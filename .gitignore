@@ -1,0 +1,12 @@
+# Reference ROMs, saves, traces and build output stay local (see AGENTS.md)
+local/
+build/
+*.gb
+*.gbc
+*.sav
+*.state
+*.o
+*.map
+*.sym
+__pycache__/
+tools/rgbds/

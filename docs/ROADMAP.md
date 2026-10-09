@@ -1,0 +1,100 @@
+# Phased roadmap
+
+Baseline: **2026-09-12**. Work is sequenced by evidence and exit gates. These are planning estimates, not deadlines; re-estimate after the first matching build. All phases inherit the full-ROM identity requirement and C0–C3 semantic standard.
+
+## Phase 0 — Archaeological survey and target definition
+
+**Current:** baseline survey delivered; reference identification and adoption audit still pending.
+
+Read existing repositories and community sources without running their scripts. Record exact commits, target variants, source provenance, inspected files, build claims, dependency assumptions, and reuse terms. Search forks and author-linked resources when they can fill a specific gap. Preserve source conflicts and distinguish firsthand research from copied summaries.
+
+Deliverables: [survey](SURVEY.md), [knowledge map](KNOWLEDGE_MAP.md), [initial evidence](EVIDENCE_LOG.md), target decision, later ROM manifest and adoption decision. The title selection is done; the manifest cannot be completed without the local reference.
+
+**Exit gate:** identify one reference ROM and its hash; establish what source may be reused; document whether any upstream Cobi build actually matches under captured conditions. A failed or incomplete upstream build does not block a fresh scaffold, provided its result is recorded honestly.
+
+Planning allowance: 1–3 focused sessions to finish target and adoption work once inputs are available.
+
+## Phase 1 — Baseline build and trustworthy binary diff
+
+Dependencies: identified local reference and a tested toolchain choice.
+
+Initialize Git and exclusions, pin RGBDS and helper-tool versions, implement the verifier and its negative tests, and generate a fixed-bank scaffold preserving every original byte. Review unknown slices as build dependencies. Capture complete build/diff reports and source maps. Reproduce from clean directories; do not make emulator booting the acceptance criterion.
+
+Deliverables: manifest, toolchain lock, reproducible extraction, one documented build/verify entry point, symbols/map, reports, and opaque-range coverage inventory.
+
+**Exit gate:** two clean full-ROM matches against the reference; failure cases rejected; no stale-output fallback; a changed test byte is detected; one small code or data slice replaced with authored assembly and the full ROM still matches. Opaque bytes remain counted explicitly.
+
+Planning allowance: 2–5 sessions, depending on toolchain setup and upstream compatibility. First usable milestone is matching scaffolding, not a large renamed bank.
+
+## Phase 2 — Orientation and first teaching investigations
+
+Dependencies: phase 1 passes.
+
+Trace the cartridge entry path, enabled interrupts, one bank-switch path, and one short copy/input routine. Locate a small data consumer to connect a banked ROM read to observable behavior. Build an initial ROM/RAM map and learn the debugger together.
+
+Deliverables: a short boot-path document; one example of a bank transition with before/after context; routine contracts; two or three reproducible evidence records; learning exercises 1–4 completed.
+
+**Exit gate:** locally supported entry/bank observations, one C3 routine claim within a narrow scope, the user can walk through a small instruction sequence, and all accepted source changes preserve the full match. Unknown callers and RAM-bank state are visible rather than guessed.
+
+Planning allowance: 3–6 sessions. Do not wait for all of bank 0 to be understood before tackling a useful data path.
+
+## Phase 3 — High-value data recovery
+
+Dependencies: address/bank conventions and a reliable scaffold.
+
+Investigate monster species IDs and records, name lookup, growth/experience tables, skills, items, and fixed encounters. Start with a small bounded subset, trace the reader, then expand. Treat core species IDs, prebuilt encounter IDs, and runtime party slots as potentially distinct namespaces.
+
+Deliverables: original schemas with unknown fields preserved; deterministic extractors; exact data round trips; small readable tables; evidence for pointer interpretation, record sizes, and consuming code. Link each data explanation to gameplay context.
+
+**Exit gate per table:** bounds, pointer handling, count/stride, holes/aliases, and terminators checked; output bytes equal the reference; at least representative consumers tested; field confidence recorded individually. A decoder that prints plausible monster names is not sufficient.
+
+Planning allowance: several weeks of regular sessions; recover one coherent table at a time.
+
+## Phase 4 — Mechanics and state transitions
+
+Dependencies: relevant phase 3 records and routines, plus reproducible saves/input recipes.
+
+Choose one mechanic according to user interest: recruitment, damage and resistance, growth, skill learning, or breeding. Trace its complete data flow, including integer widths, rounding, flags, RNG consumption, and special cases. Define experiments before relying on a plausible formula.
+
+Deliverables: an explanation suitable for a technical newcomer to assembly, constrained pseudocode, evidence-linked assembly, and a small set of contrasting/boundary cases. Native game behavior and intentionally modified experiments remain distinguishable.
+
+**Exit gate per mechanic:** a bounded specification reproduced from local bytes and execution; evidence includes counterexamples considered; uncertainty remains explicit; canonical build matches. Models of a random process must distinguish arithmetic correctness from distribution assumptions.
+
+Planning allowance: multiple iterations per mechanic. Breeding and RNG are likely to need more investigation; that is a planning judgment, not a verified engine-complexity measurement.
+
+## Phase 5 — World, presentation, persistence, and communication
+
+Dependencies vary by subsystem. Trace maps and events, procedural keys/worlds, graphics decoding, text rendering, audio dispatch, save format/checksums, and serial/link operations. Pursue each through a bounded question instead of parallel broad rewrites.
+
+Deliverables: format and state-machine documents, read/write contracts, decoding and round-trip tools where feasible, save fixtures with local storage rules, and recorded emulator configurations. Use the audio converter and existing map research as leads, with target-specific validation.
+
+**Exit gate per subsystem:** documented external interfaces and important state transitions, tested failure/boundary cases, exact byte preservation, and confidence-qualified claims. Compression work must preserve the original compressed stream until an encoder produces identical bytes; visually identical decoded graphics do not satisfy the build gate.
+
+Planning allowance: ongoing work over months. Link behavior may require coordinated emulator instances or hardware; defer that dependency until its investigation is selected.
+
+## Phase 6 — Consolidation and optional variants
+
+Dependencies: stable Cobi build and enough recovered structure to make comparison useful.
+
+Reconcile duplicate concepts, review old C1/C2 assumptions, generate searchable indexes and coverage maps, test setup from a fresh checkout, and prepare a clear contribution guide. Consider Tara first as a separate target, then DWM1 or regional variants if the user wants them.
+
+**Exit gate for a new target:** separate manifest and identity check, separately measured rebuild, explicit mapping of shared versus variant-specific ranges, and evidence for each transferred semantic claim. Never apply a single global address delta without proving it across the relevant ranges.
+
+Project completion is not defined by a green byte comparison alone. A long-term completion review must account for every byte, the residual opaque regions, unresolved semantics, runtime scope, and reproducibility from preserved instructions.
+
+## First task queue
+
+| ID | Task | Owner role | Prerequisite | Acceptance |
+| --- | --- | --- | --- | --- |
+| T-001 | Identify local Cobi reference and write manifest | Lead + user for reference provenance | Local reference path | Measured size/hash/header; revision certainty recorded |
+| T-002 | Pin and audit candidate build environment | Lead | T-001; relevant upstream notices | Tested version/flags and adoption note |
+| T-003 | Implement complete-file verifier | Lead | Manifest contract | Positive/negative fixtures pass; failure propagates |
+| T-004 | Create fixed-bank opaque scaffold | Lead | T-001–003 | Two clean complete matches; no hidden repair step |
+| T-005 | Explain and transcribe one short routine | Lead + user | T-004 | Full match plus scoped evidence and teach-back |
+| T-006 | Validate one monster-table pointer path | Lead | T-004 and bank conventions | Local consumer evidence; unknown fields preserved |
+
+## Progress reporting
+
+Report binary identity as PASS/FAIL/UNVERIFIED with a source revision. Report opaque bytes, decoded assembly bytes, structured data bytes, and classification coverage as distinct, non-overlapping measures where possible. Record mixed-use ranges explicitly and avoid double-counting. Report C0/C1/C2/C3 claims separately from byte coverage; known data is valuable progress, not code disassembly.
+
+After each phase gate, compare actual effort with the estimate, identify the highest-value unanswered question, and revise the next phase. Do not use calendar pressure to weaken the matching requirement or inflate confidence.
