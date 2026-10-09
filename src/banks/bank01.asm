@@ -3249,7 +3249,7 @@ Func_001_5B98::
     inc de
     ld a, [de]
     ld h, a
-    call Func_001_5BAD
+    call CopyMonsterNameToBuffer_B01
     pop hl
     ld e, l
     ld d, h
@@ -3258,17 +3258,19 @@ Func_001_5B98::
     call Func_000_21A1
     ret
 
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
 ; 1 call site from 1 routine (e.g. Func_001_5B98)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC8CF
-Func_001_5BAD::
+CopyMonsterNameToBuffer_B01::
+Func_001_5BAD:: ; address name
     push hl
     ld a, [wDataBank]
     push af
     ld a, $08
     ld [wDataBank], a
-    ld hl, Data_008_4032
+    ld hl, StringDatabase
     ld a, $04
     add a, l
     ld l, a

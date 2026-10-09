@@ -3860,7 +3860,7 @@ Func_01D_5CD7::
     push af
     ld a, $08
     ld [wDataBank], a
-    ld hl, Data_008_4032
+    ld hl, StringDatabase
     ld a, $04
     add a, l
     ld l, a
@@ -4583,7 +4583,7 @@ Jump_01D_60BB::
     push af
     ld a, $08
     ld [wDataBank], a
-    ld hl, Data_008_4032
+    ld hl, StringDatabase
     ld a, $04
     add a, l
     ld l, a

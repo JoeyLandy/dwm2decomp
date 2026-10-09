@@ -11,7 +11,7 @@ Func_008_4001::
     ret
 
 Jump_008_400F::
-    ld de, Data_008_4032
+    ld de, StringDatabase
     call Func_000_25C9
     ret
 
@@ -25,7 +25,7 @@ Func_008_4016::
     ret
 
 Jump_008_4024::
-    ld de, Data_008_4032
+    ld de, StringDatabase
     call Func_000_25FE
     ret
 
@@ -35,22 +35,26 @@ Func_008_402B::
     call Func_000_2611
     ret
 
-Data_008_4032:: ; heuristic: bank from RAM variable $D7FE; C0
-    dw Data_008_4044
-    dw Data_008_4242
-    dw Data_008_4258
+; nine pointers, one per string category; each points at a table of string pointers; strings end in $F0 (E-0026)
+StringDatabase:: ; heuristic: bank from RAM variable $D7FE; C0
+Data_008_4032:: ; address name
+    dw StringTable_System
+    dw StringTable_MonsterFamilies
+    dw StringTable_MonsterNames
 
 Data_008_4038:: ; heuristic: argument of a bank-switching copy helper; C0
-    dw Data_008_4458
-    dw Data_008_4558
+    dw StringTable_MonsterNames2
+    dw StringTable_SkillNames
 
 Data_008_403C:: ; heuristic: argument of a bank-switching copy helper; C0
-    dw Data_008_4716
-    dw Data_008_47F6
-    dw Data_008_48D6
-    dw Data_008_490C
+    dw StringTable_ItemNames
+    dw StringTable_ItemDescriptions
+    dw StringTable_PersonalityNames
+    dw StringTable_ItemMenuMessages
 
-Data_008_4044:: ; heuristic: target of a monotone pointer table; C0
+; 255 strings: debug-menu and system text, for example 'DEBUG MODE' and '? EDIT ?' (named from its contents; E-0026)
+StringTable_System:: ; heuristic: target of a monotone pointer table; C0
+Data_008_4044:: ; address name
     dw Data_008_492A
     dw Data_008_493B
     dw Data_008_4A1A
@@ -307,7 +311,9 @@ Data_008_4044:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_53B2
     dw Data_008_53B2
 
-Data_008_4242:: ; heuristic: target of a monotone pointer table; C0
+; 11 strings: Slime, Dragon, Beast, Bird, Plant, ... (named from its contents; E-0026)
+StringTable_MonsterFamilies:: ; heuristic: target of a monotone pointer table; C0
+Data_008_4242:: ; address name
     dw Data_008_53B5
     dw Data_008_53BB
     dw Data_008_53C2
@@ -320,7 +326,9 @@ Data_008_4242:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_53ED
     dw Data_008_53F3
 
-Data_008_4258:: ; heuristic: target of a monotone pointer table; C0
+; 256 strings indexed by the number the monster-name routines take in HL (entry 0 is empty): 'DrakSlime', 'SpotSlime', ... (named from its contents; E-0026)
+StringTable_MonsterNames:: ; heuristic: target of a monotone pointer table; C0
+Data_008_4258:: ; address name
     dw Data_008_53F8
     dw Data_008_53F9
     dw Data_008_5403
@@ -578,7 +586,9 @@ Data_008_4258:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_5B28
     dw Data_008_5B31
 
-Data_008_4458:: ; heuristic: target of a monotone pointer table; C0
+; 128 more monster names: 'Mudron', 'NiteWhip', ... (named from its contents; E-0026)
+StringTable_MonsterNames2:: ; heuristic: target of a monotone pointer table; C0
+Data_008_4458:: ; address name
     dw Data_008_5B36
     dw Data_008_5B3D
     dw Data_008_5B46
@@ -708,7 +718,9 @@ Data_008_4458:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_5EEE
     dw Data_008_5EF6
 
-Data_008_4558:: ; heuristic: target of a monotone pointer table; C0
+; 223 strings: 'Blaze', 'Blazemore', 'Blazemost', 'Firebal', ... (named from its contents; E-0026)
+StringTable_SkillNames:: ; heuristic: target of a monotone pointer table; C0
+Data_008_4558:: ; address name
     dw Data_008_5EF8
     dw Data_008_5EF9
     dw Data_008_5EFF
@@ -933,7 +945,9 @@ Data_008_4558:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_64E1
     dw Data_008_64E1
 
-Data_008_4716:: ; heuristic: target of a monotone pointer table; C0
+; 112 strings: 'Herb', 'LoveWater', 'WorldDew', 'Potion', ... (named from its contents; E-0026)
+StringTable_ItemNames:: ; heuristic: target of a monotone pointer table; C0
+Data_008_4716:: ; address name
     dw Data_008_64E2
     dw Data_008_64E3
     dw Data_008_64E8
@@ -1047,7 +1061,9 @@ Data_008_4716:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_67CA
     dw Data_008_67CA
 
-Data_008_47F6:: ; heuristic: target of a monotone pointer table; C0
+; 112 strings: 'Restores HP of one monster', ... (named from its contents; E-0026)
+StringTable_ItemDescriptions:: ; heuristic: target of a monotone pointer table; C0
+Data_008_47F6:: ; address name
     dw Data_008_67CB
     dw Data_008_67CB
     dw Data_008_67F0
@@ -1161,7 +1177,9 @@ Data_008_47F6:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_71D0
     dw Data_008_71D2
 
-Data_008_48D6:: ; heuristic: target of a monotone pointer table; C0
+; 27 strings: 'Hotblood', 'Eager', 'Smug', 'Earnest', 'Pushy', ... (named from its contents; E-0026)
+StringTable_PersonalityNames:: ; heuristic: target of a monotone pointer table; C0
+Data_008_48D6:: ; address name
     dw Data_008_71F7
     dw Data_008_7200
     dw Data_008_7206
@@ -1190,7 +1208,9 @@ Data_008_48D6:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_72AD
     dw Data_008_72B6
 
-Data_008_490C:: ; heuristic: target of a monotone pointer table; C0
+; 15 strings: 'No items', 'Toss this away?', ... (named from its contents; E-0026)
+StringTable_ItemMenuMessages:: ; heuristic: target of a monotone pointer table; C0
+Data_008_490C:: ; address name
     dw Data_008_72BB
     dw Data_008_72C4
     dw Data_008_72D4

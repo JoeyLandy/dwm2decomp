@@ -1052,7 +1052,7 @@ Jump_015_487A::
     ld l, a
     ld a, [wD7F7]
     ld h, a
-    call Func_015_6ACA
+    call CopyMonsterNameToBuffer_B15
     ld hl, wCADD
     ld a, [hl]
     and a, $0F
@@ -1409,7 +1409,7 @@ Jump_015_4B55::
     inc de
     ld a, [de]
     ld h, a
-    call Func_015_6ACA
+    call CopyMonsterNameToBuffer_B15
     ld hl, wC8CF
     ld de, wC130
 
@@ -4076,7 +4076,7 @@ Jump_015_5F51::
     inc de
     ld a, [de]
     ld h, a
-    call Func_015_6ACA
+    call CopyMonsterNameToBuffer_B15
     ld hl, wC8CF
     ld de, wC130
     ld c, $00
@@ -5865,7 +5865,7 @@ Func_015_6A36::
     ld l, a
     ldh a, [hFFC7]
     ld h, a
-    call Func_015_6ACA
+    call CopyMonsterNameToBuffer_B15
     xor a, a
     ld c, a
     ld a, $03
@@ -5922,17 +5922,19 @@ Jump_015_6ABF::
     ld [rRAMG2], a
     ret
 
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
 ; 4 call sites from 3 routines (e.g. Func_015_47A7, Func_015_6A36, Func_015_5A67)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC8CF
-Func_015_6ACA::
+CopyMonsterNameToBuffer_B15::
+Func_015_6ACA:: ; address name
     push hl
     ld a, [wDataBank]
     push af
     ld a, $08
     ld [wDataBank], a
-    ld hl, Data_008_4032
+    ld hl, StringDatabase
     ld a, $04
     add a, l
     ld l, a
@@ -7339,7 +7341,7 @@ Func_015_7A5F::
     push af
     ld a, $08
     ld [wDataBank], a
-    ld hl, Data_008_4032
+    ld hl, StringDatabase
     ld a, $04
     add a, l
     ld l, a

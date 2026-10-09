@@ -94,6 +94,7 @@ class Rom:
         self.text_enabled = True  # render prose runs as db strings (--no-text turns it off)
         self._text_runs: dict[int, list[tuple[int, int]]] = {}
         self.alias: dict[tuple[int, int], str] = {}  # address name kept as an alias after a rename
+        self.dalias: dict[tuple[int, int], str] = {}  # the same for data labels
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
         self.symbols: dict[int, dict] = {}  # config/symbols.json: evidence-named RAM addresses
         self.ram_used: dict[int, str] = {}  # RAM address -> symbol name used in the source
@@ -834,6 +835,13 @@ class Rom:
             if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name) or name in seen:
                 raise AssertionError(f"bad or duplicate name {name!r} at {bank:02X}:{addr:04X}")
             seen.add(name)
+            if info.get("data"):
+                old = self.dlabels[bank].get(addr)
+                if old is None:
+                    raise AssertionError(f"{name}: no data label at {bank:02X}:{addr:04X}")
+                self.dalias[(bank, addr)] = old
+                self.dlabels[bank][addr] = name
+                continue
             old = self.labels[bank].get(addr)
             if old is None or addr not in self.insn[bank]:
                 raise AssertionError(f"{name}: no traced code label at {bank:02X}:{addr:04X}")
@@ -927,6 +935,8 @@ class Rom:
         out.append(f"; sound track, {len(tr['events'])} events after the header (E-0019: grammar C2, meaning C0)")
         if p in dl:
             out.append(f"{dl[p]}:: ; heuristic: {self.dreason.get((bank, p), 'sound track')}; C0")
+            if (bank, p) in self.dalias:
+                out.append(f"{self.dalias[(bank, p)]}:: ; address name")
         out.append("    db " + ", ".join(f"${v:02X}" for v in h["bytes"]) + f" ; header: {h['text'][7:]}")
         for ev in tr["events"]:
             a = 0x4000 + ev["off"]
@@ -971,6 +981,8 @@ class Rom:
                 if q in dl:
                     flush()
                     out.append(f"{dl[q]}:: ; heuristic: {self.dreason.get((bank, q), 'label inside a table')}; C0")
+                    if (bank, q) in self.dalias:
+                        out.append(f"{self.dalias[(bank, q)]}:: ; address name")
                 if f["type"] == "ptr":
                     flush()
                     tb = vals[f["bank_from"]] if "bank_from" in f else bank
@@ -1258,10 +1270,15 @@ class Rom:
                     why = self.dreason.get((bank, pc), "target of a monotone pointer table")
                     stream = self.streams.get((bank, pc))
                     out.append("")
+                    dinfo = self.names.get((bank, pc))
+                    if dinfo and dinfo.get("data") and dinfo.get("note"):
+                        out.append(f"; {dinfo['note']}")
                     if stream:
                         out.append(f"; LZSS-compressed asset: {stream[1]} bytes expand to {stream[0]} "
                                    f"(tools/lzss_gfx.py, E-0016/E-0017; C1)")
                     out.append(f"{dl[pc]}:: ; heuristic: {why}; C0")
+                    if (bank, pc) in self.dalias:
+                        out.append(f"{self.dalias[(bank, pc)]}:: ; address name")
                 if pc in dt:
                     out.append(f"    dw {dl[dt[pc]]}")
                     pc += 2

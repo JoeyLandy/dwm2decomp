@@ -5925,7 +5925,7 @@ Func_01E_6E84::
     push af
     ld a, $08
     ld [wDataBank], a
-    ld hl, Data_008_4032
+    ld hl, StringDatabase
     ld bc, $0004
     add hl, bc
     call ReadWordFromDataBank

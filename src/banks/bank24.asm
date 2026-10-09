@@ -1251,7 +1251,7 @@ Jump_024_498D::
     ld a, [wD7F6]
     ld l, a
     call Func_024_4F41
-    call Func_024_4F68
+    call CopyMonsterNameToBuffer_B24
     ld a, $0A
     call Func_024_4EE8
     ld a, [wD781]
@@ -2084,17 +2084,19 @@ Jump_024_4F5B::
     ld [rRAMB], a
     ret
 
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
 ; 1 call site from 1 routine (e.g. Func_024_4117)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC130
-Func_024_4F68::
+CopyMonsterNameToBuffer_B24::
+Func_024_4F68:: ; address name
     push hl
     ld a, [wDataBank]
     push af
     ld a, $08
     ld [wDataBank], a
-    ld hl, Data_008_4032
+    ld hl, StringDatabase
     ld a, $04
     add a, l
     ld l, a

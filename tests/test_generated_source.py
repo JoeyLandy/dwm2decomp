@@ -133,6 +133,8 @@ class RoutineNames(unittest.TestCase):
             lines = (BANKS / f"bank{bank:02x}.asm").read_text(encoding="utf-8").splitlines()
             alias = f"Func_{bank:03X}_{addr:04X}:: ; address name"
             alt = f"Jump_{bank:03X}_{addr:04X}:: ; address name"
+            if info.get("data"):
+                alias = alt = f"Data_{bank:03X}_{addr:04X}:: ; address name"
             i = next((k for k, l in enumerate(lines) if l.startswith(info["name"] + "::")), None)
             if i is None or lines[i + 1] not in (alias, alt):
                 problems.append(key)

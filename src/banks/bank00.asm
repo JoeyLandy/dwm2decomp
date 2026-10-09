@@ -1633,7 +1633,7 @@ Jump_000_0B20::
     ret
 
 ; C2 static reading (E-0014): like Func_000_0B18, but before each byte waits for STAT ($FF41) bit 1 to clear with interrupts disabled, so HL can be VRAM.
-; 232 call sites from 95 routines (e.g. Func_000_2D4A, Func_001_5BAD, Func_001_4045, Func_003_6B5E, ...)
+; 232 call sites from 95 routines (e.g. Func_000_2D4A, CopyMonsterNameToBuffer_B01, Func_001_4045, Func_003_6B5E, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 CopyFromBankWaitVRAM::
@@ -1699,7 +1699,7 @@ Jump_000_0B5A::
     ret
 
 ; C2 static reading (E-0014): switches to the ROM bank held in $D7FE, reads the word at [HL] into B (low address) and C (next address), leaves HL unchanged, restores the caller's bank. $D7FE is therefore the data-bank variable for reads through HL; 30 call sites.
-; 30 call sites from 17 routines (e.g. Func_001_5BAD, Func_00D_5DED, Func_00D_778C, Func_010_4008, ...)
+; 30 call sites from 17 routines (e.g. CopyMonsterNameToBuffer_B01, Func_00D_5DED, CopyMonsterNameToBuffer_B0D, Func_010_4008, ...)
 ; reads: wDataBank
 ; writes: rROMB0
 ReadWordFromDataBank::

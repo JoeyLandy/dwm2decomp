@@ -246,5 +246,90 @@
     "name": "ResetWDA6E",
     "note": "wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF",
     "evidence": "reading"
+  },
+  "08:4032": {
+    "name": "StringDatabase",
+    "note": "nine pointers, one per string category; each points at a table of string pointers; strings end in $F0 (E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:4044": {
+    "name": "StringTable_System",
+    "note": "255 strings: debug-menu and system text, for example 'DEBUG MODE' and '? EDIT ?' (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:4242": {
+    "name": "StringTable_MonsterFamilies",
+    "note": "11 strings: Slime, Dragon, Beast, Bird, Plant, ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:4258": {
+    "name": "StringTable_MonsterNames",
+    "note": "256 strings indexed by the number the monster-name routines take in HL (entry 0 is empty): 'DrakSlime', 'SpotSlime', ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:4458": {
+    "name": "StringTable_MonsterNames2",
+    "note": "128 more monster names: 'Mudron', 'NiteWhip', ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:4558": {
+    "name": "StringTable_SkillNames",
+    "note": "223 strings: 'Blaze', 'Blazemore', 'Blazemost', 'Firebal', ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:4716": {
+    "name": "StringTable_ItemNames",
+    "note": "112 strings: 'Herb', 'LoveWater', 'WorldDew', 'Potion', ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:47F6": {
+    "name": "StringTable_ItemDescriptions",
+    "note": "112 strings: 'Restores HP of one monster', ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:48D6": {
+    "name": "StringTable_PersonalityNames",
+    "note": "27 strings: 'Hotblood', 'Eager', 'Smug', 'Earnest', 'Pushy', ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "08:490C": {
+    "name": "StringTable_ItemMenuMessages",
+    "note": "15 strings: 'No items', 'Toss this away?', ... (named from its contents; E-0026)",
+    "evidence": "E-0026",
+    "data": true
+  },
+  "01:5BAD": {
+    "name": "CopyMonsterNameToBuffer_B01",
+    "note": "HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored",
+    "evidence": "E-0026"
+  },
+  "0D:778C": {
+    "name": "CopyMonsterNameToBuffer_B0D",
+    "note": "HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored",
+    "evidence": "E-0026"
+  },
+  "15:6ACA": {
+    "name": "CopyMonsterNameToBuffer_B15",
+    "note": "HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored",
+    "evidence": "E-0026"
+  },
+  "24:4F68": {
+    "name": "CopyMonsterNameToBuffer_B24",
+    "note": "HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored",
+    "evidence": "E-0026"
+  },
+  "F2:41CC": {
+    "name": "CopyMonsterNameToBuffer_BF2",
+    "note": "HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored",
+    "evidence": "E-0026"
   }
 }
