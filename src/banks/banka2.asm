@@ -182,8 +182,8 @@ Func_0A2_4A88:: ; heuristic: target of a pointer table; C0
 Jump_0A2_4A90::
     dec e
     jr Jump_0A2_4AAE
-    db $12, $22, $0A, $16, $0A, $F0, $90, $90, $14, $18, $12, $0C, $11, $12, $90, $1C
-    db $1E, $10, $12, $22, $0A, $16, $0A, $F0, $90, $90
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "IYAMA", $F0, "  KOICHI SUGIYAMA", $F0, "  "
 
 Jump_0A2_4AAD::
     sub a, b
@@ -227,8 +227,8 @@ Jump_0A2_4AE6::
     db $10, $90 ; stop
     dec e
     jr Jump_0A2_4B0A
-    db $12, $12, $F0, $90, $90, $90, $13, $18, $11, $17, $90, $15, $0A, $1E, $1B, $0E
-    db $17, $0C, $0E, $F0, $90, $90, $13, $18, $17, $90, $20
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "II", $F0, "   JOHN LAURENCE", $F0, "  JON W"
 
 Jump_0A2_4B0A::
     ld c, $12
@@ -499,8 +499,9 @@ Jump_0A2_4C79::
     ld a, [bc]
     dec e
     jr Jump_0A2_4C9B
-    db $11, $12, $90, $0A, $14, $12, $22, $0A, $16, $0A, $F1, $90, $1C, $0E, $12, $12
-    db $0C, $11, $12, $90, $16, $18, $1B, $12, $1E, $0C, $11, $12
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HI AKIYAMA", $F1
+    db " SEIICHI MORIUCHI"
 
 Jump_0A2_4C9B::
     pop af
@@ -613,8 +614,9 @@ Func_0A2_4D23:: ; heuristic: target of a pointer table; C0
     sub a, b
     ld [hl+], a
     jr Jump_0A2_4D56
-    db $14, $18, $90, $14, $0A, $10, $0A, $22, $0A, $F1, $90, $90, $90, $0E, $16, $12
-    db $90, $17, $0A, $1B, $12, $14, $12, $22, $18, $F1
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KO KAGAYA", $F1
+    db "   EMI NARIKIYO", $F1
 
 Jump_0A2_4D52::
     sub a, b
@@ -662,10 +664,11 @@ Jump_0A2_4D74::
     ld d, $18
     dec e
     jr Jump_0A2_4D74
-    db $90, $90, $16, $12, $17, $18, $1B, $1E, $90, $14, $0A, $14, $12, $23, $0A, $20
-    db $0A, $F1, $90, $90, $22, $0A, $1C, $1E, $11, $12, $1D, $18, $90, $1C, $1E, $23
-    db $1E, $14, $12, $F1, $90, $90, $90, $90, $17, $0A, $18, $16, $12, $90, $18, $23
-    db $0A, $20, $0A, $F1, $90
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "  MINORU KAKIZAWA", $F1
+    db "  YASUHITO SUZUKI", $F1
+    db "    NAOMI OZAWA", $F1
+    db " "
 
 Jump_0A2_4DB8::
     sub a, b
@@ -778,8 +781,9 @@ Jump_0A2_4E53::
     dec de
     ld [hl+], a
     jr Jump_0A2_4DEC
-    db $22, $18, $17, $0A, $10, $0A, $F1, $90, $90, $90, $1C, $11, $12, $17, $10, $18
-    db $90, $17, $18, $10, $1E, $14, $12, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "YONAGA", $F1
+    db "   SHINGO NOGUKI", $F0
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4E74:: ; heuristic: target of a pointer table; C0
@@ -833,8 +837,9 @@ Jump_0A2_4EA8::
 
 Jump_0A2_4EAC::
     jr Jump_0A2_4E3E
-    db $22, $18, $14, $18, $22, $0A, $16, $0A, $F1, $90, $1B, $22, $1E, $12, $0C, $11
-    db $12, $90, $17, $0A, $14, $0A, $1C, $11, $12, $16, $0A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "YOKOYAMA", $F1
+    db " RYUICHI NAKASHIMA", $F0
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4ECA:: ; heuristic: target of a pointer table; C0
@@ -895,8 +900,9 @@ Func_0A2_4F1F:: ; heuristic: target of a pointer table; C0
     rla
     ld a, [bc]
     jr Jump_0A2_4F48
-    db $0A, $90, $16, $0A, $1D, $1C, $1E, $0D, $0A, $F1, $90, $22, $18, $1C, $11, $12
-    db $1D, $18, $90, $1D, $0A, $17, $12, $1E, $0C, $11, $12, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A MATSUDA", $F1
+    db " YOSHITO TANIUCHI", $F0
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4F42:: ; heuristic: target of a pointer table; C0
@@ -985,8 +991,10 @@ Jump_0A2_4FAB::
     ld e, $0D
     ld [de], a
     jr Jump_0A2_4FA2
-    db $90, $B8, $02, $00, $00, $01, $F1, $90, $90, $14, $18, $12, $0C, $11, $12, $90
-    db $1C, $1E, $10, $12, $22, $0A, $16, $0A, $F1, $F0, $0D, $1B, $0A, $10, $18, $17
-    db $90, $20, $0A, $1B, $1B, $12, $18, $1B, $F1, $90, $90, $16, $18, $17, $1C, $1D
-    db $0E, $1B, $1C, $90, $02, $F0
+    db $90, $B8, $02, $00, $00, $01
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F1
+    db "  KOICHI SUGIYAMA", $F1
+    db $F0, "DRAGON WARRIOR", $F1
+    db "  MONSTERS 2", $F0
     ds $3019, $00

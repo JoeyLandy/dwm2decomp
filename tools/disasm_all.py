@@ -12,7 +12,8 @@ byte-exact, so classification errors cannot change the ROM -- only the build
 gate (tools/build.py) certifies identity. Reachability is not proof of runtime
 execution and names carry no semantics.
 
-Usage: disasm_all.py [--stats] [--quiet] [--export-streams PATH.json]
+Usage: disasm_all.py [--stats] [--quiet] [--no-text] [--export-streams PATH.json]
+  --no-text keeps prose as opaque INCBIN data instead of rendering it as db strings.
 Progress goes to stderr. All banks are rendered in memory first; src/banks/*.asm
 and src/main.asm are written only after the whole analysis succeeds, so an
 interrupted run leaves the previous generated tree untouched.
@@ -31,6 +32,7 @@ from trace_disasm import decode  # noqa: E402
 from lzss_gfx import decompress as lzss_decompress  # noqa: E402
 from sound_tracks import decode_header, decode_region  # noqa: E402
 import gb_symbols as gbs  # noqa: E402
+import gb_text  # noqa: E402
 
 _T0 = time.monotonic()
 _QUIET = False
@@ -86,6 +88,8 @@ class Rom:
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
         self.names: dict[tuple[int, int], dict] = {}  # config/names.json: evidence-backed routine names
+        self.text_enabled = True  # render prose runs as db strings (--no-text turns it off)
+        self._text_runs: dict[int, list[tuple[int, int]]] = {}
         self.alias: dict[tuple[int, int], str] = {}  # address name kept as an alias after a rename
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
         self.symbols: dict[int, dict] = {}  # config/symbols.json: evidence-named RAM addresses
@@ -978,7 +982,62 @@ class Rom:
             f"{sum(len(v) for v in self.callers.values())} call sites")
 
     # ---- emission -------------------------------------------------------
+    def text_runs_for(self, bank: int) -> list[tuple[int, int]]:
+        """Prose runs of a bank as absolute CPU address ranges. Bytes already owned by code,
+        pointer words, structured tables, sound tracks and compressed streams are masked first,
+        so a run never swallows them."""
+        if bank in self._text_runs:
+            return self._text_runs[bank]
+        base = self.base(bank)
+        raw = bytearray(self.data[bank * BANK:(bank + 1) * BANK])
+
+        def mask(lo: int, hi: int) -> None:
+            for a in range(max(lo, base), min(hi, base + BANK)):
+                raw[a - base] = 0xFF
+
+        for a in self.covered[bank]:
+            mask(a, a + 1)
+        for k in self.dtab[bank]:
+            mask(k, k + 2)
+        for (b, a), t in self.table_at.items():
+            if b == bank:
+                mask(a, t["end"])
+        for (b, a), tr in self.track_at.items():
+            if b == bank:
+                mask(a, tr["end"])
+        for (b, a), (size, used) in self.streams.items():
+            if b == bank:
+                mask(a, a + used)
+        runs = [(base + s, base + e) for s, e in gb_text.find_text_runs(bytes(raw))]
+        self._text_runs[bank] = runs
+        return runs
+
+    def emit_text(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
+        raw = self.data[bank * BANK + lo - self.base(bank):bank * BANK + hi - self.base(bank)]
+        out.append("; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning")
+        for line in gb_text.render(raw):
+            out.append("    db " + line)
+
     def emit_gap(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
+        """Emit uncovered bytes [lo, hi): prose as readable strings, the rest as opaque data."""
+        pos, pieces = lo, []
+        if self.text_enabled:
+            for s, e in self.text_runs_for(bank):
+                cs, ce = max(s, lo), min(e, hi)
+                if ce - cs >= 4:
+                    if cs > pos:
+                        pieces.append((False, pos, cs))
+                    pieces.append((True, cs, ce))
+                    pos = ce
+        if pos < hi:
+            pieces.append((False, pos, hi))
+        for is_text, a, b in pieces:
+            if is_text:
+                self.emit_text(bank, a, b, out)
+            else:
+                self.emit_gap_plain(bank, a, b, out)
+
+    def emit_gap_plain(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
         base = self.base(bank)
         raw = self.data[bank * BANK + lo - base:bank * BANK + hi - base]
         i = 0
@@ -1216,6 +1275,7 @@ def main() -> int:
     log(f"reading {REF}")
     rom = Rom(REF.read_bytes())
     log(f"{rom.nbanks} banks, {len(rom.zero)} all-zero")
+    rom.text_enabled = "--no-text" not in sys.argv
     notes_path = ROOT / "config/annotations.json"
     if notes_path.exists():
         for key, text in json.loads(notes_path.read_text(encoding="utf-8")).items():
@@ -1264,11 +1324,12 @@ def main() -> int:
             reached.append((b, code))
     (ROOT / "src/macros.inc").write_text(MACROS_INC, encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
+    gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
     rom.write_ram_inc(ROOT / "src/ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "
         f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")
     (ROOT / "src/main.asm").write_text(
-        'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\n'
+        'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\nINCLUDE "charmap.inc"\n'
         + "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
         encoding="utf-8", newline="\n")
     log("done writing; rebuild and verify with tools/build.py")

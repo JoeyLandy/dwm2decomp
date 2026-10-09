@@ -1,5 +1,8 @@
 SECTION "Bank 51", ROMX[$4000], BANK[$51]
-    INCBIN "dwm2-cobi-us.gbc", $144000, $12D5
+    INCBIN "dwm2-cobi-us.gbc", $144000, $97A
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WXCDCDMN2 22 2mnSTSTABYZ"
+    INCBIN "dwm2-cobi-us.gbc", $144992, $943
     dw Data_051_5416
     db $51, $BA, $58, $51
     dw Data_051_58ED

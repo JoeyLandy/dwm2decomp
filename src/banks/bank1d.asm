@@ -12,7 +12,108 @@ Data_01D_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $CD, $11, $26, $C9
 
 Data_01D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $074016, $4A4
+    db $18, $40, $48, $40, $48, $40, $69, $40, $8E, $40, $AF, $40, $D0, $40, $F4, $40
+    db $13, $41, $33, $41, $4C, $41, $65, $41, $84, $41, $BD, $41, $D6, $41, $F3, $41
+    db $12, $42, $37, $42, $59, $42, $76, $42, $95, $42, $B4, $42, $D2, $42, $10, $43
+    db $10, $43, $EA, $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Which monster", $F1
+    db "will hibernate?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Do you need me", $F1
+    db "for anything else?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " So this one", $F1
+    db "should hibernate?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " OK my friend,", $F1
+    db "time to sleep!", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Huh? There's no", $F1
+    db "one on the farm.", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Uh-oh, the", $F1
+    db "stable is full!", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Want to switch", $F1
+    db "with someone?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Who should I", $F1
+    db "wake up?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Wake this", $F1
+    db "monster up?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Which one should", $F1
+    db "hibernate?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " So switch ", $F9, "0", $F1
+    db "and ", $F9, "G, huh?", $FA, $F7
+    db $F2, "OK, I'll do that", $F1
+    db "for you.", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Who should I", $F1
+    db "wake up?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " I'll send ", $F9, "G", $F1
+    db "to the farm.", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Huh? No one's", $F1
+    db "sleeping now.", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Huh? There's no", $F1
+    db "room on the farm.", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Should someone", $F1
+    db "else hibernate?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Who do you want", $F1
+    db "to check?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Who do you want", $F1
+    db "to release?", $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " It'll disappear.", $F1
+    db "Is that OK?", $F0, $F9, "G was released", $F1
+    db "in the wild.", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " Come see me if", $F1
+    db "you get more", $FA, $F7
+    db $EF, $EE, "monsters.", $EF, $EE, "I'll be waiting.", $F7
+    db $F0, $EA
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " No one else can", $F1
+    db "hibernate,I see.", $F7
+    db $F0, $EB, $EB
+    INCBIN "dwm2-cobi-us.gbc", $074337, $183
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F5D)
 ; reads: wD780, wD781

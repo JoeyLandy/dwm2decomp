@@ -1,6 +1,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "ram.asm"
 INCLUDE "macros.inc"
+INCLUDE "charmap.inc"
 INCLUDE "banks/bank00.asm"
 INCLUDE "banks/bank01.asm"
 INCLUDE "banks/bank02.asm"

@@ -9,11 +9,231 @@ Func_037_4001::
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
 
 Data_037_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0DC016, $8F1
-    ds $10, $A4
-    db $F1
-    ds $10, $A4
-    INCBIN "dwm2-cobi-us.gbc", $0DC928, $1D5
+    INCBIN "dwm2-cobi-us.gbc", $0DC016, $B0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "The ", $F9, "W", $F1
+    db "shattered!", $F7
+    db $F0, $F9, "0 tried using", $F1
+    db "the ", $F9, "W.", $F7
+    db $F0, "But nothing", $F1
+    db "happened!", $F7
+    db $F0, $F9, "0 used the", $F1
+    db $F9, "W on", $F7
+    db $F2, $F9, "G!", $F7
+    db $F0, $F9, "G's wounds", $F1
+    db "were healed!", $F7
+    db $F0, $F9, "0 held aloft", $F1
+    db "the ", $F9, "W!", $F7
+    db $F0, $F9, "0 scattered", $F1
+    db "the ", $F9, "W!", $F7
+    db $F0, $F9, "G", $F1
+    db "regained MP.", $F7
+    db $F0, $F9, "G was cured of", $F1
+    db "poison.", $F7
+    db $F0, $F9, "G was cured of", $F1
+    db "paralysis.", $F7
+    db $F0, $F9, "G snapped", $F1
+    db "out of confusion.", $F7
+    db $F0, $F9, "G was", $F1
+    db "uncursed.", $F7
+    db $F0, $F9, "G woke up.", $F7
+    db $F0, $F9, "G came", $F1
+    db "back to life.", $F7
+    db $F0, $F9, "G's max.HP", $F1
+    db "rose by ", $F9, "m!", $F7
+    db $F0, $F9, "G's max.MP", $F1
+    db "rose by ", $F9, "m!", $F7
+    db $F0, $F9, "G's ATK", $F1
+    db "rose by ", $F9, "m!", $F7
+    db $F0, $F9, "G's DEF", $F1
+    db "rose by ", $F9, "m!", $F7
+    db $F0, $F9, "G's AGL", $F1
+    db "rose by ", $F9, "m!", $F7
+    db $F0, $F9, "G's INT", $F1
+    db "rose by ", $F9, "m!", $F7
+    db $F0, $F9, "0 gave ", $F9, "G", $F1
+    db "the ", $F9, "W.", $F7
+    db $F0, $F9, "G happily ate", $F1
+    db "the treat.", $F7
+    db $F2, $F9, "G's affection", $F1
+    db "for "
+    db $F6
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " rose!", $F7
+    db $F0, $F9, "G fearfully", $F1
+    db "ate the foul mess.", $F7
+    db $F2, $F9, "G glared with", $F1
+    db "a sour expression.", $F7
+    db $F2, $F9, "G became", $F1
+    db "poisoned.", $F7
+    db $F0, $F9, "0 held aloft", $F1
+    db "the ", $F9, "W!", $F7
+    db $F0, $F9, "0 tossed the", $F1
+    db $F9, "W up.", $F7
+    db $F0, $F9, "0 used the", $F1
+    db $F9, "W!", $F7
+    db $F0, $F9, "0 read ", $F9, "G", $F1
+    db "the ", $F9, "W.", $F7
+    db $F0, "A stirring tale of", $F1
+    db "honor, sacrifice", $F7
+    db $F2, "and heroism made", $F1
+    db $F9, "G brave.", $F7
+    db $F0, "A bloodcurdling", $F1
+    db "tale of horror", $F7
+    db $F2, "turned ", $F9, "G", $F1
+    db "cowardly.", $F7
+    db $F0, "A heartwarming", $F1
+    db "tale of selfless", $F7
+    db $F2, "compassion made", $F1
+    db $F9, "G kind.", $F7
+    db $F0, "A shameless tale", $F1
+    db "of greed, lies and", $F7
+    db $F2, "deception made", $F1
+    db $F9, "G sly.", $F7
+    db $F0, "A practical guide", $F1
+    db "on thinking in a", $F7
+    db $F2, "rational manner", $F1
+    db "made ", $F9, "G smart.", $F7
+    db $F0, "A hilarious tale", $F1
+    db "made ", $F9, "G simple.", $F7
+    db $F0
+    db $F6
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " held aloft", $F1
+    db "the ", $F9, "W!", $F7
+    db $F0, "The Orb glowed", $F1
+    db "with a warm light.", $F7
+    db $F0, "The presence of", $F1
+    db "monsters faded.", $F7
+    db $F0, $F9, "0 strummed", $F1
+    db "the ", $F9, "W!", $F7
+    db $F0, "Want to record", $F1
+    db "your journey?", $F0, "Your progress has", $F1
+    db "been recorded.", $F7
+    db $F0, $F9, "G equipped", $F1
+    db "the ", $F9, "W.", $F7
+    db $F0, $F9, "m's wounds", $F1
+    db "were healed.", $F7
+    db $F0, $F9, "m's wounds", $F1
+    db "were healed.", $F7
+    db $F2, $F9, "'r's wounds", $F1
+    db "were healed.", $F7
+    db $F0, $F9, "m's wounds", $F1
+    db "were healed.", $F7
+    db $F2, $F9, "'r's wounds", $F1
+    db "were healed.", $F7
+    db $F2, $F9
+    db $50
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "'s wounds", $F1
+    db "were healed.", $F7
+    db $F0, $F9, "0 gripped", $F1
+    db "the ", $F9, "W.", $F7
+    db $F0, "The MarkStaff", $F1
+    db "was sensed at", $F7
+    db $F2, $F9, "0", $A3, " ", $F9, "G and", $F1
+    db $F9, "W", $A3, " ", $F9, "m.", $F7
+    db $F0, "The MarkStaff was", $F1
+    db "not sensed.", $F7
+    db $F2, "It doesn't appear", $F1
+    db "to have been used.", $F7
+    db $F0, $F9, "0 put down", $F1
+    db "the ", $F9, "W.", $F7
+    db $F0, "The Guide Bell's", $F1
+    db "clear note echoed!", $F7
+    db $F0, $F9, "0 gave ", $F9, "G", $F1
+    db "the ", $F9, "W.", $F7
+    db $F0, $F9, "G switched its", $F1
+    db $F9, "m with the", $F7
+    db $F2, $F9, "W.", $F7
+    db $F0, $A4, "But that monster", $F1
+    db "is dead", $A4, $F7
+    db $F0, $F9, "m was", $F1
+    db "uncursed.", $F7
+    db $F0, $F9, "m was", $F1
+    db "uncursed.", $F7
+    db $F2, $F9, "'r was", $F1
+    db "uncursed.", $F7
+    db $F0, $F9, "m was", $F1
+    db "uncursed.", $F7
+    db $F2, $F9, "'r was", $F1
+    db "uncursed.", $F7
+    db $F2, $F9
+    db $50
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " was", $F1
+    db "uncursed.", $F7
+    db $F0, $F9, "0 cast", $F1
+    db $F9, "W!", $F7
+    db $F0, $F9, "0 whistled!", $F7
+    db $F0, $F9, "0 released its", $F1
+    db "Pheromone.", $F7
+    db $F0, $F9, "0 scanned the", $F1
+    db "surroundings.", $FA, $F7
+    db $F0
+    db $F6
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " asked ", $F9, "0", $F1
+    db "to run an errand.", $F7
+    db $F0, $F9, "0 scanned the", $F1
+    db "area sharply.", $F7
+    db $F0, $F9, "G's wounds", $F1
+    db "were healed!", $F7
+    db $F0, $F9, "G regained MP!", $F7
+    db $F0, $F9, "G came back to", $F1
+    db "life!", $F7
+    db $F0, $F9, "G was cured of", $F1
+    db "poison.", $F7
+    db $F0, $F9, "G was", $F1
+    db "uncursed.", $F7
+    db $F0, $F9, "0 whispered in", $F1
+    db $F6
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "'s ear.", $FA, $F7
+    db $F0, $F9, "0", $A3, " There are", $F1
+    db $F9, "m around.", $FA, $F7
+    db $F0, $F9, "0 finished", $F1
+    db "talking.", $F7
+    db $F0, $F9, "0 ran off with", $F1
+    db "100G.", $FA, $F7
+    db $F2, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $F1
+    db $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $FA, $F7
+    db $F0, $F9, "0 returned", $F1
+    db "with an item.", $FA, $F7
+    db $F2
+    db $F6
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " obtained one", $F1
+    db $F9, "m.", $F7
+    db $F0, $F9, "0 came back", $F1
+    db "with nothing", $A4, $F7
+    db $F0, $F9, "0 sensed a", $F1
+    db "treasure nearby.", $FA, $F7
+    db $F2, "It appears to be", $F1
+    db "very close.", $F7
+    db $F0, "But nothing", $F1
+    db "happened.", $F7
+    db $F0, $F9, "G did not come", $F1
+    db "back to life", $A4, $F7
+    db $F0, "But it couldn't be", $F1
+    db "used here.", $F7
+    db $F0, "But there were no", $F1
+    db "monsters nearby.", $F7
+    db $F0, "But there is no", $F1
+    db "room for it", $A4, $F7
+    db $F0, "But there wasn't", $F1
+    db "enough money.", $F7
+    db $F0, "There are no", $F1
+    db "treasures nearby.", $F7
+    db $F0, "Not enough MP!", $F1
+    db $F7
+    db $F0, "A dead monster", $F1
+    db "can't use a skill.", $F7
+    db $F0, "That can't be used", $F1
+    db "in the field.", $F7
+    db $F0, "The surroundings", $F1
+    db "became clear.", $F7
+    db $F0
 
 ; 1 call site from 1 routine (e.g. Func_01B_44D6)
 ; reads: wC56C, wD780

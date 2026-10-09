@@ -6832,14 +6832,28 @@ Data_014_6FE7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $06, $07, $08, $09, $00, $FF, $FF, $FF, $FF, $FF, $FF
 
 Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $053003, $6A
+    db $05, $70, $0D, $70, $1C, $70, $2B, $70, $4D, $70
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Is ", $F9, "0 correct?", $F0, "Is ", $F9, "0 correct?", $F0, "A monster already", $F1
+    db "has that name.", $F7
+    db $F0, "Sorry, that name", $F1
+    db "can't be used.", $F7
+    db $F0
 
 Data_014_706D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6F, $70, $77, $70, $84, $70, $91, $70, $B2, $70, $EB, $45, $90, $12, $36, $90
     db $F9, $00, $90, $18, $14, $98, $F0, $EB, $45, $90
 
 Data_014_7087:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $053087, $69
+    db $12, $36, $90, $F9, $00, $90, $18, $14, $98, $F0, $EB, $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " That name is", $F1
+    db "already in use.", $F7
+    db $F0, $EB
+    db $45, $90, $1D, $2B, $24, $37, $90, $31, $24, $30, $28, $90, $26, $24, $31, $41
+    db $F1, $25, $28, $90, $38, $36, $28, $27, $B5, $FA, $F7, $F2, $22, $32, $38, $43
+    db $2F, $90, $2B, $24, $39, $28, $90, $37, $32, $90, $38, $36, $28, $F1, $24, $31
+    db $32, $37, $2B, $28, $35, $90, $31, $24, $30, $28, $B5, $F7, $F0
 
 Data_014_70F0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0530F0, $5F
