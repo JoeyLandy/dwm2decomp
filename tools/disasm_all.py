@@ -65,6 +65,8 @@ class Rom:
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
+        self.schemas: list[dict] = []  # config/tables.json
+        self.table_at: dict[tuple[int, int], dict] = {}  # (bank, addr) -> prepared schema
         self.pdata: dict[int, set[int]] = {b: set() for b in range(self.nbanks)}
         self.vetoed = 0  # heuristic candidates rejected by data-pointer evidence
         self.dreason: dict[tuple[int, int], str] = {}  # why a Data_ label exists
@@ -668,6 +670,100 @@ class Rom:
             f"{weak} same-bank loads, "
             f"{sum(len(d) for d in self.dlabels.values())} data labels in total")
 
+    def _u16(self, bank: int, addr: int) -> int:
+        o = bank * BANK + (addr - self.base(bank))
+        return self.data[o] | (self.data[o + 1] << 8)
+
+    def prepare_tables(self) -> None:
+        """Validate config/tables.json against the ROM and register data labels for their
+        pointer targets. Raises if a layout overlaps code or an existing label would fall in
+        the middle of a field (it could not be emitted)."""
+        for t in self.schemas:
+            bank, addr, count = t["bank"], t["addr"], t["count"]
+            fields = t["fields"]
+            sizes = [2 if f["type"] == "ptr" else f.get("size", 1) for f in fields]
+            stride = sum(sizes)
+            end = addr + stride * count
+            cov, dt, dl = self.covered[bank], self.dtab[bank], self.dlabels[bank]
+            if any(a in cov for a in range(addr, end)):
+                raise AssertionError(f"table {t['label']} overlaps decoded code")
+            bounds = set()
+            for i in range(count):
+                p = addr + i * stride
+                for sz in sizes:
+                    bounds.add(p)
+                    p += sz
+            for a in list(dl):
+                if addr < a < end and a not in bounds:
+                    raise AssertionError(f"label {dl[a]} falls inside a field of table {t['label']}")
+            for k in [k for k in dt if addr <= k < end]:
+                del dt[k]  # the schema emits these bytes
+            for i in range(count):
+                p = addr + i * stride
+                vals, q = [], p
+                for f, sz in zip(fields, sizes):  # read the whole record first
+                    o = bank * BANK + (q - self.base(bank))
+                    vals.append(self._u16(bank, q) if f["type"] == "ptr" else self.data[o])
+                    q += sz
+                for fi, f in enumerate(fields):
+                    if f["type"] != "ptr":
+                        continue
+                    tb = vals[f["bank_from"]] if "bank_from" in f else bank
+                    tgt = vals[fi]
+                    if tb in range(self.nbanks) and tb not in self.zero and \
+                            self.base(tb) <= tgt < self.base(tb) + BANK and tgt not in self.covered[tb] \
+                            and not (tb == bank and addr <= tgt < end):
+                        self.dlabels[tb].setdefault(tgt, f"Data_{tb:03X}_{tgt:04X}")
+                        self.dreason.setdefault((tb, tgt), f.get("reason", "pointer in a sound table"))
+            self.table_at[(bank, addr)] = dict(t, stride=stride, end=end, sizes=sizes)
+        log(f"structured tables: {len(self.table_at)} ({sum(t['count'] for t in self.schemas)} records)")
+
+    def emit_table(self, bank: int, t: dict, out: list[str]) -> None:
+        """Emit a schema table: one record per entry, `db` runs and `dw` pointers."""
+        dl = self.dlabels[bank]
+        fields, sizes, stride = t["fields"], t["sizes"], t["stride"]
+        out.append("")
+        out.append(f"; {t['note']}")
+        out.append("; record: " + "; ".join(f["name"] for f in fields))
+        out.append(f"{t['label']}::")
+        for i in range(t["count"]):
+            p = t["addr"] + i * stride
+            vals, q = [], p
+            for f in fields:
+                o = bank * BANK + (q - self.base(bank))
+                vals.append(self._u16(bank, q) if f["type"] == "ptr" else self.data[o])
+                q += 2 if f["type"] == "ptr" else f.get("size", 1)
+            tag = f" ; id {t['id_base'] + i}" if "id_base" in t else f" ; entry {i}"
+            run: list[int] = []
+            tagged = False
+
+            def flush() -> None:
+                nonlocal tagged
+                if run:
+                    out.append("    db " + ", ".join(f"${v:02X}" for v in run) + ("" if tagged else tag))
+                    tagged = True
+                    run.clear()
+
+            q = p
+            for fi, (f, sz) in enumerate(zip(fields, sizes)):
+                if q in dl:
+                    flush()
+                    out.append(f"{dl[q]}:: ; heuristic: {self.dreason.get((bank, q), 'label inside a table')}; C0")
+                if f["type"] == "ptr":
+                    flush()
+                    tb = vals[f["bank_from"]] if "bank_from" in f else bank
+                    tgt = vals[fi]
+                    nm = self.table_at[(tb, tgt)]["label"] if (tb, tgt) in self.table_at else None
+                    nm = nm or self.dlabels.get(tb, {}).get(tgt)
+                    if nm is None and tgt in self.insn.get(tb, {}):
+                        nm = self.labels[tb].get(tgt)
+                    out.append(f"    dw {nm or f'${tgt:04X}'}" + ("" if tagged else tag))
+                    tagged = True
+                else:
+                    run.append(vals[fi])
+                q += sz
+            flush()
+
     def summary(self) -> str:
         code = sum(v[0] if v[0] != "dw" else 2 for ins in self.insn.values() for v in ins.values())
         banks = sum(1 for ins in self.insn.values() if ins)
@@ -701,6 +797,7 @@ class Rom:
         self.structure_data()
         self.find_compressed_assets()
         self.label_data_refs()
+        self.prepare_tables()
 
     # ---- emission -------------------------------------------------------
     def emit_gap(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
@@ -752,6 +849,11 @@ class Rom:
                     out.append(f"; {note}")
                 out.append(f"{labels[pc]}::" + (f" ; {why}; C0" if why else ""))
             it = ins.get(pc)
+            if it is None and (bank, pc) in self.table_at:
+                tbl = self.table_at[(bank, pc)]
+                self.emit_table(bank, tbl, out)
+                pc = tbl["end"]
+                continue
             if it is None:
                 if pc in dl:
                     why = self.dreason.get((bank, pc), "target of a monotone pointer table")
@@ -818,6 +920,11 @@ def main() -> int:
                 bank_s, addr_s = key.split(":")
                 rom.notes[(int(bank_s, 16), int(addr_s, 16))] = text
         log(f"loaded {len(rom.notes)} annotations from {notes_path.name}")
+    tables_path = ROOT / "config/tables.json"
+    if tables_path.exists():
+        for t in json.loads(tables_path.read_text(encoding="utf-8"))["tables"]:
+            rom.schemas.append(dict(t, bank=int(t["bank"], 16), addr=int(t["addr"], 16)))
+        log(f"loaded {len(rom.schemas)} table layouts from {tables_path.name}")
     rom.run()
     if "--export-streams" in sys.argv:
         dest = Path(sys.argv[sys.argv.index("--export-streams") + 1])

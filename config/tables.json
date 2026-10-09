@@ -1,0 +1,130 @@
+{
+  "_comment": "Understood table layouts, emitted field by field by tools/disasm_all.py. Each table: bank, addr (hex CPU address), label (an alias; Data_BBB_AAAA labels are kept), count, id_base (optional; record index + id_base is shown in comments), fields (db N bytes | ptr = 16-bit pointer into the same bank), and note. Every layout cites its evidence in docs/EVIDENCE_LOG.md. Field names state only what the evidence supports.",
+  "tables": [
+    {
+      "bank": "00",
+      "addr": "3E13",
+      "label": "SoundBankTable",
+      "count": 4,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "first sound id of this range"
+        },
+        {
+          "type": "ptr",
+          "name": "record array in that bank",
+          "bank_from": 2,
+          "reason": "sound record array named by the bank table"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank holding the records and tracks"
+        }
+      ],
+      "note": "E-0018 (C2: static reading of Func_000_3354, and 495 emulated sound starts read exactly the banks this table names). Func_000_3354 takes the first entry whose first byte is greater than the sound id; the PREVIOUS entry gives the base id, record array and bank. A first byte of $FF ends the table."
+    },
+    {
+      "bank": "40",
+      "addr": "4001",
+      "label": "SoundRecords_Bank40",
+      "count": 28,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "channel-state slot offset (added to $DC00)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "copied to slot byte +2 (meaning unverified)"
+        },
+        {
+          "type": "ptr",
+          "name": "track stream (stored at slot +3/+4, with this bank at +5)",
+          "reason": "track stream of a sound record"
+        }
+      ],
+      "note": "E-0018 (C2 for the fields, C0 for the meaning of the second byte and of the streams). Sound ids 0-27."
+    },
+    {
+      "bank": "41",
+      "addr": "4001",
+      "label": "SoundRecords_Bank41",
+      "count": 21,
+      "id_base": 28,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "channel-state slot offset (added to $DC00)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "copied to slot byte +2 (meaning unverified)"
+        },
+        {
+          "type": "ptr",
+          "name": "track stream (stored at slot +3/+4, with this bank at +5)",
+          "reason": "track stream of a sound record"
+        }
+      ],
+      "note": "E-0018. Sound ids 28-48."
+    },
+    {
+      "bank": "42",
+      "addr": "4001",
+      "label": "SoundRecords_Bank42",
+      "count": 119,
+      "id_base": 49,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "channel-state slot offset (added to $DC00)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "copied to slot byte +2 (meaning unverified)"
+        },
+        {
+          "type": "ptr",
+          "name": "track stream (stored at slot +3/+4, with this bank at +5)",
+          "reason": "track stream of a sound record"
+        }
+      ],
+      "note": "E-0018. Sound ids 49-167."
+    },
+    {
+      "bank": "43",
+      "addr": "4001",
+      "label": "SoundRecords_Bank43",
+      "count": 55,
+      "id_base": 168,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "channel-state slot offset (added to $DC00)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "copied to slot byte +2 (meaning unverified)"
+        },
+        {
+          "type": "ptr",
+          "name": "track stream (stored at slot +3/+4, with this bank at +5)",
+          "reason": "track stream of a sound record"
+        }
+      ],
+      "note": "E-0018. Sound ids 168-222: the array ends at $40DD and track streams follow; the bank table nominally covers ids up to 254, but no records exist for 223-254."
+    }
+  ]
+}

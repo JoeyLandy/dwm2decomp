@@ -44,12 +44,15 @@ class GameBoy:
         self.on_write = None
         self.cur_pc = 0
         self.pc_hooks = {}  # address -> callable(gb), called before the instruction there runs
+        self.on_rom_read = None  # callable(pc, bank, addr) for reads in the switchable window
 
     # ---- memory -------------------------------------------------------------
     def rb(self, a: int) -> int:
         if a < 0x4000:
             return self.rom[a]
         if a < 0x8000:
+            if self.on_rom_read:
+                self.on_rom_read(self.cur_pc, self.rombank, a)
             return self.rom[(self.rombank % self.nrom) * 0x4000 + a - 0x4000]
         if a < 0xA000:
             return self.vram[self.io[0x4F] & 1][a - 0x8000]

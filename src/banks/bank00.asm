@@ -8172,6 +8172,7 @@ Func_000_334E::
 Func_000_3351::
     call Func_000_3354
 
+; C2 static reading, and 495 emulated sound starts agree (E-0018): starts sound id A (kept in $DD10). Finds A's range in SoundBankTable, switches to that bank, takes the 4-byte record at (array + 4*(A - first id)), and copies it into the channel-state slot at $DC00 + record byte 0 (record byte 1 to slot +2, the track pointer to +3/+4, this bank to +5). Returns A + 1.
 Func_000_3354::
     push bc
     push de
@@ -8289,6 +8290,7 @@ Jump_000_33AA::
     pop bc
     ret
 
+; C1 (E-0018): appears to be the sound engine's update routine. It switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes the sound registers (including $FF1A). Identified from those writes and from the banks it reads at runtime ($40-$43 via the tables above); not decoded further.
 Func_000_33E8::
     ld a, [$4000]
     push af
@@ -9717,7 +9719,22 @@ Jump_000_3DFB::
     pop bc
     pop de
     ret
-    db $00, $01, $40, $40, $1C, $01, $40, $41, $31, $01, $40, $42, $A8, $01, $40, $43
+
+; E-0018 (C2: static reading of Func_000_3354, and 495 emulated sound starts read exactly the banks this table names). Func_000_3354 takes the first entry whose first byte is greater than the sound id; the PREVIOUS entry gives the base id, record array and bank. A first byte of $FF ends the table.
+; record: first sound id of this range; record array in that bank; ROM bank holding the records and tracks
+SoundBankTable::
+    db $00 ; entry 0
+    dw SoundRecords_Bank40
+    db $40
+    db $1C ; entry 1
+    dw SoundRecords_Bank41
+    db $41
+    db $31 ; entry 2
+    dw SoundRecords_Bank42
+    db $42
+    db $A8 ; entry 3
+    dw SoundRecords_Bank43
+    db $43
     db $FF, $FF
 
 Func_000_3E25::
