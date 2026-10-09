@@ -1,6 +1,9 @@
 SECTION "Bank 27", ROMX[$4000], BANK[$27]
     db $27
 
+; 6 call sites from 6 routines (e.g. Func_001_5EAF, Func_004_44CE, Func_004_4C96, Func_004_4D43, ...)
+; reads: hFFAD, hFFB0
+; writes: hFFB0
 Func_027_4001::
     ldh a, [hFFAD]
     ld e, a
@@ -145,6 +148,10 @@ Data_027_401E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_027_411C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $09C11C, $80
 
+; 1 call site from 1 routine (e.g. Func_027_4001)
+; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hFFB1
+; points at: hFFB5
 Func_027_419C::
     ldh a, [hFFB1]
     cp a, $27
@@ -610,6 +617,8 @@ Jump_027_43C2::
     jr nz, Jump_027_4367
     ret
 
+; 2 call sites from 1 routine (e.g. Func_027_419C)
+; reads: hFFA5, hFFA1, hFFBA, rSTAT
 Func_027_43E2::
     push hl
     push bc

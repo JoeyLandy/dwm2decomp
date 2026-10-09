@@ -1,6 +1,10 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
+; 1 call site from 1 routine (e.g. Func_060_4035)
+; reads: wCD0C, hFFCE, hFFCF
+; writes: wCC46, hFFCE, hFFCF, hFFC6
+; points at: wCD8B, wCDAC
 Func_084_4001::
     xor a, a
     ld [wCC46], a
@@ -70,6 +74,8 @@ Jump_084_4053::
 Jump_084_405A::
     jr Jump_084_4029
 
+; 1 call site from 1 routine (e.g. Func_084_4001)
+; reads: hFFC6
 Func_084_405C::
     ldh a, [hFFC6]
     rst $00
@@ -348,6 +354,10 @@ Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0B, $01, $00, $0B, $00, $0B
 
+; 2 call sites from 1 routine (e.g. Func_084_405C)
+; reads: wCC46, hFFC8, hFFCA, hFFC6, hFFC9
+; writes: hFFC8, hFFC9, wCC46
+; points at: wCE2C
 Func_084_41F2::
     push af
     ld a, [wCC46]
@@ -488,6 +498,9 @@ Jump_084_429B::
 Data_084_42C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2102C7, $60
 
+; 1 call site from 1 routine (e.g. Func_084_41F2)
+; reads: hFFC9
+; writes: hFFCA
 Func_084_4327::
     push hl
     ld a, e
@@ -530,6 +543,9 @@ Jump_084_434A::
     pop hl
     ret
 
+; 2 call sites from 1 routine (e.g. Func_084_41F2)
+; reads: hFFC9
+; writes: hFFC9, hFFCA
 Func_084_435C::
     push hl
     ld a, e
@@ -595,6 +611,8 @@ Jump_084_439A::
     pop hl
     ret
 
+; 5 call sites from 1 routine (e.g. Func_084_41F2)
+; reads: wCD04
 Func_084_43AC::
     call NextRandomSeed
     ld a, [wCD04]
@@ -603,6 +621,9 @@ Func_084_43AC::
     jr nc, Func_084_43AC
     ret
 
+; 3 call sites from 3 routines (e.g. Func_000_19A9, Func_05F_7969, Func_085_4858)
+; reads: hFF90, hFF8F, hFF92
+; writes: hFFC6
 Func_084_43B8::
     ld hl, Data_084_4461
 
@@ -652,6 +673,9 @@ Jump_084_43E8::
 Jump_084_43F0::
     jr Jump_084_43BB
 
+; 1 call site from 1 routine (e.g. Func_084_43B8)
+; reads: hFFC6, wIsCGB
+; writes: rSVBK
 Func_084_43F2::
     ldh a, [hFFC6]
     cp a, $FF
@@ -750,6 +774,10 @@ Jump_084_4457::
 Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $210461, $361
 
+; 1 call site from 1 routine (e.g. Func_016_4454)
+; reads: hFF8C, wCC44, hFF90, hFF8F, hFF92, hFF8E, hFF91, wC88E, ...
+; writes: hFFD0, wC83B, wC83C, wC83D, wC83E, wC88E, wC88F, wC890, ...
+; points at: wCD7B, wCD8B
 Func_084_47C2::
     xor a, a
     ldh [hFFD0], a
@@ -1056,6 +1084,8 @@ Jump_084_499F::
 Data_084_49A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2109A1, $C9
 
+; 2 call sites from 1 routine (e.g. Func_084_47C2)
+; reads: wC8FE, hFF8E, hFF91, wC8FF
 Func_084_4A6A::
     ld a, [wC8FE]
     cp a, $FF
@@ -1078,6 +1108,9 @@ Jump_084_4A87::
     xor a, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_002_4745)
+; reads: wCC44, hFF90, hFF8F, hFF92, wC83B, wC83E, wC83D, wC83C, ...
+; writes: hFFB9, hFFC6, rSVBK
 Func_084_4A89::
     xor a, a
     ldh [hFFB9], a
@@ -1310,6 +1343,9 @@ Jump_084_4BFE::
     call Func_000_1E29
     ret
 
+; 4 call sites from 1 routine (e.g. Func_084_4A89)
+; reads: wIsCGB, wCC44
+; writes: rSVBK
 Func_084_4C04::
     ld a, c
     and a, $0F
@@ -1406,6 +1442,9 @@ Jump_084_4C77::
 Data_084_4C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $03, $02, $02
 
+; 1 call site from 1 routine (e.g. Func_012_69B0)
+; reads: wC88E, hFFC6, wC891
+; writes: wC88E
 Func_084_4C84::
     ld a, [wC88E]
     or a, a

@@ -1,6 +1,8 @@
 SECTION "Bank 14", ROMX[$4000], BANK[$14]
     db $14
 
+; 1 call site from 1 routine (e.g. Func_010_65FE)
+; reads: wD788
 Func_014_4001::
     ld a, [wD788]
     rst $00
@@ -9,9 +11,15 @@ Func_014_4001::
     dw Func_014_4080
     dw $409E
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wIsCGB
+; points at: wC364, wC198
 Func_014_400D:: ; heuristic: target of a pointer table; C0
     ld hl, wC364
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wIsCGB
+; points at: wC198
 Func_014_4010:: ; heuristic: target of a pointer table; C0
     ld de, wC198
     ld bc, $0104
@@ -21,6 +29,7 @@ Func_014_4010:: ; heuristic: target of a pointer table; C0
     jr z, Jump_014_402B
     db $21
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4020:: ; heuristic: target of a pointer table; C0
     call z, Func_000_11D1
     nop
@@ -32,6 +41,9 @@ Jump_014_402B::
     call Func_014_5800
     db $01, $0D
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD788
+; writes: wD788
 Func_014_4030:: ; heuristic: target of a pointer table; C0
     inc d
     ld de, $01CC
@@ -42,6 +54,9 @@ Func_014_4030:: ; heuristic: target of a pointer table; C0
     ret
     db $3E
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD784, wD785, wD780, wD781, ...
 Func_014_4040:: ; heuristic: target of a pointer table; C0
     sbc a, h
     ld [wD7F1], a
@@ -52,6 +67,9 @@ Func_014_4040:: ; heuristic: target of a pointer table; C0
     ld [wD7F3], a
     ld a, e
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5
+; writes: wD7F4, wD784, wD785, wD780, wD781, wC46B
 Func_014_4050:: ; heuristic: target of a pointer table; C0
     ld [wD7F4], a
     farcall Func_01D_6C14
@@ -60,6 +78,8 @@ Func_014_4050:: ; heuristic: target of a pointer table; C0
     ret nz
     xor a, a
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD784, wD785, wD780, wD781, wC46B
 Func_014_4060:: ; heuristic: target of a pointer table; C0
     ld [wD784], a
     ld [wD785], a
@@ -68,6 +88,8 @@ Func_014_4060:: ; heuristic: target of a pointer table; C0
     ld [wC46B], a
     db $FA
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD788, wC920, wC919
 Func_014_4070:: ; heuristic: target of a pointer table; C0
     adc a, b
     rst $10
@@ -79,6 +101,10 @@ Func_014_4070:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD788
+; writes: wD788
+; points at: wC52D
 Func_014_4080:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles1 + $500
     ld bc, $0F01
@@ -88,6 +114,9 @@ Func_014_4080:: ; heuristic: target of a pointer table; C0
     ld [hl+], a
     ld a, $88
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD788
+; writes: wD788
 Func_014_4090:: ; heuristic: target of a pointer table; C0
     ld [hl+], a
     ld a, $02
@@ -99,6 +128,8 @@ Func_014_4090:: ; heuristic: target of a pointer table; C0
     ret
     db $21, $AD
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7F0, wD788
 Func_014_40A0:: ; heuristic: target of a pointer table; C0
     ld h, d
     ld b, $1D
@@ -109,6 +140,8 @@ Func_014_40A0:: ; heuristic: target of a pointer table; C0
     ld bc, $006F
     db $21, $80
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: hFFBA, wC920, wC919
 Func_014_40B0:: ; heuristic: target of a pointer table; C0
     rst $10
 
@@ -128,6 +161,8 @@ Jump_014_40B1::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_65F7)
+; reads: wD780
 Func_014_40CC::
     ld a, [wD780]
     rst $00
@@ -152,6 +187,8 @@ Jump_014_40EE::
     xor a, a
     ld [hl+], a
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC364, wC198
 Func_014_40F0:: ; heuristic: target of a pointer table; C0
     dec bc
     ld a, b
@@ -162,6 +199,10 @@ Func_014_40F0:: ; heuristic: target of a pointer table; C0
     ld bc, $0104
     db $CD, $E5
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wIsCGB
+; writes: wD7F0, hFFBA, wC920, wC919
+; points at: wD1CC, wD000, wD780
 Func_014_4100:: ; heuristic: target of a pointer table; C0
     ld d, a
     ld a, [wIsCGB]
@@ -171,6 +212,9 @@ Func_014_4100:: ; heuristic: target of a pointer table; C0
     ld de, wD000
     ld bc, $0104
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7F0, hFFBA, wC920, wC919
+; points at: wD780
 Func_014_4110:: ; heuristic: target of a pointer table; C0
     call Func_014_57EE
 
@@ -182,6 +226,8 @@ Jump_014_4113::
     xor a, a
     ld hl, wD780
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC920, wC919
 Func_014_4120:: ; heuristic: target of a pointer table; C0
     inc [hl]
     xor a, a
@@ -198,11 +244,14 @@ Jump_014_412B::
     dw $414F
     dw Func_014_415D
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4137:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_6C8A
     ret
     db $21, $28
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
 Func_014_4140:: ; heuristic: target of a pointer table; C0
     ld e, d
     ld de, Data_014_5A84
@@ -214,6 +263,9 @@ Func_014_4140:: ; heuristic: target of a pointer table; C0
     ret
     db $21
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
 Func_014_4150:: ; heuristic: target of a pointer table; C0
     ld a, c
     ld e, [hl]
@@ -224,9 +276,17 @@ Func_014_4150:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD780
+; writes: wD781, wD780
+; points at: wC364
 Func_014_415D:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5AC4
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD780
+; writes: wD781, wD780
+; points at: wC364
 Func_014_4160:: ; heuristic: target of a pointer table; C0
     ld hl, wC364
     ld bc, $0A09
@@ -249,6 +309,9 @@ Jump_014_418A::
     bit 6, a
     db $20
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC562, wD786, wD780
+; writes: wD7FA, wC920, wC919, wD780, wD7AB, wD7AD, wD7AF, wD786
 Func_014_4190:: ; heuristic: target of a pointer table; C0
     dec d
     bit 7, a
@@ -262,6 +325,8 @@ Func_014_4190:: ; heuristic: target of a pointer table; C0
     ret
     db $CD, $5D, $42, $FA, $86, $D7, $A7, $20, $0E, $3E
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD786
 Func_014_41B0:: ; heuristic: target of a pointer table; C0
     inc bc
     ld [wD786], a
@@ -290,6 +355,7 @@ Jump_014_41D4::
     xor a, a
     db $EA
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_41E0:: ; heuristic: target of a pointer table; C0
     add a, [hl]
     rst $10
@@ -305,6 +371,9 @@ Jump_014_41EB::
 Jump_014_41EE::
     ld a, $69
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786, wD780
+; writes: wD7FA, wD780, wD7AB, wD7AD, wD7AF, wC920, wC919
 Func_014_41F0:: ; heuristic: target of a pointer table; C0
     call StoreWC60B
     call Func_014_4261
@@ -317,6 +386,9 @@ Jump_014_41F8::
     push bc
     push hl
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786, wD780
+; writes: wD7FA, wD780, wD7AB, wD7AD, wD7AF, wC920, wC919
 Func_014_4200:: ; heuristic: target of a pointer table; C0
     call Func_014_5902
     pop hl
@@ -328,6 +400,9 @@ Func_014_4200:: ; heuristic: target of a pointer table; C0
     ld a, [wD786]
     cp a, $03
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD780
+; writes: wD7FA, wD780, wD7AB, wD7AD, wD7AF, wC920, wC919
 Func_014_4210:: ; heuristic: target of a pointer table; C0
     jr z, Func_014_4230
     ld [wD7FA], a
@@ -337,6 +412,8 @@ Func_014_4210:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD7AB], a
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7AD, wD7AF, wC920, wC919
 Func_014_4220:: ; heuristic: target of a pointer table; C0
     ld [wD7AD], a
     ld [wD7AF], a
@@ -346,6 +423,8 @@ Func_014_4220:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FA, wC920, wC919
 Func_014_4230:: ; heuristic: target of a pointer table; C0
     ld a, $03
     ld [wD7FA], a
@@ -356,6 +435,9 @@ Func_014_4230:: ; heuristic: target of a pointer table; C0
     ret
     db $FA
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD787, wD786
+; writes: wD787
 Func_014_4240:: ; heuristic: target of a pointer table; C0
     ld h, h
     push bc
@@ -367,23 +449,33 @@ Func_014_4240:: ; heuristic: target of a pointer table; C0
     cp a, $10
     db $38
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786
+; writes: wD787
 Func_014_4250:: ; heuristic: target of a pointer table; C0
     ld [$18FE], sp
     jr c, Func_014_425D
     xor a, a
     ld [wD787], a
 
+; 1 call site from 1 routine (e.g. Func_014_41B0)
+; reads: wD786
 Func_014_4259::
     ld b, $BB
     jr Jump_014_4263
 
+; 1 call site from 1 routine (e.g. Func_014_41B0)
 Func_014_425D::
     ld b, $C3
     db $18
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786
 Func_014_4260:: ; heuristic: target of a pointer table; C0
     ld [bc], a
 
+; 1 call site from 1 routine (e.g. Func_014_41F0)
+; reads: wD786
 Func_014_4261::
     ld b, $BC
 
@@ -399,6 +491,7 @@ Jump_014_4263::
 Jump_014_426F::
     ld e, [hl]
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4270:: ; heuristic: target of a pointer table; C0
     inc hl
     ld d, [hl]
@@ -430,6 +523,9 @@ Jump_014_429B::
     ld hl, Func_01D_5ECE
     ld b, $1D
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD780, wD7A9
+; writes: wD780, wD7FA, wD781, wC920, wC919
 Func_014_42A0:: ; heuristic: target of a pointer table; C0
     rst $10
     ld a, [wD780]
@@ -440,6 +536,9 @@ Func_014_42A0:: ; heuristic: target of a pointer table; C0
     jr z, Jump_014_42F1
     db $21, $F8
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5
+; writes: wD781, wD7FA, wD7AF, wD7AB, wC920, wC919
 Func_014_42B0:: ; heuristic: target of a pointer table; C0
     ld l, l
     ld b, $1D
@@ -449,6 +548,8 @@ Func_014_42B0:: ; heuristic: target of a pointer table; C0
     cp a, c
     jr c, Jump_014_42DA
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD7FA, wD7AF, wD7AB, wC920, wC919
 Func_014_42C0:: ; heuristic: target of a pointer table; C0
     ld a, $1E
     ld [wD781], a
@@ -458,6 +559,8 @@ Func_014_42C0:: ; heuristic: target of a pointer table; C0
     ld [wD7AF], a
     ld [wD7AB], a
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC920, wC919
 Func_014_42D0:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wC920], a
@@ -470,6 +573,8 @@ Jump_014_42DA::
     ld [wD781], a
     ld a, $02
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FA, wD7AF, wC920, wC919
 Func_014_42E0:: ; heuristic: target of a pointer table; C0
     ld [wD7FA], a
     xor a, a
@@ -542,6 +647,8 @@ Jump_014_4359::
     inc a
     db $EA, $80
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC920, wC919
 Func_014_4370:: ; heuristic: target of a pointer table; C0
     rst $10
     xor a, a
@@ -553,9 +660,13 @@ Func_014_4370:: ; heuristic: target of a pointer table; C0
 Jump_014_437B::
     ld a, $04
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FA, wD782, wD781, wD780, wC920, wC919
 Func_014_437D:: ; heuristic: target of a pointer table; C0
     ld [wD7FA], a
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD782, wD781, wD780, wC920, wC919
 Func_014_4380:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD782], a
@@ -575,6 +686,8 @@ Jump_014_4396::
     ld [wD782], a
     db $EA
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD780, wC920, wC919
 Func_014_43A0:: ; heuristic: target of a pointer table; C0
     add a, c
     rst $10
@@ -595,6 +708,8 @@ Jump_014_43B1::
     ld a, $02
     db $EA
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC920, wC919
 Func_014_43C0:: ; heuristic: target of a pointer table; C0
     add a, b
     rst $10
@@ -605,6 +720,9 @@ Func_014_43C0:: ; heuristic: target of a pointer table; C0
     ret
     db $21, $CE, $5E, $06
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7A9, wD780
+; writes: wD7FA, wD780, wC920, wC919
 Func_014_43D0:: ; heuristic: target of a pointer table; C0
     dec e
     rst $10
@@ -616,6 +734,8 @@ Func_014_43D0:: ; heuristic: target of a pointer table; C0
     ld a, $02
     db $EA
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD782, wC920, wC919
 Func_014_43E0:: ; heuristic: target of a pointer table; C0
     add a, b
     rst $10
@@ -636,6 +756,8 @@ Jump_014_43F3::
     ld [wD780], a
     xor a, a
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC920, wC919
 Func_014_4400:: ; heuristic: target of a pointer table; C0
     ld [wC920], a
     ld a, $80
@@ -742,6 +864,9 @@ Jump_014_4446::
     db $75, $4A, $A8, $4C, $BC, $4C, $2B, $4D, $CD, $32, $49, $21, $CE, $5E, $06, $1D
     db $D7, $FA, $F5, $D7, $67, $FA, $F6, $D7, $6F, $7E, $EA, $B4, $D7, $FA
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AF, wD7B4
+; writes: wD7B5, wD7B6, wD7AB, wD7AF
 Func_014_44F0:: ; heuristic: target of a pointer table; C0
     xor a, e
     rst $10
@@ -757,10 +882,18 @@ Func_014_44F0:: ; heuristic: target of a pointer table; C0
     ld [wD7AF], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD7B5, wD7B6
+; writes: wD7AB, wD7AF, wD7FA, wD781, wC920, wC919
+; points at: wC52D
 Func_014_450C:: ; heuristic: target of a pointer table; C0
     call Func_014_5800
     push hl
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD7B5, wD7B6
+; writes: wD7AB, wD7AF, wD7FA, wD781, wC920, wC919
+; points at: wC52D
 Func_014_4510:: ; heuristic: target of a pointer table; C0
     ld a, [wD7AB]
     add a, a
@@ -821,6 +954,9 @@ Jump_014_451C::
 Data_014_4586:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7FA, wD7AB
+; writes: wD7FA, wD781, wD782, wC920, wC919
 Func_014_4590:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_6540
     ld a, [wD7F9]
@@ -839,6 +975,9 @@ Jump_014_45A5::
     ld hl, Data_014_5CA3
     db $06
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wD782, wC920, wC919
 Func_014_45B0:: ; heuristic: target of a pointer table; C0
     dec e
     rst $10
@@ -850,6 +989,8 @@ Jump_014_45B8::
     ld a, [wD7AB]
     ld b, $C3
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FA, wD781, wD782, wC920, wC919
 Func_014_45C0:: ; heuristic: target of a pointer table; C0
     ld hl, Data_014_5B1E
     call Func_014_5902
@@ -858,6 +999,8 @@ Func_014_45C0:: ; heuristic: target of a pointer table; C0
     ld a, $3B
     ld [wD781], a
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD782, wC920, wC919
 Func_014_45D0:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD782], a
@@ -868,6 +1011,10 @@ Func_014_45D0:: ; heuristic: target of a pointer table; C0
     ret
     db $FA, $82
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B4, wD7F5, wD7F6, wD781
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7B4, wD782, ...
+; points at: wC986, sB356, sA000
 Func_014_45E0:: ; heuristic: target of a pointer table; C0
     rst $10
     and a, a
@@ -885,6 +1032,9 @@ Func_014_45E0:: ; heuristic: target of a pointer table; C0
     ld a, l
     db $EA
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7B4, wD782
+; writes: wD7F4, wD7F1, wD7F2, wD7B4, wD782
 Func_014_4600:: ; heuristic: target of a pointer table; C0
     di
     rst $10
@@ -934,6 +1084,9 @@ Jump_014_4654::
     pop hl
     ld a, l
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: wD7F3, wD7F4, wD7F1, wD7F2, wD7B4, wD782, wD781
 Func_014_4660:: ; heuristic: target of a pointer table; C0
     ld [wD7F3], a
     ld a, h
@@ -941,6 +1094,9 @@ Func_014_4660:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_7492
     ld a, [wD7F5]
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: wD7F1, wD7F2, wD7B4, wD782, wD781
 Func_014_4670:: ; heuristic: target of a pointer table; C0
     cp a, $FF
     ret nz
@@ -949,6 +1105,9 @@ Func_014_4670:: ; heuristic: target of a pointer table; C0
     ld h, a
     ld a, [wD7F6]
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD781
+; writes: wD7F1, wD7F2, wD7B4, wD782, wD781
 Func_014_4680:: ; heuristic: target of a pointer table; C0
     ld l, a
     ld a, [hl]
@@ -965,6 +1124,10 @@ Func_014_4680:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B4
+; writes: rRAMG2, rRAMB, wD7B5, wD7B6, wD7B4, wD7AB, wD7AD, wD7AF, ...
+; points at: sB356, wC986, sA000
 Func_014_46A1:: ; heuristic: target of a pointer table; C0
     ld a, $0A
     ld [rRAMG2], a
@@ -1001,6 +1164,8 @@ Jump_014_46C6::
     ld [wD7B4], a
     farcall Func_01D_5E79
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7AB, wD7AD, wD7AF, wD7AC, wD7AE
 Func_014_46E0:: ; heuristic: target of a pointer table; C0
     call Func_014_4932
     xor a, a
@@ -1011,12 +1176,16 @@ Func_014_46E0:: ; heuristic: target of a pointer table; C0
     ld [wD7AE], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC52D, wD781
 Func_014_46F4:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles1 + $270
     ld bc, $0901
     call Func_000_1881
     ld hl, vTiles1 + $780
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC52D, wD781
 Func_014_4700:: ; heuristic: target of a pointer table; C0
     ld bc, $0501
     call Func_000_1881
@@ -1027,6 +1196,8 @@ Func_014_4700:: ; heuristic: target of a pointer table; C0
     ld [hl+], a
     ld a, $02
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
 Func_014_4710:: ; heuristic: target of a pointer table; C0
     ld [hl+], a
     ld [hl], $12
@@ -1034,11 +1205,14 @@ Func_014_4710:: ; heuristic: target of a pointer table; C0
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB
 Func_014_4718:: ; heuristic: target of a pointer table; C0
     ld a, [wD7AB]
     ld b, $BB
     ld hl, $5B1E
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4720:: ; heuristic: target of a pointer table; C0
     call Func_014_5902
     call Func_014_5800
@@ -1047,6 +1221,9 @@ Func_014_4720:: ; heuristic: target of a pointer table; C0
     call Func_014_585B
     db $FA
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
 Func_014_4730:: ; heuristic: target of a pointer table; C0
     xor a, e
     rst $10
@@ -1058,6 +1235,9 @@ Func_014_4730:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD7F2, wD781
 Func_014_4742:: ; heuristic: target of a pointer table; C0
     ld c, $0D
     ld hl, $01D4
@@ -1066,6 +1246,9 @@ Func_014_4742:: ; heuristic: target of a pointer table; C0
     ld [wD7F1], a
     ld a, $0C
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F2, wD781
 Func_014_4750:: ; heuristic: target of a pointer table; C0
     ld [wD7F2], a
     call Func_014_5925
@@ -1075,6 +1258,9 @@ Func_014_4750:: ; heuristic: target of a pointer table; C0
     ret
     db $CD, $00
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
 Func_014_4760:: ; heuristic: target of a pointer table; C0
     ld e, b
     ld bc, $140D
@@ -1085,6 +1271,8 @@ Func_014_4760:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
 Func_014_4772:: ; heuristic: target of a pointer table; C0
     ld hl, Data_014_5C36
     ld de, Data_014_5C4A
@@ -1095,6 +1283,8 @@ Func_014_4772:: ; heuristic: target of a pointer table; C0
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
 Func_014_4783:: ; heuristic: target of a pointer table; C0
     ld hl, Data_014_5C8A
     ld de, Data_014_5C9A
@@ -1105,6 +1295,10 @@ Func_014_4783:: ; heuristic: target of a pointer table; C0
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7AD, wD7AE, wD781
+; points at: wC410
 Func_014_4794:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_47C0
     ld hl, wC410
@@ -1130,11 +1324,13 @@ Data_014_47C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $FA, $63, $C5, $CB, $77, $20, $15, $CB
     db $7F, $20, $2B, $FA, $62, $C5, $CB, $47, $C2, $2E, $48, $CB, $4F, $C2, $D7, $48
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4800:: ; heuristic: target of a pointer table; C0
     call Func_014_48ED
     ret
     db $CD, $0B, $49, $FA, $AD, $D7, $A7, $20, $04, $3E, $01, $18
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4810:: ; heuristic: target of a pointer table; C0
     ld bc, $EA3D
     xor a, l
@@ -1145,6 +1341,8 @@ Func_014_4810:: ; heuristic: target of a pointer table; C0
     ret
     db $CD, $0B
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AD
 Func_014_4820:: ; heuristic: target of a pointer table; C0
     ld c, c
     ld a, [wD7AD]
@@ -1159,6 +1357,9 @@ Jump_014_482B::
     db $3E, $69, $CD, $78, $12, $CD, $0F, $49, $FA, $AD, $D7, $A7, $C2, $AC, $48, $FA
     db $80, $D7
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7B2, wD7B3, wD780, wD781, wD782, wD7FA, wC920, wC919
 Func_014_4840:: ; heuristic: target of a pointer table; C0
     cp a, $05
     jr z, Jump_014_486D
@@ -1171,6 +1372,8 @@ Jump_014_4848::
     jr c, Jump_014_485E
     db $3E
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7B2, wD7B3, wD780, wD781, wD782, wD7FA, wC920, wC919
 Func_014_4850:: ; heuristic: target of a pointer table; C0
     inc b
     ld [wD7B2], a
@@ -1182,6 +1385,8 @@ Func_014_4850:: ; heuristic: target of a pointer table; C0
 Jump_014_485E::
     ld a, $04
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7B2, wD7B3, wD780, wD781, wD782, wD7FA, wC920, wC919
 Func_014_4860:: ; heuristic: target of a pointer table; C0
     ld [wD7B2], a
     ld a, $12
@@ -1192,6 +1397,8 @@ Func_014_4860:: ; heuristic: target of a pointer table; C0
 Jump_014_486D::
     ld a, [wD781]
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7B2, wD7B3, wD780, wD781, wD782, wD7FA, wC920, wC919
 Func_014_4870:: ; heuristic: target of a pointer table; C0
     cp a, $2E
     jr c, Jump_014_4883
@@ -1201,6 +1408,8 @@ Func_014_4870:: ; heuristic: target of a pointer table; C0
     ld [wD7B3], a
     ld a, $09
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD780, wD781, wD782, wD7FA, wC920, wC919
 Func_014_4880:: ; heuristic: target of a pointer table; C0
     jp Jump_014_488F
 
@@ -1225,6 +1434,9 @@ Jump_014_488F::
     ret
     db $FA, $80, $D7, $FE
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7FA, wD781, wC920, wC919
 Func_014_48B0:: ; heuristic: target of a pointer table; C0
     inc b
     jr nz, Func_014_48C0
@@ -1234,6 +1446,9 @@ Func_014_48B0:: ; heuristic: target of a pointer table; C0
     call Func_014_578E
     call Func_014_574E
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7FA, wD781, wC920, wC919
 Func_014_48C0:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wD7FA], a
@@ -1247,6 +1462,8 @@ Func_014_48C0:: ; heuristic: target of a pointer table; C0
     ret
     db $3E, $02, $EA, $FA, $D7, $FA, $81, $D7, $3C
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wC920, wC919
 Func_014_48E0:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     xor a, a
@@ -1255,9 +1472,15 @@ Func_014_48E0:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_4800)
+; reads: wC564, wD7AE, wD7AD
+; writes: wD7AE
 Func_014_48ED::
     ld a, [wC564]
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AE, wD7AD
+; writes: wD7AE
 Func_014_48F0:: ; heuristic: target of a pointer table; C0
     cp a, $14
     jr c, Func_014_4907
@@ -1271,6 +1494,8 @@ Func_014_48F0:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD7AE], a
 
+; 1 call site from 1 routine (e.g. Func_014_4810)
+; reads: wD7AD
 Func_014_4907::
     ld b, $BB
     jr Jump_014_4911
@@ -1280,6 +1505,8 @@ Jump_014_490B::
     jr Jump_014_4911
     db $06
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AD
 Func_014_4910:: ; heuristic: target of a pointer table; C0
     cp a, h
 
@@ -1310,6 +1537,10 @@ Jump_014_491D::
 Data_014_492E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $01, $6D, $01
 
+; 4 call sites from 4 routines (e.g. Func_014_46E0, Func_014_543F, Func_014_5171, Func_014_511F)
+; reads: wD7AB, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC410
 Func_014_4932:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_4965
     ld hl, wC410
@@ -1335,6 +1566,7 @@ Func_014_4932:: ; heuristic: target of a pointer table; C0
 Data_014_4965:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_496D:: ; heuristic: target of a pointer table; C0
     ld de, Data_01F_4330
     ld hl, vTiles2 + $730
@@ -1344,6 +1576,10 @@ Func_014_496D:: ; heuristic: target of a pointer table; C0
     ld a, $6C
     db $CD
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786, wD781
+; writes: wD781, wD7FA
+; points at: wC412
 Func_014_497D:: ; heuristic: target of a pointer table; C0
     ld a, b
     ld [de], a
@@ -1354,6 +1590,9 @@ Func_014_497D:: ; heuristic: target of a pointer table; C0
     ld a, [wD786]
     ld b, $BC
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wD7FA
 Func_014_4990:: ; heuristic: target of a pointer table; C0
     ld hl, Data_014_5B1E
     call Func_014_5902
@@ -1372,10 +1611,14 @@ Data_014_49AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
     db $C3, $B7, $B6, $C3, $EF, $73, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_49CC:: ; heuristic: target of a pointer table; C0
     ld hl, $6540
     db $06
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7FA, wD781
+; writes: wD781, wD782, wC920, wC919, wD7FA, wD780
 Func_014_49D0:: ; heuristic: target of a pointer table; C0
     dec e
     rst $10
@@ -1404,6 +1647,9 @@ Jump_014_49E0::
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7FA, wD781
+; writes: wD781, wD782, wC920, wC919, wD7FA, wD780
 Func_014_4A00:: ; heuristic: target of a pointer table; C0
     ld a, [wD7FA]
     cp a, $01
@@ -1420,6 +1666,10 @@ Func_014_4A00:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; 2 call sites from 2 routines (e.g. Func_014_49D0, Func_014_4A00)
+; reads: wIsCGB, rSVBK
+; writes: rSVBK
+; points at: wC412, wC246, wD27A, wD0AE
 Func_014_4A1F::
     ld hl, wC412
     ld de, wC246
@@ -1446,6 +1696,7 @@ Jump_014_4A47::
     call Func_014_585B
     ret
 
+; 2 call sites from 1 routine (e.g. Func_014_4A1F)
 Func_014_4A54::
     push hl
     push de
@@ -1472,6 +1723,7 @@ Jump_014_4A6E::
     inc c
     ld a, c
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4A70:: ; heuristic: target of a pointer table; C0
     cp a, $05
     jr c, Func_014_4A54
@@ -1504,6 +1756,10 @@ Data_014_4AA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_4B02:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $050B02, $58
 
+; 1 call site from 1 routine (e.g. Func_014_51E9)
+; reads: wD781
+; writes: wD781
+; points at: wC364
 Func_014_4B5A:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles1 + $240
     ld bc, $0C01
@@ -1526,11 +1782,19 @@ Func_014_4B5A:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC42E, wC42F
 Func_014_4B92:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_5ECE
     jr Func_014_4BA0
     db $21, $2D, $5F, $06, $1D, $D7
 
+; 2 call sites from 2 routines (e.g. Func_014_4510, Func_014_4FCC)
+; reads: wD7B0, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC42E, wC42F
 Func_014_4BA0::
     farcall Func_01E_7163
     ld a, [wD7B0]
@@ -1559,10 +1823,15 @@ Jump_014_4BDB::
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4BE3:: ; heuristic: target of a pointer table; C0
     farcall Func_01F_5C15
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: wD7F1, wD781
+; points at: wC36C
 Func_014_4BEA:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_5D84
     ld a, [wD7F5]
@@ -1585,6 +1854,9 @@ Func_014_4BEA:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: wD7F1, wD781
 Func_014_4C1C:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_5D84
     ld a, [wD7F5]
@@ -1599,6 +1871,10 @@ Func_014_4C1C:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD7AB
+; writes: wD7F9, wD781, wD7FA, wC920, wC919
+; points at: wC52D
 Func_014_4C3C:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD7F9], a
@@ -1660,6 +1936,9 @@ Jump_014_4C9F::
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
 Func_014_4CA8:: ; heuristic: target of a pointer table; C0
     ld hl, Data_014_5C5E
     ld de, Data_014_5C74
@@ -1671,6 +1950,9 @@ Func_014_4CA8:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
 Func_014_4CBC:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_62AD
     farcall Func_01D_5E79
@@ -1679,6 +1961,10 @@ Func_014_4CBC:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786
+; writes: wD781, wD7FA, wC920, wC919
+; points at: wC364
 Func_014_4CD0:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5AC4
     ld hl, wC364
@@ -1704,6 +1990,8 @@ Func_014_4CD0:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wC920, wC919
 Func_014_4D10:: ; heuristic: follows a terminator; C0
     call Func_014_5800
     ld bc, $140D
@@ -1717,6 +2005,9 @@ Func_014_4D10:: ; heuristic: follows a terminator; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD780, wD7FA, wC920, wC919
+; points at: wC364
 Func_014_4D2B:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5AC4
     ld hl, wC364
@@ -1816,14 +2107,23 @@ Jump_014_4D64::
     dw Func_014_4772
     db $75, $4A, $A8, $4C, $BC, $4C, $2B, $4D
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC42E, wC42F
 Func_014_4DFE:: ; heuristic: target of a pointer table; C0
     farcall Func_015_77AC
     jp Func_014_4BA0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_4E07:: ; heuristic: target of a pointer table; C0
     farcall Func_015_77FB
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: wD7F1, wD781
+; points at: wC36C
 Func_014_4E0E:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_5D84
     ld a, [wD7F5]
@@ -1847,6 +2147,9 @@ Func_014_4E0E:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: wD7F1, wD781
 Func_014_4E46:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_5D84
     ld a, [wD7F5]
@@ -1861,6 +2164,9 @@ Func_014_4E46:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7FA, wD781, wD7AB
+; writes: wD781, wD782, wC920, wC919, wD7FA
 Func_014_4E66:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_6540
     ld a, [wD7F9]
@@ -1908,6 +2214,10 @@ Jump_014_4EA7::
     ld [wC919], a
     ret
 
+; 4 call sites from 3 routines (e.g. Func_014_4E66, Func_014_45B0, Func_014_5603)
+; reads: wIsCGB, rSVBK
+; writes: rSVBK
+; points at: wC412, wC246, wD27A, wD0AE
 Func_014_4EBF::
     ld hl, wC412
     ld de, wC246
@@ -1958,6 +2268,7 @@ Data_014_4F24:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_4F2A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00
 
+; 4 call sites from 1 routine (e.g. Func_014_4EBF)
 Func_014_4F30::
     push hl
     push de
@@ -1987,6 +2298,8 @@ Jump_014_4F4A::
     jr c, Func_014_4F30
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC412
 Func_014_4F51:: ; heuristic: target of a pointer table; C0
     ld de, Data_01F_4330
     ld hl, vTiles2 + $730
@@ -2006,6 +2319,9 @@ Func_014_4F51:: ; heuristic: target of a pointer table; C0
     call CopyFromBankWaitVRAM
     db $11
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wD7FA
 Func_014_4F7D:: ; heuristic: target of a pointer table; C0
     sub a, b
     ld b, d
@@ -2031,6 +2347,10 @@ Func_014_4F7D:: ; heuristic: target of a pointer table; C0
     db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $70, $71, $DF, $B7, $B6, $C3, $C3, $C3
     db $C3, $B7, $B6, $C3, $76, $73, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B5, wD7B6
+; writes: wD7AB, wD7AF, wD7FA, wD781, wC920, wC919
+; points at: wC52D
 Func_014_4FCC:: ; heuristic: target of a pointer table; C0
     ld a, [wD7B5]
     ld [wD7AB], a
@@ -2056,6 +2376,10 @@ Func_014_4FCC:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD781
+; writes: rRAMG2, rRAMB, wD7F2, wD7F3, wD7F4, wD7F1, wD7BE, wD7BF, ...
+; points at: sB356, sA000
 Func_014_5002:: ; heuristic: target of a pointer table; C0
     ld a, $0A
     ld [rRAMG2], a
@@ -2139,6 +2463,9 @@ Jump_014_506D::
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7BE, wD7BF, wD7C0, wD7C1, wD7F5, wD7F6, wD781
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, rRAMG2, rRAMB, wD781, wC920, ...
 Func_014_5095:: ; heuristic: target of a pointer table; C0
     ld a, [wD7BE]
     ld [wD7F1], a
@@ -2188,6 +2515,8 @@ Jump_014_50CE::
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wC920, wC919
 Func_014_5104:: ; heuristic: target of a pointer table; C0
     call Func_014_5800
     ld bc, $140D
@@ -2201,6 +2530,9 @@ Func_014_5104:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: rRAMG2, rRAMB, wD781, wD7AB, wD7AD, wD7AF, wD7AC, wD7AE
 Func_014_511F:: ; heuristic: target of a pointer table; C0
     ld a, $0A
     ld [rRAMG2], a
@@ -2240,6 +2572,10 @@ Jump_014_514B::
     ld [wD7AE], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD7F7, wD7AF, wD7AB
+; writes: wD7F2, wD7F3, wD7F4, wD7F1, rRAMG2, rRAMB, wD7AB, wD7AD, ...
+; points at: wD789
 Func_014_5171:: ; heuristic: target of a pointer table; C0
     ld a, [wD7F5]
     ld [wD7F2], a
@@ -2293,6 +2629,9 @@ Jump_014_5197::
     ld [wD7AE], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7AB, wD781
+; writes: wD7F9, wD7FA, wD781, wC920, wC919
 Func_014_51E9:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD7F9], a
@@ -2354,6 +2693,10 @@ Jump_014_5238::
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786
+; writes: wD781, wD7FA, wC920, wC919
+; points at: wC364
 Func_014_525C:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5AC4
     ld hl, wC364
@@ -2379,6 +2722,9 @@ Func_014_525C:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781, wD7AB, wD7F5, wD7F6, wD7AF
+; writes: wD781, wD7B5, wD7B4, wD7B6, wD7AB, wD7AF, wC920, wC919
 Func_014_529C:: ; heuristic: target of a pointer table; C0
     call Func_014_5800
     ld bc, $140D
@@ -2408,6 +2754,10 @@ Func_014_529C:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD7AB, wD780
+; writes: wD7F9, wD781, wD7FA, wC920, wC919
+; points at: wC52D
 Func_014_52E4:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD7F9], a
@@ -2486,6 +2836,8 @@ Jump_014_5368::
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wC920, wC919
 Func_014_5371:: ; heuristic: target of a pointer table; C0
     call Func_014_5800
     ld bc, $140D
@@ -2499,6 +2851,10 @@ Func_014_5371:: ; heuristic: target of a pointer table; C0
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782, wD7F5, wD7F6, wD7B4, wD781
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD782, wD7B4, ...
+; points at: wC986, sB356, sA000
 Func_014_538C:: ; heuristic: target of a pointer table; C0
     ld a, [wD782]
     and a, a
@@ -2584,6 +2940,10 @@ Jump_014_5404::
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B4
+; writes: rRAMG2, rRAMB, wD7B5, wD7B6, wD7B4, wD7AB, wD7AD, wD7AF, ...
+; points at: sB356, wC986, sA000
 Func_014_543F:: ; heuristic: target of a pointer table; C0
     ld a, $0A
     ld [rRAMG2], a
@@ -2649,6 +3009,10 @@ Jump_014_5492::
     dw Func_014_4D2B
     dw Func_014_55A0
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: wD7F1, wD781
+; points at: wC36C
 Func_014_54B8:: ; heuristic: target of a pointer table; C0
     farcall Func_01D_5D84
     ld a, [wD7F5]
@@ -2678,6 +3042,10 @@ Func_014_54B8:: ; heuristic: target of a pointer table; C0
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD7AB
+; writes: wD7F9, wD781, wD7FA, wC920, wC919
+; points at: wC52D
 Func_014_5501:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD7F9], a
@@ -2740,6 +3108,10 @@ Jump_014_5564::
     ret
     db $0E, $09, $21, $D4, $01, $11, $08, $00, $AF, $EA, $F1, $D7, $3E, $0C, $EA, $F2
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+; points at: wC40D
 Func_014_557D:: ; heuristic: target of a pointer table; C0
     rst $10
     call Func_014_5925
@@ -2755,6 +3127,8 @@ Func_014_557D:: ; heuristic: target of a pointer table; C0
 Data_014_5595:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7B2, wD7B3, wD781, wD782, wD780
 Func_014_55A0:: ; heuristic: target of a pointer table; C0
     ld hl, Data_014_5C8A
     ld de, Data_014_5C9A
@@ -2803,9 +3177,13 @@ Jump_014_55C9::
     dw Func_014_4CBC
     dw Func_014_4D2B
 
+; no direct call (reached through a table, a jump or a vector)
 Func_014_5601:: ; heuristic: target of a pointer table; C0
     dw $4021
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7FA, wD781, wD7AB
+; writes: wD781, wD782, wC920, wC919, wD7FA
 Func_014_5603:: ; heuristic: follows a terminator; C0
     ld h, l
     ld b, $1D
@@ -2844,6 +3222,10 @@ Jump_014_5623::
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, wD781
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD781
+; points at: sB356, sA000
 Func_014_5649:: ; heuristic: target of a pointer table; C0
     ld a, $0A
     ld [rRAMG2], a
@@ -2892,12 +3274,17 @@ Jump_014_5677::
     ld [wD781], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FC
 Func_014_56A4:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wD7FC], a
     farcall Func_01E_4069
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_44F0)
+; writes: rRAMG2, rRAMB, wC8D9
+; points at: wC8CF, wC130
 Func_014_56B0::
     push bc
     ld a, $0A
@@ -2941,6 +3328,10 @@ Jump_014_56E7::
     ld [de], a
     ret
 
+; 2 call sites from 2 routines (e.g. Func_014_45B0, Func_014_5603)
+; reads: wD7F5, wD7F6, wC140
+; writes: wD7F2, wD7F3, wD7F4, wD7F1, wC8D9, wC140
+; points at: sB356, wC8CF, wC140, sA000
 Func_014_56EB::
     farcall Func_01D_5D84
     ld a, [wD7F5]
@@ -2998,6 +3389,10 @@ Jump_014_573F::
     ld [wC140], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_48B0)
+; reads: wD7F5, wD7F6
+; writes: rRAMG2, rRAMB, wC8D9
+; points at: wC8CF, wC140
 Func_014_574E::
     farcall Func_01D_5D84
     ld a, [wD7F5]
@@ -3036,6 +3431,10 @@ Jump_014_578A::
     ld [de], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_48B0)
+; reads: wD7B4, wC130
+; writes: wD7F2, wD7F3, wD7F4, wD7F1, wC8D9, wC132
+; points at: sB356, wC8CF, wC130, sA000
 Func_014_578E::
     ld a, [wD7B4]
     cp a, $1D
@@ -3088,6 +3487,7 @@ Jump_014_57D6::
     ld [wC132], a
     ret
 
+; 4 call sites from 4 routines (e.g. Func_014_5925, Func_014_4A54, Func_014_4F30, Func_014_4010)
 Func_014_57E5::
     ld a, [de]
     inc de
@@ -3098,6 +3498,8 @@ Func_014_57E5::
     jr nz, Func_014_57E5
     ret
 
+; 3 call sites from 3 routines (e.g. Func_014_5925, Func_014_4020, Func_014_4110)
+; writes: rSVBK
 Func_014_57EE::
     ld a, $02
     ldh [rSVBK], a
@@ -3115,6 +3517,8 @@ Jump_014_57F2::
     ldh [rSVBK], a
     ret
 
+; 20 call sites from 20 routines (e.g. Func_014_4F7D, Func_014_4990, Func_014_599F, Func_014_4910, ...)
+; reads: hFFA5, hFFA1
 Func_014_5800::
     ld hl, vBGMap0
     ldh a, [hFFA5]
@@ -3138,6 +3542,9 @@ Func_014_5800::
 Jump_014_5820::
     ret
 
+; 15 call sites from 14 routines (e.g. Func_014_557D, Func_014_497D, Func_014_4160, Func_014_54B8, ...)
+; reads: wIsCGB
+; writes: rSVBK
 Func_014_5821::
     push hl
     push bc
@@ -3191,6 +3598,10 @@ Jump_014_5849::
     ldh [rSVBK], a
     ret
 
+; 17 call sites from 17 routines (e.g. Func_014_4F7D, Func_014_4990, Func_014_4A1F, Func_014_4760, ...)
+; reads: wIsCGB
+; writes: wC554, wC555, rVBK, rSVBK
+; points at: wC198, wD000
 Func_014_585B::
     push de
     push bc
@@ -3232,6 +3643,9 @@ Func_014_585B::
     ldh [rVBK], a
     ret
 
+; 5 call sites from 5 routines (e.g. Func_014_4140, Func_014_55A0, Func_014_4783, Func_014_4CA8, ...)
+; reads: wD785, wD784
+; writes: wD784, wD785
 Func_014_5898::
     xor a, a
     ld [wD784], a
@@ -3298,6 +3712,7 @@ Jump_014_58E2::
     ld a, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_014_4510, Func_014_51E9)
 Func_014_58EE::
     ld c, $00
 
@@ -3314,6 +3729,7 @@ Jump_014_58F0::
     jr c, Jump_014_58F0
     ret
 
+; 16 call sites from 15 routines (e.g. Func_014_4990, Func_014_58EE, Func_014_45C0, Func_014_4730, ...)
 Func_014_5902::
     push bc
     add a, a
@@ -3331,6 +3747,8 @@ Jump_014_5909::
     ld [de], a
     ret
 
+; 4 call sites from 4 routines (e.g. Func_014_4160, Func_014_525C, Func_014_4CD0, Func_014_4D2B)
+; writes: wD7F1, wD7F2
 Func_014_5910::
     ld c, $02
     ld hl, $0280
@@ -3342,6 +3760,9 @@ Func_014_5910::
     call Func_014_5925
     ret
 
+; 4 call sites from 4 routines (e.g. Func_014_557D, Func_014_4750, Func_014_5910, Func_014_4932)
+; reads: wD7F1, wD7F2, wIsCGB
+; points at: wC198, wD000
 Func_014_5925::
     push bc
     push hl
@@ -3406,6 +3827,9 @@ Jump_014_5975::
     jr nz, Func_014_5925
     ret
 
+; 2 call sites from 2 routines (e.g. Func_014_54B8, Func_014_4BEA)
+; reads: hFFC6
+; writes: rRAMG2, rRAMB, wD09D, wD09E
 Func_014_5979::
     ld a, $0A
     ld [rRAMG2], a
@@ -3424,6 +3848,7 @@ Func_014_5979::
     ld [rRAMG2], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_4BA0)
 Func_014_599F::
     push de
     call Func_014_5800
@@ -3450,6 +3875,7 @@ Func_014_599F::
     ei
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_4BA0)
 Func_014_59C2::
     ld a, $C5
     ld [hl], a
@@ -3463,6 +3889,9 @@ Func_014_59C2::
     ld [hl], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_511F)
+; writes: rRAMB, wD7F6, wD7F7, wD7F5
+; points at: sB356, sA000
 Func_014_59D0::
     ld hl, sB356
     ld c, $00
@@ -3615,6 +4044,8 @@ Data_014_5C9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5CA3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $41, $50, $41, $FF, $FF
 
+; 5 call sites from 5 routines (e.g. Func_007_65F1, Func_00D_525F, Func_015_54C0, Func_016_6A4E, ...)
+; reads: wC56C, wCFA8
 Func_014_5CA8::
     ld a, [wC56C]
     and a, a
@@ -3874,6 +4305,7 @@ Jump_014_5E62::
     ld [wD7F5], a
     ret
 
+; 2 call sites from 1 routine (e.g. Func_014_5CA8)
 Func_014_5E8C::
     ld a, [hl+]
     ld [de], a
@@ -4214,6 +4646,9 @@ Jump_014_60CF::
     ld [wD7F5], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7F5
+; points at: wCFAD
 Func_014_60E6:: ; heuristic: follows a terminator; C0
     call Func_014_6C3F
     ld hl, wCFAD
@@ -4321,6 +4756,9 @@ Jump_014_6164::
     ld [wD7F5], a
     ret
 
+; 6 call sites from 1 routine (e.g. Func_014_5E8C)
+; reads: wCFC1, wCFC0, wCFBF
+; writes: wCFC1
 Func_014_6172::
     ld a, [wCFC1]
     inc a
@@ -4336,10 +4774,14 @@ Jump_014_6185::
     ld b, $55
     jr Jump_014_618F
 
+; 7 call sites from 2 routines (e.g. Func_014_631C, Func_014_5E8C)
+; reads: wCFC0, wCFBF
 Func_014_6189::
     ld b, $C3
     jr Jump_014_618F
 
+; 1 call site from 1 routine (e.g. Func_014_5E8C)
+; reads: wCFC0, wCFBF
 Func_014_618D::
     ld b, $55
 
@@ -4512,6 +4954,10 @@ Jump_014_6314::
     jr nc, Func_014_631C
     inc h
 
+; 1 call site from 1 routine (e.g. Func_014_5E8C)
+; reads: wCFC2, wCFA9, wCFC3, wCFA8
+; writes: wCFC3, wCFC2, wCFA9, wD7F5, wCFBF, wCFC0, wCFA8
+; points at: wCFAD
 Func_014_631C::
     ld a, [hl]
     cp a, $FD
@@ -5231,6 +5677,10 @@ Jump_014_67FA::
     ld [wD7F5], a
     ret
 
+; 8 call sites from 2 routines (e.g. Func_014_631C, Func_014_5E8C)
+; reads: wD7F1, wD7F4, wD7F5
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6
+; points at: wD7F1, wCF8B
 Func_014_6804::
     ld hl, wD7F1
     ld de, wCF8B
@@ -5309,6 +5759,7 @@ Jump_014_6856::
     inc de
     ret
 
+; 2 call sites from 2 routines (e.g. Func_014_631C, Func_014_60E6)
 Func_014_6875::
     ld de, Data_014_688A
 
@@ -5336,6 +5787,7 @@ Data_014_688A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $34, $35, $37, $38, $75, $76, $77, $78, $79, $60, $61, $62, $63, $64, $65, $66
     db $67, $68, $69, $6A, $6B, $6C, $6E, $6F, $26, $5A, $FF
 
+; 3 call sites from 2 routines (e.g. Func_014_631C, Func_014_60E6)
 Func_014_68B5::
     ld de, Data_014_68CA
 
@@ -5361,6 +5813,9 @@ Jump_014_68C7::
 Data_014_68CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3E, $3F, $40, $41, $42, $75, $76, $77, $78, $79, $FF
 
+; 1 call site from 1 routine (e.g. Func_014_631C)
+; reads: wC563, wC562, wCFBD
+; writes: wD7F9, wCFBD, wCFBE
 Func_014_68D5::
     ld a, [wC563]
     bit 6, a
@@ -5427,6 +5882,9 @@ Jump_014_693D::
     ld [wD7F9], a
     ret
 
+; 2 call sites from 1 routine (e.g. Func_014_68D5)
+; reads: wCFBE, wCFBD
+; writes: wCFBE
 Func_014_6943::
     ld a, [wCFBE]
     inc a
@@ -5442,10 +5900,14 @@ Jump_014_6956::
     ld b, $BB
     jr Jump_014_6960
 
+; 2 call sites from 1 routine (e.g. Func_014_68D5)
+; reads: wCFBD
 Func_014_695A::
     ld b, $C3
     jr Jump_014_6960
 
+; 1 call site from 1 routine (e.g. Func_014_68D5)
+; reads: wCFBD
 Func_014_695E::
     ld b, $BC
 
@@ -5476,6 +5938,8 @@ Jump_014_696C::
 Data_014_697D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
+; 2 call sites from 2 routines (e.g. Func_014_6C3F, Func_014_5CA8)
+; reads: rSTAT
 Func_014_6981::
     ld c, $10
 
@@ -5494,6 +5958,9 @@ Jump_014_6984::
     jr nz, Jump_014_6983
     ret
 
+; 2 call sites from 2 routines (e.g. Func_014_631C, Func_014_5E8C)
+; writes: wCFBC
+; points at: wCFAD
 Func_014_6992::
     ld hl, wCFAD
     ld bc, $0000
@@ -5541,6 +6008,8 @@ Jump_014_69CA::
     db $C5, $D1, $CD, $40, $2E, $7B, $EA, $33, $C5, $EA, $37, $C5, $7A, $EA, $34, $C5
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
+; 6 call sites from 4 routines (e.g. Func_014_631C, Func_014_6CEA, Func_014_618D, Func_014_5E8C)
+; reads: wCFC2, rSTAT
 Func_014_6A0D::
     push bc
     call Func_014_6BCF
@@ -5564,6 +6033,8 @@ Jump_014_6A1F::
     ei
     ret
 
+; 2 call sites from 2 routines (e.g. Func_014_5E8C, Func_014_618D)
+; points at: wCFAD
 Func_014_6A28::
     ld hl, wCFAD
     ld c, $00
@@ -5587,6 +6058,10 @@ Jump_014_6A3B::
     jr c, Jump_014_6A3B
     ret
 
+; 1 call site from 1 routine (e.g. Func_014_631C)
+; reads: wD7F1, wD786
+; writes: rRAMG2, rRAMB
+; points at: sA000, wCFAD, wC6FE
 Func_014_6A45::
     ld hl, sA000
     ld a, $0A
@@ -5686,6 +6161,9 @@ Jump_014_6AB2::
     ld a, $FF
     ret
 
+; 3 call sites from 1 routine (e.g. Func_014_631C)
+; reads: wD7F1
+; points at: wCFAD
 Func_014_6AB7::
     ld hl, Data_014_70F0
     ld c, $00
@@ -5761,6 +6239,8 @@ Jump_014_6B03::
     ld a, $FF
     ret
 
+; 3 call sites from 1 routine (e.g. Func_014_631C)
+; points at: wCFAD
 Func_014_6B08::
     ld hl, wCFAD
     ld c, $00
@@ -5852,6 +6332,9 @@ Jump_014_6B74::
     xor a, a
     ret
 
+; 3 call sites from 1 routine (e.g. Func_014_631C)
+; reads: wCFC4, wC52B, wD7F1
+; writes: wCFC4, wC52D, wC52E, wC52F, wC530
 Func_014_6B76::
     ld a, [wCFC4]
     and a, a
@@ -5909,6 +6392,8 @@ Jump_014_6BCD::
     xor a, a
     ret
 
+; 12 call sites from 5 routines (e.g. Func_014_631C, Func_014_695E, Func_014_618D, Func_014_6A0D, ...)
+; reads: hFFA5, hFFA1
 Func_014_6BCF::
     ldh a, [hFFA5]
     and a, $F8
@@ -5940,6 +6425,9 @@ Jump_014_6BF3::
     ld h, a
     ret
 
+; 3 call sites from 2 routines (e.g. Func_014_5CA8, Func_014_631C)
+; reads: wCFAB
+; writes: wCFAB, wCFAC
 Func_014_6BF8::
     push hl
     push de
@@ -5996,6 +6484,8 @@ Jump_014_6C33::
     ld a, $FF
     ret
 
+; 4 call sites from 3 routines (e.g. Func_014_631C, Func_014_618D, Func_014_60E6)
+; reads: wCFC2
 Func_014_6C3F::
     ld hl, Data_014_6C56
     ld a, [wCFC2]
@@ -6020,6 +6510,10 @@ Data_014_6C56:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_6C60:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
+; 1 call site from 1 routine (e.g. Func_014_631C)
+; reads: wD7F1, wC5E7, wD7F3, wD7F2
+; writes: wCFC2, wCFC3
+; points at: wCFAD
 Func_014_6C70::
     ld a, [wD7F1]
     or a, a
@@ -6109,6 +6603,9 @@ Jump_014_6CC0::
     call Func_014_6CEA
     ret
 
+; 2 call sites from 1 routine (e.g. Func_014_6C70)
+; writes: wCFC2, wCFC3
+; points at: wCFAD
 Func_014_6CEA::
     ld a, [hl]
     cp a, $F0
@@ -7542,6 +8039,10 @@ Data_014_7D31:: ; heuristic: target of a monotone pointer table; C0
 Data_014_7D37:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $053D37, $48
 
+; 4 call sites from 4 routines (e.g. Func_014_4680, Func_014_5095, Func_014_538C, Func_014_5649)
+; reads: wD7F1
+; writes: rRAMG2, rRAMB, wD7F5, wD7F6, wD7F7
+; points at: sB356, sB3C5, sA000, wCA2B
 Func_014_7D7F::
     ld a, [wD7F1]
     cp a, $1E
@@ -7752,6 +8253,10 @@ Jump_014_7E89::
     ld [rRAMB], a
     ret
 
+; 19 call sites from 15 routines (e.g. Func_007_7DE5, Func_00D_73F1, Func_014_4600, Func_014_5171, ...)
+; reads: wD7F1, wD7F2, wC6FD
+; writes: rRAMG2, rRAMB, wD7F3, wD7F5, wD7F6, wD7F7, wC6FD
+; points at: sA000, sA0A5, wC6FE
 Func_014_7E96::
     ld a, $0A
     ld [rRAMG2], a
@@ -7951,6 +8456,8 @@ Jump_014_7F8C::
     ld [rRAMG2], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_001_6C48)
+; reads: wD09D, wD09E, wD09F, wD0A0
 Func_014_7F9C::
     ld a, [wD09D]
     ld c, a

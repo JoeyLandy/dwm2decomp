@@ -1,6 +1,9 @@
 SECTION "Bank 92", ROMX[$4000], BANK[$92]
     db $92
 
+; 1 call site from 1 routine (e.g. Func_03A_5383)
+; reads: wD804, wD801, wDAB7
+; points at: hFFA9
 Func_092_4001::
     ld hl, hFFA9
     ld a, [wD804]
@@ -84,6 +87,9 @@ Data_092_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_092_6F1C
     dw Data_092_78D4
 
+; 1 call site from 1 routine (e.g. Func_092_4001)
+; reads: hFFB1, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; writes: hFFB1
 Func_092_409C::
     ldh a, [hFFB1]
     cp a, $28
@@ -536,6 +542,9 @@ Data_092_56BF:: ; heuristic: target of a monotone pointer table; C0
     dw Data_092_5BEB
     INCBIN "dwm2-cobi-us.gbc", $2496FF, $106
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: rNR30
+; writes: hFFF9, rP1
 Func_092_5805:: ; heuristic: target of a pointer table; C0
     ret nc
     add sp, 26
@@ -545,6 +554,8 @@ Func_092_5805:: ; heuristic: target of a pointer table; C0
     nop
     add a, b
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: hFFF9, rP1
 Func_092_580E:: ; heuristic: target of a pointer table; C0
     ldh [hFFF9], a
     ld e, $00
@@ -559,6 +570,9 @@ Func_092_580E:: ; heuristic: target of a pointer table; C0
     jp hl
     db $02, $1A, $00, $DE, $F7, $1A, $00, $80
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: rP1, hFFF8, rNR30, rSB, rNR11, rNR23, rNR22, rNR24
+; writes: hFFF0, rP1, hFFF9
 Func_092_5827:: ; heuristic: target of a pointer table; C0
     ldh [hFFF0], a
     ld de, $E000
@@ -600,6 +614,9 @@ Func_092_5827:: ; heuristic: target of a pointer table; C0
     nop
     add a, b
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: rSB, rNR11, rNR23, rNR22, rNR24
+; writes: hFFF9, rP1
 Func_092_5860:: ; heuristic: target of a pointer table; C0
     ldh [hFFF9], a
     ld e, $00

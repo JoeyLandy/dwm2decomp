@@ -1,6 +1,9 @@
 SECTION "Bank 96", ROMX[$4000], BANK[$96]
     db $96
 
+; 1 call site from 1 routine (e.g. Func_080_4001)
+; reads: wC529
+; writes: wC529
 Func_096_4001::
     ld de, Data_096_404B
     ld a, [wC529]
@@ -9,6 +12,9 @@ Func_096_4001::
     call Func_000_25C9
     ret
 
+; 1 call site from 1 routine (e.g. Func_080_4016)
+; reads: wC529
+; writes: wC529
 Func_096_4010:: ; heuristic: follows a terminator; C0
     ld de, Data_096_404B
     ld a, [wC529]
@@ -18,6 +24,9 @@ Func_096_4010:: ; heuristic: follows a terminator; C0
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
+; 2 call sites from 2 routines (e.g. Func_082_4001, Func_082_4016)
+; reads: wC529
+; writes: wC529
 Func_096_4026::
     ld de, Data_096_574A
     ld a, [wC529]
@@ -26,6 +35,9 @@ Func_096_4026::
     call Func_000_25C9
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC529
+; writes: wC529
 Func_096_4035:: ; heuristic: follows a terminator; C0
     ld de, Data_096_574A
     ld a, [wC529]
@@ -562,6 +574,9 @@ Data_096_6EE0:: ; heuristic: target of a monotone pointer table; C0
 Data_096_6EF6:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $25AEF6, $11B
 
+; 1 call site from 1 routine (e.g. Func_00E_4001)
+; reads: wC529
+; writes: wC529
 Func_096_7011::
     ld de, Data_096_7036
     ld a, [wC529]
@@ -570,6 +585,9 @@ Func_096_7011::
     call Func_000_25C9
     ret
 
+; 1 call site from 1 routine (e.g. Func_00E_4016)
+; reads: wC529
+; writes: wC529
 Func_096_7020:: ; heuristic: follows a terminator; C0
     ld de, Data_096_7036
     ld a, [wC529]

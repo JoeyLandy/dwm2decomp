@@ -1,16 +1,19 @@
 SECTION "Bank 09", ROMX[$4000], BANK[$09]
     db $09
 
+; 5 call sites from 5 routines (e.g. Func_009_400F, Func_001_4AD4, Func_012_6610, Func_012_66DA, ...)
 Func_009_4001::
     ld de, Data_009_4016
     call Func_000_25C9
     ret
 
+; 2 call sites from 2 routines (e.g. Func_003_6B5E, Func_073_49C5)
 Func_009_4008::
     ld de, Data_009_4016
     call Func_000_25FE
     ret
 
+; 15 call sites from 12 routines (e.g. Func_003_5A07, Func_003_6595, Func_003_779A, Func_003_78CB, ...)
 Func_009_400F::
     call Func_009_4001
     call Func_000_2611

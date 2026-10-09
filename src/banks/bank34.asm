@@ -1,11 +1,15 @@
 SECTION "Bank 34", ROMX[$4000], BANK[$34]
     db $34
 
+; 20 call sites from 20 routines (e.g. Func_001_4F80, Func_001_6C48, Func_007_6975, Func_00D_6B55, ...)
+; points at: wCFEC
 Func_034_4001::
     ld de, wCFEC
     call Func_034_4040
     ret
 
+; 2 call sites from 2 routines (e.g. Func_00A_5071, Func_085_5B53)
+; reads: wCFE7, wCFE6, hFFC6
 Func_034_4008::
     ld a, [wCFE7]
     cp a, $02
@@ -40,6 +44,8 @@ Jump_034_401D::
     call Func_034_406E
     ret
 
+; 1 call site from 1 routine (e.g. Func_034_4001)
+; reads: wCFE7, wCFE6
 Func_034_4040::
     ld a, [wCFE7]
     cp a, $02
@@ -67,6 +73,7 @@ Jump_034_4055::
     pop de
     ld b, $1A
 
+; 1 call site from 1 routine (e.g. Func_034_4008)
 Func_034_406E::
     ld a, [hl+]
     ld [de], a

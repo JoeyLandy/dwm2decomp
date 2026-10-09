@@ -1,6 +1,10 @@
 SECTION "Bank 11", ROMX[$4000], BANK[$11]
     db $11, $C9
 
+; 6 call sites from 1 routine (e.g. Func_002_541B)
+; reads: wCC44, hFF90, hFF98, hFF8F, hFF92, hFF8E, hFF91, wC8CA, ...
+; writes: wC8CA, wCCEA, hFF90, hFF8F, hFF92, wC8C8, wC8C9, hFF8C, ...
+; points at: wC5E0
 Func_011_4002::
     ld a, [wCC44]
     bit 7, a
@@ -198,6 +202,10 @@ Jump_011_4105::
     ld c, $01
     ret
 
+; 3 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_56DC, Func_002_5BD7)
+; reads: wCC44, hFF90, hFF8C, hFF8F, hFF92, hFF8E, hFF91, wC8C9
+; writes: hFF8C, wC8CA, wCCEA, hFF90, hFF8F, hFF92, wC8C8, wC8C9, ...
+; points at: wC5E0
 Func_011_4130::
     ld a, [wCC44]
     bit 7, a
@@ -397,6 +405,10 @@ Jump_011_4235::
     ld c, $01
     ret
 
+; 2 call sites from 2 routines (e.g. Func_002_541B, Func_061_5794)
+; reads: wCC44, hFF90, wC88E, wC891, wCC42, wC88F, wC890, wCD09, ...
+; writes: hFF90, wC8C8, wC8C9, hFF8F, hFF92
+; points at: wC88F
 Func_011_4268::
     ld a, [wCC44]
     bit 7, a
@@ -447,6 +459,7 @@ Jump_011_42A6::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_011_42AC:: ; heuristic: follows a terminator; C0
     add hl, hl
     ld b, l
@@ -517,6 +530,10 @@ Jump_011_431E::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_011_4268)
+; reads: hFF8C
+; writes: wCCEA, wC8C8, wC8C9, hFF8F, hFF92, wC8C6, wC5DC, wC8C5, ...
+; points at: wC5E0
 Func_011_4340::
     ld a, $01
     ld [wCCEA], a
@@ -557,6 +574,9 @@ Func_011_4340::
     ld c, $01
     ret
 
+; 2 call sites from 1 routine (e.g. Func_011_42AC)
+; reads: hFF8C
+; writes: wC8CA, wC5DC, wC8C5, hFF8C, wC8C6
 Func_011_438F::
     ld a, $F0
     ld [wC8CA], a
@@ -579,6 +599,10 @@ Func_011_438F::
     ld [wC8C6], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_011_4130)
+; reads: hFF90, hFF8C, wC88E, wC891
+; writes: hFF8C
+; points at: wC88F
 Func_011_43BB::
     ldh a, [hFF90]
     cp a, $20
@@ -628,6 +652,10 @@ Jump_011_43F3::
     call Func_011_43FA
     ret
 
+; 2 call sites from 1 routine (e.g. Func_011_43BB)
+; reads: hFF8E, hFF91, hFF8F, hFF92, hFF8C
+; writes: wCCEA, hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC88B, wC8C6, ...
+; points at: wC5E0
 Func_011_43FA::
     ldh a, [hFF8E]
     and a, $F0

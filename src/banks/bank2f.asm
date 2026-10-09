@@ -1,12 +1,14 @@
 SECTION "Bank 2F", ROMX[$4000], BANK[$2F]
     db $2F
 
+; 31 call sites from 18 routines (e.g. Func_02F_400F, Func_001_4AD4, Func_016_6955, Func_031_40CC, ...)
 Func_02F_4001::
     ld de, Data_02F_4016
     call Func_000_25C9
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9
 
+; 2 call sites from 2 routines (e.g. Func_001_6903, Func_016_6961)
 Func_02F_400F::
     call Func_02F_4001
     call Func_000_2611

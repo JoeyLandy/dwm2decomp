@@ -1,6 +1,10 @@
 SECTION "Bank 69", ROMX[$4000], BANK[$69]
     db $69
 
+; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00C_433D, Func_015_570C)
+; reads: wCC44, hFF90, hFF8F, hFF92, wCC38, hFFD0, wC190
+; writes: wCB7D, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
+; points at: wCB7F
 Func_069_4001::
     xor a, a
     ld [wCB7D], a

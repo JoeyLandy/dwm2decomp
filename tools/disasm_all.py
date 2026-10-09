@@ -19,6 +19,7 @@ interrupted run leaves the previous generated tree untouched.
 """
 from __future__ import annotations
 
+import bisect
 import json
 import re
 import sys
@@ -695,6 +696,84 @@ class Rom:
             f"{weak} same-bank loads, "
             f"{sum(len(d) for d in self.dlabels.values())} data labels in total")
 
+    # Symbol names have an upper-case letter after their prefix (wC5FC, hFFC6, rLCDC, wDataBank);
+    # that keeps register operands such as [hl] from matching.
+    _SYM_MEM = re.compile(r"\[([whsr][A-Z][A-Za-z0-9_]*)(?: \+ \$[0-9A-F]+)?\]")
+    _SYM_PTR = re.compile(r"^ld (?:hl|de|bc), ([whs][A-Z][A-Za-z0-9_]*)$")
+
+    def build_xrefs(self) -> None:
+        """Static cross-references: who calls each routine, and which RAM it touches.
+
+        Call sites are `call`/`call cc`, plus the far calls the tracer mined (`ld hl, X` /
+        `ld b, BANK` / `rst $10`). RAM use follows a routine's own jumps and branches to its
+        returns, never into callees, and lists only absolute symbols (no pointer arithmetic)."""
+        self.callers: dict[tuple[int, int], list[tuple[int, int]]] = {}
+        for b in range(self.nbanks):
+            for a, v in self.insn[b].items():
+                if v[0] != "dw" and v[2] in ("call", "callc") and v[3] is not None:
+                    r = self.resolve(b, v[3])
+                    if r:
+                        self.callers.setdefault(r, []).append((b, a))
+        for (b, a), (tb, imm) in self.banked_call_args().items():
+            self.callers.setdefault((tb, imm), []).append((b, a))
+        self.entries: dict[int, list[int]] = {}
+        for b in range(self.nbanks):
+            self.entries[b] = sorted(
+                a for a in self.labels[b]
+                if a in self.insn[b] and (self.labels[b][a].startswith("Func_") or (b, a) in self.alias))
+        self.ram_use: dict[tuple[int, int], tuple[list[str], list[str], list[str]]] = {}
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for e in self.entries[b]:
+                reads: dict[str, None] = {}
+                writes: dict[str, None] = {}
+                ptrs: dict[str, None] = {}
+                seen, work = set(), [e]
+                while work and len(seen) < 400:
+                    pc = work.pop()
+                    while pc in ins and pc not in seen and ins[pc][0] != "dw":
+                        seen.add(pc)
+                        n, text, kind, tgt = ins[pc]
+                        s = self.symbolize(text)
+                        m = self._SYM_MEM.search(s)
+                        if m:
+                            if s.startswith(("ld [", "ldh [")):
+                                writes[m.group(1)] = None
+                            elif s.startswith(("ld a, [", "ldh a, [")):
+                                reads[m.group(1)] = None
+                        m = self._SYM_PTR.match(s)
+                        if m:
+                            ptrs[m.group(1)] = None
+                        if kind in ("jr", "jrc", "jp", "jpc") and tgt is not None:
+                            r = self.resolve(b, tgt)
+                            if r and r[0] == b and tgt in ins:
+                                work.append(tgt)
+                        if kind in ("ret", "jp", "jr", "jphl") or (kind == "rst" and tgt == 0):
+                            break
+                        pc += n
+                self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
+
+    def xref_lines(self, bank: int, addr: int) -> list[str]:
+        out = []
+        calls = self.callers.get((bank, addr), [])
+        if calls:
+            names = []
+            for cb, ca in calls:
+                ents = self.entries[cb]
+                k = bisect.bisect_right(ents, ca) - 1
+                names.append(self.labels[cb].get(ents[k], "?") if k >= 0 else "?")
+            uniq = list(dict.fromkeys(names))
+            eg = ", ".join(uniq[:4]) + (", ..." if len(uniq) > 4 else "")
+            out.append(f"; {len(calls)} call site{'s' if len(calls) != 1 else ''} from "
+                       f"{len(uniq)} routine{'s' if len(uniq) != 1 else ''} (e.g. {eg})")
+        else:
+            out.append("; no direct call (reached through a table, a jump or a vector)")
+        r, w, p = self.ram_use.get((bank, addr), ([], [], []))
+        for label, items in (("reads", r), ("writes", w), ("points at", p)):
+            if items:
+                out.append(f"; {label}: " + ", ".join(items[:8]) + (", ..." if len(items) > 8 else ""))
+        return out
+
     def apply_names(self) -> None:
         """Rename code labels listed in config/names.json; keep the address name as an alias.
 
@@ -894,6 +973,9 @@ class Rom:
         self.prepare_tables()
         self.prepare_tracks()
         self.apply_names()
+        self.build_xrefs()
+        log(f"cross-references: {len(self.callers)} routines are called, "
+            f"{sum(len(v) for v in self.callers.values())} call sites")
 
     # ---- emission -------------------------------------------------------
     def emit_gap(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
@@ -1051,6 +1133,8 @@ class Rom:
                     out.append(f"; {note}")
                 if nm_info and nm_info.get("note"):
                     out.append(f"; {nm_info['note']}")
+                if pc in self.entries.get(bank, ()) and getattr(self, "ram_use", None) is not None:
+                    out.extend(self.xref_lines(bank, pc))
                 out.append(f"{labels[pc]}::" + (f" ; {why}; C0" if why else ""))
                 if (bank, pc) in self.alias:
                     out.append(f"{self.alias[(bank, pc)]}:: ; address name")

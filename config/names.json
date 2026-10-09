@@ -171,5 +171,80 @@
     "name": "AddAx9ToHL",
     "note": "HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved",
     "evidence": "reading"
+  },
+  "13:4001": {
+    "name": "SetRequestPtrC921_B13",
+    "note": "HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)",
+    "evidence": "reading"
+  },
+  "04:55BB": {
+    "name": "SetRequestPtrC921_B04",
+    "note": "HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)",
+    "evidence": "reading"
+  },
+  "13:4049": {
+    "name": "SetRequestPtrC91A_B13",
+    "note": "HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1",
+    "evidence": "reading"
+  },
+  "04:5603": {
+    "name": "SetRequestPtrC91A_B04",
+    "note": "HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1",
+    "evidence": "reading"
+  },
+  "0F:7F68": {
+    "name": "StoreHLInWC924_B0F",
+    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
+    "evidence": "reading"
+  },
+  "73:4ED8": {
+    "name": "StoreHLInWC924_B73",
+    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
+    "evidence": "reading"
+  },
+  "85:57C8": {
+    "name": "StoreHLInWC924_B85",
+    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
+    "evidence": "reading"
+  },
+  "73:7AA5": {
+    "name": "StoreHLInWC924_B73b",
+    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
+    "evidence": "reading"
+  },
+  "04:55DF": {
+    "name": "SetRequestPtrC924FromDE_B04",
+    "note": "DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)",
+    "evidence": "reading"
+  },
+  "13:4025": {
+    "name": "SetRequestPtrC924FromDE_B13",
+    "note": "DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)",
+    "evidence": "reading"
+  },
+  "0F:7ECE": {
+    "name": "SetBit2AtHL_B0F",
+    "note": "sets bit 2 of the byte at [HL]; only A is clobbered",
+    "evidence": "reading"
+  },
+  "73:7A47": {
+    "name": "SetBit2AtHL_B73",
+    "note": "sets bit 2 of the byte at [HL]; only A is clobbered",
+    "evidence": "reading"
+  },
+  "12:65F5": {
+    "name": "SetBit2AtHL_B12",
+    "note": "sets bit 2 of the byte at [HL]; only A is clobbered",
+    "evidence": "reading"
+  },
+  "00:3E54": {
+    "name": "CarryUnlessWDA63SlotEmpty",
+    "note": "A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved",
+    "evidence": "reading"
+  },
+  "05:6AE8": {
+    "name": "ResetWDA6E",
+    "note": "wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF",
+    "evidence": "reading"
   }
 }

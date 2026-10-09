@@ -1,12 +1,14 @@
 SECTION "Bank 88", ROMX[$4000], BANK[$88]
     db $88
 
+; 2 call sites from 2 routines (e.g. Func_088_400F, Func_001_4AD4)
 Func_088_4001::
     ld de, Data_088_4016
     call Func_000_25C9
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9
 
+; 2 call sites from 2 routines (e.g. Func_001_4F80, Func_001_6903)
 Func_088_400F::
     call Func_088_4001
     call Func_000_2611

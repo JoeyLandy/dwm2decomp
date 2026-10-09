@@ -1,6 +1,8 @@
 SECTION "Bank A2", ROMX[$4000], BANK[$A2]
     db $A2
 
+; 1 call site from 1 routine (e.g. Func_034_4008)
+; reads: wCFE6, wCFE7, hFFC6
 Func_0A2_4001::
     push de
     push bc
@@ -32,6 +34,8 @@ Func_0A2_4001::
     call Func_0A2_404F
     ret
 
+; 1 call site from 1 routine (e.g. Func_034_4040)
+; reads: wCFE6, wCFE7
 Func_0A2_402D::
     push de
     ld a, [wCFE6]
@@ -56,6 +60,7 @@ Func_0A2_402D::
     pop de
     ld b, $1A
 
+; 1 call site from 1 routine (e.g. Func_0A2_4001)
 Func_0A2_404F::
     ld a, [hl+]
     ld [de], a
@@ -67,6 +72,9 @@ Func_0A2_404F::
     ds $14, $00
     INCBIN "dwm2-cobi-us.gbc", $288070, $972
 
+; 1 call site from 1 routine (e.g. Func_0E0_76E0)
+; reads: wC528
+; writes: wC528
 Func_0A2_49E2::
     ld de, Data_0A2_49F8
     ld a, [wC528]
@@ -104,9 +112,11 @@ Data_0A2_49F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_0A2_4F85
     db $CA, $4F
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4A3E:: ; heuristic: target of a pointer table; C0
     bit 1, a
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4A40:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -121,6 +131,8 @@ Func_0A2_4A40:: ; heuristic: target of a pointer table; C0
     ld [de], a
     db $F0
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFF0, hFF90
 Func_0A2_4A4F:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -155,6 +167,8 @@ Func_0A2_4A4F:: ; heuristic: target of a pointer table; C0
     db $0E, $F1, $0F, $1E, $16, $12, $17, $18, $1B, $12, $90, $12, $1C, $11, $12, $14
     db $0A, $20, $0A, $F0
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFF0, hFF90
 Func_0A2_4A88:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -232,10 +246,14 @@ Jump_0A2_4B0A::
     inc d
     jr Jump_0A2_4AAD
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFF90
 Func_0A2_4B1D:: ; heuristic: follows a terminator; C0
     inc d
     jr Jump_0A2_4B36
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFF0, hFF90
 Func_0A2_4B20:: ; heuristic: follows a terminator; C0
     ld [de], a
     ld [hl+], a
@@ -285,6 +303,8 @@ Jump_0A2_4B4B::
     inc c
     jr Jump_0A2_4B7D
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFF90
 Func_0A2_4B66:: ; heuristic: follows a terminator; C0
     ld a, [bc]
     dec de
@@ -370,6 +390,8 @@ Jump_0A2_4BCC::
     dec e
     jr Jump_0A2_4BCC
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFF0
 Func_0A2_4BDC:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -384,6 +406,7 @@ Func_0A2_4BDC:: ; heuristic: target of a pointer table; C0
     rla
     ldh a, [hFFF0]
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4BEE:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -402,6 +425,8 @@ Jump_0A2_4C0A::
     ld a, [bc]
     db $F0
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFF90
 Func_0A2_4C10:: ; heuristic: target of a pointer table; C0
     sub a, b
 
@@ -415,12 +440,15 @@ Jump_0A2_4C11::
     dec de
     jr Jump_0A2_4BAB
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFF90
 Func_0A2_4C1B:: ; heuristic: follows a terminator; C0
     inc d
     ld a, [bc]
     rla
     jr Jump_0A2_4C11
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4C20:: ; heuristic: follows a terminator; C0
     sub a, b
     sub a, b
@@ -438,6 +466,7 @@ Jump_0A2_4C3C::
     db $0E, $F1, $90, $90, $14, $0A, $23, $1E, $17, $18, $1B, $12, $90, $18, $11, $20
     db $0A, $0D, $0A, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4C55:: ; heuristic: target of a pointer table; C0
     sub a, b
 
@@ -449,6 +478,7 @@ Jump_0A2_4C58::
     ld de, $1B12
     jr Jump_0A2_4C79
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4C5D:: ; heuristic: follows a terminator; C0
     ld de, vTiles2 + $12
     inc e
@@ -458,6 +488,7 @@ Func_0A2_4C5D:: ; heuristic: follows a terminator; C0
     db $90, $90, $11, $12, $0D, $0E, $14, $12, $90, $22, $18, $17, $0E, $22, $0A, $16
     db $0A, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4C77:: ; heuristic: target of a pointer table; C0
     sub a, b
     dec e
@@ -481,6 +512,7 @@ Jump_0A2_4C9C::
     ld de, $1712
     jr Jump_0A2_4CAF
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4CA4:: ; heuristic: follows a terminator; C0
     ld e, $90
     rla
@@ -492,6 +524,7 @@ Jump_0A2_4CAF::
     dec e
     jr Func_0A2_4CCF
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4CB3:: ; heuristic: follows a terminator; C0
     ld de, vTiles2 + $12
     rrca
@@ -515,6 +548,7 @@ Jump_0A2_4CC0::
     jr Jump_0A2_4CDD
     db $18, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4CCF:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -558,6 +592,7 @@ Jump_0A2_4D0A::
     db $17, $18, $16, $1E, $1B, $0A, $F1, $90, $90, $90, $1D, $18, $16, $18, $0E, $90
     db $1C, $1E, $23, $1E, $14, $12, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4D23:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -597,6 +632,7 @@ Jump_0A2_4D56::
     dec c
     jr Jump_0A2_4D52
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4D61:: ; heuristic: follows a terminator; C0
     sub a, b
     sub a, b
@@ -609,6 +645,7 @@ Func_0A2_4D61:: ; heuristic: follows a terminator; C0
     jr Jump_0A2_4CFB
     db $12, $14, $0E, $0D, $0A, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4D71:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -638,6 +675,7 @@ Jump_0A2_4DB8::
     jr Jump_0A2_4DD1
     db $12, $90, $17, $1E, $16, $0A, $1D, $0A, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4DC7:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -694,6 +732,7 @@ Jump_0A2_4E19::
     inc e
     ld de, $F012
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4E1F:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -742,6 +781,7 @@ Jump_0A2_4E53::
     db $22, $18, $17, $0A, $10, $0A, $F1, $90, $90, $90, $1C, $11, $12, $17, $10, $18
     db $90, $17, $18, $10, $1E, $14, $12, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4E74:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -751,6 +791,7 @@ Func_0A2_4E74:: ; heuristic: target of a pointer table; C0
     dec de
     jr Jump_0A2_4E0D
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4E7D:: ; heuristic: follows a terminator; C0
     inc d
     ld e, $16
@@ -795,6 +836,7 @@ Jump_0A2_4EAC::
     db $22, $18, $14, $18, $22, $0A, $16, $0A, $F1, $90, $1B, $22, $1E, $12, $0C, $11
     db $12, $90, $17, $0A, $14, $0A, $1C, $11, $12, $16, $0A, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4ECA:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -845,6 +887,7 @@ Jump_0A2_4EEF::
     jr Jump_0A2_4EA8
     db $17, $0A, $14, $0A, $1D, $0A, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4F1F:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -855,6 +898,7 @@ Func_0A2_4F1F:: ; heuristic: target of a pointer table; C0
     db $0A, $90, $16, $0A, $1D, $1C, $1E, $0D, $0A, $F1, $90, $22, $18, $1C, $11, $12
     db $1D, $18, $90, $1D, $0A, $17, $12, $1E, $0C, $11, $12, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4F42:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -872,6 +916,7 @@ Jump_0A2_4F48::
     ld a, [bc]
     db $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4F53:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -887,6 +932,7 @@ Jump_0A2_4F67::
     jr Jump_0A2_4F88
     db $13, $12, $90, $1D, $0A, $10, $1E, $0C, $11, $12, $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4F75:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -902,6 +948,7 @@ Func_0A2_4F75:: ; heuristic: target of a pointer table; C0
     ld a, [bc]
     db $F0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0A2_4F85:: ; heuristic: target of a pointer table; C0
     sub a, b
     cp a, b

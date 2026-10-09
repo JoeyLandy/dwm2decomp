@@ -1,6 +1,9 @@
 SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
+; 1 call site from 1 routine (e.g. Func_017_41CF)
+; reads: wC524, wC47C
+; points at: wC47F
 Func_017_4001::
     ld a, [wC524]
     or a, a
@@ -150,6 +153,10 @@ Data_017_41AF:: ; heuristic: target of a monotone pointer table; C0
 Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; 9 call sites from 7 routines (e.g. Func_000_0150, Func_002_45C6, Func_007_486E, Func_007_4B27, ...)
+; reads: wC524, wC51F, wC0A0, wC520
+; writes: wC47F, wC0A0, wC47C
+; points at: wC480, wC577
 Func_017_41CF::
     ld a, [wC524]
     or a, a
@@ -190,6 +197,9 @@ Jump_017_41F4::
     call SpinDelay
     ret
 
+; 7 call sites from 7 routines (e.g. Func_017_41CF, Func_002_5F9B, Func_007_486E, Func_007_600E, ...)
+; reads: wC524, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
+; points at: wC4DF, wC4E7, wC4EF, wC4F7
 Func_017_421A::
     ld a, [wC524]
     or a, a
@@ -220,6 +230,7 @@ Func_017_421A::
     call Func_017_4258
     ret
 
+; 4 call sites from 1 routine (e.g. Func_017_421A)
 Func_017_4258::
     add hl, hl
     add hl, hl

@@ -1,6 +1,10 @@
 SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
     db $3F
 
+; 1 call site from 1 routine (e.g. Func_03A_5383)
+; reads: wD801, wDAD2, wD88F, wD8A5, wD804, wDAB7
+; writes: wD871, wD868
+; points at: wD871, wD868, hFFA9
 Func_03F_4001::
     ld a, [wD801]
     cp a, $15
@@ -13,7 +17,7 @@ Func_03F_4001::
     ld a, [wD8A5]
     and a, $04
     ld [wD868], a
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03F_402B
     farcall Func_03A_4A3A
     call Func_03F_405B
@@ -27,7 +31,7 @@ Jump_03F_402B::
     ld hl, wD868
     inc [hl]
     ld a, [hl]
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03F_4045
     farcall Func_03A_4A3A
     call Func_03F_405B
@@ -41,10 +45,13 @@ Jump_03F_4045::
     ld hl, wD868
     inc [hl]
     ld a, [hl]
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     ret c
     farcall Func_03A_4A3A
 
+; 2 call sites from 1 routine (e.g. Func_03F_4001)
+; reads: wD804, wD801, wDAB7
+; points at: hFFA9
 Func_03F_405B::
     ld hl, hFFA9
     ld a, [wD804]
@@ -100,6 +107,9 @@ Data_03F_407E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_03F_6E99
     dw Data_03F_734A
 
+; 1 call site from 1 routine (e.g. Func_03F_405B)
+; reads: hFFB1, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; writes: hFFB1
 Func_03F_40BE::
     ldh a, [hFFB1]
     cp a, $28

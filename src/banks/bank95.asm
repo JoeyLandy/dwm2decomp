@@ -1,6 +1,9 @@
 SECTION "Bank 95", ROMX[$4000], BANK[$95]
     INCBIN "dwm2-cobi-us.gbc", $254000, $650
 
+; 1 call site from 1 routine (e.g. Func_008_4001)
+; reads: wC528
+; writes: wC528
 Func_095_4650::
     ld de, Data_095_4675
     ld a, [wC528]
@@ -9,6 +12,9 @@ Func_095_4650::
     call Func_000_25C9
     ret
 
+; 1 call site from 1 routine (e.g. Func_008_4016)
+; reads: wC528
+; writes: wC528
 Func_095_465F::
     ld de, Data_095_4675
     ld a, [wC528]

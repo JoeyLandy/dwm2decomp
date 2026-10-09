@@ -1,6 +1,10 @@
 SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
+; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4F0A, Func_032_5820, ...)
+; reads: wD8A4, wC58A
+; writes: wD8A6
+; points at: wDA1C, wDA53
 Func_039_4001::
     ld a, [wD8A4]
     ld hl, wDA1C
@@ -61,12 +65,18 @@ Jump_039_4042::
     call Func_000_000B
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wC5E7
+; points at: wDA1D
 Func_039_404B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
     xor a, $04
     jp Jump_039_417C
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wC5E7
+; points at: wDA2D, wDA1D
 Func_039_4055:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     add a, a
@@ -79,7 +89,7 @@ Func_039_4055:: ; heuristic: follows a terminator; C0
 Jump_039_4061::
     ld a, [hl]
     ld c, a
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_039_406A
     jr Func_039_404B
 
@@ -96,6 +106,9 @@ Jump_039_4076::
     ld [hl], c
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wDA1D
 Func_039_4078:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -105,7 +118,7 @@ Func_039_4078:: ; heuristic: follows a terminator; C0
 
 Jump_039_4082::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_039_408C
     inc c
     dec b
@@ -125,6 +138,9 @@ Jump_039_4098::
     ret
     db $FA, $A4, $D8, $E6, $04, $C3, $7C, $41
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wDA1D
 Func_039_40A2:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -133,7 +149,7 @@ Func_039_40A2:: ; heuristic: target of a pointer table; C0
 
 Jump_039_40AA::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_039_40B4
     inc c
     dec b
@@ -152,6 +168,9 @@ Jump_039_40C0::
     ld [hl], c
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wC5E7
+; points at: wDA1D
 Func_039_40C2:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -183,6 +202,9 @@ Jump_039_40E6::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0E40E8, $43
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wDA1D
 Func_039_412B:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     ld hl, wDA1D
@@ -197,6 +219,9 @@ Jump_039_4137::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wDA1D
 Func_039_413C:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     ld hl, wDA1D
@@ -212,6 +237,9 @@ Jump_039_4148::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wC5E7
+; points at: wDA1D
 Func_039_414F:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     ld e, a
@@ -222,7 +250,7 @@ Jump_039_4153::
     and a, $07
     cp a, e
     jr z, Jump_039_4153
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_4153
     and a, $03
     cp a, $03
@@ -248,7 +276,7 @@ Jump_039_417C::
 
 Jump_039_4181::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_419A
     ld a, d
     cp a, $FF
@@ -1337,6 +1365,10 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $C5, $66, $C5, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $0A, $6A, $2B, $41, $78, $40, $2B, $41, $2B, $41
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wD8A5, wD872, wD873
+; writes: wD8A5, wD872, wD873
+; points at: wD872, wDA1D
 Func_039_5390:: ; heuristic: target of a pointer table; C0
     ld hl, wD872
     ld bc, $0008
@@ -1351,7 +1383,7 @@ Func_039_5390:: ; heuristic: target of a pointer table; C0
 
 Jump_039_53A7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_53B2
     call Func_039_6D6A
     jr z, Jump_039_53BC
@@ -1370,7 +1402,7 @@ Jump_039_53BC::
 
 Jump_039_53C2::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_53CD
     call Func_039_6E06
     jr z, Jump_039_53D7
@@ -1390,7 +1422,7 @@ Jump_039_53D7::
 Jump_039_53DD::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_540D
     call Func_039_6E06
     jr nz, Jump_039_540D
@@ -1449,6 +1481,10 @@ Jump_039_5437::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wD8A5, wD872, wD873
+; writes: wD8A5, wD872, wD873
+; points at: wD872, wDA1D
 Func_039_543C:: ; heuristic: target of a pointer table; C0
     ld hl, wD872
     ld bc, $0008
@@ -1463,7 +1499,7 @@ Func_039_543C:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5453::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_545E
     call Func_039_6D6A
     jr z, Jump_039_5468
@@ -1482,7 +1518,7 @@ Jump_039_5468::
 
 Jump_039_546E::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_547E
     call Func_039_6E06
     jr z, Jump_039_5488
@@ -1588,6 +1624,10 @@ Jump_039_550F::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wD86B, wD86C
+; writes: wD86B, wD86C
+; points at: wD87D, wD874, wD8BF
 Func_039_5514:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -1600,7 +1640,7 @@ Jump_039_551C::
     ld a, d
     ld [wD86C], a
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_039_5532
     ld bc, $0000
     ld hl, $0000
@@ -1677,6 +1717,10 @@ Jump_039_5580::
     call Func_039_6EB6
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC6, hFFC7, hFFC8, wD86B, wD86C, wD868, wD87D, ...
+; writes: wD868, wD86B, wD86C, hFFC6, hFFC7, hFFC8, wD87D, wD87E, ...
+; points at: hFFC6, wD868, wD8A7, wD8CF, wDA1D, wD87D, wD874, wD8BF
 Func_039_5593:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -1698,7 +1742,7 @@ Jump_039_55A8::
     ld a, b
     ld [wD86C], a
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_55E4
     ld hl, wD868
     inc [hl]
@@ -1768,7 +1812,7 @@ Jump_039_561A::
     ld a, d
     ld [wD869], a
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_566D
     ld a, e
     ld hl, wD8CF
@@ -1840,6 +1884,10 @@ Jump_039_5691::
     ld d, $03
     jp Jump_039_551C
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC6, wC5E7
+; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wDA63, hFFC7, hFFC6, wDA1D
 Func_039_569C:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -1933,6 +1981,10 @@ Jump_039_5714::
     ld [hl], c
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wC5E7, hFFC6
+; writes: hFFC7, hFFC8, hFFC9, hFFC6
+; points at: hFFC7, wD80C, wDA1D
 Func_039_5716:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -1946,7 +1998,7 @@ Func_039_5716:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5728::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5738
     ld hl, wD80C
     call AddAx9ToHL
@@ -2067,6 +2119,10 @@ Jump_039_57CD::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6, wC5E7
+; writes: hFFC6, hFFC7, hFFC8
+; points at: wD80C, wDA1D
 Func_039_57D8:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2080,7 +2136,7 @@ Func_039_57D8:: ; heuristic: follows a terminator; C0
 
 Jump_039_57E9::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5831
     ld hl, wD80C
     call AddAx9ToHL
@@ -2150,6 +2206,10 @@ Jump_039_584C::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6
+; writes: hFFC6, hFFC7, hFFC8
+; points at: wDA1D
 Func_039_5857:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2163,7 +2223,7 @@ Func_039_5857:: ; heuristic: target of a pointer table; C0
 Jump_039_5867::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5891
     call Func_039_71EA
     push hl
@@ -2215,6 +2275,10 @@ Jump_039_58B5::
     ld [hl], c
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80E, wDA75
 Func_039_58B7:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2230,7 +2294,7 @@ Func_039_58B7:: ; heuristic: target of a pointer table; C0
 
 Jump_039_58CD::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5909
     ldh [hFFC8], a
     ld hl, wD80E
@@ -2271,6 +2335,10 @@ Jump_039_5909::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80E, wDA75
 Func_039_5911:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2286,7 +2354,7 @@ Func_039_5911:: ; heuristic: follows a terminator; C0
 
 Jump_039_5927::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5963
     ldh [hFFC8], a
     ld hl, wD80E
@@ -2327,6 +2395,10 @@ Jump_039_5963::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6
+; writes: hFFC6, hFFC7, hFFC8
+; points at: wDA1D
 Func_039_596B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2340,7 +2412,7 @@ Func_039_596B:: ; heuristic: follows a terminator; C0
 Jump_039_597B::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_59A5
     call Func_039_7203
     push hl
@@ -2392,6 +2464,10 @@ Jump_039_59C9::
     ld [hl], c
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wDA74
 Func_039_59CB:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2407,7 +2483,7 @@ Func_039_59CB:: ; heuristic: follows a terminator; C0
 
 Jump_039_59E1::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5A1F
     ldh [hFFC8], a
     call Func_039_71EA
@@ -2451,6 +2527,9 @@ Jump_039_5A1F::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCA, hFFC7, hFFC8
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 Func_039_5A27:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     ld e, a
@@ -2469,7 +2548,7 @@ Func_039_5A27:: ; heuristic: target of a pointer table; C0
 Jump_039_5A40::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5A7B
     ldh [hFFC9], a
     cp a, e
@@ -2511,6 +2590,10 @@ Jump_039_5A7B::
     call Func_039_7028
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD80D, wDA78
 Func_039_5A84:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2527,7 +2610,7 @@ Func_039_5A84:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5A9C::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5AD3
     ldh [hFFC8], a
     call Func_039_6F9A
@@ -2563,6 +2646,10 @@ Jump_039_5AD3::
     call Func_039_7002
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD80C, wDA77
 Func_039_5ADB:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2579,7 +2666,7 @@ Func_039_5ADB:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5AF3::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5B38
     ldh [hFFC8], a
     call Func_039_71EA
@@ -2628,6 +2715,10 @@ Jump_039_5B38::
     call Func_039_7002
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD8A7, wD80C, wDA77
 Func_039_5B40:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2644,7 +2735,7 @@ Func_039_5B40:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5B58::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5B9D
     ldh [hFFC8], a
     ld hl, wD8A7
@@ -2693,6 +2784,10 @@ Jump_039_5B9D::
     call Func_039_7002
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA74
 Func_039_5BA5:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2708,7 +2803,7 @@ Func_039_5BA5:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5BBB::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5BF1
     ldh [hFFC8], a
     ld hl, wD80C
@@ -2746,6 +2841,10 @@ Jump_039_5BF1::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wDA74
 Func_039_5BF9:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2761,7 +2860,7 @@ Func_039_5BF9:: ; heuristic: follows a terminator; C0
 
 Jump_039_5C0F::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5C3B
     ldh [hFFC8], a
     call Func_039_71FE
@@ -2793,6 +2892,10 @@ Jump_039_5C3B::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC9
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD8A7
 Func_039_5C43:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2809,7 +2912,7 @@ Func_039_5C43:: ; heuristic: target of a pointer table; C0
 Jump_039_5C59::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5C8E
     ldh [hFFC9], a
     ld hl, wD8A7
@@ -2849,51 +2952,64 @@ Jump_039_5C8E::
     call Func_039_6FC8
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5C97:: ; heuristic: target of a pointer table; C0
     ld d, $01
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5C9D:: ; heuristic: target of a pointer table; C0
     ld d, $02
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5CA3:: ; heuristic: target of a pointer table; C0
     ld d, $03
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5CA9:: ; heuristic: target of a pointer table; C0
     ld d, $06
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5CAF:: ; heuristic: target of a pointer table; C0
     ld d, $07
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5CB5:: ; heuristic: target of a pointer table; C0
     ld d, $08
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5CBB:: ; heuristic: target of a pointer table; C0
     ld d, $00
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5CC1:: ; heuristic: target of a pointer table; C0
     ld d, $05
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_5CC7:: ; heuristic: target of a pointer table; C0
     ld d, $04
     call Func_039_7093
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA76
 Func_039_5CCD:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2909,7 +3025,7 @@ Func_039_5CCD:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5CE3::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5D11
     ldh [hFFC8], a
     ld hl, wD80C
@@ -2940,6 +3056,10 @@ Jump_039_5D11::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA77
 Func_039_5D19:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -2955,7 +3075,7 @@ Func_039_5D19:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5D2F::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5D5F
     ldh [hFFC8], a
     ld hl, wD80C
@@ -2988,6 +3108,10 @@ Jump_039_5D5F::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA77
 Func_039_5D67:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -3003,7 +3127,7 @@ Func_039_5D67:: ; heuristic: target of a pointer table; C0
 
 Jump_039_5D7D::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5DB3
     ldh [hFFC8], a
     ld hl, wD80C
@@ -3041,6 +3165,9 @@ Jump_039_5DB3::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC9
+; writes: hFFD0, hFFC6, hFFC9, hFFC7, hFFC8
 Func_039_5DBB:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -3058,7 +3185,7 @@ Func_039_5DBB:: ; heuristic: target of a pointer table; C0
 Jump_039_5DD2::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5DFA
     ldh [hFFC9], a
     call Func_039_71EF
@@ -3088,6 +3215,10 @@ Jump_039_5DFA::
     call Func_039_6FC8
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
+; points at: wD80E, wDA74, hFFC8, wDA1D
 Func_039_5E03:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -3107,7 +3238,7 @@ Func_039_5E03:: ; heuristic: follows a terminator; C0
 
 Jump_039_5E20::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5E53
     ld hl, wD80E
     ldh [hFFCB], a
@@ -3151,7 +3282,7 @@ Jump_039_5E53::
 Jump_039_5E65::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5EA5
     ld hl, wD80E
     call AddAx9ToHL
@@ -3200,7 +3331,7 @@ Jump_039_5EAC::
 Jump_039_5EB1::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5ED1
     ldh [hFFCB], a
     call Func_039_71F9
@@ -3233,7 +3364,7 @@ Jump_039_5ED8::
 
 Jump_039_5EE0::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5EF3
     ld hl, wDA74
     call Func_039_71C9
@@ -3268,6 +3399,10 @@ Jump_039_5F06::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A6, wC58A, wD8A4, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
+; writes: wCFEC, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
+; points at: hFFCE, wD80E, wDA72, wDA1D
 Func_039_5F0E:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A6]
     ld [wCFEC], a
@@ -3315,7 +3450,7 @@ Jump_039_5F3A::
 Jump_039_5F6B::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jp c, Jump_039_5FF2
     ldh [hFFC9], a
     ld hl, wD80E
@@ -3412,6 +3547,10 @@ Jump_039_6012::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCA, hFFC9, hFFC6, hFFD0, hFFC7, hFFC8
+; writes: hFFD0, hFFC6, hFFC9, hFFCA, hFFC7, hFFC8
+; points at: wD812, wDA75, wD813
 Func_039_6014:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -3430,7 +3569,7 @@ Func_039_6014:: ; heuristic: target of a pointer table; C0
 Jump_039_602D::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6079
     ldh [hFFC9], a
     ld hl, wD812
@@ -3488,7 +3627,7 @@ Jump_039_6079::
 Jump_039_608A::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_60B6
     ldh [hFFC9], a
     ld hl, wD813
@@ -3525,7 +3664,7 @@ Jump_039_60B6::
 Jump_039_60C6::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_60E4
     ldh [hFFC9], a
     call Func_039_71F9
@@ -3551,6 +3690,10 @@ Jump_039_60E9::
     call Func_039_6FC8
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD80C, wDA74
 Func_039_60ED:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -3567,7 +3710,7 @@ Func_039_60ED:: ; heuristic: follows a terminator; C0
 
 Jump_039_6105::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6143
     ldh [hFFC8], a
     ld hl, wD80C
@@ -3610,6 +3753,10 @@ Jump_039_6143::
     call Func_039_7002
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80E, wDA74
 Func_039_614B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -3625,7 +3772,7 @@ Func_039_614B:: ; heuristic: follows a terminator; C0
 
 Jump_039_6161::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6199
     ldh [hFFC8], a
     call Func_039_71FE
@@ -3663,6 +3810,10 @@ Jump_039_6199::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA72
 Func_039_61A1:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -3680,7 +3831,7 @@ Func_039_61A1:: ; heuristic: target of a pointer table; C0
 
 Jump_039_61BD::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_621A
     ldh [hFFC8], a
     ld hl, wD80F
@@ -3738,6 +3889,10 @@ Jump_039_621A::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA73
 Func_039_6222:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -3755,7 +3910,7 @@ Func_039_6222:: ; heuristic: target of a pointer table; C0
 
 Jump_039_623E::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_629B
     ldh [hFFC8], a
     ld hl, wD80F
@@ -3813,6 +3968,10 @@ Jump_039_629B::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA73
 Func_039_62A3:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -3830,7 +3989,7 @@ Func_039_62A3:: ; heuristic: target of a pointer table; C0
 
 Jump_039_62BF::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_631C
     ldh [hFFC8], a
     ld hl, wD80F
@@ -3889,6 +4048,10 @@ Jump_039_631C::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA73
 Func_039_6324:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -3906,7 +4069,7 @@ Func_039_6324:: ; heuristic: target of a pointer table; C0
 
 Jump_039_6340::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_639D
     ldh [hFFC8], a
     ld hl, wD80F
@@ -3965,6 +4128,10 @@ Jump_039_639D::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wDA73
 Func_039_63A5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -3982,7 +4149,7 @@ Func_039_63A5:: ; heuristic: follows a terminator; C0
 
 Jump_039_63C1::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_640E
     ldh [hFFC8], a
     ld a, c
@@ -4033,6 +4200,10 @@ Jump_039_640E::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wD8A5, hFFC7, wD872, wD873
+; writes: wD8A5, hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wDA1D, wDA78
 Func_039_6416:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -4051,7 +4222,7 @@ Func_039_6416:: ; heuristic: target of a pointer table; C0
 
 Jump_039_6435::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6440
     call Func_039_6D6A
     jr z, Jump_039_644A
@@ -4070,7 +4241,7 @@ Jump_039_644A::
 
 Jump_039_6450::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6460
     call Func_039_6E06
     jr z, Jump_039_646A
@@ -4086,7 +4257,7 @@ Jump_039_6460::
 
 Jump_039_646A::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_64C2
     call Func_039_71D4
     jr nz, Jump_039_64C2
@@ -4156,6 +4327,10 @@ Jump_039_64D6::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA72
 Func_039_64DB:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -4173,7 +4348,7 @@ Func_039_64DB:: ; heuristic: target of a pointer table; C0
 
 Jump_039_64F7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6554
     ldh [hFFC8], a
     ld hl, wD80F
@@ -4232,6 +4407,10 @@ Jump_039_6554::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wDA72
 Func_039_655C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -4249,7 +4428,7 @@ Func_039_655C:: ; heuristic: follows a terminator; C0
 
 Jump_039_6578::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_65C5
     ldh [hFFC8], a
     ld a, c
@@ -4300,6 +4479,10 @@ Jump_039_65C5::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
+; points at: wDA76, wDA1D
 Func_039_65CD:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -4323,7 +4506,7 @@ Func_039_65CD:: ; heuristic: target of a pointer table; C0
 Jump_039_65F4::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jp c, Jump_039_666F
     ldh [hFFC9], a
     ld hl, wDA76
@@ -4415,6 +4598,10 @@ Jump_039_668F::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; points at: hFFC6, hFFC7
 Func_039_6691:: ; heuristic: target of a pointer table; C0
     call Func_000_3ED4
     ld a, [wD8A4]
@@ -4431,7 +4618,7 @@ Func_039_6691:: ; heuristic: target of a pointer table; C0
 
 Jump_039_66A9::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_66BD
     ld hl, hFFC6
     ld a, [hl]
@@ -4452,6 +4639,10 @@ Jump_039_66BD::
     call Func_039_704E
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wD872, wD873, wD874, wD875, hFFC7, hFFC8, wD876, ...
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873, wD874, wD875, ...
+; points at: hFFC6, hFFC7, wD872
 Func_039_66C5:: ; heuristic: target of a pointer table; C0
     call Func_000_3ED4
     ld a, [wD8A4]
@@ -4474,7 +4665,7 @@ Func_039_66C5:: ; heuristic: target of a pointer table; C0
 
 Jump_039_66EF::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6722
     ld hl, hFFC6
     ld e, [hl]
@@ -4592,6 +4783,10 @@ Jump_039_67A9::
     call Func_039_704E
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCB, hFFCC, hFFC7, hFFC8, hFFC6, hFFC9, hFFCA
+; writes: wD09D, wD09E, wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, ...
+; points at: wD09D, hFFC7, wDA1D
 Func_039_67AD:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -4614,7 +4809,7 @@ Func_039_67AD:: ; heuristic: target of a pointer table; C0
 
 Jump_039_67DB::
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_680E
     call Func_039_71F9
     push hl
@@ -4666,7 +4861,7 @@ Jump_039_680E::
 
 Jump_039_6820::
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6895
     ld hl, hFFC7
     ld a, [hl+]
@@ -4775,6 +4970,10 @@ Jump_039_68AE::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCA, hFFCB, hFFC6, wD876, wD877, wD874, wD875, ...
+; writes: hFFC6, hFFCA, hFFCB, hFFC7, hFFC8, hFFC9, wD872, wD873, ...
+; points at: hFFC6, wD872, hFFC7, wDA1D, wD09D
 Func_039_68B0:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -4798,7 +4997,7 @@ Func_039_68B0:: ; heuristic: target of a pointer table; C0
 
 Jump_039_68DA::
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_68F1
     call Func_039_71EF
     ldh a, [hFFCA]
@@ -4830,7 +5029,7 @@ Jump_039_68F1::
 
 Jump_039_690A::
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_693C
     call Func_039_71F9
     ldh a, [hFFCA]
@@ -4921,138 +5120,265 @@ Jump_039_6994::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC6, wC5E7
+; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wDA63, hFFC7, hFFC6, wDA1D
 Func_039_6998:: ; heuristic: target of a pointer table; C0
     jp Func_039_569C
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wC5E7, hFFC6
+; writes: hFFC7, hFFC8, hFFC9, hFFC6
+; points at: hFFC7, wD80C, wDA1D
 Func_039_699B:: ; heuristic: target of a pointer table; C0
     jp Func_039_5716
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6, wC5E7
+; writes: hFFC6, hFFC7, hFFC8
+; points at: wD80C, wDA1D
 Func_039_699E:: ; heuristic: follows a terminator; C0
     jp Func_039_57D8
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6
+; writes: hFFC6, hFFC7, hFFC8
+; points at: wDA1D
 Func_039_69A1:: ; heuristic: target of a pointer table; C0
     jp Func_039_5857
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80E, wDA75
 Func_039_69A4:: ; heuristic: target of a pointer table; C0
     jp Func_039_58B7
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80E, wDA75
 Func_039_69A7:: ; heuristic: follows a terminator; C0
     jp Func_039_5911
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6
+; writes: hFFC6, hFFC7, hFFC8
+; points at: wDA1D
 Func_039_69AA:: ; heuristic: follows a terminator; C0
     jp Func_039_596B
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wDA74
 Func_039_69AD:: ; heuristic: follows a terminator; C0
     jp Func_039_59CB
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCA, hFFC7, hFFC8
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 Func_039_69B0:: ; heuristic: target of a pointer table; C0
     jp Func_039_5A27
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD80D, wDA78
 Func_039_69B3:: ; heuristic: target of a pointer table; C0
     jp Func_039_5A84
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD80C, wDA77
 Func_039_69B6:: ; heuristic: target of a pointer table; C0
     jp Func_039_5ADB
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD8A7, wD80C, wDA77
 Func_039_69B9:: ; heuristic: target of a pointer table; C0
     jp Func_039_5B40
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA74
 Func_039_69BC:: ; heuristic: target of a pointer table; C0
     jp Func_039_5BA5
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wDA74
 Func_039_69BF:: ; heuristic: follows a terminator; C0
     jp Func_039_5BF9
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC9
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD8A7
 Func_039_69C2:: ; heuristic: target of a pointer table; C0
     jp Func_039_5C43
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69C5:: ; heuristic: target of a pointer table; C0
     ld d, $01
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69CB:: ; heuristic: target of a pointer table; C0
     ld d, $02
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69D1:: ; heuristic: target of a pointer table; C0
     ld d, $03
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69D7:: ; heuristic: target of a pointer table; C0
     ld d, $06
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69DD:: ; heuristic: target of a pointer table; C0
     ld d, $07
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69E3:: ; heuristic: target of a pointer table; C0
     ld d, $08
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69E9:: ; heuristic: target of a pointer table; C0
     ld d, $00
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69EF:: ; heuristic: target of a pointer table; C0
     ld d, $05
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_69F5:: ; heuristic: target of a pointer table; C0
     ld d, $04
     call Func_039_70FD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA76
 Func_039_69FB:: ; heuristic: target of a pointer table; C0
     jp Func_039_5CCD
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA77
 Func_039_69FE:: ; heuristic: target of a pointer table; C0
     jp Func_039_5D19
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, wDA77
 Func_039_6A01:: ; heuristic: target of a pointer table; C0
     jp Func_039_5D67
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC9
+; writes: hFFD0, hFFC6, hFFC9, hFFC7, hFFC8
 Func_039_6A04:: ; heuristic: target of a pointer table; C0
     jp Func_039_5DBB
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
+; points at: wD80E, wDA74, hFFC8, wDA1D
 Func_039_6A07:: ; heuristic: follows a terminator; C0
     jp Func_039_5E03
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A6, wC58A, wD8A4, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
+; writes: wCFEC, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
+; points at: hFFCE, wD80E, wDA72, wDA1D
 Func_039_6A0A:: ; heuristic: target of a pointer table; C0
     jp Func_039_5F0E
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCA, hFFC9, hFFC6, hFFD0, hFFC7, hFFC8
+; writes: hFFD0, hFFC6, hFFC9, hFFCA, hFFC7, hFFC8
+; points at: wD812, wDA75, wD813
 Func_039_6A0D:: ; heuristic: target of a pointer table; C0
     jp Func_039_6014
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD80C, wDA74
 Func_039_6A10:: ; heuristic: follows a terminator; C0
     jp Func_039_60ED
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80E, wDA74
 Func_039_6A13:: ; heuristic: follows a terminator; C0
     jp Func_039_614B
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA72
 Func_039_6A16:: ; heuristic: target of a pointer table; C0
     jp Func_039_61A1
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA73
 Func_039_6A19:: ; heuristic: target of a pointer table; C0
     jp Func_039_6222
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA73
 Func_039_6A1C:: ; heuristic: target of a pointer table; C0
     jp Func_039_62A3
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA73
 Func_039_6A1F:: ; heuristic: target of a pointer table; C0
     jp Func_039_6324
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wDA73
 Func_039_6A22:: ; heuristic: follows a terminator; C0
     jp Func_039_63A5
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wDA78
 Func_039_6A25:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -5070,7 +5396,7 @@ Func_039_6A25:: ; heuristic: target of a pointer table; C0
 
 Jump_039_6A41::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6A8E
     ldh [hFFC8], a
     ld a, c
@@ -5121,12 +5447,24 @@ Jump_039_6A8E::
     call Func_039_6FE2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wD80F, wDA72
 Func_039_6A96:: ; heuristic: target of a pointer table; C0
     jp Func_039_64DB
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, wD872, wD873
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD872, wD873
+; points at: wDA72
 Func_039_6A99:: ; heuristic: follows a terminator; C0
     jp Func_039_655C
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD80C, wDA75
 Func_039_6A9C:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -5143,7 +5481,7 @@ Func_039_6A9C:: ; heuristic: target of a pointer table; C0
 
 Jump_039_6AB4::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6AF2
     ldh [hFFC8], a
     ld hl, wD80C
@@ -5186,9 +5524,17 @@ Jump_039_6AF2::
     call Func_039_7002
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
+; points at: wDA76, wDA1D
 Func_039_6AFA:: ; heuristic: target of a pointer table; C0
     jp Func_039_65CD
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC6, hFFC7, wC5E7, hFFC8
+; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; points at: wD80C, hFFC6, hFFC7, wDA1D
 Func_039_6AFD:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -5196,6 +5542,10 @@ Func_039_6AFD:: ; heuristic: target of a pointer table; C0
     ld d, $03
     jp Jump_039_6BE3
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC6, hFFC7, wC5E7, hFFC8
+; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; points at: hFFC6, hFFC7, wDA1D
 Func_039_6B0A:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -5211,7 +5561,7 @@ Func_039_6B0A:: ; heuristic: target of a pointer table; C0
 Jump_039_6B1D::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6B41
     call Func_039_71EA
     push hl
@@ -5254,6 +5604,10 @@ Jump_039_6B58::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC6, hFFC7, wC5E7, hFFC8
+; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; points at: hFFC6, hFFC7, wDA1D
 Func_039_6B5D:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5269,7 +5623,7 @@ Func_039_6B5D:: ; heuristic: follows a terminator; C0
 Jump_039_6B70::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6B94
     call Func_039_7203
     push hl
@@ -5312,6 +5666,10 @@ Jump_039_6BAB::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC6
+; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; points at: hFFC6, hFFC7
 Func_039_6BB0:: ; heuristic: target of a pointer table; C0
     ld de, Func_039_71EA
     jp Jump_039_6C30
@@ -5332,7 +5690,7 @@ Jump_039_6BE3::
 
 Jump_039_6BF4::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6C0E
     ld a, [hl]
     and a, d
@@ -5393,7 +5751,7 @@ Jump_039_6C30::
 
 Jump_039_6C45::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6C67
     ld h, d
     ld l, e
@@ -5428,6 +5786,10 @@ Jump_039_6C67::
     call Func_039_704E
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wDA1D
 Func_039_6C75:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -5444,7 +5806,7 @@ Func_039_6C75:: ; heuristic: target of a pointer table; C0
 Jump_039_6C8A::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6CD4
     call Func_039_71F9
     push hl
@@ -5509,6 +5871,10 @@ Jump_039_6CE5::
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wDA1D
 Func_039_6CE9:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -5528,7 +5894,7 @@ Jump_039_6CFE::
     cp a, c
     jr z, Jump_039_6D4E
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6D4E
     call Func_039_71FE
     push hl
@@ -5598,6 +5964,8 @@ Jump_039_6D68::
     ld [hl], a
     ret
 
+; 3 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; points at: wD810
 Func_039_6D6A::
     ld hl, wD810
     call AddAx9ToHL
@@ -5605,6 +5973,10 @@ Func_039_6D6A::
     and a, $0C
     ret
 
+; 3 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; reads: wD8A5, wD874, wD875, hFFC6, wC5E7
+; writes: wD87F, hFFC7, hFFC6
+; points at: wD874, wD8A5
 Func_039_6D74::
     ld a, $00
     ld [wD87F], a
@@ -5620,6 +5992,10 @@ Jump_039_6D82::
     dec b
     jr nz, Jump_039_6D82
 
+; 3 call sites from 3 routines (e.g. Func_039_6E8B, Func_039_543C, Func_039_5390)
+; reads: wD874, wD875, hFFC6, wC5E7
+; writes: hFFC6
+; points at: wD874, wD8A5
 Func_039_6D89::
     xor a, a
     ldh [hFFC6], a
@@ -5669,9 +6045,12 @@ Jump_039_6DBC::
     ld [hl], a
     ret
 
+; 2 call sites from 2 routines (e.g. Func_039_6D74, Func_039_6E8B)
+; reads: hFFC7
+; points at: wD812, wD874
 Func_039_6DC8::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Func_039_6DF1
     call Func_039_71F9
     push hl
@@ -5696,9 +6075,13 @@ Jump_039_6DED::
     add hl, de
     jr Func_039_6DF4
 
+; 1 call site from 1 routine (e.g. Func_039_6E8B)
+; points at: wD874
 Func_039_6DF1::
     ld hl, rIE
 
+; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
+; points at: wD874
 Func_039_6DF4::
     ld a, c
     and a, $03
@@ -5717,6 +6100,8 @@ Jump_039_6E00::
     ld [de], a
     ret
 
+; 7 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; points at: wD80C
 Func_039_6E06::
     ld hl, wD80C
     call AddAx9ToHL
@@ -5741,6 +6126,9 @@ Func_039_6E06::
 Jump_039_6E26::
     ret
 
+; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
+; reads: wD8A6, wD8A4
+; writes: wD872, wD873
 Func_039_6E27::
     push bc
     ld a, [wD8A6]
@@ -5776,6 +6164,10 @@ Jump_039_6E5F::
     pop bc
     ret
 
+; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
+; reads: wD872, wD873
+; writes: wD872, wD873
+; points at: wD8A7
 Func_039_6E61::
     ld a, c
     ld hl, wD8A7
@@ -5807,6 +6199,10 @@ Jump_039_6E6A::
     pop af
     ret
 
+; 4 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; reads: wD8A5
+; writes: hFFC7
+; points at: wD80F
 Func_039_6E8B::
     ld a, $01
     ldh [hFFC7], a
@@ -5837,6 +6233,10 @@ Jump_039_6EAE::
     call Func_039_6D89
     ret
 
+; 1 call site from 1 routine (e.g. Func_039_5514)
+; reads: hFFC7, hFFC6, hFFC8, wD8A4, wD8A5
+; writes: hFFC6, hFFC7, hFFC8, wD8A5
+; points at: wD874, wD87D, hFFC7, wDA1D
 Func_039_6EB6::
     ld a, $00
     ldh [hFFC6], a
@@ -5930,6 +6330,8 @@ Jump_039_6F2D::
     ld [hl], a
     ret
 
+; 2 call sites from 2 routines (e.g. Func_039_5857, Func_039_6B0A)
+; reads: wDAC4, wDAC5, wC58A, wD8A4
 Func_039_6F32::
     farcall Func_03B_40CD
     ld a, [wDAC4]
@@ -5960,6 +6362,8 @@ Jump_039_6F62::
 Jump_039_6F65::
     ret
 
+; 2 call sites from 2 routines (e.g. Func_039_6B5D, Func_039_596B)
+; reads: wDAC4, wDAC5, wC58A, wD8A4
 Func_039_6F66:: ; heuristic: follows a terminator; C0
     farcall Func_03B_4111
     ld a, [wDAC4]
@@ -5990,6 +6394,8 @@ Jump_039_6F96::
 Jump_039_6F99::
     ret
 
+; 1 call site from 1 routine (e.g. Func_039_5A84)
+; points at: wD989
 Func_039_6F9A::
     push bc
     ld hl, wD989
@@ -6028,6 +6434,9 @@ Jump_039_6FC0::
     pop bc
     ret
 
+; 5 call sites from 5 routines (e.g. Func_039_70FD, Func_039_6014, Func_039_5C43, Func_039_7093, ...)
+; reads: wD8A4, hFFC6, hFFC9, hFFD0
+; points at: wDA1D
 Func_039_6FC8::
     ld a, [wD8A4]
     ld hl, wDA1D
@@ -6050,6 +6459,9 @@ Jump_039_6FDC::
     ld [hl], a
     ret
 
+; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_5D67, Func_039_6416, Func_039_5BA5, ...)
+; reads: wD8A4, hFFC6, hFFC9, hFFC8, hFFD0
+; points at: wDA1D
 Func_039_6FE2::
     ld a, [wD8A4]
     ld hl, wDA1D
@@ -6075,6 +6487,9 @@ Jump_039_6FFC::
     ld [hl], a
     ret
 
+; 5 call sites from 5 routines (e.g. Func_039_6A9C, Func_039_5A84, Func_039_5B40, Func_039_5ADB, ...)
+; reads: wD8A4, hFFC6, hFFCA, hFFC9, hFFC8, hFFD0
+; points at: wDA1D
 Func_039_7002::
     ld a, [wD8A4]
     ld hl, wDA1D
@@ -6103,6 +6518,9 @@ Jump_039_7022::
     ld [hl], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_039_5A27)
+; reads: wD8A4, hFFC6, hFFCB, hFFCA, hFFC9, hFFD0
+; points at: wDA1D
 Func_039_7028::
     ld a, [wD8A4]
     ld hl, wDA1D
@@ -6131,6 +6549,9 @@ Jump_039_7048::
     ld [hl], a
     ret
 
+; 3 call sites from 3 routines (e.g. Func_039_66C5, Func_039_6BB0, Func_039_6691)
+; reads: hFFC6, hFFC7, wD8A4, wC5E7, hFFC8
+; points at: wDA1D, hFFC7
 Func_039_704E::
     ldh a, [hFFC6]
     cp a, $03
@@ -6183,6 +6604,10 @@ Jump_039_7091::
     ld [hl], b
     ret
 
+; 9 call sites from 9 routines (e.g. Func_039_5CB5, Func_039_5CAF, Func_039_5CA9, Func_039_5CC7, ...)
+; reads: wD8A4, wD008, hFFC7, hFFC8, hFFC9
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD006, wD007
+; points at: wD958
 Func_039_7093::
     ld a, [wD8A4]
     and a, $04
@@ -6200,7 +6625,7 @@ Jump_039_70A9::
     ld a, c
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_70F4
     ldh [hFFC9], a
     ld hl, wD958
@@ -6251,6 +6676,10 @@ Jump_039_70F4::
     call Func_039_6FC8
     ret
 
+; 9 call sites from 9 routines (e.g. Func_039_69E3, Func_039_69DD, Func_039_69D7, Func_039_69F5, ...)
+; reads: wD8A4, wD008, hFFC6, wC5E7, hFFC9
+; writes: hFFD0, hFFC6, hFFC9, wD006, wD007
+; points at: wD958
 Func_039_70FD::
     ld a, [wD8A4]
     and a, $04
@@ -6266,7 +6695,7 @@ Jump_039_710F::
     ld a, c
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_714C
     ldh [hFFC9], a
     ld hl, wD958
@@ -6307,6 +6736,8 @@ Jump_039_714C::
     call Func_039_6FC8
     ret
 
+; 1 call site from 1 routine (e.g. Func_039_5F0E)
+; reads: hFFCE, hFFCF
 Func_039_7155::
     push af
     ldh a, [hFFCE]
@@ -6340,6 +6771,9 @@ Jump_039_717B::
 Jump_039_717F::
     ret
 
+; 1 call site from 1 routine (e.g. Func_039_65CD)
+; reads: wD8A4
+; points at: wD8B7
 Func_039_7180::
     push af
     ld a, [wD8A4]
@@ -6393,6 +6827,7 @@ Jump_039_71C4::
 Jump_039_71C8::
     ret
 
+; 29 call sites from 27 routines (e.g. Func_039_6A9C, Func_039_6A25, Func_039_5A84, Func_039_5B40, ...)
 Func_039_71C9::
     add a, a
     add a, c
@@ -6407,6 +6842,8 @@ Jump_039_71D2::
     ld a, [hl]
     ret
 
+; 5 call sites from 2 routines (e.g. Func_039_543C, Func_039_6416)
+; points at: wD80E
 Func_039_71D4::
     ld a, c
     ld hl, wD80E
@@ -6420,34 +6857,50 @@ Func_039_71D4::
     and a, $C0
     ret
 
+; 2 call sites from 2 routines (e.g. Func_039_6E27, Func_039_57D8)
+; points at: wD8FF
 Func_039_71E5::
     ld hl, wD8FF
     jr Jump_039_7212
 
+; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_66C5, Func_039_6DC8, Func_039_5ADB, ...)
+; points at: wD90F
 Func_039_71EA::
     ld hl, wD90F
     jr Jump_039_7212
 
+; 7 call sites from 7 routines (e.g. Func_039_68B0, Func_039_5593, Func_039_5514, Func_039_67AD, ...)
+; points at: wD8CF
 Func_039_71EF::
     ld hl, wD8CF
     jr Jump_039_7212
 
+; 2 call sites from 2 routines (e.g. Func_039_5DBB, Func_039_6CE9)
+; points at: wD8EF
 Func_039_71F4::
     ld hl, wD8EF
     jr Jump_039_7212
 
+; 28 call sites from 24 routines (e.g. Func_039_6A25, Func_039_68B0, Func_039_66C5, Func_039_5593, ...)
+; points at: wD8BF
 Func_039_71F9::
     ld hl, wD8BF
     jr Jump_039_7212
 
+; 4 call sites from 4 routines (e.g. Func_039_7180, Func_039_6CE9, Func_039_5BF9, Func_039_614B)
+; points at: wD8DF
 Func_039_71FE::
     ld hl, wD8DF
     jr Jump_039_7212
 
+; 4 call sites from 4 routines (e.g. Func_039_6B5D, Func_039_5911, Func_039_596B, Func_039_59CB)
+; points at: wD91F
 Func_039_7203::
     ld hl, wD91F
     jr Jump_039_7212
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wDA53
 Func_039_7208:: ; heuristic: follows a terminator; C0
     ld hl, wDA53
     add a, l
@@ -6472,6 +6925,7 @@ Jump_039_7218::
     ld l, a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_039_721C:: ; heuristic: follows a terminator; C0
     add a, a
     add a, l
@@ -6482,6 +6936,8 @@ Func_039_721C:: ; heuristic: follows a terminator; C0
 Jump_039_7222::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wC57F, wD8A4
 Func_039_7223:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -6499,6 +6955,8 @@ Jump_039_7238::
     cp a, $04
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wC57F, wD8A5
 Func_039_723E:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01

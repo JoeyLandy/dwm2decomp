@@ -1,6 +1,7 @@
 SECTION "Bank 86", ROMX[$4000], BANK[$86]
     db $86
 
+; 3 call sites from 3 routines (e.g. Func_001_4AD4, Func_010_4AD0, Func_05F_69FB)
 Func_086_4001::
     ld de, Data_086_4016
     call Func_000_25C9

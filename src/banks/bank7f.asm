@@ -1,6 +1,7 @@
 SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7F
 
+; 3 call sites from 3 routines (e.g. Func_004_44CE, Func_004_4C25, Func_004_4C96)
 Func_07F_4001::
     ld de, Data_07F_4008
     call Func_07F_40CC
@@ -102,6 +103,10 @@ Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_6EB4
     db $74, $62, $74, $62, $26, $6F, $74, $62, $98, $6F
 
+; 1 call site from 1 routine (e.g. Func_07F_4001)
+; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hFFB1
+; points at: hFFB5
 Func_07F_40CC::
     ldh a, [hFFB1]
     cp a, $27
@@ -567,6 +572,8 @@ Jump_07F_42F2::
     jr nz, Jump_07F_4297
     ret
 
+; 2 call sites from 1 routine (e.g. Func_07F_40CC)
+; reads: hFFA5, hFFA1, hFFBA, rSTAT
 Func_07F_4312::
     push hl
     push bc
@@ -922,6 +929,7 @@ Data_07F_6E42:: ; heuristic: target of a monotone pointer table; C0
 Data_07F_6EB4:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $1FEEB4, $156
 
+; 25 call sites from 20 routines (e.g. Func_003_7647, Func_004_4BE4, Func_004_4D43, Func_007_5DD6, ...)
 Func_07F_700A::
     ld de, Data_07F_7011
     call Func_07F_7065
@@ -971,6 +979,10 @@ Data_07F_7011:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_7B1D
     dw Data_07F_7B24
 
+; 1 call site from 1 routine (e.g. Func_07F_700A)
+; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hFFB1
+; points at: hFFB5
 Func_07F_7065::
     ldh a, [hFFB1]
     cp a, $27
@@ -1436,6 +1448,8 @@ Jump_07F_728B::
     jr nz, Jump_07F_7230
     ret
 
+; 2 call sites from 1 routine (e.g. Func_07F_7065)
+; reads: hFFA5, hFFA1, hFFBA, rSTAT
 Func_07F_72AB::
     push hl
     push bc

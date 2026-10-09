@@ -1,34 +1,50 @@
 SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
+; 12 call sites from 11 routines (e.g. Func_005_6985, Func_005_544F, Func_005_50E3, Func_005_65C1, ...)
+; points at: wD8FF
 Func_005_4001:: ; heuristic: follows a terminator; C0
     ld hl, wD8FF
     jr Jump_005_402E
 
+; 18 call sites from 15 routines (e.g. Func_005_443B, Func_005_6B20, Func_005_6985, Func_005_6CC2, ...)
+; points at: wD90F
 Func_005_4006::
     ld hl, wD90F
     jr Jump_005_402E
 
+; 19 call sites from 14 routines (e.g. Func_005_64DF, Func_005_5317, Func_005_6B9E, Func_005_6556, ...)
+; points at: wD8CF
 Func_005_400B::
     ld hl, wD8CF
     jr Jump_005_402E
 
+; 12 call sites from 7 routines (e.g. Func_005_558B, Func_005_544F, Func_005_6FFD, Func_005_6741, ...)
+; points at: wD8EF
 Func_005_4010::
     ld hl, wD8EF
     jr Jump_005_402E
 
+; 25 call sites from 21 routines (e.g. Func_005_6494, Func_005_4C5D, Func_005_64DF, Func_005_5317, ...)
+; points at: wD8BF
 Func_005_4015::
     ld hl, wD8BF
     jr Jump_005_402E
 
+; 9 call sites from 9 routines (e.g. Func_005_5500, Func_005_558B, Func_005_6FFD, Func_005_62E1, ...)
+; points at: wD8DF
 Func_005_401A::
     ld hl, wD8DF
     jr Jump_005_402E
 
+; 10 call sites from 8 routines (e.g. Func_005_4461, Func_005_6B5F, Func_005_6DFF, Func_005_4B97, ...)
+; points at: wD91F
 Func_005_401F::
     ld hl, wD91F
     jr Jump_005_402E
 
+; 6 call sites from 5 routines (e.g. Func_005_6556, Func_005_667F, Func_005_67B2, Func_005_6820, ...)
+; points at: wDA53
 Func_005_4024:: ; heuristic: follows a terminator; C0
     ld hl, wDA53
     add a, l
@@ -53,6 +69,7 @@ Jump_005_4034::
     ld l, a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_005_4038:: ; heuristic: follows a terminator; C0
     add a, a
     add a, l
@@ -63,6 +80,8 @@ Func_005_4038:: ; heuristic: follows a terminator; C0
 Jump_005_403E::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wC57F, wD8A4
 Func_005_403F:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -80,6 +99,8 @@ Jump_005_4054::
     cp a, $04
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wC57F, wD8A5
 Func_005_405A:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -98,6 +119,9 @@ Jump_005_406F::
     ret
     INCBIN "dwm2-cobi-us.gbc", $014075, $CA
 
+; 35 call sites from 35 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; reads: wD8A4, wCFEE
+; points at: wD8DF
 Func_005_413F::
     ld a, [wD8A4]
     ld hl, wD8DF
@@ -134,6 +158,9 @@ Jump_005_4166::
     ld c, $FF
     ret
 
+; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; reads: wCFF3, wD8A4
+; points at: wD80D
 Func_005_4169::
     ld a, [wCFF3]
     bit 6, a
@@ -150,6 +177,9 @@ Jump_005_4180::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_74F9, Func_005_7812, Func_005_7879, Func_005_7AA4)
+; reads: wCFF3, wD8A4
+; points at: wD80D
 Func_005_4183:: ; heuristic: follows a terminator; C0
     ld a, [wCFF3]
     bit 4, a
@@ -166,6 +196,9 @@ Jump_005_419B::
     ld c, $FF
     ret
 
+; 5 call sites from 5 routines (e.g. Func_005_78EC, Func_005_7946, Func_005_7975, Func_005_7996, ...)
+; reads: wCFF3, wD8A4
+; points at: wD80D
 Func_005_419E:: ; heuristic: follows a terminator; C0
     ld a, [wCFF3]
     bit 5, a
@@ -182,6 +215,9 @@ Jump_005_41B6::
     ld c, $FF
     ret
 
+; 6 call sites from 6 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; reads: wCFEC, wCFF3
+; points at: wD80A
 Func_005_41B9::
     ld hl, wD80A
     ld a, [hl+]
@@ -203,6 +239,8 @@ Jump_005_41D3::
     ld c, $FF
     ret
 
+; 20 call sites from 20 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; reads: wCFF6, wCFEC
 Func_005_41D6::
     ld a, [wCFF6]
     bit 7, a
@@ -217,6 +255,9 @@ Jump_005_41E8::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_7261)
+; reads: wD8A4
+; points at: wD80E
 Func_005_41EB::
     ld a, [wD8A4]
     and a, $04
@@ -227,6 +268,9 @@ Func_005_41EB::
     call Func_005_6FA1
     ret
 
+; 23 call sites from 23 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_74D1, ...)
+; reads: wD8A4
+; points at: wD811
 Func_005_41FD::
     ld a, [wD8A4]
     and a, $04
@@ -237,6 +281,9 @@ Func_005_41FD::
     call Func_005_6FA1
     ret
 
+; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_74D1, Func_005_7616, Func_005_770A, ...)
+; reads: wD8A4
+; points at: wD80E
 Func_005_420F::
     ld hl, wD80E
     ld a, [wD8A4]
@@ -247,6 +294,9 @@ Func_005_420F::
     call Func_005_6FA1
     ret
 
+; 11 call sites from 11 routines (e.g. Func_005_7080, Func_005_7512, Func_005_7616, Func_005_774F, ...)
+; reads: wD8A4
+; points at: wD80F, wD810
 Func_005_4221::
     ld a, [wD8A4]
     and a, $04
@@ -256,7 +306,7 @@ Func_005_4221::
 
 Jump_005_422B::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_423E
     ld a, c
     ld hl, wD80F
@@ -290,6 +340,9 @@ Jump_005_4256::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_7322, Func_005_78A8, Func_005_7A6C, Func_005_7CF3)
+; reads: wD8A4
+; points at: wD8DF
 Func_005_4259:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -299,7 +352,7 @@ Func_005_4259:: ; heuristic: follows a terminator; C0
 
 Jump_005_4263::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_427C
     ld hl, wD8DF
     ld a, c
@@ -328,6 +381,10 @@ Jump_005_4283::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_72F7)
+; reads: wD8A4, wCFEC, wCFED, hFFC6
+; writes: wCFEC, wCFED, wD868, wD869, wD86A, wD86B
+; points at: wD988, hFFC6
 Func_005_4286:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -355,7 +412,7 @@ Jump_005_42A4::
 
 Jump_005_42AF::
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_42F4
     ld c, $00
 
@@ -427,6 +484,9 @@ Jump_005_4319::
     ld c, $01
     ret
 
+; 16 call sites from 16 routines (e.g. Func_005_7109, Func_005_71BE, Func_005_72F7, Func_005_7345, ...)
+; reads: wD8A4
+; points at: wD80C
 Func_005_431C:: ; heuristic: follows a terminator; C0
     ld hl, wD80C
     ld a, [wD8A4]
@@ -437,6 +497,10 @@ Func_005_431C:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_7345, Func_005_73D7, Func_005_7449, Func_005_7A6C)
+; reads: wD8A4, wCFEC
+; writes: wCFEC
+; points at: wD80D
 Func_005_432E:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -453,7 +517,7 @@ Func_005_432E:: ; heuristic: follows a terminator; C0
 
 Jump_005_4348::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_435E
     ld a, c
     ld hl, wD80D
@@ -482,6 +546,9 @@ Jump_005_4370::
     ld c, $01
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_7410, Func_005_7CF3)
+; reads: wD8A4, wCFEC
+; writes: wCFEC
 Func_005_4373:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -498,7 +565,7 @@ Func_005_4373:: ; heuristic: follows a terminator; C0
 
 Jump_005_438D::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4398
     call Func_005_6C02
     jr nz, Jump_005_43A3
@@ -522,6 +589,10 @@ Jump_005_43AA::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7B84)
+; reads: wD8A4, wCFEC
+; writes: wCFEC
+; points at: wD80D
 Func_005_43AD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -538,7 +609,7 @@ Func_005_43AD:: ; heuristic: follows a terminator; C0
 
 Jump_005_43C7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_43DD
     ld a, c
     ld hl, wD80D
@@ -567,6 +638,9 @@ Jump_005_43EF::
     ld c, $01
     ret
 
+; 11 call sites from 11 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_74D1, ...)
+; reads: wCFEF, wD8A4
+; points at: wDA72
 Func_005_43F2::
     ld a, [wCFEF]
     or a, a
@@ -601,7 +675,7 @@ Jump_005_4402::
 
 Jump_005_441C::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4429
     call Func_005_6C86
     cp a, $03
@@ -624,6 +698,8 @@ Jump_005_4438::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7786, Func_0E2_4001, Func_0E2_5F0A)
+; reads: wD8A4
 Func_005_443B::
     ld a, [wD8A4]
     and a, $04
@@ -633,7 +709,7 @@ Func_005_443B::
 
 Jump_005_4445::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4457
     call Func_005_4006
     ld a, h
@@ -654,6 +730,8 @@ Jump_005_445E::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_76A3)
+; reads: wD8A4
 Func_005_4461:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -663,7 +741,7 @@ Func_005_4461:: ; heuristic: follows a terminator; C0
 
 Jump_005_446B::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_447D
     call Func_005_401F
     ld a, h
@@ -684,6 +762,9 @@ Jump_005_4484::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_74F9)
+; reads: wD8A4
+; points at: wD80E
 Func_005_4487:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -694,6 +775,9 @@ Func_005_4487:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7370, Func_005_78CC, Func_005_7CF3)
+; reads: wD8A4
+; points at: wD80C
 Func_005_4499:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -704,6 +788,9 @@ Func_005_4499:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7860)
+; reads: wD8A4
+; points at: wD80C
 Func_005_44AB:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -714,6 +801,9 @@ Func_005_44AB:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_763E, Func_005_7847)
+; reads: wD8A4
+; points at: wD80C
 Func_005_44BD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -724,6 +814,9 @@ Func_005_44BD:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 7 call sites from 7 routines (e.g. Func_005_7686, Func_005_72DE, Func_005_77F9, Func_005_7D5B, ...)
+; reads: wD8A4
+; points at: wD80C
 Func_005_44CF::
     ld a, [wD8A4]
     and a, $04
@@ -734,6 +827,10 @@ Func_005_44CF::
     call Func_005_6FA1
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7CC2)
+; reads: wD8A4, wCFEC
+; writes: wCFEC
+; points at: wD80D
 Func_005_44E1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -750,7 +847,7 @@ Func_005_44E1:: ; heuristic: follows a terminator; C0
 
 Jump_005_44FB::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4512
     ld a, c
     ld hl, wD80D
@@ -780,6 +877,9 @@ Jump_005_4524::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD811
 Func_005_4527:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -790,6 +890,9 @@ Func_005_4527:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD811, wD80D
 Func_005_4539:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -799,7 +902,7 @@ Func_005_4539:: ; heuristic: follows a terminator; C0
 
 Jump_005_4543::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4561
     ld a, c
     ld hl, wD811
@@ -825,6 +928,9 @@ Jump_005_4568::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD811, wD80D
 Func_005_456B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -834,7 +940,7 @@ Func_005_456B:: ; heuristic: follows a terminator; C0
 
 Jump_005_4575::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4593
     ld a, c
     ld hl, wD811
@@ -860,6 +966,9 @@ Jump_005_459A::
     ld c, $FF
     ret
 
+; 6 call sites from 6 routines (e.g. Func_005_72BE, Func_005_79C5, Func_005_79E5, Func_005_7C12, ...)
+; reads: wD8A4
+; points at: wD811, wD80D
 Func_005_459D:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -869,7 +978,7 @@ Func_005_459D:: ; heuristic: follows a terminator; C0
 
 Jump_005_45A7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_45C5
     ld a, c
     ld hl, wD811
@@ -895,6 +1004,9 @@ Jump_005_45CC::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_7345, Func_005_7449)
+; reads: wD8A4
+; points at: wD80D
 Func_005_45CF:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -905,6 +1017,9 @@ Func_005_45CF:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7410, Func_005_7BBE, Func_005_7CF3)
+; reads: wD8A4
+; points at: wD80D
 Func_005_45E1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -915,6 +1030,9 @@ Func_005_45E1:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7B84)
+; reads: wD8A4
+; points at: wD80D
 Func_005_45F3:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -925,6 +1043,8 @@ Func_005_45F3:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 22 call sites from 22 routines (e.g. Func_005_7686, Func_005_7236, Func_005_727A, Func_005_7293, ...)
+; reads: wD8A4
 Func_005_4605::
     ld a, [wD8A4]
     and a, $04
@@ -946,6 +1066,9 @@ Jump_005_461C::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7B40)
+; reads: wD8A4
+; points at: wD8A7, wD80F
 Func_005_461F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -960,7 +1083,7 @@ Func_005_461F:: ; heuristic: follows a terminator; C0
 
 Jump_005_4631::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4659
     bit 4, [hl]
     jr nz, Jump_005_4659
@@ -995,6 +1118,9 @@ Jump_005_4661::
     ld c, $FF
     ret
 
+; 6 call sites from 6 routines (e.g. Func_005_7AD8, Func_005_7B11, Func_005_7B5C, Func_0E2_432D, ...)
+; reads: wD8A4
+; points at: wD80F
 Func_005_4664::
     ld a, [wD8A4]
     and a, $04
@@ -1005,6 +1131,9 @@ Func_005_4664::
     call Func_005_6FA1
     ret
 
+; 7 call sites from 7 routines (e.g. Func_005_7109, Func_0E2_411C, Func_0E2_41E0, Func_0E2_4567, ...)
+; reads: wD8A4
+; points at: wD80E
 Func_005_4676::
     ld a, [wD8A4]
     call Func_005_6B16
@@ -1022,7 +1151,7 @@ Func_005_4676::
 
 Jump_005_4693::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_46A5
     ld a, c
     ld hl, wD80E
@@ -1049,6 +1178,9 @@ Jump_005_46B1::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4B6B)
+; reads: wD8A4
+; points at: wD80E
 Func_005_46B4:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -1066,7 +1198,7 @@ Func_005_46B4:: ; heuristic: follows a terminator; C0
 
 Jump_005_46D1::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_46E4
     ld a, c
     ld hl, wD80E
@@ -1094,6 +1226,9 @@ Jump_005_46F0::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD810
 Func_005_46F3:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD810
@@ -1108,6 +1243,9 @@ Jump_005_4704::
     ld c, $FF
     ret
 
+; 17 call sites from 17 routines (e.g. Func_005_7187, Func_005_74B5, Func_005_772B, Func_005_774F, ...)
+; reads: wD8A4
+; points at: wD810
 Func_005_4707::
     ld a, [wD8A4]
     ld hl, wD810
@@ -1122,6 +1260,9 @@ Jump_005_4718::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD80D
 Func_005_471B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80D
@@ -1135,6 +1276,9 @@ Jump_005_472B::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD80D
 Func_005_472E:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80D
@@ -1148,6 +1292,9 @@ Jump_005_473E::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_72F7)
+; reads: wD8A4
+; points at: wD80E
 Func_005_4741:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
@@ -1161,6 +1308,9 @@ Jump_005_4751::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7C82)
+; reads: wD8A4
+; points at: wD80E
 Func_005_4754:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
@@ -1174,6 +1324,9 @@ Jump_005_4764::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_7CA2, Func_005_7CF3)
+; reads: wD8A4
+; points at: wD80E
 Func_005_4767:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1183,6 +1336,9 @@ Func_005_4767:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 11 call sites from 11 routines (e.g. Func_005_7187, Func_005_7786, Func_005_77E0, Func_0E2_4279, ...)
+; reads: wD8A4
+; points at: wD80C
 Func_005_4777::
     ld a, [wD8A4]
     ld e, a
@@ -1195,7 +1351,7 @@ Jump_005_4782::
     ld a, c
     cp a, e
     jr z, Jump_005_4797
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4797
     inc d
     ld a, c
@@ -1218,6 +1374,9 @@ Jump_005_47A2::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_71DE)
+; reads: wD8A4
+; points at: wD80C
 Func_005_47A5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1227,6 +1386,9 @@ Func_005_47A5:: ; heuristic: follows a terminator; C0
     call Func_005_6FBD
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_720A)
+; reads: wD8A4
+; points at: wD80C
 Func_005_47B5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1236,6 +1398,9 @@ Func_005_47B5:: ; heuristic: follows a terminator; C0
     call Func_005_6FBD
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_71F4)
+; reads: wD8A4
+; points at: wD80C
 Func_005_47C5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1245,6 +1410,9 @@ Func_005_47C5:: ; heuristic: follows a terminator; C0
     call Func_005_6FBD
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7220)
+; reads: wD8A4
+; points at: wD80C
 Func_005_47D5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1254,6 +1422,9 @@ Func_005_47D5:: ; heuristic: follows a terminator; C0
     call Func_005_6FBD
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wDA76
 Func_005_47E5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1266,7 +1437,7 @@ Jump_005_47EA::
 
 Jump_005_47F3::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4800
     ld a, [hl]
     and a, $3C
@@ -1290,62 +1461,78 @@ Jump_005_480F::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7AA4)
+; reads: wD8A4
+; points at: wDA76
 Func_005_4812:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
     xor a, $04
     jp Jump_005_47EA
 
+; 1 call site from 1 routine (e.g. Func_005_7524)
 Func_005_481C::
     ld e, $00
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_753A)
 Func_005_4822::
     ld e, $01
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7550)
 Func_005_4828::
     ld e, $02
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7566)
 Func_005_482E::
     ld e, $03
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_757C)
 Func_005_4834::
     ld e, $05
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7592)
 Func_005_483A::
     ld e, $04
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_75A8)
 Func_005_4840::
     ld e, $06
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_75BE)
 Func_005_4846::
     ld e, $07
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_75D4)
 Func_005_484C::
     ld e, $08
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_75EA)
 Func_005_4852::
     ld e, $09
     call Func_005_6FD9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7600)
+; reads: wD8A4
+; points at: wD8A7
 Func_005_4858:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1355,7 +1542,7 @@ Func_005_4858:: ; heuristic: follows a terminator; C0
 
 Jump_005_4862::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4874
     ld hl, wD8A7
     add a, l
@@ -1381,6 +1568,9 @@ Jump_005_487D::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7A3E)
+; reads: wD8A4
+; points at: wDA74, wD80D
 Func_005_4880:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1390,7 +1580,7 @@ Func_005_4880:: ; heuristic: follows a terminator; C0
 
 Jump_005_488A::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_48BF
     ld hl, wDA74
     call Func_005_6F60
@@ -1428,6 +1618,9 @@ Jump_005_48C6::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_72BE, Func_005_79C5, Func_005_79E5)
+; reads: wD8A4
+; points at: wD80D, wDA73
 Func_005_48C9::
     ld a, [wD8A4]
     and a, $04
@@ -1437,7 +1630,7 @@ Func_005_48C9::
 
 Jump_005_48D3::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_48FA
     ld a, c
     ld hl, wD80D
@@ -1469,6 +1662,10 @@ Jump_005_4901::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7345)
+; reads: wCFEC, wD8A4
+; writes: wCFEC
+; points at: wD80D, wDA74
 Func_005_4904:: ; heuristic: follows a terminator; C0
     ld a, [wCFEC]
     push af
@@ -1481,7 +1678,7 @@ Func_005_4904:: ; heuristic: follows a terminator; C0
 
 Jump_005_4914::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4937
     ld a, c
     ld hl, wD80D
@@ -1512,6 +1709,9 @@ Jump_005_4942::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_7322, Func_005_78A8)
+; reads: wD8A4
+; points at: wDA74
 Func_005_4949:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1521,7 +1721,7 @@ Func_005_4949:: ; heuristic: follows a terminator; C0
 
 Jump_005_4953::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_496D
     call Func_005_401A
     ld a, h
@@ -1545,6 +1745,9 @@ Jump_005_4974::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_724F)
+; reads: wD8A4
+; points at: wDA75
 Func_005_4977::
     ld a, [wD8A4]
     and a, $04
@@ -1554,7 +1757,7 @@ Func_005_4977::
 
 Jump_005_4981::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_49A0
     call Func_005_4006
     ld a, h
@@ -1583,6 +1786,9 @@ Jump_005_49A7::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7293)
+; reads: wD8A4
+; points at: wDA75
 Func_005_49AA:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1592,7 +1798,7 @@ Func_005_49AA:: ; heuristic: follows a terminator; C0
 
 Jump_005_49B4::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_49D3
     call Func_005_401F
     ld a, h
@@ -1621,6 +1827,9 @@ Jump_005_49DA::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_763E, Func_005_7847, Func_005_7860)
+; reads: wD8A4
+; points at: wD80C, wDA76
 Func_005_49DD::
     ld a, [wD8A4]
     and a, $04
@@ -1630,7 +1839,7 @@ Func_005_49DD::
 
 Jump_005_49E7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4A06
     ld a, c
     ld hl, wD80C
@@ -1656,6 +1865,9 @@ Jump_005_4A0D::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_765B, Func_005_7824)
+; reads: wD8A4
+; points at: wD80C, wDA77
 Func_005_4A10:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1665,7 +1877,7 @@ Func_005_4A10:: ; heuristic: follows a terminator; C0
 
 Jump_005_4A1A::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4A39
     ld a, c
     ld hl, wD80C
@@ -1691,6 +1903,9 @@ Jump_005_4A40::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7879)
+; reads: wD8A4
+; points at: wD80C, wDA77
 Func_005_4A43:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1700,7 +1915,7 @@ Func_005_4A43:: ; heuristic: follows a terminator; C0
 
 Jump_005_4A4D::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4A6C
     ld a, c
     ld hl, wD80C
@@ -1726,6 +1941,10 @@ Jump_005_4A73::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7B84)
+; reads: wCFEC, wD8A4
+; writes: wCFEC
+; points at: wD80D, wDA77
 Func_005_4A76:: ; heuristic: follows a terminator; C0
     ld a, [wCFEC]
     push af
@@ -1738,7 +1957,7 @@ Func_005_4A76:: ; heuristic: follows a terminator; C0
 
 Jump_005_4A86::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4AA9
     ld a, c
     ld hl, wD80D
@@ -1769,6 +1988,10 @@ Jump_005_4AB4::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCFEC, wD8A4
+; writes: wCFEC
+; points at: wD80D, wDA78
 Func_005_4ABB:: ; heuristic: follows a terminator; C0
     ld a, [wCFEC]
     push af
@@ -1781,7 +2004,7 @@ Func_005_4ABB:: ; heuristic: follows a terminator; C0
 
 Jump_005_4ACB::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4AEE
     ld a, c
     ld hl, wD80D
@@ -1812,6 +2035,9 @@ Jump_005_4AF9::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wDA63
 Func_005_4B00:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1836,7 +2062,7 @@ Jump_005_4B10::
 Jump_005_4B1A::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4B31
     call Func_005_400B
     push hl
@@ -1863,6 +2089,8 @@ Jump_005_4B3A::
     ld c, $FF
     ret
 
+; 5 call sites from 5 routines (e.g. Func_005_76E2, Func_0E2_4001, Func_0E2_4279, Func_0E2_4B6B, ...)
+; reads: wD8A4
 Func_005_4B3D::
     ld a, [wD8A4]
     and a, $04
@@ -1873,7 +2101,7 @@ Func_005_4B3D::
 
 Jump_005_4B49::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4B50
     inc e
 
@@ -1891,6 +2119,9 @@ Jump_005_4B5C::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7A91)
+; reads: wD8A4
+; points at: wDA63
 Func_005_4B5F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1915,6 +2146,9 @@ Jump_005_4B77::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_71AC, Func_005_71BE, Func_005_7946, Func_005_7DA8)
+; reads: wD8A4
+; points at: wDA63
 Func_005_4B7A:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -1940,6 +2174,8 @@ Jump_005_4B94::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_76A3, Func_0E2_4536, Func_0E2_4567, Func_0E2_545D)
+; reads: wD8A4
 Func_005_4B97:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_401F
@@ -1959,7 +2195,7 @@ Func_005_4B97:: ; heuristic: follows a terminator; C0
 
 Jump_005_4BB7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4BCE
     call Func_005_401F
     ld a, h
@@ -1993,6 +2229,8 @@ Jump_005_4BDE::
     ld c, $FF
     ret
 
+; 5 call sites from 5 routines (e.g. Func_0E2_4279, Func_0E2_432D, Func_0E2_5B3D, Func_0E2_6249, ...)
+; reads: wD8A4
 Func_005_4BE1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2002,7 +2240,7 @@ Func_005_4BE1:: ; heuristic: follows a terminator; C0
 
 Jump_005_4BEB::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4BF8
     call Func_005_6B9E
     jr c, Jump_005_4BFF
@@ -2019,6 +2257,8 @@ Jump_005_4BFF::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_005_4C02:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2028,7 +2268,7 @@ Func_005_4C02:: ; heuristic: follows a terminator; C0
 
 Jump_005_4C0C::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4C19
     call Func_005_6FFD
     jr c, Jump_005_4C20
@@ -2045,6 +2285,8 @@ Jump_005_4C20::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7236)
+; reads: wD8A4
 Func_005_4C23:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2053,7 +2295,7 @@ Func_005_4C23:: ; heuristic: follows a terminator; C0
 
 Jump_005_4C2B::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4C36
     call Func_005_6B20
     jr c, Jump_005_4C3D
@@ -2069,6 +2311,8 @@ Jump_005_4C3D::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_727A)
+; reads: wD8A4
 Func_005_4C40:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2077,7 +2321,7 @@ Func_005_4C40:: ; heuristic: follows a terminator; C0
 
 Jump_005_4C48::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4C53
     call Func_005_6B5F
     jr c, Jump_005_4C5A
@@ -2093,6 +2337,9 @@ Jump_005_4C5A::
     ld c, $FF
     ret
 
+; 32 call sites from 32 routines (e.g. Func_005_772B, Func_005_7397, Func_005_7BEE, Func_0E2_4001, ...)
+; reads: wD8A4
+; points at: wD2C1
 Func_005_4C5D::
     ld a, [wD8A4]
     and a, $04
@@ -2103,7 +2350,7 @@ Func_005_4C5D::
 
 Jump_005_4C69::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4C71
     inc e
     ld d, c
@@ -2142,6 +2389,10 @@ Jump_005_4C99::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wD8A4, hFFC6
+; writes: hFFC6, wD006, wD007
+; points at: wD958, hFFC6
 Func_005_4C9C:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     or a, a
@@ -2156,7 +2407,7 @@ Func_005_4C9C:: ; heuristic: follows a terminator; C0
 
 Jump_005_4CAF::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4CD6
     ld hl, wD958
     add a, a
@@ -2193,6 +2444,9 @@ Jump_005_4CE2::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1)
+; reads: wD8A4
+; points at: wD812
 Func_005_4CE5::
     ld a, [wD8A4]
     call Func_005_6B16
@@ -2206,7 +2460,7 @@ Func_005_4CE5::
 
 Jump_005_4CF9::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4D0B
     ld a, c
     ld hl, wD812
@@ -2233,6 +2487,9 @@ Jump_005_4D17::
     ld c, $01
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_72AC, Func_0E2_4A08)
+; reads: wD8A4
+; points at: wD80D
 Func_005_4D1A:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2241,7 +2498,7 @@ Func_005_4D1A:: ; heuristic: follows a terminator; C0
 
 Jump_005_4D22::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4D3C
     ld a, c
     ld hl, wD80D
@@ -2267,6 +2524,9 @@ Jump_005_4D43::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7449)
+; reads: wD8A4
+; points at: wD814
 Func_005_4D46:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2276,6 +2536,9 @@ Func_005_4D46:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7996)
+; reads: wD8A4
+; points at: wD811
 Func_005_4D56:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD811
@@ -2290,6 +2553,9 @@ Jump_005_4D67::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7A27)
+; reads: wD8A4
+; points at: wD80C
 Func_005_4D6A:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2298,7 +2564,7 @@ Func_005_4D6A:: ; heuristic: follows a terminator; C0
 
 Jump_005_4D72::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4D9B
     ld a, c
     ld hl, wD80C
@@ -2334,6 +2600,9 @@ Jump_005_4DA2::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7A55)
+; reads: wD8A4
+; points at: wD80D, wDA63
 Func_005_4DA5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -2343,7 +2612,7 @@ Func_005_4DA5:: ; heuristic: follows a terminator; C0
 
 Jump_005_4DAF::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4DD8
     ld a, c
     ld hl, wD80D
@@ -2391,6 +2660,9 @@ Jump_005_4DF2::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_7109, Func_005_71BE, Func_005_7946, Func_005_7DA8)
+; reads: wD8A4
+; points at: wC984
 Func_005_4DF5::
     ld a, [wD8A4]
     rrca
@@ -2413,6 +2685,8 @@ Jump_005_4E0C::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCFC5
 Func_005_4E0F:: ; heuristic: follows a terminator; C0
     ld a, [wCFC5]
     cp a, $04
@@ -2428,6 +2702,8 @@ Jump_005_4E1D::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_61E0)
+; reads: wDAAC
 Func_005_4E20:: ; heuristic: follows a terminator; C0
     ld a, [wDAAC]
     and a, a
@@ -2455,6 +2731,9 @@ Jump_005_4E45::
     ld c, $FF
     ret
 
+; 12 call sites from 12 routines (e.g. Func_005_557E, Func_0E2_40BF, Func_0E2_411C, Func_0E2_4AB6, ...)
+; reads: wD8A4
+; points at: wD2C1
 Func_005_4E48::
     ld a, [wD8A4]
     and a, $04
@@ -2465,7 +2744,7 @@ Func_005_4E48::
 
 Jump_005_4E55::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4E70
     push hl
     push bc
@@ -2498,6 +2777,9 @@ Jump_005_4E79::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_4E48)
+; reads: wCFEC, wCFF7, wCFF9, wCFF8, wCFFA, wD8A4, wC58A
+; points at: wD8B7
 Func_005_4E7C::
     ld a, [wCFEC]
     cp a, $48
@@ -2815,6 +3097,7 @@ Jump_005_5010::
 Jump_005_5028::
     ld a, c
 
+; 3 call sites from 1 routine (e.g. Func_005_4E7C)
 Func_005_5029::
     ld b, h
     ld c, l
@@ -2823,6 +3106,10 @@ Func_005_5029::
     call Func_000_16E2
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_4E7C)
+; reads: wD008
+; writes: wD006, wD007
+; points at: wD958
 Func_005_5034::
     ld a, c
     add a, a
@@ -2842,6 +3129,10 @@ Jump_005_503E::
     cp a, $09
     ret
 
+; 14 call sites from 14 routines (e.g. Func_0E2_40BF, Func_0E2_411C, Func_0E2_47AB, Func_0E2_4A08, ...)
+; reads: wCFEF, wD8A4, hFFC6, hFFC7
+; writes: hFFC6, hFFC7
+; points at: wDA72
 Func_005_5052::
     ld a, [wCFEF]
     or a, a
@@ -2881,7 +3172,7 @@ Jump_005_507C::
 
 Jump_005_5081::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5095
     ldh a, [hFFC6]
     inc a
@@ -2920,6 +3211,8 @@ Jump_005_50B4::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_0E2_4536, Func_0E2_4567, Func_0E2_4721, Func_0E2_545D)
+; reads: wD8A4
 Func_005_50B7:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -2947,6 +3240,10 @@ Jump_005_50E0::
     ld c, $01
     ret
 
+; 7 call sites from 7 routines (e.g. Func_0E2_449C, Func_0E2_5426, Func_0E2_54C4, Func_0E2_5529, ...)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
+; points at: hFFC6, hFFC9
 Func_005_50E3:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -2964,7 +3261,7 @@ Func_005_50E3:: ; heuristic: follows a terminator; C0
 
 Jump_005_50FF::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5117
     ld hl, hFFC6
     inc [hl]
@@ -3002,7 +3299,7 @@ Jump_005_5117::
 
 Jump_005_513B::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5152
     call Func_005_4001
     ldh a, [hFFCA]
@@ -3046,6 +3343,9 @@ Jump_005_517A::
     ld c, $01
     ret
 
+; 7 call sites from 7 routines (e.g. Func_0E2_449C, Func_0E2_493F, Func_0E2_54C4, Func_0E2_5529, ...)
+; reads: wD8A4, hFFC6, hFFC7
+; writes: hFFC6, hFFC7
 Func_005_517D:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -3066,7 +3366,7 @@ Func_005_517D:: ; heuristic: follows a terminator; C0
 
 Jump_005_519E::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_51AA
     inc c
     dec b
@@ -3085,7 +3385,7 @@ Jump_005_51AA::
 
 Jump_005_51B7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_51CE
     call Func_005_4006
     ldh a, [hFFC6]
@@ -3128,6 +3428,8 @@ Jump_005_51E7::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4619)
+; reads: wD8A4, hFFC6, hFFC7
 Func_005_51EA:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -3168,6 +3470,8 @@ Jump_005_5225::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4619)
+; reads: wD8A4, hFFC6, hFFC7
 Func_005_5228:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -3181,7 +3485,7 @@ Func_005_5228:: ; heuristic: follows a terminator; C0
 
 Jump_005_523D::
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5266
     call Func_005_4001
     ldh a, [hFFC6]
@@ -3221,6 +3525,10 @@ Jump_005_5272::
     ld c, $01
     ret
 
+; 3 call sites from 3 routines (e.g. Func_0E2_4674, Func_0E2_5BC4, Func_0E2_5C25)
+; reads: wD8A4, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
+; points at: hFFC6, hFFC9
 Func_005_5275:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -3238,7 +3546,7 @@ Func_005_5275:: ; heuristic: follows a terminator; C0
 
 Jump_005_5291::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_52AE
     call Func_005_6D07
     jr nz, Jump_005_52AE
@@ -3280,7 +3588,7 @@ Jump_005_52AE::
 
 Jump_005_52D5::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_52EC
     call Func_005_4006
     ldh a, [hFFCA]
@@ -3324,6 +3632,8 @@ Jump_005_5314::
     ld c, $01
     ret
 
+; 8 call sites from 8 routines (e.g. Func_0E2_656D, Func_0E2_65B8, Func_0E2_661A, Func_0E2_6634, ...)
+; reads: hFFC6
 Func_005_5317::
     ldh a, [hFFC6]
     call Func_005_400B
@@ -3411,6 +3721,8 @@ Jump_005_5393::
     ld c, $05
     ret
 
+; 11 call sites from 11 routines (e.g. Func_005_77C7, Func_005_7C69, Func_005_7CF3, Func_0E2_432D, ...)
+; reads: wD8A4
 Func_005_5397:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6BF8
@@ -3422,6 +3734,8 @@ Jump_005_53A2::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_0E2_438D, Func_0E2_5B3D, Func_0E2_6387)
+; reads: wD8A4
 Func_005_53A5:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -3431,7 +3745,7 @@ Func_005_53A5:: ; heuristic: follows a terminator; C0
 
 Jump_005_53AF::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_53BB
     call Func_005_6BF8
     jr nz, Jump_005_53BB
@@ -3451,6 +3765,9 @@ Jump_005_53C7::
     ld c, $FF
     ret
 
+; 14 call sites from 14 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4E71, Func_0E2_4F30, ...)
+; reads: wD8A4
+; points at: wD80D
 Func_005_53CA::
     ld a, [wD8A4]
     ld hl, wD80D
@@ -3473,6 +3790,9 @@ Jump_005_53E3::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7AA4, Func_005_7CF3, Func_0E2_4B6B)
+; reads: wD8A4
+; points at: wD810
 Func_005_53E6:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD810
@@ -3487,6 +3807,9 @@ Jump_005_53F7::
     ld c, $FF
     ret
 
+; 7 call sites from 7 routines (e.g. Func_0E2_48FD, Func_0E2_4984, Func_0E2_60A6, Func_0E2_618D, ...)
+; reads: wD8A4
+; points at: wD80D, wD989
 Func_005_53FA:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -3500,7 +3823,7 @@ Func_005_53FA:: ; heuristic: follows a terminator; C0
 
 Jump_005_540E::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5440
     ld a, c
     ld hl, wD80D
@@ -3549,6 +3872,10 @@ Jump_005_544C::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_493F)
+; reads: wD8A4, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
+; points at: hFFCE
 Func_005_544F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -3588,7 +3915,7 @@ Jump_005_5494::
     xor a, a
     ldh [hFFCE], a
     ld a, e
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_54EE
     call Func_005_400B
     ldh a, [hFFC6]
@@ -3659,10 +3986,14 @@ Jump_005_54FA::
     ld c, $01
     ret
 
+; 73 call sites from 73 routines (e.g. Func_005_7187, Func_005_7DDC, Func_0E2_4001, Func_0E2_40BF, ...)
 Func_005_54FD::
     ld c, $00
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_60D7, Func_0E2_61E0)
+; reads: wD8A4
+; points at: wD989, wD8DF, wD8B7, wD8BF
 Func_005_5500:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -3763,6 +4094,7 @@ Jump_005_557B::
     ld c, $01
     ret
 
+; 11 call sites from 11 routines (e.g. Func_0E2_40BF, Func_0E2_411C, Func_0E2_4AB6, Func_0E2_4B6B, ...)
 Func_005_557E::
     call Func_005_4E48
     ld a, c
@@ -3775,6 +4107,8 @@ Jump_005_5588::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_78A8, Func_005_7322, Func_0E2_478E)
+; reads: wD8A4
 Func_005_558B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_4010
@@ -3797,6 +4131,9 @@ Jump_005_55A7::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_73D7)
+; reads: wD8A4
+; points at: wD80E
 Func_005_55AA:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
@@ -3811,6 +4148,9 @@ Jump_005_55BB::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_6822, Func_0E2_6843)
+; reads: wC58A, wD8A4
+; points at: wD044, wD057
 Func_005_55BE::
     ld a, [wC58A]
     and a, a
@@ -3847,6 +4187,9 @@ Jump_005_55F0::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_73D7, Func_0E2_6854)
+; reads: wC58A, wD8A4
+; points at: wD044, wD057
 Func_005_55F3:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     and a, a
@@ -3883,6 +4226,9 @@ Jump_005_5625::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6865)
+; reads: wC58A, wD8A4
+; points at: wD044, wD057
 Func_005_5628:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     and a, a
@@ -3919,6 +4265,9 @@ Jump_005_565A::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6876)
+; reads: wC58A, wD8A4
+; points at: wD044, wD057
 Func_005_565D:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     and a, a
@@ -3955,6 +4304,9 @@ Jump_005_568F::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6887)
+; reads: wC58A, wD8A4
+; points at: wD044, wD057
 Func_005_5692:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     and a, a
@@ -3991,6 +4343,9 @@ Jump_005_56C4::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6898)
+; reads: wC58A, wD8A4
+; points at: wD044, wD057
 Func_005_56C7:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     and a, a
@@ -4027,6 +4382,9 @@ Jump_005_56F9::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4A08)
+; reads: wC58A, wD8A4
+; points at: wD044, wD057
 Func_005_56FC:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     and a, a
@@ -4063,6 +4421,9 @@ Jump_005_572E::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_0E2_4A08, Func_0E2_4AB6, Func_0E2_6822)
+; reads: wC58A, wD891
+; points at: wD04B
 Func_005_5731::
     ld a, [wC58A]
     and a, a
@@ -4090,6 +4451,8 @@ Jump_005_5755::
     ld c, $FF
     ret
 
+; 8 call sites from 8 routines (e.g. Func_0E2_411C, Func_0E2_49B5, Func_0E2_4A08, Func_0E2_4AB6, ...)
+; reads: wD8A4
 Func_005_5758:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld e, a
@@ -4099,7 +4462,7 @@ Func_005_5758:: ; heuristic: follows a terminator; C0
 
 Jump_005_5761::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_576D
     ld a, c
     cp a, e
@@ -4123,6 +4486,8 @@ Jump_005_577C::
     ld c, $FF
     ret
 
+; 21 call sites from 21 routines (e.g. Func_005_5758, Func_0E2_40BF, Func_0E2_411C, Func_0E2_41E0, ...)
+; reads: wD8A4
 Func_005_577F::
     ld a, [wD8A4]
     and a, $04
@@ -4133,7 +4498,7 @@ Func_005_577F::
 
 Jump_005_578B::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5792
     inc e
 
@@ -4151,6 +4516,8 @@ Jump_005_579E::
     ld c, $FF
     ret
 
+; 7 call sites from 7 routines (e.g. Func_0E2_47CE, Func_0E2_48CF, Func_0E2_491E, Func_0E2_5DBC, ...)
+; reads: wD8A4
 Func_005_57A1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -4164,7 +4531,7 @@ Func_005_57A1:: ; heuristic: follows a terminator; C0
 
 Jump_005_57B5::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_57C0
     call Func_005_6D1A
     jr nz, Jump_005_57C6
@@ -4187,6 +4554,9 @@ Jump_005_57CC::
     ld c, $01
     ret
 
+; 11 call sites from 11 routines (e.g. Func_0E2_411C, Func_0E2_4AB6, Func_0E2_4B6B, Func_0E2_4CA1, ...)
+; reads: wD8A4
+; points at: wD812
 Func_005_57CF::
     ld a, [wD8A4]
     call Func_005_6B16
@@ -4200,7 +4570,7 @@ Func_005_57CF::
 
 Jump_005_57E3::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_57F4
     ld a, c
     ld hl, wD812
@@ -4226,6 +4596,9 @@ Jump_005_5800::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4279)
+; reads: wD8A4
+; points at: wDA75
 Func_005_5803:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_400B
@@ -4251,7 +4624,7 @@ Jump_005_5826::
     cp a, e
     jr z, Jump_005_5830
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_5836
 
 Jump_005_5830::
@@ -4269,7 +4642,7 @@ Jump_005_5836::
 
 Jump_005_5840::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5853
     ld a, c
     ld hl, wDA75
@@ -4289,6 +4662,9 @@ Jump_005_585A::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_0E2_4674, Func_0E2_5BC4, Func_0E2_5C25, Func_0E2_6773)
+; reads: wD8A4, hFFC6, hFFC7
+; writes: hFFC6, hFFC7
 Func_005_585D:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -4302,7 +4678,7 @@ Func_005_585D:: ; heuristic: follows a terminator; C0
 
 Jump_005_586E::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5882
     call Func_005_4001
     ldh a, [hFFC6]
@@ -4336,7 +4712,7 @@ Jump_005_5882::
 
 Jump_005_58A1::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_58B5
     call Func_005_4006
     ldh a, [hFFC6]
@@ -4381,7 +4757,7 @@ Jump_005_58B5::
 
 Jump_005_58E3::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_58F7
     call Func_005_400B
     ldh a, [hFFC6]
@@ -4417,6 +4793,9 @@ Jump_005_5916::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD989, wD80D
 Func_005_5919:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -4433,7 +4812,7 @@ Jump_005_592F::
     ld a, c
     cp a, e
     jr z, Jump_005_595C
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_595C
     jr z, Jump_005_595C
     inc d
@@ -4455,7 +4834,7 @@ Jump_005_5951::
     ld a, c
     cp a, e
     jr z, Jump_005_595C
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_595C
     inc d
     ld l, c
@@ -4537,6 +4916,9 @@ Jump_005_59BA::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD80D, wD989
 Func_005_59BD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -4625,6 +5007,9 @@ Jump_005_5A30::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD80D
 Func_005_5A33:: ; heuristic: follows a terminator; C0
     ld [bc], a
     dec b
@@ -4673,6 +5058,9 @@ Jump_005_5A70::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD989
 Func_005_5A73:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -4782,6 +5170,9 @@ Jump_005_5AF5::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD80D, wD989
 Func_005_5AF8:: ; heuristic: follows a terminator; C0
     rrca
     ld bc, $191E
@@ -4853,6 +5244,9 @@ Jump_005_5B54::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD80D, wD989
 Func_005_5B57:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -4926,6 +5320,9 @@ Jump_005_5BB9::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4984)
+; reads: wD8A4, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
 Func_005_5BBC::
     ld a, [wD8A4]
     call Func_005_400B
@@ -5018,6 +5415,9 @@ Jump_005_5C4D::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD989
 Func_005_5C50:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     swap a
@@ -5045,7 +5445,7 @@ Jump_005_5C5F::
 
 Jump_005_5C72::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5C80
     call Func_005_6E30
     ld a, d
@@ -5066,6 +5466,9 @@ Jump_005_5C89::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_51F6, Func_0E2_526D)
+; reads: wD8A4
+; points at: wD2C1
 Func_005_5C8C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5075,7 +5478,7 @@ Func_005_5C8C:: ; heuristic: follows a terminator; C0
 
 Jump_005_5C96::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5CC1
     and a, $03
     ld hl, wD2C1
@@ -5120,6 +5523,8 @@ Jump_005_5CCB::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_7109, Func_005_70C9, Func_005_7824, Func_0E2_4AB6)
+; reads: wCFC5
 Func_005_5CCE::
     ld a, [wCFC5]
     cp a, $02
@@ -5136,6 +5541,8 @@ Jump_005_5CDE::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4A08)
+; reads: wC58A
 Func_005_5CE1:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     and a, a
@@ -5149,6 +5556,8 @@ Jump_005_5CEE::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_5AE6, Func_0E2_67D5)
+; reads: wD8A4, wC984, wC985
 Func_005_5CF1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     cp a, $04
@@ -5172,7 +5581,7 @@ Jump_005_5D0D::
     ld a, c
     cp a, e
     jr z, Jump_005_5D16
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_5D1D
 
 Jump_005_5D16::
@@ -5186,6 +5595,9 @@ Jump_005_5D1D::
     ld c, $FF
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_7410, Func_0E2_6249)
+; reads: wD8A4
+; points at: wD80E
 Func_005_5D20:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5196,6 +5608,9 @@ Func_005_5D20:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_4B6B, Func_0E2_5E46)
+; reads: wD8A4
+; points at: wD80E
 Func_005_5D31:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5207,6 +5622,8 @@ Func_005_5D31:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_4C49, Func_0E2_4E71)
+; reads: wD8A4
 Func_005_5D44:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -5229,7 +5646,7 @@ Func_005_5D44:: ; heuristic: follows a terminator; C0
 
 Jump_005_5D67::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5D7A
     call Func_005_4015
     ld a, l
@@ -5259,6 +5676,8 @@ Jump_005_5D86::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, hFF8C
 Func_005_5D89:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     or a, a
@@ -5273,6 +5692,9 @@ Jump_005_5D98::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7671, Func_005_72DE, Func_005_77F9)
+; reads: wD8A4
+; points at: wD80C, wDA74
 Func_005_5D9B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5282,7 +5704,7 @@ Func_005_5D9B:: ; heuristic: follows a terminator; C0
 
 Jump_005_5DA5::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5DC3
     ld a, c
     ld hl, wD80C
@@ -5307,6 +5729,9 @@ Jump_005_5DCA::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_791F, Func_005_7AD8, Func_005_7B11)
+; reads: wD8A4
+; points at: wD80F, wDA77
 Func_005_5DCD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5316,7 +5741,7 @@ Func_005_5DCD:: ; heuristic: follows a terminator; C0
 
 Jump_005_5DD7::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5DF5
     ld a, c
     ld hl, wD80F
@@ -5342,6 +5767,9 @@ Jump_005_5DFC::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7A0D)
+; reads: wD8A4
+; points at: wDA74, wD814
 Func_005_5DFF:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5360,7 +5788,7 @@ Func_005_5DFF:: ; heuristic: follows a terminator; C0
 
 Jump_005_5E15::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5E2D
     ld a, c
     ld hl, wD814
@@ -5389,6 +5817,8 @@ Jump_005_5E3C::
     ld c, $FF
     ret
 
+; 5 call sites from 5 routines (e.g. Func_005_76A3, Func_005_7BEE, Func_005_7C45, Func_005_7D5B, ...)
+; reads: wD891
 Func_005_5E3F:: ; heuristic: follows a terminator; C0
     ld a, [wD891]
     and a, a
@@ -5400,6 +5830,9 @@ Jump_005_5E48::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wD810, wD80F
 Func_005_5E4B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5420,6 +5853,9 @@ Func_005_5E4B:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7370)
+; reads: wD8A4
+; points at: wD80C, wDA75
 Func_005_5E6F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5429,7 +5865,7 @@ Func_005_5E6F:: ; heuristic: follows a terminator; C0
 
 Jump_005_5E79::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5E97
     ld a, c
     ld hl, wD80C
@@ -5454,6 +5890,9 @@ Jump_005_5E9E::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5529)
+; reads: wD8A4
+; points at: wD80C
 Func_005_5EA1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -5463,7 +5902,7 @@ Func_005_5EA1:: ; heuristic: follows a terminator; C0
 
 Jump_005_5EAB::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5EC4
     ld a, c
     ld hl, wD80C
@@ -5488,6 +5927,9 @@ Jump_005_5ECB::
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_67F9)
+; reads: wD8A4, wD2CC
+; points at: wDA5B
 Func_005_5ECE::
     ld a, [wD8A4]
     call Func_005_6B16
@@ -5539,6 +5981,8 @@ Jump_005_5F10::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5ECE)
+; points at: wDA1C
 Func_005_5F13::
     ld a, c
     ld hl, wDA1C
@@ -5559,6 +6003,8 @@ Jump_005_5F1D::
     cp a, $93
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5ECE)
+; points at: wDA77
 Func_005_5F2A::
     ld a, c
     ld hl, wDA77
@@ -5577,6 +6023,9 @@ Jump_005_5F37::
     cp a, $0C
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_45FE, Func_0E2_4619)
+; reads: wD8A4, wD2CC
+; points at: wD80D, wDA5B
 Func_005_5F3D:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -5636,6 +6085,8 @@ Jump_005_5F8A::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5F3D)
+; points at: wD989, wD8DF
 Func_005_5F8D::
     ld a, c
     ld hl, wD989
@@ -5692,6 +6143,9 @@ Jump_005_5FBE::
     jr c, Jump_005_5FA7
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_67F9)
+; reads: wD8A4, wD2CC
+; points at: wDA5B
 Func_005_5FC7::
     ld a, [wD8A4]
     call Func_005_6B16
@@ -5745,6 +6199,8 @@ Jump_005_600B::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5FC7)
+; points at: wD8DF, wD989
 Func_005_600E::
     ld a, c
     ld hl, wD8DF
@@ -5785,6 +6241,8 @@ Jump_005_6037::
     xor a, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5FC7)
+; points at: wDA77
 Func_005_6039::
     ld a, c
     ld hl, wDA77
@@ -5803,6 +6261,9 @@ Jump_005_6046::
     cp a, $0C
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_51DB, Func_0E2_51F6)
+; reads: wD8A4
+; points at: wD8BF, wD8CF, wD978
 Func_005_604C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -5816,7 +6277,7 @@ Func_005_604C:: ; heuristic: follows a terminator; C0
 
 Jump_005_6060::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6087
     ld a, c
     ld hl, wD8BF
@@ -5895,6 +6356,9 @@ Jump_005_60B7::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_604C)
+; reads: wDAAC
+; points at: wDA1D, wD8DF
 Func_005_60BA::
     ld a, c
     ld hl, wDA1D
@@ -5986,6 +6450,8 @@ Jump_005_611E::
     jr c, Jump_005_60E9
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_60BA)
+; points at: wD80D, wD80A
 Func_005_6127::
     ld a, c
     ld hl, wD80D
@@ -6006,6 +6472,8 @@ Jump_005_613E::
     bit 3, [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_60BA)
+; points at: wD80D
 Func_005_6141::
     ld a, c
     ld hl, wD80D
@@ -6016,6 +6484,9 @@ Func_005_6141::
 Data_005_614B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $05, $07, $12, $24, $01, $0C, $1C
 
+; 3 call sites from 3 routines (e.g. Func_0E2_41C5, Func_0E2_41E0, Func_0E2_59E5)
+; reads: wD8A4
+; points at: wD80E, wDA74
 Func_005_6153::
     ld a, [wD8A4]
     call Func_005_6B16
@@ -6029,7 +6500,7 @@ Func_005_6153::
 
 Jump_005_6167::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_618B
     ld a, c
     ld hl, wD80E
@@ -6068,6 +6539,8 @@ Jump_005_6195::
     ld c, $01
     ret
 
+; 7 call sites from 7 routines (e.g. Func_005_76A3, Func_005_7397, Func_005_7BEE, Func_005_7C45, ...)
+; reads: wD8A4, wD2CC
 Func_005_6198:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -6087,6 +6560,9 @@ Jump_005_61AE::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7CC2)
+; reads: wD8A4
+; points at: wD80E
 Func_005_61B1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
@@ -6101,6 +6577,9 @@ Jump_005_61C1::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0161C4, $65
 
+; 1 call site from 1 routine (e.g. Func_005_7879)
+; reads: wD8A4
+; points at: wD80C
 Func_005_6229::
     ld a, [wD8A4]
     and a, $04
@@ -6111,6 +6590,10 @@ Func_005_6229::
     call Func_005_6FA1
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7AA4)
+; reads: wD8A4, wCFEC
+; writes: wCFEC
+; points at: wD988
 Func_005_623B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     swap a
@@ -6145,6 +6628,8 @@ Jump_005_6264::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_715F, Func_005_7975, Func_005_7DC2)
+; reads: wD8A4
 Func_005_626B::
     ld a, [wD8A4]
     and a, $04
@@ -6153,7 +6638,7 @@ Func_005_626B::
 
 Jump_005_6273::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_627F
 
 Jump_005_6279::
@@ -6183,6 +6668,8 @@ Jump_005_6295::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_626B)
+; reads: wCFEC
 Func_005_6298::
     push bc
     call Func_005_400B
@@ -6236,6 +6723,8 @@ Jump_005_62D9::
     pop bc
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7187)
+; reads: wD8A4
 Func_005_62E1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld e, a
@@ -6247,7 +6736,7 @@ Jump_005_62EA::
     ld a, c
     cp a, e
     jr z, Jump_005_62F3
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_62F9
 
 Jump_005_62F3::
@@ -6277,6 +6766,8 @@ Jump_005_630F::
     ld c, $FF
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
 Func_005_6312:: ; heuristic: follows a terminator; C0
     ldh a, [hFFC6]
     call Func_005_4010
@@ -6364,6 +6855,8 @@ Jump_005_638E::
     ld c, $05
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4A08)
+; reads: wD8A4
 Func_005_6392:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -6377,7 +6870,7 @@ Func_005_6392:: ; heuristic: follows a terminator; C0
 
 Jump_005_63A6::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_63B2
 
 Jump_005_63AC::
@@ -6413,6 +6906,10 @@ Jump_005_63CF::
     ld c, $01
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7BBE, Func_005_7C82, Func_005_7CA2)
+; reads: wCFEC, wD8A4
+; writes: wCFEC
+; points at: wD80D
 Func_005_63D2:: ; heuristic: follows a terminator; C0
     ld a, [wCFEC]
     push af
@@ -6425,7 +6922,7 @@ Func_005_63D2:: ; heuristic: follows a terminator; C0
 
 Jump_005_63E2::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_63F8
     ld a, c
     ld hl, wD80D
@@ -6450,6 +6947,10 @@ Jump_005_6403::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_63D2)
+; reads: hFFC6
+; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; points at: hFFC6, wD989
 Func_005_640A::
     push bc
     ld a, $05
@@ -6501,6 +7002,8 @@ Jump_005_644F::
     pop bc
     ret
 
+; 10 call sites from 10 routines (e.g. Func_005_7397, Func_005_791F, Func_005_7BE6, Func_005_7C69, ...)
+; reads: wD8A4, wC984, wC985
 Func_005_6452:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     cp a, $04
@@ -6524,7 +7027,7 @@ Jump_005_646E::
     ld a, c
     cp a, e
     jr z, Jump_005_6477
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_647E
 
 Jump_005_6477::
@@ -6540,6 +7043,8 @@ Jump_005_647E::
     ld c, $FF
     ret
 
+; 5 call sites from 5 routines (e.g. Func_005_74B5, Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, ...)
+; reads: wC58A, wCFC5
 Func_005_6481::
     ld a, [wC58A]
     or a, a
@@ -6554,6 +7059,9 @@ Jump_005_6491::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, Func_0E2_511C)
+; reads: wD8A4
+; points at: wD2C1
 Func_005_6494::
     ld a, [wD8A4]
     and a, $04
@@ -6563,7 +7071,7 @@ Func_005_6494::
 
 Jump_005_649E::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_64C1
     push bc
     ld a, c
@@ -6601,6 +7109,8 @@ Jump_005_64C9::
     ld c, $FF
     ret
 
+; 3 call sites from 3 routines (e.g. Func_0E2_4001, Func_0E2_4CE6, Func_0E2_511C)
+; reads: wC58A, wD8A4
 Func_005_64CC::
     ld a, [wC58A]
     or a, a
@@ -6615,6 +7125,8 @@ Jump_005_64DC::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_7D95)
+; reads: wD8A4
 Func_005_64DF:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_400B
@@ -6634,6 +7146,10 @@ Jump_005_64FB::
     ld c, $FF
     ret
 
+; 21 call sites from 21 routines (e.g. Func_0E2_411C, Func_0E2_41E0, Func_0E2_4279, Func_0E2_449C, ...)
+; reads: wD8A4, wCFEF, hFFC6
+; writes: hFFC6, hFFC7
+; points at: wDA72
 Func_005_64FE:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_6B16
@@ -6677,7 +7193,7 @@ Jump_005_6532::
 
 Jump_005_6537::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6549
     ldh a, [hFFC6]
     inc a
@@ -6703,6 +7219,9 @@ Jump_005_6553::
     ld c, $01
     ret
 
+; 5 call sites from 5 routines (e.g. Func_0E2_4310, Func_0E2_438D, Func_0E2_5B3D, Func_0E2_6303, ...)
+; reads: wD8A4
+; points at: wD988
 Func_005_6556:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_4024
@@ -6729,7 +7248,7 @@ Jump_005_656D::
 Jump_005_657E::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6599
     ld a, c
     call Func_005_400B
@@ -6762,6 +7281,7 @@ Jump_005_65A9::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_6556)
 Func_005_65AC::
     inc hl
     ld a, [hl+]
@@ -6779,6 +7299,9 @@ Func_005_65AC::
     or a, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_678C)
+; reads: wD8A4, hFFC6, hFFC7
+; writes: hFFC6, hFFC7
 Func_005_65C1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -6791,7 +7314,7 @@ Func_005_65C1:: ; heuristic: follows a terminator; C0
 
 Jump_005_65D0::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_65E4
     call Func_005_4001
     ldh a, [hFFC6]
@@ -6826,7 +7349,7 @@ Jump_005_65E4::
 
 Jump_005_6605::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6619
     call Func_005_4006
     ldh a, [hFFC6]
@@ -6872,7 +7395,7 @@ Jump_005_6619::
 
 Jump_005_6649::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_665D
     call Func_005_4015
     ldh a, [hFFC6]
@@ -6908,6 +7431,10 @@ Jump_005_667C::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_0E2_43C8, Func_0E2_43E9, Func_0E2_5AE6, Func_0E2_6350)
+; reads: wD8A4, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; points at: wD988
 Func_005_667F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_4024
@@ -6938,7 +7465,7 @@ Jump_005_6697::
 Jump_005_66AF::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_66BB
     jr z, Jump_005_66BB
     call Func_005_6741
@@ -6976,7 +7503,7 @@ Jump_005_66BB::
 Jump_005_66E8::
     push bc
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_66F2
     call Func_005_6741
 
@@ -7016,6 +7543,7 @@ Jump_005_671D::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_667F)
 Func_005_6720::
     inc hl
     ld a, [hl+]
@@ -7041,6 +7569,9 @@ Func_005_6720::
     or a, a
     ret
 
+; 2 call sites from 1 routine (e.g. Func_005_667F)
+; reads: hFFC6, hFFC7, hFFC8
+; writes: hFFC6, hFFC7, hFFC8
 Func_005_6741::
     push de
     ld a, c
@@ -7073,6 +7604,9 @@ Func_005_6741::
     inc d
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_526D)
+; reads: wD8A4
+; points at: wD2C1
 Func_005_676E:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -7082,7 +7616,7 @@ Func_005_676E:: ; heuristic: follows a terminator; C0
 
 Jump_005_6778::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_67A6
     push bc
     ld a, c
@@ -7126,6 +7660,9 @@ Jump_005_67AF::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_56C6)
+; reads: wD8A4
+; points at: wD2C1
 Func_005_67B2:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_4024
@@ -7141,7 +7678,7 @@ Func_005_67B2:: ; heuristic: follows a terminator; C0
 
 Jump_005_67CA::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_67D2
     ld e, c
     inc d
@@ -7203,6 +7740,9 @@ Jump_005_681D::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_57A9)
+; reads: wD8A4, wCFEF
+; points at: wDA72
 Func_005_6820:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_4024
@@ -7218,7 +7758,7 @@ Func_005_6820:: ; heuristic: follows a terminator; C0
 
 Jump_005_6838::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6840
     ld e, c
     inc d
@@ -7290,6 +7830,9 @@ Jump_005_6899::
     ld c, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5856)
+; reads: wD8A4, wC58A, wCFC5, wD2CC, wCFEF
+; points at: wDA5B, wDA72
 Func_005_689C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_4024
@@ -7315,7 +7858,7 @@ Jump_005_68C6::
     cp a, e
     jr z, Jump_005_68F5
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_68F5
     ld a, c
     call Func_005_4024
@@ -7370,7 +7913,7 @@ Jump_005_68FB::
 Jump_005_6920::
     push hl
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     pop hl
     jr c, Jump_005_6963
     push bc
@@ -7437,6 +7980,9 @@ Jump_005_696F::
     ld c, $01
     ret
 
+; 8 call sites from 8 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, ...)
+; reads: wD8A4
+; points at: wD810
 Func_005_6972::
     ld a, [wD8A4]
     ld hl, wD810
@@ -7450,6 +7996,10 @@ Jump_005_6982::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_76CE)
+; reads: wD8A4, hFFCA, hFFCB, hFFC9
+; writes: hFFC9, hFFCA, hFFCB
+; points at: hFFC9
 Func_005_6985:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -7463,7 +8013,7 @@ Func_005_6985:: ; heuristic: follows a terminator; C0
 
 Jump_005_6996::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_69AD
     call Func_005_4006
     ldh a, [hFFCA]
@@ -7505,6 +8055,9 @@ Jump_005_69D7::
     ld c, $FF
     ret
 
+; 14 call sites from 14 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, Func_0E2_511C, ...)
+; reads: wD8A4
+; points at: wD80E
 Func_005_69DA::
     ld a, [wD8A4]
     ld hl, wD80E
@@ -7526,6 +8079,10 @@ Jump_005_69F2::
     ld c, $FF
     ret
 
+; 20 call sites from 20 routines (e.g. Func_0E2_41E0, Func_0E2_449C, Func_0E2_4567, Func_0E2_4674, ...)
+; reads: wC58A, wD8A4, wCFEF, hFFC6, hFFC7
+; writes: hFFC6, hFFC7
+; points at: wDA72
 Func_005_69F5:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -7573,7 +8130,7 @@ Jump_005_6A2D::
 
 Jump_005_6A32::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6A46
     ldh a, [hFFC6]
     inc a
@@ -7616,6 +8173,10 @@ Jump_005_6A68::
     ld c, $01
     ret
 
+; 20 call sites from 20 routines (e.g. Func_0E2_41E0, Func_0E2_449C, Func_0E2_4567, Func_0E2_4674, ...)
+; reads: wC58A, wD8A4, wCFEF, hFFC6, hFFC7
+; writes: hFFC6, hFFC7
+; points at: wDA72
 Func_005_6A6B:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -7664,7 +8225,7 @@ Jump_005_6AAA::
 
 Jump_005_6AAF::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6AC3
     ldh a, [hFFC6]
     inc a
@@ -7707,7 +8268,11 @@ Jump_005_6AE5::
     ld c, $01
     ret
 
-Func_005_6AE8::
+; wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF
+; 108 call sites from 108 routines (e.g. Func_005_7080, Func_005_708C, Func_005_70C9, Func_005_7109, ...)
+; writes: wDA6E, wDA6F, wDA70, wDA71
+ResetWDA6E::
+Func_005_6AE8:: ; address name
     xor a, a
     ld [wDA6E], a
     ld [wDA6F], a
@@ -7716,6 +8281,9 @@ Func_005_6AE8::
     ld [wDA71], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDA6E, wDA6F
+; writes: wDA6E, wDA6F
 Func_005_6AF8:: ; heuristic: follows a terminator; C0
     ld a, [wDA6E]
     add a, c
@@ -7725,6 +8293,9 @@ Func_005_6AF8:: ; heuristic: follows a terminator; C0
     ld [wDA6F], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDA70, wDA71
+; writes: wDA70, wDA71
 Func_005_6B07:: ; heuristic: follows a terminator; C0
     ld a, [wDA70]
     add a, c
@@ -7734,6 +8305,8 @@ Func_005_6B07:: ; heuristic: follows a terminator; C0
     ld [wDA71], a
     ret
 
+; 35 call sites from 35 routines (e.g. Func_005_4CE5, Func_005_5500, Func_005_6A6B, Func_005_64FE, ...)
+; points at: wDA53
 Func_005_6B16::
     ld hl, wDA53
     add a, l
@@ -7745,6 +8318,8 @@ Jump_005_6B1E::
     ld a, [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_4C23)
+; reads: wDAC4, wDAC5, wC58A
 Func_005_6B20:: ; heuristic: follows a terminator; C0
     call Func_005_4006
     ld a, l
@@ -7794,6 +8369,8 @@ Jump_005_6B5D::
     scf
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_4C40)
+; reads: wDAC4, wDAC5, wC58A
 Func_005_6B5F:: ; heuristic: follows a terminator; C0
     call Func_005_401F
     ld a, l
@@ -7843,6 +8420,7 @@ Jump_005_6B9C::
     scf
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_4BE1)
 Func_005_6B9E:: ; heuristic: follows a terminator; C0
     push bc
     ld a, c
@@ -7865,6 +8443,7 @@ Func_005_6B9E:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_005_6BBC:: ; heuristic: follows a terminator; C0
     push bc
     push af
@@ -7879,6 +8458,7 @@ Func_005_6BBC:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_005_6BCE:: ; heuristic: follows a terminator; C0
     push bc
     push af
@@ -7894,6 +8474,7 @@ Func_005_6BCE:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_005_6BE1:: ; heuristic: follows a terminator; C0
     push bc
     push af
@@ -7913,6 +8494,7 @@ Func_005_6BE1:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_5397, Func_005_53A5)
 Func_005_6BF8::
     call Func_005_4015
     ld a, h
@@ -7922,6 +8504,10 @@ Func_005_6BF8::
     cp a, $01
     ret
 
+; 8 call sites from 8 routines (e.g. Func_005_432E, Func_005_4373, Func_005_44E1, Func_005_43AD, ...)
+; reads: hFFC6
+; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; points at: hFFC6, wD989
 Func_005_6C02:: ; heuristic: follows a terminator; C0
     push bc
     ld a, $05
@@ -7967,6 +8553,10 @@ Jump_005_6C3F::
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; points at: hFFC6, wD989
 Func_005_6C42:: ; heuristic: follows a terminator; C0
     push bc
     ld a, $01
@@ -8013,6 +8603,7 @@ Jump_005_6C7E::
     pop bc
     ret
 
+; 8 call sites from 8 routines (e.g. Func_005_43F2, Func_005_69F5, Func_005_5052, Func_005_6A6B, ...)
 Func_005_6C86::
     ld a, e
     or a, a
@@ -8044,6 +8635,10 @@ Jump_005_6CA2::
     and a, $03
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_6FD9)
+; reads: wD008
+; writes: wD006, wD007
+; points at: wD958
 Func_005_6CA5:: ; heuristic: follows a terminator; C0
     ld hl, wD958
     add a, a
@@ -8063,6 +8658,9 @@ Jump_005_6CAE::
     ld a, [wD008]
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_51EA, Func_005_5228)
+; reads: wD8A4, hFFC6, hFFC7
+; writes: hFFC6, hFFC7
 Func_005_6CC2:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -8075,7 +8673,7 @@ Func_005_6CC2:: ; heuristic: follows a terminator; C0
 
 Jump_005_6CD1::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_005_6CDD
     inc c
     dec b
@@ -8095,7 +8693,7 @@ Jump_005_6CDD::
 
 Jump_005_6CEB::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6D02
     call Func_005_4006
     ldh a, [hFFC6]
@@ -8116,6 +8714,8 @@ Jump_005_6D02::
 Jump_005_6D06::
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5275)
+; points at: wD80D
 Func_005_6D07:: ; heuristic: follows a terminator; C0
     ld a, c
     ld hl, wD80D
@@ -8132,6 +8732,8 @@ Func_005_6D07:: ; heuristic: follows a terminator; C0
 Jump_005_6D19::
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_57A1, Func_005_5A33)
+; points at: wD989
 Func_005_6D1A::
     ld hl, wD989
     swap a
@@ -8176,6 +8778,8 @@ Jump_005_6D4C::
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD989
 Func_005_6D54:: ; heuristic: follows a terminator; C0
     ld hl, wD989
     swap a
@@ -8228,6 +8832,8 @@ Jump_005_6D96::
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD989
 Func_005_6D9E:: ; heuristic: follows a terminator; C0
     ld hl, wD989
     swap a
@@ -8273,6 +8879,8 @@ Jump_005_6DD1::
     or a, a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD989
 Func_005_6DD9:: ; heuristic: follows a terminator; C0
     push bc
     ld hl, wD989
@@ -8306,6 +8914,10 @@ Jump_005_6DF9::
     pop bc
     ret
 
+; 2 call sites from 1 routine (e.g. Func_005_50B7)
+; reads: hFFC7, hFFC8, hFFC6
+; writes: hFFC6, hFFC7, hFFC8
+; points at: hFFC6
 Func_005_6DFF::
     ld c, a
     ld b, $03
@@ -8316,7 +8928,7 @@ Func_005_6DFF::
 
 Jump_005_6E09::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6E20
     call Func_005_401F
     ldh a, [hFFC7]
@@ -8340,6 +8952,8 @@ Jump_005_6E20::
     call DivideHLByA
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5C50)
+; points at: wD80D
 Func_005_6E30:: ; heuristic: follows a terminator; C0
     ld a, c
     ld d, $00
@@ -8384,10 +8998,15 @@ Func_005_6E30:: ; heuristic: follows a terminator; C0
     call nz, Func_005_6E89
     ret
 
+; 14 call sites from 1 routine (e.g. Func_005_6E30)
 Func_005_6E89::
     inc d
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC8
+; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; points at: wD989
 Func_005_6E8B:: ; heuristic: follows a terminator; C0
     push bc
     ld de, $0000
@@ -8434,6 +9053,8 @@ Jump_005_6ECA::
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD989
 Func_005_6ED1:: ; heuristic: follows a terminator; C0
     push bc
     ld a, c
@@ -8474,6 +9095,8 @@ Jump_005_6EF9::
     or a, a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD989
 Func_005_6F01:: ; heuristic: follows a terminator; C0
     push bc
     ld hl, wD989
@@ -8503,6 +9126,8 @@ Jump_005_6F19::
     pop bc
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD989
 Func_005_6F21:: ; heuristic: follows a terminator; C0
     push bc
     ld hl, wD989
@@ -8550,6 +9175,7 @@ Jump_005_6F58::
     pop bc
     ret
 
+; 16 call sites from 16 routines (e.g. Func_005_5803, Func_005_5D9B, Func_005_47E5, Func_005_5DCD, ...)
 Func_005_6F60::
     add a, a
     add a, c
@@ -8570,12 +9196,13 @@ Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $02, $04, $01, $04, $00, $05, $03, $05, $02, $05, $01, $05, $00, $06, $03
     db $06, $02, $06, $01, $00, $03
 
+; 21 call sites from 20 routines (e.g. Func_005_420F, Func_005_41FD, Func_005_41EB, Func_005_4D46, ...)
 Func_005_6FA1::
     ld c, a
 
 Jump_005_6FA2::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6FB3
     push hl
     ld a, c
@@ -8597,12 +9224,13 @@ Jump_005_6FBA::
     ld c, $FF
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_47A5, Func_005_47B5, Func_005_47C5, Func_005_47D5)
 Func_005_6FBD:: ; heuristic: follows a terminator; C0
     ld c, a
 
 Jump_005_6FBE::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6FCF
     push hl
     ld a, c
@@ -8624,6 +9252,8 @@ Jump_005_6FD6::
     ld c, $FF
     ret
 
+; 10 call sites from 10 routines (e.g. Func_005_481C, Func_005_4822, Func_005_4828, Func_005_482E, ...)
+; reads: wD8A4
 Func_005_6FD9:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -8633,7 +9263,7 @@ Func_005_6FD9:: ; heuristic: follows a terminator; C0
 
 Jump_005_6FE3::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6FF1
     push de
     call Func_005_6CA5
@@ -8655,6 +9285,7 @@ Jump_005_6FFA::
     ld c, $FF
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_4C02)
 Func_005_6FFD:: ; heuristic: follows a terminator; C0
     push bc
     ld a, c
@@ -8677,6 +9308,7 @@ Func_005_6FFD:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_5C8C)
 Func_005_701B:: ; heuristic: follows a terminator; C0
     push de
     push bc
@@ -8690,11 +9322,16 @@ Func_005_701B:: ; heuristic: follows a terminator; C0
     pop de
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_4676, Func_005_46B4)
+; reads: wCFEF
 Func_005_702D::
     ld a, [wCFEF]
     or a, a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; points at: wDA72
 Func_005_7032:: ; heuristic: follows a terminator; C0
     dec a
     ld hl, Data_005_6F6B
@@ -8728,6 +9365,8 @@ Jump_005_704F::
     ld a, e
     ret
 
+; 1 call site from 1 routine (e.g. Func_005_689C)
+; points at: wD989
 Func_005_7058:: ; heuristic: follows a terminator; C0
     ld e, $00
     ld d, c
@@ -8762,6 +9401,7 @@ Jump_005_707E::
     xor a, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4001)
 Func_005_7080::
     call Func_005_4221
     ld a, c
@@ -8770,9 +9410,10 @@ Func_005_7080::
     ret
 
 Jump_005_7088::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_40BF, Func_0E2_411C)
 Func_005_708C:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -8809,9 +9450,10 @@ Func_005_708C:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_70C5::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_41E0)
 Func_005_70C9:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -8848,9 +9490,10 @@ Func_005_70C9:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7105::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4279)
 Func_005_7109:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -8903,9 +9546,10 @@ Jump_005_714C::
     ret
 
 Jump_005_715B::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_4310, Func_0E2_438D)
 Func_005_715F:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -8930,9 +9574,10 @@ Func_005_715F:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7183::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_43BE)
 Func_005_7187:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
@@ -8956,9 +9601,10 @@ Func_005_7187:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_71A8::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_43C8)
 Func_005_71AC:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -8971,9 +9617,10 @@ Func_005_71AC:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_71BA::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_43E9)
 Func_005_71BE:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -8994,9 +9641,10 @@ Func_005_71BE:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_71DA::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4420)
 Func_005_71DE:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9010,10 +9658,11 @@ Func_005_71DE:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_71EE::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4433)
 Func_005_71F4:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9027,10 +9676,11 @@ Func_005_71F4:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7204::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4446)
 Func_005_720A:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9044,10 +9694,11 @@ Func_005_720A:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_721A::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4459)
 Func_005_7220:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9061,10 +9712,11 @@ Func_005_7220:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7230::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_446C)
 Func_005_7236:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9081,9 +9733,10 @@ Func_005_7236:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_724B::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_449C)
 Func_005_724F:: ; heuristic: follows a terminator; C0
     call Func_005_7261
     ld a, c
@@ -9096,9 +9749,10 @@ Func_005_724F:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_725D::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 6 call sites from 6 routines (e.g. Func_005_724F, Func_005_7293, Func_005_72BE, Func_005_72DE, ...)
 Func_005_7261::
     call Func_005_7494
     ld a, c
@@ -9115,9 +9769,10 @@ Func_005_7261::
     ret
 
 Jump_005_7276::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4536)
 Func_005_727A:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9134,9 +9789,10 @@ Func_005_727A:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_728F::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4567)
 Func_005_7293:: ; heuristic: follows a terminator; C0
     call Func_005_7261
     ld a, c
@@ -9153,9 +9809,10 @@ Func_005_7293:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_72A8::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4619)
 Func_005_72AC:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9168,9 +9825,10 @@ Func_005_72AC:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_72BA::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4674)
 Func_005_72BE:: ; heuristic: follows a terminator; C0
     call Func_005_7261
     ld a, c
@@ -9191,9 +9849,10 @@ Func_005_72BE:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_72DA::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4721)
 Func_005_72DE:: ; heuristic: follows a terminator; C0
     call Func_005_7261
     ld a, c
@@ -9210,9 +9869,10 @@ Func_005_72DE:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_72F3::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_478E)
 Func_005_72F7:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9241,9 +9901,10 @@ Jump_005_7308::
     ret
 
 Jump_005_731E::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_47AB)
 Func_005_7322:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9264,9 +9925,10 @@ Func_005_7322:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7341::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_47CE)
 Func_005_7345:: ; heuristic: follows a terminator; C0
     call Func_005_7261
     ld a, c
@@ -9295,9 +9957,10 @@ Jump_005_735D::
     ret
 
 Jump_005_736C::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_4855, Func_0E2_6473)
 Func_005_7370:: ; heuristic: follows a terminator; C0
     call Func_005_7261
     ld a, c
@@ -9322,9 +9985,10 @@ Func_005_7370:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7393::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_48AE, Func_0E2_648D)
 Func_005_7397:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9365,9 +10029,10 @@ Jump_005_73CB::
     ret
 
 Jump_005_73D3::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_48CF)
 Func_005_73D7:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9404,9 +10069,10 @@ Jump_005_73EF::
     ret
 
 Jump_005_740C::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_48FD)
 Func_005_7410:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9443,9 +10109,10 @@ Jump_005_7428::
     ret
 
 Jump_005_7445::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_491E)
 Func_005_7449:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9482,9 +10149,10 @@ Jump_005_7461::
     ret
 
 Jump_005_747E::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_493F, Func_0E2_4984)
 Func_005_7482:: ; heuristic: follows a terminator; C0
     call Func_005_7494
     ld a, c
@@ -9497,9 +10165,10 @@ Func_005_7482:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7490::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 18 call sites from 18 routines (e.g. Func_005_71AC, Func_005_71BE, Func_005_71DE, Func_005_71F4, ...)
 Func_005_7494::
     call Func_005_413F
     ld a, c
@@ -9520,9 +10189,10 @@ Func_005_7494::
     ret
 
 Jump_005_74B1::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4A08)
 Func_005_74B5:: ; heuristic: follows a terminator; C0
     call Func_005_74D1
     ld a, c
@@ -9539,9 +10209,10 @@ Func_005_74B5:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_74CD::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 6 call sites from 6 routines (e.g. Func_005_74B5, Func_005_74F9, Func_005_7512, Func_0E2_4AB6, ...)
 Func_005_74D1::
     call Func_005_413F
     ld a, c
@@ -9566,9 +10237,10 @@ Func_005_74D1::
     ret
 
 Jump_005_74F5::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4B6B)
 Func_005_74F9:: ; heuristic: follows a terminator; C0
     call Func_005_74D1
     ld a, c
@@ -9585,9 +10257,10 @@ Func_005_74F9:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_750E::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 6 call sites from 6 routines (e.g. Func_0E2_4CE6, Func_0E2_4D7B, Func_0E2_4DEC, Func_0E2_4E71, ...)
 Func_005_7512:: ; heuristic: follows a terminator; C0
     call Func_005_74D1
     ld a, c
@@ -9600,9 +10273,10 @@ Func_005_7512:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7520::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4FE1)
 Func_005_7524:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9616,10 +10290,11 @@ Func_005_7524:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7534::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5068)
 Func_005_753A:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9633,10 +10308,11 @@ Func_005_753A:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_754A::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_507A)
 Func_005_7550:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9650,10 +10326,11 @@ Func_005_7550:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7560::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_508C)
 Func_005_7566:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9667,10 +10344,11 @@ Func_005_7566:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7576::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_509E)
 Func_005_757C:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9684,10 +10362,11 @@ Func_005_757C:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_758C::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_50B0)
 Func_005_7592:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9701,10 +10380,11 @@ Func_005_7592:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_75A2::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_50C2)
 Func_005_75A8:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9718,10 +10398,11 @@ Func_005_75A8:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_75B8::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_50D4)
 Func_005_75BE:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9735,10 +10416,11 @@ Func_005_75BE:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_75CE::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_50E6)
 Func_005_75D4:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9752,10 +10434,11 @@ Func_005_75D4:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_75E4::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_50F8)
 Func_005_75EA:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9769,10 +10452,11 @@ Func_005_75EA:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_75FA::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_510A)
 Func_005_7600:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9786,10 +10470,11 @@ Func_005_7600:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7610::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 19 call sites from 19 routines (e.g. Func_005_7524, Func_005_763E, Func_005_753A, Func_005_7686, ...)
 Func_005_7616::
     call Func_005_413F
     ld a, c
@@ -9814,9 +10499,10 @@ Func_005_7616::
     ret
 
 Jump_005_763A::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_511C)
 Func_005_763E:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9834,10 +10520,11 @@ Func_005_763E:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7655::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_51B7)
 Func_005_765B:: ; heuristic: follows a terminator; C0
     call Func_005_7686
     ld a, c
@@ -9851,10 +10538,11 @@ Func_005_765B:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_766B::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_51C9)
 Func_005_7671:: ; heuristic: follows a terminator; C0
     call Func_005_7686
     ld a, c
@@ -9867,10 +10555,11 @@ Func_005_7671:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7680::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_765B, Func_005_7671)
 Func_005_7686::
     call Func_005_7616
     ld a, c
@@ -9888,10 +10577,11 @@ Func_005_7686::
     ret
 
 Jump_005_769D::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_51F6)
 Func_005_76A3:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9920,9 +10610,10 @@ Jump_005_76C9::
     ret
 
 Jump_005_76CA::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_526D)
 Func_005_76CE:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9935,10 +10626,11 @@ Func_005_76CE:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_76DC::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_530E)
 Func_005_76E2:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -9952,10 +10644,11 @@ Func_005_76E2:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_76F2::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5385)
 Func_005_76F8:: ; heuristic: follows a terminator; C0
     call Func_005_770A
     ld a, c
@@ -9968,9 +10661,10 @@ Func_005_76F8:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7706::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_76F8, Func_005_7777, Func_005_7812)
 Func_005_770A::
     call Func_005_413F
     ld a, c
@@ -9991,9 +10685,10 @@ Func_005_770A::
     ret
 
 Jump_005_7727::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5426)
 Func_005_772B:: ; heuristic: follows a terminator; C0
     call Func_005_4707
     ld a, c
@@ -10014,9 +10709,10 @@ Func_005_772B:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_774B::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_545D)
 Func_005_774F:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10041,9 +10737,10 @@ Func_005_774F:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7773::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_54C4)
 Func_005_7777:: ; heuristic: follows a terminator; C0
     call Func_005_770A
     call Func_005_4707
@@ -10053,9 +10750,10 @@ Func_005_7777:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7782::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_561B)
 Func_005_7786:: ; heuristic: follows a terminator; C0
     call Func_005_779F
     ld a, c
@@ -10072,9 +10770,10 @@ Func_005_7786:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_779B::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7786, Func_005_77C7, Func_0E2_56C6)
 Func_005_779F::
     call Func_005_413F
     ld a, c
@@ -10099,9 +10798,10 @@ Func_005_779F::
     ret
 
 Jump_005_77C3::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_77E0, Func_0E2_57A9)
 Func_005_77C7:: ; heuristic: follows a terminator; C0
     call Func_005_779F
     ld a, c
@@ -10118,9 +10818,10 @@ Func_005_77C7:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_77DC::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5856)
 Func_005_77E0:: ; heuristic: follows a terminator; C0
     call Func_005_77C7
     ld a, c
@@ -10137,9 +10838,10 @@ Func_005_77E0:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_77F5::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5876)
 Func_005_77F9:: ; heuristic: follows a terminator; C0
     call Func_005_7812
     ld a, c
@@ -10156,9 +10858,10 @@ Func_005_77F9:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_780E::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_77F9, Func_005_7824, Func_005_7847, Func_005_7860)
 Func_005_7812::
     call Func_005_770A
     ld a, c
@@ -10171,9 +10874,10 @@ Func_005_7812::
     ret
 
 Jump_005_7820::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_58DF)
 Func_005_7824:: ; heuristic: follows a terminator; C0
     call Func_005_7812
     ld a, c
@@ -10194,9 +10898,10 @@ Func_005_7824:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7843::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_58EA)
 Func_005_7847:: ; heuristic: follows a terminator; C0
     call Func_005_7812
     ld a, c
@@ -10213,9 +10918,10 @@ Func_005_7847:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_785C::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_58F5)
 Func_005_7860:: ; heuristic: follows a terminator; C0
     call Func_005_7812
     ld a, c
@@ -10232,9 +10938,10 @@ Func_005_7860:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7875::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5900)
 Func_005_7879:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10263,9 +10970,10 @@ Func_005_7879:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_78A4::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_591F)
 Func_005_78A8:: ; heuristic: follows a terminator; C0
     call Func_005_78EC
     ld a, c
@@ -10287,10 +10995,11 @@ Func_005_78A8:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_78C6::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5970)
 Func_005_78CC:: ; heuristic: follows a terminator; C0
     call Func_005_78EC
     ld a, c
@@ -10311,9 +11020,10 @@ Func_005_78CC:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_78E8::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_78A8, Func_005_790D, Func_005_78CC, Func_005_791F)
 Func_005_78EC::
     call Func_005_413F
     ld a, c
@@ -10334,9 +11044,10 @@ Func_005_78EC::
     ret
 
 Jump_005_7909::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_59E5)
 Func_005_790D:: ; heuristic: follows a terminator; C0
     call Func_005_78EC
     ld a, c
@@ -10349,9 +11060,10 @@ Func_005_790D:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_791B::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5A72)
 Func_005_791F:: ; heuristic: follows a terminator; C0
     call Func_005_78EC
     ld a, c
@@ -10376,9 +11088,10 @@ Func_005_791F:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7942::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5AE6)
 Func_005_7946:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10407,9 +11120,10 @@ Func_005_7946:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7971::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5B3D)
 Func_005_7975:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10430,9 +11144,10 @@ Func_005_7975:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7992::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5BC4)
 Func_005_7996:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10461,9 +11176,10 @@ Func_005_7996:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_79C1::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5C25)
 Func_005_79C5:: ; heuristic: follows a terminator; C0
     call Func_005_7616
     ld a, c
@@ -10484,9 +11200,10 @@ Func_005_79C5:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_79E1::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5CC2)
 Func_005_79E5:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10511,9 +11228,10 @@ Func_005_79E5:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7A09::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5CCE)
 Func_005_7A0D:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10530,9 +11248,10 @@ Func_005_7A0D:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7A23::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5D3D)
 Func_005_7A27:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10546,10 +11265,11 @@ Func_005_7A27:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7A38::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5D60)
 Func_005_7A3E:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10563,10 +11283,11 @@ Func_005_7A3E:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7A4F::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5D83)
 Func_005_7A55:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10580,10 +11301,11 @@ Func_005_7A55:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7A66::
-    call Func_005_6AE8
+    call ResetWDA6E
     ld c, $00
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5DBC)
 Func_005_7A6C:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10608,9 +11330,10 @@ Jump_005_7A85::
     ret
 
 Jump_005_7A8D::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5DED)
 Func_005_7A91:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10623,9 +11346,10 @@ Func_005_7A91:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7AA0::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5E46)
 Func_005_7AA4:: ; heuristic: follows a terminator; C0
     call Func_005_4183
     ld a, c
@@ -10650,9 +11374,10 @@ Func_005_7AA4:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7AC8::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5E83)
 Func_005_7ACC:: ; heuristic: follows a terminator; C0
     call Func_005_4707
     ld a, c
@@ -10661,9 +11386,10 @@ Func_005_7ACC:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7AD4::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 3 call sites from 3 routines (e.g. Func_005_7B40, Func_0E2_5EC0, Func_0E2_5FE8)
 Func_005_7AD8:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10696,9 +11422,10 @@ Func_005_7AD8:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7B0D::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_5F0A, Func_0E2_6401)
 Func_005_7B11:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10727,9 +11454,10 @@ Func_005_7B11:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7B3C::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5F94)
 Func_005_7B40:: ; heuristic: follows a terminator; C0
     call Func_005_7AD8
     ld a, c
@@ -10746,9 +11474,10 @@ Func_005_7B40:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7B58::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6044)
 Func_005_7B5C:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10773,9 +11502,10 @@ Func_005_7B5C:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7B80::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6089)
 Func_005_7B84:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10812,9 +11542,10 @@ Jump_005_7BAB::
     ret
 
 Jump_005_7BBA::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_60A6)
 Func_005_7BBE:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -10839,15 +11570,18 @@ Func_005_7BBE:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7BE2::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_60D7)
+; writes: wDA6E, wDA6F, wDA70, wDA71
 Func_005_7BE6:: ; heuristic: follows a terminator; C0
     call Func_005_6452
     ld a, c
     and a, a
-    jp z, Func_005_6AE8
+    jp z, ResetWDA6E
 
+; 1 call site from 1 routine (e.g. Func_005_7C12)
 Func_005_7BEE::
     call Func_005_7C24
     ld a, c
@@ -10872,9 +11606,10 @@ Jump_005_7C06::
     ret
 
 Jump_005_7C0E::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6112)
 Func_005_7C12:: ; heuristic: follows a terminator; C0
     call Func_005_7BEE
     ld a, c
@@ -10887,9 +11622,10 @@ Func_005_7C12:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7C20::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 4 call sites from 4 routines (e.g. Func_005_7BEE, Func_005_7C45, Func_005_7C82, Func_005_7CA2)
 Func_005_7C24::
     call Func_005_413F
     ld a, c
@@ -10910,9 +11646,10 @@ Func_005_7C24::
     ret
 
 Jump_005_7C41::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_005_7C69, Func_0E2_6139)
 Func_005_7C45:: ; heuristic: follows a terminator; C0
     call Func_005_7C24
     ld a, c
@@ -10937,9 +11674,10 @@ Jump_005_7C5D::
     ret
 
 Jump_005_7C65::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6160)
 Func_005_7C69:: ; heuristic: follows a terminator; C0
     call Func_005_7C45
     ld a, c
@@ -10956,9 +11694,10 @@ Func_005_7C69:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7C7E::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_618D)
 Func_005_7C82:: ; heuristic: follows a terminator; C0
     call Func_005_7C24
     ld a, c
@@ -10979,9 +11718,10 @@ Func_005_7C82:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7C9E::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_61C2)
 Func_005_7CA2:: ; heuristic: follows a terminator; C0
     call Func_005_7C24
     ld a, c
@@ -11002,9 +11742,10 @@ Func_005_7CA2:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7CBE::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_61CD)
 Func_005_7CC2:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -11029,9 +11770,10 @@ Jump_005_7CDB::
     ret
 
 Jump_005_7CE3::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_61E0)
 Func_005_7CE7:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -11040,9 +11782,10 @@ Func_005_7CE7:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7CEF::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6249)
 Func_005_7CF3:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -11107,9 +11850,10 @@ Jump_005_7D48::
     ret
 
 Jump_005_7D57::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_62A4)
 Func_005_7D5B:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -11146,9 +11890,10 @@ Jump_005_7D89::
     ret
 
 Jump_005_7D91::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6303)
 Func_005_7D95:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -11161,9 +11906,10 @@ Func_005_7D95:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7DA4::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6350)
 Func_005_7DA8:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -11180,9 +11926,10 @@ Func_005_7DA8:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7DBE::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6387)
 Func_005_7DC2:: ; heuristic: follows a terminator; C0
     call Func_005_413F
     ld a, c
@@ -11199,9 +11946,10 @@ Func_005_7DC2:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7DD8::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 2 call sites from 2 routines (e.g. Func_0E2_63FA, Func_0E2_641E)
 Func_005_7DDC:: ; heuristic: follows a terminator; C0
     call Func_005_54FD
     ld a, c
@@ -11210,9 +11958,10 @@ Func_005_7DDC:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_005_7DE4::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6425)
 Func_005_7DE8:: ; heuristic: follows a terminator; C0
     call Func_005_41FD
     ld a, c
@@ -11241,6 +11990,6 @@ Jump_005_7E08::
     ret
 
 Jump_005_7E10::
-    call Func_005_6AE8
+    call ResetWDA6E
     ret
     ds $1EC, $00

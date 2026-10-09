@@ -1,6 +1,9 @@
 SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
+; 1 call site from 1 routine (e.g. Func_037_5FB8)
+; reads: wCA36, wCA37, wCA38, wCA45, wCA46, wD008, wCA47, wCA48, ...
+; writes: wD2AD, wD2AE, wD2B3, wD2AF, wD2B0, wD006, wD007, wD2B4, ...
 Func_081_4001::
     ld a, [wCA36]
     ld l, a
@@ -119,6 +122,9 @@ Jump_081_40D8::
     ld [wD007], a
     ret
 
+; 2 call sites from 1 routine (e.g. Func_081_4001)
+; reads: hFFC6, hFFC7, hFFCB, hFFC8, hFFC9, wD2B3, wD2AD, wD2AE
+; points at: hFFCB
 Func_081_40E2::
     ld a, [hl+]
     ld d, [hl]
@@ -1571,6 +1577,9 @@ Data_081_5449:: ; heuristic: target of a monotone pointer table; C0
 Data_081_5451:: ; heuristic: target of a monotone pointer table; C0
     db $FF, $0A
 
+; 1 call site from 1 routine (e.g. Func_037_5BC6)
+; reads: wD0A6, wD0E8
+; points at: wD0EA
 Func_081_5453::
     ld a, [wD0A6]
     ld l, a

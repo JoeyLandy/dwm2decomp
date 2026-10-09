@@ -1,6 +1,8 @@
 SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
+; 12 call sites from 6 routines (e.g. Func_008_402B, Func_000_2E72, Func_001_4AD4, Func_003_5253, ...)
+; reads: wC528
 Func_008_4001::
     ld a, [wC528]
     cp a, $09
@@ -13,6 +15,8 @@ Jump_008_400F::
     call Func_000_25C9
     ret
 
+; 3 call sites from 3 routines (e.g. Func_000_2E81, Func_012_4B19, Func_0A1_52D4)
+; reads: wC528
 Func_008_4016::
     ld a, [wC528]
     cp a, $09
@@ -25,6 +29,7 @@ Jump_008_4024::
     call Func_000_25FE
     ret
 
+; 67 call sites from 40 routines (e.g. Func_001_4045, Func_001_4F80, Func_001_5EAF, Func_001_6903, ...)
 Func_008_402B::
     call Func_008_4001
     call Func_000_2611

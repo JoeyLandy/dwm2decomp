@@ -1,6 +1,9 @@
 SECTION "Bank 97", ROMX[$4000], BANK[$97]
     db $97
 
+; 1 call site from 1 routine (e.g. Func_028_4001)
+; reads: wC529
+; writes: wC529
 Func_097_4001::
     ld de, Data_097_4095
     ld a, [wC529]
@@ -9,6 +12,9 @@ Func_097_4001::
     call Func_000_25C9
     ret
 
+; 1 call site from 1 routine (e.g. Func_028_4016)
+; reads: wC529
+; writes: wC529
 Func_097_4010:: ; heuristic: follows a terminator; C0
     ld de, Data_097_4095
     ld a, [wC529]
@@ -18,6 +24,9 @@ Func_097_4010:: ; heuristic: follows a terminator; C0
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
+; 1 call site from 1 routine (e.g. Func_029_4001)
+; reads: wC529
+; writes: wC529
 Func_097_4026::
     ld de, Data_097_474A
     ld a, [wC529]
@@ -26,6 +35,9 @@ Func_097_4026::
     call Func_000_25C9
     ret
 
+; 1 call site from 1 routine (e.g. Func_029_4016)
+; reads: wC529
+; writes: wC529
 Func_097_4035:: ; heuristic: follows a terminator; C0
     ld de, Data_097_474A
     ld a, [wC529]
@@ -35,6 +47,9 @@ Func_097_4035:: ; heuristic: follows a terminator; C0
     ret
     db $CD, $26, $40, $CD, $11, $26, $C9
 
+; 1 call site from 1 routine (e.g. Func_02A_4001)
+; reads: wC529
+; writes: wC529
 Func_097_404B::
     ld de, Data_097_5BBF
     ld a, [wC529]
@@ -43,6 +58,9 @@ Func_097_404B::
     call Func_000_25C9
     ret
 
+; 1 call site from 1 routine (e.g. Func_02A_4016)
+; reads: wC529
+; writes: wC529
 Func_097_405A:: ; heuristic: follows a terminator; C0
     ld de, Data_097_5BBF
     ld a, [wC529]
@@ -52,6 +70,9 @@ Func_097_405A:: ; heuristic: follows a terminator; C0
     ret
     db $CD, $4B, $40, $CD, $11, $26, $C9
 
+; 1 call site from 1 routine (e.g. Func_083_4001)
+; reads: wC529
+; writes: wC529
 Func_097_4070::
     ld de, Data_097_6DC1
     ld a, [wC529]
@@ -60,6 +81,9 @@ Func_097_4070::
     call Func_000_25C9
     ret
 
+; 1 call site from 1 routine (e.g. Func_083_4016)
+; reads: wC529
+; writes: wC529
 Func_097_407F:: ; heuristic: follows a terminator; C0
     ld de, Data_097_6DC1
     ld a, [wC529]

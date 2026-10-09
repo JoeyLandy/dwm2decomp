@@ -1,6 +1,9 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
+; 1 call site from 1 routine (e.g. Func_002_4AE0)
+; reads: wC8CB, wC468, hFF8C, wC918, hFF90, hFF8F, hFF92, wC5DC, ...
+; writes: wC918, wC916, wC917, wC55E, wC562
 Func_087_4001::
     ld a, [wC8CB]
     and a, $03
@@ -144,6 +147,9 @@ Jump_087_409E::
     db $05, $5F, $00, $00, $1A, $5F
     ds $A6, $00
 
+; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
+; reads: wC8CB, wC468, hFF8C, wC562, wCB7D, hFF8E, hFF91, hFF98, ...
+; writes: wC916, wC917, wC55E, wC562
 Func_087_42A0::
     ld a, [wC8CB]
     and a, $03
@@ -571,6 +577,9 @@ Jump_087_44FC::
 Jump_087_4504::
     jp Jump_087_4420
 
+; 1 call site from 1 routine (e.g. Func_087_42A0)
+; reads: wCC45
+; points at: wCD89
 Func_087_4507::
     cp a, $84
     jr nz, Jump_087_4511
@@ -652,6 +661,10 @@ Jump_087_4537::
     ds $12, $00
     INCBIN "dwm2-cobi-us.gbc", $21C61B, $EE
 
+; 1 call site from 1 routine (e.g. Func_087_42A0)
+; reads: wCB7D, hFFC7, hFFC6
+; writes: hFFC6, hFFC7
+; points at: wCB8A
 Func_087_4709::
     ld a, [wCB7D]
     or a, a

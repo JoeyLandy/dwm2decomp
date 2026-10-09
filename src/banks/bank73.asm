@@ -1,6 +1,8 @@
 SECTION "Bank 73", ROMX[$4000], BANK[$73]
     db $73
 
+; 1 call site from 1 routine (e.g. Func_010_499B)
+; reads: wC935
 Func_073_4001::
     ld a, [wC935]
     and a, $0F
@@ -43,7 +45,7 @@ Jump_073_403F::
     add a, $3A
     ld l, a
     ld h, $00
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
@@ -53,7 +55,7 @@ Jump_073_4053::
     or a, a
     jr nz, Jump_073_407B
     ld hl, $003E
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, [wC935]
     and a, $0F
     sub a, $0C
@@ -81,7 +83,7 @@ Jump_073_407B::
     add a, $3F
     ld l, a
     ld h, $00
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $06
     ld [wC923], a
     ret
@@ -108,7 +110,7 @@ Jump_073_4098::
 
 Jump_073_40BA::
     ld hl, $4037
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
@@ -118,14 +120,14 @@ Jump_073_40C5::
     or a, a
     jr nz, Jump_073_40D6
     ld hl, vTiles0 + $49
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_40D6::
     ld hl, vTiles0 + $48
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $0D
     ld [wC923], a
     ret
@@ -135,7 +137,7 @@ Jump_073_40E2::
     or a, a
     jr nz, Jump_073_4105
     ld hl, $0038
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_4100
@@ -151,14 +153,14 @@ Jump_073_4100::
 
 Jump_073_4105::
     ld hl, $0039
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $0B
     ld [wC923], a
     ret
 
 Jump_073_4111::
     ld hl, $000F
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     call Func_073_4C5D
     ld hl, wC923
     inc [hl]
@@ -178,6 +180,10 @@ Jump_073_411F::
     dw Func_073_4139
     db $5D, $4E, $9C, $4E
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC921, wC46B, wC46C, wC46D
+; writes: wC921, wC928, hFFC6, hFFC7
+; points at: wC923
 Func_073_4139:: ; heuristic: target of a pointer table; C0
     ld a, [wC921]
     inc a
@@ -247,7 +253,7 @@ Jump_073_41AD::
     or a, a
     jr nz, Jump_073_41C3
     ld hl, $0032
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $1E
     ld [wC928], a
     farcall Func_05F_6C8C
@@ -257,7 +263,7 @@ Jump_073_41C3::
     dec a
     jr nz, Jump_073_41D8
     ld hl, $0030
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $2C
     ld [wC928], a
     farcall Func_05F_6C8C
@@ -267,7 +273,7 @@ Jump_073_41D8::
     dec a
     jr nz, Jump_073_41F1
     ld hl, $0031
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, $03E8
     ld a, l
     ldh [hFFC6], a
@@ -280,7 +286,7 @@ Jump_073_41F1::
     dec a
     jr nz, Jump_073_420A
     ld hl, $0044
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, $01F4
     ld a, l
     ldh [hFFC6], a
@@ -291,7 +297,7 @@ Jump_073_41F1::
 
 Jump_073_420A::
     ld hl, $0045
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, $00C8
     ld a, l
     ldh [hFFC6], a
@@ -302,7 +308,7 @@ Jump_073_420A::
 
 Jump_073_4220::
     ld hl, $0035
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4227::
@@ -320,7 +326,7 @@ Jump_073_4236::
     or a, a
     jr nz, Jump_073_4250
     ld hl, $0046
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, $0064
     ld a, l
     ldh [hFFC6], a
@@ -333,7 +339,7 @@ Jump_073_4250::
     dec a
     jr nz, Jump_073_4220
     ld hl, $0047
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, $0032
     ld a, l
     ldh [hFFC6], a
@@ -342,6 +348,9 @@ Jump_073_4250::
     farcall Func_012_7EC2
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5F0, wC46E
+; points at: wC46B, wC923, wC46C, wC46D
 Func_073_4269:: ; heuristic: target of a pointer table; C0
     call Func_073_43BE
     ld a, [wC5F0]
@@ -381,6 +390,7 @@ Jump_073_42A7::
     call Func_073_441D
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_4269)
 Func_073_42AB::
     ld a, [hl]
     and a, $0F
@@ -403,6 +413,9 @@ Jump_073_42BF::
     ld a, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC562
+; points at: wC46E, wC923
 Func_073_42C2:: ; heuristic: target of a pointer table; C0
     ld a, [wC562]
     bit 0, a
@@ -417,6 +430,10 @@ Jump_073_42D1::
     call Func_073_441D
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC921
+; writes: wC921
+; points at: wC923
 Func_073_42D8:: ; heuristic: target of a pointer table; C0
     call Func_073_43BE
     call Func_073_441D
@@ -431,6 +448,10 @@ Func_073_42D8:: ; heuristic: target of a pointer table; C0
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCD04, wIsCGB
+; writes: wC46B, wC46C, wC46D, wC46E, rSVBK
+; points at: wC198, wC923
 Func_073_42F1:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call NextRandomSeed
@@ -522,7 +543,7 @@ Jump_073_4387::
     or a, a
     jr nz, Jump_073_43A7
     ld hl, $002F
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, $0064
     ld a, l
     ldh [hFFC6], a
@@ -535,7 +556,7 @@ Jump_073_4387::
 
 Jump_073_43A7::
     ld hl, $0036
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $09
     ld [wC923], a
     ret
@@ -544,9 +565,12 @@ Jump_073_43B3::
     ld hl, wC923
     inc [hl]
     ld hl, $002E
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
+; 3 call sites from 3 routines (e.g. Func_073_4269, Func_073_42C2, Func_073_42D8)
+; reads: wC5F0, wC46E, wC46B, wC46C, wC46D
+; writes: wC46B, wC46C, wC46D
 Func_073_43BE::
     ld a, [wC5F0]
     and a, $01
@@ -597,6 +621,9 @@ Jump_073_4404::
 Jump_073_441C::
     ret
 
+; 4 call sites from 4 routines (e.g. Func_073_4269, Func_073_42C2, Func_073_42D8, Func_073_42F1)
+; reads: wC46B, wC46C, wC46D
+; writes: hFFC6, hFFC7
 Func_073_441D::
     ld hl, vTiles1 + $240
     ld a, [wC46B]
@@ -694,6 +721,9 @@ Jump_073_449B::
     call Func_073_44A5
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_441D)
+; reads: hFFC7, hFFC8, hFFC6
+; writes: hFFC8
 Func_073_44A5::
     and a, $0E
     ldh [hFFC8], a
@@ -766,18 +796,24 @@ Jump_073_45E4::
     ld hl, wC923
     inc [hl]
     ld hl, $4021
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC552
+; writes: wC923
 Func_073_45EF:: ; heuristic: target of a pointer table; C0
     ld a, [wC552]
     or a, a
     jr nz, Jump_073_4629
     ld hl, vTiles0 + $23
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $FF
     db $EA, $93
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: hFFC6, hFFC7
+; points at: wC923
 Func_073_45FF:: ; heuristic: target of a pointer table; C0
     adc a, $EA
     sub a, h
@@ -807,18 +843,21 @@ Func_073_45FF:: ; heuristic: target of a pointer table; C0
 
 Jump_073_4629::
     ld hl, vTiles0 + $22
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $06
     ld [wC923], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_073_4635:: ; heuristic: target of a pointer table; C0
     farcall Func_012_653F
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC923
 Func_073_463C:: ; heuristic: target of a pointer table; C0
     ld hl, $0052
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
@@ -857,7 +896,7 @@ Jump_073_46B3::
     cp a, c
     jr nz, Jump_073_46EA
     ld hl, vTiles0 + $18
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     jp Jump_073_4797
 
 Jump_073_46EA::
@@ -878,6 +917,10 @@ Jump_073_46FD::
     cp a, c
     db $D2
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC922, wC921, wC46D, wCD03
+; writes: wC922, wC46D, wC928, wC923, wC921, wC8C0, wC8C1, wC8C2
+; points at: wC152, wC181, wC016
 Func_073_4706:: ; heuristic: target of a pointer table; C0
     sub a, c
     ld b, a
@@ -893,7 +936,7 @@ Jump_073_470A::
     cp a, $05
     jr nz, Jump_073_473F
     ld hl, vTiles0 + $1C
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, [wC46D]
     ld de, wC152
     call Func_000_2431
@@ -947,14 +990,14 @@ Jump_073_4770::
     ld de, wC181
     call Func_000_23CA
     ld hl, wC016
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $08
     ld [wC923], a
     ret
 
 Jump_073_4791::
     ld hl, vTiles0 + $17
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
 
 Jump_073_4797::
     ld a, [wC922]
@@ -1001,12 +1044,12 @@ Jump_073_47DB::
     ld a, $06
     ld [wC46B], a
     ld hl, wC014
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_47F1::
     ld hl, vTiles0 + $15
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $10
     ld [wC923], a
     ret
@@ -1027,7 +1070,7 @@ Jump_073_480D::
     ld de, wC152
     call Func_000_2431
     ld hl, $4013
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
@@ -1056,7 +1099,7 @@ Jump_073_4860::
     ld hl, wC923
     inc [hl]
     ld hl, $4024
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_486B::
@@ -1064,14 +1107,14 @@ Jump_073_486B::
     or a, a
     jr nz, Jump_073_487C
     ld hl, vTiles0 + $51
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_487C::
     ld hl, vTiles0 + $50
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $0C
     ld [wC923], a
     ret
@@ -1083,12 +1126,12 @@ Jump_073_4888::
     or a, a
     jr nz, Jump_073_4899
     ld hl, $0025
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4899::
     ld hl, $0053
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_48A0::
@@ -1109,7 +1152,7 @@ Jump_073_48A0::
 
 Jump_073_48BF::
     ld hl, $0026
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $0C
     ld [wC923], a
     ret
@@ -1126,12 +1169,12 @@ Jump_073_48CB::
     bit 7, a
     jr nz, Jump_073_48BF
     ld hl, $4026
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_48E9::
     ld hl, $000F
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     call Func_073_4C5D
     ld a, $0C
     ld [wC923], a
@@ -1153,7 +1196,7 @@ Jump_073_48F8::
 
 Jump_073_4912::
     ld hl, vTiles0 + $26
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $0C
     ld [wC923], a
     ret
@@ -1170,14 +1213,14 @@ Jump_073_491E::
     bit 7, a
     jr nz, Jump_073_4912
     ld hl, wC026
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_493C::
     ld hl, wC923
     inc [hl]
     ld hl, vTiles0 + $26
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $02
     call Func_073_4956
     ld a, $02
@@ -1186,6 +1229,10 @@ Jump_073_493C::
     call Func_073_4A0F
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_4706)
+; reads: hFFC6, hFFC7
+; writes: rRAMG, hFFC8
+; points at: wC6FE
 Func_073_4956::
     ld hl, wC6FE
     add a, l
@@ -1235,6 +1282,9 @@ Jump_073_495E::
     call Func_073_49C5
     ret
 
+; 5 call sites from 1 routine (e.g. Func_073_4956)
+; reads: hFFC7, hFFC6
+; writes: hFFC8
 Func_073_49B1::
     ldh a, [hFFC7]
     cp a, d
@@ -1253,6 +1303,10 @@ Jump_073_49BB::
     ld d, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_4956)
+; reads: hFFC8
+; writes: wC921, wC529, wC528, wC53D, wC53E
+; points at: wC152
 Func_073_49C5::
     ldh a, [hFFC8]
     ld [wC921], a
@@ -1268,6 +1322,9 @@ Func_073_49C5::
     farcall Func_009_4008
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_4706)
+; writes: rRAMG
+; points at: wC6FE, wC8CF, wC147
 Func_073_49E6::
     ld hl, wC6FE
     add a, l
@@ -1297,6 +1354,10 @@ Jump_073_4A05::
     ld [de], a
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_4706)
+; reads: wC921, hFFC6, hFFC7, hFFC9, hFFC8
+; writes: rRAMG, hFFC8, hFFC9, wC8C0, wC8C1, wC8C2
+; points at: wC6FE, wC17E
 Func_073_4A0F::
     ld hl, wC6FE
     add a, l
@@ -1384,7 +1445,7 @@ Jump_073_4A9E::
     ld hl, wC923
     inc [hl]
     ld hl, $401D
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4AA9::
@@ -1392,14 +1453,14 @@ Jump_073_4AA9::
     or a, a
     jr nz, Jump_073_4ABA
     ld hl, vTiles0 + $4B
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4ABA::
     ld hl, vTiles0 + $4A
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $08
     ld [wC923], a
     ret
@@ -1411,12 +1472,12 @@ Jump_073_4AC6::
     or a, a
     jr nz, Jump_073_4AD7
     ld hl, $001E
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4AD7::
     ld hl, $001F
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4ADE::
@@ -1440,19 +1501,19 @@ Jump_073_4ADE::
     cp a, $FF
     jr z, Jump_073_4B15
     ld hl, $001B
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4B15::
     ld hl, $401B
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $0A
     ld [wC923], a
     ret
 
 Jump_073_4B21::
     ld hl, $000F
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     call Func_073_4C5D
     ret
 
@@ -1472,14 +1533,14 @@ Jump_073_4B2B::
     cp a, $FF
     jr z, Jump_073_4B5D
     ld hl, vTiles0 + $1B
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $08
     ld [wC923], a
     ret
 
 Jump_073_4B5D::
     ld hl, wC01B
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     dec [hl]
     ret
@@ -1502,7 +1563,7 @@ Jump_073_4B80::
     ld hl, wC923
     inc [hl]
     ld hl, $4010
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4B8B::
@@ -1510,14 +1571,14 @@ Jump_073_4B8B::
     or a, a
     jr nz, Jump_073_4B9C
     ld hl, vTiles0 + $4F
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4B9C::
     ld hl, vTiles0 + $4E
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $08
     ld [wC923], a
     ret
@@ -1530,6 +1591,8 @@ Jump_073_4BA8::
     jr nz, Jump_073_4BB9
     db $21
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wCD00
 Func_073_4BB3:: ; heuristic: target of a pointer table; C0
     ld de, wCD00
     ret c
@@ -1538,7 +1601,7 @@ Func_073_4BB3:: ; heuristic: target of a pointer table; C0
 
 Jump_073_4BB9::
     ld hl, $0012
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     call Func_073_4C5D
     ret
 
@@ -1560,7 +1623,7 @@ Jump_073_4BDB::
     ld hl, wC923
     inc [hl]
     ld hl, $400B
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4BE6::
@@ -1568,14 +1631,14 @@ Jump_073_4BE6::
     or a, a
     jr nz, Jump_073_4BF7
     ld hl, vTiles0 + $4D
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4BF7::
     ld hl, vTiles0 + $4C
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $08
     ld [wC923], a
     ret
@@ -1587,12 +1650,12 @@ Jump_073_4C03::
     or a, a
     jr nz, Jump_073_4C14
     ld hl, $000C
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4C14::
     ld hl, $000E
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4C1B::
@@ -1608,13 +1671,16 @@ Jump_073_4C1B::
 
 Jump_073_4C2F::
     ld hl, $000D
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld a, $29
     ld [wC928], a
     farcall Func_05F_6C8C
     ret
     db $21
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: wC928
 Func_073_4C42:: ; heuristic: target of a pointer table; C0
     sbc a, d
     ld l, b
@@ -1624,15 +1690,19 @@ Func_073_4C42:: ; heuristic: target of a pointer table; C0
     or a, a
     jr z, Jump_073_4C2F
     ld hl, $0043
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4C53::
     ld hl, $000F
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     call Func_073_4C5D
     ret
 
+; 5 call sites from 5 routines (e.g. Func_073_4C42, Func_073_4BB3, Func_073_4A0F, Func_073_4706, ...)
+; reads: wC617, wC618, wC619, wC8C0, wC8C1, wC8C2
+; writes: wC8C0, wC8C1, wC8C2
+; points at: wC17E
 Func_073_4C5D::
     ld a, [wC617]
     ld [wC8C0], a
@@ -1674,7 +1744,7 @@ Jump_073_4CAE::
     ld hl, wC923
     inc [hl]
     ld hl, $4008
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     call Func_073_4FD2
     ld a, [wC921]
     ld de, wC152
@@ -1683,6 +1753,9 @@ Jump_073_4CAE::
     call Func_073_4FB7
     ld e, l
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC8C0, wC8C1, wC8C2
+; points at: wC17E
 Func_073_4CCB:: ; heuristic: target of a pointer table; C0
     ld d, h
     add hl, hl
@@ -1721,12 +1794,12 @@ Jump_073_4CE5::
     ldh [hFFC7], a
     farcall Func_012_7E84
     ld hl, vTiles0 + $9
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4D19::
     ld hl, vTiles0 + $A
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4D20::
@@ -1746,7 +1819,7 @@ Jump_073_4D36::
     ld hl, wC923
     inc [hl]
     ld hl, $4005
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4D41::
@@ -1756,7 +1829,7 @@ Jump_073_4D41::
     or a, a
     jr nz, Jump_073_4D52
     ld hl, vTiles0 + $27
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4D52::
@@ -1780,12 +1853,12 @@ Jump_073_4D5B::
     farcall Func_012_7E84
     farcall Func_012_64F8
     ld hl, $0006
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4D82::
     ld hl, vTiles0 + $7
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
@@ -1803,7 +1876,7 @@ Jump_073_4D9B::
     ld hl, wC923
     inc [hl]
     ld hl, $4002
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     call Func_073_4FD2
     ld a, [wC921]
     ld de, wC152
@@ -1838,12 +1911,12 @@ Jump_073_4DCD::
     ldh [hFFC7], a
     farcall Func_012_7E84
     ld hl, vTiles0 + $3
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4DFC::
     ld hl, vTiles0 + $4
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ret
 
 Jump_073_4E03::
@@ -1859,11 +1932,14 @@ Jump_073_4E03::
 
 Jump_073_4E15::
     ld hl, $0000
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     ld hl, wC923
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wIsCGB
+; points at: wC49F, wC0F0, wC923
 Func_073_4E20:: ; heuristic: target of a pointer table; C0
     xor a, a
     call Func_073_4FA9
@@ -1887,16 +1963,21 @@ Jump_073_4E41::
     farcall Func_012_653F
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921
+; points at: wC923
 Func_073_4E48:: ; heuristic: follows a terminator; C0
     farcall Func_012_64F8
     ld hl, $0001
-    call Func_073_4ED8
+    call StoreHLInWC924_B73
     xor a, a
     ld [wC921], a
     ld hl, wC923
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC923
 Func_073_4E5D:: ; heuristic: follows a terminator; C0
     xor a, a
     call Func_073_4FA9
@@ -1905,6 +1986,10 @@ Func_073_4E5D:: ; heuristic: follows a terminator; C0
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC921
+; writes: wC921, hFF8D, wC527
+; points at: wC923
 Func_073_4E67:: ; heuristic: follows a terminator; C0
     ld a, [wC921]
     or a, a
@@ -1930,6 +2015,9 @@ Jump_073_4E76::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_6038)
+; reads: wC921
+; writes: wCB7D, wC921, wC919, wC935
 Func_073_4E9C:: ; heuristic: follows a terminator; C0
     ld a, [wC921]
     cp a, $1E
@@ -1971,7 +2059,11 @@ Jump_073_4EC4::
     ld [wC935], a
     ret
 
-Func_073_4ED8::
+; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
+; 76 call sites from 14 routines (e.g. Func_073_4E48, Func_073_4C42, Func_073_4BB3, Func_073_4706, ...)
+; writes: wC924, wC925, wC926
+StoreHLInWC924_B73::
+Func_073_4ED8:: ; address name
     ld a, l
     ld [wC924], a
     ld a, h
@@ -1980,6 +2072,8 @@ Func_073_4ED8::
     ld [wC926], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_4FA9)
+; reads: wC926
 Func_073_4EE5:: ; heuristic: follows a terminator; C0
     push af
     ld a, [wC926]
@@ -2094,6 +2188,8 @@ Jump_073_4FA3::
     ld [wC926], a
     ret
 
+; 2 call sites from 2 routines (e.g. Func_073_4E5D, Func_073_4E20)
+; reads: wC926
 Func_073_4FA9::
     call Func_073_4EE5
     ld a, [wC926]
@@ -2106,6 +2202,7 @@ Jump_073_4FB5::
     scf
     ret
 
+; 5 call sites from 3 routines (e.g. Func_073_4CCB, Func_073_516B, Func_073_4C5D)
 Func_073_4FB7::
     ld c, $0D
     call Multiply8
@@ -2125,6 +2222,9 @@ Func_073_4FB7::
     ld h, c
     ret
 
+; 2 call sites from 2 routines (e.g. Func_073_4CCB, Func_073_4C5D)
+; reads: wC92C, wC6FD, wD7AA, hFFC9, hFFC8
+; writes: wC921
 Func_073_4FD2::
     farcall Func_05F_6CA9
     ld a, [wC92C]
@@ -2263,6 +2363,10 @@ Jump_073_50BD::
     ld [wC921], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_4FD2)
+; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
+; writes: hFFC8, hFFC9, rRAMG
+; points at: wC6FE
 Func_073_50C3::
     ld hl, $0000
     ld a, l
@@ -2320,6 +2424,10 @@ Jump_073_5112::
     ld [rRAMG], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_4FD2)
+; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
+; writes: hFFC8, hFFC9, rRAMG
+; points at: wC6FE
 Func_073_5117::
     ld hl, $0000
     ld a, l
@@ -2377,6 +2485,8 @@ Jump_073_5166::
     ld [rRAMG], a
     ret
 
+; 10 call sites from 1 routine (e.g. Func_073_4FD2)
+; reads: wC935, wC619, wC618, wC617
 Func_073_516B::
     call Func_073_4FB7
     ld a, [wC935]
@@ -2428,6 +2538,8 @@ Jump_073_5194::
     farcall Func_00A_476E
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4F31)
+; reads: wC923
 Func_073_51BD::
     ld a, [wC923]
     rst $00
@@ -2570,6 +2682,9 @@ Jump_073_52EE::
     call Func_073_52F5
     ret
 
+; 2 call sites from 1 routine (e.g. Func_073_51BD)
+; reads: hFF90
+; points at: wC923
 Func_073_52F5::
     ldh a, [hFF90]
     sub a, $C8
@@ -2585,12 +2700,15 @@ Jump_073_52FF::
     inc de
     ld a, [de]
     ld h, a
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
     INCBIN "dwm2-cobi-us.gbc", $1CD30C, $6C
 
+; 1 call site from 1 routine (e.g. Func_010_4F2A)
+; reads: hFFC6, wCC3F
+; writes: hFFC6, hFFC7, wCC3F, wCB9A, wCB9B, wC919
 Func_073_5378::
     xor a, a
     ldh [hFFC6], a
@@ -2614,6 +2732,8 @@ Func_073_5378::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4F23)
+; reads: wC923
 Func_073_53AB::
     ld a, [wC923]
     rst $00
@@ -2641,7 +2761,7 @@ Jump_073_53B3::
 
 Jump_073_53D8::
     ld hl, wCB8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wC923
     inc [hl]
     ldh a, [hFF8E]
@@ -2687,6 +2807,10 @@ Jump_073_5412::
     ld [wCB86], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4F1C)
+; reads: wCB8B
+; writes: wCBAB, wCB86, wCB96, wCB8B, wCB9B, wC919
+; points at: wCB8C, wCB9C
 Func_073_541D::
     ld a, $10
     ld [wCBAB], a
@@ -2694,9 +2818,9 @@ Func_073_541D::
     ld [wCB86], a
     ld [wCB96], a
     ld hl, wCB8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wCB9C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld a, [wCB8B]
     inc a
     inc a
@@ -2708,6 +2832,8 @@ Func_073_541D::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4F0E)
+; reads: wC923
 Func_073_5449::
     ld a, [wC923]
     rst $00
@@ -2724,7 +2850,7 @@ Func_073_5449::
 
 Jump_073_5461::
     ld hl, $0782
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -2764,7 +2890,7 @@ Jump_073_5488::
 
 Jump_073_54AF::
     ld hl, $0781
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -2776,7 +2902,7 @@ Jump_073_54BA::
 
 Jump_073_54BF::
     ld hl, $0780
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -2862,6 +2988,8 @@ Jump_073_5541::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4F38)
+; reads: wC923
 Func_073_5546::
     ld a, [wC923]
     rst $00
@@ -2890,6 +3018,9 @@ Jump_073_555E::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4F00)
+; reads: wC923
+; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_5577::
     ld a, [wC923]
     or a, a
@@ -2914,6 +3045,9 @@ Jump_073_559E::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4EF9)
+; reads: hFFC6
+; writes: hFFC6, hFFC7, wC919
 Func_073_55A4::
     xor a, a
     ldh [hFFC6], a
@@ -2930,6 +3064,8 @@ Func_073_55A4::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4EEB)
+; reads: wC923
 Func_073_55C5::
     ld a, [wC923]
     rst $00
@@ -2982,7 +3118,7 @@ Jump_073_55D1::
 
 Jump_073_562C::
     ld hl, wCB9C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld a, $01
     ld [wCB96], a
     ld a, [wCB9A]
@@ -3027,11 +3163,13 @@ Jump_073_5670::
     xor a, a
     ld [wCB96], a
     ld hl, $0725
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4EE4)
+; reads: wC923
 Func_073_568E::
     ld a, [wC923]
     rst $00
@@ -3090,9 +3228,9 @@ Jump_073_56DB::
 
 Jump_073_56F6::
     ld hl, wCB9C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wCBAC
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld a, [wCBAB]
     dec a
     ld [wCBAB], a
@@ -3107,6 +3245,8 @@ Jump_073_56F6::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4E20)
+; reads: wC923
 Func_073_571D::
     ld a, [wC923]
     rst $00
@@ -3120,6 +3260,9 @@ Jump_073_5729::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4E19)
+; reads: wC923
+; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_572F::
     ld a, [wC923]
     or a, a
@@ -3146,6 +3289,8 @@ Jump_073_575B::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4E0B)
+; reads: wC923
 Func_073_5761::
     ld a, [wC923]
     rst $00
@@ -3296,6 +3441,8 @@ Jump_073_5873::
     farcall Func_012_61EF
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4E04)
+; reads: wC923
 Func_073_587A::
     ld a, [wC923]
     rst $00
@@ -3363,6 +3510,9 @@ Jump_073_58E0::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4DEF)
+; reads: hFFC6
+; writes: hFFC6, hFFC7, wCB7D, wC919
 Func_073_58FE::
     xor a, a
     ldh [hFFC6], a
@@ -3378,6 +3528,9 @@ Func_073_58FE::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4DE8)
+; reads: wC921
+; writes: wCB9B, wC921, hFFC6, wC919
 Func_073_5919::
     ld a, [wC921]
     cp a, $1E
@@ -3431,6 +3584,8 @@ Jump_073_5942::
     ld [wC919], a
     ret
 
+; 2 call sites from 2 routines (e.g. Func_010_4DD3, Func_010_4DDA)
+; reads: wC923
 Func_073_5987::
     ld a, [wC923]
     rst $00
@@ -3492,11 +3647,13 @@ Jump_073_59E6::
     or a, a
     ret z
     ld hl, hFF8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wC923
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4DC5)
+; reads: wC923
 Func_073_5A16::
     ld a, [wC923]
     rst $00
@@ -3522,7 +3679,7 @@ Jump_073_5A22::
 
 Jump_073_5A3D::
     ld hl, $0480
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -3535,6 +3692,10 @@ Jump_073_5A48::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4E3C)
+; reads: hFF8E, wC6FD, wC92C
+; writes: wC92A, wC928, wC929, wC919
+; points at: wC8F0
 Func_073_5A57:: ; heuristic: follows a terminator; C0
     ldh a, [hFF8E]
     cp a, $40
@@ -3604,6 +3765,9 @@ Jump_073_5AA6::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4DBE)
+; reads: hFFC6
+; writes: hFFC6, hFFC7, wCB7D, wC919
 Func_073_5ABB::
     xor a, a
     ldh [hFFC6], a
@@ -3619,6 +3783,9 @@ Func_073_5ABB::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4DB7)
+; reads: wCC3B
+; writes: wCC3B, wC919
 Func_073_5AD6::
     ld a, [wCC3B]
     set 2, a
@@ -3627,6 +3794,8 @@ Func_073_5AD6::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4DB0)
+; reads: wC923
 Func_073_5AE4::
     ld a, [wC923]
     rst $00
@@ -3697,6 +3866,10 @@ Jump_073_5B47::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_5B66)
+; reads: wC922, wC921, wCB8B, wCB8A
+; writes: wC921
+; points at: wCB8B, wC923, wCB8A
 Func_073_5B66::
     ld a, [wC922]
     or a, a
@@ -3856,12 +4029,16 @@ Jump_073_5C35::
     ld a, [hl]
     ld [wC925], a
     ld hl, wCB8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wC923
     inc [hl]
     ret
     db $03, $F0, $00, $00, $02, $00, $F0, $00, $00, $00, $10, $00, $01, $10, $00, $00
 
+; 1 call site from 1 routine (e.g. Func_010_4DA9)
+; reads: hFF8E, hFF91, wC1EA, wC1F8, wC28A, wC298, wCC3B
+; writes: wCC3B, wC919
+; points at: wC1EA, wC28A, wC298, wC1C8, wC1F8
 Func_073_5C5F::
     ldh a, [hFF8E]
     cp a, $30
@@ -3950,6 +4127,9 @@ Jump_073_5CFD::
     ld [wC919], a
     ret
 
+; 9 call sites from 1 routine (e.g. Func_073_5C5F)
+; reads: wIsCGB
+; writes: rSVBK
 Func_073_5D09::
     push hl
     call Func_073_5D48
@@ -3986,6 +4166,7 @@ Func_073_5D09::
     ldh [rSVBK], a
     ret
 
+; 4 call sites from 1 routine (e.g. Func_073_5D09)
 Func_073_5D48::
     ld a, [hl]
     add a, $08
@@ -4013,6 +4194,7 @@ Jump_073_5D63::
     ld a, [hl]
     ret
 
+; 4 call sites from 1 routine (e.g. Func_073_5D09)
 Func_073_5D65::
     ld a, c
     ld [hl+], a
@@ -4027,6 +4209,9 @@ Jump_073_5D6F::
     ld a, [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4E35)
+; reads: hFF90, hFF8F, hFFC6
+; writes: hFFC6, hFFC7, wCB7D, wC919
 Func_073_5D71:: ; heuristic: follows a terminator; C0
     xor a, a
     ldh [hFFC6], a
@@ -4064,6 +4249,9 @@ Jump_073_5DAB::
     call SetFlagBit
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4DA2)
+; reads: wC923
+; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_5DAF::
     ld a, [wC923]
     or a, a
@@ -4088,6 +4276,8 @@ Jump_073_5DD7::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D9B)
+; reads: wC923
 Func_073_5DDD::
     ld a, [wC923]
     rst $00
@@ -4100,7 +4290,7 @@ Func_073_5DDD::
 
 Jump_073_5DED::
     ld hl, $0433
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -4170,6 +4360,9 @@ Jump_073_5E60::
     inc [hl]
     ret
 
+; 2 call sites from 1 routine (e.g. Func_073_5DDD)
+; reads: wC924, wC925, wCB8B
+; writes: wC924, wC925, wCB8B
 Func_073_5E73::
     ld a, [wC924]
     ld l, a
@@ -4197,7 +4390,7 @@ Jump_073_5E97::
     call Func_073_7A2B
     ret nc
     ld hl, wCB8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, $05C0
     ld a, l
     ld [wC924], a
@@ -4207,6 +4400,8 @@ Jump_073_5E97::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D94)
+; reads: wC923
 Func_073_5EB3::
     ld a, [wC923]
     rst $00
@@ -4246,6 +4441,9 @@ Jump_073_5EDF::
     inc [hl]
     ret
 
+; 2 call sites from 1 routine (e.g. Func_073_5EB3)
+; reads: wC924, wC925, wCB8B
+; writes: wC924, wC925, wCB8B
 Func_073_5EF9::
     ld a, [wC924]
     ld l, a
@@ -4273,7 +4471,7 @@ Jump_073_5F1D::
     call Func_073_7A2B
     ret nc
     ld hl, wCB8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, $03C0
     ld a, l
     ld [wC924], a
@@ -4283,6 +4481,9 @@ Jump_073_5F1D::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D8D)
+; writes: wC919
+; points at: wC26A, wC27E
 Func_073_5F39::
     ld hl, wC26A
     ld [hl], $68
@@ -4297,6 +4498,10 @@ Func_073_5F39::
     ld [wC919], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wC6FD, wCBB6, wCBBA, wCBBB
+; writes: hFFC7, hFFC8, hFFC9, wC527, wC919
+; points at: wC6FD, wC8EF, wC6FE, wCB7D
 Func_073_5F55:: ; heuristic: follows a terminator; C0
     ld a, $00
     ldh [hFFC7], a
@@ -4349,6 +4554,8 @@ Jump_073_5F94::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D78)
+; reads: wC923
 Func_073_5FBC::
     ld a, [wC923]
     rst $00
@@ -4415,6 +4622,8 @@ Jump_073_601B::
     db $06, $31, $12, $44, $00, $63, $02, $24, $16, $53, $1A, $43, $06, $31, $12, $44
     db $00, $53, $02, $24, $16, $42, $1A, $43
 
+; 1 call site from 1 routine (e.g. Func_010_4D55)
+; reads: wC923
 Func_073_6038::
     ld a, [wC923]
     rst $00
@@ -4454,6 +4663,8 @@ Jump_073_6072::
     call SetFlagBit
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D40)
+; reads: wC923
 Func_073_6079::
     ld a, [wC923]
     rst $00
@@ -4524,6 +4735,9 @@ Jump_073_60CD::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D1D)
+; reads: wC5F0, wCB9B
+; writes: wCB7D, wCB9B, wC919
 Func_073_60FE::
     ld a, [wC5F0]
     bit 2, a
@@ -4548,6 +4762,8 @@ Jump_073_6111::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D16)
+; reads: wC923
 Func_073_6126::
     ld a, [wC923]
     rst $00
@@ -4624,12 +4840,16 @@ Jump_073_618F::
     farcall Func_012_5C31
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC195
 Func_073_619B:: ; heuristic: follows a terminator; C0
     ld a, $10
     ld [wC195], a
     farcall Func_012_61EF
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D0F)
+; reads: wC923
 Func_073_61A7::
     ld a, [wC923]
     rst $00
@@ -4691,7 +4911,7 @@ Jump_073_6218::
     ld hl, $0D4B
 
 Jump_073_621B::
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld a, $00
     ld [wCB96], a
     ld a, $02
@@ -4717,7 +4937,7 @@ Jump_073_622D::
     ld hl, wC923
     inc [hl]
     ld hl, $0D3E
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
 Jump_073_6252::
@@ -4846,6 +5066,8 @@ Jump_073_62F6::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4D08)
+; reads: wC923
 Func_073_630F::
     ld a, [wC923]
     rst $00
@@ -4917,7 +5139,7 @@ Jump_073_6394::
     ld hl, $0D16
 
 Jump_073_6397::
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ld a, [wCB9A]
@@ -4972,7 +5194,7 @@ Jump_073_63DA::
     ld hl, wC923
     inc [hl]
     ld hl, $0D15
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
 Jump_073_63FF::
@@ -5249,6 +5471,7 @@ Jump_073_6590::
     ld [wC923], a
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_630F)
 Func_073_6596::
     inc a
     ld [hl], a
@@ -5257,6 +5480,7 @@ Func_073_6596::
     ld [hl], $00
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_630F)
 Func_073_659D::
     dec a
     ld [hl], a
@@ -5265,6 +5489,7 @@ Func_073_659D::
     ld [hl], $02
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_630F)
 Func_073_65A4::
     dec a
     ld [hl], a
@@ -5272,6 +5497,7 @@ Func_073_65A4::
     ld [hl], $03
     ret
 
+; 3 call sites from 1 routine (e.g. Func_073_630F)
 Func_073_65AA::
     inc a
     ld [hl], a
@@ -5279,6 +5505,8 @@ Func_073_65AA::
     ld [hl], $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4CFA)
+; reads: wC923
 Func_073_65B0::
     ld a, [wC923]
     rst $00
@@ -5620,6 +5848,8 @@ Jump_073_6798::
     jr Jump_073_6762
     db $C9
 
+; 1 call site from 1 routine (e.g. Func_010_4CD7)
+; reads: wC923
 Func_073_679F::
     ld a, [wC923]
     rst $00
@@ -5735,12 +5965,18 @@ Jump_073_6868::
     ld de, $4301
     ld b, $56
 
+; 1 call site from 1 routine (e.g. Func_073_6882)
+; points at: wC198
 Func_073_6875::
     ld hl, wC198
     call DecompressToVRAM
     farcall Func_05F_6DDB
     ret
 
+; 5 call sites from 2 routines (e.g. Func_073_679F, Func_073_6882)
+; reads: wIsCGB
+; writes: rSVBK
+; points at: wD000
 Func_073_6882::
     ld a, [wIsCGB]
     or a, a
@@ -5845,6 +6081,9 @@ Jump_073_6931::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4CD0)
+; reads: wCC39
+; writes: wC242, wC243, wC256, wC257, wCC39, wC919
 Func_073_6941::
     ld a, $58
     ld [wC242], a
@@ -5862,6 +6101,8 @@ Func_073_6941::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4CC9)
+; reads: wC923
 Func_073_6969::
     ld a, [wC923]
     rst $00
@@ -6018,6 +6259,8 @@ Jump_073_6A71::
     farcall Func_05F_6C5A
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4CB4)
+; reads: wC923
 Func_073_6A91::
     ld a, [wC923]
     rst $00
@@ -6044,6 +6287,9 @@ Jump_073_6AB8::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4CAD)
+; reads: wC923
+; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_6ABE::
     ld a, [wC923]
     or a, a
@@ -6070,6 +6316,9 @@ Jump_073_6AE9::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4CA6)
+; reads: wC923
+; writes: wC919
 Func_073_6AEF::
     ld a, [wC923]
     or a, a
@@ -6082,6 +6331,8 @@ Jump_073_6AF9::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C9F)
+; reads: wC923
 Func_073_6AFF::
     ld a, [wC923]
     rst $00
@@ -6102,6 +6353,8 @@ Jump_073_6B19::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_6AEF)
+; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6
 Func_073_6B1F::
     ld a, $41
     ldh [hFF90], a
@@ -6129,9 +6382,11 @@ Jump_073_6B46::
     ld hl, wC923
     inc [hl]
     ld hl, $0849
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C98)
+; reads: wC923
 Func_073_6B5B::
     ld a, [wC923]
     rst $00
@@ -6162,13 +6417,15 @@ Jump_073_6B80::
 
 Jump_073_6B87::
     ld hl, hFF8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, hFF8C
     call Func_073_7A3D
     ld hl, wC923
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C91)
+; reads: wC923
 Func_073_6B98::
     ld a, [wC923]
     rst $00
@@ -6220,7 +6477,7 @@ Jump_073_6BC6::
     ld de, $006E
     call SetFlagBit
     ld hl, $0813
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     xor a, a
     ldh [hFF8D], a
     ld hl, wC923
@@ -6266,7 +6523,7 @@ Jump_073_6C3E::
     call TestFlagBit
     jr nc, Jump_073_6C5B
     ld hl, $0815
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
 Jump_073_6C5B::
@@ -6276,19 +6533,23 @@ Jump_073_6C5B::
     or a, a
     jr z, Jump_073_6C6C
     ld hl, $0814
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
 Jump_073_6C6C::
     ld hl, $0812
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_073_6B5B)
+; reads: hFF8E
+; writes: wC8EF, wC8F4, wC8F9, hFF98, hFF8E, wC921, wCB9A
+; points at: hFF8C, wC8F0, wC8F6, wC8FB, wC923
 Func_073_6C77::
     ld hl, hFF8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld a, $03
     ld [wC8EF], a
     xor a, a
@@ -6322,7 +6583,7 @@ Func_073_6C77::
     ld a, $30
     ld [wCB9A], a
     ld hl, $0886
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
 Jump_073_6CCA::
@@ -6331,7 +6592,7 @@ Jump_073_6CCA::
 
 Jump_073_6CD1::
     ld hl, hFF8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld a, $01
     ld [wC8EF], a
     ld a, $02
@@ -6397,6 +6658,8 @@ Jump_073_6D4D::
     ret
     INCBIN "dwm2-cobi-us.gbc", $1CED52, $C5
 
+; 1 call site from 1 routine (e.g. Func_010_4C6E)
+; reads: wC923
 Func_073_6E17::
     ld a, [wC923]
     rst $00
@@ -6439,6 +6702,10 @@ Jump_073_6E55::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C36)
+; reads: hFFC6, wC836
+; writes: hFFC6, wC836, wC919
+; points at: wC61D
 Func_073_6E5F::
     ld a, $19
     ldh [hFFC6], a
@@ -6483,6 +6750,8 @@ Jump_073_6EAA::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C67)
+; reads: wC923
 Func_073_6EBA::
     ld a, [wC923]
     rst $00
@@ -6508,6 +6777,8 @@ Jump_073_6EC8::
     farcall Func_05F_6C5A
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C4B)
+; reads: wC923
 Func_073_6EE7::
     ld a, [wC923]
     rst $00
@@ -6535,6 +6806,10 @@ Jump_073_6F04::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C1A)
+; reads: hFF8E, hFF91, wCBD4
+; writes: wCBCF, wCBD3, wCBD4, wC919
+; points at: wCBD3, wCBD4
 Func_073_6F14::
     ldh a, [hFF8E]
     cp a, $50
@@ -6577,6 +6852,10 @@ Jump_073_6F40::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C13)
+; reads: wC923
+; writes: wCBCF, wC919
+; points at: wC923, wCBD4
 Func_073_6F5B::
     ld a, [wC923]
     or a, a
@@ -6597,6 +6876,8 @@ Jump_073_6F6B::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C44)
+; reads: wC923
 Func_073_6F7C::
     ld a, [wC923]
     rst $00
@@ -6699,6 +6980,8 @@ Jump_073_701E::
     ld [wC921], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4BFE)
+; reads: wC923
 Func_073_7024::
     ld a, [wC923]
     rst $00
@@ -6788,7 +7071,7 @@ Jump_073_70C2::
     call Func_073_7A2B
     ret nc
     ld hl, $005C
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -6872,7 +7155,7 @@ Jump_073_715A::
     call Func_073_7A2B
     ret nc
     ld hl, $005B
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -7047,12 +7330,12 @@ Jump_073_72D6::
     call TestFlagBit
     jr c, Jump_073_72F9
     ld hl, $0058
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
 Jump_073_72F9::
     ld hl, $005E
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ret
 
 Jump_073_7300::
@@ -7073,7 +7356,7 @@ Jump_073_7317::
     call Func_073_7A5D
     ret nc
     ld hl, $0055
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -7083,7 +7366,7 @@ Jump_073_7329::
     call Func_073_7A5D
     ret nc
     ld hl, $0054
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
@@ -7093,16 +7376,20 @@ Jump_073_733B::
     call Func_073_7A5D
     ret nc
     ld hl, $0053
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     ld hl, wC923
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_00F_40E9)
+; reads: wC921
+; writes: wCBCF
+; points at: wCB9C, wCBAC, wC923
 Func_073_734D::
     ld hl, wCB9C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wCBAC
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld a, $80
     ld [wCBCF], a
     call Func_073_736B
@@ -7113,6 +7400,10 @@ Func_073_734D::
     inc [hl]
     ret
 
+; 3 call sites from 2 routines (e.g. Func_073_7024, Func_073_734D)
+; reads: wC921, wCB9A, wCBAA, wCBD3
+; writes: wCB9A, wCBAA, wCBD3
+; points at: wC921
 Func_073_736B::
     ld a, [wC921]
     and a, $3F
@@ -7147,6 +7438,8 @@ Jump_073_7386::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4BF7)
+; reads: wC923
 Func_073_73A0::
     ld a, [wC923]
     rst $00
@@ -7342,13 +7635,17 @@ Jump_073_7566::
     ld a, $01
     ld [wC8EF], a
     ld hl, hFF8C
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wCBAC
-    call Func_073_7A47
+    call SetBit2AtHL_B73
     ld hl, wC923
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4C05)
+; reads: wC923, hFF8E, hFF91
+; writes: wCBD3, wCBD4, wCBCF, wC919
+; points at: wC923, wCBD3, wCBD4
 Func_073_758C:: ; heuristic: follows a terminator; C0
     ld a, [wC923]
     or a, a
@@ -7400,6 +7697,8 @@ Jump_073_75CC::
     ld [wC919], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4BF0)
+; reads: wC923
 Func_073_75DD::
     ld a, [wC923]
     rst $00
@@ -7475,6 +7774,8 @@ Jump_073_764E::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4BE9)
+; reads: wC923
 Func_073_765D::
     ld a, [wC923]
     rst $00
@@ -7666,6 +7967,8 @@ Jump_073_77C0::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4BE2)
+; reads: wC923
 Func_073_77CC::
     ld a, [wC923]
     rst $00
@@ -7813,6 +8116,9 @@ Jump_073_78E7::
     inc [hl]
     ret
 
+; 2 call sites from 1 routine (e.g. Func_073_77CC)
+; reads: wC924, wC92C, wC925
+; writes: wC92A, wC928, wC929, wC924, wC925
 Func_073_78F5::
     ld b, $00
     ld a, [wC924]
@@ -7928,6 +8234,9 @@ Jump_073_799D::
 Jump_073_79B7::
     ret
 
+; 2 call sites from 1 routine (e.g. Func_073_77CC)
+; reads: wC925
+; writes: wCB86
 Func_073_79B8::
     ld a, [wC925]
     and a, $03
@@ -7943,6 +8252,10 @@ Jump_073_79C5::
     ret
     db $01, $00, $03, $02
 
+; 3 call sites from 1 routine (e.g. Func_073_77CC)
+; reads: wC5F0, wC922, wC921
+; writes: wC921, wCB86
+; points at: wC922
 Func_073_79CE::
     ld a, [wC5F0]
     and a, $08
@@ -7966,6 +8279,8 @@ Jump_073_79D9::
     ld [wCB86], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_010_4BDB)
+; reads: wC923
 Func_073_79F4::
     ld a, [wC923]
     rst $00
@@ -7998,6 +8313,9 @@ Jump_073_7A11::
     inc [hl]
     ret
 
+; 19 call sites from 16 routines (e.g. Func_073_79F4, Func_073_77CC, Func_073_765D, Func_073_75DD, ...)
+; reads: wC921
+; writes: wC921
 Func_073_7A2B::
     ld a, [wC921]
     inc a
@@ -8013,30 +8331,38 @@ Jump_073_7A37::
     scf
     ret
 
+; 2 call sites from 2 routines (e.g. Func_073_6B5B, Func_073_6038)
 Func_073_7A3D:: ; heuristic: follows a terminator; C0
     ld a, [hl]
     or a, $02
     ld [hl], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_073_7A42:: ; heuristic: follows a terminator; C0
     ld a, [hl]
     and a, $FD
     ld [hl], a
     ret
 
-Func_073_7A47:: ; heuristic: follows a terminator; C0
+; sets bit 2 of the byte at [HL]; only A is clobbered
+; 17 call sites from 12 routines (e.g. Func_073_73A0, Func_073_734D, Func_073_6C77, Func_073_6B5B, ...)
+SetBit2AtHL_B73:: ; heuristic: follows a terminator; C0
+Func_073_7A47:: ; address name
     ld a, [hl]
     or a, $04
     ld [hl], a
     ret
 
+; 11 call sites from 8 routines (e.g. Func_073_73A0, Func_073_6C77, Func_073_5B66, Func_073_5987, ...)
 Func_073_7A4C:: ; heuristic: follows a terminator; C0
     ld a, [hl]
     and a, $FB
     ld [hl], a
     ret
 
+; 4 call sites from 1 routine (e.g. Func_073_7024)
+; reads: wC921
 Func_073_7A51:: ; heuristic: follows a terminator; C0
     ld a, [wC921]
     and a, $1F
@@ -8047,6 +8373,9 @@ Func_073_7A51:: ; heuristic: follows a terminator; C0
     ld [de], a
     ret
 
+; 13 call sites from 8 routines (e.g. Func_073_79F4, Func_073_765D, Func_073_758C, Func_073_7024, ...)
+; reads: wC921
+; writes: wC928, wC929, wC921
 Func_073_7A5D::
     ld a, e
     ld [wC928], a
@@ -8068,6 +8397,10 @@ Jump_073_7A79::
     scf
     ret
 
+; 3 call sites from 2 routines (e.g. Func_073_765D, Func_073_7024)
+; reads: wC921
+; writes: wC928, wC929, wC921
+; points at: wC923
 Func_073_7A7F:: ; heuristic: follows a terminator; C0
     push hl
     ld a, e
@@ -8081,14 +8414,18 @@ Func_073_7A7F:: ; heuristic: follows a terminator; C0
     pop hl
     cp a, $20
     ret nz
-    call Func_073_7AA5
+    call StoreHLInWC924_B73b
     xor a, a
     ld [wC921], a
     ld hl, wC923
     inc [hl]
     ret
 
-Func_073_7AA5::
+; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
+; 25 call sites from 12 routines (e.g. Func_073_7A7F, Func_073_7024, Func_073_6B98, Func_073_6C77, ...)
+; writes: wC924, wC925, wC926
+StoreHLInWC924_B73b::
+Func_073_7AA5:: ; address name
     ld a, l
     ld [wC924], a
     ld a, h
@@ -8097,6 +8434,9 @@ Func_073_7AA5::
     ld [wC926], a
     ret
 
+; 7 call sites from 5 routines (e.g. Func_073_7AB2, Func_073_7AD0, Func_073_7024, Func_073_6B98, ...)
+; reads: wC926
+; writes: wC928
 Func_073_7AB2:: ; heuristic: follows a terminator; C0
     ld [wC928], a
     farcall Func_05F_6936
@@ -8118,6 +8458,8 @@ Jump_073_7AC6::
     inc [hl]
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC919
 Func_073_7AD0:: ; heuristic: follows a terminator; C0
     xor a, a
     call Func_073_7AB2

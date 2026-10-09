@@ -1,6 +1,8 @@
 SECTION "Bank 83", ROMX[$4000], BANK[$83]
     db $83
 
+; 2 call sites from 2 routines (e.g. Func_001_4AD4, Func_010_4AD0)
+; reads: wC529
 Func_083_4001::
     ld a, [wC529]
     cp a, $C7
@@ -13,6 +15,8 @@ Jump_083_400F::
     call Func_000_25C9
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC529
 Func_083_4016:: ; heuristic: follows a terminator; C0
     ld a, [wC529]
     cp a, $C7

@@ -1,6 +1,9 @@
 SECTION "Bank 3E", ROMX[$4000], BANK[$3E]
     db $3E
 
+; 1 call site from 1 routine (e.g. Func_03A_5383)
+; reads: wD804, wD801, wDAB7
+; points at: hFFA9
 Func_03E_4001::
     ld hl, hFFA9
     ld a, [wD804]
@@ -26,6 +29,9 @@ Data_03E_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $91, $40, $9E, $41, $C2, $44, $5F, $48, $1E, $4B, $CD, $4E, $CD, $52, $A7, $53
     db $19, $56, $26, $60, $FC, $61, $1A, $67, $16, $76, $3A, $7A
 
+; 1 call site from 1 routine (e.g. Func_03E_4001)
+; reads: hFFB1, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; writes: hFFB1
 Func_03E_4040::
     ldh a, [hFFB1]
     cp a, $28
@@ -1092,6 +1098,7 @@ Data_03E_6719:: ; heuristic: target of a monotone pointer table; C0
     dw Func_03E_7615
     dw Func_03E_7615
 
+; no direct call (reached through a table, a jump or a vector)
 Func_03E_675A:: ; heuristic: follows a terminator; C0
     ld hl, sp + -80
     inc b
@@ -1206,6 +1213,7 @@ Data_03E_7604:: ; heuristic: target of a monotone pointer table; C0
     db $D0, $20, $1D, $00, $D8, $38, $1F, $00, $F8, $48, $1C, $00, $D0, $48, $1E, $00
     db $80
 
+; no direct call (reached through a table, a jump or a vector)
 Func_03E_7615:: ; heuristic: target of a pointer table; C0
     add a, b
     ld d, [hl]

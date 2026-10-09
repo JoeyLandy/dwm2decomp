@@ -1,6 +1,9 @@
 SECTION "Bank 31", ROMX[$4000], BANK[$31]
     db $31
 
+; 1 call site from 1 routine (e.g. Func_000_0355)
+; reads: wC524, wIsCGB
+; writes: wC51F, wC520, hFFA1, hFFA2, hFFA5, hFFA6, rVBK, wC554, ...
 Func_031_4001::
     call Func_000_08A6
     ld a, $02
@@ -75,6 +78,8 @@ Jump_031_404B::
     ld a, $0B
     jp Jump_000_077A
 
+; 1 call site from 1 routine (e.g. Func_000_048A)
+; reads: wC58A, wD802, wD800, wCFC8
 Func_031_40A5::
     ld a, [wC58A]
     or a, a
@@ -95,6 +100,8 @@ Func_031_40A5::
 Jump_031_40C9::
     call Func_031_4A23
 
+; 1 call site from 1 routine (e.g. Func_01B_43FA)
+; reads: wCFC8
 Func_031_40CC::
     ld a, [wCFC8]
     rst $00
@@ -301,6 +308,7 @@ Jump_031_4228::
     inc [hl]
     ret
 
+; 3 call sites from 1 routine (e.g. Func_031_40CC)
 Func_031_423B::
     ld a, h
     add a, $02
@@ -363,7 +371,7 @@ Jump_031_429D::
 
 Jump_031_42A6::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr z, Jump_031_42B0
     ld [hl], $03
     jr Jump_031_42B2
@@ -392,6 +400,9 @@ Jump_031_42CF::
 Jump_031_42D4::
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_423B)
+; reads: wD960, wD961, wD890, wD962, wD963, wD964, wD965, wC529
+; points at: wC130
 Func_031_42D5::
     ld a, [wD960]
     ld e, a
@@ -483,6 +494,10 @@ Jump_031_435E::
 Jump_031_4364::
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_42D5)
+; reads: wC528, wC529
+; writes: wC528, wC529
+; points at: wC130
 Func_031_4365::
     ld a, [wC528]
     ld l, a
@@ -664,6 +679,9 @@ Jump_031_445B::
     ld [wCFCA], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4365)
+; reads: wD2CE
+; writes: wD2CE
 Func_031_4493::
     ld a, [wD2CE]
     dec a
@@ -787,6 +805,7 @@ Jump_031_452D::
     farcall Func_019_73A2
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_4493)
 Func_031_4566::
     ld a, [de]
     inc de
@@ -795,6 +814,7 @@ Func_031_4566::
     jr nz, Func_031_4566
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4493)
 Func_031_456D::
     push hl
     ld a, $FF
@@ -828,6 +848,7 @@ Jump_031_4581::
     ld h, a
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_4493)
 Func_031_458E::
     ld a, $98
     ld [hl+], a
@@ -846,6 +867,10 @@ Jump_031_459E::
     jr nz, Jump_031_459E
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4493)
+; reads: wD890, wDA6B, wDA6C, wDA6D
+; writes: wDA6B, wDA6C, wDA6D
+; points at: wDA63
 Func_031_45A3::
     ld a, [wD890]
     ld b, a
@@ -901,6 +926,10 @@ Jump_031_45E7::
 Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D7, $D1, $25, $D2, $73, $D2
 
+; 1 call site from 1 routine (e.g. Func_031_4493)
+; reads: wCFC5, wD890, wCFDF, wCFE0, wCFDD, wCFDE
+; writes: hFFC6, hFFC7, wDAAB, wCB7E
+; points at: wCFDF, wCFDD
 Func_031_45F2::
     ld a, [wCFC5]
     cp a, $02
@@ -989,6 +1018,8 @@ Jump_031_4678::
 Jump_031_4680::
     ret
 
+; 5 call sites from 1 routine (e.g. Func_031_45F2)
+; reads: hFFC6, hFFC7
 Func_031_4681::
     ldh a, [hFFC6]
     ld e, a
@@ -1031,6 +1062,9 @@ Jump_031_4693::
     call Func_031_67AA
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4681)
+; reads: wD2CE
+; writes: wD2CE
 Func_031_46C1::
     ld a, [wD2CE]
     dec a
@@ -1145,6 +1179,8 @@ Jump_031_4793::
     call nz, Func_031_47DD
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_46C1)
+; points at: wC198
 Func_031_47A9::
     call Func_031_47C7
     ld hl, vBGMap0
@@ -1160,6 +1196,7 @@ Jump_031_47B9::
     call nz, Func_031_47DD
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_47A9, Func_031_46C1)
 Func_031_47C7::
     call Func_031_47DD
     call Func_031_71F5
@@ -1170,6 +1207,10 @@ Func_031_47C7::
     call Func_031_746F
     ret
 
+; 4 call sites from 3 routines (e.g. Func_031_47A9, Func_031_46C1, Func_031_47C7)
+; reads: wDAAB
+; writes: wCFCF, wC526, wC52D, wC52E, wC52F, wC530, wC528, wC529
+; points at: wD958
 Func_031_47DD::
     xor a, a
     ld [wCFCF], a
@@ -1292,6 +1333,9 @@ Jump_031_4893::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_47DD)
+; reads: hFF98, hFF8E, hFF91
+; writes: wC8EF, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
 Func_031_48C3::
     ldh a, [hFF98]
     ld [wC8EF], a
@@ -1405,6 +1449,10 @@ Jump_031_4988::
     ld [wCFC9], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4365)
+; reads: wC58A, wD890
+; writes: wD868
+; points at: wD960, wC130, wC958
 Func_031_498E::
     ld a, [wC58A]
     or a, a
@@ -1453,6 +1501,8 @@ Jump_031_49C8::
     ld [hl], $F0
     jr Jump_031_4A22
 
+; 1 call site from 1 routine (e.g. Func_031_498E)
+; points at: wC130
 Func_031_49D8::
     ld l, e
     ld a, d
@@ -1507,6 +1557,9 @@ Jump_031_4A00::
 Jump_031_4A22::
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_40A5)
+; reads: wC830, wC831, wC82F
+; points at: wC82D
 Func_031_4A23::
     ld a, [wC830]
     ld l, a
@@ -1559,6 +1612,10 @@ Jump_031_4A3F::
     ld [hl], c
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4365)
+; reads: wC984, wC58A, wC57F, wC985
+; writes: wD892, wD893, wC46B
+; points at: wDAD8, wD854, wD895, wDA1C, wDA5B, wCFC9, wD80F
 Func_031_4A65::
     ld hl, wDAD8
     ld b, $08
@@ -1631,7 +1688,7 @@ Jump_031_4AD1::
 Jump_031_4AD2::
     ld e, $03
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_4B01
     ld e, $01
     ld a, c
@@ -1671,6 +1728,8 @@ Jump_031_4B0A::
     jr nz, Jump_031_4AD2
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4365)
+; reads: wCFCA
 Func_031_4B10::
     ld a, [wCFCA]
     rst $00
@@ -1968,6 +2027,9 @@ Jump_031_4CC6::
 Jump_031_4CED::
     ret
 
+; 3 call sites from 1 routine (e.g. Func_031_4B10)
+; reads: wC57F
+; points at: wDA1C
 Func_031_4CEE::
     ld a, [wC57F]
     and a, $02
@@ -1989,6 +2051,9 @@ Jump_031_4CFD::
     ld [hl+], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4B10)
+; reads: wC58A, wC57F
+; points at: wDAF2, wDA43
 Func_031_4D06::
     ld a, [wC58A]
     or a, a
@@ -2103,7 +2168,7 @@ Jump_031_4D95::
 
 Jump_031_4DB5::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_4DC0
     ld a, [hl]
     cp a, e
@@ -2123,7 +2188,7 @@ Jump_031_4DC0::
 
 Jump_031_4DD0::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_4DDB
     ld a, [hl]
     cp a, d
@@ -2184,6 +2249,8 @@ Jump_031_4E1F::
     ld [wDataBankSave], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4D06)
+; reads: wD890
 Func_031_4E3E::
     ld a, [wD890]
     ld b, a
@@ -2204,6 +2271,9 @@ Jump_031_4E4D::
     or a, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4D06)
+; reads: wD88F
+; points at: wD8B7, wD980, wD968, wD970, wD978
 Func_031_4E54::
     ld a, [wD88F]
     ld b, a
@@ -2211,7 +2281,7 @@ Func_031_4E54::
 
 Jump_031_4E5A::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_4EB4
     ld hl, wD8B7
     add a, l
@@ -2275,6 +2345,7 @@ Jump_031_4EB4::
     jr nz, Jump_031_4E5A
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_4E54)
 Func_031_4EB9::
     ld a, c
     add a, e
@@ -2308,7 +2379,7 @@ Jump_031_4EE6::
 
 Jump_031_4EF4::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_4EFE
     ld [hl], $03
     jr Jump_031_4F00
@@ -4693,6 +4764,9 @@ Jump_031_5EF6::
     ld [wCFCA], a
     ret
 
+; 4 call sites from 3 routines (e.g. Func_031_4EB9, Func_031_4B10, Func_031_6E67)
+; reads: wC563, wC5F0
+; writes: wC5F0
 Func_031_5F02::
     ld a, [wC563]
     and a, $C0
@@ -4739,6 +4813,9 @@ Jump_031_5F45::
 Jump_031_5F4D::
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
+; reads: wC563, wC5F0
+; writes: wC5F0
 Func_031_5F4E::
     ld a, [wC563]
     and a, $40
@@ -4791,6 +4868,9 @@ Jump_031_5F95::
 Jump_031_5F9D::
     ret
 
+; 4 call sites from 2 routines (e.g. Func_031_4EB9, Func_031_6E67)
+; reads: wC563, wCFD5, wCFD7, wCFD6, wC5F0, wCFD3
+; writes: wC5F0, wCFD5
 Func_031_5F9E::
     ld a, [wC563]
     and a, $40
@@ -4967,6 +5047,7 @@ Jump_031_60A4::
 Jump_031_60AC::
     ret
 
+; 15 call sites from 4 routines (e.g. Func_031_5F02, Func_031_6518, Func_031_5F9E, Func_031_5F4E)
 Func_031_60AD::
     set 6, [hl]
     ld a, [hl]
@@ -4992,6 +5073,7 @@ Func_031_60AD::
     pop hl
     ret
 
+; 13 call sites from 6 routines (e.g. Func_031_5F02, Func_031_6518, Func_031_61A4, Func_031_5F9E, ...)
 Func_031_60CC::
     res 6, [hl]
     ld a, [hl]
@@ -5017,6 +5099,8 @@ Func_031_60CC::
     pop hl
     ret
 
+; 3 call sites from 1 routine (e.g. Func_031_4EB9)
+; writes: wC46C
 Func_031_60EB::
     push hl
     ld hl, Data_031_6102
@@ -5042,6 +5126,10 @@ Jump_031_60FC::
 Data_031_6102:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $D5, $DA
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
+; reads: wCFD4
+; writes: wD86A, wD86B, wCFD7, wCFD6, wCFD5
+; points at: wD989
 Func_031_6105::
     ld a, [wCFD4]
     ld hl, wD989
@@ -5102,6 +5190,10 @@ Jump_031_614B::
     ld [wCFD5], a
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_61A4, Func_031_4EB9)
+; reads: wCFD4, wCFD5
+; writes: wC528, wD86A, wD86B
+; points at: wD989
 Func_031_6153::
     ld a, $04
     ld [wC528], a
@@ -5150,10 +5242,15 @@ Jump_031_617A::
     call Func_031_6324
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_6153)
 Func_031_61A2::
     xor a, a
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_4EB9)
+; reads: wCFD5, wC46E, wD86A, wD86B
+; writes: wCFD5, wC46E, wC528
+; points at: wC46E, wC388
 Func_031_61A4::
     ld a, [wCFD5]
     bit 7, a
@@ -5207,6 +5304,9 @@ Jump_031_61E7::
     call WriteVRAMByte
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4B10)
+; writes: wCFD7, wCFD6, wCFD5
+; points at: wC61D
 Func_031_6200::
     ld hl, wC61D
     ld bc, $1800
@@ -5257,6 +5357,9 @@ Jump_031_623D::
     ld [wCFD5], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6200)
+; reads: wCFD7
+; writes: wCFD7
 Func_031_6245::
     push af
     ld a, [wCFD7]
@@ -5265,6 +5368,10 @@ Func_031_6245::
     pop af
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_6288, Func_031_4EB9)
+; reads: wCFD5
+; writes: wC528
+; points at: wC61D
 Func_031_624F::
     ld a, $05
     ld [wC528], a
@@ -5296,10 +5403,15 @@ Jump_031_6261::
     call Func_031_6324
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_624F)
 Func_031_6286::
     xor a, a
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_4EB9)
+; reads: wCFD5, wC471
+; writes: wCFD5, wC471, wC528, wC529
+; points at: wC471, wC61D
 Func_031_6288::
     ld a, [wCFD5]
     bit 7, a
@@ -5342,6 +5454,10 @@ Jump_031_62C5::
     call Func_031_7A3D
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_4EB9)
+; reads: wCFD5, wC471
+; writes: wD081
+; points at: wC61D
 Func_031_62D3::
     ld a, [wCFD5]
     and a, $0F
@@ -5367,6 +5483,8 @@ Jump_031_62EC::
     farcall Func_016_4007
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
+; writes: wC529
 Func_031_62F7::
     ld [wC529], a
     push hl
@@ -5376,6 +5494,8 @@ Func_031_62F7::
     pop hl
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
+; writes: wC529
 Func_031_6306::
     ld [wC529], a
     push hl
@@ -5385,6 +5505,8 @@ Func_031_6306::
     pop hl
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
+; writes: wC529
 Func_031_6315::
     ld [wC529], a
     push hl
@@ -5394,6 +5516,8 @@ Func_031_6315::
     pop hl
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
+; writes: wC529
 Func_031_6324::
     ld [wC529], a
     ld hl, vTiles2 + $80
@@ -5401,6 +5525,10 @@ Func_031_6324::
     call Func_031_7A3D
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_61A4, Func_031_4EB9)
+; reads: wCFEE, wCFD4
+; writes: wC529, wCFEC, wCFED
+; points at: wD8DF, wC388
 Func_031_6331::
     push af
     ld [wC529], a
@@ -5440,6 +5568,8 @@ Jump_031_6369::
     call Func_000_2123
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_4EB9)
+; reads: wCFD7, wCFD5
 Func_031_6373::
     ld a, [wCFD7]
     or a, a
@@ -5480,6 +5610,9 @@ Data_031_63BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01, $2F, $01, $6F, $01
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
+; reads: wCFD4
+; points at: wDA43, wDA4B
 Func_031_63CD::
     push af
     ld a, [wCFD4]
@@ -5507,6 +5640,10 @@ Jump_031_63EA::
     ld [hl], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
+; reads: wC46E, wCFD5, wCFD4
+; writes: wCFEC, wCFED
+; points at: wD989
 Func_031_63ED::
     ld a, [wC46E]
     and a, $03
@@ -5539,6 +5676,8 @@ Jump_031_640E::
     farcall Func_01A_4001
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_4EB9)
+; reads: wC57F
 Func_031_641D::
     ld de, $0000
     ld b, $03
@@ -5550,7 +5689,7 @@ Func_031_641D::
 
 Jump_031_642C::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_6434
     inc d
     ld e, c
@@ -5561,6 +5700,8 @@ Jump_031_6434::
     jr nz, Jump_031_642C
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
+; reads: wC57F
 Func_031_6439::
     ld d, $00
     ld b, $03
@@ -5571,7 +5712,7 @@ Func_031_6439::
 
 Jump_031_6445::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_644C
     inc d
 
@@ -5581,6 +5722,9 @@ Jump_031_644C::
     jr nz, Jump_031_6445
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
+; reads: wCFEC, wC57F, wD86D, wD86E, wD86F
+; points at: wDA63, wD86D, wC31A
 Func_031_6451::
     ld a, [wCFEC]
     cp a, $1E
@@ -5589,6 +5733,9 @@ Func_031_6451::
     jr z, Jump_031_6465
     jr Jump_031_6486
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
+; reads: wD081, wC57F, wD86D, wD86E, wD86F
+; points at: wDA63, wD86D, wC31A
 Func_031_645E::
     ld a, [wD081]
     cp a, $0C
@@ -5669,6 +5816,7 @@ Jump_031_64A2::
     call nz, Func_031_64CE
     ret
 
+; 3 call sites from 1 routine (e.g. Func_031_645E)
 Func_031_64CE::
     push hl
     ld a, $C3
@@ -5680,6 +5828,8 @@ Func_031_64CE::
     pop hl
     ret
 
+; 7 call sites from 2 routines (e.g. Func_031_6518, Func_031_4EB9)
+; reads: wD86C
 Func_031_64D8::
     or a, a
     jr nz, Jump_031_64EB
@@ -5712,7 +5862,7 @@ Jump_031_64F5::
     cp a, $03
     jr z, Jump_031_650A
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_031_6513
     jr z, Jump_031_650A
     ld a, [wD86C]
@@ -5734,6 +5884,9 @@ Jump_031_6513::
     ld [hl], a
     ret
 
+; 5 call sites from 1 routine (e.g. Func_031_4EB9)
+; reads: wC563, wC5F0
+; writes: wC5F0
 Func_031_6518::
     ld a, [wC563]
     and a, $40
@@ -5780,10 +5933,14 @@ Jump_031_655B::
 Jump_031_6563::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_031_6564:: ; heuristic: follows a terminator; C0
     farcall Func_0E0_443B
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4365)
+; reads: wDataBankSave, wCFC5, wD092, wC57F
+; writes: wDataBank, wDataBankSave, wD092
 Func_031_656B::
     ld a, [wDataBankSave]
     ld [wDataBank], a
@@ -5871,6 +6028,8 @@ Jump_031_65FB::
     ld [wD092], a
     ret
 
+; 7 call sites from 1 routine (e.g. Func_031_656B)
+; points at: wDA63, wD80C
 Func_031_65FF::
     ld a, c
     ld hl, wDA63
@@ -5898,6 +6057,8 @@ Jump_031_6618::
     cp a, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_656B)
+; points at: wDA63
 Func_031_6620::
     ld a, c
     ld hl, wDA63
@@ -5926,6 +6087,9 @@ Jump_031_6635::
     cp a, $01
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4493)
+; reads: wC58A, wD88F
+; writes: rRAMG, rRAMB
 Func_031_663D::
     ld a, [wC58A]
     or a, a
@@ -5961,6 +6125,10 @@ Jump_031_6653::
 Jump_031_6677::
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_663D)
+; reads: wC46B
+; writes: wC835
+; points at: wDA43, wDA4B
 Func_031_6678::
     push bc
     ld a, c
@@ -6003,6 +6171,9 @@ Jump_031_668F::
     pop bc
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_663D)
+; reads: wCFC5
+; points at: wDA63, wD80C
 Func_031_66AE::
     ld [hl], $00
     ld a, c
@@ -6035,14 +6206,19 @@ Jump_031_66D9::
     set 7, [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_66AE)
 Func_031_66DC::
     set 0, [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_66AE)
 Func_031_66DF::
     set 2, [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_663D)
+; writes: wD868
+; points at: wD8BF
 Func_031_66E2::
     ld a, [hl]
     ld [wD868], a
@@ -6104,6 +6280,8 @@ Jump_031_671C::
     inc hl
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_663D)
+; points at: wD8DF
 Func_031_6723::
     push hl
     inc hl
@@ -6155,6 +6333,9 @@ Jump_031_6749::
     ld h, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_663D)
+; reads: wD868
+; points at: wD93F
 Func_031_6757::
     ld a, [wD868]
     bit 7, a
@@ -6183,6 +6364,9 @@ Jump_031_676D::
     ld h, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_663D)
+; reads: wD868
+; points at: wD968, wD978, wD980, wD970
 Func_031_6776::
     ld a, [wD868]
     bit 7, a
@@ -6231,6 +6415,8 @@ Jump_031_67A7::
 Jump_031_67A9::
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4681)
+; reads: wCFCA
 Func_031_67AA::
     ld a, [wCFCA]
     rst $00
@@ -6350,6 +6536,8 @@ Jump_031_686B::
     ld [wD868], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_67AA)
+; reads: wDA6B, wDA6C, wDA6D
 Func_031_6885::
     push bc
     ld a, c
@@ -6613,6 +6801,8 @@ Jump_031_6A0A::
     ld [wCFCB], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; reads: wD868, wD095, wD096, wD097, wD098, wD099, wD09A
 Func_031_6A2D::
     ld a, [wD868]
     ld c, $56
@@ -6668,6 +6858,7 @@ Func_031_6A2D::
     call Func_031_6A8B
     ret
 
+; 6 call sites from 1 routine (e.g. Func_031_6A2D)
 Func_031_6A8B::
     add a, [hl]
     ld [hl+], a
@@ -6676,6 +6867,9 @@ Func_031_6A8B::
     ld [hl], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; reads: wD868
+; writes: wC529, wC528
 Func_031_6A92::
     ld a, [wD868]
     ld c, $56
@@ -6690,6 +6884,9 @@ Func_031_6A92::
     farcall Func_02F_4001
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; reads: wD868
+; points at: wD09D
 Func_031_6AAE::
     ld a, [wD868]
     ld c, $34
@@ -6747,6 +6944,9 @@ Jump_031_6AE9::
     inc [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6AAE)
+; reads: wDA6B, wDA6C, wDA6D, wC7C7
+; writes: wDA6B, wDA6C, wDA6D
 Func_031_6AFE::
     ld a, [wDA6B]
     ld l, a
@@ -6779,6 +6979,8 @@ Jump_031_6B1E::
     ld [wDA6D], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6AAE)
+; reads: wDA6B, wDA6C, wDA6D
 Func_031_6B2E::
     push bc
     push hl
@@ -6886,6 +7088,8 @@ Jump_031_6BAC::
     dec [hl]
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6B2E)
+; reads: wD869, wD095, wD096, wD097, wD098, wD099, wD09A
 Func_031_6BCA::
     ld a, [wD869]
     ld c, $56
@@ -6941,6 +7145,7 @@ Func_031_6BCA::
     call Func_031_6C28
     ret
 
+; 6 call sites from 1 routine (e.g. Func_031_6BCA)
 Func_031_6C28::
     add a, [hl]
     ld [hl+], a
@@ -6949,6 +7154,8 @@ Func_031_6C28::
     ld [hl], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6B2E)
+; reads: wD869
 Func_031_6C2F::
     ld a, [wD869]
     ld c, $5D
@@ -7099,6 +7306,7 @@ Jump_031_6D17::
     ret nz
     jp Jump_031_6C93
 
+; no direct call (reached through a table, a jump or a vector)
 Func_031_6D1F:: ; heuristic: follows a terminator; C0
     push hl
     ld c, $4E
@@ -7107,6 +7315,9 @@ Func_031_6D1F:: ; heuristic: follows a terminator; C0
     add hl, bc
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_6B2E, Func_031_6885)
+; reads: wD00F, hFFC8, hFFC9, hFFCA
+; writes: rRAMG, rRAMB, hFFC7, wD006, wD007, hFFC6
 Func_031_6D28::
     push af
     ld a, $0A
@@ -7169,6 +7380,8 @@ Jump_031_6D82::
     ld [rRAMG], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; points at: wC130
 Func_031_6D87::
     ld de, wC130
     ld b, $0A
@@ -7183,6 +7396,9 @@ Jump_031_6D8C::
     ld [de], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; reads: wD095, wD096, wD097, wD098, wD099, wD09A
+; points at: wC140, wC150, wC154, wC158, wC15C, wC160, wC164
 Func_031_6D96::
     ld a, l
     add a, $4B
@@ -7214,6 +7430,8 @@ Func_031_6D96::
     call Func_000_2EAC
     ret
 
+; 6 call sites from 3 routines (e.g. Func_031_67AA, Func_031_6885, Func_031_6E67)
+; writes: wC528, wC529
 Func_031_6DDD::
     ld a, h
     ld [wC528], a
@@ -7222,6 +7440,9 @@ Func_031_6DDD::
     farcall Func_02F_4001
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; writes: rRAMG, rRAMB
+; points at: sA000
 Func_031_6DEC::
     ld a, $0A
     ld [rRAMG], a
@@ -7255,6 +7476,7 @@ Jump_031_6E05::
     ld [rRAMG], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6DEC)
 Func_031_6E18::
     push bc
     ld a, b
@@ -7275,6 +7497,8 @@ Jump_031_6E22::
     jr nz, Jump_031_6E22
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6E18)
+; points at: wD0D9
 Func_031_6E30::
     ld d, a
     push de
@@ -7324,6 +7548,8 @@ Jump_031_6E62::
     jr nz, Jump_031_6E5C
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; reads: wCFCC
 Func_031_6E67::
     ld a, [wCFCC]
     rst $00
@@ -7596,6 +7822,8 @@ Jump_031_705A::
     ld [wCFCC], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6E67)
+; points at: wD0D9, wD09D
 Func_031_7064::
     ld hl, wD0D9
     ld bc, $0038
@@ -7632,6 +7860,10 @@ Jump_031_708E::
     pop af
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_6E67)
+; reads: wCFD5
+; writes: wC52F, wC530, wC52D, wC52E, wC529, wC528
+; points at: wD09D
 Func_031_7096::
     ld hl, $0901
     ld a, l
@@ -7702,6 +7934,10 @@ Jump_031_70D2::
 Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
+; 2 call sites from 2 routines (e.g. Func_031_719E, Func_031_6E67)
+; reads: wCFD5, wC46B, wCFEC, wD868, wCFEE
+; writes: wC52D, wC52E, wC52F, wC530, wC529, wC528, wCFEC, wCFED, ...
+; points at: wD09D, wC39E
 Func_031_7105::
     ld hl, vTiles2 + $260
     ld a, l
@@ -7783,6 +8019,8 @@ Jump_031_717E::
     ld [wC52E], a
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_6E67)
+; points at: wC39E
 Func_031_719E::
     call Func_031_7105
     ld hl, vBGMap0 + $206
@@ -7797,6 +8035,8 @@ Func_031_719E::
     call WriteVRAMByte
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_6E67)
+; reads: wCFD5
 Func_031_71B6::
     ld a, [wCFD5]
     and a, $0F
@@ -7805,6 +8045,10 @@ Func_031_71B6::
     call WriteVRAMByte
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_6885)
+; reads: wSoundChannelSlots, wD2CE
+; writes: wD2CE
+; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0
 Func_031_71C4::
     ld a, [wSoundChannelSlots]
     ld hl, wDC01
@@ -7837,6 +8081,10 @@ Func_031_71C4::
     ret nz
     ret
 
+; 6 call sites from 6 routines (e.g. Func_031_47C7, Func_031_46C1, Func_016_733F, Func_019_419B, ...)
+; reads: wIsCGB
+; writes: rVBK
+; points at: wC198
 Func_031_71F5::
     ld a, [wIsCGB]
     or a, a
@@ -7877,6 +8125,8 @@ Jump_031_7221::
     jr nz, Jump_031_7221
     ret
 
+; 39 call sites from 5 routines (e.g. Func_031_4EB9, Func_031_4D06, Func_031_4B10, Func_031_6E67, ...)
+; points at: wC278
 Func_031_722A::
     ld hl, wC278
     ld bc, $0160
@@ -7890,6 +8140,10 @@ Jump_031_7230::
     jr nz, Jump_031_7230
     ret
 
+; 1 call site from 1 routine (e.g. Func_019_419B)
+; reads: wD88F, wC57F
+; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4
+; points at: wC8CF
 Func_031_7239::
     ld a, $90
     ld [wC8CF], a
@@ -7950,6 +8204,8 @@ Jump_031_7285::
     ret
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8D, $50, $8D, $A0, $8D
 
+; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1, Func_016_733F, Func_019_419B, ...)
+; reads: wD88F
 Func_031_72AC::
     ld a, [wD88F]
     dec a
@@ -7971,9 +8227,15 @@ Jump_031_72B9::
 Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7C, $75, $B8, $75, $1E, $76
 
+; 16 call sites from 2 routines (e.g. Func_0A0_5E07, Func_0A0_5F2E)
+; reads: wD890
+; points at: wC285
 Func_031_72C9::
     call Func_031_722A
 
+; 41 call sites from 7 routines (e.g. Func_031_47C7, Func_031_4EB9, Func_031_4D06, Func_031_4B10, ...)
+; reads: wD890
+; points at: wC285
 Func_031_72CC::
     ld d, $14
     ld a, [wD890]
@@ -8007,6 +8269,7 @@ Jump_031_72F0::
     ld hl, wC285
     jr Jump_031_7302
 
+; 2 call sites from 1 routine (e.g. Func_031_72CC)
 Func_031_72FF::
     ld a, [hl+]
     ld h, [hl]
@@ -8041,6 +8304,9 @@ Data_031_7317:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $C2, $7F, $C2
 
+; 4 call sites from 4 routines (e.g. Func_031_47C7, Func_031_46C1, Func_016_733F, Func_019_419B)
+; reads: wIsCGB, wC57F, wD890
+; points at: wD960, wD958
 Func_031_7321::
     ld a, [wIsCGB]
     or a, a
@@ -8092,6 +8358,8 @@ Jump_031_735C::
     call Func_031_7379
     ret
 
+; 6 call sites from 1 routine (e.g. Func_031_7321)
+; writes: hFFC6
 Func_031_7379::
     push de
     ld a, c
@@ -8107,6 +8375,8 @@ Func_031_7379::
     pop de
     ret
 
+; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1, Func_016_733F, Func_019_419B, ...)
+; reads: wD88F
 Func_031_7389::
     call Func_031_739F
     ld a, [wD88F]
@@ -8119,6 +8389,8 @@ Func_031_7389::
     call Func_031_73DD
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_7389)
+; reads: wC58A, wC57F
 Func_031_739F::
     ld c, $00
     ld a, [wC58A]
@@ -8137,6 +8409,8 @@ Jump_031_73B4::
     call Func_031_76AE
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_7389)
+; reads: wC58A, wC57F
 Func_031_73BE::
     ld c, $01
     ld a, [wC58A]
@@ -8155,6 +8429,8 @@ Jump_031_73D3::
     call Func_031_76AE
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_7389)
+; reads: wC58A, wC57F
 Func_031_73DD::
     ld c, $02
     ld a, [wC58A]
@@ -8173,6 +8449,8 @@ Jump_031_73F2::
     call Func_031_76AE
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD88F
 Func_031_73FC:: ; heuristic: follows a terminator; C0
     call Func_031_7412
     ld a, [wD88F]
@@ -8185,6 +8463,8 @@ Func_031_73FC:: ; heuristic: follows a terminator; C0
     call Func_031_7450
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_73FC)
+; reads: wC58A, wC57F
 Func_031_7412::
     ld c, $00
     ld a, [wC58A]
@@ -8203,6 +8483,8 @@ Jump_031_7427::
     call Func_031_77B9
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_73FC)
+; reads: wC58A, wC57F
 Func_031_7431::
     ld c, $01
     ld a, [wC58A]
@@ -8221,6 +8503,8 @@ Jump_031_7446::
     call Func_031_77B9
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_73FC)
+; reads: wC58A, wC57F
 Func_031_7450::
     ld c, $02
     ld a, [wC58A]
@@ -8239,11 +8523,14 @@ Jump_031_7465::
     call Func_031_77B9
     ret
 
+; 13 call sites from 6 routines (e.g. Func_031_40CC, Func_031_4365, Func_031_47C7, Func_031_46C1, ...)
 Func_031_746F::
     call FillTilesFromRequest
     farcall Func_01A_7276
     ret
 
+; 13 call sites from 2 routines (e.g. Func_031_4EB9, Func_031_4D06)
+; points at: wC338
 Func_031_7479::
     ld de, wC338
     ld hl, vBGMap0 + $1A0
@@ -8251,9 +8538,13 @@ Func_031_7479::
     call Func_031_753F
     ret
 
+; 2 call sites from 2 routines (e.g. Func_031_4D06, Func_031_4B10)
+; points at: wC338
 Func_031_7486::
     farcall Func_01A_727D
 
+; 2 call sites from 1 routine (e.g. Func_031_4B10)
+; points at: wC338
 Func_031_748C::
     ld de, wC338
     ld hl, vBGMap0 + $1A0
@@ -8261,10 +8552,13 @@ Func_031_748C::
     call Func_031_753F
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
 Func_031_7499::
     farcall Func_01A_7284
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_4EB9)
+; points at: wC278
 Func_031_74A0::
     ld de, wC278
     ld hl, vBGMap0 + $E0
@@ -8272,10 +8566,13 @@ Func_031_74A0::
     call Func_031_753F
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
 Func_031_74AD::
     farcall Func_01A_7292
     ret
 
+; 5 call sites from 1 routine (e.g. Func_031_4EB9)
+; points at: wC2B8
 Func_031_74B4::
     ld de, wC2B8
     ld hl, vBGMap0 + $120
@@ -8283,10 +8580,14 @@ Func_031_74B4::
     call Func_031_753F
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
 Func_031_74C1::
     farcall Func_01A_72A0
     ret
 
+; 6 call sites from 1 routine (e.g. Func_031_4EB9)
+; writes: wD868
+; points at: wC2B8
 Func_031_74C8::
     ld de, wC2B8
     ld hl, vBGMap0 + $120
@@ -8296,10 +8597,13 @@ Func_031_74C8::
     ld [wD868], a
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_645E)
 Func_031_74DA::
     farcall Func_01A_72A7
     ret
 
+; 5 call sites from 1 routine (e.g. Func_031_4EB9)
+; points at: wC2B8
 Func_031_74E1::
     ld de, wC2B8
     ld hl, vBGMap0 + $120
@@ -8307,10 +8611,13 @@ Func_031_74E1::
     call Func_031_753F
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
 Func_031_74EE::
     farcall Func_01A_72AE
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_4EB9)
+; points at: wC2F8
 Func_031_74F5::
     ld de, wC2F8
     ld hl, vBGMap0 + $160
@@ -8318,10 +8625,13 @@ Func_031_74F5::
     call Func_031_753F
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_4EB9)
 Func_031_7502::
     farcall Func_01A_72B5
     ret
 
+; 4 call sites from 1 routine (e.g. Func_031_4EB9)
+; points at: wC2A4, wC2B8
 Func_031_7509::
     ld de, wC2A4
     ld hl, vBGMap0 + $10C
@@ -8333,10 +8643,13 @@ Func_031_7509::
     call Func_031_753F
     ret
 
+; 3 call sites from 1 routine (e.g. Func_031_4EB9)
 Func_031_7522::
     farcall Func_01A_72C2
     ret
 
+; 5 call sites from 1 routine (e.g. Func_031_4EB9)
+; points at: wC2F8
 Func_031_7529::
     ld de, wC2F8
     ld hl, vBGMap0 + $160
@@ -8344,11 +8657,14 @@ Func_031_7529::
     call Func_031_753F
     ret
 
+; 8 call sites from 7 routines (e.g. Func_031_40CC, Func_031_4365, Func_031_4EB9, Func_031_4B10, ...)
+; points at: wC278
 Func_031_7536::
     ld de, wC278
     ld hl, vBGMap0 + $E0
     ld bc, $140B
 
+; 18 call sites from 13 routines (e.g. Func_031_47A9, Func_031_7479, Func_031_74A0, Func_031_4EB9, ...)
 Func_031_753F::
     push bc
     push hl
@@ -8375,6 +8691,8 @@ Jump_031_7557::
     jr nz, Func_031_753F
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_72AC)
+; points at: wC198
 Func_031_755B::
     ld e, [hl]
     inc hl
@@ -8390,6 +8708,7 @@ Func_031_755B::
     pop de
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_72AC)
 Func_031_756A::
     push bc
     push hl
@@ -8419,6 +8738,9 @@ Jump_031_756C::
     ds $12, $B4
     db $B5
 
+; 7 call sites from 6 routines (e.g. Func_031_73DD, Func_031_73BE, Func_031_739F, Func_031_6885, ...)
+; reads: wC58A, wC57F
+; points at: wD80C
 Func_031_76AE::
     ld a, [wC58A]
     cp a, $02
@@ -8449,7 +8771,7 @@ Jump_031_76D6::
     cp a, $03
     jr z, Jump_031_773A
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_031_7726
     ld a, c
     ld hl, wD80C
@@ -8507,6 +8829,7 @@ Jump_031_773A::
     pop bc
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_76AE)
 Func_031_773C::
     push hl
     ld hl, Data_031_779B
@@ -8520,6 +8843,7 @@ Func_031_773C::
     pop hl
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_76AE)
 Func_031_774C::
     push hl
     ld hl, Data_031_779B
@@ -8528,6 +8852,7 @@ Func_031_774C::
     pop hl
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_76AE)
 Func_031_7757::
     push hl
     ld hl, Data_031_77A7
@@ -8536,6 +8861,7 @@ Func_031_7757::
     pop hl
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_76AE)
 Func_031_7762::
     push hl
     ld hl, Data_031_77A7
@@ -8544,6 +8870,7 @@ Func_031_7762::
     pop hl
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_76AE)
 Func_031_776D::
     push hl
     ld hl, Data_031_77AD
@@ -8552,6 +8879,7 @@ Func_031_776D::
     pop hl
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_76AE)
 Func_031_7778::
     push hl
     ld hl, Data_031_77A1
@@ -8560,6 +8888,7 @@ Func_031_7778::
     pop hl
     ret
 
+; 1 call site from 1 routine (e.g. Func_031_76AE)
 Func_031_7783::
     push hl
     ld hl, Data_031_77B3
@@ -8568,6 +8897,7 @@ Func_031_7783::
     pop hl
     ret
 
+; 7 call sites from 7 routines (e.g. Func_031_776D, Func_031_7783, Func_031_774C, Func_031_7778, ...)
 Func_031_778E::
     ld a, c
     and a, $03
@@ -8577,6 +8907,7 @@ Func_031_778E::
     jr nc, Func_031_7797
     inc h
 
+; 2 call sites from 1 routine (e.g. Func_031_76AE)
 Func_031_7797::
     ld a, [hl+]
     ld h, [hl]
@@ -8598,6 +8929,9 @@ Data_031_77AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $43, $C2, $49, $C2
 
+; 7 call sites from 6 routines (e.g. Func_031_6885, Func_031_7450, Func_031_7431, Func_031_7412, ...)
+; reads: wC58A, wC57F
+; points at: wC198
 Func_031_77B9::
     ld a, [wC58A]
     or a, a
@@ -8656,6 +8990,9 @@ Jump_031_77FD::
 Jump_031_7805::
     ret
 
+; 6 call sites from 5 routines (e.g. Func_031_73DD, Func_031_73BE, Func_031_739F, Func_03A_66A9, ...)
+; reads: wC58A, wC57F
+; points at: wD8BF, wC198
 Func_031_7806::
     ld a, [wC58A]
     cp a, $02
@@ -8724,6 +9061,9 @@ Jump_031_785D::
     pop bc
     ret
 
+; 6 call sites from 5 routines (e.g. Func_031_73DD, Func_031_73BE, Func_031_739F, Func_03A_66A9, ...)
+; reads: wC58A, wC57F
+; points at: wD8DF, wC198
 Func_031_785F::
     ld a, [wC58A]
     cp a, $02
@@ -8792,6 +9132,9 @@ Jump_031_78B6::
     pop bc
     ret
 
+; 2 call sites from 1 routine (e.g. Func_031_76AE)
+; reads: wC58A, wC57F
+; points at: wC198, wD8B7
 Func_031_78B8::
     ld a, [wC58A]
     cp a, $02
@@ -8860,6 +9203,9 @@ Jump_031_7912::
     pop bc
     ret
 
+; 6 call sites from 5 routines (e.g. Func_031_7450, Func_031_7431, Func_031_7412, Func_03A_66A9, ...)
+; reads: wC58A, wC57F
+; points at: wC198
 Func_031_7914::
     ld a, [wC58A]
     or a, a
@@ -8918,6 +9264,9 @@ Jump_031_7947::
 Jump_031_7964::
     ret
 
+; 6 call sites from 5 routines (e.g. Func_031_7450, Func_031_7431, Func_031_7412, Func_03A_66A9, ...)
+; reads: wC58A, wC57F
+; points at: wC198
 Func_031_7965::
     ld a, [wC58A]
     or a, a
@@ -8976,6 +9325,9 @@ Jump_031_7998::
 Jump_031_79B5::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wC57F
+; points at: wC198
 Func_031_79B6:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     or a, a
@@ -9031,6 +9383,9 @@ Jump_031_79E9::
 Jump_031_7A01::
     ret
 
+; 7 call sites from 2 routines (e.g. Func_031_4B10, Func_031_4EB9)
+; reads: wC52D, wC52E, wC52F, wC530
+; writes: wC52D, wC52E, wC52F, wC530
 Func_031_7A02::
     ld a, [wC52D]
     ld c, a
@@ -9063,6 +9418,9 @@ Func_031_7A02::
     ld [wC530], a
     ret
 
+; 7 call sites from 7 routines (e.g. Func_031_6331, Func_031_6324, Func_031_6315, Func_031_6306, ...)
+; reads: wC52D, wC52E, wC52F, wC530
+; writes: wC52D, wC52E, wC52F, wC530
 Func_031_7A3D::
     ld a, [wC52D]
     ld c, a
@@ -9108,6 +9466,8 @@ Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_7ADA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C7ADA, $114
 
+; 1 call site from 1 routine (e.g. Func_031_4E3E)
+; points at: wD80F
 Func_031_7BEE::
     call Func_000_3E25
     ret c
@@ -9134,6 +9494,8 @@ Jump_031_7C09::
     pop hl
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD80F
 Func_031_7C0D:: ; heuristic: follows a terminator; C0
     push hl
     ld hl, wD80F

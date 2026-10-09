@@ -62,8 +62,8 @@ class Annotations(unittest.TestCase):
             label = re.compile(rf"^(?:Func|Jump)_{int(bank_s, 16):03X}_{int(addr_s, 16):04X}::")
             idx = next((i for i, l in enumerate(lines) if label.match(l)), None)
             # The note sits above the label block; a renamed routine's block is
-            # `; note` / `Name::` / `Func_BBB_AAAA:: ; address name`.
-            if idx is None or f"; {text}" not in lines[max(0, idx - 3):idx]:
+            # `; note` / `; xref lines` / `Name::` / `Func_BBB_AAAA:: ; address name`.
+            if idx is None or f"; {text}" not in lines[max(0, idx - 10):idx]:
                 missing.append(key)
         self.assertEqual(missing, [], "annotation not emitted directly above its label")
 
@@ -142,6 +142,39 @@ class RoutineNames(unittest.TestCase):
         text = "".join(f.read_text(encoding="utf-8") for f in sorted(BANKS.glob("bank*.asm")))
         self.assertGreater(text.count("call FillBytes"), 20)
         self.assertNotIn("call Func_000_0949", text)
+
+
+@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+class CrossReferences(unittest.TestCase):
+    def test_header_call_counts_match_the_call_sites_in_the_source(self):
+        import json
+        names = json.loads((BANKS.parents[1] / "config" / "names.json").read_text(encoding="utf-8"))
+        files = {f.name: f.read_text(encoding="utf-8").splitlines() for f in BANKS.glob("bank*.asm")}
+        header = re.compile(r"^; (\d+) call sites? from ")
+        wrong, checked = [], 0
+        for key, info in names.items():
+            if key.startswith("_"):
+                continue
+            name = info["name"]
+            call = re.compile(r"^\s+(?:call(?: [a-z]+,)?|farcall(?:_b)?) " + re.escape(name) + r"$")
+            actual = sum(1 for lines in files.values() for l in lines if call.match(l))
+            bank = int(key.split(":")[0], 16)
+            lines = files[f"bank{bank:02x}.asm"]
+            i = next(k for k, l in enumerate(lines) if l.startswith(name + "::"))
+            claimed = next((int(m.group(1)) for k in range(i - 1, max(0, i - 8), -1)
+                            if (m := header.match(lines[k]))), 0)
+            checked += 1
+            # rst-vector and jump-only entries have no direct call line; only compare when called
+            if claimed != actual and actual > 0:
+                wrong.append(f"{name}: header {claimed}, source {actual}")
+        self.assertGreater(checked, 40)
+        self.assertEqual(wrong, [])
+
+    def test_header_ram_lists_never_name_a_register_operand(self):
+        for f in BANKS.glob("bank*.asm"):
+            for line in f.read_text(encoding="utf-8").splitlines():
+                if line.startswith(("; reads: ", "; writes: ", "; points at: ")):
+                    self.assertNotRegex(line, r"(hl|bc|de|af)", line)
 
 
 REF = BANKS.parents[1] / "local" / "roms" / "dwm2-cobi-us.gbc"

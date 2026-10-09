@@ -1,6 +1,10 @@
 SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
     db $3D
 
+; 1 call site from 1 routine (e.g. Func_03A_5383)
+; reads: wD801, wD890, wD8A5, wD804, wDAB7
+; writes: wD871, wD868
+; points at: wD871, wD868, hFFA9
 Func_03D_4001::
     ld a, [wD801]
     cp a, $2C
@@ -10,7 +14,7 @@ Func_03D_4001::
     ld a, [wD8A5]
     and a, $04
     ld [wD868], a
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03D_4024
     farcall Func_03A_4A3A
     call Func_03D_4054
@@ -24,7 +28,7 @@ Jump_03D_4024::
     ld hl, wD868
     inc [hl]
     ld a, [hl]
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03D_403E
     farcall Func_03A_4A3A
     call Func_03D_4054
@@ -38,10 +42,13 @@ Jump_03D_403E::
     ld hl, wD868
     inc [hl]
     ld a, [hl]
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     ret c
     farcall Func_03A_4A3A
 
+; 2 call sites from 1 routine (e.g. Func_03D_4001)
+; reads: wD804, wD801, wDAB7
+; points at: hFFA9
 Func_03D_4054::
     ld hl, hFFA9
     ld a, [wD804]
@@ -66,6 +73,9 @@ Func_03D_4054::
 Data_03D_4077:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0F4077, $5A
 
+; 1 call site from 1 routine (e.g. Func_03D_4054)
+; reads: hFFB1, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; writes: hFFB1
 Func_03D_40D1::
     ldh a, [hFFB1]
     cp a, $28
@@ -615,6 +625,8 @@ Data_03D_4E24:: ; heuristic: target of a monotone pointer table; C0
     db $D0, $FC, $11, $00, $D8, $FC, $11, $00, $E0, $FC, $11, $00, $E8, $FC, $11, $00
     db $F0, $FC, $11, $00, $F8, $FC, $11, $00, $80
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD820
 Func_03D_4E3D:: ; heuristic: target of a pointer table; C0
     ret nc
     ei
@@ -630,6 +642,7 @@ Func_03D_4E3D:: ; heuristic: target of a pointer table; C0
     ei
     ld de, vTiles0 + $20
 
+; no direct call (reached through a table, a jump or a vector)
 Func_03D_4E56:: ; heuristic: target of a pointer table; C0
     add a, b
     sub a, a

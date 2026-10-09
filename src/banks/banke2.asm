@@ -1,6 +1,7 @@
 SECTION "Bank E2", ROMX[$4000], BANK[$E2]
     db $E2
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4001:: ; heuristic: follows a terminator; C0
     farcall Func_005_7080
     ld a, c
@@ -98,6 +99,7 @@ Jump_0E2_40AE::
 Jump_0E2_40BE::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_40BF:: ; heuristic: follows a terminator; C0
     farcall Func_005_708C
     ld a, c
@@ -146,6 +148,7 @@ Jump_0E2_4108::
 Jump_0E2_411B::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_411C:: ; heuristic: follows a terminator; C0
     farcall Func_005_708C
     ld a, c
@@ -232,6 +235,7 @@ Jump_0E2_41B0::
 Jump_0E2_41C4::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_41C5:: ; heuristic: follows a terminator; C0
     call Func_0E2_41E0
     ld a, c
@@ -249,6 +253,7 @@ Func_0E2_41C5:: ; heuristic: follows a terminator; C0
 Jump_0E2_41DF::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_41C5)
 Func_0E2_41E0::
     farcall Func_005_70C9
     ld a, c
@@ -326,6 +331,7 @@ Jump_0E2_4276::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4279:: ; heuristic: follows a terminator; C0
     farcall Func_005_7109
     ld a, c
@@ -402,6 +408,8 @@ Jump_0E2_42FB::
 Jump_0E2_430F::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_4310:: ; heuristic: follows a terminator; C0
     farcall Func_005_715F
     ld a, c
@@ -416,6 +424,8 @@ Func_0E2_4310:: ; heuristic: follows a terminator; C0
     ld bc, $0069
     call Func_0E2_64F5
 
+; 1 call site from 1 routine (e.g. Func_0E2_438D)
+; reads: wD8A4
 Func_0E2_432D::
     farcall Func_005_44CF
     ld a, c
@@ -464,6 +474,7 @@ Jump_0E2_4389::
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_438D:: ; heuristic: follows a terminator; C0
     farcall Func_005_715F
     ld a, c
@@ -490,6 +501,7 @@ Jump_0E2_43A9::
 Jump_0E2_43BD::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_43BE:: ; heuristic: follows a terminator; C0
     farcall Func_005_7187
     ld a, c
@@ -497,6 +509,7 @@ Func_0E2_43BE:: ; heuristic: follows a terminator; C0
     ret z
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_43C8:: ; heuristic: follows a terminator; C0
     farcall Func_005_71AC
     ld a, c
@@ -515,6 +528,7 @@ Func_0E2_43C8:: ; heuristic: follows a terminator; C0
 Jump_0E2_43E8::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_43E9:: ; heuristic: follows a terminator; C0
     farcall Func_005_71BE
     ld a, c
@@ -543,6 +557,7 @@ Jump_0E2_440B::
 Jump_0E2_441F::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4420:: ; heuristic: follows a terminator; C0
     farcall Func_005_71DE
     ld a, c
@@ -553,6 +568,7 @@ Func_0E2_4420:: ; heuristic: follows a terminator; C0
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4433:: ; heuristic: follows a terminator; C0
     farcall Func_005_71F4
     ld a, c
@@ -563,6 +579,7 @@ Func_0E2_4433:: ; heuristic: follows a terminator; C0
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4446:: ; heuristic: follows a terminator; C0
     farcall Func_005_720A
     ld a, c
@@ -573,6 +590,7 @@ Func_0E2_4446:: ; heuristic: follows a terminator; C0
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4459:: ; heuristic: follows a terminator; C0
     farcall Func_005_7220
     ld a, c
@@ -583,6 +601,7 @@ Func_0E2_4459:: ; heuristic: follows a terminator; C0
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_446C:: ; heuristic: follows a terminator; C0
     farcall Func_005_7236
     ld a, c
@@ -608,6 +627,7 @@ Jump_0E2_4485::
 Jump_0E2_449B::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_449C:: ; heuristic: follows a terminator; C0
     farcall Func_005_724F
     ld a, c
@@ -685,6 +705,7 @@ Jump_0E2_4521::
 Jump_0E2_4535::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4536:: ; heuristic: follows a terminator; C0
     farcall Func_005_727A
     ld a, c
@@ -711,6 +732,7 @@ Jump_0E2_4563::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4567:: ; heuristic: follows a terminator; C0
     farcall Func_005_7293
     ld a, c
@@ -787,6 +809,7 @@ Jump_0E2_45E9::
 Jump_0E2_45FD::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_45FE:: ; heuristic: follows a terminator; C0
     call Func_0E2_4619
     ld a, c
@@ -804,6 +827,7 @@ Func_0E2_45FE:: ; heuristic: follows a terminator; C0
 Jump_0E2_4618::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_45FE)
 Func_0E2_4619::
     farcall Func_005_72AC
     ld a, c
@@ -851,6 +875,7 @@ Jump_0E2_4671::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4674:: ; heuristic: follows a terminator; C0
     farcall Func_005_72BE
     ld a, c
@@ -937,6 +962,7 @@ Jump_0E2_470C::
 Jump_0E2_4720::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4721:: ; heuristic: follows a terminator; C0
     farcall Func_005_72DE
     ld a, c
@@ -993,6 +1019,7 @@ Jump_0E2_4779::
 Jump_0E2_478D::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_478E:: ; heuristic: follows a terminator; C0
     farcall Func_005_72F7
     ld a, c
@@ -1009,6 +1036,7 @@ Jump_0E2_47A7::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_47AB:: ; heuristic: follows a terminator; C0
     farcall Func_005_7322
     ld a, c
@@ -1027,6 +1055,7 @@ Jump_0E2_47CA::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_47CE:: ; heuristic: follows a terminator; C0
     farcall Func_005_7345
     ld a, c
@@ -1095,6 +1124,7 @@ Jump_0E2_4840::
 Jump_0E2_4854::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4855:: ; heuristic: follows a terminator; C0
     farcall Func_005_7370
     ld a, c
@@ -1141,6 +1171,7 @@ Jump_0E2_4899::
 Jump_0E2_48AD::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_48AE:: ; heuristic: follows a terminator; C0
     farcall Func_005_7397
     ld a, c
@@ -1159,6 +1190,7 @@ Jump_0E2_48CB::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_48CF:: ; heuristic: follows a terminator; C0
     farcall Func_005_73D7
     ld a, c
@@ -1184,6 +1216,7 @@ Jump_0E2_48E8::
 Jump_0E2_48FC::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_48FD:: ; heuristic: follows a terminator; C0
     farcall Func_005_7410
     ld a, c
@@ -1202,6 +1235,7 @@ Jump_0E2_491A::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_491E:: ; heuristic: follows a terminator; C0
     farcall Func_005_7449
     ld a, c
@@ -1220,6 +1254,7 @@ Func_0E2_491E:: ; heuristic: follows a terminator; C0
 Jump_0E2_493E::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_493F:: ; heuristic: follows a terminator; C0
     farcall Func_005_7482
     ld a, c
@@ -1256,6 +1291,7 @@ Jump_0E2_4980::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4984:: ; heuristic: follows a terminator; C0
     farcall Func_005_7482
     ld a, c
@@ -1282,6 +1318,7 @@ Jump_0E2_49A1::
 Jump_0E2_49B4::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_49B5:: ; heuristic: follows a terminator; C0
     farcall Func_005_7494
     ld a, c
@@ -1324,6 +1361,7 @@ Jump_0E2_49F4::
 Jump_0E2_4A07::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4A08:: ; heuristic: follows a terminator; C0
     farcall Func_005_74B5
     ld a, c
@@ -1413,6 +1451,7 @@ Jump_0E2_4AA1::
 Jump_0E2_4AB5::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4AB6:: ; heuristic: follows a terminator; C0
     farcall Func_005_74D1
     ld a, c
@@ -1505,6 +1544,7 @@ Jump_0E2_4B56::
 Jump_0E2_4B6A::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4B6B:: ; heuristic: follows a terminator; C0
     farcall Func_005_74F9
     ld a, c
@@ -1605,6 +1645,7 @@ Jump_0E2_4C1B::
 Jump_0E2_4C2F::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4C30:: ; heuristic: follows a terminator; C0
     farcall Func_005_74D1
     ld a, c
@@ -1617,6 +1658,7 @@ Func_0E2_4C30:: ; heuristic: follows a terminator; C0
     ld bc, $0010
     call Func_0E2_64F5
 
+; 1 call site from 1 routine (e.g. Func_0E2_4CA1)
 Func_0E2_4C49::
     farcall Func_005_4C5D
     ld a, c
@@ -1663,6 +1705,7 @@ Jump_0E2_4C89::
 Jump_0E2_4CA0::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4CA1:: ; heuristic: follows a terminator; C0
     farcall Func_005_74D1
     ld a, c
@@ -1699,6 +1742,7 @@ Jump_0E2_4CD1::
 Jump_0E2_4CE5::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4CE6:: ; heuristic: follows a terminator; C0
     farcall Func_005_7512
     ld a, c
@@ -1775,6 +1819,7 @@ Jump_0E2_4D66::
 Jump_0E2_4D7A::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4D7B:: ; heuristic: follows a terminator; C0
     farcall Func_005_7512
     ld a, c
@@ -1833,6 +1878,7 @@ Jump_0E2_4DD7::
 Jump_0E2_4DEB::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4DEC:: ; heuristic: follows a terminator; C0
     farcall Func_005_7512
     ld a, c
@@ -1901,6 +1947,7 @@ Jump_0E2_4E5C::
 Jump_0E2_4E70::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4E71:: ; heuristic: follows a terminator; C0
     farcall Func_005_7512
     ld a, c
@@ -1997,6 +2044,7 @@ Jump_0E2_4F1B::
 Jump_0E2_4F2F::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4F30:: ; heuristic: follows a terminator; C0
     farcall Func_005_7512
     ld a, c
@@ -2087,6 +2135,7 @@ Jump_0E2_4FD0::
 Jump_0E2_4FE0::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_4FE1:: ; heuristic: follows a terminator; C0
     farcall Func_005_7524
     ld a, c
@@ -2155,6 +2204,7 @@ Jump_0E2_5057::
 Jump_0E2_5067::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5068:: ; heuristic: follows a terminator; C0
     farcall Func_005_753A
     ld a, c
@@ -2164,6 +2214,7 @@ Func_0E2_5068:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_507A:: ; heuristic: follows a terminator; C0
     farcall Func_005_7550
     ld a, c
@@ -2173,6 +2224,7 @@ Func_0E2_507A:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_508C:: ; heuristic: follows a terminator; C0
     farcall Func_005_7566
     ld a, c
@@ -2182,6 +2234,7 @@ Func_0E2_508C:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_509E:: ; heuristic: follows a terminator; C0
     farcall Func_005_757C
     ld a, c
@@ -2191,6 +2244,7 @@ Func_0E2_509E:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_50B0:: ; heuristic: follows a terminator; C0
     farcall Func_005_7592
     ld a, c
@@ -2200,6 +2254,7 @@ Func_0E2_50B0:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_50C2:: ; heuristic: follows a terminator; C0
     farcall Func_005_75A8
     ld a, c
@@ -2209,6 +2264,7 @@ Func_0E2_50C2:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_50D4:: ; heuristic: follows a terminator; C0
     farcall Func_005_75BE
     ld a, c
@@ -2218,6 +2274,7 @@ Func_0E2_50D4:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_50E6:: ; heuristic: follows a terminator; C0
     farcall Func_005_75D4
     ld a, c
@@ -2227,6 +2284,7 @@ Func_0E2_50E6:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_50F8:: ; heuristic: follows a terminator; C0
     farcall Func_005_75EA
     ld a, c
@@ -2236,6 +2294,7 @@ Func_0E2_50F8:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_510A:: ; heuristic: follows a terminator; C0
     farcall Func_005_7600
     ld a, c
@@ -2245,6 +2304,7 @@ Func_0E2_510A:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_4FF0
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_511C:: ; heuristic: follows a terminator; C0
     farcall Func_005_763E
     ld a, c
@@ -2325,6 +2385,7 @@ Jump_0E2_51A2::
 Jump_0E2_51B6::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_51B7:: ; heuristic: follows a terminator; C0
     farcall Func_005_765B
     ld a, c
@@ -2334,6 +2395,7 @@ Func_0E2_51B7:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_512B
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_51C9:: ; heuristic: follows a terminator; C0
     farcall Func_005_7671
     ld a, c
@@ -2343,6 +2405,7 @@ Func_0E2_51C9:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
     jp Jump_0E2_512B
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_51DB:: ; heuristic: follows a terminator; C0
     call Func_0E2_51F6
     ld a, c
@@ -2360,6 +2423,7 @@ Func_0E2_51DB:: ; heuristic: follows a terminator; C0
 Jump_0E2_51F5::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_51DB)
 Func_0E2_51F6::
     farcall Func_005_76A3
     ld a, c
@@ -2421,6 +2485,7 @@ Jump_0E2_526A::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_526D:: ; heuristic: follows a terminator; C0
     farcall Func_005_76CE
     ld a, c
@@ -2503,6 +2568,7 @@ Jump_0E2_52FD::
 Jump_0E2_530D::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_530E:: ; heuristic: follows a terminator; C0
     farcall Func_005_76E2
     ld a, c
@@ -2563,6 +2629,7 @@ Jump_0E2_5374::
 Jump_0E2_5384::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5385:: ; heuristic: follows a terminator; C0
     farcall Func_005_76F8
     ld a, c
@@ -2631,6 +2698,7 @@ Jump_0E2_53F5::
 Jump_0E2_5409::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_540A:: ; heuristic: follows a terminator; C0
     farcall Func_005_7512
     ld a, c
@@ -2646,6 +2714,7 @@ Func_0E2_540A:: ; heuristic: follows a terminator; C0
 Jump_0E2_5423::
     jp Jump_0E2_53A2
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5426:: ; heuristic: follows a terminator; C0
     farcall Func_005_772B
     ld a, c
@@ -2674,6 +2743,7 @@ Jump_0E2_5459::
     call Func_0E2_6898
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_545D:: ; heuristic: follows a terminator; C0
     farcall Func_005_774F
     ld a, c
@@ -2726,6 +2796,7 @@ Jump_0E2_54C0::
     call Func_0E2_6898
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_54C4:: ; heuristic: follows a terminator; C0
     farcall Func_005_7777
     ld a, c
@@ -2778,6 +2849,7 @@ Jump_0E2_5515::
 Jump_0E2_5528::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5529:: ; heuristic: follows a terminator; C0
     farcall Func_005_7616
     ld a, c
@@ -2862,6 +2934,7 @@ Jump_0E2_55BD::
 Jump_0E2_55CD::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_55CE:: ; heuristic: follows a terminator; C0
     farcall Func_005_7616
     ld a, c
@@ -2902,6 +2975,7 @@ Jump_0E2_5607::
 Jump_0E2_561A::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_561B:: ; heuristic: follows a terminator; C0
     farcall Func_005_7786
     ld a, c
@@ -2988,6 +3062,7 @@ Jump_0E2_56B5::
 Jump_0E2_56C5::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_56C6:: ; heuristic: follows a terminator; C0
     farcall Func_005_779F
     ld a, c
@@ -3102,6 +3177,8 @@ Jump_0E2_5798::
 Jump_0E2_57A8::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_57A9:: ; heuristic: follows a terminator; C0
     farcall Func_005_77C7
     ld a, c
@@ -3188,6 +3265,8 @@ Jump_0E2_5845::
 Jump_0E2_5855::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_5856:: ; heuristic: follows a terminator; C0
     farcall Func_005_77E0
     ld a, c
@@ -3205,6 +3284,7 @@ Func_0E2_5856:: ; heuristic: follows a terminator; C0
 Jump_0E2_5873::
     jp Jump_0E2_57E6
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5876:: ; heuristic: follows a terminator; C0
     farcall Func_005_77F9
     ld a, c
@@ -3261,6 +3341,7 @@ Jump_0E2_58CA::
 Jump_0E2_58DE::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_58DF:: ; heuristic: follows a terminator; C0
     farcall Func_005_7824
     ld a, c
@@ -3268,6 +3349,7 @@ Func_0E2_58DF:: ; heuristic: follows a terminator; C0
     ret z
     jr Jump_0E2_588F
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_58EA:: ; heuristic: follows a terminator; C0
     farcall Func_005_7847
     ld a, c
@@ -3275,6 +3357,7 @@ Func_0E2_58EA:: ; heuristic: follows a terminator; C0
     ret z
     jr Jump_0E2_588F
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_58F5:: ; heuristic: follows a terminator; C0
     farcall Func_005_7860
     ld a, c
@@ -3282,6 +3365,7 @@ Func_0E2_58F5:: ; heuristic: follows a terminator; C0
     ret z
     jr Jump_0E2_588F
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5900:: ; heuristic: follows a terminator; C0
     farcall Func_005_7879
     ld a, c
@@ -3298,6 +3382,7 @@ Jump_0E2_5919::
     call Func_0E2_6854
     jp Jump_0E2_5892
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_591F:: ; heuristic: follows a terminator; C0
     farcall Func_005_78A8
     ld a, c
@@ -3338,6 +3423,7 @@ Jump_0E2_595B::
 Jump_0E2_596F::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5970:: ; heuristic: follows a terminator; C0
     farcall Func_005_78CC
     ld a, c
@@ -3396,6 +3482,7 @@ Jump_0E2_59D0::
 Jump_0E2_59E4::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_59E5:: ; heuristic: follows a terminator; C0
     farcall Func_005_790D
     ld a, c
@@ -3462,6 +3549,7 @@ Jump_0E2_5A53::
 Jump_0E2_5A67::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5A68:: ; heuristic: follows a terminator; C0
     call Func_0E2_5A72
     ld a, c
@@ -3470,6 +3558,7 @@ Func_0E2_5A68:: ; heuristic: follows a terminator; C0
     call Func_0E2_67F9
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5A68)
 Func_0E2_5A72::
     farcall Func_005_791F
     ld a, c
@@ -3528,6 +3617,7 @@ Jump_0E2_5AE0::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5AE6:: ; heuristic: follows a terminator; C0
     farcall Func_005_7946
     ld a, c
@@ -3572,6 +3662,8 @@ Jump_0E2_5B28::
 Jump_0E2_5B3C::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     farcall Func_005_7975
     ld a, c
@@ -3640,6 +3732,7 @@ Jump_0E2_5BAC::
 Jump_0E2_5BC3::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5BC4:: ; heuristic: follows a terminator; C0
     farcall Func_005_7996
     ld a, c
@@ -3690,6 +3783,7 @@ Jump_0E2_5C11::
 Jump_0E2_5C24::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5C25:: ; heuristic: follows a terminator; C0
     farcall Func_005_79C5
     ld a, c
@@ -3772,6 +3866,7 @@ Jump_0E2_5CAD::
 Jump_0E2_5CC1::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5CC2:: ; heuristic: follows a terminator; C0
     farcall Func_005_79E5
     ld a, c
@@ -3779,6 +3874,7 @@ Func_0E2_5CC2:: ; heuristic: follows a terminator; C0
     ret z
     jp Jump_0E2_5C2E
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5CCE:: ; heuristic: follows a terminator; C0
     farcall Func_005_7A0D
     ld a, c
@@ -3835,6 +3931,7 @@ Jump_0E2_5D28::
 Jump_0E2_5D3C::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5D3D:: ; heuristic: follows a terminator; C0
     farcall Func_005_7A27
     ld a, c
@@ -3853,6 +3950,7 @@ Jump_0E2_5D5C::
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5D60:: ; heuristic: follows a terminator; C0
     farcall Func_005_7A3E
     ld a, c
@@ -3871,6 +3969,7 @@ Jump_0E2_5D7F::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5D83:: ; heuristic: follows a terminator; C0
     farcall Func_005_7A55
     ld a, c
@@ -3899,6 +3998,7 @@ Jump_0E2_5DB8::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5DBC:: ; heuristic: follows a terminator; C0
     farcall Func_005_7A6C
     ld a, c
@@ -3925,6 +4025,7 @@ Jump_0E2_5DD5::
 Jump_0E2_5DEC::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5DED:: ; heuristic: follows a terminator; C0
     farcall Func_005_7A91
     ld a, c
@@ -3969,6 +4070,7 @@ Jump_0E2_5E32::
 Jump_0E2_5E45::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5E46:: ; heuristic: follows a terminator; C0
     farcall Func_005_7AA4
     ld a, c
@@ -4001,6 +4103,7 @@ Jump_0E2_5E6F::
 Jump_0E2_5E82::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5E83:: ; heuristic: follows a terminator; C0
     farcall Func_005_7ACC
     ld a, c
@@ -4027,6 +4130,7 @@ Jump_0E2_5EB2::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5EB6:: ; heuristic: follows a terminator; C0
     call Func_0E2_5EC0
     ld a, c
@@ -4035,6 +4139,7 @@ Func_0E2_5EB6:: ; heuristic: follows a terminator; C0
     call Func_0E2_67F9
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5EB6)
 Func_0E2_5EC0::
     farcall Func_005_7AD8
     ld a, c
@@ -4073,6 +4178,7 @@ Jump_0E2_5F04::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5F0A:: ; heuristic: follows a terminator; C0
     farcall Func_005_7B11
     ld a, c
@@ -4138,6 +4244,7 @@ Jump_0E2_5F86::
     call Func_0E2_67F9
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5F8A:: ; heuristic: follows a terminator; C0
     call Func_0E2_5F94
     ld a, c
@@ -4146,6 +4253,7 @@ Func_0E2_5F8A:: ; heuristic: follows a terminator; C0
     call Func_0E2_67F9
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5F8A)
 Func_0E2_5F94::
     farcall Func_005_7B40
     ld a, c
@@ -4184,6 +4292,7 @@ Jump_0E2_5FD8::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5FDE:: ; heuristic: follows a terminator; C0
     call Func_0E2_5FE8
     ld a, c
@@ -4192,6 +4301,7 @@ Func_0E2_5FDE:: ; heuristic: follows a terminator; C0
     call Func_0E2_67F9
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_5FDE)
 Func_0E2_5FE8::
     farcall Func_005_7AD8
     ld a, c
@@ -4236,6 +4346,7 @@ Jump_0E2_603E::
     ld c, $01
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6044:: ; heuristic: follows a terminator; C0
     farcall Func_005_7B5C
     ld a, c
@@ -4272,6 +4383,7 @@ Jump_0E2_6074::
 Jump_0E2_6088::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6089:: ; heuristic: follows a terminator; C0
     farcall Func_005_7B84
     ld a, c
@@ -4288,6 +4400,7 @@ Jump_0E2_60A2::
     call Func_0E2_6887
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_60A6:: ; heuristic: follows a terminator; C0
     farcall Func_005_7BBE
     ld a, c
@@ -4314,6 +4427,8 @@ Jump_0E2_60D3::
     call Func_0E2_6876
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_60D7:: ; heuristic: follows a terminator; C0
     farcall Func_005_7BE6
     ld a, c
@@ -4344,6 +4459,7 @@ Jump_0E2_610E::
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6112:: ; heuristic: follows a terminator; C0
     farcall Func_005_7C12
     ld a, c
@@ -4364,6 +4480,7 @@ Jump_0E2_6135::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6139:: ; heuristic: follows a terminator; C0
     farcall Func_005_7C45
     ld a, c
@@ -4384,6 +4501,8 @@ Jump_0E2_615C::
     call Func_0E2_6865
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_6160:: ; heuristic: follows a terminator; C0
     farcall Func_005_7C69
     ld a, c
@@ -4406,6 +4525,7 @@ Jump_0E2_6189::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_618D:: ; heuristic: follows a terminator; C0
     farcall Func_005_7C82
     ld a, c
@@ -4436,6 +4556,7 @@ Jump_0E2_61BE::
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_61C2:: ; heuristic: follows a terminator; C0
     farcall Func_005_7CA2
     ld a, c
@@ -4443,6 +4564,8 @@ Func_0E2_61C2:: ; heuristic: follows a terminator; C0
     ret z
     jr Jump_0E2_619A
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_61CD:: ; heuristic: follows a terminator; C0
     farcall Func_005_7CC2
     ld a, c
@@ -4453,6 +4576,7 @@ Func_0E2_61CD:: ; heuristic: follows a terminator; C0
     call Func_0E2_6854
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_61E0:: ; heuristic: follows a terminator; C0
     farcall Func_005_7CE7
     ld a, c
@@ -4507,6 +4631,8 @@ Jump_0E2_6231::
 Jump_0E2_6248::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_6249:: ; heuristic: follows a terminator; C0
     farcall Func_005_7CF3
     ld a, c
@@ -4553,6 +4679,7 @@ Jump_0E2_6290::
 Jump_0E2_62A3::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_62A4:: ; heuristic: follows a terminator; C0
     farcall Func_005_7D5B
     ld a, c
@@ -4601,6 +4728,8 @@ Jump_0E2_62EB::
 Jump_0E2_6302::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_6303:: ; heuristic: follows a terminator; C0
     farcall Func_005_7D95
     ld a, c
@@ -4639,6 +4768,7 @@ Jump_0E2_6338::
 Jump_0E2_634F::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6350:: ; heuristic: follows a terminator; C0
     farcall Func_005_7DA8
     ld a, c
@@ -4667,6 +4797,8 @@ Jump_0E2_636F::
 Jump_0E2_6386::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
 Func_0E2_6387:: ; heuristic: follows a terminator; C0
     farcall Func_005_7DC2
     ld a, c
@@ -4723,10 +4855,12 @@ Jump_0E2_63E2::
 Jump_0E2_63F9::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_63FA:: ; heuristic: follows a terminator; C0
     farcall Func_005_7DDC
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6401:: ; heuristic: follows a terminator; C0
     farcall Func_005_7B11
     ld a, c
@@ -4743,10 +4877,12 @@ Jump_0E2_641A::
     call Func_0E2_6898
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_641E:: ; heuristic: follows a terminator; C0
     farcall Func_005_7DDC
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6425:: ; heuristic: follows a terminator; C0
     call Func_0E2_67A5
     ret z
@@ -4788,6 +4924,7 @@ Jump_0E2_6462::
 Jump_0E2_6472::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_6473:: ; heuristic: follows a terminator; C0
     farcall Func_005_7370
     ld a, c
@@ -4803,6 +4940,7 @@ Func_0E2_6473:: ; heuristic: follows a terminator; C0
 Jump_0E2_648C::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_648D:: ; heuristic: follows a terminator; C0
     farcall Func_005_7397
     ld a, c
@@ -4831,6 +4969,8 @@ Jump_0E2_64BE::
     ret
     db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65, $C9, $C9
 
+; 304 call sites from 118 routines (e.g. Func_0E2_4001, Func_0E2_656D, Func_0E2_40BF, Func_0E2_6822, ...)
+; points at: wDA6E, wDA70
 Func_0E2_64CE::
     call Func_0E2_654B
     cp a, $FF
@@ -4861,6 +5001,8 @@ Jump_0E2_64EE::
 Jump_0E2_64F4::
     ret
 
+; 223 call sites from 89 routines (e.g. Func_0E2_4001, Func_0E2_656D, Func_0E2_40BF, Func_0E2_6822, ...)
+; points at: wDA70, wDA6E
 Func_0E2_64F5::
     call Func_0E2_654B
     cp a, $FF
@@ -4891,6 +5033,7 @@ Jump_0E2_6515::
 Jump_0E2_651B::
     ret
 
+; 4 call sites from 2 routines (e.g. Func_0E2_64F5, Func_0E2_64CE)
 Func_0E2_651C::
     push hl
     ld a, [hl+]
@@ -4908,6 +5051,9 @@ Func_0E2_651C::
     db $00, $44, $4D, $E1, $71, $23, $70, $C9, $AF, $21, $6E, $DA, $22, $22, $3E, $FF
     db $22, $22, $C9
 
+; 2 call sites from 2 routines (e.g. Func_0E2_64F5, Func_0E2_64CE)
+; reads: wD2C7
+; writes: wDataBank
 Func_0E2_654B::
     ld a, $36
     call Func_000_16AA
@@ -4933,6 +5079,8 @@ Jump_0E2_6561::
     ld c, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_60D7)
+; writes: hFFC6
 Func_0E2_656D:: ; heuristic: follows a terminator; C0
     ldh [hFFC6], a
     farcall Func_005_5317
@@ -4978,6 +5126,8 @@ Jump_0E2_65B1::
 Jump_0E2_65B7::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_61CD)
+; writes: hFFC6
 Func_0E2_65B8:: ; heuristic: follows a terminator; C0
     ldh [hFFC6], a
     farcall Func_005_5317
@@ -5023,6 +5173,8 @@ Jump_0E2_65FC::
 Jump_0E2_6602::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6249)
+; writes: hFFC6
 Func_0E2_6603:: ; heuristic: follows a terminator; C0
     and a, $04
     ld c, a
@@ -5030,7 +5182,7 @@ Func_0E2_6603:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_6608::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_6615
     ldh [hFFC6], a
     push bc
@@ -5043,6 +5195,7 @@ Jump_0E2_6615::
     jr nz, Jump_0E2_6608
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6603)
 Func_0E2_661A::
     farcall Func_005_5317
     ld a, c
@@ -5059,6 +5212,8 @@ Jump_0E2_662D::
 Jump_0E2_6633::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_6303)
+; writes: hFFC6
 Func_0E2_6634:: ; heuristic: follows a terminator; C0
     ldh [hFFC6], a
     farcall Func_005_5317
@@ -5104,6 +5259,8 @@ Jump_0E2_6678::
 Jump_0E2_667E::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_432D)
+; writes: hFFC6
 Func_0E2_667F:: ; heuristic: follows a terminator; C0
     and a, $04
     ld c, a
@@ -5111,7 +5268,7 @@ Func_0E2_667F:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_6684::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_6691
     ldh [hFFC6], a
     push bc
@@ -5124,6 +5281,8 @@ Jump_0E2_6691::
     jr nz, Jump_0E2_6684
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_667F)
+; reads: wD8A4
 Func_0E2_6696::
     push bc
     farcall Func_005_5317
@@ -5155,6 +5314,8 @@ Data_0E2_66B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0E2_66BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AB, $AC, $AD, $AE, $AF, $AF
 
+; 2 call sites from 2 routines (e.g. Func_0E2_5B3D, Func_0E2_6387)
+; writes: hFFC6
 Func_0E2_66C5::
     and a, $04
     ld c, a
@@ -5162,7 +5323,7 @@ Func_0E2_66C5::
 
 Jump_0E2_66CA::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_66D7
     ldh [hFFC6], a
     push bc
@@ -5175,6 +5336,8 @@ Jump_0E2_66D7::
     jr nz, Jump_0E2_66CA
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_66C5)
+; reads: wD8A4
 Func_0E2_66DC::
     push bc
     farcall Func_005_5317
@@ -5206,6 +5369,8 @@ Data_0E2_66FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0E2_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AB, $AC, $AD, $AE, $AF
 
+; 1 call site from 1 routine (e.g. Func_0E2_57A9)
+; writes: hFFC6
 Func_0E2_670B::
     ldh [hFFC6], a
     push bc
@@ -5226,12 +5391,17 @@ Jump_0E2_6720::
     call Func_0E2_64CE
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; writes: hFFC6
 Func_0E2_6727:: ; heuristic: follows a terminator; C0
     dec e
     ld e, $1F
     jr nz, Jump_0E2_674D
     ld [hl+], a
 
+; 1 call site from 1 routine (e.g. Func_0E2_6160)
+; writes: hFFC6
 Func_0E2_672D::
     and a, $04
     ld c, a
@@ -5239,7 +5409,7 @@ Func_0E2_672D::
 
 Jump_0E2_6732::
     ld a, c
-    call Func_000_3E54
+    call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_673F
     ldh [hFFC6], a
     push bc
@@ -5252,6 +5422,8 @@ Jump_0E2_673F::
     jr nz, Jump_0E2_6732
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_672D)
+; reads: wD8A4
 Func_0E2_6744::
     push bc
     farcall Func_005_5317
@@ -5285,6 +5457,7 @@ Data_0E2_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0E2_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AA, $AB, $AC, $AD, $AE
 
+; 1 call site from 1 routine (e.g. Func_0E2_446C)
 Func_0E2_6773::
     farcall Func_005_585D
     ld a, c
@@ -5301,6 +5474,7 @@ Jump_0E2_6785::
 Jump_0E2_678B::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_449C)
 Func_0E2_678C:: ; heuristic: follows a terminator; C0
     farcall Func_005_65C1
     ld a, c
@@ -5317,6 +5491,9 @@ Jump_0E2_679E::
 Jump_0E2_67A4::
     ret
 
+; 4 call sites from 4 routines (e.g. Func_0E2_67CF, Func_0E2_51F6, Func_0E2_56C6, Func_0E2_6425)
+; reads: wD2CC
+; writes: wDA6E, wDA6F, wDA70, wDA71
 Func_0E2_67A5:: ; heuristic: follows a terminator; C0
     ld a, [wD2CC]
     and a, $01
@@ -5333,6 +5510,8 @@ Func_0E2_67A5:: ; heuristic: follows a terminator; C0
     ld c, a
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_618D)
+; reads: wD891
 Func_0E2_67C0:: ; heuristic: follows a terminator; C0
     ld a, [wD891]
     ld c, a
@@ -5343,11 +5522,14 @@ Func_0E2_67C0:: ; heuristic: follows a terminator; C0
     ld c, $FF
     ret
 
+; 8 call sites from 8 routines (e.g. Func_0E2_48AE, Func_0E2_60D7, Func_0E2_6112, Func_0E2_6139, ...)
+; reads: wD891
 Func_0E2_67CF::
     call Func_0E2_67A5
     ret z
     jr Func_0E2_67C0
 
+; 2 call sites from 2 routines (e.g. Func_0E2_43C8, Func_0E2_43E9)
 Func_0E2_67D5::
     call Func_0E2_6865
     farcall Func_005_5758
@@ -5368,6 +5550,7 @@ Jump_0E2_67E8::
 Jump_0E2_67F8::
     ret
 
+; 9 call sites from 9 routines (e.g. Func_0E2_5A68, Func_0E2_5A72, Func_0E2_5EB6, Func_0E2_5EC0, ...)
 Func_0E2_67F9:: ; heuristic: follows a terminator; C0
     farcall Func_005_5ECE
     ld a, c
@@ -5391,6 +5574,7 @@ Jump_0E2_680D::
 Jump_0E2_6821::
     ret
 
+; 3 call sites from 3 routines (e.g. Func_0E2_40BF, Func_0E2_411C, Func_0E2_41E0)
 Func_0E2_6822::
     farcall Func_005_55BE
     ld a, c
@@ -5410,6 +5594,7 @@ Jump_0E2_6832::
 Jump_0E2_6842::
     ret
 
+; 1 call site from 1 routine (e.g. Func_0E2_4279)
 Func_0E2_6843:: ; heuristic: follows a terminator; C0
     farcall Func_005_55BE
     ld a, c
@@ -5421,6 +5606,7 @@ Func_0E2_6843:: ; heuristic: follows a terminator; C0
 Jump_0E2_6853::
     ret
 
+; 36 call sites from 36 routines (e.g. Func_0E2_446C, Func_0E2_449C, Func_0E2_4536, Func_0E2_4567, ...)
 Func_0E2_6854:: ; heuristic: follows a terminator; C0
     farcall Func_005_55F3
     ld a, c
@@ -5432,6 +5618,7 @@ Func_0E2_6854:: ; heuristic: follows a terminator; C0
 Jump_0E2_6864::
     ret
 
+; 12 call sites from 12 routines (e.g. Func_0E2_432D, Func_0E2_67D5, Func_0E2_4420, Func_0E2_4433, ...)
 Func_0E2_6865:: ; heuristic: follows a terminator; C0
     farcall Func_005_5628
     ld a, c
@@ -5443,6 +5630,7 @@ Func_0E2_6865:: ; heuristic: follows a terminator; C0
 Jump_0E2_6875::
     ret
 
+; 5 call sites from 5 routines (e.g. Func_0E2_4B6B, Func_0E2_5876, Func_0E2_5E46, Func_0E2_60A6, ...)
 Func_0E2_6876:: ; heuristic: follows a terminator; C0
     farcall Func_005_565D
     ld a, c
@@ -5454,6 +5642,7 @@ Func_0E2_6876:: ; heuristic: follows a terminator; C0
 Jump_0E2_6886::
     ret
 
+; 8 call sites from 8 routines (e.g. Func_0E2_591F, Func_0E2_5970, Func_0E2_59E5, Func_0E2_5A72, ...)
 Func_0E2_6887:: ; heuristic: follows a terminator; C0
     farcall Func_005_5692
     ld a, c
@@ -5465,6 +5654,7 @@ Func_0E2_6887:: ; heuristic: follows a terminator; C0
 Jump_0E2_6897::
     ret
 
+; 22 call sites from 22 routines (e.g. Func_0E2_4AB6, Func_0E2_4C49, Func_0E2_4CE6, Func_0E2_4D7B, ...)
 Func_0E2_6898:: ; heuristic: follows a terminator; C0
     farcall Func_005_56C7
     ld a, c
@@ -5476,6 +5666,8 @@ Func_0E2_6898:: ; heuristic: follows a terminator; C0
 Jump_0E2_68A8::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD8FF
 Func_0E2_68A9:: ; heuristic: follows a terminator; C0
     ld hl, wD8FF
     jr Jump_0E2_68D6
@@ -5496,6 +5688,7 @@ Jump_0E2_68DC::
     ld l, a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_0E2_68E0:: ; heuristic: follows a terminator; C0
     add a, a
     add a, l
@@ -5506,6 +5699,8 @@ Func_0E2_68E0:: ; heuristic: follows a terminator; C0
 Jump_0E2_68E6::
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wC57F, wD8A4
 Func_0E2_68E7:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -5523,6 +5718,8 @@ Jump_0E2_68FC::
     cp a, $04
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wC57F, wD8A5
 Func_0E2_6902:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01

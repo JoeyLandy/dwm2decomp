@@ -25,6 +25,7 @@ Data_0E1_5A67:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_5AA7:: ; heuristic: argument of a bank-switching copy helper; C0
     db $20, $7C, $FF, $7F, $A8, $14, $00, $00, $20, $7C, $FF, $7F, $35, $04, $00, $00
 
+; 1 call site from 1 routine (e.g. Func_007_5FE8)
 Func_0E1_5AB7::
     ld de, Data_0E1_5ABE
     call Func_0E1_5AC0
@@ -33,6 +34,10 @@ Func_0E1_5AB7::
 Data_0E1_5ABE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $5D
 
+; 1 call site from 1 routine (e.g. Func_0E1_5AB7)
+; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hFFB1
+; points at: hFFB5
 Func_0E1_5AC0::
     ldh a, [hFFB1]
     cp a, $27
@@ -498,6 +503,8 @@ Jump_0E1_5CE6::
     jr nz, Jump_0E1_5C8B
     ret
 
+; 2 call sites from 1 routine (e.g. Func_0E1_5AC0)
+; reads: hFFA5, hFFA1, hFFBA, rSTAT
 Func_0E1_5D06::
     push hl
     push bc

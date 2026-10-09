@@ -1,7 +1,11 @@
 SECTION "Bank 13", ROMX[$4000], BANK[$13]
     db $13
 
-Func_013_4001::
+; HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
+; 697 call sites from 48 routines (e.g. Func_013_5EF4, Func_013_5C0B, Func_013_5922, Func_013_49D5, ...)
+; writes: wC921, wC922, wC919, wC5DC, wC920, wC91F, wC923
+SetRequestPtrC921_B13::
+Func_013_4001:: ; address name
     ld a, l
     ld [wC921], a
     ld a, h
@@ -19,7 +23,11 @@ Func_013_4001::
     ld [wC923], a
     ret
 
-Func_013_4025::
+; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
+; 33 call sites from 18 routines (e.g. Func_013_5EF4, Func_013_49D5, Func_013_405C, Func_013_7DEC, ...)
+; writes: wC924, wC925, wC919, wC5DC, wC920, wC91F, wC923
+SetRequestPtrC924FromDE_B13::
+Func_013_4025:: ; address name
     ld a, e
     ld [wC924], a
     ld a, d
@@ -37,7 +45,11 @@ Func_013_4025::
     ld [wC923], a
     ret
 
-Func_013_4049::
+; HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1
+; 215 call sites from 22 routines (e.g. Func_013_5922, Func_013_5EF4, Func_013_5C0B, Func_013_49D5, ...)
+; writes: wC91A, wC91B, wC919, wC5DC
+SetRequestPtrC91A_B13::
+Func_013_4049:: ; address name
     ld a, l
     ld [wC91A], a
     ld a, h
@@ -48,6 +60,10 @@ Func_013_4049::
     ld [wC5DC], a
     ret
 
+; 39 call sites from 23 routines (e.g. Func_002_4745, Func_002_4E9E, Func_002_4ED6, Func_002_5B2A, ...)
+; reads: wCC44, wC917, wCC45, wC916
+; writes: wC919, wC5DC, wC917, wC916, wC921, wC922, wC920, wC91F, ...
+; points at: wCD89, wCDAE
 Func_013_405C::
     ld a, [wCC44]
     bit 7, a
@@ -290,27 +306,27 @@ Jump_013_4134::
 
 Jump_013_421E::
     ld hl, $0400
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4225::
     ld hl, $0401
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_422C::
     ld hl, $0402
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4233::
     ld hl, $0403
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_423A::
     ld hl, $0404
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4241::
@@ -318,22 +334,22 @@ Jump_013_4241::
     call TestFlagBit
     jr c, Jump_013_4250
     ld hl, $0405
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4250::
     ld hl, $0492
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4257::
     ld hl, $0407
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_425E::
     ld hl, $0406
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4265::
@@ -341,17 +357,17 @@ Jump_013_4265::
     call TestFlagBit
     jr c, Jump_013_4274
     ld hl, $0408
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4274::
     ld hl, $0D2C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_427B::
     ld hl, $0409
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4282::
@@ -362,29 +378,29 @@ Jump_013_4282::
     call TestFlagBit
     jr c, Jump_013_4299
     ld hl, $040A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4299::
     ld hl, $0414
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_42A0::
     ld hl, $0D2D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_42A7::
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_5FE8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_42B3::
     ld hl, $040E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_42BA::
@@ -392,19 +408,19 @@ Jump_013_42BA::
     call TestFlagBit
     jr c, Jump_013_42C9
     ld hl, $5FEF
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_42C9::
     ld hl, $5FF7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_42D0::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6003
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_42DC::
@@ -416,12 +432,12 @@ Jump_013_42DC::
     or a, a
     jr nz, Jump_013_42F4
     ld hl, $0410
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_42F4::
     ld hl, $5FFC
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_42FB::
@@ -430,12 +446,12 @@ Jump_013_42FB::
     ld a, $2A
     ld [wC922], a
     ld de, $00A1
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_430C::
     ld hl, $0413
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4313::
@@ -444,7 +460,7 @@ Jump_013_4313::
     ld a, $61
     ld [wC922], a
     ld de, $00A2
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_4324::
@@ -453,12 +469,12 @@ Jump_013_4324::
     ld a, $00
     ld [wC922], a
     ld de, $00A3
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_4335::
     ld hl, $600A
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_433C::
@@ -475,19 +491,19 @@ Jump_013_433C::
     set 6, a
     ld [wC836], a
     ld hl, $041A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $00A7
     call SetFlagBit
     ret
 
 Jump_013_4367::
     ld hl, $041B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_436E::
     ld hl, $04A2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4375::
@@ -502,7 +518,7 @@ Jump_013_4375::
 
 Jump_013_4387::
     ld hl, $041C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_438E::
@@ -510,39 +526,39 @@ Jump_013_438E::
     cp a, $50
     jr z, Jump_013_43A2
     ld hl, $6015
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0209
     call SetFlagBit
     ret
 
 Jump_013_43A2::
     ld hl, $041D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43A9::
     ld hl, $0DF8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43B0::
     ld hl, $041E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43B7::
     ld hl, $041F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43BE::
     ld hl, $0420
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43C5::
     ld hl, $0421
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43CC::
@@ -550,12 +566,12 @@ Jump_013_43CC::
     call TestFlagBit
     jr c, Jump_013_43DB
     ld hl, $0422
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43DB::
     ld hl, $0D2E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43E2::
@@ -563,12 +579,12 @@ Jump_013_43E2::
     call TestFlagBit
     jr c, Jump_013_43F1
     ld hl, $0423
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43F1::
     ld hl, $0D2F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_43F8::
@@ -576,12 +592,12 @@ Jump_013_43F8::
     call TestFlagBit
     jr c, Jump_013_4407
     ld hl, $0424
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4407::
     ld hl, $0494
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_440E::
@@ -589,12 +605,12 @@ Jump_013_440E::
     call TestFlagBit
     jr c, Jump_013_441D
     ld hl, $0425
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_441D::
     ld hl, $0495
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4424::
@@ -606,34 +622,34 @@ Jump_013_4424::
 
 Jump_013_442E::
     ld hl, $6020
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4435::
     ld hl, $602D
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_443C::
     ld hl, $042A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4443::
     ld hl, $042B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_444A::
     ld hl, $042C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4451::
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_603A
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_445D::
@@ -642,29 +658,29 @@ Jump_013_445D::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6041
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_446E::
     ld hl, $0430
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4475::
     ld hl, $04AA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_447C::
     ld hl, $0DD3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4483::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6048
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_448F::
@@ -676,7 +692,7 @@ Jump_013_448F::
     or a, a
     ret z
     ld hl, $604F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_44A7::
@@ -684,19 +700,19 @@ Jump_013_44A7::
     call TestFlagBit
     jr c, Jump_013_44BC
     ld hl, $0434
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $00A9
     call SetFlagBit
     ret
 
 Jump_013_44BC::
     ld hl, $0435
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_44C3::
     ld hl, $0436
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_44CA::
@@ -705,12 +721,12 @@ Jump_013_44CA::
     ld a, $03
     ld [wC922], a
     ld de, $00AA
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_44DB::
     ld hl, $0437
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_44E2::
@@ -718,17 +734,17 @@ Jump_013_44E2::
     call TestFlagBit
     jr c, Jump_013_44F1
     ld hl, $0438
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_44F1::
     ld hl, $0496
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_44F8::
     ld hl, $6062
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_44FF::
@@ -739,27 +755,27 @@ Jump_013_44FF::
     call TestFlagBit
     jr c, Jump_013_4516
     ld hl, $043C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4516::
     ld hl, $043D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_451D::
     ld hl, $0497
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4524::
     ld hl, $043E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_452B::
     ld hl, $043F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4532::
@@ -767,12 +783,12 @@ Jump_013_4532::
     call TestFlagBit
     jr c, Jump_013_4541
     ld hl, $0440
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4541::
     ld hl, $0498
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4548::
@@ -804,22 +820,22 @@ Jump_013_4582::
     call TestFlagBit
     jr c, Jump_013_4591
     ld hl, $0441
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4591::
     ld hl, $0442
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4598::
     ld hl, $6119
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_459F::
     ld hl, $0499
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_45A6::
@@ -854,29 +870,29 @@ Jump_013_45E8::
     call TestFlagBit
     jr c, Jump_013_45F7
     ld hl, $0443
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_45F7::
     ld hl, $0444
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_45FE::
     ld hl, $046B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $00B7
     call SetFlagBit
     ret
 
 Jump_013_460B::
     ld hl, $046C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4612::
     ld hl, $049A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4619::
@@ -884,12 +900,12 @@ Jump_013_4619::
     call TestFlagBit
     jr c, Jump_013_4628
     ld hl, $0445
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4628::
     ld hl, $04A3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_462F::
@@ -897,22 +913,22 @@ Jump_013_462F::
     call TestFlagBit
     jr c, Jump_013_463E
     ld hl, $0446
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_463E::
     ld hl, $049B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4645::
     ld hl, $606F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_464C::
     ld hl, $044A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4653::
@@ -921,14 +937,14 @@ Jump_013_4653::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_607C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4664::
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_6083
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4670::
@@ -939,49 +955,49 @@ Jump_013_4670::
     call TestFlagBit
     jr c, Jump_013_4687
     ld hl, $044D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4687::
     ld hl, $044E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_468E::
     ld hl, $049C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4695::
     ld hl, $0450
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_469C::
     ld hl, $0314
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46A3::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6048
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_46AF::
     ld hl, $0452
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46B6::
     ld hl, $0453
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46BD::
     ld hl, $0454
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46C4::
@@ -989,27 +1005,27 @@ Jump_013_46C4::
     call TestFlagBit
     jr c, Jump_013_46D3
     ld hl, $0455
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46D3::
     ld hl, $0456
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46DA::
     ld hl, $0457
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46E1::
     ld hl, $0458
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46E8::
     ld hl, $0459
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_46EF::
@@ -1018,19 +1034,19 @@ Jump_013_46EF::
     or a, a
     jr nz, Jump_013_4701
     ld hl, $045B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4701::
     dec a
     jr nz, Jump_013_470B
     ld hl, $045C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_470B::
     ld hl, $6091
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4712::
@@ -1039,7 +1055,7 @@ Jump_013_4712::
     ld a, $4E
     ld [wC922], a
     ld de, $00AB
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_4723::
@@ -1048,7 +1064,7 @@ Jump_013_4723::
     ld a, $39
     ld [wC922], a
     ld de, $00AC
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_4734::
@@ -1056,12 +1072,12 @@ Jump_013_4734::
     call TestFlagBit
     jr c, Jump_013_4743
     ld hl, $6096
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4743::
     ld hl, $60B0
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_474A::
@@ -1070,7 +1086,7 @@ Jump_013_474A::
     ld a, $3A
     ld [wC922], a
     ld de, $00AF
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_475B::
@@ -1079,47 +1095,47 @@ Jump_013_475B::
     or a, a
     jr nz, Jump_013_476D
     ld hl, $60C7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_476D::
     ld hl, $0461
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4774::
     ld hl, $0462
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_477B::
     ld hl, $60CE
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4782::
     ld hl, $04A8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4789::
     ld hl, $04A9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4790::
     ld hl, $60D0
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4797::
     ld hl, $0463
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_479E::
     ld hl, $040E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_47A5::
@@ -1127,12 +1143,12 @@ Jump_013_47A5::
     call TestFlagBit
     jr c, Jump_013_47B4
     ld hl, $60D4
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_47B4::
     ld hl, $040E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_47BB::
@@ -1140,12 +1156,12 @@ Jump_013_47BB::
     call TestFlagBit
     jr c, Jump_013_47CA
     ld hl, $60EA
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_47CA::
     ld hl, $6103
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_47D1::
@@ -1154,7 +1170,7 @@ Jump_013_47D1::
     ld a, $3B
     ld [wC922], a
     ld de, $00B5
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_47E2::
@@ -1162,22 +1178,22 @@ Jump_013_47E2::
     call TestFlagBit
     jr c, Jump_013_47F1
     ld hl, $046D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_47F1::
     ld hl, $049D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_47F8::
     ld hl, $046E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_47FF::
     ld hl, $046F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4806::
@@ -1209,22 +1225,22 @@ Jump_013_4806::
 
 Jump_013_4848::
     ld hl, $0470
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_484F::
     ld hl, $6126
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4856::
     ld hl, $0472
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_485D::
     ld hl, $049E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4864::
@@ -1233,37 +1249,37 @@ Jump_013_4864::
     ld a, $2C
     ld [wC922], a
     ld de, $0200
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_4875::
     ld hl, $6131
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_487C::
     ld hl, $6059
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4883::
     ld hl, $0DE2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_488A::
     ld hl, $0476
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4891::
     ld hl, $0477
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4898::
     ld hl, $0478
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_489F::
@@ -1272,12 +1288,12 @@ Jump_013_489F::
     ld a, $03
     ld [wC922], a
     ld de, $00BC
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_48B0::
     ld hl, $0450
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_48B7::
@@ -1286,7 +1302,7 @@ Jump_013_48B7::
     ld a, $60
     ld [wC922], a
     ld de, $00BD
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_48C8::
@@ -1295,7 +1311,7 @@ Jump_013_48C8::
     ld a, $25
     ld [wC922], a
     ld de, $00BE
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_48D9::
@@ -1304,7 +1320,7 @@ Jump_013_48D9::
     ld a, $45
     ld [wC922], a
     ld de, $00BF
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_48EA::
@@ -1333,7 +1349,7 @@ Jump_013_48EA::
 
 Jump_013_4924::
     ld hl, $0479
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_492B::
@@ -1350,22 +1366,22 @@ Jump_013_492B::
     farcall Func_012_7DCE
     farcall Func_012_7DF1
     ld hl, $6133
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4962::
     ld hl, $614A
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4969::
     ld hl, $6152
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4970::
     ld hl, $6198
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4977::
@@ -1375,22 +1391,22 @@ Jump_013_4977::
     cp a, $70
     ret z
     ld hl, $618B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4987::
     ld hl, $04A6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_498E::
     ld hl, $04A4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4995::
     ld hl, $04A5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_499C::
@@ -1399,12 +1415,12 @@ Jump_013_499C::
     or a, a
     jr nz, Jump_013_49AE
     ld hl, $60C7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_49AE::
     ld hl, $04A0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_49B5::
@@ -1413,19 +1429,22 @@ Jump_013_49B5::
     or a, a
     jr nz, Jump_013_49C7
     ld hl, $60C7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_49C7::
     ld hl, $04A1
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_49CE::
     ld hl, $0413
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC955, hFF90
+; writes: wC955, hFF90, wC8C8, wC8C9, wC55E, wC562, wC8CA, wC914, ...
 Func_013_49D5:: ; heuristic: follows a terminator; C0
     ld a, [wC955]
     or a, a
@@ -1645,22 +1664,22 @@ Jump_013_4A23::
 
 Jump_013_4B7D::
     ld hl, $0300
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4B84::
     ld hl, $0301
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4B8B::
     ld hl, $0302
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4B92::
     ld hl, $0303
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4B99::
@@ -1668,12 +1687,12 @@ Jump_013_4B99::
     call TestFlagBit
     jr c, Jump_013_4BA8
     ld hl, $0304
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BA8::
     ld hl, $0355
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BAF::
@@ -1681,12 +1700,12 @@ Jump_013_4BAF::
     call TestFlagBit
     jr c, Jump_013_4BBE
     ld hl, $0305
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BBE::
     ld hl, $0356
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BC5::
@@ -1694,12 +1713,12 @@ Jump_013_4BC5::
     call TestFlagBit
     jr c, Jump_013_4BD4
     ld hl, $0306
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BD4::
     ld hl, $0357
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BDB::
@@ -1707,17 +1726,17 @@ Jump_013_4BDB::
     call TestFlagBit
     jr c, Jump_013_4BEA
     ld hl, $0307
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BEA::
     ld hl, $0A0B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4BF1::
     ld hl, $5D5B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4BF8::
@@ -1725,12 +1744,12 @@ Jump_013_4BF8::
     call TestFlagBit
     jr c, Jump_013_4C07
     ld hl, $030B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C07::
     ld hl, $0D21
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C0E::
@@ -1738,12 +1757,12 @@ Jump_013_4C0E::
     call TestFlagBit
     jr c, Jump_013_4C1D
     ld hl, $030C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C1D::
     ld hl, $0DF2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C24::
@@ -1757,17 +1776,17 @@ Jump_013_4C24::
     bit 7, a
     jr z, Jump_013_4C43
     ld hl, $030E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C43::
     ld hl, $5D8A
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4C4A::
     ld hl, $031D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C51::
@@ -1775,12 +1794,12 @@ Jump_013_4C51::
     call TestFlagBit
     jr c, Jump_013_4C60
     ld hl, $030F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C60::
     ld hl, $037A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C67::
@@ -1789,12 +1808,12 @@ Jump_013_4C67::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5D68
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4C78::
     ld hl, $0311
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C7F::
@@ -1803,29 +1822,29 @@ Jump_013_4C7F::
     ld a, $2C
     ld [wC922], a
     ld de, $01E6
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_4C90::
     ld hl, $0313
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C97::
     ld hl, $0314
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4C9E::
     ld hl, $5D6F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $10
     ld [wDataBank], a
     ret
 
 Jump_013_4CAA::
     ld hl, $0315
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4CB1::
@@ -1839,12 +1858,12 @@ Jump_013_4CB1::
     call TestFlagBit
     jr c, Jump_013_4CD0
     ld hl, $5D76
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4CD0::
     ld hl, $031B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4CD7::
@@ -1852,12 +1871,12 @@ Jump_013_4CD7::
     call TestFlagBit
     jr c, Jump_013_4CE6
     ld hl, $5FCD
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4CE6::
     ld hl, $5FD2
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4CED::
@@ -1878,22 +1897,22 @@ Jump_013_4CF7::
     call TestFlagBit
     jr c, Jump_013_4D16
     ld hl, $031E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D16::
     ld hl, $0358
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D1D::
     ld hl, $0ABA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D24::
     ld hl, $0379
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D2B::
@@ -1901,12 +1920,12 @@ Jump_013_4D2B::
     call TestFlagBit
     jr c, Jump_013_4D3A
     ld hl, $031F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D3A::
     ld hl, $0377
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D41::
@@ -1914,12 +1933,12 @@ Jump_013_4D41::
     call TestFlagBit
     jr c, Jump_013_4D50
     ld hl, $0320
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D50::
     ld hl, $0378
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D57::
@@ -1936,42 +1955,42 @@ Jump_013_4D57::
     call TestFlagBit
     jr c, Jump_013_4D7E
     ld hl, $5D97
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4D7E::
     ld hl, $0323
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D85::
     ld hl, $5DA6
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4D8C::
     ld hl, $0ABB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D93::
     ld hl, $0376
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4D9A::
     ld hl, $0ABD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DA1::
     ld hl, $0ABE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DA8::
     ld hl, $0ABC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DAF::
@@ -1979,17 +1998,17 @@ Jump_013_4DAF::
     call TestFlagBit
     jr c, Jump_013_4DBE
     ld hl, $0324
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DBE::
     ld hl, $0AC3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DC5::
     ld hl, $0325
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DCC::
@@ -1997,12 +2016,12 @@ Jump_013_4DCC::
     call TestFlagBit
     jr c, Jump_013_4DDB
     ld hl, $0326
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DDB::
     ld hl, $0A0C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DE2::
@@ -2010,17 +2029,17 @@ Jump_013_4DE2::
     call TestFlagBit
     jr c, Jump_013_4DF1
     ld hl, $0327
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DF1::
     ld hl, $0AC4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DF8::
     ld hl, $0328
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4DFF::
@@ -2028,17 +2047,17 @@ Jump_013_4DFF::
     call TestFlagBit
     jr c, Jump_013_4E0E
     ld hl, $0329
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E0E::
     ld hl, $0A0D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E15::
     ld hl, $032A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E1C::
@@ -2046,12 +2065,12 @@ Jump_013_4E1C::
     call TestFlagBit
     jr c, Jump_013_4E2B
     ld hl, $032B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E2B::
     ld hl, $0A0E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E32::
@@ -2059,12 +2078,12 @@ Jump_013_4E32::
     call TestFlagBit
     jr c, Jump_013_4E41
     ld hl, $032C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E41::
     ld hl, $037B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E48::
@@ -2072,17 +2091,17 @@ Jump_013_4E48::
     call TestFlagBit
     jr c, Jump_013_4E57
     ld hl, $032D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E57::
     ld hl, $0DF5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E5E::
     ld hl, $032E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E65::
@@ -2090,17 +2109,17 @@ Jump_013_4E65::
     call TestFlagBit
     jr c, Jump_013_4E74
     ld hl, $032F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E74::
     ld hl, $0DF6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E7B::
     ld hl, $0330
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4E82::
@@ -2109,7 +2128,7 @@ Jump_013_4E82::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5DB0
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4E93::
@@ -2118,7 +2137,7 @@ Jump_013_4E93::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5DB7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4EA4::
@@ -2127,34 +2146,34 @@ Jump_013_4EA4::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5DBE
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4EB5::
     ld a, $1F
     ld [wDataBank], a
     ld hl, $5DCC
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_4EC1::
     ld hl, $0312
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4EC8::
     ld hl, $0D3B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4ECF::
     ld hl, $0314
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4ED6::
     ld hl, $0313
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4EDD::
@@ -2162,17 +2181,17 @@ Jump_013_4EDD::
     call TestFlagBit
     jr c, Jump_013_4EEC
     ld hl, $0334
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4EEC::
     ld hl, $0A0F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4EF3::
     ld hl, $0335
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4EFA::
@@ -2180,12 +2199,12 @@ Jump_013_4EFA::
     call TestFlagBit
     jr c, Jump_013_4F09
     ld hl, $0336
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F09::
     ld hl, $0A10
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F10::
@@ -2193,7 +2212,7 @@ Jump_013_4F10::
     call TestFlagBit
     jr c, Jump_013_4F1F
     ld hl, $0337
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F1F::
@@ -2204,31 +2223,31 @@ Jump_013_4F1F::
     bit 7, a
     jr z, Jump_013_4F3C
     ld hl, $0AE6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $009E
     call SetFlagBit
     ret
 
 Jump_013_4F3C::
     ld hl, $0D20
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F43::
     ld hl, $0ABF
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F4A::
     ld hl, $5DC5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $10
     ld [wDataBank], a
     ret
 
 Jump_013_4F56::
     ld hl, $0338
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F5D::
@@ -2236,12 +2255,12 @@ Jump_013_4F5D::
     call TestFlagBit
     jr c, Jump_013_4F6C
     ld hl, $0339
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F6C::
     ld hl, $034E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F73::
@@ -2252,17 +2271,17 @@ Jump_013_4F73::
     call TestFlagBit
     jr c, Jump_013_4F8A
     ld hl, $033A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F8A::
     ld hl, $034F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F91::
     ld hl, $037C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4F98::
@@ -2273,17 +2292,17 @@ Jump_013_4F98::
     call TestFlagBit
     jr c, Jump_013_4FAF
     ld hl, $033B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FAF::
     ld hl, $0350
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FB6::
     ld hl, $037D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FBD::
@@ -2291,12 +2310,12 @@ Jump_013_4FBD::
     call TestFlagBit
     jr c, Jump_013_4FCC
     ld hl, $033C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FCC::
     ld hl, $0351
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FD3::
@@ -2307,17 +2326,17 @@ Jump_013_4FD3::
     call TestFlagBit
     jr c, Jump_013_4FEA
     ld hl, $033D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FEA::
     ld hl, $0352
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FF1::
     ld hl, $0D1C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_4FF8::
@@ -2328,17 +2347,17 @@ Jump_013_4FF8::
     call TestFlagBit
     jr c, Jump_013_500F
     ld hl, $033E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_500F::
     ld hl, $0353
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5016::
     ld hl, $0D1D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_501D::
@@ -2346,52 +2365,52 @@ Jump_013_501D::
     call TestFlagBit
     jr c, Jump_013_502C
     ld hl, $033F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_502C::
     ld hl, $0354
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5033::
     ld hl, $0340
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_503A::
     ld hl, $0345
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5041::
     ld hl, $0341
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5048::
     ld hl, $0342
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_504F::
     ld hl, $0344
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5056::
     ld hl, $0343
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_505D::
     ld hl, $5DD3
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5064::
     ld hl, $5E02
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_506B::
@@ -2400,7 +2419,7 @@ Jump_013_506B::
     ld a, $40
     ld [wC922], a
     ld de, $0084
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_507C::
@@ -2429,55 +2448,55 @@ Jump_013_507C::
     call TestFlagBit
     jr c, Jump_013_50CA
     ld hl, $035C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0088
     call SetFlagBit
     ret
 
 Jump_013_50CA::
     ld hl, $035D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_50D1::
     ld hl, $0367
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $008C
     call SetFlagBit
     ret
 
 Jump_013_50DE::
     ld hl, $0368
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $008D
     call SetFlagBit
     ret
 
 Jump_013_50EB::
     ld hl, $0369
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $008E
     call SetFlagBit
     ret
 
 Jump_013_50F8::
     ld hl, $036A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_50FF::
     ld hl, $0373
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5106::
     ld hl, $0375
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_510D::
     ld hl, $0AC2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5114::
@@ -2485,29 +2504,29 @@ Jump_013_5114::
     call TestFlagBit
     jr c, Jump_013_5129
     ld hl, $035E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0089
     call SetFlagBit
     ret
 
 Jump_013_5129::
     ld hl, $035F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5130::
     ld hl, $5E2F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5137::
     ld hl, $5E37
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_513E::
     ld hl, $5E5A
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5145::
@@ -2527,45 +2546,45 @@ Jump_013_5145::
     call TestFlagBit
     jr c, Jump_013_517A
     ld hl, $036C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $008F
     call SetFlagBit
     ret
 
 Jump_013_517A::
     ld hl, $036D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0090
     call SetFlagBit
     ret
 
 Jump_013_5187::
     ld hl, $036E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0091
     call SetFlagBit
     ret
 
 Jump_013_5194::
     ld hl, $036F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0092
     call SetFlagBit
     ret
 
 Jump_013_51A1::
     ld hl, $5E67
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_51A8::
     ld hl, $5E77
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_51AF::
     ld hl, $037E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51B6::
@@ -2573,12 +2592,12 @@ Jump_013_51B6::
     call TestFlagBit
     jr c, Jump_013_51C5
     ld hl, $037F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51C5::
     ld hl, $0D3D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51CC::
@@ -2586,17 +2605,17 @@ Jump_013_51CC::
     call TestFlagBit
     jr c, Jump_013_51DB
     ld hl, $0380
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51DB::
     ld hl, $0A11
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51E2::
     ld hl, $0381
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51E9::
@@ -2604,12 +2623,12 @@ Jump_013_51E9::
     call TestFlagBit
     jr c, Jump_013_51F8
     ld hl, $0382
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51F8::
     ld hl, $0DC8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_51FF::
@@ -2617,12 +2636,12 @@ Jump_013_51FF::
     call TestFlagBit
     jr c, Jump_013_520E
     ld hl, $0383
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_520E::
     ld hl, $0A12
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5215::
@@ -2633,17 +2652,17 @@ Jump_013_5215::
     call TestFlagBit
     jr c, Jump_013_522C
     ld hl, $0384
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_522C::
     ld hl, $0AE0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5233::
     ld hl, $0D22
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_523A::
@@ -2651,22 +2670,22 @@ Jump_013_523A::
     call TestFlagBit
     jr c, Jump_013_5249
     ld hl, $0385
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5249::
     ld hl, $0DF3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5250::
     ld hl, $0386
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5257::
     ld hl, $0387
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_525E::
@@ -2674,12 +2693,12 @@ Jump_013_525E::
     call TestFlagBit
     jr c, Jump_013_526D
     ld hl, $0388
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_526D::
     ld hl, $0AE1
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5274::
@@ -2687,12 +2706,12 @@ Jump_013_5274::
     call TestFlagBit
     jr c, Jump_013_5283
     ld hl, $0389
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5283::
     ld hl, $0AE2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_528A::
@@ -2700,17 +2719,17 @@ Jump_013_528A::
     call TestFlagBit
     jr c, Jump_013_5299
     ld hl, $038A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5299::
     ld hl, $0D23
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_52A0::
     ld hl, $0312
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_52A7::
@@ -2719,17 +2738,17 @@ Jump_013_52A7::
     ld a, $2C
     ld [wC922], a
     ld de, $01E7
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_52B8::
     ld hl, $0313
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_52BF::
     ld hl, $5E87
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $10
     ld [wDataBank], a
     ret
@@ -2740,7 +2759,7 @@ Jump_013_52CB::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5E8E
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_52DC::
@@ -2748,37 +2767,37 @@ Jump_013_52DC::
     call TestFlagBit
     jr c, Jump_013_52EB
     ld hl, $038C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_52EB::
     ld hl, $0A13
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_52F2::
     ld hl, $038D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_52F9::
     ld hl, $038E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5300::
     ld hl, $038F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5307::
     ld hl, $0390
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_530E::
     ld hl, $0391
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5315::
@@ -2789,17 +2808,17 @@ Jump_013_5315::
     call TestFlagBit
     jr c, Jump_013_532C
     ld hl, $0392
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_532C::
     ld hl, $0AB9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5333::
     ld hl, $0ACB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_533A::
@@ -2810,17 +2829,17 @@ Jump_013_533A::
     call TestFlagBit
     jr c, Jump_013_5351
     ld hl, $0393
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5351::
     ld hl, $0D1E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5358::
     ld hl, $0ADE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_535F::
@@ -2831,22 +2850,22 @@ Jump_013_535F::
     call TestFlagBit
     jr c, Jump_013_5376
     ld hl, $5E95
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5376::
     ld hl, $0394
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_537D::
     ld hl, $0ADF
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5384::
     ld hl, $0397
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_538B::
@@ -2854,17 +2873,17 @@ Jump_013_538B::
     call TestFlagBit
     jr c, Jump_013_539A
     ld hl, $0398
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_539A::
     ld hl, $0AD8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53A1::
     ld hl, $0399
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53A8::
@@ -2872,12 +2891,12 @@ Jump_013_53A8::
     call TestFlagBit
     jr c, Jump_013_53B7
     ld hl, $039A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53B7::
     ld hl, $0DE1
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53BE::
@@ -2885,12 +2904,12 @@ Jump_013_53BE::
     call TestFlagBit
     jr c, Jump_013_53CD
     ld hl, $039B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53CD::
     ld hl, $0AD9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53D4::
@@ -2898,12 +2917,12 @@ Jump_013_53D4::
     cp a, $30
     jr nz, Jump_013_53E1
     ld hl, $0ADA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53E1::
     ld hl, $039C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_53E8::
@@ -2920,7 +2939,7 @@ Jump_013_53E8::
     cp a, $50
     jr nz, Jump_013_540E
     ld hl, $039D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_540E::
@@ -2932,37 +2951,37 @@ Jump_013_540E::
     or a, a
     jr nz, Jump_013_5428
     ld hl, $5EE6
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5428::
     ld hl, $039E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_542F::
     ld hl, $039F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5436::
     ld hl, $03A5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_543D::
     ld hl, $0ACD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5444::
     ld hl, $0ADB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_544B::
     ld hl, $5EF5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5452::
@@ -2973,17 +2992,17 @@ Jump_013_5452::
     call TestFlagBit
     jr c, Jump_013_5469
     ld hl, $03A4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5469::
     ld hl, $0ACC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5470::
     ld hl, $0ADC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5477::
@@ -3002,7 +3021,7 @@ Jump_013_5477::
 
 Jump_013_5497::
     ld hl, $03A3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_549E::
@@ -3013,27 +3032,27 @@ Jump_013_549E::
     bit 7, a
     jr nz, Jump_013_5497
     ld hl, $5FA5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_54B5::
     ld hl, $5FAD
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_54BC::
     ld hl, $0AD7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_54C3::
     ld hl, $0AC5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_54CA::
     ld hl, $03A6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_54D1::
@@ -3041,12 +3060,12 @@ Jump_013_54D1::
     call TestFlagBit
     jr c, Jump_013_54E0
     ld hl, $03A7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_54E0::
     ld hl, $0AC6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_54E7::
@@ -3054,12 +3073,12 @@ Jump_013_54E7::
     call TestFlagBit
     jr c, Jump_013_54F6
     ld hl, $03A8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_54F6::
     ld hl, $0A14
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_54FD::
@@ -3067,12 +3086,12 @@ Jump_013_54FD::
     call TestFlagBit
     jr c, Jump_013_550C
     ld hl, $03A9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_550C::
     ld hl, $0AC7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5513::
@@ -3080,17 +3099,17 @@ Jump_013_5513::
     call TestFlagBit
     jr c, Jump_013_5522
     ld hl, $03AA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5522::
     ld hl, $0DF4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5529::
     ld hl, $03AB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5530::
@@ -3098,12 +3117,12 @@ Jump_013_5530::
     call TestFlagBit
     jr c, Jump_013_553F
     ld hl, $03AE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_553F::
     ld hl, $0A00
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5546::
@@ -3111,17 +3130,17 @@ Jump_013_5546::
     call TestFlagBit
     jr c, Jump_013_5555
     ld hl, $03AD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5555::
     ld hl, $0AFF
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_555C::
     ld hl, $03AF
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5563::
@@ -3135,7 +3154,7 @@ Jump_013_5563::
     bit 7, a
     jr z, Jump_013_5582
     ld hl, $03B0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5582::
@@ -3143,17 +3162,17 @@ Jump_013_5582::
     cp a, $41
     jr nc, Jump_013_558F
     ld hl, $5F26
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_558F::
     ld hl, $5F38
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5596::
     ld hl, $03B2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_559D::
@@ -3162,7 +3181,7 @@ Jump_013_559D::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5F0B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_55AE::
@@ -3170,17 +3189,17 @@ Jump_013_55AE::
     call TestFlagBit
     jr c, Jump_013_55BD
     ld hl, $03B4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_55BD::
     ld hl, $0A15
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_55C4::
     ld hl, $5F12
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Data_013_55CB:: ; heuristic: target of a monotone pointer table; C0
@@ -3222,6 +3241,7 @@ Data_013_564A:: ; heuristic: target of a monotone pointer table; C0
     db $11, $E2, $01, $CD, $1B, $18, $38, $07, $21, $D6, $0D, $CD, $01, $40, $C9, $21
     db $FC, $0A, $CD, $01, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_5660:: ; heuristic: target of a pointer table; C0
     ld de, $01E2
     call TestFlagBit
@@ -3230,19 +3250,22 @@ Func_013_5660:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_5677
     ld hl, $0DD7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5677::
     ld hl, $0DC9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_567E::
     ld hl, $0AFD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
 Func_013_5685:: ; heuristic: target of a pointer table; C0
     ld de, $01E2
     call TestFlagBit
@@ -3262,12 +3285,12 @@ Func_013_5685:: ; heuristic: target of a pointer table; C0
 
 Jump_013_56AD::
     ld hl, $0DD8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_56B4::
     ld hl, $0AE4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_56BB::
@@ -3281,24 +3304,25 @@ Jump_013_56BB::
     bit 7, a
     jr nz, Jump_013_56B4
     ld hl, $5FB8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_56DA::
     ld hl, $0AF8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_56E1::
     ld hl, $0AF9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_56E8::
     ld hl, $0AFA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_56EF:: ; heuristic: target of a pointer table; C0
     ld de, $01E5
     call TestFlagBit
@@ -3309,14 +3333,15 @@ Func_013_56EF:: ; heuristic: target of a pointer table; C0
 
 Jump_013_56FF::
     ld hl, $0DD9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5706::
     ld hl, $0AE5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_570D:: ; heuristic: target of a pointer table; C0
     ld de, $01E2
     call TestFlagBit
@@ -3325,19 +3350,21 @@ Func_013_570D:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_5724
     ld hl, $0DDA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5724::
     ld hl, $0D1F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_572B::
     ld hl, $0AFE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wCB86
 Func_013_5732:: ; heuristic: target of a pointer table; C0
     ld de, $01E5
     call TestFlagBit
@@ -3352,7 +3379,7 @@ Func_013_5732:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_5759
     ld hl, $0DDB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5759::
@@ -3364,17 +3391,17 @@ Jump_013_575E::
     xor a, a
     ld [wCB86], a
     ld hl, $5FCB
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5769::
     ld hl, $0AF7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5770::
     ld hl, $0DE0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Data_013_5777:: ; heuristic: target of a monotone pointer table; C0
@@ -3433,82 +3460,98 @@ Data_013_5894:: ; heuristic: target of a monotone pointer table; C0
     db $3E, $32, $E0, $C6, $21, $CE, $7D, $06, $12, $D7, $21, $F1, $7D, $06, $12, $D7
     db $21, $D4, $5F, $CD, $49, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_58AB:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $25
     ld [wC922], a
     ld de, $01E9
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_58BC:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $41
     ld [wC922], a
     ld de, $01EA
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_58CD:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $52
     ld [wC922], a
     ld de, $01EB
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_58DE:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $17
     ld [wC922], a
     ld de, $01EC
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_58EF:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $23
     ld [wC922], a
     ld de, $01ED
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_5900:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $5D
     ld [wC922], a
     ld de, $01EE
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_5911:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $5B
     ld [wC922], a
     ld de, $01EF
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_5922:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $1E
     ld [wC922], a
     ld de, $01F0
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
     db $21, $C9, $5F, $CD, $49, $40, $C9
 
 Jump_013_593A::
     ld hl, $512D
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5941::
@@ -3757,7 +3800,7 @@ Jump_013_5B33::
 
 Jump_013_5B34::
     ld hl, $5895
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5B3B::
@@ -3786,12 +3829,12 @@ Jump_013_5B3B::
     call TestFlagBit
     jr c, Jump_013_5B86
     ld hl, $4FA4
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5B86::
     ld hl, $0022
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5B8D::
@@ -3802,14 +3845,14 @@ Jump_013_5B8D::
     ldh [hFFC6], a
     farcall Func_012_6B98
     ld hl, $4FAF
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $000D
     call SetFlagBit
     ret
 
 Jump_013_5BAC::
     ld hl, $006C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5BB3::
@@ -3821,13 +3864,13 @@ Jump_013_5BB3::
 
 Jump_013_5BC0::
     ld hl, $0102
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5BC7::
     ld [hl], $01
     ld hl, $5175
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5BD0::
@@ -3842,7 +3885,7 @@ Jump_013_5BD6::
 
 Jump_013_5BD8::
     ld hl, $0500
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5BDF::
@@ -3856,16 +3899,19 @@ Jump_013_5BDF::
     call TestFlagBit
     jr c, Jump_013_5C04
     ld hl, $0D91
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $018A
     call SetFlagBit
     ret
 
 Jump_013_5C04::
     ld hl, $0B00
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; 1 call site from 1 routine (e.g. Func_013_5922)
+; reads: hFFC6
+; writes: hFFC6
 Func_013_5C0B::
     ld de, $0182
     call TestFlagBit
@@ -3877,7 +3923,7 @@ Func_013_5C0B::
     call TestFlagBit
     jr c, Jump_013_5C36
     ld hl, $517F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0104
     call SetFlagBit
     ld de, $0180
@@ -3892,20 +3938,20 @@ Jump_013_5C36::
     bit 7, a
     jr z, Jump_013_5C4D
     ld hl, $0202
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5C4D::
     farcall Func_012_7DF1
     ld hl, $522B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0181
     call SetFlagBit
     ret
 
 Jump_013_5C60::
     ld hl, $0214
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0182
     call SetFlagBit
     ret
@@ -3918,7 +3964,7 @@ Jump_013_5C6D::
     call TestFlagBit
     jr c, Jump_013_5C84
     ld hl, $5189
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5C84::
@@ -3929,12 +3975,12 @@ Jump_013_5C84::
     bit 7, a
     jr z, Jump_013_5C9B
     ld hl, $08A5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5C9B::
     ld hl, $519F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     farcall Func_012_7DF1
     ret
 
@@ -3946,7 +3992,7 @@ Jump_013_5CA8::
     call TestFlagBit
     jr c, Jump_013_5CBF
     ld hl, $51A9
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5CBF::
@@ -3957,12 +4003,12 @@ Jump_013_5CBF::
     bit 7, a
     jr z, Jump_013_5CD6
     ld hl, $08AA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5CD6::
     ld hl, $51BF
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     farcall Func_012_7DF1
     ret
 
@@ -3971,7 +4017,7 @@ Jump_013_5CE3::
     call TestFlagBit
     jr c, Jump_013_5CF2
     ld hl, $0205
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5CF2::
@@ -3985,12 +4031,12 @@ Jump_013_5CF2::
     call TestFlagBit
     jr c, Jump_013_5D11
     ld hl, $51F5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5D11::
     ld hl, $520B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5D18::
@@ -4001,23 +4047,23 @@ Jump_013_5D18::
     bit 7, a
     jr z, Jump_013_5D2F
     ld hl, $0A27
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5D2F::
     farcall Func_012_7DF1
     ld hl, $5221
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5D3C::
     ld hl, $0A2A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5D43::
     ld hl, $0023
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5D4A::
@@ -4025,7 +4071,7 @@ Jump_013_5D4A::
     call TestFlagBit
     jr c, Jump_013_5D59
     ld hl, $001B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5D59::
@@ -4033,22 +4079,22 @@ Jump_013_5D59::
     call TestFlagBit
     jr c, Jump_013_5D68
     ld hl, $596B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5D68::
     ld hl, $597B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5D6F::
     ld hl, $0026
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5D76::
     ld hl, $0027
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5D7D::
@@ -4083,7 +4129,7 @@ Jump_013_5D7D::
     call TestFlagBit
     jr c, Jump_013_5DDA
     ld hl, $0016
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5DDA::
@@ -4091,17 +4137,17 @@ Jump_013_5DDA::
     call TestFlagBit
     jr c, Jump_013_5DE9
     ld hl, $4FB7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5DE9::
     ld hl, $4FD0
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5DF0::
     ld hl, $002E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5DF7::
@@ -4109,17 +4155,17 @@ Jump_013_5DF7::
     call TestFlagBit
     jr c, Jump_013_5E06
     ld hl, $4FE8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5E06::
     ld hl, $4FF7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5E0D::
     ld hl, $0064
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E14::
@@ -4129,13 +4175,13 @@ Jump_013_5E14::
     call Func_013_7F94
     jr c, Jump_013_5E28
     ld hl, $0107
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E28::
     ld [hl], $1A
     ld hl, $52DC
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0100
     call SetFlagBit
     ret
@@ -4145,7 +4191,7 @@ Jump_013_5E37::
     cp a, $02
     jr nc, Jump_013_5E45
     ld hl, $0107
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E45::
@@ -4153,19 +4199,19 @@ Jump_013_5E45::
     call TestFlagBit
     jr c, Jump_013_5E5A
     ld hl, $0108
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0101
     call SetFlagBit
     ret
 
 Jump_013_5E5A::
     ld hl, $0109
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E61::
     ld hl, $0204
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E68::
@@ -4174,12 +4220,12 @@ Jump_013_5E68::
 
 Jump_013_5E6C::
     ld hl, $0A2B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E73::
     ld hl, $0501
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E7A::
@@ -4191,61 +4237,61 @@ Jump_013_5E7A::
     cp a, $14
     jr nc, Jump_013_5E93
     ld hl, $0B01
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E93::
     cp a, $1E
     jr nc, Jump_013_5E9E
     ld hl, $0DE7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5E9E::
     cp a, $28
     jr nc, Jump_013_5EA9
     ld hl, $0DE8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5EA9::
     cp a, $32
     jr nc, Jump_013_5EB4
     ld hl, $0DE9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5EB4::
     cp a, $64
     jr nc, Jump_013_5EBF
     ld hl, $0DEA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5EBF::
     cp a, $96
     jr nc, Jump_013_5ECA
     ld hl, $0DEB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5ECA::
     cp a, $C8
     jr nc, Jump_013_5ED5
     ld hl, $0DEC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5ED5::
     cp a, $FA
     jr nc, Jump_013_5EE0
     ld hl, $0DED
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5EE0::
     ld hl, $0DEE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5EE7::
@@ -4253,9 +4299,12 @@ Jump_013_5EE7::
     cp a, $38
     jr c, Jump_013_5EE0
     ld hl, $0DEF
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; 1 call site from 1 routine (e.g. Func_013_5C0B)
+; reads: hFFC6, wC6FD, wC634
+; writes: hFFC6, hFFC7
 Func_013_5EF4::
     ld de, $0191
     call TestFlagBit
@@ -4264,7 +4313,7 @@ Func_013_5EF4::
     call TestFlagBit
     jr c, Jump_013_5F0C
     ld hl, $52E3
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5F0C::
@@ -4278,7 +4327,7 @@ Jump_013_5F0C::
     bit 7, a
     jr z, Jump_013_5F28
     ld hl, $52E3
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5F28::
@@ -4294,27 +4343,27 @@ Jump_013_5F28::
     or a, a
     jr z, Jump_013_5F47
     ld hl, $530D
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5F47::
     ld hl, $5324
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5F4E::
     ld hl, $52F3
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_5F55::
     ld hl, $08B2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5F5C::
     ld hl, $08B6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5F63::
@@ -4325,19 +4374,19 @@ Jump_013_5F63::
     call TestFlagBit
     jr c, Jump_013_5F80
     ld hl, $0017
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0004
     call SetFlagBit
     ret
 
 Jump_013_5F80::
     ld hl, $0018
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5F87::
     ld hl, $0065
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5F8E::
@@ -4354,27 +4403,27 @@ Jump_013_5F8E::
     call TestFlagBit
     jr c, Jump_013_5FB6
     ld hl, $0019
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5FB6::
     ld hl, $002F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5FBD::
     ld hl, $0066
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5FC4::
     ld hl, $010A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5FCB::
     ld hl, $0B08
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_5FD2::
@@ -4397,7 +4446,7 @@ Jump_013_5FD2::
     call TestFlagBit
     jr c, Jump_013_6009
     ld hl, $0032
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6009::
@@ -4405,39 +4454,39 @@ Jump_013_6009::
     call TestFlagBit
     jr c, Jump_013_601E
     ld hl, $0068
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0010
     call SetFlagBit
     ret
 
 Jump_013_601E::
     ld hl, $0069
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6025::
     ld hl, $010C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_602C::
     ld hl, $020B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6033::
     ld hl, $0505
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_603A::
     ld hl, $053F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6041::
     ld hl, $0B0D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6048::
@@ -4460,39 +4509,39 @@ Jump_013_6048::
     call TestFlagBit
     jr c, Jump_013_607F
     ld hl, $003C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_607F::
     ld hl, $4F66
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6086::
     ld hl, $0073
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $000F
     call SetFlagBit
     ret
 
 Jump_013_6093::
     ld hl, $011B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_609A::
     ld hl, $0D0D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_60A1::
     ld hl, $0D30
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_60A8::
     ld hl, $0D88
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_60AF::
@@ -4515,37 +4564,37 @@ Jump_013_60AF::
     call TestFlagBit
     jr c, Jump_013_60E6
     ld hl, $0040
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_60E6::
     ld hl, $0072
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_60ED::
     ld hl, $011A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_60F4::
     ld hl, $08CE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_60FB::
     ld hl, $050C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6102::
     ld hl, $0541
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6109::
     ld hl, $0B11
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6110::
@@ -4559,7 +4608,7 @@ Jump_013_6116::
     set 6, a
     ld [wC836], a
     ld hl, $00FD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6127::
@@ -4576,27 +4625,27 @@ Jump_013_6127::
     call TestFlagBit
     jr c, Jump_013_614E
     ld hl, $0034
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_614E::
     ld hl, $0074
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6155::
     ld hl, $0114
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_615C::
     ld hl, $020C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6163::
     ld hl, $0B19
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_616A::
@@ -4607,17 +4656,17 @@ Jump_013_616A::
     call TestFlagBit
     jr c, Jump_013_6181
     ld hl, $020F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6181::
     ld hl, $0507
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6188::
     ld hl, $0B18
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_618F::
@@ -4634,7 +4683,7 @@ Jump_013_618F::
     call TestFlagBit
     jr c, Jump_013_61B6
     ld hl, $003A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_61B6::
@@ -4645,14 +4694,14 @@ Jump_013_61B6::
     set 0, a
     ld [wCC37], a
     ld hl, $0077
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0011
     call SetFlagBit
     ret
 
 Jump_013_61D3::
     ld hl, $0078
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_61DA::
@@ -4660,19 +4709,19 @@ Jump_013_61DA::
     call TestFlagBit
     jr c, Jump_013_61EF
     ld hl, $08C1
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $010B
     call SetFlagBit
     ret
 
 Jump_013_61EF::
     ld hl, $08C2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_61F6::
     ld hl, $0506
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_61FD::
@@ -4684,12 +4733,12 @@ Jump_013_61FD::
     call TestFlagBit
     jr c, Jump_013_6216
     ld hl, Data_010_57ED
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6216::
     ld hl, $57F7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_621D::
@@ -4706,17 +4755,17 @@ Jump_013_621D::
     call TestFlagBit
     jr c, Jump_013_6244
     ld hl, $0035
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6244::
     ld hl, $0075
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_624B::
     ld hl, $0115
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6252::
@@ -4731,7 +4780,7 @@ Jump_013_6252::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_533E
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0106
     call SetFlagBit
     ret
@@ -4742,7 +4791,7 @@ Jump_013_6279::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5345
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_628A::
@@ -4754,7 +4803,7 @@ Jump_013_628A::
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_534C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $00CE
     call SetFlagBit
     ret
@@ -4776,37 +4825,37 @@ Jump_013_62A9::
     call TestFlagBit
     jr c, Jump_013_62D8
     ld hl, $003B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_62D8::
     ld hl, $006D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_62DF::
     ld hl, $0116
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_62E6::
     ld hl, $0D0E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_62ED::
     ld hl, $0540
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_62F4::
     ld hl, $0B0F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_62FB::
     ld hl, $0038
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6302::
@@ -4817,17 +4866,17 @@ Jump_013_6302::
     call TestFlagBit
     jr c, Jump_013_6319
     ld hl, $0041
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6319::
     ld hl, $0070
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6320::
     ld hl, $0119
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6327::
@@ -4853,42 +4902,42 @@ Jump_013_6327::
     call TestFlagBit
     jr c, Jump_013_6366
     ld hl, $003D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6366::
     ld hl, $006E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_636D::
     ld hl, $0117
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6374::
     ld hl, $0210
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_637B::
     ld hl, $08C3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6382::
     ld hl, $0508
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6389::
     ld hl, $0542
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6390::
     ld hl, $0B1A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6397::
@@ -4914,42 +4963,42 @@ Jump_013_6397::
     call TestFlagBit
     jr c, Jump_013_63D6
     ld hl, $003F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_63D6::
     ld hl, $0052
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_63DD::
     ld hl, $006F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_63E4::
     ld hl, $0118
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_63EB::
     ld hl, $0211
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_63F2::
     ld hl, $08C4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_63F9::
     ld hl, $0509
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6400::
     ld hl, $0B1B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6407::
@@ -4957,7 +5006,7 @@ Jump_013_6407::
     call TestFlagBit
     jr c, Jump_013_641C
     ld hl, $004A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0009
     call SetFlagBit
     ret
@@ -4972,12 +5021,12 @@ Jump_013_641C::
 
 Jump_013_642A::
     ld hl, $004B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6431::
     ld hl, $004F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6438::
@@ -4985,7 +5034,7 @@ Jump_013_6438::
     cp a, $02
     jr nz, Jump_013_642A
     ld hl, $4F8D
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B98
@@ -5002,14 +5051,14 @@ Jump_013_645F::
     call TestFlagBit
     jr c, Jump_013_6474
     ld hl, $0048
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0008
     call SetFlagBit
     ret
 
 Jump_013_6474::
     ld hl, $0049
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_647B::
@@ -5046,7 +5095,7 @@ Jump_013_647B::
 
 Jump_013_64CF::
     ld hl, $005F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_64D6::
@@ -5057,22 +5106,22 @@ Jump_013_64D6::
     call TestFlagBit
     jr c, Jump_013_64EF
     ld hl, $5006
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_64EF::
     ld hl, $5029
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_64F6::
     ld hl, $0082
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_64FD::
     ld hl, $536E
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6504::
@@ -5083,12 +5132,12 @@ Jump_013_6504::
     call TestFlagBit
     jr c, Jump_013_651B
     ld hl, $029E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_651B::
     ld hl, $02A4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $01A0
     call SetFlagBit
     ret
@@ -5102,12 +5151,12 @@ Jump_013_652F::
     call TestFlagBit
     jr c, Jump_013_6546
     ld hl, $0D1A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6546::
     ld hl, $0D1B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $01A1
     call SetFlagBit
     ret
@@ -5120,12 +5169,12 @@ Jump_013_6553::
     call TestFlagBit
     jr c, Jump_013_656A
     ld hl, $0D2A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_656A::
     ld hl, $0D2B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $01A2
     call SetFlagBit
     ret
@@ -5140,17 +5189,17 @@ Jump_013_6577::
     cp a, $FF
     jr z, Jump_013_6590
     ld hl, $53AD
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6590::
     ld hl, $53BA
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6597::
     ld hl, $0532
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_659E::
@@ -5172,7 +5221,7 @@ Jump_013_659E::
 
 Jump_013_65C3::
     ld hl, $53D0
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_65CA::
@@ -5182,22 +5231,22 @@ Jump_013_65CA::
 
 Jump_013_65D0::
     ld hl, $53CE
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_65D7::
     ld hl, $0B26
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_65DE::
     ld hl, $0B2D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_65E5::
     ld hl, $0BA8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_65EC::
@@ -5214,17 +5263,17 @@ Jump_013_65EC::
     call TestFlagBit
     jr c, Jump_013_6613
     ld hl, $001A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6613::
     ld hl, $0067
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_661A::
     ld hl, $010B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6621::
@@ -5232,7 +5281,7 @@ Jump_013_6621::
     call TestFlagBit
     jr c, Jump_013_6630
     ld hl, $0203
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6630::
@@ -5240,17 +5289,17 @@ Jump_013_6630::
     call TestFlagBit
     jr c, Jump_013_663F
     ld hl, $0215
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_663F::
     ld hl, $08AE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6646::
     ld hl, $0B04
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_664D::
@@ -5275,7 +5324,7 @@ Jump_013_664D::
     call TestFlagBit
     jr c, Jump_013_668C
     ld hl, $0103
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_668C::
@@ -5283,12 +5332,12 @@ Jump_013_668C::
     call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5256
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_669B::
     ld hl, $5260
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_66A2::
@@ -5296,7 +5345,7 @@ Jump_013_66A2::
     call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5267
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_66B1::
@@ -5304,7 +5353,7 @@ Jump_013_66B1::
     call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5271
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_66C0::
@@ -5312,7 +5361,7 @@ Jump_013_66C0::
     call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $527B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_66CF::
@@ -5320,7 +5369,7 @@ Jump_013_66CF::
     call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5285
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_66DE::
@@ -5328,7 +5377,7 @@ Jump_013_66DE::
     call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $528F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_66ED::
@@ -5353,7 +5402,7 @@ Jump_013_66ED::
     call TestFlagBit
     jr c, Jump_013_672C
     ld hl, $0104
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_672C::
@@ -5361,12 +5410,12 @@ Jump_013_672C::
     call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $5299
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_673B::
     ld hl, $52A3
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6742::
@@ -5374,7 +5423,7 @@ Jump_013_6742::
     call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52AA
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6751::
@@ -5382,7 +5431,7 @@ Jump_013_6751::
     call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52B4
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6760::
@@ -5390,7 +5439,7 @@ Jump_013_6760::
     call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52BE
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_676F::
@@ -5398,7 +5447,7 @@ Jump_013_676F::
     call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52C8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_677E::
@@ -5406,7 +5455,7 @@ Jump_013_677E::
     call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52D2
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_678D::
@@ -5414,12 +5463,12 @@ Jump_013_678D::
     call TestFlagBit
     jr c, Jump_013_679C
     ld hl, $011E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_679C::
     ld hl, $0B1D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_67A3::
@@ -5430,22 +5479,22 @@ Jump_013_67A3::
     call TestFlagBit
     jp c, Jump_013_67BB
     ld hl, $021F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_67BB::
     ld hl, $0DE5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_67C2::
     ld hl, $0B14
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_67C9::
     ld hl, $04D0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_67D0::
@@ -5467,17 +5516,17 @@ Jump_013_67D0::
 
 Jump_013_67F8::
     ld hl, $003E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_67FF::
     ld hl, $0071
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6806::
     ld hl, $021B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_680D::
@@ -5485,12 +5534,12 @@ Jump_013_680D::
     call TestFlagBit
     jr c, Jump_013_681C
     ld hl, $53D2
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_681C::
     ld hl, $0A3D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6823::
@@ -5498,7 +5547,7 @@ Jump_013_6823::
     call TestFlagBit
     jr c, Jump_013_681C
     ld hl, $53FA
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6832::
@@ -5509,19 +5558,19 @@ Jump_013_6832::
     call TestFlagBit
     jr c, Jump_013_684F
     ld hl, $5418
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0107
     call SetFlagBit
     ret
 
 Jump_013_684F::
     ld hl, $021E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6856::
     ld hl, $0B10
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_685D::
@@ -5529,12 +5578,12 @@ Jump_013_685D::
     call TestFlagBit
     jr c, Jump_013_686C
     ld hl, $021C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_686C::
     ld hl, $0B0E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6873::
@@ -5545,17 +5594,17 @@ Jump_013_6873::
     call TestFlagBit
     jr c, Jump_013_688A
     ld hl, $0221
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_688A::
     ld hl, $0521
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6891::
     ld hl, $0B2F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6898::
@@ -5566,17 +5615,17 @@ Jump_013_6898::
     call TestFlagBit
     jr c, Jump_013_68AF
     ld hl, $0222
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_68AF::
     ld hl, $0522
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_68B6::
     ld hl, $0B30
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_68BD::
@@ -5589,17 +5638,17 @@ Jump_013_68BD::
 
 Jump_013_68CD::
     ld hl, $0223
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_68D4::
     ld hl, $0543
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_68DB::
     ld hl, $0224
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_68E2::
@@ -5627,17 +5676,17 @@ Jump_013_68E2::
 
 Jump_013_6915::
     ld hl, $0263
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_691C::
     ld hl, $5422
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6923::
     ld hl, $0267
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_692A::
@@ -5645,52 +5694,52 @@ Jump_013_692A::
     call TestFlagBit
     jr c, Jump_013_6939
     ld hl, $0D32
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6939::
     ld hl, $0528
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6940::
     ld hl, $5433
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6947::
     ld hl, $0D8C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_694E::
     ld hl, $0D8D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6955::
     ld hl, $022D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_695C::
     ld hl, $5476
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6963::
     ld hl, $022C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_696A::
     ld hl, $0005
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6971::
     ld hl, $0006
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6978::
@@ -5699,7 +5748,7 @@ Jump_013_6978::
     jr c, Jump_013_6988
     ld l, $04
     ld h, $00
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6988::
@@ -5707,17 +5756,17 @@ Jump_013_6988::
     or a, a
     jr z, Jump_013_6994
     ld hl, $50DB
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6994::
     ld hl, $50F6
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_699B::
     ld hl, $5120
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_69A2::
@@ -5725,12 +5774,12 @@ Jump_013_69A2::
     call TestFlagBit
     jr c, Jump_013_69B1
     ld hl, $000A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_69B1::
     ld hl, $000E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_69B8::
@@ -5742,14 +5791,14 @@ Jump_013_69B8::
     add a, $0B
     ld l, a
     ld h, $00
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0013
     call SetFlagBit
     ret
 
 Jump_013_69D3::
     ld hl, $000D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_69DA::
@@ -5758,7 +5807,7 @@ Jump_013_69DA::
     cp a, $FF
     jr nz, Jump_013_69EE
     ld hl, $0D62
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_69EE::
@@ -5767,7 +5816,7 @@ Jump_013_69EE::
     add a, $63
     ld l, a
     ld h, $0D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld a, [wC916]
     sub a, $33
     add a, $06
@@ -5781,12 +5830,12 @@ Jump_013_69EE::
 
 Jump_013_6A14::
     ld hl, $0BAC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A1B::
     ld hl, $0D84
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A22::
@@ -5797,17 +5846,17 @@ Jump_013_6A22::
     call TestFlagBit
     jr c, Jump_013_6A39
     ld hl, $023F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A39::
     ld hl, $0523
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A40::
     ld hl, $0D8B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A47::
@@ -5818,17 +5867,17 @@ Jump_013_6A47::
     call TestFlagBit
     jr c, Jump_013_6A5E
     ld hl, $0240
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A5E::
     ld hl, $0524
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A65::
     ld hl, $0B31
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A6C::
@@ -5836,27 +5885,27 @@ Jump_013_6A6C::
     call TestFlagBit
     jr c, Jump_013_6A7B
     ld hl, $0241
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A7B::
     ld hl, $0B32
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A82::
     ld hl, $0243
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A89::
     ld hl, $0244
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A90::
     ld hl, $0245
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6A97::
@@ -5867,32 +5916,32 @@ Jump_013_6A97::
     call TestFlagBit
     jr c, Jump_013_6AAE
     ld hl, $5483
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6AAE::
     ld hl, $0526
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6AB5::
     ld hl, $0B42
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6ABC::
     ld hl, $0249
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6AC3::
     ld hl, $0256
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6ACA::
     ld hl, $02B0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6AD1::
@@ -5903,12 +5952,12 @@ Jump_013_6AD1::
     call TestFlagBit
     jr c, Jump_013_6AE8
     ld hl, $5490
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6AE8::
     ld hl, $0525
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6AEF::
@@ -5920,7 +5969,7 @@ Jump_013_6AEF::
     cp a, $FF
     jr nz, Jump_013_6B0B
     ld hl, $0B44
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B0B::
@@ -5932,24 +5981,24 @@ Jump_013_6B0B::
     ldh [hFFC9], a
     farcall Func_001_6E46
     ld hl, $0B43
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $00CD
     call SetFlagBit
     ret
 
 Jump_013_6B2B::
     ld hl, $0B45
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B32::
     ld hl, $025A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B39::
     ld hl, $025B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B40::
@@ -5957,7 +6006,7 @@ Jump_013_6B40::
     call TestFlagBit
     ret nc
     ld hl, $0314
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B4E::
@@ -5967,34 +6016,34 @@ Jump_013_6B4E::
     call TestFlagBit
     jr c, Jump_013_6B68
     ld hl, Data_096_549D
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0111
     call SetFlagBit
     ret
 
 Jump_013_6B68::
     ld hl, $54A4
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6B6F::
     ld hl, $04C5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B76::
     ld hl, $04C6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B7D::
     ld hl, $04C7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B84::
     ld hl, $08C0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6B8B::
@@ -6010,12 +6059,12 @@ Jump_013_6B8B::
     or a, a
     jr z, Jump_013_6BAC
     ld hl, $0D4A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6BAC::
     ld hl, $599F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $2C
     ld [wC928], a
     farcall Func_05F_6C8C
@@ -6026,12 +6075,12 @@ Jump_013_6BBE::
     call TestFlagBit
     jr c, Jump_013_6BCD
     ld hl, $08BB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6BCD::
     ld hl, $0D87
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6BD4::
@@ -6039,7 +6088,7 @@ Jump_013_6BD4::
     call TestFlagBit
     jr c, Jump_013_6BEE
     ld hl, $54AB
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $1D
     ld [wDataBank], a
     ld de, $010A
@@ -6048,49 +6097,49 @@ Jump_013_6BD4::
 
 Jump_013_6BEE::
     ld hl, $54B2
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $1D
     ld [wDataBank], a
     ret
 
 Jump_013_6BFA::
     ld hl, $0A50
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C01::
     ld hl, $0A52
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C08::
     ld hl, $0A53
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C0F::
     ld hl, $0A59
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C16::
     ld hl, $54B9
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6C1D::
     ld hl, $54C0
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6C24::
     ld hl, $0A5D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C2B::
     ld hl, $54C7
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6C32::
@@ -6098,12 +6147,12 @@ Jump_013_6C32::
     call TestFlagBit
     jr c, Jump_013_6C41
     ld hl, $0292
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C41::
     ld hl, $0B79
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C48::
@@ -6111,47 +6160,47 @@ Jump_013_6C48::
     call TestFlagBit
     jr c, Jump_013_6C57
     ld hl, $027D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C57::
     ld hl, $0B75
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C5E::
     ld hl, $027E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C65::
     ld hl, $028C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C6C::
     ld hl, $028D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C73::
     ld hl, $028E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C7A::
     ld hl, $0287
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C81::
     ld hl, $0286
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C88::
     ld hl, $028F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C8F::
@@ -6159,22 +6208,22 @@ Jump_013_6C8F::
     call TestFlagBit
     jr c, Jump_013_6C9E
     ld hl, $0294
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6C9E::
     ld hl, $0B7A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6CA5::
     ld hl, $0290
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6CAC::
     ld hl, $0291
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6CB3::
@@ -6185,12 +6234,12 @@ Jump_013_6CB3::
     call TestFlagBit
     jr c, Jump_013_6CC8
     ld hl, $54CE
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6CC8::
     ld hl, $550F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6CCF::
@@ -6200,12 +6249,12 @@ Jump_013_6CCF::
     call TestFlagBit
     jr c, Jump_013_6CE1
     ld hl, $54DB
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6CE1::
     ld hl, $551C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6CE8::
@@ -6215,12 +6264,12 @@ Jump_013_6CE8::
     call TestFlagBit
     jr c, Jump_013_6CFA
     ld hl, $54E8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6CFA::
     ld hl, $5529
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6D01::
@@ -6230,12 +6279,12 @@ Jump_013_6D01::
     call TestFlagBit
     jr c, Jump_013_6D13
     ld hl, $54F5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6D13::
     ld hl, $5536
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6D1A::
@@ -6245,22 +6294,22 @@ Jump_013_6D1A::
     call TestFlagBit
     jr c, Jump_013_6D2C
     ld hl, $5502
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6D2C::
     ld hl, $5543
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6D33::
     ld hl, $0B78
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6D3A::
     ld hl, $0296
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6D41::
@@ -6269,7 +6318,7 @@ Jump_013_6D41::
     ld a, $2C
     ld [wC922], a
     ld de, $010C
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_6D52::
@@ -6277,12 +6326,12 @@ Jump_013_6D52::
     call TestFlagBit
     jr c, Jump_013_6D61
     ld hl, $027A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6D61::
     ld hl, $0B67
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6D68::
@@ -6307,12 +6356,12 @@ Jump_013_6D68::
     or a, a
     jr nz, Jump_013_6DA0
     ld hl, $5578
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6DA0::
     ld hl, $557F
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6DA7::
@@ -6322,7 +6371,7 @@ Jump_013_6DA7::
 
 Jump_013_6DAD::
     ld hl, $5550
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6DB4::
@@ -6330,17 +6379,17 @@ Jump_013_6DB4::
     call TestFlagBit
     jr c, Jump_013_6DC3
     ld hl, $5560
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6DC3::
     ld hl, $556A
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6DCA::
     ld hl, $5571
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6DD1::
@@ -6357,17 +6406,17 @@ Jump_013_6DD1::
     call TestFlagBit
     jr c, Jump_013_6DFB
     ld hl, Data_00E_5586
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6DFB::
     ld hl, $558B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6E02::
     ld hl, $04B4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E09::
@@ -6381,22 +6430,22 @@ Jump_013_6E09::
     call TestFlagBit
     jr c, Jump_013_6E28
     ld hl, $04B5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E28::
     ld hl, $04BB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E2F::
     ld hl, $04C1
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E36::
     ld hl, $0B6E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E3D::
@@ -6410,22 +6459,22 @@ Jump_013_6E3D::
     call TestFlagBit
     jr c, Jump_013_6E5C
     ld hl, $04B6
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E5C::
     ld hl, $04BC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E63::
     ld hl, $04C2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E6A::
     ld hl, $0B6F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6E71::
@@ -6438,12 +6487,12 @@ Jump_013_6E71::
     call TestFlagBit
     jr c, Jump_013_6E8D
     ld hl, Data_096_5598
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6E8D::
     ld hl, $55A2
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6E94::
@@ -6451,7 +6500,7 @@ Jump_013_6E94::
     call TestFlagBit
     jr c, Jump_013_6E8D
     ld hl, $55A9
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6EA3::
@@ -6466,12 +6515,12 @@ Jump_013_6EA3::
     call TestFlagBit
     jr c, Jump_013_6EC8
     ld hl, $55B3
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6EC8::
     ld hl, $55BD
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6ECF::
@@ -6479,42 +6528,42 @@ Jump_013_6ECF::
     call TestFlagBit
     jr c, Jump_013_6EC8
     ld hl, $55C4
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6EDE::
     ld hl, $55CE
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6EE5::
     ld hl, $08D8
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6EEC::
     ld hl, $08D9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6EF3::
     ld hl, $08CD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6EFA::
     ld hl, $02DC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F01::
     ld hl, $0DD4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F08::
     ld hl, $02DD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F0F::
@@ -6527,12 +6576,12 @@ Jump_013_6F0F::
     call TestFlagBit
     jr c, Jump_013_6F2B
     ld hl, Data_00C_55DB
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6F2B::
     ld hl, $55E5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6F32::
@@ -6540,27 +6589,27 @@ Jump_013_6F32::
     call TestFlagBit
     jr c, Jump_013_6F2B
     ld hl, $55EC
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6F41::
     ld hl, $0A6F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F48::
     ld hl, $0A75
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F4F::
     ld hl, $0A76
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F56::
     ld hl, $0A77
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F5D::
@@ -6577,14 +6626,14 @@ Jump_013_6F5D::
     call TestFlagBit
     jr c, Jump_013_6F84
     ld hl, $025E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F84::
     call Func_013_7F94
     jr c, Jump_013_6F90
     ld hl, $0261
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6F90::
@@ -6593,12 +6642,12 @@ Jump_013_6F90::
     set 6, a
     ld [wC836], a
     ld hl, $55F6
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_6FA1::
     ld hl, $0262
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FA8::
@@ -6606,22 +6655,22 @@ Jump_013_6FA8::
     call TestFlagBit
     jr c, Jump_013_6FB7
     ld hl, $0D31
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FB7::
     ld hl, $0527
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FBE::
     ld hl, $0B46
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FC5::
     ld hl, $0269
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FCC::
@@ -6630,17 +6679,17 @@ Jump_013_6FCC::
     ld a, $2E
     ld [wC922], a
     ld de, $0114
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
 Jump_013_6FDD::
     ld hl, $026A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FE4::
     ld hl, $0A32
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FEB::
@@ -6648,12 +6697,12 @@ Jump_013_6FEB::
     call TestFlagBit
     jp c, Jump_013_6FFB
     ld hl, $0A33
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_6FFB::
     ld hl, $0B06
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7002::
@@ -6661,12 +6710,12 @@ Jump_013_7002::
     call TestFlagBit
     jp c, Jump_013_7012
     ld hl, $020A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7012::
     ld hl, $0B0B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7019::
@@ -6674,12 +6723,12 @@ Jump_013_7019::
     call TestFlagBit
     jp c, Jump_013_7029
     ld hl, $08BF
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7029::
     ld hl, $0B0C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7030::
@@ -6694,7 +6743,7 @@ Jump_013_7030::
 
 Jump_013_7046::
     ld hl, $08C5
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_704D::
@@ -6719,22 +6768,22 @@ Jump_013_704D::
     or a, a
     jr z, Jump_013_7081
     ld hl, $561A
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7081::
     ld hl, $5631
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7088::
     ld hl, $5600
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_708F::
     ld hl, $08C7
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7096::
@@ -6746,7 +6795,7 @@ Jump_013_7096::
 
 Jump_013_70A3::
     ld hl, $0D25
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_70AA::
@@ -6759,17 +6808,20 @@ Jump_013_70AA::
     call TestFlagBit
     jr c, Jump_013_70CB
     ld hl, Data_010_564B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $0116
     call SetFlagBit
     ret
 
 Jump_013_70CB::
     ld hl, $5652
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
     db $21, $39, $0A, $CD, $01, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC7, hFFC6
+; writes: hFFC6, hFFC7
 Func_013_70D9:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -6781,7 +6833,7 @@ Func_013_70D9:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jp c, Jump_013_70F9
     ld hl, $0A3C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_70F9::
@@ -6789,7 +6841,7 @@ Jump_013_70F9::
     call TestFlagBit
     jr c, Jump_013_7114
     ld hl, $050E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $0117
     call SetFlagBit
     ld de, $0122
@@ -6798,12 +6850,12 @@ Jump_013_70F9::
 
 Jump_013_7114::
     ld hl, $050F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_711B::
     ld hl, $053D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7122::
@@ -6824,17 +6876,17 @@ Jump_013_7122::
     cp a, $64
     jr nc, Jump_013_7152
     ld hl, $0B7B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7152::
     ld hl, $5903
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7159::
     ld hl, $0B7F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7160::
@@ -6845,7 +6897,7 @@ Jump_013_7160::
     ldh [hFFC7], a
     farcall Func_012_7EC2
     ld hl, $5913
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7176::
@@ -6866,17 +6918,17 @@ Jump_013_7176::
     cp a, $78
     jr nc, Jump_013_71A6
     ld hl, $0B82
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_71A6::
     ld hl, $591D
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_71AD::
     ld hl, $0B85
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_71B4::
@@ -6887,7 +6939,7 @@ Jump_013_71B4::
     ldh [hFFC7], a
     farcall Func_012_7EC2
     ld hl, $592D
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_71CA::
@@ -6908,17 +6960,17 @@ Jump_013_71CA::
     cp a, $8C
     jr nc, Jump_013_71FA
     ld hl, $0B82
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_71FA::
     ld hl, $5937
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7201::
     ld hl, $0B88
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7208::
@@ -6929,7 +6981,7 @@ Jump_013_7208::
     ldh [hFFC7], a
     farcall Func_012_7EC2
     ld hl, $5947
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_721E::
@@ -6950,17 +7002,17 @@ Jump_013_721E::
     cp a, $A0
     jr nc, Jump_013_724F
     ld hl, $0B82
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_724F::
     ld hl, $5951
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7256::
     ld hl, $0B8B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_725D::
@@ -6971,14 +7023,15 @@ Jump_013_725D::
     ldh [hFFC7], a
     farcall Func_012_7EC2
     ld hl, $5961
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7273::
     ld hl, $0B8D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_727A:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -6987,12 +7040,12 @@ Func_013_727A:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jp c, Jump_013_7292
     ld hl, $0A3E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7292::
     ld hl, $0510
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7299::
@@ -7000,7 +7053,7 @@ Jump_013_7299::
     call TestFlagBit
     jr c, Jump_013_72A8
     ld hl, $0D93
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_72A8::
@@ -7028,14 +7081,15 @@ Jump_013_72A8::
 
 Jump_013_72E0::
     ld hl, $0B8E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_72E7::
     ld hl, $0D94
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_72EE:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7047,19 +7101,20 @@ Func_013_72EE:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_730D
     ld hl, $0A3F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_730D::
     ld hl, $0511
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7314::
     ld hl, $0544
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_731B:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7070,17 +7125,19 @@ Func_013_731B:: ; heuristic: target of a pointer table; C0
 
 Jump_013_732B::
     ld hl, $0A41
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7332::
     ld hl, $0545
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
     db $21, $42, $0A, $CD, $01, $40, $C9, $11, $25, $00, $CD, $1B, $18, $38, $07, $21
     db $43, $0A, $CD, $01, $40, $C9, $21, $52, $0B, $CD, $01, $40, $C9, $21, $44, $0A
     db $CD, $01, $40, $C9, $21, $45, $0A, $CD, $01, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
 Func_013_7364:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
@@ -7093,14 +7150,14 @@ Func_013_7364:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wD7FB], a
     ld hl, $5660
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $0E
     ld [wDataBank], a
     ret
 
 Jump_013_738F::
     ld hl, $0A49
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7396::
@@ -7112,16 +7169,17 @@ Jump_013_7396::
     ld a, $03
     ld [wD7FB], a
     ld hl, $5670
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $0E
     ld [wDataBank], a
     ret
 
 Jump_013_73B8::
     ld hl, $0516
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_73BF:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7130,28 +7188,31 @@ Func_013_73BF:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jp c, Jump_013_73D7
     ld hl, $0A4A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_73D7::
     ld hl, $0517
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_73DE::
     ld hl, $0BB9
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_73E5:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wC921], a
     ld a, $47
     ld [wC922], a
     ld de, $0126
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_73F6:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7160,19 +7221,20 @@ Func_013_73F6:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jp c, Jump_013_740E
     ld hl, $0A4C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_740E::
     ld hl, $051F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7415::
     ld hl, $0BBB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_741C:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7181,19 +7243,21 @@ Func_013_741C:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_7433
     ld hl, $0A4D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7433::
     ld hl, $0520
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_743A::
     ld hl, $0BBC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
 Func_013_7441:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
@@ -7201,7 +7265,7 @@ Func_013_7441:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_7463
     ld hl, $5680
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $02
     ld [wD7FB], a
     ld a, $0E
@@ -7210,9 +7274,11 @@ Func_013_7441:: ; heuristic: target of a pointer table; C0
 
 Jump_013_7463::
     ld hl, $04BA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
 Func_013_746A:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7221,12 +7287,12 @@ Func_013_746A:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_7481
     ld hl, $5690
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7481::
     ld hl, $04CB
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7488::
@@ -7240,7 +7306,7 @@ Jump_013_7488::
     call TestFlagBit
     jr c, Jump_013_74AD
     ld hl, $0B4A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $002E
     call SetFlagBit
     ret
@@ -7251,12 +7317,12 @@ Jump_013_74AD::
     or a, a
     jr nz, Jump_013_74BF
     ld hl, $0B4B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_74BF::
     ld hl, $56A0
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_74C6::
@@ -7269,21 +7335,23 @@ Jump_013_74C6::
 
 Jump_013_74D6::
     ld hl, $0B4D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_74DD::
     ld hl, $56A8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld de, $003E
     call SetFlagBit
     ret
 
 Jump_013_74EA::
     ld hl, $0BB4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
 Func_013_74F1:: ; heuristic: target of a pointer table; C0
     ld de, $011E
     call TestFlagBit
@@ -7293,35 +7361,39 @@ Func_013_74F1:: ; heuristic: target of a pointer table; C0
     or a, a
     jr nz, Jump_013_750B
     ld hl, $04CE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_750B::
     ld hl, $04CD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ld de, $011E
     call SetFlagBit
     ret
 
 Jump_013_7518::
     ld hl, $04CC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
     INCBIN "dwm2-cobi-us.gbc", $04F51F, $62
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7581:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_7591
     ld hl, $0504
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7591::
     ld hl, $0B05
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC7, hFFC6
+; writes: hFFC6, hFFC7
 Func_013_7598:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7330,12 +7402,12 @@ Func_013_7598:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_75AF
     ld hl, $0512
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_75AF::
     ld hl, $053E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_75B6::
@@ -7353,12 +7425,12 @@ Jump_013_75B6::
     cp a, $32
     jr nc, Jump_013_75DE
     ld hl, $0D92
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_75DE::
     ld hl, $58B5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_75E5::
@@ -7375,7 +7447,7 @@ Jump_013_75E5::
 
 Jump_013_7600::
     ld hl, $0B96
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7607::
@@ -7390,7 +7462,7 @@ Jump_013_7607::
 Jump_013_7617::
     farcall Func_012_6955
     ld hl, $58C3
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7624::
@@ -7399,7 +7471,7 @@ Jump_013_7624::
     or a, a
     jr z, Jump_013_7600
     ld hl, $58CD
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7636::
@@ -7417,12 +7489,12 @@ Jump_013_7636::
     cp a, $96
     jr nc, Jump_013_765E
     ld hl, $0B98
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_765E::
     ld hl, $58E1
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7665::
@@ -7439,7 +7511,7 @@ Jump_013_7665::
 
 Jump_013_7680::
     ld hl, $0B96
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7687::
@@ -7454,7 +7526,7 @@ Jump_013_7687::
 Jump_013_7697::
     farcall Func_012_6955
     ld hl, $58EF
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_76A4::
@@ -7463,32 +7535,38 @@ Jump_013_76A4::
     or a, a
     jr z, Jump_013_7680
     ld hl, $58F9
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_76B6::
     ld hl, $0B98
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_76BD:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $11
     ld [wC922], a
     ld de, $011B
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_76CE:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $13
     ld [wC922], a
     ld de, $011C
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
 Func_013_76DF:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
@@ -7496,7 +7574,7 @@ Func_013_76DF:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_7701
     ld hl, $56C8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $04
     ld [wD7FB], a
     ld a, $0E
@@ -7505,9 +7583,11 @@ Func_013_76DF:: ; heuristic: target of a pointer table; C0
 
 Jump_013_7701::
     ld hl, $04C0
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC82C
 Func_013_7708:: ; heuristic: target of a pointer table; C0
     ld a, [wC82C]
     cp a, $05
@@ -7515,22 +7595,23 @@ Func_013_7708:: ; heuristic: target of a pointer table; C0
     or a, a
     jr nz, Jump_013_7719
     ld hl, $0276
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7719::
     ld hl, $56D8
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7720::
     ld hl, $56E5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Data_013_7727:: ; heuristic: target of a monotone pointer table; C0
     db $21, $F2, $56, $CD, $49, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_772E:: ; heuristic: target of a pointer table; C0
     ld de, $00D1
     call TestFlagBit
@@ -7539,12 +7620,12 @@ Func_013_772E:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_7744
     ld hl, $5709
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7744::
     ld hl, $56F5
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Data_013_774B:: ; heuristic: target of a monotone pointer table; C0
@@ -7578,6 +7659,7 @@ Data_013_77A0:: ; heuristic: target of a monotone pointer table; C0
 Data_013_77B6:: ; heuristic: target of a monotone pointer table; C0
     db $21, $4E, $0D, $CD, $01, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_77BD:: ; heuristic: target of a pointer table; C0
     ld de, $000B
     call TestFlagBit
@@ -7588,9 +7670,10 @@ Func_013_77BD:: ; heuristic: target of a pointer table; C0
 
 Jump_013_77CC::
     ld hl, $0043
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_77D3:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7607,41 +7690,46 @@ Func_013_77D3:: ; heuristic: target of a pointer table; C0
 
 Jump_013_77F3::
     ld hl, $0036
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_77FA::
     ld hl, $0076
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7801::
     ld hl, $0D00
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7808::
     ld hl, $050A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC26A
 Func_013_780F:: ; heuristic: target of a pointer table; C0
     ld a, [wC26A]
     cp a, $1A
     ret nz
     ld hl, $0037
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
 Func_013_781C:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wD7FB], a
     ld hl, $5660
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ld a, $0E
     ld [wDataBank], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_782D:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7650,17 +7738,17 @@ Func_013_782D:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_7844
     ld hl, $0268
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7844::
     ld hl, $0529
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_784B::
     ld hl, $0B48
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Data_013_7852:: ; heuristic: target of a monotone pointer table; C0
@@ -7695,6 +7783,8 @@ Data_013_78D0:: ; heuristic: target of a monotone pointer table; C0
 Data_013_78D7:: ; heuristic: target of a monotone pointer table; C0
     db $21, $44, $57, $CD, $49, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5
 Func_013_78DE:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7702,7 +7792,7 @@ Func_013_78DE:: ; heuristic: target of a pointer table; C0
 
 Jump_013_78E6::
     ld hl, $08D1
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_78ED::
@@ -7714,14 +7804,16 @@ Jump_013_78ED::
     cp a, $FF
     jr nz, Jump_013_7909
     ld hl, $57FE
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7909::
     ld hl, $580B
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC82C
 Func_013_7910:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7733,74 +7825,78 @@ Func_013_7910:: ; heuristic: target of a pointer table; C0
     or a, a
     jr nz, Jump_013_792D
     ld hl, $04D2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_792D::
     ld hl, $0D0C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7934::
     ld hl, $08D2
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_793B::
     ld hl, $0B25
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7942:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7951
     ld hl, $021F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7951::
     ld hl, $0B12
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7958:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7967
     ld hl, $0220
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7967::
     ld hl, $0B13
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_796E:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_797D
     ld hl, $027F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_797D::
     ld hl, $0B76
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7984:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7993
     ld hl, $0280
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7993::
     ld hl, $0B77
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Data_013_799A:: ; heuristic: target of a monotone pointer table; C0
@@ -7862,78 +7958,88 @@ Data_013_7A4A:: ; heuristic: target of a monotone pointer table; C0
 Data_013_7A93:: ; heuristic: target of a monotone pointer table; C0
     db $21, $45, $02, $CD, $01, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7A9A:: ; heuristic: target of a pointer table; C0
     farcall Func_085_5DB9
     ld hl, $00FC
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7AA7:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7AB6
     ld hl, $0A74
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7AB6::
     ld hl, $0B51
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7ABD:: ; heuristic: target of a pointer table; C0
     ld de, $0023
     call TestFlagBit
     ret nc
     ld hl, $57A2
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_7ACB:: ; heuristic: target of a pointer table; C0
     ld a, $02
     ld [wC921], a
     ld a, $2C
     ld [wC922], a
     ld de, $013C
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_7ADC:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wC921], a
     ld a, $1C
     ld [wC922], a
     ld de, $013D
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7AED:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_7AFD
     ld hl, $0A35
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7AFD::
     ld hl, $0B0A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
     db $21, $34, $0A, $CD, $01, $40, $C9
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7B0B:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7B1A
     ld hl, $0A68
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7B1A::
     ld hl, $0BBD
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7B21:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7942,19 +8048,20 @@ Func_013_7B21:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_013_7B38
     ld hl, $0A6B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7B38::
     ld hl, $0A6C
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7B3F::
     ld hl, $0BBE
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7B46:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7965,14 +8072,15 @@ Func_013_7B46:: ; heuristic: target of a pointer table; C0
 
 Jump_013_7B56::
     ld hl, $0A40
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7B5D::
     ld hl, $0545
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7B64:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -7981,17 +8089,17 @@ Func_013_7B64:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jp c, Jump_013_7B7C
     ld hl, $0A4B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7B7C::
     ld hl, $0518
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7B83::
     ld hl, $0BBA
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Data_013_7B8A:: ; heuristic: target of a monotone pointer table; C0
@@ -8040,19 +8148,21 @@ Data_013_7D65:: ; heuristic: target of a monotone pointer table; C0
 Data_013_7D8C:: ; heuristic: target of a monotone pointer table; C0
     db $AF, $EA, $68, $C9, $C9
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7D91:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7DA0
     ld hl, $029B
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7DA0::
     ld hl, $0B1F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7DA7:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -8063,46 +8173,54 @@ Func_013_7DA7:: ; heuristic: target of a pointer table; C0
 
 Jump_013_7DB7::
     ld hl, $0DE3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7DBE::
     ld hl, $0DE4
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7DC5:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7DD4
     ld hl, $0220
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7DD4::
     ld hl, $0B13
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_7DDB:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $26
     ld [wC922], a
     ld de, $013E
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC921, wC922
 Func_013_7DEC:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC921], a
     ld a, $42
     ld [wC922], a
     ld de, $013F
-    call Func_013_4025
+    call SetRequestPtrC924FromDE_B13
     ret
     db $21, $5F, $05, $CD, $01, $40, $C9, $C9
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCB81, hFFC7, hFFC6
+; writes: wDataBank, wD7FB
 Func_013_7E05:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
@@ -8119,12 +8237,12 @@ Func_013_7E05:: ; heuristic: target of a pointer table; C0
     ld a, $05
     ld [wD7FB], a
     ld hl, $581C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7E32::
     ld hl, $0B56
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7E39::
@@ -8139,19 +8257,19 @@ Jump_013_7E39::
     cp a, $64
     jr nc, Jump_013_7E59
     ld hl, $0D8E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7E59::
     ld a, $06
     ld [wD7FB], a
     ld hl, $582C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7E65::
     ld hl, $0B5A
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7E6C::
@@ -8166,21 +8284,24 @@ Jump_013_7E6C::
     cp a, $96
     jr nc, Jump_013_7E8C
     ld hl, $0D8F
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7E8C::
     ld a, $07
     ld [wD7FB], a
     ld hl, $583C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7E98::
     ld hl, $0B5E
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCB81, hFFC7, hFFC6
+; writes: wDataBank, wD7FB
 Func_013_7E9F:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
@@ -8195,12 +8316,12 @@ Func_013_7E9F:: ; heuristic: target of a pointer table; C0
     ld a, $08
     ld [wD7FB], a
     ld hl, $584C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7EC8::
     ld hl, $0B6D
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7ECF::
@@ -8215,21 +8336,23 @@ Jump_013_7ECF::
     cp a, $64
     jr nc, Jump_013_7EEF
     ld hl, $0D85
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7EEF::
     ld a, $09
     ld [wD7FB], a
     ld hl, $585C
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7EFB::
     ld hl, $0B73
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC7, hFFC6
 Func_013_7F02:: ; heuristic: target of a pointer table; C0
     ld de, $0038
     call TestFlagBit
@@ -8242,19 +8365,22 @@ Func_013_7F02:: ; heuristic: target of a pointer table; C0
     cp a, $96
     jr nc, Jump_013_7F23
     ld hl, $0D90
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
 Jump_013_7F23::
     ld hl, $5899
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
 Jump_013_7F2A::
     ld hl, $0BB3
-    call Func_013_4001
+    call SetRequestPtrC921_B13
     ret
 
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC7, hFFC6
+; writes: wCB8A
 Func_013_7F31:: ; heuristic: target of a pointer table; C0
     ld de, $0025
     call TestFlagBit
@@ -8272,6 +8398,7 @@ Jump_013_7F48::
     ld [wCB8A], a
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7F4E:: ; heuristic: target of a pointer table; C0
     ld de, $0032
     call TestFlagBit
@@ -8287,6 +8414,7 @@ Jump_013_7F5C::
     call SetFlagBit
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7F6A:: ; heuristic: target of a pointer table; C0
     ld de, $0035
     call TestFlagBit
@@ -8302,14 +8430,18 @@ Jump_013_7F78::
     call SetFlagBit
     ret
 
+; no direct call (reached through a table, a jump or a vector)
 Func_013_7F86:: ; heuristic: target of a pointer table; C0
     ld de, $0021
     call TestFlagBit
     ret nc
     ld hl, $5988
-    call Func_013_4049
+    call SetRequestPtrC91A_B13
     ret
 
+; 5 call sites from 4 routines (e.g. Func_013_5EF4, Func_013_5C0B, Func_013_5922, Func_013_405C)
+; reads: wC634
+; points at: wC61D
 Func_013_7F94::
     ld a, [wC634]
     cp a, $FF
@@ -8335,6 +8467,9 @@ Jump_013_7FAE::
     scf
     ret
 
+; 8 call sites from 6 routines (e.g. Func_013_5EF4, Func_013_7E9F, Func_013_7E05, Func_013_76DF, ...)
+; reads: wCB86, hFF8E, hFF91, hFF98, wC8EF, wC8F0, wC8F1, wC8F4, ...
+; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
 Func_013_7FB0::
     ld a, [wCB86]
     ld [wC937], a

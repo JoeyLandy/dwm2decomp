@@ -1,6 +1,7 @@
 SECTION "Bank 7A", ROMX[$4000], BANK[$7A]
     db $7A
 
+; no direct call (reached through a table, a jump or a vector)
 Func_07A_4001:: ; heuristic: follows a terminator; C0
     ld b, b
     ld [bc], a
