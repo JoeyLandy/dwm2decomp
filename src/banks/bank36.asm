@@ -6391,7 +6391,7 @@ Func_036_69ED:: ; heuristic: target of a pointer table; C0
     and a, $03
     sla a
     sla a
-    ld de, Func_036_6A59
+    ld de, $6A59
     add a, e
     ld e, a
     jr nc, Jump_036_6A0E
@@ -8591,7 +8591,7 @@ Func_036_799B:: ; heuristic: follows a terminator; C0
     call Func_000_3ED4
     ld a, [$C5E7]
     and a, $0F
-    ld hl, Data_036_79DC
+    ld hl, $79DC
     add a, l
     ld l, a
     jr nc, Jump_036_79BA
@@ -8623,8 +8623,6 @@ Jump_036_79CF::
 
 Jump_036_79D9::
     jp Func_036_7D03
-
-Data_036_79DC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $02, $02, $02, $02
     db $C9, $CD, $13, $50, $FA, $72, $D8, $6F, $FA, $73, $D8, $67, $CD, $1C, $65, $7D
     db $EA, $72, $D8, $7C, $EA, $73, $D8, $C3, $7D, $7C, $FA, $A4, $D8, $21, $13, $D8
@@ -9223,7 +9221,7 @@ Func_036_7DC9:: ; heuristic: follows a terminator; C0
     sub a, $47
 
 Jump_036_7DD1::
-    ld hl, Data_036_7DDE
+    ld hl, $7DDE
     add a, a
     add a, l
     ld l, a
@@ -9233,8 +9231,6 @@ Jump_036_7DD1::
 Jump_036_7DDA::
     call Func_000_000B
     ret
-
-Data_036_7DDE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $13, $50, $C5, $58, $2E, $59, $93, $59, $52, $53, $B4, $60, $B4, $60, $CF, $5D
     db $CF, $5D, $22, $55, $33, $55, $44, $55, $55, $55, $66, $55, $71, $55, $7C, $55
     db $87, $55, $92, $55, $9D, $55, $A8, $55, $B3, $55, $BE, $55, $C9, $55, $D4

@@ -36,10 +36,10 @@ Coverage (bytes of the 4,194,304; measured from generated `src/`, not a semantic
 | Class | Bytes |
 | --- | --- |
 | Traced instructions and inline `dw` tables (C0 semantics) | 453,774 in 91 banks (2,094 heuristic entries, each marked `; heuristic: ...; C0` in `src/`) |
-| Assembled `ds`/`DS` fills (99 all-zero banks plus zero runs) | 1,622,016 whole-bank plus 356,521 run fills |
-| Opaque `INCBIN` slices of the reference (not understood) | 1,508,936 in 4,943 slices |
+| Assembled `ds`/`DS` fills (99 all-zero banks plus zero runs) | 1,622,016 whole-bank plus 357,001 run fills |
+| Opaque `INCBIN` slices of the reference (not understood) | 1,509,853 in 4,945 slices |
 | Data pointer words (`dw Data_BBB_AAAA`, C1 structure only) | 35,208 bytes: 17,604 pointers in 483 monotone tables |
-| Labelled data starts (`Data_BBB_AAAA`, C0/C1 structure only) | 14,001 labels: pointer-table targets plus 2,078 `ld hl/de/bc` loads resolved to them (235 via bank-switching helpers, 1,843 same-bank assumed). 3,778 banked-call operands (`ld hl, ADDR` before `rst $10`) name code in the bank given by `ld b` |
+| Labelled data starts (`Data_BBB_AAAA`, C0/C1 structure only) | 13,754 labels: pointer-table targets plus 1,705 `ld hl/de/bc` loads resolved to them (281 with bank evidence: helper call or the `$D7FE` bank variable; 1,424 same-bank assumed, withheld in 10 banks). 3,778 banked-call operands (`ld hl, ADDR` before `rst $10`) name code in the bank given by `ld b` |
 | Data pointer words (`dw Data_BBB_AAAA`, C1 structure only) | 35,208 bytes: 17,604 pointers in 483 monotone tables |
 
 Reachability is not proof of execution; every label is address-derived (C0). Tracer idioms mined from bank 0, **C1 (one local observation, not yet runtime-confirmed)**: `ld hl,ADDR / ld b,BANK / rst $10` is a banked call; `rst $00` takes an inline word table. Observation (C2, measured over the file): byte `$4000` of every non-zero switchable bank equals its bank number, which the `$0010` helper reads.

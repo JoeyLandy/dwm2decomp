@@ -280,6 +280,71 @@ class Rom:
                     out[(bank, hl[0])] = (bnk, hl[1])
         return out
 
+    def _interior_bytes(self) -> dict[int, set[int]]:
+        """Per bank, addresses that lie strictly inside a decoded instruction or table word."""
+        out: dict[int, set[int]] = {}
+        for bank in range(self.nbanks):
+            s: set[int] = set()
+            for a, v in self.insn[bank].items():
+                n = 2 if v[0] == "dw" else v[0]
+                s.update(range(a + 1, a + n))
+            out[bank] = s
+        return out
+
+    def bank_variable_pairs(self, code_args, interior):
+        """Find WRAM bytes that behave as a data-bank selector (C1, statistical).
+
+        Pattern: `ld a, N` / `ld [$Cxxx|$Dxxx], a`, then `ld hl|de|bc, $4000-$7FFF` within the
+        next 8 instructions. A variable qualifies when >= 20 such pairs exist and pairing the
+        pointer with bank N lands inside already-decoded code far less often (<= 20% and
+        <= half) than assuming the caller's own bank. Returns ({(bank, ld address): (N, ptr,
+        var)}, [var...])."""
+        lda = re.compile(r"ld a, \$([0-9A-F]{2})$")
+        st = re.compile(r"ld \[\$([CD][0-9A-F]{3})\], a$")
+        ld16 = re.compile(r"ld (?:hl|de|bc), \$([0-9A-F]{4})$")
+        pairs: dict[str, list[tuple[int, int, int, int]]] = {}
+        for bank in range(1, self.nbanks):
+            ins = self.insn[bank]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                m = st.match(ins[a][1])
+                if not m:
+                    continue
+                n_val = None
+                for x in reversed(order[max(0, k - 3):k]):
+                    ma = lda.match(ins[x][1])
+                    if ma:
+                        n_val = int(ma.group(1), 16)
+                        break
+                    if ins[x][2] in ("ret", "jp", "jr", "call"):
+                        break
+                if n_val is None or not 1 <= n_val < self.nbanks or n_val in self.zero:
+                    continue
+                for y in order[k + 1:k + 9]:
+                    if ins[y][2] in ("ret", "jp", "jr"):
+                        break
+                    if (bank, y) in code_args:
+                        continue
+                    ml = ld16.match(ins[y][1])
+                    if ml and 0x4000 <= int(ml.group(1), 16) < 0x8000:
+                        pairs.setdefault(m.group(1), []).append((bank, y, n_val, int(ml.group(1), 16)))
+
+        def in_code(b: int, x: int) -> bool:
+            return x in interior[b] or x in self.insn[b]
+
+        chosen, out = [], {}
+        for var, lst in pairs.items():
+            if len(lst) < 20:
+                continue
+            in_n = sum(1 for _, _, n_val, p in lst if in_code(n_val, p))
+            in_s = sum(1 for b, _, _, p in lst if in_code(b, p))
+            if in_n <= 0.2 * len(lst) and in_n * 2 <= in_s:
+                chosen.append(f"${var} ({len(lst)} pairs: {100 * in_n // len(lst)}% in code if N is the bank, "
+                              f"{100 * in_s // len(lst)}% if same bank)")
+                for b, y, n_val, p in lst:
+                    out[(b, y)] = (n_val, p, var)
+        return out, chosen
+
     def snapshot_data_pointers(self) -> None:
         """Record `ld hl|de|bc, $4000-$7FFF` targets of the directly traced (non-heuristic)
         code, per bank (same bank assumed). Taken once, before any heuristic runs, so
@@ -463,6 +528,27 @@ class Rom:
                 self.dref[(bank, a)] = (tb, imm)
                 coded += 1
         helpers.discard(0x10)  # the rst $10 handler transfers to code, not data
+        interior = self._interior_bytes()
+        bv_pairs, bv_vars = self.bank_variable_pairs(code_args, interior)
+        for desc in bv_vars:
+            log(f"data-bank variable: {desc}")
+        # Banks where many pointer loads land inside decoded code cannot be reading their own
+        # bank's data (a same-bank pointer into a code-dense bank would hit data, not code);
+        # the same-bank guess is withheld there rather than naming data in the wrong bank.
+        untrusted = set()
+        for bank in range(1, self.nbanks):
+            tot = hit = 0
+            for a, v in self.insn[bank].items():
+                if v[0] == "dw" or (bank, a) in code_args or (bank, a) in bv_pairs:
+                    continue
+                m = ld16.match(v[1])
+                if m and 0x4000 <= int(m.group(2), 16) < 0x8000:
+                    tot += 1
+                    hit += int(m.group(2), 16) in interior[bank]
+            if hit >= 5 and hit >= 0.10 * tot:
+                untrusted.add(bank)
+        log(f"same-bank pointer guess withheld in {len(untrusted)} banks with high contradiction rate: "
+            + " ".join(f"{b:02X}" for b in sorted(untrusted)))
         for bank in range(self.nbanks):
             ins = self.insn[bank]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
@@ -496,7 +582,10 @@ class Rom:
                     continue
                 if a in paired:
                     tb, why = paired[a][0], "argument of a bank-switching copy helper"
-                elif bank != 0:
+                elif (bank, a) in bv_pairs:
+                    tb = bv_pairs[(bank, a)][0]
+                    why = f"bank from RAM variable ${bv_pairs[(bank, a)][2]}"
+                elif bank != 0 and bank not in untrusted:
                     tb, why = bank, "pointer load in the same bank (bank assumed)"
                 else:
                     continue
@@ -514,12 +603,13 @@ class Rom:
                 self.dlabels[tb].setdefault(imm, name)
                 self.dreason.setdefault((tb, imm), why)
                 self.dref[(bank, a)] = (tb, imm)
-                if a in paired:
+                if a in paired or (bank, a) in bv_pairs:
                     strong += 1
                 else:
                     weak += 1
         log(f"banked-call operands resolved to code labels: {coded}")
-        log(f"data references: {strong} via bank-switching helpers, {weak} same-bank loads, "
+        log(f"data references: {strong} with a bank evidence (helper call or RAM variable), "
+            f"{weak} same-bank loads, "
             f"{sum(len(d) for d in self.dlabels.values())} data labels in total")
 
     def summary(self) -> str:

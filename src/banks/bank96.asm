@@ -245,7 +245,13 @@ Data_096_539D:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $25939D, $E1
 
 Data_096_547E:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $25947E, $44
+    db $EB, $45, $90, $1A, $38, $2C, $26, $2E, $AB, $90, $2A, $2C, $39, $28, $90, $37
+    db $2B, $28, $F1, $30, $28, $27, $2C, $26, $2C, $31, $28, $90, $37, $32, $90
+
+Data_096_549D:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $32, $38, $35, $FA, $F7, $EF, $EE, $1A, $38, $28, $28, $31, $90, $11, $28, $2F
+    db $28, $31, $B5, $EF, $EE, $19, $2F, $28, $24, $36, $28, $AB, $90, $2B, $38, $35
+    db $35, $3C, $99, $F7, $F0
 
 Data_096_54C2:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2594C2, $45
@@ -254,7 +260,12 @@ Data_096_5507:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $259507, $44
 
 Data_096_554B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $25954B, $7C
+    INCBIN "dwm2-cobi-us.gbc", $25954B, $4D
+
+Data_096_5598:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $EE, $32, $38, $35, $90, $37, $38, $35, $31, $90, $37, $32, $90, $27, $32, $90
+    db $32, $38, $35, $FA, $F7, $EF, $EE, $25, $28, $36, $37, $90, $29, $32, $35, $90
+    db $1A, $38, $28, $28, $31, $EF, $EE, $11, $28, $2F, $28, $31, $B5, $F7, $F0
 
 Data_096_55C7:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2595C7, $44

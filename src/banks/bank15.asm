@@ -5970,7 +5970,7 @@ Func_015_6ACA::
     push af
     ld a, $08
     ld [$D7FE], a
-    ld hl, $4032
+    ld hl, Data_008_4032
     ld a, $04
     add a, l
     ld l, a
@@ -7346,7 +7346,7 @@ Func_015_7A5F::
     push af
     ld a, $08
     ld [$D7FE], a
-    ld hl, $4032
+    ld hl, Data_008_4032
     ld a, $04
     add a, l
     ld l, a

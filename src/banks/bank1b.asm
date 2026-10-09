@@ -3510,7 +3510,7 @@ Jump_01B_60D4::
     push af
     ld a, $09
     ld [$D7FE], a
-    ld hl, $4016
+    ld hl, Data_009_4016
     ld a, $0C
     add a, l
     ld l, a

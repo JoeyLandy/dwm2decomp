@@ -27,8 +27,6 @@ Data_00D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00D_41D8
     dw Data_00D_4221
     dw Data_00D_423F
-
-Data_00D_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00D_423F
     dw Data_00D_423F
     dw Data_00D_423F
@@ -3705,7 +3703,7 @@ Jump_00D_5E60::
     push af
     ld a, $09
     ld [$D7FE], a
-    ld hl, Data_00D_4016
+    ld hl, Data_009_4016
     ld a, $0C
     add a, l
     ld l, a
@@ -6749,7 +6747,7 @@ Func_00D_778C::
     push af
     ld a, $08
     ld [$D7FE], a
-    ld hl, Data_00D_4032
+    ld hl, Data_008_4032
     ld a, $04
     add a, l
     ld l, a

@@ -392,7 +392,7 @@ Jump_013_42A0::
 Jump_013_42A7::
     ld a, $1F
     ld [$D7FE], a
-    ld hl, $5FE8
+    ld hl, Data_01F_5FE8
     call Func_013_4049
     ret
 
@@ -417,7 +417,7 @@ Jump_013_42C9::
 Jump_013_42D0::
     ld a, $10
     ld [$D7FE], a
-    ld hl, $6003
+    ld hl, Data_010_6003
     call Func_013_4049
     ret
 
@@ -648,7 +648,7 @@ Jump_013_444A::
 Jump_013_4451::
     ld a, $1F
     ld [$D7FE], a
-    ld hl, Jump_013_603A
+    ld hl, Data_01F_603A
     call Func_013_4049
     ret
 
@@ -657,7 +657,7 @@ Jump_013_445D::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, Jump_013_6041
+    ld hl, Data_010_6041
     call Func_013_4049
     ret
 
@@ -679,7 +679,7 @@ Jump_013_447C::
 Jump_013_4483::
     ld a, $10
     ld [$D7FE], a
-    ld hl, Jump_013_6048
+    ld hl, Data_010_6048
     call Func_013_4049
     ret
 
@@ -950,14 +950,14 @@ Jump_013_4653::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $607C
+    ld hl, Data_010_607C
     call Func_013_4049
     ret
 
 Jump_013_4664::
     ld a, $1F
     ld [$D7FE], a
-    ld hl, $6083
+    ld hl, Data_01F_6083
     call Func_013_4049
     ret
 
@@ -995,7 +995,7 @@ Jump_013_469C::
 Jump_013_46A3::
     ld a, $10
     ld [$D7FE], a
-    ld hl, Jump_013_6048
+    ld hl, Data_010_6048
     call Func_013_4049
     ret
 
@@ -1852,7 +1852,7 @@ Jump_013_4C67::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, Jump_013_5D68
+    ld hl, Data_010_5D68
     call Func_013_4049
     ret
 
@@ -1881,7 +1881,7 @@ Jump_013_4C97::
     ret
 
 Jump_013_4C9E::
-    ld hl, Jump_013_5D6F
+    ld hl, $5D6F
     call Func_013_4049
     ld a, $10
     ld [$D7FE], a
@@ -1902,7 +1902,7 @@ Jump_013_4CB1::
     ld de, $01E8
     call Func_000_181B
     jr c, Jump_013_4CD0
-    ld hl, Jump_013_5D76
+    ld hl, $5D76
     call Func_013_4049
     ret
 
@@ -1920,7 +1920,7 @@ Jump_013_4CD7::
     ret
 
 Jump_013_4CE6::
-    ld hl, Jump_013_5FD2
+    ld hl, $5FD2
     call Func_013_4049
     ret
 
@@ -2172,7 +2172,7 @@ Jump_013_4E82::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $5DB0
+    ld hl, Data_010_5DB0
     call Func_013_4049
     ret
 
@@ -2181,7 +2181,7 @@ Jump_013_4E93::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $5DB7
+    ld hl, Data_010_5DB7
     call Func_013_4049
     ret
 
@@ -2190,7 +2190,7 @@ Jump_013_4EA4::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $5DBE
+    ld hl, Data_010_5DBE
     call Func_013_4049
     ret
 
@@ -2567,12 +2567,12 @@ Jump_013_5130::
     ret
 
 Jump_013_5137::
-    ld hl, Jump_013_5E37
+    ld hl, $5E37
     call Func_013_4049
     ret
 
 Jump_013_513E::
-    ld hl, Jump_013_5E5A
+    ld hl, $5E5A
     call Func_013_4049
     ret
 
@@ -2805,7 +2805,7 @@ Jump_013_52CB::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $5E8E
+    ld hl, Data_010_5E8E
     call Func_013_4049
     ret
 
@@ -3233,7 +3233,7 @@ Jump_013_559D::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $5F0B
+    ld hl, Data_010_5F0B
     call Func_013_4049
     ret
 
@@ -3256,37 +3256,22 @@ Jump_013_55C4::
     ret
 
 Data_013_55CB:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $1F, $EA
-
-Data_013_55CE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
+    db $3E, $1F, $EA, $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
 
 Data_013_55D7:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $E6, $5F, $CD
-
-Data_013_55DB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $49, $40, $C9
+    db $21, $E6, $5F, $CD, $49, $40, $C9
 
 Data_013_55DE:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $1F, $EA, $FE, $D7, $21, $D6
-
-Data_013_55E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $5F, $CD, $49, $40, $C9
+    db $3E, $1F, $EA, $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
 
 Data_013_55EA:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $1F
+    db $3E, $1F, $EA, $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
 
-Data_013_55EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $EA, $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
-
-Data_013_55F6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_013_55F6:: ; heuristic: target of a monotone pointer table; C0
     db $21, $13, $03, $CD, $01, $40, $C9
 
 Data_013_55FD:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $12, $03
-
-Data_013_5600:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $CD, $01, $40, $C9
+    db $21, $12, $03, $CD, $01, $40, $C9
 
 Data_013_5604:: ; heuristic: target of a monotone pointer table; C0
     db $21, $1F, $5F, $CD, $49, $40, $3E, $10, $EA, $FE, $D7, $C9
@@ -3295,29 +3280,19 @@ Data_013_5610:: ; heuristic: target of a monotone pointer table; C0
     db $21, $B8, $03, $CD, $01, $40, $C9
 
 Data_013_5617:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $AC, $03
-
-Data_013_561A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $CD, $01, $40, $C9
+    db $21, $AC, $03, $CD, $01, $40, $C9
 
 Data_013_561E:: ; heuristic: target of a monotone pointer table; C0
     db $21, $96, $03, $CD, $01, $40, $C9
 
 Data_013_5625:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $E2, $01, $CD, $1B, $18, $38, $16, $11, $9D, $00, $CD
-
-Data_013_5631:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $1B, $18, $38, $07, $21, $B9, $03, $CD, $01, $40, $C9, $21, $E3, $0A, $CD, $01
-    db $40, $C9, $21, $FB, $0A, $CD, $01, $40, $C9
+    db $11, $E2, $01, $CD, $1B, $18, $38, $16, $11, $9D, $00, $CD, $1B, $18, $38, $07
+    db $21, $B9, $03, $CD, $01, $40, $C9, $21, $E3, $0A, $CD, $01, $40, $C9, $21, $FB
+    db $0A, $CD, $01, $40, $C9
 
 Data_013_564A:: ; heuristic: target of a monotone pointer table; C0
-    db $11
-
-Data_013_564B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $E2, $01, $CD, $1B, $18, $38, $07
-
-Data_013_5652:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $21, $D6, $0D, $CD, $01, $40, $C9, $21, $FC, $0A, $CD, $01, $40, $C9
+    db $11, $E2, $01, $CD, $1B, $18, $38, $07, $21, $D6, $0D, $CD, $01, $40, $C9, $21
+    db $FC, $0A, $CD, $01, $40, $C9
 
 Func_013_5660:: ; heuristic: target of a pointer table; C0
     ld de, $01E2
@@ -3462,7 +3437,7 @@ Jump_013_5759::
 Jump_013_575E::
     xor a, a
     ld [$CB86], a
-    ld hl, Jump_013_5FCB
+    ld hl, $5FCB
     call Func_013_4049
     ret
 
@@ -3489,7 +3464,7 @@ Data_013_5794:: ; heuristic: target of a monotone pointer table; C0
 Data_013_579B:: ; heuristic: target of a monotone pointer table; C0
     db $21, $C0, $0A, $CD, $01, $40, $C9
 
-Data_013_57A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_013_57A2:: ; heuristic: target of a monotone pointer table; C0
     db $21, $C1, $0A, $CD, $01, $40, $C9
 
 Data_013_57A9:: ; heuristic: target of a monotone pointer table; C0
@@ -3499,50 +3474,24 @@ Data_013_57B0:: ; heuristic: target of a monotone pointer table; C0
     db $21, $4A, $5F, $CD, $49, $40, $C9
 
 Data_013_57B7:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $9A, $00, $CD, $1B, $18, $38, $22, $11, $96, $00, $CD, $1B, $18, $38, $07
-    db $21, $4C, $5F, $CD, $49, $40, $C9, $CD, $94, $7F, $30, $07, $21, $54, $5F, $CD
-    db $49, $40, $C9, $21, $6C, $5F, $CD, $49, $40, $C9, $11, $96, $00, $CD, $1B, $18
-    db $38, $07, $21, $7D, $5F, $CD
-
-Data_013_57ED:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $49, $40, $C9, $CD, $94, $7F, $30, $07, $21, $82
-
-Data_013_57F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $5F, $CD, $49, $40, $C9, $21, $97
-
-Data_013_57FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $5F, $CD, $49, $40, $C9
+    INCBIN "dwm2-cobi-us.gbc", $04D7B7, $4C
 
 Data_013_5803:: ; heuristic: target of a monotone pointer table; C0
-    db $FA, $9A, $CB, $FE, $80, $20, $0E, $FA
-
-Data_013_580B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $9B, $CB, $FE, $10, $20, $07, $21, $CE, $0A, $CD, $01, $40, $C9, $21, $AD, $5F
-    db $CD
-
-Data_013_581C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $49, $40, $C9
+    db $FA, $9A, $CB, $FE, $80, $20, $0E, $FA, $9B, $CB, $FE, $10, $20, $07, $21, $CE
+    db $0A, $CD, $01, $40, $C9, $21, $AD, $5F, $CD, $49, $40, $C9
 
 Data_013_581F:: ; heuristic: target of a monotone pointer table; C0
     db $21, $16, $0A, $CD, $01, $40, $C9
 
 Data_013_5826:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $9F, $00, $CD, $1B, $18
-
-Data_013_582C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $38, $02, $18, $07, $21, $E8, $0A, $CD, $01, $40, $C9, $CD, $94, $7F, $30, $17
-
-Data_013_583C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $36, $34, $FA, $36, $C8, $CB, $F7, $EA, $36, $C8, $21, $E7, $0A, $CD, $01, $40
-
-Data_013_584C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $11, $9F, $00, $CD, $45, $18, $C9, $21, $E9, $0A, $CD, $01, $40, $C9
+    db $11, $9F, $00, $CD, $1B, $18, $38, $02, $18, $07, $21, $E8, $0A, $CD, $01, $40
+    db $C9, $CD, $94, $7F, $30, $17, $36, $34, $FA, $36, $C8, $CB, $F7, $EA, $36, $C8
+    db $21, $E7, $0A, $CD, $01, $40, $11, $9F, $00, $CD, $45, $18, $C9, $21, $E9, $0A
+    db $CD, $01, $40, $C9
 
 Data_013_585A:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $03
-
-Data_013_585C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $EA, $21, $C9, $3E, $00, $EA, $22, $C9, $11, $E0, $01, $CD, $25, $40, $C9
+    db $3E, $03, $EA, $21, $C9, $3E, $00, $EA, $22, $C9, $11, $E0, $01, $CD, $25, $40
+    db $C9
 
 Data_013_586B:: ; heuristic: target of a monotone pointer table; C0
     db $AF, $EA, $A6, $CB, $C9
@@ -3555,14 +3504,8 @@ Data_013_5877:: ; heuristic: target of a monotone pointer table; C0
     db $C8, $CB, $F7, $EA, $36, $C8, $21, $DD, $5F, $CD, $49, $40, $C9
 
 Data_013_5894:: ; heuristic: target of a monotone pointer table; C0
-    db $3E
-
-Data_013_5895:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $32, $E0, $C6, $21
-
-Data_013_5899:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $CE, $7D, $06, $12, $D7, $21, $F1, $7D, $06, $12, $D7, $21, $D4, $5F, $CD, $49
-    db $40, $C9
+    db $3E, $32, $E0, $C6, $21, $CE, $7D, $06, $12, $D7, $21, $F1, $7D, $06, $12, $D7
+    db $21, $D4, $5F, $CD, $49, $40, $C9
 
 Func_013_58AB:: ; heuristic: target of a pointer table; C0
     ld a, $00
@@ -3635,10 +3578,7 @@ Func_013_5922:: ; heuristic: target of a pointer table; C0
     ld de, $01F0
     call Func_013_4025
     ret
-    db $21, $C9, $5F, $CD
-
-Data_013_5937:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $49, $40, $C9
+    db $21, $C9, $5F, $CD, $49, $40, $C9
 
 Jump_013_593A::
     ld hl, $512D
@@ -3890,7 +3830,7 @@ Jump_013_5B33::
     ret
 
 Jump_013_5B34::
-    ld hl, Data_013_5895
+    ld hl, $5895
     call Func_013_4049
     ret
 
@@ -3937,7 +3877,7 @@ Jump_013_5B8D::
     ld hl, Func_012_6B98
     ld b, $12
     rst $10
-    ld hl, Jump_013_4FAF
+    ld hl, $4FAF
     call Func_013_4049
     ld de, $000D
     call Func_000_1845
@@ -4286,7 +4226,7 @@ Jump_013_5E14::
 
 Jump_013_5E28::
     ld [hl], $1A
-    ld hl, Jump_013_52DC
+    ld hl, $52DC
     call Func_013_4049
     ld de, $0100
     call Func_000_1845
@@ -4839,12 +4779,12 @@ Jump_013_61FD::
     ld de, $012C
     call Func_000_181B
     jr c, Jump_013_6216
-    ld hl, Data_013_57ED
+    ld hl, Data_010_57ED
     call Func_013_4049
     ret
 
 Jump_013_6216::
-    ld hl, Data_013_57F7
+    ld hl, $57F7
     call Func_013_4049
     ret
 
@@ -4886,7 +4826,7 @@ Jump_013_6252::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $533E
+    ld hl, Data_010_533E
     call Func_013_4049
     ld de, $0106
     call Func_000_1845
@@ -4897,7 +4837,7 @@ Jump_013_6279::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $5345
+    ld hl, Data_010_5345
     call Func_013_4049
     ret
 
@@ -4909,7 +4849,7 @@ Jump_013_628A::
     ld [$D7FB], a
     ld a, $10
     ld [$D7FE], a
-    ld hl, $534C
+    ld hl, Data_010_534C
     call Func_013_4049
     ld de, $00CE
     call Func_000_1845
@@ -5522,7 +5462,7 @@ Jump_013_672C::
     ld de, $0102
     call Func_000_181B
     jr c, Jump_013_673B
-    ld hl, Jump_013_5299
+    ld hl, $5299
     call Func_013_4049
     ret
 
@@ -6138,7 +6078,7 @@ Jump_013_6B4E::
     ld de, $0111
     call Func_000_181B
     jr c, Jump_013_6B68
-    ld hl, $549D
+    ld hl, Data_096_549D
     call Func_013_4049
     ld de, $0111
     call Func_000_1845
@@ -6393,7 +6333,7 @@ Jump_013_6CE8::
     ret
 
 Jump_013_6CFA::
-    ld hl, Jump_013_5529
+    ld hl, $5529
     call Func_013_4049
     ret
 
@@ -6536,7 +6476,7 @@ Jump_013_6DD1::
     ld de, $010D
     call Func_000_181B
     jr c, Jump_013_6DFB
-    ld hl, $5586
+    ld hl, Data_00E_5586
     call Func_013_4049
     ret
 
@@ -6617,7 +6557,7 @@ Jump_013_6E71::
     ld de, $010F
     call Func_000_181B
     jr c, Jump_013_6E8D
-    ld hl, $5598
+    ld hl, Data_096_5598
     call Func_013_4049
     ret
 
@@ -6652,7 +6592,7 @@ Jump_013_6EA3::
     ret
 
 Jump_013_6EC8::
-    ld hl, Jump_013_55BD
+    ld hl, $55BD
     call Func_013_4049
     ret
 
@@ -6660,12 +6600,12 @@ Jump_013_6ECF::
     ld de, $002C
     call Func_000_181B
     jr c, Jump_013_6EC8
-    ld hl, Jump_013_55C4
+    ld hl, $55C4
     call Func_013_4049
     ret
 
 Jump_013_6EDE::
-    ld hl, Data_013_55CE
+    ld hl, $55CE
     call Func_013_4049
     ret
 
@@ -6708,12 +6648,12 @@ Jump_013_6F0F::
     ld de, $0112
     call Func_000_181B
     jr c, Jump_013_6F2B
-    ld hl, Data_013_55DB
+    ld hl, Data_00C_55DB
     call Func_013_4049
     ret
 
 Jump_013_6F2B::
-    ld hl, Data_013_55E5
+    ld hl, $55E5
     call Func_013_4049
     ret
 
@@ -6721,7 +6661,7 @@ Jump_013_6F32::
     ld de, $0031
     call Func_000_181B
     jr c, Jump_013_6F2B
-    ld hl, Data_013_55EC
+    ld hl, $55EC
     call Func_013_4049
     ret
 
@@ -6774,7 +6714,7 @@ Jump_013_6F90::
     ld a, [$C836]
     set 6, a
     ld [$C836], a
-    ld hl, Data_013_55F6
+    ld hl, $55F6
     call Func_013_4049
     ret
 
@@ -6902,17 +6842,17 @@ Jump_013_704D::
     jr z, Jump_013_7081
     or a, a
     jr z, Jump_013_7081
-    ld hl, Data_013_561A
+    ld hl, $561A
     call Func_013_4049
     ret
 
 Jump_013_7081::
-    ld hl, Data_013_5631
+    ld hl, $5631
     call Func_013_4049
     ret
 
 Jump_013_7088::
-    ld hl, Data_013_5600
+    ld hl, $5600
     call Func_013_4049
     ret
 
@@ -6942,14 +6882,14 @@ Jump_013_70AA::
     ld de, $0116
     call Func_000_181B
     jr c, Jump_013_70CB
-    ld hl, Data_013_564B
+    ld hl, Data_010_564B
     call Func_013_4049
     ld de, $0116
     call Func_000_1845
     ret
 
 Jump_013_70CB::
-    ld hl, Data_013_5652
+    ld hl, $5652
     call Func_013_4049
     ret
     db $21, $39, $0A, $CD, $01, $40, $C9
@@ -7106,7 +7046,7 @@ Jump_013_71CA::
     ret
 
 Jump_013_71FA::
-    ld hl, Data_013_5937
+    ld hl, $5937
     call Func_013_4049
     ret
 
@@ -7116,7 +7056,7 @@ Jump_013_7201::
     ret
 
 Jump_013_7208::
-    ld hl, Data_013_7530
+    ld hl, $7530
     ld a, l
     ldh [$FFC6], a
     ld a, h
@@ -7294,7 +7234,7 @@ Func_013_7364:: ; heuristic: target of a pointer table; C0
     jr c, Jump_013_738F
     ld a, $01
     ld [$D7FB], a
-    ld hl, Func_013_5660
+    ld hl, $5660
     call Func_013_4049
     ld a, $0E
     ld [$D7FE], a
@@ -7517,11 +7457,7 @@ Jump_013_7518::
     ld hl, $04CC
     call Func_013_4001
     ret
-    db $21, $CF, $04, $CD, $01, $40, $C9, $FA, $68, $C9, $FE, $01, $20, $07, $21, $C2
-    db $0D
-
-Data_013_7530:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $04F530, $51
+    INCBIN "dwm2-cobi-us.gbc", $04F51F, $62
 
 Func_013_7581:: ; heuristic: target of a pointer table; C0
     ld de, $0025
@@ -7622,7 +7558,7 @@ Jump_013_7624::
     ldh a, [$FFC6]
     or a, a
     jr z, Jump_013_7600
-    ld hl, Func_013_58CD
+    ld hl, $58CD
     call Func_013_4049
     ret
 
@@ -7685,7 +7621,7 @@ Jump_013_7697::
     ld hl, Func_012_6955
     ld b, $12
     rst $10
-    ld hl, Func_013_58EF
+    ld hl, $58EF
     call Func_013_4049
     ret
 
@@ -7872,7 +7808,7 @@ Func_013_780F:: ; heuristic: target of a pointer table; C0
 Func_013_781C:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [$D7FB], a
-    ld hl, Func_013_5660
+    ld hl, $5660
     call Func_013_4049
     ld a, $0E
     ld [$D7FE], a
@@ -7951,12 +7887,12 @@ Jump_013_78ED::
     ld a, [$D7F5]
     cp a, $FF
     jr nz, Jump_013_7909
-    ld hl, Data_013_57FE
+    ld hl, $57FE
     call Func_013_4049
     ret
 
 Jump_013_7909::
-    ld hl, Data_013_580B
+    ld hl, $580B
     call Func_013_4049
     ret
 
@@ -8125,7 +8061,7 @@ Func_013_7ABD:: ; heuristic: target of a pointer table; C0
     ld de, $0023
     call Func_000_181B
     ret nc
-    ld hl, Data_013_57A2
+    ld hl, $57A2
     call Func_013_4049
     ret
 
@@ -8360,7 +8296,7 @@ Func_013_7E05:: ; heuristic: target of a pointer table; C0
     jr c, Jump_013_7E32
     ld a, $05
     ld [$D7FB], a
-    ld hl, Data_013_581C
+    ld hl, $581C
     call Func_013_4049
     ret
 
@@ -8389,7 +8325,7 @@ Jump_013_7E39::
 Jump_013_7E59::
     ld a, $06
     ld [$D7FB], a
-    ld hl, Data_013_582C
+    ld hl, $582C
     call Func_013_4049
     ret
 
@@ -8418,7 +8354,7 @@ Jump_013_7E6C::
 Jump_013_7E8C::
     ld a, $07
     ld [$D7FB], a
-    ld hl, Data_013_583C
+    ld hl, $583C
     call Func_013_4049
     ret
 
@@ -8442,7 +8378,7 @@ Func_013_7E9F:: ; heuristic: target of a pointer table; C0
     jr c, Jump_013_7EC8
     ld a, $08
     ld [$D7FB], a
-    ld hl, Data_013_584C
+    ld hl, $584C
     call Func_013_4049
     ret
 
@@ -8471,7 +8407,7 @@ Jump_013_7ECF::
 Jump_013_7EEF::
     ld a, $09
     ld [$D7FB], a
-    ld hl, Data_013_585C
+    ld hl, $585C
     call Func_013_4049
     ret
 
@@ -8498,7 +8434,7 @@ Func_013_7F02:: ; heuristic: target of a pointer table; C0
     ret
 
 Jump_013_7F23::
-    ld hl, Data_013_5899
+    ld hl, $5899
     call Func_013_4049
     ret
 

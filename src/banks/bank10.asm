@@ -2301,7 +2301,86 @@ Func_010_4F4D:: ; heuristic: follows a terminator; C0
     ld b, $85
     rst $10
     ret
-    INCBIN "dwm2-cobi-us.gbc", $040F54, $166B
+    INCBIN "dwm2-cobi-us.gbc", $040F54, $3EA
+
+Data_010_533E:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $0D, $42, $E7, $59, $66, $FF
+
+Data_010_5345:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $0E, $42, $E7, $59, $66, $FF
+
+Data_010_534C:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $89, $4D, $E7, $59, $66, $FF
+
+Data_010_5353:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $0A, $03, $01, $00, $1C, $41, $E7, $B5, $67, $FF, $00, $1D, $41, $E7, $B5, $67
+    db $FF
+
+Data_010_5364:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $041364, $2E7
+
+Data_010_564B:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $04164B, $1A2
+
+Data_010_57ED:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $0417ED, $1D4
+
+Data_010_59C1:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $0419C1, $1CB
+
+Data_010_5B8C:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $09, $48, $E7, $07, $67, $FF, $FF, $00, $BB, $41, $E7, $0B, $69, $FF, $00
+    db $18, $48, $06, $04, $00, $1A, $88, $FF, $00, $19, $88, $FF, $00, $20, $48, $E7
+    db $D4, $77, $FF
+
+Data_010_5BAF:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $041BAF, $1B9
+
+Data_010_5D68:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $041D68, $48
+
+Data_010_5DB0:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $31, $43, $E7, $59, $66, $FF
+
+Data_010_5DB7:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $32, $43, $E7, $07, $67, $FF
+
+Data_010_5DBE:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $041DBE, $D0
+
+Data_010_5E8E:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $041E8E, $7D
+
+Data_010_5F0B:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $041F0B, $F8
+
+Data_010_6003:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $BB, $41, $E7, $0B, $69, $FF, $00, $12, $04, $00, $E6, $0D, $50, $0A, $A4
+    db $00, $FF, $00, $1D, $04, $01, $00, $01, $01, $05, $80, $03, $FF, $00, $26, $44
+    db $06, $04, $00, $28, $84, $FF, $00, $27, $84, $FF, $00, $26, $44, $06, $04, $00
+    db $28, $84, $FF, $00, $29, $84, $FF, $00, $2E, $44, $E7, $D4, $77, $FF
+
+Data_010_6041:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $2D, $44, $E7, $07, $67, $FF
+
+Data_010_6048:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $32, $44, $E7, $0B, $69, $FF, $00, $33, $04, $51, $0D, $05, $0A, $A8, $00
+    db $FF, $00, $33, $04, $0D, $05, $0A, $A8, $00, $FF, $00, $39, $44, $06, $04, $00
+    db $3B, $84, $FF, $00, $3A, $84, $FF, $00, $47, $44, $06, $04, $00, $49, $84, $FF
+    db $00, $48, $84, $FF
+
+Data_010_607C:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $04207C, $2FF
+
+Data_010_637B:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $04237B, $C3
+
+Data_010_643E:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $04243E, $16C
+
+Data_010_65AA:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $00, $24, $41, $E7, $0B, $69, $FF, $00, $28, $41, $E7, $0B, $69, $FF, $00, $27
+    db $41, $E7, $D4, $77, $FF
 
 Func_010_65BF:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01C_4075

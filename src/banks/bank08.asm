@@ -34,7 +34,7 @@ Func_008_402B::
     call Func_000_2611
     ret
 
-Data_008_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_008_4032:: ; heuristic: bank from RAM variable $D7FE; C0
     db $44, $40, $42, $42, $58, $42
 
 Data_008_4038:: ; heuristic: argument of a bank-switching copy helper; C0

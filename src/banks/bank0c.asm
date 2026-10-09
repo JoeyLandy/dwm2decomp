@@ -3028,7 +3028,10 @@ Data_00C_555C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $86, $7D, $FF, $7F, $E1, $7F
 
 Data_00C_5562:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $031562, $175
+    INCBIN "dwm2-cobi-us.gbc", $031562, $79
+
+Data_00C_55DB:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $0315DB, $FC
 
 Data_00C_56D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $04

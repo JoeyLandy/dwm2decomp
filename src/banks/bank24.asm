@@ -2165,7 +2165,7 @@ Func_024_4F68::
     push af
     ld a, $08
     ld [$D7FE], a
-    ld hl, $4032
+    ld hl, Data_008_4032
     ld a, $04
     add a, l
     ld l, a

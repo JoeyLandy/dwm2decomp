@@ -639,8 +639,11 @@ Data_00E_556E:: ; heuristic: target of a monotone pointer table; C0
     db $0B, $35, $28, $27, $12, $31, $29, $32, $0E, $3B, $2C, $37, $F0
 
 Data_00E_557B:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $1D, $14, $0D, $0E, $0F, $10, $15, $12, $17, $20, $16, $28, $3B, $37, $39
-    db $2F, $0B, $24, $36, $90, $90, $90, $90, $90, $90, $90, $90, $A2, $90, $F0
+    db $0A, $1D, $14, $0D, $0E, $0F, $10, $15, $12, $17, $20
+
+Data_00E_5586:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $16, $28, $3B, $37, $39, $2F, $0B, $24, $36, $90, $90, $90, $90, $90, $90, $90
+    db $90, $A2, $90, $F0
 
 Data_00E_559A:: ; heuristic: target of a monotone pointer table; C0
     db $0B, $35, $28, $28, $27, $2C, $31, $2A, $90, $3A, $28, $31, $37, $F1, $3A, $35

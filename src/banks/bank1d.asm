@@ -11,11 +11,7 @@ Data_01D_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $CD, $11, $26, $C9
 
 Data_01D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $18, $40, $48, $40, $48, $40, $69, $40, $8E, $40, $AF, $40, $D0, $40, $F4, $40
-    db $13, $41, $33, $41, $4C, $41, $65, $41, $84, $41, $BD, $41
-
-Data_01D_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $074032, $488
+    INCBIN "dwm2-cobi-us.gbc", $074016, $4A4
 
 Func_01D_44BA::
     ld a, [$D780]
@@ -3601,7 +3597,7 @@ Func_01D_5CD7::
     push af
     ld a, $08
     ld [$D7FE], a
-    ld hl, Data_01D_4032
+    ld hl, Data_008_4032
     ld a, $04
     add a, l
     ld l, a
@@ -4284,7 +4280,7 @@ Jump_01D_60BB::
     push af
     ld a, $08
     ld [$D7FE], a
-    ld hl, Data_01D_4032
+    ld hl, Data_008_4032
     ld a, $04
     add a, l
     ld l, a

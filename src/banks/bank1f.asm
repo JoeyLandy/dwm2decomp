@@ -557,7 +557,10 @@ Data_01F_599C:: ; heuristic: target of a monotone pointer table; C0
 
 Data_01F_59BD:: ; heuristic: target of a monotone pointer table; C0
     db $1D, $2B, $28, $90, $28, $2A, $2A, $90, $3A, $24, $36, $F1, $35, $28, $2F, $28
-    db $24, $36, $28, $27, $B5, $F7, $F0
+    db $24, $36
+
+Data_01F_59CF:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $28, $27, $B5, $F7, $F0
 
 Data_01F_59D4:: ; heuristic: target of a monotone pointer table; C0
     db $F9, $00, $90, $3A, $24, $36, $90, $35, $28, $2F, $28, $24, $36, $28, $27, $F1
@@ -567,7 +570,16 @@ Data_01F_59F2:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $07D9F2, $48
 
 Data_01F_5A3A:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $07DA3A, $1DB
+    INCBIN "dwm2-cobi-us.gbc", $07DA3A, $13C
+
+Data_01F_5B76:: ; heuristic: bank from RAM variable $D7FE; C0
+    db $5B, $E8, $EA, $05, $C0, $07, $3B, $5A, $07, $77, $5B, $EA, $15, $C0, $E8, $E4
+    db $04, $00, $07, $62, $5B, $E8, $07, $84, $5B, $EA, $16, $C0, $E8, $07, $62, $5B
+    db $E8, $EA, $17, $C0, $E8, $E4, $0A, $0C, $0E, $1A, $00, $EA, $06, $C0, $07, $97
+    db $5B, $07
+
+Data_01F_5BA8:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $07DBA8, $6D
 
 Func_01F_5C15::
     ld a, $0A
@@ -958,7 +970,16 @@ Data_01F_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3
 
 Data_01F_5E13:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $07DE13, $69C
+    INCBIN "dwm2-cobi-us.gbc", $07DE13, $1D5
+
+Data_01F_5FE8:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $07DFE8, $52
+
+Data_01F_603A:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $07E03A, $49
+
+Data_01F_6083:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $07E083, $42C
 
 Data_01F_64AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07E4AF, $6C
@@ -968,7 +989,10 @@ Data_01F_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Data_01F_653F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $C3
-    INCBIN "dwm2-cobi-us.gbc", $07E577, $B4
+    INCBIN "dwm2-cobi-us.gbc", $07E577, $41
+
+Data_01F_65B8:: ; heuristic: bank from RAM variable $D7FE; C0
+    INCBIN "dwm2-cobi-us.gbc", $07E5B8, $73
 
 Data_01F_662B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07E62B, $B4
