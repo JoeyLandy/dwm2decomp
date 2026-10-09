@@ -122,7 +122,7 @@ Jump_03A_40B3::
     xor a, a
     ld hl, wD804
     ld bc, $0004
-    call Func_000_0949
+    call FillBytes
     xor a, a
     ld [wDAF1], a
     ret
@@ -265,7 +265,7 @@ Jump_03A_4970::
     ld a, $FF
     ld hl, wD805
     ld bc, $0003
-    call Func_000_0949
+    call FillBytes
     ld a, $01
     ld [wD802], a
     ld a, $01
@@ -592,7 +592,7 @@ Jump_03A_4BC8::
     ld a, $FF
     ld hl, wD805
     ld bc, $0003
-    call Func_000_0949
+    call FillBytes
     ld a, $01
     ld [wD802], a
     ld a, $01
@@ -782,7 +782,7 @@ Func_03A_4D2B::
 
 Jump_03A_4D30::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [hl+]
     ld [de], a
     ei
@@ -1612,7 +1612,7 @@ Func_03A_52A4::
     ld d, a
     ld b, [hl]
     ld hl, vTiles0
-    call Func_000_0CF5
+    call DecompressToVRAM
     ret
 
 Data_03A_52B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1725,7 +1725,7 @@ Jump_03A_5426::
     ld a, [wD869]
     ld h, a
     ld a, b
-    call Func_000_1211
+    call WriteVRAMByte
     pop af
     swap a
     and a, $0F
@@ -1745,7 +1745,7 @@ Jump_03A_5442::
     ld h, a
     dec hl
     ld a, b
-    call Func_000_1211
+    call WriteVRAMByte
     pop hl
 
 Jump_03A_5451::
@@ -1770,7 +1770,7 @@ Jump_03A_5464::
     ld a, [wD86B]
     ld h, a
     ld a, b
-    call Func_000_1211
+    call WriteVRAMByte
     pop af
     swap a
     and a, $0F
@@ -1790,7 +1790,7 @@ Jump_03A_5480::
     ld h, a
     dec hl
     ld a, b
-    call Func_000_1211
+    call WriteVRAMByte
 
 Jump_03A_548E::
     ret
@@ -1806,7 +1806,7 @@ Func_03A_548F::
     ld a, $FF
     ld hl, wD805
     ld bc, $0003
-    call Func_000_0949
+    call FillBytes
     ld a, $01
     ld [wD802], a
     ld a, $01
@@ -2336,7 +2336,7 @@ Jump_03A_57C2::
     ld a, [hl]
     cp a, $FF
     ret z
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Func_03A_57CA::
@@ -2361,7 +2361,7 @@ Jump_03A_57E2::
     ld a, [hl]
     sbc a, $03
     ld a, $81
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_03A_57F1::
@@ -2529,7 +2529,7 @@ Jump_03A_61D7::
     jr z, Jump_03A_61F4
     ld a, [wD8A4]
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_03A_61F0
     ld hl, wCFCA
@@ -2564,7 +2564,7 @@ Jump_03A_6211::
     jr z, Jump_03A_6264
     ld a, [wD8A4]
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr z, Jump_03A_6264
     res 0, [hl]
@@ -2575,7 +2575,7 @@ Jump_03A_6211::
 Jump_03A_6230::
     ld a, [wD8A4]
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     res 0, [hl]
     ld d, $86
     farcall Func_03A_7193
@@ -2615,7 +2615,7 @@ Jump_03A_6269::
     call Func_03A_7D6A
     jr c, Jump_03A_629F
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 1, [hl]
     jr z, Jump_03A_629F
     ld hl, wCFC9
@@ -2637,7 +2637,7 @@ Jump_03A_62A3::
     call Func_000_3E54
     jr c, Jump_03A_62FC
     ld hl, wD810
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr z, Jump_03A_62FC
     res 6, [hl]
@@ -2733,7 +2733,7 @@ Jump_03A_634C::
     jr nz, Jump_03A_635E
     ld a, [wD8A4]
     ld hl, wD810
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $F3
     ld [hl], a
@@ -2845,7 +2845,7 @@ Func_03A_63F7::
     ret c
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     ret z
     scf
@@ -2943,7 +2943,7 @@ Jump_03A_6480::
     inc [hl]
     ld a, [wD8A4]
     ld hl, wD811
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $3F
     ld d, a
@@ -2976,7 +2976,7 @@ Jump_03A_64AF::
     inc [hl]
     ld a, [wD8A4]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $03
     ret z
@@ -3012,7 +3012,7 @@ Func_03A_64F8::
     ld a, [wD8A4]
     call Func_03A_7C66
     ld a, b
-    call Func_000_16D1
+    call DivideHLByA
     ld a, h
     or a, l
     jr nz, Jump_03A_650A
@@ -3133,7 +3133,7 @@ Jump_03A_65B8::
     ld hl, wDA5B
     ld bc, $0008
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld b, $03
     ld c, $00
     ld d, $00
@@ -3666,7 +3666,7 @@ Jump_03A_6923::
     jr z, Jump_03A_6940
     ld a, [wD8A4]
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_03A_693C
     ld hl, wCFCA
@@ -3769,7 +3769,7 @@ Jump_03A_69C2::
     inc [hl]
     ld a, [wD8A5]
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jp z, Jump_03A_6A60
     ld a, [wD8A5]
@@ -3792,7 +3792,7 @@ Jump_03A_69F2::
     ld a, [wD8A5]
     call Func_03A_7C75
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr z, Jump_03A_6A60
     ld a, [wD872]
     ld e, a
@@ -3807,7 +3807,7 @@ Jump_03A_69F2::
     ld a, d
     ld [wD873], a
     add hl, de
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_03A_6A3A
     jr z, Jump_03A_6A3A
     ld a, l
@@ -3863,7 +3863,7 @@ Jump_03A_6A60::
     jr z, Jump_03A_6AB6
     ld a, [wD8A5]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $90
     jr z, Jump_03A_6AB6
@@ -3902,7 +3902,7 @@ Jump_03A_6ABC::
     inc [hl]
     ld a, [wD8A5]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     bit 4, [hl]
     jr z, Jump_03A_6AEC
@@ -3939,7 +3939,7 @@ Jump_03A_6AFE::
     jp nz, Jump_03A_6BE8
     ld a, [wD8A5]
     ld hl, wD813
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 2, [hl]
     jp z, Jump_03A_6BE8
     ld a, [wCFF3]
@@ -3963,7 +3963,7 @@ Jump_03A_6AFE::
     push hl
     ld a, [wD8A5]
     ld hl, wD813
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 3, [hl]
     jr z, Jump_03A_6B66
     pop hl
@@ -4224,7 +4224,7 @@ Func_03A_6CD4::
     call Func_03A_7D6A
     jr c, Jump_03A_6D45
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 3, [hl]
     jr z, Jump_03A_6D45
     ld a, [wCFF5]
@@ -4733,7 +4733,7 @@ Jump_03A_7784::
     ld a, b
     dec b
     ld c, b
-    call Func_000_1682
+    call Multiply8
     srl h
     rr l
     ld a, [wDAC4]
@@ -4834,7 +4834,7 @@ Jump_03A_780B::
     ld a, b
     dec b
     ld c, b
-    call Func_000_1682
+    call Multiply8
     srl h
     rr l
     ld a, [wDAC4]
@@ -4935,7 +4935,7 @@ Jump_03A_7893::
     ld a, b
     dec b
     ld c, b
-    call Func_000_1682
+    call Multiply8
     srl h
     rr l
     ld a, [wDAC4]
@@ -5351,7 +5351,7 @@ Func_03A_7AE3::
     xor a, a
     ld hl, wC0A0
     ld bc, $0010
-    call Func_000_0949
+    call FillBytes
     ld de, $0000
     ld c, $00
     ld a, [wC58A]
@@ -5495,7 +5495,7 @@ Func_03A_7BA0::
     ld a, $FF
     ld hl, wD86D
     ld bc, $0003
-    call Func_000_0949
+    call FillBytes
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_03A_7BB6
@@ -5790,7 +5790,7 @@ Func_03A_7D6A::
     push bc
     ld c, a
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_03A_7D84
@@ -5812,7 +5812,7 @@ Jump_03A_7D85::
 Func_03A_7D89:: ; heuristic: follows a terminator; C0
     push hl
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_03A_7D98

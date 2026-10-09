@@ -4927,7 +4927,7 @@ Func_0E2_654B::
 Jump_0E2_6561::
     ld a, $06
     ld [wDataBank], a
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld a, b
     ld b, c
     ld c, a

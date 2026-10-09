@@ -105,7 +105,7 @@ Jump_011_4088::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, [de]
     inc de
     ldh [hFF90], a
@@ -246,10 +246,10 @@ Jump_011_4152::
     cp a, $50
     jr nz, Jump_011_4190
     ld de, $0076
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_011_4190
     ld de, $0070
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_011_4190
     jr Jump_011_4196
 
@@ -328,7 +328,7 @@ Jump_011_41E6::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, [de]
     inc de
     ldh [hFF90], a
@@ -521,7 +521,7 @@ Func_011_4340::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, [de]
     and a, $F0
     ld [wC8C8], a
@@ -561,7 +561,7 @@ Func_011_438F::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $04
     call Func_000_0DF2
     ld a, $04
@@ -667,7 +667,7 @@ Jump_011_442B::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     inc de
     ld a, [de]
     dec a

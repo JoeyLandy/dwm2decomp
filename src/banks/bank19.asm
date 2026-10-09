@@ -7,17 +7,17 @@ Func_019_4001::
     ld hl, wD800
     ld bc, $0303
     xor a, a
-    call Func_000_0949
+    call FillBytes
     ld a, [wDataBank]
     ld [wDataBankSave], a
     ld hl, wCFC8
     ld bc, $0008
     xor a, a
-    call Func_000_0949
+    call FillBytes
     ld hl, wCFD0
     ld bc, $0008
     xor a, a
-    call Func_000_0949
+    call FillBytes
     pop af
     ld [wCFC5], a
     call Func_019_4079
@@ -27,7 +27,7 @@ Func_019_4001::
     ld hl, wD09D
     ld bc, $0200
     xor a, a
-    call Func_000_0949
+    call FillBytes
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
@@ -76,7 +76,7 @@ Jump_019_408D::
     ld hl, wC46B
     ld bc, $0008
     xor a, a
-    call Func_000_0949
+    call FillBytes
     xor a, a
     ld [wC5FC], a
     ld [wC5FD], a
@@ -84,23 +84,23 @@ Jump_019_408D::
     ld hl, wDA5B
     ld bc, $0008
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld hl, wDAD8
     ld bc, $0008
     ld a, $80
-    call Func_000_0949
+    call FillBytes
     ld hl, wDA63
     ld bc, $0008
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld hl, wD958
     ld bc, $0010
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld a, $FF
     ld hl, wDA08
     ld bc, $0080
-    call Func_000_0949
+    call FillBytes
     ld a, $FF
     ld hl, wDAD4
     ld [hl+], a
@@ -113,7 +113,7 @@ Jump_019_408D::
     ld hl, wD895
     ld bc, $000A
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     xor a, a
     ld [wD891], a
     ld a, $00
@@ -411,7 +411,7 @@ Func_019_42EE::
     ld hl, wD008
     ld bc, $002F
     xor a, a
-    call Func_000_0949
+    call FillBytes
     pop hl
     pop bc
     ret
@@ -446,7 +446,7 @@ Func_019_42FD::
     push bc
     push de
     push hl
-    call Func_000_095B
+    call NextTableByte
     pop hl
     pop de
     pop bc
@@ -457,7 +457,7 @@ Func_019_42FD::
     ld h, a
 
 Jump_019_4332::
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_019_433F
     ld a, l
     sub a, c
@@ -511,7 +511,7 @@ Jump_019_435A::
 
 Jump_019_436B::
     ld a, $4E
-    call Func_000_1682
+    call Multiply8
     pop bc
     ld a, l
     add a, $E3
@@ -864,7 +864,7 @@ Jump_019_451C::
 Jump_019_451E::
     ld a, [de]
     inc de
-    call Func_000_121F
+    call WriteVRAMByteInc
     dec b
     jr nz, Jump_019_451E
     ld a, $0C
@@ -889,7 +889,7 @@ Func_019_4537::
     add hl, hl
     add hl, hl
     ld a, $0A
-    call Func_000_16D1
+    call DivideHLByA
     pop de
     pop bc
     ret
@@ -1386,7 +1386,7 @@ Func_019_488D::
     push bc
     push de
     push hl
-    call Func_000_095B
+    call NextTableByte
     pop hl
     pop de
     pop bc
@@ -1400,7 +1400,7 @@ Func_019_489D::
     push bc
     push de
     push hl
-    call Func_000_095B
+    call NextTableByte
     pop hl
     pop de
     pop bc
@@ -1571,7 +1571,7 @@ Jump_019_4991::
     push bc
     push de
     push hl
-    call Func_000_095B
+    call NextTableByte
     pop hl
     pop de
     pop bc
@@ -1729,18 +1729,18 @@ Func_019_4A74::
     push af
     push hl
     ld c, e
-    call Func_000_1682
+    call Multiply8
     pop bc
     pop af
     push hl
     push af
     push bc
     ld c, b
-    call Func_000_1682
+    call Multiply8
     pop bc
     pop af
     push hl
-    call Func_000_1682
+    call Multiply8
     pop bc
     ld a, c
     add a, h
@@ -1919,7 +1919,7 @@ Jump_019_4B5B::
     push bc
     push de
     push hl
-    call Func_000_095B
+    call NextTableByte
     pop hl
     pop de
     pop bc
@@ -2401,7 +2401,7 @@ Func_019_4E05::
 
 Jump_019_4E0E::
     ld c, $4E
-    call Func_000_1682
+    call Multiply8
     ld a, l
     add a, $D5
     ld l, a

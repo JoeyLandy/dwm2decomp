@@ -267,7 +267,7 @@ Func_014_41B0:: ; heuristic: target of a pointer table; C0
     ld [wD786], a
     call $423F
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
     db $3D
 
@@ -279,7 +279,7 @@ Jump_014_41BE::
     ld [wD7AF], a
     call Func_014_4259
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_014_41D4::
@@ -295,7 +295,7 @@ Func_014_41E0:: ; heuristic: target of a pointer table; C0
     rst $10
     call $423F
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_014_41EB::
@@ -306,7 +306,7 @@ Jump_014_41EE::
     ld a, $69
 
 Func_014_41F0:: ; heuristic: target of a pointer table; C0
-    call Func_000_1278
+    call StoreWC60B
     call Func_014_4261
     ld c, $00
 
@@ -407,7 +407,7 @@ Func_014_4270:: ; heuristic: target of a pointer table; C0
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -777,7 +777,7 @@ Jump_014_451C::
     pop hl
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $BC
     ld [hl], a
     ei
@@ -916,7 +916,7 @@ Jump_014_4630::
     cp a, $1D
     jr z, Jump_014_464F
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -972,7 +972,7 @@ Func_014_46A1:: ; heuristic: target of a pointer table; C0
     cp a, $1D
     jr z, Jump_014_46B9
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -1115,7 +1115,7 @@ Func_014_4794:: ; heuristic: target of a pointer table; C0
     ld de, $01CC
     call Func_014_585B
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wD7AD], a
     ld [wD7AE], a
@@ -1141,7 +1141,7 @@ Func_014_4810:: ; heuristic: target of a pointer table; C0
     rst $10
     call Func_014_4907
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
     db $CD, $0B
 
@@ -1301,7 +1301,7 @@ Jump_014_491D::
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -1340,7 +1340,7 @@ Func_014_496D:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles2 + $730
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld a, $6C
     db $CD
 
@@ -1944,12 +1944,12 @@ Jump_014_4EFD::
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4320
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ret
 
 Data_014_4F24:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1992,9 +1992,9 @@ Func_014_4F51:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles2 + $730
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_01F_4FAE
     ld hl, wC412
     ld bc, $0605
@@ -2003,7 +2003,7 @@ Func_014_4F51:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     db $11
 
 Func_014_4F7D:: ; heuristic: target of a pointer table; C0
@@ -2012,12 +2012,12 @@ Func_014_4F7D:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4180
     ld hl, vTiles2 + $760
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     call Func_014_5800
     ld bc, $140D
     ld de, $01CC
@@ -2070,7 +2070,7 @@ Func_014_5002:: ; heuristic: target of a pointer table; C0
     cp a, $1D
     jr nc, Jump_014_502A
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -2548,7 +2548,7 @@ Jump_014_53EC::
     cp a, $1D
     jr z, Jump_014_53FF
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -2591,7 +2591,7 @@ Func_014_543F:: ; heuristic: target of a pointer table; C0
     cp a, $1D
     jr z, Jump_014_5457
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -2856,7 +2856,7 @@ Func_014_5649:: ; heuristic: target of a pointer table; C0
     cp a, $1D
     jr z, Jump_014_566D
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -2951,7 +2951,7 @@ Func_014_56EB::
     cp a, $1D
     jr z, Jump_014_570A
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -3041,7 +3041,7 @@ Func_014_578E::
     cp a, $1D
     jr z, Jump_014_57A1
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     xor a, a
@@ -3275,7 +3275,7 @@ Jump_014_58BD::
     pop hl
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     pop de
     pop hl
     ld a, [wD785]
@@ -3413,7 +3413,7 @@ Func_014_5979::
     ld [rRAMB], a
     ld a, b
     ld c, $0D
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     ldh a, [hFFC6]
     and a, $0F
     ld [wD09D], a
@@ -3430,21 +3430,21 @@ Func_014_599F::
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $C5
     ld [hl], a
     ei
     inc hl
     inc hl
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $BE
     ld [hl], a
     ei
     inc hl
     inc hl
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $C6
     ld [hl], a
     ei
@@ -3497,7 +3497,7 @@ Jump_014_59F7::
     cp a, $1D
     jr z, Jump_014_5A15
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld de, sB356
     add hl, de
     ld a, l
@@ -3680,32 +3680,32 @@ Jump_014_5CD5::
     ld hl, vTiles2
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4230
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4290
     ld hl, vTiles1 + $4F0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4370
     ld hl, vTiles1 + $5F0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4A80
     ld hl, vTiles1 + $4C0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4A90
     ld hl, vTiles1 + $4D0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld a, [wCFA9]
     inc a
     ld [wCFA9], a
@@ -3752,7 +3752,7 @@ Jump_014_5D8B::
     ld de, $0043
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     pop af
     and a, $01
     add a, $CC
@@ -3917,7 +3917,7 @@ Jump_014_5EDE::
     ld [rRAMB], a
     ld a, [hl]
     ld c, $01
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld de, wCFAD
     ld c, $00
 
@@ -3949,7 +3949,7 @@ Jump_014_5F09::
 
 Jump_014_5F12::
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_014_5F30
     ld hl, wCFAD
     ld a, $0C
@@ -4047,7 +4047,7 @@ Jump_014_5FC3::
 Jump_014_5FC7::
     call Func_014_6172
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wD7F5], a
     ret
@@ -4088,7 +4088,7 @@ Jump_014_6006::
 Jump_014_600D::
     call Func_014_6172
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wD7F5], a
     ret
@@ -4130,7 +4130,7 @@ Jump_014_604A::
 Jump_014_6051::
     call Func_014_6172
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wD7F5], a
     ret
@@ -4174,14 +4174,14 @@ Jump_014_6092::
 Jump_014_6099::
     call Func_014_6172
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wD7F5], a
     ret
 
 Jump_014_60A6::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     call Func_014_618D
     ld a, [wCFA9]
     inc a
@@ -4193,7 +4193,7 @@ Jump_014_60A6::
 
 Jump_014_60BB::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     call Func_014_6172
     ld a, [wCFA9]
     inc a
@@ -4204,7 +4204,7 @@ Jump_014_60BB::
 
 Jump_014_60CF::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     call Func_014_6189
     ld a, $0D
     ld [wCFBF], a
@@ -4246,7 +4246,7 @@ Jump_014_60F8::
 
 Jump_014_6112::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wCFAD
 
 Jump_014_611A::
@@ -4316,7 +4316,7 @@ Jump_014_6164::
     ld a, $8E
     ld [hl], a
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wD7F5], a
     ret
@@ -4373,7 +4373,7 @@ Jump_014_61AA::
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -4387,7 +4387,7 @@ Jump_014_61AA::
     ret nz
     inc hl
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -4395,12 +4395,12 @@ Jump_014_61AA::
 Jump_014_61D2::
     inc hl
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl+], a
     ei
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -4768,7 +4768,7 @@ Jump_014_6488::
     ld hl, vTiles2 + $480
     ld b, $1F
     ld c, $10
-    call Func_000_0B46
+    call OrFromBankWaitVRAM
 
 Jump_014_64A9::
     xor a, a
@@ -4809,7 +4809,7 @@ Jump_014_64D3::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, [wCFAA]
     inc a
     ld [wCFAA], a
@@ -5075,7 +5075,7 @@ Jump_014_66B1::
     inc a
     ld [wCFA8], a
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wD7F5], a
     ret
@@ -5409,14 +5409,14 @@ Jump_014_691D::
     ld [wCFBE], a
     call Func_014_6943
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $FD
     ld [wD7F9], a
     ret
 
 Jump_014_692F::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     call Func_014_695E
     ld a, $FF
     ld [wD7F9], a
@@ -5467,7 +5467,7 @@ Jump_014_696C::
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -5524,7 +5524,7 @@ Jump_014_6998::
     push bc
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     pop bc
     pop hl
     inc hl
@@ -5871,7 +5871,7 @@ Jump_014_6B82::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, [wCFC4]
     inc a
     ld [wCFC4], a
@@ -5979,7 +5979,7 @@ Jump_014_6C19::
     pop hl
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     pop de
     pop hl
     ld a, [wCFAB]
@@ -6088,7 +6088,7 @@ Jump_014_6CC0::
     ld a, [wD7F2]
     and a, $01
     ld c, $46
-    call Func_000_1682
+    call Multiply8
     pop bc
     ld a, b
     add a, l
@@ -7549,7 +7549,7 @@ Func_014_7D7F::
     cp a, $1D
     jr z, Jump_014_7D9E
     ld c, $6F
-    call Func_000_1682
+    call Multiply8
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -7761,7 +7761,7 @@ Func_014_7E96::
     cp a, $1E
     jr nc, Jump_014_7EB6
     ld c, $A5
-    call Func_000_1682
+    call Multiply8
     ld de, sA000
     add hl, de
     ld b, $A5

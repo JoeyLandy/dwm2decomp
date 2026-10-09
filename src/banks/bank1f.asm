@@ -223,7 +223,7 @@ Jump_01F_507A::
     pop bc
     dec b
     ret z
-    call Func_000_05D1
+    call SpinDelay
     jr Jump_01F_5065
 
 Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -707,7 +707,7 @@ Jump_01F_5CB9::
     cp a, $8E
     jr z, Jump_01F_5CCF
     call Func_01F_5CF8
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     jr Jump_01F_5CDE
 
 Jump_01F_5CCF::
@@ -717,7 +717,7 @@ Jump_01F_5CCF::
     ld [wD785], a
     pop af
     call Func_01F_5CF8
-    call Func_000_0B46
+    call OrFromBankWaitVRAM
 
 Jump_01F_5CDE::
     pop hl
@@ -1105,7 +1105,7 @@ Jump_01F_73A7::
     pop de
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     pop bc
     inc c
     ld a, c
@@ -1224,17 +1224,17 @@ Func_01F_7494::
     ld hl, vTiles1 + $7E0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4A70
     ld hl, vTiles1 + $7F0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4AD0
     ld hl, vTiles2 + $6F0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ret
 
 Func_01F_74E3::
@@ -1330,7 +1330,7 @@ Func_01F_7591::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     call Func_01F_77AB
     ld de, $0008
     add hl, de
@@ -1390,7 +1390,7 @@ Jump_01F_760D::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles2 + $200
     ld a, l
     ld [wC52D], a
@@ -1441,7 +1441,7 @@ Jump_01F_7673::
     jr Jump_01F_7682
 
 Jump_01F_767D::
-    call Func_000_290E
+    call FillTilesFromRequest
     jr Jump_01F_7690
 
 Jump_01F_7682::
@@ -1506,7 +1506,7 @@ Func_01F_76B5::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     call Func_01F_77AB
     ld de, $0008
     add hl, de
@@ -1536,7 +1536,7 @@ Func_01F_76B5::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a

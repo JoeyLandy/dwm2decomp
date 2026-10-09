@@ -636,7 +636,7 @@ Jump_03B_43BE::
     jr z, Jump_03B_43F5
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     bit 6, a
     jr nz, Jump_03B_4406
@@ -718,7 +718,7 @@ Jump_03B_4456::
     inc [hl]
     ld a, [wD8A5]
     ld hl, wD811
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $C0
     ret z
@@ -1139,7 +1139,7 @@ Func_03B_4711::
     ld a, $FF
     ld hl, wD88B
     ld bc, $0003
-    call Func_000_0949
+    call FillBytes
     farcall Func_03A_7AE3
     ld a, d
     cp a, $03
@@ -1404,7 +1404,7 @@ Jump_03B_4873::
     ld b, a
     ld a, [wD8A5]
     call Func_03B_4F25
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_03B_4896
     call Func_03B_48E9
     ld b, h
@@ -1454,7 +1454,7 @@ Jump_03B_48C1::
     ld b, a
     ld a, [wD8A5]
     call Func_03B_4F2A
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_03B_48E4
     call Func_03B_48E9
     ld b, h
@@ -1551,7 +1551,7 @@ Func_03B_4953::
     ld b, a
     add hl, bc
     ld bc, $0708
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_03B_4967
     ld hl, $0708
 
@@ -1719,7 +1719,7 @@ Func_03B_4A40::
 Func_03B_4A4C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld hl, wD814
-    call Func_000_3F25
+    call AddAx9ToHL
     ret
 
 Func_03B_4A56::
@@ -1897,7 +1897,7 @@ Func_03B_4B92:: ; heuristic: target of a pointer table; C0
     ld a, [hl+]
     ld h, [hl]
     ld l, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr z, Jump_03B_4BBA
     call Func_03B_483A
     ld l, $37
@@ -1920,7 +1920,7 @@ Func_03B_4BBD:: ; heuristic: follows a terminator; C0
     ld a, [hl+]
     ld h, [hl]
     ld l, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr z, Jump_03B_4BE5
     call Func_03B_489B
     ld l, $C3
@@ -2051,7 +2051,7 @@ Func_03B_4C95:: ; heuristic: target of a pointer table; C0
 Jump_03B_4C9F::
     ld a, [wD8A5]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     bit 6, a
     jr nz, Jump_03B_4CEA
@@ -2124,7 +2124,7 @@ Func_03B_4D1C:: ; heuristic: target of a pointer table; C0
 Jump_03B_4D2C::
     ld a, [wD8A5]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     bit 6, a
     jp nz, Jump_03B_4DD8
@@ -2148,7 +2148,7 @@ Jump_03B_4D47::
 Jump_03B_4D59::
     ld a, [wD8A5]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $03
     jr nz, Jump_03B_4DAC
@@ -2241,14 +2241,14 @@ Func_03B_4E18:: ; heuristic: target of a pointer table; C0
 Func_03B_4E1B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_03B_4E40
     call Func_03B_4A34
     jr nc, Jump_03B_4E43
     ld a, [wD8A5]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     set 0, [hl]
     ld l, $3B
     ld bc, $4098
@@ -2263,7 +2263,7 @@ Jump_03B_4E43::
 Func_03B_4E46:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 2, [hl]
     jr nz, Jump_03B_4E5D
     set 2, [hl]
@@ -2320,7 +2320,7 @@ Func_03B_4F03::
     ld [wD873], a
     ld a, [wD8A5]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     ret
 
@@ -2515,7 +2515,7 @@ Func_03B_5029:: ; heuristic: follows a terminator; C0
     push bc
     ld c, a
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_03B_5043
@@ -2537,7 +2537,7 @@ Jump_03B_5044::
 Func_03B_5048:: ; heuristic: follows a terminator; C0
     push hl
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_03B_5057

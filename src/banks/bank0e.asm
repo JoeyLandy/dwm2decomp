@@ -1281,7 +1281,7 @@ Jump_00E_598B::
     ld hl, wCB3D
     ld a, [hl]
     ld c, $03
-    call Func_000_1682
+    call Multiply8
     pop bc
     ld a, b
     add a, l
@@ -1838,7 +1838,7 @@ Func_00E_5D4E::
     ld c, a
     ld hl, wCB3D
     ld a, [hl]
-    call Func_000_1682
+    call Multiply8
     ld a, h
     and a, a
     jr nz, Jump_00E_5D6E
@@ -2211,7 +2211,7 @@ Jump_00E_5F44::
     ld b, d
     call Func_000_16AA
     ld a, $64
-    call Func_000_16D1
+    call DivideHLByA
     and a, a
     jr z, Jump_00E_5F58
     inc hl
@@ -2351,7 +2351,7 @@ Jump_00E_6001::
     ldh [hFFC6], a
     call Func_00E_6032
     ld a, $09
-    call Func_000_1682
+    call Multiply8
     ld b, l
     pop hl
     push hl
@@ -2404,7 +2404,7 @@ Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Func_00E_611B::
     push bc
-    call Func_000_095B
+    call NextTableByte
     pop bc
     ld a, [wC5E7]
     ld l, a
@@ -2412,7 +2412,7 @@ Func_00E_611B::
     and a, b
     ld h, a
     ld a, $29
-    call Func_000_16D1
+    call DivideHLByA
     ret
 
 Func_00E_612E::
@@ -2421,7 +2421,7 @@ Func_00E_612E::
     ld a, [wD7F5]
     ld c, a
     pop af
-    call Func_000_1F89
+    call LoadSRAMRecordWord
 
 Func_00E_6138::
     ldh a, [hFFC6]

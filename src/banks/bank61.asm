@@ -26,7 +26,7 @@ Jump_061_401E::
     ld a, [hl]
     push af
     ld c, $67
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld l, a
     ldh a, [hFFC7]
@@ -34,7 +34,7 @@ Jump_061_401E::
     pop af
     push af
     ld c, $69
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -45,7 +45,7 @@ Jump_061_401E::
     pop af
     push af
     ld c, $63
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -54,7 +54,7 @@ Jump_061_401E::
     pop af
     push af
     ld c, $65
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -63,7 +63,7 @@ Jump_061_401E::
     pop af
     push af
     ld c, $5D
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -72,7 +72,7 @@ Jump_061_401E::
     pop af
     push af
     ld c, $61
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -80,7 +80,7 @@ Jump_061_401E::
     add hl, de
     pop af
     ld a, $19
-    call Func_000_16D1
+    call DivideHLByA
     ldh a, [hFFCA]
     ld e, a
     ldh a, [hFFCB]
@@ -102,7 +102,7 @@ Jump_061_401E::
     ldh a, [hFFCB]
     ld h, a
     ld a, [wC6FD]
-    call Func_000_16D1
+    call DivideHLByA
     ld a, h
     or a, a
     jr nz, Jump_061_40AA
@@ -148,7 +148,7 @@ Jump_061_40D7::
     ld a, [hl]
     push af
     ld c, $67
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld l, a
     ldh a, [hFFC7]
@@ -156,7 +156,7 @@ Jump_061_40D7::
     pop af
     push af
     ld c, $69
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -171,7 +171,7 @@ Jump_061_40D7::
     pop af
     push af
     ld c, $63
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     push hl
     ldh a, [hFFC8]
     ld l, a
@@ -195,7 +195,7 @@ Jump_061_40D7::
     pop af
     push af
     ld c, $65
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     push hl
     ldh a, [hFFC8]
     ld l, a
@@ -219,7 +219,7 @@ Jump_061_40D7::
     pop af
     push af
     ld c, $5D
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     push hl
     ldh a, [hFFC8]
     ld l, a
@@ -243,7 +243,7 @@ Jump_061_40D7::
     pop af
     push af
     ld c, $61
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     push hl
     ldh a, [hFFC8]
     ld l, a
@@ -265,7 +265,7 @@ Jump_061_40D7::
     ld d, a
     add hl, de
     ld a, $32
-    call Func_000_16D1
+    call DivideHLByA
     ldh a, [hFFCA]
     ld e, a
     ldh a, [hFFCB]
@@ -278,11 +278,11 @@ Jump_061_40D7::
     pop af
     push af
     ld c, $56
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     push bc
     ldh a, [hFFC6]
     ld c, $18
-    call Func_000_1682
+    call Multiply8
     ld e, l
     ld d, h
     pop bc
@@ -304,7 +304,7 @@ Jump_061_40D7::
 
 Jump_061_41C4::
     ld a, $32
-    call Func_000_16D1
+    call DivideHLByA
 
 Jump_061_41C9::
     ldh a, [hFFCC]
@@ -341,7 +341,7 @@ Jump_061_41C9::
 
 Jump_061_41F8::
     ld a, [wC6FD]
-    call Func_000_16D1
+    call DivideHLByA
     ld a, l
     cp a, $63
     jr c, Jump_061_4209
@@ -442,7 +442,7 @@ Jump_061_427E::
     ld b, a
     push hl
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop hl
     ld a, [wIsCGB]
     or a, a
@@ -455,7 +455,7 @@ Jump_061_427E::
     ld b, a
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B18
+    call CopyFromBank
     ld a, $7F
     ld [wC526], a
 
@@ -543,7 +543,7 @@ Jump_061_4325::
     ld de, Data_061_74E4
     ld b, $6E
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_061_4348
@@ -551,7 +551,7 @@ Jump_061_4325::
     ld b, $6E
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B18
+    call CopyFromBank
     ld a, $7F
     ld [wC526], a
 
@@ -666,7 +666,7 @@ Jump_061_43CF::
     ld b, a
     push hl
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop hl
     ld a, [hl+]
     ld e, a
@@ -679,7 +679,7 @@ Jump_061_43CF::
     jr z, Jump_061_440A
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B18
+    call CopyFromBank
     ld a, $7F
     ld [wC526], a
 
@@ -929,10 +929,10 @@ Jump_061_454E::
     adc a, $40
     ld d, a
     ld b, $72
-    call Func_000_1872
+    call ReadByteInBank
     ld l, c
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld h, c
     inc hl
     inc hl
@@ -963,18 +963,18 @@ Jump_061_4590::
     push bc
     ld e, l
     ld d, h
-    call Func_000_1872
+    call ReadByteInBank
     ld l, c
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld h, c
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld b, c
     ld e, l
     ld d, h
     ld hl, wC198
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop bc
     pop hl
     ld a, [wIsCGB]
@@ -990,15 +990,15 @@ Jump_061_4590::
     ld e, a
     ld a, h
     ld d, a
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld l, a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld h, a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld b, a
     ld a, l
@@ -1008,7 +1008,7 @@ Jump_061_4590::
     ld a, $02
     ldh [rSVBK], a
     ld hl, wD000
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
 
@@ -1586,7 +1586,7 @@ Jump_061_5454::
     push bc
     ld a, [hl]
     ld c, $60
-    call Func_000_1682
+    call Multiply8
     add hl, de
     pop bc
     ldh a, [hFF92]
@@ -1616,14 +1616,14 @@ Jump_061_5489::
     push hl
     ld e, l
     ld d, h
-    call Func_000_1872
+    call ReadByteInBank
     ld l, c
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld h, c
     push bc
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld b, c
     ld e, l
     ld d, h
@@ -1636,7 +1636,7 @@ Jump_061_5489::
     inc de
     inc de
     ld hl, wC198
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop bc
     pop hl
     ld a, [wIsCGB]
@@ -1652,15 +1652,15 @@ Jump_061_5489::
     ld e, a
     ld a, h
     ld d, a
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld l, a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld h, a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld b, a
     ld a, l
@@ -1670,7 +1670,7 @@ Jump_061_5489::
     ld a, $02
     ldh [rSVBK], a
     ld hl, wD000
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
 
@@ -2215,7 +2215,7 @@ Jump_061_57BC::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $04
     call Func_000_0DF2
     ld a, $04
@@ -2260,7 +2260,7 @@ Jump_061_5832::
     ld a, [hl-]
     ld [hl], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $83
     ld [wCC44], a
     ld a, $04
@@ -2315,7 +2315,7 @@ Jump_061_587C::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $04
     call Func_000_0DF2
     ld a, $04
@@ -2455,7 +2455,7 @@ Jump_061_594D::
     ld [wC8C6], a
     pop de
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld c, $01
     ret
 
@@ -2575,7 +2575,7 @@ Jump_061_59EA::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $04
     call Func_000_0DF2
     ld a, $04
@@ -2724,7 +2724,7 @@ Jump_061_5ACE::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $04
     call Func_000_0DF2
     ld a, $04
@@ -2770,7 +2770,7 @@ Jump_061_5B18::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $01
     ld [wCCEA], a
     ld a, $04
@@ -2816,7 +2816,7 @@ Jump_061_5B73::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $01
     ld [wCCEA], a
     ld a, $04
@@ -2999,7 +2999,7 @@ Jump_061_5C9F::
     ld a, $84
     ld [wCC44], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ld a, $04
     call Func_000_0DF2
     ld a, $04
@@ -3133,10 +3133,10 @@ Jump_061_5D64::
     adc a, $60
     ld d, a
     ld b, $61
-    call Func_000_1872
+    call ReadByteInBank
     ld l, c
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld h, c
     ld a, $0C
     add a, l
@@ -3156,25 +3156,25 @@ Jump_061_5D88::
 Jump_061_5D92::
     ld e, l
     ld d, h
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ldh [hFF8F], a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ldh [hFF92], a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld [wC8C8], a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld [wC8C9], a
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC8C7], a
     ld a, $04
@@ -3263,7 +3263,7 @@ Jump_061_5E44::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC8C7], a
     ld a, $04
@@ -3363,7 +3363,7 @@ Jump_061_5EF0::
     bit 5, a
     jr nz, Jump_061_5ECD
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC8C7], a
     ld a, $04
@@ -3445,7 +3445,7 @@ Jump_061_5F56::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC8C7], a
     push hl
@@ -3520,7 +3520,7 @@ Jump_061_5FE0::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     push hl
     ld a, $04
     call Func_000_0DF2

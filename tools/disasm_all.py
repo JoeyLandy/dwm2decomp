@@ -84,6 +84,8 @@ class Rom:
         self.dtab: dict[int, dict[int, int]] = {b: {} for b in range(self.nbanks)}  # data pointer words
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
+        self.names: dict[tuple[int, int], dict] = {}  # config/names.json: evidence-backed routine names
+        self.alias: dict[tuple[int, int], str] = {}  # address name kept as an alias after a rename
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
         self.symbols: dict[int, dict] = {}  # config/symbols.json: evidence-named RAM addresses
         self.ram_used: dict[int, str] = {}  # RAM address -> symbol name used in the source
@@ -693,6 +695,24 @@ class Rom:
             f"{weak} same-bank loads, "
             f"{sum(len(d) for d in self.dlabels.values())} data labels in total")
 
+    def apply_names(self) -> None:
+        """Rename code labels listed in config/names.json; keep the address name as an alias.
+
+        A name must be unique, a valid identifier, and sit on a traced instruction that already
+        has a label; anything else raises so a stale entry cannot go unnoticed."""
+        seen: set[str] = set()
+        for (bank, addr), info in sorted(self.names.items()):
+            name = info["name"]
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name) or name in seen:
+                raise AssertionError(f"bad or duplicate name {name!r} at {bank:02X}:{addr:04X}")
+            seen.add(name)
+            old = self.labels[bank].get(addr)
+            if old is None or addr not in self.insn[bank]:
+                raise AssertionError(f"{name}: no traced code label at {bank:02X}:{addr:04X}")
+            self.alias[(bank, addr)] = old
+            self.labels[bank][addr] = name
+        log(f"routines renamed from config/names.json: {len(self.names)}")
+
     def _u16(self, bank: int, addr: int) -> int:
         o = bank * BANK + (addr - self.base(bank))
         return self.data[o] | (self.data[o + 1] << 8)
@@ -873,6 +893,7 @@ class Rom:
         self.label_data_refs()
         self.prepare_tables()
         self.prepare_tracks()
+        self.apply_names()
 
     # ---- emission -------------------------------------------------------
     def emit_gap(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
@@ -973,14 +994,21 @@ class Rom:
             return self._ram_symbol(addr, "h")
         return None
 
-    def symbolize(self, text: str) -> str:
-        """Replace absolute addresses in memory operands and pointer immediates by symbols."""
+    def symbolize(self, text: str, following: tuple[str, ...] = ()) -> str:
+        """Replace absolute addresses in memory operands and pointer immediates by symbols.
+
+        `following` holds the next instructions' text: a 16-bit immediate that is then added
+        to HL (`add hl, bc`) is arithmetic (for example $FF9C is -100), not a pointer, so it
+        stays numeric."""
         m = self._MEM.search(text)
         if m:
             nm = self.sym_name(int(m.group(1), 16), False)
             return text[:m.start()] + "[" + nm + "]" + text[m.end():] if nm else text
         m = self._IMM.match(text)
         if m:
+            reg = m.group(1).split()[1].rstrip(",")
+            if reg in ("bc", "de") and f"add hl, {reg}" in following and int(m.group(2), 16) >= 0xFF00:
+                return text  # a small negative number, not an address
             nm = self.sym_name(int(m.group(2), 16), True)
             if nm:
                 return m.group(1) + nm
@@ -1017,10 +1045,15 @@ class Rom:
             if pc in labels and pc in ins:
                 why = self.reason.get((bank, pc))
                 note = self.notes.get((bank, pc))
+                nm_info = self.names.get((bank, pc))
                 out.append("")
                 if note:
                     out.append(f"; {note}")
+                if nm_info and nm_info.get("note"):
+                    out.append(f"; {nm_info['note']}")
                 out.append(f"{labels[pc]}::" + (f" ; {why}; C0" if why else ""))
+                if (bank, pc) in self.alias:
+                    out.append(f"{self.alias[(bank, pc)]}:: ; address name")
             it = ins.get(pc)
             if it is None and (bank, pc) in self.track_at:
                 tr = self.track_at[(bank, pc)]
@@ -1077,7 +1110,14 @@ class Rom:
                 elif r and r[0] == 0 and tgt in self.insn[0]:
                     nm = self.labels[0].get(tgt)
                 text = text.replace("{T}", nm or f"${tgt:04X}")
-            text = self.symbolize(text)
+            look, q = [], pc + n
+            for _ in range(2):
+                nx = ins.get(q)
+                if nx is None or nx[0] == "dw":
+                    break
+                look.append(nx[1])
+                q += nx[0]
+            text = self.symbolize(text, tuple(look))
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
@@ -1099,6 +1139,13 @@ def main() -> int:
                 bank_s, addr_s = key.split(":")
                 rom.notes[(int(bank_s, 16), int(addr_s, 16))] = text
         log(f"loaded {len(rom.notes)} annotations from {notes_path.name}")
+    names_path = ROOT / "config/names.json"
+    if names_path.exists():
+        for key, info in json.loads(names_path.read_text(encoding="utf-8")).items():
+            if not key.startswith("_"):
+                bank_s, addr_s = key.split(":")
+                rom.names[(int(bank_s, 16), int(addr_s, 16))] = info
+        log(f"loaded {len(rom.names)} routine names")
     symbols_path = ROOT / "config/symbols.json"
     if symbols_path.exists():
         for key, info in json.loads(symbols_path.read_text(encoding="utf-8")).items():

@@ -140,7 +140,7 @@ Func_005_4169::
     jr z, Jump_005_4180
     ld a, [wD8A4]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr z, Jump_005_4180
     ld c, $00
@@ -156,7 +156,7 @@ Func_005_4183:: ; heuristic: follows a terminator; C0
     jr z, Jump_005_419B
     ld a, [wD8A4]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 7, [hl]
     jp z, Jump_005_419B
     ld c, $00
@@ -172,7 +172,7 @@ Func_005_419E:: ; heuristic: follows a terminator; C0
     jr z, Jump_005_41B6
     ld a, [wD8A4]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jp z, Jump_005_41B6
     ld c, $00
@@ -260,7 +260,7 @@ Jump_005_422B::
     jr c, Jump_005_423E
     ld a, c
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $C0
     and a, a
@@ -275,7 +275,7 @@ Jump_005_423E::
 Jump_005_4244::
     ld a, c
     ld hl, wD810
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $0C
     and a, a
@@ -457,7 +457,7 @@ Jump_005_4348::
     jr c, Jump_005_435E
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_005_435E
     call Func_005_6C02
@@ -542,7 +542,7 @@ Jump_005_43C7::
     jr c, Jump_005_43DD
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_005_43DD
     call Func_005_6C02
@@ -754,7 +754,7 @@ Jump_005_44FB::
     jr c, Jump_005_4512
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $C1
     jr nz, Jump_005_4512
@@ -803,13 +803,13 @@ Jump_005_4543::
     jr c, Jump_005_4561
     ld a, c
     ld hl, wD811
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $01
     jr nz, Jump_005_4561
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $02
     jr z, Jump_005_4568
@@ -838,13 +838,13 @@ Jump_005_4575::
     jr c, Jump_005_4593
     ld a, c
     ld hl, wD811
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $02
     jr nz, Jump_005_4593
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $02
     jr z, Jump_005_459A
@@ -873,13 +873,13 @@ Jump_005_45A7::
     jr c, Jump_005_45C5
     ld a, c
     ld hl, wD811
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $03
     jr nz, Jump_005_45C5
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $02
     jr z, Jump_005_45CC
@@ -967,7 +967,7 @@ Jump_005_4631::
     push hl
     ld a, c
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     pop hl
     and a, $C0
@@ -976,7 +976,7 @@ Jump_005_4631::
     push hl
     ld a, c
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     pop hl
     and a, $0C
@@ -1026,7 +1026,7 @@ Jump_005_4693::
     jr c, Jump_005_46A5
     ld a, c
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $22
     jr nz, Jump_005_46AB
@@ -1070,7 +1070,7 @@ Jump_005_46D1::
     jr c, Jump_005_46E4
     ld a, c
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $40
     and a, a
@@ -1097,7 +1097,7 @@ Jump_005_46F0::
 Func_005_46F3:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD810
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $03
     jr z, Jump_005_4704
@@ -1111,7 +1111,7 @@ Jump_005_4704::
 Func_005_4707::
     ld a, [wD8A4]
     ld hl, wD810
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $C0
     jr z, Jump_005_4718
@@ -1125,7 +1125,7 @@ Jump_005_4718::
 Func_005_471B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 2, [hl]
     jr z, Jump_005_472B
     ld c, $00
@@ -1138,7 +1138,7 @@ Jump_005_472B::
 Func_005_472E:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 3, [hl]
     jr z, Jump_005_473E
     ld c, $00
@@ -1151,7 +1151,7 @@ Jump_005_473E::
 Func_005_4741:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr z, Jump_005_4751
     ld c, $00
@@ -1164,7 +1164,7 @@ Jump_005_4751::
 Func_005_4754:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr z, Jump_005_4764
     ld c, $00
@@ -1200,7 +1200,7 @@ Jump_005_4782::
     inc d
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr z, Jump_005_47A2
 
@@ -1413,7 +1413,7 @@ Jump_005_488A::
     jr nc, Jump_005_48C6
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 1, [hl]
     jr z, Jump_005_48C6
 
@@ -1441,7 +1441,7 @@ Jump_005_48D3::
     jr c, Jump_005_48FA
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 1, [hl]
     jr nz, Jump_005_48FA
     inc hl
@@ -1485,7 +1485,7 @@ Jump_005_4914::
     jr c, Jump_005_4937
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_005_4937
     call Func_005_6C02
@@ -1634,7 +1634,7 @@ Jump_005_49E7::
     jr c, Jump_005_4A06
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $03
     jr nz, Jump_005_4A06
@@ -1669,7 +1669,7 @@ Jump_005_4A1A::
     jr c, Jump_005_4A39
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $40
     jr nz, Jump_005_4A39
@@ -1704,7 +1704,7 @@ Jump_005_4A4D::
     jr c, Jump_005_4A6C
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $20
     jr nz, Jump_005_4A6C
@@ -1742,7 +1742,7 @@ Jump_005_4A86::
     jr c, Jump_005_4AA9
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_005_4AA9
     call Func_005_6C02
@@ -1785,7 +1785,7 @@ Jump_005_4ACB::
     jr c, Jump_005_4AEE
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_4AEE
     call Func_005_6C02
@@ -1845,7 +1845,7 @@ Jump_005_4B1A::
     add hl, hl
     add hl, hl
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_4B39
 
 Jump_005_4B31::
@@ -1984,7 +1984,7 @@ Jump_005_4BCE::
     pop hl
     ld b, d
     ld c, e
-    call Func_000_3E7A
+    call CompareHLToBC
     jp c, Jump_005_4BDE
     ld c, $00
     ret
@@ -2133,7 +2133,7 @@ Jump_005_4C8C::
     ld a, [hl]
     ld b, a
     pop hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_4C99
     ld c, $00
     ret
@@ -2210,7 +2210,7 @@ Jump_005_4CF9::
     jr c, Jump_005_4D0B
     ld a, c
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     inc hl
     bit 2, [hl]
     jr nz, Jump_005_4D11
@@ -2245,7 +2245,7 @@ Jump_005_4D22::
     jr c, Jump_005_4D3C
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $0C
     jr nz, Jump_005_4D3C
@@ -2279,7 +2279,7 @@ Func_005_4D46:: ; heuristic: follows a terminator; C0
 Func_005_4D56:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD811
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $0C
     jr z, Jump_005_4D67
@@ -2302,7 +2302,7 @@ Jump_005_4D72::
     jr c, Jump_005_4D9B
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     or a, a
     jr nz, Jump_005_4DA2
@@ -2347,7 +2347,7 @@ Jump_005_4DAF::
     jr c, Jump_005_4DD8
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $3C
     jr nz, Jump_005_4DF2
@@ -2934,7 +2934,7 @@ Func_005_50B7:: ; heuristic: follows a terminator; C0
     and a, $04
     call Func_005_6DFF
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_50DD
     ld c, $00
     ret
@@ -2986,7 +2986,7 @@ Jump_005_5117::
     ldh a, [hFFC8]
     ld h, a
     ldh a, [hFFC6]
-    call Func_000_16D1
+    call DivideHLByA
     ld a, l
     ldh [hFFC7], a
     ld a, h
@@ -3023,7 +3023,7 @@ Jump_005_5152::
     ldh a, [hFFCB]
     ld h, a
     ldh a, [hFFC9]
-    call Func_000_16D1
+    call DivideHLByA
     sla l
     rl h
     push hl
@@ -3032,7 +3032,7 @@ Jump_005_5152::
     ldh a, [hFFC8]
     ld h, a
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5177
     jr z, Jump_005_5177
     ld c, $00
@@ -3109,7 +3109,7 @@ Jump_005_51D2::
     ldh a, [hFFC7]
     ld h, a
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_51E4
     jr Jump_005_51E1
 
@@ -3142,7 +3142,7 @@ Func_005_51EA:: ; heuristic: follows a terminator; C0
     ld b, a
     sla c
     rl b
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5210
     jr z, Jump_005_5210
     jr Jump_005_5222
@@ -3152,7 +3152,7 @@ Jump_005_5210::
     rr c
     sra b
     rr c
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_521F
     jr Jump_005_5222
 
@@ -3190,7 +3190,7 @@ Jump_005_523D::
     ld b, a
     sla c
     rl b
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5259
     jr z, Jump_005_5259
     jr Jump_005_5266
@@ -3200,7 +3200,7 @@ Jump_005_5259::
     rr c
     sra b
     rr c
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_526C
 
 Jump_005_5266::
@@ -3264,7 +3264,7 @@ Jump_005_52AE::
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_005_5311
-    call Func_000_16D1
+    call DivideHLByA
     ld a, l
     ldh [hFFC7], a
     ld a, h
@@ -3301,7 +3301,7 @@ Jump_005_52EC::
     ldh a, [hFFCB]
     ld h, a
     ldh a, [hFFC9]
-    call Func_000_16D1
+    call DivideHLByA
     sla l
     rl h
     push hl
@@ -3310,7 +3310,7 @@ Jump_005_52EC::
     ldh a, [hFFC8]
     ld h, a
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5311
     jr z, Jump_005_5311
     ld c, $00
@@ -3329,13 +3329,13 @@ Func_005_5317::
     call Func_005_400B
     add hl, hl
     ld a, $03
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     ldh a, [hFFC6]
     call Func_005_4015
     pop bc
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_537F
     ldh a, [hFFC6]
     call Func_005_400B
@@ -3345,17 +3345,17 @@ Func_005_5317::
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_5383
     ldh a, [hFFC6]
     call Func_005_400B
     ld a, $03
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_5387
     ldh a, [hFFC6]
     call Func_005_400B
@@ -3367,17 +3367,17 @@ Func_005_5317::
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_538B
     ldh a, [hFFC6]
     call Func_005_400B
     ld a, $0A
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_538F
     jr Jump_005_5393
 
@@ -3454,7 +3454,7 @@ Jump_005_53C7::
 Func_005_53CA::
     ld a, [wD8A4]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $0C
     jr nz, Jump_005_53E0
@@ -3476,7 +3476,7 @@ Jump_005_53E3::
 Func_005_53E6:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD810
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $30
     jr z, Jump_005_53F7
@@ -3504,7 +3504,7 @@ Jump_005_540E::
     jr c, Jump_005_5440
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_5440
     ld hl, wD989
@@ -3595,7 +3595,7 @@ Jump_005_5494::
     ld c, a
     ldh a, [hFFC7]
     ld b, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_54AF
     ld hl, hFFCE
     inc [hl]
@@ -3607,7 +3607,7 @@ Jump_005_54AF::
     ld c, a
     ldh a, [hFFC9]
     ld b, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_54C2
     ld hl, hFFCE
     inc [hl]
@@ -3619,7 +3619,7 @@ Jump_005_54C2::
     ld c, a
     ldh a, [hFFCB]
     ld b, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_54D5
     ld hl, hFFCE
     inc [hl]
@@ -3631,7 +3631,7 @@ Jump_005_54D5::
     ld c, a
     ldh a, [hFFCD]
     ld b, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_54E8
     ld hl, hFFCE
     inc [hl]
@@ -3735,7 +3735,7 @@ Jump_005_555B::
     ld b, [hl]
     ld c, e
     pop hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_5574
     pop bc
     ld a, c
@@ -3788,7 +3788,7 @@ Func_005_558B:: ; heuristic: follows a terminator; C0
     add hl, hl
     add hl, hl
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_55A7
     ld c, $00
     ret
@@ -3800,7 +3800,7 @@ Jump_005_55A7::
 Func_005_55AA:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $22
     jr z, Jump_005_55BB
@@ -4204,7 +4204,7 @@ Jump_005_57E3::
     jr c, Jump_005_57F4
     ld a, c
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 3, [hl]
     jr nz, Jump_005_57FA
 
@@ -4230,12 +4230,12 @@ Func_005_5803:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_400B
     ld a, $0A
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     ld a, [wD8A4]
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_581D
     jr Jump_005_585A
 
@@ -4322,7 +4322,7 @@ Jump_005_5882::
     ldh a, [hFFC7]
     ld h, a
     ld a, e
-    call Func_000_16D1
+    call DivideHLByA
     add hl, hl
     push hl
     ld a, [wD8A4]
@@ -4356,11 +4356,11 @@ Jump_005_58B5::
     ldh a, [hFFC7]
     ld h, a
     ld a, e
-    call Func_000_16D1
+    call DivideHLByA
     ld c, l
     ld b, h
     pop hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5916
     jr z, Jump_005_5916
     ld a, l
@@ -4403,11 +4403,11 @@ Jump_005_58F7::
     ld a, e
     srl h
     rr l
-    call Func_000_16D1
+    call DivideHLByA
     ld c, l
     ld b, h
     pop hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5916
     jr z, Jump_005_5916
     ld c, $00
@@ -4500,7 +4500,7 @@ Jump_005_5984::
     jr nz, Jump_005_5984
     ld a, e
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_005_59B7
     ld a, e
@@ -4564,7 +4564,7 @@ Jump_005_59D9::
 Jump_005_59DF::
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_005_59D9
     ld a, c
@@ -4657,7 +4657,7 @@ Jump_005_5A54::
 Jump_005_5A5A::
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_005_5A54
     call Func_005_6D1A
@@ -4813,7 +4813,7 @@ Jump_005_5B1A::
 Jump_005_5B20::
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_5B1A
     ld hl, wD989
@@ -4880,7 +4880,7 @@ Jump_005_5B73::
 Jump_005_5B79::
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr z, Jump_005_5B73
     ld hl, wD989
@@ -4963,7 +4963,7 @@ Func_005_5BBC::
     ldh a, [hFFC7]
     ld h, a
     ld bc, $03E7
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5C09
     inc e
 
@@ -4973,7 +4973,7 @@ Jump_005_5C09::
     ldh a, [hFFC9]
     ld h, a
     ld bc, $012C
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5C18
     inc e
 
@@ -4983,7 +4983,7 @@ Jump_005_5C18::
     ldh a, [hFFCB]
     ld h, a
     ld bc, $012C
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5C27
     inc e
 
@@ -4993,7 +4993,7 @@ Jump_005_5C27::
     ldh a, [hFFCD]
     ld h, a
     ld bc, $00C8
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5C36
     inc e
 
@@ -5003,7 +5003,7 @@ Jump_005_5C36::
     ldh a, [hFFCF]
     ld h, a
     ld bc, $011E
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_5C45
     inc e
 
@@ -5101,7 +5101,7 @@ Jump_005_5CA8::
     ld c, l
     ld b, h
     pop hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_5CC7
     pop bc
 
@@ -5286,7 +5286,7 @@ Jump_005_5DA5::
     jr c, Jump_005_5DC3
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_5DC3
     ld a, c
@@ -5320,7 +5320,7 @@ Jump_005_5DD7::
     jr c, Jump_005_5DF5
     ld a, c
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, a
     jr nz, Jump_005_5DF5
@@ -5364,7 +5364,7 @@ Jump_005_5E15::
     jr c, Jump_005_5E2D
     ld a, c
     ld hl, wD814
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_5E2D
     ld a, [de]
@@ -5433,7 +5433,7 @@ Jump_005_5E79::
     jr c, Jump_005_5E97
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 4, [hl]
     jr nz, Jump_005_5E97
     ld a, c
@@ -5467,7 +5467,7 @@ Jump_005_5EAB::
     jr c, Jump_005_5EC4
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_005_5ECB
@@ -5600,7 +5600,7 @@ Jump_005_5F56::
     jr c, Jump_005_5F80
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 2, [hl]
     jr nz, Jump_005_5F80
     ld a, c
@@ -5989,7 +5989,7 @@ Jump_005_611E::
 Func_005_6127::
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 0, [hl]
     ret nz
     ld a, c
@@ -6009,7 +6009,7 @@ Jump_005_613E::
 Func_005_6141::
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     ret
 
@@ -6033,7 +6033,7 @@ Jump_005_6167::
     jr c, Jump_005_618B
     ld a, c
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     and a, $2A
     jr nz, Jump_005_618B
@@ -6090,7 +6090,7 @@ Jump_005_61AE::
 Func_005_61B1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 3, [hl]
     jr nz, Jump_005_61C1
     ld c, $FF
@@ -6170,7 +6170,7 @@ Jump_005_627F::
     ld a, c
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     jr c, Jump_005_6295
     jr Jump_005_6279
@@ -6205,7 +6205,7 @@ Func_005_6298::
 Jump_005_62BB::
     push hl
     ld a, $0A
-    call Func_000_16D1
+    call DivideHLByA
     ld b, h
     ld c, l
     pop hl
@@ -6231,7 +6231,7 @@ Jump_005_62CC::
 
 Jump_005_62D9::
     ld a, $03
-    call Func_000_16D1
+    call DivideHLByA
     add hl, hl
     pop bc
     ret
@@ -6264,7 +6264,7 @@ Jump_005_62F9::
     ld a, c
     call Func_005_4010
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     jr c, Jump_005_630F
     jr Jump_005_62F3
@@ -6282,13 +6282,13 @@ Func_005_6312:: ; heuristic: follows a terminator; C0
     call Func_005_4010
     add hl, hl
     ld a, $03
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     ldh a, [hFFC6]
     call Func_005_401A
     pop bc
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_637A
     ldh a, [hFFC6]
     call Func_005_4010
@@ -6298,17 +6298,17 @@ Func_005_6312:: ; heuristic: follows a terminator; C0
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_637E
     ldh a, [hFFC6]
     call Func_005_4010
     ld a, $03
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_6382
     ldh a, [hFFC6]
     call Func_005_4010
@@ -6320,17 +6320,17 @@ Func_005_6312:: ; heuristic: follows a terminator; C0
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_6386
     ldh a, [hFFC6]
     call Func_005_4010
     ld a, $0A
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     pop bc
     pop hl
     push hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_638A
     jr Jump_005_638E
 
@@ -6396,7 +6396,7 @@ Jump_005_63B2::
     pop bc
     add hl, bc
     ld bc, $0578
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     jr nc, Jump_005_63CC
     jr Jump_005_63AC
@@ -6429,7 +6429,7 @@ Jump_005_63E2::
     jr c, Jump_005_63F8
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_63F8
     call Func_005_640A
@@ -6584,7 +6584,7 @@ Jump_005_64B1::
     push hl
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     jr c, Jump_005_64C6
 
@@ -6619,13 +6619,13 @@ Func_005_64DF:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call Func_005_400B
     ld a, $03
-    call Func_000_16D1
+    call DivideHLByA
     add hl, hl
     push hl
     ld a, [wD8A4]
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_64FB
     ld c, $00
     ret
@@ -6739,7 +6739,7 @@ Jump_005_657E::
     ld a, c
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_6599
     inc e
 
@@ -6811,7 +6811,7 @@ Jump_005_65E4::
     ldh a, [hFFC7]
     ld h, a
     ld a, e
-    call Func_000_16D1
+    call DivideHLByA
     add hl, hl
     push hl
     ld a, [wD8A4]
@@ -6846,11 +6846,11 @@ Jump_005_6619::
     ldh a, [hFFC7]
     ld h, a
     ld a, e
-    call Func_000_16D1
+    call DivideHLByA
     ld c, l
     ld b, h
     pop hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_667C
     jr z, Jump_005_667C
     ld a, l
@@ -6894,11 +6894,11 @@ Jump_005_665D::
     ld a, e
     srl h
     rr l
-    call Func_000_16D1
+    call DivideHLByA
     ld c, l
     ld b, h
     pop hl
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_667C
     jr z, Jump_005_667C
     ld c, $00
@@ -7108,7 +7108,7 @@ Jump_005_678B::
     ld a, c
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     jr c, Jump_005_67AC
 
@@ -7166,7 +7166,7 @@ Jump_005_67D2::
     ld a, $64
     call Func_000_16E2
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop de
     jr nc, Jump_005_681A
     ld a, e
@@ -7187,7 +7187,7 @@ Jump_005_6806::
     ld a, e
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_005_6817
     jr nz, Jump_005_681A
 
@@ -7277,7 +7277,7 @@ Jump_005_686E::
     ld a, $64
     call Func_000_16E2
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_6896
     ld c, $00
     ret
@@ -7357,7 +7357,7 @@ Jump_005_68FB::
     ld a, [wD8A4]
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_696C
     ld de, $0064
     add hl, de
@@ -7379,7 +7379,7 @@ Jump_005_6920::
     ld a, c
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop hl
     pop bc
     jr c, Jump_005_6963
@@ -7440,7 +7440,7 @@ Jump_005_696F::
 Func_005_6972::
     ld a, [wD8A4]
     ld hl, wD810
-    call Func_000_3F25
+    call AddAx9ToHL
     and a, $03
     jr z, Jump_005_6982
     ld c, $00
@@ -7484,7 +7484,7 @@ Jump_005_69AD::
     ldh a, [hFFCB]
     ld h, a
     ldh a, [hFFC9]
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     ld a, [wD8A4]
     call Func_005_4001
@@ -7496,7 +7496,7 @@ Jump_005_69AD::
     rr e
     add hl, de
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_005_69D7
     ld c, $00
     ret
@@ -7508,7 +7508,7 @@ Jump_005_69D7::
 Func_005_69DA::
     ld a, [wD8A4]
     ld hl, wD80E
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $02
     jr nz, Jump_005_69EF
@@ -7861,7 +7861,7 @@ Func_005_6B9E:: ; heuristic: follows a terminator; C0
     ld a, c
     call Func_005_4015
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     ret
 
@@ -7875,7 +7875,7 @@ Func_005_6BBC:: ; heuristic: follows a terminator; C0
     call Func_005_4015
     add hl, hl
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     ret
 
@@ -7890,7 +7890,7 @@ Func_005_6BCE:: ; heuristic: follows a terminator; C0
     add hl, hl
     add hl, hl
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     ret
 
@@ -7909,7 +7909,7 @@ Func_005_6BE1:: ; heuristic: follows a terminator; C0
     add hl, hl
     add hl, bc
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     ret
 
@@ -8119,7 +8119,7 @@ Jump_005_6D06::
 Func_005_6D07:: ; heuristic: follows a terminator; C0
     ld a, c
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 1, [hl]
     jr nz, Jump_005_6D19
     inc hl
@@ -8337,14 +8337,14 @@ Jump_005_6E20::
     ldh a, [hFFC8]
     ld h, a
     ldh a, [hFFC6]
-    call Func_000_16D1
+    call DivideHLByA
     ret
 
 Func_005_6E30:: ; heuristic: follows a terminator; C0
     ld a, c
     ld d, $00
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 2, [hl]
     call nz, Func_005_6E89
     bit 3, [hl]
@@ -8579,7 +8579,7 @@ Jump_005_6FA2::
     jr c, Jump_005_6FB3
     push hl
     ld a, c
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     pop hl
     and a, e
@@ -8606,7 +8606,7 @@ Jump_005_6FBE::
     jr c, Jump_005_6FCF
     push hl
     ld a, c
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl]
     pop hl
     and a, e
@@ -8673,7 +8673,7 @@ Func_005_6FFD:: ; heuristic: follows a terminator; C0
     ld a, c
     call Func_005_401A
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     pop bc
     ret
 
@@ -8681,7 +8681,7 @@ Func_005_701B:: ; heuristic: follows a terminator; C0
     push de
     push bc
     ld a, $05
-    call Func_000_16D1
+    call DivideHLByA
     sla l
     rl h
     sla l

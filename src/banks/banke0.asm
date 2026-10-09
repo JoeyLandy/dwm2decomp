@@ -26,7 +26,7 @@ Jump_0E0_4011::
     ld a, $00
     ld [wC529], a
     call Func_0E0_4279
-    call Func_000_290E
+    call FillTilesFromRequest
     ld de, $42D3
     ld bc, $1412
     ld hl, vBGMap0
@@ -38,7 +38,7 @@ Jump_0E0_4043::
 Jump_0E0_4045::
     ld a, [de]
     inc de
-    call Func_000_121F
+    call WriteVRAMByteInc
     dec b
     jr nz, Jump_0E0_4045
     pop hl
@@ -55,7 +55,7 @@ Jump_0E0_4045::
     inc [hl]
     ld a, $BB
     ld hl, vBGMap0 + $42
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Jump_0E0_406F::
@@ -94,10 +94,10 @@ Jump_0E0_4095::
 Jump_0E0_40A6::
     ld [wC5FE], a
     ld a, $BB
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, $C3
     ld hl, vBGMap0 + $42
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Jump_0E0_40B7::
@@ -164,10 +164,10 @@ Jump_0E0_410E::
 Jump_0E0_4112::
     ld [wC5FE], a
     ld a, $BB
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, $C3
     ld hl, vBGMap0 + $A2
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Jump_0E0_4123::
@@ -215,10 +215,10 @@ Jump_0E0_4160::
 Jump_0E0_4164::
     ld [wC5FE], a
     ld a, $BB
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, $C3
     ld hl, vBGMap0 + $122
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Jump_0E0_4175::
@@ -257,10 +257,10 @@ Jump_0E0_419B::
 Jump_0E0_41AC::
     ld [wC5FE], a
     ld a, $BB
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, $C3
     ld hl, vBGMap0 + $182
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Jump_0E0_41BD::
@@ -283,11 +283,11 @@ Func_0E0_41C7::
 Jump_0E0_41D6::
     ld a, [de]
     ld hl, vBGMap0 + $69
-    call Func_000_1211
+    call WriteVRAMByte
     inc de
     ld a, [de]
     ld hl, vBGMap0 + $6D
-    call Func_000_1211
+    call WriteVRAMByte
     ret
     db $BB, $C3, $BB
 
@@ -297,11 +297,11 @@ Func_0E0_41E9::
     and a, $0F
     add a, $01
     ld hl, vBGMap0 + $CA
-    call Func_000_121F
+    call WriteVRAMByteInc
     ld a, [wC5F9]
     and a, $0F
     add a, $01
-    call Func_000_1211
+    call WriteVRAMByte
     ld de, wC130
     ld a, [wC5F9]
     ld l, a
@@ -318,7 +318,7 @@ Func_0E0_421F::
     ld a, [wC5FA]
     ld l, a
     ld h, $00
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld c, $00
     ld hl, vBGMap0 + $14A
     ld a, [wC8C0]
@@ -332,7 +332,7 @@ Jump_0E0_4239::
     ld a, $C3
 
 Jump_0E0_423B::
-    call Func_000_121F
+    call WriteVRAMByteInc
     ld a, [wC8C1]
     or a, a
     jr nz, Jump_0E0_4248
@@ -347,10 +347,10 @@ Jump_0E0_424C::
     ld a, $C3
 
 Jump_0E0_424E::
-    call Func_000_121F
+    call WriteVRAMByteInc
     ld a, [wC8C2]
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Func_0E0_425A::
@@ -366,11 +366,11 @@ Func_0E0_425A::
 Jump_0E0_4269::
     ld a, [de]
     ld hl, vBGMap0 + $1A9
-    call Func_000_1211
+    call WriteVRAMByte
     inc de
     ld a, [de]
     ld hl, vBGMap0 + $1AD
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Func_0E0_4279::
@@ -485,7 +485,7 @@ Jump_0E0_447D::
     ld h, [hl]
     ld l, a
     ld a, $BB
-    call Func_000_1211
+    call WriteVRAMByte
     ld hl, wC5FD
     inc [hl]
     ret
@@ -670,7 +670,7 @@ Func_0E0_45AB::
     or a, a
     jr z, Jump_0E0_45BD
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ld b, $01
 
 Jump_0E0_45BD::
@@ -686,7 +686,7 @@ Func_0E0_45BE::
 
 Jump_0E0_45C9::
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ld b, $01
 
 Jump_0E0_45D0::
@@ -701,14 +701,14 @@ Jump_0E0_45D0::
 
 Jump_0E0_45DE::
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
 
 Jump_0E0_45E3::
     inc hl
     ldh a, [hFFC6]
     and a, $0F
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Func_0E0_45EE::
@@ -759,7 +759,7 @@ Jump_0E0_4623::
     ld h, [hl]
     ld l, a
     pop af
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Func_0E0_462B::
@@ -787,7 +787,7 @@ Jump_0E0_4640::
     ld a, [de]
     and a, $01
     add a, $CC
-    call Func_000_1211
+    call WriteVRAMByte
     ret
     db $C6, $98, $CC, $98, $D2, $98, $42, $98, $48, $98, $4E, $98, $46, $99, $4C, $99
     db $52, $99, $0B, $0A, $09, $08, $EF
@@ -870,7 +870,7 @@ Jump_0E0_46E6::
 Jump_0E0_46E8::
     ld a, [de]
     inc de
-    call Func_000_121F
+    call WriteVRAMByteInc
     dec b
     jr nz, Jump_0E0_46E8
     pop hl
@@ -1027,7 +1027,7 @@ Func_0E0_47F0::
 Jump_0E0_47F1::
     and a, $03
     add a, $E0
-    call Func_000_121F
+    call WriteVRAMByteInc
     ret
 
 Jump_0E0_47F9::
@@ -1050,7 +1050,7 @@ Jump_0E0_480D::
 Jump_0E0_480F::
     ld a, [de]
     inc de
-    call Func_000_121F
+    call WriteVRAMByteInc
     dec b
     jr nz, Jump_0E0_480F
     pop hl
@@ -1131,7 +1131,7 @@ Jump_0E0_4896::
     sub a, $02
 
 Jump_0E0_4898::
-    call Func_000_121F
+    call WriteVRAMByteInc
     ret
 
 Func_0E0_489C::
@@ -1185,7 +1185,7 @@ Jump_0E0_48D9::
     or a, a
     jr z, Jump_0E0_48EC
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ld b, $01
 
 Jump_0E0_48EC::
@@ -1200,7 +1200,7 @@ Jump_0E0_48EC::
 
 Jump_0E0_48FA::
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ld b, $01
 
 Jump_0E0_4901::
@@ -1214,7 +1214,7 @@ Jump_0E0_4901::
 
 Jump_0E0_490D::
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ld b, $01
 
 Jump_0E0_4914::
@@ -1229,7 +1229,7 @@ Jump_0E0_4914::
 
 Jump_0E0_4922::
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     ld b, $01
 
 Jump_0E0_4929::
@@ -1237,7 +1237,7 @@ Jump_0E0_4929::
     ldh a, [hFFC6]
     and a, $0F
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     pop hl
     ret
     db $E2, $99, $E8, $99, $EE, $99
@@ -1326,7 +1326,7 @@ Jump_0E0_4AC6::
 
 Jump_0E0_4AC8::
     ld hl, vBGMap0 + $8A
-    call Func_000_1211
+    call WriteVRAMByte
     pop af
     swap a
     and a, $0F
@@ -1340,7 +1340,7 @@ Jump_0E0_4ADB::
 
 Jump_0E0_4ADD::
     ld hl, vBGMap0 + $89
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_0E0_4FCE
     ret
 
@@ -1424,7 +1424,7 @@ Jump_0E0_4B74::
     and a, $20
     jr z, Jump_0E0_4B9C
     ld a, [wC0A2]
-    call Func_000_1211
+    call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
     and a, $0F
@@ -1450,7 +1450,7 @@ Jump_0E0_4B9C::
     and a, $10
     jr z, Jump_0E0_4BC2
     ld a, [wC0A2]
-    call Func_000_1211
+    call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
     and a, $0F
@@ -1475,7 +1475,7 @@ Jump_0E0_4BC2::
     and a, $40
     jr z, Jump_0E0_4BEB
     ld a, [wC0A2]
-    call Func_000_1211
+    call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
     and a, $F0
@@ -1501,7 +1501,7 @@ Jump_0E0_4BEB::
     and a, $80
     jr z, Jump_0E0_4C14
     ld a, [wC0A2]
-    call Func_000_1211
+    call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
     and a, $F0
@@ -1536,10 +1536,10 @@ Jump_0E0_4C14::
     ld a, [wC0A1]
     ld h, a
     ld a, [wC0A2]
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC5FE]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [wC5FF]
     ld e, a
     swap a
@@ -1595,7 +1595,7 @@ Func_0E0_4C7E::
     ld a, [wC0A2]
 
 Jump_0E0_4C92::
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Jump_0E0_4C96::
@@ -1638,7 +1638,7 @@ Jump_0E0_4CD9::
 Jump_0E0_4CDB::
     ld a, [de]
     inc de
-    call Func_000_121F
+    call WriteVRAMByteInc
     dec b
     jr nz, Jump_0E0_4CDB
     pop hl
@@ -1737,7 +1737,7 @@ Jump_0E0_4D72::
     ld a, $FF
     ld hl, wDA1C
     ld bc, $0010
-    jp Func_000_0949
+    jp FillBytes
 
 Jump_0E0_4D89::
     farcall Func_0E0_5A35
@@ -1780,7 +1780,7 @@ Func_0E0_4EFD::
     ld [wC0A0], a
     ld a, h
     ld [wC0A1], a
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [hl]
     ld [wC0A2], a
     ret
@@ -1796,7 +1796,7 @@ Func_0E0_4F28::
     ld c, $00
     ld a, [wC5FE]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
 
 Jump_0E0_4F44::
     ld d, [hl]
@@ -1817,7 +1817,7 @@ Jump_0E0_4F47::
     ld a, d
     and a, $01
     add a, $E0
-    call Func_000_1211
+    call WriteVRAMByte
     pop hl
     srl d
     inc b
@@ -1917,19 +1917,19 @@ Func_0E0_4FDB::
     ld a, [wCFEE]
     ld l, a
     ld h, $00
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld a, [wC8C0]
     add a, $E0
     ld hl, vBGMap0 + $204
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C1]
     add a, $E0
     ld hl, vBGMap0 + $205
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C2]
     add a, $E0
     ld hl, vBGMap0 + $206
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Func_0E0_502B::
@@ -1943,73 +1943,73 @@ Func_0E0_502B::
     ld a, [wCFF8]
     ld h, a
     push hl
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld a, [wC8C0]
     add a, $E0
     ld hl, vBGMap0 + $1C3
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C1]
     add a, $E0
     ld hl, vBGMap0 + $1C4
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C2]
     add a, $E0
     ld hl, vBGMap0 + $1C5
-    call Func_000_1211
+    call WriteVRAMByte
     pop hl
     ld a, [wCFF9]
     ld c, a
     ld b, $00
     add hl, bc
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld a, [wC8C0]
     add a, $E0
     ld hl, vBGMap0 + $1E3
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C1]
     add a, $E0
     ld hl, vBGMap0 + $1E4
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C2]
     add a, $E0
     ld hl, vBGMap0 + $1E5
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wCFFB]
     ld l, a
     ld a, [wCFFC]
     ld h, a
     push hl
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld a, [wC8C0]
     add a, $E0
     ld hl, vBGMap0 + $1C7
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C1]
     add a, $E0
     ld hl, vBGMap0 + $1C8
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C2]
     add a, $E0
     ld hl, vBGMap0 + $1C9
-    call Func_000_1211
+    call WriteVRAMByte
     pop hl
     ld a, [wCFFD]
     ld c, a
     ld b, $00
     add hl, bc
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld a, [wC8C0]
     add a, $E0
     ld hl, vBGMap0 + $1E7
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C1]
     add a, $E0
     ld hl, vBGMap0 + $1E8
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC8C2]
     add a, $E0
     ld hl, vBGMap0 + $1E9
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Func_0E0_50EE::
@@ -2122,7 +2122,7 @@ Func_0E0_558E::
 
 Jump_0E0_5599::
     ld a, [hl]
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Func_0E0_559E:: ; heuristic: follows a terminator; C0
@@ -2232,7 +2232,7 @@ Func_0E0_572D::
 Jump_0E0_573D::
     di
     ld a, [de]
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     inc de
     dec b
@@ -2247,7 +2247,7 @@ Jump_0E0_573D::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, [wD8A4]
     and a, $03
     cp a, $03
@@ -2283,7 +2283,7 @@ Jump_0E0_5795::
     add a, $8D
     ld hl, vBGMap0 + $46
     di
-    call Func_000_1211
+    call WriteVRAMByte
     ei
     ld hl, vTiles1 + $6D0
     ld de, $0701
@@ -2295,7 +2295,7 @@ Jump_0E0_5795::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, [wD8A4]
     call Func_0E0_7A80
     ld [wC529], a
@@ -2315,9 +2315,9 @@ Jump_0E0_57DE::
     ld a, $C3
     ld hl, vBGMap0 + $1AF
     di
-    call Func_000_121F
-    call Func_000_121F
-    call Func_000_1211
+    call WriteVRAMByteInc
+    call WriteVRAMByteInc
+    call WriteVRAMByte
     ei
     jr Jump_0E0_581A
 
@@ -2335,7 +2335,7 @@ Jump_0E0_57F9::
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     dec de
     ld a, [de]
@@ -2343,13 +2343,13 @@ Jump_0E0_57F9::
     swap a
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, [de]
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
 
 Jump_0E0_581A::
@@ -2373,7 +2373,7 @@ Jump_0E0_582E::
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     inc hl
     inc de
@@ -2382,13 +2382,13 @@ Jump_0E0_582E::
     swap a
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, [de]
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     pop hl
     push de
@@ -2416,13 +2416,13 @@ Jump_0E0_5861::
     push hl
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, [de]
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     dec de
     ld a, [de]
@@ -2430,13 +2430,13 @@ Jump_0E0_5861::
     swap a
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, [de]
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     pop hl
     inc de
@@ -2520,13 +2520,13 @@ Jump_0E0_5905::
     swap a
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, [de]
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     call Func_0E0_59A4
     ld hl, $5A05
@@ -2539,7 +2539,7 @@ Jump_0E0_5905::
 Jump_0E0_592C::
     di
     ld a, [de]
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     inc de
     dec b
@@ -2557,7 +2557,7 @@ Jump_0E0_5941::
     ld a, [hl+]
     cp a, c
     jr nz, Jump_0E0_596D
-    ld de, hFFFC
+    ld de, $FFFC
     add hl, de
     ld a, [hl]
     ld [wC8C0], a
@@ -2599,7 +2599,7 @@ Jump_0E0_597E::
     and a, $0F
     inc a
     di
-    call Func_000_1211
+    call WriteVRAMByte
     ei
     push de
     ld de, $0020
@@ -2655,7 +2655,7 @@ Func_0E0_59C0::
 Jump_0E0_59CE::
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
 
 Func_0E0_59D4::
@@ -2671,7 +2671,7 @@ Func_0E0_59D4::
 Jump_0E0_59E0::
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ldh a, [hFFC6]
     and a, $F0
@@ -2686,13 +2686,13 @@ Jump_0E0_59E0::
 Jump_0E0_59F4::
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ldh a, [hFFC6]
     and a, $0F
     inc a
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ret
     dw Data_0E0_5A15
@@ -2825,27 +2825,27 @@ Jump_0E0_5B16::
     ld b, $7D
     ld de, $4001
     ld hl, vTiles0
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $40FA
     ld hl, vTiles0 + $100
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $41E1
     ld hl, vTiles0 + $200
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7E
     ld de, $4F22
     ld hl, vTiles0 + $300
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $93
     ld de, $4001
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $46
     ld de, $496B
     ld hl, wC198
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_0E0_5BB2
@@ -2854,34 +2854,34 @@ Jump_0E0_5B16::
     ld b, $46
     ld de, $5301
     ld hl, wD000
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
     ld de, Data_07E_4001
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BA5
     ld hl, wC4DF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BAD
     ld hl, wC4E7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B45
     ld hl, wC4EF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4C0D
     ld hl, wC4F7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
 
 Jump_0E0_5BB2::
     ld hl, vBGMap0
@@ -3269,23 +3269,23 @@ Jump_0E0_5E83::
     ld b, $7D
     ld de, $4001
     ld hl, vTiles0
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $40FA
     ld hl, vTiles0 + $100
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $41E1
     ld hl, vTiles0 + $200
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $46
     ld de, $7025
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $46
     ld de, $777A
     ld hl, wC198
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_0E0_5F07
@@ -3294,29 +3294,29 @@ Jump_0E0_5E83::
     ld b, $46
     ld de, $7A9D
     ld hl, wD000
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
     ld de, Data_07E_4081
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BA5
     ld hl, wC4DF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BAD
     ld hl, wC4E7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B45
     ld hl, wC4EF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
 
 Jump_0E0_5F07::
     ld hl, vBGMap0
@@ -3818,35 +3818,35 @@ Jump_0E0_62A0::
     ld b, $7D
     ld de, $4001
     ld hl, vTiles0
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $40FA
     ld hl, vTiles0 + $100
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7E
     ld de, $48D6
     ld hl, vTiles0 + $200
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $21
     ld de, $7548
     ld hl, vTiles0 + $300
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $42BD
     ld hl, vTiles0 + $400
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $41E1
     ld hl, vTiles0 + $500
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $48
     ld de, $4DDC
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $48
     ld de, $523C
     ld hl, wC198
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_0E0_636C
@@ -3855,44 +3855,44 @@ Jump_0E0_62A0::
     ld b, $48
     ld de, $54BF
     ld hl, wD000
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
     ld de, Data_07E_5138
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BA5
     ld hl, wC4DF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BAD
     ld hl, wC4E7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_027_4B2D
     ld hl, wC4EF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $27
     ld de, Data_07E_7850
     ld hl, wC4F7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B4D
     ld hl, wC4FF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B45
     ld hl, wC507
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
 
 Jump_0E0_636C::
     ld hl, vBGMap0
@@ -4565,39 +4565,39 @@ Jump_0E0_685B::
     ld b, $7D
     ld de, $4001
     ld hl, vTiles0
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $40FA
     ld hl, vTiles0 + $100
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $42BD
     ld hl, vTiles0 + $200
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $41E1
     ld hl, vTiles0 + $300
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $4EB6
     ld hl, vTiles0 + $400
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $4B4A
     ld hl, vTiles0 + $500
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7E
     ld de, $52BC
     ld hl, vTiles0 + $600
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $48
     ld de, $55DA
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $48
     ld de, $5C7D
     ld hl, wC198
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
     jp z, Jump_0E0_694D
@@ -4606,54 +4606,54 @@ Jump_0E0_685B::
     ld b, $48
     ld de, $61F2
     ld hl, wD000
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $94
     ld de, Data_048_4001
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $48
     ld de, Data_07E_5138
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BA5
     ld hl, wC4DF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BAD
     ld hl, wC4E7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B4D
     ld hl, wC4EF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B45
     ld hl, wC4F7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B2D
     ld hl, wC4FF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B1D
     ld hl, wC507
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4C65
     ld hl, wC50F
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
 
 Jump_0E0_694D::
     ld hl, vBGMap0
@@ -5061,27 +5061,27 @@ Jump_0E0_6C2C::
     ld b, $7D
     ld de, $4001
     ld hl, vTiles0
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $40FA
     ld hl, vTiles0 + $100
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $42BD
     ld hl, vTiles0 + $200
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $7D
     ld de, $41E1
     ld hl, vTiles0 + $300
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $49
     ld de, $4C1B
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld b, $49
     ld de, $531F
     ld hl, wC198
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_0E0_6CC8
@@ -5090,34 +5090,34 @@ Jump_0E0_6C2C::
     ld b, $49
     ld de, $572D
     ld hl, wD000
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $49
     ld de, Data_07E_52BB
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BA5
     ld hl, wC4DF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4BAD
     ld hl, wC4E7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B4D
     ld hl, wC4EF
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4B45
     ld hl, wC4F7
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
 
 Jump_0E0_6CC8::
     ld hl, vBGMap0
@@ -5568,7 +5568,7 @@ Jump_0E0_7011::
     jr nz, Jump_0E0_7036
     ld hl, vTiles2 + $7F0
     ld de, $0101
-    call Func_000_2E98
+    call FillTilesRequest
     ld a, [wD09F]
     dec a
     ld hl, $7649
@@ -5621,7 +5621,7 @@ Jump_0E0_7070::
     ld a, [wD0AA]
     ld h, a
     ld de, $1202
-    call Func_000_2E98
+    call FillTilesRequest
     ld a, [wD0A9]
     ld l, a
     ld a, [wD0AA]
@@ -5663,7 +5663,7 @@ Jump_0E0_70B6::
     ld a, [wD0AA]
     ld h, a
     ld de, $1201
-    call Func_000_2E98
+    call FillTilesRequest
     ld a, [wD0A9]
     ld l, a
     ld a, [wD0AA]
@@ -5792,7 +5792,7 @@ Jump_0E0_71A8::
     push hl
     ld hl, vTiles1
     ld de, $1202
-    call Func_000_2E98
+    call FillTilesRequest
     pop hl
     xor a, a
     ld [wC528], a
@@ -5816,7 +5816,7 @@ Jump_0E0_71CE::
     push hl
     ld hl, vTiles1 + $240
     ld de, $1206
-    call Func_000_2E98
+    call FillTilesRequest
     pop hl
     ld a, $01
     ld [wC528], a
@@ -5997,7 +5997,7 @@ Jump_0E0_72DB::
     ld a, [wC6FD]
     ld [wC933], a
     ld de, $019F
-    call Func_000_1845
+    call SetFlagBit
     ld a, $01
     ld [wC5DB], a
     ld a, $01
@@ -6041,10 +6041,10 @@ Jump_0E0_7351::
 Jump_0E0_735E::
     ld hl, vTiles2 + $7F0
     ld de, $0101
-    call Func_000_2E98
+    call FillTilesRequest
     ld hl, vTiles1
     ld de, $0E02
-    call Func_000_2E98
+    call FillTilesRequest
     ld a, $02
     ld [wC528], a
     xor a, a
@@ -6057,7 +6057,7 @@ Jump_0E0_735E::
     ld de, Data_048_4001
     ld hl, wC49F
     ld c, $08
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld a, $01
     ldh [rVBK], a
     ld a, $00
@@ -6130,7 +6130,7 @@ Func_0E0_740E::
 
 Jump_0E0_7410::
     di
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     inc a
     dec b
@@ -6430,7 +6430,7 @@ Func_0E0_758B::
 Jump_0E0_758D::
     di
     push af
-    call Func_000_120A
+    call WaitForVRAMAccess
     pop af
     ld [hl], a
     ei
@@ -6523,12 +6523,12 @@ Func_0E0_75BF::
     ld a, $FF
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     farcall Func_017_421A
     ld hl, $7641
     ld de, wC4FF
     ld bc, $0008
-    call Func_000_0952
+    call CopyBytes
 
 Jump_0E0_7640::
     ret
@@ -7276,7 +7276,7 @@ Func_0E0_7AD7:: ; heuristic: follows a terminator; C0
     push bc
     ld c, a
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_0E0_7AF1
@@ -7298,7 +7298,7 @@ Jump_0E0_7AF2::
 Func_0E0_7AF6:: ; heuristic: follows a terminator; C0
     push hl
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_0E0_7B05

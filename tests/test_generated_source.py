@@ -61,7 +61,9 @@ class Annotations(unittest.TestCase):
             lines = (BANKS / f"bank{int(bank_s, 16):02x}.asm").read_text(encoding="utf-8").splitlines()
             label = re.compile(rf"^(?:Func|Jump)_{int(bank_s, 16):03X}_{int(addr_s, 16):04X}::")
             idx = next((i for i, l in enumerate(lines) if label.match(l)), None)
-            if idx is None or lines[idx - 1] != f"; {text}":
+            # The note sits above the label block; a renamed routine's block is
+            # `; note` / `Name::` / `Func_BBB_AAAA:: ; address name`.
+            if idx is None or f"; {text}" not in lines[max(0, idx - 3):idx]:
                 missing.append(key)
         self.assertEqual(missing, [], "annotation not emitted directly above its label")
 
@@ -88,7 +90,8 @@ class SymbolicOperands(unittest.TestCase):
         bad, checked, symbolic = [], 0, 0
         sym = re.compile(r"\[[whrsv][A-Za-z0-9_]+( \+ \$[0-9A-F]+)?\]|BANK_NUMBER_BYTE|, [whrsv][A-Z][A-Za-z0-9_]*( \+ \$[0-9A-F]+)?$")
         for f in sorted(BANKS.glob("bank*.asm")):
-            for n, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            lines = f.read_text(encoding="utf-8").splitlines()
+            for n, line in enumerate(lines, 1):
                 if not line.startswith("    ") or line.lstrip().startswith(("db", "dw", "ds", "INCBIN")):
                     continue
                 code = line.split(";")[0].strip()
@@ -102,6 +105,10 @@ class SymbolicOperands(unittest.TestCase):
                 m = self.IMM.match(code)
                 if m:
                     checked += 1
+                    reg = code.split()[1].rstrip(",")
+                    ahead = [l.split(";")[0].strip() for l in lines[n:n + 2]]
+                    if reg in ("bc", "de") and int(m.group(1), 16) >= 0xFF00 and f"add hl, {reg}" in ahead:
+                        continue  # a small negative number added to HL, not an address
                     if forbidden(int(m.group(1), 16), True):
                         bad.append(f"{f.name}:{n} {code}")
         self.assertGreater(symbolic, 10000, "expected the source to use many symbolic operands")
@@ -110,6 +117,31 @@ class SymbolicOperands(unittest.TestCase):
     def test_includes_define_every_symbol_the_banks_use(self):
         main = (BANKS.parent / "main.asm").read_text(encoding="utf-8").splitlines()
         self.assertEqual(main[:3], ['INCLUDE "hardware.inc"', 'INCLUDE "ram.asm"', 'INCLUDE "macros.inc"'])
+
+
+@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+class RoutineNames(unittest.TestCase):
+    def test_every_configured_name_is_a_label_with_its_address_alias(self):
+        import json
+        names = json.loads((BANKS.parents[1] / "config" / "names.json").read_text(encoding="utf-8"))
+        problems = []
+        for key, info in names.items():
+            if key.startswith("_"):
+                continue
+            bank_s, addr_s = key.split(":")
+            bank, addr = int(bank_s, 16), int(addr_s, 16)
+            lines = (BANKS / f"bank{bank:02x}.asm").read_text(encoding="utf-8").splitlines()
+            alias = f"Func_{bank:03X}_{addr:04X}:: ; address name"
+            alt = f"Jump_{bank:03X}_{addr:04X}:: ; address name"
+            i = next((k for k, l in enumerate(lines) if l.startswith(info["name"] + "::")), None)
+            if i is None or lines[i + 1] not in (alias, alt):
+                problems.append(key)
+        self.assertEqual(problems, [])
+
+    def test_a_renamed_routine_is_used_by_its_callers(self):
+        text = "".join(f.read_text(encoding="utf-8") for f in sorted(BANKS.glob("bank*.asm")))
+        self.assertGreater(text.count("call FillBytes"), 20)
+        self.assertNotIn("call Func_000_0949", text)
 
 
 REF = BANKS.parents[1] / "local" / "roms" / "dwm2-cobi-us.gbc"

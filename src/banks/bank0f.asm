@@ -60,7 +60,7 @@ Jump_00F_404D::
     or a, $02
     ldh [hFF8C], a
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -104,7 +104,7 @@ Jump_00F_40B2::
     push hl
     ld a, [hl]
     ld c, $0D
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     ldh a, [hFFC6]
     and a, $0F
     ld hl, $40DE
@@ -251,7 +251,7 @@ Jump_00F_418E::
     ld hl, wC198
     ld a, $C3
     ld bc, $0168
-    call Func_000_0949
+    call FillBytes
     ld hl, wC252
     ld b, $08
     ld a, $80
@@ -269,7 +269,7 @@ Jump_00F_41D4::
     ld hl, wD000
     xor a, a
     ld bc, $0168
-    call Func_000_0949
+    call FillBytes
     ld a, $00
     ldh [rSVBK], a
 
@@ -305,12 +305,12 @@ Jump_00F_41F1::
     ld [wC57D], a
     ld a, h
     ld [wC57E], a
-    call Func_000_05D1
+    call SpinDelay
     farcall Func_017_421A
     ld hl, $425E
     ld de, wC4FF
     ld bc, $0008
-    call Func_000_0952
+    call CopyBytes
 
 Jump_00F_423E::
     farcall Func_05F_6DDB
@@ -732,7 +732,7 @@ Jump_00F_456A::
     ld a, h
     ld [wC922], a
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld a, $0E
     ldh [hFF8D], a
     ld hl, wC923
@@ -2196,7 +2196,7 @@ Jump_00F_5175::
     ld a, $01
     ld [wCB7D], a
     ld de, $00D1
-    call Func_000_1845
+    call SetFlagBit
     ld a, [wCC3C]
     set 0, a
     ld [wCC3C], a
@@ -2238,7 +2238,7 @@ Jump_00F_5240::
     and a, $70
     swap a
     ld c, $30
-    call Func_000_1682
+    call Multiply8
     pop de
     add hl, de
     ld a, [hl+]
@@ -2361,7 +2361,7 @@ Jump_00F_549F::
     or a, a
     ret z
     ld de, $00C3
-    call Func_000_1845
+    call SetFlagBit
     farcall Func_002_6050
     ld a, $01
     ld [wCB7D], a
@@ -2404,7 +2404,7 @@ Jump_00F_550B::
     ld a, $30
     ld [wC8C9], a
     ld de, $0024
-    call Func_000_1845
+    call SetFlagBit
     ld a, $04
     ld [wC8C6], a
     farcall Func_05F_6C5A
@@ -2455,7 +2455,7 @@ Jump_00F_5577::
     set 3, a
     ld [wCC3B], a
     ld de, $00C2
-    call Func_000_1845
+    call SetFlagBit
     ldh a, [hFF8E]
     ld [wC8C8], a
     ldh a, [hFF91]
@@ -2482,7 +2482,7 @@ Jump_00F_55AC::
 
 Jump_00F_55B3::
     ld a, $7A
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_00F_55B8::
     ld a, [wIsCGB]
@@ -2491,7 +2491,7 @@ Jump_00F_55B8::
     ld hl, wC49F
     ld de, wC0F0
     ld bc, $0040
-    call Func_000_0952
+    call CopyBytes
 
 Jump_00F_55CA::
     ld hl, wC923
@@ -2683,14 +2683,14 @@ Jump_00F_56F3::
     ld hl, vTiles0 + $416
     call Func_00F_7F68
     ld de, $00A6
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_00F_570A::
     ld hl, vTiles0 + $417
     call Func_00F_7F68
     ld de, $00A5
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_00F_5717::
@@ -2733,22 +2733,22 @@ Jump_00F_5745::
     xor a, a
     ld [wC921], a
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_00F_57DE
     ld de, $00A7
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_57D2
     ld de, $00A6
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_57C6
     ld de, $00A5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_57BB
     ld de, $00A4
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_579D
     ld de, $00A0
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_5791
     ld hl, $040C
     call Func_00F_7F68
@@ -2765,7 +2765,7 @@ Jump_00F_5791::
 
 Jump_00F_579D::
     ld de, $00A0
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_57B0
     ld hl, $4415
     call Func_00F_7F68
@@ -2837,7 +2837,7 @@ Func_00F_57EA::
 
 Jump_00F_581C::
     ld de, $0023
-    call Func_000_1845
+    call SetFlagBit
     ld a, $04
     ldh [hFFC6], a
     farcall Func_05F_6DAC
@@ -2861,7 +2861,7 @@ Jump_00F_583A::
     ld hl, $0DCB
     call Func_00F_7F68
     ld de, $001E
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -2883,7 +2883,7 @@ Jump_00F_585B::
     ld a, $80
     ld [wCBCF], a
     ld a, $85
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -2947,7 +2947,7 @@ Jump_00F_58E5::
     ld hl, $0A08
     call Func_00F_7F68
     ld de, $01E5
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -3096,7 +3096,7 @@ Jump_00F_5A02::
     ld hl, $0A05
     call Func_00F_7F68
     ld de, $01E4
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -3200,7 +3200,7 @@ Jump_00F_5AB2::
 
 Jump_00F_5AB9::
     ld de, $01E3
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_00F_5AD2
     ld hl, $0A03
     call Func_00F_7F68
@@ -3217,11 +3217,11 @@ Jump_00F_5AD2::
     ld hl, wC49F
     ld de, wC0F0
     ld bc, $0040
-    call Func_000_0952
+    call CopyBytes
 
 Jump_00F_5AE4::
     ld de, $01E3
-    call Func_000_1845
+    call SetFlagBit
     xor a, a
     ld [wC922], a
     ld hl, wC923
@@ -3254,7 +3254,7 @@ Jump_00F_5B17::
     ld hl, $0AF5
     call Func_00F_7F68
     ld de, $01E2
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -3271,7 +3271,7 @@ Jump_00F_5B3B::
     ld de, $4C21
     ld b, $7D
     ld hl, vTiles0 + $500
-    call Func_000_0CF5
+    call DecompressToVRAM
     xor a, a
     ld [wCB86], a
     ld a, $0F
@@ -3383,7 +3383,7 @@ Jump_00F_5BF0::
 
 Jump_00F_5C06::
     ld de, $01E1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_5C2F
     ld hl, $0AED
     call Func_00F_7F68
@@ -3392,7 +3392,7 @@ Jump_00F_5C06::
     farcall Func_012_7DCE
     farcall Func_012_7DF1
     ld de, $01E1
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -3588,7 +3588,7 @@ Jump_00F_5DBB::
     ld hl, $0AD5
     call Func_00F_7F68
     ld de, $009D
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -3670,12 +3670,12 @@ Jump_00F_5E4A::
     ld hl, wC923
     inc [hl]
     ld de, $009C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_5E6A
     ld hl, $4AD2
     call Func_00F_7F68
     ld de, $009C
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_00F_5E6A::
@@ -3718,7 +3718,7 @@ Jump_00F_5E9D::
     ld a, $E0
     ld [wCB9A], a
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -3750,7 +3750,7 @@ Jump_00F_5EE8::
     cp a, $10
     jr nz, Jump_00F_5F00
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -4033,7 +4033,7 @@ Jump_00F_60FE::
     cp a, $10
     ret nz
     ld a, $72
-    call Func_000_1278
+    call StoreWC60B
     ld a, $52
     ld [wCBA1], a
     ldh [hFFC6], a
@@ -4091,11 +4091,11 @@ Jump_00F_614C::
     ld hl, wC49F
     ld de, wC0F0
     ld bc, $0040
-    call Func_000_0952
+    call CopyBytes
 
 Jump_00F_6189::
     ld a, $7A
-    call Func_000_1278
+    call StoreWC60B
     ld hl, hFF8C
     call Func_00F_7ED3
     xor a, a
@@ -4182,18 +4182,18 @@ Jump_00F_622E::
     or a, a
     ret z
     ld a, $66
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
 
 Jump_00F_6252::
     ld de, $0085
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_626B
     farcall Func_05F_6E09
     ld de, $0085
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -4241,14 +4241,14 @@ Jump_00F_62AF::
     call Func_00F_7EB2
     ret nc
     ld de, $0093
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
 
 Jump_00F_62C0::
     ld de, $0093
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_00F_62D1
     ld hl, wC923
     inc [hl]
@@ -4416,12 +4416,12 @@ Jump_00F_63E5::
     cp a, $30
     jr z, Jump_00F_6410
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00F_6410::
     ld a, $66
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00F_6416::
@@ -4636,7 +4636,7 @@ Jump_00F_6586::
     ld a, $B0
     ld [wC8FB], a
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -4706,7 +4706,7 @@ Jump_00F_6606::
     ld a, $01
     ldh [hFF8D], a
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -4956,7 +4956,7 @@ Func_00F_67BA::
 
 Jump_00F_6822::
     ld de, $0022
-    call Func_000_1845
+    call SetFlagBit
     ld a, $03
     ldh [hFFC6], a
     farcall Func_05F_6DAC
@@ -4982,7 +4982,7 @@ Jump_00F_6845::
     ld hl, $0DC1
     call Func_00F_7F68
     ld de, $001F
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -5004,7 +5004,7 @@ Jump_00F_6866::
     ld a, $80
     ld [wCBCF], a
     ld a, $85
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -5093,7 +5093,7 @@ Jump_00F_6924::
     or a, a
     ret z
     ld de, $005F
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -5166,7 +5166,7 @@ Jump_00F_69A6::
     ld de, $42BD
     ld b, $7D
     ld hl, vTiles0 + $500
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $03
     ld [wCB81], a
     ld hl, $0871
@@ -5224,7 +5224,7 @@ Jump_00F_6A21::
     call Func_00F_7EE9
     ret nc
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld a, $01
     ld [wCB7D], a
     ld hl, wC923
@@ -5256,7 +5256,7 @@ Jump_00F_6A51::
     ld a, $80
     ld [wCBCF], a
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld a, $E0
     ld [wCB9A], a
     xor a, a
@@ -5270,7 +5270,7 @@ Jump_00F_6A77::
     set 3, a
     ld [wCC39], a
     ld de, $007F
-    call Func_000_1845
+    call SetFlagBit
     ldh a, [hFF8E]
     ld [wC8C8], a
     ldh a, [hFF91]
@@ -5290,7 +5290,7 @@ Jump_00F_6AA1::
     call Func_00F_7EE9
     ret nc
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -5455,7 +5455,7 @@ Jump_00F_6BDA::
     cp a, $40
     ret nz
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC921], a
     ld [wC922], a
@@ -5557,7 +5557,7 @@ Jump_00F_6C77::
     ld de, $7705
     ld b, $7D
     ld hl, vTiles0 + $700
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $45
     ld [wCBA1], a
     xor a, a
@@ -5664,7 +5664,7 @@ Jump_00F_6D62::
     cp a, $A0
     ret nz
     ld de, $007E
-    call Func_000_1845
+    call SetFlagBit
     ld a, $80
     ld [wC919], a
     ret
@@ -5741,7 +5741,7 @@ Jump_00F_6E16::
     and a, $F8
     ldh [hFFA1], a
     ld a, $7D
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     xor a, a
@@ -5757,7 +5757,7 @@ Jump_00F_6E31::
     ret nz
     farcall Func_05F_6E09
     ld a, $66
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -5820,7 +5820,7 @@ Jump_00F_6E77::
     ld a, $80
     ld [wCBCF], a
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -5900,7 +5900,7 @@ Jump_00F_6F0C::
     ld hl, hFF8C
     call Func_00F_7EC4
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -5984,7 +5984,7 @@ Jump_00F_6FC7::
     and a, $F8
     ldh [hFFA1], a
     ld de, $007D
-    call Func_000_1845
+    call SetFlagBit
     ld a, [wCC39]
     set 2, a
     ld [wCC39], a
@@ -5998,7 +5998,7 @@ Jump_00F_6FC7::
     ld [wC8C7], a
     farcall Func_05F_6C5A
     ld a, $00
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00F_7002::
@@ -6035,7 +6035,7 @@ Jump_00F_7024::
     ld hl, wCBAC
     call Func_00F_7ED3
     ld a, $7D
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -6097,7 +6097,7 @@ Func_00F_7093::
 
 Jump_00F_7099::
     ld de, $0075
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_70BD
     ld a, $00
     ldh [hFFC6], a
@@ -6123,7 +6123,7 @@ Jump_00F_70BD::
     or a, a
     ret z
     ld de, $009B
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_00F_70E2
     ld a, $33
     ld [wC928], a
@@ -6164,7 +6164,7 @@ Jump_00F_7104::
     and a, $FD
     ldh [hFF8C], a
     ld de, $0064
-    call Func_000_1845
+    call SetFlagBit
     ld a, $80
     ld [wC919], a
     ret
@@ -6221,7 +6221,7 @@ Jump_00F_716A::
     or a, $02
     ldh [hFF8C], a
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC922], a
     ld hl, wC923
@@ -6347,7 +6347,7 @@ Func_00F_7271::
 Jump_00F_727B::
     farcall Func_05F_6E09
     ld a, $7D
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -6359,7 +6359,7 @@ Jump_00F_728B::
 
 Jump_00F_7291::
     ld a, $00
-    call Func_000_1278
+    call StoreWC60B
     ld a, $80
     ld [wC919], a
     ret
@@ -6449,7 +6449,7 @@ Func_00F_72D9::
 
 Jump_00F_7325::
     ld de, $0021
-    call Func_000_1845
+    call SetFlagBit
     ld a, $02
     ldh [hFFC6], a
     farcall Func_05F_6DAC
@@ -6475,7 +6475,7 @@ Jump_00F_7348::
     ld hl, $0DC0
     call Func_00F_7F68
     ld de, $001D
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -6497,7 +6497,7 @@ Jump_00F_7369::
     ld a, $80
     ld [wCBCF], a
     ld a, $85
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -6658,7 +6658,7 @@ Jump_00F_749D::
     ld de, $5B5F
     ld b, $7D
     ld hl, vTiles0 + $500
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $22
     ld [wCB81], a
     ld a, $E0
@@ -6679,13 +6679,13 @@ Jump_00F_74F7::
     ld de, $5F6E
     ld b, $7D
     ld hl, vTiles0 + $500
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $27
     ld [wCB81], a
     ld de, $5F6E
     ld b, $7D
     ld hl, vTiles0 + $600
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $27
     ld [wCB91], a
     ld hl, wC923
@@ -6711,14 +6711,14 @@ Jump_00F_7546::
     or a, a
     jr nz, Jump_00F_7553
     ld a, $7C
-    call Func_000_1278
+    call StoreWC60B
     jr Jump_00F_755C
 
 Jump_00F_7553::
     cp a, $3C
     jr nz, Jump_00F_755C
     ld a, $81
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_00F_755C::
     ld a, [wC921]
@@ -6806,7 +6806,7 @@ Jump_00F_7601::
     set 5, a
     ld [wCC38], a
     ld de, $005A
-    call Func_000_1845
+    call SetFlagBit
     ld hl, wC923
     inc [hl]
     ret
@@ -6845,7 +6845,7 @@ Jump_00F_7639::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00F_766D::
@@ -6917,7 +6917,7 @@ Jump_00F_76E3::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00F_7707::
@@ -6976,7 +6976,7 @@ Jump_00F_776B::
     call Func_00F_7F75
     ret nc
     ld a, $6D
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -7014,7 +7014,7 @@ Jump_00F_7795::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00F_77C9::
@@ -7029,7 +7029,7 @@ Jump_00F_77C9::
     ld a, $02
     ldh [hFF98], a
     ld a, $6D
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -7058,7 +7058,7 @@ Jump_00F_780D::
     inc a
     ld [wC921], a
     ld a, $6D
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_00F_781C::
     ld a, $80
@@ -7083,7 +7083,7 @@ Jump_00F_781C::
     ld a, $02
     call Func_000_122D
     ld a, $60
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wC921], a
     ret
@@ -7132,7 +7132,7 @@ Jump_00F_789B::
     ld a, $01
     ld [wC6FD], a
     ld de, $0002
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_00F_78B7::
@@ -7172,7 +7172,7 @@ Jump_00F_78E7::
     ld hl, wC923
     inc [hl]
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_7903
     ld hl, $009A
     call Func_00F_7F68
@@ -7392,7 +7392,7 @@ Jump_00F_7A70::
     ld hl, wC923
     inc [hl]
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_7A9B
     ld hl, $4094
     call Func_00F_7F68
@@ -7462,7 +7462,7 @@ Jump_00F_7AF9::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld de, $001B
-    call Func_000_1845
+    call SetFlagBit
     ld a, $01
     ldh [hFF8B], a
     xor a, a
@@ -7716,9 +7716,9 @@ Func_00F_7CA5::
 
 Jump_00F_7CB1::
     ld a, $76
-    call Func_000_1278
+    call StoreWC60B
     ld de, $001B
-    call Func_000_1845
+    call SetFlagBit
     ld a, $03
     ld [wC8EF], a
     ld a, $60
@@ -7740,7 +7740,7 @@ Jump_00F_7CD6::
     ld hl, wC923
     inc [hl]
     ld de, $0001
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_00F_7CF4
     ld hl, $0076
     call Func_00F_7F68
@@ -7821,7 +7821,7 @@ Jump_00F_7D6C::
     ld hl, wC923
     inc [hl]
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_00F_7D7F
     ld hl, $0021
     call Func_00F_7F68

@@ -294,7 +294,7 @@ Jump_0A3_4274::
 Func_0A3_4278::
     push hl
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_0A3_4287
@@ -453,7 +453,7 @@ Jump_0A3_4580::
     ld a, [hl]
     call Func_000_16AA
     ld a, $0A
-    call Func_000_16D1
+    call DivideHLByA
     ld a, h
     or a, a
     jr z, Jump_0A3_458F
@@ -753,7 +753,7 @@ Func_0A3_4A5F::
     ld a, $FF
     ld hl, wD86D
     ld bc, $0003
-    call Func_000_0949
+    call FillBytes
     ld a, [wD8A5]
     ld d, a
     and a, $04
@@ -876,7 +876,7 @@ Jump_0A3_4B1A::
     push hl
     ld a, [hl]
     ld c, $5B
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, [de]
     inc de
     ld [hl+], a
@@ -887,7 +887,7 @@ Jump_0A3_4B1A::
     push hl
     ld a, [hl]
     ld c, $5F
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, [de]
     inc de
     ld [hl+], a
@@ -898,7 +898,7 @@ Jump_0A3_4B1A::
     push hl
     ld a, [hl]
     ld c, $55
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, [de]
     inc de
     ld [hl+], a

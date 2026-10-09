@@ -135,7 +135,7 @@ Func_00C_40E6:: ; heuristic: target of a pointer table; C0
     add a, $E1
     ld b, a
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl+], a
     ei
@@ -345,7 +345,7 @@ Jump_00C_4206::
 Jump_00C_4218::
     call Func_00C_430A
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, [wD780]
     sub a, $03
     ld [wD780], a
@@ -387,7 +387,7 @@ Jump_00C_4250::
     ld [wD786], a
     call Func_00C_430A
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00C_425C::
@@ -442,7 +442,7 @@ Jump_00C_428C::
 
 Jump_00C_42A2::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     call Func_00C_4312
     ld a, [wD786]
     ld hl, Data_00C_58FE
@@ -523,7 +523,7 @@ Jump_00C_4320::
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -768,7 +768,7 @@ Func_00C_4501:: ; heuristic: target of a pointer table; C0
 Func_00C_4502:: ; heuristic: target of a pointer table; C0
     ld [wD780], a
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00C_450B::
@@ -777,7 +777,7 @@ Jump_00C_450B::
     sub a, $03
     ld [wD780], a
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00C_451C::
@@ -816,7 +816,7 @@ Jump_00C_4544::
     ld [wD78A], a
     call Func_00C_45D6
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00C_4550::
@@ -861,7 +861,7 @@ Jump_00C_457E::
     and a, a
     jr z, Jump_00C_459B
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, [wD780]
     add a, $03
     ld [wD780], a
@@ -931,7 +931,7 @@ Jump_00C_45EC::
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -1026,7 +1026,7 @@ Func_00C_46A4:: ; heuristic: target of a pointer table; C0
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, Data_00C_4718
     ld de, vTiles2 + $610
     call Func_00C_5145
@@ -1039,22 +1039,22 @@ Func_00C_46A4:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles2 + $7C0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4170
     ld hl, vTiles2 + $7D0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4160
     ld hl, vTiles2 + $7E0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4110
     ld hl, vTiles2 + $7F0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1079,19 +1079,19 @@ Func_00C_4778:: ; heuristic: target of a pointer table; C0
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld de, Data_00C_5C14
     ld hl, vTiles1
     ld b, $F1
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld de, Data_00C_5D44
     ld hl, wC364
     ld b, $F1
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld de, Data_00C_5D9C
     ld hl, wC300
     ld b, $F1
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_00C_47E9
@@ -1100,11 +1100,11 @@ Func_00C_4778:: ; heuristic: target of a pointer table; C0
     ld de, Data_00C_5DBC
     ld hl, wD1CC
     ld b, $F1
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld de, Data_00C_5DEE
     ld hl, wD168
     ld b, $F1
-    call Func_000_0CF5
+    call DecompressToVRAM
     xor a, a
     ldh [rSVBK], a
     farcall Func_0F1_5C05
@@ -1434,12 +1434,12 @@ Func_00C_4AA6:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles2 + $420
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4990
     ld hl, vTiles2 + $430
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     xor a, a
     ld [wC528], a
     ld [wC529], a
@@ -1644,7 +1644,7 @@ Jump_00C_4C1C::
     and a, a
     jr z, Jump_00C_4BCB
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     call Func_00C_529D
     ld hl, vTiles1 + $220
     ld a, l
@@ -1656,7 +1656,7 @@ Jump_00C_4C1C::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, $01
     ld [wD781], a
     ld [wD782], a
@@ -1727,7 +1727,7 @@ Jump_00C_4CA2::
     and a, a
     jr z, Jump_00C_4C4F
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     call Func_00C_529D
     ld hl, vTiles1 + $220
     ld a, l
@@ -1739,7 +1739,7 @@ Jump_00C_4CA2::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, $01
     ld [wD781], a
     ld [wD782], a
@@ -1747,7 +1747,7 @@ Jump_00C_4CA2::
 
 Jump_00C_4CD5::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_00C_4CDA::
     ld a, [wD781]
@@ -1760,7 +1760,7 @@ Func_00C_4CE2:: ; heuristic: target of a pointer table; C0
     ld b, $46
     ld de, Func_00C_4001
     ld hl, vTiles1
-    call Func_000_0CF5
+    call DecompressToVRAM
     call Func_00C_511B
     ld a, [wD781]
     inc a
@@ -1810,7 +1810,7 @@ Jump_00C_4D12::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, $7F
     ld [wC526], a
     call Func_000_0829
@@ -1999,7 +1999,7 @@ Jump_00C_4EA4::
     ld de, Data_01F_4990
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ret
 
 Func_00C_4EC7::
@@ -2226,7 +2226,7 @@ Func_00C_501F::
     add a, $E1
     ld b, a
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl+], a
     ei
@@ -2247,7 +2247,7 @@ Jump_00C_5043::
     ld b, a
     pop hl
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -2333,7 +2333,7 @@ Jump_00C_50A2::
     ld a, [hl]
     ld l, a
     ld h, $00
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld a, [wC8C1]
     and a, a
     jr nz, Jump_00C_50B6
@@ -2384,13 +2384,13 @@ Jump_00C_50DF::
 
 Jump_00C_50E4::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [wC8C1]
     add a, $E0
     ld [hl+], a
     ei
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [wC8C2]
     add a, $E0
     ld [hl], a
@@ -2663,7 +2663,7 @@ Func_00C_5269::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ret
 
 Func_00C_5283::
@@ -2677,7 +2677,7 @@ Func_00C_5283::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ret
 
 Func_00C_529D::
@@ -2691,7 +2691,7 @@ Func_00C_529D::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles2 + $670
     ld a, l
     ld [wC52D], a
@@ -2702,7 +2702,7 @@ Func_00C_529D::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ret
 
 Func_00C_52D0::
@@ -3583,7 +3583,7 @@ Jump_00C_6833::
     ld [wD786], a
     call Func_00C_68EF
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00C_683F::
@@ -3635,7 +3635,7 @@ Jump_00C_687D::
 
 Jump_00C_688C::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, [wD786]
     ld hl, Data_00C_68D1
     add a, l
@@ -3714,7 +3714,7 @@ Jump_00C_6906::
     add hl, de
     call Func_000_24F8
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -3725,7 +3725,7 @@ Data_00C_691A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Func_00C_6922:: ; heuristic: target of a pointer table; C0
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_00C_7831
     ld hl, wC412
     ld bc, $0605
@@ -4108,7 +4108,7 @@ Jump_00C_6C0B::
     ld [wD786], a
     call Func_00C_6C9D
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_00C_6C17::
@@ -4135,7 +4135,7 @@ Jump_00C_6C27::
 Jump_00C_6C36::
     call Func_00C_6C9D
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, [wD786]
     ld hl, Data_00C_6C7F
     add a, l
@@ -4213,7 +4213,7 @@ Jump_00C_6CB4::
     add hl, de
     call Func_000_24F8
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -4566,7 +4566,7 @@ Func_00C_6F5E:: ; heuristic: target of a pointer table; C0
     cp a, $01
     jr nz, Jump_00C_6F8B
     ld de, $0188
-    call Func_000_1845
+    call SetFlagBit
     farcall Func_012_6990
     ld a, $03
     ldh [hFFC7], a
@@ -4575,7 +4575,7 @@ Func_00C_6F5E:: ; heuristic: target of a pointer table; C0
     set 7, a
     ld [wC836], a
     ld de, $012F
-    call Func_000_1845
+    call SetFlagBit
     jr Jump_00C_6F99
 
 Jump_00C_6F8B::
@@ -4780,7 +4780,7 @@ Jump_00C_70DB::
     cp a, b
     jr c, Jump_00C_70DB
     ld a, [wC6FD]
-    call Func_000_16D1
+    call DivideHLByA
     ld a, h
     and a, a
     ret z
@@ -4809,7 +4809,7 @@ Jump_00C_7116::
     push hl
     ld a, [de]
     ld c, $5D
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4818,7 +4818,7 @@ Jump_00C_7116::
     push hl
     ld a, [de]
     ld c, $61
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4826,7 +4826,7 @@ Jump_00C_7116::
     push hl
     ld a, [de]
     ld c, $63
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4834,7 +4834,7 @@ Jump_00C_7116::
     push hl
     ld a, [de]
     ld c, $65
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4842,7 +4842,7 @@ Jump_00C_7116::
     push hl
     ld a, [de]
     ld c, $67
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     ld hl, $0000
     call Func_00C_7246
     ld c, l
@@ -4854,7 +4854,7 @@ Jump_00C_7116::
     push bc
     ld a, [de]
     ld c, $69
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     srl h
@@ -4864,7 +4864,7 @@ Jump_00C_7116::
     pop hl
     add hl, bc
     ld a, $32
-    call Func_000_16D1
+    call DivideHLByA
     ld a, h
     and a, a
     jr z, Jump_00C_7187
@@ -4900,7 +4900,7 @@ Jump_00C_719D::
     push hl
     ld a, [de]
     ld c, $5D
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4909,7 +4909,7 @@ Jump_00C_719D::
     push hl
     ld a, [de]
     ld c, $61
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4917,7 +4917,7 @@ Jump_00C_719D::
     push hl
     ld a, [de]
     ld c, $63
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4925,7 +4925,7 @@ Jump_00C_719D::
     push hl
     ld a, [de]
     ld c, $65
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4933,7 +4933,7 @@ Jump_00C_719D::
     push hl
     ld a, [de]
     ld c, $67
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4941,7 +4941,7 @@ Jump_00C_719D::
     push hl
     ld a, [de]
     ld c, $69
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop hl
     call Func_00C_7246
     pop de
@@ -4949,10 +4949,10 @@ Jump_00C_719D::
     push hl
     ld a, [de]
     ld c, $56
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     ldh a, [hFFC6]
     ld c, $18
-    call Func_000_1682
+    call Multiply8
     ld b, h
     ld c, l
     pop hl
@@ -4963,7 +4963,7 @@ Jump_00C_719D::
     sbc a, b
     ld h, a
     ld a, $32
-    call Func_000_16D1
+    call DivideHLByA
     ld a, h
     and a, a
     jr z, Jump_00C_721B
@@ -5031,7 +5031,7 @@ Jump_00C_7260::
     push de
     ld a, [hl]
     ld c, $56
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     pop de
     ldh a, [hFFC6]
     add a, e
@@ -5310,7 +5310,7 @@ Jump_00C_739D::
 
 Func_00C_73B3::
     push bc
-    call Func_000_095B
+    call NextTableByte
     pop bc
     ld a, [wC5E7]
     ld l, a
@@ -5318,7 +5318,7 @@ Func_00C_73B3::
     and a, b
     ld h, a
     ld a, $52
-    call Func_000_16D1
+    call DivideHLByA
     ret
 
 Func_00C_73C6::
@@ -5622,7 +5622,7 @@ Func_00C_7587::
 
 Jump_00C_75AA::
     ld b, $08
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     cp a, $F0
     jr z, Jump_00C_75B8

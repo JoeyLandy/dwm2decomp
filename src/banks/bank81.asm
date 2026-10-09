@@ -140,7 +140,7 @@ Jump_081_40F4::
     ld c, a
     ld a, [wD2AE]
     ld b, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nz, Jump_081_4113
     ld a, [wD2B3]
     ld hl, hFFCB
@@ -189,7 +189,7 @@ Jump_081_4136::
     ld l, a
     ldh a, [hFFC9]
     ld h, a
-    call Func_000_3E7A
+    call CompareHLToBC
     pop hl
     jp z, Jump_081_4110
 
@@ -208,7 +208,7 @@ Jump_081_414C::
     ld l, a
     ldh a, [hFFC7]
     ld h, a
-    call Func_000_3E7A
+    call CompareHLToBC
     pop hl
     jr z, Jump_081_4165
 

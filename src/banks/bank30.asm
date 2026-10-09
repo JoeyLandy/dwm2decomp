@@ -247,15 +247,15 @@ Jump_030_4160::
     ld hl, wD895
     ld bc, $0009
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld hl, wD868
     ld bc, $0009
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld hl, wD87D
     ld bc, $0012
     ld a, $00
-    call Func_000_0949
+    call FillBytes
     xor a, a
     ld [wD89E], a
     ld [wD871], a
@@ -478,7 +478,7 @@ Jump_030_42B9::
     ld e, $00
 
 Jump_030_42CF::
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_030_4309
     ld a, l
     ld [wD872], a
@@ -591,7 +591,7 @@ Jump_030_434C::
     xor a, a
     ld hl, wCFCB
     ld bc, $0005
-    call Func_000_0949
+    call FillBytes
     farcall Func_0A3_4187
     call Func_030_439D
     ret
@@ -627,7 +627,7 @@ Jump_030_43B1::
     jr nz, Jump_030_43BF
     ld a, c
     ld hl, wD812
-    call Func_000_3F25
+    call AddAx9ToHL
     set 2, [hl]
 
 Jump_030_43BF::
@@ -725,7 +725,7 @@ Jump_030_4438::
     ld [hl], a
     ld a, [wD8A4]
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_030_4480
     call Func_030_44E0
@@ -746,7 +746,7 @@ Jump_030_4438::
     ld c, a
     ld a, [wD86B]
     ld b, a
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_030_4497
 
 Jump_030_4480::
@@ -819,11 +819,11 @@ Jump_030_44EC::
     ld h, [hl]
     ld l, a
     ld bc, $0033
-    call Func_000_3E7A
+    call CompareHLToBC
     ld a, $00
     jr c, Jump_030_4505
     ld bc, $03B6
-    call Func_000_3E7A
+    call CompareHLToBC
     ld a, $02
     jr c, Jump_030_4505
     ld a, $03
@@ -961,7 +961,7 @@ Jump_030_45BB::
     ld a, [hl]
     ld hl, Data_030_45D0
     call Func_030_5C68
-    call Func_000_000E
+    call JumpToHL
     jr Jump_030_45CB
 
 Jump_030_45C7::
@@ -984,7 +984,7 @@ Func_030_45DA::
     ld hl, wD2AD
     ld bc, $0014
     xor a, a
-    call Func_000_0949
+    call FillBytes
     xor a, a
     ld [wDA3C], a
     ld [wDA3D], a
@@ -1121,7 +1121,7 @@ Jump_030_46B5::
 Func_030_46BA::
     ld a, [wD8A4]
     ld hl, wD80D
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $08
     jr nz, Jump_030_46CF
@@ -1266,12 +1266,12 @@ Jump_030_4793::
     ld a, c
     call Func_030_5C45
     ld a, $06
-    call Func_000_16D1
+    call DivideHLByA
     push hl
     ld a, c
     call Func_030_5C4F
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_030_47B4
 
 Jump_030_47AE::
@@ -1597,7 +1597,7 @@ Jump_030_497D::
     ld hl, Data_030_4998
     dec a
     call Func_030_5C68
-    call Func_000_000E
+    call JumpToHL
     call Func_030_541B
     ld b, [hl]
     ld a, [wD871]
@@ -1859,7 +1859,7 @@ Jump_030_4C14::
     and a, c
     cp a, $FF
     jr z, Jump_030_4C34
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_030_4C2F
     jr nz, Jump_030_4C34
     call Func_000_3ED4
@@ -2300,7 +2300,7 @@ Func_030_502D::
     ld hl, wC0A0
     ld bc, $0008
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     call Func_030_50D2
     ld a, [wD8A4]
     ld hl, wD968
@@ -2481,7 +2481,7 @@ Jump_030_513F::
     ld a, [wCFEE]
     ld l, a
     ld h, $00
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_030_5181
     ld a, d
     ld hl, wC0A0
@@ -2504,7 +2504,7 @@ Jump_030_5187::
     ld hl, wC0A8
     ld bc, $0008
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld hl, wC0A0
     ld de, wC0A8
     jr Jump_030_51CD
@@ -2541,7 +2541,7 @@ Jump_030_51BC::
     ld hl, wC0A0
     ld bc, $0008
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld hl, wC0A8
     ld de, wC0A0
 
@@ -2639,7 +2639,7 @@ Jump_030_523A::
     ld h, $00
     pop bc
     pop de
-    call Func_000_3E7A
+    call CompareHLToBC
     jr c, Jump_030_5277
     ld c, l
     ld b, h
@@ -2668,7 +2668,7 @@ Jump_030_5285::
 Func_030_5287::
     ld a, [wD8A4]
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $40
     jr z, Jump_030_5299
@@ -2910,7 +2910,7 @@ Jump_030_545C::
     ld a, [hl]
     ld hl, Data_030_45D0
     call Func_030_5C68
-    call Func_000_000E
+    call JumpToHL
     call Func_030_541B
     ld [hl], b
     call Func_030_4CFC
@@ -2922,7 +2922,7 @@ Func_030_5472::
     ld hl, wD2AD
     ld bc, $0014
     xor a, a
-    call Func_000_0949
+    call FillBytes
     xor a, a
     ld [wDA3C], a
     ld [wDA3D], a
@@ -3039,7 +3039,7 @@ Jump_030_550E::
     ld l, c
     add hl, bc
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_030_5534
     ld a, [wDA3E]
     add a, $14
@@ -3081,7 +3081,7 @@ Jump_030_5544::
     add hl, bc
     add hl, bc
     pop bc
-    call Func_000_3E7A
+    call CompareHLToBC
     jr nc, Jump_030_556B
     ld a, [wDA3C]
     add a, $14
@@ -3510,7 +3510,7 @@ Func_030_5D49:: ; heuristic: follows a terminator; C0
     push bc
     ld c, a
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_030_5D63
@@ -3532,7 +3532,7 @@ Jump_030_5D64::
 Func_030_5D68:: ; heuristic: follows a terminator; C0
     push hl
     ld hl, wD80F
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
     jr nz, Jump_030_5D77

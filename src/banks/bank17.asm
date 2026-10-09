@@ -65,7 +65,7 @@ Jump_017_403B::
     pop bc
     dec b
     ret z
-    call Func_000_05D1
+    call SpinDelay
     jr Jump_017_4026
 
 Data_017_4055:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -187,7 +187,7 @@ Jump_017_41F4::
     ld a, $FF
     ld [wC47C], a
     farcall_b Func_017_4001
-    call Func_000_05D1
+    call SpinDelay
     ret
 
 Func_017_421A::

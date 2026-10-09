@@ -24,10 +24,10 @@ Jump_069_401E::
     cp a, $01
     jr nz, Jump_069_404C
     ld de, $0056
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_069_404C
     ld de, $0058
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_069_404C
     ld a, [wCC38]
     bit 3, a
@@ -54,7 +54,7 @@ Jump_069_404C::
     sla a
     ld c, a
     ldh a, [hFF92]
-    call Func_000_1682
+    call Multiply8
     ldh a, [hFF8F]
     sla a
     add a, l
@@ -109,7 +109,7 @@ Jump_069_40A6::
     ld e, a
     ld a, [hl+]
     ld d, a
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_069_40B8
     ld a, [hl+]
     inc hl
@@ -131,7 +131,7 @@ Jump_069_40BC::
     ld e, a
     ld a, [hl+]
     ld d, a
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_069_40C9
     inc hl
     inc hl
@@ -153,7 +153,7 @@ Jump_069_40D2::
     ld e, a
     ld a, [hl+]
     ld d, a
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_069_40E1
     inc hl
     inc hl
@@ -168,7 +168,7 @@ Jump_069_40E1::
     ld d, a
 
 Jump_069_40E5::
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_069_40EE
     inc hl
     inc hl

@@ -315,7 +315,7 @@ Jump_013_423A::
 
 Jump_013_4241::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4250
     ld hl, $0405
     call Func_013_4001
@@ -338,7 +338,7 @@ Jump_013_425E::
 
 Jump_013_4265::
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4274
     ld hl, $0408
     call Func_013_4001
@@ -356,10 +356,10 @@ Jump_013_427B::
 
 Jump_013_4282::
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_42A0
     ld de, $00A4
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4299
     ld hl, $040A
     call Func_013_4001
@@ -389,7 +389,7 @@ Jump_013_42B3::
 
 Jump_013_42BA::
     ld de, $00A0
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_42C9
     ld hl, $5FEF
     call Func_013_4049
@@ -463,10 +463,10 @@ Jump_013_4335::
 
 Jump_013_433C::
     ld de, $00A6
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld de, $00A7
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_436E
     call Func_013_7F94
     jr nc, Jump_013_4367
@@ -477,7 +477,7 @@ Jump_013_433C::
     ld hl, $041A
     call Func_013_4001
     ld de, $00A7
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_4367::
@@ -492,7 +492,7 @@ Jump_013_436E::
 
 Jump_013_4375::
     ld de, $0209
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_43A9
     ldh a, [hFF93]
     bit 7, a
@@ -512,7 +512,7 @@ Jump_013_438E::
     ld hl, $6015
     call Func_013_4049
     ld de, $0209
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_43A2::
@@ -547,7 +547,7 @@ Jump_013_43C5::
 
 Jump_013_43CC::
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_43DB
     ld hl, $0422
     call Func_013_4001
@@ -560,7 +560,7 @@ Jump_013_43DB::
 
 Jump_013_43E2::
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_43F1
     ld hl, $0423
     call Func_013_4001
@@ -573,7 +573,7 @@ Jump_013_43F1::
 
 Jump_013_43F8::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4407
     ld hl, $0424
     call Func_013_4001
@@ -586,7 +586,7 @@ Jump_013_4407::
 
 Jump_013_440E::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_441D
     ld hl, $0425
     call Func_013_4001
@@ -669,7 +669,7 @@ Jump_013_4483::
 
 Jump_013_448F::
     ld de, $00A4
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     farcall Func_085_5882
     ldh a, [hFFC6]
@@ -681,12 +681,12 @@ Jump_013_448F::
 
 Jump_013_44A7::
     ld de, $00A9
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_44BC
     ld hl, $0434
     call Func_013_4001
     ld de, $00A9
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_44BC::
@@ -715,7 +715,7 @@ Jump_013_44DB::
 
 Jump_013_44E2::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_44F1
     ld hl, $0438
     call Func_013_4001
@@ -733,10 +733,10 @@ Jump_013_44F8::
 
 Jump_013_44FF::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_451D
     ld de, $00A8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4516
     ld hl, $043C
     call Func_013_4001
@@ -764,7 +764,7 @@ Jump_013_452B::
 
 Jump_013_4532::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4541
     ld hl, $0440
     call Func_013_4001
@@ -777,7 +777,7 @@ Jump_013_4541::
 
 Jump_013_4548::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_459F
     ld a, $39
     ldh [hFFC6], a
@@ -801,7 +801,7 @@ Jump_013_4548::
 
 Jump_013_4582::
     ld de, $00A8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4591
     ld hl, $0441
     call Func_013_4001
@@ -824,10 +824,10 @@ Jump_013_459F::
 
 Jump_013_45A6::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4612
     ld de, $00B7
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_460B
     ld a, $39
     ldh [hFFC6], a
@@ -851,7 +851,7 @@ Jump_013_45A6::
 
 Jump_013_45E8::
     ld de, $00A8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_45F7
     ld hl, $0443
     call Func_013_4001
@@ -866,7 +866,7 @@ Jump_013_45FE::
     ld hl, $046B
     call Func_013_4001
     ld de, $00B7
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_460B::
@@ -881,7 +881,7 @@ Jump_013_4612::
 
 Jump_013_4619::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4628
     ld hl, $0445
     call Func_013_4001
@@ -894,7 +894,7 @@ Jump_013_4628::
 
 Jump_013_462F::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_463E
     ld hl, $0446
     call Func_013_4001
@@ -933,10 +933,10 @@ Jump_013_4664::
 
 Jump_013_4670::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_468E
     ld de, $00A8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4687
     ld hl, $044D
     call Func_013_4001
@@ -986,7 +986,7 @@ Jump_013_46BD::
 
 Jump_013_46C4::
     ld de, $00A8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_46D3
     ld hl, $0455
     call Func_013_4001
@@ -1053,7 +1053,7 @@ Jump_013_4723::
 
 Jump_013_4734::
     ld de, $00AD
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4743
     ld hl, $6096
     call Func_013_4049
@@ -1124,7 +1124,7 @@ Jump_013_479E::
 
 Jump_013_47A5::
     ld de, $00B2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_47B4
     ld hl, $60D4
     call Func_013_4049
@@ -1137,7 +1137,7 @@ Jump_013_47B4::
 
 Jump_013_47BB::
     ld de, $00B3
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_47CA
     ld hl, $60EA
     call Func_013_4049
@@ -1159,7 +1159,7 @@ Jump_013_47D1::
 
 Jump_013_47E2::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_47F1
     ld hl, $046D
     call Func_013_4001
@@ -1182,10 +1182,10 @@ Jump_013_47FF::
 
 Jump_013_4806::
     ld de, $00C2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_485D
     ld de, $00B8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4856
     ld a, $39
     ldh [hFFC6], a
@@ -1309,7 +1309,7 @@ Jump_013_48D9::
 
 Jump_013_48EA::
     ld de, $00C0
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4962
     ld a, $39
     ldh [hFFC6], a
@@ -1665,7 +1665,7 @@ Jump_013_4B92::
 
 Jump_013_4B99::
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4BA8
     ld hl, $0304
     call Func_013_4001
@@ -1678,7 +1678,7 @@ Jump_013_4BA8::
 
 Jump_013_4BAF::
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4BBE
     ld hl, $0305
     call Func_013_4001
@@ -1691,7 +1691,7 @@ Jump_013_4BBE::
 
 Jump_013_4BC5::
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4BD4
     ld hl, $0306
     call Func_013_4001
@@ -1704,7 +1704,7 @@ Jump_013_4BD4::
 
 Jump_013_4BDB::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4BEA
     ld hl, $0307
     call Func_013_4001
@@ -1722,7 +1722,7 @@ Jump_013_4BF1::
 
 Jump_013_4BF8::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4C07
     ld hl, $030B
     call Func_013_4001
@@ -1735,7 +1735,7 @@ Jump_013_4C07::
 
 Jump_013_4C0E::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4C1D
     ld hl, $030C
     call Func_013_4001
@@ -1748,7 +1748,7 @@ Jump_013_4C1D::
 
 Jump_013_4C24::
     ld de, $0081
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4C4A
     ld a, $32
     ldh [hFFC6], a
@@ -1772,7 +1772,7 @@ Jump_013_4C4A::
 
 Jump_013_4C51::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4C60
     ld hl, $030F
     call Func_013_4001
@@ -1830,13 +1830,13 @@ Jump_013_4CAA::
 
 Jump_013_4CB1::
     ld de, $01E4
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4CED
     ld de, $01E2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4CD7
     ld de, $01E8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4CD0
     ld hl, $5D76
     call Func_013_4049
@@ -1849,7 +1849,7 @@ Jump_013_4CD0::
 
 Jump_013_4CD7::
     ld de, $01E3
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4CE6
     ld hl, $5FCD
     call Func_013_4049
@@ -1869,13 +1869,13 @@ Jump_013_4CED::
 
 Jump_013_4CF7::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D24
     ld de, $0087
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D1D
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D16
     ld hl, $031E
     call Func_013_4001
@@ -1898,7 +1898,7 @@ Jump_013_4D24::
 
 Jump_013_4D2B::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D3A
     ld hl, $031F
     call Func_013_4001
@@ -1911,7 +1911,7 @@ Jump_013_4D3A::
 
 Jump_013_4D41::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D50
     ld hl, $0320
     call Func_013_4001
@@ -1924,16 +1924,16 @@ Jump_013_4D50::
 
 Jump_013_4D57::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D93
     ld de, $0087
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D8C
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D85
     ld de, $0082
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4D7E
     ld hl, $5D97
     call Func_013_4049
@@ -1976,7 +1976,7 @@ Jump_013_4DA8::
 
 Jump_013_4DAF::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4DBE
     ld hl, $0324
     call Func_013_4001
@@ -1994,7 +1994,7 @@ Jump_013_4DC5::
 
 Jump_013_4DCC::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4DDB
     ld hl, $0326
     call Func_013_4001
@@ -2007,7 +2007,7 @@ Jump_013_4DDB::
 
 Jump_013_4DE2::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4DF1
     ld hl, $0327
     call Func_013_4001
@@ -2025,7 +2025,7 @@ Jump_013_4DF8::
 
 Jump_013_4DFF::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4E0E
     ld hl, $0329
     call Func_013_4001
@@ -2043,7 +2043,7 @@ Jump_013_4E15::
 
 Jump_013_4E1C::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4E2B
     ld hl, $032B
     call Func_013_4001
@@ -2056,7 +2056,7 @@ Jump_013_4E2B::
 
 Jump_013_4E32::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4E41
     ld hl, $032C
     call Func_013_4001
@@ -2069,7 +2069,7 @@ Jump_013_4E41::
 
 Jump_013_4E48::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4E57
     ld hl, $032D
     call Func_013_4001
@@ -2087,7 +2087,7 @@ Jump_013_4E5E::
 
 Jump_013_4E65::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4E74
     ld hl, $032F
     call Func_013_4001
@@ -2159,7 +2159,7 @@ Jump_013_4ED6::
 
 Jump_013_4EDD::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4EEC
     ld hl, $0334
     call Func_013_4001
@@ -2177,7 +2177,7 @@ Jump_013_4EF3::
 
 Jump_013_4EFA::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4F09
     ld hl, $0336
     call Func_013_4001
@@ -2190,7 +2190,7 @@ Jump_013_4F09::
 
 Jump_013_4F10::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4F1F
     ld hl, $0337
     call Func_013_4001
@@ -2206,7 +2206,7 @@ Jump_013_4F1F::
     ld hl, $0AE6
     call Func_013_4001
     ld de, $009E
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_4F3C::
@@ -2233,7 +2233,7 @@ Jump_013_4F56::
 
 Jump_013_4F5D::
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4F6C
     ld hl, $0339
     call Func_013_4001
@@ -2246,10 +2246,10 @@ Jump_013_4F6C::
 
 Jump_013_4F73::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4F91
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4F8A
     ld hl, $033A
     call Func_013_4001
@@ -2267,10 +2267,10 @@ Jump_013_4F91::
 
 Jump_013_4F98::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4FB6
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4FAF
     ld hl, $033B
     call Func_013_4001
@@ -2288,7 +2288,7 @@ Jump_013_4FB6::
 
 Jump_013_4FBD::
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4FCC
     ld hl, $033C
     call Func_013_4001
@@ -2301,10 +2301,10 @@ Jump_013_4FCC::
 
 Jump_013_4FD3::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4FF1
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_4FEA
     ld hl, $033D
     call Func_013_4001
@@ -2322,10 +2322,10 @@ Jump_013_4FF1::
 
 Jump_013_4FF8::
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5016
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_500F
     ld hl, $033E
     call Func_013_4001
@@ -2343,7 +2343,7 @@ Jump_013_5016::
 
 Jump_013_501D::
     ld de, $0086
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_502C
     ld hl, $033F
     call Func_013_4001
@@ -2405,33 +2405,33 @@ Jump_013_506B::
 
 Jump_013_507C::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_510D
     ld de, $0094
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5106
     ld de, $0093
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_50FF
     ld de, $008E
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_50F8
     ld de, $008D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_50EB
     ld de, $008C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_50DE
     ld de, $008B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_50D1
     ld de, $0088
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_50CA
     ld hl, $035C
     call Func_013_4001
     ld de, $0088
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_50CA::
@@ -2443,21 +2443,21 @@ Jump_013_50D1::
     ld hl, $0367
     call Func_013_4001
     ld de, $008C
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_50DE::
     ld hl, $0368
     call Func_013_4001
     ld de, $008D
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_50EB::
     ld hl, $0369
     call Func_013_4001
     ld de, $008E
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_50F8::
@@ -2482,12 +2482,12 @@ Jump_013_510D::
 
 Jump_013_5114::
     ld de, $0089
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5129
     ld hl, $035E
     call Func_013_4001
     ld de, $0089
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5129::
@@ -2512,45 +2512,45 @@ Jump_013_513E::
 
 Jump_013_5145::
     ld de, $0093
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_51A8
     ld de, $0092
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_51A1
     ld de, $0091
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5194
     ld de, $0090
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5187
     ld de, $008F
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_517A
     ld hl, $036C
     call Func_013_4001
     ld de, $008F
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_517A::
     ld hl, $036D
     call Func_013_4001
     ld de, $0090
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5187::
     ld hl, $036E
     call Func_013_4001
     ld de, $0091
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5194::
     ld hl, $036F
     call Func_013_4001
     ld de, $0092
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_51A1::
@@ -2570,7 +2570,7 @@ Jump_013_51AF::
 
 Jump_013_51B6::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_51C5
     ld hl, $037F
     call Func_013_4001
@@ -2583,7 +2583,7 @@ Jump_013_51C5::
 
 Jump_013_51CC::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_51DB
     ld hl, $0380
     call Func_013_4001
@@ -2601,7 +2601,7 @@ Jump_013_51E2::
 
 Jump_013_51E9::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_51F8
     ld hl, $0382
     call Func_013_4001
@@ -2614,7 +2614,7 @@ Jump_013_51F8::
 
 Jump_013_51FF::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_520E
     ld hl, $0383
     call Func_013_4001
@@ -2627,10 +2627,10 @@ Jump_013_520E::
 
 Jump_013_5215::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5233
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_522C
     ld hl, $0384
     call Func_013_4001
@@ -2648,7 +2648,7 @@ Jump_013_5233::
 
 Jump_013_523A::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5249
     ld hl, $0385
     call Func_013_4001
@@ -2671,7 +2671,7 @@ Jump_013_5257::
 
 Jump_013_525E::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_526D
     ld hl, $0388
     call Func_013_4001
@@ -2684,7 +2684,7 @@ Jump_013_526D::
 
 Jump_013_5274::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5283
     ld hl, $0389
     call Func_013_4001
@@ -2697,7 +2697,7 @@ Jump_013_5283::
 
 Jump_013_528A::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5299
     ld hl, $038A
     call Func_013_4001
@@ -2745,7 +2745,7 @@ Jump_013_52CB::
 
 Jump_013_52DC::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_52EB
     ld hl, $038C
     call Func_013_4001
@@ -2783,10 +2783,10 @@ Jump_013_530E::
 
 Jump_013_5315::
     ld de, $0096
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5333
     ld de, $0095
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_532C
     ld hl, $0392
     call Func_013_4001
@@ -2804,10 +2804,10 @@ Jump_013_5333::
 
 Jump_013_533A::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5358
     ld de, $009B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5351
     ld hl, $0393
     call Func_013_4001
@@ -2825,10 +2825,10 @@ Jump_013_5358::
 
 Jump_013_535F::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_537D
     ld de, $0095
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5376
     ld hl, $5E95
     call Func_013_4049
@@ -2851,7 +2851,7 @@ Jump_013_5384::
 
 Jump_013_538B::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_539A
     ld hl, $0398
     call Func_013_4001
@@ -2869,7 +2869,7 @@ Jump_013_53A1::
 
 Jump_013_53A8::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_53B7
     ld hl, $039A
     call Func_013_4001
@@ -2882,7 +2882,7 @@ Jump_013_53B7::
 
 Jump_013_53BE::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_53CD
     ld hl, $039B
     call Func_013_4001
@@ -2908,13 +2908,13 @@ Jump_013_53E1::
 
 Jump_013_53E8::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5444
     ld de, $009B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_543D
     ld de, $0096
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5436
     ld a, [wCB8A]
     cp a, $50
@@ -2967,10 +2967,10 @@ Jump_013_544B::
 
 Jump_013_5452::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5470
     ld de, $009B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5469
     ld hl, $03A4
     call Func_013_4001
@@ -2988,16 +2988,16 @@ Jump_013_5470::
 
 Jump_013_5477::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_54C3
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_54BC
     ld de, $009C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_54B5
     ld de, $009B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_549E
 
 Jump_013_5497::
@@ -3038,7 +3038,7 @@ Jump_013_54CA::
 
 Jump_013_54D1::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_54E0
     ld hl, $03A7
     call Func_013_4001
@@ -3051,7 +3051,7 @@ Jump_013_54E0::
 
 Jump_013_54E7::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_54F6
     ld hl, $03A8
     call Func_013_4001
@@ -3064,7 +3064,7 @@ Jump_013_54F6::
 
 Jump_013_54FD::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_550C
     ld hl, $03A9
     call Func_013_4001
@@ -3077,7 +3077,7 @@ Jump_013_550C::
 
 Jump_013_5513::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5522
     ld hl, $03AA
     call Func_013_4001
@@ -3095,7 +3095,7 @@ Jump_013_5529::
 
 Jump_013_5530::
     ld de, $01E2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_553F
     ld hl, $03AE
     call Func_013_4001
@@ -3108,7 +3108,7 @@ Jump_013_553F::
 
 Jump_013_5546::
     ld de, $01E2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5555
     ld hl, $03AD
     call Func_013_4001
@@ -3126,7 +3126,7 @@ Jump_013_555C::
 
 Jump_013_5563::
     ld de, $0097
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5596
     ld a, $32
     ldh [hFFC6], a
@@ -3167,7 +3167,7 @@ Jump_013_559D::
 
 Jump_013_55AE::
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_55BD
     ld hl, $03B4
     call Func_013_4001
@@ -3224,10 +3224,10 @@ Data_013_564A:: ; heuristic: target of a monotone pointer table; C0
 
 Func_013_5660:: ; heuristic: target of a pointer table; C0
     ld de, $01E2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_567E
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5677
     ld hl, $0DD7
     call Func_013_4001
@@ -3245,19 +3245,19 @@ Jump_013_567E::
 
 Func_013_5685:: ; heuristic: target of a pointer table; C0
     ld de, $01E2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_56E8
     ld de, $01E1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_56E1
     ld de, $01F1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_56DA
     ld de, $009F
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_56BB
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_56B4
 
 Jump_013_56AD::
@@ -3272,7 +3272,7 @@ Jump_013_56B4::
 
 Jump_013_56BB::
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_56AD
     ld a, $34
     ldh [hFFC6], a
@@ -3301,10 +3301,10 @@ Jump_013_56E8::
 
 Func_013_56EF:: ; heuristic: target of a pointer table; C0
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_56FF
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5706
 
 Jump_013_56FF::
@@ -3319,10 +3319,10 @@ Jump_013_5706::
 
 Func_013_570D:: ; heuristic: target of a pointer table; C0
     ld de, $01E2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_572B
     ld de, $009D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5724
     ld hl, $0DDA
     call Func_013_4001
@@ -3340,16 +3340,16 @@ Jump_013_572B::
 
 Func_013_5732:: ; heuristic: target of a pointer table; C0
     ld de, $01E5
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5770
     ld de, $01E2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5769
     ld de, $01E1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_575E
     ld de, $01F1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5759
     ld hl, $0DDB
     call Func_013_4001
@@ -3762,28 +3762,28 @@ Jump_013_5B34::
 
 Jump_013_5B3B::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5BDF
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5BD8
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5BD6
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5BD4
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5BD0
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5BB3
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5B8D
     ld de, $0003
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5B86
     ld hl, $4FA4
     call Func_013_4049
@@ -3796,7 +3796,7 @@ Jump_013_5B86::
 
 Jump_013_5B8D::
     ld de, $000D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5BAC
     ld a, $01
     ldh [hFFC6], a
@@ -3804,7 +3804,7 @@ Jump_013_5B8D::
     ld hl, $4FAF
     call Func_013_4049
     ld de, $000D
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5BAC::
@@ -3814,7 +3814,7 @@ Jump_013_5BAC::
 
 Jump_013_5BB3::
     ld de, $01A7
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5BC0
     call Func_013_7F94
     jr c, Jump_013_5BC7
@@ -3847,18 +3847,18 @@ Jump_013_5BD8::
 
 Jump_013_5BDF::
     ld de, $018A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5C04
     ld de, $0180
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_5C04
     ld de, $0181
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5C04
     ld hl, $0D91
     call Func_013_4001
     ld de, $018A
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5C04::
@@ -3868,20 +3868,20 @@ Jump_013_5C04::
 
 Func_013_5C0B::
     ld de, $0182
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5C6D
     ld de, $0181
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5C60
     ld de, $0180
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5C36
     ld hl, $517F
     call Func_013_4049
     ld de, $0104
-    call Func_000_1845
+    call SetFlagBit
     ld de, $0180
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5C36::
@@ -3900,22 +3900,22 @@ Jump_013_5C4D::
     ld hl, $522B
     call Func_013_4049
     ld de, $0181
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5C60::
     ld hl, $0214
     call Func_013_4001
     ld de, $0182
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5C6D::
     ld de, $0184
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5CA8
     ld de, $0183
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5C84
     ld hl, $5189
     call Func_013_4049
@@ -3940,10 +3940,10 @@ Jump_013_5C9B::
 
 Jump_013_5CA8::
     ld de, $0186
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5CE3
     ld de, $0185
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5CBF
     ld hl, $51A9
     call Func_013_4049
@@ -3968,7 +3968,7 @@ Jump_013_5CD6::
 
 Jump_013_5CE3::
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5CF2
     ld hl, $0205
     call Func_013_4001
@@ -3976,13 +3976,13 @@ Jump_013_5CE3::
 
 Jump_013_5CF2::
     ld de, $018C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5D3C
     ld de, $018B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5D18
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5D11
     ld hl, $51F5
     call Func_013_4049
@@ -4022,7 +4022,7 @@ Jump_013_5D43::
 
 Jump_013_5D4A::
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5D59
     ld hl, $001B
     call Func_013_4001
@@ -4030,7 +4030,7 @@ Jump_013_5D4A::
 
 Jump_013_5D59::
     ld de, $012A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5D68
     ld hl, $596B
     call Func_013_4049
@@ -4053,34 +4053,34 @@ Jump_013_5D76::
 
 Jump_013_5D7D::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5E7A
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5E73
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5E6C
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5E68
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5E61
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5E14
     ld de, $000E
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5E0D
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5DF7
     ld de, $0014
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5DF0
     ld de, $0003
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5DDA
     ld hl, $0016
     call Func_013_4001
@@ -4088,7 +4088,7 @@ Jump_013_5D7D::
 
 Jump_013_5DDA::
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5DE9
     ld hl, $4FB7
     call Func_013_4049
@@ -4106,7 +4106,7 @@ Jump_013_5DF0::
 
 Jump_013_5DF7::
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5E06
     ld hl, $4FE8
     call Func_013_4049
@@ -4124,7 +4124,7 @@ Jump_013_5E0D::
 
 Jump_013_5E14::
     ld de, $0100
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5E37
     call Func_013_7F94
     jr c, Jump_013_5E28
@@ -4137,7 +4137,7 @@ Jump_013_5E28::
     ld hl, $52DC
     call Func_013_4049
     ld de, $0100
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5E37::
@@ -4150,12 +4150,12 @@ Jump_013_5E37::
 
 Jump_013_5E45::
     ld de, $0101
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5E5A
     ld hl, $0108
     call Func_013_4001
     ld de, $0101
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5E5A::
@@ -4258,10 +4258,10 @@ Jump_013_5EE7::
 
 Func_013_5EF4::
     ld de, $0191
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5F5C
     ld de, $0190
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5F0C
     ld hl, $52E3
     call Func_013_4049
@@ -4286,7 +4286,7 @@ Jump_013_5F28::
     dec a
     jr z, Jump_013_5F55
     ld de, $0134
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5F4E
     ld a, [wC634]
     cp a, $FF
@@ -4319,15 +4319,15 @@ Jump_013_5F5C::
 
 Jump_013_5F63::
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5F87
     ld de, $0004
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5F80
     ld hl, $0017
     call Func_013_4001
     ld de, $0004
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_5F80::
@@ -4342,16 +4342,16 @@ Jump_013_5F87::
 
 Jump_013_5F8E::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_5FCB
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5FC4
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5FBD
     ld de, $0003
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_5FB6
     ld hl, $0019
     call Func_013_4001
@@ -4379,22 +4379,22 @@ Jump_013_5FCB::
 
 Jump_013_5FD2::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6041
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_603A
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6033
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_602C
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6025
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6009
     ld hl, $0032
     call Func_013_4001
@@ -4402,12 +4402,12 @@ Jump_013_5FD2::
 
 Jump_013_6009::
     ld de, $0010
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_601E
     ld hl, $0068
     call Func_013_4001
     ld de, $0010
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_601E::
@@ -4442,22 +4442,22 @@ Jump_013_6041::
 
 Jump_013_6048::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_60A8
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_60A1
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_609A
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6093
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6086
     ld de, $0007
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_607F
     ld hl, $003C
     call Func_013_4001
@@ -4472,7 +4472,7 @@ Jump_013_6086::
     ld hl, $0073
     call Func_013_4001
     ld de, $000F
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6093::
@@ -4497,22 +4497,22 @@ Jump_013_60A8::
 
 Jump_013_60AF::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6109
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6102
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_60FB
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_60F4
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_60ED
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_60E6
     ld hl, $0040
     call Func_013_4001
@@ -4564,16 +4564,16 @@ Jump_013_6116::
 
 Jump_013_6127::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6163
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_615C
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6155
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_614E
     ld hl, $0034
     call Func_013_4001
@@ -4601,10 +4601,10 @@ Jump_013_6163::
 
 Jump_013_616A::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6188
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6181
     ld hl, $020F
     call Func_013_4001
@@ -4622,16 +4622,16 @@ Jump_013_6188::
 
 Jump_013_618F::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_61FD
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_61F6
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_61DA
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_61B6
     ld hl, $003A
     call Func_013_4001
@@ -4639,7 +4639,7 @@ Jump_013_618F::
 
 Jump_013_61B6::
     ld de, $0011
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_61D3
     ld a, [wCC37]
     set 0, a
@@ -4647,7 +4647,7 @@ Jump_013_61B6::
     ld hl, $0077
     call Func_013_4001
     ld de, $0011
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_61D3::
@@ -4657,12 +4657,12 @@ Jump_013_61D3::
 
 Jump_013_61DA::
     ld de, $010B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_61EF
     ld hl, $08C1
     call Func_013_4001
     ld de, $010B
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_61EF::
@@ -4681,7 +4681,7 @@ Jump_013_61FD::
     ld a, $10
     ld [wDataBank], a
     ld de, $012C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6216
     ld hl, Data_010_57ED
     call Func_013_4049
@@ -4694,16 +4694,16 @@ Jump_013_6216::
 
 Jump_013_621D::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_628A
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6252
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_624B
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6244
     ld hl, $0035
     call Func_013_4001
@@ -4721,10 +4721,10 @@ Jump_013_624B::
 
 Jump_013_6252::
     ld de, $0106
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6279
     ld de, $0104
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_624B
     ld a, $00
     ld [wD7FB], a
@@ -4733,7 +4733,7 @@ Jump_013_6252::
     ld hl, Data_010_533E
     call Func_013_4049
     ld de, $0106
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6279::
@@ -4747,7 +4747,7 @@ Jump_013_6279::
 
 Jump_013_628A::
     ld de, $00CE
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6279
     ld a, $00
     ld [wD7FB], a
@@ -4756,24 +4756,24 @@ Jump_013_628A::
     ld hl, Data_010_534C
     call Func_013_4049
     ld de, $00CE
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_62A9::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_62F4
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_62ED
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_62E6
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_62DF
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_62D8
     ld hl, $003B
     call Func_013_4001
@@ -4811,10 +4811,10 @@ Jump_013_62FB::
 
 Jump_013_6302::
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6320
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6319
     ld hl, $0041
     call Func_013_4001
@@ -4832,25 +4832,25 @@ Jump_013_6320::
 
 Jump_013_6327::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6390
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6389
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6382
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_637B
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6374
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_636D
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6366
     ld hl, $003D
     call Func_013_4001
@@ -4893,25 +4893,25 @@ Jump_013_6390::
 
 Jump_013_6397::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6400
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_63F9
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_63F2
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_63EB
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_63E4
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_63DD
     ld de, $000A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_63D6
     ld hl, $003F
     call Func_013_4001
@@ -4954,17 +4954,17 @@ Jump_013_6400::
 
 Jump_013_6407::
     ld de, $0009
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_641C
     ld hl, $004A
     call Func_013_4001
     ld de, $0009
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_641C::
     ld de, $0008
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6438
     ldh a, [hFF8F]
     cp a, $02
@@ -4994,17 +4994,17 @@ Jump_013_6438::
     ld a, $50
     ld [wCBD4], a
     ld de, $000A
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_645F::
     ld de, $0008
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6474
     ld hl, $0048
     call Func_013_4001
     ld de, $0008
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6474::
@@ -5014,34 +5014,34 @@ Jump_013_6474::
 
 Jump_013_647B::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_659E
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_6577
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_6553
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_652F
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6504
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_64FD
     ld de, $001A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_64F6
     ld de, $000D
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_64CF
     ld de, $000F
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_64CF
     ld de, $0011
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_64D6
 
 Jump_013_64CF::
@@ -5054,7 +5054,7 @@ Jump_013_64D6::
     ldh [hFFC6], a
     farcall Func_012_6B98
     ld de, $0016
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_64EF
     ld hl, $5006
     call Func_013_4049
@@ -5077,10 +5077,10 @@ Jump_013_64FD::
 
 Jump_013_6504::
     ld de, $01A0
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_64FD
     ld de, $012F
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_651B
     ld hl, $029E
     call Func_013_4001
@@ -5090,16 +5090,16 @@ Jump_013_651B::
     ld hl, $02A4
     call Func_013_4001
     ld de, $01A0
-    call Func_000_1845
+    call SetFlagBit
     ret
     db $21, $7B, $53, $CD, $49, $40, $C9
 
 Jump_013_652F::
     ld de, $01A1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_64FD
     ld de, $0135
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6546
     ld hl, $0D1A
     call Func_013_4001
@@ -5109,15 +5109,15 @@ Jump_013_6546::
     ld hl, $0D1B
     call Func_013_4001
     ld de, $01A1
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6553::
     ld de, $01A2
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_64FD
     ld de, $0117
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_656A
     ld hl, $0D2A
     call Func_013_4001
@@ -5127,12 +5127,12 @@ Jump_013_656A::
     ld hl, $0D2B
     call Func_013_4001
     ld de, $01A2
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6577::
     ld de, $013B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6597
     ld a, [wC632]
     or a, a
@@ -5155,10 +5155,10 @@ Jump_013_6597::
 
 Jump_013_659E::
     ld de, $002A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_65DE
     ld de, $002B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_65E5
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -5202,16 +5202,16 @@ Jump_013_65E5::
 
 Jump_013_65EC::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6646
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6621
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_661A
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6613
     ld hl, $001A
     call Func_013_4001
@@ -5229,7 +5229,7 @@ Jump_013_661A::
 
 Jump_013_6621::
     ld de, $0181
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6630
     ld hl, $0203
     call Func_013_4001
@@ -5237,7 +5237,7 @@ Jump_013_6621::
 
 Jump_013_6630::
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_663F
     ld hl, $0215
     call Func_013_4001
@@ -5257,22 +5257,22 @@ Jump_013_664D::
     ld a, $1F
     ld [wDataBank], a
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_66DE
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_66CF
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_66C0
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_66B1
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_66A2
     ld de, $0020
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_668C
     ld hl, $0103
     call Func_013_4001
@@ -5280,7 +5280,7 @@ Jump_013_664D::
 
 Jump_013_668C::
     ld de, $0102
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5256
     call Func_013_4049
@@ -5293,7 +5293,7 @@ Jump_013_669B::
 
 Jump_013_66A2::
     ld de, $0105
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5267
     call Func_013_4049
@@ -5301,7 +5301,7 @@ Jump_013_66A2::
 
 Jump_013_66B1::
     ld de, $0109
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5271
     call Func_013_4049
@@ -5309,7 +5309,7 @@ Jump_013_66B1::
 
 Jump_013_66C0::
     ld de, $0115
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $527B
     call Func_013_4049
@@ -5317,7 +5317,7 @@ Jump_013_66C0::
 
 Jump_013_66CF::
     ld de, $0121
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $5285
     call Func_013_4049
@@ -5325,7 +5325,7 @@ Jump_013_66CF::
 
 Jump_013_66DE::
     ld de, $0131
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_669B
     ld hl, $528F
     call Func_013_4049
@@ -5335,22 +5335,22 @@ Jump_013_66ED::
     ld a, $1F
     ld [wDataBank], a
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_677E
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_676F
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_6760
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6751
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6742
     ld de, $0020
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_672C
     ld hl, $0104
     call Func_013_4001
@@ -5358,7 +5358,7 @@ Jump_013_66ED::
 
 Jump_013_672C::
     ld de, $0102
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $5299
     call Func_013_4049
@@ -5371,7 +5371,7 @@ Jump_013_673B::
 
 Jump_013_6742::
     ld de, $0105
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52AA
     call Func_013_4049
@@ -5379,7 +5379,7 @@ Jump_013_6742::
 
 Jump_013_6751::
     ld de, $0109
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52B4
     call Func_013_4049
@@ -5387,7 +5387,7 @@ Jump_013_6751::
 
 Jump_013_6760::
     ld de, $0115
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52BE
     call Func_013_4049
@@ -5395,7 +5395,7 @@ Jump_013_6760::
 
 Jump_013_676F::
     ld de, $0121
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52C8
     call Func_013_4049
@@ -5403,7 +5403,7 @@ Jump_013_676F::
 
 Jump_013_677E::
     ld de, $0131
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_673B
     ld hl, $52D2
     call Func_013_4049
@@ -5411,7 +5411,7 @@ Jump_013_677E::
 
 Jump_013_678D::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_679C
     ld hl, $011E
     call Func_013_4001
@@ -5424,10 +5424,10 @@ Jump_013_679C::
 
 Jump_013_67A3::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_67C2
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_67BB
     ld hl, $021F
     call Func_013_4001
@@ -5450,19 +5450,19 @@ Jump_013_67C9::
 
 Jump_013_67D0::
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6823
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_680D
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6806
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_67F8
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_67FF
 
 Jump_013_67F8::
@@ -5482,7 +5482,7 @@ Jump_013_6806::
 
 Jump_013_680D::
     ld de, $0117
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_681C
     ld hl, $53D2
     call Func_013_4049
@@ -5495,7 +5495,7 @@ Jump_013_681C::
 
 Jump_013_6823::
     ld de, $0117
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_681C
     ld hl, $53FA
     call Func_013_4049
@@ -5503,15 +5503,15 @@ Jump_013_6823::
 
 Jump_013_6832::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6856
     ld de, $0107
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_684F
     ld hl, $5418
     call Func_013_4049
     ld de, $0107
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_684F::
@@ -5526,7 +5526,7 @@ Jump_013_6856::
 
 Jump_013_685D::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_686C
     ld hl, $021C
     call Func_013_4001
@@ -5539,10 +5539,10 @@ Jump_013_686C::
 
 Jump_013_6873::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6891
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_688A
     ld hl, $0221
     call Func_013_4001
@@ -5560,10 +5560,10 @@ Jump_013_6891::
 
 Jump_013_6898::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_68B6
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_68AF
     ld hl, $0222
     call Func_013_4001
@@ -5581,10 +5581,10 @@ Jump_013_68B6::
 
 Jump_013_68BD::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_68CD
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_68D4
 
 Jump_013_68CD::
@@ -5604,13 +5604,13 @@ Jump_013_68DB::
 
 Jump_013_68E2::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6940
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_692A
     ld de, $012D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6923
     ld a, [wC6FD]
     dec a
@@ -5642,7 +5642,7 @@ Jump_013_6923::
 
 Jump_013_692A::
     ld de, $012D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6939
     ld hl, $0D32
     call Func_013_4001
@@ -5695,7 +5695,7 @@ Jump_013_6971::
 
 Jump_013_6978::
     ld de, $0013
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6988
     ld l, $04
     ld h, $00
@@ -5722,7 +5722,7 @@ Jump_013_699B::
 
 Jump_013_69A2::
     ld de, $0013
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_69B1
     ld hl, $000A
     call Func_013_4001
@@ -5735,7 +5735,7 @@ Jump_013_69B1::
 
 Jump_013_69B8::
     ld de, $0013
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_69D3
     ld a, $02
     and a, $01
@@ -5744,7 +5744,7 @@ Jump_013_69B8::
     ld h, $00
     call Func_013_4001
     ld de, $0013
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_69D3::
@@ -5791,10 +5791,10 @@ Jump_013_6A1B::
 
 Jump_013_6A22::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6A40
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6A39
     ld hl, $023F
     call Func_013_4001
@@ -5812,10 +5812,10 @@ Jump_013_6A40::
 
 Jump_013_6A47::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6A65
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6A5E
     ld hl, $0240
     call Func_013_4001
@@ -5833,7 +5833,7 @@ Jump_013_6A65::
 
 Jump_013_6A6C::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6A7B
     ld hl, $0241
     call Func_013_4001
@@ -5861,10 +5861,10 @@ Jump_013_6A90::
 
 Jump_013_6A97::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6AB5
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6AAE
     ld hl, $5483
     call Func_013_4049
@@ -5897,10 +5897,10 @@ Jump_013_6ACA::
 
 Jump_013_6AD1::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6AEF
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6AE8
     ld hl, $5490
     call Func_013_4049
@@ -5913,7 +5913,7 @@ Jump_013_6AE8::
 
 Jump_013_6AEF::
     ld de, $00CD
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6B2B
     farcall Func_05F_6D78
     ld a, [wD7F5]
@@ -5934,7 +5934,7 @@ Jump_013_6B0B::
     ld hl, $0B43
     call Func_013_4001
     ld de, $00CD
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6B2B::
@@ -5954,7 +5954,7 @@ Jump_013_6B39::
 
 Jump_013_6B40::
     ld de, $0134
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld hl, $0314
     call Func_013_4001
@@ -5964,12 +5964,12 @@ Jump_013_6B4E::
     ld a, $96
     ld [wDataBank], a
     ld de, $0111
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6B68
     ld hl, Data_096_549D
     call Func_013_4049
     ld de, $0111
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6B68::
@@ -5999,10 +5999,10 @@ Jump_013_6B84::
 
 Jump_013_6B8B::
     ld de, $01A3
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_6BBE
     ld de, $01A4
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6BBE
     ld a, [wC634]
     cp a, $FF
@@ -6023,7 +6023,7 @@ Jump_013_6BAC::
 
 Jump_013_6BBE::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6BCD
     ld hl, $08BB
     call Func_013_4001
@@ -6036,14 +6036,14 @@ Jump_013_6BCD::
 
 Jump_013_6BD4::
     ld de, $010A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6BEE
     ld hl, $54AB
     call Func_013_4049
     ld a, $1D
     ld [wDataBank], a
     ld de, $010A
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_6BEE::
@@ -6095,7 +6095,7 @@ Jump_013_6C2B::
 
 Jump_013_6C32::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6C41
     ld hl, $0292
     call Func_013_4001
@@ -6108,7 +6108,7 @@ Jump_013_6C41::
 
 Jump_013_6C48::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6C57
     ld hl, $027D
     call Func_013_4001
@@ -6156,7 +6156,7 @@ Jump_013_6C88::
 
 Jump_013_6C8F::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6C9E
     ld hl, $0294
     call Func_013_4001
@@ -6182,7 +6182,7 @@ Jump_013_6CB3::
     or a, a
     jr nz, Jump_013_6CCF
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6CC8
     ld hl, $54CE
     call Func_013_4049
@@ -6197,7 +6197,7 @@ Jump_013_6CCF::
     dec a
     jr nz, Jump_013_6CE8
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6CE1
     ld hl, $54DB
     call Func_013_4049
@@ -6212,7 +6212,7 @@ Jump_013_6CE8::
     dec a
     jr nz, Jump_013_6D01
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6CFA
     ld hl, $54E8
     call Func_013_4049
@@ -6227,7 +6227,7 @@ Jump_013_6D01::
     dec a
     jr nz, Jump_013_6D1A
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6D13
     ld hl, $54F5
     call Func_013_4049
@@ -6242,7 +6242,7 @@ Jump_013_6D1A::
     dec a
     jr nz, Jump_013_6D33
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6D2C
     ld hl, $5502
     call Func_013_4049
@@ -6274,7 +6274,7 @@ Jump_013_6D41::
 
 Jump_013_6D52::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6D61
     ld hl, $027A
     call Func_013_4001
@@ -6327,7 +6327,7 @@ Jump_013_6DAD::
 
 Jump_013_6DB4::
     ld de, $0189
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6DC3
     ld hl, $5560
     call Func_013_4049
@@ -6347,14 +6347,14 @@ Jump_013_6DD1::
     farcall Func_002_5EEE
     call Func_013_7FB0
     ld de, $010E
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E02
     ld a, $00
     ld [wD7FB], a
     ld a, $0E
     ld [wDataBank], a
     ld de, $010D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6DFB
     ld hl, Data_00E_5586
     call Func_013_4049
@@ -6372,13 +6372,13 @@ Jump_013_6E02::
 
 Jump_013_6E09::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E36
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E2F
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E28
     ld hl, $04B5
     call Func_013_4001
@@ -6401,13 +6401,13 @@ Jump_013_6E36::
 
 Jump_013_6E3D::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E6A
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E63
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E5C
     ld hl, $04B6
     call Func_013_4001
@@ -6432,10 +6432,10 @@ Jump_013_6E71::
     ld a, $96
     ld [wDataBank], a
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E94
     ld de, $010F
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E8D
     ld hl, Data_096_5598
     call Func_013_4049
@@ -6448,7 +6448,7 @@ Jump_013_6E8D::
 
 Jump_013_6E94::
     ld de, $0028
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6E8D
     ld hl, $55A9
     call Func_013_4049
@@ -6460,10 +6460,10 @@ Jump_013_6EA3::
     ld a, $15
     ld [wDataBank], a
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6ECF
     ld de, $0110
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6EC8
     ld hl, $55B3
     call Func_013_4049
@@ -6476,7 +6476,7 @@ Jump_013_6EC8::
 
 Jump_013_6ECF::
     ld de, $002C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6EC8
     ld hl, $55C4
     call Func_013_4049
@@ -6521,10 +6521,10 @@ Jump_013_6F0F::
     ld a, $0C
     ld [wDataBank], a
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6F32
     ld de, $0112
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6F2B
     ld hl, Data_00C_55DB
     call Func_013_4049
@@ -6537,7 +6537,7 @@ Jump_013_6F2B::
 
 Jump_013_6F32::
     ld de, $0031
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6F2B
     ld hl, $55EC
     call Func_013_4049
@@ -6565,16 +6565,16 @@ Jump_013_6F56::
 
 Jump_013_6F5D::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6FBE
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6FA8
     ld de, $012E
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6FA1
     ld de, $012D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6F84
     ld hl, $025E
     call Func_013_4001
@@ -6603,7 +6603,7 @@ Jump_013_6FA1::
 
 Jump_013_6FA8::
     ld de, $012D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_6FB7
     ld hl, $0D31
     call Func_013_4001
@@ -6645,7 +6645,7 @@ Jump_013_6FE4::
 
 Jump_013_6FEB::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_6FFB
     ld hl, $0A33
     call Func_013_4001
@@ -6658,7 +6658,7 @@ Jump_013_6FFB::
 
 Jump_013_7002::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7012
     ld hl, $020A
     call Func_013_4001
@@ -6671,7 +6671,7 @@ Jump_013_7012::
 
 Jump_013_7019::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7029
     ld hl, $08BF
     call Func_013_4001
@@ -6684,13 +6684,13 @@ Jump_013_7029::
 
 Jump_013_7030::
     ld de, $0134
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7096
     ld de, $0133
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_704D
     ld de, $0133
-    call Func_000_1845
+    call SetFlagBit
 
 Jump_013_7046::
     ld hl, $08C5
@@ -6711,7 +6711,7 @@ Jump_013_704D::
     dec a
     jr z, Jump_013_708F
     ld de, $0191
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7088
     ld a, [wC634]
     cp a, $FF
@@ -6741,7 +6741,7 @@ Jump_013_7096::
     ld a, $01
     ld [wD7FB], a
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_70AA
 
 Jump_013_70A3::
@@ -6756,12 +6756,12 @@ Jump_013_70AA::
     ld a, $10
     ld [wDataBank], a
     ld de, $0116
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_70CB
     ld hl, Data_010_564B
     call Func_013_4049
     ld de, $0116
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_70CB::
@@ -6772,13 +6772,13 @@ Jump_013_70CB::
 
 Func_013_70D9:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7122
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_711B
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_70F9
     ld hl, $0A3C
     call Func_013_4001
@@ -6786,14 +6786,14 @@ Func_013_70D9:: ; heuristic: target of a pointer table; C0
 
 Jump_013_70F9::
     ld de, $0122
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7114
     ld hl, $050E
     call Func_013_4001
     ld de, $0117
-    call Func_000_1845
+    call SetFlagBit
     ld de, $0122
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_7114::
@@ -6808,13 +6808,13 @@ Jump_013_711B::
 
 Jump_013_7122::
     ld de, $0194
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7176
     ld de, $0193
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7160
     ld de, $0192
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7159
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -6850,13 +6850,13 @@ Jump_013_7160::
 
 Jump_013_7176::
     ld de, $0197
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_71CA
     ld de, $0196
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_71B4
     ld de, $0195
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_71AD
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -6892,13 +6892,13 @@ Jump_013_71B4::
 
 Jump_013_71CA::
     ld de, $019A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_721E
     ld de, $0199
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7208
     ld de, $0198
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7201
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -6934,13 +6934,13 @@ Jump_013_7208::
 
 Jump_013_721E::
     ld de, $019D
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7273
     ld de, $019C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_725D
     ld de, $019B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7256
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -6981,10 +6981,10 @@ Jump_013_7273::
 
 Func_013_727A:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7299
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7292
     ld hl, $0A3E
     call Func_013_4001
@@ -6997,7 +6997,7 @@ Jump_013_7292::
 
 Jump_013_7299::
     ld de, $0192
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72A8
     ld hl, $0D93
     call Func_013_4001
@@ -7005,25 +7005,25 @@ Jump_013_7299::
 
 Jump_013_72A8::
     ld de, $019C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72E7
     ld de, $019B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72E0
     ld de, $0199
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72E7
     ld de, $0198
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72E0
     ld de, $0196
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72E7
     ld de, $0195
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72E0
     ld de, $0193
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_72E7
 
 Jump_013_72E0::
@@ -7038,13 +7038,13 @@ Jump_013_72E7::
 
 Func_013_72EE:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_730D
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7314
     ld de, $0122
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_730D
     ld hl, $0A3F
     call Func_013_4001
@@ -7062,10 +7062,10 @@ Jump_013_7314::
 
 Func_013_731B:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_732B
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7332
 
 Jump_013_732B::
@@ -7085,10 +7085,10 @@ Func_013_7364:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7396
     ld de, $0118
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_738F
     ld a, $01
     ld [wD7FB], a
@@ -7107,7 +7107,7 @@ Jump_013_7396::
     farcall Func_002_5EEE
     call Func_013_7FB0
     ld de, $0125
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_73B8
     ld a, $03
     ld [wD7FB], a
@@ -7124,10 +7124,10 @@ Jump_013_73B8::
 
 Func_013_73BF:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_73DE
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_73D7
     ld hl, $0A4A
     call Func_013_4001
@@ -7154,10 +7154,10 @@ Func_013_73E5:: ; heuristic: target of a pointer table; C0
 
 Func_013_73F6:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7415
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_740E
     ld hl, $0A4C
     call Func_013_4001
@@ -7175,10 +7175,10 @@ Jump_013_7415::
 
 Func_013_741C:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_743A
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7433
     ld hl, $0A4D
     call Func_013_4001
@@ -7198,7 +7198,7 @@ Func_013_7441:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
     ld de, $011A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7463
     ld hl, $5680
     call Func_013_4049
@@ -7215,10 +7215,10 @@ Jump_013_7463::
 
 Func_013_746A:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7488
     ld de, $011D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7481
     ld hl, $5690
     call Func_013_4049
@@ -7231,18 +7231,18 @@ Jump_013_7481::
 
 Jump_013_7488::
     ld de, $00C8
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_74EA
     ld de, $003D
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_74C6
     ld de, $002E
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_74AD
     ld hl, $0B4A
     call Func_013_4001
     ld de, $002E
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_74AD::
@@ -7261,10 +7261,10 @@ Jump_013_74BF::
 
 Jump_013_74C6::
     ld de, $0206
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_74D6
     ld de, $0207
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_74DD
 
 Jump_013_74D6::
@@ -7276,7 +7276,7 @@ Jump_013_74DD::
     ld hl, $56A8
     call Func_013_4049
     ld de, $003E
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_74EA::
@@ -7286,7 +7286,7 @@ Jump_013_74EA::
 
 Func_013_74F1:: ; heuristic: target of a pointer table; C0
     ld de, $011E
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7518
     farcall Func_012_689A
     ldh a, [hFFC6]
@@ -7300,7 +7300,7 @@ Jump_013_750B::
     ld hl, $04CD
     call Func_013_4001
     ld de, $011E
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_013_7518::
@@ -7311,7 +7311,7 @@ Jump_013_7518::
 
 Func_013_7581:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7591
     ld hl, $0504
     call Func_013_4001
@@ -7324,10 +7324,10 @@ Jump_013_7591::
 
 Func_013_7598:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_75B6
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_75AF
     ld hl, $0512
     call Func_013_4001
@@ -7340,10 +7340,10 @@ Jump_013_75AF::
 
 Jump_013_75B6::
     ld de, $003A
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7636
     ld de, $0039
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_75E5
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -7382,7 +7382,7 @@ Jump_013_7607::
     ld a, $07
     ldh [hFFC7], a
     ld de, $0203
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_7617
     ld a, $47
     ldh [hFFC7], a
@@ -7404,10 +7404,10 @@ Jump_013_7624::
 
 Jump_013_7636::
     ld de, $003C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_76B6
     ld de, $003B
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7665
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -7446,7 +7446,7 @@ Jump_013_7687::
     ld a, $09
     ldh [hFFC7], a
     ld de, $0205
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_7697
     ld a, $49
     ldh [hFFC7], a
@@ -7493,7 +7493,7 @@ Func_013_76DF:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call Func_013_7FB0
     ld de, $0129
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7701
     ld hl, $56C8
     call Func_013_4049
@@ -7533,10 +7533,10 @@ Data_013_7727:: ; heuristic: target of a monotone pointer table; C0
 
 Func_013_772E:: ; heuristic: target of a pointer table; C0
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7744
     ld hl, $5709
     call Func_013_4049
@@ -7580,10 +7580,10 @@ Data_013_77B6:: ; heuristic: target of a monotone pointer table; C0
 
 Func_013_77BD:: ; heuristic: target of a pointer table; C0
     ld de, $000B
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_77CC
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     ret nc
 
 Jump_013_77CC::
@@ -7593,16 +7593,16 @@ Jump_013_77CC::
 
 Func_013_77D3:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_77F3
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7808
     ld de, $0002
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7801
     ld de, $000C
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_77FA
 
 Jump_013_77F3::
@@ -7644,10 +7644,10 @@ Func_013_781C:: ; heuristic: target of a pointer table; C0
 
 Func_013_782D:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_784B
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7844
     ld hl, $0268
     call Func_013_4001
@@ -7697,7 +7697,7 @@ Data_013_78D7:: ; heuristic: target of a monotone pointer table; C0
 
 Func_013_78DE:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_78ED
 
 Jump_013_78E6::
@@ -7707,7 +7707,7 @@ Jump_013_78E6::
 
 Jump_013_78ED::
     ld de, $0029
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_78E6
     farcall Func_05F_6D78
     ld a, [wD7F5]
@@ -7724,10 +7724,10 @@ Jump_013_7909::
 
 Func_013_7910:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_793B
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7934
     ld a, [wC82C]
     or a, a
@@ -7753,7 +7753,7 @@ Jump_013_793B::
 
 Func_013_7942:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7951
     ld hl, $021F
     call Func_013_4001
@@ -7766,7 +7766,7 @@ Jump_013_7951::
 
 Func_013_7958:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7967
     ld hl, $0220
     call Func_013_4001
@@ -7779,7 +7779,7 @@ Jump_013_7967::
 
 Func_013_796E:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_797D
     ld hl, $027F
     call Func_013_4001
@@ -7792,7 +7792,7 @@ Jump_013_797D::
 
 Func_013_7984:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7993
     ld hl, $0280
     call Func_013_4001
@@ -7870,7 +7870,7 @@ Func_013_7A9A:: ; heuristic: target of a pointer table; C0
 
 Func_013_7AA7:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7AB6
     ld hl, $0A74
     call Func_013_4001
@@ -7883,7 +7883,7 @@ Jump_013_7AB6::
 
 Func_013_7ABD:: ; heuristic: target of a pointer table; C0
     ld de, $0023
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld hl, $57A2
     call Func_013_4049
@@ -7909,7 +7909,7 @@ Func_013_7ADC:: ; heuristic: target of a pointer table; C0
 
 Func_013_7AED:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7AFD
     ld hl, $0A35
     call Func_013_4001
@@ -7923,7 +7923,7 @@ Jump_013_7AFD::
 
 Func_013_7B0B:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7B1A
     ld hl, $0A68
     call Func_013_4001
@@ -7936,10 +7936,10 @@ Jump_013_7B1A::
 
 Func_013_7B21:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7B3F
     ld de, $0136
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7B38
     ld hl, $0A6B
     call Func_013_4001
@@ -7957,10 +7957,10 @@ Jump_013_7B3F::
 
 Func_013_7B46:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7B56
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7B5D
 
 Jump_013_7B56::
@@ -7975,10 +7975,10 @@ Jump_013_7B5D::
 
 Func_013_7B64:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7B83
     ld de, $0024
-    call Func_000_181B
+    call TestFlagBit
     jp c, Jump_013_7B7C
     ld hl, $0A4B
     call Func_013_4001
@@ -8042,7 +8042,7 @@ Data_013_7D8C:: ; heuristic: target of a monotone pointer table; C0
 
 Func_013_7D91:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7DA0
     ld hl, $029B
     call Func_013_4001
@@ -8055,10 +8055,10 @@ Jump_013_7DA0::
 
 Func_013_7DA7:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7DB7
     ld de, $0022
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7DBE
 
 Jump_013_7DB7::
@@ -8073,7 +8073,7 @@ Jump_013_7DBE::
 
 Func_013_7DC5:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7DD4
     ld hl, $0220
     call Func_013_4001
@@ -8114,7 +8114,7 @@ Func_013_7E05:: ; heuristic: target of a pointer table; C0
     cp a, $13
     jr z, Jump_013_7E39
     ld de, $0032
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7E32
     ld a, $05
     ld [wD7FB], a
@@ -8129,7 +8129,7 @@ Jump_013_7E32::
 
 Jump_013_7E39::
     ld de, $0033
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7E65
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -8156,7 +8156,7 @@ Jump_013_7E65::
 
 Jump_013_7E6C::
     ld de, $0034
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7E98
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -8190,7 +8190,7 @@ Func_013_7E9F:: ; heuristic: target of a pointer table; C0
     cp a, $14
     jr z, Jump_013_7ECF
     ld de, $0035
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7EC8
     ld a, $08
     ld [wD7FB], a
@@ -8205,7 +8205,7 @@ Jump_013_7EC8::
 
 Jump_013_7ECF::
     ld de, $0036
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7EFB
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -8232,7 +8232,7 @@ Jump_013_7EFB::
 
 Func_013_7F02:: ; heuristic: target of a pointer table; C0
     ld de, $0038
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_013_7F2A
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -8257,7 +8257,7 @@ Jump_013_7F2A::
 
 Func_013_7F31:: ; heuristic: target of a pointer table; C0
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     farcall Func_085_5B04
     ldh a, [hFFC7]
@@ -8274,37 +8274,37 @@ Jump_013_7F48::
 
 Func_013_7F4E:: ; heuristic: target of a pointer table; C0
     ld de, $0032
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_7F5C
     ld de, $00C9
-    call Func_000_1845
+    call SetFlagBit
 
 Jump_013_7F5C::
     ld de, $0033
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld de, $00CA
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Func_013_7F6A:: ; heuristic: target of a pointer table; C0
     ld de, $0035
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_013_7F78
     ld de, $00CB
-    call Func_000_1845
+    call SetFlagBit
 
 Jump_013_7F78::
     ld de, $0036
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld de, $00CC
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Func_013_7F86:: ; heuristic: target of a pointer table; C0
     ld de, $0021
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld hl, $5988
     call Func_013_4049

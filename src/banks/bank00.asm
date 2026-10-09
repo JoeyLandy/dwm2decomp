@@ -1,7 +1,8 @@
 SECTION "Bank 00", ROM0[$0000]
 
 ; C2 static reading (E-0007): rst $00 pops its return address as the base of an inline word table, indexes it by A (entry = base + 2*A), preserves DE, and jumps to the entry.
-Func_000_0000::
+JumpTable::
+Func_000_0000:: ; address name
     pop hl
     push de
     ld e, a
@@ -16,17 +17,20 @@ Func_000_000B::
     ld h, [hl]
     ld l, a
 
-Func_000_000E::
+; jp hl; the call target used by CallInBank
+JumpToHL::
+Func_000_000E:: ; address name
     jp hl
     db $00
 
 ; C2 static reading (E-0007): rst $10 selects ROM bank B, calls the code at HL, then restores the caller's bank (saved from $4000, which holds each bank's own number, E-0006).
-Func_000_0010::
+CallInBank::
+Func_000_0010:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, b
     ld [rROMB0], a
-    call Func_000_000E
+    call JumpToHL
     pop af
     ld [rROMB0], a
     ret
@@ -54,7 +58,9 @@ Func_000_0058::
     db $D9
     ds $24, $00
 
-Func_000_0080::
+; copies the 10 bytes at $008E (ld a,$C0 / ldh [rDMA],a / wait / ret) to HRAM at $FF80
+InstallOamDmaRoutine::
+Func_000_0080:: ; address name
     ld c, $80
     ld b, $0A
     ld hl, $008E
@@ -97,11 +103,11 @@ Jump_000_015A::
     ld sp, wDFFF
     call Func_000_078D
     call Func_000_08D0
-    call Func_000_0080
+    call InstallOamDmaRoutine
     ld hl, vTiles0
     ld bc, $1C00
     xor a, a
-    call Func_000_0949
+    call FillBytes
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_000_0189
@@ -110,7 +116,7 @@ Jump_000_015A::
     ld hl, vBGMap0
     ld bc, $0800
     xor a, a
-    call Func_000_0949
+    call FillBytes
     ld a, $00
     ldh [rVBK], a
 
@@ -164,68 +170,68 @@ Jump_000_01DF::
     ld a, $14
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $02
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $03
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $04
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $05
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $06
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $07
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $08
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $09
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0C
     ld bc, $0800
     ld e, $6C
     ld d, $44
     ld h, $17
     call Func_000_0705
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0D
     ld e, $8C
     ld d, $44
     ld b, $17
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $12
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0A
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $13
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0E
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ld a, $01
     ld [wC524], a
     ld a, $FF
@@ -276,7 +282,7 @@ Jump_000_02D2::
 Jump_000_0324::
     ld a, [wC58A]
     or a, a
-    call z, Func_000_095B
+    call z, NextTableByte
     halt
     nop
     ld a, [wC5DF]
@@ -291,11 +297,11 @@ Jump_000_0324::
 Jump_000_033D::
     di
     call Func_000_078D
-    call Func_000_05D1
+    call SpinDelay
     ld a, $00
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     jp Jump_000_02D2
 
 Func_000_0355::
@@ -398,7 +404,7 @@ Jump_000_03EA::
     call Func_000_0A17
     call Func_000_0A8D
     call Func_000_33E8
-    call Func_000_09F3
+    call NextRandomSeed
     call Func_000_131A
     call Func_000_0474
     ld a, [wC52B]
@@ -667,7 +673,9 @@ Jump_000_05C7::
     ld a, $F0
     jp Func_000_08AD
 
-Func_000_05D1::
+; returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step
+SpinDelay::
+Func_000_05D1:: ; address name
     ld a, [wC524]
     or a, a
     ret z
@@ -687,7 +695,7 @@ Func_000_05E2::
     ld a, $0B
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ldh a, [rP1]
     and a, $03
     cp a, $03
@@ -718,7 +726,7 @@ Func_000_05E2::
     ld a, $0A
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     sub a, a
     ret
 
@@ -726,7 +734,7 @@ Jump_000_0636::
     ld a, $0A
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     scf
     ret
 
@@ -820,13 +828,13 @@ Func_000_06A8::
     ld hl, vTiles1
     ld bc, $1000
     xor a, a
-    call Func_000_0949
+    call FillBytes
     pop de
     ld a, $E4
     ldh [rBGP], a
     pop bc
     ld hl, vTiles1
-    call Func_000_0C5A
+    call DecompressToRAMLocked
     ld hl, vBGMap0
     ld de, $000C
     ld a, $80
@@ -976,7 +984,7 @@ Func_000_07AA::
     ld a, $01
     ld [wC47C], a
     farcall_b Func_01F_5040
-    call Func_000_05D1
+    call SpinDelay
     ret
     db $C9, $AF, $E0, $0F, $F0, $FF, $E6, $F7, $E0, $FF, $C9
 
@@ -1063,7 +1071,7 @@ Func_000_0829::
 
 Jump_000_0841::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $80
     ldh [rBGPI], a
     ei
@@ -1075,7 +1083,7 @@ Jump_000_084F::
 
 Jump_000_0851::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [hl+]
     ldh [c], a
     ei
@@ -1102,7 +1110,7 @@ Func_000_085C::
 
 Jump_000_0876::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $80
     ldh [rOBPI], a
     ei
@@ -1194,11 +1202,11 @@ Jump_000_08EC::
     ld hl, wC000
     ld bc, $1E00
     ld a, $00
-    call Func_000_0949
+    call FillBytes
     ld hl, hFF8A
     ld bc, $0074
     ld a, $00
-    call Func_000_0949
+    call FillBytes
     pop af
     ld [wIsCGB], a
     ld a, $0A
@@ -1208,13 +1216,13 @@ Jump_000_08EC::
     xor a, a
     ld hl, sA000
     ld bc, $2000
-    call Func_000_0949
+    call FillBytes
     ld a, $00
     ld [rRAMB], a
     xor a, a
     ld hl, sA000
     ld bc, $2000
-    call Func_000_0949
+    call FillBytes
     ld a, $00
     ld [rRAMG], a
     ret
@@ -1231,10 +1239,12 @@ Func_000_0930::
     ld a, $C3
 
 Jump_000_0945::
-    call Func_000_0949
+    call FillBytes
     ret
 
-Func_000_0949::
+; A = value, HL = destination, BC = count; HL ends past the last byte (memset)
+FillBytes::
+Func_000_0949:: ; address name
     ld d, a
 
 Jump_000_094A::
@@ -1246,17 +1256,21 @@ Jump_000_094A::
     jr nz, Jump_000_094A
     ret
 
-Func_000_0952::
+; HL = source, DE = destination, BC = count (memcpy)
+CopyBytes::
+Func_000_0952:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_000_0952
+    jr nz, CopyBytes
     ret
 
-Func_000_095B::
+; wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8
+NextTableByte::
+Func_000_095B:: ; address name
     push hl
     ld a, [wC5E8]
     inc a
@@ -1275,7 +1289,9 @@ Jump_000_096D::
     ret
     INCBIN "dwm2-cobi-us.gbc", $000973, $80
 
-Func_000_09F3::
+; 16-bit seed in wCD03/wCD04 becomes seed * 5 + 11
+NextRandomSeed::
+Func_000_09F3:: ; address name
     push hl
     push bc
     ld a, [wCD03]
@@ -1462,7 +1478,8 @@ Func_000_0B0D::
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.
-Func_000_0B18::
+CopyFromBank::
+Func_000_0B18:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, b
@@ -1479,7 +1496,8 @@ Jump_000_0B20::
     ret
 
 ; C2 static reading (E-0014): like Func_000_0B18, but before each byte waits for STAT ($FF41) bit 1 to clear with interrupts disabled, so HL can be VRAM.
-Func_000_0B2B::
+CopyFromBankWaitVRAM::
+Func_000_0B2B:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, b
@@ -1503,7 +1521,8 @@ Jump_000_0B34::
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.
-Func_000_0B46::
+OrFromBankWaitVRAM::
+Func_000_0B46:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, b
@@ -1537,7 +1556,8 @@ Jump_000_0B5A::
     ret
 
 ; C2 static reading (E-0014): switches to the ROM bank held in $D7FE, reads the word at [HL] into B (low address) and C (next address), leaves HL unchanged, restores the caller's bank. $D7FE is therefore the data-bank variable for reads through HL; 30 call sites.
-Func_000_0B6C::
+ReadWordFromDataBank::
+Func_000_0B6C:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, [wDataBank]
@@ -1723,22 +1743,24 @@ Jump_000_0C4E::
     ret
 
 ; C2 static reading (E-0016): takes the lock byte $FFD6 (spins while it is non-zero), calls Func_000_0C69, then clears the lock.
-Func_000_0C5A::
+DecompressToRAMLocked::
+Func_000_0C5A:: ; address name
     ldh a, [hDecompressLock]
     or a, a
-    jr nz, Func_000_0C5A
+    jr nz, DecompressToRAMLocked
     inc a
     ldh [hDecompressLock], a
-    call Func_000_0C69
+    call DecompressToRAM
     xor a, a
     ldh [hDecompressLock], a
     ret
 
 ; C2 (E-0016: static reading; 141 emulated calls matched tools/lzss_gfx.py byte for byte): expands the compressed stream at [DE] in ROM bank B into memory at [HL] with a plain store per byte (RAM destination). Header and format: see Func_000_0DA8. Restores the caller's bank on return.
-Func_000_0C69::
+DecompressToRAM::
+Func_000_0C69:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
-    call Func_000_0DA8
+    call DecompressReadHeader
 
 Jump_000_0C70::
     ld a, [de]
@@ -1855,15 +1877,16 @@ Jump_000_0CF0::
     ret
 
 ; C2 (E-0016): the same expansion as Func_000_0C69 but for VRAM destinations: each store waits for STAT ($FF41) bit 1 to clear with interrupts disabled, back-references read the already-written VRAM, and the lock byte $FFD6 is taken on entry and cleared on exit.
-Func_000_0CF5::
+DecompressToVRAM::
+Func_000_0CF5:: ; address name
     ldh a, [hDecompressLock]
     or a, a
-    jr nz, Func_000_0CF5
+    jr nz, DecompressToVRAM
     inc a
     ldh [hDecompressLock], a
     ld a, [BANK_NUMBER_BYTE]
     push af
-    call Func_000_0DA8
+    call DecompressReadHeader
 
 Jump_000_0D04::
     ld a, [de]
@@ -2002,7 +2025,8 @@ Jump_000_0DA0::
     ret
 
 ; C2 static reading (E-0016): selects ROM bank B, then reads the compressed-stream header from [DE]: u16 output size into BC, a marker byte into $FFBB. Saves the destination start (HL) in $FFBC/$FFBD and $FFC3/$FFC4 and the destination end (HL + size) in $FFC1/$FFC2.
-Func_000_0DA8::
+DecompressReadHeader::
+Func_000_0DA8:: ; address name
     ld a, b
     ld [rROMB0], a
     ld a, [de]
@@ -2130,7 +2154,7 @@ Jump_000_0E63::
     ld [de], a
     inc de
     call Func_000_1022
-    call Func_000_05D1
+    call SpinDelay
     ld a, [wC56E]
     bit 4, a
     jp z, Jump_000_0F3D
@@ -2141,7 +2165,7 @@ Jump_000_0E63::
     ld [de], a
     inc de
     call Func_000_1022
-    call Func_000_05D1
+    call SpinDelay
     jp Jump_000_0F3D
 
 Jump_000_0E9B::
@@ -2345,7 +2369,7 @@ Jump_000_0FFC::
     ld a, [wC56E]
     bit 4, a
     ret z
-    call Func_000_05D1
+    call SpinDelay
     call Func_000_076B
     ld hl, wC4EF
     ld de, wC47F
@@ -2662,13 +2686,17 @@ Jump_000_1205::
     ld [wC56C], a
     ret
 
-Func_000_120A::
+; loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set
+WaitForVRAMAccess::
+Func_000_120A:: ; address name
     ldh a, [rSTAT]
     bit 1, a
     ret z
-    jr Func_000_120A
+    jr WaitForVRAMAccess
 
-Func_000_1211::
+; A = value, HL = address; disables interrupts, waits until VRAM is accessible, stores A at [HL]; clobbers hFFD1
+WriteVRAMByte::
+Func_000_1211:: ; address name
     ldh [hFFD1], a
     di
 
@@ -2681,7 +2709,9 @@ Jump_000_1214::
     ei
     ret
 
-Func_000_121F::
+; like WriteVRAMByte but stores at [HL] and increments HL
+WriteVRAMByteInc::
+Func_000_121F:: ; address name
     ldh [hFFD1], a
     di
 
@@ -2742,7 +2772,9 @@ Jump_000_1276::
     ei
     ret
 
-Func_000_1278::
+; stores A in wC60B
+StoreWC60B::
+Func_000_1278:: ; address name
     ld [wC60B], a
     ret
 
@@ -2813,7 +2845,7 @@ Func_000_127C::
     cp a, $DD
     jr z, Jump_000_1306
     di
-    call Func_000_3354
+    call StartSound
     ei
     pop hl
     pop de
@@ -2977,13 +3009,13 @@ Func_000_13E5::
     ld d, $44
     ld b, $17
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $11
     ld e, $5A
     ld d, $50
     ld b, $17
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0F
     ld e, $03
     ld d, $5B
@@ -2999,13 +3031,13 @@ Jump_000_1419::
     ld d, $40
     ld b, $18
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $11
     ld e, $0B
     ld d, $49
     ld b, $18
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0F
     ld e, $E0
     ld d, $5E
@@ -3021,13 +3053,13 @@ Jump_000_1447::
     ld d, $49
     ld b, $18
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $11
     ld e, $6F
     ld d, $55
     ld b, $18
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0F
     ld e, $A6
     ld d, $61
@@ -3043,13 +3075,13 @@ Jump_000_1474::
     ld d, $60
     ld b, $18
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $11
     ld e, $F4
     ld d, $6B
     ld b, $18
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0F
     ld e, $5B
     ld d, $65
@@ -3065,19 +3097,19 @@ Jump_000_14A1::
     ld d, $5D
     ld b, $E1
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $11
     ld e, $90
     ld d, $69
     ld b, $E1
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
     ld a, $0F
     ld e, $E2
     ld d, $76
     ld b, $E1
     call Func_000_06A8
-    call Func_000_05D1
+    call SpinDelay
 
 Jump_000_14CF::
     ret
@@ -3256,7 +3288,7 @@ Jump_000_15EB::
 Jump_000_15ED::
     di
     ld a, [de]
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     inc de
     dec b
@@ -3296,7 +3328,7 @@ Jump_000_1618::
 Jump_000_161A::
     di
     ld a, [de]
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, l
     and a, $1F
@@ -3343,7 +3375,7 @@ Jump_000_1651::
 
 Jump_000_1654::
     ld a, [de]
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, l
     and a, $E0
     push af
@@ -3380,7 +3412,9 @@ Func_000_1679::
     jr nz, Func_000_1679
     ret
 
-Func_000_1682::
+; HL = A * C (8 x 8 bit); clobbers A, B and C
+Multiply8::
+Func_000_1682:: ; address name
     ld b, $00
     ld h, b
     ld l, b
@@ -3421,11 +3455,11 @@ Func_000_16AA::
     push af
     push bc
     ld c, b
-    call Func_000_1682
+    call Multiply8
     pop bc
     pop af
     push hl
-    call Func_000_1682
+    call Multiply8
     pop bc
     ld a, c
     add a, h
@@ -3456,7 +3490,9 @@ Jump_000_16CD::
     jr nz, Jump_000_16C3
     ret
 
-Func_000_16D1::
+; HL = HL / A (quotient in HL), A = remainder; clobbers D, E
+DivideHLByA::
+Func_000_16D1:: ; address name
     ld d, $10
     ld e, a
     xor a, a
@@ -3499,7 +3535,9 @@ Jump_000_16F1::
     jr nz, Jump_000_16E6
     ret
 
-Func_000_16F5::
+; HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones
+HLToDecimalDigits::
+Func_000_16F5:: ; address name
     xor a, a
     ld [wC8C0], a
     ld [wC8C1], a
@@ -3509,7 +3547,7 @@ Jump_000_16FF::
     ld a, [wC8C0]
     inc a
     ld [wC8C0], a
-    ld bc, hFF9C
+    ld bc, $FF9C
     add hl, bc
     ld a, h
     rlc a
@@ -3524,7 +3562,7 @@ Jump_000_171A::
     ld a, [wC8C1]
     inc a
     ld [wC8C1], a
-    ld bc, hFFF6
+    ld bc, $FFF6
     add hl, bc
     ld a, h
     rlc a
@@ -3716,7 +3754,9 @@ Jump_000_1812::
     ldh [hFFC6], a
     ret
 
-Func_000_181B::
+; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
+TestFlagBit::
+Func_000_181B:: ; address name
     ld b, e
     sra d
     rr e
@@ -3752,7 +3792,9 @@ Jump_000_1843::
     scf
     ret
 
-Func_000_1845::
+; DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300
+SetFlagBit::
+Func_000_1845:: ; address name
     ld a, d
     cp a, $03
     jr nc, Jump_000_1870
@@ -3789,7 +3831,9 @@ Jump_000_186C::
 Jump_000_1870::
     jr Jump_000_1870
 
-Func_000_1872::
+; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
+ReadByteInBank::
+Func_000_1872:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, b
@@ -3939,7 +3983,7 @@ Func_000_1906::
     add a, c
     ld c, a
     ldh a, [hFF92]
-    call Func_000_1682
+    call Multiply8
     ldh a, [hFF8F]
     ld c, a
     add a, a
@@ -3961,7 +4005,7 @@ Jump_000_1951::
     inc hl
     ld b, [hl]
     ld hl, wC198
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop af
     ld [rROMB0], a
     ld a, [wIsCGB]
@@ -4004,7 +4048,7 @@ Jump_000_1978::
     ld a, $02
     ldh [rSVBK], a
     ld hl, wD000
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
 
@@ -4077,7 +4121,7 @@ Jump_000_19E6::
     add a, c
     ld c, a
     ldh a, [hFF92]
-    call Func_000_1682
+    call Multiply8
     ldh a, [hFF8F]
     ld c, a
     add a, a
@@ -4100,7 +4144,7 @@ Jump_000_1A0E::
     ld a, [hl]
     ld b, a
     ld hl, wC198
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop af
     ld [rROMB0], a
     ld a, [wIsCGB]
@@ -4143,7 +4187,7 @@ Jump_000_1A36::
     ld a, $02
     ldh [rSVBK], a
     ld hl, wD000
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
 
@@ -4325,7 +4369,7 @@ Jump_000_1B6D::
 
 Func_000_1B6F::
     ld de, $012B
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ldh a, [hFF8F]
     or a, a
@@ -4398,7 +4442,7 @@ Func_000_1BAD::
     ld b, a
     push hl
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop hl
     ld a, [hl+]
     ld e, a
@@ -4453,11 +4497,11 @@ Jump_000_1C1A::
     cp a, $14
     jr nz, Jump_000_1C51
     ld hl, vTiles1
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld de, $7861
     ld b, $48
     ld hl, vTiles2
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop hl
     xor a, a
     ld [wC46B], a
@@ -4465,7 +4509,7 @@ Jump_000_1C1A::
     jr Jump_000_1C55
 
 Jump_000_1C51::
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop hl
 
 Jump_000_1C55::
@@ -4522,7 +4566,7 @@ Func_000_1CA1::
     ld a, [wCC37]
     ret nz
     ld de, $00D1
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld a, $0B
     ld [wC90D], a
@@ -4565,10 +4609,10 @@ Jump_000_1CE2::
 
 Func_000_1CF9::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [de]
     ei
-    call Func_000_121F
+    call WriteVRAMByteInc
     inc de
     dec b
     jr nz, Func_000_1CF9
@@ -4724,7 +4768,7 @@ Jump_000_1DF4::
     add a, c
     ld c, a
     ld a, [wC5FC]
-    call Func_000_1682
+    call Multiply8
     ld a, [wC5FA]
     ld c, a
     sla a
@@ -4764,7 +4808,7 @@ Jump_000_1E30::
 Jump_000_1E32::
     di
     ld a, [de]
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, l
     and a, $1F
@@ -4816,7 +4860,7 @@ Jump_000_1E71::
     di
     ld a, [de]
     and a, $07
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     ld a, l
     and a, $1F
@@ -5001,7 +5045,7 @@ Func_000_1F49::
     push bc
     call Func_000_24C5
     ld c, $A5
-    call Func_000_1682
+    call Multiply8
     ld bc, sA000
     add hl, bc
     pop bc
@@ -5046,17 +5090,21 @@ Jump_000_1F77::
     pop hl
     ret
 
-Func_000_1F80::
+; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
+LoadSRAMRecordByte::
+Func_000_1F80:: ; address name
     push hl
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, [hl]
     ldh [hFFC6], a
     pop hl
     ret
 
-Func_000_1F89::
+; like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)
+LoadSRAMRecordWord::
+Func_000_1F89:: ; address name
     push hl
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, [hl+]
     ldh [hFFC6], a
     ld a, [hl]
@@ -5066,7 +5114,7 @@ Func_000_1F89::
 
 Func_000_1F95::
     push hl
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, [hl+]
     ldh [hFFC6], a
     ld a, [hl+]
@@ -5079,7 +5127,7 @@ Func_000_1F95::
 Func_000_1FA4::
     push hl
     push de
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld de, wC8CF
     ld b, $0A
     ld a, [hl]
@@ -5114,10 +5162,12 @@ Jump_000_1FBD::
     scf
     ret
 
-Func_000_1FD1::
+; A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)
+SRAMRecordAddress::
+Func_000_1FD1:: ; address name
     push bc
     ld c, $A5
-    call Func_000_1682
+    call Multiply8
     ld bc, sA000
     add hl, bc
     pop bc
@@ -5152,7 +5202,7 @@ Func_000_1FE3::
     pop af
     ld [rROMB0], a
     pop hl
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop de
     pop bc
     ld a, [wIsCGB]
@@ -5183,7 +5233,7 @@ Func_000_1FE3::
 
 Jump_000_2032::
     ld c, $10
-    call Func_000_0B18
+    call CopyFromBank
     ret
 
 Func_000_2038::
@@ -5232,7 +5282,7 @@ Jump_000_2068::
     ldh a, [hFFC6]
     add a, c
     pop bc
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     inc de
     dec b
@@ -5302,7 +5352,7 @@ Jump_000_20C0::
     ldh a, [hFFC6]
     add a, c
     pop bc
-    call Func_000_121F
+    call WriteVRAMByteInc
     ei
     inc de
     dec b
@@ -5654,7 +5704,7 @@ Jump_000_22A5::
     push de
     ld a, [de]
     ld c, $55
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     pop de
     ldh a, [hFFC6]
     bit 7, a
@@ -5675,7 +5725,7 @@ Jump_000_22A5::
     ld l, a
     ldh a, [hFFC9]
     ld h, a
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
     jp z, Jump_000_2378
@@ -5706,13 +5756,13 @@ Jump_000_22F1::
 Jump_000_22FB::
     ld b, $7E
     ld c, $08
-    call Func_000_0B18
+    call CopyFromBank
     jr Jump_000_2378
 
 Jump_000_2304::
     ld a, [de]
     ld c, $0B
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG], a
     ldh a, [hFFC6]
@@ -5750,7 +5800,7 @@ Jump_000_2304::
     ld l, a
     ldh a, [hFFC9]
     ld h, a
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_000_2378
@@ -5790,7 +5840,7 @@ Jump_000_235C::
     ld b, $27
     pop hl
     ld c, $08
-    call Func_000_0B18
+    call CopyFromBank
 
 Jump_000_2378::
     ldh a, [hFFC9]
@@ -5812,14 +5862,14 @@ Jump_000_2378::
 Func_000_2391::
     ldh [hFFCC], a
     ld c, $6F
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     call Func_000_23BD
     ld a, $09
-    call Func_000_1682
+    call Multiply8
     ld b, l
     ldh a, [hFFCC]
     ld c, $72
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     call Func_000_23BD
     ld a, c
     add a, a
@@ -5828,7 +5878,7 @@ Func_000_2391::
     ld b, a
     ldh a, [hFFCC]
     ld c, $70
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     call Func_000_23BD
     ld a, c
     add a, b
@@ -6081,7 +6131,7 @@ Func_000_24E5::
     ret z
     ld hl, wC49F
     ld c, $40
-    call Func_000_0B18
+    call CopyFromBank
     ld a, $7F
     ld [wC526], a
     ret
@@ -6247,7 +6297,7 @@ Jump_000_25C5::
 
 Func_000_25C9::
     push de
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, [wC52D]
     ld [wC531], a
     ld [wC535], a
@@ -6334,7 +6384,7 @@ Jump_000_265F::
     ld b, $09
     call Func_000_3048
     ld a, c
-    call Func_000_1211
+    call WriteVRAMByte
 
 Jump_000_266E::
     ld a, [wC52B]
@@ -6359,7 +6409,7 @@ Jump_000_2685::
     xor a, $01
     ld [wC552], a
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     jr Jump_000_26B5
 
 Jump_000_26A2::
@@ -6370,7 +6420,7 @@ Jump_000_26A2::
     xor a, $01
     ld [wC552], a
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_000_26B5::
     ld c, $BB
@@ -6396,7 +6446,7 @@ Jump_000_26CE::
     call Func_000_3048
     pop bc
     ld a, c
-    call Func_000_1211
+    call WriteVRAMByte
     push bc
     ld hl, $0160
     call Func_000_3072
@@ -6404,7 +6454,7 @@ Jump_000_26CE::
     call Func_000_3048
     pop bc
     ld a, b
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC562]
     ld b, a
     ld a, [wC566]
@@ -6418,7 +6468,7 @@ Jump_000_26CE::
     cp a, $E6
     jp z, Jump_000_271B
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     jr Jump_000_271B
 
 Jump_000_2711::
@@ -6561,7 +6611,7 @@ Jump_000_27E5::
     cp a, $9A
     jr z, Jump_000_2875
     ld a, [wC556]
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC52C
     set 1, [hl]
     jr Jump_000_2875
@@ -6734,7 +6784,9 @@ Func_000_28F4::
     ld h, a
     ret
 
-Func_000_290E::
+; fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero
+FillTilesFromRequest::
+Func_000_290E:: ; address name
     ld hl, wC52F
     ld a, [hl+]
     or a, [hl]
@@ -6818,7 +6870,7 @@ Jump_000_2996::
     res 7, [hl]
     call Func_000_2E5D
     ld a, [hl]
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC52C
     set 2, [hl]
     ret
@@ -6851,7 +6903,7 @@ Jump_000_29CB::
     call Func_000_2E5D
     ld c, [hl]
     ld a, [wC530]
-    call Func_000_1682
+    call Multiply8
     add hl, de
     add hl, hl
     add hl, hl
@@ -6885,7 +6937,7 @@ Jump_000_29FA::
     jr z, Jump_000_2A16
     cp a, $D6
     jr z, Jump_000_2A16
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_000_2A16::
@@ -6969,7 +7021,7 @@ Jump_000_2A73::
 
 Jump_000_2A9C::
     ld a, e
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_000_304F
     inc e
     dec b
@@ -7001,9 +7053,9 @@ Jump_000_2A9C::
 
 Jump_000_2AD2::
     ld a, $FF
-    call Func_000_121F
+    call WriteVRAMByteInc
     xor a, a
-    call Func_000_121F
+    call WriteVRAMByteInc
     dec bc
     dec bc
     ld a, b
@@ -7015,7 +7067,7 @@ Jump_000_2AD2::
 
 Jump_000_2AE8::
     ld a, e
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_000_304F
     inc e
     dec b
@@ -7104,7 +7156,7 @@ Jump_000_2B45::
 
 Jump_000_2B81::
     ld a, e
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_000_304F
     inc e
     dec b
@@ -7134,7 +7186,7 @@ Jump_000_2B81::
 
 Jump_000_2BB5::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [hl+]
     ei
     ld [de], a
@@ -7185,12 +7237,12 @@ Func_000_2BFA::
     ld b, $09
     call Func_000_3048
     ld a, $B4
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, [wC5DB]
     cp a, $04
     ret z
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Jump_000_2C21::
@@ -7220,7 +7272,7 @@ Jump_000_2C21::
 Jump_000_2C48::
     call Func_000_2BFA
     call Func_000_2C6A
-    call Func_000_290E
+    call FillTilesFromRequest
 
 Jump_000_2C51::
     ld a, [wC52D]
@@ -7363,7 +7415,7 @@ Func_000_2D33::
     ld hl, wC52C
     res 7, [hl]
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     call Func_000_2D4A
     ld hl, wC52B
     set 2, [hl]
@@ -7377,12 +7429,12 @@ Func_000_2D4A::
     ld hl, vTiles1 + $6E0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4330
     ld hl, vTiles1 + $6F0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld hl, $0100
     call Func_000_3072
     ld b, $0E
@@ -7414,7 +7466,7 @@ Jump_000_2D77::
     jr Jump_000_2D76
 
 Jump_000_2D92::
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_000_304F
     jr Jump_000_2D77
 
@@ -7454,7 +7506,7 @@ Jump_000_2DAB::
     jr Jump_000_2DAA
 
 Jump_000_2DC6::
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_000_304F
     jr Jump_000_2DAB
 
@@ -7543,7 +7595,9 @@ Func_000_2E81::
     farcall Func_008_4016
     ret
 
-Func_000_2E98::
+; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
+FillTilesRequest::
+Func_000_2E98:: ; address name
     ld a, l
     ld [wC52D], a
     ld a, h
@@ -7552,7 +7606,7 @@ Func_000_2E98::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ret
 
 Func_000_2EAC::
@@ -7821,7 +7875,7 @@ Jump_000_3031::
 
 Jump_000_3032::
     ld a, e
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_000_304F
     inc e
     dec b
@@ -7899,7 +7953,7 @@ Func_000_3072::
 
 Func_000_3095::
     ld a, $C3
-    call Func_000_1211
+    call WriteVRAMByte
     call Func_000_304F
     dec b
     jr nz, Func_000_3095
@@ -8068,16 +8122,17 @@ Func_000_3340::
     jr Jump_000_335D
 
 Func_000_334B::
-    call Func_000_3354
+    call StartSound
 
 Func_000_334E::
-    call Func_000_3354
+    call StartSound
 
 Func_000_3351::
-    call Func_000_3354
+    call StartSound
 
 ; C2 static reading, and 495 emulated sound starts agree (E-0018): starts sound id A (kept in $DD10). Finds A's range in SoundBankTable, switches to that bank, takes the 4-byte record at (array + 4*(A - first id)), and copies it into the channel-state slot at $DC00 + record byte 0 (record byte 1 to slot +2, the track pointer to +3/+4, this bank to +5). Returns A + 1.
-Func_000_3354::
+StartSound::
+Func_000_3354:: ; address name
     push bc
     push de
     push hl
@@ -8324,7 +8379,7 @@ Jump_000_349C::
 Jump_000_349F::
     ldh a, [hFFEF]
     ldh [hFFF0], a
-    call Func_000_35CD
+    call SoundNextEvent
     jr Jump_000_34C7
 
 Jump_000_34A8::
@@ -8527,7 +8582,8 @@ Jump_000_35C5::
     jr Jump_000_357E
 
 ; C2 static reading and 5,154 emulated fetches agree (E-0019): fetches the next track event of the current channel. The position in $FFD8/$FFD9 counts 2-byte events from the track start ($FFDB/$FFDC), the event address is base + 2*position, and the first byte selects the command (see tools/sound_tracks.py).
-Func_000_35CD::
+SoundNextEvent::
+Func_000_35CD:: ; address name
     ldh a, [hTrackPosLo]
     ld l, a
     ldh a, [hTrackPosHi]
@@ -8565,7 +8621,7 @@ Jump_000_35F8::
 Jump_000_3602::
     push hl
     ld b, [hl]
-    call Func_000_3DAE
+    call SoundLabelSlot
     xor a, a
     ld [hl+], a
     ldh a, [hTrackPosLo]
@@ -8649,7 +8705,7 @@ Jump_000_366D::
     ld e, a
     ld b, [hl]
     push hl
-    call Func_000_3DAE
+    call SoundLabelSlot
     inc [hl]
     ld a, [hl+]
     inc e
@@ -8662,7 +8718,7 @@ Jump_000_366D::
 
 Jump_000_3688::
     pop hl
-    jp Func_000_35CD
+    jp SoundNextEvent
 
 Jump_000_368C::
     ld a, [hl]
@@ -8672,14 +8728,14 @@ Jump_000_368C::
     jp nz, Jump_000_36A5
     ld b, [hl]
     push hl
-    call Func_000_3DAE
+    call SoundLabelSlot
     inc hl
     ld a, [hl+]
     ldh [hTrackPosLo], a
     ld a, [hl]
     ldh [hTrackPosHi], a
     pop hl
-    jp Func_000_35CD
+    jp SoundNextEvent
 
 Jump_000_36A5::
     inc hl
@@ -8878,7 +8934,7 @@ Jump_000_37B9::
     ldh [hTrackPosLo], a
     ld a, [hl]
     ldh [hTrackPosHi], a
-    jp Func_000_35CD
+    jp SoundNextEvent
 
 Jump_000_37CA::
     cp a, $80
@@ -8969,7 +9025,7 @@ Jump_000_3836::
     ldh [hTrackPosLo], a
     ld a, h
     ldh [hTrackPosHi], a
-    jp Func_000_35CD
+    jp SoundNextEvent
 
 Jump_000_3855::
     xor a, a
@@ -8980,7 +9036,7 @@ Jump_000_3855::
     ldh a, [hTrackPosHi]
     adc a, $00
     ldh [hTrackPosHi], a
-    jp Func_000_35CD
+    jp SoundNextEvent
 
 Jump_000_3867::
     cp a, $AD
@@ -8989,7 +9045,7 @@ Jump_000_3867::
     ldh [hTrackPosLo], a
     ldh a, [hFFF6]
     ldh [hTrackPosHi], a
-    jp Func_000_35CD
+    jp SoundNextEvent
 
 Jump_000_3876::
     cp a, $AE
@@ -9552,7 +9608,8 @@ Jump_000_3DA7::
     ret
 
 ; C2 static reading (E-0019): address of a label slot: HL = $DCC0 + channel*12 + (B & $0F)*3. A slot holds a repeat counter and a saved position (2 bytes); used by the FD, B0 and B1-BF commands.
-Func_000_3DAE::
+SoundLabelSlot::
+Func_000_3DAE:: ; address name
     ld a, [wSoundChannelIndex]
     add a, a
     ld c, a
@@ -9653,7 +9710,7 @@ Func_000_3E25::
     jr c, Jump_000_3E50
     ld a, c
     ld hl, wD80C
-    call Func_000_3F25
+    call AddAx9ToHL
     ld a, [hl+]
     and a, $D0
     jr nz, Jump_000_3E4F
@@ -9718,7 +9775,9 @@ Jump_000_3E76::
     pop hl
     ret
 
-Func_000_3E7A::
+; Z set when HL == BC; A is clobbered
+CompareHLToBC::
+Func_000_3E7A:: ; address name
     ld a, h
     cp a, b
     ret nz
@@ -9746,14 +9805,14 @@ Jump_000_3E8C::
 Jump_000_3E8F::
     ld a, h
     or a, l
-    jr nz, Func_000_3E7A
+    jr nz, CompareHLToBC
     ld a, $01
     or a, a
     scf
     ret
 
 Func_000_3E98::
-    call Func_000_3E7A
+    call CompareHLToBC
     jr z, Jump_000_3ED1
     ld a, h
     or a, l
@@ -9807,7 +9866,7 @@ Func_000_3ED4::
     ld a, [wC58A]
     or a, a
     jr nz, Func_000_3EDE
-    call Func_000_095B
+    call NextTableByte
     ret
 
 Func_000_3EDE::
@@ -9820,7 +9879,7 @@ Func_000_3EDE::
     ld [wC5E7], a
     ld a, h
     ld [wC5E8], a
-    call Func_000_095B
+    call NextTableByte
     ld a, [wC5E7]
     ld l, a
     ld a, [wC5E8]
@@ -9851,7 +9910,7 @@ Jump_000_3F0B::
 
 Jump_000_3F16::
     ld a, c
-    call Func_000_16D1
+    call DivideHLByA
     ld c, a
     ld b, $00
     jr Jump_000_3F24
@@ -9866,7 +9925,9 @@ Jump_000_3F1F::
 Jump_000_3F24::
     ret
 
-Func_000_3F25::
+; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
+AddAx9ToHL::
+Func_000_3F25:: ; address name
     push de
     ld d, a
     add a, a
@@ -9889,7 +9950,7 @@ Func_000_3F32::
 
 Jump_000_3F37::
     ld c, $4E
-    call Func_000_1682
+    call Multiply8
     ld bc, wD0D5
     add hl, bc
     ld a, e

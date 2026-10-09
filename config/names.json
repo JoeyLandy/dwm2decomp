@@ -1,0 +1,175 @@
+{
+  "_comment": "Routine names supported by evidence, applied by tools/disasm_all.py. Key 'BB:AAAA'. A name describes what the routine provably does (read from its instructions, or confirmed on the emulator) and never a guessed game purpose. 'note' gives inputs and outputs. The address name (Func_BBB_AAAA) is kept as an alias label. Evidence ids refer to docs/EVIDENCE_LOG.md; 'reading' means a complete static reading of the routine's instructions (E-0022).",
+  "00:0000": {
+    "name": "JumpTable",
+    "evidence": "E-0007"
+  },
+  "00:000E": {
+    "name": "JumpToHL",
+    "note": "jp hl; the call target used by CallInBank",
+    "evidence": "reading"
+  },
+  "00:0010": {
+    "name": "CallInBank",
+    "evidence": "E-0007"
+  },
+  "00:0080": {
+    "name": "InstallOamDmaRoutine",
+    "note": "copies the 10 bytes at $008E (ld a,$C0 / ldh [rDMA],a / wait / ret) to HRAM at $FF80",
+    "evidence": "reading"
+  },
+  "00:0949": {
+    "name": "FillBytes",
+    "note": "A = value, HL = destination, BC = count; HL ends past the last byte (memset)",
+    "evidence": "reading"
+  },
+  "00:0952": {
+    "name": "CopyBytes",
+    "note": "HL = source, DE = destination, BC = count (memcpy)",
+    "evidence": "reading"
+  },
+  "00:095B": {
+    "name": "NextTableByte",
+    "note": "wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8",
+    "evidence": "reading"
+  },
+  "00:09F3": {
+    "name": "NextRandomSeed",
+    "note": "16-bit seed in wCD03/wCD04 becomes seed * 5 + 11",
+    "evidence": "reading"
+  },
+  "00:05D1": {
+    "name": "SpinDelay",
+    "note": "returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step",
+    "evidence": "reading"
+  },
+  "00:0B18": {
+    "name": "CopyFromBank",
+    "evidence": "E-0014"
+  },
+  "00:0B2B": {
+    "name": "CopyFromBankWaitVRAM",
+    "evidence": "E-0014"
+  },
+  "00:0B46": {
+    "name": "OrFromBankWaitVRAM",
+    "evidence": "E-0014"
+  },
+  "00:0B6C": {
+    "name": "ReadWordFromDataBank",
+    "evidence": "E-0014"
+  },
+  "00:0C5A": {
+    "name": "DecompressToRAMLocked",
+    "evidence": "E-0016"
+  },
+  "00:0C69": {
+    "name": "DecompressToRAM",
+    "evidence": "E-0016"
+  },
+  "00:0CF5": {
+    "name": "DecompressToVRAM",
+    "evidence": "E-0016"
+  },
+  "00:0DA8": {
+    "name": "DecompressReadHeader",
+    "evidence": "E-0016"
+  },
+  "00:120A": {
+    "name": "WaitForVRAMAccess",
+    "note": "loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set",
+    "evidence": "reading"
+  },
+  "00:1211": {
+    "name": "WriteVRAMByte",
+    "note": "A = value, HL = address; disables interrupts, waits until VRAM is accessible, stores A at [HL]; clobbers hFFD1",
+    "evidence": "reading"
+  },
+  "00:121F": {
+    "name": "WriteVRAMByteInc",
+    "note": "like WriteVRAMByte but stores at [HL] and increments HL",
+    "evidence": "reading"
+  },
+  "00:1278": {
+    "name": "StoreWC60B",
+    "note": "stores A in wC60B",
+    "evidence": "reading"
+  },
+  "00:1682": {
+    "name": "Multiply8",
+    "note": "HL = A * C (8 x 8 bit); clobbers A, B and C",
+    "evidence": "reading"
+  },
+  "00:16D1": {
+    "name": "DivideHLByA",
+    "note": "HL = HL / A (quotient in HL), A = remainder; clobbers D, E",
+    "evidence": "reading"
+  },
+  "00:16F5": {
+    "name": "HLToDecimalDigits",
+    "note": "HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones",
+    "evidence": "reading"
+  },
+  "00:181B": {
+    "name": "TestFlagBit",
+    "note": "DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check",
+    "evidence": "reading"
+  },
+  "00:1845": {
+    "name": "SetFlagBit",
+    "note": "DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300",
+    "evidence": "reading"
+  },
+  "00:1872": {
+    "name": "ReadByteInBank",
+    "note": "B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored",
+    "evidence": "reading"
+  },
+  "00:1F80": {
+    "name": "LoadSRAMRecordByte",
+    "note": "A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved",
+    "evidence": "reading"
+  },
+  "00:1F89": {
+    "name": "LoadSRAMRecordWord",
+    "note": "like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)",
+    "evidence": "reading"
+  },
+  "00:1FD1": {
+    "name": "SRAMRecordAddress",
+    "note": "A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)",
+    "evidence": "reading"
+  },
+  "00:290E": {
+    "name": "FillTilesFromRequest",
+    "note": "fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero",
+    "evidence": "reading"
+  },
+  "00:2E98": {
+    "name": "FillTilesRequest",
+    "note": "HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest",
+    "evidence": "reading"
+  },
+  "00:3354": {
+    "name": "StartSound",
+    "evidence": "E-0018"
+  },
+  "00:35CD": {
+    "name": "SoundNextEvent",
+    "evidence": "E-0019"
+  },
+  "00:3DAE": {
+    "name": "SoundLabelSlot",
+    "evidence": "E-0019"
+  },
+  "00:3E7A": {
+    "name": "CompareHLToBC",
+    "note": "Z set when HL == BC; A is clobbered",
+    "evidence": "reading"
+  },
+  "00:3F25": {
+    "name": "AddAx9ToHL",
+    "note": "HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved",
+    "evidence": "reading"
+  }
+}

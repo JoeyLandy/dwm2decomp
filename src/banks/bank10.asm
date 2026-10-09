@@ -26,7 +26,7 @@ Jump_010_401D::
     ld a, [wD7FD]
     and a, a
     jr z, Jump_010_4032
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld a, b
     inc hl
     jr Jump_010_4033
@@ -328,7 +328,7 @@ Jump_010_42B3::
     jr z, Jump_010_42CE
     ld a, $01
     ld [wC920], a
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld a, b
     ld [wC921], a
     ld a, c
@@ -457,7 +457,7 @@ Jump_010_4367::
     ld a, [wC552]
     or a, a
     jr nz, Jump_010_43A3
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     inc hl
     ld a, b
     add a, l
@@ -506,7 +506,7 @@ Jump_010_43C9::
     ld a, [wD7FD]
     and a, a
     jr z, Jump_010_43DF
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld a, b
     ld [wC91A], a
     ld a, c
@@ -596,7 +596,7 @@ Func_010_445D:: ; heuristic: target of a pointer table; C0
     jr z, Jump_010_447D
     cp a, $60
     jr c, Jump_010_4477
-    call Func_000_1278
+    call StoreWC60B
     jp Jump_010_401D
 
 Jump_010_4477::
@@ -626,7 +626,7 @@ Func_010_4490:: ; heuristic: target of a pointer table; C0
     ld [wC920], a
     call Func_010_46CD
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_010_44BA
     ld hl, $0088
     ld a, l
@@ -653,7 +653,7 @@ Func_010_44CA:: ; heuristic: target of a pointer table; C0
     ld [wC920], a
     call Func_010_46CD
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_010_44EB
     ld hl, $4097
     ld a, l
@@ -829,7 +829,7 @@ Func_010_45D3:: ; heuristic: target of a pointer table; C0
     jr z, Jump_010_45EE
     ld a, $01
     ld [wC920], a
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld a, b
     ld [wC921], a
     ld a, c
@@ -894,7 +894,7 @@ Func_010_4637:: ; heuristic: target of a pointer table; C0
     jr z, Jump_010_4652
     ld a, $01
     ld [wC920], a
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld a, b
     ld [wC921], a
     ld a, c
@@ -914,7 +914,7 @@ Jump_010_4652::
 Jump_010_465F::
     push hl
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_010_4670
     ld a, [wC921]
     add a, $20
@@ -1189,10 +1189,10 @@ Jump_010_4A27::
     farcall Func_004_4470
     ld hl, vTiles1
     ld de, $1202
-    call Func_000_2E98
-    call Func_000_290E
+    call FillTilesRequest
+    call FillTilesFromRequest
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -1238,7 +1238,7 @@ Jump_010_4A84::
     bit 6, a
     jr nz, Jump_010_4AAE
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ldh [hFFB9], a
     ld a, $02

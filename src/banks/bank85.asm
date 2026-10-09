@@ -93,7 +93,7 @@ Jump_085_4093::
     ldh [hFFB9], a
     farcall Func_002_6050
     ld de, $0078
-    call Func_000_1845
+    call SetFlagBit
     ld a, $80
     ld [wC919], a
     ret
@@ -324,7 +324,7 @@ Func_085_426B:: ; heuristic: follows a terminator; C0
     ldh [hFFB9], a
     farcall Func_002_6050
     ld de, $005C
-    call Func_000_1845
+    call SetFlagBit
     ld a, $80
     ld [wC919], a
     ret
@@ -603,9 +603,9 @@ Jump_085_4479::
     jr z, Jump_085_4493
     call Func_085_44D2
     ld a, $BC
-    call Func_000_1211
+    call WriteVRAMByte
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ld hl, wC923
@@ -617,11 +617,11 @@ Jump_085_4493::
     jr z, Jump_085_44AA
     call Func_085_44D2
     ld a, $C3
-    call Func_000_1211
+    call WriteVRAMByte
     ld hl, wC92E
     dec [hl]
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     jr Jump_085_44BF
 
 Jump_085_44AA::
@@ -629,11 +629,11 @@ Jump_085_44AA::
     jr z, Jump_085_44BF
     call Func_085_44D2
     ld a, $C3
-    call Func_000_1211
+    call WriteVRAMByte
     ld hl, wC92E
     inc [hl]
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_085_44BF::
     call Func_085_44D2
@@ -645,7 +645,7 @@ Jump_085_44BF::
 
 Jump_085_44CD::
     ld a, c
-    call Func_000_1211
+    call WriteVRAMByte
     ret
 
 Func_085_44D2::
@@ -743,7 +743,7 @@ Jump_085_4546::
 Jump_085_454C::
     call Func_085_4555
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Func_085_4555::
@@ -793,11 +793,11 @@ Jump_085_45D3::
     ld a, [hl]
     push af
     ld c, $5D
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop af
     push af
     ld c, $5B
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ldh a, [hFFC6]
     ld [hl+], a
     ldh a, [hFFC7]
@@ -805,11 +805,11 @@ Jump_085_45D3::
     pop af
     push af
     ld c, $61
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop af
     push af
     ld c, $5F
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ldh a, [hFFC6]
     ld [hl+], a
     ldh a, [hFFC7]
@@ -817,12 +817,12 @@ Jump_085_45D3::
     pop af
     push af
     ld c, $55
-    call Func_000_1FD1
+    call SRAMRecordAddress
     xor a, a
     ld [hl], a
     pop af
     ld c, $00
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, $01
     ld [hl], a
     xor a, a
@@ -1078,7 +1078,7 @@ Jump_085_47E3::
 
 Jump_085_480A::
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
     ld a, $01
     ldh [hFF8D], a
     xor a, a
@@ -1170,7 +1170,7 @@ Jump_085_487E::
     inc d
 
 Jump_085_4887::
-    call Func_000_1845
+    call SetFlagBit
     farcall Func_084_43B8
     farcall Func_05F_6DDB
     ld a, $80
@@ -1205,7 +1205,7 @@ Jump_085_48C2::
     or a, a
     jr nz, Jump_085_4932
     ld de, $003B
-    call Func_000_1845
+    call SetFlagBit
     ld a, $09
     ldh [hFFC6], a
     farcall Func_085_5B23
@@ -1228,7 +1228,7 @@ Jump_085_48F5::
     ld a, $09
     ldh [hFFC7], a
     ld de, $0205
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_085_4905
     ld a, $49
     ldh [hFFC7], a
@@ -1249,7 +1249,7 @@ Jump_085_4912::
 
 Jump_085_4921::
     ld de, $003C
-    call Func_000_1845
+    call SetFlagBit
     ld hl, $0B9C
     call Func_085_57C8
     ld hl, wC923
@@ -1298,7 +1298,7 @@ Jump_085_496F::
     or a, a
     jr nz, Jump_085_49DF
     ld de, $0039
-    call Func_000_1845
+    call SetFlagBit
     ld a, $07
     ldh [hFFC6], a
     farcall Func_085_5B23
@@ -1321,7 +1321,7 @@ Jump_085_49A2::
     ld a, $07
     ldh [hFFC7], a
     ld de, $0203
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_085_49B2
     ld a, $47
     ldh [hFFC7], a
@@ -1342,7 +1342,7 @@ Jump_085_49BF::
 
 Jump_085_49CE::
     ld de, $003A
-    call Func_000_1845
+    call SetFlagBit
     ld hl, $0B92
     call Func_085_57C8
     ld hl, wC923
@@ -1412,7 +1412,7 @@ Jump_085_4A35::
     ld a, $01
     ld [wC894], a
     ld de, $0038
-    call Func_000_1845
+    call SetFlagBit
     ret
 
 Jump_085_4A51::
@@ -1422,7 +1422,7 @@ Jump_085_4A51::
 
 Jump_085_4A58::
     ld de, $0037
-    call Func_000_1845
+    call SetFlagBit
     ld a, $14
     ldh [hFFC6], a
     farcall Func_00A_47A4
@@ -1452,7 +1452,7 @@ Jump_085_4A79::
     ld a, $0F
     ldh [hFF90], a
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_085_4AAB
     ld a, $20
     ld [wC8C8], a
@@ -1471,7 +1471,7 @@ Jump_085_4AAB::
 
 Jump_085_4ABC::
     ld de, $0025
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_085_4AD9
     ld a, $10
     ldh [hFF90], a
@@ -1553,7 +1553,7 @@ Jump_085_4B33::
     ldh [hFFC9], a
     farcall Func_001_6E46
     ld de, $002B
-    call Func_000_1845
+    call SetFlagBit
     ld a, $80
     ld [wC919], a
     ret
@@ -1677,7 +1677,7 @@ Jump_085_4C46::
     or a, a
     jr nz, Jump_085_4C51
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_085_4C51::
     ld a, [wC921]
@@ -1720,7 +1720,7 @@ Jump_085_4C7F::
     ldh [hFFC9], a
     farcall Func_001_6E46
     ld de, $002A
-    call Func_000_1845
+    call SetFlagBit
     xor a, a
     ldh [hFF8D], a
     xor a, a
@@ -1742,7 +1742,7 @@ Jump_085_4CC6::
     or a, a
     jr nz, Jump_085_4CD5
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_085_4CD5::
     ld a, [wC921]
@@ -1776,7 +1776,7 @@ Jump_085_4D03::
     cp a, $40
     ret nz
     ld a, $72
-    call Func_000_1278
+    call StoreWC60B
     ld a, [wCB96]
     ld [wCBA6], a
     xor a, a
@@ -1862,7 +1862,7 @@ Jump_085_4DB2::
     ld a, [wC921]
     and a, $07
     jr nz, Jump_085_4DD8
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD03]
     and a, $03
     swap a
@@ -1874,7 +1874,7 @@ Jump_085_4DB2::
 
 Jump_085_4DCB::
     push hl
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $01
     add a, a
@@ -1916,7 +1916,7 @@ Jump_085_4E06::
     ld hl, wC923
     inc [hl]
     ld de, $0056
-    call Func_000_181B
+    call TestFlagBit
     ret c
     ld a, $80
     ld [wC919], a
@@ -1951,7 +1951,7 @@ Jump_085_4E39::
     push hl
     ld b, $93
     ld hl, wC198
-    call Func_000_0CF5
+    call DecompressToVRAM
     pop hl
     ld a, [wIsCGB]
     or a, a
@@ -1964,7 +1964,7 @@ Jump_085_4E39::
     ldh [rSVBK], a
     ld b, $93
     ld hl, wD000
-    call Func_000_0CF5
+    call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
 
@@ -2007,7 +2007,7 @@ Jump_085_4E61::
 
 Jump_085_4EAA::
     ld de, $0056
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_085_4F0B
     ld a, $01
     ld [wC929], a
@@ -2098,7 +2098,7 @@ Jump_085_4F52::
     ret c
     push af
     ld a, $66
-    call Func_000_1278
+    call StoreWC60B
     xor a, a
     ld [wCB86], a
     pop af
@@ -2139,7 +2139,7 @@ Jump_085_4F9E::
     cp a, $48
     ret nz
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC921
     inc [hl]
     ret
@@ -2296,12 +2296,12 @@ Jump_085_50A9::
     pop af
     push af
     ld c, $56
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     ldh a, [hFFC6]
     ld e, a
     pop af
     ld c, $57
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG], a
     ldh a, [hFFC6]
@@ -2314,7 +2314,7 @@ Jump_085_50A9::
 Jump_085_50D2::
     ld l, a
     ld h, $00
-    call Func_000_16F5
+    call HLToDecimalDigits
     ld de, wC17E
     ld a, [wC8C1]
     or a, a
@@ -2427,7 +2427,7 @@ Jump_085_5181::
     ret
 
 Func_085_5190::
-    call Func_000_095B
+    call NextTableByte
     ld a, [wC5E8]
     and a, $03
     cp a, $03
@@ -2451,11 +2451,11 @@ Jump_085_51A5::
     inc d
 
 Jump_085_51B6::
-    call Func_000_1845
+    call SetFlagBit
 
 Jump_085_51B9::
     ld de, $0162
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_085_51C7
     ld a, $80
     ld [wC919], a
@@ -2463,7 +2463,7 @@ Jump_085_51B9::
 
 Jump_085_51C7::
     ld de, $0163
-    call Func_000_1845
+    call SetFlagBit
     ld hl, $0779
     call Func_085_57C8
     xor a, a
@@ -2518,17 +2518,17 @@ Jump_085_521E::
     xor a, a
     ld [wC922], a
     ld de, $015F
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld hl, wC922
     inc [hl]
     ld de, $0160
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld hl, wC922
     inc [hl]
     ld de, $0161
-    call Func_000_181B
+    call TestFlagBit
     ret nc
     ld hl, wC922
     inc [hl]
@@ -2704,7 +2704,7 @@ Jump_085_534B::
     inc de
 
 Jump_085_5358::
-    call Func_000_1845
+    call SetFlagBit
     ld a, $80
     ld [wC919], a
     ret
@@ -3012,7 +3012,7 @@ Jump_085_5581::
     ld a, [wC921]
     and a, $0F
     jr nz, Jump_085_55A9
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD03]
     and a, $03
     inc a
@@ -3025,7 +3025,7 @@ Jump_085_5581::
 
 Jump_085_559B::
     push hl
-    call Func_000_095B
+    call NextTableByte
     ld a, [wC5E8]
     and a, $01
     sla a
@@ -3111,7 +3111,7 @@ Jump_085_561E::
     ld hl, wCB9C
     call Func_085_5760
     ld a, $63
-    call Func_000_1278
+    call StoreWC60B
     ld hl, wC923
     inc [hl]
     ret
@@ -3162,7 +3162,7 @@ Jump_085_5689::
     or a, a
     jr nz, Jump_085_5694
     ld a, $65
-    call Func_000_1278
+    call StoreWC60B
 
 Jump_085_5694::
     ld a, [wC922]
@@ -3390,7 +3390,7 @@ Jump_085_5811::
     push bc
     ld a, [hl]
     ld c, $6F
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     pop bc
     ldh a, [hFFC6]
     cp a, $C0
@@ -3398,7 +3398,7 @@ Jump_085_5811::
     push bc
     ld a, [hl]
     ld c, $55
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     pop bc
     ldh a, [hFFC6]
     bit 7, a
@@ -3441,7 +3441,7 @@ Jump_085_5857::
     push bc
     ld a, [hl]
     ld c, $55
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     pop bc
     ldh a, [hFFC6]
     bit 7, a
@@ -3449,7 +3449,7 @@ Jump_085_5857::
     push bc
     ld a, [hl]
     ld c, $6B
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop bc
     ldh a, [hFFC6]
     ld c, a
@@ -3527,7 +3527,7 @@ Jump_085_58C6::
     push bc
     ld a, [hl]
     ld c, $55
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     pop bc
     ldh a, [hFFC6]
     bit 7, a
@@ -3535,7 +3535,7 @@ Jump_085_58C6::
     push bc
     ld a, [hl]
     ld c, $0B
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop bc
     ld de, $5912
 
@@ -3593,7 +3593,7 @@ Jump_085_5909::
 
 Func_085_594E::
     ld de, $0000
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_085_598C
     ldh a, [hFF93]
     bit 7, a
@@ -3711,7 +3711,7 @@ Jump_085_5AAB::
     push bc
     ld a, [hl]
     ld c, $55
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     pop bc
     ldh a, [hFFC6]
     bit 7, a
@@ -3719,7 +3719,7 @@ Jump_085_5AAB::
     push bc
     ld a, [hl]
     ld c, $0B
-    call Func_000_1F89
+    call LoadSRAMRecordWord
     pop bc
     ld de, $5AF8
 
@@ -3913,7 +3913,7 @@ Jump_085_5BC5::
     jr Jump_085_5BE9
 
 Jump_085_5BD0::
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $1F
     ld hl, $5C72
@@ -4018,7 +4018,7 @@ Func_085_5C92::
     jr nz, Jump_085_5CB4
 
 Jump_085_5CAA::
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wC5E7]
     and a, $1F
     jr z, Jump_085_5CBE
@@ -4046,7 +4046,7 @@ Jump_085_5CBE::
 
 Jump_085_5CD8::
     farcall Func_061_4001
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $1F
     sub a, $10
@@ -4143,7 +4143,7 @@ Jump_085_5D4C::
     ret
 
 Func_085_5D6F::
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD03]
     and a, $7F
     cp a, $63
@@ -4165,7 +4165,7 @@ Jump_085_5DC5::
     push hl
     ld a, [hl]
     ld c, $69
-    call Func_000_1FD1
+    call SRAMRecordAddress
     push hl
     ld a, [hl+]
     ld e, a

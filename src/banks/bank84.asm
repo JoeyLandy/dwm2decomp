@@ -129,7 +129,7 @@ Jump_084_409C::
     ld a, [hl]
     add a, $20
     ld [de], a
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     srl a
     and a, $01
@@ -168,7 +168,7 @@ Jump_084_40CD::
     ld a, [hl]
     add a, $40
     ld [de], a
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     srl a
     and a, $01
@@ -219,7 +219,7 @@ Jump_084_40F3::
     inc h
 
 Jump_084_4112::
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $03
     add a, l
@@ -246,7 +246,7 @@ Jump_084_4126::
     ld a, [de]
     cp a, $FF
     jr z, Jump_084_4150
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $07
     inc de
@@ -257,7 +257,7 @@ Jump_084_4126::
     ld a, [de]
     cp a, $FF
     jr z, Jump_084_4150
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $07
     inc de
@@ -283,7 +283,7 @@ Jump_084_4156::
     ld a, [wCC46]
     ld [de], a
     inc de
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $07
     ld hl, Data_084_41C2
@@ -311,7 +311,7 @@ Jump_084_417F::
     ld a, [de]
     cp a, $FF
     jr z, Jump_084_41A9
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $07
     inc de
@@ -322,7 +322,7 @@ Jump_084_417F::
     ld a, [de]
     cp a, $FF
     jr z, Jump_084_41A9
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $07
     inc de
@@ -364,7 +364,7 @@ Jump_084_41FF::
     jr nz, Jump_084_4241
     ld a, $A0
     ldh [hFFC8], a
-    call Func_000_09F3
+    call NextRandomSeed
     and a, $03
     add a, a
     add a, a
@@ -498,14 +498,14 @@ Func_084_4327::
     ld d, a
     ld a, $72
     ld b, a
-    call Func_000_1872
+    call ReadByteInBank
     ld l, c
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld h, c
 
 Jump_084_433C::
-    call Func_000_09F3
+    call NextRandomSeed
     and a, $03
     jr z, Jump_084_433C
     push hl
@@ -520,7 +520,7 @@ Jump_084_434A::
     ld e, a
     ld a, h
     ld d, a
-    call Func_000_1872
+    call ReadByteInBank
     pop hl
     ldh a, [hFFC9]
     cp a, c
@@ -540,17 +540,17 @@ Func_084_435C::
     ld d, a
     ld a, $72
     ld b, a
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld l, a
     inc de
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ld h, a
     push hl
 
 Jump_084_4374::
-    call Func_000_09F3
+    call NextRandomSeed
     and a, $03
     jr z, Jump_084_4374
     dec a
@@ -564,13 +564,13 @@ Jump_084_4381::
     ld e, a
     ld a, h
     ld d, a
-    call Func_000_1872
+    call ReadByteInBank
     ld a, c
     ldh [hFFC9], a
     pop hl
 
 Jump_084_438C::
-    call Func_000_09F3
+    call NextRandomSeed
     and a, $03
     jr z, Jump_084_438C
     push hl
@@ -585,7 +585,7 @@ Jump_084_439A::
     ld e, a
     ld a, h
     ld d, a
-    call Func_000_1872
+    call ReadByteInBank
     pop hl
     ldh a, [hFFC9]
     cp a, c
@@ -596,7 +596,7 @@ Jump_084_439A::
     ret
 
 Func_084_43AC::
-    call Func_000_09F3
+    call NextRandomSeed
     ld a, [wCD04]
     and a, $0F
     cp a, c
@@ -635,7 +635,7 @@ Jump_084_43C3::
     ld e, a
     ld a, [hl]
     ld d, a
-    call Func_000_181B
+    call TestFlagBit
     jr nc, Jump_084_43E8
     pop hl
     push hl

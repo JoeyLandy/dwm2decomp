@@ -635,7 +635,7 @@ Func_01A_5FA7::
     ld hl, wD09D
     ld bc, $0038
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld a, [wD86A]
     add a, $0E
     ld e, a
@@ -1158,7 +1158,7 @@ Func_01A_624B::
     ld hl, wD09D
     ld bc, $0019
     ld a, $FF
-    call Func_000_0949
+    call FillBytes
     ld a, [wC991]
     ld l, a
     ld a, [wC992]
@@ -1454,7 +1454,7 @@ Jump_01A_63A4::
 Func_01A_63A7::
     ldh a, [hFFC6]
     ld c, $63
-    call Func_000_1682
+    call Multiply8
     ld a, l
     add a, $16
     ld l, a
@@ -1500,10 +1500,10 @@ Func_01A_6418::
     ld hl, wD095
     ld bc, $0008
     xor a, a
-    call Func_000_0949
+    call FillBytes
     ld a, [wD869]
     ld c, $0B
-    call Func_000_1FD1
+    call SRAMRecordAddress
     push hl
     ld a, [hl+]
     ld [wD006], a
@@ -1561,7 +1561,7 @@ Func_01A_64A2::
     push de
     ld a, [wD869]
     ld c, $A4
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld bc, $0000
     ld a, [hl]
     cp a, $1D
@@ -1704,7 +1704,7 @@ Jump_01A_6561::
 Func_01A_6562::
     push de
     ld c, $63
-    call Func_000_1682
+    call Multiply8
     ld a, l
     add a, $16
     ld l, a
@@ -1739,7 +1739,7 @@ Jump_01A_6585::
 Func_01A_6587::
     ld a, [wD869]
     ld c, $5D
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld a, [wD095]
     ld c, a
     call Func_01A_65F4
@@ -1891,7 +1891,7 @@ Func_01A_72C9::
     ld hl, Data_01A_79CB
     call Func_01A_7321
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Func_01A_72DB::
@@ -1899,11 +1899,11 @@ Func_01A_72DB::
     ld hl, vTiles1 + $6D0
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld hl, Data_01A_7826
     call Func_01A_7321
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Func_01A_72F4::
@@ -1915,7 +1915,7 @@ Func_01A_72FB::
     ld hl, Data_01A_787E
     call Func_01A_7321
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Func_01A_7307::
@@ -1932,7 +1932,7 @@ Func_01A_7315::
     ld hl, Data_01A_796F
     call Func_01A_7321
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ret
 
 Func_01A_7321::

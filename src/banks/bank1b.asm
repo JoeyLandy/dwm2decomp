@@ -307,7 +307,7 @@ Jump_01B_425F::
 
 Jump_01B_426F::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $00
     ld [wC55D], a
     ld a, $01
@@ -332,7 +332,7 @@ Jump_01B_4292::
 
 Jump_01B_42A4::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $00
     ld [wC55D], a
     ld a, $01
@@ -348,7 +348,7 @@ Jump_01B_42A4::
 
 Jump_01B_42C3::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $00
     ld [wC55D], a
     ld a, $01
@@ -364,7 +364,7 @@ Jump_01B_42C3::
 
 Jump_01B_42E2::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $00
     ld [wC55D], a
     ld a, $01
@@ -380,7 +380,7 @@ Jump_01B_42E2::
 
 Jump_01B_4301::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $00
     ld [wC55D], a
     ld a, $01
@@ -396,7 +396,7 @@ Jump_01B_4301::
 
 Jump_01B_4320::
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $00
     ld [wC55D], a
     ld a, $02
@@ -1579,12 +1579,12 @@ Jump_01B_5407::
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld de, Data_01F_4330
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1737,7 +1737,7 @@ Jump_01B_5538::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles2 + $600
     ld a, l
     ld [wC52D], a
@@ -1748,7 +1748,7 @@ Jump_01B_5538::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -2003,7 +2003,7 @@ Jump_01B_574E::
     and a, a
     ret nz
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_01B_65E9
     ld hl, wC412
     ld bc, $0605
@@ -2684,7 +2684,7 @@ Jump_01B_5B7E::
     and a, a
     ret nz
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_01B_65A6
     ld hl, wC410
     ld bc, $0805
@@ -2855,7 +2855,7 @@ Jump_01B_5CD3::
     and a, a
     ret nz
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_01B_65A6
     ld hl, wC410
     ld bc, $0805
@@ -2926,7 +2926,7 @@ Jump_01B_5D18::
     ld [rRAMG2], a
     ld a, $02
     ld [rRAMB], a
-    call Func_000_0952
+    call CopyBytes
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
@@ -2936,7 +2936,7 @@ Jump_01B_5D70::
     ld hl, wD580
     ld bc, $0195
     xor a, a
-    call Func_000_0949
+    call FillBytes
 
 Jump_01B_5D7A::
     ld hl, wD580
@@ -2958,7 +2958,7 @@ Jump_01B_5D8B::
     call Func_01B_61A7
     ld hl, $0195
     ld a, $1E
-    call Func_000_16D1
+    call DivideHLByA
     ld [wD09F], a
     ld a, l
     ld [wD09D], a
@@ -3141,7 +3141,7 @@ Jump_01B_5EB6::
 Jump_01B_5ECD::
     push hl
     push bc
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_01B_5EDB
     ld a, [wC5B7]
     and a, $0F
@@ -3219,7 +3219,7 @@ Jump_01B_5EEC::
     ld d, h
     ld hl, wD200
     ld bc, $0195
-    call Func_000_0952
+    call CopyBytes
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
@@ -3443,13 +3443,13 @@ Func_01B_60BA::
     inc h
 
 Jump_01B_60C4::
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld e, b
     ld d, c
     ld hl, wC130
     ld b, $09
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ret
 
 Jump_01B_60D4::
@@ -3470,7 +3470,7 @@ Jump_01B_60D4::
     inc h
 
 Jump_01B_60F0::
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld e, b
     ld b, c
     ld c, e
@@ -3480,7 +3480,7 @@ Jump_01B_60F0::
     sla l
     rl h
     add hl, bc
-    call Func_000_0B6C
+    call ReadWordFromDataBank
     ld a, b
     ld e, a
     ld a, c
@@ -3490,7 +3490,7 @@ Jump_01B_60F0::
     ld hl, wC8CF
     ld b, $09
     ld c, $10
-    call Func_000_0B2B
+    call CopyFromBankWaitVRAM
     ld a, $F0
     ld [wC8DC], a
     ld hl, wC8CF
@@ -3547,19 +3547,19 @@ Func_01B_6170::
 Func_01B_618C::
     ld hl, vBGMap0 + $20F
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [de]
     ld [hl+], a
     ei
     inc de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [de]
     ld [hl+], a
     ei
     inc de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, [de]
     ld [hl], a
     ei
@@ -3592,7 +3592,7 @@ Func_01B_61BD::
 
 Jump_01B_61C8::
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -3737,7 +3737,7 @@ Func_01B_6277::
     or a, a
     ret z
     push de
-    call Func_000_120A
+    call WaitForVRAMAccess
     push bc
     ld c, $4F
     ld a, $01
@@ -3755,7 +3755,7 @@ Func_01B_6277::
     ld d, a
     pop hl
     call Func_000_18A5
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a
     ld c, $4F
@@ -3856,21 +3856,21 @@ Func_01B_632C::
     pop de
     add hl, de
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $C5
     ld [hl], a
     ei
     inc hl
     inc hl
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $BE
     ld [hl], a
     ei
     inc hl
     inc hl
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, $C6
     ld [hl], a
     ei
@@ -4028,7 +4028,7 @@ Jump_01B_6413::
     ld [wD783], a
     call Func_01B_6453
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $FD
     ld [wD7F9], a
     ret
@@ -4036,7 +4036,7 @@ Jump_01B_6413::
 Jump_01B_6425::
     call Func_01B_645B
     ld a, $69
-    call Func_000_1278
+    call StoreWC60B
     ld a, $FF
     ld [wD7F9], a
     ret
@@ -4091,7 +4091,7 @@ Jump_01B_646A::
     add hl, de
     call Func_000_24F8
     di
-    call Func_000_120A
+    call WaitForVRAMAccess
     ld a, b
     ld [hl], a
     ei
@@ -4148,7 +4148,7 @@ Jump_01B_6613::
     ld b, $46
     ld de, Func_01B_4001
     ld hl, vTiles1
-    call Func_000_0CF5
+    call DecompressToVRAM
     farcall Func_0F1_4AA8
     ld hl, vTiles1
     ld a, l
@@ -4160,7 +4160,7 @@ Jump_01B_6613::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -4403,7 +4403,7 @@ Func_01B_67F0::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     call Func_01B_75B4
     ld a, [wD781]
     inc a
@@ -4589,7 +4589,7 @@ Jump_01B_6940::
     ld [wC529], a
     farcall Func_01B_481A
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_01B_7847
     ld hl, wC410
     ld bc, $0805
@@ -4803,7 +4803,7 @@ Jump_01B_6B0B::
     and a, a
     ret nz
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_01B_78CB
     ld hl, wC412
     ld bc, $0605
@@ -5047,7 +5047,7 @@ Jump_01B_6CC8::
     ld hl, wC986
     ld bc, $00A5
     xor a, a
-    call Func_000_0949
+    call FillBytes
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5059,7 +5059,7 @@ Jump_01B_6CC8::
 
 Jump_01B_6CEC::
     ld c, $A5
-    call Func_000_1682
+    call Multiply8
     ld de, sA000
     add hl, de
     ld a, $0A
@@ -5186,7 +5186,7 @@ Jump_01B_6DB3::
     ld [wC529], a
     farcall Func_01B_481A
     ld a, $6C
-    call Func_000_1278
+    call StoreWC60B
     ld de, Data_01B_78E9
     ld hl, wC3E7
     ld bc, $0907
@@ -5652,7 +5652,7 @@ Jump_01B_716C::
     ld [rRAMB], a
     ld a, [de]
     ld c, $01
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld c, l
     ld b, h
     pop de
@@ -5666,7 +5666,7 @@ Jump_01B_716C::
     push hl
     ld a, [de]
     ld c, $34
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld c, l
     ld b, h
     pop hl
@@ -5677,7 +5677,7 @@ Jump_01B_716C::
     push hl
     ld a, [de]
     ld c, $55
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld c, l
     ld b, h
     pop hl
@@ -5695,7 +5695,7 @@ Jump_01B_716C::
     push hl
     ld a, [de]
     ld c, $6F
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld c, l
     ld b, h
     pop hl
@@ -5706,7 +5706,7 @@ Jump_01B_716C::
     push hl
     ld a, [de]
     ld c, $A4
-    call Func_000_1FD1
+    call SRAMRecordAddress
     ld c, l
     ld b, h
     pop hl
@@ -5723,7 +5723,7 @@ Jump_01B_71DA::
     push de
     ld bc, $004E
     xor a, a
-    call Func_000_0949
+    call FillBytes
 
 Jump_01B_71E5::
     pop de
@@ -5764,7 +5764,7 @@ Func_01B_7205::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles1 + $700
     ld a, l
     ld [wC52D], a
@@ -5775,13 +5775,13 @@ Func_01B_7205::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles1 + $780
     ld a, l
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles1 + $240
     ld a, l
     ld [wC52D], a
@@ -5792,7 +5792,7 @@ Func_01B_7205::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld hl, vTiles1 + $4E0
     ld a, l
     ld [wC52D], a
@@ -5803,7 +5803,7 @@ Func_01B_7205::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    call Func_000_290E
+    call FillTilesFromRequest
     ld a, [wD7DC]
     push af
     xor a, a
@@ -5876,7 +5876,7 @@ Jump_01B_72D2::
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
@@ -5932,7 +5932,7 @@ Jump_01B_731A::
     ld [rRAMB], a
     ld a, [hl]
     ld c, $0D
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
     ldh a, [hFFC6]
@@ -6145,7 +6145,7 @@ Func_01B_7460::
     ld [rRAMB], a
     ld a, b
     ld c, $0D
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     ldh a, [hFFC6]
     and a, $0F
     ld [wD09D], a
@@ -6171,11 +6171,11 @@ Func_01B_7487::
     ld [rRAMB], a
     ld a, b
     ld c, $56
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     ldh a, [hFFC6]
     ld l, a
     ld h, $00
-    call Func_000_16F5
+    call HLToDecimalDigits
     farcall Func_01E_75B3
     ld a, [wC8C1]
     add a, $E0
@@ -6197,7 +6197,7 @@ Func_01B_7487::
     ld a, b
     ld c, $0E
     ld b, $01
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     ldh a, [hFFC6]
     and a, $01
     add a, $CC
@@ -6228,7 +6228,7 @@ Jump_01B_74FB::
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    call Func_000_290E
+    call FillTilesFromRequest
 
 Jump_01B_7509::
     ld hl, vTiles2 + $160
@@ -6236,7 +6236,7 @@ Jump_01B_7509::
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    call Func_000_290E
+    call FillTilesFromRequest
 
 Jump_01B_7517::
     ld hl, vTiles2 + $1C0
@@ -6244,7 +6244,7 @@ Jump_01B_7517::
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    call Func_000_290E
+    call FillTilesFromRequest
 
 Jump_01B_7525::
     ld hl, vTiles2 + $220
@@ -6252,7 +6252,7 @@ Jump_01B_7525::
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    call Func_000_290E
+    call FillTilesFromRequest
 
 Jump_01B_7533::
     call Func_01B_7449
@@ -6452,7 +6452,7 @@ Jump_01B_764B::
     ld [rRAMB], a
     ld a, [hl]
     ld c, $56
-    call Func_000_1F80
+    call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
     ld [rRAMG], a

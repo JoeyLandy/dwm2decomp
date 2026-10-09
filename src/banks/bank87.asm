@@ -89,7 +89,7 @@ Jump_087_4064::
 Jump_087_4071::
     ld a, [hl+]
     ld d, a
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_087_4096
 
 Jump_087_4078::
@@ -195,7 +195,7 @@ Jump_087_42DF::
     jp z, Jump_087_43FC
     dec a
     ld c, $10
-    call Func_000_1682
+    call Multiply8
     ld a, l
     add a, $7F
     ld l, a
@@ -536,7 +536,7 @@ Jump_087_44BD::
 Jump_087_44CA::
     ld a, [hl+]
     ld d, a
-    call Func_000_181B
+    call TestFlagBit
     jr c, Jump_087_44FC
 
 Jump_087_44D1::
