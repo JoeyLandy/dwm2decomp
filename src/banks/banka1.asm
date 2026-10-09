@@ -5,10 +5,8 @@ Func_0A1_4001:: ; heuristic: follows a terminator; C0
     ld hl, $D8FF
     jr Jump_0A1_402E
     db $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E, $21, $EF, $D8, $18, $19, $21
-    db $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9
-
-Data_0A1_4022:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
+    db $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53
+    db $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
 Jump_0A1_402E::
     add a, a
@@ -160,13 +158,13 @@ Jump_0A1_41C2::
     ret
 
 Jump_0A1_41C3::
-    ld hl, $43C4
+    ld hl, Func_030_43C4
     ld b, $30
     rst $10
     ret
 
 Jump_0A1_41CA::
-    ld hl, Func_0A1_4001
+    ld hl, Func_039_4001
     ld b, $39
     rst $10
     ld a, [$D8A4]
@@ -399,7 +397,7 @@ Jump_0A1_4305::
     ld hl, $CFCB
     ld bc, $0005
     call Func_000_0949
-    ld hl, $4187
+    ld hl, Func_0A3_4187
     ld b, $A3
     rst $10
     call Func_0A1_4356
@@ -516,7 +514,7 @@ Jump_0A1_43AC::
     ld [$D86A], a
     ld a, h
     ld [$D86B], a
-    ld hl, Data_0A1_4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop hl
@@ -1902,7 +1900,7 @@ Func_0A1_4BA1::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
 
@@ -2006,7 +2004,7 @@ Jump_0A1_4C42::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
 
@@ -2123,7 +2121,7 @@ Jump_0A1_4D32::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
 
@@ -2246,7 +2244,7 @@ Jump_0A1_4DC1::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
 
@@ -2353,7 +2351,7 @@ Jump_0A1_4E9F::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
 
@@ -2474,7 +2472,7 @@ Jump_0A1_4F48::
     ldh [$FFAA], a
     ldh [$FFAC], a
     push de
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     pop de
@@ -2503,7 +2501,7 @@ Func_0A1_4F8B::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
@@ -3219,7 +3217,7 @@ Func_0A1_542E::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
@@ -3504,7 +3502,7 @@ Func_0A1_5639::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
@@ -3632,7 +3630,7 @@ Func_0A1_56DC::
     xor a, a
     ldh [$FFAA], a
     ldh [$FFAC], a
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
@@ -3711,7 +3709,7 @@ Jump_0A1_5725::
     ldh [$FFAA], a
     ldh [$FFAC], a
     push de
-    ld hl, Data_0A1_700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     pop de
@@ -3847,7 +3845,7 @@ Func_0A1_5898::
     ld [$C5E0], a
     ld a, $40
     ld [$D067], a
-    ld hl, $4628
+    ld hl, Func_002_4628
     ld b, $02
     rst $10
     ld hl, $C5E9
@@ -3983,7 +3981,7 @@ Jump_0A1_595D::
     ldh [$FFC6], a
     ld a, $01
     ld [$C8C7], a
-    ld hl, Data_0A1_5EEE
+    ld hl, Func_002_5EEE
     ld b, $02
     rst $10
     ld a, $08
@@ -4025,7 +4023,7 @@ Jump_0A1_59AE::
     ldh [$FFC6], a
     ld a, $01
     ld [$C8C7], a
-    ld hl, Data_0A1_5EEE
+    ld hl, Func_002_5EEE
     ld b, $02
     rst $10
     ld a, $08
@@ -4281,8 +4279,6 @@ Data_0A1_5E00:: ; heuristic: target of a monotone pointer table; C0
     dw Data_0A1_7A00
     db $04, $44, $00
     dw Data_0A1_7B00
-
-Data_0A1_5EEE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $36, $44, $37
     dw Data_0A1_7C44
     db $59, $44, $00
@@ -4318,10 +4314,7 @@ Data_0A1_6600:: ; heuristic: target of a monotone pointer table; C0
     ds $100, $00
 
 Data_0A1_6700:: ; heuristic: target of a monotone pointer table; C0
-    ds $90A, $00
-
-Data_0A1_700A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $F6, $00
+    ds $A00, $00
 
 Data_0A1_7100:: ; heuristic: target of a monotone pointer table; C0
     ds $100, $00

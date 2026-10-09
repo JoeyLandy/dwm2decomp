@@ -1167,7 +1167,7 @@ Func_01A_624B::
     ld [$D006], a
     ld a, h
     ld [$D007], a
-    ld hl, Func_01A_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld hl, $D09D
@@ -1511,7 +1511,7 @@ Func_01A_6418::
     ld [$D006], a
     ld a, [hl]
     ld [$D007], a
-    ld hl, Func_01A_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     pop hl

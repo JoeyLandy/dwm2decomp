@@ -189,22 +189,22 @@ Jump_019_4199::
     ret
 
 Func_019_419B::
-    ld hl, Data_019_7239
+    ld hl, Func_031_7239
     ld b, $31
     rst $10
-    ld hl, Data_019_71F5
+    ld hl, Func_031_71F5
     ld b, $31
     rst $10
-    ld hl, Data_019_72AC
+    ld hl, Func_031_72AC
     ld b, $31
     rst $10
-    ld hl, Data_019_72CC
+    ld hl, Func_031_72CC
     ld b, $31
     rst $10
-    ld hl, $7389
+    ld hl, Func_031_7389
     ld b, $31
     rst $10
-    ld hl, Data_019_7321
+    ld hl, Func_031_7321
     ld b, $31
     rst $10
     ld hl, $9800
@@ -325,7 +325,7 @@ Jump_019_4276::
     ld a, [hl]
     ld [$D007], a
     push de
-    ld hl, Func_019_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     pop de
@@ -590,7 +590,7 @@ Jump_019_43AA::
     ld [$D86A], a
     ld a, d
     ld [$D86B], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     ld a, [$D86A]
@@ -1215,7 +1215,7 @@ Jump_019_471A::
     ld a, h
     ld [$CFE7], a
     push de
-    ld hl, Func_019_4001
+    ld hl, Func_034_4001
     ld b, $34
     rst $10
     pop de
@@ -1233,7 +1233,7 @@ Jump_019_471A::
     ld [$D007], a
     push bc
     push de
-    ld hl, Func_019_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     pop de
@@ -1281,7 +1281,7 @@ Jump_019_477B::
     ld [$D006], a
     ld a, h
     ld [$D007], a
-    ld hl, Func_019_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld a, [$D86A]
@@ -1323,7 +1323,7 @@ Jump_019_477B::
     push hl
     ld a, [$D014]
     ldh [$FFC6], a
-    ld hl, Data_019_63A7
+    ld hl, Func_01A_63A7
     ld b, $1A
     rst $10
     pop hl
@@ -1334,7 +1334,7 @@ Jump_019_477B::
     ld a, [$D015]
     ldh [$FFC6], a
     push hl
-    ld hl, Data_019_63A7
+    ld hl, Func_01A_63A7
     ld b, $1A
     rst $10
     pop hl
@@ -1347,7 +1347,7 @@ Jump_019_477B::
     ld a, [$D016]
     ldh [$FFC6], a
     push hl
-    ld hl, Data_019_63A7
+    ld hl, Func_01A_63A7
     ld b, $1A
     rst $10
     pop hl
@@ -1357,7 +1357,7 @@ Jump_019_477B::
     ld a, [$D017]
     ldh [$FFC6], a
     push hl
-    ld hl, Data_019_63A7
+    ld hl, Func_01A_63A7
     ld b, $1A
     rst $10
     pop hl
@@ -1367,7 +1367,7 @@ Jump_019_477B::
     ld a, [$D018]
     ldh [$FFC6], a
     push hl
-    ld hl, Data_019_63A7
+    ld hl, Func_01A_63A7
     ld b, $1A
     rst $10
     pop hl
@@ -1375,7 +1375,7 @@ Jump_019_477B::
     ld a, [$D019]
     ldh [$FFC6], a
     push hl
-    ld hl, Data_019_63A7
+    ld hl, Func_01A_63A7
     ld b, $1A
     rst $10
     pop hl
@@ -1407,7 +1407,7 @@ Jump_019_477B::
     ld [hl+], a
     call Func_019_496F
     call Func_019_49B1
-    ld hl, Data_019_5FA7
+    ld hl, Func_01A_5FA7
     ld b, $1A
     rst $10
     ld a, [$D86A]
@@ -2500,29 +2500,7 @@ Jump_019_4E5A::
     dec b
     jr nz, Jump_019_4E44
     ret
-    INCBIN "dwm2-cobi-us.gbc", $064E60, $1147
-
-Data_019_5FA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $065FA7, $400
-
-Data_019_63A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0663A7, $E4E
-
-Data_019_71F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0671F5, $44
-
-Data_019_7239:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $067239, $73
-
-Data_019_72AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $65, $0C, $9F, $64, $0D, $67, $67, $0E, $3A, $6E, $0F, $28, $79, $10, $42, $88
-    db $11, $98, $9B, $12, $3B, $B3, $13, $3D, $CF, $14, $AF, $EF, $15, $A3, $14, $17
-
-Data_019_72CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0672CC, $55
-
-Data_019_7321:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $067321, $5F
+    INCBIN "dwm2-cobi-us.gbc", $064E60, $2520
 
 Func_019_7380::
     ld bc, $0129
@@ -2557,7 +2535,7 @@ Func_019_73A2::
     ld [$D006], a
     ld a, h
     ld [$D007], a
-    ld hl, Func_019_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld a, [$D00F]
@@ -2596,7 +2574,7 @@ Func_019_73DF::
     ld [$D006], a
     ld a, h
     ld [$D007], a
-    ld hl, Func_019_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld a, [$D00F]

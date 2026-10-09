@@ -181,13 +181,7 @@ Jump_039_40D6::
 Jump_039_40E6::
     ld [hl], d
     ret
-    db $FA, $A4, $D8, $5F, $E6, $04, $4F, $06, $03, $16, $FF, $79, $CD, $54, $3E, $38
-    db $17, $79, $BB, $28, $13, $7A, $FE, $FF, $20, $03, $51, $18, $0B, $CD, $D4, $3E
-    db $FA, $E7, $C5, $CB, $7F, $28, $01, $51, $0C
-
-Data_039_4111:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $05, $20, $DF, $7A, $FE, $FF, $20, $04, $7B, $E6, $04, $57, $FA, $A4, $D8, $21
-    db $1D, $DA, $87, $85, $6F, $30, $01, $24, $72, $C9
+    INCBIN "dwm2-cobi-us.gbc", $0E40E8, $43
 
 Func_039_412B:: ; heuristic: target of a pointer table; C0
     ld a, [$D8A4]
@@ -3298,7 +3292,7 @@ Func_039_5F0E:: ; heuristic: target of a pointer table; C0
 Jump_039_5F3A::
     ld a, e
     ld [$D868], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     ld a, [$D8A4]
@@ -5764,13 +5758,13 @@ Func_039_6E27::
     jr z, Jump_039_6E4F
 
 Jump_039_6E3F::
-    ld hl, Data_039_7DC9
+    ld hl, Func_036_7DC9
     ld b, $36
     rst $10
     jr Jump_039_6E5F
 
 Jump_039_6E47::
-    ld hl, $408F
+    ld hl, Func_01A_408F
     ld b, $1A
     rst $10
     jr Jump_039_6E5F
@@ -5943,7 +5937,7 @@ Jump_039_6F2D::
     ret
 
 Func_039_6F32::
-    ld hl, $40CD
+    ld hl, Func_03B_40CD
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -5975,7 +5969,7 @@ Jump_039_6F65::
     ret
 
 Func_039_6F66:: ; heuristic: follows a terminator; C0
-    ld hl, Data_039_4111
+    ld hl, Func_03B_4111
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -6233,7 +6227,7 @@ Jump_039_70BC::
     ld [$D007], a
     push de
     push bc
-    ld hl, $400A
+    ld hl, Func_035_400A
     ld b, $35
     rst $10
     pop bc
@@ -6300,7 +6294,7 @@ Jump_039_7122::
     ld a, [hl]
     ld [$D007], a
     push de
-    ld hl, $400A
+    ld hl, Func_035_400A
     ld b, $35
     rst $10
     pop de
@@ -6536,7 +6530,4 @@ Jump_039_7253::
     cp a, $04
     ret
     INCBIN "dwm2-cobi-us.gbc", $0E7259, $CA
-    ds $AA6, $00
-
-Data_039_7DC9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $237, $00
+    ds $CDD, $00

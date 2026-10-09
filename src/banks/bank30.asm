@@ -224,7 +224,7 @@ Jump_030_4143::
     jp nz, Jump_030_4151
 
 Jump_030_4149::
-    ld hl, Func_030_4001
+    ld hl, Func_039_4001
     ld b, $39
     rst $10
     jr Jump_030_4152
@@ -389,7 +389,7 @@ Jump_030_420E::
     ld [$D86A], a
     ld a, h
     ld [$D86B], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop hl
@@ -596,7 +596,7 @@ Jump_030_434C::
     ld hl, $CFCB
     ld bc, $0005
     call Func_000_0949
-    ld hl, $4187
+    ld hl, Func_0A3_4187
     ld b, $A3
     rst $10
     call Func_030_439D
@@ -806,7 +806,7 @@ Jump_030_44C1::
     cp a, $03
     jr z, Jump_030_44DF
     ld d, $28
-    ld hl, Data_030_6EE5
+    ld hl, Func_03A_6EE5
     ld b, $3A
     rst $10
 
@@ -2009,7 +2009,7 @@ Jump_030_4CC9::
     ld [$CFEC], a
     xor a, a
     ld [$CFED], a
-    ld hl, Func_030_4001
+    ld hl, Func_01A_4001
     ld b, $1A
     rst $10
     pop af
@@ -2423,7 +2423,7 @@ Jump_030_50E3::
     ld [$D86A], a
     ld a, h
     ld [$D86B], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     ld a, [$CFF1]
@@ -2487,7 +2487,7 @@ Jump_030_513F::
     ld [$D86A], a
     ld a, h
     ld [$D86B], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop de
@@ -2621,7 +2621,7 @@ Func_030_5209::
     ld [$D86A], a
     ld a, h
     ld [$D86B], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     ld a, [$CFEE]
@@ -2649,7 +2649,7 @@ Jump_030_523A::
     ld [$D86A], a
     ld a, h
     ld [$D86B], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     ld a, [$CFEE]
@@ -3662,7 +3662,4 @@ Data_030_64C0:: ; heuristic: target of a monotone pointer table; C0
     db $00
 
 Data_030_64C1:: ; heuristic: target of a monotone pointer table; C0
-    ds $A24, $00
-
-Data_030_6EE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $111B, $00
+    ds $1B3F, $00

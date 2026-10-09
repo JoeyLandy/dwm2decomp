@@ -2,13 +2,13 @@ SECTION "Bank E2", ROMX[$4000], BANK[$E2]
     db $E2
 
 Func_0E2_4001:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7080
+    ld hl, Func_005_7080
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $443B
+    ld hl, Func_005_443B
     ld b, $05
     rst $10
     ld a, c
@@ -18,7 +18,7 @@ Func_0E2_4001:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_401A::
-    ld hl, $4B3D
+    ld hl, Func_005_4B3D
     ld b, $05
     rst $10
     ld a, c
@@ -28,7 +28,7 @@ Jump_0E2_401A::
     call Func_0E2_64CE
 
 Jump_0E2_402A::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -38,7 +38,7 @@ Jump_0E2_402A::
     call Func_0E2_64CE
 
 Jump_0E2_403A::
-    ld hl, Jump_0E2_4CE5
+    ld hl, Func_005_4CE5
     ld b, $05
     rst $10
     ld a, c
@@ -50,7 +50,7 @@ Jump_0E2_403A::
     call Func_0E2_64F5
 
 Jump_0E2_404E::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -60,7 +60,7 @@ Jump_0E2_404E::
     call Func_0E2_64CE
 
 Jump_0E2_405E::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -70,7 +70,7 @@ Jump_0E2_405E::
     call Func_0E2_64CE
 
 Jump_0E2_406E::
-    ld hl, $6481
+    ld hl, Func_005_6481
     ld b, $05
     rst $10
     ld a, c
@@ -80,7 +80,7 @@ Jump_0E2_406E::
     call Func_0E2_64CE
 
 Jump_0E2_407E::
-    ld hl, $6494
+    ld hl, Func_005_6494
     ld b, $05
     rst $10
     ld a, c
@@ -90,7 +90,7 @@ Jump_0E2_407E::
     call Func_0E2_64CE
 
 Jump_0E2_408E::
-    ld hl, Data_0E2_64CC
+    ld hl, Func_005_64CC
     ld b, $05
     rst $10
     ld a, c
@@ -100,7 +100,7 @@ Jump_0E2_408E::
     call Func_0E2_64CE
 
 Jump_0E2_409E::
-    ld hl, Data_0E2_6972
+    ld hl, Func_005_6972
     ld b, $05
     rst $10
     ld a, c
@@ -110,7 +110,7 @@ Jump_0E2_409E::
     call Func_0E2_64CE
 
 Jump_0E2_40AE::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -123,13 +123,13 @@ Jump_0E2_40BE::
     ret
 
 Func_0E2_40BF:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_708C
+    ld hl, Func_005_708C
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -139,7 +139,7 @@ Func_0E2_40BF:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_40D8::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -149,7 +149,7 @@ Jump_0E2_40D8::
     call Func_0E2_64CE
 
 Jump_0E2_40E8::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -159,7 +159,7 @@ Jump_0E2_40E8::
     call Func_0E2_64CE
 
 Jump_0E2_40F8::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -170,7 +170,7 @@ Jump_0E2_40F8::
 
 Jump_0E2_4108::
     call Func_0E2_6822
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -183,13 +183,13 @@ Jump_0E2_411B::
     ret
 
 Func_0E2_411C:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_708C
+    ld hl, Func_005_708C
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4676
+    ld hl, Func_005_4676
     ld b, $05
     rst $10
     ld a, c
@@ -201,7 +201,7 @@ Func_0E2_411C:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4139::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -211,7 +211,7 @@ Jump_0E2_4139::
     call Func_0E2_64F5
 
 Jump_0E2_4149::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -221,7 +221,7 @@ Jump_0E2_4149::
     call Func_0E2_64CE
 
 Jump_0E2_4159::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -231,7 +231,7 @@ Jump_0E2_4159::
     call Func_0E2_64CE
 
 Jump_0E2_4169::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -242,7 +242,7 @@ Jump_0E2_4169::
 
 Jump_0E2_4179::
     call Func_0E2_6822
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -252,7 +252,7 @@ Jump_0E2_4179::
     call Func_0E2_64CE
 
 Jump_0E2_418C::
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -262,7 +262,7 @@ Jump_0E2_418C::
     call Func_0E2_64CE
 
 Jump_0E2_419C::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -274,7 +274,7 @@ Jump_0E2_419C::
     call Func_0E2_64F5
 
 Jump_0E2_41B0::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -293,7 +293,7 @@ Func_0E2_41C5:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    ld hl, $6153
+    ld hl, Func_005_6153
     ld b, $05
     rst $10
     ld a, c
@@ -308,13 +308,13 @@ Jump_0E2_41DF::
     ret
 
 Func_0E2_41E0::
-    ld hl, Data_0E2_70C9
+    ld hl, Func_005_70C9
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4676
+    ld hl, Func_005_4676
     ld b, $05
     rst $10
     ld a, c
@@ -326,7 +326,7 @@ Func_0E2_41E0::
     call Func_0E2_64F5
 
 Jump_0E2_41FD::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -339,7 +339,7 @@ Jump_0E2_41FD::
 
 Jump_0E2_4213::
     call Func_0E2_6822
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -349,7 +349,7 @@ Jump_0E2_4213::
     call Func_0E2_64CE
 
 Jump_0E2_4226::
-    ld hl, $6153
+    ld hl, Func_005_6153
     ld b, $05
     rst $10
     ld a, c
@@ -361,7 +361,7 @@ Jump_0E2_4226::
     call Func_0E2_64CE
 
 Jump_0E2_423A::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -373,7 +373,7 @@ Jump_0E2_423A::
     call Func_0E2_64F5
 
 Jump_0E2_424E::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -385,7 +385,7 @@ Jump_0E2_424E::
     call Func_0E2_64CE
 
 Jump_0E2_4262::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -401,13 +401,13 @@ Jump_0E2_4276::
     ret
 
 Func_0E2_4279:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7109
+    ld hl, Func_005_7109
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4707
+    ld hl, Func_005_4707
     ld b, $05
     rst $10
     ld a, c
@@ -417,7 +417,7 @@ Func_0E2_4279:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4292::
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -427,7 +427,7 @@ Jump_0E2_4292::
     call Func_0E2_64F5
 
 Jump_0E2_42A2::
-    ld hl, $4B3D
+    ld hl, Func_005_4B3D
     ld b, $05
     rst $10
     ld a, c
@@ -437,7 +437,7 @@ Jump_0E2_42A2::
     call Func_0E2_64F5
 
 Jump_0E2_42B2::
-    ld hl, $4BE1
+    ld hl, Func_005_4BE1
     ld b, $05
     rst $10
     ld a, c
@@ -447,7 +447,7 @@ Jump_0E2_42B2::
     call Func_0E2_64F5
 
 Jump_0E2_42C2::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -457,7 +457,7 @@ Jump_0E2_42C2::
     call Func_0E2_64F5
 
 Jump_0E2_42D2::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -470,7 +470,7 @@ Jump_0E2_42D2::
 
 Jump_0E2_42E8::
     call Func_0E2_6843
-    ld hl, $5803
+    ld hl, Func_005_5803
     ld b, $05
     rst $10
     ld a, c
@@ -480,7 +480,7 @@ Jump_0E2_42E8::
     call Func_0E2_64CE
 
 Jump_0E2_42FB::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -495,13 +495,13 @@ Jump_0E2_430F::
     ret
 
 Func_0E2_4310:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_715F
+    ld hl, Func_005_715F
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $6556
+    ld hl, Func_005_6556
     ld b, $05
     rst $10
     ld a, c
@@ -513,7 +513,7 @@ Func_0E2_4310:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Func_0E2_432D::
-    ld hl, $44CF
+    ld hl, Func_005_44CF
     ld b, $05
     rst $10
     ld a, c
@@ -523,7 +523,7 @@ Func_0E2_432D::
     call Func_0E2_64CE
 
 Jump_0E2_433D::
-    ld hl, $4664
+    ld hl, Func_005_4664
     ld b, $05
     rst $10
     ld a, c
@@ -533,7 +533,7 @@ Jump_0E2_433D::
     call Func_0E2_64CE
 
 Jump_0E2_434D::
-    ld hl, $4BE1
+    ld hl, Func_005_4BE1
     ld b, $05
     rst $10
     ld a, c
@@ -545,7 +545,7 @@ Jump_0E2_434D::
 Jump_0E2_435D::
     ld a, [$D8A4]
     call Func_0E2_667F
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -555,7 +555,7 @@ Jump_0E2_435D::
     call Func_0E2_64CE
 
 Jump_0E2_4373::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -571,14 +571,14 @@ Jump_0E2_4389::
     ret
 
 Func_0E2_438D:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_715F
+    ld hl, Func_005_715F
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
     call Func_0E2_432D
-    ld hl, $53A5
+    ld hl, Func_005_53A5
     ld b, $05
     rst $10
     ld a, c
@@ -588,7 +588,7 @@ Func_0E2_438D:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_43A9::
-    ld hl, $6556
+    ld hl, Func_005_6556
     ld b, $05
     rst $10
     ld a, c
@@ -603,7 +603,7 @@ Jump_0E2_43BD::
     ret
 
 Func_0E2_43BE:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7187
+    ld hl, Func_005_7187
     ld b, $05
     rst $10
     ld a, c
@@ -612,14 +612,14 @@ Func_0E2_43BE:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_43C8:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_71AC
+    ld hl, Func_005_71AC
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
     call Func_0E2_67D5
-    ld hl, Func_0E2_667F
+    ld hl, Func_005_667F
     ld b, $05
     rst $10
     ld a, c
@@ -634,14 +634,14 @@ Jump_0E2_43E8::
     ret
 
 Func_0E2_43E9:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_71BE
+    ld hl, Func_005_71BE
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
     call Func_0E2_67D5
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -653,7 +653,7 @@ Func_0E2_43E9:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_440B::
-    ld hl, Func_0E2_667F
+    ld hl, Func_005_667F
     ld b, $05
     rst $10
     ld a, c
@@ -668,7 +668,7 @@ Jump_0E2_441F::
     ret
 
 Func_0E2_4420:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_71DE
+    ld hl, Func_005_71DE
     ld b, $05
     rst $10
     ld a, c
@@ -680,7 +680,7 @@ Func_0E2_4420:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_4433:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_71F4
+    ld hl, Func_005_71F4
     ld b, $05
     rst $10
     ld a, c
@@ -692,7 +692,7 @@ Func_0E2_4433:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_4446:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_720A
+    ld hl, Func_005_720A
     ld b, $05
     rst $10
     ld a, c
@@ -704,7 +704,7 @@ Func_0E2_4446:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_4459:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7220
+    ld hl, Func_005_7220
     ld b, $05
     rst $10
     ld a, c
@@ -716,13 +716,13 @@ Func_0E2_4459:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_446C:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7236
+    ld hl, Func_005_7236
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -734,7 +734,7 @@ Func_0E2_446C:: ; heuristic: follows a terminator; C0
 Jump_0E2_4485::
     call Func_0E2_6854
     call Func_0E2_6773
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -747,13 +747,13 @@ Jump_0E2_449B::
     ret
 
 Func_0E2_449C:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_724F
+    ld hl, Func_005_724F
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -763,7 +763,7 @@ Func_0E2_449C:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_44B5::
-    ld hl, $50E3
+    ld hl, Func_005_50E3
     ld b, $05
     rst $10
     ld a, c
@@ -775,7 +775,7 @@ Jump_0E2_44B5::
     call Func_0E2_64CE
 
 Jump_0E2_44C9::
-    ld hl, $517D
+    ld hl, Func_005_517D
     ld b, $05
     rst $10
     ld a, c
@@ -787,7 +787,7 @@ Jump_0E2_44C9::
     call Func_0E2_64CE
 
 Jump_0E2_44DD::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -800,7 +800,7 @@ Jump_0E2_44DD::
 
 Jump_0E2_44F3::
     call Func_0E2_6854
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -813,7 +813,7 @@ Jump_0E2_44F3::
 
 Jump_0E2_450A::
     call Func_0E2_678C
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -825,7 +825,7 @@ Jump_0E2_450A::
     call Func_0E2_64CE
 
 Jump_0E2_4521::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -840,13 +840,13 @@ Jump_0E2_4535::
     ret
 
 Func_0E2_4536:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_727A
+    ld hl, Func_005_727A
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4B97
+    ld hl, Func_005_4B97
     ld b, $05
     rst $10
     ld a, c
@@ -856,7 +856,7 @@ Func_0E2_4536:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_454F::
-    ld hl, $50B7
+    ld hl, Func_005_50B7
     ld b, $05
     rst $10
     ld a, c
@@ -872,13 +872,13 @@ Jump_0E2_4563::
     ret
 
 Func_0E2_4567:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7293
+    ld hl, Func_005_7293
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4676
+    ld hl, Func_005_4676
     ld b, $05
     rst $10
     ld a, c
@@ -890,7 +890,7 @@ Func_0E2_4567:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4584::
-    ld hl, $4B97
+    ld hl, Func_005_4B97
     ld b, $05
     rst $10
     ld a, c
@@ -900,7 +900,7 @@ Jump_0E2_4584::
     call Func_0E2_64F5
 
 Jump_0E2_4594::
-    ld hl, $50B7
+    ld hl, Func_005_50B7
     ld b, $05
     rst $10
     ld a, c
@@ -912,7 +912,7 @@ Jump_0E2_4594::
     call Func_0E2_64CE
 
 Jump_0E2_45A8::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -925,7 +925,7 @@ Jump_0E2_45A8::
 
 Jump_0E2_45BE::
     call Func_0E2_6854
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -937,7 +937,7 @@ Jump_0E2_45BE::
     call Func_0E2_64F5
 
 Jump_0E2_45D5::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -949,7 +949,7 @@ Jump_0E2_45D5::
     call Func_0E2_64CE
 
 Jump_0E2_45E9::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -968,7 +968,7 @@ Func_0E2_45FE:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    ld hl, $5F3D
+    ld hl, Func_005_5F3D
     ld b, $05
     rst $10
     ld a, c
@@ -983,13 +983,13 @@ Jump_0E2_4618::
     ret
 
 Func_0E2_4619::
-    ld hl, Data_0E2_72AC
+    ld hl, Func_005_72AC
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $51EA
+    ld hl, Func_005_51EA
     ld b, $05
     rst $10
     ld a, c
@@ -1001,7 +1001,7 @@ Func_0E2_4619::
     call Func_0E2_64CE
 
 Jump_0E2_4636::
-    ld hl, $5228
+    ld hl, Func_005_5228
     ld b, $05
     rst $10
     ld a, c
@@ -1013,7 +1013,7 @@ Jump_0E2_4636::
     call Func_0E2_64CE
 
 Jump_0E2_464A::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1024,7 +1024,7 @@ Jump_0E2_464A::
 
 Jump_0E2_465A::
     call Func_0E2_6854
-    ld hl, $5F3D
+    ld hl, Func_005_5F3D
     ld b, $05
     rst $10
     ld a, c
@@ -1040,13 +1040,13 @@ Jump_0E2_4671::
     ret
 
 Func_0E2_4674:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_72BE
+    ld hl, Func_005_72BE
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4676
+    ld hl, Func_005_4676
     ld b, $05
     rst $10
     ld a, c
@@ -1058,7 +1058,7 @@ Func_0E2_4674:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4691::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -1068,7 +1068,7 @@ Jump_0E2_4691::
     call Func_0E2_64F5
 
 Jump_0E2_46A1::
-    ld hl, $5275
+    ld hl, Func_005_5275
     ld b, $05
     rst $10
     ld a, c
@@ -1080,7 +1080,7 @@ Jump_0E2_46A1::
     call Func_0E2_64CE
 
 Jump_0E2_46B5::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1095,7 +1095,7 @@ Jump_0E2_46B5::
 
 Jump_0E2_46D1::
     call Func_0E2_6854
-    ld hl, $585D
+    ld hl, Func_005_585D
     ld b, $05
     rst $10
     ld a, c
@@ -1105,7 +1105,7 @@ Jump_0E2_46D1::
     call Func_0E2_64CE
 
 Jump_0E2_46E4::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -1117,7 +1117,7 @@ Jump_0E2_46E4::
     call Func_0E2_64F5
 
 Jump_0E2_46F8::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -1129,7 +1129,7 @@ Jump_0E2_46F8::
     call Func_0E2_64CE
 
 Jump_0E2_470C::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -1144,13 +1144,13 @@ Jump_0E2_4720::
     ret
 
 Func_0E2_4721:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_72DE
+    ld hl, Func_005_72DE
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4676
+    ld hl, Func_005_4676
     ld b, $05
     rst $10
     ld a, c
@@ -1162,7 +1162,7 @@ Func_0E2_4721:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_473E::
-    ld hl, $50B7
+    ld hl, Func_005_50B7
     ld b, $05
     rst $10
     ld a, c
@@ -1174,7 +1174,7 @@ Jump_0E2_473E::
     call Func_0E2_64CE
 
 Jump_0E2_4752::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1185,7 +1185,7 @@ Jump_0E2_4752::
 
 Jump_0E2_4762::
     call Func_0E2_6854
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -1197,7 +1197,7 @@ Jump_0E2_4762::
     call Func_0E2_64CE
 
 Jump_0E2_4779::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -1212,13 +1212,13 @@ Jump_0E2_478D::
     ret
 
 Func_0E2_478E:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_72F7
+    ld hl, Func_005_72F7
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $558B
+    ld hl, Func_005_558B
     ld b, $05
     rst $10
     ld a, c
@@ -1232,7 +1232,7 @@ Jump_0E2_47A7::
     ret
 
 Func_0E2_47AB:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7322
+    ld hl, Func_005_7322
     ld b, $05
     rst $10
     ld a, c
@@ -1240,7 +1240,7 @@ Func_0E2_47AB:: ; heuristic: follows a terminator; C0
     ret z
     ld bc, $0035
     call Func_0E2_64CE
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -1254,13 +1254,13 @@ Jump_0E2_47CA::
     ret
 
 Func_0E2_47CE:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7345
+    ld hl, Func_005_7345
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4676
+    ld hl, Func_005_4676
     ld b, $05
     rst $10
     ld a, c
@@ -1273,7 +1273,7 @@ Func_0E2_47CE:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_47EB::
     call Func_0E2_6854
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1285,7 +1285,7 @@ Jump_0E2_47EB::
     call Func_0E2_64F5
 
 Jump_0E2_4804::
-    ld hl, $57A1
+    ld hl, Func_005_57A1
     ld b, $05
     rst $10
     ld a, c
@@ -1297,7 +1297,7 @@ Jump_0E2_4804::
     call Func_0E2_64CE
 
 Jump_0E2_4818::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -1309,7 +1309,7 @@ Jump_0E2_4818::
     call Func_0E2_64F5
 
 Jump_0E2_482C::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -1321,7 +1321,7 @@ Jump_0E2_482C::
     call Func_0E2_64CE
 
 Jump_0E2_4840::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -1336,13 +1336,13 @@ Jump_0E2_4854::
     ret
 
 Func_0E2_4855:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7370
+    ld hl, Func_005_7370
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1353,7 +1353,7 @@ Func_0E2_4855:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_486E::
     call Func_0E2_6854
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -1365,7 +1365,7 @@ Jump_0E2_486E::
     call Func_0E2_64F5
 
 Jump_0E2_4885::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -1377,7 +1377,7 @@ Jump_0E2_4885::
     call Func_0E2_64CE
 
 Jump_0E2_4899::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -1392,7 +1392,7 @@ Jump_0E2_48AD::
     ret
 
 Func_0E2_48AE:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7397
+    ld hl, Func_005_7397
     ld b, $05
     rst $10
     ld a, c
@@ -1400,7 +1400,7 @@ Func_0E2_48AE:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1414,13 +1414,13 @@ Jump_0E2_48CB::
     ret
 
 Func_0E2_48CF:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_73D7
+    ld hl, Func_005_73D7
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1430,7 +1430,7 @@ Func_0E2_48CF:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_48E8::
-    ld hl, $57A1
+    ld hl, Func_005_57A1
     ld b, $05
     rst $10
     ld a, c
@@ -1445,13 +1445,13 @@ Jump_0E2_48FC::
     ret
 
 Func_0E2_48FD:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7410
+    ld hl, Func_005_7410
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $53FA
+    ld hl, Func_005_53FA
     ld b, $05
     rst $10
     ld a, c
@@ -1467,14 +1467,14 @@ Jump_0E2_491A::
     ret
 
 Func_0E2_491E:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7449
+    ld hl, Func_005_7449
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
     call Func_0E2_6854
-    ld hl, $57A1
+    ld hl, Func_005_57A1
     ld b, $05
     rst $10
     ld a, c
@@ -1489,13 +1489,13 @@ Jump_0E2_493E::
     ret
 
 Func_0E2_493F:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7482
+    ld hl, Func_005_7482
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $517D
+    ld hl, Func_005_517D
     ld b, $05
     rst $10
     ld a, c
@@ -1507,7 +1507,7 @@ Func_0E2_493F:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_495C::
-    ld hl, $544F
+    ld hl, Func_005_544F
     ld b, $05
     rst $10
     ld a, c
@@ -1519,7 +1519,7 @@ Jump_0E2_495C::
     call Func_0E2_64CE
 
 Jump_0E2_4970::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1533,13 +1533,13 @@ Jump_0E2_4980::
     ret
 
 Func_0E2_4984:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7482
+    ld hl, Func_005_7482
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $53FA
+    ld hl, Func_005_53FA
     ld b, $05
     rst $10
     ld a, c
@@ -1552,7 +1552,7 @@ Func_0E2_4984:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_49A1::
     call Func_0E2_6854
-    ld hl, $5BBC
+    ld hl, Func_005_5BBC
     ld b, $05
     rst $10
     ld a, c
@@ -1565,13 +1565,13 @@ Jump_0E2_49B4::
     ret
 
 Func_0E2_49B5:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7494
+    ld hl, Func_005_7494
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -1581,7 +1581,7 @@ Func_0E2_49B5:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_49CE::
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -1591,7 +1591,7 @@ Jump_0E2_49CE::
     call Func_0E2_64CE
 
 Jump_0E2_49DE::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1604,7 +1604,7 @@ Jump_0E2_49DE::
 
 Jump_0E2_49F4::
     call Func_0E2_6854
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -1617,13 +1617,13 @@ Jump_0E2_4A07::
     ret
 
 Func_0E2_4A08:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_74B5
+    ld hl, Func_005_74B5
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -1633,7 +1633,7 @@ Func_0E2_4A08:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_4A21::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -1643,7 +1643,7 @@ Jump_0E2_4A21::
     call Func_0E2_64F5
 
 Jump_0E2_4A31::
-    ld hl, $4D1A
+    ld hl, Func_005_4D1A
     ld b, $05
     rst $10
     ld a, c
@@ -1653,7 +1653,7 @@ Jump_0E2_4A31::
     call Func_0E2_64F5
 
 Jump_0E2_4A41::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -1663,7 +1663,7 @@ Jump_0E2_4A41::
     call Func_0E2_64CE
 
 Jump_0E2_4A51::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1673,7 +1673,7 @@ Jump_0E2_4A51::
     call Func_0E2_64CE
 
 Jump_0E2_4A61::
-    ld hl, $56FC
+    ld hl, Func_005_56FC
     ld b, $05
     rst $10
     ld a, c
@@ -1683,7 +1683,7 @@ Jump_0E2_4A61::
     call Func_0E2_64F5
 
 Jump_0E2_4A71::
-    ld hl, $5731
+    ld hl, Func_005_5731
     ld b, $05
     rst $10
     ld a, c
@@ -1693,7 +1693,7 @@ Jump_0E2_4A71::
     call Func_0E2_64CE
 
 Jump_0E2_4A81::
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -1703,7 +1703,7 @@ Jump_0E2_4A81::
     call Func_0E2_64CE
 
 Jump_0E2_4A91::
-    ld hl, $5CE1
+    ld hl, Func_005_5CE1
     ld b, $05
     rst $10
     ld a, c
@@ -1713,7 +1713,7 @@ Jump_0E2_4A91::
     call Func_0E2_64CE
 
 Jump_0E2_4AA1::
-    ld hl, $6392
+    ld hl, Func_005_6392
     ld b, $05
     rst $10
     ld a, c
@@ -1728,13 +1728,13 @@ Jump_0E2_4AB5::
     ret
 
 Func_0E2_4AB6:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_74D1
+    ld hl, Func_005_74D1
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4707
+    ld hl, Func_005_4707
     ld b, $05
     rst $10
     ld a, c
@@ -1744,7 +1744,7 @@ Func_0E2_4AB6:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_4ACF::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -1754,7 +1754,7 @@ Jump_0E2_4ACF::
     call Func_0E2_64F5
 
 Jump_0E2_4ADF::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -1764,7 +1764,7 @@ Jump_0E2_4ADF::
     call Func_0E2_64CE
 
 Jump_0E2_4AEF::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -1775,7 +1775,7 @@ Jump_0E2_4AEF::
 
 Jump_0E2_4AFF::
     call Func_0E2_6898
-    ld hl, $5731
+    ld hl, Func_005_5731
     ld b, $05
     rst $10
     ld a, c
@@ -1785,7 +1785,7 @@ Jump_0E2_4AFF::
     call Func_0E2_64CE
 
 Jump_0E2_4B12::
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -1795,7 +1795,7 @@ Jump_0E2_4B12::
     call Func_0E2_64CE
 
 Jump_0E2_4B22::
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -1805,7 +1805,7 @@ Jump_0E2_4B22::
     call Func_0E2_64CE
 
 Jump_0E2_4B32::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -1817,7 +1817,7 @@ Jump_0E2_4B32::
     call Func_0E2_64F5
 
 Jump_0E2_4B46::
-    ld hl, Func_0E2_5CCE
+    ld hl, Func_005_5CCE
     ld b, $05
     rst $10
     ld a, c
@@ -1827,7 +1827,7 @@ Jump_0E2_4B46::
     call Func_0E2_64CE
 
 Jump_0E2_4B56::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -1842,13 +1842,13 @@ Jump_0E2_4B6A::
     ret
 
 Func_0E2_4B6B:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_74F9
+    ld hl, Func_005_74F9
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $46B4
+    ld hl, Func_005_46B4
     ld b, $05
     rst $10
     ld a, c
@@ -1858,7 +1858,7 @@ Func_0E2_4B6B:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4B84::
-    ld hl, $4B3D
+    ld hl, Func_005_4B3D
     ld b, $05
     rst $10
     ld a, c
@@ -1868,7 +1868,7 @@ Jump_0E2_4B84::
     call Func_0E2_64F5
 
 Jump_0E2_4B94::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -1878,7 +1878,7 @@ Jump_0E2_4B94::
     call Func_0E2_64F5
 
 Jump_0E2_4BA4::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -1888,7 +1888,7 @@ Jump_0E2_4BA4::
     call Func_0E2_64CE
 
 Jump_0E2_4BB4::
-    ld hl, $53E6
+    ld hl, Func_005_53E6
     ld b, $05
     rst $10
     ld a, c
@@ -1898,7 +1898,7 @@ Jump_0E2_4BB4::
     call Func_0E2_64CE
 
 Jump_0E2_4BC4::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -1908,7 +1908,7 @@ Jump_0E2_4BC4::
     call Func_0E2_64CE
 
 Jump_0E2_4BD4::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -1919,7 +1919,7 @@ Jump_0E2_4BD4::
 
 Jump_0E2_4BE4::
     call Func_0E2_6876
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -1929,7 +1929,7 @@ Jump_0E2_4BE4::
     call Func_0E2_64CE
 
 Jump_0E2_4BF7::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -1941,7 +1941,7 @@ Jump_0E2_4BF7::
     call Func_0E2_64F5
 
 Jump_0E2_4C0B::
-    ld hl, $5D31
+    ld hl, Func_005_5D31
     ld b, $05
     rst $10
     ld a, c
@@ -1951,7 +1951,7 @@ Jump_0E2_4C0B::
     call Func_0E2_64F5
 
 Jump_0E2_4C1B::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -1966,13 +1966,13 @@ Jump_0E2_4C2F::
     ret
 
 Func_0E2_4C30:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_74D1
+    ld hl, Func_005_74D1
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -1982,7 +1982,7 @@ Func_0E2_4C30:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Func_0E2_4C49::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -1992,7 +1992,7 @@ Func_0E2_4C49::
     call Func_0E2_64F5
 
 Jump_0E2_4C59::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -2002,7 +2002,7 @@ Jump_0E2_4C59::
     call Func_0E2_64F5
 
 Jump_0E2_4C69::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -2012,7 +2012,7 @@ Jump_0E2_4C69::
     call Func_0E2_64CE
 
 Jump_0E2_4C79::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -2023,7 +2023,7 @@ Jump_0E2_4C79::
 
 Jump_0E2_4C89::
     call Func_0E2_6898
-    ld hl, $5D44
+    ld hl, Func_005_5D44
     ld b, $05
     rst $10
     ld a, c
@@ -2038,14 +2038,14 @@ Jump_0E2_4CA0::
     ret
 
 Func_0E2_4CA1:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_74D1
+    ld hl, Func_005_74D1
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
     call Func_0E2_4C49
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -2055,7 +2055,7 @@ Func_0E2_4CA1:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_4CBD::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -2067,7 +2067,7 @@ Jump_0E2_4CBD::
     call Func_0E2_64F5
 
 Jump_0E2_4CD1::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -2082,13 +2082,13 @@ Jump_0E2_4CE5::
     ret
 
 Func_0E2_4CE6:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7512
+    ld hl, Func_005_7512
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2098,7 +2098,7 @@ Func_0E2_4CE6:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4CFF::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -2108,7 +2108,7 @@ Jump_0E2_4CFF::
     call Func_0E2_64F5
 
 Jump_0E2_4D0F::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -2118,7 +2118,7 @@ Jump_0E2_4D0F::
     call Func_0E2_64CE
 
 Jump_0E2_4D1F::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -2129,7 +2129,7 @@ Jump_0E2_4D1F::
 
 Jump_0E2_4D2F::
     call Func_0E2_6898
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -2139,7 +2139,7 @@ Jump_0E2_4D2F::
     call Func_0E2_64CE
 
 Jump_0E2_4D42::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -2151,7 +2151,7 @@ Jump_0E2_4D42::
     call Func_0E2_64F5
 
 Jump_0E2_4D56::
-    ld hl, Data_0E2_64CC
+    ld hl, Func_005_64CC
     ld b, $05
     rst $10
     ld a, c
@@ -2161,7 +2161,7 @@ Jump_0E2_4D56::
     call Func_0E2_64F5
 
 Jump_0E2_4D66::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -2176,13 +2176,13 @@ Jump_0E2_4D7A::
     ret
 
 Func_0E2_4D7B:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7512
+    ld hl, Func_005_7512
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2192,7 +2192,7 @@ Func_0E2_4D7B:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4D94::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -2202,7 +2202,7 @@ Jump_0E2_4D94::
     call Func_0E2_64F5
 
 Jump_0E2_4DA4::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -2212,7 +2212,7 @@ Jump_0E2_4DA4::
     call Func_0E2_64CE
 
 Jump_0E2_4DB4::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -2223,7 +2223,7 @@ Jump_0E2_4DB4::
 
 Jump_0E2_4DC4::
     call Func_0E2_6898
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -2233,7 +2233,7 @@ Jump_0E2_4DC4::
     call Func_0E2_64F5
 
 Jump_0E2_4DD7::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -2248,13 +2248,13 @@ Jump_0E2_4DEB::
     ret
 
 Func_0E2_4DEC:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7512
+    ld hl, Func_005_7512
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2264,7 +2264,7 @@ Func_0E2_4DEC:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4E05::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -2274,7 +2274,7 @@ Jump_0E2_4E05::
     call Func_0E2_64F5
 
 Jump_0E2_4E15::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -2284,7 +2284,7 @@ Jump_0E2_4E15::
     call Func_0E2_64CE
 
 Jump_0E2_4E25::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -2295,7 +2295,7 @@ Jump_0E2_4E25::
 
 Jump_0E2_4E35::
     call Func_0E2_6898
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -2305,7 +2305,7 @@ Jump_0E2_4E35::
     call Func_0E2_64CE
 
 Jump_0E2_4E48::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -2317,7 +2317,7 @@ Jump_0E2_4E48::
     call Func_0E2_64F5
 
 Jump_0E2_4E5C::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -2332,13 +2332,13 @@ Jump_0E2_4E70::
     ret
 
 Func_0E2_4E71:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7512
+    ld hl, Func_005_7512
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2348,7 +2348,7 @@ Func_0E2_4E71:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4E8A::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -2358,7 +2358,7 @@ Jump_0E2_4E8A::
     call Func_0E2_64F5
 
 Jump_0E2_4E9A::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -2368,7 +2368,7 @@ Jump_0E2_4E9A::
     call Func_0E2_64CE
 
 Jump_0E2_4EAA::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -2378,7 +2378,7 @@ Jump_0E2_4EAA::
     call Func_0E2_64F5
 
 Jump_0E2_4EBA::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -2390,7 +2390,7 @@ Jump_0E2_4EBA::
     call Func_0E2_64CE
 
 Jump_0E2_4ED0::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -2401,7 +2401,7 @@ Jump_0E2_4ED0::
 
 Jump_0E2_4EE0::
     call Func_0E2_6898
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -2411,7 +2411,7 @@ Jump_0E2_4EE0::
     call Func_0E2_64CE
 
 Jump_0E2_4EF3::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -2423,7 +2423,7 @@ Jump_0E2_4EF3::
     call Func_0E2_64F5
 
 Jump_0E2_4F07::
-    ld hl, $5D44
+    ld hl, Func_005_5D44
     ld b, $05
     rst $10
     ld a, c
@@ -2435,7 +2435,7 @@ Jump_0E2_4F07::
     call Func_0E2_64CE
 
 Jump_0E2_4F1B::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -2450,13 +2450,13 @@ Jump_0E2_4F2F::
     ret
 
 Func_0E2_4F30:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7512
+    ld hl, Func_005_7512
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2466,7 +2466,7 @@ Func_0E2_4F30:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_4F49::
-    ld hl, Jump_0E2_4CE5
+    ld hl, Func_005_4CE5
     ld b, $05
     rst $10
     ld a, c
@@ -2478,7 +2478,7 @@ Jump_0E2_4F49::
     call Func_0E2_64F5
 
 Jump_0E2_4F5D::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -2488,7 +2488,7 @@ Jump_0E2_4F5D::
     call Func_0E2_64F5
 
 Jump_0E2_4F6D::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -2498,7 +2498,7 @@ Jump_0E2_4F6D::
     call Func_0E2_64CE
 
 Jump_0E2_4F7D::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -2508,7 +2508,7 @@ Jump_0E2_4F7D::
     call Func_0E2_64CE
 
 Jump_0E2_4F8D::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -2519,7 +2519,7 @@ Jump_0E2_4F8D::
 
 Jump_0E2_4F9D::
     call Func_0E2_6898
-    ld hl, $6481
+    ld hl, Func_005_6481
     ld b, $05
     rst $10
     ld a, c
@@ -2529,7 +2529,7 @@ Jump_0E2_4F9D::
     call Func_0E2_64CE
 
 Jump_0E2_4FB0::
-    ld hl, $6494
+    ld hl, Func_005_6494
     ld b, $05
     rst $10
     ld a, c
@@ -2539,7 +2539,7 @@ Jump_0E2_4FB0::
     call Func_0E2_64CE
 
 Jump_0E2_4FC0::
-    ld hl, Data_0E2_6972
+    ld hl, Func_005_6972
     ld b, $05
     rst $10
     ld a, c
@@ -2549,7 +2549,7 @@ Jump_0E2_4FC0::
     call Func_0E2_64CE
 
 Jump_0E2_4FD0::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -2562,7 +2562,7 @@ Jump_0E2_4FE0::
     ret
 
 Func_0E2_4FE1:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7524
+    ld hl, Func_005_7524
     ld b, $05
     rst $10
     ld a, c
@@ -2572,7 +2572,7 @@ Func_0E2_4FE1:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_4FF0::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2582,7 +2582,7 @@ Jump_0E2_4FF0::
     call Func_0E2_64F5
 
 Jump_0E2_5000::
-    ld hl, Jump_0E2_4CE5
+    ld hl, Func_005_4CE5
     ld b, $05
     rst $10
     ld a, c
@@ -2594,7 +2594,7 @@ Jump_0E2_5000::
     call Func_0E2_64F5
 
 Jump_0E2_5014::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -2605,7 +2605,7 @@ Jump_0E2_5014::
 
 Jump_0E2_5024::
     call Func_0E2_6898
-    ld hl, $6481
+    ld hl, Func_005_6481
     ld b, $05
     rst $10
     ld a, c
@@ -2615,7 +2615,7 @@ Jump_0E2_5024::
     call Func_0E2_64CE
 
 Jump_0E2_5037::
-    ld hl, $6494
+    ld hl, Func_005_6494
     ld b, $05
     rst $10
     ld a, c
@@ -2623,7 +2623,7 @@ Jump_0E2_5037::
     jr nz, Jump_0E2_5067
     ld bc, $0067
     call Func_0E2_64CE
-    ld hl, Data_0E2_6972
+    ld hl, Func_005_6972
     ld b, $05
     rst $10
     ld a, c
@@ -2633,7 +2633,7 @@ Jump_0E2_5037::
     call Func_0E2_64CE
 
 Jump_0E2_5057::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -2646,7 +2646,7 @@ Jump_0E2_5067::
     ret
 
 Func_0E2_5068:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_753A
+    ld hl, Func_005_753A
     ld b, $05
     rst $10
     ld a, c
@@ -2657,7 +2657,7 @@ Func_0E2_5068:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_507A:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7550
+    ld hl, Func_005_7550
     ld b, $05
     rst $10
     ld a, c
@@ -2668,7 +2668,7 @@ Func_0E2_507A:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_508C:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7566
+    ld hl, Func_005_7566
     ld b, $05
     rst $10
     ld a, c
@@ -2679,7 +2679,7 @@ Func_0E2_508C:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_509E:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_757C
+    ld hl, Func_005_757C
     ld b, $05
     rst $10
     ld a, c
@@ -2690,7 +2690,7 @@ Func_0E2_509E:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_50B0:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7592
+    ld hl, Func_005_7592
     ld b, $05
     rst $10
     ld a, c
@@ -2701,7 +2701,7 @@ Func_0E2_50B0:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_50C2:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_75A8
+    ld hl, Func_005_75A8
     ld b, $05
     rst $10
     ld a, c
@@ -2712,7 +2712,7 @@ Func_0E2_50C2:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_50D4:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_75BE
+    ld hl, Func_005_75BE
     ld b, $05
     rst $10
     ld a, c
@@ -2723,7 +2723,7 @@ Func_0E2_50D4:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_50E6:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_75D4
+    ld hl, Func_005_75D4
     ld b, $05
     rst $10
     ld a, c
@@ -2734,7 +2734,7 @@ Func_0E2_50E6:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_50F8:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_75EA
+    ld hl, Func_005_75EA
     ld b, $05
     rst $10
     ld a, c
@@ -2745,7 +2745,7 @@ Func_0E2_50F8:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_510A:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7600
+    ld hl, Func_005_7600
     ld b, $05
     rst $10
     ld a, c
@@ -2756,7 +2756,7 @@ Func_0E2_510A:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_4FF0
 
 Func_0E2_511C:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_763E
+    ld hl, Func_005_763E
     ld b, $05
     rst $10
     ld a, c
@@ -2766,7 +2766,7 @@ Func_0E2_511C:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_512B::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -2777,7 +2777,7 @@ Jump_0E2_512B::
 
 Jump_0E2_513B::
     call Func_0E2_6898
-    ld hl, $6481
+    ld hl, Func_005_6481
     ld b, $05
     rst $10
     ld a, c
@@ -2787,7 +2787,7 @@ Jump_0E2_513B::
     call Func_0E2_64CE
 
 Jump_0E2_514E::
-    ld hl, $6494
+    ld hl, Func_005_6494
     ld b, $05
     rst $10
     ld a, c
@@ -2797,7 +2797,7 @@ Jump_0E2_514E::
     call Func_0E2_64CE
 
 Jump_0E2_515E::
-    ld hl, Data_0E2_64CC
+    ld hl, Func_005_64CC
     ld b, $05
     rst $10
     ld a, c
@@ -2807,7 +2807,7 @@ Jump_0E2_515E::
     call Func_0E2_64F5
 
 Jump_0E2_516E::
-    ld hl, Data_0E2_6972
+    ld hl, Func_005_6972
     ld b, $05
     rst $10
     ld a, c
@@ -2817,7 +2817,7 @@ Jump_0E2_516E::
     call Func_0E2_64CE
 
 Jump_0E2_517E::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -2827,7 +2827,7 @@ Jump_0E2_517E::
     call Func_0E2_64F5
 
 Jump_0E2_518E::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -2839,7 +2839,7 @@ Jump_0E2_518E::
     call Func_0E2_64CE
 
 Jump_0E2_51A2::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -2854,7 +2854,7 @@ Jump_0E2_51B6::
     ret
 
 Func_0E2_51B7:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_765B
+    ld hl, Func_005_765B
     ld b, $05
     rst $10
     ld a, c
@@ -2865,7 +2865,7 @@ Func_0E2_51B7:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_512B
 
 Func_0E2_51C9:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7671
+    ld hl, Func_005_7671
     ld b, $05
     rst $10
     ld a, c
@@ -2880,7 +2880,7 @@ Func_0E2_51DB:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    ld hl, $604C
+    ld hl, Func_005_604C
     ld b, $05
     rst $10
     ld a, c
@@ -2895,7 +2895,7 @@ Jump_0E2_51F5::
     ret
 
 Func_0E2_51F6::
-    ld hl, Data_0E2_76A3
+    ld hl, Func_005_76A3
     ld b, $05
     rst $10
     ld a, c
@@ -2903,7 +2903,7 @@ Func_0E2_51F6::
     ret z
     call Func_0E2_67A5
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2913,7 +2913,7 @@ Func_0E2_51F6::
     call Func_0E2_64F5
 
 Jump_0E2_5213::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -2924,7 +2924,7 @@ Jump_0E2_5213::
 
 Jump_0E2_5223::
     call Func_0E2_6898
-    ld hl, $5C8C
+    ld hl, Func_005_5C8C
     ld b, $05
     rst $10
     ld a, c
@@ -2934,7 +2934,7 @@ Jump_0E2_5223::
     call Func_0E2_64CE
 
 Jump_0E2_5236::
-    ld hl, $604C
+    ld hl, Func_005_604C
     ld b, $05
     rst $10
     ld a, c
@@ -2946,7 +2946,7 @@ Jump_0E2_5236::
     call Func_0E2_64CE
 
 Jump_0E2_524A::
-    ld hl, Data_0E2_6972
+    ld hl, Func_005_6972
     ld b, $05
     rst $10
     ld a, c
@@ -2956,7 +2956,7 @@ Jump_0E2_524A::
     call Func_0E2_64CE
 
 Jump_0E2_525A::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -2970,13 +2970,13 @@ Jump_0E2_526A::
     ret
 
 Func_0E2_526D:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_76CE
+    ld hl, Func_005_76CE
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -2986,7 +2986,7 @@ Func_0E2_526D:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_5286::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -2996,7 +2996,7 @@ Jump_0E2_5286::
     call Func_0E2_64CE
 
 Jump_0E2_5296::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3007,7 +3007,7 @@ Jump_0E2_5296::
 
 Jump_0E2_52A6::
     call Func_0E2_6898
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -3017,7 +3017,7 @@ Jump_0E2_52A6::
     call Func_0E2_64CE
 
 Jump_0E2_52B9::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -3029,7 +3029,7 @@ Jump_0E2_52B9::
     call Func_0E2_64F5
 
 Jump_0E2_52CD::
-    ld hl, $5C8C
+    ld hl, Func_005_5C8C
     ld b, $05
     rst $10
     ld a, c
@@ -3039,7 +3039,7 @@ Jump_0E2_52CD::
     call Func_0E2_64CE
 
 Jump_0E2_52DD::
-    ld hl, Data_0E2_676E
+    ld hl, Func_005_676E
     ld b, $05
     rst $10
     ld a, c
@@ -3049,7 +3049,7 @@ Jump_0E2_52DD::
     call Func_0E2_64CE
 
 Jump_0E2_52ED::
-    ld hl, Data_0E2_6972
+    ld hl, Func_005_6972
     ld b, $05
     rst $10
     ld a, c
@@ -3059,7 +3059,7 @@ Jump_0E2_52ED::
     call Func_0E2_64CE
 
 Jump_0E2_52FD::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3072,13 +3072,13 @@ Jump_0E2_530D::
     ret
 
 Func_0E2_530E:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_76E2
+    ld hl, Func_005_76E2
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -3088,7 +3088,7 @@ Func_0E2_530E:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_5327::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3101,7 +3101,7 @@ Jump_0E2_5327::
 
 Jump_0E2_533D::
     call Func_0E2_6898
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -3111,7 +3111,7 @@ Jump_0E2_533D::
     call Func_0E2_64CE
 
 Jump_0E2_5350::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -3123,7 +3123,7 @@ Jump_0E2_5350::
     call Func_0E2_64F5
 
 Jump_0E2_5364::
-    ld hl, Data_0E2_6972
+    ld hl, Func_005_6972
     ld b, $05
     rst $10
     ld a, c
@@ -3133,7 +3133,7 @@ Jump_0E2_5364::
     call Func_0E2_64CE
 
 Jump_0E2_5374::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3146,13 +3146,13 @@ Jump_0E2_5384::
     ret
 
 Func_0E2_5385:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_76F8
+    ld hl, Func_005_76F8
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -3164,7 +3164,7 @@ Func_0E2_5385:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_53A2::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3174,7 +3174,7 @@ Jump_0E2_53A2::
     call Func_0E2_64F5
 
 Jump_0E2_53B2::
-    ld hl, Jump_0E2_4E48
+    ld hl, Func_005_4E48
     ld b, $05
     rst $10
     ld a, c
@@ -3184,7 +3184,7 @@ Jump_0E2_53B2::
     call Func_0E2_64F5
 
 Jump_0E2_53C2::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -3194,7 +3194,7 @@ Jump_0E2_53C2::
     call Func_0E2_64CE
 
 Jump_0E2_53D2::
-    ld hl, $557E
+    ld hl, Func_005_557E
     ld b, $05
     rst $10
     ld a, c
@@ -3205,7 +3205,7 @@ Jump_0E2_53D2::
 
 Jump_0E2_53E2::
     call Func_0E2_6898
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -3215,7 +3215,7 @@ Jump_0E2_53E2::
     call Func_0E2_64CE
 
 Jump_0E2_53F5::
-    ld hl, $57CF
+    ld hl, Func_005_57CF
     ld b, $05
     rst $10
     ld a, c
@@ -3230,13 +3230,13 @@ Jump_0E2_5409::
     ret
 
 Func_0E2_540A:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7512
+    ld hl, Func_005_7512
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3249,13 +3249,13 @@ Jump_0E2_5423::
     jp Jump_0E2_53A2
 
 Func_0E2_5426:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_772B
+    ld hl, Func_005_772B
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $50E3
+    ld hl, Func_005_50E3
     ld b, $05
     rst $10
     ld a, c
@@ -3267,7 +3267,7 @@ Func_0E2_5426:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_5443::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3283,13 +3283,13 @@ Jump_0E2_5459::
     ret
 
 Func_0E2_545D:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_774F
+    ld hl, Func_005_774F
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4B97
+    ld hl, Func_005_4B97
     ld b, $05
     rst $10
     ld a, c
@@ -3299,7 +3299,7 @@ Func_0E2_545D:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_5476::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3309,7 +3309,7 @@ Jump_0E2_5476::
     call Func_0E2_64F5
 
 Jump_0E2_5486::
-    ld hl, $50B7
+    ld hl, Func_005_50B7
     ld b, $05
     rst $10
     ld a, c
@@ -3321,7 +3321,7 @@ Jump_0E2_5486::
     call Func_0E2_64CE
 
 Jump_0E2_549A::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -3331,7 +3331,7 @@ Jump_0E2_549A::
     call Func_0E2_64F5
 
 Jump_0E2_54AA::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3347,13 +3347,13 @@ Jump_0E2_54C0::
     ret
 
 Func_0E2_54C4:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7777
+    ld hl, Func_005_7777
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3363,7 +3363,7 @@ Func_0E2_54C4:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_54DD::
-    ld hl, $50E3
+    ld hl, Func_005_50E3
     ld b, $05
     rst $10
     ld a, c
@@ -3375,7 +3375,7 @@ Jump_0E2_54DD::
     call Func_0E2_64F5
 
 Jump_0E2_54F1::
-    ld hl, $517D
+    ld hl, Func_005_517D
     ld b, $05
     rst $10
     ld a, c
@@ -3387,7 +3387,7 @@ Jump_0E2_54F1::
     call Func_0E2_64F5
 
 Jump_0E2_5505::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -3398,7 +3398,7 @@ Jump_0E2_5505::
 
 Jump_0E2_5515::
     call Func_0E2_6898
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3411,13 +3411,13 @@ Jump_0E2_5528::
     ret
 
 Func_0E2_5529:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7616
+    ld hl, Func_005_7616
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4605
+    ld hl, Func_005_4605
     ld b, $05
     rst $10
     ld a, c
@@ -3427,7 +3427,7 @@ Func_0E2_5529:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_5542::
-    ld hl, $4664
+    ld hl, Func_005_4664
     ld b, $05
     rst $10
     ld a, c
@@ -3437,7 +3437,7 @@ Jump_0E2_5542::
     call Func_0E2_64CE
 
 Jump_0E2_5552::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3447,7 +3447,7 @@ Jump_0E2_5552::
     call Func_0E2_64F5
 
 Jump_0E2_5562::
-    ld hl, $50E3
+    ld hl, Func_005_50E3
     ld b, $05
     rst $10
     ld a, c
@@ -3459,7 +3459,7 @@ Jump_0E2_5562::
     call Func_0E2_64CE
 
 Jump_0E2_5576::
-    ld hl, $517D
+    ld hl, Func_005_517D
     ld b, $05
     rst $10
     ld a, c
@@ -3471,7 +3471,7 @@ Jump_0E2_5576::
     call Func_0E2_64CE
 
 Jump_0E2_558A::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -3481,7 +3481,7 @@ Jump_0E2_558A::
     call Func_0E2_64F5
 
 Jump_0E2_559A::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3492,7 +3492,7 @@ Jump_0E2_559A::
 
 Jump_0E2_55AA::
     call Func_0E2_6898
-    ld hl, $5EA1
+    ld hl, Func_005_5EA1
     ld b, $05
     rst $10
     ld a, c
@@ -3502,7 +3502,7 @@ Jump_0E2_55AA::
     call Func_0E2_64CE
 
 Jump_0E2_55BD::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3515,13 +3515,13 @@ Jump_0E2_55CD::
     ret
 
 Func_0E2_55CE:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7616
+    ld hl, Func_005_7616
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4B3D
+    ld hl, Func_005_4B3D
     ld b, $05
     rst $10
     ld a, c
@@ -3531,7 +3531,7 @@ Func_0E2_55CE:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_55E7::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3541,7 +3541,7 @@ Jump_0E2_55E7::
     call Func_0E2_64F5
 
 Jump_0E2_55F7::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3552,7 +3552,7 @@ Jump_0E2_55F7::
 
 Jump_0E2_5607::
     call Func_0E2_6898
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3565,13 +3565,13 @@ Jump_0E2_561A::
     ret
 
 Func_0E2_561B:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7786
+    ld hl, Func_005_7786
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $431C
+    ld hl, Func_005_431C
     ld b, $05
     rst $10
     ld a, c
@@ -3581,7 +3581,7 @@ Func_0E2_561B:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_5634::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3591,7 +3591,7 @@ Jump_0E2_5634::
     call Func_0E2_64F5
 
 Jump_0E2_5644::
-    ld hl, $50E3
+    ld hl, Func_005_50E3
     ld b, $05
     rst $10
     ld a, c
@@ -3603,7 +3603,7 @@ Jump_0E2_5644::
     call Func_0E2_64F5
 
 Jump_0E2_5658::
-    ld hl, $517D
+    ld hl, Func_005_517D
     ld b, $05
     rst $10
     ld a, c
@@ -3615,7 +3615,7 @@ Jump_0E2_5658::
     call Func_0E2_64F5
 
 Jump_0E2_566C::
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -3625,7 +3625,7 @@ Jump_0E2_566C::
     call Func_0E2_64F5
 
 Jump_0E2_567C::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -3635,7 +3635,7 @@ Jump_0E2_567C::
     call Func_0E2_64F5
 
 Jump_0E2_568C::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3648,7 +3648,7 @@ Jump_0E2_568C::
 
 Jump_0E2_56A2::
     call Func_0E2_6898
-    ld hl, Jump_0E2_6452
+    ld hl, Func_005_6452
     ld b, $05
     rst $10
     ld a, c
@@ -3658,7 +3658,7 @@ Jump_0E2_56A2::
     call Func_0E2_64F5
 
 Jump_0E2_56B5::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3671,7 +3671,7 @@ Jump_0E2_56C5::
     ret
 
 Func_0E2_56C6:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_779F
+    ld hl, Func_005_779F
     ld b, $05
     rst $10
     ld a, c
@@ -3679,7 +3679,7 @@ Func_0E2_56C6:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67A5
     ret z
-    ld hl, $4605
+    ld hl, Func_005_4605
     ld b, $05
     rst $10
     ld a, c
@@ -3689,7 +3689,7 @@ Func_0E2_56C6:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_56E3::
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -3699,7 +3699,7 @@ Jump_0E2_56E3::
     call Func_0E2_64F5
 
 Jump_0E2_56F3::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3709,7 +3709,7 @@ Jump_0E2_56F3::
     call Func_0E2_64F5
 
 Jump_0E2_5703::
-    ld hl, $50E3
+    ld hl, Func_005_50E3
     ld b, $05
     rst $10
     ld a, c
@@ -3721,7 +3721,7 @@ Jump_0E2_5703::
     call Func_0E2_64F5
 
 Jump_0E2_5717::
-    ld hl, $517D
+    ld hl, Func_005_517D
     ld b, $05
     rst $10
     ld a, c
@@ -3733,7 +3733,7 @@ Jump_0E2_5717::
     call Func_0E2_64F5
 
 Jump_0E2_572B::
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -3743,7 +3743,7 @@ Jump_0E2_572B::
     call Func_0E2_64F5
 
 Jump_0E2_573B::
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -3753,7 +3753,7 @@ Jump_0E2_573B::
     call Func_0E2_64F5
 
 Jump_0E2_574B::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3766,7 +3766,7 @@ Jump_0E2_574B::
 
 Jump_0E2_5761::
     call Func_0E2_6898
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -3776,7 +3776,7 @@ Jump_0E2_5761::
     call Func_0E2_64F5
 
 Jump_0E2_5774::
-    ld hl, Jump_0E2_6452
+    ld hl, Func_005_6452
     ld b, $05
     rst $10
     ld a, c
@@ -3786,7 +3786,7 @@ Jump_0E2_5774::
     call Func_0E2_64F5
 
 Jump_0E2_5784::
-    ld hl, $67B2
+    ld hl, Func_005_67B2
     ld b, $05
     rst $10
     ld a, c
@@ -3798,7 +3798,7 @@ Jump_0E2_5784::
     call Func_0E2_64CE
 
 Jump_0E2_5798::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3811,13 +3811,13 @@ Jump_0E2_57A8::
     ret
 
 Func_0E2_57A9:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_77C7
+    ld hl, Func_005_77C7
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $431C
+    ld hl, Func_005_431C
     ld b, $05
     rst $10
     ld a, c
@@ -3827,7 +3827,7 @@ Func_0E2_57A9:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_57C2::
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -3837,7 +3837,7 @@ Jump_0E2_57C2::
     call Func_0E2_64F5
 
 Jump_0E2_57D2::
-    ld hl, $6820
+    ld hl, Func_005_6820
     ld b, $05
     rst $10
     ld a, c
@@ -3849,7 +3849,7 @@ Jump_0E2_57D2::
     call Func_0E2_64CE
 
 Jump_0E2_57E6::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -3859,7 +3859,7 @@ Jump_0E2_57E6::
     call Func_0E2_64F5
 
 Jump_0E2_57F6::
-    ld hl, $5052
+    ld hl, Func_005_5052
     ld b, $05
     rst $10
     ld a, c
@@ -3871,7 +3871,7 @@ Jump_0E2_57F6::
 Jump_0E2_5806::
     ld a, [$D8A4]
     call Func_0E2_670B
-    ld hl, $53CA
+    ld hl, Func_005_53CA
     ld b, $05
     rst $10
     ld a, c
@@ -3881,7 +3881,7 @@ Jump_0E2_5806::
     call Func_0E2_64F5
 
 Jump_0E2_581C::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3894,7 +3894,7 @@ Jump_0E2_581C::
 
 Jump_0E2_5832::
     call Func_0E2_6898
-    ld hl, Jump_0E2_6452
+    ld hl, Func_005_6452
     ld b, $05
     rst $10
     ld a, c
@@ -3904,7 +3904,7 @@ Jump_0E2_5832::
     call Func_0E2_64F5
 
 Jump_0E2_5845::
-    ld hl, Data_0E2_69DA
+    ld hl, Func_005_69DA
     ld b, $05
     rst $10
     ld a, c
@@ -3917,13 +3917,13 @@ Jump_0E2_5855::
     ret
 
 Func_0E2_5856:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_77E0
+    ld hl, Func_005_77E0
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $689C
+    ld hl, Func_005_689C
     ld b, $05
     rst $10
     ld a, c
@@ -3938,13 +3938,13 @@ Jump_0E2_5873::
     jp Jump_0E2_57E6
 
 Func_0E2_5876:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_77F9
+    ld hl, Func_005_77F9
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -3957,7 +3957,7 @@ Jump_0E2_588F::
     call Func_0E2_6876
 
 Jump_0E2_5892::
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -3967,7 +3967,7 @@ Jump_0E2_5892::
     call Func_0E2_64CE
 
 Jump_0E2_58A2::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -3979,7 +3979,7 @@ Jump_0E2_58A2::
     call Func_0E2_64F5
 
 Jump_0E2_58B6::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -3991,7 +3991,7 @@ Jump_0E2_58B6::
     call Func_0E2_64CE
 
 Jump_0E2_58CA::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4006,7 +4006,7 @@ Jump_0E2_58DE::
     ret
 
 Func_0E2_58DF:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7824
+    ld hl, Func_005_7824
     ld b, $05
     rst $10
     ld a, c
@@ -4015,7 +4015,7 @@ Func_0E2_58DF:: ; heuristic: follows a terminator; C0
     jr Jump_0E2_588F
 
 Func_0E2_58EA:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7847
+    ld hl, Func_005_7847
     ld b, $05
     rst $10
     ld a, c
@@ -4024,7 +4024,7 @@ Func_0E2_58EA:: ; heuristic: follows a terminator; C0
     jr Jump_0E2_588F
 
 Func_0E2_58F5:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7860
+    ld hl, Func_005_7860
     ld b, $05
     rst $10
     ld a, c
@@ -4033,13 +4033,13 @@ Func_0E2_58F5:: ; heuristic: follows a terminator; C0
     jr Jump_0E2_588F
 
 Func_0E2_5900:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7879
+    ld hl, Func_005_7879
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4053,7 +4053,7 @@ Jump_0E2_5919::
     jp Jump_0E2_5892
 
 Func_0E2_591F:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_78A8
+    ld hl, Func_005_78A8
     ld b, $05
     rst $10
     ld a, c
@@ -4061,7 +4061,7 @@ Func_0E2_591F:: ; heuristic: follows a terminator; C0
     ret z
     ld bc, $0009
     call Func_0E2_64CE
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4074,7 +4074,7 @@ Func_0E2_591F:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5944::
     call Func_0E2_6887
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -4086,7 +4086,7 @@ Jump_0E2_5944::
     call Func_0E2_64CE
 
 Jump_0E2_595B::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4101,13 +4101,13 @@ Jump_0E2_596F::
     ret
 
 Func_0E2_5970:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_78CC
+    ld hl, Func_005_78CC
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4122,7 +4122,7 @@ Func_0E2_5970:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5995::
     call Func_0E2_6887
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -4132,7 +4132,7 @@ Jump_0E2_5995::
     call Func_0E2_64CE
 
 Jump_0E2_59A8::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -4144,7 +4144,7 @@ Jump_0E2_59A8::
     call Func_0E2_64F5
 
 Jump_0E2_59BC::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -4156,7 +4156,7 @@ Jump_0E2_59BC::
     call Func_0E2_64CE
 
 Jump_0E2_59D0::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4171,13 +4171,13 @@ Jump_0E2_59E4::
     ret
 
 Func_0E2_59E5:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_790D
+    ld hl, Func_005_790D
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4190,7 +4190,7 @@ Func_0E2_59E5:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5A04::
     call Func_0E2_6887
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -4200,7 +4200,7 @@ Jump_0E2_5A04::
     call Func_0E2_64CE
 
 Jump_0E2_5A17::
-    ld hl, $6153
+    ld hl, Func_005_6153
     ld b, $05
     rst $10
     ld a, c
@@ -4212,7 +4212,7 @@ Jump_0E2_5A17::
     call Func_0E2_64CE
 
 Jump_0E2_5A2B::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -4224,7 +4224,7 @@ Jump_0E2_5A2B::
     call Func_0E2_64F5
 
 Jump_0E2_5A3F::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -4236,7 +4236,7 @@ Jump_0E2_5A3F::
     call Func_0E2_64CE
 
 Jump_0E2_5A53::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4259,13 +4259,13 @@ Func_0E2_5A68:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_5A72::
-    ld hl, Data_0E2_791F
+    ld hl, Func_005_791F
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4278,7 +4278,7 @@ Func_0E2_5A72::
 
 Jump_0E2_5A91::
     call Func_0E2_6887
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -4288,7 +4288,7 @@ Jump_0E2_5A91::
     call Func_0E2_64CE
 
 Jump_0E2_5AA4::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -4300,7 +4300,7 @@ Jump_0E2_5AA4::
     call Func_0E2_64F5
 
 Jump_0E2_5AB8::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -4312,7 +4312,7 @@ Jump_0E2_5AB8::
     call Func_0E2_64CE
 
 Jump_0E2_5ACC::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4329,13 +4329,13 @@ Jump_0E2_5AE0::
     ret
 
 Func_0E2_5AE6:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7946
+    ld hl, Func_005_7946
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4348,7 +4348,7 @@ Func_0E2_5AE6:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5B05::
     call Func_0E2_6887
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -4358,7 +4358,7 @@ Jump_0E2_5B05::
     call Func_0E2_64CE
 
 Jump_0E2_5B18::
-    ld hl, $5CF1
+    ld hl, Func_005_5CF1
     ld b, $05
     rst $10
     ld a, c
@@ -4368,7 +4368,7 @@ Jump_0E2_5B18::
     call Func_0E2_64CE
 
 Jump_0E2_5B28::
-    ld hl, Func_0E2_667F
+    ld hl, Func_005_667F
     ld b, $05
     rst $10
     ld a, c
@@ -4383,7 +4383,7 @@ Jump_0E2_5B3C::
     ret
 
 Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7975
+    ld hl, Func_005_7975
     ld b, $05
     rst $10
     ld a, c
@@ -4391,7 +4391,7 @@ Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     ret z
     ld a, [$D8A4]
     call Func_0E2_66C5
-    ld hl, $44CF
+    ld hl, Func_005_44CF
     ld b, $05
     rst $10
     ld a, c
@@ -4401,7 +4401,7 @@ Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_5B5C::
-    ld hl, $4664
+    ld hl, Func_005_4664
     ld b, $05
     rst $10
     ld a, c
@@ -4411,7 +4411,7 @@ Jump_0E2_5B5C::
     call Func_0E2_64CE
 
 Jump_0E2_5B6C::
-    ld hl, $4BE1
+    ld hl, Func_005_4BE1
     ld b, $05
     rst $10
     ld a, c
@@ -4421,7 +4421,7 @@ Jump_0E2_5B6C::
     call Func_0E2_64F5
 
 Jump_0E2_5B7C::
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -4431,7 +4431,7 @@ Jump_0E2_5B7C::
     call Func_0E2_64CE
 
 Jump_0E2_5B8C::
-    ld hl, $53A5
+    ld hl, Func_005_53A5
     ld b, $05
     rst $10
     ld a, c
@@ -4441,7 +4441,7 @@ Jump_0E2_5B8C::
     call Func_0E2_64CE
 
 Jump_0E2_5B9C::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4452,7 +4452,7 @@ Jump_0E2_5B9C::
 
 Jump_0E2_5BAC::
     call Func_0E2_6887
-    ld hl, $6556
+    ld hl, Func_005_6556
     ld b, $05
     rst $10
     ld a, c
@@ -4467,13 +4467,13 @@ Jump_0E2_5BC3::
     ret
 
 Func_0E2_5BC4:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7996
+    ld hl, Func_005_7996
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $459D
+    ld hl, Func_005_459D
     ld b, $05
     rst $10
     ld a, c
@@ -4483,7 +4483,7 @@ Func_0E2_5BC4:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_5BDD::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -4493,7 +4493,7 @@ Jump_0E2_5BDD::
     call Func_0E2_64F5
 
 Jump_0E2_5BED::
-    ld hl, $5275
+    ld hl, Func_005_5275
     ld b, $05
     rst $10
     ld a, c
@@ -4505,7 +4505,7 @@ Jump_0E2_5BED::
     call Func_0E2_64CE
 
 Jump_0E2_5C01::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4516,7 +4516,7 @@ Jump_0E2_5C01::
 
 Jump_0E2_5C11::
     call Func_0E2_6887
-    ld hl, $585D
+    ld hl, Func_005_585D
     ld b, $05
     rst $10
     ld a, c
@@ -4529,7 +4529,7 @@ Jump_0E2_5C24::
     ret
 
 Func_0E2_5C25:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_79C5
+    ld hl, Func_005_79C5
     ld b, $05
     rst $10
     ld a, c
@@ -4537,7 +4537,7 @@ Func_0E2_5C25:: ; heuristic: follows a terminator; C0
     ret z
 
 Jump_0E2_5C2E::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -4547,7 +4547,7 @@ Jump_0E2_5C2E::
     call Func_0E2_64F5
 
 Jump_0E2_5C3E::
-    ld hl, $5275
+    ld hl, Func_005_5275
     ld b, $05
     rst $10
     ld a, c
@@ -4559,7 +4559,7 @@ Jump_0E2_5C3E::
     call Func_0E2_64CE
 
 Jump_0E2_5C52::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4570,7 +4570,7 @@ Jump_0E2_5C52::
 
 Jump_0E2_5C62::
     call Func_0E2_6854
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -4580,7 +4580,7 @@ Jump_0E2_5C62::
     call Func_0E2_64CE
 
 Jump_0E2_5C75::
-    ld hl, $585D
+    ld hl, Func_005_585D
     ld b, $05
     rst $10
     ld a, c
@@ -4590,7 +4590,7 @@ Jump_0E2_5C75::
     call Func_0E2_64CE
 
 Jump_0E2_5C85::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -4602,7 +4602,7 @@ Jump_0E2_5C85::
     call Func_0E2_64F5
 
 Jump_0E2_5C99::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -4614,7 +4614,7 @@ Jump_0E2_5C99::
     call Func_0E2_64CE
 
 Jump_0E2_5CAD::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4629,7 +4629,7 @@ Jump_0E2_5CC1::
     ret
 
 Func_0E2_5CC2:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_79E5
+    ld hl, Func_005_79E5
     ld b, $05
     rst $10
     ld a, c
@@ -4638,13 +4638,13 @@ Func_0E2_5CC2:: ; heuristic: follows a terminator; C0
     jp Jump_0E2_5C2E
 
 Func_0E2_5CCE:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7A0D
+    ld hl, Func_005_7A0D
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4657,7 +4657,7 @@ Func_0E2_5CCE:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5CED::
     call Func_0E2_6854
-    ld hl, $577F
+    ld hl, Func_005_577F
     ld b, $05
     rst $10
     ld a, c
@@ -4667,7 +4667,7 @@ Jump_0E2_5CED::
     call Func_0E2_64CE
 
 Jump_0E2_5D00::
-    ld hl, $64FE
+    ld hl, Func_005_64FE
     ld b, $05
     rst $10
     ld a, c
@@ -4679,7 +4679,7 @@ Jump_0E2_5D00::
     call Func_0E2_64F5
 
 Jump_0E2_5D14::
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -4691,7 +4691,7 @@ Jump_0E2_5D14::
     call Func_0E2_64CE
 
 Jump_0E2_5D28::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4706,7 +4706,7 @@ Jump_0E2_5D3C::
     ret
 
 Func_0E2_5D3D:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7A27
+    ld hl, Func_005_7A27
     ld b, $05
     rst $10
     ld a, c
@@ -4714,7 +4714,7 @@ Func_0E2_5D3D:: ; heuristic: follows a terminator; C0
     ret z
     ld bc, $006F
     call Func_0E2_64CE
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4728,7 +4728,7 @@ Jump_0E2_5D5C::
     ret
 
 Func_0E2_5D60:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7A3E
+    ld hl, Func_005_7A3E
     ld b, $05
     rst $10
     ld a, c
@@ -4736,7 +4736,7 @@ Func_0E2_5D60:: ; heuristic: follows a terminator; C0
     ret z
     ld bc, $006F
     call Func_0E2_64CE
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4750,7 +4750,7 @@ Jump_0E2_5D7F::
     ret
 
 Func_0E2_5D83:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7A55
+    ld hl, Func_005_7A55
     ld b, $05
     rst $10
     ld a, c
@@ -4758,7 +4758,7 @@ Func_0E2_5D83:: ; heuristic: follows a terminator; C0
     ret z
     ld bc, $0071
     call Func_0E2_64CE
-    ld hl, Jump_0E2_41FD
+    ld hl, Func_005_41FD
     ld b, $05
     rst $10
     ld a, c
@@ -4768,7 +4768,7 @@ Func_0E2_5D83:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_5DA2::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4784,13 +4784,13 @@ Jump_0E2_5DB8::
     ret
 
 Func_0E2_5DBC:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7A6C
+    ld hl, Func_005_7A6C
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4801,7 +4801,7 @@ Func_0E2_5DBC:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5DD5::
     call Func_0E2_6854
-    ld hl, $57A1
+    ld hl, Func_005_57A1
     ld b, $05
     rst $10
     ld a, c
@@ -4816,13 +4816,13 @@ Jump_0E2_5DEC::
     ret
 
 Func_0E2_5DED:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7A91
+    ld hl, Func_005_7A91
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -4832,7 +4832,7 @@ Func_0E2_5DED:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_5E06::
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -4842,7 +4842,7 @@ Jump_0E2_5E06::
     call Func_0E2_64F5
 
 Jump_0E2_5E16::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4857,7 +4857,7 @@ Jump_0E2_5E16::
 
 Jump_0E2_5E32::
     call Func_0E2_6854
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -4870,13 +4870,13 @@ Jump_0E2_5E45::
     ret
 
 Func_0E2_5E46:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7AA4
+    ld hl, Func_005_7AA4
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -4886,7 +4886,7 @@ Func_0E2_5E46:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_5E5F::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4897,7 +4897,7 @@ Jump_0E2_5E5F::
 
 Jump_0E2_5E6F::
     call Func_0E2_6876
-    ld hl, $5D31
+    ld hl, Func_005_5D31
     ld b, $05
     rst $10
     ld a, c
@@ -4910,13 +4910,13 @@ Jump_0E2_5E82::
     ret
 
 Func_0E2_5E83:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7ACC
+    ld hl, Func_005_7ACC
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -4926,7 +4926,7 @@ Func_0E2_5E83:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_5E9C::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4950,13 +4950,13 @@ Func_0E2_5EB6:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_5EC0::
-    ld hl, Data_0E2_7AD8
+    ld hl, Func_005_7AD8
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -4967,7 +4967,7 @@ Func_0E2_5EC0::
 
 Jump_0E2_5ED9::
     call Func_0E2_6854
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -4979,7 +4979,7 @@ Jump_0E2_5ED9::
     call Func_0E2_64CE
 
 Jump_0E2_5EF0::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -4996,13 +4996,13 @@ Jump_0E2_5F04::
     ret
 
 Func_0E2_5F0A:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7B11
+    ld hl, Func_005_7B11
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $443B
+    ld hl, Func_005_443B
     ld b, $05
     rst $10
     ld a, c
@@ -5012,7 +5012,7 @@ Func_0E2_5F0A:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_5F23::
-    ld hl, $50E3
+    ld hl, Func_005_50E3
     ld b, $05
     rst $10
     ld a, c
@@ -5024,7 +5024,7 @@ Jump_0E2_5F23::
     call Func_0E2_64CE
 
 Jump_0E2_5F37::
-    ld hl, $517D
+    ld hl, Func_005_517D
     ld b, $05
     rst $10
     ld a, c
@@ -5036,7 +5036,7 @@ Jump_0E2_5F37::
     call Func_0E2_64CE
 
 Jump_0E2_5F4B::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5047,7 +5047,7 @@ Jump_0E2_5F4B::
 
 Jump_0E2_5F5B::
     call Func_0E2_6854
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -5059,7 +5059,7 @@ Jump_0E2_5F5B::
     call Func_0E2_64CE
 
 Jump_0E2_5F72::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -5083,13 +5083,13 @@ Func_0E2_5F8A:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_5F94::
-    ld hl, Data_0E2_7B40
+    ld hl, Func_005_7B40
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5100,7 +5100,7 @@ Func_0E2_5F94::
 
 Jump_0E2_5FAD::
     call Func_0E2_6854
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -5112,7 +5112,7 @@ Jump_0E2_5FAD::
     call Func_0E2_64CE
 
 Jump_0E2_5FC4::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -5137,13 +5137,13 @@ Func_0E2_5FDE:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_5FE8::
-    ld hl, Data_0E2_7AD8
+    ld hl, Func_005_7AD8
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5160,7 +5160,7 @@ Func_0E2_5FE8::
 
 Jump_0E2_6013::
     call Func_0E2_6854
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -5172,7 +5172,7 @@ Jump_0E2_6013::
     call Func_0E2_64CE
 
 Jump_0E2_602A::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -5189,13 +5189,13 @@ Jump_0E2_603E::
     ret
 
 Func_0E2_6044:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7B5C
+    ld hl, Func_005_7B5C
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5206,7 +5206,7 @@ Func_0E2_6044:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_605D::
     call Func_0E2_6854
-    ld hl, Data_0E2_69F5
+    ld hl, Func_005_69F5
     ld b, $05
     rst $10
     ld a, c
@@ -5218,7 +5218,7 @@ Jump_0E2_605D::
     call Func_0E2_64CE
 
 Jump_0E2_6074::
-    ld hl, Data_0E2_6A6B
+    ld hl, Func_005_6A6B
     ld b, $05
     rst $10
     ld a, c
@@ -5233,13 +5233,13 @@ Jump_0E2_6088::
     ret
 
 Func_0E2_6089:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7B84
+    ld hl, Func_005_7B84
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5253,13 +5253,13 @@ Jump_0E2_60A2::
     ret
 
 Func_0E2_60A6:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7BBE
+    ld hl, Func_005_7BBE
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $53FA
+    ld hl, Func_005_53FA
     ld b, $05
     rst $10
     ld a, c
@@ -5271,7 +5271,7 @@ Func_0E2_60A6:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_60C3::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5285,7 +5285,7 @@ Jump_0E2_60D3::
     ret
 
 Func_0E2_60D7:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7BE6
+    ld hl, Func_005_7BE6
     ld b, $05
     rst $10
     ld a, c
@@ -5295,7 +5295,7 @@ Func_0E2_60D7:: ; heuristic: follows a terminator; C0
     ret z
     ld a, [$D8A4]
     call Func_0E2_656D
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5305,7 +5305,7 @@ Func_0E2_60D7:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_60FA::
-    ld hl, $5500
+    ld hl, Func_005_5500
     ld b, $05
     rst $10
     ld a, c
@@ -5321,7 +5321,7 @@ Jump_0E2_610E::
     ret
 
 Func_0E2_6112:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7C12
+    ld hl, Func_005_7C12
     ld b, $05
     rst $10
     ld a, c
@@ -5329,7 +5329,7 @@ Func_0E2_6112:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5345,7 +5345,7 @@ Jump_0E2_6135::
     ret
 
 Func_0E2_6139:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7C45
+    ld hl, Func_005_7C45
     ld b, $05
     rst $10
     ld a, c
@@ -5353,7 +5353,7 @@ Func_0E2_6139:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5369,7 +5369,7 @@ Jump_0E2_615C::
     ret
 
 Func_0E2_6160:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7C69
+    ld hl, Func_005_7C69
     ld b, $05
     rst $10
     ld a, c
@@ -5379,7 +5379,7 @@ Func_0E2_6160:: ; heuristic: follows a terminator; C0
     ret z
     ld a, [$D8A4]
     call Func_0E2_672D
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5395,7 +5395,7 @@ Jump_0E2_6189::
     ret
 
 Func_0E2_618D:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7C82
+    ld hl, Func_005_7C82
     ld b, $05
     rst $10
     ld a, c
@@ -5405,7 +5405,7 @@ Func_0E2_618D:: ; heuristic: follows a terminator; C0
     ret z
 
 Jump_0E2_619A::
-    ld hl, $53FA
+    ld hl, Func_005_53FA
     ld b, $05
     rst $10
     ld a, c
@@ -5417,7 +5417,7 @@ Jump_0E2_619A::
     call Func_0E2_64CE
 
 Jump_0E2_61AE::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5431,7 +5431,7 @@ Jump_0E2_61BE::
     ret
 
 Func_0E2_61C2:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7CA2
+    ld hl, Func_005_7CA2
     ld b, $05
     rst $10
     ld a, c
@@ -5440,7 +5440,7 @@ Func_0E2_61C2:: ; heuristic: follows a terminator; C0
     jr Jump_0E2_619A
 
 Func_0E2_61CD:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7CC2
+    ld hl, Func_005_7CC2
     ld b, $05
     rst $10
     ld a, c
@@ -5452,13 +5452,13 @@ Func_0E2_61CD:: ; heuristic: follows a terminator; C0
     ret
 
 Func_0E2_61E0:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7CE7
+    ld hl, Func_005_7CE7
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4E20
+    ld hl, Func_005_4E20
     ld b, $05
     rst $10
     ld a, c
@@ -5468,7 +5468,7 @@ Func_0E2_61E0:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_61F9::
-    ld hl, $53FA
+    ld hl, Func_005_53FA
     ld b, $05
     rst $10
     ld a, c
@@ -5480,7 +5480,7 @@ Jump_0E2_61F9::
     call Func_0E2_64CE
 
 Jump_0E2_620D::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5490,7 +5490,7 @@ Jump_0E2_620D::
     call Func_0E2_64CE
 
 Jump_0E2_621D::
-    ld hl, $5500
+    ld hl, Func_005_5500
     ld b, $05
     rst $10
     ld a, c
@@ -5503,7 +5503,7 @@ Jump_0E2_621D::
 
 Jump_0E2_6231::
     call Func_0E2_6854
-    ld hl, $57A1
+    ld hl, Func_005_57A1
     ld b, $05
     rst $10
     ld a, c
@@ -5518,7 +5518,7 @@ Jump_0E2_6248::
     ret
 
 Func_0E2_6249:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7CF3
+    ld hl, Func_005_7CF3
     ld b, $05
     rst $10
     ld a, c
@@ -5526,7 +5526,7 @@ Func_0E2_6249:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -5536,7 +5536,7 @@ Func_0E2_6249:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_6266::
-    ld hl, $4BE1
+    ld hl, Func_005_4BE1
     ld b, $05
     rst $10
     ld a, c
@@ -5548,7 +5548,7 @@ Jump_0E2_6266::
 Jump_0E2_6276::
     ld a, [$D8A4]
     call Func_0E2_6603
-    ld hl, $53FA
+    ld hl, Func_005_53FA
     ld b, $05
     rst $10
     ld a, c
@@ -5561,7 +5561,7 @@ Jump_0E2_6276::
 
 Jump_0E2_6290::
     call Func_0E2_6876
-    ld hl, $5D20
+    ld hl, Func_005_5D20
     ld b, $05
     rst $10
     ld a, c
@@ -5574,7 +5574,7 @@ Jump_0E2_62A3::
     ret
 
 Func_0E2_62A4:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7D5B
+    ld hl, Func_005_7D5B
     ld b, $05
     rst $10
     ld a, c
@@ -5582,7 +5582,7 @@ Func_0E2_62A4:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld hl, $4C5D
+    ld hl, Func_005_4C5D
     ld b, $05
     rst $10
     ld a, c
@@ -5592,7 +5592,7 @@ Func_0E2_62A4:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_62C1::
-    ld hl, $53FA
+    ld hl, Func_005_53FA
     ld b, $05
     rst $10
     ld a, c
@@ -5604,7 +5604,7 @@ Jump_0E2_62C1::
     call Func_0E2_64CE
 
 Jump_0E2_62D5::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5617,7 +5617,7 @@ Jump_0E2_62D5::
 
 Jump_0E2_62EB::
     call Func_0E2_6854
-    ld hl, $57A1
+    ld hl, Func_005_57A1
     ld b, $05
     rst $10
     ld a, c
@@ -5632,7 +5632,7 @@ Jump_0E2_6302::
     ret
 
 Func_0E2_6303:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7D95
+    ld hl, Func_005_7D95
     ld b, $05
     rst $10
     ld a, c
@@ -5640,7 +5640,7 @@ Func_0E2_6303:: ; heuristic: follows a terminator; C0
     ret z
     ld a, [$D8A4]
     call Func_0E2_6634
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -5650,7 +5650,7 @@ Func_0E2_6303:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_6322::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5663,7 +5663,7 @@ Jump_0E2_6322::
 
 Jump_0E2_6338::
     call Func_0E2_6865
-    ld hl, $6556
+    ld hl, Func_005_6556
     ld b, $05
     rst $10
     ld a, c
@@ -5678,13 +5678,13 @@ Jump_0E2_634F::
     ret
 
 Func_0E2_6350:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7DA8
+    ld hl, Func_005_7DA8
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5697,7 +5697,7 @@ Func_0E2_6350:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_636F::
     call Func_0E2_6865
-    ld hl, Func_0E2_667F
+    ld hl, Func_005_667F
     ld b, $05
     rst $10
     ld a, c
@@ -5712,13 +5712,13 @@ Jump_0E2_6386::
     ret
 
 Func_0E2_6387:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7DC2
+    ld hl, Func_005_7DC2
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $4BE1
+    ld hl, Func_005_4BE1
     ld b, $05
     rst $10
     ld a, c
@@ -5730,7 +5730,7 @@ Func_0E2_6387:: ; heuristic: follows a terminator; C0
 Jump_0E2_63A0::
     ld a, [$D8A4]
     call Func_0E2_66C5
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -5740,7 +5740,7 @@ Jump_0E2_63A0::
     call Func_0E2_64CE
 
 Jump_0E2_63B6::
-    ld hl, $53A5
+    ld hl, Func_005_53A5
     ld b, $05
     rst $10
     ld a, c
@@ -5750,7 +5750,7 @@ Jump_0E2_63B6::
     call Func_0E2_64CE
 
 Jump_0E2_63C6::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5765,7 +5765,7 @@ Jump_0E2_63C6::
 
 Jump_0E2_63E2::
     call Func_0E2_6865
-    ld hl, $6556
+    ld hl, Func_005_6556
     ld b, $05
     rst $10
     ld a, c
@@ -5780,19 +5780,19 @@ Jump_0E2_63F9::
     ret
 
 Func_0E2_63FA:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7DDC
+    ld hl, Func_005_7DDC
     ld b, $05
     rst $10
     ret
 
 Func_0E2_6401:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7B11
+    ld hl, Func_005_7B11
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5806,7 +5806,7 @@ Jump_0E2_641A::
     ret
 
 Func_0E2_641E:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7DDC
+    ld hl, Func_005_7DDC
     ld b, $05
     rst $10
     ret
@@ -5814,13 +5814,13 @@ Func_0E2_641E:: ; heuristic: follows a terminator; C0
 Func_0E2_6425:: ; heuristic: follows a terminator; C0
     call Func_0E2_67A5
     ret z
-    ld hl, Data_0E2_7DE8
+    ld hl, Func_005_7DE8
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $459D
+    ld hl, Func_005_459D
     ld b, $05
     rst $10
     ld a, c
@@ -5830,7 +5830,7 @@ Func_0E2_6425:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_6442::
-    ld hl, $4777
+    ld hl, Func_005_4777
     ld b, $05
     rst $10
     ld a, c
@@ -5840,7 +5840,7 @@ Jump_0E2_6442::
     call Func_0E2_64F5
 
 Jump_0E2_6452::
-    ld hl, $5397
+    ld hl, Func_005_5397
     ld b, $05
     rst $10
     ld a, c
@@ -5850,7 +5850,7 @@ Jump_0E2_6452::
     call Func_0E2_64F5
 
 Jump_0E2_6462::
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5863,13 +5863,13 @@ Jump_0E2_6472::
     ret
 
 Func_0E2_6473:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7370
+    ld hl, Func_005_7370
     ld b, $05
     rst $10
     ld a, c
     and a, a
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5882,7 +5882,7 @@ Jump_0E2_648C::
     ret
 
 Func_0E2_648D:: ; heuristic: follows a terminator; C0
-    ld hl, Data_0E2_7397
+    ld hl, Func_005_7397
     ld b, $05
     rst $10
     ld a, c
@@ -5890,7 +5890,7 @@ Func_0E2_648D:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld hl, $54FD
+    ld hl, Func_005_54FD
     ld b, $05
     rst $10
     ld a, c
@@ -5900,7 +5900,7 @@ Func_0E2_648D:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_64AA::
-    ld hl, $57A1
+    ld hl, Func_005_57A1
     ld b, $05
     rst $10
     ld a, c
@@ -5913,10 +5913,7 @@ Jump_0E2_64AA::
 
 Jump_0E2_64BE::
     ret
-    db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65
-
-Data_0E2_64CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $C9, $C9
+    db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65, $C9, $C9
 
 Func_0E2_64CE::
     call Func_0E2_654B
@@ -6022,7 +6019,7 @@ Jump_0E2_6561::
 
 Func_0E2_656D:: ; heuristic: follows a terminator; C0
     ldh [$FFC6], a
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6069,7 +6066,7 @@ Jump_0E2_65B7::
 
 Func_0E2_65B8:: ; heuristic: follows a terminator; C0
     ldh [$FFC6], a
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6135,7 +6132,7 @@ Jump_0E2_6615::
     ret
 
 Func_0E2_661A::
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6154,7 +6151,7 @@ Jump_0E2_6633::
 
 Func_0E2_6634:: ; heuristic: follows a terminator; C0
     ldh [$FFC6], a
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6221,7 +6218,7 @@ Jump_0E2_6691::
 
 Func_0E2_6696::
     push bc
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6274,7 +6271,7 @@ Jump_0E2_66D7::
 
 Func_0E2_66DC::
     push bc
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6308,7 +6305,7 @@ Data_0E2_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Func_0E2_670B::
     ldh [$FFC6], a
     push bc
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6355,7 +6352,7 @@ Jump_0E2_673F::
 
 Func_0E2_6744::
     push bc
-    ld hl, $5317
+    ld hl, Func_005_5317
     ld b, $05
     rst $10
     ld a, c
@@ -6386,13 +6383,10 @@ Data_0E2_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $20, $1F, $1E, $1D, $1D
 
 Data_0E2_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $AA
-
-Data_0E2_676E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $AA, $AB, $AC, $AD, $AE
+    db $AA, $AA, $AB, $AC, $AD, $AE
 
 Func_0E2_6773::
-    ld hl, $585D
+    ld hl, Func_005_585D
     ld b, $05
     rst $10
     ld a, c
@@ -6410,7 +6404,7 @@ Jump_0E2_678B::
     ret
 
 Func_0E2_678C:: ; heuristic: follows a terminator; C0
-    ld hl, $65C1
+    ld hl, Func_005_65C1
     ld b, $05
     rst $10
     ld a, c
@@ -6460,7 +6454,7 @@ Func_0E2_67CF::
 
 Func_0E2_67D5::
     call Func_0E2_6865
-    ld hl, $5758
+    ld hl, Func_005_5758
     ld b, $05
     rst $10
     ld a, c
@@ -6470,7 +6464,7 @@ Func_0E2_67D5::
     call Func_0E2_64CE
 
 Jump_0E2_67E8::
-    ld hl, $5CF1
+    ld hl, Func_005_5CF1
     ld b, $05
     rst $10
     ld a, c
@@ -6483,7 +6477,7 @@ Jump_0E2_67F8::
     ret
 
 Func_0E2_67F9:: ; heuristic: follows a terminator; C0
-    ld hl, $5ECE
+    ld hl, Func_005_5ECE
     ld b, $05
     rst $10
     ld a, c
@@ -6495,7 +6489,7 @@ Func_0E2_67F9:: ; heuristic: follows a terminator; C0
     call Func_0E2_64CE
 
 Jump_0E2_680D::
-    ld hl, $5FC7
+    ld hl, Func_005_5FC7
     ld b, $05
     rst $10
     ld a, c
@@ -6510,7 +6504,7 @@ Jump_0E2_6821::
     ret
 
 Func_0E2_6822::
-    ld hl, $55BE
+    ld hl, Func_005_55BE
     ld b, $05
     rst $10
     ld a, c
@@ -6520,7 +6514,7 @@ Func_0E2_6822::
     call Func_0E2_64F5
 
 Jump_0E2_6832::
-    ld hl, $5731
+    ld hl, Func_005_5731
     ld b, $05
     rst $10
     ld a, c
@@ -6533,7 +6527,7 @@ Jump_0E2_6842::
     ret
 
 Func_0E2_6843:: ; heuristic: follows a terminator; C0
-    ld hl, $55BE
+    ld hl, Func_005_55BE
     ld b, $05
     rst $10
     ld a, c
@@ -6546,7 +6540,7 @@ Jump_0E2_6853::
     ret
 
 Func_0E2_6854:: ; heuristic: follows a terminator; C0
-    ld hl, $55F3
+    ld hl, Func_005_55F3
     ld b, $05
     rst $10
     ld a, c
@@ -6559,7 +6553,7 @@ Jump_0E2_6864::
     ret
 
 Func_0E2_6865:: ; heuristic: follows a terminator; C0
-    ld hl, $5628
+    ld hl, Func_005_5628
     ld b, $05
     rst $10
     ld a, c
@@ -6572,7 +6566,7 @@ Jump_0E2_6875::
     ret
 
 Func_0E2_6876:: ; heuristic: follows a terminator; C0
-    ld hl, $565D
+    ld hl, Func_005_565D
     ld b, $05
     rst $10
     ld a, c
@@ -6585,7 +6579,7 @@ Jump_0E2_6886::
     ret
 
 Func_0E2_6887:: ; heuristic: follows a terminator; C0
-    ld hl, $5692
+    ld hl, Func_005_5692
     ld b, $05
     rst $10
     ld a, c
@@ -6598,7 +6592,7 @@ Jump_0E2_6897::
     ret
 
 Func_0E2_6898:: ; heuristic: follows a terminator; C0
-    ld hl, $56C7
+    ld hl, Func_005_56C7
     ld b, $05
     rst $10
     ld a, c
@@ -6673,323 +6667,5 @@ Jump_0E2_6917::
     ld a, [$D8A5]
     cp a, $04
     ret
-    INCBIN "dwm2-cobi-us.gbc", $38A91D, $55
-
-Data_0E2_6972:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $38A972, $68
-
-Data_0E2_69DA:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $CD, $25, $3F, $2A, $E6, $C0, $20, $03, $7E, $E6, $0C, $E1, $C9, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-Data_0E2_69F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $76, $00
-
-Data_0E2_6A6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $615, $00
-
-Data_0E2_7080:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-Data_0E2_708C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $3D, $00
-
-Data_0E2_70C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $40, $00
-
-Data_0E2_7109:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $56, $00
-
-Data_0E2_715F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_7187:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $25, $00
-
-Data_0E2_71AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $12, $00
-
-Data_0E2_71BE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $20, $00
-
-Data_0E2_71DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_71F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_720A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7220:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7236:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_724F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2B, $00
-
-Data_0E2_727A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_7293:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_72AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $12, $00
-
-Data_0E2_72BE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $20, $00
-
-Data_0E2_72DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_72F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2B, $00
-
-Data_0E2_7322:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $23, $00
-
-Data_0E2_7345:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2B, $00
-
-Data_0E2_7370:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $27, $00
-
-Data_0E2_7397:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $40, $00
-
-Data_0E2_73D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $39, $00
-
-Data_0E2_7410:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $39, $00
-
-Data_0E2_7449:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $39, $00
-
-Data_0E2_7482:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $12, $00
-
-Data_0E2_7494:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $21, $00
-
-Data_0E2_74B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1C, $00
-
-Data_0E2_74D1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_74F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_7512:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $12, $00
-
-Data_0E2_7524:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_753A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7550:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7566:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_757C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7592:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_75A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_75BE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_75D4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_75EA:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7600:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7616:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_763E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1D, $00
-
-Data_0E2_765B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_7671:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $32, $00
-
-Data_0E2_76A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2B, $00
-
-Data_0E2_76CE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $14, $00
-
-Data_0E2_76E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $16, $00
-
-Data_0E2_76F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $33, $00
-
-Data_0E2_772B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $24, $00
-
-Data_0E2_774F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_7777:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-Data_0E2_7786:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_779F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_77C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_77E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_77F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2B, $00
-
-Data_0E2_7824:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $23, $00
-
-Data_0E2_7847:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_7860:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_7879:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2F, $00
-
-Data_0E2_78A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $24, $00
-
-Data_0E2_78CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $41, $00
-
-Data_0E2_790D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $12, $00
-
-Data_0E2_791F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $27, $00
-
-Data_0E2_7946:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2F, $00
-
-Data_0E2_7975:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $21, $00
-
-Data_0E2_7996:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2F, $00
-
-Data_0E2_79C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $20, $00
-
-Data_0E2_79E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_7A0D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1A, $00
-
-Data_0E2_7A27:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $17, $00
-
-Data_0E2_7A3E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $17, $00
-
-Data_0E2_7A55:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $17, $00
-
-Data_0E2_7A6C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $25, $00
-
-Data_0E2_7A91:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $13, $00
-
-Data_0E2_7AA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_7ACC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-Data_0E2_7AD8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $39, $00
-
-Data_0E2_7B11:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2F, $00
-
-Data_0E2_7B40:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1C, $00
-
-Data_0E2_7B5C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_7B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $3A, $00
-
-Data_0E2_7BBE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $28, $00
-
-Data_0E2_7BE6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $2C, $00
-
-Data_0E2_7C12:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $33, $00
-
-Data_0E2_7C45:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $24, $00
-
-Data_0E2_7C69:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $19, $00
-
-Data_0E2_7C82:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $20, $00
-
-Data_0E2_7CA2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $20, $00
-
-Data_0E2_7CC2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $25, $00
-
-Data_0E2_7CE7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-Data_0E2_7CF3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $68, $00
-
-Data_0E2_7D5B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $3A, $00
-
-Data_0E2_7D95:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $13, $00
-
-Data_0E2_7DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1A, $00
-
-Data_0E2_7DC2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1A, $00
-
-Data_0E2_7DDC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-Data_0E2_7DE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $218, $00
+    INCBIN "dwm2-cobi-us.gbc", $38A91D, $CA
+    ds $1619, $00

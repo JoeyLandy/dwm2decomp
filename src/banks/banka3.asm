@@ -908,7 +908,7 @@ Jump_0A3_4B1A::
     jr nz, Jump_0A3_4B1A
 
 Jump_0A3_4B4C::
-    ld hl, Data_0A3_65E6
+    ld hl, Func_0F2_65E6
     ld b, $F2
     rst $10
     xor a, a
@@ -927,7 +927,4 @@ Data_0A3_4CD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28CD90, $A2
     ds $17, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03
-    ds $1790, $00
-
-Data_0A3_65E6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1A1A, $00
+    ds $31AA, $00

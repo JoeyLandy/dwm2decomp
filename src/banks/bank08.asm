@@ -5,7 +5,7 @@ Func_008_4001::
     ld a, [$C528]
     cp a, $09
     jr c, Jump_008_400F
-    ld hl, Data_008_4650
+    ld hl, Func_095_4650
     ld b, $95
     rst $10
     ret
@@ -19,7 +19,7 @@ Func_008_4016::
     ld a, [$C528]
     cp a, $09
     jr c, Jump_008_4024
-    ld hl, $465F
+    ld hl, Func_095_465F
     ld b, $95
     rst $10
     ret
@@ -818,8 +818,6 @@ Data_008_42BC:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_6305
     dw Data_008_630F
     dw Data_008_6319
-
-Data_008_4650:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_008_6323
     dw Data_008_632A
     dw Data_008_6333

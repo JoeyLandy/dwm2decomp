@@ -27,7 +27,7 @@ Func_003_4015::
     dw Jump_003_402F
 
 Jump_003_402F::
-    ld hl, Func_003_4001
+    ld hl, Func_0F1_4001
     ld b, $F1
     rst $10
     ret
@@ -267,7 +267,7 @@ Func_003_4208::
 Jump_003_4218::
     call Func_003_499B
     call Func_003_4A27
-    ld hl, $7A64
+    ld hl, Func_016_7A64
     ld b, $16
     rst $10
     ld a, [$C6FD]
@@ -472,7 +472,7 @@ Jump_003_4315::
     ret
 
 Func_003_432F::
-    ld hl, $5E82
+    ld hl, Func_002_5E82
     ld b, $02
     rst $10
     call Func_000_222B
@@ -507,7 +507,7 @@ Jump_003_4367::
     call Func_003_42DA
     ld hl, $C5E0
     inc [hl]
-    ld hl, Data_003_4628
+    ld hl, Func_002_4628
     ld b, $02
     rst $10
     xor a, a
@@ -606,7 +606,7 @@ Func_003_43D9::
     ld [$C52F], a
     ld a, d
     ld [$C530], a
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     pop bc
@@ -985,10 +985,7 @@ Data_003_4623:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $99, $61, $99
 
 Data_003_4627:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01
-
-Data_003_4628:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $99, $41, $99
+    db $01, $99, $41, $99
 
 Data_003_462B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $47, $99, $87, $99, $C7, $99, $07, $9A
@@ -1032,7 +1029,7 @@ Jump_003_4677::
     ret
 
 Jump_003_467C::
-    ld hl, $7347
+    ld hl, Func_002_7347
     ld b, $02
     rst $10
     ld a, [$C8C3]
@@ -1183,7 +1180,7 @@ Jump_003_4759::
     ret
 
 Jump_003_4770::
-    ld hl, $6A3D
+    ld hl, Func_01D_6A3D
     ld b, $1D
     rst $10
     ld de, Func_003_460B
@@ -1383,7 +1380,7 @@ Jump_003_48B3::
     ld [$D7F1], a
     ld a, h
     ld [$D7F2], a
-    ld hl, Data_003_6899
+    ld hl, Func_01D_6899
     ld b, $1D
     rst $10
     ld a, [$C562]
@@ -1415,19 +1412,19 @@ Jump_003_48EB::
 Func_003_48EF::
     call Func_003_4284
     ld e, $00
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $01
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $02
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $03
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld hl, $C0A4
@@ -1437,19 +1434,19 @@ Func_003_48EF::
 Func_003_4917::
     call Func_003_4284
     ld e, $00
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $04
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $05
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $06
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld hl, $C0A4
@@ -1459,15 +1456,15 @@ Func_003_4917::
 Func_003_493F::
     call Func_003_4284
     ld e, $00
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $07
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $08
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld hl, $C0A4
@@ -1477,15 +1474,15 @@ Func_003_493F::
 Func_003_495F::
     call Func_003_4284
     ld e, $00
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $09
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $0A
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld hl, $C0A4
@@ -1497,11 +1494,11 @@ Func_003_497F::
     ld a, [$C6FD]
     add a, $2D
     ld e, a
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $31
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld hl, $C0A4
@@ -1511,19 +1508,19 @@ Func_003_497F::
 Func_003_499B::
     call Func_003_4284
     ld e, $00
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $01
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $02
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $03
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     call Func_003_451C
@@ -1532,19 +1529,19 @@ Func_003_499B::
 Func_003_49C2::
     call Func_003_4284
     ld e, $00
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $04
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $05
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $06
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     call Func_003_451C
@@ -1553,15 +1550,15 @@ Func_003_49C2::
 Func_003_49E9::
     call Func_003_4284
     ld e, $00
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $07
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $08
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     call Func_003_451C
@@ -1570,15 +1567,15 @@ Func_003_49E9::
 Func_003_4A08::
     call Func_003_4284
     ld e, $00
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $09
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     ld e, $0A
-    ld hl, $402B
+    ld hl, Func_033_402B
     ld b, $33
     rst $10
     call Func_003_451C
@@ -1999,7 +1996,7 @@ Jump_003_4CB8::
     ld [$D006], a
     ld a, [hl]
     ld [$D007], a
-    ld hl, Func_003_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld a, [$D00F]
@@ -2010,7 +2007,7 @@ Jump_003_4CB8::
     call Func_000_1F49
     ld a, [hl]
     ldh [$FFC7], a
-    ld hl, Jump_003_7380
+    ld hl, Func_019_7380
     ld b, $19
     rst $10
     ld c, $56
@@ -2054,7 +2051,7 @@ Func_003_4D57::
     ld [$D006], a
     ld a, [hl]
     ld [$D007], a
-    ld hl, Func_003_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld a, [$D013]
@@ -2258,7 +2255,7 @@ Jump_003_4ED2::
     ld l, a
     ld de, $0901
     call Func_003_43D9
-    ld hl, Func_003_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld a, [$D008]
@@ -2274,7 +2271,7 @@ Jump_003_4ED2::
 Jump_003_4EF1::
     ld a, [hl]
     ld [$D09E], a
-    ld hl, $7A48
+    ld hl, Func_016_7A48
     ld b, $16
     rst $10
     pop hl
@@ -2392,7 +2389,7 @@ Func_003_4F6F::
     ld [$D7F4], a
     ld a, h
     ld [$D7F5], a
-    ld hl, Data_003_6973
+    ld hl, Func_01D_6973
     ld b, $1D
     rst $10
     xor a, a
@@ -2430,7 +2427,7 @@ Jump_003_4FCF::
     ld [$D09D], a
     ld a, h
     ld [$D09E], a
-    ld hl, $682A
+    ld hl, Func_01D_682A
     ld b, $1D
     rst $10
     xor a, a
@@ -2703,7 +2700,7 @@ Jump_003_5142::
     ld a, h
     add a, $02
     ld [$C528], a
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     pop bc
@@ -2946,7 +2943,7 @@ Jump_003_52FF::
     ld de, $C60C
     ld hl, $C130
     call Func_000_2FE1
-    ld hl, $4007
+    ld hl, Func_016_4007
     ld b, $16
     rst $10
     ld hl, $C0A0
@@ -2966,7 +2963,7 @@ Jump_003_5328::
 Jump_003_5330::
     bit 2, a
     ret z
-    ld hl, $590C
+    ld hl, Func_016_590C
     ld b, $16
     rst $10
     call Func_003_5900
@@ -3096,7 +3093,7 @@ Jump_003_540C::
     ld [$C528], a
     ld a, $06
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -3188,7 +3185,7 @@ Jump_003_54B4::
     ld [$C529], a
     cp a, $25
     jr z, Jump_003_54CE
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -3208,7 +3205,7 @@ Jump_003_54D4::
     ld [$0100], a
     ld a, $00
     ld [$4100], a
-    ld hl, $4025
+    ld hl, Func_016_4025
     ld b, $16
     rst $10
     xor a, a
@@ -3261,7 +3258,7 @@ Jump_003_5532::
     ld [$C528], a
 
 Jump_003_553C::
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -3280,7 +3277,7 @@ Jump_003_5550::
     ld [$0100], a
     ld a, $00
     ld [$4100], a
-    ld hl, $468E
+    ld hl, Func_016_468E
     ld b, $16
     rst $10
     xor a, a
@@ -3293,7 +3290,7 @@ Jump_003_5550::
 Jump_003_556E::
     ld a, $00
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -3319,7 +3316,7 @@ Jump_003_5591::
     ld [$0100], a
     ld a, $00
     ld [$4100], a
-    ld hl, $4025
+    ld hl, Func_016_4025
     ld b, $16
     rst $10
     xor a, a
@@ -3347,7 +3344,7 @@ Jump_003_55C9::
     ld [$C529], a
     ld a, $00
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -3368,7 +3365,7 @@ Jump_003_55EB::
     ld [$0100], a
     ld a, $00
     ld [$4100], a
-    ld hl, $468E
+    ld hl, Func_016_468E
     ld b, $16
     rst $10
     xor a, a
@@ -3379,7 +3376,7 @@ Jump_003_55EB::
     jr z, Jump_003_5614
     ld a, $00
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
 
@@ -3396,7 +3393,7 @@ Jump_003_5619::
     ret
 
 Jump_003_5622::
-    ld hl, $4025
+    ld hl, Func_016_4025
     ld b, $16
     rst $10
     ld hl, $C0A1
@@ -3414,7 +3411,7 @@ Jump_003_5622::
     inc [hl]
 
 Jump_003_5643::
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ret
@@ -3468,7 +3465,7 @@ Jump_003_56AA::
     ld [$0100], a
     ld a, $00
     ld [$4100], a
-    ld hl, $468E
+    ld hl, Func_016_468E
     ld b, $16
     rst $10
     xor a, a
@@ -3511,7 +3508,7 @@ Jump_003_56EB::
     ld [$C529], a
     ld a, $00
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -3564,7 +3561,7 @@ Jump_003_574A::
     ld [$C528], a
     ld a, $01
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -3637,7 +3634,7 @@ Jump_003_57C6::
     ld [$C528], a
     ld a, $02
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -3658,10 +3655,10 @@ Jump_003_57ED::
     ld [$C528], a
     ld a, $04
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
-    ld hl, $4C48
+    ld hl, Func_016_4C48
     ld b, $16
     rst $10
     ld hl, $C0A1
@@ -3685,18 +3682,18 @@ Jump_003_581A::
 Func_003_581E::
     call Func_003_4284
     ld e, $0B
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $0C
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C61D]
     or a, a
     ret z
     ld e, $0D
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C0A7]
@@ -3721,7 +3718,7 @@ Jump_003_585C::
 Func_003_585D::
     call Func_003_581E
     ld e, $0E
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46E]
@@ -3733,11 +3730,11 @@ Func_003_585D::
 Func_003_5874::
     call Func_003_585D
     ld e, $11
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $1B
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$D081]
@@ -3768,7 +3765,7 @@ Func_003_58A6::
     call Func_000_290E
     call Func_003_5874
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46D]
@@ -3780,7 +3777,7 @@ Func_003_58A6::
 Func_003_58C0::
     call Func_003_585D
     ld e, $0F
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -3789,7 +3786,7 @@ Func_003_58C0::
 Func_003_58CF::
     call Func_003_58C0
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46F]
@@ -3802,7 +3799,7 @@ Func_003_58E6::
     call Func_000_290E
     call Func_003_585D
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46F]
@@ -3866,7 +3863,7 @@ Func_003_592E::
     ld [$C52D], a
     ld a, h
     ld [$C52E], a
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     ld de, $C61E
@@ -3909,7 +3906,7 @@ Jump_003_5995::
     ld [$C52D], a
     ld a, h
     ld [$C52E], a
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     pop hl
@@ -3997,7 +3994,7 @@ Func_003_5A07::
     ld [$C528], a
     ld a, $00
     ld [$C529], a
-    ld hl, $400F
+    ld hl, Func_009_400F
     ld b, $09
     rst $10
     pop hl
@@ -4577,7 +4574,7 @@ Jump_003_5F90::
     ld [$C528], a
     ld a, $1A
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -4744,7 +4741,7 @@ Jump_003_60C6::
 Jump_003_60D7::
     ld a, $01
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -4933,7 +4930,7 @@ Jump_003_623F::
     ld [$C529], a
     ld a, $01
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -4950,7 +4947,7 @@ Jump_003_6253::
     ld [$0100], a
     ld a, $00
     ld [$4100], a
-    ld hl, $52C9
+    ld hl, Func_016_52C9
     ld b, $16
     rst $10
     ld a, $00
@@ -4974,7 +4971,7 @@ Jump_003_6286::
     ld [$C529], a
     ld a, $01
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -5066,7 +5063,7 @@ Jump_003_6324::
     ld [$0100], a
     ld a, $00
     ld [$4100], a
-    ld hl, $53E6
+    ld hl, Func_016_53E6
     ld b, $16
     rst $10
     ld a, $00
@@ -5091,7 +5088,7 @@ Jump_003_6354::
     ld [$C529], a
     cp a, $FF
     jr z, Jump_003_6364
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
 
@@ -5146,7 +5143,7 @@ Jump_003_639F::
     ld [$C528], a
     ld a, $0C
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $D09E
@@ -5182,7 +5179,7 @@ Jump_003_63E3::
 Jump_003_63E8::
     ld a, $01
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld a, $0B
@@ -5215,11 +5212,11 @@ Jump_003_640F::
 Func_003_641E::
     call Func_003_4284
     ld e, $1C
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $0C
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -5263,7 +5260,7 @@ Jump_003_6450::
 Func_003_646F::
     call Func_003_641E
     ld e, $1D
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46D]
@@ -5285,15 +5282,15 @@ Func_003_646F::
 Func_003_649C::
     call Func_003_4284
     ld e, $20
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $0C
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $1D
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46D]
@@ -5353,7 +5350,7 @@ Func_003_650C::
     ld hl, $4617
     call Func_003_4538
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -5362,11 +5359,11 @@ Func_003_6526::
     call Func_000_290E
     call Func_003_4284
     ld e, $20
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $0C
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46E]
@@ -5401,7 +5398,7 @@ Jump_003_656C::
     ld l, a
     call Func_003_4290
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -5414,7 +5411,7 @@ Func_003_657B::
     ld hl, Func_003_460B
     call Func_003_4538
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -5444,7 +5441,7 @@ Func_003_6595::
     ld [$C528], a
     ld a, $01
     ld [$C529], a
-    ld hl, $400F
+    ld hl, Func_009_400F
     ld b, $09
     rst $10
     pop hl
@@ -5490,7 +5487,7 @@ Jump_003_6606::
     ld [$D081], a
     xor a, a
     ld [$CFED], a
-    ld hl, Func_003_4001
+    ld hl, Func_01A_4001
     ld b, $1A
     rst $10
     ld a, [$CFEE]
@@ -5679,7 +5676,7 @@ Func_003_67B0::
     ld a, h
     ld [$C52E], a
     push de
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     pop de
@@ -5722,7 +5719,7 @@ Jump_003_681F::
     ld [$C52D], a
     ld a, h
     ld [$C52E], a
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     pop hl
@@ -5745,17 +5742,10 @@ Jump_003_681F::
     ret
     ds $1B, $00
     db $01, $01, $01
-    ds $2A, $00
-
-Data_003_6899:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $88, $00
+    ds $B2, $00
 
 Data_003_6921:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $00E921, $52
-
-Data_003_6973:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $C3, $B7, $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4
-    db $B4, $B4, $B4, $B5
+    INCBIN "dwm2-cobi-us.gbc", $00E921, $66
 
 Data_003_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $FF, $FF, $FF, $FF
@@ -5766,11 +5756,8 @@ Data_003_699B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF, $FF, $FF
 
 Data_003_69AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00
-
-Data_003_69B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $00, $00, $03
-    db $04, $05, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $00, $00
+    db $03, $04, $05, $00
 
 Func_003_69C3::
     ld a, [$C46D]
@@ -5944,7 +5931,7 @@ Jump_003_6ABB::
     call Func_003_7692
     call Func_003_42DA
     call Func_000_222B
-    ld hl, $7A64
+    ld hl, Func_016_7A64
     ld b, $16
     rst $10
     ld a, $06
@@ -5978,7 +5965,7 @@ Jump_003_6ADC::
     call Func_003_6B5E
     jr z, Jump_003_6B1F
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     xor a, a
@@ -6011,7 +5998,7 @@ Jump_003_6B33::
     ld [$C528], a
     ld a, $0D
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -6027,7 +6014,7 @@ Jump_003_6B54::
     ret
 
 Func_003_6B5E::
-    ld hl, Data_003_4645
+    ld hl, Func_016_4645
     ld b, $16
     rst $10
     ld a, c
@@ -6267,7 +6254,7 @@ Jump_003_6CEE::
     ld [$C53D], a
     ld a, h
     ld [$C53E], a
-    ld hl, $4008
+    ld hl, Func_009_4008
     ld b, $09
     rst $10
     ld a, $0A
@@ -6340,7 +6327,7 @@ Jump_003_6D73::
     ld [$C529], a
 
 Jump_003_6D85::
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -6370,7 +6357,7 @@ Jump_003_6DAB::
     ld [$C528], a
     ld a, $08
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -6400,7 +6387,7 @@ Jump_003_6DDC::
     ld [$C528], a
     ld a, $07
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -6485,7 +6472,7 @@ Jump_003_6E88::
     ld [$C529], a
     ld a, $08
     ld [$C528], a
-    ld hl, Func_003_4001
+    ld hl, Func_008_4001
     ld b, $08
     rst $10
     ld hl, $C0A1
@@ -6505,7 +6492,7 @@ Jump_003_6E9D::
 
 Jump_003_6EAF::
     ldh [$FFC6], a
-    ld hl, Data_003_69B0
+    ld hl, Func_012_69B0
     ld b, $12
     rst $10
     xor a, a
@@ -7280,7 +7267,7 @@ Jump_003_73A0::
     call Func_003_7763
     ld a, $20
     ld [$D09E], a
-    ld hl, $7A5B
+    ld hl, Func_016_7A5B
     ld b, $16
     rst $10
     ld hl, $C60C
@@ -7305,13 +7292,13 @@ Jump_003_73A0::
     ld a, [$D09E]
     ld de, $C249
     call Func_003_74D1
-    ld hl, $6DF8
+    ld hl, Func_01D_6DF8
     ld b, $1D
     rst $10
     ld a, [$D7F5]
     ld de, $C283
     call Func_003_74D1
-    ld hl, $5AC0
+    ld hl, Func_016_5AC0
     ld b, $16
     rst $10
     ld a, [$D09D]
@@ -7473,7 +7460,7 @@ Jump_003_7501::
     ld [$C528], a
     ld a, $04
     ld [$C529], a
-    ld hl, $400F
+    ld hl, Func_007_400F
     ld b, $07
     rst $10
     pop hl
@@ -7493,7 +7480,7 @@ Jump_003_7501::
     ld [$C528], a
     ld a, $25
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     call Func_003_7647
@@ -7579,7 +7566,7 @@ Jump_003_75FF::
     ld [$C528], a
     ld a, $26
     ld [$C529], a
-    ld hl, Func_003_4001
+    ld hl, Func_037_4001
     ld b, $37
     rst $10
     ld hl, $C0A1
@@ -7646,7 +7633,7 @@ Func_003_7647::
     ld [$4100], a
     xor a, a
     ld [$0100], a
-    ld hl, $700A
+    ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
@@ -7661,7 +7648,7 @@ Jump_003_7689::
 Func_003_7692::
     call Func_003_4284
     ld e, $21
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -7677,13 +7664,13 @@ Func_003_769E::
 Func_003_76AD::
     call Func_003_769E
     ld e, $23
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     call Func_003_7978
     jr z, Jump_003_76C5
     ld e, $22
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
 
@@ -7694,7 +7681,7 @@ Jump_003_76C5::
 Func_003_76C9::
     call Func_003_76AD
     ld e, $24
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -7703,7 +7690,7 @@ Func_003_76D5::
     call Func_003_76C9
     call Func_000_290E
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46F]
@@ -7727,11 +7714,11 @@ Func_003_7707::
     ld hl, Data_003_4633
     call Func_003_4538
     ld e, $25
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -7742,11 +7729,11 @@ Func_003_7726::
     ld de, Data_003_7BAF
     call Func_003_7BBF
     ld e, $26
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld e, $27
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -7754,7 +7741,7 @@ Func_003_7726::
 Func_003_7743::
     call Func_003_769E
     ld e, $2C
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -7762,27 +7749,27 @@ Func_003_7743::
 Func_003_774F::
     call Func_003_769E
     ld e, $29
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
 
 Func_003_775A::
     ld e, $28
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
 
 Func_003_7763::
     ld e, $2D
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
 
 Func_003_776C::
     ld e, $2A
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ld a, [$C46D]
@@ -7791,17 +7778,17 @@ Func_003_776C::
     call Func_003_4538
     call Func_000_290E
     ld e, $10
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
-    ld hl, $777B
+    ld hl, Func_016_777B
     ld b, $16
     rst $10
     ret
 
 Func_003_7791::
     ld e, $2B
-    ld hl, Func_003_4001
+    ld hl, Func_033_4001
     ld b, $33
     rst $10
     ret
@@ -7837,7 +7824,7 @@ Jump_003_77B3::
     ld [$C52D], a
     ld a, h
     ld [$C52E], a
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     ld bc, $0301
@@ -7900,7 +7887,7 @@ Jump_003_781C::
     ld [$C528], a
     ld a, $05
     ld [$C529], a
-    ld hl, $402B
+    ld hl, Func_008_402B
     ld b, $08
     rst $10
     jr Jump_003_7861
@@ -7914,7 +7901,7 @@ Jump_003_783B::
     ld [$C529], a
     ld a, $06
     ld [$C528], a
-    ld hl, $400F
+    ld hl, Func_009_400F
     ld b, $09
     rst $10
     jr Jump_003_7861
@@ -7924,7 +7911,7 @@ Jump_003_7851::
     ld [$C528], a
     ld a, $00
     ld [$C529], a
-    ld hl, $400F
+    ld hl, Func_009_400F
     ld b, $09
     rst $10
 
@@ -8103,7 +8090,7 @@ Jump_003_7953::
     ld [$C529], a
     ld a, $07
     ld [$C528], a
-    ld hl, $400F
+    ld hl, Func_009_400F
     ld b, $09
     rst $10
     ld hl, $8800
@@ -8384,7 +8371,7 @@ Func_003_7AE8::
     ld [$C528], a
     ld a, $02
     ld [$C529], a
-    ld hl, $400F
+    ld hl, Func_009_400F
     ld b, $09
     rst $10
     ld hl, $8800

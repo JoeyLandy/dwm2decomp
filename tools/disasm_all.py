@@ -248,14 +248,47 @@ class Rom:
         tablelike = len(words) >= 6 and sum(0x4000 <= w < 0x8000 for w in words) >= 0.75 * len(words)
         return regreg <= 0.25 * n and nops <= 0.2 * n and struct >= 1 and not tablelike
 
+    def banked_call_args(self) -> dict[tuple[int, int], tuple[int, int]]:
+        """`ld hl, ADDR` loads that feed a banked code call (`rst $10` / `call $0010`).
+
+        Returns {(bank, address of the ld hl): (target bank from the nearby `ld b`, ADDR)}.
+        These are CODE pointers into the bank named by `ld b`, not data pointers into the
+        caller's bank, so they must not be labelled or counted as same-bank data."""
+        ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
+        ld_b = re.compile(r"ld b, \$([0-9A-F]{2})$")
+        out: dict[tuple[int, int], tuple[int, int]] = {}
+        for bank in range(self.nbanks):
+            ins = self.insn[bank]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                n, text, kind, tgt = ins[a]
+                if not ((kind == "rst" and tgt == 0x10) or (kind == "call" and tgt == 0x0010)):
+                    continue
+                hl = bnk = None
+                for x in reversed(order[max(0, k - 8):k]):
+                    if ins[x][2] in ("ret", "jp", "jr", "jphl"):
+                        break  # previous function; its loads are not this call's arguments
+                    if hl is None:
+                        m = ld_hl.match(ins[x][1])
+                        if m:
+                            hl = (x, int(m.group(1), 16))
+                    if bnk is None:
+                        m = ld_b.match(ins[x][1])
+                        if m:
+                            bnk = int(m.group(1), 16)
+                if hl is not None and bnk is not None and 0x4000 <= hl[1] < 0x8000:
+                    out[(bank, hl[0])] = (bnk, hl[1])
+        return out
+
     def snapshot_data_pointers(self) -> None:
         """Record `ld hl|de|bc, $4000-$7FFF` targets of the directly traced (non-heuristic)
         code, per bank (same bank assumed). Taken once, before any heuristic runs, so
         bogus heuristic code cannot veto good code."""
         ld16 = re.compile(r"ld (?:hl|de|bc), \$([0-9A-F]{4})$")
+        code_args = self.banked_call_args()  # code pointers into another bank, not data
         for bank in range(1, self.nbanks):
-            for v in self.insn[bank].values():
-                if v[0] != "dw":
+            for a, v in self.insn[bank].items():
+                if v[0] != "dw" and (bank, a) not in code_args:
                     m = ld16.match(v[1])
                     if m and 0x4000 <= int(m.group(1), 16) < 0x8000:
                         self.pdata[bank].add(int(m.group(1), 16))
@@ -421,7 +454,15 @@ class Rom:
             if (0, a) in self.reason or self.labels[0].get(a, "").startswith("Func"):
                 if any(i0[x][1] == "ld [$2100], a" for x in order0[k:k + 10]):
                     helpers.add(a)
-        strong = weak = 0
+        strong = weak = coded = 0
+        code_args = self.banked_call_args()
+        # Banked code calls: the operand names code in the bank given by `ld b`.
+        for (bank, a), (tb, imm) in code_args.items():
+            if tb < self.nbanks and tb not in self.zero and imm in self.insn[tb] \
+                    and self.labels[tb].get(imm):
+                self.dref[(bank, a)] = (tb, imm)
+                coded += 1
+        helpers.discard(0x10)  # the rst $10 handler transfers to code, not data
         for bank in range(self.nbanks):
             ins = self.insn[bank]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
@@ -445,6 +486,8 @@ class Rom:
                     for x, imm in loads:
                         paired[x] = (bnk, imm)
             for a in order:
+                if (bank, a) in code_args:
+                    continue  # handled above as a code pointer
                 m = ld16.match(ins[a][1])
                 if not m:
                     continue
@@ -475,6 +518,7 @@ class Rom:
                     strong += 1
                 else:
                     weak += 1
+        log(f"banked-call operands resolved to code labels: {coded}")
         log(f"data references: {strong} via bank-switching helpers, {weak} same-bank loads, "
             f"{sum(len(d) for d in self.dlabels.values())} data labels in total")
 

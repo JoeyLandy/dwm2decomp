@@ -2169,7 +2169,7 @@ Func_061_5794::
     ret
 
 Jump_061_579D::
-    ld hl, $4268
+    ld hl, Func_011_4268
     ld b, $11
     rst $10
     ret
@@ -3190,7 +3190,7 @@ Jump_061_5D92::
     ldh [$FF8C], a
     ld a, $03
     ld [$C8C6], a
-    ld hl, Data_061_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     pop hl
@@ -3279,7 +3279,7 @@ Jump_061_5E44::
     ldh a, [$FF8C]
     or a, $80
     ldh [$FF8C], a
-    ld hl, Data_061_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     pop hl
@@ -3394,7 +3394,7 @@ Jump_061_5EF0::
     ld [$C8CA], a
     ld a, $03
     ld [$C8C6], a
-    ld hl, Data_061_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     ld a, $01
@@ -3496,7 +3496,7 @@ Jump_061_5F56::
     ld [$C8C9], a
     ld a, $03
     ld [$C8C6], a
-    ld hl, Data_061_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     pop hl
@@ -3571,7 +3571,7 @@ Jump_061_5FE0::
     ld [$C8C9], a
     ld a, $03
     ld [$C8C6], a
-    ld hl, Data_061_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     pop hl
@@ -3979,7 +3979,4 @@ Data_061_74E4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06
     ds $20, $FE
     INCBIN "dwm2-cobi-us.gbc", $187515, $108
-    ds $582, $00
-
-Data_061_7B9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $461, $00
+    ds $9E3, $00

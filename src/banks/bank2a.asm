@@ -5,7 +5,7 @@ Func_02A_4001::
     ld a, [$C529]
     cp a, $95
     jr c, Jump_02A_400F
-    ld hl, $404B
+    ld hl, Func_097_404B
     ld b, $97
     rst $10
     ret
@@ -19,7 +19,7 @@ Func_02A_4016:: ; heuristic: follows a terminator; C0
     ld a, [$C529]
     cp a, $95
     jr c, Jump_02A_4024
-    ld hl, Data_02A_405A
+    ld hl, Func_097_405A
     ld b, $97
     rst $10
     ret
@@ -51,8 +51,6 @@ Data_02A_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_02A_4AD1
     dw Data_02A_4B18
     dw Data_02A_4BA4
-
-Data_02A_405A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_02A_4BFA
     dw Data_02A_4C19
     dw Data_02A_4C5F

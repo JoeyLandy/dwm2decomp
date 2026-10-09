@@ -7,10 +7,10 @@ Func_069_4001::
     ld a, [$CC44]
     bit 7, a
     jr z, Jump_069_401E
-    ld hl, $4025
+    ld hl, Func_004_4025
     ld b, $04
     rst $10
-    ld hl, $4008
+    ld hl, Func_004_4008
     ld b, $04
     rst $10
     ld a, $7F
@@ -278,7 +278,7 @@ Jump_069_413A::
     inc de
     push hl
     push de
-    ld hl, Data_069_431F
+    ld hl, Func_004_431F
     ld b, $04
     rst $10
     pop de
@@ -288,7 +288,7 @@ Jump_069_413A::
     jr nz, Jump_069_40FC
 
 Jump_069_4168::
-    ld hl, $4008
+    ld hl, Func_004_4008
     ld b, $04
     rst $10
     ld a, $7F
@@ -437,11 +437,7 @@ Jump_069_4168::
     dw Data_069_7E4B
     dw Data_069_7E4B
     dw Data_069_7E4B
-    db $0E, $45, $F8, $44, $E2, $44, $CC, $44, $B6, $44, $92, $44, $4B, $7E, $4B, $7E
-    db $4B, $7E, $63, $44, $4D, $44, $37, $44, $21
-
-Data_069_431F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $1A431F, $21E
+    INCBIN "dwm2-cobi-us.gbc", $1A4306, $237
 
 Data_069_453D:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $1A453D, $AB

@@ -5,7 +5,7 @@ Func_011_4002::
     ld a, [$CC44]
     bit 7, a
     jr z, Jump_011_4010
-    ld hl, Data_011_5764
+    ld hl, Func_061_5764
     ld b, $61
     rst $10
     ret
@@ -195,7 +195,7 @@ Jump_011_4105::
     ldh a, [$FF8C]
     or a, $80
     ldh [$FF8C], a
-    ld hl, Data_011_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     pop de
@@ -206,7 +206,7 @@ Func_011_4130::
     ld a, [$CC44]
     bit 7, a
     jr z, Jump_011_413E
-    ld hl, Data_011_596F
+    ld hl, Func_061_596F
     ld b, $61
     rst $10
     ret
@@ -396,7 +396,7 @@ Jump_011_4235::
     ldh a, [$FF8C]
     or a, $80
     ldh [$FF8C], a
-    ld hl, Data_011_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     pop de
@@ -560,7 +560,7 @@ Func_011_4340::
     or a, $20
     and a, $7F
     ldh [$FF8C], a
-    ld hl, Data_011_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     pop de
@@ -714,7 +714,7 @@ Jump_011_4440::
     ldh a, [$FF8C]
     or a, $20
     ldh [$FF8C], a
-    ld hl, Data_011_7B9F
+    ld hl, Func_012_7B9F
     ld b, $12
     rst $10
     ld c, $01
@@ -1042,11 +1042,7 @@ Data_011_56A8:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0456A8, $6C
 
 Data_011_5714:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $045714, $50
-
-Data_011_5764:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $33, $00, $00, $0B, $00, $10, $30, $00, $3A, $CC, $20, $71, $4E, $29, $71, $4E
-    db $20, $71, $4E, $29, $71, $4E, $20, $71, $4E, $29, $71, $4E
+    INCBIN "dwm2-cobi-us.gbc", $045714, $6C
 
 Data_011_5780:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $045780, $6C
@@ -1061,15 +1057,7 @@ Data_011_58C4:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0458C4, $6C
 
 Data_011_5930:: ; heuristic: target of a monotone pointer table; C0
-    db $5F, $71, $66, $B7, $74, $66, $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
-    db $3A, $CC, $F7, $74, $66, $03, $75, $66, $F7, $74, $66, $03, $75, $66, $F7, $74
-    db $66, $03, $75, $66, $5F, $71, $66, $B7, $74, $66, $02, $02, $33, $00, $00, $0E
-    db $07, $02, $01, $00, $3A, $CC, $71, $78, $66, $7D, $78, $66, $71, $78, $66
-
-Data_011_596F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $7D, $78, $66, $71, $78, $66, $7D, $78, $66, $5F, $71, $66, $B7, $74, $66, $02
-    db $02, $33, $00, $00, $0E, $07, $02, $01, $00, $3A, $CC, $EA, $7B, $66, $F6, $7B
-    db $66, $EA, $7B, $66, $F6, $7B, $66, $EA, $7B, $66, $F6, $7B, $66
+    INCBIN "dwm2-cobi-us.gbc", $045930, $6C
 
 Data_011_599C:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $04599C, $6C
@@ -2098,10 +2086,8 @@ Data_011_7B7D:: ; heuristic: target of a monotone pointer table; C0
     db $04, $05, $80
 
 Data_011_7B90:: ; heuristic: target of a monotone pointer table; C0
-    db $FD, $01, $40, $50, $D5, $00, $10, $04, $05, $FD, $00, $40, $50, $D7, $00
-
-Data_011_7B9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $11, $04, $05, $80
+    db $FD, $01, $40, $50, $D5, $00, $10, $04, $05, $FD, $00, $40, $50, $D7, $00, $11
+    db $04, $05, $80
 
 Data_011_7BA3:: ; heuristic: target of a monotone pointer table; C0
     db $FD, $01, $40, $50, $D6, $00, $10, $04, $05, $80

@@ -96,15 +96,7 @@ Jump_005_406F::
     ld a, [$D8A5]
     cp a, $04
     ret
-    INCBIN "dwm2-cobi-us.gbc", $014075, $58
-
-Data_005_40CD:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0140CD, $44
-
-Data_005_4111:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $3E, $D8, $E5, $C5, $4F, $21, $0F, $D8, $CD, $25, $3F, $2A, $E6, $C0, $20, $08
-    db $7E, $E6, $0C, $20, $03, $AF, $18, $01, $37, $79, $C1, $E1, $C9, $E5, $21, $0F
-    db $D8, $CD, $25, $3F, $2A, $E6, $C0, $20, $03, $7E, $E6, $0C, $E1, $C9
+    INCBIN "dwm2-cobi-us.gbc", $014075, $CA
 
 Func_005_413F::
     ld a, [$D8A4]
@@ -386,7 +378,7 @@ Jump_005_42B7::
     ld [$D86A], a
     ld a, h
     ld [$D86B], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop de
@@ -2181,7 +2173,7 @@ Jump_005_4CBE::
     ld a, [hl]
     ld [$D007], a
     push bc
-    ld hl, $5A7E
+    ld hl, Func_016_5A7E
     ld b, $16
     rst $10
     ld a, c
@@ -2849,7 +2841,7 @@ Jump_005_503E::
     ld [$D006], a
     ld a, [hl]
     ld [$D007], a
-    ld hl, Func_005_4001
+    ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld a, [$D008]
@@ -6496,7 +6488,7 @@ Jump_005_642E::
     push bc
     push hl
     ld [$CFEC], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop hl
@@ -7770,7 +7762,7 @@ Func_005_6B20:: ; heuristic: follows a terminator; C0
     jr nc, Jump_005_6B5B
     push hl
     push bc
-    ld hl, Data_005_40CD
+    ld hl, Func_03B_40CD
     ld b, $3B
     rst $10
     pop bc
@@ -7821,7 +7813,7 @@ Func_005_6B5F:: ; heuristic: follows a terminator; C0
     jr nc, Jump_005_6B9A
     push hl
     push bc
-    ld hl, Data_005_4111
+    ld hl, Func_03B_4111
     ld b, $3B
     rst $10
     pop bc
@@ -7970,7 +7962,7 @@ Jump_005_6C26::
     push hl
     ld a, [hl]
     ld [$CFEC], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop hl
@@ -8018,7 +8010,7 @@ Jump_005_6C66::
     push bc
     push hl
     ld [$CFEC], a
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop hl
@@ -8082,7 +8074,7 @@ Jump_005_6CAE::
     ld a, [hl]
     ld [$D007], a
     push bc
-    ld hl, $400A
+    ld hl, Func_035_400A
     ld b, $35
     rst $10
     pop bc
@@ -8443,7 +8435,7 @@ Jump_005_6EAF::
     jr z, Jump_005_6ECA
     push de
     push hl
-    ld hl, $4022
+    ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop hl

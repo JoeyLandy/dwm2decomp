@@ -25,7 +25,7 @@ Func_081_4001::
     ld [$D006], a
     ld a, h
     ld [$D007], a
-    ld hl, $400A
+    ld hl, Func_035_400A
     ld b, $35
     rst $10
     ld a, [$D008]
@@ -42,7 +42,7 @@ Func_081_4001::
     ld [$D006], a
     ld a, h
     ld [$D007], a
-    ld hl, $400A
+    ld hl, Func_035_400A
     ld b, $35
     rst $10
     ld a, [$D008]
