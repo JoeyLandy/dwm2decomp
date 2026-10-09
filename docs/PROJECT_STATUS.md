@@ -30,6 +30,8 @@ What exists (all locally run):
 | Identity verifier with 9 negative tests (`python -I -m unittest discover -s tests`) | `tools/verify_rom.py`, `tests/` |
 | Clean build + gate, JSON report | `python -I tools/build.py --out build/runN` |
 | Whole-ROM recursive-descent disassembler (regenerates `src/`) | `tools/disasm_all.py`, `tools/trace_disasm.py` |
+| Asset decompressor (LZSS-style; C2, cross-checked on 141 emulated calls) | `tools/lzss_gfx.py`, `tests/golden_gfx_assets.json` |
+| Emulator for dynamic analysis (own implementation, unverified against hardware) | `tools/sm83.py` |
 
 Coverage (bytes of the 4,194,304; measured from generated `src/`, not a semantic metric):
 

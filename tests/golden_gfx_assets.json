@@ -1,0 +1,439 @@
+{
+ "_comment": "Assets the emulator (tools/sm83.py) observed the game decompress during a 100M-instruction run; each output matched tools/lzss_gfx.py byte for byte. Digests are of the decompressed bytes. Observation of our own emulator, not hardware.",
+ "assets": [
+  {
+   "bank": 70,
+   "addr": 16385,
+   "size": 2048,
+   "compressed_bytes": 644,
+   "sha256": "7d57511fd85b07510d6bda85de93c1e72c6dbd1ec821ca08e2c00466cc735721",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 13
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 87,
+   "addr": 28310,
+   "size": 1536,
+   "compressed_bytes": 656,
+   "sha256": "e8d12bb022905c041e67f04f462ae985b77fd7d5a69a3d72417bce8fc2093ca3",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 144,
+    "wraps": 1,
+    "extended": 12
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 87,
+   "addr": 29126,
+   "size": 360,
+   "compressed_bytes": 19,
+   "sha256": "d3df611a0ed2e328b050d285287637c60643ba96ec09e4aaefaad7f2cd114b77",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 4
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 87,
+   "addr": 30693,
+   "size": 360,
+   "compressed_bytes": 19,
+   "sha256": "d3df611a0ed2e328b050d285287637c60643ba96ec09e4aaefaad7f2cd114b77",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 4
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 125,
+   "addr": 16385,
+   "size": 256,
+   "compressed_bytes": 249,
+   "sha256": "8866e5057fedaa6b59809ce8e27f400c7af3fd340aae03dc0113a0e9f0bc5d32",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 125,
+   "addr": 16634,
+   "size": 256,
+   "compressed_bytes": 231,
+   "sha256": "9c46026fcaf9df6c790ed64e309e3a35c3f03396b53903e85d87304e2ab38ccb",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 125,
+   "addr": 17294,
+   "size": 224,
+   "compressed_bytes": 202,
+   "sha256": "441df6ed300de8d44fba6eb7b5f464b19ce8f1e6a18ddcabb1d812f8cc3c3149",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 125,
+   "addr": 17496,
+   "size": 224,
+   "compressed_bytes": 198,
+   "sha256": "50b9617f0240faae226328a793f8ea1acd184f151361683c7c3896690cb618ef",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 125,
+   "addr": 24647,
+   "size": 224,
+   "compressed_bytes": 225,
+   "sha256": "a3281d60442c64f43d6ffc356671c9698723c08326c1cd2115bec1a843aed71e",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 125,
+   "addr": 24872,
+   "size": 224,
+   "compressed_bytes": 217,
+   "sha256": "2f0650280561f4cf937fabd3e8701c6b42a8a1af97f270a84135e799e42c4187",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 126,
+   "addr": 19693,
+   "size": 64,
+   "compressed_bytes": 45,
+   "sha256": "0efe2f865feab9f717440d6b5f5871e0a202594433cf109e8b7ccf3882a7eeb2",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 15,
+    "wraps": 1,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 126,
+   "addr": 22278,
+   "size": 96,
+   "compressed_bytes": 80,
+   "sha256": "1c06d091ee71d73c4bfcccb328f90f9991d63afe61d116dc9a06a1a696a99f3c",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 144,
+   "addr": 29235,
+   "size": 1024,
+   "compressed_bytes": 875,
+   "sha256": "f8385bc0b1cb22759c6139973c5e13eef13137b8ddaf72ae67e13ba927f9881b",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 31,
+    "wraps": 1,
+    "extended": 1
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 144,
+   "addr": 30186,
+   "size": 360,
+   "compressed_bytes": 246,
+   "sha256": "9afd618199dfa23109f804bcaa2f929b2417766fb12821c0fdf232d11ee97676",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 1,
+    "wraps": 1,
+    "extended": 0
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 144,
+   "addr": 30432,
+   "size": 360,
+   "compressed_bytes": 260,
+   "sha256": "e9e7d47bc8a0f30298ee18912fe6c254da4443bcc1c84d064bca23a619692d75",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 2,
+    "wraps": 1,
+    "extended": 0
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 144,
+   "addr": 30692,
+   "size": 360,
+   "compressed_bytes": 55,
+   "sha256": "448d4d451b6f900f389f475b193def64a967209c5c1856bb125c935abc117259",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 4,
+    "wraps": 1,
+    "extended": 5
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 144,
+   "addr": 30747,
+   "size": 360,
+   "compressed_bytes": 90,
+   "sha256": "3f43f189024d80341aa29754e7605e5991840cc87c9f440308b40dcfffd02be6",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 19,
+    "wraps": 3,
+    "extended": 6
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 16385,
+   "size": 304,
+   "compressed_bytes": 213,
+   "sha256": "c78b84c70fff96997580c99a6a0598de503e40a3c9be6ff632694862a715151e",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 2,
+    "wraps": 2,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 225,
+   "addr": 16598,
+   "size": 360,
+   "compressed_bytes": 37,
+   "sha256": "64a48b2becffa3d9231bb4ad1c43a58325f6dec2657fb9a1a831870c106f77c6",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 4
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 16635,
+   "size": 360,
+   "compressed_bytes": 19,
+   "sha256": "d3df611a0ed2e328b050d285287637c60643ba96ec09e4aaefaad7f2cd114b77",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 4
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 16662,
+   "size": 1600,
+   "compressed_bytes": 1169,
+   "sha256": "e5c32fd72e57d4e81367924cbc212922497c8ec58113aa33aac340fdd2c3576d",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 3
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 225,
+   "addr": 17831,
+   "size": 360,
+   "compressed_bytes": 85,
+   "sha256": "406ebf361002cafc0cfcba3c2cb5a89609dfe46fea6c1694b2b43ec6de3e5103",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 6
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 17916,
+   "size": 360,
+   "compressed_bytes": 19,
+   "sha256": "d3df611a0ed2e328b050d285287637c60643ba96ec09e4aaefaad7f2cd114b77",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 4
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 17943,
+   "size": 1552,
+   "compressed_bytes": 815,
+   "sha256": "9d7e21c2beb399dce61b220e69ded12eef5c8b2256e6f35f3a6322fe20e32b3f",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 32,
+    "wraps": 25,
+    "extended": 8
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 225,
+   "addr": 18758,
+   "size": 360,
+   "compressed_bytes": 120,
+   "sha256": "dc2f2efe50d8e1d381a77de12e4447ba38e7c367d55b04db4671b76ee44d5c01",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 95,
+    "wraps": 10,
+    "extended": 2
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 18878,
+   "size": 360,
+   "compressed_bytes": 20,
+   "sha256": "a7755f27e47e04a291e9588959a6b2aa31fd4ebd59cdd96c3bfa0a3ce0b65d32",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 4
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 18906,
+   "size": 2048,
+   "compressed_bytes": 1165,
+   "sha256": "5e757fc783206735b340b7bdb79d8b4d1cb11b0f74a75d8bb5d53eb0718d2ba3",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 5
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 225,
+   "addr": 20071,
+   "size": 2048,
+   "compressed_bytes": 1438,
+   "sha256": "b5aa52fa4061b1578cdb9a3d4e2c4df637ebfa14714ebca63f2bcf41677fbeaa",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 180,
+    "wraps": 5,
+    "extended": 3
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 225,
+   "addr": 22396,
+   "size": 256,
+   "compressed_bytes": 175,
+   "sha256": "aa246e8412284bad2c51dc312cefbe3b16e7dbaf9e46e77cf6ccf0b1ccfbd816",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 7,
+    "wraps": 7,
+    "extended": 0
+   },
+   "dest_was_vram": true
+  },
+  {
+   "bank": 225,
+   "addr": 22571,
+   "size": 360,
+   "compressed_bytes": 152,
+   "sha256": "36741d2b2337bc6ba6b89e327e6fe0447128704ea2390071b2c391fcd1c1cbaf",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 0,
+    "wraps": 0,
+    "extended": 2
+   },
+   "dest_was_vram": false
+  },
+  {
+   "bank": 225,
+   "addr": 22723,
+   "size": 360,
+   "compressed_bytes": 76,
+   "sha256": "735bb189ec0794ee408f66640d9af61688854372c4fdb6f3ed09f6f52ffc4bd8",
+   "events": {
+    "unwritten_reads": 0,
+    "zero_fills": 96,
+    "wraps": 0,
+    "extended": 5
+   },
+   "dest_was_vram": false
+  }
+ ]
+}

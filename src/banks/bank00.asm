@@ -1798,6 +1798,7 @@ Jump_000_0C4E::
     ld [$C0D9], a
     ret
 
+; C2 static reading (E-0016): takes the lock byte $FFD6 (spins while it is non-zero), calls Func_000_0C69, then clears the lock.
 Func_000_0C5A::
     ldh a, [$FFD6]
     or a, a
@@ -1809,6 +1810,7 @@ Func_000_0C5A::
     ldh [$FFD6], a
     ret
 
+; C2 (E-0016: static reading; 141 emulated calls matched tools/lzss_gfx.py byte for byte): expands the compressed stream at [DE] in ROM bank B into memory at [HL] with a plain store per byte (RAM destination). Header and format: see Func_000_0DA8. Restores the caller's bank on return.
 Func_000_0C69::
     ld a, [$4000]
     push af
@@ -1928,6 +1930,7 @@ Jump_000_0CF0::
     ld [$2100], a
     ret
 
+; C2 (E-0016): the same expansion as Func_000_0C69 but for VRAM destinations: each store waits for STAT ($FF41) bit 1 to clear with interrupts disabled, back-references read the already-written VRAM, and the lock byte $FFD6 is taken on entry and cleared on exit.
 Func_000_0CF5::
     ldh a, [$FFD6]
     or a, a
@@ -2074,6 +2077,7 @@ Jump_000_0DA0::
     ldh [$FFD6], a
     ret
 
+; C2 static reading (E-0016): selects ROM bank B, then reads the compressed-stream header from [DE]: u16 output size into BC, a marker byte into $FFBB. Saves the destination start (HL) in $FFBC/$FFBD and $FFC3/$FFC4 and the destination end (HL + size) in $FFC1/$FFC2.
 Func_000_0DA8::
     ld a, b
     ld [$2100], a
