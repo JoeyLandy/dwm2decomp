@@ -62,5 +62,36 @@ class Annotations(unittest.TestCase):
         self.assertEqual(missing, [], "annotation not emitted directly above its label")
 
 
+REF = BANKS.parents[1] / "local" / "roms" / "dwm2-cobi-us.gbc"
+
+
+@unittest.skipUnless(BANKS.is_dir() and REF.exists(), "needs generated source and the reference ROM")
+class CompressedAssetNotes(unittest.TestCase):
+    def test_every_stream_note_matches_a_fresh_decompression(self):
+        import sys
+        sys.path.insert(0, str(BANKS.parents[1] / "tools"))
+        import lzss_gfx
+
+        rom = REF.read_bytes()
+        note = re.compile(r"^; LZSS-compressed asset: (\d+) bytes expand to (\d+) ")
+        label = re.compile(r"^Data_([0-9A-F]{3})_([0-9A-F]{4})::")
+        checked, wrong = 0, []
+        for f in sorted(BANKS.glob("bank*.asm")):
+            lines = f.read_text(encoding="utf-8").splitlines()
+            for i, line in enumerate(lines[:-1]):
+                m = note.match(line)
+                if not m:
+                    continue
+                lm = label.match(lines[i + 1])
+                self.assertIsNotNone(lm, f"{f.name}:{i + 1}: note is not followed by a Data_ label")
+                bank, addr = int(lm.group(1), 16), int(lm.group(2), 16)
+                out, used, ev = lzss_gfx.decompress(rom, bank, addr)
+                checked += 1
+                if (used, len(out)) != (int(m.group(1)), int(m.group(2))) or ev["unwritten_reads"]:
+                    wrong.append(f"{f.name}:{i + 1} {lm.group(0)}")
+        self.assertGreater(checked, 1000, "expected the generated source to annotate many streams")
+        self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} stream notes disagree with the ROM")
+
+
 if __name__ == "__main__":
     unittest.main()

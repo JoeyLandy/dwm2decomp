@@ -18,27 +18,35 @@ SECTION "Bank 53", ROMX[$4000], BANK[$53]
     dw Data_053_521E
     db $53
 
+; LZSS-compressed asset: 332 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_4BF2:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14CBF2, $14C
 
+; LZSS-compressed asset: 311 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_4D3E:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14CD3E, $137
 
+; LZSS-compressed asset: 332 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_4E75:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14CE75, $14C
 
+; LZSS-compressed asset: 300 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_4FC1:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14CFC1, $12C
 
+; LZSS-compressed asset: 113 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_50ED:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14D0ED, $71
 
+; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_515E:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14D15E, $4C
 
+; LZSS-compressed asset: 116 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_51AA:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14D1AA, $74
 
+; LZSS-compressed asset: 75 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_053_521E:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $14D21E, $4D1
     ds $12, $00

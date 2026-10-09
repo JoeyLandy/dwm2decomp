@@ -32,6 +32,7 @@ What exists (all locally run):
 | Whole-ROM recursive-descent disassembler (regenerates `src/`) | `tools/disasm_all.py`, `tools/trace_disasm.py` |
 | Asset decompressor (LZSS-style; C2, cross-checked on 141 emulated calls) | `tools/lzss_gfx.py`, `tests/golden_gfx_assets.json` |
 | Emulator for dynamic analysis (own implementation, unverified against hardware) | `tools/sm83.py` |
+| Compressed-asset finder and extractor (2,137 streams, 304 KB -> 726 KB; C1) | `tools/disasm_all.py --export-streams`, `tools/extract_assets.py` |
 
 Coverage (bytes of the 4,194,304; measured from generated `src/`, not a semantic metric):
 

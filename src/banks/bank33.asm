@@ -138,9 +138,11 @@ Data_033_405F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_033_40C5:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC0C5, $4C
 
+; LZSS-compressed asset: 11 bytes expand to 8 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4111:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC111, $A0
 
+; LZSS-compressed asset: 342 bytes expand to 353 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_41B1:: ; heuristic: target of a monotone pointer table; C0
     db $61, $01, $06, $06, $5C, $5D, $5E, $5F, $60, $61
     dw Data_033_6362
@@ -159,34 +161,42 @@ Data_033_41B1:: ; heuristic: target of a monotone pointer table; C0
     dw Data_033_7D7C
     dw Data_033_7F7E
 
+; LZSS-compressed asset: 424 bytes expand to 424 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_41D9:: ; heuristic: target of a monotone pointer table; C0
     db $A8, $01, $0C, $05, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
     db $B6, $F9, $FA, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $FB, $FA, $ED, $C3, $C3, $C3, $BE
     db $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
+; LZSS-compressed asset: 11 bytes expand to 8 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4219:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC219, $88
 
+; LZSS-compressed asset: 342 bytes expand to 352 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_42A1:: ; heuristic: target of a monotone pointer table; C0
     db $60, $01, $08, $07, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1
     db $B1, $B1, $B1, $B2, $B6, $35, $36, $37, $38, $39, $3A, $B7, $B6, $C3, $C3, $C3
     db $C3, $C3, $C3, $B7, $B6, $3B, $3C, $3D, $3E, $3F, $40, $B7, $B3, $B4, $B4, $B4
     db $B4, $B4, $B4, $B5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
+; LZSS-compressed asset: 362 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_42DD:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC2DD, $58
 
+; LZSS-compressed asset: 11 bytes expand to 8 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4335:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC335, $DC
 
+; LZSS-compressed asset: 342 bytes expand to 352 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4411:: ; heuristic: target of a monotone pointer table; C0
     db $60, $01, $08, $07
     ds $38, $C3
 
+; LZSS-compressed asset: 11 bytes expand to 8 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_444D:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC44D, $DC
 
+; LZSS-compressed asset: 390 bytes expand to 387 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4529:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC529, $11D
     ds $12, $B1
@@ -204,9 +214,11 @@ Data_033_4789:: ; heuristic: target of a monotone pointer table; C0
     db $00, $00, $06, $03, $B0, $B1, $B1, $B1, $B1, $B2, $B6, $A4, $A8, $A9, $EC, $B7
     db $B3, $B4, $B4, $B4, $B4, $B5
 
+; LZSS-compressed asset: 11 bytes expand to 8 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_479F:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC79F, $70
 
+; LZSS-compressed asset: 322 bytes expand to 320 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_480F:: ; heuristic: target of a monotone pointer table; C0
     db $40, $01, $14, $07, $B0
     ds $12, $B1
@@ -221,14 +233,17 @@ Data_033_480F:: ; heuristic: target of a monotone pointer table; C0
     ds $12, $B4
     db $B5
 
+; LZSS-compressed asset: 64 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_489F:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC89F, $6A
 
+; LZSS-compressed asset: 259 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4909:: ; heuristic: target of a monotone pointer table; C0
     db $00, $01, $06, $05, $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7
     db $B6, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $A5, $F4, $C3, $B7, $B3, $B4, $B4, $B4
     db $B4, $B5
 
+; LZSS-compressed asset: 418 bytes expand to 416 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_492B:: ; heuristic: target of a monotone pointer table; C0
     db $A0, $01, $14, $05, $B0
     ds $12, $B1
@@ -243,12 +258,14 @@ Data_033_492B:: ; heuristic: target of a monotone pointer table; C0
 Data_033_4993:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC993, $4C
 
+; LZSS-compressed asset: 291 bytes expand to 288 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_49DF:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CC9DF, $4A
 
 Data_033_4A29:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CCA29, $4C
 
+; LZSS-compressed asset: 291 bytes expand to 288 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4A75:: ; heuristic: target of a monotone pointer table; C0
     db $20, $01, $14, $09, $B0
     ds $12, $B1
@@ -272,9 +289,11 @@ Data_033_4B2D:: ; heuristic: target of a monotone pointer table; C0
 Data_033_4B79:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CCB79, $C7
 
+; LZSS-compressed asset: 9 bytes expand to 6 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4C40:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CCC40, $66
 
+; LZSS-compressed asset: 296 bytes expand to 293 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4CA6:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CCCA6, $8B
 
@@ -284,24 +303,30 @@ Data_033_4D31:: ; heuristic: target of a monotone pointer table; C0
     db $B6, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $FF, $F4, $DF, $DF, $B7, $B3, $B4
     db $B4, $B4, $B4, $B4, $B5
 
+; LZSS-compressed asset: 223 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4D66:: ; heuristic: target of a monotone pointer table; C0
     db $E0, $00, $06, $05, $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7
     db $B6, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $A5, $F4, $C3, $B7, $B3, $B4, $B4, $B4
     db $B4, $B5
 
+; LZSS-compressed asset: 202 bytes expand to 205 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4D88:: ; heuristic: target of a monotone pointer table; C0
     db $CD, $00, $07, $03, $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $D0, $D1, $D2, $D3
     db $D4, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B5
 
+; LZSS-compressed asset: 300 bytes expand to 297 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4DA1:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CCDA1, $67
 
+; LZSS-compressed asset: 69 bytes expand to 66 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4E08:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CCE08, $82
 
+; LZSS-compressed asset: 299 bytes expand to 296 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4E8A:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0CCE8A, $70
 
+; LZSS-compressed asset: 35 bytes expand to 32 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4EFA:: ; heuristic: target of a monotone pointer table; C0
     db $20, $00, $14, $0B, $B0
     ds $12, $B1
@@ -321,11 +346,13 @@ Data_033_4EFA:: ; heuristic: target of a monotone pointer table; C0
     ds $12, $B4
     db $B5
 
+; LZSS-compressed asset: 273 bytes expand to 270 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4FDA:: ; heuristic: target of a monotone pointer table; C0
     db $0E, $01, $06, $05, $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7
     db $B6, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $A5, $F4, $C3, $B7, $B3, $B4, $B4, $B4
     db $B4, $B5
 
+; LZSS-compressed asset: 290 bytes expand to 289 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_033_4FFC:: ; heuristic: target of a monotone pointer table; C0
     db $21, $01, $12, $05, $B0
     ds $10, $B1

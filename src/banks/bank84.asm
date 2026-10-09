@@ -1507,75 +1507,92 @@ Data_084_4CCB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_084_5D07
     dw Data_084_5D89
 
+; LZSS-compressed asset: 709 bytes expand to 771 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4D2B:: ; heuristic: target of a monotone pointer table; C0
     db $03, $03, $0A, $9E, $E0, $C2, $00, $00, $00, $00, $0A, $9E, $E0, $C2, $00, $00
     db $00, $05, $03, $03, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $FF
 
+; LZSS-compressed asset: 763 bytes expand to 771 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4D5D:: ; heuristic: target of a monotone pointer table; C0
     db $03, $03, $A6, $09, $6A, $C8, $00, $00, $00, $00, $A6, $09, $6A, $C8, $00, $00
     db $00, $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $FF
 
+; LZSS-compressed asset: 763 bytes expand to 771 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4D8F:: ; heuristic: target of a monotone pointer table; C0
     db $03, $03, $B1, $8E, $08, $C6, $00, $00, $00, $00, $00, $8E, $08, $C6, $00, $00
     db $00, $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $FF
 
+; LZSS-compressed asset: 517 bytes expand to 515 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4DC1:: ; heuristic: target of a monotone pointer table; C0
     db $03, $02, $69, $E5, $0A, $00, $BB, $92, $C9, $7B, $00, $00, $00, $00, $00, $00
     db $00, $05, $03, $03, $00, $2C, $00, $00, $01, $2A, $00, $00, $00, $00, $00, $00
     db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $FF
 
+; LZSS-compressed asset: 772 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4DF3:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210DF3, $42
 
 Data_084_4E35:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210E35, $42
 
+; LZSS-compressed asset: 727 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4E77:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210E77, $42
 
+; LZSS-compressed asset: 768 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4EB9:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210EB9, $42
 
 Data_084_4EFB:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210EFB, $42
 
+; LZSS-compressed asset: 729 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4F3D:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210F3D, $42
 
+; LZSS-compressed asset: 252 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_4F7F:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210F7F, $42
 
 Data_084_4FC1:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $210FC1, $42
 
+; LZSS-compressed asset: 519 bytes expand to 516 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5003:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211003, $42
 
+; LZSS-compressed asset: 256 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5045:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211045, $42
 
+; LZSS-compressed asset: 261 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5087:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211087, $42
 
+; LZSS-compressed asset: 516 bytes expand to 516 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_50C9:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2110C9, $42
 
+; LZSS-compressed asset: 520 bytes expand to 517 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_510B:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $21110B, $52
 
+; LZSS-compressed asset: 520 bytes expand to 517 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_515D:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $21115D, $52
 
+; LZSS-compressed asset: 758 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_51AF:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2111AF, $52
 
+; LZSS-compressed asset: 718 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5201:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211201, $52
 
@@ -1585,81 +1602,99 @@ Data_084_5253:: ; heuristic: target of a monotone pointer table; C0
 Data_084_52A5:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2112A5, $52
 
+; LZSS-compressed asset: 741 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_52F7:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2112F7, $52
 
+; LZSS-compressed asset: 761 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5349:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211349, $52
 
 Data_084_539B:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $21139B, $52
 
+; LZSS-compressed asset: 644 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_53ED:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2113ED, $52
 
+; LZSS-compressed asset: 261 bytes expand to 261 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_543F:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $21143F, $52
 
 Data_084_5491:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211491, $52
 
+; LZSS-compressed asset: 261 bytes expand to 262 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_54E3:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2114E3, $62
 
+; LZSS-compressed asset: 252 bytes expand to 262 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5545:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211545, $62
 
 Data_084_55A7:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2115A7, $62
 
+; LZSS-compressed asset: 261 bytes expand to 262 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5609:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211609, $62
 
+; LZSS-compressed asset: 526 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_566B:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $21166B, $72
 
+; LZSS-compressed asset: 764 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_56DD:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2116DD, $72
 
 Data_084_574F:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $21174F, $72
 
+; LZSS-compressed asset: 727 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_57C1:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2117C1, $72
 
+; LZSS-compressed asset: 766 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5833:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211833, $72
 
 Data_084_58A5:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2118A5, $72
 
+; LZSS-compressed asset: 755 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5917:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211917, $72
 
+; LZSS-compressed asset: 776 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5989:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211989, $72
 
 Data_084_59FB:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2119FB, $82
 
+; LZSS-compressed asset: 774 bytes expand to 776 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5A7D:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211A7D, $82
 
+; LZSS-compressed asset: 252 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5AFF:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211AFF, $82
 
 Data_084_5B81:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211B81, $82
 
+; LZSS-compressed asset: 254 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5C03:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211C03, $82
 
+; LZSS-compressed asset: 244 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5C85:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211C85, $82
 
 Data_084_5D07:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211D07, $82
 
+; LZSS-compressed asset: 252 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_084_5D89:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $211D89, $82
     ds $21F5, $00

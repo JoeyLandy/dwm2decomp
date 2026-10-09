@@ -947,41 +947,50 @@ Data_0F1_4676:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0F1_47A0
     dw Data_0F1_47C8
 
+; LZSS-compressed asset: 253 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_4688:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $FB, $FC, $ED
     ds $18, $C3
     db $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
+; LZSS-compressed asset: 258 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_46B0:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $FD, $FE, $ED
     ds $18, $C3
     db $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
+; LZSS-compressed asset: 261 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_46D8:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $F6, $F7, $F8, $F9, $FA, $0E, $0F, $10, $11, $12, $13, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $1A, $1B, $1C, $1D
     db $1E, $1F, $20, $21, $22, $C3, $C3, $C3
 
+; LZSS-compressed asset: 273 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_4700:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $0B, $0C, $0D, $ED
     ds $20, $C3
 
+; LZSS-compressed asset: 302 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_4728:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $FF, $00, $01, $ED
     ds $20, $C3
 
+; LZSS-compressed asset: 305 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_4750:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $02, $03, $04, $ED
     ds $20, $C3
 
+; LZSS-compressed asset: 310 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_4778:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $05, $06, $07, $ED
     ds $20, $C3
 
+; LZSS-compressed asset: 313 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_47A0:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03, $08, $09, $0A, $ED
     ds $20, $C3
 
+; LZSS-compressed asset: 317 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_47C8:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03
     ds $24, $C3

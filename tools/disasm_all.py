@@ -12,7 +12,7 @@ byte-exact, so classification errors cannot change the ROM -- only the build
 gate (tools/build.py) certifies identity. Reachability is not proof of runtime
 execution and names carry no semantics.
 
-Usage: disasm_all.py [--stats] [--quiet]
+Usage: disasm_all.py [--stats] [--quiet] [--export-streams PATH.json]
 Progress goes to stderr. All banks are rendered in memory first; src/banks/*.asm
 and src/main.asm are written only after the whole analysis succeeds, so an
 interrupted run leaves the previous generated tree untouched.
@@ -27,6 +27,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from trace_disasm import decode  # noqa: E402
+from lzss_gfx import decompress as lzss_decompress  # noqa: E402
 
 _T0 = time.monotonic()
 _QUIET = False
@@ -63,6 +64,7 @@ class Rom:
         self.dtab: dict[int, dict[int, int]] = {b: {} for b in range(self.nbanks)}  # data pointer words
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
+        self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
         self.pdata: dict[int, set[int]] = {b: set() for b in range(self.nbanks)}
         self.vetoed = 0  # heuristic candidates rejected by data-pointer evidence
         self.dreason: dict[tuple[int, int], str] = {}  # why a Data_ label exists
@@ -507,6 +509,55 @@ class Rom:
         log(f"data structure: {tables} monotone pointer tables ({selfptr} self-pointing), "
             f"{entries} pointers, {dropped} dropped (targets inside another table)")
 
+    def find_compressed_assets(self) -> None:
+        """Mark pointer-table targets that parse as the game's compressed-asset format (C1).
+
+        A target is a stream when the decompressor (tools/lzss_gfx.py, cross-checked against
+        the emulated game, E-0016) runs on it without reading unwritten output, produces
+        1..$4000 bytes and stays inside the bank. A table counts as an asset index only when
+        >= 8 distinct targets exist and >= 60% of them parse; such a miss rate is far above
+        what random data gives, and in real indexes each stream usually ends exactly where
+        the next target begins. Only comments change; no bytes."""
+        def parse(bank: int, addr: int):
+            fo = bank * BANK + addr - 0x4000
+            try:
+                size = self.data[fo] | (self.data[fo + 1] << 8)
+                if not 1 <= size <= 0x4000:
+                    return None
+                out, used, ev = lzss_decompress(self.data, bank, addr)
+            except IndexError:
+                return None
+            if ev["unwritten_reads"] or addr - 0x4000 + used > BANK:
+                return None
+            return len(out), used
+
+        tables = streams = exact = 0
+        for bank in range(1, self.nbanks):
+            keys = sorted(self.dtab[bank])
+            i = 0
+            while i < len(keys):
+                j = i
+                while j + 1 < len(keys) and 2 <= keys[j + 1] - keys[j] <= 6 and (
+                        j == i or keys[j + 1] - keys[j] == keys[i + 1] - keys[i]):
+                    j += 1
+                run, i = keys[i:j + 1], j + 1
+                targets = sorted({self.dtab[bank][k] for k in run})
+                if len(run) < 8 or len(targets) < 8:
+                    continue
+                found = {t: parse(bank, t) for t in targets}
+                ok = [t for t in targets if found[t]]
+                if len(ok) < 0.6 * len(targets):
+                    continue
+                tables += 1
+                for n, t in enumerate(targets):
+                    if found[t]:
+                        self.streams[(bank, t)] = found[t]
+                        streams += 1
+                        if n + 1 < len(targets) and t + found[t][1] == targets[n + 1]:
+                            exact += 1
+        log(f"compressed assets: {streams} streams in {tables} index tables "
+            f"({exact} end exactly where the next target begins)")
+
     def label_data_refs(self) -> None:
         """Resolve `ld hl|de|bc, $4000-$7FFF` in traced code to labelled data starts (C1).
 
@@ -648,6 +699,7 @@ class Rom:
                 log(f"round {rnd}: no new entries; analysis complete")
                 break
         self.structure_data()
+        self.find_compressed_assets()
         self.label_data_refs()
 
     # ---- emission -------------------------------------------------------
@@ -703,7 +755,12 @@ class Rom:
             if it is None:
                 if pc in dl:
                     why = self.dreason.get((bank, pc), "target of a monotone pointer table")
-                    out.append(f"\n{dl[pc]}:: ; heuristic: {why}; C0")
+                    stream = self.streams.get((bank, pc))
+                    out.append("")
+                    if stream:
+                        out.append(f"; LZSS-compressed asset: {stream[1]} bytes expand to {stream[0]} "
+                                   f"(tools/lzss_gfx.py, E-0016/E-0017; C1)")
+                    out.append(f"{dl[pc]}:: ; heuristic: {why}; C0")
                 if pc in dt:
                     out.append(f"    dw {dl[dt[pc]]}")
                     pc += 2
@@ -762,6 +819,13 @@ def main() -> int:
                 rom.notes[(int(bank_s, 16), int(addr_s, 16))] = text
         log(f"loaded {len(rom.notes)} annotations from {notes_path.name}")
     rom.run()
+    if "--export-streams" in sys.argv:
+        dest = Path(sys.argv[sys.argv.index("--export-streams") + 1])
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps(
+            [{"bank": b, "addr": a, "compressed": u, "size": s}
+             for (b, a), (s, u) in sorted(rom.streams.items())], indent=1), encoding="utf-8")
+        log(f"exported {len(rom.streams)} streams to {dest}")
     log("rendering all banks in memory (no files written yet)")
     texts = [rom.emit_bank(b) for b in range(rom.nbanks)]
     out = ROOT / "src/banks"
