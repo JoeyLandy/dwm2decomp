@@ -1,0 +1,8655 @@
+SECTION "Bank 1D", ROMX[$4000], BANK[$1D]
+    db $1D
+
+Func_01D_4001::
+    ld de, $4016
+    call Func_000_25C9
+    ret
+    INCBIN "dwm2-cobi-us.gbc", $074008, $4B2
+
+Func_01D_44BA::
+    ld a, [$D780]
+    cp a, $03
+    jr z, Jump_01D_44C6
+    ld hl, $4547
+    jr Jump_01D_44C9
+
+Jump_01D_44C6::
+    ld hl, $44E3
+
+Jump_01D_44C9::
+    ld de, $9F00
+
+Jump_01D_44CC::
+    ld a, [hl]
+    cp a, $7F
+    jr z, Jump_01D_44DB
+    di
+    call Func_000_120A
+    ld a, [hl+]
+    ld [de], a
+    inc de
+    ei
+    jr Jump_01D_44CC
+
+Jump_01D_44DB::
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+    INCBIN "dwm2-cobi-us.gbc", $0744E3, $C8
+
+Func_01D_45AB::
+    ld hl, $97A0
+    ld de, $4130
+    ld b, $1F
+    ld c, $10
+    call Func_000_0B2B
+    ld hl, $97B0
+    ld de, $4310
+    ld b, $1F
+    ld c, $10
+    call Func_000_0B2B
+    ld hl, $97C0
+    ld de, $4300
+    ld b, $1F
+    ld c, $10
+    call Func_000_0B2B
+    call Func_01D_59CF
+    ld de, $0062
+    add hl, de
+    ld bc, $0401
+    ld de, $4603
+    call Func_01D_5A32
+    call Func_01D_59CF
+    ld de, $00A2
+    add hl, de
+    ld bc, $0401
+    ld de, $4607
+    call Func_01D_5A32
+    call Func_01D_59CF
+    ld de, $00E2
+    add hl, de
+    ld bc, $0401
+    ld de, $460B
+    call Func_01D_5A32
+    ret
+    db $7A, $AD, $CF, $7B, $BF, $A7, $7C, $EE, $A9, $A4, $EB, $AD
+
+Func_01D_460F::
+    call Func_01D_47AF
+    and a, a
+    ret z
+    cp a, $01
+    jr z, Jump_01D_462C
+    cp a, $02
+    jr z, Jump_01D_461D
+    ret
+
+Jump_01D_461D::
+    ld a, $06
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4642
+
+Jump_01D_462C::
+    ld a, [$D7ED]
+    and a, a
+    jr z, Jump_01D_464C
+    cp a, $01
+    jr z, Jump_01D_4689
+    ld a, $06
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+
+Jump_01D_4642::
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_464C::
+    call Func_01D_4A62
+    ld a, [$D7BC]
+    and a, a
+    jr z, Jump_01D_466C
+    ld a, [$D7B0]
+    cp a, $18
+    jr z, Jump_01D_467A
+    ld a, $04
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4642
+
+Jump_01D_466C::
+    xor a, a
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4642
+
+Jump_01D_467A::
+    ld a, $01
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4642
+
+Jump_01D_4689::
+    ld a, [$C61C]
+    and a, a
+    jr nz, Jump_01D_46AA
+    ld a, [$C61B]
+    and a, a
+    jr nz, Jump_01D_46AA
+    ld a, [$C61A]
+    and a, a
+    jr nz, Jump_01D_46AA
+    ld a, $03
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4642
+
+Jump_01D_46AA::
+    ld a, [$C619]
+    cp a, $01
+    jr c, Jump_01D_46D4
+    jr nz, Jump_01D_46C5
+    ld a, [$C618]
+    cp a, $86
+    jr c, Jump_01D_46D4
+    jr nz, Jump_01D_46C5
+    ld a, [$C617]
+    cp a, $3B
+    jr c, Jump_01D_46D4
+    jr z, Jump_01D_46D4
+
+Jump_01D_46C5::
+    ld a, $02
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4642
+
+Jump_01D_46D4::
+    ld a, $05
+    ld [$D7FA], a
+    ld a, $11
+    ld [$D781], a
+    jp Jump_01D_4642
+
+Func_01D_46E1::
+    call Func_01D_47AF
+    and a, a
+    ret z
+    cp a, $01
+    jr z, Jump_01D_46FE
+    cp a, $02
+    jr z, Jump_01D_46EF
+    ret
+
+Jump_01D_46EF::
+    ld a, $06
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4714
+
+Jump_01D_46FE::
+    ld a, [$D7ED]
+    and a, a
+    jr z, Jump_01D_471E
+    cp a, $01
+    jr z, Jump_01D_4758
+    ld a, $06
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+
+Jump_01D_4714::
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_471E::
+    ld a, [$D7B0]
+    and a, a
+    jr z, Jump_01D_473B
+    call Func_01D_5965
+    cp a, $FF
+    jr z, Jump_01D_4749
+    ld a, $04
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4714
+
+Jump_01D_473B::
+    xor a, a
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4714
+
+Jump_01D_4749::
+    ld a, $01
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4714
+
+Jump_01D_4758::
+    ld a, [$C619]
+    and a, a
+    jr nz, Jump_01D_477A
+    ld a, [$C618]
+    and a, a
+    jr nz, Jump_01D_477A
+    ld a, [$C617]
+    cp a, $64
+    jr nc, Jump_01D_477A
+    ld a, $02
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4714
+
+Jump_01D_477A::
+    ld a, [$C61C]
+    cp a, $0F
+    jr c, Jump_01D_47A2
+    jr nz, Jump_01D_4793
+    ld a, [$C61B]
+    cp a, $41
+    jr c, Jump_01D_47A2
+    jr nz, Jump_01D_4793
+    ld a, [$C61A]
+    cp a, $DC
+    jr c, Jump_01D_47A2
+
+Jump_01D_4793::
+    ld a, $03
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    jp Jump_01D_4714
+
+Jump_01D_47A2::
+    ld a, $05
+    ld [$D7FA], a
+    ld a, $11
+    ld [$D781], a
+    jp Jump_01D_4714
+
+Func_01D_47AF::
+    ld a, [$C563]
+    bit 6, a
+    jr nz, Jump_01D_47C8
+    bit 7, a
+    jr nz, Jump_01D_47E3
+    bit 0, a
+    jr nz, Jump_01D_47F3
+    bit 1, a
+    jp nz, Jump_01D_47FE
+    call Func_01D_4801
+    xor a, a
+    ret
+
+Jump_01D_47C8::
+    call Func_01D_481F
+    ld a, [$D7ED]
+    and a, a
+    jr nz, Jump_01D_47D5
+    ld a, $02
+    jr Jump_01D_47D6
+
+Jump_01D_47D5::
+    dec a
+
+Jump_01D_47D6::
+    ld [$D7ED], a
+    call Func_01D_481B
+    ld a, $69
+    call Func_000_1278
+    xor a, a
+    ret
+
+Jump_01D_47E3::
+    call Func_01D_481F
+    ld a, [$D7ED]
+    cp a, $02
+    jr c, Jump_01D_47F0
+    xor a, a
+    jr Jump_01D_47D6
+
+Jump_01D_47F0::
+    inc a
+    jr Jump_01D_47D6
+
+Jump_01D_47F3::
+    call Func_01D_4823
+    ld a, $69
+    call Func_000_1278
+    ld a, $01
+    ret
+
+Jump_01D_47FE::
+    ld a, $02
+    ret
+
+Func_01D_4801::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Func_01D_481B
+    ld a, [$D7EF]
+    inc a
+    ld [$D7EF], a
+    cp a, $10
+    jr c, Func_01D_481B
+    cp a, $18
+    jr c, Func_01D_481F
+    xor a, a
+    ld [$D7EF], a
+
+Func_01D_481B::
+    ld b, $BB
+    jr Jump_01D_4825
+
+Func_01D_481F::
+    ld b, $C3
+    jr Jump_01D_4825
+
+Func_01D_4823::
+    ld b, $BC
+
+Jump_01D_4825::
+    ld a, [$D7ED]
+    add a, a
+    ld hl, $4842
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_4831
+    inc h
+
+Jump_01D_4831::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_59CF
+    pop de
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $61, $00, $A1, $00, $E1, $00
+
+Func_01D_4848::
+    ld hl, $0088
+    ld de, $9F70
+    ld bc, $090C
+    call Func_01D_5917
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Func_01D_485C::
+    ld hl, $0140
+    ld de, $9FE0
+    ld bc, $0307
+    call Func_01D_5917
+    ld a, [$D780]
+    cp a, $03
+    jr nz, Jump_01D_487B
+    ld hl, $689A
+    ld b, $1C
+    rst $10
+    ld hl, $6449
+    ld b, $F2
+    rst $10
+
+Jump_01D_487B::
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Func_01D_4883::
+    ld a, $01
+    ld [$D7F1], a
+    call Func_01D_5ADF
+    ld a, [$D7BB]
+    cp a, $02
+    jr c, Jump_01D_48A5
+    call Func_01D_59CF
+    ld de, $0088
+    add hl, de
+    ld bc, $0C09
+    ld de, $48FC
+    push hl
+    call Func_01D_5A32
+    jr Jump_01D_48B6
+
+Jump_01D_48A5::
+    call Func_01D_59CF
+    ld de, $0088
+    add hl, de
+    ld bc, $0C09
+    ld de, $4968
+    push hl
+    call Func_01D_5A32
+
+Jump_01D_48B6::
+    pop hl
+    ld a, [$C525]
+    and a, a
+    jr nz, Jump_01D_48C5
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Jump_01D_48C5::
+    ld bc, $0000
+
+Jump_01D_48C8::
+    push hl
+
+Jump_01D_48C9::
+    push bc
+    ld c, $4F
+    ld a, $01
+    ldh [c], a
+    pop bc
+    di
+    call Func_000_120A
+    xor a, a
+    ld [hl+], a
+    ei
+    push bc
+    ld c, $4F
+    xor a, a
+    ldh [c], a
+    pop bc
+    inc c
+    ld a, c
+    cp a, $0C
+    jr c, Jump_01D_48C9
+    pop hl
+    ld c, $00
+    ld a, l
+    add a, $20
+    ld l, a
+    ld a, h
+    adc a, $00
+    ld h, a
+    inc b
+    ld a, b
+    cp a, $09
+    jr c, Jump_01D_48C8
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+    INCBIN "dwm2-cobi-us.gbc", $0748FC, $D8
+
+Func_01D_49D4::
+    xor a, a
+    ld [$D7F1], a
+    call Func_01D_5ADF
+    call Func_000_16F5
+    ld a, [$C8C1]
+    and a, a
+    jr nz, Jump_01D_49E9
+    ld a, $E3
+    ld [$C8C1], a
+
+Jump_01D_49E9::
+    ld a, [$D7BB]
+    cp a, $02
+    jr c, Jump_01D_4A3F
+    call Func_01D_59CF
+    ld de, $0190
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, [$C8C1]
+    add a, $E0
+    ld [hl+], a
+    ei
+    di
+    call Func_000_120A
+    ld a, [$C8C2]
+    add a, $E0
+    ld [hl], a
+    ei
+    ld a, [$D7B6]
+    ld l, a
+    ld h, $00
+    inc hl
+    call Func_000_16F5
+    ld a, [$C8C1]
+    and a, a
+    jr nz, Jump_01D_4A22
+    ld a, $E3
+    ld [$C8C1], a
+
+Jump_01D_4A22::
+    call Func_01D_59CF
+    ld de, $018D
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, [$C8C1]
+    add a, $E0
+    ld [hl+], a
+    ei
+    di
+    call Func_000_120A
+    ld a, [$C8C2]
+    add a, $E0
+    ld [hl], a
+    ei
+
+Jump_01D_4A3F::
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$D783], a
+    ld [$D784], a
+    ret
+
+Func_01D_4A4E::
+    ld hl, $D7D5
+    ld b, $00
+    ld c, $00
+
+Jump_01D_4A55::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01D_4A5A
+    inc c
+
+Jump_01D_4A5A::
+    inc hl
+    inc b
+    ld a, b
+    cp a, $18
+    jr c, Jump_01D_4A55
+    ret
+
+Func_01D_4A62::
+    ld hl, $C635
+    ld c, $00
+    ld b, $00
+
+Jump_01D_4A69::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01D_4A72
+    cp a, $FF
+    jr z, Jump_01D_4A72
+    inc c
+
+Jump_01D_4A72::
+    inc hl
+    inc hl
+    inc b
+    ld a, b
+    cp a, $64
+    jr c, Jump_01D_4A69
+    ld a, c
+    ld [$D7BC], a
+    ld hl, $C61D
+    ld c, $00
+    ld b, $00
+
+Jump_01D_4A85::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01D_4A8E
+    cp a, $FF
+    jr z, Jump_01D_4A8E
+    inc c
+
+Jump_01D_4A8E::
+    inc hl
+    inc b
+    ld a, b
+    cp a, $18
+    jr c, Jump_01D_4A85
+    ld a, c
+    ld [$D7B0], a
+    ret
+
+Func_01D_4A9A:: ; heuristic: follows a terminator; C0
+    ld a, [$D7B4]
+    inc a
+    ld [$D7B4], a
+    cp a, $10
+    jr c, Jump_01D_4AAD
+    cp a, $18
+    jr c, Func_01D_4AB1
+    xor a, a
+    ld [$D7B4], a
+
+Jump_01D_4AAD::
+    ld b, $BB
+    jr Jump_01D_4AB7
+
+Func_01D_4AB1::
+    ld b, $C3
+    jr Jump_01D_4AB7
+    db $06, $BC
+
+Jump_01D_4AB7::
+    ld a, [$D7B5]
+    add a, a
+    ld hl, $4AD4
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_4AC3
+    inc h
+
+Jump_01D_4AC3::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_59CF
+    pop de
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $A9, $00, $E9, $00, $29, $01, $69, $01
+
+Func_01D_4ADC::
+    ld hl, $4BE4
+    ld de, $D788
+    ld c, $00
+
+Jump_01D_4AE4::
+    ld a, [hl+]
+    ld [de], a
+    inc c
+    inc de
+    ld a, c
+    cp a, $15
+    jr c, Jump_01D_4AE4
+    ld a, [$D780]
+    cp a, $03
+    jp z, Jump_01D_4B32
+    ld hl, $C635
+    ld a, [$D7B6]
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ld a, [$D7B5]
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_4B14
+    inc h
+
+Jump_01D_4B14::
+    ld e, [hl]
+    ld hl, $C635
+    ld bc, $0000
+
+Jump_01D_4B1B::
+    ld a, [hl]
+    cp a, e
+    jr nz, Jump_01D_4B26
+    and a, a
+    jr z, Jump_01D_4B26
+    inc hl
+    ld c, [hl]
+    jr Jump_01D_4B66
+
+Jump_01D_4B26::
+    inc b
+    inc hl
+    inc hl
+    ld a, b
+    cp a, $64
+    jr c, Jump_01D_4B1B
+    ld c, $00
+    jr Jump_01D_4B66
+
+Jump_01D_4B32::
+    ld hl, $D7D5
+    ld a, [$D7B6]
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ld a, [$D7B5]
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_4B4C
+    inc h
+
+Jump_01D_4B4C::
+    ld e, [hl]
+    ld hl, $C61D
+    ld bc, $0000
+
+Jump_01D_4B53::
+    ld a, [hl]
+    cp a, e
+    jr nz, Jump_01D_4B5F
+    and a, a
+    jr z, Jump_01D_4B5F
+    cp a, $FF
+    jr z, Jump_01D_4B5F
+    inc c
+
+Jump_01D_4B5F::
+    inc b
+    inc hl
+    ld a, b
+    cp a, $18
+    jr c, Jump_01D_4B53
+
+Jump_01D_4B66::
+    ld a, c
+    ld l, a
+    ld h, $00
+    call Func_000_16F5
+    ld a, [$C8C1]
+    and a, a
+    jr nz, Jump_01D_4B78
+    ld a, $E3
+    ld [$C8C1], a
+
+Jump_01D_4B78::
+    ld a, [$C8C1]
+    add a, $E0
+    ld [$D793], a
+    ld a, [$C8C2]
+    add a, $E0
+    ld [$D794], a
+    call Func_01D_59CF
+    ld de, $0140
+    add hl, de
+    ld bc, $0703
+    ld de, $D788
+    call Func_01D_5A32
+    ld a, [$C525]
+    and a, a
+    jr nz, Jump_01D_4BA6
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Jump_01D_4BA6::
+    call Func_01D_59CF
+    ld de, $0140
+    add hl, de
+    ld bc, $0000
+
+Jump_01D_4BB0::
+    push hl
+
+Jump_01D_4BB1::
+    push bc
+    ld c, $4F
+    ld a, $01
+    ldh [c], a
+    pop bc
+    di
+    call Func_000_120A
+    xor a, a
+    ld [hl+], a
+    ei
+    push bc
+    ld c, $4F
+    xor a, a
+    ldh [c], a
+    pop bc
+    inc c
+    ld a, c
+    cp a, $07
+    jr c, Jump_01D_4BB1
+    pop hl
+    ld c, $00
+    ld a, l
+    add a, $20
+    ld l, a
+    ld a, h
+    adc a, $00
+    ld h, a
+    inc b
+    ld a, b
+    cp a, $03
+    jr c, Jump_01D_4BB0
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $BE, $C3, $C3, $B7, $B3, $B4
+    db $B4, $B4, $B4, $B4, $B5
+
+Func_01D_4BF9::
+    ld a, [$C563]
+    bit 2, a
+    jr nz, Jump_01D_4C3D
+    bit 4, a
+    jr nz, Jump_01D_4C50
+    bit 5, a
+    jr nz, Jump_01D_4C75
+    bit 6, a
+    jp nz, Jump_01D_4C8D
+    bit 7, a
+    jp nz, Jump_01D_4CAF
+    bit 0, a
+    jp nz, Jump_01D_4CD3
+    call Func_01D_4D41
+    ld a, [$C563]
+    bit 1, a
+    ret z
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$D7B5], a
+    ld [$D7B6], a
+    ld a, $02
+    ld [$D7FA], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_4C3D::
+    ld hl, $6449
+    ld b, $F2
+    rst $10
+    ld a, [$D781]
+    sub a, $04
+    ld [$D781], a
+    ret
+
+Jump_01D_4C4C::
+    call Func_01D_4D41
+    ret
+
+Jump_01D_4C50::
+    ld a, [$D7BB]
+    cp a, $02
+    jr c, Jump_01D_4C4C
+    ld a, [$D7BB]
+    ld b, a
+    ld a, [$D7B6]
+    inc a
+    cp a, b
+    jr c, Jump_01D_4C63
+    xor a, a
+
+Jump_01D_4C63::
+    ld [$D7B6], a
+    ld a, [$D781]
+    dec a
+    dec a
+    dec a
+    ld [$D781], a
+    ld a, $69
+    call Func_000_1278
+    ret
+
+Jump_01D_4C75::
+    ld a, [$D7BB]
+    cp a, $02
+    jr c, Jump_01D_4C4C
+    ld a, [$D7B6]
+    and a, a
+    jr nz, Jump_01D_4C89
+    ld a, [$D7BB]
+    dec a
+    jp Jump_01D_4C63
+
+Jump_01D_4C89::
+    dec a
+    jp Jump_01D_4C63
+
+Jump_01D_4C8D::
+    call Func_01D_4D5F
+    ld a, [$D7B5]
+    and a, a
+    jr nz, Jump_01D_4C9B
+    ld a, [$D7B7]
+    jr Jump_01D_4C9C
+
+Jump_01D_4C9B::
+    dec a
+
+Jump_01D_4C9C::
+    ld [$D7B5], a
+    call Func_01D_4D5B
+    ld a, [$D781]
+    dec a
+    ld [$D781], a
+    ld a, $69
+    call Func_000_1278
+    ret
+
+Jump_01D_4CAF::
+    call Func_01D_4D5F
+    ld a, [$D7B7]
+    ld b, a
+    ld a, [$D7B5]
+    cp a, b
+    jr c, Jump_01D_4CBF
+    xor a, a
+    jr Jump_01D_4CC0
+
+Jump_01D_4CBF::
+    inc a
+
+Jump_01D_4CC0::
+    ld [$D7B5], a
+    call Func_01D_4D5B
+    ld a, [$D781]
+    dec a
+    ld [$D781], a
+    ld a, $69
+    call Func_000_1278
+    ret
+
+Jump_01D_4CD3::
+    ld a, $69
+    call Func_000_1278
+    call Func_01D_4D63
+    ld a, [$D780]
+    cp a, $04
+    jr z, Jump_01D_4D0A
+    call Func_01D_4D8A
+    and a, a
+    jr z, Jump_01D_4D0A
+    cp a, $FE
+    jr z, Jump_01D_4CFB
+    ld a, $01
+    ld [$D7FA], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_4CFB::
+    ld a, $03
+    ld [$D7FA], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_4D0A::
+    ld a, [$D781]
+    inc a
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$D7CA], a
+    ld a, $01
+    ld [$D7CB], a
+    ld [$D7CC], a
+    ld a, [$D780]
+    cp a, $04
+    jr z, Jump_01D_4D2D
+    ld hl, $6999
+    ld b, $1C
+    rst $10
+    jr Jump_01D_4D30
+
+Jump_01D_4D2D::
+    call Func_01D_58E7
+
+Jump_01D_4D30::
+    call Func_01D_4FE9
+    xor a, a
+    ld [$D7FA], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Func_01D_4D41::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Func_01D_4D5B
+    ld a, [$D7B4]
+    inc a
+    ld [$D7B4], a
+    cp a, $10
+    jr c, Func_01D_4D5B
+    cp a, $18
+    jr c, Func_01D_4D5F
+    xor a, a
+    ld [$D7B4], a
+
+Func_01D_4D5B::
+    ld b, $BB
+    jr Jump_01D_4D65
+
+Func_01D_4D5F::
+    ld b, $C3
+    jr Jump_01D_4D65
+
+Func_01D_4D63::
+    ld b, $BC
+
+Jump_01D_4D65::
+    ld a, [$D7B5]
+    add a, a
+    ld hl, $4D82
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_4D71
+    inc h
+
+Jump_01D_4D71::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_59CF
+    pop de
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $A9, $00, $E9, $00, $29, $01, $69, $01
+
+Func_01D_4D8A::
+    ld hl, $D7D5
+    ld a, [$D7B6]
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ld a, [$D7B5]
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_4DA4
+    inc h
+
+Jump_01D_4DA4::
+    ld b, [hl]
+    ld hl, $C635
+    ld c, $00
+
+Jump_01D_4DAA::
+    ld a, [hl]
+    cp a, b
+    jr z, Jump_01D_4DBC
+    and a, a
+    jr z, Jump_01D_4DC5
+    inc hl
+    inc hl
+    inc c
+    ld a, c
+    cp a, $64
+    jr c, Jump_01D_4DAA
+    ld a, $FF
+    ret
+
+Jump_01D_4DBC::
+    inc hl
+    ld a, [hl]
+    cp a, $63
+    jr c, Jump_01D_4DC5
+    ld a, $FE
+    ret
+
+Jump_01D_4DC5::
+    xor a, a
+    ret
+
+Func_01D_4DC7::
+    ld a, [$C563]
+    bit 1, a
+    jr nz, Jump_01D_4DE9
+    bit 4, a
+    jr nz, Jump_01D_4E0D
+    bit 5, a
+    jr nz, Jump_01D_4E27
+    bit 6, a
+    jp nz, Jump_01D_4E37
+    bit 7, a
+    jp nz, Jump_01D_4EC0
+    bit 0, a
+    jp nz, Jump_01D_4F4D
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4DE9::
+    ld a, $02
+    ld [$D7FA], a
+    ld a, $0B
+    ld [$D781], a
+    call Func_01D_59CF
+    ld de, $0161
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, $C3
+    ld [hl+], a
+    ld [hl], a
+    ei
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_4E0D::
+    call Func_01D_4FB3
+    ld a, [$D7CC]
+    cp a, $01
+    jr nz, Jump_01D_4E1A
+    xor a, a
+    jr Jump_01D_4E1B
+
+Jump_01D_4E1A::
+    inc a
+
+Jump_01D_4E1B::
+    ld [$D7CC], a
+    call Func_01D_4F99
+    ld a, $69
+    call Func_000_1278
+    ret
+
+Jump_01D_4E27::
+    call Func_01D_4FB3
+    ld a, [$D7CC]
+    and a, a
+    jr nz, Jump_01D_4E34
+    ld a, $01
+    jr Jump_01D_4E1B
+
+Jump_01D_4E34::
+    dec a
+    jr Jump_01D_4E1B
+
+Jump_01D_4E37::
+    ld a, $69
+    call Func_000_1278
+    ld a, [$D7CC]
+    and a, a
+    jr nz, Jump_01D_4E84
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CA]
+    cp a, b
+    jr c, Jump_01D_4E72
+    ld a, b
+
+Func_01D_4E4D:: ; heuristic: target of a pointer table; C0
+    ld [$D7CA], a
+    ld a, [$D7D3]
+    ld [$D7CA], a
+    ld a, [$D7D4]
+    ld [$D7CB], a
+    call Func_01D_4FE9
+    ret
+
+Jump_01D_4E60::
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CB]
+    cp a, b
+    jr c, Jump_01D_4E6E
+    ld a, b
+    ld [$D7CB], a
+
+Jump_01D_4E6E::
+    call Func_01D_4FE9
+    ret
+
+Jump_01D_4E72::
+    inc a
+    ld [$D7CA], a
+    push af
+    ld a, [$D7D3]
+    ld b, a
+    pop af
+    cp a, b
+    jp nc, Jump_01D_4E60
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4E84::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CA]
+    cp a, b
+    jr c, Jump_01D_4E94
+    ld a, [$D7D4]
+    ld b, a
+    jr Jump_01D_4E96
+
+Jump_01D_4E94::
+    ld b, $09
+
+Jump_01D_4E96::
+    ld a, [$D7CB]
+    cp a, b
+    jr c, Jump_01D_4EB8
+    ld a, [$D7D4]
+    cp a, b
+    jr nz, Jump_01D_4EA6
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4EA6::
+    ld a, [$D7CA]
+    and a, a
+    jr nz, Jump_01D_4EB0
+    ld a, $01
+    jr Jump_01D_4EB1
+
+Jump_01D_4EB0::
+    xor a, a
+
+Jump_01D_4EB1::
+    ld [$D7CB], a
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4EB8::
+    inc a
+    ld [$D7CB], a
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4EC0::
+    ld a, $69
+    call Func_000_1278
+    ld a, [$D7CC]
+    and a, a
+    jr nz, Jump_01D_4F0D
+    ld a, [$D7CA]
+    and a, a
+    jr nz, Jump_01D_4EF5
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CB]
+    cp a, b
+    jr c, Jump_01D_4EEB
+    ld a, [$D7D3]
+    ld [$D7CA], a
+    ld a, [$D7D4]
+    ld [$D7CB], a
+    call Func_01D_4FE9
+    ret
+
+Jump_01D_4EEB::
+    ld a, [$D7D3]
+    ld [$D7CA], a
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4EF5::
+    dec a
+    ld [$D7CA], a
+    ld b, a
+    ld a, [$D7CB]
+    or a, b
+    jr nz, Jump_01D_4F09
+    ld a, $01
+    ld [$D7CB], a
+    call Func_01D_4FE9
+    ret
+
+Jump_01D_4F09::
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4F0D::
+    ld a, [$D7CA]
+    and a, a
+    jr nz, Jump_01D_4F1C
+    ld a, [$D7CB]
+    cp a, $01
+    jr nz, Jump_01D_4F45
+    jr Jump_01D_4F22
+
+Jump_01D_4F1C::
+    ld a, [$D7CB]
+    and a, a
+    jr nz, Jump_01D_4F45
+
+Jump_01D_4F22::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CA]
+    cp a, b
+    jr c, Jump_01D_4F3C
+    ld a, [$D7D3]
+    ld [$D7CA], a
+    ld a, [$D7D4]
+    ld [$D7CB], a
+    call Func_01D_4FE9
+    ret
+
+Jump_01D_4F3C::
+    ld a, $09
+    ld [$D7CB], a
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4F45::
+    dec a
+    ld [$D7CB], a
+    call Func_01D_4F99
+    ret
+
+Jump_01D_4F4D::
+    call Func_01D_4FB3
+    ld a, [$D7CA]
+    and a, a
+    jr nz, Jump_01D_4F5B
+    ld a, [$D7CB]
+    and a, a
+    ret z
+
+Jump_01D_4F5B::
+    ld a, $69
+    call Func_000_1278
+    ld a, [$D780]
+    cp a, $03
+    jr z, Jump_01D_4F6F
+    call Func_01D_5012
+    and a, a
+    jr z, Jump_01D_4F84
+    jr Jump_01D_4F75
+
+Jump_01D_4F6F::
+    call Func_01D_5024
+    and a, a
+    jr z, Jump_01D_4F84
+
+Jump_01D_4F75::
+    ld a, $01
+    ld [$D7FA], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_4F84::
+    xor a, a
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Func_01D_4F99::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Func_01D_4FB3
+    ld a, [$D7CD]
+    inc a
+    ld [$D7CD], a
+    cp a, $10
+    jr c, Func_01D_4FB3
+    cp a, $18
+    jr c, Jump_01D_4FC6
+    xor a, a
+    ld [$D7CD], a
+
+Func_01D_4FB3::
+    ld a, [$D7CC]
+    and a, a
+    jr nz, Jump_01D_4FBE
+    ld a, [$D7CA]
+    jr Jump_01D_4FC1
+
+Jump_01D_4FBE::
+    ld a, [$D7CB]
+
+Jump_01D_4FC1::
+    add a, $E0
+    ld b, a
+    jr Jump_01D_4FC8
+
+Jump_01D_4FC6::
+    ld b, $CB
+
+Jump_01D_4FC8::
+    ld a, [$D7CC]
+    add a, a
+    ld hl, $4FE5
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_4FD4
+    inc h
+
+Jump_01D_4FD4::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_59CF
+    pop de
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $61, $01, $62, $01
+
+Func_01D_4FE9::
+    call Func_01D_59CF
+    ld de, $0161
+    add hl, de
+    ld a, [$D7CA]
+    add a, $E0
+    ld b, a
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    call Func_01D_59CF
+    ld de, $0162
+    add hl, de
+    ld a, [$D7CB]
+    add a, $E0
+    ld b, a
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+
+Func_01D_5012::
+    call Func_01D_5A80
+    ld a, [$D7B0]
+    add a, l
+    cp a, $18
+    jr c, Jump_01D_5022
+    jr z, Jump_01D_5022
+    ld a, $FF
+    ret
+
+Jump_01D_5022::
+    xor a, a
+    ret
+
+Func_01D_5024::
+    ld hl, $D7D5
+    ld a, [$D7B6]
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ld a, [$D7B5]
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_503E
+    inc h
+
+Jump_01D_503E::
+    ld b, [hl]
+    ld hl, $C635
+    xor a, a
+    ld [$D7C3], a
+    ld c, $00
+
+Jump_01D_5048::
+    ld a, [hl+]
+    cp a, b
+    jr z, Jump_01D_506B
+    and a, a
+    jr z, Jump_01D_5056
+
+Func_01D_504F:: ; heuristic: target of a pointer table; C0
+    ld a, [$D7C3]
+    inc a
+    ld [$D7C3], a
+
+Jump_01D_5056::
+    inc hl
+    inc c
+    ld a, c
+    cp a, $64
+    jr c, Jump_01D_5048
+    ld hl, $C635
+    ld a, [$D7C3]
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5069
+    inc h
+
+Jump_01D_5069::
+    ld a, b
+    ld [hl+], a
+
+Jump_01D_506B::
+    ld a, [hl]
+    push hl
+    ld b, a
+    call Func_01D_5A80
+    ld a, l
+    add a, b
+    cp a, $64
+    jr nc, Jump_01D_5083
+    pop hl
+    ld [hl], a
+    dec hl
+    ld a, [hl]
+    ld [$D7C5], a
+    xor a, a
+    ld [$D7C3], a
+    ret
+
+Jump_01D_5083::
+    pop hl
+    xor a, a
+    ld [$D7C3], a
+    ld a, $FF
+    ret
+
+Func_01D_508B::
+    ld hl, $C635
+    ld a, [$D7B6]
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ld a, [$D7B5]
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_50AA
+    inc h
+
+Jump_01D_50AA::
+    ld a, [hl+]
+    ld b, a
+    push hl
+    call Func_01D_5A80
+    ld e, l
+    pop hl
+    push de
+    ld a, [hl]
+    sub a, e
+    ld [hl], a
+    pop de
+    and a, a
+    jr nz, Jump_01D_50BD
+    dec hl
+    xor a, a
+    ld [hl], a
+
+Jump_01D_50BD::
+    ld hl, $C61D
+    ld c, $00
+
+Jump_01D_50C2::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01D_50CC
+    cp a, $FF
+    jr z, Jump_01D_50CC
+    jr Jump_01D_50CF
+
+Jump_01D_50CC::
+    ld a, b
+    ld [hl], a
+    dec e
+
+Jump_01D_50CF::
+    inc hl
+    inc c
+    ld a, e
+    and a, a
+    jr z, Jump_01D_50DA
+    ld a, c
+    cp a, $18
+    jr c, Jump_01D_50C2
+
+Jump_01D_50DA::
+    call Func_01D_4A62
+    ld a, [$D7B0]
+    cp a, $18
+    jr c, Jump_01D_50EB
+    xor a, a
+    ld [$D7FA], a
+    jp Jump_01D_5168
+
+Jump_01D_50EB::
+    ld a, [$D7BC]
+    and a, a
+    jr nz, Jump_01D_50F9
+    ld a, $01
+    ld [$D7FA], a
+    jp Jump_01D_5168
+
+Jump_01D_50F9::
+    ld a, $02
+    ld [$D7FA], a
+    jp Jump_01D_5168
+
+Func_01D_5101::
+    ld hl, $C61D
+    ld c, $00
+
+Jump_01D_5106::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01D_5110
+    cp a, $FF
+    jr z, Jump_01D_5110
+    jr Jump_01D_511E
+
+Jump_01D_5110::
+    inc hl
+    inc c
+    ld a, c
+    cp a, $18
+    jr c, Jump_01D_5106
+    xor a, a
+    ld [$D7FA], a
+    jp Jump_01D_5168
+
+Jump_01D_511E::
+    ld hl, $C635
+    ld de, $0000
+    ld c, $00
+
+Jump_01D_5126::
+    inc hl
+    ld a, [hl]
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_512D
+    inc d
+
+Jump_01D_512D::
+    inc hl
+    inc c
+    ld a, c
+    cp a, $64
+    jr c, Jump_01D_5126
+    ld a, d
+    cp a, $26
+    jr c, Jump_01D_5145
+    ld a, e
+    cp a, $AC
+    jr c, Jump_01D_5145
+    ld a, $01
+    ld [$D7FA], a
+    jr Jump_01D_5168
+
+Jump_01D_5145::
+    ld hl, $C635
+    ld c, $00
+
+Jump_01D_514A::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01D_5163
+    ld b, a
+    ld a, [$D7C5]
+    cp a, b
+    jr nz, Jump_01D_515B
+    inc hl
+    ld a, [hl]
+    cp a, $63
+    jr c, Jump_01D_5163
+
+Jump_01D_515B::
+    inc hl
+    inc hl
+    inc c
+    ld a, c
+    cp a, $64
+    jr c, Jump_01D_514A
+
+Jump_01D_5163::
+    ld a, $02
+    ld [$D7FA], a
+
+Jump_01D_5168::
+    xor a, a
+    ld [$D7C3], a
+    ld [$D7C5], a
+    ld a, [$CF8B]
+    inc a
+    and a, $01
+    ld [$CF8B], a
+    ld hl, $6449
+    ld b, $F2
+    rst $10
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Func_01D_5186:: ; heuristic: follows a terminator; C0
+    ld hl, $2928
+    ld a, [hl+]
+    ld l, $1F
+    jr nz, Jump_01D_51B9
+    ld bc, $0302
+    inc b
+    dec b
+    ld b, $07
+    ld [$0A09], sp
+    dec bc
+    inc c
+    add hl, de
+    ld a, [de]
+    dec de
+    inc e
+    dec e
+    ld e, $13
+    inc d
+    dec d
+    ld d, $17
+    jr Jump_01D_51B4
+    db $0E, $0F, $10, $11, $12, $2C, $2D, $40, $41, $42, $43, $44, $45
+
+Jump_01D_51B4::
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    ld c, c
+    ld c, d
+
+Jump_01D_51B9::
+    ld c, e
+    ld c, h
+    dw Func_01D_4E4D
+    dw Func_01D_504F
+    dw Func_01D_5251
+    dw Func_01D_5453
+    dw $5655
+    dw Func_01D_5857
+    INCBIN "dwm2-cobi-us.gbc", $0751C7, $52
+    dw Func_01D_4E4D
+    dw Func_01D_504F
+    dw Func_01D_5251
+    dw Func_01D_5453
+    dw $5655
+    dw Func_01D_5857
+    db $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $21, $28, $29, $2A, $2E, $1F
+    db $20, $2B, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D
+    db $FF, $21, $00, $97, $01, $80, $00
+
+Jump_01D_524C::
+    di
+    call Func_000_120A
+    xor a, a
+
+Func_01D_5251:: ; heuristic: target of a pointer table; C0
+    ld [hl+], a
+    ei
+    dec bc
+    ld a, b
+    or a, c
+    jr nz, Jump_01D_524C
+    ret
+
+Func_01D_5259::
+    ld a, [$D7FA]
+    cp a, $02
+    jr z, Jump_01D_5271
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_5271::
+    ld a, $07
+    ld [$D781], a
+    call Func_01D_59CF
+    ld de, $0161
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, $C3
+    ld [hl+], a
+    ld [hl], a
+    ei
+    xor a, a
+    ld [$D7B5], a
+    ld [$D7B6], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Func_01D_5297::
+    ld hl, $0147
+    ld de, $9F70
+    ld bc, $030D
+    call Func_01D_5917
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$D7CD], a
+    ld [$D7CE], a
+    ld [$D7CF], a
+    ld [$D7D0], a
+    ld a, $02
+    ld [$D7CC], a
+    ret
+
+Func_01D_52BD::
+    ld hl, $D788
+    ld de, $53A2
+    ld c, $00
+
+Jump_01D_52C5::
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $27
+    jr c, Jump_01D_52C5
+    ld hl, $C61A
+    ld a, [hl+]
+    ld [$C8C0], a
+    ld a, [hl+]
+    ld [$C8C1], a
+    ld a, [hl]
+    ld [$C8C2], a
+    call Func_000_173A
+    ldh a, [$FFC8]
+    and a, $F0
+    swap a
+    ld [$D7BD], a
+    ldh a, [$FFC8]
+    and a, $0F
+    ld [$D7BE], a
+    ldh a, [$FFC7]
+    and a, $F0
+    swap a
+    ld [$D7BF], a
+    ldh a, [$FFC7]
+    and a, $0F
+    ld [$D7C0], a
+    ldh a, [$FFC6]
+    and a, $F0
+    swap a
+    ld [$D7C1], a
+    ldh a, [$FFC6]
+    and a, $0F
+    ld [$D7C2], a
+    ld hl, $D7BD
+    ld c, $00
+
+Jump_01D_5315::
+    ld a, [hl]
+    and a, a
+    jr nz, Jump_01D_5323
+    add a, $E3
+    ld [hl], a
+    inc c
+    inc hl
+    ld a, c
+    cp a, $05
+    jr c, Jump_01D_5315
+
+Jump_01D_5323::
+    ld hl, $D7BD
+    ld de, $D793
+    ld a, [hl+]
+    add a, $E0
+    ld [de], a
+    inc de
+    ld a, [hl+]
+    add a, $E0
+    ld [de], a
+    inc de
+    ld a, [hl+]
+    add a, $E0
+    ld [de], a
+    inc de
+    ld a, [hl+]
+    add a, $E0
+    ld [de], a
+    inc de
+    ld a, [hl+]
+    add a, $E0
+    ld [de], a
+    inc de
+    ld a, [hl]
+    add a, $E0
+    ld [de], a
+    call Func_01D_59CF
+    ld de, $014B
+    add hl, de
+    ld de, $D788
+    ld bc, $0903
+    call Func_01D_5A32
+    ld a, [$C525]
+    and a, a
+    jr nz, Jump_01D_5364
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Jump_01D_5364::
+    call Func_01D_59CF
+    ld de, $014B
+    add hl, de
+    ld bc, $0000
+
+Jump_01D_536E::
+    push hl
+
+Jump_01D_536F::
+    push bc
+    ld c, $4F
+    ld a, $01
+    ldh [c], a
+    pop bc
+    di
+    call Func_000_120A
+    xor a, a
+    ld [hl+], a
+    ei
+    push bc
+    ld c, $4F
+    xor a, a
+    ldh [c], a
+    pop bc
+    inc c
+    ld a, c
+    cp a, $09
+    jr c, Jump_01D_536F
+    pop hl
+    ld c, $00
+    ld a, l
+    add a, $20
+    ld l, a
+    ld a, h
+    adc a, $00
+    ld h, a
+    inc b
+    ld a, b
+    cp a, $03
+    jr c, Jump_01D_536E
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3
+    db $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+Func_01D_53BD::
+    ld hl, $D788
+    ld de, $548D
+    ld c, $00
+
+Jump_01D_53C5::
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $10
+    jr c, Jump_01D_53C5
+    ld a, [$D7CE]
+    add a, $E0
+    ld [$D78A], a
+    ld a, [$D7CF]
+    add a, $E0
+    ld [$D78B], a
+    ld a, [$D7D0]
+    add a, $E0
+    ld [$D78C], a
+    call Func_01D_59CF
+    ld de, $006C
+    add hl, de
+    ld de, $D788
+    ld bc, $0802
+    call Func_01D_5A32
+    ld a, [$D780]
+    cp a, $03
+    jp nz, Jump_01D_5438
+    ld hl, $C617
+    ld a, [hl+]
+    ld [$C8C0], a
+    ld a, [hl+]
+    ld [$C8C1], a
+    ld a, [hl]
+    ld [$C8C2], a
+    call Func_000_173A
+    ldh a, [$FFC8]
+    and a, $0F
+    ld [$D7D3], a
+    ldh a, [$FFC7]
+    and a, $F0
+    swap a
+    ld [$D7D4], a
+    ldh a, [$FFC7]
+    and a, $0F
+    ld [$D7D5], a
+
+Jump_01D_5427::
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_5438::
+    ld a, [$C61C]
+    cp a, $01
+    jr c, Jump_01D_5461
+    jr nz, Func_01D_5453
+    ld a, [$C61B]
+    cp a, $86
+    jr c, Jump_01D_5461
+    jr nz, Func_01D_5453
+    ld a, [$C61A]
+    cp a, $3C
+    jr c, Jump_01D_5461
+    jr z, Jump_01D_5461
+
+Func_01D_5453:: ; heuristic: target of a pointer table; C0
+    ld a, $09
+    ld [$D7D3], a
+    ld [$D7D4], a
+    ld [$D7D5], a
+    jp Jump_01D_5427
+
+Jump_01D_5461::
+    ld hl, $C61A
+    ld a, [hl+]
+    ld [$C8C0], a
+    ld a, [hl+]
+    ld [$C8C1], a
+    ld a, [hl]
+    ld [$C8C2], a
+    call Func_000_173A
+    ldh a, [$FFC8]
+    and a, $0F
+    ld [$D7D3], a
+    ldh a, [$FFC7]
+    and a, $F0
+    swap a
+    ld [$D7D4], a
+    ldh a, [$FFC7]
+    and a, $0F
+    ld [$D7D5], a
+    jp Jump_01D_5427
+    db $B6, $BF, $C3, $C3, $C3, $E0, $E0, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+Func_01D_549D::
+    call Func_01D_564B
+    and a, a
+    ret z
+    cp a, $01
+    jr z, Jump_01D_54B3
+    cp a, $02
+    jr z, Jump_01D_54AB
+    ret
+
+Jump_01D_54AB::
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Jump_01D_54B3::
+    call Func_01D_58C8
+    ld a, [$D7CE]
+    and a, a
+    jr nz, Jump_01D_54C9
+    ld a, [$D7CF]
+    and a, a
+    jr nz, Jump_01D_54C9
+    ld a, [$D7D0]
+    and a, a
+    jr nz, Jump_01D_54C9
+    ret
+
+Jump_01D_54C9::
+    ld a, [$D7CE]
+    ld bc, $2710
+    call Func_000_16AA
+    ld d, $00
+    push de
+    push hl
+    ld a, [$D7CF]
+    ld bc, $03E8
+    call Func_000_16AA
+
+Jump_01D_54DF::
+    ld a, h
+    ld c, a
+    ld a, e
+    ld b, a
+    ld a, l
+    pop hl
+    pop de
+    add a, l
+    ld l, a
+    ld a, h
+    adc a, c
+    ld h, a
+    ld a, b
+    adc a, e
+    ld e, a
+    inc d
+    ld a, d
+    cp a, $02
+    jr nc, Jump_01D_5501
+    push de
+    push hl
+    ld a, [$D7D0]
+    ld bc, $0064
+    call Func_000_16AA
+    jr Jump_01D_54DF
+
+Jump_01D_5501::
+    push de
+    push hl
+    ld a, [$C61A]
+    add a, l
+    ld l, a
+    ld a, [$C61B]
+    adc a, h
+    ld h, a
+    ld a, [$C61C]
+    adc a, e
+    ld e, a
+    ld a, e
+    cp a, $0F
+    jr c, Jump_01D_5536
+    jr nz, Jump_01D_5525
+    ld a, h
+    cp a, $41
+    jr c, Jump_01D_5536
+    jr nz, Jump_01D_5525
+    ld a, l
+    cp a, $DD
+    jr c, Jump_01D_5536
+
+Jump_01D_5525::
+    pop hl
+    pop de
+    ld a, $01
+    ld [$D7FA], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_5536::
+    ld a, e
+    ld [$C61C], a
+    ld a, h
+    ld [$C61B], a
+    ld a, l
+    ld [$C61A], a
+    pop hl
+    pop de
+    ld a, [$C617]
+    sub a, l
+    ld l, a
+    ld a, [$C618]
+    sbc a, h
+    ld h, a
+    ld a, [$C619]
+    sbc a, e
+    ld [$C619], a
+    ld a, h
+    ld [$C618], a
+    ld a, l
+    ld [$C617], a
+    xor a, a
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Func_01D_5573::
+    call Func_01D_564B
+    and a, a
+    ret z
+    cp a, $01
+    jr z, Jump_01D_5589
+    cp a, $02
+    jr z, Jump_01D_5581
+    ret
+
+Jump_01D_5581::
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Jump_01D_5589::
+    call Func_01D_58C8
+    ld a, [$D7CE]
+    and a, a
+    jr nz, Jump_01D_559F
+    ld a, [$D7CF]
+    and a, a
+    jr nz, Jump_01D_559F
+    ld a, [$D7D0]
+    and a, a
+    jr nz, Jump_01D_559F
+    ret
+
+Jump_01D_559F::
+    ld a, [$D7CE]
+    ld bc, $2710
+    call Func_000_16AA
+    ld d, $00
+    push de
+    push hl
+    ld a, [$D7CF]
+    ld bc, $03E8
+    call Func_000_16AA
+
+Jump_01D_55B5::
+    ld a, h
+    ld c, a
+    ld a, e
+    ld b, a
+    ld a, l
+    pop hl
+    pop de
+    add a, l
+    ld l, a
+    ld a, h
+    adc a, c
+    ld h, a
+    ld a, b
+    adc a, e
+    ld e, a
+    inc d
+    ld a, d
+    cp a, $02
+    jr nc, Jump_01D_55D7
+    push de
+    push hl
+    ld a, [$D7D0]
+    ld bc, $0064
+    call Func_000_16AA
+    jr Jump_01D_55B5
+
+Jump_01D_55D7::
+    push de
+    push hl
+    ld a, [$C617]
+    add a, l
+    ld l, a
+    ld a, [$C618]
+    adc a, h
+    ld h, a
+    ld a, [$C619]
+    adc a, e
+    ld e, a
+    ld a, e
+    cp a, $01
+    jr c, Jump_01D_560E
+    jr nz, Jump_01D_55FD
+    ld a, h
+    cp a, $86
+    jr c, Jump_01D_560E
+    jr nz, Jump_01D_55FD
+    ld a, l
+    cp a, $9F
+    jr c, Jump_01D_560E
+    jr z, Jump_01D_560E
+
+Jump_01D_55FD::
+    pop hl
+    pop de
+    ld a, $01
+    ld [$D7FA], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_560E::
+    ld a, e
+    ld [$C619], a
+    ld a, h
+    ld [$C618], a
+    ld a, l
+    ld [$C617], a
+    pop hl
+    pop de
+    ld a, [$C61A]
+    sub a, l
+    ld l, a
+    ld a, [$C61B]
+    sbc a, h
+    ld h, a
+    ld a, [$C61C]
+    sbc a, e
+    ld [$C61C], a
+    ld a, h
+    ld [$C61B], a
+    ld a, l
+    ld [$C61A], a
+    xor a, a
+    ld [$D7FA], a
+    ld a, [$D781]
+    inc a
+    inc a
+    ld [$D781], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Func_01D_564B::
+    ld a, [$C562]
+    bit 0, a
+    jr nz, Jump_01D_5671
+    bit 1, a
+    jr nz, Jump_01D_5679
+    ld a, [$C563]
+    bit 6, a
+    jp nz, Jump_01D_567C
+    bit 7, a
+    jp nz, Jump_01D_5765
+    bit 4, a
+    jp nz, Jump_01D_5822
+    bit 5, a
+    jp nz, Jump_01D_5834
+    call Func_01D_5878
+    ret
+
+Jump_01D_5671::
+    ld a, $69
+    call Func_000_1278
+    ld a, $01
+    ret
+
+Jump_01D_5679::
+    ld a, $02
+    ret
+
+Jump_01D_567C::
+    ld a, $69
+    call Func_000_1278
+    ld a, [$D7CC]
+    and a, a
+    jr z, Jump_01D_568F
+    cp a, $01
+    jp z, Jump_01D_56E4
+    jp Jump_01D_5725
+
+Jump_01D_568F::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CE]
+    cp a, b
+    jr c, Jump_01D_56D8
+    jr z, Jump_01D_56C0
+    ld a, [$D7D3]
+    ld [$D7CE], a
+    ld a, [$D7CF]
+    ld b, a
+    ld a, [$D7D4]
+    cp a, b
+    jr nc, Jump_01D_56BB
+    ld [$D7CF], a
+    ld a, [$D7D0]
+    ld b, a
+    ld a, [$D7D5]
+    cp a, b
+    jr nc, Jump_01D_56BB
+    ld [$D7D0], a
+
+Jump_01D_56BB::
+    call Func_01D_58C8
+    xor a, a
+    ret
+
+Jump_01D_56C0::
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CF]
+    cp a, b
+    jr nc, Jump_01D_56CA
+
+Jump_01D_56CA::
+    ld a, [$D7D4]
+    ld [$D7CF], a
+    ld a, [$D7D5]
+    ld [$D7D0], a
+    jr Jump_01D_56BB
+
+Jump_01D_56D8::
+    inc a
+    ld [$D7CE], a
+    call Func_01D_5AA3
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_56E4::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CE]
+    cp a, b
+    jr nc, Jump_01D_570A
+    ld a, [$D7CF]
+    cp a, $09
+    jr c, Jump_01D_56FE
+    xor a, a
+    ld [$D7CF], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_56FE::
+    inc a
+    ld [$D7CF], a
+    call Func_01D_5AA3
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_570A::
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CF]
+    cp a, b
+    jr c, Jump_01D_56FE
+    ld [$D7D4], a
+    ld [$D7CF], a
+    ld a, [$D7D5]
+    ld [$D7D0], a
+    call Func_01D_58C8
+    xor a, a
+    ret
+
+Jump_01D_5725::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CE]
+    cp a, b
+    jr c, Jump_01D_574C
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CF]
+    cp a, b
+    jr c, Jump_01D_574C
+    ld a, [$D7D5]
+    ld b, a
+    ld a, [$D7D0]
+    cp a, b
+    jr c, Jump_01D_575C
+    ld a, b
+    ld [$D7D0], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_574C::
+    ld a, [$D7D0]
+    cp a, $09
+    jr c, Jump_01D_575C
+    xor a, a
+    ld [$D7D0], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_575C::
+    inc a
+    ld [$D7D0], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_5765::
+    ld a, $69
+    call Func_000_1278
+    ld a, [$D7CC]
+    and a, a
+    jr z, Jump_01D_5778
+    cp a, $01
+    jp z, Jump_01D_579E
+    jp Jump_01D_57E4
+
+Jump_01D_5778::
+    ld a, [$D7CE]
+    and a, a
+    jr nz, Jump_01D_5795
+    ld a, [$D7D3]
+    ld [$D7CE], a
+    ld a, [$D7D4]
+    ld [$D7CF], a
+    ld a, [$D7D5]
+    ld [$D7D0], a
+    call Func_01D_58C8
+    xor a, a
+    ret
+
+Jump_01D_5795::
+    dec a
+    ld [$D7CE], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_579E::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CE]
+    cp a, b
+    jr c, Jump_01D_57CB
+    ld a, [$D7CF]
+    and a, a
+    jr nz, Jump_01D_57DB
+    ld a, [$D7D4]
+    ld [$D7CF], a
+    ld a, [$D7D5]
+    ld b, a
+    ld a, [$D7D0]
+    cp a, b
+    jr c, Jump_01D_57C6
+    jr z, Jump_01D_57C6
+    ld a, [$D7D5]
+    ld [$D7D0], a
+
+Jump_01D_57C6::
+    call Func_01D_58C8
+    xor a, a
+    ret
+
+Jump_01D_57CB::
+    ld a, [$D7CF]
+    and a, a
+    jr nz, Jump_01D_57DB
+    ld a, $09
+    ld [$D7CF], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_57DB::
+    dec a
+    ld [$D7CF], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_57E4::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CE]
+    cp a, b
+    jr c, Jump_01D_5809
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CF]
+    cp a, b
+    jr c, Jump_01D_5809
+    ld a, [$D7D0]
+    and a, a
+    jr nz, Jump_01D_5819
+    ld a, [$D7D5]
+    ld [$D7D0], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_5809::
+    ld a, [$D7D0]
+    and a, a
+    jr nz, Jump_01D_5819
+    ld a, $09
+    ld [$D7D0], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_5819::
+    dec a
+    ld [$D7D0], a
+    call Func_01D_5878
+    xor a, a
+    ret
+
+Jump_01D_5822::
+    ld a, $69
+    call Func_000_1278
+    ld a, [$D7CC]
+    cp a, $02
+    jr nc, Jump_01D_5843
+    inc a
+    ld [$D7CC], a
+    jr Jump_01D_5843
+
+Jump_01D_5834::
+    ld a, $69
+    call Func_000_1278
+    ld a, [$D7CC]
+    and a, a
+    jr z, Jump_01D_5843
+    dec a
+    ld [$D7CC], a
+
+Jump_01D_5843::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CE]
+    cp a, b
+    jr c, Jump_01D_5873
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CF]
+    cp a, b
+    jr c, Jump_01D_5873
+
+Func_01D_5857:: ; heuristic: target of a pointer table; C0
+    ld a, [$D7D5]
+    ld b, a
+    ld a, [$D7D0]
+    cp a, b
+    jr c, Jump_01D_5873
+    ld a, [$D7D3]
+    ld [$D7CE], a
+    ld a, [$D7D4]
+    ld [$D7CF], a
+    ld a, [$D7D5]
+    ld [$D7D0], a
+
+Jump_01D_5873::
+    call Func_01D_58C8
+    xor a, a
+    ret
+
+Func_01D_5878::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Jump_01D_5892
+    ld a, [$D7CD]
+    inc a
+    ld [$D7CD], a
+    cp a, $10
+    jr c, Jump_01D_5892
+    cp a, $18
+    jr c, Jump_01D_58A3
+    xor a, a
+    ld [$D7CD], a
+
+Jump_01D_5892::
+    ld hl, $D7CE
+    ld a, [$D7CC]
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_589D
+    inc h
+
+Jump_01D_589D::
+    ld a, [hl]
+    add a, $E0
+    ld b, a
+    jr Jump_01D_58A5
+
+Jump_01D_58A3::
+    ld b, $CB
+
+Jump_01D_58A5::
+    ld a, [$D7CC]
+    add a, a
+    ld hl, $58C2
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_58B1
+    inc h
+
+Jump_01D_58B1::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_59CF
+    pop de
+    add hl, de
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $6E, $00, $6F, $00, $70, $00
+
+Func_01D_58C8::
+    call Func_01D_59CF
+    ld de, $006E
+    add hl, de
+    ld de, $D7CE
+    ld c, $00
+
+Jump_01D_58D4::
+    ld a, [de]
+    add a, $E0
+    ld b, a
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl+], a
+    ei
+    inc de
+    inc c
+    ld a, c
+    cp a, $03
+    jr c, Jump_01D_58D4
+    ret
+
+Func_01D_58E7::
+    ld hl, $C635
+    ld a, [$D7B6]
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ld a, [$D7B5]
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5906
+    inc h
+
+Jump_01D_5906::
+    inc hl
+    ld l, [hl]
+    ld h, $00
+    ld a, $0A
+    call Func_000_16D1
+    ld [$D7D4], a
+    ld a, l
+    ld [$D7D3], a
+    ret
+
+Func_01D_5917::
+    push bc
+    push de
+    push hl
+    call Func_01D_59CF
+    ld e, l
+    ld d, h
+    pop hl
+    add hl, de
+    pop de
+    pop bc
+    ld a, c
+    ld [$D7B8], a
+    push hl
+    push hl
+
+Jump_01D_5929::
+    di
+    call Func_000_120A
+    ld a, [hl]
+    ld [de], a
+    ei
+    ld a, [$C525]
+    or a, a
+    jr z, Jump_01D_594A
+    push bc
+    ld c, $4F
+    ld a, $01
+    ldh [c], a
+    pop bc
+    di
+    call Func_000_120A
+    ld a, [hl]
+    ld [de], a
+    ei
+    push bc
+    ld c, $4F
+    xor a, a
+    ldh [c], a
+    pop bc
+
+Jump_01D_594A::
+    inc hl
+    inc de
+    dec c
+    jp nz, Jump_01D_5929
+    ld a, [$D7B8]
+    ld c, a
+    pop hl
+    ld a, l
+    add a, $20
+    ld l, a
+    ld a, h
+    adc a, $00
+    ld h, a
+    push hl
+    dec b
+    jp nz, Jump_01D_5929
+    pop hl
+    pop hl
+    ret
+
+Func_01D_5965::
+    ld hl, $C635
+    ld de, $C61D
+    ld bc, $0000
+
+Jump_01D_596E::
+    ld a, [de]
+    and a, a
+    jr z, Jump_01D_598E
+    cp a, $FF
+    jr z, Jump_01D_598E
+    push bc
+    ld b, a
+    ld c, $00
+    ld a, [hl]
+    cp a, b
+    jr z, Jump_01D_599A
+    and a, a
+    jp z, Jump_01D_59B6
+    pop bc
+    inc hl
+    inc hl
+    inc c
+    ld a, c
+    cp a, $64
+    jr c, Jump_01D_596E
+    ld hl, $C635
+
+Jump_01D_598E::
+    inc de
+    ld c, $00
+    inc b
+    ld a, b
+    cp a, $18
+    jr c, Jump_01D_596E
+
+Jump_01D_5997::
+    ld a, $FF
+    ret
+
+Jump_01D_599A::
+    inc hl
+    ld a, [hl]
+    cp a, $63
+    jr c, Jump_01D_59B6
+    pop bc
+    inc hl
+    inc c
+    ld a, c
+    cp a, $64
+    jr c, Jump_01D_596E
+    ld hl, $C635
+    inc de
+    ld c, $00
+    inc b
+    ld a, b
+    cp a, $18
+    jr c, Jump_01D_596E
+    jr Jump_01D_5997
+
+Jump_01D_59B6::
+    pop bc
+    xor a, a
+    ret
+
+Func_01D_59B9:: ; heuristic: follows a terminator; C0
+    ld hl, $C635
+    ld c, $00
+
+Jump_01D_59BE::
+    ld a, [hl]
+    and a, a
+    jr nz, Jump_01D_59CD
+    inc hl
+    inc hl
+    inc c
+    ld a, c
+    cp a, $64
+    jr c, Jump_01D_59BE
+    ld a, $FF
+    ret
+
+Jump_01D_59CD::
+    xor a, a
+    ret
+
+Func_01D_59CF::
+    ld hl, $9800
+    ldh a, [$FFA5]
+    and a, $F8
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ldh a, [$FFA1]
+    srl a
+    srl a
+    srl a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_59EF
+    inc h
+
+Jump_01D_59EF::
+    ret
+
+Func_01D_59F0:: ; heuristic: follows a terminator; C0
+    push de
+    push bc
+    push hl
+    xor a, a
+    call Func_01D_5A4F
+    pop hl
+    push hl
+    ld a, l
+    add a, $C1
+    ld l, a
+    ld a, h
+    adc a, $01
+    ld h, a
+    ld a, l
+    ld [$C554], a
+    ld a, h
+    ld [$C555], a
+    pop hl
+    pop bc
+    pop de
+    ld a, [$C525]
+    or a, a
+    ret z
+    push de
+    call Func_000_120A
+    push bc
+    ld c, $4F
+    ld a, $01
+    ldh [c], a
+    pop bc
+    pop de
+    ld a, $02
+    ldh [$FF70], a
+    xor a, a
+    call Func_01D_5A4F
+    call Func_000_120A
+    ld a, $00
+    ldh [$FF70], a
+    ld c, $4F
+    ld a, $00
+    ldh [c], a
+    ret
+
+Func_01D_5A32::
+    push de
+    push bc
+    push hl
+    xor a, a
+    call Func_01D_5A4F
+    pop hl
+    push hl
+    ld a, l
+    add a, $21
+    ld l, a
+    ld a, h
+    adc a, $00
+    ld h, a
+    ld a, l
+    ld [$C554], a
+    ld a, h
+    ld [$C555], a
+    pop hl
+    pop bc
+    pop de
+    ret
+
+Func_01D_5A4F::
+    push hl
+    push bc
+
+Jump_01D_5A51::
+    di
+    call Func_000_120A
+    ld a, [de]
+    ei
+    call Func_000_121F
+    ld a, l
+    and a, $1F
+    jp nz, Jump_01D_5A68
+    ld a, l
+    sub a, $20
+    ld l, a
+    ld a, h
+    sbc a, $00
+    ld h, a
+
+Jump_01D_5A68::
+    inc de
+    dec b
+    jr nz, Jump_01D_5A51
+    pop bc
+    pop hl
+    dec c
+    jr z, Jump_01D_5A7F
+    ld a, l
+    add a, $20
+    ld l, a
+    ld a, h
+    adc a, $00
+    ld h, a
+    ld a, h
+    and a, $9B
+    ld h, a
+    jr Func_01D_5A4F
+
+Jump_01D_5A7F::
+    ret
+
+Func_01D_5A80::
+    ld a, [$D7CA]
+    ld e, a
+    ld l, a
+    ld h, $00
+    ld d, $00
+    sla l
+    rl h
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ld a, [$D7CB]
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5AA2
+    inc h
+
+Jump_01D_5AA2::
+    ret
+
+Func_01D_5AA3::
+    ld a, [$D7D3]
+    ld b, a
+    ld a, [$D7CE]
+    cp a, b
+    jr c, Jump_01D_5ADE
+    jr nz, Jump_01D_5AC9
+    ld a, [$D7D4]
+    ld b, a
+    ld a, [$D7CF]
+    cp a, b
+    jr c, Jump_01D_5ADE
+    jr nz, Jump_01D_5AC9
+    ld a, [$D7D5]
+    ld b, a
+    ld a, [$D7D0]
+    cp a, b
+    jr c, Jump_01D_5ADE
+    jr nz, Jump_01D_5AC9
+    jr Jump_01D_5ADE
+
+Jump_01D_5AC9::
+    ld a, [$D7D3]
+    ld [$D7CE], a
+    ld a, [$D7D4]
+    ld [$D7CF], a
+    ld a, [$D7D5]
+    ld [$D7D0], a
+    call Func_01D_58C8
+
+Jump_01D_5ADE::
+    ret
+
+Func_01D_5ADF::
+    ld a, [$D780]
+    cp a, $03
+    jr z, Jump_01D_5AF1
+    call Func_01D_4A62
+    call Func_01D_4A4E
+    ld a, [$D7BC]
+    jr Jump_01D_5AF8
+
+Jump_01D_5AF1::
+    call Func_01D_4A62
+    call Func_01D_4A4E
+    ld a, c
+
+Jump_01D_5AF8::
+    ld l, a
+    ld h, $00
+    ld a, $04
+    call Func_000_16D1
+    push af
+    and a, a
+    jr z, Jump_01D_5B05
+    inc l
+
+Jump_01D_5B05::
+    ld a, l
+    ld [$D7BB], a
+    ld a, [$D7B6]
+    inc a
+    cp a, l
+    jr c, Jump_01D_5B46
+    pop af
+    push af
+    and a, a
+    jr nz, Jump_01D_5B25
+    ld a, [$D7B6]
+    inc a
+    cp a, l
+    jr z, Jump_01D_5B46
+    ld a, [$D7B6]
+    dec a
+    ld [$D7B6], a
+    jr Jump_01D_5B46
+
+Jump_01D_5B25::
+    pop af
+    dec a
+    ld [$D7B7], a
+    ld b, a
+    ld a, [$D7B5]
+    cp a, b
+    jr c, Jump_01D_5B4C
+    jr z, Jump_01D_5B4C
+    push bc
+    push hl
+    ld a, [$D7F1]
+    and a, a
+    jr nz, Jump_01D_5B3E
+    call Func_01D_4AB1
+
+Jump_01D_5B3E::
+    pop hl
+    pop bc
+    ld a, b
+    ld [$D7B5], a
+    jr Jump_01D_5B4C
+
+Jump_01D_5B46::
+    pop af
+    ld a, $03
+    ld [$D7B7], a
+
+Jump_01D_5B4C::
+    ret
+
+Func_01D_5B4D::
+    ld a, [$D7F1]
+    ld b, a
+    push bc
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, b
+    ld c, $0E
+    ld b, $01
+    call Func_000_1F80
+    ldh a, [$FFC6]
+    and a, $01
+    add a, $CC
+    ld [$C386], a
+    pop bc
+    push bc
+    ld a, b
+    ld c, $56
+    ld b, $01
+    call Func_000_1F80
+    ldh a, [$FFC6]
+    ld l, a
+    ld h, $00
+    call Func_000_16F5
+    ld hl, $75B3
+    ld b, $1E
+    rst $10
+    ld a, [$C8C1]
+    add a, $E0
+    ld [$C389], a
+    ld a, [$C8C2]
+    add a, $E0
+    ld [$C38A], a
+    pop bc
+    push bc
+    ld c, $00
+
+Jump_01D_5B98::
+    push bc
+    ld a, c
+    ld hl, $5BE6
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5BA2
+    inc h
+
+Jump_01D_5BA2::
+    ld c, [hl]
+    ld a, b
+    ld b, $02
+    call Func_000_1F89
+    ldh a, [$FFC6]
+    ld l, a
+    ldh a, [$FFC7]
+    ld h, a
+    call Func_000_16F5
+    ld hl, $75B3
+    ld b, $1E
+    rst $10
+    pop bc
+    ld a, c
+    add a, a
+    ld hl, $5BEA
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5BC3
+    inc h
+
+Jump_01D_5BC3::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    ld a, [$C8C0]
+    add a, $E0
+    ld [de], a
+    inc de
+    ld a, [$C8C1]
+    add a, $E0
+    ld [de], a
+    inc de
+    ld a, [$C8C2]
+    add a, $E0
+    ld [de], a
+    inc c
+    ld a, c
+    cp a, $04
+    jr c, Jump_01D_5B98
+    pop bc
+    xor a, a
+    ld [$1FFF], a
+    ret
+    db $5B, $5D, $5F, $61, $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
+
+Func_01D_5BF2::
+    ld hl, $CFEC
+    ld de, $D7F1
+    ld b, $09
+
+Jump_01D_5BFA::
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5BFA
+    ld de, $FFC6
+    ld b, $0D
+
+Jump_01D_5C05::
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5C05
+    call Func_01D_5D84
+    ld c, $00
+    ld a, l
+    ld [$D7F1], a
+    ld a, h
+    ld [$D7F2], a
+    call Func_01D_6899
+    ld hl, $CFEC
+    ld de, $D7F1
+    ld b, $09
+
+Jump_01D_5C23::
+    ld a, [hl+]
+    ld [de], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5C23
+    ld de, $FFC6
+    ld b, $0D
+
+Jump_01D_5C2E::
+    ld a, [hl+]
+    ld [de], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5C2E
+    ret
+
+Func_01D_5C35::
+    ld hl, $CFEC
+    ld de, $D7F1
+    ld b, $09
+
+Jump_01D_5C3D::
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5C3D
+    ld de, $FFC6
+    ld b, $0D
+
+Jump_01D_5C48::
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5C48
+    call Func_01D_5D84
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, [hl]
+    ld c, $0B
+    call Func_000_1F89
+    xor a, a
+    ld [$1FFF], a
+    ldh a, [$FFC6]
+    ld [$D7F1], a
+    ldh a, [$FFC7]
+    ld [$D7F2], a
+    xor a, a
+    ld h, a
+    ld e, a
+    ld l, $90
+    ld d, $40
+    ld c, $00
+    call Func_01D_69DA
+    ld hl, $CFEC
+    ld de, $D7F1
+    ld b, $09
+
+Jump_01D_5C82::
+    ld a, [hl+]
+    ld [de], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5C82
+    ld de, $FFC6
+    ld b, $0D
+
+Jump_01D_5C8D::
+    ld a, [hl+]
+    ld [de], a
+    inc de
+    dec b
+    jr nz, Jump_01D_5C8D
+    ret
+
+Func_01D_5C94:: ; heuristic: follows a terminator; C0
+    call Func_01D_5D84
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, [hl]
+    jr Jump_01D_5CAF
+    db $3E, $0A, $EA, $FF, $1F, $AF, $EA, $00, $41, $FA, $B4, $D7
+
+Jump_01D_5CAF::
+    ld c, $01
+    call Func_000_1FA4
+    ld a, $F0
+    ld [$C8D9], a
+    xor a, a
+    ld [$1FFF], a
+    ld hl, $C8CF
+    ld de, $C130
+    ld c, $00
+
+Jump_01D_5CC5::
+    ld a, [hl]
+    cp a, $F0
+    jr z, Jump_01D_5CD3
+    ld [de], a
+    inc hl
+    inc de
+    inc c
+    ld a, c
+    cp a, $0A
+    jr c, Jump_01D_5CC5
+
+Jump_01D_5CD3::
+    ld a, $F0
+    ld [de], a
+    ret
+
+Func_01D_5CD7::
+    ld a, [$D7F1]
+    ld b, a
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    push bc
+    ld a, b
+    ld c, $01
+    call Func_000_1FA4
+    ld a, $F0
+    ld [$C8D9], a
+    ld de, $8F80
+    call Func_000_21A1
+    pop bc
+    push bc
+    ld a, b
+    ld c, $0B
+    ld b, $02
+    call Func_000_1F89
+    ldh a, [$FFC6]
+    ld l, a
+    ldh a, [$FFC7]
+    ld h, a
+    push hl
+    ld a, [$D7FE]
+    push af
+    ld a, $08
+    ld [$D7FE], a
+    ld hl, $4032
+    ld a, $04
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5D1A
+    inc h
+
+Jump_01D_5D1A::
+    call Func_000_0B6C
+    ld e, b
+    ld b, c
+    ld c, e
+    pop af
+    pop hl
+    push af
+    sla l
+    rl h
+    add hl, bc
+    call Func_000_0B6C
+    ld e, b
+    ld d, c
+    pop af
+    ld [$D7FE], a
+    ld hl, $C8CF
+    ld b, $08
+    ld c, $10
+    call Func_000_0B2B
+    ld de, $8A70
+    call Func_000_21A1
+    pop bc
+    xor a, a
+    ld [$1FFF], a
+    ret
+
+Func_01D_5D47::
+    ld a, [$D7FC]
+    ld c, a
+    add a, a
+    add a, c
+    push af
+    ld hl, $5D78
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5D56
+    inc h
+
+Jump_01D_5D56::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    inc hl
+    ld b, [hl]
+    ld hl, $9000
+    call Func_000_0CF5
+    pop af
+    ld hl, $5D7E
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5D6A
+    inc h
+
+Jump_01D_5D6A::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    inc hl
+    ld b, [hl]
+    ld hl, $C49F
+    ld c, $40
+    call Func_000_0B2B
+    ret
+    db $01, $40, $93, $DE, $4D, $47, $01, $40, $48, $46, $52, $47
+
+Func_01D_5D84::
+    ld a, [$D7AF]
+    ld b, a
+    add a, a
+    add a, a
+    add a, b
+    ld b, a
+    ld a, [$D7AB]
+    add a, b
+    ld hl, $D789
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5D98
+    inc h
+
+Jump_01D_5D98::
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ret
+
+Func_01D_5DA1::
+    ld a, [$D7AF]
+    add a, a
+    add a, a
+    ld b, a
+    ld a, [$D7AB]
+    add a, b
+    ld hl, $D789
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5DB3
+    inc h
+
+Jump_01D_5DB3::
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ret
+
+Func_01D_5DBC::
+    call Func_01D_5D84
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, [$D7F5]
+    ld h, a
+    ld a, [$D7F6]
+    ld l, a
+    ld a, [hl]
+    ld c, $A4
+    call Func_000_1F80
+    ldh a, [$FFC6]
+    ld [$C529], a
+    ld a, $0B
+    ld [$C528], a
+    xor a, a
+    ld [$1FFF], a
+    ld hl, $C52D
+    ld a, $20
+    ld [hl+], a
+    ld a, $93
+    ld [hl+], a
+    ld a, $02
+    ld [hl+], a
+    ld [hl], $06
+    ld hl, $402B
+    ld b, $08
+    rst $10
+    ret
+
+Func_01D_5DF9::
+    call Func_01D_5D84
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, [hl]
+    ld c, $0B
+    call Func_000_1F89
+    xor a, a
+    ld [$1FFF], a
+    ldh a, [$FFC6]
+    ld [$D006], a
+    ldh a, [$FFC7]
+    ld [$D007], a
+    ld hl, $4001
+    ld b, $35
+    rst $10
+    ld a, [$D013]
+    ld [$C529], a
+    ld a, $0D
+    ld [$C528], a
+    ld hl, $C52D
+    ld a, $80
+    ld [hl+], a
+    ld a, $96
+    ld [hl+], a
+    ld a, $02
+    ld [hl+], a
+    ld [hl], $06
+    ld hl, $402B
+    ld b, $08
+    rst $10
+    ret
+
+Func_01D_5E3F::
+    call Func_01D_6D70
+    ld d, c
+    xor a, a
+    ld [$D7AA], a
+    ld hl, $A000
+    ld b, $00
+    ld c, $A5
+
+Jump_01D_5E4E::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, [hl]
+    cp a, $01
+    jr z, Jump_01D_5E62
+    cp a, $02
+    jr z, Jump_01D_5E62
+    jr Jump_01D_5E69
+
+Jump_01D_5E62::
+    ld a, [$D7AA]
+    inc a
+    ld [$D7AA], a
+
+Jump_01D_5E69::
+    inc b
+    ld a, c
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5E70
+    inc h
+
+Jump_01D_5E70::
+    ld a, b
+    cp a, d
+    jr c, Jump_01D_5E4E
+    xor a, a
+    ld [$1FFF], a
+    ret
+
+Func_01D_5E79::
+    call Func_01D_6D70
+    ld b, c
+    ld hl, $D789
+
+Jump_01D_5E80::
+    xor a, a
+    ld [hl+], a
+    dec b
+    jr nz, Jump_01D_5E80
+    xor a, a
+    ld [$D7A9], a
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld de, $C6FE
+    ld b, $00
+
+Jump_01D_5E97::
+    ld a, [de]
+    ld c, a
+    ld a, $A5
+    push bc
+    push de
+    call Func_000_1682
+    ld de, $A000
+    add hl, de
+    ld a, [hl]
+    cp a, $02
+    jr nz, Jump_01D_5EC0
+    pop de
+    pop bc
+    ld hl, $D789
+    ld a, b
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5EB4
+    inc h
+
+Jump_01D_5EB4::
+    ld a, [de]
+    ld [hl], a
+    inc b
+    ld a, [$D7A9]
+    inc a
+    ld [$D7A9], a
+    jr Jump_01D_5EC2
+
+Jump_01D_5EC0::
+    pop de
+    pop bc
+
+Jump_01D_5EC2::
+    inc de
+    ld a, [$C6FD]
+    cp a, b
+    jr nz, Jump_01D_5E97
+    xor a, a
+    ld [$1FFF], a
+    ret
+
+Func_01D_5ECE::
+    call Func_01D_6D70
+    ld hl, $D789
+    ld b, $1E
+
+Jump_01D_5ED6::
+    xor a, a
+    ld [hl+], a
+    dec b
+    jr nz, Jump_01D_5ED6
+    xor a, a
+    ld [$D7A9], a
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld [$D7B9], a
+    ld de, $A000
+    ld hl, $D789
+    ld b, $00
+    ld c, $00
+
+Jump_01D_5EF5::
+    ld a, [de]
+    cp a, $01
+    jr nz, Jump_01D_5F14
+    push de
+    ld a, $6E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_5F02
+    inc d
+
+Jump_01D_5F02::
+    ld a, [de]
+    and a, a
+    jr nz, Jump_01D_5F0C
+    pop de
+    inc c
+    ld a, b
+    ld [hl+], a
+    jr Jump_01D_5F14
+
+Jump_01D_5F0C::
+    pop de
+    ld a, [$D7B9]
+    inc a
+    ld [$D7B9], a
+
+Jump_01D_5F14::
+    ld a, $A5
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_5F1B
+    inc d
+
+Jump_01D_5F1B::
+    inc b
+    ld a, [$D7FF]
+    cp a, b
+    jr nz, Jump_01D_5EF5
+    jr c, Jump_01D_5EF5
+    ld a, c
+    ld [$D7A9], a
+    xor a, a
+    ld [$1FFF], a
+    ret
+
+Func_01D_5F2D::
+    call Func_01D_6D70
+    ld hl, $D789
+    ld b, $1E
+
+Jump_01D_5F35::
+    xor a, a
+    ld [hl+], a
+    dec b
+    jr nz, Jump_01D_5F35
+    ld hl, $D7BE
+    ld b, $1E
+
+Jump_01D_5F3F::
+    xor a, a
+    ld [hl+], a
+    dec b
+    jr nz, Jump_01D_5F3F
+    xor a, a
+    ld [$D7A9], a
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld [$D7B9], a
+    ld de, $A000
+    ld hl, $D789
+    ld b, $00
+    ld c, $00
+
+Jump_01D_5F5E::
+    ld a, [de]
+    and a, a
+    jr z, Jump_01D_5F86
+    cp a, $01
+    jr z, Jump_01D_5F6C
+    cp a, $02
+    jr z, Jump_01D_5F6C
+    jr Jump_01D_5F86
+
+Jump_01D_5F6C::
+    push de
+    ld a, $6E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_5F74
+    inc d
+
+Jump_01D_5F74::
+    ld a, [de]
+    and a, a
+    jr nz, Jump_01D_5F7E
+    pop de
+    inc c
+    ld a, b
+    ld [hl+], a
+    jr Jump_01D_5F86
+
+Jump_01D_5F7E::
+    pop de
+    ld a, [$D7B9]
+    inc a
+    ld [$D7B9], a
+
+Jump_01D_5F86::
+    ld a, $A5
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_5F8D
+    inc d
+
+Jump_01D_5F8D::
+    inc b
+    ld a, [$D7FF]
+    cp a, b
+    jr nz, Jump_01D_5F5E
+    ld a, c
+    ld [$D7A9], a
+    xor a, a
+    ld [$1FFF], a
+
+Func_01D_5F9C::
+    ld a, [$D7A9]
+    and a, a
+    ret z
+    ld hl, $D789
+    ld de, $C6FE
+    ld bc, $0000
+
+Jump_01D_5FAA::
+    push hl
+    push de
+    push bc
+    ld b, $00
+
+Jump_01D_5FAF::
+    ld a, [de]
+    ld c, a
+    ld a, [hl]
+    cp a, c
+    jr z, Jump_01D_5FC4
+    inc b
+    inc hl
+    ld a, [$D7A9]
+    ld c, a
+    ld a, b
+    cp a, c
+    jr c, Jump_01D_5FAF
+    pop bc
+    pop de
+    pop hl
+    jr Jump_01D_5FD6
+
+Jump_01D_5FC4::
+    ld a, $FF
+    ld [hl], a
+    pop bc
+    ld hl, $D7BE
+    ld a, b
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5FD1
+    inc h
+
+Jump_01D_5FD1::
+    ld a, [de]
+    ld [hl], a
+    pop de
+    pop hl
+    inc b
+
+Jump_01D_5FD6::
+    inc c
+    inc de
+    ld a, [$C6FD]
+    cp a, c
+    jr nz, Jump_01D_5FAA
+    ld hl, $D7BE
+    ld a, b
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_5FE7
+    inc h
+
+Jump_01D_5FE7::
+    ld de, $D789
+    ld a, [$D7A9]
+    ld c, a
+
+Jump_01D_5FEE::
+    ld a, [de]
+    cp a, $FF
+    jr z, Jump_01D_5FF4
+    ld [hl+], a
+
+Jump_01D_5FF4::
+    inc de
+    dec c
+    jr nz, Jump_01D_5FEE
+    ld hl, $D7BE
+    ld de, $D789
+    ld a, [$D7A9]
+    ld b, a
+
+Jump_01D_6002::
+    ld a, [hl+]
+    ld [de], a
+    inc de
+    dec b
+    jr nz, Jump_01D_6002
+    ld a, [$D7A9]
+    cp a, $1E
+    jr nc, Jump_01D_6025
+    ld hl, $D789
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6017
+    inc h
+
+Jump_01D_6017::
+    ld a, [$D7A9]
+    ld b, a
+    ld a, $1E
+    sub a, b
+    ld b, a
+
+Jump_01D_601F::
+    ld a, $FF
+    ld [hl+], a
+    dec b
+    jr nz, Jump_01D_601F
+
+Jump_01D_6025::
+    ret
+
+Func_01D_6026::
+    call Func_01D_6D70
+    ld hl, $D789
+    ld b, $1E
+
+Jump_01D_602E::
+    xor a, a
+    ld [hl+], a
+    dec b
+    jr nz, Jump_01D_602E
+    xor a, a
+    ld [$D7A9], a
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld [$D7B9], a
+    ld de, $A000
+    ld hl, $D789
+    ld b, $00
+    ld c, $00
+
+Jump_01D_604D::
+    ld a, [de]
+    and a, a
+    jr z, Jump_01D_606E
+    cp a, $01
+    jr z, Jump_01D_605B
+    cp a, $02
+    jr z, Jump_01D_605B
+    jr Jump_01D_606E
+
+Jump_01D_605B::
+    push de
+    ld a, $6E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6063
+    inc d
+
+Jump_01D_6063::
+    ld a, [de]
+    and a, a
+    jr z, Jump_01D_606D
+    pop de
+    inc c
+    ld a, b
+    ld [hl+], a
+    jr Jump_01D_606E
+
+Jump_01D_606D::
+    pop de
+
+Jump_01D_606E::
+    ld a, $A5
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6075
+    inc d
+
+Jump_01D_6075::
+    inc b
+    ld a, [$D7FF]
+    cp a, b
+    jr nz, Jump_01D_604D
+    ld a, c
+    ld [$D7A9], a
+    ld [$D7B9], a
+    xor a, a
+    ld [$1FFF], a
+    ret
+
+Func_01D_6088::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld hl, $D789
+    ld a, [$D7AF]
+    add a, a
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_609E
+    inc h
+
+Jump_01D_609E::
+    ld c, $00
+
+Jump_01D_60A0::
+    ld a, [$D7B1]
+    cp a, $03
+    jr c, Jump_01D_60AC
+    ld a, [$D7A9]
+    jr Jump_01D_60BB
+
+Jump_01D_60AC::
+    ld a, [$D7B0]
+    cp a, $01
+    jr nz, Jump_01D_60B8
+    ld a, [$D7A9]
+    jr Jump_01D_60BB
+
+Jump_01D_60B8::
+    ld a, [$D7A9]
+
+Jump_01D_60BB::
+    ld b, a
+    ld a, [$D7AF]
+    add a, a
+    add a, a
+    add a, c
+    cp a, b
+    jr nc, Jump_01D_6124
+    push hl
+    push bc
+    ld a, [hl]
+    ld c, $0B
+    ld b, $02
+    call Func_000_1F89
+    ldh a, [$FFC6]
+    ld l, a
+    ldh a, [$FFC7]
+    ld h, a
+    push hl
+    ld a, [$D7FE]
+    push af
+    ld a, $08
+    ld [$D7FE], a
+    ld hl, $4032
+    ld a, $04
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_60E9
+    inc h
+
+Jump_01D_60E9::
+    call Func_000_0B6C
+    ld e, b
+    ld b, c
+    ld c, e
+    pop af
+    pop hl
+    push af
+    sla l
+    rl h
+    add hl, bc
+    call Func_000_0B6C
+    ld e, b
+    ld d, c
+    pop af
+    ld [$D7FE], a
+    ld hl, $C8CF
+    ld b, $08
+    ld c, $10
+    call Func_000_0B2B
+    ld a, $F0
+    ld [$C8DE], a
+    pop bc
+    push bc
+    call Func_01D_6129
+    pop bc
+    pop hl
+    inc hl
+    inc c
+    ld a, [$D7A9]
+    cp a, c
+    jr z, Jump_01D_6124
+    ld a, c
+    cp a, $04
+    jp c, Jump_01D_60A0
+
+Jump_01D_6124::
+    xor a, a
+    ld [$1FFF], a
+    ret
+
+Func_01D_6129::
+    xor a, a
+    ld [$D784], a
+    ld [$D785], a
+    ld hl, $C8CF
+
+Jump_01D_6133::
+    ld a, [$D784]
+    push hl
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_613C
+    inc h
+
+Jump_01D_613C::
+    ld a, [hl]
+    cp a, $F0
+    jp z, Jump_01D_6176
+    cp a, $8D
+    jr z, Jump_01D_6154
+    cp a, $8E
+    jr z, Jump_01D_6154
+    push bc
+    call Func_01D_617F
+    call Func_000_0B2B
+    pop bc
+    jr Jump_01D_6165
+
+Jump_01D_6154::
+    push af
+    ld a, [$D785]
+    dec a
+    ld [$D785], a
+    pop af
+    push bc
+    call Func_01D_617F
+    call Func_000_0B46
+    pop bc
+
+Jump_01D_6165::
+    pop hl
+    ld a, [$D785]
+    inc a
+    ld [$D785], a
+    ld a, [$D784]
+    inc a
+    ld [$D784], a
+    jr Jump_01D_6133
+
+Jump_01D_6176::
+    pop hl
+    xor a, a
+    ld [$D785], a
+    ld [$D784], a
+    ret
+
+Func_01D_617F::
+    swap a
+    ld d, a
+    and a, $F0
+    ld e, a
+    ld a, d
+    and a, $0F
+    ld d, a
+    ld hl, $4010
+    add hl, de
+    ld e, l
+    ld d, h
+    push de
+    ld a, [$D7F5]
+    and a, a
+    jr z, Jump_01D_61B6
+    cp a, $01
+    jr z, Jump_01D_61B1
+    cp a, $02
+    jr z, Jump_01D_61AC
+    cp a, $03
+    jr z, Jump_01D_61A7
+    ld de, $6299
+    jr Jump_01D_61B9
+
+Jump_01D_61A7::
+    ld de, $6285
+    jr Jump_01D_61B9
+
+Jump_01D_61AC::
+    ld de, $6279
+    jr Jump_01D_61B9
+
+Jump_01D_61B1::
+    ld de, $6229
+    jr Jump_01D_61B9
+
+Jump_01D_61B6::
+    ld de, $61D9
+
+Jump_01D_61B9::
+    ld a, c
+    add a, a
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_61C0
+    inc d
+
+Jump_01D_61C0::
+    ld a, [de]
+    ld l, a
+    inc de
+    ld a, [de]
+    ld h, a
+    ld a, [$D785]
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_61CE
+    inc h
+
+Jump_01D_61CE::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    ld h, d
+    ld l, e
+    pop de
+    ld b, $1F
+    ld c, $10
+    ret
+    INCBIN "dwm2-cobi-us.gbc", $0761D9, $D4
+
+Func_01D_62AD::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld c, $00
+
+Jump_01D_62B8::
+    push bc
+    ld hl, $C6FE
+    ld a, c
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_62C2
+    inc h
+
+Jump_01D_62C2::
+    ld a, [hl]
+    ld c, $01
+    call Func_000_1FA4
+    ld a, $F0
+    ld [$C8D9], a
+    ld hl, $62F9
+    pop bc
+    push bc
+    ld a, c
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_62D9
+    inc h
+
+Jump_01D_62D9::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    call Func_000_21A1
+    pop bc
+    inc c
+    ld a, [$C6FD]
+    cp a, c
+    jr nz, Jump_01D_62B8
+    xor a, a
+    ld [$1FFF], a
+    ld hl, $C52D
+    xor a, a
+    ld [hl+], a
+    ld a, $88
+    ld [hl+], a
+    ld a, $02
+    ld [hl+], a
+    ld [hl], $12
+    ret
+    db $00, $8D, $50, $8D, $A0, $8D
+
+Func_01D_62FF::
+    ld hl, $9800
+    ldh a, [$FFA5]
+    and a, $F8
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    add hl, de
+    ldh a, [$FFA1]
+    srl a
+    srl a
+    srl a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_631F
+    inc h
+
+Jump_01D_631F::
+    ret
+
+Func_01D_6320::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld hl, $D789
+    ld a, [$D7AF]
+    add a, a
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6336
+    inc h
+
+Jump_01D_6336::
+    ld c, $00
+
+Jump_01D_6338::
+    ld a, [$D7B1]
+    cp a, $03
+    jr c, Jump_01D_6344
+    ld a, [$D7A9]
+    jr Jump_01D_6353
+
+Jump_01D_6344::
+    ld a, [$D7B0]
+    cp a, $01
+    jr nz, Jump_01D_6350
+    ld a, [$D7A9]
+    jr Jump_01D_6353
+
+Jump_01D_6350::
+    ld a, [$D7A9]
+
+Jump_01D_6353::
+    ld b, a
+    ld a, [$D7AF]
+    add a, a
+    add a, a
+    add a, c
+    cp a, b
+    jp nc, Jump_01D_63F5
+    push hl
+    push bc
+    ld a, [hl]
+    ld c, $6E
+    call Func_000_1F80
+    ldh a, [$FFC6]
+    cp a, $02
+    jr nz, Jump_01D_637F
+    pop bc
+    pop hl
+    push hl
+    push bc
+    ld a, [hl]
+    ld c, $0E
+    call Func_000_1F80
+    ldh a, [$FFC6]
+    and a, $01
+    add a, $CC
+    ld e, a
+    jr Jump_01D_6381
+
+Jump_01D_637F::
+    ld e, $CE
+
+Jump_01D_6381::
+    pop bc
+    push bc
+    push de
+    call Func_01D_62FF
+    push hl
+    ld a, [$D7F2]
+    and a, a
+    jr z, Jump_01D_639C
+    cp a, $01
+    jr z, Jump_01D_6397
+    ld hl, $640A
+    jr Jump_01D_639F
+
+Jump_01D_6397::
+    ld hl, $6402
+    jr Jump_01D_639F
+
+Jump_01D_639C::
+    ld hl, $63FA
+
+Jump_01D_639F::
+    ld a, c
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_63A6
+    inc h
+
+Jump_01D_63A6::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    pop hl
+    add hl, de
+    call Func_000_24F8
+    pop de
+    ld a, [$D7F1]
+    and a, a
+    jr nz, Jump_01D_63BC
+    di
+    call Func_000_120A
+    ld a, e
+    ld [hl], a
+    ei
+
+Jump_01D_63BC::
+    pop bc
+    push bc
+    push de
+    ld a, [$D7F2]
+    and a, a
+    jr z, Jump_01D_63D3
+    cp a, $01
+    jr z, Jump_01D_63CE
+    ld de, $6422
+    jr Jump_01D_63D6
+
+Jump_01D_63CE::
+    ld de, $641A
+    jr Jump_01D_63D6
+
+Jump_01D_63D3::
+    ld de, $6412
+
+Jump_01D_63D6::
+    ld a, c
+    add a, a
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_63DD
+    inc d
+
+Jump_01D_63DD::
+    ld a, [de]
+    ld l, a
+    inc de
+    ld a, [de]
+    ld h, a
+    pop de
+    ld a, e
+    ld [hl], a
+    pop bc
+    pop hl
+    inc hl
+    inc c
+    ld a, [$D7A9]
+    cp a, c
+    jr z, Jump_01D_63F5
+    ld a, c
+    cp a, $04
+    jp c, Jump_01D_6338
+
+Jump_01D_63F5::
+    xor a, a
+    ld [$1FFF], a
+    ret
+    db $32, $00, $72, $00, $B2, $00, $F2, $00, $B2, $00, $F2, $00, $32, $01, $72, $01
+    db $2B, $00, $6B, $00, $AB, $00, $EB, $00, $8A, $C3, $B2, $C3, $DA, $C3, $02, $C4
+    db $DA, $C3, $02, $C4, $2A, $C4, $52, $C4, $83, $C3, $AB, $C3, $D3, $C3, $FB, $C3
+
+Func_01D_642A::
+    ld a, [$C563]
+    bit 6, a
+    jr nz, Jump_01D_645F
+    bit 7, a
+    jr nz, Jump_01D_646F
+    ld a, [$C562]
+    bit 0, a
+    jr nz, Jump_01D_6448
+    bit 1, a
+    jr nz, Jump_01D_6456
+    call Func_01D_648E
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6448::
+    ld a, $69
+    call Func_000_1278
+    call Func_01D_64B0
+    ld a, $FF
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6456::
+    call Func_01D_64AC
+    ld a, $FE
+    ld [$D7F9], a
+    ret
+
+Jump_01D_645F::
+    call Func_01D_64AC
+    ld a, [$D7B7]
+    and a, a
+    jr nz, Jump_01D_646C
+    ld a, $01
+    jr Jump_01D_647D
+
+Jump_01D_646C::
+    dec a
+    jr Jump_01D_647D
+
+Jump_01D_646F::
+    call Func_01D_64AC
+    ld a, [$D7B7]
+    cp a, $01
+    jr c, Jump_01D_647C
+    xor a, a
+    jr Jump_01D_647D
+
+Jump_01D_647C::
+    inc a
+
+Jump_01D_647D::
+    ld [$D7B7], a
+    call Func_01D_64A8
+    ld a, $69
+    call Func_000_1278
+    ld a, $FD
+    ld [$D7F9], a
+    ret
+
+Func_01D_648E::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Func_01D_64A8
+    ld a, [$D7B8]
+    inc a
+    ld [$D7B8], a
+    cp a, $10
+    jr c, Func_01D_64A8
+    cp a, $18
+    jr c, Func_01D_64AC
+    xor a, a
+    ld [$D7B8], a
+
+Func_01D_64A8::
+    ld b, $BB
+    jr Jump_01D_64B2
+
+Func_01D_64AC::
+    ld b, $C3
+    jr Jump_01D_64B2
+
+Func_01D_64B0::
+    ld b, $BC
+
+Jump_01D_64B2::
+    ld a, [$D7B7]
+    add a, a
+    ld hl, $64D2
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_64BE
+    inc h
+
+Jump_01D_64BE::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_62FF
+    pop de
+    add hl, de
+    call Func_000_24F8
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $28, $01, $68, $01
+
+Func_01D_64D6::
+    xor a, a
+    ld [$D7AF], a
+    ld a, [$C563]
+    bit 6, a
+    jr nz, Jump_01D_6506
+    bit 7, a
+    jr nz, Jump_01D_651B
+    ld a, [$C562]
+    bit 1, a
+    jr nz, Jump_01D_64F5
+    bit 0, a
+    jr nz, Jump_01D_64FB
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_64F5::
+    ld a, $FE
+    ld [$D7F9], a
+    ret
+
+Jump_01D_64FB::
+    ld a, $69
+    call Func_000_1278
+    ld a, $FF
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6506::
+    ld a, [$D7AB]
+    and a, a
+    jr nz, Jump_01D_6518
+    ld a, [$D7A9]
+    dec a
+    jr nz, Jump_01D_6532
+    ld a, $FD
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6518::
+    dec a
+    jr Jump_01D_6532
+
+Jump_01D_651B::
+    ld a, [$D7A9]
+    dec a
+    jr nz, Jump_01D_6527
+    ld a, $FD
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6527::
+    ld b, a
+    ld a, [$D7AB]
+    cp a, b
+    jr c, Jump_01D_6531
+    xor a, a
+    jr Jump_01D_6532
+
+Jump_01D_6531::
+    inc a
+
+Jump_01D_6532::
+    ld [$D7AB], a
+    ld a, $69
+    call Func_000_1278
+    ld a, $FD
+    ld [$D7F9], a
+    ret
+
+Func_01D_6540::
+    ld a, [$C563]
+    bit 6, a
+    jr nz, Jump_01D_655E
+    bit 7, a
+    jr nz, Jump_01D_6574
+    ld a, [$C562]
+    bit 0, a
+    jr nz, Jump_01D_659A
+    bit 1, a
+    jr nz, Jump_01D_65A8
+    call Func_01D_65AE
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_655E::
+    call Func_01D_65CC
+    ld a, [$D7FA]
+    and a, a
+    jr nz, Jump_01D_656E
+    ld a, $01
+    ld [$D7FA], a
+    jr Jump_01D_6588
+
+Jump_01D_656E::
+    dec a
+    ld [$D7FA], a
+    jr Jump_01D_6588
+
+Jump_01D_6574::
+    call Func_01D_65CC
+    ld a, [$D7FA]
+    cp a, $01
+    jr c, Jump_01D_6584
+    xor a, a
+    ld [$D7FA], a
+    jr Jump_01D_6588
+
+Jump_01D_6584::
+    inc a
+    ld [$D7FA], a
+
+Jump_01D_6588::
+    xor a, a
+    ld [$D783], a
+    call Func_01D_65C8
+    ld a, $69
+    call Func_000_1278
+    ld a, $FD
+    ld [$D7F9], a
+    ret
+
+Jump_01D_659A::
+    call Func_01D_65D0
+    ld a, $69
+    call Func_000_1278
+    ld a, $FF
+    ld [$D7F9], a
+    ret
+
+Jump_01D_65A8::
+    ld a, $FE
+    ld [$D7F9], a
+    ret
+
+Func_01D_65AE::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Func_01D_65C8
+    ld a, [$D783]
+    inc a
+    ld [$D783], a
+    cp a, $10
+    jr c, Func_01D_65C8
+    cp a, $18
+    jr c, Func_01D_65CC
+    xor a, a
+    ld [$D783], a
+
+Func_01D_65C8::
+    ld b, $BB
+    jr Jump_01D_65D2
+
+Func_01D_65CC::
+    ld b, $C3
+    jr Jump_01D_65D2
+
+Func_01D_65D0::
+    ld b, $BC
+
+Jump_01D_65D2::
+    ld a, [$D7FA]
+    add a, a
+    ld hl, $65F2
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_65DE
+    inc h
+
+Jump_01D_65DE::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_62FF
+    pop de
+    add hl, de
+    call Func_000_24F8
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $2F, $01, $6F, $01
+
+Func_01D_65F6::
+    ld a, [$C563]
+    bit 6, a
+    jr nz, Jump_01D_6614
+    bit 7, a
+    jr nz, Jump_01D_662C
+    ld a, [$C562]
+    bit 0, a
+    jr nz, Jump_01D_6656
+    bit 1, a
+    jr nz, Jump_01D_6664
+    call Func_01D_666A
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6614::
+    call Func_01D_6688
+    ld a, [$D7AB]
+    and a, a
+    jr nz, Jump_01D_6626
+    ld a, [$D7A9]
+    dec a
+    ld [$D7AB], a
+    jr Jump_01D_6644
+
+Jump_01D_6626::
+    dec a
+    ld [$D7AB], a
+    jr Jump_01D_6644
+
+Jump_01D_662C::
+    call Func_01D_6688
+    ld a, [$D7A9]
+    dec a
+    ld b, a
+    ld a, [$D7AB]
+    cp a, b
+    jr c, Jump_01D_6640
+    xor a, a
+    ld [$D7AB], a
+    jr Jump_01D_6644
+
+Jump_01D_6640::
+    inc a
+    ld [$D7AB], a
+
+Jump_01D_6644::
+    xor a, a
+    ld [$D7AC], a
+    call Func_01D_6684
+    ld a, $69
+    call Func_000_1278
+    ld a, $FD
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6656::
+    ld a, $69
+    call Func_000_1278
+    call Func_01D_668C
+    ld a, $FF
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6664::
+    ld a, $FE
+    ld [$D7F9], a
+    ret
+
+Func_01D_666A::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Func_01D_6684
+    ld a, [$D7AC]
+    inc a
+    ld [$D7AC], a
+    cp a, $10
+    jr c, Func_01D_6684
+    cp a, $18
+    jr c, Func_01D_6688
+    xor a, a
+    ld [$D7AC], a
+
+Func_01D_6684::
+    ld b, $BB
+    jr Jump_01D_668E
+
+Func_01D_6688::
+    ld b, $C3
+    jr Jump_01D_668E
+
+Func_01D_668C::
+    ld b, $BC
+
+Jump_01D_668E::
+    ld a, [$D7AB]
+    add a, a
+    ld hl, $66AE
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_669A
+    inc h
+
+Jump_01D_669A::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_62FF
+    pop de
+    add hl, de
+    call Func_000_24F8
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $21, $00, $61, $00, $A1, $00, $E1, $00
+
+Func_01D_66B6::
+    ld a, [$C563]
+    bit 4, a
+    jr nz, Jump_01D_66E3
+    bit 5, a
+    jr nz, Jump_01D_6713
+    ld a, [$C563]
+    bit 6, a
+    jp nz, Jump_01D_6730
+    bit 7, a
+    jp nz, Jump_01D_6752
+    ld a, [$C562]
+    bit 0, a
+    jp nz, Jump_01D_6789
+    bit 1, a
+    jp nz, Jump_01D_6797
+    call Func_01D_679D
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_66E3::
+    ld a, [$D7B0]
+    ld b, a
+    ld a, [$D7AF]
+    inc a
+    cp a, b
+    jr c, Jump_01D_66FE
+    ld a, [$D7B0]
+    cp a, $01
+    jr nz, Jump_01D_66FD
+    call Func_01D_679D
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_66FD::
+    xor a, a
+
+Jump_01D_66FE::
+    ld [$D7AF], a
+    xor a, a
+    ld [$D7AC], a
+    call Func_01D_67B7
+    ld a, $69
+    call Func_000_1278
+    ld a, $FB
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6713::
+    ld a, [$D7AF]
+    and a, a
+    jr nz, Jump_01D_672C
+    ld a, [$D7B0]
+    cp a, $01
+    jr nz, Jump_01D_6728
+    call Func_01D_679D
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6728::
+    dec a
+    jp Jump_01D_66FE
+
+Jump_01D_672C::
+    dec a
+    jp Jump_01D_66FE
+
+Jump_01D_6730::
+    call Func_01D_67BB
+    ld a, [$D7AB]
+    and a, a
+    jr nz, Jump_01D_674C
+    ld a, [$D7B1]
+    and a, a
+    jr nz, Jump_01D_6747
+    call Func_01D_679D
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6747::
+    ld [$D7AB], a
+    jr Jump_01D_6777
+
+Jump_01D_674C::
+    dec a
+    ld [$D7AB], a
+    jr Jump_01D_6777
+
+Jump_01D_6752::
+    call Func_01D_67BB
+    ld a, [$D7B1]
+    ld b, a
+    ld a, [$D7AB]
+    cp a, b
+    jr c, Jump_01D_6773
+    ld a, [$D7B1]
+    and a, a
+    jr nz, Jump_01D_676D
+    call Func_01D_679D
+    xor a, a
+    ld [$D7F9], a
+    ret
+
+Jump_01D_676D::
+    xor a, a
+    ld [$D7AB], a
+    jr Jump_01D_6777
+
+Jump_01D_6773::
+    inc a
+    ld [$D7AB], a
+
+Jump_01D_6777::
+    xor a, a
+    ld [$D7AC], a
+    call Func_01D_67B7
+    ld a, $69
+    call Func_000_1278
+    ld a, $FD
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6789::
+    call Func_01D_67BF
+    ld a, $69
+    call Func_000_1278
+    ld a, $FF
+    ld [$D7F9], a
+    ret
+
+Jump_01D_6797::
+    ld a, $FE
+    ld [$D7F9], a
+    ret
+
+Func_01D_679D::
+    ld a, [$C564]
+    cp a, $14
+    jr c, Func_01D_67B7
+    ld a, [$D7AC]
+    inc a
+    ld [$D7AC], a
+    cp a, $10
+    jr c, Func_01D_67B7
+    cp a, $18
+    jr c, Func_01D_67BB
+    xor a, a
+    ld [$D7AC], a
+
+Func_01D_67B7::
+    ld b, $BB
+    jr Jump_01D_67C1
+
+Func_01D_67BB::
+    ld b, $C3
+    jr Jump_01D_67C1
+
+Func_01D_67BF::
+    ld b, $BC
+
+Jump_01D_67C1::
+    ld a, [$D7F9]
+    ld c, a
+    add a, a
+    add a, a
+    add a, c
+    add a, a
+    ld hl, $67EE
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_67D1
+    inc h
+
+Jump_01D_67D1::
+    ld a, [$D7AB]
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_67DA
+    inc h
+
+Jump_01D_67DA::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_62FF
+    pop de
+    add hl, de
+    call Func_000_24F8
+    di
+    call Func_000_120A
+    ld a, b
+    ld [hl], a
+    ei
+    ret
+    db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01, $28, $00, $68, $00, $A8, $00
+    db $E8, $00, $28, $01, $A8, $00, $E8, $00, $28, $01, $68, $01, $A8, $01, $A6, $00
+    db $E6, $00, $26, $01, $66, $01, $A6, $01, $A4, $00, $E4, $00, $24, $01, $64, $01
+    db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
+
+Func_01D_682A::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, [$D7F1]
+    ld l, a
+    ld a, [$D7F2]
+    ld h, a
+    ld bc, $0300
+
+Jump_01D_683E::
+    push hl
+    push bc
+    ld a, [hl]
+    ld c, $0D
+    call Func_000_1F80
+    ldh a, [$FFC6]
+    and a, $10
+    jr nz, Jump_01D_6851
+    ld de, $6DE0
+    jr Jump_01D_6854
+
+Jump_01D_6851::
+    ld de, $6DE3
+
+Jump_01D_6854::
+    pop bc
+    pop hl
+    push hl
+    push bc
+    ld a, c
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_685E
+    inc d
+
+Jump_01D_685E::
+    ld a, [de]
+    ld c, a
+    ld a, [hl]
+    call Func_000_1F89
+    ldh a, [$FFC7]
+    cp a, $FF
+    jr z, Jump_01D_6885
+    pop bc
+    push bc
+    ld a, c
+    add a, a
+    add a, c
+    ld de, $6890
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6877
+    inc d
+
+Jump_01D_6877::
+    ld hl, $D7F3
+    ld c, $03
+
+Jump_01D_687C::
+    ld a, [de]
+    ld [hl+], a
+    inc de
+    dec c
+    jr nz, Jump_01D_687C
+    call Func_01D_6915
+
+Jump_01D_6885::
+    pop bc
+    pop hl
+    inc c
+    dec b
+    jr nz, Jump_01D_683E
+    xor a, a
+    ld [$0100], a
+    ret
+    db $00, $00, $80, $08, $00, $81, $10, $00, $82
+
+Func_01D_6899::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld a, [$D7F1]
+    ld l, a
+    ld a, [$D7F2]
+    ld h, a
+    ld bc, $0300
+
+Jump_01D_68AD::
+    push hl
+    push bc
+    ld a, [hl]
+    ld c, $0D
+    call Func_000_1F80
+    ldh a, [$FFC6]
+    and a, $10
+    jr nz, Jump_01D_68C0
+    ld de, $6DE0
+    jr Jump_01D_68C3
+
+Jump_01D_68C0::
+    ld de, $6DE3
+
+Jump_01D_68C3::
+    pop bc
+    pop hl
+    push hl
+    push bc
+    ld a, c
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_68CD
+    inc d
+
+Jump_01D_68CD::
+    ld a, [de]
+    ld c, a
+    ld a, [hl]
+    call Func_000_1F89
+    ldh a, [$FFC7]
+    cp a, $FF
+    jr z, Jump_01D_68FE
+    pop bc
+    push bc
+    ldh a, [$FFC6]
+    ld [$D7F1], a
+    ldh a, [$FFC7]
+    ld [$D7F2], a
+    ld a, c
+    add a, a
+    add a, a
+    ld hl, $6909
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_68F0
+    inc h
+
+Jump_01D_68F0::
+    ld b, [hl]
+    inc hl
+    ld c, [hl]
+    inc hl
+    ld d, [hl]
+    inc hl
+    ld e, [hl]
+    ld l, c
+    ld h, b
+    ld c, $00
+    call Func_01D_69DA
+
+Jump_01D_68FE::
+    pop bc
+    pop hl
+    inc c
+    dec b
+    jr nz, Jump_01D_68AD
+    xor a, a
+    ld [$1FFF], a
+    ret
+    db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
+
+Func_01D_6915::
+    ldh a, [$FFC6]
+    ld l, a
+    ld e, a
+    ldh a, [$FFC7]
+    ld h, a
+    ld d, a
+    push hl
+    add hl, hl
+    add hl, de
+    ld de, $4EAA
+    add hl, de
+    ld e, l
+    ld d, h
+    ld b, $04
+    call Func_000_18D6
+    ld e, l
+    ld d, h
+    ld a, [$D7F4]
+    ld l, a
+    ld a, [$D7F5]
+    ld h, a
+    call Func_000_0CF5
+    pop hl
+    ld a, [$C525]
+    and a, a
+    ret z
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld a, l
+    add a, $28
+    ld l, a
+    ld a, h
+    adc a, $73
+    ld h, a
+    ld e, l
+    ld d, h
+    ld b, $27
+    ld hl, $C4DF
+    ld a, [$D7F3]
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6958
+    inc h
+
+Jump_01D_6958::
+    ld c, $08
+
+Jump_01D_695A::
+    push bc
+    call Func_000_1872
+    di
+
+Jump_01D_695F::
+    ldh a, [$FF41]
+    bit 1, a
+    jr nz, Jump_01D_695F
+    ld a, c
+    ld [hl+], a
+    ei
+    pop bc
+    inc de
+    dec c
+    jr nz, Jump_01D_695A
+    ld a, $7F
+    ld [$C527], a
+    ret
+
+Func_01D_6973::
+    ld a, [$D7F1]
+    ld l, a
+    ld e, a
+    ld a, [$D7F2]
+    ld h, a
+    ld d, a
+    add hl, hl
+    add hl, de
+    ld de, $4EAA
+    add hl, de
+    ld e, l
+    ld d, h
+    ld b, $04
+    call Func_000_18D6
+    ld e, l
+    ld d, h
+    ld a, [$D7F4]
+    ld l, a
+    ld a, [$D7F5]
+    ld h, a
+    call Func_000_0CF5
+    ld a, [$C525]
+    or a, a
+    jr z, Jump_01D_69D9
+    ld a, [$D7F1]
+    ld l, a
+    ld a, [$D7F2]
+    ld h, a
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld a, l
+    add a, $28
+    ld l, a
+    ld a, h
+    adc a, $73
+    ld h, a
+    ld e, l
+    ld d, h
+    ld b, $27
+    ld hl, $C4DF
+    ld a, [$D7F3]
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_69BF
+    inc h
+
+Jump_01D_69BF::
+    ld c, $08
+
+Jump_01D_69C1::
+    push bc
+    call Func_000_1872
+    di
+
+Jump_01D_69C6::
+    ldh a, [$FF41]
+    bit 1, a
+    jr nz, Jump_01D_69C6
+    ld a, c
+    ld [hl+], a
+    ei
+    pop bc
+    inc de
+    dec c
+    jr nz, Jump_01D_69C1
+    ld a, $7F
+    ld [$C527], a
+
+Jump_01D_69D9::
+    ret
+
+Func_01D_69DA::
+    ld c, $00
+    ld a, e
+    ldh [$FFB0], a
+    ld a, c
+    and a, a
+    jr nz, Jump_01D_69F1
+    ld c, $00
+    ld a, [$C5F0]
+    swap a
+    and a, $01
+    add a, c
+    ldh [$FFAE], a
+    jr Jump_01D_69F4
+
+Jump_01D_69F1::
+    xor a, a
+    ldh [$FFAE], a
+
+Jump_01D_69F4::
+    ld a, h
+    ldh [$FFAF], a
+    ldh a, [$FFA1]
+    add a, l
+    ldh [$FFA9], a
+    ldh a, [$FFA2]
+    adc a, $00
+    ldh [$FFAA], a
+    ldh a, [$FFA5]
+    add a, d
+    ldh [$FFAB], a
+    ldh a, [$FFA6]
+    adc a, $00
+    ldh [$FFAC], a
+    ld a, [$D7F1]
+    and a, $7F
+    ldh [$FFAD], a
+    ld a, [$D7F2]
+    or a, a
+    jr nz, Jump_01D_6A2F
+    ld a, [$D7F1]
+    bit 7, a
+    jr nz, Jump_01D_6A28
+    ld hl, $4001
+    ld b, $25
+    rst $10
+    ret
+
+Jump_01D_6A28::
+    ld hl, $4001
+    ld b, $26
+    rst $10
+    ret
+
+Jump_01D_6A2F::
+    ld hl, $4001
+    ld b, $27
+    rst $10
+    ret
+
+Func_01D_6A36::
+    ld a, [$D7F6]
+    ldh [$FFB0], a
+    jr Jump_01D_6A59
+
+Func_01D_6A3D::
+    ld c, $00
+
+Func_01D_6A3F::
+    ld a, [$D7F6]
+    ldh [$FFB0], a
+    ld a, c
+    and a, a
+    jr nz, Jump_01D_6A56
+    ld c, $00
+    ld a, [$C5F0]
+    swap a
+    and a, $01
+    add a, c
+    ldh [$FFAE], a
+    jr Jump_01D_6A59
+
+Jump_01D_6A56::
+    xor a, a
+    ldh [$FFAE], a
+
+Jump_01D_6A59::
+    ld a, [$D7F3]
+    ldh [$FFAF], a
+    ld a, [$D7F4]
+    ld b, a
+    ldh a, [$FFA1]
+    add a, b
+    ldh [$FFA9], a
+    ldh a, [$FFA2]
+    adc a, $00
+    ldh [$FFAA], a
+    ld a, [$D7F5]
+    ld b, a
+    ldh a, [$FFA5]
+    add a, b
+    ldh [$FFAB], a
+    ldh a, [$FFA6]
+    adc a, $00
+    ldh [$FFAC], a
+    ld a, [$D7F1]
+    and a, $7F
+    ldh [$FFAD], a
+    ld a, [$D7F2]
+    or a, a
+    jr nz, Jump_01D_6A9E
+    ld a, [$D7F1]
+    bit 7, a
+    jr nz, Jump_01D_6A97
+    ld hl, $4001
+    ld b, $25
+    rst $10
+    ret
+
+Jump_01D_6A97::
+    ld hl, $4001
+    ld b, $26
+    rst $10
+    ret
+
+Jump_01D_6A9E::
+    ld hl, $4001
+    ld b, $27
+    rst $10
+    ret
+
+Func_01D_6AA5::
+    ld hl, $C6FE
+    ld bc, $0000
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+
+Jump_01D_6AB4::
+    push bc
+    push hl
+    ld b, [hl]
+    ld a, [$D7AF]
+    ld c, a
+    add a, a
+    add a, a
+    add a, c
+    ld hl, $D789
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6AC6
+    inc h
+
+Jump_01D_6AC6::
+    ld c, $00
+
+Jump_01D_6AC8::
+    ld a, [hl]
+    cp a, b
+    jr z, Jump_01D_6AE3
+    inc hl
+    inc c
+    ld a, [$D7B1]
+    cp a, c
+    jr nc, Jump_01D_6AC8
+    pop hl
+    pop bc
+
+Jump_01D_6AD6::
+    inc hl
+    inc b
+    ld a, [$C6FD]
+    cp a, b
+    jr nz, Jump_01D_6AB4
+    xor a, a
+    ld [$1FFF], a
+    ret
+
+Jump_01D_6AE3::
+    ld a, [$D7F1]
+    and a, a
+    jr z, Jump_01D_6B03
+    ld hl, $6B28
+    ld a, c
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6AF3
+    inc h
+
+Jump_01D_6AF3::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    call Func_01D_62FF
+    pop de
+    add hl, de
+    call Func_000_24F8
+    ld e, l
+    ld d, h
+    jr Jump_01D_6B10
+
+Jump_01D_6B03::
+    ld a, c
+    add a, a
+    ld hl, $6B1E
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6B0D
+    inc h
+
+Jump_01D_6B0D::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+
+Jump_01D_6B10::
+    pop hl
+    pop bc
+    di
+    call Func_000_120A
+    ld a, b
+    add a, $E1
+    ld [de], a
+    ei
+    jp Jump_01D_6AD6
+    db $78, $C3, $A0, $C3, $C8, $C3, $F0, $C3, $18, $C4, $20, $00, $60, $00, $A0, $00
+    db $E0, $00, $20, $01
+
+Func_01D_6B32::
+    ld hl, $C52D
+    xor a, a
+    ld [hl+], a
+    ld a, $88
+    ld [hl+], a
+    ld a, $02
+    ld [hl+], a
+    ld [hl], $12
+    ld a, [$D786]
+    and a, a
+    jr z, Jump_01D_6B54
+    cp a, $01
+    jp z, Jump_01D_6B93
+    cp a, $02
+    jp z, Jump_01D_6BF0
+    cp a, $03
+    jp z, Jump_01D_6C02
+
+Jump_01D_6B54::
+    call Func_01D_5E79
+    ld a, [$D780]
+    inc a
+    ld [$D780], a
+    ld a, [$D7A9]
+    cp a, $02
+    jr c, Jump_01D_6B7C
+    xor a, a
+    ld [$D781], a
+    ld a, $01
+    ld [$D7FA], a
+    xor a, a
+    ld [$D7AF], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_6B7C::
+    ld a, $10
+    ld [$D781], a
+    xor a, a
+    ld [$D7FA], a
+    xor a, a
+    ld [$D7AF], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_6B93::
+    ld hl, $5ECE
+    ld b, $1D
+    rst $10
+    ld a, [$D7A9]
+    and a, a
+    jr nz, Jump_01D_6BBA
+    xor a, a
+    ld [$D7FA], a
+    ld [$D782], a
+    ld a, $03
+    ld [$D781], a
+    ld a, $01
+    ld [$D780], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_6BBA::
+    ld a, [$D780]
+    add a, $02
+    ld [$D780], a
+    ld a, [$C6FD]
+    cp a, $03
+    jr c, Jump_01D_6BDD
+    ld a, $01
+    ld [$D7FA], a
+    ld a, $1E
+    ld [$D781], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_6BDD::
+    ld a, $02
+    ld [$D7FA], a
+    xor a, a
+    ld [$D781], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_6BF0::
+    ld a, [$D780]
+    add a, $03
+    ld [$D780], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Jump_01D_6C02::
+    ld a, [$D780]
+    add a, $04
+    ld [$D780], a
+    xor a, a
+    ld [$C920], a
+    ld a, $80
+    ld [$C919], a
+    ret
+
+Func_01D_6C14::
+    ld a, [$D7F3]
+    ld d, a
+    ld a, [$D7F4]
+    ld e, a
+    xor a, a
+    ld [$D784], a
+
+Jump_01D_6C20::
+    push hl
+    push de
+    ld a, [$D785]
+    add a, a
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6C2B
+    inc d
+
+Jump_01D_6C2B::
+    ld a, [de]
+    cp a, $FF
+    jr z, Jump_01D_6C6A
+    ld a, [de]
+    ld l, a
+    inc de
+    ld a, [de]
+    ld d, a
+    ld e, l
+    push de
+    ld a, [$D785]
+    swap a
+    ld h, a
+    and a, $F0
+    ld l, a
+    ld a, h
+    and a, $0F
+    ld h, a
+    ld a, [$D7F1]
+    ld d, a
+    ld a, [$D7F2]
+    ld e, a
+    add hl, de
+    pop de
+    call Func_01D_6C79
+    pop de
+    pop hl
+    ld a, [$D785]
+    inc a
+    ld [$D785], a
+    ld a, [$D784]
+    inc a
+    ld [$D784], a
+    cp a, $06
+    jr c, Jump_01D_6C20
+    xor a, a
+    ld [$D7F5], a
+    ret
+
+Jump_01D_6C6A::
+    pop de
+    pop hl
+    xor a, a
+    ld [$D785], a
+    ld [$D784], a
+    ld a, $FF
+    ld [$D7F5], a
+    ret
+
+Func_01D_6C79::
+    ld c, $10
+
+Jump_01D_6C7B::
+    di
+
+Jump_01D_6C7C::
+    ldh a, [$FF41]
+    bit 1, a
+    jr nz, Jump_01D_6C7C
+    ld a, [hl+]
+    ld [de], a
+    inc de
+    ei
+    dec c
+    jr nz, Jump_01D_6C7B
+    ret
+
+Func_01D_6C8A::
+    ld hl, $6D84
+    ld a, $9C
+    ld [$D7F1], a
+    xor a, a
+    ld [$D7F2], a
+    ld de, $9C00
+    xor a, a
+    ld [$D784], a
+    jr Jump_01D_6CB2
+
+Func_01D_6C9F::
+    ld hl, $6DC4
+    ld a, $9E
+    ld [$D7F1], a
+    xor a, a
+    ld [$D7F2], a
+    ld de, $9E00
+    xor a, a
+    ld [$D784], a
+
+Jump_01D_6CB2::
+    push hl
+    push de
+    ld a, [$D785]
+    add a, a
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6CBD
+    inc h
+
+Jump_01D_6CBD::
+    ld a, [hl]
+    cp a, $FF
+    jr z, Jump_01D_6CF9
+    ld e, [hl]
+    inc hl
+    ld a, [hl]
+    ld h, a
+    ld l, e
+    push hl
+    ld a, [$D785]
+    swap a
+    ld h, a
+    and a, $F0
+    ld l, a
+    ld a, h
+    and a, $0F
+    ld h, a
+    ld a, [$D7F1]
+    ld d, a
+    ld a, [$D7F2]
+    ld e, a
+    add hl, de
+    ld e, l
+    ld d, h
+    pop hl
+    call Func_01D_6C79
+    pop de
+    pop hl
+    ld a, [$D785]
+    inc a
+    ld [$D785], a
+    ld a, [$D784]
+    inc a
+    ld [$D784], a
+    cp a, $06
+    jr c, Jump_01D_6CB2
+    ret
+
+Jump_01D_6CF9::
+    pop de
+    pop hl
+    xor a, a
+    ld [$D784], a
+    ld [$D785], a
+    ld hl, $D781
+    inc [hl]
+    ret
+
+Func_01D_6D07::
+    ld hl, $6D20
+    ld de, $96E0
+    call Func_01D_6C79
+    call Func_01D_6C79
+    ld de, $97C0
+    call Func_01D_6C79
+    call Func_01D_6C79
+    call Func_01D_6C79
+    ret
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $FF
+    db $FF, $FF, $FF, $00, $FF
+
+Jump_01D_6D35::
+    nop
+    rst $38
+
+Jump_01D_6D37::
+    nop
+    rst $38
+    nop
+    rst $38
+    nop
+    rst $38
+    nop
+    rst $38
+    nop
+    rst $38
+    rst $38
+    rst $38
+    rst $38
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+
+Jump_01D_6D56::
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    rst $38
+    rst $38
+    rst $38
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+    rst $38
+    ret nz
+
+Func_01D_6D70::
+    ld a, [$C7C7]
+    ld de, $6D81
+    add a, e
+    ld e, a
+
+Jump_01D_6D78::
+    jr nc, Jump_01D_6D7B
+    inc d
+
+Jump_01D_6D7B::
+    ld a, [de]
+    ld c, a
+    ld [$D7FF], a
+    ret
+
+Func_01D_6D81:: ; heuristic: follows a terminator; C0
+    ld a, [bc]
+    inc d
+    ld e, $40
+    adc a, d
+    ld d, b
+    adc a, d
+    ld h, b
+    adc a, d
+    ld [hl], b
+    adc a, d
+    add a, b
+    adc a, d
+    sub a, b
+    adc a, d
+    and a, b
+    adc a, d
+    or a, b
+    adc a, d
+    ret nz
+    adc a, d
+    ret nc
+    adc a, d
+    ldh [$FF8A], a
+    ldh a, [$FF8A]
+    ldh [$FF8E], a
+    ldh a, [$FF8E]
+    nop
+    adc a, a
+    db $10, $8F ; stop
+    jr nz, Jump_01D_6D35
+    jr nc, Jump_01D_6D37
+    ld b, b
+    adc a, a
+    ld d, b
+    adc a, a
+    ld h, b
+    adc a, a
+    ld [hl], b
+    adc a, a
+    add a, b
+    adc a, a
+    sub a, b
+    adc a, a
+    and a, b
+    adc a, a
+    or a, b
+    adc a, a
+    ret nz
+    adc a, a
+    ret nc
+    adc a, a
+    ldh [$FF8F], a
+    ldh a, [$FF8F]
+    or a, b
+    adc a, [hl]
+    rst $38
+    rst $38
+    nop
+    adc a, h
+    db $10, $8C ; stop
+    jr nz, Jump_01D_6D56
+    ld [hl], b
+    adc a, h
+    add a, b
+    adc a, h
+    sub a, b
+    adc a, h
+    and a, b
+    adc a, h
+    or a, b
+    adc a, h
+    ldh a, [$FF8B]
+    and a, b
+    adc a, [hl]
+    or a, b
+    adc a, [hl]
+    ret nz
+    adc a, [hl]
+    ret nc
+    adc a, [hl]
+    rst $38
+    rst $38
+    dec bc
+    ld a, [de]
+    inc e
+    dec bc
+    inc e
+    ld a, [de]
+    nop
+    adc a, h
+    db $10, $8C ; stop
+    jr nz, Jump_01D_6D78
+    ld [hl], b
+    adc a, h
+    add a, b
+    adc a, h
+    sub a, b
+    adc a, h
+    and a, b
+    adc a, h
+    or a, b
+    adc a, h
+    rst $38
+    rst $38
+
+Func_01D_6DF8::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    xor a, a
+    ld [$D7F5], a
+    ld hl, $B356
+    ld c, $00
+    ld b, $00
+
+Jump_01D_6E0C::
+    ld a, [hl]
+    bit 7, a
+    jr z, Jump_01D_6E12
+    inc c
+
+Jump_01D_6E12::
+    inc b
+    ld a, $6F
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6E1A
+    inc h
+
+Jump_01D_6E1A::
+    ld a, b
+    cp a, $1D
+    jr c, Jump_01D_6E0C
+    ld a, $01
+    ld [$4100], a
+    ld hl, $A000
+    ld a, [hl]
+    bit 7, a
+    jr z, Jump_01D_6E2D
+    inc c
+
+Jump_01D_6E2D::
+    ld a, c
+    ld [$D7F5], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ret
+
+Func_01D_6E39::
+    ld bc, $0007
+    ld hl, $D7E0
+
+Jump_01D_6E3F::
+    xor a, a
+    ld [hl+], a
+    dec bc
+    ld a, b
+    or a, c
+    jr nz, Jump_01D_6E3F
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push de
+    ld a, [de]
+    and a, $03
+    swap a
+    sla a
+    set 7, a
+    ld c, a
+    pop de
+    push de
+    ld a, $0D
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6E61
+    inc d
+
+Jump_01D_6E61::
+    ld a, [de]
+    and a, $1F
+    or a, c
+    pop de
+    pop hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    push hl
+    push de
+    ld a, $0E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6E7F
+    inc d
+
+Jump_01D_6E7F::
+    ld a, [de]
+    and a, $01
+    sla a
+    sla a
+    sla a
+    ld c, a
+    ld a, [de]
+    and a, $F0
+    or a, c
+    ld c, a
+    pop de
+    push de
+    ld a, $6E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6E97
+    inc d
+
+Jump_01D_6E97::
+    ld a, [de]
+    and a, $03
+    sla a
+    or a, c
+    ld c, a
+    pop de
+    push de
+    ld a, $0B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6EA7
+    inc d
+
+Jump_01D_6EA7::
+    inc de
+    ld a, [de]
+    and a, $01
+    or a, c
+    ld c, a
+    dec de
+    ld a, [de]
+    pop de
+    pop hl
+    ld b, a
+    ld a, c
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    ld a, b
+    ld [hl+], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+
+Jump_01D_6EC5::
+    ld hl, $D7E2
+    ld c, $00
+
+Jump_01D_6ECA::
+    xor a, a
+    ld [hl+], a
+    inc c
+    ld a, c
+    cp a, $05
+    jr c, Jump_01D_6ECA
+    call Func_01D_7B0F
+    ld a, $03
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6EDC
+    inc h
+
+Jump_01D_6EDC::
+    ld a, [$D7E1]
+    ld b, a
+    sla a
+    sla a
+    add a, b
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6EEA
+    inc h
+
+Jump_01D_6EEA::
+    ld bc, $0000
+    call Func_01D_7B05
+    push hl
+    ld a, [$D7E1]
+    ld hl, $6F9A
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6EFC
+    inc h
+
+Jump_01D_6EFC::
+    ld a, [hl]
+    pop hl
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_6F03
+    inc d
+
+Jump_01D_6F03::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    push de
+    push hl
+    push bc
+    ld a, [de]
+    cp a, $8D
+    jr z, Jump_01D_6F36
+    cp a, $8E
+    jr z, Jump_01D_6F36
+    cp a, $F0
+    jr z, Jump_01D_6F69
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl], a
+    pop bc
+    push bc
+    ld a, c
+    ld hl, $D7E2
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6F2D
+    inc h
+
+Jump_01D_6F2D::
+    xor a, a
+    ld [hl], a
+    pop bc
+    pop hl
+    inc hl
+    inc c
+    inc b
+    jr Jump_01D_6F5B
+
+Jump_01D_6F36::
+    pop bc
+    dec c
+    push bc
+    ld b, a
+    ld a, c
+    ld hl, $D7E2
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6F43
+    inc h
+
+Jump_01D_6F43::
+    ld a, b
+    cp a, $8D
+    jr z, Jump_01D_6F4C
+    ld a, $02
+    jr Jump_01D_6F4E
+
+Jump_01D_6F4C::
+    ld a, $01
+
+Jump_01D_6F4E::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl], a
+    pop bc
+    inc b
+    inc c
+    pop hl
+
+Jump_01D_6F5B::
+    pop de
+    inc de
+    ld a, c
+    cp a, $05
+    jr c, Jump_01D_6F03
+    ld a, b
+    cp a, $0A
+    jr c, Jump_01D_6F03
+    jr Jump_01D_6F7C
+
+Jump_01D_6F69::
+    pop bc
+    pop hl
+    pop de
+    ld a, c
+    cp a, $05
+    jr nc, Jump_01D_6F7C
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, $F0
+    ld [hl], a
+
+Jump_01D_6F7C::
+    ld a, [$D7E1]
+    and a, a
+    jp z, Jump_01D_6FA0
+    cp a, $01
+    jp z, Jump_01D_6FDD
+    cp a, $02
+    jp z, Jump_01D_7019
+    cp a, $03
+    jp z, Jump_01D_7057
+    cp a, $04
+    jp z, Jump_01D_708D
+    jp Jump_01D_70C6
+    db $01, $0F, $1E, $29, $8E, $99
+
+Jump_01D_6FA0::
+    call Func_01D_7B0F
+    ld a, $21
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6FAA
+    inc h
+
+Jump_01D_6FAA::
+    push hl
+    call Func_01D_70F9
+    pop hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, b
+    ld [hl], a
+    ld a, $06
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6FC0
+    inc h
+
+Jump_01D_6FC0::
+    ld a, [$D7E6]
+    and a, $03
+    swap a
+    sla a
+    sla a
+    ld [hl], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld a, [$D7E1]
+    inc a
+    ld [$D7E1], a
+    jp Jump_01D_6EC5
+
+Jump_01D_6FDD::
+    call Func_01D_7B0F
+    ld a, $22
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6FE7
+    inc h
+
+Jump_01D_6FE7::
+    push hl
+    call Func_01D_70F9
+    pop hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, b
+    ld [hl], a
+    ld a, $05
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_6FFD
+    inc h
+
+Jump_01D_6FFD::
+    ld a, [$D7E6]
+    and a, $03
+    swap a
+    ld b, a
+    ld a, [hl]
+    or a, b
+    ld [hl], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld a, [$D7E1]
+    inc a
+    ld [$D7E1], a
+    jp Jump_01D_6EC5
+
+Jump_01D_7019::
+    call Func_01D_7B0F
+    ld a, $23
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7023
+    inc h
+
+Jump_01D_7023::
+    push hl
+    call Func_01D_70F9
+    pop hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, b
+    ld [hl], a
+    ld a, $04
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7039
+    inc h
+
+Jump_01D_7039::
+    ld a, [$D7E6]
+    and a, $03
+    sla a
+    sla a
+    ld b, a
+    ld a, [hl]
+    or a, b
+    ld [hl], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld a, [$D7E1]
+    inc a
+    ld [$D7E1], a
+    jp Jump_01D_6EC5
+
+Jump_01D_7057::
+    call Func_01D_7B0F
+    ld a, $24
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7061
+    inc h
+
+Jump_01D_7061::
+    push hl
+    call Func_01D_70F9
+    pop hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, b
+    ld [hl], a
+    inc hl
+    inc hl
+    inc hl
+    ld a, [$D7E6]
+    and a, $03
+    ld b, a
+    ld a, [hl]
+    or a, b
+    ld [hl], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld a, [$D7E1]
+    inc a
+    ld [$D7E1], a
+    jp Jump_01D_6EC5
+
+Jump_01D_708D::
+    call Func_01D_7B0F
+    ld a, $25
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7097
+    inc h
+
+Jump_01D_7097::
+    push hl
+    call Func_01D_70F9
+    pop hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, b
+    ld [hl], a
+    inc hl
+    inc hl
+    inc hl
+    ld a, [$D7E6]
+    and a, $03
+    swap a
+    sla a
+    sla a
+    ld [hl], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld a, [$D7E1]
+    inc a
+    ld [$D7E1], a
+    jp Jump_01D_6EC5
+
+Jump_01D_70C6::
+    call Func_01D_7B0F
+    ld a, $26
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_70D0
+    inc h
+
+Jump_01D_70D0::
+    push hl
+    call Func_01D_70F9
+    pop hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, b
+    ld [hl], a
+    inc hl
+    inc hl
+    ld a, [$D7E6]
+    and a, $03
+    swap a
+    ld b, a
+    ld a, [hl]
+    or a, b
+    ld [hl], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld [$D7E1], a
+    jp Jump_01D_7121
+
+Func_01D_70F9::
+    ld a, [$D7E2]
+    and a, $03
+    swap a
+    sla a
+    sla a
+    ld b, a
+    ld a, [$D7E3]
+    and a, $03
+    swap a
+    or a, b
+    ld b, a
+    ld a, [$D7E4]
+    and a, $03
+    sla a
+    sla a
+    or a, b
+    ld b, a
+    ld a, [$D7E5]
+    and a, $03
+    or a, b
+    ld b, a
+    ret
+
+Jump_01D_7121::
+    call Func_01D_7B0F
+    ld a, $28
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_712B
+    inc h
+
+Jump_01D_712B::
+    ld a, $73
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7132
+    inc d
+
+Jump_01D_7132::
+    call Func_01D_7B05
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $03
+    sla a
+    sla a
+    ld b, a
+    inc de
+    ld a, [de]
+    and a, $03
+    or a, b
+    ld b, a
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    or a, b
+    ld [hl+], a
+    inc de
+    ld c, $00
+
+Jump_01D_7157::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $03
+    swap a
+    sla a
+    sla a
+    ld b, a
+    inc de
+    ld a, [de]
+    and a, $03
+    swap a
+    or a, b
+    ld b, a
+    inc de
+    ld a, [de]
+    and a, $03
+    sla a
+    sla a
+    or a, b
+    ld b, a
+    inc de
+    ld a, [de]
+    and a, $03
+    or a, b
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $06
+    jr c, Jump_01D_7157
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $03
+    swap a
+    sla a
+    sla a
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl], a
+    push hl
+    call Func_01D_7B0F
+    pop hl
+    ld a, $1A
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_71B2
+    inc d
+
+Jump_01D_71B2::
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $01
+    sla a
+    ld b, a
+    inc de
+    inc de
+    ld a, [de]
+    and a, $01
+    or a, b
+    ld b, a
+    dec de
+    dec de
+    dec de
+    ld a, [de]
+    ld c, a
+    inc de
+    inc de
+    ld a, [de]
+    ld e, a
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    or a, b
+    ld [hl+], a
+    ld a, c
+    ld [hl+], a
+    ld a, e
+    ld [hl], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld [$D7E1], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push de
+    ld a, $19
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_71F7
+    inc d
+
+Jump_01D_71F7::
+    ld a, $32
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_71FE
+    inc h
+
+Jump_01D_71FE::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl], a
+    pop de
+    pop hl
+    ld a, $28
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7217
+    inc d
+
+Jump_01D_7217::
+    ld a, $33
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_721E
+    inc h
+
+Jump_01D_721E::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    ld a, $0B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7235
+    inc d
+
+Jump_01D_7235::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    ld c, $00
+
+Jump_01D_7248::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $22
+    jr c, Jump_01D_7248
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    ld a, $5B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7270
+    inc d
+
+Jump_01D_7270::
+    ld a, $57
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7277
+    inc h
+
+Jump_01D_7277::
+    call Func_01D_7B05
+    ld c, $00
+
+Jump_01D_727C::
+    push bc
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $03
+    ld [$D7E2], a
+    inc de
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $03
+    ld [$D7E3], a
+    inc de
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $03
+    ld [$D7E4], a
+    inc de
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $03
+    ld [$D7E5], a
+    inc de
+    call Func_01D_70F9
+    ld a, b
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    pop bc
+    inc c
+    ld a, c
+    cp a, $02
+    jr c, Jump_01D_727C
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push de
+    ld a, $6B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_730C
+    inc d
+
+Jump_01D_730C::
+    ld a, $61
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7313
+    inc h
+
+Jump_01D_7313::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $02
+    sla a
+    sla a
+    swap a
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $01
+    swap a
+    sla a
+    sla a
+    sla a
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl-], a
+    pop de
+    ld a, $56
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_735E
+    inc d
+
+Jump_01D_735E::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $7F
+    ld b, a
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    or a, b
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    and a, $7F
+    ld b, a
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    or a, b
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push de
+    ld a, $6F
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_73D2
+    inc d
+
+Jump_01D_73D2::
+    ld a, $67
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_73D9
+    inc h
+
+Jump_01D_73D9::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    pop de
+    push de
+    ld a, $6D
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7425
+    inc d
+
+Jump_01D_7425::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    pop de
+    push de
+    ld a, $98
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_743E
+    inc d
+
+Jump_01D_743E::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    pop de
+    push de
+    ld a, $A3
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7457
+    inc d
+
+Jump_01D_7457::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    pop de
+    push de
+    ld a, $A4
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7470
+    inc d
+
+Jump_01D_7470::
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld a, [de]
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld [hl+], a
+    pop de
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    xor a, a
+    ld [$D7E0], a
+    ld a, $FF
+    ld [$D7F5], a
+    ret
+
+Func_01D_7492::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $60
+    srl a
+    swap a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    ld a, $0D
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_74B6
+    inc d
+
+Jump_01D_74B6::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $1F
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    push de
+    inc hl
+    ld a, $0E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_74D2
+    inc d
+
+Jump_01D_74D2::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $08
+    srl a
+    srl a
+    srl a
+    ld b, a
+    ld a, [hl]
+    and a, $F0
+    or a, b
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    push de
+    ld a, $6E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_74F8
+    inc d
+
+Jump_01D_74F8::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $06
+    srl a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    ld a, $0B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7514
+    inc d
+
+Jump_01D_7514::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    and a, $01
+    inc de
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    dec de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push de
+    call Func_01D_795D
+    pop de
+    push de
+    ld a, $01
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7552
+    inc d
+
+Jump_01D_7552::
+    ld hl, $C8CF
+    call Func_01D_75C7
+    pop de
+    push de
+    call Func_01D_7991
+    pop de
+    push de
+    ld a, $0F
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7566
+    inc d
+
+Jump_01D_7566::
+    ld hl, $C8CF
+    call Func_01D_75C7
+    pop de
+    push de
+    call Func_01D_79C5
+    pop de
+    push de
+    ld a, $1E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_757A
+    inc d
+
+Jump_01D_757A::
+    ld hl, $C8CF
+    call Func_01D_75C7
+    pop de
+    push de
+    call Func_01D_79FB
+    pop de
+    push de
+    ld a, $29
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_758E
+    inc d
+
+Jump_01D_758E::
+    ld hl, $C8CF
+    call Func_01D_75C7
+    pop de
+    push de
+    call Func_01D_7A2D
+    pop de
+    push de
+    ld a, $8E
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_75A2
+    inc d
+
+Jump_01D_75A2::
+    ld hl, $C8CF
+    call Func_01D_75C7
+    pop de
+    push de
+    call Func_01D_7A61
+    pop de
+    push de
+    ld a, $99
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_75B6
+    inc d
+
+Jump_01D_75B6::
+    ld hl, $C8CF
+    call Func_01D_75C7
+    pop de
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    jp Jump_01D_75DA
+
+Func_01D_75C7::
+    ld c, $00
+
+Jump_01D_75C9::
+    ld a, [hl]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    inc hl
+    inc c
+    ld a, c
+    cp a, $0A
+    jr c, Jump_01D_75C9
+    ret
+
+Jump_01D_75DA::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    ld a, $28
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_75E7
+    inc h
+
+Jump_01D_75E7::
+    push de
+    ld a, $73
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_75EF
+    inc d
+
+Jump_01D_75EF::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $0C
+    srl a
+    srl a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    and a, $03
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    ld c, $00
+
+Jump_01D_761B::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $C0
+    srl a
+    srl a
+    swap a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $30
+    swap a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $0C
+    srl a
+    srl a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    and a, $03
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $06
+    jr c, Jump_01D_761B
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $C0
+    srl a
+    srl a
+    swap a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    ld a, $1A
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7699
+    inc d
+
+Jump_01D_7699::
+    inc hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    dec hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $02
+    srl a
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    cp a, $01
+    jr nz, Jump_01D_76CE
+    dec de
+    ld a, [de]
+    inc de
+    cp a, $FF
+    jr nz, Jump_01D_76CE
+    ld a, $FF
+    ld [de], a
+
+Jump_01D_76CE::
+    inc de
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $01
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    dec de
+    inc hl
+    inc hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    cp a, $FF
+    jr nz, Jump_01D_7702
+    inc de
+    ld a, [de]
+    cp a, $01
+    jr nz, Jump_01D_7702
+    ld a, $FF
+    ld [de], a
+
+Jump_01D_7702::
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    ld a, $32
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7716
+    inc h
+
+Jump_01D_7716::
+    push de
+    ld a, $19
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_771E
+    inc d
+
+Jump_01D_771E::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    push de
+    ld a, $28
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7737
+    inc d
+
+Jump_01D_7737::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    ld a, $0B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_774E
+    inc d
+
+Jump_01D_774E::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    ld a, $34
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7766
+    inc d
+
+Jump_01D_7766::
+    ld c, $00
+
+Jump_01D_7768::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $22
+    jr c, Jump_01D_7768
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    ld a, $57
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7793
+    inc h
+
+Jump_01D_7793::
+    push de
+    ld a, $5B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_779B
+    inc d
+
+Jump_01D_779B::
+    ld c, $00
+
+Jump_01D_779D::
+    push de
+    push hl
+    ld a, $04
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_77A6
+    inc h
+
+Jump_01D_77A6::
+    call Func_01D_7AD8
+    pop hl
+    pop de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    ld a, [$D7F5]
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    ld a, [$D7F6]
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    ld a, [$D7F7]
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    ld a, [$D7F8]
+    ld [de], a
+    inc de
+    inc hl
+    inc c
+    ld a, c
+    cp a, $02
+    jr c, Jump_01D_779D
+    pop de
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    ld a, $61
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_781F
+    inc h
+
+Jump_01D_781F::
+    push de
+    ld a, $6B
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7827
+    inc d
+
+Jump_01D_7827::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    ld c, a
+    ld a, [hl+]
+    and a, $80
+    srl a
+    srl a
+    swap a
+    ld b, a
+    ld a, [hl-]
+    and a, $80
+    srl a
+    srl a
+    srl a
+    swap a
+    or a, b
+    ld b, a
+    ld a, c
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    ld a, b
+    ld [de], a
+    pop de
+    ld a, $56
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_785B
+    inc d
+
+Jump_01D_785B::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    and a, $7F
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    and a, $7F
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    ld a, $67
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_78C7
+    inc h
+
+Jump_01D_78C7::
+    push de
+    ld a, $6F
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_78CF
+    inc d
+
+Jump_01D_78CF::
+    ld c, $00
+
+Jump_01D_78D1::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $04
+    jr c, Jump_01D_78D1
+    pop de
+    push de
+    ld a, $6D
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_78F1
+    inc d
+
+Jump_01D_78F1::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    push de
+    ld a, $98
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_790A
+    inc d
+
+Jump_01D_790A::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    push de
+    ld a, $A3
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_7923
+    inc d
+
+Jump_01D_7923::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    push de
+    ld a, $A4
+    add a, e
+    ld e, a
+    jr nc, Jump_01D_793C
+    inc d
+
+Jump_01D_793C::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl+]
+    push af
+    xor a, a
+    ld [$4100], a
+    pop af
+    ld [de], a
+    pop de
+    xor a, a
+    ld [$1FFF], a
+    ld [$4100], a
+    ld [$D7E0], a
+    ld a, $FF
+    ld [$D7F5], a
+    ret
+
+Func_01D_795D::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, $21
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7973
+    inc h
+
+Jump_01D_7973::
+    call Func_01D_7AD8
+    ld a, $06
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_797D
+    inc h
+
+Jump_01D_797D::
+    ld a, [hl]
+    and a, $C0
+    srl a
+    srl a
+    swap a
+    ld [$D7F9], a
+    pop hl
+    inc hl
+    inc hl
+    inc hl
+    call Func_01D_7A90
+    ret
+
+Func_01D_7991::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, $22
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_79A7
+    inc h
+
+Jump_01D_79A7::
+    call Func_01D_7AD8
+    ld a, $05
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_79B1
+    inc h
+
+Jump_01D_79B1::
+    ld a, [hl]
+    and a, $30
+    swap a
+    ld [$D7F9], a
+    pop hl
+    ld a, $08
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_79C1
+    inc h
+
+Jump_01D_79C1::
+    call Func_01D_7A90
+    ret
+
+Func_01D_79C5::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, $23
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_79DB
+    inc h
+
+Jump_01D_79DB::
+    call Func_01D_7AD8
+    ld a, $04
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_79E5
+    inc h
+
+Jump_01D_79E5::
+    ld a, [hl]
+    and a, $0C
+    srl a
+    srl a
+    ld [$D7F9], a
+    pop hl
+    ld a, $0D
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_79F7
+    inc h
+
+Jump_01D_79F7::
+    call Func_01D_7A90
+    ret
+
+Func_01D_79FB::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, $24
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7A11
+    inc h
+
+Jump_01D_7A11::
+    call Func_01D_7AD8
+    ld a, $03
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7A1B
+    inc h
+
+Jump_01D_7A1B::
+    ld a, [hl]
+    and a, $03
+    ld [$D7F9], a
+    pop hl
+    ld a, $12
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7A29
+    inc h
+
+Jump_01D_7A29::
+    call Func_01D_7A90
+    ret
+
+Func_01D_7A2D::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, $25
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7A43
+    inc h
+
+Jump_01D_7A43::
+    call Func_01D_7AD8
+    inc hl
+    inc hl
+    inc hl
+    ld a, [hl]
+    and a, $C0
+    srl a
+    srl a
+    swap a
+    ld [$D7F9], a
+    pop hl
+    ld a, $17
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7A5D
+    inc h
+
+Jump_01D_7A5D::
+    call Func_01D_7A90
+    ret
+
+Func_01D_7A61::
+    call Func_01D_7B0F
+    call Func_01D_7B05
+    push hl
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, $26
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7A77
+    inc h
+
+Jump_01D_7A77::
+    call Func_01D_7AD8
+    inc hl
+    inc hl
+    ld a, [hl]
+    and a, $30
+    swap a
+    ld [$D7F9], a
+    pop hl
+    ld a, $1C
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7A8C
+    inc h
+
+Jump_01D_7A8C::
+    call Func_01D_7A90
+    ret
+
+Func_01D_7A90::
+    ld de, $C8CF
+    ld c, $00
+
+Jump_01D_7A95::
+    ld a, $F0
+    ld [de], a
+    inc de
+    inc c
+    ld a, c
+    cp a, $0B
+    jr c, Jump_01D_7A95
+    ld bc, $0000
+    ld de, $C8CF
+
+Jump_01D_7AA5::
+    ld a, [hl]
+    cp a, $F0
+    jr z, Jump_01D_7AD6
+    ld [de], a
+    inc de
+    push hl
+    ld a, c
+    ld hl, $D7F5
+    add a, l
+    ld l, a
+    jr nc, Jump_01D_7AB6
+    inc h
+
+Jump_01D_7AB6::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01D_7ACC
+    cp a, $01
+    jr z, Jump_01D_7AC8
+    cp a, $02
+    jr z, Jump_01D_7AC4
+    jr Jump_01D_7ACC
+
+Jump_01D_7AC4::
+    ld a, $8E
+    jr Jump_01D_7ACA
+
+Jump_01D_7AC8::
+    ld a, $8D
+
+Jump_01D_7ACA::
+    ld [de], a
+    inc de
+
+Jump_01D_7ACC::
+    pop hl
+    inc hl
+    inc c
+    ld a, c
+    cp a, $05
+    jr c, Jump_01D_7AA5
+    ld a, $F0
+
+Jump_01D_7AD6::
+    ld [de], a
+    ret
+
+Func_01D_7AD8::
+    push af
+    ld a, [$D7F2]
+    ld [$4100], a
+    pop af
+    ld a, [hl]
+    and a, $C0
+    srl a
+    srl a
+    swap a
+    ld [$D7F5], a
+    ld a, [hl]
+    and a, $30
+    swap a
+    ld [$D7F6], a
+    ld a, [hl]
+    and a, $0C
+    srl a
+    srl a
+    ld [$D7F7], a
+    ld a, [hl]
+    and a, $03
+    ld [$D7F8], a
+    ret
+
+Func_01D_7B05::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ret
+
+Func_01D_7B0F::
+    ld a, [$D7F3]
+    ld l, a
+    ld a, [$D7F4]
+    ld h, a
+    push hl
+    ld a, [$D7F1]
+    ld c, $A5
+    call Func_000_1682
+    ld de, $A000
+    add hl, de
+    ld e, l
+    ld d, h
+    pop hl
+    ret
+    ds $4D8, $00

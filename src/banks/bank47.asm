@@ -1,0 +1,147 @@
+SECTION "Bank 47", ROMX[$4000], BANK[$47]
+    INCBIN "dwm2-cobi-us.gbc", $11C000, $2822
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_6965
+    db $47
+    dw Data_047_6A3C
+    db $47
+    dw Data_047_6B0A
+    db $47
+    dw Data_047_6B9B
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6D02
+    db $47
+    dw Data_047_6D3C
+    db $47
+    dw Data_047_6DAA
+    db $47
+    dw Data_047_6DE4
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_6965
+    db $47
+    dw Data_047_6A3C
+    db $47
+    dw Data_047_6B0A
+    db $47
+    dw Data_047_6B9B
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6D02
+    db $47
+    dw Data_047_6D3C
+    db $47
+    dw Data_047_6DAA
+    db $47
+    dw Data_047_6DE4
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_68B2
+    db $47
+    dw Data_047_6965
+    db $47
+    dw Data_047_6A3C
+    db $47
+    dw Data_047_6B53
+    db $47
+    dw Data_047_6C0A
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6C77
+    db $47
+    dw Data_047_6D02
+    db $47
+    dw Data_047_6D3C
+    db $47
+    dw Data_047_6DC7
+    db $47
+    dw Data_047_6E01
+    db $47
+
+Data_047_68B2:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11E8B2, $B3
+
+Data_047_6965:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11E965, $D7
+
+Data_047_6A3C:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11EA3C, $CE
+
+Data_047_6B0A:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11EB0A, $49
+
+Data_047_6B53:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11EB53, $48
+
+Data_047_6B9B:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11EB9B, $6F
+
+Data_047_6C0A:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11EC0A, $6D
+
+Data_047_6C77:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11EC77, $8B
+
+Data_047_6D02:: ; heuristic: target of a monotone pointer table; C0
+    db $68, $01, $00, $04, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $76, $0F, $02
+    db $02, $02, $00, $C4, $0F, $13, $00, $FD, $0F, $4D, $00, $08, $16, $68, $01, $00
+    db $04, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $76, $0F, $02, $02, $02, $00
+    db $C4, $0F, $13, $00, $FD, $0F, $4D, $00, $08, $16
+
+Data_047_6D3C:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11ED3C, $6E
+
+Data_047_6DAA:: ; heuristic: target of a monotone pointer table; C0
+    db $68, $01, $00, $04, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $6C, $07, $02
+    db $02, $00, $BA, $0F, $13, $00, $F3, $0F, $4D, $00, $08, $1F, $01
+
+Data_047_6DC7:: ; heuristic: target of a monotone pointer table; C0
+    db $68, $01, $00, $04, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $6C, $07, $02
+    db $02, $00, $C4, $0F, $13, $00, $F3, $0F, $4D, $00, $08, $1F, $01
+
+Data_047_6DE4:: ; heuristic: target of a monotone pointer table; C0
+    db $68, $01, $00, $04, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $6C, $07, $02
+    db $02, $00, $BA, $0F, $13, $00, $F3, $0F, $4D, $00, $08, $1F, $01
+
+Data_047_6E01:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $11EE01, $10FA
+    ds $105, $00

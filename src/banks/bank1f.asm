@@ -1,0 +1,1400 @@
+SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
+    INCBIN "dwm2-cobi-us.gbc", $07C000, $BA0
+    ds $470, $00
+    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+
+Func_01F_5040::
+    ld a, [$C524]
+    or a, a
+    ret z
+    ld a, [$C47C]
+    cp a, $FF
+    jr nz, Jump_01F_5051
+    ld hl, $C47F
+    jr Jump_01F_505E
+
+Jump_01F_5051::
+    ld l, a
+    ld h, $00
+    add hl, hl
+    ld de, $5094
+    add hl, de
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    push de
+    pop hl
+
+Jump_01F_505E::
+    ld a, [hl]
+    and a, $07
+    ret z
+    ld b, a
+    ld c, $00
+
+Jump_01F_5065::
+    push bc
+    ld a, $00
+    ldh [c], a
+    ld a, $30
+    ldh [c], a
+    ld b, $10
+
+Jump_01F_506E::
+    ld e, $08
+    ld a, [hl+]
+    ld d, a
+
+Jump_01F_5072::
+    bit 0, d
+    ld a, $10
+    jr nz, Jump_01F_507A
+    ld a, $20
+
+Jump_01F_507A::
+    ldh [c], a
+    ld a, $30
+    ldh [c], a
+    rr d
+    dec e
+    jr nz, Jump_01F_5072
+    dec b
+    jr nz, Jump_01F_506E
+    ld a, $20
+    ldh [c], a
+    ld a, $30
+    ldh [c], a
+    pop bc
+    dec b
+    ret z
+    call Func_000_05D1
+    jr Jump_01F_5065
+    INCBIN "dwm2-cobi-us.gbc", $07D094, $17A
+
+Func_01F_520E::
+    ld de, $5223
+    call Func_000_25C9
+    ret
+    db $11, $23, $52, $CD, $FE, $25, $C9, $CD, $0E, $52, $CD, $11, $26, $C9, $25, $52
+    dw Data_01F_52A5
+    dw Data_01F_52A5
+    dw Data_01F_52E3
+    dw Data_01F_5303
+    dw Data_01F_5327
+    dw Data_01F_534B
+    dw Data_01F_536D
+    dw Data_01F_5394
+    dw Data_01F_53B8
+    dw Data_01F_53DA
+    dw Data_01F_53F9
+    dw Data_01F_5410
+    dw Data_01F_5433
+    dw Data_01F_5455
+    dw Data_01F_5475
+    dw Data_01F_5498
+    dw Data_01F_54B5
+    dw Data_01F_54D7
+    dw Data_01F_54F7
+    dw Data_01F_5519
+    dw Data_01F_5540
+    dw Data_01F_5540
+    dw Data_01F_5561
+    dw Data_01F_5582
+    dw Data_01F_55A7
+    dw Data_01F_55CA
+    dw Data_01F_55ED
+    dw Data_01F_5610
+    dw Data_01F_5627
+    dw Data_01F_5644
+    dw Data_01F_5664
+    dw Data_01F_5664
+    dw Data_01F_5664
+    dw Data_01F_5664
+    dw Data_01F_5696
+    dw Data_01F_56B6
+    dw Data_01F_56DA
+    dw Data_01F_56FD
+    dw Data_01F_571F
+    dw Data_01F_5740
+    dw Data_01F_5764
+    dw Data_01F_5786
+    dw Data_01F_57A5
+    dw Data_01F_57BC
+    dw Data_01F_57DD
+    dw Data_01F_57FF
+    dw Data_01F_581F
+    dw Data_01F_5842
+    dw Data_01F_5864
+    dw Data_01F_5886
+    dw Data_01F_58A6
+    dw Data_01F_58C8
+    dw Data_01F_58EF
+    dw Data_01F_58EF
+    dw Data_01F_5910
+    dw Data_01F_5931
+    dw Data_01F_5956
+    dw Data_01F_5979
+    dw Data_01F_599C
+    dw Data_01F_59BD
+    dw Data_01F_59D4
+    dw Data_01F_59F2
+    dw Data_01F_5A3A
+    dw Data_01F_5A3A
+
+Data_01F_52A5:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $12, $36, $90, $3C, $32, $38, $35, $F1, $24
+    db $27, $39, $28, $31, $37, $38, $35, $28, $90, $27, $32, $31, $28, $98, $FA, $F7
+    db $EF, $EE, $18, $35, $90, $27, $32, $90, $3C, $32, $38, $90, $31, $28, $28, $27
+    db $EF, $EE, $36, $32, $30, $28, $37, $2B, $2C, $31, $2A, $98, $F7, $F0
+
+Data_01F_52E3:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $3E, $F1, $36, $37, $24, $3C, $2C, $31, $2A, $90, $2B, $28, $35, $28, $98, $F0
+
+Data_01F_5303:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $1C, $32, $90, $37, $2B, $2C, $36, $90, $32
+    db $31, $28, $F1, $2C, $36, $90, $36, $37, $24, $3C, $2C, $31, $2A, $90, $2B, $28
+    db $35, $28, $98, $F0
+
+Data_01F_5327:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $0C, $2B, $28, $26, $2E, $90, $38, $33, $90
+    db $32, $31, $F1, $37, $2B, $28, $90, $32, $37, $2B, $28, $35, $36, $90, $37, $32
+    db $32, $B5, $F7, $F0
+
+Data_01F_534B:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $0D, $32, $90, $3C, $32, $38, $90, $31, $28
+    db $28, $27, $F1, $24, $31, $3C, $37, $2B, $2C, $31, $2A, $90, $28, $2F, $36, $28
+    db $98, $F0
+
+Data_01F_536D:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $17, $32, $AB, $90, $3C, $32, $38, $90, $26
+    db $24, $31, $41, $F1, $2A, $32, $90, $32, $29, $29, $90, $24, $2F, $2F, $90, $24
+    db $2F, $32, $31, $28, $B5, $F7, $F0
+
+Data_01F_5394:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $1C, $3A, $2C, $37, $26, $2B, $90, $3A, $2C
+    db $37, $2B, $F1, $32, $31, $28, $90, $32, $31, $90, $37, $2B, $28, $90, $29, $24
+    db $35, $30, $98, $F0
+
+Data_01F_53B8:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $24, $37, $43, $2F, $90, $3C, $32
+    db $38, $F1, $36, $3A, $2C, $37, $26, $2B, $90, $2C, $37, $90, $3A, $2C, $37, $2B
+    db $98, $F0
+
+Data_01F_53DA:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $1C, $32, $90, $3C, $32, $38, $43, $2F, $F1
+    db $37, $24, $2E, $28, $90, $37, $2B, $2C, $36, $90, $32, $31, $28, $98, $F0
+
+Data_01F_53F9:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $12, $90, $36, $3A, $2C, $37, $26, $2B, $28
+    db $27, $F1, $F9, $00, $B5, $F7, $F0
+
+Data_01F_5410:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $1D, $2B, $28, $90, $29, $24, $35, $30, $90
+    db $2B, $24, $36, $F1, $31, $32, $90, $30, $32, $35, $28, $90, $35, $32, $32, $30
+    db $B5, $F7, $F0
+
+Data_01F_5433:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $24, $37, $43, $2F, $90, $3C, $32
+    db $38, $F1, $36, $3A, $2C, $37, $26, $2B, $90, $2C, $37, $90, $3A, $2C, $37, $2B
+    db $98, $F0
+
+Data_01F_5455:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $37, $24, $2E, $28, $98, $F0
+
+Data_01F_5475:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $12, $36, $90, $37, $2B, $2C, $36, $90, $37
+    db $2B, $28, $F1, $32, $31, $28, $90, $3C, $32, $38, $43, $2F, $90, $37, $24, $2E
+    db $28, $98, $F0
+
+Data_01F_5498:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $12, $37, $3E, $90, $28, $24, $2A, $28, $35
+    db $F1, $37, $32, $90, $2A, $32, $AB, $90, $F9, $00, $B5, $F7, $F0
+
+Data_01F_54B5:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $22, $32, $38, $90, $2B, $24, $39, $28, $31
+    db $41, $F1, $2F, $28, $29, $37, $90, $24, $31, $3C, $90, $2B, $28, $35, $28, $B5
+    db $F7, $F0
+
+Data_01F_54D7:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $22, $32, $38, $90, $26, $24, $31, $41, $F1
+    db $37, $24, $2E, $28, $90, $24, $31, $3C, $90, $30, $32, $35, $28, $B5, $F7, $F0
+
+Data_01F_54F7:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $24, $37, $90, $27, $32, $90, $3C
+    db $32, $38, $F1, $3A, $24, $31, $37, $90, $37, $32, $90, $26, $2B, $28, $26, $2E
+    db $98, $F0
+
+Data_01F_5519:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $28, $90, $27, $32, $31, $41, $90, $2B
+    db $24, $39, $28, $F1, $24, $31, $3C, $90, $32, $29, $90, $3C, $32, $38, $35, $90
+    db $28, $2A, $2A, $36, $B5, $F7, $F0
+
+Data_01F_5540:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $26, $2B, $28, $26, $2E, $98
+    db $F0
+
+Data_01F_5561:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $28, $2A, $2A
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $26, $2B, $28, $26, $2E, $98
+    db $F0
+
+Data_01F_5582:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $24, $37, $90, $90, $27, $32, $90
+    db $3C, $32, $38, $F1, $3A, $24, $31, $37, $90, $37, $32, $90, $35, $28, $2F, $28
+    db $24, $36, $28, $98, $F0
+
+Data_01F_55A7:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $35, $28, $2F, $28, $24, $36
+    db $28, $98, $F0
+
+Data_01F_55CA:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $28, $2A, $2A
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $35, $28, $2F, $28, $24, $36
+    db $28, $98, $F0
+
+Data_01F_55ED:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $12, $37, $43, $2F, $90, $25, $28, $90, $2A
+    db $32, $31, $28, $F1, $29, $32, $35, $28, $39, $28, $35, $B5, $90, $1C, $38, $35
+    db $28, $98, $F0
+
+Data_01F_5610:: ; heuristic: target of a monotone pointer table; C0
+    db $1D, $2B, $28, $90, $28, $2A, $2A, $90, $3A, $24, $36, $F1, $35, $28, $2F, $28
+    db $24, $36, $28, $27, $B5, $F7, $F0
+
+Data_01F_5627:: ; heuristic: target of a monotone pointer table; C0
+    db $F9, $00, $90, $3A, $24, $36, $90, $35, $28, $2F, $28, $24, $36, $28, $27, $F1
+    db $2C, $31, $90, $37, $2B, $28, $90, $3A, $2C, $2F, $27, $B5, $F0
+
+Data_01F_5644:: ; heuristic: target of a monotone pointer table; C0
+    db $EA, $0C, $32, $25, $2C, $A3, $90, $0C, $32, $30, $28, $90, $25, $24, $26, $2E
+    db $F1, $24, $31, $3C, $37, $2C, $30, $28, $AB, $90, $36, $2C, $36, $99, $F7, $F0
+
+Data_01F_5664:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $11, $2C, $AB, $90, $25, $2C, $2A, $F1, $25
+    db $35, $32, $37, $2B, $28, $35, $99, $FA, $F7, $EF, $EE, $0D, $32, $90, $3C, $32
+    db $38, $90, $31, $28, $28, $27, $EF, $EE, $24, $31, $3C, $37, $2B, $2C, $31, $2A
+    db $98, $F0
+
+Data_01F_5696:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $3E, $F1, $36, $37, $24, $3C, $2C, $31, $2A, $90, $2B, $28, $35, $28, $98, $F0
+
+Data_01F_56B6:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $1C, $32, $90, $37, $2B, $2C, $36, $90, $32
+    db $31, $28, $F1, $2C, $36, $90, $36, $37, $24, $3C, $2C, $31, $2A, $90, $2B, $28
+    db $35, $28, $98, $F0
+
+Data_01F_56DA:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $1C, $24, $3C, $90, $25, $3C, $28, $90, $37
+    db $32, $F1, $F9, $00, $90, $29, $32, $35, $90, $24, $90, $3A, $2B, $2C, $2F, $28
+    db $B5, $F7, $F0
+
+Data_01F_56FD:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $0D, $32, $90, $3C, $32, $38, $90, $31, $28
+    db $28, $27, $F1, $24, $31, $3C, $37, $2B, $2C, $31, $2A, $90, $28, $2F, $36, $28
+    db $98, $F0
+
+Data_01F_571F:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $22, $32, $38, $43, $2F, $90, $25, $28, $F1
+    db $2F, $28, $29, $37, $90, $24, $2F, $2F, $90, $24, $2F, $32, $31, $28, $99, $F7
+    db $F0
+
+Data_01F_5740:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $1C, $3A, $2C, $37, $26, $2B, $90, $3A, $2C
+    db $37, $2B, $F1, $32, $31, $28, $90, $32, $31, $90, $37, $2B, $28, $90, $29, $24
+    db $35, $30, $98, $F0
+
+Data_01F_5764:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $24, $37, $43, $2F, $90, $3C, $32
+    db $38, $F1, $36, $3A, $2C, $37, $26, $2B, $90, $2C, $37, $90, $3A, $2C, $37, $2B
+    db $98, $F0
+
+Data_01F_5786:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $1C, $32, $90, $3C, $32, $38, $43, $2F, $F1
+    db $37, $24, $2E, $28, $90, $37, $2B, $2C, $36, $90, $32, $31, $28, $98, $F0
+
+Data_01F_57A5:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $12, $90, $36, $3A, $2C, $37, $26, $2B, $28
+    db $27, $F1, $F9, $00, $B5, $F7, $F0
+
+Data_01F_57BC:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $1D, $2B, $28, $90, $29, $24, $35, $30, $90
+    db $2C, $36, $F1, $32, $38, $37, $90, $32, $29, $90, $35, $32, $32, $30, $B5, $F7
+    db $F0
+
+Data_01F_57DD:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $24, $37, $43, $2F, $90, $3C, $32
+    db $38, $F1, $36, $3A, $2C, $37, $26, $2B, $90, $2C, $37, $90, $3A, $2C, $37, $2B
+    db $98, $F0
+
+Data_01F_57FF:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $37, $24, $2E, $28, $98, $F0
+
+Data_01F_581F:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $12, $36, $90, $37, $2B, $2C, $36, $90, $37
+    db $2B, $28, $F1, $32, $31, $28, $90, $3C, $32, $38, $43, $2F, $90, $37, $24, $2E
+    db $28, $98, $F0
+
+Data_01F_5842:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $F9, $00, $AB, $90, $2C, $37, $F1, $35, $28
+    db $24, $2F, $2F, $3C, $90, $30, $2C, $36, $36, $28, $27, $90, $3C, $32, $38, $B5
+    db $F7, $F0
+
+Data_01F_5864:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $22, $32, $38, $90, $2B, $24, $39, $28, $31
+    db $41, $F1, $2F, $28, $29, $37, $90, $24, $31, $3C, $90, $2B, $28, $35, $28, $B5
+    db $F7, $F0
+
+Data_01F_5886:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $22, $32, $38, $90, $26, $24, $31, $41, $F1
+    db $37, $24, $2E, $28, $90, $24, $31, $3C, $90, $30, $32, $35, $28, $B5, $F7, $F0
+
+Data_01F_58A6:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $24, $37, $90, $27, $32, $90, $3C
+    db $32, $38, $F1, $3A, $24, $31, $37, $90, $37, $32, $90, $26, $2B, $28, $26, $2E
+    db $98, $F0
+
+Data_01F_58C8:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $28, $90, $27, $32, $31, $41, $90, $2B
+    db $24, $39, $28, $F1, $24, $31, $3C, $90, $32, $29, $90, $3C, $32, $38, $35, $90
+    db $28, $2A, $2A, $36, $B5, $F7, $F0
+
+Data_01F_58EF:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $26, $2B, $28, $26, $2E, $98
+    db $F0
+
+Data_01F_5910:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $28, $2A, $2A
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $26, $2B, $28, $26, $2E, $98
+    db $F0
+
+Data_01F_5931:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $24, $37, $90, $90, $27, $32, $90
+    db $3C, $32, $38, $F1, $3A, $24, $31, $37, $90, $37, $32, $90, $35, $28, $2F, $28
+    db $24, $36, $28, $98, $F0
+
+Data_01F_5956:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $32, $31, $28
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $35, $28, $2F, $28, $24, $36
+    db $28, $98, $F0
+
+Data_01F_5979:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $20, $2B, $2C, $26, $2B, $90, $28, $2A, $2A
+    db $F1, $3A, $2C, $2F, $2F, $90, $3C, $32, $38, $90, $35, $28, $2F, $28, $24, $36
+    db $28, $98, $F0
+
+Data_01F_599C:: ; heuristic: target of a monotone pointer table; C0
+    db $EB, $1D, $24, $35, $24, $A3, $90, $12, $37, $43, $2F, $90, $25, $28, $90, $2A
+    db $32, $31, $28, $F1, $29, $32, $35, $28, $39, $28, $35, $B5, $90, $18, $14, $98
+    db $F0
+
+Data_01F_59BD:: ; heuristic: target of a monotone pointer table; C0
+    db $1D, $2B, $28, $90, $28, $2A, $2A, $90, $3A, $24, $36, $F1, $35, $28, $2F, $28
+    db $24, $36, $28, $27, $B5, $F7, $F0
+
+Data_01F_59D4:: ; heuristic: target of a monotone pointer table; C0
+    db $F9, $00, $90, $3A, $24, $36, $90, $35, $28, $2F, $28, $24, $36, $28, $27, $F1
+    db $2C, $31, $90, $37, $2B, $28, $90, $3A, $2C, $2F, $27, $B5, $F7, $F0
+
+Data_01F_59F2:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $07D9F2, $48
+
+Data_01F_5A3A:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $07DA3A, $1DB
+
+Func_01F_5C15::
+    ld a, $0A
+    ld [$1FFF], a
+    xor a, a
+    ld [$4100], a
+    ld hl, $D789
+    ld a, [$D7AF]
+    ld b, a
+    add a, a
+    add a, a
+    add a, b
+    add a, l
+    ld l, a
+    jr nc, Jump_01F_5C2D
+    inc h
+
+Jump_01F_5C2D::
+    ld c, $00
+
+Jump_01F_5C2F::
+    ld a, [$D7B1]
+    cp a, $04
+    jr c, Jump_01F_5C3B
+    ld a, [$D7A9]
+    jr Jump_01F_5C4A
+
+Jump_01F_5C3B::
+    ld a, [$D7B0]
+    cp a, $01
+    jr nz, Jump_01F_5C47
+    ld a, [$D7A9]
+    jr Jump_01F_5C4A
+
+Jump_01F_5C47::
+    ld a, [$D7A9]
+
+Jump_01F_5C4A::
+    ld b, a
+    ld a, [$D7AF]
+    push bc
+    ld c, a
+    add a, a
+    add a, a
+    add a, c
+    pop bc
+    add a, c
+    cp a, b
+    jr nc, Jump_01F_5C90
+    push hl
+    push bc
+    ld a, [hl]
+    ld c, $01
+    call Func_000_1FA4
+    ld a, $F0
+    ld [$C8D9], a
+    pop bc
+    push bc
+    ld a, c
+    cp a, $04
+    jr nz, Jump_01F_5C71
+    call Func_01F_5CA6
+    jr Jump_01F_5C81
+
+Jump_01F_5C71::
+    ld a, c
+    add a, a
+    ld hl, $5C9C
+    add a, l
+    ld l, a
+    jr nc, Jump_01F_5C7B
+    inc h
+
+Jump_01F_5C7B::
+    ld e, [hl]
+    inc hl
+    ld d, [hl]
+    call Func_000_21A1
+
+Jump_01F_5C81::
+    pop bc
+    pop hl
+    inc hl
+    inc c
+    ld a, [$D7A9]
+    cp a, c
+    jr z, Jump_01F_5C90
+    ld a, c
+    cp a, $05
+    jr c, Jump_01F_5C2F
+
+Jump_01F_5C90::
+    xor a, a
+    ld [$1FFF], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+    db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
+
+Func_01F_5CA6::
+    xor a, a
+    ld [$D784], a
+    ld [$D785], a
+    ld hl, $C8CF
+
+Jump_01F_5CB0::
+    ld a, [$D784]
+    push hl
+    add a, l
+    ld l, a
+    jr nc, Jump_01F_5CB9
+    inc h
+
+Jump_01F_5CB9::
+    ld a, [hl]
+    cp a, $F0
+    jp z, Jump_01F_5CEF
+    cp a, $8D
+    jr z, Jump_01F_5CCF
+    cp a, $8E
+    jr z, Jump_01F_5CCF
+    call Func_01F_5CF8
+    call Func_000_0B2B
+    jr Jump_01F_5CDE
+
+Jump_01F_5CCF::
+    push af
+    ld a, [$D785]
+    dec a
+    ld [$D785], a
+    pop af
+    call Func_01F_5CF8
+    call Func_000_0B46
+
+Jump_01F_5CDE::
+    pop hl
+    ld a, [$D785]
+    inc a
+    ld [$D785], a
+    ld a, [$D784]
+    inc a
+    ld [$D784], a
+    jr Jump_01F_5CB0
+
+Jump_01F_5CEF::
+    pop hl
+    xor a, a
+    ld [$D785], a
+    ld [$D784], a
+    ret
+
+Func_01F_5CF8::
+    swap a
+    ld d, a
+    and a, $F0
+    ld e, a
+    ld a, d
+    and a, $0F
+    ld d, a
+    ld hl, $4010
+    add hl, de
+    ld e, l
+    ld d, h
+    push de
+    ld hl, $5D20
+    ld a, [$D785]
+    sla a
+    add a, l
+    ld l, a
+    jr nc, Jump_01F_5D16
+    inc h
+
+Jump_01F_5D16::
+    ld e, [hl]
+    inc hl
+    ld h, [hl]
+    ld l, e
+    pop de
+    ld b, $1F
+    ld c, $10
+    ret
+    db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
+
+Func_01F_5D2A::
+    ld hl, $D7F1
+    ld d, [hl]
+    inc hl
+    ld e, [hl]
+    inc hl
+    ld b, [hl]
+    inc hl
+    ld c, [hl]
+    inc hl
+    ld a, [hl]
+    ld h, a
+    ld a, [$D7F6]
+    ld l, a
+
+Jump_01F_5D3B::
+    push hl
+    push bc
+
+Jump_01F_5D3D::
+    di
+
+Jump_01F_5D3E::
+    ldh a, [$FF41]
+    bit 1, a
+    jr nz, Jump_01F_5D3E
+    ld a, [de]
+    ld [hl+], a
+    ei
+    ld a, l
+    and a, $1F
+    jr nz, Jump_01F_5D54
+    ld a, l
+    sub a, $20
+    ld l, a
+    ld a, h
+    sbc a, $00
+    ld h, a
+
+Jump_01F_5D54::
+    inc de
+    dec b
+    jr nz, Jump_01F_5D3D
+    pop bc
+    pop hl
+    push hl
+    push bc
+    ld a, [$C525]
+    and a, a
+    jr z, Jump_01F_5D89
+    ld a, [$D7F7]
+    and a, a
+    jr nz, Jump_01F_5D89
+    ld a, $01
+    ldh [$FF4F], a
+
+Jump_01F_5D6C::
+    di
+
+Jump_01F_5D6D::
+    ldh a, [$FF41]
+    bit 1, a
+    jr nz, Jump_01F_5D6D
+    xor a, a
+    ld [hl+], a
+    ei
+    ld a, l
+    and a, $1F
+    jr nz, Jump_01F_5D83
+    ld a, l
+    sub a, $20
+    ld l, a
+    ld a, h
+    sbc a, $00
+    ld h, a
+
+Jump_01F_5D83::
+    dec b
+    jr nz, Jump_01F_5D6C
+    xor a, a
+    ldh [$FF4F], a
+
+Jump_01F_5D89::
+    pop bc
+    pop hl
+    ld a, $20
+    add a, l
+    ld l, a
+    jr nc, Jump_01F_5D92
+    inc h
+
+Jump_01F_5D92::
+    ld a, h
+    and a, $9B
+    ld h, a
+    dec c
+    jr nz, Jump_01F_5D3B
+    ret
+
+Func_01F_5D9A::
+    ld a, [$D7F1]
+    ld d, a
+    ld a, [$D7F2]
+    ld e, a
+    ld a, [$D7F3]
+    ld b, a
+    ld a, [$D7F4]
+    ld c, a
+    ld a, [$D7F5]
+    ld h, a
+    ld a, [$D7F6]
+    ld l, a
+
+Jump_01F_5DB2::
+    push hl
+    push bc
+
+Jump_01F_5DB4::
+    di
+
+Jump_01F_5DB5::
+    ldh a, [$FF41]
+    bit 1, a
+    jr nz, Jump_01F_5DB5
+    ld a, [de]
+    ld [hl+], a
+    ei
+    ld a, l
+    and a, $1F
+    jr nz, Jump_01F_5DCB
+    ld a, l
+    sub a, $20
+    ld l, a
+    ld a, h
+    sbc a, $00
+    ld h, a
+
+Jump_01F_5DCB::
+    dec b
+    jr nz, Jump_01F_5DB4
+    pop bc
+    pop hl
+    push hl
+    push bc
+    ld a, [$C525]
+    and a, a
+    jr z, Jump_01F_5DFF
+    ld a, [$D7F7]
+    and a, a
+    jr nz, Jump_01F_5DFF
+    ld a, $01
+    ldh [$FF4F], a
+
+Jump_01F_5DE2::
+    di
+
+Jump_01F_5DE3::
+    ldh a, [$FF41]
+    bit 1, a
+    jr nz, Jump_01F_5DE3
+    xor a, a
+    ld [hl+], a
+    ei
+    ld a, l
+    and a, $1F
+    jr nz, Jump_01F_5DF9
+    ld a, l
+    sub a, $20
+    ld l, a
+    ld a, h
+    sbc a, $00
+    ld h, a
+
+Jump_01F_5DF9::
+    dec b
+    jr nz, Jump_01F_5DE2
+    xor a, a
+    ldh [$FF4F], a
+
+Jump_01F_5DFF::
+    pop bc
+    pop hl
+    ld a, $20
+    add a, l
+    ld l, a
+    jr nc, Jump_01F_5E08
+    inc h
+
+Jump_01F_5E08::
+    ld a, h
+    and a, $9B
+    ld h, a
+    dec c
+    ld a, c
+    and a, a
+    jr nz, Jump_01F_5DB2
+    ret
+    INCBIN "dwm2-cobi-us.gbc", $07DE12, $709
+    ds $5C, $C3
+    INCBIN "dwm2-cobi-us.gbc", $07E577, $6B0
+    ds $38, $C3
+    INCBIN "dwm2-cobi-us.gbc", $07EC5F, $D8
+    ds $38, $C3
+    INCBIN "dwm2-cobi-us.gbc", $07ED6F, $FD
+    ds $1B, $C3
+    INCBIN "dwm2-cobi-us.gbc", $07EE87, $1B1
+    ds $12, $B1
+    db $B2, $B6, $C3, $C3, $C3, $C3, $06, $35, $3B, $28, $39, $C3, $13, $24, $30, $28
+    db $C3, $C3, $C3, $C3, $B7, $B8
+    ds $12, $B9
+    db $BA, $B6, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $C3
+    db $0F, $10, $11, $12, $B7, $B6
+    ds $12, $C3
+    db $B7, $B6, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $C3
+    db $20, $21, $22, $23, $B7, $B6
+    ds $12, $C3
+    db $B7, $B6, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $C3
+    db $31, $32, $33, $34, $B7, $B6
+    ds $12, $C3
+    db $B7, $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $C3
+    db $42, $43, $44, $45, $B7, $B6
+    ds $12, $C3
+    db $B7, $B6, $46, $47, $48, $49, $4A, $4B, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $06, $13, $05, $C3, $B7, $B6
+    ds $12, $C3
+    db $B7, $B3
+    ds $12, $B4
+    db $B5, $B0
+    ds $12, $B1
+    db $B2, $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69
+    db $6A, $6B, $6C, $6D, $B7, $B6
+    ds $12, $C3
+    db $B7, $B6, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $7B
+    db $7C, $7D, $7E, $7F, $B7, $B3
+    ds $12, $B4
+    db $B5, $B0
+    ds $12, $B1
+    db $B2, $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69
+    db $6A, $6B, $6C, $6D, $B7, $B3
+    ds $12, $B4
+    INCBIN "dwm2-cobi-us.gbc", $07F1EE, $187
+
+Func_01F_7375::
+    ld c, $00
+
+Jump_01F_7377::
+    push bc
+    ld a, c
+    ld de, $73BC
+    add a, e
+    ld e, a
+    jr nc, Jump_01F_7381
+    inc d
+
+Jump_01F_7381::
+    ld a, [de]
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    ld hl, $4010
+    add hl, de
+    ld e, l
+    ld d, h
+    push de
+    ld a, c
+    sla a
+    ld de, $73CC
+    add a, e
+    ld e, a
+    jr nc, Jump_01F_73A7
+    inc d
+
+Jump_01F_73A7::
+    ld a, [de]
+    ld l, a
+    inc de
+    ld a, [de]
+    ld h, a
+    pop de
+    ld b, $1F
+    ld c, $10
+    call Func_000_0B2B
+    pop bc
+    inc c
+    ld a, c
+    cp a, $10
+    jr c, Jump_01F_7377
+    ret
+    db $A3, $54, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
+    db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
+    db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
+
+Func_01F_73EC::
+    ld a, [$D782]
+    and a, a
+    jp nz, Jump_01F_7436
+    call Func_01F_77AB
+    ld de, $0161
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $651B
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $06
+    ld [$D7F3], a
+    ld a, $06
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    ld a, [$CA36]
+    ld e, a
+    ld a, [$CA37]
+    ld d, a
+    ld hl, $9200
+    ld c, $01
+    call Func_000_1FE3
+    ld a, [$D782]
+    inc a
+    ld [$D782], a
+    ret
+
+Jump_01F_7436::
+    ld a, [$C525]
+    and a, a
+    jr z, Jump_01F_745C
+    ld a, [$CA36]
+    ld e, a
+    ld a, [$CA37]
+    ld d, a
+    push de
+    ld a, $7F
+    ld [$C526], a
+    call Func_000_0829
+    ld a, $01
+    ldh [$FFC6], a
+    call Func_01F_77AB
+    ld de, $0161
+    add hl, de
+    pop de
+    call Func_000_2090
+
+Jump_01F_745C::
+    call Func_01F_77AB
+    ld de, $0161
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $64AF
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $06
+    ld [$D7F3], a
+    ld a, $06
+    ld [$D7F4], a
+    ld a, $01
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    xor a, a
+    ld [$D782], a
+    ld a, [$D781]
+    inc a
+    ld [$D781], a
+    ret
+
+Func_01F_7494::
+    call Func_01F_77AB
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $5E12
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $20
+    ld [$D7F3], a
+    ld a, $20
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D9A
+    ld de, $4250
+    ld hl, $8FE0
+    ld b, $1F
+    ld c, $10
+    call Func_000_0B2B
+    ld de, $4A70
+    ld hl, $8FF0
+    ld b, $1F
+    ld c, $10
+    call Func_000_0B2B
+    ld de, $4AD0
+    ld hl, $96F0
+    ld b, $1F
+    ld c, $10
+    call Func_000_0B2B
+    ret
+
+Func_01F_74E3::
+    call Func_01F_77AB
+    ld de, $0068
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $662B
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $0C
+    ld [$D7F3], a
+    ld a, $0F
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    call Func_01F_77AB
+    ld de, $0160
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $653F
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $08
+    ld [$D7F3], a
+    ld a, $07
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    ret
+
+Func_01F_753A::
+    call Func_01F_77AB
+    ld de, $0008
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $6B4F
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $0C
+    ld [$D7F3], a
+    ld a, $12
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    call Func_01F_77AB
+    ld de, $0160
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $6C27
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $08
+    ld [$D7F3], a
+    ld a, $07
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    ret
+
+Func_01F_7591::
+    ld hl, $9200
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $1504
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    call Func_000_290E
+    call Func_01F_77AB
+    ld de, $0008
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $6C5F
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $0C
+    ld [$D7F3], a
+    ld a, $12
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    call Func_01F_77AB
+    ld de, $0160
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $6D37
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $08
+    ld [$D7F3], a
+    ld a, $07
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    ret
+
+Func_01F_7601::
+    ld a, [$CA5F]
+    cp a, $FF
+    jr z, Jump_01F_760D
+    and a, a
+    jr z, Jump_01F_760D
+    jr Jump_01F_764E
+
+Jump_01F_760D::
+    ld hl, $9200
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $1504
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    call Func_000_290E
+    ld hl, $9200
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $0901
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    ld a, $08
+    ld [$C528], a
+    ld a, $0E
+    ld [$C529], a
+    ld hl, $402B
+    ld b, $08
+    rst $10
+    jr Jump_01F_769E
+
+Jump_01F_764E::
+    ld hl, $9200
+    ld c, $34
+    ld b, $08
+
+Jump_01F_7655::
+    push bc
+    push hl
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $0901
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    ld hl, $CA2B
+    ld a, c
+    add a, l
+    ld l, a
+    jr nc, Jump_01F_7673
+    inc h
+
+Jump_01F_7673::
+    ld a, [hl]
+    and a, a
+    jr z, Jump_01F_767D
+    cp a, $FF
+    jr z, Jump_01F_767D
+    jr Jump_01F_7682
+
+Jump_01F_767D::
+    call Func_000_290E
+    jr Jump_01F_7690
+
+Jump_01F_7682::
+    ld [$C529], a
+    ld a, $04
+    ld [$C528], a
+    ld hl, $402B
+    ld b, $08
+    rst $10
+
+Jump_01F_7690::
+    pop hl
+    ld a, l
+    add a, $90
+    ld l, a
+    ld a, h
+    adc a, $00
+    ld h, a
+    pop bc
+    inc c
+    dec b
+    jr nz, Jump_01F_7655
+
+Jump_01F_769E::
+    ld hl, $8800
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $1202
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    ret
+
+Func_01F_76B5::
+    call Func_01F_77AB
+    ld de, $0160
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $6E47
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $08
+    ld [$D7F3], a
+    ld a, $07
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    ld hl, $96C0
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $0201
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    call Func_000_290E
+    call Func_01F_77AB
+    ld de, $0008
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $6D6F
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $0C
+    ld [$D7F3], a
+    ld a, $12
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    ld hl, $9200
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $0805
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    call Func_000_290E
+    ld hl, $8800
+    ld a, l
+    ld [$C52D], a
+    ld a, h
+    ld [$C52E], a
+    ld hl, $1202
+    ld a, l
+    ld [$C52F], a
+    ld a, h
+    ld [$C530], a
+    ret
+
+Func_01F_7754::
+    call Func_01F_77AB
+    ld de, $0008
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $5E13
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $0C
+    ld [$D7F3], a
+    ld a, $03
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    call Func_01F_77AB
+    ld de, $0160
+    add hl, de
+    ld a, h
+    ld [$D7F5], a
+    ld a, l
+    ld [$D7F6], a
+    ld de, $66DF
+    ld a, d
+    ld [$D7F1], a
+    ld a, e
+    ld [$D7F2], a
+    ld a, $08
+    ld [$D7F3], a
+    ld a, $07
+    ld [$D7F4], a
+    xor a, a
+    ld [$D7F7], a
+    call Func_01F_5D2A
+    ret
+
+Func_01F_77AB::
+    ldh a, [$FFA5]
+    and a, $F8
+    ld e, a
+    ld d, $00
+    sla e
+    rl d
+    sla e
+    rl d
+    ld a, e
+    add a, $00
+    ld e, a
+    ld a, d
+    adc a, $98
+    ld d, a
+    ldh a, [$FFA1]
+    srl a
+    srl a
+    srl a
+    add a, e
+    ld e, a
+    jr nc, Jump_01F_77CF
+    inc d
+
+Jump_01F_77CF::
+    ld a, e
+    ld l, a
+    ld a, d
+    ld h, a
+    ret
+    INCBIN "dwm2-cobi-us.gbc", $07F7D4, $D3
+    ds $759, $00

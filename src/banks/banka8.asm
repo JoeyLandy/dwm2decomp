@@ -1,0 +1,3 @@
+SECTION "Bank A8", ROMX[$4000], BANK[$A8]
+; bank $A8: all $00 in the reference
+DS $4000, $00
