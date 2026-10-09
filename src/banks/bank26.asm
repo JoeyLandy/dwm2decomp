@@ -5,7 +5,7 @@ Func_026_4001::
     ldh a, [$FFAD]
     ld e, a
     ld d, $00
-    ld hl, $411E
+    ld hl, Data_026_411E
     add hl, de
     bit 0, [hl]
     jr z, Jump_026_4017
@@ -17,9 +17,11 @@ Func_026_4001::
     ldh [$FFB0], a
 
 Jump_026_4017::
-    ld de, $401E
+    ld de, Data_026_401E
     call Func_026_419E
     ret
+
+Data_026_401E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_026_441A
     dw Data_026_448C
     dw Data_026_44FE
@@ -148,6 +150,8 @@ Jump_026_4017::
     dw Data_026_6E38
     dw Data_026_6EAA
     dw Data_026_6F1C
+
+Data_026_411E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $01, $11, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $11, $10
     db $10, $11, $00, $10, $10, $01, $10, $11, $10, $10, $11, $10, $00, $00, $10, $10
     db $11, $01, $00, $01, $01, $00, $01, $01

@@ -5775,7 +5775,7 @@ Jump_000_22A5::
 
 Jump_000_22F1::
     ld a, $C8
-    ld de, $4BBD
+    ld de, Data_07E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_000_22FB
@@ -7455,12 +7455,12 @@ Func_000_2D33::
 
 Func_000_2D4A::
     call Func_000_2DD6
-    ld de, $4180
+    ld de, Data_01F_4180
     ld hl, $8EE0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld de, $4330
+    ld de, Data_01F_4330
     ld hl, $8EF0
     ld b, $1F
     ld c, $10

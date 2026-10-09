@@ -68,13 +68,16 @@ Func_0A2_404F::
     INCBIN "dwm2-cobi-us.gbc", $288070, $972
 
 Func_0A2_49E2::
-    ld de, $49F8
+    ld de, Data_0A2_49F8
     ld a, [$C528]
     sub a, $01
     ld [$C528], a
     call Func_000_25C9
     ret
-    db $CD, $E2, $49, $CD, $11, $26, $C9, $FC, $49
+    db $CD, $E2, $49, $CD, $11, $26, $C9
+
+Data_0A2_49F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $FC, $49
     dw Func_0A2_4A3E
     dw Func_0A2_4A40
     dw Func_0A2_4A4F

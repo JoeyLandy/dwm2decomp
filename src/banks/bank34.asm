@@ -13,7 +13,7 @@ Func_034_4008::
     ld a, [$CFE6]
     cp a, $50
     jr c, Jump_034_401D
-    ld hl, $4001
+    ld hl, Func_034_4001
     ld b, $A2
     rst $10
     ret

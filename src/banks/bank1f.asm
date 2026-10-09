@@ -1,6 +1,167 @@
 SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
-    INCBIN "dwm2-cobi-us.gbc", $07C000, $BA0
-    ds $470, $00
+    db $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+
+Data_01F_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $FF, $7C, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00
+    db $FF, $10, $FF, $30, $FF, $10, $FF, $10, $FF, $10, $FF
+
+Data_01F_402B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $07C02B, $B5
+
+Data_01F_40E0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $F8, $FF, $84, $FF, $82, $FF, $82, $FF, $82, $FF, $84, $FF, $F8, $FF, $00
+    db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80
+
+Data_01F_40FA:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $80, $FF, $FE, $FF, $00, $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80
+    db $FF, $80, $FF, $80, $FF, $00
+
+Data_01F_4110:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $3C, $FF, $42, $FF, $80, $FF, $9E, $FF, $82, $FF, $42, $FF, $3C, $FF, $00
+
+Data_01F_4120:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $82, $FF, $82, $FF, $82, $FF, $FE, $FF, $82, $FF, $82, $FF, $82, $FF, $00
+
+Data_01F_4130:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $7C, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00
+    db $FF, $7E, $FF, $08, $FF, $08, $FF, $08, $FF, $88, $FF, $88, $FF, $70, $FF, $00
+    db $FF, $84, $FF, $88, $FF, $90, $FF, $B0, $FF, $C8, $FF, $84, $FF, $82, $FF, $00
+
+Data_01F_4160:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $FE, $FF, $00
+
+Data_01F_4170:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $82, $FF, $C6, $FF, $AA, $FF, $92, $FF, $82, $FF, $82, $FF, $82, $FF, $00
+
+Data_01F_4180:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00
+
+Data_01F_4190:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $82, $FF, $44, $FF, $38, $FF, $00
+
+Data_01F_41A0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00
+    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $8A, $FF, $44, $FF, $3A, $FF, $00
+    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $88, $FF, $84, $FF, $82, $FF, $00
+
+Data_01F_41D0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $78, $FF, $84, $FF, $80, $FF, $7C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00
+    db $FF, $FE, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
+    db $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00
+    db $FF, $82, $FF, $82, $FF, $44, $FF, $44, $FF, $28, $FF, $28, $FF, $10, $FF, $00
+
+Data_01F_4210:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $82, $FF, $92, $FF, $AA, $FF, $AA, $FF, $C6, $FF, $C6, $FF, $82, $FF, $00
+    db $FF, $C6, $FF, $44, $FF, $28, $FF, $10, $FF, $28, $FF, $44, $FF, $C6, $FF, $00
+
+Data_01F_4230:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $82, $FF, $44, $FF, $28, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
+    db $FF, $FE, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $FE, $FF, $00
+
+Data_01F_4250:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $04, $FF, $7C, $FF, $84, $FF, $7E, $FF, $00
+
+Data_01F_4260:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $00
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $80, $FF, $84, $FF, $78, $FF, $00
+
+Data_01F_4280:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $04, $FF, $04, $FF, $04, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $00
+
+Data_01F_4290:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $FC, $FF, $80, $FF, $7C, $FF, $00
+    db $FF, $18, $FF, $24, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $00
+    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8
+    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $00
+
+Data_01F_42D0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
+    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $60
+    db $FF, $80, $FF, $80, $FF, $8C, $FF, $B0, $FF, $C0, $FF, $B0, $FF, $8C, $FF, $00
+
+Data_01F_4300:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
+
+Data_01F_4310:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $00, $FF, $EC, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $00
+
+Data_01F_4320:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $00
+
+Data_01F_4330:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
+
+Data_01F_4340:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $80, $FF, $80
+    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $04
+    db $FF, $00, $FF, $00, $FF, $9C, $FF, $A0, $FF, $C0, $FF, $80, $FF, $80, $FF, $00
+
+Data_01F_4370:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07C370, $50
+
+Data_01F_43C0:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07C3C0, $90
+
+Data_01F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $82, $FF, $82, $FF, $02, $FF, $3E, $FF, $42, $FF, $42, $FF, $3E, $FF, $00
+    db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00
+    db $FF, $70, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $70, $FF, $00
+
+Data_01F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07C480, $80
+
+Data_01F_4500:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+
+Data_01F_4510:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07C510, $270
+
+Data_01F_4780:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07C780, $160
+
+Data_01F_48E0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $05, $FF, $05, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+
+Data_01F_48F0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $02, $FF, $05, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $30, $FF, $48, $FF, $48, $FF, $30
+
+Data_01F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07C910, $80
+
+Data_01F_4990:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07C990, $B0
+
+Data_01F_4A40:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $92, $FF, $00
+
+Data_01F_4A60:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $80, $FF, $80, $FF, $80, $FF, $8A, $FF, $8A, $FF, $84, $FF, $F4
+
+Data_01F_4A70:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $E0, $FF, $80, $FF, $80, $FF, $EA, $FF, $84, $FF, $84, $FF, $EA
+
+Data_01F_4A80:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $1E, $FF, $06, $FF, $0A, $FF, $72, $FF, $90, $FF, $90, $FF, $60
+
+Data_01F_4A90:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $38, $FF, $44, $FF, $44, $FF, $38, $FF, $10, $FF, $7C, $FF, $10
+
+Data_01F_4AA0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $10, $FF, $38, $FF, $7C, $FF, $FE, $FF, $38, $FF, $38, $FF, $38
+    db $FF, $00, $FF, $6C, $FF, $6C, $FF, $24, $FF, $48, $FF, $00, $FF, $00, $FF, $00
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $60, $FF, $20, $FF, $40
+
+Data_01F_4AD0:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6
+
+Data_01F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $07CAE0, $C0
+    ds $40E, $00
+
+Data_01F_4FAE:: ; heuristic: argument of a bank-switching copy helper; C0
+    ds $62, $00
     db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
@@ -19,7 +180,7 @@ Jump_01F_5051::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, $5094
+    ld de, Data_01F_5094
     add hl, de
     ld e, [hl]
     inc hl
@@ -71,13 +232,18 @@ Jump_01F_507A::
     ret z
     call Func_000_05D1
     jr Jump_01F_5065
+
+Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07D094, $17A
 
 Func_01F_520E::
-    ld de, $5223
+    ld de, Data_01F_5223
     call Func_000_25C9
     ret
-    db $11, $23, $52, $CD, $FE, $25, $C9, $CD, $0E, $52, $CD, $11, $26, $C9, $25, $52
+    db $11, $23, $52, $CD, $FE, $25, $C9, $CD, $0E, $52, $CD, $11, $26, $C9
+
+Data_01F_5223:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $25, $52
     dw Data_01F_52A5
     dw Data_01F_52A5
     dw Data_01F_52E3
@@ -476,7 +642,7 @@ Jump_01F_5C4A::
 Jump_01F_5C71::
     ld a, c
     add a, a
-    ld hl, $5C9C
+    ld hl, Data_01F_5C9C
     add a, l
     ld l, a
     jr nc, Jump_01F_5C7B
@@ -507,6 +673,8 @@ Jump_01F_5C90::
     inc a
     ld [$D781], a
     ret
+
+Data_01F_5C9C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
 Func_01F_5CA6::
@@ -569,12 +737,12 @@ Func_01F_5CF8::
     ld a, d
     and a, $0F
     ld d, a
-    ld hl, $4010
+    ld hl, Data_01F_4010
     add hl, de
     ld e, l
     ld d, h
     push de
-    ld hl, $5D20
+    ld hl, Data_01F_5D20
     ld a, [$D785]
     sla a
     add a, l
@@ -591,6 +759,8 @@ Jump_01F_5D16::
     ld b, $1F
     ld c, $10
     ret
+
+Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
 Func_01F_5D2A::
@@ -790,13 +960,48 @@ Jump_01F_5E08::
     and a, a
     jr nz, Jump_01F_5DB2
     ret
-    INCBIN "dwm2-cobi-us.gbc", $07DE12, $709
-    ds $5C, $C3
-    INCBIN "dwm2-cobi-us.gbc", $07E577, $6B0
+
+Data_01F_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3
+
+Data_01F_5E13:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $07DE13, $69C
+
+Data_01F_64AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $07E4AF, $6C
+
+Data_01F_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    ds $24, $C3
+
+Data_01F_653F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $C3
+    INCBIN "dwm2-cobi-us.gbc", $07E577, $B4
+
+Data_01F_662B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $07E62B, $B4
+
+Data_01F_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $07E6DF, $470
+
+Data_01F_6B4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $07EB4F, $D8
+
+Data_01F_6C27:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    ds $38, $C3
+
+Data_01F_6C5F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07EC5F, $D8
+
+Data_01F_6D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $C3
-    INCBIN "dwm2-cobi-us.gbc", $07ED6F, $FD
+
+Data_01F_6D6F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $07ED6F, $D8
+
+Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $7C, $C3, $C3, $C3
+    db $C3, $C3, $C3, $6E, $7E, $C3, $C3, $C3, $C3, $C3, $C3, $6F, $7E, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $7D
     ds $1B, $C3
     INCBIN "dwm2-cobi-us.gbc", $07EE87, $1B1
     ds $12, $B1
@@ -841,7 +1046,7 @@ Func_01F_7375::
 Jump_01F_7377::
     push bc
     ld a, c
-    ld de, $73BC
+    ld de, Data_01F_73BC
     add a, e
     ld e, a
     jr nc, Jump_01F_7381
@@ -859,14 +1064,14 @@ Jump_01F_7381::
     rl d
     sla e
     rl d
-    ld hl, $4010
+    ld hl, Data_01F_4010
     add hl, de
     ld e, l
     ld d, h
     push de
     ld a, c
     sla a
-    ld de, $73CC
+    ld de, Data_01F_73CC
     add a, e
     ld e, a
     jr nc, Jump_01F_73A7
@@ -888,7 +1093,11 @@ Jump_01F_73A7::
     cp a, $10
     jr c, Jump_01F_7377
     ret
+
+Data_01F_73BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A3, $54, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
+
+Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
@@ -903,7 +1112,7 @@ Func_01F_73EC::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $651B
+    ld de, Data_01F_651B
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -955,7 +1164,7 @@ Jump_01F_745C::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $64AF
+    ld de, Data_01F_64AF
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -980,7 +1189,7 @@ Func_01F_7494::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $5E12
+    ld de, Data_01F_5E12
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -992,17 +1201,17 @@ Func_01F_7494::
     xor a, a
     ld [$D7F7], a
     call Func_01F_5D9A
-    ld de, $4250
+    ld de, Data_01F_4250
     ld hl, $8FE0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld de, $4A70
+    ld de, Data_01F_4A70
     ld hl, $8FF0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld de, $4AD0
+    ld de, Data_01F_4AD0
     ld hl, $96F0
     ld b, $1F
     ld c, $10
@@ -1017,7 +1226,7 @@ Func_01F_74E3::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $662B
+    ld de, Data_01F_662B
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1036,7 +1245,7 @@ Func_01F_74E3::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $653F
+    ld de, Data_01F_653F
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1058,7 +1267,7 @@ Func_01F_753A::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $6B4F
+    ld de, Data_01F_6B4F
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1077,7 +1286,7 @@ Func_01F_753A::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $6C27
+    ld de, Data_01F_6C27
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1110,7 +1319,7 @@ Func_01F_7591::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $6C5F
+    ld de, Data_01F_6C5F
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1129,7 +1338,7 @@ Func_01F_7591::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $6D37
+    ld de, Data_01F_6D37
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1177,7 +1386,7 @@ Jump_01F_760D::
     ld [$C528], a
     ld a, $0E
     ld [$C529], a
-    ld hl, $402B
+    ld hl, Data_01F_402B
     ld b, $08
     rst $10
     jr Jump_01F_769E
@@ -1222,7 +1431,7 @@ Jump_01F_7682::
     ld [$C529], a
     ld a, $04
     ld [$C528], a
-    ld hl, $402B
+    ld hl, Data_01F_402B
     ld b, $08
     rst $10
 
@@ -1260,7 +1469,7 @@ Func_01F_76B5::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $6E47
+    ld de, Data_01F_6E47
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1290,7 +1499,7 @@ Func_01F_76B5::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $6D6F
+    ld de, Data_01F_6D6F
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1333,7 +1542,7 @@ Func_01F_7754::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $5E13
+    ld de, Data_01F_5E13
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1352,7 +1561,7 @@ Func_01F_7754::
     ld [$D7F5], a
     ld a, l
     ld [$D7F6], a
-    ld de, $66DF
+    ld de, Data_01F_66DF
     ld a, d
     ld [$D7F1], a
     ld a, e
@@ -1396,5 +1605,10 @@ Jump_01F_77CF::
     ld a, d
     ld h, a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $07F7D4, $D3
-    ds $759, $00
+    INCBIN "dwm2-cobi-us.gbc", $07F7D4, $C6
+
+Data_01F_789A:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $C0, $F6, $07, $7C, $78, $F6, $00, $03, $C0, $F6, $07, $93, $78, $00, $00, $00
+
+Data_01F_78AA:: ; heuristic: argument of a bank-switching copy helper; C0
+    ds $756, $00

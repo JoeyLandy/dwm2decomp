@@ -5,7 +5,7 @@ Func_027_4001::
     ldh a, [$FFAD]
     ld e, a
     ld d, $00
-    ld hl, $411C
+    ld hl, Data_027_411C
     add hl, de
     bit 0, [hl]
     jr z, Jump_027_4017
@@ -17,9 +17,11 @@ Func_027_4001::
     ldh [$FFB0], a
 
 Jump_027_4017::
-    ld de, $401E
+    ld de, Data_027_401E
     call Func_027_419C
     ret
+
+Data_027_401E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_027_4418
     dw Data_027_448A
     dw Data_027_44FC
@@ -137,7 +139,11 @@ Jump_027_4017::
     dw Data_027_707C
     dw Data_027_70EE
     dw Data_027_7160
-    INCBIN "dwm2-cobi-us.gbc", $09C108, $94
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $D2, $71
+    db $44, $72, $B6, $72
+
+Data_027_411C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $09C11C, $80
 
 Func_027_419C::
     ldh a, [$FFB1]
@@ -695,7 +701,10 @@ Data_027_4A54:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $09CA54, $72
 
 Data_027_4AC6:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $09CAC6, $72
+    INCBIN "dwm2-cobi-us.gbc", $09CAC6, $67
+
+Data_027_4B2D:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $0D, $20, $F9, $F8, $0E, $00, $F9, $00, $0F, $00, $80
 
 Data_027_4B38:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $09CB38, $72

@@ -18,9 +18,11 @@ Func_03E_4001::
     ld a, $00
     ld [hl+], a
     ld [hl+], a
-    ld de, $4024
+    ld de, Data_03E_4024
     call Func_03E_4040
     ret
+
+Data_03E_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $91, $40, $9E, $41, $C2, $44, $5F, $48, $1E, $4B, $CD, $4E, $CD, $52, $A7, $53
     db $19, $56, $26, $60, $FC, $61, $1A, $67, $16, $76, $3A, $7A
 

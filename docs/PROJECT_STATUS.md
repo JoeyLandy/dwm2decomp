@@ -36,8 +36,9 @@ Coverage (bytes of the 4,194,304; measured from generated `src/`, not a semantic
 | Class | Bytes |
 | --- | --- |
 | Traced instructions and inline `dw` tables (C0 semantics) | 454,369 in 91 banks (2,157 heuristic entries, each marked `; heuristic: ...; C0` in `src/`) |
-| Assembled `ds`/`DS` fills (99 all-zero banks plus zero runs) | 1,622,016 whole-bank plus 357,038 run fills |
-| Opaque `INCBIN` slices of the reference (not understood) | 1,518,755 in 4,856 slices |
+| Assembled `ds`/`DS` fills (99 all-zero banks plus zero runs) | 1,622,016 whole-bank plus 356,521 run fills |
+| Opaque `INCBIN` slices of the reference (not understood) | 1,504,369 in 5,000 slices |
+| Labelled data starts (`Data_BBB_AAAA`, C0/C1 structure only) | 14,596 labels: pointer-table targets plus 3,132 `ld hl/de/bc` loads resolved to them (238 via bank-switching helpers, 2,894 same-bank assumed); 657 thunk operands now name their code target |
 | Data pointer words (`dw Data_BBB_AAAA`, C1 structure only) | 35,198 bytes: 483 monotone pointer tables, 17,599 pointers |
 
 Reachability is not proof of execution; every label is address-derived (C0). Tracer idioms mined from bank 0, **C1 (one local observation, not yet runtime-confirmed)**: `ld hl,ADDR / ld b,BANK / rst $10` is a banked call; `rst $00` takes an inline word table. Observation (C2, measured over the file): byte `$4000` of every non-zero switchable bank equals its bank number, which the `$0010` helper reads.

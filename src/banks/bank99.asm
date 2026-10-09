@@ -2,7 +2,7 @@ SECTION "Bank 99", ROMX[$4000], BANK[$99]
     db $99
 
 Func_099_4001::
-    ld de, $4070
+    ld de, Data_099_4070
     ld a, [$C529]
     sub a, $D5
     ld [$C529], a
@@ -10,7 +10,7 @@ Func_099_4001::
     ret
 
 Func_099_4010:: ; heuristic: follows a terminator; C0
-    ld de, $4070
+    ld de, Data_099_4070
     ld a, [$C529]
     sub a, $D5
     ld [$C529], a
@@ -19,7 +19,7 @@ Func_099_4010:: ; heuristic: follows a terminator; C0
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 Func_099_4026::
-    ld de, $4B35
+    ld de, Data_099_4B35
     ld a, [$C529]
     sub a, $A6
     ld [$C529], a
@@ -27,7 +27,7 @@ Func_099_4026::
     ret
 
 Func_099_4035:: ; heuristic: follows a terminator; C0
-    ld de, $4B35
+    ld de, Data_099_4B35
     ld a, [$C529]
     sub a, $A6
     ld [$C529], a
@@ -36,7 +36,7 @@ Func_099_4035:: ; heuristic: follows a terminator; C0
     db $CD, $26, $40, $CD, $11, $26, $C9
 
 Func_099_404B::
-    ld de, $6366
+    ld de, Data_099_6366
     ld a, [$C529]
     sub a, $87
     ld [$C529], a
@@ -44,13 +44,16 @@ Func_099_404B::
     ret
 
 Func_099_405A:: ; heuristic: follows a terminator; C0
-    ld de, $6366
+    ld de, Data_099_6366
     ld a, [$C529]
     sub a, $87
     ld [$C529], a
     call Func_000_25FE
     ret
-    db $CD, $4B, $40, $CD, $11, $26, $C9, $72, $40
+    db $CD, $4B, $40, $CD, $11, $26, $C9
+
+Data_099_4070:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $72, $40
     dw Data_099_40C8
     dw Data_099_4111
     dw Data_099_4152
@@ -271,7 +274,10 @@ Data_099_4AC6:: ; heuristic: target of a monotone pointer table; C0
 Data_099_4B07:: ; heuristic: target of a monotone pointer table; C0
     db $EA, $45, $90, $12, $90, $26, $24, $31, $41, $90, $25, $28, $F1, $25, $32, $37
     db $2B, $28, $35, $28, $27, $90, $37, $32, $90, $26, $2B, $24, $37, $A4, $FA, $F7
-    db $EF, $EE, $0B, $28, $90, $2A, $32, $31, $28, $A4, $EF, $EE, $F7, $F0, $37, $4B
+    db $EF, $EE, $0B, $28, $90, $2A, $32, $31, $28, $A4, $EF, $EE, $F7, $F0
+
+Data_099_4B35:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $37, $4B
     dw Data_099_4BEB
     dw Data_099_4C54
     dw Data_099_4D28
@@ -557,7 +563,10 @@ Data_099_631E:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $26631E, $47
 
 Data_099_6365:: ; heuristic: target of a monotone pointer table; C0
-    db $F0, $68, $63
+    db $F0
+
+Data_099_6366:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $68, $63
     dw Data_099_645A
     dw Data_099_6498
     dw Data_099_64FD

@@ -2,7 +2,7 @@ SECTION "Bank 95", ROMX[$4000], BANK[$95]
     INCBIN "dwm2-cobi-us.gbc", $254000, $650
 
 Func_095_4650::
-    ld de, $4675
+    ld de, Data_095_4675
     ld a, [$C528]
     sub a, $09
     ld [$C528], a
@@ -10,14 +10,17 @@ Func_095_4650::
     ret
 
 Func_095_465F::
-    ld de, $4675
+    ld de, Data_095_4675
     ld a, [$C528]
     sub a, $09
     ld [$C528], a
     call Func_000_25FE
     ret
-    db $CD, $50, $46, $CD, $11, $26, $C9, $8D, $46, $ED, $47, $EF, $47, $37, $48, $39
-    db $48, $47, $48, $53, $48, $57, $48, $69, $48, $7F, $48, $B7, $48, $C7, $48
+    db $CD, $50, $46, $CD, $11, $26, $C9
+
+Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $8D, $46, $ED, $47, $EF, $47, $37, $48, $39, $48, $47, $48, $53, $48, $57, $48
+    db $69, $48, $7F, $48, $B7, $48, $C7, $48
     dw Data_095_48CF
     dw Data_095_48CF
     dw Data_095_48F2

@@ -5,7 +5,7 @@ Func_025_4001::
     ldh a, [$FFAD]
     ld e, a
     ld d, $00
-    ld hl, $411E
+    ld hl, Data_025_411E
     add hl, de
     bit 0, [hl]
     jr z, Jump_025_4017
@@ -17,9 +17,11 @@ Func_025_4001::
     ldh [$FFB0], a
 
 Jump_025_4017::
-    ld de, $401E
+    ld de, Data_025_401E
     call Func_025_419E
     ret
+
+Data_025_401E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_025_441A
     dw Data_025_441A
     dw Data_025_448C
@@ -148,6 +150,8 @@ Jump_025_4017::
     dw Data_025_73D2
     dw Data_025_7444
     dw Data_025_74B6
+
+Data_025_411E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $09411E, $80
 
 Func_025_419E::

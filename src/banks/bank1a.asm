@@ -134,9 +134,16 @@ Jump_01A_40CB::
     ds $11, $00
     db $08
     ds $21, $00
-    INCBIN "dwm2-cobi-us.gbc", $068E56, $199
-    ds $16, $00
-    INCBIN "dwm2-cobi-us.gbc", $069005, $BE9
+    INCBIN "dwm2-cobi-us.gbc", $068E56, $1A2
+
+Data_01A_4FF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+
+Data_01A_5005:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $069005, $BE7
+
+Data_01A_5BEC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $40, $5D
     dw Data_01A_5D41
     db $42, $5D, $40, $5D
     dw Data_01A_5D44
@@ -267,7 +274,10 @@ Data_01A_5D80:: ; heuristic: target of a monotone pointer table; C0
     db $87
 
 Data_01A_5D81:: ; heuristic: target of a monotone pointer table; C0
-    db $88, $FF, $8C, $FF, $8E, $FF, $98, $FF, $9A, $FF, $DF, $5E
+    db $88, $FF, $8C, $FF, $8E, $FF, $98, $FF, $9A, $FF
+
+Data_01A_5D8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $DF, $5E
     dw Data_01A_5EE0
     db $5E, $5F, $5D, $5F
     dw Data_01A_5EE1
@@ -649,7 +659,7 @@ Jump_01A_5FC3::
     ld a, [$D86B]
     adc a, $00
     ld d, a
-    ld hl, $4FF8
+    ld hl, Data_01A_4FF8
     ld c, $00
     ld a, $04
     ld [$D86C], a
@@ -885,7 +895,7 @@ Func_01A_60F1::
     call Func_000_1F49
     ld d, h
     ld e, l
-    ld hl, $4FF8
+    ld hl, Data_01A_4FF8
     ld c, $00
 
 Jump_01A_6100::
@@ -1157,7 +1167,7 @@ Func_01A_624B::
     ld [$D006], a
     ld a, h
     ld [$D007], a
-    ld hl, $4001
+    ld hl, Func_01A_4001
     ld b, $35
     rst $10
     ld hl, $D09D
@@ -1209,7 +1219,7 @@ Func_01A_62A0::
     jr nz, Jump_01A_62CD
     push bc
     ld b, $00
-    ld hl, $5BEC
+    ld hl, Data_01A_5BEC
     add hl, bc
     add hl, bc
     pop bc
@@ -1245,7 +1255,7 @@ Func_01A_62D0::
     push hl
     push de
     push bc
-    ld hl, $5005
+    ld hl, Data_01A_5005
     ld b, $AA
     ld c, $00
 
@@ -1320,7 +1330,7 @@ Func_01A_631F:: ; heuristic: follows a terminator; C0
     ldh a, [$FFC6]
     ld c, a
     ld b, $00
-    ld hl, $5BEC
+    ld hl, Data_01A_5BEC
     add hl, bc
     add hl, bc
     ld a, [hl+]
@@ -1391,7 +1401,7 @@ Jump_01A_636A::
 
 Func_01A_636C::
     ld b, $00
-    ld hl, $5D8B
+    ld hl, Data_01A_5D8B
     add hl, bc
     add hl, bc
     ld a, [hl+]
@@ -1456,7 +1466,7 @@ Func_01A_63A7::
     ldh a, [$FFC7]
     ld b, a
     ldh a, [$FFC6]
-    ld de, $63F8
+    ld de, Data_01A_63F8
     add a, e
     ld e, a
     jr nc, Jump_01A_63C3
@@ -1483,6 +1493,8 @@ Jump_01A_63C7::
     ret
     db $F0, $C6, $0E, $63, $CD, $82, $16, $7D, $C6, $16, $6F, $7C, $CE, $66, $67, $F0
     db $C7, $85, $6F, $30, $01, $24, $5E, $16, $00, $7B, $E0, $C8, $7A, $E0, $C9, $C9
+
+Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $02, $02, $03, $03, $03, $03, $04, $05, $05, $06, $07, $03, $04, $05
     db $06, $07, $08, $04, $05, $06, $07, $07, $08, $0B, $0C, $0D, $0C, $0C, $0E, $10
 
@@ -1499,7 +1511,7 @@ Func_01A_6418::
     ld [$D006], a
     ld a, [hl]
     ld [$D007], a
-    ld hl, $4001
+    ld hl, Func_01A_4001
     ld b, $35
     rst $10
     pop hl
@@ -1821,107 +1833,107 @@ Jump_01A_6613::
     INCBIN "dwm2-cobi-us.gbc", $06A616, $C60
 
 Func_01A_7276::
-    ld hl, $7345
+    ld hl, Data_01A_7345
     call Func_01A_7321
     ret
 
 Func_01A_727D::
-    ld hl, $73AD
+    ld hl, Data_01A_73AD
     call Func_01A_7321
     ret
 
 Func_01A_7284::
-    ld hl, $73F7
+    ld hl, Data_01A_73F7
     call Func_01A_7321
     ret
 
 Func_01A_728B::
-    ld hl, $747F
+    ld hl, Data_01A_747F
     call Func_01A_7321
     ret
 
 Func_01A_7292::
-    ld hl, $755F
+    ld hl, Data_01A_755F
     call Func_01A_7321
     ret
 
 Func_01A_7299::
-    ld hl, $75AB
+    ld hl, Data_01A_75AB
     call Func_01A_7321
     ret
 
 Func_01A_72A0::
-    ld hl, $7600
+    ld hl, Data_01A_7600
     call Func_01A_7321
     ret
 
 Func_01A_72A7::
-    ld hl, $76AC
+    ld hl, Data_01A_76AC
     call Func_01A_7321
     ret
 
 Func_01A_72AE::
-    ld hl, $76F8
+    ld hl, Data_01A_76F8
     call Func_01A_7321
     ret
 
 Func_01A_72B5::
-    ld hl, $7600
+    ld hl, Data_01A_7600
     call Func_01A_7321
-    ld hl, $7734
+    ld hl, Data_01A_7734
     call Func_01A_7321
     ret
 
 Func_01A_72C2::
-    ld hl, $7750
+    ld hl, Data_01A_7750
     call Func_01A_7321
     ret
 
 Func_01A_72C9::
-    ld hl, $77B6
+    ld hl, Data_01A_77B6
     call Func_01A_7321
-    ld hl, $79CB
+    ld hl, Data_01A_79CB
     call Func_01A_7321
     ld a, $6C
     call Func_000_1278
     ret
 
 Func_01A_72DB::
-    ld de, $4330
+    ld de, Data_01F_4330
     ld hl, $8ED0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld hl, $7826
+    ld hl, Data_01A_7826
     call Func_01A_7321
     ld a, $6C
     call Func_000_1278
     ret
 
 Func_01A_72F4::
-    ld hl, $7848
+    ld hl, Data_01A_7848
     call Func_01A_7321
     ret
 
 Func_01A_72FB::
-    ld hl, $787E
+    ld hl, Data_01A_787E
     call Func_01A_7321
     ld a, $6C
     call Func_000_1278
     ret
 
 Func_01A_7307::
-    ld hl, $78AA
+    ld hl, Data_01A_78AA
     call Func_01A_7321
     ret
 
 Func_01A_730E::
-    ld hl, $7923
+    ld hl, Data_01A_7923
     call Func_01A_7321
     ret
 
 Func_01A_7315::
-    ld hl, $796F
+    ld hl, Data_01A_796F
     call Func_01A_7321
     ld a, $6C
     call Func_000_1278
@@ -1962,6 +1974,8 @@ Jump_01A_7331::
     dec c
     jr nz, Jump_01A_732F
     ret
+
+Data_01A_7345:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A0, $01, $14, $05, $B0
     ds $12, $B1
     db $B2, $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D
@@ -1970,7 +1984,16 @@ Jump_01A_7331::
     db $B7, $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F
     db $A0, $A1, $A2, $A3, $B7, $B3
     ds $12, $B4
-    INCBIN "dwm2-cobi-us.gbc", $06B3AC, $D8
+    db $B5
+
+Data_01A_73AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B3AD, $4A
+
+Data_01A_73F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B3F7, $88
+
+Data_01A_747F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $E0, $00, $14, $0B, $B0
     ds $12, $B1
     db $B2, $B6, $C3, $C3, $D0, $D1, $D2, $D3, $D4, $C3, $C3, $C3, $C3, $C3, $C3, $C3
     db $C3, $C3, $C3, $C3, $B7, $B8
@@ -1987,7 +2010,63 @@ Jump_01A_7331::
     db $B7, $B6, $C3, $C3, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10
     db $11, $12, $13, $C3, $B7, $B3
     ds $12, $B4
-    INCBIN "dwm2-cobi-us.gbc", $06B55E, $472
+    db $B5
+
+Data_01A_755F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B55F, $4C
+
+Data_01A_75AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B5AB, $55
+
+Data_01A_7600:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B600, $AC
+
+Data_01A_76AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B6AC, $4C
+
+Data_01A_76F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $60, $01, $08, $07, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $EF, $F0
+    db $EE, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA, $B6, $C3, $F1, $F2
+    db $F2, $F3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $F4, $F5
+    db $F6, $F7, $F3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+Data_01A_7734:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $CC, $01, $08, $03, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $EC, $AD, $AF
+    db $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+Data_01A_7750:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B750, $66
+
+Data_01A_77B6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B7B6, $70
+
+Data_01A_7826:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $0E, $01, $06, $05, $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7
+    db $B6, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $A5, $ED, $C3, $B7, $B3, $B4, $B4, $B4
+    db $B4, $B5
+
+Data_01A_7848:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $0A, $01, $0A, $05, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3
+    db $F3, $F4, $F5, $F6, $F7, $F8, $F9, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $B7, $B6, $C3, $FA, $FB, $FC, $C3, $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4
+    db $B4, $B4, $B4, $B4, $B4, $B5
+
+Data_01A_787E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $0C, $01, $08, $05, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $A4, $EE
+    db $EF, $F0, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $F1, $F2
+    db $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+Data_01A_78AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B8AA, $79
+
+Data_01A_7923:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B923, $4C
+
+Data_01A_796F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $06B96F, $5C
+
+Data_01A_79CB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $20, $01, $14, $09, $B0
     ds $12, $B1
     db $B2, $B6, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33
     db $34, $35, $36, $37, $B7, $B6

@@ -28,7 +28,7 @@ Func_035_401C::
     ld b, a
     sla c
     rl b
-    ld hl, $403B
+    ld hl, Data_035_403B
     add hl, bc
     ld e, [hl]
     inc hl
@@ -44,6 +44,8 @@ Jump_035_4034::
     dec b
     jr nz, Jump_035_4034
     ret
+
+Data_035_403B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_035_433B
     dw Data_035_436A
     dw Data_035_4399

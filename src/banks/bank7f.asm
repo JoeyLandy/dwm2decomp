@@ -2,9 +2,11 @@ SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7F
 
 Func_07F_4001::
-    ld de, $4008
+    ld de, Data_07F_4008
     call Func_07F_40CC
     ret
+
+Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_4348
     dw Data_07F_43BA
     dw Data_07F_442C
@@ -921,9 +923,11 @@ Data_07F_6EB4:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $1FEEB4, $156
 
 Func_07F_700A::
-    ld de, $7011
+    ld de, Data_07F_7011
     call Func_07F_7065
     ret
+
+Data_07F_7011:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_72E1
     dw Data_07F_72F4
     dw Data_07F_731A

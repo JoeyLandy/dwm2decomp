@@ -11,7 +11,7 @@ Func_02E_4001::
     ret
 
 Jump_02E_400F::
-    ld de, $4032
+    ld de, Data_02E_4032
     call Func_000_25C9
     ret
 
@@ -25,10 +25,13 @@ Func_02E_4016:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_02E_4024::
-    ld de, $4032
+    ld de, Data_02E_4032
     call Func_000_25FE
     ret
-    db $CD, $01, $40, $CD, $11, $26, $C9, $34, $40
+    db $CD, $01, $40, $CD, $11, $26, $C9
+
+Data_02E_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $34, $40
     dw Data_02E_4180
     dw Data_02E_4188
     dw Data_02E_41F0

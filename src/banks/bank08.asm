@@ -5,13 +5,13 @@ Func_008_4001::
     ld a, [$C528]
     cp a, $09
     jr c, Jump_008_400F
-    ld hl, $4650
+    ld hl, Data_008_4650
     ld b, $95
     rst $10
     ret
 
 Jump_008_400F::
-    ld de, $4032
+    ld de, Data_008_4032
     call Func_000_25C9
     ret
 
@@ -25,7 +25,7 @@ Func_008_4016::
     ret
 
 Jump_008_4024::
-    ld de, $4032
+    ld de, Data_008_4032
     call Func_000_25FE
     ret
 
@@ -33,8 +33,15 @@ Func_008_402B::
     call Func_008_4001
     call Func_000_2611
     ret
-    db $44, $40, $42, $42, $58, $42, $58, $44, $58, $45, $16, $47, $F6, $47, $D6, $48
-    db $0C, $49
+
+Data_008_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $44, $40, $42, $42, $58, $42
+
+Data_008_4038:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $58, $44, $58, $45
+
+Data_008_403C:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $16, $47, $F6, $47, $D6, $48, $0C, $49
     dw Data_008_492A
     dw Data_008_493B
     dw Data_008_4A1A
@@ -351,6 +358,8 @@ Func_008_402B::
     dw Data_008_5551
     dw Data_008_555B
     dw Data_008_5563
+
+Data_008_42BC:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_556D
     dw Data_008_5577
     dw Data_008_557F
@@ -809,6 +818,8 @@ Func_008_402B::
     dw Data_008_6305
     dw Data_008_630F
     dw Data_008_6319
+
+Data_008_4650:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_008_6323
     dw Data_008_632A
     dw Data_008_6333
@@ -1094,6 +1105,8 @@ Func_008_402B::
     dw Data_008_6F6E
     dw Data_008_6F80
     dw Data_008_6F92
+
+Data_008_488A:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_6FA4
     dw Data_008_6FB6
     dw Data_008_6FC9
@@ -1180,7 +1193,12 @@ Data_008_492A:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_008_493B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $02093B, $DF
+    db $90, $90, $0D, $0E, $0B, $1E, $10, $90, $16, $18, $0D, $0E, $90, $90, $90, $90
+    db $90, $90, $90, $90, $1C, $0E, $15, $0E, $0C, $1D, $90, $90, $90, $90, $90, $90
+    db $90, $01
+
+Data_008_495D:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $02095D, $BD
 
 Data_008_4A1A:: ; heuristic: target of a monotone pointer table; C0
     db $90, $90, $98, $90, $0E, $0D, $12, $1D, $90, $98
@@ -3984,8 +4002,10 @@ Data_008_6F0C:: ; heuristic: target of a monotone pointer table; C0
     db $3C, $90, $03, $00, $B5, $F0
 
 Data_008_6F22:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $24, $2C, $36, $28, $36, $90, $30, $24, $3B, $B5, $90, $16, $19, $F1, $25
-    db $3C, $90, $08, $00, $B5, $F0
+    db $1B, $24, $2C, $36, $28, $36, $90, $30, $24, $3B, $B5, $90, $16, $19
+
+Data_008_6F30:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $F1, $25, $3C, $90, $08, $00, $B5, $F0
 
 Data_008_6F38:: ; heuristic: target of a monotone pointer table; C0
     db $1B, $24, $2C, $36, $28, $36, $90, $0A, $1D, $14, $90, $25, $3C, $90, $01, $00

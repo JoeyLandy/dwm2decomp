@@ -1,5 +1,15 @@
 SECTION "Bank 5E", ROMX[$4000], BANK[$5E]
-    INCBIN "dwm2-cobi-us.gbc", $178000, $24D
+    db $5E
+
+Data_05E_4001:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $178001, $22E
+
+Data_05E_422F:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $4D, $01, $FF, $6B, $55, $2A, $00, $00, $88
+
+Data_05E_4238:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $6E, $53, $57, $54, $55, $53, $54, $53, $54, $55, $55, $57, $53, $55, $54, $55
+    db $54, $58, $59, $5A, $66
     dw Data_05E_5151
     db $51
     dw Data_05E_5151

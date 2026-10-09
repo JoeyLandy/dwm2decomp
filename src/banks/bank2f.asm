@@ -2,7 +2,7 @@ SECTION "Bank 2F", ROMX[$4000], BANK[$2F]
     db $2F
 
 Func_02F_4001::
-    ld de, $4016
+    ld de, Data_02F_4016
     call Func_000_25C9
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9
@@ -11,6 +11,8 @@ Func_02F_400F::
     call Func_02F_4001
     call Func_000_2611
     ret
+
+Data_02F_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $22, $40, $34, $41, $34, $43, $3C, $43, $3E, $43, $40, $43
     dw Data_02F_4384
     dw Data_02F_4393

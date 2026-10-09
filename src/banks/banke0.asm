@@ -1,4 +1,6 @@
 SECTION "Bank E0", ROMX[$4000], BANK[$E0]
+
+Data_0E0_4000:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0
 
 Func_0E0_4001::
@@ -27,7 +29,7 @@ Jump_0E0_4011::
     ld [$C529], a
     call Func_0E0_4279
     call Func_000_290E
-    ld de, $42D3
+    ld de, Data_0E0_42D3
     ld bc, $1412
     ld hl, $9800
 
@@ -274,7 +276,7 @@ Func_0E0_41C7::
     ld a, [$C5F8]
     and a, $01
     xor a, $01
-    ld de, $41E6
+    ld de, Data_0E0_41E6
     add a, e
     ld e, a
     jr nc, Jump_0E0_41D6
@@ -289,6 +291,8 @@ Jump_0E0_41D6::
     ld hl, $986D
     call Func_000_1211
     ret
+
+Data_0E0_41E6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BB, $C3, $BB
 
 Func_0E0_41E9::
@@ -359,7 +363,7 @@ Func_0E0_425A::
     ld a, [$D894]
     and a, $01
     xor a, $01
-    ld de, $41E6
+    ld de, Data_0E0_41E6
     add a, e
     ld e, a
     jr nc, Jump_0E0_4269
@@ -422,6 +426,8 @@ Func_0E0_42A6::
     ld a, h
     ld [$C530], a
     ret
+
+Data_0E0_42D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0
     ds $12, $B1
     db $B2, $B6
@@ -478,7 +484,7 @@ Jump_0E0_445B::
     ld [$C529], a
     call Func_0E0_5553
     call Func_0E0_50EE
-    ld hl, $448A
+    ld hl, Data_0E0_448A
     ld a, [$C5FE]
     add a, a
     add a, l
@@ -495,6 +501,8 @@ Jump_0E0_447D::
     ld hl, $C5FD
     inc [hl]
     ret
+
+Data_0E0_448A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $24, $98, $2A, $98
 
 Jump_0E0_448E::
@@ -523,7 +531,7 @@ Jump_0E0_449A::
 Func_0E0_44B3::
     ld a, c
     and a, $03
-    ld hl, $4652
+    ld hl, Data_0E0_4652
     add a, a
     add a, l
     ld l, a
@@ -742,7 +750,7 @@ Func_0E0_4603::
 
 Jump_0E0_460C::
     ld a, [hl]
-    ld hl, $465E
+    ld hl, Data_0E0_465E
     add a, l
     ld l, a
     jr nc, Jump_0E0_4615
@@ -753,7 +761,7 @@ Jump_0E0_4615::
     push af
     ld a, c
     and a, $03
-    ld hl, $4658
+    ld hl, Data_0E0_4658
     add a, a
     add a, l
     ld l, a
@@ -779,7 +787,7 @@ Func_0E0_462B::
 Jump_0E0_4634::
     ld a, c
     and a, $03
-    ld hl, $464C
+    ld hl, Data_0E0_464C
     add a, a
     add a, l
     ld l, a
@@ -795,8 +803,18 @@ Jump_0E0_4640::
     add a, $CC
     call Func_000_1211
     ret
-    db $C6, $98, $CC, $98, $D2, $98, $42, $98, $48, $98, $4E, $98, $46, $99, $4C, $99
-    db $52, $99, $0B, $0A, $09, $08, $EF
+
+Data_0E0_464C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C6, $98, $CC, $98, $D2, $98
+
+Data_0E0_4652:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $42, $98, $48, $98, $4E, $98
+
+Data_0E0_4658:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $46, $99, $4C, $99, $52, $99
+
+Data_0E0_465E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $0B, $0A, $09, $08, $EF
 
 Jump_0E0_4663::
     ld a, [$C562]
@@ -1045,7 +1063,7 @@ Jump_0E0_47F9::
     ret
 
 Func_0E0_4804::
-    ld de, $4946
+    ld de, Data_0E0_4946
     ld hl, $9820
     ld bc, $1410
 
@@ -1174,7 +1192,7 @@ Func_0E0_48B7::
     pop af
     push hl
     ld a, b
-    ld hl, $4935
+    ld hl, Data_0E0_4935
     add a, a
     add a, l
     ld l, a
@@ -1246,6 +1264,8 @@ Jump_0E0_4929::
     call Func_000_1211
     pop hl
     ret
+
+Data_0E0_4935:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E2, $99, $E8, $99, $EE, $99
 
 Jump_0E0_493B::
@@ -1255,10 +1275,15 @@ Jump_0E0_493B::
     xor a, a
     ld [$C5FD], a
     ret
+
+Data_0E0_4946:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0
     ds $12, $B1
     db $B2, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $F5, $F6, $F7, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B6
+    db $C3, $C3
+
+Data_0E0_496B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $B7, $B6
     ds $12, $C3
     db $B7, $B6
     ds $12, $C3
@@ -1268,10 +1293,12 @@ Jump_0E0_493B::
     ds $12, $C3
     db $B7, $B6
     ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $F8, $C3, $F9, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B6
+    db $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3
+
+Data_0E0_49E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $F8, $C3, $F9, $C3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6
     ds $12, $C3
     db $B7, $B6
     ds $12, $C3
@@ -1291,7 +1318,7 @@ Jump_0E0_4A86::
     ld a, [$D802]
     cp a, $FF
     jr z, Jump_0E0_4A94
-    ld hl, $54DC
+    ld hl, Data_0E0_54DC
     ld b, $3A
     rst $10
     ret
@@ -1356,7 +1383,7 @@ Jump_0E0_4AE7::
     ld a, [$C562]
     and a, $01
     jr z, Jump_0E0_4AF8
-    ld hl, $548F
+    ld hl, Data_0E0_548F
     ld b, $3A
     rst $10
     call Func_0E0_558E
@@ -1561,7 +1588,7 @@ Jump_0E0_4C14::
     and a, $01
     jr z, Jump_0E0_4C5C
     ld a, e
-    ld de, $4C76
+    ld de, Data_0E0_4C76
     and a, $0F
     add a, e
     ld e, a
@@ -1576,7 +1603,7 @@ Jump_0E0_4C58::
 
 Jump_0E0_4C5C::
     ld a, e
-    ld de, $4C6E
+    ld de, Data_0E0_4C6E
     and a, $0F
     add a, e
     ld e, a
@@ -1591,7 +1618,12 @@ Jump_0E0_4C67::
 
 Jump_0E0_4C6B::
     jp Jump_0E0_4B2D
-    db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F, $01, $02, $04, $08, $10, $20, $40, $80
+
+Data_0E0_4C6E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F
+
+Data_0E0_4C76:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $01, $02, $04, $08, $10, $20, $40, $80
 
 Func_0E0_4C7E::
     ld a, [$C0A0]
@@ -1637,7 +1669,7 @@ Jump_0E0_4CAA::
     ld a, $00
     ld [$C529], a
     call Func_0E0_4279
-    ld de, $4D95
+    ld de, Data_0E0_4D95
     ld bc, $1412
     ld hl, $9800
 
@@ -1667,7 +1699,7 @@ Jump_0E0_4CF6::
     ld a, [$D8A4]
     call Func_0E0_7A80
     ld [$D2C7], a
-    ld hl, $56C7
+    ld hl, Func_0E0_56C7
     ld b, $E0
     rst $10
     ld a, $02
@@ -1675,7 +1707,7 @@ Jump_0E0_4CF6::
     ret
 
 Jump_0E0_4D0B::
-    ld hl, $572D
+    ld hl, Func_0E0_572D
     ld b, $E0
     rst $10
     ld a, $03
@@ -1754,19 +1786,26 @@ Jump_0E0_4D72::
     jp Func_000_0949
 
 Jump_0E0_4D89::
-    ld hl, $5A35
+    ld hl, Func_0E0_5A35
     ld b, $E0
     rst $10
     ld a, $02
     ld [$C5FE], a
     ret
+
+Data_0E0_4D95:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0
     ds $12, $B1
     db $B2, $B6, $C3, $C3, $80, $81, $82, $01, $C3, $C3, $9B, $9C, $9D, $9E, $9F, $A0
     db $A1, $A2, $C3, $C3, $B7, $B6, $C3, $C3, $8B, $8C, $C3, $C3, $C3, $C3, $ED, $EE
-    db $EF, $F0, $F1, $F2, $F3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $380DE4, $DE
+    db $EF, $F0, $F1, $F2, $F3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3
+
+Data_0E0_4DDC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $380DDC, $DA
+
+Data_0E0_4EB6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6
     ds $12, $C3
     db $B7, $B6, $C3, $C3, $C3, $C3, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3
     db $C3, $C3, $C3, $C3, $B7, $B3
@@ -1861,7 +1900,7 @@ Jump_0E0_4F47::
 
 Func_0E0_4F86::
     add a, a
-    ld hl, $4F9E
+    ld hl, Data_0E0_4F9E
     add a, l
     ld l, a
     jr nc, Jump_0E0_4F8F
@@ -1876,6 +1915,8 @@ Jump_0E0_4F8F::
     ld a, $E0
     call Func_000_15DE
     ret
+
+Data_0E0_4F9E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0E0_4FAE
     dw Data_0E0_4FB2
     dw Data_0E0_4FB6
@@ -1912,7 +1953,7 @@ Data_0E0_4FCA:: ; heuristic: target of a monotone pointer table; C0
 Func_0E0_4FCE::
     call Func_0E0_4FDB
     call Func_0E0_502B
-    ld hl, $53B9
+    ld hl, Data_0E0_53B9
     ld b, $3A
     rst $10
     ret
@@ -1957,7 +1998,7 @@ Func_0E0_502B::
     ld [$CFEC], a
     xor a, a
     ld [$CFED], a
-    ld hl, $4001
+    ld hl, Func_0E0_4001
     ld b, $1A
     rst $10
     ld a, [$CFF7]
@@ -2036,7 +2077,7 @@ Func_0E0_502B::
 
 Func_0E0_50EE::
     ld hl, $9800
-    ld de, $511B
+    ld de, Data_0E0_511B
     ld bc, $1412
     ld a, $E0
     call Func_000_15DE
@@ -2044,7 +2085,7 @@ Func_0E0_50EE::
 
 Func_0E0_50FD::
     ld hl, $9800
-    ld de, $5283
+    ld de, Data_0E0_5283
     ld bc, $1412
     ld a, $E0
     call Func_000_15DE
@@ -2052,11 +2093,13 @@ Func_0E0_50FD::
 
 Func_0E0_510C::
     ld hl, $9800
-    ld de, $53EB
+    ld de, Data_0E0_53EB
     ld bc, $1412
     ld a, $E0
     call Func_000_15DE
     ret
+
+Data_0E0_511B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0
     ds $12, $B1
     db $B2, $B6, $C3, $C3, $C3, $C3, $F5, $F6, $F7, $C3, $C3, $C3, $F8, $F9, $C3, $C3
@@ -2066,31 +2109,71 @@ Func_0E0_510C::
     db $B7, $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3
     db $C3, $C3, $C3, $C3, $B7, $B6
     ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $381192, $DE
+    INCBIN "dwm2-cobi-us.gbc", $381192, $AA
+
+Data_0E0_523C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $C3, $C3, $F1, $03, $C3, $C3, $C3, $C3, $B7, $B6, $F1, $07, $C3, $C3
+    db $C3, $C3, $F1, $07, $C3, $C3, $C3, $C3, $F1, $07, $C3, $C3, $C3, $C3, $B7, $B6
+    db $C3, $C3, $C3, $C3, $FA, $FB, $FC, $FD, $FE, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $B7, $B3
     ds $12, $B4
-    db $B5, $B0
+    db $B5
+
+Data_0E0_5283:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $B0
     ds $12, $B1
     db $B2, $B6
     ds $12, $C3
     db $B7, $B6, $C3, $C3, $C3, $C3, $0E, $09, $0F, $C3, $0C, $0D, $0D, $0C, $0A, $FF
-    db $C3, $C3, $C3, $C3, $B7, $B6
+    db $C3, $C3
+
+Data_0E0_52BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $B7, $B6
     ds $12, $C3
     db $B7, $B6
     ds $12, $C3
     db $B7, $B6
     ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $38130E, $CA
+    db $B7, $B6, $C3, $C3, $C3, $C3, $C3
+
+Data_0E0_5301:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3
+    db $C3, $C3, $C3, $C3, $C3, $14, $15, $16, $17, $18, $19, $C3, $C3, $C3
+
+Data_0E0_531F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $38131F, $9A
+
+Data_0E0_53B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $E2, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $EC, $01, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $C3, $E3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B3
     ds $12, $B4
-    db $B5, $B0
+    db $B5
+
+Data_0E0_53EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $B0
     ds $12, $B1
     db $B2, $B6
     ds $12, $C3
     db $B7, $B6, $C3, $C3, $C3, $C3, $09, $F0, $FF, $C3, $E0, $E1, $E2, $E3, $E4, $E5
     db $E6, $E7, $C3, $C3, $B7, $B6
     ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $38143A, $B6
+    db $B7, $B6, $C3, $09, $FF, $E0
+
+Data_0E0_5440:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $381440, $4F
+
+Data_0E0_548F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $E4, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $09, $FF, $E5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $B7, $B6, $C3, $09, $FF, $E6, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+
+Data_0E0_54BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $09, $FF, $E7, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6
+
+Data_0E0_54DC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $C3, $09, $FF, $E8, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $B7, $B6
     ds $12, $C3
     db $B7, $B6
     ds $12, $C3
@@ -2138,7 +2221,7 @@ Func_0E0_5553::
 
 Func_0E0_558E::
     ld a, [$C5FE]
-    ld hl, $55BF
+    ld hl, Func_0E0_55BF
     add a, l
     ld l, a
     jr nc, Jump_0E0_5599
@@ -2152,7 +2235,7 @@ Jump_0E0_5599::
 Func_0E0_559E:: ; heuristic: follows a terminator; C0
     add a, a
     add a, a
-    ld hl, $55FB
+    ld hl, Data_0E0_55FB
     add a, l
     ld l, a
     jr nc, Jump_0E0_55A8
@@ -2181,7 +2264,16 @@ Func_0E0_55BF:: ; heuristic: follows a terminator; C0
     adc a, a
     sub a, b
     reti
-    INCBIN "dwm2-cobi-us.gbc", $3815C7, $100
+    db $91, $93, $93, $94, $95, $95, $96, $97, $97, $98, $87, $86, $85, $88, $88, $99
+    db $9A, $9B, $9D
+
+Data_0E0_55DA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $9E, $9F, $99, $A2, $A3, $A4, $A5, $A7, $A8, $DA, $99, $A9, $AA, $AB, $AC, $AE
+    db $B0, $85, $B2, $B4, $B8, $B6, $DC, $BA, $BC, $BD, $BF, $C1, $C3, $C5, $C7, $C9
+    db $CB
+
+Data_0E0_55FB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $3815FB, $CC
 
 Func_0E0_56C7::
     ld a, [$D8A4]
@@ -2245,7 +2337,7 @@ Jump_0E0_5721::
     ld a, [hl]
     cp a, $FF
     jr nz, Jump_0E0_572C
-    ld hl, $4001
+    ld hl, Func_0E0_4001
     ld b, $39
     rst $10
 
@@ -2254,7 +2346,7 @@ Jump_0E0_572C::
 
 Func_0E0_572D::
     call Func_0E0_5992
-    ld hl, $5A05
+    ld hl, Data_0E0_5A05
     call Func_000_0B0D
     ld d, h
     ld e, l
@@ -2561,7 +2653,7 @@ Jump_0E0_5905::
     call Func_000_121F
     ei
     call Func_0E0_59A4
-    ld hl, $5A05
+    ld hl, Data_0E0_5A05
     call Func_000_0B0D
     ld d, h
     ld e, l
@@ -2727,6 +2819,8 @@ Jump_0E0_59F4::
     call Func_000_121F
     ei
     ret
+
+Data_0E0_5A05:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0E0_5A15
     dw Data_0E0_5A19
     dw Data_0E0_5A1D
@@ -2774,10 +2868,10 @@ Func_0E0_5A35::
     ld a, [$C5E8]
     ld h, a
     push hl
-    ld hl, $5440
+    ld hl, Data_0E0_5440
     ld b, $30
     rst $10
-    ld hl, $4001
+    ld hl, Func_0E0_4001
     ld b, $39
     rst $10
     pop hl
@@ -2793,10 +2887,10 @@ Func_0E0_5A35::
     ret
 
 Jump_0E0_5A6C::
-    ld hl, $5440
+    ld hl, Data_0E0_5440
     ld b, $30
     rst $10
-    ld hl, $4001
+    ld hl, Func_0E0_4001
     ld b, $39
     rst $10
     ret
@@ -2867,11 +2961,11 @@ Jump_0E0_5AF2::
 
 Jump_0E0_5B16::
     ld b, $7D
-    ld de, $4001
+    ld de, Func_0E0_4001
     ld hl, $8000
     call Func_000_0CF5
     ld b, $7D
-    ld de, $40FA
+    ld de, Jump_0E0_40FA
     ld hl, $8100
     call Func_000_0CF5
     ld b, $7D
@@ -2883,11 +2977,11 @@ Jump_0E0_5B16::
     ld hl, $8300
     call Func_000_0CF5
     ld b, $93
-    ld de, $4001
+    ld de, Func_0E0_4001
     ld hl, $9000
     call Func_000_0CF5
     ld b, $46
-    ld de, $496B
+    ld de, Data_0E0_496B
     ld hl, $C198
     call Func_000_0C5A
     ld a, [$C525]
@@ -2896,33 +2990,33 @@ Jump_0E0_5B16::
     ld a, $02
     ldh [$FF70], a
     ld b, $46
-    ld de, $5301
+    ld de, Data_0E0_5301
     ld hl, $D000
     call Func_000_0C5A
     ld a, $00
     ldh [$FF70], a
     ld b, $48
-    ld de, $4001
+    ld de, Data_07E_4001
     ld hl, $C49F
     ld c, $40
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BA5
+    ld de, Data_07E_4BA5
     ld hl, $C4DF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BAD
+    ld de, Data_07E_4BAD
     ld hl, $C4E7
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B45
+    ld de, Data_07E_4B45
     ld hl, $C4EF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4C0D
+    ld de, Data_07E_4C0D
     ld hl, $C4F7
     ld c, $08
     call Func_000_0B2B
@@ -3078,7 +3172,7 @@ Jump_0E0_5C91::
 Jump_0E0_5CB5::
     call Func_0E0_7420
     ld a, $03
-    ld de, $6040
+    ld de, Data_0E0_6040
     call Func_0E0_7492
     ret nz
     ld a, $03
@@ -3226,10 +3320,10 @@ Jump_0E0_5DCA::
 Jump_0E0_5DDD::
     call Func_0E0_7420
     ld a, $00
-    ld de, $4000
+    ld de, Data_0E0_4000
     call Func_0E0_7492
     ld a, $01
-    ld de, $4000
+    ld de, Data_0E0_4000
     call Func_0E0_7492
     ret nz
     call Func_0E0_754F
@@ -3270,7 +3364,7 @@ Jump_0E0_5E24::
     ld de, $6030
     call Func_0E0_7492
     ld a, $03
-    ld de, $6040
+    ld de, Data_0E0_6040
     call Func_0E0_7492
     ret nz
     call Func_0E0_754F
@@ -3311,11 +3405,11 @@ Jump_0E0_5E4B::
 
 Jump_0E0_5E83::
     ld b, $7D
-    ld de, $4001
+    ld de, Func_0E0_4001
     ld hl, $8000
     call Func_000_0CF5
     ld b, $7D
-    ld de, $40FA
+    ld de, Jump_0E0_40FA
     ld hl, $8100
     call Func_000_0CF5
     ld b, $7D
@@ -3342,22 +3436,22 @@ Jump_0E0_5E83::
     ld a, $00
     ldh [$FF70], a
     ld b, $48
-    ld de, $4081
+    ld de, Data_07E_4081
     ld hl, $C49F
     ld c, $40
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BA5
+    ld de, Data_07E_4BA5
     ld hl, $C4DF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BAD
+    ld de, Data_07E_4BAD
     ld hl, $C4E7
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B45
+    ld de, Data_07E_4B45
     ld hl, $C4EF
     ld c, $08
     call Func_000_0B2B
@@ -3449,7 +3543,7 @@ Jump_0E0_5F91::
     srl a
     swap a
     and a, $07
-    ld hl, $5FE3
+    ld hl, Data_0E0_5FE3
     add a, l
     ld l, a
     jr nc, Jump_0E0_5FA5
@@ -3463,7 +3557,7 @@ Jump_0E0_5FA5::
     srl a
     swap a
     and a, $07
-    ld hl, $5FE8
+    ld hl, Data_0E0_5FE8
     add a, l
     ld l, a
     jr nc, Jump_0E0_5FBC
@@ -3489,7 +3583,12 @@ Jump_0E0_5FBC::
     ld hl, $D09E
     inc [hl]
     ret
-    db $03, $02, $03, $00, $03, $01, $00, $01, $02, $01
+
+Data_0E0_5FE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $03, $02, $03, $00, $03
+
+Data_0E0_5FE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $01, $00, $01, $02, $01
 
 Jump_0E0_5FED::
     call Func_0E0_7420
@@ -3526,13 +3625,18 @@ Jump_0E0_6022::
     ld b, $00
     inc a
     ld [$D0A3], a
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB92]
     add a, [hl]
     ld [$CB92], a
     ret
-    db $FE, $FE, $FE, $FF, $FF, $FF, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02
+
+Data_0E0_6038:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $FE, $FE, $FE, $FF, $FF, $FF, $00, $00
+
+Data_0E0_6040:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $00, $00, $01, $01, $01, $02, $02, $02
 
 Jump_0E0_6048::
     call Func_0E0_7420
@@ -3557,7 +3661,7 @@ Jump_0E0_605D::
     and a, $0F
     ld c, a
     ld b, $00
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB92]
     add a, [hl]
@@ -3705,7 +3809,7 @@ Jump_0E0_617E::
     ld b, $00
     inc a
     ld [$D0A3], a
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB92]
     add a, [hl]
@@ -3732,7 +3836,7 @@ Jump_0E0_61AD::
     ld b, $00
     inc a
     ld [$D0A3], a
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB92]
     add a, [hl]
@@ -3759,7 +3863,7 @@ Jump_0E0_61DC::
     ld b, $00
     inc a
     ld [$D0A3], a
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB92]
     add a, [hl]
@@ -3786,7 +3890,7 @@ Jump_0E0_620B::
     ld b, $00
     inc a
     ld [$D0A3], a
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB92]
     add a, [hl]
@@ -3801,7 +3905,7 @@ Jump_0E0_6221::
     and a, $07
     ld c, a
     ld b, $00
-    ld hl, $625E
+    ld hl, Data_0E0_625E
     add hl, bc
     ld a, [$CB82]
     add a, [hl]
@@ -3825,6 +3929,8 @@ Jump_0E0_624A::
     ld hl, $D09E
     inc [hl]
     ret
+
+Data_0E0_625E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FD, $FE, $FF, $00, $00, $01, $02, $03
 
 Jump_0E0_6266::
@@ -3860,11 +3966,11 @@ Jump_0E0_6266::
 
 Jump_0E0_62A0::
     ld b, $7D
-    ld de, $4001
+    ld de, Func_0E0_4001
     ld hl, $8000
     call Func_000_0CF5
     ld b, $7D
-    ld de, $40FA
+    ld de, Jump_0E0_40FA
     ld hl, $8100
     call Func_000_0CF5
     ld b, $7E
@@ -3872,7 +3978,7 @@ Jump_0E0_62A0::
     ld hl, $8200
     call Func_000_0CF5
     ld b, $21
-    ld de, $7548
+    ld de, Data_0E0_7548
     ld hl, $8300
     call Func_000_0CF5
     ld b, $7D
@@ -3884,11 +3990,11 @@ Jump_0E0_62A0::
     ld hl, $8500
     call Func_000_0CF5
     ld b, $48
-    ld de, $4DDC
+    ld de, Data_0E0_4DDC
     ld hl, $9000
     call Func_000_0CF5
     ld b, $48
-    ld de, $523C
+    ld de, Data_0E0_523C
     ld hl, $C198
     call Func_000_0C5A
     ld a, [$C525]
@@ -3897,43 +4003,43 @@ Jump_0E0_62A0::
     ld a, $02
     ldh [$FF70], a
     ld b, $48
-    ld de, $54BF
+    ld de, Data_0E0_54BF
     ld hl, $D000
     call Func_000_0C5A
     ld a, $00
     ldh [$FF70], a
     ld b, $48
-    ld de, $5138
+    ld de, Data_07E_5138
     ld hl, $C49F
     ld c, $40
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BA5
+    ld de, Data_07E_4BA5
     ld hl, $C4DF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BAD
+    ld de, Data_07E_4BAD
     ld hl, $C4E7
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B2D
+    ld de, Data_027_4B2D
     ld hl, $C4EF
     ld c, $08
     call Func_000_0B2B
     ld b, $27
-    ld de, $7850
+    ld de, Data_07E_7850
     ld hl, $C4F7
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B4D
+    ld de, Data_07E_4B4D
     ld hl, $C4FF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B45
+    ld de, Data_07E_4B45
     ld hl, $C507
     ld c, $08
     call Func_000_0B2B
@@ -4071,7 +4177,7 @@ Jump_0E0_6439::
     srl a
     swap a
     and a, $07
-    ld hl, $6490
+    ld hl, Data_0E0_6490
     add a, l
     ld l, a
     jr nc, Jump_0E0_644D
@@ -4085,7 +4191,7 @@ Jump_0E0_644D::
     srl a
     swap a
     and a, $07
-    ld hl, $6495
+    ld hl, Data_0E0_6495
     add a, l
     ld l, a
     jr nc, Jump_0E0_6464
@@ -4113,7 +4219,12 @@ Jump_0E0_6464::
     ld hl, $D09E
     inc [hl]
     ret
-    db $03, $02, $01, $02, $03, $01, $00, $03, $00, $01
+
+Data_0E0_6490:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $03, $02, $01, $02, $03
+
+Data_0E0_6495:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $01, $00, $03, $00, $01
 
 Jump_0E0_649A::
     call Func_0E0_7420
@@ -4185,7 +4296,7 @@ Jump_0E0_6514::
     and a, $0F
     ld c, a
     ld b, $00
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB82]
     add a, [hl]
@@ -4218,7 +4329,7 @@ Jump_0E0_6551::
     and a, $0F
     ld c, a
     ld b, $00
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CBA2]
     add a, [hl]
@@ -4427,7 +4538,7 @@ Jump_0E0_66DB::
 Jump_0E0_6702::
     call Func_0E0_7420
     ld a, $04
-    ld de, $6040
+    ld de, Data_0E0_6040
     call Func_0E0_7492
     ld a, $05
     ld de, $6030
@@ -4446,7 +4557,7 @@ Jump_0E0_6722::
     ld de, $6050
     call Func_0E0_7492
     ld a, $05
-    ld de, $6040
+    ld de, Data_0E0_6040
     call Func_0E0_7492
     ret nz
     ld a, $04
@@ -4520,7 +4631,7 @@ Jump_0E0_67B1::
     and a, $0F
     ld c, a
     ld b, $00
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CBAA]
     add a, [hl]
@@ -4607,11 +4718,11 @@ Jump_0E0_6841::
 
 Jump_0E0_685B::
     ld b, $7D
-    ld de, $4001
+    ld de, Func_0E0_4001
     ld hl, $8000
     call Func_000_0CF5
     ld b, $7D
-    ld de, $40FA
+    ld de, Jump_0E0_40FA
     ld hl, $8100
     call Func_000_0CF5
     ld b, $7D
@@ -4623,7 +4734,7 @@ Jump_0E0_685B::
     ld hl, $8300
     call Func_000_0CF5
     ld b, $7D
-    ld de, $4EB6
+    ld de, Data_0E0_4EB6
     ld hl, $8400
     call Func_000_0CF5
     ld b, $7D
@@ -4631,11 +4742,11 @@ Jump_0E0_685B::
     ld hl, $8500
     call Func_000_0CF5
     ld b, $7E
-    ld de, $52BC
+    ld de, Data_0E0_52BC
     ld hl, $8600
     call Func_000_0CF5
     ld b, $48
-    ld de, $55DA
+    ld de, Data_0E0_55DA
     ld hl, $9000
     call Func_000_0CF5
     ld b, $48
@@ -4648,53 +4759,53 @@ Jump_0E0_685B::
     ld a, $02
     ldh [$FF70], a
     ld b, $48
-    ld de, $61F2
+    ld de, Jump_0E0_61F2
     ld hl, $D000
     call Func_000_0C5A
     ld a, $00
     ldh [$FF70], a
     ld b, $94
-    ld de, $4001
+    ld de, Data_048_4001
     ld hl, $C49F
     ld c, $40
     call Func_000_0B2B
     ld b, $48
-    ld de, $5138
+    ld de, Data_07E_5138
     ld hl, $C49F
     ld c, $40
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BA5
+    ld de, Data_07E_4BA5
     ld hl, $C4DF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BAD
+    ld de, Data_07E_4BAD
     ld hl, $C4E7
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B4D
+    ld de, Data_07E_4B4D
     ld hl, $C4EF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B45
+    ld de, Data_07E_4B45
     ld hl, $C4F7
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B2D
+    ld de, Data_07E_4B2D
     ld hl, $C4FF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B1D
+    ld de, Data_07E_4B1D
     ld hl, $C507
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4C65
+    ld de, Data_07E_4C65
     ld hl, $C50F
     ld c, $08
     call Func_000_0B2B
@@ -4848,7 +4959,7 @@ Jump_0E0_6A32::
     srl a
     swap a
     and a, $07
-    ld hl, $6490
+    ld hl, Data_0E0_6490
     add a, l
     ld l, a
     jr nc, Jump_0E0_6A46
@@ -4862,7 +4973,7 @@ Jump_0E0_6A46::
     srl a
     swap a
     and a, $07
-    ld hl, $6495
+    ld hl, Data_0E0_6495
     add a, l
     ld l, a
     jr nc, Jump_0E0_6A5D
@@ -4927,7 +5038,7 @@ Jump_0E0_6ABE::
     and a, $0F
     ld c, a
     ld b, $00
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CBAA]
     add a, [hl]
@@ -4935,7 +5046,7 @@ Jump_0E0_6ABE::
     ld a, [$D0A3]
     srl a
     srl a
-    ld hl, $6B06
+    ld hl, Data_0E0_6B06
     ld [$CBAC], a
     ld a, [$D0A3]
     inc a
@@ -4955,6 +5066,8 @@ Jump_0E0_6AED::
     ld hl, $D09E
     inc [hl]
     ret
+
+Data_0E0_6B06:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $02, $01, $00
 
 Jump_0E0_6B0A::
@@ -4965,7 +5078,7 @@ Jump_0E0_6B0A::
     and a, $0F
     ld c, a
     ld b, $00
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CBA2]
     add a, [hl]
@@ -4973,7 +5086,7 @@ Jump_0E0_6B0A::
     ld a, [$D0A3]
     srl a
     srl a
-    ld hl, $6B52
+    ld hl, Data_0E0_6B52
     ld [$CBA4], a
     ld a, [$D0A3]
     inc a
@@ -4993,6 +5106,8 @@ Jump_0E0_6B39::
     ld hl, $D09E
     inc [hl]
     ret
+
+Data_0E0_6B52:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $01, $00, $03
 
 Jump_0E0_6B56::
@@ -5103,11 +5218,11 @@ Jump_0E0_6C0A::
 
 Jump_0E0_6C2C::
     ld b, $7D
-    ld de, $4001
+    ld de, Func_0E0_4001
     ld hl, $8000
     call Func_000_0CF5
     ld b, $7D
-    ld de, $40FA
+    ld de, Jump_0E0_40FA
     ld hl, $8100
     call Func_000_0CF5
     ld b, $7D
@@ -5123,7 +5238,7 @@ Jump_0E0_6C2C::
     ld hl, $9000
     call Func_000_0CF5
     ld b, $49
-    ld de, $531F
+    ld de, Data_0E0_531F
     ld hl, $C198
     call Func_000_0C5A
     ld a, [$C525]
@@ -5132,33 +5247,33 @@ Jump_0E0_6C2C::
     ld a, $02
     ldh [$FF70], a
     ld b, $49
-    ld de, $572D
+    ld de, Func_0E0_572D
     ld hl, $D000
     call Func_000_0C5A
     ld a, $00
     ldh [$FF70], a
     ld b, $49
-    ld de, $52BB
+    ld de, Data_07E_52BB
     ld hl, $C49F
     ld c, $40
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BA5
+    ld de, Data_07E_4BA5
     ld hl, $C4DF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4BAD
+    ld de, Data_07E_4BAD
     ld hl, $C4E7
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B4D
+    ld de, Data_07E_4B4D
     ld hl, $C4EF
     ld c, $08
     call Func_000_0B2B
     ld b, $7E
-    ld de, $4B45
+    ld de, Data_07E_4B45
     ld hl, $C4F7
     ld c, $08
     call Func_000_0B2B
@@ -5335,7 +5450,7 @@ Jump_0E0_6DEE::
     and a, $1F
     ld c, a
     ld b, $00
-    ld hl, $6E83
+    ld hl, Data_0E0_6E83
     add hl, bc
     ld a, [$CB92]
     add a, [hl]
@@ -5366,7 +5481,7 @@ Jump_0E0_6E29::
     and a, $1F
     ld c, a
     ld b, $00
-    ld hl, $6E83
+    ld hl, Data_0E0_6E83
     add hl, bc
     ld a, [$CB9A]
     add a, [hl]
@@ -5406,6 +5521,8 @@ Jump_0E0_6E5E::
     ld hl, $D09E
     inc [hl]
     ret
+
+Data_0E0_6E83:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FD, $FD, $FD, $FD, $FE, $FE, $FE, $FE, $FF, $FF, $FF, $FF, $00, $00, $00, $00
     db $00, $00, $00, $00, $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03, $03
 
@@ -5417,7 +5534,7 @@ Jump_0E0_6EA3::
     and a, $0F
     ld c, a
     ld b, $00
-    ld hl, $6038
+    ld hl, Data_0E0_6038
     add hl, bc
     ld a, [$CB82]
     add a, [hl]
@@ -5615,7 +5732,7 @@ Jump_0E0_7011::
     call Func_000_2E98
     ld a, [$D09F]
     dec a
-    ld hl, $7649
+    ld hl, Data_0E0_7649
     call Func_000_0B0D
     ld a, [hl+]
     ld [$D0A1], a
@@ -6098,7 +6215,7 @@ Jump_0E0_735E::
     or a, a
     jr z, Jump_0E0_73A2
     ld b, $48
-    ld de, $4001
+    ld de, Data_048_4001
     ld hl, $C49F
     ld c, $08
     call Func_000_0B2B
@@ -6237,7 +6354,7 @@ Jump_0E0_745E::
     ldh [$FFAE], a
     ld b, $00
     push hl
-    ld hl, $7477
+    ld hl, Data_0E0_7477
     add hl, bc
     add hl, bc
     add hl, bc
@@ -6254,6 +6371,8 @@ Jump_0E0_745E::
     dec b
     jr nz, Jump_0E0_7429
     ret
+
+Data_0E0_7477:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $25, $01, $40, $7F, $0A, $70, $7F
 
 Func_0E0_7480::
@@ -6365,7 +6484,7 @@ Jump_0E0_74E6::
     jr c, Jump_0E0_7501
     push hl
     ld a, [$D0A7]
-    ld hl, $7535
+    ld hl, Data_0E0_7535
     add a, l
     ld l, a
     jr nc, Jump_0E0_74FB
@@ -6381,7 +6500,7 @@ Jump_0E0_74FB::
 Jump_0E0_7501::
     push hl
     ld a, [$D0A7]
-    ld hl, $7535
+    ld hl, Data_0E0_7535
     add a, l
     ld l, a
     jr nc, Jump_0E0_750D
@@ -6404,7 +6523,7 @@ Jump_0E0_7513::
     ld b, a
     push hl
     ld a, [$D0A7]
-    ld hl, $7542
+    ld hl, Data_0E0_7542
     add a, l
     ld l, a
     jr nc, Jump_0E0_7525
@@ -6424,8 +6543,15 @@ Jump_0E0_7532::
     ld a, c
     or a, a
     ret
-    db $01, $01, $01, $01, $01, $01, $01, $01, $02, $02, $02, $02, $00, $02, $02, $02
-    db $02, $01, $01, $01, $01, $01, $01, $01, $01, $00
+
+Data_0E0_7535:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $01, $01, $01, $01, $01, $01, $01, $01, $02, $02, $02, $02, $00
+
+Data_0E0_7542:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $02, $02, $02, $02, $01, $01
+
+Data_0E0_7548:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $01, $01, $01, $01, $01, $01, $00
 
 Func_0E0_754F::
     ld a, [$D0A2]
@@ -6573,20 +6699,25 @@ Func_0E0_75BF::
     ld hl, $421A
     ld b, $17
     rst $10
-    ld hl, $7641
+    ld hl, Data_0E0_7641
     ld de, $C4FF
     ld bc, $0008
     call Func_000_0952
 
 Jump_0E0_7640::
     ret
-    INCBIN "dwm2-cobi-us.gbc", $383641, $9F
+
+Data_0E0_7641:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $DE, $67, $1F, $33, $3C, $12, $00, $00
+
+Data_0E0_7649:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $383649, $97
 
 Func_0E0_76E0::
     ld a, [$C528]
     cp a, $01
     jr c, Jump_0E0_76EE
-    ld hl, $49E2
+    ld hl, Data_0E0_49E2
     ld b, $A2
 
 Jump_0E0_76EC::
@@ -6594,7 +6725,7 @@ Jump_0E0_76EC::
     ret
 
 Jump_0E0_76EE::
-    ld de, $76FC
+    ld de, Data_0E0_76FC
     call Func_000_25C9
     ret
 
@@ -6602,6 +6733,8 @@ Func_0E0_76F5::
     call Func_0E0_76E0
     call Func_000_2611
     ret
+
+Data_0E0_76FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $76
     dw Func_0E0_7740
     dw Func_0E0_7753

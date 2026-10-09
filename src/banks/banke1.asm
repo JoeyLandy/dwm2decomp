@@ -1,10 +1,36 @@
 SECTION "Bank E1", ROMX[$4000], BANK[$E1]
-    INCBIN "dwm2-cobi-us.gbc", $384000, $1AB7
+    INCBIN "dwm2-cobi-us.gbc", $384000, $10E
+
+Data_0E1_410E:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $38410E, $501
+
+Data_0E1_460F:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $38460F, $3C3
+
+Data_0E1_49D2:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $3849D2, $1055
+
+Data_0E1_5A27:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09
+    db $33, $05, $FF, $03, $BD, $21, $AA, $04, $33, $05, $FF, $7F, $1F, $13, $AA, $04
+    db $33, $05, $FF, $7F, $BD, $21, $AA, $04, $36, $04, $FF, $7F, $1F, $13, $AA, $04
+    db $36, $04, $FF, $7F, $1F, $13, $D5, $09, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
+
+Data_0E1_5A67:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09
+    db $33, $05, $FF, $03, $BD, $21, $AA, $04, $33, $05, $FF, $7F, $1F, $13, $AA, $04
+    db $33, $05, $FF, $7F, $BD, $21, $AA, $04, $36, $04, $FF, $7F, $1F, $13, $AA, $04
+    db $36, $04, $FF, $7F, $1F, $13, $D5, $09, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
+
+Data_0E1_5AA7:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $20, $7C, $FF, $7F, $A8, $14, $00, $00, $20, $7C, $FF, $7F, $35, $04, $00, $00
 
 Func_0E1_5AB7::
-    ld de, $5ABE
+    ld de, Data_0E1_5ABE
     call Func_0E1_5AC0
     ret
+
+Data_0E1_5ABE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $5D
 
 Func_0E1_5AC0::

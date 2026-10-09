@@ -2,7 +2,7 @@ SECTION "Bank 96", ROMX[$4000], BANK[$96]
     db $96
 
 Func_096_4001::
-    ld de, $404B
+    ld de, Data_096_404B
     ld a, [$C529]
     sub a, $C8
     ld [$C529], a
@@ -10,7 +10,7 @@ Func_096_4001::
     ret
 
 Func_096_4010:: ; heuristic: follows a terminator; C0
-    ld de, $404B
+    ld de, Data_096_404B
     ld a, [$C529]
     sub a, $C8
     ld [$C529], a
@@ -19,7 +19,7 @@ Func_096_4010:: ; heuristic: follows a terminator; C0
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 Func_096_4026::
-    ld de, $574A
+    ld de, Data_096_574A
     ld a, [$C529]
     sub a, $90
     ld [$C529], a
@@ -27,13 +27,16 @@ Func_096_4026::
     ret
 
 Func_096_4035:: ; heuristic: follows a terminator; C0
-    ld de, $574A
+    ld de, Data_096_574A
     ld a, [$C529]
     sub a, $90
     ld [$C529], a
     call Func_000_25FE
     ret
-    db $CD, $26, $40, $CD, $11, $26, $C9, $4D, $40
+    db $CD, $26, $40, $CD, $11, $26, $C9
+
+Data_096_404B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $4D, $40
     dw Data_096_40BD
     dw Data_096_4119
     dw Data_096_4184
@@ -263,7 +266,10 @@ Data_096_5671:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $259671, $47
 
 Data_096_56B8:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2596B8, $94
+    INCBIN "dwm2-cobi-us.gbc", $2596B8, $92
+
+Data_096_574A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $4C, $57
     dw Data_096_582C
     dw Data_096_586E
     dw Data_096_588A
@@ -542,7 +548,7 @@ Data_096_6EF6:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $25AEF6, $11B
 
 Func_096_7011::
-    ld de, $7036
+    ld de, Data_096_7036
     ld a, [$C529]
     sub a, $88
     ld [$C529], a
@@ -550,13 +556,16 @@ Func_096_7011::
     ret
 
 Func_096_7020:: ; heuristic: follows a terminator; C0
-    ld de, $7036
+    ld de, Data_096_7036
     ld a, [$C529]
     sub a, $88
     ld [$C529], a
     call Func_000_25FE
     ret
-    db $CD, $11, $70, $CD, $11, $26, $C9, $38, $70
+    db $CD, $11, $70, $CD, $11, $26, $C9
+
+Data_096_7036:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $38, $70
     dw Data_096_7068
     dw Data_096_70D1
     dw Data_096_70F2

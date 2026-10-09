@@ -1,5 +1,8 @@
 SECTION "Bank 48", ROMX[$4000], BANK[$48]
-    INCBIN "dwm2-cobi-us.gbc", $120000, $1178
+    db $48
+
+Data_048_4001:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $120001, $1177
     dw Data_048_519C
     db $48
     dw Data_048_523C

@@ -1,5 +1,14 @@
 SECTION "Bank 47", ROMX[$4000], BANK[$47]
-    INCBIN "dwm2-cobi-us.gbc", $11C000, $2822
+    INCBIN "dwm2-cobi-us.gbc", $11C000, $229A
+
+Data_047_629A:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $11E29A, $548
+
+Data_047_67E2:: ; heuristic: argument of a bank-switching copy helper; C0
+    db $A0, $7D, $FF, $7F, $E0, $7F, $63, $00, $2F, $01, $FF, $4F, $D8, $01, $63, $0C
+    db $28, $15, $FF, $2B, $FF, $00, $00, $00, $2F, $01, $3F, $2B, $D8, $01, $00, $00
+    db $28, $15, $95, $36, $AE, $15, $00, $00, $1B, $00, $FF, $2B, $3F, $02, $00, $00
+    db $88, $01, $BF, $4F, $D3, $01, $00, $00, $20, $00, $20, $00, $20, $00, $20, $00
     dw Data_047_68B2
     db $47
     dw Data_047_68B2

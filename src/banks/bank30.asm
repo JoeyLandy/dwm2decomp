@@ -224,7 +224,7 @@ Jump_030_4143::
     jp nz, Jump_030_4151
 
 Jump_030_4149::
-    ld hl, $4001
+    ld hl, Func_030_4001
     ld b, $39
     rst $10
     jr Jump_030_4152
@@ -806,7 +806,7 @@ Jump_030_44C1::
     cp a, $03
     jr z, Jump_030_44DF
     ld d, $28
-    ld hl, $6EE5
+    ld hl, Data_030_6EE5
     ld b, $3A
     rst $10
 
@@ -847,9 +847,11 @@ Func_030_450B::
     call Func_030_540C
     cp a, $03
     ret z
-    ld hl, $4519
+    ld hl, Data_030_4519
     call Func_030_5C68
     jr Jump_030_451F
+
+Data_030_4519:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $68, $D9, $70, $D9, $78, $D9
 
 Jump_030_451F::
@@ -875,7 +877,7 @@ Func_030_4536::
     ld a, [$D2C7]
     add a, a
     add a, a
-    ld hl, $5587
+    ld hl, Data_030_5587
     add a, l
     ld l, a
     jr nc, Jump_030_4543
@@ -965,7 +967,7 @@ Jump_030_45A5::
 
 Jump_030_45BB::
     ld a, [hl]
-    ld hl, $45D0
+    ld hl, Data_030_45D0
     call Func_030_5C68
     call Func_000_000E
     jr Jump_030_45CB
@@ -978,6 +980,8 @@ Jump_030_45CB::
     ld hl, $CFCB
     inc [hl]
     ret
+
+Data_030_45D0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $46, $49
     dw Func_030_4AD3
     dw Func_030_4AD3
@@ -1598,7 +1602,7 @@ Jump_030_496E::
 
 Jump_030_497D::
     ld a, [hl]
-    ld hl, $4998
+    ld hl, Data_030_4998
     dec a
     call Func_030_5C68
     call Func_000_000E
@@ -1610,10 +1614,12 @@ Jump_030_497D::
     ld hl, $DA42
     inc [hl]
     jr Func_030_4946
+
+Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C0998, $12E
 
 Func_030_4AC6:: ; heuristic: target of a pointer table; C0
-    ld hl, $59E0
+    ld hl, Data_030_59E0
     ld a, l
     ld [$DA6B], a
     ld a, h
@@ -1621,7 +1627,7 @@ Func_030_4AC6:: ; heuristic: target of a pointer table; C0
     jr Jump_030_4ADE
 
 Func_030_4AD3:: ; heuristic: target of a pointer table; C0
-    ld hl, $5785
+    ld hl, Data_030_5785
     ld a, l
     ld [$DA6B], a
     ld a, h
@@ -2003,7 +2009,7 @@ Jump_030_4CC9::
     ld [$CFEC], a
     xor a, a
     ld [$CFED], a
-    ld hl, $4001
+    ld hl, Func_030_4001
     ld b, $1A
     rst $10
     pop af
@@ -2069,13 +2075,15 @@ Func_030_4D25::
     call Func_030_541B
     ld c, [hl]
     ld b, $00
-    ld hl, $4D34
+    ld hl, Data_030_4D34
     add hl, bc
     add hl, bc
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ret
+
+Data_030_4D34:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C0D34, $6A
     ds $10, $FF
     INCBIN "dwm2-cobi-us.gbc", $0C0DAE, $56
@@ -2095,7 +2103,7 @@ Func_030_4D25::
 Func_030_4F14::
     ld e, $00
     ld d, $10
-    ld hl, $4F46
+    ld hl, Func_030_4F46
 
 Jump_030_4F1B::
     push hl
@@ -2769,7 +2777,7 @@ Jump_030_5300::
 
 Jump_030_5307::
     call Func_030_540C
-    ld hl, $5384
+    ld hl, Data_030_5384
     call Func_030_5C68
     add hl, de
     add hl, bc
@@ -2850,6 +2858,8 @@ Func_030_5378::
 Jump_030_5380::
     call Func_030_5428
     ret
+
+Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
 Func_030_540C::
@@ -2916,7 +2926,7 @@ Func_030_5440::
 
 Jump_030_545C::
     ld a, [hl]
-    ld hl, $45D0
+    ld hl, Data_030_45D0
     call Func_030_5C68
     call Func_000_000E
     call Func_030_541B
@@ -3114,11 +3124,16 @@ Func_030_556C:: ; heuristic: follows a terminator; C0
 
 Jump_030_5586::
     ret
+
+Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1587, $1AF
     ds $11, $00
     db $50, $00, $00, $00, $50, $00, $5A, $00, $3C
     ds $33, $00
-    INCBIN "dwm2-cobi-us.gbc", $0C1783, $18B
+    db $64, $00
+
+Data_030_5785:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $0C1785, $189
     dw Data_030_5D83
     db $E2
     dw Data_030_5DBC
@@ -3236,7 +3251,10 @@ Jump_030_5586::
     dw Data_030_64C0
     db $E2
     dw Data_030_64C1
-    INCBIN "dwm2-cobi-us.gbc", $0C19DF, $18A
+    db $E2
+
+Data_030_59E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $0C19E0, $189
     dw Data_030_5D83
     db $E2
     dw Data_030_5DBC
@@ -3644,4 +3662,7 @@ Data_030_64C0:: ; heuristic: target of a monotone pointer table; C0
     db $00
 
 Data_030_64C1:: ; heuristic: target of a monotone pointer table; C0
-    ds $1B3F, $00
+    ds $A24, $00
+
+Data_030_6EE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    ds $111B, $00

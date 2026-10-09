@@ -15,7 +15,7 @@ Jump_017_4012::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, $4055
+    ld de, Data_017_4055
     add hl, de
     ld e, [hl]
     inc hl
@@ -67,6 +67,8 @@ Jump_017_403B::
     ret z
     call Func_000_05D1
     jr Jump_017_4026
+
+Data_017_4055:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $40, $0F, $41, $7F, $40
     dw Data_017_408F
     dw Data_017_409F
@@ -158,7 +160,7 @@ Func_017_41CF::
     add hl, hl
     add hl, hl
     add hl, hl
-    ld de, $426C
+    ld de, Data_017_426C
     add hl, de
     ld de, $C480
     ld bc, $C577
@@ -182,7 +184,7 @@ Jump_017_41F4::
     ld a, $FF
     ld [$C47C], a
     ld b, $17
-    ld hl, $4001
+    ld hl, Func_017_4001
     rst $10
     call Func_000_05D1
     ret
@@ -236,6 +238,8 @@ Jump_017_4265::
     dec c
     jr nz, Jump_017_4265
     ret
+
+Data_017_426C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $05C26C, $87
     dw Data_017_4400
     dw Data_017_4500

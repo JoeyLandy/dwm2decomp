@@ -61,6 +61,8 @@ class Rom:
         self._spec: dict[tuple[int, int], object] = {}  # speculative-trace cache
         self.dtab: dict[int, dict[int, int]] = {b: {} for b in range(self.nbanks)}  # data pointer words
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
+        self.dreason: dict[tuple[int, int], str] = {}  # why a Data_ label exists
+        self.dref: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, insn addr) -> (bank, ptr)
 
     @staticmethod
     def base(bank: int) -> int:
@@ -370,6 +372,80 @@ class Rom:
         log(f"data structure: {tables} monotone pointer tables, {entries} pointers, "
             f"{dropped} dropped (targets inside another table)")
 
+    def label_data_refs(self) -> None:
+        """Resolve `ld hl|de|bc, $4000-$7FFF` in traced code to labelled data starts (C1).
+
+        Strong case: the load is an argument of a call to a bank-0 helper that writes the
+        bank register ($2100); the `ld b, BANK` nearby then names the bank. Weak case: a
+        bare load in a switchable bank is assumed to point into the same bank. Bank-0
+        loads without a helper call are skipped (bank unknown). Only labels, operand
+        spelling and blob boundaries change -- the assembled value is identical."""
+        ld16 = re.compile(r"ld (hl|de|bc), \$([0-9A-F]{4})$")
+        ldb = re.compile(r"ld b, \$([0-9A-F]{2})$")
+        helpers = set()
+        i0 = self.insn[0]
+        order0 = sorted(a for a, v in i0.items() if v[0] != "dw")
+        for k, a in enumerate(order0):
+            if (0, a) in self.reason or self.labels[0].get(a, "").startswith("Func"):
+                if any(i0[x][1] == "ld [$2100], a" for x in order0[k:k + 10]):
+                    helpers.add(a)
+        strong = weak = 0
+        for bank in range(self.nbanks):
+            ins = self.insn[bank]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            paired: dict[int, tuple[int, int]] = {}
+            for k, a in enumerate(order):
+                n, text, kind, tgt = ins[a]
+                if kind != "call" or tgt not in helpers:
+                    continue
+                loads, bnk = [], None
+                for x in reversed(order[max(0, k - 8):k]):
+                    xt, xk = ins[x][1], ins[x][2]
+                    if xk in ("ret", "jp", "jr", "jphl"):
+                        break
+                    mb = ldb.match(xt)
+                    if mb and bnk is None:
+                        bnk = int(mb.group(1), 16)
+                    ml = ld16.match(xt)
+                    if ml and 0x4000 <= int(ml.group(2), 16) < 0x8000:
+                        loads.append((x, int(ml.group(2), 16)))
+                if bnk is not None:
+                    for x, imm in loads:
+                        paired[x] = (bnk, imm)
+            for a in order:
+                m = ld16.match(ins[a][1])
+                if not m:
+                    continue
+                imm = int(m.group(2), 16)
+                if not 0x4000 <= imm < 0x8000:
+                    continue
+                if a in paired:
+                    tb, why = paired[a][0], "argument of a bank-switching copy helper"
+                elif bank != 0:
+                    tb, why = bank, "pointer load in the same bank (bank assumed)"
+                else:
+                    continue
+                if tb >= self.nbanks or tb in self.zero:
+                    continue
+                if not (self.base(tb) <= imm < self.base(tb) + BANK):
+                    continue
+                if imm in self.insn[tb]:  # points at known code: reuse its label
+                    if self.labels[tb].get(imm):
+                        self.dref[(bank, a)] = (tb, imm)
+                    continue
+                if imm in self.covered[tb] or (imm - 1) in self.dtab[tb]:
+                    continue  # inside an instruction or the second byte of a table word
+                name = f"Data_{tb:03X}_{imm:04X}"
+                self.dlabels[tb].setdefault(imm, name)
+                self.dreason.setdefault((tb, imm), why)
+                self.dref[(bank, a)] = (tb, imm)
+                if a in paired:
+                    strong += 1
+                else:
+                    weak += 1
+        log(f"data references: {strong} via bank-switching helpers, {weak} same-bank loads, "
+            f"{sum(len(d) for d in self.dlabels.values())} data labels in total")
+
     def summary(self) -> str:
         code = sum(v[0] if v[0] != "dw" else 2 for ins in self.insn.values() for v in ins.values())
         banks = sum(1 for ins in self.insn.values() if ins)
@@ -399,6 +475,7 @@ class Rom:
                 log(f"round {rnd}: no new entries; analysis complete")
                 break
         self.structure_data()
+        self.label_data_refs()
 
     # ---- emission -------------------------------------------------------
     def emit_gap(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
@@ -448,7 +525,8 @@ class Rom:
             it = ins.get(pc)
             if it is None:
                 if pc in dl:
-                    out.append(f"\n{dl[pc]}:: ; heuristic: target of a monotone pointer table; C0")
+                    why = self.dreason.get((bank, pc), "target of a monotone pointer table")
+                    out.append(f"\n{dl[pc]}:: ; heuristic: {why}; C0")
                 if pc in dt:
                     out.append(f"    dw {dl[dt[pc]]}")
                     pc += 2
@@ -471,6 +549,12 @@ class Rom:
                 pc += 2
                 continue
             n, text, kind, tgt = it
+            ref = self.dref.get((bank, pc))
+            if ref:
+                rb_, ra = ref
+                nm = self.dlabels[rb_].get(ra) or (self.labels[rb_].get(ra) if ra in self.insn[rb_] else None)
+                if nm:
+                    text = re.sub(r"\$[0-9A-F]{4}$", nm, text)
             if "{T}" in text:
                 r = self.resolve(bank, tgt)
                 nm = None

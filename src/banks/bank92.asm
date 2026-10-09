@@ -18,9 +18,11 @@ Func_092_4001::
     ld a, $00
     ld [hl+], a
     ld [hl+], a
-    ld de, $4024
+    ld de, Data_092_4024
     call Func_092_409C
     ret
+
+Data_092_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_092_40ED
     dw Data_092_40ED
     dw Data_092_40ED

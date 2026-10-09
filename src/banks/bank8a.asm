@@ -2,10 +2,13 @@ SECTION "Bank 8A", ROMX[$4000], BANK[$8A]
     db $8A
 
 Func_08A_4001::
-    ld de, $4016
+    ld de, Data_08A_4016
     call Func_000_25C9
     ret
-    db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9, $18, $40
+    db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
+
+Data_08A_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $18, $40
     dw Data_08A_4216
     dw Data_08A_432E
     dw Data_08A_4428

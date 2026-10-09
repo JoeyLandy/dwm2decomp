@@ -100,7 +100,7 @@ Jump_0A3_4168::
     cp a, $FF
     jr z, Jump_0A3_417D
     sla a
-    ld hl, $4181
+    ld hl, Data_0A3_4181
     add a, l
     ld l, a
     jr nc, Jump_0A3_4177
@@ -119,6 +119,8 @@ Jump_0A3_417D::
     ldh [$FFC6], a
     pop bc
     ret
+
+Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $02, $01, $02
 
 Func_0A3_4187::
@@ -166,7 +168,7 @@ Func_0A3_41CF::
     and a, $04
     ldh [$FFC6], a
     ld b, $00
-    ld hl, $4289
+    ld hl, Data_0A3_4289
 
 Jump_0A3_41DB::
     push hl
@@ -302,6 +304,8 @@ Func_0A3_4278::
 Jump_0A3_4287::
     pop hl
     ret
+
+Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28C289, $23B
 
 Func_0A3_44C4::
@@ -439,7 +443,7 @@ Jump_0A3_456D::
     pop hl
     ld a, [hl]
     sub a, $D0
-    ld hl, $45A3
+    ld hl, Data_0A3_45A3
     add a, l
     ld l, a
     jr nc, Jump_0A3_4580
@@ -469,6 +473,8 @@ Jump_0A3_458F::
 Jump_0A3_45A0::
     ld a, $01
     ret
+
+Data_0A3_45A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28C5A3, $374
 
 Func_0A3_4917::
@@ -642,11 +648,11 @@ Jump_0A3_49DF::
     ld a, [$D8A4]
     cp a, $04
     jr c, Jump_0A3_49EB
-    ld de, $4CD7
+    ld de, Data_0A3_4CD7
     jr Jump_0A3_49EE
 
 Jump_0A3_49EB::
-    ld de, $4B57
+    ld de, Data_0A3_4B57
 
 Jump_0A3_49EE::
     ld a, [$D8A4]
@@ -807,7 +813,7 @@ Func_0A3_4AAF:: ; heuristic: follows a terminator; C0
     ld b, a
     ld a, $0E
     call Func_000_16BF
-    ld hl, $4AFD
+    ld hl, Data_0A3_4AFD
     add a, l
     ld l, a
     jr nc, Jump_0A3_4AC3
@@ -849,6 +855,8 @@ Jump_0A3_4AF3::
     cp a, $B2
     jr z, Func_0A3_4AAF
     ret
+
+Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
 Func_0A3_4B0B::
@@ -900,17 +908,26 @@ Jump_0A3_4B1A::
     jr nz, Jump_0A3_4B1A
 
 Jump_0A3_4B4C::
-    ld hl, $65E6
+    ld hl, Data_0A3_65E6
     ld b, $F2
     rst $10
     xor a, a
     ld [$0100], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $28CB57, $194
+
+Data_0A3_4B57:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $28CB57, $180
+
+Data_0A3_4CD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01
+    db $01, $00, $00, $01
     ds $11, $00
     INCBIN "dwm2-cobi-us.gbc", $28CCFC, $83
     ds $11, $00
     INCBIN "dwm2-cobi-us.gbc", $28CD90, $A2
     ds $17, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03
-    ds $31AA, $00
+    ds $1790, $00
+
+Data_0A3_65E6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    ds $1A1A, $00

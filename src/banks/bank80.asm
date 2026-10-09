@@ -5,13 +5,13 @@ Func_080_4001::
     ld a, [$C529]
     cp a, $C8
     jr c, Jump_080_400F
-    ld hl, $4001
+    ld hl, Func_080_4001
     ld b, $96
     rst $10
     ret
 
 Jump_080_400F::
-    ld de, $4032
+    ld de, Data_080_4032
     call Func_000_25C9
     ret
 
@@ -25,10 +25,13 @@ Func_080_4016:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_080_4024::
-    ld de, $4032
+    ld de, Data_080_4032
     call Func_000_25FE
     ret
-    db $CD, $01, $40, $CD, $11, $26, $C9, $34, $40
+    db $CD, $01, $40, $CD, $11, $26, $C9
+
+Data_080_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $34, $40
     dw Data_080_41C4
     dw Data_080_41E8
     dw Data_080_4200

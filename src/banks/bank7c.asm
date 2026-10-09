@@ -11,7 +11,7 @@ Func_07C_4001::
     ret
 
 Jump_07C_400F::
-    ld de, $4032
+    ld de, Data_07C_4032
     call Func_000_25C9
     ret
 
@@ -19,16 +19,19 @@ Func_07C_4016:: ; heuristic: follows a terminator; C0
     ld a, [$C529]
     cp a, $87
     jr c, Jump_07C_4024
-    ld hl, $405A
+    ld hl, Data_07C_405A
     ld b, $99
     rst $10
     ret
 
 Jump_07C_4024::
-    ld de, $4032
+    ld de, Data_07C_4032
     call Func_000_25FE
     ret
-    db $CD, $01, $40, $CD, $11, $26, $C9, $34, $40
+    db $CD, $01, $40, $CD, $11, $26, $C9
+
+Data_07C_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $34, $40
     dw Data_07C_4142
     dw Data_07C_4186
     dw Data_07C_41C9
@@ -48,6 +51,8 @@ Jump_07C_4024::
     dw Data_07C_4853
     dw Data_07C_4902
     dw Data_07C_4926
+
+Data_07C_405A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07C_4998
     dw Data_07C_49B2
     dw Data_07C_4A49
