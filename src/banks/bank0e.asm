@@ -5,9 +5,7 @@ Func_00E_4001::
     ld a, [wC529]
     cp a, $88
     jr c, Jump_00E_400F
-    ld hl, Func_096_7011
-    ld b, $96
-    rst $10
+    farcall Func_096_7011
     ret
 
 Jump_00E_400F::
@@ -19,9 +17,7 @@ Func_00E_4016:: ; heuristic: follows a terminator; C0
     ld a, [wC529]
     cp a, $88
     jr c, Jump_00E_4024
-    ld hl, Func_096_7020
-    ld b, $96
-    rst $10
+    farcall Func_096_7020
     ret
 
 Jump_00E_4024::
@@ -1278,9 +1274,7 @@ Jump_00E_598B::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld a, [wD00E]
     ld b, a
     push bc
@@ -1644,9 +1638,7 @@ Func_00E_5C11::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld a, [wD010]
     ld b, a
     ld a, [wD011]
@@ -1659,9 +1651,7 @@ Func_00E_5C2B:: ; heuristic: follows a terminator; C0
     ld [wD006], a
     ld a, [wD7F2]
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld a, [wD010]
     ld [wD7F5], a
     ld a, [wD011]
@@ -1698,9 +1688,7 @@ Jump_00E_5C6C::
     ld a, [hl]
     ld [wD7F3], a
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     pop hl
     ld a, $73
     add a, l
@@ -1751,9 +1739,7 @@ Func_00E_5CB2::
     ld a, [hl]
     ld [wD7F3], a
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld b, $1B
     ld c, $00
 
@@ -2448,9 +2434,7 @@ Func_00E_6138::
     ld [wD09D], a
     ld a, [wD7F4]
     ld [wD09E], a
-    ld hl, Func_016_7A48
-    ld b, $16
-    rst $10
+    farcall Func_016_7A48
     ret
 
 Func_00E_615A::
@@ -2539,9 +2523,7 @@ Func_00E_61C1::
     ld [wD006], a
     ld a, [wCADC]
     ld [wD007], a
-    ld hl, Func_035_4013
-    ld b, $35
-    rst $10
+    farcall Func_035_4013
     ld a, [wD009]
     and a, a
     jr z, Jump_00E_61F4

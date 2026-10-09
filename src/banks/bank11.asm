@@ -5,9 +5,7 @@ Func_011_4002::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_011_4010
-    ld hl, Func_061_5764
-    ld b, $61
-    rst $10
+    farcall Func_061_5764
     ret
 
 Jump_011_4010::
@@ -195,9 +193,7 @@ Jump_011_4105::
     ldh a, [hFF8C]
     or a, $80
     ldh [hFF8C], a
-    ld hl, Func_012_7B9F
-    ld b, $12
-    rst $10
+    farcall Func_012_7B9F
     pop de
     ld c, $01
     ret
@@ -206,9 +202,7 @@ Func_011_4130::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_011_413E
-    ld hl, Func_061_596F
-    ld b, $61
-    rst $10
+    farcall Func_061_596F
     ret
 
 Jump_011_413E::
@@ -396,9 +390,7 @@ Jump_011_4235::
     ldh a, [hFF8C]
     or a, $80
     ldh [hFF8C], a
-    ld hl, Func_012_7B9F
-    ld b, $12
-    rst $10
+    farcall Func_012_7B9F
     pop de
     xor a, a
     ld [wC562], a
@@ -560,9 +552,7 @@ Func_011_4340::
     or a, $20
     and a, $7F
     ldh [hFF8C], a
-    ld hl, Func_012_7B9F
-    ld b, $12
-    rst $10
+    farcall Func_012_7B9F
     pop de
     ld c, $01
     ret
@@ -714,9 +704,7 @@ Jump_011_4440::
     ldh a, [hFF8C]
     or a, $20
     ldh [hFF8C], a
-    ld hl, Func_012_7B9F
-    ld b, $12
-    rst $10
+    farcall Func_012_7B9F
     ld c, $01
     ret
 

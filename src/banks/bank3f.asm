@@ -15,9 +15,7 @@ Func_03F_4001::
     ld [wD868], a
     call Func_000_3E54
     jr c, Jump_03F_402B
-    ld hl, Func_03A_4A3A
-    ld b, $3A
-    rst $10
+    farcall Func_03A_4A3A
     call Func_03F_405B
 
 Jump_03F_402B::
@@ -31,9 +29,7 @@ Jump_03F_402B::
     ld a, [hl]
     call Func_000_3E54
     jr c, Jump_03F_4045
-    ld hl, Func_03A_4A3A
-    ld b, $3A
-    rst $10
+    farcall Func_03A_4A3A
     call Func_03F_405B
 
 Jump_03F_4045::
@@ -47,9 +43,7 @@ Jump_03F_4045::
     ld a, [hl]
     call Func_000_3E54
     ret c
-    ld hl, Func_03A_4A3A
-    ld b, $3A
-    rst $10
+    farcall Func_03A_4A3A
 
 Func_03F_405B::
     ld hl, hFFA9

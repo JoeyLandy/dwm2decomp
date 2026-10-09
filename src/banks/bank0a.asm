@@ -31,9 +31,7 @@ Jump_00A_4027::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ret
 
 Jump_00A_4042::
@@ -622,9 +620,7 @@ Jump_00A_43DC::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ret
 
 Func_00A_43EC::
@@ -674,9 +670,7 @@ Jump_00A_4432::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ret
 
 Jump_00A_4442::
@@ -777,9 +771,7 @@ Jump_00A_44C3::
     ld [wC903], a
 
 Jump_00A_44D3::
-    ld hl, Func_002_5B9E
-    ld b, $02
-    rst $10
+    farcall Func_002_5B9E
     ld a, $03
     ld [wC5DC], a
     xor a, a
@@ -791,9 +783,7 @@ Jump_00A_44D3::
     ld [wC905], a
     ld a, $02
     ld [wC8C7], a
-    ld hl, Func_002_5EEE
-    ld b, $02
-    rst $10
+    farcall Func_002_5EEE
     call Func_00A_476E
     ret
     INCBIN "dwm2-cobi-us.gbc", $0284FE, $120
@@ -868,9 +858,7 @@ Jump_00A_4677::
     and a, $0F
     cp a, $0C
     jr nc, Jump_00A_46D0
-    ld hl, Func_061_40B4
-    ld b, $61
-    rst $10
+    farcall Func_061_40B4
     ld a, [wCD05]
     ld b, a
     ld a, $05
@@ -961,9 +949,7 @@ Data_00A_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $12, $02, $13, $02, $14, $02, $15, $02
 
 Jump_00A_472E::
-    ld hl, Func_061_4001
-    ld b, $61
-    rst $10
+    farcall Func_061_4001
     ld c, $76
     ld a, [wCD05]
     cp a, $05
@@ -1084,12 +1070,8 @@ Jump_00A_47FB::
     ld [wC905], a
     ld a, $02
     ld [wC8C7], a
-    ld hl, Func_002_5EEE
-    ld b, $02
-    rst $10
-    ld hl, Func_00A_476E
-    ld b, $0A
-    rst $10
+    farcall Func_002_5EEE
+    farcall Func_00A_476E
     pop hl
     ret
     INCBIN "dwm2-cobi-us.gbc", $02881C, $198
@@ -2171,9 +2153,7 @@ Jump_00A_50A6::
     ldh [hFFC6], a
     ld de, hFFC6
     ld c, $00
-    ld hl, Func_034_4008
-    ld b, $34
-    rst $10
+    farcall Func_034_4008
     pop hl
     ldh a, [hFFC6]
     ld [hl+], a
@@ -3275,9 +3255,7 @@ Func_00A_5748::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ret
 
 Data_00A_5773:: ; heuristic: pointer load in the same bank (bank assumed); C0

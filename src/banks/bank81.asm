@@ -25,9 +25,7 @@ Func_081_4001::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    ld hl, Func_035_400A
-    ld b, $35
-    rst $10
+    farcall Func_035_400A
     ld a, [wD008]
     ld [wD2B4], a
     ld a, [wCA47]
@@ -42,9 +40,7 @@ Func_081_4001::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    ld hl, Func_035_400A
-    ld b, $35
-    rst $10
+    farcall Func_035_400A
     ld a, [wD008]
     ld [wD2B5], a
     ld a, [wD2AD]

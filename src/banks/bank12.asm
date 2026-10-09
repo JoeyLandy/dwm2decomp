@@ -58,9 +58,7 @@ Jump_012_404C::
     and a, $01
     sla a
     ld [wC905], a
-    ld hl, Func_05F_6C71
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C71
     ld hl, wC923
     inc [hl]
     ret
@@ -212,9 +210,7 @@ Func_012_413C:: ; heuristic: target of a pointer table; C0
     ld [wC8C9], a
     xor a, a
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ret
 
 Func_012_4177:: ; heuristic: target of a pointer table; C0
@@ -237,9 +233,7 @@ Func_012_4177:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     jp Jump_012_43C6
 
 Func_012_41AA:: ; heuristic: target of a pointer table; C0
@@ -254,9 +248,7 @@ Func_012_41AA:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     jp Jump_012_43C6
 
 Func_012_41CC:: ; heuristic: target of a pointer table; C0
@@ -271,9 +263,7 @@ Func_012_41CC:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     jp Jump_012_43C6
 
 Func_012_41ED:: ; heuristic: target of a pointer table; C0
@@ -286,9 +276,7 @@ Func_012_41ED:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld hl, hFF8E
     inc [hl]
     jp Jump_012_43C6
@@ -389,9 +377,7 @@ Func_012_42B5::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     inc a
     inc a
@@ -458,9 +444,7 @@ Func_012_4310:: ; heuristic: target of a pointer table; C0
     ld [wC8C9], a
     xor a, a
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ret
 
 Func_012_4346:: ; heuristic: target of a pointer table; C0
@@ -479,9 +463,7 @@ Func_012_4346:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     jr Jump_012_43C6
 
 Func_012_436E:: ; heuristic: target of a pointer table; C0
@@ -494,9 +476,7 @@ Func_012_436E:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     jr Jump_012_43C6
 
 Func_012_438A:: ; heuristic: target of a pointer table; C0
@@ -509,9 +489,7 @@ Func_012_438A:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     jr Jump_012_43C6
 
 Func_012_43A6:: ; heuristic: target of a pointer table; C0
@@ -524,9 +502,7 @@ Func_012_43A6:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld hl, hFF91
     dec [hl]
 
@@ -601,12 +577,8 @@ Jump_012_4437::
     inc [hl]
 
 Jump_012_4440::
-    ld hl, Func_00C_703D
-    ld b, $0C
-    rst $10
-    ld hl, Func_00C_73F5
-    ld b, $0C
-    rst $10
+    farcall Func_00C_703D
+    farcall Func_00C_73F5
     ret
 
 Func_012_444D:: ; heuristic: target of a pointer table; C0
@@ -630,12 +602,8 @@ Jump_012_4464::
     inc [hl]
 
 Jump_012_446D::
-    ld hl, Func_00C_703D
-    ld b, $0C
-    rst $10
-    ld hl, Func_00C_73F5
-    ld b, $0C
-    rst $10
+    farcall Func_00C_703D
+    farcall Func_00C_73F5
     ret
 
 Func_012_447A:: ; heuristic: target of a pointer table; C0
@@ -676,9 +644,7 @@ Func_012_44AF:: ; heuristic: target of a pointer table; C0
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, [wD7FC]
     add a, $05
     call Func_012_6820
@@ -756,9 +722,7 @@ Func_012_4546:: ; heuristic: target of a pointer table; C0
     ld [wC8C9], a
     ld a, $03
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ret
 
 Func_012_456A:: ; heuristic: target of a pointer table; C0
@@ -806,21 +770,13 @@ Func_012_459F:: ; heuristic: target of a pointer table; C0
     ld a, [wC82C]
     or a, a
     jr nz, Jump_012_45BF
-    ld hl, Func_00C_704B
-    ld b, $0C
-    rst $10
-    ld hl, Func_00C_744D
-    ld b, $0C
-    rst $10
+    farcall Func_00C_704B
+    farcall Func_00C_744D
     ret
 
 Jump_012_45BF::
-    ld hl, Func_00C_704B
-    ld b, $0C
-    rst $10
-    ld hl, Func_00C_74A6
-    ld b, $0C
-    rst $10
+    farcall Func_00C_704B
+    farcall Func_00C_74A6
     ret
 
 Func_012_45CC:: ; heuristic: target of a pointer table; C0
@@ -970,9 +926,7 @@ Jump_012_469A::
     ret
 
 Func_012_469E:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_085_5B53
-    ld b, $85
-    rst $10
+    farcall Func_085_5B53
     ld a, $7F
     ld [wC527], a
     ld a, $01
@@ -1005,21 +959,13 @@ Func_012_46D8:: ; heuristic: target of a pointer table; C0
     ld a, [wC82C]
     or a, a
     jr nz, Jump_012_46F8
-    ld hl, Func_00C_704B
-    ld b, $0C
-    rst $10
-    ld hl, Func_00C_744D
-    ld b, $0C
-    rst $10
+    farcall Func_00C_704B
+    farcall Func_00C_744D
     ret
 
 Jump_012_46F8::
-    ld hl, Func_00C_704B
-    ld b, $0C
-    rst $10
-    ld hl, Func_00C_74A6
-    ld b, $0C
-    rst $10
+    farcall Func_00C_704B
+    farcall Func_00C_74A6
     ret
 
 Func_012_4705:: ; heuristic: target of a pointer table; C0
@@ -1046,9 +992,7 @@ Func_012_4705:: ; heuristic: target of a pointer table; C0
     ld [wC903], a
     ld a, $01
     ld [wC905], a
-    ld hl, Func_05F_6C71
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C71
     ret
 
 Func_012_473C:: ; heuristic: target of a pointer table; C0
@@ -1235,9 +1179,7 @@ Func_012_4863:: ; heuristic: target of a pointer table; C0
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, $00
     call Func_012_488B
     xor a, a
@@ -1409,9 +1351,7 @@ Jump_012_49F6::
     ldh [hFF8D], a
     ld a, $00
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, $01
     ld [wC936], a
     ret
@@ -1475,14 +1415,10 @@ Jump_012_4A64::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     ld a, $0D
     ldh [hFFC6], a
-    ld hl, Func_012_6B98
-    ld b, $12
-    rst $10
+    farcall Func_012_6B98
     ld a, $7F
     ld [wC527], a
     ld hl, wC923
@@ -1577,9 +1513,7 @@ Jump_012_4B27::
     ld [wC53D], a
     ld a, d
     ld [wC53E], a
-    ld hl, Func_008_4016
-    ld b, $08
-    rst $10
+    farcall Func_008_4016
     ld hl, wCAD0
     ld a, $6D
     add a, l
@@ -1642,9 +1576,7 @@ Jump_012_4B83::
 Func_012_4B9B:: ; heuristic: target of a pointer table; C0
     ld a, $0E
     ldh [hFFC6], a
-    ld hl, Func_012_6B98
-    ld b, $12
-    rst $10
+    farcall Func_012_6B98
     ld hl, wC923
     inc [hl]
     ret
@@ -1685,14 +1617,10 @@ Jump_012_4BC7::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     ld a, $0D
     ldh [hFFC6], a
-    ld hl, Func_012_6B98
-    ld b, $12
-    rst $10
+    farcall Func_012_6B98
     xor a, a
     ld [wCBCF], a
     ld a, $7F
@@ -1932,9 +1860,7 @@ Jump_012_4D7E::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     ld a, $0B
     ld hl, wCA2B
     add a, l
@@ -1958,9 +1884,7 @@ Jump_012_4DAA::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     ld a, $7F
     ld [wC527], a
     ld hl, wCB8C
@@ -1981,9 +1905,7 @@ Func_012_4DDC:: ; heuristic: target of a pointer table; C0
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ret
 
 Func_012_4DFB:: ; heuristic: follows a terminator; C0
@@ -2090,9 +2012,7 @@ Func_012_4EAD:: ; heuristic: target of a pointer table; C0
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ret
 
 Func_012_4ECE::
@@ -2200,12 +2120,8 @@ Func_012_4F5C:: ; heuristic: target of a pointer table; C0
     ret
 
 Func_012_4F77:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_002_541B
-    ld b, $02
-    rst $10
-    ld hl, Func_002_5BD7
-    ld b, $02
-    rst $10
+    farcall Func_002_541B
+    farcall Func_002_5BD7
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -2228,12 +2144,8 @@ Func_012_4F8E:: ; heuristic: target of a pointer table; C0
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    ld hl, Func_002_541B
-    ld b, $02
-    rst $10
-    ld hl, Func_002_5BD7
-    ld b, $02
-    rst $10
+    farcall Func_002_541B
+    farcall Func_002_5BD7
     ld hl, wC923
     inc [hl]
     ret
@@ -2291,9 +2203,7 @@ Func_012_5007:: ; heuristic: target of a pointer table; C0
     ldh a, [hFF93]
     or a, $80
     ldh [hFF93], a
-    ld hl, Func_004_4B2D
-    ld b, $04
-    rst $10
+    farcall Func_004_4B2D
     ld a, $7F
     ld [wC527], a
 
@@ -2373,9 +2283,7 @@ Jump_012_5080::
     ret
 
 Func_012_5090:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_653F
-    ld b, $12
-    rst $10
+    farcall Func_012_653F
     ret
 
 Func_012_5097:: ; heuristic: target of a pointer table; C0
@@ -2404,9 +2312,7 @@ Func_012_50B3::
 Jump_012_50BD::
     xor a, a
     ldh [hFF93], a
-    ld hl, Func_004_4B2D
-    ld b, $04
-    rst $10
+    farcall Func_004_4B2D
     ld a, $7F
     ld [wC527], a
     ld a, $80
@@ -2565,9 +2471,7 @@ Jump_012_51FC::
     ldh [hFF8C], a
     ld a, $01
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, $80
     ld [wC8C5], a
     ld a, [wCC44]
@@ -2814,9 +2718,7 @@ Func_012_55F8::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_012_5605
-    ld hl, Func_060_6C96
-    ld b, $60
-    rst $10
+    farcall Func_060_6C96
 
 Jump_012_5605::
     ld a, $50
@@ -2839,17 +2741,13 @@ Jump_012_5622::
 Jump_012_5627::
     ld a, $01
     ld [wC957], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ret
 
 Jump_012_5633::
     ld hl, wC923
     inc [hl]
-    ld hl, Func_012_7F05
-    ld b, $12
-    rst $10
+    farcall Func_012_7F05
     ld de, $0025
     call Func_000_181B
     jr c, Jump_012_5650
@@ -2953,12 +2851,8 @@ Jump_012_56DB::
     ret
 
 Jump_012_56E8::
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
+    farcall Func_002_5E85
+    farcall Func_002_5E85
     call Func_000_222B
     ld hl, Func_004_4AA8
 
@@ -3009,9 +2903,7 @@ Func_012_573E:: ; heuristic: target of a pointer table; C0
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ret
 
 Func_012_574E:: ; heuristic: target of a pointer table; C0
@@ -3276,9 +3168,7 @@ Func_012_58E4:: ; heuristic: target of a pointer table; C0
     ret
 
 Func_012_58EF:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_653F
-    ld b, $12
-    rst $10
+    farcall Func_012_653F
     ret
 
 Func_012_58F6:: ; heuristic: target of a pointer table; C0
@@ -3359,9 +3249,7 @@ Jump_012_5941::
 Jump_012_5988::
     ld a, $01
     ld [wC905], a
-    ld hl, Func_05F_6C71
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C71
     ret
 
 Func_012_5994:: ; heuristic: target of a pointer table; C0
@@ -3431,9 +3319,7 @@ Jump_012_59FB::
     ld [wCFDC], a
     ld a, $01
     ld [wC905], a
-    ld hl, Func_05F_6C71
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C71
     ret
 
 Func_012_5A17:: ; heuristic: target of a pointer table; C0
@@ -3524,9 +3410,7 @@ Func_012_5AC4:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     inc a
     inc a
@@ -3540,9 +3424,7 @@ Func_012_5AC4:: ; heuristic: target of a pointer table; C0
     ret
 
 Func_012_5AE9:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_085_5C92
-    ld b, $85
-    rst $10
+    farcall Func_085_5C92
     ret
 
 Func_012_5AF0:: ; heuristic: target of a pointer table; C0
@@ -3656,9 +3538,7 @@ Jump_012_5B85::
     ldh [rSVBK], a
 
 Jump_012_5B8C::
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6DDB
     xor a, a
     ldh [hFF8D], a
     ld hl, wC923
@@ -3752,9 +3632,7 @@ Jump_012_5C1A::
     ldh [hFFAB], a
     ld a, h
     ldh [hFFAC], a
-    ld hl, Func_07F_700A
-    ld b, $7F
-    rst $10
+    farcall Func_07F_700A
     ret
 
 Func_012_5C27::
@@ -3924,9 +3802,7 @@ Jump_012_5D25::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5D41
@@ -3967,9 +3843,7 @@ Jump_012_5D41::
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    ld hl, Func_002_6050
-    ld b, $02
-    rst $10
+    farcall Func_002_6050
     ret
 
 Jump_012_5D91::
@@ -4024,9 +3898,7 @@ Jump_012_5DD3::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5DEF
@@ -4225,9 +4097,7 @@ Jump_012_5F11::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     and a, $01
     jr nz, Jump_012_5F30
@@ -4263,9 +4133,7 @@ Jump_012_5F4D::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5F74
@@ -4437,9 +4305,7 @@ Jump_012_6077::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_6093
@@ -4589,9 +4455,7 @@ Jump_012_615F::
     ldh [hFFAB], a
     ld a, h
     ldh [hFFAC], a
-    ld hl, Func_07F_700A
-    ld b, $7F
-    rst $10
+    farcall Func_07F_700A
     ret
 
 Jump_012_616C::
@@ -4677,17 +4541,13 @@ Func_012_61EF::
     ld a, [wC921]
     or a, a
     jr nz, Jump_012_6200
-    ld hl, Func_002_5923
-    ld b, $02
-    rst $10
+    farcall Func_002_5923
     ld hl, wC921
     inc [hl]
     ret
 
 Jump_012_6200::
-    ld hl, Func_002_5946
-    ld b, $02
-    rst $10
+    farcall Func_002_5946
     ld b, $11
     call Func_012_65A4
     ret nc
@@ -4705,9 +4565,7 @@ Func_012_6211::
     dw Func_012_621F
 
 Func_012_621F:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_0F0_7D0A
-    ld b, $F0
-    rst $10
+    farcall Func_0F0_7D0A
     ld a, [wCC45]
     swap a
     ld hl, wCDAF
@@ -4719,12 +4577,8 @@ Func_012_621F:: ; heuristic: target of a pointer table; C0
 Jump_012_6232::
     ld a, $FF
     ld [hl], a
-    ld hl, Func_061_44DB
-    ld b, $61
-    rst $10
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
+    farcall Func_061_44DB
+    farcall Func_05F_6DDB
     ld a, $80
     ld [wC919], a
     ret
@@ -4757,18 +4611,12 @@ Jump_012_6265::
     bit 7, a
     jr nz, Jump_012_6279
     ld [wC928], a
-    ld hl, Func_05F_6C8C
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C8C
     jr Jump_012_6279
 
 Jump_012_6279::
-    ld hl, Func_061_44DB
-    ld b, $61
-    rst $10
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
+    farcall Func_061_44DB
+    farcall Func_05F_6DDB
     ld a, $80
     ld [wC919], a
     ret
@@ -4823,9 +4671,7 @@ Jump_012_62C9::
     ret
 
 Jump_012_62DA::
-    ld hl, Func_012_689A
-    ld b, $12
-    rst $10
+    farcall Func_012_689A
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_012_62EB
@@ -4881,15 +4727,9 @@ Jump_012_6328::
     inc hl
     inc hl
     ld [hl], $01
-    ld hl, Func_05F_6C8C
-    ld b, $5F
-    rst $10
-    ld hl, Func_061_45E8
-    ld b, $61
-    rst $10
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C8C
+    farcall Func_061_45E8
+    farcall Func_05F_6DDB
     ld a, $80
     ld [wC919], a
     ret
@@ -4968,9 +4808,7 @@ Func_012_63B7:: ; heuristic: target of a pointer table; C0
     ld [wC903], a
     ld a, $01
     ld [wC905], a
-    ld hl, Func_05F_6C71
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C71
     call Func_012_64D5
     ld a, [hl]
     or a, $80
@@ -4990,9 +4828,7 @@ Func_012_63D4:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld a, $FF
     ld [wC8FE], a
-    ld hl, Func_05F_6C8C
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C8C
     ld a, $80
     ld [wC919], a
     ret
@@ -5014,9 +4850,7 @@ Func_012_63F2:: ; heuristic: target of a pointer table; C0
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    ld hl, Func_012_7EC2
-    ld b, $12
-    rst $10
+    farcall Func_012_7EC2
     pop hl
     dec hl
     ld a, [hl]
@@ -5300,16 +5134,10 @@ Func_012_65B6:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_012_65C5::
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
+    farcall Func_002_5E85
+    farcall Func_002_5E85
     call Func_000_222B
-    ld hl, Func_004_4AA8
-    ld b, $04
-    rst $10
+    farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
     xor a, a
@@ -5347,14 +5175,10 @@ Func_012_65FA:: ; heuristic: follows a terminator; C0
 Func_012_65FF:: ; heuristic: follows a terminator; C0
     and a, $0F
     jr nz, Jump_012_6609
-    ld hl, Func_002_5923
-    ld b, $02
-    rst $10
+    farcall Func_002_5923
 
 Jump_012_6609::
-    ld hl, Func_002_5946
-    ld b, $02
-    rst $10
+    farcall Func_002_5946
     ret
 
 Func_012_6610:: ; heuristic: follows a terminator; C0
@@ -5376,9 +5200,7 @@ Jump_012_6623::
     pop af
     or a, a
     jr nz, Jump_012_662D
-    ld hl, Func_004_4470
-    ld b, $04
-    rst $10
+    farcall Func_004_4470
 
 Jump_012_662D::
     ld a, [wC925]
@@ -5423,9 +5245,7 @@ Jump_012_666D::
     ld [wC529], a
     ld a, $01
     ld [wC528], a
-    ld hl, Func_009_4001
-    ld b, $09
-    rst $10
+    farcall Func_009_4001
     ld hl, wC926
     inc [hl]
     ret
@@ -5473,9 +5293,7 @@ Jump_012_66CA::
     pop af
     or a, a
     jr nz, Jump_012_66D4
-    ld hl, Func_004_449F
-    ld b, $04
-    rst $10
+    farcall Func_004_449F
 
 Jump_012_66D4::
     ld a, $FF
@@ -5501,9 +5319,7 @@ Jump_012_66ED::
     pop af
     or a, a
     jr nz, Jump_012_66F7
-    ld hl, Func_004_4470
-    ld b, $04
-    rst $10
+    farcall Func_004_4470
 
 Jump_012_66F7::
     ld a, [wC924]
@@ -5544,9 +5360,7 @@ Jump_012_6731::
     ld [wC529], a
     ld a, $09
     ld [wC528], a
-    ld hl, Func_009_4001
-    ld b, $09
-    rst $10
+    farcall Func_009_4001
     ld hl, wC926
     inc [hl]
     ret
@@ -5602,9 +5416,7 @@ Jump_012_679A::
     pop af
     or a, a
     jr nz, Jump_012_67A4
-    ld hl, Func_004_4470
-    ld b, $04
-    rst $10
+    farcall Func_004_4470
 
 Jump_012_67A4::
     ld hl, vTiles1
@@ -5639,9 +5451,7 @@ Jump_012_67D2::
     ld [wC529], a
     xor a, a
     ld [wC528], a
-    ld hl, Func_08A_4001
-    ld b, $8A
-    rst $10
+    farcall Func_08A_4001
     ld hl, wC926
     inc [hl]
     ret
@@ -5685,9 +5495,7 @@ Func_012_6820::
 
 Func_012_6828::
     ld [wC928], a
-    ld hl, Func_05F_6936
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6936
     ld a, [wC926]
     cp a, $FF
     jr z, Jump_012_683A
@@ -5946,14 +5754,10 @@ Func_012_6955::
     ret
 
 Jump_012_6973::
-    ld hl, Func_061_40B4
-    ld b, $61
-    rst $10
+    farcall Func_061_40B4
     ld a, [wCD05]
     ldh [hFFC6], a
-    ld hl, Func_060_6916
-    ld b, $60
-    rst $10
+    farcall Func_060_6916
     pop hl
     inc hl
     ldh a, [hFFC7]
@@ -6013,9 +5817,7 @@ Func_012_69B0::
 
 Jump_012_69C9::
     push hl
-    ld hl, Func_084_4C84
-    ld b, $84
-    rst $10
+    farcall Func_084_4C84
     pop hl
     dec hl
     dec hl
@@ -6300,9 +6102,7 @@ Jump_012_6B5F::
     ld a, [wC949]
     add a, $10
     ldh [hFFAB], a
-    ld hl, Func_07F_700A
-    ld b, $7F
-    rst $10
+    farcall Func_07F_700A
     ret
 
 Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6899,9 +6699,7 @@ Jump_012_6EEA::
     ldh a, [hFFA6]
     adc a, $00
     ldh [hFFAC], a
-    ld hl, Func_07F_700A
-    ld b, $7F
-    rst $10
+    farcall Func_07F_700A
     ret
 
 Func_012_6F17::
@@ -7372,9 +7170,7 @@ Jump_012_728D::
     ldh [hFFAB], a
     ld a, d
     ldh [hFFAC], a
-    ld hl, Func_07F_700A
-    ld b, $7F
-    rst $10
+    farcall Func_07F_700A
     ret
 
 Jump_012_729A::
@@ -7419,9 +7215,7 @@ Jump_012_72C8::
     ldh [hFFAB], a
     ld a, d
     ldh [hFFAC], a
-    ld hl, Func_07F_700A
-    ld b, $7F
-    rst $10
+    farcall Func_07F_700A
     ret
 
 Jump_012_72D5::
@@ -7457,9 +7251,7 @@ Jump_012_72FB::
     ldh [hFFAB], a
     ld a, d
     ldh [hFFAC], a
-    ld hl, Func_07F_700A
-    ld b, $7F
-    rst $10
+    farcall Func_07F_700A
     ret
 
 Data_012_7308:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -7527,18 +7319,14 @@ Jump_012_7377::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     xor a, a
     ld [wC55E], a
     ld [wC562], a
     ld a, [wC8CD]
     bit 7, a
     ret z
-    ld hl, Func_002_5B9E
-    ld b, $02
-    rst $10
+    farcall Func_002_5B9E
     ret
 
 Jump_012_73A0::
@@ -7582,9 +7370,7 @@ Jump_012_73DC::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     xor a, a
     ld [wC55E], a
     ld [wC562], a
@@ -7670,9 +7456,7 @@ Jump_012_7457::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     xor a, a
     ld [wC55E], a
     ld [wC562], a
@@ -7722,9 +7506,7 @@ Jump_012_74A2::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     xor a, a
     ld [wC55E], a
     ld [wC562], a
@@ -7760,9 +7542,7 @@ Jump_012_74D6::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     xor a, a
     ld [wC55E], a
     ld [wC562], a
@@ -7793,9 +7573,7 @@ Jump_012_7513::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     xor a, a
     ld [wC55E], a
     ld [wC562], a
@@ -9033,9 +8811,7 @@ Jump_012_7CB3::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     ld a, $7F
     ld [wC527], a
     ret

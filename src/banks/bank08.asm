@@ -5,9 +5,7 @@ Func_008_4001::
     ld a, [wC528]
     cp a, $09
     jr c, Jump_008_400F
-    ld hl, Func_095_4650
-    ld b, $95
-    rst $10
+    farcall Func_095_4650
     ret
 
 Jump_008_400F::
@@ -19,9 +17,7 @@ Func_008_4016::
     ld a, [wC528]
     cp a, $09
     jr c, Jump_008_4024
-    ld hl, Func_095_465F
-    ld b, $95
-    rst $10
+    farcall Func_095_465F
     ret
 
 Jump_008_4024::

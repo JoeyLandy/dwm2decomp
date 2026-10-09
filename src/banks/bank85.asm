@@ -14,9 +14,7 @@ Jump_085_4009::
     ld [wC92A], a
     ld a, $60
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -73,9 +71,7 @@ Jump_085_4071::
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    ld hl, Func_001_6E46
-    ld b, $01
-    rst $10
+    farcall Func_001_6E46
     ld hl, $4D52
     call Func_085_57C8
     ld hl, wCB7D
@@ -88,22 +84,14 @@ Jump_085_4093::
     xor a, a
     call Func_085_57D5
     ret nc
-    ld hl, Func_002_5F22
-    ld b, $02
-    rst $10
+    farcall Func_002_5F22
     ld hl, wCB7D
     dec [hl]
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
-    ld hl, Func_004_449F
-    ld b, $04
-    rst $10
+    farcall Func_05F_6DDB
+    farcall Func_004_449F
     xor a, a
     ldh [hFFB9], a
-    ld hl, Func_002_6050
-    ld b, $02
-    rst $10
+    farcall Func_002_6050
     ld de, $0078
     call Func_000_1845
     ld a, $80
@@ -117,9 +105,7 @@ Jump_085_40C3::
     ldh [hFFC8], a
     ld a, $02
     ldh [hFFC9], a
-    ld hl, Func_001_6E46
-    ld b, $01
-    rst $10
+    farcall Func_001_6E46
     ld hl, wC6FD
     inc [hl]
     ld a, [wC92E]
@@ -152,16 +138,10 @@ Jump_085_40EA::
 Jump_085_4102::
     ld a, [wD7F5]
     ld [hl], a
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
+    farcall Func_002_5E85
+    farcall Func_002_5E85
     call Func_000_222B
-    ld hl, Func_004_4AA8
-    ld b, $04
-    rst $10
+    farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
     ld hl, wCB7D
@@ -173,9 +153,7 @@ Jump_085_4102::
     ret
 
 Jump_085_412F::
-    ld hl, Func_002_5F22
-    ld b, $02
-    rst $10
+    farcall Func_002_5F22
     call Func_085_4555
     ld a, [wC92E]
     cp a, $03
@@ -203,9 +181,7 @@ Jump_085_4159::
     ld [wC92D], a
     ld [wC92E], a
     call Func_085_4505
-    ld hl, Func_004_4470
-    ld b, $04
-    rst $10
+    farcall Func_004_4470
     ld hl, wC923
     inc [hl]
     ret
@@ -214,9 +190,7 @@ Jump_085_4174::
     ld a, [wC552]
     or a, a
     jr nz, Jump_085_41C1
-    ld hl, Func_05F_6D78
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6D78
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_4192
@@ -232,9 +206,7 @@ Jump_085_4192::
     jr z, Jump_085_41B2
     ld hl, vTiles0 + $1B8
     call Func_085_57C8
-    ld hl, Func_002_5EEE
-    ld b, $02
-    rst $10
+    farcall Func_002_5EEE
     ld a, [wC6FD]
     inc a
     ld [wC92E], a
@@ -330,9 +302,7 @@ Func_085_4249:: ; heuristic: follows a terminator; C0
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    ld hl, Func_001_6E46
-    ld b, $01
-    rst $10
+    farcall Func_001_6E46
     ld hl, $4D52
     call Func_085_57C8
     ld hl, wCB7D
@@ -345,22 +315,14 @@ Func_085_426B:: ; heuristic: follows a terminator; C0
     xor a, a
     call Func_085_57D5
     ret nc
-    ld hl, Func_002_5F22
-    ld b, $02
-    rst $10
+    farcall Func_002_5F22
     ld hl, wCB7D
     dec [hl]
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
-    ld hl, Func_004_449F
-    ld b, $04
-    rst $10
+    farcall Func_05F_6DDB
+    farcall Func_004_449F
     xor a, a
     ldh [hFFB9], a
-    ld hl, Func_002_6050
-    ld b, $02
-    rst $10
+    farcall Func_002_6050
     ld de, $005C
     call Func_000_1845
     ld a, $80
@@ -374,9 +336,7 @@ Func_085_429B:: ; heuristic: follows a terminator; C0
     ldh [hFFC8], a
     ld a, $02
     ldh [hFFC9], a
-    ld hl, Func_001_6E46
-    ld b, $01
-    rst $10
+    farcall Func_001_6E46
     ld hl, wC6FD
     inc [hl]
     ld a, [wC92E]
@@ -409,16 +369,10 @@ Jump_085_42C2::
 Jump_085_42DA::
     ld a, [wD7F5]
     ld [hl], a
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
-    ld hl, Func_002_5E85
-    ld b, $02
-    rst $10
+    farcall Func_002_5E85
+    farcall Func_002_5E85
     call Func_000_222B
-    ld hl, Func_004_4AA8
-    ld b, $04
-    rst $10
+    farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
     ld hl, wCB7D
@@ -434,9 +388,7 @@ Func_085_4307:: ; heuristic: follows a terminator; C0
     call Func_085_4339
     or a, a
     ret z
-    ld hl, Func_002_5F22
-    ld b, $02
-    rst $10
+    farcall Func_002_5F22
     call Func_085_4555
     ld a, [wC92E]
     cp a, $03
@@ -531,21 +483,15 @@ Jump_085_437D::
     ret
 
 Jump_085_4389::
-    ld hl, Func_012_61EF
-    ld b, $12
-    rst $10
+    farcall Func_012_61EF
     ret
 
 Jump_085_4390::
-    ld hl, Func_002_5F22
-    ld b, $02
-    rst $10
+    farcall Func_002_5F22
     call Func_085_4555
     ld hl, wCD56
     call Func_085_57C8
-    ld hl, Func_004_449F
-    ld b, $04
-    rst $10
+    farcall Func_004_449F
     ld a, $01
     ld [wC923], a
     ret
@@ -561,9 +507,7 @@ Func_085_43AF:: ; heuristic: follows a terminator; C0
     ld [wC92D], a
     ld [wC92E], a
     call Func_085_4505
-    ld hl, Func_004_4470
-    ld b, $04
-    rst $10
+    farcall Func_004_4470
     ld hl, wC923
     inc [hl]
     ret
@@ -579,9 +523,7 @@ Func_085_43D5:: ; heuristic: follows a terminator; C0
     ld a, [wC552]
     or a, a
     jr nz, Jump_085_4422
-    ld hl, Func_05F_6D78
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6D78
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_43F3
@@ -597,9 +539,7 @@ Jump_085_43F3::
     jr z, Jump_085_4413
     ld hl, vTiles0 + $1B8
     call Func_085_57C8
-    ld hl, Func_002_5EEE
-    ld b, $02
-    rst $10
+    farcall Func_002_5EEE
     ld a, [wC6FD]
     inc a
     ld [wC92E], a
@@ -745,9 +685,7 @@ Jump_085_4504::
     ret
 
 Func_085_4505::
-    ld hl, Func_002_5EEE
-    ld b, $02
-    rst $10
+    farcall Func_002_5EEE
     ld hl, wC198
     ld de, $4583
     ld b, $09
@@ -906,18 +844,14 @@ Jump_085_4623::
     ld [wC92A], a
     ld a, $E0
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $02
     ld [wC929], a
     ld a, $03
     ld [wC92A], a
     ld a, $E0
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -932,18 +866,14 @@ Jump_085_4658::
     ld [wC92A], a
     ld a, $E0
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $02
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $20
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     jr Jump_085_46DA
 
 Jump_085_4684::
@@ -953,18 +883,14 @@ Jump_085_4684::
     ld [wC92A], a
     ld a, $30
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $01
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $20
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     jr Jump_085_46DA
 
 Jump_085_46B0::
@@ -974,18 +900,14 @@ Jump_085_46B0::
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $02
     ld [wC929], a
     ld a, $03
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
 
 Jump_085_46DA::
     ld a, [wC92C]
@@ -1001,9 +923,7 @@ Func_085_46E4:: ; heuristic: follows a terminator; C0
     jr nz, Jump_085_4703
     ld a, $05
     ldh [hFFC6], a
-    ld hl, Func_012_6B98
-    ld b, $12
-    rst $10
+    farcall Func_012_6B98
     ld a, $50
     ld [wCBD3], a
     ld a, $10
@@ -1036,9 +956,7 @@ Jump_085_471F::
     ret
 
 Jump_085_4725::
-    ld hl, Func_002_5EEE
-    ld b, $02
-    rst $10
+    farcall Func_002_5EEE
     ld a, $01
     ld [wC8C7], a
     ld a, $02
@@ -1134,9 +1052,7 @@ Jump_085_47B1::
     ld [wC8C9], a
     ld a, $01
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ret
 
 Jump_085_47E3::
@@ -1146,9 +1062,7 @@ Jump_085_47E3::
     ld a, $10
     sub a, c
     ld [wC928], a
-    ld hl, Func_05F_6AEB
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6AEB
     ld a, [wC92C]
     or a, a
     ret z
@@ -1257,12 +1171,8 @@ Jump_085_487E::
 
 Jump_085_4887::
     call Func_000_1845
-    ld hl, Func_084_43B8
-    ld b, $84
-    rst $10
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
+    farcall Func_084_43B8
+    farcall Func_05F_6DDB
     ld a, $80
     ld [wC919], a
     ret
@@ -1298,15 +1208,11 @@ Jump_085_48C2::
     call Func_000_1845
     ld a, $09
     ldh [hFFC6], a
-    ld hl, Func_085_5B23
-    ld b, $85
-    rst $10
+    farcall Func_085_5B23
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_4912
-    ld hl, Func_012_6990
-    ld b, $12
-    rst $10
+    farcall Func_012_6990
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_085_48F5
@@ -1328,17 +1234,13 @@ Jump_085_48F5::
     ldh [hFFC7], a
 
 Jump_085_4905::
-    ld hl, Func_012_6955
-    ld b, $12
-    rst $10
+    farcall Func_012_6955
     ld a, $01
     ld [wC921], a
     jr Jump_085_4921
 
 Jump_085_4912::
-    ld hl, Func_012_689A
-    ld b, $12
-    rst $10
+    farcall Func_012_689A
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_085_48E9
@@ -1364,9 +1266,7 @@ Jump_085_4932::
 Jump_085_493E::
     ld a, $30
     ldh [hFFC6], a
-    ld hl, Func_00A_47A4
-    ld b, $0A
-    rst $10
+    farcall Func_00A_47A4
     ld hl, wC923
     inc [hl]
     ret
@@ -1401,15 +1301,11 @@ Jump_085_496F::
     call Func_000_1845
     ld a, $07
     ldh [hFFC6], a
-    ld hl, Func_085_5B23
-    ld b, $85
-    rst $10
+    farcall Func_085_5B23
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_49BF
-    ld hl, Func_012_6990
-    ld b, $12
-    rst $10
+    farcall Func_012_6990
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_085_49A2
@@ -1431,17 +1327,13 @@ Jump_085_49A2::
     ldh [hFFC7], a
 
 Jump_085_49B2::
-    ld hl, Func_012_6955
-    ld b, $12
-    rst $10
+    farcall Func_012_6955
     ld a, $01
     ld [wC921], a
     jr Jump_085_49CE
 
 Jump_085_49BF::
-    ld hl, Func_012_689A
-    ld b, $12
-    rst $10
+    farcall Func_012_689A
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_085_4996
@@ -1467,9 +1359,7 @@ Jump_085_49DF::
 Jump_085_49EB::
     ld a, $2F
     ldh [hFFC6], a
-    ld hl, Func_00A_47A4
-    ld b, $0A
-    rst $10
+    farcall Func_00A_47A4
     ld hl, wC923
     inc [hl]
     ret
@@ -1499,9 +1389,7 @@ Jump_085_4A15::
 Jump_085_4A1C::
     ld a, $15
     ldh [hFFC6], a
-    ld hl, Func_00A_47A4
-    ld b, $0A
-    rst $10
+    farcall Func_00A_47A4
     ld hl, wC923
     inc [hl]
     ret
@@ -1537,9 +1425,7 @@ Jump_085_4A58::
     call Func_000_1845
     ld a, $14
     ldh [hFFC6], a
-    ld hl, Func_00A_47A4
-    ld b, $0A
-    rst $10
+    farcall Func_00A_47A4
     ld hl, wC923
     inc [hl]
     ret
@@ -1570,9 +1456,7 @@ Jump_085_4A79::
     jr c, Jump_085_4AAB
     ld a, $20
     ld [wC8C8], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, $04
     call Func_000_0DF2
     ret
@@ -1580,9 +1464,7 @@ Jump_085_4A79::
 Jump_085_4AAB::
     ld a, $20
     ld [wC8C8], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, $04
     call Func_000_0DF2
     ret
@@ -1595,9 +1477,7 @@ Jump_085_4ABC::
     ldh [hFF90], a
     ld a, $70
     ld [wC8C8], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, $04
     call Func_000_0DF2
     ret
@@ -1607,9 +1487,7 @@ Jump_085_4AD9::
     ldh [hFF90], a
     ld a, $70
     ld [wC8C8], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld a, $04
     call Func_000_0DF2
     ret
@@ -1663,9 +1541,7 @@ Jump_085_4B33::
     ld [wC929], a
     ld a, $C0
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -1675,9 +1551,7 @@ Jump_085_4B33::
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    ld hl, Func_001_6E46
-    ld b, $01
-    rst $10
+    farcall Func_001_6E46
     ld de, $002B
     call Func_000_1845
     ld a, $80
@@ -1694,9 +1568,7 @@ Jump_085_4B6F::
     ld [wC92A], a
     ld a, $70
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -1709,9 +1581,7 @@ Jump_085_4B94::
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -1766,9 +1636,7 @@ Jump_085_4BEC::
     db $D0, $10, $C0, $20, $D0, $30, $E0, $20
 
 Jump_085_4C00::
-    ld hl, Func_05F_6D78
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6D78
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_4C18
@@ -1821,9 +1689,7 @@ Jump_085_4C51::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     pop af
     ld [wC921], a
     ld a, [wC921]
@@ -1852,9 +1718,7 @@ Jump_085_4C7F::
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    ld hl, Func_001_6E46
-    ld b, $01
-    rst $10
+    farcall Func_001_6E46
     ld de, $002A
     call Func_000_1845
     xor a, a
@@ -1890,9 +1754,7 @@ Jump_085_4CD5::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     pop af
     ld [wC921], a
     ld a, [wC921]
@@ -1924,9 +1786,7 @@ Jump_085_4D03::
     ret
 
 Jump_085_4D29::
-    ld hl, Func_012_61EF
-    ld b, $12
-    rst $10
+    farcall Func_012_61EF
     ret
 
 Jump_085_4D30::
@@ -1961,9 +1821,7 @@ Jump_085_4D55::
     db $D0, $10, $C0, $20, $D0, $30, $E0, $20
 
 Jump_085_4D69::
-    ld hl, Func_05F_6D78
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6D78
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_4D81
@@ -1987,9 +1845,7 @@ Func_085_4D8D::
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    ld hl, Func_001_6E46
-    ld b, $01
-    rst $10
+    farcall Func_001_6E46
     ld a, $80
     ld [wC919], a
     ret
@@ -2113,9 +1969,7 @@ Jump_085_4E39::
     ldh [rSVBK], a
 
 Jump_085_4E61::
-    ld hl, Func_05F_6DDB
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6DDB
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -2161,36 +2015,28 @@ Jump_085_4EAA::
     ld [wC92A], a
     ld a, $10
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $02
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $03
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $20
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $00
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $30
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -2305,9 +2151,7 @@ Jump_085_4FBE::
     ld [wCBAB], a
     cp a, $40
     ret nz
-    ld hl, Func_05F_6E09
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6E09
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -2640,9 +2484,7 @@ Jump_085_51DC::
 Jump_085_51E9::
     ld a, [de]
     ldh [hFFC6], a
-    ld hl, Func_00A_47A4
-    ld b, $0A
-    rst $10
+    farcall Func_00A_47A4
     ld hl, wC923
     inc [hl]
     ret
@@ -2820,9 +2662,7 @@ Jump_085_5302::
 Jump_085_530D::
     ld a, [hl]
     ldh [hFFC6], a
-    ld hl, Func_012_6B98
-    ld b, $12
-    rst $10
+    farcall Func_012_6B98
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -2879,9 +2719,7 @@ Func_085_5361:: ; heuristic: target of a pointer table; C0
     jr z, Jump_085_5389
     ld a, $02
     ld [wC92A], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -2894,9 +2732,7 @@ Func_085_5361:: ; heuristic: target of a pointer table; C0
 Jump_085_5389::
     ld a, $03
     ld [wC92A], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -2918,9 +2754,7 @@ Func_085_53A2:: ; heuristic: target of a pointer table; C0
 Jump_085_53B0::
     xor a, a
     ldh [hFFC6], a
-    ld hl, Func_05F_6BF8
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BF8
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -2939,9 +2773,7 @@ Func_085_53C3:: ; heuristic: target of a pointer table; C0
 Jump_085_53D0::
     ld a, $1B
     ldh [hFFC6], a
-    ld hl, Func_00A_47A4
-    ld b, $0A
-    rst $10
+    farcall Func_00A_47A4
     ld hl, wC923
     inc [hl]
     ret
@@ -3026,9 +2858,7 @@ Jump_085_5455::
     ldh [hFFC7], a
     ld a, $00
     ldh [hFFC6], a
-    ld hl, Func_05F_6BF8
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BF8
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -3067,9 +2897,7 @@ Jump_085_548F::
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     jr Jump_085_54B8
 
 Jump_085_54A8::
@@ -3077,9 +2905,7 @@ Jump_085_54A8::
     ld [wC92A], a
     ld a, $B0
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
 
 Jump_085_54B8::
     ld hl, wC929
@@ -3112,9 +2938,7 @@ Jump_085_54D4::
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ret
 
 Jump_085_54F1::
@@ -3122,9 +2946,7 @@ Jump_085_54F1::
     ld [wC92A], a
     ld a, $B0
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -3143,19 +2965,13 @@ Jump_085_5514::
     ld [wC928], a
     ld a, $01
     ld [wC929], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $03
     ld [wC929], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, $04
     ld [wC929], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -3184,9 +3000,7 @@ Jump_085_5562::
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -3254,9 +3068,7 @@ Jump_085_55D0::
     ld [wC8C9], a
     ld a, $01
     ld [wC8C6], a
-    ld hl, Func_05F_6C5A
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6C5A
     ld hl, $0185
     call Func_085_57C8
     ret
@@ -3292,9 +3104,7 @@ Jump_085_561E::
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    ld hl, Func_05F_6B54
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6B54
     ld a, [wC92C]
     or a, a
     ret z
@@ -3385,9 +3195,7 @@ Jump_085_56B3::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -3418,9 +3226,7 @@ Jump_085_56FF::
 Jump_085_571A::
     ld a, $02
     ldh [hFFC6], a
-    ld hl, Func_012_6B98
-    ld b, $12
-    rst $10
+    farcall Func_012_6B98
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -3490,9 +3296,7 @@ Func_085_5780::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     inc a
     inc a
@@ -3514,9 +3318,7 @@ Func_085_57A2:: ; heuristic: follows a terminator; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    ld hl, Func_05F_6BCD
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6BCD
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -3541,9 +3343,7 @@ Func_085_57C8::
 
 Func_085_57D5::
     ld [wC928], a
-    ld hl, Func_05F_6936
-    ld b, $5F
-    rst $10
+    farcall Func_05F_6936
     ld a, [wC926]
     cp a, $FF
     jr z, Jump_085_57E7
@@ -3976,9 +3776,7 @@ Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
     db $74, $01, $00, $00
 
 Func_085_5B04::
-    ld hl, Func_016_5AC0
-    ld b, $16
-    rst $10
+    farcall Func_016_5AC0
     ld hl, $0000
     ld de, wD09D
     ld b, $0B
@@ -4141,9 +3939,7 @@ Jump_085_5BE9::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     ld b, $00
     ld de, wCFDD
     ld hl, vTiles0 + $500
@@ -4168,9 +3964,7 @@ Jump_085_5C08::
     ldh [hFFC6], a
     ld de, hFFC6
     ld c, $00
-    ld hl, Func_034_4008
-    ld b, $34
-    rst $10
+    farcall Func_034_4008
     pop bc
     push bc
     ld a, b
@@ -4188,9 +3982,7 @@ Jump_085_5C3B::
     ld [hl], a
     xor a, a
     ldh [hFFC8], a
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     pop bc
     pop de
     pop hl
@@ -4253,9 +4045,7 @@ Jump_085_5CBE::
     jr Jump_085_5D41
 
 Jump_085_5CD8::
-    ld hl, Func_061_4001
-    ld b, $61
-    rst $10
+    farcall Func_061_4001
     call Func_000_09F3
     ld a, [wCD04]
     and a, $1F
@@ -4341,9 +4131,7 @@ Jump_085_5D4C::
     or a, a
     jp z, Jump_085_5CB4
     ld [wC8FE], a
-    ld hl, Func_012_7179
-    ld b, $12
-    rst $10
+    farcall Func_012_7179
     ld a, [wC924]
     ld [wC8FF], a
     ld a, [wC925]

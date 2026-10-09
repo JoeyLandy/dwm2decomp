@@ -3292,9 +3292,7 @@ Func_039_5F0E:: ; heuristic: target of a pointer table; C0
 Jump_039_5F3A::
     ld a, e
     ld [wD868], a
-    ld hl, Func_01A_4022
-    ld b, $1A
-    rst $10
+    farcall Func_01A_4022
     ld a, [wD8A4]
     and a, $04
     xor a, $04
@@ -5758,15 +5756,11 @@ Func_039_6E27::
     jr z, Jump_039_6E4F
 
 Jump_039_6E3F::
-    ld hl, Func_036_7DC9
-    ld b, $36
-    rst $10
+    farcall Func_036_7DC9
     jr Jump_039_6E5F
 
 Jump_039_6E47::
-    ld hl, Func_01A_408F
-    ld b, $1A
-    rst $10
+    farcall Func_01A_408F
     jr Jump_039_6E5F
 
 Jump_039_6E4F::
@@ -5937,9 +5931,7 @@ Jump_039_6F2D::
     ret
 
 Func_039_6F32::
-    ld hl, Func_03B_40CD
-    ld b, $3B
-    rst $10
+    farcall Func_03B_40CD
     ld a, [wDAC4]
     ld l, a
     ld a, [wDAC5]
@@ -5969,9 +5961,7 @@ Jump_039_6F65::
     ret
 
 Func_039_6F66:: ; heuristic: follows a terminator; C0
-    ld hl, Func_03B_4111
-    ld b, $3B
-    rst $10
+    farcall Func_03B_4111
     ld a, [wDAC4]
     ld l, a
     ld a, [wDAC5]
@@ -6227,9 +6217,7 @@ Jump_039_70BC::
     ld [wD007], a
     push de
     push bc
-    ld hl, Func_035_400A
-    ld b, $35
-    rst $10
+    farcall Func_035_400A
     pop bc
     pop de
     ld a, [wD008]
@@ -6294,9 +6282,7 @@ Jump_039_7122::
     ld a, [hl]
     ld [wD007], a
     push de
-    ld hl, Func_035_400A
-    ld b, $35
-    rst $10
+    farcall Func_035_400A
     pop de
     ld a, [wD008]
     cp a, d

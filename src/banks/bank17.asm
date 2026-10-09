@@ -186,9 +186,7 @@ Jump_017_41F4::
     call Func_017_421A
     ld a, $FF
     ld [wC47C], a
-    ld b, $17
-    ld hl, Func_017_4001
-    rst $10
+    farcall_b Func_017_4001
     call Func_000_05D1
     ret
 

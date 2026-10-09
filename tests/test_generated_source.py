@@ -20,10 +20,11 @@ TERMINATOR = re.compile(r"\s+(?:ret|reti|jp |jr |jp$)")
 @unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
 class GeneratedSource(unittest.TestCase):
     def test_banked_call_labels_name_the_target_bank(self):
-        wrong, checked = [], 0
+        wrong, checked, macros = [], 0, 0
         for f in sorted(BANKS.glob("bank*.asm")):
             lines = f.read_text(encoding="utf-8").splitlines()
             for i, line in enumerate(lines):
+                macros += line.startswith(("    farcall ", "    farcall_b "))
                 if not CALL.match(line):
                     continue
                 hl = bnk = None
@@ -40,7 +41,10 @@ class GeneratedSource(unittest.TestCase):
                 checked += 1
                 if int(hl[1].group(1), 16) != int(bnk.group(1), 16):
                     wrong.append(f"{f.name}:{hl[0] + 1} {lines[hl[0]].strip()} but ld b,${bnk.group(1)}")
-        self.assertGreater(checked, 1000, "audit found too few banked-call setups to be meaningful")
+        # `farcall L` expands to ld b, BANK(L), so its bank is right by construction; every
+        # explicit setup that remains is audited here.
+        self.assertGreater(macros + checked, 1000, "audit found too few banked calls to be meaningful")
+        self.assertGreater(macros, 3000, "banked calls should be written with the farcall macros")
         self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} banked-call labels name the wrong bank")
 
 
@@ -105,7 +109,7 @@ class SymbolicOperands(unittest.TestCase):
 
     def test_includes_define_every_symbol_the_banks_use(self):
         main = (BANKS.parent / "main.asm").read_text(encoding="utf-8").splitlines()
-        self.assertEqual(main[:2], ['INCLUDE "hardware.inc"', 'INCLUDE "ram.asm"'])
+        self.assertEqual(main[:3], ['INCLUDE "hardware.inc"', 'INCLUDE "ram.asm"', 'INCLUDE "macros.inc"'])
 
 
 REF = BANKS.parents[1] / "local" / "roms" / "dwm2-cobi-us.gbc"

@@ -49,6 +49,24 @@ LD_HL = re.compile(r"ld hl, \$([0-9A-F]{4})$")
 LD_B = re.compile(r"ld b, \$([0-9A-F]{2})$")
 MAX_TABLE = 128
 
+MACROS_INC = """; Macros that name instruction idioms found in the ROM (E-0007). They expand to exactly
+; the instructions the ROM contains, so the bytes do not change.
+
+; A far call: `rst $10` calls the code at HL with ROM bank B mapped, then restores the caller's
+; bank (Func_000_0010). The ROM loads the two registers in either order, hence two macros.
+MACRO farcall
+    ld hl, \\1
+    ld b, BANK(\\1)
+    rst $10
+ENDM
+
+MACRO farcall_b
+    ld b, BANK(\\1)
+    ld hl, \\1
+    rst $10
+ENDM
+"""
+
 
 class Rom:
     def __init__(self, data: bytes):
@@ -887,6 +905,41 @@ class Rom:
                     out.append("    db " + ", ".join(f"${x:02X}" for x in seg[c:c + 16]))
             i = k
 
+    _FC_HL = re.compile(r"^    ld hl, ([A-Za-z_][A-Za-z0-9_]*)$")
+    _FC_B = re.compile(r"^    ld b, \$([0-9A-F]{2})$")
+
+    def _label_banks(self) -> dict[str, int]:
+        if not hasattr(self, "_lb"):
+            self._lb = {}
+            for b in range(self.nbanks):
+                for d in (self.labels[b], self.dlabels[b]):
+                    for name in d.values():
+                        self._lb[name] = b
+        return self._lb
+
+    def compress_farcalls(self, out: list[str]) -> list[str]:
+        """Rewrite `ld hl, L / ld b, BANK / rst $10` (either load first) as one macro call when
+        L is a label in bank BANK. The macros expand to the same three instructions, so the
+        bytes do not change; a label or comment between the lines prevents the rewrite."""
+        banks = self._label_banks()
+        res, i = [], 0
+        while i < len(out):
+            if i + 2 < len(out) and out[i + 2] == "    rst $10":
+                a, b = out[i], out[i + 1]
+                m1, m2 = self._FC_HL.match(a), self._FC_B.match(b)
+                if m1 and m2 and banks.get(m1.group(1)) == int(m2.group(1), 16):
+                    res.append(f"    farcall {m1.group(1)}")
+                    i += 3
+                    continue
+                m1, m2 = self._FC_B.match(a), self._FC_HL.match(b)
+                if m1 and m2 and banks.get(m2.group(1)) == int(m1.group(1), 16):
+                    res.append(f"    farcall_b {m2.group(1)}")
+                    i += 3
+                    continue
+            res.append(out[i])
+            i += 1
+        return res
+
     _MEM = re.compile(r"\[\$([0-9A-F]{4})\]")
     _IMM = re.compile(r"^(ld (?:hl|de|bc|sp), )\$([0-9A-F]{4})$")
 
@@ -1030,7 +1083,7 @@ class Rom:
             else:
                 out.append(f"    {text}")
             pc += n
-        return hdr + "\n".join(out) + "\n"
+        return hdr + "\n".join(self.compress_farcalls(out)) + "\n"
 
 
 def main() -> int:
@@ -1078,12 +1131,13 @@ def main() -> int:
         tot_code += code
         if code:
             reached.append((b, code))
+    (ROOT / "src/macros.inc").write_text(MACROS_INC, encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     rom.write_ram_inc(ROOT / "src/ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "
         f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")
     (ROOT / "src/main.asm").write_text(
-        'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\n'
+        'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\n'
         + "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
         encoding="utf-8", newline="\n")
     log("done writing; rebuild and verify with tools/build.py")

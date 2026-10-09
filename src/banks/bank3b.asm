@@ -32,9 +32,7 @@ Jump_03B_4023::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wCFF6]
     ld c, a
     ld a, [wCFF7]
@@ -78,9 +76,7 @@ Jump_03B_4067::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wCFF8]
     ld c, a
     ld a, [wCFF9]
@@ -124,9 +120,7 @@ Jump_03B_40AB::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wCFFA]
     ld c, a
     ld a, [wCFFB]
@@ -170,9 +164,7 @@ Jump_03B_40EF::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wCFFC]
     ld c, a
     ld a, [wCFFD]
@@ -216,9 +208,7 @@ Jump_03B_4133::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wCFFE]
     ld c, a
     ld a, [wCFFF]
@@ -262,9 +252,7 @@ Jump_03B_4177::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wD000]
     ld c, a
     ld a, [wD001]
@@ -308,9 +296,7 @@ Jump_03B_41B9::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wCFF5]
     ld c, a
 
@@ -350,9 +336,7 @@ Jump_03B_41F3::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wD002]
     ld c, a
 
@@ -392,9 +376,7 @@ Jump_03B_422D::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wD004]
     ld c, a
 
@@ -434,9 +416,7 @@ Jump_03B_4267::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wD003]
     ld c, a
 
@@ -476,9 +456,7 @@ Jump_03B_42A1::
     ld [wCFE6], a
     ld a, h
     ld [wCFE7], a
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     ld a, [wD005]
     ld c, a
 
@@ -499,9 +477,7 @@ Func_03B_42BB::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld a, [wD00A]
     swap a
     ld c, a
@@ -601,9 +577,7 @@ Jump_03B_435D::
 
 Jump_03B_4364::
     ld [wD8A6], a
-    ld hl, Func_03A_6E92
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6E92
     ld a, $0D
     ld [wCFCB], a
     ret
@@ -623,9 +597,7 @@ Jump_03B_4375::
 Jump_03B_437F::
     ld hl, wCFCB
     inc [hl]
-    ld hl, Func_03A_6E92
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6E92
     ret
 
 Jump_03B_438A::
@@ -692,17 +664,13 @@ Jump_03B_43E5::
 Jump_03B_43E9::
     ld a, $08
     ld [wDAD2], a
-    ld hl, Func_03A_4001
-    ld b, $3A
-    rst $10
+    farcall Func_03A_4001
     ret
 
 Jump_03B_43F5::
     call Func_03B_444A
     ld d, $7E
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld a, $0B
     ld [wCFCB], a
     ret
@@ -710,9 +678,7 @@ Jump_03B_43F5::
 Jump_03B_4406::
     call Func_03B_444A
     ld d, $E6
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     ld a, $0B
     ld [wCFCB], a
     ret
@@ -720,9 +686,7 @@ Jump_03B_4406::
 Jump_03B_4417::
     call Func_03B_444A
     ld d, $7B
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld a, $0B
     ld [wCFCB], a
     ret
@@ -730,9 +694,7 @@ Jump_03B_4417::
 Jump_03B_4428::
     call Func_03B_444A
     ld d, $7D
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld a, $0B
     ld [wCFCB], a
     ret
@@ -740,9 +702,7 @@ Jump_03B_4428::
 Jump_03B_4439::
     call Func_03B_444A
     ld d, $7C
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld a, $0B
     ld [wCFCB], a
     ret
@@ -750,9 +710,7 @@ Jump_03B_4439::
 Func_03B_444A::
     ld a, [wD890]
     ldh [hFFC6], a
-    ld hl, Func_03A_774C
-    ld b, $3A
-    rst $10
+    farcall Func_03A_774C
     ret
 
 Jump_03B_4456::
@@ -765,9 +723,7 @@ Jump_03B_4456::
     and a, $C0
     ret z
     ld d, $66
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     call Func_03B_470B
     ret
 
@@ -809,14 +765,10 @@ Jump_03B_449D::
     ld [wD808], a
     ld a, $04
     ld [wDAD2], a
-    ld hl, Func_03A_4001
-    ld b, $3A
-    rst $10
+    farcall Func_03A_4001
     ld a, $01
     ld [wDAD3], a
-    ld hl, Func_03A_5762
-    ld b, $3A
-    rst $10
+    farcall Func_03A_5762
     ld a, [wD8A6]
     cp a, $01
     ret c
@@ -888,9 +840,7 @@ Jump_03B_4529::
 Jump_03B_452F::
     ld a, [wC0A0]
     ld d, a
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     call Func_03B_453D
     ret
 
@@ -961,9 +911,7 @@ Jump_03B_459E::
     ret
 
 Jump_03B_459F::
-    ld hl, Func_032_6764
-    ld b, $32
-    rst $10
+    farcall Func_032_6764
     ret
 
 Jump_03B_45A6::
@@ -1007,23 +955,17 @@ Jump_03B_45E3::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    ld hl, Func_016_5A7E
-    ld b, $16
-    rst $10
+    farcall Func_016_5A7E
     ld a, c
     or a, a
     jr z, Jump_03B_45FF
     ld d, $2B
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     jr Jump_03B_4607
 
 Jump_03B_45FF::
     ld d, $2A
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
 
 Jump_03B_4607::
     ld hl, wDABA
@@ -1154,12 +1096,8 @@ Jump_03B_46AE::
     and a, $03
     add a, b
     ld [wD082], a
-    ld hl, Func_016_4007
-    ld b, $16
-    rst $10
-    ld hl, Func_016_4C1D
-    ld b, $16
-    rst $10
+    farcall Func_016_4007
+    farcall Func_016_4C1D
     ld a, [wD081]
     cp a, $FF
     ret nz
@@ -1173,9 +1111,7 @@ Jump_03B_46AE::
 
 Jump_03B_46E6::
     ld d, $87
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     ret
 
 Jump_03B_46EF::
@@ -1189,9 +1125,7 @@ Jump_03B_46EF::
 
 Jump_03B_46FD::
     ld d, $CC
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     ld a, $0C
     ld [wCFCB], a
     ret
@@ -1206,9 +1140,7 @@ Func_03B_4711::
     ld hl, wD88B
     ld bc, $0003
     call Func_000_0949
-    ld hl, Func_03A_7AE3
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7AE3
     ld a, d
     cp a, $03
     jr z, Jump_03B_4735
@@ -2100,9 +2032,7 @@ Func_03B_4C7D:: ; heuristic: target of a pointer table; C0
     call Func_000_3E54
     jr nc, Jump_03B_4C8E
     jr z, Jump_03B_4C91
-    ld hl, Func_036_6D0A
-    ld b, $36
-    rst $10
+    farcall Func_036_6D0A
     ret
 
 Jump_03B_4C8E::
@@ -2146,9 +2076,7 @@ Jump_03B_4CC8::
     ld a, [wD8A5]
     cp a, $03
     jr c, Jump_03B_4CE2
-    ld hl, Func_03A_7AE3
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7AE3
     ld a, b
     cp a, $01
     jr z, Jump_03B_4CE2
@@ -2168,25 +2096,19 @@ Jump_03B_4CEA::
 
 Jump_03B_4CF2::
     ld d, $7B
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4D00::
     ld d, $7D
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4D0E::
     ld d, $7C
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld bc, $0000
     jp Jump_03B_4EFA
 
@@ -2231,9 +2153,7 @@ Jump_03B_4D59::
     and a, $03
     jr nz, Jump_03B_4DAC
     push hl
-    ld hl, Func_036_60D1
-    ld b, $36
-    rst $10
+    farcall Func_036_60D1
     pop hl
     ld a, e
     or a, a
@@ -2250,23 +2170,17 @@ Jump_03B_4D59::
     ld a, [wD8A5]
     cp a, $03
     jr c, Jump_03B_4DA3
-    ld hl, Func_03A_7AE3
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7AE3
     ld a, b
     cp a, $01
     jr z, Jump_03B_4DA3
     ld d, $FE
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     ret
 
 Jump_03B_4DA3::
     ld d, $96
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     ret
 
 Jump_03B_4DAC::
@@ -2277,23 +2191,17 @@ Jump_03B_4DAC::
     ld a, [wD8A5]
     cp a, $03
     jr c, Jump_03B_4DCF
-    ld hl, Func_03A_7AE3
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7AE3
     ld a, b
     cp a, $01
     jr z, Jump_03B_4DCF
     ld d, $FE
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     ret
 
 Jump_03B_4DCF::
     ld d, $96
-    ld hl, Func_03A_7193
-    ld b, $3A
-    rst $10
+    farcall Func_03A_7193
     ret
 
 Jump_03B_4DD8::
@@ -2303,25 +2211,19 @@ Jump_03B_4DD8::
 
 Jump_03B_4DE0::
     ld d, $7B
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4DEE::
     ld d, $7D
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4DFC::
     ld d, $7C
-    ld hl, Func_03A_6EE5
-    ld b, $3A
-    rst $10
+    farcall Func_03A_6EE5
     ld bc, $0000
     jp Jump_03B_4EFA
 

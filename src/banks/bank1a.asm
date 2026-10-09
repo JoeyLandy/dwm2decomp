@@ -1167,9 +1167,7 @@ Func_01A_624B::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld hl, wD09D
     ld de, wD010
     ld b, $03
@@ -1511,9 +1509,7 @@ Func_01A_6418::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     pop hl
     ld a, l
     add a, $4B

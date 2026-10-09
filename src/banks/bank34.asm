@@ -13,9 +13,7 @@ Func_034_4008::
     ld a, [wCFE6]
     cp a, $50
     jr c, Jump_034_401D
-    ld hl, Func_0A2_4001
-    ld b, $A2
-    rst $10
+    farcall Func_0A2_4001
     ret
 
 Jump_034_401D::
@@ -49,9 +47,7 @@ Func_034_4040::
     ld a, [wCFE6]
     cp a, $50
     jr c, Jump_034_4055
-    ld hl, Func_0A2_402D
-    ld b, $A2
-    rst $10
+    farcall Func_0A2_402D
     ret
 
 Jump_034_4055::

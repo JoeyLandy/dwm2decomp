@@ -5,9 +5,7 @@ Func_02B_4001::
     ld a, [wC529]
     cp a, $8A
     jr c, Jump_02B_400F
-    ld hl, Func_098_4001
-    ld b, $98
-    rst $10
+    farcall Func_098_4001
     ret
 
 Jump_02B_400F::
@@ -19,9 +17,7 @@ Func_02B_4016:: ; heuristic: follows a terminator; C0
     ld a, [wC529]
     cp a, $8A
     jr c, Jump_02B_4024
-    ld hl, Func_098_4010
-    ld b, $98
-    rst $10
+    farcall Func_098_4010
     ret
 
 Jump_02B_4024::

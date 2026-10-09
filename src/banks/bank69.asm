@@ -7,12 +7,8 @@ Func_069_4001::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_069_401E
-    ld hl, Func_004_4025
-    ld b, $04
-    rst $10
-    ld hl, Func_004_4008
-    ld b, $04
-    rst $10
+    farcall Func_004_4025
+    farcall Func_004_4008
     ld a, $7F
     ld [wC527], a
     ret
@@ -278,9 +274,7 @@ Jump_069_413A::
     inc de
     push hl
     push de
-    ld hl, Func_004_431F
-    ld b, $04
-    rst $10
+    farcall Func_004_431F
     pop de
     pop hl
     pop bc
@@ -288,9 +282,7 @@ Jump_069_413A::
     jr nz, Jump_069_40FC
 
 Jump_069_4168::
-    ld hl, Func_004_4008
-    ld b, $04
-    rst $10
+    farcall Func_004_4008
     ld a, $7F
     ld [wC527], a
     ret

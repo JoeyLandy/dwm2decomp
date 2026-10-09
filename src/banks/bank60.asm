@@ -46,9 +46,7 @@ Func_060_4035::
     call Func_060_51B7
     or a, a
     jr nz, Func_060_4035
-    ld hl, Func_084_4001
-    ld b, $84
-    rst $10
+    farcall Func_084_4001
     call Func_060_50E5
     call Func_060_5373
     call Func_060_4076
@@ -4513,9 +4511,7 @@ Jump_060_68FF::
     ld [de], a
     inc de
     push de
-    ld hl, Func_061_4706
-    ld b, $61
-    rst $10
+    farcall Func_061_4706
     pop de
     ldh a, [hFFC6]
     ld [de], a

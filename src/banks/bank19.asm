@@ -189,24 +189,12 @@ Jump_019_4199::
     ret
 
 Func_019_419B::
-    ld hl, Func_031_7239
-    ld b, $31
-    rst $10
-    ld hl, Func_031_71F5
-    ld b, $31
-    rst $10
-    ld hl, Func_031_72AC
-    ld b, $31
-    rst $10
-    ld hl, Func_031_72CC
-    ld b, $31
-    rst $10
-    ld hl, Func_031_7389
-    ld b, $31
-    rst $10
-    ld hl, Func_031_7321
-    ld b, $31
-    rst $10
+    farcall Func_031_7239
+    farcall Func_031_71F5
+    farcall Func_031_72AC
+    farcall Func_031_72CC
+    farcall Func_031_7389
+    farcall Func_031_7321
     ld hl, vBGMap0
     call Func_019_4516
     ld a, $7F
@@ -325,9 +313,7 @@ Jump_019_4276::
     ld a, [hl]
     ld [wD007], a
     push de
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     pop de
     ld a, [wD00B]
     ld h, a
@@ -590,9 +576,7 @@ Jump_019_43AA::
     ld [wD86A], a
     ld a, d
     ld [wD86B], a
-    ld hl, Func_01A_4022
-    ld b, $1A
-    rst $10
+    farcall Func_01A_4022
     ld a, [wD86A]
     ld e, a
     ld a, [wD86B]
@@ -1215,9 +1199,7 @@ Jump_019_471A::
     ld a, h
     ld [wCFE7], a
     push de
-    ld hl, Func_034_4001
-    ld b, $34
-    rst $10
+    farcall Func_034_4001
     pop de
     pop bc
     push de
@@ -1233,9 +1215,7 @@ Jump_019_471A::
     ld [wD007], a
     push bc
     push de
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     pop de
     pop bc
     call Func_019_4B37
@@ -1281,9 +1261,7 @@ Jump_019_477B::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld a, [wD86A]
     add a, $0A
     ld l, a
@@ -1323,9 +1301,7 @@ Jump_019_477B::
     push hl
     ld a, [wD014]
     ldh [hFFC6], a
-    ld hl, Func_01A_63A7
-    ld b, $1A
-    rst $10
+    farcall Func_01A_63A7
     pop hl
     ld a, $01
     ld [wD868], a
@@ -1334,9 +1310,7 @@ Jump_019_477B::
     ld a, [wD015]
     ldh [hFFC6], a
     push hl
-    ld hl, Func_01A_63A7
-    ld b, $1A
-    rst $10
+    farcall Func_01A_63A7
     pop hl
     ld a, $00
     ld [wD868], a
@@ -1347,9 +1321,7 @@ Jump_019_477B::
     ld a, [wD016]
     ldh [hFFC6], a
     push hl
-    ld hl, Func_01A_63A7
-    ld b, $1A
-    rst $10
+    farcall Func_01A_63A7
     pop hl
     call Func_019_48B1
     ld a, $03
@@ -1357,9 +1329,7 @@ Jump_019_477B::
     ld a, [wD017]
     ldh [hFFC6], a
     push hl
-    ld hl, Func_01A_63A7
-    ld b, $1A
-    rst $10
+    farcall Func_01A_63A7
     pop hl
     call Func_019_48B1
     ld a, $00
@@ -1367,17 +1337,13 @@ Jump_019_477B::
     ld a, [wD018]
     ldh [hFFC6], a
     push hl
-    ld hl, Func_01A_63A7
-    ld b, $1A
-    rst $10
+    farcall Func_01A_63A7
     pop hl
     call Func_019_48B1
     ld a, [wD019]
     ldh [hFFC6], a
     push hl
-    ld hl, Func_01A_63A7
-    ld b, $1A
-    rst $10
+    farcall Func_01A_63A7
     pop hl
     call Func_019_48B1
     ld a, $E7
@@ -1407,9 +1373,7 @@ Jump_019_477B::
     ld [hl+], a
     call Func_019_496F
     call Func_019_49B1
-    ld hl, Func_01A_5FA7
-    ld b, $1A
-    rst $10
+    farcall Func_01A_5FA7
     ld a, [wD86A]
     ld e, a
     ld a, [wD86B]
@@ -2535,9 +2499,7 @@ Func_019_73A2::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld a, [wD00F]
     ld bc, $0129
     call Func_000_16AA
@@ -2574,9 +2536,7 @@ Func_019_73DF::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    ld hl, Func_035_4001
-    ld b, $35
-    rst $10
+    farcall Func_035_4001
     ld a, [wD00F]
     ld bc, $0129
     call Func_000_16AA

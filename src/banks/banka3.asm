@@ -908,9 +908,7 @@ Jump_0A3_4B1A::
     jr nz, Jump_0A3_4B1A
 
 Jump_0A3_4B4C::
-    ld hl, Func_0F2_65E6
-    ld b, $F2
-    rst $10
+    farcall Func_0F2_65E6
     xor a, a
     ld [rRAMG], a
     ret

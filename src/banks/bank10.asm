@@ -580,9 +580,7 @@ Func_010_4445:: ; heuristic: target of a pointer table; C0
     ld [wC91A], a
     ld a, h
     ld [wC91B], a
-    ld hl, Func_012_7EC2
-    ld b, $12
-    rst $10
+    farcall Func_012_7EC2
     jp Jump_010_401D
 
 Func_010_445D:: ; heuristic: target of a pointer table; C0
@@ -606,9 +604,7 @@ Jump_010_4477::
     jp Jump_010_401D
 
 Jump_010_447D::
-    ld hl, Func_002_604B
-    ld b, $02
-    rst $10
+    farcall Func_002_604B
     jp Jump_010_401D
 
 Func_010_4486:: ; heuristic: target of a pointer table; C0
@@ -1021,236 +1017,158 @@ Func_010_46E9::
     db $1B, $4A, $44, $66, $4B, $66, $52, $66
 
 Func_010_48E5:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_59AC
-    ld b, $12
-    rst $10
+    farcall Func_012_59AC
     ret
 
 Func_010_48EC:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4001
-    ld b, $12
-    rst $10
+    farcall Func_012_4001
     ret
 
 Func_010_48F3:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4013
-    ld b, $12
-    rst $10
+    farcall Func_012_4013
     ret
 
 Func_010_48FA:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_550E
-    ld b, $12
-    rst $10
+    farcall Func_012_550E
     ret
 
 Func_010_4901:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4030
-    ld b, $12
-    rst $10
+    farcall Func_012_4030
     ret
 
 Func_010_4908:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4064
-    ld b, $12
-    rst $10
+    farcall Func_012_4064
     ret
 
 Func_010_490F:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4210
-    ld b, $12
-    rst $10
+    farcall Func_012_4210
     ret
 
 Func_010_4916:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_44DB
-    ld b, $12
-    rst $10
+    farcall Func_012_44DB
     ret
 
 Func_010_491D:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_43DA
-    ld b, $12
-    rst $10
+    farcall Func_012_43DA
     ret
 
 Func_010_4924:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4F1E
-    ld b, $12
-    rst $10
+    farcall Func_012_4F1E
     ret
 
 Func_010_492B:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4EF9
-    ld b, $12
-    rst $10
+    farcall Func_012_4EF9
     ret
 
 Func_010_4932:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4ECE
-    ld b, $12
-    rst $10
+    farcall Func_012_4ECE
     ret
 
 Func_010_4939:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4E55
-    ld b, $12
-    rst $10
+    farcall Func_012_4E55
     ret
 
 Func_010_4940:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4E4B
-    ld b, $12
-    rst $10
+    farcall Func_012_4E4B
     ret
 
 Func_010_4947:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4A1E
-    ld b, $12
-    rst $10
+    farcall Func_012_4A1E
     ret
 
 Func_010_494E:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4A9A
-    ld b, $12
-    rst $10
+    farcall Func_012_4A9A
     ret
 
 Func_010_4955:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4C07
-    ld b, $12
-    rst $10
+    farcall Func_012_4C07
     ret
 
 Func_010_495C:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4965
-    ld b, $12
-    rst $10
+    farcall Func_012_4965
     ret
 
 Func_010_4963:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4919
-    ld b, $12
-    rst $10
+    farcall Func_012_4919
     ret
 
 Func_010_496A:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_4FEA
-    ld b, $12
-    rst $10
+    farcall Func_012_4FEA
     ret
 
 Func_010_4971:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_50B3
-    ld b, $12
-    rst $10
+    farcall Func_012_50B3
     ret
 
 Func_010_4978:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_50E5
-    ld b, $12
-    rst $10
+    farcall Func_012_50E5
     ret
 
 Func_010_497F:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_51F4
-    ld b, $12
-    rst $10
+    farcall Func_012_51F4
     ret
 
 Func_010_4986:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_63A1
-    ld b, $12
-    rst $10
+    farcall Func_012_63A1
     ret
 
 Func_010_498D:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_630E
-    ld b, $12
-    rst $10
+    farcall Func_012_630E
     ret
 
 Func_010_4994:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_6211
-    ld b, $12
-    rst $10
+    farcall Func_012_6211
     ret
 
 Func_010_499B:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_073_4001
-    ld b, $73
-    rst $10
+    farcall Func_073_4001
     ret
 
 Func_010_49A2:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_5CE5
-    ld b, $12
-    rst $10
+    farcall Func_012_5CE5
     ret
 
 Func_010_49A9:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_5A2F
-    ld b, $12
-    rst $10
+    farcall Func_012_5A2F
     ret
 
 Func_010_49B0:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_5854
-    ld b, $12
-    rst $10
+    farcall Func_012_5854
     ret
 
 Func_010_49B7:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_5728
-    ld b, $12
-    rst $10
+    farcall Func_012_5728
     ret
 
 Func_010_49BE:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_55E8
-    ld b, $12
-    rst $10
+    farcall Func_012_55E8
     ret
 
 Func_010_49C5:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_012_5534
-    ld b, $12
-    rst $10
+    farcall Func_012_5534
     ret
 
 Jump_010_49CC::
-    ld hl, Func_05F_78CE
-    ld b, $5F
-    rst $10
+    farcall Func_05F_78CE
     ret
 
 Jump_010_49D3::
-    ld hl, Func_05F_787C
-    ld b, $5F
-    rst $10
+    farcall Func_05F_787C
     ret
 
 Jump_010_49DA::
-    ld hl, Func_05F_785C
-    ld b, $5F
-    rst $10
+    farcall Func_05F_785C
     ret
 
 Jump_010_49E1::
-    ld hl, Func_05F_77D8
-    ld b, $5F
-    rst $10
+    farcall Func_05F_77D8
 
 Jump_010_49E7::
-    ld hl, Func_05F_77D8
-    ld b, $5F
-    rst $10
+    farcall Func_05F_77D8
     ret
 
 Func_010_49EE:: ; heuristic: follows a terminator; C0
-    ld hl, Func_05F_7969
-    ld b, $5F
-    rst $10
+    farcall Func_05F_7969
     ret
     db $FA, $23, $C9, $C7, $27, $4A, $67, $4A, $84, $4A, $01, $4A, $FA, $CB, $C8, $E6
     db $03, $C0, $21, $9F, $44, $06, $04, $D7, $AF, $EA, $20, $C9, $AF, $EA, $1F, $C9
@@ -1268,9 +1186,7 @@ Jump_010_4A27::
     ld a, [wC922]
     bit 7, a
     jr nz, Jump_010_4A62
-    ld hl, Func_004_4470
-    ld b, $04
-    rst $10
+    farcall Func_004_4470
     ld hl, vTiles1
     ld de, $1202
     call Func_000_2E98
@@ -1347,9 +1263,7 @@ Jump_010_4AB3::
     ld a, [wC8CB]
     and a, $03
     ret nz
-    ld hl, Func_004_449F
-    ld b, $04
-    rst $10
+    farcall Func_004_449F
 
 Jump_010_4AC6::
     xor a, a
@@ -1432,75 +1346,51 @@ Jump_010_4B2D::
     dw Jump_010_4BA0
 
 Jump_010_4B53::
-    ld hl, Func_028_4001
-    ld b, $28
-    rst $10
+    farcall Func_028_4001
     ret
 
 Jump_010_4B5A::
-    ld hl, Func_029_4001
-    ld b, $29
-    rst $10
+    farcall Func_029_4001
     ret
 
 Jump_010_4B61::
-    ld hl, Func_02A_4001
-    ld b, $2A
-    rst $10
+    farcall Func_02A_4001
     ret
 
 Jump_010_4B68::
-    ld hl, Func_02B_4001
-    ld b, $2B
-    rst $10
+    farcall Func_02B_4001
     ret
 
 Jump_010_4B6F::
-    ld hl, Func_02C_4001
-    ld b, $2C
-    rst $10
+    farcall Func_02C_4001
     ret
 
 Jump_010_4B76::
-    ld hl, Func_02D_4001
-    ld b, $2D
-    rst $10
+    farcall Func_02D_4001
     ret
 
 Jump_010_4B7D::
-    ld hl, Func_02E_4001
-    ld b, $2E
-    rst $10
+    farcall Func_02E_4001
     ret
 
 Jump_010_4B84::
-    ld hl, Func_07C_4001
-    ld b, $7C
-    rst $10
+    farcall Func_07C_4001
     ret
 
 Jump_010_4B8B::
-    ld hl, Func_080_4001
-    ld b, $80
-    rst $10
+    farcall Func_080_4001
     ret
 
 Jump_010_4B92::
-    ld hl, Func_082_4001
-    ld b, $82
-    rst $10
+    farcall Func_082_4001
     ret
 
 Jump_010_4B99::
-    ld hl, Func_086_4001
-    ld b, $86
-    rst $10
+    farcall Func_086_4001
     ret
 
 Jump_010_4BA0::
-    ld hl, Func_089_4001
-    ld b, $89
-    rst $10
+    farcall Func_089_4001
     ret
 
 Jump_010_4BA7::
@@ -1513,9 +1403,7 @@ Jump_010_4BA7::
     ld [wC529], a
     xor a, a
     ld [wC528], a
-    ld hl, Func_083_4001
-    ld b, $83
-    rst $10
+    farcall Func_083_4001
     ret
 
 Jump_010_4BBE::
@@ -1523,549 +1411,367 @@ Jump_010_4BBE::
     ld [wC529], a
     xor a, a
     ld [wC528], a
-    ld hl, Func_08A_4001
-    ld b, $8A
-    rst $10
+    farcall Func_08A_4001
     ret
 
 Func_010_4BCD:: ; heuristic: follows a terminator; C0
-    ld hl, Func_05F_7907
-    ld b, $5F
-    rst $10
+    farcall Func_05F_7907
     ret
 
 Func_010_4BD4:: ; heuristic: follows a terminator; C0
-    ld hl, Func_05F_7AB2
-    ld b, $5F
-    rst $10
+    farcall Func_05F_7AB2
     ret
 
 Func_010_4BDB:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_79F4
-    ld b, $73
-    rst $10
+    farcall Func_073_79F4
     ret
 
 Func_010_4BE2:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_77CC
-    ld b, $73
-    rst $10
+    farcall Func_073_77CC
     ret
 
 Func_010_4BE9:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_765D
-    ld b, $73
-    rst $10
+    farcall Func_073_765D
     ret
 
 Func_010_4BF0:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_75DD
-    ld b, $73
-    rst $10
+    farcall Func_073_75DD
     ret
 
 Func_010_4BF7:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_73A0
-    ld b, $73
-    rst $10
+    farcall Func_073_73A0
     ret
 
 Func_010_4BFE:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_7024
-    ld b, $73
-    rst $10
+    farcall Func_073_7024
     ret
 
 Func_010_4C05:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_758C
-    ld b, $73
-    rst $10
+    farcall Func_073_758C
     ret
 
 Func_010_4C0C:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_567B
-    ld b, $85
-    rst $10
+    farcall Func_085_567B
     ret
 
 Func_010_4C13:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6F5B
-    ld b, $73
-    rst $10
+    farcall Func_073_6F5B
     ret
 
 Func_010_4C1A:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6F14
-    ld b, $73
-    rst $10
+    farcall Func_073_6F14
     ret
 
 Func_010_4C21:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4617
-    ld b, $85
-    rst $10
+    farcall Func_085_4617
     ret
 
 Func_010_4C28:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7A2D
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7A2D
     ret
 
 Func_010_4C2F:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_786F
-    ld b, $0F
-    rst $10
+    farcall Func_00F_786F
     ret
 
 Func_010_4C36:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6E5F
-    ld b, $73
-    rst $10
+    farcall Func_073_6E5F
     ret
 
 Func_010_4C3D:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_772E
-    ld b, $0F
-    rst $10
+    farcall Func_00F_772E
     ret
 
 Func_010_4C44:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6F7C
-    ld b, $73
-    rst $10
+    farcall Func_073_6F7C
     ret
 
 Func_010_4C4B:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6EE7
-    ld b, $73
-    rst $10
+    farcall Func_073_6EE7
     ret
 
 Func_010_4C52:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_55F5
-    ld b, $85
-    rst $10
+    farcall Func_085_55F5
     ret
 
 Func_010_4C59:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7625
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7625
     ret
 
 Func_010_4C60:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_546F
-    ld b, $85
-    rst $10
+    farcall Func_085_546F
     ret
 
 Func_010_4C67:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6EBA
-    ld b, $73
-    rst $10
+    farcall Func_073_6EBA
     ret
 
 Func_010_4C6E:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6E17
-    ld b, $73
-    rst $10
+    farcall Func_073_6E17
     ret
 
 Func_010_4C75:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_72D9
-    ld b, $0F
-    rst $10
+    farcall Func_00F_72D9
     ret
 
 Func_010_4C7C:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7271
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7271
     ret
 
 Func_010_4C83:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_70EC
-    ld b, $0F
-    rst $10
+    farcall Func_00F_70EC
     ret
 
 Func_010_4C8A:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4047
-    ld b, $85
-    rst $10
+    farcall Func_085_4047
     ret
 
 Func_010_4C91:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6B98
-    ld b, $73
-    rst $10
+    farcall Func_073_6B98
     ret
 
 Func_010_4C98:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6B5B
-    ld b, $73
-    rst $10
+    farcall Func_073_6B5B
     ret
 
 Func_010_4C9F:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6AFF
-    ld b, $73
-    rst $10
+    farcall Func_073_6AFF
     ret
 
 Func_010_4CA6:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6AEF
-    ld b, $73
-    rst $10
+    farcall Func_073_6AEF
     ret
 
 Func_010_4CAD:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6ABE
-    ld b, $73
-    rst $10
+    farcall Func_073_6ABE
     ret
 
 Func_010_4CB4:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6A91
-    ld b, $73
-    rst $10
+    farcall Func_073_6A91
     ret
 
 Func_010_4CBB:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_5421
-    ld b, $85
-    rst $10
+    farcall Func_085_5421
     ret
 
 Func_010_4CC2:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7093
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7093
     ret
 
 Func_010_4CC9:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6969
-    ld b, $73
-    rst $10
+    farcall Func_073_6969
     ret
 
 Func_010_4CD0:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6941
-    ld b, $73
-    rst $10
+    farcall Func_073_6941
     ret
 
 Func_010_4CD7:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_679F
-    ld b, $73
-    rst $10
+    farcall Func_073_679F
     ret
 
 Func_010_4CDE:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7049
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7049
     ret
 
 Func_010_4CE5:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_6F65
-    ld b, $0F
-    rst $10
+    farcall Func_00F_6F65
     ret
 
 Func_010_4CEC:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_6D2B
-    ld b, $0F
-    rst $10
+    farcall Func_00F_6D2B
     ret
 
 Func_010_4CF3:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_67BA
-    ld b, $0F
-    rst $10
+    farcall Func_00F_67BA
     ret
 
 Func_010_4CFA:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_65B0
-    ld b, $73
-    rst $10
+    farcall Func_073_65B0
     ret
 
 Func_010_4D01:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_67BA
-    ld b, $0F
-    rst $10
+    farcall Func_00F_67BA
     ret
 
 Func_010_4D08:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_630F
-    ld b, $73
-    rst $10
+    farcall Func_073_630F
     ret
 
 Func_010_4D0F:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_61A7
-    ld b, $73
-    rst $10
+    farcall Func_073_61A7
     ret
 
 Func_010_4D16:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6126
-    ld b, $73
-    rst $10
+    farcall Func_073_6126
     ret
 
 Func_010_4D1D:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_60FE
-    ld b, $73
-    rst $10
+    farcall Func_073_60FE
     ret
 
 Func_010_4D24:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_6681
-    ld b, $0F
-    rst $10
+    farcall Func_00F_6681
     ret
 
 Func_010_4D2B:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_60E6
-    ld b, $0F
-    rst $10
+    farcall Func_00F_60E6
     ret
 
 Func_010_4D32:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_64F3
-    ld b, $0F
-    rst $10
+    farcall Func_00F_64F3
     ret
 
 Func_010_4D39:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_631F
-    ld b, $0F
-    rst $10
+    farcall Func_00F_631F
     ret
 
 Func_010_4D40:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6079
-    ld b, $73
-    rst $10
+    farcall Func_073_6079
     ret
 
 Func_010_4D47:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_6277
-    ld b, $0F
-    rst $10
+    farcall Func_00F_6277
     ret
 
 Func_010_4D4E:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_5F06
-    ld b, $0F
-    rst $10
+    farcall Func_00F_5F06
     ret
 
 Func_010_4D55:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_6038
-    ld b, $73
-    rst $10
+    farcall Func_073_6038
     ret
 
 Func_010_4D5C:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_5D9D
-    ld b, $0F
-    rst $10
+    farcall Func_00F_5D9D
     ret
 
 Func_010_4D63:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_5C3B
-    ld b, $0F
-    rst $10
+    farcall Func_00F_5C3B
     ret
 
 Func_010_4D6A:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_59E6
-    ld b, $0F
-    rst $10
+    farcall Func_00F_59E6
     ret
 
 Func_010_4D71:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_57EA
-    ld b, $0F
-    rst $10
+    farcall Func_00F_57EA
     ret
 
 Func_010_4D78:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5FBC
-    ld b, $73
-    rst $10
+    farcall Func_073_5FBC
     ret
 
 Func_010_4D7F:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4207
-    ld b, $85
-    rst $10
+    farcall Func_085_4207
     ret
 
 Func_010_4D86:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_56CD
-    ld b, $0F
-    rst $10
+    farcall Func_00F_56CD
     ret
 
 Func_010_4D8D:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5F39
-    ld b, $73
-    rst $10
+    farcall Func_073_5F39
     ret
 
 Func_010_4D94:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5EB3
-    ld b, $73
-    rst $10
+    farcall Func_073_5EB3
     ret
 
 Func_010_4D9B:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5DDD
-    ld b, $73
-    rst $10
+    farcall Func_073_5DDD
     ret
 
 Func_010_4DA2:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5DAF
-    ld b, $73
-    rst $10
+    farcall Func_073_5DAF
     ret
 
 Func_010_4DA9:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5C5F
-    ld b, $73
-    rst $10
+    farcall Func_073_5C5F
     ret
 
 Func_010_4DB0:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5AE4
-    ld b, $73
-    rst $10
+    farcall Func_073_5AE4
     ret
 
 Func_010_4DB7:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5AD6
-    ld b, $73
-    rst $10
+    farcall Func_073_5AD6
     ret
 
 Func_010_4DBE:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5ABB
-    ld b, $73
-    rst $10
+    farcall Func_073_5ABB
     ret
 
 Func_010_4DC5:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5A16
-    ld b, $73
-    rst $10
+    farcall Func_073_5A16
     ret
 
 Func_010_4DCC:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_5404
-    ld b, $0F
-    rst $10
+    farcall Func_00F_5404
     ret
 
 Func_010_4DD3:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5987
-    ld b, $73
-    rst $10
+    farcall Func_073_5987
     ret
 
 Func_010_4DDA:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5987
-    ld b, $73
-    rst $10
+    farcall Func_073_5987
     ret
 
 Func_010_4DE1:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_5248
-    ld b, $85
-    rst $10
+    farcall Func_085_5248
     ret
 
 Func_010_4DE8:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5919
-    ld b, $73
-    rst $10
+    farcall Func_073_5919
     ret
 
 Func_010_4DEF:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_58FE
-    ld b, $73
-    rst $10
+    farcall Func_073_58FE
     ret
 
 Func_010_4DF6:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_4595
-    ld b, $0F
-    rst $10
+    farcall Func_00F_4595
     ret
 
 Func_010_4DFD:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_40E9
-    ld b, $0F
-    rst $10
+    farcall Func_00F_40E9
     ret
 
 Func_010_4E04:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_587A
-    ld b, $73
-    rst $10
+    farcall Func_073_587A
     ret
 
 Func_010_4E0B:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5761
-    ld b, $73
-    rst $10
+    farcall Func_073_5761
     ret
 
 Func_010_4E12:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_409A
-    ld b, $0F
-    rst $10
+    farcall Func_00F_409A
     ret
 
 Func_010_4E19:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_572F
-    ld b, $73
-    rst $10
+    farcall Func_073_572F
     ret
 
 Func_010_4E20:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_571D
-    ld b, $73
-    rst $10
+    farcall Func_073_571D
     ret
 
 Func_010_4E27:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_5065
-    ld b, $85
-    rst $10
+    farcall Func_085_5065
     ret
 
 Func_010_4E2E:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_5AF3
-    ld b, $0F
-    rst $10
+    farcall Func_00F_5AF3
     ret
 
 Func_010_4E35:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5D71
-    ld b, $73
-    rst $10
+    farcall Func_073_5D71
     ret
 
 Func_010_4E3C:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5A57
-    ld b, $73
-    rst $10
+    farcall Func_073_5A57
     ret
 
 Func_010_4E43:: ; heuristic: follows a terminator; C0
@@ -2075,231 +1781,155 @@ Func_010_4E43:: ; heuristic: follows a terminator; C0
     ret
 
 Func_010_4E4A:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7D97
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7D97
     ret
 
 Func_010_4E51:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7D62
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7D62
     ret
 
 Func_010_4E58:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4D8D
-    ld b, $85
-    rst $10
+    farcall Func_085_4D8D
     ret
 
 Func_010_4E5F:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4C24
-    ld b, $85
-    rst $10
+    farcall Func_085_4C24
     ret
 
 Func_010_4E66:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4B0F
-    ld b, $85
-    rst $10
+    farcall Func_085_4B0F
     ret
 
 Func_010_4E6D:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4AEE
-    ld b, $85
-    rst $10
+    farcall Func_085_4AEE
     ret
 
 Func_010_4E74:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4A6D
-    ld b, $85
-    rst $10
+    farcall Func_085_4A6D
     ret
 
 Func_010_4E7B:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_494D
-    ld b, $85
-    rst $10
+    farcall Func_085_494D
     ret
 
 Func_010_4E82:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_48A0
-    ld b, $85
-    rst $10
+    farcall Func_085_48A0
     ret
 
 Func_010_4E89:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_505A
-    ld b, $85
-    rst $10
+    farcall Func_085_505A
     ret
 
 Func_010_4E90:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4858
-    ld b, $85
-    rst $10
+    farcall Func_085_4858
     ret
 
 Func_010_4E97:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7CFB
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7CFB
     ret
 
 Func_010_4E9E:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7CA5
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7CA5
     ret
 
 Func_010_4EA5:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_7AC6
-    ld b, $0F
-    rst $10
+    farcall Func_00F_7AC6
     ret
 
 Func_010_4EAC:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4717
-    ld b, $85
-    rst $10
+    farcall Func_085_4717
     ret
 
 Func_010_4EB3:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4DA6
-    ld b, $85
-    rst $10
+    farcall Func_085_4DA6
     ret
 
 Func_010_4EBA:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_46E4
-    ld b, $85
-    rst $10
+    farcall Func_085_46E4
     ret
 
 Func_010_4EC1:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_49FA
-    ld b, $85
-    rst $10
+    farcall Func_085_49FA
     ret
 
 Func_010_4EC8:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4A2B
-    ld b, $85
-    rst $10
+    farcall Func_085_4A2B
     ret
 
 Func_010_4ECF:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4755
-    ld b, $85
-    rst $10
+    farcall Func_085_4755
     ret
 
 Func_010_4ED6:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_481C
-    ld b, $85
-    rst $10
+    farcall Func_085_481C
     ret
 
 Func_010_4EDD:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_479B
-    ld b, $85
-    rst $10
+    farcall Func_085_479B
     ret
 
 Func_010_4EE4:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_568E
-    ld b, $73
-    rst $10
+    farcall Func_073_568E
     ret
 
 Func_010_4EEB:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_55C5
-    ld b, $73
-    rst $10
+    farcall Func_073_55C5
     ret
 
 Func_010_4EF2:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4F14
-    ld b, $85
-    rst $10
+    farcall Func_085_4F14
     ret
 
 Func_010_4EF9:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_55A4
-    ld b, $73
-    rst $10
+    farcall Func_073_55A4
     ret
 
 Func_010_4F00:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5577
-    ld b, $73
-    rst $10
+    farcall Func_073_5577
     ret
 
 Func_010_4F07:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_50F2
-    ld b, $85
-    rst $10
+    farcall Func_085_50F2
     ret
 
 Func_010_4F0E:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5449
-    ld b, $73
-    rst $10
+    farcall Func_073_5449
     ret
 
 Func_010_4F15:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00F_4001
-    ld b, $0F
-    rst $10
+    farcall Func_00F_4001
     ret
 
 Func_010_4F1C:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_541D
-    ld b, $73
-    rst $10
+    farcall Func_073_541D
     ret
 
 Func_010_4F23:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_53AB
-    ld b, $73
-    rst $10
+    farcall Func_073_53AB
     ret
 
 Func_010_4F2A:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5378
-    ld b, $73
-    rst $10
+    farcall Func_073_5378
     ret
 
 Func_010_4F31:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_51BD
-    ld b, $73
-    rst $10
+    farcall Func_073_51BD
     ret
 
 Func_010_4F38:: ; heuristic: follows a terminator; C0
-    ld hl, Func_073_5546
-    ld b, $73
-    rst $10
+    farcall Func_073_5546
     ret
 
 Func_010_4F3F:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_501A
-    ld b, $85
-    rst $10
+    farcall Func_085_501A
     ret
 
 Func_010_4F46:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_403D
-    ld b, $85
-    rst $10
+    farcall Func_085_403D
     ret
 
 Func_010_4F4D:: ; heuristic: follows a terminator; C0
-    ld hl, Func_085_4001
-    ld b, $85
-    rst $10
+    farcall Func_085_4001
     ret
     INCBIN "dwm2-cobi-us.gbc", $040F54, $3EA
 
@@ -2383,75 +2013,51 @@ Data_010_65AA:: ; heuristic: bank from RAM variable $D7FE; C0
     db $41, $E7, $D4, $77, $FF
 
 Func_010_65BF:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_01C_4075
-    ld b, $1C
-    rst $10
+    farcall Func_01C_4075
     ret
 
 Func_010_65C6:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_01C_4001
-    ld b, $1C
-    rst $10
+    farcall Func_01C_4001
     ret
 
 Func_010_65CD:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_01C_4696
-    ld b, $1C
-    rst $10
+    farcall Func_01C_4696
     ret
 
 Func_010_65D4:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_01C_4605
-    ld b, $1C
-    rst $10
+    farcall Func_01C_4605
     ret
 
 Func_010_65DB:: ; heuristic: follows a terminator; C0
-    ld hl, Func_01C_6CEF
-    ld b, $1C
-    rst $10
+    farcall Func_01C_6CEF
     ret
 
 Func_010_65E2:: ; heuristic: follows a terminator; C0
-    ld hl, Func_01C_6CEB
-    ld b, $1C
-    rst $10
+    farcall Func_01C_6CEB
     ret
 
 Func_010_65E9:: ; heuristic: follows a terminator; C0
-    ld hl, Func_01E_4069
-    ld b, $1E
-    rst $10
+    farcall Func_01E_4069
     ret
 
 Func_010_65F0:: ; heuristic: follows a terminator; C0
-    ld hl, Func_01E_4001
-    ld b, $1E
-    rst $10
+    farcall Func_01E_4001
     ret
 
 Func_010_65F7:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_014_40CC
-    ld b, $14
-    rst $10
+    farcall Func_014_40CC
     ret
 
 Func_010_65FE:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_014_4001
-    ld b, $14
-    rst $10
+    farcall Func_014_4001
     ret
 
 Func_010_6605:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_015_40FA
-    ld b, $15
-    rst $10
+    farcall Func_015_40FA
     ret
 
 Func_010_660C:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_015_4001
-    ld b, $15
-    rst $10
+    farcall Func_015_4001
     ret
 
 Func_010_6613:: ; heuristic: target of a pointer table; C0
@@ -2461,57 +2067,39 @@ Func_010_6613:: ; heuristic: target of a pointer table; C0
     ret
 
 Func_010_661A:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_00D_5159
-    ld b, $0D
-    rst $10
+    farcall Func_00D_5159
     ret
 
 Func_010_6621:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_00D_50E5
-    ld b, $0D
-    rst $10
+    farcall Func_00D_50E5
     ret
 
 Func_010_6628:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_00D_55BE
-    ld b, $0D
-    rst $10
+    farcall Func_00D_55BE
     ret
 
 Func_010_662F:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_00D_6310
-    ld b, $0D
-    rst $10
+    farcall Func_00D_6310
     ret
 
 Func_010_6636:: ; heuristic: target of a pointer table; C0
-    ld hl, Func_00D_711C
-    ld b, $0D
-    rst $10
+    farcall Func_00D_711C
     ret
 
 Func_010_663D:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00D_7115
-    ld b, $0D
-    rst $10
+    farcall Func_00D_7115
     ret
 
 Func_010_6644:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00C_4001
-    ld b, $0C
-    rst $10
+    farcall Func_00C_4001
     ret
 
 Func_010_664B:: ; heuristic: follows a terminator; C0
-    ld hl, Func_00C_659F
-    ld b, $0C
-    rst $10
+    farcall Func_00C_659F
     ret
 
 Func_010_6652:: ; heuristic: follows a terminator; C0
-    ld hl, Func_024_60DB
-    ld b, $24
-    rst $10
+    farcall Func_024_60DB
     ret
     INCBIN "dwm2-cobi-us.gbc", $042659, $2CF
     ds $16D8, $00

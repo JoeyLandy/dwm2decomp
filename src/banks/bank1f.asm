@@ -1405,9 +1405,7 @@ Jump_01F_760D::
     ld [wC528], a
     ld a, $0E
     ld [wC529], a
-    ld hl, Func_008_402B
-    ld b, $08
-    rst $10
+    farcall Func_008_402B
     jr Jump_01F_769E
 
 Jump_01F_764E::
@@ -1450,9 +1448,7 @@ Jump_01F_7682::
     ld [wC529], a
     ld a, $04
     ld [wC528], a
-    ld hl, Func_008_402B
-    ld b, $08
-    rst $10
+    farcall Func_008_402B
 
 Jump_01F_7690::
     pop hl

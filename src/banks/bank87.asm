@@ -97,9 +97,7 @@ Jump_087_4078::
     ld [wC916], a
     ld a, [hl]
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ld a, [wC5DC]
     cp a, $01
     jr nz, Jump_087_4094
@@ -366,9 +364,7 @@ Jump_087_43D7::
     ld [wC917], a
 
 Jump_087_43DC::
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ld a, [wC5DC]
     cp a, $01
     ret nz
@@ -378,9 +374,7 @@ Jump_087_43DC::
     ld a, [wC8CD]
     bit 7, a
     ret z
-    ld hl, Func_002_5B9E
-    ld b, $02
-    rst $10
+    farcall Func_002_5B9E
     ret
 
 Jump_087_43FC::
@@ -550,9 +544,7 @@ Jump_087_44D1::
     ld [wC916], a
     ld a, [hl]
     ld [wC917], a
-    ld hl, Func_013_405C
-    ld b, $13
-    rst $10
+    farcall Func_013_405C
     ld a, [wC5DC]
     cp a, $01
     jr nz, Jump_087_44FC
@@ -562,9 +554,7 @@ Jump_087_44D1::
     ld a, [wC8CD]
     bit 7, a
     jr z, Jump_087_44FA
-    ld hl, Func_002_5B9E
-    ld b, $02
-    rst $10
+    farcall Func_002_5B9E
 
 Jump_087_44FA::
     pop hl
