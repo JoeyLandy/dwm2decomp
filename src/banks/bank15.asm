@@ -2989,7 +2989,7 @@ Jump_015_56B0::
 
 Jump_015_56F6::
     ld b, $46
-    ld de, Func_015_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld a, [wD781]

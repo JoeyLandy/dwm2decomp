@@ -1,8 +1,16 @@
 SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
-    INCBIN "dwm2-cobi-us.gbc", $174000, $139
+    db $5D
+
+; LZSS-compressed asset: 312 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_05D_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $174001, $138
 
 Data_05D_4139:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $174139, $42C
+    INCBIN "dwm2-cobi-us.gbc", $174139, $275
+
+; LZSS-compressed asset: 439 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_05D_43AE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $1743AE, $1B7
 
 Data_05D_4565:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $174565, $92

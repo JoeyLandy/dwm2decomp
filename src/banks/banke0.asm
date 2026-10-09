@@ -2934,27 +2934,27 @@ Jump_0E0_5AF2::
 
 Jump_0E0_5B16::
     ld b, $7D
-    ld de, $4001
+    ld de, Data_07D_4001
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, $40FA
+    ld de, Data_07D_40FA
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, $41E1
+    ld de, Data_07D_41E1
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7E
-    ld de, $4F22
+    ld de, Data_07E_4F22
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $93
-    ld de, $4001
+    ld de, Data_093_4001
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $46
-    ld de, $496B
+    ld de, Data_046_496B
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2963,13 +2963,13 @@ Jump_0E0_5B16::
     ld a, $02
     ldh [rSVBK], a
     ld b, $46
-    ld de, $5301
+    ld de, Data_046_5301
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_07E_4001
+    ld de, Data_048_4001
     ld hl, wC49F
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -3378,23 +3378,23 @@ Jump_0E0_5E4B::
 
 Jump_0E0_5E83::
     ld b, $7D
-    ld de, $4001
+    ld de, Data_07D_4001
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, $40FA
+    ld de, Data_07D_40FA
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, $41E1
+    ld de, Data_07D_41E1
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $46
-    ld de, $7025
+    ld de, Data_046_7025
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $46
-    ld de, $777A
+    ld de, Data_046_777A
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -3403,13 +3403,13 @@ Jump_0E0_5E83::
     ld a, $02
     ldh [rSVBK], a
     ld b, $46
-    ld de, $7A9D
+    ld de, Data_046_7A9D
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_07E_4081
+    ld de, Data_048_4081
     ld hl, wC49F
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -3927,35 +3927,35 @@ Jump_0E0_6266::
 
 Jump_0E0_62A0::
     ld b, $7D
-    ld de, $4001
+    ld de, Data_07D_4001
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, $40FA
+    ld de, Data_07D_40FA
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7E
-    ld de, $48D6
+    ld de, Data_07E_48D6
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $21
-    ld de, $7548
+    ld de, Data_021_7548
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $7D
-    ld de, $42BD
+    ld de, Data_07D_42BD
     ld hl, vTiles0 + $400
     call DecompressToVRAM
     ld b, $7D
-    ld de, $41E1
+    ld de, Data_07D_41E1
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, $48
-    ld de, $4DDC
+    ld de, Data_048_4DDC
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $48
-    ld de, $523C
+    ld de, Data_048_523C
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -3964,13 +3964,13 @@ Jump_0E0_62A0::
     ld a, $02
     ldh [rSVBK], a
     ld b, $48
-    ld de, $54BF
+    ld de, Data_048_54BF
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_07E_5138
+    ld de, Data_048_5138
     ld hl, wC49F
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -3985,12 +3985,12 @@ Jump_0E0_62A0::
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_027_4B2D
+    ld de, Data_07E_4B2D
     ld hl, wC4EF
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $27
-    ld de, Data_07E_7850
+    ld de, Data_027_7850
     ld hl, wC4F7
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -4674,39 +4674,39 @@ Jump_0E0_6841::
 
 Jump_0E0_685B::
     ld b, $7D
-    ld de, $4001
+    ld de, Data_07D_4001
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, $40FA
+    ld de, Data_07D_40FA
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, $42BD
+    ld de, Data_07D_42BD
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7D
-    ld de, $41E1
+    ld de, Data_07D_41E1
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $7D
-    ld de, $4EB6
+    ld de, Data_07D_4EB6
     ld hl, vTiles0 + $400
     call DecompressToVRAM
     ld b, $7D
-    ld de, $4B4A
+    ld de, Data_07D_4B4A
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, $7E
-    ld de, $52BC
+    ld de, Data_07E_52BC
     ld hl, vTiles0 + $600
     call DecompressToVRAM
     ld b, $48
-    ld de, $55DA
+    ld de, Data_048_55DA
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $48
-    ld de, $5C7D
+    ld de, Data_048_5C7D
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -4715,18 +4715,18 @@ Jump_0E0_685B::
     ld a, $02
     ldh [rSVBK], a
     ld b, $48
-    ld de, $61F2
+    ld de, Data_048_61F2
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $94
-    ld de, Data_048_4001
+    ld de, Data_094_4001
     ld hl, wC49F
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $48
-    ld de, Data_07E_5138
+    ld de, Data_048_5138
     ld hl, wC49F
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -5170,27 +5170,27 @@ Jump_0E0_6C0A::
 
 Jump_0E0_6C2C::
     ld b, $7D
-    ld de, $4001
+    ld de, Data_07D_4001
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, $40FA
+    ld de, Data_07D_40FA
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, $42BD
+    ld de, Data_07D_42BD
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7D
-    ld de, $41E1
+    ld de, Data_07D_41E1
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $49
-    ld de, $4C1B
+    ld de, Data_049_4C1B
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $49
-    ld de, $531F
+    ld de, Data_049_531F
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -5199,13 +5199,13 @@ Jump_0E0_6C2C::
     ld a, $02
     ldh [rSVBK], a
     ld b, $49
-    ld de, $572D
+    ld de, Data_049_572D
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $49
-    ld de, Data_07E_52BB
+    ld de, Data_049_52BB
     ld hl, wC49F
     ld c, $40
     call CopyFromBankWaitVRAM

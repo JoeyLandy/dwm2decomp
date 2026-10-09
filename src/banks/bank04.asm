@@ -1935,7 +1935,7 @@ Func_004_4B7E::
     ldh a, [hFF8C]
     bit 3, a
     ret z
-    ld de, $58FF
+    ld de, Data_07E_58FF
     ld b, $7E
     ld hl, vTiles0 + $700
     call DecompressToVRAM

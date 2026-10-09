@@ -4818,7 +4818,7 @@ Jump_000_1C1A::
     jr nz, Jump_000_1C51
     ld hl, vTiles1
     call DecompressToVRAM
-    ld de, $7861
+    ld de, Data_048_7861
     ld b, $48
     ld hl, vTiles2
     call DecompressToVRAM
@@ -6105,7 +6105,7 @@ Jump_000_22A5::
     ld [bc], a
     inc bc
     ld [bc], a
-    ld de, $545E
+    ld de, Data_07E_545E
     ld b, $7E
     ldh a, [hFFC8]
     ld l, a

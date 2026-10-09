@@ -40,7 +40,7 @@ Jump_01E_403F::
 
 Jump_01E_4046::
     ld b, $46
-    ld de, $4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles1 + $500

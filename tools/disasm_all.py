@@ -51,6 +51,9 @@ VECTORS = [0x00, 0x10, 0x30, 0x38, 0x40, 0x48, 0x58, 0x80, 0x100, 0x150]
 LD_HL = re.compile(r"ld hl, \$([0-9A-F]{4})$")
 LD_B = re.compile(r"ld b, \$([0-9A-F]{2})$")
 MAX_TABLE = 128
+# Instruction kinds that end an argument setup when scanning backwards from a call: another call
+# consumes or clobbers the registers, and a return or jump leaves the straight-line code.
+SETUP_BARRIER = ("ret", "jp", "jr", "jphl", "call", "callc", "rst")
 
 MACROS_INC = """; Macros that name instruction idioms found in the ROM (E-0007). They expand to exactly
 ; the instructions the ROM contains, so the bytes do not change.
@@ -302,8 +305,8 @@ class Rom:
                     continue
                 hl = bnk = None
                 for x in reversed(order[max(0, k - 8):k]):
-                    if ins[x][2] in ("ret", "jp", "jr", "jphl"):
-                        break  # previous function; its loads are not this call's arguments
+                    if ins[x][2] in SETUP_BARRIER:
+                        break  # an earlier call or function: its loads are not this call's arguments
                     if hl is None:
                         m = ld_hl.match(ins[x][1])
                         if m:
@@ -589,6 +592,47 @@ class Rom:
                             exact += 1
         log(f"compressed assets: {streams} streams in {tables} index tables "
             f"({exact} end exactly where the next target begins)")
+        # Second source: literal arguments of calls to the decompress routines (b = bank,
+        # de = stream), which no pointer table need mention.
+        entries = self._decompress_entries()
+        ld_de = re.compile(r"ld de, \$([0-9A-F]{4})$")
+        ld_b = re.compile(r"ld b, \$([0-9A-F]{2})$")
+        calls = literal = added = 0
+        for bank in range(self.nbanks):
+            ins = self.insn[bank]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                n, text, kind, tgt = ins[a]
+                if kind != "call" or tgt not in entries:
+                    continue
+                calls += 1
+                de = bnk = None
+                for x in reversed(order[max(0, k - 10):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if de is None and (m := ld_de.match(ins[x][1])):
+                        de = int(m.group(1), 16)
+                    if bnk is None and (m := ld_b.match(ins[x][1])):
+                        bnk = int(m.group(1), 16)
+                if de is None or bnk is None or not 0x4000 <= de < 0x8000:
+                    continue
+                if not 0 < bnk < self.nbanks or bnk in self.zero:
+                    continue
+                literal += 1
+                if (bnk, de) in self.streams or de in self.covered[bnk] or (de - 1) in self.dtab[bnk]:
+                    continue
+                r = parse(bnk, de)
+                if r:
+                    self.streams[(bnk, de)] = r
+                    self.dlabels[bnk].setdefault(de, f"Data_{bnk:03X}_{de:04X}")
+                    self.dreason.setdefault((bnk, de), "stream decompressed by a call to DecompressTo*")
+                    added += 1
+        log(f"compressed assets from decompress call sites: {calls} calls, {literal} with literal "
+            f"arguments, {added} new streams")
+
+    def _decompress_entries(self) -> set[int]:
+        """Bank-0 addresses of the decompress routines, taken from config/names.json."""
+        return {a for (b, a), info in self.names.items() if b == 0 and info["name"].startswith("DecompressTo")}
 
     def label_data_refs(self) -> None:
         """Resolve `ld hl|de|bc, $4000-$7FFF` in traced code to labelled data starts (C1).
@@ -616,6 +660,7 @@ class Rom:
                 self.dref[(bank, a)] = (tb, imm)
                 coded += 1
         helpers.discard(0x10)  # the rst $10 handler transfers to code, not data
+        helpers |= self._decompress_entries()  # b = bank, de = stream (E-0016)
         interior = self._interior_bytes()
         bv_pairs, bv_vars = self.bank_variable_pairs(code_args, interior)
         for desc in bv_vars:
@@ -648,7 +693,7 @@ class Rom:
                 loads, bnk = [], None
                 for x in reversed(order[max(0, k - 8):k]):
                     xt, xk = ins[x][1], ins[x][2]
-                    if xk in ("ret", "jp", "jr", "jphl"):
+                    if xk in SETUP_BARRIER:
                         break
                     mb = ldb.match(xt)
                     if mb and bnk is None:

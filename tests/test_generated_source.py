@@ -174,7 +174,75 @@ class CrossReferences(unittest.TestCase):
         for f in BANKS.glob("bank*.asm"):
             for line in f.read_text(encoding="utf-8").splitlines():
                 if line.startswith(("; reads: ", "; writes: ", "; points at: ")):
-                    self.assertNotRegex(line, r"(hl|bc|de|af)", line)
+                    self.assertNotRegex(line, r"\b(hl|bc|de|af)\b", line)
+
+
+@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+class BankSwitchingCallSites(unittest.TestCase):
+    """For every call to a routine that takes a bank in B and a pointer in HL/DE/BC, a pointer
+    spelled as a Data_ label in the same straight-line setup must name that bank."""
+
+    HELPERS = ("CopyFromBank", "OrFromBank", "DecompressTo", "ReadByteInBank")
+
+    def test_pointer_labels_in_a_call_setup_agree_with_ld_b(self):
+        import json
+        names = json.loads((BANKS.parents[1] / "config" / "names.json").read_text(encoding="utf-8"))
+        helper_names = [v["name"] for k, v in names.items()
+                        if not k.startswith("_") and v["name"].startswith(self.HELPERS)]
+        self.assertTrue(helper_names)
+        call = re.compile(r"\s+call (" + "|".join(helper_names) + r")$")
+        ld_ptr = re.compile(r"\s+ld (?:hl|de|bc), Data_([0-9A-F]{3})_[0-9A-F]{4}$")
+        ld_b = re.compile(r"\s+ld b, \$([0-9A-F]{2})$")
+        barrier = re.compile(r"(\S+::|\s+(?:call|ret|reti|jp|jr|farcall|farcall_b|rst)\b)")
+        checked, wrong = 0, []
+        for f in sorted(BANKS.glob("bank*.asm")):
+            lines = f.read_text(encoding="utf-8").splitlines()
+            for i, line in enumerate(lines):
+                if not call.match(line):
+                    continue
+                bnk, ptrs, b_seen = None, [], False
+                for back in lines[max(0, i - 12):i][::-1]:
+                    if back.startswith(";") or not back.strip():
+                        continue
+                    if barrier.match(back):
+                        break
+                    if not b_seen and back.strip().startswith("ld b,"):
+                        b_seen = True  # the nearest write to B decides; a non-literal one means no bank
+                        bnk = ld_b.match(back)
+                    if ld_ptr.match(back):
+                        ptrs.append(ld_ptr.match(back))
+                if bnk and ptrs:
+                    for m in ptrs:
+                        checked += 1
+                        if int(m.group(1), 16) != int(bnk.group(1), 16):
+                            wrong.append(f"{f.name}:{i + 1} {m.group(0).strip()} with ld b,${bnk.group(1)}")
+        self.assertGreater(checked, 100)
+        self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} pointer labels disagree with ld b")
+
+
+@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+class DecompressCallSites(unittest.TestCase):
+    def test_literal_decompress_arguments_name_a_stream(self):
+        stream_labels = set()
+        for f in BANKS.glob("bank*.asm"):
+            ls = f.read_text(encoding="utf-8").splitlines()
+            for i, l in enumerate(ls[1:], 1):
+                if ls[i - 1].startswith("; LZSS-compressed asset"):
+                    stream_labels.add(l.split("::")[0])
+        ld_de = re.compile(r"\s+ld de, (Data_[0-9A-F]{3}_[0-9A-F]{4})$")
+        sites = bad = 0
+        for f in sorted(BANKS.glob("bank*.asm")):
+            lines = f.read_text(encoding="utf-8").splitlines()
+            for i, l in enumerate(lines):
+                if re.match(r"\s+call DecompressTo", l):
+                    for back in lines[max(0, i - 4):i][::-1]:
+                        m = ld_de.match(back)
+                        if m:
+                            sites += 1
+                            bad += m.group(1) not in stream_labels
+                            break
+        self.assertGreater(sites, 100)
+        self.assertEqual(bad, 0)
 
 
 REF = BANKS.parents[1] / "local" / "roms" / "dwm2-cobi-us.gbc"

@@ -24,7 +24,7 @@ Jump_0F2_4013::
     bit 7, a
     jr z, Jump_0F2_4013
     ld b, $46
-    ld de, Func_0F2_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     farcall Func_0F1_4AA8

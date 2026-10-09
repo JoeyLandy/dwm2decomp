@@ -149,13 +149,15 @@ Jump_001_4297::
     ld [wC529], a
     farcall Func_008_402B
     ld a, $01
-    ld de, Data_008_42BC
+    ld de, Data_001_42BC
     ld hl, vBGMap0
     ld bc, $1412
     call Func_000_15DE
     ld hl, $0000
     call Func_001_4F80
     ret
+
+Data_001_42BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $1B, $00
     db $11, $40, $41, $42, $43, $44, $45, $46, $47, $48, $00, $00, $00, $00, $12, $13
     db $14, $15
@@ -186,7 +188,7 @@ Jump_001_4424::
     ld [wC529], a
     farcall Func_008_402B
     ld a, $01
-    ld de, Data_008_6F30
+    ld de, Data_001_6F30
     ld hl, vBGMap0
     ld bc, $1412
     call Func_000_15DE
@@ -619,7 +621,7 @@ Jump_001_4826::
     ld [wC529], a
     farcall Func_008_402B
     ld a, $01
-    ld de, Data_008_488A
+    ld de, Data_001_488A
     ld hl, vBGMap0 + $A3
     ld bc, $0B04
     call Func_000_15DE
@@ -629,6 +631,8 @@ Jump_001_4826::
     ld [wC0A0], a
     ld [wC0A1], a
     ret
+
+Data_001_488A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $90, $91, $92, $93, $94
     db $95, $96, $97, $98, $99, $9A, $A0, $A1, $A2, $A3, $A4, $A5, $10, $10, $A8, $10
     db $12, $B0, $B1, $B2, $B3, $B4, $B5, $10, $10, $B8, $10, $10
@@ -665,7 +669,7 @@ Jump_001_48B6::
     ld [wC529], a
     farcall Func_008_402B
     ld a, $01
-    ld de, Data_008_495D
+    ld de, Data_001_495D
     ld hl, vBGMap0 + $40
     ld bc, $140E
     call Func_000_15DE
@@ -700,6 +704,8 @@ Jump_001_48B6::
     xor a, a
     ld [wC46B], a
     ret
+
+Data_001_495D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A
     ds $19, $00
     INCBIN "dwm2-cobi-us.gbc", $004985, $F0
@@ -6036,6 +6042,8 @@ Jump_001_6EA0::
 
 Data_001_6EB0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $80, $FF
+
+Data_001_6F30:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $29, $00
     db $11, $12, $13, $35, $0E, $00, $00, $00, $00, $A0, $A1, $A2, $A3, $A4, $A5, $A6
     db $A7, $A8

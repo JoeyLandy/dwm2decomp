@@ -193,7 +193,7 @@ Func_073_4139:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5F22
     farcall Func_05F_6DDB
     ld b, $46
-    ld de, $4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     call Func_000_222B
@@ -5962,7 +5962,7 @@ Jump_073_6868::
     ld de, $6D99
     ld b, $56
     call Func_073_6882
-    ld de, $4301
+    ld de, Data_056_4301
     ld b, $56
 
 ; 1 call site from 1 routine (e.g. Func_073_6882)
@@ -7130,7 +7130,7 @@ Jump_073_711D::
 Jump_073_7138::
     ld a, $72
     call StoreWC60B
-    ld de, $7AD4
+    ld de, Data_07D_7AD4
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM

@@ -710,10 +710,7 @@ Data_027_4A54:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $09CA54, $72
 
 Data_027_4AC6:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $09CAC6, $67
-
-Data_027_4B2D:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $0D, $20, $F9, $F8, $0E, $00, $F9, $00, $0F, $00, $80
+    INCBIN "dwm2-cobi-us.gbc", $09CAC6, $72
 
 Data_027_4B38:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $09CB38, $72
@@ -974,5 +971,8 @@ Data_027_70EE:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $09F0EE, $72
 
 Data_027_7160:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $09F160, $DC0
+    INCBIN "dwm2-cobi-us.gbc", $09F160, $6F0
+
+Data_027_7850:: ; heuristic: argument of a bank-switching copy helper; C0
+    INCBIN "dwm2-cobi-us.gbc", $09F850, $6D0
     ds $E0, $00

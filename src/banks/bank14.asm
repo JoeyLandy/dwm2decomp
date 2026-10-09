@@ -1210,7 +1210,7 @@ Func_014_4710:: ; heuristic: target of a pointer table; C0
 Func_014_4718:: ; heuristic: target of a pointer table; C0
     ld a, [wD7AB]
     ld b, $BB
-    ld hl, $5B1E
+    ld hl, Data_014_5B1E
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_014_4720:: ; heuristic: target of a pointer table; C0
@@ -2308,7 +2308,7 @@ Func_014_4F51:: ; heuristic: target of a pointer table; C0
     call CopyFromBankWaitVRAM
     ld a, $6C
     call StoreWC60B
-    ld de, Data_01F_4FAE
+    ld de, Data_014_4FAE
     ld hl, wC412
     ld bc, $0605
     call Func_014_5821
@@ -2344,6 +2344,8 @@ Func_014_4F7D:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wD7FA], a
     ret
+
+Data_014_4FAE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $70, $71, $DF, $B7, $B6, $C3, $C3, $C3
     db $C3, $B7, $B6, $C3, $76, $73, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
 

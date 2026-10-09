@@ -3863,7 +3863,31 @@ Jump_0F1_5C0D::
     dec c
     jr nz, Jump_0F1_5C0D
     ret
-    INCBIN "dwm2-cobi-us.gbc", $3C5C14, $1F0
+
+; LZSS-compressed asset: 304 bytes expand to 544 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0F1_5C14:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $3C5C14, $130
+
+; LZSS-compressed asset: 88 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0F1_5D44:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $3C5D44, $58
+
+; LZSS-compressed asset: 32 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0F1_5D9C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $64, $00, $00, $9C, $80, $00, $01, $02, $90, $91, $00, $09, $04, $92, $9D, $00
+    db $00, $04, $00, $15, $07, $00, $13, $0F, $16, $9E, $9F, $A0, $00, $52, $0C, $A1
+
+; LZSS-compressed asset: 50 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $04, $01, $03, $01, $03, $00, $0F, $01, $03, $EE, $FF, $01, $03, $F8, $FD, $03
+    db $26, $07, $03, $1D, $0F, $01, $03, $45, $0F, $28, $03, $08, $0F, $01, $03, $14
+    db $06, $03, $9E, $07, $03, $09, $0B, $02, $02, $02, $02, $03, $A8, $0F, $11, $03
+    db $A4, $0C
+
+; LZSS-compressed asset: 22 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0F1_5DEE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $64, $00, $02, $01, $02, $F9, $F4, $02, $08, $08, $02, $EE, $FF, $00, $02, $14
+    db $0F, $16, $02, $4F, $0F, $00
 
 Data_0F1_5E04:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EE, $3D, $FF, $7F, $D6, $5A, $63, $00, $12, $36, $FF, $7F, $D8, $42

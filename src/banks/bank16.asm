@@ -5957,11 +5957,11 @@ Jump_016_6AF3::
     cp a, $FF
     ret nz
     ld b, $31
-    ld de, Data_016_7C1E
+    ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Data_016_7DFB
+    ld de, Data_031_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToVRAM
     ld hl, wCFCF
@@ -6569,11 +6569,11 @@ Jump_016_6F30::
     ld a, [wD7BB]
     ld [wCB7D], a
     ld b, $31
-    ld de, Data_016_7C1E
+    ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Data_016_7DFB
+    ld de, Data_031_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToVRAM
     ld hl, wCFCF
@@ -7640,7 +7640,7 @@ Func_016_777B::
 ; points at: wC4DF, wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, ...
 Func_016_7783:: ; heuristic: follows a terminator; C0
     ld b, $7E
-    ld de, $5B63
+    ld de, Data_07E_5B63
     ld hl, vTiles0
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -8164,11 +8164,9 @@ Jump_016_7AC4::
     ret
 
 Data_016_7ACD:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $05BACD, $151
+    INCBIN "dwm2-cobi-us.gbc", $05BACD, $B0
 
-Data_016_7C1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $05BC1E, $136
-    ds $A7, $00
-
-Data_016_7DFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $205, $00
+; LZSS-compressed asset: 405 bytes expand to 624 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_016_7B7D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $05BB7D, $1D7
+    ds $2AC, $00

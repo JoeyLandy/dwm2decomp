@@ -1,8 +1,5 @@
 SECTION "Bank 5F", ROMX[$4000], BANK[$5F]
-    INCBIN "dwm2-cobi-us.gbc", $17C000, $1E1
-
-Data_05F_41E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $17C1E1, $2755
+    INCBIN "dwm2-cobi-us.gbc", $17C000, $2936
 
 ; 6 call sites from 6 routines (e.g. Func_05F_77C7, Func_00F_7F75, Func_012_6828, Func_073_7024, ...)
 ; reads: wC926
@@ -1750,7 +1747,7 @@ Jump_05F_73E6::
 Jump_05F_7402::
     ld a, $72
     call StoreWC60B
-    ld de, $7AD4
+    ld de, Data_07D_7AD4
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -1979,7 +1976,7 @@ Jump_05F_75D2::
     xor a, a
     call Func_05F_77C7
     ret nc
-    ld de, Data_05F_41E1
+    ld de, Data_07D_41E1
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM

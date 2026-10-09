@@ -288,7 +288,7 @@ SECTION "Bank 56", ROMX[$4000], BANK[$56]
     db $21, $7F, $56, $5D, $7F, $56, $99, $6D, $56
 
 ; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_056_4301:: ; heuristic: target of a monotone pointer table; C0
+Data_056_4301:: ; heuristic: argument of a bank-switching copy helper; C0
     db $68, $01, $02, $00, $01, $02, $00, $0E, $02, $01, $0F, $00, $02, $FF, $FF, $4D
     db $02, $5F, $0F, $4D, $02, $BF, $0F, $4D, $02, $F7, $0F, $0E
 

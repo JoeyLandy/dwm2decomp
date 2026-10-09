@@ -1,7 +1,8 @@
 SECTION "Bank 47", ROMX[$4000], BANK[$47]
     INCBIN "dwm2-cobi-us.gbc", $11C000, $229A
 
-Data_047_629A:: ; heuristic: argument of a bank-switching copy helper; C0
+; LZSS-compressed asset: 1352 bytes expand to 1616 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_047_629A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $11E29A, $548
 
 Data_047_67E2:: ; heuristic: argument of a bank-switching copy helper; C0

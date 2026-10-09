@@ -1,5 +1,9 @@
 SECTION "Bank 46", ROMX[$4000], BANK[$46]
-    INCBIN "dwm2-cobi-us.gbc", $118000, $285
+    db $46
+
+; LZSS-compressed asset: 644 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_046_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $118001, $284
     dw Data_046_4435
     db $46
     dw Data_046_4435
@@ -323,7 +327,7 @@ Data_046_488C:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $11888C, $DF
 
 ; LZSS-compressed asset: 139 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_046_496B:: ; heuristic: target of a monotone pointer table; C0
+Data_046_496B:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $11896B, $8B
 
 ; LZSS-compressed asset: 178 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -392,7 +396,7 @@ Data_046_528E:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $11928E, $73
 
 ; LZSS-compressed asset: 98 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_046_5301:: ; heuristic: target of a monotone pointer table; C0
+Data_046_5301:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $119301, $62
 
 ; LZSS-compressed asset: 152 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -620,5 +624,17 @@ Data_046_6EA0:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 97 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_046_6F04:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $11AF04, $C64
+    INCBIN "dwm2-cobi-us.gbc", $11AF04, $121
+
+; LZSS-compressed asset: 827 bytes expand to 1136 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_046_7025:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $11B025, $755
+
+; LZSS-compressed asset: 133 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_046_777A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $11B77A, $323
+
+; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_046_7A9D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $11BA9D, $CB
     ds $498, $00

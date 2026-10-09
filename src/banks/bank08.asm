@@ -371,8 +371,6 @@ Data_008_4258:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_5551
     dw Data_008_555B
     dw Data_008_5563
-
-Data_008_42BC:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_556D
     dw Data_008_5577
     dw Data_008_557F
@@ -1124,8 +1122,6 @@ Data_008_47F6:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_6F6E
     dw Data_008_6F80
     dw Data_008_6F92
-
-Data_008_488A:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_6FA4
     dw Data_008_6FB6
     dw Data_008_6FC9
@@ -1218,14 +1214,11 @@ Data_008_492A:: ; heuristic: target of a monotone pointer table; C0
 
 Data_008_493B:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "  DEBUG MODE        SELECT       1"
-
-Data_008_495D:: ; heuristic: argument of a bank-switching copy helper; C0
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $A3, "GOTO PROGRAM  2", $A3, "EDIT          3", $A3, "AUTOMAP CHECK 4", $A3, "GRA"
-    db "FHICS      5", $A3, "SOUNDS        6", $A3, "BATTLE        7", $A3, "HAIGOU   "
-    db "     8", $A3, "STAFF ROLL    9", $A3, "TOKUGI CHECK  A", $A3, "ENEMY TBL CHK B"
-    db $A3, "MESSAGE CHK  ?  RETURN  ?  ", $F0
+    db "  DEBUG MODE        SELECT       1", $A3, "GOTO PROGRAM  2", $A3, "EDIT "
+    db "         3", $A3, "AUTOMAP CHECK 4", $A3, "GRAFHICS      5", $A3, "SOUNDS     "
+    db "   6", $A3, "BATTLE        7", $A3, "HAIGOU        8", $A3, "STAFF ROLL    9", $A3
+    db "TOKUGI CHECK  A", $A3, "ENEMY TBL CHK B", $A3, "MESSAGE CHK  ?  RETURN  "
+    db "?  ", $F0
 
 Data_008_4A1A:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -4198,11 +4191,7 @@ Data_008_6F0C:: ; heuristic: target of a monotone pointer table; C0
 
 Data_008_6F22:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Raises max. MP"
-
-Data_008_6F30:: ; heuristic: argument of a bank-switching copy helper; C0
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F1
+    db "Raises max. MP", $F1
     db "by 80.", $F0
 
 Data_008_6F38:: ; heuristic: target of a monotone pointer table; C0

@@ -1033,7 +1033,7 @@ Jump_002_45DB::
     call Func_002_4AB5
     call Func_000_13E5
     ld b, $46
-    ld de, Func_002_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, Data_002_4AD6

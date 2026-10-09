@@ -1580,7 +1580,7 @@ Func_003_4A08::
 ; 1 call site from 1 routine (e.g. Func_003_4208)
 Func_003_4A27::
     ld b, $16
-    ld de, $7B7D
+    ld de, Data_016_7B7D
     ld hl, vTiles1 + $6E0
     call DecompressToVRAM
     call Func_003_4A36

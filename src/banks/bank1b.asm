@@ -4397,7 +4397,7 @@ Jump_01B_6613::
     dec b
     jr nz, Jump_01B_6613
     ld b, $46
-    ld de, Func_01B_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     farcall Func_0F1_4AA8

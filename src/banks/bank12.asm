@@ -4147,7 +4147,7 @@ Func_012_5C3F:: ; heuristic: follows a terminator; C0
     jr Jump_012_5C4E
 
 Jump_012_5C49::
-    ld de, $5A9A
+    ld de, Data_07E_5A9A
     ld b, $7E
 
 Jump_012_5C4E::
@@ -4485,7 +4485,7 @@ Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $FF
 
 Jump_012_5E64::
-    ld de, $58FF
+    ld de, Data_07E_58FF
     ld b, $7E
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -4963,7 +4963,7 @@ Jump_012_615F::
     ret
 
 Jump_012_616C::
-    ld de, $594A
+    ld de, Data_07E_594A
     ld b, $7E
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -6624,7 +6624,7 @@ Jump_012_6AE3::
     ld hl, vTiles0 + $700
 
 Jump_012_6AE6::
-    ld de, $5595
+    ld de, Data_07E_5595
     ld b, $7E
     call DecompressToVRAM
     ld a, $30

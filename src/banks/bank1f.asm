@@ -151,10 +151,7 @@ Data_01F_4AD0:: ; heuristic: argument of a bank-switching copy helper; C0
 
 Data_01F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07CAE0, $C0
-    ds $40E, $00
-
-Data_01F_4FAE:: ; heuristic: argument of a bank-switching copy helper; C0
-    ds $62, $00
+    ds $470, $00
     db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
@@ -1705,10 +1702,5 @@ Jump_01F_77CF::
     ld a, d
     ld h, a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $07F7D4, $C6
-
-Data_01F_789A:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $C0, $F6, $07, $7C, $78, $F6, $00, $03, $C0, $F6, $07, $93, $78, $00, $00, $00
-
-Data_01F_78AA:: ; heuristic: argument of a bank-switching copy helper; C0
-    ds $756, $00
+    INCBIN "dwm2-cobi-us.gbc", $07F7D4, $D3
+    ds $759, $00

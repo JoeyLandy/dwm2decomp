@@ -57,7 +57,7 @@ Jump_024_4052::
 
 Jump_024_4057::
     ld b, $46
-    ld de, Func_024_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     farcall Func_0F1_4AA8
@@ -624,7 +624,7 @@ Jump_024_4477::
 
 Jump_024_44AA::
     ld b, $46
-    ld de, Func_024_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld de, vTiles1
@@ -1376,7 +1376,7 @@ Jump_024_4A94::
 
 Jump_024_4AA4::
     ld b, $46
-    ld de, Func_024_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -1551,7 +1551,7 @@ Jump_024_4C18::
 
 Jump_024_4C2C::
     ld b, $46
-    ld de, Func_024_4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -5322,7 +5322,8 @@ Data_024_6CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_6CE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $092CE4, $12F
 
-Data_024_6E13:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; LZSS-compressed asset: 315 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_024_6E13:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092E13, $13B
 
 Data_024_6F4E:: ; heuristic: pointer load in the same bank (bank assumed); C0

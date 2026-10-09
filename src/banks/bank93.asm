@@ -1,5 +1,9 @@
 SECTION "Bank 93", ROMX[$4000], BANK[$93]
-    INCBIN "dwm2-cobi-us.gbc", $24C000, $921
+    db $93
+
+; LZSS-compressed asset: 1313 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $24C001, $920
     ds $12, $00
     INCBIN "dwm2-cobi-us.gbc", $24C933, $E6D
     dw Data_093_57E8

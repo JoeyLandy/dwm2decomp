@@ -783,19 +783,19 @@ Jump_0A1_452D::
     ldh [hFFA1], a
     ldh [hFFA5], a
     call Func_000_07E0
-    ld de, $4EB3
+    ld de, Data_07E_4EB3
     ld b, $7E
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, $5B27
+    ld de, Data_07E_5B27
     ld b, $7E
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, $5B46
+    ld de, Data_07E_5B46
     ld b, $7E
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld de, $43AE
+    ld de, Data_05D_43AE
     ld b, $5D
     ld hl, vTiles2
     call DecompressToVRAM
@@ -2595,15 +2595,15 @@ Jump_0A1_4FE2::
     ldh [hFFA1], a
     ldh [hFFA5], a
     call Func_000_07E0
-    ld de, $4EB3
+    ld de, Data_07E_4EB3
     ld b, $7E
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, $5B0E
+    ld de, Data_07E_5B0E
     ld b, $7E
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, $4001
+    ld de, Data_05D_4001
     ld b, $5D
     ld hl, vTiles2
     call DecompressToVRAM
@@ -2611,7 +2611,7 @@ Jump_0A1_4FE2::
     ld b, $5E
     ld hl, vTiles2 + $500
     call DecompressToVRAM
-    ld de, Data_05E_4238
+    ld de, $4238
     ld a, $5E
     ld bc, $1412
     ld hl, vBGMap0

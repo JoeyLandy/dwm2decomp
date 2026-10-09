@@ -3305,7 +3305,7 @@ Jump_00F_5B2C::
     ret
 
 Jump_00F_5B3B::
-    ld de, $4C21
+    ld de, Data_07D_4C21
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -5221,7 +5221,7 @@ Jump_00F_69A6::
     ld b, $38
     call Func_00F_7EB2
     ret nc
-    ld de, $42BD
+    ld de, Data_07D_42BD
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -5612,7 +5612,7 @@ Jump_00F_6C77::
     ld [wCB96], a
     ld hl, wCB9C
     call Func_00F_7ED3
-    ld de, $7705
+    ld de, Data_07D_7705
     ld b, $7D
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -6739,7 +6739,7 @@ Jump_00F_749D::
     ret z
     ld a, $01
     ld [wCB7D], a
-    ld de, $5B5F
+    ld de, Data_07D_5B5F
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -6760,13 +6760,13 @@ Jump_00F_74F7::
     ld [wCB8B], a
     ld a, $C0
     ld [wCB9B], a
-    ld de, $5F6E
+    ld de, Data_07D_5F6E
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $27
     ld [wCB81], a
-    ld de, $5F6E
+    ld de, Data_07D_5F6E
     ld b, $7D
     ld hl, vTiles0 + $600
     call DecompressToVRAM

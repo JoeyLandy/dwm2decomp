@@ -1,14 +1,98 @@
 SECTION "Bank E1", ROMX[$4000], BANK[$E1]
-    INCBIN "dwm2-cobi-us.gbc", $384000, $10E
+    db $E1
+
+; LZSS-compressed asset: 213 bytes expand to 304 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $384001, $D5
+
+; LZSS-compressed asset: 37 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_40D6:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $68, $01, $13, $13, $A0, $FF, $4D, $13, $41, $0F, $2E, $01, $02, $03, $04, $05
+    db $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13, $41, $0F
+    db $4D, $13, $12, $1F, $42
+
+; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_40FB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
+    db $1F, $1F, $35
 
 Data_0E1_410E:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $38410E, $501
+    db $B5, $56, $FF, $7F, $D7, $56, $00, $00
+
+; LZSS-compressed asset: 1169 bytes expand to 1600 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_4116:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $384116, $491
+
+; LZSS-compressed asset: 85 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_45A7:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $3845A7, $55
+
+; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_45FC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
+    db $1F, $1F, $35
 
 Data_0E1_460F:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $38460F, $3C3
+    db $60, $31, $B5, $56, $E8, $62, $00, $00
+
+; LZSS-compressed asset: 815 bytes expand to 1552 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_4617:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $384617, $32F
+
+; LZSS-compressed asset: 120 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_4946:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $384946, $78
+
+; LZSS-compressed asset: 20 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_49BE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $68, $01, $00, $08, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
+    db $00, $08, $1F, $34
 
 Data_0E1_49D2:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $3849D2, $1055
+    db $0F, $3E, $BF, $73, $D7, $56, $00, $00
+
+; LZSS-compressed asset: 1165 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_49DA:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $3849DA, $48D
+
+; LZSS-compressed asset: 1438 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_4E67:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $384E67, $59E
+
+; LZSS-compressed asset: 887 bytes expand to 1152 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_5405:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $385405, $377
+
+; LZSS-compressed asset: 175 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_577C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $38577C, $AF
+
+; LZSS-compressed asset: 152 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_582B:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $38582B, $98
+
+; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_58C3:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $3858C3, $4C
+
+; LZSS-compressed asset: 101 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_590F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $38590F, $65
+
+; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_5974:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
+    db $1F, $1F, $35
+
+; LZSS-compressed asset: 112 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_5987:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    INCBIN "dwm2-cobi-us.gbc", $385987, $70
+
+; LZSS-compressed asset: 48 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_0E1_59F7:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $00, $04, $00, $03, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
+    db $00, $20, $1F, $4D, $00, $80, $1F, $4D, $00, $E0, $1F, $4D, $00, $40, $2F, $4D
+    db $00, $A0, $2F, $4D, $00, $00, $3F, $4D, $00, $60, $3F, $4D, $00, $A0, $3F, $2C
 
 Data_0E1_5A27:: ; heuristic: argument of a bank-switching copy helper; C0
     db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09

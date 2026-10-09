@@ -2293,11 +2293,11 @@ Jump_0A0_4F19::
     ld a, h
     ld [wC555], a
     ld b, $31
-    ld de, Data_0A0_7C1E
+    ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Data_0A0_7DFB
+    ld de, Data_031_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToRAMLocked
     call Func_0A0_4001
@@ -7341,10 +7341,4 @@ Data_0A0_70F7:: ; heuristic: target of a monotone pointer table; C0
     db $10, $60, $01, $61, $01, $63, $01, $64, $01, $66, $01, $67, $01, $68, $01, $69
     db $01, $6C, $01, $6E, $01, $6F, $01, $70, $01, $71, $01, $72, $01, $73, $01, $74
     db $01
-    ds $B06, $00
-
-Data_0A0_7C1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1DD, $00
-
-Data_0A0_7DFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $205, $00
+    ds $EE8, $00

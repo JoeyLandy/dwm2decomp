@@ -521,7 +521,7 @@ Jump_007_48D3::
 
 Jump_007_48F3::
     ld b, $46
-    ld de, $4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     xor a, a
@@ -652,7 +652,7 @@ Jump_007_49B3::
     ld a, $01
     ld [wC964], a
     ld b, $46
-    ld de, $4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     ld hl, vTiles2
@@ -881,7 +881,7 @@ Jump_007_4B95::
     ld a, $FC
     call Func_000_0DF2
     ld b, $46
-    ld de, $4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall Func_0F1_4AA8
@@ -982,7 +982,7 @@ Jump_007_4C74::
     ld a, $FC
     call Func_000_0DF2
     ld b, $46
-    ld de, $4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall Func_0F1_4AA8
@@ -1072,11 +1072,11 @@ Jump_007_4D45::
     ld a, $FC
     call Func_000_0DF2
     ld b, $31
-    ld de, $7C1E
+    ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, $7DFB
+    ld de, Data_031_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToRAMLocked
     ld hl, vTiles2 + $400
@@ -1259,7 +1259,7 @@ Jump_007_4E8D::
     ld a, $FC
     call Func_000_0DF2
     ld b, $46
-    ld de, $4001
+    ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall Func_0F1_4AA8
@@ -1779,11 +1779,11 @@ Jump_007_591A::
     or a, a
     jr z, Jump_007_596A
     ld b, $E1
-    ld de, $4001
+    ld de, Data_0E1_4001
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, $40D6
+    ld de, Data_0E1_40D6
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -1792,7 +1792,7 @@ Jump_007_591A::
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, $40FB
+    ld de, Data_0E1_40FB
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
@@ -1871,11 +1871,11 @@ Jump_007_59C0::
     or a, a
     jr z, Jump_007_5A10
     ld b, $E1
-    ld de, $4116
+    ld de, Data_0E1_4116
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, $45A7
+    ld de, Data_0E1_45A7
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -1884,7 +1884,7 @@ Jump_007_59C0::
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, $45FC
+    ld de, Data_0E1_45FC
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
@@ -1963,11 +1963,11 @@ Jump_007_5A66::
     or a, a
     jr z, Jump_007_5AB6
     ld b, $E1
-    ld de, $4617
+    ld de, Data_0E1_4617
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, $4946
+    ld de, Data_0E1_4946
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -1976,7 +1976,7 @@ Jump_007_5A66::
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, $49BE
+    ld de, Data_0E1_49BE
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
@@ -2067,11 +2067,11 @@ Jump_007_5B2A::
     or a, a
     ret nz
     ld b, $7E
-    ld de, $4CED
+    ld de, Data_07E_4CED
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7E
-    ld de, $5706
+    ld de, Data_07E_5706
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $10
@@ -2228,11 +2228,11 @@ Jump_007_5C5F::
     or a, a
     jp nz, Func_007_5DF5
     ld b, $E1
-    ld de, $5405
+    ld de, Data_0E1_5405
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, $590F
+    ld de, Data_0E1_590F
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2241,7 +2241,7 @@ Jump_007_5C5F::
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, $5974
+    ld de, Data_0E1_5974
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00
@@ -2283,15 +2283,15 @@ Jump_007_5CD8::
     or a, a
     ret nz
     ld b, $E1
-    ld de, $49DA
+    ld de, Data_0E1_49DA
     ld hl, vTiles1
     call DecompressToVRAM
     ld b, $E1
-    ld de, $4E67
+    ld de, Data_0E1_4E67
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, $5987
+    ld de, Data_0E1_5987
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -2300,7 +2300,7 @@ Jump_007_5CD8::
     ld a, $01
     ldh [rVBK], a
     ld b, $E1
-    ld de, $59F7
+    ld de, Data_0E1_59F7
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, $00
@@ -2636,19 +2636,19 @@ Jump_007_5F09::
     or a, a
     ret nz
     ld b, $E1
-    ld de, $577C
+    ld de, Data_0E1_577C
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $E1
-    ld de, $49DA
+    ld de, Data_0E1_49DA
     ld hl, vTiles1
     call DecompressToVRAM
     ld b, $E1
-    ld de, $4E67
+    ld de, Data_0E1_4E67
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, $582B
+    ld de, Data_0E1_582B
     ld hl, wC198
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2657,7 +2657,7 @@ Jump_007_5F09::
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, $58C3
+    ld de, Data_0E1_58C3
     ld hl, wD000
     call DecompressToRAMLocked
     ld a, $00

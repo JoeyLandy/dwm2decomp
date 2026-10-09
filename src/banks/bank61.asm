@@ -550,7 +550,7 @@ Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_061_707E
 
 Jump_061_4325::
-    ld de, Data_061_74E4
+    ld de, Data_06E_74E4
     ld b, $6E
     ld hl, vTiles2
     call DecompressToVRAM
@@ -4059,11 +4059,7 @@ Data_061_707E:: ; heuristic: target of a monotone pointer table; C0
     db $02, $04, $03, $07, $06, $06, $07, $02, $02, $03, $05, $05, $07, $01, $08, $07
     db $02, $06, $08, $03, $02, $06, $08, $03, $02, $04, $02, $04, $02, $04, $02, $04
     ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $187435, $AF
-
-Data_061_74E4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $05, $02, $04, $05, $06, $06, $02, $FF, $FF, $01, $07, $03, $01, $04, $04, $07
-    db $06
+    INCBIN "dwm2-cobi-us.gbc", $187435, $C0
     ds $20, $FE
     INCBIN "dwm2-cobi-us.gbc", $187515, $108
     ds $9E3, $00
