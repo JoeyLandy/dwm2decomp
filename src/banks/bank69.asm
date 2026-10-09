@@ -3,8 +3,8 @@ SECTION "Bank 69", ROMX[$4000], BANK[$69]
 
 Func_069_4001::
     xor a, a
-    ld [$CB7D], a
-    ld a, [$CC44]
+    ld [wCB7D], a
+    ld a, [wCC44]
     bit 7, a
     jr z, Jump_069_401E
     ld hl, Func_004_4025
@@ -14,17 +14,17 @@ Func_069_4001::
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     ret
 
 Jump_069_401E::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     cp a, $2F
     jr nz, Jump_069_404C
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     or a, a
     jr nz, Jump_069_404C
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     cp a, $01
     jr nz, Jump_069_404C
     ld de, $0056
@@ -33,14 +33,14 @@ Jump_069_401E::
     ld de, $0058
     call Func_000_181B
     jr c, Jump_069_404C
-    ld a, [$CC38]
+    ld a, [wCC38]
     bit 3, a
     jr z, Jump_069_404C
     ld hl, Data_069_7E1E
     jp Jump_069_40F4
 
 Jump_069_404C::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld l, a
     ld h, $00
     add hl, hl
@@ -54,12 +54,12 @@ Jump_069_404C::
     ld e, a
     ld a, [hl]
     ld d, a
-    ld a, [$C190]
+    ld a, [wC190]
     sla a
     ld c, a
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     call Func_000_1682
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     sla a
     add a, l
     ld l, a
@@ -94,7 +94,7 @@ Jump_069_4080::
 
 Jump_069_408D::
     xor a, a
-    ld [$CB7D], a
+    ld [wCB7D], a
     jp Jump_069_4168
 
 Jump_069_4094::
@@ -188,29 +188,29 @@ Jump_069_40EE::
 
 Jump_069_40F4::
     ld a, [hl+]
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld b, a
-    ld de, $CB7F
+    ld de, wCB7F
 
 Jump_069_40FC::
     push bc
     ld a, b
-    ldh [$FFD0], a
+    ldh [hFFD0], a
     xor a, a
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     ld a, [hl+]
-    ldh [$FFCB], a
+    ldh [hFFCB], a
     ld a, [hl+]
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     inc de
     ld [de], a
     inc de
     ld a, [hl+]
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld [de], a
     inc de
     ld a, [hl+]
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld [de], a
     inc de
     push de
@@ -252,7 +252,7 @@ Jump_069_413A::
     pop de
     inc de
     ld a, [hl+]
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld [de], a
     inc de
     ld a, [hl+]
@@ -261,7 +261,7 @@ Jump_069_413A::
     ld a, [hl+]
     ld [de], a
     inc de
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     and a, $03
     ld [de], a
     xor a, a
@@ -292,7 +292,7 @@ Jump_069_4168::
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     ret
     dw Data_069_63B2
     db $22, $67

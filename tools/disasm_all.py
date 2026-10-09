@@ -29,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from trace_disasm import decode  # noqa: E402
 from lzss_gfx import decompress as lzss_decompress  # noqa: E402
 from sound_tracks import decode_header, decode_region  # noqa: E402
+import gb_symbols as gbs  # noqa: E402
 
 _T0 = time.monotonic()
 _QUIET = False
@@ -66,6 +67,8 @@ class Rom:
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
+        self.symbols: dict[int, dict] = {}  # config/symbols.json: evidence-named RAM addresses
+        self.ram_used: dict[int, str] = {}  # RAM address -> symbol name used in the source
         self.schemas: list[dict] = []  # config/tables.json
         self.table_at: dict[tuple[int, int], dict] = {}  # (bank, addr) -> prepared schema
         self.track_at: dict[tuple[int, int], dict] = {}  # (bank, addr) -> decoded sound track region
@@ -884,6 +887,69 @@ class Rom:
                     out.append("    db " + ", ".join(f"${x:02X}" for x in seg[c:c + 16]))
             i = k
 
+    _MEM = re.compile(r"\[\$([0-9A-F]{4})\]")
+    _IMM = re.compile(r"^(ld (?:hl|de|bc|sp), )\$([0-9A-F]{4})$")
+
+    def _ram_symbol(self, addr: int, prefix: str) -> str:
+        info = self.symbols.get(addr)
+        name = info["name"] if info else f"{prefix}{addr:04X}"
+        self.ram_used[addr] = name
+        return name
+
+    def sym_name(self, addr: int, pointer: bool) -> str | None:
+        """Symbol text for an absolute address, or None to keep it numeric.
+
+        Hardware names are Pan Docs facts; RAM names are address names (wC5FC, hFFC6, sA000)
+        unless config/symbols.json supplies an evidence-backed name. MBC registers are only
+        ever written, so they are not used for pointer immediates."""
+        if 0xFF30 <= addr < 0xFF40:
+            return "rWAVE" if addr == 0xFF30 else f"rWAVE + ${addr - 0xFF30:X}"
+        if addr in gbs.IO:
+            return gbs.IO[addr]
+        if not pointer and addr in gbs.MBC:
+            return gbs.MBC[addr]
+        if not pointer and addr == gbs.BANK_NUMBER_BYTE[1]:
+            return gbs.BANK_NUMBER_BYTE[0]
+        if 0x8000 <= addr < 0xA000:
+            return gbs.vram_expr(addr)
+        if 0xA000 <= addr < 0xC000:
+            return self._ram_symbol(addr, "s")
+        if 0xC000 <= addr < 0xE000:
+            return self._ram_symbol(addr, "w")
+        if gbs.HRAM_START <= addr <= gbs.HRAM_END:
+            return self._ram_symbol(addr, "h")
+        return None
+
+    def symbolize(self, text: str) -> str:
+        """Replace absolute addresses in memory operands and pointer immediates by symbols."""
+        m = self._MEM.search(text)
+        if m:
+            nm = self.sym_name(int(m.group(1), 16), False)
+            return text[:m.start()] + "[" + nm + "]" + text[m.end():] if nm else text
+        m = self._IMM.match(text)
+        if m:
+            nm = self.sym_name(int(m.group(2), 16), True)
+            if nm:
+                return m.group(1) + nm
+        return text
+
+    def write_ram_inc(self, path) -> None:
+        lines = ["; RAM symbols referenced by the code. Names of the form wXXXX / hXXXX / sXXXX are",
+                 "; address names (no meaning claimed); any other name cites its evidence.", ""]
+        sections = [("SRAM ($A000-$BFFF)", 0xA000, 0xBFFF), ("WRAM ($C000-$DFFF)", 0xC000, 0xDFFF),
+                    ("HRAM ($FF80-$FFFE)", 0xFF80, 0xFFFE)]
+        for title, lo, hi in sections:
+            used = sorted(a for a in self.ram_used if lo <= a <= hi)
+            if not used:
+                continue
+            lines.append(f"; {title}")
+            for a in used:
+                info = self.symbols.get(a)
+                note = f" ; {info['note']} ({info['evidence']})" if info else ""
+                lines.append(f"DEF {self.ram_used[a]} EQU ${a:04X}{note}")
+            lines.append("")
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+
     def emit_bank(self, bank: int) -> str:
         hdr = ('SECTION "Bank 00", ROM0[$0000]\n' if bank == 0
                else f'SECTION "Bank {bank:02X}", ROMX[$4000], BANK[${bank:02X}]\n')
@@ -958,6 +1024,7 @@ class Rom:
                 elif r and r[0] == 0 and tgt in self.insn[0]:
                     nm = self.labels[0].get(tgt)
                 text = text.replace("{T}", nm or f"${tgt:04X}")
+            text = self.symbolize(text)
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
@@ -979,6 +1046,12 @@ def main() -> int:
                 bank_s, addr_s = key.split(":")
                 rom.notes[(int(bank_s, 16), int(addr_s, 16))] = text
         log(f"loaded {len(rom.notes)} annotations from {notes_path.name}")
+    symbols_path = ROOT / "config/symbols.json"
+    if symbols_path.exists():
+        for key, info in json.loads(symbols_path.read_text(encoding="utf-8")).items():
+            if not key.startswith("_"):
+                rom.symbols[int(key, 16)] = info
+        log(f"loaded {len(rom.symbols)} evidence-named RAM symbols")
     tables_path = ROOT / "config/tables.json"
     if tables_path.exists():
         for t in json.loads(tables_path.read_text(encoding="utf-8"))["tables"]:
@@ -1005,8 +1078,13 @@ def main() -> int:
         tot_code += code
         if code:
             reached.append((b, code))
+    gbs.write_hardware_inc(ROOT / "src/hardware.inc")
+    rom.write_ram_inc(ROOT / "src/ram.asm")
+    log(f"symbols: {len(rom.ram_used)} RAM addresses named "
+        f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")
     (ROOT / "src/main.asm").write_text(
-        "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
+        'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\n'
+        + "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
         encoding="utf-8", newline="\n")
     log("done writing; rebuild and verify with tools/build.py")
     if "--stats" in sys.argv:

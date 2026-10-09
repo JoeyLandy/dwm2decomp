@@ -2,9 +2,9 @@ SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
     db $1A
 
 Func_01A_4001::
-    ld a, [$CFEC]
+    ld a, [wCFEC]
     ld c, a
-    ld a, [$CFED]
+    ld a, [wCFED]
     ld b, a
     ld a, $11
     call Func_000_16AA
@@ -14,7 +14,7 @@ Func_01A_4001::
     ld a, h
     adc a, $40
     ld h, a
-    ld de, $CFEE
+    ld de, wCFEE
     ld b, $11
 
 Jump_01A_401B::
@@ -26,9 +26,9 @@ Jump_01A_401B::
     ret
 
 Func_01A_4022::
-    ld a, [$CFEC]
+    ld a, [wCFEC]
     ld c, a
-    ld a, [$CFED]
+    ld a, [wCFED]
     ld b, a
     ld a, c
     cp a, $FF
@@ -41,18 +41,18 @@ Func_01A_4022::
     ld a, h
     adc a, $40
     ld h, a
-    ld a, [$D868]
+    ld a, [wD868]
     add a, l
     ld l, a
     jr nc, Jump_01A_4044
     inc h
 
 Jump_01A_4044::
-    ld a, [$D869]
+    ld a, [wD869]
     ld b, a
-    ld a, [$D86A]
+    ld a, [wD86A]
     ld e, a
-    ld a, [$D86B]
+    ld a, [wD86B]
     ld d, a
 
 Jump_01A_4050::
@@ -64,11 +64,11 @@ Jump_01A_4050::
     ret
 
 Jump_01A_4057::
-    ld a, [$D869]
+    ld a, [wD869]
     ld b, a
-    ld a, [$D86A]
+    ld a, [wD86A]
     ld l, a
-    ld a, [$D86B]
+    ld a, [wD86B]
     ld h, a
 
 Jump_01A_4063::
@@ -82,7 +82,7 @@ Jump_01A_4063::
     db $C9, $C1, $0E, $00, $C9
 
 Func_01A_408F::
-    ld a, [$D8A6]
+    ld a, [wD8A6]
     ld c, a
     ld b, $00
     ld a, $11
@@ -94,19 +94,19 @@ Func_01A_408F::
     adc a, $40
     ld h, a
     ld bc, $0009
-    ld a, [$C58A]
+    ld a, [wC58A]
     cp a, $01
     jr z, Jump_01A_40B6
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, $04
     jr c, Jump_01A_40B6
     ld bc, $000D
 
 Jump_01A_40B6::
     add hl, bc
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     push hl
-    ld hl, $DA53
+    ld hl, wDA53
     add a, l
     ld l, a
     jr nc, Jump_01A_40C3
@@ -122,9 +122,9 @@ Jump_01A_40C3::
 
 Jump_01A_40CB::
     ld a, [hl+]
-    ld [$D872], a
+    ld [wD872], a
     ld a, [hl]
-    ld [$D873], a
+    ld [wD873], a
     ret
     INCBIN "dwm2-cobi-us.gbc", $0680D4, $B97
     ds $1C, $00
@@ -632,17 +632,17 @@ Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
     db $86, $85, $FF, $8B, $FF, $8D, $FF, $97, $FF, $99, $FF
 
 Func_01A_5FA7::
-    ld hl, $D09D
+    ld hl, wD09D
     ld bc, $0038
     ld a, $FF
     call Func_000_0949
-    ld a, [$D86A]
+    ld a, [wD86A]
     add a, $0E
     ld e, a
-    ld a, [$D86B]
+    ld a, [wD86B]
     adc a, $00
     ld d, a
-    ld hl, $D09D
+    ld hl, wD09D
     ld b, $08
 
 Jump_01A_5FC3::
@@ -653,16 +653,16 @@ Jump_01A_5FC3::
     inc de
     dec b
     jr nz, Jump_01A_5FC3
-    ld a, [$D86A]
+    ld a, [wD86A]
     add a, $17
     ld e, a
-    ld a, [$D86B]
+    ld a, [wD86B]
     adc a, $00
     ld d, a
     ld hl, Data_01A_4FF8
     ld c, $00
     ld a, $04
-    ld [$D86C], a
+    ld [wD86C], a
 
 Jump_01A_5FE2::
     push de
@@ -764,7 +764,7 @@ Jump_01A_5FE2::
     pop bc
     push bc
     push de
-    ld de, $D09D
+    ld de, wD09D
     ld b, $08
 
 Jump_01A_6066::
@@ -807,10 +807,10 @@ Jump_01A_6094::
     pop de
     pop bc
     push bc
-    ld a, [$D86A]
+    ld a, [wD86A]
     add a, $0E
     ld l, a
-    ld a, [$D86B]
+    ld a, [wD86B]
     adc a, $00
     ld h, a
     ld b, $08
@@ -839,10 +839,10 @@ Jump_01A_60B9::
     push bc
     dec hl
     ld e, [hl]
-    ld a, [$D86A]
+    ld a, [wD86A]
     add a, $0E
     ld l, a
-    ld a, [$D86B]
+    ld a, [wD86B]
     adc a, $00
     ld h, a
     ld b, $08
@@ -890,7 +890,7 @@ Jump_01A_60E8::
     ret
 
 Func_01A_60F1::
-    ld a, [$D868]
+    ld a, [wD868]
     ld c, $56
     call Func_000_1F49
     ld d, h
@@ -1023,7 +1023,7 @@ Jump_01A_6189::
     ld a, [hl]
     cp a, $FF
     jr z, Jump_01A_61B6
-    ldh [$FFCC], a
+    ldh [hFFCC], a
     ld a, c
     cp a, $3D
     jr nz, Jump_01A_61AF
@@ -1079,9 +1079,9 @@ Jump_01A_61E4::
     cp a, $AA
     jp nz, Jump_01A_6100
     ld a, $FF
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, $FF
-    ldh [$FFCA], a
+    ldh [hFFCA], a
 
 Jump_01A_61FE::
     ret
@@ -1094,21 +1094,21 @@ Jump_01A_61FF::
     pop hl
     pop de
     ld a, c
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, $00
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     jr Jump_01A_61FE
 
 Jump_01A_620F::
-    ldh a, [$FFCC]
-    ldh [$FFCB], a
+    ldh a, [hFFCC]
+    ldh [hFFCB], a
     pop bc
     pop hl
     pop de
     ld a, c
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, $01
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     jr Jump_01A_61FE
 
 Jump_01A_621F::
@@ -1116,9 +1116,9 @@ Jump_01A_621F::
     pop hl
     pop de
     ld a, c
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, $02
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     jr Jump_01A_61FE
 
 Func_01A_622B::
@@ -1141,7 +1141,7 @@ Jump_01A_6234::
     ret
 
 Func_01A_623D::
-    ld de, $D09D
+    ld de, wD09D
     ld b, $38
 
 Jump_01A_6242::
@@ -1155,23 +1155,23 @@ Jump_01A_6242::
     ret
 
 Func_01A_624B::
-    ld hl, $D09D
+    ld hl, wD09D
     ld bc, $0019
     ld a, $FF
     call Func_000_0949
-    ld a, [$C991]
+    ld a, [wC991]
     ld l, a
-    ld a, [$C992]
+    ld a, [wC992]
     ld h, a
     ld a, l
-    ld [$D006], a
+    ld [wD006], a
     ld a, h
-    ld [$D007], a
+    ld [wD007], a
     ld hl, Func_035_4001
     ld b, $35
     rst $10
-    ld hl, $D09D
-    ld de, $D010
+    ld hl, wD09D
+    ld de, wD010
     ld b, $03
 
 Jump_01A_6274::
@@ -1185,7 +1185,7 @@ Jump_01A_627E::
     ld [hl+], a
     dec b
     jr nz, Jump_01A_6274
-    ld hl, $C9C2
+    ld hl, wC9C2
     ld b, $19
     ld a, $FF
 
@@ -1193,8 +1193,8 @@ Jump_01A_6289::
     ld [hl+], a
     dec b
     jr nz, Jump_01A_6289
-    ld de, $D09D
-    ld hl, $C9C2
+    ld de, wD09D
+    ld hl, wC9C2
     ld b, $19
 
 Jump_01A_6295::
@@ -1301,7 +1301,7 @@ Jump_01A_62FB::
 
 Func_01A_6306::
     push bc
-    ld hl, $C9BA
+    ld hl, wC9BA
     ld b, $08
 
 Jump_01A_630C::
@@ -1322,12 +1322,12 @@ Jump_01A_6318::
 
 Func_01A_631A::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     xor a, a
     ret
 
 Func_01A_631F:: ; heuristic: follows a terminator; C0
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld c, a
     ld b, $00
     ld hl, Data_01A_5BEC
@@ -1353,7 +1353,7 @@ Jump_01A_633A::
 
 Jump_01A_633F::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     jr Jump_01A_6347
 
 Jump_01A_6344::
@@ -1366,7 +1366,7 @@ Func_01A_6348::
     cp a, c
     jr z, Jump_01A_6359
     ld b, $08
-    ld hl, $D09D
+    ld hl, wD09D
 
 Jump_01A_6350::
     cp a, [hl]
@@ -1384,7 +1384,7 @@ Jump_01A_6359::
 Func_01A_635B::
     ld a, c
     ld b, $08
-    ld hl, $D09D
+    ld hl, wD09D
 
 Jump_01A_6361::
     cp a, [hl]
@@ -1408,9 +1408,9 @@ Func_01A_636C::
     ld d, [hl]
     ld e, a
     ld b, $08
-    ld hl, $D09D
+    ld hl, wD09D
     xor a, a
-    ldh [$FFC7], a
+    ldh [hFFC7], a
 
 Jump_01A_637E::
     ld a, [hl]
@@ -1424,7 +1424,7 @@ Jump_01A_637E::
     dec b
     jr nz, Jump_01A_637E
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ret
 
 Jump_01A_6393::
@@ -1454,7 +1454,7 @@ Jump_01A_63A4::
     ret
 
 Func_01A_63A7::
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld c, $63
     call Func_000_1682
     ld a, l
@@ -1463,9 +1463,9 @@ Func_01A_63A7::
     ld a, h
     adc a, $66
     ld h, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld b, a
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld de, Data_01A_63F8
     add a, e
     ld e, a
@@ -1487,9 +1487,9 @@ Jump_01A_63C7::
     dec b
     jr nz, Jump_01A_63C7
     ld a, e
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, d
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ret
     db $F0, $C6, $0E, $63, $CD, $82, $16, $7D, $C6, $16, $6F, $7C, $CE, $66, $67, $F0
     db $C7, $85, $6F, $30, $01, $24, $5E, $16, $00, $7B, $E0, $C8, $7A, $E0, $C9, $C9
@@ -1499,18 +1499,18 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $07, $08, $04, $05, $06, $07, $07, $08, $0B, $0C, $0D, $0C, $0C, $0E, $10
 
 Func_01A_6418::
-    ld hl, $D095
+    ld hl, wD095
     ld bc, $0008
     xor a, a
     call Func_000_0949
-    ld a, [$D869]
+    ld a, [wD869]
     ld c, $0B
     call Func_000_1FD1
     push hl
     ld a, [hl+]
-    ld [$D006], a
+    ld [wD006], a
     ld a, [hl]
-    ld [$D007], a
+    ld [wD007], a
     ld hl, Func_035_4001
     ld b, $35
     rst $10
@@ -1526,36 +1526,36 @@ Func_01A_6418::
     jr nc, Jump_01A_64A1
     ld d, a
     call Func_01A_64A2
-    ld a, [$D014]
+    ld a, [wD014]
     call Func_01A_6562
     ld b, $00
     call Func_01A_6579
-    ld [$D095], a
-    ld a, [$D015]
+    ld [wD095], a
+    ld a, [wD015]
     call Func_01A_6562
     ld b, $01
     call Func_01A_6579
-    ld [$D096], a
-    ld a, [$D016]
+    ld [wD096], a
+    ld a, [wD016]
     call Func_01A_6562
     ld b, $02
     call Func_01A_6579
-    ld [$D097], a
-    ld a, [$D017]
+    ld [wD097], a
+    ld a, [wD017]
     call Func_01A_6562
     ld b, $03
     call Func_01A_6579
-    ld [$D098], a
-    ld a, [$D018]
+    ld [wD098], a
+    ld a, [wD018]
     call Func_01A_6562
     ld b, $04
     call Func_01A_6579
-    ld [$D099], a
-    ld a, [$D019]
+    ld [wD099], a
+    ld a, [wD019]
     call Func_01A_6562
     ld b, $05
     call Func_01A_6579
-    ld [$D09A], a
+    ld [wD09A], a
     call Func_01A_6587
 
 Jump_01A_64A1::
@@ -1563,7 +1563,7 @@ Jump_01A_64A1::
 
 Func_01A_64A2::
     push de
-    ld a, [$D869]
+    ld a, [wD869]
     ld c, $A4
     call Func_000_1FD1
     ld bc, $0000
@@ -1575,13 +1575,13 @@ Func_01A_64A2::
 
 Jump_01A_64B7::
     ld a, $FF
-    ld [$D09B], a
+    ld [wD09B], a
     xor a, a
     jp Jump_01A_654C
 
 Jump_01A_64C0::
     sub a, $1D
-    ld [$D09B], a
+    ld [wD09B], a
     ld a, l
     add a, $C9
     ld l, a
@@ -1672,8 +1672,8 @@ Jump_01A_6539::
     srl a
     ld b, a
     push hl
-    ld a, [$D09B]
-    ld hl, $D095
+    ld a, [wD09B]
+    ld hl, wD095
     add a, l
     ld l, a
     jr nc, Jump_01A_6549
@@ -1685,7 +1685,7 @@ Jump_01A_6549::
     add a, b
 
 Jump_01A_654C::
-    ld [$D09C], a
+    ld [wD09C], a
     pop de
     ret
 
@@ -1727,77 +1727,77 @@ Jump_01A_6577::
     ret
 
 Func_01A_6579::
-    ld a, [$D09B]
+    ld a, [wD09B]
     cp a, b
     jr z, Jump_01A_6582
     xor a, a
     jr Jump_01A_6585
 
 Jump_01A_6582::
-    ld a, [$D09C]
+    ld a, [wD09C]
 
 Jump_01A_6585::
     add a, c
     ret
 
 Func_01A_6587::
-    ld a, [$D869]
+    ld a, [wD869]
     ld c, $5D
     call Func_000_1FD1
-    ld a, [$D095]
+    ld a, [wD095]
     ld c, a
     call Func_01A_65F4
-    ld [$D095], a
+    ld [wD095], a
     ld a, l
     add a, $04
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [$D096]
+    ld a, [wD096]
     ld c, a
     call Func_01A_65F4
-    ld [$D096], a
+    ld [wD096], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [$D097]
+    ld a, [wD097]
     ld c, a
     call Func_01A_65F4
-    ld [$D097], a
+    ld [wD097], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [$D098]
+    ld a, [wD098]
     ld c, a
     call Func_01A_65F4
-    ld [$D098], a
+    ld [wD098], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [$D099]
+    ld a, [wD099]
     ld c, a
     call Func_01A_65F4
-    ld [$D099], a
+    ld [wD099], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [$D09A]
+    ld a, [wD09A]
     ld c, a
     call Func_01A_65F4
-    ld [$D09A], a
+    ld [wD09A], a
     ret
 
 Func_01A_65F4::
@@ -1900,7 +1900,7 @@ Func_01A_72C9::
 
 Func_01A_72DB::
     ld de, Data_01F_4330
-    ld hl, $8ED0
+    ld hl, vTiles1 + $6D0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B

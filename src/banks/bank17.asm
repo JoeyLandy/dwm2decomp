@@ -2,13 +2,13 @@ SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
 Func_017_4001::
-    ld a, [$C524]
+    ld a, [wC524]
     or a, a
     ret z
-    ld a, [$C47C]
+    ld a, [wC47C]
     cp a, $FF
     jr nz, Jump_017_4012
-    ld hl, $C47F
+    ld hl, wC47F
     jr Jump_017_401F
 
 Jump_017_4012::
@@ -151,13 +151,13 @@ Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 Func_017_41CF::
-    ld a, [$C524]
+    ld a, [wC524]
     or a, a
     ret z
     call Func_000_076B
     ld a, $51
-    ld [$C47F], a
-    ld a, [$C51F]
+    ld [wC47F], a
+    ld a, [wC51F]
     ld l, a
     ld h, $00
     add hl, hl
@@ -165,10 +165,10 @@ Func_017_41CF::
     add hl, hl
     ld de, Data_017_426C
     add hl, de
-    ld de, $C480
-    ld bc, $C577
+    ld de, wC480
+    ld bc, wC577
     ld a, $08
-    ld [$C0A0], a
+    ld [wC0A0], a
 
 Jump_017_41F4::
     ld a, [hl+]
@@ -176,16 +176,16 @@ Jump_017_41F4::
     ld [bc], a
     inc de
     inc bc
-    ld a, [$C0A0]
+    ld a, [wC0A0]
     dec a
-    ld [$C0A0], a
+    ld [wC0A0], a
     jr nz, Jump_017_41F4
-    ld a, [$C520]
+    ld a, [wC520]
     or a, $80
     ld [de], a
     call Func_017_421A
     ld a, $FF
-    ld [$C47C], a
+    ld [wC47C], a
     ld b, $17
     ld hl, Func_017_4001
     rst $10
@@ -193,31 +193,31 @@ Jump_017_41F4::
     ret
 
 Func_017_421A::
-    ld a, [$C524]
+    ld a, [wC524]
     or a, a
     ret z
-    ld a, [$C577]
+    ld a, [wC577]
     ld l, a
-    ld a, [$C578]
+    ld a, [wC578]
     ld h, a
-    ld de, $C4DF
+    ld de, wC4DF
     call Func_017_4258
-    ld de, $C4E7
-    ld a, [$C579]
+    ld de, wC4E7
+    ld a, [wC579]
     ld l, a
-    ld a, [$C57A]
-    ld h, a
-    call Func_017_4258
-    ld de, $C4EF
-    ld a, [$C57B]
-    ld l, a
-    ld a, [$C57C]
+    ld a, [wC57A]
     ld h, a
     call Func_017_4258
-    ld de, $C4F7
-    ld a, [$C57D]
+    ld de, wC4EF
+    ld a, [wC57B]
     ld l, a
-    ld a, [$C57E]
+    ld a, [wC57C]
+    ld h, a
+    call Func_017_4258
+    ld de, wC4F7
+    ld a, [wC57D]
+    ld l, a
+    ld a, [wC57E]
     ld h, a
     call Func_017_4258
     ret

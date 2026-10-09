@@ -2,14 +2,14 @@ SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
     db $3D
 
 Func_03D_4001::
-    ld a, [$D801]
+    ld a, [wD801]
     cp a, $2C
     jr nz, Func_03D_4054
-    ld a, [$D890]
-    ld [$D871], a
-    ld a, [$D8A5]
+    ld a, [wD890]
+    ld [wD871], a
+    ld a, [wD8A5]
     and a, $04
-    ld [$D868], a
+    ld [wD868], a
     call Func_000_3E54
     jr c, Jump_03D_4024
     ld hl, Func_03A_4A3A
@@ -18,12 +18,12 @@ Func_03D_4001::
     call Func_03D_4054
 
 Jump_03D_4024::
-    ld hl, $D871
+    ld hl, wD871
     dec [hl]
     ld a, [hl]
     or a, a
     ret z
-    ld hl, $D868
+    ld hl, wD868
     inc [hl]
     ld a, [hl]
     call Func_000_3E54
@@ -34,12 +34,12 @@ Jump_03D_4024::
     call Func_03D_4054
 
 Jump_03D_403E::
-    ld hl, $D871
+    ld hl, wD871
     dec [hl]
     ld a, [hl]
     or a, a
     ret z
-    ld hl, $D868
+    ld hl, wD868
     inc [hl]
     ld a, [hl]
     call Func_000_3E54
@@ -49,8 +49,8 @@ Jump_03D_403E::
     rst $10
 
 Func_03D_4054::
-    ld hl, $FFA9
-    ld a, [$D804]
+    ld hl, hFFA9
+    ld a, [wD804]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -58,9 +58,9 @@ Func_03D_4054::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ld a, [$D801]
+    ld a, [wD801]
     ld [hl+], a
-    ld a, [$DAB7]
+    ld a, [wDAB7]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -73,10 +73,10 @@ Data_03D_4077:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0F4077, $5A
 
 Func_03D_40D1::
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     cp a, $28
     jr nc, Jump_03D_4121
-    ldh a, [$FFAD]
+    ldh a, [hFFAD]
     ld l, a
     ld h, $00
     add hl, hl
@@ -84,7 +84,7 @@ Func_03D_40D1::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [$FFAE]
+    ldh a, [hFFAE]
     ld l, a
     ld h, $00
     add hl, hl
@@ -92,7 +92,7 @@ Func_03D_40D1::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     sla a
     sla a
     ld l, a
@@ -104,18 +104,18 @@ Jump_03D_40F4::
     cp a, $80
     jr z, Jump_03D_4121
     ld b, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, b
     add a, $10
     ld [hl+], a
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, b
     add a, $08
     ld [hl+], a
-    ldh a, [$FFAF]
+    ldh a, [hFFAF]
     ld b, a
     ld a, [de]
     inc de
@@ -124,12 +124,12 @@ Jump_03D_40F4::
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [$FFB0]
+    ldh a, [hFFB0]
     xor a, b
     ld [hl+], a
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     inc a
-    ldh [$FFB1], a
+    ldh [hFFB1], a
     cp a, $28
     jr c, Jump_03D_40F4
 
@@ -624,7 +624,7 @@ Data_03D_4E24:: ; heuristic: target of a monotone pointer table; C0
 Func_03D_4E3D:: ; heuristic: target of a pointer table; C0
     ret nc
     ei
-    ld de, $D820
+    ld de, wD820
     ei
     ld de, $E020
     ei
@@ -634,7 +634,7 @@ Func_03D_4E3D:: ; heuristic: target of a pointer table; C0
     ei
     ld de, $F820
     ei
-    ld de, $8020
+    ld de, vTiles0 + $20
 
 Func_03D_4E56:: ; heuristic: target of a pointer table; C0
     add a, b

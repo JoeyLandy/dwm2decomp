@@ -3,68 +3,68 @@ SECTION "Bank 97", ROMX[$4000], BANK[$97]
 
 Func_097_4001::
     ld de, Data_097_4095
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $DA
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25C9
     ret
 
 Func_097_4010:: ; heuristic: follows a terminator; C0
     ld de, Data_097_4095
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $DA
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25FE
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 Func_097_4026::
     ld de, Data_097_474A
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $8E
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25C9
     ret
 
 Func_097_4035:: ; heuristic: follows a terminator; C0
     ld de, Data_097_474A
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $8E
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25FE
     ret
     db $CD, $26, $40, $CD, $11, $26, $C9
 
 Func_097_404B::
     ld de, Data_097_5BBF
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $95
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25C9
     ret
 
 Func_097_405A:: ; heuristic: follows a terminator; C0
     ld de, Data_097_5BBF
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $95
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25FE
     ret
     db $CD, $4B, $40, $CD, $11, $26, $C9
 
 Func_097_4070::
     ld de, Data_097_6DC1
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $C7
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25C9
     ret
 
 Func_097_407F:: ; heuristic: follows a terminator; C0
     ld de, Data_097_6DC1
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $C7
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25FE
     ret
     db $CD, $70, $40, $CD, $11, $26, $C9

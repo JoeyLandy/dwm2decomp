@@ -2,7 +2,7 @@ SECTION "Bank A1", ROMX[$4000], BANK[$A1]
     db $A1
 
 Func_0A1_4001:: ; heuristic: follows a terminator; C0
-    ld hl, $D8FF
+    ld hl, wD8FF
     jr Jump_0A1_402E
     db $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E, $21, $EF, $D8, $18, $19, $21
     db $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53
@@ -32,45 +32,45 @@ Jump_0A1_403E::
     ret
 
 Func_0A1_403F:: ; heuristic: follows a terminator; C0
-    ld a, [$C58A]
+    ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0A1_4054
-    ld a, [$C57F]
+    ld a, [wC57F]
     bit 1, a
     jr z, Jump_0A1_4054
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, $04
     ccf
     ret
 
 Jump_0A1_4054::
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, $04
     ret
 
 Func_0A1_405A:: ; heuristic: follows a terminator; C0
-    ld a, [$C58A]
+    ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0A1_406F
-    ld a, [$C57F]
+    ld a, [wC57F]
     bit 1, a
     jr z, Jump_0A1_406F
-    ld a, [$D8A5]
+    ld a, [wD8A5]
     cp a, $04
     ccf
     ret
 
 Jump_0A1_406F::
-    ld a, [$D8A5]
+    ld a, [wD8A5]
     cp a, $04
     ret
     INCBIN "dwm2-cobi-us.gbc", $284075, $CA
 
 Func_0A1_413F::
-    ld a, [$C52B]
+    ld a, [wC52B]
     or a, a
     ret nz
-    ld a, [$CFCA]
+    ld a, [wCFCA]
     rst $00
     dw Jump_0A1_4156
     dw Jump_0A1_418A
@@ -82,11 +82,11 @@ Func_0A1_413F::
 
 Jump_0A1_4156::
     xor a, a
-    ld [$C594], a
+    ld [wC594], a
     xor a, a
-    ld [$D8A4], a
+    ld [wD8A4], a
     ld bc, $0304
-    ld hl, $DA5F
+    ld hl, wDA5F
 
 Jump_0A1_4164::
     ld a, [hl]
@@ -110,17 +110,17 @@ Jump_0A1_417F::
     inc c
     dec b
     jr nz, Jump_0A1_4164
-    ld hl, $CFCA
+    ld hl, wCFCA
     inc [hl]
     ret
 
 Jump_0A1_418A::
     call Func_000_3EDE
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, $08
     jr z, Jump_0A1_41BC
     ld e, a
-    ld hl, $DA5B
+    ld hl, wDA5B
     add a, l
     ld l, a
     jr nc, Jump_0A1_419D
@@ -134,22 +134,22 @@ Jump_0A1_419D::
 Jump_0A1_41A2::
     inc e
     ld a, e
-    ld [$D8A4], a
+    ld [wD8A4], a
     jr Jump_0A1_41C2
 
 Jump_0A1_41A9::
     ld a, e
     call Func_000_3E54
     jr c, Jump_0A1_41A2
-    ld [$D8A4], a
-    ld hl, $CFCA
+    ld [wD8A4], a
+    ld hl, wCFCA
     inc [hl]
     xor a, a
-    ld [$CFCB], a
+    ld [wCFCB], a
     jr Jump_0A1_41C2
 
 Jump_0A1_41BC::
-    ld hl, $CFCA
+    ld hl, wCFCA
     inc [hl]
     inc [hl]
     inc [hl]
@@ -167,8 +167,8 @@ Jump_0A1_41CA::
     ld hl, Func_039_4001
     ld b, $39
     rst $10
-    ld a, [$D8A4]
-    ld hl, $DA1D
+    ld a, [wD8A4]
+    ld hl, wDA1D
     add a, a
     add a, l
     ld l, a
@@ -177,8 +177,8 @@ Jump_0A1_41CA::
 
 Jump_0A1_41DC::
     ld d, [hl]
-    ld a, [$D8A4]
-    ld hl, $DA5B
+    ld a, [wD8A4]
+    ld hl, wDA5B
     add a, l
     ld l, a
     jr nc, Jump_0A1_41E8
@@ -187,32 +187,32 @@ Jump_0A1_41DC::
 Jump_0A1_41E8::
     ld [hl], $02
     ld a, $01
-    ld [$CFCA], a
-    ld hl, $D8A4
+    ld [wCFCA], a
+    ld hl, wD8A4
     inc [hl]
     ret
 
 Jump_0A1_41F4::
-    ld hl, $D895
+    ld hl, wD895
     ld bc, $0009
     ld a, $FF
     call Func_000_0949
-    ld hl, $D868
+    ld hl, wD868
     ld bc, $0009
     ld a, $FF
     call Func_000_0949
-    ld hl, $D87D
+    ld hl, wD87D
     ld bc, $0012
     ld a, $00
     call Func_000_0949
     xor a, a
-    ld [$D89E], a
-    ld [$D871], a
-    ld hl, $D87D
+    ld [wD89E], a
+    ld [wD871], a
+    ld hl, wD87D
     ld a, l
-    ld [$D87A], a
+    ld [wD87A], a
     ld a, h
-    ld [$D87B], a
+    ld [wD87B], a
     ld de, $0800
 
 Jump_0A1_422A::
@@ -220,7 +220,7 @@ Jump_0A1_422A::
     call Func_000_3E54
     jr c, Jump_0A1_4266
     ld a, e
-    ld hl, $DA5B
+    ld hl, wDA5B
     add a, l
     ld l, a
     jr nc, Jump_0A1_4239
@@ -233,15 +233,15 @@ Jump_0A1_4239::
     ld a, e
     call Func_0A1_437D
     call Func_0A1_43A1
-    ld hl, $D87A
+    ld hl, wD87A
     ld a, [hl+]
     ld h, [hl]
     ld l, a
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [$D871]
-    ld hl, $D868
+    ld a, [wD871]
+    ld hl, wD868
     add a, l
     ld l, a
     jr nc, Jump_0A1_4259
@@ -249,18 +249,18 @@ Jump_0A1_4239::
 
 Jump_0A1_4259::
     ld [hl], e
-    ld hl, $D871
+    ld hl, wD871
     inc [hl]
-    ld hl, $D87A
+    ld hl, wD87A
     inc [hl]
-    ld hl, $D87A
+    ld hl, wD87A
     inc [hl]
 
 Jump_0A1_4266::
     inc e
     dec d
     jp nz, Jump_0A1_422A
-    ld hl, $CFCA
+    ld hl, wCFCA
     inc [hl]
     ret
 
@@ -268,15 +268,15 @@ Jump_0A1_4270::
     ld d, $08
 
 Jump_0A1_4272::
-    ld hl, $D87D
+    ld hl, wD87D
     ld a, l
-    ld [$D87A], a
+    ld [wD87A], a
     ld a, h
-    ld [$D87B], a
+    ld [wD87B], a
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld hl, $D87F
+    ld hl, wD87F
     ld a, [hl+]
     ld h, [hl]
     ld l, a
@@ -286,27 +286,27 @@ Jump_0A1_4288::
     call Func_000_3E7A
     jr c, Jump_0A1_42C2
     ld a, l
-    ld [$D872], a
+    ld [wD872], a
     ld a, h
-    ld [$D873], a
+    ld [wD873], a
     ld a, c
-    ld [$D874], a
+    ld [wD874], a
     ld a, b
-    ld [$D875], a
-    ld a, [$D87A]
+    ld [wD875], a
+    ld a, [wD87A]
     ld l, a
-    ld a, [$D87B]
+    ld a, [wD87B]
     ld h, a
-    ld a, [$D872]
+    ld a, [wD872]
     ld [hl+], a
-    ld a, [$D873]
+    ld a, [wD873]
     ld [hl+], a
-    ld a, [$D874]
+    ld a, [wD874]
     ld [hl+], a
-    ld a, [$D875]
+    ld a, [wD875]
     ld [hl], a
     ld a, e
-    ld hl, $D868
+    ld hl, wD868
     add a, l
     ld l, a
     jr nc, Jump_0A1_42BE
@@ -323,9 +323,9 @@ Jump_0A1_42C2::
     ld a, e
     cp a, d
     jr z, Jump_0A1_42DB
-    ld hl, $D87A
+    ld hl, wD87A
     inc [hl]
-    ld hl, $D87A
+    ld hl, wD87A
     inc [hl]
     ld a, [hl+]
     ld h, [hl]
@@ -342,16 +342,16 @@ Jump_0A1_42C2::
 Jump_0A1_42DB::
     dec d
     jr nz, Jump_0A1_4272
-    ld a, [$D89E]
-    ld de, $D895
+    ld a, [wD89E]
+    ld de, wD895
     add a, e
     ld e, a
     jr nc, Jump_0A1_42E9
     inc d
 
 Jump_0A1_42E9::
-    ld a, [$D89E]
-    ld hl, $D868
+    ld a, [wD89E]
+    ld hl, wD868
     ld b, $09
 
 Jump_0A1_42F1::
@@ -365,36 +365,36 @@ Jump_0A1_42F1::
 
 Jump_0A1_42FB::
     ld a, $00
-    ld [$D89E], a
-    ld hl, $CFCA
+    ld [wD89E], a
+    ld hl, wCFCA
     inc [hl]
     ret
 
 Jump_0A1_4305::
-    ld hl, $D8BF
+    ld hl, wD8BF
     ld bc, $0000
     call Func_0A1_434F
     call Func_0A1_434F
     call Func_0A1_434F
     ld a, c
-    ld [$D2C8], a
+    ld [wD2C8], a
     ld a, b
-    ld [$D2C9], a
-    ld hl, $D8CF
+    ld [wD2C9], a
+    ld hl, wD8CF
     ld bc, $0000
     call Func_0A1_434F
     call Func_0A1_434F
     call Func_0A1_434F
     ld a, c
-    ld [$D2CA], a
+    ld [wD2CA], a
     ld a, b
-    ld [$D2CB], a
-    ld hl, $CFC9
+    ld [wD2CB], a
+    ld hl, wCFC9
     inc [hl]
     xor a, a
-    ld [$CFCA], a
+    ld [wCFCA], a
     xor a, a
-    ld hl, $CFCB
+    ld hl, wCFCB
     ld bc, $0005
     call Func_000_0949
     ld hl, Func_0A3_4187
@@ -422,7 +422,7 @@ Jump_0A1_435A::
     jr c, Jump_0A1_4378
     ld a, c
     add a, a
-    ld hl, $DA1C
+    ld hl, wDA1C
     add a, l
     ld l, a
     jr nc, Jump_0A1_436A
@@ -433,7 +433,7 @@ Jump_0A1_436A::
     cp a, $6E
     jr nz, Jump_0A1_4378
     ld a, c
-    ld hl, $D812
+    ld hl, wD812
     call Func_000_3F25
     set 2, [hl]
 
@@ -447,7 +447,7 @@ Func_0A1_437D::
     push de
     call Func_000_3EDE
     ld a, e
-    ld hl, $D91F
+    ld hl, wD91F
     add a, a
     add a, l
     ld l, a
@@ -473,7 +473,7 @@ Jump_0A1_438B::
 Func_0A1_43A1::
     push de
     ld a, e
-    ld hl, $DA1C
+    ld hl, wDA1C
     add a, a
     add a, l
     ld l, a
@@ -492,46 +492,46 @@ Jump_0A1_43AC::
     push bc
     push de
     push hl
-    ld [$CFEC], a
+    ld [wCFEC], a
     xor a, a
-    ld [$CFED], a
-    ld a, [$D868]
+    ld [wCFED], a
+    ld a, [wD868]
     ld l, a
-    ld a, [$D869]
+    ld a, [wD869]
     ld h, a
     push hl
-    ld a, [$D86A]
+    ld a, [wD86A]
     ld l, a
-    ld a, [$D86B]
+    ld a, [wD86B]
     ld h, a
     push hl
     ld a, $05
-    ld [$D868], a
+    ld [wD868], a
     ld a, $01
-    ld [$D869], a
-    ld hl, $CFF3
+    ld [wD869], a
+    ld hl, wCFF3
     ld a, l
-    ld [$D86A], a
+    ld [wD86A], a
     ld a, h
-    ld [$D86B], a
+    ld [wD86B], a
     ld hl, Func_01A_4022
     ld b, $1A
     rst $10
     pop hl
     ld a, l
-    ld [$D86A], a
+    ld [wD86A], a
     ld a, h
-    ld [$D86B], a
+    ld [wD86B], a
     pop hl
     ld a, l
-    ld [$D868], a
+    ld [wD868], a
     ld a, h
-    ld [$D869], a
+    ld [wD869], a
     pop hl
     pop de
     pop bc
     pop af
-    ld a, [$CFF3]
+    ld a, [wCFF3]
     bit 2, a
     jr nz, Jump_0A1_4418
     ld hl, $000A
@@ -547,7 +547,7 @@ Jump_0A1_4418::
 
 Jump_0A1_441D::
     call Func_000_3EDE
-    ld a, [$C5E7]
+    ld a, [wC5E7]
     ld b, a
     ld a, $09
     call Func_000_16BF
@@ -566,21 +566,21 @@ Jump_0A1_4433::
     ret
 
 Func_0A1_4435::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     ret z
     cp a, $80
     ret nz
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     and a, $FC
-    ld hl, $CE93
+    ld hl, wCE93
     add a, l
     ld l, a
     jr nc, Jump_0A1_444A
     inc h
 
 Jump_0A1_444A::
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     srl a
     and a, $FE
     add a, l
@@ -589,7 +589,7 @@ Jump_0A1_444A::
     inc h
 
 Jump_0A1_4455::
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     bit 1, a
     jr z, Jump_0A1_445C
     inc hl
@@ -601,7 +601,7 @@ Jump_0A1_445C::
     ld c, $10
 
 Jump_0A1_4464::
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     and a, $03
     jr z, Jump_0A1_4470
     ld b, a
@@ -618,8 +618,8 @@ Jump_0A1_4470::
     ret
 
 Func_0A1_4474::
-    ld hl, $CD78
-    ld a, [$CC45]
+    ld hl, wCD78
+    ld a, [wCC45]
     bit 7, a
     jr z, Jump_0A1_447F
     inc hl
@@ -638,7 +638,7 @@ Jump_0A1_4488::
     push af
     and a, $0F
     and a, $FC
-    ld hl, $CE93
+    ld hl, wCE93
     add a, l
     ld l, a
     jr nc, Jump_0A1_4496
@@ -690,32 +690,32 @@ Jump_0A1_44C5::
     ret
 
 Func_0A1_44C9::
-    ldh a, [$FF8F]
-    ldh [$FFC6], a
+    ldh a, [hFF8F]
+    ldh [hFFC6], a
     dec a
     dec a
-    ldh [$FF8F], a
-    ldh a, [$FF92]
-    ldh [$FFC7], a
+    ldh [hFF8F], a
+    ldh a, [hFF92]
+    ldh [hFFC7], a
     dec a
     dec a
-    ldh [$FF92], a
+    ldh [hFF92], a
     ld c, $05
 
 Jump_0A1_44DB::
     ld b, $05
 
 Jump_0A1_44DD::
-    ld a, [$CD0E]
+    ld a, [wCD0E]
     ld d, a
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     bit 7, a
     jr nz, Jump_0A1_4503
     cp a, d
     jr nc, Jump_0A1_4503
-    ld a, [$CD0D]
+    ld a, [wCD0D]
     ld d, a
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     bit 7, a
     jr nz, Jump_0A1_44FC
     cp a, d
@@ -725,27 +725,27 @@ Jump_0A1_44DD::
     pop bc
 
 Jump_0A1_44FC::
-    ld hl, $FF8F
+    ld hl, hFF8F
     inc [hl]
     dec b
     jr nz, Jump_0A1_44DD
 
 Jump_0A1_4503::
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     sub a, $02
-    ldh [$FF8F], a
-    ld hl, $FF92
+    ldh [hFF8F], a
+    ld hl, hFF92
     inc [hl]
     dec c
     jr nz, Jump_0A1_44DB
-    ldh a, [$FFC6]
-    ldh [$FF8F], a
-    ldh a, [$FFC7]
-    ldh [$FF92], a
+    ldh a, [hFFC6]
+    ldh [hFF8F], a
+    ldh a, [hFFC7]
+    ldh [hFF92], a
     ret
 
 Func_0A1_4519::
-    ld a, [$C5DD]
+    ld a, [wC5DD]
     and a, $07
     rst $00
     dw Jump_0A1_4FB8
@@ -758,28 +758,28 @@ Func_0A1_4519::
 
 Jump_0A1_452D::
     xor a, a
-    ldh [$FFA1], a
-    ldh [$FFA5], a
+    ldh [hFFA1], a
+    ldh [hFFA5], a
     call Func_000_07E0
     ld de, $4EB3
     ld b, $7E
-    ld hl, $8000
+    ld hl, vTiles0
     call Func_000_0CF5
     ld de, $5B27
     ld b, $7E
-    ld hl, $8100
+    ld hl, vTiles0 + $100
     call Func_000_0CF5
     ld de, $5B46
     ld b, $7E
-    ld hl, $8200
+    ld hl, vTiles0 + $200
     call Func_000_0CF5
     ld de, $43AE
     ld b, $5D
-    ld hl, $9000
+    ld hl, vTiles2
     call Func_000_0CF5
     call Func_0A1_578E
     call Func_0A1_579F
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jr nz, Jump_0A1_4573
     call Func_0A1_47D8
@@ -789,14 +789,14 @@ Jump_0A1_4573::
     call Func_0A1_45C5
 
 Jump_0A1_4576::
-    ld hl, $C5E9
+    ld hl, wC5E9
     ld a, $D2
     ld [hl+], a
     ld a, $D2
     ld [hl+], a
     ld a, $E2
     ld [hl], a
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_0A1_45C0
     ld a, $40
@@ -808,68 +808,68 @@ Jump_0A1_4576::
 
 Jump_0A1_4592::
     ld b, $7E
-    ld hl, $C4DF
+    ld hl, wC4DF
     ld c, $08
     call Func_000_0B18
     ld de, Data_07E_5AF6
     ld b, $7E
-    ld hl, $C4E7
+    ld hl, wC4E7
     ld c, $10
     call Func_000_0B18
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     ld de, Data_05D_4565
     ld b, $5D
-    ld hl, $C49F
+    ld hl, wC49F
     ld c, $40
     call Func_000_0B18
     ld a, $7F
-    ld [$C526], a
+    ld [wC526], a
 
 Jump_0A1_45C0::
-    ld hl, $C5DD
+    ld hl, wC5DD
     inc [hl]
     ret
 
 Func_0A1_45C5::
     call Func_0A1_46DF
     call Func_0A1_4A91
-    ld hl, $9800
+    ld hl, vBGMap0
     ld c, $12
 
 Jump_0A1_45D0::
     push hl
-    ldh a, [$FFCB]
-    ldh [$FFCF], a
-    ldh a, [$FFCD]
-    ldh [$FFD0], a
+    ldh a, [hFFCB]
+    ldh [hFFCF], a
+    ldh a, [hFFCD]
+    ldh [hFFD0], a
     ld b, $14
 
 Jump_0A1_45DB::
     push bc
     push hl
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     bit 7, a
     jr nz, Jump_0A1_4610
     ld c, a
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     dec a
     cp a, c
     jr c, Jump_0A1_4610
-    ldh a, [$FFCE]
+    ldh a, [hFFCE]
     bit 7, a
     jr nz, Jump_0A1_4610
     ld c, a
-    ldh a, [$FFCA]
+    ldh a, [hFFCA]
     dec a
     cp a, c
     jr c, Jump_0A1_4610
     push bc
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     and a, $0F
     swap a
     ld c, a
-    ldh a, [$FFCE]
+    ldh a, [hFFCE]
     and a, $0F
     or a, c
     pop bc
@@ -881,33 +881,33 @@ Jump_0A1_45DB::
     call Func_0A1_4640
 
 Jump_0A1_4610::
-    ldh a, [$FFCF]
+    ldh a, [hFFCF]
     inc a
     cp a, $05
     jr nz, Jump_0A1_461D
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     inc a
-    ldh [$FFD0], a
+    ldh [hFFD0], a
     xor a, a
 
 Jump_0A1_461D::
-    ldh [$FFCF], a
+    ldh [hFFCF], a
     pop hl
     inc hl
     pop bc
     dec b
     jr nz, Jump_0A1_45DB
-    ldh a, [$FFCC]
+    ldh a, [hFFCC]
     inc a
     cp a, $05
     jr nz, Jump_0A1_4632
-    ldh a, [$FFCE]
+    ldh a, [hFFCE]
     inc a
-    ldh [$FFCE], a
+    ldh [hFFCE], a
     xor a, a
 
 Jump_0A1_4632::
-    ldh [$FFCC], a
+    ldh [hFFCC], a
     pop hl
     ld a, $20
     add a, l
@@ -922,12 +922,12 @@ Jump_0A1_463C::
 
 Func_0A1_4640::
     push hl
-    ldh a, [$FFCE]
+    ldh a, [hFFCE]
     and a, $FC
     add a, a
     ld l, a
     ld h, $00
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     and a, $FC
     add a, l
     ld l, a
@@ -953,7 +953,7 @@ Jump_0A1_4652::
     call Func_000_1682
     add hl, de
     pop bc
-    ldh a, [$FFCE]
+    ldh a, [hFFCE]
     and a, $03
     ld c, a
     sla a
@@ -966,7 +966,7 @@ Jump_0A1_4652::
     inc h
 
 Jump_0A1_467A::
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     and a, $03
     ld c, a
     sla a
@@ -1006,10 +1006,10 @@ Jump_0A1_4687::
     ld a, $19
     call Func_000_16AA
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
-    ldh a, [$FFCC]
+    ldh [hFFC7], a
+    ldh a, [hFFCC]
     ld c, a
     sla a
     sla a
@@ -1020,7 +1020,7 @@ Jump_0A1_4687::
     inc h
 
 Jump_0A1_46C3::
-    ldh a, [$FFCF]
+    ldh a, [hFFCF]
     add a, l
     ld l, a
     jr nc, Jump_0A1_46CA
@@ -1043,30 +1043,30 @@ Jump_0A1_46CA::
     ret
 
 Func_0A1_46DF::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     ld l, a
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     ld h, a
     push hl
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     ld l, a
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     ld h, a
     push hl
     call Func_0A1_4744
-    ld a, [$CD0D]
-    ldh [$FFC9], a
-    ld a, [$CD0E]
-    ldh [$FFCA], a
-    ldh a, [$FF8F]
+    ld a, [wCD0D]
+    ldh [hFFC9], a
+    ld a, [wCD0E]
+    ldh [hFFCA], a
+    ldh a, [hFF8F]
     dec a
     dec a
-    ldh [$FFCD], a
-    ldh a, [$FF92]
+    ldh [hFFCD], a
+    ldh a, [hFF92]
     dec a
     dec a
-    ldh [$FFCE], a
-    ldh a, [$FF8E]
+    ldh [hFFCE], a
+    ldh a, [hFF8E]
     swap a
     and a, $0F
     srl a
@@ -1075,13 +1075,13 @@ Func_0A1_46DF::
     jr c, Jump_0A1_471B
     sub a, $05
     push af
-    ld hl, $FFCD
+    ld hl, hFFCD
     inc [hl]
     pop af
 
 Jump_0A1_471B::
-    ldh [$FFCB], a
-    ldh a, [$FF91]
+    ldh [hFFCB], a
+    ldh a, [hFF91]
     swap a
     and a, $0F
     srl a
@@ -1091,26 +1091,26 @@ Jump_0A1_471B::
     jr c, Jump_0A1_4733
     sub a, $05
     push af
-    ld hl, $FFCE
+    ld hl, hFFCE
     inc [hl]
     pop af
 
 Jump_0A1_4733::
-    ldh [$FFCC], a
+    ldh [hFFCC], a
     pop hl
     ld a, l
-    ldh [$FF91], a
+    ldh [hFF91], a
     ld a, h
-    ldh [$FF92], a
+    ldh [hFF92], a
     pop hl
     ld a, l
-    ldh [$FF8E], a
+    ldh [hFF8E], a
     ld a, h
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ret
 
 Func_0A1_4744::
-    ld a, [$CC44]
+    ld a, [wCC44]
     and a, $07
     rst $00
     dw Jump_0A1_475A
@@ -1126,18 +1126,18 @@ Jump_0A1_475A::
     ret
 
 Jump_0A1_475B::
-    ld a, [$CC45]
+    ld a, [wCC45]
     and a, $07
     add a, a
     add a, a
-    ld hl, $CD78
+    ld hl, wCD78
     add a, l
     ld l, a
     jr nc, Jump_0A1_476A
     inc h
 
 Jump_0A1_476A::
-    ld a, [$CC45]
+    ld a, [wCC45]
     bit 7, a
     jr z, Jump_0A1_4772
     inc hl
@@ -1147,11 +1147,11 @@ Jump_0A1_4772::
     jr Func_0A1_47C5
 
 Jump_0A1_4775::
-    ld a, [$CC45]
+    ld a, [wCC45]
     and a, $07
     add a, a
     add a, a
-    ld hl, $CD88
+    ld hl, wCD88
     add a, l
     ld l, a
     jr nc, Jump_0A1_4784
@@ -1162,89 +1162,89 @@ Jump_0A1_4784::
     jr Func_0A1_47C5
 
 Jump_0A1_4787::
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_47B4
-    ld a, [$C891]
+    ld a, [wC891]
     bit 7, a
     jr z, Jump_0A1_47B4
     and a, $7F
     ld c, a
-    ld a, [$CC42]
+    ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_47B4
-    ld a, [$C890]
+    ld a, [wC890]
     call Func_0A1_47C5
-    ld a, [$C88F]
+    ld a, [wC88F]
     and a, $F0
-    ldh [$FF8E], a
-    ld a, [$C88F]
+    ldh [hFF8E], a
+    ld a, [wC88F]
     and a, $0F
     swap a
-    ldh [$FF91], a
+    ldh [hFF91], a
     ret
 
 Jump_0A1_47B4::
-    ld a, [$CD08]
+    ld a, [wCD08]
     call Func_0A1_47C5
-    ld a, [$CD09]
-    ldh [$FF8E], a
-    ld a, [$CD0A]
-    ldh [$FF91], a
+    ld a, [wCD09]
+    ldh [hFF8E], a
+    ld a, [wCD0A]
+    ldh [hFF91], a
     ret
 
 Func_0A1_47C5::
     push af
     swap a
     and a, $0F
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     pop af
     and a, $0F
-    ldh [$FF92], a
+    ldh [hFF92], a
     ld a, $40
-    ldh [$FF8E], a
-    ldh [$FF91], a
+    ldh [hFF8E], a
+    ldh [hFF91], a
     ret
 
 Func_0A1_47D8::
     call Func_0A1_4874
     call Func_0A1_4A91
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
-    ld hl, $9800
+    ld hl, vBGMap0
     ld c, $12
 
 Jump_0A1_47E9::
     push hl
     push de
-    ldh a, [$FFCB]
-    ldh [$FFCF], a
-    ldh a, [$FFCD]
-    ldh [$FFD0], a
+    ldh a, [hFFCB]
+    ldh [hFFCF], a
+    ldh a, [hFFCD]
+    ldh [hFFD0], a
     ld b, $14
 
 Jump_0A1_47F5::
     push bc
     push hl
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     bit 7, a
     jr nz, Jump_0A1_481B
     ld c, a
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     dec a
     cp a, c
     jr c, Jump_0A1_481B
-    ldh a, [$FFCE]
+    ldh a, [hFFCE]
     bit 7, a
     jr nz, Jump_0A1_481B
     ld c, a
-    ldh a, [$FFCA]
+    ldh a, [hFFCA]
     dec a
     cp a, c
     jr c, Jump_0A1_481B
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld b, a
     call Func_000_1872
     ld a, c
@@ -1252,13 +1252,13 @@ Jump_0A1_47F5::
 
 Jump_0A1_481B::
     inc de
-    ldh a, [$FFCF]
+    ldh a, [hFFCF]
     inc a
     cp a, $05
     jr nz, Jump_0A1_4831
-    ldh a, [$FFD0]
+    ldh a, [hFFD0]
     inc a
-    ldh [$FFD0], a
+    ldh [hFFD0], a
     ld a, e
     add a, $14
     ld e, a
@@ -1268,7 +1268,7 @@ Jump_0A1_481B::
     xor a, a
 
 Jump_0A1_4831::
-    ldh [$FFCF], a
+    ldh [hFFCF], a
     pop hl
     inc hl
     pop bc
@@ -1282,15 +1282,15 @@ Jump_0A1_4831::
     inc d
 
 Jump_0A1_4841::
-    ldh a, [$FFCC]
+    ldh a, [hFFCC]
     inc a
     cp a, $05
     jr nz, Jump_0A1_4865
-    ldh a, [$FFCE]
+    ldh a, [hFFCE]
     inc a
-    ldh [$FFCE], a
+    ldh [hFFCE], a
     push bc
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     ld c, a
     ld a, $19
     push de
@@ -1309,7 +1309,7 @@ Jump_0A1_4841::
     xor a, a
 
 Jump_0A1_4865::
-    ldh [$FFCC], a
+    ldh [hFFCC], a
     pop hl
     ld a, $20
     add a, l
@@ -1323,18 +1323,18 @@ Jump_0A1_486F::
     ret
 
 Func_0A1_4874::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     ld l, a
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     ld h, a
     push hl
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     ld l, a
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     ld h, a
     push hl
     call Func_0A1_49A8
-    ld a, [$C944]
+    ld a, [wC944]
     add a, a
     add a, a
     ld hl, $497C
@@ -1347,61 +1347,61 @@ Jump_0A1_4892::
     ld a, [hl]
     swap a
     and a, $0F
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, [hl+]
     and a, $0F
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     ld a, [hl+]
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, [hl+]
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld a, [hl]
-    ldh [$FFC8], a
-    ldh a, [$FF8F]
+    ldh [hFFC8], a
+    ldh a, [hFF8F]
     ld c, a
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld b, a
     ld b, $00
     dec bc
     dec bc
     ld a, c
-    ldh [$FFCD], a
+    ldh [hFFCD], a
     ld a, $19
     call Func_000_16AA
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     add hl, de
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
-    ldh a, [$FF92]
+    ldh [hFFC7], a
+    ldh a, [hFF92]
     ld c, a
-    ldh a, [$FF93]
+    ldh a, [hFF93]
     ld b, a
     ld b, $00
     dec bc
     dec bc
     ld a, c
-    ldh [$FFCE], a
-    ldh a, [$FFC9]
+    ldh [hFFCE], a
+    ldh a, [hFFC9]
     call Func_000_16AA
     ld c, l
     ld b, h
     ld a, $19
     call Func_000_16AA
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     add hl, de
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
-    ldh a, [$FF8E]
+    ldh [hFFC7], a
+    ldh a, [hFF8E]
     swap a
     and a, $0F
     srl a
@@ -1410,11 +1410,11 @@ Jump_0A1_4892::
     jr c, Jump_0A1_4915
     sub a, $05
     push af
-    ld hl, $FFCD
+    ld hl, hFFCD
     inc [hl]
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
     ld a, l
     add a, $19
@@ -1423,17 +1423,17 @@ Jump_0A1_4892::
     adc a, $00
     ld h, a
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     pop af
 
 Jump_0A1_4915::
-    ldh [$FFCB], a
+    ldh [hFFCB], a
     push af
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
     pop af
     add a, l
@@ -1443,10 +1443,10 @@ Jump_0A1_4915::
 
 Jump_0A1_4924::
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
-    ldh a, [$FF91]
+    ldh [hFFC7], a
+    ldh a, [hFF91]
     swap a
     and a, $0F
     srl a
@@ -1456,32 +1456,32 @@ Jump_0A1_4924::
     jr c, Jump_0A1_4954
     sub a, $05
     push af
-    ld hl, $FFCE
+    ld hl, hFFCE
     inc [hl]
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     ld c, $19
     call Func_000_1682
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     add hl, de
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     pop af
 
 Jump_0A1_4954::
-    ldh [$FFCC], a
+    ldh [hFFCC], a
     ld c, a
     add a, a
     add a, a
     add a, c
     push af
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
     pop af
     add a, l
@@ -1491,19 +1491,19 @@ Jump_0A1_4954::
 
 Jump_0A1_4967::
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     pop hl
     ld a, l
-    ldh [$FF91], a
+    ldh [hFF91], a
     ld a, h
-    ldh [$FF92], a
+    ldh [hFF92], a
     pop hl
     ld a, l
-    ldh [$FF8E], a
+    ldh [hFF8E], a
     ld a, h
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ret
     db $88, $A5
     dw Data_0A1_5D45
@@ -1529,7 +1529,7 @@ Jump_0A1_4967::
     dw Data_0A1_5D76
 
 Func_0A1_49A8::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld c, $01
     cp a, $29
     jp z, Jump_0A1_4A31
@@ -1600,7 +1600,7 @@ Jump_0A1_4A18::
     jr Jump_0A1_4A18
 
 Jump_0A1_4A23::
-    ld a, [$C88B]
+    ld a, [wC88B]
     dec a
     dec a
     jr nz, Jump_0A1_4A2C
@@ -1613,31 +1613,31 @@ Jump_0A1_4A2C::
     ret
 
 Jump_0A1_4A31::
-    ld a, [$C944]
+    ld a, [wC944]
     inc a
     ld c, a
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_4A67
-    ld a, [$C891]
+    ld a, [wC891]
     bit 7, a
     jr nz, Jump_0A1_4A67
     cp a, c
     jr nz, Jump_0A1_4A67
-    ld a, [$C890]
+    ld a, [wC890]
     swap a
     and a, $0F
-    ldh [$FF8F], a
-    ld a, [$C890]
+    ldh [hFF8F], a
+    ld a, [wC890]
     and a, $0F
-    ldh [$FF92], a
-    ld a, [$C88F]
+    ldh [hFF92], a
+    ld a, [wC88F]
     and a, $F0
-    ldh [$FF8E], a
-    ld a, [$C88F]
+    ldh [hFF8E], a
+    ld a, [wC88F]
     and a, $0F
     swap a
-    ldh [$FF91], a
+    ldh [hFF91], a
     ret
 
 Jump_0A1_4A67::
@@ -1659,59 +1659,59 @@ Func_0A1_4A77::
     ld a, [hl]
     swap a
     and a, $0F
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ld a, [hl]
     and a, $0F
-    ldh [$FF92], a
+    ldh [hFF92], a
     inc hl
     ld a, [hl]
     and a, $F0
-    ldh [$FF8E], a
+    ldh [hFF8E], a
     ld a, [hl]
     and a, $0F
     swap a
-    ldh [$FF91], a
+    ldh [hFF91], a
     ret
 
 Func_0A1_4A91::
-    ldh a, [$FFCB]
-    ld [$C945], a
-    ldh a, [$FFCD]
-    ld [$C946], a
-    ldh a, [$FFCC]
-    ld [$C947], a
-    ldh a, [$FFCE]
-    ld [$C948], a
+    ldh a, [hFFCB]
+    ld [wC945], a
+    ldh a, [hFFCD]
+    ld [wC946], a
+    ldh a, [hFFCC]
+    ld [wC947], a
+    ldh a, [hFFCE]
+    ld [wC948], a
     ret
 
 Jump_0A1_4AA6::
-    ld a, [$C562]
+    ld a, [wC562]
     bit 1, a
     jr nz, Func_0A1_4AB1
     bit 2, a
     jr z, Jump_0A1_4ADC
 
 Func_0A1_4AB1::
-    ld hl, $C5E9
+    ld hl, wC5E9
     ld a, $00
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_0A1_4AD7
-    ld hl, $C49F
+    ld hl, wC49F
     ld bc, $0050
     ld a, $FF
     call Func_000_0949
     ld a, $7F
-    ld [$C526], a
+    ld [wC526], a
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     call Func_000_0829
 
 Jump_0A1_4AD7::
-    ld hl, $C5DD
+    ld hl, wC5DD
     inc [hl]
     ret
 
@@ -1724,10 +1724,10 @@ Jump_0A1_4ADC::
     ret
 
 Func_0A1_4AEC::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_4B64
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld c, $01
     cp a, $30
     jr c, Jump_0A1_4B34
@@ -1761,16 +1761,16 @@ Func_0A1_4AEC::
     ld c, $0B
 
 Jump_0A1_4B34::
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_4B4E
-    ld a, [$C891]
+    ld a, [wC891]
     cp a, c
     jr nz, Jump_0A1_4B4E
-    ld a, [$C890]
-    ldh [$FFC7], a
-    ld a, [$C88F]
-    ldh [$FFC8], a
+    ld a, [wC890]
+    ldh [hFFC7], a
+    ld a, [wC88F]
+    ldh [hFFC8], a
     call Func_0A1_4BA1
     ret
 
@@ -1787,49 +1787,49 @@ Jump_0A1_4B4E::
 
 Jump_0A1_4B5A::
     ld a, [hl+]
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld a, [hl]
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     call Func_0A1_4BA1
     ret
 
 Jump_0A1_4B64::
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_4B88
-    ld a, [$C891]
+    ld a, [wC891]
     bit 7, a
     jr z, Jump_0A1_4B88
     and a, $7F
     ld c, a
-    ld a, [$CC42]
+    ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_4B88
-    ld a, [$C890]
-    ldh [$FFC7], a
-    ld a, [$C88F]
-    ldh [$FFC8], a
+    ld a, [wC890]
+    ldh [hFFC7], a
+    ld a, [wC88F]
+    ldh [hFFC8], a
     call Func_0A1_4BA1
     ret
 
 Jump_0A1_4B88::
-    ld a, [$CD08]
-    ldh [$FFC7], a
-    ld a, [$CD09]
+    ld a, [wCD08]
+    ldh [hFFC7], a
+    ld a, [wCD09]
     and a, $F0
     ld c, a
-    ld a, [$CD0A]
+    ld a, [wCD0A]
     and a, $F0
     swap a
     or a, c
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     call Func_0A1_4BA1
     ret
 
 Func_0A1_4BA1::
-    ld a, [$C946]
+    ld a, [wC946]
     ld c, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     swap a
     and a, $0F
     sub a, c
@@ -1840,10 +1840,10 @@ Func_0A1_4BA1::
     ld c, $28
     call Func_000_1682
     ld a, l
-    ldh [$FFA9], a
-    ld a, [$C948]
+    ldh [hFFA9], a
+    ld a, [wC948]
     ld c, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     and a, $0F
     sub a, c
     bit 7, a
@@ -1853,13 +1853,13 @@ Func_0A1_4BA1::
     ld c, $28
     call Func_000_1682
     ld a, l
-    ldh [$FFAB], a
-    ld a, [$C945]
+    ldh [hFFAB], a
+    ld a, [wC945]
     sla a
     sla a
     sla a
     ld c, a
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     swap a
     and a, $0F
     srl a
@@ -1868,15 +1868,15 @@ Func_0A1_4BA1::
     sla a
     sub a, c
     ld c, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, c
-    ldh [$FFA9], a
-    ld a, [$C947]
+    ldh [hFFA9], a
+    ld a, [wC947]
     sla a
     sla a
     sla a
     ld c, a
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     and a, $0F
     srl a
     sla a
@@ -1884,20 +1884,20 @@ Func_0A1_4BA1::
     sla a
     sub a, c
     ld c, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $20
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $01
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $28
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
@@ -1906,15 +1906,15 @@ Jump_0A1_4C2D::
     ret
 
 Func_0A1_4C2E::
-    ld a, [$C950]
+    ld a, [wC950]
     or a, a
     ret z
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_4CDD
-    ld a, [$CC47]
+    ld a, [wCC47]
     ld b, a
-    ld de, $CC48
+    ld de, wCC48
 
 Jump_0A1_4C42::
     push bc
@@ -1926,7 +1926,7 @@ Jump_0A1_4C42::
     inc de
     inc de
     inc de
-    ld a, [$C946]
+    ld a, [wC946]
     ld c, a
     ld a, [de]
     swap a
@@ -1941,8 +1941,8 @@ Jump_0A1_4C42::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFA9], a
-    ld a, [$C948]
+    ldh [hFFA9], a
+    ld a, [wC948]
     ld c, a
     ld a, [de]
     and a, $0F
@@ -1956,8 +1956,8 @@ Jump_0A1_4C42::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFAB], a
-    ld a, [$C945]
+    ldh [hFFAB], a
+    ld a, [wC945]
     add a, a
     add a, a
     add a, a
@@ -1972,10 +1972,10 @@ Jump_0A1_4C42::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, c
-    ldh [$FFA9], a
-    ld a, [$C947]
+    ldh [hFFA9], a
+    ld a, [wC947]
     add a, a
     add a, a
     add a, a
@@ -1988,20 +1988,20 @@ Jump_0A1_4C42::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $10
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $02
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $27
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
@@ -2021,9 +2021,9 @@ Jump_0A1_4CD7::
     ret
 
 Jump_0A1_4CDD::
-    ld a, [$CC47]
+    ld a, [wCC47]
     ld b, a
-    ld de, $CC48
+    ld de, wCC48
 
 Jump_0A1_4CE4::
     push bc
@@ -2035,7 +2035,7 @@ Jump_0A1_4CE4::
     inc de
     inc de
     inc de
-    ld a, [$C946]
+    ld a, [wC946]
     ld c, a
     ld a, [de]
     swap a
@@ -2050,8 +2050,8 @@ Jump_0A1_4CE4::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFA9], a
-    ld a, [$C948]
+    ldh [hFFA9], a
+    ld a, [wC948]
     ld c, a
     ld a, [de]
     and a, $0F
@@ -2065,7 +2065,7 @@ Jump_0A1_4CE4::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     inc de
     ld a, [de]
     ld hl, $4D94
@@ -2075,7 +2075,7 @@ Jump_0A1_4CE4::
     inc h
 
 Jump_0A1_4D32::
-    ld a, [$C945]
+    ld a, [wC945]
     sla a
     sla a
     sla a
@@ -2089,10 +2089,10 @@ Jump_0A1_4D32::
     sla a
     sub a, c
     ld c, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, c
-    ldh [$FFA9], a
-    ld a, [$C947]
+    ldh [hFFA9], a
+    ld a, [wC947]
     sla a
     sla a
     sla a
@@ -2105,20 +2105,20 @@ Jump_0A1_4D32::
     sla a
     sub a, c
     ld c, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $10
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $02
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $27
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
@@ -2139,10 +2139,10 @@ Jump_0A1_4D8E::
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
 Func_0A1_4DA4::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_4E4D
-    ld a, [$C944]
+    ld a, [wC944]
     add a, a
     ld hl, $5A49
     add a, l
@@ -2164,7 +2164,7 @@ Jump_0A1_4DB8::
 Jump_0A1_4DC1::
     push bc
     push de
-    ld a, [$C946]
+    ld a, [wC946]
     ld c, a
     ld a, [de]
     swap a
@@ -2179,8 +2179,8 @@ Jump_0A1_4DC1::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFA9], a
-    ld a, [$C948]
+    ldh [hFFA9], a
+    ld a, [wC948]
     ld c, a
     ld a, [de]
     and a, $0F
@@ -2194,8 +2194,8 @@ Jump_0A1_4DC1::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFAB], a
-    ld a, [$C945]
+    ldh [hFFAB], a
+    ld a, [wC945]
     add a, a
     add a, a
     add a, a
@@ -2210,10 +2210,10 @@ Jump_0A1_4DC1::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, c
-    ldh [$FFA9], a
-    ld a, [$C947]
+    ldh [hFFA9], a
+    ld a, [wC947]
     add a, a
     add a, a
     add a, a
@@ -2226,20 +2226,20 @@ Jump_0A1_4DC1::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $20
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $01
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $28
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
@@ -2254,7 +2254,7 @@ Jump_0A1_4E44::
     ret
 
 Jump_0A1_4E4D::
-    ld de, $CD8B
+    ld de, wCD8B
 
 Jump_0A1_4E50::
     push de
@@ -2268,7 +2268,7 @@ Jump_0A1_4E58::
     dec de
     dec de
     dec de
-    ld a, [$C946]
+    ld a, [wC946]
     ld c, a
     ld a, [de]
     swap a
@@ -2283,8 +2283,8 @@ Jump_0A1_4E58::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFA9], a
-    ld a, [$C948]
+    ldh [hFFA9], a
+    ld a, [wC948]
     ld c, a
     ld a, [de]
     and a, $0F
@@ -2298,8 +2298,8 @@ Jump_0A1_4E58::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFAB], a
-    ld a, [$C950]
+    ldh [hFFAB], a
+    ld a, [wC950]
     or a, a
     jr nz, Jump_0A1_4E9F
     ld a, [de]
@@ -2308,7 +2308,7 @@ Jump_0A1_4E58::
     jr z, Jump_0A1_4EDF
 
 Jump_0A1_4E9F::
-    ld a, [$C945]
+    ld a, [wC945]
     add a, a
     add a, a
     add a, a
@@ -2319,10 +2319,10 @@ Jump_0A1_4E9F::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, c
-    ldh [$FFA9], a
-    ld a, [$C947]
+    ldh [hFFA9], a
+    ld a, [wC947]
     add a, a
     add a, a
     add a, a
@@ -2333,20 +2333,20 @@ Jump_0A1_4E9F::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $20
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $01
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $28
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
@@ -2360,10 +2360,10 @@ Jump_0A1_4EDF::
     jp Jump_0A1_4E50
 
 Func_0A1_4EE7::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     ret z
-    ld de, $CD7B
+    ld de, wCD7B
 
 Jump_0A1_4EF0::
     push de
@@ -2388,7 +2388,7 @@ Jump_0A1_4EF8::
     jp Jump_0A1_4EF0
 
 Func_0A1_4F0A::
-    ld a, [$C946]
+    ld a, [wC946]
     ld c, a
     ld a, [de]
     swap a
@@ -2403,8 +2403,8 @@ Func_0A1_4F0A::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFA9], a
-    ld a, [$C948]
+    ldh [hFFA9], a
+    ld a, [wC948]
     ld c, a
     ld a, [de]
     and a, $0F
@@ -2418,8 +2418,8 @@ Func_0A1_4F0A::
     call Func_000_1682
     pop de
     ld a, l
-    ldh [$FFAB], a
-    ld a, [$C950]
+    ldh [hFFAB], a
+    ld a, [wC950]
     or a, a
     jr nz, Jump_0A1_4F48
     ld a, [de]
@@ -2428,7 +2428,7 @@ Func_0A1_4F0A::
     ret z
 
 Jump_0A1_4F48::
-    ld a, [$C945]
+    ld a, [wC945]
     add a, a
     add a, a
     add a, a
@@ -2439,10 +2439,10 @@ Jump_0A1_4F48::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, c
-    ldh [$FFA9], a
-    ld a, [$C947]
+    ldh [hFFA9], a
+    ld a, [wC947]
     add a, a
     add a, a
     add a, a
@@ -2453,20 +2453,20 @@ Jump_0A1_4F48::
     add a, a
     sub a, c
     ld c, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $20
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $01
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $28
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     push de
     ld hl, Func_07F_700A
     ld b, $7F
@@ -2475,28 +2475,28 @@ Jump_0A1_4F48::
     ret
 
 Func_0A1_4F8B::
-    ld a, [$C5F0]
+    ld a, [wC5F0]
     bit 5, a
     ret z
     ld a, $50
     dec a
     dec a
-    ldh [$FFA9], a
+    ldh [hFFA9], a
     ld a, $48
     dec a
     dec a
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $00
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $00
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $08
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
@@ -2504,57 +2504,57 @@ Func_0A1_4F8B::
 
 Jump_0A1_4FB8::
     xor a, a
-    ld [$CB7D], a
-    ld hl, $C5E9
+    ld [wCB7D], a
+    ld hl, wC5E9
     ld a, $00
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_0A1_4FDD
-    ld hl, $C49F
+    ld hl, wC49F
     ld bc, $0040
     ld a, $FF
     call Func_000_0949
     ld a, $7F
-    ld [$C526], a
+    ld [wC526], a
     call Func_000_0829
 
 Jump_0A1_4FDD::
-    ld hl, $C5DD
+    ld hl, wC5DD
     inc [hl]
     ret
 
 Jump_0A1_4FE2::
     xor a, a
-    ldh [$FFA1], a
-    ldh [$FFA5], a
+    ldh [hFFA1], a
+    ldh [hFFA5], a
     call Func_000_07E0
     ld de, $4EB3
     ld b, $7E
-    ld hl, $8000
+    ld hl, vTiles0
     call Func_000_0CF5
     ld de, $5B0E
     ld b, $7E
-    ld hl, $8100
+    ld hl, vTiles0 + $100
     call Func_000_0CF5
     ld de, $4001
     ld b, $5D
-    ld hl, $9000
+    ld hl, vTiles2
     call Func_000_0CF5
     ld de, Data_05E_4001
     ld b, $5E
-    ld hl, $9500
+    ld hl, vTiles2 + $500
     call Func_000_0CF5
     ld de, Data_05E_4238
     ld a, $5E
     ld bc, $1412
-    ld hl, $9800
+    ld hl, vBGMap0
     call Func_000_15DE
     call Func_0A1_57F9
     call Func_0A1_57BE
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jr nz, Jump_0A1_5036
     call Func_0A1_52D4
@@ -2564,14 +2564,14 @@ Jump_0A1_5036::
     call Func_0A1_50BF
 
 Jump_0A1_5039::
-    ld hl, $C5E9
+    ld hl, wC5E9
     ld a, $D2
     ld [hl+], a
     ld a, $D2
     ld [hl+], a
     ld a, $E2
     ld [hl], a
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_0A1_5090
     ld a, $40
@@ -2583,47 +2583,47 @@ Jump_0A1_5039::
 
 Jump_0A1_5055::
     ld b, $7E
-    ld hl, $C4DF
+    ld hl, wC4DF
     ld c, $08
     call Func_000_0B18
     ld de, Data_07E_5AF6
     ld b, $7E
-    ld hl, $C4E7
+    ld hl, wC4E7
     ld c, $08
     call Func_000_0B18
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     ld de, Data_05D_4139
     ld b, $5D
-    ld hl, $C49F
+    ld hl, wC49F
     ld c, $08
     call Func_000_0B18
     ld de, Data_05E_422F
     ld b, $5E
-    ld hl, $C4A7
+    ld hl, wC4A7
     ld c, $08
     call Func_000_0B18
     ld a, $7F
-    ld [$C526], a
+    ld [wC526], a
 
 Jump_0A1_5090::
-    ld hl, $C5DD
+    ld hl, wC5DD
     inc [hl]
     ret
 
 Jump_0A1_5095::
-    ld a, [$C562]
+    ld a, [wC562]
     bit 1, a
     jr z, Jump_0A1_50A5
     call Func_0A1_4AB1
     ld a, $06
-    ld [$C5DD], a
+    ld [wC5DD], a
     ret
 
 Jump_0A1_50A5::
     bit 2, a
     jr z, Jump_0A1_50AE
-    ld hl, $C5DD
+    ld hl, wC5DD
     inc [hl]
     ret
 
@@ -2639,37 +2639,37 @@ Jump_0A1_50BB::
     ret
 
 Func_0A1_50BF::
-    ld a, [$CD0E]
+    ld a, [wCD0E]
     ld c, a
-    ld a, [$CD0D]
+    ld a, [wCD0D]
     ld b, a
     call Func_0A1_5764
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld a, l
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, h
-    ldh [$FFC9], a
-    ld hl, $CE93
+    ldh [hFFC9], a
+    ld hl, wCE93
     ld a, l
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     ld a, h
-    ldh [$FFCB], a
+    ldh [hFFCB], a
     ld a, l
-    ldh [$FFCC], a
+    ldh [hFFCC], a
     ld a, h
-    ldh [$FFCD], a
-    ld a, [$CD0E]
+    ldh [hFFCD], a
+    ld a, [wCD0E]
     srl a
     srl a
     ld c, a
-    ld a, [$CD0D]
+    ld a, [wCD0D]
     srl a
     srl a
     ld b, a
-    ld hl, $CD60
+    ld hl, wCD60
 
 Jump_0A1_50F8::
     push bc
@@ -2690,9 +2690,9 @@ Jump_0A1_50FA::
     call Func_000_1682
     add hl, de
     pop bc
-    ldh a, [$FFCA]
+    ldh a, [hFFCA]
     ld e, a
-    ldh a, [$FFCB]
+    ldh a, [hFFCB]
     ld d, a
     ld a, [de]
     call Func_0A1_5242
@@ -2700,9 +2700,9 @@ Jump_0A1_50FA::
     call Func_0A1_5242
     call Func_0A1_5242
     push af
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ld a, $1C
     add a, e
@@ -2712,17 +2712,17 @@ Jump_0A1_50FA::
 
 Jump_0A1_512C::
     ld a, e
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, d
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     pop af
     call Func_0A1_5242
     call Func_0A1_5242
     call Func_0A1_5242
     call Func_0A1_5242
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ld a, $1C
     add a, e
@@ -2732,27 +2732,27 @@ Jump_0A1_512C::
 
 Jump_0A1_514C::
     ld a, e
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, d
-    ldh [$FFC7], a
-    ldh a, [$FFCA]
+    ldh [hFFC7], a
+    ldh a, [hFFCA]
     ld e, a
-    ldh a, [$FFCB]
+    ldh a, [hFFCB]
     ld d, a
     inc de
     ld a, e
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     ld a, d
-    ldh [$FFCB], a
+    ldh [hFFCB], a
     ld a, [de]
     call Func_0A1_5242
     call Func_0A1_5242
     call Func_0A1_5242
     call Func_0A1_5242
     push af
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ld a, $1C
     add a, e
@@ -2762,17 +2762,17 @@ Jump_0A1_514C::
 
 Jump_0A1_517A::
     ld a, e
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, d
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     pop af
     call Func_0A1_5242
     call Func_0A1_5242
     call Func_0A1_5242
     call Func_0A1_5242
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ld a, $1C
     add a, e
@@ -2782,22 +2782,22 @@ Jump_0A1_517A::
 
 Jump_0A1_519A::
     ld a, e
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, d
-    ldh [$FFC7], a
-    ldh a, [$FFCA]
+    ldh [hFFC7], a
+    ldh a, [hFFCA]
     ld e, a
-    ldh a, [$FFCB]
+    ldh a, [hFFCB]
     ld d, a
     inc de
     ld a, e
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     ld a, d
-    ldh [$FFCB], a
+    ldh [hFFCB], a
     ld a, [de]
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ld a, e
     sub a, $7C
@@ -2806,9 +2806,9 @@ Jump_0A1_519A::
     sbc a, $00
     ld d, a
     ld a, e
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, d
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     pop hl
     ld a, $04
     add a, l
@@ -2820,9 +2820,9 @@ Jump_0A1_51CA::
     pop bc
     dec b
     jp nz, Jump_0A1_50FA
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld e, a
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     ld d, a
     ld a, $80
     add a, e
@@ -2832,16 +2832,16 @@ Jump_0A1_51CA::
 
 Jump_0A1_51DC::
     ld a, e
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, d
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, e
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, d
-    ldh [$FFC7], a
-    ldh a, [$FFCC]
+    ldh [hFFC7], a
+    ldh a, [hFFCC]
     ld e, a
-    ldh a, [$FFCD]
+    ldh a, [hFFCD]
     ld d, a
     ld a, e
     add a, $04
@@ -2850,13 +2850,13 @@ Jump_0A1_51DC::
     adc a, $00
     ld d, a
     ld a, e
-    ldh [$FFCA], a
+    ldh [hFFCA], a
     ld a, d
-    ldh [$FFCB], a
+    ldh [hFFCB], a
     ld a, e
-    ldh [$FFCC], a
+    ldh [hFFCC], a
     ld a, d
-    ldh [$FFCD], a
+    ldh [hFFCD], a
     pop hl
     ld a, $08
     add a, l
@@ -2868,7 +2868,7 @@ Jump_0A1_520A::
     pop bc
     dec c
     jp nz, Jump_0A1_50F8
-    ld hl, $8800
+    ld hl, vTiles1
     ld b, $58
 
 Jump_0A1_5214::
@@ -2878,14 +2878,14 @@ Jump_0A1_5214::
     call Func_000_121F
     dec b
     jr nz, Jump_0A1_5214
-    ld de, $C8CF
-    ld a, [$C833]
+    ld de, wC8CF
+    ld a, [wC833]
     call Func_000_2458
     call Func_0A1_528B
-    ld de, $8800
+    ld de, vTiles1
     call Func_000_21A1
     ld e, $80
-    ld hl, $9A04
+    ld hl, vBGMap0 + $204
     ld b, $0B
 
 Jump_0A1_5239::
@@ -2907,9 +2907,9 @@ Func_0A1_5242::
     inc h
 
 Jump_0A1_524E::
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     inc a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     pop af
     ret
 
@@ -2934,9 +2934,9 @@ Jump_0A1_5255::
     inc de
     inc de
     call Func_000_1872
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
     ld a, c
     call Func_000_1211
@@ -2948,9 +2948,9 @@ Jump_0A1_5255::
     inc h
 
 Jump_0A1_5283::
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     inc a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     pop bc
     pop af
     ret
@@ -2958,7 +2958,7 @@ Jump_0A1_5283::
 Func_0A1_528B::
     push hl
     push de
-    ld hl, $C8CF
+    ld hl, wC8CF
     ld bc, $0000
 
 Jump_0A1_5293::
@@ -2982,7 +2982,7 @@ Jump_0A1_52A4::
     ld b, a
     ld a, c
     add a, b
-    ld de, $C8CF
+    ld de, wC8CF
     add a, e
     ld e, a
     jr nc, Jump_0A1_52B7
@@ -2990,7 +2990,7 @@ Jump_0A1_52A4::
 
 Jump_0A1_52B7::
     ld a, c
-    ld hl, $C8CF
+    ld hl, wC8CF
     add a, l
     ld l, a
     jr nc, Jump_0A1_52C0
@@ -3006,7 +3006,7 @@ Jump_0A1_52C1::
     dec de
     dec c
     jr nz, Jump_0A1_52C1
-    ld hl, $C8CF
+    ld hl, wC8CF
 
 Jump_0A1_52CB::
     ld [hl], $90
@@ -3020,7 +3020,7 @@ Jump_0A1_52D1::
     ret
 
 Func_0A1_52D4::
-    ld a, [$C944]
+    ld a, [wC944]
     add a, a
     add a, a
     add a, a
@@ -3046,7 +3046,7 @@ Jump_0A1_52E2::
     ld a, $5D
     call Func_000_15DE
     pop hl
-    ld hl, $8800
+    ld hl, vTiles1
     ld b, $58
 
 Jump_0A1_52FB::
@@ -3056,24 +3056,24 @@ Jump_0A1_52FB::
     call Func_000_121F
     dec b
     jr nz, Jump_0A1_52FB
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     add a, $0A
-    ld [$C529], a
+    ld [wC529], a
     xor a, a
-    ld [$C528], a
-    ld de, $C8CF
+    ld [wC528], a
+    ld de, wC8CF
     ld a, e
-    ld [$C53D], a
+    ld [wC53D], a
     ld a, d
-    ld [$C53E], a
+    ld [wC53E], a
     ld hl, Func_008_4016
     ld b, $08
     rst $10
     call Func_0A1_528B
-    ld de, $8800
+    ld de, vTiles1
     call Func_000_21A1
     ld e, $80
-    ld hl, $9A04
+    ld hl, vBGMap0 + $204
     ld b, $0B
 
 Jump_0A1_5333::
@@ -3086,10 +3086,10 @@ Jump_0A1_5333::
     INCBIN "dwm2-cobi-us.gbc", $28533C, $58
 
 Func_0A1_5394::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_5406
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld c, $01
     cp a, $30
     jr c, Jump_0A1_53DC
@@ -3123,14 +3123,14 @@ Func_0A1_5394::
     ld c, $0B
 
 Jump_0A1_53DC::
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_53F1
-    ld a, [$C891]
+    ld a, [wC891]
     cp a, c
     jr nz, Jump_0A1_53F1
-    ld a, [$C890]
-    ldh [$FFC7], a
+    ld a, [wC890]
+    ldh [hFFC7], a
     call Func_0A1_542E
     ret
 
@@ -3147,83 +3147,83 @@ Jump_0A1_53F1::
 
 Jump_0A1_53FF::
     ld a, [hl]
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     call Func_0A1_542E
     ret
 
 Jump_0A1_5406::
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_5425
-    ld a, [$C891]
+    ld a, [wC891]
     bit 7, a
     jr z, Jump_0A1_5425
     and a, $7F
     ld c, a
-    ld a, [$CC42]
+    ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_5425
-    ld a, [$C890]
-    ldh [$FFC7], a
+    ld a, [wC890]
+    ldh [hFFC7], a
     call Func_0A1_542E
     ret
 
 Jump_0A1_5425::
-    ld a, [$CD08]
-    ldh [$FFC7], a
+    ld a, [wCD08]
+    ldh [hFFC7], a
     call Func_0A1_542E
     ret
 
 Func_0A1_542E::
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     and a, $F0
     swap a
     sla a
     sla a
     sla a
     ld c, a
-    ld a, [$C945]
+    ld a, [wC945]
     sla a
     sla a
     sla a
     add a, c
-    ldh [$FFA9], a
-    ldh a, [$FFC7]
+    ldh [hFFA9], a
+    ldh a, [hFFC7]
     and a, $0F
     sla a
     sla a
     sla a
     ld c, a
-    ld a, [$C946]
+    ld a, [wC946]
     sla a
     sla a
     sla a
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $10
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $01
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $26
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
 
 Func_0A1_5479::
-    ld a, [$C5F0]
+    ld a, [wC5F0]
     bit 5, a
     ret z
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_55A1
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld c, $01
     cp a, $29
     jp z, Jump_0A1_553D
@@ -3294,7 +3294,7 @@ Jump_0A1_5502::
     jr Jump_0A1_5502
 
 Jump_0A1_550D::
-    ld a, [$C88B]
+    ld a, [wC88B]
     dec a
     dec a
     jr nz, Jump_0A1_5516
@@ -3311,12 +3311,12 @@ Jump_0A1_5516::
     ret
 
 Jump_0A1_5523::
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     sla a
     sla a
     sla a
     call Func_0A1_5581
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     sla a
     sla a
     sla a
@@ -3325,20 +3325,20 @@ Jump_0A1_5523::
     ret
 
 Jump_0A1_553D::
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_5565
-    ld a, [$C891]
+    ld a, [wC891]
     cp a, c
     jr nz, Jump_0A1_5565
-    ld a, [$C890]
+    ld a, [wC890]
     and a, $F0
     swap a
     add a, a
     add a, a
     add a, a
     call Func_0A1_5581
-    ld a, [$C890]
+    ld a, [wC890]
     and a, $0F
     add a, a
     add a, a
@@ -3348,14 +3348,14 @@ Jump_0A1_553D::
     ret
 
 Jump_0A1_5565::
-    ld a, [$CD08]
+    ld a, [wCD08]
     and a, $F0
     swap a
     add a, a
     add a, a
     add a, a
     call Func_0A1_5581
-    ld a, [$CD08]
+    ld a, [wCD08]
     and a, $0F
     add a, a
     add a, a
@@ -3366,28 +3366,28 @@ Jump_0A1_5565::
 
 Func_0A1_5581::
     ld c, a
-    ld a, [$C945]
+    ld a, [wC945]
     sla a
     sla a
     sla a
     add a, c
     add a, $06
-    ldh [$FFA9], a
+    ldh [hFFA9], a
     ret
 
 Func_0A1_5591::
     ld c, a
-    ld a, [$C946]
+    ld a, [wC946]
     sla a
     sla a
     sla a
     add a, c
     add a, $06
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ret
 
 Jump_0A1_55A1::
-    ld a, [$CC44]
+    ld a, [wCC44]
     and a, $07
     rst $00
     dw Jump_0A1_5523
@@ -3400,18 +3400,18 @@ Jump_0A1_55A1::
     dw Jump_0A1_55E9
 
 Jump_0A1_55B7::
-    ld a, [$CC45]
+    ld a, [wCC45]
     and a, $07
     sla a
     sla a
-    ld hl, $CD78
+    ld hl, wCD78
     add a, l
     ld l, a
     jr nc, Jump_0A1_55C8
     inc h
 
 Jump_0A1_55C8::
-    ld a, [$CC45]
+    ld a, [wCC45]
     bit 7, a
     jr z, Jump_0A1_55D0
     inc hl
@@ -3422,11 +3422,11 @@ Jump_0A1_55D0::
     ret
 
 Jump_0A1_55D5::
-    ld a, [$CC45]
+    ld a, [wCC45]
     and a, $07
     add a, a
     add a, a
-    ld hl, $CD88
+    ld hl, wCD88
     add a, l
     ld l, a
     jr nc, Jump_0A1_55E4
@@ -3438,23 +3438,23 @@ Jump_0A1_55E4::
     ret
 
 Jump_0A1_55E9::
-    ld a, [$C88E]
+    ld a, [wC88E]
     or a, a
     jr z, Jump_0A1_5606
-    ld a, [$C891]
+    ld a, [wC891]
     bit 7, a
     jr z, Jump_0A1_5606
     and a, $7F
     ld c, a
-    ld a, [$CC42]
+    ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_5606
-    ld a, [$C890]
+    ld a, [wC890]
     call Func_0A1_560D
     ret
 
 Jump_0A1_5606::
-    ld a, [$CD08]
+    ld a, [wCD08]
     call Func_0A1_560D
     ret
 
@@ -3463,49 +3463,49 @@ Func_0A1_560D::
     and a, $F0
     srl a
     ld c, a
-    ld a, [$C945]
+    ld a, [wC945]
     sla a
     sla a
     sla a
     add a, c
     add a, $06
-    ldh [$FFA9], a
+    ldh [hFFA9], a
     pop af
     and a, $0F
     sla a
     sla a
     sla a
     ld c, a
-    ld a, [$C946]
+    ld a, [wC946]
     sla a
     sla a
     sla a
     add a, c
     add a, $06
-    ldh [$FFAB], a
+    ldh [hFFAB], a
 
 Func_0A1_5639::
     ld a, $00
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $00
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $08
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
 
 Func_0A1_5654::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jr nz, Jump_0A1_5694
-    ld a, [$C944]
+    ld a, [wC944]
     add a, a
     ld hl, $5A00
     add a, l
@@ -3529,21 +3529,21 @@ Jump_0A1_5670::
     push de
     ld a, [de]
     ld c, a
-    ld a, [$C945]
+    ld a, [wC945]
     add a, a
     add a, a
     add a, a
     add a, c
-    ldh [$FFA9], a
+    ldh [hFFA9], a
     inc de
     ld a, [de]
     ld c, a
-    ld a, [$C946]
+    ld a, [wC946]
     add a, a
     add a, a
     add a, a
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     call Func_0A1_56DC
     pop de
     inc de
@@ -3554,7 +3554,7 @@ Jump_0A1_5670::
     ret
 
 Jump_0A1_5694::
-    ld de, $CD8B
+    ld de, wCD8B
 
 Jump_0A1_5697::
     ld a, [de]
@@ -3565,7 +3565,7 @@ Jump_0A1_5697::
     dec de
     dec de
     ld a, [de]
-    ld a, [$C950]
+    ld a, [wC950]
     or a, a
     jr nz, Jump_0A1_56AD
     ld a, [de]
@@ -3581,24 +3581,24 @@ Jump_0A1_56AD::
     add a, a
     add a, a
     ld c, a
-    ld a, [$C945]
+    ld a, [wC945]
     add a, a
     add a, a
     add a, a
     add a, c
-    ldh [$FFA9], a
+    ldh [hFFA9], a
     ld a, [de]
     and a, $0F
     add a, a
     add a, a
     add a, a
     ld c, a
-    ld a, [$C946]
+    ld a, [wC946]
     add a, a
     add a, a
     add a, a
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     call Func_0A1_56DC
 
 Jump_0A1_56D2::
@@ -3614,26 +3614,26 @@ Jump_0A1_56DA::
 
 Func_0A1_56DC::
     ld a, $10
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $01
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $26
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     ld hl, Func_07F_700A
     ld b, $7F
     rst $10
     ret
 
 Func_0A1_56F7::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     ret z
-    ld de, $CD7B
+    ld de, wCD7B
 
 Jump_0A1_5700::
     ld a, [de]
@@ -3657,7 +3657,7 @@ Jump_0A1_5717::
     jr Jump_0A1_5700
 
 Func_0A1_5719::
-    ld a, [$C950]
+    ld a, [wC950]
     or a, a
     jr nz, Jump_0A1_5725
     ld a, [de]
@@ -3673,35 +3673,35 @@ Jump_0A1_5725::
     add a, a
     add a, a
     ld c, a
-    ld a, [$C945]
+    ld a, [wC945]
     add a, a
     add a, a
     add a, a
     add a, c
-    ldh [$FFA9], a
+    ldh [hFFA9], a
     ld a, [de]
     and a, $0F
     add a, a
     add a, a
     add a, a
     ld c, a
-    ld a, [$C946]
+    ld a, [wC946]
     add a, a
     add a, a
     add a, a
     add a, c
-    ldh [$FFAB], a
+    ldh [hFFAB], a
     ld a, $10
-    ldh [$FFAF], a
+    ldh [hFFAF], a
     ld a, $01
-    ldh [$FFB0], a
+    ldh [hFFB0], a
     ld a, $26
-    ldh [$FFAD], a
+    ldh [hFFAD], a
     xor a, a
-    ldh [$FFAE], a
+    ldh [hFFAE], a
     xor a, a
-    ldh [$FFAA], a
-    ldh [$FFAC], a
+    ldh [hFFAA], a
+    ldh [hFFAC], a
     push de
     ld hl, Func_07F_700A
     ld b, $7F
@@ -3715,7 +3715,7 @@ Func_0A1_5764::
     ld l, a
     ld a, $09
     sub a, l
-    ld [$C946], a
+    ld [wC946], a
     ld l, a
     ld h, $00
     add hl, hl
@@ -3734,7 +3734,7 @@ Func_0A1_5764::
     ld e, a
     ld a, $0A
     sub a, e
-    ld [$C945], a
+    ld [wC945], a
     add a, l
     ld l, a
     jr nc, Jump_0A1_578D
@@ -3744,7 +3744,7 @@ Jump_0A1_578D::
     ret
 
 Func_0A1_578E::
-    ld hl, $9800
+    ld hl, vBGMap0
     ld bc, $0400
 
 Jump_0A1_5794::
@@ -3757,13 +3757,13 @@ Jump_0A1_5794::
     ret
 
 Func_0A1_579F::
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     ret z
     ld c, $4F
     ld a, $01
     ldh [c], a
-    ld hl, $9800
+    ld hl, vBGMap0
     ld bc, $0400
 
 Jump_0A1_57AF::
@@ -3779,13 +3779,13 @@ Jump_0A1_57AF::
     ret
 
 Func_0A1_57BE::
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     ret z
     ld c, $4F
     ld a, $01
     ldh [c], a
-    ld hl, $9800
+    ld hl, vBGMap0
     ld bc, $0400
 
 Jump_0A1_57CE::
@@ -3795,7 +3795,7 @@ Jump_0A1_57CE::
     ld a, b
     or a, c
     jr nz, Jump_0A1_57CE
-    ld hl, $9864
+    ld hl, vBGMap0 + $64
     ld c, $0C
 
 Jump_0A1_57DD::
@@ -3826,7 +3826,7 @@ Jump_0A1_57F0::
 Func_0A1_57F9::
     ld de, $5808
     ld bc, $0C0C
-    ld hl, $9864
+    ld hl, vBGMap0 + $64
     ld a, $A1
     call Func_000_15DE
     ret
@@ -3834,13 +3834,13 @@ Func_0A1_57F9::
 
 Func_0A1_5898::
     ld a, $03
-    ld [$C5E0], a
+    ld [wC5E0], a
     ld a, $40
-    ld [$D067], a
+    ld [wDataBankSave], a
     ld hl, Func_002_4628
     ld b, $02
     rst $10
-    ld hl, $C5E9
+    ld hl, wC5E9
     ld a, $D2
     ld [hl+], a
     ld a, $D2
@@ -3848,23 +3848,23 @@ Func_0A1_5898::
     ld a, $E2
     ld [hl], a
     ld a, $01
-    ld [$C5DB], a
+    ld [wC5DB], a
     ret
 
 Func_0A1_58BA::
     push bc
     push hl
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     and a, $0F
     and a, $FC
-    ld hl, $CE93
+    ld hl, wCE93
     add a, l
     ld l, a
     jr nc, Jump_0A1_58CA
     inc h
 
 Jump_0A1_58CA::
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     swap a
     and a, $0F
     srl a
@@ -3875,7 +3875,7 @@ Jump_0A1_58CA::
     inc h
 
 Jump_0A1_58D9::
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     bit 1, a
     jr z, Jump_0A1_58E0
     inc hl
@@ -3887,7 +3887,7 @@ Jump_0A1_58E0::
     ld c, $10
 
 Jump_0A1_58E8::
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     swap a
     and a, $03
     jr z, Jump_0A1_58F6
@@ -3915,23 +3915,23 @@ Jump_0A1_58FE::
 
 Func_0A1_5903::
     xor a, a
-    ldh [$FFC6], a
-    ld a, [$C56C]
+    ldh [hFFC6], a
+    ld a, [wC56C]
     or a, a
     ret nz
-    ld a, [$C8CB]
+    ld a, [wC8CB]
     and a, $03
     ret nz
-    ld a, [$C468]
+    ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [$FF8C]
+    ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_59AE
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     cp a, $20
     ret c
     ld c, $00
@@ -3968,17 +3968,17 @@ Func_0A1_5903::
 
 Jump_0A1_595D::
     ld a, c
-    ld [$C944], a
+    ld [wC944], a
     ld a, $01
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $01
-    ld [$C8C7], a
+    ld [wC8C7], a
     ld hl, Func_002_5EEE
     ld b, $02
     rst $10
     ld a, $08
-    ld [$C5DC], a
-    ldh a, [$FF90]
+    ld [wC5DC], a
+    ldh a, [hFF90]
     cp a, $20
     jr z, Jump_0A1_59A9
     cp a, $30
@@ -4002,34 +4002,34 @@ Jump_0A1_595D::
     cp a, $DA
     jr z, Jump_0A1_59A9
     ld a, $03
-    ld [$C5DD], a
+    ld [wC5DD], a
     ret
 
 Jump_0A1_59A9::
     xor a, a
-    ld [$C5DD], a
+    ld [wC5DD], a
     ret
 
 Jump_0A1_59AE::
     ld a, $01
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $01
-    ld [$C8C7], a
+    ld [wC8C7], a
     ld hl, Func_002_5EEE
     ld b, $02
     rst $10
     ld a, $08
-    ld [$C5DC], a
-    ld a, [$CC44]
+    ld [wC5DC], a
+    ld a, [wCC44]
     and a, $7F
     jr nz, Jump_0A1_59CE
     xor a, a
-    ld [$C5DD], a
+    ld [wC5DD], a
     ret
 
 Jump_0A1_59CE::
     ld a, $03
-    ld [$C5DD], a
+    ld [wC5DD], a
     ret
     db $01, $01, $00, $44, $39, $31, $76, $44, $59, $21, $B4, $44, $59, $21, $B4, $44
     db $09, $01, $10, $44, $01, $01, $00, $44, $01, $09, $01, $44, $21, $21, $44, $44

@@ -2,7 +2,7 @@ SECTION "Bank 7C", ROMX[$4000], BANK[$7C]
     db $7C
 
 Func_07C_4001::
-    ld a, [$C529]
+    ld a, [wC529]
     cp a, $87
     jr c, Jump_07C_400F
     ld hl, Func_099_404B
@@ -16,7 +16,7 @@ Jump_07C_400F::
     ret
 
 Func_07C_4016:: ; heuristic: follows a terminator; C0
-    ld a, [$C529]
+    ld a, [wC529]
     cp a, $87
     jr c, Jump_07C_4024
     ld hl, Func_099_405A

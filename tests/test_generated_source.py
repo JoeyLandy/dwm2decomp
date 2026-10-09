@@ -62,6 +62,52 @@ class Annotations(unittest.TestCase):
         self.assertEqual(missing, [], "annotation not emitted directly above its label")
 
 
+@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+class SymbolicOperands(unittest.TestCase):
+    """Instruction operands name hardware and RAM instead of repeating addresses."""
+
+    MEM = re.compile(r"\[\$([0-9A-F]{4})\]")
+    IMM = re.compile(r"^ld (?:hl|de|bc|sp), \$([0-9A-F]{4})$")
+
+    def test_no_instruction_uses_a_raw_hardware_or_ram_address(self):
+        import sys
+        sys.path.insert(0, str(BANKS.parents[1] / "tools"))
+        import gb_symbols as gbs
+
+        def forbidden(addr: int, pointer: bool) -> bool:
+            if addr in gbs.IO or 0xFF30 <= addr < 0xFF40:
+                return True
+            if not pointer and (addr in gbs.MBC or addr == gbs.BANK_NUMBER_BYTE[1]):
+                return True
+            return 0x8000 <= addr < 0xE000 or gbs.HRAM_START <= addr <= gbs.HRAM_END
+
+        bad, checked, symbolic = [], 0, 0
+        sym = re.compile(r"\[[whrsv][A-Za-z0-9_]+( \+ \$[0-9A-F]+)?\]|BANK_NUMBER_BYTE|, [whrsv][A-Z][A-Za-z0-9_]*( \+ \$[0-9A-F]+)?$")
+        for f in sorted(BANKS.glob("bank*.asm")):
+            for n, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+                if not line.startswith("    ") or line.lstrip().startswith(("db", "dw", "ds", "INCBIN")):
+                    continue
+                code = line.split(";")[0].strip()
+                symbolic += bool(sym.search(code))
+                m = self.MEM.search(code)
+                if m:
+                    checked += 1
+                    if forbidden(int(m.group(1), 16), False):
+                        bad.append(f"{f.name}:{n} {code}")
+                    continue
+                m = self.IMM.match(code)
+                if m:
+                    checked += 1
+                    if forbidden(int(m.group(1), 16), True):
+                        bad.append(f"{f.name}:{n} {code}")
+        self.assertGreater(symbolic, 10000, "expected the source to use many symbolic operands")
+        self.assertEqual(bad[:5], [], f"{len(bad)} operands still use a raw hardware/RAM address")
+
+    def test_includes_define_every_symbol_the_banks_use(self):
+        main = (BANKS.parent / "main.asm").read_text(encoding="utf-8").splitlines()
+        self.assertEqual(main[:2], ['INCLUDE "hardware.inc"', 'INCLUDE "ram.asm"'])
+
+
 REF = BANKS.parents[1] / "local" / "roms" / "dwm2-cobi-us.gbc"
 
 

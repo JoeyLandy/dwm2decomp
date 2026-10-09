@@ -7,23 +7,23 @@ Func_010_4001::
     ret
 
 Func_010_4008::
-    ld a, [$C56C]
+    ld a, [wC56C]
     or a, a
     ret nz
-    ld a, [$C919]
+    ld a, [wC919]
     bit 7, a
     ret z
     and a, $7F
-    ld [$C919], a
+    ld [wC919], a
     ld a, $01
-    ld [$C91F], a
+    ld [wC91F], a
 
 Jump_010_401D::
-    ld a, [$C91A]
+    ld a, [wC91A]
     ld l, a
-    ld a, [$C91B]
+    ld a, [wC91B]
     ld h, a
-    ld a, [$D7FD]
+    ld a, [wD7FD]
     and a, a
     jr z, Jump_010_4032
     call Func_000_0B6C
@@ -38,19 +38,19 @@ Jump_010_4033::
     cp a, $FF
     jr nz, Jump_010_4054
     xor a, a
-    ld [$C91F], a
-    ld [$C920], a
-    ld [$D7FD], a
-    ld a, [$CC44]
+    ld [wC91F], a
+    ld [wC920], a
+    ld [wD7FD], a
+    ld a, [wCC44]
     bit 7, a
     jr nz, Jump_010_404E
     ld a, $00
-    ld [$C5DC], a
+    ld [wC5DC], a
     ret
 
 Jump_010_404E::
     ld a, $05
-    ld [$C5DC], a
+    ld [wC5DC], a
     ret
 
 Jump_010_4054::
@@ -261,107 +261,107 @@ Func_010_4248:: ; heuristic: target of a pointer table; C0
     pop hl
     dec hl
     ld a, [hl+]
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4252:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $81
-    ld [$C920], a
+    ld [wC920], a
     xor a, a
-    ld [$C923], a
-    ld [$C924], a
-    ld [$C925], a
-    ld [$C926], a
+    ld [wC923], a
+    ld [wC924], a
+    ld [wC925], a
+    ld [wC926], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Func_010_426E:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $83
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
-    ld a, [$C195]
+    ld a, [wC195]
     and a, $03
     dec a
     jr nz, Jump_010_4291
-    ldh a, [$FF8C]
+    ldh a, [hFF8C]
     bit 3, a
     jr nz, Jump_010_428B
     ld a, $01
-    ld [$C922], a
+    ld [wC922], a
     ret
 
 Jump_010_428B::
     ld a, $03
-    ld [$C922], a
+    ld [wC922], a
     ret
 
 Jump_010_4291::
     ld a, $02
-    ld [$C922], a
+    ld [wC922], a
     ret
 
 Func_010_4297:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $86
-    ld [$C920], a
+    ld [wC920], a
     xor a, a
-    ld [$C923], a
-    ld [$C924], a
-    ld [$C925], a
-    ld [$C926], a
+    ld [wC923], a
+    ld [wC924], a
+    ld [wC925], a
+    ld [wC926], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Jump_010_42B3::
     pop hl
-    ld a, [$D7FD]
+    ld a, [wD7FD]
     and a, a
     jr z, Jump_010_42CE
     ld a, $01
-    ld [$C920], a
+    ld [wC920], a
     call Func_000_0B6C
     ld a, b
-    ld [$C921], a
+    ld [wC921], a
     ld a, c
-    ld [$C922], a
+    ld [wC922], a
     inc hl
     inc hl
     jr Jump_010_42DB
 
 Jump_010_42CE::
     ld a, $01
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C921], a
+    ld [wC921], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
 
 Jump_010_42DB::
     xor a, a
-    ld [$C923], a
+    ld [wC923], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Jump_010_42E8::
     ld a, $02
-    ld [$C920], a
+    ld [wC920], a
     jr Jump_010_42F4
 
 Jump_010_42EF::
     ld a, $03
-    ld [$C920], a
+    ld [wC920], a
 
 Jump_010_42F4::
     pop hl
@@ -370,64 +370,64 @@ Jump_010_42F4::
     ld a, [hl+]
     swap a
     or a, c
-    ld [$C921], a
+    ld [wC921], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
     xor a, a
-    ld [$C923], a
+    ld [wC923], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Jump_010_430F::
     pop hl
     ld a, $04
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C921], a
+    ld [wC921], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Jump_010_4326::
     pop hl
     ld a, $05
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C921], a
+    ld [wC921], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
     xor a, a
-    ld [$C923], a
-    ldh [$FF9A], a
+    ld [wC923], a
+    ldh [hFF9A], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Jump_010_4343::
     pop hl
     ld a, $06
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C921], a
+    ld [wC921], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Func_010_435A::
-    ldh a, [$FF41]
+    ldh a, [rSTAT]
     bit 1, a
     jr nz, Func_010_435A
     ld a, [hl+]
@@ -440,21 +440,21 @@ Func_010_435A::
 Jump_010_4367::
     push bc
     push de
-    ld hl, $C89E
-    ld de, $8EE0
+    ld hl, wC89E
+    ld de, vTiles1 + $6E0
     ld c, $10
     call Func_010_435A
-    ld hl, $C8AE
-    ld de, $8EF0
+    ld hl, wC8AE
+    ld de, vTiles1 + $6F0
     ld c, $10
     call Func_010_435A
     pop de
     pop bc
     pop hl
-    ld a, [$D7FD]
+    ld a, [wD7FD]
     and a, a
     jr z, Jump_010_43A6
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_010_43A3
     call Func_000_0B6C
@@ -467,9 +467,9 @@ Jump_010_4367::
 
 Jump_010_4398::
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     jp Jump_010_401D
 
 Jump_010_43A3::
@@ -477,7 +477,7 @@ Jump_010_43A3::
     jr Jump_010_4398
 
 Jump_010_43A6::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_010_43BD
     ld a, [hl+]
@@ -488,37 +488,37 @@ Jump_010_43A6::
 
 Jump_010_43B2::
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     jp Jump_010_401D
 
 Jump_010_43BD::
     inc hl
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     jp Jump_010_401D
 
 Jump_010_43C9::
     pop hl
-    ld a, [$D7FD]
+    ld a, [wD7FD]
     and a, a
     jr z, Jump_010_43DF
     call Func_000_0B6C
     ld a, b
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, c
-    ld [$C91B], a
+    ld [wC91B], a
     inc hl
     jp Jump_010_401D
 
 Jump_010_43DF::
     ld a, [hl+]
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, [hl]
-    ld [$C91B], a
+    ld [wC91B], a
     jp Jump_010_401D
     db $E1, $2A, $5F, $2A, $57, $7D, $EA, $1A, $C9, $7C, $EA, $1B, $C9, $CD, $45, $18
     db $C3, $1D, $40
@@ -526,22 +526,22 @@ Jump_010_43DF::
 Func_010_43FD:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $0C
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
     xor a, a
-    ld [$C921], a
+    ld [wC921], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Func_010_4414:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, [hl+]
     swap a
-    ld de, $CB8B
+    ld de, wCB8B
     add a, e
     ld e, a
     jr nc, Jump_010_4420
@@ -551,35 +551,35 @@ Jump_010_4420::
     ld a, $E0
     ld [de], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     jp Jump_010_401D
 
 Func_010_442E:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $0E
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C921], a
+    ld [wC921], a
     xor a, a
-    ld [$C923], a
+    ld [wC923], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Func_010_4445:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, [hl+]
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, [hl+]
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ld hl, Func_012_7EC2
     ld b, $12
     rst $10
@@ -590,9 +590,9 @@ Func_010_445D:: ; heuristic: target of a pointer table; C0
     ld a, [hl+]
     push af
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     pop af
     cp a, $FF
     jr z, Jump_010_447D
@@ -615,76 +615,76 @@ Func_010_4486:: ; heuristic: target of a pointer table; C0
     pop hl
     dec hl
     ld a, [hl+]
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4490:: ; heuristic: target of a pointer table; C0
     pop hl
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     inc a
     inc a
     and a, $03
-    ld [$C8EF], a
+    ld [wC8EF], a
     ld a, $1C
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ld de, $0000
     call Func_000_181B
     jr c, Jump_010_44BA
     ld hl, $0088
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     xor a, a
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Jump_010_44BA::
     ld hl, $0087
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     xor a, a
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Func_010_44CA:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $1D
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ld de, $0000
     call Func_000_181B
     jr c, Jump_010_44EB
     ld hl, $4097
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     xor a, a
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Jump_010_44EB::
     ld hl, $408D
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     xor a, a
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Func_010_44FB:: ; heuristic: target of a pointer table; C0
     pop hl
-    ld a, [$CC38]
+    ld a, [wCC38]
     set 2, a
-    ld [$CC38], a
+    ld [wCC38], a
     ld a, $23
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
@@ -692,268 +692,268 @@ Func_010_450D:: ; heuristic: target of a pointer table; C0
     pop hl
     dec hl
     ld a, [hl+]
-    ld [$C920], a
-    ld a, [$C922]
+    ld [wC920], a
+    ld a, [wC922]
     push af
     call Func_010_46CD
     pop af
-    ld [$C922], a
+    ld [wC922], a
     ret
 
 Func_010_451F:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $E0
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4529:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $E1
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4533:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $E2
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_453D:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $E3
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4547:: ; heuristic: follows a terminator; C0
     pop hl
     ld a, $E5
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4551:: ; heuristic: follows a terminator; C0
     pop hl
     ld a, $E6
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_455B:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $E8
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4565:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $E9
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_456F:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $EB
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4579:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $EC
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4583:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $ED
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_458D:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $EE
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4597:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $EF
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_45A1:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F0
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_45AB:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F1
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_45B5:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F2
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_45BF:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F3
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_45C9:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F4
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_45D3:: ; heuristic: target of a pointer table; C0
     pop hl
-    ld a, [$D7FD]
+    ld a, [wD7FD]
     and a, a
     jr z, Jump_010_45EE
     ld a, $01
-    ld [$C920], a
+    ld [wC920], a
     call Func_000_0B6C
     ld a, b
-    ld [$C921], a
+    ld [wC921], a
     ld a, c
-    ld [$C922], a
+    ld [wC922], a
     inc hl
     inc hl
     jr Jump_010_45FB
 
 Jump_010_45EE::
     ld a, $01
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C921], a
+    ld [wC921], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
 
 Jump_010_45FB::
     push hl
-    ld a, [$D7FB]
+    ld a, [wD7FB]
     add a, a
     add a, a
     add a, a
     add a, a
     ld b, a
-    ld a, [$C921]
+    ld a, [wC921]
     add a, b
-    ld [$C921], a
+    ld [wC921], a
     pop hl
     xor a, a
-    ld [$C923], a
+    ld [wC923], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Func_010_4619:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F6
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4623:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F7
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_462D:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, $F8
-    ld [$C920], a
+    ld [wC920], a
     call Func_010_46CD
     ret
 
 Func_010_4637:: ; heuristic: target of a pointer table; C0
     pop hl
-    ld a, [$D7FD]
+    ld a, [wD7FD]
     and a, a
     jr z, Jump_010_4652
     ld a, $01
-    ld [$C920], a
+    ld [wC920], a
     call Func_000_0B6C
     ld a, b
-    ld [$C921], a
+    ld [wC921], a
     ld a, c
-    ld [$C922], a
+    ld [wC922], a
     inc hl
     inc hl
     jr Jump_010_465F
 
 Jump_010_4652::
     ld a, $01
-    ld [$C920], a
+    ld [wC920], a
     ld a, [hl+]
-    ld [$C921], a
+    ld [wC921], a
     ld a, [hl+]
-    ld [$C922], a
+    ld [wC922], a
 
 Jump_010_465F::
     push hl
     ld de, $0000
     call Func_000_181B
     jr c, Jump_010_4670
-    ld a, [$C921]
+    ld a, [wC921]
     add a, $20
-    ld [$C921], a
+    ld [wC921], a
 
 Jump_010_4670::
     pop hl
     xor a, a
-    ld [$C923], a
+    ld [wC923], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
     INCBIN "dwm2-cobi-us.gbc", $04067E, $4F
 
 Func_010_46CD::
     xor a, a
-    ld [$C921], a
-    ld [$C922], a
-    ld [$C923], a
-    ld [$C924], a
-    ld [$C925], a
-    ld [$C926], a
+    ld [wC921], a
+    ld [wC922], a
+    ld [wC923], a
+    ld [wC924], a
+    ld [wC925], a
+    ld [wC926], a
     ld a, l
-    ld [$C91A], a
+    ld [wC91A], a
     ld a, h
-    ld [$C91B], a
+    ld [wC91B], a
     ret
 
 Func_010_46E9::
-    ld a, [$C56C]
+    ld a, [wC56C]
     or a, a
     ret nz
-    ld a, [$C920]
+    ld a, [wC920]
     or a, a
     ret z
     dec a
@@ -1257,7 +1257,7 @@ Func_010_49EE:: ; heuristic: follows a terminator; C0
     db $3E, $00, $EA, $DC, $C5, $C9
 
 Jump_010_4A1B::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_010_4A27
     dw Jump_010_4A67
@@ -1265,86 +1265,86 @@ Jump_010_4A1B::
     dw Jump_010_4AB3
 
 Jump_010_4A27::
-    ld a, [$C922]
+    ld a, [wC922]
     bit 7, a
     jr nz, Jump_010_4A62
     ld hl, Func_004_4470
     ld b, $04
     rst $10
-    ld hl, $8800
+    ld hl, vTiles1
     ld de, $1202
     call Func_000_2E98
     call Func_000_290E
     ld a, $69
     call Func_000_1278
     ld a, $01
-    ld [$C8CB], a
+    ld [wC8CB], a
     ld a, $00
-    ld [$C8CC], a
+    ld [wC8CC], a
     ld a, $02
-    ldh [$FFB9], a
-    ldh a, [$FF91]
+    ldh [hFFB9], a
+    ldh a, [hFF91]
     cp a, $48
     jr c, Jump_010_4A62
     ld a, $81
-    ld [$C8CB], a
+    ld [wC8CB], a
     ld a, $01
-    ldh [$FFB9], a
+    ldh [hFFB9], a
 
 Jump_010_4A62::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_010_4A67::
-    ld a, [$C922]
+    ld a, [wC922]
     bit 7, a
     jr nz, Jump_010_4A74
-    ld a, [$C8CB]
+    ld a, [wC8CB]
     and a, $03
     ret nz
 
 Jump_010_4A74::
-    ld a, [$C921]
+    ld a, [wC921]
     ld l, a
-    ld a, [$C922]
+    ld a, [wC922]
     ld h, a
     call Func_010_4AD0
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_010_4A84::
-    ld a, [$C52B]
+    ld a, [wC52B]
     bit 0, a
     ret nz
-    ld a, [$C922]
+    ld a, [wC922]
     bit 6, a
     jr nz, Jump_010_4AAE
     ld a, $69
     call Func_000_1278
     xor a, a
-    ldh [$FFB9], a
+    ldh [hFFB9], a
     ld a, $02
-    ld [$C8CB], a
+    ld [wC8CB], a
     ld a, $00
-    ld [$C8CC], a
-    ldh a, [$FF91]
+    ld [wC8CC], a
+    ldh a, [hFF91]
     cp a, $48
     jr c, Jump_010_4AAE
     ld a, $82
-    ld [$C8CB], a
+    ld [wC8CB], a
 
 Jump_010_4AAE::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_010_4AB3::
-    ld a, [$C922]
+    ld a, [wC922]
     bit 6, a
     jr nz, Jump_010_4AC6
-    ld a, [$C8CB]
+    ld a, [wC8CB]
     and a, $03
     ret nz
     ld hl, Func_004_449F
@@ -1353,9 +1353,9 @@ Jump_010_4AB3::
 
 Jump_010_4AC6::
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_010_4AD0::
@@ -1363,7 +1363,7 @@ Func_010_4AD0::
     and a, $3F
     ld h, a
     push hl
-    ld a, [$D7F0]
+    ld a, [wD7F0]
     and a, a
     jr z, Jump_010_4B20
     dec a
@@ -1387,9 +1387,9 @@ Jump_010_4AE8::
     ld d, a
     pop hl
     ld a, l
-    ld [$C529], a
+    ld [wC529], a
     ld a, $00
-    ld [$C528], a
+    ld [wC528], a
     ld l, c
     ld h, b
     ld b, d
@@ -1403,7 +1403,7 @@ Data_010_4AFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Jump_010_4B20::
     pop hl
-    ld a, [$CC44]
+    ld a, [wCC44]
     cp a, $80
     jr z, Jump_010_4B2D
     bit 7, a
@@ -1411,9 +1411,9 @@ Jump_010_4B20::
 
 Jump_010_4B2D::
     ld a, l
-    ld [$C529], a
+    ld [wC529], a
     xor a, a
-    ld [$C528], a
+    ld [wC528], a
     ld a, h
     rst $00
     dw Jump_010_4B53
@@ -1510,9 +1510,9 @@ Jump_010_4BA7::
     ld a, l
     cp a, $20
     jr c, Jump_010_4BBE
-    ld [$C529], a
+    ld [wC529], a
     xor a, a
-    ld [$C528], a
+    ld [wC528], a
     ld hl, Func_083_4001
     ld b, $83
     rst $10
@@ -1520,9 +1520,9 @@ Jump_010_4BA7::
 
 Jump_010_4BBE::
     ld a, l
-    ld [$C529], a
+    ld [wC529], a
     xor a, a
-    ld [$C528], a
+    ld [wC528], a
     ld hl, Func_08A_4001
     ld b, $8A
     rst $10

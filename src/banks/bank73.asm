@@ -2,7 +2,7 @@ SECTION "Bank 73", ROMX[$4000], BANK[$73]
     db $73
 
 Func_073_4001::
-    ld a, [$C935]
+    ld a, [wC935]
     and a, $0F
     rst $00
     dw Jump_073_4E03
@@ -23,7 +23,7 @@ Func_073_4001::
     dw Jump_073_4027
 
 Jump_073_4027::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_403F
     dw Func_073_4E5D
@@ -37,24 +37,24 @@ Jump_073_4027::
     dw Func_073_4E9C
 
 Jump_073_403F::
-    ld a, [$C935]
+    ld a, [wC935]
     and a, $0F
     sub a, $0C
     add a, $3A
     ld l, a
     ld h, $00
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4053::
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_407B
     ld hl, $003E
     call Func_073_4ED8
-    ld a, [$C935]
+    ld a, [wC935]
     and a, $0F
     sub a, $0C
     add a, a
@@ -70,12 +70,12 @@ Jump_073_406F::
     ld a, [hl]
     ld d, a
     call Func_000_1845
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_407B::
-    ld a, [$C935]
+    ld a, [wC935]
     and a, $0F
     sub a, $0C
     add a, $3F
@@ -83,12 +83,12 @@ Jump_073_407B::
     ld h, $00
     call Func_073_4ED8
     ld a, $06
-    ld [$C923], a
+    ld [wC923], a
     ret
     db $93, $01, $96, $01, $99, $01, $9C, $01
 
 Jump_073_4098::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_40BA
     dw Func_073_4E5D
@@ -109,43 +109,43 @@ Jump_073_4098::
 Jump_073_40BA::
     ld hl, $4037
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_40C5::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_40D6
-    ld hl, $8049
+    ld hl, vTiles0 + $49
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_40D6::
-    ld hl, $8048
+    ld hl, vTiles0 + $48
     call Func_073_4ED8
     ld a, $0D
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_40E2::
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_4105
     ld hl, $0038
     call Func_073_4ED8
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_4100
-    ld hl, $C49F
-    ld de, $C0F0
+    ld hl, wC49F
+    ld de, wC0F0
     ld bc, $0040
     call Func_000_0952
 
 Jump_073_4100::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -153,19 +153,19 @@ Jump_073_4105::
     ld hl, $0039
     call Func_073_4ED8
     ld a, $0B
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4111::
     ld hl, $000F
     call Func_073_4ED8
     call Func_073_4C5D
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_411F::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_43B3
     dw Func_073_4E5D
@@ -179,9 +179,9 @@ Jump_073_411F::
     db $5D, $4E, $9C, $4E
 
 Func_073_4139:: ; heuristic: target of a pointer table; C0
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $3C
     ret nz
     ld hl, Func_002_5F22
@@ -192,14 +192,14 @@ Func_073_4139:: ; heuristic: target of a pointer table; C0
     rst $10
     ld b, $46
     ld de, $4001
-    ld hl, $8800
+    ld hl, vTiles1
     call Func_000_0CF5
     call Func_000_222B
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
-    ld a, [$C46B]
+    ld a, [wC46B]
     and a, $F0
     swap a
     ld de, $453A
@@ -211,7 +211,7 @@ Func_073_4139:: ; heuristic: target of a pointer table; C0
 Jump_073_4174::
     ld a, [de]
     ld c, a
-    ld a, [$C46C]
+    ld a, [wC46C]
     and a, $F0
     swap a
     ld de, $4544
@@ -224,7 +224,7 @@ Jump_073_4185::
     ld a, [de]
     cp a, c
     jp nz, Jump_073_4220
-    ld a, [$C46D]
+    ld a, [wC46D]
     and a, $F0
     swap a
     ld de, $454E
@@ -237,7 +237,7 @@ Jump_073_4199::
     ld a, [de]
     cp a, c
     jp nz, Jump_073_4227
-    ld a, [$C46B]
+    ld a, [wC46B]
     and a, $F0
     swap a
     ld de, $453A
@@ -253,7 +253,7 @@ Jump_073_41AD::
     ld hl, $0032
     call Func_073_4ED8
     ld a, $1E
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
@@ -265,7 +265,7 @@ Jump_073_41C3::
     ld hl, $0030
     call Func_073_4ED8
     ld a, $2C
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
@@ -278,9 +278,9 @@ Jump_073_41D8::
     call Func_073_4ED8
     ld hl, $03E8
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7EC2
     ld b, $12
     rst $10
@@ -293,9 +293,9 @@ Jump_073_41F1::
     call Func_073_4ED8
     ld hl, $01F4
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7EC2
     ld b, $12
     rst $10
@@ -306,9 +306,9 @@ Jump_073_420A::
     call Func_073_4ED8
     ld hl, $00C8
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7EC2
     ld b, $12
     rst $10
@@ -320,7 +320,7 @@ Jump_073_4220::
     ret
 
 Jump_073_4227::
-    ld a, [$C46B]
+    ld a, [wC46B]
     and a, $F0
     swap a
     ld de, $453A
@@ -337,9 +337,9 @@ Jump_073_4236::
     call Func_073_4ED8
     ld hl, $0064
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7EC2
     ld b, $12
     rst $10
@@ -352,9 +352,9 @@ Jump_073_4250::
     call Func_073_4ED8
     ld hl, $0032
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7EC2
     ld b, $12
     rst $10
@@ -362,37 +362,37 @@ Jump_073_4250::
 
 Func_073_4269:: ; heuristic: target of a pointer table; C0
     call Func_073_43BE
-    ld a, [$C5F0]
+    ld a, [wC5F0]
     and a, $01
     jr z, Jump_073_42A7
-    ld a, [$C46E]
+    ld a, [wC46E]
     dec a
     jr nz, Jump_073_4288
-    ld hl, $C46B
+    ld hl, wC46B
     call Func_073_42AB
     or a, a
     jr z, Jump_073_42A7
-    ld hl, $C923
+    ld hl, wC923
     dec [hl]
     jr Jump_073_42A7
 
 Jump_073_4288::
     dec a
     jr nz, Jump_073_429A
-    ld hl, $C46C
+    ld hl, wC46C
     call Func_073_42AB
     or a, a
     jr z, Jump_073_42A7
-    ld hl, $C923
+    ld hl, wC923
     dec [hl]
     jr Jump_073_42A7
 
 Jump_073_429A::
-    ld hl, $C46D
+    ld hl, wC46D
     call Func_073_42AB
     or a, a
     jr z, Jump_073_42A7
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
 
 Jump_073_42A7::
@@ -422,12 +422,12 @@ Jump_073_42BF::
     ret
 
 Func_073_42C2:: ; heuristic: target of a pointer table; C0
-    ld a, [$C562]
+    ld a, [wC562]
     bit 0, a
     jr z, Jump_073_42D1
-    ld hl, $C46E
+    ld hl, wC46E
     inc [hl]
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
 
 Jump_073_42D1::
@@ -438,14 +438,14 @@ Jump_073_42D1::
 Func_073_42D8:: ; heuristic: target of a pointer table; C0
     call Func_073_43BE
     call Func_073_441D
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $1E
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -454,25 +454,25 @@ Func_073_42F1:: ; heuristic: target of a pointer table; C0
     ld b, $02
     rst $10
     call Func_000_09F3
-    ld a, [$CD04]
+    ld a, [wCD04]
     and a, $07
     swap a
-    ld [$C46B], a
+    ld [wC46B], a
     call Func_000_09F3
-    ld a, [$CD04]
+    ld a, [wCD04]
     and a, $07
     swap a
-    ld [$C46C], a
+    ld [wC46C], a
     call Func_000_09F3
-    ld a, [$CD04]
+    ld a, [wCD04]
     and a, $07
     swap a
-    ld [$C46D], a
+    ld [wC46D], a
     xor a, a
-    ld [$C46E], a
+    ld [wC46E], a
     call Func_073_441D
     ld de, $4378
-    ld hl, $C198
+    ld hl, wC198
     ld b, $03
 
 Jump_073_432D::
@@ -493,7 +493,7 @@ Jump_073_432D::
     inc de
     ld [hl+], a
     pop hl
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_4363
     push hl
@@ -510,7 +510,7 @@ Jump_073_432D::
     adc a, $D0
     ld h, a
     ld a, $02
-    ldh [$FF70], a
+    ldh [rSVBK], a
     xor a, a
     ld [hl+], a
     ld [hl+], a
@@ -518,7 +518,7 @@ Jump_073_432D::
     ld [hl+], a
     ld [hl], a
     xor a, a
-    ldh [$FF70], a
+    ldh [rSVBK], a
     pop hl
 
 Jump_073_4363::
@@ -534,26 +534,26 @@ Jump_073_436A::
     ld hl, Func_05F_6DDB
     ld b, $5F
     rst $10
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
     db $B0, $B1, $B1, $B1, $B2, $B6, $A4, $A5, $A6, $B7, $B3, $B4, $B4, $B4, $B5
 
 Jump_073_4387::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_43A7
     ld hl, $002F
     call Func_073_4ED8
     ld hl, $0064
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7E84
     ld b, $12
     rst $10
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -561,69 +561,69 @@ Jump_073_43A7::
     ld hl, $0036
     call Func_073_4ED8
     ld a, $09
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_43B3::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $002E
     call Func_073_4ED8
     ret
 
 Func_073_43BE::
-    ld a, [$C5F0]
+    ld a, [wC5F0]
     and a, $01
     ret z
-    ld a, [$C46E]
+    ld a, [wC46E]
     cp a, $03
     ret z
     or a, a
     jr nz, Jump_073_43E5
-    ld a, [$C46B]
+    ld a, [wC46B]
     add a, $02
-    ld [$C46B], a
+    ld [wC46B], a
     and a, $F0
     swap a
     cp a, $0A
     jr nz, Jump_073_43E5
-    ld a, [$C46B]
+    ld a, [wC46B]
     and a, $0F
-    ld [$C46B], a
+    ld [wC46B], a
 
 Jump_073_43E5::
-    ld a, [$C46E]
+    ld a, [wC46E]
     cp a, $02
     jr z, Jump_073_4404
-    ld a, [$C46C]
+    ld a, [wC46C]
     add a, $01
-    ld [$C46C], a
+    ld [wC46C], a
     and a, $F0
     swap a
     cp a, $0A
     jr nz, Jump_073_4404
-    ld a, [$C46C]
+    ld a, [wC46C]
     and a, $0F
-    ld [$C46C], a
+    ld [wC46C], a
 
 Jump_073_4404::
-    ld a, [$C46D]
+    ld a, [wC46D]
     add a, $04
-    ld [$C46D], a
+    ld [wC46D], a
     and a, $F0
     swap a
     cp a, $0A
     jr nz, Jump_073_441C
-    ld a, [$C46D]
+    ld a, [wC46D]
     and a, $0F
-    ld [$C46D], a
+    ld [wC46D], a
 
 Jump_073_441C::
     ret
 
 Func_073_441D::
-    ld hl, $8A40
-    ld a, [$C46B]
+    ld hl, vTiles1 + $240
+    ld a, [wC46B]
     and a, $F0
     swap a
     push af
@@ -635,7 +635,7 @@ Func_073_441D::
 
 Jump_073_4430::
     ld a, [de]
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     pop af
     inc a
     cp a, $0A
@@ -651,10 +651,10 @@ Jump_073_443B::
 
 Jump_073_4443::
     ld a, [de]
-    ldh [$FFC7], a
-    ld a, [$C46B]
+    ldh [hFFC7], a
+    ld a, [wC46B]
     call Func_073_44A5
-    ld a, [$C46C]
+    ld a, [wC46C]
     and a, $F0
     swap a
     push af
@@ -666,7 +666,7 @@ Jump_073_4443::
 
 Jump_073_445C::
     ld a, [de]
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     pop af
     inc a
     cp a, $0A
@@ -682,10 +682,10 @@ Jump_073_4467::
 
 Jump_073_446F::
     ld a, [de]
-    ldh [$FFC7], a
-    ld a, [$C46C]
+    ldh [hFFC7], a
+    ld a, [wC46C]
     call Func_073_44A5
-    ld a, [$C46D]
+    ld a, [wC46D]
     and a, $F0
     swap a
     push af
@@ -697,7 +697,7 @@ Jump_073_446F::
 
 Jump_073_4488::
     ld a, [de]
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     pop af
     inc a
     cp a, $0A
@@ -713,17 +713,17 @@ Jump_073_4493::
 
 Jump_073_449B::
     ld a, [de]
-    ldh [$FFC7], a
-    ld a, [$C46D]
+    ldh [hFFC7], a
+    ld a, [wC46D]
     call Func_073_44A5
     ret
 
 Func_073_44A5::
     and a, $0E
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     or a, a
     jr z, Jump_073_44CE
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     swap a
     ld de, $44EA
     add a, e
@@ -732,7 +732,7 @@ Func_073_44A5::
     inc d
 
 Jump_073_44B8::
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld c, a
     ld a, $10
     sub a, c
@@ -742,7 +742,7 @@ Jump_073_44B8::
     inc d
 
 Jump_073_44C3::
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld b, a
 
 Jump_073_44C6::
@@ -753,12 +753,12 @@ Jump_073_44C6::
     jr nz, Jump_073_44C6
 
 Jump_073_44CE::
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld c, a
     ld a, $10
     sub a, c
     ld b, a
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     swap a
     ld de, $44EA
     add a, e
@@ -776,7 +776,7 @@ Jump_073_44E1::
     INCBIN "dwm2-cobi-us.gbc", $1CC4EA, $E6
 
 Jump_073_45D0::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_45E4
     dw Func_073_4E5D
@@ -787,17 +787,17 @@ Jump_073_45D0::
     db $5D, $4E, $9C, $4E
 
 Jump_073_45E4::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $4021
     call Func_073_4ED8
     ret
 
 Func_073_45EF:: ; heuristic: target of a pointer table; C0
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_4629
-    ld hl, $8023
+    ld hl, vTiles0 + $23
     call Func_073_4ED8
     ld a, $FF
     db $EA, $93
@@ -821,21 +821,21 @@ Func_073_45FF:: ; heuristic: target of a pointer table; C0
     ret z
     nop
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7E84
     ld b, $12
     rst $10
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4629::
-    ld hl, $8022
+    ld hl, vTiles0 + $22
     call Func_073_4ED8
     ld a, $06
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Func_073_4635:: ; heuristic: target of a pointer table; C0
@@ -847,12 +847,12 @@ Func_073_4635:: ; heuristic: target of a pointer table; C0
 Func_073_463C:: ; heuristic: target of a pointer table; C0
     ld hl, $0052
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4647::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_47FD
     dw Func_073_4E5D
@@ -865,44 +865,44 @@ Jump_073_4647::
 
 Jump_073_46B3::
     call Func_000_09F3
-    ld a, [$CD03]
+    ld a, [wCD03]
     and a, $0F
     cp a, $0D
     jr nc, Jump_073_46B3
-    ld [$C46C], a
+    ld [wC46C], a
     inc a
-    ld [$C8C0], a
+    ld [wC8C0], a
     xor a, a
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
-    ld de, $C17E
+    ld de, wC17E
     call Func_000_23CA
-    ld a, [$C46B]
+    ld a, [wC46B]
     ld c, a
-    ld a, [$C46C]
+    ld a, [wC46C]
     cp a, c
     jr nz, Jump_073_46EA
-    ld hl, $8018
+    ld hl, vTiles0 + $18
     call Func_073_4ED8
     jp Jump_073_4797
 
 Jump_073_46EA::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_46FD
-    ld a, [$C46B]
+    ld a, [wC46B]
     ld c, a
-    ld a, [$C46C]
+    ld a, [wC46C]
     cp a, c
     jp c, Jump_073_4791
     jr Jump_073_470A
 
 Jump_073_46FD::
-    ld a, [$C46B]
+    ld a, [wC46B]
     ld c, a
-    ld a, [$C46C]
+    ld a, [wC46C]
     cp a, c
     db $D2
 
@@ -912,31 +912,31 @@ Func_073_4706:: ; heuristic: target of a pointer table; C0
     jr Jump_073_470A
 
 Jump_073_470A::
-    ld a, [$C922]
+    ld a, [wC922]
     inc a
-    ld [$C922], a
-    ld a, [$C921]
-    ld [$C46D], a
-    ld a, [$C922]
+    ld [wC922], a
+    ld a, [wC921]
+    ld [wC46D], a
+    ld a, [wC922]
     cp a, $05
     jr nz, Jump_073_473F
-    ld hl, $801C
+    ld hl, vTiles0 + $1C
     call Func_073_4ED8
-    ld a, [$C46D]
-    ld de, $C152
+    ld a, [wC46D]
+    ld de, wC152
     call Func_000_2431
-    ld a, [$C46D]
-    ld [$C928], a
+    ld a, [wC46D]
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
     ld a, $0E
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_473F::
     call Func_000_09F3
-    ld a, [$CD03]
+    ld a, [wCD03]
     and a, $03
     ld hl, $4822
     add a, l
@@ -945,7 +945,7 @@ Jump_073_473F::
     inc h
 
 Jump_073_474F::
-    ld a, [$C922]
+    ld a, [wC922]
     add a, a
     add a, a
     add a, l
@@ -955,10 +955,10 @@ Jump_073_474F::
 
 Jump_073_4759::
     ld a, [hl]
-    ld [$C921], a
-    ld de, $C152
+    ld [wC921], a
+    ld de, wC152
     call Func_000_2431
-    ld a, [$C922]
+    ld a, [wC922]
     sla a
     ld hl, $4836
     add a, l
@@ -968,26 +968,26 @@ Jump_073_4759::
 
 Jump_073_4770::
     ld a, [hl+]
-    ld [$C8C0], a
+    ld [wC8C0], a
     ld a, [hl]
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
-    ld de, $C181
+    ld de, wC181
     call Func_000_23CA
-    ld hl, $C016
+    ld hl, wC016
     call Func_073_4ED8
     ld a, $08
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4791::
-    ld hl, $8017
+    ld hl, vTiles0 + $17
     call Func_073_4ED8
 
 Jump_073_4797::
-    ld a, [$C922]
+    ld a, [wC922]
     add a, a
     ld hl, $4836
     add a, l
@@ -997,53 +997,53 @@ Jump_073_4797::
 
 Jump_073_47A3::
     ld a, [hl+]
-    ld [$C8C0], a
+    ld [wC8C0], a
     ld a, [hl]
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
-    ld a, [$C8C0]
+    ld [wC8C2], a
+    ld a, [wC8C0]
     ld c, a
-    ld a, [$C617]
+    ld a, [wC617]
     sub a, c
-    ld [$C617], a
-    ld a, [$C8C1]
+    ld [wC617], a
+    ld a, [wC8C1]
     ld c, a
-    ld a, [$C618]
+    ld a, [wC618]
     sbc a, c
-    ld [$C618], a
-    ld a, [$C619]
+    ld [wC618], a
+    ld a, [wC619]
     sbc a, $00
-    ld [$C619], a
+    ld [wC619], a
     call Func_000_173A
-    ld de, $C181
+    ld de, wC181
     call Func_000_23CA
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_47DB::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_47F1
     ld a, $06
-    ld [$C46B], a
-    ld hl, $C014
+    ld [wC46B], a
+    ld hl, wC014
     call Func_073_4ED8
     ret
 
 Jump_073_47F1::
-    ld hl, $8015
+    ld hl, vTiles0 + $15
     call Func_073_4ED8
     ld a, $10
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_47FD::
     call Func_000_09F3
-    ld a, [$CD03]
+    ld a, [wCD03]
     and a, $03
     ld hl, $4822
     add a, l
@@ -1053,19 +1053,19 @@ Jump_073_47FD::
 
 Jump_073_480D::
     ld a, [hl]
-    ld [$C921], a
-    ld de, $C152
+    ld [wC921], a
+    ld de, wC152
     call Func_000_2431
     ld hl, $4013
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
     db $03, $22, $28, $2A, $0B, $25, $05, $2B, $0C, $23, $27, $2C, $11, $12, $26, $1E
     db $0D, $0E, $0F, $10, $64, $00, $2C, $01, $58, $02, $E8, $03, $DC, $05
 
 Jump_073_4840::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4860
     dw Func_073_4E5D
@@ -1083,33 +1083,33 @@ Jump_073_4840::
     dw Func_073_4E9C
 
 Jump_073_4860::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $4024
     call Func_073_4ED8
     ret
 
 Jump_073_486B::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_487C
-    ld hl, $8051
+    ld hl, vTiles0 + $51
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_487C::
-    ld hl, $8050
+    ld hl, vTiles0 + $50
     call Func_073_4ED8
     ld a, $0C
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4888::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_4899
     ld hl, $0025
@@ -1122,9 +1122,9 @@ Jump_073_4899::
     ret
 
 Jump_073_48A0::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_48E9
     ld a, $00
@@ -1133,7 +1133,7 @@ Jump_073_48A0::
     call Func_073_49E6
     ld a, $00
     call Func_073_4A0F
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     jr nz, Jump_073_48CB
 
@@ -1141,18 +1141,18 @@ Jump_073_48BF::
     ld hl, $0026
     call Func_073_4ED8
     ld a, $0C
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_48CB::
     ld a, $0A
-    ld [$0100], a
-    ld a, [$C6FF]
+    ld [rRAMG], a
+    ld a, [wC6FF]
     ld c, $55
     call Func_000_1F80
     xor a, a
-    ld [$0100], a
-    ldh a, [$FFC6]
+    ld [rRAMG], a
+    ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_073_48BF
     ld hl, $4026
@@ -1164,11 +1164,11 @@ Jump_073_48E9::
     call Func_073_4ED8
     call Func_073_4C5D
     ld a, $0C
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_48F8::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld a, $01
     call Func_073_4956
@@ -1176,37 +1176,37 @@ Jump_073_48F8::
     call Func_073_49E6
     ld a, $01
     call Func_073_4A0F
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     dec a
     jr nz, Jump_073_491E
 
 Jump_073_4912::
-    ld hl, $8026
+    ld hl, vTiles0 + $26
     call Func_073_4ED8
     ld a, $0C
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_491E::
     ld a, $0A
-    ld [$0100], a
-    ld a, [$C700]
+    ld [rRAMG], a
+    ld a, [wC700]
     ld c, $55
     call Func_000_1F80
     xor a, a
-    ld [$0100], a
-    ldh a, [$FFC6]
+    ld [rRAMG], a
+    ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_073_4912
-    ld hl, $C026
+    ld hl, wC026
     call Func_073_4ED8
     ret
 
 Jump_073_493C::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld hl, $8026
+    ld hl, vTiles0 + $26
     call Func_073_4ED8
     ld a, $02
     call Func_073_4956
@@ -1217,7 +1217,7 @@ Jump_073_493C::
     ret
 
 Func_073_4956::
-    ld hl, $C6FE
+    ld hl, wC6FE
     add a, l
     ld l, a
     jr nc, Jump_073_495E
@@ -1225,15 +1225,15 @@ Func_073_4956::
 
 Jump_073_495E::
     ld a, $0A
-    ld [$0100], a
+    ld [rRAMG], a
     xor a, a
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, [hl]
     ld c, $5D
     call Func_000_1F89
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ld b, $01
     ld a, [hl]
@@ -1261,47 +1261,47 @@ Jump_073_495E::
     call Func_000_1F89
     call Func_073_49B1
     xor a, a
-    ld [$0100], a
+    ld [rRAMG], a
     call Func_073_49C5
     ret
 
 Func_073_49B1::
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     cp a, d
     jr c, Jump_073_49BB
     ret nz
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     cp a, e
     ret nc
 
 Jump_073_49BB::
     ld a, b
-    ldh [$FFC8], a
-    ldh a, [$FFC6]
+    ldh [hFFC8], a
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ret
 
 Func_073_49C5::
-    ldh a, [$FFC8]
-    ld [$C921], a
+    ldh a, [hFFC8]
+    ld [wC921], a
     add a, $28
-    ld [$C529], a
+    ld [wC529], a
     ld a, $05
-    ld [$C528], a
-    ld hl, $C152
+    ld [wC528], a
+    ld hl, wC152
     ld a, l
-    ld [$C53D], a
+    ld [wC53D], a
     ld a, h
-    ld [$C53E], a
+    ld [wC53E], a
     ld hl, Func_009_4008
     ld b, $09
     rst $10
     ret
 
 Func_073_49E6::
-    ld hl, $C6FE
+    ld hl, wC6FE
     add a, l
     ld l, a
     jr nc, Jump_073_49EE
@@ -1309,14 +1309,14 @@ Func_073_49E6::
 
 Jump_073_49EE::
     ld a, $0A
-    ld [$0100], a
+    ld [rRAMG], a
     ld a, [hl]
     ld c, $01
     call Func_000_1FA4
     xor a, a
-    ld [$0100], a
-    ld hl, $C8CF
-    ld de, $C147
+    ld [rRAMG], a
+    ld hl, wC8CF
+    ld de, wC147
     ld b, $0A
 
 Jump_073_4A05::
@@ -1330,7 +1330,7 @@ Jump_073_4A05::
     ret
 
 Func_073_4A0F::
-    ld hl, $C6FE
+    ld hl, wC6FE
     add a, l
     ld l, a
     jr nc, Jump_073_4A17
@@ -1338,8 +1338,8 @@ Func_073_4A0F::
 
 Jump_073_4A17::
     ld a, $0A
-    ld [$0100], a
-    ld a, [$C921]
+    ld [rRAMG], a
+    ld a, [wC921]
     ld de, $4A7C
     add a, e
     ld e, a
@@ -1351,53 +1351,53 @@ Jump_073_4A27::
     ld c, a
     ld a, [hl]
     call Func_000_1F89
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     add a, $14
-    ldh [$FFC8], a
-    ldh a, [$FFC7]
+    ldh [hFFC8], a
+    ldh a, [hFFC7]
     adc a, $00
-    ldh [$FFC9], a
-    ldh a, [$FFC9]
+    ldh [hFFC9], a
+    ldh a, [hFFC9]
     cp a, $03
     jr nz, Jump_073_4A4E
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     cp a, $E8
     jr c, Jump_073_4A4E
     ld de, $03E7
     ld a, e
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, d
-    ldh [$FFC9], a
+    ldh [hFFC9], a
 
 Jump_073_4A4E::
     ld a, [hl]
     call Func_000_1FD1
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld [hl+], a
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     ld [hl], a
     xor a, a
-    ld [$0100], a
-    ldh a, [$FFC6]
+    ld [rRAMG], a
+    ldh a, [hFFC6]
     ld c, a
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     sub a, c
-    ld [$C8C0], a
-    ldh a, [$FFC7]
+    ld [wC8C0], a
+    ldh a, [hFFC7]
     ld c, a
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     sbc a, c
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
-    ld de, $C17E
+    ld de, wC17E
     call Func_000_23CA
     ret
     db $5D, $61, $63, $65, $67, $69
 
 Jump_073_4A82::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4A9E
     dw Func_073_4E5D
@@ -1413,33 +1413,33 @@ Jump_073_4A82::
     dw Jump_073_4B2B
 
 Jump_073_4A9E::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $401D
     call Func_073_4ED8
     ret
 
 Jump_073_4AA9::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_4ABA
-    ld hl, $804B
+    ld hl, vTiles0 + $4B
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4ABA::
-    ld hl, $804A
+    ld hl, vTiles0 + $4A
     call Func_073_4ED8
     ld a, $08
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4AC6::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_4AD7
     ld hl, $001E
@@ -1452,23 +1452,23 @@ Jump_073_4AD7::
     ret
 
 Jump_073_4ADE::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_4B21
     call Func_000_09F3
-    ld a, [$CD03]
+    ld a, [wCD03]
     and a, $03
     add a, $19
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
-    ld a, [$C928]
-    ld de, $C152
+    ld a, [wC928]
+    ld de, wC152
     call Func_000_2431
-    ld a, [$C634]
+    ld a, [wC634]
     or a, a
     jr z, Jump_073_4B15
     cp a, $FF
@@ -1481,7 +1481,7 @@ Jump_073_4B15::
     ld hl, $401B
     call Func_073_4ED8
     ld a, $0A
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4B21::
@@ -1492,36 +1492,36 @@ Jump_073_4B21::
 
 Jump_073_4B2B::
     call Func_000_09F3
-    ld a, [$CD03]
+    ld a, [wCD03]
     and a, $03
     add a, $19
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
-    ld a, [$C928]
-    ld de, $C152
+    ld a, [wC928]
+    ld de, wC152
     call Func_000_2431
-    ld a, [$C634]
+    ld a, [wC634]
     or a, a
     jr z, Jump_073_4B5D
     cp a, $FF
     jr z, Jump_073_4B5D
-    ld hl, $801B
+    ld hl, vTiles0 + $1B
     call Func_073_4ED8
     ld a, $08
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4B5D::
-    ld hl, $C01B
+    ld hl, wC01B
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     dec [hl]
     ret
 
 Jump_073_4B68::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4B80
     dw Func_073_4E5D
@@ -1535,39 +1535,39 @@ Jump_073_4B68::
     dw Func_073_4E9C
 
 Jump_073_4B80::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $4010
     call Func_073_4ED8
     ret
 
 Jump_073_4B8B::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_4B9C
-    ld hl, $804F
+    ld hl, vTiles0 + $4F
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4B9C::
-    ld hl, $804E
+    ld hl, vTiles0 + $4E
     call Func_073_4ED8
     ld a, $08
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4BA8::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_4BB9
     db $21
 
 Func_073_4BB3:: ; heuristic: target of a pointer table; C0
-    ld de, $CD00
+    ld de, wCD00
     ret c
     ld c, [hl]
     ret
@@ -1579,7 +1579,7 @@ Jump_073_4BB9::
     ret
 
 Jump_073_4BC3::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4BDB
     dw Func_073_4E5D
@@ -1593,33 +1593,33 @@ Jump_073_4BC3::
     dw Func_073_4E9C
 
 Jump_073_4BDB::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $400B
     call Func_073_4ED8
     ret
 
 Jump_073_4BE6::
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_4BF7
-    ld hl, $804D
+    ld hl, vTiles0 + $4D
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4BF7::
-    ld hl, $804C
+    ld hl, vTiles0 + $4C
     call Func_073_4ED8
     ld a, $08
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_4C03::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_4C14
     ld hl, $000C
@@ -1632,13 +1632,13 @@ Jump_073_4C14::
     ret
 
 Jump_073_4C1B::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$D092]
+    ld a, [wD092]
     or a, a
     jr nz, Jump_073_4C53
     call Func_000_095B
-    ld a, [$C5E7]
+    ld a, [wC5E7]
     cp a, $10
     jr c, $4C41
 
@@ -1646,7 +1646,7 @@ Jump_073_4C2F::
     ld hl, $000D
     call Func_073_4ED8
     ld a, $29
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
@@ -1658,7 +1658,7 @@ Func_073_4C42:: ; heuristic: target of a pointer table; C0
     ld l, b
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     jr z, Jump_073_4C2F
     ld hl, $0043
@@ -1672,37 +1672,37 @@ Jump_073_4C53::
     ret
 
 Func_073_4C5D::
-    ld a, [$C617]
-    ld [$C8C0], a
-    ld a, [$C618]
-    ld [$C8C1], a
-    ld a, [$C619]
-    ld [$C8C2], a
+    ld a, [wC617]
+    ld [wC8C0], a
+    ld a, [wC618]
+    ld [wC8C1], a
+    ld a, [wC619]
+    ld [wC8C2], a
     ld hl, Func_012_7F1C
     ld b, $12
     rst $10
-    ld a, [$C617]
+    ld a, [wC617]
     ld c, a
-    ld a, [$C8C0]
+    ld a, [wC8C0]
     sub a, c
-    ld [$C8C0], a
-    ld a, [$C618]
+    ld [wC8C0], a
+    ld a, [wC618]
     ld c, a
-    ld a, [$C8C1]
+    ld a, [wC8C1]
     sbc a, c
-    ld [$C8C1], a
-    ld a, [$C619]
+    ld [wC8C1], a
+    ld a, [wC619]
     ld c, a
-    ld a, [$C8C2]
+    ld a, [wC8C2]
     sbc a, c
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
-    ld de, $C17E
+    ld de, wC17E
     call Func_000_23CA
     ret
 
 Jump_073_4CA0::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4CAE
     dw Func_073_4E5D
@@ -1711,15 +1711,15 @@ Jump_073_4CA0::
     dw Func_073_4E9C
 
 Jump_073_4CAE::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $4008
     call Func_073_4ED8
     call Func_073_4FD2
-    ld a, [$C921]
-    ld de, $C152
+    ld a, [wC921]
+    ld de, wC152
     call Func_000_2431
-    ld a, [$C921]
+    ld a, [wC921]
     call Func_073_4FB7
     ld e, l
 
@@ -1729,28 +1729,28 @@ Func_073_4CCB:: ; heuristic: target of a pointer table; C0
     add hl, hl
     add hl, de
     ld a, l
-    ld [$C8C0], a
+    ld [wC8C0], a
     ld a, h
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
-    ld de, $C17E
+    ld de, wC17E
     call Func_000_23CA
     ret
 
 Jump_073_4CE5::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_4D19
-    ld a, [$C921]
-    ld [$C928], a
+    ld a, [wC921]
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     call Func_073_4FB7
     ld e, l
     ld d, h
@@ -1758,23 +1758,23 @@ Jump_073_4CE5::
     add hl, hl
     add hl, de
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7E84
     ld b, $12
     rst $10
-    ld hl, $8009
+    ld hl, vTiles0 + $9
     call Func_073_4ED8
     ret
 
 Jump_073_4D19::
-    ld hl, $800A
+    ld hl, vTiles0 + $A
     call Func_073_4ED8
     ret
 
 Jump_073_4D20::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4D36
     dw Func_073_4E5D
@@ -1787,40 +1787,40 @@ Jump_073_4D20::
     dw Func_073_4E9C
 
 Jump_073_4D36::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $4005
     call Func_073_4ED8
     ret
 
 Jump_073_4D41::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_4D52
-    ld hl, $8027
+    ld hl, vTiles0 + $27
     call Func_073_4ED8
     ret
 
 Jump_073_4D52::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4D5B::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$C924]
+    ld a, [wC924]
     cp a, $27
     jr nz, Jump_073_4D82
     ld hl, $03E8
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7E84
     ld b, $12
     rst $10
@@ -1832,14 +1832,14 @@ Jump_073_4D5B::
     ret
 
 Jump_073_4D82::
-    ld hl, $8007
+    ld hl, vTiles0 + $7
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_4D8D::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4D9B
     dw Func_073_4E5D
@@ -1848,58 +1848,58 @@ Jump_073_4D8D::
     dw Func_073_4E9C
 
 Jump_073_4D9B::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld hl, $4002
     call Func_073_4ED8
     call Func_073_4FD2
-    ld a, [$C921]
-    ld de, $C152
+    ld a, [wC921]
+    ld de, wC152
     call Func_000_2431
-    ld a, [$C921]
+    ld a, [wC921]
     call Func_073_4FB7
     ld a, l
-    ld [$C8C0], a
+    ld [wC8C0], a
     ld a, h
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
-    ld de, $C17E
+    ld de, wC17E
     call Func_000_23CA
     ret
 
 Jump_073_4DCD::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$C552]
+    ld a, [wC552]
     or a, a
     jr nz, Jump_073_4DFC
-    ld a, [$C921]
-    ld [$C928], a
+    ld a, [wC921]
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     call Func_073_4FB7
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7E84
     ld b, $12
     rst $10
-    ld hl, $8003
+    ld hl, vTiles0 + $3
     call Func_073_4ED8
     ret
 
 Jump_073_4DFC::
-    ld hl, $8004
+    ld hl, vTiles0 + $4
     call Func_073_4ED8
     ret
 
 Jump_073_4E03::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_4E15
     dw Func_073_4E20
@@ -1912,7 +1912,7 @@ Jump_073_4E03::
 Jump_073_4E15::
     ld hl, $0000
     call Func_073_4ED8
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -1920,18 +1920,18 @@ Func_073_4E20:: ; heuristic: target of a pointer table; C0
     xor a, a
     call Func_073_4FA9
     ret nc
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_4E37
-    ld hl, $C49F
-    ld de, $C0F0
+    ld hl, wC49F
+    ld de, wC0F0
     ld bc, $0040
     call Func_000_0952
 
 Jump_073_4E37::
     ld a, $7A
     call Func_000_1278
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -1948,8 +1948,8 @@ Func_073_4E48:: ; heuristic: follows a terminator; C0
     ld hl, $0001
     call Func_073_4ED8
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -1957,18 +1957,18 @@ Func_073_4E5D:: ; heuristic: follows a terminator; C0
     xor a, a
     call Func_073_4FA9
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_4E67:: ; heuristic: follows a terminator; C0
-    ld a, [$C921]
+    ld a, [wC921]
     or a, a
     jr nz, Jump_073_4E76
     inc a
-    ld [$C921], a
+    ld [wC921], a
     ld a, $0E
-    ldh [$FF8D], a
+    ldh [hFF8D], a
     ret
 
 Jump_073_4E76::
@@ -1983,17 +1983,17 @@ Jump_073_4E76::
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     xor a, a
-    ldh [$FF8D], a
+    ldh [hFF8D], a
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_4E9C:: ; heuristic: follows a terminator; C0
-    ld a, [$C921]
+    ld a, [wC921]
     cp a, $1E
     jr nc, Jump_073_4EA9
     bit 3, a
@@ -2014,37 +2014,37 @@ Jump_073_4EB3::
 
 Jump_073_4EB9::
     ld a, $01
-    ld [$CB7D], a
+    ld [wCB7D], a
     jr Jump_073_4EC4
 
 Jump_073_4EC0::
     xor a, a
-    ld [$CB7D], a
+    ld [wCB7D], a
 
 Jump_073_4EC4::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $78
     ret nz
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     xor a, a
-    ld [$C935], a
+    ld [wC935], a
     ret
 
 Func_073_4ED8::
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     xor a, a
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Func_073_4EE5:: ; heuristic: follows a terminator; C0
     push af
-    ld a, [$C926]
+    ld a, [wC926]
     cp a, $FF
     jr nz, Jump_073_4EEF
     pop af
@@ -2066,84 +2066,84 @@ Jump_073_4EF8::
     rst $10
 
 Jump_073_4F02::
-    ld a, [$C925]
+    ld a, [wC925]
     bit 7, a
     jr nz, Jump_073_4F37
-    ld hl, $8800
+    ld hl, vTiles1
     ld de, $1202
     call Func_000_2E98
     call Func_000_290E
     ld a, $69
     call Func_000_1278
     ld a, $01
-    ld [$C8CB], a
+    ld [wC8CB], a
     ld a, $00
-    ld [$C8CC], a
+    ld [wC8CC], a
     ld a, $02
-    ldh [$FFB9], a
-    ldh a, [$FF91]
+    ldh [hFFB9], a
+    ldh a, [hFF91]
     cp a, $48
     jr c, Jump_073_4F37
     ld a, $81
-    ld [$C8CB], a
+    ld [wC8CB], a
     ld a, $01
-    ldh [$FFB9], a
+    ldh [hFFB9], a
 
 Jump_073_4F37::
-    ld hl, $C926
+    ld hl, wC926
     inc [hl]
     ret
 
 Jump_073_4F3C::
     pop af
-    ld a, [$C8CB]
+    ld a, [wC8CB]
     and a, $03
     ret nz
-    ld a, [$C924]
-    ld [$C529], a
+    ld a, [wC924]
+    ld [wC529], a
     ld a, $05
-    ld [$C528], a
+    ld [wC528], a
     ld hl, Func_009_4001
     ld b, $09
     rst $10
-    ld hl, $C926
+    ld hl, wC926
     inc [hl]
     ret
 
 Jump_073_4F59::
     pop af
-    ld a, [$C52B]
+    ld a, [wC52B]
     bit 0, a
     ret nz
-    ld a, [$C925]
+    ld a, [wC925]
     bit 6, a
     jr z, Jump_073_4F6D
     ld a, $FF
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Jump_073_4F6D::
     ld a, $69
     call Func_000_1278
     ld a, $02
-    ld [$C8CB], a
+    ld [wC8CB], a
     ld a, $00
-    ld [$C8CC], a
+    ld [wC8CC], a
     ld a, $00
-    ldh [$FFB9], a
-    ldh a, [$FF91]
+    ldh [hFFB9], a
+    ldh a, [hFF91]
     cp a, $48
     jr c, Jump_073_4F8B
     ld a, $82
-    ld [$C8CB], a
+    ld [wC8CB], a
 
 Jump_073_4F8B::
-    ld hl, $C926
+    ld hl, wC926
     inc [hl]
     ret
 
 Jump_073_4F90::
-    ld a, [$C8CB]
+    ld a, [wC8CB]
     and a, $03
     jr z, Jump_073_4F99
     pop af
@@ -2159,12 +2159,12 @@ Jump_073_4F99::
 
 Jump_073_4FA3::
     ld a, $FF
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Func_073_4FA9::
     call Func_073_4EE5
-    ld a, [$C926]
+    ld a, [wC926]
     cp a, $FF
     jr z, Jump_073_4FB5
     sub a, a
@@ -2197,11 +2197,11 @@ Func_073_4FD2::
     ld hl, Func_05F_6CA9
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     jr z, Jump_073_4FE8
     ld a, $0C
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
@@ -2210,11 +2210,11 @@ Jump_073_4FE8::
     ld hl, Func_05F_6D0D
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     jr z, Jump_073_4FFE
     ld a, $08
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
@@ -2223,169 +2223,169 @@ Jump_073_4FFE::
     ld hl, Func_05F_6CDB
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     jr z, Jump_073_5014
     ld a, $06
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_5014::
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     cp a, $03
     jr z, Jump_073_505C
     ld hl, Func_01D_5E3F
     ld b, $1D
     rst $10
-    ld a, [$D7AA]
+    ld a, [wD7AA]
     cp a, $03
     jr nc, Jump_073_5032
     ld a, $19
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_5032::
-    ld a, [$D7AA]
+    ld a, [wD7AA]
     cp a, $03
     jr c, Jump_073_5047
     cp a, $06
     jr nc, Jump_073_5047
     ld a, $1A
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_5047::
-    ld a, [$D7AA]
+    ld a, [wD7AA]
     cp a, $06
     jr c, Jump_073_505C
     cp a, $0B
     jr nc, Jump_073_505C
     ld a, $1B
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_505C::
     call Func_073_5117
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     or a, a
     jr nz, Jump_073_506A
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     cp a, $65
     jr c, Jump_073_5074
 
 Jump_073_506A::
     ld a, $05
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_5074::
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     or a, a
     jr nz, Jump_073_508C
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     cp a, $65
     jr nc, Jump_073_508C
     or a, a
     jr z, Jump_073_508C
     ld a, $04
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_508C::
     call Func_073_50C3
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     or a, a
     jr nz, Jump_073_509A
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     cp a, $65
     jr c, Jump_073_50A4
 
 Jump_073_509A::
     ld a, $03
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_50A4::
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     or a, a
     jr nz, Jump_073_50BD
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     cp a, $33
     jr c, Jump_073_50BD
     cp a, $64
     jr nc, Jump_073_50BD
     ld a, $02
-    ld [$C921], a
+    ld [wC921], a
     call Func_073_516B
     or a, a
     ret nz
 
 Jump_073_50BD::
     ld a, $01
-    ld [$C921], a
+    ld [wC921], a
     ret
 
 Func_073_50C3::
     ld hl, $0000
     ld a, l
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, h
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, $0A
-    ld [$0100], a
-    ld a, [$C6FD]
+    ld [rRAMG], a
+    ld a, [wC6FD]
     or a, a
     jr z, Jump_073_5112
     ld b, a
-    ld hl, $C6FE
+    ld hl, wC6FE
 
 Jump_073_50DB::
     ld a, [hl]
     ld c, $5D
     call Func_000_1F89
     push hl
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld e, a
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     ld d, a
     add hl, de
     ld a, l
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, h
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     pop hl
     ld a, [hl]
     ld c, $5B
     call Func_000_1F89
     push hl
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     sub a, l
-    ldh [$FFC8], a
-    ldh a, [$FFC9]
+    ldh [hFFC8], a
+    ldh a, [hFFC9]
     sbc a, h
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     pop hl
     inc hl
     dec b
@@ -2393,56 +2393,56 @@ Jump_073_50DB::
 
 Jump_073_5112::
     xor a, a
-    ld [$0100], a
+    ld [rRAMG], a
     ret
 
 Func_073_5117::
     ld hl, $0000
     ld a, l
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, h
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld a, $0A
-    ld [$0100], a
-    ld a, [$C6FD]
+    ld [rRAMG], a
+    ld a, [wC6FD]
     or a, a
     jr z, Jump_073_5166
     ld b, a
-    ld hl, $C6FE
+    ld hl, wC6FE
 
 Jump_073_512F::
     ld a, [hl]
     ld c, $61
     call Func_000_1F89
     push hl
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     ld e, a
-    ldh a, [$FFC9]
+    ldh a, [hFFC9]
     ld d, a
     add hl, de
     ld a, l
-    ldh [$FFC8], a
+    ldh [hFFC8], a
     ld a, h
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     pop hl
     ld a, [hl]
     ld c, $5F
     call Func_000_1F89
     push hl
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld l, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld h, a
-    ldh a, [$FFC8]
+    ldh a, [hFFC8]
     sub a, l
-    ldh [$FFC8], a
-    ldh a, [$FFC9]
+    ldh [hFFC8], a
+    ldh a, [hFFC9]
     sbc a, h
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     pop hl
     inc hl
     dec b
@@ -2450,12 +2450,12 @@ Jump_073_512F::
 
 Jump_073_5166::
     xor a, a
-    ld [$0100], a
+    ld [rRAMG], a
     ret
 
 Func_073_516B::
     call Func_073_4FB7
-    ld a, [$C935]
+    ld a, [wC935]
     and a, $0F
     dec a
     jr z, Jump_073_517B
@@ -2466,7 +2466,7 @@ Func_073_516B::
     add hl, de
 
 Jump_073_517B::
-    ld a, [$C619]
+    ld a, [wC619]
     or a, a
     jr z, Jump_073_5184
 
@@ -2475,11 +2475,11 @@ Jump_073_5181::
     ret
 
 Jump_073_5184::
-    ld a, [$C618]
+    ld a, [wC618]
     cp a, h
     jr c, Jump_073_5192
     jr nz, Jump_073_5181
-    ld a, [$C617]
+    ld a, [wC617]
     cp a, l
     jr nc, Jump_073_5181
 
@@ -2488,18 +2488,18 @@ Jump_073_5192::
     ret
 
 Jump_073_5194::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld a, $06
-    ld [$C903], a
+    ld [wC903], a
     ld a, $01
-    ld [$C905], a
+    ld [wC905], a
     ld a, $03
-    ld [$C5DC], a
+    ld [wC5DC], a
     xor a, a
-    ld [$C904], a
+    ld [wC904], a
     ld a, $02
-    ld [$C8C7], a
+    ld [wC8C7], a
     ld hl, Func_002_5EEE
     ld b, $02
     rst $10
@@ -2509,7 +2509,7 @@ Jump_073_5194::
     ret
 
 Func_073_51BD::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_52EE
     dw Jump_073_7AC6
@@ -2524,26 +2524,26 @@ Func_073_51BD::
     dw Jump_073_51FB
 
 Jump_073_51D7::
-    ld a, [$C922]
+    ld a, [wC922]
     ld c, a
-    ld a, [$CB8A]
+    ld a, [wCB8A]
     add a, c
-    ld [$CB8A], a
-    ld a, [$C921]
+    ld [wCB8A], a
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $10
     ret nz
     xor a, a
-    ld [$CB86], a
-    ld hl, $CB8C
+    ld [wCB86], a
+    ld hl, wCB8C
     call Func_073_7A4C
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_51FB::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     sub a, $C8
     add a, a
     ld hl, $5215
@@ -2559,7 +2559,7 @@ Jump_073_5208::
     ld d, a
     call Func_000_1845
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
     db $00, $00, $00, $00, $D4, $01, $D9, $01, $DD, $01, $6A, $01, $6E, $01, $00, $00
     db $00, $00, $00, $00, $00, $00, $74, $01, $78, $01, $7C, $01, $D5, $00, $D9, $00
@@ -2568,36 +2568,36 @@ Jump_073_5208::
 
 Jump_073_524B::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $30
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     xor a, a
-    ld [$CB7D], a
-    ld hl, $C923
+    ld [wCB7D], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5265::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     cp a, $CE
     jr z, Jump_073_5278
     cp a, $D7
     jr z, Jump_073_528A
     cp a, $E0
     jr z, Jump_073_529C
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5278::
     ld a, $0A
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_05F_6DAC
     ld b, $5F
     rst $10
@@ -2607,7 +2607,7 @@ Jump_073_5278::
 
 Jump_073_528A::
     ld a, $0B
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_05F_6DAC
     ld b, $5F
     rst $10
@@ -2617,7 +2617,7 @@ Jump_073_528A::
 
 Jump_073_529C::
     ld a, $0C
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_05F_6DAC
     ld b, $5F
     rst $10
@@ -2626,7 +2626,7 @@ Jump_073_529C::
 
 Jump_073_52AC::
     ld a, $08
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_52B2::
@@ -2635,7 +2635,7 @@ Jump_073_52B2::
     ret
 
 Jump_073_52B9::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     sub a, $C8
     ld de, $52D3
     add a, e
@@ -2645,11 +2645,11 @@ Jump_073_52B9::
 
 Jump_073_52C5::
     ld a, [de]
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_00A_47A4
     ld b, $0A
     rst $10
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
     db $00, $00, $20, $21, $22, $23, $24, $00, $00, $00, $00, $25, $26, $27, $28, $29
@@ -2661,7 +2661,7 @@ Jump_073_52EE::
     ret
 
 Func_073_52F5::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     sub a, $C8
     add a, a
     add a, e
@@ -2676,79 +2676,79 @@ Jump_073_52FF::
     ld a, [de]
     ld h, a
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
     INCBIN "dwm2-cobi-us.gbc", $1CD30C, $6C
 
 Func_073_5378::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $20
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     ld a, $09
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_05F_6DAC
     ld b, $5F
     rst $10
-    ld a, [$CC3F]
+    ld a, [wCC3F]
     set 1, a
-    ld [$CC3F], a
+    ld [wCC3F], a
     ld a, $50
-    ld [$CB9A], a
+    ld [wCB9A], a
     ld a, $70
-    ld [$CB9B], a
+    ld [wCB9B], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_53AB::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_53D8
     dw Jump_073_53B3
 
 Jump_073_53B3::
-    ld a, [$C922]
+    ld a, [wC922]
     ld c, a
-    ld a, [$CB8A]
+    ld a, [wCB8A]
     add a, c
-    ld [$CB8A], a
-    ld a, [$C921]
+    ld [wCB8A], a
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $10
     ret nz
     xor a, a
-    ld [$CB86], a
-    ld hl, $CB8C
+    ld [wCB86], a
+    ld hl, wCB8C
     call Func_073_7A4C
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_53D8::
-    ld hl, $CB8C
+    ld hl, wCB8C
     call Func_073_7A47
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $30
     jr nz, Jump_073_53EE
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $20
     jr z, Jump_073_5412
 
 Jump_073_53EE::
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     ld b, a
-    ld hl, $C8F0
+    ld hl, wC8F0
 
 Jump_073_53F5::
     push hl
@@ -2766,9 +2766,9 @@ Jump_073_5400::
     dec b
     jr nz, Jump_073_53F5
     ld a, $FF
-    ld [$C922], a
+    ld [wC922], a
     ld a, $03
-    ld [$CB86], a
+    ld [wCB86], a
     ret
 
 Jump_073_5411::
@@ -2776,34 +2776,34 @@ Jump_073_5411::
 
 Jump_073_5412::
     ld a, $01
-    ld [$C922], a
+    ld [wC922], a
     ld a, $01
-    ld [$CB86], a
+    ld [wCB86], a
     ret
 
 Func_073_541D::
     ld a, $10
-    ld [$CBAB], a
+    ld [wCBAB], a
     xor a, a
-    ld [$CB86], a
-    ld [$CB96], a
-    ld hl, $CB8C
+    ld [wCB86], a
+    ld [wCB96], a
+    ld hl, wCB8C
     call Func_073_7A47
-    ld hl, $CB9C
+    ld hl, wCB9C
     call Func_073_7A47
-    ld a, [$CB8B]
+    ld a, [wCB8B]
     inc a
     inc a
-    ld [$CB8B], a
-    ld [$CB9B], a
+    ld [wCB8B], a
+    ld [wCB9B], a
     cp a, $B0
     ret nz
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5449::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5509
     dw Jump_073_54CA
@@ -2819,20 +2819,20 @@ Func_073_5449::
 Jump_073_5461::
     ld hl, $0782
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_546C::
-    ld a, [$CB8B]
+    ld a, [wCB8B]
     cp a, $40
     jr z, Jump_073_5488
     xor a, a
-    ld [$C929], a
+    ld [wC929], a
     ld a, $00
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $40
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
@@ -2840,55 +2840,55 @@ Jump_073_546C::
 
 Jump_073_5488::
     xor a, a
-    ld [$C929], a
+    ld [wC929], a
     ld a, $03
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $10
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     inc a
     inc a
     and a, $03
-    ld [$CB86], a
-    ld hl, $C923
+    ld [wCB86], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_54AF::
     ld hl, $0781
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_54BA::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_54BF::
     ld hl, $0780
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_54CA::
-    ld a, [$CB8A]
+    ld a, [wCB8A]
     cp a, $50
     jr z, Jump_073_54E6
     xor a, a
-    ld [$C929], a
+    ld [wC929], a
     ld a, $01
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
@@ -2896,37 +2896,37 @@ Jump_073_54CA::
 
 Jump_073_54E6::
     xor a, a
-    ld [$C929], a
+    ld [wC929], a
     ld a, $02
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $03
-    ld [$CB86], a
-    ld hl, $C923
+    ld [wCB86], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5509::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $40
     jr nz, Jump_073_5515
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $40
     jr z, Jump_073_5541
 
 Jump_073_5515::
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     or a, a
     jr z, Jump_073_5535
     ld b, a
-    ld hl, $C8F0
+    ld hl, wC8F0
 
 Jump_073_551F::
     push hl
@@ -2951,21 +2951,21 @@ Jump_073_5532::
 
 Jump_073_5535::
     ld a, $02
-    ld [$CB86], a
+    ld [wCB86], a
     ld a, $02
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_5540::
     pop hl
 
 Jump_073_5541::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5546::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_555E
     dw Jump_073_554E
@@ -2975,41 +2975,41 @@ Jump_073_554E::
     call Func_073_7A2B
     ret nc
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_555E::
     ld a, $05
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B98
     ld b, $12
     rst $10
     ld a, $40
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, $20
-    ld [$CBD4], a
-    ld hl, $C923
+    ld [wCBD4], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5577::
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_559E
     ld a, $A9
-    ldh [$FF90], a
+    ldh [hFF90], a
     ld a, $01
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     xor a, a
-    ldh [$FF92], a
+    ldh [hFF92], a
     ld a, $60
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $10
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $02
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -3017,31 +3017,31 @@ Func_073_5577::
 
 Jump_073_559E::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_55A4::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $30
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     ld a, $07
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_05F_6DAC
     ld b, $5F
     rst $10
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_55C5::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5659
     dw Jump_073_7AC6
@@ -3049,9 +3049,9 @@ Func_073_55C5::
     dw Jump_073_55D1
 
 Jump_073_55D1::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     ld a, l
     sub a, $08
@@ -3060,96 +3060,96 @@ Jump_073_55D1::
     sbc a, $00
     ld h, a
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
-    ld a, [$CB8B]
+    ld [wC925], a
+    ld a, [wCB8B]
     sub a, h
-    ld [$CB8B], a
-    ld a, [$CB9B]
+    ld [wCB8B], a
+    ld a, [wCB9B]
     sub a, h
-    ld [$CB9B], a
+    ld [wCB9B], a
     ld a, $00
-    ld [$C929], a
+    ld [wC929], a
     ld a, $01
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $C0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $01
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $C0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_562C::
-    ld hl, $CB9C
+    ld hl, wCB9C
     call Func_073_7A47
     ld a, $01
-    ld [$CB96], a
-    ld a, [$CB9A]
+    ld [wCB96], a
+    ld a, [wCB9A]
     cp a, $60
     jr z, Jump_073_5643
     inc a
-    ld [$CB9A], a
+    ld [wCB9A], a
     ret
 
 Jump_073_5643::
-    ld hl, $CB9C
+    ld hl, wCB9C
     call Func_073_7A4C
     ld hl, $0300
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
-    ld hl, $C923
+    ld [wC925], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5659::
     ld a, $02
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $40
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ld a, [$CBAB]
+    ld a, [wCBAB]
     cp a, $40
     jr z, Jump_073_5670
     ld a, $30
 
 Jump_073_5670::
-    ld [$CBBB], a
-    ldh a, [$FFC6]
+    ld [wCBBB], a
+    ldh a, [hFFC6]
     or a, a
     ret z
-    ld a, [$CB7D]
+    ld a, [wCB7D]
     dec a
     dec a
-    ld [$CB7D], a
+    ld [wCB7D], a
     xor a, a
-    ld [$CB96], a
+    ld [wCB96], a
     ld hl, $0725
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_568E::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_56F6
     dw Jump_073_56DB
@@ -3157,74 +3157,74 @@ Func_073_568E::
     dw Jump_073_569A
 
 Jump_073_569A::
-    ld a, [$CBAB]
+    ld a, [wCBAB]
     dec a
-    ld [$CBAB], a
-    ld a, [$CB9B]
+    ld [wCBAB], a
+    ld a, [wCB9B]
     dec a
-    ld [$CB9B], a
+    ld [wCB9B], a
     cp a, $50
     ret nz
-    ld hl, $CB9C
+    ld hl, wCB9C
     call Func_073_7A4C
-    ld hl, $CBAC
+    ld hl, wCBAC
     call Func_073_7A4C
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_56BD::
-    ld a, [$CBAA]
+    ld a, [wCBAA]
     inc a
-    ld [$CBAA], a
-    ld a, [$CB9A]
+    ld [wCBAA], a
+    ld a, [wCB9A]
     inc a
-    ld [$CB9A], a
+    ld [wCB9A], a
     cp a, $60
     ret nz
     ld a, $02
-    ld [$CB96], a
-    ld [$CBA6], a
-    ld hl, $C923
+    ld [wCB96], a
+    ld [wCBA6], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_56DB::
-    ld a, [$CB9A]
+    ld a, [wCB9A]
     inc a
-    ld [$CB9A], a
-    ld a, [$CBAB]
+    ld [wCB9A], a
+    ld a, [wCBAB]
     dec a
-    ld [$CBAB], a
+    ld [wCBAB], a
     cp a, $60
     ret nz
     ld a, $01
-    ld [$CBA6], a
-    ld hl, $C923
+    ld [wCBA6], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_56F6::
-    ld hl, $CB9C
+    ld hl, wCB9C
     call Func_073_7A47
-    ld hl, $CBAC
+    ld hl, wCBAC
     call Func_073_7A47
-    ld a, [$CBAB]
+    ld a, [wCBAB]
     dec a
-    ld [$CBAB], a
-    ld a, [$CB9B]
+    ld [wCBAB], a
+    ld a, [wCB9B]
     dec a
-    ld [$CB9B], a
+    ld [wCB9B], a
     cp a, $60
     ret nz
     ld a, $01
-    ld [$CB96], a
-    ld hl, $C923
+    ld [wCB96], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_571D::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Func_073_619B
     dw Func_073_619B
@@ -3233,25 +3233,25 @@ Func_073_571D::
 
 Jump_073_5729::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_572F::
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_575B
     ld a, $28
-    ldh [$FF90], a
+    ldh [hFF90], a
     xor a, a
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ld a, $01
-    ldh [$FF92], a
+    ldh [hFF92], a
     ld a, $40
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $80
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -3261,11 +3261,11 @@ Func_073_572F::
 
 Jump_073_575B::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5761::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5873
     dw Jump_073_5873
@@ -3276,34 +3276,34 @@ Func_073_5761::
     dw Jump_073_5773
 
 Jump_073_5773::
-    ld hl, $C240
+    ld hl, wC240
     ld [hl], $2B
     inc hl
     ld [hl], $2C
-    ld hl, $C254
+    ld hl, wC254
     ld [hl], $2D
     inc hl
     ld [hl], $2E
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     jr z, Jump_073_57B0
-    ld hl, $C266
+    ld hl, wC266
     ld [hl], $2B
     inc hl
     ld [hl], $2C
-    ld hl, $C27A
+    ld hl, wC27A
     ld [hl], $2D
     inc hl
     ld [hl], $2E
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     dec a
     jr z, Jump_073_57B0
-    ld hl, $C290
+    ld hl, wC290
     ld [hl], $2B
     inc hl
     ld [hl], $2C
-    ld hl, $C2A4
+    ld hl, wC2A4
     ld [hl], $2D
     inc hl
     ld [hl], $2E
@@ -3313,103 +3313,103 @@ Jump_073_57B0::
     ld b, $5F
     rst $10
     ld a, $01
-    ld [$C94D], a
+    ld [wC94D], a
     xor a, a
-    ld [$C195], a
+    ld [wC195], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_57C5::
-    ld a, [$C8FB]
+    ld a, [wC8FB]
     cp a, $60
     jr z, Jump_073_57D1
-    ld hl, $C8FB
+    ld hl, wC8FB
     inc [hl]
     ret
 
 Jump_073_57D1::
     ld a, $01
-    ld [$C8F9], a
-    ld a, [$C8FA]
+    ld [wC8F9], a
+    ld a, [wC8FA]
     inc a
-    ld [$C8FA], a
+    ld [wC8FA], a
     cp a, $40
     ret nz
     ld a, $02
-    ld [$C8F9], a
-    ld hl, $C923
+    ld [wC8F9], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_57EA::
-    ld a, [$C8F5]
+    ld a, [wC8F5]
     cp a, $30
     jr z, Jump_073_57FC
-    ld a, [$C8F5]
+    ld a, [wC8F5]
     dec a
-    ld [$C8F5], a
-    ld [$C8FA], a
+    ld [wC8F5], a
+    ld [wC8FA], a
     ret
 
 Jump_073_57FC::
     xor a, a
-    ld [$C8F4], a
-    ld [$C8F9], a
-    ld a, [$C8F6]
+    ld [wC8F4], a
+    ld [wC8F9], a
+    ld a, [wC8F6]
     inc a
-    ld [$C8F6], a
-    ld [$C8FB], a
+    ld [wC8F6], a
+    ld [wC8FB], a
     cp a, $50
     ret nz
     ld a, $01
-    ld [$C8F4], a
-    ld hl, $C923
+    ld [wC8F4], a
+    ld hl, wC923
     inc [hl]
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     dec a
     ret nz
     ld a, $06
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_5825::
-    ld a, [$C8F1]
+    ld a, [wC8F1]
     cp a, $40
     jr z, Jump_073_5845
     ld a, $02
-    ld [$C8EF], a
-    ld [$C8F4], a
-    ld [$C8F9], a
-    ld a, [$C8F1]
+    ld [wC8EF], a
+    ld [wC8F4], a
+    ld [wC8F9], a
+    ld a, [wC8F1]
     dec a
-    ld [$C8F1], a
-    ld [$C8F6], a
-    ld [$C8FB], a
+    ld [wC8F1], a
+    ld [wC8F6], a
+    ld [wC8FB], a
     ret
 
 Jump_073_5845::
     ld a, $03
-    ld [$C8EF], a
-    ld [$C8F4], a
-    ld [$C8F9], a
-    ld a, [$C8F0]
+    ld [wC8EF], a
+    ld [wC8F4], a
+    ld [wC8F9], a
+    ld a, [wC8F0]
     dec a
-    ld [$C8F0], a
-    ld [$C8F5], a
-    ld [$C8FA], a
+    ld [wC8F0], a
+    ld [wC8F5], a
+    ld [wC8FA], a
     cp a, $40
     ret nz
     xor a, a
-    ld [$C8EF], a
-    ld hl, $C923
+    ld [wC8EF], a
+    ld hl, wC923
     inc [hl]
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     ret nz
     ld a, $06
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_5873::
@@ -3419,7 +3419,7 @@ Jump_073_5873::
     ret
 
 Func_073_587A::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_58E0
     dw Jump_073_6C0C
@@ -3428,17 +3428,17 @@ Func_073_587A::
     dw Jump_073_5888
 
 Jump_073_5888::
-    ld hl, $CBD3
+    ld hl, wCBD3
     inc [hl]
-    ld hl, $CBD4
+    ld hl, wCBD4
     inc [hl]
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $2C
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
@@ -3446,72 +3446,72 @@ Jump_073_5888::
     ld b, $12
     rst $10
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_58B1::
     ld b, $5A
     call Func_073_7A2B
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_58BC::
-    ld de, $CB8B
+    ld de, wCB8B
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_58E0::
     ld a, $10
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B98
     ld b, $12
     rst $10
     ld a, $50
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, $30
-    ld [$CBD4], a
+    ld [wCBD4], a
     ld a, $80
-    ld [$CBCF], a
-    ld hl, $C923
+    ld [wCBCF], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_58FE::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $30
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     xor a, a
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5919::
-    ld a, [$C921]
+    ld a, [wC921]
     cp a, $1E
     jr nc, Jump_073_5926
     bit 1, a
@@ -3532,23 +3532,23 @@ Jump_073_5930::
 
 Jump_073_5936::
     ld a, $20
-    ld [$CB9B], a
+    ld [wCB9B], a
     jr Jump_073_5942
 
 Jump_073_593D::
     ld a, $E0
-    ld [$CB9B], a
+    ld [wCB9B], a
 
 Jump_073_5942::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $78
     ret nz
     ld a, $20
-    ld [$CB9B], a
+    ld [wCB9B], a
     ld a, $36
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
@@ -3556,7 +3556,7 @@ Jump_073_5942::
     ld b, $12
     rst $10
     ld a, $37
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
@@ -3564,7 +3564,7 @@ Jump_073_5942::
     ld b, $12
     rst $10
     ld a, $38
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
@@ -3572,11 +3572,11 @@ Jump_073_5942::
     ld b, $12
     rst $10
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5987::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_59E6
     dw Jump_073_59AF
@@ -3587,41 +3587,41 @@ Jump_073_5991::
     ld b, $12
     rst $10
     ld a, $05
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_6955
     ld b, $12
     rst $10
-    ld a, [$C836]
+    ld a, [wC836]
     set 7, a
-    ld [$C836], a
+    ld [wC836], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_59AF::
-    ld hl, $C8F1
+    ld hl, wC8F1
     dec [hl]
-    ld hl, $C8F6
+    ld hl, wC8F6
     dec [hl]
-    ld hl, $C8FB
+    ld hl, wC8FB
     dec [hl]
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     dec a
-    ldh [$FF91], a
+    ldh [hFF91], a
     cp a, $C0
     ret nz
-    ld hl, $FF8C
+    ld hl, hFF8C
     call Func_073_7A4C
     ld a, $19
-    ldh [$FF90], a
+    ldh [hFF90], a
     xor a, a
-    ldh [$FF8F], a
-    ldh [$FF92], a
+    ldh [hFF8F], a
+    ldh [hFF92], a
     ld a, $40
-    ld [$C8C8], a
-    ld [$C8C9], a
+    ld [wC8C8], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -3629,30 +3629,30 @@ Jump_073_59AF::
 
 Jump_073_59E6::
     ld a, $00
-    ld [$C929], a
+    ld [wC929], a
     ld a, $02
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $B0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
     ld a, $00
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6AEB
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
-    ld hl, $FF8C
+    ld hl, hFF8C
     call Func_073_7A47
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5A16::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5A48
     dw Jump_073_5A3D
@@ -3661,47 +3661,47 @@ Func_073_5A16::
 
 Jump_073_5A22::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $20
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     xor a, a
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_5A3D::
     ld hl, $0480
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5A48::
     ld a, $1C
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_00A_47A4
     ld b, $0A
     rst $10
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5A57:: ; heuristic: follows a terminator; C0
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $40
     jr z, Jump_073_5A9C
     cp a, $60
     jr z, Jump_073_5A90
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     ld b, a
-    ld hl, $C8F0
+    ld hl, wC8F0
 
 Jump_073_5A68::
     push hl
@@ -3740,57 +3740,57 @@ Jump_073_5A8D::
 
 Jump_073_5A90::
     ld a, $03
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $40
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_5AA6
 
 Jump_073_5A9C::
     ld a, $01
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $60
-    ld [$C928], a
+    ld [wC928], a
 
 Jump_073_5AA6::
     xor a, a
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5ABB::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $30
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     xor a, a
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5AD6::
-    ld a, [$CC3B]
+    ld a, [wCC3B]
     set 2, a
-    ld [$CC3B], a
+    ld [wCC3B], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5AE4::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5C1F
     dw Jump_073_5BAE
@@ -3800,23 +3800,23 @@ Func_073_5AE4::
 
 Jump_073_5AF2::
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $20
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     xor a, a
-    ld [$CB7D], a
-    ld a, [$CC3B]
+    ld [wCB7D], a
+    ld a, [wCC3B]
     set 1, a
-    ld [$CC3B], a
+    ld [wCC3B], a
     ld a, $66
     call Func_000_1278
-    ld hl, $C19A
+    ld hl, wC19A
     ld [hl], $56
     inc hl
     ld [hl], $57
@@ -3845,84 +3845,84 @@ Jump_073_5B2A::
     ld de, $00B1
     call Func_000_1845
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_5B47::
     ld a, $00
-    ld [$C929], a
+    ld [wC929], a
     ld a, $02
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $20
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5B66::
-    ld a, [$C922]
+    ld a, [wC922]
     or a, a
     jr nz, Jump_073_5B72
-    ld hl, $CB8B
+    ld hl, wCB8B
     inc [hl]
     jr Jump_073_5B88
 
 Jump_073_5B72::
     dec a
     jr nz, Jump_073_5B7B
-    ld hl, $CB8A
+    ld hl, wCB8A
     inc [hl]
     jr Jump_073_5B88
 
 Jump_073_5B7B::
     dec a
     jr nz, Jump_073_5B84
-    ld hl, $CB8B
+    ld hl, wCB8B
     dec [hl]
     jr Jump_073_5B88
 
 Jump_073_5B84::
-    ld hl, $CB8A
+    ld hl, wCB8A
     dec [hl]
 
 Jump_073_5B88::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $10
     ret nz
     xor a, a
-    ld [$C921], a
-    ld a, [$CB8B]
+    ld [wC921], a
+    ld a, [wCB8B]
     cp a, $30
     jr nz, Jump_073_5BA9
-    ld a, [$CB8A]
+    ld a, [wCB8A]
     cp a, $80
     jr nz, Jump_073_5BA9
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5BA9::
-    ld hl, $C923
+    ld hl, wC923
     dec [hl]
     ret
 
 Jump_073_5BAE::
-    ld a, [$C924]
+    ld a, [wC924]
     ld d, a
-    ld a, [$CB8A]
+    ld a, [wCB8A]
     add a, d
     ld b, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld d, a
-    ld a, [$CB8B]
+    ld a, [wCB8B]
     add a, d
     ld c, a
     ld a, c
@@ -3951,9 +3951,9 @@ Jump_073_5BD1::
     inc h
 
 Jump_073_5BDF::
-    ld de, $C198
+    ld de, wC198
     add hl, de
-    ld de, $C910
+    ld de, wC910
     ld a, [hl+]
     ld [de], a
     inc de
@@ -3981,7 +3981,7 @@ Jump_073_5BFD::
     ld a, [de]
     inc de
     ld c, a
-    ld a, [$C192]
+    ld a, [wC192]
     cp a, c
     jr c, Jump_073_5C08
     jr Jump_073_5C13
@@ -3990,19 +3990,19 @@ Jump_073_5C08::
     dec b
     jr nz, Jump_073_5BFD
     call Func_073_5B66
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5C13::
-    ld hl, $CB8C
+    ld hl, wCB8C
     call Func_073_7A4C
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_5C1F::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     swap a
     and a, $0F
     sub a, $05
@@ -4017,73 +4017,73 @@ Jump_073_5C1F::
 
 Jump_073_5C35::
     ld a, [hl+]
-    ld [$C922], a
-    ld [$CB86], a
+    ld [wC922], a
+    ld [wCB86], a
     ld a, [hl+]
-    ld [$C924], a
+    ld [wC924], a
     ld a, [hl]
-    ld [$C925], a
-    ld hl, $CB8C
+    ld [wC925], a
+    ld hl, wCB8C
     call Func_073_7A47
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
     db $03, $F0, $00, $00, $02, $00, $F0, $00, $00, $00, $10, $00, $01, $10, $00, $00
 
 Func_073_5C5F::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $30
     jr nz, Jump_073_5C8D
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $30
     jr nz, Jump_073_5C7F
-    ld hl, $C1EA
+    ld hl, wC1EA
     call Func_073_5D09
-    ld hl, $C28A
+    ld hl, wC28A
     call Func_073_5D09
-    ld hl, $C298
+    ld hl, wC298
     call Func_073_5D09
     jr Jump_073_5CAD
 
 Jump_073_5C7F::
-    ld hl, $C28A
+    ld hl, wC28A
     call Func_073_5D09
-    ld hl, $C298
+    ld hl, wC298
     call Func_073_5D09
     jr Jump_073_5CAD
 
 Jump_073_5C8D::
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $30
     jr nz, Jump_073_5CA1
-    ld hl, $C1F8
+    ld hl, wC1F8
     call Func_073_5D09
-    ld hl, $C28A
+    ld hl, wC28A
     call Func_073_5D09
     jr Jump_073_5CAD
 
 Jump_073_5CA1::
-    ld hl, $C1F8
+    ld hl, wC1F8
     call Func_073_5D09
-    ld hl, $C298
+    ld hl, wC298
     call Func_073_5D09
 
 Jump_073_5CAD::
-    ld a, [$C1EA]
+    ld a, [wC1EA]
     cp a, $10
     jr nz, Jump_073_5CFD
-    ld a, [$C1F8]
+    ld a, [wC1F8]
     cp a, $10
     jr nz, Jump_073_5CFD
-    ld a, [$C28A]
+    ld a, [wC28A]
     cp a, $10
     jr nz, Jump_073_5CFD
-    ld a, [$C298]
+    ld a, [wC298]
     cp a, $10
     jr nz, Jump_073_5CFD
     ld a, $66
     call Func_000_1278
-    ld hl, $C1C8
+    ld hl, wC1C8
     ld [hl], $46
     inc hl
     ld [hl], $47
@@ -4106,9 +4106,9 @@ Jump_073_5CE4::
     ld [hl], $4A
     inc hl
     ld [hl], $4B
-    ld a, [$CC3B]
+    ld a, [wCC3B]
     set 0, a
-    ld [$CC3B], a
+    ld [wCC3B], a
     ld de, $00B0
     call Func_000_1845
 
@@ -4117,7 +4117,7 @@ Jump_073_5CFD::
     ld b, $5F
     rst $10
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5D09::
@@ -4127,7 +4127,7 @@ Func_073_5D09::
     call Func_073_5D48
     call Func_073_5D48
     pop hl
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     ret z
     ld c, $04
@@ -4147,13 +4147,13 @@ Func_073_5D09::
     adc a, $D0
     ld h, a
     ld a, $02
-    ldh [$FF70], a
+    ldh [rSVBK], a
     call Func_073_5D65
     call Func_073_5D65
     call Func_073_5D65
     call Func_073_5D65
     ld a, $00
-    ldh [$FF70], a
+    ldh [rSVBK], a
     ret
 
 Func_073_5D48::
@@ -4199,35 +4199,35 @@ Jump_073_5D6F::
 
 Func_073_5D71:: ; heuristic: follows a terminator; C0
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, $20
-    ldh [$FFC7], a
-    ldh a, [$FF90]
+    ldh [hFFC7], a
+    ldh a, [hFF90]
     cp a, $8C
     jr z, Jump_073_5D88
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     cp a, $01
     jr nz, Jump_073_5D88
     ld a, $50
-    ldh [$FFC7], a
+    ldh [hFFC7], a
 
 Jump_073_5D88::
     ld hl, Func_05F_6BF8
     ld b, $5F
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     or a, a
     ret z
     xor a, a
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ld de, $00C5
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     cp a, $8C
     jr z, Jump_073_5DAB
     inc de
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     or a, a
     jr z, Jump_073_5DAB
     inc de
@@ -4237,21 +4237,21 @@ Jump_073_5DAB::
     ret
 
 Func_073_5DAF::
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_5DD7
     ld a, $82
-    ldh [$FF90], a
+    ldh [hFF90], a
     ld a, $01
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ld a, $02
-    ldh [$FF92], a
+    ldh [hFF92], a
     ld a, $40
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $80
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -4259,11 +4259,11 @@ Func_073_5DAF::
 
 Jump_073_5DD7::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5DDD::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5E97
     dw Jump_073_5E51
@@ -4275,81 +4275,81 @@ Func_073_5DDD::
 Jump_073_5DED::
     ld hl, $0433
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5DF8::
     xor a, a
-    ldh [$FF92], a
+    ldh [hFF92], a
     ld a, $40
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $30
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
     ret
 
 Jump_073_5E11::
-    ld hl, $CB8A
+    ld hl, wCB8A
     inc [hl]
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $01
     jr nz, Jump_073_5E20
-    ld hl, $CB8A
+    ld hl, wCB8A
     inc [hl]
 
 Jump_073_5E20::
-    ld hl, $C921
+    ld hl, wC921
     inc [hl]
     call Func_073_5E73
     add a, $10
-    ldh [$FF91], a
-    ld [$C8F1], a
-    ld [$C8F6], a
-    ld [$C8FB], a
-    ld a, [$CB8A]
-    ldh [$FF8E], a
-    ld [$C8F0], a
-    ld [$C8F5], a
-    ld [$C8FA], a
-    ld a, [$CB8B]
+    ldh [hFF91], a
+    ld [wC8F1], a
+    ld [wC8F6], a
+    ld [wC8FB], a
+    ld a, [wCB8A]
+    ldh [hFF8E], a
+    ld [wC8F0], a
+    ld [wC8F5], a
+    ld [wC8FA], a
+    ld a, [wCB8B]
     cp a, $C0
     ret c
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_5E51::
-    ld hl, $CB8A
+    ld hl, wCB8A
     inc [hl]
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $01
     jr nz, Jump_073_5E60
-    ld hl, $CB8A
+    ld hl, wCB8A
     inc [hl]
 
 Jump_073_5E60::
-    ld hl, $C921
+    ld hl, wC921
     inc [hl]
     call Func_073_5E73
     cp a, $70
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5E73::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     ld a, l
     sub a, $18
@@ -4358,74 +4358,74 @@ Func_073_5E73::
     sbc a, $00
     ld h, a
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
-    ld a, [$C925]
+    ld [wC925], a
+    ld a, [wC925]
     ld h, a
-    ld a, [$CB8B]
+    ld a, [wCB8B]
     add a, h
-    ld [$CB8B], a
+    ld [wCB8B], a
     ret
 
 Jump_073_5E97::
     ld b, $3C
     call Func_073_7A2B
     ret nc
-    ld hl, $CB8C
+    ld hl, wCB8C
     call Func_073_7A47
     ld hl, $05C0
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
-    ld hl, $C923
+    ld [wC925], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5EB3::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5F1D
     dw Jump_073_5EDF
     dw Jump_073_5EBD
 
 Jump_073_5EBD::
-    ld hl, $CB8A
+    ld hl, wCB8A
     dec [hl]
-    ld hl, $C921
+    ld hl, wC921
     inc [hl]
     call Func_073_5EF9
     add a, $10
-    ld [$CB9B], a
-    ld a, [$CB8A]
-    ld [$CB9A], a
-    ld a, [$CB8A]
+    ld [wCB9B], a
+    ld a, [wCB8A]
+    ld [wCB9A], a
+    ld a, [wCB8A]
     cp a, $E0
     ret nz
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_5EDF::
-    ld hl, $CB8A
+    ld hl, wCB8A
     dec [hl]
-    ld hl, $C921
+    ld hl, wC921
     inc [hl]
     call Func_073_5EF9
-    ld a, [$CB8A]
+    ld a, [wCB8A]
     cp a, $40
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5EF9::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     ld a, l
     sub a, $10
@@ -4434,37 +4434,37 @@ Func_073_5EF9::
     sbc a, $00
     ld h, a
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
-    ld a, [$C925]
+    ld [wC925], a
+    ld a, [wC925]
     ld h, a
-    ld a, [$CB8B]
+    ld a, [wCB8B]
     add a, h
-    ld [$CB8B], a
+    ld [wCB8B], a
     ret
 
 Jump_073_5F1D::
     ld b, $3C
     call Func_073_7A2B
     ret nc
-    ld hl, $CB8C
+    ld hl, wCB8C
     call Func_073_7A47
     ld hl, $03C0
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
-    ld hl, $C923
+    ld [wC925], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_5F39::
-    ld hl, $C26A
+    ld hl, wC26A
     ld [hl], $68
     inc hl
     ld [hl], $69
-    ld hl, $C27E
+    ld hl, wC27E
     ld [hl], $6A
     inc hl
     ld [hl], $6B
@@ -4472,50 +4472,50 @@ Func_073_5F39::
     ld b, $5F
     rst $10
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5F55:: ; heuristic: follows a terminator; C0
     ld a, $00
-    ldh [$FFC7], a
-    ld a, [$D7F5]
-    ldh [$FFC8], a
+    ldh [hFFC7], a
+    ld a, [wD7F5]
+    ldh [hFFC8], a
     ld a, $02
-    ldh [$FFC9], a
+    ldh [hFFC9], a
     ld hl, Func_001_6E46
     ld b, $01
     rst $10
-    ld hl, $C6FD
+    ld hl, wC6FD
     inc [hl]
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     ld c, a
     add a, a
     add a, a
     add a, c
-    ld hl, $C8EF
+    ld hl, wC8EF
     add a, l
     ld l, a
     jr nc, Jump_073_5F7C
     inc h
 
 Jump_073_5F7C::
-    ld a, [$CBB6]
+    ld a, [wCBB6]
     ld [hl+], a
-    ld a, [$CBBA]
+    ld a, [wCBBA]
     ld [hl+], a
-    ld a, [$CBBB]
+    ld a, [wCBBB]
     ld [hl], a
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
-    ld hl, $C6FE
+    ld hl, wC6FE
     add a, l
     ld l, a
     jr nc, Jump_073_5F94
     inc h
 
 Jump_073_5F94::
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld [hl], a
     ld hl, Func_002_5E85
     ld b, $02
@@ -4528,26 +4528,26 @@ Jump_073_5F94::
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
-    ld hl, $CB7D
+    ld [wC527], a
+    ld hl, wCB7D
     dec [hl]
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_5FBC::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_5FE4
     dw Jump_073_5FC4
 
 Jump_073_5FC4::
     ld a, $80
-    ld [$CBCF], a
-    ld a, [$C921]
+    ld [wCBCF], a
+    ld a, [wC921]
     and a, $03
     jr nz, Jump_073_5FD4
-    ld hl, $CBD4
+    ld hl, wCBD4
     dec [hl]
 
 Jump_073_5FD4::
@@ -4555,14 +4555,14 @@ Jump_073_5FD4::
     call Func_073_7A2B
     ret nc
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_5FE4::
     ld a, $11
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B98
     ld b, $12
     rst $10
@@ -4573,7 +4573,7 @@ Jump_073_5FE4::
     ld hl, $602C
 
 Jump_073_5FFC::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld c, a
 
 Jump_073_5FFF::
@@ -4584,14 +4584,14 @@ Jump_073_5FFF::
     inc hl
     ld a, [hl]
     and a, $F0
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, [hl]
     and a, $0F
     swap a
     add a, $F8
-    ld [$CBD4], a
+    ld [wCBD4], a
     pop hl
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -4604,16 +4604,16 @@ Jump_073_601B::
     db $00, $53, $02, $24, $16, $42, $1A, $43
 
 Func_073_6038::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_604F
     dw Jump_073_6040
 
 Jump_073_6040::
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $01
     jr z, Jump_073_604B
-    ld hl, $CB8B
+    ld hl, wCB8B
     inc [hl]
 
 Jump_073_604B::
@@ -4621,14 +4621,14 @@ Jump_073_604B::
     ret
 
 Jump_073_604F::
-    ld hl, $CB8C
+    ld hl, wCB8C
     call Func_073_7A3D
     ld b, $1E
     call Func_073_7A2B
     ret nc
     xor a, a
-    ld [$CB86], a
-    ld hl, $C923
+    ld [wCB86], a
+    ld hl, wC923
     inc [hl]
     ld de, $0098
     call Func_000_181B
@@ -4643,7 +4643,7 @@ Jump_073_6072::
     ret
 
 Func_073_6079::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_60CD
     dw Jump_073_60A7
@@ -4654,92 +4654,92 @@ Jump_073_6083::
     call Func_073_7A2B
     ret nc
     ld a, $40
-    ld [$CBAB], a
+    ld [wCBAB], a
     ld a, $50
-    ld [$CB9B], a
+    ld [wCB9B], a
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $03
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld a, $00
     call Func_000_1278
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_60A7::
-    ld a, [$CBAB]
+    ld a, [wCBAB]
     inc a
     inc a
-    ld [$CBAB], a
-    ld a, [$CB9B]
+    ld [wCBAB], a
+    ld a, [wCB9B]
     dec a
     dec a
-    ld [$CB9B], a
+    ld [wCB9B], a
     cp a, $48
     ret nz
     xor a, a
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld a, $80
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $7D
     call Func_000_1278
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_60CD::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     and a, $03
     ret nz
-    ld hl, $CBAB
+    ld hl, wCBAB
     dec [hl]
-    ld a, [$CB9B]
+    ld a, [wCB9B]
     inc a
-    ld [$CB9B], a
+    ld [wCB9B], a
     cp a, $58
     ret nz
     ld a, $0C
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B98
     ld b, $12
     rst $10
     ld a, $40
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, $48
-    ld [$CBD4], a
-    ld hl, $C923
+    ld [wCBD4], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_60FE::
-    ld a, [$C5F0]
+    ld a, [wC5F0]
     bit 2, a
     jr z, Jump_073_610C
     ld a, $01
-    ld [$CB7D], a
+    ld [wCB7D], a
     jr Jump_073_6111
 
 Jump_073_610C::
     ld a, $02
-    ld [$CB7D], a
+    ld [wCB7D], a
 
 Jump_073_6111::
-    ld a, [$CB9B]
+    ld a, [wCB9B]
     inc a
-    ld [$CB9B], a
+    ld [wCB9B], a
     cp a, $70
     ret nz
     ld a, $02
-    ld [$CB7D], a
+    ld [wCB7D], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6126::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_618F
     dw Jump_073_6188
@@ -4747,7 +4747,7 @@ Func_073_6126::
     dw Jump_073_6132
 
 Jump_073_6132::
-    ld a, [$C925]
+    ld a, [wC925]
     swap a
     and a, $0F
     sla a
@@ -4760,7 +4760,7 @@ Jump_073_6132::
     add hl, de
     add hl, hl
     add hl, hl
-    ld a, [$C924]
+    ld a, [wC924]
     swap a
     and a, $0F
     add a, a
@@ -4795,11 +4795,11 @@ Jump_073_6168::
     ld b, $5F
     rst $10
     xor a, a
-    ldh [$FF8D], a
+    ldh [hFF8D], a
     xor a, a
-    ld [$C195], a
+    ld [wC195], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_6181::
@@ -4816,7 +4816,7 @@ Jump_073_6188::
 
 Jump_073_618F::
     ld a, $10
-    ld [$C195], a
+    ld [wC195], a
     ld hl, Func_012_5C31
     ld b, $12
     rst $10
@@ -4824,14 +4824,14 @@ Jump_073_618F::
 
 Func_073_619B:: ; heuristic: follows a terminator; C0
     ld a, $10
-    ld [$C195], a
+    ld [wC195], a
     ld hl, Func_012_61EF
     ld b, $12
     rst $10
     ret
 
 Func_073_61A7::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_62D7
     dw Jump_073_62B0
@@ -4846,16 +4846,16 @@ Func_073_61A7::
 
 Jump_073_61BF::
     ld a, $80
-    ld [$C919], a
-    ldh a, [$FF98]
+    ld [wC919], a
+    ldh a, [hFF98]
     inc a
     inc a
     and a, $03
-    ld [$CB96], a
+    ld [wCB96], a
     ld de, $0191
     call Func_000_181B
     jr c, Jump_073_61EC
-    ld a, [$C634]
+    ld a, [wC634]
     cp a, $FF
     jr z, Jump_073_61E0
     or a, a
@@ -4864,7 +4864,7 @@ Jump_073_61BF::
 
 Jump_073_61E0::
     ld a, $2C
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
@@ -4875,13 +4875,13 @@ Jump_073_61EC::
     ld b, $12
     rst $10
     ld a, $04
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_6955
     ld b, $12
     rst $10
-    ld a, [$C836]
+    ld a, [wC836]
     set 7, a
-    ld [$C836], a
+    ld [wC836], a
     ld de, $0135
     call Func_000_1845
     ret
@@ -4899,28 +4899,28 @@ Jump_073_6218::
 Jump_073_621B::
     call Func_073_7AA5
     ld a, $00
-    ld [$CB96], a
+    ld [wCB96], a
     ld a, $02
-    ld [$CBB6], a
-    ld hl, $C923
+    ld [wCBB6], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_622D::
-    ld a, [$C921]
+    ld a, [wC921]
     swap a
     and a, $01
     add a, a
     inc a
-    ld [$CBB6], a
-    ld a, [$C921]
+    ld [wCBB6], a
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $78
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ld hl, $0D3E
     call Func_073_7AA5
@@ -4930,41 +4930,41 @@ Jump_073_6252::
     ld b, $3C
     call Func_073_7A2B
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_625D::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
-    ld a, [$C937]
+    ld a, [wC937]
     ld [hl+], a
-    ld a, [$C938]
+    ld a, [wC938]
     ld [hl+], a
-    ld a, [$C939]
+    ld a, [wC939]
     ld [hl], a
     ld hl, $00B9
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6D3F
     ld b, $5F
     rst $10
     xor a, a
-    ldh [$FF8D], a
+    ldh [hFF8D], a
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_628C::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
@@ -4983,15 +4983,15 @@ Jump_073_62A2::
     dec hl
     ld [hl], $01
     ld a, $50
-    ld [$CBBB], a
-    ld hl, $C923
+    ld [wCBBB], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_62B0::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
@@ -5017,25 +5017,25 @@ Jump_073_62C6::
     ret
 
 Jump_073_62D2::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_62D7::
     ld hl, $00B9
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7D95
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld c, a
     sla a
     sla a
     add a, c
-    ld hl, $C8EF
+    ld hl, wC8EF
     add a, l
     ld l, a
     jr nc, Jump_073_62F6
@@ -5043,21 +5043,21 @@ Jump_073_62D7::
 
 Jump_073_62F6::
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     ld a, [hl+]
-    ld [$C937], a
+    ld [wC937], a
     ld a, [hl+]
-    ld [$C938], a
+    ld [wC938], a
     ld a, [hl]
-    ld [$C939], a
-    ld hl, $C923
+    ld [wC939], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_630F::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_653D
     dw Jump_073_651C
@@ -5082,16 +5082,16 @@ Func_073_630F::
 
 Jump_073_633B::
     ld a, $80
-    ld [$C919], a
-    ldh a, [$FF98]
+    ld [wC919], a
+    ldh a, [hFF98]
     inc a
     inc a
     and a, $03
-    ld [$CB86], a
+    ld [wCB86], a
     ld de, $0134
     call Func_000_181B
     jr c, Jump_073_6368
-    ld a, [$C634]
+    ld a, [wC634]
     cp a, $FF
     jr z, Jump_073_635C
     or a, a
@@ -5100,7 +5100,7 @@ Jump_073_633B::
 
 Jump_073_635C::
     ld a, $2C
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
@@ -5111,13 +5111,13 @@ Jump_073_6368::
     ld b, $12
     rst $10
     ld a, $04
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_6955
     ld b, $12
     rst $10
-    ld a, [$C836]
+    ld a, [wC836]
     set 7, a
-    ld [$C836], a
+    ld [wC836], a
     ld de, $0135
     call Func_000_1845
     ret
@@ -5134,58 +5134,58 @@ Jump_073_6394::
 
 Jump_073_6397::
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$CB9A]
+    ld a, [wCB9A]
     cp a, $50
     jr nz, Jump_073_63B0
     ld a, $03
-    ld [$CB86], a
+    ld [wCB86], a
     ld a, $01
-    ld [$CB96], a
+    ld [wCB96], a
     ret
 
 Jump_073_63B0::
     cp a, $70
     jr nz, Jump_073_63BF
     ld a, $01
-    ld [$CB86], a
+    ld [wCB86], a
     ld a, $03
-    ld [$CB96], a
+    ld [wCB96], a
     ret
 
 Jump_073_63BF::
-    ld a, [$CB9B]
+    ld a, [wCB9B]
     cp a, $20
     jr nz, Jump_073_63D0
     ld a, $02
-    ld [$CB86], a
+    ld [wCB86], a
     xor a, a
-    ld [$CB96], a
+    ld [wCB96], a
     ret
 
 Jump_073_63D0::
     xor a, a
-    ld [$CB86], a
+    ld [wCB86], a
     ld a, $02
-    ld [$CB96], a
+    ld [wCB96], a
     ret
 
 Jump_073_63DA::
-    ld a, [$C921]
+    ld a, [wC921]
     swap a
     and a, $01
     add a, a
     inc a
-    ld [$CB96], a
-    ld a, [$C921]
+    ld [wCB96], a
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $78
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ld hl, $0D15
     call Func_073_7AA5
@@ -5195,53 +5195,53 @@ Jump_073_63FF::
     ld b, $3C
     call Func_073_7A2B
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_640A::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
-    ld a, [$C937]
+    ld a, [wC937]
     ld [hl+], a
-    ld a, [$C938]
+    ld a, [wC938]
     ld [hl+], a
-    ld a, [$C939]
+    ld a, [wC939]
     ld [hl], a
     ld hl, $005A
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6D3F
     ld b, $5F
     rst $10
     xor a, a
-    ldh [$FF8D], a
+    ldh [hFF8D], a
     xor a, a
-    ld [$CB96], a
-    ld hl, $CB7D
+    ld [wCB96], a
+    ld hl, wCB7D
     inc [hl]
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6441::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
     cp a, $50
     jr nz, Jump_073_6459
     ld a, $50
-    ld [$CB9A], a
-    ld hl, $C923
+    ld [wCB9A], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5250,9 +5250,9 @@ Jump_073_6459::
     ret
 
 Jump_073_645D::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
@@ -5260,8 +5260,8 @@ Jump_073_645D::
     cp a, $20
     jr nz, Jump_073_6476
     ld a, $20
-    ld [$CB9B], a
-    ld hl, $C923
+    ld [wCB9B], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5270,9 +5270,9 @@ Jump_073_6476::
     ret
 
 Jump_073_647A::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
@@ -5280,9 +5280,9 @@ Jump_073_647A::
     cp a, $30
     jr nz, Jump_073_6494
     ld a, $30
-    ld [$CB9B], a
+    ld [wCB9B], a
     ld a, $0D
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6494::
@@ -5295,17 +5295,17 @@ Jump_073_649A::
     ret
 
 Jump_073_649E::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
     cp a, $70
     jr nz, Jump_073_64B6
     ld a, $70
-    ld [$CB9A], a
-    ld hl, $C923
+    ld [wCB9A], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5314,9 +5314,9 @@ Jump_073_64B6::
     ret
 
 Jump_073_64BA::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
@@ -5325,7 +5325,7 @@ Jump_073_64BA::
     jr nz, Jump_073_64CE
 
 Jump_073_64C9::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5341,18 +5341,18 @@ Jump_073_64D8::
     ret
 
 Jump_073_64DC::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
     cp a, $60
     jr nz, Jump_073_64F5
     ld a, $60
-    ld [$CB9A], a
+    ld [wCB9A], a
     ld a, $0D
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_64F5::
@@ -5365,9 +5365,9 @@ Jump_073_64FB::
     ret
 
 Jump_073_64FF::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
@@ -5375,8 +5375,8 @@ Jump_073_64FF::
     cp a, $40
     jr nz, Jump_073_6518
     ld a, $40
-    ld [$CB9B], a
-    ld hl, $C923
+    ld [wCB9B], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5385,9 +5385,9 @@ Jump_073_6518::
     ret
 
 Jump_073_651C::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
@@ -5395,7 +5395,7 @@ Jump_073_651C::
     jr nz, Jump_073_652F
 
 Jump_073_652A::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5413,18 +5413,18 @@ Jump_073_6539::
 Jump_073_653D::
     ld hl, $005A
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7D95
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld c, a
     sla a
     sla a
     add a, c
-    ld hl, $C8EF
+    ld hl, wC8EF
     add a, l
     ld l, a
     jr nc, Jump_073_655C
@@ -5432,21 +5432,21 @@ Jump_073_653D::
 
 Jump_073_655C::
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     ld a, [hl+]
-    ld [$C937], a
+    ld [wC937], a
     ld a, [hl+]
-    ld [$C938], a
+    ld [wC938], a
     ld a, [hl]
-    ld [$C939], a
-    ld hl, $CB7D
+    ld [wC939], a
+    ld hl, wCB7D
     dec [hl]
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     or a, a
     jr nz, Jump_073_657E
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5454,19 +5454,19 @@ Jump_073_657E::
     dec a
     jr nz, Jump_073_6587
     ld a, $04
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6587::
     dec a
     jr nz, Jump_073_6590
     ld a, $07
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6590::
     ld a, $0A
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Func_073_6596::
@@ -5500,7 +5500,7 @@ Func_073_65AA::
     ret
 
 Func_073_65B0::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6729
     dw Jump_073_6705
@@ -5516,52 +5516,52 @@ Func_073_65B0::
     dw Jump_073_65CC
 
 Jump_073_65CC::
-    ld de, $CB8B
+    ld de, wCB8B
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     ret nz
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_65ED::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
-    ld a, [$C937]
+    ld a, [wC937]
     ld [hl+], a
-    ld a, [$C938]
+    ld a, [wC938]
     ld [hl+], a
-    ld a, [$C939]
+    ld a, [wC939]
     ld [hl], a
     ld hl, $0002
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_05F_6D3F
     ld b, $5F
     rst $10
     xor a, a
-    ldh [$FF8D], a
-    ld hl, $C923
+    ldh [hFF8D], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6618::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
@@ -5570,14 +5570,14 @@ Jump_073_6618::
     dec hl
     ld [hl], $02
     ld a, $02
-    ld [$CB86], a
+    ld [wCB86], a
     ld a, $40
-    ld [$CB8A], a
+    ld [wCB8A], a
     ld a, $50
-    ld [$CB8B], a
+    ld [wCB8B], a
     ld a, $0E
-    ldh [$FF8D], a
-    ld hl, $C923
+    ldh [hFF8D], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5597,16 +5597,16 @@ Jump_073_6649::
     ret
 
 Jump_073_664F::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
     ld a, [hl]
     cp a, $50
     jr nz, Jump_073_6663
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5619,9 +5619,9 @@ Jump_073_6663::
     ret
 
 Jump_073_666A::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
@@ -5632,18 +5632,18 @@ Jump_073_666A::
 
 Jump_073_667C::
     ld a, $07
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6682::
     ld a, $08
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6688::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
@@ -5652,11 +5652,11 @@ Jump_073_6688::
     dec hl
     ld [hl], $00
     ld a, $40
-    ld [$CB8A], a
+    ld [wCB8A], a
     ld a, $0E
-    ldh [$FF8D], a
+    ldh [hFF8D], a
     ld a, $0A
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_66A8::
@@ -5675,16 +5675,16 @@ Jump_073_66B0::
     ret
 
 Jump_073_66B6::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
     ld a, [hl]
     cp a, $30
     jr nz, Jump_073_66CA
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5697,15 +5697,15 @@ Jump_073_66CA::
     ret
 
 Jump_073_66D1::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
     cp a, $60
     jr nz, Jump_073_66E4
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5717,16 +5717,16 @@ Jump_073_66E4::
     ret
 
 Jump_073_66EA::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     inc hl
     ld a, [hl]
     cp a, $50
     jr nz, Jump_073_66FE
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -5739,45 +5739,45 @@ Jump_073_66FE::
     ret
 
 Jump_073_6705::
-    ld a, [$C924]
+    ld a, [wC924]
     ld l, a
-    ld a, [$C925]
+    ld a, [wC925]
     ld h, a
     inc hl
     ld a, [hl]
     cp a, $40
     jr nz, Jump_073_6719
     ld a, $02
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6719::
     cp a, $50
     jr nz, Jump_073_6723
     ld a, $03
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6723::
     ld a, $04
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6729::
     ld hl, $0002
     ld a, l
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, h
-    ldh [$FFC7], a
+    ldh [hFFC7], a
     ld hl, Func_012_7D95
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld c, a
     sla a
     sla a
     add a, c
-    ld hl, $C8EF
+    ld hl, wC8EF
     add a, l
     ld l, a
     jr nc, Jump_073_6748
@@ -5785,48 +5785,48 @@ Jump_073_6729::
 
 Jump_073_6748::
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     ld a, [hl+]
-    ld [$C937], a
+    ld [wC937], a
     ld a, [hl+]
-    ld [$C938], a
+    ld [wC938], a
     ld a, [hl]
-    ld [$C939], a
-    ldh a, [$FF91]
+    ld [wC939], a
+    ldh a, [hFF91]
     cp a, $50
     jr nz, Jump_073_6767
 
 Jump_073_6762::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6767::
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $30
     jr nz, Jump_073_6773
 
 Jump_073_676D::
     ld a, $06
-    ld [$C923], a
+    ld [wC923], a
     ret
 
 Jump_073_6773::
-    ld hl, $C924
+    ld hl, wC924
     inc hl
     inc hl
-    ld a, [$C924]
+    ld a, [wC924]
     cp a, $40
     jr z, Jump_073_6783
     jr c, Jump_073_676D
     jr Jump_073_6762
 
 Jump_073_6783::
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     ld b, a
-    ld hl, $C8F0
+    ld hl, wC8F0
 
 Jump_073_678A::
     push hl
@@ -5847,7 +5847,7 @@ Jump_073_6798::
     db $C9
 
 Func_073_679F::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6927
     dw Jump_073_691C
@@ -5874,42 +5874,42 @@ Func_073_679F::
 
 Jump_073_67CF::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_67D5::
-    ld a, [$CC39]
+    ld a, [wCC39]
     set 1, a
-    ld [$CC39], a
+    ld [wCC39], a
     ld a, $40
-    ldh [$FF90], a
+    ldh [hFF90], a
     xor a, a
-    ldh [$FF8F], a
-    ldh [$FF92], a
-    ldh a, [$FF8E]
-    ld [$C8C8], a
+    ldh [hFF8F], a
+    ldh [hFF92], a
+    ldh a, [hFF8E]
+    ld [wC8C8], a
     ld a, $40
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
     ret
 
 Jump_073_67FC::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $14
     jr nz, Jump_073_680F
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
 
 Jump_073_680F::
-    ld a, [$C921]
+    ld a, [wC921]
     bit 0, a
     jr z, Jump_073_6826
     ld de, $77D0
@@ -5929,24 +5929,24 @@ Jump_073_6826::
 
 Jump_073_6835::
     ld a, $05
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ld a, $04
-    ldh [$FF92], a
+    ldh [hFF92], a
     jr Jump_073_689E
 
 Jump_073_683F::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $14
     jr nz, Jump_073_6852
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
 
 Jump_073_6852::
-    ld a, [$C921]
+    ld a, [wC921]
     bit 0, a
     jr z, Jump_073_6868
     ld de, $7ABA
@@ -5964,7 +5964,7 @@ Jump_073_6868::
     ld b, $56
 
 Func_073_6875::
-    ld hl, $C198
+    ld hl, wC198
     call Func_000_0CF5
     ld hl, Func_05F_6DDB
     ld b, $5F
@@ -5972,39 +5972,39 @@ Func_073_6875::
     ret
 
 Func_073_6882::
-    ld a, [$C525]
+    ld a, [wIsCGB]
     or a, a
     ret z
     ld a, $02
-    ldh [$FF70], a
-    ld hl, $D000
+    ldh [rSVBK], a
+    ld hl, wD000
     call Func_000_0CF5
     ld a, $00
-    ldh [$FF70], a
+    ldh [rSVBK], a
     ret
 
 Jump_073_6896::
     ld a, $06
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ld a, $05
-    ldh [$FF92], a
+    ldh [hFF92], a
 
 Jump_073_689E::
     ld a, $30
-    ldh [$FF90], a
-    ldh a, [$FF8E]
-    ld [$C8C8], a
+    ldh [hFF90], a
+    ldh a, [hFF8E]
+    ld [wC8C8], a
     ld a, $E0
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
     ret
 
 Jump_073_68B8::
-    ld a, [$C921]
+    ld a, [wC921]
     ld b, a
     ld a, $06
     call Func_000_16BF
@@ -6034,14 +6034,14 @@ Jump_073_68CB::
     ld hl, Func_05F_6DDB
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $09
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
     db $06, $47, $42, $4C, $FB, $47, $CB, $4C, $EE, $48, $3C, $4D, $FB, $47
@@ -6053,7 +6053,7 @@ Jump_073_68CB::
 
 Jump_073_6910::
     ld a, $B4
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_00F_729C
     ld b, $0F
     rst $10
@@ -6063,7 +6063,7 @@ Jump_073_691C::
     ld b, $3C
     call Func_073_7A2B
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -6075,35 +6075,35 @@ Jump_073_6927::
 
 Jump_073_6931::
     ld a, $48
-    ld [$CB8A], a
+    ld [wCB8A], a
     ld hl, Func_05F_6E09
     ld b, $5F
     rst $10
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_6941::
     ld a, $58
-    ld [$C242], a
+    ld [wC242], a
     ld a, $59
-    ld [$C243], a
+    ld [wC243], a
     ld a, $5A
-    ld [$C256], a
+    ld [wC256], a
     ld a, $5B
-    ld [$C257], a
+    ld [wC257], a
     ld hl, Func_05F_6DDB
     ld b, $5F
     rst $10
-    ld a, [$CC39]
+    ld a, [wCC39]
     set 0, a
-    ld [$CC39], a
+    ld [wCC39], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6969::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6A71
     dw Jump_073_6A2B
@@ -6116,83 +6116,83 @@ Func_073_6969::
     dw Func_073_4E9C
 
 Jump_073_697F::
-    ld a, [$C8FB]
+    ld a, [wC8FB]
     inc a
-    ld [$C8FB], a
+    ld [wC8FB], a
     cp a, $40
     ret nz
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_698E::
-    ld a, [$C8F6]
+    ld a, [wC8F6]
     inc a
-    ld [$C8F6], a
+    ld [wC8F6], a
     cp a, $40
     ret nz
     ld a, $40
-    ld [$C8FA], a
+    ld [wC8FA], a
     ld a, $30
-    ld [$C8FB], a
+    ld [wC8FB], a
     xor a, a
-    ld [$C8F9], a
-    ld hl, $C923
+    ld [wC8F9], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_69AB::
-    ld a, [$C8F1]
+    ld a, [wC8F1]
     inc a
-    ld [$C8F1], a
+    ld [wC8F1], a
     cp a, $40
     ret nz
     ld a, $40
-    ld [$C8F5], a
+    ld [wC8F5], a
     ld a, $30
-    ld [$C8F6], a
+    ld [wC8F6], a
     xor a, a
-    ld [$C8F4], a
-    ld hl, $C923
+    ld [wC8F4], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_69C8::
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     inc a
-    ldh [$FF91], a
+    ldh [hFF91], a
     cp a, $40
     ret nz
     ld a, $40
-    ld [$C8F0], a
+    ld [wC8F0], a
     ld a, $30
-    ld [$C8F1], a
+    ld [wC8F1], a
     xor a, a
-    ld [$C8EF], a
-    ld hl, $C923
+    ld [wC8EF], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_69E3::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     and a, $01
     ret nz
-    ld a, [$CB8B]
+    ld a, [wCB8B]
     inc a
-    ld [$CB8B], a
+    ld [wCB8B], a
     cp a, $30
     ret nz
     ld a, $40
-    ldh [$FF8E], a
+    ldh [hFF8E], a
     ld a, $30
-    ldh [$FF91], a
+    ldh [hFF91], a
     xor a, a
-    ldh [$FF98], a
+    ldh [hFF98], a
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -6203,42 +6203,42 @@ Jump_073_6A0B::
     ld hl, Func_002_5BD7
     ld b, $02
     rst $10
-    ld a, [$C468]
+    ld a, [wC468]
     bit 7, a
     ret nz
     xor a, a
-    ld [$CB8B], a
+    ld [wCB8B], a
     ld a, $01
-    ld [$CB7D], a
-    ld hl, $C923
+    ld [wCB7D], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6A2B::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     and a, $01
     ret nz
-    ld a, [$CB8B]
+    ld a, [wCB8B]
     inc a
-    ld [$CB8B], a
+    ld [wCB8B], a
     cp a, $80
     ret nz
     ld a, $80
-    ld [$C468], a
+    ld [wC468], a
     ld a, $08
-    ld [$C46A], a
-    ld hl, $FF92
+    ld [wC46A], a
+    ld hl, hFF92
     inc [hl]
-    ldh a, [$FF8C]
+    ldh a, [hFF8C]
     or a, $01
-    ldh [$FF8C], a
-    ld hl, $FF80
+    ldh [hFF8C], a
+    ld hl, hFF80
     ld a, l
-    ldh [$FF9D], a
+    ldh [hFF9D], a
     ld a, h
-    ldh [$FF9E], a
+    ldh [hFF9E], a
     ld hl, Func_002_541B
     ld b, $02
     rst $10
@@ -6246,46 +6246,46 @@ Jump_073_6A2B::
     ld b, $02
     rst $10
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6A71::
     ld a, $30
-    ldh [$FF90], a
+    ldh [hFF90], a
     ld a, $05
-    ldh [$FF8F], a
-    ldh [$FF92], a
+    ldh [hFF8F], a
+    ldh [hFF92], a
     ld a, $E0
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $E0
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
     ret
 
 Func_073_6A91::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6A99
     dw Jump_073_6AB8
 
 Jump_073_6A99::
     ld a, $36
-    ldh [$FF90], a
+    ldh [hFF90], a
     xor a, a
-    ldh [$FF8F], a
-    ldh [$FF92], a
+    ldh [hFF8F], a
+    ldh [hFF92], a
     ld a, $40
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $80
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $03
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -6293,27 +6293,27 @@ Jump_073_6A99::
 
 Jump_073_6AB8::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6ABE::
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_6AE9
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_6AE9
     ld a, $3C
-    ldh [$FF90], a
+    ldh [hFF90], a
     xor a, a
-    ldh [$FF8F], a
-    ldh [$FF92], a
+    ldh [hFF8F], a
+    ldh [hFF92], a
     ld a, $50
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $40
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $04
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -6321,11 +6321,11 @@ Func_073_6ABE::
 
 Jump_073_6AE9::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6AEF::
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_6AF9
     call Func_073_6B1F
@@ -6333,11 +6333,11 @@ Func_073_6AEF::
 
 Jump_073_6AF9::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6AFF::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6D22
     dw Jump_073_6D1B
@@ -6353,22 +6353,22 @@ Func_073_6AFF::
 
 Jump_073_6B19::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6B1F::
     ld a, $41
-    ldh [$FF90], a
+    ldh [hFF90], a
     xor a, a
-    ldh [$FF8F], a
+    ldh [hFF8F], a
     ld a, $01
-    ldh [$FF92], a
+    ldh [hFF92], a
     ld a, $70
-    ld [$C8C8], a
+    ld [wC8C8], a
     ld a, $30
-    ld [$C8C9], a
+    ld [wC8C9], a
     ld a, $01
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -6381,15 +6381,15 @@ Jump_073_6B46::
     call Func_073_7AB2
     ret nc
     ld a, $01
-    ld [$CB96], a
-    ld hl, $C923
+    ld [wCB96], a
+    ld hl, wC923
     inc [hl]
     ld hl, $0849
     call Func_073_7AA5
     ret
 
 Func_073_6B5B::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6D22
     dw Jump_073_6D1B
@@ -6403,13 +6403,13 @@ Func_073_6B5B::
 
 Jump_073_6B71::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_6B77::
     call Func_073_6C77
     ld a, $E0
-    ld [$CB9A], a
+    ld [wCB9A], a
     ret
 
 Jump_073_6B80::
@@ -6419,16 +6419,16 @@ Jump_073_6B80::
     ret
 
 Jump_073_6B87::
-    ld hl, $FF8C
+    ld hl, hFF8C
     call Func_073_7A47
-    ld hl, $FF8C
+    ld hl, hFF8C
     call Func_073_7A3D
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_6B98::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6D22
     dw Jump_073_6D1B
@@ -6449,33 +6449,33 @@ Jump_073_6BB6::
     call Func_073_7AB2
     ret nc
     ld a, $E0
-    ld [$CB9A], a
+    ld [wCB9A], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_6BC6::
-    ld a, [$CBD3]
+    ld a, [wCBD3]
     inc a
     inc a
-    ld [$CBD3], a
-    ld de, $CBD4
+    ld [wCBD3], a
+    ld de, wCBD4
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     ret nz
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $2C
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6C8C
     ld b, $5F
     rst $10
@@ -6484,20 +6484,20 @@ Jump_073_6BC6::
     ld hl, $0813
     call Func_073_7AA5
     xor a, a
-    ldh [$FF8D], a
-    ld hl, $C923
+    ldh [hFF8D], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6C0C::
-    ld hl, $CBD4
+    ld hl, wCBD4
     dec [hl]
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     ld a, $65
     call Func_000_1278
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -6506,15 +6506,15 @@ Jump_073_6C21::
     call Func_073_7AB2
     ret nc
     ld a, $10
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B98
     ld b, $12
     rst $10
     ld a, $80
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $0E
-    ldh [$FF8D], a
-    ld hl, $C923
+    ldh [hFF8D], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -6523,8 +6523,8 @@ Jump_073_6C3E::
     call Func_073_7AB2
     ret nc
     ld a, $01
-    ld [$CB96], a
-    ld hl, $C923
+    ld [wCB96], a
+    ld hl, wC923
     inc [hl]
     ld de, $006E
     call Func_000_181B
@@ -6534,7 +6534,7 @@ Jump_073_6C3E::
     ret
 
 Jump_073_6C5B::
-    ld a, [$C634]
+    ld a, [wC634]
     cp a, $FF
     jr z, Jump_073_6C6C
     or a, a
@@ -6546,45 +6546,45 @@ Jump_073_6C5B::
 Jump_073_6C6C::
     ld hl, $0812
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_6C77::
-    ld hl, $FF8C
+    ld hl, hFF8C
     call Func_073_7A47
     ld a, $03
-    ld [$C8EF], a
+    ld [wC8EF], a
     xor a, a
-    ld [$C8F4], a
+    ld [wC8F4], a
     ld a, $02
-    ld [$C8F9], a
+    ld [wC8F9], a
     ld a, $01
-    ldh [$FF98], a
-    ld hl, $C8F0
+    ldh [hFF98], a
+    ld hl, wC8F0
     dec [hl]
-    ld hl, $C8F6
+    ld hl, wC8F6
     inc [hl]
-    ld hl, $C8FB
+    ld hl, wC8FB
     dec [hl]
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     inc a
-    ldh [$FF8E], a
+    ldh [hFF8E], a
     cp a, $70
     ret nz
     ld a, $03
-    ldh [$FF98], a
-    ld [$C8EF], a
-    ld [$C8F4], a
-    ld [$C8F9], a
-    ld hl, $FF8C
+    ldh [hFF98], a
+    ld [wC8EF], a
+    ld [wC8F4], a
+    ld [wC8F9], a
+    ld hl, hFF8C
     call Func_073_7A4C
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ld a, $30
-    ld [$CB9A], a
+    ld [wCB9A], a
     ld hl, $0886
     call Func_073_7AA5
     ret
@@ -6596,39 +6596,39 @@ Jump_073_6CCA::
     ret
 
 Jump_073_6CD1::
-    ld hl, $FF8C
+    ld hl, hFF8C
     call Func_073_7A47
     ld a, $01
-    ld [$C8EF], a
+    ld [wC8EF], a
     ld a, $02
-    ld [$C8F4], a
+    ld [wC8F4], a
     xor a, a
-    ld [$C8F9], a
+    ld [wC8F9], a
     ld a, $03
-    ldh [$FF98], a
-    ld hl, $C8F0
+    ldh [hFF98], a
+    ld hl, wC8F0
     inc [hl]
-    ld hl, $C8F6
+    ld hl, wC8F6
     dec [hl]
-    ld hl, $C8FB
+    ld hl, wC8FB
     inc [hl]
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     dec a
-    ldh [$FF8E], a
+    ldh [hFF8E], a
     cp a, $60
     ret nz
     xor a, a
-    ldh [$FF98], a
-    ld [$C8EF], a
-    ld [$C8F4], a
-    ld [$C8F9], a
-    ld hl, $FF8C
+    ldh [hFF98], a
+    ld [wC8EF], a
+    ld [wC8F4], a
+    ld [wC8F9], a
+    ld hl, hFF8C
     call Func_073_7A4C
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     xor a, a
-    ld [$C921], a
-    ld [$C92D], a
+    ld [wC921], a
+    ld [wC92D], a
     ret
 
 Jump_073_6D1B::
@@ -6638,39 +6638,39 @@ Jump_073_6D1B::
     ret
 
 Jump_073_6D22::
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $40
     jr z, Jump_073_6D34
     ld a, $40
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6A94
     ld b, $5F
     rst $10
     ret
 
 Jump_073_6D34::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $70
     jr z, Jump_073_6D4D
     ld a, $70
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6ABF
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     xor a, a
-    ldh [$FF98], a
+    ldh [hFF98], a
 
 Jump_073_6D4D::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
     INCBIN "dwm2-cobi-us.gbc", $1CED52, $C5
 
 Func_073_6E17::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6E40
     dw Jump_073_4E41
@@ -6679,17 +6679,17 @@ Func_073_6E17::
 
 Jump_073_6E23::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_6E29::
-    ldh a, [$FF8E]
-    ld [$C8C8], a
-    ldh a, [$FF91]
-    ld [$C8C9], a
-    ldh a, [$FF98]
+    ldh a, [hFF8E]
+    ld [wC8C8], a
+    ldh a, [hFF91]
+    ld [wC8C9], a
+    ldh a, [hFF98]
     inc a
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
@@ -6697,60 +6697,60 @@ Jump_073_6E29::
 
 Jump_073_6E40::
     xor a, a
-    ldh [$FFB9], a
-    ld a, [$C525]
+    ldh [hFFB9], a
+    ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_6E55
-    ld hl, $C49F
-    ld de, $C0F0
+    ld hl, wC49F
+    ld de, wC0F0
     ld bc, $0040
     call Func_000_0952
 
 Jump_073_6E55::
     ld a, $7A
     call Func_000_1278
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_6E5F::
     ld a, $19
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1A
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1B
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1C
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_7DCE
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
     ret
 
 Jump_073_6EA0::
-    ld hl, $C61D
-    ldh a, [$FFC6]
+    ld hl, wC61D
+    ldh a, [hFFC6]
     add a, l
     ld l, a
     jr nc, Jump_073_6EAA
@@ -6758,42 +6758,42 @@ Jump_073_6EA0::
 
 Jump_073_6EAA::
     ld [hl], $30
-    ld a, [$C836]
+    ld a, [wC836]
     set 6, a
-    ld [$C836], a
+    ld [wC836], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6EBA::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6EC8
     dw Jump_073_6EC2
 
 Jump_073_6EC2::
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_6EC8::
-    ld a, [$CC38]
+    ld a, [wCC38]
     or a, $02
-    ld [$CC38], a
-    ldh a, [$FF8E]
-    ld [$C8C8], a
-    ldh a, [$FF91]
-    ld [$C8C9], a
-    ldh a, [$FF98]
+    ld [wCC38], a
+    ldh a, [hFF8E]
+    ld [wC8C8], a
+    ldh a, [hFF91]
+    ld [wC8C9], a
+    ldh a, [hFF98]
     inc a
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
     ret
 
 Func_073_6EE7::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_6EEF
     dw Jump_073_6F04
@@ -6803,11 +6803,11 @@ Jump_073_6EEF::
     call Func_073_7A2B
     ret nc
     ld a, $05
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B98
     ld b, $12
     rst $10
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -6816,75 +6816,75 @@ Jump_073_6F04::
     call Func_073_7A2B
     ret nc
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6F14::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $50
     jr nz, Jump_073_6F24
-    ld hl, $CBD3
+    ld hl, wCBD3
     inc [hl]
-    ld hl, $CBD4
+    ld hl, wCBD4
     inc [hl]
     jr Jump_073_6F40
 
 Jump_073_6F24::
     cp a, $30
     jr nz, Jump_073_6F32
-    ld hl, $CBD3
+    ld hl, wCBD3
     dec [hl]
-    ld hl, $CBD4
+    ld hl, wCBD4
     inc [hl]
     jr Jump_073_6F40
 
 Jump_073_6F32::
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $20
     jr z, Jump_073_6F40
-    ld a, [$CBD4]
+    ld a, [wCBD4]
     inc a
     inc a
-    ld [$CBD4], a
+    ld [wCBD4], a
 
 Jump_073_6F40::
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $40
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, $30
-    ld [$CBD4], a
+    ld [wCBD4], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6F5B::
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_6F6B
     ld a, $80
-    ld [$CBCF], a
-    ld hl, $C923
+    ld [wCBCF], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6F6B::
-    ld hl, $CBD4
+    ld hl, wCBD4
     dec [hl]
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_6F7C::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_7007
     dw Jump_073_6FC5
@@ -6892,101 +6892,101 @@ Func_073_6F7C::
     dw Jump_073_6F88
 
 Jump_073_6F88::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $3C
     ret nz
     ld a, $72
     call Func_000_1278
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     inc a
     inc a
     and a, $03
-    ld [$CB86], a
+    ld [wCB86], a
     ld a, $40
-    ld [$CB8A], a
+    ld [wCB8A], a
     ld de, $0019
     call Func_000_1845
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_6FB1::
     ld a, $01
-    ld [$C8F4], a
-    ld a, [$C8F5]
+    ld [wC8F4], a
+    ld a, [wC8F5]
     inc a
-    ld [$C8F5], a
+    ld [wC8F5], a
     cp a, $B0
     ret nz
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6FC5::
-    ld a, [$C921]
+    ld a, [wC921]
     or a, a
     jr nz, Jump_073_6FE2
-    ld a, [$C8F5]
+    ld a, [wC8F5]
     cp a, $50
     jr nz, Jump_073_6FD8
     ld a, $01
-    ld [$C921], a
+    ld [wC921], a
     ret
 
 Jump_073_6FD8::
     ld a, $01
-    ld [$C8F4], a
-    ld hl, $C8F5
+    ld [wC8F4], a
+    ld hl, wC8F5
     inc [hl]
     ret
 
 Jump_073_6FE2::
-    ld a, [$C8F6]
+    ld a, [wC8F6]
     cp a, $40
     jr nz, Jump_073_6FF2
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_6FF2::
     jr nc, Jump_073_6FFD
     xor a, a
-    ld [$C8F4], a
-    ld hl, $C8F6
+    ld [wC8F4], a
+    ld hl, wC8F6
     inc [hl]
     ret
 
 Jump_073_6FFD::
     ld a, $02
-    ld [$C8F4], a
-    ld hl, $C8F6
+    ld [wC8F4], a
+    ld hl, wC8F6
     dec [hl]
     ret
 
 Jump_073_7007::
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
-    ld a, [$C8F5]
+    ld a, [wC8F5]
     cp a, $40
     jr nz, Jump_073_701E
-    ld a, [$C8F6]
+    ld a, [wC8F6]
     cp a, $20
     jr nz, Jump_073_701E
     xor a, a
-    ld [$C921], a
+    ld [wC921], a
     ret
 
 Jump_073_701E::
     ld a, $01
-    ld [$C921], a
+    ld [wC921], a
     ret
 
 Func_073_7024::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Func_073_734D
     dw Jump_073_733B
@@ -7019,57 +7019,57 @@ Func_073_7024::
     dw Jump_073_7062
 
 Jump_073_7062::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
     cp a, $1E
     jr z, Jump_073_706E
-    ld [$C921], a
+    ld [wC921], a
     ret
 
 Jump_073_706E::
     dec a
-    ld [$C921], a
+    ld [wC921], a
     ld a, $40
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B17
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $02
-    ldh [$FF98], a
-    ld [$C8EF], a
+    ldh [hFF98], a
+    ld [wC8EF], a
     ld de, $000C
     call Func_000_1845
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_7095::
-    ld hl, $CBD4
+    ld hl, wCBD4
     inc [hl]
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     xor a, a
-    ld [$CBCF], a
-    ld hl, $C923
+    ld [wCBCF], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_70A9::
     ld a, $68
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B17
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $02
-    ldh [$FF98], a
-    ld hl, $C923
+    ldh [hFF98], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -7079,64 +7079,64 @@ Jump_073_70C2::
     ret nc
     ld hl, $005C
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_70D3::
-    ld a, [$C926]
+    ld a, [wC926]
     cp a, $FF
     jr z, Jump_073_70E5
     xor a, a
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6936
     ld b, $5F
     rst $10
     ret
 
 Jump_073_70E5::
-    ld a, [$C921]
+    ld a, [wC921]
     or a, a
     jr nz, Jump_073_70F0
     ld a, $65
     call Func_000_1278
 
 Jump_073_70F0::
-    ld de, $CB8B
+    ld de, wCB8B
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $01
     jr nz, Jump_073_7111
-    ld a, [$CB86]
+    ld a, [wCB86]
     inc a
     and a, $03
-    ld [$CB86], a
+    ld [wCB86], a
 
 Jump_073_7111::
-    ld a, [$CB8A]
+    ld a, [wCB8A]
     cp a, $40
     jr z, Jump_073_711D
     dec a
     dec a
-    ld [$CB8A], a
+    ld [wCB8A], a
 
 Jump_073_711D::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     jr z, Jump_073_7138
     ld hl, Func_012_6B22
     ld b, $12
     rst $10
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B33
     ld b, $12
     rst $10
@@ -7147,15 +7147,15 @@ Jump_073_7138::
     call Func_000_1278
     ld de, $7AD4
     ld b, $7D
-    ld hl, $8500
+    ld hl, vTiles0 + $500
     call Func_000_0CF5
     ld a, $49
-    ld [$CB81], a
+    ld [wCB81], a
     xor a, a
-    ld [$CB86], a
+    ld [wCB86], a
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -7164,18 +7164,18 @@ Jump_073_715A::
     ld b, $12
     rst $10
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B33
     ld b, $12
     rst $10
-    ld de, $CB86
+    ld de, wCB86
     call Func_073_7A51
     ld b, $78
     call Func_073_7A2B
     ret nc
     ld hl, $005B
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -7184,29 +7184,29 @@ Jump_073_7180::
     ld b, $12
     rst $10
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B33
     ld b, $12
     rst $10
-    ld de, $CB86
+    ld de, wCB86
     call Func_073_7A51
-    ld hl, $C921
+    ld hl, wC921
     inc [hl]
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $81
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $B0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -7215,13 +7215,13 @@ Jump_073_71BC::
     ld b, $12
     rst $10
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B33
     ld b, $12
     rst $10
-    ld de, $CB86
+    ld de, wCB86
     call Func_073_7A51
-    ld de, $CB9B
+    ld de, wCB9B
     ld hl, $005A
     call Func_073_7A7F
     ret
@@ -7230,114 +7230,114 @@ Jump_073_71DB::
     ld a, $01
     call Func_073_7AB2
     push af
-    ld de, $CB86
+    ld de, wCB86
     call Func_073_7A51
-    ld hl, $C921
+    ld hl, wC921
     inc [hl]
     pop af
     ret nc
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_71F6::
     ld a, $02
-    ld [$C8EF], a
+    ld [wC8EF], a
     ld a, $70
-    ld [$C8F0], a
+    ld [wC8F0], a
     ld a, $40
-    ld [$C8F1], a
+    ld [wC8F1], a
     ld hl, Func_012_6B22
     ld b, $12
     rst $10
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6B33
     ld b, $12
     rst $10
     ld a, $80
-    ld [$CBCF], a
-    ld de, $CB8B
+    ld [wCBCF], a
+    ld de, wCB8B
     ld hl, $0059
     call Func_073_7A7F
     ret
 
 Jump_073_7223::
     ld a, $02
-    ld [$CBA6], a
-    ld hl, $CBAB
+    ld [wCBA6], a
+    ld hl, wCBAB
     inc [hl]
-    ld de, $CBAB
+    ld de, wCBAB
     call Func_073_7A5D
     ret nc
     ld de, $000B
     call Func_000_1845
-    ldh a, [$FF8E]
-    ld [$C8C8], a
-    ldh a, [$FF91]
-    ld [$C8C9], a
+    ldh a, [hFF8E]
+    ld [wC8C8], a
+    ldh a, [hFF91]
+    ld [wC8C9], a
     ld a, $04
-    ld [$C8C6], a
+    ld [wC8C6], a
     ld hl, Func_05F_6C5A
     ld b, $5F
     rst $10
     ret
 
 Jump_073_724F::
-    ld hl, $CBAA
+    ld hl, wCBAA
     dec [hl]
-    ld de, $CB9B
+    ld de, wCB9B
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld de, $CBAB
+    ld de, wCBAB
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld de, $CBD4
+    ld de, wCBD4
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $01
     jr z, Jump_073_728D
 
 Jump_073_728D::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     ret nz
     xor a, a
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_012_6AD9
     ld b, $12
     rst $10
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_72A9::
-    ld a, [$C8F1]
+    ld a, [wC8F1]
     dec a
     dec a
-    ld [$C8F1], a
+    ld [wC8F1], a
     cp a, $38
     jr z, Jump_073_72B9
     call Func_073_736B
@@ -7345,29 +7345,29 @@ Jump_073_72A9::
 
 Jump_073_72B9::
     ld a, $80
-    ld [$CB9A], a
+    ld [wCB9A], a
     ld a, $60
-    ld [$CBAA], a
+    ld [wCBAA], a
     ld a, $70
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, $63
     call Func_000_1278
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_72D6::
-    ld a, [$C5F0]
+    ld a, [wC5F0]
     and a, $03
     ret nz
-    ld a, [$C8F1]
+    ld a, [wC8F1]
     inc a
-    ld [$C8F1], a
+    ld [wC8F1], a
     cp a, $48
     ret nz
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ld de, $0001
     call Func_000_181B
@@ -7383,64 +7383,64 @@ Jump_073_72F9::
 
 Jump_073_7300::
     call Func_073_736B
-    ld a, [$C8F0]
+    ld a, [wC8F0]
     dec a
-    ld [$C8F0], a
+    ld [wC8F0], a
     cp a, $70
     ret nz
     ld a, $02
-    ld [$C8EF], a
-    ld hl, $C923
+    ld [wC8EF], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_7317::
-    ld de, $CB9B
+    ld de, wCB9B
     call Func_073_7A5D
     ret nc
     ld hl, $0055
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_7329::
-    ld de, $CBAB
+    ld de, wCBAB
     call Func_073_7A5D
     ret nc
     ld hl, $0054
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_733B::
-    ld de, $CB9B
+    ld de, wCB9B
     call Func_073_7A5D
     ret nc
     ld hl, $0053
     call Func_073_7AA5
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_734D::
-    ld hl, $CB9C
+    ld hl, wCB9C
     call Func_073_7A47
-    ld hl, $CBAC
+    ld hl, wCBAC
     call Func_073_7A47
     ld a, $80
-    ld [$CBCF], a
+    ld [wCBCF], a
     call Func_073_736B
-    ld a, [$C921]
+    ld a, [wC921]
     or a, a
     ret nz
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_736B::
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $3F
     ld hl, $7526
     add a, l
@@ -7451,7 +7451,7 @@ Func_073_736B::
 Jump_073_7378::
     ld a, [hl]
     ld c, a
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $40
     jr z, Jump_073_7386
     ld a, c
@@ -7460,21 +7460,21 @@ Jump_073_7378::
     ld c, a
 
 Jump_073_7386::
-    ld a, [$CB9A]
+    ld a, [wCB9A]
     add a, c
-    ld [$CB9A], a
-    ld a, [$CBAA]
+    ld [wCB9A], a
+    ld a, [wCBAA]
     add a, c
-    ld [$CBAA], a
-    ld a, [$CBD3]
+    ld [wCBAA], a
+    ld a, [wCBD3]
     add a, c
-    ld [$CBD3], a
-    ld hl, $C921
+    ld [wCBD3], a
+    ld hl, wC921
     inc [hl]
     ret
 
 Func_073_73A0::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_7566
     dw Jump_073_74EC
@@ -7489,64 +7489,64 @@ Func_073_73A0::
     dw Jump_073_73BA
 
 Jump_073_73BA::
-    ld a, [$C921]
+    ld a, [wC921]
     or a, a
     jr nz, Jump_073_73F9
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $82
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld a, $81
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $E0
-    ld [$CBAA], a
-    ld hl, $C921
+    ld [wCBAA], a
+    ld hl, wC921
     inc [hl]
     ret
 
 Jump_073_73F9::
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $81
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $E0
-    ld [$CB9A], a
+    ld [wCB9A], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_741E::
-    ld a, [$C921]
+    ld a, [wC921]
     or a, a
     jr nz, Jump_073_7429
     ld a, $65
     call Func_000_1278
 
 Jump_073_7429::
-    ld a, [$C921]
+    ld a, [wC921]
     ld hl, $749A
     add a, l
     ld l, a
@@ -7555,56 +7555,56 @@ Jump_073_7429::
 
 Jump_073_7434::
     ld a, [hl]
-    ld [$CBD3], a
-    ld a, [$C921]
+    ld [wCBD3], a
+    ld a, [wC921]
     push af
     srl a
-    ld [$C921], a
-    ld de, $CBD4
+    ld [wC921], a
+    ld de, wCBD4
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
     pop af
-    ld [$C921], a
-    ldh a, [$FF8E]
+    ld [wC921], a
+    ldh a, [hFF8E]
     cp a, $00
     jr nz, Jump_073_746A
-    ld hl, $FF8C
+    ld hl, hFF8C
     call Func_073_7A4C
-    ld hl, $CBAC
+    ld hl, wCBAC
     call Func_073_7A4C
     jr Jump_073_7476
 
 Jump_073_746A::
     dec a
     dec a
-    ldh [$FF8E], a
-    ld a, [$CBAA]
+    ldh [hFF8E], a
+    ld a, [wCBAA]
     inc a
     inc a
-    ld [$CBAA], a
+    ld [wCBAA], a
 
 Jump_073_7476::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $40
     ret nz
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $68
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, $30
-    ld [$CBD4], a
-    ld hl, $C923
+    ld [wCBD4], a
+    ld hl, wC923
     inc [hl]
     xor a, a
-    ld [$C921], a
-    ld [$C922], a
+    ld [wC921], a
+    ld [wC922], a
     ret
     db $21, $22, $23, $23, $24, $25, $26, $27, $28, $29, $2A, $2A, $2B, $2C, $2D, $2E
     db $2F, $30, $30, $31, $32, $33, $34, $35, $35, $36, $37, $38, $39, $39, $3A, $3B
@@ -7612,7 +7612,7 @@ Jump_073_7476::
     db $46, $47, $48, $48, $49, $4A, $4A, $4B, $4C, $4C, $4D, $4E, $4E, $4F, $50, $50
 
 Jump_073_74DA::
-    ld a, [$C921]
+    ld a, [wC921]
     ld hl, $7526
     add a, l
     ld l, a
@@ -7627,7 +7627,7 @@ Jump_073_74E5::
     jr Jump_073_74F9
 
 Jump_073_74EC::
-    ld a, [$C921]
+    ld a, [wC921]
     ld hl, $7526
     add a, l
     ld l, a
@@ -7639,27 +7639,27 @@ Jump_073_74F7::
     ld c, a
 
 Jump_073_74F9::
-    ld a, [$CBAA]
+    ld a, [wCBAA]
     add a, c
-    ld [$CBAA], a
-    ldh a, [$FF8E]
+    ld [wCBAA], a
+    ldh a, [hFF8E]
     add a, c
-    ldh [$FF8E], a
-    ld a, [$C8F0]
+    ldh [hFF8E], a
+    ld a, [wC8F0]
     add a, c
-    ld [$C8F0], a
-    ld a, [$CBD3]
+    ld [wC8F0], a
+    ld a, [wCBD3]
     add a, c
-    ld [$CBD3], a
-    ld a, [$C921]
+    ld [wCBD3], a
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $40
     ret nz
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     xor a, a
-    ld [$C921], a
+    ld [wC921], a
     ret
     db $01, $00, $01, $00, $01, $01, $00, $FF, $01, $00, $00, $FF, $00, $FF, $FF, $00
     db $01, $00, $00, $00, $01, $01, $FF, $00, $00, $FF, $00, $00, $00, $FF, $01, $00
@@ -7668,76 +7668,76 @@ Jump_073_74F9::
 
 Jump_073_7566::
     ld a, $10
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6ABF
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $01
-    ld [$C8EF], a
-    ld hl, $FF8C
+    ld [wC8EF], a
+    ld hl, hFF8C
     call Func_073_7A47
-    ld hl, $CBAC
+    ld hl, wCBAC
     call Func_073_7A47
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_758C:: ; heuristic: follows a terminator; C0
-    ld a, [$C923]
+    ld a, [wC923]
     or a, a
     jr nz, Jump_073_75A6
-    ldh a, [$FF8E]
-    ld [$CBD3], a
-    ldh a, [$FF91]
-    ld [$CBD4], a
+    ldh a, [hFF8E]
+    ld [wCBD3], a
+    ldh a, [hFF91]
+    ld [wCBD4], a
     ld a, $80
-    ld [$CBCF], a
-    ld hl, $C923
+    ld [wCBCF], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_75A6::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $30
     jr nz, Jump_073_75B2
-    ld hl, $CBD3
+    ld hl, wCBD3
     inc [hl]
     jr Jump_073_75CC
 
 Jump_073_75B2::
     cp a, $50
     jr nz, Jump_073_75BC
-    ld hl, $CBD3
+    ld hl, wCBD3
     dec [hl]
     jr Jump_073_75CC
 
 Jump_073_75BC::
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, $20
     jr nz, Jump_073_75C8
-    ld hl, $CBD4
+    ld hl, wCBD4
     inc [hl]
     jr Jump_073_75CC
 
 Jump_073_75C8::
-    ld hl, $CBD4
+    ld hl, wCBD4
     dec [hl]
 
 Jump_073_75CC::
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_073_75DD::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_764E
     dw Jump_073_7639
@@ -7749,72 +7749,72 @@ Jump_073_75E9::
     call Func_073_7A2B
     ret nc
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_75F5::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, $00
     jr z, Jump_073_760B
     dec a
     dec a
-    ldh [$FF8E], a
-    ld a, [$C8F0]
+    ldh [hFF8E], a
+    ld a, [wC8F0]
     cp a, $00
     jr z, Jump_073_760B
     dec a
     dec a
-    ld [$C8F0], a
+    ld [wC8F0], a
 
 Jump_073_760B::
     ld a, $80
-    ld [$CBCF], a
-    ld de, $CBD4
+    ld [wCBCF], a
+    ld de, wCBD4
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     ret nz
     ld a, $50
-    ld [$CBD4], a
+    ld [wCBD4], a
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_7639::
-    ld a, [$CBAA]
+    ld a, [wCBAA]
     dec a
     dec a
-    ld [$CBAA], a
+    ld [wCBAA], a
     cp a, $30
     ret nz
     ld a, $63
     call Func_000_1278
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_764E::
-    ld a, [$CBAA]
+    ld a, [wCBAA]
     inc a
-    ld [$CBAA], a
+    ld [wCBAA], a
     cp a, $40
     ret nz
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_765D::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_77A5
     dw Jump_073_7765
@@ -7836,118 +7836,118 @@ Func_073_765D::
 
 Jump_073_7683::
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $82
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $E0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld a, $82
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $E0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_76B8::
-    ld a, [$CBAA]
+    ld a, [wCBAA]
     cp a, $40
     jr z, Jump_073_76CB
     ld a, $83
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $40
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_76D5
 
 Jump_073_76CB::
     ld a, $82
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $E0
-    ld [$C928], a
+    ld [wC928], a
 
 Jump_073_76D5::
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $82
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $40
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld hl, $CBD4
+    ld hl, wCBD4
     inc [hl]
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     xor a, a
-    ld [$CBCF], a
-    ld hl, $C923
+    ld [wCBCF], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_7709::
-    ld de, $CB8B
+    ld de, wCB8B
     ld hl, $0039
     call Func_073_7A7F
     ret
 
 Jump_073_7713::
-    ld hl, $CBD3
+    ld hl, wCBD3
     inc [hl]
     jr Jump_073_771D
 
 Jump_073_7719::
-    ld hl, $CBD3
+    ld hl, wCBD3
     dec [hl]
 
 Jump_073_771D::
-    ld de, $CBD4
+    ld de, wCBD4
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_7741::
-    ld hl, $CBD3
+    ld hl, wCBD3
     dec [hl]
-    ld hl, $CBD4
+    ld hl, wCBD4
     dec [hl]
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     ld a, $03
-    ld [$CBA6], a
-    ld hl, $C923
+    ld [wCBA6], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -7955,71 +7955,71 @@ Jump_073_775A::
     ld b, $1E
     call Func_073_7A2B
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_7765::
-    ld a, [$CB9A]
+    ld a, [wCB9A]
     cp a, $30
     jr z, Jump_073_7781
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $01
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
 
 Jump_073_7781::
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld a, $00
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $40
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $01
-    ld [$CBA6], a
-    ld hl, $C923
+    ld [wCBA6], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_77A5::
-    ld hl, $C921
+    ld hl, wC921
     inc [hl]
-    ld a, [$C921]
+    ld a, [wC921]
     cp a, $3C
     jr nz, Jump_073_77B6
     ld a, $50
-    ld [$CBAA], a
+    ld [wCBAA], a
     ret
 
 Jump_073_77B6::
     cp a, $78
     jr nz, Jump_073_77C0
     ld a, $20
-    ld [$CB9A], a
+    ld [wCB9A], a
     ret
 
 Jump_073_77C0::
     cp a, $B4
     ret nz
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_77CC::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_78E7
     dw Jump_073_78CC
@@ -8030,65 +8030,65 @@ Func_073_77CC::
 
 Jump_073_77DC::
     call Func_073_79CE
-    ld a, [$C922]
+    ld a, [wC922]
     or a, a
     ret nz
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_77EA::
     call Func_073_79CE
-    ld a, [$CB9B]
+    ld a, [wCB9B]
     cp a, $30
     jr z, Jump_073_7800
     ld a, $82
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_780A
 
 Jump_073_7800::
     ld a, $83
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $E0
-    ld [$C928], a
+    ld [wC928], a
 
 Jump_073_780A::
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C924]
+    ld a, [wC924]
     or a, a
     jr nz, Jump_073_783B
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld a, $83
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $20
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     ld a, $01
-    ld [$C924], a
+    ld [wC924], a
     ret
 
 Jump_073_783B::
-    ld a, [$CBAB]
+    ld a, [wCBAB]
     cp a, $30
     jr z, Jump_073_7858
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld a, $82
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
@@ -8096,47 +8096,47 @@ Jump_073_783B::
 
 Jump_073_7858::
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld a, $83
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $E0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_787B::
     call Func_073_79CE
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld a, $83
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $20
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld a, $83
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $20
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     ret z
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -8147,10 +8147,10 @@ Jump_073_78B2::
     call Func_073_7A2B
     ret nc
     ld a, $40
-    ld [$C922], a
+    ld [wC922], a
     xor a, a
-    ld [$C924], a
-    ld hl, $C923
+    ld [wC924], a
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -8161,25 +8161,25 @@ Jump_073_78CC::
     call Func_073_7A2B
     ret nc
     ld a, $81
-    ld [$C924], a
+    ld [wC924], a
     ld a, $80
-    ld [$C925], a
-    ld hl, $C923
+    ld [wC925], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Jump_073_78E7::
     ld a, $01
-    ld [$C924], a
+    ld [wC924], a
     xor a, a
-    ld [$C925], a
-    ld hl, $C923
+    ld [wC925], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_78F5::
     ld b, $00
-    ld a, [$C924]
+    ld a, [wC924]
     bit 7, a
     jr z, Jump_073_7900
     ld b, $80
@@ -8189,9 +8189,9 @@ Jump_073_7900::
     jr nz, Jump_073_7911
     ld a, b
     or a, $01
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_793C
 
 Jump_073_7911::
@@ -8199,9 +8199,9 @@ Jump_073_7911::
     jr nz, Jump_073_7921
     ld a, b
     or a, $00
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_793C
 
 Jump_073_7921::
@@ -8209,35 +8209,35 @@ Jump_073_7921::
     jr nz, Jump_073_7931
     ld a, b
     or a, $03
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_793C
 
 Jump_073_7931::
     ld a, b
     or a, $02
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
 
 Jump_073_793C::
     ld a, $01
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     jr z, Jump_073_7956
-    ld a, [$C924]
+    ld a, [wC924]
     inc a
     and a, $83
-    ld [$C924], a
+    ld [wC924], a
 
 Jump_073_7956::
     ld b, $00
-    ld a, [$C925]
+    ld a, [wC925]
     bit 7, a
     jr z, Jump_073_7961
     ld b, $80
@@ -8247,9 +8247,9 @@ Jump_073_7961::
     jr nz, Jump_073_7972
     ld a, b
     or a, $01
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_799D
 
 Jump_073_7972::
@@ -8257,9 +8257,9 @@ Jump_073_7972::
     jr nz, Jump_073_7982
     ld a, b
     or a, $00
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $50
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_799D
 
 Jump_073_7982::
@@ -8267,37 +8267,37 @@ Jump_073_7982::
     jr nz, Jump_073_7992
     ld a, b
     or a, $03
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
     jr Jump_073_799D
 
 Jump_073_7992::
     ld a, b
     or a, $02
-    ld [$C92A], a
+    ld [wC92A], a
     ld a, $30
-    ld [$C928], a
+    ld [wC928], a
 
 Jump_073_799D::
     ld a, $02
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6B54
     ld b, $5F
     rst $10
-    ld a, [$C92C]
+    ld a, [wC92C]
     or a, a
     jr z, Jump_073_79B7
-    ld a, [$C925]
+    ld a, [wC925]
     inc a
     and a, $83
-    ld [$C925], a
+    ld [wC925], a
 
 Jump_073_79B7::
     ret
 
 Func_073_79B8::
-    ld a, [$C925]
+    ld a, [wC925]
     and a, $03
     ld hl, $79CA
     add a, l
@@ -8307,69 +8307,69 @@ Func_073_79B8::
 
 Jump_073_79C5::
     ld a, [hl]
-    ld [$CB86], a
+    ld [wCB86], a
     ret
     db $01, $00, $03, $02
 
 Func_073_79CE::
-    ld a, [$C5F0]
+    ld a, [wC5F0]
     and a, $08
     jr nz, Jump_073_79D9
-    ld hl, $C922
+    ld hl, wC922
     dec [hl]
 
 Jump_073_79D9::
-    ld a, [$C922]
+    ld a, [wC922]
     swap a
     and a, $0F
     ld c, a
-    ld a, [$C921]
+    ld a, [wC921]
     add a, c
-    ld [$C921], a
+    ld [wC921], a
     swap a
     and a, $03
     ld c, a
     ld a, $03
     sub a, c
-    ld [$CB86], a
+    ld [wCB86], a
     ret
 
 Func_073_79F4::
-    ld a, [$C923]
+    ld a, [wC923]
     rst $00
     dw Jump_073_7A11
     dw Jump_073_79FC
 
 Jump_073_79FC::
-    ld hl, $CBD4
+    ld hl, wCBD4
     inc [hl]
-    ld de, $CBD4
+    ld de, wCBD4
     call Func_073_7A5D
     ret nc
     xor a, a
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_073_7A11::
     ld a, $40
-    ld [$CBD3], a
+    ld [wCBD3], a
     ld a, $30
-    ld [$CBD4], a
+    ld [wCBD4], a
     ld a, $80
-    ld [$CBCF], a
+    ld [wCBCF], a
     ld b, $3C
     call Func_073_7A2B
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_7A2B::
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, b
     jr z, Jump_073_7A37
     sub a, a
@@ -8377,7 +8377,7 @@ Func_073_7A2B::
 
 Jump_073_7A37::
     xor a, a
-    ld [$C921], a
+    ld [wC921], a
     scf
     ret
 
@@ -8406,7 +8406,7 @@ Func_073_7A4C:: ; heuristic: follows a terminator; C0
     ret
 
 Func_073_7A51:: ; heuristic: follows a terminator; C0
-    ld a, [$C921]
+    ld a, [wC921]
     and a, $1F
     ret nz
     ld a, [de]
@@ -8417,16 +8417,16 @@ Func_073_7A51:: ; heuristic: follows a terminator; C0
 
 Func_073_7A5D::
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
     inc a
-    ld [$C921], a
+    ld [wC921], a
     cp a, $20
     jr z, Jump_073_7A79
     sub a, a
@@ -8434,47 +8434,47 @@ Func_073_7A5D::
 
 Jump_073_7A79::
     xor a, a
-    ld [$C921], a
+    ld [wC921], a
     scf
     ret
 
 Func_073_7A7F:: ; heuristic: follows a terminator; C0
     push hl
     ld a, e
-    ld [$C928], a
+    ld [wC928], a
     ld a, d
-    ld [$C929], a
+    ld [wC929], a
     ld hl, Func_05F_6BCD
     ld b, $5F
     rst $10
-    ld a, [$C921]
+    ld a, [wC921]
     inc a
-    ld [$C921], a
+    ld [wC921], a
     pop hl
     cp a, $20
     ret nz
     call Func_073_7AA5
     xor a, a
-    ld [$C921], a
-    ld hl, $C923
+    ld [wC921], a
+    ld hl, wC923
     inc [hl]
     ret
 
 Func_073_7AA5::
     ld a, l
-    ld [$C924], a
+    ld [wC924], a
     ld a, h
-    ld [$C925], a
+    ld [wC925], a
     xor a, a
-    ld [$C926], a
+    ld [wC926], a
     ret
 
 Func_073_7AB2:: ; heuristic: follows a terminator; C0
-    ld [$C928], a
+    ld [wC928], a
     ld hl, Func_05F_6936
     ld b, $5F
     rst $10
-    ld a, [$C926]
+    ld a, [wC926]
     cp a, $FF
     jr z, Jump_073_7AC4
     sub a, a
@@ -8488,7 +8488,7 @@ Jump_073_7AC6::
     xor a, a
     call Func_073_7AB2
     ret nc
-    ld hl, $C923
+    ld hl, wC923
     inc [hl]
     ret
 
@@ -8497,6 +8497,6 @@ Func_073_7AD0:: ; heuristic: follows a terminator; C0
     call Func_073_7AB2
     ret nc
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
     ds $525, $00

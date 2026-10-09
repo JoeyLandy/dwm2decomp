@@ -2,7 +2,7 @@ SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
 Func_008_4001::
-    ld a, [$C528]
+    ld a, [wC528]
     cp a, $09
     jr c, Jump_008_400F
     ld hl, Func_095_4650
@@ -16,7 +16,7 @@ Jump_008_400F::
     ret
 
 Func_008_4016::
-    ld a, [$C528]
+    ld a, [wC528]
     cp a, $09
     jr c, Jump_008_4024
     ld hl, Func_095_465F

@@ -4,9 +4,9 @@ SECTION "Bank A2", ROMX[$4000], BANK[$A2]
 Func_0A2_4001::
     push de
     push bc
-    ld a, [$CFE6]
+    ld a, [wCFE6]
     ld c, a
-    ld a, [$CFE7]
+    ld a, [wCFE7]
     ld b, a
     ld a, c
     sub a, $50
@@ -26,7 +26,7 @@ Func_0A2_4001::
     pop bc
     ld b, $00
     add hl, bc
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld b, a
     pop de
     call Func_0A2_404F
@@ -34,9 +34,9 @@ Func_0A2_4001::
 
 Func_0A2_402D::
     push de
-    ld a, [$CFE6]
+    ld a, [wCFE6]
     ld c, a
-    ld a, [$CFE7]
+    ld a, [wCFE7]
     ld b, a
     ld a, c
     sub a, $50
@@ -69,9 +69,9 @@ Func_0A2_404F::
 
 Func_0A2_49E2::
     ld de, Data_0A2_49F8
-    ld a, [$C528]
+    ld a, [wC528]
     sub a, $01
-    ld [$C528], a
+    ld [wC528], a
     call Func_000_25C9
     ret
     db $CD, $E2, $49, $CD, $11, $26, $C9
@@ -143,7 +143,7 @@ Func_0A2_4A4F:: ; heuristic: target of a pointer table; C0
     sub a, b
     ld c, $17
     ld [de], a
-    ld hl, $90F1
+    ld hl, vTiles2 + $F1
     sub a, b
     sub a, b
     sub a, b
@@ -200,7 +200,7 @@ Jump_0A2_4AD6::
     jr nz, Jump_0A2_4AE6
     dec de
     ld a, [bc]
-    ldh a, [$FFF0]
+    ldh a, [hFFF0]
     sub a, b
     sub a, b
     ld d, $12
@@ -224,7 +224,7 @@ Jump_0A2_4B0A::
     inc e
     inc d
     ld [de], a
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     sub a, b
     ld d, $0A
     inc e
@@ -342,7 +342,7 @@ Jump_0A2_4BAB::
 
 Jump_0A2_4BB9::
     rla
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     sub a, b
     ld d, $12
     inc e
@@ -356,7 +356,7 @@ Jump_0A2_4BB9::
     rla
 
 Jump_0A2_4BCC::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     sub a, b
     sub a, b
     sub a, b
@@ -382,7 +382,7 @@ Func_0A2_4BDC:: ; heuristic: target of a pointer table; C0
     ld c, $15
     ld d, $0A
     rla
-    ldh a, [$FFF0]
+    ldh a, [hFFF0]
 
 Func_0A2_4BEE:: ; heuristic: target of a pointer table; C0
     sub a, b
@@ -450,7 +450,7 @@ Jump_0A2_4C58::
     jr Jump_0A2_4C79
 
 Func_0A2_4C5D:: ; heuristic: follows a terminator; C0
-    ld de, $9012
+    ld de, vTiles2 + $12
     inc e
     ld a, [bc]
     dec e
@@ -493,7 +493,7 @@ Jump_0A2_4CAF::
     jr Func_0A2_4CCF
 
 Func_0A2_4CB3:: ; heuristic: follows a terminator; C0
-    ld de, $9012
+    ld de, vTiles2 + $12
     rrca
     ld e, $14
     ld e, $1C
@@ -644,7 +644,7 @@ Func_0A2_4DC7:: ; heuristic: target of a pointer table; C0
     ld a, [bc]
     dec e
     ld e, $1C
-    ld de, $9012
+    ld de, vTiles2 + $12
     dec e
 
 Jump_0A2_4DD1::
@@ -803,7 +803,7 @@ Func_0A2_4ECA:: ; heuristic: target of a pointer table; C0
     inc e
     ld a, [bc]
     inc e
-    ld de, $9012
+    ld de, vTiles2 + $12
     inc d
     jr Jump_0A2_4EEF
     db $17, $18, $F1, $90, $16, $12, $14, $12, $11, $12, $1B, $18, $90, $11, $0A, $22
@@ -811,7 +811,7 @@ Func_0A2_4ECA:: ; heuristic: target of a pointer table; C0
 
 Jump_0A2_4EEF::
     ld d, $12
-    ld de, $9018
+    ld de, vTiles2 + $18
     inc e
     ld de, $0B12
     ld a, [bc]
@@ -864,7 +864,7 @@ Func_0A2_4F42:: ; heuristic: target of a pointer table; C0
     inc c
 
 Jump_0A2_4F48::
-    ld de, $9012
+    ld de, vTiles2 + $12
     ld [de], a
     rla
     ld e, $23
@@ -910,7 +910,7 @@ Func_0A2_4F85:: ; heuristic: target of a pointer table; C0
 Jump_0A2_4F88::
     nop
     nop
-    ld bc, $90F1
+    ld bc, vTiles2 + $F1
     sub a, b
     ld a, [bc]
     dec de

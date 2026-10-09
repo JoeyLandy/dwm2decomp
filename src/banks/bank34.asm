@@ -2,15 +2,15 @@ SECTION "Bank 34", ROMX[$4000], BANK[$34]
     db $34
 
 Func_034_4001::
-    ld de, $CFEC
+    ld de, wCFEC
     call Func_034_4040
     ret
 
 Func_034_4008::
-    ld a, [$CFE7]
+    ld a, [wCFE7]
     cp a, $02
     jr c, Jump_034_401D
-    ld a, [$CFE6]
+    ld a, [wCFE6]
     cp a, $50
     jr c, Jump_034_401D
     ld hl, Func_0A2_4001
@@ -21,9 +21,9 @@ Func_034_4008::
 Jump_034_401D::
     push de
     push bc
-    ld a, [$CFE6]
+    ld a, [wCFE6]
     ld c, a
-    ld a, [$CFE7]
+    ld a, [wCFE7]
     ld b, a
     ld a, $1A
     call Func_000_16AA
@@ -36,17 +36,17 @@ Jump_034_401D::
     pop bc
     ld b, $00
     add hl, bc
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld b, a
     pop de
     call Func_034_406E
     ret
 
 Func_034_4040::
-    ld a, [$CFE7]
+    ld a, [wCFE7]
     cp a, $02
     jr c, Jump_034_4055
-    ld a, [$CFE6]
+    ld a, [wCFE6]
     cp a, $50
     jr c, Jump_034_4055
     ld hl, Func_0A2_402D
@@ -56,9 +56,9 @@ Func_034_4040::
 
 Jump_034_4055::
     push de
-    ld a, [$CFE6]
+    ld a, [wCFE6]
     ld c, a
-    ld a, [$CFE7]
+    ld a, [wCFE7]
     ld b, a
     ld a, $1A
     call Func_000_16AA

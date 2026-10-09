@@ -250,7 +250,7 @@ Jump_00D_45B6::
     inc h
     dec [hl]
     ld h, $2E
-    ldh a, [$FFFA]
+    ldh a, [hFFFA]
     add a, b
     rst $10
     rst $00
@@ -284,7 +284,7 @@ Jump_00D_45F5::
     ret
 
 Jump_00D_45F6::
-    ld hl, $D780
+    ld hl, wD780
     db $01, $6F
 
 Jump_00D_45FB::
@@ -298,32 +298,32 @@ Jump_00D_45FB::
 
 Func_00D_4602:: ; heuristic: target of a pointer table; C0
     ld sp, hl
-    ld hl, $C364
-    ld de, $C198
+    ld hl, wC364
+    ld de, wC198
     ld bc, $0104
     call Func_00D_4E7B
-    ld a, [$C525]
+    ld a, [wIsCGB]
     and a, a
     jr z, Jump_00D_4621
-    ld hl, $D1CC
-    ld de, $D000
+    ld hl, wD1CC
+    ld de, wD000
     ld bc, $0104
     call Func_00D_4E84
 
 Jump_00D_4621::
     ld a, $06
-    ld [$D7F0], a
+    ld [wD7F0], a
     xor a, a
-    ld hl, $D780
+    ld hl, wD780
     inc [hl]
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_4635::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Func_00D_463F
     dw Jump_00D_4650
@@ -333,28 +333,28 @@ Func_00D_463F::
     ld hl, Data_00D_4F81
     ld de, Data_00D_4F9F
     call Func_00D_4F3D
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_4650::
     ld de, Data_00D_4FBD
-    ld hl, $C370
+    ld hl, wC370
     ld bc, $0803
     call Func_00D_4DCB
-    ld a, [$C617]
-    ld [$C8C0], a
-    ld a, [$C618]
-    ld [$C8C1], a
-    ld a, [$C619]
-    ld [$C8C2], a
+    ld a, [wC617]
+    ld [wC8C0], a
+    ld a, [wC618]
+    ld [wC8C1], a
+    ld a, [wC619]
+    ld [wC8C2], a
     call Func_000_173A
     ld hl, Func_015_6676
     ld b, $15
     rst $10
-    ld hl, $C386
-    ld de, $D7F3
+    ld hl, wC386
+    ld de, wD7F3
     ld c, $00
 
 Jump_00D_467F::
@@ -366,14 +366,14 @@ Jump_00D_467F::
     ld a, c
     cp a, $05
     jr c, Jump_00D_467F
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_4692::
     ld de, Data_00D_4FD5
-    ld hl, $C364
+    ld hl, wC364
     ld bc, $0B07
     call Func_00D_4DCB
     call Func_00D_4E5A
@@ -381,72 +381,72 @@ Jump_00D_4692::
     ld de, $01CC
     call Func_00D_4E05
     xor a, a
-    ld [$D781], a
-    ld a, [$D780]
+    ld [wD781], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_46B6::
     ld a, $01
-    ld [$C89D], a
+    ld [wC89D], a
     ld hl, Func_015_6478
     ld b, $15
     rst $10
     ret
 
 Jump_00D_46C2::
-    ld a, [$D786]
+    ld a, [wD786]
     and a, a
     jr z, Jump_00D_46CA
     jr Jump_00D_46D0
 
 Jump_00D_46CA::
     xor a, a
-    ld [$D7BD], a
+    ld [wD7BD], a
     jr Jump_00D_46D5
 
 Jump_00D_46D0::
     ld a, $01
-    ld [$D7BD], a
+    ld [wD7BD], a
 
 Jump_00D_46D5::
     ld hl, Func_01D_6026
     ld b, $1D
     rst $10
-    ld a, [$D7B9]
+    ld a, [wD7B9]
     and a, a
     jr z, Jump_00D_46FB
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld a, [wD780]
     inc a
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ld a, $70
-    ldh [$FFBA], a
+    ldh [hFFBA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_46FB::
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     ld a, $02
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_470F::
     ret
 
 Jump_00D_4710::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Func_00D_473A
     dw Func_00D_473A
@@ -476,11 +476,11 @@ Func_00D_473A:: ; heuristic: target of a pointer table; C0
 
 Func_00D_4741:: ; heuristic: target of a pointer table; C0
     ld a, $02
-    ld [$D7F9], a
+    ld [wD7F9], a
     ld hl, Func_01D_66B6
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FB
@@ -496,21 +496,21 @@ Func_00D_4741:: ; heuristic: target of a pointer table; C0
     ret
 
 Jump_00D_4766::
-    ld a, [$D781]
+    ld a, [wD781]
     sub a, $04
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_476F::
     ret
 
 Jump_00D_4770::
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ld a, $01
-    ld [$D7FA], a
-    ld hl, $C52D
+    ld [wD7FA], a
+    ld hl, wC52D
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -522,30 +522,30 @@ Jump_00D_4770::
 
 Jump_00D_478A::
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     add a, $04
-    ld [$D781], a
-    ld a, [$D7AB]
+    ld [wD781], a
+    ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_00D_5097
     call Func_00D_4E96
-    ld a, [$D7BD]
+    ld a, [wD7BD]
     and a, a
     jr z, Jump_00D_47E0
     call Func_00D_4CF4
     ld a, l
-    ld [$C8C0], a
+    ld [wC8C0], a
     ld a, h
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
     ld hl, Func_015_6676
     ld b, $15
     rst $10
     ld b, $04
-    ld hl, $D7F4
+    ld hl, wD7F4
 
 Jump_00D_47C4::
     ld a, [hl]
@@ -558,7 +558,7 @@ Jump_00D_47C4::
     jr nz, Jump_00D_47C4
 
 Jump_00D_47CF::
-    ld de, $C130
+    ld de, wC130
 
 Jump_00D_47D2::
     ld a, b
@@ -576,7 +576,7 @@ Jump_00D_47DD::
     ld [de], a
 
 Jump_00D_47E0::
-    ld hl, $C52D
+    ld hl, wC52D
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -585,16 +585,16 @@ Jump_00D_47E0::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_47F7:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ld [$D7F5], a
+    ld [wD7F5], a
     call Func_00D_4D24
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     and a, a
     ret z
     cp a, $FE
@@ -605,112 +605,112 @@ Func_00D_47F7:: ; heuristic: target of a pointer table; C0
 
 Jump_00D_480C::
     ld a, $02
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_4822::
-    ld a, [$D7AD]
+    ld a, [wD7AD]
     and a, a
     jp nz, Jump_00D_4852
     ld a, $05
-    ld [$D7B2], a
+    ld [wD7B2], a
     ld a, $0C
-    ld [$D7B3], a
+    ld [wD7B3], a
     ld a, $0D
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$D781], a
-    ld [$D782], a
-    ld [$D7FA], a
+    ld [wD781], a
+    ld [wD782], a
+    ld [wD7FA], a
     ld hl, Func_01E_7745
     ld b, $1E
     rst $10
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_4852::
     ld a, $01
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     add a, $03
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_4869:: ; heuristic: target of a pointer table; C0
-    ld a, [$D7BD]
+    ld a, [wD7BD]
     and a, a
     jr nz, Jump_00D_4894
     ld a, $14
-    ld [$D7F1], a
+    ld [wD7F1], a
     xor a, a
-    ld [$D7F2], a
-    ld [$D7F3], a
+    ld [wD7F2], a
+    ld [wD7F3], a
     ld hl, Func_01C_440F
     ld b, $1C
     rst $10
-    ld a, [$D7F1]
+    ld a, [wD7F1]
     and a, a
     jr nz, Jump_00D_48AF
-    ld a, [$D781]
+    ld a, [wD781]
     add a, $03
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$D782], a
+    ld [wD782], a
     ret
 
 Jump_00D_4894::
     call Func_00D_4CF4
     ld a, l
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, h
-    ld [$D7F2], a
+    ld [wD7F2], a
     xor a, a
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld hl, Func_01C_440F
     ld b, $1C
     rst $10
-    ld a, [$D7F1]
+    ld a, [wD7F1]
     and a, a
     jr z, Jump_00D_48C5
 
 Jump_00D_48AF::
     ld a, $01
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_48C5::
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     ld a, [hl]
     ld c, $0E
     call Func_000_1FD1
@@ -726,65 +726,65 @@ Jump_00D_48E9::
 Jump_00D_48EB::
     ld [hl], a
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     call Func_00D_4CF4
     ld a, l
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, h
-    ld [$D7F2], a
+    ld [wD7F2], a
     xor a, a
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld hl, Func_015_683C
     ld b, $15
     rst $10
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_491A:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_5022
-    ld hl, $C3BB
+    ld hl, wC3BB
     ld bc, $0D09
     call Func_00D_4DCB
     ld hl, Func_01E_71E1
     ld b, $1E
     rst $10
-    ld a, [$D7B0]
+    ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_494A
-    ld hl, $C462
+    ld hl, wC462
     call Func_00D_4EC7
-    ld hl, $C463
+    ld hl, wC463
     ld a, h
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, l
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld hl, Func_01E_759A
     ld b, $1E
     rst $10
 
 Jump_00D_494A::
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_4952:: ; heuristic: target of a pointer table; C0
     ld de, Data_01F_4990
-    ld hl, $8CE0
+    ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld a, $01
-    ld [$D7F1], a
-    ld [$D7F2], a
+    ld [wD7F1], a
+    ld [wD7F2], a
     ld hl, Func_01D_6320
     ld b, $1D
     rst $10
@@ -793,11 +793,11 @@ Func_00D_4952:: ; heuristic: target of a pointer table; C0
     ld de, $01CC
     call Func_00D_4E05
     ld a, $07
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
     db $FA, $82, $D7, $C7
     dw Func_00D_499A
@@ -810,7 +810,7 @@ Func_00D_4952:: ; heuristic: target of a pointer table; C0
 
 Func_00D_499A:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ld [$D7FA], a
+    ld [wD7FA], a
     call Func_00D_4B30
     ret
 
@@ -836,10 +836,10 @@ Jump_00D_49B6::
     ld a, [hl]
     call Func_000_1F89
     pop de
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     add a, e
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     adc a, d
     ld d, a
     pop bc
@@ -879,9 +879,9 @@ Jump_00D_49F0::
     ld a, $01
 
 Jump_00D_49F2::
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     call Func_00D_4B30
     ret
 
@@ -936,7 +936,7 @@ Func_00D_4A3F:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     ld c, $57
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     cp a, $29
     jr c, Jump_00D_4A5B
     cp a, $3D
@@ -966,7 +966,7 @@ Func_00D_4A69:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     ld c, $6F
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
     pop bc
     pop hl
@@ -976,7 +976,7 @@ Func_00D_4A69:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     ld c, $72
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     cp a, e
     jr c, Jump_00D_4A96
     jr nz, Jump_00D_4A8D
@@ -985,7 +985,7 @@ Func_00D_4A69:: ; heuristic: target of a pointer table; C0
 Jump_00D_4A8D::
     pop bc
     pop de
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
     ld b, $01
     push de
@@ -1001,7 +1001,7 @@ Jump_00D_4A96::
     ld a, [hl]
     ld c, $70
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     cp a, e
     jr c, Jump_00D_4AB8
     jr nz, Jump_00D_4AAB
@@ -1010,9 +1010,9 @@ Jump_00D_4A96::
 Jump_00D_4AAB::
     pop bc
     pop de
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     ld e, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     ld d, a
     ld b, $02
     pop hl
@@ -1032,85 +1032,85 @@ Func_00D_4ABF:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     ld c, $0E
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     and a, $01
     jp Jump_00D_49F2
 
 Func_00D_4ACF:: ; heuristic: target of a pointer table; C0
     ld a, $14
-    ld [$D7F1], a
+    ld [wD7F1], a
     xor a, a
-    ld [$D7F2], a
-    ld [$D7F3], a
+    ld [wD7F2], a
+    ld [wD7F3], a
     ld hl, Func_015_683C
     ld b, $15
     rst $10
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     ld a, [hl]
     ld c, $6E
     call Func_000_1FD1
     ld a, $02
     ld [hl], a
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$D782], a
+    ld [wD782], a
     ld a, $10
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_4B18::
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ret
 
 Func_00D_4B30::
-    ld a, [$D782]
+    ld a, [wD782]
     inc a
-    ld [$D782], a
+    ld [wD782], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_4B41:: ; heuristic: follows a terminator; C0
     ld hl, Func_01E_4069
     ld b, $1E
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     cp a, $0A
     ret nz
     xor a, a
-    ld [$D781], a
-    ld [$D782], a
-    ld a, [$D780]
+    ld [wD781], a
+    ld [wD782], a
+    ld a, [wD780]
     inc a
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ret
     db $FA, $81, $D7, $C7
     dw Func_00D_4B73
@@ -1124,20 +1124,20 @@ Func_00D_4B41:: ; heuristic: follows a terminator; C0
     dw Func_00D_4C9C
 
 Func_00D_4B73:: ; heuristic: target of a pointer table; C0
-    ld hl, $9000
+    ld hl, vTiles2
     ld de, Data_049_4418
     ld b, $49
     call Func_000_0CF5
-    ld hl, $C49F
+    ld hl, wC49F
     ld de, Data_049_46DC
     ld b, $49
     ld c, $40
     call Func_000_0B2B
     ld a, $7F
-    ld [$C526], a
-    ld a, [$D781]
+    ld [wC526], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_4B98:: ; heuristic: target of a pointer table; C0
@@ -1148,19 +1148,19 @@ Func_00D_4B98:: ; heuristic: target of a pointer table; C0
     ret
 
 Func_00D_4BA5:: ; heuristic: target of a pointer table; C0
-    ld hl, $8C00
+    ld hl, vTiles1 + $400
     ld bc, $0301
     call Func_000_1881
-    ld hl, $8C70
+    ld hl, vTiles1 + $470
     ld bc, $0501
     call Func_000_1881
-    ld hl, $8D00
+    ld hl, vTiles1 + $500
     ld bc, $0F01
     call Func_000_1881
-    ld hl, $8F00
+    ld hl, vTiles1 + $700
     ld bc, $0D01
     call Func_000_1881
-    ld hl, $C52D
+    ld hl, wC52D
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -1168,9 +1168,9 @@ Func_00D_4BA5:: ; heuristic: target of a pointer table; C0
     ld a, $02
     ld [hl+], a
     ld [hl], $12
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_4BDE:: ; heuristic: target of a pointer table; C0
@@ -1178,63 +1178,63 @@ Func_00D_4BDE:: ; heuristic: target of a pointer table; C0
 
 Func_00D_4BE1:: ; heuristic: target of a pointer table; C0
     ld a, $01
-    ld [$D7F5], a
+    ld [wD7F5], a
     ld hl, Func_01D_6088
     ld b, $1D
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_4BF4:: ; heuristic: target of a pointer table; C0
     ld de, Data_01F_4990
-    ld hl, $8CE0
+    ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld a, $01
-    ld [$D7F1], a
-    ld [$D7F2], a
+    ld [wD7F1], a
+    ld [wD7F2], a
     ld hl, Func_01D_6320
     ld b, $1D
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_4C17:: ; heuristic: target of a pointer table; C0
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_00D_5097
     call Func_00D_4E96
     ld de, Data_00D_50BD
-    ld hl, $C410
+    ld hl, wC410
     ld bc, $0805
     call Func_00D_4DCB
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_4C36:: ; heuristic: target of a pointer table; C0
-    ld a, [$D7BD]
+    ld a, [wD7BD]
     and a, a
     jr z, Jump_00D_4C78
     call Func_00D_4CF4
     ld a, l
-    ld [$C8C0], a
+    ld [wC8C0], a
     ld a, h
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
     ld hl, Func_015_6676
     ld b, $15
     rst $10
     ld b, $04
-    ld hl, $D7F4
+    ld hl, wD7F4
 
 Jump_00D_4C59::
     ld a, [hl]
@@ -1247,7 +1247,7 @@ Jump_00D_4C59::
     jr nz, Jump_00D_4C59
 
 Jump_00D_4C64::
-    ld de, $C130
+    ld de, wC130
 
 Jump_00D_4C67::
     ld a, b
@@ -1269,10 +1269,10 @@ Jump_00D_4C78::
     ld a, $03
 
 Jump_00D_4C7A::
-    ld [$C529], a
+    ld [wC529], a
     xor a, a
-    ld [$C528], a
-    ld hl, $C52D
+    ld [wC528], a
+    ld hl, wC52D
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -1283,9 +1283,9 @@ Jump_00D_4C7A::
     ld hl, Func_0F2_43DE
     ld b, $F2
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_4C9C:: ; heuristic: target of a pointer table; C0
@@ -1293,7 +1293,7 @@ Func_00D_4C9C:: ; heuristic: target of a pointer table; C0
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     call Func_00D_4E5A
     ld bc, $140D
     ld de, $01CC
@@ -1308,14 +1308,14 @@ Func_00D_4C9C:: ; heuristic: target of a pointer table; C0
     ld b, $1E
     rst $10
     ld a, $70
-    ldh [$FFBA], a
+    ldh [hFFBA], a
     xor a, a
-    ld [$D782], a
-    ld a, [$D7B2]
-    ld [$D780], a
-    ld a, [$D7B3]
-    ld [$D781], a
-    ld hl, $C52D
+    ld [wD782], a
+    ld a, [wD7B2]
+    ld [wD780], a
+    ld a, [wD7B3]
+    ld [wD781], a
+    ld hl, wC52D
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -1324,29 +1324,29 @@ Func_00D_4C9C:: ; heuristic: target of a pointer table; C0
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_4CF4::
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     ld a, [hl]
     ld c, $6D
     call Func_000_1F80
     xor a, a
-    ld [$1FFF], a
-    ldh a, [$FFC6]
+    ld [rRAMG2], a
+    ldh a, [hFFC6]
     ld c, $14
     call Func_000_1682
     ld a, $14
@@ -1359,24 +1359,24 @@ Jump_00D_4D23::
     ret
 
 Func_00D_4D24::
-    ld a, [$C563]
+    ld a, [wC563]
     bit 6, a
     jr nz, Jump_00D_4D44
     bit 7, a
     jr nz, Jump_00D_4D62
-    ld a, [$C562]
+    ld a, [wC562]
     bit 0, a
     jp nz, Jump_00D_4D72
     bit 1, a
     jp nz, Jump_00D_4D80
     call Func_00D_4D86
     xor a, a
-    ld [$D7F5], a
+    ld [wD7F5], a
     ret
 
 Jump_00D_4D44::
     call Func_00D_4DA4
-    ld a, [$D7AD]
+    ld a, [wD7AD]
     and a, a
     jr nz, Jump_00D_4D51
     ld a, $01
@@ -1386,17 +1386,17 @@ Jump_00D_4D51::
     dec a
 
 Jump_00D_4D52::
-    ld [$D7AD], a
+    ld [wD7AD], a
     ld a, $69
     call Func_000_1278
     call Func_00D_4DA0
     xor a, a
-    ld [$D7F5], a
+    ld [wD7F5], a
     ret
 
 Jump_00D_4D62::
     call Func_00D_4DA4
-    ld a, [$D7AD]
+    ld a, [wD7AD]
     cp a, $01
     jr c, Jump_00D_4D6F
     xor a, a
@@ -1411,27 +1411,27 @@ Jump_00D_4D72::
     call Func_000_1278
     call Func_00D_4DA8
     ld a, $FF
-    ld [$D7F5], a
+    ld [wD7F5], a
     ret
 
 Jump_00D_4D80::
     ld a, $FE
-    ld [$D7F5], a
+    ld [wD7F5], a
     ret
 
 Func_00D_4D86::
-    ld a, [$C564]
+    ld a, [wC564]
     cp a, $14
     jr c, Func_00D_4DA0
-    ld a, [$D7AE]
+    ld a, [wD7AE]
     inc a
-    ld [$D7AE], a
+    ld [wD7AE], a
     cp a, $10
     jr c, Func_00D_4DA0
     cp a, $18
     jr c, Func_00D_4DA4
     xor a, a
-    ld [$D7AE], a
+    ld [wD7AE], a
 
 Func_00D_4DA0::
     ld b, $BB
@@ -1445,7 +1445,7 @@ Func_00D_4DA8::
     ld b, $BC
 
 Jump_00D_4DAA::
-    ld a, [$D7AD]
+    ld a, [wD7AD]
     add a, a
     ld hl, Func_00D_4DC7
     add a, l
@@ -1494,7 +1494,7 @@ Jump_00D_4DCF::
     jr nz, Jump_00D_4DCD
     pop bc
     pop hl
-    ld a, [$C525]
+    ld a, [wIsCGB]
     and a, a
     ret z
     ld a, l
@@ -1504,7 +1504,7 @@ Jump_00D_4DCF::
     adc a, $0E
     ld h, a
     ld a, $02
-    ldh [$FF70], a
+    ldh [rSVBK], a
 
 Jump_00D_4DF1::
     push bc
@@ -1522,14 +1522,14 @@ Jump_00D_4DF3::
     dec c
     jr nz, Jump_00D_4DF1
     xor a, a
-    ldh [$FF70], a
+    ldh [rSVBK], a
     ret
 
 Func_00D_4E05:: ; heuristic: follows a terminator; C0
     push de
     push bc
     push hl
-    ld hl, $C198
+    ld hl, wC198
     add hl, de
     ld e, l
     ld d, h
@@ -1540,47 +1540,47 @@ Func_00D_4E05:: ; heuristic: follows a terminator; C0
     push hl
     ld a, l
     add a, $C1
-    ld [$C554], a
+    ld [wC554], a
     ld a, h
     adc a, $01
-    ld [$C555], a
-    ld a, [$C554]
+    ld [wC555], a
+    ld a, [wC554]
     cp a, $61
     jr nz, Jump_00D_4E39
-    ld a, [$C555]
+    ld a, [wC555]
     cp a, $9B
     jr nz, Jump_00D_4E39
     ld a, $C1
-    ld [$C554], a
+    ld [wC554], a
     ld a, $99
-    ld [$C555], a
+    ld [wC555], a
 
 Jump_00D_4E39::
     pop hl
     pop bc
     pop de
-    ld a, [$C525]
+    ld a, [wIsCGB]
     and a, a
     ret z
     ld a, $01
-    ldh [$FF4F], a
+    ldh [rVBK], a
     ld a, $02
-    ldh [$FF70], a
+    ldh [rSVBK], a
     push hl
-    ld hl, $D000
+    ld hl, wD000
     add hl, de
     ld e, l
     ld d, h
     pop hl
     call Func_000_18A5
     xor a, a
-    ldh [$FF70], a
-    ldh [$FF4F], a
+    ldh [rSVBK], a
+    ldh [rVBK], a
     ret
 
 Func_00D_4E5A::
-    ld hl, $9800
-    ldh a, [$FFA5]
+    ld hl, vBGMap0
+    ldh a, [hFFA5]
     and a, $F8
     ld e, a
     ld d, $00
@@ -1589,7 +1589,7 @@ Func_00D_4E5A::
     sla e
     rl d
     add hl, de
-    ldh a, [$FFA1]
+    ldh a, [hFFA1]
     srl a
     srl a
     srl a
@@ -1613,7 +1613,7 @@ Func_00D_4E7B:: ; heuristic: follows a terminator; C0
 
 Func_00D_4E84:: ; heuristic: follows a terminator; C0
     ld a, $02
-    ldh [$FF70], a
+    ldh [rSVBK], a
 
 Jump_00D_4E88::
     ld a, [de]
@@ -1625,7 +1625,7 @@ Jump_00D_4E88::
     or a, c
     jr nz, Jump_00D_4E88
     xor a, a
-    ldh [$FF70], a
+    ldh [rSVBK], a
     ret
 
 Func_00D_4E96:: ; heuristic: follows a terminator; C0
@@ -1688,41 +1688,41 @@ Func_00D_4ED5:: ; heuristic: follows a terminator; C0
     push bc
     push hl
     push de
-    ld de, $C198
+    ld de, wC198
     add hl, de
     pop de
     push de
     push hl
-    ld hl, $C198
+    ld hl, wC198
     add hl, de
     ld e, l
     ld d, h
     pop hl
-    ld a, [$D7F1]
+    ld a, [wD7F1]
     ld b, a
-    ld a, [$D7F2]
+    ld a, [wD7F2]
     ld c, a
     call Func_00D_4E7B
     pop de
     pop hl
-    ld a, [$C525]
+    ld a, [wIsCGB]
     and a, a
     jr z, Jump_00D_4F16
     push hl
     push de
-    ld de, $D000
+    ld de, wD000
     add hl, de
     pop de
     push de
     push hl
-    ld hl, $D000
+    ld hl, wD000
     add hl, de
     ld e, l
     ld d, h
     pop hl
-    ld a, [$D7F1]
+    ld a, [wD7F1]
     ld b, a
-    ld a, [$D7F2]
+    ld a, [wD7F2]
     ld c, a
     call Func_00D_4E84
     pop de
@@ -1770,7 +1770,7 @@ Jump_00D_4F2D::
 Func_00D_4F3D::
     push hl
     push de
-    ld a, [$D785]
+    ld a, [wD785]
     add a, a
     add a, l
     ld l, a
@@ -1788,7 +1788,7 @@ Jump_00D_4F48::
     pop de
     push de
     push hl
-    ld a, [$D785]
+    ld a, [wD785]
     add a, a
     add a, e
     ld e, a
@@ -1808,17 +1808,17 @@ Jump_00D_4F5E::
     call Func_000_0B2B
     pop de
     pop hl
-    ld a, [$D785]
+    ld a, [wD785]
     inc a
-    ld [$D785], a
+    ld [wD785], a
     jr Func_00D_4F3D
 
 Jump_00D_4F77::
     pop de
     pop hl
     xor a, a
-    ld [$D785], a
-    ld [$D784], a
+    ld [wD785], a
+    ld [wD784], a
     ret
 
 Data_00D_4F81:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1854,7 +1854,7 @@ Data_00D_50BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 Func_00D_50E5::
-    ld a, [$D788]
+    ld a, [wD788]
     rst $00
     dw Func_00D_50F1
     dw Func_00D_50F8
@@ -1870,47 +1870,47 @@ Func_00D_50F1:: ; heuristic: target of a pointer table; C0
 Func_00D_50F8:: ; heuristic: target of a pointer table; C0
     call Func_000_222B
     ld de, Data_01F_4910
-    ld hl, $8F00
+    ld hl, vTiles1 + $700
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4910
-    ld hl, $8F10
+    ld hl, vTiles1 + $710
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4910
-    ld hl, $8F20
+    ld hl, vTiles1 + $720
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     xor a, a
-    ld [$D784], a
-    ld [$D785], a
-    ld [$D780], a
-    ld [$D781], a
-    ld [$C46B], a
-    ld a, [$D788]
+    ld [wD784], a
+    ld [wD785], a
+    ld [wD780], a
+    ld [wD781], a
+    ld [wC46B], a
+    ld a, [wD788]
     inc a
-    ld [$D788], a
-    ld hl, $8800
+    ld [wD788], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5159::
-    ld a, [$D780]
+    ld a, [wD780]
     rst $00
     dw Jump_00D_516B
     dw Jump_00D_5172
@@ -1927,40 +1927,40 @@ Jump_00D_516B::
     ret
 
 Jump_00D_5172::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Func_00D_517A
     dw Jump_00D_51B6
 
 Func_00D_517A::
     ld de, Data_01F_4210
-    ld hl, $8F00
+    ld hl, vTiles1 + $700
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4120
-    ld hl, $8F10
+    ld hl, vTiles1 + $710
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4190
-    ld hl, $8F20
+    ld hl, vTiles1 + $720
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4330
-    ld hl, $8F30
+    ld hl, vTiles1 + $730
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_51B6::
     ld de, Data_00D_550A
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
     call Func_00D_4E5A
@@ -1970,18 +1970,18 @@ Jump_00D_51B6::
     ld a, $6C
     call Func_000_1278
     xor a, a
-    ld [$D7FA], a
-    ld [$D781], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld [wD781], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_51E2::
     ld hl, Func_01D_6540
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FE
@@ -1992,30 +1992,30 @@ Jump_00D_51E2::
 
 Jump_00D_51F6::
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_5205::
-    ld a, [$D7FA]
+    ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_51F6
-    ld a, [$D780]
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_5221::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Jump_00D_522B
     dw Func_00D_525F
@@ -2023,47 +2023,47 @@ Jump_00D_5221::
 
 Jump_00D_522B::
     ld de, Data_00D_552E
-    ld hl, $C364
+    ld hl, wC364
     ld bc, $0809
     call Func_00D_4DCB
     ld c, $05
     ld hl, $027A
     ld de, $00AE
     xor a, a
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, $06
-    ld [$D7F2], a
+    ld [wD7F2], a
     call Func_00D_4ED5
     call Func_00D_4E5A
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_525F::
-    ld hl, $8D00
+    ld hl, vTiles1 + $500
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $0F01
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_5280::
     call Func_000_222B
     ld de, Data_00D_5576
-    ld hl, $C364
+    ld hl, wC364
     ld bc, $0809
     call Func_00D_4DCB
     call Func_00D_4E5A
@@ -2071,10 +2071,10 @@ Jump_00D_5280::
     ld de, $01CC
     call Func_00D_4E05
     xor a, a
-    ld [$D781], a
-    ld a, [$D780]
+    ld [wD781], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_52A7::
@@ -2082,8 +2082,8 @@ Jump_00D_52A7::
     ret
 
 Jump_00D_52AB::
-    ld a, [$D786]
-    ld hl, $C6FE
+    ld a, [wD786]
+    ld hl, wC6FE
     add a, l
     ld l, a
     jr nc, Jump_00D_52B6
@@ -2091,52 +2091,52 @@ Jump_00D_52AB::
 
 Jump_00D_52B6::
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     push hl
     ld a, [hl]
     ld c, $0E
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     and a, $01
-    ld [$D7F2], a
+    ld [wD7F2], a
     pop hl
     push hl
     ld a, [hl]
     ld c, $0D
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     and a, $1F
-    ld [$D7F3], a
+    ld [wD7F3], a
     pop hl
     push hl
     ld a, [hl]
     ld c, $0B
     call Func_000_1F89
-    ldh a, [$FFC6]
-    ld [$D7F4], a
-    ldh a, [$FFC7]
-    ld [$D7F5], a
+    ldh a, [hFFC6]
+    ld [wD7F4], a
+    ldh a, [hFFC7]
+    ld [wD7F5], a
     pop hl
     ld a, [hl]
-    ld [$D7B4], a
+    ld [wD7B4], a
     ld a, $03
-    ld [$D7F1], a
-    ld [$1FFF], a
+    ld [wD7F1], a
+    ld [rRAMG2], a
     ld hl, Func_014_5CA8
     ld b, $14
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     cp a, $FF
     ret nz
-    ld a, [$D780]
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_530F::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Func_00D_531D
     dw Func_00D_5342
@@ -2145,32 +2145,32 @@ Jump_00D_530F::
     dw Func_00D_53BB
 
 Func_00D_531D:: ; heuristic: target of a pointer table; C0
-    ld hl, $9000
+    ld hl, vTiles2
     ld de, Data_049_4832
     ld b, $49
     call Func_000_0CF5
-    ld hl, $C49F
+    ld hl, wC49F
     ld de, Data_049_4AC5
     ld b, $49
     ld c, $40
     call Func_000_0B2B
     ld a, $7F
-    ld [$C526], a
-    ld a, [$D781]
+    ld [wC526], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_5342:: ; heuristic: target of a pointer table; C0
     call Func_00D_517A
     call Func_00D_525F
     ld a, $02
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_534E:: ; heuristic: target of a pointer table; C0
-    ld a, [$D786]
-    ld hl, $C6FE
+    ld a, [wD786]
+    ld hl, wC6FE
     add a, l
     ld l, a
     jr nc, Jump_00D_5359
@@ -2178,13 +2178,13 @@ Func_00D_534E:: ; heuristic: target of a pointer table; C0
 
 Jump_00D_5359::
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     ld a, [hl]
     ld c, $01
     call Func_000_1FD1
-    ld de, $C8CF
+    ld de, wC8CF
     ld c, $00
 
 Jump_00D_536D::
@@ -2205,34 +2205,34 @@ Jump_00D_537C::
 
 Jump_00D_537F::
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     call Func_000_222B
-    ld hl, $8800
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
-    ld a, [$D781]
+    ld [wC530], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_53A4:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ld [$C528], a
+    ld [wC528], a
     ld a, $23
-    ld [$C529], a
+    ld [wC529], a
     ld hl, Func_0F2_43DE
     ld b, $F2
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_53BB:: ; heuristic: target of a pointer table; C0
@@ -2240,7 +2240,7 @@ Func_00D_53BB:: ; heuristic: target of a pointer table; C0
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     call Func_00D_4E5A
     ld bc, $140D
     ld de, $01CC
@@ -2252,35 +2252,35 @@ Func_00D_53BB:: ; heuristic: target of a pointer table; C0
     ld de, $0168
     call Func_00D_4E05
     ld a, $70
-    ldh [$FFBA], a
+    ldh [hFFBA], a
     xor a, a
-    ld [$D782], a
-    ld [$D781], a
+    ld [wD782], a
+    ld [wD781], a
     ld a, $04
-    ld [$D780], a
-    ld hl, $8800
+    ld [wD780], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5412::
-    ld a, [$C563]
+    ld a, [wC563]
     bit 6, a
     jr nz, Jump_00D_542E
     bit 7, a
     jr nz, Jump_00D_5460
-    ld a, [$C562]
+    ld a, [wC562]
     bit 0, a
     jp nz, Jump_00D_5479
     bit 1, a
@@ -2290,17 +2290,17 @@ Func_00D_5412::
 
 Jump_00D_542E::
     call Func_00D_54DF
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     cp a, $02
     jr c, Jump_00D_543E
-    ld a, [$D786]
+    ld a, [wD786]
     and a, a
     jr nz, Jump_00D_5449
 
 Jump_00D_543E::
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
-    ld [$D786], a
+    ld [wD786], a
     call Func_00D_54C1
     ret
 
@@ -2308,11 +2308,11 @@ Jump_00D_5449::
     dec a
 
 Jump_00D_544A::
-    ld [$D786], a
+    ld [wD786], a
     xor a, a
-    ld [$D7AB], a
-    ld [$D7AD], a
-    ld [$D7AF], a
+    ld [wD7AB], a
+    ld [wD7AD], a
+    ld [wD7AF], a
     call Func_00D_54DB
     ld a, $69
     call Func_000_1278
@@ -2320,14 +2320,14 @@ Jump_00D_544A::
 
 Jump_00D_5460::
     call Func_00D_54DF
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     dec a
     ld b, a
-    ld a, [$D786]
+    ld a, [wD786]
     cp a, b
     jr c, Jump_00D_5476
     xor a, a
-    ld [$D786], a
+    ld [wD786], a
     call Func_00D_54C1
     ret
 
@@ -2340,48 +2340,48 @@ Jump_00D_5479::
     call Func_000_1278
     call Func_00D_54E3
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$D7AB], a
-    ld [$D7AD], a
-    ld [$D7AF], a
-    ld [$CFA8], a
-    ld [$CFA9], a
+    ld [wD7AB], a
+    ld [wD7AD], a
+    ld [wD7AF], a
+    ld [wCFA8], a
+    ld [wCFA9], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_54A6::
     ld a, $01
-    ld [$D7FA], a
-    ld [$D780], a
-    ld [$D7AB], a
-    ld [$D7AD], a
-    ld [$D7AF], a
+    ld [wD7FA], a
+    ld [wD780], a
+    ld [wD7AB], a
+    ld [wD7AD], a
+    ld [wD7AF], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_54C1::
-    ld a, [$C564]
+    ld a, [wC564]
     cp a, $14
     jr c, Func_00D_54DB
-    ld a, [$D787]
+    ld a, [wD787]
     inc a
-    ld [$D787], a
+    ld [wD787], a
     cp a, $10
     jr c, Func_00D_54DB
     cp a, $18
     jr c, Func_00D_54DF
     xor a, a
-    ld [$D787], a
+    ld [wD787], a
 
 Func_00D_54DB::
     ld b, $BB
@@ -2395,7 +2395,7 @@ Func_00D_54E3::
     ld b, $BC
 
 Jump_00D_54E5::
-    ld a, [$D786]
+    ld a, [wD786]
     sla a
     ld hl, Data_00D_5504
     add a, l
@@ -2434,7 +2434,7 @@ Data_00D_5576:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $035576, $48
 
 Func_00D_55BE::
-    ld a, [$D780]
+    ld a, [wD780]
     rst $00
     dw Jump_00D_55CA
     dw Jump_00D_5633
@@ -2442,7 +2442,7 @@ Func_00D_55BE::
     dw Jump_00D_5722
 
 Jump_00D_55CA::
-    ld hl, $D780
+    ld hl, wD780
     ld bc, $006F
 
 Jump_00D_55D0::
@@ -2452,69 +2452,69 @@ Jump_00D_55D0::
     ld a, b
     or a, c
     jr nz, Jump_00D_55D0
-    ld hl, $C364
-    ld de, $C198
+    ld hl, wC364
+    ld de, wC198
     ld bc, $0104
     call Func_00D_4E7B
-    ld a, [$C525]
+    ld a, [wIsCGB]
     and a, a
     jr z, Jump_00D_55F5
-    ld hl, $D1CC
-    ld de, $D000
+    ld hl, wD1CC
+    ld de, wD000
     ld bc, $0104
     call Func_00D_4E84
 
 Jump_00D_55F5::
     ld a, $07
-    ld [$D7F0], a
+    ld [wD7F0], a
     ld a, $70
-    ldh [$FFBA], a
+    ldh [hFFBA], a
     ld de, Data_01F_4AD0
-    ld hl, $8CA0
+    ld hl, vTiles1 + $4A0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4180
-    ld hl, $9760
+    ld hl, vTiles2 + $760
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4330
-    ld hl, $9770
+    ld hl, vTiles2 + $770
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld hl, $D780
+    ld hl, wD780
     inc [hl]
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_5633::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Jump_00D_563B
     dw Jump_00D_567D
 
 Jump_00D_563B::
     ld de, Data_00D_4FBD
-    ld hl, $C370
+    ld hl, wC370
     ld bc, $0803
     call Func_00D_4DCB
-    ld a, [$C617]
-    ld [$C8C0], a
-    ld a, [$C618]
-    ld [$C8C1], a
-    ld a, [$C619]
-    ld [$C8C2], a
+    ld a, [wC617]
+    ld [wC8C0], a
+    ld a, [wC618]
+    ld [wC8C1], a
+    ld a, [wC619]
+    ld [wC8C2], a
     call Func_000_173A
     ld hl, Func_015_6676
     ld b, $15
     rst $10
-    ld hl, $C386
-    ld de, $D7F3
+    ld hl, wC386
+    ld de, wD7F3
     ld c, $00
 
 Jump_00D_566A::
@@ -2526,14 +2526,14 @@ Jump_00D_566A::
     ld a, c
     cp a, $05
     jr c, Jump_00D_566A
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_567D::
     ld de, Data_00D_6189
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
     call Func_00D_4E5A
@@ -2543,18 +2543,18 @@ Jump_00D_567D::
     ld a, $6C
     call Func_000_1278
     xor a, a
-    ld [$D7FA], a
-    ld [$D781], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld [wD781], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_56A9::
     ld hl, Func_01D_6540
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FE
@@ -2565,40 +2565,40 @@ Jump_00D_56A9::
 
 Jump_00D_56BD::
     ld a, $02
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_56CC::
-    ld a, [$D7FA]
+    ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_56BD
     call Func_00D_5702
     cp a, $FF
     jr nz, Jump_00D_56E9
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_56E9::
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5702::
@@ -2631,7 +2631,7 @@ Jump_00D_5720::
     ret
 
 Jump_00D_5722::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Jump_00D_5766
     dw Jump_00D_5789
@@ -2658,18 +2658,18 @@ Func_00D_574C:: ; heuristic: target of a pointer table; C0
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_5766::
     ld de, Data_00D_61A7
-    ld hl, $C3B8
+    ld hl, wC3B8
     ld bc, $1009
     call Func_00D_4DCB
     call Func_00D_60C3
@@ -2677,98 +2677,98 @@ Jump_00D_5766::
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_5789::
-    ld hl, $9700
+    ld hl, vTiles2 + $700
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $0601
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld hl, $8A40
+    ld hl, vTiles1 + $240
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $0C01
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld hl, $8D00
+    ld hl, vTiles1 + $500
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $0C01
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld hl, $8EE0
+    ld hl, vTiles1 + $6E0
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1201
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_57F5:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_6237
-    ld hl, $C3CE
+    ld hl, wC3CE
     ld bc, $0D07
     db $CD, $CB
 
 Func_00D_5800:: ; heuristic: target of a pointer table; C0
     ld c, l
     xor a, a
-    ld [$D7F5], a
+    ld [wD7F5], a
     call Func_00D_5C87
-    ld a, [$D7B0]
+    ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_583D
     ld de, $018E
     call Func_00D_4EA4
-    ld hl, $C462
+    ld hl, wC462
     call Func_00D_4EC7
     ld de, $018F
     ld a, d
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, e
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld hl, Func_01E_7564
     ld b, $1E
     rst $10
-    ld hl, $C463
+    ld hl, wC463
     ld a, h
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, l
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld hl, Func_01E_759A
     ld b, $1E
     rst $10
 
 Jump_00D_583D::
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     ld b, $BB
     ld hl, Data_00D_62B0
     call Func_00D_4E96
@@ -2776,21 +2776,21 @@ Jump_00D_583D::
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_585C:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ld [$D7F5], a
+    ld [wD7F5], a
     call Func_00D_5DED
     xor a, a
-    ld [$D7F5], a
+    ld [wD7F5], a
     call Func_00D_5D26
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_5872:: ; heuristic: target of a pointer table; C0
@@ -2798,25 +2798,25 @@ Func_00D_5872:: ; heuristic: target of a pointer table; C0
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_00D_62B0
     call Func_00D_4E96
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_5891:: ; heuristic: target of a pointer table; C0
-    ld a, [$C563]
+    ld a, [wC563]
     bit 2, a
     jr nz, Jump_00D_58B9
     ld a, $03
-    ld [$D7F9], a
+    ld [wD7F9], a
     ld hl, Func_01D_66B6
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FB
@@ -2836,27 +2836,27 @@ Jump_00D_58B9::
     ret
 
 Jump_00D_58C0::
-    ld a, [$D781]
+    ld a, [wD781]
     sub a, $04
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_58C9::
     ld a, $02
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_58D8::
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     ld l, a
@@ -2873,57 +2873,57 @@ Jump_00D_58D8::
     cp a, $FE
     jr z, Jump_00D_591E
     ld a, $01
-    ld [$D7FA], a
-    ld hl, $8800
+    ld [wD7FA], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_591E::
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_00D_62B0
     call Func_00D_4E96
-    ld de, $C130
+    ld de, wC130
     ld a, $01
     call Func_00D_6120
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$D7FA], a
-    ld hl, $8800
+    ld [wD7FA], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_595C:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_6540
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FE
@@ -2935,93 +2935,93 @@ Func_00D_595C:: ; heuristic: target of a pointer table; C0
 Jump_00D_5970::
     call Func_00D_5A05
     ld a, $02
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
-    ld hl, $8800
+    ld [wD781], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_599F::
-    ld a, [$D7FA]
+    ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_5970
     xor a, a
     call Func_00D_6120
     ld a, l
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, h
-    ld [$D7F2], a
+    ld [wD7F2], a
     xor a, a
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld hl, Func_01C_440F
     ld b, $1C
     rst $10
-    ld a, [$D7F1]
+    ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_00D_59D2
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_59D2::
     call Func_00D_5A05
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$D782], a
-    ld hl, $8800
+    ld [wD782], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5A05::
     ld de, Data_00D_6292
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
-    ld a, [$D7B0]
+    ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_5A2F
-    ld hl, $C462
+    ld hl, wC462
     call Func_00D_4EC7
-    ld hl, $C463
+    ld hl, wC463
     ld a, h
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, l
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld hl, Func_01E_759A
     ld b, $1E
     rst $10
@@ -3037,9 +3037,9 @@ Func_00D_5A3C:: ; heuristic: target of a pointer table; C0
     ld hl, Func_015_645F
     ld b, $15
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_5A4A:: ; heuristic: target of a pointer table; C0
@@ -3047,15 +3047,15 @@ Func_00D_5A4A:: ; heuristic: target of a pointer table; C0
     ld b, $15
     rst $10
     xor a, a
-    ld [$C528], a
-    ld a, [$D781]
+    ld [wC528], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_5A5C:: ; heuristic: target of a pointer table; C0
     call Func_00D_615E
-    ld a, [$D782]
+    ld a, [wD782]
     cp a, $02
     jr z, Jump_00D_5A87
     cp a, $03
@@ -3063,48 +3063,48 @@ Func_00D_5A5C:: ; heuristic: target of a pointer table; C0
     ld hl, Func_015_642D
     ld b, $15
     rst $10
-    ld hl, $8800
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     ret
 
 Jump_00D_5A87::
     ld a, $0B
-    ld [$C529], a
+    ld [wC529], a
     ld hl, Func_00D_4001
     ld b, $0D
     rst $10
-    ld a, [$D782]
+    ld a, [wD782]
     inc a
-    ld [$D782], a
+    ld [wD782], a
     ret
 
 Jump_00D_5A9A::
-    ld a, [$C52B]
+    ld a, [wC52B]
     and a, a
     ret nz
     xor a, a
-    ld [$D782], a
-    ld a, [$D781]
+    ld [wD782], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5AB4:: ; heuristic: target of a pointer table; C0
     call Func_00D_615E
     ld de, Data_00D_6189
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
     call Func_00D_4E5A
@@ -3114,11 +3114,11 @@ Func_00D_5AB4:: ; heuristic: target of a pointer table; C0
     ld a, $6C
     call Func_000_1278
     xor a, a
-    ld [$D7FA], a
-    ld [$D782], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld [wD782], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_5AE3:: ; heuristic: target of a pointer table; C0
@@ -3130,18 +3130,18 @@ Func_00D_5AE3:: ; heuristic: target of a pointer table; C0
     ld de, $01CC
     call Func_00D_4E05
     ld a, $05
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5B06:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_6540
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     cp a, $FE
     jr z, Jump_00D_5B1B
     cp a, $FF
@@ -3151,64 +3151,64 @@ Func_00D_5B06:: ; heuristic: target of a pointer table; C0
 
 Jump_00D_5B1B::
     call Func_00D_5C47
-    ld a, [$D781]
+    ld a, [wD781]
     add a, $05
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_5B27::
-    ld a, [$D7FA]
+    ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_5B1B
     call Func_00D_615E
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$D782], a
+    ld [wD782], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5B4A:: ; heuristic: target of a pointer table; C0
     call Func_00D_615E
-    ld a, [$D782]
+    ld a, [wD782]
     and a, a
     jr z, Jump_00D_5B7C
     ld hl, Func_002_7347
     ld b, $02
     rst $10
-    ld a, [$C8C3]
+    ld a, [wC8C3]
     bit 7, a
     ret z
     xor a, a
-    ld [$D7FA], a
-    ld [$D782], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld [wD782], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $01
-    ld [$C968], a
+    ld [wC968], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_5B7C::
     xor a, a
-    ld [$C8C3], a
-    ld [$C8C4], a
+    ld [wC8C3], a
+    ld [wC8C4], a
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     ld l, a
@@ -3226,17 +3226,17 @@ Jump_00D_5B7C::
     xor a, a
     call Func_00D_6120
     ld a, l
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, h
-    ld [$D7F2], a
+    ld [wD7F2], a
     xor a, a
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld hl, Func_015_683C
     ld b, $15
     rst $10
-    ld a, [$D782]
+    ld a, [wD782]
     inc a
-    ld [$D782], a
+    ld [wD782], a
     ret
 
 Func_00D_5BBF:: ; heuristic: target of a pointer table; C0
@@ -3244,16 +3244,16 @@ Func_00D_5BBF:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
-    ld de, $C130
+    ld de, wC130
     call Func_000_2458
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_5BDF:: ; heuristic: target of a pointer table; C0
@@ -3261,14 +3261,14 @@ Func_00D_5BDF:: ; heuristic: target of a pointer table; C0
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
+    ld [wC527], a
     ld c, $0D
     ld hl, $01CC
     ld de, $0000
     xor a, a
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, $14
-    ld [$D7F2], a
+    ld [wD7F2], a
     call Func_00D_4ED5
     db $CD, $3B
 
@@ -3279,9 +3279,9 @@ Func_00D_5C00:: ; heuristic: target of a pointer table; C0
     ld de, $01CC
     call Func_00D_4E05
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5C17:: ; heuristic: target of a pointer table; C0
@@ -3289,33 +3289,33 @@ Func_00D_5C17:: ; heuristic: target of a pointer table; C0
     cp a, $FF
     jr nz, Jump_00D_5C38
     xor a, a
-    ld [$D7FA], a
+    ld [wD7FA], a
     ld a, $03
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$D781], a
-    ld [$D782], a
+    ld [wD781], a
+    ld [wD782], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_5C38::
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_5C47::
     ld a, $C3
-    ld hl, $C3B0
+    ld hl, wC3B0
     ld [hl+], a
     ld [hl], a
-    ld hl, $C3C4
+    ld hl, wC3C4
     ld [hl+], a
     ld [hl], a
     call Func_00D_4E5A
@@ -3325,7 +3325,7 @@ Func_00D_5C47::
     ret
 
 Func_00D_5C60::
-    ld hl, $C707
+    ld hl, wC707
     ld c, $00
     ld b, $00
 
@@ -3359,7 +3359,7 @@ Jump_00D_5C83::
     ret
 
 Func_00D_5C87::
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     ld l, a
     ld h, $00
     ld a, $04
@@ -3371,8 +3371,8 @@ Func_00D_5C87::
 
 Jump_00D_5C97::
     ld a, l
-    ld [$D7B0], a
-    ld a, [$D7AF]
+    ld [wD7B0], a
+    ld a, [wD7AF]
     inc a
     cp a, l
     jr c, Jump_00D_5CD2
@@ -3380,21 +3380,21 @@ Jump_00D_5C97::
     push af
     and a, a
     jr nz, Jump_00D_5CB7
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     inc a
     cp a, l
     jr z, Jump_00D_5CD2
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     dec a
-    ld [$D7AF], a
+    ld [wD7AF], a
     jr Jump_00D_5CD2
 
 Jump_00D_5CB7::
     pop af
     dec a
-    ld [$D7B1], a
+    ld [wD7B1], a
     ld b, a
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     cp a, b
     jr c, Jump_00D_5CD8
     jr z, Jump_00D_5CD8
@@ -3404,20 +3404,20 @@ Jump_00D_5CB7::
     pop hl
     pop bc
     ld a, b
-    ld [$D7AB], a
+    ld [wD7AB], a
     jr Jump_00D_5CD8
 
 Jump_00D_5CD2::
     pop af
     ld a, $03
-    ld [$D7B1], a
+    ld [wD7B1], a
 
 Jump_00D_5CD8::
     ret
 
 Func_00D_5CD9::
     ld b, $C3
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     and a, a
     jr z, Jump_00D_5CEF
     cp a, $01
@@ -3433,7 +3433,7 @@ Jump_00D_5CEF::
     ld hl, Data_00D_5D0E
 
 Jump_00D_5CF2::
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     sla a
     add a, l
     ld l, a
@@ -3466,7 +3466,7 @@ Data_00D_5D1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $00, $C2, $00, $E2, $00, $02, $01
 
 Func_00D_5D26::
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     and a, a
     jr nz, Jump_00D_5D31
     ld de, Data_00D_5DDD
@@ -3489,8 +3489,8 @@ Jump_00D_5D36::
     inc de
     dec b
     jr nz, Jump_00D_5D36
-    ld hl, $D789
-    ld a, [$D7AF]
+    ld hl, wD789
+    ld a, [wD7AF]
     sla a
     sla a
     add a, l
@@ -3503,25 +3503,25 @@ Jump_00D_5D51::
     ld c, $00
 
 Jump_00D_5D54::
-    ld a, [$D7B1]
+    ld a, [wD7B1]
     cp a, $03
     jr c, Jump_00D_5D60
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     jr Jump_00D_5D6F
 
 Jump_00D_5D60::
-    ld a, [$D7B0]
+    ld a, [wD7B0]
     cp a, $01
     jr nz, Jump_00D_5D6C
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     jr Jump_00D_5D6F
 
 Jump_00D_5D6C::
-    ld a, [$D7A9]
+    ld a, [wD7A9]
 
 Jump_00D_5D6F::
     ld b, a
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     sla a
     sla a
     add a, c
@@ -3536,7 +3536,7 @@ Jump_00D_5D6F::
     rl h
     sla l
     rl h
-    ld de, $C707
+    ld de, wC707
     add hl, de
     ld e, l
     ld d, h
@@ -3554,7 +3554,7 @@ Jump_00D_5DA1::
     ld b, $C3
 
 Jump_00D_5DA3::
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     and a, a
     jr nz, Jump_00D_5DAE
     ld de, Data_00D_5DDD
@@ -3592,7 +3592,7 @@ Jump_00D_5DCC::
     pop hl
     inc hl
     inc c
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     cp a, c
     jr z, Jump_00D_5DDC
     ld a, c
@@ -3609,8 +3609,8 @@ Data_00D_5DE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
 
 Func_00D_5DED::
-    ld hl, $D789
-    ld a, [$D7AF]
+    ld hl, wD789
+    ld a, [wD7AF]
     sla a
     sla a
     add a, l
@@ -3622,25 +3622,25 @@ Jump_00D_5DFC::
     ld c, $00
 
 Jump_00D_5DFE::
-    ld a, [$D7B1]
+    ld a, [wD7B1]
     cp a, $03
     jr c, Jump_00D_5E0A
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     jr Jump_00D_5E19
 
 Jump_00D_5E0A::
-    ld a, [$D7B0]
+    ld a, [wD7B0]
     cp a, $01
     jr nz, Jump_00D_5E16
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     jr Jump_00D_5E19
 
 Jump_00D_5E16::
-    ld a, [$D7A9]
+    ld a, [wD7A9]
 
 Jump_00D_5E19::
     ld b, a
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     sla a
     sla a
     add a, c
@@ -3651,7 +3651,7 @@ Jump_00D_5E19::
     ld a, [hl]
     sla a
     sla a
-    ld de, $C707
+    ld de, wC707
     add a, e
     ld e, a
     jr nc, Jump_00D_5E35
@@ -3661,7 +3661,7 @@ Jump_00D_5E35::
     ld a, [de]
     cp a, $FE
     jr nz, Jump_00D_5E60
-    ld hl, $C8CF
+    ld hl, wC8CF
     ld a, $16
     ld [hl+], a
     ld a, $24
@@ -3701,10 +3701,10 @@ Jump_00D_5E60::
     ld l, a
     ld h, $00
     push hl
-    ld a, [$D7FE]
+    ld a, [wDataBank]
     push af
     ld a, $09
-    ld [$D7FE], a
+    ld [wDataBank], a
     ld hl, Data_009_4016
     ld a, $0C
     add a, l
@@ -3732,18 +3732,18 @@ Jump_00D_5E85::
     ld a, c
     ld d, a
     pop af
-    ld [$D7FE], a
-    ld hl, $C8CF
+    ld [wDataBank], a
+    ld hl, wC8CF
     ld b, $09
     ld c, $10
     call Func_000_0B2B
     ld a, $F0
-    ld [$C8DC], a
+    ld [wC8DC], a
     jr Jump_00D_5EC0
 
 Jump_00D_5EB2::
     ld a, [hl]
-    ld de, $C8CF
+    ld de, wC8CF
     call Func_000_2458
     ld a, $5B
     ld [de], a
@@ -3759,7 +3759,7 @@ Jump_00D_5EC0::
     pop hl
     inc hl
     inc c
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     cp a, c
     jr z, Jump_00D_5ED5
     ld a, c
@@ -3771,12 +3771,12 @@ Jump_00D_5ED5::
 
 Func_00D_5ED6::
     xor a, a
-    ld [$D784], a
-    ld [$D785], a
-    ld hl, $C8CF
+    ld [wD784], a
+    ld [wD785], a
+    ld hl, wC8CF
 
 Jump_00D_5EE0::
-    ld a, [$D784]
+    ld a, [wD784]
     push hl
     add a, l
     ld l, a
@@ -3799,9 +3799,9 @@ Jump_00D_5EE9::
 
 Jump_00D_5F01::
     push af
-    ld a, [$D785]
+    ld a, [wD785]
     dec a
-    ld [$D785], a
+    ld [wD785], a
     pop af
     push bc
     call Func_00D_5F2C
@@ -3810,19 +3810,19 @@ Jump_00D_5F01::
 
 Jump_00D_5F12::
     pop hl
-    ld a, [$D785]
+    ld a, [wD785]
     inc a
-    ld [$D785], a
-    ld a, [$D784]
+    ld [wD785], a
+    ld a, [wD784]
     inc a
-    ld [$D784], a
+    ld [wD784], a
     jr Jump_00D_5EE0
 
 Jump_00D_5F23::
     pop hl
     xor a, a
-    ld [$D785], a
-    ld [$D784], a
+    ld [wD785], a
+    ld [wD784], a
     ret
 
 Func_00D_5F2C::
@@ -3841,7 +3841,7 @@ Func_00D_5F2C::
     ld e, l
     ld d, h
     push de
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     and a, a
     jr z, Jump_00D_5F63
     cp a, $01
@@ -3876,7 +3876,7 @@ Jump_00D_5F6E::
     inc de
     ld a, [de]
     ld h, a
-    ld a, [$D785]
+    ld a, [wD785]
     sla a
     add a, l
     ld l, a
@@ -3909,7 +3909,7 @@ Data_00D_60A9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $70, $96, $80, $96, $90, $96, $A0, $96, $B0, $96
 
 Func_00D_60C3::
-    ld hl, $D789
+    ld hl, wD789
     ld b, $20
 
 Jump_00D_60C8::
@@ -3918,9 +3918,9 @@ Jump_00D_60C8::
     dec b
     jr nz, Jump_00D_60C8
     xor a, a
-    ld [$D7A9], a
-    ld de, $C707
-    ld hl, $D789
+    ld [wD7A9], a
+    ld de, wC707
+    ld hl, wD789
     ld b, $00
     ld c, $00
 
@@ -3945,12 +3945,12 @@ Jump_00D_60EA::
     cp a, $20
     jr c, Jump_00D_60DB
     ld a, c
-    ld [$D7A9], a
+    ld [wD7A9], a
     ret
 
 Func_00D_60F5:: ; heuristic: follows a terminator; C0
-    ld hl, $D789
-    ld a, [$D7AF]
+    ld hl, wD789
+    ld a, [wD7AF]
     add a, a
     add a, a
     add a, l
@@ -3959,7 +3959,7 @@ Func_00D_60F5:: ; heuristic: follows a terminator; C0
     inc h
 
 Jump_00D_6102::
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     add a, l
     ld l, a
     jr nc, Jump_00D_610A
@@ -3967,7 +3967,7 @@ Jump_00D_6102::
 
 Jump_00D_610A::
     ld a, [hl]
-    ld hl, $C707
+    ld hl, wC707
     add a, a
     add a, a
     add a, l
@@ -3995,17 +3995,17 @@ Jump_00D_6127::
     call Func_00D_60F5
     push de
     ld a, l
-    ld [$C8C0], a
+    ld [wC8C0], a
     ld a, h
-    ld [$C8C1], a
+    ld [wC8C1], a
     xor a, a
-    ld [$C8C2], a
+    ld [wC8C2], a
     call Func_000_173A
     ld hl, Func_015_6676
     ld b, $15
     rst $10
     pop de
-    ld hl, $D7F1
+    ld hl, wD7F1
     ld c, $07
 
 Jump_00D_6146::
@@ -4034,10 +4034,10 @@ Jump_00D_615A::
 
 Func_00D_615E:: ; heuristic: follows a terminator; C0
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     ld a, $01
-    ld [$4100], a
-    ld hl, $BB0F
+    ld [rRAMB], a
+    ld hl, sBB0F
     ld de, $022B
     add hl, de
     ld a, [hl]
@@ -4046,12 +4046,12 @@ Func_00D_615E:: ; heuristic: follows a terminator; C0
 
 Jump_00D_6173::
     xor a, a
-    ld [$4100], a
-    ld [$1FFF], a
+    ld [rRAMB], a
+    ld [rRAMG2], a
     ret
 
 Jump_00D_617B::
-    ld a, [$D781]
+    ld a, [wD781]
     cp a, $0B
     jr c, Jump_00D_6173
     ld hl, Func_015_6403
@@ -4077,7 +4077,7 @@ Data_00D_62B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0362B0, $60
 
 Func_00D_6310::
-    ld a, [$D780]
+    ld a, [wD780]
     rst $00
     dw Jump_00D_643A
     dw Jump_00D_6384
@@ -4087,10 +4087,10 @@ Func_00D_6310::
     dw Jump_00D_65D0
 
 Jump_00D_6320::
-    ld a, [$C839]
+    ld a, [wC839]
     and a, a
     jr nz, Jump_00D_6345
-    ld a, [$C838]
+    ld a, [wC838]
     and a, a
     jr z, Jump_00D_6336
     cp a, $01
@@ -4101,24 +4101,24 @@ Jump_00D_6320::
 
 Jump_00D_6336::
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6345::
-    ld a, [$C838]
+    ld a, [wC838]
     ld l, a
-    ld a, [$C839]
+    ld a, [wC839]
     ld h, a
     call Func_000_16F5
     ld hl, Func_015_68DC
     ld b, $15
     rst $10
-    ld hl, $C130
-    ld de, $C8C0
+    ld hl, wC130
+    ld de, wC8C0
     ld a, [de]
     cp a, $E3
     jr z, Jump_00D_6362
@@ -4137,23 +4137,23 @@ Jump_00D_6369::
     ld [hl+], a
     ld a, $F0
     ld [hl], a
-    ld a, [$D780]
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6384::
     call Func_00D_6DD0
     push af
-    ld a, [$C838]
+    ld a, [wC838]
     ld l, a
-    ld a, [$C839]
+    ld a, [wC839]
     ld h, a
     pop af
     cp a, $FF
@@ -4190,15 +4190,15 @@ Jump_00D_63A9::
     ld b, a
     and a, a
     jr z, Jump_00D_63C1
-    ld hl, $C61D
+    ld hl, wC61D
     ld c, $00
     call Func_00D_63F6
 
 Jump_00D_63C1::
     ld a, $03
-    ld [$C839], a
+    ld [wC839], a
     ld a, $E7
-    ld [$C838], a
+    ld [wC838], a
 
 Jump_00D_63CB::
     ld a, $01
@@ -4208,23 +4208,23 @@ Jump_00D_63CF::
     pop af
     ld b, a
     ld a, l
-    ld [$C838], a
+    ld [wC838], a
     ld a, h
-    ld [$C839], a
-    ld hl, $C61D
+    ld [wC839], a
+    ld hl, wC61D
     ld c, $00
     call Func_00D_63F6
     xor a, a
 
 Jump_00D_63E2::
-    ld [$D7FA], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_63F6::
@@ -4258,8 +4258,8 @@ Jump_00D_640D::
     jr c, Func_00D_63F6
 
 Jump_00D_6416::
-    ld hl, $C61D
-    ld de, $C61E
+    ld hl, wC61D
+    ld de, wC61E
     ld b, $17
 
 Jump_00D_641E::
@@ -4292,7 +4292,7 @@ Jump_00D_6431::
     ret
 
 Jump_00D_643A::
-    ld hl, $D780
+    ld hl, wD780
     ld bc, $006F
 
 Jump_00D_6440::
@@ -4302,50 +4302,50 @@ Jump_00D_6440::
     ld a, b
     or a, c
     jr nz, Jump_00D_6440
-    ld hl, $C364
-    ld de, $C198
+    ld hl, wC364
+    ld de, wC198
     ld bc, $0104
     call Func_00D_4E7B
-    ld a, [$C525]
+    ld a, [wIsCGB]
     and a, a
     jr z, Jump_00D_6465
-    ld hl, $D1CC
-    ld de, $D000
+    ld hl, wD1CC
+    ld de, wD000
     ld bc, $0104
     call Func_00D_4E84
 
 Jump_00D_6465::
     ld a, $07
-    ld [$D7F0], a
+    ld [wD7F0], a
     ld a, $70
-    ldh [$FFBA], a
+    ldh [hFFBA], a
     xor a, a
     call Func_00D_6DD0
     cp a, $FF
     jr z, Jump_00D_6488
     xor a, a
-    ld [$D7FA], a
-    ld hl, $D780
+    ld [wD7FA], a
+    ld hl, wD780
     inc [hl]
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6488::
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     ld a, $02
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_649C::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Jump_00D_64A6
     dw Func_00D_6509
@@ -4353,60 +4353,60 @@ Jump_00D_649C::
 
 Jump_00D_64A6::
     ld de, Data_01F_4170
-    ld hl, $8AD0
+    ld hl, vTiles1 + $2D0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4280
-    ld hl, $8AE0
+    ld hl, vTiles1 + $2E0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4250
-    ld hl, $8AF0
+    ld hl, vTiles1 + $2F0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4300
-    ld hl, $8FC0
+    ld hl, vTiles1 + $7C0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4A40
-    ld hl, $8FD0
+    ld hl, vTiles1 + $7D0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4180
-    ld hl, $9760
+    ld hl, vTiles2 + $760
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4330
-    ld hl, $9770
+    ld hl, vTiles2 + $770
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_6509::
     ld de, Data_00D_6EB7
-    ld hl, $C36D
+    ld hl, wC36D
     ld bc, $0B03
     call Func_00D_4DCB
-    ld a, [$C838]
+    ld a, [wC838]
     ld l, a
-    ld a, [$C839]
+    ld a, [wC839]
     ld h, a
     call Func_000_16F5
     ld hl, Func_015_68DC
     ld b, $15
     rst $10
-    ld hl, $C388
-    ld de, $C8C0
+    ld hl, wC388
+    ld de, wC8C0
     ld c, $00
 
 Jump_00D_652E::
@@ -4418,14 +4418,14 @@ Jump_00D_652E::
     ld a, c
     cp a, $03
     jr c, Jump_00D_652E
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_6541::
     ld de, Data_00D_6189
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
     call Func_00D_4E5A
@@ -4435,18 +4435,18 @@ Jump_00D_6541::
     ld a, $6C
     call Func_000_1278
     xor a, a
-    ld [$D7FA], a
-    ld [$D781], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld [wD781], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_656D::
     ld hl, Func_01D_6540
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FE
@@ -4457,44 +4457,44 @@ Jump_00D_656D::
 
 Jump_00D_6581::
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6590::
-    ld a, [$D7FA]
+    ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_6581
     ld c, $05
     ld hl, $027A
     ld de, $00AE
     xor a, a
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, $06
-    ld [$D7F2], a
+    ld [wD7F2], a
     call Func_00D_4ED5
     call Func_00D_4E5A
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D780]
+    ld [wD7FA], a
+    ld a, [wD780]
     inc a
-    ld [$D780], a
+    ld [wD780], a
     xor a, a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_65D0::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Jump_00D_65F2
     dw Jump_00D_6615
@@ -4514,7 +4514,7 @@ Jump_00D_65D0::
 
 Jump_00D_65F2::
     ld de, Data_00D_6ED8
-    ld hl, $C3B7
+    ld hl, wC3B7
     ld bc, $1109
     call Func_00D_4DCB
     call Func_00D_6DF2
@@ -4522,52 +4522,52 @@ Jump_00D_65F2::
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Jump_00D_6615::
-    ld hl, $8A40
+    ld hl, vTiles1 + $240
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $0901
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld hl, $8D00
+    ld hl, vTiles1 + $500
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $0F01
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld hl, $8F00
+    ld hl, vTiles1 + $700
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $0C01
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     call Func_000_290E
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_6668:: ; heuristic: target of a pointer table; C0
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     and a, a
     jr nz, Jump_00D_6678
     ld de, Data_00D_6F71
@@ -4578,25 +4578,25 @@ Jump_00D_6673::
     jr Jump_00D_6681
 
 Jump_00D_6678::
-    ld a, [$C837]
+    ld a, [wC837]
     and a, a
     jr nz, Jump_00D_6673
     ld de, Data_00D_6FDA
 
 Jump_00D_6681::
-    ld hl, $C3CC
+    ld hl, wC3CC
     ld bc, $0F07
     call Func_00D_4DCB
     ld a, $01
-    ld [$D7F5], a
+    ld [wD7F5], a
     call Func_00D_5C87
-    ld a, [$D7B0]
+    ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_669C
     call Func_00D_6E88
 
 Jump_00D_669C::
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     ld b, $BB
     ld hl, Data_00D_7106
     call Func_00D_4E96
@@ -4604,19 +4604,19 @@ Jump_00D_669C::
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_66BB:: ; heuristic: target of a pointer table; C0
     ld a, $01
-    ld [$D7F5], a
+    ld [wD7F5], a
     call Func_00D_6E0E
     call Func_00D_6D3E
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_66CE:: ; heuristic: target of a pointer table; C0
@@ -4624,13 +4624,13 @@ Func_00D_66CE:: ; heuristic: target of a pointer table; C0
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_00D_7106
     call Func_00D_4E96
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_66ED:: ; heuristic: target of a pointer table; C0
@@ -4639,9 +4639,9 @@ Func_00D_66ED:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     cp a, $01
@@ -4649,33 +4649,33 @@ Func_00D_66ED:: ; heuristic: target of a pointer table; C0
     ld a, $01
 
 Jump_00D_6707::
-    ld [$D7FA], a
+    ld [wD7FA], a
     cp a, $01
     jr z, Jump_00D_6744
     add a, $22
-    ld [$C529], a
+    ld [wC529], a
     xor a, a
-    ld [$C528], a
-    ld hl, $8800
+    ld [wC528], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     ld hl, Func_00D_400F
     ld b, $0D
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6744::
@@ -4697,7 +4697,7 @@ Jump_00D_6744::
     ld e, a
     ld a, [hl]
     ld d, a
-    ld hl, $C130
+    ld hl, wC130
     ld c, $00
 
 Jump_00D_6761::
@@ -4712,35 +4712,35 @@ Jump_00D_676A::
     ld a, $F0
     ld [hl], a
     ld a, $23
-    ld [$C529], a
+    ld [wC529], a
     xor a, a
-    ld [$C528], a
-    ld hl, $8800
+    ld [wC528], a
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     ld hl, Func_00D_400F
     ld b, $0D
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_67A3:: ; heuristic: follows a terminator; C0
     ld b, $BB
     call Func_00D_6DA7
-    ld a, [$C563]
+    ld a, [wC563]
     bit 6, a
     jr nz, Jump_00D_67E4
     bit 7, a
@@ -4753,7 +4753,7 @@ Func_00D_67A3:: ; heuristic: follows a terminator; C0
     jr nz, Jump_00D_67CB
     bit 0, a
     jr nz, Jump_00D_67CB
-    ld a, [$C52B]
+    ld a, [wC52B]
     bit 0, a
     ret nz
     jr Jump_00D_67CE
@@ -4762,13 +4762,13 @@ Jump_00D_67CB::
     call Func_00D_400F
 
 Jump_00D_67CE::
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ld b, $BB
     call Func_00D_6DA7
     ret
@@ -4789,11 +4789,11 @@ Jump_00D_67F0::
     ld a, $04
 
 Jump_00D_67F2::
-    ld [$D7BD], a
+    ld [wD7BD], a
     jr Jump_00D_67CE
 
 Func_00D_67F7:: ; heuristic: target of a pointer table; C0
-    ld a, [$D7BD]
+    ld a, [wD7BD]
     and a, a
     jr z, Jump_00D_6827
     cp a, $01
@@ -4807,30 +4807,30 @@ Func_00D_67F7:: ; heuristic: target of a pointer table; C0
 
 Jump_00D_680D::
     ld a, $20
-    ld [$C563], a
+    ld [wC563], a
     jr Jump_00D_6827
 
 Jump_00D_6814::
     ld a, $10
-    ld [$C563], a
+    ld [wC563], a
     jr Jump_00D_6827
 
 Jump_00D_681B::
     ld a, $80
-    ld [$C563], a
+    ld [wC563], a
     jr Jump_00D_6827
 
 Jump_00D_6822::
     ld a, $40
-    ld [$C563], a
+    ld [wC563], a
 
 Jump_00D_6827::
     ld a, $04
-    ld [$D7F9], a
+    ld [wD7F9], a
     ld hl, Func_01D_66B6
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FB
@@ -4847,57 +4847,57 @@ Jump_00D_6827::
 
 Jump_00D_684C::
     xor a, a
-    ld [$D7BD], a
-    ld a, [$D781]
+    ld [wD7BD], a
+    ld a, [wD781]
     sub a, $06
-    ld [$D781], a
+    ld [wD781], a
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6867::
     xor a, a
-    ld [$D7BD], a
-    ld a, [$D781]
+    ld [wD7BD], a
+    ld a, [wD781]
     sub a, $02
-    ld [$D781], a
+    ld [wD781], a
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6882::
     ld a, $02
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6891::
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
-    ld a, [$D7AB]
+    ld [wD781], a
+    ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_00D_7106
     call Func_00D_4E96
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     ld de, Data_00D_710E
@@ -4914,36 +4914,36 @@ Jump_00D_68BE::
     ld hl, Func_015_68DC
     ld b, $15
     rst $10
-    ld hl, $C130
-    ld a, [$C8C1]
+    ld hl, wC130
+    ld a, [wC8C1]
     cp a, $E3
     jr z, Jump_00D_68D6
     ld [hl+], a
 
 Jump_00D_68D6::
-    ld a, [$C8C2]
+    ld a, [wC8C2]
     ld [hl+], a
     ld a, $F0
     ld [hl], a
-    ld hl, $8800
+    ld hl, vTiles1
     ld a, l
-    ld [$C52D], a
+    ld [wC52D], a
     ld a, h
-    ld [$C52E], a
+    ld [wC52E], a
     ld hl, $1202
     ld a, l
-    ld [$C52F], a
+    ld [wC52F], a
     ld a, h
-    ld [$C530], a
+    ld [wC530], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_68FD:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_6189
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
     call Func_00D_4E5A
@@ -4953,18 +4953,18 @@ Func_00D_68FD:: ; heuristic: target of a pointer table; C0
     ld a, $6C
     call Func_000_1278
     xor a, a
-    ld [$D7FA], a
-    ld [$D782], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld [wD782], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_6929:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_6540
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FE
@@ -4976,26 +4976,26 @@ Func_00D_6929:: ; heuristic: target of a pointer table; C0
 Jump_00D_693D::
     call Func_00D_69B3
     ld a, $01
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6956::
-    ld a, [$D7FA]
+    ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_693D
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     ld de, Data_00D_710E
@@ -5007,40 +5007,40 @@ Jump_00D_6956::
 Jump_00D_6974::
     ld a, [de]
     ld b, a
-    ld a, [$C839]
+    ld a, [wC839]
     and a, a
     jr nz, Jump_00D_6999
-    ld a, [$C838]
+    ld a, [wC838]
     cp a, b
     jr nc, Jump_00D_6999
     ld a, $02
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6999::
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     add a, $03
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$D782], a
+    ld [wD782], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_69B3::
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     and a, a
     jr nz, Jump_00D_69C3
     ld de, Data_00D_70AC
@@ -5051,13 +5051,13 @@ Jump_00D_69BE::
     jr Jump_00D_69CC
 
 Jump_00D_69C3::
-    ld a, [$C837]
+    ld a, [wC837]
     and a, a
     jr nz, Jump_00D_69BE
     ld de, Data_00D_70E8
 
 Jump_00D_69CC::
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
     call Func_00D_6D3E
@@ -5077,31 +5077,31 @@ Func_00D_69E8:: ; heuristic: target of a pointer table; C0
     ld de, $01CC
     call Func_00D_4E05
     ld a, $05
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_6A0B:: ; heuristic: target of a pointer table; C0
     call Func_00D_69B3
-    ld a, [$D781]
+    ld a, [wD781]
     dec a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_6A1F:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     and a, a
@@ -5110,26 +5110,26 @@ Func_00D_6A1F:: ; heuristic: target of a pointer table; C0
     cp a, $FF
     jr nz, Jump_00D_6A4E
     ld a, $03
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     dec a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6A4E::
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6A63::
@@ -5137,41 +5137,41 @@ Jump_00D_6A63::
     cp a, $FF
     jr nz, Jump_00D_6A4E
     ld a, $01
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     dec a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_6A80:: ; heuristic: follows a terminator; C0
     ld hl, Func_012_691F
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_00D_6A4E
     ld a, $02
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     dec a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_6AA2:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     push hl
@@ -5184,18 +5184,18 @@ Func_00D_6AA2:: ; heuristic: target of a pointer table; C0
 Jump_00D_6ABA::
     ld a, [de]
     ld b, a
-    ld a, [$C838]
+    ld a, [wC838]
     ld l, a
-    ld a, [$C839]
+    ld a, [wC839]
     ld h, a
     ld a, l
     sub a, b
     ld l, a
     ld a, h
     sbc a, $00
-    ld [$C839], a
+    ld [wC839], a
     ld a, l
-    ld [$C838], a
+    ld [wC838], a
     call Func_00D_6509
     pop hl
     ld a, [hl]
@@ -5208,20 +5208,20 @@ Jump_00D_6ADD::
     ld a, $01
 
 Jump_00D_6ADF::
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_6AEC:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     push af
@@ -5252,14 +5252,14 @@ Jump_00D_6B24::
     xor a, a
 
 Jump_00D_6B25::
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     sub a, $03
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_6B3A::
@@ -5273,7 +5273,7 @@ Func_00D_6B45:: ; heuristic: follows a terminator; C0
     ld hl, Func_012_691F
     ld b, $12
     rst $10
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_00D_6B24
     ld a, $02
@@ -5281,7 +5281,7 @@ Func_00D_6B45:: ; heuristic: follows a terminator; C0
 
 Func_00D_6B55::
     push hl
-    ld hl, $C986
+    ld hl, wC986
     ld b, $A5
 
 Jump_00D_6B5B::
@@ -5294,9 +5294,9 @@ Jump_00D_6B5B::
     ld hl, Func_01D_5DA1
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     ld hl, $0179
@@ -5307,42 +5307,42 @@ Jump_00D_6B5B::
 
 Jump_00D_6B79::
     ld a, l
-    ld [$CFE6], a
+    ld [wCFE6], a
     ld a, h
-    ld [$CFE7], a
+    ld [wCFE7], a
     ld hl, Func_034_4001
     ld b, $34
     rst $10
-    ld a, [$CFEC]
-    ld [$D006], a
-    ld a, [$CFED]
-    ld [$D007], a
+    ld a, [wCFEC]
+    ld [wD006], a
+    ld a, [wCFED]
+    ld [wD007], a
     ld hl, Func_035_4001
     ld b, $35
     rst $10
     ld hl, Func_016_5AAF
     ld b, $16
     rst $10
-    ld hl, $C986
+    ld hl, wC986
     ld a, $01
     ld [hl+], a
     call Func_00D_6CBA
-    ld a, [$CFEC]
+    ld a, [wCFEC]
     ld [hl+], a
-    ld [$CADB], a
-    ld a, [$CFED]
+    ld [wCADB], a
+    ld a, [wCFED]
     ld [hl+], a
-    ld [$CADC], a
-    ld a, [$D008]
+    ld [wCADC], a
+    ld a, [wD008]
     ld [hl+], a
     push hl
     ld hl, Func_00E_61C1
     ld b, $0E
     rst $10
     pop hl
-    ld a, [$CADE]
+    ld a, [wCADE]
     ld [hl+], a
-    ld de, $C60C
+    ld de, wC60C
     ld c, $00
 
 Jump_00D_6BCB::
@@ -5404,11 +5404,11 @@ Jump_00D_6C0A::
     dec b
     jr nz, Jump_00D_6C0A
     pop hl
-    ld a, [$D010]
+    ld a, [wD010]
     ld [hl+], a
-    ld a, [$D011]
+    ld a, [wD011]
     ld [hl+], a
-    ld a, [$D012]
+    ld a, [wD012]
     ld [hl+], a
     ld a, $16
     add a, l
@@ -5421,43 +5421,43 @@ Jump_00D_6C24::
     ld [hl+], a
     ld a, $01
     ld [hl+], a
-    ld a, [$D00E]
+    ld a, [wD00E]
     ld [hl+], a
     xor a, a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    ld a, [$CFF6]
+    ld a, [wCFF6]
     ld [hl+], a
-    ld a, [$CFF7]
+    ld a, [wCFF7]
     ld [hl+], a
-    ld a, [$CFF6]
+    ld a, [wCFF6]
     ld [hl+], a
-    ld a, [$CFF7]
+    ld a, [wCFF7]
     ld [hl+], a
-    ld a, [$CFF8]
+    ld a, [wCFF8]
     ld [hl+], a
-    ld a, [$CFF9]
+    ld a, [wCFF9]
     ld [hl+], a
-    ld a, [$CFF8]
+    ld a, [wCFF8]
     ld [hl+], a
-    ld a, [$CFF9]
+    ld a, [wCFF9]
     ld [hl+], a
-    ld a, [$CFFA]
+    ld a, [wCFFA]
     ld [hl+], a
-    ld a, [$CFFB]
+    ld a, [wCFFB]
     ld [hl+], a
-    ld a, [$CFFC]
+    ld a, [wCFFC]
     ld [hl+], a
-    ld a, [$CFFD]
+    ld a, [wCFFD]
     ld [hl+], a
-    ld a, [$CFFE]
+    ld a, [wCFFE]
     ld [hl+], a
-    ld a, [$CFFF]
+    ld a, [wCFFF]
     ld [hl+], a
-    ld a, [$D000]
+    ld a, [wD000]
     ld [hl+], a
-    ld a, [$D001]
+    ld a, [wD001]
     ld [hl+], a
     xor a, a
     ld [hl+], a
@@ -5466,15 +5466,15 @@ Jump_00D_6C24::
     ld [hl+], a
     ld a, $01
     ld [hl+], a
-    ld a, [$D002]
+    ld a, [wD002]
     ld [hl+], a
-    ld a, [$D003]
+    ld a, [wD003]
     ld [hl+], a
-    ld a, [$D005]
+    ld a, [wD005]
     ld [hl+], a
-    ld a, [$D004]
+    ld a, [wD004]
     ld [hl+], a
-    ld de, $D01A
+    ld de, wD01A
     ld b, $1B
 
 Jump_00D_6C8E::
@@ -5493,10 +5493,10 @@ Jump_00D_6C8E::
     ld [hl+], a
     pop hl
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
-    ld de, $C986
+    ld [rRAMB], a
+    ld de, wC986
     ld b, $A5
 
 Jump_00D_6CAF::
@@ -5506,7 +5506,7 @@ Jump_00D_6CAF::
     dec b
     jr nz, Jump_00D_6CAF
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     ret
 
 Func_00D_6CBA::
@@ -5529,12 +5529,12 @@ Jump_00D_6CC5::
 
 Func_00D_6CCC::
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
-    ld hl, $A000
+    ld [rRAMB], a
+    ld hl, sA000
     ld c, $00
-    ld a, [$C7C7]
+    ld a, [wC7C7]
     ld de, Data_00D_6D06
     add a, e
     ld e, a
@@ -5570,14 +5570,14 @@ Jump_00D_6CF8::
 Jump_00D_6D00::
     pop hl
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     ret
 
 Data_00D_6D06:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E
 
 Func_00D_6D09::
-    ld hl, $C61D
+    ld hl, wC61D
     ld c, $00
 
 Jump_00D_6D0E::
@@ -5599,7 +5599,7 @@ Jump_00D_6D20::
     ret
 
 Func_00D_6D22:: ; heuristic: follows a terminator; C0
-    ld hl, $C707
+    ld hl, wC707
     ld c, $00
 
 Jump_00D_6D27::
@@ -5625,7 +5625,7 @@ Jump_00D_6D3C::
     ret
 
 Func_00D_6D3E::
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     add a, a
     add a, a
     ld de, Data_00D_710E
@@ -5635,13 +5635,13 @@ Func_00D_6D3E::
     inc d
 
 Jump_00D_6D4B::
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     and a, a
     jr z, Jump_00D_6D60
-    ld a, [$C837]
+    ld a, [wC837]
     and a, a
     jr nz, Jump_00D_6D64
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     ld b, a
     ld a, $03
     sub a, b
@@ -5684,10 +5684,10 @@ Jump_00D_6D85::
     inc de
     ld a, [de]
     ld h, a
-    ld a, [$C8C1]
+    ld a, [wC8C1]
     add a, $E0
     ld [hl+], a
-    ld a, [$C8C2]
+    ld a, [wC8C2]
     add a, $E0
     ld [hl], a
     pop bc
@@ -5704,7 +5704,7 @@ Data_00D_6D9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Func_00D_6DA7::
     push bc
-    ld a, [$D7AB]
+    ld a, [wD7AB]
     sla a
     ld hl, Data_00D_6DC8
     add a, l
@@ -5733,7 +5733,7 @@ Data_00D_6DC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A4, $00, $E4, $00, $24, $01, $64, $01
 
 Func_00D_6DD0::
-    ld hl, $C61D
+    ld hl, wC61D
     ld c, $00
     ld b, $00
 
@@ -5765,7 +5765,7 @@ Jump_00D_6DEF::
     ret
 
 Func_00D_6DF2::
-    ld a, [$C837]
+    ld a, [wC837]
     and a, a
     jr nz, Jump_00D_6DFC
     ld b, $06
@@ -5775,7 +5775,7 @@ Jump_00D_6DFC::
     ld b, $07
 
 Jump_00D_6DFE::
-    ld hl, $D789
+    ld hl, wD789
     ld c, $00
 
 Jump_00D_6E03::
@@ -5785,12 +5785,12 @@ Jump_00D_6E03::
     ld a, c
     cp a, b
     jr c, Jump_00D_6E03
-    ld [$D7A9], a
+    ld [wD7A9], a
     ret
 
 Func_00D_6E0E::
-    ld hl, $D789
-    ld a, [$D7AF]
+    ld hl, wD789
+    ld a, [wD7AF]
     sla a
     sla a
     add a, l
@@ -5802,25 +5802,25 @@ Jump_00D_6E1D::
     ld c, $00
 
 Jump_00D_6E1F::
-    ld a, [$D7B1]
+    ld a, [wD7B1]
     cp a, $03
     jr c, Jump_00D_6E2B
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     jr Jump_00D_6E3A
 
 Jump_00D_6E2B::
-    ld a, [$D7B0]
+    ld a, [wD7B0]
     cp a, $01
     jr nz, Jump_00D_6E37
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     jr Jump_00D_6E3A
 
 Jump_00D_6E37::
-    ld a, [$D7A9]
+    ld a, [wD7A9]
 
 Jump_00D_6E3A::
     ld b, a
-    ld a, [$D7AF]
+    ld a, [wD7AF]
     sla a
     sla a
     add a, c
@@ -5846,7 +5846,7 @@ Jump_00D_6E3A::
     ld e, a
     ld a, [hl]
     ld d, a
-    ld hl, $C8CF
+    ld hl, wC8CF
     ld c, $00
 
 Jump_00D_6E66::
@@ -5867,7 +5867,7 @@ Jump_00D_6E6F::
     pop hl
     inc hl
     inc c
-    ld a, [$D7A9]
+    ld a, [wD7A9]
     cp a, c
     jr z, Jump_00D_6E87
     ld a, c
@@ -5880,21 +5880,21 @@ Jump_00D_6E87::
 Func_00D_6E88::
     ld de, $018E
     call Func_00D_4EA4
-    ld hl, $C462
+    ld hl, wC462
     call Func_00D_4EC7
     ld de, $018F
     ld a, d
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, e
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld hl, Func_01E_7564
     ld b, $1E
     rst $10
-    ld hl, $C463
+    ld hl, wC463
     ld a, h
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, l
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld hl, Func_01E_759A
     ld b, $1E
     rst $10
@@ -5960,7 +5960,7 @@ Func_00D_7115::
     ret
 
 Func_00D_711C::
-    ld a, [$D780]
+    ld a, [wD780]
     rst $00
     dw Jump_00D_7144
     dw Jump_00D_7158
@@ -5986,17 +5986,17 @@ Jump_00D_7144::
     ld b, $1E
     rst $10
     ld a, $08
-    ld [$D7F0], a
-    ld a, [$D780]
+    ld [wD7F0], a
+    ld a, [wD780]
     add a, $03
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_7158::
     ret
 
 Jump_00D_7159::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Func_00D_7195
     dw Func_00D_7195
@@ -6038,12 +6038,12 @@ Func_00D_719C:: ; heuristic: target of a pointer table; C0
     ld b, $15
     rst $10
     ld de, Data_01F_4510
-    ld hl, $8EE0
+    ld hl, vTiles1 + $6E0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4450
-    ld hl, $8EF0
+    ld hl, vTiles1 + $6F0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
@@ -6053,42 +6053,42 @@ Func_00D_71BD:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_5D84
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     ld b, a
     push af
     ld a, $C7
-    ld [$D7F1], a
+    ld [wD7F1], a
     call Func_00D_7812
     ld de, Data_00D_785E
-    ld hl, $C36C
+    ld hl, wC36C
     ld bc, $0C05
     call Func_00D_4DCB
     pop af
-    ld [$D7F1], a
-    ld hl, $C386
+    ld [wD7F1], a
+    ld hl, wC386
     ld a, l
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld a, h
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld hl, Func_015_688D
     ld b, $15
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_71FF:: ; heuristic: target of a pointer table; C0
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_720E:: ; heuristic: target of a pointer table; C0
@@ -6096,104 +6096,104 @@ Func_00D_720E:: ; heuristic: target of a pointer table; C0
     ld hl, $0278
     ld de, $00AC
     xor a, a
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, $08
-    ld [$D7F2], a
+    ld [wD7F2], a
     call Func_00D_4ED5
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_722A:: ; heuristic: target of a pointer table; C0
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     ld hl, Func_01D_5D84
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     push hl
     ld a, [hl]
     ld c, $56
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     cp a, $0A
     jr nc, Jump_00D_726A
     pop hl
     ld a, $02
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$1FFF], a
-    ld a, [$D781]
+    ld [rRAMG2], a
+    ld a, [wD781]
     dec a
     dec a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_726A::
     pop hl
-    ld a, [$C6FD]
+    ld a, [wC6FD]
     cp a, $02
     jr nc, Jump_00D_7295
     ld a, [hl]
     ld b, a
-    ld a, [$C6FE]
+    ld a, [wC6FE]
     cp a, b
     jr nz, Jump_00D_7295
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$1FFF], a
-    ld a, [$D781]
+    ld [rRAMG2], a
+    ld a, [wD781]
     dec a
     dec a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_7295::
     ld hl, Func_01D_5D84
     ld b, $1D
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     ld h, a
-    ld a, [$D7F6]
+    ld a, [wD7F6]
     ld l, a
     ld a, [hl]
-    ld [$D7B4], a
-    ld a, [$D7AB]
-    ld [$D7B5], a
-    ld a, [$D7AF]
-    ld [$D7B6], a
+    ld [wD7B4], a
+    ld a, [wD7AB]
+    ld [wD7B5], a
+    ld a, [wD7AF]
+    ld [wD7B6], a
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$D782], a
+    ld [wD782], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_72D0:: ; heuristic: target of a pointer table; C0
-    ld a, [$D782]
+    ld a, [wD782]
     and a, a
     jr nz, Jump_00D_72E0
     call Func_00D_7839
@@ -6204,7 +6204,7 @@ Func_00D_72D0:: ; heuristic: target of a pointer table; C0
 
 Jump_00D_72E0::
     xor a, a
-    ld [$D782], a
+    ld [wD782], a
     call Func_00D_720E
     call Func_00D_4E5A
     ld bc, $140D
@@ -6214,7 +6214,7 @@ Jump_00D_72E0::
 
 Func_00D_72F4:: ; heuristic: target of a pointer table; C0
     call Func_00D_7839
-    ld a, [$D7FB]
+    ld a, [wD7FB]
     sla a
     ld de, Data_00D_78D6
     add a, e
@@ -6232,7 +6232,7 @@ Jump_00D_7304::
     inc de
     ld a, [de]
     ld h, a
-    ld de, $CA2B
+    ld de, wCA2B
     ld b, $A5
 
 Jump_00D_730E::
@@ -6241,82 +6241,82 @@ Jump_00D_730E::
     inc de
     dec b
     jr nz, Jump_00D_730E
-    ld hl, $C994
+    ld hl, wC994
     ld a, [hl]
     and a, $01
     inc a
     and a, $01
-    ld hl, $CA39
+    ld hl, wCA39
     ld [hl], a
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_7329:: ; heuristic: target of a pointer table; C0
     ld a, $01
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld hl, Func_00E_5688
     ld b, $0E
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     cp a, $FF
     ret nz
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     call Func_00D_76D0
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     xor a, a
-    ld [$D782], a
+    ld [wD782], a
     ret
 
 Func_00D_7352:: ; heuristic: target of a pointer table; C0
     ld a, $6C
     call Func_000_1278
     ld de, Data_01F_4230
-    ld hl, $9700
+    ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4290
-    ld hl, $9710
+    ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4370
-    ld hl, $9720
+    ld hl, vTiles2 + $720
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4180
-    ld hl, $9760
+    ld hl, vTiles2 + $760
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     xor a, a
-    ld [$D7FA], a
+    ld [wD7FA], a
     ld de, Data_00D_78B8
-    ld hl, $C412
+    ld hl, wC412
     ld bc, $0605
     call Func_00D_4DCB
     call Func_00D_4E5A
     ld bc, $140D
     ld de, $01CC
     call Func_00D_4E05
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_73AF:: ; heuristic: target of a pointer table; C0
     ld hl, Func_01D_6540
     ld b, $1D
     rst $10
-    ld a, [$D7F9]
+    ld a, [wD7F9]
     and a, a
     ret z
     cp a, $FE
@@ -6327,62 +6327,62 @@ Func_00D_73AF:: ; heuristic: target of a pointer table; C0
 
 Jump_00D_73C3::
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_73D2::
-    ld a, [$D7FA]
+    ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_73C3
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$D782], a
-    ld [$D7FA], a
+    ld [wD782], a
+    ld [wD7FA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Func_00D_73F1:: ; heuristic: target of a pointer table; C0
-    ld a, [$D782]
+    ld a, [wD782]
     and a, a
     jr z, Jump_00D_740F
     xor a, a
-    ld [$D7FA], a
-    ld [$D782], a
-    ld a, [$D781]
+    ld [wD7FA], a
+    ld [wD782], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_740F::
-    ld a, [$D7B4]
-    ld [$D7F1], a
+    ld a, [wD7B4]
+    ld [wD7F1], a
     xor a, a
-    ld [$D7F2], a
+    ld [wD7F2], a
     ld hl, Func_014_7E96
     ld b, $14
     rst $10
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
-    ld a, [$D7F6]
+    ld [rRAMB], a
+    ld a, [wD7F6]
     ld l, a
-    ld a, [$D7F7]
+    ld a, [wD7F7]
     ld h, a
-    ld de, $CAD0
+    ld de, wCAD0
     ld b, $A5
 
 Jump_00D_7435::
@@ -6392,29 +6392,29 @@ Jump_00D_7435::
     dec b
     jr nz, Jump_00D_7435
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$C8C3], a
-    ld [$C8C4], a
+    ld [wC8C3], a
+    ld [wC8C4], a
     ld hl, Func_004_4AA8
     ld b, $04
     rst $10
     ld a, $7F
-    ld [$C527], a
-    ld hl, $CADB
+    ld [wC527], a
+    ld hl, wCADB
     ld a, [hl+]
-    ld [$D7F1], a
+    ld [wD7F1], a
     ld a, [hl]
-    ld [$D7F2], a
-    ld de, $C7FC
+    ld [wD7F2], a
+    ld de, wC7FC
     ld a, e
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld a, d
-    ld [$D7F4], a
+    ld [wD7F4], a
     ld hl, Func_015_68F3
     ld b, $15
     rst $10
-    ld hl, $D7E0
+    ld hl, wD7E0
     ld b, $07
 
 Jump_00D_7472::
@@ -6422,7 +6422,7 @@ Jump_00D_7472::
     ld [hl+], a
     dec b
     jr nz, Jump_00D_7472
-    ld a, [$D7FB]
+    ld a, [wD7FB]
     sla a
     ld hl, Data_00D_7499
     add a, l
@@ -6439,9 +6439,9 @@ Jump_00D_7484::
     ld hl, Func_015_6E64
     ld b, $15
     rst $10
-    ld a, [$D782]
+    ld a, [wD782]
     inc a
-    ld [$D782], a
+    ld [wD782], a
     ret
 
 Data_00D_7499:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6452,62 +6452,62 @@ Func_00D_74AD:: ; heuristic: target of a pointer table; C0
     ld hl, Func_00C_6FCB
     ld b, $0C
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_74BB:: ; heuristic: target of a pointer table; C0
-    ld a, [$C919]
-    ld [$C91C], a
-    ld a, [$C91A]
-    ld [$C91D], a
-    ld a, [$C91B]
-    ld [$C91E], a
+    ld a, [wC919]
+    ld [wC91C], a
+    ld a, [wC91A]
+    ld [wC91D], a
+    ld a, [wC91B]
+    ld [wC91E], a
     xor a, a
-    ld [$C917], a
+    ld [wC917], a
     ld a, $20
-    ld [$C916], a
+    ld [wC916], a
     ld hl, Func_013_405C
     ld b, $13
     rst $10
     xor a, a
-    ld [$D7FD], a
+    ld [wD7FD], a
     xor a, a
-    ldh [$FFB9], a
+    ldh [hFFB9], a
     ld hl, Func_004_449F
     ld b, $04
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_74F1:: ; heuristic: target of a pointer table; C0
     call Func_00D_77C2
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Func_00D_74FC:: ; heuristic: target of a pointer table; C0
-    ld hl, $C364
-    ld de, $C198
+    ld hl, wC364
+    ld de, wC198
     ld bc, $0104
     call Func_00D_4E7B
-    ld hl, $C300
-    ld de, $C29C
+    ld hl, wC300
+    ld de, wC29C
     ld bc, $0064
     call Func_00D_4E7B
-    ld a, [$C525]
+    ld a, [wIsCGB]
     and a, a
     jr z, Jump_00D_7532
-    ld hl, $D1CC
-    ld de, $D000
+    ld hl, wD1CC
+    ld de, wD000
     ld bc, $0104
     call Func_00D_4E84
-    ld hl, $D168
-    ld de, $D104
+    ld hl, wD168
+    ld de, wD104
     ld bc, $0064
     call Func_00D_4E84
 
@@ -6523,30 +6523,30 @@ Jump_00D_7532::
     ld de, $0168
     call Func_00D_4E05
     ld a, $70
-    ldh [$FFBA], a
+    ldh [hFFBA], a
     xor a, a
-    ld [$C920], a
+    ld [wC920], a
     ld a, $80
-    ld [$C919], a
+    ld [wC919], a
     ret
 
 Jump_00D_755C::
     ld hl, Func_01E_4069
     ld b, $1E
     rst $10
-    ld a, [$D781]
+    ld a, [wD781]
     cp a, $0A
     ret nz
     xor a, a
-    ld [$D781], a
-    ld [$D782], a
-    ld a, [$D780]
+    ld [wD781], a
+    ld [wD782], a
+    ld a, [wD780]
     add a, $05
-    ld [$D780], a
+    ld [wD780], a
     ret
 
 Jump_00D_7578::
-    ld a, [$D781]
+    ld a, [wD781]
     rst $00
     dw Func_00D_7597
     dw Func_00D_7637
@@ -6563,7 +6563,7 @@ Func_00D_7590:: ; heuristic: target of a pointer table; C0
     ret
 
 Func_00D_7597:: ; heuristic: target of a pointer table; C0
-    ld a, [$D7FB]
+    ld a, [wD7FB]
     ld b, a
     sla a
     add a, b
@@ -6581,7 +6581,7 @@ Jump_00D_75A7::
     ld d, a
     ld a, [hl]
     ld b, a
-    ld hl, $9000
+    ld hl, vTiles2
     call Func_000_0CF5
     pop af
     ld hl, Data_00D_7607
@@ -6597,14 +6597,14 @@ Jump_00D_75BC::
     ld d, a
     ld a, [hl]
     ld b, a
-    ld hl, $C49F
+    ld hl, wC49F
     ld c, $40
     call Func_000_0B2B
     ld a, $7F
-    ld [$C526], a
-    ld a, [$D781]
+    ld [wC526], a
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
 
 Data_00D_75D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6622,57 +6622,57 @@ Func_00D_7637:: ; heuristic: target of a pointer table; C0
     ld de, Data_01F_78AA
     call Func_00D_4F3D
     ld de, Data_01F_4510
-    ld hl, $8EE0
+    ld hl, vTiles1 + $6E0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
     ld de, Data_01F_4450
-    ld hl, $8EF0
+    ld hl, vTiles1 + $6F0
     ld b, $1F
     ld c, $10
     call Func_000_0B2B
-    ld a, [$D781]
+    ld a, [wD781]
     inc a
-    ld [$D781], a
+    ld [wD781], a
     ret
     INCBIN "dwm2-cobi-us.gbc", $037662, $6E
 
 Func_00D_76D0::
-    ld a, [$D7F6]
-    ld [$D7F1], a
-    ld [$D006], a
-    ld a, [$D7F7]
-    ld [$D7F2], a
-    ld [$D007], a
+    ld a, [wD7F6]
+    ld [wD7F1], a
+    ld [wD006], a
+    ld a, [wD7F7]
+    ld [wD7F2], a
+    ld [wD007], a
     ld de, $75C5
     ld a, e
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld a, d
-    ld [$D7F4], a
+    ld [wD7F4], a
     ld hl, Func_015_68FA
     ld b, $15
     rst $10
-    ld a, [$D7F5]
+    ld a, [wD7F5]
     cp a, $FF
     jr z, Jump_00D_7737
-    ld a, [$D7F6]
-    ld [$D7F1], a
-    ld a, [$D7F7]
-    ld [$D7F2], a
-    ld hl, $C7FC
+    ld a, [wD7F6]
+    ld [wD7F1], a
+    ld a, [wD7F7]
+    ld [wD7F2], a
+    ld hl, wC7FC
     ld a, l
-    ld [$D7F3], a
+    ld [wD7F3], a
     ld a, h
-    ld [$D7F4], a
+    ld [wD7F4], a
     ld hl, Func_015_68FA
     ld b, $15
     rst $10
     cp a, $FF
     jr z, Jump_00D_7737
-    ld a, [$D7F6]
-    ld [$D006], a
-    ld a, [$D7F7]
-    ld [$D007], a
+    ld a, [wD7F6]
+    ld [wD006], a
+    ld a, [wD7F7]
+    ld [wD007], a
     ld hl, Func_016_5A7E
     ld b, $16
     rst $10
@@ -6680,19 +6680,19 @@ Func_00D_76D0::
     and a, a
     jr nz, Jump_00D_7737
     ld a, $01
-    ld [$D7FA], a
+    ld [wD7FA], a
     ret
 
 Jump_00D_7737::
     xor a, a
-    ld [$D7FA], a
-    ld a, [$D7F6]
+    ld [wD7FA], a
+    ld a, [wD7F6]
     ld l, a
-    ld a, [$D7F7]
+    ld a, [wD7F7]
     ld h, a
     call Func_00D_778C
-    ld hl, $C8CF
-    ld de, $C130
+    ld hl, wC8CF
+    ld de, wC130
     ld b, $10
 
 Jump_00D_774E::
@@ -6712,7 +6712,7 @@ Jump_00D_7758::
     ld [de], a
     inc de
     push de
-    ld a, [$CB3D]
+    ld a, [wCB3D]
     ld l, a
     ld h, $00
     call Func_000_16F5
@@ -6720,7 +6720,7 @@ Jump_00D_7758::
     ld b, $15
     rst $10
     pop de
-    ld hl, $C8C0
+    ld hl, wC8C0
     ld b, $03
 
 Jump_00D_7776::
@@ -6745,10 +6745,10 @@ Jump_00D_7782::
 
 Func_00D_778C::
     push hl
-    ld a, [$D7FE]
+    ld a, [wDataBank]
     push af
     ld a, $08
-    ld [$D7FE], a
+    ld [wDataBank], a
     ld hl, Data_008_4032
     ld a, $04
     add a, l
@@ -6771,75 +6771,75 @@ Jump_00D_77A0::
     ld e, b
     ld d, c
     pop af
-    ld [$D7FE], a
-    ld hl, $C8CF
+    ld [wDataBank], a
+    ld hl, wC8CF
     ld b, $08
     ld c, $10
     call Func_000_0B2B
     ret
 
 Func_00D_77C2::
-    ld a, [$C938]
-    ldh [$FF8E], a
-    ld a, [$C939]
-    ldh [$FF91], a
-    ld a, [$C93A]
-    ldh [$FF98], a
-    ld a, [$C93B]
-    ld [$C8EF], a
-    ld a, [$C93C]
-    ld [$C8F0], a
-    ld a, [$C93D]
-    ld [$C8F1], a
-    ld a, [$C93E]
-    ld [$C8F4], a
-    ld a, [$C93F]
-    ld [$C8F5], a
-    ld a, [$C940]
-    ld [$C8F6], a
-    ld a, [$C941]
-    ld [$C8F9], a
-    ld a, [$C942]
-    ld [$C8FA], a
-    ld a, [$C943]
-    ld [$C8FB], a
-    ld a, [$C937]
-    ld [$CB86], a
+    ld a, [wC938]
+    ldh [hFF8E], a
+    ld a, [wC939]
+    ldh [hFF91], a
+    ld a, [wC93A]
+    ldh [hFF98], a
+    ld a, [wC93B]
+    ld [wC8EF], a
+    ld a, [wC93C]
+    ld [wC8F0], a
+    ld a, [wC93D]
+    ld [wC8F1], a
+    ld a, [wC93E]
+    ld [wC8F4], a
+    ld a, [wC93F]
+    ld [wC8F5], a
+    ld a, [wC940]
+    ld [wC8F6], a
+    ld a, [wC941]
+    ld [wC8F9], a
+    ld a, [wC942]
+    ld [wC8FA], a
+    ld a, [wC943]
+    ld [wC8FB], a
+    ld a, [wC937]
+    ld [wCB86], a
     xor a, a
-    ld [$C936], a
+    ld [wC936], a
     ret
 
 Func_00D_7812::
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
+    ld [rRAMB], a
     ld a, b
     ld c, $0D
     call Func_000_1F80
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     and a, $0F
-    ld [$D09D], a
-    ld a, [$D7F1]
-    ld [$D09E], a
+    ld [wD09D], a
+    ld a, [wD7F1]
+    ld [wD09E], a
     ld hl, Func_016_7A48
     ld b, $16
     rst $10
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     ret
 
 Func_00D_7839::
     ld a, $0A
-    ld [$1FFF], a
+    ld [rRAMG2], a
     xor a, a
-    ld [$4100], a
-    ld a, [$D7B4]
+    ld [rRAMB], a
+    ld a, [wD7B4]
     ld c, $A5
     call Func_000_1682
-    ld de, $A000
+    ld de, sA000
     add hl, de
-    ld de, $C986
+    ld de, wC986
     ld b, $A5
 
 Jump_00D_7853::
@@ -6849,7 +6849,7 @@ Jump_00D_7853::
     dec b
     jr nz, Jump_00D_7853
     xor a, a
-    ld [$1FFF], a
+    ld [rRAMG2], a
     ret
 
 Data_00D_785E:: ; heuristic: pointer load in the same bank (bank assumed); C0

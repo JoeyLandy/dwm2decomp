@@ -1,0 +1,20 @@
+{
+  "_comment": "RAM addresses whose names are supported by evidence. Key: hex address. Each entry: name, note (what the evidence shows), evidence (id in docs/EVIDENCE_LOG.md). Addresses not listed get address names (wXXXX, hXXXX, sXXXX) with no meaning claimed.",
+  "C525": {"name": "wIsCGB", "note": "1 when the boot code found A = $11 (CGB), else 0; set at $0150", "evidence": "E-0020"},
+  "D7FE": {"name": "wDataBank", "note": "ROM bank used by Func_000_0B6C when reading a word through HL", "evidence": "E-0014"},
+  "D067": {"name": "wDataBankSave", "note": "spare slot some code copies wDataBank to and restores it from", "evidence": "E-0014"},
+  "DD10": {"name": "wSoundId", "note": "sound id passed to the start-sound routine", "evidence": "E-0018"},
+  "DC00": {"name": "wSoundChannelSlots", "note": "channel-state slots; the record's first byte is added to this address", "evidence": "E-0018"},
+  "DCC0": {"name": "wSoundLabelSlots", "note": "per-channel label slots: 3 bytes each, 16 per channel", "evidence": "E-0019"},
+  "DD0F": {"name": "wSoundChannelIndex", "note": "slot number of the channel the sound engine is processing", "evidence": "E-0019"},
+  "DD0A": {"name": "wSoundHwChannel", "note": "hardware channel of the current slot: 2 selects the wave channel, 3 noise", "evidence": "E-0019"},
+  "FFDD": {"name": "hSoundBank", "note": "ROM bank the sound engine reads tracks from", "evidence": "E-0018"},
+  "FFD8": {"name": "hTrackPosLo", "note": "low byte of the current track position, counted in 2-byte events", "evidence": "E-0019"},
+  "FFD9": {"name": "hTrackPosHi", "note": "high byte of the current track position", "evidence": "E-0019"},
+  "FFDB": {"name": "hTrackBaseLo", "note": "low byte of the current track's start address", "evidence": "E-0019"},
+  "FFDC": {"name": "hTrackBaseHi", "note": "high byte of the current track's start address", "evidence": "E-0019"},
+  "FFD6": {"name": "hDecompressLock", "note": "non-zero while the decompressor is running", "evidence": "E-0016"},
+  "FFBB": {"name": "hDecompressMarker", "note": "marker byte from the stream header", "evidence": "E-0016"},
+  "FFBC": {"name": "hDecompressDestLo", "note": "destination start, low byte", "evidence": "E-0016"},
+  "FFBD": {"name": "hDecompressDestHi", "note": "destination start, high byte", "evidence": "E-0016"}
+}

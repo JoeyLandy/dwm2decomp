@@ -2,8 +2,8 @@ SECTION "Bank 3E", ROMX[$4000], BANK[$3E]
     db $3E
 
 Func_03E_4001::
-    ld hl, $FFA9
-    ld a, [$D804]
+    ld hl, hFFA9
+    ld a, [wD804]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -11,9 +11,9 @@ Func_03E_4001::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ld a, [$D801]
+    ld a, [wD801]
     ld [hl+], a
-    ld a, [$DAB7]
+    ld a, [wDAB7]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -27,10 +27,10 @@ Data_03E_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $19, $56, $26, $60, $FC, $61, $1A, $67, $16, $76, $3A, $7A
 
 Func_03E_4040::
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     cp a, $28
     jr nc, Jump_03E_4090
-    ldh a, [$FFAD]
+    ldh a, [hFFAD]
     ld l, a
     ld h, $00
     add hl, hl
@@ -38,7 +38,7 @@ Func_03E_4040::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [$FFAE]
+    ldh a, [hFFAE]
     ld l, a
     ld h, $00
     add hl, hl
@@ -46,7 +46,7 @@ Func_03E_4040::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     sla a
     sla a
     ld l, a
@@ -58,18 +58,18 @@ Jump_03E_4063::
     cp a, $80
     jr z, Jump_03E_4090
     ld b, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, b
     add a, $10
     ld [hl+], a
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, b
     add a, $08
     ld [hl+], a
-    ldh a, [$FFAF]
+    ldh a, [hFFAF]
     ld b, a
     ld a, [de]
     inc de
@@ -78,12 +78,12 @@ Jump_03E_4063::
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [$FFB0]
+    ldh a, [hFFB0]
     xor a, b
     ld [hl+], a
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     inc a
-    ldh [$FFB1], a
+    ldh [hFFB1], a
     cp a, $28
     jr c, Jump_03E_4063
 

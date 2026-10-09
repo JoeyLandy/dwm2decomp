@@ -2,7 +2,7 @@ SECTION "Bank 29", ROMX[$4000], BANK[$29]
     db $29
 
 Func_029_4001::
-    ld a, [$C529]
+    ld a, [wC529]
     cp a, $8E
     jr c, Jump_029_400F
     ld hl, Func_097_4026
@@ -16,7 +16,7 @@ Jump_029_400F::
     ret
 
 Func_029_4016:: ; heuristic: follows a terminator; C0
-    ld a, [$C529]
+    ld a, [wC529]
     cp a, $8E
     jr c, Jump_029_4024
     ld hl, Func_097_4035

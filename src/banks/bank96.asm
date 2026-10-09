@@ -3,34 +3,34 @@ SECTION "Bank 96", ROMX[$4000], BANK[$96]
 
 Func_096_4001::
     ld de, Data_096_404B
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $C8
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25C9
     ret
 
 Func_096_4010:: ; heuristic: follows a terminator; C0
     ld de, Data_096_404B
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $C8
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25FE
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 Func_096_4026::
     ld de, Data_096_574A
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $90
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25C9
     ret
 
 Func_096_4035:: ; heuristic: follows a terminator; C0
     ld de, Data_096_574A
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $90
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25FE
     ret
     db $CD, $26, $40, $CD, $11, $26, $C9
@@ -564,17 +564,17 @@ Data_096_6EF6:: ; heuristic: target of a monotone pointer table; C0
 
 Func_096_7011::
     ld de, Data_096_7036
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $88
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25C9
     ret
 
 Func_096_7020:: ; heuristic: follows a terminator; C0
     ld de, Data_096_7036
-    ld a, [$C529]
+    ld a, [wC529]
     sub a, $88
-    ld [$C529], a
+    ld [wC529], a
     call Func_000_25FE
     ret
     db $CD, $11, $70, $CD, $11, $26, $C9

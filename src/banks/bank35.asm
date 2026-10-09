@@ -2,19 +2,19 @@ SECTION "Bank 35", ROMX[$4000], BANK[$35]
     db $35
 
 Func_035_4001::
-    ld de, $D008
+    ld de, wD008
     ld b, $2F
     call Func_035_401C
     ret
 
 Func_035_400A::
-    ld de, $D008
+    ld de, wD008
     ld b, $01
     call Func_035_401C
     ret
 
 Func_035_4013::
-    ld de, $D008
+    ld de, wD008
     ld b, $02
     call Func_035_401C
     ret
@@ -22,9 +22,9 @@ Func_035_4013::
 Func_035_401C::
     push bc
     push de
-    ld a, [$D006]
+    ld a, [wD006]
     ld c, a
-    ld a, [$D007]
+    ld a, [wD007]
     ld b, a
     sla c
     rl b

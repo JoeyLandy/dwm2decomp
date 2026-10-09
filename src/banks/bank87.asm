@@ -2,21 +2,21 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
 Func_087_4001::
-    ld a, [$C8CB]
+    ld a, [wC8CB]
     and a, $03
     ret nz
-    ld a, [$C468]
+    ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [$FF8C]
+    ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [$C918]
+    ld a, [wC918]
     or a, a
     ret nz
     inc a
-    ld [$C918], a
-    ldh a, [$FF90]
+    ld [wC918], a
+    ldh a, [hFF90]
     ld l, a
     ld h, $00
     add hl, hl
@@ -45,17 +45,17 @@ Jump_087_4031::
     inc hl
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
@@ -66,12 +66,12 @@ Jump_087_4031::
 
 Jump_087_4057::
     ld c, a
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, c
     jr nz, Jump_087_4096
 
@@ -94,18 +94,18 @@ Jump_087_4071::
 
 Jump_087_4078::
     ld a, [hl+]
-    ld [$C916], a
+    ld [wC916], a
     ld a, [hl]
-    ld [$C917], a
+    ld [wC917], a
     ld hl, Func_013_405C
     ld b, $13
     rst $10
-    ld a, [$C5DC]
+    ld a, [wC5DC]
     cp a, $01
     jr nz, Jump_087_4094
     xor a, a
-    ld [$C55E], a
-    ld [$C562], a
+    ld [wC55E], a
+    ld [wC562], a
 
 Jump_087_4094::
     pop hl
@@ -147,26 +147,26 @@ Jump_087_409E::
     ds $A6, $00
 
 Func_087_42A0::
-    ld a, [$C8CB]
+    ld a, [wC8CB]
     and a, $03
     ret nz
-    ld a, [$C468]
+    ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [$FF8C]
+    ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [$C562]
+    ld a, [wC562]
     bit 0, a
     ret z
-    ld a, [$CB7D]
+    ld a, [wCB7D]
     or a, a
     jp z, Jump_087_43FC
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     ld b, a
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     ld c, a
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     or a, a
     jr z, Jump_087_42D2
     dec a
@@ -263,7 +263,7 @@ Jump_087_4332::
     ld [hl], a
     dec hl
     dec hl
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     add a, $02
     and a, $03
     ld [hl], a
@@ -278,104 +278,104 @@ Jump_087_4344::
     cp a, $FF
     jr nz, Jump_087_4351
     ld a, $08
-    ld [$C917], a
+    ld [wC917], a
     jp Jump_087_43DC
 
 Jump_087_4351::
     cp a, $FE
     jr nz, Jump_087_4360
     ld a, $09
-    ld [$C917], a
+    ld [wC917], a
     xor a, a
-    ld [$C916], a
+    ld [wC916], a
     jr Jump_087_43DC
 
 Jump_087_4360::
     cp a, $FC
     jr nz, Jump_087_4370
     ld a, $09
-    ld [$C917], a
+    ld [wC917], a
     ld a, $02
-    ld [$C916], a
+    ld [wC916], a
     jr Jump_087_43DC
 
 Jump_087_4370::
     cp a, $FB
     jr nz, Jump_087_4380
     ld a, $09
-    ld [$C917], a
+    ld [wC917], a
     ld a, $03
-    ld [$C916], a
+    ld [wC916], a
     jr Jump_087_43DC
 
 Jump_087_4380::
     cp a, $FA
     jr nz, Jump_087_4390
     ld a, $09
-    ld [$C917], a
+    ld [wC917], a
     ld a, $08
-    ld [$C916], a
+    ld [wC916], a
     jr Jump_087_43DC
 
 Jump_087_4390::
-    ld [$C916], a
-    ldh a, [$FF90]
+    ld [wC916], a
+    ldh a, [hFF90]
     cp a, $20
     jr nc, Jump_087_43A0
     ld a, $01
-    ld [$C917], a
+    ld [wC917], a
     jr Jump_087_43DC
 
 Jump_087_43A0::
     cp a, $30
     jr nc, Jump_087_43AB
     ld a, $02
-    ld [$C917], a
+    ld [wC917], a
     jr Jump_087_43DC
 
 Jump_087_43AB::
     cp a, $48
     jr nc, Jump_087_43B6
     ld a, $03
-    ld [$C917], a
+    ld [wC917], a
     jr Jump_087_43DC
 
 Jump_087_43B6::
     cp a, $70
     jr nc, Jump_087_43C1
     ld a, $04
-    ld [$C917], a
+    ld [wC917], a
     jr Jump_087_43DC
 
 Jump_087_43C1::
     cp a, $A0
     jr nc, Jump_087_43CC
     ld a, $05
-    ld [$C917], a
+    ld [wC917], a
     jr Jump_087_43DC
 
 Jump_087_43CC::
     cp a, $A8
     jr nc, Jump_087_43D7
     ld a, $06
-    ld [$C917], a
+    ld [wC917], a
     jr Jump_087_43DC
 
 Jump_087_43D7::
     ld a, $07
-    ld [$C917], a
+    ld [wC917], a
 
 Jump_087_43DC::
     ld hl, Func_013_405C
     ld b, $13
     rst $10
-    ld a, [$C5DC]
+    ld a, [wC5DC]
     cp a, $01
     ret nz
     xor a, a
-    ld [$C55E], a
-    ld [$C562], a
-    ld a, [$C8CD]
+    ld [wC55E], a
+    ld [wC562], a
+    ld a, [wC8CD]
     bit 7, a
     ret z
     ld hl, Func_002_5B9E
@@ -384,7 +384,7 @@ Jump_087_43DC::
     ret
 
 Jump_087_43FC::
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jr z, Jump_087_440A
     call Func_087_4507
@@ -393,7 +393,7 @@ Jump_087_43FC::
     ret
 
 Jump_087_440A::
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     ld l, a
     ld h, $00
     add hl, hl
@@ -422,12 +422,12 @@ Jump_087_4420::
     cp a, $05
     jr nz, Jump_087_4489
     inc hl
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jr nz, Jump_087_443D
     ld a, [hl]
     ld c, a
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     cp a, c
     jp nz, Jump_087_44FC
 
@@ -435,17 +435,17 @@ Jump_087_443D::
     inc hl
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     dec a
     jp nz, Jump_087_445D
     ld a, c
@@ -462,12 +462,12 @@ Jump_087_445D::
     ld c, a
 
 Jump_087_4466::
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     or a, a
     jr nz, Jump_087_4479
     ld a, c
@@ -484,7 +484,7 @@ Jump_087_4479::
     ld c, a
 
 Jump_087_4481::
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, c
     jp nz, Jump_087_44FC
     jr Jump_087_44BD
@@ -492,16 +492,16 @@ Jump_087_4481::
 Jump_087_4489::
     dec a
     ld c, a
-    ldh a, [$FF98]
+    ldh a, [hFF98]
     cp a, c
     jr nz, Jump_087_44FC
     inc hl
-    ld a, [$CC44]
+    ld a, [wCC44]
     bit 7, a
     jr nz, Jump_087_449F
     ld a, [hl]
     ld c, a
-    ldh a, [$FF90]
+    ldh a, [hFF90]
     cp a, c
     jr nz, Jump_087_44FC
 
@@ -509,22 +509,22 @@ Jump_087_449F::
     inc hl
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF8F]
+    ldh a, [hFF8F]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF92]
+    ldh a, [hFF92]
     cp a, c
     jr nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF8E]
+    ldh a, [hFF8E]
     cp a, c
     jr nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [$FF91]
+    ldh a, [hFF91]
     cp a, c
     jr nz, Jump_087_44FC
 
@@ -547,19 +547,19 @@ Jump_087_44CA::
 
 Jump_087_44D1::
     ld a, [hl+]
-    ld [$C916], a
+    ld [wC916], a
     ld a, [hl]
-    ld [$C917], a
+    ld [wC917], a
     ld hl, Func_013_405C
     ld b, $13
     rst $10
-    ld a, [$C5DC]
+    ld a, [wC5DC]
     cp a, $01
     jr nz, Jump_087_44FC
     xor a, a
-    ld [$C55E], a
-    ld [$C562], a
-    ld a, [$C8CD]
+    ld [wC55E], a
+    ld [wC562], a
+    ld a, [wC8CD]
     bit 7, a
     jr z, Jump_087_44FA
     ld hl, Func_002_5B9E
@@ -591,10 +591,10 @@ Func_087_4507::
 Jump_087_4511::
     cp a, $83
     jr nz, Jump_087_4537
-    ld a, [$CC45]
+    ld a, [wCC45]
     add a, a
     add a, a
-    ld hl, $CD89
+    ld hl, wCD89
     add a, l
     ld l, a
     jr nc, Jump_087_4522
@@ -663,21 +663,21 @@ Jump_087_4537::
     INCBIN "dwm2-cobi-us.gbc", $21C61B, $EE
 
 Func_087_4709::
-    ld a, [$CB7D]
+    ld a, [wCB7D]
     or a, a
     ret z
     ld a, c
     swap a
     and a, $0F
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld a, b
     swap a
     and a, $0F
-    ldh [$FFC7], a
-    ld a, [$CB7D]
+    ldh [hFFC7], a
+    ld a, [wCB7D]
     ld b, a
     ld c, $01
-    ld hl, $CB8A
+    ld hl, wCB8A
 
 Jump_087_4725::
     push hl
@@ -686,7 +686,7 @@ Jump_087_4725::
     swap a
     and a, $0F
     ld c, a
-    ldh a, [$FFC7]
+    ldh a, [hFFC7]
     cp a, c
     jr nz, Jump_087_473E
     inc hl
@@ -694,7 +694,7 @@ Jump_087_4725::
     swap a
     and a, $0F
     ld c, a
-    ldh a, [$FFC6]
+    ldh a, [hFFC6]
     cp a, c
     jr z, Jump_087_474D
 

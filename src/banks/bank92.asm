@@ -2,8 +2,8 @@ SECTION "Bank 92", ROMX[$4000], BANK[$92]
     db $92
 
 Func_092_4001::
-    ld hl, $FFA9
-    ld a, [$D804]
+    ld hl, hFFA9
+    ld a, [wD804]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -11,9 +11,9 @@ Func_092_4001::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ld a, [$D801]
+    ld a, [wD801]
     ld [hl+], a
-    ld a, [$DAB7]
+    ld a, [wDAB7]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -85,10 +85,10 @@ Data_092_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_092_78D4
 
 Func_092_409C::
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     cp a, $28
     jr nc, Jump_092_40EC
-    ldh a, [$FFAD]
+    ldh a, [hFFAD]
     ld l, a
     ld h, $00
     add hl, hl
@@ -96,7 +96,7 @@ Func_092_409C::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [$FFAE]
+    ldh a, [hFFAE]
     ld l, a
     ld h, $00
     add hl, hl
@@ -104,7 +104,7 @@ Func_092_409C::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     sla a
     sla a
     ld l, a
@@ -116,18 +116,18 @@ Jump_092_40BF::
     cp a, $80
     jr z, Jump_092_40EC
     ld b, a
-    ldh a, [$FFAB]
+    ldh a, [hFFAB]
     add a, b
     add a, $10
     ld [hl+], a
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [$FFA9]
+    ldh a, [hFFA9]
     add a, b
     add a, $08
     ld [hl+], a
-    ldh a, [$FFAF]
+    ldh a, [hFFAF]
     ld b, a
     ld a, [de]
     inc de
@@ -136,12 +136,12 @@ Jump_092_40BF::
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [$FFB0]
+    ldh a, [hFFB0]
     xor a, b
     ld [hl+], a
-    ldh a, [$FFB1]
+    ldh a, [hFFB1]
     inc a
-    ldh [$FFB1], a
+    ldh [hFFB1], a
     cp a, $28
     jr c, Jump_092_40BF
 
@@ -541,17 +541,17 @@ Func_092_5805:: ; heuristic: target of a pointer table; C0
     add sp, 26
     nop
     ret c
-    ldh a, [$FF1A]
+    ldh a, [rNR30]
     nop
     add a, b
 
 Func_092_580E:: ; heuristic: target of a pointer table; C0
-    ldh [$FFF9], a
+    ldh [hFFF9], a
     ld e, $00
     rst $20
     ld sp, hl
     ld e, $40
-    ldh [$FF00], a
+    ldh [rP1], a
     ld e, $20
     rst $20
     nop
@@ -560,7 +560,7 @@ Func_092_580E:: ; heuristic: target of a pointer table; C0
     db $02, $1A, $00, $DE, $F7, $1A, $00, $80
 
 Func_092_5827:: ; heuristic: target of a pointer table; C0
-    ldh [$FFF0], a
+    ldh [hFFF0], a
     ld de, $E000
     ld hl, sp + 18
     nop
@@ -581,32 +581,32 @@ Func_092_5827:: ; heuristic: target of a pointer table; C0
     add sp, -8
     inc de
     ld h, b
-    ldh a, [$FF00]
+    ldh a, [rP1]
     rrca
     ld h, b
-    ldh a, [$FFF8]
+    ldh a, [hFFF8]
     db $10, $60 ; stop
     ldh [$FF08], a
     inc d
     ld h, b
-    ldh [$FF00], a
+    ldh [rP1], a
     dec d
     ld h, b
     ldh a, [$FF08]
     ld a, [de]
     nop
     ret c
-    ldh a, [$FF1A]
+    ldh a, [rNR30]
     nop
     add a, b
 
 Func_092_5860:: ; heuristic: target of a pointer table; C0
-    ldh [$FFF9], a
+    ldh [hFFF9], a
     ld e, $00
     rst $20
     ld sp, hl
     ld e, $40
-    ldh [$FF00], a
+    ldh [rP1], a
     ld e, $20
     rst $20
     nop
@@ -620,10 +620,10 @@ Jump_092_5874::
     add sp, 9
     rla
     nop
-    ldh a, [$FF01]
+    ldh a, [rSB]
     rla
     ld h, b
-    ldh a, [$FF11]
+    ldh a, [rNR11]
     add hl, de
     nop
     ld hl, sp + 9
@@ -633,13 +633,13 @@ Jump_092_5874::
     ld a, [de]
     nop
     rst $10
-    ldh a, [$FF18]
+    ldh a, [rNR23]
     ld h, b
     rst $18
     ld hl, sp + 22
     ld h, b
     rst $18
-    ldh a, [$FF17]
+    ldh a, [rNR22]
     ld h, b
     rst $10
     ld hl, sp + 23
@@ -648,7 +648,7 @@ Jump_092_5874::
     add sp, 25
     ld h, b
     rst $08
-    ldh a, [$FF19]
+    ldh a, [rNR24]
     nop
     ret nc
     jp hl

@@ -543,7 +543,7 @@ Jump_0E2_434D::
     call Func_0E2_64F5
 
 Jump_0E2_435D::
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_667F
     ld hl, Func_005_5397
     ld b, $05
@@ -3869,7 +3869,7 @@ Jump_0E2_57F6::
     call Func_0E2_64CE
 
 Jump_0E2_5806::
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_670B
     ld hl, Func_005_53CA
     ld b, $05
@@ -4389,7 +4389,7 @@ Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_66C5
     ld hl, Func_005_44CF
     ld b, $05
@@ -5293,7 +5293,7 @@ Func_0E2_60D7:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_656D
     ld hl, Func_005_54FD
     ld b, $05
@@ -5377,7 +5377,7 @@ Func_0E2_6160:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_672D
     ld hl, Func_005_54FD
     ld b, $05
@@ -5446,7 +5446,7 @@ Func_0E2_61CD:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_65B8
     call Func_0E2_6854
     ret
@@ -5546,7 +5546,7 @@ Jump_0E2_6266::
     call Func_0E2_64F5
 
 Jump_0E2_6276::
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_6603
     ld hl, Func_005_53FA
     ld b, $05
@@ -5638,7 +5638,7 @@ Func_0E2_6303:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_6634
     ld hl, Func_005_5397
     ld b, $05
@@ -5728,7 +5728,7 @@ Func_0E2_6387:: ; heuristic: follows a terminator; C0
     call Func_0E2_64F5
 
 Jump_0E2_63A0::
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     call Func_0E2_66C5
     ld hl, Func_005_5397
     ld b, $05
@@ -5934,12 +5934,12 @@ Jump_0E2_64E0::
     cpl
     ld b, a
     inc bc
-    ld hl, $DA70
+    ld hl, wDA70
     call Func_0E2_651C
     jr Jump_0E2_64F4
 
 Jump_0E2_64EE::
-    ld hl, $DA6E
+    ld hl, wDA6E
     call Func_0E2_651C
 
 Jump_0E2_64F4::
@@ -5964,12 +5964,12 @@ Jump_0E2_6507::
     cpl
     ld b, a
     inc bc
-    ld hl, $DA6E
+    ld hl, wDA6E
     call Func_0E2_651C
     jr Jump_0E2_651B
 
 Jump_0E2_6515::
-    ld hl, $DA70
+    ld hl, wDA70
     call Func_0E2_651C
 
 Jump_0E2_651B::
@@ -6001,7 +6001,7 @@ Func_0E2_654B::
     ld a, h
     adc a, $40
     ld h, a
-    ld a, [$D2C7]
+    ld a, [wD2C7]
     add a, a
     add a, l
     ld l, a
@@ -6010,7 +6010,7 @@ Func_0E2_654B::
 
 Jump_0E2_6561::
     ld a, $06
-    ld [$D7FE], a
+    ld [wDataBank], a
     call Func_000_0B6C
     ld a, b
     ld b, c
@@ -6018,7 +6018,7 @@ Jump_0E2_6561::
     ret
 
 Func_0E2_656D:: ; heuristic: follows a terminator; C0
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_005_5317
     ld b, $05
     rst $10
@@ -6065,7 +6065,7 @@ Jump_0E2_65B7::
     ret
 
 Func_0E2_65B8:: ; heuristic: follows a terminator; C0
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_005_5317
     ld b, $05
     rst $10
@@ -6120,7 +6120,7 @@ Jump_0E2_6608::
     ld a, c
     call Func_000_3E54
     jr c, Jump_0E2_6615
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     push bc
     call Func_0E2_661A
     pop bc
@@ -6150,7 +6150,7 @@ Jump_0E2_6633::
     ret
 
 Func_0E2_6634:: ; heuristic: follows a terminator; C0
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     ld hl, Func_005_5317
     ld b, $05
     rst $10
@@ -6205,7 +6205,7 @@ Jump_0E2_6684::
     ld a, c
     call Func_000_3E54
     jr c, Jump_0E2_6691
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     push bc
     call Func_0E2_6696
     pop bc
@@ -6224,7 +6224,7 @@ Func_0E2_6696::
     ld a, c
     pop bc
     ld b, a
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, c
     ld hl, Data_0E2_66B9
     jr z, Jump_0E2_66AC
@@ -6258,7 +6258,7 @@ Jump_0E2_66CA::
     ld a, c
     call Func_000_3E54
     jr c, Jump_0E2_66D7
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     push bc
     call Func_0E2_66DC
     pop bc
@@ -6277,7 +6277,7 @@ Func_0E2_66DC::
     ld a, c
     pop bc
     ld b, a
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, c
     ld hl, Data_0E2_66FF
     jr z, Jump_0E2_66F2
@@ -6303,7 +6303,7 @@ Data_0E2_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AB, $AC, $AD, $AE, $AF
 
 Func_0E2_670B::
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     push bc
     ld hl, Func_005_5317
     ld b, $05
@@ -6339,7 +6339,7 @@ Jump_0E2_6732::
     ld a, c
     call Func_000_3E54
     jr c, Jump_0E2_673F
-    ldh [$FFC6], a
+    ldh [hFFC6], a
     push bc
     call Func_0E2_6744
     pop bc
@@ -6360,7 +6360,7 @@ Func_0E2_6744::
 
 Jump_0E2_674D::
     ld b, a
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, c
     ld hl, Data_0E2_6767
     jr z, Jump_0E2_675A
@@ -6422,23 +6422,23 @@ Jump_0E2_67A4::
     ret
 
 Func_0E2_67A5:: ; heuristic: follows a terminator; C0
-    ld a, [$D2CC]
+    ld a, [wD2CC]
     and a, $01
     xor a, $01
     ld c, a
     ret nz
     xor a, a
-    ld [$DA6E], a
-    ld [$DA6F], a
+    ld [wDA6E], a
+    ld [wDA6F], a
     ld a, $FF
-    ld [$DA70], a
-    ld [$DA71], a
+    ld [wDA70], a
+    ld [wDA71], a
     xor a, a
     ld c, a
     ret
 
 Func_0E2_67C0:: ; heuristic: follows a terminator; C0
-    ld a, [$D891]
+    ld a, [wD891]
     ld c, a
     or a, a
     ret nz
@@ -6605,7 +6605,7 @@ Jump_0E2_68A8::
     ret
 
 Func_0E2_68A9:: ; heuristic: follows a terminator; C0
-    ld hl, $D8FF
+    ld hl, wD8FF
     jr Jump_0E2_68D6
     db $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E, $21, $EF, $D8, $18, $19, $21
     db $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53
@@ -6635,36 +6635,36 @@ Jump_0E2_68E6::
     ret
 
 Func_0E2_68E7:: ; heuristic: follows a terminator; C0
-    ld a, [$C58A]
+    ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0E2_68FC
-    ld a, [$C57F]
+    ld a, [wC57F]
     bit 1, a
     jr z, Jump_0E2_68FC
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, $04
     ccf
     ret
 
 Jump_0E2_68FC::
-    ld a, [$D8A4]
+    ld a, [wD8A4]
     cp a, $04
     ret
 
 Func_0E2_6902:: ; heuristic: follows a terminator; C0
-    ld a, [$C58A]
+    ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0E2_6917
-    ld a, [$C57F]
+    ld a, [wC57F]
     bit 1, a
     jr z, Jump_0E2_6917
-    ld a, [$D8A5]
+    ld a, [wD8A5]
     cp a, $04
     ccf
     ret
 
 Jump_0E2_6917::
-    ld a, [$D8A5]
+    ld a, [wD8A5]
     cp a, $04
     ret
     INCBIN "dwm2-cobi-us.gbc", $38A91D, $CA

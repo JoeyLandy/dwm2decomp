@@ -3,17 +3,17 @@ SECTION "Bank 95", ROMX[$4000], BANK[$95]
 
 Func_095_4650::
     ld de, Data_095_4675
-    ld a, [$C528]
+    ld a, [wC528]
     sub a, $09
-    ld [$C528], a
+    ld [wC528], a
     call Func_000_25C9
     ret
 
 Func_095_465F::
     ld de, Data_095_4675
-    ld a, [$C528]
+    ld a, [wC528]
     sub a, $09
-    ld [$C528], a
+    ld [wC528], a
     call Func_000_25FE
     ret
     db $CD, $50, $46, $CD, $11, $26, $C9
