@@ -8533,6 +8533,7 @@ Jump_000_352F::
     call Func_000_32FE
     ret
 
+; C2 static reading (E-0019): channel start. Reads the 4-byte track header (byte 0 low nibble -> $FFDF, byte 1 -> duty bits of $FFDE (wave: $FFE6), byte 2 swapped -> $FFE0, byte 3 -> $FFE2) and begins playback at event 2 ($FFD8 = 2).
 Jump_000_3554::
     ldh a, [$FFDB]
     ld l, a
@@ -8621,6 +8622,7 @@ Jump_000_35C5::
     jr nz, Jump_000_35C5
     jr Jump_000_357E
 
+; C2 static reading and 5,154 emulated fetches agree (E-0019): fetches the next track event of the current channel. The position in $FFD8/$FFD9 counts 2-byte events from the track start ($FFDB/$FFDC), the event address is base + 2*position, and the first byte selects the command (see tools/sound_tracks.py).
 Func_000_35CD::
     ldh a, [$FFD8]
     ld l, a
@@ -9217,6 +9219,7 @@ Jump_000_3930::
     sbc a, h
     ld h, a
 
+; C2 (E-0019: formula matched 1,928 of 1,928 emulated notes): pitch for a note event. The semitone (low nibble of the first byte, 0-11) indexes the period table at $3B5C ($3B74 when $FFDE bit 4 is set), the value is shifted right by the octave (high nibble) and subtracted from $0800 to give the frequency register value in HL. Noise-channel notes use $38A0.
 Jump_000_3938::
     xor a, a
     ldh [$FFE7], a
@@ -9644,6 +9647,7 @@ Jump_000_3DA7::
     jr nz, Jump_000_3DA7
     ret
 
+; C2 static reading (E-0019): address of a label slot: HL = $DCC0 + channel*12 + (B & $0F)*3. A slot holds a repeat counter and a saved position (2 bytes); used by the FD, B0 and B1-BF commands.
 Func_000_3DAE::
     ld a, [$DD0F]
     add a, a

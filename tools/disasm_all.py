@@ -28,6 +28,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from trace_disasm import decode  # noqa: E402
 from lzss_gfx import decompress as lzss_decompress  # noqa: E402
+from sound_tracks import decode_header, decode_region  # noqa: E402
 
 _T0 = time.monotonic()
 _QUIET = False
@@ -67,6 +68,7 @@ class Rom:
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
         self.schemas: list[dict] = []  # config/tables.json
         self.table_at: dict[tuple[int, int], dict] = {}  # (bank, addr) -> prepared schema
+        self.track_at: dict[tuple[int, int], dict] = {}  # (bank, addr) -> decoded sound track region
         self.pdata: dict[int, set[int]] = {b: set() for b in range(self.nbanks)}
         self.vetoed = 0  # heuristic candidates rejected by data-pointer evidence
         self.dreason: dict[tuple[int, int], str] = {}  # why a Data_ label exists
@@ -718,6 +720,57 @@ class Rom:
             self.table_at[(bank, addr)] = dict(t, stride=stride, end=end, sizes=sizes)
         log(f"structured tables: {len(self.table_at)} ({sum(t['count'] for t in self.schemas)} records)")
 
+    def prepare_tracks(self) -> None:
+        """Decode the sound track regions named by tables flagged "tracks" (E-0019).
+
+        Regions run from one track pointer to the next; a region is used only if it decodes
+        in alignment (every event whole, last event ending exactly at the next pointer) and
+        every existing label inside it falls on an event boundary. The last track of a bank
+        has no known end and is left as data."""
+        used = skipped = 0
+        for t in self.schemas:
+            if not t.get("tracks"):
+                continue
+            bank, addr, count = t["bank"], t["addr"], t["count"]
+            ptrs = sorted({self._u16(bank, addr + 4 * i + 2) for i in range(count)})
+            bd = self.data[bank * BANK:(bank + 1) * BANK]
+            dt, dl = self.dtab[bank], self.dlabels[bank]
+            for p, nxt in zip(ptrs, ptrs[1:]):
+                evs = decode_region(bd, p - 0x4000, nxt - 0x4000)
+                if evs is None:
+                    skipped += 1
+                    continue
+                bounds = {p, nxt} | {0x4000 + e["off"] for e in evs}
+                if any(p < a < nxt and a not in bounds for a in dl) or                         any(a in self.covered[bank] for a in range(p, nxt)):
+                    skipped += 1
+                    continue
+                for k in [k for k in dt if p <= k < nxt]:
+                    del dt[k]
+                self.track_at[(bank, p)] = {"events": evs, "end": nxt, "header": decode_header(bd, p - 0x4000)}
+                used += 1
+        log(f"sound tracks emitted as events: {used} (skipped {skipped}; "
+            f"{sum(len(v['events']) for v in self.track_at.values())} events)")
+
+    def emit_track(self, bank: int, p: int, tr: dict, out: list[str]) -> None:
+        dl = self.dlabels[bank]
+        h = tr["header"]
+        out.append("")
+        out.append(f"; sound track, {len(tr['events'])} events after the header (E-0019: grammar C2, meaning C0)")
+        if p in dl:
+            out.append(f"{dl[p]}:: ; heuristic: {self.dreason.get((bank, p), 'sound track')}; C0")
+        out.append("    db " + ", ".join(f"${v:02X}" for v in h["bytes"]) + f" ; header: {h['text'][7:]}")
+        for ev in tr["events"]:
+            a = 0x4000 + ev["off"]
+            if a in dl:
+                out.append(f"{dl[a]}:: ; heuristic: {self.dreason.get((bank, a), 'inside a sound track')}; C0")
+            if ev["b1"] is None:
+                out.append(f"    db ${ev['b0']:02X} ; {ev['text']}")
+            elif ev["kind"] == "call":
+                out.append(f"    db ${ev['b0']:02X}, ${ev['b1']:02X} ; {ev['text'].split(' ->')[0]}")
+                out.append(f"    dw ${ev['target']:04X} ; byte offset of the called section from the track start")
+            else:
+                out.append(f"    db ${ev['b0']:02X}, ${ev['b1']:02X} ; {ev['text']}")
+
     def emit_table(self, bank: int, t: dict, out: list[str]) -> None:
         """Emit a schema table: one record per entry, `db` runs and `dw` pointers."""
         dl = self.dlabels[bank]
@@ -798,6 +851,7 @@ class Rom:
         self.find_compressed_assets()
         self.label_data_refs()
         self.prepare_tables()
+        self.prepare_tracks()
 
     # ---- emission -------------------------------------------------------
     def emit_gap(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
@@ -849,6 +903,11 @@ class Rom:
                     out.append(f"; {note}")
                 out.append(f"{labels[pc]}::" + (f" ; {why}; C0" if why else ""))
             it = ins.get(pc)
+            if it is None and (bank, pc) in self.track_at:
+                tr = self.track_at[(bank, pc)]
+                self.emit_track(bank, pc, tr, out)
+                pc = tr["end"]
+                continue
             if it is None and (bank, pc) in self.table_at:
                 tbl = self.table_at[(bank, pc)]
                 self.emit_table(bank, tbl, out)

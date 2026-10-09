@@ -34,6 +34,7 @@ What exists (all locally run):
 | Emulator for dynamic analysis (own implementation, unverified against hardware) | `tools/sm83.py` |
 | Compressed-asset finder and extractor (2,137 streams, 304 KB -> 726 KB; C1) | `tools/disasm_all.py --export-streams`, `tools/extract_assets.py` |
 | Structured table layouts (sound-id table + record arrays, 227 records; C2) | `config/tables.json`, emitted into `src/` by `tools/disasm_all.py` |
+| Sound track decoder (214 tracks, 27,639 events; grammar C2, validated on the emulator for the commands that ran) | `tools/sound_tracks.py`, `tools/validate_sound_tracks.py` |
 
 Coverage (bytes of the 4,194,304; measured from generated `src/`, not a semantic metric):
 

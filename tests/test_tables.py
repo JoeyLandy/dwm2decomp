@@ -71,6 +71,19 @@ class GeneratedTables(unittest.TestCase):
         ids = sum(len(re.findall(r"; id \d+$", text[f"bank{b:02x}.asm"], re.M)) for b in (0x40, 0x41, 0x42, 0x43))
         self.assertEqual(ids, sum(t["count"] for t in CFG if t["label"].startswith("SoundRecords_")))
 
+    def test_sound_tracks_are_emitted_as_events(self):
+        headers = events = 0
+        for b in (0x40, 0x41, 0x42, 0x43):
+            lines = (SRC / f"bank{b:02x}.asm").read_text(encoding="utf-8").splitlines()
+            for i, line in enumerate(lines):
+                if "; header: param=" in line:
+                    headers += 1
+                    self.assertTrue(any(l.startswith("; sound track,") for l in lines[max(0, i - 3):i]), line)
+                if re.match(r"\s+db \$[0-9A-F]{2}(, \$[0-9A-F]{2})? ; (note|rest-note|set|label|end|jump|repeat|call|env|step|volume|duty|mod|pan|wait|param|counter|slide|tuning|instrument|mastervol|duty2|skip|return)", line):
+                    events += 1
+        self.assertGreaterEqual(headers, 200)
+        self.assertGreater(events, 25000)
+
 
 if __name__ == "__main__":
     unittest.main()

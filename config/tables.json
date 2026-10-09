@@ -49,7 +49,8 @@
           "reason": "track stream of a sound record"
         }
       ],
-      "note": "E-0018 (C2 for the fields, C0 for the meaning of the second byte and of the streams). Sound ids 0-27."
+      "note": "E-0018 (C2 for the fields, C0 for the meaning of the second byte and of the streams). Sound ids 0-27.",
+      "tracks": true
     },
     {
       "bank": "41",
@@ -74,7 +75,8 @@
           "reason": "track stream of a sound record"
         }
       ],
-      "note": "E-0018. Sound ids 28-48."
+      "note": "E-0018. Sound ids 28-48.",
+      "tracks": true
     },
     {
       "bank": "42",
@@ -99,7 +101,8 @@
           "reason": "track stream of a sound record"
         }
       ],
-      "note": "E-0018. Sound ids 49-167."
+      "note": "E-0018. Sound ids 49-167.",
+      "tracks": true
     },
     {
       "bank": "43",
@@ -124,7 +127,8 @@
           "reason": "track stream of a sound record"
         }
       ],
-      "note": "E-0018. Sound ids 168-222: the array ends at $40DD and track streams follow; the bank table nominally covers ids up to 254, but no records exist for 223-254."
+      "note": "E-0018. Sound ids 168-222: the array ends at $40DD and track streams follow; the bank table nominally covers ids up to 254, but no records exist for 223-254.",
+      "tracks": true
     }
   ]
 }
