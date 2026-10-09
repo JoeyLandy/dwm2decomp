@@ -17,11 +17,23 @@ Func_009_400F::
     ret
 
 Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $2A, $40, $30, $40, $64, $40, $78, $40, $0A, $41, $0C, $41, $B4, $41, $CE, $41
-    db $EC, $41, $EE, $41
+    dw Data_009_402A
+    dw Data_009_4030
+    dw Data_009_4064
+    dw Data_009_4078
+    dw Data_009_410A
+    dw Data_009_410C
+    dw Data_009_41B4
+    dw Data_009_41CE
+    dw Data_009_41EC
+    dw Data_009_41EE
+
+Data_009_402A:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_4232
     dw Data_009_4259
     dw Data_009_4263
+
+Data_009_4030:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_4294
     dw Data_009_42C8
     dw Data_009_42FB
@@ -48,6 +60,8 @@ Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_009_484D
     dw Data_009_486E
     dw Data_009_4893
+
+Data_009_4064:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_48F0
     dw Data_009_48FC
     dw Data_009_491C
@@ -58,6 +72,8 @@ Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_009_4960
     dw Data_009_4968
     dw Data_009_4978
+
+Data_009_4078:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_498A
     dw Data_009_498C
     dw Data_009_4990
@@ -131,7 +147,11 @@ Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_009_4B05
     dw Data_009_4B0B
     dw Data_009_4B11
+
+Data_009_410A:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_4B16
+
+Data_009_410C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_4B17
     dw Data_009_4B3B
     dw Data_009_4B5E
@@ -216,6 +236,8 @@ Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_009_5AE3
     dw Data_009_5B08
     dw Data_009_5B2E
+
+Data_009_41B4:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_5B6F
     dw Data_009_5B70
     dw Data_009_5B7A
@@ -229,6 +251,8 @@ Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_009_5BB1
     dw Data_009_5BB8
     dw Data_009_5BC0
+
+Data_009_41CE:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_5BC6
     dw Data_009_5BC9
     dw Data_009_5BDD
@@ -244,7 +268,11 @@ Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_009_5C9C
     dw Data_009_5CAF
     dw Data_009_5CC3
+
+Data_009_41EC:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_5CCF
+
+Data_009_41EE:: ; heuristic: target of a monotone pointer table; C0
     dw Data_009_5D06
     dw Data_009_5D44
     dw Data_009_5DA1

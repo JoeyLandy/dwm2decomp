@@ -8,7 +8,9 @@ Func_08A_4001::
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
 
 Data_08A_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $18, $40
+    dw Data_08A_4018
+
+Data_08A_4018:: ; heuristic: target of a monotone pointer table; C0
     dw Data_08A_4216
     dw Data_08A_432E
     dw Data_08A_4428

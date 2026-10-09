@@ -236,7 +236,9 @@ Func_01F_520E::
     db $11, $23, $52, $CD, $FE, $25, $C9, $CD, $0E, $52, $CD, $11, $26, $C9
 
 Data_01F_5223:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $25, $52
+    dw Data_01F_5225
+
+Data_01F_5225:: ; heuristic: target of a monotone pointer table; C0
     dw Data_01F_52A5
     dw Data_01F_52A5
     dw Data_01F_52E3

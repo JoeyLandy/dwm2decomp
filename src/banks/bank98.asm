@@ -53,7 +53,9 @@ Func_098_405A:: ; heuristic: follows a terminator; C0
     db $CD, $4B, $40, $CD, $11, $26, $C9
 
 Data_098_4070:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $72, $40
+    dw Data_098_4072
+
+Data_098_4072:: ; heuristic: target of a monotone pointer table; C0
     dw Data_098_4154
     dw Data_098_4255
     dw Data_098_4275
@@ -342,7 +344,9 @@ Data_098_572D:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_098_572E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $30, $57
+    dw Data_098_5730
+
+Data_098_5730:: ; heuristic: target of a monotone pointer table; C0
     dw Data_098_580E
     dw Data_098_588B
     dw Data_098_58FC
@@ -679,7 +683,9 @@ Data_098_7031:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_098_7032:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $34, $70
+    dw Data_098_7034
+
+Data_098_7034:: ; heuristic: target of a monotone pointer table; C0
     dw Data_098_7078
     dw Data_098_7130
     dw Data_098_714B

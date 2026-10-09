@@ -26,7 +26,9 @@ Func_0F0_48AE::
     ret
 
 Data_0F0_48B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B7, $48
+    dw Data_0F0_48B7
+
+Data_0F0_48B7:: ; heuristic: target of a monotone pointer table; C0
     dw Data_0F0_48FD
     dw Data_0F0_491A
     dw Data_0F0_4933

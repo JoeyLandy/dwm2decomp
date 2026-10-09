@@ -19,8 +19,20 @@ Func_095_465F::
     db $CD, $50, $46, $CD, $11, $26, $C9
 
 Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $8D, $46, $ED, $47, $EF, $47, $37, $48, $39, $48, $47, $48, $53, $48, $57, $48
-    db $69, $48, $7F, $48, $B7, $48, $C7, $48
+    dw Data_095_468D
+    dw Data_095_47ED
+    dw Data_095_47EF
+    dw Data_095_4837
+    dw Data_095_4839
+    dw Data_095_4847
+    dw Data_095_4853
+    dw Data_095_4857
+    dw Data_095_4869
+    dw Data_095_487F
+    dw Data_095_48B7
+    dw Data_095_48C7
+
+Data_095_468D:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_48CF
     dw Data_095_48CF
     dw Data_095_48F2
@@ -197,7 +209,11 @@ Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_095_62E3
     dw Data_095_62E3
     dw Data_095_62E3
+
+Data_095_47ED:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_62E4
+
+Data_095_47EF:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_62E5
     dw Data_095_62EB
     dw Data_095_62F4
@@ -234,7 +250,11 @@ Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_095_6402
     dw Data_095_640D
     dw Data_095_6419
+
+Data_095_4837:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_641B
+
+Data_095_4839:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_641C
     dw Data_095_6422
     dw Data_095_642C
@@ -242,14 +262,20 @@ Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_095_6442
     dw Data_095_6448
     dw Data_095_644D
+
+Data_095_4847:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_6457
     dw Data_095_6457
     dw Data_095_645E
     dw Data_095_6465
     dw Data_095_646B
     dw Data_095_6474
+
+Data_095_4853:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_647C
     dw Data_095_647C
+
+Data_095_4857:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_647C
     dw Data_095_647D
     dw Data_095_6484
@@ -259,6 +285,8 @@ Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_095_64A2
     dw Data_095_64AC
     dw Data_095_64B1
+
+Data_095_4869:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_64B6
     dw Data_095_64BE
     dw Data_095_64C6
@@ -270,6 +298,8 @@ Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_095_650A
     dw Data_095_650F
     dw Data_095_6513
+
+Data_095_487F:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_651A
     dw Data_095_651F
     dw Data_095_6525
@@ -298,6 +328,8 @@ Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_095_65CF
     dw Data_095_65D6
     dw Data_095_65DB
+
+Data_095_48B7:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_65E1
     dw Data_095_65E8
     dw Data_095_65EF
@@ -306,6 +338,8 @@ Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_095_6604
     dw Data_095_660B
     dw Data_095_6612
+
+Data_095_48C7:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_6619
     dw Data_095_661E
     dw Data_095_6625

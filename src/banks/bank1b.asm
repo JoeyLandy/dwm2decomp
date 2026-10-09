@@ -1126,7 +1126,9 @@ Func_01B_481A::
     ret
 
 Data_01B_4821:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $23, $48
+    dw Data_01B_4823
+
+Data_01B_4823:: ; heuristic: target of a monotone pointer table; C0
     dw Data_01B_4873
     dw Data_01B_4873
     dw Data_01B_4889
@@ -1330,7 +1332,9 @@ Func_01B_4C94::
     ret
 
 Data_01B_4C9B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $9D, $4C
+    dw Data_01B_4C9D
+
+Data_01B_4C9D:: ; heuristic: target of a monotone pointer table; C0
     dw Data_01B_4CF1
     dw Data_01B_4CF1
     dw Data_01B_4D12

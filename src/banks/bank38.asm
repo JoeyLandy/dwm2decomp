@@ -1,59 +1,61 @@
 SECTION "Bank 38", ROMX[$4000], BANK[$38]
-    db $38, $01
-    dw Data_038_7440
-    db $01
-    dw Data_038_7440
-    db $F1
-    dw Data_038_7440
-    db $82
-    dw Data_038_7441
-    db $A4
-    dw Data_038_7442
-    db $47
-    dw Data_038_7443
-    db $FE
-    dw Data_038_7443
-    db $F9
-    dw Data_038_7444
-    db $B0
-    dw Data_038_7445
-    db $66
-    dw Data_038_7446
-    db $6F
-    dw Data_038_7447
-    db $D4
-    dw Data_038_7447
-    db $70
-    dw Data_038_7448
-    db $57
-    dw Data_038_7449
-    db $EB
-    dw Data_038_7449
-    db $97
-    dw Data_038_744A
-    db $5B
-    dw Data_038_744B
-    db $A3
-    dw Data_038_744C
-    db $08
-    dw Data_038_744D
-    db $BF
-    dw Data_038_744D
-    db $25
-    dw Data_038_744F
-    db $FE
-    dw Data_038_744F
-    db $08
-    dw Data_038_7451
-    db $B3
-    dw Data_038_7451
-    db $FC
-    dw Data_038_7452
-    db $E7
-    dw Data_038_7454
-    db $E4
-    dw Data_038_7456
-    db $F1
+    db $38
+
+Data_038_4001:: ; heuristic: target of a monotone pointer table; C0
+    dw Data_038_4001
+    db $74
+    dw Data_038_4001
+    db $74
+    dw Data_038_40F1
+    db $74
+    dw Data_038_4182
+    db $74
+    dw Data_038_42A4
+    db $74
+    dw Data_038_4347
+    db $74
+    dw Data_038_43FE
+    db $74
+    dw Data_038_44F9
+    db $74
+    dw Data_038_45B0
+    db $74
+    dw Data_038_4666
+    db $74
+    dw Data_038_476F
+    db $74
+    dw Data_038_47D4
+    db $74
+    dw Data_038_4870
+    db $74
+    dw Data_038_4957
+    db $74
+    dw Data_038_49EB
+    db $74
+    dw Data_038_4A97
+    db $74
+    dw Data_038_4B5B
+    db $74
+    dw Data_038_4CA3
+    db $74
+    dw Data_038_4D08
+    db $74
+    dw Data_038_4DBF
+    db $74
+    dw Data_038_4F25
+    db $74
+    dw Data_038_4FFE
+    db $74
+    dw Data_038_5108
+    db $74
+    dw Data_038_51B3
+    db $74
+    dw Data_038_52FC
+    db $74
+    dw Data_038_54E7
+    db $74
+    dw Data_038_56E4
+    db $74, $F1
     dw Data_038_7440
     db $01
     dw Data_038_7440
@@ -159,6 +161,8 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     dw Data_038_7551
     db $FB
     dw Data_038_7552
+
+Data_038_40F1:: ; heuristic: target of a monotone pointer table; C0
     db $CD
     dw Data_038_7554
     db $0C
@@ -231,7 +235,10 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     dw Data_038_7652
     db $A7, $54, $76, $92
     dw Data_038_7656
-    db $5F, $58, $76, $DD
+    db $5F
+
+Data_038_4182:: ; heuristic: target of a monotone pointer table; C0
+    db $58, $76, $DD
     dw Data_038_7659
     db $DA, $5B, $76, $B2
     dw Data_038_765D
@@ -383,6 +390,8 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     dw Data_038_784E
     db $01
     dw Data_038_7851
+
+Data_038_42A4:: ; heuristic: target of a monotone pointer table; C0
     db $A6
     dw Data_038_7852
     db $0D
@@ -492,6 +501,8 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     db $01
     dw Data_038_7440
     db $01
+
+Data_038_4347:: ; heuristic: target of a monotone pointer table; C0
     dw Data_038_7440
     db $01
     dw Data_038_7440
@@ -614,6 +625,8 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     db $08
     dw Data_038_7A47
     db $D0
+
+Data_038_43FE:: ; heuristic: target of a monotone pointer table; C0
     dw Data_038_7A48
     db $60
     dw Data_038_7A4A
@@ -697,9 +710,11 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     dw Data_038_5C15
     db $7B
     ds $1B, $00
-    db $39, $5C, $7B, $5D, $5C, $7B, $81, $5C, $7B, $00, $00, $00, $A5, $5C, $7B, $C9
-    db $5C, $7B, $ED, $5C, $7B, $11, $5D, $7B, $00, $00, $00, $35, $5D, $7B, $59, $5D
-    db $7B, $7D, $5D, $7B, $A1, $5D, $7B, $00, $00, $00, $00, $00, $00
+    db $39, $5C, $7B, $5D, $5C, $7B, $81, $5C, $7B, $00, $00, $00, $A5, $5C, $7B
+
+Data_038_44F9:: ; heuristic: target of a monotone pointer table; C0
+    db $C9, $5C, $7B, $ED, $5C, $7B, $11, $5D, $7B, $00, $00, $00, $35, $5D, $7B, $59
+    db $5D, $7B, $7D, $5D, $7B, $A1, $5D, $7B, $00, $00, $00, $00, $00, $00
     dw Data_038_5DC5
     db $7B, $00, $00, $00
     dw Data_038_5DE9
@@ -715,7 +730,10 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     dw Data_038_5F09
     db $7B, $2D, $5F, $7B
     dw Data_038_5F51
-    INCBIN "dwm2-cobi-us.gbc", $0E0543, $79
+    INCBIN "dwm2-cobi-us.gbc", $0E0543, $6D
+
+Data_038_45B0:: ; heuristic: target of a monotone pointer table; C0
+    db $D5, $62, $7B, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dw Data_038_62F9
     db $7B, $1D, $63, $7B
     dw Data_038_6341
@@ -794,6 +812,8 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     dw Data_038_6905
     db $7B
     dw Data_038_6929
+
+Data_038_4666:: ; heuristic: target of a monotone pointer table; C0
     db $7B
     dw Data_038_694D
     db $7B
@@ -825,9 +845,22 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     dw Data_038_6F7D
     db $7B, $A1, $6F, $7B
     dw Data_038_6FC5
-    INCBIN "dwm2-cobi-us.gbc", $0E0750, $5E
+    db $7B, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $E9, $6F, $7B, $0D, $70, $7B, $00, $00, $00, $31, $70, $7B, $55, $70, $7B
+
+Data_038_476F:: ; heuristic: target of a monotone pointer table; C0
+    db $79, $70, $7B, $9D, $70, $7B, $00, $00, $00, $00, $00, $00, $C1, $70, $7B, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $E5, $70, $7B, $00, $00
+    db $00, $09, $71, $7B, $2D, $71, $7B, $51, $71, $7B, $75, $71, $7B, $99, $71, $7B
+    db $BD, $71, $7B, $E1, $71, $7B, $00, $00, $00, $00, $00, $00, $05, $72, $7B
     ds $1B, $00
-    INCBIN "dwm2-cobi-us.gbc", $0E07C9, $AE
+    db $29, $72, $7B, $00, $00, $00, $4D, $72, $7B, $71, $72
+
+Data_038_47D4:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0E07D4, $9C
+
+Data_038_4870:: ; heuristic: target of a monotone pointer table; C0
+    db $7B, $CD, $76, $7B, $00, $00, $00
     dw Data_038_76F1
     db $7B
     dw Data_038_7715
@@ -846,7 +879,49 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
     INCBIN "dwm2-cobi-us.gbc", $0E088E, $4F
     ds $15, $00
     db $99, $7A, $7B, $BD, $7A, $7B, $E1, $7A, $7B
-    ds $121E, $00
+    ds $5C, $00
+
+Data_038_4957:: ; heuristic: target of a monotone pointer table; C0
+    ds $94, $00
+
+Data_038_49EB:: ; heuristic: target of a monotone pointer table; C0
+    ds $AC, $00
+
+Data_038_4A97:: ; heuristic: target of a monotone pointer table; C0
+    ds $C4, $00
+
+Data_038_4B5B:: ; heuristic: target of a monotone pointer table; C0
+    ds $148, $00
+
+Data_038_4CA3:: ; heuristic: target of a monotone pointer table; C0
+    ds $65, $00
+
+Data_038_4D08:: ; heuristic: target of a monotone pointer table; C0
+    ds $B7, $00
+
+Data_038_4DBF:: ; heuristic: target of a monotone pointer table; C0
+    ds $166, $00
+
+Data_038_4F25:: ; heuristic: target of a monotone pointer table; C0
+    ds $D9, $00
+
+Data_038_4FFE:: ; heuristic: target of a monotone pointer table; C0
+    ds $10A, $00
+
+Data_038_5108:: ; heuristic: target of a monotone pointer table; C0
+    ds $AB, $00
+
+Data_038_51B3:: ; heuristic: target of a monotone pointer table; C0
+    ds $149, $00
+
+Data_038_52FC:: ; heuristic: target of a monotone pointer table; C0
+    ds $1EB, $00
+
+Data_038_54E7:: ; heuristic: target of a monotone pointer table; C0
+    ds $1FD, $00
+
+Data_038_56E4:: ; heuristic: target of a monotone pointer table; C0
+    ds $435, $00
 
 Data_038_5B19:: ; heuristic: target of a monotone pointer table; C0
     ds $24, $00
@@ -1053,61 +1128,7 @@ Data_038_6FC5:: ; heuristic: target of a monotone pointer table; C0
     ds $47B, $00
 
 Data_038_7440:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7441:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7442:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7443:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7444:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7445:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7446:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7447:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7448:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7449:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_744A:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_744B:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_744C:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_744D:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_038_744F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_038_7451:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_038_7452:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_038_7454:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_038_7456:: ; heuristic: target of a monotone pointer table; C0
-    db $00
+    ds $17, $00
 
 Data_038_7457:: ; heuristic: target of a monotone pointer table; C0
     db $00

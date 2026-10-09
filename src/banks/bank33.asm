@@ -2899,7 +2899,9 @@ Func_033_7045::
     ret
 
 Data_033_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $4E, $70
+    dw Data_033_704E
+
+Data_033_704E:: ; heuristic: target of a monotone pointer table; C0
     dw Data_033_7074
     dw Data_033_7089
     dw Data_033_70A7

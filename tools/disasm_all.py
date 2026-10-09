@@ -454,10 +454,12 @@ class Rom:
         """Find monotone in-bank pointer tables in untraced bytes (C1 structure, not meaning).
 
         A chain is >= 8 pointers at a fixed stride (2..6 bytes) whose values never decrease
-        (>= 4 distinct), lie in $4000-$7FFF, and point past the end of the table into
-        untraced bytes. Random data does not do this; compressed-asset indexes, far-pointer
-        records and word tables do. Only labels and `dw` lines change, never bytes."""
-        tables = entries = dropped = 0
+        (>= 4 distinct), lie in $4000-$7FFF, and do not point before the table's own start
+        into untraced bytes. Pointing into the table itself is allowed: a multi-level index
+        has sub-table pointers inside its first words (bank $08, $4032). Random data does
+        not do this; compressed-asset indexes, far-pointer records and word tables do.
+        Only labels and `dw` lines change, never bytes."""
+        tables = entries = dropped = selfptr = 0
         for bank in range(1, self.nbanks):
             if bank in self.zero:
                 continue
@@ -482,7 +484,7 @@ class Rom:
                         q += stride
                     if len(chain) > len(best):
                         best = chain
-                if (len(best) >= 8 and best[0][1] >= best[-1][0] + 2
+                if (len(best) >= 8 and best[0][1] >= best[0][0]
                         and len({w for _, w in best}) >= 4
                         and all(w not in cov for _, w in best)):
                     chains.append(best)
@@ -501,8 +503,9 @@ class Rom:
                     self.dlabels[bank].setdefault(w, f"Data_{bank:03X}_{w:04X}")
                 tables += 1
                 entries += len(ch)
-        log(f"data structure: {tables} monotone pointer tables, {entries} pointers, "
-            f"{dropped} dropped (targets inside another table)")
+                selfptr += ch[0][1] < ch[-1][0] + 2  # first target lies inside the table itself
+        log(f"data structure: {tables} monotone pointer tables ({selfptr} self-pointing), "
+            f"{entries} pointers, {dropped} dropped (targets inside another table)")
 
     def label_data_refs(self) -> None:
         """Resolve `ld hl|de|bc, $4000-$7FFF` in traced code to labelled data starts (C1).

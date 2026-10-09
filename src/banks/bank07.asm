@@ -11,7 +11,15 @@ Func_007_400F::
     call Func_007_4001
     call Func_000_2611
     ret
-    db $24, $40, $34, $40, $40, $40, $42, $40, $50, $40, $56, $40, $8C, $40
+    dw Data_007_4024
+    dw Data_007_4034
+    dw Data_007_4040
+    dw Data_007_4042
+    dw Data_007_4050
+    dw Data_007_4056
+    dw Data_007_408C
+
+Data_007_4024:: ; heuristic: target of a monotone pointer table; C0
     dw Data_007_409E
     dw Data_007_40A3
     dw Data_007_40C1
@@ -20,13 +28,19 @@ Func_007_400F::
     dw Data_007_4123
     dw Data_007_415A
     dw Data_007_4164
+
+Data_007_4034:: ; heuristic: target of a monotone pointer table; C0
     dw Data_007_4195
     dw Data_007_419F
     dw Data_007_41A3
     dw Data_007_41B4
     dw Data_007_41DF
     dw Data_007_41E8
+
+Data_007_4040:: ; heuristic: target of a monotone pointer table; C0
     dw Data_007_41F1
+
+Data_007_4042:: ; heuristic: target of a monotone pointer table; C0
     dw Data_007_41FD
     dw Data_007_422D
     dw Data_007_4252
@@ -34,9 +48,13 @@ Func_007_400F::
     dw Data_007_4284
     dw Data_007_42A1
     dw Data_007_42BF
+
+Data_007_4050:: ; heuristic: target of a monotone pointer table; C0
     dw Data_007_42DE
     dw Data_007_42F8
     dw Data_007_430F
+
+Data_007_4056:: ; heuristic: target of a monotone pointer table; C0
     dw Data_007_4327
     dw Data_007_4346
     dw Data_007_438E
@@ -64,6 +82,8 @@ Func_007_400F::
     dw Data_007_4685
     dw Data_007_46BA
     dw Data_007_46F5
+
+Data_007_408C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_007_470A
     dw Data_007_4724
     dw Data_007_473E

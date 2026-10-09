@@ -36,7 +36,9 @@ Func_096_4035:: ; heuristic: follows a terminator; C0
     db $CD, $26, $40, $CD, $11, $26, $C9
 
 Data_096_404B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $4D, $40
+    dw Data_096_404D
+
+Data_096_404D:: ; heuristic: target of a monotone pointer table; C0
     dw Data_096_40BD
     dw Data_096_4119
     dw Data_096_4184
@@ -280,7 +282,9 @@ Data_096_56B8:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $2596B8, $92
 
 Data_096_574A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $4C, $57
+    dw Data_096_574C
+
+Data_096_574C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_096_582C
     dw Data_096_586E
     dw Data_096_588A
@@ -576,7 +580,9 @@ Func_096_7020:: ; heuristic: follows a terminator; C0
     db $CD, $11, $70, $CD, $11, $26, $C9
 
 Data_096_7036:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $38, $70
+    dw Data_096_7038
+
+Data_096_7038:: ; heuristic: target of a monotone pointer table; C0
     dw Data_096_7068
     dw Data_096_70D1
     dw Data_096_70F2

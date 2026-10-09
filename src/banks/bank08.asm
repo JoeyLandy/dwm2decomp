@@ -35,13 +35,21 @@ Func_008_402B::
     ret
 
 Data_008_4032:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $44, $40, $42, $42, $58, $42
+    dw Data_008_4044
+    dw Data_008_4242
+    dw Data_008_4258
 
 Data_008_4038:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $58, $44, $58, $45
+    dw Data_008_4458
+    dw Data_008_4558
 
 Data_008_403C:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $16, $47, $F6, $47, $D6, $48, $0C, $49
+    dw Data_008_4716
+    dw Data_008_47F6
+    dw Data_008_48D6
+    dw Data_008_490C
+
+Data_008_4044:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_492A
     dw Data_008_493B
     dw Data_008_4A1A
@@ -297,6 +305,8 @@ Data_008_403C:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_53B2
     dw Data_008_53B2
     dw Data_008_53B2
+
+Data_008_4242:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_53B5
     dw Data_008_53BB
     dw Data_008_53C2
@@ -308,6 +318,8 @@ Data_008_403C:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_53E4
     dw Data_008_53ED
     dw Data_008_53F3
+
+Data_008_4258:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_53F8
     dw Data_008_53F9
     dw Data_008_5403
@@ -566,6 +578,8 @@ Data_008_42BC:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_5B21
     dw Data_008_5B28
     dw Data_008_5B31
+
+Data_008_4458:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_5B36
     dw Data_008_5B3D
     dw Data_008_5B46
@@ -694,6 +708,8 @@ Data_008_42BC:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_5EE4
     dw Data_008_5EEE
     dw Data_008_5EF6
+
+Data_008_4558:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_5EF8
     dw Data_008_5EF9
     dw Data_008_5EFF
@@ -917,6 +933,8 @@ Data_008_42BC:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_64E1
     dw Data_008_64E1
     dw Data_008_64E1
+
+Data_008_4716:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_64E2
     dw Data_008_64E3
     dw Data_008_64E8
@@ -1029,6 +1047,8 @@ Data_008_42BC:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_67CA
     dw Data_008_67CA
     dw Data_008_67CA
+
+Data_008_47F6:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_67CB
     dw Data_008_67CB
     dw Data_008_67F0
@@ -1143,6 +1163,8 @@ Data_008_488A:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_71D0
     dw Data_008_71D0
     dw Data_008_71D2
+
+Data_008_48D6:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_71F7
     dw Data_008_7200
     dw Data_008_7206
@@ -1170,6 +1192,8 @@ Data_008_488A:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_008_72A4
     dw Data_008_72AD
     dw Data_008_72B6
+
+Data_008_490C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_008_72BB
     dw Data_008_72C4
     dw Data_008_72D4

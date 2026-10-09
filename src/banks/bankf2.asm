@@ -544,7 +544,9 @@ Func_0F2_43DE::
     ret
 
 Data_0F2_43E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $E7, $43
+    dw Data_0F2_43E7
+
+Data_0F2_43E7:: ; heuristic: target of a monotone pointer table; C0
     dw Data_0F2_442F
     dw Data_0F2_442F
     dw Data_0F2_444E

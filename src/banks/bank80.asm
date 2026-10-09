@@ -31,7 +31,9 @@ Jump_080_4024::
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 Data_080_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $34, $40
+    dw Data_080_4034
+
+Data_080_4034:: ; heuristic: target of a monotone pointer table; C0
     dw Data_080_41C4
     dw Data_080_41E8
     dw Data_080_4200

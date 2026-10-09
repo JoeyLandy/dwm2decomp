@@ -13,7 +13,14 @@ Func_02F_400F::
     ret
 
 Data_02F_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $22, $40, $34, $41, $34, $43, $3C, $43, $3E, $43, $40, $43
+    dw Data_02F_4022
+    dw Data_02F_4134
+    dw Data_02F_4334
+    dw Data_02F_433C
+    dw Data_02F_433E
+    dw Data_02F_4340
+
+Data_02F_4022:: ; heuristic: target of a monotone pointer table; C0
     dw Data_02F_4384
     dw Data_02F_4393
     dw Data_02F_43A7
@@ -151,6 +158,8 @@ Data_02F_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_02F_5A82
     dw Data_02F_5A9C
     dw Data_02F_5AB8
+
+Data_02F_4134:: ; heuristic: target of a monotone pointer table; C0
     dw Data_02F_5AC9
     dw Data_02F_5AD8
     dw Data_02F_5AE6
@@ -407,12 +416,20 @@ Data_02F_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_02F_77D2
     dw Data_02F_7818
     dw Data_02F_7854
+
+Data_02F_4334:: ; heuristic: target of a monotone pointer table; C0
     dw Data_02F_7877
     dw Data_02F_787D
     dw Data_02F_7882
     dw Data_02F_7888
+
+Data_02F_433C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_02F_788D
+
+Data_02F_433E:: ; heuristic: target of a monotone pointer table; C0
     dw Data_02F_788D
+
+Data_02F_4340:: ; heuristic: target of a monotone pointer table; C0
     dw Data_02F_7897
     dw Data_02F_78B7
     dw Data_02F_7942

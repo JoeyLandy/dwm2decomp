@@ -13,7 +13,11 @@ Func_088_400F::
     ret
 
 Data_088_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $1C, $40, $1C, $42, $1C, $44
+    dw Data_088_401C
+    dw Data_088_421C
+    dw Data_088_441C
+
+Data_088_401C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_088_461C
     dw Data_088_4621
     dw Data_088_4627
@@ -270,6 +274,8 @@ Data_088_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_088_4E4A
     dw Data_088_4E51
     dw Data_088_4E58
+
+Data_088_421C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_088_4E61
     dw Data_088_4E6A
     dw Data_088_4E73
@@ -526,6 +532,8 @@ Data_088_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_088_56DC
     dw Data_088_56E6
     dw Data_088_56EC
+
+Data_088_441C:: ; heuristic: target of a monotone pointer table; C0
     dw Data_088_56F6
     dw Data_088_5700
     dw Data_088_5709
