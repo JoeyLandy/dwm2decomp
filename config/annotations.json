@@ -1,0 +1,9 @@
+{
+  "_comment": "Notes emitted as comments above a labelled address by tools/disasm_all.py. Key: 'BB:AAAA' (hex bank, CPU address). Each note states what the instructions literally do and its evidence level; none claims game-level meaning. 'static reading' = read from the instructions only, not confirmed by running the game.",
+  "00:0000": "C2 static reading (E-0007): rst $00 pops its return address as the base of an inline word table, indexes it by A (entry = base + 2*A), preserves DE, and jumps to the entry.",
+  "00:0010": "C2 static reading (E-0007): rst $10 selects ROM bank B, calls the code at HL, then restores the caller's bank (saved from $4000, which holds each bank's own number, E-0006).",
+  "00:0B18": "C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.",
+  "00:0B2B": "C2 static reading (E-0014): like Func_000_0B18, but before each byte waits for STAT ($FF41) bit 1 to clear with interrupts disabled, so HL can be VRAM.",
+  "00:0B46": "C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.",
+  "00:0B6C": "C2 static reading (E-0014): switches to the ROM bank held in $D7FE, reads the word at [HL] into B (low address) and C (next address), leaves HL unchanged, restores the caller's bank. $D7FE is therefore the data-bank variable for reads through HL; 30 call sites."
+}

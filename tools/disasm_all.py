@@ -19,6 +19,7 @@ interrupted run leaves the previous generated tree untouched.
 """
 from __future__ import annotations
 
+import json
 import re
 import sys
 import time
@@ -61,6 +62,7 @@ class Rom:
         self._spec: dict[tuple[int, int], object] = {}  # speculative-trace cache
         self.dtab: dict[int, dict[int, int]] = {b: {} for b in range(self.nbanks)}  # data pointer words
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
+        self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
         self.pdata: dict[int, set[int]] = {b: set() for b in range(self.nbanks)}
         self.vetoed = 0  # heuristic candidates rejected by data-pointer evidence
         self.dreason: dict[tuple[int, int], str] = {}  # why a Data_ label exists
@@ -689,7 +691,11 @@ class Rom:
         while pc < end:
             if pc in labels and pc in ins:
                 why = self.reason.get((bank, pc))
-                out.append(f"\n{labels[pc]}::" + (f" ; {why}; C0" if why else ""))
+                note = self.notes.get((bank, pc))
+                out.append("")
+                if note:
+                    out.append(f"; {note}")
+                out.append(f"{labels[pc]}::" + (f" ; {why}; C0" if why else ""))
             it = ins.get(pc)
             if it is None:
                 if pc in dl:
@@ -745,6 +751,13 @@ def main() -> int:
     log(f"reading {REF}")
     rom = Rom(REF.read_bytes())
     log(f"{rom.nbanks} banks, {len(rom.zero)} all-zero")
+    notes_path = ROOT / "config/annotations.json"
+    if notes_path.exists():
+        for key, text in json.loads(notes_path.read_text(encoding="utf-8")).items():
+            if not key.startswith("_"):
+                bank_s, addr_s = key.split(":")
+                rom.notes[(int(bank_s, 16), int(addr_s, 16))] = text
+        log(f"loaded {len(rom.notes)} annotations from {notes_path.name}")
     rom.run()
     log("rendering all banks in memory (no files written yet)")
     texts = [rom.emit_bank(b) for b in range(rom.nbanks)]

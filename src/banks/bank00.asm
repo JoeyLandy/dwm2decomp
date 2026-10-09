@@ -1,5 +1,6 @@
 SECTION "Bank 00", ROM0[$0000]
 
+; C2 static reading (E-0007): rst $00 pops its return address as the base of an inline word table, indexes it by A (entry = base + 2*A), preserves DE, and jumps to the entry.
 Func_000_0000::
     pop hl
     push de
@@ -19,6 +20,7 @@ Func_000_000E::
     jp hl
     db $00
 
+; C2 static reading (E-0007): rst $10 selects ROM bank B, calls the code at HL, then restores the caller's bank (saved from $4000, which holds each bank's own number, E-0006).
 Func_000_0010::
     ld a, [$4000]
     push af
@@ -1535,6 +1537,7 @@ Func_000_0B0D::
     ld l, a
     ret
 
+; C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.
 Func_000_0B18::
     ld a, [$4000]
     push af
@@ -1551,6 +1554,7 @@ Jump_000_0B20::
     ld [$2100], a
     ret
 
+; C2 static reading (E-0014): like Func_000_0B18, but before each byte waits for STAT ($FF41) bit 1 to clear with interrupts disabled, so HL can be VRAM.
 Func_000_0B2B::
     ld a, [$4000]
     push af
@@ -1574,6 +1578,7 @@ Jump_000_0B34::
     ld [$2100], a
     ret
 
+; C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.
 Func_000_0B46::
     ld a, [$4000]
     push af
@@ -1607,6 +1612,7 @@ Jump_000_0B5A::
     ld [$2100], a
     ret
 
+; C2 static reading (E-0014): switches to the ROM bank held in $D7FE, reads the word at [HL] into B (low address) and C (next address), leaves HL unchanged, restores the caller's bank. $D7FE is therefore the data-bank variable for reads through HL; 30 call sites.
 Func_000_0B6C::
     ld a, [$4000]
     push af

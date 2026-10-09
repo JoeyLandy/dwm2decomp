@@ -44,5 +44,23 @@ class GeneratedSource(unittest.TestCase):
         self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} banked-call labels name the wrong bank")
 
 
+@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+class Annotations(unittest.TestCase):
+    def test_every_annotation_appears_above_its_label(self):
+        import json
+        notes = json.loads((BANKS.parents[1] / "config" / "annotations.json").read_text(encoding="utf-8"))
+        missing = []
+        for key, text in notes.items():
+            if key.startswith("_"):
+                continue
+            bank_s, addr_s = key.split(":")
+            lines = (BANKS / f"bank{int(bank_s, 16):02x}.asm").read_text(encoding="utf-8").splitlines()
+            label = re.compile(rf"^(?:Func|Jump)_{int(bank_s, 16):03X}_{int(addr_s, 16):04X}::")
+            idx = next((i for i, l in enumerate(lines) if label.match(l)), None)
+            if idx is None or lines[idx - 1] != f"; {text}":
+                missing.append(key)
+        self.assertEqual(missing, [], "annotation not emitted directly above its label")
+
+
 if __name__ == "__main__":
     unittest.main()
