@@ -138,7 +138,7 @@ Func_014_40CC::
     dw Jump_014_40E8
     dw Jump_014_412B
     dw Jump_014_418A
-    dw $428A
+    dw Jump_014_428A
     dw Jump_014_4D64
     dw Jump_014_4446
     dw Jump_014_5492
@@ -373,8 +373,10 @@ Func_014_4240:: ; heuristic: target of a pointer table; C0
     inc a
     ld [$D787], a
     cp a, $10
-    jr c, Func_014_4259
-    cp a, $18
+    db $38
+
+Func_014_4250:: ; heuristic: target of a pointer table; C0
+    ld [$18FE], sp
     jr c, Func_014_425D
     xor a, a
     ld [$D787], a
@@ -396,7 +398,7 @@ Func_014_4261::
 Jump_014_4263::
     ld a, [$D786]
     add a, a
-    ld hl, Func_014_4280
+    ld hl, Data_014_4280
     add a, l
     ld l, a
     jr nc, Jump_014_426F
@@ -419,20 +421,13 @@ Func_014_4270:: ; heuristic: target of a pointer table; C0
     ei
     ret
 
-Func_014_4280:: ; heuristic: target of a pointer table; C0
-    ld hl, $6100
-    nop
-    and a, c
-    nop
-    pop hl
-    nop
-    ld hl, $FA01
-    add a, [hl]
-    rst $10
+Data_014_4280:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
+
+Jump_014_428A::
+    ld a, [$D786]
     and a, a
     jr z, Jump_014_429B
-
-Func_014_4290:: ; heuristic: target of a pointer table; C0
     cp a, $01
     jp z, Jump_014_4309
     cp a, $02
@@ -503,8 +498,6 @@ Jump_014_42F1::
     xor a, a
     ld [$D781], a
     xor a, a
-
-Func_014_4300:: ; heuristic: target of a pointer table; C0
     ld [$C920], a
     ld a, $80
     ld [$C919], a
@@ -514,11 +507,7 @@ Jump_014_4309::
     ld hl, Data_014_6DF8
     ld b, $1D
     rst $10
-    db $FA
-
-Func_014_4310:: ; heuristic: target of a pointer table; C0
-    push af
-    rst $10
+    ld a, [$D7F5]
     and a, a
     jp z, Jump_014_43B1
     ld hl, $5F2D
@@ -535,8 +524,6 @@ Func_014_4310:: ; heuristic: target of a pointer table; C0
     cp a, c
     jr nc, Jump_014_4396
     add a, b
-
-Func_014_4330:: ; heuristic: target of a pointer table; C0
     cp a, c
     jr c, Jump_014_4359
     ld a, [$C6FD]
@@ -555,8 +542,6 @@ Jump_014_4339::
     inc a
     ld [$D780], a
     xor a, a
-
-Func_014_4350:: ; heuristic: target of a pointer table; C0
     ld [$C920], a
     ld a, $80
     ld [$C919], a
@@ -567,15 +552,16 @@ Jump_014_4359::
     ld b, $1D
     rst $10
     xor a, a
-
-Func_014_4360:: ; heuristic: target of a pointer table; C0
     ld [$D7FA], a
     ld [$D782], a
     ld [$D781], a
     ld a, [$D780]
     inc a
     inc a
-    ld [$D780], a
+    db $EA, $80
+
+Func_014_4370:: ; heuristic: target of a pointer table; C0
+    rst $10
     xor a, a
     ld [$C920], a
     ld a, $80
@@ -625,7 +611,11 @@ Jump_014_43B1::
     ld [$D782], a
     ld [$D781], a
     ld a, $02
-    ld [$D780], a
+    db $EA
+
+Func_014_43C0:: ; heuristic: target of a pointer table; C0
+    add a, b
+    rst $10
     xor a, a
     ld [$C920], a
     ld a, $80
@@ -705,7 +695,7 @@ Jump_014_4430::
 Jump_014_4446::
     ld a, [$D781]
     rst $00
-    dw Func_014_4A75
+    dw Jump_014_4A75
     dw Func_014_4B5A
     dw Func_014_4DFE
     dw Func_014_4E07
@@ -717,7 +707,7 @@ Jump_014_4446::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4D2B
@@ -728,13 +718,13 @@ Jump_014_4446::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4D2B
     dw Func_014_496D
     dw Func_014_49CC
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4B5A
     dw Func_014_4B92
     dw Func_014_4BE3
@@ -746,17 +736,13 @@ Jump_014_4446::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4CD0
     dw Func_014_4783
     dw Func_014_4794
-    dw Func_014_47E8
-    dw Func_014_4932
-    dw Func_014_4D10
-    dw Func_014_44DA
-    dw Func_014_4A75
+    db $E8, $47, $32, $49, $10, $4D, $DA, $44, $75, $4A
     dw Func_014_4B5A
     dw Func_014_4DFE
     dw Func_014_4E07
@@ -773,23 +759,8 @@ Jump_014_4446::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
-    dw Func_014_4CA8
-    dw Func_014_4CBC
-    dw Func_014_4D2B
-
-Func_014_44DA:: ; heuristic: target of a pointer table; C0
-    call Func_014_4932
-    ld hl, $5ECE
-    ld b, $1D
-    rst $10
-    ld a, [$D7F5]
-    ld h, a
-    ld a, [$D7F6]
-    ld l, a
-    ld a, [hl]
-    ld [$D7B4], a
-    db $FA
+    db $75, $4A, $A8, $4C, $BC, $4C, $2B, $4D, $CD, $32, $49, $21, $CE, $5E, $06, $1D
+    db $D7, $FA, $F5, $D7, $67, $FA, $F6, $D7, $6F, $7E, $EA, $B4, $D7, $FA
 
 Func_014_44F0:: ; heuristic: target of a pointer table; C0
     xor a, e
@@ -838,10 +809,7 @@ Jump_014_451C::
     ld b, $1D
     rst $10
     call Func_014_4BA0
-    db $CD, $EE
-
-Func_014_4540:: ; heuristic: target of a pointer table; C0
-    ld e, b
+    call Func_014_58EE
     ld hl, $8A40
     ld bc, $0C01
     call Func_000_1881
@@ -892,7 +860,7 @@ Jump_014_45A5::
     ld a, [$D7FA]
     cp a, $01
     jr z, Jump_014_45B8
-    ld hl, $5CA3
+    ld hl, Data_014_5CA3
     db $06
 
 Func_014_45B0:: ; heuristic: target of a pointer table; C0
@@ -1197,43 +1165,13 @@ Func_014_4794:: ; heuristic: target of a pointer table; C0
 Data_014_47C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $70, $71, $72, $73, $C3, $B7
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $74, $75, $C3, $C3, $C3, $B7
-
-Func_014_47E0:: ; heuristic: target of a pointer table; C0
-    or a, e
-    or a, h
-    or a, h
-    or a, h
-    or a, h
-    or a, h
-    or a, h
-    or a, l
-
-Func_014_47E8:: ; heuristic: target of a pointer table; C0
-    ld a, [$C563]
-    bit 6, a
-    jr nz, Jump_014_4804
-    db $CB
-
-Func_014_47F0:: ; heuristic: target of a pointer table; C0
-    ld a, a
-    jr nz, $481E
-    ld a, [$C562]
-    bit 0, a
-    jp nz, Jump_014_482E
-    bit 1, a
-    jp nz, Jump_014_48D7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $FA, $63, $C5, $CB, $77, $20, $15, $CB
+    db $7F, $20, $2B, $FA, $62, $C5, $CB, $47, $C2, $2E, $48, $CB, $4F, $C2, $D7, $48
 
 Func_014_4800:: ; heuristic: target of a pointer table; C0
     call Func_014_48ED
     ret
-
-Jump_014_4804::
-    call Func_014_490B
-    ld a, [$D7AD]
-    and a, a
-    jr nz, $4811
-    ld a, $01
-    db $18
+    db $CD, $0B, $49, $FA, $AD, $D7, $A7, $20, $04, $3E, $01, $18
 
 Func_014_4810:: ; heuristic: target of a pointer table; C0
     ld bc, $EA3D
@@ -1256,17 +1194,8 @@ Func_014_4820:: ; heuristic: target of a pointer table; C0
 Jump_014_482B::
     inc a
     jr $4812
-
-Jump_014_482E::
-    ld a, $69
-
-Func_014_4830:: ; heuristic: target of a pointer table; C0
-    call Func_000_1278
-    call Func_014_490F
-    ld a, [$D7AD]
-    and a, a
-    jp nz, Jump_014_48AC
-    ld a, [$D780]
+    db $3E, $69, $CD, $78, $12, $CD, $0F, $49, $FA, $AD, $D7, $A7, $C2, $AC, $48, $FA
+    db $80, $D7
 
 Func_014_4840:: ; heuristic: target of a pointer table; C0
     cp a, $05
@@ -1334,10 +1263,10 @@ Jump_014_488F::
     ld a, $80
     ld [$C919], a
     ret
+    db $FA, $80, $D7, $FE
 
-Jump_014_48AC::
-    ld a, [$D780]
-    cp a, $04
+Func_014_48B0:: ; heuristic: target of a pointer table; C0
+    inc b
     jr nz, Func_014_48C0
     ld a, [$D781]
     cp a, $3F
@@ -1356,12 +1285,7 @@ Func_014_48C0:: ; heuristic: target of a pointer table; C0
     ld a, $80
     ld [$C919], a
     ret
-
-Jump_014_48D7::
-    ld a, $02
-    ld [$D7FA], a
-    ld a, [$D781]
-    inc a
+    db $3E, $02, $EA, $FA, $D7, $FA, $81, $D7, $3C
 
 Func_014_48E0:: ; heuristic: target of a pointer table; C0
     ld [$D781], a
@@ -1383,7 +1307,7 @@ Func_014_48F0:: ; heuristic: target of a pointer table; C0
     cp a, $10
     jr c, Func_014_4907
     cp a, $18
-    jr c, Func_014_490B
+    jr c, Jump_014_490B
     xor a, a
     ld [$D7AE], a
 
@@ -1391,12 +1315,13 @@ Func_014_4907::
     ld b, $BB
     jr Jump_014_4911
 
-Func_014_490B::
+Jump_014_490B::
     ld b, $C3
     jr Jump_014_4911
+    db $06
 
-Func_014_490F::
-    ld b, $BC
+Func_014_4910:: ; heuristic: target of a pointer table; C0
+    cp a, h
 
 Jump_014_4911::
     ld a, [$D7AD]
@@ -1592,7 +1517,7 @@ Func_014_4A70:: ; heuristic: target of a pointer table; C0
     jr c, Func_014_4A54
     ret
 
-Func_014_4A75:: ; heuristic: target of a pointer table; C0
+Jump_014_4A75::
     ld de, Data_014_4AA8
     ld hl, $C364
     ld bc, $0A09
@@ -1845,7 +1770,7 @@ Func_014_4CD0:: ; heuristic: target of a pointer table; C0
     ld [$C919], a
     ret
 
-Func_014_4D10:: ; heuristic: target of a pointer table; C0
+Func_014_4D10:: ; heuristic: follows a terminator; C0
     call Func_014_5800
     ld bc, $140D
     ld de, $01CC
@@ -1886,7 +1811,7 @@ Func_014_4D2B:: ; heuristic: target of a pointer table; C0
 Jump_014_4D64::
     ld a, [$D781]
     rst $00
-    dw Func_014_4A75
+    dw Jump_014_4A75
     dw Func_014_4B5A
     dw Func_014_4B92
     dw Func_014_4BE3
@@ -1898,13 +1823,13 @@ Jump_014_4D64::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4D2B
     dw Func_014_4783
     dw Func_014_4794
-    dw Func_014_47E8
+    db $E8, $47
     dw Func_014_4932
     dw Func_014_5104
     dw Func_014_511F
@@ -1912,13 +1837,13 @@ Jump_014_4D64::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4D2B
     dw Func_014_496D
     dw Func_014_49CC
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4B5A
     dw Func_014_4DFE
     dw Func_014_4E07
@@ -1930,14 +1855,14 @@ Jump_014_4D64::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_525C
     dw Func_014_4F51
     dw Func_014_4E66
     dw Func_014_529C
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4B5A
     dw Func_014_4B92
     dw Func_014_4BE3
@@ -1949,7 +1874,7 @@ Jump_014_4D64::
     dw Func_014_4FCC
     dw Func_014_4783
     dw Func_014_4794
-    dw Func_014_47E8
+    db $E8, $47
     dw Func_014_4932
     dw Func_014_5371
     dw Func_014_538C
@@ -1957,10 +1882,7 @@ Jump_014_4D64::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
-    dw Func_014_4CA8
-    dw Func_014_4CBC
-    dw Func_014_4D2B
+    db $75, $4A, $A8, $4C, $BC, $4C, $2B, $4D
 
 Func_014_4DFE:: ; heuristic: target of a pointer table; C0
     ld hl, Data_014_77AC
@@ -2837,7 +2759,7 @@ Jump_014_5464::
 Jump_014_5492::
     ld a, [$D781]
     rst $00
-    dw Func_014_4A75
+    dw Jump_014_4A75
     dw Func_014_4B5A
     dw Func_014_4B92
     dw Func_014_4BE3
@@ -2849,7 +2771,7 @@ Jump_014_5492::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4D2B
@@ -2994,7 +2916,7 @@ Func_014_55A0:: ; heuristic: target of a pointer table; C0
 Jump_014_55C9::
     ld a, [$D781]
     rst $00
-    dw Func_014_4A75
+    dw Jump_014_4A75
     dw Func_014_4B5A
     dw Func_014_4DFE
     dw Func_014_4E07
@@ -3006,7 +2928,7 @@ Jump_014_55C9::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4D2B
@@ -3016,7 +2938,7 @@ Jump_014_55C9::
     dw Func_014_4742
     dw $475E
     dw Func_014_4772
-    dw Func_014_4A75
+    db $75, $4A
     dw Func_014_4CA8
     dw Func_014_4CBC
     dw Func_014_4D2B
@@ -3760,37 +3682,31 @@ Jump_014_5A15::
     INCBIN "dwm2-cobi-us.gbc", $051A28, $5C
 
 Data_014_5A84:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $D0, $41
-    dw Func_014_4300
-    dw Func_014_4290
-    dw $4340
-    dw Func_014_4210
-    dw $4250
-    db $F0, $42
+    db $D0, $41, $00, $43, $90, $42, $40, $43, $10, $42, $50, $42, $F0, $42
     dw $41C0
-    dw $4370
+    dw Func_014_4370
     dw Func_014_40F0
-    dw $43C0
+    dw Func_014_43C0
     dw Func_014_42D0
     dw Func_014_4380
     dw $4180
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
     dw Func_014_4120
     dw $4170
     dw $41A0
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
     dw Func_014_4A70
-    dw $4910
+    dw Func_014_4910
     db $FF, $FF
 
 Data_014_5AC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3812,20 +3728,20 @@ Data_014_5B8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Data_014_5C15:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8F, $FF, $FF
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
     db $FF, $FF
 
 Data_014_5C36:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3835,9 +3751,9 @@ Data_014_5C36:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5C4A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $43, $10, $42, $50, $42, $F0, $42
     dw $41C0
-    dw $4370
+    dw Func_014_4370
     dw Func_014_40F0
-    dw $43C0
+    dw Func_014_43C0
     dw Func_014_42D0
     db $FF, $FF
 
@@ -3846,29 +3762,23 @@ Data_014_5C5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0, $8C, $F0, $8C, $FF, $FF
 
 Data_014_5C74:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $D0, $41
-    dw Func_014_4300
-    dw Func_014_4290
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
-    dw $4910
+    db $D0, $41, $00, $43, $90, $42
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
+    dw Func_014_4910
     dw Func_014_4230
-    dw Func_014_4290
-    db $FF, $FF
+    db $90, $42, $FF, $FF
 
 Data_014_5C8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97, $FF, $FF
 
 Data_014_5C9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $30, $41
-    dw $4320
-    dw Func_014_42A0
-    dw Func_014_4330
-    dw Func_014_4190
-    dw Func_014_4150
-    db $FF, $FF
+    db $30, $41, $20, $43, $A0, $42, $30, $43, $90
+
+Data_014_5CA3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $41, $50, $41, $FF, $FF
 
 Func_014_5CA8::
     ld a, [$C56C]
@@ -6512,32 +6422,23 @@ Data_014_6DF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_014_4060
     dw Func_014_4070
     dw Func_014_4080
-    dw $4250
+    dw Func_014_4250
     dw Func_014_4260
     dw Func_014_4270
-    dw Func_014_4280
-    dw Func_014_4290
+    db $80, $42, $90, $42
     dw Func_014_42A0
     dw Func_014_42B0
     dw Func_014_42C0
     dw Func_014_42D0
     dw Func_014_42E0
-    db $F0, $42
-    dw Func_014_4300
-    dw Func_014_4310
+    db $F0, $42, $00, $43, $10, $43
     dw Func_014_4090
     dw Func_014_40A0
     dw $49A0
     dw Func_014_4990
-    dw $4320
-    dw Func_014_4330
-    dw $4340
-    dw Func_014_4350
-    dw Func_014_4360
-    dw $4370
-    dw Func_014_4380
-    db $90, $43, $A0, $43, $B0, $43
-    dw $43C0
+    db $20, $43, $30, $43, $40, $43, $50, $43, $60, $43, $70, $43, $80, $43, $90, $43
+    db $A0, $43, $B0, $43
+    dw Func_014_43C0
     dw Func_014_43D0
     dw Func_014_43E0
     dw $40C0
@@ -6572,9 +6473,8 @@ Data_014_6DF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_014_4050
     dw Func_014_4060
     dw Func_014_4760
-    db $70, $47, $80, $47, $90, $47, $A0, $47, $B0, $47, $C0, $47, $D0, $47
-    dw Func_014_47E0
-    dw Func_014_47F0
+    db $70, $47, $80, $47, $90, $47, $A0, $47, $B0, $47, $C0, $47, $D0, $47, $E0, $47
+    db $F0, $47
     dw Func_014_4800
     dw Func_014_4820
     dw Func_014_4840
@@ -6583,7 +6483,7 @@ Data_014_6DF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_014_4880
     dw $4890
     dw $48A0
-    dw $48B0
+    dw Func_014_48B0
     dw Func_014_48C0
     db $D0, $48
     dw Func_014_46E0
@@ -6598,7 +6498,7 @@ Data_014_6DF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_014_45E0
     dw Func_014_4600
     dw Func_014_4810
-    dw Func_014_4830
+    db $30, $48
     dw Func_014_4850
     dw Func_014_48E0
     dw Func_014_48F0
@@ -6606,10 +6506,8 @@ Data_014_6DF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_014_44F0
     dw Func_014_42A0
     dw Func_014_43A0
-    db $80, $44
-    dw Func_014_4510
-    dw Func_014_4290
-    dw Func_014_4540
+    db $80, $44, $10, $45, $90, $42
+    dw $4540
     dw Func_014_4510
     dw Func_014_4A00
     dw Func_014_4A00

@@ -1023,7 +1023,7 @@ Func_002_4628::
     ld hl, $639D
     ld b, $60
     rst $10
-    ld hl, $62F9
+    ld hl, Data_002_62F9
     ld b, $60
     rst $10
     call Func_002_470B
@@ -5115,7 +5115,7 @@ Jump_002_609D::
     dw Func_002_62E0
     dw Func_002_62E0
     dw Func_002_62E0
-    dw Func_002_62ED
+    db $ED, $62
     dw Func_002_631A
     dw Func_002_62E0
     dw Func_002_62E0
@@ -5210,19 +5210,10 @@ Func_002_62E0:: ; heuristic: target of a pointer table; C0
     jr c, Jump_002_62DB
     ld c, $2E
     jp Jump_002_6089
+    db $F0, $92, $B7, $28, $EE, $11, $87, $00, $CD, $1B, $18, $30
 
-Func_002_62ED:: ; heuristic: target of a pointer table; C0
-    ldh a, [$FF92]
-    or a, a
-    jr z, Func_002_62E0
-    ld de, $0087
-    call Func_000_181B
-    jr nc, Func_002_62E0
-    ld de, $008A
-    call Func_000_181B
-    jr c, Func_002_62E0
-    ld c, $28
-    jp Jump_002_6089
+Data_002_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $E6, $11, $8A, $00, $CD, $1B, $18, $38, $DE, $0E, $28, $C3, $89, $60
 
 Jump_002_6307::
     ld c, $1C

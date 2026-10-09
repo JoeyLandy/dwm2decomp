@@ -3376,7 +3376,7 @@ Jump_03A_66CF::
     bit 0, [hl]
     jr z, Jump_03A_66E3
     push hl
-    ld hl, $7806
+    ld hl, Data_03A_7806
     ld b, $31
     rst $10
     ld hl, $7914
@@ -3389,7 +3389,7 @@ Jump_03A_66E3::
     bit 1, [hl]
     jr z, Jump_03A_66F7
     push hl
-    ld hl, $785F
+    ld hl, Data_03A_785F
     ld b, $31
     rst $10
     ld hl, $7965
@@ -4893,216 +4893,16 @@ Jump_03A_77CB::
 Jump_03A_77CF::
     call Func_03A_7927
     ret
+    db $F0, $C6, $47, $78, $FE, $01, $28, $7B, $AF, $EA, $C4, $DA, $FA, $A5, $D8, $CB
+    db $57, $21, $A0, $C0, $28, $03, $21, $A8, $C0, $78, $D6, $01, $5F, $16, $01, $78
+    db $92, $4F, $E5, $D5, $2A, $5F, $2A, $57, $7B, $BE, $23, $20, $0B, $7A, $BE, $20
+    db $07, $FA, $C4
 
-Func_03A_77D3:: ; heuristic: follows a terminator; C0
-    ldh a, [$FFC6]
-    ld b, a
-    ld a, b
-    cp a, $01
-    jr z, Jump_03A_7856
-    xor a, a
-    ld [$DAC4], a
-    ld a, [$D8A5]
-    bit 2, a
-    ld hl, $C0A0
-    jr z, Jump_03A_77EC
-    ld hl, $C0A8
+Data_03A_7806:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $0EB806, $59
 
-Jump_03A_77EC::
-    ld a, b
-    sub a, $01
-    ld e, a
-    ld d, $01
-
-Jump_03A_77F2::
-    ld a, b
-    sub a, d
-    ld c, a
-    push hl
-    push de
-    ld a, [hl+]
-    ld e, a
-    ld a, [hl+]
-    ld d, a
-
-Jump_03A_77FB::
-    ld a, e
-    cp a, [hl]
-    inc hl
-    jr nz, Jump_03A_780B
-    ld a, d
-    cp a, [hl]
-    jr nz, Jump_03A_780B
-    ld a, [$DAC4]
-    inc a
-    ld [$DAC4], a
-
-Jump_03A_780B::
-    inc hl
-    dec c
-    jr nz, Jump_03A_77FB
-    pop de
-    pop hl
-    inc d
-    inc hl
-    inc hl
-    dec e
-    jr nz, Jump_03A_77F2
-    ld a, b
-    dec b
-    ld c, b
-    call Func_000_1682
-    srl h
-    rr l
-    ld a, [$DAC4]
-    cp a, l
-    jr z, Jump_03A_7845
-    ld hl, $C130
-    ld [hl], $16
-    inc hl
-    ld [hl], $32
-    inc hl
-    ld [hl], $31
-    inc hl
-    ld [hl], $36
-    inc hl
-    ld [hl], $37
-    inc hl
-    ld [hl], $28
-    inc hl
-    ld [hl], $35
-    inc hl
-    ld [hl], $36
-    inc hl
-    ld [hl], $F0
-    ret
-
-Jump_03A_7845::
-    call Func_03A_7927
-    jr Jump_03A_7852
-
-Func_03A_784A:: ; heuristic: follows a terminator; C0
-    ld a, e
-    cp a, $01
-    jr z, Jump_03A_7856
-    call Func_03A_795D
-
-Jump_03A_7852::
-    call Func_03A_7B82
-    ret
-
-Jump_03A_7856::
-    call Func_03A_7927
-    ret
-
-Func_03A_785A:: ; heuristic: follows a terminator; C0
-    ldh a, [$FFC6]
-    ld b, a
-    ld a, b
-    cp a, $01
-    jp z, Jump_03A_78EA
-    xor a, a
-    ld [$DAC4], a
-    ld a, [$D8A5]
-    bit 2, a
-    ld hl, $C0A0
-    jr z, Jump_03A_7874
-    ld hl, $C0A8
-
-Jump_03A_7874::
-    ld a, b
-    sub a, $01
-    ld e, a
-    ld d, $01
-
-Jump_03A_787A::
-    ld a, b
-    sub a, d
-    ld c, a
-    push hl
-    push de
-    ld a, [hl+]
-    ld e, a
-    ld a, [hl+]
-    ld d, a
-
-Jump_03A_7883::
-    ld a, e
-    cp a, [hl]
-    inc hl
-    jr nz, Jump_03A_7893
-    ld a, d
-    cp a, [hl]
-    jr nz, Jump_03A_7893
-    ld a, [$DAC4]
-    inc a
-    ld [$DAC4], a
-
-Jump_03A_7893::
-    inc hl
-    dec c
-    jr nz, Jump_03A_7883
-    pop de
-    pop hl
-    inc d
-    inc hl
-    inc hl
-    dec e
-    jr nz, Jump_03A_787A
-    ld a, b
-    dec b
-    ld c, b
-    call Func_000_1682
-    srl h
-    rr l
-    ld a, [$DAC4]
-    cp a, l
-    jr z, Jump_03A_78D9
-    ld hl, $C130
-    ld [hl], $1D
-    inc hl
-    ld [hl], $2B
-    inc hl
-    ld [hl], $28
-    inc hl
-    ld [hl], $90
-    inc hl
-    ld [hl], $30
-    inc hl
-    ld [hl], $32
-    inc hl
-    ld [hl], $31
-    inc hl
-    ld [hl], $36
-    inc hl
-    ld [hl], $37
-    inc hl
-    ld [hl], $28
-    inc hl
-    ld [hl], $35
-    inc hl
-    ld [hl], $36
-    inc hl
-    ld [hl], $F0
-    ret
-
-Jump_03A_78D9::
-    call Func_03A_7927
-    jr Jump_03A_78E6
-
-Func_03A_78DE:: ; heuristic: follows a terminator; C0
-    ld a, e
-    cp a, $01
-    jr z, Jump_03A_78EA
-    call Func_03A_795D
-
-Jump_03A_78E6::
-    call Func_03A_7B82
-    ret
-
-Jump_03A_78EA::
-    call Func_03A_7927
-    ret
+Data_03A_785F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $0EB85F, $8F
 
 Func_03A_78EE::
     ld a, [$D8A4]

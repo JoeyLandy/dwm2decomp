@@ -1729,10 +1729,12 @@ Func_012_4C07::
     dw Func_012_4D3B
     dw Func_012_4CBC
     dw Func_012_4D3B
-    dw Func_012_4C69
-    dw Func_012_4C3D
 
-Func_012_4C3D:: ; heuristic: target of a pointer table; C0
+Func_012_4C39:: ; heuristic: follows a terminator; C0
+    ld l, c
+    ld c, h
+    dec a
+    ld c, h
     ld a, [$C56C]
     or a, a
     ret nz
@@ -1751,30 +1753,12 @@ Func_012_4C3D:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [$D7FD], a
     ret
+    db $3E, $0D, $E0, $90, $3E, $01, $E0, $8F, $E0, $8F, $AF, $E0, $92, $3E, $40, $EA
+    db $C8, $C8, $3E, $40, $EA, $C9, $C8, $AF, $E0, $8D, $3E
 
-Func_012_4C69:: ; heuristic: target of a pointer table; C0
-    ld a, $0D
-    ldh [$FF90], a
-    ld a, $01
-    ldh [$FF8F], a
-    ldh [$FF8F], a
-    xor a, a
-    ldh [$FF92], a
-    ld a, $40
-    ld [$C8C8], a
-    ld a, $40
-    ld [$C8C9], a
-    xor a, a
-    ldh [$FF8D], a
-    ld a, $00
-    ld [$C8C6], a
-    ld a, $0F
-    call Func_000_0DF2
-    ld a, $01
-    ld [$C936], a
-    ld hl, $C923
-    inc [hl]
-    ret
+Data_012_4C84:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $00, $EA, $C6, $C8, $3E, $0F, $CD, $F2, $0D, $3E, $01, $EA, $36, $C9, $21, $23
+    db $C9, $34, $C9
 
 Func_012_4C97:: ; heuristic: target of a pointer table; C0
     xor a, a
@@ -6016,7 +6000,7 @@ Func_012_69B0::
 
 Jump_012_69C9::
     push hl
-    ld hl, $4C84
+    ld hl, Data_012_4C84
     ld b, $84
     rst $10
     pop hl

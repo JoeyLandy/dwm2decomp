@@ -1157,7 +1157,7 @@ Jump_03B_46AE::
     ld hl, $4007
     ld b, $16
     rst $10
-    ld hl, $4C1D
+    ld hl, Data_03B_4C1D
     ld b, $16
     rst $10
     ld a, [$D081]
@@ -1933,9 +1933,7 @@ Func_03B_4B02::
     add hl, bc
     call Func_000_000B
     ret
-    db $91, $4B, $92, $4B, $92, $4B, $92, $4B, $BD, $4B, $BD, $4B
-    dw Func_03B_4BE8
-    dw Func_03B_4BFE
+    db $91, $4B, $92, $4B, $92, $4B, $92, $4B, $BD, $4B, $BD, $4B, $E8, $4B, $FE, $4B
     dw Func_03B_4C21
     dw Func_03B_4C37
     dw Func_03B_4C5A
@@ -1998,7 +1996,7 @@ Func_03B_4BBD:: ; heuristic: follows a terminator; C0
 Jump_03B_4BE5::
     jp Jump_03B_4EE3
 
-Func_03B_4BE8:: ; heuristic: target of a pointer table; C0
+Func_03B_4BE8:: ; heuristic: follows a terminator; C0
     call Func_03B_4F03
     and a, $03
     jr z, Jump_03B_4BFB
@@ -2011,29 +2009,11 @@ Func_03B_4BE8:: ; heuristic: target of a pointer table; C0
 
 Jump_03B_4BFB::
     jp Jump_03B_4EE3
+    db $CD, $03, $4F, $E6, $40, $28, $19, $7E, $E6, $BF, $77, $FA, $A5, $D8, $21, $5B
+    db $DA, $85, $6F, $30, $01, $24, $36, $03, $2E, $4F, $01, $90, $40, $C3, $CF
 
-Func_03B_4BFE:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F03
-    and a, $40
-    jr z, Jump_03B_4C1E
-    ld a, [hl]
-    and a, $BF
-    ld [hl], a
-    ld a, [$D8A5]
-    ld hl, $DA5B
-    add a, l
-    ld l, a
-    jr nc, Jump_03B_4C14
-    inc h
-
-Jump_03B_4C14::
-    ld [hl], $03
-    ld l, $4F
-    ld bc, $4090
-    jp Func_03B_4ECF
-
-Jump_03B_4C1E::
-    jp Jump_03B_4EE3
+Data_03B_4C1D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $4E, $C3, $E3, $4E
 
 Func_03B_4C21:: ; heuristic: target of a pointer table; C0
     call Func_03B_4F03

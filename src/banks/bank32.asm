@@ -142,417 +142,49 @@ Data_032_4111:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $04, $01, $04, $02, $04, $03, $04, $04, $02, $05, $02, $06
 
 Data_032_413F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $02
+    db $02, $07, $02, $1F, $08, $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $09
 
-Func_032_4140:: ; heuristic: target of a pointer table; C0
-    rlca
-    ld [bc], a
-    rra
-    ld [$0308], sp
-    add hl, bc
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    add hl, bc
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    ld [$0902], sp
-    dec b
-    ld a, [bc]
-    dec b
-    dec bc
-    dec b
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    rra
-    ld [$0100], sp
-    ld bc, $0201
-    ld bc, $0103
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [bc], a
-    ld [bc], a
-    nop
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0203
-    ld [bc], a
-    inc bc
-    inc b
-    inc b
-    dec b
-    dec b
-    inc bc
-    ld b, $04
-    rlca
-    inc bc
-    ld [$0404], sp
-    inc bc
-    dec b
-    inc b
-    ld b, $03
-    rlca
-    inc b
-    ld [$0403], sp
-    inc b
-    dec b
-    inc bc
-    ld b, $04
-    rlca
-    inc bc
-    ld [$0404], sp
-    inc bc
-    dec b
-    inc b
-    ld b, $03
-    rlca
-    inc b
-    ld [$0403], sp
-    inc bc
-    dec b
-    inc b
-    ld b, $03
-    rlca
-    inc b
-    ld [$0903], sp
-    inc b
-    ld a, [bc]
-    dec b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0202
-    inc b
-    inc bc
-    inc b
-    inc b
-    ld [bc], a
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    ld bc, $1F02
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    rra
-    db $10, $03 ; stop
-    inc b
-    inc b
-    ld [bc], a
-    dec b
-    inc b
-    ld b, $02
-    rlca
-    inc b
-    ld [$0302], sp
-    inc bc
-    inc b
-    ld [bc], a
-    dec b
-    inc bc
-    ld b, $02
-    rlca
-    inc b
-    ld [$1F02], sp
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    rra
-    db $10, $04 ; stop
-    dec b
-    dec b
-    dec b
-    ld b, $05
-    rlca
-    ld [bc], a
-    ld [$0E02], sp
-    ld [bc], a
-    add hl, bc
-    ld [bc], a
-    rrca
-    ld [bc], a
-    ld c, $02
-    db $10, $02 ; stop
-    dec bc
-    ld [bc], a
-    ld de, $0C02
-    ld [bc], a
-    db $10, $02 ; stop
-    dec bc
-    ld [bc], a
-    ld de, $0C02
-    ld [bc], a
-    ld [de], a
-    ld [bc], a
-    dec c
-    ld [bc], a
-    inc de
-    ld [bc], a
-    ld [$0E02], sp
-    ld [bc], a
-    add hl, bc
-    ld [bc], a
-    rrca
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    db $10, $02 ; stop
-    dec bc
-    ld [bc], a
-    ld b, $02
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc b
-    inc bc
-    inc b
-    inc b
-    dec b
-    dec b
-    inc b
-    ld b, $05
-    rlca
-    inc b
-    ld [$0905], sp
-    inc b
-    ld a, [bc]
-    dec b
-    dec bc
-    inc b
-    inc c
-    dec b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    rrca
-    inc bc
-    db $10, $03 ; stop
-    ld de, $1203
-    inc bc
-    inc de
-    inc bc
-    inc d
-    inc bc
-    dec d
-    inc bc
-    ld d, $03
-    rla
-    inc bc
-    jr Jump_032_430B
-    db $19, $03, $1A
+Data_032_414F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $03, $0A, $03, $0B, $02, $0C
 
-Jump_032_430B::
-    inc bc
-    rra
-    inc bc
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    rrca
-    inc bc
-    db $10, $03 ; stop
-    ld de, $1203
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    dec b
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
+Data_032_4155:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $0C8155, $44
+
+Data_032_4199:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $03, $05, $03, $06, $03, $07, $03, $08, $03, $09, $03, $0A, $03, $0B, $03, $0C
+    db $03, $0D, $03, $1F, $02, $FF, $FF, $00, $03, $01, $03, $02, $03, $03, $03, $04
+    db $03, $05, $03, $06, $03, $07, $03, $08, $03, $09, $03, $0A, $03, $0B, $03, $0C
+    db $03, $0D, $03, $1F, $02, $FF, $FF, $00, $04, $01
+
+Data_032_41D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $03, $02, $02, $03, $04, $04, $05, $05, $03, $06, $04, $07, $03, $08, $04, $04
+    db $03, $05, $04, $06, $03, $07, $04, $08, $03, $04, $04, $05, $03, $06, $04, $07
+    db $03, $08, $04, $04, $03, $05, $04, $06, $03, $07, $04, $08, $03, $04, $03, $05
+    db $04, $06, $03, $07, $04, $08, $03, $09, $04, $0A
+
+Data_032_420D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $05, $1F, $02, $FF, $FF, $00, $04, $01, $02, $02, $04, $03, $04, $04, $02, $00
+    db $02, $01, $02, $02, $02, $01, $02, $1F, $02, $FF, $FF, $00, $02, $01, $02, $02
+    db $02, $1F, $10, $03, $04, $04, $02, $05, $04, $06, $02, $07, $04, $08, $02, $03
+    db $03, $04, $02, $05, $03, $06, $02, $07, $04, $08
+
+Data_032_4247:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $02, $1F, $02, $FF, $FF, $00, $02, $01, $02, $02, $02, $03, $02, $1F, $10, $04
+    db $05, $05, $05, $06, $05, $07, $02, $08, $02, $0E, $02, $09, $02, $0F, $02, $0E
+    db $02, $10, $02, $0B, $02, $11, $02, $0C, $02, $10, $02, $0B, $02, $11, $02, $0C
+    db $02, $12, $02, $0D, $02, $13, $02, $08, $02, $0E
+
+Data_032_4281:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $02, $09, $02, $0F, $02, $0A, $02, $10, $02, $0B, $02, $06, $02, $1F, $02, $FF
+    db $FF, $00, $02, $01, $02, $02, $02
+
+Data_032_4298:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $03, $02, $04, $02, $05, $02, $06, $02, $07, $02, $08, $02, $09, $02, $0A, $02
+    db $0B, $02, $0C, $02, $1F, $02, $FF, $FF, $00, $03, $01, $03, $02, $04, $03, $04
+    db $04, $05, $05
+
+Data_032_42BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $0C82BB, $87
 
 Func_032_4342:: ; heuristic: target of a pointer table; C0
     inc b
@@ -2761,7 +2393,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
     cp a, $01
     call nz, Func_032_5386
     call Func_032_543C
-    ld hl, $414F
+    ld hl, Data_032_414F
     ld b, $A3
     rst $10
     ldh a, [$FFC6]
@@ -2777,7 +2409,7 @@ Jump_032_4F32::
     ld b, $3A
     rst $10
     call Func_032_543C
-    ld hl, $414F
+    ld hl, Data_032_414F
     ld b, $A3
     rst $10
     ldh a, [$FFC6]
@@ -2974,8 +2606,8 @@ Jump_032_5073::
 
 Data_032_5078:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13
-    db $14, $15, $19, $1A, $26, $28, $2A, $2C, $2E, $2F, $30, $33, $3D, $3E, $3F
-    dw Func_032_4140
+    db $14, $15, $19, $1A, $26, $28, $2A, $2C, $2E, $2F, $30, $33, $3D, $3E, $3F, $40
+    db $41
     dw Func_032_4342
     dw Func_032_4544
     dw Func_032_4746
@@ -3102,7 +2734,7 @@ Jump_032_5181::
     push de
     ld a, [$D8A4]
     push af
-    ld hl, $414F
+    ld hl, Data_032_414F
     ld b, $A3
     rst $10
     ldh a, [$FFC6]
@@ -3516,7 +3148,7 @@ Jump_032_53C8::
     call Func_032_5397
     ld a, [$D8A4]
     push af
-    ld hl, $414F
+    ld hl, Data_032_414F
     ld b, $A3
     rst $10
     ldh a, [$FFC6]
@@ -3542,7 +3174,7 @@ Jump_032_541A::
     call Func_032_5397
     ld a, [$D8A4]
     push af
-    ld hl, $414F
+    ld hl, Data_032_414F
     ld b, $A3
     rst $10
     ldh a, [$FFC6]
@@ -4813,7 +4445,7 @@ Jump_032_5CCA::
     ld [hl], b
     ld a, [$D8A5]
     ld c, a
-    ld hl, $4155
+    ld hl, Data_032_4155
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -4828,12 +4460,12 @@ Jump_032_5CCA::
     ld [hl], b
     ld a, [$D8A5]
     ld c, a
-    ld hl, $4298
+    ld hl, Data_032_4298
     ld b, $19
     rst $10
     ld a, [$D8A5]
     ld c, a
-    ld hl, $4199
+    ld hl, Data_032_4199
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -4849,7 +4481,7 @@ Jump_032_5D29::
     ld [hl], c
     ld a, [$D8A5]
     ld c, a
-    ld hl, $41D3
+    ld hl, Data_032_41D3
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -4865,7 +4497,7 @@ Jump_032_5D43::
     ld [hl], c
     ld a, [$D8A5]
     ld c, a
-    ld hl, $420D
+    ld hl, Data_032_420D
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -4881,7 +4513,7 @@ Jump_032_5D5D::
     ld [hl], c
     ld a, [$D8A5]
     ld c, a
-    ld hl, $4247
+    ld hl, Data_032_4247
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -4897,7 +4529,7 @@ Jump_032_5D77::
     ld [hl], c
     ld a, [$D8A5]
     ld c, a
-    ld hl, $4281
+    ld hl, Data_032_4281
     ld b, $3B
     rst $10
     ld a, [$DAC4]
@@ -4943,7 +4575,7 @@ Jump_032_5D91::
     ld [hl], b
     ld a, [$D8A5]
     ld c, a
-    ld hl, $42BB
+    ld hl, Data_032_42BB
     ld b, $3B
     rst $10
     ld a, [$D8A5]
@@ -5192,7 +4824,7 @@ Jump_032_5F3B::
 Jump_032_5F4B::
     ld a, [$D8A4]
     push af
-    ld hl, $414F
+    ld hl, Data_032_414F
     ld b, $A3
     rst $10
     ldh a, [$FFC6]
@@ -5721,7 +5353,7 @@ Jump_032_62CF::
     jr nz, Jump_032_62F1
     set 7, a
     ld [$C983], a
-    ld hl, $414F
+    ld hl, Data_032_414F
     ld b, $A3
     rst $10
     ldh a, [$FFC6]

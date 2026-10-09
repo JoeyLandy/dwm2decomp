@@ -4,12 +4,12 @@ SECTION "Bank 1E", ROMX[$4000], BANK[$1E]
 Func_01E_4001::
     ld a, [$D788]
     rst $00
-    dw Func_01E_400D
-    dw Func_01E_403F
-    dw Func_01E_4046
-    dw Func_01E_4062
+    dw Jump_01E_400D
+    dw Jump_01E_403F
+    dw Jump_01E_4046
+    dw Jump_01E_4062
 
-Func_01E_400D:: ; heuristic: target of a pointer table; C0
+Jump_01E_400D::
     ld hl, $C364
     ld de, $C198
     ld bc, $0104
@@ -32,13 +32,13 @@ Jump_01E_402B::
     ld [$D788], a
     ret
 
-Func_01E_403F:: ; heuristic: target of a pointer table; C0
+Jump_01E_403F::
     ld hl, Func_01E_4001
     ld b, $15
     rst $10
     ret
 
-Func_01E_4046:: ; heuristic: target of a pointer table; C0
+Jump_01E_4046::
     ld b, $46
     ld de, Func_01E_4001
     ld hl, $8800
@@ -51,7 +51,7 @@ Func_01E_4046:: ; heuristic: target of a pointer table; C0
     ld [$D788], a
     ret
 
-Func_01E_4062:: ; heuristic: target of a pointer table; C0
+Jump_01E_4062::
     ld hl, Func_01E_4001
     ld b, $15
     rst $10

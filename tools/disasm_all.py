@@ -61,6 +61,8 @@ class Rom:
         self._spec: dict[tuple[int, int], object] = {}  # speculative-trace cache
         self.dtab: dict[int, dict[int, int]] = {b: {} for b in range(self.nbanks)}  # data pointer words
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
+        self.pdata: dict[int, set[int]] = {b: set() for b in range(self.nbanks)}
+        self.vetoed = 0  # heuristic candidates rejected by data-pointer evidence
         self.dreason: dict[tuple[int, int], str] = {}  # why a Data_ label exists
         self.dref: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, insn addr) -> (bank, ptr)
 
@@ -246,11 +248,41 @@ class Rom:
         tablelike = len(words) >= 6 and sum(0x4000 <= w < 0x8000 for w in words) >= 0.75 * len(words)
         return regreg <= 0.25 * n and nops <= 0.2 * n and struct >= 1 and not tablelike
 
+    def snapshot_data_pointers(self) -> None:
+        """Record `ld hl|de|bc, $4000-$7FFF` targets of the directly traced (non-heuristic)
+        code, per bank (same bank assumed). Taken once, before any heuristic runs, so
+        bogus heuristic code cannot veto good code."""
+        ld16 = re.compile(r"ld (?:hl|de|bc), \$([0-9A-F]{4})$")
+        for bank in range(1, self.nbanks):
+            for v in self.insn[bank].values():
+                if v[0] != "dw":
+                    m = ld16.match(v[1])
+                    if m and 0x4000 <= int(m.group(1), 16) < 0x8000:
+                        self.pdata[bank].add(int(m.group(1), 16))
+        log(f"data-pointer evidence: {sum(len(s) for s in self.pdata.values())} targets "
+            f"from directly traced code")
+
+    def contradicted(self, bank: int, tr: dict) -> bool:
+        """True if a data pointer targets the interior of one of the candidate's instructions."""
+        pd = self.pdata[bank]
+        if not pd:
+            return False
+        interior: set[int] = set()
+        for (cb, pc), v in tr.items():
+            if cb == bank:
+                interior.update(range(pc + 1, pc + v[0]))
+        return bool(pd & interior)
+
     def accept(self, bank: int, start: int) -> bool:
         base = self.base(bank)
         tr = self.spec_trace(bank, start)
         fb = self.data[bank * BANK + start - base:bank * BANK + start - base + 16]
-        return self.plausible(tr, fb)
+        if not self.plausible(tr, fb):
+            return False
+        if self.contradicted(bank, tr):
+            self.vetoed += 1
+            return False
+        return True
 
     def discover_fallthrough(self) -> bool:
         """Cheap pass: queue plausible code that starts right after known code or a table."""
@@ -465,6 +497,8 @@ class Rom:
                 if not (a or b) and not any(self.pending.values()):
                     break
             log(f"round {rnd}: trace fixpoint after {passes} passes: {self.summary()}")
+            if rnd == 1:
+                self.snapshot_data_pointers()
             self._spec.clear()
             # Cheap fall-through discovery first (each hit exposes the next function in a
             # chain); the slow pointer-table scan only runs once that is exhausted.

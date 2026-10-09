@@ -4528,7 +4528,7 @@ Jump_00D_65D0::
     dw Func_00D_66BB
     dw Func_00D_66CE
     dw Func_00D_66ED
-    dw Func_00D_67A3
+    db $A3, $67
     dw Func_00D_67F7
     dw Func_00D_68FD
     dw Func_00D_6929
@@ -4763,7 +4763,7 @@ Jump_00D_676A::
     ld [$C919], a
     ret
 
-Func_00D_67A3:: ; heuristic: target of a pointer table; C0
+Func_00D_67A3:: ; heuristic: follows a terminator; C0
     ld b, $BB
     call Func_00D_6DA7
     ld a, [$C563]
