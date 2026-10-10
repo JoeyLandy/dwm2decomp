@@ -530,7 +530,7 @@ Jump_024_4369::
 
 Jump_024_437D::
     call GameMode6_Update_Shared02
-    call Func_024_4F0C
+    call CopyWCA2CNameToWC130
     ld a, $06
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
@@ -982,7 +982,7 @@ Jump_024_4621::
     ld b, $BC
     ld hl, Data_024_5AAE
     call StoreBAtWordTableEntry_Bank24_52CE
-    farcall Func_01B_76E3
+    farcall CopyWD789Cell5NameToWC130
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1365,7 +1365,7 @@ Jump_024_48AE::
     ld b, $BC
     ld hl, Data_024_5AAE
     call StoreBAtWordTableEntry_Bank24_52CE
-    farcall Func_01B_76E3
+    farcall CopyWD789Cell5NameToWC130
     ld a, [wD781]
     add a, $02
     ld [wD781], a
@@ -2354,15 +2354,19 @@ Func_024_4EE8:: ; address name
     farcall BeginStringDisplay_Bank33_7037
     ret
 
+; HL = wCA2C, then copies up to 10 name bytes to wC130 with a $F0 terminator (E-0124)
 ; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case05, Func_024_5553_Case08)
 ; points at: wCA2C, wC130
-Func_024_4F0C::
+CopyWCA2CNameToWC130::
+Func_024_4F0C:: ; address name
     ld hl, wCA2C
     jp Jump_024_4F15
 
+; copies up to 10 name bytes from wC987 (stopping at $F0) to wC130 with a $F0 terminator (E-0124)
 ; 1 call site from 1 routine (e.g. Func_024_5434_Case08)
 ; points at: wC987, wC130
-Func_024_4F12::
+CopyWC987NameToWC130::
+Func_024_4F12:: ; address name
     ld hl, wC987
 
 Jump_024_4F15::
@@ -2782,11 +2786,13 @@ ReturnStub_51A3::
 Func_024_51A3:: ; address name
     ret
 
+; on CGB with wD092 = 8: copies the 6 x 6 block Data_024_51D3 into the WRAM-bank-2 buffer at wD25F (20-byte rows) (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD092
 ; writes: rSVBK
 ; points at: wD25F
-Func_024_51A4:: ; heuristic: follows a terminator; C0
+CopyAttributeBlock51D3ToWD25F:: ; heuristic: follows a terminator; C0
+Func_024_51A4:: ; address name
     ld a, [wIsCGB]
     and a, a
     ret z
@@ -3240,7 +3246,7 @@ Jump_024_54D2::
 ; writes: wD782
 Func_024_5434_Case08::
 Jump_024_54DA:: ; address name
-    call Func_024_4F12
+    call CopyWC987NameToWC130
     ld a, $03
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wD782]
@@ -3459,7 +3465,7 @@ Jump_024_55FB::
 ; writes: wD782
 Func_024_5553_Case08::
 Jump_024_5603:: ; address name
-    call Func_024_4F0C
+    call CopyWCA2CNameToWC130
     ld a, $04
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wD782]
@@ -3664,7 +3670,7 @@ Jump_024_575B::
 Jump_024_5762::
     ld a, $0D
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     xor a, a
     ld [wCBCF], a
     ld a, $48

@@ -2,7 +2,7 @@ SECTION "Bank 35", ROMX[$4000], BANK[$35]
     db $35
 
 ; copies the whole 47-byte species record of monster id wSpeciesIdLo/Hi to wSpeciesRecord; byte 0 is the family (E-0069)
-; 37 call sites from 36 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_6C48, WithSRAMDraw4ACEAnd4BE8_Sub01, ShowRecordSpeciesAndSkillNames, ...)
+; 37 call sites from 36 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, WithSRAMDraw4ACEAnd4BE8_Sub01, ShowRecordSpeciesAndSkillNames, ...)
 ; points at: wSpeciesRecord
 LoadSpeciesRecord::
 Func_035_4001:: ; address name
@@ -12,7 +12,7 @@ Func_035_4001:: ; address name
     ret
 
 ; copies byte 0 of the species record of monster id wSpeciesIdLo/Hi, the family (0 Slime ... 9 Water, 10 Boss; $FF for an unused id), to wSpeciesRecord (E-0069)
-; 8 call sites from 7 routines (e.g. GetSlotSpeciesFamily, CountSpeciesPerFamilyFlaggedOrListed, BattleEnd_Step3_Sub01_Sub01, Func_037_5DBC, ...)
+; 8 call sites from 7 routines (e.g. GetSlotSpeciesFamily, CountSpeciesPerFamilyFlaggedOrListed, BattleEnd_Step3_Sub01_Sub01, FamilyNibbleOrSpeciesFamily, ...)
 ; points at: wSpeciesRecord
 LoadSpeciesFamily::
 Func_035_400A:: ; address name
@@ -22,7 +22,7 @@ Func_035_400A:: ; address name
     ret
 
 ; copies bytes 0-1 of the species record of monster id wSpeciesIdLo/Hi (the family and byte 1) to wSpeciesRecord (E-0069)
-; 1 call site from 1 routine (e.g. Func_00E_61C1)
+; 1 call site from 1 routine (e.g. RollWCADEFromSpeciesFlag)
 ; points at: wSpeciesRecord
 LoadSpeciesRecordWord0::
 Func_035_4013:: ; address name

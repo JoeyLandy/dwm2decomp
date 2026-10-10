@@ -1,10 +1,12 @@
 SECTION "Bank 25", ROMX[$4000], BANK[$25]
     db $25
 
-; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, Func_004_44CE, Func_004_4C96, Func_004_4D43, ...)
+; ORs the attribute bits from Data_025_411E[hSpriteSetIndex] (when its bit 0 is set) into hSpriteAttrXor, then builds the sprite from Data_025_401E (E-0124)
+; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, Func_004_44CE, AdvanceHFF99AndRunHFF8BMode_Shared01, AdvanceHFF99AndRunHFF8BMode_Case00_Sub01, ...)
 ; reads: hSpriteSetIndex, hSpriteAttrXor
 ; writes: hSpriteAttrXor
-Func_025_4001::
+DrawMetaSpriteSet_Bank25::
+Func_025_4001:: ; address name
     ldh a, [hSpriteSetIndex]
     ld e, a
     ld d, $00
@@ -21,7 +23,7 @@ Func_025_4001::
 
 Jump_025_4017::
     ld de, Data_025_401E
-    call Func_025_419E
+    call DrawMetaSpriteSet_Bank25_Sub01
     ret
 
 Data_025_401E:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -157,11 +159,13 @@ Data_025_401E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_025_411E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $09411E, $80
 
-; 1 call site from 1 routine (e.g. Func_025_4001)
+; only called from DrawMetaSpriteSet_Bank25 (E-0047)
+; 1 call site from 1 routine (e.g. DrawMetaSpriteSet_Bank25)
 ; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
-Func_025_419E::
+DrawMetaSpriteSet_Bank25_Sub01::
+Func_025_419E:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
@@ -625,7 +629,7 @@ Jump_025_43C4::
     ret
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-; 2 call sites from 1 routine (e.g. Func_025_419E)
+; 2 call sites from 1 routine (e.g. DrawMetaSpriteSet_Bank25_Sub01)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
 BGTileUnderPointIsHFFBA_Bank25::
 Func_025_43E4:: ; address name

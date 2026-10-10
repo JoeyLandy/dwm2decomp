@@ -403,7 +403,7 @@ Jump_00D_4710:: ; address name
     dw ScriptCommandEF_Run_Case05_Case00
     dw ScriptCommandEF_Run_Case05_Case00
     dw ScriptCommandEF_Run_Case05_Case0F
-    dw Func_00D_491A
+    dw DrawBox5022WithPageIndicator
     dw ScriptCommandEF_Run_Case05_Case11
     dw ScriptCommandEF_Run_Case05_Case12
 
@@ -690,11 +690,13 @@ Jump_00D_48EB::
     ld [wScriptStartRequest], a
     ret
 
+; copies box Data_00D_5022 to wC3BB, runs Func_01E_71E1, draws the page-of-pages indicator when wD7B0 >= 2, and wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandEF_Run_Case0F_Case03)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC3BB, wC462, wC463
-Func_00D_491A::
+DrawBox5022WithPageIndicator::
+Func_00D_491A:: ; address name
     ld de, Data_00D_5022
     ld hl, wC3BB
     ld bc, $0D09
@@ -1192,7 +1194,7 @@ Jump_00D_4BA5:: ; address name
 ; writes: wD7F5, wD781
 ScriptCommandEF_Run_Case0F_Case03::
 Jump_00D_4BDE:: ; address name
-    call Func_00D_491A
+    call DrawBox5022WithPageIndicator
 
 ; entry 4 of the `rst $00` table in ScriptCommandEF_Run_Case0F
 ; no direct call (reached through a table, a jump or a vector)
@@ -1444,7 +1446,7 @@ Jump_00D_4D6F::
 Jump_00D_4D72::
     ld a, $69
     call QueueSoundEffect
-    call Func_00D_4DA8
+    call DrawArrowTileBCAtWD7ADEntry
     ld a, $FF
     ld [wD7F5], a
     ret
@@ -1489,9 +1491,11 @@ Func_00D_4DA4:: ; address name
     ld b, $C3
     jr Jump_00D_4DAA
 
+; B = $BC, then writes B at the scroll position + Data_00D_4DC7[wD7AD] (the shared tile-at-entry draw) (E-0124)
 ; 1 call site from 1 routine (e.g. Func_00D_4D24)
 ; reads: wD7AD
-Func_00D_4DA8::
+DrawArrowTileBCAtWD7ADEntry::
+Func_00D_4DA8:: ; address name
     ld b, $BC
 
 Jump_00D_4DAA::
@@ -1517,7 +1521,7 @@ Data_00D_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $01, $6D, $01
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 21 call sites from 21 routines (e.g. ScriptCommandEF_Run_Case01_Case02, ScriptCommandEF_Run_Case01_Case01, Func_00D_491A, ScriptCommandEF_Run_Case0F_Case06, ...)
+; 21 call sites from 21 routines (e.g. ScriptCommandEF_Run_Case01_Case02, ScriptCommandEF_Run_Case01_Case01, DrawBox5022WithPageIndicator, ScriptCommandEF_Run_Case0F_Case06, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank0D::
@@ -1734,7 +1738,7 @@ Func_00D_4EA4:: ; address name
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 4 call sites from 4 routines (e.g. Func_00D_491A, ScriptCommandF2_Run_Case03_Case07_Sub01, ScriptCommandF2_Run_Case03_Case02, ScriptCommandF3_Run_Shared06)
+; 4 call sites from 4 routines (e.g. DrawBox5022WithPageIndicator, ScriptCommandF2_Run_Case03_Case07_Sub01, ScriptCommandF2_Run_Case03_Case02, ScriptCommandF3_Run_Shared06)
 StoreC5BEC6AtHLStride2_Bank0D::
 Func_00D_4EC7:: ; address name
     ld a, $C5
@@ -2012,13 +2016,15 @@ ScriptCommandF0_Run_Case01::
 Jump_00D_5172:: ; address name
     ld a, [wD781]
     rst $00
-    dw Func_00D_517A
+    dw LoadFourFrameTilesAndStep
     dw ScriptCommandF0_Run_Case01_Case01
 
+; copies four tiles from bank $1F to vTiles1 + $700-$730, then wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandF0_Run_Case06_Case01)
 ; reads: wD781
 ; writes: wD781
-Func_00D_517A::
+LoadFourFrameTilesAndStep::
+Func_00D_517A:: ; address name
     ld de, Data_01F_4210
     ld hl, vTiles1 + $700
     ld b, $1F
@@ -2294,7 +2300,7 @@ Jump_00D_531D:: ; address name
 ; writes: wD781
 ScriptCommandF0_Run_Case06_Case01::
 Jump_00D_5342:: ; address name
-    call Func_00D_517A
+    call LoadFourFrameTilesAndStep
     call ClearStringWindowAt1500AndIncWD781
     ld a, $02
     ld [wD781], a
@@ -2664,14 +2670,16 @@ ScriptCommandF2_Run_Case01::
 Jump_00D_5633:: ; address name
     ld a, [wD781]
     rst $00
-    dw Func_00D_563B
+    dw DrawGoldBoxAndStep
     dw ScriptCommandF2_Run_Case01_Case01
 
+; copies box Data_00D_4FBD to wC370 and writes the gold as five digit tiles at wC386, then wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case10)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wD781
 ; writes: wC8C0, wC8C1, wC8C2, wD781
 ; points at: wC370, wC386, wD7F3
-Func_00D_563B::
+DrawGoldBoxAndStep::
+Func_00D_563B:: ; address name
     ld de, Data_00D_4FBD
     ld hl, wC370
     ld bc, $0803
@@ -3285,7 +3293,7 @@ Jump_00D_5A5C:: ; address name
     jr z, Jump_00D_5A87
     cp a, $03
     jr z, Jump_00D_5A9A
-    farcall Func_015_642D
+    farcall DrawBottomBoxForLinkAndSetWD782
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -3418,7 +3426,7 @@ Jump_00D_5B4A:: ; address name
     ld a, [wD782]
     and a, a
     jr z, Jump_00D_5B7C
-    farcall Func_002_7347
+    farcall RunSaveGameSteps_7347
     ld a, [wC8C3]
     bit 7, a
     ret z
@@ -3509,7 +3517,7 @@ Jump_00D_5BDF:: ; address name
     ld a, $14
     ld [wD7F2], a
     call Func_00D_4ED5
-    call Func_00D_563B
+    call DrawGoldBoxAndStep
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -4292,7 +4300,7 @@ Jump_00D_617B::
     ld a, [wD781]
     cp a, $0B
     jr c, Jump_00D_6173
-    farcall Func_015_6403
+    farcall DrawSpritePart9000At88_28
     ret
 
 Data_00D_6189:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4607,7 +4615,7 @@ Jump_00D_649C:: ; address name
     ld a, [wD781]
     rst $00
     dw ScriptCommandF3_Run_Case03_Case00
-    dw Func_00D_6509
+    dw DrawWC838CountBoxAndStep
     dw ScriptCommandF3_Run_Case03_Case02
 
 ; entry 0 of the `rst $00` table in ScriptCommandF3_Run_Case03
@@ -4656,11 +4664,13 @@ Jump_00D_64A6:: ; address name
     ld [wD781], a
     ret
 
+; copies box Data_00D_6EB7 to wC36D and writes the word wC838 as three digits (leading blanks) at wC388, then wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandF3_Run_Case05_Case0D)
 ; reads: wC838, wC839, wD781
 ; writes: wD781
 ; points at: wC36D, wC388, wC8C0
-Func_00D_6509::
+DrawWC838CountBoxAndStep::
+Func_00D_6509:: ; address name
     ld de, Data_00D_6EB7
     ld hl, wC36D
     ld bc, $0B03
@@ -5535,7 +5545,7 @@ Jump_00D_6ABA::
     ld [wC839], a
     ld a, l
     ld [wC838], a
-    call Func_00D_6509
+    call DrawWC838CountBoxAndStep
     pop hl
     ld a, [hl]
     cp a, $01
@@ -5672,7 +5682,7 @@ Jump_00D_6B5B::
     ld a, [wSpeciesRecord]
     ld [hl+], a
     push hl
-    farcall Func_00E_61C1
+    farcall RollWCADEFromSpeciesFlag
     pop hl
     ld a, [wCADE]
     ld [hl+], a
@@ -5938,9 +5948,11 @@ Jump_00D_6D20::
     xor a, a
     ret
 
+; A = 0 when one of the 12 four-byte wKeyList entries is free ($FF), else $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wKeyList
-Func_00D_6D22:: ; heuristic: follows a terminator; C0
+KeyListHasFreeSlot:: ; heuristic: follows a terminator; C0
+Func_00D_6D22:: ; address name
     ld hl, wKeyList
     ld c, $00
 
@@ -6432,7 +6444,7 @@ Jump_00D_71BD:: ; address name
     push af
     ld a, $C7
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank0D
+    call LoadFamilyIconTileForRecordB_Bank0D
     ld de, Data_00D_785E
     ld hl, wC36C
     ld bc, $0C05
@@ -7287,11 +7299,11 @@ Func_00D_77C2:: ; address name
     ld [wC936], a
     ret
 
-; the same 39 bytes as LoadFamilyPaletteForRecordB_Bank15 (15:6866)
+; the same 39 bytes as LoadFamilyIconTileForRecordB_Bank15 (15:6866)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Case04_Case04)
 ; reads: hFFC6, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
-LoadFamilyPaletteForRecordB_Bank0D::
+LoadFamilyIconTileForRecordB_Bank0D::
 Func_00D_7812:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -7305,7 +7317,7 @@ Func_00D_7812:: ; address name
     ld [wD09D], a
     ld a, [wD7F1]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ret

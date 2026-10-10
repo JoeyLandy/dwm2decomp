@@ -1364,7 +1364,7 @@ Jump_039_53CD::
     inc c
     dec b
     jr nz, Jump_039_53C2
-    call Func_039_6E8B
+    call EstimateThreeTargets
     jp Jump_039_542B
 
 Jump_039_53D7::
@@ -1379,7 +1379,7 @@ Jump_039_53DD::
     jr c, Jump_039_540D
     call AnySlotStatusMaskSet
     jr nz, Jump_039_540D
-    call Func_039_6E27
+    call ComputeDamageEstimateForAction
     ld a, c
     call GetBattleHP_Bank39
     ld a, [wBattleDamageLo]
@@ -1479,7 +1479,7 @@ Jump_039_547E::
     inc c
     dec b
     jr nz, Jump_039_546E
-    call Func_039_6E8B
+    call EstimateThreeTargets
     jp Jump_039_5503
 
 Jump_039_5488::
@@ -1501,7 +1501,7 @@ Jump_039_549F::
     inc c
     dec b
     jr nz, Jump_039_548E
-    call Func_039_6E8B
+    call EstimateThreeTargets
     jp Jump_039_5503
 
 Jump_039_54A9::
@@ -1519,7 +1519,7 @@ Jump_039_54AF::
     call TestSlotStatus2Bit3OrStatus5Bits67
     jr nz, Jump_039_54E5
     ld a, c
-    call Func_039_6E27
+    call ComputeDamageEstimateForAction
     ld a, c
     call GetBattleHP_Bank39
     ld a, [wBattleDamageLo]
@@ -2134,7 +2134,7 @@ Jump_039_5867::
     jr c, Jump_039_5891
     call GetBattleDEF_Bank39
     push hl
-    call Func_039_6F32
+    call BuffCapOfBaseDEF
     pop bc
     call CompareHLToBC
     jr nc, Jump_039_5891
@@ -2324,7 +2324,7 @@ Jump_039_597B::
     jr c, Jump_039_59A5
     call GetBattleAGL_Bank39
     push hl
-    call Func_039_6F66
+    call BuffCapOfBaseAGL
     pop bc
     call CompareHLToBC
     jr nc, Jump_039_59A5
@@ -3242,7 +3242,7 @@ Jump_039_5E65::
     ld c, a
     ldh a, [hFFCA]
     ld b, a
-    call Func_000_3E80
+    call CompareHLToBCFastZero
     jr c, Jump_039_5EA5
     ld a, l
     ldh [hFFC9], a
@@ -3276,7 +3276,7 @@ Jump_039_5EB1::
     ld c, a
     ldh a, [hFFCA]
     ld b, a
-    call Func_000_3E80
+    call CompareHLToBCFastZero
     jr c, Jump_039_5ED1
     ld a, l
     ldh [hFFC9], a
@@ -3446,7 +3446,7 @@ Jump_039_5FD9::
     ld c, a
     ld a, [wD873]
     ld b, a
-    call Func_000_3E80
+    call CompareHLToBCFastZero
     jr c, Jump_039_5FF2
     ld a, l
     ld [wBattleDamageLo], a
@@ -4199,7 +4199,7 @@ Jump_039_6460::
     inc c
     dec b
     jr nz, Jump_039_6450
-    call Func_039_6E8B
+    call EstimateThreeTargets
     jp Jump_039_64CA
 
 Jump_039_646A::
@@ -4511,7 +4511,7 @@ Jump_039_6656::
     ld c, a
     ld a, [wD873]
     ld b, a
-    call Func_000_3E80
+    call CompareHLToBCFastZero
     jr c, Jump_039_666F
     ld a, l
     ld [wBattleDamageLo], a
@@ -5566,7 +5566,7 @@ Jump_039_6B1D::
     jr c, Jump_039_6B41
     call GetBattleDEF_Bank39
     push hl
-    call Func_039_6F32
+    call BuffCapOfBaseDEF
     pop bc
     call CompareHLToBC
     jr z, Jump_039_6B41
@@ -5620,7 +5620,7 @@ Jump_039_6B70::
     jr c, Jump_039_6B94
     call GetBattleAGL_Bank39
     push hl
-    call Func_039_6F66
+    call BuffCapOfBaseAGL
     pop bc
     call CompareHLToBC
     jr z, Jump_039_6B94
@@ -5948,12 +5948,12 @@ Func_039_6D74::
     ld c, a
 
 Jump_039_6D82::
-    call Func_039_6DC8
+    call StoreSlotHPPlusDEFToWD874
     inc c
     dec b
     jr nz, Jump_039_6D82
 
-; 3 call sites from 3 routines (e.g. Func_039_6E8B, ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
+; 3 call sites from 3 routines (e.g. EstimateThreeTargets, ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wD874, wD875, hFFC6, wC5E7
 ; writes: hFFC6
 ; points at: wD874, wBattleTarget
@@ -5999,10 +5999,12 @@ Jump_039_6DBC::
     ld [hl], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_039_6D74, Func_039_6E8B)
+; slot C: stores HP + DEF (DEF halved when hFFC7 is set and bit 2 of its wD812 byte is set) in wD874[C & 3], or $FFFF when empty (E-0124)
+; 2 call sites from 2 routines (e.g. Func_039_6D74, EstimateThreeTargets)
 ; reads: hFFC7
 ; points at: wD812, wD874
-Func_039_6DC8::
+StoreSlotHPPlusDEFToWD874::
+Func_039_6DC8:: ; address name
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, StoreFFFFToWD874SlotC
@@ -6030,7 +6032,7 @@ Jump_039_6DED::
     jr StoreHLToWD874SlotC
 
 ; HL = $FFFF, then falls into StoreHLToWD874SlotC (E-0122)
-; 1 call site from 1 routine (e.g. Func_039_6E8B)
+; 1 call site from 1 routine (e.g. EstimateThreeTargets)
 ; points at: wD874
 StoreFFFFToWD874SlotC::
 Func_039_6DF1:: ; address name
@@ -6086,10 +6088,12 @@ Func_039_6E06:: ; address name
 Jump_039_6E26::
     ret
 
+; fills the damage for wBattleActionId: the effect handler for 0 or ids from $48 (except $66), Func_01A_408F for low ids and $66, or the actor's ATK for $6B and $6C (E-0124)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wBattleActionId, wBattleActor
 ; writes: wBattleDamageLo, wD873
-Func_039_6E27::
+ComputeDamageEstimateForAction::
+Func_039_6E27:: ; address name
     push bc
     ld a, [wBattleActionId]
     cp a, $00
@@ -6104,11 +6108,11 @@ Func_039_6E27::
     jr z, Jump_039_6E4F
 
 Jump_039_6E3F::
-    farcall Func_036_7DC9
+    farcall RunEffectHandlerForActionId
     jr Jump_039_6E5F
 
 Jump_039_6E47::
-    farcall Func_01A_408F
+    farcall ComputeDamageEstimateForAction_Sub01
     jr Jump_039_6E5F
 
 Jump_039_6E4F::
@@ -6156,11 +6160,13 @@ Func_039_6E61:: ; address name
     pop af
     ret
 
+; hFFC7 = 1; for three slots from the target stores HP + DEF in wD874, or $FFFF for slots with wD80F status bits $C0 or $0C; then Func_039_6D89 (E-0124)
 ; 4 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; reads: wBattleTarget
 ; writes: hFFC7
 ; points at: wD80F
-Func_039_6E8B::
+EstimateThreeTargets::
+Func_039_6E8B:: ; address name
     ld a, $01
     ldh [hFFC7], a
     ld b, $03
@@ -6177,7 +6183,7 @@ Jump_039_6E95::
     ld a, [hl]
     and a, $0C
     jr nz, Jump_039_6EAB
-    call Func_039_6DC8
+    call StoreSlotHPPlusDEFToWD874
     jr Jump_039_6EAE
 
 Jump_039_6EAB::
@@ -6260,9 +6266,11 @@ Jump_039_6F0A::
     ld [hl], a
     ret
 
+; HL = 999 when the base DEF doubled (quadrupled for allies or link battles) reaches 999, otherwise the base DEF times that factor (E-0124)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_Upper, ChooseTarget_Upper_6B0A)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A, wBattleActor
-Func_039_6F32::
+BuffCapOfBaseDEF::
+Func_039_6F32:: ; address name
     farcall GetBaseDEF
     ld a, [wBattleStatResultLo]
     ld l, a
@@ -6292,9 +6300,11 @@ Jump_039_6F62::
 Jump_039_6F65::
     ret
 
+; HL = 999 when the base AGL doubled (quadrupled for allies or link battles) reaches 999, otherwise the base AGL times that factor (E-0124)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_Speed_6B5D, ChooseTarget_Speed)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A, wBattleActor
-Func_039_6F66:: ; heuristic: follows a terminator; C0
+BuffCapOfBaseAGL:: ; heuristic: follows a terminator; C0
+Func_039_6F66:: ; address name
     farcall GetBaseAGL
     ld a, [wBattleStatResultLo]
     ld l, a
@@ -6752,7 +6762,7 @@ Func_039_71D4:: ; address name
     ret
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$39 copy of GetBattleATK) (E-0060)
-; 2 call sites from 2 routines (e.g. Func_039_6E27, ChooseTarget_TwinHits)
+; 2 call sites from 2 routines (e.g. ComputeDamageEstimateForAction, ChooseTarget_TwinHits)
 ; points at: wBattleATK
 GetBattleATK_Bank39::
 Func_039_71E5:: ; address name
@@ -6760,7 +6770,7 @@ Func_039_71E5:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)
-; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_SquallHit_66C5, Func_039_6DC8, ChooseTarget_SickLick, ...)
+; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_SquallHit_66C5, StoreSlotHPPlusDEFToWD874, ChooseTarget_SickLick, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank39::
 Func_039_71EA:: ; address name

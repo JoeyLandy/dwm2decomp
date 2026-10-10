@@ -518,7 +518,7 @@ Func_0E0_443B:: ; address name
     dw RunWC5FDState_E0_Case04
     dw RunWC5FDState_E0_Case05
     dw RunWC5FDState_E0_Case06
-    dw Func_0E0_4804
+    dw DrawTileMap4946AndStep
     dw RunWC5FDState_E0_Case08
     dw RunWC5FDState_E0_Case09
     dw RunWC5FDState_E0_Case0A
@@ -1003,7 +1003,7 @@ Jump_0E0_4710::
 ; no direct call (reached through a table, a jump or a vector)
 RunWC5FDState_E0_Case04::
 Jump_0E0_4724:: ; address name
-    call Func_0E0_4804
+    call DrawTileMap4946AndStep
     ret
 
 ; entry 5 of the `rst $00` table in RunWC5FDState_E0
@@ -1152,9 +1152,11 @@ Jump_0E0_47F9:: ; address name
     ld [wC5FD], a
     ret
 
+; writes the 20 x 16 tile map $4946 to vBGMap0 + $20, then wC5FD += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case04)
 ; points at: wC5FD
-Func_0E0_4804::
+DrawTileMap4946AndStep::
+Func_0E0_4804:: ; address name
     ld de, $4946
     ld hl, vBGMap0 + $20
     ld bc, $1410
@@ -2408,7 +2410,7 @@ Func_0E0_56C7:: ; address name
     ld a, [wC5E8]
     ld h, a
     push hl
-    farcall Func_030_4595
+    farcall AIChooseActionResolveStep
     call ChooseTargetIfUnset
     pop hl
     ld a, l
@@ -2423,7 +2425,7 @@ Func_0E0_56C7:: ; address name
     ret
 
 Jump_0E0_570B::
-    farcall Func_030_4595
+    farcall AIChooseActionResolveStep
     call ChooseTargetIfUnset
     ret
 
@@ -3037,7 +3039,7 @@ Func_0E0_5AD3:: ; address name
     ld a, [wD09D]
     or a, a
     jp z, Jump_0E0_6FF7
-    farcall Func_002_5074
+    farcall RunFieldEventWC90D
     call IncrementSpriteSlotCounters
     ld a, [wD09F]
     dec a

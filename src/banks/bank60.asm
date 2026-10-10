@@ -588,7 +588,7 @@ Jump_060_45B6::
     push de
 
 Jump_060_45E7::
-    call Func_060_4709
+    call PickRandomWCCF7Entry
     call Func_060_4724
     jr nc, Jump_060_45E7
     ld l, e
@@ -695,7 +695,7 @@ Jump_060_4672::
     push de
 
 Jump_060_4678::
-    call Func_060_4709
+    call PickRandomWCCF7Entry
     call Func_060_4724
     jr nc, Jump_060_4678
     ld l, e
@@ -729,7 +729,7 @@ Func_060_4698::
     ldh [hFFC6], a
 
 Jump_060_46A0::
-    call Func_060_4709
+    call PickRandomWCCF7Entry
     call Func_060_4724
     jr nc, Jump_060_46A0
     ld a, e
@@ -761,7 +761,7 @@ Jump_060_46CF::
 
 Jump_060_46D8::
     ldh [hFFC6], a
-    call Func_060_4709
+    call PickRandomWCCF7Entry
     call Func_060_4724
     jr nc, Jump_060_46A0
     ld a, e
@@ -789,11 +789,13 @@ Jump_060_46FE::
     ld [wCE7A], a
     ret
 
+; hFFC7 = wCCF7[random & 1], stepping back over $FF entries (E-0124)
 ; 4 call sites from 3 routines (e.g. Func_060_4597, Func_060_4698, Func_060_4607)
 ; reads: wCD03
 ; writes: hFFC7
 ; points at: wCCF7
-Func_060_4709::
+PickRandomWCCF7Entry::
+Func_060_4709:: ; address name
     call NextRandomSeed
     ld a, [wCD03]
     and a, $01
@@ -1234,7 +1236,7 @@ Jump_060_4DB8::
     jr nz, Jump_060_4DCE
 
 Jump_060_4DC4::
-    call Func_060_5EE1
+    call RunRandomPatternCase
     or a, a
     jr z, Jump_060_4DC4
     ld hl, hFFCD
@@ -1423,7 +1425,7 @@ Jump_060_4EAD::
     ld a, [de]
     and a, $0F
     jp z, Jump_060_4F42
-    call Func_060_4F5C
+    call SwapDEByteWithMatchingWCD70
     jp Jump_060_4F42
 
 Jump_060_4EC2::
@@ -1448,7 +1450,7 @@ Jump_060_4ED3::
     ld a, [de]
     and a, $0F
     jr z, Jump_060_4F42
-    call Func_060_4F5C
+    call SwapDEByteWithMatchingWCD70
     jr Jump_060_4F42
 
 Jump_060_4EE6::
@@ -1480,7 +1482,7 @@ Jump_060_4EFA::
     ld a, [de]
     and a, $0F
     jr z, Jump_060_4F42
-    call Func_060_4F5C
+    call SwapDEByteWithMatchingWCD70
     jr Jump_060_4F42
 
 Jump_060_4F16::
@@ -1510,7 +1512,7 @@ Jump_060_4F29::
     ld a, [de]
     and a, $0F
     jr z, Jump_060_4F42
-    call Func_060_4F5C
+    call SwapDEByteWithMatchingWCD70
 
 Jump_060_4F42::
     pop bc
@@ -1534,11 +1536,13 @@ Jump_060_4F53::
     jr nz, Jump_060_4F53
     ret
 
+; swaps [DE] with the first of the four wCD70 bytes whose high nibble matches [DE]'s (E-0124)
 ; 4 call sites from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub05)
 ; reads: hFFC7
 ; writes: hFFC7
 ; points at: wCD70
-Func_060_4F5C::
+SwapDEByteWithMatchingWCD70::
+Func_060_4F5C:: ; address name
     ld a, [de]
     and a, $F0
     ldh [hFFC7], a
@@ -2282,7 +2286,7 @@ Jump_060_5365::
 DebugAutomap_Update_Sub01_Sub01_Sub0A::
 Func_060_5373:: ; address name
     ld a, [wCD05]
-    call Func_060_53C3
+    call SetWCD0FBandForA
 
 Jump_060_5379::
     ld [wCD0F], a
@@ -2327,9 +2331,11 @@ Jump_060_53A7::
 Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
+; wCD0F = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_060_62F9, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; writes: wCD0F
-Func_060_53C3::
+SetWCD0FBandForA::
+Func_060_53C3:: ; address name
     cp a, $0B
     jr nc, Jump_060_53CB
     ld a, $00
@@ -2976,36 +2982,38 @@ Jump_060_5EBE::
 Data_060_5ED1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
+; runs one of four routines chosen by random & $0F through a 16-entry table (E-0124)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub03)
 ; reads: wCD04
-Func_060_5EE1::
+RunRandomPatternCase::
+Func_060_5EE1:: ; address name
     call NextRandomSeed
     ld a, [wCD04]
     and a, $0F
     rst $00
-    dw Func_060_5EE1_Case00
-    dw Func_060_5EE1_Case01
-    dw Func_060_5EE1_Case02
-    dw Func_060_5EE1_Case03
-    dw Func_060_5EE1_Case02
-    dw Func_060_5EE1_Case01
-    dw Func_060_5EE1_Case00
-    dw Func_060_5EE1_Case01
-    dw Func_060_5EE1_Case02
-    dw Func_060_5EE1_Case03
-    dw Func_060_5EE1_Case02
-    dw Func_060_5EE1_Case01
-    dw Func_060_5EE1_Case00
-    dw Func_060_5EE1_Case01
-    dw Func_060_5EE1_Case02
-    dw Func_060_5EE1_Case03
+    dw RunRandomPatternCase_Case00
+    dw RunRandomPatternCase_Case01
+    dw RunRandomPatternCase_Case02
+    dw RunRandomPatternCase_Case03
+    dw RunRandomPatternCase_Case02
+    dw RunRandomPatternCase_Case01
+    dw RunRandomPatternCase_Case00
+    dw RunRandomPatternCase_Case01
+    dw RunRandomPatternCase_Case02
+    dw RunRandomPatternCase_Case03
+    dw RunRandomPatternCase_Case02
+    dw RunRandomPatternCase_Case01
+    dw RunRandomPatternCase_Case00
+    dw RunRandomPatternCase_Case01
+    dw RunRandomPatternCase_Case02
+    dw RunRandomPatternCase_Case03
     db $C9, $C9
 
-; entry 3 of the `rst $00` table in Func_060_5EE1
+; entry 3 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
 ; writes: hFFD0
-Func_060_5EE1_Case03::
+RunRandomPatternCase_Case03::
 Jump_060_5F0C:: ; address name
     ld a, b
     and a, $01
@@ -3118,11 +3126,11 @@ Jump_060_5F5E::
     ld a, $01
     ret
 
-; entry 2 of the `rst $00` table in Func_060_5EE1
+; entry 2 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
 ; writes: hFFD0
-Func_060_5EE1_Case02::
+RunRandomPatternCase_Case02::
 Jump_060_5FBF:: ; address name
     ld a, b
     and a, $01
@@ -3196,11 +3204,11 @@ Jump_060_5FF2::
     ld a, $01
     ret
 
-; entry 1 of the `rst $00` table in Func_060_5EE1
+; entry 1 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
 ; writes: hFFD0
-Func_060_5EE1_Case01::
+RunRandomPatternCase_Case01::
 Jump_060_6031:: ; address name
     ld a, b
     cp a, $02
@@ -3272,11 +3280,11 @@ Jump_060_605E::
     ld a, $01
     ret
 
-; entry 0 of the `rst $00` table in Func_060_5EE1
+; entry 0 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD03, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFD0
 ; writes: hFFD0
-Func_060_5EE1_Case00::
+RunRandomPatternCase_Case00::
 Jump_060_609E:: ; address name
     call NextRandomSeed
     ld a, [wCD03]
@@ -3321,7 +3329,7 @@ Jump_060_60B2::
     ret
 
 ; copies three bytes at DE to the address in hFFC6/hFFC7 minus 3 and to hFFC8-hFFCA (E-0121)
-; 4 call sites from 4 routines (e.g. Func_060_5EE1_Case03, Func_060_5EE1_Case02, Func_060_5EE1_Case01, Func_060_5EE1_Case00)
+; 4 call sites from 4 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01, RunRandomPatternCase_Case00)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9, hFFCA
 StoreThreeBytesBeforeHFFC6Pointer::
@@ -3347,7 +3355,7 @@ Func_060_60E0:: ; address name
     ret
 
 ; HL += the word hFFC6/hFFC7, then stores hFFC8, hFFC9, hFFCA at HL - 3 onward (E-0119)
-; 5 call sites from 3 routines (e.g. Func_060_5EE1_Case03, Func_060_5EE1_Case02, Func_060_5EE1_Case01)
+; 5 call sites from 3 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 StoreHFFC8To3BytesBeforeHLPlusHFFC6::
 Func_060_60F8:: ; address name
@@ -3608,7 +3616,7 @@ Func_060_62F9::
     adc a, $C7
     ld h, a
     ld a, [hl]
-    call Func_060_53C3
+    call SetWCD0FBandForA
     ld a, [wCD0F]
     and a, $0F
     ld hl, Data_060_638D
@@ -4398,7 +4406,7 @@ Jump_060_687A::
     adc a, $C7
     ld h, a
     ld a, [hl]
-    call Func_060_53C3
+    call SetWCD0FBandForA
     ld a, $02
     ld [wCCE9], a
     ld b, $02
@@ -4610,11 +4618,13 @@ Func_060_6C96:: ; address name
     ld [rRAMB], a
     ret
 
+; when wCC42 < 20 and SRAM bank 2 slot wCC42 is marked wCC42 + $50, copies its $194 bytes to wCD07; counterpart of SaveWCD07RecordToSRAMSlotWCC42 (E-0124)
 ; 8 call sites from 8 routines (e.g. DebugAutomap_Update, RunWC46BMenuState_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07
-Func_060_6CD1::
+LoadWCD07RecordFromSRAMSlotWCC42::
+Func_060_6CD1:: ; address name
     ld a, [wCC42]
     cp a, $14
     ret nc

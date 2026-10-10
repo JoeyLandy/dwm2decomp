@@ -448,7 +448,7 @@ Jump_05F_6B4D::
     ret
 
 ; wC929 = object number (16-byte entries): sets bit 2 of wCB8C + 16n, stores direction wC92A & 3 at wCB86 + 16n and moves the object one pixel, two when wC92A bit 7 is set: direction 0 adds the step to Y (wCB8B + 16n), 1 adds it to X (wCB8A + 16n), 2 subtracts it from Y, 3 from X. When the moved coordinate equals wC928 it clears bit 2 and sets wC92C = 1, else wC92C = 0 (E-0061)
-; 145 call sites from 78 routines (e.g. ScriptCommandC7_Run_Case01, ScriptCommand5F_Run_Case17, Func_00F_4774, Func_00F_47F5, ...)
+; 145 call sites from 78 routines (e.g. ScriptCommandC7_Run_Case01, ScriptCommand5F_Run_Case17, ScriptStepMoveObjects2And3To81B0, ScriptStepMoveObjects2And3To0340, ...)
 ; reads: wC929, wC92A, wC928
 ; writes: wStepArrived
 ; points at: wCB8C
@@ -555,7 +555,7 @@ Jump_05F_6BC2::
     ret
 
 ; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
-; 66 call sites from 54 routines (e.g. Func_05F_7363_Case0F, Func_05F_7363_Case0D, Func_05F_7363_Case0B, Func_05F_7363_Case08, ...)
+; 66 call sites from 54 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case0B, RunWC92DStep_7363_Case08, ...)
 ; reads: wC928, wC929, wScriptParam0
 AddStepDeltaToPointedByte::
 Func_05F_6BCD:: ; address name
@@ -700,11 +700,13 @@ Jump_05F_6C9B::
     ld [wC836], a
     ret
 
+; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
 ; 5 call sites from 4 routines (e.g. Func_004_58C2_Case13, Func_004_612B_Case18, DispatchTalkEvent_Case04_Case6F, ScriptCommand82_Run_Shared05)
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, wStepArrived
 ; points at: wC6FE
-Func_05F_6CA9::
+SetWStepArrivedIfPartyHasField55Bit7::
+Func_05F_6CA9:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -1786,7 +1788,7 @@ Jump_05F_7303::
     ld [wC8F9], a
     ld a, $0B
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ldh a, [hFF8C]
     or a, $02
     ldh [hFF8C], a
@@ -1819,34 +1821,36 @@ Jump_05F_7345:: ; address name
     inc [hl]
     ret
 
+; runs the routine for wC92D (jump table of eighteen) (E-0124)
 ; 4 call sites from 4 routines (e.g. ScriptCommand5E_Run_Case0C, ScriptCommand4B_Run_Case12, ScriptCommand39_Run_Case2D, ScriptCommand27_Run_Case1F)
 ; reads: wC92D
-Func_05F_7363::
+RunWC92DStep_7363::
+Func_05F_7363:: ; address name
     ld a, [wC92D]
     rst $00
-    dw Func_05F_7363_Case00
-    dw Func_05F_7363_Case01
-    dw Func_05F_7363_Case02
-    dw Func_05F_7363_Case03
-    dw Func_05F_7363_Case04
-    dw Func_05F_7363_Case05
-    dw Func_05F_7363_Case06
-    dw Func_05F_7363_Case07
-    dw Func_05F_7363_Case08
-    dw Func_05F_7363_Case09
-    dw Func_05F_7363_Case0A
-    dw Func_05F_7363_Case0B
-    dw Func_05F_7363_Case0C
-    dw Func_05F_7363_Case0D
-    dw Func_05F_7363_Case0E
-    dw Func_05F_7363_Case0F
-    dw Func_05F_7363_Case09
-    dw Func_05F_7363_Case11
+    dw RunWC92DStep_7363_Case00
+    dw RunWC92DStep_7363_Case01
+    dw RunWC92DStep_7363_Case02
+    dw RunWC92DStep_7363_Case03
+    dw RunWC92DStep_7363_Case04
+    dw RunWC92DStep_7363_Case05
+    dw RunWC92DStep_7363_Case06
+    dw RunWC92DStep_7363_Case07
+    dw RunWC92DStep_7363_Case08
+    dw RunWC92DStep_7363_Case09
+    dw RunWC92DStep_7363_Case0A
+    dw RunWC92DStep_7363_Case0B
+    dw RunWC92DStep_7363_Case0C
+    dw RunWC92DStep_7363_Case0D
+    dw RunWC92DStep_7363_Case0E
+    dw RunWC92DStep_7363_Case0F
+    dw RunWC92DStep_7363_Case09
+    dw RunWC92DStep_7363_Case11
 
-; entry 17 of the `rst $00` table in Func_05F_7363
+; entry 17 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Func_05F_7363_Case11::
+RunWC92DStep_7363_Case11::
 Jump_05F_738B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1870,24 +1874,24 @@ Jump_05F_739E::
     dec [hl]
 
 Jump_05F_73A4::
-    call Func_05F_7761
+    call StartMessageFromTable7787
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC92D
 Func_05F_73A8:: ; heuristic: follows a terminator; C0
     ld a, $05
-    call Func_05F_7761
+    call StartMessageFromTable7787
     ld hl, wC92D
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in Func_05F_7363
+; entry 15 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wCB86, wC933
 ; writes: wC928, wC929, wCB86, wScriptParam0, hFFC6, wCB81, wC6FD
 ; points at: wCB8B, wCB8A, wC92D
-Func_05F_7363_Case0F::
+RunWC92DStep_7363_Case0F::
 Jump_05F_73B2:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -1941,7 +1945,7 @@ Jump_05F_7402::
     xor a, a
     ld [wCB86], a
     ld a, $04
-    call Func_05F_7761
+    call StartMessageFromTable7787
     ld a, [wC933]
     ld [wC6FD], a
     xor a, a
@@ -1950,11 +1954,11 @@ Jump_05F_7402::
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in Func_05F_7363
+; entry 14 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wC92D
-Func_05F_7363_Case0E::
+RunWC92DStep_7363_Case0E::
 Jump_05F_742F:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -1965,12 +1969,12 @@ Jump_05F_742F:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in Func_05F_7363
+; entry 13 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hFFC6, wC928, wC929, wScriptParam0
 ; points at: wCB8B, wC92D
-Func_05F_7363_Case0D::
+RunWC92DStep_7363_Case0D::
 Jump_05F_743D:: ; address name
     farcall CycleWC949Down
     ld a, $01
@@ -1988,17 +1992,17 @@ Jump_05F_743D:: ; address name
     cp a, $20
     ret nz
     ld a, $03
-    call Func_05F_7761
+    call StartMessageFromTable7787
     ld hl, wC92D
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in Func_05F_7363
+; entry 12 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wScriptParam0
 ; writes: hFFC6, wScriptParam1, wScriptParam0, wCBCF, wCBD4
 ; points at: wC92D
-Func_05F_7363_Case0C::
+RunWC92DStep_7363_Case0C::
 Jump_05F_746F:: ; address name
     farcall CycleWC949Down
     ld a, $01
@@ -2046,12 +2050,12 @@ Jump_05F_74AA::
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in Func_05F_7363
+; entry 11 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hFFC6, wC928, wC929, wScriptParam0, wScriptParam1
 ; points at: wCBD4, wC92D
-Func_05F_7363_Case0B::
+RunWC92DStep_7363_Case0B::
 Jump_05F_74CD:: ; address name
     farcall CycleWC949Down
     ld a, $01
@@ -2082,17 +2086,17 @@ Jump_05F_74F6::
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in Func_05F_7363
+; entry 10 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wScriptParam0
 ; writes: wCBD3, wScriptParam0
 ; points at: wC92D
-Func_05F_7363_Case0A::
+RunWC92DStep_7363_Case0A::
 Jump_05F_750C:: ; address name
     call NextTableByte
     ld a, [wC5E7]
     and a, $03
-    jr z, Func_05F_7363_Case0A
+    jr z, RunWC92DStep_7363_Case0A
     dec a
     dec a
     add a, $40
@@ -2112,11 +2116,11 @@ Jump_05F_750C:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in Func_05F_7363
+; entry 9 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wC92D
 ; points at: wC92D
-Func_05F_7363_Case09::
+RunWC92DStep_7363_Case09::
 Jump_05F_753A:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2132,12 +2136,12 @@ Jump_05F_753A:: ; address name
     ld [wC92D], a
     ret
 
-; entry 8 of the `rst $00` table in Func_05F_7363
+; entry 8 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hFFC6, wC928, wC929, wScriptParam0
 ; points at: wCBD4, wCBD3, wC92D
-Func_05F_7363_Case08::
+RunWC92DStep_7363_Case08::
 Jump_05F_7554:: ; address name
     farcall CycleWC949Down
     ld a, $01
@@ -2160,19 +2164,19 @@ Jump_05F_7554:: ; address name
     cp a, $20
     ret nz
     ld a, $02
-    call Func_05F_7761
+    call StartMessageFromTable7787
     xor a, a
     ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in Func_05F_7363
+; entry 7 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wCB8A
 ; writes: hFFC6, wC928, wC929, wScriptParam0, wCB8A
 ; points at: wCB8B, wC92D
-Func_05F_7363_Case07::
+RunWC92DStep_7363_Case07::
 Jump_05F_7593:: ; address name
     farcall CycleWC949Down
     ld a, $01
@@ -2203,11 +2207,11 @@ Jump_05F_75C3::
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_05F_7363
+; entry 6 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCB81
 ; points at: wC92D
-Func_05F_7363_Case06::
+RunWC92DStep_7363_Case06::
 Jump_05F_75D2:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2222,12 +2226,12 @@ Jump_05F_75D2:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_05F_7363
+; entry 5 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
 ; points at: wCBD4, wC92D
-Func_05F_7363_Case05::
+RunWC92DStep_7363_Case05::
 Jump_05F_75EC:: ; address name
     ld de, wCBD4
     ld a, e
@@ -2244,19 +2248,19 @@ Jump_05F_75EC:: ; address name
     cp a, $20
     ret nz
     ld a, $01
-    call Func_05F_7761
+    call StartMessageFromTable7787
     xor a, a
     ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_05F_7363
+; entry 4 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD
 ; writes: wCBCF, wC933, wC6FD
 ; points at: wC92D
-Func_05F_7363_Case04::
+RunWC92DStep_7363_Case04::
 Jump_05F_7617:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2271,12 +2275,12 @@ Jump_05F_7617:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_05F_7363
+; entry 3 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFF8D, wC527
 ; points at: wC92D
-Func_05F_7363_Case03::
+RunWC92DStep_7363_Case03::
 Jump_05F_7631:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2303,12 +2307,12 @@ Jump_05F_7646::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_05F_7363
+; entry 2 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wC526, wScriptParam0
 ; points at: wC5E9, wC0F0, wBGPaletteBuffer, wC92D
-Func_05F_7363_Case02::
+RunWC92DStep_7363_Case02::
 Jump_05F_766C:: ; address name
     ld a, [wScriptParam0]
     srl a
@@ -2365,19 +2369,19 @@ Jump_05F_76BE::
     cp a, $1E
     ret nz
     ld a, $00
-    call Func_05F_7761
+    call StartMessageFromTable7787
     xor a, a
     ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_05F_7363
+; entry 1 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: hPlayerFacing, wCB86
 ; points at: wBGPaletteBuffer, wC0F0, wC92D
-Func_05F_7363_Case01::
+RunWC92DStep_7363_Case01::
 Jump_05F_76D6:: ; address name
     ld a, $03
     ldh [hPlayerFacing], a
@@ -2401,11 +2405,11 @@ Jump_05F_76F6::
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Func_05F_7363
+; entry 0 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hFFC6, wC92E, wCBD3, wCBD4
 ; points at: wC92D
-Func_05F_7363_Case00::
+RunWC92DStep_7363_Case00::
 Jump_05F_7700:: ; address name
     ld a, $01
     ldh [hFFC6], a
@@ -2446,7 +2450,7 @@ Jump_05F_7743::
     ldh [hFFC6], a
 
 Jump_05F_774C::
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $50
     ld [wCBD3], a
     ld a, $30
@@ -2455,10 +2459,12 @@ Jump_05F_774C::
     inc [hl]
     ret
 
-; 7 call sites from 7 routines (e.g. Func_05F_7363_Case0F, Func_05F_7363_Case0D, Func_05F_7363_Case08, Func_05F_7363_Case05, ...)
+; starts the message whose index and group are at Data_05F_7787 + 2 * A + 16 * wC92E (wMessageState = 0) (E-0124)
+; 7 call sites from 7 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case08, RunWC92DStep_7363_Case05, ...)
 ; reads: wC92E
 ; writes: wMessageIndex, wMessageGroup, wMessageState
-Func_05F_7761::
+StartMessageFromTable7787::
+Func_05F_7761:: ; address name
     sla a
     ld de, Data_05F_7787
     add a, e
@@ -2495,7 +2501,7 @@ Data_05F_7787:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $34, $05, $35, $05, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; wC928 = A, RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079)
-; 5 call sites from 5 routines (e.g. Func_05F_7363_Case0E, Func_05F_7363_Case09, Func_05F_7363_Case06, Func_05F_7363_Case04, ...)
+; 5 call sites from 5 routines (e.g. RunWC92DStep_7363_Case0E, RunWC92DStep_7363_Case09, RunWC92DStep_7363_Case06, RunWC92DStep_7363_Case04, ...)
 ; reads: wMessageState
 ; writes: wC928
 RunMessageBoxCarryWhenIdle_Bank5F::

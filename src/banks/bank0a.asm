@@ -675,10 +675,12 @@ Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $89, $92, $9D, $A4, $A9, $AB, $AF, $B2, $B1, $B6, $B9, $BA, $BC, $C5, $D0, $D9
     db $E2, $FF
 
+; when nothing else runs and wC901 & $7F is set, counts wD069 down; at zero sets wC916 = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs) (E-0124)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wFadeState, wScriptRunning, wC901, wD069
 ; writes: wD069, wC916, wC917
-Func_00A_43B5::
+CountDownWD069ThenDispatchTalkEvent::
+Func_00A_43B5:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz

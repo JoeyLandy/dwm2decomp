@@ -1197,7 +1197,7 @@ Jump_033_5609:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_033_5215_Table2_Case04_Case02::
 Jump_033_5615:: ; address name
-    farcall Func_01B_675F
+    farcall DrawRecordListPageIndicators_1B
     ret
 
 ; far-calls DrawWD789Cell5RecordPanel (E-0122)
@@ -1328,7 +1328,7 @@ Jump_033_56E1::
     ld b, $BC
     ld hl, Data_033_63EF
     call StoreBAtWordTableEntry_Bank33
-    call Func_033_6074
+    call CopyWD789Cell5NameToWC130_Bank33
     ld hl, wD781
     inc [hl]
     ld a, $02
@@ -1449,7 +1449,7 @@ Jump_033_57B2:: ; address name
     ret nz
     ld c, $05
     ld hl, Data_033_63EF
-    call Func_033_6227
+    call WriteC3AtWordTableEntries_Bank33
     call Func_033_5F83
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
@@ -2165,7 +2165,7 @@ Jump_033_5C1A:: ; address name
 ; writes: wD7AB, wD7AF
 Func_033_5215_Table2_Case0D::
 Jump_033_5C36:: ; address name
-    farcall Func_0F1_4AD0
+    farcall RunWD780StateWhenNotFading_F1
     ld a, [wD780]
     cp a, $0E
     ret nz
@@ -2262,7 +2262,7 @@ Jump_033_5CAC:: ; address name
     ld [wD09D], a
     ld a, [wD7F1]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ld de, Data_033_5D5F
@@ -2407,7 +2407,7 @@ Jump_033_5DDF:: ; address name
     ld hl, wC3E7
     ld bc, $0907
     call CopyRectTo20ByteRowsJp_Bank33
-    call Func_033_6074
+    call CopyWD789Cell5NameToWC130_Bank33
     call SetDefaultStringWindow_Bank33
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -2562,7 +2562,7 @@ Jump_033_5EDF:: ; address name
     ld a, $1E
     ld [wStringIndex], a
     farcall ShowString_Bank1B_481A
-    call Func_033_6074
+    call CopyWD789Cell5NameToWC130_Bank33
     call SetDefaultStringWindow_Bank33
     xor a, a
     ld a, $12
@@ -2803,11 +2803,13 @@ Func_033_6060::
     ld [de], a
     ret
 
+; copies the name of the record at WD789 cell 5 (11 bytes) to wC130 (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_033_5215_Table2_Case04_Case08, Func_033_5215_Table2_Case0E_Case06, Func_033_5215_Table2_Case0F_Case06)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wC8CF, wC130
-Func_033_6074::
+CopyWD789Cell5NameToWC130_Bank33::
+Func_033_6074:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3146,8 +3148,10 @@ Jump_033_6217::
     ld h, a
     ret
 
+; writes $C3 at the addresses held by entries 0 to C - 1 of the word table at HL (E-0124)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case04_Case0B)
-Func_033_6227::
+WriteC3AtWordTableEntries_Bank33::
+Func_033_6227:: ; address name
     ld a, c
     ld b, a
     ld c, $00

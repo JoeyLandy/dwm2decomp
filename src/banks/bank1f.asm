@@ -1097,7 +1097,7 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $12, $B4
     INCBIN "dwm2-cobi-us.gbc", $07F1EE, $187
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_0F1_4AD0_Case0D_Case01)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, RunWD780StateWhenNotFading_F1_Case0D_Case01)
 Func_01F_7375::
     ld c, $00
 
@@ -1159,7 +1159,7 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, Func_0F1_4AD0_Case0D_Case05)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, RunWD780StateWhenNotFading_F1_Case0D_Case05)
 ; reads: wD782, wCA36, wCA37, wIsCGB, wD781
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wD782, ...
 Func_01F_73EC::
@@ -1245,7 +1245,7 @@ Jump_01F_745C::
     ret
 
 ; draws the 32 x 32 tile map Data_01F_5E12 at the scroll origin, then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case00, Func_0F1_4AD0_Case0D_Case00)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case00, RunWD780StateWhenNotFading_F1_Case0D_Case00)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 DrawTileMap5E12AndLoadFrameTiles::
 Func_01F_7494:: ; address name
@@ -1284,7 +1284,7 @@ Func_01F_7494:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_662B (12 x 15 at scroll + $68) and Data_01F_653F (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case15, Func_0F1_4AD0_Case0D_Case15)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case15, RunWD780StateWhenNotFading_F1_Case0D_Case15)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 DrawRects662BAnd653F::
 Func_01F_74E3:: ; address name
@@ -1329,7 +1329,7 @@ Func_01F_74E3:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_6B4F (12 x 18 at scroll + 8) and Data_01F_6C27 (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case17, Func_0F1_4AD0_Case0D_Case17)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case17, RunWD780StateWhenNotFading_F1_Case0D_Case17)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 DrawRects6B4FAnd6C27::
 Func_01F_753A:: ; address name
@@ -1373,7 +1373,7 @@ Func_01F_753A:: ; address name
     call DrawTileRectFromWD7F1Params
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case18, Func_0F1_4AD0_Case0D_Case18)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case18, RunWD780StateWhenNotFading_F1_Case0D_Case18)
 ; writes: wC52D, wC52E, wC52F, wC530, wD7F5, wD7F6, wD7F1, wD7F2, ...
 Func_01F_7591::
     ld hl, vTiles2 + $200
@@ -1427,7 +1427,7 @@ Func_01F_7591::
     call DrawTileRectFromWD7F1Params
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, Func_0F1_4AD0_Case0D_Case19)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, RunWD780StateWhenNotFading_F1_Case0D_Case19)
 ; reads: wCA5F
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wCA2B
@@ -1531,7 +1531,7 @@ Jump_01F_769E::
     ld [wC530], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1B, Func_0F1_4AD0_Case0D_Case1B)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1B, RunWD780StateWhenNotFading_F1_Case0D_Case1B)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wC52D, ...
 Func_01F_76B5::
     call BGMapAddressAtScroll_Bank1F
@@ -1607,7 +1607,7 @@ Func_01F_76B5::
     ret
 
 ; draws the tile rectangles Data_01F_5E13 (12 x 3 at scroll + 8) and Data_01F_66DF (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1C, Func_0F1_4AD0_Case0D_Case1C)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1C, RunWD780StateWhenNotFading_F1_Case0D_Case1C)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 DrawRects5E13And66DF::
 Func_01F_7754:: ; address name

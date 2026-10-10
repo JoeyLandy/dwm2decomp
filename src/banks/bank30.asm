@@ -640,7 +640,7 @@ Func_030_43C4:: ; address name
     rst $00
     dw RunBattleResolveStep_43C4_Case00
     dw RunBattleResolveStep_43C4_Case01
-    dw Func_030_4595
+    dw AIChooseActionResolveStep
     dw RunBattleResolveStep_43C4_Case03
 
 ; entry 0 of the `rst $00` table in RunBattleResolveStep_43C4
@@ -653,7 +653,7 @@ Jump_030_43D0:: ; address name
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_Bank30
     ld [wPersonalityIndex], a
-    call Func_030_5287
+    call ForcedActionForActorStatus
     jr nz, Jump_030_4414
     ld a, [wC58A]
     or a, a
@@ -927,19 +927,21 @@ Jump_030_4586::
     ld [wD86B], a
     ret
 
+; when the actor has no forced action and bit 7 of its wDAD8 byte is set, initialises the AI weights and runs the routine for its AI mode; a forced action is stored directly; then wBattleResolveStep += 1 (E-0124)
 ; 2 call sites from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case01_Sub01)
 ; reads: wBattleActor
 ; writes: wD2CC
 ; points at: wDAD8, wDA53, wBattleResolveStep
-Func_030_4595::
-    call Func_030_5287
+AIChooseActionResolveStep::
+Func_030_4595:: ; address name
+    call ForcedActionForActorStatus
     jr nz, Jump_030_45C7
     ld a, [wBattleActor]
     ld hl, wDAD8
     add_a_to_hl
     bit 7, [hl]
     jr z, Jump_030_45CB
-    call Func_030_45DA
+    call InitAIWeightsForActor
     xor a, a
     ld [wD2CC], a
     ld a, [wBattleActor]
@@ -967,10 +969,12 @@ Data_030_45D0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_030_4AD3
     dw UseAIScoreTableB
 
-; 1 call site from 1 routine (e.g. Func_030_4595)
+; clears wD2AD ($14 bytes), sets wDA3C-wDA42 = 0, 0, 0, 1, 2, 3, 3, then adds personality, HP and other weights (Func_030_4617, 46BA, 47B9, 483F); wD871 = 0 (E-0124)
+; 1 call site from 1 routine (e.g. AIChooseActionResolveStep)
 ; writes: wDA3C, wDA3D, wDA3E, wDA3F, wDA40, wDA41, wDA42, wD871
 ; points at: wD2AD
-Func_030_45DA::
+InitAIWeightsForActor::
+Func_030_45DA:: ; address name
     ld hl, wD2AD
     ld bc, $0014
     xor a, a
@@ -996,7 +1000,7 @@ Func_030_45DA::
     ld [wD871], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_45DA, AIChooseActionForActor_Sub01)
+; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wC58A, wBattleActor, wC46B, wDAE9
 ; points at: wDA3C, wDA4B, wDAE9
 Func_030_4617::
@@ -1040,7 +1044,7 @@ Jump_030_4650::
     ld hl, wDA3C
     add_a_to_hl
     ld e, $2D
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
     jr Jump_030_4687
 
 Jump_030_466C::
@@ -1052,13 +1056,13 @@ Jump_030_466C::
     ld hl, wDA3C
     add_a_to_hl
     ld e, $14
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
 
 Jump_030_4687::
     ret
 
 ; for the actor's three personality bytes (Hi, Mid, Lo) adds value / 10 to wDA3C + 0, 1, 2 (Func_030_5428) (E-0122)
-; 2 call sites from 2 routines (e.g. Func_030_45DA, AIChooseActionForActor_Sub01)
+; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wBattleActor
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wDA3C
 AddActorPersonalityTensToWDA3C::
@@ -1088,10 +1092,10 @@ Func_030_469D:: ; address name
     ld hl, wDA3C
     add_a_to_hl
     ld e, b
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_45DA, AIChooseActionForActor_Sub01)
+; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wBattleActor, wC58A, wC46B, wDAE9, wD891
 ; points at: wD80D, wDA3C, wDA53, wDA3E, wD989, wDAE9
 Func_030_46BA::
@@ -1139,10 +1143,10 @@ Jump_030_46FD::
     jr z, Jump_030_470B
     ld hl, wDA3C
     ld e, $1E
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
 
 Jump_030_470B::
-    call Func_030_478B
+    call AnyAllyHPBelowSixthOfMax
     jr z, Jump_030_4768
     ld a, [wBattleActor]
     ld hl, wDA53
@@ -1191,7 +1195,7 @@ Jump_030_4759::
     jr z, Jump_030_4768
     ld hl, wDA3E
     ld e, $1E
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
 
 Jump_030_4768::
     ld a, [wD891]
@@ -1208,14 +1212,16 @@ Jump_030_4768::
     jr nz, Jump_030_478A
     ld hl, wDA3E
     ld e, $E2
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
 
 Jump_030_478A::
     ret
 
+; A = 1 and NZ when an occupied ally has HP below a sixth of its max; otherwise returns with the last comparison flags (E-0124)
 ; 1 call site from 1 routine (e.g. Func_030_46BA)
 ; reads: wBattleActor
-Func_030_478B::
+AnyAllyHPBelowSixthOfMax::
+Func_030_478B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -1250,7 +1256,7 @@ Jump_030_47B4::
     or a, a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_45DA, AIChooseActionForActor_Sub01)
+; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wC58A, wBattleActor, wC5E7
 ; points at: wDA3C, wSlotPersonalityHi, wSlotPersonalityMid, wDA3D, wSlotPersonalityLo, wDA3E
 Func_030_47B9::
@@ -1275,7 +1281,7 @@ Jump_030_47D5::
     ld a, [wC5E7]
     and a, $0F
     ld e, a
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
     inc hl
     dec b
     jr nz, Jump_030_47D5
@@ -1288,17 +1294,19 @@ Jump_030_47E6::
     ld a, [wBattleActor]
     ld hl, wSlotPersonalityHi
     ld de, wDA3C
-    call Func_030_480E
+    call AddRandomWeightByValueBand
     ld a, [wBattleActor]
     ld hl, wSlotPersonalityMid
     ld de, wDA3D
-    call Func_030_480E
+    call AddRandomWeightByValueBand
     ld a, [wBattleActor]
     ld hl, wSlotPersonalityLo
     ld de, wDA3E
 
+; adds RandomInRange(0, 30/25/20/15/10) to [DE] (Func_030_5428), the bound chosen by [HL + A] (< 50, 100, 150, 200, or more) (E-0124)
 ; 2 call sites from 1 routine (e.g. Func_030_47B9)
-Func_030_480E::
+AddRandomWeightByValueBand::
+Func_030_480E:: ; address name
     push de
     add_a_to_hl
     ld a, [hl]
@@ -1320,10 +1328,10 @@ Jump_030_4834::
     ld hl, $0000
     call RandomInRange
     pop hl
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_45DA, AIChooseActionForActor_Sub01)
+; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wC5E7, wC5E8, wDA3F, wDA40, wDA41, wDA3C, wBattleActor
 ; writes: wDA3F, wDA40, wDA41
 ; points at: wDA3C, wD988, wD2AD, wD2BD
@@ -1677,7 +1685,7 @@ Jump_030_4B65::
     jr Jump_030_4B72
 
 Jump_030_4B6F::
-    call Func_030_4B88
+    call QuarterWordAtDEUnlessBit15
 
 Jump_030_4B72::
     call Func_030_4C00
@@ -1705,8 +1713,10 @@ Jump_030_4B86::
     pop de
     ret
 
+; divides the word at DE by 4 unless its bit 15 is set (E-0124)
 ; 1 call site from 1 routine (e.g. Func_030_4AD3)
-Func_030_4B88::
+QuarterWordAtDEUnlessBit15::
+Func_030_4B88:: ; address name
     push de
     ld a, [de]
     ld c, a
@@ -1996,16 +2006,18 @@ Func_030_4CDB:: ; address name
 ; points at: wBattleSubPhase
 RunBattleResolveStep_43C4_Case03::
 Jump_030_4CF0:: ; address name
-    call Func_030_4CFC
+    call RunActorActionHandlersForAISlots
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
     ld [wBattleResolveStep], a
     ret
 
+; for AI-controlled slots (foes, or both sides outside normal battles, never slot 3/7) runs the handlers for the set bits of the actor's action data word (E-0124)
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_43C4_Case03, AIChooseActionForActor)
 ; reads: wC58A, wBattleActor
-Func_030_4CFC::
+RunActorActionHandlersForAISlots::
+Func_030_4CFC:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_030_4D06
@@ -2036,7 +2048,7 @@ Jump_030_4D24::
     ret
 
 ; BC = the word at Data_030_4D34 + 2 * the actor's chosen action (ActorActionChoiceAddress) (E-0118)
-; 1 call site from 1 routine (e.g. Func_030_4CFC)
+; 1 call site from 1 routine (e.g. RunActorActionHandlersForAISlots)
 ActorActionDataWord::
 Func_030_4D25:: ; address name
     call ActorActionChoiceAddress
@@ -2068,7 +2080,7 @@ Data_030_4D34:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $8A, $FF
 
 ; for bit numbers 0-15 in turn (BitMaskWords16): when the bit is set in BC (C for 0-7, B for 8-15), calls handler E through CallFlagBitHandlerE; stops early when a handler returns carry (E-0102)
-; 1 call site from 1 routine (e.g. Func_030_4CFC)
+; 1 call site from 1 routine (e.g. RunActorActionHandlersForAISlots)
 RunHandlersForSetBitsInBC::
 Func_030_4F14:: ; address name
     ld e, $00
@@ -2672,10 +2684,12 @@ Jump_030_527C::
     ld c, [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_4595, RunBattleResolveStep_43C4_Case00)
+; B = forced action $CD, $CC, $CE or $CF by the actor's status bits (wD80F byte 0 bit 6, byte 1 bit 2, byte 2 bit 4, byte 5 bit 0); Z when none (E-0124)
+; 2 call sites from 2 routines (e.g. AIChooseActionResolveStep, RunBattleResolveStep_43C4_Case00)
 ; reads: wBattleActor
 ; points at: wD80F
-Func_030_5287::
+ForcedActionForActorStatus::
+Func_030_5287:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
@@ -2855,7 +2869,7 @@ Func5428ForActorEntryOfHL::
 Func_030_5378:: ; address name
     ld a, [wBattleActor]
     add_a_to_hl
-    call Func_030_5428
+    call AddSignedEToByteAtHLClamped
     ret
 
 Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2875,7 +2889,7 @@ Func_030_540C:: ; address name
     ret
 
 ; HL = wBattleActionChoice + 2 * wBattleActor (the actor's action byte; the target follows) (E-0072)
-; 12 call sites from 8 routines (e.g. ActorActionDataWord, Func_030_4595, RunBattleResolveStep_43C4_Case01_Sub03, AIChooseActionForActor, ...)
+; 12 call sites from 8 routines (e.g. ActorActionDataWord, AIChooseActionResolveStep, RunBattleResolveStep_43C4_Case01_Sub03, AIChooseActionForActor, ...)
 ; reads: wBattleActor
 ; points at: wBattleActionChoice
 ActorActionChoiceAddress::
@@ -2886,8 +2900,10 @@ Func_030_541B:: ; address name
     add_a_to_hl
     ret
 
-; 9 call sites from 6 routines (e.g. Func_030_47B9, Func_030_480E, Func_030_46BA, AddActorPersonalityTensForIndexA, ...)
-Func_030_5428::
+; [HL] += E as a signed value, clamped to 0-$FF (E-0124)
+; 9 call sites from 6 routines (e.g. Func_030_47B9, AddRandomWeightByValueBand, Func_030_46BA, AddActorPersonalityTensForIndexA, ...)
+AddSignedEToByteAtHLClamped::
+Func_030_5428:: ; address name
     bit 7, e
     jr z, Jump_030_5438
     ld a, e
@@ -2932,7 +2948,7 @@ Func_030_5440:: ; address name
     call JumpToHL
     call ActorActionChoiceAddress
     ld [hl], b
-    call Func_030_4CFC
+    call RunActorActionHandlersForAISlots
     xor a, a
     ld [wD2CC], a
     ret
@@ -3407,7 +3423,7 @@ Func_030_5C40:: ; address name
     jr ReadBattleWordFromArray_Bank30
 
 ; HL = wBattleMaxHP, then ReadBattleWordFromArray_Bank30 (E-0122)
-; 1 call site from 1 routine (e.g. Func_030_478B)
+; 1 call site from 1 routine (e.g. AnyAllyHPBelowSixthOfMax)
 ; points at: wBattleMaxHP
 ReadBattleMaxHPOfSlot_Bank30::
 Func_030_5C45:: ; address name
@@ -3416,7 +3432,7 @@ Func_030_5C45:: ; address name
     db $21, $EF, $D8, $18, $19
 
 ; HL = wBattleHP, then ReadBattleWordFromArray_Bank30 (E-0122)
-; 1 call site from 1 routine (e.g. Func_030_478B)
+; 1 call site from 1 routine (e.g. AnyAllyHPBelowSixthOfMax)
 ; points at: wBattleHP
 ReadBattleHPOfSlot_Bank30::
 Func_030_5C4F:: ; address name
@@ -3426,7 +3442,7 @@ Func_030_5C4F:: ; address name
     db $01, $24, $7E, $C9
 
 ; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
-; 5 call sites from 5 routines (e.g. Func_030_4595, RunBattleResolveStep_43C4_Case01_Sub04, RunBattleResolveStep_43C4_Case01_Sub02, AIChooseActionForActor, ...)
+; 5 call sites from 5 routines (e.g. AIChooseActionResolveStep, RunBattleResolveStep_43C4_Case01_Sub04, RunBattleResolveStep_43C4_Case01_Sub02, AIChooseActionForActor, ...)
 ReadBattleWordFromArray_Bank30::
 Func_030_5C68:: ; address name
     add a, a

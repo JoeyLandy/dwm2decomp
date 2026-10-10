@@ -1370,6 +1370,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Commits.** The regenerated `src/` for E-0120-E-0122 was not committed with those entries; it is committed here.
 - Binary verification: build/run81 PASS, 0 differing bytes; 140 tests OK (3 skipped) before the new test was added.
 
+### E-0124 — Routines of 17-30 instructions; family icon tiles corrected
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** About 205 routines of 17-30 instructions are named; the unnamed count goes from 786 to 542. These include:
+  - AI usability checks in bank $05 (AIHealUsable, AIPanicAllUsable, AIParalyzeUsable, AIDanceUsable …);
+  - inventory add and remove (16:4C78, 16:4C9E);
+  - SRAM slot load (60:6CD1), the counterpart of the E-0121 save routine;
+  - forced actions from status (30:5287: $CC-$CF);
+  - stat buff caps (39:6F32, 39:6F66);
+  - the per-bank meta-sprite builders (25-27:4001);
+  - the gold-threshold event (12:797C, 5000 gold).
+- **Correction.** E-0122 named 16:7A48 `LoadFamilyPaletteForWD09D`. Its helper 16:7AAF writes the bytes to VRAM tile wD09E ($8000 + 16 * index, indices below $80 in the $9000 area), not to a palette. The family data at Data_016_7ACD is 16 bytes per family, one tile each. Renamed `LoadFamilyIconTileForWD09D`, `LoadAllFamilyIconTiles` and `LoadFamilyIconTileForRecordB_*`.
+- Binary verification: build/run82 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -203,7 +203,7 @@ Jump_0E2_4169::
 
 Jump_0E2_4179::
     call AIAddScoresFor55BEAnd5731
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_418C
@@ -373,7 +373,7 @@ Jump_0E2_42A2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_42B2::
-    farcall Func_005_4BE1
+    farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
     jr nz, Jump_0E2_42C2
@@ -425,7 +425,7 @@ Jump_0E2_430F::
 ; reads: wBattleActor
 AIScore_Heal:: ; heuristic: follows a terminator; C0
 Func_0E2_4310:: ; address name
-    farcall Func_005_715F
+    farcall AIHealUsable
     ld a, c
     and a, a
     ret z
@@ -459,7 +459,7 @@ Jump_0E2_433D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_434D::
-    farcall Func_005_4BE1
+    farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
     jr nz, Jump_0E2_435D
@@ -494,12 +494,12 @@ Jump_0E2_4389::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_HealUs:: ; heuristic: follows a terminator; C0
 Func_0E2_438D:: ; address name
-    farcall Func_005_715F
+    farcall AIHealUsable
     ld a, c
     and a, a
     ret z
     call AIScore_HealUs_Sub01
-    farcall Func_005_53A5
+    farcall FewerThanTwoAlliesAtHP1
     ld a, c
     and a, a
     jr nz, Jump_0E2_43A9
@@ -757,7 +757,7 @@ Func_0E2_4536:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_454F::
-    farcall Func_005_50B7
+    farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4563
@@ -796,7 +796,7 @@ Jump_0E2_4584::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4594::
-    farcall Func_005_50B7
+    farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
     jr z, Jump_0E2_45A8
@@ -1026,7 +1026,7 @@ Func_0E2_4721:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_473E::
-    farcall Func_005_50B7
+    farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4752
@@ -1136,7 +1136,7 @@ Jump_0E2_47EB::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4804::
-    farcall Func_005_57A1
+    farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4818
@@ -1182,7 +1182,7 @@ Jump_0E2_4854::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PanicAll:: ; heuristic: follows a terminator; C0
 Func_0E2_4855:: ; address name
-    farcall Func_005_7370
+    farcall AIPanicAllUsable
     ld a, c
     and a, a
     ret z
@@ -1264,7 +1264,7 @@ Func_0E2_48CF:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_48E8::
-    farcall Func_005_57A1
+    farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
     jr z, Jump_0E2_48FC
@@ -1306,7 +1306,7 @@ Func_0E2_491E:: ; address name
     and a, a
     ret z
     call WeighWD044RuleBit5
-    farcall Func_005_57A1
+    farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
     jr z, Jump_0E2_493E
@@ -1421,7 +1421,7 @@ Jump_0E2_49DE::
 
 Jump_0E2_49F4::
     call WeighWD044RuleBit5
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A07
@@ -1487,7 +1487,7 @@ Jump_0E2_4A61::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4A71::
-    farcall Func_005_5731
+    farcall LinkRuleCheckWD04BTurnLimit
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A81
@@ -1495,7 +1495,7 @@ Jump_0E2_4A71::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A81::
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A91
@@ -1527,7 +1527,7 @@ Jump_0E2_4AB5::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BigBang:: ; heuristic: follows a terminator; C0
 Func_0E2_4AB6:: ; address name
-    farcall Func_005_74D1
+    farcall AIAttackSkillUsable_74D1
     ld a, c
     and a, a
     ret z
@@ -1564,7 +1564,7 @@ Jump_0E2_4AEF::
 
 Jump_0E2_4AFF::
     call WeighWD044RuleBit1
-    farcall Func_005_5731
+    farcall LinkRuleCheckWD04BTurnLimit
     ld a, c
     and a, a
     jr nz, Jump_0E2_4B12
@@ -1572,7 +1572,7 @@ Jump_0E2_4AFF::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B12::
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_4B22
@@ -1725,7 +1725,7 @@ Jump_0E2_4C2F::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_WindBeast:: ; heuristic: follows a terminator; C0
 Func_0E2_4C30:: ; address name
-    farcall Func_005_74D1
+    farcall AIAttackSkillUsable_74D1
     ld a, c
     and a, a
     ret z
@@ -1789,7 +1789,7 @@ Jump_0E2_4CA0::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Vacuum:: ; heuristic: follows a terminator; C0
 Func_0E2_4CA1:: ; address name
-    farcall Func_005_74D1
+    farcall AIAttackSkillUsable_74D1
     ld a, c
     and a, a
     ret z
@@ -2901,7 +2901,7 @@ Jump_0E2_5476::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5486::
-    farcall Func_005_50B7
+    farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
     jr z, Jump_0E2_549A
@@ -3210,7 +3210,7 @@ Jump_0E2_56C5::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Berserker:: ; heuristic: follows a terminator; C0
 Func_0E2_56C6:: ; address name
-    farcall Func_005_779F
+    farcall AIAttackSkillUsable_779F
     ld a, c
     and a, a
     ret z
@@ -3287,7 +3287,7 @@ Jump_0E2_574B::
 
 Jump_0E2_5761::
     call WeighWD044RuleBit1
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_5774
@@ -3723,7 +3723,7 @@ Func_0E2_5A68:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 122 LureDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3783,7 +3783,7 @@ Jump_0E2_5ACC::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5AE0::
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
 
@@ -3806,7 +3806,7 @@ Func_0E2_5AE6:: ; address name
 
 Jump_0E2_5B05::
     call WeighWD044RuleBit2
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B18
@@ -3814,7 +3814,7 @@ Jump_0E2_5B05::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B18::
-    farcall Func_005_5CF1
+    farcall PassIfWC984OrAllySlotEmpty
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B28
@@ -3861,7 +3861,7 @@ Jump_0E2_5B5C::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B6C::
-    farcall Func_005_4BE1
+    farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B7C
@@ -3877,7 +3877,7 @@ Jump_0E2_5B7C::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B8C::
-    farcall Func_005_53A5
+    farcall FewerThanTwoAlliesAtHP1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B9C
@@ -4203,7 +4203,7 @@ Func_0E2_5DBC:: ; address name
 
 Jump_0E2_5DD5::
     call WeighWD044RuleBit5
-    farcall Func_005_57A1
+    farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5DEC
@@ -4252,7 +4252,7 @@ Jump_0E2_5E16::
 
 Jump_0E2_5E32::
     call WeighWD044RuleBit5
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E45
@@ -4334,7 +4334,7 @@ Func_0E2_5EB6:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 139 LushLicks. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4374,7 +4374,7 @@ Jump_0E2_5EF0::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F04::
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
 
@@ -4382,7 +4382,7 @@ Jump_0E2_5F04::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SickLick:: ; heuristic: follows a terminator; C0
 Func_0E2_5F0A:: ; address name
-    farcall Func_005_7B11
+    farcall AIStatusLickUsable
     ld a, c
     and a, a
     ret z
@@ -4443,7 +4443,7 @@ Jump_0E2_5F72::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F86::
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ret
 
 ; table-B AI score: AIScore_LegSweep, then Func_0E2_67F9 when usable (E-0122)
@@ -4454,7 +4454,7 @@ Func_0E2_5F8A:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 141 LegSweep, 142 BigTrip. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4494,7 +4494,7 @@ Jump_0E2_5FC4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5FD8::
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
 
@@ -4506,7 +4506,7 @@ Func_0E2_5FDE:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 143 Ahhh, 144 WarCry. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4552,7 +4552,7 @@ Jump_0E2_602A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_603E::
-    call Func_0E2_67F9
+    call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
 
@@ -4704,7 +4704,7 @@ Jump_0E2_6135::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BladeD:: ; heuristic: follows a terminator; C0
 Func_0E2_6139:: ; address name
-    farcall Func_005_7C45
+    farcall AIGuardSkillUsable_7C45
     ld a, c
     and a, a
     ret z
@@ -4851,7 +4851,7 @@ Jump_0E2_621D::
 
 Jump_0E2_6231::
     call WeighWD044RuleBit5
-    farcall Func_005_57A1
+    farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6248
@@ -4882,7 +4882,7 @@ Func_0E2_6249:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_6266::
-    farcall Func_005_4BE1
+    farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
     jr nz, Jump_0E2_6276
@@ -4952,7 +4952,7 @@ Jump_0E2_62D5::
 
 Jump_0E2_62EB::
     call WeighWD044RuleBit5
-    farcall Func_005_57A1
+    farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6302
@@ -5046,7 +5046,7 @@ Func_0E2_6387:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4BE1
+    farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
     jr nz, Jump_0E2_63A0
@@ -5064,7 +5064,7 @@ Jump_0E2_63A0::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_63B6::
-    farcall Func_005_53A5
+    farcall FewerThanTwoAlliesAtHP1
     ld a, c
     and a, a
     jr nz, Jump_0E2_63C6
@@ -5108,7 +5108,7 @@ Func_0E2_63FA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Ahhh_6401:: ; heuristic: follows a terminator; C0
 Func_0E2_6401:: ; address name
-    farcall Func_005_7B11
+    farcall AIStatusLickUsable
     ld a, c
     and a, a
     ret z
@@ -5178,7 +5178,7 @@ Jump_0E2_6472::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PanicAll_6473:: ; heuristic: follows a terminator; C0
 Func_0E2_6473:: ; address name
-    farcall Func_005_7370
+    farcall AIPanicAllUsable
     ld a, c
     and a, a
     ret z
@@ -5210,7 +5210,7 @@ Func_0E2_648D:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_64AA::
-    farcall Func_005_57A1
+    farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
     jr z, Jump_0E2_64BE
@@ -5795,7 +5795,7 @@ Func_0E2_67CF:: ; address name
 AIAddPenaltyFor5758And5CF1::
 Func_0E2_67D5:: ; address name
     call WeighWD044RuleBit4
-    farcall Func_005_5758
+    farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
     jr nz, Jump_0E2_67E8
@@ -5803,7 +5803,7 @@ Func_0E2_67D5:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_67E8::
-    farcall Func_005_5CF1
+    farcall PassIfWC984OrAllySlotEmpty
     ld a, c
     and a, a
     jr nz, Jump_0E2_67F8
@@ -5813,9 +5813,11 @@ Jump_0E2_67E8::
 Jump_0E2_67F8::
     ret
 
+; adds score word $B1 when Func_005_5ECE fails and $B2 when Func_005_5FC7 fails (results of 1 count as passing) (E-0124)
 ; 9 call sites from 9 routines (e.g. AIScoreB_LureDance, AIScore_LureDance, AIScoreB_LushLicks, AIScore_LushLicks, ...)
-Func_0E2_67F9:: ; heuristic: follows a terminator; C0
-    farcall Func_005_5ECE
+AIAddScoresFor5ECEAnd5FC7:: ; heuristic: follows a terminator; C0
+Func_0E2_67F9:: ; address name
+    farcall AIAddScoresFor5ECEAnd5FC7_Sub01
     ld a, c
     cp a, $01
     jr z, Jump_0E2_680D
@@ -5825,7 +5827,7 @@ Func_0E2_67F9:: ; heuristic: follows a terminator; C0
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_680D::
-    farcall Func_005_5FC7
+    farcall AIAddScoresFor5ECEAnd5FC7_Sub02
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6821
@@ -5841,7 +5843,7 @@ Jump_0E2_6821::
 ; 3 call sites from 3 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_Beat)
 AIAddScoresFor55BEAnd5731::
 Func_0E2_6822:: ; address name
-    farcall Func_005_55BE
+    farcall LinkRuleCheckWD044Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_6832
@@ -5849,7 +5851,7 @@ Func_0E2_6822:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_6832::
-    farcall Func_005_5731
+    farcall LinkRuleCheckWD04BTurnLimit
     ld a, c
     and a, a
     jr nz, Jump_0E2_6842
@@ -5863,7 +5865,7 @@ Jump_0E2_6842::
 ; 1 call site from 1 routine (e.g. AIScore_Sacrifice)
 AIScore_Sacrifice_Sub03:: ; heuristic: follows a terminator; C0
 Func_0E2_6843:: ; address name
-    farcall Func_005_55BE
+    farcall LinkRuleCheckWD044Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_6853

@@ -110,7 +110,7 @@ Data_0E1_5AA7:: ; heuristic: argument of a bank-switching copy helper; C0
     db $20, $7C, $FF, $7F, $A8, $14, $00, $00, $20, $7C, $FF, $7F, $35, $04, $00, $00
 
 ; runs Func_0E1_5AC0 with DE = Data_0E1_5ABE (E-0122)
-; 1 call site from 1 routine (e.g. Func_007_5FE8)
+; 1 call site from 1 routine (e.g. DrawCGBMetaSpriteAt38_30)
 RunE15AC0For5ABE::
 Func_0E1_5AB7:: ; address name
     ld de, Data_0E1_5ABE

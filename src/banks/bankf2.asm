@@ -444,7 +444,7 @@ Jump_0F2_42A2::
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0D
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     xor a, a
     ld [wCBCF], a
     ld a, $48
@@ -892,7 +892,7 @@ Data_0F2_48D1:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_037_4AFD_Case0D_Case1C, Func_0F1_4AD0_Case0D_Case01, Func_0F1_4AD0_Case0D_Case1C)
+; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_037_4AFD_Case0D_Case1C, RunWD780StateWhenNotFading_F1_Case0D_Case01, RunWD780StateWhenNotFading_F1_Case0D_Case1C)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ShowString10Bank0EAtTiles2020ThenDefault::
 Func_0F2_49CF:: ; address name
@@ -1060,14 +1060,14 @@ Func_0F2_4AF3:: ; address name
     ret
 
 ; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case12, Func_0F1_4AD0_Case0D_Case12)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case12, RunWD780StateWhenNotFading_F1_Case0D_Case12)
 ShowPersonalityNameAndWCA3AName::
 Func_0F2_4AFE:: ; address name
     call ShowCombinedPersonalityName
     call DrawWCA3ANameAtTiles2290
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, Func_0F1_4AD0_Case0D_Case13)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
 ; reads: wCA83, wCA84, wCA85, wCA81, wCA82, hFFC6, wCA36, wCA37, ...
 ; writes: wC8C0, wC8C1, wC8C2, hFFC6, hFFC7, wSpeciesIdLo, wSpeciesIdHi, hFFC8, ...
 ; points at: hFFC8
@@ -1171,7 +1171,7 @@ Jump_0F2_4BB6::
     jr Jump_0F2_4BA8
 
 ; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case14, Func_0F1_4AD0_Case0D_Case14)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case14, RunWD780StateWhenNotFading_F1_Case0D_Case14)
 ; reads: wCACF
 ; writes: wStringIndex, wStringCategory, rRAMG2, wC52D, wC52E, wC52F, wC530
 ShowWCACFCategory11StringAtTiles2320::
@@ -1196,7 +1196,7 @@ Func_0F2_4BD0:: ; address name
     ret
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1A, Func_0F1_4AD0_Case0D_Case1A)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1A, RunWD780StateWhenNotFading_F1_Case0D_Case1A)
 ; reads: wCA36, wCA37, wD013
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ShowSpeciesCategory13StringAtTiles2680::
@@ -1223,7 +1223,7 @@ Func_0F2_4BFC:: ; address name
     farcall ShowString_Bank08
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1F, Func_0F1_4AD0_Case0D_Case1F)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1F, RunWD780StateWhenNotFading_F1_Case0D_Case1F)
 Func_0F2_4C36::
     call Func_0F2_4C3D
     call Func_0F2_4D72
@@ -1601,7 +1601,7 @@ Jump_0F2_4E68::
     jr nz, Jump_0F2_4E68
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1E, Func_0F1_4AD0_Case0D_Case1E)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1E, RunWD780StateWhenNotFading_F1_Case0D_Case1E)
 ; reads: wCA38, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7, wD7F1, wD7F2
 ; points at: wCA2B, wD7F3
@@ -1756,7 +1756,7 @@ Data_0F2_4F41:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
-; 5 call sites from 5 routines (e.g. Func_0F2_5002, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, Func_0F1_4AD0_Case0D_Case16, ...)
+; 5 call sites from 5 routines (e.g. Func_0F2_5002, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case16, ...)
 ; reads: hFFC7, hFFC6, wC8C1, wC8C2, wCA80, wCA39
 ; writes: hFFC6, hFFC7
 ; points at: wCA81
@@ -1899,7 +1899,7 @@ Func_0F2_4FF9:: ; address name
     ei
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, Func_0F1_4AD0_Case0D_Case04)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, RunWD780StateWhenNotFading_F1_Case0D_Case04)
 Func_0F2_5002::
     call Func_0F2_4F47
     call Func_0F2_505C
@@ -2040,7 +2040,7 @@ Func_0F2_50C6::
     pop bc
     jp Jump_0F2_50F8
 
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, Func_0F1_4AD0_Case0D_Case13)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
 ; reads: wCA38, wD7F4, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2
 ; writes: wD09D, wD09E
 ; points at: wCA2B
@@ -2051,7 +2051,7 @@ Func_0F2_50E2::
     ld [wD09D], a
     ld a, [wD7F4]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     pop bc
 
 Jump_0F2_50F8::

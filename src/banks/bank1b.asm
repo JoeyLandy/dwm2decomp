@@ -329,7 +329,7 @@ Jump_01B_426F::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_01B_4292
-    farcall Func_060_6CD1
+    farcall LoadWCD07RecordFromSRAMSlotWCC42
 
 Jump_01B_4292::
     ei
@@ -630,7 +630,7 @@ Jump_01B_443D:: ; address name
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall Func_0F1_4AD0
+    farcall RunWD780StateWhenNotFading_F1
     ld hl, wC5ED
     res 1, [hl]
     ret
@@ -979,7 +979,7 @@ Jump_01B_45DD::
 Func_01B_45EF:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
-    jr nz, Func_01B_465B
+    jr nz, LinkHandshakeSendFAOrFB
     ld a, [wC58C]
     or a, a
     jr nz, Jump_01B_4608
@@ -1030,10 +1030,12 @@ Jump_01B_4651::
     set 7, [hl]
     ret
 
+; link: with bit 2 of wC5ED clear sends $FA and runs a frame; otherwise clears it, sends $FB and sets bit 7 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC582
 ; points at: wC5ED
-Func_01B_465B:: ; heuristic: follows a terminator; C0
+LinkHandshakeSendFAOrFB:: ; heuristic: follows a terminator; C0
+Func_01B_465B:: ; address name
     ld hl, wC5ED
     bit 2, [hl]
     jr nz, Jump_01B_4676
@@ -3309,11 +3311,13 @@ Jump_01B_5C06::
     call BeginString_Bank1B_Cat0
     ret
 
+; when no text runs, copies box Data_01B_65E9 to wC412, draws it, clears wTwoChoiceCursor and wD781 += 1 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wD781
 ; writes: wTwoChoiceCursor, wD781
 ; points at: wC412
-Func_01B_5C3B:: ; heuristic: follows a terminator; C0
+ShowTwoChoiceBox65E9WhenTextIdle:: ; heuristic: follows a terminator; C0
+Func_01B_5C3B:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -4500,7 +4504,7 @@ Jump_01B_631C::
     ret
 
 ; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll + DE, two entries apart (WaitForVRAMAccess, interrupts off) (E-0120)
-; 2 call sites from 2 routines (e.g. RunWD780StateWhenNotFading_1B_Case01_Case02, Func_01B_675F)
+; 2 call sites from 2 routines (e.g. RunWD780StateWhenNotFading_1B_Case01_Case02, DrawRecordListPageIndicators_1B)
 DrawC5BEC6AtScrollOffsetDE_Bank1B::
 Func_01B_632C:: ; address name
     push de
@@ -4529,7 +4533,7 @@ Func_01B_632C:: ; address name
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 3 call sites from 3 routines (e.g. RunWD780StateWhenNotFading_1B_Case01_Case02, Func_01B_675F, ScriptCommandEF_Run_Bank1B_Case0E_Case01)
+; 3 call sites from 3 routines (e.g. RunWD780StateWhenNotFading_1B_Case01_Case02, DrawRecordListPageIndicators_1B, ScriptCommandEF_Run_Bank1B_Case0E_Case01)
 StoreC5BEC6AtHLStride2_Bank1B::
 Func_01B_634F:: ; address name
     ld a, $C5
@@ -5038,11 +5042,11 @@ Jump_01B_6727:: ; address name
     rst $00
     dw ScriptCommandEF_Run_Bank1B_Case04_Case00
     dw ScriptCommandEF_Run_Bank1B_Case04_Case01
-    dw Func_01B_675F
+    dw DrawRecordListPageIndicators_1B
     dw ScriptCommandEF_Run_Bank1B_Case04_Case01
     dw DrawWD789Cell5RecordPanel
     dw ClearAndDrawWD789Cell5NameAtTiles1780
-    dw Func_01B_6814
+    dw DrawRuleBoxByWD04CBit7
     dw ScriptCommandEF_Run_Bank1B_Case04_Case07
     dw ScriptCommandEF_Run_Bank1B_Case04_Case08
     dw ScriptCommandEF_Run_Bank1B_Case04_Case09
@@ -5073,11 +5077,13 @@ Jump_01B_6753:: ; address name
     farcall ScriptCommandED_Run
     ret
 
+; runs Func_01B_7399 and Func_01E_7163; with two or more pages draws the bracket and page-of-pages indicators; wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case04_Case02)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC42E, wC42F
-Func_01B_675F::
+DrawRecordListPageIndicators_1B::
+Func_01B_675F:: ; address name
     call Func_01B_7399
     farcall Func_01E_7163
     ld a, [wD7B0]
@@ -5123,7 +5129,7 @@ Func_01B_67A5:: ; address name
     push af
     ld a, $C7
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank1B
+    call LoadFamilyIconTileForRecordB_Bank1B
     ld de, Data_01B_7738
     ld hl, wC434
     ld bc, $0501
@@ -5168,11 +5174,13 @@ Func_01B_67F0:: ; address name
     ld [wD781], a
     ret
 
+; copies box Data_01B_7757 (10 x 7) or Data_01B_779D (10 x 9, when bit 7 of wD04C is set) to wC36E, then wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandEF_Run_Bank1B_Case0E_Case05)
 ; reads: wD04C, wD781
 ; writes: wD781
 ; points at: wC36E
-Func_01B_6814::
+DrawRuleBoxByWD04CBit7::
+Func_01B_6814:: ; address name
     ld a, [wD04C]
     bit 7, a
     jr nz, Jump_01B_6829
@@ -5325,7 +5333,7 @@ Jump_01B_6918::
     ld b, $BC
     ld hl, Data_01B_786F
     call StoreBAtWordTableEntry_Bank1B
-    call Func_01B_76E3
+    call CopyWD789Cell5NameToWC130
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5677,7 +5685,7 @@ Jump_01B_6B69::
     ret
 
 Jump_01B_6B7D::
-    call Func_01B_7349
+    call DrawChoiceBoxByWD04CBit7
     ld a, [wD782]
     add a, $02
     ld [wD782], a
@@ -5687,7 +5695,7 @@ Jump_01B_6B89::
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_01B_6B7D
-    call Func_01B_7349
+    call DrawChoiceBoxByWD04CBit7
     xor a, a
     call ShowStringA10_Bank1B
     ld a, [wD782]
@@ -5796,7 +5804,7 @@ Jump_01B_6C23::
     ret
 
 Jump_01B_6C37::
-    call Func_01B_7349
+    call DrawChoiceBoxByWD04CBit7
     ld a, $04
     ld [wD7DC], a
     ld a, $FF
@@ -5810,7 +5818,7 @@ Jump_01B_6C4D::
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_01B_6C37
-    call Func_01B_7349
+    call DrawChoiceBoxByWD04CBit7
     ld a, $06
     call ShowStringA10_Bank1B
     ld a, $03
@@ -6361,7 +6369,7 @@ Jump_01B_6F8F:: ; address name
 ; writes: wD7AB, wD7AF
 ScriptCommandEF_Run_Bank1B_Case0D::
 Jump_01B_6FAB:: ; address name
-    farcall Func_0F1_4AD0
+    farcall RunWD780StateWhenNotFading_F1
     ld a, [wD780]
     cp a, $0E
     ret nz
@@ -6514,7 +6522,7 @@ Jump_01B_7093:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandEF_Run_Bank1B_Case0E_Case05::
 Jump_01B_7097:: ; address name
-    call Func_01B_6814
+    call DrawRuleBoxByWD04CBit7
     ret
 
 ; entry 6 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0F
@@ -6539,7 +6547,7 @@ Jump_01B_709B:: ; address name
     ld a, $1E
     ld [wStringIndex], a
     farcall ShowString_Bank1B_481A
-    call Func_01B_76E3
+    call CopyWD789Cell5NameToWC130
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -6956,10 +6964,12 @@ Jump_01B_7345::
     ld a, $FF
     ret
 
+; copies box Data_01B_788F or Data_01B_78AD (by bit 7 of wD04C) to wC412 and draws it at scroll + $1CC (E-0124)
 ; 4 call sites from 2 routines (e.g. Func_01B_6A5E_Case07, Func_01B_6A5E_Case02)
 ; reads: wD04C
 ; points at: wC412
-Func_01B_7349::
+DrawChoiceBoxByWD04CBit7::
+Func_01B_7349:: ; address name
     ld a, [wD04C]
     bit 7, a
     jr nz, Jump_01B_735E
@@ -7006,7 +7016,7 @@ Jump_01B_738C::
 Jump_01B_7398::
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01B_675F, ScriptCommandEF_Run_Bank1B_Case0E_Case01, Func_01B_6A5E_Case00)
+; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, ScriptCommandEF_Run_Bank1B_Case0E_Case01, Func_01B_6A5E_Case00)
 ; reads: wD7DC, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wD7DD
@@ -7156,11 +7166,11 @@ Func_01B_7449:: ; address name
     ld [wC530], a
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyPaletteForWD09D (E-0122)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
 ; 2 call sites from 2 routines (e.g. Func_01B_7537, DrawWD789Cell5RecordPanel)
 ; reads: hFFC6, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
-LoadFamilyPaletteForRecordB_Bank1B::
+LoadFamilyIconTileForRecordB_Bank1B::
 Func_01B_7460:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -7174,7 +7184,7 @@ Func_01B_7460:: ; address name
     ld [wD09D], a
     ld a, [wD7F1]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ret
@@ -7357,7 +7367,7 @@ Jump_01B_755C::
     add_a_to_hl
     ld a, [hl]
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank1B
+    call LoadFamilyIconTileForRecordB_Bank1B
 
 Jump_01B_75A0::
     pop bc
@@ -7572,11 +7582,13 @@ Jump_01B_76E0::
     ld a, $FF
     ret
 
+; copies the name of the record at WD789 cell 5 (11 bytes) to wC130 (E-0124)
 ; 4 call sites from 4 routines (e.g. ScriptCommandEF_Run_Bank1B_Case04_Case08, ScriptCommandEF_Run_Bank1B_Case0F_Case06, GameMode6_Update_Case04_Case08_Case00, GameMode6_Update_Case05_Case05)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wC8CF, wC130
-Func_01B_76E3::
+CopyWD789Cell5NameToWC130::
+Func_01B_76E3:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

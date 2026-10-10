@@ -300,8 +300,8 @@ Jump_003_4218:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_003_4208_Case01::
 Jump_003_4235:: ; address name
-    call Func_003_5E68
-    call Func_003_581E
+    call ResetInventoryMenuToFirstPage
+    call BuildInventoryScreenBase
     call ShowString0Bank09AtTiles16E0ThenItemDescription
     ret
 
@@ -353,7 +353,7 @@ Jump_003_427D::
     ret
 
 ; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
-; 14 call sites from 14 routines (e.g. LoadScreenBlock21, LoadScreenBlocks1CAnd0C, Func_003_581E, LoadBlankedBlocks00To03WithCursor, ...)
+; 14 call sites from 14 routines (e.g. LoadScreenBlock21, LoadScreenBlocks1CAnd0C, BuildInventoryScreenBase, LoadBlankedBlocks00To03WithCursor, ...)
 ; points at: wScreenTileBuffer
 ClearScreenTileBuffer_Bank03::
 Func_003_4284:: ; address name
@@ -1096,7 +1096,7 @@ Jump_003_4677:: ; address name
 ; points at: wC0A4
 RunWC0A4Screen_Case02::
 Jump_003_467C:: ; address name
-    farcall Func_002_7347
+    farcall RunSaveGameSteps_7347
     ld a, [wC8C3]
     bit 7, a
     ret z
@@ -2443,7 +2443,7 @@ Func_003_4EB6:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     pop hl
     ret
 
@@ -3048,7 +3048,7 @@ Jump_003_5288:: ; address name
     or a, a
     call nz, RefreshRecordListAndNameTiles
     call SetupInventoryMenuPages_Bank03
-    call Func_003_581E
+    call BuildInventoryScreenBase
     call SetMenuRowsForPage_Bank03_59DB
     call ShowSelectedItemDescription
     call CopyTileBufferToBGMap
@@ -3503,7 +3503,7 @@ Jump_003_5547:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_003_5E68
+    call ResetInventoryMenuToFirstPage
     ret
 
 ; entry 11 of the `rst $00` table in PauseMenu_Items_Case02
@@ -3815,7 +3815,7 @@ Jump_003_5700:: ; address name
     ld [wCB7E], a
 
 Jump_003_571F::
-    call Func_003_5E68
+    call ResetInventoryMenuToFirstPage
     xor a, a
     ld [wC0A0], a
     ld [wC0A1], a
@@ -3972,20 +3972,22 @@ Jump_003_580A:: ; address name
     xor a, a
     ld [wMenuPage], a
     ld [wC46E], a
-    call Func_003_5E68
+    call ResetInventoryMenuToFirstPage
     ret
 
 ; entry 6 of the `rst $00` table in PauseMenu_Items_Case03
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_Items_Case03_Case06::
 Jump_003_581A:: ; address name
-    call Func_003_5E68
+    call ResetInventoryMenuToFirstPage
     ret
 
+; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_003_4208_Case01, PauseMenu_Items_Case00_Case00, BuildScreenBlock0EWithCursor)
 ; reads: wInventory, wC0A7, wMenuPage
 ; points at: wC2A6
-Func_003_581E::
+BuildInventoryScreenBase::
+Func_003_581E:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $0B
     farcall CopyBlockToTileBuffer
@@ -4020,7 +4022,7 @@ Jump_003_585C::
 ; reads: wC46E
 BuildScreenBlock0EWithCursor::
 Func_003_585D:: ; address name
-    call Func_003_581E
+    call BuildInventoryScreenBase
     ld e, $0E
     farcall CopyBlockToTileBuffer
     ld a, [wC46E]
@@ -4138,7 +4140,7 @@ Jump_003_591C::
     call ShowStringBank08AtTilesHL_Bank03
     ret
 
-; 4 call sites from 3 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, Func_003_5E68, PauseMenu_Items_Case00_Case01)
+; 4 call sites from 3 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, ResetInventoryMenuToFirstPage, PauseMenu_Items_Case00_Case01)
 ; reads: wC52D, wC52E, wC52F, wC530, wInventory, wMenuPage
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC61E, wInventory
@@ -4328,7 +4330,7 @@ Func_003_5A07:: ; address name
     ret
 
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. Func_003_5E68, PauseMenu_Items_Case00_Case00)
+; 2 call sites from 2 routines (e.g. ResetInventoryMenuToFirstPage, PauseMenu_Items_Case00_Case00)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wC0A7, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
@@ -4748,10 +4750,12 @@ Data_003_5E40:: ; heuristic: target of a monotone pointer table; C0
     db $41, $01, $0C, $03
     ds $24, $C3
 
+; wMenuPage = 0, wC46E = 0, sets up the inventory pages, clamps the page, runs Func_003_592E and clears wC0A0/1 (E-0124)
 ; 5 call sites from 5 routines (e.g. Func_003_4208_Case01, PauseMenu_Items_Case02_Case21, PauseMenu_Items_Case02_Case0A, PauseMenu_Items_Case03_Case06, ...)
 ; writes: wMenuPage, wC46E, wC0A0, wC0A1
 ; points at: wMenuPage
-Func_003_5E68::
+ResetInventoryMenuToFirstPage::
+Func_003_5E68:: ; address name
     xor a, a
     ld [wMenuPage], a
     xor a, a
@@ -7924,7 +7928,7 @@ Jump_003_73A0:: ; address name
     call LoadScreenBlock2D
     ld a, $20
     ld [wD09E], a
-    farcall LoadAllFamilyPalettes
+    farcall LoadAllFamilyIconTiles
     ld hl, wC60C
     call CopyTenBytesToWC130
     ld hl, vTiles2 + $300

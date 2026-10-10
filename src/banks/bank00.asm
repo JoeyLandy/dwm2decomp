@@ -14,13 +14,13 @@ Func_000_0000:: ; address name
     pop de
 
 ; HL = address of a word: HL = that word, then jumps to it (falls into JumpToHL); A = its low byte (E-0061)
-; 7 call sites from 7 routines (e.g. CallFlagBitHandlerE, DispatchActionEffectTable, Func_036_7DC9, ChooseActionTarget, ...)
+; 7 call sites from 7 routines (e.g. CallFlagBitHandlerE, DispatchActionEffectTable, RunEffectHandlerForActionId, ChooseActionTarget, ...)
 JumpToWordAtHL::
 Func_000_000B:: ; address name
     deref_hl
 
 ; jp hl; the call target used by CallInBank
-; 5 call sites from 5 routines (e.g. CallInBank, Func_030_4595, AIChooseActionForActor, Func_030_4946, ...)
+; 5 call sites from 5 routines (e.g. CallInBank, AIChooseActionResolveStep, AIChooseActionForActor, Func_030_4946, ...)
 JumpToHL::
 Func_000_000E:: ; address name
     jp hl
@@ -1225,10 +1225,12 @@ Func_000_07FD:: ; address name
     ldh [rOBP1], a
     ret
 
+; on CGB only: copies $40 bytes from DE in ROM bank B to HL, then writes $7F at HL + BC (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rROMB0
-Func_000_080A:: ; heuristic: follows a terminator; C0
+CopyCGB40BytesFromBankAndMark7F:: ; heuristic: follows a terminator; C0
+Func_000_080A:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -1499,7 +1501,7 @@ Jump_000_094A::
     ret
 
 ; HL = source, DE = destination, BC = count (memcpy)
-; 47 call sites from 42 routines (e.g. RestoreScreenBufferFromBGMap1, SaveScreenBufferToBGMap1, Func_002_470B, Func_002_52D8, ...)
+; 47 call sites from 42 routines (e.g. RestoreScreenBufferFromBGMap1, SaveScreenBufferToBGMap1, WritePlayerNameWithFlag0SuffixToWC130, RunFieldEventWC90D_Case08_Sub01, ...)
 CopyBytes::
 Func_000_0952:: ; address name
     ld a, [hl+]
@@ -1512,7 +1514,7 @@ Func_000_0952:: ; address name
     ret
 
 ; wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8
-; 47 call sites from 41 routines (e.g. Func_000_0150, AdvanceRandom, NextTableByteSecondStream, Func_001_6C48, ...)
+; 47 call sites from 41 routines (e.g. Func_000_0150, AdvanceRandom, NextTableByteSecondStream, CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, ...)
 ; reads: wC5E8
 ; writes: wC5E8, wC5E7
 NextTableByte::
@@ -3938,7 +3940,7 @@ Func_000_16AA:: ; address name
     ret
 
 ; B = B / A (quotient), A = remainder; clobbers D, E
-; 29 call sites from 29 routines (e.g. Func_001_6C48, Func_001_6903, SetupInventoryMenuPages_Bank03, Func_005_69F5, ...)
+; 29 call sites from 29 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, Func_001_6903, SetupInventoryMenuPages_Bank03, Func_005_69F5, ...)
 DivideBByA::
 Func_000_16BF:: ; address name
     ld d, $08
@@ -4240,7 +4242,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 863 call sites from 411 routines (e.g. LoadMapScreen_Sub02, SetWC90DTo0BOnMap19IfFlagD1, Func_002_470B, PlayMapMusic_Case05, ...)
+; 863 call sites from 411 routines (e.g. LoadMapScreen_Sub02, SetWC90DTo0BOnMap19IfFlagD1, WritePlayerNameWithFlag0SuffixToWC130, PlayMapMusic_Case05, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -5593,7 +5595,7 @@ Func_000_1F80:: ; address name
     ret
 
 ; like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)
-; 98 call sites from 54 routines (e.g. Func_000_228A, Func_002_6788, Func_004_5D14, GameMode5_Init_Case06_Sub01, ...)
+; 98 call sites from 54 routines (e.g. Func_000_228A, Func_002_6788, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
 ; writes: hFFC6, hFFC7
 LoadSRAMRecordWord::
 Func_000_1F89:: ; address name
@@ -9290,7 +9292,7 @@ Jump_000_34A8::
     jr nz, Jump_000_34C7
     call SoundTick_Sub07
     ldh a, [hFFE0]
-    call Func_000_3A2F
+    call WriteChannelEnvelopeIfChanged
     jr Jump_000_34C7
 
 Jump_000_34BA::
@@ -9653,7 +9655,7 @@ Jump_000_36A9::
     ld a, [wDD08]
     and a, b
     jp nz, Jump_000_35DB
-    call Func_000_3A2F
+    call WriteChannelEnvelopeIfChanged
     jp Jump_000_35DB
 
 Jump_000_36C3::
@@ -10192,7 +10194,7 @@ Func_000_39B9:: ; address name
     ldh a, [hFFE0]
     add a, $10
     ldh [hFFE0], a
-    jp Func_000_3A2F
+    jp WriteChannelEnvelopeIfChanged
 
 Jump_000_39EC::
     inc [hl]
@@ -10202,7 +10204,7 @@ Jump_000_39EC::
     ldh a, [hFFE0]
     sub a, $10
     ldh [hFFE0], a
-    jr Func_000_3A2F
+    jr WriteChannelEnvelopeIfChanged
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
@@ -10248,9 +10250,11 @@ Func_000_3A21:: ; address name
     jr nz, Jump_000_3A94
     ldh a, [hFFE0]
 
+; B = A (bit 3 set when the low three bits are 0); writes it to the channel envelope register (wDD0D + $12) only if it differs, then restarts the channel (E-0124)
 ; 2 call sites from 2 routines (e.g. SoundNextEvent, SoundTick)
 ; reads: wDD0D, hFFEC
-Func_000_3A2F::
+WriteChannelEnvelopeIfChanged::
+Func_000_3A2F:: ; address name
     ld b, a
     and a, $07
     jr nz, Jump_000_3A38
@@ -10274,7 +10278,7 @@ Jump_000_3A38::
     ret
 
 ; A = value, C = register offset: writes A to $FF00 + wDD0D + C (wDD0D holds the current sound channel's register base); B = A (E-0077)
-; 5 call sites from 2 routines (e.g. SoundNextEvent, Func_000_3A2F)
+; 5 call sites from 2 routines (e.g. SoundNextEvent, WriteChannelEnvelopeIfChanged)
 ; reads: wDD0D
 WriteChannelRegisterC::
 Func_000_3A4E:: ; address name
@@ -10292,7 +10296,7 @@ Jump_000_3A57::
     jr WriteChannelRegisterC
 
 ; [$FF00 + wDD0D + $11] &= $C0: keeps the duty bits of the current channel's length/duty register and clears its length (E-0114)
-; 2 call sites from 2 routines (e.g. SoundNextEvent, Func_000_3A2F)
+; 2 call sites from 2 routines (e.g. SoundNextEvent, WriteChannelEnvelopeIfChanged)
 ; reads: wDD0D
 ClearChannelLengthBits::
 Func_000_3A5D:: ; address name
@@ -10441,7 +10445,7 @@ Jump_000_3B0E::
     add hl, de
     ld a, [hl]
     or a, b
-    jp Func_000_3A2F
+    jp WriteChannelEnvelopeIfChanged
 
 Jump_000_3B20::
     ld c, $12
@@ -10459,7 +10463,7 @@ Jump_000_3B20::
     add hl, de
     ld a, [hl]
     or a, b
-    jp Func_000_3A2F
+    jp WriteChannelEnvelopeIfChanged
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
@@ -10468,7 +10472,7 @@ SoundNextEvent_Sub02::
 Func_000_3B39:: ; address name
     call ReturnTwiceIfWDD08AndWDD0B
     ld a, $00
-    jp Func_000_3A2F
+    jp WriteChannelEnvelopeIfChanged
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
@@ -10659,7 +10663,7 @@ Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessWDA63SlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 29 call sites from 26 routines (e.g. Func_005_59BD, AIScore_Kamikaze_Sub01, Func_005_5FC7, Func_005_5ECE, ...)
+; 29 call sites from 26 routines (e.g. Func_005_59BD, AIScore_Kamikaze_Sub01, AIAddScoresFor5ECEAnd5FC7_Sub02, AIAddScoresFor5ECEAnd5FC7_Sub01, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name
@@ -10735,7 +10739,7 @@ Jump_000_3E76::
     ret
 
 ; Z set when HL == BC; A is clobbered
-; 177 call sites from 116 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, Func_001_6857, Func_005_6494, ...)
+; 177 call sites from 116 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, Func_005_6494, ...)
 CompareHLToBC::
 Func_000_3E7A:: ; address name
     ld a, h
@@ -10745,8 +10749,10 @@ Func_000_3E7A:: ; address name
     cp a, c
     ret
 
+; CompareHLToBC with shortcuts when BC or HL is zero: equal zeros give A = 0 and NC, HL = 0 < BC gives carry (E-0124)
 ; 5 call sites from 4 routines (e.g. Func_005_667F, ChooseTarget_MegaMagic, ChooseTarget_Blaze, ChooseTarget_Beat)
-Func_000_3E80:: ; heuristic: follows a terminator; C0
+CompareHLToBCFastZero:: ; heuristic: follows a terminator; C0
+Func_000_3E80:: ; address name
     ld a, b
     or a, c
     jr nz, Jump_000_3E8F
@@ -10773,7 +10779,7 @@ Jump_000_3E8F::
     ret
 
 ; HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)
-; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, Func_030_480E, RandomWithin5PercentOfHL, ResolveStepComputeDamage_Sub01, ...)
+; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, AddRandomWeightByValueBand, RandomWithin5PercentOfHL, ResolveStepComputeDamage_Sub01, ...)
 ; reads: wC5E7, wC5E8
 RandomInRange::
 Func_000_3E98:: ; address name
@@ -10918,7 +10924,7 @@ Func_000_3F25:: ; address name
     ret
 
 ; A = battle slot, E = field offset: HL = wBattlerRecords + $4E * A' + E, where A' = A - 1 for A >= 3, so slots 0-2 and 4-6 map to records 0-5 (slots 3 and 7 have no record here; GetBaseHP handles them separately); clobbers A, BC (E-0059, E-0062)
-; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, ActionEffect_Transform_Sub01_Sub03, ActionEffect_Transform_Sub01_Sub04, ...)
+; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01_Sub03, ActionEffect_Transform_Sub01_Sub04, ...)
 ; points at: wBattlerRecords
 BattlerRecordFieldAddress::
 Func_000_3F32:: ; address name

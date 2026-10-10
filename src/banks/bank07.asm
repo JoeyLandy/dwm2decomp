@@ -695,14 +695,14 @@ Jump_007_49B3::
     ld a, $01
     ldh [rVBK], a
     ld d, $00
-    call Func_007_4AE4
+    call FillScreenTileBufferWithD
     call DrawScreenBufferToBGMap0_Bank07
     xor a, a
     ldh [rVBK], a
 
 Jump_007_4A68::
     ld d, $C3
-    call Func_007_4AE4
+    call FillScreenTileBufferWithD
     call DrawScreenBufferToBGMap0_Bank07
     farcall CheckSaveData
     ldh a, [hFFC6]
@@ -757,9 +757,11 @@ Jump_007_4A9D::
     ld a, $09
     jp Jump_000_077A
 
+; fills the 20 x 18 visible part of wScreenTileBuffer (32-byte rows) with D (E-0124)
 ; 5 call sites from 4 routines (e.g. GameMode5_Init_Case01, RunWD06AState_6C12_Case03_Case00, RunWD06AState_6C12_Case04_Case07, RunWD06AState_6C12_Case08_Case00)
 ; points at: wScreenTileBuffer
-Func_007_4AE4::
+FillScreenTileBufferWithD::
+Func_007_4AE4:: ; address name
     ld hl, wScreenTileBuffer
     ld bc, $1412
     ld a, d
@@ -898,7 +900,7 @@ Jump_007_4B7B::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_007_4B95
-    farcall Func_060_6CD1
+    farcall LoadWCD07RecordFromSRAMSlotWCC42
 
 Jump_007_4B95::
     ld a, $FC
@@ -1005,7 +1007,7 @@ Jump_007_4C5A::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_007_4C74
-    farcall Func_060_6CD1
+    farcall LoadWCD07RecordFromSRAMSlotWCC42
 
 Jump_007_4C74::
     ld a, $FC
@@ -1101,7 +1103,7 @@ Jump_007_4D2B::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_007_4D45
-    farcall Func_060_6CD1
+    farcall LoadWCD07RecordFromSRAMSlotWCC42
 
 Jump_007_4D45::
     ld a, $FC
@@ -1121,7 +1123,7 @@ Jump_007_4D45::
     call GameMode5_Init_Case04_Sub02
     ld a, $00
     ld [wD09E], a
-    farcall LoadAllFamilyPalettes
+    farcall LoadAllFamilyIconTiles
     ld hl, vTiles2 + $B0
     ld de, $2501
     call FillTilesRequest
@@ -1283,7 +1285,7 @@ Jump_007_4E6B::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_007_4E85
-    farcall Func_060_6CD1
+    farcall LoadWCD07RecordFromSRAMSlotWCC42
 
 Jump_007_4E85::
     ld hl, vBGMap0
@@ -1467,7 +1469,7 @@ Func_007_4F9D::
     jr Jump_007_4FB3
 
 Jump_007_4FB0::
-    call Func_007_5046
+    call WriteBBTileAtWordTableEntryC_Bank07
 
 Jump_007_4FB3::
     ld a, [wC46F]
@@ -1507,10 +1509,10 @@ Jump_007_4FE4::
 Jump_007_4FE5::
     xor a, a
     ld [wFrameCounterLo], a
-    call Func_007_5067
+    call WriteC3TileAtWordTableEntryC_Bank07
     ld a, $69
     call QueueSoundEffect
-    call Func_007_5046
+    call WriteBBTileAtWordTableEntryC_Bank07
     ret
 
 ; only called from routines of RunWD06AState_6C12 (E-0098)
@@ -1529,7 +1531,7 @@ Func_007_4FF5:: ; address name
     jr Jump_007_500B
 
 Jump_007_5008::
-    call Func_007_5046
+    call WriteBBTileAtWordTableEntryC_Bank07
 
 Jump_007_500B::
     ld c, [hl]
@@ -1566,15 +1568,17 @@ Jump_007_5035::
 Jump_007_5036::
     xor a, a
     ld [wFrameCounterLo], a
-    call Func_007_5067
+    call WriteC3TileAtWordTableEntryC_Bank07
     ld a, $69
     call QueueSoundEffect
-    call Func_007_5046
+    call WriteBBTileAtWordTableEntryC_Bank07
     ret
 
+; C = [HL]; writes the cursor tile $BB at the VRAM address in entry C of the word table at DE, waiting for VRAM access (E-0124)
 ; 6 call sites from 3 routines (e.g. Func_007_4F9D, RunWD06AState_6C12_Shared01, RunWD06AState_6C12_Case03_Case1A_Sub02)
 ; reads: rSTAT
-Func_007_5046::
+WriteBBTileAtWordTableEntryC_Bank07::
+Func_007_5046:: ; address name
     ld c, [hl]
     push hl
     ld a, c
@@ -1607,9 +1611,11 @@ Jump_007_505C::
 Func_007_5066::
     ld c, [hl]
 
+; writes the blank tile $C3 at the VRAM address in entry C of the word table at DE, waiting for VRAM access (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_007_4F9D, RunWD06AState_6C12_Shared01, RunWD06AState_6C12_Case03_Case1A_Sub02)
 ; reads: rSTAT
-Func_007_5067::
+WriteC3TileAtWordTableEntryC_Bank07::
+Func_007_5067:: ; address name
     push hl
     ld a, c
     add a, a
@@ -1648,8 +1654,10 @@ Func_007_50FE:: ; address name
     call WriteVRAMByte
     ret
 
+; writes blank tile $C3 to the 20 x 18 visible area of vBGMap0 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
-Func_007_510D:: ; heuristic: follows a terminator; C0
+ClearBGMap0Screen20x18:: ; heuristic: follows a terminator; C0
+Func_007_510D:: ; address name
     ld hl, vBGMap0
     ld bc, $1412
     ld a, $C3
@@ -2947,10 +2955,12 @@ Jump_007_5FCF::
     inc [hl]
     ret
 
+; on CGB only: draws sprite set 0, sub-index 1, at ($38, $30) through RunE15AC0For5ABE (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginXHi, hSpriteOriginYHi, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginY
-Func_007_5FE8:: ; heuristic: follows a terminator; C0
+DrawCGBMetaSpriteAt38_30:: ; heuristic: follows a terminator; C0
+Func_007_5FE8:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -3420,7 +3430,7 @@ Jump_007_62ED:: ; address name
     ld a, [wC8C3]
     bit 7, a
     ret z
-    farcall Func_060_6CD1
+    farcall LoadWCD07RecordFromSRAMSlotWCC42
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_007_6319
@@ -5484,7 +5494,7 @@ Jump_007_6FD7::
 
 Jump_007_6FF1::
     ld d, $C3
-    call Func_007_4AE4
+    call FillScreenTileBufferWithD
     ld hl, $54DB
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawWD09DSelectionTilesAndPanels
@@ -6607,7 +6617,7 @@ Func_007_7690:: ; address name
     jr Jump_007_76AC
 
 Jump_007_76A9::
-    call Func_007_5046
+    call WriteBBTileAtWordTableEntryC_Bank07
 
 Jump_007_76AC::
     ld c, [hl]
@@ -6668,8 +6678,8 @@ Jump_007_76F4::
     ld [hl], a
     xor a, a
     ld [wFrameCounterLo], a
-    call Func_007_5067
-    call Func_007_5046
+    call WriteC3TileAtWordTableEntryC_Bank07
+    call WriteBBTileAtWordTableEntryC_Bank07
     ret
     db $43, $99, $45, $99, $47, $99, $49, $99, $4B, $99, $4D, $99, $83, $99, $85, $99
     db $87, $99, $89, $99, $8B, $99
@@ -7089,7 +7099,7 @@ Jump_007_795B:: ; address name
 RunWD06AState_6C12_Case04_Case07::
 Jump_007_796A:: ; address name
     ld d, $C3
-    call Func_007_4AE4
+    call FillScreenTileBufferWithD
     ld hl, $54DB
     call CopyRecordRectToScreenBuffer_Bank07
     call LoadInvertedBit7FlagsToWD09D
@@ -7654,7 +7664,7 @@ Jump_007_7C8C:: ; address name
     cp a, $FE
     jp z, RunWD06AState_6C12_Case08_Case04
     ld d, $C3
-    call Func_007_4AE4
+    call FillScreenTileBufferWithD
     ld hl, $54DB
     call CopyRecordRectToScreenBuffer_Bank07
     call LoadInvertedBit7FlagsToWD09D

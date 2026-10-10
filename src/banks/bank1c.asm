@@ -48,7 +48,7 @@ Jump_01C_404F::
     ld a, b
     or a, c
     jr nz, Jump_01C_404F
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     xor a, a
     ld [wD7F0], a
     ld [wD780], a
@@ -562,10 +562,12 @@ Jump_01C_434C::
     ldh [rSVBK], a
     ret
 
+; with story flag 2, no text, wC468 bit 7 clear, a non-empty party and hFF8C bit 0 clear: hFFB9 = 3, sets bit 1 of the player and object flags and returns A = $FF; otherwise 0 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB, wC468, wC6FD, hFF8C
 ; writes: hFFB9
-Func_01C_4364:: ; heuristic: follows a terminator; C0
+TryStartFieldMenu:: ; heuristic: follows a terminator; C0
+Func_01C_4364:: ; address name
     ld de, $0002
     call TestFlagBit
     jr nc, Jump_01C_4393
@@ -1102,7 +1104,7 @@ Jump_01C_4680::
     ld [hl+], a
     dec b
     jr nz, Jump_01C_4680
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1454,7 +1456,7 @@ Jump_01C_488E:: ; address name
     dw ScriptCommandE2_Run_Case03_Case0A
     dw ScriptCommandE2_Run_Case03_Case0B
     dw ScriptCommandE2_Run_Case03_Case0C
-    dw Func_01C_52E8
+    dw DrawTwoBoxesAndRequestScript80
     dw ScriptCommandE2_Run_Case03_Case0E
     dw ScriptCommandE2_Run_Case03_Case0F
     dw ScriptCommandE2_Run_Case03_Case10
@@ -2320,7 +2322,7 @@ Jump_01C_4DB0::
     add hl, de
     ld bc, $0403
     ld de, wD788
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2925,7 +2927,7 @@ Jump_01C_516C::
     pop hl
     ld de, Data_01C_6302
     ld bc, $0605
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ld a, $6C
     call QueueSoundEffect
     ld a, [wD781]
@@ -3065,7 +3067,7 @@ Jump_01C_5279::
     add hl, de
     ld bc, $0605
     ld de, vBGMap1 + $3D0
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ld a, [wD781]
     sub a, $03
     ld [wD781], a
@@ -3138,15 +3140,17 @@ Jump_01C_52C4::
 Data_01C_52E4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
+; clears two rectangles at scroll + $10E and + $140, wD781 = 6, clears wScriptCommandType and requests script $80 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandE2_Run_Case03_Case0F)
 ; writes: wD781, wScriptCommandType, wScriptStartRequest
-Func_01C_52E8::
+DrawTwoBoxesAndRequestScript80::
+Func_01C_52E8:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $010E
     add hl, de
     ld bc, $0605
     ld de, vBGMap1 + $3D0
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
@@ -3166,7 +3170,7 @@ Func_01C_52E8::
 ; writes: wD781
 ScriptCommandE2_Run_Case03_Case0F::
 Jump_01C_5317:: ; address name
-    call Func_01C_52E8
+    call DrawTwoBoxesAndRequestScript80
     ld a, $10
     ld [wD781], a
     ret
@@ -3377,7 +3381,7 @@ Jump_01C_5451::
     add_a_to_hl
     ld de, wD788
     ld bc, $0804
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -4206,7 +4210,7 @@ Jump_01C_598D::
     add hl, de
     ld bc, $0703
     ld de, wD788
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4830,7 +4834,7 @@ Jump_01C_5D7D::
     add hl, de
     ld bc, $0605
     ld de, vBGMap1 + $3D0
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ld a, [wD781]
     sub a, $03
     ld [wD781], a
@@ -4913,7 +4917,7 @@ Jump_01C_5DEC:: ; address name
     add hl, de
     ld bc, $0605
     ld de, vBGMap1 + $3D0
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
@@ -5037,7 +5041,7 @@ Jump_01C_5EC0::
     add_a_to_hl
     ld de, wD788
     ld bc, $0804
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     xor a, a
     ld [wD7B5], a
     ld [wD7B6], a
@@ -5656,7 +5660,7 @@ Data_01C_679D:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 6 call sites from 4 routines (e.g. ScriptCommandE5_Run_Case01_Case00, Func_01C_7196, ScriptCommandE5_Run_Case03_Case12, Func_01C_6AF7_Case00)
+; 6 call sites from 4 routines (e.g. ScriptCommandE5_Run_Case01_Case00, ClearRect147AndAskTwoChoice, ScriptCommandE5_Run_Case03_Case12, Func_01C_6AF7_Case00)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1C::
 Func_01C_679E:: ; address name
@@ -5700,7 +5704,7 @@ Func_01C_67AF:: ; address name
     ret
 
 ; clears a rectangle (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1; on CGB also clears the attribute map in VRAM bank 1 (E-0121)
-; 11 call sites from 9 routines (e.g. Func_01C_52E8, ScriptCommandE2_Run_Case03_Case09, ScriptCommandE2_Run_Case04_Case0C, ScriptCommandE2_Run_Case04_Case08, ...)
+; 11 call sites from 9 routines (e.g. DrawTwoBoxesAndRequestScript80, ScriptCommandE2_Run_Case03_Case09, ScriptCommandE2_Run_Case04_Case0C, ScriptCommandE2_Run_Case04_Case08, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ClearRectBothBanksSetWC554Plus1C1::
@@ -5740,9 +5744,11 @@ Func_01C_67D0:: ; address name
     ldh [rVBK], a
     ret
 
-; 13 call sites from 13 routines (e.g. ScriptCommandE2_Run_Case03_Case0E, Func_01C_52E8, ScriptCommandE2_Run_Case03_Case0C, ScriptCommandE2_Run_Case03_Case08, ...)
+; clears a rectangle (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1 (E-0124)
+; 13 call sites from 13 routines (e.g. ScriptCommandE2_Run_Case03_Case0E, DrawTwoBoxesAndRequestScript80, ScriptCommandE2_Run_Case03_Case0C, ScriptCommandE2_Run_Case03_Case08, ...)
 ; writes: wC554, wC555
-Func_01C_6806::
+ClearRectSetWC554Plus1C1_Bank1C::
+Func_01C_6806:: ; address name
     push de
     push bc
     push hl
@@ -5765,7 +5771,7 @@ Func_01C_6806::
     pop de
     ret
 
-; 3 call sites from 2 routines (e.g. Func_01C_6806, ClearRectBothBanksSetWC554Plus1C1)
+; 3 call sites from 2 routines (e.g. ClearRectSetWC554Plus1C1_Bank1C, ClearRectBothBanksSetWC554Plus1C1)
 ; reads: hScrollX, rSTAT, hFFC5
 ; writes: hFFC5
 Func_01C_6823::
@@ -6369,7 +6375,7 @@ Jump_01C_6B53:: ; address name
     add hl, de
     ld bc, $1405
     ld de, Data_01C_6B7D
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ld c, $24
     ld de, vTiles1
 
@@ -6412,7 +6418,7 @@ Jump_01C_6BF1:: ; address name
     add hl, de
     ld bc, $1405
     ld de, Data_01C_6C0C
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ld a, [wD7C2]
     inc a
     ld [wD7C2], a
@@ -6901,7 +6907,7 @@ Jump_01C_6F27:: ; address name
     dw ScriptCommandE5_Run_Case03_Case13
     dw ScriptCommandE5_Run_Case03_Case14
     dw ScriptCommandE5_Run_Case03_Case15
-    dw Func_01C_7196
+    dw ClearRect147AndAskTwoChoice
     dw ScriptCommandE5_Run_Case03_Case17
     dw ScriptCommandE5_Run_Case03_Case18
 
@@ -7296,9 +7302,11 @@ Jump_01C_718F:: ; address name
     farcall ScriptCommandE5_Run_Case03_Case15_Sub01
     ret
 
+; clears the rectangle at scroll + $147, copies a tile, runs Func_01C_7252, wD781 = 3, wTwoChoiceCursor = 2 and requests script $80 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case18)
 ; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-Func_01C_7196::
+ClearRect147AndAskTwoChoice::
+Func_01C_7196:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0147
     add hl, de
@@ -7344,7 +7352,7 @@ Jump_01C_71CF::
     add_a_to_hl
     ld de, wD788
     ld bc, $0802
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     farcall ScriptCommandE5_Run_Shared02
     xor a, a
     ld [wScriptCommandType], a
@@ -7357,7 +7365,7 @@ Jump_01C_71CF::
 ; writes: wD780, wD781
 ScriptCommandE5_Run_Case03_Case18::
 Jump_01C_7200:: ; address name
-    call Func_01C_7196
+    call ClearRect147AndAskTwoChoice
     ld a, $01
     ld [wD780], a
     ld a, $02
@@ -7393,7 +7401,7 @@ Jump_01C_720E:: ; address name
     dw ScriptCommandE5_Run_Case03_Case13
     dw ScriptCommandE5_Run_Case03_Case14
     dw ScriptCommandE5_Run_Case04_Case15
-    dw Func_01C_7196
+    dw ClearRect147AndAskTwoChoice
     dw ScriptCommandE5_Run_Case03_Case17
     dw ScriptCommandE5_Run_Case03_Case18
 
@@ -7411,7 +7419,7 @@ Jump_01C_724B:: ; address name
     farcall ScriptCommandE5_Run_Case04_Case15_Sub01
     ret
 
-; 2 call sites from 2 routines (e.g. Func_01C_7196, ScriptCommandE5_Run_Case03_Case0F)
+; 2 call sites from 2 routines (e.g. ClearRect147AndAskTwoChoice, ScriptCommandE5_Run_Case03_Case0F)
 ; reads: wC8C1, wC8C2
 ; writes: wD7B0, wD7A5, wD7A6
 ; points at: wD788, wD792, wInventory
@@ -7468,7 +7476,7 @@ Jump_01C_7297::
     add_a_to_hl
     ld de, wD788
     ld bc, $0804
-    call Func_01C_6806
+    call ClearRectSetWC554Plus1C1_Bank1C
     ret
 
 ; only called from routines of ScriptCommandE5_Run (E-0098)

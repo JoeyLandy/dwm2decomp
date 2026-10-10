@@ -97,7 +97,7 @@ Func_031_40A5:: ; address name
     cp a, $02
     ret nz
     di
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
     ei
     ret
 
@@ -7211,7 +7211,7 @@ Jump_031_69F9::
     ret
 
 Jump_031_69FA::
-    call Func_031_6DEC
+    call ForEachSRAMRecordRun6E18
     ld hl, wBattleResolveStep
     inc [hl]
     xor a, a
@@ -7361,7 +7361,7 @@ Jump_031_6ABB::
 ; points at: sA000, wBattleSubPhase
 Func_031_67AA_Case05::
 Jump_031_6AC2:: ; address name
-    call Func_031_6AFE
+    call DivideWDA6BByModeFactor
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -7402,10 +7402,12 @@ Jump_031_6AE9::
     inc [hl]
     ret
 
+; divides the 24-bit wDA6B-wDA6D by 20, 15 or 10 for wC7C7 = 0, 1 or other (E-0124)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case05)
 ; reads: wDA6B, wDA6C, wDA6D, wC7C7
 ; writes: wDA6B, wDA6C, wDA6D
-Func_031_6AFE::
+DivideWDA6BByModeFactor::
+Func_031_6AFE:: ; address name
     ld a, [wDA6B]
     ld l, a
     ld a, [wDA6C]
@@ -7947,10 +7949,12 @@ Func_031_6DDD:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
+; with SRAM enabled runs Func_031_6E18 for each of the 30 records ($A5 bytes from sA000) whose first byte is non-zero (E-0124)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case01)
 ; writes: rRAMG, rRAMB
 ; points at: sA000
-Func_031_6DEC::
+ForEachSRAMRecordRun6E18::
+Func_031_6DEC:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -7964,7 +7968,7 @@ Jump_031_6DFA::
     jr z, Jump_031_6E05
     push hl
     push bc
-    call Func_031_6E18
+    call ForEachSkillOfRecordBRun6E30
     pop bc
     pop hl
 
@@ -7983,8 +7987,10 @@ Jump_031_6E05::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_6DEC)
-Func_031_6E18::
+; runs Func_031_6E30 for each of the eight skills (field $34) of record B that is not $FF (E-0124)
+; 1 call site from 1 routine (e.g. ForEachSRAMRecordRun6E18)
+ForEachSkillOfRecordBRun6E30::
+Func_031_6E18:: ; address name
     push bc
     ld a, b
     ld c, $34
@@ -7997,16 +8003,18 @@ Jump_031_6E22::
     cp a, $FF
     push hl
     push bc
-    call nz, Func_031_6E30
+    call nz, ForEachSkillOfRecordBRun6E30_Sub01
     pop bc
     pop hl
     dec c
     jr nz, Jump_031_6E22
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_6E18)
+; only called from ForEachSkillOfRecordBRun6E30 (E-0047)
+; 1 call site from 1 routine (e.g. ForEachSkillOfRecordBRun6E30)
 ; points at: wD0D9
-Func_031_6E30::
+ForEachSkillOfRecordBRun6E30_Sub01::
+Func_031_6E30:: ; address name
     ld d, a
     push de
     ld a, b
@@ -8668,7 +8676,7 @@ Jump_031_7230::
 ; reads: wD88F, wC57F
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4
 ; points at: wC8CF
-GameMode4_Init_Sub01_Sub02_Sub02::
+GameMode4_Init_Sub01_Sub02_Sub01::
 Func_031_7239:: ; address name
     ld a, $90
     ld [wC8CF], a
@@ -9757,7 +9765,7 @@ Func_031_7914::
     jr z, Jump_031_7933
     cp a, $02
     jr nz, Jump_031_7925
-    farcall Func_0A0_6BF0
+    farcall CopySlotPanelPart6D47ToVRAM
     ret
 
 Jump_031_7925::
@@ -9811,7 +9819,7 @@ Func_031_7965::
     jr z, Jump_031_7984
     cp a, $02
     jr nz, Jump_031_7976
-    farcall Func_0A0_6C22
+    farcall CopySlotPanelPart6D4BToVRAM
     ret
 
 Jump_031_7976::
@@ -9865,7 +9873,7 @@ Func_031_79B6:: ; heuristic: follows a terminator; C0
     jr z, Jump_031_79D5
     cp a, $02
     jr nz, Jump_031_79C7
-    farcall Func_0A0_6C54
+    farcall CopySlotPanelPart6D4FToVRAM
     ret
 
 Jump_031_79C7::

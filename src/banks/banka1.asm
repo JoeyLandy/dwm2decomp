@@ -3296,27 +3296,27 @@ Func_0A1_5479:: ; address name
     cp a, $E2
     jr z, Jump_0A1_553D
     cp a, $20
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $30
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $48
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $70
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $A0
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $A8
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $B0
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $B8
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $C8
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $D1
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     cp a, $DA
-    jr z, Func_0A1_5591_Case00
+    jr z, SetSpriteYFromWC946_Case00
     ld c, a
     ld hl, $5A92
 
@@ -3344,14 +3344,14 @@ Jump_0A1_5516::
     ld a, [hl+]
     call SetSpriteXFromWC945
     ld a, [hl]
-    call Func_0A1_5591
+    call SetSpriteYFromWC946
     call DrawMetaSpriteSet08
     ret
 
-; entry 0 of the `rst $00` table in Func_0A1_5591
+; entry 0 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX, hMapScreenY
-Func_0A1_5591_Case00::
+SetSpriteYFromWC946_Case00::
 Jump_0A1_5523:: ; address name
     ldh a, [hMapScreenX]
     sla a
@@ -3362,7 +3362,7 @@ Jump_0A1_5523:: ; address name
     sla a
     sla a
     sla a
-    call Func_0A1_5591
+    call SetSpriteYFromWC946
     call DrawMetaSpriteSet08
     ret
 
@@ -3385,7 +3385,7 @@ Jump_0A1_553D::
     add a, a
     add a, a
     add a, a
-    call Func_0A1_5591
+    call SetSpriteYFromWC946
     call DrawMetaSpriteSet08
     ret
 
@@ -3402,12 +3402,12 @@ Jump_0A1_5565::
     add a, a
     add a, a
     add a, a
-    call Func_0A1_5591
+    call SetSpriteYFromWC946
     call DrawMetaSpriteSet08
     ret
 
 ; hSpriteOriginX = 8 * wC945 + A + 6 (E-0122)
-; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, Func_0A1_5591_Case00)
+; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, SetSpriteYFromWC946_Case00)
 ; reads: wC945
 ; writes: hSpriteOriginX
 SetSpriteXFromWC945::
@@ -3422,10 +3422,12 @@ Func_0A1_5581:: ; address name
     ldh [hSpriteOriginX], a
     ret
 
-; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, Func_0A1_5591_Case00)
+; hSpriteOriginY = 8 * wC946 + A + 6; the next entry dispatches on wCC44 & 7 (E-0124)
+; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, SetSpriteYFromWC946_Case00)
 ; reads: wC946
 ; writes: hSpriteOriginY
-Func_0A1_5591::
+SetSpriteYFromWC946::
+Func_0A1_5591:: ; address name
     ld c, a
     ld a, [wC946]
     sla a
@@ -3440,20 +3442,20 @@ Jump_0A1_55A1::
     ld a, [wCC44]
     and a, $07
     rst $00
-    dw Func_0A1_5591_Case00
-    dw Func_0A1_5591_Case01
-    dw Func_0A1_5591_Case01
-    dw Func_0A1_5591_Case03
-    dw Func_0A1_5591_Case03
-    dw Func_0A1_5591_Case03
-    dw Func_0A1_5591_Case03
-    dw Func_0A1_5591_Case07
+    dw SetSpriteYFromWC946_Case00
+    dw SetSpriteYFromWC946_Case01
+    dw SetSpriteYFromWC946_Case01
+    dw SetSpriteYFromWC946_Case03
+    dw SetSpriteYFromWC946_Case03
+    dw SetSpriteYFromWC946_Case03
+    dw SetSpriteYFromWC946_Case03
+    dw SetSpriteYFromWC946_Case07
 
-; entry 1 of the `rst $00` table in Func_0A1_5591
+; entry 1 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45
 ; points at: wCD78
-Func_0A1_5591_Case01::
+SetSpriteYFromWC946_Case01::
 Jump_0A1_55B7:: ; address name
     ld a, [wCC45]
     and a, $07
@@ -3468,14 +3470,14 @@ Jump_0A1_55B7:: ; address name
 
 Jump_0A1_55D0::
     ld a, [hl]
-    call Func_0A1_560D
+    call SetSpriteXYFromCellA
     ret
 
-; entry 3 of the `rst $00` table in Func_0A1_5591
+; entry 3 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45
 ; points at: wCD88
-Func_0A1_5591_Case03::
+SetSpriteYFromWC946_Case03::
 Jump_0A1_55D5:: ; address name
     ld a, [wCC45]
     and a, $07
@@ -3484,13 +3486,13 @@ Jump_0A1_55D5:: ; address name
     ld hl, wCD88
     add_a_to_hl
     ld a, [hl]
-    call Func_0A1_560D
+    call SetSpriteXYFromCellA
     ret
 
-; entry 7 of the `rst $00` table in Func_0A1_5591
+; entry 7 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC88E, wC891, wCC42, wC890, wCD08
-Func_0A1_5591_Case07::
+SetSpriteYFromWC946_Case07::
 Jump_0A1_55E9:: ; address name
     ld a, [wC88E]
     or a, a
@@ -3504,18 +3506,20 @@ Jump_0A1_55E9:: ; address name
     cp a, c
     jr nz, Jump_0A1_5606
     ld a, [wC890]
-    call Func_0A1_560D
+    call SetSpriteXYFromCellA
     ret
 
 Jump_0A1_5606::
     ld a, [wCD08]
-    call Func_0A1_560D
+    call SetSpriteXYFromCellA
     ret
 
-; 4 call sites from 3 routines (e.g. Func_0A1_5591_Case07, Func_0A1_5591_Case03, Func_0A1_5591_Case01)
+; hSpriteOriginX = 8 * wC945 + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wC946 + (A & $0F) * 8 + 6 (E-0124)
+; 4 call sites from 3 routines (e.g. SetSpriteYFromWC946_Case07, SetSpriteYFromWC946_Case03, SetSpriteYFromWC946_Case01)
 ; reads: wC945, wC946
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_560D::
+SetSpriteXYFromCellA::
+Func_0A1_560D:: ; address name
     push af
     and a, $F0
     srl a
@@ -3542,7 +3546,7 @@ Func_0A1_560D::
     ldh [hSpriteOriginY], a
 
 ; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0) (E-0118)
-; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, Func_0A1_5591_Case00)
+; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, SetSpriteYFromWC946_Case00)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawMetaSpriteSet08::
 Func_0A1_5639:: ; address name

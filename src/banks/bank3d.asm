@@ -1,11 +1,13 @@
 SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
     db $3D
 
-; 1 call site from 1 routine (e.g. Func_03A_5383)
+; only called from DrawEffectSpriteForWD801Range (E-0047)
+; 1 call site from 1 routine (e.g. DrawEffectSpriteForWD801Range)
 ; reads: wD801, wD890, wBattleTarget, wD804, wDAB7
 ; writes: wD871, wD868
 ; points at: wD871, wD868, hSpriteOriginX
-Func_03D_4001::
+DrawEffectSpriteForWD801Range_Sub01::
+Func_03D_4001:: ; address name
     ld a, [wD801]
     cp a, $2C
     jr nz, DrawEffectSpriteAtWD804_Bank3D
@@ -47,7 +49,7 @@ Jump_03D_403E::
     farcall Func_03A_4A3A
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
-; 2 call sites from 1 routine (e.g. Func_03D_4001)
+; 2 call sites from 1 routine (e.g. DrawEffectSpriteForWD801Range_Sub01)
 ; reads: wD804, wD801, wDAB7
 ; points at: hSpriteOriginX
 DrawEffectSpriteAtWD804_Bank3D::

@@ -1652,11 +1652,11 @@ Func_001_4F80:: ; address name
     ld a, [wCFF4]
     ld hl, vBGMap0 + $AF
     ld bc, $0100
-    call Func_001_53DC
+    call WriteDecimalByteTiles_Bank01
     ld a, [wCFF5]
     ld hl, vBGMap0 + $CF
     ld bc, $0100
-    call Func_001_53DC
+    call WriteDecimalByteTiles_Bank01
     ld a, [wCFF6]
     ld e, a
     ld a, [wCFF7]
@@ -1702,19 +1702,19 @@ Func_001_4F80:: ; address name
     ld a, [wD002]
     ld hl, vBGMap0 + $1AF
     ld bc, $0100
-    call Func_001_53DC
+    call WriteDecimalByteTiles_Bank01
     ld a, [wD003]
     ld hl, vBGMap0 + $1CF
     ld bc, $0100
-    call Func_001_53DC
+    call WriteDecimalByteTiles_Bank01
     ld a, [wD004]
     ld hl, vBGMap0 + $1EF
     ld bc, $0100
-    call Func_001_53DC
+    call WriteDecimalByteTiles_Bank01
     ld a, [wD005]
     ld hl, vBGMap0 + $20F
     ld bc, $0100
-    call Func_001_53DC
+    call WriteDecimalByteTiles_Bank01
 
 Jump_001_50EC::
     ret
@@ -1786,7 +1786,7 @@ Jump_001_512D::
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $90
     ld bc, $0100
-    call Func_001_53DC
+    call WriteDecimalByteTiles_Bank01
     ld a, $04
     ld [wStringCategory], a
     ld a, [wRecordBuffer]
@@ -2154,8 +2154,10 @@ Jump_001_53CC::
     ei
     ret
 
+; writes A as decimal digit tiles at HL (three digits, with tile C for absent leading digits) (E-0124)
 ; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, DebugSkillViewer_Update)
-Func_001_53DC::
+WriteDecimalByteTiles_Bank01::
+Func_001_53DC:: ; address name
     cp a, $64
     jr nc, Jump_001_53EE
     call WriteTileCAtHL
@@ -2184,7 +2186,7 @@ Jump_001_5400::
     ret
 
 ; D = A / E and A = A mod E by repeated subtraction (E-0122)
-; 2 call sites from 1 routine (e.g. Func_001_53DC)
+; 2 call sites from 1 routine (e.g. WriteDecimalByteTiles_Bank01)
 DivModAByE_Bank01::
 Func_001_5405:: ; address name
     ld d, $FF
@@ -2197,7 +2199,7 @@ Jump_001_5407::
     ret
 
 ; writes tile D + B at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
-; 5 call sites from 3 routines (e.g. Func_001_53DC, DebugShowMonsterRecord_Sub02, WriteHexByteTilesAtHL)
+; 5 call sites from 3 routines (e.g. WriteDecimalByteTiles_Bank01, DebugShowMonsterRecord_Sub02, WriteHexByteTilesAtHL)
 WriteTileDPlusBAtHL::
 Func_001_540D:: ; address name
     push af
@@ -2210,7 +2212,7 @@ Func_001_540D:: ; address name
     ret
 
 ; writes tile C at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
-; 2 call sites from 1 routine (e.g. Func_001_53DC)
+; 2 call sites from 1 routine (e.g. WriteDecimalByteTiles_Bank01)
 WriteTileCAtHL::
 Func_001_5417:: ; address name
     push af
@@ -3537,7 +3539,7 @@ Jump_001_5C5B::
     ld a, [wC5FD]
     and a, $7F
     ld [wCC42], a
-    farcall Func_060_6CD1
+    farcall LoadWCD07RecordFromSRAMSlotWCC42
     ld a, $80
     ld [wCC44], a
     xor a, a
@@ -4679,15 +4681,15 @@ Jump_001_645E::
     ld a, [wC5FB]
     bit 7, a
     jr nz, Jump_001_64B2
-    farcall Func_025_4001
+    farcall DrawMetaSpriteSet_Bank25
     ret
 
 Jump_001_64B2::
-    farcall Func_026_4001
+    farcall DrawMetaSpriteSet_Bank26
     ret
 
 Jump_001_64B9::
-    farcall Func_027_4001
+    farcall DrawMetaSpriteSet_Bank27
     ret
 
 ; update for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
@@ -5073,7 +5075,7 @@ Jump_001_6764::
     inc de
     inc de
     inc de
-    call Func_001_6857
+    call ClampDebugValueToTableLimit
     jr Jump_001_679F
 
 Jump_001_679B::
@@ -5104,7 +5106,7 @@ Jump_001_67A4::
     dec de
     dec de
     dec de
-    call Func_001_6857
+    call ClampDebugValueToTableLimit
     jr Jump_001_67C4
 
 Jump_001_67C0::
@@ -5213,9 +5215,11 @@ Jump_001_6852::
     ld [hl], d
     ret
 
+; clamps the word DE to 0 .. Data_001_68EB[wC46B] (negative becomes the limit) and stores it at HL (E-0124)
 ; 2 call sites from 1 routine (e.g. Func_001_66AD)
 ; reads: wC46B
-Func_001_6857::
+ClampDebugValueToTableLimit::
+Func_001_6857:: ; address name
     push hl
     ld a, [wC46B]
     ld hl, Data_001_68EB
@@ -5699,7 +5703,7 @@ Jump_001_6BE2::
     xor a, a
     ld [rRAMB], a
     push bc
-    call Func_001_6C1F
+    call PickRandomMonsterSkipping7ETo82
     pop bc
     xor a, a
     ld [rRAMG], a
@@ -5729,9 +5733,11 @@ Jump_001_6C14::
     ld [rRAMG], a
     ret
 
+; draws random ids until one is non-zero and not $7E-$82, then creates that record (Func_001_6E82) (E-0124)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01_Sub01)
 ; reads: wC5E7, wC5E8
-Func_001_6C1F::
+PickRandomMonsterSkipping7ETo82::
+Func_001_6C1F:: ; address name
     call NextTableByte
     ld a, [wC5E7]
     ld e, a
@@ -5739,26 +5745,28 @@ Func_001_6C1F::
     or a, e
     ld e, a
     or a, a
-    jr z, Func_001_6C1F
+    jr z, PickRandomMonsterSkipping7ETo82
     cp a, $7E
-    jr z, Func_001_6C1F
+    jr z, PickRandomMonsterSkipping7ETo82
     cp a, $7F
-    jr z, Func_001_6C1F
+    jr z, PickRandomMonsterSkipping7ETo82
     cp a, $80
-    jr z, Func_001_6C1F
+    jr z, PickRandomMonsterSkipping7ETo82
     cp a, $81
-    jr z, Func_001_6C1F
+    jr z, PickRandomMonsterSkipping7ETo82
     cp a, $82
-    jr z, Func_001_6C1F
+    jr z, PickRandomMonsterSkipping7ETo82
     ld d, $00
-    call Func_001_6E82
+    call PickRandomMonsterSkipping7ETo82_Sub01
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_6E91)
+; only called from CreateMonsterRecordOfKindHFFC7_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01)
 ; reads: hFFC9, wD868, wRecordBuffer, wCFED, wD869, wC5E8, wRecordBufferData, wCFEF, ...
 ; writes: wMonsterId, wCFE7, wC9DC, wSpeciesIdLo, wSpeciesIdHi, wD09D, wD09E, wD09F, ...
 ; points at: wC60C, wD01A
-Func_001_6C48::
+CreateMonsterRecordOfKindHFFC7_Sub01_Sub01::
+Func_001_6C48:: ; address name
     ldh a, [hFFC9]
     push af
     ld a, e
@@ -5977,7 +5985,7 @@ Jump_001_6D33::
     ld [wD09F], a
     ld a, h
     ld [wD0A0], a
-    farcall Func_014_7F9C
+    farcall CreateMonsterRecordOfKindHFFC7_Sub01_Sub01_Sub01
     jr Jump_001_6DF4
 
 Jump_001_6DD9::
@@ -6021,7 +6029,7 @@ Jump_001_6DF4::
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
-; 3 call sites from 1 routine (e.g. Func_001_6C48)
+; 3 call sites from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
 CopyBBytesDEToHL_Bank01::
 Func_001_6E25:: ; address name
     ld a, [de]
@@ -6032,7 +6040,7 @@ Func_001_6E25:: ; address name
     ret
 
 ; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_001_6C48)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
 FillBBytesAtHL_Bank01::
 Func_001_6E2C:: ; address name
     ld [hl+], a
@@ -6041,7 +6049,7 @@ Func_001_6E2C:: ; address name
     ret
 
 ; writes '???' ($98 x 3), seven $F0 bytes and a 0 at HL (E-0122)
-; 4 call sites from 1 routine (e.g. Func_001_6C48)
+; 4 call sites from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
 WriteUnknownNamePlaceholder_Bank01::
 Func_001_6E31:: ; address name
     ld a, $98
@@ -6061,10 +6069,12 @@ Jump_001_6E3E::
     ld [hl+], a
     ret
 
+; with SRAM enabled creates a record from the template Data_001_7098[hFFC7] (wD869 = hFFC7, level hFFC8); kinds 1 and 2 also set field $6E = 1 (E-0124)
 ; 10 call sites from 10 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, AddRecordWD7F5AsFollower, ScriptCommand2A_Run_Case10, ...)
 ; reads: hFFC7, hFFC8, wD868
 ; writes: rRAMG, rRAMB, wD869, wD86A
-Func_001_6E46::
+CreateMonsterRecordOfKindHFFC7::
+Func_001_6E46:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -6080,7 +6090,7 @@ Func_001_6E46::
     xor a, a
     ld [wD86A], a
     ldh a, [hFFC8]
-    call Func_001_6E91
+    call CreateMonsterRecordOfKindHFFC7_Sub01
     ldh a, [hFFC7]
     cp a, $01
     jr z, Jump_001_6E73
@@ -6098,10 +6108,12 @@ Jump_001_6E7D::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_6C1F)
+; only called from PickRandomMonsterSkipping7ETo82 (E-0047)
+; 1 call site from 1 routine (e.g. PickRandomMonsterSkipping7ETo82)
 ; reads: wD868
 ; writes: wD869, wD86A, hFFC9, wD868
-Func_001_6E82::
+PickRandomMonsterSkipping7ETo82_Sub01::
+Func_001_6E82:: ; address name
     ld a, $FF
     ld [wD869], a
     ld [wD86A], a
@@ -6109,11 +6121,13 @@ Func_001_6E82::
     ldh [hFFC9], a
     ld a, [wD868]
 
-; 1 call site from 1 routine (e.g. Func_001_6E46)
+; only called from CreateMonsterRecordOfKindHFFC7 (E-0047)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7)
 ; writes: wD868
-Func_001_6E91::
+CreateMonsterRecordOfKindHFFC7_Sub01::
+Func_001_6E91:: ; address name
     ld [wD868], a
-    call Func_001_6C48
+    call CreateMonsterRecordOfKindHFFC7_Sub01_Sub01
     ret
 
 ; only called from DebugBattleSetup_Update_Shared01 (E-0047)

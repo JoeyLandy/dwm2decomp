@@ -75,18 +75,20 @@ Jump_0A3_406F::
 ; points at: wDA5B
 RunA3414FAndMarkWDA5B3::
 Func_0A3_413F:: ; address name
-    call Func_0A3_414F
+    call ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $03
     ret
 
+; hFFC6 = the slot for the actor through its side's wC953 formation (Data_0A3_4181), $FF when none (E-0124)
 ; 16 call sites from 13 routines (e.g. RunA3414FAndMarkWDA5B3, Func_032_4F0A, Func_032_514C, Func_032_5397, ...)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wC953
-Func_0A3_414F::
+ActorFormationSlotToHFFC6::
+Func_0A3_414F:: ; address name
     push bc
     ld a, [wBattleActor]
     and a, $03
@@ -647,10 +649,12 @@ Jump_0A3_49EE::
     ldh [hFFC6], a
     ret
 
+; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wDA5B[target] = 3 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
 ; reads: wBattleTarget
 ; points at: wBattleActionChoice, wDA5B
-Func_0A3_4A02::
+CancelTargetActionUnlessSpecial::
+Func_0A3_4A02:: ; address name
     ld a, [wBattleTarget]
     add a, a
     ld hl, wBattleActionChoice
@@ -682,9 +686,11 @@ Jump_0A3_4A2B::
     ld [hl], $03
     ret
 
+; removes the first byte equal to C from the 8-byte queue at wD895, shifting later bytes down and filling with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD895
-Func_0A3_4A39:: ; heuristic: follows a terminator; C0
+RemoveCFromWD895Queue_A3:: ; heuristic: follows a terminator; C0
+Func_0A3_4A39:: ; address name
     push de
     ld hl, wD895
     ld b, $08

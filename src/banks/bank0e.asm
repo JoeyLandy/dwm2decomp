@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. Func_037_4AFD_Case04_Case16, Func_037_4AFD_Case0E_Case08, Func_0F1_4AD0_Case04_Case16, Func_0F1_4AD0_Case0E_Case08, ...)
+; 6 call sites from 6 routines (e.g. Func_037_4AFD_Case04_Case16, Func_037_4AFD_Case0E_Case08, RunWD780StateWhenNotFading_F1_Case04_Case16, RunWD780StateWhenNotFading_F1_Case0E_Case08, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -1539,10 +1539,10 @@ Jump_00E_59BD::
 Jump_00E_59C4::
     ld hl, wCB27
     ld [hl], a
-    call Func_00E_61C1
+    call RollWCADEFromSpeciesFlag
     call Func_00E_5EE8
     call Func_00E_5CB2
-    call Func_00E_5AA4
+    call BuildWCB0CCandidateList
     ld a, [wCFA8]
     inc a
     ld [wCFA8], a
@@ -1705,9 +1705,11 @@ Data_00E_5A8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $1E, $50, $1E, $50, $0A, $32, $0A, $32, $0A, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
 
+; fills wCB04 with $FF, appends species bytes 8-10 of wCADB, wC991 and wCA36 and eight bytes each from wC9BA and wCA5F to wCB0C, maps them through Data_00E_5B03 and compacts the list (E-0124)
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; points at: wCB04, wCADB, wCB0C, wC991, wCA36, wC9BA, wCA5F
-Func_00E_5AA4::
+BuildWCB0CCandidateList::
+Func_00E_5AA4:: ; address name
     ld hl, wCB04
     ld c, $08
 
@@ -1734,15 +1736,17 @@ Jump_00E_5AA9::
     call CopyEightBytesDEToHL
     ld de, wCA5F
     call CopyEightBytesDEToHL
-    call Func_00E_5AEA
-    call Func_00E_5BCC
-    call Func_00E_5BB3
-    call Func_00E_5BCC
+    call MapWCB0CEntriesThroughTable5B03
+    call BuildWCB0CCandidateList_Sub01
+    call CompactWCB0CRemovingFF
+    call BuildWCB0CCandidateList_Sub01
     ret
 
-; 1 call site from 1 routine (e.g. Func_00E_5AA4)
+; replaces each of the $19 bytes at wCB0C (other than $FF) by Data_00E_5B03[byte] (E-0124)
+; 1 call site from 1 routine (e.g. BuildWCB0CCandidateList)
 ; points at: wCB0C
-Func_00E_5AEA::
+MapWCB0CEntriesThroughTable5B03::
+Func_00E_5AEA:: ; address name
     ld hl, wCB0C
     ld c, $19
 
@@ -1769,9 +1773,11 @@ Jump_00E_5AFE::
 Data_00E_5B03:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $039B03, $B0
 
-; 1 call site from 1 routine (e.g. Func_00E_5AA4)
+; moves the non-$FF bytes of the $19-byte list at wCB0C to its front (E-0124)
+; 1 call site from 1 routine (e.g. BuildWCB0CCandidateList)
 ; points at: wCB0C
-Func_00E_5BB3::
+CompactWCB0CRemovingFF::
+Func_00E_5BB3:: ; address name
     ld hl, wCB0C
     ld de, wCB0C
     ld c, $19
@@ -1793,9 +1799,11 @@ Jump_00E_5BC5::
     jr nz, Jump_00E_5BBB
     ret
 
-; 2 call sites from 1 routine (e.g. Func_00E_5AA4)
+; only called from BuildWCB0CCandidateList (E-0047)
+; 2 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
 ; points at: wCB0C
-Func_00E_5BCC::
+BuildWCB0CCandidateList_Sub01::
+Func_00E_5BCC:: ; address name
     ld hl, wCB0C
     ld c, $00
 
@@ -1847,7 +1855,7 @@ Jump_00E_5BF8::
     ret
 
 ; copies 8 bytes from DE to HL (E-0122)
-; 2 call sites from 1 routine (e.g. Func_00E_5AA4)
+; 2 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
 CopyEightBytesDEToHL::
 Func_00E_5C00:: ; address name
     ld c, $08
@@ -1861,7 +1869,7 @@ Jump_00E_5C02::
     ret
 
 ; stores B, C and A at HL onward; HL += 3; AF kept (E-0114)
-; 3 call sites from 1 routine (e.g. Func_00E_5AA4)
+; 3 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
 StoreBCAAtHL::
 Func_00E_5C09:: ; address name
     push af
@@ -1874,7 +1882,7 @@ Func_00E_5C09:: ; address name
     ret
 
 ; monster id = the word at HL: LoadSpeciesRecord, then B = species byte 8, C = byte 9, A = byte 10 (wD010-wD012) (E-0117)
-; 3 call sites from 1 routine (e.g. Func_00E_5AA4)
+; 3 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
 ; reads: wD010, wD011, wD012
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 LoadSpeciesBytes8To10FromHL::
@@ -2000,7 +2008,7 @@ Jump_00E_5CCD::
     cp a, $02
     jr z, Jump_00E_5CF4
     ld b, $03
-    call Func_00E_5DAF
+    call SumFunc5DCDOfWC9F9AndWCA9E
     ld a, b
     cp a, $FF
     jr z, Jump_00E_5D01
@@ -2009,7 +2017,7 @@ Jump_00E_5CCD::
 
 Jump_00E_5CF4::
     ld b, $05
-    call Func_00E_5DAF
+    call SumFunc5DCDOfWC9F9AndWCA9E
     ld a, b
     cp a, $FF
     jr z, Jump_00E_5D01
@@ -2060,7 +2068,7 @@ Jump_00E_5D20::
     ld a, $05
 
 Jump_00E_5D36::
-    call Func_00E_5D4E
+    call RollWCB3DChanceOrIncWD7F5
 
 Jump_00E_5D39::
     pop bc
@@ -2076,16 +2084,18 @@ Jump_00E_5D3F::
 
 Jump_00E_5D43::
     ld a, $0A
-    call Func_00E_5D4E
+    call RollWCB3DChanceOrIncWD7F5
     cp a, $FF
     jr z, Jump_00E_5D39
     jr Jump_00E_5D3F
 
+; chance = A * wCB3D; if below 100 and a random value is below it, A = $FF; otherwise wD7F5 += 1 and A = 0 (E-0124)
 ; 3 call sites from 2 routines (e.g. Func_00E_5D16, Func_00E_5D77)
 ; reads: wD7F5
 ; writes: wD7F5
 ; points at: wCB3D
-Func_00E_5D4E::
+RollWCB3DChanceOrIncWD7F5::
+Func_00E_5D4E:: ; address name
     ld c, a
     ld hl, wCB3D
     ld a, [hl]
@@ -2134,7 +2144,7 @@ Jump_00E_5D81::
     cp a, $05
     jr z, Jump_00E_5D8D
     ld a, $02
-    call Func_00E_5D4E
+    call RollWCB3DChanceOrIncWD7F5
     pop bc
     ret
 
@@ -2163,16 +2173,18 @@ Jump_00E_5DA5::
     pop bc
     ret
 
+; B = Func_00E_5DCD(wC9F9) + Func_00E_5DCD(wCA9E) when both are valid and the sum is at least B; otherwise B = $FF (E-0124)
 ; 2 call sites from 1 routine (e.g. Func_00E_5CB2)
 ; points at: wC9F9, wCA9E
-Func_00E_5DAF::
+SumFunc5DCDOfWC9F9AndWCA9E::
+Func_00E_5DAF:: ; address name
     ld hl, wC9F9
-    call Func_00E_5DCD
+    call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
     jr z, Jump_00E_5DCA
     ld e, a
     ld hl, wCA9E
-    call Func_00E_5DCD
+    call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
     jr z, Jump_00E_5DCA
     add a, e
@@ -2185,8 +2197,10 @@ Jump_00E_5DCA::
     ld b, $FF
     ret
 
-; 2 call sites from 1 routine (e.g. Func_00E_5DAF)
-Func_00E_5DCD::
+; only called from SumFunc5DCDOfWC9F9AndWCA9E (E-0047)
+; 2 call sites from 1 routine (e.g. SumFunc5DCDOfWC9F9AndWCA9E)
+SumFunc5DCDOfWC9F9AndWCA9E_Sub01::
+Func_00E_5DCD:: ; address name
     push hl
     ld a, c
     add_a_to_hl
@@ -2505,7 +2519,7 @@ Jump_00E_5F7C::
 Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
-; 2 call sites from 2 routines (e.g. Func_00E_5EE8, Func_0F1_4AD0_Case04_Case16)
+; 2 call sites from 2 routines (e.g. Func_00E_5EE8, RunWD780StateWhenNotFading_F1_Case04_Case16)
 ; writes: wD7F5
 ; points at: wC986, wCA2B
 Func_00E_5F91::
@@ -2639,7 +2653,7 @@ Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $30, $0C, $03
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0117)
-; 3 call sites from 3 routines (e.g. Func_00E_5D4E, Func_00E_5D77, Func_00E_61C1)
+; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncWD7F5, Func_00E_5D77, RollWCADEFromSpeciesFlag)
 ; reads: wC5E7
 RandomModulo29::
 Func_00E_611B:: ; address name
@@ -2680,7 +2694,7 @@ Func_00E_6138::
     ld [wD09D], a
     ld a, [wD7F4]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     ret
 
 ; 5 call sites from 4 routines (e.g. Func_00E_5688, Func_00E_6138, Func_001_57E1, ScriptCommandF6_Run_Case10_Case06_Sub02)
@@ -2767,11 +2781,13 @@ Jump_00E_61BD::
     ld [wD7F5], a
     ret
 
+; loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_00E_5688, ScriptCommandF3_Run_Case05_Case0E_Sub01)
 ; reads: wCADB, wCADC, wD009
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wCADE
-Func_00E_61C1::
+RollWCADEFromSpeciesFlag::
+Func_00E_61C1:: ; address name
     ld a, [wCADB]
     ld [wSpeciesIdLo], a
     ld a, [wCADC]

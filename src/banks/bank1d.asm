@@ -183,19 +183,19 @@ Func_01D_45AB:: ; address name
     add hl, de
     ld bc, $0401
     ld de, Data_01D_4603
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
     call BGMapAddressAtScroll_Bank1D
     ld de, $00A2
     add hl, de
     ld bc, $0401
     ld de, Data_01D_4607
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
     call BGMapAddressAtScroll_Bank1D
     ld de, $00E2
     add hl, de
     ld bc, $0401
     ld de, Data_01D_460B
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
     ret
 
 Data_01D_4603:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -625,7 +625,7 @@ Func_01D_4883:: ; address name
     ld bc, $0C09
     ld de, Data_01D_48FC
     push hl
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
     jr Jump_01D_48B6
 
 Jump_01D_48A5::
@@ -635,7 +635,7 @@ Jump_01D_48A5::
     ld bc, $0C09
     ld de, Data_01D_4968
     push hl
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
 
 Jump_01D_48B6::
     pop hl
@@ -1007,7 +1007,7 @@ Jump_01D_4B78::
     add hl, de
     ld bc, $0703
     ld de, wD788
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
     ld a, [wIsCGB]
     and a, a
     jr nz, Jump_01D_4BA6
@@ -2180,7 +2180,7 @@ Jump_01D_5323::
     add hl, de
     ld de, wD788
     ld bc, $0903
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
     ld a, [wIsCGB]
     and a, a
     jr nz, Jump_01D_5364
@@ -2272,7 +2272,7 @@ Jump_01D_53C5::
     add hl, de
     ld de, wD788
     ld bc, $0802
-    call Func_01D_5A32
+    call ClearRectSetWC554Plus21_Bank1D
     ld a, [wD780]
     cp a, $03
     jp nz, Jump_01D_5438
@@ -3204,9 +3204,11 @@ Jump_01D_59B6::
     xor a, a
     ret
 
+; A = 0 when one of the 100 two-byte entries at wC635 has a non-zero first byte, else $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC635
-Func_01D_59B9:: ; heuristic: follows a terminator; C0
+WC635HasNonZeroEntry:: ; heuristic: follows a terminator; C0
+Func_01D_59B9:: ; address name
     ld hl, wC635
     ld c, $00
 
@@ -3298,9 +3300,11 @@ Func_01D_59F0:: ; address name
     ldh [c], a
     ret
 
+; clears a rectangle (Func_01D_5A4F with A = 0) and sets wC554 = HL + $21 (E-0124)
 ; 8 call sites from 5 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, ScriptCommandE5_Run_Case03_Case07_Sub01, ScriptCommandE5_Run_Case03_Case0A_Sub01, ScriptCommandE5_Run_Case03_Case14_Sub01, ...)
 ; writes: wC554, wC555
-Func_01D_5A32::
+ClearRectSetWC554Plus21_Bank1D::
+Func_01D_5A32:: ; address name
     push de
     push bc
     push hl
@@ -3323,7 +3327,7 @@ Func_01D_5A32::
     pop de
     ret
 
-; 3 call sites from 2 routines (e.g. Func_01D_5A32, ClearRectBothBanksSetWC554Plus1C1_Bank1D)
+; 3 call sites from 2 routines (e.g. ClearRectSetWC554Plus21_Bank1D, ClearRectBothBanksSetWC554Plus1C1_Bank1D)
 Func_01D_5A4F::
     push hl
     push bc
@@ -5053,7 +5057,7 @@ Jump_01D_64B2::
 Data_01D_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $28, $01, $68, $01
 
-; 2 call sites from 2 routines (e.g. ScriptCommandE8_Run_Case0D_Case07, Func_0F0_5DE8_Case07)
+; 2 call sites from 2 routines (e.g. ScriptCommandE8_Run_Case0D_Case07, RunWD781Step_F0_5DE8_Case07)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7A9, wD7AB
 ; writes: wD7AF, wMenuInputResult, wD7AB
 Func_01D_64D6::
@@ -5622,7 +5626,7 @@ Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E6, $00, $26, $01, $66, $01, $A6, $01, $A4, $00, $E4, $00, $24, $01, $64, $01
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
-; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_Sub01, ScriptCommandE8_Run_Case0D_Case04, ScriptCommandE8_Run_Case09_Case1E, Func_0F0_5DE8_Case04)
+; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_Sub01, ScriptCommandE8_Run_Case0D_Case04, ScriptCommandE8_Run_Case09_Case1E, RunWD781Step_F0_5DE8_Case04)
 ; reads: wD7F1, wD7F2, hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wD7F3
@@ -5979,15 +5983,15 @@ Jump_01D_69F4::
     ld a, [wD7F1]
     bit 7, a
     jr nz, Jump_01D_6A28
-    farcall Func_025_4001
+    farcall DrawMetaSpriteSet_Bank25
     ret
 
 Jump_01D_6A28::
-    farcall Func_026_4001
+    farcall DrawMetaSpriteSet_Bank26
     ret
 
 Jump_01D_6A2F::
-    farcall Func_027_4001
+    farcall DrawMetaSpriteSet_Bank27
     ret
 
 ; only called from DrawThreeMetaSpritePartsFor5050 (E-0047)
@@ -6008,10 +6012,12 @@ DrawMetaSpritePartC0::
 Func_01D_6A3D:: ; address name
     ld c, $00
 
-; 1 call site from 1 routine (e.g. Func_015_6403)
+; only called from DrawSpritePart9000At88_28 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSpritePart9000At88_28)
 ; reads: wD7F6, wFrameCounterLo, wD7F3, wD7F4, hScrollX, hScrollXHi, wD7F5, hScrollY, ...
 ; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSetIndex
-Func_01D_6A3F::
+DrawSpritePart9000At88_28_Sub01::
+Func_01D_6A3F:: ; address name
     ld a, [wD7F6]
     ldh [hSpriteAttrXor], a
     ld a, c
@@ -6057,15 +6063,15 @@ Jump_01D_6A59::
     ld a, [wD7F1]
     bit 7, a
     jr nz, Jump_01D_6A97
-    farcall Func_025_4001
+    farcall DrawMetaSpriteSet_Bank25
     ret
 
 Jump_01D_6A97::
-    farcall Func_026_4001
+    farcall DrawMetaSpriteSet_Bank26
     ret
 
 Jump_01D_6A9E::
-    farcall Func_027_4001
+    farcall DrawMetaSpriteSet_Bank27
     ret
 
 ; 14 call sites from 10 routines (e.g. ScriptCommandEB_Run_Case06_Case04, ScriptCommandED_Run_Case04_Case03, ScriptCommandEF_Run_Bank1B_Case0E_Case02, ScriptCommandE8_Run_Case06_Case08, ...)
@@ -6462,7 +6468,7 @@ Jump_01D_6CF9::
     ret
 
 ; copies tiles from Data_01D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank1D) (E-0118)
-; 4 call sites from 4 routines (e.g. ScriptCommandE8_Run_Case09_Case1B_Case00, ScriptCommandE8_Run_Case0D_Case04, ScriptCommandE8_Run_Case08_Case1B, Func_0F0_5DE8_Case04)
+; 4 call sites from 4 routines (e.g. ScriptCommandE8_Run_Case09_Case1B_Case00, ScriptCommandE8_Run_Case0D_Case04, ScriptCommandE8_Run_Case08_Case1B, RunWD781Step_F0_5DE8_Case04)
 UploadTilesFromData6D20::
 Func_01D_6D07:: ; address name
     ld hl, Data_01D_6D20

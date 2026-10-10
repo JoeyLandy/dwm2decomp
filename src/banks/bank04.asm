@@ -5,7 +5,7 @@ SECTION "Bank 04", ROMX[$4000], BANK[$04]
 ; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case03, ...)
 FieldStateCommonUpdate::
 Func_004_4001:: ; address name
-    call Func_004_4BB0
+    call AdvanceHFF99AndRunHFF8BMode
     call Func_004_44CE
     ret
 
@@ -632,7 +632,7 @@ Func_004_44CE::
     ld a, [wSpriteSlotCount]
     or a, a
     ret z
-    call Func_004_456D
+    call UpdateSpriteSlots
     ld a, [wSpriteSlotCount]
     ld b, a
     ld hl, wSpriteSlots
@@ -700,15 +700,15 @@ Jump_004_4526::
     ld a, [hl]
     bit 7, a
     jr nz, Jump_004_4545
-    farcall Func_025_4001
+    farcall DrawMetaSpriteSet_Bank25
     jr Jump_004_455F
 
 Jump_004_4545::
-    farcall Func_026_4001
+    farcall DrawMetaSpriteSet_Bank26
     jr Jump_004_455F
 
 Jump_004_454D::
-    farcall Func_027_4001
+    farcall DrawMetaSpriteSet_Bank27
     jr Jump_004_455F
 
 Jump_004_4555::
@@ -726,10 +726,12 @@ Jump_004_455F::
     jp nz, Jump_004_44E3
     ret
 
+; for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for its type byte (jump table of six) (E-0124)
 ; 1 call site from 1 routine (e.g. Func_004_44CE)
 ; reads: wSpriteSlotCount
 ; points at: wSpriteSlots
-Func_004_456D::
+UpdateSpriteSlots::
+Func_004_456D:: ; address name
     ld a, [wSpriteSlotCount]
     ld b, a
     ld hl, wSpriteSlots
@@ -740,12 +742,12 @@ Jump_004_4574::
     push hl
     ld a, [hl]
     rst $00
-    dw Func_004_456D_Case00
-    dw Func_004_456D_Case01
-    dw Func_004_456D_Case02
-    dw Func_004_456D_Case03
-    dw Func_004_456D_Case04
-    dw Func_004_456D_Case05
+    dw UpdateSpriteSlots_Case00
+    dw UpdateSpriteSlots_Case01
+    dw UpdateSpriteSlots_Case02
+    dw UpdateSpriteSlots_Case03
+    dw UpdateSpriteSlots_Case04
+    dw UpdateSpriteSlots_Case05
 
 Jump_004_4585::
     pop hl
@@ -756,9 +758,9 @@ Jump_004_4585::
     jr nz, Jump_004_4574
     ret
 
-; entry 0 of the `rst $00` table in Func_004_456D
+; entry 0 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_456D_Case00::
+UpdateSpriteSlots_Case00::
 Jump_004_4592:: ; address name
     pop hl
     ld a, $0D
@@ -842,10 +844,10 @@ Jump_004_45EC::
     jp nz, Jump_004_4574
     ret
 
-; entry 2 of the `rst $00` table in Func_004_456D
+; entry 2 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptRunning, wC5E7
-Func_004_456D_Case02::
+UpdateSpriteSlots_Case02::
 Jump_004_4606:: ; address name
     pop hl
     push hl
@@ -961,7 +963,7 @@ Jump_004_465C::
     call Func_004_4904
     cp a, $01
     jr z, Jump_004_46F7
-    call Func_004_49B0
+    call UpdateSpriteSlots_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1003,7 +1005,7 @@ Jump_004_46B9::
     call Func_004_4904
     cp a, $01
     jr z, Jump_004_46F7
-    call Func_004_49B0
+    call UpdateSpriteSlots_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1027,16 +1029,16 @@ Jump_004_46F8::
     ld a, [hl]
     jp Jump_004_45A7
 
-; entry 1 of the `rst $00` table in Func_004_456D
+; entry 1 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_456D_Case01::
+UpdateSpriteSlots_Case01::
 Jump_004_4704:: ; address name
     ret
 
-; entry 3 of the `rst $00` table in Func_004_456D
+; entry 3 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptRunning, wC5E7
-Func_004_456D_Case03::
+UpdateSpriteSlots_Case03::
 Jump_004_4705:: ; address name
     pop hl
     push hl
@@ -1172,7 +1174,7 @@ Jump_004_4784::
     call RunWC935Type0AOrOther
     cp a, $01
     jp z, Jump_004_4845
-    call Func_004_49B0
+    call UpdateSpriteSlots_Shared01
     or a, a
     jp nz, Jump_004_4845
     pop hl
@@ -1200,7 +1202,7 @@ Jump_004_47CD::
     call RunWC935Type0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call Func_004_49B0
+    call UpdateSpriteSlots_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1230,7 +1232,7 @@ Jump_004_47F4::
     call RunWC935Type0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call Func_004_49B0
+    call UpdateSpriteSlots_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1260,7 +1262,7 @@ Jump_004_481C::
     call RunWC935Type0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call Func_004_49B0
+    call UpdateSpriteSlots_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1285,7 +1287,7 @@ Jump_004_4846::
     jp Jump_004_45A7
 
 ; runs Func_004_495A when wC935 & $0F = $0A, else Func_004_4904 (E-0122)
-; 4 call sites from 1 routine (e.g. Func_004_456D_Case03)
+; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_Case03)
 ; reads: wC935
 RunWC935Type0AOrOther::
 Func_004_4852:: ; address name
@@ -1300,11 +1302,11 @@ Jump_004_485F::
     call RunWC935Type0AOrOther_Sub01
     ret
 
-; entry 4 of the `rst $00` table in Func_004_456D
+; entry 4 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_004_456D_Case04::
+UpdateSpriteSlots_Case04::
 Jump_004_4863:: ; address name
     ld hl, $48D6
     ld a, l
@@ -1313,11 +1315,11 @@ Jump_004_4863:: ; address name
     ldh [hFFC7], a
     jr Jump_004_4877
 
-; entry 5 of the `rst $00` table in Func_004_456D
+; entry 5 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_004_456D_Case05::
+UpdateSpriteSlots_Case05::
 Jump_004_486E:: ; address name
     ld hl, $48FA
     ld a, l
@@ -1407,7 +1409,7 @@ Jump_004_48CD::
     db $00, $10, $01, $0E, $02, $0E, $01, $0E, $02, $0E, $00, $20, $06, $0E, $07, $20
     db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
 
-; 3 call sites from 2 routines (e.g. RunWC935Type0AOrOther, Func_004_456D_Case02)
+; 3 call sites from 2 routines (e.g. RunWC935Type0AOrOther, UpdateSpriteSlots_Case02)
 ; reads: wMaxBlockingTile
 ; points at: wScreenTileBuffer, wC910
 Func_004_4904::
@@ -1541,11 +1543,13 @@ Jump_004_49AC::
     pop bc
     ret
 
-; 6 call sites from 2 routines (e.g. Func_004_456D_Case03, Func_004_456D_Case02)
+; only called from routines of UpdateSpriteSlots (E-0098)
+; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_Case03, UpdateSpriteSlots_Case02)
 ; reads: hPlayerX, hFFC7, hPlayerY, hFFC6, wC6FD
 ; writes: hFFC6, hFFC7
 ; points at: wC8F0
-Func_004_49B0::
+UpdateSpriteSlots_Shared01::
+Func_004_49B0:: ; address name
     push bc
     ld a, c
     swap a
@@ -1826,11 +1830,13 @@ Func_004_4B7E:: ; address name
     ld [wC527], a
     ret
 
+; unless bit 1 of hFF8C is set, hFF99 += 1 (+3 more with bit 2); then runs the routine for hFF8B (jump table of three) (E-0124)
 ; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_Case04)
 ; reads: hFF8C, hFF99, hFF8B
 ; writes: hFF99
 ; points at: hFF99
-Func_004_4BB0::
+AdvanceHFF99AndRunHFF8BMode::
+Func_004_4BB0:: ; address name
     ldh a, [hFF8C]
     bit 1, a
     jr nz, Jump_004_4BC6
@@ -1846,38 +1852,40 @@ Func_004_4BB0::
 Jump_004_4BC6::
     ldh a, [hFF8B]
     rst $00
-    dw Func_004_4BB0_Case00
-    dw Func_004_4BB0_Case01
-    dw Func_004_4BB0_Case02
+    dw AdvanceHFF99AndRunHFF8BMode_Case00
+    dw AdvanceHFF99AndRunHFF8BMode_Case01
+    dw AdvanceHFF99AndRunHFF8BMode_Case02
 
-; entry 0 of the `rst $00` table in Func_004_4BB0
+; entry 0 of the `rst $00` table in AdvanceHFF99AndRunHFF8BMode
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_4BB0_Case00::
+AdvanceHFF99AndRunHFF8BMode_Case00::
 Jump_004_4BCF:: ; address name
-    call Func_004_4C96
-    call Func_004_4D43
+    call AdvanceHFF99AndRunHFF8BMode_Shared01
+    call AdvanceHFF99AndRunHFF8BMode_Case00_Sub01
     ret
 
-; entry 1 of the `rst $00` table in Func_004_4BB0
+; entry 1 of the `rst $00` table in AdvanceHFF99AndRunHFF8BMode
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_4BB0_Case01::
+AdvanceHFF99AndRunHFF8BMode_Case01::
 Jump_004_4BD6:: ; address name
-    call Func_004_4C96
-    call Func_004_4C25
+    call AdvanceHFF99AndRunHFF8BMode_Shared01
+    call AdvanceHFF99AndRunHFF8BMode_Case01_Sub01
     ret
 
-; entry 2 of the `rst $00` table in Func_004_4BB0
+; entry 2 of the `rst $00` table in AdvanceHFF99AndRunHFF8BMode
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_4BB0_Case02::
+AdvanceHFF99AndRunHFF8BMode_Case02::
 Jump_004_4BDD:: ; address name
-    call Func_004_4C96
-    call Func_004_4BE4
+    call AdvanceHFF99AndRunHFF8BMode_Shared01
+    call AdvanceHFF99AndRunHFF8BMode_Case02_Sub01
     ret
 
-; 1 call site from 1 routine (e.g. Func_004_4BB0_Case02)
+; only called from AdvanceHFF99AndRunHFF8BMode_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. AdvanceHFF99AndRunHFF8BMode_Case02)
 ; reads: hSpriteOriginY, hSpriteOriginYHi, hSpriteAttrXor, hFF8C
 ; writes: hSpriteOriginY, hSpriteOriginYHi, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex
-Func_004_4BE4::
+AdvanceHFF99AndRunHFF8BMode_Case02_Sub01::
+Func_004_4BE4:: ; address name
     ldh a, [hSpriteOriginY]
     ld l, a
     ldh a, [hSpriteOriginYHi]
@@ -1912,10 +1920,12 @@ Jump_004_4C17::
     farcall DrawMetaSprite
     ret
 
-; 1 call site from 1 routine (e.g. Func_004_4BB0_Case01)
+; only called from AdvanceHFF99AndRunHFF8BMode_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. AdvanceHFF99AndRunHFF8BMode_Case01)
 ; reads: hFF8D, hFF8A, wC8F0, wC8F1, hFF99, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
-Func_004_4C25::
+AdvanceHFF99AndRunHFF8BMode_Case01_Sub01::
+Func_004_4C25:: ; address name
     ldh a, [hFF8D]
     bit 1, a
     ret nz
@@ -1932,7 +1942,7 @@ Func_004_4C25::
     ld b, a
     ld a, [wC8F1]
     ld c, a
-    call Func_004_4E0F
+    call AdvanceHFF99AndRunHFF8BMode_Shared02
     or a, a
     jr z, Jump_004_4C4E
     ld a, $02
@@ -1978,10 +1988,12 @@ Jump_004_4C5B::
     farcall DrawMetaSprite4008
     ret
 
-; 3 call sites from 3 routines (e.g. Func_004_4BB0_Case02, Func_004_4BB0_Case01, Func_004_4BB0_Case00)
+; only called from routines of AdvanceHFF99AndRunHFF8BMode (E-0098)
+; 3 call sites from 3 routines (e.g. AdvanceHFF99AndRunHFF8BMode_Case02, AdvanceHFF99AndRunHFF8BMode_Case01, AdvanceHFF99AndRunHFF8BMode_Case00)
 ; reads: hFF8D, hFF8A, hPlayerX, hPlayerY, hFF99, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
-Func_004_4C96::
+AdvanceHFF99AndRunHFF8BMode_Shared01::
+Func_004_4C96:: ; address name
     ldh a, [hFF8D]
     bit 0, a
     ret nz
@@ -1993,7 +2005,7 @@ Func_004_4C96::
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call Func_004_4E0F
+    call AdvanceHFF99AndRunHFF8BMode_Shared02
     or a, a
     jr z, Jump_004_4CB3
     ld a, $02
@@ -2078,22 +2090,24 @@ Jump_004_4D1D::
     ldh a, [hFF94]
     bit 7, a
     jr nz, Jump_004_4D35
-    farcall Func_025_4001
+    farcall DrawMetaSpriteSet_Bank25
     ret
 
 Jump_004_4D35::
-    farcall Func_026_4001
+    farcall DrawMetaSpriteSet_Bank26
     ret
 
 Jump_004_4D3C::
-    farcall Func_027_4001
+    farcall DrawMetaSpriteSet_Bank27
     ret
 
-; 1 call site from 1 routine (e.g. Func_004_4BB0_Case00)
+; only called from AdvanceHFF99AndRunHFF8BMode_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. AdvanceHFF99AndRunHFF8BMode_Case00)
 ; reads: wC6FD, hFFCF, hFF8D, hFF99, hFFC6, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hFFCF, hFFC6, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, ...
 ; points at: wFollowerRecords, wC701
-Func_004_4D43::
+AdvanceHFF99AndRunHFF8BMode_Case00_Sub01::
+Func_004_4D43:: ; address name
     ld a, $02
     ldh [hFFCF], a
     ld a, [wC6FD]
@@ -2125,7 +2139,7 @@ Jump_004_4D57::
     ld a, [hl-]
     ld c, a
     dec hl
-    call Func_004_4E0F
+    call AdvanceHFF99AndRunHFF8BMode_Shared02
     pop bc
     or a, a
     jr z, Jump_004_4D7C
@@ -2193,15 +2207,15 @@ Jump_004_4DCB::
     ld a, [de]
     bit 7, a
     jr nz, Jump_004_4DE4
-    farcall Func_025_4001
+    farcall DrawMetaSpriteSet_Bank25
     jp Jump_004_4DF3
 
 Jump_004_4DE4::
-    farcall Func_026_4001
+    farcall DrawMetaSpriteSet_Bank26
     jp Jump_004_4DF3
 
 Jump_004_4DED::
-    farcall Func_027_4001
+    farcall DrawMetaSpriteSet_Bank27
 
 Jump_004_4DF3::
     ldh a, [hFFC6]
@@ -2221,9 +2235,11 @@ Jump_004_4DF3::
     jp nz, Jump_004_4D57
     ret
 
-; 3 call sites from 3 routines (e.g. Func_004_4C96, Func_004_4C25, Func_004_4D43)
+; only called from routines of AdvanceHFF99AndRunHFF8BMode (E-0098)
+; 3 call sites from 3 routines (e.g. AdvanceHFF99AndRunHFF8BMode_Shared01, AdvanceHFF99AndRunHFF8BMode_Case01_Sub01, AdvanceHFF99AndRunHFF8BMode_Case00_Sub01)
 ; reads: wFadeState, hMapId, hMapScreenX, hMapScreenY, hPlayerY
-Func_004_4E0F::
+AdvanceHFF99AndRunHFF8BMode_Shared02::
+Func_004_4E0F:: ; address name
     ld a, [wFadeState]
     or a, a
     jr z, Jump_004_4E30
@@ -3172,7 +3188,7 @@ Func_004_5616:: ; address name
     dw Data_004_57F8
     dw Data_004_580E
     dw Data_004_5815
-    dw Func_004_581C
+    dw MapEventCountKeysAndStartScript5039
     dw IfFlag00D1Msg0D33_YouSavedUsAll
     dw IfFlag00D1Msg0D34_PleaseEatUpEat
     dw IfFlag00D1Msg0D35_HmISawYour
@@ -3234,7 +3250,7 @@ Func_004_5698:: ; address name
     call StartScriptAtHL_B04
     ld a, $00
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld de, $0006
     call SetFlagBit
     ret
@@ -3269,7 +3285,7 @@ Func_004_56BD:: ; address name
     jr c, Jump_004_56F4
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld hl, $4F88
     call StartScriptAtHL_B04
     ld de, $0007
@@ -3366,10 +3382,12 @@ Data_004_580E:: ; heuristic: target of a monotone pointer table; C0
 Data_004_5815:: ; heuristic: target of a monotone pointer table; C0
     db $21, $0F, $00, $CD, $BB, $55, $C9
 
+; with story flag $1A set: counts keys twice (Func_012_6955 with hFFC7 = 1 and 2), sets bit 7 of wC836 and starts script $5039 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC836
 ; writes: hFFC7, wC836
-Func_004_581C:: ; heuristic: target of a pointer table; C0
+MapEventCountKeysAndStartScript5039:: ; heuristic: target of a pointer table; C0
+Func_004_581C:: ; address name
     ld de, $001A
     call TestFlagBit
     ret nc
@@ -3830,7 +3848,7 @@ Jump_004_5AA5:: ; address name
     ret
 
 Jump_004_5AC0::
-    farcall Func_05F_6CA9
+    farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a, a
     jr z, Jump_004_5AD3
@@ -4242,7 +4260,7 @@ Jump_004_5CBE:: ; address name
     ld de, $006D
     call TestFlagBit
     jr c, Jump_004_5CEE
-    call Func_004_5D14
+    call PartyHasSpeciesLo3CTo5BWithHiSet
     jr c, Jump_004_5CE7
     ld a, $01
     ld [wCBB6], a
@@ -4261,7 +4279,7 @@ Jump_004_5CEE::
     ret
 
 Jump_004_5CF5::
-    call Func_004_5D14
+    call PartyHasSpeciesLo3CTo5BWithHiSet
     jr c, Jump_004_5D06
     ld a, $01
     ld [wCBB6], a
@@ -4279,11 +4297,13 @@ Jump_004_5D0D::
     call StartMessageCommand09HL_B04
     ret
 
+; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B (E-0124)
 ; 2 call sites from 1 routine (e.g. Func_004_58C2_Case33)
 ; reads: wC6FD, hFFC7, hFFC6
 ; writes: rRAMG
 ; points at: wC6FE
-Func_004_5D14::
+PartyHasSpeciesLo3CTo5BWithHiSet::
+Func_004_5D14:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -4571,7 +4591,7 @@ Jump_004_5E92::
     ret
 
 Jump_004_5E99::
-    call Func_004_7C37
+    call InventoryHasFreeSlotCheck
     jr c, Jump_004_5EA5
     ld hl, $0DC7
     call StartMessageCommand09HL_B04
@@ -4647,7 +4667,7 @@ Jump_004_5EEE::
 ; writes: wC836
 Func_004_58C2_Case4B::
 Jump_004_5EF5:: ; address name
-    call Func_004_7C37
+    call InventoryHasFreeSlotCheck
     jr c, Jump_004_5F01
     ld hl, $0888
     call StartMessageCommand09HL_B04
@@ -5573,7 +5593,7 @@ Jump_004_63ED:: ; address name
     ld a, [wC6FD]
     cp a, $03
     jr nz, Jump_004_640F
-    farcall Func_05F_6CA9
+    farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a, a
     jr nz, Jump_004_6416
@@ -5595,7 +5615,7 @@ Jump_004_641D::
     ld a, [wC6FD]
     cp a, $03
     jr nz, Jump_004_6437
-    farcall Func_05F_6CA9
+    farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a, a
     jr nz, Jump_004_6437
@@ -6206,7 +6226,7 @@ Func_004_612B_Case3C::
 Jump_004_6798:: ; address name
     ld a, $03
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld de, $0059
     call TestFlagBit
     jr c, Jump_004_67B1
@@ -7614,7 +7634,7 @@ Jump_004_6FF7::
     bit 7, a
     jr nz, Jump_004_702B
     farcall RemoveInventorySlotShiftDown
-    call Func_004_7C37
+    call InventoryHasFreeSlotCheck
     ld [hl], $17
     ld a, [wC836]
     set 6, a
@@ -7814,7 +7834,7 @@ Func_004_7164:: ; address name
     ret
 
 Jump_004_717B::
-    call Func_004_7C37
+    call InventoryHasFreeSlotCheck
     jr c, Jump_004_7187
     ld hl, $077B
     call StartMessageCommand09HL_B04
@@ -8036,7 +8056,7 @@ Jump_004_72E3::
     ret
 
 Jump_004_72EA::
-    call Func_004_7C37
+    call InventoryHasFreeSlotCheck
     jr c, Jump_004_72F6
     ld hl, $64DC
     call StartScriptAtHL_B04
@@ -8546,7 +8566,7 @@ Jump_004_7633::
 ; writes: wC836
 Talk07BF_HeroFoundThePretty:: ; heuristic: target of a pointer table; C0
 Func_004_763A:: ; address name
-    call Func_004_7C37
+    call InventoryHasFreeSlotCheck
     jr c, Jump_004_7646
     ld hl, $07BF
     call StartMessageCommand09HL_B04
@@ -9570,10 +9590,12 @@ Jump_004_7C2B:: ; address name
     call StartScriptAtHL_B04
     ret
 
+; A = 0 unless wC634 is $FF or 0; then scans wInventory for an empty slot ($FF or 0) and returns carry (E-0124)
 ; 6 call sites from 6 routines (e.g. Func_004_58C2_Case4B, Func_004_58C2_Case45, Talk075F_KiralFetchMeMy, Talk07BF_HeroFoundThePretty, ...)
 ; reads: wC634
 ; points at: wInventory
-Func_004_7C37::
+InventoryHasFreeSlotCheck::
+Func_004_7C37:: ; address name
     ld a, [wC634]
     cp a, $FF
     jr z, Jump_004_7C43

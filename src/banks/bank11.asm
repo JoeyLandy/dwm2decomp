@@ -501,7 +501,7 @@ Jump_011_42E0::
     ld a, [wC890]
     and a, $0F
     ldh [hMapScreenY], a
-    call Func_011_438F
+    call StartWarpTransition
     ld c, $01
     ret
 
@@ -517,7 +517,7 @@ Jump_011_431E::
     ld a, [wCD08]
     and a, $0F
     ldh [hMapScreenY], a
-    call Func_011_438F
+    call StartWarpTransition
     ld c, $01
     ret
 
@@ -567,10 +567,12 @@ Func_011_4340:: ; address name
     ld c, $01
     ret
 
+; wC8CA = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wC8C5, updates hFF8C and sets wC8C6 = 1 (E-0124)
 ; 2 call sites from 1 routine (e.g. Func_011_4268)
 ; reads: hFF8C
 ; writes: wC8CA, wModeState, wC8C5, hFF8C, wC8C6
-Func_011_438F::
+StartWarpTransition::
+Func_011_438F:: ; address name
     ld a, $F0
     ld [wC8CA], a
     ld a, $60

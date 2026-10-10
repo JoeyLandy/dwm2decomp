@@ -216,7 +216,7 @@ Func_0A0_415D:: ; address name
     call FillTilesFromRequest
     farcall CopyRectRecord7345ToScreenBuffer
     ld hl, vBGMap0
-    call Func_0A0_42B2
+    call CopyScreenTileBufferToVRAM_A0
     ld a, $7F
     ld [wC526], a
     ret
@@ -327,7 +327,7 @@ Jump_0A0_41F8::
     jr c, Jump_0A0_4203
     ld a, [hl]
     or a, a
-    call z, Func_0A0_4240
+    call z, ReplaceSkill8FWithAAInSlotC_A0
 
 Jump_0A0_4203::
     inc c
@@ -373,9 +373,11 @@ Jump_0A0_4230::
     jr nz, Jump_0A0_420E
     ret
 
+; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0A0_41F2)
 ; points at: wD989
-Func_0A0_4240::
+ReplaceSkill8FWithAAInSlotC_A0::
+Func_0A0_4240:: ; address name
     push hl
     ld a, c
     ld hl, wD989
@@ -502,9 +504,11 @@ Jump_0A0_42AC::
     ld [de], a
     ret
 
+; copies the 20 x 18 screen tile buffer to the BG map at HL (32-byte rows) (E-0124)
 ; 3 call sites from 3 routines (e.g. GameMode7_Init_Sub01_Sub02, RunBattlePhaseWhenTextIdle_A0_Case03_Case05, RunBattlePhaseWhenTextIdle_A0_Case03_Case02)
 ; points at: wScreenTileBuffer
-Func_0A0_42B2::
+CopyScreenTileBufferToVRAM_A0::
+Func_0A0_42B2:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $1412
 
@@ -1461,7 +1465,7 @@ Func_0A0_486D:: ; address name
 ; points at: wC5E7, wCFDD
 Func_0A0_4874::
     push bc
-    call Func_0A0_48D0
+    call PickRandomBand0To10
     add a, a
     add a, a
     add a, a
@@ -1524,9 +1528,11 @@ Jump_0A0_48CC::
     pop bc
     jr Func_0A0_4874
 
+; draws a random value and returns its band in the 11-entry threshold table Data_0A0_48F5; band 10 is redrawn while wCFE4 < 6 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0A0_4874)
 ; reads: wC5E7, wCFE4
-Func_0A0_48D0::
+PickRandomBand0To10::
+Func_0A0_48D0:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]
     ld bc, $0B00
@@ -1548,7 +1554,7 @@ Jump_0A0_48E5::
     ld a, [wCFE4]
     cp a, $06
     jr nc, Jump_0A0_48F3
-    jr Func_0A0_48D0
+    jr PickRandomBand0To10
 
 Jump_0A0_48F3::
     ld a, c
@@ -2098,8 +2104,8 @@ Func_0A0_4C63:: ; heuristic: follows a terminator; C0
 ; 1 call site from 1 routine (e.g. Func_0A0_4C63)
 BuildAndCopySlotPanel_A0::
 Func_0A0_4C6A:: ; address name
-    call Func_0A0_6BF0
-    call Func_0A0_6C22
+    call CopySlotPanelPart6D47ToVRAM
+    call CopySlotPanelPart6D4BToVRAM
     call CopySlotPanelRowToVRAM_BankA0
     ret
 
@@ -2377,7 +2383,7 @@ Func_0A0_4F70:: ; address name
     cp a, $02
     ret nz
     di
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
     ei
     ret
 
@@ -3485,7 +3491,7 @@ Jump_0A0_55B6:: ; address name
     ld a, $C3
     call FillBytes
     ld hl, vBGMap0
-    call Func_0A0_42B2
+    call CopyScreenTileBufferToVRAM_A0
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -3625,13 +3631,15 @@ Jump_0A0_569C::
 ; reads: wC8C1, wC8C2
 RunBattlePhaseWhenTextIdle_A0_Case03_Case04_Sub01::
 Func_0A0_569E:: ; address name
-    call Func_0A0_56A7
-    call Func_0A0_56A7
-    call Func_0A0_56A7
+    call WriteTwoDigitsFromDEStepRow
+    call WriteTwoDigitsFromDEStepRow
+    call WriteTwoDigitsFromDEStepRow
 
+; writes [DE] (DE += 1) as two digit tiles at HL (no leading zero digit), then HL moves to the next row ($40 on) (E-0124)
 ; 3 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case04_Sub01)
 ; reads: wC8C1, wC8C2
-Func_0A0_56A7::
+WriteTwoDigitsFromDEStepRow::
+Func_0A0_56A7:: ; address name
     push hl
     ld a, [de]
     inc de
@@ -3668,7 +3676,7 @@ Data_0A0_56CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 RunBattlePhaseWhenTextIdle_A0_Case03_Case05::
 Jump_0A0_56D2:: ; address name
     ld hl, vBGMap0
-    call Func_0A0_42B2
+    call CopyScreenTileBufferToVRAM_A0
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -4347,7 +4355,7 @@ Jump_0A0_5B85::
     add_a_to_hl
     ld c, [hl]
     pop hl
-    call Func_0A0_5C8F
+    call AddCToWordCappedAt999
     ld a, c
     ld [wD0A7], a
     ld a, [wD09E]
@@ -4367,7 +4375,7 @@ Jump_0A0_5BAE::
     add_a_to_hl
     ld c, [hl]
     pop hl
-    call Func_0A0_5CB2
+    call SubtractCFromWordMin1
     ld a, b
     ld [wD0A7], a
     ld de, $03E8
@@ -4380,24 +4388,24 @@ Jump_0A0_5BCB::
     add_a_to_hl
     ld c, [hl]
     pop hl
-    call Func_0A0_5CB2
+    call SubtractCFromWordMin1
     ld a, b
     ld [wD0A7], a
     inc hl
     inc hl
-    call Func_0A0_5CB2
+    call SubtractCFromWordMin1
     ld a, b
     ld [wD0A8], a
-    call Func_0A0_5CB2
+    call SubtractCFromWordMin1
     ld a, b
     ld [wD0A9], a
-    call Func_0A0_5CB2
+    call SubtractCFromWordMin1
     ld a, b
     ld [wD0AA], a
-    call Func_0A0_5CB2
+    call SubtractCFromWordMin1
     ld a, b
     ld [wD0AB], a
-    call Func_0A0_5CB2
+    call SubtractCFromWordMin1
     ld a, b
     ld [wD0AC], a
     ld de, $03E8
@@ -4499,8 +4507,10 @@ Jump_0A0_5C8A::
     ld [rRAMG], a
     ret
 
+; the word at HL += C, capped at 999; C becomes the amount actually added (E-0124)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub03)
-Func_0A0_5C8F::
+AddCToWordCappedAt999::
+Func_0A0_5C8F:: ; address name
     ld a, [hl+]
     add a, c
     ld e, a
@@ -4533,8 +4543,10 @@ Jump_0A0_5CAE::
     ld [hl], e
     ret
 
+; the word at HL -= C; results at or below 0 become 1 (B = the amount actually taken) (E-0124)
 ; 7 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub03)
-Func_0A0_5CB2::
+SubtractCFromWordMin1::
+Func_0A0_5CB2:: ; address name
     ld b, c
     ld a, [hl+]
     sub a, c
@@ -7132,9 +7144,11 @@ Jump_0A0_6BEE::
     pop bc
     ret
 
+; for slots 0-2: copies three tiles at offset Data_0A0_6D47[slot] from the screen buffer to vBGMap0 (E-0124)
 ; 2 call sites from 2 routines (e.g. BuildAndCopySlotPanel_A0, Func_031_7914)
 ; points at: wScreenTileBuffer
-Func_0A0_6BF0::
+CopySlotPanelPart6D47ToVRAM::
+Func_0A0_6BF0:: ; address name
     ld a, c
     cp a, $04
     jr nc, Jump_0A0_6C21
@@ -7165,9 +7179,11 @@ Func_0A0_6BF0::
 Jump_0A0_6C21::
     ret
 
+; for slots 0-2: copies three tiles at offset Data_0A0_6D4B[slot] from the screen buffer to vBGMap0 (E-0124)
 ; 2 call sites from 2 routines (e.g. BuildAndCopySlotPanel_A0, Func_031_7965)
 ; points at: wScreenTileBuffer
-Func_0A0_6C22::
+CopySlotPanelPart6D4BToVRAM::
+Func_0A0_6C22:: ; address name
     ld a, c
     cp a, $04
     jr nc, Jump_0A0_6C53
@@ -7198,9 +7214,11 @@ Func_0A0_6C22::
 Jump_0A0_6C53::
     ret
 
+; for slots 0-2: copies two tiles at offset Data_0A0_6D4F[slot] from the screen buffer to vBGMap0 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_031_79B6)
 ; points at: wScreenTileBuffer
-Func_0A0_6C54:: ; heuristic: follows a terminator; C0
+CopySlotPanelPart6D4FToVRAM:: ; heuristic: follows a terminator; C0
+Func_0A0_6C54:: ; address name
     ld a, c
     cp a, $04
     jr nc, Jump_0A0_6C80

@@ -659,7 +659,7 @@ Jump_00C_440E::
     ld [hl+], a
     dec b
     jr nz, Jump_00C_440E
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1324,7 +1324,7 @@ Jump_00C_490A:: ; address name
     ld a, $00
     ld [wD7F7], a
     farcall DrawTileRectFromWD7F1Params
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld e, l
     ld d, h
     push de
@@ -1338,7 +1338,7 @@ Jump_00C_490A:: ; address name
     ret
 
 Jump_00C_4957::
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_00C_497A
@@ -1389,7 +1389,7 @@ Jump_00C_497A::
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD781
 ScriptCommandF6_Run_Case10_Case03::
 Jump_00C_49B5:: ; address name
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld a, l
     ld [wD7F1], a
     ld a, h
@@ -1413,7 +1413,7 @@ Jump_00C_49B5:: ; address name
 ScriptCommandF6_Run_Case10_Case04::
 Jump_00C_49DA:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld a, h
     add a, $02
     ld [wStringCategory], a
@@ -1435,7 +1435,7 @@ Jump_00C_49DA:: ; address name
     ld [wD09D], a
     ld a, $2F
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     call GridIndexFromWD786WD787
     ld [wStringIndex], a
     ld a, $02
@@ -1451,7 +1451,7 @@ Jump_00C_49DA:: ; address name
     ld a, h
     ld [wC530], a
     farcall ShowString_Bank0B
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld a, l
     ld [wD7F1], a
     ld a, h
@@ -1514,7 +1514,7 @@ Data_00C_4AA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ScriptCommandF6_Run_Case10_Case05::
 Jump_00C_4AA6:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     call ScriptCommandF6_Run_Shared08
     cp a, $FF
     jr z, Jump_00C_4B0A
@@ -1567,7 +1567,7 @@ Jump_00C_4B0A::
 ScriptCommandF6_Run_Case10_Case06::
 Jump_00C_4B12:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     push hl
     sla l
     rl h
@@ -1610,7 +1610,7 @@ Jump_00C_4B12:: ; address name
 ScriptCommandF6_Run_Case10_Case07::
 Jump_00C_4B5C:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld a, $10
     add_a_to_hl
     ld a, h
@@ -1704,7 +1704,7 @@ Jump_00C_4BF8::
     ld [wD78A], a
 
 Jump_00C_4BFC::
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     push hl
     call GridIndexFromWD786WD787
     add a, a
@@ -1724,7 +1724,7 @@ Jump_00C_4BFC::
     jr Jump_00C_4BE9
 
 Jump_00C_4C1C::
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     call ScriptCommandF6_Run_Shared08
     and a, a
     jr z, Jump_00C_4BCB
@@ -1782,7 +1782,7 @@ Jump_00C_4C7E::
     ld [wD78A], a
 
 Jump_00C_4C82::
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     push hl
     call GridIndexFromWD786WD787
     add a, a
@@ -1802,7 +1802,7 @@ Jump_00C_4C82::
     jr nz, Jump_00C_4C5B
 
 Jump_00C_4CA2::
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     call ScriptCommandF6_Run_Shared08
     and a, a
     jr z, Jump_00C_4C4F
@@ -2084,7 +2084,7 @@ Jump_00C_4E94::
     ld [wD09D], a
     pop af
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     ret
 
 Jump_00C_4EA4::
@@ -2260,7 +2260,7 @@ Jump_00C_4F95::
     inc a
     inc a
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     pop bc
     pop de
 
@@ -2281,7 +2281,7 @@ Data_00C_4FAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, hSpriteSubIndex
 DrawThreeMetaSpritePartsFor5050::
 Func_00C_4FC2:: ; address name
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld a, l
     ld [wD7F1], a
     ld a, h
@@ -2360,8 +2360,10 @@ Jump_00C_5043::
     ei
     ret
 
+; HL = the word Data_00C_5916[GridIndexFromWD786WD787] + GridIndexFromWD78AWD78B (E-0124)
 ; 15 call sites from 10 routines (e.g. ScriptCommandF6_Run_Case10_Case08, DrawThreeMetaSpritePartsFor5050, ScriptCommandF6_Run_Case10_Case07, ScriptCommandF6_Run_Case10_Case06, ...)
-Func_00C_5050::
+GridCellAddressFromWD786AndWD78A::
+Func_00C_5050:: ; address name
     call GridIndexFromWD786WD787
     add a, a
     ld de, Data_00C_5916
@@ -2885,7 +2887,7 @@ Func_00C_52EC:: ; address name
     ret
 
 ; A = 6 * wD78B + wD78A (row-major index in a 6-column grid); BC kept (E-0117)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0C, Func_00C_5050)
+; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0C, GridCellAddressFromWD786AndWD78A)
 ; reads: wD78B, wD78A
 GridIndexFromWD78AWD78B::
 Func_00C_52FB:: ; address name
@@ -2951,7 +2953,7 @@ Jump_00C_5346::
 ; points at: wD79C
 ScriptCommandF6_Run_Case10_Case01_Sub01::
 Func_00C_534A:: ; address name
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld de, Data_00C_536A
     add hl, de
     ld a, [hl]
@@ -2986,7 +2988,7 @@ Data_00C_54DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wD79C
 ScriptCommandF6_Run_Case10_Case01_Sub02::
 Func_00C_54F3:: ; address name
-    call Func_00C_5050
+    call GridCellAddressFromWD786AndWD78A
     ld de, Data_00C_5562
     add hl, de
     ld a, [hl]
@@ -4745,7 +4747,7 @@ Jump_00C_6F30::
     ret
 
 Jump_00C_6F49::
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -4863,7 +4865,7 @@ Jump_00C_6FFF::
 ; writes: wC130, wC131
 ScriptCommandF7_Run_Case23_Sub01::
 Func_00C_701C:: ; address name
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     ld a, [wD7FC]
     ld hl, Data_00C_7037
     add_a_to_hl

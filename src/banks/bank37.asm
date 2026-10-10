@@ -722,7 +722,7 @@ Jump_037_4D80:: ; address name
     push af
     ld a, $C7
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank37
+    call LoadFamilyIconTileForRecordB_Bank37
     ld de, Data_037_647D
     ld hl, wC36C
     ld bc, $0C05
@@ -1790,7 +1790,7 @@ Func_037_542C:: ; address name
     ld [wC530], a
     call FillTilesFromRequest
     ld hl, wCA2C
-    call Func_037_5912
+    call CopyF0NameToWC8CF
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
     ret
@@ -1970,7 +1970,7 @@ Jump_037_552B:: ; address name
 ; writes: wD781
 Func_037_4AFD_Case0D_Case10::
 Jump_037_5565:: ; address name
-    call Func_037_5929
+    call DrawWCA2CNameAndWCA36String_Bank37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2251,7 +2251,7 @@ Jump_037_5715:: ; address name
     ld a, h
     ld [wC530], a
     call FillTilesFromRequest
-    call Func_037_5929
+    call DrawWCA2CNameAndWCA36String_Bank37
     ld de, Data_01F_4AD0
     ld hl, vTiles2 + $6F0
     ld b, $1F
@@ -2512,9 +2512,11 @@ Jump_037_5901::
     jr c, Jump_037_58FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5929, DrawWCA2CNameAtTiles1500)
+; copies up to 10 bytes from HL to wC8CF, stopping at $F0, and appends $F0 (E-0124)
+; 2 call sites from 2 routines (e.g. DrawWCA2CNameAndWCA36String_Bank37, DrawWCA2CNameAtTiles1500)
 ; points at: wC8CF
-Func_037_5912::
+CopyF0NameToWC8CF::
+Func_037_5912:: ; address name
     ld de, wC8CF
     ld c, $00
 
@@ -2535,12 +2537,14 @@ Jump_037_5925::
     ld [de], a
     ret
 
+; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at vTiles1 + $270 with size $0109 (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1D, Func_037_4AFD_Case0D_Case10)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ; points at: wCA2C, wCA36
-Func_037_5929::
+DrawWCA2CNameAndWCA36String_Bank37::
+Func_037_5929:: ; address name
     ld hl, wCA2C
-    call Func_037_5912
+    call CopyF0NameToWC8CF
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
     ld hl, wCA36
@@ -2664,7 +2668,7 @@ Jump_037_59EB::
     ret
 
 Jump_037_59FD::
-    call Func_037_5A33
+    call DrawArrowTileBCAtTwoChoiceEntry_Bank37
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
@@ -2711,9 +2715,11 @@ Func_037_5A2F:: ; address name
     ld b, $C3
     jr Jump_037_5A35
 
+; B = $BC, then writes B at the scroll position + Data_037_5A57[wTwoChoiceCursor] (E-0124)
 ; 1 call site from 1 routine (e.g. Func_037_59A3)
 ; reads: wTwoChoiceCursor
-Func_037_5A33::
+DrawArrowTileBCAtTwoChoiceEntry_Bank37::
+Func_037_5A33:: ; address name
     ld b, $BC
 
 Jump_037_5A35::
@@ -2842,11 +2848,11 @@ Jump_037_5AC4::
     ldh [rSVBK], a
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyPaletteForWD09D (E-0122)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case04)
 ; reads: hFFC6, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
-LoadFamilyPaletteForRecordB_Bank37::
+LoadFamilyIconTileForRecordB_Bank37::
 Func_037_5AD3:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -2860,7 +2866,7 @@ Func_037_5AD3:: ; address name
     ld [wD09D], a
     ld a, [wD7F1]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ret
@@ -2994,7 +3000,7 @@ Func_037_5B3F::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 11 call sites from 11 routines (e.g. Func_037_4AFD_Case04_Case19, RunFunc5A5DAt024FAndDrawBox, Func_037_5A33, Func_037_4AFD_Case04_Case17, ...)
+; 11 call sites from 11 routines (e.g. Func_037_4AFD_Case04_Case19, RunFunc5A5DAt024FAndDrawBox, DrawArrowTileBCAtTwoChoiceEntry_Bank37, Func_037_4AFD_Case04_Case17, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank37::
 Func_037_5B95:: ; address name
@@ -3043,7 +3049,7 @@ Func_037_5BC6::
     inc de
     call Func_037_5D5E
     call AppendTable6175ByteForWordAtDE
-    call Func_037_5DBC
+    call FamilyNibbleOrSpeciesFamily
     ld a, [de]
     and a, $01
     ld [hl+], a
@@ -3421,10 +3427,12 @@ Func_037_5DA9:: ; address name
     ld [hl+], a
     ret
 
+; A = [DE] & $0F (DE += 1); for 9 looks up the species at Data_037_5FC7[[HL - 1]] and uses its family; 10 becomes 9; stores it at [HL+] (E-0124)
 ; 1 call site from 1 routine (e.g. Func_037_5BC6)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-Func_037_5DBC::
+FamilyNibbleOrSpeciesFamily::
+Func_037_5DBC:: ; address name
     ld a, [de]
     and a, $0F
     inc de

@@ -208,14 +208,14 @@ Jump_019_4199::
 ; writes: wC526
 GameMode4_Init_Sub01_Sub02::
 Func_019_419B:: ; address name
-    farcall GameMode4_Init_Sub01_Sub02_Sub02
+    farcall GameMode4_Init_Sub01_Sub02_Sub01
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForWD88F_Bank31
     farcall LayoutTileBlocksForWD890Count
     farcall DrawPartySlotStatusPanels
     farcall Func_031_7321
     ld hl, vBGMap0
-    call GameMode4_Init_Sub01_Sub02_Sub01
+    call CopyScreenTileBufferToVRAM_A0_Bank19
     ld a, $7F
     ld [wC526], a
     ret
@@ -635,7 +635,7 @@ Jump_019_43F3::
     jr c, Jump_019_43FE
     ld a, [hl]
     or a, a
-    call z, Func_019_4440
+    call z, ReplaceSkill8FWithAAInSlotC
 
 Jump_019_43FE::
     inc c
@@ -684,9 +684,11 @@ Jump_019_4430::
     jr nz, Jump_019_440E
     ret
 
+; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
 ; 1 call site from 1 routine (e.g. Func_019_43ED)
 ; points at: wD989
-Func_019_4440::
+ReplaceSkill8FWithAAInSlotC::
+Func_019_4440:: ; address name
     push hl
     ld a, c
     ld hl, wD989
@@ -815,7 +817,7 @@ Jump_019_44B3::
     ld [de], a
     ret
 
-; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, ActionEffect_Transform_Sub01, ActionEffect_TatsuCall_Sub01, ...)
+; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01, ActionEffect_TatsuCall_Sub01, ...)
 ; reads: wD868, wD869, wD86A, wD86B
 Func_019_44B9::
     ld a, [wD868]
@@ -883,10 +885,10 @@ Jump_019_44EC::
     ld [de], a
     ret
 
-; only called from GameMode4_Init_Sub01_Sub02 (E-0047)
+; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (A0:42B2)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub02)
 ; points at: wScreenTileBuffer
-GameMode4_Init_Sub01_Sub02_Sub01::
+CopyScreenTileBufferToVRAM_A0_Bank19::
 Func_019_4516:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $1412
@@ -2601,7 +2603,7 @@ Func_019_7380:: ; address name
     ret
 
 ; loads species record [wC991] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wC9DC] - 1)) to wC9DE (E-0121)
-; 2 call sites from 2 routines (e.g. Func_001_6C48, BattleEnd_Step3)
+; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, BattleEnd_Step3)
 ; reads: wC991, wC992, wD00F, wC9DC
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wC9DE

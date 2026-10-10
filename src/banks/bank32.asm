@@ -1,9 +1,11 @@
 SECTION "Bank 32", ROMX[$4000], BANK[$32]
     db $32
 
+; for the sequence at wCB75: runs the frame timer (Func_032_401C) when started, otherwise marks it started, clears byte 4 and loads the first frame (Func_032_403F) (E-0124)
 ; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01, ...)
 ; reads: wCB75, wCB76
-Func_032_4001::
+TickWCB75Sequence::
+Func_032_4001:: ; address name
     ld a, [wCB75]
     ld l, a
     ld a, [wCB76]
@@ -11,7 +13,7 @@ Func_032_4001::
     ld a, [hl]
     or a, a
     jr z, Jump_032_4012
-    call Func_032_401C
+    call CountDownWCB75FrameTimer
     jr Jump_032_401B
 
 Jump_032_4012::
@@ -20,14 +22,16 @@ Jump_032_4012::
     inc hl
     inc hl
     ld [hl], $00
-    call Func_032_403F
+    call TickWCB75Sequence_Sub01
 
 Jump_032_401B::
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_4001)
+; counts down byte 5 of the wCB75 sequence ($FF = hold); at zero advances byte 3 (E-0124)
+; 1 call site from 1 routine (e.g. TickWCB75Sequence)
 ; reads: wCB75, wCB76
-Func_032_401C::
+CountDownWCB75FrameTimer::
+Func_032_401C:: ; address name
     ld a, [wCB75]
     add a, $05
     ld l, a
@@ -52,10 +56,12 @@ Jump_032_4032::
     ld h, a
     inc [hl]
 
-; 1 call site from 1 routine (e.g. Func_032_4001)
+; only called from TickWCB75Sequence (E-0047)
+; 1 call site from 1 routine (e.g. TickWCB75Sequence)
 ; reads: wCB75, wCB76
-Func_032_403F::
-    call Func_032_4083
+TickWCB75Sequence_Sub01::
+Func_032_403F:: ; address name
+    call LookupWCB75FrameWord
     ld a, b
     and a, c
     cp a, $FF
@@ -101,9 +107,11 @@ Jump_032_4073::
     ld [hl], b
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_403F)
+; BC = word ([seq + 3]) of the table Data_032_40A6[[seq + 2]] (E-0124)
+; 1 call site from 1 routine (e.g. TickWCB75Sequence_Sub01)
 ; reads: wCB75, wCB76
-Func_032_4083::
+LookupWCB75FrameWord::
+Func_032_4083:: ; address name
     ld a, [wCB75]
     ld c, a
     ld a, [wCB76]
@@ -2798,7 +2806,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
     cp a, $01
     call nz, Func_032_5386
     call SetSubPhase7AndResetSteps
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
@@ -2808,7 +2816,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
 Jump_032_4F32::
     farcall ShowSpecialActionMessage
     call SetSubPhase7AndResetSteps
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
@@ -2828,7 +2836,7 @@ Jump_032_4F53:: ; address name
     or a, a
     jr nz, Jump_032_4F00
     call LoadActorChosenActionRecord
-    call Func_032_535F
+    call ActionIsSpecialBFOrC9ToCF
     jp nc, Jump_032_4FFB
     call CheckSkillMPCost
     jr c, Jump_032_4F9C
@@ -3123,7 +3131,7 @@ Jump_032_5181::
     push de
     ld a, [wBattleActor]
     push af
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld [wBattleActor], a
     add a, a
@@ -3456,9 +3464,11 @@ Jump_032_535D::
     scf
     ret
 
+; A = 0 for action $BF or $C9-$CF, otherwise carry (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_032_5386, Func_032_55EE, Func_032_4ADC_Case01_Case00)
 ; reads: wBattleActionId
-Func_032_535F::
+ActionIsSpecialBFOrC9ToCF::
+Func_032_535F:: ; address name
     ld a, [wBattleActionId]
     cp a, $BF
     jr z, Jump_032_5384
@@ -3496,7 +3506,7 @@ Func_032_5386::
     jr Jump_032_53C8
 
 Jump_032_5393::
-    call Func_032_535F
+    call ActionIsSpecialBFOrC9ToCF
     ret nc
 
 ; 4 call sites from 1 routine (e.g. Func_032_5397)
@@ -3552,7 +3562,7 @@ Jump_032_53C8::
     call Func_032_5397
     ld a, [wBattleActor]
     push af
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld [wBattleActor], a
     ld hl, wDA2C
@@ -3574,7 +3584,7 @@ Jump_032_541A::
     call Func_032_5397
     ld a, [wBattleActor]
     push af
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld [wBattleActor], a
     call Func_032_5397
@@ -3911,7 +3921,7 @@ Func_032_55EE::
     ld a, [wDABA]
     or a, a
     ret nz
-    call Func_032_535F
+    call ActionIsSpecialBFOrC9ToCF
     ret nc
     ld a, [wD044]
     bit 7, a
@@ -4985,7 +4995,7 @@ Jump_032_5CCA::
     farcall Func_019_4298
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4199
+    farcall SlotField17OrMonsterCFF5
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4994,7 +5004,7 @@ Jump_032_5CCA::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_41D3
+    farcall SlotField2DOrMonsterD002
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -5003,7 +5013,7 @@ Jump_032_5CCA::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_420D
+    farcall SlotField30OrMonsterD004
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -5012,7 +5022,7 @@ Jump_032_5CCA::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4247
+    farcall SlotField2EOrMonsterD003
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -5021,7 +5031,7 @@ Jump_032_5CCA::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4281
+    farcall SlotField2FOrMonsterD005
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -5056,7 +5066,7 @@ Jump_032_5CCA::
     ld [hl], b
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_42BB
+    farcall SlotSpeciesNibblesD00AD00B
     ld a, [wBattleTarget]
     ld hl, wD8A7
     add_a_to_hl
@@ -5307,7 +5317,7 @@ Jump_032_5F3B::
 Jump_032_5F4B::
     ld a, [wBattleActor]
     push af
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld [wBattleActor], a
     call ResolveStep0EEffect_Case00_Sub01
@@ -5354,7 +5364,7 @@ Jump_032_5FAE::
     bit 6, [hl]
     jp nz, SetBattleSubStep1
     push hl
-    farcall Func_036_60EB
+    farcall RollTargetWDA72Byte5Bits67ChanceToE
     pop hl
     ld a, e
     or a, a
@@ -5885,7 +5895,7 @@ Jump_032_62CF:: ; address name
     jr nz, Jump_032_62F1
     set 7, a
     ld [wC983], a
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld [wBattleActor], a
 

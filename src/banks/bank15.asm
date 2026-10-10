@@ -133,7 +133,7 @@ Jump_015_40D3::
     ld [hl+], a
     dec b
     jr nz, Jump_015_40D3
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     ld a, $80
     ldh [hFFBA], a
     ld hl, wC52D
@@ -389,7 +389,7 @@ Jump_015_422B:: ; address name
     dw ScriptCommandED_Run_Case04_Case15
     dw ScriptCommandED_Run_Case04_Case16
     dw ScriptCommandED_Run_Case04_Case03
-    dw Func_015_4771
+    dw DrawWD789Cell5IconAndLevelAndStep
     dw ScriptCommandED_Run_Case04_Case19
     dw DrawWD789Cell5RecordNamesAndStep
     dw ScriptCommandED_Run_Case04_Case1B
@@ -546,7 +546,7 @@ Jump_015_43BD:: ; address name
     push af
     ld a, $C7
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank15
+    call LoadFamilyIconTileForRecordB_Bank15
     ld de, Data_015_74D5
     ld hl, wC3BC
     ld bc, $0C09
@@ -1085,18 +1085,20 @@ Jump_015_4768:: ; address name
     call ScriptCommandED_Run_Shared05
     jp Jump_015_4369
 
+; for the record at WD789 cell 5 loads its family icon tile and draws its mark and level at wC426, then wD781 += 1 (E-0124)
 ; 2 call sites from 2 routines (e.g. ScriptCommandED_Run_Case04_Case29, ScriptCommandED_Run_Case04_Case24)
 ; reads: wD781
 ; writes: wD7F1, wD7F2, wD7F3, wD781
 ; points at: wC426
-Func_015_4771::
+DrawWD789Cell5IconAndLevelAndStep::
+Func_015_4771:: ; address name
     farcall SetWD7F5ToWD789Cell5
     ld a, [hl]
     ld b, a
     push af
     ld a, $FF
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank15
+    call LoadFamilyIconTileForRecordB_Bank15
     pop af
     ld [wD7F1], a
     ld hl, wC426
@@ -1249,7 +1251,7 @@ Jump_015_487A::
     ld [wD09D], a
     ld a, $C9
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
 
 Jump_015_4899::
     ld c, $00
@@ -1439,7 +1441,7 @@ Jump_015_49C9:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank15
-    call Func_015_4771
+    call DrawWD789Cell5IconAndLevelAndStep
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -1788,7 +1790,7 @@ Jump_015_4C2E:: ; address name
     jr z, Jump_015_4C4D
     cp a, $03
     jr z, Jump_015_4C66
-    call Func_015_642D
+    call DrawBottomBoxForLinkAndSetWD782
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -1865,7 +1867,7 @@ Jump_015_4C8A::
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank15
-    call Func_015_4771
+    call DrawWD789Cell5IconAndLevelAndStep
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -2153,7 +2155,7 @@ Jump_015_4E87::
     ld a, [wC58A]
     and a, a
     jr z, Jump_015_4E9C
-    farcall Func_002_7347
+    farcall RunSaveGameSteps_7347
     ld a, [wC8C3]
     bit 7, a
     ret z
@@ -2506,7 +2508,7 @@ Jump_015_50D1:: ; address name
     rst $00
     dw ScriptCommandED_Run_Case05_Case00
     dw ScriptCommandED_Run_Case05_Case01
-    dw Func_015_512C
+    dw ClearTileRowsAndResetWindowAndStep
     dw ScriptCommandED_Run_Case05_Case03
     dw ScriptCommandED_Run_Case05_Case04
     dw ScriptCommandED_Run_Case05_Case05
@@ -2554,11 +2556,13 @@ Jump_015_50FB:: ; address name
     ld [wD781], a
     ret
 
+; clears four tile rows, sets the default window ($8800, $1202) and wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandED_Run_Case0F_Case02)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC52D
-Func_015_512C::
+ClearTileRowsAndResetWindowAndStep::
+Func_015_512C:: ; address name
     ld hl, vTiles1 + $400
     ld bc, $0301
     call FillTilesBxC
@@ -3976,7 +3980,7 @@ Jump_015_5AFC:: ; address name
     push af
     ld a, $C7
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank15
+    call LoadFamilyIconTileForRecordB_Bank15
     ld de, Data_015_7411
     ld hl, wC36C
     ld bc, $0C09
@@ -4783,7 +4787,7 @@ Jump_015_6063:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandED_Run_Case0F_Case02::
 Jump_015_6070:: ; address name
-    call Func_015_512C
+    call ClearTileRowsAndResetWindowAndStep
     ret
 
 ; entry 13 of the `rst $00` table in ScriptCommandED_Run_Case05
@@ -5114,7 +5118,7 @@ Jump_015_629F:: ; address name
     ld [wD7F1], a
     ld a, [wD7B4]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank15
+    call LoadFamilyIconTileForRecordB_Bank15
     farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
@@ -5125,7 +5129,7 @@ Jump_015_629F:: ; address name
     push af
     ld a, $FF
     ld [wD7F1], a
-    call LoadFamilyPaletteForRecordB_Bank15
+    call LoadFamilyIconTileForRecordB_Bank15
     pop af
     call CopyRect7351ToWC410AndIncWD781
     ret
@@ -5349,9 +5353,11 @@ Jump_015_63F5::
     cp a, $37
     jr nc, Jump_015_63ED
 
+; with SRAM disabled draws sprite part $0090 at ($88, $28) (Func_01D_6A3F, C = 1) (E-0124)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF2_Run_Shared02, GameMode5_Update_Case07_Sub01_Sub01)
 ; writes: rRAMB, rRAMG2, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6
-Func_015_6403::
+DrawSpritePart9000At88_28::
+Func_015_6403:: ; address name
     xor a, a
     ld [rRAMB], a
     ld [rRAMG2], a
@@ -5367,14 +5373,16 @@ Func_015_6403::
     xor a, a
     ld [wD7F6], a
     ld c, $01
-    farcall Func_01D_6A3F
+    farcall DrawSpritePart9000At88_28_Sub01
     ret
 
+; outside link battles only sets wD782 = 2; otherwise copies the row Data_015_727D when wD782 is set, sets wD782 = 2 and draws the box at scroll + $1CC (E-0124)
 ; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case2C, ScriptCommandF2_Run_Case03_Case0B, Func_0F0_4CA0_Table4_Case03)
 ; reads: wC58A, wD782
 ; writes: wD782
 ; points at: wC3C8
-Func_015_642D::
+DrawBottomBoxForLinkAndSetWD782::
+Func_015_642D:: ; address name
     ld a, [wC58A]
     and a, a
     jr nz, Jump_015_6439
@@ -5480,7 +5488,7 @@ Jump_015_64D9::
 Jump_015_64DC::
     ld a, $69
     call QueueSoundEffect
-    call Func_015_6546
+    call DrawArrowTileBCAtWD786Entry_Bank15
     ld c, $03
     ld hl, Data_015_732D
     call BlankWordTableTargets
@@ -5543,9 +5551,11 @@ Func_015_6542:: ; address name
     ld b, $C3
     jr Jump_015_6548
 
+; B = $BC, then writes B at the scroll position + Data_015_6566[wD786] (E-0124)
 ; 1 call site from 1 routine (e.g. Func_015_6478)
 ; reads: wD786
-Func_015_6546::
+DrawArrowTileBCAtWD786Entry_Bank15::
+Func_015_6546:: ; address name
     ld b, $BC
 
 Jump_015_6548::
@@ -5627,7 +5637,7 @@ Jump_015_65AD::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 45 call sites from 37 routines (e.g. ScriptCommandED_Run_Case01_Case02, ScriptCommandED_Run_Case04_Case33, ScriptCommandED_Run_Case04_Case30, Func_015_642D, ...)
+; 45 call sites from 37 routines (e.g. ScriptCommandED_Run_Case01_Case02, ScriptCommandED_Run_Case04_Case33, ScriptCommandED_Run_Case04_Case30, DrawBottomBoxForLinkAndSetWD782, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank15::
@@ -5751,7 +5761,7 @@ Jump_015_6634::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 45 call sites from 39 routines (e.g. ScriptCommandEE_Run_Case00, Func_015_6546, ScriptCommandED_Run_Case01_Case02, ScriptCommandED_Run_Case04_Case3B, ...)
+; 45 call sites from 39 routines (e.g. ScriptCommandEE_Run_Case00, DrawArrowTileBCAtWD786Entry_Bank15, ScriptCommandED_Run_Case01_Case02, ScriptCommandED_Run_Case04_Case3B, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank15::
 Func_015_6655:: ; address name
@@ -6198,11 +6208,11 @@ Func_015_683C:: ; address name
     ld [wGoldLo], a
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyPaletteForWD09D (E-0122)
-; 5 call sites from 4 routines (e.g. Func_015_4771, ScriptCommandED_Run_Case07_Case0F, ScriptCommandED_Run_Case04_Case04, ScriptCommandED_Run_Case12_Case09)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
+; 5 call sites from 4 routines (e.g. DrawWD789Cell5IconAndLevelAndStep, ScriptCommandED_Run_Case07_Case0F, ScriptCommandED_Run_Case04_Case04, ScriptCommandED_Run_Case12_Case09)
 ; reads: hFFC6, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
-LoadFamilyPaletteForRecordB_Bank15::
+LoadFamilyIconTileForRecordB_Bank15::
 Func_015_6866:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -6216,13 +6226,13 @@ Func_015_6866:: ; address name
     ld [wD09D], a
     ld a, [wD7F1]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ret
 
 ; record wD7F1 (bank 0): writes tile $CC + (field $0E & 1) at the address in wD7F2/3 and, three tiles on, field $56 as two digits with leading blanks (E-0121)
-; 5 call sites from 5 routines (e.g. Func_015_4771, ScriptCommandED_Run_Case04_Case04, ScriptCommandF4_Run_Case04_Case04, Func_037_4AFD_Case04_Case04, ...)
+; 5 call sites from 5 routines (e.g. DrawWD789Cell5IconAndLevelAndStep, ScriptCommandED_Run_Case04_Case04, ScriptCommandF4_Run_Case04_Case04, Func_037_4AFD_Case04_Case04, ...)
 ; reads: wD7F1, wD7F2, wD7F3, hFFC6, wC8C1, wC8C2
 ; writes: rRAMG2, rRAMB
 DrawRecordField0EMarkAndField56Digits::
@@ -6274,7 +6284,7 @@ Func_015_688D:: ; address name
     ret
 
 ; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
-; 7 call sites from 7 routines (e.g. ScriptCommandED_Run_Case04_Case27, DrawRecordField0EMarkAndField56Digits, ScriptCommandF3_Run_Case02, Func_00D_6509, ...)
+; 7 call sites from 7 routines (e.g. ScriptCommandED_Run_Case04_Case27, DrawRecordField0EMarkAndField56Digits, ScriptCommandF3_Run_Case02, DrawWC838CountBoxAndStep, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1
 BlankLeadingZeroDigitsWC8C0_Bank15::
@@ -6826,7 +6836,7 @@ Jump_015_6C3F::
     ld a, c
     add a, $C7
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     pop bc
     pop hl
     inc c
@@ -7120,7 +7130,7 @@ Func_015_6E14:: ; address name
     ld [wC936], a
     ret
 
-; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case36, ScriptCommandF4_Run_Case04_Case17, Func_0F1_4AD0_Case04_Case1E)
+; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case36, ScriptCommandF4_Run_Case04_Case17, RunWD780StateWhenNotFading_F1_Case04_Case1E)
 ; reads: wCF8C, wCF8B, wCF8D, wCF8F, wCF8E, wCF90
 ; points at: wCF8B, wCF8E
 Func_015_6E64::
@@ -7169,7 +7179,7 @@ Jump_015_6E86::
     ld [hl], a
     ret
 
-; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case29, ScriptCommandF4_Run_Case04_Case12, Func_0F1_4AD0_Case04_Case19)
+; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case29, ScriptCommandF4_Run_Case04_Case12, RunWD780StateWhenNotFading_F1_Case04_Case19)
 ; reads: wCA2A, wC58A, wCACF, wD7F1, wD782
 ; writes: wCF8B, wCF8C, wCF8D, wCF8E, wCF8F, wCF90, rRAMG, rRAMB, ...
 ; points at: wCF8B, wCF8E
@@ -7772,11 +7782,11 @@ Func_015_7917:: ; address name
 Data_015_794A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
-; wD09D = the family nibble of the record selected by wD7F1 (Func_015_7A43), wD09E = $C7, then LoadFamilyPaletteForWD09D (E-0122)
+; wD09D = the family nibble of the record selected by wD7F1 (Func_015_7A43), wD09E = $C7, then LoadFamilyIconTileForWD09D (E-0122)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case04)
 ; reads: wD7F1
 ; writes: rRAMG2, wD09D, wD09E
-LoadFamilyPaletteForWD7F1Record::
+LoadFamilyIconTileForWD7F1Record::
 Func_015_7954:: ; address name
     ld a, [wD7F1]
     ld b, a
@@ -7788,7 +7798,7 @@ Func_015_7954:: ; address name
     ld [wD09D], a
     ld a, $C7
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ret
@@ -7912,7 +7922,7 @@ Data_015_7A3B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; HL = sB356 + $6F * B in SRAM bank 0, except record $1D, which is at sA000 in SRAM bank 1 (E-0122)
-; 3 call sites from 3 routines (e.g. ScriptCommandEB_Run_Case05_Case04_Sub01, LoadFamilyPaletteForWD7F1Record, ScriptCommandEB_Run_Case05_Case06_Sub01)
+; 3 call sites from 3 routines (e.g. ScriptCommandEB_Run_Case05_Case04_Sub01, LoadFamilyIconTileForWD7F1Record, ScriptCommandEB_Run_Case05_Case06_Sub01)
 ; writes: rRAMB
 ; points at: sB356, sA000
 RecordAddressWithBank1Slot1D::

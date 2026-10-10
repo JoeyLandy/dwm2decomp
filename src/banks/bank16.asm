@@ -2531,7 +2531,7 @@ Func_016_4C1D:: ; address name
     ret
 
 ; copies the 24 wInventory bytes to wD09D, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
-; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, Func_016_4A48, Func_016_4C9E, PauseMenu_Items_Case03_Case04, ...)
+; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, Func_016_4A48, RemoveWItemIdFromInventory, PauseMenu_Items_Case03_Case04, ...)
 ; points at: wD09D, wInventory
 CompactInventory::
 Func_016_4C48:: ; address name
@@ -2567,11 +2567,13 @@ Jump_016_4C74::
     jr nz, Jump_016_4C69
     ret
 
+; puts wItemId in the first empty inventory slot; sets wItemId = $FF when all 24 are full (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemId
 ; writes: wItemId
 ; points at: wInventory
-Func_016_4C78:: ; heuristic: follows a terminator; C0
+AddWItemIdToInventory:: ; heuristic: follows a terminator; C0
+Func_016_4C78:: ; address name
     ld a, [wItemId]
     cp a, $00
     ret z
@@ -2598,11 +2600,13 @@ Jump_016_4C99::
     ld [hl], a
     ret
 
+; removes the first inventory slot holding wItemId and compacts the inventory; sets wItemId = $FF when not found (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemId
 ; writes: wItemId
 ; points at: wInventory
-Func_016_4C9E:: ; heuristic: follows a terminator; C0
+RemoveWItemIdFromInventory:: ; heuristic: follows a terminator; C0
+Func_016_4C9E:: ; address name
     ld a, [wItemId]
     cp a, $00
     ret z
@@ -3711,7 +3715,7 @@ Func_016_57D1:: ; address name
     ld c, $5B
     call SRAMRecordAddressMapped
     pop bc
-    call Func_016_58CC
+    call AddDEToWordAtHLCappedAtBC
     ret
 
 ; adds HL to record A's MP (field $5F), capped at its max MP (field $61), through Func_016_58CC (E-0122)
@@ -3731,7 +3735,7 @@ Func_016_57E8:: ; address name
     ld c, $5F
     call SRAMRecordAddressMapped
     pop bc
-    call Func_016_58CC
+    call AddDEToWordAtHLCappedAtBC
     ret
 
 ; only called from ItemApply_ATKseed (E-0047)
@@ -3899,7 +3903,7 @@ Func_016_58AD:: ; address name
     call SRAMRecordAddress
     pop bc
     pop de
-    call Func_016_58CC
+    call AddDEToWordAtHLCappedAtBC
     ret
 
 ; [HL] += E, capped at C (also on overflow) (E-0122)
@@ -3936,8 +3940,10 @@ Jump_016_58CA::
     ld [hl], a
     ret
 
+; the word at HL += DE, capped at BC (also on overflow) (E-0124)
 ; 3 call sites from 3 routines (e.g. AddHLToRecordMPCapped, AddHLToRecordHPCapped, AddToRecordFieldWordCapped)
-Func_016_58CC::
+AddDEToWordAtHLCappedAtBC::
+Func_016_58CC:: ; address name
     push hl
     deref_hl
     add hl, de
@@ -4161,7 +4167,7 @@ Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
-; 8 call sites from 8 routines (e.g. RunBattleSubStep_6A4E_Case01, Func_001_6C48, GameMode5_Update_Case01_Case06_Case06_Sub01, ScriptCommandF3_Run_Case05_Case0E_Sub01, ...)
+; 8 call sites from 8 routines (e.g. RunBattleSubStep_6A4E_Case01, CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, GameMode5_Update_Case01_Case06_Case06_Sub01, ScriptCommandF3_Run_Case05_Case0E_Sub01, ...)
 ; reads: wC7FB
 ; writes: wC7FB
 SetSpeciesFlag::
@@ -4573,7 +4579,7 @@ Jump_016_5D51:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
     ld de, wC130
-    call Func_016_6A10
+    call CopyBattleMonsterNameWithLetterSuffix
     ld a, [wCFC5]
     cp a, $08
     jr nc, Jump_016_5D71
@@ -4680,7 +4686,7 @@ Jump_016_5DE6:: ; address name
     or a, a
     ret z
     ld de, wC130
-    call Func_016_6A10
+    call CopyBattleMonsterNameWithLetterSuffix
     ld a, $0C
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -5220,7 +5226,7 @@ Jump_016_61A8::
     ld [wC0A1], a
     ld a, [wC700]
     ld [wMenuRowCount], a
-    call Func_016_70DB
+    call RunFunc710FForPartyMembers
     xor a, a
     ld [rRAMG], a
     ld hl, wBattleSubPhase
@@ -6340,11 +6346,13 @@ Func_016_6917:: ; address name
     ld [wC320], a
     ret
 
+; removes the $FF entry from the party list wC6FE, wC6FD -= 1, wD88F = new count, and terminates the list with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD
 ; writes: wC6FD, wD88F
 ; points at: wC6FE, wC0A0
-Func_016_6926:: ; heuristic: follows a terminator; C0
+RemovePartyMemberMarkedFF:: ; heuristic: follows a terminator; C0
+Func_016_6926:: ; address name
     ld a, [wC6FD]
     ld b, a
     ld hl, wC6FE
@@ -6379,7 +6387,7 @@ Jump_016_694B::
     ret
 
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls BeginStringDisplay_Bank2F (E-0072)
-; 16 call sites from 14 routines (e.g. Func_016_69E2, Func_016_6C16_Case0C, Func_016_6C16_Case05, Func_016_6C16_Case03, ...)
+; 16 call sites from 14 routines (e.g. ShowRecordNameString1D, Func_016_6C16_Case0C, Func_016_6C16_Case05, Func_016_6C16_Case03, ...)
 ; writes: wStringCategory
 ShowStringCategory5_Bank16::
 Func_016_6955:: ; address name
@@ -6471,11 +6479,13 @@ Func_016_69AB:: ; address name
     call ShowStringCategory5Immediate_Bank16
     ret
 
+; copies the name of record wD868[wC46C] to wC130 and shows string $1D of category 5 (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_016_6C16_Case0F, Func_016_6C16_Case0B)
 ; reads: wC46C
 ; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wD868, wC130
-Func_016_69E2::
+ShowRecordNameString1D::
+Func_016_69E2:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -6500,10 +6510,12 @@ Jump_016_6A01::
     call ShowStringCategory5_Bank16
     ret
 
+; copies the name of battle slot wDAAB to DE and appends tile $A7 + (wD8AF[slot] & 1) before the terminator (E-0124)
 ; 3 call sites from 3 routines (e.g. RunBattleSubStep_6A4E_Case00, Func_016_5D13_Case04, Func_016_5D13_Case00)
 ; reads: wDAAB
 ; points at: wD8AF
-Func_016_6A10::
+CopyBattleMonsterNameWithLetterSuffix::
+Func_016_6A10:: ; address name
     push de
     call CopyMonsterNameOfWDAABSlotToDE
     ld a, [wDAAB]
@@ -6530,7 +6542,7 @@ Jump_016_6A31::
     ret
 
 ; copies the name of the monster in slot wDAAB to DE: string category 2 + the id's high byte (StringTable_MonsterNames, then StringTable_MonsterNames2 from id 256), index = the low byte (CopyStringHLToDE) (E-0069)
-; 1 call site from 1 routine (e.g. Func_016_6A10)
+; 1 call site from 1 routine (e.g. CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wDAAB
 ; points at: wBattleMonsterId
 CopyMonsterNameOfWDAABSlotToDE::
@@ -6569,7 +6581,7 @@ Func_016_6A4E:: ; address name
 RunBattleSubStep_6A4E_Case00::
 Jump_016_6A5C:: ; address name
     ld de, wC130
-    call Func_016_6A10
+    call CopyBattleMonsterNameWithLetterSuffix
     ld a, $14
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -6989,7 +7001,7 @@ Func_016_6C16_Case03::
 Jump_016_6CF5:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
-    call Func_016_7188
+    call BattleMonsterTable71ACAtLeast6
     or a, a
     jr z, Jump_016_6D08
     ld a, $20
@@ -7034,7 +7046,7 @@ Jump_016_6D1E:: ; address name
 Jump_016_6D2B::
     ld hl, wBattleSubStep
     inc [hl]
-    call Func_016_7188
+    call BattleMonsterTable71ACAtLeast6
     or a, a
     jr z, Jump_016_6D3E
     ld a, $21
@@ -7072,7 +7084,7 @@ Jump_016_6D47:: ; address name
     ld [hl], b
     call Func_016_70C5
     call LoadRecordListNameTiles
-    call Func_016_70DB
+    call RunFunc710FForPartyMembers
     call BuildBattleMenuScreen_733F
     ld hl, wBattleSubStep
     inc [hl]
@@ -7223,7 +7235,7 @@ Jump_016_6E38:: ; address name
     ld hl, vBGMap0 + $12D
     ld a, $BB
     call WriteVRAMByte
-    call Func_016_69E2
+    call ShowRecordNameString1D
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -7381,7 +7393,7 @@ Jump_016_6F6F:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $1412
     call CopyRect32StrideToVRAM_Bank16
-    call Func_016_69E2
+    call ShowRecordNameString1D
     ld a, $0C
     ld [wBattleSubStep], a
     ret
@@ -7472,7 +7484,7 @@ Jump_016_7023::
     dec b
     jr nz, Jump_016_7023
     call LoadRecordListNameTiles
-    call Func_016_70DB
+    call RunFunc710FForPartyMembers
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -7585,38 +7597,42 @@ Func_016_70C6:: ; address name
     ld [rRAMG], a
     ret
 
+; with SRAM enabled runs Func_016_710F for each of the first one to three party records (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_016_6C16_Case12, Func_016_6C16_Case06, Func_016_5D13_Case15)
 ; reads: wC6FE, wC6FD, wC6FF, wC700
 ; writes: rRAMG, rRAMB
-Func_016_70DB::
+RunFunc710FForPartyMembers::
+Func_016_70DB:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
     ld c, $00
     ld a, [wC6FE]
-    call Func_016_710F
+    call RunFunc710FForPartyMembers_Sub01
     ld a, [wC6FD]
     cp a, $01
     jr z, Jump_016_710A
     ld c, $01
     ld a, [wC6FF]
-    call Func_016_710F
+    call RunFunc710FForPartyMembers_Sub01
     ld a, [wC6FD]
     cp a, $02
     jr z, Jump_016_710A
     ld c, $02
     ld a, [wC700]
-    call Func_016_710F
+    call RunFunc710FForPartyMembers_Sub01
 
 Jump_016_710A::
     xor a, a
     ld [rRAMG], a
     ret
 
-; 3 call sites from 1 routine (e.g. Func_016_70DB)
+; only called from RunFunc710FForPartyMembers (E-0047)
+; 3 call sites from 1 routine (e.g. RunFunc710FForPartyMembers)
 ; points at: wD8B7, wBattleHP, wBattleMP, wBattleSlotOut, wBattleStatus
-Func_016_710F::
+RunFunc710FForPartyMembers_Sub01::
+Func_016_710F:: ; address name
     push bc
     ld c, $56
     call SRAMRecordAddress
@@ -7711,7 +7727,7 @@ Jump_016_717A::
     ret
 
 ; [DE] |= $20; clobbers A (E-0114)
-; 1 call site from 1 routine (e.g. Func_016_710F)
+; 1 call site from 1 routine (e.g. RunFunc710FForPartyMembers_Sub01)
 SetBit5AtDE::
 Func_016_717E:: ; address name
     ld a, [de]
@@ -7720,7 +7736,7 @@ Func_016_717E:: ; address name
     ret
 
 ; [DE] |= $01; clobbers A (E-0114)
-; 1 call site from 1 routine (e.g. Func_016_710F)
+; 1 call site from 1 routine (e.g. RunFunc710FForPartyMembers_Sub01)
 SetBit0AtDE::
 Func_016_7183:: ; address name
     ld a, [de]
@@ -7728,10 +7744,12 @@ Func_016_7183:: ; address name
     ld [de], a
     ret
 
+; A = 1 when Data $71AC[battle monster id of wDAAB] is at least 6, else 0 (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_016_6C16_Case05, Func_016_6C16_Case03)
 ; reads: wDAAB
 ; points at: wBattleMonsterId
-Func_016_7188::
+BattleMonsterTable71ACAtLeast6::
+Func_016_7188:: ; address name
     ld a, [wDAAB]
     ld hl, wBattleMonsterId
     add a, a
@@ -8674,7 +8692,7 @@ Jump_016_7912::
     ld a, [hl]
     ld [wD09E], a
     push hl
-    call LoadFamilyPaletteForWD09D
+    call LoadFamilyIconTileForWD09D
     pop hl
     ld a, [hl]
     swap a
@@ -8855,10 +8873,10 @@ Data_016_7A3C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $C2, $A2, $C2, $E2, $C2
 
-; loads the 16 palette bytes of family wD09D (Data_016_7ACD + 16 * family) through Func_016_7AAF; wD09E selects the slot (E-0122)
+; writes the 16-byte icon tile of family wD09D (Data_016_7ACD + 16 * family) to VRAM tile wD09E through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)
 ; 19 call sites from 19 routines (e.g. Func_016_78F9, ShowSpeciesNameAndIconForSlotB, ScriptCommandF6_Run_Case10_Case04, ScriptCommandF6_Run_Case10_Case06_Sub02, ...)
 ; reads: wD09D
-LoadFamilyPaletteForWD09D::
+LoadFamilyIconTileForWD09D::
 Func_016_7A48:: ; address name
     ld a, [wD09D]
     swap a
@@ -8870,16 +8888,16 @@ Func_016_7A48:: ; address name
 
 Jump_016_7A55::
     ld b, $10
-    call Func_016_7AAF
+    call WriteBytesToVRAMTileWD09E
     ret
 
-; loads $B0 bytes from Data_016_7ACD (all eleven family palettes) through Func_016_7AAF (E-0122)
+; writes the $B0 bytes at Data_016_7ACD (the eleven family icon tiles) to VRAM from tile wD09E; corrected in E-0124 (E-0122)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_Case00, GameMode5_Init_Case04)
-LoadAllFamilyPalettes::
+LoadAllFamilyIconTiles::
 Func_016_7A5B:: ; address name
     ld de, Data_016_7ACD
     ld b, $B0
-    call Func_016_7AAF
+    call WriteBytesToVRAMTileWD09E
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
@@ -8934,9 +8952,11 @@ Jump_016_7AAA::
     pop af
     jr Jump_016_7AB2
 
-; 2 call sites from 2 routines (e.g. LoadFamilyPaletteForWD09D, LoadAllFamilyPalettes)
+; writes B bytes from DE to VRAM tile wD09E ($8000 + 16 * index; indices below $80 use the $9000 area) (E-0124)
+; 2 call sites from 2 routines (e.g. LoadFamilyIconTileForWD09D, LoadAllFamilyIconTiles)
 ; reads: wD09E
-Func_016_7AAF::
+WriteBytesToVRAMTileWD09E::
+Func_016_7AAF:: ; address name
     ld a, [wD09E]
 
 Jump_016_7AB2::

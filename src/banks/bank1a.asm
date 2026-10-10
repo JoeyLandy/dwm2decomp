@@ -85,11 +85,13 @@ Jump_01A_4063::
     db $CD, $AA, $16, $7D, $C6, $D4, $6F, $7C, $CE, $40, $67, $C1, $06, $00, $09, $4E
     db $C9, $C1, $0E, $00, $C9
 
-; 1 call site from 1 routine (e.g. Func_039_6E27)
+; only called from ComputeDamageEstimateForAction (E-0047)
+; 1 call site from 1 routine (e.g. ComputeDamageEstimateForAction)
 ; reads: wBattleActionId, wC58A, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wDA53
-Func_01A_408F::
+ComputeDamageEstimateForAction_Sub01::
+Func_01A_408F:: ; address name
     ld a, [wBattleActionId]
     ld c, a
     ld b, $00
@@ -1649,7 +1651,7 @@ Jump_01A_637E::
     jr z, Jump_01A_6393
     cp a, $FF
     jr z, Jump_01A_6393
-    call Func_01A_6395
+    call IsHLByteInFFListAtDE
     jr nc, Jump_01A_6393
     inc hl
     dec b
@@ -1662,8 +1664,10 @@ Jump_01A_6393::
     ld [hl], c
     ret
 
+; carry when [HL] is not in the $FF-terminated list at DE, A = 0 and NC when it is (E-0124)
 ; 1 call site from 1 routine (e.g. Func_01A_636C)
-Func_01A_6395::
+IsHLByteInFFListAtDE::
+Func_01A_6395:: ; address name
     push de
 
 Jump_01A_6396::

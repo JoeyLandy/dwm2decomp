@@ -1713,7 +1713,7 @@ Jump_012_4A5A:: ; address name
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0D
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $7F
     ld [wC527], a
     ld hl, wScriptStep
@@ -1893,7 +1893,7 @@ ScriptCommand8D_Run_Case14::
 Jump_012_4B9B:: ; address name
     ld a, $0E
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1943,7 +1943,7 @@ Jump_012_4BB4:: ; address name
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0D
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     xor a, a
     ld [wCBCF], a
     ld a, $7F
@@ -6691,7 +6691,7 @@ Jump_012_6948::
     ldh [hFFC6], a
     ret
 
-; 12 call sites from 10 routines (e.g. Func_012_689A, Func_004_581C, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
+; 12 call sites from 10 routines (e.g. Func_012_689A, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
 ; reads: hFFC6, hFFC7, wCD05, hFFC8, hFFC9
 ; writes: hFFC6
 Func_012_6955::
@@ -6734,7 +6734,7 @@ Jump_012_6973::
     ret
 
 ; counts the 4-byte wKeyList entries before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
-; 11 call sites from 9 routines (e.g. Func_004_581C, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
+; 11 call sites from 9 routines (e.g. MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hFFC6
 ; points at: wKeyList
 CountKeysOrFull::
@@ -6922,7 +6922,7 @@ Func_012_6A6A::
     jr nz, Jump_012_6A98
     ld a, $12
     ldh [hFFC6], a
-    call Func_012_6B98
+    call RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $10
@@ -6943,7 +6943,7 @@ Jump_012_6A98::
     ret nz
     ld a, $12
     ldh [hFFC6], a
-    call Func_012_6B98
+    call RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $40
@@ -6958,7 +6958,7 @@ Jump_012_6ABC::
     ret nz
     ld a, $12
     ldh [hFFC6], a
-    call Func_012_6B98
+    call RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -6967,7 +6967,7 @@ Jump_012_6ABC::
     ld [wCBCF], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_05F_7363_Case00, ScriptCommand16_Run_Case0F)
+; 2 call sites from 2 routines (e.g. RunWC92DStep_7363_Case00, ScriptCommand16_Run_Case0F)
 ; reads: hFFC6, wIsCGB
 ; writes: wC949, wC527
 ; points at: wOBJPaletteBuffer
@@ -7018,7 +7018,7 @@ Jump_012_6B15::
     ret
 
 ; wC949 -= 2, and when the result is $C0 or more it becomes $30 (E-0117)
-; 11 call sites from 11 routines (e.g. Func_05F_7363_Case0F, Func_05F_7363_Case0D, Func_05F_7363_Case0C, Func_05F_7363_Case0B, ...)
+; 11 call sites from 11 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case0C, RunWC92DStep_7363_Case0B, ...)
 ; reads: wC949
 ; writes: wC949
 CycleWC949Down::
@@ -7033,7 +7033,7 @@ Func_012_6B22:: ; address name
     ld [wC949], a
     ret
 
-; 11 call sites from 11 routines (e.g. Func_05F_7363_Case0F, Func_05F_7363_Case0D, Func_05F_7363_Case0C, Func_05F_7363_Case0B, ...)
+; 11 call sites from 11 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case0C, RunWC92DStep_7363_Case0B, ...)
 ; reads: hFFC6, wFrameCounterLo, wFrameCounterHi, wC949
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
 Func_012_6B33::
@@ -7078,41 +7078,43 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
+; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
 ; 51 call sites from 49 routines (e.g. Func_012_6A6A, Func_002_4628, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
 ; reads: hFFC6
-Func_012_6B98::
+RunFieldCommandHFFC6::
+Func_012_6B98:: ; address name
     ldh a, [hFFC6]
     rst $00
-    dw Func_012_6B98_Case00
-    dw Func_012_6B98_Case01
-    dw Func_012_6B98_Case02
-    dw Func_012_6B98_Case03
-    dw Func_012_6B98_Case04
-    dw Func_012_6B98_Case05
-    dw Func_012_6B98_Case06
-    dw Func_012_6B98_Case07
-    dw Func_012_6B98_Case08
-    dw Func_012_6B98_Case09
-    dw Func_012_6B98_Case0A
-    dw Func_012_6B98_Case0B
-    dw Func_012_6B98_Case0C
-    dw Func_012_6B98_Case0D
-    dw Func_012_6B98_Case0D
-    dw Func_012_6B98_Case0F
-    dw Func_012_6B98_Case10
-    dw Func_012_6B98_Case11
-    dw Func_012_6B98_Case12
-    dw Func_012_6B98_Case13
-    dw Func_012_6B98_Case14
-    dw Func_012_6B98_Case14
+    dw RunFieldCommandHFFC6_Case00
+    dw RunFieldCommandHFFC6_Case01
+    dw RunFieldCommandHFFC6_Case02
+    dw RunFieldCommandHFFC6_Case03
+    dw RunFieldCommandHFFC6_Case04
+    dw RunFieldCommandHFFC6_Case05
+    dw RunFieldCommandHFFC6_Case06
+    dw RunFieldCommandHFFC6_Case07
+    dw RunFieldCommandHFFC6_Case08
+    dw RunFieldCommandHFFC6_Case09
+    dw RunFieldCommandHFFC6_Case0A
+    dw RunFieldCommandHFFC6_Case0B
+    dw RunFieldCommandHFFC6_Case0C
+    dw RunFieldCommandHFFC6_Case0D
+    dw RunFieldCommandHFFC6_Case0D
+    dw RunFieldCommandHFFC6_Case0F
+    dw RunFieldCommandHFFC6_Case10
+    dw RunFieldCommandHFFC6_Case11
+    dw RunFieldCommandHFFC6_Case12
+    dw RunFieldCommandHFFC6_Case13
+    dw RunFieldCommandHFFC6_Case14
+    dw RunFieldCommandHFFC6_Case14
 
-; entry 20 of the `rst $00` table in Func_012_6B98
+; entry 20 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF, wCBD5, wCBD6
 ; points at: wCBD0
-Func_012_6B98_Case14::
+RunFieldCommandHFFC6_Case14::
 Jump_012_6BC7:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7134,13 +7136,13 @@ Jump_012_6BC7:: ; address name
     ld [wCBD6], a
     ret
 
-; entry 19 of the `rst $00` table in Func_012_6B98
+; entry 19 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case13::
+RunFieldCommandHFFC6_Case13::
 Jump_012_6BED:: ; address name
-    call Func_012_6E61
+    call RunFieldCommandHFFC6_Shared02
     push af
     ld hl, wCBD0
     ld [hl], $30
@@ -7153,13 +7155,13 @@ Jump_012_6BED:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 18 of the `rst $00` table in Func_012_6B98
+; entry 18 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF, wCBD5, wCBD6
 ; points at: wCBD0
-Func_012_6B98_Case12::
+RunFieldCommandHFFC6_Case12::
 Jump_012_6C01:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7177,13 +7179,13 @@ Jump_012_6C01:: ; address name
     ld [wCBD6], a
     ret
 
-; entry 17 of the `rst $00` table in Func_012_6B98
+; entry 17 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF, wCBD5, wCBD6
 ; points at: wCBD0
-Func_012_6B98_Case11::
+RunFieldCommandHFFC6_Case11::
 Jump_012_6C20:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7201,13 +7203,13 @@ Jump_012_6C20:: ; address name
     ld [wCBD6], a
     ret
 
-; entry 16 of the `rst $00` table in Func_012_6B98
+; entry 16 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case10::
+RunFieldCommandHFFC6_Case10::
 Jump_012_6C3F:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7224,13 +7226,13 @@ Jump_012_6C3F:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 15 of the `rst $00` table in Func_012_6B98
+; entry 15 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case0F::
+RunFieldCommandHFFC6_Case0F::
 Jump_012_6C59:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7247,13 +7249,13 @@ Jump_012_6C59:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 13 of the `rst $00` table in Func_012_6B98
+; entry 13 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF, wCBD5, wCBD6
 ; points at: wCBD0
-Func_012_6B98_Case0D::
+RunFieldCommandHFFC6_Case0D::
 Jump_012_6C73:: ; address name
-    call Func_012_6E61
+    call RunFieldCommandHFFC6_Shared02
     push af
     ld hl, wCBD0
     ld [hl], $30
@@ -7277,13 +7279,13 @@ Jump_012_6C73:: ; address name
     ld [wCBD6], a
     ret
 
-; entry 12 of the `rst $00` table in Func_012_6B98
+; entry 12 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF, wCBD5, wCBD6
 ; points at: wCBD0
-Func_012_6B98_Case0C::
+RunFieldCommandHFFC6_Case0C::
 Jump_012_6C9B:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7307,14 +7309,14 @@ Jump_012_6C9B:: ; address name
     ld [wCBD6], a
     ret
 
-; entry 11 of the `rst $00` table in Func_012_6B98
+; entry 11 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY
 ; writes: wCBCF, wCBD5, wCBD6
 ; points at: wCBD0
-Func_012_6B98_Case0B::
+RunFieldCommandHFFC6_Case0B::
 Jump_012_6CC2:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7338,13 +7340,13 @@ Jump_012_6CC2:: ; address name
     ld [wCBD6], a
     ret
 
-; entry 10 of the `rst $00` table in Func_012_6B98
+; entry 10 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case0A::
+RunFieldCommandHFFC6_Case0A::
 Jump_012_6CE9:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7361,13 +7363,13 @@ Jump_012_6CE9:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 9 of the `rst $00` table in Func_012_6B98
+; entry 9 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case09::
+RunFieldCommandHFFC6_Case09::
 Jump_012_6D03:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7384,13 +7386,13 @@ Jump_012_6D03:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 8 of the `rst $00` table in Func_012_6B98
+; entry 8 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case08::
+RunFieldCommandHFFC6_Case08::
 Jump_012_6D1E:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7407,13 +7409,13 @@ Jump_012_6D1E:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 7 of the `rst $00` table in Func_012_6B98
+; entry 7 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case07::
+RunFieldCommandHFFC6_Case07::
 Jump_012_6D38:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7430,13 +7432,13 @@ Jump_012_6D38:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 6 of the `rst $00` table in Func_012_6B98
+; entry 6 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF, wCBD5, wCBD6
 ; points at: wCBD0
-Func_012_6B98_Case06::
+RunFieldCommandHFFC6_Case06::
 Jump_012_6D53:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7458,13 +7460,13 @@ Jump_012_6D53:: ; address name
     ld [wCBD6], a
     ret
 
-; entry 5 of the `rst $00` table in Func_012_6B98
+; entry 5 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case05::
+RunFieldCommandHFFC6_Case05::
 Jump_012_6D79:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7481,13 +7483,13 @@ Jump_012_6D79:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 4 of the `rst $00` table in Func_012_6B98
+; entry 4 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case04::
+RunFieldCommandHFFC6_Case04::
 Jump_012_6D94:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7504,13 +7506,13 @@ Jump_012_6D94:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 3 of the `rst $00` table in Func_012_6B98
+; entry 3 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case03::
+RunFieldCommandHFFC6_Case03::
 Jump_012_6DAE:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7523,13 +7525,13 @@ Jump_012_6DAE:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 2 of the `rst $00` table in Func_012_6B98
+; entry 2 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case02::
+RunFieldCommandHFFC6_Case02::
 Jump_012_6DC2:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7546,13 +7548,13 @@ Jump_012_6DC2:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 1 of the `rst $00` table in Func_012_6B98
+; entry 1 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case01::
+RunFieldCommandHFFC6_Case01::
 Jump_012_6DDC:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7565,13 +7567,13 @@ Jump_012_6DDC:: ; address name
     ld [wCBCF], a
     ret
 
-; entry 0 of the `rst $00` table in Func_012_6B98
+; entry 0 of the `rst $00` table in RunFieldCommandHFFC6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCBCF
 ; points at: wCBD0
-Func_012_6B98_Case00::
+RunFieldCommandHFFC6_Case00::
 Jump_012_6DF0:: ; address name
-    call Func_012_6E0B
+    call RunFieldCommandHFFC6_Shared01
     push af
     ld hl, wCBD0
     ld [hl], $40
@@ -7588,11 +7590,13 @@ Jump_012_6DF0:: ; address name
     ld [wCBCF], a
     ret
 
-; 18 call sites from 18 routines (e.g. Func_012_6B98_Case14, Func_012_6B98_Case12, Func_012_6B98_Case11, Func_012_6B98_Case10, ...)
+; only called from routines of RunFieldCommandHFFC6 (E-0098)
+; 18 call sites from 18 routines (e.g. RunFieldCommandHFFC6_Case14, RunFieldCommandHFFC6_Case12, RunFieldCommandHFFC6_Case11, RunFieldCommandHFFC6_Case10, ...)
 ; reads: hFFC6, wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
-Func_012_6E0B::
+RunFieldCommandHFFC6_Shared01::
+Func_012_6E0B:: ; address name
     ldh a, [hFFC6]
     and a, $7F
     add a, a
@@ -7642,11 +7646,13 @@ Jump_012_6E5E::
     ld a, [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_012_6B98_Case13, Func_012_6B98_Case0D)
+; only called from routines of RunFieldCommandHFFC6 (E-0098)
+; 2 call sites from 2 routines (e.g. RunFieldCommandHFFC6_Case13, RunFieldCommandHFFC6_Case0D)
 ; reads: hFFC6, wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
-Func_012_6E61::
+RunFieldCommandHFFC6_Shared02::
+Func_012_6E61:: ; address name
     ldh a, [hFFC6]
     and a, $7F
     add a, a
@@ -8798,7 +8804,7 @@ Jump_012_7624::
     ret c
     call Func_012_79DC
     ret c
-    call Func_012_797C
+    call TriggerEventC6IfGoldAtLeast5000
     ret c
     call Func_012_781E
     ret c
@@ -9366,10 +9372,12 @@ Jump_012_797A::
     sub a, a
     ret
 
+; when wC627 is $FF or 0 and the gold is at least 5000, wC935 = $C6 and carry; otherwise A = 0, no carry (E-0124)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wC627, wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
-Func_012_797C::
+TriggerEventC6IfGoldAtLeast5000::
+Func_012_797C:: ; address name
     ld a, [wC627]
     cp a, $FF
     jr z, Jump_012_7986

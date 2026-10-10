@@ -570,7 +570,7 @@ Jump_013_433C:: ; address name
     ld de, $00A7
     call TestFlagBit
     jr c, Jump_013_436E
-    call DispatchTalkEvent_Shared01
+    call InventoryHasFreeSlotCheck_Bank13
     jr nc, Jump_013_4367
     ld [hl], $35
     ld a, [wC836]
@@ -1360,7 +1360,7 @@ Jump_013_474A:: ; address name
 ; reads: hFFC6
 DispatchTalkEvent_Case05_Case4C::
 Jump_013_475B:: ; address name
-    farcall DispatchTalkEvent_Shared02
+    farcall DispatchTalkEvent_Shared01
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_476D
@@ -1795,7 +1795,7 @@ Jump_013_4995:: ; address name
 ; reads: hFFC6
 DispatchTalkEvent_Case05_Case6E::
 Jump_013_499C:: ; address name
-    farcall DispatchTalkEvent_Shared02
+    farcall DispatchTalkEvent_Shared01
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_49AE
@@ -1813,7 +1813,7 @@ Jump_013_49AE::
 ; reads: hFFC6
 DispatchTalkEvent_Case05_Case6F::
 Jump_013_49B5:: ; address name
-    farcall DispatchTalkEvent_Shared02
+    farcall DispatchTalkEvent_Shared01
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_49C7
@@ -3697,7 +3697,7 @@ Jump_013_540E::
     ld a, [wC6FD]
     cp a, $03
     jr nz, Jump_013_542F
-    farcall Func_05F_6CA9
+    farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a, a
     jr nz, Jump_013_5428
@@ -4690,7 +4690,7 @@ Jump_013_5B8D::
     jr c, Jump_013_5BAC
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld hl, $4FAF
     call StartScriptAtHL_B13
     ld de, $000D
@@ -4706,7 +4706,7 @@ Jump_013_5BB3::
     ld de, $01A7
     call TestFlagBit
     jr c, Jump_013_5BC0
-    call DispatchTalkEvent_Shared01
+    call InventoryHasFreeSlotCheck_Bank13
     jr c, Jump_013_5BC7
 
 Jump_013_5BC0::
@@ -5037,7 +5037,7 @@ Jump_013_5E14::
     ld de, $0100
     call TestFlagBit
     jr c, Jump_013_5E37
-    call DispatchTalkEvent_Shared01
+    call InventoryHasFreeSlotCheck_Bank13
     jr c, Jump_013_5E28
     ld hl, $0107
     call StartMessageCommand09HL_B13
@@ -5485,7 +5485,7 @@ Jump_013_6109::
 ; writes: wC836
 DispatchTalkEvent_Case01_Case0D::
 Jump_013_6110:: ; address name
-    call DispatchTalkEvent_Shared01
+    call InventoryHasFreeSlotCheck_Bank13
     jr c, Jump_013_6116
     ret
 
@@ -5959,7 +5959,7 @@ Jump_013_6438::
     call StartScriptAtHL_B13
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $20
     ld [wCBD3], a
     ld a, $50
@@ -6031,7 +6031,7 @@ Jump_013_64CF::
 Jump_013_64D6::
     ld a, $02
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld de, $0016
     call TestFlagBit
     jr c, Jump_013_64EF
@@ -6839,7 +6839,7 @@ Jump_013_69EE::
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ret
 
 ; entry 54 of the `rst $00` table in DispatchTalkEvent_Case01
@@ -7034,7 +7034,7 @@ Jump_013_6B0B::
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld hl, $0B43
     call StartMessageCommand09HL_B13
     ld de, $00CD
@@ -7858,7 +7858,7 @@ Jump_013_6F5D:: ; address name
     ret
 
 Jump_013_6F84::
-    call DispatchTalkEvent_Shared01
+    call InventoryHasFreeSlotCheck_Bank13
     jr c, Jump_013_6F90
     ld hl, $0261
     call StartMessageCommand09HL_B13
@@ -9800,11 +9800,11 @@ Func_013_7F86:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; only called from routines of DispatchTalkEvent (E-0098)
+; the same 28 bytes as InventoryHasFreeSlotCheck (04:7C37)
 ; 5 call sites from 5 routines (e.g. DispatchTalkEvent_Case01_Case77, DispatchTalkEvent_Case01_Case0D, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case02, ...)
 ; reads: wC634
 ; points at: wInventory
-DispatchTalkEvent_Shared01::
+InventoryHasFreeSlotCheck_Bank13::
 Func_013_7F94:: ; address name
     ld a, [wC634]
     cp a, $FF

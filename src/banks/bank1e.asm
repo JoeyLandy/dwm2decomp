@@ -403,7 +403,7 @@ Jump_01E_4234:: ; address name
     dw ScriptCommandE8_Run_Case04_Case0A
     dw ScriptCommandE8_Run_Case04_Case0B
     dw ScriptCommandE8_Run_Case04_Case0C
-    dw Func_01E_46E5
+    dw DrawBox4718AndMenuAndStep_1E
     dw ScriptCommandE8_Run_Case04_Case0E
     dw ScriptCommandE8_Run_Case04_Case0F
     dw ScriptCommandE8_Run_Case04_Case10
@@ -428,7 +428,7 @@ Jump_01E_4234:: ; address name
     dw ScriptCommandE8_Run_Case04_Case0A
     dw ScriptCommandE8_Run_Case04_Case0B
     dw ScriptCommandE8_Run_Case04_Case0C
-    dw Func_01E_46E5
+    dw DrawBox4718AndMenuAndStep_1E
     dw ScriptCommandE8_Run_Case04_Case27
     dw ScriptCommandE8_Run_Case04_Case28
     dw ScriptCommandE8_Run_Case04_Case29
@@ -546,7 +546,7 @@ Jump_01E_4371:: ; address name
     ld a, [hl]
     ld b, a
     push af
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     ld de, $795C
     ld hl, wC36C
     ld bc, $0C09
@@ -982,7 +982,7 @@ Jump_01E_465C::
     ld a, [wD781]
     cp a, $0C
     jr nz, Jump_01E_4670
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
 
 Jump_01E_4670::
     ld a, $01
@@ -1071,11 +1071,13 @@ Jump_01E_46C1::
     ret
     db $2D, $01, $6D, $01
 
+; copies box $4718 to wC410, runs Func_01E_75F2, blanks the cursor entry wD7AB of table $7880 and wD781 += 1 (E-0124)
 ; 5 call sites from 5 routines (e.g. ScriptCommandE8_Run_Case04_Case29, ScriptCommandE8_Run_Case04_Case0F, ScriptCommandE8_Run_Case05_Case48, ScriptCommandE8_Run_Case05_Case2F, ...)
 ; reads: wD7AB, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC410
-Func_01E_46E5::
+DrawBox4718AndMenuAndStep_1E::
+Func_01E_46E5:: ; address name
     ld de, $4718
     ld hl, wC410
     ld bc, $0801
@@ -1164,7 +1166,7 @@ Jump_01E_4782::
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    call Func_01E_46E5
+    call DrawBox4718AndMenuAndStep_1E
     ld a, $06
     ld [wD781], a
     xor a, a
@@ -1520,7 +1522,7 @@ Jump_01E_4A39:: ; address name
     ld a, [hl]
     ld b, a
     push af
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     ld de, $795C
     ld hl, wC36C
     ld bc, $0C09
@@ -1822,7 +1824,7 @@ Jump_01E_4BE1:: ; address name
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    call Func_01E_46E5
+    call DrawBox4718AndMenuAndStep_1E
     xor a, a
     ld [wD7AB], a
     ld [wD7AD], a
@@ -1884,7 +1886,7 @@ Jump_01E_4C78:: ; address name
     dw ScriptCommandE8_Run_Case04_Case0A
     dw ScriptCommandE8_Run_Case04_Case0B
     dw ScriptCommandE8_Run_Case04_Case0C
-    dw Func_01E_46E5
+    dw DrawBox4718AndMenuAndStep_1E
     dw ScriptCommandE8_Run_Case05_Case14
     dw ScriptCommandE8_Run_Case05_Case15
     dw ScriptCommandE8_Run_Case05_Case16
@@ -1910,7 +1912,7 @@ Jump_01E_4C78:: ; address name
     dw ScriptCommandE8_Run_Case04_Case0A
     dw ScriptCommandE8_Run_Case04_Case0B
     dw ScriptCommandE8_Run_Case04_Case0C
-    dw Func_01E_46E5
+    dw DrawBox4718AndMenuAndStep_1E
     dw ScriptCommandE8_Run_Case05_Case2E
     dw ScriptCommandE8_Run_Case05_Case2F
     dw ScriptCommandE8_Run_Case05_Case30
@@ -1934,7 +1936,7 @@ Jump_01E_4C78:: ; address name
     dw ScriptCommandE8_Run_Case04_Case0A
     dw ScriptCommandE8_Run_Case04_Case0B
     dw ScriptCommandE8_Run_Case04_Case0C
-    dw Func_01E_46E5
+    dw DrawBox4718AndMenuAndStep_1E
     dw ScriptCommandE8_Run_Case05_Case46
     dw ScriptCommandE8_Run_Case05_Case47
     dw ScriptCommandE8_Run_Case05_Case48
@@ -1970,7 +1972,7 @@ Jump_01E_4D1C:: ; address name
 ; points at: wC52D
 ScriptCommandE8_Run_Case05_Case15::
 Jump_01E_4D37:: ; address name
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2023,7 +2025,7 @@ Jump_01E_4D5B:: ; address name
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    call Func_01E_46E5
+    call DrawBox4718AndMenuAndStep_1E
     xor a, a
     ld [wD7AB], a
     ld [wD7AD], a
@@ -2322,7 +2324,7 @@ Jump_01E_4F94::
 ; reads: wD7AB
 ScriptCommandE8_Run_Case05_Case2F::
 Jump_01E_4F9D:: ; address name
-    call Func_01E_46E5
+    call DrawBox4718AndMenuAndStep_1E
     ld a, [wD7AB]
     ld b, $BC
     ld hl, $7880
@@ -2428,7 +2430,7 @@ Jump_01E_4FF7:: ; address name
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    call Func_01E_46E5
+    call DrawBox4718AndMenuAndStep_1E
     xor a, a
     ld [wD7AB], a
     ld [wD7AD], a
@@ -2708,7 +2710,7 @@ Jump_01E_525F:: ; address name
     call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     ld de, $795C
     ld hl, wC36C
     ld bc, $0C09
@@ -3860,7 +3862,7 @@ Jump_01E_5B50:: ; address name
     dw DrawTileMap5E12AtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
-    dw Func_01E_6810
+    dw ListRecordsAndDrawWD789Cell5Panel
     dw ScriptCommandE8_Run_Case09_Case0B
     dw ScriptCommandE8_Run_Case09_Case0C
     dw ScriptCommandE8_Run_Case09_Case0D
@@ -4764,7 +4766,7 @@ Jump_01E_613A:: ; address name
     push hl
     ld a, [hl]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     pop hl
     push hl
     ld a, [hl]
@@ -4774,7 +4776,7 @@ Jump_01E_613A:: ; address name
     pop hl
     ld a, [hl]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4826,11 +4828,11 @@ Jump_01E_619F:: ; address name
     ld hl, $793C
     ld de, $791C
     call ScriptCommandE8_Run_Shared05
-    call Func_01E_6810
+    call ListRecordsAndDrawWD789Cell5Panel
     call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommandE8_Run_Case0E
@@ -5449,7 +5451,7 @@ Jump_01E_65B8:: ; address name
     dw DrawTileMap5E12AtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
-    dw Func_01E_6810
+    dw ListRecordsAndDrawWD789Cell5Panel
     dw ScriptCommandE8_Run_Case09_Case0B
     dw ScriptCommandE8_Run_Case09_Case0C
     dw ScriptCommandE8_Run_Case08_Case0D
@@ -5784,10 +5786,12 @@ Jump_01E_6808::
     ld [wD781], a
     ret
 
+; lists the records (Func_01D_5E79 in state 8, else ListRecordsState1WithByte6EClear), loads the family icon of the record at WD789 cell 5 and draws it, then wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case0E_Case0A)
 ; reads: wD780, wD781
 ; writes: wD7F1, wD781
-Func_01E_6810::
+ListRecordsAndDrawWD789Cell5Panel::
+Func_01E_6810:: ; address name
     ld a, [wD780]
     cp a, $08
     jr nz, Jump_01E_681F
@@ -5801,7 +5805,7 @@ Jump_01E_6825::
     call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
@@ -5856,7 +5860,7 @@ Jump_01E_6870:: ; address name
     call GetWD789Cell4Address
     ld a, [hl]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank1E
+    call LoadFamilyIconTileForRecordB_Bank1E
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -6580,7 +6584,7 @@ Func_01E_6D42:: ; address name
     ld [hl], $12
     ret
 
-; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, Func_01E_6FE3)
+; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunWD781Step_F0_5DE8_Case05_Sub01)
 ; reads: hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, wC8CF, wC8D0, wC8D1, wC8D2, wC8D9, wD7F1, ...
 Func_01E_6D70::
@@ -6951,14 +6955,16 @@ Jump_01E_6FC9::
     ld [wD7F7], a
     jr Jump_01E_6FBA
 
-; 1 call site from 1 routine (e.g. Func_0F0_5DE8_Case05)
-Func_01E_6FE3::
+; only called from RunWD781Step_F0_5DE8_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunWD781Step_F0_5DE8_Case05)
+RunWD781Step_F0_5DE8_Case05_Sub01::
+Func_01E_6FE3:: ; address name
     ld b, e
     call Func_01E_6D70
     call Func_01E_6FEB
     ret
 
-; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, Func_01E_6FE3)
+; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunWD781Step_F0_5DE8_Case05_Sub01)
 ; reads: hFFC6, hFFC7, rSTAT
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F5, wD7F2, wD7F3, wD7F4
 Func_01E_6FEB::
@@ -7150,7 +7156,7 @@ Func_01E_70EF:: ; address name
     ld [wD09D], a
     ld a, [wD7F4]
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     pop bc
 
 Jump_01E_710A::
@@ -7303,7 +7309,7 @@ Func_01E_71B5:: ; address name
     ret
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
-; 11 call sites from 11 routines (e.g. ScriptCommandE8_Run_Case07_Case30, ScriptCommandE8_Run_Case06_Case18, ScriptCommandE8_Run_Case0D_Case0E, Func_00D_491A, ...)
+; 11 call sites from 11 routines (e.g. ScriptCommandE8_Run_Case07_Case30, ScriptCommandE8_Run_Case06_Case18, ScriptCommandE8_Run_Case0D_Case0E, DrawBox5022WithPageIndicator, ...)
 ; reads: wD7A9, wD7AF, wD7AB
 ; writes: wD7B0, wD7AF, wD7B1, wD7AB
 Func_01E_71E1::
@@ -8097,11 +8103,11 @@ Func_01E_75B3:: ; address name
 Jump_01E_75C4::
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyPaletteForWD09D (E-0122)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWD09D (E-0122)
 ; 8 call sites from 7 routines (e.g. ScriptCommandE8_Run_Case04_Case01, ScriptCommandE8_Run_Case04_Case17, ScriptCommandE8_Run_Case06_Case08, ScriptCommandE8_Run_Case08_Case0D, ...)
 ; reads: hFFC6
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
-LoadFamilyPaletteForRecordB_Bank1E::
+LoadFamilyIconTileForRecordB_Bank1E::
 Func_01E_75C5:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -8115,19 +8121,19 @@ Func_01E_75C5:: ; address name
     ld [wD09D], a
     ld a, $C7
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ret
 
 ; far-calls Func_01D_5B4D (E-0122)
-; 5 call sites from 5 routines (e.g. ScriptCommandE8_Run_Case04_Case01, ScriptCommandE8_Run_Case04_Case17, ScriptCommandE8_Run_Case06_Case08, Func_01E_6810, ...)
+; 5 call sites from 5 routines (e.g. ScriptCommandE8_Run_Case04_Case01, ScriptCommandE8_Run_Case04_Case17, ScriptCommandE8_Run_Case06_Case08, ListRecordsAndDrawWD789Cell5Panel, ...)
 CallFunc5B4DInBank1D::
 Func_01E_75EB:: ; address name
     farcall Func_01D_5B4D
     ret
 
-; 5 call sites from 5 routines (e.g. Func_01E_46E5, ScriptCommandE8_Run_Shared03, ScriptCommandE8_Run_Case04_Case06, ScriptCommandE8_Run_Case06_Case0D, ...)
+; 5 call sites from 5 routines (e.g. DrawBox4718AndMenuAndStep_1E, ScriptCommandE8_Run_Shared03, ScriptCommandE8_Run_Case04_Case06, ScriptCommandE8_Run_Case06_Case0D, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
 Func_01E_75F2::

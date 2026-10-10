@@ -121,7 +121,7 @@ Jump_014_40B1::
     jr nz, Jump_014_40B1
     ld a, $80
     ldh [hFFBA], a
-    farcall Func_002_470B
+    farcall WritePlayerNameWithFlag0SuffixToWC130
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -664,7 +664,7 @@ Jump_014_4446:: ; address name
     ld a, [wD781]
     rst $00
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case02
     dw ScriptCommandEB_Run_Case05_Case03
     dw ScriptCommandEB_Run_Case05_Case04
@@ -693,7 +693,7 @@ Jump_014_4446:: ; address name
     dw ScriptCommandEB_Run_Case05_Case1B
     dw ScriptCommandEB_Run_Case05_Case1C
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case1F
     dw ScriptCommandEB_Run_Case05_Case20
     dw ScriptCommandEB_Run_Case05_Case21
@@ -711,11 +711,11 @@ Jump_014_4446:: ; address name
     dw ScriptCommandEB_Run_Case05_Case2D
     dw ScriptCommandEB_Run_Case05_Case2E
     dw ScriptCommandEB_Run_Case05_Case2F
-    dw Func_014_4932
+    dw DrawBox4965AndMenuAndStep
     dw ScriptCommandEB_Run_Case05_Case31
     dw ScriptCommandEB_Run_Case05_Case32
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case02
     dw ScriptCommandEB_Run_Case05_Case03
     dw ScriptCommandEB_Run_Case05_Case04
@@ -742,7 +742,7 @@ Jump_014_4446:: ; address name
 ; writes: wD7B4, wD7B5, wD7B6, wD7AB, wD7AF
 ScriptCommandEB_Run_Case05_Case32::
 Jump_014_44DA:: ; address name
-    call Func_014_4932
+    call DrawBox4965AndMenuAndStep
     farcall ListRecordsState1WithByte6EClear
     ld a, [wD7F5]
     ld h, a
@@ -1002,7 +1002,7 @@ Jump_014_46C6::
     ld [wD7B6], a
     ld [wD7B4], a
     farcall Func_01D_5E79
-    call Func_014_4932
+    call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
     ld [wD7AD], a
@@ -1359,11 +1359,13 @@ Jump_014_4911::
 Data_014_492E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $01, $6D, $01
 
+; copies box Data_014_4965 to wC410, runs Func_014_5925, blanks the cursor entry wD7AB of Data_014_5B1E and wD781 += 1 (E-0124)
 ; 5 call sites from 5 routines (e.g. ScriptCommandEB_Run_Case04_Case43, ScriptCommandEB_Run_Case04_Case16, ScriptCommandEB_Run_Case04_Case15, ScriptCommandEB_Run_Case05_Case40, ...)
 ; reads: wD7AB, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC410
-Func_014_4932::
+DrawBox4965AndMenuAndStep::
+Func_014_4932:: ; address name
     ld de, Data_014_4965
     ld hl, wC410
     ld bc, $0801
@@ -1565,11 +1567,13 @@ Data_014_4AA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_4B02:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $050B02, $58
 
+; clears four tile rows (vTiles1 + $240, $500, $700, $4E0), copies rectangle Data_014_5B36 to wC364 and wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case08)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC364
-Func_014_4B5A::
+ClearTilesAndDrawRect5B36AndStep::
+Func_014_4B5A:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0C01
     call FillTilesBxC
@@ -1658,7 +1662,7 @@ Jump_014_4BEA:: ; address name
     ld a, [hl]
     ld b, a
     push af
-    call LoadFamilyPaletteForRecordB_Bank14
+    call LoadFamilyIconTileForRecordB_Bank14
     ld de, Data_014_5B8E
     ld hl, wC36C
     ld bc, $0C09
@@ -1870,7 +1874,7 @@ Jump_014_4D64:: ; address name
     ld a, [wD781]
     rst $00
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case1F
     dw ScriptCommandEB_Run_Case05_Case20
     dw ScriptCommandEB_Run_Case05_Case21
@@ -1888,7 +1892,7 @@ Jump_014_4D64:: ; address name
     dw ScriptCommandEB_Run_Case05_Case2D
     dw ScriptCommandEB_Run_Case05_Case2E
     dw ScriptCommandEB_Run_Case05_Case2F
-    dw Func_014_4932
+    dw DrawBox4965AndMenuAndStep
     dw ScriptCommandEB_Run_Case04_Case14
     dw ScriptCommandEB_Run_Case04_Case15
     dw ScriptCommandEB_Run_Case04_Case16
@@ -1902,7 +1906,7 @@ Jump_014_4D64:: ; address name
     dw ScriptCommandEB_Run_Case05_Case1B
     dw ScriptCommandEB_Run_Case05_Case1C
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case02
     dw ScriptCommandEB_Run_Case05_Case03
     dw ScriptCommandEB_Run_Case05_Case04
@@ -1921,7 +1925,7 @@ Jump_014_4D64:: ; address name
     dw ScriptCommandEB_Run_Case04_Case31
     dw ScriptCommandEB_Run_Case04_Case32
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case1F
     dw ScriptCommandEB_Run_Case05_Case20
     dw ScriptCommandEB_Run_Case05_Case21
@@ -1933,7 +1937,7 @@ Jump_014_4D64:: ; address name
     dw ScriptCommandEB_Run_Case05_Case2D
     dw ScriptCommandEB_Run_Case05_Case2E
     dw ScriptCommandEB_Run_Case05_Case2F
-    dw Func_014_4932
+    dw DrawBox4965AndMenuAndStep
     dw ScriptCommandEB_Run_Case04_Case41
     dw ScriptCommandEB_Run_Case04_Case42
     dw ScriptCommandEB_Run_Case04_Case43
@@ -1978,7 +1982,7 @@ Jump_014_4E0E:: ; address name
     ld b, a
     push af
     ld [wD7F1], a
-    farcall LoadFamilyPaletteForWD7F1Record
+    farcall LoadFamilyIconTileForWD7F1Record
     ld de, Data_014_5B8E
     ld hl, wC36C
     ld bc, $0C09
@@ -2414,7 +2418,7 @@ Jump_014_514B::
     inc a
     ld [wD781], a
     farcall Func_01D_5E79
-    call Func_014_4932
+    call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
     ld [wD7AD], a
@@ -2468,7 +2472,7 @@ Jump_014_5171:: ; address name
     ld [wD7F2], a
     farcall Func_014_7E96
     farcall Func_01D_5E79
-    call Func_014_4932
+    call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
     ld [wD7AD], a
@@ -2502,7 +2506,7 @@ Jump_014_51E9:: ; address name
     ret
 
 Jump_014_520D::
-    call Func_014_4B5A
+    call ClearTilesAndDrawRect5B36AndStep
     ld a, [wD781]
     sub a, $07
     ld [wD781], a
@@ -2841,7 +2845,7 @@ Jump_014_5464::
     ld [wD7B6], a
     ld [wD7B4], a
     farcall Func_01D_5E79
-    call Func_014_4932
+    call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
     ld [wD7AD], a
@@ -2858,7 +2862,7 @@ Jump_014_5492:: ; address name
     ld a, [wD781]
     rst $00
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case1F
     dw ScriptCommandEB_Run_Case05_Case20
     dw ScriptCommandEB_Run_Case06_Case04
@@ -2889,7 +2893,7 @@ Jump_014_54B8:: ; address name
     ld l, a
     ld a, [hl]
     ld b, a
-    call LoadFamilyPaletteForRecordB_Bank14
+    call LoadFamilyIconTileForRecordB_Bank14
     ld de, Data_014_5B8E
     ld hl, wC36C
     ld bc, $0C09
@@ -3034,7 +3038,7 @@ Jump_014_55C9:: ; address name
     ld a, [wD781]
     rst $00
     dw ScriptCommandEB_Run_Case05_Case00
-    dw Func_014_4B5A
+    dw ClearTilesAndDrawRect5B36AndStep
     dw ScriptCommandEB_Run_Case05_Case02
     dw ScriptCommandEB_Run_Case05_Case03
     dw ScriptCommandEB_Run_Case05_Case04
@@ -3435,7 +3439,7 @@ Func_014_5800:: ; address name
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 15 call sites from 14 routines (e.g. ScriptCommandEB_Run_Case01_Case03, ScriptCommandEB_Run_Case04_Case2F, Func_014_4932, ScriptCommandEB_Run_Case05_Case2E, ...)
+; 15 call sites from 14 routines (e.g. ScriptCommandEB_Run_Case01_Case03, ScriptCommandEB_Run_Case04_Case2F, DrawBox4965AndMenuAndStep, ScriptCommandEB_Run_Case05_Case2E, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank14::
@@ -3654,7 +3658,7 @@ Func_014_5910:: ; address name
     call Func_014_5925
     ret
 
-; 4 call sites from 4 routines (e.g. RunFunc5925At0280, Func_014_4932, ScriptCommandEB_Run_Case05_Case09, DrawBox1D4AndCopyRect5595)
+; 4 call sites from 4 routines (e.g. RunFunc5925At0280, DrawBox4965AndMenuAndStep, ScriptCommandEB_Run_Case05_Case09, DrawBox1D4AndCopyRect5595)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
 Func_014_5925::
@@ -3716,11 +3720,11 @@ Jump_014_5975::
     jr nz, Func_014_5925
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyPaletteForWD09D (E-0122)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWD09D (E-0122)
 ; 2 call sites from 2 routines (e.g. ScriptCommandEB_Run_Case05_Case21, ScriptCommandEB_Run_Case06_Case04)
 ; reads: hFFC6
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
-LoadFamilyPaletteForRecordB_Bank14::
+LoadFamilyIconTileForRecordB_Bank14::
 Func_014_5979:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -3734,7 +3738,7 @@ Func_014_5979:: ; address name
     ld [wD09D], a
     ld a, $C7
     ld [wD09E], a
-    farcall LoadFamilyPaletteForWD09D
+    farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
     ret
@@ -4544,7 +4548,7 @@ Jump_014_60F8::
     jr z, Jump_014_6154
     ld b, $8D
     push bc
-    call Func_014_6875
+    call IsHLByteInList688A
     pop bc
     cp a, $FF
     jr nz, Jump_014_6112
@@ -4612,7 +4616,7 @@ Jump_014_6154::
     dec hl
     ld b, $8E
     push bc
-    call Func_014_68B5
+    call IsHLByteInList68CA
     pop bc
     cp a, $FF
     jr nz, Jump_014_6164
@@ -4921,13 +4925,13 @@ Jump_014_6375::
     push af
     cp a, $8D
     jr z, Jump_014_6392
-    call Func_014_68B5
+    call IsHLByteInList68CA
     cp a, $FF
     jp z, Jump_014_63FD
     jr Jump_014_639A
 
 Jump_014_6392::
-    call Func_014_6875
+    call IsHLByteInList688A
     cp a, $FF
     jp z, Jump_014_63FD
 
@@ -5024,7 +5028,7 @@ Jump_014_641A::
     cp a, $8D
     jr z, Jump_014_63FD
     dec hl
-    call Func_014_68B5
+    call IsHLByteInList68CA
     cp a, $FF
     jr z, Jump_014_63FD
     inc hl
@@ -5753,8 +5757,10 @@ Jump_014_6856::
     inc de
     ret
 
+; A = 0 when [HL] is in the $FF-terminated list Data_014_688A, else $FF (E-0124)
 ; 2 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, Func_014_60E6)
-Func_014_6875::
+IsHLByteInList688A::
+Func_014_6875:: ; address name
     ld de, Data_014_688A
 
 Jump_014_6878::
@@ -5781,8 +5787,10 @@ Data_014_688A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $34, $35, $37, $38, $75, $76, $77, $78, $79, $60, $61, $62, $63, $64, $65, $66
     db $67, $68, $69, $6A, $6B, $6C, $6E, $6F, $26, $5A, $FF
 
+; A = 0 when [HL] is in the $FF-terminated list Data_014_68CA, else $FF (E-0124)
 ; 3 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, Func_014_60E6)
-Func_014_68B5::
+IsHLByteInList68CA::
+Func_014_68B5:: ; address name
     ld de, Data_014_68CA
 
 Jump_014_68B8::
@@ -8358,9 +8366,11 @@ Jump_014_7F85::
     ld [rRAMG2], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_6C48)
+; only called from CreateMonsterRecordOfKindHFFC7_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
 ; reads: wD09D, wD09E, wD09F, wD0A0
-Func_014_7F9C::
+CreateMonsterRecordOfKindHFFC7_Sub01_Sub01_Sub01::
+Func_014_7F9C:: ; address name
     ld a, [wD09D]
     ld c, a
     ld b, $00

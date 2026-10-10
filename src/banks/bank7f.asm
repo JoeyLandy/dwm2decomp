@@ -2,7 +2,7 @@ SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7F
 
 ; DrawMetaSpriteAt_40CC with DE = Data_07F_4008 (E-0116)
-; 3 call sites from 3 routines (e.g. Func_004_44CE, Func_004_4C25, Func_004_4C96)
+; 3 call sites from 3 routines (e.g. Func_004_44CE, AdvanceHFF99AndRunHFF8BMode_Case01_Sub01, AdvanceHFF99AndRunHFF8BMode_Shared01)
 DrawMetaSprite4008::
 Func_07F_4001:: ; address name
     ld de, Data_07F_4008
@@ -934,7 +934,7 @@ Data_07F_6EB4:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $1FEEB4, $156
 
 ; DE = Data_07F_7011 (the table of meta-sprite sets), then DrawMetaSpriteAt
-; 25 call sites from 20 routines (e.g. PauseMenu_State3_Shared04, Func_004_4BE4, Func_004_4D43, DrawMetaSprite0AtX50YWD09E, ...)
+; 25 call sites from 20 routines (e.g. PauseMenu_State3_Shared04, AdvanceHFF99AndRunHFF8BMode_Case02_Sub01, AdvanceHFF99AndRunHFF8BMode_Case00_Sub01, DrawMetaSprite0AtX50YWD09E, ...)
 DrawMetaSprite::
 Func_07F_700A:: ; address name
     ld de, Data_07F_7011

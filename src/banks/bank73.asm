@@ -2471,7 +2471,7 @@ Func_073_4FB7:: ; address name
 ; writes: wScriptParam0
 ScriptCommand82_Run_Shared05::
 Func_073_4FD2:: ; address name
-    farcall Func_05F_6CA9
+    farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a, a
     jr z, Jump_073_4FE8
@@ -3359,7 +3359,7 @@ ScriptCommandCC_Run_Case00::
 Jump_073_555E:: ; address name
     ld a, $05
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $20
@@ -3957,7 +3957,7 @@ ScriptCommand60_Run_Case00::
 Jump_073_58E0:: ; address name
     ld a, $10
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $50
     ld [wCBD3], a
     ld a, $30
@@ -5059,7 +5059,7 @@ Func_073_5F55:: ; address name
     ldh [hFFC8], a
     ld a, $02
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld hl, wC6FD
     inc [hl]
     ld a, [wC6FD]
@@ -5138,7 +5138,7 @@ ScriptCommand4C_Run_Case00::
 Jump_073_5FE4:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld hl, $6020
     ld de, $00D1
     call TestFlagBit
@@ -5310,7 +5310,7 @@ Jump_073_60CD:: ; address name
     ret nz
     ld a, $0C
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $48
@@ -7442,7 +7442,7 @@ Jump_073_6C21:: ; address name
     ret nc
     ld a, $10
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $80
     ld [wCBCF], a
     ld a, $0E
@@ -7789,7 +7789,7 @@ Jump_073_6EEF:: ; address name
     ret nc
     ld a, $05
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -8400,7 +8400,7 @@ Jump_073_72A9:: ; address name
     ld [wC8F1], a
     cp a, $38
     jr z, Jump_073_72B9
-    call Func_073_736B
+    call ShiftObjectsYByTable7526
     ret
 
 Jump_073_72B9::
@@ -8454,7 +8454,7 @@ Jump_073_72F9::
 ; points at: wScriptStep
 ScriptCommand16_Run_Case0B::
 Jump_073_7300:: ; address name
-    call Func_073_736B
+    call ShiftObjectsYByTable7526
     ld a, [wC8F0]
     dec a
     ld [wC8F0], a
@@ -8521,7 +8521,7 @@ Func_073_734D:: ; address name
     call SetBit2AtHL_B73
     ld a, $80
     ld [wCBCF], a
-    call Func_073_736B
+    call ShiftObjectsYByTable7526
     ld a, [wScriptParam0]
     or a, a
     ret nz
@@ -8529,11 +8529,13 @@ Func_073_734D:: ; address name
     inc [hl]
     ret
 
+; adds the signed step $7526[wScriptParam0 & $3F] (negated with bit 6) to wCB9A, wCBAA and wCBD3, then wScriptParam0 += 1 (E-0124)
 ; 3 call sites from 3 routines (e.g. ScriptCommand16_Run_Case0E, ScriptCommand16_Run_Case0B, ScriptStepSetObjectBit2AndWait)
 ; reads: wScriptParam0, wCB9A, wCBAA, wCBD3
 ; writes: wCB9A, wCBAA, wCBD3
 ; points at: wScriptParam0
-Func_073_736B::
+ShiftObjectsYByTable7526::
+Func_073_736B:: ; address name
     ld a, [wScriptParam0]
     and a, $3F
     ld hl, $7526

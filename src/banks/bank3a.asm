@@ -280,11 +280,11 @@ Jump_03A_4970::
     ld [wCB75], a
     ld a, h
     ld [wCB76], a
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
     call Func_03A_4A3A
     ld a, [wD801]
     ld c, a
-    call Func_03A_5516
+    call LoadEffectOBJPaletteC
     ret
 
 Data_03A_49AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -358,7 +358,7 @@ Jump_03A_4A33::
     ld [wD868], a
     ret
 
-; 9 call sites from 5 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, DrawHexByteAtBGMap8A_Sub01, Func_03D_4001, ...)
+; 9 call sites from 5 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, DrawHexByteAtBGMap8A_Sub01, DrawEffectSpriteForWD801Range_Sub01, ...)
 ; reads: wDAB9, wD890, wC58A, wC57F, wD868, wD805
 ; writes: wD804
 ; points at: wD805
@@ -495,7 +495,7 @@ Jump_03A_4B04::
     ld a, [wC58A]
     or a, a
     jr nz, Jump_03A_4B18
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
 
 Jump_03A_4B18::
     call AdvanceWD804By4InMode3
@@ -505,7 +505,7 @@ Jump_03A_4B18::
     ld a, [wDAAA]
     or a, a
     jr z, Jump_03A_4B2B
-    call Func_03A_5383
+    call DrawEffectSpriteForWD801Range
     ret
 
 Jump_03A_4B2B::
@@ -568,7 +568,7 @@ Jump_03A_4B87::
     ld [wDAAA], a
     ld a, $00
     ld [wDAB3], a
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
     ld a, [wDAD2]
     srl a
     and a, $44
@@ -608,18 +608,18 @@ Jump_03A_4BB5::
     ld [wCB75], a
     ld a, h
     ld [wCB76], a
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
     call Func_03A_4A3A
     ld a, [wD801]
     ld c, a
-    call Func_03A_5516
+    call LoadEffectOBJPaletteC
     ret
 
 Data_03A_4C12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $22, $00
 
 Jump_03A_4C14::
-    call Func_03A_4C26
+    call RunWD803EffectEvery5Frames
     call Func_03A_5536
     ld a, [wD802]
     cp a, $FF
@@ -628,10 +628,12 @@ Jump_03A_4C14::
     ld [wC526], a
     ret
 
+; every fifth frame (wDAF1) runs the effect routine for wD803 (jump table of fourteen) (E-0124)
 ; 1 call site from 1 routine (e.g. Func_03A_4ADB)
 ; reads: wDAF1, wD803
 ; writes: wDAF1
-Func_03A_4C26::
+RunWD803EffectEvery5Frames::
+Func_03A_4C26:: ; address name
     ld a, [wDAF1]
     inc a
     cp a, $05
@@ -641,25 +643,25 @@ Func_03A_4C26::
     ld [wDAF1], a
     ld a, [wD803]
     rst $00
-    dw Func_03A_4C26_Case00
-    dw Func_03A_4C26_Case00
-    dw Func_03A_4C26_Case02
-    dw Func_03A_4C26_Case03
-    dw Func_03A_4C26_Case04
-    dw Func_03A_4C26_Case05
-    dw Func_03A_4C26_Case06
-    dw Func_03A_4C26_Case07
-    dw Func_03A_4C26_Case08
-    dw Func_03A_4C26_Case09
-    dw Func_03A_4C26_Case0A
-    dw Func_03A_4C26_Case0B
-    dw Func_03A_4C26_Case0C
-    dw Func_03A_4C26_Case0D
+    dw RunWD803EffectEvery5Frames_Case00
+    dw RunWD803EffectEvery5Frames_Case00
+    dw RunWD803EffectEvery5Frames_Case02
+    dw RunWD803EffectEvery5Frames_Case03
+    dw RunWD803EffectEvery5Frames_Case04
+    dw RunWD803EffectEvery5Frames_Case05
+    dw RunWD803EffectEvery5Frames_Case06
+    dw RunWD803EffectEvery5Frames_Case07
+    dw RunWD803EffectEvery5Frames_Case08
+    dw RunWD803EffectEvery5Frames_Case09
+    dw RunWD803EffectEvery5Frames_Case0A
+    dw RunWD803EffectEvery5Frames_Case0B
+    dw RunWD803EffectEvery5Frames_Case0C
+    dw RunWD803EffectEvery5Frames_Case0D
 
-; entry 0 of the `rst $00` table in Func_03A_4C26
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4C26_Case00::
+RunWD803EffectEvery5Frames_Case00::
 Jump_03A_4C54:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -667,16 +669,16 @@ Jump_03A_4C54:: ; address name
     ld [wD804], a
     ret
 
-; entry 2 of the `rst $00` table in Func_03A_4C26
+; entry 2 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wC58A, wC57F, wD804
 ; writes: wD802, wD804, wD805
-Func_03A_4C26_Case02::
+RunWD803EffectEvery5Frames_Case02::
 Jump_03A_4C5E:: ; address name
     ld a, [wBattleTarget]
     and a, $03
     cp a, $03
-    jp z, Func_03A_4C26_Table2_Case04
+    jp z, RunWD803EffectEvery5Frames_Table2_Case04
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_03A_4C7F
@@ -685,35 +687,35 @@ Jump_03A_4C5E:: ; address name
     jr z, Jump_03A_4C7F
     ld a, [wBattleTarget]
     cp a, $04
-    jr nc, Func_03A_4C26_Table2_Case04
+    jr nc, RunWD803EffectEvery5Frames_Table2_Case04
     jr Jump_03A_4C86
 
 Jump_03A_4C7F::
     ld a, [wBattleTarget]
     cp a, $04
-    jr c, Func_03A_4C26_Table2_Case04
+    jr c, RunWD803EffectEvery5Frames_Table2_Case04
 
 Jump_03A_4C86::
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
-    jr c, Func_03A_4C26_Table2_Case04
+    jr c, RunWD803EffectEvery5Frames_Table2_Case04
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Table2_Case00
-    dw Func_03A_4C26_Table2_Case01
-    dw Func_03A_4C26_Table2_Case00
-    dw Func_03A_4C26_Table2_Case01
-    dw Func_03A_4C26_Table2_Case04
+    dw RunWD803EffectEvery5Frames_Table2_Case00
+    dw RunWD803EffectEvery5Frames_Table2_Case01
+    dw RunWD803EffectEvery5Frames_Table2_Case00
+    dw RunWD803EffectEvery5Frames_Table2_Case01
+    dw RunWD803EffectEvery5Frames_Table2_Case04
 
-; entry 0 of the `rst $00` table in Func_03A_4C26
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD805
 ; points at: wD804
-Func_03A_4C26_Table2_Case00::
+RunWD803EffectEvery5Frames_Table2_Case00::
 Jump_03A_4C9C:: ; address name
     ld a, $06
     ld [wD805], a
-    call Func_03A_4CF9
+    call EffectPositionIndexForTarget
     ld hl, Data_03A_4D52
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
@@ -729,16 +731,16 @@ Jump_03A_4C9C:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_4C26
+; entry 1 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wD805
 ; points at: wD804
-Func_03A_4C26_Table2_Case01::
+RunWD803EffectEvery5Frames_Table2_Case01::
 Jump_03A_4CC2:: ; address name
     ld a, $06
     ld [wD805], a
-    call Func_03A_4CF9
+    call EffectPositionIndexForTarget
     ld hl, Data_03A_4D52
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
@@ -755,10 +757,10 @@ Jump_03A_4CC2:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_03A_4C26
+; entry 4 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804, wD805
-Func_03A_4C26_Table2_Case04::
+RunWD803EffectEvery5Frames_Table2_Case04::
 Jump_03A_4CEB:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -768,9 +770,11 @@ Jump_03A_4CEB:: ; address name
     ld [wD805], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_03A_4C26_Table2_Case01, Func_03A_4C26_Table2_Case00)
+; A = a 0-4 position index from wD890 (side count) and the target's slot (E-0124)
+; 2 call sites from 2 routines (e.g. RunWD803EffectEvery5Frames_Table2_Case01, RunWD803EffectEvery5Frames_Table2_Case00)
 ; reads: wD890, wBattleTarget
-Func_03A_4CF9::
+EffectPositionIndexForTarget::
+Func_03A_4CF9:: ; address name
     ld a, [wD890]
     cp a, $01
     jr z, Jump_03A_4D28
@@ -807,7 +811,7 @@ Jump_03A_4D2A::
     ret
 
 ; copies rows of wD805 bytes from VRAM at HL (WaitForVRAMAccess, interrupts off per byte) to DE, C rows, the destination rows 32 bytes apart (the source-row step is not read) (E-0113)
-; 4 call sites from 4 routines (e.g. Func_03A_4C26_Table2_Case01, Func_03A_4C26_Table2_Case00, Func_03A_50D9_Case01, Func_03A_50D9_Case00)
+; 4 call sites from 4 routines (e.g. RunWD803EffectEvery5Frames_Table2_Case01, RunWD803EffectEvery5Frames_Table2_Case00, Func_03A_50D9_Case01, Func_03A_50D9_Case00)
 ; reads: wD805
 CopyVRAMRectToBuffer::
 Func_03A_4D2B:: ; address name
@@ -837,7 +841,7 @@ Jump_03A_4D45::
     jr CopyVRAMRectToBuffer
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 8 call sites from 4 routines (e.g. Func_03A_4C26_Table2_Case01, Func_03A_4C26_Table2_Case00, Func_03A_50D9_Case01, Func_03A_50D9_Case00)
+; 8 call sites from 4 routines (e.g. RunWD803EffectEvery5Frames_Table2_Case01, RunWD803EffectEvery5Frames_Table2_Case00, Func_03A_50D9_Case01, Func_03A_50D9_Case00)
 ReadWordTableEntry_Bank3A::
 Func_03A_4D47:: ; address name
     add a, a
@@ -856,23 +860,23 @@ Data_03A_4D5C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0E8D5C, $74
     ds $24, $C3
 
-; entry 3 of the `rst $00` table in Func_03A_4C26
+; entry 3 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case03::
+RunWD803EffectEvery5Frames_Case03::
 Jump_03A_4DF4:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case03_Case00
-    dw Func_03A_4C26_Case03_Case01
-    dw Func_03A_4C26_Case03_Case00
-    dw Func_03A_4C26_Case03_Case03
+    dw RunWD803EffectEvery5Frames_Case03_Case00
+    dw RunWD803EffectEvery5Frames_Case03_Case01
+    dw RunWD803EffectEvery5Frames_Case03_Case00
+    dw RunWD803EffectEvery5Frames_Case03_Case03
 
-; entry 0 of the `rst $00` table in Func_03A_4C26_Case03
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wD804
-Func_03A_4C26_Case03_Case00::
+RunWD803EffectEvery5Frames_Case03_Case00::
 Jump_03A_4E00:: ; address name
     ld a, $02
     ldh [hScrollY], a
@@ -896,11 +900,11 @@ Func_03A_4E0D:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_4C26_Case03
+; entry 1 of the `rst $00` table in RunWD803EffectEvery5Frames_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wD804
-Func_03A_4C26_Case03_Case01::
+RunWD803EffectEvery5Frames_Case03_Case01::
 Jump_03A_4E1A:: ; address name
     xor a, a
     ldh [hScrollY], a
@@ -910,10 +914,10 @@ Jump_03A_4E1A:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_03A_4C26_Case03
+; entry 3 of the `rst $00` table in RunWD803EffectEvery5Frames_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, hScrollY, hScrollX, wD804
-Func_03A_4C26_Case03_Case03::
+RunWD803EffectEvery5Frames_Case03_Case03::
 Jump_03A_4E25:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -925,25 +929,25 @@ Jump_03A_4E25:: ; address name
     ld [wD804], a
     ret
 
-; entry 4 of the `rst $00` table in Func_03A_4C26
+; entry 4 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case04::
+RunWD803EffectEvery5Frames_Case04::
 Jump_03A_4E35:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case06
+    dw RunWD803EffectEvery5Frames_Case04_Case06
 
-; entry 0 of the `rst $00` table in Func_03A_4C26_Case04
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9, wD804
-Func_03A_4C26_Case04_Case00::
+RunWD803EffectEvery5Frames_Case04_Case00::
 Jump_03A_4E47:: ; address name
     ld hl, wC5E9
     ld [hl], $00
@@ -956,7 +960,7 @@ Jump_03A_4E47:: ; address name
     ret
 
 ; wC5E9-wC5EB = $D2, $D2, $E2; wD804 += 1 (E-0074)
-; 1 call site from 1 routine (e.g. Func_03A_4C26_Case04_Case06)
+; 1 call site from 1 routine (e.g. RunWD803EffectEvery5Frames_Case04_Case06)
 ; points at: wC5E9, wD804
 SetWC5E9PatternAndIncWD804::
 Func_03A_4E57:: ; address name
@@ -970,10 +974,10 @@ Func_03A_4E57:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_03A_4C26_Case04
+; entry 6 of the `rst $00` table in RunWD803EffectEvery5Frames_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4C26_Case04_Case06::
+RunWD803EffectEvery5Frames_Case04_Case06::
 Jump_03A_4E67:: ; address name
     call SetWC5E9PatternAndIncWD804
     ld a, $FF
@@ -982,26 +986,26 @@ Jump_03A_4E67:: ; address name
     ld [wD804], a
     ret
 
-; entry 5 of the `rst $00` table in Func_03A_4C26
+; entry 5 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case05::
+RunWD803EffectEvery5Frames_Case05::
 Jump_03A_4E74:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case05_Case00
-    dw Func_03A_4C26_Case05_Case01
-    dw Func_03A_4C26_Case05_Case02
-    dw Func_03A_4C26_Case05_Case03
+    dw RunWD803EffectEvery5Frames_Case05_Case00
+    dw RunWD803EffectEvery5Frames_Case05_Case01
+    dw RunWD803EffectEvery5Frames_Case05_Case02
+    dw RunWD803EffectEvery5Frames_Case05_Case03
 
-; entry 0 of the `rst $00` table in Func_03A_4C26_Case05
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD807
 ; writes: wD806, wD807
 ; points at: wD804
-Func_03A_4C26_Case05_Case00::
+RunWD803EffectEvery5Frames_Case05_Case00::
 Jump_03A_4E80:: ; address name
-    call Func_03A_4EC3
+    call RunWD803EffectEvery5Frames_Shared01
     ld a, [wD807]
     cp a, $04
     ret c
@@ -1013,12 +1017,12 @@ Jump_03A_4E80:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_4C26_Case05
+; entry 1 of the `rst $00` table in RunWD803EffectEvery5Frames_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD805
 ; writes: wD805
 ; points at: wD805, wD804
-Func_03A_4C26_Case05_Case01::
+RunWD803EffectEvery5Frames_Case05_Case01::
 Jump_03A_4E96:: ; address name
     ld hl, wD805
     inc [hl]
@@ -1031,10 +1035,10 @@ Jump_03A_4E96:: ; address name
     ld [wD805], a
     ret
 
-; entry 2 of the `rst $00` table in Func_03A_4C26_Case05
+; entry 2 of the `rst $00` table in RunWD803EffectEvery5Frames_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9, wD804
-Func_03A_4C26_Case05_Case02::
+RunWD803EffectEvery5Frames_Case05_Case02::
 Jump_03A_4EA9:: ; address name
     ld hl, wC5E9
     ld [hl], $D2
@@ -1046,10 +1050,10 @@ Jump_03A_4EA9:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_03A_4C26_Case05
+; entry 3 of the `rst $00` table in RunWD803EffectEvery5Frames_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4C26_Case05_Case03::
+RunWD803EffectEvery5Frames_Case05_Case03::
 Jump_03A_4EB9:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -1057,9 +1061,11 @@ Jump_03A_4EB9:: ; address name
     ld [wD804], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_03A_4C26_Case05_Case00, Func_03A_4C26_Case07_Case00)
+; only called from routines of RunWD803EffectEvery5Frames (E-0098)
+; 2 call sites from 2 routines (e.g. RunWD803EffectEvery5Frames_Case05_Case00, RunWD803EffectEvery5Frames_Case07_Case00)
 ; points at: wD807, wC5E9
-Func_03A_4EC3::
+RunWD803EffectEvery5Frames_Shared01::
+Func_03A_4EC3:: ; address name
     ld hl, wD807
     inc [hl]
     ld b, $03
@@ -1111,31 +1117,31 @@ Jump_03A_4F00::
     jr nz, Jump_03A_4ECE
     ret
 
-; entry 6 of the `rst $00` table in Func_03A_4C26
+; entry 6 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case06::
+RunWD803EffectEvery5Frames_Case06::
 Jump_03A_4F06:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case00
-    dw Func_03A_4C26_Case06_Case0C
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case00
+    dw RunWD803EffectEvery5Frames_Case06_Case0C
 
-; entry 0 of the `rst $00` table in Func_03A_4C26_Case06
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9, wD804
-Func_03A_4C26_Case06_Case00::
+RunWD803EffectEvery5Frames_Case06_Case00::
 Jump_03A_4F24:: ; address name
     ld hl, wC5E9
     ld a, [hl]
@@ -1151,10 +1157,10 @@ Jump_03A_4F24:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in Func_03A_4C26_Case06
+; entry 12 of the `rst $00` table in RunWD803EffectEvery5Frames_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4C26_Case06_Case0C::
+RunWD803EffectEvery5Frames_Case06_Case0C::
 Jump_03A_4F38:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -1162,29 +1168,29 @@ Jump_03A_4F38:: ; address name
     ld [wD804], a
     ret
 
-; entry 7 of the `rst $00` table in Func_03A_4C26
+; entry 7 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case07::
+RunWD803EffectEvery5Frames_Case07::
 Jump_03A_4F42:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case07_Case00
-    dw Func_03A_4C26_Case07_Case01
-    dw Func_03A_4C26_Case07_Case02
-    dw Func_03A_4C26_Case07_Case00
-    dw Func_03A_4C26_Case07_Case01
-    dw Func_03A_4C26_Case07_Case02
-    dw Func_03A_4C26_Case07_Case06
+    dw RunWD803EffectEvery5Frames_Case07_Case00
+    dw RunWD803EffectEvery5Frames_Case07_Case01
+    dw RunWD803EffectEvery5Frames_Case07_Case02
+    dw RunWD803EffectEvery5Frames_Case07_Case00
+    dw RunWD803EffectEvery5Frames_Case07_Case01
+    dw RunWD803EffectEvery5Frames_Case07_Case02
+    dw RunWD803EffectEvery5Frames_Case07_Case06
 
-; entry 0 of the `rst $00` table in Func_03A_4C26_Case07
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD807
 ; writes: wD806, wD807
 ; points at: wD804
-Func_03A_4C26_Case07_Case00::
+RunWD803EffectEvery5Frames_Case07_Case00::
 Jump_03A_4F54:: ; address name
-    call Func_03A_4EC3
+    call RunWD803EffectEvery5Frames_Shared01
     ld a, [wD807]
     cp a, $04
     ret c
@@ -1196,12 +1202,12 @@ Jump_03A_4F54:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_4C26_Case07
+; entry 1 of the `rst $00` table in RunWD803EffectEvery5Frames_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD805
 ; writes: wD805
 ; points at: wD805, wD804
-Func_03A_4C26_Case07_Case01::
+RunWD803EffectEvery5Frames_Case07_Case01::
 Jump_03A_4F6A:: ; address name
     ld hl, wD805
     inc [hl]
@@ -1214,10 +1220,10 @@ Jump_03A_4F6A:: ; address name
     ld [wD805], a
     ret
 
-; entry 2 of the `rst $00` table in Func_03A_4C26_Case07
+; entry 2 of the `rst $00` table in RunWD803EffectEvery5Frames_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9, wD804
-Func_03A_4C26_Case07_Case02::
+RunWD803EffectEvery5Frames_Case07_Case02::
 Jump_03A_4F7D:: ; address name
     ld hl, wC5E9
     ld [hl], $D2
@@ -1229,10 +1235,10 @@ Jump_03A_4F7D:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_03A_4C26_Case07
+; entry 6 of the `rst $00` table in RunWD803EffectEvery5Frames_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4C26_Case07_Case06::
+RunWD803EffectEvery5Frames_Case07_Case06::
 Jump_03A_4F8D:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -1240,16 +1246,16 @@ Jump_03A_4F8D:: ; address name
     ld [wD804], a
     ret
 
-; entry 8 of the `rst $00` table in Func_03A_4C26
+; entry 8 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
 ; writes: wD802, wD804, wD805
-Func_03A_4C26_Case08::
+RunWD803EffectEvery5Frames_Case08::
 Jump_03A_4F97:: ; address name
     ld a, [wD804]
     or a, a
-    call z, Func_03A_4FB4
-    call Func_03A_5028
+    call z, RunWD803EffectEvery5Frames_Case08_Sub01
+    call RunWD805Step
     ld a, [wD804]
     or a, a
     ret z
@@ -1261,9 +1267,11 @@ Jump_03A_4F97:: ; address name
     ld [wD805], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_4C26_Case08)
+; only called from RunWD803EffectEvery5Frames_Case08 (E-0047)
+; 1 call site from 1 routine (e.g. RunWD803EffectEvery5Frames_Case08)
 ; reads: wD804, wD805
-Func_03A_4FB4::
+RunWD803EffectEvery5Frames_Case08_Sub01::
+Func_03A_4FB4:: ; address name
     ld a, [wD804]
     or a, a
     ret nz
@@ -1354,43 +1362,45 @@ Jump_03A_5018:: ; address name
     ld [wD805], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_4C26_Case08)
+; runs the routine for wD805 (jump table) (E-0124)
+; 1 call site from 1 routine (e.g. RunWD803EffectEvery5Frames_Case08)
 ; reads: wD805
-Func_03A_5028::
+RunWD805Step::
+Func_03A_5028:: ; address name
     ld a, [wD805]
     rst $00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
-    dw Func_03A_5028_Case09
-    dw Func_03A_5028_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
+    dw RunWD805Step_Case09
+    dw RunWD805Step_Case00
 
-; entry 9 of the `rst $00` table in Func_03A_5028
+; entry 9 of the `rst $00` table in RunWD805Step
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9
-Func_03A_5028_Case09::
+RunWD805Step_Case09::
 Jump_03A_5062:: ; address name
     ld hl, wC5E9
     ld [hl], $00
@@ -1400,10 +1410,10 @@ Jump_03A_5062:: ; address name
     ld [hl], $00
     ret
 
-; entry 0 of the `rst $00` table in Func_03A_5028
+; entry 0 of the `rst $00` table in RunWD805Step
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9
-Func_03A_5028_Case00::
+RunWD805Step_Case00::
 Jump_03A_506E:: ; address name
     ld hl, wC5E9
     ld [hl], $D2
@@ -1413,11 +1423,11 @@ Jump_03A_506E:: ; address name
     ld [hl], $E2
     ret
 
-; entry 9 of the `rst $00` table in Func_03A_4C26
+; entry 9 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD807
 ; points at: wD807
-Func_03A_4C26_Case09::
+RunWD803EffectEvery5Frames_Case09::
 Jump_03A_507A:: ; address name
     ld a, [wD807]
     or a, a
@@ -1431,26 +1441,26 @@ Jump_03A_5085::
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in Func_03A_4C26
+; entry 10 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case0A::
+RunWD803EffectEvery5Frames_Case0A::
 Jump_03A_508A:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case0A_Case00
-    dw Func_03A_4C26_Case0A_Case01
-    dw Func_03A_4C26_Case0A_Case02
-    dw Func_03A_4C26_Case0A_Case03
+    dw RunWD803EffectEvery5Frames_Case0A_Case00
+    dw RunWD803EffectEvery5Frames_Case0A_Case01
+    dw RunWD803EffectEvery5Frames_Case0A_Case02
+    dw RunWD803EffectEvery5Frames_Case0A_Case03
 
-; entry 0 of the `rst $00` table in Func_03A_4C26_Case0A
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD807
 ; writes: wD806, wD807
 ; points at: wD804
-Func_03A_4C26_Case0A_Case00::
+RunWD803EffectEvery5Frames_Case0A_Case00::
 Jump_03A_5096:: ; address name
-    call Func_03A_50D9
+    call RunWD803EffectEvery5Frames_Case0A_Case00_Sub01
     ld a, [wD807]
     cp a, $04
     ret c
@@ -1462,12 +1472,12 @@ Jump_03A_5096:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_4C26_Case0A
+; entry 1 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD805
 ; writes: wD805
 ; points at: wD805, wD804
-Func_03A_4C26_Case0A_Case01::
+RunWD803EffectEvery5Frames_Case0A_Case01::
 Jump_03A_50AC:: ; address name
     ld hl, wD805
     inc [hl]
@@ -1480,10 +1490,10 @@ Jump_03A_50AC:: ; address name
     ld [wD805], a
     ret
 
-; entry 2 of the `rst $00` table in Func_03A_4C26_Case0A
+; entry 2 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9, wD804
-Func_03A_4C26_Case0A_Case02::
+RunWD803EffectEvery5Frames_Case0A_Case02::
 Jump_03A_50BF:: ; address name
     ld hl, wC5E9
     ld [hl], $D2
@@ -1495,10 +1505,10 @@ Jump_03A_50BF:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_03A_4C26_Case0A
+; entry 3 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4C26_Case0A_Case03::
+RunWD803EffectEvery5Frames_Case0A_Case03::
 Jump_03A_50CF:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -1506,9 +1516,11 @@ Jump_03A_50CF:: ; address name
     ld [wD804], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_4C26_Case0A_Case00)
+; only called from RunWD803EffectEvery5Frames_Case0A_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunWD803EffectEvery5Frames_Case0A_Case00)
 ; points at: wD807, wC5E9
-Func_03A_50D9::
+RunWD803EffectEvery5Frames_Case0A_Case00_Sub01::
+Func_03A_50D9:: ; address name
     ld hl, wD807
     inc [hl]
     ld b, $03
@@ -1556,72 +1568,72 @@ Jump_03A_510E::
     jr nz, Jump_03A_50E4
     ret
 
-; entry 11 of the `rst $00` table in Func_03A_4C26
+; entry 11 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case0B::
+RunWD803EffectEvery5Frames_Case0B::
 Jump_03A_5114:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case00
+    dw RunWD803EffectEvery5Frames_Case04_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4C26_Case04_Case06
+    dw RunWD803EffectEvery5Frames_Case04_Case06
 
-; entry 12 of the `rst $00` table in Func_03A_4C26
+; entry 12 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD804
-Func_03A_4C26_Case0C::
+RunWD803EffectEvery5Frames_Case0C::
 Jump_03A_513A:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4C26_Case0C_Case00
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case02
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case04
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case06
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case08
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0A
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0C
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0E
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0C
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0E
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0C
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0E
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0C
-    dw Func_03A_4C26_Case0C_Case01
-    dw Func_03A_4C26_Case0C_Case0E
-    dw Func_03A_4C26_Case0C_Case1B
+    dw RunWD803EffectEvery5Frames_Case0C_Case00
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case02
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case04
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case06
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case08
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0A
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0C
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0E
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0C
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0E
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0C
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0E
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0C
+    dw RunWD803EffectEvery5Frames_Case0C_Case01
+    dw RunWD803EffectEvery5Frames_Case0C_Case0E
+    dw RunWD803EffectEvery5Frames_Case0C_Case1B
 
-; entry 1 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 1 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY
 ; points at: wD804
-Func_03A_4C26_Case0C_Case01::
+RunWD803EffectEvery5Frames_Case0C_Case01::
 Jump_03A_5176:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -1630,11 +1642,11 @@ Jump_03A_5176:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 0 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wD804
-Func_03A_4C26_Case0C_Case00::
+RunWD803EffectEvery5Frames_Case0C_Case00::
 Jump_03A_5180:: ; address name
     ld a, $FE
     ldh [hScrollX], a
@@ -1642,11 +1654,11 @@ Jump_03A_5180:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 2 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wD804
-Func_03A_4C26_Case0C_Case02::
+RunWD803EffectEvery5Frames_Case0C_Case02::
 Jump_03A_5189:: ; address name
     ld a, $02
     ldh [hScrollX], a
@@ -1654,11 +1666,11 @@ Jump_03A_5189:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 4 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wD804
-Func_03A_4C26_Case0C_Case04::
+RunWD803EffectEvery5Frames_Case0C_Case04::
 Jump_03A_5192:: ; address name
     ld a, $FC
     ldh [hScrollX], a
@@ -1666,11 +1678,11 @@ Jump_03A_5192:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 6 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wD804
-Func_03A_4C26_Case0C_Case06::
+RunWD803EffectEvery5Frames_Case0C_Case06::
 Jump_03A_519B:: ; address name
     ld a, $04
     ldh [hScrollX], a
@@ -1678,11 +1690,11 @@ Jump_03A_519B:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 8 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wD804
-Func_03A_4C26_Case0C_Case08::
+RunWD803EffectEvery5Frames_Case0C_Case08::
 Jump_03A_51A4:: ; address name
     ld a, $F8
     ldh [hScrollX], a
@@ -1690,11 +1702,11 @@ Jump_03A_51A4:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 10 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wD804
-Func_03A_4C26_Case0C_Case0A::
+RunWD803EffectEvery5Frames_Case0C_Case0A::
 Jump_03A_51AD:: ; address name
     ld a, $08
     ldh [hScrollX], a
@@ -1702,11 +1714,11 @@ Jump_03A_51AD:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 12 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY
 ; points at: wD804
-Func_03A_4C26_Case0C_Case0C::
+RunWD803EffectEvery5Frames_Case0C_Case0C::
 Jump_03A_51B6:: ; address name
     ld a, $F8
     ldh [hScrollX], a
@@ -1716,11 +1728,11 @@ Jump_03A_51B6:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 14 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY
 ; points at: wD804
-Func_03A_4C26_Case0C_Case0E::
+RunWD803EffectEvery5Frames_Case0C_Case0E::
 Jump_03A_51C3:: ; address name
     ld a, $08
     ldh [hScrollX], a
@@ -1730,10 +1742,10 @@ Jump_03A_51C3:: ; address name
     inc [hl]
     ret
 
-; entry 27 of the `rst $00` table in Func_03A_4C26_Case0C
+; entry 27 of the `rst $00` table in RunWD803EffectEvery5Frames_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY, wD802, wD804
-Func_03A_4C26_Case0C_Case1B::
+RunWD803EffectEvery5Frames_Case0C_Case1B::
 Jump_03A_51D0:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -1744,11 +1756,11 @@ Jump_03A_51D0:: ; address name
     ld [wD804], a
     ret
 
-; entry 13 of the `rst $00` table in Func_03A_4C26
+; entry 13 of the `rst $00` table in RunWD803EffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wC58A, wBattleActor, wD804
 ; writes: wD802, wD804, wD805
-Func_03A_4C26_Case0D::
+RunWD803EffectEvery5Frames_Case0D::
 Jump_03A_51DF:: ; address name
     ld a, [wC57F]
     ld b, a
@@ -1789,7 +1801,7 @@ Func_03A_50D9_Case00::
 Jump_03A_5215:: ; address name
     ld a, $06
     ld [wD805], a
-    call Func_03A_5272
+    call EffectPositionIndexForActor
     ld hl, Data_03A_4D52
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
@@ -1814,7 +1826,7 @@ Func_03A_50D9_Case01::
 Jump_03A_523B:: ; address name
     ld a, $06
     ld [wD805], a
-    call Func_03A_5272
+    call EffectPositionIndexForActor
     ld hl, Data_03A_4D52
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
@@ -1844,9 +1856,11 @@ Jump_03A_5264:: ; address name
     ld [wD805], a
     ret
 
+; A = a 0-4 position index from wD890 (side count) and the actor's slot (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_03A_50D9_Case01, Func_03A_50D9_Case00)
 ; reads: wD890, wBattleActor
-Func_03A_5272::
+EffectPositionIndexForActor::
+Func_03A_5272:: ; address name
     ld a, [wD890]
     cp a, $01
     jr z, Jump_03A_52A1
@@ -1922,9 +1936,11 @@ Func_03A_536D:: ; address name
     ld [wDAAA], a
     ret
 
+; draws the effect sprite from bank $3E, $3F, $3D, $3B or $92 by wD801 (< $0E, $20, $2D, $33, or more) (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_03A_4ADB, RunWC5FDState_E0_Case0A_Sub01)
 ; reads: wD801
-Func_03A_5383::
+DrawEffectSpriteForWD801Range::
+Func_03A_5383:: ; address name
     ld a, [wD801]
     cp a, $0E
     jr c, Jump_03A_539D
@@ -1942,11 +1958,11 @@ Jump_03A_539D::
     ret
 
 Jump_03A_53A4::
-    farcall Func_03F_4001
+    farcall DrawEffectSpriteForWD801Range_Sub02
     ret
 
 Jump_03A_53AB::
-    farcall Func_03D_4001
+    farcall DrawEffectSpriteForWD801Range_Sub01
     ret
 
 Jump_03A_53B2::
@@ -2128,11 +2144,11 @@ Func_03A_548F:: ; address name
     ld [wCB75], a
     ld a, h
     ld [wCB76], a
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
     call Func_03A_4A3A
     ld a, [wD801]
     ld c, a
-    call Func_03A_5516
+    call LoadEffectOBJPaletteC
     ret
 
 ; only called from RunWC5FDState_E0_Case0A (E-0047)
@@ -2152,7 +2168,7 @@ Func_03A_54DC:: ; address name
     ret
 
 Jump_03A_54F0::
-    farcall Func_032_4001
+    farcall TickWCB75Sequence
     call AdvanceWD804By4InMode3
     ld a, [wDAB3]
     or a, a
@@ -2160,7 +2176,7 @@ Jump_03A_54F0::
     ld a, [wDAAA]
     or a, a
     jr z, Jump_03A_5509
-    call Func_03A_5383
+    call DrawEffectSpriteForWD801Range
     ret
 
 Jump_03A_5509::
@@ -2171,11 +2187,13 @@ Jump_03A_5509::
     ld [wD802], a
     ret
 
+; on CGB copies palette C (8 bytes) from Data_03A_7D9A to wOBJPaletteBuffer and sets wC527 = $80 (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, DrawHexByteAtBGMap8A_Sub01)
 ; reads: wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
-Func_03A_5516::
+LoadEffectOBJPaletteC::
+Func_03A_5516:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -4841,9 +4859,11 @@ Jump_03A_6D45::
     scf
     ret
 
+; removes the first byte equal to C from the 8-byte queue at wD895, shifting later bytes down and filling with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD895
-Func_03A_6D53:: ; heuristic: follows a terminator; C0
+RemoveCFromWD895Queue_3A:: ; heuristic: follows a terminator; C0
+Func_03A_6D53:: ; address name
     ld hl, wD895
     ld b, $08
     ld d, $00
@@ -5603,7 +5623,7 @@ Func_03A_78FB:: ; address name
 ; points at: wC140
 CopyMappedSlotNameToWC140::
 Func_03A_7908:: ; address name
-    farcall Func_0A3_414F
+    farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld hl, wC140
     ld [wD86C], a

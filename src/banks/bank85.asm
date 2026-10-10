@@ -100,7 +100,7 @@ Jump_085_4071:: ; address name
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld hl, $4D52
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
@@ -145,7 +145,7 @@ Jump_085_40C3:: ; address name
     ldh [hFFC8], a
     ld a, $02
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld hl, wC6FD
     inc [hl]
     ld a, [wC92E]
@@ -372,7 +372,7 @@ Jump_085_4249:: ; address name
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld hl, $4D52
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
@@ -417,7 +417,7 @@ Jump_085_429B:: ; address name
     ldh [hFFC8], a
     ld a, $02
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld hl, wC6FD
     inc [hl]
     ld a, [wC92E]
@@ -1051,7 +1051,7 @@ Func_085_46E4:: ; address name
     jr nz, Jump_085_4703
     ld a, $05
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $50
     ld [wCBD3], a
     ld a, $10
@@ -1815,7 +1815,7 @@ Jump_085_4B33:: ; address name
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld de, $002B
     call SetFlagBit
     ld a, $80
@@ -2013,7 +2013,7 @@ Jump_085_4C7F::
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld de, $002A
     call SetFlagBit
     xor a, a
@@ -2165,7 +2165,7 @@ Func_085_4D8D:: ; address name
     ldh [hFFC8], a
     ld a, $01
     ldh [hFFC9], a
-    farcall Func_001_6E46
+    farcall CreateMonsterRecordOfKindHFFC7
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -3130,7 +3130,7 @@ Jump_085_5302:: ; address name
     add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -3819,7 +3819,7 @@ ScriptCommand18_Run_Case00::
 Jump_085_571A:: ; address name
     ld a, $02
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -4328,7 +4328,7 @@ Data_085_5A00:: ; heuristic: target of a monotone pointer table; C0
 ; 3 call sites from 3 routines (e.g. DispatchTalkEvent_Case05_Case4C, DispatchTalkEvent_Case05_Case6E, DispatchTalkEvent_Case05_Case6F)
 ; reads: hFF93, hFF95, hFF94
 ; writes: hFFC6, hFFC7
-DispatchTalkEvent_Shared02::
+DispatchTalkEvent_Shared01::
 Func_085_5A75:: ; address name
     ldh a, [hFF93]
     bit 7, a
@@ -4909,9 +4909,11 @@ Jump_085_5DE7::
     ld [rRAMG], a
     ret
 
+; copies the 48-byte preset $5E11, $5E41 or $5E71 (C = 0, 1, other) to wSpeciesFlags (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSpeciesFlags
-Func_085_5DF5:: ; heuristic: follows a terminator; C0
+LoadSpeciesFlagsPresetC:: ; heuristic: follows a terminator; C0
+Func_085_5DF5:: ; address name
     ld a, c
     ld de, $5E11
     or a, a

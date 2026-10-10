@@ -747,7 +747,7 @@ ScriptCommand5F_Run_Case08::
 Jump_00F_4493:: ; address name
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $68
     ld [wCBD3], a
     ld a, $30
@@ -888,7 +888,7 @@ ScriptCommand5F_Run_Case00::
 Jump_00F_456A:: ; address name
     ld a, $13
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld [wCBD4], a
@@ -1041,17 +1041,19 @@ Func_00F_4595:: ; address name
     dw ScriptCommand5E_Run_Case7E
     dw ScriptCommand5E_Run_Case7F
     db $6A, $51
-    dw Func_00F_47F5
+    dw ScriptStepMoveObjects2And3To0340
     dw Func_00F_47BC
     dw ScriptStepDeltaWCBABThenCopy
-    dw Func_00F_4774
+    dw ScriptStepMoveObjects2And3To81B0
     INCBIN "dwm2-cobi-us.gbc", $03C6A3, $D1
 
+; steps objects 2 and 3 toward ($81, $B0) and ($81, $C0) (StepObjectTowardCoord); advances wScriptStep once they arrive (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wC929, wC928, wC92A
 ; points at: wScriptStep
-Func_00F_4774:: ; heuristic: target of a pointer table; C0
+ScriptStepMoveObjects2And3To81B0:: ; heuristic: target of a pointer table; C0
+Func_00F_4774:: ; address name
     ld a, $02
     ld [wC929], a
     ld a, $B0
@@ -1134,11 +1136,13 @@ Jump_00F_47E5::
     inc [hl]
     ret
 
+; steps objects 2 and 3 toward ($03, $40) and ($03, $50); advances wScriptStep once they arrive (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wC929, wC928, wC92A
 ; points at: wScriptStep
-Func_00F_47F5:: ; heuristic: target of a pointer table; C0
+ScriptStepMoveObjects2And3To0340:: ; heuristic: target of a pointer table; C0
+Func_00F_47F5:: ; address name
     ld a, $02
     ld [wC929], a
     ld a, $40
@@ -1168,7 +1172,7 @@ ScriptCommand5E_Run_Case7F::
 Jump_00F_4829:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $20
     ld [wCBD3], a
     ld a, $40
@@ -1370,7 +1374,7 @@ ScriptCommand5E_Run_Case6E::
 Jump_00F_4968:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $60
@@ -1639,7 +1643,7 @@ ScriptCommand5E_Run_Case5C::
 Jump_00F_4B1B:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -1805,7 +1809,7 @@ ScriptCommand5E_Run_Case51::
 Jump_00F_4C20:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $20
@@ -2064,7 +2068,7 @@ ScriptCommand5E_Run_Case42::
 Jump_00F_4DE7:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $20
     ld [wCBD3], a
     ld a, $40
@@ -2237,7 +2241,7 @@ ScriptCommand5E_Run_Case35::
 Jump_00F_4EDA:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $30
     ld [wCBD3], a
     ld a, $60
@@ -2350,7 +2354,7 @@ ScriptCommand5E_Run_Case2D::
 Jump_00F_4F72:: ; address name
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $10
@@ -2422,7 +2426,7 @@ Jump_00F_4FCF:: ; address name
     call StartMessageHL_B0F
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     xor a, a
     ld [wCBCF], a
     xor a, a
@@ -2614,7 +2618,7 @@ Jump_00F_50BE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5E_Run_Case0C::
 Jump_00F_50D2:: ; address name
-    farcall Func_05F_7363
+    farcall RunWC92DStep_7363
     ret
 
 ; entry 11 of the `rst $00` table in ScriptCommand5E_Run
@@ -3217,7 +3221,7 @@ Jump_00F_5623::
     call StartMessageHL_B0F
     ld a, $04
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ldh a, [hPlayerX]
     ld [wCBD3], a
     ld a, $E0
@@ -3606,7 +3610,7 @@ Jump_00F_585B:: ; address name
     ld [wCB86], a
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ldh a, [hPlayerX]
     ld [wCBD3], a
     ldh a, [hPlayerY]
@@ -3624,7 +3628,7 @@ Jump_00F_585B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand4B_Run_Case12::
 Jump_00F_5889:: ; address name
-    farcall Func_05F_7363
+    farcall RunWC92DStep_7363
     ret
 
 ; entry 17 of the `rst $00` table in ScriptCommand4B_Run
@@ -3857,7 +3861,7 @@ ScriptCommand4B_Run_Case00::
 Jump_00F_59C8:: ; address name
     ld a, $10
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ldh a, [hPlayerX]
     ld [wCBD3], a
     ldh a, [hPlayerY]
@@ -5142,7 +5146,7 @@ Jump_00F_614C:: ; address name
     ret nz
     ld a, $09
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_00F_6189
@@ -5691,7 +5695,7 @@ Jump_00F_64D4:: ; address name
     farcall RedrawColumnsBesideScreen
     ld a, $05
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $30
     ld [wCBD3], a
     ld a, $40
@@ -6268,7 +6272,7 @@ Jump_00F_6866:: ; address name
     ld [wCB86], a
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ldh a, [hPlayerX]
     ld [wCBD3], a
     ldh a, [hPlayerY]
@@ -6286,7 +6290,7 @@ Jump_00F_6866:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand39_Run_Case2D::
 Jump_00F_6894:: ; address name
-    farcall Func_05F_7363
+    farcall RunWC92DStep_7363
     ret
 
 ; entry 44 of the `rst $00` table in ScriptCommand39_Run
@@ -6773,7 +6777,7 @@ Jump_00F_6B4B:: ; address name
     ret z
     ld a, $08
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
     ld a, $60
@@ -7258,7 +7262,7 @@ Jump_00F_6E6F::
     call ClearBit2AtHL_Bank0F
     ld a, $07
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ld a, $80
     ld [wCBCF], a
     ld a, $65
@@ -8083,7 +8087,7 @@ Jump_00F_7369:: ; address name
     ld [wCB86], a
     ld a, $11
     ldh [hFFC6], a
-    farcall Func_012_6B98
+    farcall RunFieldCommandHFFC6
     ldh a, [hPlayerX]
     ld [wCBD3], a
     ldh a, [hPlayerY]
@@ -8101,7 +8105,7 @@ Jump_00F_7369:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand27_Run_Case1F::
 Jump_00F_7397:: ; address name
-    farcall Func_05F_7363
+    farcall RunWC92DStep_7363
     ret
 
 ; entry 30 of the `rst $00` table in ScriptCommand27_Run
