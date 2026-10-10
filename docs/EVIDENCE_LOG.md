@@ -1141,6 +1141,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also named:** DrawThreeDigitsAtScrollOffset6E, and DecompressGraphicsWD7F1ToWD7F4, which uses the same far-pointer table at `04:4EAA` as DecompressGraphicsHFFC6ToHFFCA (E-0093).
 - Binary verification: pending; see the commit.
 
+### E-0105 — Copies of hand names that carry a bank suffix
+
+- Kind: DECISION (naming rule).
+- **The rule.** `name_copies_of_named_routines` used to skip every name ending in `_BankBB`. It now skips only data names and names derived from table position, stub shape or the call graph. A copy is named after the base name: a copy of `X_Bank1B` in bank $33 becomes `X_Bank33`.
+- **Effect.** One new copy was named: ShowStringA10_Bank33, which replaces the call-graph name BeginString_Bank07_Cat5_Shared02. Binary identity is unchanged.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

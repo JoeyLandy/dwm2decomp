@@ -47,6 +47,7 @@ def log(msg: str) -> None:
 ROOT = Path(__file__).resolve().parents[1]
 REF = ROOT / "local/roms/dwm2-cobi-us.gbc"
 BANK = 0x4000
+BANK_SUFFIX_RE = re.compile(r"_Bank[0-9A-F]{2}(?:_[0-9A-F]{4})?$")  # a per-bank copy suffix
 SUFFIX_RE = re.compile(r"(_(?:Sub|Case|Shared|Table\d*_Case)[0-9A-F]{2})+$")  # helper-name suffixes of a routine name
 ROM_NAME = "dwm2-cobi-us.gbc"
 VECTORS = [0x00, 0x10, 0x30, 0x38, 0x40, 0x48, 0x58, 0x80, 0x100, 0x150]
@@ -1080,8 +1081,8 @@ class Rom:
         4 bytes are skipped: a `ret` or `ld a, b` would match everywhere."""
         by_size: dict[int, list] = {}
         for (bank, addr), info in list(self.names.items()):
-            if info.get("data") or info["name"].endswith(tuple(f"_Bank{b:02X}" for b in range(256))) or                     info.get("evidence", "").startswith("structure"):
-                continue  # names made from table position or stub shape say nothing about a copy
+            if info.get("data") or info.get("evidence", "").startswith(("structure", "call graph")):
+                continue  # names made from table position, stub shape or callers say nothing about a copy
             if addr not in self.insn.get(bank, {}) or self.labels[bank].get(addr, "").startswith(("Jump_", "Jr_")):
                 continue
             size = self.routine_extent(bank, addr)
@@ -1103,7 +1104,8 @@ class Rom:
                         off = cb * BANK + ca - self.base(cb)
                         if self.data[off:off + size] != want or self.routine_extent(cb, ca) != size:
                             continue
-                        name = f"{info['name']}_Bank{cb:02X}"
+                        base = BANK_SUFFIX_RE.sub("", info["name"])  # a copy of X_Bank39 is X_BankBB (E-0105)
+                        name = f"{base}_Bank{cb:02X}"
                         if name in used:
                             name += f"_{ca:04X}"
                         used.add(name)
