@@ -3046,7 +3046,7 @@ Jump_0F0_5B6F:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_BankF0
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     ld a, [wD781]
     inc a
     ld [wD781], a

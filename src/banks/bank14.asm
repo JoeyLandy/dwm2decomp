@@ -252,7 +252,7 @@ Jump_014_415D:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank14
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     xor a, a
     ld [wD781], a
     ld a, [wD780]
@@ -446,7 +446,7 @@ Jump_014_428A:: ; address name
     ret
 
 Jump_014_429B::
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -502,7 +502,7 @@ Jump_014_4309::
     ld a, [wD7F5]
     and a, a
     jp z, Jump_014_43B1
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     farcall LoadWD7FFFromWC7C7Table
     ld a, [wD7A9]
     cp a, c
@@ -536,7 +536,7 @@ Jump_014_4339::
     ret
 
 Jump_014_4359::
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     xor a, a
     ld [wTwoChoiceCursor], a
     ld [wD782], a
@@ -597,7 +597,7 @@ Jump_014_43B1::
 ; reads: wD7A9, wD780
 ; writes: wTwoChoiceCursor, wD780, wD781, wD782, wScriptCommandType, wScriptStartRequest
 Func_014_43CC:: ; heuristic: follows a terminator; C0
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     ld a, [wD7A9]
     and a, a
     jr nz, Jump_014_43F3
@@ -743,7 +743,7 @@ Jump_014_4446:: ; address name
 Func_014_43CC_Case32::
 Jump_014_44DA:: ; address name
     call Func_014_4932
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -790,7 +790,7 @@ Jump_014_450C:: ; address name
     ld [wD7AB], a
     ld a, [wD7B6]
     ld [wD7AF], a
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     call Func_014_4BA0
     call Func_014_58EE
     ld hl, vTiles1 + $240
@@ -1586,7 +1586,7 @@ Func_014_4B5A::
 ; points at: wC42E, wC42F
 Func_014_43CC_Case1F::
 Jump_014_4B92:: ; address name
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     jr Func_014_4BA0
     db $21, $2D, $5F, $06, $1D, $D7
 
@@ -1792,7 +1792,7 @@ Jump_014_4CD0:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank14
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     ld a, $1B
     ld [wD781], a
     ld a, $01
@@ -1835,7 +1835,7 @@ Jump_014_4D2B:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank14
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     xor a, a
     ld [wD781], a
     ld a, $02
@@ -2545,7 +2545,7 @@ Jump_014_525C:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank14
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     ld a, $1E
     ld [wD781], a
     ld a, $01
@@ -2583,7 +2583,7 @@ Jump_014_529C:: ; address name
     xor a, a
     ld [wD7AB], a
     ld [wD7AF], a
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -4098,7 +4098,7 @@ Jump_014_5E44::
     ld [wD7F4], a
     ld a, $80
     ld [wD7F5], a
-    farcall Func_01D_6973
+    farcall DecompressGraphicsWD7F1ToWD7F4
 
 Jump_014_5E62::
     ld hl, wCF8B

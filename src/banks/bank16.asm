@@ -4952,7 +4952,7 @@ Jump_016_6017:: ; address name
     ld [wD781], a
     xor a, a
     ld [wD782], a
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     ld hl, wScreenTileBuffer
     ld bc, $02D0
     ld a, $C3
@@ -5415,7 +5415,7 @@ Jump_016_637E:: ; address name
     ld [wD781], a
     xor a, a
     ld [wD782], a
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     ld hl, wScreenTileBuffer
     ld bc, $02D0
     ld a, $C3

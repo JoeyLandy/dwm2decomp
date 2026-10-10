@@ -199,7 +199,7 @@ Jump_01E_4100:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     xor a, a
     ld [wD781], a
     ld a, [wD780]
@@ -1440,7 +1440,7 @@ Jump_01E_49B2:: ; address name
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC42E, wC42F
 Func_01E_49EA::
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     jr Func_01E_49F8
 
 ; entry 6 of the `rst $00` table in Func_01E_4A32
@@ -1450,7 +1450,7 @@ Func_01E_49EA::
 ; points at: wC42E, wC42F
 Func_01E_4A32_Table2_Case06::
 Jump_01E_49F2:: ; address name
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
 
 ; 5 call sites from 5 routines (e.g. Func_01E_5C63_Table4_Case01, Func_01E_6074_Table2_Case03, Func_01E_6074_Table3_Case03, Func_01E_6074_Table4_Case03, ...)
 ; reads: wD7B0, wD781
@@ -1643,7 +1643,7 @@ Jump_01E_4B05:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     ld a, $11
     ld [wD781], a
     ld a, $01
@@ -1825,7 +1825,7 @@ Jump_01E_4C42:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     xor a, a
     ld [wD781], a
     ld a, $02
@@ -2084,7 +2084,7 @@ Jump_01E_4E0E:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     ld a, $1E
     ld [wD781], a
     ld a, $01
@@ -2135,7 +2135,7 @@ Jump_01E_4E66:: ; address name
     xor a, a
     ld [wD7AB], a
     ld [wD7AF], a
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2483,7 +2483,7 @@ Jump_01E_50BE:: ; address name
     call CopyRectTo20ByteRows_Bank1E
     ld a, $6C
     call QueueSoundEffect
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     ld a, [wD7A9]
     ld l, a
     ld h, $00
@@ -2666,7 +2666,7 @@ Jump_01E_51E6:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     xor a, a
     ld [wD781], a
     ld [wD782], a
@@ -2833,14 +2833,14 @@ Jump_01E_536A:: ; address name
     ld bc, $140B
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     ld de, $7BBE
     ld hl, wC40B
     ld bc, $0D05
     call CopyRectTo20ByteRows_Bank1E
     ld a, $6C
     call QueueSoundEffect
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     ld a, [wD7A9]
     ld l, a
     ld h, $00
@@ -2928,7 +2928,7 @@ Jump_01E_5430:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3266,7 +3266,7 @@ Jump_01E_5720::
     ld a, [wD7B7]
     and a, a
     jp nz, Jump_01E_5199
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     ld a, [wD7A9]
     cp a, $02
     jr nc, Jump_01E_5743
@@ -3322,7 +3322,7 @@ Jump_01E_5774:: ; address name
     ld hl, wC41F
     ld bc, $0102
     call CopyRectTo20ByteRows_Bank1E
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     ld a, [wD7A9]
     ld l, a
     ld h, $00
@@ -3554,7 +3554,7 @@ Jump_01E_592B:: ; address name
     ld hl, wC40B
     ld bc, $0D01
     call CopyRectTo20ByteRows_Bank1E
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     ld a, [wD7A9]
     ld l, a
     ld h, $00
@@ -3592,7 +3592,7 @@ Jump_01E_592B:: ; address name
 ; points at: wC412, wC413
 Func_01E_4A32_Table3_Case30::
 Jump_01E_5994:: ; address name
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     call Func_01E_71E1
     ld a, [wD7B0]
     cp a, $02
@@ -3808,7 +3808,7 @@ Jump_01E_5B06:: ; address name
 ; writes: wD781, wD780, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 Func_01E_4A32_Table3_Case3A::
 Jump_01E_5B32:: ; address name
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     xor a, a
     ld [wD781], a
     ld a, $02
@@ -4731,7 +4731,7 @@ Jump_01E_613A:: ; address name
     ld hl, $793C
     ld de, $791C
     call Func_01E_7454
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     call GetWD789Cell5Address
     push hl
     ld a, [hl]
@@ -5763,7 +5763,7 @@ Func_01E_6810::
     jr Jump_01E_6825
 
 Jump_01E_681F::
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
 
 Jump_01E_6825::
     call GetWD789Cell5Address
@@ -5969,7 +5969,7 @@ Jump_01E_694D:: ; address name
     ld [wD7F4], a
     ld a, $80
     ld [wD7F5], a
-    farcall Func_01D_6973
+    farcall DecompressGraphicsWD7F1ToWD7F4
     ld a, $F0
     ldh [hFFBA], a
     farcall Func_01D_5DBC

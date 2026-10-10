@@ -343,7 +343,7 @@ Jump_00D_46D0::
     ld [wD7BD], a
 
 Jump_00D_46D5::
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     ld a, [wD7B9]
     and a, a
     jr z, Jump_00D_46FB

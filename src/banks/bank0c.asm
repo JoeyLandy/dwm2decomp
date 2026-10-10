@@ -1399,7 +1399,7 @@ Jump_00C_49B5:: ; address name
     ld [wD7F4], a
     ld a, $80
     ld [wD7F5], a
-    farcall Func_01D_6973
+    farcall DecompressGraphicsWD7F1ToWD7F4
     ld a, [wD781]
     inc a
     ld [wD781], a

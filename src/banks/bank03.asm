@@ -2493,7 +2493,7 @@ Func_003_4F6F::
     ld [wD7F4], a
     ld a, h
     ld [wD7F5], a
-    farcall Func_01D_6973
+    farcall DecompressGraphicsWD7F1ToWD7F4
     xor a, a
     ld [rRAMG], a
     ld a, $00

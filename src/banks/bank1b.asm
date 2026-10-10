@@ -5660,7 +5660,7 @@ Jump_01B_6BAB:: ; address name
     ret
 
 Jump_01B_6BBB::
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     ld a, [wD7A9]
     and a, a
     jr nz, Jump_01B_6BD7

@@ -2036,7 +2036,7 @@ Jump_037_55C6:: ; address name
     ld [wD7F4], a
     ld a, $80
     ld [wD7F5], a
-    farcall Func_01D_6973
+    farcall DecompressGraphicsWD7F1ToWD7F4
     ld a, $F0
     ldh [hFFBA], a
     farcall Func_0F2_4BD0

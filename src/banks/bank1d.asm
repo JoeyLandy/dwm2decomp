@@ -2298,7 +2298,7 @@ Jump_01D_54AB::
     ret
 
 Jump_01D_54B3::
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
     ld a, [wD7CE]
     and a, a
     jr nz, Jump_01D_54C9
@@ -2437,7 +2437,7 @@ Jump_01D_5581::
     ret
 
 Jump_01D_5589::
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
     ld a, [wD7CE]
     and a, a
     jr nz, Jump_01D_559F
@@ -2621,7 +2621,7 @@ Jump_01D_568F::
     ld [wD7D0], a
 
 Jump_01D_56BB::
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
     xor a, a
     ret
 
@@ -2680,7 +2680,7 @@ Jump_01D_570A::
     ld [wD7CF], a
     ld a, [wD7D5]
     ld [wD7D0], a
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
     xor a, a
     ret
 
@@ -2743,7 +2743,7 @@ Jump_01D_5778::
     ld [wD7CF], a
     ld a, [wD7D5]
     ld [wD7D0], a
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
     xor a, a
     ret
 
@@ -2775,7 +2775,7 @@ Jump_01D_579E::
     ld [wD7D0], a
 
 Jump_01D_57C6::
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
     xor a, a
     ret
 
@@ -2876,7 +2876,7 @@ Jump_01D_5843::
     ld [wD7D0], a
 
 Jump_01D_5873::
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
     xor a, a
     ret
 
@@ -2932,9 +2932,11 @@ Jump_01D_58A5::
 Data_01D_58C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6E, $00, $6F, $00, $70, $00
 
+; writes the three bytes at wD7CE as digit tiles ($E0 + digit) at the BG map entry BGMapAddressAtScroll + $6E (row 3, column 14 of the view), one per byte with WaitForVRAMAccess (E-0104)
 ; 8 call sites from 4 routines (e.g. Func_01D_5573, Func_01D_564B, Func_01D_5AA3, Func_01D_549D)
 ; points at: wD7CE
-Func_01D_58C8::
+DrawThreeDigitsAtScrollOffset6E::
+Func_01D_58C8:: ; address name
     call BGMapAddressAtScroll_Bank1D
     ld de, $006E
     add hl, de
@@ -3330,7 +3332,7 @@ Jump_01D_5AC9::
     ld [wD7CF], a
     ld a, [wD7D5]
     ld [wD7D0], a
-    call Func_01D_58C8
+    call DrawThreeDigitsAtScrollOffset6E
 
 Jump_01D_5ADE::
     ret
@@ -3883,11 +3885,13 @@ Func_01D_5DF9::
     farcall ShowString_Bank08
     ret
 
+; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadWD7FFFromWC7C7Table): wD7AA = how many have byte 0 equal to 1 or 2 (in use) (E-0104)
 ; 13 call sites from 13 routines (e.g. ScriptCommandEB_Run_Table2_Case03, Func_014_43CC_Case2C, Func_014_43CC_Case0F, Func_014_4BA0_Case2F, ...)
 ; reads: wD7AA
 ; writes: wD7AA, rRAMG2, rRAMB
 ; points at: sA000
-Func_01D_5E3F::
+CountRecordsInUse::
+Func_01D_5E3F:: ; address name
     call LoadWD7FFFromWC7C7Table
     ld d, c
     xor a, a
@@ -3985,11 +3989,13 @@ Jump_01D_5EC2::
     ld [rRAMG2], a
     ret
 
+; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadWD7FFFromWC7C7Table): clears the 30-byte list wD789, then appends the number of every record whose byte 0 is 1 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many state-1 records had byte $6E set (E-0104)
 ; 12 call sites from 11 routines (e.g. ScriptCommandEB_Run_Case03, Func_014_43CC, Func_014_43CC_Case32, Func_014_43CC_Case3C, ...)
 ; reads: wD7FF, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, sA000
-Func_01D_5ECE::
+ListRecordsState1WithByte6EClear::
+Func_01D_5ECE:: ; address name
     call LoadWD7FFFromWC7C7Table
     ld hl, wD789
     ld b, $1E
@@ -4057,11 +4063,13 @@ Jump_01D_5F1B::
     ld [rRAMG2], a
     ret
 
+; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadWD7FFFromWC7C7Table): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)
 ; 13 call sites from 13 routines (e.g. ScriptCommandEB_Run_Case03, Func_015_4182_Case02, Func_015_60BF_Table3_Case02, Func_016_5D13_Case10, ...)
 ; reads: wD7FF, wD7A9, wC6FD, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wC6FE
-Func_01D_5F2D::
+ListRecordsInUseWithByte6EClear::
+Func_01D_5F2D:: ; address name
     call LoadWD7FFFromWC7C7Table
     ld hl, wD789
     ld b, $1E
@@ -4244,11 +4252,13 @@ Jump_01D_601F::
 Jump_01D_6025::
     ret
 
+; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadWD7FFFromWC7C7Table): clears wD789, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wD7A9 = the list length (E-0104)
 ; 10 call sites from 10 routines (e.g. ScriptCommandEF_Run_Case03, ScriptCommandED_Run_Case03, Func_015_4182_Case41, Func_015_4F4C_Case01, ...)
 ; reads: wD7FF
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, sA000
-Func_01D_6026::
+ListRecordsInUseWithByte6ESet::
+Func_01D_6026:: ; address name
     call LoadWD7FFFromWC7C7Table
     ld hl, wD789
     ld b, $1E
@@ -5727,11 +5737,13 @@ Jump_01D_695F::
     ld [wC527], a
     ret
 
+; graphics number = the word wD7F1/wD7F2: reads its far pointer (3 bytes per entry) from Data_004_4EAA in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in wD7F4/wD7F5; on CGB it continues with the palette (not read) (E-0104)
 ; 8 call sites from 8 routines (e.g. Func_003_4F6F, Func_00C_45DA_Case03, Func_014_5CA8_Table2_Case03, Func_015_63B8, ...)
 ; reads: wD7F1, wD7F2, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
-Func_01D_6973::
+DecompressGraphicsWD7F1ToWD7F4::
+Func_01D_6973:: ; address name
     ld a, [wD7F1]
     ld l, a
     ld e, a
@@ -6082,7 +6094,7 @@ Jump_01D_6B7C::
     ret
 
 Jump_01D_6B93::
-    farcall Func_01D_5ECE
+    farcall ListRecordsState1WithByte6EClear
     ld a, [wD7A9]
     and a, a
     jr nz, Jump_01D_6BBA
@@ -6339,7 +6351,7 @@ Data_01D_6D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $076D20, $50
 
 ; C = wD7FF = Data_01D_6D81[wC7C7] (E-0073)
-; 10 call sites from 9 routines (e.g. Func_01D_6026, Func_01D_5ECE, Func_01D_5F2D, Func_01D_5E79, ...)
+; 10 call sites from 9 routines (e.g. ListRecordsInUseWithByte6ESet, ListRecordsState1WithByte6EClear, ListRecordsInUseWithByte6EClear, Func_01D_5E79, ...)
 ; reads: wC7C7
 ; writes: wD7FF
 LoadWD7FFFromWC7C7Table::
@@ -6674,7 +6686,7 @@ Jump_01D_6FA0::
     ld a, $21
     add_a_to_hl
     push hl
-    call Func_01D_70F9
+    call Pack2BitFieldsFromWD7E2
     pop hl
     push af
     ld a, [wD7F2]
@@ -6703,7 +6715,7 @@ Jump_01D_6FDD::
     ld a, $22
     add_a_to_hl
     push hl
-    call Func_01D_70F9
+    call Pack2BitFieldsFromWD7E2
     pop hl
     push af
     ld a, [wD7F2]
@@ -6733,7 +6745,7 @@ Jump_01D_7019::
     ld a, $23
     add_a_to_hl
     push hl
-    call Func_01D_70F9
+    call Pack2BitFieldsFromWD7E2
     pop hl
     push af
     ld a, [wD7F2]
@@ -6764,7 +6776,7 @@ Jump_01D_7057::
     ld a, $24
     add_a_to_hl
     push hl
-    call Func_01D_70F9
+    call Pack2BitFieldsFromWD7E2
     pop hl
     push af
     ld a, [wD7F2]
@@ -6794,7 +6806,7 @@ Jump_01D_708D::
     ld a, $25
     add_a_to_hl
     push hl
-    call Func_01D_70F9
+    call Pack2BitFieldsFromWD7E2
     pop hl
     push af
     ld a, [wD7F2]
@@ -6824,7 +6836,7 @@ Jump_01D_70C6::
     ld a, $26
     add_a_to_hl
     push hl
-    call Func_01D_70F9
+    call Pack2BitFieldsFromWD7E2
     pop hl
     push af
     ld a, [wD7F2]
@@ -6847,9 +6859,11 @@ Jump_01D_70C6::
     ld [wD7E1], a
     jp Jump_01D_7121
 
-; 7 call sites from 2 routines (e.g. Func_01D_6E39, Func_01D_70F9)
+; B = (wD7E2 & 3) << 6 | (wD7E3 & 3) << 4 | (wD7E4 & 3) << 2 | (wD7E5 & 3), the opposite of unpacking a byte into four 2-bit fields (E-0104)
+; 7 call sites from 2 routines (e.g. Func_01D_6E39, Pack2BitFieldsFromWD7E2)
 ; reads: wD7E2, wD7E3, wD7E4, wD7E5
-Func_01D_70F9::
+Pack2BitFieldsFromWD7E2::
+Func_01D_70F9:: ; address name
     ld a, [wD7E2]
     and a, $03
     swap a
@@ -7172,7 +7186,7 @@ Jump_01D_727C::
     and a, $03
     ld [wD7E5], a
     inc de
-    call Func_01D_70F9
+    call Pack2BitFieldsFromWD7E2
     ld a, b
     push af
     ld a, [wD7F2]
@@ -7990,7 +8004,7 @@ Jump_01D_779D::
     push hl
     ld a, $04
     add_a_to_hl
-    call Func_01D_7AD8
+    call UnpackByteAtHLTo2BitFieldsWD7F5
     pop hl
     pop de
     push af
@@ -8294,7 +8308,7 @@ Func_01D_795D::
     pop af
     ld a, $21
     add_a_to_hl
-    call Func_01D_7AD8
+    call UnpackByteAtHLTo2BitFieldsWD7F5
     ld a, $06
     add_a_to_hl
     ld a, [hl]
@@ -8323,7 +8337,7 @@ Func_01D_7991::
     pop af
     ld a, $22
     add_a_to_hl
-    call Func_01D_7AD8
+    call UnpackByteAtHLTo2BitFieldsWD7F5
     ld a, $05
     add_a_to_hl
     ld a, [hl]
@@ -8349,7 +8363,7 @@ Func_01D_79C5::
     pop af
     ld a, $23
     add_a_to_hl
-    call Func_01D_7AD8
+    call UnpackByteAtHLTo2BitFieldsWD7F5
     ld a, $04
     add_a_to_hl
     ld a, [hl]
@@ -8376,7 +8390,7 @@ Func_01D_79FB::
     pop af
     ld a, $24
     add_a_to_hl
-    call Func_01D_7AD8
+    call UnpackByteAtHLTo2BitFieldsWD7F5
     ld a, $03
     add_a_to_hl
     ld a, [hl]
@@ -8401,7 +8415,7 @@ Func_01D_7A2D::
     pop af
     ld a, $25
     add_a_to_hl
-    call Func_01D_7AD8
+    call UnpackByteAtHLTo2BitFieldsWD7F5
     inc hl
     inc hl
     inc hl
@@ -8430,7 +8444,7 @@ Func_01D_7A61::
     pop af
     ld a, $26
     add_a_to_hl
-    call Func_01D_7AD8
+    call UnpackByteAtHLTo2BitFieldsWD7F5
     inc hl
     inc hl
     ld a, [hl]
@@ -8503,10 +8517,12 @@ Jump_01D_7AD6::
     ld [de], a
     ret
 
+; with SRAM bank wD7F2 selected, splits the byte at HL into four 2-bit fields: wD7F5 = bits 7-6, wD7F6 = bits 5-4, wD7F7 = bits 3-2, wD7F8 = bits 1-0 (E-0104)
 ; 7 call sites from 7 routines (e.g. Func_01D_75C7, Func_01D_7A61, Func_01D_7A2D, Func_01D_79FB, ...)
 ; reads: wD7F2
 ; writes: rRAMB, wD7F5, wD7F6, wD7F7, wD7F8
-Func_01D_7AD8::
+UnpackByteAtHLTo2BitFieldsWD7F5::
+Func_01D_7AD8:: ; address name
     push af
     ld a, [wD7F2]
     ld [rRAMB], a

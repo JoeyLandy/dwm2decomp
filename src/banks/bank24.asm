@@ -378,7 +378,7 @@ Jump_024_4271:: ; address name
     ret
 
 Jump_024_4284::
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     farcall LoadWD7FFFromWC7C7Table
     ld a, [wD7FF]
     ld b, a
@@ -592,11 +592,11 @@ Jump_024_43D4::
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_024_43E2
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     jr Jump_024_43E8
 
 Jump_024_43E2::
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
 
 Jump_024_43E8::
     ld a, [wD781]
@@ -1703,7 +1703,7 @@ Jump_024_4AEF::
 ; points at: wC40B, wC40C
 GameMode6_Update_Table8_Case01::
 Jump_024_4B0E:: ; address name
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     farcall Func_01E_71E1
     ld a, [wD7B0]
     cp a, $02
@@ -1921,7 +1921,7 @@ Jump_024_4C81::
 ; points at: wC42E, wC42F
 GameMode6_Update_Table9_Case01::
 Jump_024_4CA0:: ; address name
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
     farcall Func_01E_7163
     ld a, [wD7B0]
     cp a, $02

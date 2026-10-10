@@ -1130,6 +1130,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also named:** ShowRaiseAmountOrRefuse, StoreHLToRecordField, BlankTileAtTableEntryDE, and the party tile loaders LoadTilesForPartyRecords and LoadTileForRecordByte0D (partly read).
 - Binary verification: pending; see the commit.
 
+### E-0104 — Save-record list builders and bit packing (bank $1D)
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **The record filters.** Four routines walk the first wD7FF SRAM records ($A5 bytes each), where wD7FF comes from a table indexed by wC7C7. They filter on record byte 0 (0 = empty, 1 or 2 = in use) and byte $6E:
+  - CountRecordsInUse;
+  - ListRecordsState1WithByte6EClear, ListRecordsInUseWithByte6EClear and ListRecordsInUseWithByte6ESet, which build a list of record numbers in wD789 with its length in wD7A9.
+  - What states 1 and 2 and byte $6E mean is not established.
+- **Bit packing.** UnpackByteAtHLTo2BitFieldsWD7F5 and Pack2BitFieldsFromWD7E2 convert between a byte and four 2-bit fields.
+- **Also named:** DrawThreeDigitsAtScrollOffset6E, and DecompressGraphicsWD7F1ToWD7F4, which uses the same far-pointer table at `04:4EAA` as DecompressGraphicsHFFC6ToHFFCA (E-0093).
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

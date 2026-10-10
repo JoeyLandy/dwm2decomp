@@ -4253,7 +4253,7 @@ Jump_000_1870::
     jr Jump_000_1870
 
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
-; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF7_Run_Case27_Sub02_Sub01, Func_01D_6973, Func_01D_6915, ...)
+; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF7_Run_Case27_Sub02_Sub01, DecompressGraphicsWD7F1ToWD7F4, Func_01D_6915, ...)
 ; writes: rROMB0
 ReadByteInBank::
 Func_000_1872:: ; address name

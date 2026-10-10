@@ -329,7 +329,7 @@ Jump_015_41ED::
     ret
 
 Jump_015_41F5::
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     ld a, [wD7B9]
     and a, a
     jr nz, Jump_015_4215
@@ -490,7 +490,7 @@ Jump_015_434C:: ; address name
 ; points at: wC42E, wC42F
 Func_015_4182_Case02::
 Jump_015_4363:: ; address name
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
 
 Jump_015_4369::
     farcall Func_01E_7163
@@ -2425,7 +2425,7 @@ Jump_015_504D::
     ld a, c
     cp a, $1E
     jr c, Jump_015_504D
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     xor a, a
     ld [wD7AB], a
     ld [wD7AF], a
@@ -2540,7 +2540,7 @@ Jump_015_50FB:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank15
-    farcall Func_01D_6026
+    farcall ListRecordsInUseWithByte6ESet
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5148,7 +5148,7 @@ Jump_015_62D9:: ; address name
 ; points at: wC42E, wC42F
 Func_015_60BF_Table3_Case02::
 Jump_015_62F1:: ; address name
-    farcall Func_01D_5F2D
+    farcall ListRecordsInUseWithByte6EClear
 
 Jump_015_62F7::
     farcall Func_01E_7163
@@ -5281,7 +5281,7 @@ Func_015_63B8::
     ld [wD7F4], a
     ld a, $80
     ld [wD7F5], a
-    farcall Func_01D_6973
+    farcall DecompressGraphicsWD7F1ToWD7F4
     ret
 
 ; 9 call sites from 5 routines (e.g. Func_015_4182_Case36, Func_015_4182_Case2F, Func_015_4182_Case2C, Func_015_4182_Case3E, ...)

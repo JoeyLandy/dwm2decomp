@@ -2487,7 +2487,7 @@ Jump_073_5014::
     ld a, [wC6FD]
     cp a, $03
     jr z, Jump_073_505C
-    farcall Func_01D_5E3F
+    farcall CountRecordsInUse
     ld a, [wD7AA]
     cp a, $03
     jr nc, Jump_073_5032

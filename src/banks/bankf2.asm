@@ -1640,7 +1640,7 @@ Jump_0F2_4EC0::
     inc de
     dec c
     jr nz, Jump_0F2_4EC0
-    farcall Func_01D_6973
+    farcall DecompressGraphicsWD7F1ToWD7F4
 
 Jump_0F2_4ECC::
     pop bc
