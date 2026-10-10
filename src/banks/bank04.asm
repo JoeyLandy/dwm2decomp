@@ -5022,7 +5022,7 @@ Jump_004_60DF:: ; address name
     ld a, $31
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld de, $007A
     call SetFlagBit
     ret
@@ -6146,7 +6146,7 @@ Jump_004_674D:: ; address name
     ld a, $30
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ret
 
 ; entry 58 of the `rst $00` table in Func_004_612B
@@ -7595,7 +7595,7 @@ Jump_004_6FF7::
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_004_702B
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     call Func_004_7C37
     ld [hl], $17
     ld a, [wC836]
@@ -7975,7 +7975,7 @@ Jump_004_7291::
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_004_728A
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld hl, $64CA
     call StartScriptAtHL_B04
     ret

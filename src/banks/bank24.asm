@@ -4279,7 +4279,7 @@ Jump_024_6183:: ; address name
     ld [wMenuInputResult], a
     ld a, $04
     ld [wD7A9], a
-    farcall Func_01D_65F6
+    farcall UpdateListCursorWD7AB
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -4627,7 +4627,7 @@ Jump_024_63C9::
     ld [wD78B], a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_015_6676
+    farcall UnpackBCDToDigitsWD7F1
     ld hl, wD7F4
     ld de, wC130
     ld b, $04
@@ -4801,7 +4801,7 @@ Jump_024_6541::
     ld [wD7F2], a
     ld a, [wD789]
     ld [wD7F1], a
-    farcall Func_015_683C
+    farcall SubtractWD7F1AmountFromGold
     call DrawGoldPanel_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
@@ -5393,7 +5393,7 @@ Func_024_68B0:: ; address name
     ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_015_6676
+    farcall UnpackBCDToDigitsWD7F1
     ld hl, wC386
     ld de, wD7F3
     ld c, $00

@@ -637,7 +637,7 @@ Jump_00C_43CE:: ; address name
     call CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
-    farcall Func_01D_62AD
+    farcall DrawRecordListNameTiles_Bank1D
     farcall LoadTilesForPartyRecords
     xor a, a
     ld [wD7F0], a
@@ -3929,7 +3929,7 @@ Jump_00C_6A39::
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    farcall Func_015_683C
+    farcall SubtractWD7F1AmountFromGold
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -4511,7 +4511,7 @@ Jump_00C_6E0C:: ; address name
     ld [wD7F2], a
     ld a, [wD586]
     ld [wD7F1], a
-    farcall Func_015_683C
+    farcall SubtractWD7F1AmountFromGold
     call ScriptCommandF7_Run_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
@@ -4920,7 +4920,7 @@ Func_00C_7098:: ; address name
     ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_01E_768E
+    farcall UnpackBCDToDigitsWD7F1_Bank1E
     ld hl, wC386
     ld de, wD7F3
     ld c, $00

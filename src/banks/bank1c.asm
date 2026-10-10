@@ -1077,7 +1077,7 @@ Jump_01C_4619:: ; address name
 ; points at: wD780, wC130
 ScriptCommandE3_Run_Case03::
 Jump_01C_465B:: ; address name
-    farcall Func_01D_62AD
+    farcall DrawRecordListNameTiles_Bank1D
     farcall LoadTilesForPartyRecords
     xor a, a
     ld [wD7F0], a
@@ -1874,7 +1874,7 @@ Jump_01C_4AFA::
     ld a, b
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_01E_768E
+    farcall UnpackBCDToDigitsWD7F1_Bank1E
     ld a, $DF
     ld [wD7F8], a
 
@@ -3208,7 +3208,7 @@ Jump_01C_5355:: ; address name
     ld [wD7F2], a
     ld a, [wD7CE]
     ld [wD7F1], a
-    farcall Func_015_683C
+    farcall SubtractWD7F1AmountFromGold
     ld a, [wD7CA]
     ld e, a
     ld d, $00

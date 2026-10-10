@@ -631,7 +631,7 @@ Func_01E_4201_Case05::
 Jump_01E_440A:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall Func_01D_65F6
+    farcall UpdateListCursorWD7AB
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -1470,7 +1470,7 @@ Func_01E_49F8::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    call Func_01E_7564
+    call DrawPageOfPagesAtScrollOffset
     ld hl, wC42F
     ld a, h
     ld [wD7F1], a
@@ -1617,7 +1617,7 @@ Jump_01E_4AE0:: ; address name
 ; writes: wD781
 Func_01E_4201_Case21::
 Jump_01E_4AF1:: ; address name
-    farcall Func_01D_62AD
+    farcall DrawRecordListNameTiles_Bank1D
     farcall Func_01D_5E79
     ld a, [wD781]
     inc a
@@ -2020,7 +2020,7 @@ Func_01E_4A32_Case25::
 Jump_01E_4DB5:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall Func_01D_65F6
+    farcall UpdateListCursorWD7AB
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -2994,7 +2994,7 @@ Jump_01E_5518:: ; address name
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    call Func_01E_7564
+    call DrawPageOfPagesAtScrollOffset
     ld hl, wC413
     ld a, h
     ld [wD7F1], a
@@ -3606,7 +3606,7 @@ Jump_01E_5994:: ; address name
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    call Func_01E_7564
+    call DrawPageOfPagesAtScrollOffset
     ld hl, wC413
     ld a, h
     ld [wD7F1], a
@@ -3887,7 +3887,7 @@ Jump_01E_5B96:: ; address name
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    call Func_01E_7564
+    call DrawPageOfPagesAtScrollOffset
 
 Jump_01E_5BC8::
     ld a, [wD781]
@@ -5649,7 +5649,7 @@ Func_01E_6074_Table8_Case06::
 Jump_01E_6753:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall Func_01D_65F6
+    farcall UpdateListCursorWD7AB
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -6020,7 +6020,7 @@ Jump_01E_69AD:: ; address name
     farcall Func_01D_6A3D
     xor a, a
     ld [wMenuInputResult], a
-    farcall Func_01D_65F6
+    farcall UpdateListCursorWD7AB
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -6214,7 +6214,7 @@ Func_01E_6074_Table8_Case1B::
 Jump_01E_6B1F:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall Func_01D_65F6
+    farcall UpdateListCursorWD7AB
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -6428,7 +6428,7 @@ Func_01E_6074_Table8_Case20::
 Jump_01E_6CAB:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall Func_01D_65F6
+    farcall UpdateListCursorWD7AB
     ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_01E_6CC7
@@ -6811,7 +6811,7 @@ Func_01E_6F17::
     ldh a, [hFFC8]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    call Func_01E_768E
+    call UnpackBCDToDigitsWD7F1_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $018C
     add hl, de
@@ -6886,7 +6886,7 @@ Func_01E_6F17::
     ld a, e
     ld [wC8C2], a
     call Number24ToPackedBCD
-    call Func_01E_768E
+    call UnpackBCDToDigitsWD7F1_Bank1E
 
 Jump_01E_6FBA::
     call BGMapAddressAtScroll_Bank1E
@@ -7891,7 +7891,7 @@ Jump_01E_74EE::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 86 call sites from 67 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case02_Sub04, Func_01E_7233, Func_01E_7564, ...)
+; 86 call sites from 67 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case02_Sub04, Func_01E_7233, DrawPageOfPagesAtScrollOffset, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1E::
 Func_01E_750F:: ; address name
@@ -7956,9 +7956,11 @@ Func_01E_7556:: ; address name
     ld [hl], a
     ret
 
+; HL = BGMapAddressAtScroll + the offset in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two entries later, each through StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (current page and page count) (E-0106)
 ; 11 call sites from 11 routines (e.g. Func_01E_49F8, Func_01E_4A32_Table3_Case30, Func_01E_4A32_Table2_Case18, Func_01E_5A4D_Case03, ...)
 ; reads: wD7F1, wD7F2, wD7AF, wD7B0
-Func_01E_7564::
+DrawPageOfPagesAtScrollOffset::
+Func_01E_7564:: ; address name
     ld a, [wD7F1]
     ld d, a
     ld a, [wD7F2]
@@ -8175,9 +8177,11 @@ Jump_01E_7684::
     jr nz, Jump_01E_7648
     ret
 
+; the same 57 bytes as UnpackBCDToDigitsWD7F1 (15:6676)
 ; 6 call sites from 4 routines (e.g. Func_01E_6F17, ScriptCommandF7_Run_Shared02, Func_01C_4867_Case05, Func_0F2_4B05)
 ; points at: hFFC9, wD7F1
-Func_01E_768E::
+UnpackBCDToDigitsWD7F1_Bank1E::
+Func_01E_768E:: ; address name
     ld de, hFFC9
     ld hl, wD7F1
     ld a, [de]

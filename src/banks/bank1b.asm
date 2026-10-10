@@ -2121,7 +2121,7 @@ Jump_01B_5588:: ; address name
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01E_7564
+    farcall DrawPageOfPagesAtScrollOffset
     ld hl, wC45E
     ld a, h
     ld [wD7F1], a
@@ -5034,7 +5034,7 @@ Func_01B_675F::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01E_7564
+    farcall DrawPageOfPagesAtScrollOffset
     ld hl, wC42F
     ld a, h
     ld [wD7F1], a

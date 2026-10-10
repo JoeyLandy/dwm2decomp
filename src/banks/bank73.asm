@@ -3882,7 +3882,7 @@ Jump_073_5888:: ; address name
     ld a, $2C
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -4007,15 +4007,15 @@ Jump_073_5942::
     ld a, $36
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld a, $37
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld a, $38
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld a, $80
     ld [wScriptStartRequest], a
     ret

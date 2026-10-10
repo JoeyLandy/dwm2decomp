@@ -1063,7 +1063,7 @@ Func_0F2_4B05::
     ld a, [wCA85]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_01E_768E
+    farcall UnpackBCDToDigitsWD7F1_Bank1E
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $018C
     add hl, de
@@ -1132,7 +1132,7 @@ Func_0F2_4B05::
     ld a, e
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_01E_768E
+    farcall UnpackBCDToDigitsWD7F1_Bank1E
 
 Jump_0F2_4BA8::
     call BGMapAddressAtScroll_BankF2_514D

@@ -271,7 +271,7 @@ Jump_00D_4650:: ; address name
     ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_015_6676
+    farcall UnpackBCDToDigitsWD7F1
     ld hl, wC386
     ld de, wD7F3
     ld c, $00
@@ -483,7 +483,7 @@ Jump_00D_478A::
     xor a, a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_015_6676
+    farcall UnpackBCDToDigitsWD7F1
     ld b, $04
     ld hl, wD7F4
 
@@ -676,7 +676,7 @@ Jump_00D_48EB::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall Func_015_683C
+    farcall SubtractWD7F1AmountFromGold
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD781]
@@ -1024,7 +1024,7 @@ Jump_00D_4ACF:: ; address name
     xor a, a
     ld [wD7F2], a
     ld [wD7F3], a
-    farcall Func_015_683C
+    farcall SubtractWD7F1AmountFromGold
     farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
@@ -1260,7 +1260,7 @@ Jump_00D_4C36:: ; address name
     xor a, a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_015_6676
+    farcall UnpackBCDToDigitsWD7F1
     ld b, $04
     ld hl, wD7F4
 
@@ -2663,7 +2663,7 @@ Func_00D_563B::
     ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_015_6676
+    farcall UnpackBCDToDigitsWD7F1
     ld hl, wC386
     ld de, wD7F3
     ld c, $00
@@ -2938,7 +2938,7 @@ Jump_00D_57F5:: ; address name
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01E_7564
+    farcall DrawPageOfPagesAtScrollOffset
     ld hl, wC463
     ld a, h
     ld [wD7F1], a
@@ -3444,7 +3444,7 @@ Jump_00D_5B7C::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall Func_015_683C
+    farcall SubtractWD7F1AmountFromGold
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -4205,7 +4205,7 @@ Jump_00D_6127::
     xor a, a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    farcall Func_015_6676
+    farcall UnpackBCDToDigitsWD7F1
     pop de
     ld hl, wD7F1
     ld c, $07
@@ -6186,7 +6186,7 @@ Func_00D_6E88::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01E_7564
+    farcall DrawPageOfPagesAtScrollOffset
     ld hl, wC463
     ld a, h
     ld [wD7F1], a

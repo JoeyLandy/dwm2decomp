@@ -4570,11 +4570,13 @@ Data_01D_6299:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $9B, $62, $C0, $97, $D0, $97, $E0, $97, $F0, $97, $00, $8C, $10, $8C, $20, $8C
     db $A0, $8C, $B0, $8C
 
+; with SRAM enabled, for each of the wC6FD record numbers in wC6FE copies the record's name (CopyRecordNameToWC8CF, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)
 ; 6 call sites from 6 routines (e.g. ScriptCommandF6_Run_Case08, ScriptCommandEC_Run_Case03, Func_014_43CC_Case0E, ScriptCommandEE_Run_Case03, ...)
 ; reads: wC6FD
 ; writes: rRAMG2, rRAMB, wC8D9
 ; points at: wC6FE, wC52D
-Func_01D_62AD::
+DrawRecordListNameTiles_Bank1D::
+Func_01D_62AD:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5151,10 +5153,12 @@ Jump_01D_65D2::
 Data_01D_65F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
+; list cursor over wD7A9 entries: Up/Down move wD7AB with wrap, erase and redraw the cursor, play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor, plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks and the result is 0 (the codes of UpdatePagedListCursor) (E-0106)
 ; 7 call sites from 7 routines (e.g. Func_01E_4201_Case05, Func_01E_4A32_Case25, Func_01E_6074_Table8_Case06, Func_01E_6074_Table8_Case15, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7A9, wD7AB
 ; writes: wMenuInputResult, wD7AB, wD7AC
-Func_01D_65F6::
+UpdateListCursorWD7AB::
+Func_01D_65F6:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01D_6614
@@ -5165,13 +5169,13 @@ Func_01D_65F6::
     jr nz, Jump_01D_6656
     bit 1, a
     jr nz, Jump_01D_6664
-    call Func_01D_666A
+    call UpdateListCursorWD7AB_Sub01
     xor a, a
     ld [wMenuInputResult], a
     ret
 
 Jump_01D_6614::
-    call Func_01D_6688
+    call UpdateListCursorWD7AB_Sub03
     ld a, [wD7AB]
     and a, a
     jr nz, Jump_01D_6626
@@ -5186,7 +5190,7 @@ Jump_01D_6626::
     jr Jump_01D_6644
 
 Jump_01D_662C::
-    call Func_01D_6688
+    call UpdateListCursorWD7AB_Sub03
     ld a, [wD7A9]
     dec a
     ld b, a
@@ -5204,7 +5208,7 @@ Jump_01D_6640::
 Jump_01D_6644::
     xor a, a
     ld [wD7AC], a
-    call Func_01D_6684
+    call UpdateListCursorWD7AB_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -5214,7 +5218,7 @@ Jump_01D_6644::
 Jump_01D_6656::
     ld a, $69
     call QueueSoundEffect
-    call Func_01D_668C
+    call UpdateListCursorWD7AB_Sub04
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5224,38 +5228,46 @@ Jump_01D_6664::
     ld [wMenuInputResult], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01D_65F6)
+; only called from UpdateListCursorWD7AB (E-0047)
+; 1 call site from 1 routine (e.g. UpdateListCursorWD7AB)
 ; reads: wJoypadRepeatTimer, wD7AC, wD7AB
 ; writes: wD7AC
-Func_01D_666A::
+UpdateListCursorWD7AB_Sub01::
+Func_01D_666A:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, Func_01D_6684
+    jr c, UpdateListCursorWD7AB_Sub02
     ld a, [wD7AC]
     inc a
     ld [wD7AC], a
     cp a, $10
-    jr c, Func_01D_6684
+    jr c, UpdateListCursorWD7AB_Sub02
     cp a, $18
-    jr c, Func_01D_6688
+    jr c, UpdateListCursorWD7AB_Sub03
     xor a, a
     ld [wD7AC], a
 
-; 1 call site from 1 routine (e.g. Func_01D_65F6)
+; only called from UpdateListCursorWD7AB (E-0047)
+; 1 call site from 1 routine (e.g. UpdateListCursorWD7AB)
 ; reads: wD7AB
-Func_01D_6684::
+UpdateListCursorWD7AB_Sub02::
+Func_01D_6684:: ; address name
     ld b, $BB
     jr Jump_01D_668E
 
-; 2 call sites from 1 routine (e.g. Func_01D_65F6)
+; only called from UpdateListCursorWD7AB (E-0047)
+; 2 call sites from 1 routine (e.g. UpdateListCursorWD7AB)
 ; reads: wD7AB
-Func_01D_6688::
+UpdateListCursorWD7AB_Sub03::
+Func_01D_6688:: ; address name
     ld b, $C3
     jr Jump_01D_668E
 
-; 1 call site from 1 routine (e.g. Func_01D_65F6)
+; only called from UpdateListCursorWD7AB (E-0047)
+; 1 call site from 1 routine (e.g. UpdateListCursorWD7AB)
 ; reads: wD7AB
-Func_01D_668C::
+UpdateListCursorWD7AB_Sub04::
+Func_01D_668C:: ; address name
     ld b, $BC
 
 Jump_01D_668E::
@@ -7604,7 +7616,7 @@ Jump_01D_7514::
 
 Jump_01D_7552::
     ld hl, wC8CF
-    call Func_01D_75C7
+    call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
     call Func_01D_7991
@@ -7618,7 +7630,7 @@ Jump_01D_7552::
 
 Jump_01D_7566::
     ld hl, wC8CF
-    call Func_01D_75C7
+    call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
     call Func_01D_79C5
@@ -7632,7 +7644,7 @@ Jump_01D_7566::
 
 Jump_01D_757A::
     ld hl, wC8CF
-    call Func_01D_75C7
+    call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
     call Func_01D_79FB
@@ -7646,7 +7658,7 @@ Jump_01D_757A::
 
 Jump_01D_758E::
     ld hl, wC8CF
-    call Func_01D_75C7
+    call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
     call Func_01D_7A2D
@@ -7660,7 +7672,7 @@ Jump_01D_758E::
 
 Jump_01D_75A2::
     ld hl, wC8CF
-    call Func_01D_75C7
+    call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
     call Func_01D_7A61
@@ -7674,16 +7686,18 @@ Jump_01D_75A2::
 
 Jump_01D_75B6::
     ld hl, wC8CF
-    call Func_01D_75C7
+    call CopyTenBytesThenSelectSRAMBank0
     pop de
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
     jp Jump_01D_75DA
 
+; copies 10 bytes from HL to DE, selecting SRAM bank 0 (rRAMB = 0) after each byte is read; HL and DE advance (E-0106)
 ; 6 call sites from 1 routine (e.g. Func_01D_7492)
 ; writes: rRAMB
-Func_01D_75C7::
+CopyTenBytesThenSelectSRAMBank0::
+Func_01D_75C7:: ; address name
     ld c, $00
 
 Jump_01D_75C9::
@@ -8518,7 +8532,7 @@ Jump_01D_7AD6::
     ret
 
 ; with SRAM bank wD7F2 selected, splits the byte at HL into four 2-bit fields: wD7F5 = bits 7-6, wD7F6 = bits 5-4, wD7F7 = bits 3-2, wD7F8 = bits 1-0 (E-0104)
-; 7 call sites from 7 routines (e.g. Func_01D_75C7, Func_01D_7A61, Func_01D_7A2D, Func_01D_79FB, ...)
+; 7 call sites from 7 routines (e.g. CopyTenBytesThenSelectSRAMBank0, Func_01D_7A61, Func_01D_7A2D, Func_01D_79FB, ...)
 ; reads: wD7F2
 ; writes: rRAMB, wD7F5, wD7F6, wD7F7, wD7F8
 UnpackByteAtHLTo2BitFieldsWD7F5::
@@ -8548,7 +8562,7 @@ Func_01D_7AD8:: ; address name
     ret
 
 ; writes $0A to the RAM-enable register (rRAMG2 alias) and selects SRAM bank 0 (rRAMB = 0); clobbers A (E-0066)
-; 20 call sites from 10 routines (e.g. Func_01D_7492, Func_01D_75C7, Func_01D_7A61, Func_01D_7A2D, ...)
+; 20 call sites from 10 routines (e.g. Func_01D_7492, CopyTenBytesThenSelectSRAMBank0, Func_01D_7A61, Func_01D_7A2D, ...)
 ; writes: rRAMG2, rRAMB
 EnableSRAMBank0::
 Func_01D_7B05:: ; address name
@@ -8559,7 +8573,7 @@ Func_01D_7B05:: ; address name
     ret
 
 ; HL = the word at wD7F3/wD7F4; DE = sA000 + $A5 * wD7F1, the start of SRAM record wD7F1 (records are $A5 bytes, as in SRAMRecordAddress); clobbers A, BC (E-0063)
-; 27 call sites from 10 routines (e.g. Func_01D_7492, Func_01D_75C7, Func_01D_7A61, Func_01D_7A2D, ...)
+; 27 call sites from 10 routines (e.g. Func_01D_7492, CopyTenBytesThenSelectSRAMBank0, Func_01D_7A61, Func_01D_7A2D, ...)
 ; reads: wD7F3, wD7F4, wD7F1
 ; points at: sA000
 SRAMRecordAddressOfWD7F1::

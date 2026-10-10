@@ -1717,15 +1717,15 @@ Jump_013_492B::
     ld a, $39
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld a, $3A
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld a, $3B
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld hl, $6133
     call StartScriptAtHL_B13
     ret
@@ -4791,7 +4791,7 @@ Jump_013_5C36::
     ret
 
 Jump_013_5C4D::
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld hl, $522B
     call StartScriptAtHL_B13
     ld de, $0181
@@ -4830,7 +4830,7 @@ Jump_013_5C84::
 Jump_013_5C9B::
     ld hl, $519F
     call StartScriptAtHL_B13
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ret
 
 Jump_013_5CA8::
@@ -4858,7 +4858,7 @@ Jump_013_5CBF::
 Jump_013_5CD6::
     ld hl, $51BF
     call StartScriptAtHL_B13
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ret
 
 Jump_013_5CE3::
@@ -4900,7 +4900,7 @@ Jump_013_5D18::
     ret
 
 Jump_013_5D2F::
-    farcall Func_012_7DF1
+    farcall RemoveInventorySlotShiftDown
     ld hl, $5221
     call StartScriptAtHL_B13
     ret

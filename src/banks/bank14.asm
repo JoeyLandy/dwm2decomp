@@ -105,7 +105,7 @@ Jump_014_4080:: ; address name
 ; points at: wD780
 ScriptCommandEC_Run_Case03::
 Jump_014_409E:: ; address name
-    farcall Func_01D_62AD
+    farcall DrawRecordListNameTiles_Bank1D
     xor a, a
     ld [wD7F0], a
     ld [wD788], a
@@ -1608,7 +1608,7 @@ Func_014_4BA0::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01E_7564
+    farcall DrawPageOfPagesAtScrollOffset
     ld hl, wC42F
     ld a, h
     ld [wD7F1], a
@@ -1765,7 +1765,7 @@ Jump_014_4CA8:: ; address name
 ; writes: wD781
 Func_014_43CC_Case0E::
 Jump_014_4CBC:: ; address name
-    farcall Func_01D_62AD
+    farcall DrawRecordListNameTiles_Bank1D
     farcall Func_01D_5E79
     ld a, [wD781]
     inc a

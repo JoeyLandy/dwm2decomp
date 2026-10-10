@@ -10083,11 +10083,13 @@ Jump_012_7DED::
     ldh [hFFC6], a
     ret
 
+; hFFC6 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wC634 = $FF; nothing moves when the slot is $17 (E-0106)
 ; 17 call sites from 10 routines (e.g. Func_004_58C2_Case6A, Func_004_612B_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
 ; reads: hFFC6
 ; writes: wC634
 ; points at: wInventory
-Func_012_7DF1::
+RemoveInventorySlotShiftDown::
+Func_012_7DF1:: ; address name
     ldh a, [hFFC6]
     cp a, $17
     jr z, Jump_012_7E09

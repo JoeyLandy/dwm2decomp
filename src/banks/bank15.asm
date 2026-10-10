@@ -110,7 +110,7 @@ Jump_015_4076:: ; address name
 ; points at: wD780, wC130, wC52D
 ScriptCommandEE_Run_Case03::
 Jump_015_40AE:: ; address name
-    farcall Func_01D_62AD
+    farcall DrawRecordListNameTiles_Bank1D
     farcall LoadTilesForPartyRecords
     xor a, a
     ld [wD7F0], a
@@ -263,7 +263,7 @@ Func_015_4182::
     ld a, [hl]
     ld [de], a
     call Number24ToPackedBCD
-    call Func_015_6676
+    call UnpackBCDToDigitsWD7F1
     ld hl, wC386
     ld de, wD7F3
     ld c, $00
@@ -506,7 +506,7 @@ Jump_015_4369::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01E_7564
+    farcall DrawPageOfPagesAtScrollOffset
     ld hl, wC42F
     ld a, h
     ld [wD7F1], a
@@ -2414,7 +2414,7 @@ Jump_015_5030:: ; address name
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    call Func_015_683C
+    call SubtractWD7F1AmountFromGold
     ld hl, wD7BE
     ld c, $00
 
@@ -2600,7 +2600,7 @@ Jump_015_5165:: ; address name
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01E_7564
+    farcall DrawPageOfPagesAtScrollOffset
     ld hl, wC463
     ld a, h
     ld [wD7F1], a
@@ -3196,7 +3196,7 @@ Jump_015_556A:: ; address name
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    call Func_015_683C
+    call SubtractWD7F1AmountFromGold
     ld hl, wD7BE
     ld c, $00
 
@@ -5732,9 +5732,11 @@ Func_015_6655:: ; address name
     add_a_to_hl
     ret
 
+; wD7F1 = hFFC9, then the high and low digits of hFFC8, hFFC7 and hFFC6 go to wD7F2-wD7F7 (seven digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read (E-0106)
 ; 9 call sites from 9 routines (e.g. Func_015_67F9, Func_015_4182, ScriptCommandEF_Run_Table2_Case01, Func_00D_463F_Case06, ...)
 ; points at: hFFC9, wD7F1
-Func_015_6676::
+UnpackBCDToDigitsWD7F1::
+Func_015_6676:: ; address name
     ld de, hFFC9
     ld hl, wD7F1
     ld a, [de]
@@ -6069,7 +6071,7 @@ Func_015_67F9::
     xor a, a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    call Func_015_6676
+    call UnpackBCDToDigitsWD7F1
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_015_4182_Case41, Func_015_4182_Case3F, Func_015_67F9, Func_015_4F4C_Case10, ...)
@@ -6111,10 +6113,12 @@ Jump_015_6831::
     ld [de], a
     ret
 
+; wGold -= the 24-bit amount wD7F3:wD7F2:wD7F1 (no floor; callers check first, for example with IsAmountInWD7F1AboveGold) (E-0106)
 ; 9 call sites from 9 routines (e.g. Func_015_4182_Case41, Func_015_4F4C_Case10, ScriptCommandF7_Run_Case07, ScriptCommandF7_Run_Case19, ...)
 ; reads: wD7F3, wD7F2, wD7F1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldHi, wGoldMid, wGoldLo
-Func_015_683C::
+SubtractWD7F1AmountFromGold::
+Func_015_683C:: ; address name
     ld a, [wD7F3]
     ld e, a
     ld a, [wD7F2]

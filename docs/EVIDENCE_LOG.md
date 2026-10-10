@@ -1148,6 +1148,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Effect.** One new copy was named: ShowStringA10_Bank33, which replaces the call-graph name BeginString_Bank07_Cat5_Shared02. Binary identity is unchanged.
 - Binary verification: pending; see the commit.
 
+### E-0106 — List cursor, inventory removal, gold subtraction
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **Named:**
+  - UpdateListCursorWD7AB, with the same result codes as UpdatePagedListCursor (E-0068);
+  - DrawRecordListNameTiles_Bank1D;
+  - CopyTenBytesThenSelectSRAMBank0;
+  - RemoveInventorySlotShiftDown, which leaves the last slot duplicated rather than cleared;
+  - SubtractWD7F1AmountFromGold (no floor);
+  - UnpackBCDToDigitsWD7F1, partly read;
+  - DrawPageOfPagesAtScrollOffset, the scroll-relative form of DrawPageOfPagesAtWD7F1.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
