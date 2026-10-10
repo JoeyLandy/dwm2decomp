@@ -1499,7 +1499,7 @@ DEF wD8A2 EQU $D8A2
 DEF wD8A3 EQU $D8A3
 DEF wBattleActor EQU $D8A4 ; slot number of the battler whose turn it is: indexes MP arrays and status records in the battle code (reading (E-0043))
 DEF wBattleTarget EQU $D8A5 ; slot number of the battler an action is applied to (ApplyDamageToTarget, DefeatTarget) (reading (E-0043))
-DEF wD8A6 EQU $D8A6
+DEF wBattleActionId EQU $D8A6 ; id of the action being resolved; the resolve steps compare it with fixed values ($13-$15, $79, $91, $D6, $D7, $DC), some above the SkillTable range of 175, so it is an action number rather than a skill index (reading (E-0045))
 DEF wD8A7 EQU $D8A7
 DEF wD8AF EQU $D8AF
 DEF wD8B7 EQU $D8B7

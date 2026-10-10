@@ -2483,5 +2483,20 @@
     "name": "RunBattleStep4",
     "note": "battle fight step 4: the same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle)",
     "evidence": "execution and reading (E-0044)"
+  },
+  "36:4806": {
+    "name": "ResolveStepDamageMessage",
+    "note": "resolve step $0A: advances wBattleResolveStep and, for the actor or target side chosen by wDAC0 bit 4, stores wDAC2 or wDAC3 in wC0A0 and calls Func_036_4991 / Func_036_4A38; the first fight showed the battle text 'took N damage!' (bank $2F, category 1, index 53) at this step",
+    "evidence": "execution and reading (E-0045)"
+  },
+  "36:4901": {
+    "name": "ResolveStepDefeat",
+    "note": "resolve step $0D: runs the defeat sequence Func_032_5A3A (RunDefeatSequence); the first fight showed 'was defeated!' (category 1, index 139) at this step",
+    "evidence": "execution and reading (E-0045)"
+  },
+  "32:5A3A": {
+    "name": "RunDefeatSequence",
+    "note": "three sub-steps by wBattleSubStep2: 0 lowers a counter (wDA5B + target by 5) and calls DefeatTarget, 1 runs Func_032_5AB3, 2 advances wBattleResolveStep, sets bit 2 of the target's wD095 flags and starts the defeat message (Func_03A_7193)",
+    "evidence": "execution and reading (E-0045)"
   }
 }

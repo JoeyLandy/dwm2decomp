@@ -3,7 +3,7 @@ SECTION "Bank 39", ROMX[$4000], BANK[$39]
 
 ; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4EE4_Case02, Func_032_5820_Case00, ...)
 ; reads: wBattleActor, wC58A
-; writes: wD8A6
+; writes: wBattleActionId
 ; points at: wDA1C, wDA53
 Func_039_4001::
     ld a, [wBattleActor]
@@ -11,7 +11,7 @@ Func_039_4001::
     add a, a
     add_a_to_hl
     ld a, [hl]
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     ld c, a
     ld b, $00
     ld a, [wBattleActor]
@@ -3248,11 +3248,11 @@ Jump_039_5EFA::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
+; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
 ; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
 ; points at: hFFCE, wD80E, wDA72, wDA1D
 Func_039_5F0E:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
@@ -5106,7 +5106,7 @@ Func_039_6A07:: ; heuristic: follows a terminator; C0
     jp Func_039_5E03
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
+; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
 ; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
 ; points at: hFFCE, wD80E, wDA72, wDA1D
 Func_039_6A0A:: ; heuristic: target of a pointer table; C0
@@ -5863,11 +5863,11 @@ Jump_039_6E26::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
-; reads: wD8A6, wBattleActor
+; reads: wBattleActionId, wBattleActor
 ; writes: wBattleDamageLo, wD873
 Func_039_6E27::
     push bc
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $00
     jr z, Jump_039_6E3F
     cp a, $48

@@ -86,11 +86,11 @@ Jump_01A_4063::
     db $C9, $C1, $0E, $00, $C9
 
 ; 1 call site from 1 routine (e.g. Func_039_6E27)
-; reads: wD8A6, wC58A, wBattleActor
+; reads: wBattleActionId, wC58A, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wDA53
 Func_01A_408F::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld c, a
     ld b, $00
     ld a, $11

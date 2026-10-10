@@ -834,7 +834,7 @@ Jump_0E0_4634::
 
 ; entry 2 of the `rst $00` table in Func_0E0_443B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wD88F, wD890, wBattleActor, wBattleTarget, wD8A6, wC5FE
+; reads: wJoypadPressed, wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wC5FE
 ; writes: wD88F, wD890, wC5FD, wC5FE, wD802
 ; points at: wD09D, wC5FD
 Func_0E0_443B_Case02::
@@ -851,7 +851,7 @@ Jump_0E0_4663:: ; address name
     ld [hl+], a
     ld a, [wBattleTarget]
     ld [hl+], a
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld [hl], a
     ld a, $01
     ld [wD88F], a
@@ -1360,7 +1360,7 @@ Jump_0E0_493B:: ; address name
 ; entry 10 of the `rst $00` table in Func_0E0_443B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD802, wJoypadPressed
-; writes: wD88F, wD890, wBattleActor, wBattleTarget, wD8A6, wC5FD, wC5FE, wC5FF, ...
+; writes: wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wC5FD, wC5FE, wC5FF, ...
 ; points at: wC5FE, wD09D
 Func_0E0_443B_Case0A::
 Jump_0E0_4A86:: ; address name
@@ -1449,7 +1449,7 @@ Jump_0E0_4AF8::
     ld a, [hl+]
     ld [wBattleTarget], a
     ld a, [hl]
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     ld a, $0B
     ld [wC5FD], a
     xor a, a
@@ -1475,7 +1475,7 @@ Jump_0E0_4B2D::
     ld a, [hl+]
     ld [wBattleTarget], a
     ld a, [hl]
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     xor a, a
     ld [wC5FD], a
     ld a, $FF
@@ -1485,7 +1485,7 @@ Jump_0E0_4B2D::
 ; entry 11 of the `rst $00` table in Func_0E0_443B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC0A2, wC0A0, wC0A1, wC5FE, wC5FF
-; writes: wC5FF, wC0A2, wD88F, wD890, wBattleActor, wBattleTarget, wD8A6, wC5FD, ...
+; writes: wC5FF, wC0A2, wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wC5FD, ...
 ; points at: wC5FE, wC5FF, wBattleStatus, wD09D
 Func_0E0_443B_Case0B::
 Jump_0E0_4B54:: ; address name
@@ -2266,7 +2266,7 @@ Func_0E0_558E::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleActor, wBattleTarget, wD8A6, wDAD3
+; writes: wBattleActor, wBattleTarget, wBattleActionId, wDAD3
 Func_0E0_559E:: ; heuristic: follows a terminator; C0
     add a, a
     add a, a
@@ -2277,7 +2277,7 @@ Func_0E0_559E:: ; heuristic: follows a terminator; C0
     ld a, [hl+]
     ld [wBattleTarget], a
     ld a, [hl+]
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     ld a, [hl]
     ld [wDAD3], a
     farcall Func_03A_5762

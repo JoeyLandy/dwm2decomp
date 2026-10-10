@@ -2524,7 +2524,7 @@ Func_032_4D8D::
 
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Table2_Case03)
 ; reads: wBattleActor, wC5E7, wC58A, wC5E8, wCFC5
-; writes: wD8A6, wBattleTarget
+; writes: wBattleActionId, wBattleTarget
 ; points at: wD80F, wDA1C, wDA1D
 Func_032_4D99::
     call AdvanceRandom
@@ -2587,7 +2587,7 @@ Jump_032_4DF5::
 
 Jump_032_4DF7::
     ld b, a
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     ld a, [wBattleActor]
     ld hl, wDA1C
     add a, a
@@ -2808,8 +2808,8 @@ Jump_032_4F32::
 
 ; entry 0 of the `rst $00` table in Func_032_4EE4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, wBattleActor, wD8A6, wCFF3
-; writes: wD8A6
+; reads: hFFC6, wBattleActor, wBattleActionId, wCFF3
+; writes: wBattleActionId
 ; points at: wDAD8, wBattleSubStep, wBattleStatus, wDA1C, wDAE0
 Func_032_4EE4_Case00::
 Jump_032_4F53:: ; address name
@@ -2864,7 +2864,7 @@ Jump_032_4F9C::
     jr c, Jump_032_4FFB
 
 Jump_032_4FC8::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $6E
     jr z, Jump_032_4FFB
     ld a, [wBattleActor]
@@ -2879,7 +2879,7 @@ Jump_032_4FC8::
     ld hl, wDA1C
     add a, a
     call Func_032_57FD
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     inc hl
     ld [hl], $FF
     call Func_032_51F9
@@ -2892,7 +2892,7 @@ Jump_032_4FFB::
 
 ; entry 1 of the `rst $00` table in Func_032_4EE4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wBattleActor, wD89E, wD8A6
+; reads: wC58A, wBattleActor, wD89E, wBattleActionId
 ; points at: wD895, wDA5B, wDA1C, wBattleSubStep
 Func_032_4EE4_Case01::
 Jump_032_5000:: ; address name
@@ -2929,7 +2929,7 @@ Jump_032_5031::
     ld hl, wDA1C
     add a, a
     add_a_to_hl
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, [hl]
     pop hl
     jr z, Jump_032_5049
@@ -2941,7 +2941,7 @@ Jump_032_5043::
     jr Jump_032_5073
 
 Jump_032_5049::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld c, a
     push hl
     ld hl, Data_032_5078
@@ -3036,7 +3036,7 @@ Jump_032_50FC::
 
 ; entry 3 of the `rst $00` table in Func_032_4EE4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wRecordBufferData
+; reads: wBattleActionId, wRecordBufferData
 ; writes: wBattleSubStep
 ; points at: wBattleResolveStep
 Func_032_4EE4_Case03::
@@ -3045,7 +3045,7 @@ Jump_032_510E:: ; address name
     inc [hl]
     xor a, a
     ld [wBattleSubStep], a
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     call Func_000_3F47
     ret nz
     ld d, $02
@@ -3184,11 +3184,11 @@ Jump_032_51F3::
     ret
 
 ; 6 call sites from 4 routines (e.g. Func_032_5820_Case01, Func_032_4EE4_Case04, Func_032_4EE4_Case00, Func_032_514C)
-; reads: wD8A6, wBattleActor, hFFC8, wCFF3, wRecordBufferData
+; reads: wBattleActionId, wBattleActor, hFFC8, wCFF3, wRecordBufferData
 ; writes: hFFC8
 ; points at: wD80E
 Func_032_51F9::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $D0
     jr c, Jump_032_5206
     cp a, $E4
@@ -3222,7 +3222,7 @@ Jump_032_520B::
     jr nz, Jump_032_5296
 
 Jump_032_522D::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     call Func_000_3F47
     jr z, Jump_032_529A
     ld a, [wCFF3]
@@ -3439,9 +3439,9 @@ Jump_032_535D::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_032_5386, Func_032_55EE, Func_032_4EE4_Case00)
-; reads: wD8A6
+; reads: wBattleActionId
 Func_032_535F::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $BF
     jr z, Jump_032_5384
     cp a, $C9
@@ -3466,11 +3466,11 @@ Jump_032_5384::
     ret
 
 ; 8 call sites from 8 routines (e.g. Func_032_5820_Case07, Func_032_5820_Case01, Func_032_4ADC_Case08, Func_032_4EE4_Case04, ...)
-; reads: wD8A6, wBattleActor, hFFC6, wRecordBufferData
+; reads: wBattleActionId, wBattleActor, hFFC6, wRecordBufferData
 ; writes: wRecordBuffer, wCFED, wBattleActor, wRecordBufferData, wD866, wD867
 ; points at: wDA2C, wBattleMP
 Func_032_5386::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $D0
     jr c, Jump_032_5393
     cp a, $E4
@@ -3610,7 +3610,7 @@ Jump_032_546D::
 
 ; entry 3 of the `rst $00` table in Func_032_4ADC
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wCFC5, wBattleActor, wD8A6
+; reads: wC58A, wCFC5, wBattleActor, wBattleActionId
 ; writes: wDAD3, wD093
 ; points at: wBattleResolveStep
 Func_032_4ADC_Case03::
@@ -3632,7 +3632,7 @@ Jump_032_5474:: ; address name
     ld a, [wBattleActor]
     cp a, $04
     ret c
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     or a, a
     ret z
     cp a, $AB
@@ -3740,9 +3740,9 @@ Jump_032_5519:: ; address name
     ret
 
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case05)
-; reads: wD8A6
+; reads: wBattleActionId
 Func_032_553B::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $CD
     ret
 
@@ -3760,8 +3760,8 @@ Jump_032_5541:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_032_553B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wCFF6, wCFF2, wD8A6, wBattleTarget
-; writes: wD8A6, wBattleTarget, wBattleSubStep
+; reads: wBattleActor, wCFF6, wCFF2, wBattleActionId, wBattleTarget
+; writes: wBattleActionId, wBattleTarget, wBattleSubStep
 ; points at: wDA1C, wD814, wBattleResolveStep, wDAAC, wBattleSubStep
 Func_032_553B_Case00::
 Jump_032_554D:: ; address name
@@ -3769,7 +3769,7 @@ Jump_032_554D:: ; address name
     ld hl, wDA1C
     add a, a
     call Func_032_57FD
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     inc hl
     ld a, [hl]
     ld [wBattleTarget], a
@@ -3780,7 +3780,7 @@ Jump_032_554D:: ; address name
     and a, $0F
     cp a, $02
     jr z, Jump_032_5585
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $35
     jr z, Jump_032_5585
     ld a, [wBattleTarget]
@@ -3828,7 +3828,7 @@ Jump_032_55B2::
     ld hl, wDAAC
     ld a, [hl+]
     ld [hl-], a
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld [hl], a
     ld hl, wBattleSubStep
     inc [hl]
@@ -3872,7 +3872,7 @@ Jump_032_55E7:: ; address name
     ret
 
 ; 1 call site from 1 routine (e.g. Func_032_5820_Case06)
-; reads: wC58A, wD043, wDABA, wD044, wD8A6, wD045, wBattleActor, wC57F, ...
+; reads: wC58A, wD043, wDABA, wD044, wBattleActionId, wD045, wBattleActor, wC57F, ...
 ; writes: wD092, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, ...
 ; points at: wBattleResolveStep, wD057, wD058
 Func_032_55EE::
@@ -3895,7 +3895,7 @@ Func_032_55EE::
     bit 7, a
     ret z
     ld b, a
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld hl, Data_032_5688
     add_a_to_hl
     ld a, [hl]
@@ -4097,14 +4097,14 @@ Func_032_57FD::
 
 ; 7 call sites from 4 routines (e.g. Func_032_5397, Func_032_4EE4_Case01, Func_032_4EE4_Case00, Func_032_514C)
 ; reads: wBattleActor
-; writes: wD8A6, wRecordBuffer, wCFED
+; writes: wBattleActionId, wRecordBuffer, wCFED
 ; points at: wDA1C
 Func_032_5804::
     ld a, [wBattleActor]
     ld hl, wDA1C
     add a, a
     call Func_032_57FD
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     ld [wRecordBuffer], a
     ld a, $00
     ld [wCFED], a
@@ -4127,7 +4127,7 @@ Func_032_5820::
 
 ; entry 0 of the `rst $00` table in Func_032_5820
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wBattleTarget, wDABA, wD8A6
+; reads: wBattleActor, wBattleTarget, wDABA, wBattleActionId
 ; writes: wDABD, wDABA, wBattleActor, wBattleTarget
 ; points at: wBattleResolveStep, wDAC9, wDA1C, wDA5B, wDA1D
 Func_032_5820_Case00::
@@ -4186,7 +4186,7 @@ Jump_032_5872::
     ld a, [wBattleActor]
     ld hl, wDA1C
     call AddDoubleAToHL_Bank32
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld [hl+], a
     ld [hl], $FF
     ld a, [wBattleActor]
@@ -4285,8 +4285,8 @@ Jump_032_5915:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_032_5820
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wCFF6, wCFF2, wBattleTarget, wD8A6
-; writes: wD8A6, wBattleTarget, wBattleSubStep
+; reads: wBattleActor, wCFF6, wCFF2, wBattleTarget, wBattleActionId
+; writes: wBattleActionId, wBattleTarget, wBattleSubStep
 ; points at: wDA1C, wD814, wBattleResolveStep, wDAAC, wBattleSubStep
 Func_032_5820_Table2_Case00::
 Jump_032_5921:: ; address name
@@ -4294,7 +4294,7 @@ Jump_032_5921:: ; address name
     ld hl, wDA1C
     add a, a
     call Func_032_57FD
-    ld [wD8A6], a
+    ld [wBattleActionId], a
     inc hl
     ld a, [hl]
     ld [wBattleTarget], a
@@ -4352,7 +4352,7 @@ Jump_032_5983::
     ld hl, wDAAC
     ld a, [hl+]
     ld [hl-], a
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     ld [hl], a
     ld hl, wBattleSubStep
     inc [hl]
@@ -4496,20 +4496,22 @@ Jump_032_5A26::
 Jump_032_5A39::
     ret
 
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0D)
+; three sub-steps by wBattleSubStep2: 0 lowers a counter (wDA5B + target by 5) and calls DefeatTarget, 1 runs Func_032_5AB3, 2 advances wBattleResolveStep, sets bit 2 of the target's wD095 flags and starts the defeat message (Func_03A_7193)
+; 1 call site from 1 routine (e.g. ResolveStepDefeat)
 ; reads: wBattleSubStep2
-Func_032_5A3A::
+RunDefeatSequence::
+Func_032_5A3A:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
-    dw Func_032_5A3A_Case00
-    dw Func_032_5A3A_Case01
-    dw Func_032_5A3A_Case02
+    dw RunDefeatSequence_Case00
+    dw RunDefeatSequence_Case01
+    dw RunDefeatSequence_Case02
 
-; entry 0 of the `rst $00` table in Func_032_5A3A
+; entry 0 of the `rst $00` table in RunDefeatSequence
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wBattleSubStep2, wDA5B
-Func_032_5A3A_Case00::
+RunDefeatSequence_Case00::
 Jump_032_5A44:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
@@ -4522,22 +4524,22 @@ Jump_032_5A44:: ; address name
     call DefeatTarget
     ret
 
-; entry 1 of the `rst $00` table in Func_032_5A3A
+; entry 1 of the `rst $00` table in RunDefeatSequence
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep2
-Func_032_5A3A_Case01::
+RunDefeatSequence_Case01::
 Jump_032_5A5B:: ; address name
     call Func_032_5AB3
     ld hl, wBattleSubStep2
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_032_5A3A
+; entry 2 of the `rst $00` table in RunDefeatSequence
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wD8A6
+; reads: wBattleTarget, wBattleActionId
 ; writes: wBattleSubStep2
 ; points at: wBattleResolveStep
-Func_032_5A3A_Case02::
+RunDefeatSequence_Case02::
 Jump_032_5A63:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4547,7 +4549,7 @@ Jump_032_5A63:: ; address name
     call SetBit2OfWD095Indexed_Bank32
     call Func_032_5A95
     ret z
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $91
     jr nz, Jump_032_5A86
     ld d, $8A
@@ -4568,11 +4570,11 @@ Jump_032_5A8E::
     farcall Func_03A_7193
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_5A3A_Case02)
-; reads: wD8A6
+; 1 call site from 1 routine (e.g. RunDefeatSequence_Case02)
+; reads: wBattleActionId
 ; points at: wBattleDamageLo
 Func_032_5A95::
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $13
     ret z
     cp a, $14
@@ -4592,7 +4594,7 @@ Jump_032_5AA9::
     sbc a, $03
     ret
 
-; 11 call sites from 11 routines (e.g. Func_032_6764_Case01, Func_032_55EE_Case00, Func_032_5A3A_Case01, Func_032_66F1_Case01, ...)
+; 11 call sites from 11 routines (e.g. Func_032_6764_Case01, Func_032_55EE_Case00, RunDefeatSequence_Case01, Func_032_66F1_Case01, ...)
 ; reads: wC58A, wC57F, wBattleTarget, rSTAT
 Func_032_5AB3::
     ld a, [wC58A]
@@ -4662,7 +4664,7 @@ Jump_032_5AFE::
     ret
 
 ; target slot wBattleTarget: re-derives its stats (Func_032_5C3F, Func_032_5B94, Func_032_5BE8 clear 'buff' bits), sets wBattleSlotOut[target] = 1, wBattleHP[target] = 0 and clears the target's 9-byte status record (wD80C + 9 * slot)
-; 9 call sites from 9 routines (e.g. Func_032_6764_Case00, Func_032_55EE_Case00, Func_032_5A3A_Case00, Func_032_66F1_Case00, ...)
+; 9 call sites from 9 routines (e.g. Func_032_6764_Case00, Func_032_55EE_Case00, RunDefeatSequence_Case00, Func_032_66F1_Case00, ...)
 ; reads: wBattleTarget, wC58A
 ; writes: wDAAB, wDABE
 ; points at: wD812, wBattleSlotOut, wBattleHP, wBattleStatus, wD80A
@@ -5172,7 +5174,7 @@ Func_032_5EAB::
 
 ; entry 0 of the `rst $00` table in Func_032_5EAB
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wBattleActor, hFFC6, wCFCF, wBattleTarget
+; reads: wBattleActionId, wBattleActor, hFFC6, wCFCF, wBattleTarget
 ; writes: wBattleSubStep2, wCFCE, wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wC982, wC983, ...
 ; points at: wBattleSubStep, wBattleStatus
 Func_032_5EAB_Case00::
@@ -5181,7 +5183,7 @@ Jump_032_5EC3:: ; address name
     ld [wBattleSubStep2], a
     xor a, a
     ld [wCFCE], a
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $15
     jr z, Jump_032_5F20
     cp a, $20
@@ -5815,11 +5817,11 @@ Jump_032_62CB:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_032_5EAB
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wC983, hFFC6, wBattleSubStep2
+; reads: wBattleActionId, wC983, hFFC6, wBattleSubStep2
 ; writes: wC983, wBattleActor
 Func_032_5EAB_Case05::
 Jump_032_62CF:: ; address name
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $D6
     jr nz, Jump_032_62F1
     ld a, [wC983]
@@ -5843,7 +5845,7 @@ Jump_032_62F1::
 
 ; entry 0 of the `rst $00` table in Func_032_627C
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wD8A6, wC983, wC982
+; reads: wBattleActor, wBattleActionId, wC983, wC982
 ; writes: wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wC983, wCFCE
 ; points at: wBattleSubStep2
 Func_032_627C_Table2_Case00::
@@ -6010,13 +6012,13 @@ Jump_032_63E1:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_032_63C2
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wD8A6, wC983, wC982
+; reads: wBattleTarget, wBattleActionId, wC983, wC982
 ; writes: wCFCE, wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wC983
 Func_032_63C2_Case02::
 Jump_032_63E9:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank32
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $7B
     ld d, $8C
     jr z, Jump_032_6401
@@ -6032,11 +6034,11 @@ Jump_032_6401::
 
 ; entry 3 of the `rst $00` table in Func_032_627C
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wC983, wC982
+; reads: wBattleActionId, wC983, wC982
 ; writes: wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wC983, wCFCE
 Func_032_627C_Table2_Case03::
 Jump_032_640B:: ; address name
-    ld a, [wD8A6]
+    ld a, [wBattleActionId]
     cp a, $D6
     jr nz, Jump_032_642E
     ld a, [wC983]
@@ -6670,7 +6672,7 @@ Jump_032_67A3::
     farcall Func_03A_7193
     ret
 
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0A)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ; points at: wD813
@@ -6765,7 +6767,7 @@ Func_032_6826:: ; address name
     add_a_to_hl
     ret
 
-; 9 call sites from 9 routines (e.g. Func_032_6662_Case01, Func_032_5A3A_Case02, Func_032_66F1_Case02, Func_032_604A_Case01, ...)
+; 9 call sites from 9 routines (e.g. Func_032_6662_Case01, RunDefeatSequence_Case02, Func_032_66F1_Case02, Func_032_604A_Case01, ...)
 ; reads: wC58A, wC57F, wBattleActor
 Func_032_682D::
     ld a, [wC58A]
@@ -6784,7 +6786,7 @@ Jump_032_6842::
     cp a, $04
     ret
 
-; 3 call sites from 3 routines (e.g. Func_032_6764_Case02, Func_032_5EAB_Case00, Func_032_5A3A_Case02)
+; 3 call sites from 3 routines (e.g. Func_032_6764_Case02, Func_032_5EAB_Case00, RunDefeatSequence_Case02)
 ; reads: wC58A, wC57F, wBattleTarget
 Func_032_6848::
     ld a, [wC58A]
