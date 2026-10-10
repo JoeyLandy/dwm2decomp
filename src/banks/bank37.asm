@@ -1801,7 +1801,7 @@ Jump_037_5452:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_037_595F
+    call DrawTileRectAtHLFromDE_Bank37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1865,7 +1865,7 @@ Jump_037_54B0::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_037_595F
+    call DrawTileRectAtHLFromDE_Bank37
     ld a, $0E
     ld [wD781], a
     ret
@@ -1984,7 +1984,7 @@ Jump_037_5570:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_037_595F
+    call DrawTileRectAtHLFromDE_Bank37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2050,7 +2050,7 @@ Jump_037_55C6:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_037_595F
+    call DrawTileRectAtHLFromDE_Bank37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2279,7 +2279,7 @@ Jump_037_5760:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_037_595F
+    call DrawTileRectAtHLFromDE_Bank37
     farcall Func_0F2_4E76
     ld a, [wD781]
     inc a
@@ -2550,9 +2550,11 @@ Func_037_5929::
     farcall ShowString_Bank08
     ret
 
+; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 5 call sites from 5 routines (e.g. Func_037_5344_Case1E, Func_037_5344_Case14, Func_037_5344_Case11, Func_037_5344_Case06, ...)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2
-Func_037_595F::
+DrawTileRectAtHLFromDE_Bank37::
+Func_037_595F:: ; address name
     ld a, h
     ld [wD7F5], a
     ld a, l
@@ -2561,7 +2563,7 @@ Func_037_595F::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_037_4AFD_Table3_Case18)

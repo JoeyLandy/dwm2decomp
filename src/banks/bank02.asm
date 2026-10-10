@@ -1326,7 +1326,7 @@ Jump_002_47CB::
 Jump_002_47E8::
     ld a, c
     ldh [hPlayerFacing], a
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ld a, $50
@@ -1609,11 +1609,11 @@ Jump_002_4A1C::
 
 ; 3 call sites from 1 routine (e.g. Func_002_4745_Case01)
 ; reads: hPlayerX, hPlayerY
-; writes: hPlayerFacing, wC8EF, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, ...
+; writes: hPlayerFacing, wFollowerRecords, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, ...
 Func_002_4A2C::
     xor a, a
     ldh [hPlayerFacing], a
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]
@@ -1951,7 +1951,7 @@ Jump_002_4C82::
     ld a, [wC8C9]
     ldh [hPlayerY], a
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]
@@ -1992,7 +1992,7 @@ Jump_002_4CDA::
     ld a, [wC93A]
     ldh [hPlayerFacing], a
     ld a, [wC93B]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, [wC93C]
     ld [wC8F0], a
     ld a, [wC93D]
@@ -3243,7 +3243,7 @@ Jump_002_548A::
     ldh [hFF9B], a
     ld a, h
     ldh [hFF9C], a
-    call Func_002_5923
+    call SetFollowerTargetsFromLeader
     call UpdatePlayerMovement_Sub01
     ret
 
@@ -3330,7 +3330,7 @@ Jump_002_5522::
     ldh [hFF9B], a
     ld a, h
     ldh [hFF9C], a
-    call Func_002_5923
+    call SetFollowerTargetsFromLeader
     call UpdatePlayerMovement_Sub01
     ret
 
@@ -3430,7 +3430,7 @@ Jump_002_55DD::
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    call Func_002_5923
+    call SetFollowerTargetsFromLeader
     call UpdatePlayerMovement_Sub01
     ret
 
@@ -3532,7 +3532,7 @@ Jump_002_5697::
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    call Func_002_5923
+    call SetFollowerTargetsFromLeader
     call UpdatePlayerMovement_Sub01
     ret
 
@@ -3624,7 +3624,7 @@ Jump_002_5729::
     ld a, [wC468]
     bit 7, a
     jr nz, Jump_002_5747
-    call Func_002_5946
+    call StepFollowersTowardTargets
     ldh a, [hFF9B]
     ld l, a
     ldh a, [hFF9C]
@@ -3662,15 +3662,15 @@ Jump_002_5747::
     ld a, [wC8FA]
     sub a, $08
     ld [wC8FA], a
-    call Func_002_5923
-    call Func_002_5946
+    call SetFollowerTargetsFromLeader
+    call StepFollowersTowardTargets
     jp Jump_002_5892
 
 Jump_002_5784::
     ld a, [wC468]
     bit 7, a
     jr nz, Jump_002_57A2
-    call Func_002_5946
+    call StepFollowersTowardTargets
     ldh a, [hFF9B]
     ld l, a
     ldh a, [hFF9C]
@@ -3712,15 +3712,15 @@ Jump_002_57A2::
     ld a, [wC8FA]
     add a, $08
     ld [wC8FA], a
-    call Func_002_5923
-    call Func_002_5946
+    call SetFollowerTargetsFromLeader
+    call StepFollowersTowardTargets
     jp Jump_002_5892
 
 Jump_002_57E0::
     ld a, [wC468]
     bit 7, a
     jr nz, Jump_002_57FE
-    call Func_002_5946
+    call StepFollowersTowardTargets
     ldh a, [hFF9D]
     ld l, a
     ldh a, [hFF9E]
@@ -3758,15 +3758,15 @@ Jump_002_57FE::
     ld a, [wC8FB]
     sub a, $08
     ld [wC8FB], a
-    call Func_002_5923
-    call Func_002_5946
+    call SetFollowerTargetsFromLeader
+    call StepFollowersTowardTargets
     jr Jump_002_5892
 
 Jump_002_583A::
     ld a, [wC468]
     bit 7, a
     jr nz, Jump_002_5857
-    call Func_002_5946
+    call StepFollowersTowardTargets
     ldh a, [hFF9D]
     ld l, a
     ldh a, [hFF9E]
@@ -3808,8 +3808,8 @@ Jump_002_5857::
     ld a, [wC8FB]
     add a, $08
     ld [wC8FB], a
-    call Func_002_5923
-    call Func_002_5946
+    call SetFollowerTargetsFromLeader
+    call StepFollowersTowardTargets
 
 Jump_002_5892::
     ldh a, [hFF9B]
@@ -3858,14 +3858,14 @@ Jump_002_58BF::
 ; only called from UpdatePlayerMovement_Sub01 (E-0047)
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement_Sub01)
 ; reads: wC94D, hPlayerFacing, hPlayerX, hPlayerY
-; writes: wC8EF, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
+; writes: wFollowerRecords, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
 UpdatePlayerMovement_Sub01_Sub01::
 Func_002_58FC:: ; address name
     ld a, [wC94D]
     or a, a
     ret z
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]
@@ -3878,10 +3878,12 @@ Func_002_58FC:: ; address name
     ld [wC8FB], a
     ret
 
-; 12 call sites from 6 routines (e.g. UpdatePlayerMovement, UpdatePlayerMovement_Sub01, Func_00F_7ED8, Func_012_61EF, ...)
+; the three 5-byte follower records at wFollowerRecords hold direction, X, Y, target X, target Y: record 0's target = hPlayerX/hPlayerY, record 1's target = record 0's position, record 2's target = record 1's position (E-0093)
+; 12 call sites from 6 routines (e.g. UpdatePlayerMovement, UpdatePlayerMovement_Sub01, UpdateFollowersOnStep_Bank0F, Func_012_61EF, ...)
 ; reads: hPlayerX, hPlayerY, wC8F0, wC8F1, wC8F5, wC8F6
 ; writes: wC8F2, wC8F3, wC8F7, wC8F8, wC8FC, wC8FD
-Func_002_5923::
+SetFollowerTargetsFromLeader::
+Func_002_5923:: ; address name
     ldh a, [hPlayerX]
     ld [wC8F2], a
     ldh a, [hPlayerY]
@@ -3896,15 +3898,17 @@ Func_002_5923::
     ld [wC8FD], a
     ret
 
-; 12 call sites from 5 routines (e.g. UpdatePlayerMovement_Sub01, Func_00F_7ED8, Func_012_61EF, Func_012_65FF, ...)
+; unless wC94D is non-zero, moves each of the three follower records one pixel toward its target (four pixels when wC468 bit 7 is set), X first and then Y, storing the direction moved in byte 0 (1 = X increasing, 3 = X decreasing; Y directions not read to the end) (E-0093)
+; 12 call sites from 5 routines (e.g. UpdatePlayerMovement_Sub01, UpdateFollowersOnStep_Bank0F, Func_012_61EF, UpdateFollowersOnStep_Bank12, ...)
 ; reads: wC94D, wC468
-; points at: wC8EF, wC8F2
-Func_002_5946::
+; points at: wFollowerRecords, wC8F2
+StepFollowersTowardTargets::
+Func_002_5946:: ; address name
     ld a, [wC94D]
     or a, a
     ret nz
     ld b, $03
-    ld hl, wC8EF
+    ld hl, wFollowerRecords
     ld de, wC8F2
 
 Jump_002_5953::
@@ -6925,7 +6929,7 @@ Jump_002_6E61::
     ld a, [wC8C9]
     ldh [hPlayerY], a
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]
@@ -7103,7 +7107,7 @@ Jump_002_6FDE::
     xor a, a
     ldh [hPlayerFacing], a
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]

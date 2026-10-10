@@ -649,7 +649,7 @@ DEF wC8DB EQU $C8DB
 DEF wC8DC EQU $C8DC
 DEF wC8DD EQU $C8DD
 DEF wC8DE EQU $C8DE
-DEF wC8EF EQU $C8EF
+DEF wFollowerRecords EQU $C8EF ; three 5-byte records for the monsters following the player: direction, X, Y, target X, target Y (SetFollowerTargetsFromLeader, StepFollowersTowardTargets; ScriptSetDirection and ScriptSlideObjectY address the same records) (E-0093) (reading (E-0093))
 DEF wC8F0 EQU $C8F0
 DEF wC8F1 EQU $C8F1
 DEF wC8F2 EQU $C8F2

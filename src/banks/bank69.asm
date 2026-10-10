@@ -263,7 +263,7 @@ Jump_069_413A::
     inc de
     push hl
     push de
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     pop de
     pop hl
     pop bc

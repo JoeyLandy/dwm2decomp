@@ -776,7 +776,7 @@ Func_010_4486:: ; address name
 ; fetch handler for script opcode 1C (entry 28 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerFacing
-; writes: wC8EF, wScriptCommandType, wMessageIndex, wMessageGroup, wMessageState
+; writes: wFollowerRecords, wScriptCommandType, wMessageIndex, wMessageGroup, wMessageState
 ScriptFetch1C:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4490:: ; address name
     pop hl
@@ -784,7 +784,7 @@ Func_010_4490:: ; address name
     inc a
     inc a
     and a, $03
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, $1C
     ld [wScriptCommandType], a
     call StartEventScript

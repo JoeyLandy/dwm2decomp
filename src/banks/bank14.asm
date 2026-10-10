@@ -1614,7 +1614,7 @@ Func_014_4BA0::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_014_4BDB::
     ld a, [wD781]
@@ -4001,7 +4001,7 @@ Jump_014_5D8B:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $0043
     add hl, de
@@ -4078,7 +4078,7 @@ Jump_014_5E24::
     ld de, hFFC6
     ld b, $06
     call CopyBytesDEFromHL_Bank14
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $01
     ld [wSpriteSlotCount], a
     ld a, [wIsCGB]
@@ -5152,7 +5152,7 @@ Jump_014_64F8:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ld a, [wCFAA]
     inc a
     ld [wCFAA], a
@@ -5184,7 +5184,7 @@ Jump_014_6532:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ld a, [wCFAA]
     inc a
     ld [wCFAA], a
@@ -5216,7 +5216,7 @@ Jump_014_656C:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     xor a, a
     ld [wCFAA], a
     ld a, [wCFA8]
@@ -5437,7 +5437,7 @@ Jump_014_66B1:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ld a, [wCFA8]
     inc a
     ld [wCFA8], a
@@ -5602,7 +5602,7 @@ Jump_014_67B0:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ld a, $01
     ld [wCFA8], a
     xor a, a

@@ -3120,7 +3120,7 @@ Jump_0F0_5C57:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    call Func_0F0_63BA
+    call DrawPageOfPagesAtWD7F1_BankF0
 
 Jump_0F0_5C98::
     call BGMapAddressAtScroll_BankF0
@@ -3487,7 +3487,7 @@ Jump_0F0_5EF9:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_0F0_66D5
+    call DrawTileRectAtHLFromDE_BankF0
     call GetWD789Cell4Address_BankF0
     ld a, l
     ld [wD7F1], a
@@ -3642,7 +3642,7 @@ Jump_0F0_6014::
     ld [wD7F4], a
     ld a, $01
     ld [wD7F7], a
-    call Func_0F0_66D5
+    call DrawTileRectAtHLFromDE_BankF0
     xor a, a
     ld [wD782], a
     ld a, [wD781]
@@ -3819,7 +3819,7 @@ Func_0F0_613D:: ; heuristic: follows a terminator; C0
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    call Func_0F0_63BA
+    call DrawPageOfPagesAtWD7F1_BankF0
 
 Jump_0F0_6158::
     ld a, [wD781]
@@ -3997,7 +3997,7 @@ Func_0F0_6262::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_0F0_66D5
+    call DrawTileRectAtHLFromDE_BankF0
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0F0_5DE8_Case0B, Func_0F0_5DE8_Case0A, Func_0F0_5DE8_Case01)
@@ -4257,9 +4257,11 @@ Func_0F0_6384::
     ei
     ret
 
+; HL = the address in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two bytes later (current page and page count, 1-based display) (E-0093) (the same 25 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. Func_0F0_5B50_Case03, Func_0F0_613D)
 ; reads: wD7F1, wD7F2, wD7AF, wD7B0
-Func_0F0_63BA::
+DrawPageOfPagesAtWD7F1_BankF0::
+Func_0F0_63BA:: ; address name
     ld a, [wD7F1]
     ld h, a
     ld a, [wD7F2]
@@ -4439,9 +4441,11 @@ Data_0F0_6685:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F0_66AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $28, $C3
 
+; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. Func_0F0_6262, Func_0F0_5DE8_Case06, Func_0F0_5DE8_Case04)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2
-Func_0F0_66D5::
+DrawTileRectAtHLFromDE_BankF0::
+Func_0F0_66D5:: ; address name
     ld a, h
     ld [wD7F5], a
     ld a, l
@@ -4450,7 +4454,7 @@ Func_0F0_66D5::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ret
 
 ; the same 15 bytes as GetWD789Cell4Address (1E:76F3)
@@ -4681,7 +4685,7 @@ Jump_0F0_682C::
     ld de, hFFC6
     ld b, $06
     call CopyBytesDEFromHL_BankF0
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, [wC5C7]
     and a, a
     jr nz, Jump_0F0_6845
@@ -4695,7 +4699,7 @@ Jump_0F0_6848::
     ld de, hFFC6
     ld b, $06
     call CopyBytesDEFromHL_BankF0
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0D
     ldh [hFFC6], a
     farcall Func_012_6B98
@@ -4750,7 +4754,7 @@ Jump_0F0_68C3::
     ldh [hFFC7], a
 
 Jump_0F0_68CD::
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
 
 Jump_0F0_68D3::
     ld a, [wIsCGB]

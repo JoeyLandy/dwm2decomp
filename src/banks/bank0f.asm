@@ -20,9 +20,9 @@ Func_00F_4001:: ; address name
 ScriptCommandC7_Run_Case03::
 Jump_00F_400D:: ; address name
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -43,12 +43,12 @@ Jump_00F_400D:: ; address name
 ScriptCommandC7_Run_Case02::
 Jump_00F_402D:: ; address name
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
     inc a
     ldh [hPlayerY], a
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
     inc a
     ldh [hPlayerY], a
@@ -365,7 +365,7 @@ Jump_00F_41F1::
     call CopyBytes
 
 Jump_00F_423E::
-    farcall Func_05F_6DDB
+    farcall DrawFullScreenBufferAtScroll
     ld a, $FE
     call StartPaletteFade
     ld hl, $0258
@@ -449,7 +449,7 @@ Jump_00F_429F:: ; address name
 ; entry 32 of the `rst $00` table in ScriptCommand5F_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8F0
-; writes: wC8F0, wC8EF
+; writes: wC8F0, wFollowerRecords
 ; points at: wScriptStep
 ScriptCommand5F_Run_Case20::
 Jump_00F_42B5:: ; address name
@@ -460,7 +460,7 @@ Jump_00F_42B5:: ; address name
     cp a, $78
     ret nz
     ld a, $02
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2709,7 +2709,7 @@ Jump_00F_5140::
     ld [wC1C8], a
     ld a, $55
     ld [wC1C9], a
-    farcall Func_05F_6DDB
+    farcall DrawFullScreenBufferAtScroll
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4811,7 +4811,7 @@ Jump_00F_5F65:: ; address name
 Jump_00F_5F70::
     jr nc, Jump_00F_5F80
     ldh a, [hPlayerX]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ld a, $01
     ldh [hPlayerFacing], a
     ld hl, hPlayerX
@@ -4820,7 +4820,7 @@ Jump_00F_5F70::
 
 Jump_00F_5F80::
     ldh a, [hPlayerX]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ld a, $03
     ldh [hPlayerFacing], a
     ld hl, hPlayerX
@@ -5089,7 +5089,7 @@ Jump_00F_60FE:: ; address name
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $7F
     ld [wC527], a
     ld a, $80
@@ -5514,7 +5514,7 @@ Jump_00F_63BD::
     ld [wC1B2], a
     ld a, $3B
     ld [wC1B3], a
-    farcall Func_05F_6DDB
+    farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -5621,7 +5621,7 @@ Jump_00F_6473:: ; address name
     ld hl, hFF8C
     call SetBit2AtHL_B0F
     ldh a, [hPlayerX]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ld a, [wScriptParam1]
     cp a, $40
     jr nc, Jump_00F_6490
@@ -5898,7 +5898,7 @@ Jump_00F_6606:: ; address name
     ld [wC241], a
     ld [wC254], a
     ld [wC255], a
-    farcall Func_05F_6DDB
+    farcall DrawFullScreenBufferAtScroll
     ld a, $01
     ldh [hFF8D], a
     ld a, $65
@@ -6699,7 +6699,7 @@ Jump_00F_6ADD:: ; address name
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     xor a, a
     ld [wCB90], a
     ld a, $D6
@@ -6716,7 +6716,7 @@ Jump_00F_6ADD:: ; address name
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $7F
     ld [wC527], a
     ld hl, wScriptStep
@@ -7287,9 +7287,9 @@ Jump_00F_6EB0:: ; address name
 ScriptCommand38_Run_Case06::
 Jump_00F_6ECD:: ; address name
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -7311,12 +7311,12 @@ Jump_00F_6ECD:: ; address name
 ScriptCommand38_Run_Case05::
 Jump_00F_6EF0:: ; address name
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
     dec a
     ldh [hPlayerY], a
     ldh a, [hPlayerY]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
     dec a
     ldh [hPlayerY], a
@@ -7661,9 +7661,9 @@ Func_00F_70EC:: ; address name
 ScriptCommand29_Run_Case09::
 Jump_00F_7104:: ; address name
     ldh a, [hPlayerX]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerX]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -7686,12 +7686,12 @@ Jump_00F_7104:: ; address name
 ScriptCommand29_Run_Case08::
 Jump_00F_712A:: ; address name
     ldh a, [hPlayerX]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerX]
     inc a
     ldh [hPlayerX], a
     ldh a, [hPlayerX]
-    call Func_00F_7ED8
+    call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerX]
     inc a
     ldh [hPlayerX], a
@@ -8924,7 +8924,7 @@ Jump_00F_78B7:: ; address name
 ; entry 9 of the `rst $00` table in ScriptCommand1D_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
-; writes: wC8F1, hPlayerFacing, wC8EF
+; writes: wC8F1, hPlayerFacing, wFollowerRecords
 ; points at: hPlayerY, wScriptStep
 ScriptCommand1D_Run_Case09::
 Jump_00F_78CB:: ; address name
@@ -8938,7 +8938,7 @@ Jump_00F_78CB:: ; address name
     ld a, $01
     ldh [hPlayerFacing], a
     ld a, $03
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -8998,7 +8998,7 @@ Jump_00F_790A:: ; address name
 ; entry 5 of the `rst $00` table in ScriptCommand1D_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
-; writes: wC928, wC929, wScriptParam0, hPlayerFacing, wC8EF
+; writes: wC928, wC929, wScriptParam0, hPlayerFacing, wFollowerRecords
 ; points at: wCB8B, wScriptStep
 ScriptCommand1D_Run_Case05::
 Jump_00F_7937:: ; address name
@@ -9015,7 +9015,7 @@ Jump_00F_7937:: ; address name
     ret nz
     ld a, $02
     ldh [hPlayerFacing], a
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld hl, $0090
     call StoreHLInWC924_B0F
     xor a, a
@@ -9204,12 +9204,12 @@ Jump_00F_7A5A::
 ; entry 1 of the `rst $00` table in ScriptCommand1C_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8F0
-; writes: wC8EF, wC8F0, hPlayerFacing
+; writes: wFollowerRecords, wC8F0, hPlayerFacing
 ; points at: wScriptStep
 ScriptCommand1C_Run_Case01::
 Jump_00F_7A70:: ; address name
     ld a, $01
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, [wC8F0]
     inc a
     ld [wC8F0], a
@@ -9218,7 +9218,7 @@ Jump_00F_7A70:: ; address name
     ld a, $01
     ldh [hPlayerFacing], a
     ld a, $03
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld hl, wScriptStep
     inc [hl]
     ld de, $0000
@@ -9602,7 +9602,7 @@ Func_00F_7CA5:: ; address name
 
 ; entry 3 of the `rst $00` table in ScriptCommand76_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC8EF, wC8F0, wC8F1, wCBBB, wScriptStartRequest
+; writes: wFollowerRecords, wC8F0, wC8F1, wCBBB, wScriptStartRequest
 ScriptCommand76_Run_Case03::
 Jump_00F_7CB1:: ; address name
     ld a, $76
@@ -9610,7 +9610,7 @@ Jump_00F_7CB1:: ; address name
     ld de, $001B
     call SetFlagBit
     ld a, $03
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, $60
     ld [wC8F0], a
     ld a, $50
@@ -9761,12 +9761,12 @@ Jump_00F_7D7F::
 ; entry 0 of the `rst $00` table in ScriptCommand6B_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerFacing
-; writes: wC8EF
+; writes: wFollowerRecords
 ; points at: wC8F1, wScriptStep
 ScriptCommand6B_Run_Case00::
 Jump_00F_7D86:: ; address name
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld de, wC8F1
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -10000,14 +10000,16 @@ Func_00F_7ED3:: ; address name
     ld [hl], a
     ret
 
+; A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093) (the same 17 bytes appear in 3 banks)
 ; 15 call sites from 8 routines (e.g. ScriptCommandC7_Run_Case03, ScriptCommandC7_Run_Case02, ScriptCommand46_Run_Case0B, ScriptCommand43_Run_Case03, ...)
-Func_00F_7ED8::
+UpdateFollowersOnStep_Bank0F::
+Func_00F_7ED8:: ; address name
     and a, $0F
     jr nz, Jump_00F_7EE2
-    farcall Func_002_5923
+    farcall SetFollowerTargetsFromLeader
 
 Jump_00F_7EE2::
-    farcall Func_002_5946
+    farcall StepFollowersTowardTargets
     ret
 
 ; DE = address of a byte: adds the step delta for wScriptParam0 (AddStepDeltaToPointedByte), then wScriptParam0 += 2; when it reaches $20 it is reset to 0 and carry is set, otherwise A = 0 and carry is clear (16 calls per move) (E-0062)

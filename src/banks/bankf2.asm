@@ -425,7 +425,7 @@ Jump_0F2_4286::
     ld de, hFFC6
     ld b, $06
     call CopyBytesDEFromHL_BankF2
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, [wC5C7]
     and a, a
     jr nz, Jump_0F2_429F
@@ -439,7 +439,7 @@ Jump_0F2_42A2::
     ld de, hFFC6
     ld b, $06
     call CopyBytesDEFromHL_BankF2
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0D
     ldh [hFFC6], a
     farcall Func_012_6B98
@@ -1779,7 +1779,7 @@ Jump_0F2_4F74::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     pop hl
     ld a, [wC8C1]
     add a, $E0
@@ -1901,7 +1901,7 @@ Jump_0F2_500E::
     ld h, a
     ld l, b
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     pop bc
     ld a, c
     add a, a
@@ -1957,7 +1957,7 @@ Jump_0F2_5073::
     ld h, a
     ld l, b
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     pop hl
     push hl
     call Func_0F2_50A4
@@ -2056,7 +2056,7 @@ Jump_0F2_5108::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     pop hl
     ld a, [wC8C1]
     cp a, $E3

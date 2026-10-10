@@ -1500,10 +1500,10 @@ Jump_031_4893::
 
 ; 1 call site from 1 routine (e.g. Func_031_47DD_Case02)
 ; reads: hPlayerFacing, hPlayerX, hPlayerY
-; writes: wC8EF, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
+; writes: wFollowerRecords, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
 Func_031_48C3::
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]

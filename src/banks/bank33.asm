@@ -2283,7 +2283,7 @@ Jump_033_5CAC:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     ld a, [wC8C1]
     add a, $E0
     pop hl
@@ -2495,7 +2495,7 @@ Jump_033_5E97:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_033_5EBE::
     ld a, [wD781]

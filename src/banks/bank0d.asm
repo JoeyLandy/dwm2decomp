@@ -708,7 +708,7 @@ Func_00D_491A::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_00D_494A::
     ld a, [wD781]
@@ -2944,7 +2944,7 @@ Jump_00D_57F5:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_00D_583D::
     ld a, [wD7AB]
@@ -3216,7 +3216,7 @@ Func_00D_5A05::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_00D_5A2F::
     call BGMapAddressAtScroll_Bank0D
@@ -4328,7 +4328,7 @@ Jump_00D_6345::
     ld a, [wC839]
     ld h, a
     call HLToDecimalDigits
-    farcall Func_015_68DC
+    farcall BlankLeadingZeroDigitsWC8C0_Bank15
     ld hl, wC130
     ld de, wC8C0
     ld a, [de]
@@ -4638,7 +4638,7 @@ Func_00D_6509::
     ld a, [wC839]
     ld h, a
     call HLToDecimalDigits
-    farcall Func_015_68DC
+    farcall BlankLeadingZeroDigitsWC8C0_Bank15
     ld hl, wC388
     ld de, wC8C0
     ld c, $00
@@ -5192,7 +5192,7 @@ Jump_00D_68BE::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_015_68DC
+    farcall BlankLeadingZeroDigitsWC8C0_Bank15
     ld hl, wC130
     ld a, [wC8C1]
     cp a, $E3
@@ -5960,7 +5960,7 @@ Jump_00D_6D69::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_015_68DC
+    farcall BlankLeadingZeroDigitsWC8C0_Bank15
     ld de, Data_00D_6D9F
     pop bc
     push bc
@@ -6190,7 +6190,7 @@ Func_00D_6E88::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
     ret
 
 Data_00D_6EB7:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -7132,7 +7132,7 @@ Jump_00D_7758::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_015_68DC
+    farcall BlankLeadingZeroDigitsWC8C0_Bank15
     pop de
     ld hl, wC8C0
     ld b, $03
@@ -7196,7 +7196,7 @@ Func_00D_778C:: ; address name
 ; only called from ScriptCommandF4_Run_Table2_Case1A (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Table2_Case1A)
 ; reads: wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, wC93F, ...
-; writes: hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, wC8F5, ...
+; writes: hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wC8F0, wC8F1, wC8F4, wC8F5, ...
 ScriptCommandF4_Run_Table2_Case1A_Sub01::
 Func_00D_77C2:: ; address name
     ld a, [wC938]
@@ -7206,7 +7206,7 @@ Func_00D_77C2:: ; address name
     ld a, [wC93A]
     ldh [hPlayerFacing], a
     ld a, [wC93B]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, [wC93C]
     ld [wC8F0], a
     ld a, [wC93D]

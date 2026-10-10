@@ -989,6 +989,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Convention.** The C = 1 "mode below threshold" result joins the C = $FF/$00 pass/fail convention of the earlier bank-$05 predicates.
 - Binary verification: pending; see the commit.
 
+### E-0093 — Followers, tile-rectangle drawing, digit blanking
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Followers.** `02:5923` copies the player's position into record 0's target and each record's position into the next record's target, over three 5-byte records at wC8EF. `02:5946` moves each record one pixel (four when wC468 bit 7) toward its target and sets its direction byte.
+  - This is the party trail behind the player. The records are named wFollowerRecords, and they agree with ScriptSetDirection's "5-byte records at wC8EF" (E-0038).
+  - The three-copy wrapper UpdateFollowersOnStep refreshes the targets at each 16-pixel boundary and is called from the StepPlayer*TowardWC928 routines (E-0071).
+- **Tile rectangles.** `1F:5D2A` (DrawTileRectFromWD7F1Params) draws a tile rectangle whose parameters sit in wD7F1-wD7F7. A four-copy family, DrawTileRectAtHLFromDE, sets the destination and source and calls it.
+- **Leading zeros.** The BlankLeadingZeroDigitsWC8C0 families store $E3 in leading zero digits. $E3 + $E0 (the digit-tile base) = $C3, the blank tile.
+- **Also named:** DrawFullScreenBufferAtScroll, DrawPageOfPagesAtWD7F1, DecompressGraphicsHFFC6ToHFFCA (partly read).
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

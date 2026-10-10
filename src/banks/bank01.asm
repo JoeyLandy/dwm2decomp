@@ -3788,7 +3788,7 @@ Jump_001_5DF3::
     ld a, [wCD0A]
     ldh [hPlayerY], a
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]
@@ -5541,7 +5541,7 @@ Func_001_6A98::
     ret
 
 ; 2 call sites from 2 routines (e.g. DebugBattleSetup_Update_Sub01, DebugBattleSetup_Update)
-; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
+; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wFollowerRecords, wC8F0, wC8F1, ...
 Func_001_6ABE::
     ld a, $00
     ldh [hMapId], a
@@ -5554,7 +5554,7 @@ Func_001_6ABE::
     ld a, $40
     ldh [hPlayerY], a
     ld a, $00
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, $40
     ld [wC8F0], a
     ld a, $40

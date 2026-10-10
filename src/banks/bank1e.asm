@@ -1476,7 +1476,7 @@ Func_01E_49F8::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    call Func_01E_759A
+    call DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_01E_4A2A::
     ld a, [wD781]
@@ -2488,7 +2488,7 @@ Jump_01E_50BE:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC429
     ld a, [wC8C1]
     add a, $E0
@@ -2500,7 +2500,7 @@ Jump_01E_50BE:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC451
     ld a, [wC8C1]
     add a, $E0
@@ -2798,7 +2798,7 @@ Jump_01E_5300:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC429
     ld a, [wC8C1]
     add a, $E0
@@ -2845,7 +2845,7 @@ Jump_01E_536A:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC429
     ld a, [wC8C1]
     add a, $E0
@@ -2857,7 +2857,7 @@ Jump_01E_536A:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC451
     ld a, [wC8C1]
     add a, $E0
@@ -3000,7 +3000,7 @@ Jump_01E_5518:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    call Func_01E_759A
+    call DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_01E_5556::
     call BGMapAddressAtScroll_Bank1E
@@ -3327,7 +3327,7 @@ Jump_01E_5774:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC429
     ld a, [wC8C1]
     add a, $E0
@@ -3339,7 +3339,7 @@ Jump_01E_5774:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC451
     ld a, [wC8C1]
     add a, $E0
@@ -3559,7 +3559,7 @@ Jump_01E_592B:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC429
     ld a, [wC8C1]
     add a, $E0
@@ -3571,7 +3571,7 @@ Jump_01E_592B:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     ld hl, wC451
     ld a, [wC8C1]
     add a, $E0
@@ -3612,7 +3612,7 @@ Jump_01E_5994:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    call Func_01E_759A
+    call DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_01E_59CC::
     ld a, [wD781]
@@ -3876,7 +3876,7 @@ Jump_01E_5B96:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01E_5BC8
@@ -3959,7 +3959,7 @@ Jump_01E_5C16::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, $0E
     ld [wD781], a
     ret
@@ -4169,7 +4169,7 @@ Jump_01E_5D7E::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -4180,7 +4180,7 @@ Jump_01E_5D7E::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, $04
     ld [wD781], a
     ret
@@ -4270,7 +4270,7 @@ Jump_01E_5E17::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld hl, vTiles2 + $6C0
     ld bc, $0201
     call FillTilesBxC
@@ -4284,7 +4284,7 @@ Jump_01E_5E17::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld hl, vTiles2 + $200
     ld bc, $0805
     call FillTilesBxC
@@ -4331,7 +4331,7 @@ Jump_01E_5E98:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -4342,7 +4342,7 @@ Jump_01E_5E98:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4367,7 +4367,7 @@ Jump_01E_5ED6:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -4378,7 +4378,7 @@ Jump_01E_5ED6:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4539,7 +4539,7 @@ Jump_01E_5FF0:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5023,7 +5023,7 @@ Jump_01E_62EF:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call GetWD789Cell4Address
     ld a, l
     ld [wD7F1], a
@@ -5179,7 +5179,7 @@ Jump_01E_640A::
     ld [wD7F4], a
     ld a, $01
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     xor a, a
     ld [wD782], a
     ld a, [wD781]
@@ -5345,7 +5345,7 @@ Jump_01E_6519:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    call Func_01E_759A
+    call DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_01E_654A::
     ld a, [wD781]
@@ -5513,7 +5513,7 @@ Jump_01E_664E:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $0020
     add hl, de
@@ -5563,7 +5563,7 @@ Jump_01E_669D:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call GetWD789Cell5Address
     ld a, $0A
     ld [rRAMG2], a
@@ -5633,7 +5633,7 @@ Jump_01E_6726::
     ld [wD7F4], a
     ld a, $01
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     xor a, a
     ld [wD782], a
     ld a, [wD781]
@@ -5683,7 +5683,7 @@ Jump_01E_677D::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, $0E
     ld [wD781], a
     ret
@@ -5891,7 +5891,7 @@ Jump_01E_68E4:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5983,7 +5983,7 @@ Jump_01E_694D:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wD781]
     add a, $03
     ld [wD781], a
@@ -6062,7 +6062,7 @@ Jump_01E_6A18::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -6073,7 +6073,7 @@ Jump_01E_6A18::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, $04
     ld [wD781], a
     ret
@@ -6258,7 +6258,7 @@ Jump_01E_6B55::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld hl, vTiles2 + $6C0
     ld bc, $0201
     call FillTilesBxC
@@ -6272,7 +6272,7 @@ Jump_01E_6B55::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld hl, vTiles2 + $200
     ld bc, $0805
     call FillTilesBxC
@@ -6308,7 +6308,7 @@ Jump_01E_6BC6:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -6319,7 +6319,7 @@ Jump_01E_6BC6:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -6393,7 +6393,7 @@ Jump_01E_6C69:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     call GetWD789Cell5Address
     ld a, l
     ld [wD7F1], a
@@ -6496,12 +6496,14 @@ Func_01E_6D0F::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01E_6D2B
+    call DrawTileRectAtHLFromDE_Bank1E
     ret
 
+; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 27 call sites from 19 routines (e.g. Func_01E_6074_Table8_Case1B, Func_01E_6074_Table8_Case15, Func_01E_6074_Table8_Case06, Func_01E_6074_Table8_Case03, ...)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2
-Func_01E_6D2B::
+DrawTileRectAtHLFromDE_Bank1E::
+Func_01E_6D2B:: ; address name
     ld a, h
     ld [wD7F5], a
     ld a, l
@@ -6510,7 +6512,7 @@ Func_01E_6D2B::
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case12)
@@ -7138,7 +7140,7 @@ Jump_01E_7129::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     pop hl
     ld a, [wC8C1]
     cp a, $E3
@@ -7382,7 +7384,7 @@ Jump_01E_728A::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     pop hl
     ld a, [wC8C1]
     add a, $E0
@@ -7536,7 +7538,7 @@ Jump_01E_734E::
     ldh a, [hFFC7]
     ld h, a
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     pop de
     ld l, e
     ld h, d
@@ -7596,7 +7598,7 @@ Jump_01E_739B::
     ldh a, [hFFC7]
     ld h, a
     call HLToDecimalDigits
-    call Func_01E_75B3
+    call BlankLeadingZeroDigitsWC8C0
     pop bc
     ld a, c
     add a, a
@@ -7992,9 +7994,11 @@ Func_01E_7564::
     ei
     ret
 
+; HL = the address in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two bytes later (current page and page count, 1-based display) (E-0093) (the same 25 bytes appear in 2 banks)
 ; 20 call sites from 20 routines (e.g. Func_01E_49F8, Func_01E_4A32_Table3_Case30, Func_01E_4A32_Table2_Case18, Func_01E_6074_Table6_Case0E, ...)
 ; reads: wD7F1, wD7F2, wD7AF, wD7B0
-Func_01E_759A::
+DrawPageOfPagesAtWD7F1_Bank1E::
+Func_01E_759A:: ; address name
     ld a, [wD7F1]
     ld h, a
     ld a, [wD7F2]
@@ -8011,9 +8015,11 @@ Func_01E_759A::
     ld [hl], a
     ret
 
+; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3 (the same effect as the bank-$15 copy, coded through HL): leading zeros become the blank tile once $E0 is added (E-0093)
 ; 21 call sites from 16 routines (e.g. Func_01E_4A32_Table3_Case2F, Func_01E_4A32_Table3_Case17, Func_01E_4A32_Table2_Case13, Func_01E_4A32_Table2_Case0D, ...)
 ; points at: wC8C0
-Func_01E_75B3::
+BlankLeadingZeroDigitsWC8C0::
+Func_01E_75B3:: ; address name
     ld hl, wC8C0
     ld a, [hl]
     and a, a

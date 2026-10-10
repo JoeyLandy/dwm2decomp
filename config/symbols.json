@@ -436,6 +436,7 @@
   "C573": {"name": "wFadeDelay", "note": "frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077)", "evidence": "reading (E-0077)"},
   "C574": {"name": "wFadeDelayCounter", "note": "counts down to the next CGB fade step (StepCGBFade) (E-0077)", "evidence": "reading (E-0077)"},
   "C707": {"name": "wKeyList", "note": "up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090)", "evidence": "reading + data (E-0090)"},
+  "C8EF": {"name": "wFollowerRecords", "note": "three 5-byte records for the monsters following the player: direction, X, Y, target X, target Y (SetFollowerTargetsFromLeader, StepFollowersTowardTargets; ScriptSetDirection and ScriptSlideObjectY address the same records) (E-0093)", "evidence": "reading (E-0093)"},
   "C920": {
     "name": "wScriptCommandType",
     "note": "the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1)",

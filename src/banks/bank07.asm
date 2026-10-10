@@ -3386,7 +3386,7 @@ Jump_007_62E9::
 ; entry 2 of the `rst $00` table in Func_007_6213
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8C3, wCC44, wCD0D, wCD0E, hPlayerFacing, hPlayerX, hPlayerY
-; writes: wMapWidthScreens, wMapHeightScreens, wC8C7, wD069, wD091, wC8EF, wC8F4, wC8F9, ...
+; writes: wMapWidthScreens, wMapHeightScreens, wC8C7, wD069, wD091, wFollowerRecords, wC8F4, wC8F9, ...
 Func_007_6213_Table2_Case02::
 Jump_007_62ED:: ; address name
     call Func_007_635A
@@ -3413,7 +3413,7 @@ Jump_007_6319::
     ld [wD091], a
     farcall ClearBit1OfPlayerAndObjectFlags
     ldh a, [hPlayerFacing]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ldh a, [hPlayerX]
@@ -4326,7 +4326,7 @@ Jump_007_6919:: ; address name
     ld [wC8F1], a
     xor a, a
     ldh [hPlayerFacing], a
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, $00
     ld [wC6FD], a
     ld a, $00

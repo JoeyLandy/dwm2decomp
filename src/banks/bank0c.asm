@@ -1323,7 +1323,7 @@ Jump_00C_490A:: ; address name
     ld [wD7F4], a
     ld a, $00
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     call Func_00C_5050
     ld e, l
     ld d, h
@@ -1375,7 +1375,7 @@ Jump_00C_497A::
     ld [wD7F4], a
     ld a, $01
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     xor a, a
     ld [wD782], a
     ld a, [wD781]

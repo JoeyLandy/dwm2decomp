@@ -3442,7 +3442,7 @@ Func_01D_5B4D::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     ld a, [wC8C1]
     add a, $E0
     ld [wC389], a
@@ -3467,7 +3467,7 @@ Jump_01D_5B98::
     ldh a, [hFFC7]
     ld h, a
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     pop bc
     ld a, c
     add a, a

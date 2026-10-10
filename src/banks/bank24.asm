@@ -1274,7 +1274,7 @@ Jump_024_480A:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_024_482E::
     call BGMapAddressAtScroll_Bank24
@@ -1715,7 +1715,7 @@ Jump_024_4B0E:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_024_4B38::
     ld a, [wD781]
@@ -1933,7 +1933,7 @@ Jump_024_4CA0:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_024_4CCA::
     ld a, [wD781]
@@ -2728,7 +2728,7 @@ Jump_024_513A::
     ld [wD7F4], a
     ld a, $01
     ld [wD7F7], a
-    farcall Func_01F_5D2A
+    farcall DrawTileRectFromWD7F1Params
     ret
 
 ; only called from GameMode6_Init_Sub01 (E-0047)
@@ -3567,12 +3567,12 @@ Jump_024_56C1::
     ld de, hFFC6
     ld b, $06
     call CopyBytesDEFromHL_Bank24
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld hl, Data_024_5BDD
     ld de, hFFC6
     ld b, $06
     call CopyBytesDEFromHL_Bank24
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, [wCA99]
     and a, a
     jr nz, Jump_024_5762
@@ -3599,7 +3599,7 @@ Jump_024_5709::
     ldh [hFFC7], a
 
 Jump_024_5713::
-    farcall Func_004_431F
+    farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, [wD092]
     cp a, $08
     jr z, Jump_024_572A

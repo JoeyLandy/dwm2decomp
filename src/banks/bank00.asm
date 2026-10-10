@@ -1712,7 +1712,7 @@ Func_000_0B0D:: ; address name
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.
-; 24 call sites from 18 routines (e.g. LoadMonsterPicture, Func_000_228A, Func_000_24E5, Func_004_431F, ...)
+; 24 call sites from 18 routines (e.g. LoadMonsterPicture, Func_000_228A, Func_000_24E5, DecompressGraphicsHFFC6ToHFFCA, ...)
 ; writes: rROMB0
 CopyFromBank::
 Func_000_0B18:: ; address name

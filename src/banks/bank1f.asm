@@ -807,11 +807,13 @@ Func_01F_5CF8::
 Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
+; parameters wD7F1/wD7F2 = source (high, low), wD7F3 = width, wD7F4 = rows, wD7F5/wD7F6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wD7F7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
 ; 25 call sites from 18 routines (e.g. Func_01F_73EC, Func_01F_74E3, Func_01F_753A, Func_01F_7591, ...)
 ; reads: wD7F6, rSTAT, wIsCGB, wD7F7
 ; writes: rVBK
 ; points at: wD7F1
-Func_01F_5D2A::
+DrawTileRectFromWD7F1Params::
+Func_01F_5D2A:: ; address name
     ld hl, wD7F1
     ld d, [hl]
     inc hl
@@ -1180,7 +1182,7 @@ Func_01F_73EC::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     ld a, [wCA36]
     ld e, a
     ld a, [wCA37]
@@ -1232,7 +1234,7 @@ Jump_01F_745C::
     ld [wD7F4], a
     ld a, $01
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     xor a, a
     ld [wD782], a
     ld a, [wD781]
@@ -1298,7 +1300,7 @@ Func_01F_74E3::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1317,7 +1319,7 @@ Func_01F_74E3::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_037_5344_Case17, Func_0F1_5285_Case17)
@@ -1341,7 +1343,7 @@ Func_01F_753A::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1360,7 +1362,7 @@ Func_01F_753A::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_037_5344_Case18, Func_0F1_5285_Case18)
@@ -1395,7 +1397,7 @@ Func_01F_7591::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1414,7 +1416,7 @@ Func_01F_7591::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_037_5344_Case19, Func_0F1_5285_Case19)
@@ -1542,7 +1544,7 @@ Func_01F_76B5::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     ld hl, vTiles2 + $6C0
     ld a, l
     ld [wC52D], a
@@ -1572,7 +1574,7 @@ Func_01F_76B5::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     ld hl, vTiles2 + $200
     ld a, l
     ld [wC52D], a
@@ -1617,7 +1619,7 @@ Func_01F_7754::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1636,7 +1638,7 @@ Func_01F_7754::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D2A
+    call DrawTileRectFromWD7F1Params
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)

@@ -213,7 +213,7 @@ Jump_003_414C::
     ld [wCC37], a
     ld a, $02
     ldh [hPlayerFacing], a
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld [wC8F4], a
     ld [wC8F9], a
     ld a, $60

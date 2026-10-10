@@ -512,7 +512,7 @@ Jump_015_4369::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_015_43A4::
     ld a, [wD781]
@@ -1651,7 +1651,7 @@ Jump_015_4B70::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_015_68DC
+    call BlankLeadingZeroDigitsWC8C0_Bank15
     ld a, [wC8C1]
     cp a, $E3
     jr z, Jump_015_4B8A
@@ -2606,7 +2606,7 @@ Jump_015_5165:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_015_51AC::
     ld a, [wD7AB]
@@ -4821,7 +4821,7 @@ Jump_015_6074:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_015_60A4::
     ld a, [wD781]
@@ -5199,7 +5199,7 @@ Jump_015_62F7::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_015_631B::
     ld c, $05
@@ -6237,7 +6237,7 @@ Func_015_688D::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_015_68DC
+    call BlankLeadingZeroDigitsWC8C0_Bank15
     ld a, [wC8C1]
     add a, $E0
     pop hl
@@ -6248,10 +6248,12 @@ Func_015_688D::
     pop bc
     ret
 
+; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
 ; 7 call sites from 7 routines (e.g. Func_015_4182_Case27, Func_015_688D, ScriptCommandF3_Run_Case02, Func_00D_6509, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1
-Func_015_68DC::
+BlankLeadingZeroDigitsWC8C0_Bank15::
+Func_015_68DC:: ; address name
     ld a, [wC8C0]
     and a, a
     jr nz, Jump_015_68F2
@@ -7039,7 +7041,7 @@ Data_015_6E0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_015_54C0_Case02, Func_015_54C0_Case00)
 ; reads: wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, wC93F, ...
-; writes: hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, wC8F5, ...
+; writes: hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wC8F0, wC8F1, wC8F4, wC8F5, ...
 Func_015_6E14::
     ld a, [wC938]
     ldh [hPlayerX], a
@@ -7048,7 +7050,7 @@ Func_015_6E14::
     ld a, [wC93A]
     ldh [hPlayerFacing], a
     ld a, [wC93B]
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     ld a, [wC93C]
     ld [wC8F0], a
     ld a, [wC93D]
@@ -7761,7 +7763,7 @@ Func_015_7976::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_015_7ADB
+    call BlankLeadingZeroDigitsWC8C0_Bank15_7ADB
     ld a, [wC8C1]
     add a, $E0
     ld [wC389], a
@@ -7818,7 +7820,7 @@ Jump_015_7A01::
     ld a, [de]
     ld h, a
     call HLToDecimalDigits
-    call Func_015_7ADB
+    call BlankLeadingZeroDigitsWC8C0_Bank15_7ADB
     pop bc
     ld a, c
     sla a
@@ -7941,10 +7943,12 @@ Func_015_7A5F::
     ld [rRAMG2], a
     ret
 
+; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. Func_015_7976)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1
-Func_015_7ADB::
+BlankLeadingZeroDigitsWC8C0_Bank15_7ADB::
+Func_015_7ADB:: ; address name
     ld a, [wC8C0]
     and a, a
     jr nz, Jump_015_7AF1

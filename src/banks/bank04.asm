@@ -384,7 +384,7 @@ Jump_004_420B::
     inc de
     push hl
     push de
-    call Func_004_431F
+    call DecompressGraphicsHFFC6ToHFFCA
     pop de
     pop hl
     pop bc
@@ -446,10 +446,12 @@ Jump_004_4309::
     ld [wCB86], a
     ret
 
+; hFFC6/hFFC7 = graphics number, hFFCA/hFFCB = VRAM destination: with hFFC8 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
 ; 25 call sites from 15 routines (e.g. Func_004_4B2D, Func_004_4AA8, Func_004_4129, ScriptCommand41_Run_Case09, ...)
 ; reads: hFFC8, hFFC6, hFFC7, hFFCA, hFFCB, wIsCGB, hFFC9
 ; points at: wOBJPaletteBuffer
-Func_004_431F::
+DecompressGraphicsHFFC6ToHFFCA::
+Func_004_431F:: ; address name
     ldh a, [hFFC8]
     or a, a
     jr nz, Jump_004_433C
@@ -1705,7 +1707,7 @@ Jump_004_4AF1::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    call Func_004_431F
+    call DecompressGraphicsHFFC6ToHFFCA
     ld a, $04
     ldh [hFFC6], a
     xor a, a
@@ -1719,7 +1721,7 @@ Jump_004_4AF1::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    call Func_004_431F
+    call DecompressGraphicsHFFC6ToHFFCA
     ret
 
 Jump_004_4B23::
@@ -1759,7 +1761,7 @@ Jump_004_4B48::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    call Func_004_431F
+    call DecompressGraphicsHFFC6ToHFFCA
     ret
 
 Jump_004_4B5E::
@@ -1780,7 +1782,7 @@ Jump_004_4B5E::
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    call Func_004_431F
+    call DecompressGraphicsHFFC6ToHFFCA
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4AA8)
@@ -1925,7 +1927,7 @@ Func_004_4C25::
     jr Jump_004_4C5B
 
 Jump_004_4C4E::
-    ld a, [wC8EF]
+    ld a, [wFollowerRecords]
     cp a, $03
     jr nz, Jump_004_4C5B
     ld a, $21
@@ -2078,7 +2080,7 @@ Jump_004_4D3C::
 ; 1 call site from 1 routine (e.g. Func_004_4BB0_Case00)
 ; reads: wC6FD, hFFCF, hFF8D, hFF99, hFFC6, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hFFCF, hFFC6, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, ...
-; points at: wC8EF, wC701
+; points at: wFollowerRecords, wC701
 Func_004_4D43::
     ld a, $02
     ldh [hFFCF], a
@@ -2086,7 +2088,7 @@ Func_004_4D43::
     or a, a
     ret z
     ld b, a
-    ld hl, wC8EF
+    ld hl, wFollowerRecords
     ld de, wC701
     ld a, $10
     ldh [hFFC6], a
@@ -6519,7 +6521,7 @@ Jump_004_694C:: ; address name
 ; entry 34 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC94D, hPlayerFacing
-; writes: wC8EF, wScriptParam1
+; writes: wFollowerRecords, wScriptParam1
 Func_004_6892_Case22::
 Jump_004_6953:: ; address name
     ld a, [wC94D]
@@ -6529,7 +6531,7 @@ Jump_004_6953:: ; address name
     inc a
     inc a
     and a, $03
-    ld [wC8EF], a
+    ld [wFollowerRecords], a
     xor a, a
     ld [wScriptParam1], a
     ld hl, $57E1

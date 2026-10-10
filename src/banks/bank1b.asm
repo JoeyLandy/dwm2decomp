@@ -2127,7 +2127,7 @@ Jump_01B_5588:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_01B_55D4::
     ld a, [wD7AB]
@@ -5040,7 +5040,7 @@ Func_01B_675F::
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_01B_679D::
     ld a, [wD781]
@@ -6413,7 +6413,7 @@ Jump_01B_704F:: ; address name
     ld [wD7F1], a
     ld a, l
     ld [wD7F2], a
-    farcall Func_01E_759A
+    farcall DrawPageOfPagesAtWD7F1_Bank1E
 
 Jump_01B_7076::
     ld a, [wD781]
@@ -7122,7 +7122,7 @@ Func_01B_7487::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall Func_01E_75B3
+    farcall BlankLeadingZeroDigitsWC8C0
     ld a, [wC8C1]
     add a, $E0
     pop hl

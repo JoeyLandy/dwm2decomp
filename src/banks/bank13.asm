@@ -9773,7 +9773,7 @@ Jump_013_7FAE::
     ret
 
 ; 8 call sites from 7 routines (e.g. Msg01F0_Case6A, Msg01F0_Case66, Func_013_7E9F, Func_013_7E05, ...)
-; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, ...
+; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wC8F0, wC8F1, wC8F4, ...
 ; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
 Func_013_7FB0::
     ld a, [wCB86]
@@ -9784,7 +9784,7 @@ Func_013_7FB0::
     ld [wC939], a
     ldh a, [hPlayerFacing]
     ld [wC93A], a
-    ld a, [wC8EF]
+    ld a, [wFollowerRecords]
     ld [wC93B], a
     ld a, [wC8F0]
     ld [wC93C], a
