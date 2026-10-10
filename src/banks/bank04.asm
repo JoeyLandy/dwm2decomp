@@ -709,7 +709,7 @@ Jump_004_4555::
     ld a, [hl+]
     inc hl
     ldh [hSpriteSetIndex], a
-    farcall Func_07F_4001
+    farcall DrawMetaSprite4008
 
 Jump_004_455F::
     pop bc
@@ -1963,7 +1963,7 @@ Jump_004_4C5B::
     ldh a, [hScrollYHi]
     adc a, $00
     ldh [hSpriteOriginYHi], a
-    farcall Func_07F_4001
+    farcall DrawMetaSprite4008
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_004_4BB0_Case02, Func_004_4BB0_Case01, Func_004_4BB0_Case00)
@@ -2046,7 +2046,7 @@ Jump_004_4D06::
     jr nz, Jump_004_4D13
 
 Jump_004_4D0C::
-    farcall Func_07F_4001
+    farcall DrawMetaSprite4008
     ret
 
 Jump_004_4D13::

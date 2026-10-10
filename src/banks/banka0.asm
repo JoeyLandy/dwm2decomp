@@ -343,13 +343,13 @@ Jump_0A0_4216::
     jr z, Jump_0A0_4230
     cp a, $34
     jr nz, Jump_0A0_4224
-    call Func_0A0_4262
+    call StoreTileADAtHL_BankA0
     jr Jump_0A0_422B
 
 Jump_0A0_4224::
     cp a, $35
     jr nz, Jump_0A0_422B
-    call Func_0A0_4265
+    call StoreTileAEAtHL_BankA0
 
 Jump_0A0_422B::
     inc hl
@@ -397,13 +397,17 @@ Jump_0A0_425B::
     pop hl
     ret
 
+; [HL] = $AD (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0A0_41F2)
-Func_0A0_4262::
+StoreTileADAtHL_BankA0::
+Func_0A0_4262:: ; address name
     ld [hl], $AD
     ret
 
+; [HL] = $AE (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0A0_41F2)
-Func_0A0_4265::
+StoreTileAEAtHL_BankA0::
+Func_0A0_4265:: ; address name
     ld [hl], $AE
     ret
 
@@ -2050,11 +2054,13 @@ Jump_0A0_4C4C::
 GameMode7_Init_Sub01_Sub02_Sub03::
 Func_0A0_4C52:: ; address name
     ld c, $00
-    call Func_0A0_4C59
+    call DrawSlotPanelValues_BankA0
     ld c, $01
 
+; DrawSlotHPDigits_BankA0, DrawSlotMPDigits_BankA0 and DrawSlotStatusMarks_BankA0 for slot C (E-0116)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub02_Sub03)
-Func_0A0_4C59::
+DrawSlotPanelValues_BankA0::
+Func_0A0_4C59:: ; address name
     call DrawSlotHPDigits_BankA0
     call DrawSlotMPDigits_BankA0
     call DrawSlotStatusMarks_BankA0
@@ -2095,9 +2101,11 @@ Func_0A0_4C81:: ; address name
     call CopyRect32StrideToVRAM_BankA0
     ret
 
+; copies a 20 x 11 rectangle from wC278 to vBGMap0 + $E0 (row 7) with CopyRect32StrideToVRAM_BankA0 (E-0116)
 ; 3 call sites from 3 routines (e.g. Func_0A0_5F2E_Case04, Func_0A0_5F2E_Case03, Func_0A0_5F2E_Case01)
 ; points at: wC278
-Func_0A0_4C8E::
+DrawWC278Rect20x11ToBGMapRow7_BankA0::
+Func_0A0_4C8E:: ; address name
     ld de, wC278
     ld hl, vBGMap0 + $E0
     ld bc, $140B
@@ -2115,10 +2123,12 @@ Func_0A0_4C9B:: ; address name
     call CopyRect32StrideToVRAM_BankA0
     ret
 
+; copies a 20 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9), then wD868 = 1 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD868
 ; points at: wC2B8
-Func_0A0_4CA8:: ; heuristic: follows a terminator; C0
+DrawWC2B8RowsToBGMapRow9_BankA0:: ; heuristic: follows a terminator; C0
+Func_0A0_4CA8:: ; address name
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $1409
@@ -2127,18 +2137,22 @@ Func_0A0_4CA8:: ; heuristic: follows a terminator; C0
     ld [wD868], a
     ret
 
+; copies an 8 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC2B8
-Func_0A0_4CBA:: ; heuristic: follows a terminator; C0
+DrawWC2B8LeftToBGMapRow9_BankA0:: ; heuristic: follows a terminator; C0
+Func_0A0_4CBA:: ; address name
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0809
     call CopyRect32StrideToVRAM_BankA0
     ret
 
+; copies a 7 x 7 rectangle from wC2F8 to vBGMap0 + $160 (row 11) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC2F8
-Func_0A0_4CC7:: ; heuristic: follows a terminator; C0
+DrawWC2F8Rect7x7ToBGMapRow11_BankA0:: ; heuristic: follows a terminator; C0
+Func_0A0_4CC7:: ; address name
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0707
@@ -2158,9 +2172,11 @@ Func_0A0_4CD4::
     call CopyRect32StrideToVRAM_BankA0
     ret
 
+; copies a 13 x 7 rectangle from wC2F8 to vBGMap0 + $160 (row 11) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC2F8
-Func_0A0_4CED:: ; heuristic: follows a terminator; C0
+DrawWC2F8Rect13x7ToBGMapRow11_BankA0:: ; heuristic: follows a terminator; C0
+Func_0A0_4CED:: ; address name
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0D07
@@ -4536,7 +4552,7 @@ Func_0A0_5CF9::
     ld h, [hl]
     ld l, a
     call CompareHLToBC
-    call z, Func_0A0_5D4B
+    call z, RollChance80Of256
     jr nc, Jump_0A0_5D0A
     ld b, h
     ld c, l
@@ -4579,7 +4595,7 @@ Func_0A0_5D38::
     ld h, [hl]
     ld l, a
     call CompareHLToBC
-    call z, Func_0A0_5D4B
+    call z, RollChance80Of256
     jr c, Jump_0A0_5D49
     ld b, h
     ld c, l
@@ -4589,9 +4605,11 @@ Jump_0A0_5D49::
     pop hl
     ret
 
+; AdvanceRandom, then compares wC5E7 with $80: carry (success) half the time (E-0116)
 ; 2 call sites from 2 routines (e.g. Func_0A0_5D38, Func_0A0_5CF9)
 ; reads: wC5E7
-Func_0A0_5D4B::
+RollChance80Of256::
+Func_0A0_5D4B:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]
     cp a, $80
@@ -5020,7 +5038,7 @@ Jump_0A0_5FEB:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld [wC46C], a
-    call Func_0A0_4C8E
+    call DrawWC278Rect20x11ToBGMapRow7_BankA0
     ld hl, Data_0A0_697F
     ld a, [wC46C]
     and a, $03
@@ -5110,7 +5128,7 @@ Jump_0A0_609F::
 ; writes: wBattleResolveStep, wBattleSubPhase
 Func_0A0_5F2E_Case03::
 Jump_0A0_60A0:: ; address name
-    call Func_0A0_4C8E
+    call DrawWC278Rect20x11ToBGMapRow7_BankA0
     xor a, a
     ld [wBattleResolveStep], a
     xor a, a
@@ -5126,7 +5144,7 @@ Func_0A0_5F2E_Case04::
 Jump_0A0_60AC:: ; address name
     ld a, [wD869]
     or a, a
-    call z, Func_0A0_4C8E
+    call z, DrawWC278Rect20x11ToBGMapRow7_BankA0
     xor a, a
     ld [wD869], a
     ld hl, vTiles1 + $6D0
@@ -6397,21 +6415,21 @@ Func_0A0_6822::
     inc hl
     cp a, $FF
     call z, ReturnZero_6871
-    call Func_0A0_68CF
+    call ShowStringAAtTiles16D0_BankA0
     ld a, [hl+]
     inc hl
     cp a, $FF
     call z, ReturnZero_6871
-    call Func_0A0_68DE
+    call ShowStringAAtTiles1760_BankA0
     ld a, [hl+]
     inc hl
     cp a, $FF
     call z, ReturnZero_6871
-    call Func_0A0_68ED
+    call ShowStringAAtTiles17F0_BankA0
     ld a, [hl]
     cp a, $FF
     call z, ReturnZero_6871
-    call Func_0A0_68FC
+    call ShowStringAAtTiles2080_BankA0
     ret
 
 ; A = 0 (xor a); a two-byte handler stub (E-0111)
@@ -6473,9 +6491,11 @@ Jump_0A0_688D::
     call WriteVRAMByte
     ret
 
+; wStringIndex = A, then ShowStringBank08AtTilesHL_BankA0 at vTiles1 + $6D0 with size $0901; HL kept (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
 ; writes: wStringIndex
-Func_0A0_68CF::
+ShowStringAAtTiles16D0_BankA0::
+Func_0A0_68CF:: ; address name
     ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $6D0
@@ -6484,9 +6504,11 @@ Func_0A0_68CF::
     pop hl
     ret
 
+; wStringIndex = A, then the string at vTiles1 + $760 with size $0901; HL kept (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
 ; writes: wStringIndex
-Func_0A0_68DE::
+ShowStringAAtTiles1760_BankA0::
+Func_0A0_68DE:: ; address name
     ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $760
@@ -6495,9 +6517,11 @@ Func_0A0_68DE::
     pop hl
     ret
 
+; wStringIndex = A, then the string at vTiles1 + $7F0 with size $0901; HL kept (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
 ; writes: wStringIndex
-Func_0A0_68ED::
+ShowStringAAtTiles17F0_BankA0::
+Func_0A0_68ED:: ; address name
     ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $7F0
@@ -6506,9 +6530,11 @@ Func_0A0_68ED::
     pop hl
     ret
 
+; wStringIndex = A, then the string at vTiles2 + $80 with size $0901 (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
 ; writes: wStringIndex
-Func_0A0_68FC::
+ShowStringAAtTiles2080_BankA0::
+Func_0A0_68FC:: ; address name
     ld [wStringIndex], a
     ld hl, vTiles2 + $80
     ld de, $0901
@@ -6713,7 +6739,7 @@ Jump_0A0_6A33::
     ret
 
 ; C = slot 0-2: when the slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1, 4, 5, 6 and 7 that is set (the zero-status path is not read) (E-0111)
-; 2 call sites from 2 routines (e.g. Func_0A0_4C59, DrawSlotStatusMarks)
+; 2 call sites from 2 routines (e.g. DrawSlotPanelValues_BankA0, DrawSlotStatusMarks)
 ; points at: wBattleStatus
 DrawSlotStatusMarks_BankA0::
 Func_0A0_6A45:: ; address name
@@ -6919,7 +6945,7 @@ Jump_0A0_6B45::
     ret
 
 ; C = slot 0-2: writes the slot's HP as decimal digit tiles into wScreenTileBuffer at the position from Data_0A0_6D47 (the wC58A = 2 form of DrawSlotHPDigits) (E-0111)
-; 2 call sites from 2 routines (e.g. Func_0A0_4C59, DrawSlotHPDigits)
+; 2 call sites from 2 routines (e.g. DrawSlotPanelValues_BankA0, DrawSlotHPDigits)
 ; points at: wBattleHP, wScreenTileBuffer
 DrawSlotHPDigits_BankA0::
 Func_0A0_6B46:: ; address name
@@ -6953,7 +6979,7 @@ Jump_0A0_6B77::
     ret
 
 ; C = slot 0-2: writes the slot's MP as decimal digit tiles into wScreenTileBuffer at the position from Data_0A0_6D4B (the wC58A = 2 form of DrawSlotMPDigits) (E-0111)
-; 2 call sites from 2 routines (e.g. Func_0A0_4C59, DrawSlotMPDigits)
+; 2 call sites from 2 routines (e.g. DrawSlotPanelValues_BankA0, DrawSlotMPDigits)
 ; points at: wBattleMP, wScreenTileBuffer
 DrawSlotMPDigits_BankA0::
 Func_0A0_6B79:: ; address name
@@ -7164,7 +7190,7 @@ Func_0A0_6C81:: ; address name
     ret
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes appear in 2 banks)
-; 5 call sites from 5 routines (e.g. Func_0A0_6909, Func_0A0_68FC, Func_0A0_68ED, Func_0A0_68DE, ...)
+; 5 call sites from 5 routines (e.g. Func_0A0_6909, ShowStringAAtTiles2080_BankA0, ShowStringAAtTiles17F0_BankA0, ShowStringAAtTiles1760_BankA0, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
 ShowStringBank08AtTilesHL_BankA0::

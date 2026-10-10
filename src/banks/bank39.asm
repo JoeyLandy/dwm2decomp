@@ -1338,7 +1338,7 @@ Jump_039_53A7::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_53B2
-    call Func_039_6D6A
+    call SlotStatus4Bits23
     jr z, Jump_039_53BC
 
 Jump_039_53B2::
@@ -1451,7 +1451,7 @@ Jump_039_5453::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_545E
-    call Func_039_6D6A
+    call SlotStatus4Bits23
     jr z, Jump_039_5468
 
 Jump_039_545E::
@@ -4171,7 +4171,7 @@ Jump_039_6435::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6440
-    call Func_039_6D6A
+    call SlotStatus4Bits23
     jr z, Jump_039_644A
 
 Jump_039_6440::
@@ -5923,9 +5923,11 @@ Jump_039_6D68::
     ld [hl], a
     ret
 
+; A = slot: A = its status byte 4 (wD810) & $0C; Z set when both bits are clear (E-0116)
 ; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; points at: wD810
-Func_039_6D6A::
+SlotStatus4Bits23::
+Func_039_6D6A:: ; address name
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]

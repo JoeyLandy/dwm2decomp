@@ -2135,7 +2135,7 @@ Jump_073_4E15:: ; address name
 Func_073_44A5_Case03::
 Jump_073_4E20:: ; address name
     xor a, a
-    call Func_073_4FA9
+    call RunMessageBoxCarryWhenIdle_Bank73
     ret nc
     ld a, [wIsCGB]
     or a, a
@@ -2180,7 +2180,7 @@ Jump_073_4E48:: ; address name
 ScriptCommand82_Run_Table2_Case01::
 Jump_073_4E5D:: ; address name
     xor a, a
-    call Func_073_4FA9
+    call RunMessageBoxCarryWhenIdle_Bank73
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -2274,9 +2274,11 @@ Func_073_4ED8:: ; address name
     ld [wMessageState], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_073_4FA9)
+; the bank-$73 message runner: returns at once when wMessageState is $FF (idle), otherwise steps the message (the same opening as RunMessageBox_Bank12) (E-0116)
+; 1 call site from 1 routine (e.g. RunMessageBoxCarryWhenIdle_Bank73)
 ; reads: wMessageState
-Func_073_4EE5::
+RunMessageBox_Bank73::
+Func_073_4EE5:: ; address name
     push af
     ld a, [wMessageState]
     cp a, $FF
@@ -2286,17 +2288,17 @@ Func_073_4EE5::
 
 Jump_073_4EEF::
     rst $00
-    dw Func_073_4EE5_Case00
-    dw Func_073_4EE5_Case01
-    dw Func_073_4EE5_Case02
-    dw Func_073_4EE5_Case03
+    dw RunMessageBox_Bank73_Case00
+    dw RunMessageBox_Bank73_Case01
+    dw RunMessageBox_Bank73_Case02
+    dw RunMessageBox_Bank73_Case03
 
-; entry 0 of the `rst $00` table in Func_073_4EE5
+; entry 0 of the `rst $00` table in RunMessageBox_Bank73
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageGroup, hPlayerY
 ; writes: wC8CB, wC8CC, hFFB9
 ; points at: wMessageState
-Func_073_4EE5_Case00::
+RunMessageBox_Bank73_Case00::
 Jump_073_4EF8:: ; address name
     pop af
     or a, a
@@ -2332,12 +2334,12 @@ Jump_073_4F37::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_073_4EE5
+; entry 1 of the `rst $00` table in RunMessageBox_Bank73
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB, wMessageIndex
 ; writes: wStringIndex, wStringCategory
 ; points at: wMessageState
-Func_073_4EE5_Case01::
+RunMessageBox_Bank73_Case01::
 Jump_073_4F3C:: ; address name
     pop af
     ld a, [wC8CB]
@@ -2352,12 +2354,12 @@ Jump_073_4F3C:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_073_4EE5
+; entry 2 of the `rst $00` table in RunMessageBox_Bank73
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wMessageGroup, hPlayerY
 ; writes: wMessageState, wC8CB, wC8CC, hFFB9
 ; points at: wMessageState
-Func_073_4EE5_Case02::
+RunMessageBox_Bank73_Case02::
 Jump_073_4F59:: ; address name
     pop af
     ld a, [wC52B]
@@ -2390,11 +2392,11 @@ Jump_073_4F8B::
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_073_4EE5
+; entry 3 of the `rst $00` table in RunMessageBox_Bank73
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB
 ; writes: wMessageState
-Func_073_4EE5_Case03::
+RunMessageBox_Bank73_Case03::
 Jump_073_4F90:: ; address name
     ld a, [wC8CB]
     and a, $03
@@ -2413,10 +2415,12 @@ Jump_073_4FA3::
     ld [wMessageState], a
     ret
 
+; RunMessageBox_Bank73, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0116)
 ; 2 call sites from 2 routines (e.g. Func_073_44A5_Case03, ScriptCommand82_Run_Table2_Case01)
 ; reads: wMessageState
-Func_073_4FA9::
-    call Func_073_4EE5
+RunMessageBoxCarryWhenIdle_Bank73::
+Func_073_4FA9:: ; address name
+    call RunMessageBox_Bank73
     ld a, [wMessageState]
     cp a, $FF
     jr z, Jump_073_4FB5

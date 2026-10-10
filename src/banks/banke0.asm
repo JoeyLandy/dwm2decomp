@@ -528,7 +528,7 @@ Jump_0E0_445B:: ; address name
     ld a, $04
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_BankE0
-    call Func_0E0_50EE
+    call DrawFullScreenFromBankE0_511B
     ld hl, $448A
     ld a, [wC5FE]
     add a, a
@@ -883,7 +883,7 @@ Jump_0E0_4663:: ; address name
     ld [wD890], a
     ld a, $0A
     ld [wC5FD], a
-    call Func_0E0_50FD
+    call DrawFullScreenFromBankE0_5283
     call Func_0E0_4FCE
     xor a, a
     ld [wC5FE], a
@@ -2191,8 +2191,10 @@ Func_0E0_502B::
     call WriteVRAMByte
     ret
 
+; copies a 20 x 18 tile map from E0:$511B to vBGMap0 (CopyRectFromBankToVRAM) (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0E0_443B_Case00)
-Func_0E0_50EE::
+DrawFullScreenFromBankE0_511B::
+Func_0E0_50EE:: ; address name
     ld hl, vBGMap0
     ld de, $511B
     ld bc, $1412
@@ -2200,8 +2202,10 @@ Func_0E0_50EE::
     call CopyRectFromBankToVRAM
     ret
 
+; copies a 20 x 18 tile map from E0:$5283 to vBGMap0 (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0E0_443B_Case02)
-Func_0E0_50FD::
+DrawFullScreenFromBankE0_5283::
+Func_0E0_50FD:: ; address name
     ld hl, vBGMap0
     ld de, $5283
     ld bc, $1412

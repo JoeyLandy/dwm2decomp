@@ -4451,7 +4451,7 @@ Func_060_6916::
     swap a
     ld hl, Data_060_6969
     add_a_to_hl
-    call Func_060_695C
+    call RandomBelow100
     ld c, a
     ld b, $00
 
@@ -4474,7 +4474,7 @@ Jump_060_693E::
     call Multiply8
     ld de, Data_060_6A09
     add hl, de
-    call Func_060_695C
+    call RandomBelow100
     ld c, a
     ld b, $00
 
@@ -4490,14 +4490,16 @@ Jump_060_6958::
     ldh [hFFC8], a
     ret
 
+; repeats NextRandomSeed until wCD04 & $7F is below 100; returns A = that value (E-0116)
 ; 2 call sites from 1 routine (e.g. Func_060_6916)
 ; reads: wCD04
-Func_060_695C::
+RandomBelow100::
+Func_060_695C:: ; address name
     call NextRandomSeed
     ld a, [wCD04]
     and a, $7F
     cp a, $64
-    jr nc, Func_060_695C
+    jr nc, RandomBelow100
     ret
 
 Data_060_6969:: ; heuristic: pointer load in the same bank (bank assumed); C0

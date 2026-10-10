@@ -1261,6 +1261,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Not named.** `36:6A59` decodes as `ld [bc], a / cpl / ld [hl], a / nop / jr / reti` and is probably data.
 - Binary verification: pending; see the commit.
 
+### E-0116 — Short routines, third chunk
+
+- Kind: OBSERVATION (full reading; C1).
+- **Forty names**, including:
+  - battle message buffers: the CopyXNameToWC1x0 copies, CopyActionSkillNameToWC140 (category 4) and CopyActionItemNameToWC150 (category 5), ShowActionBattleText;
+  - resolve steps: SetResolveStep0A and its wDAC0 variant;
+  - chance rolls and damage: RollChance3FOf256, RollChance80Of256, RandomBelow100, SetDamageRandomInRange;
+  - bank-$3B dispatch: DispatchActionEffectTable_Bank3B;
+  - the bank-$73 message runner and its idle check;
+  - bank-$A0 counterparts of the bank-$31 screen helpers;
+  - full-screen tile-map draws from banks $A1 and $E0;
+  - PersonalityLevelOfA (the 0/1/2 rule of PersonalityIndexOfSlot);
+  - return stubs.
+- **Not named.** `3D:4E56` and `E0:55BF` decode as implausible instruction runs (data), and the per-skill AIScore wrappers in bank $E2 wait on Func_0E2_67F9.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

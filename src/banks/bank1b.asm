@@ -2216,7 +2216,7 @@ Jump_01B_5644::
     ret
 
 Jump_01B_566C::
-    farcall Func_0F2_6333
+    farcall ReturnStub_6333
 
 Jump_01B_5672::
     ld a, [wD781]

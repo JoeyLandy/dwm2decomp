@@ -1,8 +1,10 @@
 SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7F
 
+; DrawMetaSpriteAt_40CC with DE = Data_07F_4008 (E-0116)
 ; 3 call sites from 3 routines (e.g. Func_004_44CE, Func_004_4C25, Func_004_4C96)
-Func_07F_4001::
+DrawMetaSprite4008::
+Func_07F_4001:: ; address name
     ld de, Data_07F_4008
     call DrawMetaSpriteAt_40CC
     ret
@@ -104,7 +106,7 @@ Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $74, $62, $74, $62, $26, $6F, $74, $62, $98, $6F
 
 ; the same instruction sequence as DrawMetaSpriteAt (bank $7F) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. Func_07F_4001)
+; 1 call site from 1 routine (e.g. DrawMetaSprite4008)
 ; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5

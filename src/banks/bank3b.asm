@@ -568,7 +568,7 @@ Jump_03B_435D::
 
 Jump_03B_4364::
     ld [wBattleActionId], a
-    farcall Func_03A_6E92
+    farcall ShowActionBattleText
     ld a, $0D
     ld [wBattleResolveStep], a
     ret
@@ -593,7 +593,7 @@ Func_03B_42F4_Case01::
 Jump_03B_437F:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    farcall Func_03A_6E92
+    farcall ShowActionBattleText
     ret
 
 ; entry 2 of the `rst $00` table in Func_03B_42F4
@@ -724,7 +724,7 @@ Jump_03B_4456:: ; address name
     ret z
     ld d, $66
     farcall ShowBattleText
-    call Func_03B_470B
+    call SetResolveStep0A
     ret
 
 ; entry 4 of the `rst $00` table in Func_03B_42F4
@@ -734,7 +734,7 @@ Func_03B_42F4_Case04::
 Jump_03B_4473:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    call Func_03B_4B02
+    call DispatchActionEffectTable_Bank3B
     ret
 
 ; entry 5 of the `rst $00` table in Func_03B_42F4
@@ -857,16 +857,18 @@ Jump_03B_452F::
     ld a, [wC0A0]
     ld d, a
     farcall ShowBattleText
-    call Func_03B_453D
+    call SetResolveStep0AUnlessWDAC0Bit4
     ret
 
+; returns when wDAC0 bit 4 is set, otherwise SetResolveStep0A (E-0116)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case06)
 ; reads: wDAC0
-Func_03B_453D::
+SetResolveStep0AUnlessWDAC0Bit4::
+Func_03B_453D:: ; address name
     ld a, [wDAC0]
     bit 4, a
     ret nz
-    call Func_03B_470B
+    call SetResolveStep0A
     ret
 
 ; entry 7 of the `rst $00` table in Func_03B_42F4
@@ -1179,9 +1181,11 @@ Jump_03B_46FD:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_03B_453D, Func_03B_42F4_Case03)
+; wBattleResolveStep = $0A (the damage-message step, ResolveStepDamageMessage) (E-0116)
+; 2 call sites from 2 routines (e.g. SetResolveStep0AUnlessWDAC0Bit4, Func_03B_42F4_Case03)
 ; writes: wBattleResolveStep
-Func_03B_470B::
+SetResolveStep0A::
+Func_03B_470B:: ; address name
     ld a, $0A
     ld [wBattleResolveStep], a
     ret
@@ -1391,13 +1395,13 @@ Func_03B_483A::
     jr z, Jump_03B_4854
     ld hl, $003C
     ld bc, $0046
-    call Func_03B_4A40
+    call SetDamageRandomInRange
     jr Jump_03B_4873
 
 Jump_03B_4854::
     ld hl, $001E
     ld bc, $0028
-    call Func_03B_4A40
+    call SetDamageRandomInRange
     jr Jump_03B_4873
 
 Jump_03B_485F::
@@ -1449,7 +1453,7 @@ Func_03B_489B:: ; heuristic: follows a terminator; C0
     jr z, Jump_03B_48AD
     ld hl, $0014
     ld bc, $001E
-    call Func_03B_4A40
+    call SetDamageRandomInRange
     jr Jump_03B_48C1
 
 Jump_03B_48AD::
@@ -1635,7 +1639,7 @@ Jump_03B_499F::
     inc de
     ld a, [de]
     ld b, a
-    call Func_03B_4A40
+    call SetDamageRandomInRange
     ld a, [wBattleActionId]
     cp a, $24
     jr nz, Jump_03B_49BD
@@ -1722,9 +1726,11 @@ Func_03B_4A34::
     call Func_03B_4A86
     ret
 
+; wBattleDamageLo/wD873 = RandomInRange(HL, BC) (E-0116)
 ; 4 call sites from 3 routines (e.g. Func_03B_4990, Func_03B_483A, Func_03B_489B)
 ; writes: wBattleDamageLo, wD873
-Func_03B_4A40::
+SetDamageRandomInRange::
+Func_03B_4A40:: ; address name
     call RandomInRange
     ld a, e
     ld [wBattleDamageLo], a
@@ -1889,17 +1895,21 @@ Jump_03B_4AF0::
     cp a, $66
     ret
 
+; AdvanceRandom, then compares wC5E7 with $3F: carry (success) about one time in four (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7
-Func_03B_4AF9:: ; heuristic: follows a terminator; C0
+RollChance3FOf256:: ; heuristic: follows a terminator; C0
+Func_03B_4AF9:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]
     cp a, $3F
     ret
 
+; jumps to the routine whose address is at $4B11 + 2 * wBattleActionId (JumpToWordAtHL), the bank-$3B counterpart of DispatchActionEffectTable (E-0116)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case04)
 ; reads: wBattleActionId
-Func_03B_4B02::
+DispatchActionEffectTable_Bank3B::
+Func_03B_4B02:: ; address name
     ld a, [wBattleActionId]
     ld c, a
     ld b, $00

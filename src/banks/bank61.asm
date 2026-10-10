@@ -2487,7 +2487,7 @@ Jump_061_5986:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_061_596F_Case01::
 Jump_061_5996:: ; address name
-    call Func_061_5CCF
+    call ReturnStub_5CCF
     ret
 
 ; entry 2 of the `rst $00` table in Func_061_596F
@@ -2996,8 +2996,10 @@ Jump_061_5CCB::
     ld c, $00
     ret
 
+; a bare ret (E-0116)
 ; 1 call site from 1 routine (e.g. Func_061_596F_Case01)
-Func_061_5CCF::
+ReturnStub_5CCF::
+Func_061_5CCF:: ; address name
     ret
 
 ; 1 call site from 1 routine (e.g. Func_061_596F_Case00)

@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. Func_037_4AFD_Table3_Case16, Func_037_542C_Case08, Func_0F1_4AD0_Table3_Case16, Func_0F1_5344_Case08, ...)
+; 6 call sites from 6 routines (e.g. Func_037_4AFD_Table3_Case16, Func_037_542C_Case08, Func_0F1_4AD0_Table3_Case16, DrawShortStringWCA2CAtTiles1500_Case08, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E

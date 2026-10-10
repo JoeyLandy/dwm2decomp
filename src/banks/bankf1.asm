@@ -2885,7 +2885,7 @@ Func_0F1_5285_Case01::
 Jump_0F1_532D:: ; address name
     farcall Func_0F2_49CF
     farcall Func_01F_7375
-    call Func_0F1_5344
+    call DrawShortStringWCA2CAtTiles1500
 
 ; entry 2 of the `rst $00` table in Func_0F1_5285
 ; no direct call (reached through a table, a jump or a vector)
@@ -2898,9 +2898,11 @@ Jump_0F1_533C:: ; address name
     ld [wD781], a
     ret
 
+; clears a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the short string at wCA2C to wC8CF (CopyShortStringToWC8CF_BankF1) and draws its glyphs at vTiles1 + $500 (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0F1_5285_Case01)
 ; points at: wCA2C
-Func_0F1_5344::
+DrawShortStringWCA2CAtTiles1500::
+Func_0F1_5344:: ; address name
     ld hl, vTiles1 + $500
     ld bc, $0501
     call FillTilesBxC
@@ -3433,22 +3435,22 @@ Func_0F1_4AD0_Case0E::
 Jump_0F1_568B:: ; address name
     ld a, [wD781]
     rst $00
-    dw Func_0F1_5344_Case00
+    dw DrawShortStringWCA2CAtTiles1500_Case00
     dw Func_0F1_5285
-    dw Func_0F1_5344_Case02
-    dw Func_0F1_5344_Case02
-    dw Func_0F1_5344_Case02
+    dw DrawShortStringWCA2CAtTiles1500_Case02
+    dw DrawShortStringWCA2CAtTiles1500_Case02
+    dw DrawShortStringWCA2CAtTiles1500_Case02
     dw Func_0F1_4AD0_Table3_Case04
     dw Func_0F1_4D4E_Table2_Case06
     dw Func_0F1_4D4E_Table2_Case07
-    dw Func_0F1_5344_Case08
-    dw Func_0F1_5344_Case09
+    dw DrawShortStringWCA2CAtTiles1500_Case08
+    dw DrawShortStringWCA2CAtTiles1500_Case09
 
-; entry 0 of the `rst $00` table in Func_0F1_5344
+; entry 0 of the `rst $00` table in DrawShortStringWCA2CAtTiles1500
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B5, wD7B6, wD781
 ; writes: wD7AB, wD7AF, wD781
-Func_0F1_5344_Case00::
+DrawShortStringWCA2CAtTiles1500_Case00::
 Jump_0F1_56A3:: ; address name
     ld a, [wD7B5]
     ld [wD7AB], a
@@ -3459,11 +3461,11 @@ Jump_0F1_56A3:: ; address name
     ld [wD781], a
     ret
 
-; entry 9 of the `rst $00` table in Func_0F1_5344
+; entry 9 of the `rst $00` table in DrawShortStringWCA2CAtTiles1500
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780
 ; writes: wD780
-Func_0F1_5344_Case09::
+DrawShortStringWCA2CAtTiles1500_Case09::
 Jump_0F1_56B7:: ; address name
     ld a, [wD780]
     push af
@@ -3473,11 +3475,11 @@ Jump_0F1_56B7:: ; address name
     pop af
     ret
 
-; entry 2 of the `rst $00` table in Func_0F1_5344
+; entry 2 of the `rst $00` table in DrawShortStringWCA2CAtTiles1500
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780
 ; writes: wD780
-Func_0F1_5344_Case02::
+DrawShortStringWCA2CAtTiles1500_Case02::
 Jump_0F1_56C8:: ; address name
     ld a, [wD780]
     push af
@@ -3488,12 +3490,12 @@ Jump_0F1_56C8:: ; address name
     ld [wD780], a
     ret
 
-; entry 8 of the `rst $00` table in Func_0F1_5344
+; entry 8 of the `rst $00` table in DrawShortStringWCA2CAtTiles1500
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wStringIndex, wStringCategory, wD781
 ; points at: wC3E7, wC52D
-Func_0F1_5344_Case08::
+DrawShortStringWCA2CAtTiles1500_Case08::
 Jump_0F1_56DC:: ; address name
     ld de, Data_0F1_5A90
     ld hl, wC3E7
@@ -3582,7 +3584,7 @@ Jump_0F1_57AB::
     ret
 
 ; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. Func_0F1_57CD, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_0F1_57CD, DrawShortStringWCA2CAtTiles1500)
 ; points at: wC8CF
 CopyShortStringToWC8CF_BankF1::
 Func_0F1_57BA:: ; address name
@@ -3916,7 +3918,7 @@ Func_0F1_5969::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 4 call sites from 4 routines (e.g. Func_0F1_4AD0_Table3_Case19, Func_0F1_4AD0_Table3_Case17, Func_0F1_5344_Case08, Func_0F1_4AD0_Table3_Case04)
+; 4 call sites from 4 routines (e.g. Func_0F1_4AD0_Table3_Case19, Func_0F1_4AD0_Table3_Case17, DrawShortStringWCA2CAtTiles1500_Case08, Func_0F1_4AD0_Table3_Case04)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_BankF1::

@@ -1017,25 +1017,27 @@ Func_0F2_4A94::
 ; reads: wCA9A, wCA9D, wCA9B
 Func_0F2_4AD3::
     ld a, [wCA9A]
-    call Func_0F2_4AF3
+    call PersonalityLevelOfA
     ld a, $09
     call Multiply8
     ld b, l
     ld a, [wCA9D]
-    call Func_0F2_4AF3
+    call PersonalityLevelOfA
     ld a, c
     add a, a
     add a, c
     add a, b
     ld b, a
     ld a, [wCA9B]
-    call Func_0F2_4AF3
+    call PersonalityLevelOfA
     ld a, c
     add a, b
     ret
 
+; C = 0 when A >= $C0, 1 when A >= $40, else 2 (the g(v) of PersonalityIndexOfSlot) (E-0116)
 ; 3 call sites from 1 routine (e.g. Func_0F2_4AD3)
-Func_0F2_4AF3::
+PersonalityLevelOfA::
+Func_0F2_4AF3:: ; address name
     ld c, $00
     cp a, $C0
     ret nc
@@ -2366,8 +2368,10 @@ Data_0F2_616B:: ; heuristic: target of a monotone pointer table; C0
     ds $11, $00
     INCBIN "dwm2-cobi-us.gbc", $3CA1FB, $138
 
+; a bare ret (E-0116)
 ; 1 call site from 1 routine (e.g. Func_01B_53CE_Table3_Case05)
-Func_0F2_6333::
+ReturnStub_6333::
+Func_0F2_6333:: ; address name
     ret
     db $CD, $55, $63, $CD, $46, $63, $C9
 

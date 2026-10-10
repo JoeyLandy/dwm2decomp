@@ -2545,7 +2545,7 @@ Jump_0A1_4FE2:: ; address name
     ld bc, $1412
     ld hl, vBGMap0
     call CopyRectFromBankToVRAM
-    call Func_0A1_57F9
+    call DrawRect12x12FromBankA1
     call Func_0A1_57BE
     ld a, [wCC44]
     bit 7, a
@@ -3824,8 +3824,10 @@ Jump_0A1_57E0::
     ldh [c], a
     ret
 
+; copies a 12 x 12 tile rectangle from A1:$5808 to vBGMap0 + $64 (CopyRectFromBankToVRAM) (E-0116)
 ; 1 call site from 1 routine (e.g. Func_0A1_4519_Case01)
-Func_0A1_57F9::
+DrawRect12x12FromBankA1::
+Func_0A1_57F9:: ; address name
     ld de, $5808
     ld bc, $0C0C
     ld hl, vBGMap0 + $64

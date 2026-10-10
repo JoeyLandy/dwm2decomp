@@ -882,10 +882,12 @@ Jump_03A_4E00:: ; address name
     inc [hl]
     ret
 
+; hScrollY = 0, hScrollX = 1, then wD804 += 1 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wD804
-Func_03A_4E0D:: ; heuristic: follows a terminator; C0
+SetScroll0_1AndIncWD804:: ; heuristic: follows a terminator; C0
+Func_03A_4E0D:: ; address name
     ld a, $00
     ldh [hScrollY], a
     ld a, $01
@@ -930,18 +932,18 @@ Func_03A_4C26_Case04::
 Jump_03A_4E35:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case06
+    dw SetScroll0_1AndIncWD804_Case06
 
-; entry 0 of the `rst $00` table in Func_03A_4E0D
+; entry 0 of the `rst $00` table in SetScroll0_1AndIncWD804
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9, wD804
-Func_03A_4E0D_Case00::
+SetScroll0_1AndIncWD804_Case00::
 Jump_03A_4E47:: ; address name
     ld hl, wC5E9
     ld [hl], $00
@@ -954,7 +956,7 @@ Jump_03A_4E47:: ; address name
     ret
 
 ; wC5E9-wC5EB = $D2, $D2, $E2; wD804 += 1 (E-0074)
-; 1 call site from 1 routine (e.g. Func_03A_4E0D_Case06)
+; 1 call site from 1 routine (e.g. SetScroll0_1AndIncWD804_Case06)
 ; points at: wC5E9, wD804
 SetWC5E9PatternAndIncWD804::
 Func_03A_4E57:: ; address name
@@ -968,10 +970,10 @@ Func_03A_4E57:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_03A_4E0D
+; entry 6 of the `rst $00` table in SetScroll0_1AndIncWD804
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4E0D_Case06::
+SetScroll0_1AndIncWD804_Case06::
 Jump_03A_4E67:: ; address name
     call SetWC5E9PatternAndIncWD804
     ld a, $FF
@@ -1561,23 +1563,23 @@ Func_03A_4C26_Case0B::
 Jump_03A_5114:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case00
+    dw SetScroll0_1AndIncWD804_Case00
     dw SetWC5E9PatternAndIncWD804
-    dw Func_03A_4E0D_Case06
+    dw SetScroll0_1AndIncWD804_Case06
 
 ; entry 12 of the `rst $00` table in Func_03A_4C26
 ; no direct call (reached through a table, a jump or a vector)
@@ -4880,10 +4882,12 @@ Data_03A_6DAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $3C, $01
     INCBIN "dwm2-cobi-us.gbc", $0EADE7, $AB
 
+; D = Data_03A_6EA5[wBattleActionId]; returns at once when it is $FF, otherwise ShowBattleText (E-0116)
 ; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case00, Func_03B_42F4_Case01)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
-Func_03A_6E92::
+ShowActionBattleText::
+Func_03A_6E92:: ; address name
     ld a, [wBattleActionId]
     ld hl, Data_03A_6EA5
     add_a_to_hl
@@ -5041,7 +5045,7 @@ Func_03A_7508::
     xor a, a
     ld [wC982], a
     call CopyActorNameToWC130
-    call Func_03A_791A
+    call CopyActionSkillNameToWC140
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -5533,11 +5537,13 @@ Func_03A_78EE:: ; address name
     call CopySlotNameToHL
     ret
 
+; wD86C = wBattleActor, then CopySlotNameToHL with HL = wC140 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wD86C
 ; points at: wC140
-Func_03A_78FB:: ; heuristic: follows a terminator; C0
+CopyActorNameToWC140:: ; heuristic: follows a terminator; C0
+Func_03A_78FB:: ; address name
     ld a, [wBattleActor]
     ld hl, wC140
     ld [wD86C], a
@@ -5558,10 +5564,12 @@ Func_03A_7908:: ; address name
     call CopySlotNameToHL
     ret
 
+; copies string wBattleActionId of category 4 (skill names) to wC140 (CopyStringHLToDE) (E-0116)
 ; 1 call site from 1 routine (e.g. Func_03A_7508)
 ; reads: wBattleActionId
 ; points at: wC140
-Func_03A_791A::
+CopyActionSkillNameToWC140::
+Func_03A_791A:: ; address name
     ld a, [wBattleActionId]
     ld l, a
     ld h, $04
@@ -5582,22 +5590,26 @@ Func_03A_7927:: ; address name
     call CopySlotNameToHL
     ret
 
+; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC140 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wD86C
 ; points at: wC140
-Func_03A_7934:: ; heuristic: follows a terminator; C0
+CopyTargetNameToWC140:: ; heuristic: follows a terminator; C0
+Func_03A_7934:: ; address name
     ld a, [wBattleTarget]
     ld hl, wC140
     ld [wD86C], a
     call CopySlotNameToHL
     ret
 
+; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC150 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wD86C
 ; points at: wC150
-Func_03A_7941:: ; heuristic: follows a terminator; C0
+CopyTargetNameToWC150:: ; heuristic: follows a terminator; C0
+Func_03A_7941:: ; address name
     ld a, [wBattleTarget]
     ld hl, wC150
     ld [wD86C], a
@@ -5619,26 +5631,32 @@ Func_03A_795D:: ; address name
     call CopySlotNameToHL
     ret
 
+; copies the name at wC60C (5 glyphs, CopyFiveGlyphsPlusMarks) to wC130 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC60C, wC130
-Func_03A_796C:: ; heuristic: follows a terminator; C0
+CopyWC60CNameToWC130:: ; heuristic: follows a terminator; C0
+Func_03A_796C:: ; address name
     ld de, wC60C
     ld hl, wC130
     call CopyFiveGlyphsPlusMarks
     ret
 
+; copies the name at wC60C (5 glyphs) to wC140 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC60C, wC140
-Func_03A_7976:: ; heuristic: follows a terminator; C0
+CopyWC60CNameToWC140:: ; heuristic: follows a terminator; C0
+Func_03A_7976:: ; address name
     ld de, wC60C
     ld hl, wC140
     call CopyFiveGlyphsPlusMarks
     ret
 
+; copies string wBattleActionId of category 5 (item names) to wC150 (CopyStringHLToDE) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId
 ; points at: wC150
-Func_03A_7980:: ; heuristic: follows a terminator; C0
+CopyActionItemNameToWC150:: ; heuristic: follows a terminator; C0
+Func_03A_7980:: ; address name
     ld a, [wBattleActionId]
     ld l, a
     ld h, $05
@@ -5646,11 +5664,13 @@ Func_03A_7980:: ; heuristic: follows a terminator; C0
     call CopyStringHLToDE
     ret
 
+; wD86C = wBattleActor & 4 (the first slot of the actor's side), then CopySlotNameToHL with HL = wC130 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wD86C
 ; points at: wC130
-Func_03A_798D:: ; heuristic: follows a terminator; C0
+CopyActorSideNameToWC130:: ; heuristic: follows a terminator; C0
+Func_03A_798D:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld hl, wC130
