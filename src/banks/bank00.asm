@@ -1226,7 +1226,7 @@ Jump_000_0819::
     ret
 
 ; when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access
-; 18 call sites from 15 routines (e.g. VBlankHandler, GameMode2_Update_Case04, Func_003_4A36, Func_003_4339, ...)
+; 18 call sites from 15 routines (e.g. VBlankHandler, PauseMenu_State4, Func_003_4A36, Func_003_4339, ...)
 ; reads: wC526
 ; writes: rBGPI
 ; points at: wC49F
@@ -4183,7 +4183,7 @@ Jump_000_1843::
     ret
 
 ; DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300
-; 158 call sites from 119 routines (e.g. Func_002_4745_Case01, Func_002_6C40_Case05, GameMode2_Update_Case04, Func_004_6A35_Case12, ...)
+; 158 call sites from 119 routines (e.g. Func_002_4745_Case01, Func_002_6C40_Case05, PauseMenu_State4, Func_004_6A35_Case12, ...)
 SetFlagBit::
 Func_000_1845:: ; address name
     ld a, d
@@ -8208,7 +8208,7 @@ Func_000_2E81::
     ret
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
-; 46 call sites from 29 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, GameMode2_Update_Case04, GameMode5_Init_Case06, ...)
+; 46 call sites from 29 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, PauseMenu_State4, GameMode5_Init_Case06, ...)
 ; writes: wC52D, wC52E, wC52F, wC530
 FillTilesRequest::
 Func_000_2E98:: ; address name

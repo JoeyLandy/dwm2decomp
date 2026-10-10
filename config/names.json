@@ -2498,5 +2498,30 @@
     "name": "RunDefeatSequence",
     "note": "three sub-steps by wBattleSubStep2: 0 lowers a counter (wDA5B + target by 5) and calls DefeatTarget, 1 runs Func_032_5AB3, 2 advances wBattleResolveStep, sets bit 2 of the target's wD095 flags and starts the defeat message (Func_03A_7193)",
     "evidence": "execution and reading (E-0045)"
+  },
+  "03:4692": {
+    "name": "PauseMenu_Main",
+    "note": "GameMode2_Update, wModeState 0: the main pause menu: PLAN (Keys, Plan, Text Speed, Re-Order, Info, Journal) and, for the first monster, INFO with its level, ATK, DEF, AGL, INT, WLD, HP and MP (E-0046)",
+    "evidence": "execution (E-0046)"
+  },
+  "03:5274": {
+    "name": "PauseMenu_Items",
+    "note": "GameMode2_Update, wModeState 1: the ITEM list ('No items' at the start of a game) (E-0046)",
+    "evidence": "execution (E-0046)"
+  },
+  "03:5E89": {
+    "name": "PauseMenu_Skills",
+    "note": "GameMode2_Update, wModeState 2: the SKILLS list ('No skills' at the start) (E-0046)",
+    "evidence": "execution (E-0046)"
+  },
+  "03:6A9D": {
+    "name": "PauseMenu_State3",
+    "note": "GameMode2_Update, wModeState 3: an item list screen (state 3) (E-0046)",
+    "evidence": "execution (E-0046)"
+  },
+  "03:402F": {
+    "name": "PauseMenu_State4",
+    "note": "GameMode2_Update, wModeState 4: hands over to Func_0F1_4001 (state 4) (E-0046)",
+    "evidence": "execution (E-0046)"
   }
 }

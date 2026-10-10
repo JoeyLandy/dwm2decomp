@@ -30,15 +30,15 @@ Func_003_4015:: ; address name
     ld a, [wModeState]
     and a, $07
     rst $00
-    dw GameMode2_Update_Case00
-    dw GameMode2_Update_Case01
-    dw GameMode2_Update_Case02
-    dw GameMode2_Update_Case03
-    dw GameMode2_Update_Case04
+    dw PauseMenu_Main
+    dw PauseMenu_Items
+    dw PauseMenu_Skills
+    dw PauseMenu_State3
+    dw PauseMenu_State4
 
-; entry 4 of the `rst $00` table in GameMode2_Update
+; GameMode2_Update, wModeState 4: hands over to Func_0F1_4001 (state 4) (E-0046)
 ; no direct call (reached through a table, a jump or a vector)
-GameMode2_Update_Case04::
+PauseMenu_State4::
 Jump_003_402F:: ; address name
     farcall Func_0F1_4001
     ret
@@ -265,7 +265,7 @@ Jump_003_414C::
     ld [wCBAA], a
     ret
 
-; 1 call site from 1 routine (e.g. GameMode2_Update_Case04)
+; 1 call site from 1 routine (e.g. PauseMenu_State4)
 ; reads: wModeState
 Func_003_4208::
     ld a, [wModeState]
@@ -437,7 +437,7 @@ Jump_003_42CB::
     ret
 
 ; copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC = $1412)
-; 36 call sites from 33 routines (e.g. GameMode2_Update_Case04, Func_003_4FBB_Case02, Func_003_4339, Func_003_6A60_Table2_Case00, ...)
+; 36 call sites from 33 routines (e.g. PauseMenu_State4, Func_003_4FBB_Case02, Func_003_4339, Func_003_6A60_Table2_Case00, ...)
 ; points at: wScreenTileBuffer
 CopyTileBufferToBGMap::
 Func_003_42DA:: ; address name
@@ -446,7 +446,7 @@ Func_003_42DA:: ; address name
     ld bc, $1412
 
 ; HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is masked with $9B)
-; 24 call sites from 21 routines (e.g. GameMode2_Update_Case04, Func_003_6A60_Table2_Case02, Func_003_6B5E_Case0E, Func_003_6B5E_Case0D, ...)
+; 24 call sites from 21 routines (e.g. PauseMenu_State4, Func_003_6A60_Table2_Case02, Func_003_6B5E_Case0E, Func_003_6B5E_Case0D, ...)
 CopyRectToBGMap::
 Func_003_42E3:: ; address name
     push bc
@@ -1090,10 +1090,10 @@ Jump_003_468D:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in GameMode2_Update
+; GameMode2_Update, wModeState 0: the main pause menu: PLAN (Keys, Plan, Text Speed, Re-Order, Info, Journal) and, for the first monster, INFO with its level, ATK, DEF, AGL, INT, WLD, HP and MP (E-0046)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDataBankSave, wC0A0, wC0A1
-GameMode2_Update_Case00::
+PauseMenu_Main::
 Jump_003_4692:: ; address name
     ld a, [wDataBankSave]
     or a, a
@@ -2929,10 +2929,10 @@ Jump_003_525B::
 Data_003_5264:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6
 
-; entry 1 of the `rst $00` table in GameMode2_Update
+; GameMode2_Update, wModeState 1: the ITEM list ('No items' at the start of a game) (E-0046)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A0
-GameMode2_Update_Case01::
+PauseMenu_Items::
 Jump_003_5274:: ; address name
     ld a, [wC0A0]
     rst $00
@@ -4659,10 +4659,10 @@ Jump_003_5E7E::
     ld [wC0A1], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode2_Update
+; GameMode2_Update, wModeState 2: the SKILLS list ('No skills' at the start) (E-0046)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A0
-GameMode2_Update_Case02::
+PauseMenu_Skills::
 Jump_003_5E89:: ; address name
     ld a, [wC0A0]
     rst $00
@@ -6238,10 +6238,10 @@ Jump_003_6A7E::
 Data_003_6A98:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B4, $B4, $B4, $B4, $B4
 
-; entry 3 of the `rst $00` table in GameMode2_Update
+; GameMode2_Update, wModeState 3: an item list screen (state 3) (E-0046)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A0
-GameMode2_Update_Case03::
+PauseMenu_State3::
 Jump_003_6A9D:: ; address name
     ld a, [wC0A0]
     rst $00

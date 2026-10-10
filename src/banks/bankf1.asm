@@ -1,7 +1,7 @@
 SECTION "Bank F1", ROMX[$4000], BANK[$F1]
     db $F1
 
-; 1 call site from 1 routine (e.g. GameMode2_Update_Case04)
+; 1 call site from 1 routine (e.g. PauseMenu_State4)
 ; reads: wC0A0
 Func_0F1_4001::
     ld a, [wC0A0]

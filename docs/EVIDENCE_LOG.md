@@ -437,6 +437,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Not established: the other 13 resolve steps, how a skill's record chooses its message and effect, the special cases keyed by action id.
 - Binary verification: PASS, identical SHA-256; 122 tests.
 
+### E-0046 — Mode 2 is the pause menu; the opening monster is a Slime with the monster-table stats
+
+- Kind: OBSERVATION (execution, forcing `wGameMode` 2 with `wModeState` 0-4 in the opening field); confidence **C2**.
+- State 0 shows the PLAN list (Keys, Plan, Text Speed, Re-Order, Info, Journal) and an INFO panel for the first monster: a slime sprite, Lv 1, ATK 10, DEF 7, AGL 8, INT 7, WLD 0, HP 25/25, MP 0/0. These are the numbers of `MonsterTable` record 1 ("Slime"), which settles the HP, MP, ATK, DEF, AGL, INT order of that table's six words. State 1 is the ITEM list ("No items"), state 2 the SKILLS list ("No skills"). The `GameMode2_Update` cases are named `PauseMenu_*`.
+- Not established: what WLD (wildness) reads, how the menu is opened in normal play (it did not open on the ship), and the sub-screens behind each PLAN entry.
+- Binary verification: PASS, identical SHA-256; 122 tests.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

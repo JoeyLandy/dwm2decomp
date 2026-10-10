@@ -26,7 +26,7 @@ Forcing a mode at the title screen showed:
 | --- | --- | --- |
 | 0 | `$01` | "DEBUG MODE SELECT / 1:GOTO PROGRAM" |
 | 1 | `$02` | the field: a map with the player sprite (the opening ship deck in a normal game) |
-| 2 | `$03` | a monster panel (incomplete state) |
+| 2 | `$03` | **the pause menu**: PLAN (Keys, Plan, Text Speed, Re-Order, Info, Journal), the monster INFO panel, the ITEM and SKILLS lists |
 | 3 | none | black |
 | 4 | `$31` | **the battle** (reached by Start in the debug battle setup: party panels with HP, MP and level, FIGHT / ITEM / PLAN / FLEE, "Monster was defeated!", "Allow Slime to join you?") |
 | 5 | `$07` | title screen and its intro; the boot mode |
