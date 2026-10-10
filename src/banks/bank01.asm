@@ -37,23 +37,23 @@ Func_001_4001:: ; address name
 Func_001_4045::
     ld a, [wModeState]
     rst $00
-    dw Func_001_4045_Case00
-    dw Func_001_4045_Case00
-    dw Func_001_4045_Case02
-    dw Func_001_4045_Case03
-    dw Func_001_4045_Case04
-    dw Func_001_4045_Case05
-    dw Func_001_4045_Case06
-    dw Func_001_4045_Case07
-    dw Func_001_4045_Case08
-    dw Func_001_4045_Case09
-    dw Func_001_4045_Case0A
-    dw Func_001_4045_Case0B
+    dw DebugMainMenu_Init
+    dw DebugMainMenu_Init
+    dw DebugMapEditor_Init
+    dw DebugAutomap_Init
+    dw DebugMonsterPictureViewer_Init
+    dw DebugSoundTest_Init
+    dw DebugBattleSetup_Init
+    dw DebugResultsDisplay_Init
+    dw DebugStaffRoll_Init
+    dw DebugSkillViewer_Init
+    dw DebugMonsterRecordViewer_Init
+    dw DebugMessageTest_Init
 
-; entry 11 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC554, wC555, ...
-Func_001_4045_Case0B::
+DebugMessageTest_Init::
 Jump_001_4061:: ; address name
     call Func_001_4AA4
     ld hl, vTiles2 + $100
@@ -148,10 +148,10 @@ Data_001_412F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $24, $1E, $25, $22, $23, $11, $00, $00, $00, $10, $10
     ds $CD, $00
 
-; entry 10 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
-Func_001_4045_Case0A::
+DebugMonsterRecordViewer_Init::
 Jump_001_4297:: ; address name
     ld a, $0F
     ld [wStringCategory], a
@@ -191,12 +191,12 @@ Data_001_42BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $30, $35, $2B
     ds $24, $00
 
-; entry 9 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 9: the screen shows the skill viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wStringCategory, wStringIndex, rVBK
 ; points at: wC5F8
-Func_001_4045_Case09::
+DebugSkillViewer_Init::
 Jump_001_4424:: ; address name
     ld a, $0F
     ld [wStringCategory], a
@@ -228,10 +228,10 @@ Jump_001_445A::
     ld [hl], a
     ret
 
-; entry 8 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD09D
-Func_001_4045_Case08::
+DebugStaffRoll_Init::
 Jump_001_4462:: ; address name
     ld a, $31
     call QueueMusic
@@ -241,11 +241,11 @@ Jump_001_4462:: ; address name
     call FillBytes
     ret
 
-; entry 7 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7F1, wC5F8, ...
 ; points at: wD780
-Func_001_4045_Case07::
+DebugResultsDisplay_Init::
 Jump_001_4472:: ; address name
     call Func_001_4AA4
     ld hl, vTiles2 + $100
@@ -399,10 +399,10 @@ Jump_001_45E2::
     jr nz, Jump_001_45E2
     ret
 
-; entry 0 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 0: the screen shows the debug menu (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
-Func_001_4045_Case00::
+DebugMainMenu_Init::
 Jump_001_45EA:: ; address name
     call Func_001_4AA4
     ld hl, vTiles1
@@ -426,11 +426,11 @@ Jump_001_45EA:: ; address name
     call Func_001_4A75
     ret
 
-; entry 2 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC5F8, wC5F9, ...
-Func_001_4045_Case02::
+DebugMapEditor_Init::
 Jump_001_461E:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
@@ -490,11 +490,11 @@ Jump_001_461E:: ; address name
 Data_001_46A4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F
 
-; entry 3 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC833, hMapScreenX, hMapScreenY
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC5F8, wC5F9, ...
-Func_001_4045_Case03::
+DebugAutomap_Init::
 Jump_001_46B4:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
@@ -552,11 +552,11 @@ Jump_001_46B4:: ; address name
 Data_001_4733:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F
 
-; entry 4 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC5F9, wC5FA, ...
-Func_001_4045_Case04::
+DebugMonsterPictureViewer_Init::
 Jump_001_4743:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
@@ -633,10 +633,10 @@ Data_001_47DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_001_4802:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $24, $01
 
-; entry 5 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC46B, wC0A0, ...
-Func_001_4045_Case05::
+DebugSoundTest_Init::
 Jump_001_4826:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
@@ -685,11 +685,11 @@ Data_001_488A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $95, $96, $97, $98, $99, $9A, $A0, $A1, $A2, $A3, $A4, $A5, $10, $10, $A8, $10
     db $12, $B0, $B1, $B2, $B3, $B4, $B5, $10, $10, $B8, $10, $10
 
-; entry 6 of the `rst $00` table in Func_001_4045
+; init for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC46B
 ; points at: wD09D
-Func_001_4045_Case06::
+DebugBattleSetup_Init::
 Jump_001_48B6:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
@@ -763,7 +763,7 @@ Data_001_495D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $19, $00
     INCBIN "dwm2-cobi-us.gbc", $004985, $F0
 
-; 11 call sites from 5 routines (e.g. Func_001_4045_Case07, Func_001_4045_Case04, Func_001_4045_Case03, Func_001_4045_Case02, ...)
+; 11 call sites from 5 routines (e.g. DebugResultsDisplay_Init, DebugMonsterPictureViewer_Init, DebugAutomap_Init, DebugMapEditor_Init, ...)
 ; reads: wIsCGB
 Func_001_4A75::
     push hl
@@ -797,7 +797,7 @@ Jump_001_4A77::
     ldh [c], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_001_4045_Case0B, Func_001_4045_Case07, Func_001_4045_Case00, GameMode5_Init_Case02, ...)
+; 7 call sites from 7 routines (e.g. DebugMessageTest_Init, DebugResultsDisplay_Init, DebugMainMenu_Init, GameMode5_Init_Case02, ...)
 ; reads: wIsCGB
 ; writes: wC526, wC527
 ; points at: wC49F
@@ -829,25 +829,25 @@ GameMode0_Update::
 Func_001_4AD4:: ; address name
     ld a, [wModeState]
     rst $00
-    dw GameMode0_Update_Case00
-    dw GameMode0_Update_Case00
-    dw GameMode0_Update_Case02
-    dw GameMode0_Update_Case03
-    dw GameMode0_Update_Case04
-    dw GameMode0_Update_Case05
-    dw GameMode0_Update_Case06
-    dw GameMode0_Update_Case07
-    dw GameMode0_Update_Case08
-    dw GameMode0_Update_Case09
-    dw GameMode0_Update_Case0A
-    dw GameMode0_Update_Case0B
+    dw DebugMainMenu_Update
+    dw DebugMainMenu_Update
+    dw DebugMapEditor_Update
+    dw DebugAutomap_Update
+    dw DebugMonsterPictureViewer_Update
+    dw DebugSoundTest_Update
+    dw DebugBattleSetup_Update
+    dw DebugResultsDisplay_Update
+    dw DebugStaffRoll_Update
+    dw DebugSkillViewer_Update
+    dw DebugMonsterRecordViewer_Update
+    dw DebugMessageTest_Update
 
-; entry 11 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wJoypadPressed, wC0A2, wC0A1, wC0A0, wJoypadPressedRepeat, wC46B, wFrameCounterLo
 ; writes: wStringIndex, wStringCategory, wC52F, wC530, wC52D, wC52E, wC46B, wModeState
 ; points at: wC0A0, wModeChangeRequest
-GameMode0_Update_Case0B::
+DebugMessageTest_Update::
 Jump_001_4AF0:: ; address name
     ld a, [wC52B]
     bit 0, a
@@ -1449,12 +1449,12 @@ Jump_001_4E53::
 Data_001_4E54:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $004E54, $80
 
-; entry 10 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wJoypadHeld, wC5F8, wC5F9, wMonsterId, wCFE7, wC52D, ...
 ; writes: wGameMode, wModeState, wC5F8, wC5F9, wMonsterId, wCFE7, wStringCategory, wStringIndex, ...
 ; points at: wModeChangeRequest
-GameMode0_Update_Case0A::
+DebugMonsterRecordViewer_Update::
 Jump_001_4ED4:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1550,7 +1550,7 @@ Jump_001_4F6D::
     ld hl, $0000
 
 ; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen
-; 1 call site from 1 routine (e.g. Func_001_4045_Case0A)
+; 1 call site from 1 routine (e.g. DebugMonsterRecordViewer_Init)
 ; reads: wMonsterId, wCFE7, wC52D, wC52E, wC52F, wC530, wRecordBuffer, wCFED, ...
 ; writes: wC5F8, wC5F9, wMonsterId, wCFE7, wStringCategory, wStringIndex, wC52D, wC52E, ...
 DebugShowMonsterRecord::
@@ -1703,12 +1703,12 @@ Func_001_4F80:: ; address name
 Jump_001_50EC::
     ret
 
-; entry 9 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wC5F8, wRecordBufferData, wRecordBuffer, wCFEF, wCFF0, wCFF1, ...
 ; writes: wGameMode, wModeState, wC5F8, wRecordBuffer, wCFED, wD868, wD869, wD86A, ...
 ; points at: wModeChangeRequest, wC5F8, wRecordBufferData
-GameMode0_Update_Case09::
+DebugSkillViewer_Update::
 Jump_001_50ED:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1890,7 +1890,7 @@ Jump_001_517F::
     call Func_001_52CD
     ret
 
-; 4 call sites from 1 routine (e.g. GameMode0_Update_Case09)
+; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
 ; writes: wC8C0, wC8C1, wC8C2, hFFC7, hFFC6
 ; points at: hFFC9
 Func_001_52AF::
@@ -1911,7 +1911,7 @@ Func_001_52AF::
     ldh [hFFC6], a
     ret
 
-; 4 call sites from 1 routine (e.g. GameMode0_Update_Case09)
+; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
 ; reads: hFFC7, hFFC6
 Func_001_52CD::
     ld e, $00
@@ -1967,7 +1967,7 @@ Jump_001_5301::
     ei
     ret
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case09)
+; 1 call site from 1 routine (e.g. DebugSkillViewer_Update)
 Func_001_5311::
     or a, a
     ret z
@@ -2004,7 +2004,7 @@ Jump_001_5342::
     ld a, c
     ret
 
-; 4 call sites from 1 routine (e.g. GameMode0_Update_Case09)
+; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
 Func_001_5344::
     ld d, a
     ld e, $00
@@ -2128,7 +2128,7 @@ Jump_001_53CC::
     ei
     ret
 
-; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, GameMode0_Update_Case09)
+; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, DebugSkillViewer_Update)
 Func_001_53DC::
     cp a, $64
     jr nc, Jump_001_53EE
@@ -2189,7 +2189,7 @@ Func_001_5417::
     pop af
     ret
 
-; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, GameMode0_Update_Case09)
+; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, DebugSkillViewer_Update)
 Func_001_5420::
     inc hl
     push af
@@ -2207,19 +2207,19 @@ Func_001_542C::
     call Func_001_540D
     ret
 
-; entry 8 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Case08::
+DebugStaffRoll_Update::
 Jump_001_5433:: ; address name
     farcall Func_0E0_5AD3
     ret
 
-; entry 7 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780, wJoypadPressedRepeat, wC5F8, wD7BD, wD783, wD784, wC5F9, wC5FA, ...
 ; writes: wD780, wD7BD, wC5F8, wC5F9, wC5FA, wC5FB, wC5FC, wC5FD, ...
 ; points at: wD787, wD7A2, wModeChangeRequest, wC5FB, wC5FE, wC986, wC991, wCA36, ...
-GameMode0_Update_Case07::
+DebugResultsDisplay_Update::
 Jump_001_543A:: ; address name
     ld a, [wD780]
     and a, a
@@ -2325,7 +2325,7 @@ Jump_001_54E0::
     call Func_001_54E8
     ret
 
-; 5 call sites from 1 routine (e.g. GameMode0_Update_Case07)
+; 5 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
 ; reads: wC5FF, wC5F8, wD7BD, wC8C2
 ; writes: wC5FF
 ; points at: wD787, wD7A2
@@ -2340,7 +2340,7 @@ Func_001_54E8::
     xor a, a
     ld [wC5FF], a
 
-; 3 call sites from 1 routine (e.g. GameMode0_Update_Case07)
+; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
 ; reads: wC5F8, wD7BD, wC8C2
 ; points at: wD787, wD7A2
 Func_001_54FB::
@@ -3427,12 +3427,12 @@ Jump_001_5BED::
     ld [hl], a
     ret
 
-; entry 3 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC5FD, wC5FE, wC5F9, wC5FB, wC5FC, wCD0D, wCD0E, ...
 ; writes: wC833, hMapScreenX, hMapScreenY, hMapId, wCC44, wScriptRunning, wGameMode, wModeState, ...
 ; points at: wModeChangeRequest
-GameMode0_Update_Case03::
+DebugAutomap_Update::
 Jump_001_5BFA:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
@@ -3684,7 +3684,7 @@ Jump_001_5D9F::
 Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $05, $20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case03)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update)
 ; reads: wC5FA, wC5F9, wC5FD, hFFC6, hFFC7, hFFC8, hFFC9, wCD0D, ...
 ; writes: hFFC6, wC833, wCC42, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
 ; points at: wModeChangeRequest
@@ -3771,7 +3771,7 @@ Jump_001_5DF3::
     inc [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. GameMode0_Update_Case03, Func_001_4045_Case03)
+; 2 call sites from 2 routines (e.g. DebugAutomap_Update, DebugAutomap_Init)
 ; writes: wC5FD, wC5FE, wC5FA
 Func_001_5E6C::
     ld l, a
@@ -3795,7 +3795,7 @@ Func_001_5E6C::
     ld [wC5FA], a
     ret
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case03)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update)
 ; reads: wC5FD, wC5FE, wC5FA
 ; writes: wC5FA
 Func_001_5E8A::
@@ -3818,7 +3818,7 @@ Jump_001_5EA4::
     call Func_001_6A7E
     ret
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case03)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update)
 ; reads: wC5FE, wC5FD, wC5F9
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, wC8D5, wC8D6, ...
 ; points at: wC8CF
@@ -3899,12 +3899,12 @@ Jump_001_5F44::
 Data_001_5F56:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $005F56, $A8
 
-; entry 2 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wC5F9, wC5FA, wC5FB, wC5FC, wC5FD, wC5F8, wFrameCounterLo, ...
 ; writes: hFFC6, hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY, wC8C7, wGameMode, ...
 ; points at: wModeChangeRequest, wC5FE
-GameMode0_Update_Case02::
+DebugMapEditor_Update::
 Jump_001_5FFE:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 0, a
@@ -4109,12 +4109,12 @@ Jump_001_615C::
     jr nz, Jump_001_614A
     ret
 
-; entry 0 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 0: the screen shows the debug menu (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wC5F8, wJoypadPressed, wC600, wC601, wC602, wC603
 ; writes: wC5F8, wGameMode, wCC44, wC893, wModeState, wC8C5
 ; points at: wModeChangeRequest, wGameMode
-GameMode0_Update_Case00::
+DebugMainMenu_Update::
 Jump_001_616A:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $90
@@ -4293,12 +4293,12 @@ Jump_001_627C::
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC5FD, wC5F8, wJoypadPressedRepeat, wC5FA, wC5F9, wIsCGB, wC5FC, ...
 ; writes: wC5FD, wC5F8, wC5F9, wC5FA, hFFC6, wC526, wC5FC, wC527, ...
 ; points at: wC5F9, wC4DF, wC5FE, wModeChangeRequest
-GameMode0_Update_Case04::
+DebugMonsterPictureViewer_Update::
 Jump_001_6294:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
@@ -4632,12 +4632,12 @@ Jump_001_64B9::
     farcall Func_027_4001
     ret
 
-; entry 5 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC46B, wC0A0, wC0A1, wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wC46B, wModeState
 ; points at: wC0A0, wModeChangeRequest
-GameMode0_Update_Case05::
+DebugSoundTest_Update::
 Jump_001_64C0:: ; address name
     ld a, [wJoypadPressed]
     and a, $08
@@ -4741,7 +4741,7 @@ Jump_001_655F::
     call WriteVRAMByte
     jr Jump_001_659F
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case05)
+; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wC0A0
 Func_001_6578::
     ld a, [wC0A0]
@@ -4759,7 +4759,7 @@ Jump_001_6583::
     call WriteVRAMByte
     jr Jump_001_659F
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case05)
+; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wC0A1
 Func_001_6596::
     ld a, [wC0A1]
@@ -4769,7 +4769,7 @@ Func_001_6596::
 Jump_001_659F::
     ret
 
-; 2 call sites from 1 routine (e.g. GameMode0_Update_Case05)
+; 2 call sites from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wC46B, wC0A0, wC0A1
 ; points at: wC0A0
 Func_001_65A0::
@@ -4817,12 +4817,12 @@ Data_001_65DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_001_65FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0065FE, $54
 
-; entry 6 of the `rst $00` table in GameMode0_Update
+; update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wD09D, wD0A5, wC46B, wJoypadPressedRepeat, wJoypadHeld, wFrameCounterLo
 ; writes: wCFDC, wCFC5, wC46B, wC5F8, wC5F9, wC5FA, wGameMode, wModeState, ...
 ; points at: wCFDD, wD09F, wModeChangeRequest, wD066, wD0A9, wD09D
-GameMode0_Update_Case06::
+DebugBattleSetup_Update::
 Jump_001_6652:: ; address name
     ld a, [wJoypadPressed]
     and a, $08
@@ -4869,7 +4869,7 @@ Jump_001_6696::
     inc [hl]
     ret
 
-; 6 call sites from 2 routines (e.g. GameMode0_Update_Case06, Func_001_66AD)
+; 6 call sites from 2 routines (e.g. DebugBattleSetup_Update, Func_001_66AD)
 Func_001_66AD::
     ld a, [de]
     inc de
@@ -5182,7 +5182,7 @@ Jump_001_687B::
     ld [hl], d
     ret
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case06)
+; 1 call site from 1 routine (e.g. DebugBattleSetup_Update)
 ; reads: wC6FD, wC7C7, hFFC6
 ; points at: wC6FE
 Func_001_6880::
@@ -5246,7 +5246,7 @@ Data_001_68EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $00, $AB, $02, $AB, $02, $AB, $02, $01, $00, $00, $00, $40, $01, $63, $00
     db $40, $01, $63, $00, $40, $01, $63, $00
 
-; 9 call sites from 2 routines (e.g. Func_001_66AD, Func_001_4045_Case06)
+; 9 call sites from 2 routines (e.g. Func_001_66AD, DebugBattleSetup_Init)
 ; reads: wC46B, wC52D, wC52E, wC52F, wC530, wD0A5
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ; points at: wD09D
@@ -5486,7 +5486,7 @@ Func_001_6A98::
     ld [de], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_001_6880, GameMode0_Update_Case06)
+; 2 call sites from 2 routines (e.g. Func_001_6880, DebugBattleSetup_Update)
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
 Func_001_6ABE::
     ld a, $00

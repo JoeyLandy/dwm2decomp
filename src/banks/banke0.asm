@@ -2925,7 +2925,7 @@ Func_0E0_5A79::
     db $21, $0F, $40, $06, $09, $D7, $21, $00, $88, $7D, $EA, $2D, $C5, $7C, $EA, $2E
     db $C5, $21, $02, $12, $7D, $EA, $2F, $C5, $7C, $EA, $30, $C5, $C9
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case08)
+; 1 call site from 1 routine (e.g. DebugStaffRoll_Update)
 ; reads: wD09D, wD09F, wD09E
 Func_0E0_5AD3::
     ld a, [wD09D]

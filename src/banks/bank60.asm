@@ -4569,7 +4569,7 @@ Func_060_6C96::
     ld [rRAMB], a
     ret
 
-; 8 call sites from 8 routines (e.g. GameMode0_Update_Case03, Func_002_6C40_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
+; 8 call sites from 8 routines (e.g. DebugAutomap_Update, Func_002_6C40_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07

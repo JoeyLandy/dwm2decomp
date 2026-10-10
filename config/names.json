@@ -2133,5 +2133,115 @@
     "name": "LoadMonsterPictureAttributes",
     "note": "DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)",
     "evidence": "reading + execution (E-0041)"
+  },
+  "01:616A": {
+    "name": "DebugMainMenu_Update",
+    "note": "update for debug-mode state 0: the screen shows the debug menu (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:45EA": {
+    "name": "DebugMainMenu_Init",
+    "note": "init for debug-mode state 0: the screen shows the debug menu (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:5FFE": {
+    "name": "DebugMapEditor_Update",
+    "note": "update for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:461E": {
+    "name": "DebugMapEditor_Init",
+    "note": "init for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:5BFA": {
+    "name": "DebugAutomap_Update",
+    "note": "update for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:46B4": {
+    "name": "DebugAutomap_Init",
+    "note": "init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:6294": {
+    "name": "DebugMonsterPictureViewer_Update",
+    "note": "update for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4743": {
+    "name": "DebugMonsterPictureViewer_Init",
+    "note": "init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:64C0": {
+    "name": "DebugSoundTest_Update",
+    "note": "update for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4826": {
+    "name": "DebugSoundTest_Init",
+    "note": "init for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:6652": {
+    "name": "DebugBattleSetup_Update",
+    "note": "update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:48B6": {
+    "name": "DebugBattleSetup_Init",
+    "note": "init for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:543A": {
+    "name": "DebugResultsDisplay_Update",
+    "note": "update for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4472": {
+    "name": "DebugResultsDisplay_Init",
+    "note": "init for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:5433": {
+    "name": "DebugStaffRoll_Update",
+    "note": "update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4462": {
+    "name": "DebugStaffRoll_Init",
+    "note": "init for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:50ED": {
+    "name": "DebugSkillViewer_Update",
+    "note": "update for debug-mode state 9: the screen shows the skill viewer (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4424": {
+    "name": "DebugSkillViewer_Init",
+    "note": "init for debug-mode state 9: the screen shows the skill viewer (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4ED4": {
+    "name": "DebugMonsterRecordViewer_Update",
+    "note": "update for debug-mode state 10: the screen shows the monster record viewer (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4297": {
+    "name": "DebugMonsterRecordViewer_Init",
+    "note": "init for debug-mode state 10: the screen shows the monster record viewer (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4AF0": {
+    "name": "DebugMessageTest_Update",
+    "note": "update for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)",
+    "evidence": "execution (E-0041)"
+  },
+  "01:4061": {
+    "name": "DebugMessageTest_Init",
+    "note": "init for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)",
+    "evidence": "execution (E-0041)"
   }
 }

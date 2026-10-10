@@ -1722,7 +1722,7 @@ Jump_000_0B20::
     ret
 
 ; C2 static reading (E-0014): like Func_000_0B18, but before each byte waits for STAT ($FF41) bit 1 to clear with interrupts disabled, so HL can be VRAM.
-; 232 call sites from 116 routines (e.g. Func_000_2D4A, CopyMonsterNameToBuffer_B01, Func_001_4045_Case0B, Func_001_4045_Case07, ...)
+; 232 call sites from 116 routines (e.g. Func_000_2D4A, CopyMonsterNameToBuffer_B01, DebugMessageTest_Init, DebugResultsDisplay_Init, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 CopyFromBankWaitVRAM::
@@ -1750,7 +1750,7 @@ Jump_000_0B34::
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.
-; 17 call sites from 12 routines (e.g. Func_001_4045_Case07, Func_00D_5ED6, Func_014_5E8C_Case04, Func_015_78C5, ...)
+; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, Func_00D_5ED6, Func_014_5E8C_Case04, Func_015_78C5, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 OrFromBankWaitVRAM::
@@ -2350,7 +2350,7 @@ Jump_000_0DDB::
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
-; 91 call sites from 79 routines (e.g. GameMode0_Init, GameMode0_Update_Case06, Func_002_5F9B, Func_002_4745_Case00, ...)
+; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, Func_002_5F9B, Func_002_4745_Case00, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wC572, wC573, wC574
 ; points at: wC4FF, wC4DF, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
@@ -3042,7 +3042,7 @@ Jump_000_1222::
     ret
 
 ; wMusicRequest = A
-; 37 call sites from 35 routines (e.g. Func_000_2950_Case09, Func_000_2950_Case05, GameMode0_Update_Case05, Func_001_4045_Case08, ...)
+; 37 call sites from 35 routines (e.g. Func_000_2950_Case09, Func_000_2950_Case05, DebugSoundTest_Update, DebugStaffRoll_Init, ...)
 ; writes: wMusicRequest
 QueueMusic::
 Func_000_122D:: ; address name
@@ -3630,7 +3630,7 @@ Jump_000_15D6::
     jr z, Jump_000_15D6
     ret
 
-; 16 call sites from 15 routines (e.g. Func_001_4045_Case0B, Func_001_4045_Case0A, Func_001_4045_Case09, Func_001_4045_Case06, ...)
+; 16 call sites from 15 routines (e.g. DebugMessageTest_Init, DebugMonsterRecordViewer_Init, DebugSkillViewer_Init, DebugBattleSetup_Init, ...)
 ; writes: rROMB0
 Func_000_15DE::
     push bc
@@ -4223,7 +4223,7 @@ Jump_000_1870::
     jr Jump_000_1870
 
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
-; 73 call sites from 24 routines (e.g. GameMode0_Update_Case04, Func_00C_7587, Func_01D_6973, Func_01D_6915, ...)
+; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, Func_00C_7587, Func_01D_6973, Func_01D_6915, ...)
 ; writes: rROMB0
 ReadByteInBank::
 Func_000_1872:: ; address name
@@ -5072,7 +5072,7 @@ Func_000_1D7F:: ; address name
     ld h, d
     ret
 
-; 1 call site from 1 routine (e.g. GameMode0_Update_Case02)
+; 1 call site from 1 routine (e.g. DebugMapEditor_Update)
 ; reads: hFFC6, wC5FA, wC5FC
 ; writes: rROMB0, hFFC6
 Func_000_1D90::
@@ -5560,7 +5560,7 @@ Func_000_1FD1:: ; address name
     ret
 
 ; DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wC49F
-; 19 call sites from 16 routines (e.g. GameMode0_Update_Case04, Func_003_4A36, Func_003_4FBB_Case01, Func_00C_45DA_Case02, ...)
+; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, Func_003_4A36, Func_003_4FBB_Case01, Func_00C_45DA_Case02, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wC49F
@@ -5690,7 +5690,7 @@ Jump_000_2087::
     ret
 
 ; DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)
-; 15 call sites from 13 routines (e.g. GameMode0_Update_Case04, Func_00C_45DA_Case02, Func_01E_6074_Table6_Case06, Func_01E_5A4D_Case05, ...)
+; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, Func_00C_45DA_Case02, Func_01E_6074_Table6_Case06, Func_01E_5A4D_Case05, ...)
 ; reads: hFFC6
 ; writes: rROMB0, rVBK
 LoadMonsterPictureAttributes::
@@ -8208,7 +8208,7 @@ Func_000_2E81::
     ret
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
-; 46 call sites from 29 routines (e.g. GameMode0_Init, GameMode0_Update_Case09, GameMode2_Update_Case04, GameMode5_Init_Case06, ...)
+; 46 call sites from 29 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, GameMode2_Update_Case04, GameMode5_Init_Case06, ...)
 ; writes: wC52D, wC52E, wC52F, wC530
 FillTilesRequest::
 Func_000_2E98:: ; address name
@@ -8637,7 +8637,7 @@ Jump_000_30BE::
     INCBIN "dwm2-cobi-us.gbc", $0030CC, $1C4
 
 ; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0
-; 9 call sites from 7 routines (e.g. Func_000_0150, StartMusic, GameMode0_Update_Case05, GameMode1_Init, ...)
+; 9 call sites from 7 routines (e.g. Func_000_0150, StartMusic, DebugSoundTest_Update, GameMode1_Init, ...)
 ; writes: rNR52, rNR51, wDD09, rNR50, wDD15, wDD19
 ; points at: wSoundChannelSlots, wSoundLabelSlots
 InitSoundHardware::
@@ -10501,7 +10501,7 @@ Jump_000_3E76::
     ret
 
 ; Z set when HL == BC; A is clobbered
-; 177 call sites from 116 routines (e.g. Func_000_3E98, GameMode0_Update_Case0A, Func_001_6857, Func_005_6494, ...)
+; 177 call sites from 116 routines (e.g. Func_000_3E98, DebugMonsterRecordViewer_Update, Func_001_6857, Func_005_6494, ...)
 CompareHLToBC::
 Func_000_3E7A:: ; address name
     ld a, h
