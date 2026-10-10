@@ -61,13 +61,15 @@ Binary identity still passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, re
 
 | Measure | State |
 | --- | --- |
-| Call sites that reach a named routine | 49% of 21,739 (evidence-named; about 5,000 routines remain address-named) |
+| Call sites that reach a named routine | 50.7% of 21,781 (evidence-named; about 5,000 routines remain address-named) |
 | Hardware, VRAM and RAM operands with names | 54,500; only 64 RAM names carry evidence, the rest are address names (`wC52B`) |
 | Far calls as `farcall` macros | 3,775 |
 | Idiom macros | `add_a_to_hl` 1,744, `deref_hl` 219 (E-0027) |
-| Library routine families named across banks | 29 families (`config/name_families.json`) |
+| Jump-table targets named `Parent_CaseNN` | 4,337 (E-0040), plus 191 script command stubs and 184 implementations named by command type (E-0038) |
+| Library routine families named across banks | 30 families (`config/name_families.json`) |
 | Text rendered as strings | 2,531 runs, 331,955 bytes (E-0024); `--no-text` keeps it as `INCBIN` |
 | String display entry points | named, including 38 per-bank stubs (E-0026, E-0027) |
+| Data tables laid out field by field | SkillTable (175), MonsterTable (592), ItemTable (99), MapTable, MapWarpTable, script command and opcode tables (E-0032 to E-0039); compressed streams 3,427 (E-0035) |
 | Sound tracks decoded | 214 tracks; the engine's tick routine is not decoded |
 
 Not done: most game logic (battle, menus, map, monster data) is unnamed; roughly 1.2 MB of `INCBIN` data (much of it probably compressed graphics) is unidentified; banks `$4A`-`$4D` hold 20x18 grids of unknown meaning. No external RAM map for this game was found (a web search turned up only a few addresses from a Japanese-version speedrun note), so names come from reading the code.
