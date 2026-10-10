@@ -1,9 +1,11 @@
 SECTION "Bank 33", ROMX[$4000], BANK[$33]
     db $33
 
+; DE = block number: the table at $405F gives each block an offset into wBGMapShadow (word), a width B and a height C, followed by B * C tile bytes; they are copied into wBGMapShadow rows 32 bytes apart
 ; 64 call sites from 38 routines (e.g. Func_003_48EF, Func_003_4917, Func_003_493F, Func_003_495F, ...)
 ; points at: wBGMapShadow
-Func_033_4001::
+CopyBlockToBGMapShadow::
+Func_033_4001:: ; address name
     ld d, $00
     ld hl, Data_033_405F
     add hl, de
@@ -1472,7 +1474,7 @@ Jump_033_5911::
     ld a, $F0
     ld [wC8D9], a
     ld de, vTiles2 + $50
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, [wC5C6]
     ld [wC963], a
     ld de, wC5B7
@@ -1726,7 +1728,7 @@ Jump_033_5B38::
     ld de, wD05A
     ld bc, $000B
     call CopyBytes
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1896,7 +1898,7 @@ Jump_033_5CA7::
     ret
 
 Jump_033_5CAC::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2024,7 +2026,7 @@ Jump_033_5D80::
     ld a, $F0
     ld [wC8D9], a
     ld de, vTiles2 + $50
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, wD781
     inc [hl]
     ret
@@ -2384,7 +2386,7 @@ Func_033_6049::
 ; reads: wD7F5, wD7F6
 ; points at: wD7DD
 Func_033_6060::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2403,14 +2405,14 @@ Func_033_6074::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
     ld l, a
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld hl, wC8CF
     ld de, wC130
     ld b, $0B
@@ -2637,7 +2639,7 @@ Func_033_6197::
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld c, $00
     ld hl, wC1BA
     ldh a, [hFFC8]
@@ -2782,7 +2784,7 @@ Func_033_6247::
     ld a, $F0
     ld [wC8D9], a
     ld de, vTiles2
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, vTiles2 + $100
     ld a, l
     ld [wC52D], a

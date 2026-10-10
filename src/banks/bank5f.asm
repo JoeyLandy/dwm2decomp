@@ -446,9 +446,11 @@ Jump_05F_6BC2::
     ld [wC92C], a
     ret
 
+; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
 ; 66 call sites from 42 routines (e.g. Func_05F_73A8, Func_00F_40E9, Func_00F_47F5, Func_00F_5D9D, ...)
 ; reads: wC928, wC929, wC921
-Func_05F_6BCD::
+AddStepDeltaToPointedByte::
+Func_05F_6BCD:: ; address name
     ld a, [wC928]
     ld e, a
     ld a, [wC929]
@@ -1010,25 +1012,25 @@ Jump_05F_6EEE::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wC8F1
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wC8F6
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wC8FB
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     inc a
@@ -1137,13 +1139,13 @@ Jump_05F_6FE7::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wC8FB
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
 
 Jump_05F_7009::
     ld a, [wC921]
@@ -1296,7 +1298,7 @@ Jump_05F_7138::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wCBD4]
     inc a
     ld [wCBD4], a
@@ -1508,7 +1510,7 @@ Jump_05F_72B3::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wCBD4]
     dec a
     ld [wCBD4], a
@@ -1661,7 +1663,7 @@ Jump_05F_73BD::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    call Func_05F_6BCD
+    call AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $01
     jr nz, Jump_05F_73D6
@@ -1730,7 +1732,7 @@ Jump_05F_743D::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    call Func_05F_6BCD
+    call AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -1799,7 +1801,7 @@ Jump_05F_74CD::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    call Func_05F_6BCD
+    call AddStepDeltaToPointedByte
     ld a, [wC921]
     bit 0, a
     jr nz, Jump_05F_74F6
@@ -1868,7 +1870,7 @@ Jump_05F_7554::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    call Func_05F_6BCD
+    call AddStepDeltaToPointedByte
     ld hl, wCBD3
     dec [hl]
     ld hl, wCBD4
@@ -1897,7 +1899,7 @@ Jump_05F_7593::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    call Func_05F_6BCD
+    call AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -1937,7 +1939,7 @@ Jump_05F_75EC::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    call Func_05F_6BCD
+    call AddStepDeltaToPointedByte
     ld hl, wCBD4
     dec [hl]
     ld a, [wC921]

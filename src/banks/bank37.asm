@@ -600,7 +600,7 @@ Jump_037_4D5B::
     ret
 
 Jump_037_4D80::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -661,7 +661,7 @@ Jump_037_4DE9::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -713,7 +713,7 @@ Jump_037_4E39::
     ret
 
 Jump_037_4E4B::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1143,7 +1143,7 @@ Jump_037_5198::
     ld [wD7AB], a
     ld a, [wD7B6]
     ld [wD7AF], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1420,7 +1420,7 @@ Jump_037_5352::
     ret
 
 Jump_037_539F::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1510,7 +1510,7 @@ Func_037_542C::
     ld hl, wCA2C
     call Func_037_5912
     ld de, vTiles1 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 Jump_037_5452::
@@ -2115,7 +2115,7 @@ Func_037_5929::
     ld hl, wCA2C
     call Func_037_5912
     ld de, vTiles1 + $780
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, wCA36
     ld a, [hl+]
     ld [wStringIndex], a

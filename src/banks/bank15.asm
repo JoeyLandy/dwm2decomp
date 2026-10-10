@@ -226,7 +226,7 @@ Func_015_4182::
     inc de
     ld a, [hl]
     ld [de], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     call Func_015_6676
     ld hl, wC386
     ld de, wD7F3
@@ -456,7 +456,7 @@ Jump_015_43AC::
     ret
 
 Jump_015_43BD::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [hl]
     ld b, a
     push af
@@ -500,7 +500,7 @@ Jump_015_43F4::
     ret
 
 Jump_015_4418::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -719,7 +719,7 @@ Jump_015_45DC::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -819,7 +819,7 @@ Jump_015_466B::
     ret
 
 Jump_015_4696::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -918,7 +918,7 @@ Jump_015_4768::
 ; writes: wD7F1, wD7F2, wD7F3, wD781
 ; points at: wC426
 Func_015_4771::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [hl]
     ld b, a
     push af
@@ -949,7 +949,7 @@ Jump_015_479C::
 ; reads: wD7F5, wD7F6, wD781
 ; writes: wD7F1, wCFA8, wCFA9, wD781
 Func_015_47A7::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1266,7 +1266,7 @@ Jump_015_4A2A::
     ret
 
 Jump_015_4A4D::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1310,7 +1310,7 @@ Jump_015_4A88::
     jr Jump_015_4AED
 
 Jump_015_4AA5::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1336,7 +1336,7 @@ Jump_015_4AC2::
     ret
 
 Jump_015_4AD6::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1868,7 +1868,7 @@ Jump_015_4EB1::
     call Func_015_63D3
     ld a, [wD7B4]
     ld b, a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2150,7 +2150,7 @@ Jump_015_5091::
 
 Jump_015_5099::
     ld [wD7AB], a
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2374,7 +2374,7 @@ Jump_015_525F::
     ld b, $BC
     ld hl, Data_015_7333
     call StoreBAtWordTableEntry_Bank15
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2722,7 +2722,7 @@ Jump_015_54E6::
     ret
 
 Jump_015_5504::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2774,7 +2774,7 @@ Jump_015_556A::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2824,7 +2824,7 @@ Jump_015_55B7::
     ret
 
 Jump_015_55D2::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -3494,7 +3494,7 @@ Jump_015_5AF5::
     ret
 
 Jump_015_5AFC::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -3541,7 +3541,7 @@ Jump_015_5B33::
     ret
 
 Jump_015_5B62::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -3739,7 +3739,7 @@ Jump_015_5CF7::
     add_a_to_hl
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     xor a, a
     ld [rRAMG2], a
     ld a, $F0
@@ -3916,7 +3916,7 @@ Jump_015_5E30::
     ret
 
 Jump_015_5E62::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -4247,7 +4247,7 @@ Jump_015_60E2::
     ret
 
 Jump_015_6101::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -4441,7 +4441,7 @@ Jump_015_629F::
     ld a, [wD7B4]
     ld b, a
     call Func_015_6866
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5387,7 +5387,7 @@ Func_015_67F9::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     call Func_015_6676
     ret
 
@@ -5774,7 +5774,7 @@ Func_015_6A36::
     push bc
     ld a, b
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     xor a, a
@@ -5826,7 +5826,7 @@ Jump_015_6A9C::
     inc de
     dec b
     jr nz, Jump_015_6A9C
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5984,7 +5984,7 @@ Jump_015_6BB4::
     ld a, $F0
     ld [de], a
     ld de, vTiles1 + $280
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, $16
     ld [wC8CF], a
     ld a, $24
@@ -5996,7 +5996,7 @@ Jump_015_6BB4::
     ld a, $F0
     ld [wC8D3], a
     ld de, vTiles1 + $240
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, $28
     ld [wC8CF], a
     ld a, $35
@@ -6004,7 +6004,7 @@ Jump_015_6BB4::
     ld a, $F0
     ld [wC8D1], a
     ld de, vTiles2 + $780
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, sBB0F
     ld a, $F1
     add_a_to_hl
@@ -6036,7 +6036,7 @@ Jump_015_6C0C::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     pop hl
     inc c
@@ -6883,7 +6883,7 @@ Jump_015_788D::
     ld e, a
     ld a, [hl]
     ld d, a
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
 
 Jump_015_789F::
     pop bc
@@ -7173,7 +7173,7 @@ Func_015_7A5F::
     ld a, $F0
     ld [wC8D9], a
     ld de, vTiles1 + $780
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop hl
     inc hl
     ld a, [hl+]
@@ -7216,7 +7216,7 @@ Func_015_7A5F::
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, vTiles1 + $270
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     xor a, a
     ld [rRAMG2], a
     ret

@@ -436,7 +436,7 @@ Jump_00D_4650::
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_015_6676
     ld hl, wC386
     ld de, wD7F3
@@ -622,7 +622,7 @@ Jump_00D_478A::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_015_6676
     ld b, $04
     ld hl, wD7F4
@@ -780,7 +780,7 @@ Jump_00D_48AF::
     ret
 
 Jump_00D_48C5::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1138,7 +1138,7 @@ Func_00D_4ACF:: ; heuristic: target of a pointer table; C0
     ld [wD7F2], a
     ld [wD7F3], a
     farcall Func_015_683C
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1172,7 +1172,7 @@ Func_00D_4B18::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1347,7 +1347,7 @@ Func_00D_4C36:: ; heuristic: target of a pointer table; C0
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_015_6676
     ld b, $04
     ld hl, wD7F4
@@ -1447,7 +1447,7 @@ Func_00D_4C9C:: ; heuristic: target of a pointer table; C0
 ; reads: wD7F5, wD7F6, hFFC6
 ; writes: rRAMG2, rRAMB
 Func_00D_4CF4::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2659,7 +2659,7 @@ Jump_00D_563B::
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_015_6676
     ld hl, wC386
     ld de, wD7F3
@@ -3006,7 +3006,7 @@ Jump_00D_58C9::
     ret
 
 Jump_00D_58D8::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -3366,7 +3366,7 @@ Jump_00D_5B7C::
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -3404,7 +3404,7 @@ Jump_00D_5B7C::
 ; points at: wC130
 Func_00D_5BBF:: ; heuristic: target of a pointer table; C0
     call Func_00D_5C47
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -4151,7 +4151,7 @@ Jump_00D_6127::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_015_6676
     pop de
     ld hl, wD7F1
@@ -4798,7 +4798,7 @@ Func_00D_66CE:: ; heuristic: target of a pointer table; C0
 Func_00D_66ED:: ; heuristic: target of a pointer table; C0
     ld b, $BB
     call Func_00D_6DA7
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5053,7 +5053,7 @@ Jump_00D_6891::
     ld b, $BC
     ld hl, Data_00D_7106
     call StoreBAtWordTableEntry_Bank0D
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5152,7 +5152,7 @@ Jump_00D_6956::
     ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_693D
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5267,7 +5267,7 @@ Func_00D_6A0B:: ; heuristic: target of a pointer table; C0
 ; reads: wD7F5, wD7F6, wD781
 ; writes: wD7FA, wD781, wC920, wC919
 Func_00D_6A1F:: ; heuristic: target of a pointer table; C0
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5339,7 +5339,7 @@ Func_00D_6A80:: ; heuristic: follows a terminator; C0
 ; reads: wD7F5, wD7F6, wC838, wC839
 ; writes: wC839, wC838, wD7FA, wC920, wC919
 Func_00D_6AA2:: ; heuristic: target of a pointer table; C0
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5390,7 +5390,7 @@ Jump_00D_6ADF::
 ; reads: wD7F5, wD7F6, wD781
 ; writes: wD7FA, wD781, wC920, wC919
 Func_00D_6AEC:: ; heuristic: target of a pointer table; C0
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -5468,7 +5468,7 @@ Jump_00D_6B5B::
     jr nz, Jump_00D_6B5B
     pop hl
     push hl
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -6208,7 +6208,7 @@ Func_00D_719C:: ; heuristic: target of a pointer table; C0
 ; writes: wD7F1, wD7F2, wD7F3, wD781
 ; points at: wC36C, wC386
 Func_00D_71BD:: ; heuristic: target of a pointer table; C0
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -6272,7 +6272,7 @@ Func_00D_722A:: ; heuristic: target of a pointer table; C0
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -6324,7 +6324,7 @@ Jump_00D_726A::
     ret
 
 Jump_00D_7295::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]

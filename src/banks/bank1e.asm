@@ -411,7 +411,7 @@ Jump_01E_42D1::
     ld a, [hl]
     ld b, a
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     pop bc
@@ -423,7 +423,7 @@ Jump_01E_42D1::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     inc b
     ld a, [wC6FD]
@@ -813,7 +813,7 @@ Jump_01E_460F::
     ld a, [wC6FD]
     cp a, $02
     jr nc, Jump_01E_465C
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1462,7 +1462,7 @@ Jump_01E_4B5D::
     ld [rRAMB], a
     ld a, [wC6FE]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     ld hl, wC8CF
@@ -1504,7 +1504,7 @@ Jump_01E_4B89::
     call Func_01E_76EB
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     pop de
     ld a, $F0
     ld [wC8D9], a
@@ -2032,7 +2032,7 @@ Jump_01E_4FD6::
     ld [rRAMB], a
     ld a, [wD7B4]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     ld hl, wC8CF
@@ -2936,7 +2936,7 @@ Jump_01E_581C::
     call Func_01E_76EB
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     ld hl, wC8CF
@@ -5715,7 +5715,7 @@ Jump_01E_6D8F::
     ld [wC8D2], a
     push de
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     pop bc
     ld a, $03
@@ -5736,11 +5736,11 @@ Jump_01E_6DC5::
     inc de
     push de
     ld a, b
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     pop bc
     push bc
@@ -5763,11 +5763,11 @@ Jump_01E_6DF3::
     inc de
     push de
     ld a, b
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld de, vTiles2 + $2F0
     ld a, $F0
     ld [wC8D9], a
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     pop bc
     push bc
@@ -5790,7 +5790,7 @@ Jump_01E_6DF3::
     ld [wC8D2], a
     push de
     ld de, vTiles2 + $340
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     pop bc
     ld a, $03
@@ -5811,11 +5811,11 @@ Jump_01E_6E3E::
     inc de
     push de
     ld a, b
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     ld de, vTiles2 + $340
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     pop bc
     push bc
@@ -5836,11 +5836,11 @@ Jump_01E_6E6C::
     ld a, [de]
     ld c, a
     ld a, b
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld de, vTiles2 + $430
     ld a, $F0
     ld [wC8D9], a
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     xor a, a
     ld [rRAMG2], a
@@ -5891,7 +5891,7 @@ Func_01E_6E84::
     ld d, a
     ld a, [wD7F2]
     ld e, a
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     ret
     db $1A, $8E, $1A, $1E, $1C, $99, $1C, $29, $1C, $99, $1C, $29, $1A, $8E, $1A, $1E
@@ -5914,11 +5914,11 @@ Func_01E_6EE2::
     pop hl
     ld a, [hl]
     ld c, $0F
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld de, vTiles2 + $290
     ld a, $F0
     ld [wC8D9], a
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01E_6810)
@@ -5937,7 +5937,7 @@ Func_01E_6F17::
     ld [wC8C1], a
     ldh a, [hFFC8]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     call Func_01E_768E
     call BGMapAddressAtScroll_Bank1E
     ld de, $018C
@@ -6012,7 +6012,7 @@ Func_01E_6F17::
     ld [wC8C1], a
     ld a, e
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     call Func_01E_768E
 
 Jump_01E_6FBA::
@@ -7371,13 +7371,13 @@ Jump_01E_76E2::
 ; 30 call sites from 5 routines (e.g. Func_01E_4A32, Func_01E_6810, Func_01E_667C, Func_01E_6074, ...)
 ; reads: wD7F5, wD7F6
 Func_01E_76EB::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     jr Jump_01E_76F9
 
 ; 8 call sites from 4 routines (e.g. Func_01E_4A32, Func_01E_6810, Func_01E_6074, Func_0F1_5B38)
 ; reads: wD7F5, wD7F6
 Func_01E_76F3::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
 
 Jump_01E_76F9::
     ld a, [wD7F5]

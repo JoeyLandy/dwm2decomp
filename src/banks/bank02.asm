@@ -5525,7 +5525,7 @@ Func_002_665A::
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop hl
     ld c, $00
     ld b, $03
@@ -5764,7 +5764,7 @@ Jump_002_67B7::
     inc d
 
 Jump_002_67D5::
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ldh a, [hFFCB]
     ld c, $5F
     call LoadSRAMRecordWord
@@ -5783,7 +5783,7 @@ Jump_002_67D5::
     inc d
 
 Jump_002_67F3::
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, [hl+]
     ld de, wC364
     add a, e

@@ -691,5 +691,55 @@
     "name": "CopyRectToBGMap",
     "note": "HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is masked with $9B)",
     "evidence": "reading"
+  },
+  "00:21A1": {
+    "name": "CopyGlyphTilesToVRAM",
+    "note": "DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile",
+    "evidence": "reading"
+  },
+  "33:4001": {
+    "name": "CopyBlockToBGMapShadow",
+    "note": "DE = block number: the table at $405F gives each block an offset into wBGMapShadow (word), a width B and a height C, followed by B * C tile bytes; they are copied into wBGMapShadow rows 32 bytes apart",
+    "evidence": "reading"
+  },
+  "5F:6BCD": {
+    "name": "AddStepDeltaToPointedByte",
+    "note": "the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2",
+    "evidence": "reading"
+  },
+  "1D:5D84": {
+    "name": "SetWD7F5ToWD789Cell5",
+    "note": "wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB",
+    "evidence": "reading"
+  },
+  "1D:5DA1": {
+    "name": "SetWD7F5ToWD789Cell4",
+    "note": "wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB",
+    "evidence": "reading"
+  },
+  "00:2123": {
+    "name": "WriteDecimalDigitTiles",
+    "note": "DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third",
+    "evidence": "reading"
+  },
+  "12:7DCE": {
+    "name": "FindHFFC6InWC61DList",
+    "note": "hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches",
+    "evidence": "reading"
+  },
+  "00:173A": {
+    "name": "Number24ToPackedBCD",
+    "note": "the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed",
+    "evidence": "reading"
+  },
+  "00:1FA4": {
+    "name": "CopyRecordNameToWC8CF",
+    "note": "A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved",
+    "evidence": "reading"
+  },
+  "F1:5834": {
+    "name": "BeginBank0EString",
+    "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E",
+    "evidence": "reading"
   }
 }

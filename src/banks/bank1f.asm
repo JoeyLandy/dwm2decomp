@@ -679,7 +679,7 @@ Jump_01F_5C4A::
     push bc
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     pop bc
@@ -698,7 +698,7 @@ Jump_01F_5C71::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
 
 Jump_01F_5C81::
     pop bc

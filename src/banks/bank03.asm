@@ -1413,13 +1413,13 @@ Jump_003_48EB::
 Func_003_48EF::
     call ClearBGMapShadow_Bank03
     ld e, $00
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $01
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $02
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $03
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1429,13 +1429,13 @@ Func_003_48EF::
 Func_003_4917::
     call ClearBGMapShadow_Bank03
     ld e, $00
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $04
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $05
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $06
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1445,11 +1445,11 @@ Func_003_4917::
 Func_003_493F::
     call ClearBGMapShadow_Bank03
     ld e, $00
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $07
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $08
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1459,11 +1459,11 @@ Func_003_493F::
 Func_003_495F::
     call ClearBGMapShadow_Bank03
     ld e, $00
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $09
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $0A
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1476,9 +1476,9 @@ Func_003_497F::
     ld a, [wC6FD]
     add a, $2D
     ld e, a
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $31
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1745,7 +1745,7 @@ Func_003_4B52::
     ld l, a
     call HLToDecimalDigits
     ld de, wC208
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     ld a, [hl+]
@@ -1754,7 +1754,7 @@ Func_003_4B52::
     ld l, a
     call HLToDecimalDigits
     ld de, wC248
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     ld a, [hl+]
@@ -1763,7 +1763,7 @@ Func_003_4B52::
     ld l, a
     call HLToDecimalDigits
     ld de, wC288
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     ld a, [hl+]
@@ -1772,14 +1772,14 @@ Func_003_4B52::
     ld l, a
     call HLToDecimalDigits
     ld de, wC2C8
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     push hl
     deref_hl
     call HLToDecimalDigits
     ld de, wC308
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     ld a, l
     add a, $F0
@@ -1793,7 +1793,7 @@ Func_003_4B52::
     ld l, a
     call HLToDecimalDigits
     ld de, wC364
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     ld a, [hl+]
@@ -1802,7 +1802,7 @@ Func_003_4B52::
     ld l, a
     call HLToDecimalDigits
     ld de, wC368
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     ld a, [hl+]
@@ -1811,13 +1811,13 @@ Func_003_4B52::
     ld l, a
     call HLToDecimalDigits
     ld de, wC3A4
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A8
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4A98)
@@ -1965,7 +1965,7 @@ Jump_003_4CB8::
     ld c, a
     push bc
     push de
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC324
     call Func_000_214F
     ld c, $0B
@@ -2013,7 +2013,7 @@ Jump_003_4D43::
     ld [wC8C2], a
 
 Jump_003_4D4D::
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC3A4
     call Func_000_214F
     ret
@@ -2548,7 +2548,7 @@ Func_003_50DD::
     call HLToDecimalDigits
     pop de
     push de
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop de
     ld a, e
     add a, $20
@@ -2566,7 +2566,7 @@ Func_003_50DD::
     call HLToDecimalDigits
     pop de
     push de
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop de
     ld a, e
     add a, $21
@@ -3534,14 +3534,14 @@ Jump_003_581A::
 Func_003_581E::
     call ClearBGMapShadow_Bank03
     ld e, $0B
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $0C
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC61D]
     or a, a
     ret z
     ld e, $0D
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC0A7]
     cp a, $02
     jr c, Jump_003_585C
@@ -3566,7 +3566,7 @@ Jump_003_585C::
 Func_003_585D::
     call Func_003_581E
     ld e, $0E
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
@@ -3578,9 +3578,9 @@ Func_003_585D::
 Func_003_5874::
     call Func_003_585D
     ld e, $11
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $1B
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wD081]
     ld hl, Data_003_5C8B
     add_a_to_hl
@@ -3599,7 +3599,7 @@ Func_003_58A6::
     call FillTilesFromRequest
     call Func_003_5874
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46D]
     and a, $03
     ld hl, Func_003_460B
@@ -3610,7 +3610,7 @@ Func_003_58A6::
 Func_003_58C0::
     call Func_003_585D
     ld e, $0F
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
     db $CD, $0E, $29
 
@@ -3619,7 +3619,7 @@ Func_003_58C0::
 Func_003_58CF::
     call Func_003_58C0
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46F]
     and a, $03
     ld hl, Data_003_461F
@@ -3632,7 +3632,7 @@ Func_003_58E6::
     call FillTilesFromRequest
     call Func_003_585D
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46F]
     and a, $03
     ld hl, Data_003_461F
@@ -3973,7 +3973,7 @@ Jump_003_5AED::
     ld l, a
     call HLToDecimalDigits
     ld de, wC319
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     jr Jump_003_5B1B
@@ -4009,7 +4009,7 @@ Jump_003_5B1B::
     deref_hl
     call HLToDecimalDigits
     ld de, wC31D
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, $C3
     ld [wC2DE], a
     ld [wC2DF], a
@@ -5027,9 +5027,9 @@ Jump_003_640F::
 Func_003_641E::
     call ClearBGMapShadow_Bank03
     ld e, $1C
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $0C
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 8 call sites from 1 routine (e.g. Func_003_5E68)
@@ -5077,7 +5077,7 @@ Jump_003_6450::
 Func_003_646F::
     call Func_003_641E
     ld e, $1D
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46D]
     and a, $03
     ld c, $5F
@@ -5085,7 +5085,7 @@ Func_003_646F::
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, [wC46D]
     and a, $03
     ld hl, Func_003_460B
@@ -5098,11 +5098,11 @@ Func_003_646F::
 Func_003_649C::
     call ClearBGMapShadow_Bank03
     ld e, $20
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $0C
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $1D
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46D]
     and a, $03
     ld c, $5F
@@ -5110,7 +5110,7 @@ Func_003_649C::
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, [wCFEE]
     cp a, $FF
     jr z, Jump_003_64DA
@@ -5120,7 +5120,7 @@ Func_003_649C::
 
 Jump_003_64DA::
     ld de, wC39E
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
@@ -5153,7 +5153,7 @@ Func_003_650C::
     ld hl, $4617
     call Func_003_4538
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
@@ -5162,9 +5162,9 @@ Func_003_6526::
     call FillTilesFromRequest
     call ClearBGMapShadow_Bank03
     ld e, $20
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $0C
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
@@ -5190,7 +5190,7 @@ Func_003_6526::
     deref_hl
     call Func_003_4290
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
@@ -5203,7 +5203,7 @@ Func_003_657B::
     ld hl, Func_003_460B
     call Func_003_4538
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4208)
@@ -5295,7 +5295,7 @@ Jump_003_6625::
 Jump_003_6632::
     call HLToDecimalDigits
     ld de, wC39E
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, $09
     ld [wStringCategory], a
     ld hl, vTiles2 + $230
@@ -5337,13 +5337,13 @@ Jump_003_6664::
     ld l, a
     call HLToDecimalDigits
     ld de, wC319
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     deref_hl
     call HLToDecimalDigits
     ld de, wC31D
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, [wC46F]
     and a, $03
     ld c, $55
@@ -5770,7 +5770,7 @@ Jump_003_6ADC::
     call Func_003_6B5E
     jr z, Jump_003_6B1F
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     xor a, a
     ld [wC0A0], a
     ld hl, wC0A1
@@ -6902,7 +6902,7 @@ Func_003_7281::
     ld l, a
     call HLToDecimalDigits
     ld de, wC364
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     ld a, [hl+]
@@ -6911,7 +6911,7 @@ Func_003_7281::
     ld l, a
     call HLToDecimalDigits
     ld de, wC368
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     ld a, [hl+]
@@ -6920,13 +6920,13 @@ Func_003_7281::
     ld l, a
     call HLToDecimalDigits
     ld de, wC3A4
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A8
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop af
     push af
     add a, $C7
@@ -7093,7 +7093,7 @@ Jump_003_746C::
     jr nz, Jump_003_746C
     call HLToDecimalDigits
     ld de, wC2E6
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
@@ -7392,7 +7392,7 @@ Jump_003_7689::
 Func_003_7692::
     call ClearBGMapShadow_Bank03
     ld e, $21
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_003_76AD, Func_003_7726, Func_003_7743, Func_003_774F)
@@ -7409,11 +7409,11 @@ Func_003_769E::
 Func_003_76AD::
     call Func_003_769E
     ld e, $23
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     call Func_003_7978
     jr z, Jump_003_76C5
     ld e, $22
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
 
 Jump_003_76C5::
     call Func_003_7A58
@@ -7423,7 +7423,7 @@ Jump_003_76C5::
 Func_003_76C9::
     call Func_003_76AD
     ld e, $24
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_003_6B5E)
@@ -7433,7 +7433,7 @@ Func_003_76D5::
     call Func_003_76C9
     call FillTilesFromRequest
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46F]
     and a, $07
     ld hl, Data_003_4633
@@ -7457,9 +7457,9 @@ Func_003_7707::
     ld hl, Data_003_4633
     call Func_003_4538
     ld e, $25
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_6EBF)
@@ -7469,55 +7469,55 @@ Func_003_7726::
     ld de, Data_003_7BAF
     call Func_003_7BBF
     ld e, $26
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $27
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_6EBF)
 Func_003_7743::
     call Func_003_769E
     ld e, $2C
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_7145, Func_003_705B)
 Func_003_774F::
     call Func_003_769E
     ld e, $29
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
 
 ; 1 call site from 1 routine (e.g. Func_003_7202)
 Func_003_775A::
     ld e, $28
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_7335)
 Func_003_7763::
     ld e, $2D
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_74E2)
 ; reads: wC46D
 Func_003_776C::
     ld e, $2A
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46D]
     and a, $07
     ld hl, Func_003_460B
     call Func_003_4538
     call FillTilesFromRequest
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     farcall Func_016_777B
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_74E2, Func_003_5253)
 Func_003_7791::
     ld e, $2B
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_003_6B5E)

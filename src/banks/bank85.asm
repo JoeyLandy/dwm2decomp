@@ -172,7 +172,7 @@ Jump_085_4145::
 
 Jump_085_4159::
     ld de, vTiles1 + $6E0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     xor a, a
     ld [wC92D], a
     ld [wC92E], a
@@ -491,7 +491,7 @@ Jump_085_43AB::
 ; points at: wC923
 Func_085_43AF:: ; heuristic: follows a terminator; C0
     ld de, vTiles1 + $6E0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     xor a, a
     ld [wC92D], a
     ld [wC92E], a
@@ -1710,7 +1710,7 @@ Jump_085_4C51::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     pop af
     ld [wC921], a
     ld a, [wC921]
@@ -1775,7 +1775,7 @@ Jump_085_4CD5::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     pop af
     ld [wC921], a
     ld a, [wC921]
@@ -2294,7 +2294,7 @@ Jump_085_5086::
     ld a, [hl]
     push af
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld hl, wC8CF
     ld de, wC147
     ld b, $0A
@@ -3218,7 +3218,7 @@ Jump_085_56B3::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -3334,7 +3334,7 @@ Func_085_5780::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     inc a
@@ -3360,7 +3360,7 @@ Func_085_57A2:: ; heuristic: follows a terminator; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a

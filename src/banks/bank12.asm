@@ -278,7 +278,7 @@ Func_012_4177:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -297,7 +297,7 @@ Func_012_41AA:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -316,7 +316,7 @@ Func_012_41CC:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -333,7 +333,7 @@ Func_012_41ED:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld hl, hFF8E
     inc [hl]
     jp Jump_012_43C6
@@ -459,7 +459,7 @@ Func_012_42B5::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     inc a
@@ -560,7 +560,7 @@ Func_012_4346:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -577,7 +577,7 @@ Func_012_436E:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -594,7 +594,7 @@ Func_012_438A:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -611,7 +611,7 @@ Func_012_43A6:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld hl, hFF91
     dec [hl]
 
@@ -3380,7 +3380,7 @@ Jump_012_5817::
     ld a, $0A
     ld [rRAMG], a
     pop af
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     xor a, a
     ld [rRAMG], a
     ld hl, wC8CF
@@ -3768,7 +3768,7 @@ Func_012_5A89:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wC8C1], a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC17E
     call Func_000_23CA
     ld a, $05
@@ -3797,7 +3797,7 @@ Func_012_5AC4:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     inc a
@@ -4186,7 +4186,7 @@ Jump_012_5D25::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5D41
@@ -4285,7 +4285,7 @@ Jump_012_5DD3::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5DEF
@@ -4482,7 +4482,7 @@ Jump_012_5F11::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $01
     jr nz, Jump_012_5F30
@@ -4518,7 +4518,7 @@ Jump_012_5F4D::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5F74
@@ -4690,7 +4690,7 @@ Jump_012_6077::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_6093
@@ -5326,7 +5326,7 @@ Jump_012_6467::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC17E
     call Func_000_23CA
     ld a, $05
@@ -8421,7 +8421,7 @@ Jump_012_77D0::
     ld [wC8C1], a
     ldh a, [hFFC8]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC6]
     and a, $0F
     ld c, a
@@ -8816,7 +8816,7 @@ Jump_012_79FD::
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC6]
     and a, $0F
     ld c, a
@@ -8972,7 +8972,7 @@ Jump_012_7AF3::
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC6]
     and a, $0F
     ld c, a
@@ -9277,7 +9277,7 @@ Jump_012_7CE6::
     jr nz, Jump_012_7D2F
     ld a, $2C
     ldh [hFFC6], a
-    call Func_012_7DCE
+    call FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_012_7D2F
@@ -9411,11 +9411,13 @@ Jump_012_7DC3::
     ld [rRAMG], a
     ret
 
+; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
 ; 47 call sites from 15 routines (e.g. Func_012_7CD9, Func_004_5D14, Func_004_612B, Func_004_6827, ...)
 ; reads: hFFC6
 ; writes: hFFC6
 ; points at: wC61D
-Func_012_7DCE::
+FindHFFC6InWC61DList::
+Func_012_7DCE:: ; address name
     ldh a, [hFFC6]
     ld c, a
     ld b, $00

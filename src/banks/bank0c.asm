@@ -5007,7 +5007,7 @@ Func_00C_7098::
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_01E_768E
     ld hl, wC386
     ld de, wD7F3

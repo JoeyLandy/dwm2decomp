@@ -788,7 +788,7 @@ Data_00E_5350:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank0E, Func_001_4AD4, Func_037_5999, Func_0F1_5834)
+; 4 call sites from 4 routines (e.g. ShowString_Bank0E, Func_001_4AD4, Func_037_5999, BeginBank0EString)
 BeginStringDisplay_Bank0E::
 Func_00E_5370:: ; address name
     ld de, Data_00E_5385

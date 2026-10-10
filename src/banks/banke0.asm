@@ -632,7 +632,7 @@ Jump_0E0_4571::
     ld [wC8C1], a
     ld [wC8C2], a
     push bc
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop bc
     pop hl
 
@@ -741,7 +741,7 @@ Func_0E0_45EE::
     xor a, a
     ld [wC8C2], a
     push bc
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop bc
     pop hl
     ret
@@ -1171,7 +1171,7 @@ Func_0E0_48B7::
     ld [wC8C1], a
     ld a, [hl]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop hl
     pop de
     pop bc
@@ -2461,7 +2461,7 @@ Jump_0E0_5898::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop bc
     pop de
     pop hl
@@ -2569,7 +2569,7 @@ Jump_0E0_5941::
     ld [wC8C1], a
     ld [wC8C2], a
     push bc
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop bc
     swap c
     ld b, $00

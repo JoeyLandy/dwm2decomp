@@ -7033,7 +7033,7 @@ Func_007_7DE5::
     ld [wD7AB], a
     ld a, [wD7B6]
     ld [wD7AF], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]

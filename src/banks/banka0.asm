@@ -1840,23 +1840,23 @@ Func_0A0_4B10::
     ld a, $F0
     ld [wC8D4], a
     ld de, vTiles1 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $550
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $5A0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, wD0D5
     ld de, wC8CF
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, wD123
     ld de, wC8CF
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $550
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, [wC57F]
     bit 1, a
     jr nz, Jump_0A0_4B7A
@@ -1865,7 +1865,7 @@ Func_0A0_4B10::
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $5A0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, wD05A
     jr Jump_0A0_4B8F
 
@@ -1875,7 +1875,7 @@ Jump_0A0_4B7A::
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $5A0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, wC60C
 
 Jump_0A0_4B8F::
@@ -1907,7 +1907,7 @@ Jump_0A0_4BA9::
 Jump_0A0_4BB1::
     ld [de], a
     ld de, vTiles1 + $240
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, $90
     ld [wC8CF], a
     ld [wC8D0], a
@@ -1915,7 +1915,7 @@ Jump_0A0_4BB1::
     ld a, $F0
     ld [wC8D2], a
     ld de, vTiles1 + $4B0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 Jump_0A0_4BCF::
@@ -1924,7 +1924,7 @@ Jump_0A0_4BCF::
     push hl
     push bc
     ld de, vTiles1 + $240
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, $90
     ld [wC8CF], a
     ld [wC8D0], a
@@ -1932,7 +1932,7 @@ Jump_0A0_4BCF::
     ld a, $F0
     ld [wC8D2], a
     ld de, vTiles1 + $4B0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     ld a, b
     add a, $06
@@ -1965,7 +1965,7 @@ Jump_0A0_4C13::
     ld a, $F0
     ld [de], a
     ld de, vTiles1 + $4B0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 ; Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
@@ -5985,7 +5985,7 @@ Jump_0A0_693C::
 Jump_0A0_6941::
     call HLToDecimalDigits
     ld de, wC388
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0A0_5F2E)
@@ -6353,7 +6353,7 @@ Func_0A0_6B46::
     ld d, h
     ld e, l
     pop hl
-    call Func_000_2123
+    call WriteDecimalDigitTiles
 
 Jump_0A0_6B77::
     pop bc
@@ -6389,7 +6389,7 @@ Func_0A0_6B79::
     ld d, h
     ld e, l
     pop hl
-    call Func_000_2123
+    call WriteDecimalDigitTiles
 
 Jump_0A0_6BB1::
     pop bc

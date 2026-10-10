@@ -137,6 +137,23 @@ class LibraryRoutines(unittest.TestCase):
         self.assertEqual((gb.rb(0xC921), gb.f & 0x10), (0, 0x10))
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class DecimalRoutines(unittest.TestCase):
+    def test_number24_to_packed_bcd(self):
+        rng = random.Random(4)
+        for n in (0, 9, 10, 99, 100, 12345, 999999, 1000000, 9999999) + tuple(rng.randrange(10_000_000) for _ in range(20)):
+            gb = call(0, 0x173A, {0xC8C0: n & 0xFF, 0xC8C1: (n >> 8) & 0xFF, 0xC8C2: n >> 16})
+            digits = f"{n:08d}"
+            got = "".join(f"{gb.rb(a):02X}" for a in (0xFFC9, 0xFFC8, 0xFFC7, 0xFFC6))
+            self.assertEqual(got[-7:], digits[-7:], n)  # hFFC9 holds the millions digit in its low nibble
+
+    def test_write_decimal_digit_tiles(self):
+        for digits, want in (((0, 0, 7), [0xC3, 0xC3, 0xE7]), ((1, 0, 5), [0xE1, 0xE0, 0xE5]), ((0, 3, 0), [0xC3, 0xE3, 0xE0])):
+            mem = {0xC8C0 + i: d for i, d in enumerate(digits)}
+            gb = call(0, 0x2123, mem, d=0xC0, e=0x00, h=0, l=0)
+            self.assertEqual([gb.rb(0xC000 + i) for i in range(3)], want, digits)
+
+
 class FamilyNamesAreApplied(unittest.TestCase):
     """Audit of the committed src/: each family in config/name_families.json names its copies."""
 

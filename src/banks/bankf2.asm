@@ -920,7 +920,7 @@ Func_0F2_4A61::
     ld de, vTiles2 + $290
     ld a, $F0
     ld [wC8D9], a
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F2_4AFE)
@@ -1003,7 +1003,7 @@ Func_0F2_4B05::
     ld [wC8C1], a
     ld a, [wCA85]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_01E_768E
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $018C
@@ -1072,7 +1072,7 @@ Func_0F2_4B05::
     ld [wC8C1], a
     ld a, e
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_01E_768E
 
 Jump_0F2_4BA8::
@@ -1183,7 +1183,7 @@ Jump_0F2_4C4D::
     ld [wC8D2], a
     push de
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     ld a, $03
     add a, e
@@ -1203,7 +1203,7 @@ Jump_0F2_4C7E::
     add_a_to_hl
     call CopyShortStringToWC8CF_BankF2
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     ld a, $92
     ld [wD7F1], a
@@ -1224,7 +1224,7 @@ Jump_0F2_4CA8::
     add_a_to_hl
     call CopyShortStringToWC8CF_BankF2
     ld de, vTiles2 + $2F0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     ld a, [de]
     push de
@@ -1243,7 +1243,7 @@ Jump_0F2_4CA8::
     ld [wC8D2], a
     push de
     ld de, vTiles2 + $340
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     ld a, $03
     add a, e
@@ -1263,7 +1263,7 @@ Jump_0F2_4CEE::
     add_a_to_hl
     call CopyShortStringToWC8CF_BankF2
     ld de, vTiles2 + $340
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     ld a, $93
     ld [wD7F1], a
@@ -1282,7 +1282,7 @@ Jump_0F2_4D18::
     add_a_to_hl
     call CopyShortStringToWC8CF_BankF2
     ld de, vTiles2 + $430
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0F2_4C3D)

@@ -273,14 +273,14 @@ Jump_0F1_41E0::
 Func_0F1_41EE::
     call ClearBGMapShadow_BankF1
     ld e, $0B
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $0C
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC61D]
     or a, a
     ret z
     ld e, $0D
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC0A7]
     cp a, $02
     jr c, Jump_0F1_422C
@@ -305,7 +305,7 @@ Jump_0F1_422C::
 Func_0F1_422D::
     call Func_0F1_41EE
     ld e, $32
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46E]
     and a, $07
     ld hl, $4A6A
@@ -317,9 +317,9 @@ Func_0F1_422D::
 Func_0F1_4244:: ; heuristic: follows a terminator; C0
     call Func_0F1_422D
     ld e, $11
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld e, $1B
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wD081]
     ld hl, Data_0F1_4613
     add_a_to_hl
@@ -338,7 +338,7 @@ Func_0F1_4276:: ; heuristic: follows a terminator; C0
     call FillTilesFromRequest
     call Func_0F1_4244
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46D]
     and a, $03
     ld hl, Func_0F1_4A5E
@@ -349,7 +349,7 @@ Func_0F1_4276:: ; heuristic: follows a terminator; C0
 Func_0F1_4290:: ; heuristic: follows a terminator; C0
     call Func_0F1_422D
     ld e, $0F
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -358,7 +358,7 @@ Func_0F1_429C:: ; heuristic: follows a terminator; C0
     call FillTilesFromRequest
     call Func_0F1_4290
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46F]
     and a, $03
     ld hl, Data_0F1_4A72
@@ -374,7 +374,7 @@ Func_0F1_42B6::
     call FillTilesFromRequest
     call Func_0F1_422D
     ld e, $10
-    farcall Func_033_4001
+    farcall CopyBlockToBGMapShadow
     ld a, [wC46F]
     and a, $03
     ld hl, Data_0F1_4A72
@@ -672,7 +672,7 @@ Jump_0F1_4475::
     ld l, a
     call HLToDecimalDigits
     ld de, wC319
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     pop hl
     inc hl
     jr Jump_0F1_44A3
@@ -708,7 +708,7 @@ Jump_0F1_44A3::
     deref_hl
     call HLToDecimalDigits
     ld de, wC31D
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld a, $C3
     ld [wC2DE], a
     ld [wC2DF], a
@@ -1474,7 +1474,7 @@ Jump_0F1_4B2E::
     xor a, a
     ld [wStringCategory], a
     ld a, $01
-    call Func_0F1_5834
+    call BeginBank0EString
     xor a, a
     ld [wC594], a
     ld hl, wD06A
@@ -1494,7 +1494,7 @@ Jump_0F1_4B53::
     and a, a
     ret nz
     ld a, $07
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1518,7 +1518,7 @@ Jump_0F1_4B77::
     xor a, a
     ld [wC594], a
     ld a, $09
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1582,7 +1582,7 @@ Jump_0F1_4BE5::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $FE
     ld [wC594], a
     ret
@@ -1601,7 +1601,7 @@ Jump_0F1_4C08::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $FE
     ld [wC594], a
     ret
@@ -1614,7 +1614,7 @@ Jump_0F1_4C24::
     ld a, $09
     ld [wD781], a
     ld a, $02
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $FE
     ld [wC594], a
     ret
@@ -1635,7 +1635,7 @@ Jump_0F1_4C4C::
     ret nz
     farcall Func_015_40FA
     ld a, $09
-    call Func_0F1_5834
+    call BeginBank0EString
     ret
 
 Jump_0F1_4C64::
@@ -1660,7 +1660,7 @@ Jump_0F1_4C78::
     inc a
     ld [wD782], a
     ld a, $07
-    call Func_0F1_5834
+    call BeginBank0EString
     ret
 
 Jump_0F1_4C8E::
@@ -1681,7 +1681,7 @@ Jump_0F1_4CA0::
     xor a, a
     ld [wC594], a
     ld a, $09
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -1705,7 +1705,7 @@ Jump_0F1_4CCA::
     and a, a
     jr nz, Jump_0F1_4CE2
     ld a, $04
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -1728,7 +1728,7 @@ Jump_0F1_4CE2::
     ret
 
 Jump_0F1_4D07::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1788,7 +1788,7 @@ Jump_0F1_4D6F::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1808,7 +1808,7 @@ Jump_0F1_4D6F::
     dec a
     ld [wD781], a
     ld a, $05
-    call Func_0F1_5834
+    call BeginBank0EString
     ret
 
 Jump_0F1_4DAB::
@@ -1835,11 +1835,11 @@ Jump_0F1_4DBE::
     dec a
     ld [wD781], a
     ld a, $06
-    call Func_0F1_5834
+    call BeginBank0EString
     ret
 
 Jump_0F1_4DD0::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -1882,7 +1882,7 @@ Jump_0F1_4E19::
     xor a, a
     ld [rRAMG2], a
     ld a, $07
-    call Func_0F1_5834
+    call BeginBank0EString
     call Func_0F1_4D4E
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
@@ -1910,7 +1910,7 @@ Jump_0F1_4E4A::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $FE
     ld [wC594], a
     ret
@@ -1963,7 +1963,7 @@ Jump_0F1_4EA7::
     cp a, b
     jr nz, Jump_0F1_4ED1
     ld a, $08
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $10
     ld [wD781], a
     xor a, a
@@ -1980,7 +1980,7 @@ Jump_0F1_4ED1::
 
 Jump_0F1_4EDE::
     ld a, $0A
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $10
     ld [wD781], a
     xor a, a
@@ -2030,7 +2030,7 @@ Jump_0F1_4F12::
     ld [hl+], a
     ld [hl], $12
     ld a, $0B
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2050,7 +2050,7 @@ Jump_0F1_4F4C::
     inc a
     ld [wD781], a
     ld a, $0D
-    call Func_0F1_5834
+    call BeginBank0EString
     ret
 
 Jump_0F1_4F6F::
@@ -2093,7 +2093,7 @@ Jump_0F1_4FAA::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $FE
     ld [wC594], a
     ret
@@ -2113,7 +2113,7 @@ Jump_0F1_4FD7::
     ld a, $09
     ld [wD781], a
     ld a, $02
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $FE
     ld [wC594], a
     ret
@@ -2170,14 +2170,14 @@ Jump_0F1_5048::
     and a, a
     jr z, Jump_0F1_5059
     ld a, $16
-    call Func_0F1_5834
+    call BeginBank0EString
 
 Jump_0F1_5059::
     ret
 
 Jump_0F1_505A::
     ld a, $0C
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2237,7 +2237,7 @@ Jump_0F1_50C3::
 
 Jump_0F1_50DC::
     ld a, $0B
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $17
     ld [wD781], a
     ret
@@ -2252,7 +2252,7 @@ Jump_0F1_50E7::
     xor a, a
     ld [wD782], a
     ld a, $07
-    call Func_0F1_5834
+    call BeginBank0EString
     ret
 
 Jump_0F1_50FF::
@@ -2277,7 +2277,7 @@ Jump_0F1_511B::
     ld [wD7AB], a
     ld a, [wD7B6]
     ld [wD7AF], a
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2345,7 +2345,7 @@ Jump_0F1_51A4::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, $FE
     ld [wC594], a
     ret
@@ -2374,7 +2374,7 @@ Jump_0F1_51DC::
     and a, a
     ret nz
     ld a, $07
-    call Func_0F1_5834
+    call BeginBank0EString
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2501,7 +2501,7 @@ Jump_0F1_5293::
     ret
 
 Jump_0F1_52B7::
-    farcall Func_01D_5D84
+    farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]
@@ -2582,7 +2582,7 @@ Func_0F1_5344::
     ld hl, wCA2C
     call CopyShortStringToWC8CF_BankF1
     ld de, vTiles1 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 Jump_0F1_535A::
@@ -3143,7 +3143,7 @@ Func_0F1_57CD::
     ld hl, wCA2C
     call CopyShortStringToWC8CF_BankF1
     ld de, vTiles1 + $780
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld hl, wCA36
     ld a, [hl+]
     ld [wStringIndex], a
@@ -3192,9 +3192,11 @@ Func_0F1_5812::
     call Func_0F1_59CA
     ret
 
+; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E
 ; 26 call sites from 2 routines (e.g. Func_0F1_4AD0, Func_0F1_4D4E)
 ; writes: wStringIndex, wStringCategory
-Func_0F1_5834::
+BeginBank0EString::
+Func_0F1_5834:: ; address name
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a

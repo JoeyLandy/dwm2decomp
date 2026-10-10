@@ -2119,7 +2119,7 @@ Jump_01D_52C5::
     ld [wC8C1], a
     ld a, [hl]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC8]
     and a, $F0
     swap a
@@ -2288,7 +2288,7 @@ Jump_01D_53C5::
     ld [wC8C1], a
     ld a, [hl]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC8]
     and a, $0F
     ld [wD7D3], a
@@ -2342,7 +2342,7 @@ Jump_01D_5461::
     ld [wC8C1], a
     ld a, [hl]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC8]
     and a, $0F
     ld [wD7D3], a
@@ -3610,7 +3610,7 @@ Jump_01D_5C05::
     inc de
     dec b
     jr nz, Jump_01D_5C05
-    call Func_01D_5D84
+    call SetWD7F5ToWD789Cell5
     ld c, $00
     ld a, l
     ld [wD7F1], a
@@ -3662,7 +3662,7 @@ Jump_01D_5C48::
     inc de
     dec b
     jr nz, Jump_01D_5C48
-    call Func_01D_5D84
+    call SetWD7F5ToWD789Cell5
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3708,7 +3708,7 @@ Jump_01D_5C8D::
 ; writes: rRAMG2, rRAMB, wC8D9
 ; points at: wC8CF, wC130
 Func_01D_5C94:: ; heuristic: follows a terminator; C0
-    call Func_01D_5D84
+    call SetWD7F5ToWD789Cell5
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3719,7 +3719,7 @@ Func_01D_5C94:: ; heuristic: follows a terminator; C0
 
 Jump_01D_5CAF::
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     xor a, a
@@ -3759,11 +3759,11 @@ Func_01D_5CD7::
     push bc
     ld a, b
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     ld de, vTiles1 + $780
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     push bc
     ld a, b
@@ -3802,7 +3802,7 @@ Func_01D_5CD7::
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, vTiles1 + $270
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     xor a, a
     ld [rRAMG2], a
@@ -3845,11 +3845,13 @@ Data_01D_5D78:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01D_5D7E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $48, $46, $52, $47
 
+; wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB
 ; 66 call sites from 53 routines (e.g. Func_01D_5BF2, Func_01D_5C35, Func_01D_5DBC, Func_01D_5DF9, ...)
 ; reads: wD7AF, wD7AB
 ; writes: wD7F5, wD7F6
 ; points at: wD789
-Func_01D_5D84::
+SetWD7F5ToWD789Cell5::
+Func_01D_5D84:: ; address name
     ld a, [wD7AF]
     ld b, a
     add a, a
@@ -3866,11 +3868,13 @@ Func_01D_5D84::
     ld [wD7F6], a
     ret
 
+; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
 ; 28 call sites from 25 routines (e.g. Func_00D_4869, Func_00D_4ACF, Func_00D_4B18, Func_00D_4CF4, ...)
 ; reads: wD7AF, wD7AB
 ; writes: wD7F5, wD7F6
 ; points at: wD789
-Func_01D_5DA1::
+SetWD7F5ToWD789Cell4::
+Func_01D_5DA1:: ; address name
     ld a, [wD7AF]
     add a, a
     add a, a
@@ -3890,7 +3894,7 @@ Func_01D_5DA1::
 ; writes: rRAMG2, rRAMB, wStringIndex, wStringCategory
 ; points at: wC52D
 Func_01D_5DBC::
-    call Func_01D_5D84
+    call SetWD7F5ToWD789Cell5
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3924,7 +3928,7 @@ Func_01D_5DBC::
 ; writes: rRAMG2, rRAMB, wD006, wD007, wStringIndex, wStringCategory
 ; points at: wC52D
 Func_01D_5DF9::
-    call Func_01D_5D84
+    call SetWD7F5ToWD789Cell5
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -4649,7 +4653,7 @@ Jump_01D_62B8::
     add_a_to_hl
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     ld hl, Data_01D_62F9
@@ -4661,7 +4665,7 @@ Jump_01D_62B8::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     inc c
     ld a, [wC6FD]

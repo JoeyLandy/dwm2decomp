@@ -1723,7 +1723,7 @@ Func_001_52AF::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld hl, hFFC9
     ld a, [hl-]
     or a, [hl]
@@ -1869,7 +1869,7 @@ Func_001_536C::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop hl
     pop bc
     ld e, $00
@@ -2281,7 +2281,7 @@ Jump_001_5590::
     ld [wC530], a
     call FillTilesFromRequest
     ld de, vTiles2 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     jr Jump_001_5638
 
 Jump_001_55D8::
@@ -2304,9 +2304,9 @@ Jump_001_55D8::
     ld [wC52E], a
     call FillTilesFromRequest
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld de, vTiles2 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld bc, $0000
     ld de, vBGMap0 + $6A
     call Func_001_6A98
@@ -3180,7 +3180,7 @@ Func_001_5B98::
     ld d, h
     ld a, $F0
     ld [wC8D9], a
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
@@ -3650,7 +3650,7 @@ Func_001_5EAF::
     ld a, $F0
     ld [wC8DE], a
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, [wC5FE]
     bit 7, a
     jr z, Jump_001_5F1C
@@ -3670,7 +3670,7 @@ Func_001_5EAF::
     ld a, $F0
     ld [wC8D4], a
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 Jump_001_5F1C::
@@ -3692,7 +3692,7 @@ Jump_001_5F36::
     cp a, $F0
     jr nz, Jump_001_5F36
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 Jump_001_5F44::
@@ -3701,7 +3701,7 @@ Jump_001_5F44::
     ld de, wC8CF
     call Func_000_2458
     ld de, vTiles2 + $200
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ret
 
 Data_001_5F56:: ; heuristic: pointer load in the same bank (bank assumed); C0

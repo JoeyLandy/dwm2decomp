@@ -563,7 +563,7 @@ Func_01C_4395:: ; heuristic: follows a terminator; C0
     ld [wC8C1], a
     ld a, [wC619]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     pop hl
     ld c, $00
     ld b, $03
@@ -1774,7 +1774,7 @@ Jump_01C_4AFA::
     ld [wC8C1], a
     ld a, b
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     farcall Func_01E_768E
     ld a, $DF
     ld [wD7F8], a
@@ -2676,7 +2676,7 @@ Func_01C_507C:: ; heuristic: target of a pointer table; C0
     ld [wC8C1], a
     ld a, [hl]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC9]
     and a, $0F
     ld [wD788], a
@@ -3606,7 +3606,7 @@ Jump_01C_567C::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC7]
     and a, $F0
     swap a
@@ -4532,7 +4532,7 @@ Func_01C_5C46:: ; heuristic: target of a pointer table; C0
     ld [wC8C1], a
     ld a, [hl]
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ldh a, [hFFC8]
     and a, $F0
     swap a

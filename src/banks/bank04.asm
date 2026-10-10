@@ -2923,7 +2923,7 @@ Jump_004_5AD3::
     add_a_to_hl
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     xor a, a
     ld [rRAMG], a
     ld hl, wC8CF
@@ -3582,7 +3582,7 @@ Jump_004_5F35::
     jr c, Jump_004_5F53
     ld a, $31
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     ret z
@@ -3814,7 +3814,7 @@ Jump_004_60DF::
     call SetRequestPtrC91A_B04
     ld a, $31
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     farcall Func_012_7DF1
     ld de, $007A
     call SetFlagBit
@@ -4687,25 +4687,25 @@ Jump_004_66E9::
     jr c, Jump_004_6746
     ld a, $19
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_004_673F
     ld a, $1A
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_004_673F
     ld a, $1B
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_004_673F
     ld a, $1C
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_004_673F
@@ -4731,7 +4731,7 @@ Jump_004_674D::
     call SetRequestPtrC91A_B04
     ld a, $30
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     farcall Func_012_7DF1
     ret
 
@@ -4858,19 +4858,19 @@ Jump_004_682F::
     jr c, Jump_004_6875
     ld a, $36
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_004_686E
     ld a, $37
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_004_686E
     ld a, $38
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_004_686E
@@ -5913,7 +5913,7 @@ Jump_004_6FF0::
 Jump_004_6FF7::
     ld a, $3C
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_004_702B
@@ -6269,7 +6269,7 @@ Jump_004_728A::
 Jump_004_7291::
     ld a, $3D
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_004_728A

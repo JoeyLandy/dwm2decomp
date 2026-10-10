@@ -3861,7 +3861,7 @@ Func_0F0_66D5::
 ; 4 call sites from 1 routine (e.g. Func_0F0_5E2C)
 ; reads: wD7F5, wD7F6
 Func_0F0_66EC::
-    farcall Func_01D_5DA1
+    farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
     ld a, [wD7F6]

@@ -3855,11 +3855,13 @@ Jump_000_171A::
     ld [wC8C2], a
     ret
 
+; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
 ; 45 call sites from 39 routines (e.g. Func_001_536C, Func_001_52AF, Func_002_665A, Func_003_4BE8, ...)
 ; reads: hFFC8, hFFC7, wC8C0
 ; writes: hFFC9, hFFC8, hFFC7, hFFC6, wC8C0
 ; points at: wC8C0
-Func_000_173A::
+Number24ToPackedBCD::
+Func_000_173A:: ; address name
     xor a, a
     ldh [hFFC9], a
     ldh [hFFC8], a
@@ -5390,9 +5392,11 @@ Func_000_1F95::
     pop hl
     ret
 
+; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
 ; 29 call sites from 23 routines (e.g. Func_000_222B, Func_004_58C2, Func_012_57C7, Func_014_56B0, ...)
 ; points at: wC8CF
-Func_000_1FA4::
+CopyRecordNameToWC8CF::
+Func_000_1FA4:: ; address name
     push hl
     push de
     call SRAMRecordAddress
@@ -5431,7 +5435,7 @@ Jump_000_1FBD::
     ret
 
 ; A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)
-; 90 call sites from 57 routines (e.g. LoadSRAMRecordWord, Func_000_1F95, LoadSRAMRecordByte, Func_000_1FA4, ...)
+; 90 call sites from 57 routines (e.g. LoadSRAMRecordWord, Func_000_1F95, LoadSRAMRecordByte, CopyRecordNameToWC8CF, ...)
 ; points at: sA000
 SRAMRecordAddress::
 Func_000_1FD1:: ; address name
@@ -5673,9 +5677,11 @@ Jump_000_2120::
     pop hl
     ret
 
+; DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
 ; 36 call sites from 19 routines (e.g. Func_002_6788, Func_003_50DD, Func_003_7281, Func_003_7335, ...)
 ; points at: wC8C0
-Func_000_2123::
+WriteDecimalDigitTiles::
+Func_000_2123:: ; address name
     push hl
     ld c, $00
     ld hl, wC8C0
@@ -5787,11 +5793,13 @@ Jump_000_219A::
     pop hl
     ret
 
+; DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile
 ; 68 call sites from 30 routines (e.g. Func_000_222B, Func_001_5535, Func_001_5B98, Func_001_5EAF, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 ; points at: wC8CF
-Func_000_21A1::
+CopyGlyphTilesToVRAM::
+Func_000_21A1:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $1F
@@ -5920,11 +5928,11 @@ Func_000_222B::
     ld a, $F0
     ld [wC8D4], a
     ld de, vTiles1 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $550
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $5A0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -5940,12 +5948,12 @@ Jump_000_2264::
     push de
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     ld a, $F0
     ld [wC8D9], a
     pop de
     push de
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop de
     ld a, $50
     add a, e

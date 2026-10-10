@@ -522,7 +522,7 @@ Jump_00F_43EF::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wCB9B
     call Func_00F_7EE9
     ret nc
@@ -655,13 +655,13 @@ Jump_00F_44F3::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wCBAB
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -1284,7 +1284,7 @@ Jump_00F_4A8A::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -3406,7 +3406,7 @@ Jump_00F_5C06::
     call StoreHLInWC924_B0F
     ld a, $34
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     farcall Func_012_7DF1
     ld de, $01E1
     call SetFlagBit
@@ -3649,7 +3649,7 @@ Jump_00F_5DF8::
 Jump_00F_5E07::
     ld a, $33
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_00F_5E1D
@@ -3714,7 +3714,7 @@ Jump_00F_5E70::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -3948,7 +3948,7 @@ Jump_00F_6019::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $01
     jr nz, Jump_00F_6049
@@ -4160,7 +4160,7 @@ Jump_00F_61BC::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld hl, wC8F1
     inc [hl]
     ld de, wC8F1
@@ -4168,7 +4168,7 @@ Jump_00F_61BC::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld hl, wC8F6
     inc [hl]
     ld de, wC8F6
@@ -4176,7 +4176,7 @@ Jump_00F_61BC::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld hl, wC8FB
     inc [hl]
     ld de, wC8FB
@@ -4184,7 +4184,7 @@ Jump_00F_61BC::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -4395,7 +4395,7 @@ Jump_00F_6383::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld b, $3C
     call Func_00F_72A0
     ld a, [wC921]
@@ -4616,7 +4616,7 @@ Jump_00F_652D::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wCB9B
     call Func_00F_7EE9
     jr nc, Jump_00F_654D
@@ -5747,19 +5747,19 @@ Jump_00F_6DD1::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wCB9B
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wCBAB
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC5F0]
     and a, $03
     bit 0, a
@@ -7255,7 +7255,7 @@ Jump_00F_7937::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -8115,7 +8115,7 @@ Func_00F_7EE9::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     inc a
@@ -8139,7 +8139,7 @@ Func_00F_7F0B:: ; heuristic: follows a terminator; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld b, $20
     call StepWC921Counter_Bank0F
     ret nc
@@ -8156,7 +8156,7 @@ Func_00F_7F24:: ; heuristic: follows a terminator; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld b, $20
     call StepWC921Counter_Bank0F
     pop hl
@@ -8173,7 +8173,7 @@ Func_00F_7F42:: ; heuristic: follows a terminator; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld b, $20
     call StepWC921Counter_Bank0F
     ret nc

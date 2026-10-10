@@ -2775,7 +2775,7 @@ Jump_0A1_5214::
     call Func_000_2458
     call Func_0A1_528B
     ld de, vTiles1
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld e, $80
     ld hl, vBGMap0 + $204
     ld b, $0B
@@ -2950,7 +2950,7 @@ Jump_0A1_52FB::
     farcall CopyStringToBuffer_Bank08
     call Func_0A1_528B
     ld de, vTiles1
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld e, $80
     ld hl, vBGMap0 + $204
     ld b, $0B

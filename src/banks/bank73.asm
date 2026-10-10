@@ -877,7 +877,7 @@ Jump_073_46B3::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC17E
     call Func_000_23CA
     ld a, [wC46B]
@@ -961,7 +961,7 @@ Jump_073_473F::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC181
     call Func_000_23CA
     ld hl, wC016
@@ -998,7 +998,7 @@ Jump_073_4797::
     ld a, [wC619]
     sbc a, $00
     ld [wC619], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC181
     call Func_000_23CA
     ld hl, wC923
@@ -1292,7 +1292,7 @@ Func_073_49E6::
     ld [rRAMG], a
     ld a, [hl]
     ld c, $01
-    call Func_000_1FA4
+    call CopyRecordNameToWC8CF
     xor a, a
     ld [rRAMG], a
     ld hl, wC8CF
@@ -1369,7 +1369,7 @@ Jump_073_4A4E::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC17E
     call Func_000_23CA
     ret
@@ -1676,7 +1676,7 @@ Func_073_4C5D::
     ld a, [wC8C2]
     sbc a, c
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC17E
     call Func_000_23CA
     ret
@@ -1717,7 +1717,7 @@ Func_073_4CCB:: ; heuristic: target of a pointer table; C0
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC17E
     call Func_000_23CA
     ret
@@ -1839,7 +1839,7 @@ Jump_073_4D9B::
     ld [wC8C1], a
     xor a, a
     ld [wC8C2], a
-    call Func_000_173A
+    call Number24ToPackedBCD
     ld de, wC17E
     call Func_000_23CA
     ret
@@ -3404,7 +3404,7 @@ Jump_073_5888::
     ld [wCBCF], a
     ld a, $2C
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     farcall Func_012_7DF1
     ld a, $80
     ld [wC919], a
@@ -3424,7 +3424,7 @@ Jump_073_58BC::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -3510,15 +3510,15 @@ Jump_073_5942::
     ld [wCB9B], a
     ld a, $36
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     farcall Func_012_7DF1
     ld a, $37
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     farcall Func_012_7DF1
     ld a, $38
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     farcall Func_012_7DF1
     ld a, $80
     ld [wC919], a
@@ -5394,7 +5394,7 @@ Jump_073_65CC::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -6318,7 +6318,7 @@ Jump_073_6BC6::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -6564,25 +6564,25 @@ Jump_073_6E55::
 Func_073_6E5F::
     ld a, $19
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1A
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1B
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1C
     ldh [hFFC6], a
-    farcall Func_012_7DCE
+    farcall FindHFFC6InWC61DList
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_073_6EA0
@@ -6948,7 +6948,7 @@ Jump_073_70F0::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $01
     jr nz, Jump_073_7111
@@ -7108,19 +7108,19 @@ Jump_073_724F::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wCBAB
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld de, wCBD4
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     and a, $01
     jr z, Jump_073_728D
@@ -7366,7 +7366,7 @@ Jump_073_7429::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     pop af
     ld [wC921], a
     ldh a, [hFF8E]
@@ -7567,7 +7567,7 @@ Jump_073_760B::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -7708,7 +7708,7 @@ Jump_073_771D::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -8214,7 +8214,7 @@ Func_073_7A5D::
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     inc a
@@ -8240,7 +8240,7 @@ Func_073_7A7F:: ; heuristic: follows a terminator; C0
     ld [wC928], a
     ld a, d
     ld [wC929], a
-    farcall Func_05F_6BCD
+    farcall AddStepDeltaToPointedByte
     ld a, [wC921]
     inc a
     ld [wC921], a

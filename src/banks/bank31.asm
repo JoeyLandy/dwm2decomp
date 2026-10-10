@@ -5263,7 +5263,7 @@ Jump_031_6364::
 Jump_031_6369::
     call HLToDecimalDigits
     ld de, wC388
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_031_4EB9)
@@ -7262,7 +7262,7 @@ Jump_031_6EF7::
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     xor a, a
     ld [rRAMG], a
     ld a, [wCFD7]
@@ -7582,7 +7582,7 @@ Jump_031_7178::
 Jump_031_717E::
     call HLToDecimalDigits
     ld de, wC39E
-    call Func_000_2123
+    call WriteDecimalDigitTiles
     ld hl, $1202
     ld a, l
     ld [wC52F], a
@@ -7732,11 +7732,11 @@ Func_031_7239::
     ld a, $F0
     ld [wC8D4], a
     ld de, vTiles1 + $500
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $550
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $5A0
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     ld a, [wD88F]
     ld b, a
     ld c, $00
@@ -7774,7 +7774,7 @@ Jump_031_7285::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    call Func_000_21A1
+    call CopyGlyphTilesToVRAM
     pop bc
     inc c
     dec b
@@ -8581,7 +8581,7 @@ Jump_031_782B::
     ld d, h
     ld e, l
     pop hl
-    call Func_000_2123
+    call WriteDecimalDigitTiles
 
 Jump_031_785D::
     pop bc
@@ -8638,7 +8638,7 @@ Jump_031_7884::
     ld d, h
     ld e, l
     pop hl
-    call Func_000_2123
+    call WriteDecimalDigitTiles
 
 Jump_031_78B6::
     pop bc
