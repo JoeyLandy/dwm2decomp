@@ -1782,7 +1782,7 @@ Func_010_49C5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand06:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49CC:: ; address name
-    farcall ScriptCommand06_Run
+    farcall ScriptSetDirection
     ret
 
 ; runs one frame of script command type 05 (entry 4 of ScriptCommandHandlers)
@@ -2160,7 +2160,7 @@ Jump_010_4BBE::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand0C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4BCD:: ; address name
-    farcall ScriptCommand0C_Run
+    farcall ScriptSlideObjectY
     ret
 
 ; runs one frame of script command type 0E (entry 13 of ScriptCommandHandlers)

@@ -2646,12 +2646,12 @@ Jump_05F_78C5::
     ld [wJoypadHeld], a
     ret
 
-; implements script command type 06; reached through ScriptCommand06 in bank $10 (E-0038)
+; script command 06: wScriptParam0 picks the target (0 = the player's hPlayerFacing, 1-n = the first byte of the n-th 5-byte record at wC8EF, bit 7 set = byte 7 of the 16-byte object entry numbered by the low bits); wScriptParam1 is stored there; then wScriptStartRequest = $80 so the next script byte is fetched (the opening used it with parameters 129/130 and 2/1)
 ; 1 call site from 1 routine (e.g. ScriptCommand06)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptStartRequest
 ; points at: hPlayerFacing, wC8EF
-ScriptCommand06_Run::
+ScriptSetDirection::
 Func_05F_78CE:: ; address name
     ld a, [wScriptParam0]
     bit 7, a
@@ -2689,12 +2689,12 @@ Jump_05F_78FD::
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 0C; reached through ScriptCommand0C in bank $10 (E-0038)
+; script command 0C: for 32 frames adds the per-frame step from the table at Data_05F_7959 (indexed by wScriptParam0 / 2) to a Y coordinate chosen by wScriptParam1 (0 = hPlayerY, 1-n = the n-th 5-byte record from wC8F1, bit 7 = an object entry's byte at wCB8B + 16 * number), counting wScriptParam0 up; at $20 it ends the command
 ; 1 call site from 1 routine (e.g. ScriptCommand0C)
 ; reads: wScriptParam1, wScriptParam0
 ; writes: wScriptParam0, wScriptCommandType, wScriptStartRequest
 ; points at: hPlayerY, wC8F1, wCB8B
-ScriptCommand0C_Run::
+ScriptSlideObjectY::
 Func_05F_7907:: ; address name
     ld a, [wScriptParam1]
     bit 7, a

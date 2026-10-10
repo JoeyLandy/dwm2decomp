@@ -1370,9 +1370,9 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "5F:78CE": {
-    "name": "ScriptCommand06_Run",
-    "note": "implements script command type 06; reached through ScriptCommand06 in bank $10 (E-0038)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "name": "ScriptSetDirection",
+    "note": "script command 06: wScriptParam0 picks the target (0 = the player's hPlayerFacing, 1-n = the first byte of the n-th 5-byte record at wC8EF, bit 7 set = byte 7 of the 16-byte object entry numbered by the low bits); wScriptParam1 is stored there; then wScriptStartRequest = $80 so the next script byte is fetched (the opening used it with parameters 129/130 and 2/1)",
+    "evidence": "reading + execution (E-0038)"
   },
   "5F:787C": {
     "name": "ScriptCommand05_Run",
@@ -1385,9 +1385,9 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "5F:7907": {
-    "name": "ScriptCommand0C_Run",
-    "note": "implements script command type 0C; reached through ScriptCommand0C in bank $10 (E-0038)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "name": "ScriptSlideObjectY",
+    "note": "script command 0C: for 32 frames adds the per-frame step from the table at Data_05F_7959 (indexed by wScriptParam0 / 2) to a Y coordinate chosen by wScriptParam1 (0 = hPlayerY, 1-n = the n-th 5-byte record from wC8F1, bit 7 = an object entry's byte at wCB8B + 16 * number), counting wScriptParam0 up; at $20 it ends the command",
+    "evidence": "reading + execution (E-0038)"
   },
   "5F:7AB2": {
     "name": "ScriptCommand0E_Run",
