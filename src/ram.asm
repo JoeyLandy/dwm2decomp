@@ -1509,10 +1509,10 @@ DEF wBattleMaxHP EQU $D8CF ; maximum HP of the 8 battle slots (the foe's word st
 DEF wBattleMP EQU $D8DF ; current MP of the 8 battle slots (the values the party panels show as M) (execution (E-0042))
 DEF wBattleMaxMP EQU $D8EF ; maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP (execution (E-0042))
 DEF wD8F0 EQU $D8F0
-DEF wD8FF EQU $D8FF
-DEF wD90F EQU $D90F
-DEF wD91F EQU $D91F
-DEF wD92F EQU $D92F
+DEF wBattleATK EQU $D8FF ; attack of the 8 battle slots: ComputeBasicDamage reads the actor's word from it and the defence array for the target; 8 words, party in slots 0-2 (reading (E-0043))
+DEF wBattleDEF EQU $D90F ; defence of the 8 battle slots; RecomputeBattler (Func_032_5BE8) fills it from GetBaseDEF (reading (E-0043))
+DEF wBattleAGL EQU $D91F ; agility of the 8 battle slots; Func_032_5BE8 fills it from GetBaseAGL (reading (E-0043))
+DEF wBattleINT EQU $D92F ; intelligence of the 8 battle slots, the array after wBattleAGL (assumed) (reading (E-0043))
 DEF wD93F EQU $D93F
 DEF wD94F EQU $D94F
 DEF wD958 EQU $D958

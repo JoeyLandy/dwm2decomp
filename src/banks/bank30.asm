@@ -308,12 +308,12 @@ Jump_030_41D2::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_030_4001_Case04)
-; points at: wD91F
+; points at: wBattleAGL
 Func_030_41DF::
     push de
     call AdvanceRandom
     ld a, e
-    ld hl, wD91F
+    ld hl, wBattleAGL
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -819,7 +819,7 @@ Func_030_450B::
     cp a, $03
     ret z
     ld hl, Data_030_4519
-    call Func_030_5C68
+    call ReadBattleWordFromArray_Bank30
     jr Jump_030_451F
 
 Data_030_4519:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -921,7 +921,7 @@ Func_030_4595::
     add_a_to_hl
     ld a, [hl]
     ld hl, Data_030_45D0
-    call Func_030_5C68
+    call ReadBattleWordFromArray_Bank30
     call JumpToHL
     jr Jump_030_45CB
 
@@ -1521,7 +1521,7 @@ Jump_030_496E::
     ld a, [hl]
     ld hl, Data_030_4998
     dec a
-    call Func_030_5C68
+    call ReadBattleWordFromArray_Bank30
     call JumpToHL
     call Func_030_541B
     ld b, [hl]
@@ -2676,7 +2676,7 @@ Jump_030_52F2::
 Jump_030_5307::
     call Func_030_540C
     ld hl, Data_030_5384
-    call Func_030_5C68
+    call ReadBattleWordFromArray_Bank30
     add hl, de
     add hl, bc
     call Func_030_5319
@@ -2824,7 +2824,7 @@ Func_030_5440::
     add_a_to_hl
     ld a, [hl]
     ld hl, Data_030_45D0
-    call Func_030_5C68
+    call ReadBattleWordFromArray_Bank30
     call JumpToHL
     call Func_030_541B
     ld [hl], b
@@ -3260,34 +3260,36 @@ Data_030_59E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E2
 
 ; 1 call site from 1 routine (e.g. Func_030_4C63)
-; points at: wD8FF
+; points at: wBattleATK
 Func_030_5C3B::
-    ld hl, wD8FF
-    jr Func_030_5C68
+    ld hl, wBattleATK
+    jr ReadBattleWordFromArray_Bank30
 
 ; 1 call site from 1 routine (e.g. Func_030_4C63)
-; points at: wD90F
+; points at: wBattleDEF
 Func_030_5C40::
-    ld hl, wD90F
-    jr Func_030_5C68
+    ld hl, wBattleDEF
+    jr ReadBattleWordFromArray_Bank30
 
 ; 1 call site from 1 routine (e.g. Func_030_478B)
 ; points at: wBattleMaxHP
 Func_030_5C45::
     ld hl, wBattleMaxHP
-    jr Func_030_5C68
+    jr ReadBattleWordFromArray_Bank30
     db $21, $EF, $D8, $18, $19
 
 ; 1 call site from 1 routine (e.g. Func_030_478B)
 ; points at: wBattleHP
 Func_030_5C4F::
     ld hl, wBattleHP
-    jr Func_030_5C68
+    jr ReadBattleWordFromArray_Bank30
     db $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30
     db $01, $24, $7E, $C9
 
+; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
 ; 5 call sites from 5 routines (e.g. Func_030_4595, Func_030_52B5, Func_030_450B, Func_030_5440, ...)
-Func_030_5C68::
+ReadBattleWordFromArray_Bank30::
+Func_030_5C68:: ; address name
     add a, a
     add_a_to_hl
     deref_hl

@@ -473,7 +473,7 @@ Jump_036_4317::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABD, wDAB2, wBattleTarget, wCFF4, wD8A6, wBattleActor, wDAC0, wCFF3, ...
 ; writes: wDAD2, wDAC0
-; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wD91F
+; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wBattleAGL
 RunBattleResolveStep_Case02::
 Jump_036_431F:: ; address name
     ld hl, wBattleResolveStep
@@ -513,7 +513,7 @@ Jump_036_4347::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wCFF4, wD8A6, wBattleActor, wDAC0, wCFF3, wC5E7
 ; writes: wDAC0
-; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wD91F
+; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wBattleAGL
 RunBattleResolveStep_Case03::
 Jump_036_4356:: ; address name
     ld hl, wBattleResolveStep
@@ -541,7 +541,7 @@ Jump_036_4356:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wCFF4, wD8A6, wBattleActor, wDAC0, wCFF3, wC5E7
 ; writes: wDAC0
-; points at: wBattleResolveStep, wD810, wD811, wD80F, wD80D, wD854, wBattleStatus, wD91F
+; points at: wBattleResolveStep, wD810, wD811, wD80F, wD80D, wD854, wBattleStatus, wBattleAGL
 RunBattleResolveStep_Case04::
 Jump_036_438A:: ; address name
     call Func_036_454F
@@ -699,15 +699,15 @@ Jump_036_447F::
 
 Jump_036_44C8::
     ld a, [wBattleActor]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     add a, a
     add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wBattleTarget]
-    ld hl, wD91F
-    call Func_036_7E5B
+    ld hl, wBattleAGL
+    call ReadBattleWordFromArray
     ld a, l
     sub a, c
     ld l, a
@@ -952,7 +952,7 @@ Jump_036_464D::
     res 7, [hl]
     call Func_036_7C85
     ld a, [wBattleActor]
-    call Func_036_7E2E
+    call GetBattleATK
     call Func_036_4930
     ld a, e
     ld [wBattleDamageLo], a
@@ -1744,7 +1744,7 @@ Jump_036_4B26:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; writes: wD868
-; points at: wBattleSubStep, wD80D, wDAD8, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wD8FF, ...
+; points at: wBattleSubStep, wD80D, wDAD8, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, ...
 Func_036_4A38_Case01::
 Jump_036_4B41:: ; address name
     ld hl, wBattleSubStep
@@ -1793,7 +1793,7 @@ Jump_036_4B41:: ; address name
     inc hl
     ld [hl], b
     ld a, [wBattleTarget]
-    call Func_036_7E42
+    call GetBattleHP
     call CompareHLToBC
     jr c, Jump_036_4BCC
     ld a, [wBattleTarget]
@@ -1820,7 +1820,7 @@ Jump_036_4BCC::
     inc hl
     ld [hl], b
     ld a, [wBattleTarget]
-    call Func_036_7E47
+    call GetBattleMP
     call CompareHLToBC
     jr c, Jump_036_4C07
     ld a, [wBattleTarget]
@@ -1841,7 +1841,7 @@ Jump_036_4C07::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD8FF
+    ld hl, wBattleATK
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
@@ -1854,7 +1854,7 @@ Jump_036_4C07::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD92F
+    ld hl, wBattleINT
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
@@ -1917,7 +1917,7 @@ Jump_036_4CCF::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
@@ -1930,7 +1930,7 @@ Jump_036_4CCF::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
@@ -2442,11 +2442,11 @@ Func_036_5009::
 ; 14 call sites from 13 routines (e.g. Func_036_5522, Func_036_6098, Func_036_5533, Func_036_5544, ...)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_5013::
     call AdvanceRandom
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
@@ -2460,7 +2460,7 @@ Func_036_5013::
 ComputeBasicDamage::
 Func_036_5025:: ; address name
     ld a, [wBattleActor]
-    call Func_036_7E2E
+    call GetBattleATK
     call CompareHLToBC
     jr z, Jump_036_504E
     jr c, Jump_036_504E
@@ -2765,7 +2765,7 @@ Jump_036_5265::
     adc a, d
     ld b, a
     ld a, [wBattleTarget]
-    call Func_036_7E38
+    call GetBattleMaxHP
     call CompareHLToBC
     jr nc, Jump_036_5285
     ld b, h
@@ -2859,7 +2859,7 @@ Jump_036_52F7::
     adc a, d
     ld b, a
     ld a, [wBattleTarget]
-    call Func_036_7E3D
+    call GetBattleMaxMP
     call CompareHLToBC
     jr nc, Jump_036_531F
     ld b, h
@@ -2914,7 +2914,7 @@ Func_036_5352::
 ; 2 call sites from 2 routines (e.g. Func_036_6A82, Func_036_6DCB)
 ; reads: wBattleTarget, wD8A6, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_5360::
     ld a, [wBattleTarget]
     call Func_036_6521
@@ -2941,7 +2941,7 @@ Jump_036_5383::
     ld a, b
     ld [wD873], a
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
     ld a, [hl]
     add a, c
@@ -3017,10 +3017,10 @@ Jump_036_53EB::
 ; 1 call site from 1 routine (e.g. Func_036_6DF8)
 ; reads: wBattleTarget, wD8A6
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_53EF::
     ld a, [wBattleTarget]
-    call Func_036_7E33
+    call GetBattleDEF
     ld b, h
     ld c, l
     ld hl, $0001
@@ -3047,7 +3047,7 @@ Jump_036_5417::
 
 Jump_036_541A::
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
     push hl
     ld a, [hl+]
@@ -3081,7 +3081,7 @@ Jump_036_543F::
 ; 2 call sites from 2 routines (e.g. Func_036_6A82, Func_036_6E13)
 ; reads: wBattleTarget, wD8A6, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
-; points at: wD91F
+; points at: wBattleAGL
 Func_036_5441::
     ld a, [wBattleTarget]
     call Func_036_6558
@@ -3107,7 +3107,7 @@ Jump_036_5462::
     ld a, b
     ld [wD873], a
     ld a, [wBattleTarget]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call AddDoubleAToHL_Bank36
     ld a, [hl]
     add a, c
@@ -3173,7 +3173,7 @@ Jump_036_54BA::
 ; 1 call site from 1 routine (e.g. Func_036_6E40)
 ; reads: wBattleTarget, wD8A6
 ; writes: wBattleDamageLo, wD873
-; points at: wD91F
+; points at: wBattleAGL
 Func_036_54BE::
     ld a, [wBattleTarget]
     call Func_036_6646
@@ -3192,7 +3192,7 @@ Jump_036_54D4::
 
 Jump_036_54D7::
     ld a, [wBattleTarget]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call AddDoubleAToHL_Bank36
     push hl
     ld d, $00
@@ -3289,7 +3289,7 @@ Func_036_5555:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_5566:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $00
@@ -3299,7 +3299,7 @@ Func_036_5566:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_5571:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $01
@@ -3309,7 +3309,7 @@ Func_036_5571:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_557C:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $02
@@ -3319,7 +3319,7 @@ Func_036_557C:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_5587:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $03
@@ -3329,7 +3329,7 @@ Func_036_5587:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_5592:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $05
@@ -3339,7 +3339,7 @@ Func_036_5592:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_559D:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $04
@@ -3349,7 +3349,7 @@ Func_036_559D:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_55A8:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $06
@@ -3359,7 +3359,7 @@ Func_036_55A8:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_55B3:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $07
@@ -3369,7 +3369,7 @@ Func_036_55B3:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_55BE:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $08
@@ -3379,7 +3379,7 @@ Func_036_55BE:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_55C9:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $09
@@ -3610,7 +3610,7 @@ Jump_036_56FF::
 ; 1 call site from 1 routine (e.g. Func_036_70CC)
 ; reads: wBattleTarget, wBattleActor, wC58A, wCFF1
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer, wCFED
-; points at: wD8A7, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wD8FF, wD90F, wD91F, ...
+; points at: wD8A7, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wBattleATK, wBattleDEF, wBattleAGL, ...
 Func_036_5703:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     call Func_036_66D6
@@ -3665,7 +3665,7 @@ Jump_036_5765::
     ld [hl+], a
     ld [hl], b
     ld a, [wBattleActor]
-    ld hl, wD8FF
+    ld hl, wBattleATK
     call AddDoubleAToHL_Bank36
     ld a, [wBattleTarget]
     call Func_036_6622
@@ -3673,7 +3673,7 @@ Jump_036_5765::
     ld [hl+], a
     ld [hl], b
     ld a, [wBattleActor]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
     ld a, [wBattleTarget]
     call Func_036_6634
@@ -3681,7 +3681,7 @@ Jump_036_5765::
     ld [hl+], a
     ld [hl], b
     ld a, [wBattleActor]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call AddDoubleAToHL_Bank36
     ld a, [wBattleTarget]
     call Func_036_6646
@@ -4080,7 +4080,7 @@ Func_036_5A6C::
 ; writes: wBattleDamageLo, wD873
 Func_036_5A7A:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
-    call Func_036_7E42
+    call GetBattleHP
     call Func_036_64A3
     inc hl
     ld a, l
@@ -4103,7 +4103,7 @@ Func_036_5A98:: ; heuristic: follows a terminator; C0
     call Func_036_61D6
     jr nc, Jump_036_5AF5
     ld a, [wBattleActor]
-    call Func_036_7E42
+    call GetBattleHP
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -4128,7 +4128,7 @@ Jump_036_5ABF::
 
 Jump_036_5ACF::
     ld a, [wBattleTarget]
-    call Func_036_7E42
+    call GetBattleHP
     dec hl
     jr Jump_036_5AE4
 
@@ -4256,10 +4256,10 @@ Jump_036_5B8A::
 
 ; 1 call site from 1 routine (e.g. Func_036_757F)
 ; reads: wBattleTarget
-; points at: wD90F, wD91F, wD80D
+; points at: wBattleDEF, wBattleAGL, wD80D
 Func_036_5B8B:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -4270,7 +4270,7 @@ Func_036_5B8B:: ; heuristic: follows a terminator; C0
     or a, c
     jr nz, Jump_036_5BC2
     ld a, [wBattleTarget]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -4365,25 +4365,25 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld c, a
     ld a, [wCFFB]
     ld b, a
-    ld hl, wD8FF
+    ld hl, wBattleATK
     call Func_036_5D84
     ld a, [wCFFC]
     ld c, a
     ld a, [wCFFD]
     ld b, a
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call Func_036_5D84
     ld a, [wCFFE]
     ld c, a
     ld a, [wCFFF]
     ld b, a
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call Func_036_5D84
     ld a, [wD000]
     ld c, a
     ld a, [wD001]
     ld b, a
-    ld hl, wD92F
+    ld hl, wBattleINT
     call Func_036_5D84
     ld bc, $03E7
     ld hl, wD93F
@@ -4661,7 +4661,7 @@ Jump_036_5F17::
 ; 1 call site from 1 routine (e.g. Func_036_710F)
 ; reads: wD8A6, wCFF6, wCFF7, wBattleActor, wCFF8, wCFF9, wCFFA, wCFFB, ...
 ; writes: wMonsterId, wCFE7, wD006, wD007, wD868, wD869, wD86A, wD86B
-; points at: wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wD8FF, wD90F, wD91F, wD92F, ...
+; points at: wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, wBattleDEF, wBattleAGL, wBattleINT, ...
 Func_036_5F25:: ; heuristic: follows a terminator; C0
     ld hl, $0082
     ld a, [wD8A6]
@@ -4697,25 +4697,25 @@ Jump_036_5F32::
     ld c, a
     ld a, [wCFFB]
     ld b, a
-    ld hl, wD8FF
+    ld hl, wBattleATK
     call Func_036_608B
     ld a, [wCFFC]
     ld c, a
     ld a, [wCFFD]
     ld b, a
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call Func_036_608B
     ld a, [wCFFE]
     ld c, a
     ld a, [wCFFF]
     ld b, a
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call Func_036_608B
     ld a, [wD000]
     ld c, a
     ld a, [wD001]
     ld b, a
-    ld hl, wD92F
+    ld hl, wBattleINT
     call Func_036_608B
     ld a, [wRecordBuffer]
     ld l, a
@@ -4861,10 +4861,10 @@ Func_036_608B::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-; points at: wD8FF
+; points at: wBattleATK
 Func_036_6098:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
-    ld hl, wD8FF
+    ld hl, wBattleATK
     call AddDoubleAToHL_Bank36
     push hl
     ld a, [hl+]
@@ -5832,7 +5832,7 @@ Func_036_651C::
 ; writes: wD868
 Func_036_6521:: ; heuristic: follows a terminator; C0
     ld [wD868], a
-    call Func_036_7E33
+    call GetBattleDEF
     ld bc, $03E7
     call CompareHLToBC
     jr nc, Jump_036_6554
@@ -5869,10 +5869,10 @@ Jump_036_6554::
 ; 2 call sites from 1 routine (e.g. Func_036_5441)
 ; reads: wD868, wC58A
 ; writes: wD868
-; points at: wD91F
+; points at: wBattleAGL
 Func_036_6558:: ; heuristic: follows a terminator; C0
     ld [wD868], a
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call Func_036_64FC
     ld bc, $03E7
     call CompareHLToBC
@@ -5961,10 +5961,10 @@ Func_036_65D6:: ; heuristic: follows a terminator; C0
     push hl
     push bc
     ld b, a
-    call Func_036_7E47
+    call GetBattleMP
     push hl
     ld a, b
-    call Func_036_7E3D
+    call GetBattleMaxMP
     pop bc
     call CompareHLToBC
     pop bc
@@ -6130,11 +6130,11 @@ Func_036_66D6:: ; heuristic: follows a terminator; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
-; points at: wD90F
+; points at: wBattleDEF
 Func_036_66E0:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     add a, a
-    ld hl, wD90F
+    ld hl, wBattleDEF
     add_a_to_hl
     push hl
     ld a, [hl+]
@@ -6843,7 +6843,7 @@ Func_036_6BC7:: ; heuristic: target of a pointer table; C0
     and a, $01
     jr z, Jump_036_6C01
     ld a, [wBattleTarget]
-    call Func_036_7E42
+    call GetBattleHP
     push hl
     ld a, $64
     call DivideHLByA
@@ -7374,7 +7374,7 @@ Func_036_6EFC:: ; heuristic: follows a terminator; C0
     cp a, $DF
     jr z, Jump_036_6F2D
     ld a, [wBattleActor]
-    call Func_036_7E47
+    call GetBattleMP
     ld a, [wBattleActor]
     ld de, wBattleMaxMP
     add a, a
@@ -7942,7 +7942,7 @@ Jump_036_7326::
     call AddAx9ToHL
     res 7, [hl]
     ld a, [wBattleActor]
-    call Func_036_7E2E
+    call GetBattleATK
     call Func_036_4930
     ld a, e
     ld [wBattleDamageLo], a
@@ -7967,7 +7967,7 @@ Func_036_7353:: ; heuristic: target of a pointer table; C0
     call AddAx9ToHL
     res 7, [hl]
     ld a, [wBattleActor]
-    call Func_036_7E2E
+    call GetBattleATK
     call Func_036_4930
     ld a, e
     ld [wBattleDamageLo], a
@@ -8429,7 +8429,7 @@ Func_036_7637:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A6, wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD90F, wDA1D
+; points at: wBattleDEF, wDA1D
 Func_036_7645:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
     bit 3, [hl]
@@ -8452,7 +8452,7 @@ Jump_036_765B::
     cp a, $8B
     jr z, Jump_036_7680
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
     ld a, $01
     ld [hl+], a
@@ -8608,7 +8608,7 @@ Jump_036_775E::
 
 Jump_036_7780::
     ld a, [wBattleActor]
-    call Func_036_7E38
+    call GetBattleMaxHP
     push hl
     call Func_036_64E2
     ld c, l
@@ -9298,7 +9298,7 @@ Func_036_7BF8:: ; heuristic: target of a pointer table; C0
     and a, $F3
     ld [hl], a
     ld a, [wBattleActor]
-    call Func_036_7E42
+    call GetBattleHP
     ld a, $0A
     call DivideHLByA
     ld a, h
@@ -9651,45 +9651,59 @@ Jump_036_7DD1::
     db $72, $0B, $5E, $0B, $5E, $13, $50, $13, $50, $6C, $5A, $13, $50, $E0, $72, $13
     db $50, $13, $50, $13, $50, $E0, $72, $13, $50
 
+; A = battle slot: HL = the word for that slot in the array at wD8FF (Func_036_7E5B)
 ; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Case07, ComputeBasicDamage, Func_036_7353, Func_036_7314)
-; points at: wD8FF
-Func_036_7E2E::
-    ld hl, wD8FF
-    jr Func_036_7E5B
+; points at: wBattleATK
+GetBattleATK::
+Func_036_7E2E:: ; address name
+    ld hl, wBattleATK
+    jr ReadBattleWordFromArray
 
+; A = battle slot: HL = the word for that slot in the array at wD90F (Func_036_7E5B)
 ; 2 call sites from 2 routines (e.g. Func_036_6521, Func_036_53EF)
-; points at: wD90F
-Func_036_7E33::
-    ld hl, wD90F
-    jr Func_036_7E5B
+; points at: wBattleDEF
+GetBattleDEF::
+Func_036_7E33:: ; address name
+    ld hl, wBattleDEF
+    jr ReadBattleWordFromArray
 
+; A = battle slot: HL = the word for that slot in the array at wBattleMaxHP (Func_036_7E5B)
 ; 2 call sites from 2 routines (e.g. Func_036_5223, Func_036_771B)
 ; points at: wBattleMaxHP
-Func_036_7E38::
+GetBattleMaxHP::
+Func_036_7E38:: ; address name
     ld hl, wBattleMaxHP
-    jr Func_036_7E5B
+    jr ReadBattleWordFromArray
 
+; A = battle slot: HL = the word for that slot in the array at wBattleMaxMP (Func_036_7E5B)
 ; 2 call sites from 2 routines (e.g. Func_036_65D6, Func_036_52DF)
 ; points at: wBattleMaxMP
-Func_036_7E3D::
+GetBattleMaxMP::
+Func_036_7E3D:: ; address name
     ld hl, wBattleMaxMP
-    jr Func_036_7E5B
+    jr ReadBattleWordFromArray
 
+; A = battle slot: HL = the word for that slot in the array at wBattleHP (Func_036_7E5B)
 ; 6 call sites from 5 routines (e.g. Func_036_4A38_Case01, Func_036_5A7A, Func_036_5A98, Func_036_7BF8, ...)
 ; points at: wBattleHP
-Func_036_7E42::
+GetBattleHP::
+Func_036_7E42:: ; address name
     ld hl, wBattleHP
-    jr Func_036_7E5B
+    jr ReadBattleWordFromArray
 
+; A = battle slot: HL = the word for that slot in the array at wBattleMP (Func_036_7E5B)
 ; 3 call sites from 3 routines (e.g. Func_036_4A38_Case01, Func_036_65D6, Func_036_6EFC)
 ; points at: wBattleMP
-Func_036_7E47::
+GetBattleMP::
+Func_036_7E47:: ; address name
     ld hl, wBattleMP
-    jr Func_036_7E5B
+    jr ReadBattleWordFromArray
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
+; HL = array base, A = slot: HL = the 16-bit word at HL + 2 * A
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
-Func_036_7E5B::
+ReadBattleWordFromArray::
+Func_036_7E5B:: ; address name
     add a, a
     add_a_to_hl
     deref_hl

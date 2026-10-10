@@ -105,5 +105,9 @@
   "CFCA": {"name": "wBattleSubPhase", "note": "state variable of Func_031_47DD in the battle bank (1 and 2 alternate while waiting for the command menu)", "evidence": "reading (E-0043)"},
   "CFCB": {"name": "wBattleResolveStep", "note": "step of RunBattleResolveStep (16 cases); ApplyDamageToTarget advances or rewinds it", "evidence": "reading (E-0043)"},
   "CFCC": {"name": "wBattleSubStep", "note": "nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget", "evidence": "reading (E-0043)"},
-  "CFCD": {"name": "wBattleSubStep2", "note": "nested step used by Func_032_5A3A (3 cases)", "evidence": "reading (E-0043)"}
+  "CFCD": {"name": "wBattleSubStep2", "note": "nested step used by Func_032_5A3A (3 cases)", "evidence": "reading (E-0043)"},
+  "D8FF": {"name": "wBattleATK", "note": "attack of the 8 battle slots: ComputeBasicDamage reads the actor's word from it and the defence array for the target; 8 words, party in slots 0-2", "evidence": "reading (E-0043)"},
+  "D90F": {"name": "wBattleDEF", "note": "defence of the 8 battle slots; RecomputeBattler (Func_032_5BE8) fills it from GetBaseDEF", "evidence": "reading (E-0043)"},
+  "D91F": {"name": "wBattleAGL", "note": "agility of the 8 battle slots; Func_032_5BE8 fills it from GetBaseAGL", "evidence": "reading (E-0043)"},
+  "D92F": {"name": "wBattleINT", "note": "intelligence of the 8 battle slots, the array after wBattleAGL (assumed)", "evidence": "reading (E-0043)"}
 }

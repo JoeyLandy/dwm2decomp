@@ -837,13 +837,13 @@ Jump_0A0_44D2::
     call StoreWordAtDEPlus2C_BankA0
 
 Jump_0A0_44EA::
-    ld de, wD8FF
+    ld de, wBattleATK
     call StoreWordAtDEPlus2C_BankA0
-    ld de, wD90F
+    ld de, wBattleDEF
     call StoreWordAtDEPlus2C_BankA0
-    ld de, wD91F
+    ld de, wBattleAGL
     call StoreWordAtDEPlus2C_BankA0
-    ld de, wD92F
+    ld de, wBattleINT
     call StoreWordAtDEPlus2C_BankA0
     ld de, wD93F
     call StoreWordAtDEPlus2C_BankA0
@@ -909,7 +909,7 @@ Jump_0A0_4550::
 ; 1 call site from 1 routine (e.g. Func_0A0_43F7)
 ; reads: wD868, wD871
 ; writes: wD868, wD869, wD86A, wD86B
-; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wD8FF, wD90F, ...
+; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
 Func_0A0_456F::
     push bc
     call Func_0A0_468A
@@ -1009,13 +1009,13 @@ Jump_0A0_45ED::
     call StoreWordAtDEPlus2C_BankA0
 
 Jump_0A0_4605::
-    ld de, wD8FF
+    ld de, wBattleATK
     call StoreWordAtDEPlus2C_BankA0
-    ld de, wD90F
+    ld de, wBattleDEF
     call StoreWordAtDEPlus2C_BankA0
-    ld de, wD91F
+    ld de, wBattleAGL
     call StoreWordAtDEPlus2C_BankA0
-    ld de, wD92F
+    ld de, wBattleINT
     call StoreWordAtDEPlus2C_BankA0
     ld de, wD93F
     call StoreWordAtDEPlus2C_BankA0

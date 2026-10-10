@@ -4800,7 +4800,7 @@ Jump_032_5BE3::
 ; 2 call sites from 2 routines (e.g. Func_032_5E3B, DefeatTarget)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wBattleTarget
 ; writes: wBattleStatResultLo, wBattleStatResultHi
-; points at: wD91F, wD90F
+; points at: wBattleAGL, wBattleDEF
 Func_032_5BE8::
     push af
     push bc
@@ -4815,7 +4815,7 @@ Func_032_5BE8::
     ld c, a
     farcall GetBaseAGL
     ld a, [wBattleTarget]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     add a, a
     add_a_to_hl
     ld a, [wBattleStatResultLo]
@@ -4826,7 +4826,7 @@ Func_032_5BE8::
     ld c, a
     farcall GetBaseDEF
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     add a, a
     add_a_to_hl
     ld a, [wBattleStatResultLo]
@@ -4848,7 +4848,7 @@ Func_032_5BE8::
 ; 2 call sites from 2 routines (e.g. Func_032_5E3B, DefeatTarget)
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; writes: wD868, wD869, wD86A, wD86B
-; points at: wD80D, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wD8FF, wD92F, wD8B7, ...
+; points at: wD80D, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, wBattleINT, wD8B7, ...
 RecomputeTargetMaxHPAndMP::
 Func_032_5C3F:: ; address name
     ld a, [wBattleTarget]
@@ -4922,7 +4922,7 @@ Jump_032_5CCA::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD8FF
+    ld hl, wBattleATK
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -4935,7 +4935,7 @@ Jump_032_5CCA::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD92F
+    ld hl, wBattleINT
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -4996,7 +4996,7 @@ Jump_032_5CCA::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -5009,7 +5009,7 @@ Jump_032_5CCA::
     ld a, [wBattleStatResultHi]
     ld b, a
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -6290,7 +6290,7 @@ Jump_032_657D:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_036_7571)
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
-; points at: wBattleStatus, wD91F, wD90F
+; points at: wBattleStatus, wBattleAGL, wBattleDEF
 Func_032_6581:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -6324,7 +6324,7 @@ Func_032_6581:: ; heuristic: follows a terminator; C0
     ld c, a
     farcall GetBaseAGL
     ld a, [wBattleTarget]
-    ld hl, wD91F
+    ld hl, wBattleAGL
     add a, a
     add_a_to_hl
     push hl
@@ -6346,7 +6346,7 @@ Jump_032_65DF::
     ld c, a
     farcall GetBaseDEF
     ld a, [wBattleTarget]
-    ld hl, wD90F
+    ld hl, wBattleDEF
     add a, a
     add_a_to_hl
     push hl

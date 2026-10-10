@@ -2,15 +2,15 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
 ; 12 call sites from 11 routines (e.g. Func_005_6985, Func_005_544F, Func_005_50E3, Func_005_65C1, ...)
-; points at: wD8FF
+; points at: wBattleATK
 Func_005_4001:: ; heuristic: follows a terminator; C0
-    ld hl, wD8FF
+    ld hl, wBattleATK
     jr Jump_005_402E
 
 ; 18 call sites from 15 routines (e.g. Func_005_443B, Func_005_6B20, Func_005_6985, Func_005_6CC2, ...)
-; points at: wD90F
+; points at: wBattleDEF
 Func_005_4006::
-    ld hl, wD90F
+    ld hl, wBattleDEF
     jr Jump_005_402E
 
 ; 19 call sites from 14 routines (e.g. Func_005_64DF, Func_005_5317, Func_005_6B9E, Func_005_6556, ...)
@@ -38,9 +38,9 @@ Func_005_401A::
     jr Jump_005_402E
 
 ; 10 call sites from 8 routines (e.g. Func_005_4461, Func_005_6B5F, Func_005_6DFF, Func_005_4B97, ...)
-; points at: wD91F
+; points at: wBattleAGL
 Func_005_401F::
-    ld hl, wD91F
+    ld hl, wBattleAGL
     jr Jump_005_402E
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)

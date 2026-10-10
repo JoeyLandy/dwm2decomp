@@ -6502,15 +6502,15 @@ Func_039_71D4::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_039_6E27, Func_039_57D8)
-; points at: wD8FF
+; points at: wBattleATK
 Func_039_71E5::
-    ld hl, wD8FF
+    ld hl, wBattleATK
     jr Jump_039_7212
 
 ; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_66C5, Func_039_6DC8, Func_039_5ADB, ...)
-; points at: wD90F
+; points at: wBattleDEF
 Func_039_71EA::
-    ld hl, wD90F
+    ld hl, wBattleDEF
     jr Jump_039_7212
 
 ; 7 call sites from 7 routines (e.g. Func_039_68B0, Func_039_5593, Func_039_5514, Func_039_67AD, ...)
@@ -6538,9 +6538,9 @@ Func_039_71FE::
     jr Jump_039_7212
 
 ; 4 call sites from 4 routines (e.g. Func_039_6B5D, Func_039_5911, Func_039_596B, Func_039_59CB)
-; points at: wD91F
+; points at: wBattleAGL
 Func_039_7203::
-    ld hl, wD91F
+    ld hl, wBattleAGL
     jr Jump_039_7212
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)

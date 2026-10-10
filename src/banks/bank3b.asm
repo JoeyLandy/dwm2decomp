@@ -474,8 +474,10 @@ Jump_03B_42E3::
 Jump_03B_42E5::
     ret
 
+; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
 ; no direct call (reached through a table, a jump or a vector)
-Func_03B_42E6:: ; heuristic: follows a terminator; C0
+ReadBattleWordFromArray_Bank3B:: ; heuristic: follows a terminator; C0
+Func_03B_42E6:: ; address name
     add a, a
     add_a_to_hl
     deref_hl

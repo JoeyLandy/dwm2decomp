@@ -2318,5 +2318,40 @@
     "name": "ComputeBasicDamage",
     "note": "the damage formula: HL = the acting slot's value from the array at wD8FF (Func_036_7E2E), BC = the value to compare with, set by the caller. If HL <= BC the damage is RandomInRange(0, 1). Otherwise, with diff = HL - BC: when HL / 4 >= diff / 2 the damage is RandomInRange(0, HL / 4); else it is diff / 2 + RandomInRange(-(diff / 4), diff / 4) + RandomInRange(-1, 1). The 16-bit result goes to wBattleDamageLo/Hi",
     "evidence": "reading + execution (E-0043)"
+  },
+  "36:7E2E": {
+    "name": "GetBattleATK",
+    "note": "A = battle slot: HL = the word for that slot in the array at wD8FF (Func_036_7E5B)",
+    "evidence": "reading (E-0043)"
+  },
+  "36:7E33": {
+    "name": "GetBattleDEF",
+    "note": "A = battle slot: HL = the word for that slot in the array at wD90F (Func_036_7E5B)",
+    "evidence": "reading (E-0043)"
+  },
+  "36:7E38": {
+    "name": "GetBattleMaxHP",
+    "note": "A = battle slot: HL = the word for that slot in the array at wBattleMaxHP (Func_036_7E5B)",
+    "evidence": "reading (E-0043)"
+  },
+  "36:7E3D": {
+    "name": "GetBattleMaxMP",
+    "note": "A = battle slot: HL = the word for that slot in the array at wBattleMaxMP (Func_036_7E5B)",
+    "evidence": "reading (E-0043)"
+  },
+  "36:7E42": {
+    "name": "GetBattleHP",
+    "note": "A = battle slot: HL = the word for that slot in the array at wBattleHP (Func_036_7E5B)",
+    "evidence": "reading (E-0043)"
+  },
+  "36:7E47": {
+    "name": "GetBattleMP",
+    "note": "A = battle slot: HL = the word for that slot in the array at wBattleMP (Func_036_7E5B)",
+    "evidence": "reading (E-0043)"
+  },
+  "36:7E5B": {
+    "name": "ReadBattleWordFromArray",
+    "note": "HL = array base, A = slot: HL = the 16-bit word at HL + 2 * A",
+    "evidence": "reading (E-0043)"
   }
 }

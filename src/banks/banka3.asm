@@ -2,9 +2,9 @@ SECTION "Bank A3", ROMX[$4000], BANK[$A3]
     db $A3
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wD8FF
+; points at: wBattleATK
 Func_0A3_4001:: ; heuristic: follows a terminator; C0
-    ld hl, wD8FF
+    ld hl, wBattleATK
     jr Jump_0A3_402E
     db $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E, $21, $EF, $D8, $18, $19, $21
     db $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53

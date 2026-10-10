@@ -340,7 +340,7 @@ Jump_019_4291::
     ret
 
 ; 8 call sites from 8 routines (e.g. Func_019_4CF8, Func_019_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
-; points at: wDA53, wD92F
+; points at: wDA53, wBattleINT
 Func_019_4298::
     push bc
     ld a, c
@@ -348,7 +348,7 @@ Func_019_4298::
     add_a_to_hl
     push hl
     ld a, c
-    ld hl, wD92F
+    ld hl, wBattleINT
     add a, a
     add_a_to_hl
     deref_hl
@@ -2198,13 +2198,13 @@ Jump_019_4C71::
     call StoreWordAtDEPlus2C_Bank19
 
 Jump_019_4C89::
-    ld de, wD8FF
+    ld de, wBattleATK
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD90F
+    ld de, wBattleDEF
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD91F
+    ld de, wBattleAGL
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD92F
+    ld de, wBattleINT
     call StoreWordAtDEPlus2C_Bank19
     ld de, wD93F
     call StoreWordAtDEPlus2C_Bank19
@@ -2261,7 +2261,7 @@ Jump_019_4CEF::
 
 ; 1 call site from 1 routine (e.g. Func_019_4B91)
 ; reads: wD868, wD871
-; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wD8FF, wD90F, ...
+; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
 Func_019_4CF8::
     push bc
     call Func_019_4E05
@@ -2371,13 +2371,13 @@ Jump_019_4D6F::
     call StoreWordAtDEPlus2C_Bank19
 
 Jump_019_4D96::
-    ld de, wD8FF
+    ld de, wBattleATK
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD90F
+    ld de, wBattleDEF
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD91F
+    ld de, wBattleAGL
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD92F
+    ld de, wBattleINT
     call StoreWordAtDEPlus2C_Bank19
     ld de, wD93F
     call StoreWordAtDEPlus2C_Bank19
