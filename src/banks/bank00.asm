@@ -10580,7 +10580,7 @@ Jump_000_3E50::
     ret
 
 ; A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved
-; 288 call sites from 242 routines (e.g. CheckSlotStatusBlock, Func_005_6494, Func_005_4CE5, CheckLoneFoeHPNotBelowWD2C1, ...)
+; 288 call sites from 242 routines (e.g. CheckSlotStatusBlock, Func_005_6494, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowWD2C1, ...)
 ; points at: wBattleSlotOut
 CarryUnlessWDA63SlotEmpty::
 Func_000_3E54:: ; address name

@@ -436,5 +436,15 @@ class Status4CheckReadsAddress(unittest.TestCase):
                 self.assertEqual(gb.c, expected, f"actor {actor} status {status:#x}")
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class FoeMPCheckOffset(unittest.TestCase):
+    """05:4259 indexes wBattleMP by 16 * slot instead of 2 * slot (E-0099; C2 on our emulator)."""
+
+    def test_reads_sixteen_times_the_slot(self):
+        # actor 0, so the foes are slots 4-6; foe 4's real MP word is at wBattleMP + 8
+        self.assertEqual(call(0x05, 0x4259, mem={0xD8A4: 0, 0xD8DF + 8: 50}).c, 0x00)
+        self.assertEqual(call(0x05, 0x4259, mem={0xD8A4: 0, 0xD8DF + 0x40: 50}).c, 0xFF)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1071,6 +1071,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Examples:** ScriptCommandF7_Run_Shared01-04 and AIScore_TwinHits_Shared01.
 - Binary verification: pending; see the commit.
 
+### E-0099 — AI-scorer-only predicates, and an MP check that reads the wrong offset
+
+- Kind: OBSERVATION (reading; `05:4259` also executed, C2).
+- **The set.** 68 address-only routines are called only from AIScore routines, mostly short bank-$05 predicates in the C = $FF/$00 (and C = 1 below an AI mode) convention. Fifteen are named here:
+  - status checks: AnyFoeLacksStatus0Bits01, AnyFoeLacksStatus1Bit0, AnyFoeLacksStatus1Bit7, AnyAllyLacksStatus2Bit6, CheckFoeStatus7Bit2, AnyAllyLacksStatus1Bits23And4Bits01;
+  - skill and stat checks: AnyActiveFoeHasSkillFlag40, AnyFoeHasSkillFlag10, AnyFoeHasDEFAtLeast2;
+  - checks on the per-slot level fields: AnyFoeOpenToWDA73Field0, AnyFoeOpenToWDA76Field0, AnyFoeOpenToWDA77Field3;
+  - side checks: AnyOwnSideSlotOutIs1, CheckSideWC984Not1;
+  - AnyFoeHasMPReadsWrongOffset (below).
+- **A likely game bug: `AnyFoeHasMPReadsWrongOffset` (`05:4259`).**
+  - It indexes wBattleMP with `swap a` (16 × slot), although the array has one word per slot (2 × slot).
+  - Executed with actor 0, so the foes are slots 4-6: the real MP word of slot 4 set to 50 gives C = 0, while a byte at wBattleMP + $40 gives C = $FF.
+  - Pinned by the test `FoeMPCheckOffset`.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

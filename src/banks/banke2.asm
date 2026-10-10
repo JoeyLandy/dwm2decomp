@@ -9,7 +9,7 @@ Func_0E2_4001:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_443B
+    farcall AnyFoeHasDEFAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_401A
@@ -33,7 +33,7 @@ Jump_0E2_402A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_403A::
-    farcall Func_005_4CE5
+    farcall CheckFoeStatus7Bit2
     ld a, c
     cp a, $01
     jr z, Jump_0E2_404E
@@ -1451,7 +1451,7 @@ Jump_0E2_4A21::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4A31::
-    farcall Func_005_4D1A
+    farcall AnyAllyLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A41
@@ -2146,7 +2146,7 @@ Func_0E2_4F30:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4F49::
-    farcall Func_005_4CE5
+    farcall CheckFoeStatus7Bit2
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4F5D
@@ -2243,7 +2243,7 @@ Jump_0E2_4FF0::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5000::
-    farcall Func_005_4CE5
+    farcall CheckFoeStatus7Bit2
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5014
@@ -4376,7 +4376,7 @@ Func_0E2_5F0A:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_443B
+    farcall AnyFoeHasDEFAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_5F23
