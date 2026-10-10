@@ -656,13 +656,15 @@ Jump_0A0_4368::
 Jump_0A0_436F::
     ld l, a
     ld h, $FF
-    call Func_0A0_4378
+    call IncrementTableByteCappedAt3_BankA0
     inc de
     jr Jump_0A0_4368
 
+; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (the bank-$A0 copy of IncrementTableByteCappedAt3) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0A0_434B)
 ; reads: hFFC6, hFFC7
-Func_0A0_4378::
+IncrementTableByteCappedAt3_BankA0::
+Func_0A0_4378:: ; address name
     ldh a, [hFFC6]
     add a, l
     ld l, a
@@ -1539,9 +1541,11 @@ Jump_0A0_48F3::
 Data_0A0_48F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $19, $32, $4B, $64, $7D, $96, $AF, $C8, $E1, $FA, $FF
 
+; copies battler records 0 and 1 ($4E bytes each, wBattlerRecords and wD123) to wD1BF and wD20D (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0A0_4F8E_Table2_Case06)
 ; points at: wBattlerRecords, wD1BF, wD123, wD20D
-Func_0A0_4900::
+BackupBattlerRecords0And1::
+Func_0A0_4900:: ; address name
     ld hl, wBattlerRecords
     ld de, wD1BF
     ld bc, $004E
@@ -2159,9 +2163,11 @@ Func_0A0_4CC7:: ; address name
     call CopyRect32StrideToVRAM_BankA0
     ret
 
+; copies 7 x 1 from wC2A4 to vBGMap0 + $10C and 20 x 9 from wC2B8 to vBGMap0 + $120 (CopyRect32StrideToVRAM_BankA0) (E-0118)
 ; 3 call sites from 3 routines (e.g. Func_0A0_5F2E_Case10, Func_0A0_5F2E_Case0F, Func_0A0_5F2E_Case0D)
 ; points at: wC2A4, wC2B8
-Func_0A0_4CD4::
+DrawWC2A4AndWC2B8Rects_BankA0::
+Func_0A0_4CD4:: ; address name
     ld de, wC2A4
     ld hl, vBGMap0 + $10C
     ld bc, $0701
@@ -2184,7 +2190,7 @@ Func_0A0_4CED:: ; address name
     ret
 
 ; the same 28 bytes as CopyRect32StrideToVRAM (31:753F)
-; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, RunBattleSetup_BankA0_Shared01, Func_0A0_4CD4, DrawWC2B8Rect11x9ToBGMapRow9_BankA0, ...)
+; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, RunBattleSetup_BankA0_Shared01, DrawWC2A4AndWC2B8Rects_BankA0, DrawWC2B8Rect11x9ToBGMapRow9_BankA0, ...)
 CopyRect32StrideToVRAM_BankA0::
 Func_0A0_4CFA:: ; address name
     push bc
@@ -2555,7 +2561,7 @@ Jump_0A0_5093::
     ld [wD890], a
     ld a, $02
     ld [wC985], a
-    call Func_0A0_4900
+    call BackupBattlerRecords0And1
     call Func_0A0_418E
     ld hl, wBattleStep
     inc [hl]
@@ -3826,7 +3832,7 @@ Jump_0A0_57C8:: ; address name
     ld l, a
     ld a, [wCA89]
     ld h, a
-    call Func_0A0_590B
+    call QuarterHLAtLeast1
     ld a, l
     ld [wCA88], a
     ld a, h
@@ -3839,7 +3845,7 @@ Jump_0A0_57C8:: ; address name
     ld l, a
     ld a, [wCA8D]
     ld h, a
-    call Func_0A0_590B
+    call QuarterHLAtLeast1
     ld a, l
     ld [wCA8C], a
     ld a, h
@@ -3852,7 +3858,7 @@ Jump_0A0_57C8:: ; address name
     ld l, a
     ld a, [wCA8F]
     ld h, a
-    call Func_0A0_590B
+    call QuarterHLAtLeast1
     ld a, l
     ld [wCA8E], a
     ld a, h
@@ -3861,7 +3867,7 @@ Jump_0A0_57C8:: ; address name
     ld l, a
     ld a, [wCA91]
     ld h, a
-    call Func_0A0_590B
+    call QuarterHLAtLeast1
     ld a, l
     ld [wCA90], a
     ld a, h
@@ -3870,7 +3876,7 @@ Jump_0A0_57C8:: ; address name
     ld l, a
     ld a, [wCA93]
     ld h, a
-    call Func_0A0_590B
+    call QuarterHLAtLeast1
     ld a, l
     ld [wCA92], a
     ld a, h
@@ -3879,7 +3885,7 @@ Jump_0A0_57C8:: ; address name
     ld l, a
     ld a, [wCA95]
     ld h, a
-    call Func_0A0_590B
+    call QuarterHLAtLeast1
     ld a, l
     ld [wCA94], a
     ld a, h
@@ -3930,8 +3936,10 @@ Jump_0A0_57C8:: ; address name
     ld [wC58B], a
     ret
 
+; HL >>= 2 (arithmetic), and 1 when that leaves 0 (E-0118)
 ; 6 call sites from 1 routine (e.g. Func_0A0_56A7_Case01)
-Func_0A0_590B::
+QuarterHLAtLeast1::
+Func_0A0_590B:: ; address name
     sra h
     rr l
     sra h
@@ -5078,7 +5086,7 @@ Jump_0A0_6021:: ; address name
     ld a, [wC46C]
     and a, $03
     ld [hl], a
-    call Func_0A0_69A1
+    call SetWDA43AndWDA4BForWCFD4_BankA0
     cp a, $03
     jr nz, Jump_0A0_606D
     farcall ClearAndLayoutTileBlocksForWD890Count
@@ -5438,7 +5446,7 @@ Jump_0A0_6243:: ; address name
 ; points at: wBattleResolveStep
 Func_0A0_5F2E_Case0D::
 Jump_0A0_62A3:: ; address name
-    call Func_0A0_4CD4
+    call DrawWC2A4AndWC2B8Rects_BankA0
     ld hl, Data_0A0_697F
     ld a, [wC46E]
     and a, $03
@@ -5574,7 +5582,7 @@ Jump_0A0_6387::
 ; writes: wBattleResolveStep, wD869
 Func_0A0_5F2E_Case0F::
 Jump_0A0_639B:: ; address name
-    call Func_0A0_4CD4
+    call DrawWC2A4AndWC2B8Rects_BankA0
     ld a, [wD869]
     ld [wBattleResolveStep], a
     xor a, a
@@ -5587,7 +5595,7 @@ Jump_0A0_639B:: ; address name
 Func_0A0_5F2E_Case10::
 Jump_0A0_63A9:: ; address name
     farcall ClearAndLayoutTileBlocksForWD890Count
-    call Func_0A0_4CD4
+    call DrawWC2A4AndWC2B8Rects_BankA0
     farcall CopyRectRecord7345ToScreenBuffer
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6611,10 +6619,12 @@ Data_0A0_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $81, $01, $C1, $01, $01, $02, $C1, $01, $01, $02, $C1, $01, $01, $02, $29, $00
     db $69, $00, $A9, $00, $E9, $00, $2F, $01, $6F, $01
 
+; A = value: stores A in wDA43[wCFD4], and also in wDA4B[wCFD4] unless A is 3 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0A0_5F2E_Case02)
 ; reads: wCFD4
 ; points at: wDA43, wDA4B
-Func_0A0_69A1::
+SetWDA43AndWDA4BForWCFD4_BankA0::
+Func_0A0_69A1:: ; address name
     push af
     ld a, [wCFD4]
     ld hl, wDA43

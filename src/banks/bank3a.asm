@@ -478,7 +478,7 @@ Func_03A_4ADB::
     jr nz, Jump_03A_4B04
     ld a, [wD801]
     ld c, a
-    call Func_03A_52A4
+    call DecompressGraphicsAToTiles0
     ld a, $02
     ld [wD800], a
     ld a, [wDAD2]
@@ -1882,8 +1882,10 @@ Jump_03A_52A1::
 Jump_03A_52A3::
     ret
 
+; A = entry: decompresses the stream named by the 3-byte far pointer at Data_03A_52B9 + 3 * A to vTiles0 (DecompressToVRAM) (E-0118)
 ; 2 call sites from 2 routines (e.g. Func_03A_4ADB, Func_03A_54DC)
-Func_03A_52A4::
+DecompressGraphicsAToTiles0::
+Func_03A_52A4:: ; address name
     ld c, a
     ld b, $00
     ld hl, Data_03A_52B9
@@ -2136,7 +2138,7 @@ Func_03A_54DC::
     jr nz, Jump_03A_54F0
     ld a, [wD801]
     ld c, a
-    call Func_03A_52A4
+    call DecompressGraphicsAToTiles0
     ld a, $02
     ld [wD800], a
     ret
@@ -3127,7 +3129,7 @@ Jump_03A_6390::
     ld [wBattleResolveStep], a
     ret
 
-; 5 call sites from 5 routines (e.g. RunBattleActions_Case07, RunBattleActions_Case06, Func_03A_63F7_Case03, Func_03A_69AA_Case08, ...)
+; 5 call sites from 5 routines (e.g. RunBattleActions_Case07, RunBattleActions_Case06, SlotPresentWithStatus0Bit6_Case03, Func_03A_69AA_Case08, ...)
 ; reads: wBattleActionId, wDABA
 Func_03A_639A::
     ld a, [wBattleActionId]
@@ -3158,13 +3160,13 @@ Func_03A_63B2::
     ld c, $04
 
 Jump_03A_63C4::
-    call Func_03A_63F7
+    call SlotPresentWithStatus0Bit6
     ret nc
     inc c
-    call Func_03A_63F7
+    call SlotPresentWithStatus0Bit6
     ret nc
     inc c
-    call Func_03A_63F7
+    call SlotPresentWithStatus0Bit6
     ret
 
 ; 1 call site from 1 routine (e.g. Func_03A_639A)
@@ -3193,9 +3195,11 @@ Jump_03A_63E6::
     call CarryUnlessWDA63SlotEmpty
     ret
 
+; C = slot: carry set when the slot is present and its status byte 0 bit 6 is set, else carry clear (E-0118)
 ; 3 call sites from 1 routine (e.g. Func_03A_63B2)
 ; points at: wBattleStatus
-Func_03A_63F7::
+SlotPresentWithStatus0Bit6::
+Func_03A_63F7:: ; address name
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     ret c
@@ -3221,19 +3225,19 @@ RunBattleActions_Case09::
 Jump_03A_640F:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw Func_03A_63F7_Case00
-    dw Func_03A_63F7_Case01
-    dw Func_03A_63F7_Case02
-    dw Func_03A_63F7_Case03
-    dw Func_03A_63F7_Case04
-    dw Func_03A_63F7_Case05
-    dw Func_03A_63F7_Case06
+    dw SlotPresentWithStatus0Bit6_Case00
+    dw SlotPresentWithStatus0Bit6_Case01
+    dw SlotPresentWithStatus0Bit6_Case02
+    dw SlotPresentWithStatus0Bit6_Case03
+    dw SlotPresentWithStatus0Bit6_Case04
+    dw SlotPresentWithStatus0Bit6_Case05
+    dw SlotPresentWithStatus0Bit6_Case06
 
-; entry 0 of the `rst $00` table in Func_03A_63F7
+; entry 0 of the `rst $00` table in SlotPresentWithStatus0Bit6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wBattleResolveStep
 ; points at: wBattleResolveStep, wD80A, wD864, wBattleStatus
-Func_03A_63F7_Case00::
+SlotPresentWithStatus0Bit6_Case00::
 Jump_03A_6421:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3306,12 +3310,12 @@ Jump_03A_646E::
     ld [wBattleResolveStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_63F7
+; entry 1 of the `rst $00` table in SlotPresentWithStatus0Bit6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wBattleResolveStep
 ; points at: wBattleResolveStep, wD811
-Func_03A_63F7_Case01::
+SlotPresentWithStatus0Bit6_Case01::
 Jump_03A_6480:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3343,12 +3347,12 @@ Jump_03A_64A5::
 Jump_03A_64AE::
     ret
 
-; entry 2 of the `rst $00` table in Func_03A_63F7
+; entry 2 of the `rst $00` table in SlotPresentWithStatus0Bit6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wD868, wD871
 ; writes: wD868, wBattleTarget
 ; points at: wBattleResolveStep, wBattleStatus
-Func_03A_63F7_Case02::
+SlotPresentWithStatus0Bit6_Case02::
 Jump_03A_64AF:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3375,8 +3379,8 @@ Jump_03A_64D1::
 Jump_03A_64D8::
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call Func_03A_64F8
-    call Func_03A_6533
+    call SlotPresentWithStatus0Bit6_Case02_Sub01
+    call SlotPresentWithStatus0Bit6_Case02_Sub02
     ld a, [wD868]
     ld d, a
     farcall ShowBattleText
@@ -3387,10 +3391,12 @@ Jump_03A_64D8::
     dec [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_63F7_Case02)
+; only called from SlotPresentWithStatus0Bit6_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case02)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wD873
-Func_03A_64F8::
+SlotPresentWithStatus0Bit6_Case02_Sub01::
+Func_03A_64F8:: ; address name
     push bc
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank3A
@@ -3435,11 +3441,13 @@ Jump_03A_652A::
     ld [wD873], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_63F7_Case02)
+; only called from SlotPresentWithStatus0Bit6_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case02)
 ; reads: wBattleActor, wBattleDamageLo, wD873, wD868
 ; writes: wD871, wD868, wDABE
 ; points at: wBattleHP
-Func_03A_6533::
+SlotPresentWithStatus0Bit6_Case02_Sub02::
+Func_03A_6533:: ; address name
     xor a, a
     ld [wD871], a
     ld a, [wBattleActor]
@@ -3490,11 +3498,11 @@ Jump_03A_657D::
     call SetBit0OfWD095Indexed_Bank3A
     ret
 
-; entry 3 of the `rst $00` table in Func_03A_63F7
+; entry 3 of the `rst $00` table in SlotPresentWithStatus0Bit6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep
-Func_03A_63F7_Case03::
+SlotPresentWithStatus0Bit6_Case03::
 Jump_03A_6584:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3509,12 +3517,12 @@ Jump_03A_6584:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 4 of the `rst $00` table in Func_03A_63F7
+; entry 4 of the `rst $00` table in SlotPresentWithStatus0Bit6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wD043, wD04B
 ; writes: wBattleResolveStep, wStringIndex, wStringCategory, wBattleStep, wBattleSubPhase
 ; points at: wBattleActor, wDA5B, wD891, wBattleResolveStep, wC130
-Func_03A_63F7_Case04::
+SlotPresentWithStatus0Bit6_Case04::
 Jump_03A_65A4:: ; address name
     ld hl, wBattleActor
     inc [hl]
@@ -3522,7 +3530,7 @@ Jump_03A_65A4:: ; address name
     cp a, $08
     jr z, Jump_03A_65B8
     call CarryUnlessWDA63SlotEmpty
-    jr c, Func_03A_63F7_Case04
+    jr c, SlotPresentWithStatus0Bit6_Case04
     ld a, $01
     ld [wBattleResolveStep], a
     ret
@@ -3583,7 +3591,7 @@ Jump_03A_6619::
     ld c, a
     ld b, $00
     ld hl, wC130
-    call Func_000_2F84
+    call SlotPresentWithStatus0Bit6_Case04_Sub01
     ld hl, wC130
     ld a, [hl]
     cp a, $01
@@ -3613,7 +3621,7 @@ Jump_03A_663E::
     ret
 
 ; C = first slot, B = count, D = value: wDA5B[slot] = D for every present slot in the range (CarryUnlessWDA63SlotEmpty) (E-0113)
-; 4 call sites from 1 routine (e.g. Func_03A_63F7_Case04)
+; 4 call sites from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case04)
 ; points at: wDA5B
 SetWDA5BForPresentSlots::
 Func_03A_6650:: ; address name
@@ -3631,11 +3639,11 @@ Jump_03A_6660::
     jr nz, SetWDA5BForPresentSlots
     ret
 
-; entry 5 of the `rst $00` table in Func_03A_63F7
+; entry 5 of the `rst $00` table in SlotPresentWithStatus0Bit6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
 ; writes: wBattleStep, wBattleSubPhase, wBattleResolveStep
-Func_03A_63F7_Case05::
+SlotPresentWithStatus0Bit6_Case05::
 Jump_03A_6665:: ; address name
     ld a, [wC52B]
     or a, a
@@ -3648,11 +3656,11 @@ Jump_03A_6665:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 6 of the `rst $00` table in Func_03A_63F7
+; entry 6 of the `rst $00` table in SlotPresentWithStatus0Bit6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
 ; writes: wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wD092
-Func_03A_63F7_Case06::
+SlotPresentWithStatus0Bit6_Case06::
 Jump_03A_6677:: ; address name
     ld a, [wC52B]
     or a, a
@@ -4842,10 +4850,12 @@ Jump_03A_6D71::
     jr nz, Jump_03A_6D5A
     ret
 
+; D = Data_03A_6DAA[wBattleActionId]; returns at once when it is $FF; for action $CF first runs Func_03A_6D91; then ShowBattleText (E-0118)
 ; 2 call sites from 2 routines (e.g. Func_032_4ADC_Case03, Func_032_5820_Case02)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
-Func_03A_6D76::
+ShowActionBattleTextFrom6DAA::
+Func_03A_6D76:: ; address name
     ld a, [wBattleActionId]
     ld hl, Data_03A_6DAA
     add_a_to_hl
@@ -4855,13 +4865,15 @@ Func_03A_6D76::
     ld d, a
     ld a, [wBattleActionId]
     cp a, $CF
-    call z, Func_03A_6D91
+    call z, ShowActionBattleTextFrom6DAA_Sub01
     jp ShowBattleText
 
-; 1 call site from 1 routine (e.g. Func_03A_6D76)
+; only called from ShowActionBattleTextFrom6DAA (E-0047)
+; 1 call site from 1 routine (e.g. ShowActionBattleTextFrom6DAA)
 ; reads: wC5E7
 ; writes: wC96F
-Func_03A_6D91::
+ShowActionBattleTextFrom6DAA_Sub01::
+Func_03A_6D91:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]
     cp a, $80
@@ -5177,10 +5189,12 @@ Data_03A_76FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $4F, $56, $4E, $50, $55, $51, $52, $54, $5F, $5A, $58, $5B, $59, $5C, $FF
     db $4D, $4E, $57, $53, $FF, $FF, $FF
 
+; CopyActorNameToWC130 and CopyMappedSlotNameToWC140, then shows string Data_03A_7738[wBattleActionId - $D0] of category 0 (BeginStringDisplay_Bank2F); used for the $D0+ special actions (E-0118)
 ; 1 call site from 1 routine (e.g. Func_032_4F0A)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
-Func_03A_7715::
+ShowSpecialActionMessage::
+Func_03A_7715:: ; address name
     call CopyActorNameToWC130
     call CopyMappedSlotNameToWC140
     ld a, [wBattleActionId]
@@ -5525,7 +5539,7 @@ Jump_03A_78EA::
     ret
 
 ; wD86C = wBattleActor, then CopySlotNameToHL with HL = wC130 (E-0113)
-; 3 call sites from 2 routines (e.g. Func_03A_7508, Func_03A_7715)
+; 3 call sites from 2 routines (e.g. Func_03A_7508, ShowSpecialActionMessage)
 ; reads: wBattleActor
 ; writes: wD86C
 ; points at: wC130
@@ -5551,7 +5565,7 @@ Func_03A_78FB:: ; address name
     ret
 
 ; far-calls Func_0A3_414F (which maps the actor to a slot in hFFC6), then copies that slot's name to wC140 (CopySlotNameToHL) (E-0113)
-; 2 call sites from 2 routines (e.g. Func_03A_7508, Func_03A_7715)
+; 2 call sites from 2 routines (e.g. Func_03A_7508, ShowSpecialActionMessage)
 ; reads: hFFC6
 ; writes: wD86C
 ; points at: wC140
@@ -6204,7 +6218,7 @@ Jump_03A_7C1E::
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. Func_03A_64F8)
+; 1 call site from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case02_Sub01)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank3A::
 Func_03A_7C66:: ; address name
@@ -6236,7 +6250,7 @@ Jump_03A_7C89::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
-; 4 call sites from 4 routines (e.g. Func_03A_6533, Func_03A_69AA_Case06, Func_03A_69AA_Case04, Func_03A_69AA_Case00)
+; 4 call sites from 4 routines (e.g. SlotPresentWithStatus0Bit6_Case02_Sub02, Func_03A_69AA_Case06, Func_03A_69AA_Case04, Func_03A_69AA_Case00)
 AddDoubleAToHL_Bank3A::
 Func_03A_7C93:: ; address name
     add a, a
@@ -6288,7 +6302,7 @@ Jump_03A_7CCA::
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 1 call site from 1 routine (e.g. Func_03A_6533)
+; 1 call site from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case02_Sub02)
 ; points at: wD095
 SetBit0OfWD095Indexed_Bank3A::
 Func_03A_7CEC:: ; address name
@@ -6312,7 +6326,7 @@ Func_03A_7CF9:: ; address name
     ret
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 3 call sites from 3 routines (e.g. Func_03A_6533, Func_03A_69AA_Case02, Func_03A_69AA_Case01)
+; 3 call sites from 3 routines (e.g. SlotPresentWithStatus0Bit6_Case02_Sub02, Func_03A_69AA_Case02, Func_03A_69AA_Case01)
 ; points at: wD095
 SetBit2OfWD095Indexed_Bank3A::
 Func_03A_7D06:: ; address name

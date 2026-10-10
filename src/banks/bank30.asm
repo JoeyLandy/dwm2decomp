@@ -2003,7 +2003,7 @@ Jump_030_4D0F::
     jr z, Jump_030_4D24
 
 Jump_030_4D18::
-    call Func_030_4D25
+    call ActorActionDataWord
     ld a, c
     and a, b
     cp a, $FF
@@ -2013,8 +2013,10 @@ Jump_030_4D18::
 Jump_030_4D24::
     ret
 
+; BC = the word at Data_030_4D34 + 2 * the actor's chosen action (ActorActionChoiceAddress) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_030_4CFC)
-Func_030_4D25::
+ActorActionDataWord::
+Func_030_4D25:: ; address name
     call ActorActionChoiceAddress
     ld c, [hl]
     ld b, $00
@@ -2817,7 +2819,7 @@ Func_030_540C:: ; address name
     ret
 
 ; HL = wBattleActionChoice + 2 * wBattleActor (the actor's action byte; the target follows) (E-0072)
-; 12 call sites from 8 routines (e.g. Func_030_4D25, Func_030_4595, Func_030_502D, Func_030_5440, ...)
+; 12 call sites from 8 routines (e.g. ActorActionDataWord, Func_030_4595, Func_030_502D, Func_030_5440, ...)
 ; reads: wBattleActor
 ; points at: wBattleActionChoice
 ActorActionChoiceAddress::

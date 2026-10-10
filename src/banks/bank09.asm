@@ -10,7 +10,7 @@ Func_009_4001:: ; address name
     ret
 
 ; ld de, this bank's string table / CopyStringToBuffer
-; 2 call sites from 2 routines (e.g. Func_003_6B5E_Case03, Func_073_49C5)
+; 2 call sites from 2 routines (e.g. Func_003_6B5E_Case03, CopyItemStringToWC152)
 CopyStringToBuffer_Bank09::
 Func_009_4008:: ; address name
     ld de, Data_009_4016

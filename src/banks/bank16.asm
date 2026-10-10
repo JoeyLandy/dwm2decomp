@@ -2,7 +2,7 @@ SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $F0, $C6, $CD, $92, $4A, $C9
 
 ; wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)
-; 4 call sites from 4 routines (e.g. Func_003_5253_Table2_Case01, Func_031_62D3, Func_03B_42F4_Case0B, Func_0F1_4001_Table2_Case01)
+; 4 call sites from 4 routines (e.g. Func_003_5253_Table2_Case01, LoadSelectedInventoryItemRecord, Func_03B_42F4_Case0B, Func_0F1_4001_Table2_Case01)
 ; reads: wItemId
 ; points at: wItemRecord
 LoadItemRecord::
@@ -4050,7 +4050,7 @@ Jump_016_5970::
     ld [de], a
     pop af
     ld [hl], a
-    call Func_016_598C
+    call SwapInventorySlotCWithNext
 
 Jump_016_597C::
     inc de
@@ -4064,9 +4064,11 @@ Jump_016_597C::
     jr nz, Jump_016_5966
     ret
 
+; swaps wInventory[C] and wInventory[C + 1]; HL kept (E-0118)
 ; 1 call site from 1 routine (e.g. Func_016_590C)
 ; points at: wInventory
-Func_016_598C::
+SwapInventorySlotCWithNext::
+Func_016_598C:: ; address name
     push hl
     ld hl, wInventory
     ld a, c
@@ -5874,11 +5876,11 @@ Jump_016_6682::
     ld a, [wFrameCounterLo]
     bit 4, a
     jr z, BlankTileAtTableEntryDE
-    jr Func_016_66CB
+    jr DrawCursorTileAtTableEntryDE
 
 Jump_016_6691::
     ld [de], a
-    call Func_016_66CB
+    call DrawCursorTileAtTableEntryDE
     ld a, $02
     ld [wFrameCounterLo], a
     ret
@@ -5900,7 +5902,7 @@ Jump_016_669B::
     ld [de], a
 
 Jump_016_66B1::
-    call Func_016_66CB
+    call DrawCursorTileAtTableEntryDE
     xor a, a
     ld [wFrameCounterLo], a
     ret
@@ -5919,8 +5921,10 @@ Func_016_66B9:: ; address name
     pop hl
     ret
 
+; HL = table of VRAM addresses, [DE] = index: writes the cursor tile $BB at that entry's address (WriteVRAMByte); HL kept (E-0118)
 ; 2 call sites from 1 routine (e.g. Func_016_65FF)
-Func_016_66CB::
+DrawCursorTileAtTableEntryDE::
+Func_016_66CB:: ; address name
     ld a, [de]
     push hl
     add a, a
@@ -6222,7 +6226,7 @@ Jump_016_68B8::
 Jump_016_68CB::
     push hl
     ld bc, $0200
-    call Func_016_68F0
+    call ShowStringBCAtTileRowWD868
     ld a, [wD868]
     ld hl, Data_016_690F
     add a, a
@@ -6244,10 +6248,12 @@ Func_016_68E5::
     add a, $02
     ld b, a
 
+; wStringCategory = B, wStringIndex = C, string window destination = $9400 + 256 * wD868, then ShowString_Bank08 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_016_6891)
 ; reads: wD868
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E
-Func_016_68F0::
+ShowStringBCAtTileRowWD868::
+Func_016_68F0:: ; address name
     ld a, c
     ld [wStringIndex], a
     ld a, b
@@ -6692,7 +6698,7 @@ Jump_016_6B83::
     ld c, $55
     call SRAMRecordAddressMapped
     ld c, $00
-    call Func_016_6BE0
+    call InitSlotFromRecordFlags
     ld a, [wC6FD]
     cp a, $01
     jr z, Jump_016_6BCC
@@ -6700,7 +6706,7 @@ Jump_016_6B83::
     ld c, $55
     call SRAMRecordAddressMapped
     ld c, $01
-    call Func_016_6BE0
+    call InitSlotFromRecordFlags
     ld a, [wC6FD]
     cp a, $02
     jr z, Jump_016_6BCC
@@ -6708,7 +6714,7 @@ Jump_016_6B83::
     ld c, $55
     call SRAMRecordAddressMapped
     ld c, $02
-    call Func_016_6BE0
+    call InitSlotFromRecordFlags
 
 Jump_016_6BCC::
     ld hl, wBattleSubPhase
@@ -6730,9 +6736,11 @@ Func_016_6BD9:: ; address name
     jr nz, CopyBBytesDEToHL_Bank16
     ret
 
+; HL = a record flag byte, C = battle slot: unless bit 7 is set, marks the slot present (wBattleSlotOut = 0), clears its status byte 0 and sets status bit 0 when flag bit 2 is set and status bit 5 when flag bit 0 is set (E-0118)
 ; 3 call sites from 1 routine (e.g. Func_016_6A4E_Case04)
 ; points at: wBattleSlotOut, wBattleStatus
-Func_016_6BE0::
+InitSlotFromRecordFlags::
+Func_016_6BE0:: ; address name
     bit 7, [hl]
     jr nz, Jump_016_6C0A
     ld d, [hl]
@@ -6751,14 +6759,14 @@ Func_016_6BE0::
     ret
 
 ; [HL] |= $20 (E-0114)
-; 1 call site from 1 routine (e.g. Func_016_6BE0)
+; 1 call site from 1 routine (e.g. InitSlotFromRecordFlags)
 SetBit5AtHL::
 Func_016_6C04:: ; address name
     set 5, [hl]
     ret
 
 ; [HL] |= $01 (E-0114)
-; 1 call site from 1 routine (e.g. Func_016_6BE0)
+; 1 call site from 1 routine (e.g. InitSlotFromRecordFlags)
 SetBit0AtHL::
 Func_016_6C07:: ; address name
     set 0, [hl]
@@ -7394,7 +7402,7 @@ Jump_016_7023::
     push hl
     push de
     push bc
-    call Func_016_70C6
+    call SetRecordState2
     pop bc
     pop de
     pop hl
@@ -7497,9 +7505,11 @@ Func_016_7082::
 Func_016_70C5::
     ld a, b
 
+; A = record: sets its byte 0 (state) to 2 in SRAM bank 0 (SRAMRecordAddress with C = 0) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_016_6C16_Case12)
 ; writes: rRAMG, rRAMB
-Func_016_70C6::
+SetRecordState2::
+Func_016_70C6:: ; address name
     ld c, $00
     call SRAMRecordAddress
     ld a, $0A

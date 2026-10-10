@@ -1472,7 +1472,7 @@ Jump_039_546E::
     jr c, Jump_039_547E
     call AnySlotStatusMaskSet
     jr z, Jump_039_5488
-    call Func_039_71D4
+    call TestSlotStatus2Bit3OrStatus5Bits67
     jr z, Jump_039_5488
 
 Jump_039_547E::
@@ -1491,7 +1491,7 @@ Jump_039_548E::
     ld a, c
     call AnySlotStatusMaskSet
     jr nz, Jump_039_549F
-    call Func_039_71D4
+    call TestSlotStatus2Bit3OrStatus5Bits67
     jr nz, Jump_039_549F
     ld a, c
     call CheckSlotStatusBlock
@@ -1516,7 +1516,7 @@ Jump_039_54AF::
     jr c, Jump_039_54E5
     call AnySlotStatusMaskSet
     jr nz, Jump_039_54E5
-    call Func_039_71D4
+    call TestSlotStatus2Bit3OrStatus5Bits67
     jr nz, Jump_039_54E5
     ld a, c
     call Func_039_6E27
@@ -4192,7 +4192,7 @@ Jump_039_6450::
     jr c, Jump_039_6460
     call AnySlotStatusMaskSet
     jr z, Jump_039_646A
-    call Func_039_71D4
+    call TestSlotStatus2Bit3OrStatus5Bits67
     jr z, Jump_039_646A
 
 Jump_039_6460::
@@ -4206,7 +4206,7 @@ Jump_039_646A::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_64C2
-    call Func_039_71D4
+    call TestSlotStatus2Bit3OrStatus5Bits67
     jr nz, Jump_039_64C2
     ld a, c
     call AnySlotStatusMaskSet
@@ -6728,9 +6728,11 @@ Func_039_71C9:: ; address name
     ld a, [hl]
     ret
 
+; C = slot: NZ when its status byte 2 bit 3 is set; otherwise A = status byte 5 & $C0 (Z when clear) (E-0118)
 ; 5 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash)
 ; points at: wD80E
-Func_039_71D4::
+TestSlotStatus2Bit3OrStatus5Bits67::
+Func_039_71D4:: ; address name
     ld a, c
     ld hl, wD80E
     call AddAx9ToHL

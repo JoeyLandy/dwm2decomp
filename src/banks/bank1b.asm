@@ -431,7 +431,7 @@ Jump_01B_433F::
     ld [wC58B], a
     ld a, $01
     ld [wModeChangeRequest], a
-    call Func_01B_4362
+    call ClearSoundChannelSlots
 
 Jump_01B_4357::
     ld a, $03
@@ -440,9 +440,11 @@ Jump_01B_4357::
     call SerialSendByte
     ret
 
+; zeroes the first two bytes of each of six $20-byte sound channel slots from wSoundChannelSlots (E-0118)
 ; 1 call site from 1 routine (e.g. Func_01B_4001_Case00)
 ; writes: wSoundChannelSlots, wDC01, wDC20, wDC21, wDC40, wDC41, wDC60, wDC61, ...
-Func_01B_4362::
+ClearSoundChannelSlots::
+Func_01B_4362:: ; address name
     xor a, a
     ld [wSoundChannelSlots], a
     ld [wDC01], a
@@ -1807,11 +1809,13 @@ Data_01B_517A:: ; heuristic: target of a monotone pointer table; C0
 Data_01B_5190:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $06D190, $21F
 
+; on CGB copies the 8-byte palette Data_01B_53C6 into wBGPaletteBuffer and sets wC526 = $7F (E-0118)
 ; 2 call sites from 2 routines (e.g. GameMode6_Init, GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wC526
 ; points at: wBGPaletteBuffer
-Func_01B_53AF::
+LoadPalette0FromData53C6::
+Func_01B_53AF:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -4147,7 +4151,7 @@ Func_01B_61A7::
 Func_01B_61A7_Case00::
 Jump_01B_61B7:: ; address name
     ld b, $C3
-    jr Func_01B_61BD
+    jr WriteTileBAtBGMap20FPlusWD785
 
 ; entry 1 of the `rst $00` table in Func_01B_61A7
 ; no direct call (reached through a table, a jump or a vector)
@@ -4157,10 +4161,12 @@ Func_01B_61A7_Case01::
 Jump_01B_61BB:: ; address name
     ld b, $BC
 
+; writes B at vBGMap0 + $20F + wD785 (WaitForVRAMAccess, interrupts off), then wD783 += 1 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_01B_61A7_Case05)
 ; reads: wD785, wD783
 ; writes: wD783
-Func_01B_61BD::
+WriteTileBAtBGMap20FPlusWD785::
+Func_01B_61BD:: ; address name
     ld hl, vBGMap0 + $20F
     ld a, [wD785]
     add_a_to_hl
@@ -4181,7 +4187,7 @@ Func_01B_61BD::
 Func_01B_61A7_Case05::
 Jump_01B_61D7:: ; address name
     ld b, $BB
-    call Func_01B_61BD
+    call WriteTileBAtBGMap20FPlusWD785
     xor a, a
     ld [wD783], a
     ld a, [wD785]

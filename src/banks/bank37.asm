@@ -2197,7 +2197,7 @@ Jump_037_56D4::
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    call Func_037_5895
+    call UploadTilesFromData58AE
     farcall Func_01F_76B5
     ld a, [wD781]
     add a, $03
@@ -2460,8 +2460,10 @@ Func_037_5870:: ; heuristic: follows a terminator; C0
     farcall Func_01D_6A3D
     ret
 
+; copies tiles from Data_037_58AE: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank37) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_037_5344_Case1B)
-Func_037_5895::
+UploadTilesFromData58AE::
+Func_037_5895:: ; address name
     ld hl, Data_037_58AE
     ld de, vTiles2 + $6E0
     call CopyTileBytesToVRAM_Bank37
@@ -2476,7 +2478,7 @@ Data_037_58AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0DD8AE, $50
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
-; 5 call sites from 1 routine (e.g. Func_037_5895)
+; 5 call sites from 1 routine (e.g. UploadTilesFromData58AE)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank37::
 Func_037_58FE:: ; address name
@@ -3116,7 +3118,7 @@ Func_037_5C4E::
     ld [wSpeciesIdLo], a
     ld a, b
     ld [wSpeciesIdHi], a
-    call Func_037_5EE7
+    call StoreSpeciesFamilyAtHL
     ld a, [de]
     and a, $01
     ld [hl+], a
@@ -3644,9 +3646,11 @@ Func_037_5ED0::
     inc hl
     ret
 
+; LoadSpeciesRecord (id already in wSpeciesIdLo/Hi), then stores its family at HL; HL += 1, DE += 1 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_037_5C4E)
 ; reads: wSpeciesRecord
-Func_037_5EE7::
+StoreSpeciesFamilyAtHL::
+Func_037_5EE7:: ; address name
     push hl
     push de
     farcall LoadSpeciesRecord

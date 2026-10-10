@@ -6243,7 +6243,7 @@ Jump_01D_6C6A::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 7 call sites from 3 routines (e.g. Func_01D_6C14, Func_01D_6C9F, Func_01D_6D07)
+; 7 call sites from 3 routines (e.g. Func_01D_6C14, Func_01D_6C9F, UploadTilesFromData6D20)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1D::
 Func_01D_6C79:: ; address name
@@ -6347,8 +6347,10 @@ Jump_01D_6CF9::
     inc [hl]
     ret
 
+; copies tiles from Data_01D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank1D) (E-0118)
 ; 4 call sites from 4 routines (e.g. Func_01E_5C63_Table2_Case00, Func_01E_6074_Table6_Case04, Func_01E_6074_Table8_Case1B, Func_0F0_5DE8_Case04)
-Func_01D_6D07::
+UploadTilesFromData6D20::
+Func_01D_6D07:: ; address name
     ld hl, Data_01D_6D20
     ld de, vTiles2 + $6E0
     call CopyTileBytesToVRAM_Bank1D

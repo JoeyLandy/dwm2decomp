@@ -1293,6 +1293,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Others:** grid and window helpers.
 - Binary verification: pending; see the commit.
 
+### E-0118 — Medium-length routines read in bulk (second half)
+
+- Kind: OBSERVATION (full reading; C1).
+- **Fifty-eight names from the rest of the 9-16-instruction listing:**
+  - inventory: SwapInventorySlotCWithNext, LoadSelectedInventoryItemRecord, CopyItemStringToWC152;
+  - battle start: InitSlotFromRecordFlags, which maps record flag bits 2/0 to battle status bits 0/5;
+  - damage: DamageEightyPercentOfTargetHPScaled, ScaleDamageBy3Over2, ScaleHLBy29Over32, HalveDamageIfTargetStatus2Bit2;
+  - battle messages: ShowSpecialActionMessage (the $D0+ actions) and ShowActionBattleTextFrom6DAA;
+  - maps: SetMapScreenFromAAndCenterPlayer, LoadMapPositionFromHL, WarpToMap41;
+  - sound and battle records: ClearSoundChannelSlots, BackupBattlerRecords0And1;
+  - the battle-panel side swap DisplayedSlotOfActor;
+  - several bank copies of earlier helpers (`_BankA0`, `_BankF0`, `_BankF1`).
+- **Data tables named by structure only.** RunEffectTestEntryA reads 4-byte (actor, target, action, flags) entries, which looks like a test list. DecompressGraphicsAToTiles0 reads a far-pointer table.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

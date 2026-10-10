@@ -2561,7 +2561,7 @@ Jump_01E_5162::
     ld a, [wD7B7]
     and a, a
     jr nz, Jump_01E_5199
-    call Func_01E_7778
+    call BlankTwoTableEntries788A
     ld a, [wD7B7]
     ld b, $BC
     ld hl, $788A
@@ -2598,7 +2598,7 @@ Jump_01E_5199::
     ret
 
 Jump_01E_51AE::
-    call Func_01E_7778
+    call BlankTwoTableEntries788A
     ld a, [wD7B7]
     ld b, $BC
     ld hl, $788A
@@ -3284,7 +3284,7 @@ Jump_01E_5743::
     ld [wD781], a
     xor a, a
     ld [wTwoChoiceCursor], a
-    call Func_01E_7778
+    call BlankTwoTableEntries788A
     ld a, [wD7B7]
     ld b, $BC
     ld hl, $788A
@@ -3903,7 +3903,7 @@ Jump_01E_5BD0:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5A4D_Table2_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_5A4D_Table2_Case03
 
@@ -3964,10 +3964,12 @@ Jump_01E_5C16::
     ld [wD781], a
     ret
 
+; clears tile areas with FillTilesBxC (12 x 1 at vTiles1 + $240, 15 x 1 at + $500, 5 x 1 at + $700, 2 x 1 at + $4E0), then wD782 += 1 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_01E_5C63_Table4_Case01)
 ; reads: wD782
 ; writes: wD782
-Func_01E_5C37::
+ClearTileAreasAndIncWD782::
+Func_01E_5C37:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0C01
     call FillTilesBxC
@@ -4097,7 +4099,7 @@ Jump_01E_5D1F:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5C63_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_5C63_Case03
 
@@ -4203,7 +4205,7 @@ Jump_01E_5DC5:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5C63_Table2_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_5C63_Table2_Case03
 
@@ -4259,7 +4261,7 @@ Jump_01E_5E17::
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    farcall Func_01D_6D07
+    farcall UploadTilesFromData6D20
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -4392,7 +4394,7 @@ Jump_01E_5F1D:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5C63_Table3_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_5C63_Table3_Case03
 
@@ -4595,7 +4597,7 @@ Jump_01E_6055:: ; address name
     ld de, $78DA
     call Func_01E_7454
     call Func_01E_6074
-    call Func_01E_5C37
+    call ClearTileAreasAndIncWD782
     call Func_01E_5C63
     call Func_01E_49F8
     xor a, a
@@ -4774,7 +4776,7 @@ Jump_01E_6183:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5A4D_Table2_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_6074_Table2_Case03
 
@@ -4825,7 +4827,7 @@ Jump_01E_61C5:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5C63_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_6074_Table3_Case03
 
@@ -4854,7 +4856,7 @@ Jump_01E_61F1:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5C63_Table2_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_6074_Table4_Case03
 
@@ -4887,7 +4889,7 @@ Jump_01E_6225:: ; address name
     ld a, [wD782]
     rst $00
     dw Func_01E_5C63_Table3_Case00
-    dw Func_01E_5C37
+    dw ClearTileAreasAndIncWD782
     dw Func_01E_5C63
     dw Func_01E_6074_Table5_Case03
 
@@ -5014,7 +5016,7 @@ Jump_01E_62C0:: ; address name
 ; writes: wD7F3, wD7F4, wD7F7, wD7F1, wD7F2, wD781
 Func_01E_6074_Table6_Case04::
 Jump_01E_62EF:: ; address name
-    farcall Func_01D_6D07
+    farcall UploadTilesFromData6D20
     call BGMapAddressAtScroll_Bank1E
     ld de, $6E7F
     ld a, $14
@@ -5109,7 +5111,7 @@ Jump_01E_6399:: ; address name
     ld a, [wD782]
     and a, a
     jp nz, Jump_01E_63D3
-    call Func_01E_6D0F
+    call DrawRect6x6From651BAtScroll41
     call GetWD789Cell4Address
     ld a, $0A
     ld [rRAMG2], a
@@ -6247,7 +6249,7 @@ Jump_01E_6B55::
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    farcall Func_01D_6D07
+    farcall UploadTilesFromData6D20
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -6483,9 +6485,11 @@ Jump_01E_6D06::
     ld [wD781], a
     ret
 
+; draws a 6 x 6 tile rectangle from $651B at BGMapAddressAtScroll + $41 (DrawTileRectAtHLFromDE_Bank1E, attributes cleared) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_01E_6074_Table6_Case06)
 ; writes: wD7F3, wD7F4, wD7F7
-Func_01E_6D0F::
+DrawRect6x6From651BAtScroll41::
+Func_01E_6D0F:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0041
     add hl, de
@@ -8367,8 +8371,10 @@ Func_01E_7763:: ; address name
     ld [wSpriteSlotCount], a
     ret
 
+; stores tile $C3 at the addresses in entries 0 and 1 of the table at $788A (StoreBAtWordTableEntry_Bank1E) (E-0118)
 ; 3 call sites from 2 routines (e.g. Func_01E_4A32_Table2_Case02, Func_01E_4A32_Table3_Case02)
-Func_01E_7778::
+BlankTwoTableEntries788A::
+Func_01E_7778:: ; address name
     xor a, a
     ld b, $C3
     ld hl, $788A

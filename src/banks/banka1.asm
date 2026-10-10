@@ -829,7 +829,7 @@ Jump_0A1_45C0::
 ; writes: hFFCF, hFFD0, hFFCE, hFFCC
 Func_0A1_45C5::
     call Func_0A1_46DF
-    call Func_0A1_4A91
+    call StoreHFFCBValuesToWC945
     ld hl, vBGMap0
     ld c, $12
 
@@ -1123,7 +1123,7 @@ Jump_0A1_475B:: ; address name
 
 Jump_0A1_4772::
     ld a, [hl]
-    jr Func_0A1_47C5
+    jr SetMapScreenFromAAndCenterPlayer
 
 ; entry 3 of the `rst $00` table in Func_0A1_4744
 ; no direct call (reached through a table, a jump or a vector)
@@ -1139,7 +1139,7 @@ Jump_0A1_4775:: ; address name
     ld hl, wCD88
     add_a_to_hl
     ld a, [hl]
-    jr Func_0A1_47C5
+    jr SetMapScreenFromAAndCenterPlayer
 
 ; entry 7 of the `rst $00` table in Func_0A1_4744
 ; no direct call (reached through a table, a jump or a vector)
@@ -1159,7 +1159,7 @@ Jump_0A1_4787:: ; address name
     cp a, c
     jr nz, Jump_0A1_47B4
     ld a, [wC890]
-    call Func_0A1_47C5
+    call SetMapScreenFromAAndCenterPlayer
     ld a, [wC88F]
     and a, $F0
     ldh [hPlayerX], a
@@ -1171,16 +1171,18 @@ Jump_0A1_4787:: ; address name
 
 Jump_0A1_47B4::
     ld a, [wCD08]
-    call Func_0A1_47C5
+    call SetMapScreenFromAAndCenterPlayer
     ld a, [wCD09]
     ldh [hPlayerX], a
     ld a, [wCD0A]
     ldh [hPlayerY], a
     ret
 
+; hMapScreenX = A >> 4, hMapScreenY = A & $0F, hPlayerX = hPlayerY = $40 (E-0118)
 ; 2 call sites from 1 routine (e.g. Func_0A1_4744_Case07)
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-Func_0A1_47C5::
+SetMapScreenFromAAndCenterPlayer::
+Func_0A1_47C5:: ; address name
     push af
     swap a
     and a, $0F
@@ -1198,7 +1200,7 @@ Func_0A1_47C5::
 ; writes: hFFCF, hFFD0, hFFCE, hFFCC
 Func_0A1_47D8::
     call Func_0A1_4874
-    call Func_0A1_4A91
+    call StoreHFFCBValuesToWC945
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -1586,7 +1588,7 @@ Jump_0A1_4A23::
 
 Jump_0A1_4A2C::
     inc hl
-    call Func_0A1_4A77
+    call LoadMapPositionFromHL
     ret
 
 Jump_0A1_4A31::
@@ -1624,12 +1626,14 @@ Jump_0A1_4A67::
     add a, a
     ld hl, $59D6
     add_a_to_hl
-    call Func_0A1_4A77
+    call LoadMapPositionFromHL
     ret
 
+; hMapScreenX/Y = the nibbles of [HL]; hPlayerX = [HL + 1] & $F0, hPlayerY = ([HL + 1] & $0F) << 4 (E-0118)
 ; 2 call sites from 1 routine (e.g. Func_0A1_49A8)
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-Func_0A1_4A77::
+LoadMapPositionFromHL::
+Func_0A1_4A77:: ; address name
     ld a, [hl]
     swap a
     and a, $0F
@@ -1647,10 +1651,12 @@ Func_0A1_4A77::
     ldh [hPlayerY], a
     ret
 
+; wC945 = hFFCB, wC946 = hFFCD, wC947 = hFFCC, wC948 = hFFCE (E-0118)
 ; 2 call sites from 2 routines (e.g. Func_0A1_47D8, Func_0A1_45C5)
 ; reads: hFFCB, hFFCD, hFFCC, hFFCE
 ; writes: wC945, wC946, wC947, wC948
-Func_0A1_4A91::
+StoreHFFCBValuesToWC945::
+Func_0A1_4A91:: ; address name
     ldh a, [hFFCB]
     ld [wC945], a
     ldh a, [hFFCD]
@@ -2637,7 +2643,7 @@ Jump_0A1_50AE::
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A1_4519_Case06::
 Jump_0A1_50BB:: ; address name
-    call Func_0A1_5898
+    call EnterGameMode1WithDefaultPalettes
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4519_Case01)
@@ -3291,7 +3297,7 @@ Jump_0A1_5516::
     call Func_0A1_5581
     ld a, [hl]
     call Func_0A1_5591
-    call Func_0A1_5639
+    call DrawMetaSpriteSet08
     ret
 
 ; entry 0 of the `rst $00` table in Func_0A1_5591
@@ -3309,7 +3315,7 @@ Jump_0A1_5523:: ; address name
     sla a
     sla a
     call Func_0A1_5591
-    call Func_0A1_5639
+    call DrawMetaSpriteSet08
     ret
 
 Jump_0A1_553D::
@@ -3332,7 +3338,7 @@ Jump_0A1_553D::
     add a, a
     add a, a
     call Func_0A1_5591
-    call Func_0A1_5639
+    call DrawMetaSpriteSet08
     ret
 
 Jump_0A1_5565::
@@ -3349,7 +3355,7 @@ Jump_0A1_5565::
     add a, a
     add a, a
     call Func_0A1_5591
-    call Func_0A1_5639
+    call DrawMetaSpriteSet08
     ret
 
 ; 4 call sites from 2 routines (e.g. Func_0A1_5479, Func_0A1_5591_Case00)
@@ -3485,9 +3491,11 @@ Func_0A1_560D::
     add a, $06
     ldh [hSpriteOriginY], a
 
+; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0) (E-0118)
 ; 4 call sites from 2 routines (e.g. Func_0A1_5479, Func_0A1_5591_Case00)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_5639::
+DrawMetaSpriteSet08::
+Func_0A1_5639:: ; address name
     ld a, $00
     ldh [hSpriteTileOffset], a
     ld a, $00
@@ -3544,7 +3552,7 @@ Jump_0A1_5670::
     add a, a
     add a, c
     ldh [hSpriteOriginY], a
-    call Func_0A1_56DC
+    call DrawMetaSpriteSet26
     pop de
     inc de
     inc de
@@ -3599,7 +3607,7 @@ Jump_0A1_56AD::
     add a, a
     add a, c
     ldh [hSpriteOriginY], a
-    call Func_0A1_56DC
+    call DrawMetaSpriteSet26
 
 Jump_0A1_56D2::
     pop de
@@ -3612,9 +3620,11 @@ Jump_0A1_56D2::
 Jump_0A1_56DA::
     jr Jump_0A1_5697
 
+; DrawMetaSprite with set $26, sub-index 0, tile offset $10, attribute XOR $01 (origin high bytes 0) (E-0118)
 ; 2 call sites from 1 routine (e.g. Func_0A1_5654)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_56DC::
+DrawMetaSpriteSet26::
+Func_0A1_56DC:: ; address name
     ld a, $10
     ldh [hSpriteTileOffset], a
     ld a, $01
@@ -3836,10 +3846,12 @@ Func_0A1_57F9:: ; address name
     ret
     ds $90, $34
 
+; wC5E0 = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0A1_4519_Case06)
 ; writes: wC5E0, wDataBankSave, wGameMode
 ; points at: wC5E9
-Func_0A1_5898::
+EnterGameMode1WithDefaultPalettes::
+Func_0A1_5898:: ; address name
     ld a, $03
     ld [wC5E0], a
     ld a, $40

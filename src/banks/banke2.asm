@@ -2547,7 +2547,7 @@ Func_0E2_51F6:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67A5
+    call MaxNegativeScoreWhenWD2CCBit0
     ret z
     farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
@@ -3208,7 +3208,7 @@ Func_0E2_56C6:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67A5
+    call MaxNegativeScoreWhenWD2CCBit0
     ret z
     farcall AnyFoeNotBlocked
     ld a, c
@@ -5120,7 +5120,7 @@ Func_0E2_641E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Guard:: ; heuristic: follows a terminator; C0
 Func_0E2_6425:: ; address name
-    call Func_0E2_67A5
+    call MaxNegativeScoreWhenWD2CCBit0
     ret z
     farcall AIScore_Guard_Sub01
     ld a, c
@@ -5728,10 +5728,12 @@ Jump_0E2_679E::
 Jump_0E2_67A4::
     ret
 
+; C = (wD2CC & 1) ^ 1 and returns when non-zero; when bit 0 is set: wDA6E = 0, wDA70/wDA71 = $FFFF, C = 0 (E-0118)
 ; 4 call sites from 4 routines (e.g. Func_0E2_67CF, AIScore_SquallHit, AIScore_Berserker, AIScore_Guard)
 ; reads: wD2CC
 ; writes: wDA6E, wDA6F, wDA70, wDA71
-Func_0E2_67A5:: ; heuristic: follows a terminator; C0
+MaxNegativeScoreWhenWD2CCBit0:: ; heuristic: follows a terminator; C0
+Func_0E2_67A5:: ; address name
     ld a, [wD2CC]
     and a, $01
     xor a, $01
@@ -5764,7 +5766,7 @@ Func_0E2_67C0:: ; address name
 ; 8 call sites from 8 routines (e.g. AIScore_Ironize, AIScore_StrongD, AIScore_Dodge, AIScore_BladeD, ...)
 ; reads: wD891
 Func_0E2_67CF::
-    call Func_0E2_67A5
+    call MaxNegativeScoreWhenWD2CCBit0
     ret z
     jr AIScore_TailWind_Sub02
 

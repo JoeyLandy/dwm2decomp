@@ -3847,7 +3847,7 @@ Jump_000_1654::
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 5 call sites from 3 routines (e.g. LoadPalette0FromData4ACC, LoadPalette0FromData4322, Func_01B_53AF)
+; 5 call sites from 3 routines (e.g. LoadPalette0FromData4ACC, LoadPalette0FromData4322, LoadPalette0FromData53C6)
 CopyBytesDEToHL_Bank00::
 Func_000_1679:: ; address name
     ld a, [de]
@@ -4406,7 +4406,7 @@ Jump_000_18D5::
     ret
 
 ; with ROM bank B mapped, reads three bytes at DE: HL = the word, B = the third byte (a far pointer: address then bank); DE += 3; restores the bank (E-0090)
-; 10 call sites from 8 routines (e.g. ScriptCommandF7_Run_Case27_Sub02_Sub01, Func_01C_500C, Func_01C_5EEC, Func_01C_5F26, ...)
+; 10 call sites from 8 routines (e.g. ScriptCommandF7_Run_Case27_Sub02_Sub01, Func_01C_500C, Func_01C_5EEC, ReadF2FarPointerForWD7FB, ...)
 ; writes: rROMB0
 ReadFarPointerAtDEInBankB::
 Func_000_18D6:: ; address name
@@ -8417,7 +8417,7 @@ Func_000_2ECF::
     ld c, a
     ldh a, [hFFC7]
     ld b, a
-    jp Func_000_2F84
+    jp SlotPresentWithStatus0Bit6_Case04_Sub01
 
 Jump_000_2F03::
     ld a, $0F
@@ -8507,8 +8507,10 @@ Jump_000_2F60::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_63F7_Case04)
-Func_000_2F84::
+; only called from SlotPresentWithStatus0Bit6_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case04)
+SlotPresentWithStatus0Bit6_Case04_Sub01::
+Func_000_2F84:: ; address name
     ld de, $03E8
     push bc
     call DivideBCByDE
@@ -8550,7 +8552,7 @@ Jump_000_2FC2::
     ret
 
 ; A = BC / DE by repeated subtraction (the quotient must fit in 8 bits), BC = the remainder; HL kept (E-0078)
-; 6 call sites from 1 routine (e.g. Func_000_2F84)
+; 6 call sites from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case04_Sub01)
 DivideBCByDE::
 Func_000_2FC7:: ; address name
     push hl
@@ -8576,7 +8578,7 @@ Jump_000_2FCA::
     ret
 
 ; [HL] = A, HL += 1, [HL] = $F0 (string terminator) (E-0077)
-; 7 call sites from 2 routines (e.g. Func_000_2F84, Func_000_2ECF)
+; 7 call sites from 2 routines (e.g. SlotPresentWithStatus0Bit6_Case04_Sub01, Func_000_2ECF)
 StoreAThenTerminator::
 Func_000_2FDC:: ; address name
     ld [hl+], a

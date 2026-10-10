@@ -453,7 +453,7 @@ Func_019_42FD::
     ld b, h
     ld l, a
     ld c, a
-    call Func_019_4537
+    call ScaleHLToEightTenths_Bank19
     ld a, c
     sub a, l
     ld c, a
@@ -916,8 +916,10 @@ Jump_019_452D::
     jr nz, Jump_019_451C
     ret
 
+; HL = (HL * 8) / 10 with 16-bit arithmetic (the multiply can overflow above 8191); BC and DE kept (E-0118)
 ; 1 call site from 1 routine (e.g. Func_019_42FD)
-Func_019_4537::
+ScaleHLToEightTenths_Bank19::
+Func_019_4537:: ; address name
     push bc
     push de
     add hl, hl
@@ -1139,13 +1141,15 @@ Jump_019_4622::
 Jump_019_4629::
     ld l, a
     ld h, $FF
-    call Func_019_4632
+    call IncrementTableByteCappedAt3
     inc de
     jr Jump_019_4622
 
+; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (E-0118)
 ; 1 call site from 1 routine (e.g. Func_019_4605)
 ; reads: hFFC6, hFFC7
-Func_019_4632::
+IncrementTableByteCappedAt3::
+Func_019_4632:: ; address name
     ldh a, [hFFC6]
     add a, l
     ld l, a
@@ -1402,7 +1406,7 @@ Jump_019_4771::
     ld [hl+], a
     ld a, $03
     ld [hl+], a
-    call Func_019_489D
+    call StoreRandomByte80ToFFAtHL
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
@@ -1451,9 +1455,11 @@ Func_019_488D:: ; address name
     ld [hl+], a
     ret
 
+; NextTableByte, then stores (wC5E7 & $7F) + $80 at HL; HL += 1 (E-0118)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wC5E7
-Func_019_489D::
+StoreRandomByte80ToFFAtHL::
+Func_019_489D:: ; address name
     push af
     push bc
     push de

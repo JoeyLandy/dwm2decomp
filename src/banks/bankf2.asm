@@ -37,7 +37,7 @@ Jump_0F2_4013::
     ld bc, $140D
     ld de, $01CC
     call GameMode8_Init_Sub01
-    farcall Func_01B_53AF
+    farcall LoadPalette0FromData53C6
     farcall Func_002_5F9B
     ld hl, vTiles1
     ld a, l
@@ -2787,7 +2787,7 @@ Data_0F2_6526:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_6586:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3CA586, $60
 
-; 2 call sites from 2 routines (e.g. Func_0A0_5491, Func_0A3_4B0B)
+; 2 call sites from 2 routines (e.g. Func_0A0_5491, SetFollowersToPlayer_Case02_Sub01)
 ; reads: wC6FD, wCF8B, wCF8C
 ; writes: wCF8B, wCF8C
 ; points at: wC6FE

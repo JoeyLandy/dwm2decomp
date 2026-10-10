@@ -660,7 +660,7 @@ Func_0E0_455F:: ; address name
     inc d
 
 Jump_0E0_4566::
-    call Func_0E0_45EE
+    call WordAtDEToPackedBCD
     jr DrawSlotHPMPStats_BankE0_Sub03
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
@@ -715,7 +715,7 @@ Func_0E0_4593:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_0E0_443B_Case01)
 Func_0E0_459A::
-    call Func_0E0_45EE
+    call WordAtDEToPackedBCD
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
@@ -789,9 +789,11 @@ Jump_0E0_45E3::
     call WriteVRAMByte
     ret
 
+; wC8C0/wC8C1 = the word at DE, wC8C2 = 0, then Number24ToPackedBCD; BC, HL kept (E-0118)
 ; 2 call sites from 2 routines (e.g. Func_0E0_459A, DrawSlotHPMPStats_BankE0_Sub01)
 ; writes: wC8C0, wC8C1, wC8C2
-Func_0E0_45EE::
+WordAtDEToPackedBCD::
+Func_0E0_45EE:: ; address name
     push hl
     ld a, [de]
     ld [wC8C0], a
@@ -1962,7 +1964,7 @@ Func_0E0_4EFD::
 ; points at: wBattleStatus
 Func_0E0_4F28::
     ld a, [wC5FE]
-    call Func_0E0_4F86
+    call DrawFourTileStripForA
     ld hl, vBGMap0 + $89
     ld a, l
     ld [wD868], a
@@ -2018,8 +2020,10 @@ Jump_0E0_4F47::
     jr nz, Jump_0E0_4F44
     ret
 
+; copies a 4 x 1 tile strip from bank $E0 (address from the word table at $4F9E + 2 * A) to vBGMap0 + $27 (CopyRectFromBankToVRAM) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0E0_4F28)
-Func_0E0_4F86::
+DrawFourTileStripForA::
+Func_0E0_4F86:: ; address name
     add a, a
     ld hl, $4F9E
     add_a_to_hl
@@ -2317,9 +2321,11 @@ Func_0E0_558E:: ; address name
     call QueueSoundEffect
     ret
 
+; loads wBattleActor, wBattleTarget, wBattleActionId and wDAD3 from the 4-byte entry A of the table at $55FB, then far-calls SelectEffectByWDAD3Flags (a test or debug entry list) (E-0118)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wBattleTarget, wBattleActionId, wDAD3
-Func_0E0_559E:: ; heuristic: follows a terminator; C0
+RunEffectTestEntryA:: ; heuristic: follows a terminator; C0
+Func_0E0_559E:: ; address name
     add a, a
     add a, a
     ld hl, $55FB
@@ -2414,7 +2420,7 @@ Jump_0E0_572C::
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory, wC8C0, wC8C1, ...
 ; points at: wDA43, wDA53, wD988, wD2AD, wBattleActionChoice, wDA3F, hFFFC, wCFDE
 Func_0E0_572D::
-    call Func_0E0_5992
+    call DisplayedSlotOfActor
     ld hl, $5A05
     call ReadWordTableEntry_Bank00
     ld d, h
@@ -2788,10 +2794,12 @@ Jump_0E0_597E::
     jr nz, Jump_0E0_597E
     ret
 
+; A = wBattleActor, with bit 2 flipped when wC58A = 1 and wC57F bit 1 is set (the side swap of the battle panels) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0E0_572D)
 ; reads: wC58A, wBattleActor
 ; points at: wC57F
-Func_0E0_5992::
+DisplayedSlotOfActor::
+Func_0E0_5992:: ; address name
     ld a, [wC58A]
     ld hl, wC57F
     cp a, $01

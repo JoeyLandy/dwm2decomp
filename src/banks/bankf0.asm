@@ -3478,7 +3478,7 @@ Jump_0F0_5ECA:: ; address name
 ; writes: wD7F3, wD7F4, wD7F7, wD7F1, wD7F2, wD781
 Func_0F0_5DE8_Case04::
 Jump_0F0_5EF9:: ; address name
-    farcall Func_01D_6D07
+    farcall UploadTilesFromData6D20
     call BGMapAddressAtScroll_BankF0
     ld de, Data_0F0_6E7F
     ld a, $14
@@ -3572,7 +3572,7 @@ Jump_0F0_5FA3:: ; address name
     ld a, [wD782]
     and a, a
     jp nz, Jump_0F0_5FDD
-    call Func_0F0_6262
+    call DrawRect6x6From651BAtScroll41_BankF0
     call GetWD789Cell4Address_BankF0
     ld a, $0A
     ld [rRAMG2], a
@@ -3892,7 +3892,7 @@ Jump_0F0_61B7:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_BankF0
-    call Func_0F0_6214
+    call RestoreSpriteStateClearCount_BankF0
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -3932,10 +3932,12 @@ Func_0F0_61F6:: ; address name
     ld [wSpriteSlotCount], a
     ret
 
+; hFFB9 = wD7BC, hFFBA = $80, hFF8D = wD7BA, wSpriteSlotCount = 0 (unlike RestoreSpriteStateFromWD7BA, the count is cleared rather than restored) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0F0_5DE8_Case10)
 ; reads: wD7BC, wD7BA, wD7BB
 ; writes: hFFB9, hFFBA, hFF8D, wSpriteSlotCount
-Func_0F0_6214::
+RestoreSpriteStateClearCount_BankF0::
+Func_0F0_6214:: ; address name
     ld a, [wD7BC]
     ldh [hFFB9], a
     ld a, $80
@@ -3984,9 +3986,11 @@ Func_0F0_624F:: ; address name
     ld [wD7AF], a
     ret
 
+; draws a 6 x 6 tile rectangle from Data_0F0_651B at BGMapAddressAtScroll + $41 (DrawTileRectAtHLFromDE_BankF0) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0F0_5DE8_Case06)
 ; writes: wD7F3, wD7F4, wD7F7
-Func_0F0_6262::
+DrawRect6x6From651BAtScroll41_BankF0::
+Func_0F0_6262:: ; address name
     call BGMapAddressAtScroll_BankF0
     ld de, $0041
     add hl, de
@@ -4444,7 +4448,7 @@ Data_0F0_66AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $28, $C3
 
 ; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
-; 3 call sites from 3 routines (e.g. Func_0F0_6262, Func_0F0_5DE8_Case06, Func_0F0_5DE8_Case04)
+; 3 call sites from 3 routines (e.g. DrawRect6x6From651BAtScroll41_BankF0, Func_0F0_5DE8_Case06, Func_0F0_5DE8_Case04)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2
 DrawTileRectAtHLFromDE_BankF0::
 Func_0F0_66D5:: ; address name
@@ -5584,7 +5588,7 @@ Data_0F0_7085:: ; heuristic: target of a monotone pointer table; C0
     db $61, $01, $64, $01, $67, $01, $69, $01, $70, $01, $71, $01, $72, $01, $73, $01
     db $FE, $FE
 
-; the same 19 bytes as RandomModulo29 (0E:611B)
+; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0118)
 ; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, Func_0F0_6BE0, Func_0F0_7E69, Func_0F0_7284)
 ; reads: wC5E7
 RandomModulo29_BankF0::

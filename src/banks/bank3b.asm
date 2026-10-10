@@ -1432,7 +1432,7 @@ Jump_03B_4873::
     call GetBattleMaxHP_Bank3B
     call CompareHLToBC
     jr nc, Jump_03B_4896
-    call Func_03B_48E9
+    call SetDamageDEMinusBCPlusHL
     ld b, h
     ld c, l
 
@@ -1484,7 +1484,7 @@ Jump_03B_48C1::
     call GetBattleMaxMP_Bank3B
     call CompareHLToBC
     jr nc, Jump_03B_48E4
-    call Func_03B_48E9
+    call SetDamageDEMinusBCPlusHL
     ld b, h
     ld c, l
 
@@ -1495,9 +1495,11 @@ Jump_03B_48E4::
     ld [hl], b
     ret
 
+; damage word = DE - (BC - HL) (E-0118)
 ; 2 call sites from 2 routines (e.g. Func_03B_483A, Func_03B_489B)
 ; writes: wBattleDamageLo, wD873
-Func_03B_48E9::
+SetDamageDEMinusBCPlusHL::
+Func_03B_48E9:: ; address name
     ld a, c
     sub a, l
     ld c, a

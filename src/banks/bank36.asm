@@ -2597,7 +2597,7 @@ Func_036_509D:: ; address name
     ret nz
 
 Jump_036_50AE::
-    call Func_036_6451
+    call ScaleDamageBy3Over2
     ret
 
 ; only called from ActionEffect_ActionD3 (E-0047)
@@ -2614,7 +2614,7 @@ Func_036_50B2:: ; address name
     ret nz
 
 Jump_036_50C3::
-    call Func_036_6451
+    call ScaleDamageBy3Over2
     ret
 
 ; only called from ActionEffect_ActionD4 (E-0047)
@@ -2631,7 +2631,7 @@ Func_036_50C7:: ; address name
     ret nz
 
 Jump_036_50D8::
-    call Func_036_6451
+    call ScaleDamageBy3Over2
     ret
 
 ; only called from ActionEffect_ActionD7 (E-0047)
@@ -4203,10 +4203,12 @@ Func_036_5A6C:: ; address name
     call ScaleDamageByFlagsAtHL
     ret
 
+; damage = the target's HP * 8 / 10 + 1 (ScaleHLTo80Percent_Bank36), then ScaleDamageByFlagsAtHL with level = bits 1-0 of the target's wDA72 byte 3 (E-0118)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873
-Func_036_5A7A:: ; heuristic: follows a terminator; C0
+DamageEightyPercentOfTargetHPScaled:: ; heuristic: follows a terminator; C0
+Func_036_5A7A:: ; address name
     ld a, [wBattleTarget]
     call GetBattleHP
     call ScaleHLTo80Percent_Bank36
@@ -5265,7 +5267,7 @@ Func_036_61B0:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 3 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA75 + 7 * target); DE points at it (E-0095)
-; 6 call sites from 6 routines (e.g. Func_036_5A7A, ActionEffect_PanicAll_Sub01, Func_036_5A98, Func_036_53C6, ...)
+; 6 call sites from 6 routines (e.g. DamageEightyPercentOfTargetHPScaled, ActionEffect_PanicAll_Sub01, Func_036_5A98, Func_036_53C6, ...)
 ; reads: wBattleTarget
 ; points at: wDA75
 GetTargetWDA72Byte3::
@@ -5386,7 +5388,7 @@ Jump_036_621B::
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_1_075_04_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_085_05_0 (A = level) (E-0095)
-; 12 call sites from 12 routines (e.g. ActionEffect_ActionD1_Sub01, ActionEffect_Watershot_Sub01, SkillDamageScaledByWDA72Byte6Bits32, Func_036_5A7A, ...)
+; 12 call sites from 12 routines (e.g. ActionEffect_ActionD1_Sub01, ActionEffect_Watershot_Sub01, SkillDamageScaledByWDA72Byte6Bits32, DamageEightyPercentOfTargetHPScaled, ...)
 ScaleDamageByFlagsAtHL:: ; heuristic: follows a terminator; C0
 Func_036_621C:: ; address name
     bit 6, [hl]
@@ -5866,10 +5868,12 @@ Jump_036_6449::
     ld [wD873], a
     ret
 
+; the damage word = ScaleHLBy3Over2 of itself (x 1.5) (E-0118)
 ; 3 call sites from 3 routines (e.g. ActionEffect_ActionD2_Sub01, ActionEffect_ActionD3_Sub01, ActionEffect_ActionD4_Sub01)
 ; reads: wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
-Func_036_6451::
+ScaleDamageBy3Over2::
+Func_036_6451:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
@@ -5882,7 +5886,7 @@ Func_036_6451::
     ret
 
 ; HL += HL / 2 (rounded down); BC = the old HL (E-0115)
-; 3 call sites from 3 routines (e.g. Func_036_6451, Func_036_55D4, ActionEffect_PsycheUp)
+; 3 call sites from 3 routines (e.g. ScaleDamageBy3Over2, Func_036_55D4, ActionEffect_PsycheUp)
 ScaleHLBy3Over2::
 Func_036_6465:: ; address name
     ld b, h
@@ -5915,8 +5919,10 @@ Func_036_6477:: ; address name
     add hl, bc
     ret
 
+; HL = HL/2 + HL/4 + HL/8 + HL/32 (each rounded down) (E-0118)
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_6482:: ; heuristic: follows a terminator; C0
+ScaleHLBy29Over32:: ; heuristic: follows a terminator; C0
+Func_036_6482:: ; address name
     call ShiftHLRight1
     ld b, h
     ld c, l
@@ -5943,7 +5949,7 @@ Func_036_6494:: ; address name
     ret
 
 ; HL = HL * 8 / 10 (24-bit intermediate; Multiply8By16 then Divide24ByA), A = the remainder; DE kept (E-0067) (the same 15 bytes appear in 2 banks)
-; 3 call sites from 3 routines (e.g. ScaleHLTo40Percent, ActionEffect_Geyser_Sub03, Func_036_5A7A)
+; 3 call sites from 3 routines (e.g. ScaleHLTo40Percent, ActionEffect_Geyser_Sub03, DamageEightyPercentOfTargetHPScaled)
 ScaleHLTo80Percent_Bank36::
 Func_036_64A3:: ; address name
     push de
@@ -6043,14 +6049,14 @@ Func_036_6503:: ; address name
     rr c
 
 ; BC >>= 2 (falls through ShiftBCRight1) (E-0095)
-; 4 call sites from 3 routines (e.g. ScaleHLBy21Over16, ScaleHLBy37Over32, Func_036_6482)
+; 4 call sites from 3 routines (e.g. ScaleHLBy21Over16, ScaleHLBy37Over32, ScaleHLBy29Over32)
 ShiftBCRight2::
 Func_036_6507:: ; address name
     srl b
     rr c
 
 ; BC >>= 1 (unsigned) (E-0064)
-; 11 call sites from 10 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, ScaleHLTo75Percent, ComputeAttackDamage, Func_036_6482, ...)
+; 11 call sites from 10 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, ScaleHLTo75Percent, ComputeAttackDamage, ScaleHLBy29Over32, ...)
 ShiftBCRight1::
 Func_036_650B:: ; address name
     srl b
@@ -6074,7 +6080,7 @@ Func_036_6518:: ; address name
     rr l
 
 ; HL >>= 1 (unsigned) (E-0064)
-; 15 call sites from 11 routines (e.g. Func_036_7D13, ActionEffect_Geyser_Sub02, Func_036_6346, ScaleHLTo75Percent, ...)
+; 15 call sites from 11 routines (e.g. HalveDamageIfTargetStatus2Bit2, ActionEffect_Geyser_Sub02, Func_036_6346, ScaleHLTo75Percent, ...)
 ShiftHLRight1::
 Func_036_651C:: ; address name
     srl h
@@ -8164,7 +8170,7 @@ Func_036_71A9:: ; address name
 ActionEffect_FireAir:: ; heuristic: target of a pointer table; C0
 Func_036_71AF:: ; address name
     call ActionEffect_FireAir_Sub01
-    call Func_036_7D13
+    call HalveDamageIfTargetStatus2Bit2
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -8174,7 +8180,7 @@ Func_036_71AF:: ; address name
 ActionEffect_FrigidAir:: ; heuristic: target of a pointer table; C0
 Func_036_71B8:: ; address name
     call ActionEffect_FrigidAir_Sub01
-    call Func_036_7D13
+    call HalveDamageIfTargetStatus2Bit2
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 72 WindBeast; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -10023,11 +10029,13 @@ Jump_036_7D0D::
     ld bc, $0000
     jp Jump_036_7CC0
 
+; when the target's status byte 2 (wD80E) bit 2 is set, the damage word is halved (E-0118)
 ; 2 call sites from 2 routines (e.g. ActionEffect_FrigidAir, ActionEffect_FireAir)
 ; reads: wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ; points at: wD80E
-Func_036_7D13:: ; heuristic: follows a terminator; C0
+HalveDamageIfTargetStatus2Bit2:: ; heuristic: follows a terminator; C0
+Func_036_7D13:: ; address name
     ld a, [wBattleTarget]
     ld hl, wD80E
     call AddAx9ToHL
@@ -10234,7 +10242,7 @@ Func_036_7E3D:: ; address name
     jr ReadBattleWordFromArray
 
 ; A = battle slot: HL = the word for that slot in the array at wBattleHP (Func_036_7E5B)
-; 6 call sites from 5 routines (e.g. Func_036_4A38_Case01, Func_036_5A7A, Func_036_5A98, ActionEffect_ActionC9, ...)
+; 6 call sites from 5 routines (e.g. Func_036_4A38_Case01, DamageEightyPercentOfTargetHPScaled, Func_036_5A98, ActionEffect_ActionC9, ...)
 ; points at: wBattleHP
 GetBattleHP::
 Func_036_7E42:: ; address name

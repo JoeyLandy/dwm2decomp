@@ -1086,7 +1086,7 @@ Jump_002_461A::
     ld a, $03
     jp Jump_000_077A
 
-; 4 call sites from 4 routines (e.g. GameMode1_Init, Func_002_4AE0_Case04, Func_003_4339, Func_0A1_5898)
+; 4 call sites from 4 routines (e.g. GameMode1_Init, Func_002_4AE0_Case04, Func_003_4339, EnterGameMode1WithDefaultPalettes)
 ; reads: wCC44, hMapId, wC8C7, wC927, wC5E0, wIsCGB
 ; writes: hFF8D, hScrollY, hScrollX, hFFA0, hFF9F, rLYC, wFrameCounterLo, wFrameCounterHi, ...
 Func_002_4628::

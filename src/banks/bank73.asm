@@ -1364,7 +1364,7 @@ Func_073_4956::
     call Func_073_49B1
     xor a, a
     ld [rRAMG], a
-    call Func_073_49C5
+    call CopyItemStringToWC152
     ret
 
 ; 5 call sites from 1 routine (e.g. Func_073_4956)
@@ -1388,11 +1388,13 @@ Jump_073_49BB::
     ld d, a
     ret
 
+; wScriptParam0 = hFFC8; copies string hFFC8 + $28 of category 5 (item names) to wC152 (CopyStringToBuffer_Bank09) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_073_4956)
 ; reads: hFFC8
 ; writes: wScriptParam0, wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wC152
-Func_073_49C5::
+CopyItemStringToWC152::
+Func_073_49C5:: ; address name
     ldh a, [hFFC8]
     ld [wScriptParam0], a
     add a, $28
@@ -7188,7 +7190,7 @@ Func_073_6AEF:: ; address name
     ld a, [wScriptStep]
     or a, a
     jr nz, Jump_073_6AF9
-    call Func_073_6B1F
+    call WarpToMap41
     ret
 
 Jump_073_6AF9::
@@ -7212,7 +7214,7 @@ Func_073_6AFF:: ; address name
     dw Talk0886_NsDancingLuredA
     dw ScriptCommand2D_Run_Case07
     dw ScriptCommandCB_Run_Case01
-    dw Func_073_6B1F
+    dw WarpToMap41
     dw ScriptCommand2D_Run_Case0A
 
 ; entry 10 of the `rst $00` table in ScriptCommand2D_Run
@@ -7224,9 +7226,11 @@ Jump_073_6B19:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; hMapId = $41, hMapScreenX/Y = 0/1, wC8C8/wC8C9 = $70/$30, wC8C6 = 1, then ScriptStartFadeAndAdvanceStep and sets story flag $6F (E-0118)
 ; 1 call site from 1 routine (e.g. ScriptCommand2E_Run)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
-Func_073_6B1F::
+WarpToMap41::
+Func_073_6B1F:: ; address name
     ld a, $41
     ldh [hMapId], a
     xor a, a

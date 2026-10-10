@@ -3285,7 +3285,7 @@ Jump_0F1_558B::
     ret
 
 Jump_0F1_559C::
-    call Func_0F1_573E
+    call UploadTilesFromData5757_BankF1
     farcall Func_01F_76B5
     ld a, [wD781]
     add a, $03
@@ -3546,24 +3546,28 @@ Func_0F1_5719::
     farcall Func_01D_6A3D
     ret
 
+; copies tiles from Data_0F1_5757: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_0F1_5285_Case1B)
-Func_0F1_573E::
+UploadTilesFromData5757_BankF1::
+Func_0F1_573E:: ; address name
     ld hl, Data_0F1_5757
     ld de, vTiles2 + $6E0
-    call Func_0F1_57A7
-    call Func_0F1_57A7
+    call UploadTilesFromData5757_BankF1_Sub01
+    call UploadTilesFromData5757_BankF1_Sub01
     ld de, vTiles2 + $7C0
-    call Func_0F1_57A7
-    call Func_0F1_57A7
-    call Func_0F1_57A7
+    call UploadTilesFromData5757_BankF1_Sub01
+    call UploadTilesFromData5757_BankF1_Sub01
+    call UploadTilesFromData5757_BankF1_Sub01
     ret
 
 Data_0F1_5757:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3C5757, $50
 
-; 5 call sites from 1 routine (e.g. Func_0F1_573E)
+; only called from UploadTilesFromData5757_BankF1 (E-0047)
+; 5 call sites from 1 routine (e.g. UploadTilesFromData5757_BankF1)
 ; reads: rSTAT
-Func_0F1_57A7::
+UploadTilesFromData5757_BankF1_Sub01::
+Func_0F1_57A7:: ; address name
     ld a, $10
 
 Jump_0F1_57A9::

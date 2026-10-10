@@ -1482,7 +1482,7 @@ Jump_031_4885::
     jr c, Jump_031_4893
     cp a, $04
     jr nc, Jump_031_4893
-    call Func_031_48C3
+    call SetFollowersToPlayer
 
 Jump_031_4893::
     ld a, $01
@@ -1504,10 +1504,12 @@ Jump_031_4893::
     inc [hl]
     ret
 
+; copies hPlayerFacing to the three follower directions and hPlayerX/hPlayerY to the three follower positions (the facing-preserving form of ResetFollowersToPlayer) (E-0118)
 ; 1 call site from 1 routine (e.g. Func_031_47DD_Case02)
 ; reads: hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wFollowerRecords, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
-Func_031_48C3::
+SetFollowersToPlayer::
+Func_031_48C3:: ; address name
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
     ld [wC8F4], a
@@ -1529,16 +1531,16 @@ BattleEnd_Step7::
 Jump_031_48E5:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw Func_031_48C3_Case00
-    dw Func_031_48C3_Case01
-    dw Func_031_48C3_Case02
+    dw SetFollowersToPlayer_Case00
+    dw SetFollowersToPlayer_Case01
+    dw SetFollowersToPlayer_Case02
 
-; entry 0 of the `rst $00` table in Func_031_48C3
+; entry 0 of the `rst $00` table in SetFollowersToPlayer
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots, wC52B
 ; writes: wC594
 ; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0, wBattleSubPhase
-Func_031_48C3_Case00::
+SetFollowersToPlayer_Case00::
 Jump_031_48EF:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wDC01
@@ -1574,11 +1576,11 @@ Jump_031_48EF:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_031_48C3
+; entry 1 of the `rst $00` table in SetFollowersToPlayer
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58F
 ; points at: wBattleSubPhase
-Func_031_48C3_Case01::
+SetFollowersToPlayer_Case01::
 Jump_031_4926:: ; address name
     ld a, [wC58F]
     cp a, $01
@@ -1587,15 +1589,15 @@ Jump_031_4926:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_031_48C3
+; entry 2 of the `rst $00` table in SetFollowersToPlayer
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wGameMode, wModeState, wC5DD, wC5DE, wD780, wC581, wC582, wC57F, ...
 ; points at: wModeChangeRequest, wD066
-Func_031_48C3_Case02::
+SetFollowersToPlayer_Case02::
 Jump_031_4931:: ; address name
     ld a, $04
     call StartPaletteFade
-    farcall Func_0A3_4B0B
+    farcall SetFollowersToPlayer_Case02_Sub01
     ld a, $06
     ld [wGameMode], a
     xor a, a
@@ -2887,7 +2889,7 @@ Jump_031_50BF:: ; address name
     ld a, [wC46C]
     and a, $03
     ld [hl], a
-    call Func_031_63CD
+    call SetWDA43AndWDA4BForWCFD4
     cp a, $03
     jr nz, Jump_031_514E
     ld a, [wDAD7]
@@ -4153,7 +4155,7 @@ Jump_031_58CF:: ; address name
     call LayoutTileBlocksForWD890Count
     ld a, $00
     ld [wD869], a
-    call Func_031_62D3
+    call LoadSelectedInventoryItemRecord
     ld a, [wItemId]
     ld [wD893], a
     ld a, [wD088]
@@ -4333,7 +4335,7 @@ Jump_031_5A0C:: ; address name
     jr z, Jump_031_5A78
     ld a, $69
     call QueueSoundEffect
-    call Func_031_62D3
+    call LoadSelectedInventoryItemRecord
     ld a, [wD08A]
     and a, $01
     jr nz, Jump_031_5A5B
@@ -4529,7 +4531,7 @@ Jump_031_5B49:: ; address name
     ld a, [wD868]
     or a, a
     jr nz, Jump_031_5B66
-    call Func_031_62D3
+    call LoadSelectedInventoryItemRecord
     ld a, [wD08A]
     cp a, $04
     jr z, Jump_031_5B71
@@ -4672,7 +4674,7 @@ Jump_031_5C26:: ; address name
     ld a, [wD868]
     or a, a
     jr nz, Jump_031_5C43
-    call Func_031_62D3
+    call LoadSelectedInventoryItemRecord
     ld a, [wD08A]
     cp a, $04
     jr z, Jump_031_5C4E
@@ -5870,11 +5872,13 @@ Jump_031_62A2::
     call ShowStringBank08AtTilesHL_Bank31
     ret
 
+; wItemId = wInventory[(wCFD5 & $0F) * 4 + (wC471 & 3)], then far-calls LoadItemRecord (E-0118)
 ; 4 call sites from 4 routines (e.g. Func_031_4EB9_Table2_Case0F, Func_031_4EB9_Table2_Case0B, Func_031_4EB9_Table2_Case06, Func_031_4EB9_Table2_Case02)
 ; reads: wCFD5, wC471
 ; writes: wItemId
 ; points at: wInventory
-Func_031_62D3::
+LoadSelectedInventoryItemRecord::
+Func_031_62D3:: ; address name
     ld a, [wCFD5]
     and a, $0F
     add a, a
@@ -6017,10 +6021,12 @@ Data_031_63BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01, $2F, $01, $6F, $01
 
+; A = value: stores A in wDA43[wCFD4], and also in wDA4B[wCFD4] unless A is 3 (E-0118)
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case02)
 ; reads: wCFD4
 ; points at: wDA43, wDA4B
-Func_031_63CD::
+SetWDA43AndWDA4BForWCFD4::
+Func_031_63CD:: ; address name
     push af
     ld a, [wCFD4]
     ld hl, wDA43
@@ -6186,7 +6192,7 @@ Jump_031_64A2::
     ld hl, wC31A
     ld a, [wD86D]
     or a, a
-    call nz, Func_031_64CE
+    call nz, FillFiveC3AtHL
     ld a, l
     add a, $40
     ld l, a
@@ -6195,7 +6201,7 @@ Jump_031_64A2::
     ld h, a
     ld a, [wD86E]
     or a, a
-    call nz, Func_031_64CE
+    call nz, FillFiveC3AtHL
     ld a, l
     add a, $40
     ld l, a
@@ -6204,11 +6210,13 @@ Jump_031_64A2::
     ld h, a
     ld a, [wD86F]
     or a, a
-    call nz, Func_031_64CE
+    call nz, FillFiveC3AtHL
     ret
 
+; stores tile $C3 in the five bytes from HL; HL kept (E-0118)
 ; 3 call sites from 1 routine (e.g. Func_031_645E)
-Func_031_64CE::
+FillFiveC3AtHL::
+Func_031_64CE:: ; address name
     push hl
     ld a, $C3
     ld [hl+], a

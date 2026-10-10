@@ -1536,7 +1536,7 @@ Jump_01C_48F5:: ; address name
 ; writes: wD7BC, wD7BA, wD7B6, wD7B7, wD781, wD783, wD784, wD7B5
 Func_01C_4867_Case02::
 Jump_01C_490D:: ; address name
-    call Func_01C_68DF
+    call LoadWD7F1PointerForWD7FB
     ld c, $00
 
 Jump_01C_4912::
@@ -1683,7 +1683,7 @@ Jump_01C_49D5::
     jr c, Jump_01C_49CB
     xor a, a
     ld [wD784], a
-    call Func_01C_68DF
+    call LoadWD7F1PointerForWD7FB
     ld a, [wD7B6]
     ld e, a
     ld d, $00
@@ -1824,7 +1824,7 @@ Jump_01C_4ABC:: ; address name
 ; points at: wD7F3
 Func_01C_4867_Case05::
 Jump_01C_4AC4:: ; address name
-    call Func_01C_68DF
+    call LoadWD7F1PointerForWD7FB
     ld a, [wD7B6]
     ld e, a
     ld d, $00
@@ -1860,7 +1860,7 @@ Jump_01C_4AFA::
     add hl, de
     ld e, l
     ld d, h
-    call Func_01C_5F26
+    call ReadF2FarPointerForWD7FB
     add hl, de
     call Func_01C_5EEC
     ld e, l
@@ -2708,7 +2708,7 @@ Func_01C_500C::
 
 Jump_01C_5032::
     push de
-    call Func_01C_68DF
+    call LoadWD7F1PointerForWD7FB
     ld a, [wD7B6]
     ld e, a
     ld d, $00
@@ -2729,7 +2729,7 @@ Jump_01C_5032::
     add hl, de
     ld e, l
     ld d, h
-    call Func_01C_5F26
+    call ReadF2FarPointerForWD7FB
     add hl, de
     call Func_01C_5EEC
     ld e, l
@@ -2755,7 +2755,7 @@ Jump_01C_5032::
 ; points at: wC130, wD7CE, wD788
 Func_01C_4867_Case0A::
 Jump_01C_507C:: ; address name
-    call Func_01C_68DF
+    call LoadWD7F1PointerForWD7FB
     ld a, [wD7B6]
     ld e, a
     ld d, $00
@@ -3235,7 +3235,7 @@ Jump_01C_5355:: ; address name
 
 Jump_01C_5393::
     push de
-    call Func_01C_68DF
+    call LoadWD7F1PointerForWD7FB
     ld a, [wD7B6]
     ld e, a
     ld d, $00
@@ -5064,9 +5064,11 @@ Jump_01C_5F24::
     pop hl
     ret
 
+; HL and B = the 3-byte far pointer entry wD7FB of Data_0F2_5643 in bank $F2 (ReadFarPointerAtDEInBankB); DE kept (E-0118)
 ; 2 call sites from 2 routines (e.g. Func_01C_500C, Func_01C_4867_Case05)
 ; reads: wD7FB
-Func_01C_5F26::
+ReadF2FarPointerForWD7FB::
+Func_01C_5F26:: ; address name
     push de
     ld a, [wD7FB]
     ld e, a
@@ -5892,10 +5894,12 @@ Jump_01C_68D4::
     ld [wD785], a
     jr Jump_01C_68BE
 
+; HL = wD7F1/wD7F2 = the word at Data_01C_6158 + 2 * wD7FB (E-0118)
 ; 7 call sites from 7 routines (e.g. Func_01C_4867_Case0E, Func_01C_4867_Case0A, Func_01C_500C, Func_01C_4867_Case05, ...)
 ; reads: wD7FB
 ; writes: wD7F2, wD7F1
-Func_01C_68DF::
+LoadWD7F1PointerForWD7FB::
+Func_01C_68DF:: ; address name
     ld hl, Data_01C_6158
     ld a, [wD7FB]
     ld e, a
@@ -5917,7 +5921,7 @@ Func_01C_68DF::
 ; reads: wD7B6, wD7B5
 ; writes: wD7F1
 Func_01C_68FA::
-    call Func_01C_68DF
+    call LoadWD7F1PointerForWD7FB
     ld a, [wD7B6]
     ld e, a
     ld d, $00

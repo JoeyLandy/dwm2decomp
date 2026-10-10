@@ -70,7 +70,7 @@ Jump_024_4057::
     ld bc, $140D
     ld de, $01CC
     call Func_024_4E57
-    farcall Func_01B_53AF
+    farcall LoadPalette0FromData53C6
     farcall Func_002_5F9B
     ld hl, vTiles1
     ld a, l

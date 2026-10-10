@@ -823,11 +823,13 @@ Jump_0A3_4AF3::
 Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
-; 1 call site from 1 routine (e.g. Func_031_48C3_Case02)
+; only called from SetFollowersToPlayer_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. SetFollowersToPlayer_Case02)
 ; reads: wC6FD
 ; writes: rRAMG
 ; points at: wC6FE, wC972
-Func_0A3_4B0B::
+SetFollowersToPlayer_Case02_Sub01::
+Func_0A3_4B0B:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]

@@ -2802,7 +2802,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_032_4F32::
-    farcall Func_03A_7715
+    farcall ShowSpecialActionMessage
     call SetSubPhase7AndResetSteps
     farcall Func_0A3_414F
     ldh a, [hFFC6]
@@ -2823,7 +2823,7 @@ Jump_032_4F53:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_032_4F00
-    call Func_032_5804
+    call LoadActorChosenActionRecord
     call Func_032_535F
     jp nc, Jump_032_4FFB
     call CheckSkillMPCost
@@ -2880,7 +2880,7 @@ Jump_032_4FC8::
     and a, $10
     jr nz, Jump_032_4FFB
     farcall Func_030_5440
-    call Func_032_5804
+    call LoadActorChosenActionRecord
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
     add a, a
@@ -2973,7 +2973,7 @@ Jump_032_505E::
     ld [hl], $00
     inc hl
     ld [hl], $FF
-    call Func_032_5804
+    call LoadActorChosenActionRecord
 
 Jump_032_5073::
     ld hl, wBattleSubStep
@@ -3178,13 +3178,13 @@ Jump_032_51EB::
 
 Jump_032_51EC::
     push de
-    call Func_032_5804
+    call LoadActorChosenActionRecord
     pop de
     xor a, a
     ret
 
 Jump_032_51F3::
-    call Func_032_5804
+    call LoadActorChosenActionRecord
     pop de
     scf
     ret
@@ -3561,7 +3561,7 @@ Jump_032_53C8::
     call Func_032_5397
     pop af
     ld [wBattleActor], a
-    call Func_032_5804
+    call LoadActorChosenActionRecord
     ret
 
 Jump_032_541A::
@@ -3576,7 +3576,7 @@ Jump_032_541A::
     call Func_032_5397
     pop af
     ld [wBattleActor], a
-    call Func_032_5804
+    call LoadActorChosenActionRecord
     ret
 
 ; wBattleSubPhase = 7, wBattleResolveStep = 0, wBattleSubStep = 0 (E-0115)
@@ -3633,7 +3633,7 @@ Func_032_4ADC_Case03::
 Jump_032_5474:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    farcall Func_03A_6D76
+    farcall ShowActionBattleTextFrom6DAA
     ld a, $80
     ld [wDAD3], a
     farcall SelectEffectByWDAD3Flags
@@ -4110,18 +4110,20 @@ Jump_032_57F8::
     ret
 
 ; HL += A, then A = the byte at HL
-; 18 call sites from 13 routines (e.g. Func_032_5397, Func_032_5804, Func_032_4ADC_Case04, Func_032_4ADC_Case02, ...)
+; 18 call sites from 13 routines (e.g. Func_032_5397, LoadActorChosenActionRecord, Func_032_4ADC_Case04, Func_032_4ADC_Case02, ...)
 ReadByteAtHLPlusA::
 Func_032_57FD:: ; address name
     add_a_to_hl
     ld a, [hl]
     ret
 
+; wBattleActionId = wRecordBuffer = the actor's chosen action (wBattleActionChoice), wCFED = 0, then far-calls LoadSkillRecord (E-0118)
 ; 7 call sites from 4 routines (e.g. Func_032_5397, ClearActorStatus3Bits0To5_Case01, ClearActorStatus3Bits0To5_Case00, Func_032_514C)
 ; reads: wBattleActor
 ; writes: wBattleActionId, wRecordBuffer, wCFED
 ; points at: wBattleActionChoice
-Func_032_5804::
+LoadActorChosenActionRecord::
+Func_032_5804:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
     add a, a
@@ -4264,7 +4266,7 @@ Jump_032_58DA:: ; address name
     ld a, [wDAB2]
     bit 0, a
     jr nz, Jump_032_58F2
-    farcall Func_03A_6D76
+    farcall ShowActionBattleTextFrom6DAA
     ld a, $80
     ld [wDAD3], a
     farcall SelectEffectByWDAD3Flags
@@ -6341,7 +6343,7 @@ Func_032_6581:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $D0
-    call nz, Func_032_660F
+    call nz, SetTargetWDA5BTo3
     xor a, a
     ld [hl+], a
     ld a, [wBattleTarget]
@@ -6408,10 +6410,12 @@ Jump_032_65DF::
     ld [hl], a
     ret
 
+; wDA5B[wBattleTarget] = 3; BC, HL kept (E-0118)
 ; 3 call sites from 2 routines (e.g. ActionEffect_Surge_Sub01, ActionEffect_DeMagic_Sub01)
 ; reads: wBattleTarget
 ; points at: wDA5B
-Func_032_660F::
+SetTargetWDA5BTo3::
+Func_032_660F:: ; address name
     push hl
     push bc
     ld a, [wBattleTarget]
@@ -6434,7 +6438,7 @@ Func_032_6622:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $90
-    call nz, Func_032_660F
+    call nz, SetTargetWDA5BTo3
     ld a, [hl]
     and a, $63
     ld [hl], a
@@ -6455,7 +6459,7 @@ Func_032_6622:: ; address name
     ld [hl+], a
     ld a, [hl]
     and a, $C0
-    call nz, Func_032_660F
+    call nz, SetTargetWDA5BTo3
     ld a, [hl]
     and a, $33
     ld [hl+], a
