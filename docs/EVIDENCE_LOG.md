@@ -1037,6 +1037,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Inference, not checked.** The level is most likely a resistance level. The AI reads 2-bit fields out of the same wDA72 records (Get2BitFieldEOfHL, E-0092), and levels 0-3 map to "normal … immune" in the tables.
 - Binary verification: pending; see the commit.
 
+### E-0096 — Battle helpers: family targeting, base stats, status edits
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **Family targeting.** TargetWeakestFoeOfFamilyD (`39:7093`) and TargetRandomFoeOfFamilyD (`39:70FD`, choice rule not read to the end) select foes by species family (E-0069). Their callers are the ChooseTarget routines of the family-named slash moves (DrakSlash, DevilCut, ZombieCut, CleanCut, …), which fits.
+- **Other battle helpers named:**
+  - ComputeAttackDamageWithHalvedDEF (effective DEF one quarter);
+  - ForceLevel4IfActorWD854Bit2 and RollChanceVsTargetWDA72Byte5Bits23, both using the E-0095 tables;
+  - ScaleDamageByFlagsAtHLAlt and ScaleDamageByFlagsAtHLBit6;
+  - GetBaseATK/DEF/AGLOfSlotA;
+  - TargetStatus3Address, SetSlotStatus6Bit6, ClearTargetStatus5Bits23And7Bits012 and AnySlotStatusMaskSet;
+  - the four-choice SetActorTargetFromHRAMChoice4.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

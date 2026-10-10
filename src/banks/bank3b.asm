@@ -88,7 +88,7 @@ Jump_03B_4080::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's ATK word (wCFFA) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ActionEffect_Transform_Sub01_Sub03)
+; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, GetBaseATKOfSlotA)
 ; reads: wCFFA, wCFFB
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -444,7 +444,7 @@ Jump_03B_42B6::
     ld [wBattleStatResultLo], a
     ret
 
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_Sub06)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_Sub05)
 ; reads: wD00A, wD00B
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 Func_03B_42BB::

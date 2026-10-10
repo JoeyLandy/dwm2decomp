@@ -1357,7 +1357,7 @@ Jump_039_53C2::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_53CD
-    call Func_039_6E06
+    call AnySlotStatusMaskSet
     jr z, Jump_039_53D7
 
 Jump_039_53CD::
@@ -1377,7 +1377,7 @@ Jump_039_53DD::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_540D
-    call Func_039_6E06
+    call AnySlotStatusMaskSet
     jr nz, Jump_039_540D
     call Func_039_6E27
     ld a, c
@@ -1470,7 +1470,7 @@ Jump_039_546E::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_547E
-    call Func_039_6E06
+    call AnySlotStatusMaskSet
     jr z, Jump_039_5488
     call Func_039_71D4
     jr z, Jump_039_5488
@@ -1489,7 +1489,7 @@ Jump_039_5488::
 
 Jump_039_548E::
     ld a, c
-    call Func_039_6E06
+    call AnySlotStatusMaskSet
     jr nz, Jump_039_549F
     call Func_039_71D4
     jr nz, Jump_039_549F
@@ -1514,7 +1514,7 @@ Jump_039_54AF::
     ld a, c
     call CheckSlotStatusBlock
     jr c, Jump_039_54E5
-    call Func_039_6E06
+    call AnySlotStatusMaskSet
     jr nz, Jump_039_54E5
     call Func_039_71D4
     jr nz, Jump_039_54E5
@@ -2552,7 +2552,7 @@ Jump_039_5AD3::
     inc c
     dec b
     jr nz, Jump_039_5A9C
-    call Func_039_7002
+    call SetActorTargetFromHRAMChoice4
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2623,7 +2623,7 @@ Jump_039_5B38::
     inc c
     dec b
     jr nz, Jump_039_5AF3
-    call Func_039_7002
+    call SetActorTargetFromHRAMChoice4
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2689,7 +2689,7 @@ Jump_039_5B9D::
     inc c
     dec b
     jr nz, Jump_039_5B58
-    call Func_039_7002
+    call SetActorTargetFromHRAMChoice4
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2866,7 +2866,7 @@ Jump_039_5C8E::
 ChooseTarget_DrakSlash:: ; heuristic: target of a pointer table; C0
 Func_039_5C97:: ; address name
     ld d, $01
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2874,7 +2874,7 @@ Func_039_5C97:: ; address name
 ChooseTarget_BeastCut:: ; heuristic: target of a pointer table; C0
 Func_039_5C9D:: ; address name
     ld d, $02
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2882,7 +2882,7 @@ Func_039_5C9D:: ; address name
 ChooseTarget_BirdBlow:: ; heuristic: target of a pointer table; C0
 Func_039_5CA3:: ; address name
     ld d, $03
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2890,7 +2890,7 @@ Func_039_5CA3:: ; address name
 ChooseTarget_DevilCut:: ; heuristic: target of a pointer table; C0
 Func_039_5CA9:: ; address name
     ld d, $06
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2898,7 +2898,7 @@ Func_039_5CA9:: ; address name
 ChooseTarget_ZombieCut:: ; heuristic: target of a pointer table; C0
 Func_039_5CAF:: ; address name
     ld d, $07
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2906,7 +2906,7 @@ Func_039_5CAF:: ; address name
 ChooseTarget_CleanCut:: ; heuristic: target of a pointer table; C0
 Func_039_5CB5:: ; address name
     ld d, $08
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2914,7 +2914,7 @@ Func_039_5CB5:: ; address name
 ChooseTarget_SlimeBlow:: ; heuristic: target of a pointer table; C0
 Func_039_5CBB:: ; address name
     ld d, $00
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2922,7 +2922,7 @@ Func_039_5CBB:: ; address name
 ChooseTarget_BugBlow:: ; heuristic: target of a pointer table; C0
 Func_039_5CC1:: ; address name
     ld d, $05
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2930,7 +2930,7 @@ Func_039_5CC1:: ; address name
 ChooseTarget_Shears:: ; heuristic: target of a pointer table; C0
 Func_039_5CC7:: ; address name
     ld d, $04
-    call Func_039_7093
+    call TargetWeakestFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -3683,7 +3683,7 @@ Jump_039_6143::
     inc c
     dec b
     jr nz, Jump_039_6105
-    call Func_039_7002
+    call SetActorTargetFromHRAMChoice4
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -4190,7 +4190,7 @@ Jump_039_6450::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6460
-    call Func_039_6E06
+    call AnySlotStatusMaskSet
     jr z, Jump_039_646A
     call Func_039_71D4
     jr z, Jump_039_646A
@@ -4209,7 +4209,7 @@ Jump_039_646A::
     call Func_039_71D4
     jr nz, Jump_039_64C2
     ld a, c
-    call Func_039_6E06
+    call AnySlotStatusMaskSet
     jr nz, Jump_039_64C2
     ldh [hFFC8], a
     ld a, c
@@ -5170,7 +5170,7 @@ Func_039_69C2:: ; address name
 ChooseTarget_DrakSlash_69C5:: ; heuristic: target of a pointer table; C0
 Func_039_69C5:: ; address name
     ld d, $01
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5178,7 +5178,7 @@ Func_039_69C5:: ; address name
 ChooseTarget_BeastCut_69CB:: ; heuristic: target of a pointer table; C0
 Func_039_69CB:: ; address name
     ld d, $02
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5186,7 +5186,7 @@ Func_039_69CB:: ; address name
 ChooseTarget_BirdBlow_69D1:: ; heuristic: target of a pointer table; C0
 Func_039_69D1:: ; address name
     ld d, $03
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5194,7 +5194,7 @@ Func_039_69D1:: ; address name
 ChooseTarget_DevilCut_69D7:: ; heuristic: target of a pointer table; C0
 Func_039_69D7:: ; address name
     ld d, $06
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5202,7 +5202,7 @@ Func_039_69D7:: ; address name
 ChooseTarget_ZombieCut_69DD:: ; heuristic: target of a pointer table; C0
 Func_039_69DD:: ; address name
     ld d, $07
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5210,7 +5210,7 @@ Func_039_69DD:: ; address name
 ChooseTarget_CleanCut_69E3:: ; heuristic: target of a pointer table; C0
 Func_039_69E3:: ; address name
     ld d, $08
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5218,7 +5218,7 @@ Func_039_69E3:: ; address name
 ChooseTarget_SlimeBlow_69E9:: ; heuristic: target of a pointer table; C0
 Func_039_69E9:: ; address name
     ld d, $00
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5226,7 +5226,7 @@ Func_039_69E9:: ; address name
 ChooseTarget_BugBlow_69EF:: ; heuristic: target of a pointer table; C0
 Func_039_69EF:: ; address name
     ld d, $05
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5234,7 +5234,7 @@ Func_039_69EF:: ; address name
 ChooseTarget_Shears_69F5:: ; heuristic: target of a pointer table; C0
 Func_039_69F5:: ; address name
     ld d, $04
-    call Func_039_70FD
+    call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -5516,7 +5516,7 @@ Jump_039_6AF2::
     inc c
     dec b
     jr nz, Jump_039_6AB4
-    call Func_039_7002
+    call SetActorTargetFromHRAMChoice4
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -6052,9 +6052,11 @@ Jump_039_6E00::
     ld [de], a
     ret
 
+; A = slot: NZ when its status byte 0 & $40, byte 3 & $C0, byte 4 & $0C, byte 6 & $20 or byte 7 & $07 is set (A = that masked value), Z when none is (E-0096)
 ; 7 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; points at: wBattleStatus
-Func_039_6E06::
+AnySlotStatusMaskSet::
+Func_039_6E06:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
@@ -6352,7 +6354,7 @@ Jump_039_6FC0::
     ret
 
 ; wBattleTargetChoice[2 * actor] = (hFFC6, or hFFC9 when hFFC6 is $FF) | hFFD0 (the two-choice form of SetActorTargetFromHRAMChoice) (E-0078)
-; 5 call sites from 5 routines (e.g. Func_039_70FD, ChooseTarget_Ramming, ChooseTarget_MetalCut, Func_039_7093, ...)
+; 5 call sites from 5 routines (e.g. TargetRandomFoeOfFamilyD, ChooseTarget_Ramming, ChooseTarget_MetalCut, TargetWeakestFoeOfFamilyD, ...)
 ; reads: wBattleActor, hFFC6, hFFC9, hFFD0
 ; points at: wBattleTargetChoice
 SetActorTargetFromHFFC6OrHFFC9::
@@ -6398,10 +6400,12 @@ Jump_039_6FFC::
     ld [hl], a
     ret
 
+; wBattleTargetChoice[2 * actor] = (the first of hFFC6, hFFCA, hFFC9 that is not $FF, else hFFC8) | hFFD0 (the four-choice form of SetActorTargetFromHRAMChoice) (E-0096)
 ; 5 call sites from 5 routines (e.g. ChooseTarget_PanicAll, ChooseTarget_MouthShut, ChooseTarget_LegSweep, ChooseTarget_SickLick, ...)
 ; reads: wBattleActor, hFFC6, hFFCA, hFFC9, hFFC8, hFFD0
 ; points at: wBattleTargetChoice
-Func_039_7002::
+SetActorTargetFromHRAMChoice4::
+Func_039_7002:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -6499,11 +6503,13 @@ Jump_039_7084::
     ld [hl], b
     ret
 
+; D = family: among the actor's present opposite slots whose species family (LoadSpeciesFamily) is D, targets the one with the smallest HP + DEF; when none matches, the last present foe (hFFC9) is used (SetActorTargetFromHFFC6OrHFFC9). Used by the family-slaying moves' target routines (E-0096)
 ; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut, ChooseTarget_ZombieCut, ChooseTarget_DevilCut, ChooseTarget_Shears, ...)
 ; reads: wBattleActor, wSpeciesRecord, hFFC7, hFFC8, hFFC9
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
-Func_039_7093::
+TargetWeakestFoeOfFamilyD::
+Func_039_7093:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -6566,11 +6572,13 @@ Jump_039_70F4::
     call SetActorTargetFromHFFC6OrHFFC9
     ret
 
+; D = family: picks among the actor's present opposite slots whose species family is D, using AdvanceRandom when more than one matches (the choice rule is not read to the end); falls back to the last present foe; used by ChooseTarget routines of family-slaying moves (CleanCut, ZombieCut, DevilCut, Shears, ...) (E-0096)
 ; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut_69E3, ChooseTarget_ZombieCut_69DD, ChooseTarget_DevilCut_69D7, ChooseTarget_Shears_69F5, ...)
 ; reads: wBattleActor, wSpeciesRecord, hFFC6, wC5E7, hFFC9
 ; writes: hFFD0, hFFC6, hFFC9, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
-Func_039_70FD::
+TargetRandomFoeOfFamilyD::
+Func_039_70FD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
