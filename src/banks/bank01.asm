@@ -734,28 +734,28 @@ Jump_001_48B6:: ; address name
     call FillBytes
     ld a, $01
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     ld a, $02
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     ld a, $03
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     ld a, $04
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     ld a, $05
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     ld a, $06
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     ld a, $08
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     ld a, $0A
     ld [wC46B], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
     xor a, a
     ld [wC46B], a
     ret
@@ -2471,7 +2471,7 @@ Jump_001_5564::
     ld [wD7F1], a
 
 Jump_001_5572::
-    farcall Func_00E_5688
+    farcall ComputeBreedingChild
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -2799,10 +2799,12 @@ Func_001_57C7:: ; address name
     jr c, CopyWD01ABytesFromIndexCToDE
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_57E1)
+; debug: toggles wD7F1 between 0 and 2 and writes tile $10 + wD7F1 at vBGMap0 + $81; the following entries are the debug results screen input handlers (E-0131)
+; 1 call site from 1 routine (e.g. DebugToggleWD7F1Marker)
 ; reads: wD7F1
 ; writes: wD7F1
-Func_001_57E1::
+DebugToggleWD7F1Marker::
+Func_001_57E1:: ; address name
     ld a, [wD7F1]
     and a, a
     jr nz, Jump_001_57EE
@@ -2829,7 +2831,7 @@ Jump_001_5800::
     jr z, Jump_001_5812
     cp a, $07
     jr z, Jump_001_5812
-    call Func_001_57E1
+    call DebugToggleWD7F1Marker
     call StepDebugCursorWC5FF
     ret
 
@@ -3259,7 +3261,7 @@ Jump_001_5A99::
     ret
 
 ; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at Jump_001_5B45, then wraps to 0 (E-0126)
-; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_57E1)
+; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, DebugToggleWD7F1Marker)
 ; reads: wC5FF, wC5F8
 ; writes: wC5FF
 StepDebugCursorWC5FF::
@@ -3275,7 +3277,7 @@ Func_001_5AAC:: ; address name
     ld [wC5FF], a
 
 ; debug: draws the value of field wC5F8 (Data_001_5B70) at Data_001_5B84[wC5F8] as hex, a tile or BCD (E-0128)
-; 3 call sites from 1 routine (e.g. Func_001_57E1)
+; 3 call sites from 1 routine (e.g. DebugToggleWD7F1Marker)
 ; reads: wC5F8
 DrawDebugFieldValueWC5F8::
 Func_001_5AC0:: ; address name
@@ -3406,7 +3408,7 @@ Data_001_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $9A, $22, $9A
 
 ; reads a monster id word at DE, copies its name and draws its glyphs at HL (E-0122)
-; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_57E1)
+; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DebugToggleWD7F1Marker)
 ; writes: wC8D9
 DrawMonsterNameForWordAtDE_Bank01::
 Func_001_5B98:: ; address name
@@ -4908,9 +4910,9 @@ Jump_001_6652:: ; address name
     jr nz, Jump_001_66BD
     ld hl, wCFDD
     ld de, wD09F
-    call Func_001_66AD
-    call Func_001_66AD
-    call Func_001_66AD
+    call DebugBattleSetupLoadWords
+    call DebugBattleSetupLoadWords
+    call DebugBattleSetupLoadWords
 
 Jump_001_667A::
     xor a, a
@@ -4941,8 +4943,10 @@ Jump_001_6696::
     inc [hl]
     ret
 
-; 6 call sites from 2 routines (e.g. DebugBattleSetup_Update, Func_001_66AD)
-Func_001_66AD::
+; debug battle setup: copies a word from DE to HL (a zero word becomes 1); the following entries load the setup into wCFDD-wCFE5 and handle input (E-0131)
+; 6 call sites from 2 routines (e.g. DebugBattleSetup_Update, DebugBattleSetupLoadWords)
+DebugBattleSetupLoadWords::
+Func_001_66AD:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
@@ -5004,9 +5008,9 @@ Jump_001_6701::
     ld [wCFDC], a
     ld hl, wCFDD
     ld de, wD09F
-    call Func_001_66AD
-    call Func_001_66AD
-    call Func_001_66AD
+    call DebugBattleSetupLoadWords
+    call DebugBattleSetupLoadWords
+    call DebugBattleSetupLoadWords
     xor a, a
     ld [wC5F8], a
     ld [wC5F9], a
@@ -5154,13 +5158,13 @@ Jump_001_67EB::
 Jump_001_6801::
     xor a, a
     ld [wFrameCounterLo], a
-    call Func_001_6903
+    call DebugBattleSetupShowFieldString
 
 Jump_001_6808::
     ret
 
 ; writes the word wD09D[wC46B] as three hex digits at the address Data_001_68D3[wC46B] (E-0122)
-; 4 call sites from 1 routine (e.g. Func_001_66AD)
+; 4 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
 ; reads: wC46B
 ; points at: wD09D
 DrawDebugValueHexForWC46B::
@@ -5183,7 +5187,7 @@ Func_001_6809:: ; address name
     ret
 
 ; stores Data_001_68EB[wC46B] - DE at HL (floored at 0; DE = $FFFF stores the limit) (E-0125)
-; 2 call sites from 1 routine (e.g. Func_001_66AD)
+; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
 ; reads: wC46B
 SubtractDEFromDebugLimit::
 Func_001_682B:: ; address name
@@ -5224,7 +5228,7 @@ Jump_001_6852::
     ret
 
 ; clamps the word DE to 0 .. Data_001_68EB[wC46B] (negative becomes the limit) and stores it at HL (E-0124)
-; 2 call sites from 1 routine (e.g. Func_001_66AD)
+; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
 ; reads: wC46B
 ClampDebugValueToTableLimit::
 Func_001_6857:: ; address name
@@ -5328,11 +5332,13 @@ Data_001_68EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $00, $AB, $02, $AB, $02, $AB, $02, $01, $00, $00, $00, $40, $01, $63, $00
     db $40, $01, $63, $00, $40, $01, $63, $00
 
-; 9 call sites from 2 routines (e.g. Func_001_66AD, DebugBattleSetup_Init)
+; debug battle setup: shows the string for field wC46B (wD09D entries, ShowString_Bank88) at the window from Data_001_6A6C, with special cases for fields 4-6 (E-0131)
+; 9 call sites from 2 routines (e.g. DebugBattleSetupLoadWords, DebugBattleSetup_Init)
 ; reads: wC46B, wC52D, wC52E, wC52F, wC530, wD0A5
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ; points at: wD09D
-Func_001_6903::
+DebugBattleSetupShowFieldString::
+Func_001_6903:: ; address name
     ld a, [wC46B]
     or a, a
     ret z
@@ -5543,7 +5549,7 @@ Func_001_6A7E:: ; address name
     ret
 
 ; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess each); DE ends on the last tile (E-0120)
-; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueWC5F8, DrawDebugValueHexForWC46B, Func_001_66AD, ...)
+; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueWC5F8, DrawDebugValueHexForWC46B, DebugBattleSetupLoadWords, ...)
 WriteThreeHexDigitsAtDE::
 Func_001_6A98:: ; address name
     ld a, b

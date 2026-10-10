@@ -965,11 +965,13 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
     db "be in the Vault.", $F7
     db $F0
 
+; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
 ; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
 ; reads: wD7F6, wD7F7, wD7F5, wC616, wD7F1, wD00E, wCFA8
 ; writes: wD7F6, wD7F7, wSpeciesIdLo, wSpeciesIdHi, wCFA8, wD7F5
 ; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...
-Func_00E_5688::
+ComputeBreedingChild::
+Func_00E_5688:: ; address name
     ld hl, wCAD0
     ld b, $A5
 
@@ -1551,7 +1553,7 @@ Jump_00E_59C4::
     ret
 
 ; when wCA2A or wCACF is set and listed for stat C (Data_00E_5A6B), subtracts Data_00E_5A8E[value] from DE (unless it is at 999) (E-0130)
-; 1 call site from 1 routine (e.g. Func_00E_5688)
+; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; reads: wCA2A, wCACF
 AdjustStatForWCA2AAndWCACF::
 Func_00E_59E1:: ; address name
@@ -1708,7 +1710,7 @@ Data_00E_5A8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $05, $00
 
 ; fills wCB04 with $FF, appends species bytes 8-10 of wCADB, wC991 and wCA36 and eight bytes each from wC9BA and wCA5F to wCB0C, maps them through Data_00E_5B03 and compacts the list (E-0124)
-; 1 call site from 1 routine (e.g. Func_00E_5688)
+; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; points at: wCB04, wCADB, wCB0C, wC991, wCA36, wC9BA, wCA5F
 BuildWCB0CCandidateList::
 Func_00E_5AA4:: ; address name
@@ -1983,7 +1985,7 @@ Jump_00E_5CA1::
     ret
 
 ; for each of the 27 resistances of species wCADB: levels below 3 may rise by the parent rolls (RollWCB3DForCaseB_5D16 or 5D77); stores the result at wCB43 (E-0127)
-; 1 call site from 1 routine (e.g. Func_00E_5688)
+; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; reads: wD7F5
 ; writes: wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4
 ; points at: wCADB, wCB43
@@ -2267,7 +2269,7 @@ Func_00E_5E1D:: ; address name
     ret
 
 ; copies six bytes from the addresses in Data_00E_5E61 (or 5E6D when bit 4 of wCADD is set) to the addresses in Data_00E_5E79 (E-0125)
-; 1 call site from 1 routine (e.g. Func_00E_5688)
+; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; points at: wCADD
 CopySixBytesByWCADDBit4Table::
 Func_00E_5E2D:: ; address name
@@ -2322,7 +2324,7 @@ Data_00E_5E79:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EA, $CA, $EB, $CA, $EC, $CA, $ED, $CA, $68, $CB, $73, $CB
 
 ; copies the 10-byte player name wC60C to wCADF (E-0122)
-; 1 call site from 1 routine (e.g. Func_00E_5688)
+; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; points at: wC60C, wCADF
 CopyPlayerNameToWCADF::
 Func_00E_5E85:: ; address name
@@ -2339,7 +2341,7 @@ Jump_00E_5E8D::
     ret
 
 ; copies four 10-byte names from the addresses in Data_00E_5ED0 (or 5ED8 with bit 4 of wCADD) to the addresses in Data_00E_5EE0 (E-0125)
-; 1 call site from 1 routine (e.g. Func_00E_5688)
+; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; points at: wCADD
 CopyFourNamesByWCADDBit4Table::
 Func_00E_5E94:: ; address name
@@ -2402,7 +2404,7 @@ Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5E, $CB, $69, $CB, $EE, $CA, $F9, $CA
 
 ; computes a bonus from personality compatibility, matching parent fields and wD7F1, and adds it to the child stats at wCAD0 (offsets Data_00E_5F89) (E-0130)
-; 1 call site from 1 routine (e.g. Func_00E_5688)
+; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; reads: wD7F5, wD7F1
 ; points at: wC9DD, wCA82, wC9F3, wCA98, wCAD0
 ApplyBreedingBonusToChildStats::
@@ -2720,7 +2722,7 @@ Func_00E_6138:: ; address name
     ret
 
 ; wD7F5 = the family (0-10) of species id wD7F6/7 by id ranges (< $1B, $43, $67, $85, $A8, $CA, $F1, $111, $139, $15C, or more) (E-0128)
-; 5 call sites from 4 routines (e.g. Func_00E_5688, DrawSpeciesAndFamilyIconForHFFC6, Func_001_57E1, ScriptCommandF6_Run_Case10_Case06_Sub02)
+; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForHFFC6, DebugToggleWD7F1Marker, ScriptCommandF6_Run_Case10_Case06_Sub02)
 ; reads: wD7F6, wD7F7
 ; writes: wD7F5
 FamilyForSpeciesIdWD7F6::
@@ -2806,7 +2808,7 @@ Jump_00E_61BD::
     ret
 
 ; loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)
-; 2 call sites from 2 routines (e.g. Func_00E_5688, ScriptCommandF3_Run_Case05_Case0E_Sub01)
+; 2 call sites from 2 routines (e.g. ComputeBreedingChild, ScriptCommandF3_Run_Case05_Case0E_Sub01)
 ; reads: wCADB, wCADC, wD009
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wCADE

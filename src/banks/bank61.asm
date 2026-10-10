@@ -125,11 +125,13 @@ Jump_061_40B0::
     ld [wCD05], a
     ret
 
+; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hFFCA-hFFCD and wCD05 for key generation (E-0131)
 ; 2 call sites from 2 routines (e.g. RunWC903Case_Case06, WriteKeyEntryHFFC6)
 ; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
 ; writes: wCD05, hFFCA, hFFCB, hFFCC, hFFCD, rRAMG, hFFC8, hFFC9
 ; points at: wC6FE
-Func_061_40B4::
+ComputePartyStrengthForKey::
+Func_061_40B4:: ; address name
     ld a, [wC6FD]
     or a, a
     jr nz, Jump_061_40BF
@@ -2484,7 +2486,7 @@ Jump_061_594D::
     ret
 
 ; runs the routine for wCC44 & 7 (jump table; 7 reuses 4) (E-0122)
-; 1 call site from 1 routine (e.g. Func_011_4130)
+; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
 ; reads: wCC44
 RunWCC44Type_596F::
 Func_061_596F:: ; address name

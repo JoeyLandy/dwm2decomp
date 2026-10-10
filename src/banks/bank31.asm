@@ -2880,7 +2880,7 @@ RunBattleSetup_Case01_Case02::
 Jump_031_50BF:: ; address name
     ld de, Data_031_63A7
     ld hl, wC46C
-    call Func_031_5F9E
+    call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_031_5118
@@ -3435,7 +3435,7 @@ RunBattleSetup_Case01_Case12::
 Jump_031_5454:: ; address name
     ld de, Data_031_63A7
     ld hl, wC46E
-    call Func_031_5F9E
+    call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jp z, Jump_031_557A
@@ -4149,7 +4149,7 @@ RunBattleSetup_Case02_Case02::
 Jump_031_58CF:: ; address name
     ld de, Data_031_63A7
     ld hl, wC471
-    call Func_031_5F9E
+    call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jp z, Jump_031_597D
@@ -5321,10 +5321,12 @@ Jump_031_5F95::
 Jump_031_5F9D::
     ret
 
+; up/down/left/right move the battle command cursor entry wCFD5 within wCFD3, wCFD6, wCFD7, blinking it, with sound $69 (E-0131)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case02, RunBattleSetup_Case02_Case02, RunBattleSubStep_6E67_Case02)
 ; reads: wJoypadPressedRepeat, wCFD5, wCFD7, wCFD6, wFrameCounterLo, wCFD3
 ; writes: wFrameCounterLo, wCFD5
-Func_031_5F9E::
+MoveBattleCommandCursor::
+Func_031_5F9E:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_031_5FE2
@@ -5501,7 +5503,7 @@ Jump_031_60AC::
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: sets bit 6 of [HL] and writes tile $C3 at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 15 call sites from 4 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, Func_031_5F9E, RunBattleSetup_Case01_Case06_Sub01)
+; 15 call sites from 4 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, MoveBattleCommandCursor, RunBattleSetup_Case01_Case06_Sub01)
 SetBit6AndBlankEntryTile_Bank31::
 Func_031_60AD:: ; address name
     set 6, [hl]
@@ -5527,7 +5529,7 @@ Func_031_60AD:: ; address name
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 13 call sites from 6 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, RunBattleSetup_Shared01, Func_031_5F9E, ...)
+; 13 call sites from 6 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, RunBattleSetup_Shared01, MoveBattleCommandCursor, ...)
 ClearBit6AndCursorEntryTile_Bank31::
 Func_031_60CC:: ; address name
     res 6, [hl]
@@ -7165,7 +7167,7 @@ Jump_031_69A4:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    farcall Func_01A_60F1
+    farcall FindNewlyLearnableSkills
     ldh a, [hFFC9]
     cp a, $FF
     jr z, Jump_031_69FA
@@ -8216,7 +8218,7 @@ RunBattleSubStep_6E67_Case02::
 Jump_031_6F57:: ; address name
     ld de, Data_031_63BD
     ld hl, wC46B
-    call Func_031_5F9E
+    call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_031_6F91

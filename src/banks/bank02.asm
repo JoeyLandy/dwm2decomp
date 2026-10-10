@@ -536,7 +536,7 @@ Jump_002_42F3::
     ret
 
 ; on CGB copies the 8-byte palette Data_002_4322 into wBGPaletteBuffer and wOBJPaletteBuffer and sets the upload requests wC526 and wC527 = $7F (E-0117)
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wIsCGB
 ; writes: wC526, wC527
 ; points at: wBGPaletteBuffer, wOBJPaletteBuffer
@@ -1158,7 +1158,7 @@ Jump_002_4680::
     or a, a
     jr nz, Jump_002_46B3
     call LoadMapScreen
-    farcall Func_069_4001
+    farcall LoadMapObjectsForScreen
     farcall SetupMap0BMonsterObjects
     farcall ClearWC935WhenFieldIdle
     jr Jump_002_46BC
@@ -2117,9 +2117,9 @@ Jump_002_4D99:: ; address name
     ret z
     xor a, a
     ld [wScriptRunning], a
-    farcall Func_00A_43EC
+    farcall TickRandomEncounterCounter
     farcall CheckStepTriggerAndDispatchTalk
-    farcall Func_011_4130
+    farcall CheckWarpsAtPlayerPosition
     xor a, a
     ld [wC8BF], a
     ret
@@ -3905,9 +3905,9 @@ Jump_002_58BF::
     farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
     farcall UpdatePlayerMovement_Sub01_Sub03
-    farcall Func_00A_43EC
+    farcall TickRandomEncounterCounter
     farcall CheckStepTriggerAndDispatchTalk
-    farcall Func_011_4130
+    farcall CheckWarpsAtPlayerPosition
     farcall RunPlayerMoveTypeWC194
     farcall EnterStatusEffectFieldState
     farcall CountDownWD069ThenDispatchTalkEvent
@@ -4466,8 +4466,8 @@ Jump_002_5BF4:: ; address name
     ld [wC918], a
     farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
-    farcall Func_00A_43EC
-    farcall Func_011_4130
+    farcall TickRandomEncounterCounter
+    farcall CheckWarpsAtPlayerPosition
     farcall RunPlayerMoveTypeWC194
     farcall EnterStatusEffectFieldState
     farcall CountDownWD069ThenDispatchTalkEvent
@@ -4486,7 +4486,7 @@ Jump_002_5C27:: ; address name
     inc [hl]
     farcall FindTriggerEntryForCurrentScreen
     farcall FindTriggerEntryForCurrentScreen_WCCEB
-    farcall Func_069_4001
+    farcall LoadMapObjectsForScreen
     ld a, [wC935]
     bit 7, a
     jr z, Jump_002_5C4E
@@ -4912,7 +4912,7 @@ Jump_002_5EE9::
     ret
 
 ; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
-; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, Func_00A_43EC, ...)
+; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wCB7E
 ; points at: wScreenTileBuffer, wD000, wD2D0
@@ -7244,7 +7244,7 @@ Data_002_7006:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $00B006, $68
 
 ; with SRAM bank 1 selected: hFFC6 = 1 when sBB00 is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
-; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, Func_015_6B00, LoadSaveFileSummary)
+; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, ShowSaveFileInfoWindow, LoadSaveFileSummary)
 ; reads: sBB00
 ; writes: rRAMG, rRAMB, hFFC6
 CheckSaveData::
@@ -7567,7 +7567,7 @@ Func_002_71B2:: ; address name
     ld [wD7F4], a
     ld a, $01
     ld [wD7F2], a
-    farcall Func_01D_7492
+    farcall UnpackRecordFromBank1Slot
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -8025,7 +8025,7 @@ Func_002_73E6:: ; address name
     ld [wD7F4], a
     ld a, $01
     ld [wD7F2], a
-    farcall Func_01D_6E39
+    farcall PackRecordFieldsToBank1Slot
     ld a, [wC8C4]
     inc a
     ld [wC8C4], a

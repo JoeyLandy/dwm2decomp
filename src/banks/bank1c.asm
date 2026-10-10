@@ -5972,7 +5972,7 @@ Func_01C_68DF:: ; address name
     ret
 
 ; LoadWD7F1PointerForWD7FB, then wD7F1 = the byte at that pointer + 4 * wD7B6 + wD7B5 (E-0119)
-; 1 call site from 1 routine (e.g. Func_024_7045)
+; 1 call site from 1 routine (e.g. StepItemDescriptionText)
 ; reads: wD7B6, wD7B5
 ; writes: wD7F1
 LoadWD7F1ByteForWD7B5WD7B6::
@@ -6458,7 +6458,7 @@ Data_01C_6C0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 Func_01C_6AF7_Case02::
 Jump_01C_6C70:: ; address name
-    farcall Func_024_7045
+    farcall StepItemDescriptionText
     ret
 
 ; entry 3 of the `rst $00` table in Func_01C_6AF7

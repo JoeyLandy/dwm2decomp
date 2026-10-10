@@ -6036,7 +6036,7 @@ Jump_03A_7ADD::
     ret
 
 ; clears wC0A0 ($10 bytes) and lists the species ids of the occupied slots of the shown side at wC0A0 and of the other side at wC0A8 (E-0129)
-; 6 call sites from 5 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, Func_03B_4711, ApplyTargetWD93FReduction, ...)
+; 6 call sites from 5 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, GroupTargetsBySpeciesToWD88B, ApplyTargetWD93FReduction, ...)
 ; reads: wC58A, wC57F
 ; points at: wC0A0, wBattleMonsterId, wC0A8
 ListSideMonsterIdsToWC0A0::

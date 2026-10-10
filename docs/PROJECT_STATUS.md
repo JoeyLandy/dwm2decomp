@@ -55,6 +55,19 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code; the cartridge header (`$0104-$014F`) is an INCBIN slice, not annotated.
 
+## Readability state (2026-10-10, after E-0131)
+
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run93). Measured from the generated `src/`:
+
+| Measure | State |
+| --- | --- |
+| Routines with only an address name (`tools/rank_unnamed.py`) | 0 |
+| `call`/`farcall` operands that reach a named routine | 100% of 22,058 |
+| Evidence-named routines in `config/names.json` | 3,227, plus families, `_CaseNN`/`_SubNN`/`_SharedNN` structural names |
+| RAM operands | mostly still address names (`wC52B`); RAM naming is the next front |
+
+Most routine names are C1 readings, and many describe mechanics rather than game meaning. Proven data is kept out of code through `config/data_regions.json`, and code pointer tables through `config/tables.json`.
+
 ## Readability state (2026-10-09, after E-0027)
 
 Binary identity still passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, repeated clean builds); 102 tests pass. Readability measures from the generated `src/`, none of them a claim about game meaning:

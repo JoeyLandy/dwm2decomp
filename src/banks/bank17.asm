@@ -156,7 +156,7 @@ Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; when the Super Game Boy is active, builds a PAL_SET ($51) packet from Data_017_426C[wC51F] (also kept in wC577), attribute file wC520 | $80, loads the object palettes and sends it (E-0125)
-; 9 call sites from 9 routines (e.g. Func_000_0150, GameMode1_Init, GameMode5_Init_Case01, GameMode5_Init_Case02, ...)
+; 9 call sites from 9 routines (e.g. BootAndMainLoop, GameMode1_Init, GameMode5_Init_Case01, GameMode5_Init_Case02, ...)
 ; reads: wSGBActive, wC51F, wC0A0, wC520
 ; writes: wSGBPacketBuffer, wC0A0, wSGBPacketIndex
 ; points at: wC480, wC577

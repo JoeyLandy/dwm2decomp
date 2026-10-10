@@ -894,7 +894,7 @@ Jump_014_45DE:: ; address name
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    farcall Func_01D_6E39
+    farcall PackRecordFieldsToBank1Slot
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -902,7 +902,7 @@ Jump_014_45DE:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, [wD7F5]
     ld [wD7B4], a
     ld a, [wD782]
@@ -940,7 +940,7 @@ Jump_014_4654::
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    farcall Func_01D_7492
+    farcall UnpackRecordFromBank1Slot
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -2328,7 +2328,7 @@ Jump_014_5095:: ; address name
     ld [wD7F3], a
     ld a, [wD7C1]
     ld [wD7F4], a
-    farcall Func_01D_7492
+    farcall UnpackRecordFromBank1Slot
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -2454,7 +2454,7 @@ Jump_014_5171:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld [wD7F1], a
-    farcall Func_01D_6E39
+    farcall PackRecordFieldsToBank1Slot
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -2472,7 +2472,7 @@ Jump_014_5171:: ; address name
     xor a, a
     ld [rRAMG2], a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     farcall ListPartyRecordsWithState2ToWD789
     call DrawBox4965AndMenuAndStep
     xor a, a
@@ -2745,7 +2745,7 @@ Jump_014_538C:: ; address name
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    farcall Func_01D_6E39
+    farcall PackRecordFieldsToBank1Slot
     ld a, [wD7F5]
     cp a, $FF
     jr z, Jump_014_53D0
@@ -2757,7 +2757,7 @@ Jump_014_53D0::
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, [wD7F5]
     ld [wD7F1], a
     ld a, [wD782]
@@ -2788,7 +2788,7 @@ Jump_014_5404::
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    farcall Func_01D_7492
+    farcall UnpackRecordFromBank1Slot
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -8179,11 +8179,13 @@ Jump_014_7E89::
     ld [rRAMB], a
     ret
 
+; clears SRAM record wD7F1 (when below 30) and moves the later stored records up to fill the gap, updating the party list (E-0131)
 ; 19 call sites from 18 routines (e.g. RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case17, ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case04_Case16, ...)
 ; reads: wD7F1, wD7F2, wC6FD
 ; writes: rRAMG2, rRAMB, wD7F3, wD7F5, wD7F6, wD7F7, wC6FD
 ; points at: sA000, sA0A5, wC6FE
-Func_014_7E96::
+DeleteSRAMRecordAndCompact::
+Func_014_7E96:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

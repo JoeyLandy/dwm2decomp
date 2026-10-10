@@ -354,7 +354,7 @@ Jump_019_4291::
     ret
 
 ; wDA53[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
-; 8 call sites from 8 routines (e.g. Func_019_4CF8, Func_019_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
+; 8 call sites from 8 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
 ; points at: wDA53, wBattleINT
 SetSlotAIModeFromINT::
 Func_019_4298:: ; address name
@@ -436,7 +436,7 @@ Func_019_42EE:: ; address name
     ret
 
 ; outside link and special battles stores a random value between 80 and 100 percent of the word at HL into BC's target (E-0127)
-; 1 call site from 1 routine (e.g. Func_019_4CF8)
+; 1 call site from 1 routine (e.g. LoadBattleSlotFromBattlerRecord_4CF8)
 ; reads: wCFC5, wC58A, wC5E7, wC5E8
 RandomizeWordBetween80And100Percent::
 Func_019_42FD:: ; address name
@@ -503,7 +503,7 @@ Jump_019_433F::
     ret
 
 ; C = wD868, then falls into Func_019_434D (E-0126)
-; 4 call sites from 4 routines (e.g. Func_019_4CF8, Func_019_4BA8, RunA04410Or456FBySlotC_Sub01, RunA04410Or456FBySlotC_Sub02)
+; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_Sub01, RunA04410Or456FBySlotC_Sub02)
 ; reads: wD868, wD86A, wD86B
 ; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
@@ -513,7 +513,7 @@ Func_019_4349:: ; address name
     ld c, a
 
 ; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads each skill record (with wD868 = 3) (E-0130)
-; 6 call sites from 6 routines (e.g. Func_019_4CF8, Func_019_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
+; 6 call sites from 6 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
 ; reads: wD868, wD86A, wD86B
 ; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
@@ -741,7 +741,7 @@ Func_019_4465:: ; address name
     ret
 
 ; slot C: wBattleSlotOut = 1 when bit 7 of [HL] is set; otherwise 0 and, unless wCFC5 = 4, the status byte gets $20 for bit 0 and bit 0 for bit 2 (E-0125)
-; 2 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
+; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 ; reads: wCFC5
 ; points at: wBattleSlotOut, wBattleStatus
 InitSlotOutAndStatusFromRecordFlags::
@@ -796,7 +796,7 @@ Jump_019_44A1::
     ret
 
 ; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
-; 10 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
+; 10 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 StoreByteAtDEPlusC_Bank19::
 Func_019_44A3:: ; address name
     ld a, c
@@ -811,7 +811,7 @@ Jump_019_44A9::
     ret
 
 ; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same 13 bytes appear in 2 banks)
-; 22 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
+; 22 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 StoreWordAtDEPlus2C_Bank19::
 Func_019_44AC:: ; address name
     ld a, c
@@ -844,7 +844,7 @@ Func_019_44B9:: ; address name
     ld d, a
 
 ; packs the 2-bit fields at HL (and bits 0-1 of byte $1A) into the 7-byte wDA72-style record at DE (E-0127)
-; 2 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
+; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 PackResistanceFieldsToDE::
 Func_019_44C9:: ; address name
     push hl
@@ -1451,7 +1451,7 @@ Jump_019_4771::
     ld [hl+], a
     call RollRecordField0DState
     call AccumulateGrowthForLevelsHFFC7
-    farcall Func_01A_5FA7
+    farcall CheckSkillsLearnableAtLevel
     ld a, [wD86A]
     ld e, a
     ld a, [wD86B]
@@ -2095,24 +2095,26 @@ GameMode4_Init_Sub01_Sub04_Sub01::
 Func_019_4B91:: ; address name
     ld a, [wC58A]
     or a, a
-    jr nz, Func_019_4BA8
+    jr nz, LoadBattleSlotFromBattlerRecord_4BA8
     ld a, c
     cp a, $04
     jr nc, Jump_019_4BA1
-    call Func_019_4BA8
+    call LoadBattleSlotFromBattlerRecord_4BA8
     jr Jump_019_4BA4
 
 Jump_019_4BA1::
-    call Func_019_4CF8
+    call LoadBattleSlotFromBattlerRecord_4CF8
 
 Jump_019_4BA4::
     call ClearSpeciesRecordBuffer_Bank19
     ret
 
+; slot C: copies species, family, AI settings (wDA43/wDA4B outside link battles) and stats from its battler record into the battle arrays (E-0131)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
 ; reads: wC58A, wD868, wD871
 ; points at: wBattleMonsterId, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
-Func_019_4BA8::
+LoadBattleSlotFromBattlerRecord_4BA8::
+Func_019_4BA8:: ; address name
     ld a, c
     push bc
     call BattlerRecordAddress_Bank19
@@ -2343,10 +2345,12 @@ Jump_019_4CEF::
     call SetSlotAIModeFromINT
     ret
 
+; slot C: copies species, family, wDA43 and stats from its battler record into the battle arrays and loads its skills (E-0131)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
 ; reads: wD868, wD871
 ; points at: wBattleMonsterId, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
-Func_019_4CF8::
+LoadBattleSlotFromBattlerRecord_4CF8::
+Func_019_4CF8:: ; address name
     push bc
     call BattlerRecordAddress_Bank19
     pop bc
@@ -2517,7 +2521,7 @@ Jump_019_4DFC::
     ret
 
 ; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL = wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the field offset) (E-0067) (the same 23 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
+; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 BattlerRecordAddress_Bank19::
 Func_019_4E05:: ; address name
     cp a, $03

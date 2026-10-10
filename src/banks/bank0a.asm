@@ -714,10 +714,12 @@ Jump_00A_43DC::
     farcall DispatchTalkEvent
     ret
 
+; in the field when nothing blocks it: counts down the encounter or talk timers (wC901, wD091) and starts a battle or talk event when they expire (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wFadeState, wScriptRunning, hFF8C, wModeState, wC901, wD091, wC902, wCC44, ...
 ; writes: wC901, wD091, wC916, wC917, wC902, wC903, wModeState, wC904, ...
-Func_00A_43EC::
+TickRandomEncounterCounter::
+Func_00A_43EC:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
@@ -883,7 +885,7 @@ Jump_00A_44D3::
     INCBIN "dwm2-cobi-us.gbc", $0284FE, $120
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. Func_00A_43EC, RunPlayerMoveTypeWC194_Case05)
+; 2 call sites from 2 routines (e.g. TickRandomEncounterCounter, RunPlayerMoveTypeWC194_Case05)
 ; writes: wC910, wC911, wC912, wC913
 ReadTileBuffer2x2AtPixel_Bank0A::
 Func_00A_461E:: ; address name
@@ -952,7 +954,7 @@ Jump_00A_4677:: ; address name
     and a, $0F
     cp a, $0C
     jr nc, Jump_00A_46D0
-    farcall Func_061_40B4
+    farcall ComputePartyStrengthForKey
     ld a, [wCD05]
     ld b, a
     ld a, $05
@@ -1085,7 +1087,7 @@ Jump_00A_475C::
     ret
 
 ; draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122)
-; 5 call sites from 5 routines (e.g. Func_00A_43EC, RunWD06BSubState_60E9_Case02_Case00_Case02, StartScriptedEncounterHFFC6, SetModeState3AndSaveScreen, ...)
+; 5 call sites from 5 routines (e.g. TickRandomEncounterCounter, RunWD06BSubState_60E9_Case02_Case00_Case02, StartScriptedEncounterHFFC6, SetModeState3AndSaveScreen, ...)
 ; reads: wCD04
 ; writes: wC902
 PickRandomWC902FromTable478F::

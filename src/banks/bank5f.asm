@@ -840,7 +840,7 @@ Func_05F_6D3F:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     call LoadRecordListNameTiles
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
@@ -860,7 +860,7 @@ Func_05F_6D78:: ; address name
     ld [wD7F1], a
     ld a, $01
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, [wD7F5]
     cp a, $FF
     ret z

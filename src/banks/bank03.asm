@@ -639,7 +639,7 @@ Func_003_43D6:: ; address name
     ld de, $0501
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
-; 11 call sites from 8 routines (e.g. ShowSelectedItemDescription, PauseMenu_State3_Shared02, PauseMenu_Skills_Shared02, Func_003_5AA7, ...)
+; 11 call sites from 8 routines (e.g. ShowSelectedItemDescription, PauseMenu_State3_Shared02, PauseMenu_Skills_Shared02, DrawItemTargetStatPreview, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
 ShowStringBank08AtTilesHL_Bank03::
@@ -3359,7 +3359,7 @@ Jump_003_5449:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_5469
-    call Func_003_5AA7
+    call DrawItemTargetStatPreview
     ld hl, vBGMap0 + $141
     ld bc, $0903
     ld de, wC2D9
@@ -4060,7 +4060,7 @@ Func_003_5874:: ; address name
     add_a_to_hl
     deref_hl
     call CopyRecordRectToScreenBuffer_Bank03
-    call Func_003_5AA7
+    call DrawItemTargetStatPreview
     ret
 
 ; fills tiles, builds the item screen, copies block $10 and draws the cursor for wC46D & 3 (E-0122)
@@ -4411,11 +4411,13 @@ Jump_003_5AA3::
     ld [wMenuRowCount], a
     ret
 
+; for item wItemId (kind Data_003_5C8B) writes the target record's affected value (HP, MP or a stat word) as digits in the item screen (E-0131)
 ; 2 call sites from 2 routines (e.g. BuildItemScreenForWItemId, PauseMenu_Items_Case02_Case05)
 ; reads: wC46D, wItemId, hFFC6, hFFC7
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hFFC6, hFFC7, wC2DE, wC2DF, ...
 ; points at: wC2D9, wC319, wC31D
-Func_003_5AA7::
+DrawItemTargetStatPreview::
+Func_003_5AA7:: ; address name
     ld a, [wC46D]
     ld c, a
     ld a, [wItemId]
@@ -4664,7 +4666,7 @@ Jump_003_5C11::
     ret
 
 ; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. Func_003_5AA7)
+; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
 ; writes: wC2DF
 SetWC2DFTileC2_Bank03_5C16::
 Func_003_5C16:: ; address name
@@ -4673,7 +4675,7 @@ Func_003_5C16:: ; address name
     ret
 
 ; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. Func_003_5AA7)
+; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
 ; writes: wC2DF
 SetWC2DFTileC1_Bank03_5C1C::
 Func_003_5C1C:: ; address name
@@ -4682,7 +4684,7 @@ Func_003_5C1C:: ; address name
     ret
 
 ; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. Func_003_5AA7)
+; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
 ; writes: wC2DE
 SetWC2DETileC0_Bank03_5C22::
 Func_003_5C22:: ; address name

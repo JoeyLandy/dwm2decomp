@@ -3279,7 +3279,7 @@ Jump_00D_5A3C:: ; address name
 ; writes: wStringCategory, wD781
 ScriptCommandF2_Run_Case03_Case0A::
 Jump_00D_5A4A:: ; address name
-    farcall Func_015_6B00
+    farcall ShowSaveFileInfoWindow
     xor a, a
     ld [wStringCategory], a
     ld a, [wD781]
@@ -6680,7 +6680,7 @@ ScriptCommandF4_Run_Case04_Case14::
 Jump_00D_7329:: ; address name
     ld a, $01
     ld [wD7F1], a
-    farcall Func_00E_5688
+    farcall ComputeBreedingChild
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -6808,7 +6808,7 @@ Jump_00D_740F::
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

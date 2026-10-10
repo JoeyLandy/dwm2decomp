@@ -1181,16 +1181,18 @@ Jump_0A0_46BD::
 RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub04::
 Func_0A0_46C3:: ; address name
     push bc
-    call Func_0A0_46CC
+    call ComputeWildEncounterLevel
     pop bc
     call ApplyLevelScaledStatsToSlots
     ret
 
+; computes the wild monster level wCFE3 and band wCFE4 from the party's stat totals (wD0F2-wD0FE) and size (E-0131)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub04)
 ; reads: wD0EC, wD13A
 ; writes: wCFE3, wCFE4
 ; points at: wD0FC, wD0FE, wD0F2, wD0F6, wD0F8, wD0FA, wD14A, wD14C, ...
-Func_0A0_46CC::
+ComputeWildEncounterLevel::
+Func_0A0_46CC:: ; address name
     push bc
     ld de, $0000
     ld hl, wD0FC
@@ -1453,7 +1455,7 @@ Jump_0A0_4863::
     ret
 
 ; DE += the word at [HL]; HL += 1 (ends on the high byte); clobbers A
-; 24 call sites from 1 routine (e.g. Func_0A0_46CC)
+; 24 call sites from 1 routine (e.g. ComputeWildEncounterLevel)
 AddWordAtHLToDE::
 Func_0A0_486D:: ; address name
     ld a, [hl+]
@@ -1465,7 +1467,7 @@ Func_0A0_486D:: ; address name
     ret
 
 ; picks a monster for slot C from the band row Data_0A0_6D57 (PickRandomBand0To10, wCFE4) by a weighted roll and stores its id in wCFDD[C] (E-0127)
-; 1 call site from 1 routine (e.g. Func_0A0_46CC)
+; 1 call site from 1 routine (e.g. ComputeWildEncounterLevel)
 ; reads: wCFE4
 ; points at: wC5E7, wCFDD
 PickEncounterMonsterForSlotC::
@@ -1734,7 +1736,7 @@ Func_0A0_494F:: ; address name
     ld a, $07
     ld [hl+], a
     call RollRecordField0DState_A0
-    farcall Func_01A_5FA7
+    farcall CheckSkillsLearnableAtLevel
     ld a, [wD86A]
     ld e, a
     ld a, [wD86B]

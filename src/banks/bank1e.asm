@@ -3457,7 +3457,7 @@ Jump_01E_586E:: ; address name
     xor a, a
     ld [rRAMG2], a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     farcall ListPartyRecordsWithState2ToWD789
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
@@ -3684,7 +3684,7 @@ Jump_01E_5A16:: ; address name
     xor a, a
     ld [rRAMG2], a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     farcall ListPartyRecordsWithState2ToWD789
     call ScriptCommandE8_Run_Shared03
     xor a, a
@@ -5060,7 +5060,7 @@ Jump_01E_6325:: ; address name
     call GetWD789Cell4Address
     ld a, [hl]
     ld b, a
-    call Func_01E_6D70
+    call DrawRecordParentNames
     call DrawRecordFamilyEntries_6FEB
     ld a, $F0
     ldh [hFFBA], a
@@ -6432,7 +6432,7 @@ Jump_01E_6C69:: ; address name
 ScriptCommandE8_Run_Case09_Case1F::
 Jump_01E_6C97:: ; address name
     ld b, [hl]
-    call Func_01E_6D70
+    call DrawRecordParentNames
     call DrawRecordFamilyEntries_6FEB
     ld a, $F0
     ldh [hFFBA], a
@@ -6570,10 +6570,12 @@ Func_01E_6D42:: ; address name
     ld [hl], $12
     ret
 
+; for record B draws the names of its parents (fields from $6ED2 or $6EDA by bit 4 of field $0D), or '???' when unknown (E-0131)
 ; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunWD781Step_F0_5DE8_Case05_Sub01)
 ; reads: hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, wC8CF, wC8D0, wC8D1, wC8D2, wC8D9, wD7F1, ...
-Func_01E_6D70::
+DrawRecordParentNames::
+Func_01E_6D70:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -6746,7 +6748,7 @@ Jump_01E_6E6C::
     ret
 
 ; reads word field wD7F3 of record B, copies that monster name (category 2 of the bank-08 string database) to wC8CF and draws its glyphs at the address in wD7F1/2 (E-0121)
-; 2 call sites from 1 routine (e.g. Func_01E_6D70)
+; 2 call sites from 1 routine (e.g. DrawRecordParentNames)
 ; reads: wD7F3, hFFC6, hFFC7, wDataBank, wD7F1, wD7F2
 ; writes: wDataBank
 ; points at: wC8CF
@@ -6946,7 +6948,7 @@ Jump_01E_6FC9::
 RunWD781Step_F0_5DE8_Case05_Sub01::
 Func_01E_6FE3:: ; address name
     ld b, e
-    call Func_01E_6D70
+    call DrawRecordParentNames
     call DrawRecordFamilyEntries_6FEB
     ret
 

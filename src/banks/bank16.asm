@@ -5214,7 +5214,7 @@ Jump_016_615E:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     pop hl
     ld a, [wC6FD]
     ld [wD88F], a
@@ -5583,7 +5583,7 @@ Jump_016_643D:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     xor a, a
     ld [rRAMG], a
     ld hl, wBattleSubPhase
@@ -8217,7 +8217,7 @@ Data_016_75EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E
 
 ; checks the save; when valid, loads the player name, play time, party summaries and other title-screen details from SRAM bank 1 into wD0D5 onward (E-0129)
-; 1 call site from 1 routine (e.g. Func_016_7783)
+; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: hFFC6, sBC00, sBC01, sBC02, sBC03, sBD3A, sBE0D, sBB07, ...
 ; writes: wBattlerRecords, rRAMG, rRAMB, wD0E5, wD09D, wD09E, wD09F, wD10A, ...
 ; points at: wBattlerRecords, sBB0F, wD0D6, sBD30, wD0E0, wD0E6, wD0F2, wD0FE, ...
@@ -8488,11 +8488,13 @@ Func_016_777B:: ; address name
     farcall DecompressGraphicsA4ToTiles0
     jr Jump_016_77A6
 
+; loads the summary graphics and palette, the save file summary, and draws the player name, party icons, names, levels and key name on the title screen (E-0131)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC527, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wOBJPaletteBuffer, wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, ...
-Func_016_7783:: ; heuristic: follows a terminator; C0
+DrawTitleSaveSummaryScreen:: ; heuristic: follows a terminator; C0
+Func_016_7783:: ; address name
     ld b, $7E
     ld de, Data_07E_5B63
     ld hl, vTiles0
@@ -8657,7 +8659,7 @@ Jump_016_788B::
     ret
 
 ; writes wC8C0 as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank16 (E-0126)
-; 1 call site from 1 routine (e.g. Func_016_7783)
+; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; points at: wC8C0, wC8C1
 WriteThreeDigitTilesWC8C0_Bank16::
 Func_016_78C7:: ; address name
@@ -8668,7 +8670,7 @@ Func_016_78C7:: ; address name
     inc de
 
 ; writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. Func_016_7783, DrawSaveSummaryPartyEntryC)
+; 2 call sites from 2 routines (e.g. DrawTitleSaveSummaryScreen, DrawSaveSummaryPartyEntryC)
 ; points at: wC8C1
 WriteTwoDigitTilesWC8C1NoBlank_Bank16::
 Func_016_78CF:: ; address name
@@ -8683,7 +8685,7 @@ Func_016_78CF:: ; address name
     ret
 
 ; window at DE: copies 10 bytes from HL to wC130 with a $F0 terminator and shows it (ShowString_Bank08) (E-0122)
-; 2 call sites from 2 routines (e.g. Func_016_7783, DrawSaveSummaryPartyEntryC)
+; 2 call sites from 2 routines (e.g. DrawTitleSaveSummaryScreen, DrawSaveSummaryPartyEntryC)
 ; writes: wC52D, wC52E
 ; points at: wC130
 ShowTenByteNameAtDE::
@@ -8707,7 +8709,7 @@ Jump_016_78E9::
     ret
 
 ; for summary entry C (below B) loads its family icon, shows its 10-byte name and writes its level; otherwise blanks the entry (E-0129)
-; 3 call sites from 1 routine (e.g. Func_016_7783)
+; 3 call sites from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: wGameMode
 ; writes: wD09D, wD09E
 ; points at: hFFF7
@@ -8810,7 +8812,7 @@ Jump_016_798A::
     ret
 
 ; writes $C3 to wC227/8 and wC247/8, or to wC267/8 and wC287/8 in game mode 5 (E-0122)
-; 1 call site from 1 routine (e.g. Func_016_7783)
+; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: wGameMode
 ; writes: wC227, wC228, wC247, wC248, wC267, wC268, wC287, wC288
 BlankTwoTileCellByGameMode::
@@ -8834,7 +8836,7 @@ Jump_016_79A6::
     ret
 
 ; window at vTiles2 + $3B0 (or + $5B0 in game mode 5): shows string wD10C + $0A, or builds a two-word key name from wD10E/wD10F (E-0127)
-; 1 call site from 1 routine (e.g. Func_016_7783)
+; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: wGameMode, wD10B, wD10C, wD110, wD10E, wD10F, wD10D
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wC130

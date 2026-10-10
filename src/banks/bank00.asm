@@ -84,7 +84,7 @@ Func_000_0058:: ; address name
     ds $24, $00
 
 ; copies the 10 bytes at $008E (ld a,$C0 / ldh [rDMA],a / wait / ret) to HRAM at $FF80
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 InstallOamDmaRoutine::
 Func_000_0080:: ; address name
     ld c, $80
@@ -122,14 +122,16 @@ Jump_000_0094::
 ROMEntryPoint::
 Func_000_0100:: ; address name
     nop
-    jp Func_000_0150
+    jp BootAndMainLoop
     INCBIN "dwm2-cobi-us.gbc", $000104, $4C
 
+; entry after the header jump: wIsCGB = 1 when A was $11 at power-on; disables interrupts, sets the stack, clears RAM, installs the OAM DMA routine, clears VRAM, sets game mode 5 and the MBC banks, then runs the main loop (E-0131)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC58A, wModeChangeRequest, wFadeState
 ; writes: wIsCGB, rVBK, wGameMode, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
 ; points at: wGameMode, wC604
-Func_000_0150::
+BootAndMainLoop::
+Func_000_0150:: ; address name
     cp a, $11
     ld a, $00
     jr nz, Jump_000_0157
@@ -345,7 +347,7 @@ Jump_000_033D::
     jp Jump_000_02D2
 
 ; jumps through a 9-entry table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07, $24, $A0, $F2); called from the main loop each time the mode changes
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wGameMode
 RunGameModeInit::
 Func_000_0355:: ; address name
@@ -799,7 +801,7 @@ Jump_000_05C7::
     jp StartSerialTransferInternalClock
 
 ; returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step
-; 44 call sites from 15 routines (e.g. Func_000_0150, DetectSGB, StepFade_Sub01, StartPaletteFade, ...)
+; 44 call sites from 15 routines (e.g. BootAndMainLoop, DetectSGB, StepFade_Sub01, StartPaletteFade, ...)
 ; reads: wSGBActive
 SpinDelay::
 Func_000_05D1:: ; address name
@@ -819,7 +821,7 @@ Jump_000_05D9::
     ret
 
 ; sends packet set $0B, reads rP1 with two different line selections and returns carry set when the joypad lines change as a Super Game Boy makes them; sends packet set $0A afterwards in both outcomes
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: rP1
 ; writes: wSGBPacketIndex, rP1
 DetectSGB::
@@ -930,7 +932,7 @@ Jump_000_0651::
     ret
 
 ; returns at once when wSGBActive is 0; otherwise busy-waits BC times about $06D6 loop passes
-; 5 call sites from 3 routines (e.g. Func_000_0150, SGBTransferCompressed, SGBTransferRaw)
+; 5 call sites from 3 routines (e.g. BootAndMainLoop, SGBTransferCompressed, SGBTransferRaw)
 ; reads: wSGBActive
 DelayBCWhenSGB::
 Func_000_0692:: ; address name
@@ -956,7 +958,7 @@ Jump_000_069A::
     ret
 
 ; A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read
-; 16 call sites from 2 routines (e.g. Func_000_0150, LoadSGBBorderForSetA)
+; 16 call sites from 2 routines (e.g. BootAndMainLoop, LoadSGBBorderForSetA)
 ; reads: wSGBActive
 ; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rLCDC, wC5EC
 SGBTransferCompressed::
@@ -1010,7 +1012,7 @@ Jump_000_06DF::
     ret
 
 ; A = packet set index; H = ROM bank, DE = source, BC = byte count: the same as SGBTransferCompressed, but copies the bytes to vTiles1 instead of decompressing
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wSGBActive
 ; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rROMB0, rLCDC, wC5EC
 SGBTransferRaw::
@@ -1109,7 +1111,7 @@ Jump_000_0784::
     ret
 
 ; clears rIF and masks rIE with $E2 (keeps LCD STAT and the unused high bits); falls through (E-0122)
-; 2 call sites from 1 routine (e.g. Func_000_0150)
+; 2 call sites from 1 routine (e.g. BootAndMainLoop)
 ; reads: rIE, rLY
 ; writes: rIF, rIE
 ; points at: wC5EC
@@ -1418,7 +1420,7 @@ Func_000_08C7:: ; address name
     ret
 
 ; on CGB resets VBK, SVBK, HDMA and palette index registers; clears $1E00 bytes of WRAM from wC000 and $74 bytes of HRAM from hFF8A (keeping wIsCGB); clears SRAM banks 2 and 0 (E-0125)
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK, rHDMA1, rHDMA2, rHDMA3, rHDMA4, rHDMA5, rBGPI, ...
 ; points at: wC000, hFF8A, sA000
@@ -1470,7 +1472,7 @@ Jump_000_08EC::
     ret
 
 ; fills vBGMap0 with $800 zero bytes; if wD066 is set, clears it and fills only $400 bytes with $C3 (E-0122)
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wD066
 ; writes: wD066
 ClearBGMapOrFillWithC3::
@@ -1490,7 +1492,7 @@ Jump_000_0945::
     ret
 
 ; A = value, HL = destination, BC = count; HL ends past the last byte (memset)
-; 152 call sites from 89 routines (e.g. Func_000_0150, ClearBGMapOrFillWithC3, SGBTransferCompressed, ClearWRAMHRAMAndSRAMBanks0And2, ...)
+; 152 call sites from 89 routines (e.g. BootAndMainLoop, ClearBGMapOrFillWithC3, SGBTransferCompressed, ClearWRAMHRAMAndSRAMBanks0And2, ...)
 FillBytes::
 Func_000_0949:: ; address name
     ld d, a
@@ -1518,7 +1520,7 @@ Func_000_0952:: ; address name
     ret
 
 ; wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8
-; 47 call sites from 41 routines (e.g. Func_000_0150, AdvanceRandom, NextTableByteSecondStream, CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, ...)
+; 47 call sites from 41 routines (e.g. BootAndMainLoop, AdvanceRandom, NextTableByteSecondStream, CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, ...)
 ; reads: wC5E8
 ; writes: wC5E8, wC5E7
 NextTableByte::
@@ -1537,7 +1539,7 @@ Func_000_095B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $000973, $80
 
 ; 16-bit seed in wCD03/wCD04 becomes seed * 5 + 11
-; 81 call sites from 51 routines (e.g. VBlankHandler, PickRandomWC902FromTable478F, Func_00A_43EC, RunWC903Case_Case06, ...)
+; 81 call sites from 51 routines (e.g. VBlankHandler, PickRandomWC902FromTable478F, TickRandomEncounterCounter, RunWC903Case_Case06, ...)
 ; reads: wCD03, wCD04
 ; writes: wCD03, wCD04
 NextRandomSeed::
@@ -1854,7 +1856,7 @@ Func_000_0B6C:: ; address name
     ret
 
 ; wC5E9, wC5EA, wC5EB = $D2, $D2, $E2 (the DMG palette bytes the fade routines start from), copied to wD040-wD042 as well (E-0117)
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wC5E9, wC5EA, wC5EB
 ; points at: wC5E9, wD040
 SetDefaultDMGPaletteBytes::
@@ -1876,7 +1878,7 @@ Func_000_0B7F:: ; address name
     ret
 
 ; writes 0 to the four bytes at hScrollX (StoreAFourTimesAtHL); falls through (E-0122)
-; 3 call sites from 3 routines (e.g. Func_000_0150, SGBTransferCompressed, SGBTransferRaw)
+; 3 call sites from 3 routines (e.g. BootAndMainLoop, SGBTransferCompressed, SGBTransferRaw)
 ; points at: hScrollX
 ClearScrollPositions::
 Func_000_0B9B:: ; address name
@@ -1895,7 +1897,7 @@ Func_000_0BA2:: ; address name
     ret
 
 ; hOamNextEntry = 0 and clears the $A0 bytes of shadow OAM at wC000 (E-0122)
-; 1 call site from 1 routine (e.g. Func_000_0150)
+; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; writes: hOamNextEntry
 ; points at: wC000
 ClearShadowOAM::
@@ -2377,7 +2379,7 @@ Func_000_0DA8:: ; address name
     ret
 
 ; wC56F-wC571 = wC5E9-wC5EB; then clears wFadeLevel and the four bytes after it and wFadeState, and sets wC56D = 7 and wC56E = $1F (E-0090)
-; 4 call sites from 4 routines (e.g. Func_000_0150, SendSGBFieldPaletteSet, ResetLinkScreenPalettes, ResetScreenPalettes_E0)
+; 4 call sites from 4 routines (e.g. BootAndMainLoop, SendSGBFieldPaletteSet, ResetLinkScreenPalettes, ResetScreenPalettes_E0)
 ; reads: wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wC56D, wC56E
 ; points at: wC56F, wFadeLevel
@@ -3909,7 +3911,7 @@ Func_000_16AA:: ; address name
     ret
 
 ; B = B / A (quotient), A = remainder; clobbers D, E
-; 29 call sites from 29 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, Func_001_6903, SetupInventoryMenuPages_Bank03, ResistanceAverageGateForAISide, ...)
+; 29 call sites from 29 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, DebugBattleSetupShowFieldString, SetupInventoryMenuPages_Bank03, ResistanceAverageGateForAISide, ...)
 DivideBByA::
 Func_000_16BF:: ; address name
     ld d, $08
@@ -6369,7 +6371,7 @@ Jump_000_2378::
     ret
 
 ; A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeHFFC6 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)
-; 4 call sites from 4 routines (e.g. Func_003_5AA7, ScriptCommand62_Run_Case00, ShowRecordPersonalityName, BuildItemScreenForWItemId_BankF1_Sub01)
+; 4 call sites from 4 routines (e.g. DrawItemTargetStatPreview, ScriptCommand62_Run_Case00, ShowRecordPersonalityName, BuildItemScreenForWItemId_BankF1_Sub01)
 ; reads: hFFCC
 ; writes: hFFCC
 PersonalityIndexOfRecord::
@@ -6604,7 +6606,7 @@ Jump_000_249E::
     ret
 
 ; A = word number: with ROM bank $09 mapped, copies that string of the bank-$09 database's category 3 (Data_009_4078: Ylw, Plain, Green, ... then Slime, Draco, Beast, ... Cave, Isle) with its $F0 to DE; restores the bank (E-0090)
-; 5 call sites from 3 routines (e.g. WriteKeyNameToDE, Func_015_6B00, CopyKeyNameWordToDE_Bank16)
+; 5 call sites from 3 routines (e.g. WriteKeyNameToDE, ShowSaveFileInfoWindow, CopyKeyNameWordToDE_Bank16)
 ; writes: rROMB0
 CopyKeyNameWordToDE::
 Func_000_24A2:: ; address name
@@ -6632,7 +6634,7 @@ Jump_000_24B9::
     ret
 
 ; returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case
-; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, Func_003_5AA7, MapIndexViaWC6FEKeepHL, BuildItemScreenForWItemId_BankF1_Sub01)
+; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, DrawItemTargetStatPreview, MapIndexViaWC6FEKeepHL, BuildItemScreenForWItemId_BankF1_Sub01)
 ; reads: wC58A, wGameMode
 ; points at: wC6FE
 MapIndexViaWC6FE::
@@ -8824,7 +8826,7 @@ Jump_000_30BE::
     INCBIN "dwm2-cobi-us.gbc", $0030CC, $1C4
 
 ; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0
-; 9 call sites from 7 routines (e.g. Func_000_0150, StartMusic, DebugSoundTest_Update, GameMode1_Init, ...)
+; 9 call sites from 7 routines (e.g. BootAndMainLoop, StartMusic, DebugSoundTest_Update, GameMode1_Init, ...)
 ; writes: rNR52, rNR51, wDD09, rNR50, wDD15, wDD19
 ; points at: wSoundChannelSlots, wSoundLabelSlots
 InitSoundHardware::

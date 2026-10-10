@@ -815,11 +815,13 @@ Data_01A_5F89:: ; heuristic: target of a monotone pointer table; C0
 Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
     db $86, $85, $FF, $8B, $FF, $8D, $FF, $97, $FF, $99, $FF
 
+; copies the record's eight skills to wD09D and, for each skill in Data_01A_4FF8, checks the level and stat requirements; learnable skills go into the list (E-0131)
 ; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: wD86A, wD86B
 ; writes: wD86C
 ; points at: wD09D
-Func_01A_5FA7::
+CheckSkillsLearnableAtLevel::
+Func_01A_5FA7:: ; address name
     ld hl, wD09D
     ld bc, $0038
     ld a, $FF
@@ -1058,7 +1060,7 @@ Jump_01A_60DE::
     ret
 
 ; FindByteAtHLInEightAtDE_Bank1A with DE kept, then HL += 1 (E-0119)
-; 1 call site from 1 routine (e.g. Func_01A_5FA7)
+; 1 call site from 1 routine (e.g. CheckSkillsLearnableAtLevel)
 FindByteAtHLInEightAtDEAndStepHL::
 Func_01A_60DF:: ; address name
     push de
@@ -1083,10 +1085,12 @@ Jump_01A_60E8::
     inc b
     ret
 
+; for record wD868 finds the skills of Data_01A_4FF8 not yet known whose level and stat requirements its stats now meet (E-0131)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case01)
 ; reads: wD868, hFFCC
 ; writes: hFFCC, hFFC9, hFFCA, hFFCB
-Func_01A_60F1::
+FindNewlyLearnableSkills::
+Func_01A_60F1:: ; address name
     ld a, [wD868]
     ld c, $56
     call SRAMRecordAddressMapped
@@ -1319,7 +1323,7 @@ Jump_01A_621F::
     jr Jump_01A_61FE
 
 ; runs FindByteAtHLInEightAtDE_Bank1A_6232 (DE preserved) and continues at Jump_01A_61FE (E-0126)
-; 6 call sites from 1 routine (e.g. Func_01A_60F1)
+; 6 call sites from 1 routine (e.g. FindNewlyLearnableSkills)
 FindByteThenContinue61FE::
 Func_01A_622B:: ; address name
     push de
@@ -1344,7 +1348,7 @@ Jump_01A_6234::
     ret
 
 ; searches the $38 bytes at wD09D for C: Z when found, else B = 1 and NZ (E-0122)
-; 1 call site from 1 routine (e.g. Func_01A_60F1)
+; 1 call site from 1 routine (e.g. FindNewlyLearnableSkills)
 ; points at: wD09D
 FindCInWD09D38::
 Func_01A_623D:: ; address name

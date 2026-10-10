@@ -1541,7 +1541,7 @@ Func_01B_4C86:: ; address name
     db $11, $9B, $4C, $CD, $FE, $25, $C9
 
 ; Func_01B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 3 routines (e.g. DebugResultsDisplay_Init, ScriptCommandED_Run_Case0F_Case07, Func_015_6B00)
+; 3 call sites from 3 routines (e.g. DebugResultsDisplay_Init, ScriptCommandED_Run_Case0F_Case07, ShowSaveFileInfoWindow)
 ShowString_Bank1B_4C94::
 Func_01B_4C94:: ; address name
     call BeginStringDisplay_Bank1B_4C86

@@ -11,7 +11,7 @@ Func_02F_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_02F_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. Func_001_6903, ShowStringCategory5Immediate_Bank16)
+; 2 call sites from 2 routines (e.g. DebugBattleSetupShowFieldString, ShowStringCategory5Immediate_Bank16)
 ShowString_Bank2F::
 Func_02F_400F:: ; address name
     call BeginStringDisplay_Bank2F

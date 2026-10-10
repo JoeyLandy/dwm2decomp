@@ -560,7 +560,7 @@ Jump_00C_433D:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
-    farcall Func_069_4001
+    farcall LoadMapObjectsForScreen
     ld a, [wD780]
     inc a
     ld [wD780], a

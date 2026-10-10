@@ -1213,7 +1213,7 @@ Jump_0F0_50A4:: ; address name
 ; points at: wD781
 Func_0F0_4CA0_Table4_Case02::
 Jump_0F0_50AF:: ; address name
-    farcall Func_015_6B00
+    farcall ShowSaveFileInfoWindow
     ld hl, wD781
     inc [hl]
     ld a, $01

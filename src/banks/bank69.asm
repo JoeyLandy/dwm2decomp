@@ -1,11 +1,13 @@
 SECTION "Bank 69", ROMX[$4000], BANK[$69]
     db $69
 
+; clears the sprite slots; key-world maps set up their objects, other maps load the object list for hMapId (with a story-flag case on map $2F) (E-0131)
 ; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC38, hFFD0, wMapWidthScreens
 ; writes: wSpriteSlotCount, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
 ; points at: wSpriteSlots
-Func_069_4001::
+LoadMapObjectsForScreen::
+Func_069_4001:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a
     ld a, [wCC44]

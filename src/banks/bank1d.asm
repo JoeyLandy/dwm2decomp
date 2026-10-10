@@ -6612,11 +6612,13 @@ Jump_01D_6E2D::
     ld [rRAMB], a
     ret
 
+; packs SRAM record wD7F1's family, state, mark and other fields into the compact form in SRAM bank wD7F2 (wD7E0 workspace) (E-0131)
 ; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordWC8C4, ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case04_Case16, ScriptCommandEB_Run_Case04_Case42)
 ; reads: wD7F2, wD7E1, wD7E6
 ; writes: rRAMB, rRAMG2, wD7E1, wD7E2, wD7E3, wD7E4, wD7E5, wD7E0, ...
 ; points at: wD7E0, wD7E2
-Func_01D_6E39::
+PackRecordFieldsToBank1Slot::
+Func_01D_6E39:: ; address name
     ld bc, $0007
     ld hl, wD7E0
 
@@ -7040,7 +7042,7 @@ Jump_01D_70C6::
     jp Jump_01D_7121
 
 ; B = (wD7E2 & 3) << 6 | (wD7E3 & 3) << 4 | (wD7E4 & 3) << 2 | (wD7E5 & 3), the opposite of unpacking a byte into four 2-bit fields (E-0104)
-; 7 call sites from 2 routines (e.g. Func_01D_6E39, Pack2BitFieldsFromWD7E2)
+; 7 call sites from 2 routines (e.g. PackRecordFieldsToBank1Slot, Pack2BitFieldsFromWD7E2)
 ; reads: wD7E2, wD7E3, wD7E4, wD7E5
 Pack2BitFieldsFromWD7E2::
 Func_01D_70F9:: ; address name
@@ -7648,11 +7650,13 @@ Jump_01D_7470::
     ld [wD7F5], a
     ret
 
+; unpacks the compact record in SRAM bank wD7F2 back into the record fields (family, state, mark ...) (E-0131)
 ; 4 call sites from 4 routines (e.g. ScanBank1RecordStepWC8C4, ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case05_Case13, ScriptCommandEB_Run_Case04_Case42)
 ; reads: wD7F2, wD7F5, wD7F6, wD7F7, wD7F8
 ; writes: rRAMB, rRAMG2, wD7E0, wD7F5
 ; points at: wC8CF
-Func_01D_7492::
+UnpackRecordFromBank1Slot::
+Func_01D_7492:: ; address name
     call SRAMRecordAddressOfWD7F1
     call EnableSRAMBank0
     push de
@@ -7862,7 +7866,7 @@ Jump_01D_75B6::
     jp Jump_01D_75DA
 
 ; copies 10 bytes from HL to DE, selecting SRAM bank 0 (rRAMB = 0) after each byte is read; HL and DE advance (E-0106)
-; 6 call sites from 1 routine (e.g. Func_01D_7492)
+; 6 call sites from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; writes: rRAMB
 CopyTenBytesThenSelectSRAMBank0::
 Func_01D_75C7:: ; address name
@@ -8478,7 +8482,7 @@ Jump_01D_793C::
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $21 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 7-6 of byte $27, and copies the 5-glyph name entry at offset 3 (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 6 call sites from 6 routines (e.g. Func_01D_7492, ScriptCommandEB_Run_Shared03, ScriptCommandEB_Run_Case05_Case2F_Sub03, Func_015_6B00, ...)
+; 6 call sites from 6 routines (e.g. UnpackRecordFromBank1Slot, ScriptCommandEB_Run_Shared03, ScriptCommandEB_Run_Case05_Case2F_Sub03, ShowSaveFileInfoWindow, ...)
 ; reads: wD7F2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry0::
@@ -8509,7 +8513,7 @@ Func_01D_795D:: ; address name
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $22 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 5-4 of byte $27, and copies the 5-glyph name entry at offset 8 (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 1 call site from 1 routine (e.g. Func_01D_7492)
+; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wD7F2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry1::
@@ -8537,7 +8541,7 @@ Func_01D_7991:: ; address name
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $23 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 3-2 of byte $27, and copies the 5-glyph name entry at offset $0D (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 1 call site from 1 routine (e.g. Func_01D_7492)
+; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wD7F2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry2::
@@ -8566,7 +8570,7 @@ Func_01D_79C5:: ; address name
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $24 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 1-0 of byte $27, and copies the 5-glyph name entry at offset $12 (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 1 call site from 1 routine (e.g. Func_01D_7492)
+; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wD7F2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry3::
@@ -8593,7 +8597,7 @@ Func_01D_79FB:: ; address name
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $25 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 7-6 of byte $28, and copies the 5-glyph name entry at offset $17 (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 1 call site from 1 routine (e.g. Func_01D_7492)
+; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wD7F2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry4::
@@ -8624,7 +8628,7 @@ Func_01D_7A2D:: ; address name
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $26 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 5-4 of byte $28, and copies the 5-glyph name entry at offset $1C (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 1 call site from 1 routine (e.g. Func_01D_7492)
+; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wD7F2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry5::
@@ -8744,7 +8748,7 @@ Func_01D_7AD8:: ; address name
     ret
 
 ; writes $0A to the RAM-enable register (rRAMG2 alias) and selects SRAM bank 0 (rRAMB = 0); clobbers A (E-0066)
-; 20 call sites from 10 routines (e.g. Func_01D_7492, CopyTenBytesThenSelectSRAMBank0, LoadRecordNameEntry5, LoadRecordNameEntry4, ...)
+; 20 call sites from 10 routines (e.g. UnpackRecordFromBank1Slot, CopyTenBytesThenSelectSRAMBank0, LoadRecordNameEntry5, LoadRecordNameEntry4, ...)
 ; writes: rRAMG2, rRAMB
 EnableSRAMBank0::
 Func_01D_7B05:: ; address name
@@ -8755,7 +8759,7 @@ Func_01D_7B05:: ; address name
     ret
 
 ; HL = the word at wD7F3/wD7F4; DE = sA000 + $A5 * wD7F1, the start of SRAM record wD7F1 (records are $A5 bytes, as in SRAMRecordAddress); clobbers A, BC (E-0063)
-; 27 call sites from 10 routines (e.g. Func_01D_7492, CopyTenBytesThenSelectSRAMBank0, LoadRecordNameEntry5, LoadRecordNameEntry4, ...)
+; 27 call sites from 10 routines (e.g. UnpackRecordFromBank1Slot, CopyTenBytesThenSelectSRAMBank0, LoadRecordNameEntry5, LoadRecordNameEntry4, ...)
 ; reads: wD7F3, wD7F4, wD7F1
 ; points at: sA000
 SRAMRecordAddressOfWD7F1::

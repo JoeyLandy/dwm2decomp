@@ -1173,7 +1173,7 @@ ScriptCommandED_Run_Case04_Case1C::
 Jump_015_47E1:: ; address name
     xor a, a
     ld [wD7F1], a
-    farcall Func_00E_5688
+    farcall ComputeBreedingChild
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -1771,7 +1771,7 @@ Jump_015_4C1D:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_015_4C26
-    call Func_015_6B00
+    call ShowSaveFileInfoWindow
 
 Jump_015_4C26::
     ld a, [wD781]
@@ -2189,7 +2189,7 @@ Jump_015_4EB1::
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     pop bc
     ld a, [wD7B4]
     cp a, b
@@ -2200,7 +2200,7 @@ Jump_015_4EDE::
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, [wD7F5]
     ld [wD7B4], a
     ld a, $0A
@@ -3335,7 +3335,7 @@ Jump_015_5668::
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, [wD7F5]
     ld [wD7B4], a
     ld a, $0A
@@ -3444,7 +3444,7 @@ Jump_015_571D:: ; address name
     call LoadMapHeader
     call LoadMapScreen
     farcall LoadPlayerAndFollowerSpriteGraphics
-    farcall Func_069_4001
+    farcall LoadMapObjectsForScreen
     call RestorePlayerPositionState
     xor a, a
     ldh [hFF8D], a
@@ -5309,7 +5309,7 @@ Jump_015_63AE::
     ret
 
 ; DecompressGraphicsWD7F1ToWD7F4 with graphics number $00A4 and destination $8000 (vTiles0) (E-0117)
-; 2 call sites from 2 routines (e.g. Func_015_6B00, DecompressA4GraphicsAndContinue)
+; 2 call sites from 2 routines (e.g. ShowSaveFileInfoWindow, DecompressA4GraphicsAndContinue)
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5
 DecompressGraphicsA4ToTiles0::
 Func_015_63B8:: ; address name
@@ -6019,7 +6019,7 @@ Func_015_6772:: ; address name
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 2 call sites from 2 routines (e.g. Func_015_6B00, ScriptCommandED_Run_Case05_Case00_Sub01)
+; 2 call sites from 2 routines (e.g. ShowSaveFileInfoWindow, ScriptCommandED_Run_Case05_Case00_Sub01)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank15::
 Func_015_6780:: ; address name
@@ -6666,11 +6666,13 @@ Func_015_6ACA:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
+; clears the text tiles and, when the save is valid, shows the save details (player name, play time, party) from SRAM in the window (E-0131)
 ; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case2B, ScriptCommandF2_Run_Case03_Case0A, Func_0F0_4CA0_Table4_Case02)
 ; reads: hFFC6, wC8C1, wC8C2
 ; writes: wStringCategory, wStringIndex, wD782, rRAMG2, rRAMB, wC8CF, wC8D0, wC8D1, ...
 ; points at: wC52D, wC364, sBB0F, wC3B0, wC3C4, wC8CF, wC385, wC8C0, ...
-Func_015_6B00::
+ShowSaveFileInfoWindow::
+Func_015_6B00:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0901
     call FillTilesBxC
@@ -7058,7 +7060,7 @@ Data_015_6DD0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A8, $C3, $D0, $C3, $F8, $C3
 
 ; writes the digits at DE as tiles $E0 + digit to HL (WaitForVRAMAccess, interrupts off), counting C up to B (E-0117)
-; 2 call sites from 1 routine (e.g. Func_015_6B00)
+; 2 call sites from 1 routine (e.g. ShowSaveFileInfoWindow)
 WriteDigitTilesFromDEToVRAM::
 Func_015_6DD6:: ; address name
     di
@@ -7075,7 +7077,7 @@ Func_015_6DD6:: ; address name
     ret
 
 ; with SRAM bank 1 selected, HL = sA06F + $6F * [HL + C] (a $6F-byte record in bank 1); then selects bank 0 and disables SRAM (E-0117)
-; 3 call sites from 1 routine (e.g. Func_015_6B00)
+; 3 call sites from 1 routine (e.g. ShowSaveFileInfoWindow)
 ; writes: rRAMG2, rRAMB
 ; points at: sA06F
 SRAMBank1RecordAddress::

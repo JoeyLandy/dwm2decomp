@@ -1781,7 +1781,7 @@ Jump_060_5036::
     ret
 
 ; reads the cell at (hFFC9, hFFCA) from the area map chunk in wCD60; A = 1 when its byte is not $FF, else 0 (E-0128)
-; 3 call sites from 2 routines (e.g. Func_060_528B, PlaceTwoRandomOpenCells)
+; 3 call sites from 2 routines (e.g. PlaceObjectInAreaC, PlaceTwoRandomOpenCells)
 ; reads: hFFCA, hFFC9
 ReadKeyWorldCellIsSolid::
 Func_060_5075:: ; address name
@@ -2115,7 +2115,7 @@ Jump_060_5266::
 Jump_060_5273::
     push hl
     push bc
-    call Func_060_528B
+    call PlaceObjectInAreaC
     or a, a
     jr nz, Jump_060_5288
     pop bc
@@ -2136,11 +2136,13 @@ Jump_060_5288::
     pop hl
     ret
 
+; finds area C in wCD70 and picks a random free cell inside it for the object (avoiding wCD7B and wCD8B entries) (E-0131)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub09)
 ; reads: hFFC9, wCD04, hFFCA, hFFD0, hFFCE, hFFCF, wCD0C, hFFCC
 ; writes: hFFD0, hFFCC, hFFCA, hFFC9, hFFCE, hFFCF
 ; points at: wCD70, wCD7B, wCD8B
-Func_060_528B::
+PlaceObjectInAreaC::
+Func_060_528B:: ; address name
     push bc
     xor a, a
     ldh [hFFD0], a

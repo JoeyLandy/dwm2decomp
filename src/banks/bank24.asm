@@ -38,7 +38,7 @@ Jump_024_4022::
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
@@ -1162,7 +1162,7 @@ Jump_024_475C:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, [wD7F5]
     ld c, $A5
     call Multiply8
@@ -1540,7 +1540,7 @@ Jump_024_49E8:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, [wD7F5]
     ld c, $A5
     call Multiply8
@@ -5950,11 +5950,13 @@ Data_024_6E13:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_024_6F4E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
+; draws the next glyph of the description of the item at wD7D5[4 * wD7B6 + wD7B5] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)
 ; 1 call site from 1 routine (e.g. Func_01C_6AF7_Case02)
 ; reads: wD7C9, wD780, wD7B6, wD7B5, wD7C4, wD7C3, wD7B8, wD7C6, ...
 ; writes: wD7B8, wD7C4, wD7C3, wD7C5, wD7C6, wD7C2
 ; points at: wD7D5
-Func_024_7045::
+StepItemDescriptionText::
+Func_024_7045:: ; address name
     ld a, [wD7C9]
     and a, a
     jr nz, Jump_024_704B
@@ -6082,7 +6084,7 @@ Jump_024_70F9::
     ld [wD7C5], a
     ld a, e
     ld [wD7C6], a
-    jp Func_024_7045
+    jp StepItemDescriptionText
 
 Jump_024_7124::
     xor a, a
@@ -6108,7 +6110,7 @@ Jump_024_7139::
     ld [wD7C5], a
     ld a, $20
     ld [wD7C6], a
-    jp Func_024_7045
+    jp StepItemDescriptionText
 
 Data_024_7158:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_024_721E

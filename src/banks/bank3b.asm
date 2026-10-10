@@ -995,7 +995,7 @@ Jump_03B_45C7::
 Jump_03B_45CF::
     ld a, [wDABA]
     bit 7, a
-    call z, Func_03B_4711
+    call z, GroupTargetsBySpeciesToWD88B
     ld a, [wBattleTarget]
     add a, a
     ld hl, wBattleMonsterId
@@ -1212,11 +1212,13 @@ Func_03B_470B:: ; address name
     ld [wBattleResolveStep], a
     ret
 
+; lists the target side's species and groups the targets that share the target's species into wD88B-wD88D (bit 7 marks a group) (E-0131)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case0A)
 ; reads: wBattleTarget
 ; writes: wD88B, wDABA, wD88C, wD88D
 ; points at: wD88B, wC0A0
-Func_03B_4711::
+GroupTargetsBySpeciesToWD88B::
+Func_03B_4711:: ; address name
     ld a, $FF
     ld hl, wD88B
     ld bc, $0003

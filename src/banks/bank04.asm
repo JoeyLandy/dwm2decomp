@@ -10,7 +10,7 @@ Func_004_4001:: ; address name
     ret
 
 ; when wC88D bit 7 is set: clears wC88D, wSpriteSlotCount = wC83A and the $50 bytes at wC83B go back to wSpriteSlots (undoes SnapshotSpritesForSave) (E-0117)
-; 2 call sites from 1 routine (e.g. Func_069_4001)
+; 2 call sites from 1 routine (e.g. LoadMapObjectsForScreen)
 ; reads: wC88D, wC83A
 ; writes: wC88D, wSpriteSlotCount
 ; points at: wC83B, wSpriteSlots
@@ -30,7 +30,7 @@ Func_004_4008:: ; address name
     ret
 
 ; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wCD89/wCDAC entries (E-0130)
-; 1 call site from 1 routine (e.g. Func_069_4001)
+; 1 call site from 1 routine (e.g. LoadMapObjectsForScreen)
 ; reads: wCC44, wCC45, wCD06, wCD07, wCD0B, wC967
 ; writes: wC967, hFFCF, wSpriteSlotCount
 ; points at: wCE7E, wCDAF, wCD89, wCDAC

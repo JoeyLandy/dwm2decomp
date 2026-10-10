@@ -2282,7 +2282,7 @@ Jump_0F1_4F4C:: ; address name
     ret nz
     ld a, $02
     ld [wD7F1], a
-    farcall Func_00E_5688
+    farcall ComputeBreedingChild
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -2554,7 +2554,7 @@ Jump_0F1_511B::
     ld [wD7F1], a
     ld a, $01
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

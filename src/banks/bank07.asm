@@ -7848,7 +7848,7 @@ Func_007_7DE5:: ; address name
     jp z, Jump_007_7E6E
     ld a, $02
     ld [wD7F1], a
-    farcall Func_00E_5688
+    farcall ComputeBreedingChild
     ld a, [wD7B5]
     ld [wD7AB], a
     ld a, [wD7B6]
@@ -7862,7 +7862,7 @@ Func_007_7DE5:: ; address name
     ld [wD7F1], a
     ld a, $01
     ld [wD7F2], a
-    farcall Func_014_7E96
+    farcall DeleteSRAMRecordAndCompact
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

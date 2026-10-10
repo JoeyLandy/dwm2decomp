@@ -6768,7 +6768,7 @@ Func_012_6955:: ; address name
     ret
 
 Jump_012_6973::
-    farcall Func_061_40B4
+    farcall ComputePartyStrengthForKey
     ld a, [wCD05]
     ldh [hFFC6], a
     farcall RollKeyContentsForLevelHFFC6
@@ -9841,7 +9841,7 @@ Jump_012_7B92::
     ret
 
 ; when wC935 has bit 7 set and bit 6 clear: wC935 = 0 and wC832 = 0 (E-0117)
-; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, Func_011_4130, ScriptWarpToMapFromBytesAtDE, CheckMapExitTable4480_Sub01, ...)
+; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, CheckWarpsAtPlayerPosition, ScriptWarpToMapFromBytesAtDE, CheckMapExitTable4480_Sub01, ...)
 ; reads: wC935
 ; writes: wC935, wC832
 ClearWC935IfBit7AndNot6::

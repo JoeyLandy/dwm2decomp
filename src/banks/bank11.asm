@@ -204,11 +204,13 @@ Jump_011_4105::
     ld c, $01
     ret
 
+; special maps use RunWCC44Type_596F; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wCC44, hMapId, hFF8C, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8C9
 ; writes: hFF8C, wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
 ; points at: wC5E0
-Func_011_4130::
+CheckWarpsAtPlayerPosition::
+Func_011_4130:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_011_413E
@@ -597,7 +599,7 @@ Func_011_438F:: ; address name
     ret
 
 ; for maps from $20 looks hMapId up in the 4-byte table Data_011_4480 and runs Func_011_43FA with its entry (or wC88F); unlisted maps clear bit 5 of hFF8C and return C = 0 (E-0125)
-; 1 call site from 1 routine (e.g. Func_011_4130)
+; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
 ; reads: hMapId, hFF8C, wC88E, wC891
 ; writes: hFF8C
 ; points at: wC88F

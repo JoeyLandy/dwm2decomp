@@ -1476,6 +1476,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Unnamed routines: 72 to 25.
 - Binary verification: build/run92 PASS, 0 differing bytes; tests OK.
 
+### E-0131 — Last 25 routines; no address-only routine names remain
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** The last 25 routines (141-599 instructions) are named. These include:
+  - BootAndMainLoop (00:0150);
+  - breeding (0E:5688 ComputeBreedingChild);
+  - skill learning (1A:5FA7, 1A:60F1);
+  - record packing to SRAM bank 1 (1D:6E39, 1D:7492);
+  - warps (11:4130), the encounter timer (0A:43EC) and the wild level from party strength (A0:46CC);
+  - the title-screen save summary (16:7783).
+- **Measured state.** `tools/rank_unnamed.py` reports 0 routines with only an address name. All 22,058 `call`/`farcall` operands reach a named routine.
+- **Limits.**
+  - Most names are C1 readings. Many describe mechanics (which RAM is read and written) rather than game meaning, for example `LoadWC969TripleForWCD05` and `RunFunc5925At0280`.
+  - RAM operands are still mostly address names (`wC52B`).
+  - About 1.2 MB of INCBIN data is not interpreted.
+  - These are the next readability fronts.
+- Binary verification: build/run93 PASS, SHA-256 8e38a742...766d4e, 0 differing bytes; tests: see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

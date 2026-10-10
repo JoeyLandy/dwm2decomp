@@ -157,7 +157,7 @@ Data_01F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
 ; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse, 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit
-; 25 call sites from 10 routines (e.g. Func_000_0150, DetectSGB, SGBTransferCompressed, SGBTransferRaw, ...)
+; 25 call sites from 10 routines (e.g. BootAndMainLoop, DetectSGB, SGBTransferCompressed, SGBTransferRaw, ...)
 ; reads: wSGBActive, wSGBPacketIndex
 ; points at: wSGBPacketBuffer
 SendSGBPacketSet::
