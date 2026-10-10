@@ -425,5 +425,16 @@ class DamageDivisors(unittest.TestCase):
         self.assertGreater(high, 31, "the range is not narrower than ATK / 16")
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class Status4CheckReadsAddress(unittest.TestCase):
+    """05:6972 tests the low byte of the status address, not the status byte (E-0075; C2 on our emulator)."""
+
+    def test_result_depends_only_on_the_slot(self):
+        for actor, expected in ((0, 0xFF), (1, 0x00), (2, 0x00), (4, 0xFF), (5, 0x00), (6, 0x00)):
+            for status in (0x00, 0x03):
+                gb = call(0x05, 0x6972, mem={0xD8A4: actor, 0xD810 + 9 * actor: status})
+                self.assertEqual(gb.c, expected, f"actor {actor} status {status:#x}")
+
+
 if __name__ == "__main__":
     unittest.main()

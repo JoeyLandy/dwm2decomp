@@ -4179,7 +4179,7 @@ Jump_0F1_5B68::
     ld a, [wD7E9]
     cp a, $07
     ret nz
-    farcall Func_01E_76F3
+    farcall GetWD789Cell4Address
     ld c, $00
     ld a, l
     ld [wD7F1], a

@@ -758,6 +758,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - ShowStringCategory5Immediate_Bank16 and SetWC5E9PatternAndIncWD804.
 - Binary verification: pending; see the commit.
 
+### E-0075 — Gold arithmetic, a status check that reads its own address, batch 11
+
+- Kind: OBSERVATION (reading; `05:6972` also executed on our emulator, C2).
+- **Gold routines (bank $12):**
+  - SubtractGoldFloorZero.
+  - DeductGoldPenalty: all gold below 150, 150 below 1,500, else a tenth. Which event uses it (for example losing a battle) is not established.
+  - EventCheckGoldAtLeast10000, which tests story flags $192 and $193 with gold ≥ 10,000.
+  - Other bank-$12 routines compare gold with thresholds (5,000; 1,000) and sum BCD digits. They are not named yet.
+- **A probable game bug: `ActorStatus4CheckReadsAddress` (`05:6972`).**
+  - Its neighbours (ActorLacksStatus2Bit1And4Bits01 and others) load a status byte with `ld a, [hl]` before masking. This routine calls AddAx9ToHL and masks A directly, so A holds the low byte of the address wD810 + 9 × actor.
+  - Executed result: C = $FF for slots 0 and 4 and C = $00 for 1, 2, 5 and 6, both with status byte 4 clear and with it set to $03. Pinned by the test `Status4CheckReadsAddress`.
+  - Whether this changes play depends on its callers, which are not read.
+- **Also named:** DrawWC278RowsToBGMapRow7, GetWD789Cell4Address and GetWD789Cell5Address.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

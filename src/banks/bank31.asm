@@ -147,7 +147,7 @@ Jump_031_40E4:: ; address name
 BattlePhase0_Step1::
 Jump_031_40EE:: ; address name
     call Func_031_746F
-    call Func_031_7536
+    call DrawWC278RowsToBGMapRow7
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -684,7 +684,7 @@ Jump_031_43FE:: ; address name
     ld a, $02
     call QueueMusic
     call Func_031_746F
-    call Func_031_7536
+    call DrawWC278RowsToBGMapRow7
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -2029,7 +2029,7 @@ Jump_031_4B8F:: ; address name
     set 7, [hl]
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_7536
+    call DrawWC278RowsToBGMapRow7
     ld hl, vTiles1 + $6D0
     ld de, $0701
     ld a, $02
@@ -4068,7 +4068,7 @@ Func_031_4EB9_Table2_Case00::
 Jump_031_5855:: ; address name
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_7536
+    call DrawWC278RowsToBGMapRow7
     ld hl, wCFD5
     res 7, [hl]
     ld de, Data_031_63A7
@@ -4766,7 +4766,7 @@ Jump_031_5C98::
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
     call Func_031_746F
-    call Func_031_7536
+    call DrawWC278RowsToBGMapRow7
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
@@ -8079,7 +8079,7 @@ Jump_031_6EF7:: ; address name
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
-    call Func_031_7536
+    call DrawWC278RowsToBGMapRow7
     call Func_031_7096
     farcall Func_01A_72C9
     ld a, $0A
@@ -9083,9 +9083,11 @@ Func_031_7529::
     call CopyRect32StrideToVRAM
     ret
 
+; copies a 20 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7), falling into CopyRect32StrideToVRAM (E-0075)
 ; 8 call sites from 8 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, RunBattleSetup_Case03, RunBattleSetup_Table2_Case01, ...)
 ; points at: wC278
-Func_031_7536::
+DrawWC278RowsToBGMapRow7::
+Func_031_7536:: ; address name
     ld de, wC278
     ld hl, vBGMap0 + $E0
     ld bc, $140B

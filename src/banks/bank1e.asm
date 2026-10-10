@@ -1496,7 +1496,7 @@ Func_01E_4A32::
 ; points at: wC36C
 Func_01E_4201_Case17::
 Jump_01E_4A39:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     push af
@@ -1520,7 +1520,7 @@ Jump_01E_4A39:: ; address name
 ; writes: wD7F1, wD781
 Func_01E_4201_Case19::
 Jump_01E_4A5E:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
@@ -1723,7 +1723,7 @@ Jump_01E_4B89::
     ld [de], a
     inc de
     push de
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld c, $01
     call CopyRecordNameToWC8CF
@@ -1785,7 +1785,7 @@ Jump_01E_4BE1:: ; address name
     ld c, $55
     ld b, $01
     call StoreHFFC6BytesToSRAMRecord
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     push hl
     ld a, $02
     ldh [hFFC6], a
@@ -1979,7 +1979,7 @@ Jump_01E_4D5B:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $02
     ldh [hFFC6], a
     ld a, [hl]
@@ -1990,7 +1990,7 @@ Jump_01E_4D5B:: ; address name
     ld hl, wC6FE
     add_a_to_hl
     push hl
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     pop hl
     ld [hl], a
@@ -2372,7 +2372,7 @@ Jump_01E_4FF7:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $02
     ldh [hFFC6], a
     ld a, [hl]
@@ -2395,7 +2395,7 @@ Jump_01E_4FF7:: ; address name
     ld hl, wC6FE
     add_a_to_hl
     push hl
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     pop hl
     ld [hl], a
@@ -2685,7 +2685,7 @@ Jump_01E_51E6:: ; address name
 ; points at: wC36C
 Func_01E_4A32_Table2_Case08::
 Jump_01E_525F:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     call Func_01E_75C5
@@ -2696,7 +2696,7 @@ Jump_01E_525F:: ; address name
     xor a, a
     ld [wD7F1], a
     farcall Func_01D_6AA5
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
@@ -3390,7 +3390,7 @@ Jump_01E_581C:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld c, $01
     call CopyRecordNameToWC8CF
@@ -3443,7 +3443,7 @@ Jump_01E_586E:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld [wD7F1], a
     xor a, a
@@ -3670,7 +3670,7 @@ Jump_01E_5A16:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_76F3
+    call GetWD789Cell4Address
     ld a, [hl]
     ld [wD7F1], a
     xor a, a
@@ -4732,7 +4732,7 @@ Jump_01E_613A:: ; address name
     ld de, $791C
     call Func_01E_7454
     farcall Func_01D_5F2D
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     push hl
     ld a, [hl]
     ld b, a
@@ -4799,7 +4799,7 @@ Jump_01E_619F:: ; address name
     ld de, $791C
     call Func_01E_7454
     call Func_01E_6810
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     call Func_01E_75C5
@@ -5024,7 +5024,7 @@ Jump_01E_62EF:: ; address name
     xor a, a
     ld [wD7F7], a
     call Func_01E_6D2B
-    call Func_01E_76F3
+    call GetWD789Cell4Address
     ld a, l
     ld [wD7F1], a
     ld a, h
@@ -5041,7 +5041,7 @@ Jump_01E_62EF:: ; address name
 ; writes: hFFBA, wD781
 Func_01E_6074_Table6_Case05::
 Jump_01E_6325:: ; address name
-    call Func_01E_76F3
+    call GetWD789Cell4Address
     ld a, [hl]
     ld b, a
     call Func_01E_6D70
@@ -5110,7 +5110,7 @@ Jump_01E_6399:: ; address name
     and a, a
     jp nz, Jump_01E_63D3
     call Func_01E_6D0F
-    call Func_01E_76F3
+    call GetWD789Cell4Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5137,7 +5137,7 @@ Jump_01E_6399:: ; address name
     ret
 
 Jump_01E_63D3::
-    call Func_01E_76F3
+    call GetWD789Cell4Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5214,7 +5214,7 @@ Jump_01E_644F::
     ret
 
 Jump_01E_645D::
-    call Func_01E_76F3
+    call GetWD789Cell4Address
     ld c, $00
     ld a, l
     ld [wD7F1], a
@@ -5529,7 +5529,7 @@ Jump_01E_664E:: ; address name
 ; reads: wD781
 ; writes: rRAMG2, rRAMB, wD781
 Func_01E_667C::
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5564,7 +5564,7 @@ Jump_01E_669D:: ; address name
     xor a, a
     ld [wD7F7], a
     call Func_01E_6D2B
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5591,7 +5591,7 @@ Jump_01E_669D:: ; address name
     ret
 
 Jump_01E_66EF::
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5766,11 +5766,11 @@ Jump_01E_681F::
     farcall Func_01D_5ECE
 
 Jump_01E_6825::
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     call Func_01E_75C5
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
@@ -5803,7 +5803,7 @@ Jump_01E_6840:: ; address name
 ; writes: wD7F1, wD781
 Func_01E_5A4D_Case0C::
 Jump_01E_685A:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
@@ -5821,7 +5821,7 @@ Jump_01E_685A:: ; address name
 Func_01E_6074_Table8_Case0D::
 Jump_01E_6870:: ; address name
     farcall Func_01D_5E79
-    call Func_01E_76F3
+    call GetWD789Cell4Address
     ld a, [hl]
     ld b, a
     call Func_01E_75C5
@@ -5903,7 +5903,7 @@ Jump_01E_68E4:: ; address name
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, ...
 Func_01E_5A4D_Case12::
 Jump_01E_6907:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     push hl
     ld a, $0A
@@ -5922,7 +5922,7 @@ Jump_01E_6907:: ; address name
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, ...
 Func_01E_5A4D_Case13::
 Jump_01E_6920:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     push hl
     ld a, $0A
     ld [rRAMG2], a
@@ -5950,7 +5950,7 @@ Jump_01E_6920:: ; address name
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, ...
 Func_01E_5A4D_Case14::
 Jump_01E_694D:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5995,7 +5995,7 @@ Jump_01E_694D:: ; address name
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, ...
 Func_01E_6074_Table8_Case15::
 Jump_01E_69AD:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -6083,7 +6083,7 @@ Jump_01E_6A18::
 ; writes: rRAMG2, rRAMB, wD781
 Func_01E_5A4D_Case16::
 Jump_01E_6A57:: ; address name
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -6106,7 +6106,7 @@ Jump_01E_6A70:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ldh [hFFCB], a
     ld c, $34
@@ -6346,7 +6346,7 @@ Jump_01E_6C1F:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
     push bc
@@ -6394,7 +6394,7 @@ Jump_01E_6C69:: ; address name
     xor a, a
     ld [wD7F7], a
     call Func_01E_6D2B
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld a, l
     ld [wD7F1], a
     ld a, h
@@ -6440,7 +6440,7 @@ Jump_01E_6CAB:: ; address name
     jr z, Jump_01E_6D06
 
 Jump_01E_6CC7::
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     ld c, $00
     ld a, l
     ld [wD7F1], a
@@ -6797,7 +6797,7 @@ Func_01E_6EE2::
 ; writes: wC8C0, wC8C1, wC8C2, wSpeciesIdLo, wSpeciesIdHi, hFFC6, hFFC7, wD7F1, ...
 ; points at: hFFC8
 Func_01E_6F17::
-    call Func_01E_76EB
+    call GetWD789Cell5Address
     push hl
     ld a, [hl]
     ld c, $58
@@ -8255,15 +8255,19 @@ Jump_01E_76E2::
     pop hl
     ret
 
+; far-calls SetWD7F5ToWD789Cell5, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
 ; 30 call sites from 25 routines (e.g. Func_01E_4201_Case29, Func_01E_4201_Case28, Func_01E_4A32_Case48, Func_01E_4A32_Case16, ...)
 ; reads: wD7F5, wD7F6
-Func_01E_76EB::
+GetWD789Cell5Address::
+Func_01E_76EB:: ; address name
     farcall SetWD7F5ToWD789Cell5
     jr Jump_01E_76F9
 
+; far-calls SetWD7F5ToWD789Cell4, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
 ; 8 call sites from 7 routines (e.g. Func_01E_4A32_Table3_Case33, Func_01E_6074_Table8_Case0D, Func_01E_6074_Table6_Case07, Func_01E_6074_Table6_Case06, ...)
 ; reads: wD7F5, wD7F6
-Func_01E_76F3::
+GetWD789Cell4Address::
+Func_01E_76F3:: ; address name
     farcall SetWD7F5ToWD789Cell4
 
 Jump_01E_76F9::

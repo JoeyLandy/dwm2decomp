@@ -8750,7 +8750,7 @@ Jump_012_7618::
 Jump_012_7624::
     xor a, a
     ld [wC832], a
-    call Func_012_7662
+    call EventCheckGoldAtLeast10000
     ret c
     call Func_012_7693
     ret c
@@ -8781,10 +8781,12 @@ Jump_012_7624::
     sub a, a
     ret
 
+; when story flag $192 is set, flag $193 is clear and gold >= 10,000 ($2710): wC935 = $CC and carry set; otherwise A = 0 and carry clear (E-0075)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
-Func_012_7662::
+EventCheckGoldAtLeast10000::
+Func_012_7662:: ; address name
     ld de, $0192
     call TestFlagBit
     jr nc, Jump_012_7691
@@ -10179,10 +10181,12 @@ Jump_012_7E77::
     ret
     db $AF, $E0, $C7, $C9
 
+; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
 ; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Table4_Case02, Func_073_44A5_Case02, Func_073_4C5D_Case02, Func_073_4C5D_Table2_Case05, ...)
 ; reads: hFFC6, hFFC7, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
-Func_012_7E84::
+SubtractGoldFloorZero::
+Func_012_7E84:: ; address name
     ldh a, [hFFC6]
     ld l, a
     ldh a, [hFFC7]
@@ -10282,10 +10286,12 @@ Func_012_7F05:: ; address name
     ld [wGoldLo], a
     ret
 
+; takes gold: all of it when below 150, 150 when below 1,500 ($05DC), otherwise one tenth (Divide24ByA, rounded down) (E-0075)
 ; 1 call site from 1 routine (e.g. Func_073_4C5D)
 ; reads: wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
-Func_012_7F1C::
+DeductGoldPenalty::
+Func_012_7F1C:: ; address name
     ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7F49

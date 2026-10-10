@@ -81,7 +81,7 @@ Jump_0E2_408E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_409E::
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr nz, Jump_0E2_40AE
@@ -2117,7 +2117,7 @@ Jump_0E2_4FB0::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FC0::
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr nz, Jump_0E2_4FD0
@@ -2186,7 +2186,7 @@ Jump_0E2_5037::
     jr nz, Jump_0E2_5067
     ld bc, $0067
     call AccumulateBank6WordToDA6E
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr nz, Jump_0E2_5057
@@ -2347,7 +2347,7 @@ Jump_0E2_515E::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_516E::
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr nz, Jump_0E2_517E
@@ -2466,7 +2466,7 @@ Jump_0E2_5236::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_524A::
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr nz, Jump_0E2_525A
@@ -2550,7 +2550,7 @@ Jump_0E2_52DD::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_52ED::
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr nz, Jump_0E2_52FD
@@ -2611,7 +2611,7 @@ Jump_0E2_5350::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5364::
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr nz, Jump_0E2_5374

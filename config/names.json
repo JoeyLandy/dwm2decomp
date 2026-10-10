@@ -2605,6 +2605,13 @@
   "24:68B0": {"name": "DrawGoldPanel_Bank24", "note": "copies an 8 x 3 frame (Data_024_68EB) into the screen buffer at wC370, converts wGold to packed BCD (Number24ToPackedBCD) and Func_015_6676, then writes the digits as tiles $E0 + d at wC386 (E-0074)", "evidence": "reading (E-0074)"},
   "15:68FA": {"name": "TestBitInFieldAtWD7F3", "note": "index = the word wD7F1/wD7F2, field = the address in wD7F3/wD7F4: wD7F5 = $FF when bit index of the field is set (bit order $80 first within each byte), else 0 (E-0074)", "evidence": "reading (E-0074)"},
   "3A:4E57": {"name": "SetWC5E9PatternAndIncWD804", "note": "wC5E9-wC5EB = $D2, $D2, $E2; wD804 += 1 (E-0074)", "evidence": "reading (E-0074)"},
+  "12:7E84": {"name": "SubtractGoldFloorZero", "note": "wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)", "evidence": "reading (E-0075)"},
+  "12:7F1C": {"name": "DeductGoldPenalty", "note": "takes gold: all of it when below 150, 150 when below 1,500 ($05DC), otherwise one tenth (Divide24ByA, rounded down) (E-0075)", "evidence": "reading (E-0075)"},
+  "05:6972": {"name": "ActorStatus4CheckReadsAddress", "note": "apparently meant to test the actor's status byte 4 (wD810 + 9 * actor) & $03 like the neighbouring checks, but it never loads the byte: it tests A & 3 where A is the low byte of that address left by AddAx9ToHL. So C = $FF for slots 0 and 4 and C = 0 for slots 1, 2, 5 and 6 whatever the status (a likely bug; executed, test Status4CheckReadsAddress) (E-0075)", "evidence": "reading + execution (E-0075)"},
+  "12:7662": {"name": "EventCheckGoldAtLeast10000", "note": "when story flag $192 is set, flag $193 is clear and gold >= 10,000 ($2710): wC935 = $CC and carry set; otherwise A = 0 and carry clear (E-0075)", "evidence": "reading (E-0075)"},
+  "31:7536": {"name": "DrawWC278RowsToBGMapRow7", "note": "copies a 20 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7), falling into CopyRect32StrideToVRAM (E-0075)", "evidence": "reading (E-0075)"},
+  "1E:76F3": {"name": "GetWD789Cell4Address", "note": "far-calls SetWD7F5ToWD789Cell4, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)", "evidence": "reading (E-0075)"},
+  "1E:76EB": {"name": "GetWD789Cell5Address", "note": "far-calls SetWD7F5ToWD789Cell5, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)", "evidence": "reading (E-0075)"},
   "32:51F9": {
     "name": "CheckSkillMPCost",
     "note": "for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)",

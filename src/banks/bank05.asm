@@ -7626,10 +7626,12 @@ Jump_005_696F::
     ld c, $01
     ret
 
+; apparently meant to test the actor's status byte 4 (wD810 + 9 * actor) & $03 like the neighbouring checks, but it never loads the byte: it tests A & 3 where A is the low byte of that address left by AddAx9ToHL. So C = $FF for slots 0 and 4 and C = 0 for slots 1, 2, 5 and 6 whatever the status (a likely bug; executed, test Status4CheckReadsAddress) (E-0075)
 ; 8 call sites from 8 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, ...)
 ; reads: wBattleActor
 ; points at: wD810
-Func_005_6972::
+ActorStatus4CheckReadsAddress::
+Func_005_6972:: ; address name
     ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
@@ -10269,7 +10271,7 @@ Func_005_772B:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_774B
-    farcall Func_005_6972
+    farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
     jr z, Jump_005_774B

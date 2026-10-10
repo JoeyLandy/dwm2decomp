@@ -4740,7 +4740,7 @@ Jump_0A0_5E39:: ; address name
     inc hl
     set 7, [hl]
     farcall ClearAndLayoutTileBlocksForWD890Count
-    farcall Func_031_7536
+    farcall DrawWC278RowsToBGMapRow7
     ld hl, vTiles1 + $6D0
     ld de, $0701
     ld a, $02
@@ -5642,7 +5642,7 @@ Jump_0A0_63FE::
     farcall ClearAndLayoutTileBlocksForWD890Count
     call Func_0A0_6A2C
     farcall Func_01A_7276
-    farcall Func_031_7536
+    farcall DrawWC278RowsToBGMapRow7
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a

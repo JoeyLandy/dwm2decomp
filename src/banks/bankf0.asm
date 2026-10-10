@@ -3486,7 +3486,7 @@ Jump_0F0_5EF9:: ; address name
     xor a, a
     ld [wD7F7], a
     call Func_0F0_66D5
-    call Func_0F0_66EC
+    call GetWD789Cell4Address_BankF0
     ld a, l
     ld [wD7F1], a
     ld a, h
@@ -3503,7 +3503,7 @@ Jump_0F0_5EF9:: ; address name
 ; writes: hFFBA, wD781
 Func_0F0_5DE8_Case05::
 Jump_0F0_5F2F:: ; address name
-    call Func_0F0_66EC
+    call GetWD789Cell4Address_BankF0
     ld a, [hl]
     ld e, a
     farcall Func_01E_6FE3
@@ -3571,7 +3571,7 @@ Jump_0F0_5FA3:: ; address name
     and a, a
     jp nz, Jump_0F0_5FDD
     call Func_0F0_6262
-    call Func_0F0_66EC
+    call GetWD789Cell4Address_BankF0
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3598,7 +3598,7 @@ Jump_0F0_5FA3:: ; address name
     ret
 
 Jump_0F0_5FDD::
-    call Func_0F0_66EC
+    call GetWD789Cell4Address_BankF0
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -4449,9 +4449,11 @@ Func_0F0_66D5::
     farcall Func_01F_5D2A
     ret
 
+; the same 15 bytes as GetWD789Cell4Address (1E:76F3)
 ; 4 call sites from 3 routines (e.g. Func_0F0_5DE8_Case06, Func_0F0_5DE8_Case05, Func_0F0_5DE8_Case04)
 ; reads: wD7F5, wD7F6
-Func_0F0_66EC::
+GetWD789Cell4Address_BankF0::
+Func_0F0_66EC:: ; address name
     farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a

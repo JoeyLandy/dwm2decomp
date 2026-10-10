@@ -603,7 +603,7 @@ Jump_073_4387:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7E84
+    farcall SubtractGoldFloorZero
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -892,7 +892,7 @@ Jump_073_45EF:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7E84
+    farcall SubtractGoldFloorZero
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1841,7 +1841,7 @@ Func_073_4C5D::
     ld [wC8C1], a
     ld a, [wGoldHi]
     ld [wC8C2], a
-    farcall Func_012_7F1C
+    farcall DeductGoldPenalty
     ld a, [wGoldLo]
     ld c, a
     ld a, [wC8C0]
@@ -1934,7 +1934,7 @@ Jump_073_4CE5:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7E84
+    farcall SubtractGoldFloorZero
     ld hl, vTiles0 + $9
     call StoreHLInWC924_B73
     ret
@@ -2011,7 +2011,7 @@ Jump_073_4D5B:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7E84
+    farcall SubtractGoldFloorZero
     farcall Func_012_64F8
     ld hl, $0006
     call StoreHLInWC924_B73
@@ -2086,7 +2086,7 @@ Jump_073_4DCD:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7E84
+    farcall SubtractGoldFloorZero
     ld hl, vTiles0 + $3
     call StoreHLInWC924_B73
     ret
