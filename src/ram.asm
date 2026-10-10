@@ -1236,7 +1236,7 @@ DEF wD0AE EQU $D0AE
 DEF wD0BD EQU $D0BD
 DEF wD0C7 EQU $D0C7
 DEF wD0CD EQU $D0CD
-DEF wD0D5 EQU $D0D5
+DEF wBattlerRecords EQU $D0D5 ; six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062) (reading (E-0062))
 DEF wD0D6 EQU $D0D6
 DEF wD0D9 EQU $D0D9
 DEF wD0DF EQU $D0DF

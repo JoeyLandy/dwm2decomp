@@ -5653,7 +5653,7 @@ Func_03A_79A0::
     push hl
     push bc
     ld e, $00
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld e, l
     ld d, h
     pop bc

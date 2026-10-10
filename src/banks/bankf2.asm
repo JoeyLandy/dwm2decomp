@@ -1084,7 +1084,7 @@ Func_0F2_4B05::
     ld [wD006], a
     ld a, [wCA37]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD00F]
     ldh [hFFC6], a
     pop bc
@@ -1185,7 +1185,7 @@ Func_0F2_4BFC::
     ld [wD006], a
     ld a, [wCA37]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD013]
     ld [wStringIndex], a
     ld a, $0D

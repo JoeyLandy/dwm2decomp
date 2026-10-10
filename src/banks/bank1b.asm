@@ -6170,7 +6170,7 @@ Jump_01B_6EE7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wD781
 ; writes: wC94B, wC595, wC596, wC590, wC591, wD781
-; points at: wD0D5, wD1BF
+; points at: wBattlerRecords, wD1BF
 Func_01B_6A5E_Table2_Case0D::
 Jump_01B_6EF3:: ; address name
     ld a, [wC57F]
@@ -6179,7 +6179,7 @@ Jump_01B_6EF3:: ; address name
     xor a, a
     ld [wC94B], a
     call Func_01B_7152
-    ld hl, wD0D5
+    ld hl, wBattlerRecords
     ld a, l
     ld [wC595], a
     ld a, h
@@ -6203,7 +6203,7 @@ Jump_01B_6F1F::
     ld [wC595], a
     ld a, h
     ld [wC596], a
-    ld hl, wD0D5
+    ld hl, wBattlerRecords
     ld a, l
     ld [wC590], a
     ld a, h
@@ -6536,9 +6536,9 @@ Jump_01B_710B:: ; address name
 ; 2 call sites from 1 routine (e.g. Func_01B_6A5E_Table2_Case0D)
 ; reads: wC57F
 ; writes: rRAMG2, rRAMB
-; points at: wD0D5, wD1BF, wD7DD
+; points at: wBattlerRecords, wD1BF, wD7DD
 Func_01B_7152::
-    ld hl, wD0D5
+    ld hl, wBattlerRecords
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_01B_715F

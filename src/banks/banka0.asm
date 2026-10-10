@@ -277,7 +277,7 @@ Jump_0A0_41A8::
     ld a, [hl]
     ld [wD007], a
     push de
-    farcall Func_035_4001
+    farcall LoadBank35Record
     pop de
     ld a, [wD00B]
     ld h, a
@@ -540,10 +540,10 @@ Jump_0A0_42DF::
 ; only called from GameMode7_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01)
 ; reads: wC57F
-; points at: wD0D5, wC986, wCA2B
+; points at: wBattlerRecords, wC986, wCA2B
 GameMode7_Init_Sub01_Sub05::
 Func_0A0_42E3:: ; address name
-    ld de, wD0D5
+    ld de, wBattlerRecords
     ld a, [wC57F]
     bit 1, a
     jr nz, Jump_0A0_42F8
@@ -1532,9 +1532,9 @@ Data_0A0_48F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $19, $32, $4B, $64, $7D, $96, $AF, $C8, $E1, $FA, $FF
 
 ; 1 call site from 1 routine (e.g. Func_0A0_4F8E_Table2_Case06)
-; points at: wD0D5, wD1BF, wD123, wD20D
+; points at: wBattlerRecords, wD1BF, wD123, wD20D
 Func_0A0_4900::
-    ld hl, wD0D5
+    ld hl, wBattlerRecords
     ld de, wD1BF
     ld bc, $004E
     call CopyBytes
@@ -1599,7 +1599,7 @@ Func_0A0_494F::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD86A]
     add a, $0A
     ld l, a
@@ -1848,7 +1848,7 @@ Data_0A0_4B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub02)
 ; reads: wC57F
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4
-; points at: wD0D5, wC8CF, wD123, wC60C, wD05A
+; points at: wBattlerRecords, wC8CF, wD123, wC60C, wD05A
 GameMode7_Init_Sub01_Sub02_Sub01::
 Func_0A0_4B10:: ; address name
     ld a, $90
@@ -1865,7 +1865,7 @@ Func_0A0_4B10:: ; address name
     call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $5A0
     call CopyGlyphTilesToVRAM
-    ld hl, wD0D5
+    ld hl, wBattlerRecords
     ld de, wC8CF
     ld bc, $000A
     call CopyBytes

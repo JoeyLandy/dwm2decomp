@@ -1,7 +1,7 @@
 SECTION "Bank 3B", ROMX[$4000], BANK[$3B]
     db $3B
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's HP word (wCFF6) is returned; otherwise the word at offset $1D of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is confirmed by the pause menu's INFO panel (E-0046)
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's HP word (wCFF6) is returned; otherwise the word at offset $1D of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, Func_036_65E8)
 ; reads: wCFF6, wCFF7
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
@@ -14,7 +14,7 @@ Func_03B_4001:: ; address name
     jr z, Jump_03B_4013
     ld a, c
     ld e, $1D
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_403C
 
@@ -44,7 +44,7 @@ Jump_03B_403C::
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's MP word (wCFF8) is returned; otherwise the word at offset $21 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is confirmed by the pause menu's INFO panel (E-0046)
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's MP word (wCFF8) is returned; otherwise the word at offset $21 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, Func_036_6605)
 ; reads: wCFF8, wCFF9
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
@@ -57,7 +57,7 @@ Func_03B_4045:: ; address name
     jr z, Jump_03B_4057
     ld a, c
     ld e, $21
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_4080
 
@@ -87,7 +87,7 @@ Jump_03B_4080::
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's ATK word (wCFFA) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is confirmed by the pause menu's INFO panel (E-0046)
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's ATK word (wCFFA) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, Func_036_6622)
 ; reads: wCFFA, wCFFB
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
@@ -100,7 +100,7 @@ Func_03B_4089:: ; address name
     jr z, Jump_03B_409B
     ld a, c
     ld e, $23
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_40C4
 
@@ -130,7 +130,7 @@ Jump_03B_40C4::
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's DEF word (wCFFC) is returned; otherwise the word at offset $25 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is confirmed by the pause menu's INFO panel (E-0046)
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's DEF word (wCFFC) is returned; otherwise the word at offset $25 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 7 call sites from 7 routines (e.g. Func_005_6B20, Func_032_5BE8, RecomputeTargetMaxHPAndMP, Func_032_6581, ...)
 ; reads: wCFFC, wCFFD
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
@@ -143,7 +143,7 @@ Func_03B_40CD:: ; address name
     jr z, Jump_03B_40DF
     ld a, c
     ld e, $25
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_4108
 
@@ -173,7 +173,7 @@ Jump_03B_4108::
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's AGL word (wCFFE) is returned; otherwise the word at offset $27 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is confirmed by the pause menu's INFO panel (E-0046)
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's AGL word (wCFFE) is returned; otherwise the word at offset $27 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 7 call sites from 7 routines (e.g. Func_005_6B5F, Func_032_5BE8, RecomputeTargetMaxHPAndMP, Func_032_6581, ...)
 ; reads: wCFFE, wCFFF
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
@@ -186,7 +186,7 @@ Func_03B_4111:: ; address name
     jr z, Jump_03B_4123
     ld a, c
     ld e, $27
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_414C
 
@@ -216,7 +216,7 @@ Jump_03B_414C::
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's INT word (wD000) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is confirmed by the pause menu's INFO panel (E-0046)
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's INT word (wD000) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
 ; reads: wD000, wD001
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
@@ -229,7 +229,7 @@ Func_03B_4155:: ; address name
     jr z, Jump_03B_4167
     ld a, c
     ld e, $29
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_4190
 
@@ -270,7 +270,7 @@ Func_03B_4199::
     jr z, Jump_03B_41A9
     ld a, c
     ld e, $17
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld c, [hl]
     jr Jump_03B_41CE
 
@@ -307,7 +307,7 @@ Func_03B_41D3::
     jr z, Jump_03B_41E3
     ld a, c
     ld e, $2D
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld c, [hl]
     jr Jump_03B_4208
 
@@ -344,7 +344,7 @@ Func_03B_420D::
     jr z, Jump_03B_421D
     ld a, c
     ld e, $30
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld c, [hl]
     jr Jump_03B_4242
 
@@ -381,7 +381,7 @@ Func_03B_4247::
     jr z, Jump_03B_4257
     ld a, c
     ld e, $2E
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld c, [hl]
     jr Jump_03B_427C
 
@@ -418,7 +418,7 @@ Func_03B_4281::
     jr z, Jump_03B_4291
     ld a, c
     ld e, $2F
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld c, [hl]
     jr Jump_03B_42B6
 
@@ -454,12 +454,12 @@ Func_03B_42BB::
     jr z, Jump_03B_42E3
     ld a, c
     ld e, $0A
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld a, [hl+]
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD00A]
     swap a
     ld c, a

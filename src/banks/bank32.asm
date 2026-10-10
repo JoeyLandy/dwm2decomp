@@ -5048,7 +5048,7 @@ Jump_032_5CCA::
     ret z
     ld a, b
     ld e, $31
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld a, l
     ld [wD868], a
     ld a, h

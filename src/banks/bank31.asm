@@ -7769,7 +7769,7 @@ Func_031_6D28::
     adc a, $00
     ld h, a
     push hl
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD00F]
     ldh [hFFC6], a
     farcall Func_019_7380

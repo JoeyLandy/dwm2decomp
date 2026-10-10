@@ -2057,7 +2057,7 @@ Jump_0F1_4E19::
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
     ld de, $01CC
-    call Func_0F1_59CA
+    call DrawScreenBufferRect_BankF1
     ret
 
 ; entry 19 of the `rst $00` table in Func_0F1_4AD0
@@ -2279,7 +2279,7 @@ Jump_0F1_4F6F:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
     ld de, $01CC
-    call Func_0F1_59CA
+    call DrawScreenBufferRect_BankF1
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2429,7 +2429,7 @@ Jump_0F1_5067::
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
     ld de, $01CC
-    call Func_0F1_59CA
+    call DrawScreenBufferRect_BankF1
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3639,7 +3639,7 @@ Func_0F1_5812::
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
     ld de, $01CC
-    call Func_0F1_59CA
+    call DrawScreenBufferRect_BankF1
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E
@@ -3952,11 +3952,13 @@ Jump_0F1_59B8::
     ldh [rSVBK], a
     ret
 
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
 ; 4 call sites from 4 routines (e.g. Func_0F1_4AD0_Table3_Case19, Func_0F1_5812, Func_0F1_4AD0_Table3_Case17, Func_0F1_4AD0_Table3_Case12)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_0F1_59CA::
+DrawScreenBufferRect_BankF1::
+Func_0F1_59CA:: ; address name
     push de
     push bc
     push hl

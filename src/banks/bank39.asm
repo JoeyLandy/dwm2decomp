@@ -6328,7 +6328,7 @@ Jump_039_70A9::
     ld [wD007], a
     push de
     push bc
-    farcall Func_035_400A
+    farcall LoadBank35RecordByte0
     pop bc
     pop de
     ld a, [wD008]
@@ -6392,7 +6392,7 @@ Jump_039_710F::
     ld a, [hl]
     ld [wD007], a
     push de
-    farcall Func_035_400A
+    farcall LoadBank35RecordByte0
     pop de
     ld a, [wD008]
     cp a, d

@@ -3423,14 +3423,14 @@ Jump_007_6319::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_007_6213_Table2_Case02, Func_007_6213_Table2_Case01, Func_007_6213_Table2_Case00)
-; reads: wD0D5, wD10A
+; reads: wBattlerRecords, wD10A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
 Func_007_635A::
     ld a, $0A
     ld [rRAMG], a
     ld a, $01
     ld [rRAMB], a
-    ld a, [wD0D5]
+    ld a, [wBattlerRecords]
     or a, a
     jr z, Jump_007_639C
     ld a, [wD10A]
@@ -4489,7 +4489,7 @@ Func_007_6975::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld hl, sA00D
     ld a, [wD008]
     ld [hl], a

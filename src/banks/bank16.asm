@@ -4063,7 +4063,7 @@ Func_016_5AC0::
     ld [wD007], a
 
 Jump_016_5AD1::
-    farcall Func_035_400A
+    farcall LoadBank35RecordByte0
     ld a, [wD008]
     cp a, $FF
     jr z, Jump_016_5B16
@@ -4134,7 +4134,7 @@ Func_016_5B33:: ; address name
     ld [wD007], a
 
 Jump_016_5B44::
-    farcall Func_035_400A
+    farcall LoadBank35RecordByte0
     ld a, [wD008]
     cp a, $FF
     jr z, Jump_016_5B61
@@ -4214,7 +4214,7 @@ Func_016_5B7E::
     call Func_016_5A7E
     ld de, $5D0B
     jr nz, Jump_016_5C15
-    farcall Func_035_4001
+    farcall LoadBank35Record
     call NextTableByte
     ld a, [wC5E7]
     ld l, a
@@ -7675,7 +7675,7 @@ Jump_016_7397::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD00E]
     ld c, a
     ld a, [wC9DC]
@@ -7996,10 +7996,10 @@ Data_016_75EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_016_7783)
 ; reads: hFFC6, sBC00, sBC01, sBC02, sBC03, sBD3A, sBE0D, sBB07, ...
-; writes: wD0D5, rRAMG, rRAMB, wD0E5, wD09D, wD09E, wD09F, wD10A, ...
-; points at: wD0D5, sBB0F, wD0D6, sBD30, wD0E0, wD0E6, wD0F2, wD0FE, ...
+; writes: wBattlerRecords, rRAMG, rRAMB, wD0E5, wD09D, wD09E, wD09F, wD10A, ...
+; points at: wBattlerRecords, sBB0F, wD0D6, sBD30, wD0E0, wD0E6, wD0F2, wD0FE, ...
 Func_016_75EE::
-    ld hl, wD0D5
+    ld hl, wBattlerRecords
     ld bc, $003C
     xor a, a
     call FillBytes
@@ -8008,12 +8008,12 @@ Func_016_75EE::
     or a, a
     jr z, Jump_016_760B
     ld a, $00
-    ld [wD0D5], a
+    ld [wBattlerRecords], a
     jp Jump_016_76B5
 
 Jump_016_760B::
     ld a, $01
-    ld [wD0D5], a
+    ld [wBattlerRecords], a
     ld a, $0A
     ld [rRAMG], a
     ld a, $01
@@ -8251,7 +8251,7 @@ Jump_016_777A::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_776C, Func_007_6213_Table2_Case00)
-; reads: wD0D5, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
+; reads: wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, wC1E9, ...
 Func_016_777B::
@@ -8259,7 +8259,7 @@ Func_016_777B::
     jr Jump_016_77A6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wD0D5, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
+; reads: wIsCGB, wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC527, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC4DF, wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, ...
 Func_016_7783:: ; heuristic: follows a terminator; C0
@@ -8280,7 +8280,7 @@ Func_016_7783:: ; heuristic: follows a terminator; C0
 
 Jump_016_77A6::
     call Func_016_75EE
-    ld a, [wD0D5]
+    ld a, [wBattlerRecords]
     or a, a
     jp nz, Jump_016_7832
     ld hl, wC1D9

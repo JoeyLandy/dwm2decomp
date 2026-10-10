@@ -3867,7 +3867,7 @@ Func_01D_5DF9::
     ld [wD006], a
     ldh a, [hFFC7]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD013]
     ld [wStringIndex], a
     ld a, $0D

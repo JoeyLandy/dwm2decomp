@@ -2120,7 +2120,7 @@ Jump_003_4CB8::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD00F]
     ldh [hFFC6], a
     ld c, $56
@@ -2174,7 +2174,7 @@ Func_003_4D57::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD013]
     ld [wStringIndex], a
     ld a, $0D
@@ -2373,7 +2373,7 @@ Func_003_4EB6::
     deref_hl
     ld de, $0901
     call Func_003_43D9
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD008]
     ld [wD09D], a
     pop bc
@@ -8127,14 +8127,14 @@ Jump_003_7633::
     ret
 
 ; 7 call sites from 6 routines (e.g. Func_003_74E2_Case05, Func_003_74E2_Case04, Func_003_74E2_Case03, Func_003_74E2_Case02, ...)
-; reads: wD0D5, wD10A
+; reads: wBattlerRecords, wD10A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
 Func_003_7647::
     ld a, $0A
     ld [rRAMG], a
     ld a, $01
     ld [rRAMB], a
-    ld a, [wD0D5]
+    ld a, [wBattlerRecords]
     or a, a
     jr z, Jump_003_7689
     ld a, [wD10A]

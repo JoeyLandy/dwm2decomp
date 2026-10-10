@@ -1973,7 +1973,7 @@ Func_036_4D0C::
     ret z
     ld a, b
     ld e, $31
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld a, l
     ld [wD868], a
     ld a, h
@@ -4457,7 +4457,7 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld hl, wD01A
     ld a, l
     ld [wD868], a
@@ -4761,7 +4761,7 @@ Jump_036_5F32::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wBattleActor]
     ld c, a
     farcall Func_019_4298
@@ -5955,7 +5955,7 @@ Func_036_6594::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD008]
     ret
 
@@ -6099,7 +6099,7 @@ Func_036_6658:: ; heuristic: follows a terminator; C0
     jr z, Jump_036_6667
     ld a, b
     ld e, $31
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     jr Jump_036_669D
 
 Jump_036_6667::
@@ -6120,7 +6120,7 @@ Jump_036_6667::
     ld [wD006], a
     ld a, [wCFED]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld hl, wD01A
 
 Jump_036_669D::
@@ -6136,7 +6136,7 @@ Func_036_669E:: ; heuristic: follows a terminator; C0
     jr z, Jump_036_66AF
     ld a, b
     ld e, $0E
-    call WD0D5RecordFieldAddress
+    call BattlerRecordFieldAddress
     ld b, $08
     jr Jump_036_66D5
 

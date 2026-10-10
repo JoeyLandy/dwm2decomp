@@ -1368,7 +1368,7 @@ Func_01A_624B:: ; address name
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld hl, wD09D
     ld de, wD010
     ld b, $03
@@ -1734,7 +1734,7 @@ Func_01A_6418::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     pop hl
     ld a, l
     add a, $4B

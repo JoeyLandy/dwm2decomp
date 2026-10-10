@@ -3867,7 +3867,7 @@ Jump_073_5888:: ; address name
     ld hl, wCBD4
     inc [hl]
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -7371,7 +7371,7 @@ Jump_073_6C0C:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld a, $65
     call QueueSoundEffect
@@ -7790,7 +7790,7 @@ Jump_073_6F32::
 
 Jump_073_6F40::
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -7822,7 +7822,7 @@ Jump_073_6F6B::
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld a, $80
     ld [wScriptStartRequest], a
@@ -8034,7 +8034,7 @@ Jump_073_7095:: ; address name
     ld hl, wCBD4
     inc [hl]
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -8274,7 +8274,7 @@ Jump_073_7223:: ; address name
     ld hl, wCBAB
     inc [hl]
     ld de, wCBAB
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld de, $000B
     call SetFlagBit
@@ -8418,7 +8418,7 @@ Jump_073_7300:: ; address name
 ScriptCommand16_Run_Case07::
 Jump_073_7317:: ; address name
     ld de, wCB9B
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0055
     call StoreHLInWC924_B73b
@@ -8432,7 +8432,7 @@ Jump_073_7317:: ; address name
 ScriptCommand16_Run_Case04::
 Jump_073_7329:: ; address name
     ld de, wCBAB
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0054
     call StoreHLInWC924_B73b
@@ -8446,7 +8446,7 @@ Jump_073_7329:: ; address name
 ScriptCommand16_Run_Case01::
 Jump_073_733B:: ; address name
     ld de, wCB9B
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0053
     call StoreHLInWC924_B73b
@@ -8776,7 +8776,7 @@ Jump_073_75C8::
 
 Jump_073_75CC::
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -8973,7 +8973,7 @@ Jump_073_76D5::
     ld hl, wCBD4
     inc [hl]
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -9041,7 +9041,7 @@ Jump_073_7741:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld a, $03
     ld [wCBA6], a
@@ -9488,7 +9488,7 @@ Jump_073_79FC:: ; address name
     ld hl, wCBD4
     inc [hl]
     ld de, wCBD4
-    call Func_073_7A5D
+    call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -9583,10 +9583,12 @@ Func_073_7A51::
     ld [de], a
     ret
 
+; the same 34 bytes as ScriptApplyStepDeltaAtDE (0F:7EE9)
 ; 13 call sites from 13 routines (e.g. ScriptCommand17_Run, ScriptCommand19_Run, ScriptCommand1A_Run, ScriptCommand60_Run_Case04, ...)
 ; reads: wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
-Func_073_7A5D::
+ScriptApplyStepDeltaAtDE_Bank73::
+Func_073_7A5D:: ; address name
     ld a, e
     ld [wC928], a
     ld a, d

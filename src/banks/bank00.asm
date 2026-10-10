@@ -4292,7 +4292,7 @@ Jump_000_188C::
     ret
 
 ; B = width, C = rows, DE = source, HL = BG map address: copies a B x C rectangle, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B). Each byte is written with interrupts off after rSTAT bit 1 clears. DE ends past the source, HL at the last row start, C = 0; B kept (E-0059)
-; 24 call sites from 12 routines (e.g. Func_00C_51F5, Func_00D_4E05, Func_014_585B, Func_015_65F1, ...)
+; 24 call sites from 12 routines (e.g. DrawScreenBufferRect_Bank0C, DrawScreenBufferRect_Bank0D, DrawScreenBufferRect_Bank14, DrawScreenBufferRect_Bank15, ...)
 ; reads: rSTAT
 CopyRectToBGMapWrapped::
 Func_000_18A5:: ; address name
@@ -10743,10 +10743,10 @@ Func_000_3F25:: ; address name
     add_a_to_hl
     ret
 
-; A = index, E = field offset: HL = wD0D5 + $4E * A' + E, where A' = A - 1 when A >= 3 (so indices 2 and 3 share a record); clobbers A, BC (E-0059)
+; A = battle slot, E = field offset: HL = wBattlerRecords + $4E * A' + E, where A' = A - 1 for A >= 3, so slots 0-2 and 4-6 map to records 0-5 (slots 3 and 7 have no record here; GetBaseHP handles them separately); clobbers A, BC (E-0059, E-0062)
 ; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, Func_036_6658, Func_036_669E, ...)
-; points at: wD0D5
-WD0D5RecordFieldAddress::
+; points at: wBattlerRecords
+BattlerRecordFieldAddress::
 Func_000_3F32:: ; address name
     cp a, $03
     jr c, Jump_000_3F37
@@ -10755,7 +10755,7 @@ Func_000_3F32:: ; address name
 Jump_000_3F37::
     ld c, $4E
     call Multiply8
-    ld bc, wD0D5
+    ld bc, wBattlerRecords
     add hl, bc
     ld a, e
     add_a_to_hl

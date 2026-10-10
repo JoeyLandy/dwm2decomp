@@ -1,33 +1,41 @@
 SECTION "Bank 35", ROMX[$4000], BANK[$35]
     db $35
 
+; copies the whole $2F-byte record numbered by wD006/wD007 to wD008 (CopyBank35RecordPrefix); what the records describe is not known (E-0062)
 ; 37 call sites from 36 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_6C48, Func_003_4BE8, Func_003_4D57, ...)
 ; points at: wD008
-Func_035_4001::
+LoadBank35Record::
+Func_035_4001:: ; address name
     ld de, wD008
     ld b, $2F
-    call Func_035_401C
+    call CopyBank35RecordPrefix
     ret
 
+; copies byte 0 of the record numbered by wD006/wD007 to wD008 (E-0062)
 ; 8 call sites from 7 routines (e.g. Func_005_6CA5, Func_016_5AC0, BattleEnd_Step3_Sub01_Sub01, Func_037_5DBC, ...)
 ; points at: wD008
-Func_035_400A::
+LoadBank35RecordByte0::
+Func_035_400A:: ; address name
     ld de, wD008
     ld b, $01
-    call Func_035_401C
+    call CopyBank35RecordPrefix
     ret
 
+; copies bytes 0-1 of the record numbered by wD006/wD007 to wD008 (E-0062)
 ; 1 call site from 1 routine (e.g. Func_00E_61C1)
 ; points at: wD008
-Func_035_4013::
+LoadBank35RecordWord0::
+Func_035_4013:: ; address name
     ld de, wD008
     ld b, $02
-    call Func_035_401C
+    call CopyBank35RecordPrefix
     ret
 
-; 3 call sites from 3 routines (e.g. Func_035_4001, Func_035_4013, Func_035_400A)
+; B = byte count, DE = destination: copies the first B bytes of the record numbered by the 16-bit wD006/wD007 (pointer table Data_035_403B, 384 entries, records $2F bytes apart) to DE (E-0062)
+; 3 call sites from 3 routines (e.g. LoadBank35Record, LoadBank35RecordWord0, LoadBank35RecordByte0)
 ; reads: wD006, wD007
-Func_035_401C::
+CopyBank35RecordPrefix::
+Func_035_401C:: ; address name
     push bc
     push de
     ld a, [wD006]

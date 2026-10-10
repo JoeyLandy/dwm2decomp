@@ -1752,7 +1752,7 @@ Func_085_4AEE:: ; address name
     ld hl, wCB9B
     inc [hl]
     ld de, wCB9B
-    call Func_085_5780
+    call ScriptApplyStepDeltaAtDE_Bank85
     ret nc
     ld a, $01
     ld [wSpriteSlotCount], a
@@ -3067,7 +3067,7 @@ Jump_085_52AD::
 
 Jump_085_52B8::
     ld de, wCBD4
-    call Func_085_5780
+    call ScriptApplyStepDeltaAtDE_Bank85
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -3110,7 +3110,7 @@ Jump_085_52ED:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_085_5780
+    call ScriptApplyStepDeltaAtDE_Bank85
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -3717,7 +3717,7 @@ Jump_085_5664:: ; address name
 ScriptCommand22_Run_Case00::
 Jump_085_566F:: ; address name
     ld de, wCB8B
-    call Func_085_5780
+    call ScriptApplyStepDeltaAtDE_Bank85
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -3800,7 +3800,7 @@ Jump_085_56FF:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_085_5780
+    call ScriptApplyStepDeltaAtDE_Bank85
     ret nc
     ld hl, $0084
     call StoreHLInWC924_B85
@@ -3896,10 +3896,12 @@ Func_085_5774:: ; heuristic: follows a terminator; C0
     ld [de], a
     ret
 
+; the same 34 bytes as ScriptApplyStepDeltaAtDE (0F:7EE9)
 ; 5 call sites from 5 routines (e.g. ScriptCommand6F_Run, ScriptCommand5B_Run_Case03, ScriptCommand5B_Run_Case01, ScriptCommand22_Run_Case00, ...)
 ; reads: wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
-Func_085_5780::
+ScriptApplyStepDeltaAtDE_Bank85::
+Func_085_5780:: ; address name
     ld a, e
     ld [wC928], a
     ld a, d

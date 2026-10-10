@@ -336,7 +336,7 @@ Jump_019_425D::
     ld a, [hl]
     ld [wD007], a
     push de
-    farcall Func_035_4001
+    farcall LoadBank35Record
     pop de
     ld a, [wD00B]
     ld h, a
@@ -948,13 +948,13 @@ Jump_019_4553::
 ; only called from GameMode4_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wD88F
-; points at: wD0D5
+; points at: wBattlerRecords
 GameMode4_Init_Sub01_Sub06::
 Func_019_4557:: ; address name
     ld a, [wD88F]
     ld b, a
     ld c, $00
-    ld de, wD0D5
+    ld de, wBattlerRecords
 
 Jump_019_4560::
     push bc
@@ -1267,7 +1267,7 @@ Func_019_470F::
     ld [wD007], a
     push bc
     push de
-    farcall Func_035_4001
+    farcall LoadBank35Record
     pop de
     pop bc
     call Func_019_4B37
@@ -1307,7 +1307,7 @@ Jump_019_4771::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD86A]
     add a, $0A
     ld l, a
@@ -2583,7 +2583,7 @@ Func_019_73A2::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD00F]
     ld bc, $0129
     call Multiply8By16
@@ -2624,7 +2624,7 @@ Func_019_73DF::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD00F]
     ld bc, $0129
     call Multiply8By16

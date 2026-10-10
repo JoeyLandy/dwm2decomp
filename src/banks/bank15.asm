@@ -36,7 +36,7 @@ Jump_015_402B::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD788]
     inc a
     ld [wD788], a
@@ -296,7 +296,7 @@ Jump_015_41BD:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140B
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     xor a, a
     ld [wD781], a
     ld a, [wD780]
@@ -452,7 +452,7 @@ Jump_015_42B3:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     xor a, a
     ld [wD7AB], a
     ld [wD7AF], a
@@ -612,7 +612,7 @@ Func_015_4439::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -731,7 +731,7 @@ Jump_015_44D3:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -756,7 +756,7 @@ Jump_015_451B:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, $01
     ld [wD7FA], a
     xor a, a
@@ -779,7 +779,7 @@ Jump_015_4550:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -804,7 +804,7 @@ Jump_015_4570:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     xor a, a
     ld [wD7FA], a
     ld [wD7AD], a
@@ -840,7 +840,7 @@ Jump_015_45B9:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, $08
     ld [wD781], a
     xor a, a
@@ -1011,7 +1011,7 @@ Jump_015_46D3:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1355,7 +1355,7 @@ Jump_015_491A:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -1422,7 +1422,7 @@ Jump_015_49C9:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call Func_015_69FE
     call Func_015_47A7
     ld de, Data_015_7589
@@ -1432,12 +1432,12 @@ Jump_015_49C9:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call Func_015_4771
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, $25
     ld [wD781], a
     ld hl, wC52D
@@ -1465,7 +1465,7 @@ Jump_015_4A2A:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, $1E
     ld [wD781], a
     xor a, a
@@ -1846,7 +1846,7 @@ Jump_015_4C8A::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call Func_015_69FE
     call Func_015_47A7
     ld de, Data_015_7589
@@ -1856,12 +1856,12 @@ Jump_015_4C8A::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call Func_015_4771
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
 
 Jump_015_4CD9::
     ld a, $2A
@@ -1971,7 +1971,7 @@ Jump_015_4D6E:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2009,7 +2009,7 @@ Jump_015_4DB0:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -2050,7 +2050,7 @@ Jump_015_4DF3:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -2539,7 +2539,7 @@ Jump_015_50FB:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     farcall Func_01D_6026
     ld a, [wD781]
     inc a
@@ -2616,7 +2616,7 @@ Jump_015_51AC::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_015_7333
@@ -2807,7 +2807,7 @@ Jump_015_52FF:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2887,7 +2887,7 @@ Jump_015_5387:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     xor a, a
     ld [wD7B7], a
     ld [wD7AD], a
@@ -3095,7 +3095,7 @@ Jump_015_54E6:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, $06
     ld [wD781], a
     xor a, a
@@ -3462,13 +3462,13 @@ Jump_015_577C::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call BGMapAddressAtScroll_Bank15
     ld de, $01A0
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, $70
     ldh [hFFBA], a
     ld a, [wD781]
@@ -3536,7 +3536,7 @@ Jump_015_57CB:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3625,7 +3625,7 @@ Jump_015_5889::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ret
 
 ; 1 call site from 1 routine (e.g. Func_015_586D)
@@ -3702,7 +3702,7 @@ Jump_015_58D2:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140B
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3805,7 +3805,7 @@ Jump_015_59B8:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call Func_015_5A2D
     xor a, a
     ld [wD7AF], a
@@ -4059,7 +4059,7 @@ Jump_015_5B82:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140B
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4181,7 +4181,7 @@ Jump_015_5C5B:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call Func_015_570C
     ld a, $06
     ld [wD781], a
@@ -4246,7 +4246,7 @@ Jump_015_5CDC:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld a, $13
     ld [wD781], a
     xor a, a
@@ -4440,7 +4440,7 @@ Jump_015_5E0C:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -4650,7 +4650,7 @@ Jump_015_5F77::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -4935,13 +4935,13 @@ Jump_015_6155:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     call BGMapAddressAtScroll_Bank15
     ld de, $01A0
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     farcall Func_01E_7763
     ld a, $70
     ldh [hFFBA], a
@@ -5405,7 +5405,7 @@ Jump_015_644D::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_015_4C0C, Func_00D_5702_Case09, Func_0F0_4CA0_Table5_Case01)
@@ -5418,7 +5418,7 @@ Func_015_645F::
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
-    call Func_015_65F1
+    call DrawScreenBufferRect_Bank15
     ret
 
 ; 2 call sites from 2 routines (e.g. ScriptCommandED_Run_Case02, ScriptCommandEF_Run_Case02)
@@ -5681,11 +5681,13 @@ Jump_015_65DF::
     ldh [rSVBK], a
     ret
 
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 unchanged when wStringIndex is $10-$12; otherwise HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
 ; 41 call sites from 35 routines (e.g. ScriptCommandEE_Run_Case00, ScriptCommandED_Run_Table2_Case02, Func_015_4182_Case3B, Func_015_4182_Case34, ...)
 ; reads: wStringIndex, wC555, wC554, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_015_65F1::
+DrawScreenBufferRect_Bank15::
+Func_015_65F1:: ; address name
     push de
     push bc
     push hl

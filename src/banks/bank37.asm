@@ -3405,7 +3405,7 @@ Func_037_5DBC::
     ld a, [hl]
     ld [wD007], a
     push de
-    farcall Func_035_400A
+    farcall LoadBank35RecordByte0
     pop de
     pop hl
     ld a, [wD008]
@@ -3641,7 +3641,7 @@ Func_037_5ED0::
 Func_037_5EE7::
     push hl
     push de
-    farcall Func_035_4001
+    farcall LoadBank35Record
     pop de
     pop hl
     ld a, [wD008]

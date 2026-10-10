@@ -2994,7 +2994,7 @@ Func_005_5034::
     ld [wD006], a
     ld a, [hl]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD008]
     cp a, $09
     ret
@@ -8213,7 +8213,7 @@ Func_005_6CA5:: ; heuristic: follows a terminator; C0
     ld a, [hl]
     ld [wD007], a
     push bc
-    farcall Func_035_400A
+    farcall LoadBank35RecordByte0
     pop bc
     ld a, [wD008]
     ret

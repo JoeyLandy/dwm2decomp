@@ -2683,7 +2683,7 @@ Jump_001_5720::
     ld [wD006], a
     ld a, [wD7F3]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld c, $00
     ld de, wD787
     call Func_001_57C7
@@ -2695,7 +2695,7 @@ Jump_001_5720::
     ld [wD006], a
     ld a, [wD7F3]
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld c, $00
     ld de, wD7A2
     call Func_001_57C7
@@ -5890,7 +5890,7 @@ Jump_001_6D33::
     ld [wD006], a
     ld a, h
     ld [wD007], a
-    farcall Func_035_4001
+    farcall LoadBank35Record
     ld a, [wD868]
     ld c, $0D
     call SRAMRecordAddress

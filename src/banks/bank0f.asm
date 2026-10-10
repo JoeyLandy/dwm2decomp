@@ -412,7 +412,7 @@ Jump_00F_4270:: ; address name
 ScriptCommand5F_Run_Case26::
 Jump_00F_427A:: ; address name
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ld hl, wCBAC
     call SetBit1AtHL_Bank0F
     ld a, [wCBAA]
@@ -435,7 +435,7 @@ Jump_00F_427A:: ; address name
 ScriptCommand5F_Run_Case21::
 Jump_00F_429F:: ; address name
     ld de, wC8F1
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $01
     add a, $B9
@@ -573,7 +573,7 @@ Jump_00F_4376::
 ScriptCommand5F_Run_Case19::
 Jump_00F_438B:: ; address name
     ld de, wCBAB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $0DB7
     call StoreHLInWC924_B0F
@@ -642,7 +642,7 @@ Jump_00F_43EF:: ; address name
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $03
     ld [wCB96], a
@@ -682,7 +682,7 @@ Jump_00F_4419:: ; address name
 ScriptCommand5F_Run_Case12::
 Jump_00F_4444:: ; address name
     ld de, wCBAB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $0DB3
     call StoreHLInWC924_B0F
@@ -696,7 +696,7 @@ Jump_00F_4444:: ; address name
 ScriptCommand5F_Run_Case10::
 Jump_00F_4456:: ; address name
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $0DB2
     call StoreHLInWC924_B0F
@@ -710,7 +710,7 @@ Jump_00F_4456:: ; address name
 ScriptCommand5F_Run_Case0D::
 Jump_00F_4468:: ; address name
     ld de, wCBAB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $0DB1
     call StoreHLInWC924_B0F
@@ -724,7 +724,7 @@ Jump_00F_4468:: ; address name
 ScriptCommand5F_Run_Case0A::
 Jump_00F_447A:: ; address name
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $0DB0
     call StoreHLInWC924_B0F
@@ -802,7 +802,7 @@ Jump_00F_44D8:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $0549
     call StoreHLInWC924_B0F
@@ -1079,7 +1079,7 @@ Func_00F_4774:: ; heuristic: target of a pointer table; C0
 ; points at: wCBAB, wScriptStep
 Func_00F_47A8:: ; heuristic: target of a pointer table; C0
     ld de, wCBAB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     push af
     ld a, [wCBAB]
     ld [wCBBB], a
@@ -1593,7 +1593,7 @@ Jump_00F_4AB3:: ; address name
 ScriptCommand5E_Run_Case60::
 Jump_00F_4AD7:: ; address name
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -1684,7 +1684,7 @@ Jump_00F_4B45:: ; address name
 
 Jump_00F_4B64::
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     push af
     ld a, [wCB9B]
     ld [wCBAB], a
@@ -1749,7 +1749,7 @@ Jump_00F_4BB6:: ; address name
 
 Jump_00F_4BCC::
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     push af
     ld a, [wCB9B]
     ld [wCBAB], a
@@ -1833,7 +1833,7 @@ Jump_00F_4C3D:: ; address name
 ScriptCommand5E_Run_Case4B::
 Jump_00F_4C4A:: ; address name
     ld de, wCBBB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -1994,7 +1994,7 @@ Jump_00F_4D5D::
 ScriptCommand5E_Run_Case45::
 Jump_00F_4D7B:: ; address name
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -2101,7 +2101,7 @@ Jump_00F_4E15:: ; address name
     dec a
     ld [wCBAA], a
     ld de, wCBAB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     xor a, a
     ld [wCBA6], a
@@ -2140,7 +2140,7 @@ Jump_00F_4E3D:: ; address name
     ld hl, wCB9A
     inc [hl]
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     xor a, a
     ld [wCB96], a
@@ -2179,7 +2179,7 @@ Jump_00F_4E91:: ; address name
     ld hl, wCB8A
     dec [hl]
     ld de, wCB8B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $30
     ld [wCB9B], a
@@ -2307,7 +2307,7 @@ Jump_00F_4F2D:: ; address name
 
 Jump_00F_4F40::
     ld de, wCBAB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $02
     ld [wCBB6], a
@@ -2675,7 +2675,7 @@ Jump_00F_511E:: ; address name
 ScriptCommand5E_Run_Case03::
 Jump_00F_5122:: ; address name
     ld de, wCB8B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -3689,7 +3689,7 @@ Jump_00F_58E5:: ; address name
     ld hl, wCB8B
     inc [hl]
     ld de, wCB8B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $E0
     ld [wCB8B], a
@@ -3808,7 +3808,7 @@ Jump_00F_5993:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -3838,7 +3838,7 @@ Jump_00F_59B8:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -4611,7 +4611,7 @@ Jump_00F_5E46::
 
 Jump_00F_5E4A::
     ld de, wCB8B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -5749,7 +5749,7 @@ Jump_00F_652D::
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
     ld de, wCB9B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     jr nc, Jump_00F_654D
     ld hl, wScriptParam1
     inc [hl]
@@ -6342,7 +6342,7 @@ Jump_00F_68EB:: ; address name
     ld hl, wCBD4
     inc [hl]
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -6374,7 +6374,7 @@ Jump_00F_6910:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -6546,7 +6546,7 @@ Jump_00F_6A21:: ; address name
     dec a
     ld [wCBD4], a
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $65
     call QueueSoundEffect
@@ -6630,7 +6630,7 @@ Jump_00F_6A9B:: ; address name
 ScriptCommand39_Run_Case14::
 Jump_00F_6AA1:: ; address name
     ld de, wCBAB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $63
     call QueueSoundEffect
@@ -6659,7 +6659,7 @@ Jump_00F_6ABC:: ; address name
     inc a
     ld [wCBD4], a
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -6735,7 +6735,7 @@ Jump_00F_6B31:: ; address name
     dec a
     ld [wCBD4], a
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $086E
     call StoreHLInWC924_B0F
@@ -8183,7 +8183,7 @@ Jump_00F_740C:: ; address name
     ld hl, wCBD4
     inc [hl]
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $019F
     call StoreHLInWC924_B0F
@@ -8207,7 +8207,7 @@ Jump_00F_743A:: ; address name
     ld hl, wCBD4
     dec [hl]
     ld de, wCBD4
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, $019E
     call StoreHLInWC924_B0F
@@ -8929,7 +8929,7 @@ Jump_00F_78B7:: ; address name
 ScriptCommand1D_Run_Case09::
 Jump_00F_78CB:: ; address name
     ld de, hPlayerY
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     push af
     ldh a, [hPlayerY]
     ld [wC8F1], a
@@ -9628,7 +9628,7 @@ Jump_00F_7CB1:: ; address name
 ScriptCommand76_Run_Case00::
 Jump_00F_7CD6:: ; address name
     ld de, wCBBB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     xor a, a
     ld [wScriptParam0], a
@@ -9669,7 +9669,7 @@ Jump_00F_7D07:: ; address name
     ld hl, wCBBB
     inc [hl]
     ld de, wCBBB
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld a, $80
     ld [wScriptStartRequest], a
@@ -9768,7 +9768,7 @@ Jump_00F_7D86:: ; address name
     ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld de, wC8F1
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -9794,7 +9794,7 @@ ScriptCommand6A_Run_Case03::
 Jump_00F_7DA3:: ; address name
     call Func_00F_7E1E
     ld de, wCB8B
-    call Func_00F_7EE9
+    call ScriptApplyStepDeltaAtDE
     ret nc
     ld hl, hFF8C
     call ClearBit2AtHL_Bank0F
@@ -10010,10 +10010,12 @@ Jump_00F_7EE2::
     farcall Func_002_5946
     ret
 
+; DE = address of a byte: adds the step delta for wScriptParam0 (AddStepDeltaToPointedByte), then wScriptParam0 += 2; when it reaches $20 it is reset to 0 and carry is set, otherwise A = 0 and carry is clear (16 calls per move) (E-0062)
 ; 38 call sites from 38 routines (e.g. ScriptCommand76_Run_Case00, ScriptCommand75_Run_Case03, ScriptCommand6B_Run_Case00, ScriptCommand6A_Run_Case03, ...)
 ; reads: wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
-Func_00F_7EE9::
+ScriptApplyStepDeltaAtDE::
+Func_00F_7EE9:: ; address name
     ld a, e
     ld [wC928], a
     ld a, d
