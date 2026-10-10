@@ -219,7 +219,7 @@ Jump_0E2_418C::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_419C::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_41B0
@@ -355,7 +355,7 @@ Func_0E2_4279:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4292::
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_42A2
@@ -1390,7 +1390,7 @@ Func_0E2_49B5:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_49CE
@@ -1435,7 +1435,7 @@ Func_0E2_4A08:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A21
@@ -1584,7 +1584,7 @@ Jump_0E2_4B22::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B32::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4B46
@@ -1687,7 +1687,7 @@ Jump_0E2_4BE4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BF7::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4C0B
@@ -1798,7 +1798,7 @@ Func_0E2_4CA1:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4CBD::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4CD1
@@ -1869,7 +1869,7 @@ Jump_0E2_4D2F::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4D42::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4D56
@@ -1948,7 +1948,7 @@ Jump_0E2_4DC4::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4DD7::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4DEB
@@ -2009,7 +2009,7 @@ Jump_0E2_4E35::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4E48::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4E5C
@@ -2098,7 +2098,7 @@ Jump_0E2_4EE0::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4EF3::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4F07
@@ -2644,7 +2644,7 @@ Jump_0E2_52A6::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_52B9::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_52CD
@@ -2723,7 +2723,7 @@ Jump_0E2_533D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5350::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5364
@@ -2810,7 +2810,7 @@ Jump_0E2_53E2::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_53F5::
-    farcall Func_005_57CF
+    farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5409
@@ -3218,7 +3218,7 @@ Func_0E2_56C6:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_56E3::
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_56F3
@@ -3334,7 +3334,7 @@ Func_0E2_57A9:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_57C2::
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_57D2
@@ -4215,7 +4215,7 @@ Func_0E2_5DED:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E06
@@ -4860,7 +4860,7 @@ Func_0E2_6249:: ; address name
     ret z
     call Func_0E2_67CF
     ret z
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_6266
@@ -5134,7 +5134,7 @@ Func_0E2_6425:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_6442::
-    farcall Func_005_4777
+    farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_6452
@@ -5326,7 +5326,7 @@ Func_0E2_654B:: ; address name
 AIScore_StrongD_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_656D:: ; address name
     ldh [hFFC6], a
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     and a, a
     jr z, Jump_0E2_6591
@@ -5375,7 +5375,7 @@ Jump_0E2_65B7::
 AIScore_AquaWall_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_65B8:: ; address name
     ldh [hFFC6], a
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     and a, a
     jr z, Jump_0E2_65DC
@@ -5446,7 +5446,7 @@ Jump_0E2_6615::
 ; 1 call site from 1 routine (e.g. AIScore_SuckAll_Sub02)
 AIScore_SuckAll_Sub02_Sub01::
 Func_0E2_661A:: ; address name
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     cp a, $02
     jr nc, Jump_0E2_662D
@@ -5467,7 +5467,7 @@ Jump_0E2_6633::
 AIScore_Meditate_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_6634:: ; address name
     ldh [hFFC6], a
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     and a, a
     jr z, Jump_0E2_6658
@@ -5540,7 +5540,7 @@ Jump_0E2_6691::
 AIScore_HealUs_Sub01_Sub01_Sub01::
 Func_0E2_6696:: ; address name
     push bc
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     pop bc
     ld b, a
@@ -5590,7 +5590,7 @@ Jump_0E2_66D7::
 ; reads: wBattleActor
 Func_0E2_66DC::
     push bc
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     pop bc
     ld b, a
@@ -5621,7 +5621,7 @@ AIScore_Ramming_Sub02::
 Func_0E2_670B:: ; address name
     ldh [hFFC6], a
     push bc
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     pop bc
     ld b, a
@@ -5672,7 +5672,7 @@ Jump_0E2_673F::
 AIScore_Cover_Sub02_Sub01::
 Func_0E2_6744:: ; address name
     push bc
-    farcall Func_005_5317
+    farcall HPBandOfSlotHFFC6
     ld a, c
     pop bc
 

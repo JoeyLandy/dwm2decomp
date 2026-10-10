@@ -976,6 +976,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Unknowns.** What the wD044/wD045/wD057 bits mean. Player-set battle orders or AI tactics would fit the shape of the checks, but this is not checked.
 - Binary verification: pending; see the commit.
 
+### E-0092 — More bank-$05 AI checks
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Seven checks named:**
+  - HPBandOfSlotHFFC6 returns C = 0-5 for HP at or above 2/3, 1/2, 1/3, 1/4 and 1/10 of max, else 5. It is used by AIScore routines such as AIScore_HealUs.
+  - FoeOfFamilyEPresent (family numbers of E-0069).
+  - CheckFoeStatus6Bit3 and CheckWD2CCSetModeGated, which return C = 1 below AI mode 3.
+  - AllOtherAlliesHaveStatus0Bit6.
+  - SlotHasSkillWithFlagD, which shows wD989 + 16 × slot holding the slot's 8 skill numbers in every other byte.
+  - Get2BitFieldEOfHL.
+- **Convention.** The C = 1 "mode below threshold" result joins the C = $FF/$00 pass/fail convention of the earlier bank-$05 predicates.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

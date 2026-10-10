@@ -31,7 +31,7 @@ Jump_01A_401B::
     ret
 
 ; like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead
-; 17 call sites from 16 routines (e.g. DebugSkillViewer_Update, AIScore_TakeMagic_Sub01_Sub01, Func_005_640A, Func_005_6C02, ...)
+; 17 call sites from 16 routines (e.g. DebugSkillViewer_Update, AIScore_TakeMagic_Sub01_Sub01, Func_005_640A, SlotHasSkillWithFlagD, ...)
 ; reads: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 LoadSkillRecordPart::
 Func_01A_4022:: ; address name

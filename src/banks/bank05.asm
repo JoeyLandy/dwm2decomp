@@ -18,7 +18,7 @@ Func_005_4006:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, Func_005_5317, Func_005_6B9E, Func_005_6556, ...)
+; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, Func_005_6B9E, Func_005_6556, ...)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank05::
 Func_005_400B:: ; address name
@@ -34,7 +34,7 @@ Func_005_4010:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 25 call sites from 21 routines (e.g. Func_005_6494, CheckLoneFoeHPNotBelowWD2C1, AIScore_Meditate_Sub01_Sub01, Func_005_5317, ...)
+; 25 call sites from 21 routines (e.g. Func_005_6494, CheckLoneFoeHPNotBelowWD2C1, AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, ...)
 ; points at: wBattleHP
 GetBattleHP_Bank05::
 Func_005_4015:: ; address name
@@ -532,7 +532,7 @@ Jump_005_4348::
     call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_005_435E
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr nz, Jump_005_4369
 
 Jump_005_435E::
@@ -575,7 +575,7 @@ Jump_005_438D::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4398
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr nz, Jump_005_43A3
 
 Jump_005_4398::
@@ -626,7 +626,7 @@ Jump_005_43C7::
     call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_005_43DD
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr nz, Jump_005_43E8
 
 Jump_005_43DD::
@@ -682,7 +682,7 @@ Jump_005_441C::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4429
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     cp a, $03
     jr nz, Jump_005_4438
 
@@ -870,7 +870,7 @@ Jump_005_44FB::
     ld a, [hl]
     and a, $C1
     jr nz, Jump_005_4512
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr nz, Jump_005_451D
 
 Jump_005_4512::
@@ -1367,10 +1367,12 @@ Func_005_4767:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
+; looks at the actor's own three slots other than the actor: C = $FF when one of them is present with status byte 0 (wBattleStatus) bit 6 clear, or when none of them is present; otherwise (every present ally has bit 6) C = 0 (E-0092)
 ; 11 call sites from 11 routines (e.g. AIScore_MPass_Sub01, AIScore_TwinSlash_Sub01, AIScore_Kamikaze_Sub02, AIScore_Sacrifice, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_4777::
+AllOtherAlliesHaveStatus0Bit6::
+Func_005_4777:: ; address name
     ld a, [wBattleActor]
     ld e, a
     and a, $04
@@ -1516,7 +1518,7 @@ Func_005_4812:: ; address name
 AIScore_SlimeBlow_Sub01_Sub01::
 Func_005_481C:: ; address name
     ld e, $00
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_DrakSlash_Sub01 (E-0047)
@@ -1524,7 +1526,7 @@ Func_005_481C:: ; address name
 AIScore_DrakSlash_Sub01_Sub01::
 Func_005_4822:: ; address name
     ld e, $01
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_BeastCut_Sub01 (E-0047)
@@ -1532,7 +1534,7 @@ Func_005_4822:: ; address name
 AIScore_BeastCut_Sub01_Sub01::
 Func_005_4828:: ; address name
     ld e, $02
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_BirdBlow_Sub01 (E-0047)
@@ -1540,7 +1542,7 @@ Func_005_4828:: ; address name
 AIScore_BirdBlow_Sub01_Sub01::
 Func_005_482E:: ; address name
     ld e, $03
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_BugBlow_Sub01 (E-0047)
@@ -1548,7 +1550,7 @@ Func_005_482E:: ; address name
 AIScore_BugBlow_Sub01_Sub01::
 Func_005_4834:: ; address name
     ld e, $05
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_Shears_Sub01 (E-0047)
@@ -1556,7 +1558,7 @@ Func_005_4834:: ; address name
 AIScore_Shears_Sub01_Sub01::
 Func_005_483A:: ; address name
     ld e, $04
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_DevilCut_Sub01 (E-0047)
@@ -1564,7 +1566,7 @@ Func_005_483A:: ; address name
 AIScore_DevilCut_Sub01_Sub01::
 Func_005_4840:: ; address name
     ld e, $06
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_ZombieCut_Sub01 (E-0047)
@@ -1572,7 +1574,7 @@ Func_005_4840:: ; address name
 AIScore_ZombieCut_Sub01_Sub01::
 Func_005_4846:: ; address name
     ld e, $07
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_CleanCut_Sub01 (E-0047)
@@ -1580,7 +1582,7 @@ Func_005_4846:: ; address name
 AIScore_CleanCut_Sub01_Sub01::
 Func_005_484C:: ; address name
     ld e, $08
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_AquaCut_Sub01 (E-0047)
@@ -1588,7 +1590,7 @@ Func_005_484C:: ; address name
 AIScore_AquaCut_Sub01_Sub01::
 Func_005_4852:: ; address name
     ld e, $09
-    call Func_005_6FD9
+    call FoeOfFamilyEPresent
     ret
 
 ; only called from AIScore_MetalCut_Sub01 (E-0047)
@@ -1747,7 +1749,7 @@ Jump_005_4914::
     call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_005_4937
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr z, Jump_005_4937
     ld a, c
     ld hl, wDA74
@@ -2034,7 +2036,7 @@ Jump_005_4A86::
     call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_005_4AA9
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr z, Jump_005_4AA9
     ld a, c
     ld hl, wDA77
@@ -2081,7 +2083,7 @@ Jump_005_4ACB::
     call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_4AEE
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr z, Jump_005_4AEE
     ld a, c
     ld hl, wDA78
@@ -3165,7 +3167,7 @@ Jump_005_5081::
     ldh a, [hFFC6]
     inc a
     ldh [hFFC6], a
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     ld d, a
     ldh a, [hFFC7]
     add a, d
@@ -3624,9 +3626,11 @@ Jump_005_5314::
     ld c, $01
     ret
 
+; hFFC6 = battle slot: C = 0 when its HP >= 2/3 of its max HP, 1 when >= 1/2, 2 when >= 1/3, 3 when >= 1/4, 4 when >= 1/10, else 5 (GetBattleHP_Bank05, GetBattleMaxHP_Bank05, divisions rounded down) (E-0092)
 ; 8 call sites from 8 routines (e.g. AIScore_StrongD_Sub02, AIScore_AquaWall_Sub02, AIScore_SuckAll_Sub02_Sub01, AIScore_Meditate_Sub02, ...)
 ; reads: hFFC6
-Func_005_5317::
+HPBandOfSlotHFFC6::
+Func_005_5317:: ; address name
     ldh a, [hFFC6]
     call GetBattleMaxHP_Bank05
     add hl, hl
@@ -4513,10 +4517,12 @@ Jump_005_57CC::
     ld c, $01
     ret
 
+; C = 1 when wDA53[actor] (the AI mode) is below 3; otherwise C = 0 when one of the actor's three opposite slots is present with status byte 6 (wD812) bit 3 set, else C = $FF (E-0092)
 ; 11 call sites from 11 routines (e.g. AIScore_Firebal, AIScore_BigBang, AIScore_FireAir, AIScore_Vacuum, ...)
 ; reads: wBattleActor
 ; points at: wD812
-Func_005_57CF::
+CheckFoeStatus6Bit3::
+Func_005_57CF:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
@@ -6377,9 +6383,11 @@ Jump_005_6195::
     ld c, $01
     ret
 
+; C = 1 when wDA53[actor] (the AI mode) is below 3; otherwise C = 0 when wD2CC is non-zero, $FF when it is zero (E-0092)
 ; 7 call sites from 7 routines (e.g. AIScore_SquallHit_Sub01, Func_005_7397, AIScore_Dodge_Sub01_Sub01, Func_005_7C45, ...)
 ; reads: wBattleActor, wD2CC
-Func_005_6198:: ; heuristic: follows a terminator; C0
+CheckWD2CCSetModeGated:: ; heuristic: follows a terminator; C0
+Func_005_6198:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
@@ -6452,7 +6460,7 @@ Jump_005_6250::
     inc hl
     ld a, [hl+]
     ld [wRecordBuffer], a
-    call Func_005_6C02
+    call SlotHasSkillWithFlagD
     jr nz, Jump_005_6264
     dec b
     jr nz, Jump_005_6250
@@ -7021,7 +7029,7 @@ Jump_005_6537::
     ldh a, [hFFC6]
     inc a
     ldh [hFFC6], a
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     cp a, $03
     jr z, Jump_005_654D
 
@@ -7600,7 +7608,7 @@ Jump_005_6840::
     add a, c
     add a, d
     add_a_to_hl
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     cp a, $02
     pop de
     jr nc, Jump_005_6896
@@ -7742,7 +7750,7 @@ Jump_005_6920::
     add a, c
     add a, d
     add_a_to_hl
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     pop hl
     pop bc
     cp a, $02
@@ -7917,7 +7925,7 @@ Jump_005_6A32::
     ldh a, [hFFC6]
     inc a
     ldh [hFFC6], a
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     ld d, a
     ldh a, [hFFC7]
     add a, d
@@ -8002,7 +8010,7 @@ Jump_005_6AAF::
     ldh a, [hFFC6]
     inc a
     ldh [hFFC6], a
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     ld d, a
     ldh a, [hFFC7]
     add a, d
@@ -8277,11 +8285,13 @@ Func_005_6BF8::
     cp a, $01
     ret
 
+; C = slot, D = mask: walks the slot's 8 skill numbers (every other byte of the 16 bytes at wD989 + 16 * C), loading part of each skill record into hFFC6 (LoadSkillRecordPart with wD868 = 5, wD869 = 1); returns A = hFFC6 & D for the first skill with a masked bit set, else A = 0; BC kept (E-0092)
 ; 8 call sites from 8 routines (e.g. Func_005_432E, Func_005_4373, AIScore_AquaWall_Sub01_Sub01, AIScore_DanceShut_Sub01_Sub01, ...)
 ; reads: hFFC6
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer
 ; points at: hFFC6, wD989
-Func_005_6C02:: ; heuristic: follows a terminator; C0
+SlotHasSkillWithFlagD:: ; heuristic: follows a terminator; C0
+Func_005_6C02:: ; address name
     push bc
     ld a, $05
     ld [wD868], a
@@ -8366,8 +8376,10 @@ Jump_005_6C7E::
     pop bc
     ret
 
+; E = field number: A = bits 1-0 of [HL] for field 0, bits 3-2 for 1, bits 5-4 for 2, bits 7-6 for 3 (moved down to bits 1-0) (E-0092)
 ; 8 call sites from 8 routines (e.g. Func_005_43F2, Func_005_69F5, Func_005_5052, Func_005_6A6B, ...)
-Func_005_6C86::
+Get2BitFieldEOfHL::
+Func_005_6C86:: ; address name
     ld a, e
     or a, a
     jr z, Jump_005_6C97
@@ -8399,7 +8411,7 @@ Jump_005_6CA2::
     ret
 
 ; A = battle slot: A = the family (byte 0 of the species record) of the monster id in wBattleMonsterId[slot] (LoadSpeciesFamily); BC kept (E-0069)
-; 1 call site from 1 routine (e.g. Func_005_6FD9)
+; 1 call site from 1 routine (e.g. FoeOfFamilyEPresent)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
@@ -8973,9 +8985,11 @@ Jump_005_6FD6::
     ld c, $FF
     ret
 
+; E = family: C = 0 when one of the actor's three opposite slots is present and its species family (GetSlotSpeciesFamily) equals E; otherwise C = $FF (E-0092)
 ; 10 call sites from 10 routines (e.g. AIScore_SlimeBlow_Sub01_Sub01, AIScore_DrakSlash_Sub01_Sub01, AIScore_BeastCut_Sub01_Sub01, AIScore_BirdBlow_Sub01_Sub01, ...)
 ; reads: wBattleActor
-Func_005_6FD9:: ; heuristic: follows a terminator; C0
+FoeOfFamilyEPresent:: ; heuristic: follows a terminator; C0
+Func_005_6FD9:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -9069,7 +9083,7 @@ Func_005_7032:: ; heuristic: follows a terminator; C0
     add a, c
     add a, d
     add_a_to_hl
-    call Func_005_6C86
+    call Get2BitFieldEOfHL
     ld e, a
     ld a, $01
     or a, a
@@ -9307,7 +9321,7 @@ Func_005_7187:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_71A8
-    call Func_005_4777
+    call AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_71A8
@@ -9767,7 +9781,7 @@ Func_005_7397:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_73D3
-    call Func_005_6198
+    call CheckWD2CCSetModeGated
     ld a, c
     cp a, $01
     jr z, Jump_005_73CB
@@ -10396,7 +10410,7 @@ Func_005_76A3:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_76CA
-    call Func_005_6198
+    call CheckWD2CCSetModeGated
     ld a, c
     cp a, $01
     jr z, Jump_005_76C9
@@ -10574,7 +10588,7 @@ Func_005_7786:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_779B
-    call Func_005_4777
+    call AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_779B
@@ -10644,7 +10658,7 @@ Func_005_77E0:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_77F5
-    call Func_005_4777
+    call AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_77F5
@@ -11460,7 +11474,7 @@ Func_005_7BEE:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7C0E
-    call Func_005_6198
+    call CheckWD2CCSetModeGated
     ld a, c
     cp a, $01
     jr z, Jump_005_7C06
@@ -11530,7 +11544,7 @@ Func_005_7C45:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7C65
-    call Func_005_6198
+    call CheckWD2CCSetModeGated
     ld a, c
     cp a, $01
     jr z, Jump_005_7C5D
@@ -11714,7 +11728,7 @@ Jump_005_7D21::
     ld a, c
     and a, a
     jr z, Jump_005_7D57
-    call Func_005_6198
+    call CheckWD2CCSetModeGated
     ld a, c
     cp a, $01
     jr z, Jump_005_7D48
@@ -11760,7 +11774,7 @@ Func_005_7D5B:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7D91
-    call Func_005_6198
+    call CheckWD2CCSetModeGated
     ld a, c
     cp a, $01
     jr z, Jump_005_7D89
@@ -11868,7 +11882,7 @@ Func_005_7DE8:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7E10
-    call Func_005_6198
+    call CheckWD2CCSetModeGated
     ld a, c
     cp a, $01
     jr z, Jump_005_7E08
