@@ -1223,12 +1223,12 @@ Func_010_467E:: ; address name
 
 ; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FA, wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wCC44
+; reads: wTwoChoiceCursor, wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wCC44
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ScriptFetchE4:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4694:: ; address name
     pop hl
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     ld c, a
 
 Jump_010_4699::

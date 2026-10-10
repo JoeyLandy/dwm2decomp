@@ -197,7 +197,7 @@ Data_01C_4158:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; entry 2 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F7, wD7F8, wD7F9, wD7F1
+; reads: wD7F7, wD7F8, wMenuInputResult, wD7F1
 ; writes: wD7F3, wD7F2, wD7F1, wC552, wC46B, wScriptCommandType, wScriptStartRequest
 ; points at: wD780
 ScriptCommandE0_Run_Case02::
@@ -206,7 +206,7 @@ Jump_01C_4170:: ; address name
     ld e, a
     ld a, [wD7F8]
     ld h, a
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     ld l, a
     push de
     push hl
@@ -737,7 +737,7 @@ Func_01C_4442:: ; address name
 
 ; only called from ScriptCommandE0_Run_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE0_Run_Case00)
-; writes: wD7F7, wD7F8, wD7F9
+; writes: wD7F7, wD7F8, wMenuInputResult
 ; points at: wC8C0, wC130
 ScriptCommandE0_Run_Case00_Sub01::
 Func_01C_4463:: ; address name
@@ -755,7 +755,7 @@ Func_01C_4463:: ; address name
     ld a, h
     ld [wD7F8], a
     ld a, l
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ld hl, wC8C0
     ld de, wC130
     ld c, $03
@@ -849,7 +849,7 @@ Func_01C_449F::
 
 ; only called from ScriptCommandE0_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE0_Run_Case02)
-; reads: wD7F7, wD7F8, wD7F9, wC619, wC618, wC617
+; reads: wD7F7, wD7F8, wMenuInputResult, wC619, wC618, wC617
 ; writes: wC619, wC618, wC617
 ScriptCommandE0_Run_Case02_Sub01::
 Func_01C_44F3:: ; address name
@@ -857,7 +857,7 @@ Func_01C_44F3:: ; address name
     ld e, a
     ld a, [wD7F8]
     ld h, a
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     ld l, a
     ld a, [wC619]
     ld d, a
@@ -1202,7 +1202,7 @@ Jump_01C_4710:: ; address name
 
 ; entry 3 of the `rst $00` table in ScriptCommandE2_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC364, wD780
 ScriptCommandE2_Run_Table2_Case03::
 Jump_01C_4714:: ; address name
@@ -1213,7 +1213,7 @@ Jump_01C_4714:: ; address name
     call Func_01C_6A71
     xor a, a
     ld [wD781], a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wD780
     inc [hl]
     xor a, a
@@ -1230,13 +1230,13 @@ Data_01C_4738:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; entry 4 of the `rst $00` table in ScriptCommandE2_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wD780
 ScriptCommandE2_Run_Table2_Case04::
 Jump_01C_4770:: ; address name
     xor a, a
     ld [wD781], a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wD780
     inc [hl]
     xor a, a
@@ -1248,7 +1248,7 @@ Jump_01C_4770:: ; address name
 ; entry 2 of the `rst $00` table in ScriptCommandE2_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7B1, wD7B2, wD7B0, wD780
-; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B6, wD7B2, wD780, wD7C7, ...
+; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B6, wD7B2, wD780, wD7C7, ...
 ScriptCommandE2_Run_Case02::
 Jump_01C_4785:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -1301,7 +1301,7 @@ Jump_01C_47CE::
     ld a, $69
     call QueueSoundEffect
     ld a, [wD7B1]
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld b, a
     ld a, [wD7B2]
     cp a, b
@@ -1346,12 +1346,12 @@ Jump_01C_481B::
     and a, a
     jr nz, Jump_01C_4829
     ld a, $04
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01C_47FC
 
 Jump_01C_4829::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD780]
     add a, $02
     ld [wD780], a
@@ -1361,7 +1361,7 @@ Jump_01C_4829::
 
 Jump_01C_483D::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01C_47FC
 
 ; only called from ScriptCommandE2_Run_Case02 (E-0047)
@@ -1942,7 +1942,7 @@ Jump_01C_4B68::
 ; entry 6 of the `rst $00` table in Func_01C_4867
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7C2, wD781, wD7B7, wD7B5, wD7BA, wD7B6
-; writes: wD7C7, wD780, wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B4, ...
+; writes: wD7C7, wD780, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B4, ...
 Func_01C_4867_Case06::
 Jump_01C_4B95:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -1973,7 +1973,7 @@ Jump_01C_4B95:: ; address name
     ld a, $01
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2135,7 +2135,7 @@ Data_01C_4CC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 7 of the `rst $00` table in Func_01C_4867
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B0, wD781
-; writes: wD7C7, wD780, wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, ...
+; writes: wD7C7, wD780, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, ...
 Func_01C_4867_Case07::
 Jump_01C_4CCC:: ; address name
     call Func_01C_6ADB
@@ -2149,7 +2149,7 @@ Jump_01C_4CCC:: ; address name
     ld a, $01
     ld [wD781], a
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2161,7 +2161,7 @@ Jump_01C_4CF3::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld [wD7CA], a
     ld a, $01
     ld [wD7CB], a
@@ -2315,7 +2315,7 @@ Jump_01C_4DB0::
 ; entry 9 of the `rst $00` table in Func_01C_4867
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7CA, wD7CB, wD781, wD7CC
-; writes: wD7C7, wD7FA, wD781, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, wD7CC
+; writes: wD7C7, wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, wD7CC
 Func_01C_4867_Case09::
 Jump_01C_4DE0:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2343,7 +2343,7 @@ Jump_01C_4E05::
     ld de, vBGMap1 + $3B0
     call Func_01C_67D0
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $06
     ld [wD781], a
     xor a, a
@@ -2559,7 +2559,7 @@ Jump_01C_4F67::
     call Func_01C_4F9A
     call Func_01C_500C
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2914,7 +2914,7 @@ Jump_01C_516C::
 ; entry 12 of the `rst $00` table in Func_01C_4867
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD781, wD7D1, wD7D0, wD7CF, wD7CE, wD7F1, ...
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7F3, wD7F2, wD7F1, wD7D1
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7F3, wD7F2, wD7F1, wD7D1
 Func_01C_4867_Case0C::
 Jump_01C_51A7:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -3007,7 +3007,7 @@ Jump_01C_523E::
     cp a, $19
     jr nc, Jump_01C_5263
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     inc a
@@ -3020,12 +3020,12 @@ Jump_01C_523E::
 
 Jump_01C_525D::
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_01C_5268
 
 Jump_01C_5263::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
 
 Jump_01C_5268::
     ld a, [wD781]
@@ -3048,7 +3048,7 @@ Jump_01C_5279::
     sub a, $03
     ld [wD781], a
     ld a, $03
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3284,7 +3284,7 @@ Jump_01C_53D9::
     xor a, a
     ld [wD7B5], a
     ld [wD7B6], a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3296,7 +3296,7 @@ Jump_01C_5400::
     inc a
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wD788
     ld de, Data_01C_5F5E
     ld bc, $0020
@@ -3826,7 +3826,7 @@ Jump_01C_572F::
 ; entry 5 of the `rst $00` table in Func_01C_52E8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7C2, wD781, wD7B7, wD7B5, wD7BB, wD7B6
-; writes: wD7C7, wD780, wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7B4, wD7B5, ...
+; writes: wD7C7, wD780, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7B4, wD7B5, ...
 Func_01C_52E8_Case05::
 Jump_01C_575B:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -3857,7 +3857,7 @@ Jump_01C_575B:: ; address name
     ld a, $01
     ld [wD781], a
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3969,7 +3969,7 @@ Jump_01C_583C::
 ; entry 6 of the `rst $00` table in Func_01C_52E8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B6, wD7B5, wD781
-; writes: wD781, wD7C7, wD7FA, wScriptCommandType, wScriptStartRequest, wD7CD, wD7CA, wD7CB, ...
+; writes: wD781, wD7C7, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7CD, wD7CA, wD7CB, ...
 ; points at: wD7D5
 Func_01C_52E8_Case06::
 Jump_01C_5853:: ; address name
@@ -4003,7 +4003,7 @@ Jump_01C_5853:: ; address name
     xor a, a
     ld [wD7C7], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -4015,7 +4015,7 @@ Jump_01C_589D::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld [wD7CD], a
     ld [wD7CA], a
     ld a, $01
@@ -4187,7 +4187,7 @@ Jump_01C_598D::
 ; entry 8 of the `rst $00` table in Func_01C_52E8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7CA, wD7CB, wD781, wD7CC, wD7D4, wD7D3
-; writes: wD7FA, wD7C7, wD781, wD7CA, wD7CB, wD7CC, wScriptCommandType, wScriptStartRequest
+; writes: wTwoChoiceCursor, wD7C7, wD781, wD7CA, wD7CB, wD7CC, wScriptCommandType, wScriptStartRequest
 Func_01C_52E8_Case08::
 Jump_01C_59AD:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -4215,7 +4215,7 @@ Jump_01C_59D2::
     ld de, vBGMap1 + $3B0
     call Func_01C_67D0
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $05
     ld [wD781], a
     xor a, a
@@ -4442,7 +4442,7 @@ Jump_01C_5B46::
     call Func_01C_5B74
     call Func_01C_5BE6
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wD7C7], a
     ld a, [wD781]
@@ -4723,7 +4723,7 @@ Jump_01C_5CF2::
 ; entry 11 of the `rst $00` table in Func_01C_52E8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD781, wD7D1
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7D1
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7D1
 Func_01C_52E8_Case0B::
 Jump_01C_5D13:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -4777,7 +4777,7 @@ Jump_01C_5D59::
     and a, a
     jr nz, Jump_01C_5D7D
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     inc a
@@ -4799,7 +4799,7 @@ Jump_01C_5D7D::
     sub a, $03
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -4889,7 +4889,7 @@ Jump_01C_5DEC:: ; address name
 ; entry 13 of the `rst $00` table in Func_01C_52E8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7D0, wD7CF, wD7CE, wD781, wC8C1, wC8C2
-; writes: wD7F3, wD7F2, wD7F1, wD7B0, wD780, wD781, wD7FA, wD7B5, ...
+; writes: wD7F3, wD7F2, wD7F1, wD7B0, wD780, wD781, wTwoChoiceCursor, wD7B5, ...
 ; points at: wInventory, wD788, wD792
 Func_01C_52E8_Case0D::
 Jump_01C_5E1B:: ; address name
@@ -4928,7 +4928,7 @@ Jump_01C_5E43::
     ld a, $01
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld [wD7B5], a
     ld [wD7B6], a
     xor a, a
@@ -4942,7 +4942,7 @@ Jump_01C_5E6F::
     dec a
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wD788
     ld de, Data_01C_5F5E
     ld bc, $0020
@@ -6621,7 +6621,7 @@ Jump_01C_6DC7:: ; address name
 
 ; entry 5 of the `rst $00` table in ScriptCommandE5_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC364, wD780
 ScriptCommandE5_Run_Table2_Case05::
 Jump_01C_6DCB:: ; address name
@@ -6632,7 +6632,7 @@ Jump_01C_6DCB:: ; address name
     call Func_01C_6A71
     xor a, a
     ld [wD781], a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wD780
     inc [hl]
     xor a, a
@@ -6647,7 +6647,7 @@ Data_01C_6DEF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 2 of the `rst $00` table in ScriptCommandE5_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wD7B1, wD7B2, wD780
-; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B6, wD7B2, wD780, wD7B1
+; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B6, wD7B2, wD780, wD7B1
 ScriptCommandE5_Run_Case02::
 Jump_01C_6E3C:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -6716,7 +6716,7 @@ Jump_01C_6E9B::
     cp a, $01
     jr z, Jump_01C_6EC6
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
 
 Jump_01C_6EAE::
     xor a, a
@@ -6730,7 +6730,7 @@ Jump_01C_6EB8::
     inc a
     ld [wD780], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01C_6EAE
 
 Jump_01C_6EC6::
@@ -6739,12 +6739,12 @@ Jump_01C_6EC6::
     inc a
     ld [wD780], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01C_6EAE
 
 Jump_01C_6ED6::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01C_6EAE
 
 ; only called from ScriptCommandE5_Run_Case02 (E-0047)
@@ -6890,7 +6890,7 @@ Jump_01C_6F93:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_01C_6F00
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD780, wD781, wD7FA, wD7ED, wScriptCommandType, wScriptStartRequest
+; writes: wD780, wD781, wTwoChoiceCursor, wD7ED, wScriptCommandType, wScriptStartRequest
 Func_01C_6F00_Case04::
 Jump_01C_6F9A:: ; address name
     ld a, $01
@@ -6898,7 +6898,7 @@ Jump_01C_6F9A:: ; address name
     ld a, $02
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld [wD7ED], a
     xor a, a
     ld [wScriptCommandType], a
@@ -7164,7 +7164,7 @@ Jump_01C_7128:: ; address name
 
 ; entry 16 of the `rst $00` table in Func_01C_6F00
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FA, wD781
+; writes: wTwoChoiceCursor, wD781
 Func_01C_6F00_Case10::
 Jump_01C_7132:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
@@ -7180,7 +7180,7 @@ Jump_01C_7132:: ; address name
     ld de, vBGMap1 + $3E0
     call Func_01C_67D0
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $04
     ld [wD781], a
     ret
@@ -7233,7 +7233,7 @@ Jump_01C_718F:: ; address name
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case18)
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 Func_01C_7196::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0147
@@ -7248,7 +7248,7 @@ Func_01C_7196::
     ld a, $03
     ld [wD781], a
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80

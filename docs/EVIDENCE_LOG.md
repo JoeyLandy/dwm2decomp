@@ -657,6 +657,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **wC52D–wC530.** These are the string window, tile destination plus size, as already noted at the routine that sets them (comment generated in `src/`).
 - Binary verification: pending; see the commit.
 
+### E-0068 — Menu cursor routines in banks $1B and $1D
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Routines read:**
+  - `UpdateTwoChoiceCursor_Bank1D` (`1D:6540`, 27 references) and its four helpers.
+  - `UpdatePagedListCursor` (`1D:66B6`, 34).
+  - `1B:63CB` has the same instructions as `1D:6540` once label names are normalised, so it gets the same name with its bank. Its position table was not compared.
+- **wMenuInputResult (wD7F9).** Both routines report their outcome there with the same codes: $FF A, $FE B, $FD row move, $FB page move, 0 none. They use the same cursor tiles as UpdateMenuCursor (E-0060): $BB cursor, $C3 blank, $BC confirmed.
+- **Joypad bits.** As in E-0060, the standard Game Boy order is assumed.
+- **Unknowns:** which screens use these menus. The 1D:6540 position table (two entries, BG-map offsets $012F/$016F) suggests a yes/no prompt; not checked.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

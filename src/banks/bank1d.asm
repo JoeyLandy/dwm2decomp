@@ -205,7 +205,7 @@ Data_01D_460B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_01C_7196_Case03)
 ; reads: wD781, wD7ED, wC61C, wC61B, wC61A, wC619, wC618, wC617, ...
-; writes: wD7FA, wD781, wScriptCommandType, wScriptStartRequest
+; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_01D_460F::
     call Func_01D_47AF
     and a, a
@@ -218,7 +218,7 @@ Func_01D_460F::
 
 Jump_01D_461D::
     ld a, $06
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -231,7 +231,7 @@ Jump_01D_462C::
     cp a, $01
     jr z, Jump_01D_4689
     ld a, $06
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -252,7 +252,7 @@ Jump_01D_464C::
     cp a, $18
     jr z, Jump_01D_467A
     ld a, $04
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     inc a
@@ -261,7 +261,7 @@ Jump_01D_464C::
 
 Jump_01D_466C::
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -269,7 +269,7 @@ Jump_01D_466C::
 
 Jump_01D_467A::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -286,7 +286,7 @@ Jump_01D_4689::
     and a, a
     jr nz, Jump_01D_46AA
     ld a, $03
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -308,7 +308,7 @@ Jump_01D_46AA::
 
 Jump_01D_46C5::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -316,14 +316,14 @@ Jump_01D_46C5::
 
 Jump_01D_46D4::
     ld a, $05
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $11
     ld [wD781], a
     jp Jump_01D_4642
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case03)
 ; reads: wD781, wD7ED, wC619, wC618, wC617, wC61C, wC61B, wC61A, ...
-; writes: wD7FA, wD781, wScriptCommandType, wScriptStartRequest
+; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_01D_46E1::
     call Func_01D_47AF
     and a, a
@@ -336,7 +336,7 @@ Func_01D_46E1::
 
 Jump_01D_46EF::
     ld a, $06
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -349,7 +349,7 @@ Jump_01D_46FE::
     cp a, $01
     jr z, Jump_01D_4758
     ld a, $06
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -369,7 +369,7 @@ Jump_01D_471E::
     cp a, $FF
     jr z, Jump_01D_4749
     ld a, $04
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     inc a
@@ -378,7 +378,7 @@ Jump_01D_471E::
 
 Jump_01D_473B::
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -386,7 +386,7 @@ Jump_01D_473B::
 
 Jump_01D_4749::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -403,7 +403,7 @@ Jump_01D_4758::
     cp a, $64
     jr nc, Jump_01D_477A
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -424,7 +424,7 @@ Jump_01D_477A::
 
 Jump_01D_4793::
     ld a, $03
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -432,7 +432,7 @@ Jump_01D_4793::
 
 Jump_01D_47A2::
     ld a, $05
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $11
     ld [wD781], a
     jp Jump_01D_4714
@@ -1032,7 +1032,7 @@ Data_01D_4BE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case0B)
 ; reads: wJoypadPressedRepeat, wD781, wD780, wD7B7, wD7B5, wD7BB, wD7B6
-; writes: wD781, wD7B5, wD7B6, wD7FA, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, ...
+; writes: wD781, wD7B5, wD7B6, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, ...
 Func_01D_4BF9::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -1058,7 +1058,7 @@ Func_01D_4BF9::
     ld [wD7B5], a
     ld [wD7B6], a
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1171,7 +1171,7 @@ Jump_01D_4CD3::
     cp a, $FE
     jr z, Jump_01D_4CFB
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1180,7 +1180,7 @@ Jump_01D_4CD3::
 
 Jump_01D_4CFB::
     ld a, $03
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1209,7 +1209,7 @@ Jump_01D_4D2D::
 Jump_01D_4D30::
     call Func_01D_4FE9
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1320,7 +1320,7 @@ Jump_01D_4DC5::
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case0D)
 ; reads: wJoypadPressedRepeat, wD7CA, wD7CB, wD780, wD781, wD7CC, wD7D4, wD7D3
-; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD781, wD7CA, wD7CB, wD7CC
+; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD781, wD7CA, wD7CB, wD7CC
 Func_01D_4DC7::
     ld a, [wJoypadPressedRepeat]
     bit 1, a
@@ -1340,7 +1340,7 @@ Func_01D_4DC7::
 
 Jump_01D_4DE9::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $0B
     ld [wD781], a
     call BGMapAddressAtScroll_Bank1D
@@ -1586,7 +1586,7 @@ Jump_01D_4F6F::
 
 Jump_01D_4F75::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1595,7 +1595,7 @@ Jump_01D_4F75::
 
 Jump_01D_4F84::
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1779,7 +1779,7 @@ Jump_01D_5083::
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case0E)
 ; reads: wD7B6, wD7B5, wD7B0, wCF8B, wD781, wD7BC
-; writes: wD7FA, wD7C3, wD7C5, wCF8B, wD781
+; writes: wTwoChoiceCursor, wD7C3, wD7C5, wCF8B, wD781
 ; points at: wC635, wInventory
 Func_01D_508B::
     ld hl, wC635
@@ -1846,7 +1846,7 @@ Jump_01D_50DA::
     cp a, $18
     jr c, Jump_01D_50EB
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01D_5168
 
 Jump_01D_50EB::
@@ -1854,17 +1854,17 @@ Jump_01D_50EB::
     and a, a
     jr nz, Jump_01D_50F9
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01D_5168
 
 Jump_01D_50F9::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01D_5168
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case0E)
 ; reads: wCF8B, wD781, wD7C5
-; writes: wD7FA, wD7C3, wD7C5, wCF8B, wD781
+; writes: wTwoChoiceCursor, wD7C3, wD7C5, wCF8B, wD781
 ; points at: wInventory, wC635
 Func_01D_5101::
     ld hl, wInventory
@@ -1885,7 +1885,7 @@ Jump_01D_5110::
     cp a, $18
     jr c, Jump_01D_5106
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jp Jump_01D_5168
 
 Jump_01D_511E::
@@ -1914,7 +1914,7 @@ Jump_01D_512D::
     cp a, $AC
     jr c, Jump_01D_5145
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_01D_5168
 
 Jump_01D_5145::
@@ -1944,7 +1944,7 @@ Jump_01D_515B::
 
 Jump_01D_5163::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
 
 Jump_01D_5168::
     xor a, a
@@ -1962,10 +1962,10 @@ Jump_01D_5168::
     INCBIN "dwm2-cobi-us.gbc", $075186, $D3
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case0F)
-; reads: wD7FA, wD781
+; reads: wTwoChoiceCursor, wD781
 ; writes: wD781, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B6
 Func_01D_5259::
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     cp a, $02
     jr z, Jump_01D_5271
     ld a, [wD781]
@@ -2280,7 +2280,7 @@ Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case15)
 ; reads: wD781, wD7CE, wD7CF, wD7D0, wC61A, wC61B, wC61C, wC617, ...
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wC61C, wC61B, wC61A, wC619, ...
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wC61C, wC61B, wC61A, wC619, ...
 Func_01D_549D::
     call Func_01D_564B
     and a, a
@@ -2376,7 +2376,7 @@ Jump_01D_5525::
     pop hl
     pop de
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2406,7 +2406,7 @@ Jump_01D_5536::
     ld a, l
     ld [wC617], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     inc a
@@ -2419,7 +2419,7 @@ Jump_01D_5536::
 
 ; 1 call site from 1 routine (e.g. Func_01C_7196_Case15)
 ; reads: wD781, wD7CE, wD7CF, wD7D0, wC617, wC618, wC619, wC61A, ...
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wC619, wC618, wC617, wC61C, ...
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wC619, wC618, wC617, wC61C, ...
 Func_01D_5573::
     call Func_01D_564B
     and a, a
@@ -2516,7 +2516,7 @@ Jump_01D_55FD::
     pop hl
     pop de
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2546,7 +2546,7 @@ Jump_01D_560E::
     ld a, l
     ld [wC61A], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     inc a
@@ -4612,7 +4612,7 @@ Data_01D_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 6 call sites from 6 routines (e.g. Func_01D_6320, Func_01D_6AA5, Func_01D_67BF, Func_01D_65D0, ...)
+; 6 call sites from 6 routines (e.g. Func_01D_6320, Func_01D_6AA5, UpdatePagedListCursor_Sub04, DrawTwoChoiceCursorConfirmed, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1D_62FF::
 Func_01D_62FF:: ; address name
@@ -4811,7 +4811,7 @@ Data_01D_6422:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_01E_4A32_Table2_Case02, Func_01E_4A32_Table3_Case02)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7B7
-; writes: wD7F9, wD7B7
+; writes: wMenuInputResult, wD7B7
 Func_01D_642A::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -4825,7 +4825,7 @@ Func_01D_642A::
     jr nz, Jump_01D_6456
     call Func_01D_648E
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6448::
@@ -4833,13 +4833,13 @@ Jump_01D_6448::
     call QueueSoundEffect
     call Func_01D_64B0
     ld a, $FF
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6456::
     call Func_01D_64AC
     ld a, $FE
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_645F::
@@ -4871,7 +4871,7 @@ Jump_01D_647D::
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01D_642A)
@@ -4933,7 +4933,7 @@ Data_01D_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_01E_6074_Table6_Case07, Func_0F0_5DE8_Case07)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7A9, wD7AB
-; writes: wD7AF, wD7F9, wD7AB
+; writes: wD7AF, wMenuInputResult, wD7AB
 Func_01D_64D6::
     xor a, a
     ld [wD7AF], a
@@ -4948,19 +4948,19 @@ Func_01D_64D6::
     bit 0, a
     jr nz, Jump_01D_64FB
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_64F5::
     ld a, $FE
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_64FB::
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6506::
@@ -4971,7 +4971,7 @@ Jump_01D_6506::
     dec a
     jr nz, Jump_01D_6532
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6518::
@@ -4983,7 +4983,7 @@ Jump_01D_651B::
     dec a
     jr nz, Jump_01D_6527
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6527::
@@ -5002,13 +5002,15 @@ Jump_01D_6532::
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
+; wTwoChoiceCursor (0 or 1): Up and Down each toggle it, erase the old cursor (tile $C3), draw the new one (tile $BB), play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor (tile $BC), plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks (wD783 counts frames once wJoypadRepeatTimer reaches $14) and the result is 0. Cursor positions are BG map offsets $012F and $016F from the scroll origin (E-0068)
 ; 27 call sites from 27 routines (e.g. ScriptCommandF7_Run_Case26, ScriptCommandF7_Run_Case04, ScriptCommandF7_Run_Case0C, ScriptCommandF7_Run_Case17, ...)
-; reads: wJoypadPressedRepeat, wJoypadPressed, wD7FA
-; writes: wD7F9, wD7FA, wD783
-Func_01D_6540::
+; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
+; writes: wMenuInputResult, wTwoChoiceCursor, wD783
+UpdateTwoChoiceCursor_Bank1D::
+Func_01D_6540:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01D_655E
@@ -5019,97 +5021,105 @@ Func_01D_6540::
     jr nz, Jump_01D_659A
     bit 1, a
     jr nz, Jump_01D_65A8
-    call Func_01D_65AE
+    call BlinkTwoChoiceCursor
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_655E::
-    call Func_01D_65CC
-    ld a, [wD7FA]
+    call EraseTwoChoiceCursor
+    ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_01D_656E
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_01D_6588
 
 Jump_01D_656E::
     dec a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_01D_6588
 
 Jump_01D_6574::
-    call Func_01D_65CC
-    ld a, [wD7FA]
+    call EraseTwoChoiceCursor
+    ld a, [wTwoChoiceCursor]
     cp a, $01
     jr c, Jump_01D_6584
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_01D_6588
 
 Jump_01D_6584::
     inc a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
 
 Jump_01D_6588::
     xor a, a
     ld [wD783], a
-    call Func_01D_65C8
+    call DrawTwoChoiceCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_659A::
-    call Func_01D_65D0
+    call DrawTwoChoiceCursorConfirmed
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_65A8::
     ld a, $FE
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01D_6540)
-; reads: wJoypadRepeatTimer, wD783, wD7FA
+; once wJoypadRepeatTimer >= $14, counts wD783 up: frames 0-$0F draw the cursor, $10-$17 erase it, then the count restarts (E-0068)
+; 1 call site from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1D)
+; reads: wJoypadRepeatTimer, wD783, wTwoChoiceCursor
 ; writes: wD783
-Func_01D_65AE::
+BlinkTwoChoiceCursor::
+Func_01D_65AE:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, Func_01D_65C8
+    jr c, DrawTwoChoiceCursor
     ld a, [wD783]
     inc a
     ld [wD783], a
     cp a, $10
-    jr c, Func_01D_65C8
+    jr c, DrawTwoChoiceCursor
     cp a, $18
-    jr c, Func_01D_65CC
+    jr c, EraseTwoChoiceCursor
     xor a, a
     ld [wD783], a
 
-; 1 call site from 1 routine (e.g. Func_01D_6540)
-; reads: wD7FA
-Func_01D_65C8::
+; writes tile $BB at the position of wTwoChoiceCursor (Data_01D_65F2 offset from BGMapAddressAtScroll, StepBGMapAddressBackOnScrollWrap) (E-0068)
+; 1 call site from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1D)
+; reads: wTwoChoiceCursor
+DrawTwoChoiceCursor::
+Func_01D_65C8:: ; address name
     ld b, $BB
     jr Jump_01D_65D2
 
-; 2 call sites from 1 routine (e.g. Func_01D_6540)
-; reads: wD7FA
-Func_01D_65CC::
+; writes tile $C3 at the position of wTwoChoiceCursor (E-0068)
+; 2 call sites from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1D)
+; reads: wTwoChoiceCursor
+EraseTwoChoiceCursor::
+Func_01D_65CC:: ; address name
     ld b, $C3
     jr Jump_01D_65D2
 
-; 1 call site from 1 routine (e.g. Func_01D_6540)
-; reads: wD7FA
-Func_01D_65D0::
+; writes tile $BC at the position of wTwoChoiceCursor (E-0068)
+; 1 call site from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1D)
+; reads: wTwoChoiceCursor
+DrawTwoChoiceCursorConfirmed::
+Func_01D_65D0:: ; address name
     ld b, $BC
 
 Jump_01D_65D2::
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     add a, a
     ld hl, Data_01D_65F2
     add_a_to_hl
@@ -5133,7 +5143,7 @@ Data_01D_65F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 7 call sites from 7 routines (e.g. Func_01E_4201_Case05, Func_01E_4A32_Case25, Func_01E_6074_Table8_Case06, Func_01E_6074_Table8_Case15, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7A9, wD7AB
-; writes: wD7F9, wD7AB, wD7AC
+; writes: wMenuInputResult, wD7AB, wD7AC
 Func_01D_65F6::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5147,7 +5157,7 @@ Func_01D_65F6::
     jr nz, Jump_01D_6664
     call Func_01D_666A
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6614::
@@ -5188,7 +5198,7 @@ Jump_01D_6644::
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6656::
@@ -5196,12 +5206,12 @@ Jump_01D_6656::
     call QueueSoundEffect
     call Func_01D_668C
     ld a, $FF
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6664::
     ld a, $FE
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01D_65F6)
@@ -5261,10 +5271,12 @@ Jump_01D_668E::
 Data_01D_66AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00
 
+; row wD7AB runs 0..wD7B1 and page wD7AF runs 0..wD7B0 - 1, both wrapping; Up/Down move the row (wMenuInputResult = $FD), Left/Right move the page ($FB); a move erases the old cursor (tile $C3) and draws the new one (tile $BB) with sound $69; A draws tile $BC, plays sound $69 and sets $FF; B sets $FE. When the range is a single entry the press only blinks the cursor and the result is 0, as with no input (E-0068)
 ; 34 call sites from 34 routines (e.g. Func_00D_463F_Case06, Func_00D_5702_Case05, Func_00D_6509_Case07, Func_014_43CC_Case25, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7B1, wD7AB, wD7AF, wD7B0
-; writes: wD7F9, wD7AB, wD7AC, wD7AF
-Func_01D_66B6::
+; writes: wMenuInputResult, wD7AB, wD7AC, wD7AF
+UpdatePagedListCursor::
+Func_01D_66B6:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, Jump_01D_66E3
@@ -5280,9 +5292,9 @@ Func_01D_66B6::
     jp nz, Jump_01D_6789
     bit 1, a
     jp nz, Jump_01D_6797
-    call Func_01D_679D
+    call UpdatePagedListCursor_Sub01
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_66E3::
@@ -5295,9 +5307,9 @@ Jump_01D_66E3::
     ld a, [wD7B0]
     cp a, $01
     jr nz, Jump_01D_66FD
-    call Func_01D_679D
+    call UpdatePagedListCursor_Sub01
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_66FD::
@@ -5307,11 +5319,11 @@ Jump_01D_66FE::
     ld [wD7AF], a
     xor a, a
     ld [wD7AC], a
-    call Func_01D_67B7
+    call UpdatePagedListCursor_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, $FB
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6713::
@@ -5321,9 +5333,9 @@ Jump_01D_6713::
     ld a, [wD7B0]
     cp a, $01
     jr nz, Jump_01D_6728
-    call Func_01D_679D
+    call UpdatePagedListCursor_Sub01
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6728::
@@ -5335,16 +5347,16 @@ Jump_01D_672C::
     jp Jump_01D_66FE
 
 Jump_01D_6730::
-    call Func_01D_67BB
+    call UpdatePagedListCursor_Sub03
     ld a, [wD7AB]
     and a, a
     jr nz, Jump_01D_674C
     ld a, [wD7B1]
     and a, a
     jr nz, Jump_01D_6747
-    call Func_01D_679D
+    call UpdatePagedListCursor_Sub01
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6747::
@@ -5357,7 +5369,7 @@ Jump_01D_674C::
     jr Jump_01D_6777
 
 Jump_01D_6752::
-    call Func_01D_67BB
+    call UpdatePagedListCursor_Sub03
     ld a, [wD7B1]
     ld b, a
     ld a, [wD7AB]
@@ -5366,9 +5378,9 @@ Jump_01D_6752::
     ld a, [wD7B1]
     and a, a
     jr nz, Jump_01D_676D
-    call Func_01D_679D
+    call UpdatePagedListCursor_Sub01
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_676D::
@@ -5383,62 +5395,70 @@ Jump_01D_6773::
 Jump_01D_6777::
     xor a, a
     ld [wD7AC], a
-    call Func_01D_67B7
+    call UpdatePagedListCursor_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6789::
-    call Func_01D_67BF
+    call UpdatePagedListCursor_Sub04
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_01D_6797::
     ld a, $FE
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
-; 5 call sites from 1 routine (e.g. Func_01D_66B6)
-; reads: wJoypadRepeatTimer, wD7AC, wD7F9, wD7AB
+; only called from UpdatePagedListCursor (E-0047)
+; 5 call sites from 1 routine (e.g. UpdatePagedListCursor)
+; reads: wJoypadRepeatTimer, wD7AC, wMenuInputResult, wD7AB
 ; writes: wD7AC
-Func_01D_679D::
+UpdatePagedListCursor_Sub01::
+Func_01D_679D:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, Func_01D_67B7
+    jr c, UpdatePagedListCursor_Sub02
     ld a, [wD7AC]
     inc a
     ld [wD7AC], a
     cp a, $10
-    jr c, Func_01D_67B7
+    jr c, UpdatePagedListCursor_Sub02
     cp a, $18
-    jr c, Func_01D_67BB
+    jr c, UpdatePagedListCursor_Sub03
     xor a, a
     ld [wD7AC], a
 
-; 2 call sites from 1 routine (e.g. Func_01D_66B6)
-; reads: wD7F9, wD7AB
-Func_01D_67B7::
+; only called from UpdatePagedListCursor (E-0047)
+; 2 call sites from 1 routine (e.g. UpdatePagedListCursor)
+; reads: wMenuInputResult, wD7AB
+UpdatePagedListCursor_Sub02::
+Func_01D_67B7:: ; address name
     ld b, $BB
     jr Jump_01D_67C1
 
-; 2 call sites from 1 routine (e.g. Func_01D_66B6)
-; reads: wD7F9, wD7AB
-Func_01D_67BB::
+; only called from UpdatePagedListCursor (E-0047)
+; 2 call sites from 1 routine (e.g. UpdatePagedListCursor)
+; reads: wMenuInputResult, wD7AB
+UpdatePagedListCursor_Sub03::
+Func_01D_67BB:: ; address name
     ld b, $C3
     jr Jump_01D_67C1
 
-; 1 call site from 1 routine (e.g. Func_01D_66B6)
-; reads: wD7F9, wD7AB
-Func_01D_67BF::
+; only called from UpdatePagedListCursor (E-0047)
+; 1 call site from 1 routine (e.g. UpdatePagedListCursor)
+; reads: wMenuInputResult, wD7AB
+UpdatePagedListCursor_Sub04::
+Func_01D_67BF:: ; address name
     ld b, $BC
 
 Jump_01D_67C1::
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     ld c, a
     add a, a
     add a, a
@@ -6006,7 +6026,7 @@ Data_01D_6B28:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from ScriptCommandE8_Run_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case03)
 ; reads: wD786, wD780, wD7A9, wC6FD
-; writes: wD780, wD781, wD7FA, wD7AF, wScriptCommandType, wScriptStartRequest, wD782
+; writes: wD780, wD781, wTwoChoiceCursor, wD7AF, wScriptCommandType, wScriptStartRequest, wD782
 ; points at: wC52D
 ScriptCommandE8_Run_Case03_Sub01::
 Func_01D_6B32:: ; address name
@@ -6039,7 +6059,7 @@ Jump_01D_6B54::
     xor a, a
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wD7AF], a
     xor a, a
@@ -6052,7 +6072,7 @@ Jump_01D_6B7C::
     ld a, $10
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wD7AF], a
     xor a, a
@@ -6067,7 +6087,7 @@ Jump_01D_6B93::
     and a, a
     jr nz, Jump_01D_6BBA
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld [wD782], a
     ld a, $03
     ld [wD781], a
@@ -6087,7 +6107,7 @@ Jump_01D_6BBA::
     cp a, $03
     jr c, Jump_01D_6BDD
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $1E
     ld [wD781], a
     xor a, a
@@ -6098,7 +6118,7 @@ Jump_01D_6BBA::
 
 Jump_01D_6BDD::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wD781], a
     xor a, a
@@ -8261,7 +8281,7 @@ Jump_01D_793C::
 
 ; 6 call sites from 6 routines (e.g. Func_01D_7492, Func_014_56EB, Func_014_578E, Func_015_6B00, ...)
 ; reads: wD7F2
-; writes: rRAMB, wD7F9
+; writes: rRAMB, wMenuInputResult
 Func_01D_795D::
     call SRAMRecordAddressOfWD7F1
     call EnableSRAMBank0
@@ -8280,7 +8300,7 @@ Func_01D_795D::
     srl a
     srl a
     swap a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     pop hl
     inc hl
     inc hl
@@ -8290,7 +8310,7 @@ Func_01D_795D::
 
 ; 1 call site from 1 routine (e.g. Func_01D_7492)
 ; reads: wD7F2
-; writes: rRAMB, wD7F9
+; writes: rRAMB, wMenuInputResult
 Func_01D_7991::
     call SRAMRecordAddressOfWD7F1
     call EnableSRAMBank0
@@ -8307,7 +8327,7 @@ Func_01D_7991::
     ld a, [hl]
     and a, $30
     swap a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     pop hl
     ld a, $08
     add_a_to_hl
@@ -8316,7 +8336,7 @@ Func_01D_7991::
 
 ; 1 call site from 1 routine (e.g. Func_01D_7492)
 ; reads: wD7F2
-; writes: rRAMB, wD7F9
+; writes: rRAMB, wMenuInputResult
 Func_01D_79C5::
     call SRAMRecordAddressOfWD7F1
     call EnableSRAMBank0
@@ -8334,7 +8354,7 @@ Func_01D_79C5::
     and a, $0C
     srl a
     srl a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     pop hl
     ld a, $0D
     add_a_to_hl
@@ -8343,7 +8363,7 @@ Func_01D_79C5::
 
 ; 1 call site from 1 routine (e.g. Func_01D_7492)
 ; reads: wD7F2
-; writes: rRAMB, wD7F9
+; writes: rRAMB, wMenuInputResult
 Func_01D_79FB::
     call SRAMRecordAddressOfWD7F1
     call EnableSRAMBank0
@@ -8359,7 +8379,7 @@ Func_01D_79FB::
     add_a_to_hl
     ld a, [hl]
     and a, $03
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     pop hl
     ld a, $12
     add_a_to_hl
@@ -8368,7 +8388,7 @@ Func_01D_79FB::
 
 ; 1 call site from 1 routine (e.g. Func_01D_7492)
 ; reads: wD7F2
-; writes: rRAMB, wD7F9
+; writes: rRAMB, wMenuInputResult
 Func_01D_7A2D::
     call SRAMRecordAddressOfWD7F1
     call EnableSRAMBank0
@@ -8388,7 +8408,7 @@ Func_01D_7A2D::
     srl a
     srl a
     swap a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     pop hl
     ld a, $17
     add_a_to_hl
@@ -8397,7 +8417,7 @@ Func_01D_7A2D::
 
 ; 1 call site from 1 routine (e.g. Func_01D_7492)
 ; reads: wD7F2
-; writes: rRAMB, wD7F9
+; writes: rRAMB, wMenuInputResult
 Func_01D_7A61::
     call SRAMRecordAddressOfWD7F1
     call EnableSRAMBank0
@@ -8414,7 +8434,7 @@ Func_01D_7A61::
     ld a, [hl]
     and a, $30
     swap a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     pop hl
     ld a, $1C
     add_a_to_hl

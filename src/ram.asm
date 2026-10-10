@@ -1426,8 +1426,8 @@ DEF wD7F5 EQU $D7F5
 DEF wD7F6 EQU $D7F6
 DEF wD7F7 EQU $D7F7
 DEF wD7F8 EQU $D7F8
-DEF wD7F9 EQU $D7F9
-DEF wD7FA EQU $D7FA
+DEF wMenuInputResult EQU $D7F9 ; result of the bank-$1B/$1D menu cursor routines: $FF confirmed (A), $FE cancelled (B), $FD row moved, $FB page moved, 0 nothing (E-0068) (reading (E-0068))
+DEF wTwoChoiceCursor EQU $D7FA ; 0 or 1, the selected entry of UpdateTwoChoiceCursor (E-0068) (reading (E-0068))
 DEF wD7FB EQU $D7FB
 DEF wD7FC EQU $D7FC
 DEF wScriptInDataBank EQU $D7FD ; non-zero when the script bytes are read from the bank in wDataBank (reading + execution (E-0038))

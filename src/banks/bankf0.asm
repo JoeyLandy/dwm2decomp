@@ -759,14 +759,14 @@ Jump_0F0_4DF0:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7B7
+; reads: wMenuInputResult, wD7B7
 ; writes: wD7F2, wD781, wD782, wD780, wC594
 Func_0F0_4CA0_Table2_Case07::
 Jump_0F0_4E11:: ; address name
     ld a, $02
     ld [wD7F2], a
     call Func_0F0_6709
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     cp a, $FF
     jr z, Jump_0F0_4E25
     cp a, $FE
@@ -930,7 +930,7 @@ Jump_0F0_4EFE:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7B7
+; reads: wMenuInputResult, wD7B7
 ; writes: wD7F2, wD781, wD782, wD780, wD7EC
 ; points at: wD781, wD780
 Func_0F0_4CA0_Table3_Case03::
@@ -938,7 +938,7 @@ Jump_0F0_4F22:: ; address name
     xor a, a
     ld [wD7F2], a
     call Func_0F0_6709
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     cp a, $FF
     jr z, Jump_0F0_4F35
     cp a, $FE
@@ -1319,7 +1319,7 @@ Jump_0F0_5155:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7B7
+; reads: wMenuInputResult, wD7B7
 ; writes: wD7F2, wD781, wD782, wD780, wC594
 ; points at: wD780
 Func_0F0_4CA0_Table5_Case05::
@@ -1327,7 +1327,7 @@ Jump_0F0_5176:: ; address name
     ld a, $02
     ld [wD7F2], a
     call Func_0F0_6709
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     cp a, $FF
     jr z, Jump_0F0_518A
     cp a, $FE
@@ -3166,14 +3166,14 @@ Jump_0F0_5CBE:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_0F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD780, wD781
-; writes: wD7F9, wD781, wD782, wD780
+; reads: wMenuInputResult, wD780, wD781
+; writes: wMenuInputResult, wD781, wD782, wD780
 Func_0F0_5B50_Case06::
 Jump_0F0_5CE0:: ; address name
     ld a, $01
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -3650,12 +3650,12 @@ Jump_0F0_6014::
 
 ; entry 7 of the `rst $00` table in Func_0F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781, wD7B9
+; reads: wMenuInputResult, wD781, wD7B9
 ; writes: hFFBA, wD781
 Func_0F0_5DE8_Case07::
 Jump_0F0_6041:: ; address name
     farcall Func_01D_64D6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_0F0_6059
     cp a, $FD
@@ -4476,7 +4476,7 @@ Func_0F0_66FB:: ; address name
 
 ; 3 call sites from 3 routines (e.g. Func_0F0_4CA0_Table2_Case07, Func_0F0_4CA0_Table3_Case03, Func_0F0_4CA0_Table5_Case05)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7B7
-; writes: wD7F9, wD7B7
+; writes: wMenuInputResult, wD7B7
 Func_0F0_6709::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -4490,7 +4490,7 @@ Func_0F0_6709::
     jr nz, Jump_0F0_6735
     call Func_0F0_676D
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_0F0_6727::
@@ -4498,13 +4498,13 @@ Jump_0F0_6727::
     call QueueSoundEffect
     call Func_0F0_678F
     ld a, $FF
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_0F0_6735::
     call Func_0F0_678F
     ld a, $FE
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_0F0_673E::
@@ -4536,7 +4536,7 @@ Jump_0F0_675C::
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F0_6709)

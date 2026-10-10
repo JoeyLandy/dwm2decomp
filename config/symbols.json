@@ -499,6 +499,8 @@
   "DA1C": {"name": "wBattleActionChoice", "note": "word per slot: byte 0 is the chosen action id, which ChooseActionTarget copies to wBattleActionId; byte 1 is wBattleTargetChoice (E-0061)", "evidence": "reading (E-0061)"},
   "DA1D": {"name": "wBattleTargetChoice", "note": "byte 1 of each slot word in wBattleActionChoice: the target slot the per-action target routines write (E-0061)", "evidence": "reading (E-0061)"},
   "D0D5": {"name": "wBattlerRecords", "note": "six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062)", "evidence": "reading (E-0062)"},
+  "D7F9": {"name": "wMenuInputResult", "note": "result of the bank-$1B/$1D menu cursor routines: $FF confirmed (A), $FE cancelled (B), $FD row moved, $FB page moved, 0 nothing (E-0068)", "evidence": "reading (E-0068)"},
+  "D7FA": {"name": "wTwoChoiceCursor", "note": "0 or 1, the selected entry of UpdateTwoChoiceCursor (E-0068)", "evidence": "reading (E-0068)"},
   "DAAC": {"name": "wQueuedActionId", "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)", "evidence": "reading (E-0049)"},
   "D80C": {
     "name": "wBattleStatus",

@@ -1250,8 +1250,8 @@ Jump_033_563B:: ; address name
 
 ; entry 8 of the `rst $00` table in BeginString_Bank07_Cat5
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD7F9, wD7AB, wD781
-; writes: wD780, wD781, wD782, wC594, wD7F9
+; reads: wC58F, wMenuInputResult, wD7AB, wD781
+; writes: wD780, wD781, wD782, wC594, wMenuInputResult
 ; points at: wD781
 BeginString_Bank07_Cat5_Table2_Case08::
 Jump_033_5676:: ; address name
@@ -1271,9 +1271,9 @@ Jump_033_5676:: ; address name
 
 Jump_033_5694::
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -1749,7 +1749,7 @@ Jump_033_5911:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_033_562A
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FA
+; writes: wTwoChoiceCursor
 ; points at: wD781
 Func_033_562A_Case05::
 Jump_033_59B9:: ; address name
@@ -1760,14 +1760,14 @@ Jump_033_59B9:: ; address name
     ld a, $0D
     call BeginString_Bank07_Cat5
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wD781
     inc [hl]
     ret
 
 ; entry 6 of the `rst $00` table in Func_033_562A
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD7F9, wD7FA, wD780, wD781, wD7AB, wD7AF
+; reads: wC58F, wMenuInputResult, wTwoChoiceCursor, wD780, wD781, wD7AB, wD7AF
 ; writes: wD780, wD781, wD782, wC594, wD7B2, wD7B3, wD7B5, wD7B6, ...
 ; points at: wD781
 Func_033_562A_Case06::
@@ -1788,7 +1788,7 @@ Jump_033_59D3:: ; address name
 
 Jump_033_59F1::
     farcall Func_0F1_5842
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
@@ -1810,7 +1810,7 @@ Jump_033_5A05::
     ret
 
 Jump_033_5A1C::
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     and a, a
     jr z, Jump_033_5A28
     cp a, $01
@@ -2372,7 +2372,7 @@ Jump_033_5D80:: ; address name
 ; entry 6 of the `rst $00` table in Func_033_58C3
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7FA, wD781
+; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wTwoChoiceCursor, wD781
 ; points at: wC3E7
 Func_033_58C3_Case06::
 Jump_033_5DDF:: ; address name
@@ -2398,7 +2398,7 @@ Jump_033_5DDF:: ; address name
     call Func_033_6074
     call SetDefaultStringWindow_Bank33
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a

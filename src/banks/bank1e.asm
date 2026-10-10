@@ -210,7 +210,7 @@ Jump_01E_4100:: ; address name
 ; entry 2 of the `rst $00` table in ScriptCommandE8_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD786, wD780
-; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD780, wD7AB, wD7AD, wD7AF, wD786
+; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD780, wD7AB, wD7AD, wD7AF, wD786
 ScriptCommandE8_Run_Case02::
 Jump_01E_412A:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -290,7 +290,7 @@ Jump_01E_4198::
     ld a, [wD786]
     cp a, $04
     jr z, Jump_01E_41D0
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -306,7 +306,7 @@ Jump_01E_4198::
 
 Jump_01E_41D0::
     ld a, $04
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -625,14 +625,14 @@ Jump_01E_43E0:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7AB, wD781
-; writes: wD7F9, wD7FA, wD781, wScriptCommandType, wScriptStartRequest
+; reads: wMenuInputResult, wD7AB, wD781
+; writes: wMenuInputResult, wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_01E_4201_Case05::
 Jump_01E_440A:: ; address name
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     farcall Func_01D_65F6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FD
@@ -650,7 +650,7 @@ Jump_01E_4426::
 
 Jump_01E_442C::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -666,7 +666,7 @@ Jump_01E_4442::
     ld hl, $7880
     call StoreBAtWordTableEntry_Bank1E
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     add a, $05
     ld [wD781], a
@@ -794,7 +794,7 @@ Func_01E_44EF:: ; heuristic: follows a terminator; C0
 ; entry 12 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD781, wD7AD, wD780, wD7B7, wD7AB, wC6FD, ...
-; writes: wD7FA, wD781, wScriptCommandType, wScriptStartRequest, wD7B2, wD7B3, wD780, wD782, ...
+; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest, wD7B2, wD7B3, wD780, wD782, ...
 Func_01E_4201_Case0C::
 Jump_01E_4517:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -907,7 +907,7 @@ Jump_01E_45D2::
     xor a, a
     ld [wD781], a
     ld [wD782], a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     call Func_01E_7745
     xor a, a
     ld [wScriptCommandType], a
@@ -958,7 +958,7 @@ Jump_01E_460F::
     cp a, b
     jr nz, Jump_01E_465C
     ld a, $03
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -984,7 +984,7 @@ Jump_01E_465C::
 
 Jump_01E_4670::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     add a, $03
     ld [wD781], a
@@ -996,7 +996,7 @@ Jump_01E_4670::
 
 Jump_01E_4687::
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1171,7 +1171,7 @@ Jump_01E_4782::
 ; entry 16 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD786, wD781
-; writes: rRAMG2, rRAMB, wD7FA, wD780, wD781, wD782, wScriptCommandType, wScriptStartRequest
+; writes: rRAMG2, rRAMB, wTwoChoiceCursor, wD780, wD781, wD782, wScriptCommandType, wScriptStartRequest
 ; points at: sA000
 Func_01E_4201_Case10::
 Jump_01E_47B2:: ; address name
@@ -1214,7 +1214,7 @@ Jump_01E_47E9::
 
 Jump_01E_47EC::
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $01
     ld [wD780], a
     ld a, $03
@@ -1235,7 +1235,7 @@ Jump_01E_47EC::
 
 Jump_01E_4817::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1250,7 +1250,7 @@ Jump_01E_4817::
 ; entry 17 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD786, wD781
-; writes: wD781, wD7FA
+; writes: wD781, wTwoChoiceCursor
 ; points at: wC412
 Func_01E_4201_Case11::
 Jump_01E_4831:: ; address name
@@ -1277,19 +1277,19 @@ Jump_01E_4831:: ; address name
     inc a
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ret
     db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
     db $C3, $B7, $B6, $C3, $F3, $A6, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
 
 ; entry 18 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7FA, wD781
-; writes: wD781, wD782, wScriptCommandType, wScriptStartRequest, wD7FA, wD780
+; reads: wMenuInputResult, wTwoChoiceCursor, wD781
+; writes: wD781, wD782, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor, wD780
 Func_01E_4201_Case12::
 Jump_01E_4890:: ; address name
-    farcall Func_01D_6540
-    ld a, [wD7F9]
+    farcall UpdateTwoChoiceCursor_Bank1D
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
@@ -1301,7 +1301,7 @@ Jump_01E_4890:: ; address name
 Jump_01E_48A4::
     call Func_01E_48E3
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $01
     ld [wD780], a
     ld a, $03
@@ -1315,7 +1315,7 @@ Jump_01E_48A4::
     ret
 
 Jump_01E_48C4::
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, Jump_01E_48A4
     call Func_01E_48E3
@@ -1532,15 +1532,15 @@ Jump_01E_4A5E:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781, wD7AB
-; writes: wD7F9, wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; reads: wMenuInputResult, wD781, wD7AB
+; writes: wMenuInputResult, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC52D
 Func_01E_4201_Case1B::
 Jump_01E_4A74:: ; address name
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -1572,7 +1572,7 @@ Jump_01E_4AA9::
     add a, $08
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD7AB]
     ld b, $BC
     ld hl, $7880
@@ -1627,7 +1627,7 @@ Jump_01E_4AF1:: ; address name
 ; entry 34 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD786
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC364
 Func_01E_4201_Case22::
 Jump_01E_4B05:: ; address name
@@ -1647,7 +1647,7 @@ Jump_01E_4B05:: ; address name
     ld a, $11
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1813,7 +1813,7 @@ Jump_01E_4BE1:: ; address name
 
 ; entry 48 of the `rst $00` table in Func_01E_4201
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD781, wD780, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wD780, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC364
 Func_01E_4201_Case30::
 Jump_01E_4C42:: ; address name
@@ -1831,7 +1831,7 @@ Jump_01E_4C42:: ; address name
     ld a, $02
     ld [wD780], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2014,14 +2014,14 @@ Jump_01E_4D5B:: ; address name
 
 ; entry 37 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7AB, wD781
-; writes: wD7F9, wD7FA, wD781, wScriptCommandType, wScriptStartRequest
+; reads: wMenuInputResult, wD7AB, wD781
+; writes: wMenuInputResult, wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_01E_4A32_Case25::
 Jump_01E_4DB5:: ; address name
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     farcall Func_01D_65F6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FD
@@ -2039,7 +2039,7 @@ Jump_01E_4DD1::
 
 Jump_01E_4DD7::
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2055,7 +2055,7 @@ Jump_01E_4DED::
     ld hl, $7880
     call StoreBAtWordTableEntry_Bank1E
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     add a, $05
     ld [wD781], a
@@ -2068,7 +2068,7 @@ Jump_01E_4DED::
 ; entry 41 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD786
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC364
 Func_01E_4A32_Case29::
 Jump_01E_4E0E:: ; address name
@@ -2088,7 +2088,7 @@ Jump_01E_4E0E:: ; address name
     ld a, $1E
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2203,7 +2203,7 @@ Jump_01E_4ED4:: ; address name
 
 ; entry 65 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC52D
 Func_01E_4A32_Case41::
 Jump_01E_4EFE:: ; address name
@@ -2214,7 +2214,7 @@ Jump_01E_4EFE:: ; address name
     ld a, $25
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     farcall Func_01D_5E79
     ld hl, wC52D
     xor a, a
@@ -2232,15 +2232,15 @@ Jump_01E_4EFE:: ; address name
 
 ; entry 57 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781, wD7AB
-; writes: wD7F9, wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; reads: wMenuInputResult, wD781, wD7AB
+; writes: wMenuInputResult, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC52D
 Func_01E_4A32_Case39::
 Jump_01E_4F31:: ; address name
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -2272,7 +2272,7 @@ Jump_01E_4F66::
     add a, $09
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD7AB]
     ld b, $BC
     ld hl, $7880
@@ -2525,13 +2525,13 @@ Jump_01E_50BE:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7B7, wD781, wD7B9, wD780
-; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7B7, wD7B8
+; reads: wMenuInputResult, wD7B7, wD781, wD7B9, wD780
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7B7, wD7B8
 ; points at: wC52D
 Func_01E_4A32_Table2_Case02::
 Jump_01E_512E:: ; address name
     farcall Func_01D_642A
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FD
@@ -2544,7 +2544,7 @@ Jump_01E_512E:: ; address name
 
 Jump_01E_5145::
     ld a, $03
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wD7B7], a
     ld [wD7B8], a
@@ -2570,7 +2570,7 @@ Jump_01E_5162::
     add a, $02
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -2590,7 +2590,7 @@ Jump_01E_5199::
     and a, a
     jr nz, Jump_01E_51AE
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2604,7 +2604,7 @@ Jump_01E_51AE::
     ld hl, $788A
     call StoreBAtWordTableEntry_Bank1E
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD780]
     cp a, $07
     jr z, Jump_01E_51D7
@@ -2708,15 +2708,15 @@ Jump_01E_525F:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781, wD7AB
-; writes: wD7F9, wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7AB
+; reads: wMenuInputResult, wD781, wD7AB
+; writes: wMenuInputResult, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7AB
 ; points at: wC52D
 Func_01E_4A32_Table2_Case0C::
 Jump_01E_5290:: ; address name
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -2750,7 +2750,7 @@ Jump_01E_52C9::
     add a, $08
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD7AB]
     ld b, $BC
     ld hl, $7880
@@ -2817,7 +2817,7 @@ Jump_01E_5300:: ; address name
 ; entry 19 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD786, wD7A9, wC8C1, wC8C2, wD7B9
-; writes: wD7B7, wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD7B7, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC364, wC40B, wC429, wC451
 Func_01E_4A32_Table2_Case13::
 Jump_01E_536A:: ; address name
@@ -2878,7 +2878,7 @@ Jump_01E_536A:: ; address name
     ld a, $02
     ld [wD781], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3048,14 +3048,14 @@ Jump_01E_557C:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781
-; writes: wD7F9, wD7B2, wD7B3, wD781, wD782, wD780, wD7AB
+; reads: wMenuInputResult, wD781
+; writes: wMenuInputResult, wD7B2, wD7B3, wD781, wD782, wD780, wD7AB
 Func_01E_4A32_Table2_Case1B::
 Jump_01E_559E:: ; address name
     ld a, $01
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -3245,13 +3245,13 @@ Jump_01E_568E:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD7B7, wD7A9, wD781, wD7B9, wD780
-; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD781, wD7B7, wD7B8
+; reads: wMenuInputResult, wD7B7, wD7A9, wD781, wD7B9, wD780
+; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD781, wD7B7, wD7B8
 ; points at: wC52D
 Func_01E_4A32_Table3_Case02::
 Jump_01E_5708:: ; address name
     farcall Func_01D_642A
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FD
@@ -3271,7 +3271,7 @@ Jump_01E_5720::
     cp a, $02
     jr nc, Jump_01E_5743
     ld a, $04
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3283,7 +3283,7 @@ Jump_01E_5743::
     add a, $02
     ld [wD781], a
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     call Func_01E_7778
     ld a, [wD7B7]
     ld b, $BC
@@ -3465,15 +3465,15 @@ Jump_01E_586E:: ; address name
 
 ; entry 40 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781, wD7AB
-; writes: wD7F9, wD7FA, wD781, wScriptCommandType, wScriptStartRequest, wD7AB
+; reads: wMenuInputResult, wD781, wD7AB
+; writes: wMenuInputResult, wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest, wD7AB
 ; points at: wC52D
 Func_01E_4A32_Table3_Case28::
 Jump_01E_58B0:: ; address name
     ld a, $01
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -3504,7 +3504,7 @@ Jump_01E_58DF::
     xor a, a
     ld [wD7AB], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -3517,7 +3517,7 @@ Jump_01E_58DF::
 
 Jump_01E_58FD::
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, [wD781]
     add a, $04
     ld [wD781], a
@@ -3805,7 +3805,7 @@ Jump_01E_5B06:: ; address name
 
 ; entry 58 of the `rst $00` table in Func_01E_4A32
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD781, wD780, wD7FA, wScriptCommandType, wScriptStartRequest
+; writes: wD781, wD780, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 Func_01E_4A32_Table3_Case3A::
 Jump_01E_5B32:: ; address name
     farcall Func_01D_5E3F
@@ -3814,7 +3814,7 @@ Jump_01E_5B32:: ; address name
     ld a, $02
     ld [wD780], a
     ld a, $01
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3909,14 +3909,14 @@ Jump_01E_5BD0:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_01E_5A4D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781, wD782
-; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781, wD782
+; reads: wMenuInputResult, wD781, wD782
+; writes: wMenuInputResult, wD7F3, wD7F4, wD7F7, wD781, wD782
 Func_01E_5A4D_Table2_Case00::
 Jump_01E_5BDC:: ; address name
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -4103,8 +4103,8 @@ Jump_01E_5D1F:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_01E_5C63
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wGameMode, wD7F9, wD781, wD782
-; writes: wD7F9, hFFBA, wD781, wD7F3, wD7F4, wD7F7, wD782
+; reads: wGameMode, wMenuInputResult, wD781, wD782
+; writes: wMenuInputResult, hFFBA, wD781, wD7F3, wD7F4, wD7F7, wD782
 Func_01E_5C63_Case00::
 Jump_01E_5D2B:: ; address name
     ld a, [wGameMode]
@@ -4114,9 +4114,9 @@ Jump_01E_5D2B:: ; address name
 
 Jump_01E_5D38::
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -4209,15 +4209,15 @@ Jump_01E_5DC5:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_01E_5C63
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781, wD782
-; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781, wD782
+; reads: wMenuInputResult, wD781, wD782
+; writes: wMenuInputResult, wD7F3, wD7F4, wD7F7, wD781, wD782
 ; points at: wC52D
 Func_01E_5C63_Table2_Case00::
 Jump_01E_5DD1:: ; address name
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FB
@@ -4398,15 +4398,15 @@ Jump_01E_5F1D:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_01E_5C63
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wGameMode, wD781, wD782
-; writes: wD7F9, hFFBA, wD781, wD782
+; reads: wMenuInputResult, wGameMode, wD781, wD782
+; writes: wMenuInputResult, hFFBA, wD781, wD782
 ; points at: wC52D
 Func_01E_5C63_Table3_Case00::
 Jump_01E_5F29:: ; address name
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_01E_5F4D
     cp a, $FB
@@ -5189,12 +5189,12 @@ Jump_01E_640A::
 
 ; entry 7 of the `rst $00` table in Func_01E_6074
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wC58A, wC581, wD781, wD7B9
+; reads: wMenuInputResult, wC58A, wC581, wD781, wD7B9
 ; writes: wD7F1, wD7F2, hFFBA, wD781
 Func_01E_6074_Table6_Case07::
 Jump_01E_6437:: ; address name
     farcall Func_01D_64D6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_01E_644F
     cp a, $FD
@@ -5643,14 +5643,14 @@ Jump_01E_6726::
 
 ; entry 6 of the `rst $00` table in Func_01E_6074
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781
-; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781
+; reads: wMenuInputResult, wD781
+; writes: wMenuInputResult, wD7F3, wD7F4, wD7F7, wD781
 Func_01E_6074_Table8_Case06::
 Jump_01E_6753:: ; address name
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     farcall Func_01D_65F6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FD
@@ -5991,7 +5991,7 @@ Jump_01E_694D:: ; address name
 
 ; entry 21 of the `rst $00` table in Func_01E_6074
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, hFFC7, wD7F9, wD781
+; reads: hFFC6, hFFC7, wMenuInputResult, wD781
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, ...
 Func_01E_6074_Table8_Case15::
 Jump_01E_69AD:: ; address name
@@ -6019,9 +6019,9 @@ Jump_01E_69AD:: ; address name
     ld [wD7F6], a
     farcall Func_01D_6A3D
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     farcall Func_01D_65F6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FD
@@ -6207,15 +6207,15 @@ Jump_01E_6B10:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_01E_6074
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781
-; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781
+; reads: wMenuInputResult, wD781
+; writes: wMenuInputResult, wD7F3, wD7F4, wD7F7, wD781
 ; points at: wC52D
 Func_01E_6074_Table8_Case1B::
 Jump_01E_6B1F:: ; address name
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     farcall Func_01D_65F6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FD
@@ -6421,15 +6421,15 @@ Jump_01E_6C97:: ; address name
 
 ; entry 32 of the `rst $00` table in Func_01E_6074
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F9, wD781
-; writes: wD7F9, wD7F1, wD7F2, hFFBA, wD781
+; reads: wMenuInputResult, wD781
+; writes: wMenuInputResult, wD7F1, wD7F2, hFFBA, wD781
 ; points at: wC52D
 Func_01E_6074_Table8_Case20::
 Jump_01E_6CAB:: ; address name
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     farcall Func_01D_65F6
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_01E_6CC7
     cp a, $FD

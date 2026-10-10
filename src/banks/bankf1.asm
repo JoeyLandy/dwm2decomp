@@ -1716,7 +1716,7 @@ Jump_0F1_4C01::
 
 ; entry 8 of the `rst $00` table in Func_0F1_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC58F, wD7F9
+; reads: wC52B, wC58F, wMenuInputResult
 ; writes: wD781, wC594
 Func_0F1_4AD0_Table3_Case08::
 Jump_0F1_4C08:: ; address name
@@ -1736,7 +1736,7 @@ Jump_0F1_4C08:: ; address name
 
 Jump_0F1_4C24::
     farcall ScriptCommandED_Run
-    ld a, [wD7F9]
+    ld a, [wMenuInputResult]
     cp a, $FE
     ret nz
     ld a, $09
@@ -2267,7 +2267,7 @@ Jump_0F1_4F4C:: ; address name
 ; entry 23 of the `rst $00` table in Func_0F1_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wD781
-; writes: wD7FA, wD781
+; writes: wTwoChoiceCursor, wD781
 ; points at: wC52D, wC3E7
 Func_0F1_4AD0_Table3_Case17::
 Jump_0F1_4F6F:: ; address name
@@ -2283,7 +2283,7 @@ Jump_0F1_4F6F:: ; address name
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld a, $6C
     call QueueSoundEffect
     ld de, Data_0F1_5A90
@@ -2301,7 +2301,7 @@ Jump_0F1_4F6F:: ; address name
 
 ; entry 24 of the `rst $00` table in Func_0F1_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC58F, wD7FA, wD781, wD780, wD7AB, wD7AF
+; reads: wC52B, wC58F, wTwoChoiceCursor, wD781, wD780, wD7AB, wD7AF
 ; writes: wD781, wC594, wD782, wD7B2, wD7B3, wD7B5, wD7B6, wD7AB, ...
 Func_0F1_4AD0_Table3_Case18::
 Jump_0F1_4FAA:: ; address name
@@ -2341,12 +2341,12 @@ Jump_0F1_4FD7::
     ret
 
 Jump_0F1_4FEA::
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     cp a, $02
     jr z, Jump_0F1_4FD7
     cp a, $01
     jr z, Jump_0F1_500C
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     ld b, $BC
     ld hl, Data_0F1_5ACF
     call StoreBAtWordTableEntry_BankF1
@@ -2377,8 +2377,8 @@ Jump_0F1_500C::
 
 ; entry 25 of the `rst $00` table in Func_0F1_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD782, wD781, wD7FA
-; writes: wD782, wD7FA, wD781
+; reads: wC52B, wD782, wD781, wTwoChoiceCursor
+; writes: wD782, wTwoChoiceCursor, wD781
 ; points at: wC412
 Func_0F1_4AD0_Table3_Case19::
 Jump_0F1_5037:: ; address name
@@ -2394,7 +2394,7 @@ Jump_0F1_5037:: ; address name
 
 Jump_0F1_5048::
     farcall Func_015_6EA5
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     and a, a
     jr z, Jump_0F1_5059
     ld a, $16
@@ -2435,7 +2435,7 @@ Jump_0F1_5067::
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     ld de, Data_0F1_5A72
     ld hl, wC412
     ld bc, $0605
@@ -2451,15 +2451,15 @@ Jump_0F1_5067::
 
 ; entry 26 of the `rst $00` table in Func_0F1_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD7F9, wD7FA, wD781
+; reads: wC52B, wMenuInputResult, wTwoChoiceCursor, wD781
 ; writes: wD781, wD782
 Func_0F1_4AD0_Table3_Case1A::
 Jump_0F1_50C3:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
-    farcall Func_01D_6540
-    ld a, [wD7F9]
+    farcall UpdateTwoChoiceCursor_Bank1D
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
@@ -2476,7 +2476,7 @@ Jump_0F1_50DC::
     ret
 
 Jump_0F1_50E7::
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, Jump_0F1_50DC
     ld a, [wD781]
@@ -2948,8 +2948,8 @@ Jump_0F1_5387:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_0F1_5285
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wD7F9, wD781
-; writes: wJoypadPressedRepeat, wD7F9, wD7F3, wD7F4, wD7F7, wD781
+; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, wD7F3, wD7F4, wD7F7, wD781
 Func_0F1_5285_Case06::
 Jump_0F1_538E:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2957,9 +2957,9 @@ Jump_0F1_538E:: ; address name
     res 6, a
     ld [wJoypadPressedRepeat], a
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
@@ -3154,8 +3154,8 @@ Jump_0F1_549E:: ; address name
 
 ; entry 21 of the `rst $00` table in Func_0F1_5285
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wD7F9, wD781
-; writes: wJoypadPressedRepeat, wD7F9, hFFBA, wD781
+; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, hFFBA, wD781
 Func_0F1_5285_Case15::
 Jump_0F1_54E9:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -3163,9 +3163,9 @@ Jump_0F1_54E9:: ; address name
     res 6, a
     ld [wJoypadPressedRepeat], a
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
@@ -3250,8 +3250,8 @@ Jump_0F1_555B:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_0F1_5285
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wD7F9, wD781
-; writes: wJoypadPressedRepeat, wD7F9, wD781
+; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, wD781
 Func_0F1_5285_Case1B::
 Jump_0F1_5569:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -3259,9 +3259,9 @@ Jump_0F1_5569:: ; address name
     res 6, a
     ld [wJoypadPressedRepeat], a
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
@@ -3387,8 +3387,8 @@ Jump_0F1_5644:: ; address name
 
 ; entry 32 of the `rst $00` table in Func_0F1_5285
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wD7F9
-; writes: wJoypadPressedRepeat, wD7F9, hFFBA, wD781
+; reads: wJoypadPressedRepeat, wMenuInputResult
+; writes: wJoypadPressedRepeat, wMenuInputResult, hFFBA, wD781
 Func_0F1_5285_Case20::
 Jump_0F1_5656:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -3396,9 +3396,9 @@ Jump_0F1_5656:: ; address name
     res 6, a
     ld [wJoypadPressedRepeat], a
     xor a, a
-    ld [wD7F9], a
-    farcall Func_01D_66B6
-    ld a, [wD7F9]
+    ld [wMenuInputResult], a
+    farcall UpdatePagedListCursor
+    ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_0F1_5678
     cp a, $FE
@@ -3668,8 +3668,8 @@ Func_0F1_5834:: ; address name
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0F1_4AD0_Table3_Case18, Func_01B_6A5E_Table2_Case07, Func_033_562A_Case06)
-; reads: wJoypadPressedRepeat, wJoypadPressed, wD7FA
-; writes: wD7F9, wD7FA, wD783
+; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
+; writes: wMenuInputResult, wTwoChoiceCursor, wD783
 Func_0F1_5842::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -3683,35 +3683,35 @@ Func_0F1_5842::
     jr nz, Jump_0F1_58AA
     call Func_0F1_58B0
     xor a, a
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_0F1_5860::
     call Func_0F1_58CE
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_0F1_5870
     ld a, $02
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_0F1_588A
 
 Jump_0F1_5870::
     dec a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_0F1_588A
 
 Jump_0F1_5876::
     call Func_0F1_58CE
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     cp a, $02
     jr c, Jump_0F1_5886
     xor a, a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
     jr Jump_0F1_588A
 
 Jump_0F1_5886::
     inc a
-    ld [wD7FA], a
+    ld [wTwoChoiceCursor], a
 
 Jump_0F1_588A::
     xor a, a
@@ -3720,7 +3720,7 @@ Jump_0F1_588A::
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_0F1_589C::
@@ -3728,16 +3728,16 @@ Jump_0F1_589C::
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 Jump_0F1_58AA::
     ld a, $FE
-    ld [wD7F9], a
+    ld [wMenuInputResult], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_5842)
-; reads: wJoypadRepeatTimer, wD783, wD7FA
+; reads: wJoypadRepeatTimer, wD783, wTwoChoiceCursor
 ; writes: wD783
 Func_0F1_58B0::
     ld a, [wJoypadRepeatTimer]
@@ -3754,24 +3754,24 @@ Func_0F1_58B0::
     ld [wD783], a
 
 ; 1 call site from 1 routine (e.g. Func_0F1_5842)
-; reads: wD7FA
+; reads: wTwoChoiceCursor
 Func_0F1_58CA::
     ld b, $BB
     jr Jump_0F1_58D4
 
 ; 2 call sites from 1 routine (e.g. Func_0F1_5842)
-; reads: wD7FA
+; reads: wTwoChoiceCursor
 Func_0F1_58CE::
     ld b, $C3
     jr Jump_0F1_58D4
 
 ; 1 call site from 1 routine (e.g. Func_0F1_5842)
-; reads: wD7FA
+; reads: wTwoChoiceCursor
 Func_0F1_58D2::
     ld b, $BC
 
 Jump_0F1_58D4::
-    ld a, [wD7FA]
+    ld a, [wTwoChoiceCursor]
     add a, a
     ld hl, Data_0F1_58F4
     add_a_to_hl
