@@ -4585,7 +4585,7 @@ Data_0A0_5D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_0A0_5278_Case00)
 ; writes: wD892, wD893, wC46B
-; points at: wDAD8, wD854, wD895, wDA1C, wDA5B, wBattleStep, wD80F
+; points at: wDAD8, wD854, wD895, wBattleActionChoice, wDA5B, wBattleStep, wD80F
 Func_0A0_5D7A::
     ld hl, wDAD8
     ld b, $08
@@ -4603,7 +4603,7 @@ Jump_0A0_5D7F::
     ld bc, $000A
     xor a, a
     call FillBytes
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     ld bc, $0010
     ld a, $FF
     call FillBytes
@@ -4865,11 +4865,11 @@ Jump_0A0_5F2D::
 
 ; 1 call site from 1 routine (e.g. Func_0A0_5E07_Table2_Case04)
 ; reads: wC57F
-; points at: wDA1C
+; points at: wBattleActionChoice
 Func_0A0_5F2E::
     ld a, [wC57F]
     and a, $02
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, $FF
     ld [hl+], a
@@ -5013,7 +5013,7 @@ Jump_0A0_5FEB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCFD4, wC46C
 ; writes: wD869, wBattleResolveStep, wBattleSubPhase
-; points at: wC46C, wCFD8, wBattleResolveStep, wDA1C, wDAD8
+; points at: wC46C, wCFD8, wBattleResolveStep, wBattleActionChoice, wDAD8
 Func_0A0_5F2E_Case02::
 Jump_0A0_6021:: ; address name
     ld de, Data_0A0_697F
@@ -5051,7 +5051,7 @@ Jump_0A0_6062::
 
 Jump_0A0_606D::
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $FF
@@ -5149,7 +5149,7 @@ Jump_0A0_60F3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCFD4, wC46D
 ; writes: wD869, wBattleResolveStep
-; points at: wC46D, wBattleResolveStep, wDAD8, wDA1C
+; points at: wC46D, wBattleResolveStep, wDAD8, wBattleActionChoice
 Func_0A0_5F2E_Case06::
 Jump_0A0_6115:: ; address name
     ld de, Data_0A0_6987
@@ -5191,7 +5191,7 @@ Jump_0A0_6137::
 
 Jump_0A0_6167::
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $C0
@@ -5231,7 +5231,7 @@ Jump_0A0_61A6::
 
 Jump_0A0_61B7::
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $AC
@@ -5414,7 +5414,7 @@ Jump_0A0_62A3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCFF1, wCFD4, wRecordBufferData, wCFD5, wC46E, wRecordBuffer
 ; writes: wD869, wStringIndex
-; points at: wC46E, wBattleMP, wDAD8, wDA1C, wBattleResolveStep
+; points at: wC46E, wBattleMP, wDAD8, wBattleActionChoice, wBattleResolveStep
 Func_0A0_5F2E_Case0E::
 Jump_0A0_62CD:: ; address name
     ld de, Data_0A0_697F
@@ -5471,7 +5471,7 @@ Jump_0A0_6312::
     or a, [hl]
     ld [hl], a
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, [wRecordBuffer]
@@ -5651,7 +5651,7 @@ Jump_0A0_6424:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0A0_5E07
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wC5E8, wC57F, wC46B, wC46C, wDAD8, wDAD9, wDA1C, ...
+; reads: wC5E7, wC5E8, wC57F, wC46B, wC46C, wDAD8, wDAD9, wBattleActionChoice, ...
 ; writes: wC594
 ; points at: wDA43, wC597, wBattleSubPhase
 Func_0A0_5E07_Case05::
@@ -5684,9 +5684,9 @@ Jump_0A0_6442:: ; address name
     ld [hl+], a
     ld a, [wDAD9]
     ld [hl+], a
-    ld a, [wDA1C]
+    ld a, [wBattleActionChoice]
     ld [hl+], a
-    ld a, [wDA1D]
+    ld a, [wBattleTargetChoice]
     ld [hl+], a
     ld a, [wDA1E]
     ld [hl+], a
@@ -5802,9 +5802,9 @@ Jump_0A0_6513::
     ld [wDAD8], a
     inc hl
     ld a, [hl+]
-    ld [wDA1C], a
+    ld [wBattleActionChoice], a
     ld a, [hl]
-    ld [wDA1D], a
+    ld [wBattleTargetChoice], a
     ld hl, wDA43
     ld de, wDA4B
 

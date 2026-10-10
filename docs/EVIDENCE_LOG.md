@@ -547,6 +547,31 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - `UpdateMenuCursor` (`03:4425`, 19) and the RAM names wMenuRowCount, wMenuPageCount, wMenuLastPageRows and wMenuPage come from this one routine. The joypad bit order (4 Right, 5 Left, 6 Up, 7 Down) is the standard Game Boy order. The two helpers it calls are taken to erase and draw the cursor from how they are used; they were not read.
 - Binary verification: pending; see the commit.
 
+### E-0061 — Battle target picker (bank $39) and batch 3
+
+- Kind: OBSERVATION (full reading only; C1).
+- `ChooseActionTarget` (`39:4001`) copies byte 0 of the actor's word in wBattleActionChoice (`$DA1C`) to wBattleActionId. It indexes `Data_039_41AC` by wDA53[actor] (4 bytes per mode: two table pointers), takes the second pointer for slots 4-7 when wC58A is 0 or 2, and calls the table entry for the action through `JumpToWordAtHL` (`00:000B`). Every entry read writes a slot number to byte 1 of the same word (wBattleTargetChoice, `$DA1D`).
+- Target routines read:
+
+  | Routine | Address |
+  | --- | --- |
+  | TargetSelf | `39:412B`, 334 table entries |
+  | TargetFirstFoe | `39:4078` |
+  | TargetFirstAlly | `39:40A2`, 97 entries |
+  | TargetRandomFoe | `39:404B` |
+  | TargetSavedSlotOrRandomFoe | `39:4055` |
+  | TargetRandomAllySlot | `39:40C2` |
+  | TargetOwnSideFirstSlot | `39:413C` |
+  | TargetRandomOtherSlot | `39:414F` |
+  | TargetFoeWeightedBySlotOrder | `39:6691`, 142 |
+
+  `PickWeightedTargetCandidate` (`39:704E`) uses weights 128/85/43 of 256.
+- The slot layout (three slots per side, 0-2 and 4-6, with 3 and 7 unused) is inferred from the three-slot loops and the exclusion of slots 3 and 7 in `TargetRandomOtherSlot`.
+- Untraced table targets: `$409A` (bytes decode as `ld a, [wBattleActor] / and 4 / jp $417C`, a random present ally) and `$40E8` (in an `INCBIN`) are referenced by the table but not traced, so they are not named.
+- Unknowns: what wDA53 (the mode) and wC58A select.
+- Also read in this batch: `StepObjectTowardCoord` (`5F:6B54`, 145 call sites), `ScriptStartFadeAndAdvanceStep` (`5F:6C5A`, 51), `AddBToWordAtHLCapped` and `CompareHLWithDE` (`F0:7C64`, 66; `F0:7C81`). For StepObjectTowardCoord, the object-entry offsets agree with ScriptSlideObjectY's Y byte at wCB8B + 16n (E-0038).
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

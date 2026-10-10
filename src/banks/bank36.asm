@@ -81,7 +81,7 @@ Jump_036_4077:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABD, wCFF2, wCFF3, wBattleTarget, wBattleActor, wDAC0
 ; writes: wC981, wDAB2, wBattleTarget, wBattleSubStep, wDABE, wDAC0
-; points at: wD80A, wDA1D, wBattleSubStep, wBattleResolveStep, wD80E
+; points at: wD80A, wBattleTargetChoice, wBattleSubStep, wBattleResolveStep, wD80E
 RunBattleResolveStep_Table2_Case00::
 Jump_036_407F:: ; address name
     xor a, a
@@ -125,7 +125,7 @@ Jump_036_407F:: ; address name
     ld a, $01
     ld [wDAB2], a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], c
@@ -219,7 +219,7 @@ Jump_036_414B::
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
 ; reads: wBattleTarget, wCFF5, wBattleActionId, wBattleActor
 ; writes: wDAD1, wBattleTarget
-; points at: wD812, wD854, wD810, wDA1D, wDABF
+; points at: wD812, wD854, wD810, wBattleTargetChoice, wDABF
 RunBattleResolveStep_Table2_Case00_Sub01::
 Func_036_4162:: ; address name
     ld a, [wBattleTarget]
@@ -300,7 +300,7 @@ Jump_036_41EB::
     ld [wBattleTarget], a
     ld b, a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     call AddDoubleAToHL_Bank36
     ld [hl], b
     ld hl, wDABF
@@ -435,7 +435,7 @@ Jump_036_42CB::
 ; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub04, RunBattleResolveStep_Table2_Case00_Sub03, RunBattleResolveStep_Table2_Case00_Sub02, RunBattleResolveStep_Table2_Case00_Sub01)
 ; reads: wBattleTarget, wCFF4, wBattleActor
 ; writes: wDAD1, wBattleTarget, wC981
-; points at: wD812, wDA1D, wDABF
+; points at: wD812, wBattleTargetChoice, wDABF
 Func_036_42D3::
     ld a, [wBattleTarget]
     ld hl, wD812
@@ -455,7 +455,7 @@ Func_036_42D3::
     ld a, [wBattleTarget]
     ld [wDAD1], a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     call AddDoubleAToHL_Bank36
     ld [hl], c
     ld a, c
@@ -1461,7 +1461,7 @@ Func_036_494E:: ; address name
 ; 2 call sites from 2 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage)
 ; reads: wDAC0, wDABD, wDABF, wDAD1, wBattleActor
 ; writes: wBattleTarget, wDAD1
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_036_4961::
     ld a, [wDAC0]
     bit 4, a
@@ -1479,7 +1479,7 @@ Func_036_4961::
     ld [wBattleTarget], a
     ld b, a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], b
@@ -2228,7 +2228,7 @@ Jump_036_4EB0::
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub03, RunBattleResolveStep_Table2_Case00_Sub02)
 ; reads: wBattleActor, wBattleTarget, wDABA, wDABD
 ; writes: wBattleActor, wBattleTarget, wDABD
-; points at: wDAC9, wDA1C
+; points at: wDAC9, wBattleActionChoice
 Func_036_4EB1::
     push de
     ld hl, wDAC9
@@ -2239,7 +2239,7 @@ Func_036_4EB1::
     ld a, [wDABA]
     ld [hl+], a
     ld a, [wBattleActor]
-    ld de, wDA1C
+    ld de, wBattleActionChoice
     add a, a
     add a, e
     ld e, a
@@ -2253,7 +2253,7 @@ Jump_036_4ECD::
     ld a, [de]
     ld [hl+], a
     ld a, [wBattleTarget]
-    ld bc, wDA1C
+    ld bc, wBattleActionChoice
     add a, a
     add a, c
     ld c, a
@@ -6223,7 +6223,7 @@ Func_036_6717:: ; address name
     ld hl, $6726
     add hl, bc
     add hl, bc
-    call Func_000_000B
+    call JumpToWordAtHL
     ret
     db $75, $6B
     dw Func_036_6B7B
@@ -6708,7 +6708,7 @@ Func_036_6ACA:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wBattleActor, hFFC6, wC982, wC983, wDAD1, wDABD
 ; writes: wC982, wC983, wBattleActor, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, ...
-; points at: wBattleMP, wBattleMaxMP, wDA1D
+; points at: wBattleMP, wBattleMaxMP, wBattleTargetChoice
 Func_036_6AE7:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     jp Func_036_6EFC
@@ -6716,7 +6716,7 @@ Func_036_6AE7:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, wBattleActionId, wDAD1, wDABD
 ; writes: wBattleActor, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD813, wDA1D
+; points at: wD813, wBattleTargetChoice
 Func_036_6AF0:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     ld a, [wBattleActor]
@@ -6740,7 +6740,7 @@ Func_036_6B0F:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, wDAD1, wDABD
 ; writes: hFFC6, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD813, hFFC6, wDA1D
+; points at: wD813, hFFC6, wBattleTargetChoice
 Func_036_6B18:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     ld a, [wBattleActor]
@@ -6768,7 +6768,7 @@ Jump_036_6B38::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, wDAD1, wDABD
 ; writes: hFFC6, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD80D, hFFC6, wDA1D
+; points at: wD80D, hFFC6, wBattleTargetChoice
 Func_036_6B42:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     ld a, [wBattleActor]
@@ -6935,7 +6935,7 @@ Jump_036_6C21::
 ; 2 call sites from 2 routines (e.g. Func_036_799B, Func_036_6D20)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wDAC3, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC2
-; points at: wDA1D, wBattleHP, wBattleMaxHP
+; points at: wBattleTargetChoice, wBattleHP, wBattleMaxHP
 Func_036_6C24:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
@@ -6970,7 +6970,7 @@ Jump_036_6C5B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wDAC3, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC2
-; points at: wDA1D, wBattleMP, wBattleMaxMP
+; points at: wBattleTargetChoice, wBattleMP, wBattleMaxMP
 Func_036_6C5E:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
@@ -7006,7 +7006,7 @@ Jump_036_6C97::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wC5E7, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wBattleMaxHP, wBattleHP, wD958, wDA1D
+; points at: wBattleMaxHP, wBattleHP, wD958, wBattleTargetChoice
 Func_036_6C9A:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
@@ -7062,7 +7062,7 @@ Jump_036_6CED::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
-; points at: wBattleMaxHP, wBattleHP, wD958, wDA1D
+; points at: wBattleMaxHP, wBattleHP, wD958, wBattleTargetChoice
 Func_036_6CF5:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     and a, $03
@@ -7096,7 +7096,7 @@ Jump_036_6D1D::
 ; 1 call site from 1 routine (e.g. Func_036_74A0)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wBattleActor, wDAC0, wDA1D
+; points at: wBattleActor, wDAC0, wBattleTargetChoice
 Func_036_6D20:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleActor
@@ -7303,7 +7303,7 @@ Jump_036_6E53::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
-; points at: wD80D, wDA1D
+; points at: wD80D, wBattleTargetChoice
 Func_036_6E5B:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     ld hl, wD80D
@@ -7322,7 +7322,7 @@ Jump_036_6E72::
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04)
 ; reads: wBattleTarget, wDAC0, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD80D, wDA1D
+; points at: wD80D, wBattleTargetChoice
 ResolveStepDamageMessage_Sub04_Sub02::
 Func_036_6E75:: ; address name
     ld a, [wBattleTarget]
@@ -7390,7 +7390,7 @@ Jump_036_6EDA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
-; points at: wD80E, wDA1D
+; points at: wD80E, wBattleTargetChoice
 Func_036_6EE2:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     ld hl, wD80E
@@ -7408,7 +7408,7 @@ Jump_036_6EF9::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wBattleActor, hFFC6, wC982, wC983, wDAD1, wDABD
 ; writes: wC982, wC983, wBattleActor, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, ...
-; points at: wBattleMP, wBattleMaxMP, wDA1D
+; points at: wBattleMP, wBattleMaxMP, wBattleTargetChoice
 Func_036_6EFC:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -7494,7 +7494,7 @@ Jump_036_6F93::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD80D, wDA1D
+; points at: wD80D, wBattleTargetChoice
 Func_036_6F96:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     ld hl, wD80D
@@ -7630,7 +7630,7 @@ Jump_036_7071::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
-; points at: wD80E, wDA1D
+; points at: wD80E, wBattleTargetChoice
 Func_036_7079:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     and a, $04
@@ -7671,7 +7671,7 @@ Jump_036_70AB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD814, wDA1D
+; points at: wD814, wBattleTargetChoice
 Func_036_70AE:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     and a, $04
@@ -7768,11 +7768,11 @@ Jump_036_7147::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wBattleActionId, wRecordBuffer, wCFED, wBattleTarget, wBattleSubPhase, wBattleResolveStep
-; points at: wDA1C, wDA1D
+; points at: wBattleActionChoice, wBattleTargetChoice
 Func_036_714F:: ; heuristic: follows a terminator; C0
     farcall Func_0A3_4AAF
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, c
@@ -7783,7 +7783,7 @@ Func_036_714F:: ; heuristic: follows a terminator; C0
     ld [wCFED], a
     farcall LoadSkillRecord
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], $FF
@@ -7952,7 +7952,7 @@ Func_036_72E0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD, wBattleDamageLo, wD873
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1, wBattleDamageLo, wD873, ...
-; points at: wD810, wDA1D, wD035
+; points at: wD810, wBattleTargetChoice, wD035
 Func_036_72F9:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD810
@@ -8066,7 +8066,7 @@ Func_036_7387:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wDAC3, wDAC0, wDAC1, wBattleDamageLo, wD873, wDAC2, wBattleTarget, wDAD1, ...
-; points at: wBattleStatus, wDA1D
+; points at: wBattleStatus, wBattleTargetChoice
 Func_036_73C3:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -8093,7 +8093,7 @@ Jump_036_73E9::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wDAD1, wBattleActor, wDABD
 ; writes: wDAC3, wDAC0, wDAC1, wBattleDamageLo, wD873, wDAC2, wBattleTarget, wDAD1, ...
-; points at: wBattleStatus, wDA1D
+; points at: wBattleStatus, wBattleTargetChoice
 Func_036_73EC:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -8143,7 +8143,7 @@ Jump_036_7431::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wDAC3, wDAC0, wDAC1, wBattleDamageLo, wD873, wDAC2, wBattleTarget, wDAD1, ...
-; points at: wBattleStatus, wDA1D
+; points at: wBattleStatus, wBattleTargetChoice
 Func_036_7434:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -8170,7 +8170,7 @@ Jump_036_745A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wBattleMP, wDA1D
+; points at: wBattleMP, wBattleTargetChoice
 Func_036_745D:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -8196,7 +8196,7 @@ Jump_036_747B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_036_747E:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
     bit 1, [hl]
@@ -8247,7 +8247,7 @@ Jump_036_74CD::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD811, wDA1D
+; points at: wD811, wBattleTargetChoice
 Func_036_74D1:: ; heuristic: target of a pointer table; C0
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -8271,7 +8271,7 @@ Jump_036_74EF::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD811, wD80D, wDA1D
+; points at: wD811, wD80D, wBattleTargetChoice
 Func_036_74F2:: ; heuristic: target of a pointer table; C0
     ld d, $02
     jr Jump_036_74F8
@@ -8279,7 +8279,7 @@ Func_036_74F2:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD811, wD80D, wDA1D
+; points at: wD811, wD80D, wBattleTargetChoice
 Func_036_74F6:: ; heuristic: target of a pointer table; C0
     ld d, $01
 
@@ -8453,7 +8453,7 @@ Jump_036_761F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD810, wDA1D
+; points at: wD810, wBattleTargetChoice
 Func_036_7627:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD810
@@ -8466,7 +8466,7 @@ Func_036_7627:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD810, wDA1D
+; points at: wD810, wBattleTargetChoice
 Func_036_7637:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD810
@@ -8477,7 +8477,7 @@ Func_036_7637:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wBattleDEF, wDA1D
+; points at: wBattleDEF, wBattleTargetChoice
 Func_036_7645:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
     bit 3, [hl]
@@ -8526,7 +8526,7 @@ Jump_036_7694::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD8A7, wDA1D
+; points at: wD8A7, wBattleTargetChoice
 Func_036_7697:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
     bit 2, [hl]
@@ -8556,7 +8556,7 @@ Jump_036_76C7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_036_76CD:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
     bit 5, [hl]
@@ -8581,7 +8581,7 @@ Jump_036_76F1::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_036_76F4:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
     bit 4, [hl]
@@ -8688,7 +8688,7 @@ Jump_036_77AD::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD80D, wDA1D
+; points at: wD80D, wBattleTargetChoice
 Func_036_77B5:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wD80D
@@ -8711,7 +8711,7 @@ Jump_036_77DB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wD80D, wDA1D
+; points at: wD80D, wBattleTargetChoice
 Func_036_77DE:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wD80D
@@ -8737,7 +8737,7 @@ Jump_036_7806::
 ; 1 call site from 1 routine (e.g. Func_036_6AF0)
 ; reads: wBattleActor, wBattleActionId, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD813, wDA1D
+; points at: wD813, wBattleTargetChoice
 Func_036_7809:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD813
@@ -8772,7 +8772,7 @@ Jump_036_7833::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD812, wDA1D
+; points at: wD812, wBattleTargetChoice
 Func_036_7836:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD812
@@ -8783,7 +8783,7 @@ Func_036_7836:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD80A, wBattleActor, wD812, wDA1D
+; points at: wD80A, wBattleActor, wD812, wBattleTargetChoice
 Func_036_7844:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     rrca
@@ -8796,7 +8796,7 @@ Func_036_7844:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleTarget, wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wBattleActor, wD812, wDA1D
+; points at: wBattleActor, wD812, wBattleTargetChoice
 Func_036_7850:: ; heuristic: target of a pointer table; C0
     jr nc, Jump_036_7853
     inc h
@@ -8825,7 +8825,7 @@ Jump_036_7871::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wBattleActor, wD812, wDA1D
+; points at: wBattleActor, wD812, wBattleTargetChoice
 Func_036_7872:: ; heuristic: target of a pointer table; C0
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_036_7894
@@ -8854,7 +8854,7 @@ Jump_036_7894::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD80E, wDA1D, wD80A
+; points at: wD80E, wBattleTargetChoice, wD80A
 Func_036_789B:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActionId]
     cp a, $9A
@@ -8898,7 +8898,7 @@ Jump_036_78DB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD80E, wDA1D
+; points at: wD80E, wBattleTargetChoice
 Func_036_78DE:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD80E
@@ -8909,7 +8909,7 @@ Func_036_78DE:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD814, wDA1D
+; points at: wD814, wBattleTargetChoice
 Func_036_78EC:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD814
@@ -8920,7 +8920,7 @@ Func_036_78EC:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD80A, wD864, wD812, wDA1D
+; points at: wD80A, wD864, wD812, wBattleTargetChoice
 Func_036_78FA:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     rrca
@@ -8950,7 +8950,7 @@ Func_036_78FA:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD812, wDA1D
+; points at: wD812, wBattleTargetChoice
 Func_036_7931:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD812
@@ -9033,7 +9033,7 @@ Jump_036_79D9::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wBattleActor, wBattleTarget, wBattleActionId, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wBattleHP, wBattleSlotOut, wD94F, wDA1D
+; points at: wBattleHP, wBattleSlotOut, wD94F, wBattleTargetChoice
 Func_036_7A18:: ; heuristic: target of a pointer table; C0
     ld a, [wC58A]
     or a, a
@@ -9090,7 +9090,7 @@ Jump_036_7A85::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD80D, wDA1D
+; points at: wD80D, wBattleTargetChoice
 Func_036_7A8E:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -9143,7 +9143,7 @@ Jump_036_7ACD::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep
-; points at: wBattleMP, wDA1D
+; points at: wBattleMP, wBattleTargetChoice
 Func_036_7AD5:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -9162,7 +9162,7 @@ Func_036_7AD5:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAD1, wBattleActor, wDABD
 ; writes: wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_036_7AF4:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
     bit 0, [hl]
@@ -9176,7 +9176,7 @@ Func_036_7AF4:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep
-; points at: wBattleMP, wBattleMaxMP, wDA1D
+; points at: wBattleMP, wBattleMaxMP, wBattleTargetChoice
 Func_036_7B09:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -9283,7 +9283,7 @@ Func_036_7BA1:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wD80F, wDA1D
+; points at: wD80F, wBattleTargetChoice
 Func_036_7BA8:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     ld hl, wD80F
@@ -9307,7 +9307,7 @@ Func_036_7BB6:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
-; points at: wBattleSlotOut, wD94F, wDA1D
+; points at: wBattleSlotOut, wD94F, wBattleTargetChoice
 Func_036_7BC9:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
@@ -9415,7 +9415,7 @@ Func_036_7C6B:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABA, wC5E7, wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleTarget, wDAD1, wDAC0, wDAC1
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_036_7C77:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7966
 
@@ -9503,7 +9503,7 @@ Jump_036_7CD3::
     ld [wBattleTarget], a
     push af
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     pop af
@@ -9689,7 +9689,7 @@ Jump_036_7DD1::
     ld hl, $7DDE
     add a, a
     add_a_to_hl
-    call Func_000_000B
+    call JumpToWordAtHL
     ret
     db $13, $50, $C5, $58, $2E, $59, $93, $59, $52, $53, $B4, $60, $B4, $60, $CF, $5D
     db $CF, $5D, $22, $55, $33, $55, $44, $55, $55, $55, $66, $55, $71, $55, $7C, $55

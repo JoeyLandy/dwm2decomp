@@ -2070,7 +2070,7 @@ Jump_032_4AF4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABD, wD89E, wBattleActor, wBattleSubStep
 ; writes: wBattleSubStep, wBattleSubPhase, wBattleResolveStep, wBattleActor
-; points at: wD895, wDA5B, wBattleSubStep, wD811, wD89E, wDA1D, wBattleStatus, wBattleResolveStep
+; points at: wD895, wDA5B, wBattleSubStep, wD811, wD89E, wBattleTargetChoice, wBattleStatus, wBattleResolveStep
 Func_032_4ADC_Table2_Case00::
 Jump_032_4B04:: ; address name
     call Func_032_4E29
@@ -2129,7 +2129,7 @@ Jump_032_4B61::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleSubStep
 ; writes: wBattleSubStep, wBattleResolveStep
-; points at: wD811, wD89E, wDA1D, wBattleSubStep, wBattleStatus, wBattleResolveStep
+; points at: wD811, wD89E, wBattleTargetChoice, wBattleSubStep, wBattleStatus, wBattleResolveStep
 Func_032_4ADC_Table2_Case01::
 Jump_032_4B62:: ; address name
     ld a, [wBattleActor]
@@ -2149,7 +2149,7 @@ Jump_032_4B7A::
     jr z, Jump_032_4B98
     ld a, [wBattleActor]
     push af
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     pop af
@@ -2178,7 +2178,7 @@ Jump_032_4BAD::
     push af
     ld a, [wBattleActor]
     push af
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     pop af
@@ -2527,7 +2527,7 @@ Func_032_4D8D::
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Table2_Case03)
 ; reads: wBattleActor, wC5E7, wC58A, wC5E8, wCFC5
 ; writes: wBattleActionId, wBattleTarget
-; points at: wD80F, wDA1C, wDA1D
+; points at: wD80F, wBattleActionChoice, wBattleTargetChoice
 Func_032_4D99::
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -2591,13 +2591,13 @@ Jump_032_4DF7::
     ld b, a
     ld [wBattleActionId], a
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld [hl], b
-    farcall Func_039_4001
+    farcall ChooseActionTarget
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     call ReadByteAtHLPlusA
     ld [wBattleTarget], a
@@ -2637,7 +2637,7 @@ Func_032_4E29::
 ; 1 call site from 1 routine (e.g. Func_032_4C3E)
 ; reads: wC5E7, wBattleActor, wBattleTarget, wD871
 ; writes: wD871, wBattleTarget
-; points at: wD80F, wDA1C
+; points at: wD80F, wBattleActionChoice
 Func_032_4E51::
     ld a, [hl]
     and a, $0C
@@ -2722,7 +2722,7 @@ Jump_032_4EBE::
 
 Jump_032_4EC3::
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
 
 ; entry 9 of the `rst $00` table in Func_032_4EE4
@@ -2812,7 +2812,7 @@ Jump_032_4F32::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wBattleActor, wBattleActionId, wCFF3
 ; writes: wBattleActionId
-; points at: wDAD8, wBattleSubStep, wBattleStatus, wDA1C, wDAE0
+; points at: wDAD8, wBattleSubStep, wBattleStatus, wBattleActionChoice, wDAE0
 Func_032_4EE4_Case00::
 Jump_032_4F53:: ; address name
     farcall Func_0A3_4960
@@ -2878,7 +2878,7 @@ Jump_032_4FC8::
     farcall Func_030_5440
     call Func_032_5804
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     call ReadByteAtHLPlusA
     ld [wBattleActionId], a
@@ -2895,7 +2895,7 @@ Jump_032_4FFB::
 ; entry 1 of the `rst $00` table in Func_032_4EE4
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wBattleActor, wD89E, wBattleActionId
-; points at: wD895, wDA5B, wDA1C, wBattleSubStep
+; points at: wD895, wDA5B, wBattleActionChoice, wBattleSubStep
 Func_032_4EE4_Case01::
 Jump_032_5000:: ; address name
     ld a, [wC58A]
@@ -2928,7 +2928,7 @@ Jump_032_5018::
 Jump_032_5031::
     push hl
     ld a, [hl]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleActionId]
@@ -2963,7 +2963,7 @@ Jump_032_505B::
 Jump_032_505E::
     pop hl
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld [hl], $00
@@ -2991,11 +2991,11 @@ Data_032_5078:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wCFF2
 ; writes: wBattleTarget
-; points at: wDA1D, wDAD8, wBattleSubStep
+; points at: wBattleTargetChoice, wDAD8, wBattleSubStep
 Func_032_4EE4_Case02::
 Jump_032_50B7:: ; address name
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     call ReadByteAtHLPlusA
     cp a, $FF
@@ -3024,11 +3024,11 @@ Jump_032_50DD::
     jr Jump_032_50FC
 
 Jump_032_50F6::
-    farcall Func_039_4001
+    farcall ChooseActionTarget
 
 Jump_032_50FC::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     call ReadByteAtHLPlusA
     ld [wBattleTarget], a
@@ -3772,11 +3772,11 @@ Jump_032_5541:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wCFF6, wCFF2, wBattleActionId, wBattleTarget
 ; writes: wBattleActionId, wBattleTarget, wBattleSubStep
-; points at: wDA1C, wD814, wBattleResolveStep, wQueuedActionId, wBattleSubStep
+; points at: wBattleActionChoice, wD814, wBattleResolveStep, wQueuedActionId, wBattleSubStep
 Func_032_553B_Case00::
 Jump_032_554D:: ; address name
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     call ReadByteAtHLPlusA
     ld [wBattleActionId], a
@@ -4110,10 +4110,10 @@ Func_032_57FD:: ; address name
 ; 7 call sites from 4 routines (e.g. Func_032_5397, Func_032_4EE4_Case01, Func_032_4EE4_Case00, Func_032_514C)
 ; reads: wBattleActor
 ; writes: wBattleActionId, wRecordBuffer, wCFED
-; points at: wDA1C
+; points at: wBattleActionChoice
 Func_032_5804::
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     call ReadByteAtHLPlusA
     ld [wBattleActionId], a
@@ -4143,7 +4143,7 @@ Func_032_5820:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wDABA, wBattleActionId
 ; writes: wDABD, wDABA, wBattleActor, wBattleTarget
-; points at: wBattleResolveStep, wDAC9, wDA1C, wDA5B, wDA1D
+; points at: wBattleResolveStep, wDAC9, wBattleActionChoice, wDA5B, wBattleTargetChoice
 Func_032_5820_Case00::
 Jump_032_5834:: ; address name
     ld hl, wBattleResolveStep
@@ -4156,7 +4156,7 @@ Jump_032_5834:: ; address name
     ld a, [wDABA]
     ld [hl+], a
     ld a, [wBattleActor]
-    ld de, wDA1C
+    ld de, wBattleActionChoice
     add a, a
     add a, e
     ld e, a
@@ -4169,7 +4169,7 @@ Jump_032_5853::
     inc de
     ld [hl+], a
     ld a, [wBattleTarget]
-    ld de, wDA1C
+    ld de, wBattleActionChoice
     add a, a
     add a, e
     ld e, a
@@ -4198,7 +4198,7 @@ Jump_032_5872::
     ld a, [wBattleTarget]
     ld [wBattleActor], a
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     call AddDoubleAToHL_Bank32
     ld a, [wBattleActionId]
     ld [hl+], a
@@ -4207,9 +4207,9 @@ Jump_032_5872::
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $02
-    farcall Func_039_4001
+    farcall ChooseActionTarget
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     call AddDoubleAToHL_Bank32
     ld a, [hl]
     ld [wBattleTarget], a
@@ -4301,11 +4301,11 @@ Jump_032_5915:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wCFF6, wCFF2, wBattleTarget, wBattleActionId
 ; writes: wBattleActionId, wBattleTarget, wBattleSubStep
-; points at: wDA1C, wD814, wBattleResolveStep, wQueuedActionId, wBattleSubStep
+; points at: wBattleActionChoice, wD814, wBattleResolveStep, wQueuedActionId, wBattleSubStep
 Func_032_5820_Table2_Case00::
 Jump_032_5921:: ; address name
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     call ReadByteAtHLPlusA
     ld [wBattleActionId], a
@@ -5386,12 +5386,12 @@ Jump_032_6044::
 ; only called from ResolveStep0EEffect_Case00 (E-0047)
 ; 2 call sites from 1 routine (e.g. ResolveStep0EEffect_Case00)
 ; reads: wBattleActor, wC5E7
-; points at: wDA1C
+; points at: wBattleActionChoice
 ResolveStep0EEffect_Case00_Sub01::
 Func_032_604A:: ; address name
     call AdvanceRandom
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     call AddDoubleAToHL_Bank32
     push hl
     ld a, [wC5E7]

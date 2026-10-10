@@ -13,8 +13,10 @@ Func_000_0000:: ; address name
     add hl, de
     pop de
 
-; 7 call sites from 7 routines (e.g. Func_030_4F3B, DispatchActionEffectTable, Func_036_7DC9, Func_039_4001, ...)
-Func_000_000B::
+; HL = address of a word: HL = that word, then jumps to it (falls into JumpToHL); A = its low byte (E-0061)
+; 7 call sites from 7 routines (e.g. Func_030_4F3B, DispatchActionEffectTable, Func_036_7DC9, ChooseActionTarget, ...)
+JumpToWordAtHL::
+Func_000_000B:: ; address name
     deref_hl
 
 ; jp hl; the call target used by CallInBank

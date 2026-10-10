@@ -5739,10 +5739,10 @@ Jump_005_5F10::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_5ECE)
-; points at: wDA1C
+; points at: wBattleActionChoice
 Func_005_5F13::
     ld a, c
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, [hl]
@@ -6055,10 +6055,10 @@ Jump_005_60B7::
 
 ; 1 call site from 1 routine (e.g. Func_005_604C)
 ; reads: wQueuedActionId
-; points at: wDA1D, wBattleMP
+; points at: wBattleTargetChoice, wBattleMP
 Func_005_60BA::
     ld a, c
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     swap a
     add_a_to_hl
     ld b, $08

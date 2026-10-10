@@ -115,10 +115,10 @@ Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, Func_0A1_413F_Case06)
 ; reads: wC58A
 ; writes: wC953, wC954
-; points at: wDA1C, wDA2C, wDA24
+; points at: wBattleActionChoice, wDA2C, wDA24
 Func_0A3_4187::
     ld b, $10
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     ld de, wDA2C
 
 Jump_0A3_418F::
@@ -133,11 +133,11 @@ Jump_0A3_418F::
     ld a, [wC58A]
     cp a, $01
     ret z
-    ld de, wDA1C
+    ld de, wBattleActionChoice
     call Func_0A3_41CF
     or a, a
     jr z, Jump_0A3_41B5
-    ld de, wDA1C
+    ld de, wBattleActionChoice
     call Func_0A3_4917
     ld [wC953], a
 
@@ -524,11 +524,11 @@ Jump_0A3_494E::
 ; 1 call site from 1 routine (e.g. Func_032_4EE4_Case00)
 ; reads: wBattleActor
 ; writes: hFFC6
-; points at: wDA1C
+; points at: wBattleActionChoice
 Func_0A3_4960::
     ld a, [wBattleActor]
     add a, a
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
     cp a, $D0
@@ -639,11 +639,11 @@ Jump_0A3_49EE::
 
 ; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
 ; reads: wBattleTarget
-; points at: wDA1C, wDA5B
+; points at: wBattleActionChoice, wDA5B
 Func_0A3_4A02::
     ld a, [wBattleTarget]
     add a, a
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
     cp a, $00

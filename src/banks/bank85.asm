@@ -23,7 +23,7 @@ Jump_085_4009:: ; address name
     ld [wC92A], a
     ld a, $60
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -946,14 +946,14 @@ Jump_085_4623:: ; address name
     ld [wC92A], a
     ld a, $E0
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $02
     ld [wC929], a
     ld a, $03
     ld [wC92A], a
     ld a, $E0
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -974,14 +974,14 @@ Jump_085_4658:: ; address name
     ld [wC92A], a
     ld a, $E0
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $02
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $20
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     jr Jump_085_46DA
 
 ; entry 1 of the `rst $00` table in ScriptCommand1B_Run
@@ -997,14 +997,14 @@ Jump_085_4684:: ; address name
     ld [wC92A], a
     ld a, $30
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $01
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $20
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     jr Jump_085_46DA
 
 ; entry 0 of the `rst $00` table in ScriptCommand1B_Run
@@ -1020,14 +1020,14 @@ Jump_085_46B0:: ; address name
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $02
     ld [wC929], a
     ld a, $03
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
 
 Jump_085_46DA::
     ld a, [wC92C]
@@ -1204,7 +1204,7 @@ Jump_085_47B1:: ; address name
     ld [wC8C9], a
     ld a, $01
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand7F_Run
@@ -1703,7 +1703,7 @@ Jump_085_4A79::
     jr c, Jump_085_4AAB
     ld a, $20
     ld [wC8C8], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, $04
     call StartPaletteFade
     ret
@@ -1711,7 +1711,7 @@ Jump_085_4A79::
 Jump_085_4AAB::
     ld a, $20
     ld [wC8C8], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, $04
     call StartPaletteFade
     ret
@@ -1724,7 +1724,7 @@ Jump_085_4ABC::
     ldh [hMapId], a
     ld a, $70
     ld [wC8C8], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, $04
     call StartPaletteFade
     ret
@@ -1734,7 +1734,7 @@ Jump_085_4AD9::
     ldh [hMapId], a
     ld a, $70
     ld [wC8C8], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, $04
     call StartPaletteFade
     ret
@@ -1803,7 +1803,7 @@ Jump_085_4B33:: ; address name
     ld [wC929], a
     ld a, $C0
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -1836,7 +1836,7 @@ Jump_085_4B6F:: ; address name
     ld [wC92A], a
     ld a, $70
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -1849,7 +1849,7 @@ Jump_085_4B94::
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -2346,28 +2346,28 @@ Jump_085_4EAA:: ; address name
     ld [wC92A], a
     ld a, $10
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $02
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $03
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $20
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $00
     ld [wC929], a
     ld a, $02
     ld [wC92A], a
     ld a, $30
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -3200,7 +3200,7 @@ Jump_085_5361:: ; address name
     jr z, Jump_085_5389
     ld a, $02
     ld [wC92A], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -3213,7 +3213,7 @@ Jump_085_5361:: ; address name
 Jump_085_5389::
     ld a, $03
     ld [wC92A], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -3419,7 +3419,7 @@ Jump_085_548F::
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     jr Jump_085_54B8
 
 Jump_085_54A8::
@@ -3427,7 +3427,7 @@ Jump_085_54A8::
     ld [wC92A], a
     ld a, $B0
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
 
 Jump_085_54B8::
     ld hl, wC929
@@ -3455,7 +3455,7 @@ Jump_085_54D4::
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ret
 
 Jump_085_54F1::
@@ -3463,7 +3463,7 @@ Jump_085_54F1::
     ld [wC92A], a
     ld a, $B0
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -3488,13 +3488,13 @@ Jump_085_5514:: ; address name
     ld [wC928], a
     ld a, $01
     ld [wC929], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $03
     ld [wC929], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, $04
     ld [wC929], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -3535,7 +3535,7 @@ Jump_085_5562:: ; address name
     ld [wC92A], a
     ld a, $40
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z
@@ -3613,7 +3613,7 @@ Jump_085_55D0:: ; address name
     ld [wC8C9], a
     ld a, $01
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld hl, $0185
     call StoreHLInWC924_B85
     ret
@@ -3665,7 +3665,7 @@ Jump_085_561E:: ; address name
     ld [wC92A], a
     ld a, $50
     ld [wC928], a
-    farcall Func_05F_6B54
+    farcall StepObjectTowardCoord
     ld a, [wC92C]
     or a, a
     ret z

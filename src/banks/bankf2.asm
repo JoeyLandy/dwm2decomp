@@ -2807,7 +2807,7 @@ Jump_0F2_65EF::
     ld [wCF8B], a
     ld a, h
     ld [wCF8C], a
-    call Func_0F2_667D
+    call CompareHLWithDE_BankF2
     ld a, c
     and a, a
     jr nz, Jump_0F2_6632
@@ -2848,7 +2848,7 @@ Jump_0F2_6632::
     ld [wCF8B], a
     ld a, h
     ld [wCF8C], a
-    call Func_0F2_667D
+    call CompareHLWithDE_BankF2
     ld a, c
     and a, a
     jr nz, Jump_0F2_6675
@@ -2870,8 +2870,10 @@ Jump_0F2_6675::
     jp nz, Jump_0F2_65EF
     ret
 
+; the same 21 bytes as CompareHLWithDE (F0:7C81)
 ; 2 call sites from 1 routine (e.g. Func_0F2_65E6)
-Func_0F2_667D::
+CompareHLWithDE_BankF2::
+Func_0F2_667D:: ; address name
     ld a, h
     cp a, d
     jr c, Jump_0F2_668C

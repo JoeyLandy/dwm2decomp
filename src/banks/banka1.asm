@@ -173,12 +173,12 @@ Jump_0A1_41C3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wBattleSubPhase
-; points at: wDA1D, wDA5B, wBattleActor
+; points at: wBattleTargetChoice, wDA5B, wBattleActor
 Func_0A1_413F_Case03::
 Jump_0A1_41CA:: ; address name
-    farcall Func_039_4001
+    farcall ChooseActionTarget
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -408,7 +408,7 @@ Func_0A1_434F:: ; address name
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_413F_Case06)
-; points at: wDA1C, wD812
+; points at: wBattleActionChoice, wD812
 Func_0A1_4356::
     ld c, $00
     ld b, $08
@@ -419,7 +419,7 @@ Jump_0A1_435A::
     jr c, Jump_0A1_4378
     ld a, c
     add a, a
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
     cp a, $6E
@@ -462,11 +462,11 @@ Func_0A1_437D::
 ; 1 call site from 1 routine (e.g. Func_0A1_413F_Case04)
 ; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
-; points at: wDA1C, wCFF3
+; points at: wBattleActionChoice, wCFF3
 Func_0A1_43A1::
     push de
     ld a, e
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, [hl]

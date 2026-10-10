@@ -1916,7 +1916,7 @@ Func_03B_4B02::
     ld hl, $4B11
     add hl, bc
     add hl, bc
-    call Func_000_000B
+    call JumpToWordAtHL
     ret
     db $91, $4B, $92, $4B, $92, $4B, $92, $4B, $BD, $4B, $BD, $4B
     dw Func_03B_4BE8

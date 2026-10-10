@@ -1536,8 +1536,8 @@ DEF wD9C9 EQU $D9C9
 DEF wD9D9 EQU $D9D9
 DEF wD9E9 EQU $D9E9
 DEF wDA08 EQU $DA08
-DEF wDA1C EQU $DA1C
-DEF wDA1D EQU $DA1D
+DEF wBattleActionChoice EQU $DA1C ; word per slot: byte 0 is the chosen action id, which ChooseActionTarget copies to wBattleActionId; byte 1 is wBattleTargetChoice (E-0061) (reading (E-0061))
+DEF wBattleTargetChoice EQU $DA1D ; byte 1 of each slot word in wBattleActionChoice: the target slot the per-action target routines write (E-0061) (reading (E-0061))
 DEF wDA1E EQU $DA1E
 DEF wDA1F EQU $DA1F
 DEF wDA24 EQU $DA24

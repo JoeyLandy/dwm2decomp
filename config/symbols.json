@@ -496,6 +496,8 @@
     "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)",
     "evidence": "reading (E-0043)"
   },
+  "DA1C": {"name": "wBattleActionChoice", "note": "word per slot: byte 0 is the chosen action id, which ChooseActionTarget copies to wBattleActionId; byte 1 is wBattleTargetChoice (E-0061)", "evidence": "reading (E-0061)"},
+  "DA1D": {"name": "wBattleTargetChoice", "note": "byte 1 of each slot word in wBattleActionChoice: the target slot the per-action target routines write (E-0061)", "evidence": "reading (E-0061)"},
   "DAAC": {"name": "wQueuedActionId", "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)", "evidence": "reading (E-0049)"},
   "D80C": {
     "name": "wBattleStatus",

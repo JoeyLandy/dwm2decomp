@@ -1848,7 +1848,7 @@ Jump_0E0_4D71::
 ; entry 4 of the `rst $00` table in Func_0E0_4C7E
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wC5FE, wC5FD
-; points at: wDA1C
+; points at: wBattleActionChoice
 Func_0E0_4C7E_Case04::
 Jump_0E0_4D72:: ; address name
     xor a, a
@@ -1857,7 +1857,7 @@ Jump_0E0_4D72:: ; address name
     ld a, $03
     ld [wC5FD], a
     ld a, $FF
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     ld bc, $0010
     jp FillBytes
 
@@ -2298,10 +2298,10 @@ Func_0E0_55BF:: ; heuristic: follows a terminator; C0
 ; 1 call site from 1 routine (e.g. Func_0E0_4C7E_Case01)
 ; reads: wBattleActor, wC58A, wC5BA, wC5BB, wC5E7, wC5E8
 ; writes: wC5E7, wC5E8, wC5BA, wC5BB
-; points at: wDA1C
+; points at: wBattleActionChoice
 Func_0E0_56C7::
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $FF
@@ -2341,16 +2341,16 @@ Jump_0E0_570B::
 
 ; 2 call sites from 1 routine (e.g. Func_0E0_56C7)
 ; reads: wBattleActor
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_0E0_5715::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
     jr nz, Jump_0E0_572C
-    farcall Func_039_4001
+    farcall ChooseActionTarget
 
 Jump_0E0_572C::
     ret
@@ -2358,7 +2358,7 @@ Jump_0E0_572C::
 ; 1 call site from 1 routine (e.g. Func_0E0_4C7E_Case02)
 ; reads: wBattleActor, wC58A, hFFC9, hFFC8
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory, wC8C0, wC8C1, ...
-; points at: wDA43, wDA53, wD988, wD2AD, wDA1C, wDA3F, hFFFC, wCFDE
+; points at: wDA43, wDA53, wD988, wD2AD, wBattleActionChoice, wDA3F, hFFFC, wCFDE
 Func_0E0_572D::
     call Func_0E0_5992
     ld hl, $5A05
@@ -2614,7 +2614,7 @@ Jump_0E0_58C4::
     ld [wStringCategory], a
     ld a, [wBattleActor]
     add a, a
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
     ld [wStringIndex], a
@@ -2631,7 +2631,7 @@ Jump_0E0_58F0::
     call Func_0E0_5A79
     ld a, [wBattleActor]
     add a, a
-    ld de, wDA1C
+    ld de, wBattleActionChoice
     add a, e
     ld e, a
     jr nc, Jump_0E0_5905
@@ -2750,11 +2750,11 @@ Func_0E0_5992::
 
 ; 1 call site from 1 routine (e.g. Func_0E0_572D)
 ; reads: wBattleActor, wC58A
-; points at: wDA1D, wC57F
+; points at: wBattleTargetChoice, wC57F
 Func_0E0_59A4::
     ld a, [wBattleActor]
     add a, a
-    ld de, wDA1D
+    ld de, wBattleTargetChoice
     add a, e
     ld e, a
     jr nc, Jump_0E0_59B0
@@ -2880,7 +2880,7 @@ Func_0E0_5A35::
     ld h, a
     push hl
     farcall Func_030_5440
-    farcall Func_039_4001
+    farcall ChooseActionTarget
     pop hl
     ld a, l
     ld [wC5E7], a
@@ -2895,7 +2895,7 @@ Func_0E0_5A35::
 
 Jump_0E0_5A6C::
     farcall Func_030_5440
-    farcall Func_039_4001
+    farcall ChooseActionTarget
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_0E0_572D)

@@ -1,13 +1,15 @@
 SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
+; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wDA53[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wC58A is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
 ; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4EE4_Case02, Func_032_5820_Case00, ...)
 ; reads: wBattleActor, wC58A
 ; writes: wBattleActionId
-; points at: wDA1C, wDA53
-Func_039_4001::
+; points at: wBattleActionChoice, wDA53
+ChooseActionTarget::
+Func_039_4001:: ; address name
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, [hl]
@@ -40,22 +42,26 @@ Jump_039_403D::
     deref_hl
     add hl, bc
     add hl, bc
-    call Func_000_000B
+    call JumpToWordAtHL
     ret
 
+; target = a present slot of the opposite three (slots 4-6 for actors 0-3, 0-2 for 4-7): the first present one, then each later present one replaces it when wC5E7 bit 7 is set after AdvanceRandom, so the last is favoured; $FF when none is present (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7
-; points at: wDA1D
-Func_039_404B:: ; heuristic: follows a terminator; C0
+; points at: wBattleTargetChoice
+TargetRandomFoe:: ; heuristic: follows a terminator; C0
+Func_039_404B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     jp Jump_039_417C
 
+; target = the slot in wDA2D[2 * actor] when that slot is present, else TargetRandomFoe (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7
-; points at: wDA2D, wDA1D
-Func_039_4055:: ; heuristic: follows a terminator; C0
+; points at: wDA2D, wBattleTargetChoice
+TargetSavedSlotOrRandomFoe:: ; heuristic: follows a terminator; C0
+Func_039_4055:: ; address name
     ld a, [wBattleActor]
     add a, a
     ld hl, wDA2D
@@ -64,20 +70,22 @@ Func_039_4055:: ; heuristic: follows a terminator; C0
     ld c, a
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_039_406A
-    jr Func_039_404B
+    jr TargetRandomFoe
 
 Jump_039_406A::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], c
     ret
 
+; target = the first present slot of the opposite three; base + 3 when none is present (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-; points at: wDA1D
-Func_039_4078:: ; heuristic: follows a terminator; C0
+; points at: wBattleTargetChoice
+TargetFirstFoe:: ; heuristic: follows a terminator; C0
+Func_039_4078:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -94,17 +102,19 @@ Jump_039_4082::
 
 Jump_039_408C::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], c
     ret
     db $FA, $A4, $D8, $E6, $04, $C3, $7C, $41
 
+; target = the first present slot of the actor's own three (the actor included); base + 3 when none is present (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-; points at: wDA1D
-Func_039_40A2:: ; heuristic: target of a pointer table; C0
+; points at: wBattleTargetChoice
+TargetFirstAlly:: ; heuristic: target of a pointer table; C0
+Func_039_40A2:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -120,16 +130,18 @@ Jump_039_40AA::
 
 Jump_039_40B4::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], c
     ret
 
+; target = one of the actor's own three slots by coin flips (wC5E7 bit 7), the later ones favoured; presence is not checked (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7
-; points at: wDA1D
-Func_039_40C2:: ; heuristic: target of a pointer table; C0
+; points at: wBattleTargetChoice
+TargetRandomAllySlot:: ; heuristic: target of a pointer table; C0
+Func_039_40C2:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -148,31 +160,35 @@ Jump_039_40D6::
     dec b
     jr nz, Jump_039_40CB
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], d
     ret
     INCBIN "dwm2-cobi-us.gbc", $0E40E8, $43
 
+; target = wBattleActor; the per-action entry used most often (334 table entries) (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-; points at: wDA1D
-Func_039_412B:: ; heuristic: target of a pointer table; C0
+; points at: wBattleTargetChoice
+TargetSelf:: ; heuristic: target of a pointer table; C0
+Func_039_412B:: ; address name
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleActor]
     ld [hl], a
     ret
 
+; target = wBattleActor & 4, slot 0 or 4 of the actor's side; presence is not checked (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-; points at: wDA1D
-Func_039_413C:: ; heuristic: target of a pointer table; C0
+; points at: wBattleTargetChoice
+TargetOwnSideFirstSlot:: ; heuristic: target of a pointer table; C0
+Func_039_413C:: ; address name
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleActor]
@@ -180,10 +196,12 @@ Func_039_413C:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ret
 
+; target = a random slot (wC5E7 & 7 after AdvanceRandom) that is not the actor, is present and is not slot 3 or 7; retries until one is found (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7
-; points at: wDA1D
-Func_039_414F:: ; heuristic: target of a pointer table; C0
+; points at: wBattleTargetChoice
+TargetRandomOtherSlot:: ; heuristic: target of a pointer table; C0
+Func_039_414F:: ; address name
     ld a, [wBattleActor]
     ld e, a
 
@@ -199,7 +217,7 @@ Jump_039_4153::
     cp a, $03
     jr z, Jump_039_4153
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wC5E7]
@@ -234,7 +252,7 @@ Jump_039_419A::
     dec b
     jr nz, Jump_039_4181
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], d
@@ -242,324 +260,324 @@ Jump_039_419A::
 
 Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0E41AC, $7E
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     INCBIN "dwm2-cobi-us.gbc", $0E4234, $96
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $4B, $40, $4B, $40, $4B, $40, $78, $40, $4B, $40, $78, $40, $4B, $40, $78, $40
     db $4B, $40, $2B, $41, $2B, $41, $2B, $41, $E8, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
     db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
     db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     INCBIN "dwm2-cobi-us.gbc", $0E4358, $9C
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     INCBIN "dwm2-cobi-us.gbc", $0E43FC, $96
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $4B, $40, $4B, $40, $4B, $40, $78, $40, $4B, $40, $78, $40, $4B, $40, $78, $40
     db $4B, $40, $2B, $41, $2B, $41, $2B, $41, $E8, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40, $2B, $41, $2B, $41, $4B, $40, $2B, $41, $00, $00, $78, $40, $A2, $40
     db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
     db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $4B, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40, $4B, $40, $4B, $40, $4B, $40
     db $4B, $40, $78, $40, $78, $40, $4B, $40, $4B, $40, $78, $40, $A2, $40, $78, $40
     db $2B, $41, $A2, $40, $78, $40, $4B, $40, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
     dw Func_039_6C75
     dw Func_039_6C75
     dw Func_039_6C75
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_6CE9
     dw Func_039_6CE9
     dw Func_039_6CE9
-    dw Func_039_40C2
-    dw Func_039_40C2
-    dw Func_039_413C
+    dw TargetRandomAllySlot
+    dw TargetRandomAllySlot
+    dw TargetOwnSideFirstSlot
     dw Func_039_6AFD
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_6B0A
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_6BB0
     db $78, $40, $5D, $6B, $A2, $40, $B6, $6B, $78, $40, $9A, $40, $78, $40, $91, $66
     db $78, $40, $2B, $41, $4B, $40, $78, $40, $78, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $4B, $40, $2B, $41, $2B, $41, $91, $66, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
     db $78, $40, $78, $40, $91, $66, $78, $40, $4B, $40, $4B, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_414F
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetRandomOtherSlot
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $4B, $40, $4B, $40, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $4B, $40, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $E8, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
     db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
     db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
     dw Func_039_6C75
     dw Func_039_6C75
     dw Func_039_6C75
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_6CE9
     dw Func_039_6CE9
     dw Func_039_6CE9
-    dw Func_039_40C2
-    dw Func_039_40C2
-    dw Func_039_413C
+    dw TargetRandomAllySlot
+    dw TargetRandomAllySlot
+    dw TargetOwnSideFirstSlot
     dw Func_039_6AFD
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_6B0A
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_6BB0
     db $78, $40, $5D, $6B, $A2, $40, $B6, $6B, $78, $40, $9A, $40, $78, $40, $91, $66
     db $78, $40, $2B, $41, $4B, $40, $78, $40, $00, $00, $00, $00
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $4B, $40, $2B, $41, $2B, $41, $91, $66, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
     db $78, $40, $78, $40, $91, $66, $78, $40, $4B, $40, $4B, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_414F
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetRandomOtherSlot
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $4B, $40, $4B, $40, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $4B, $40, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $E8, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40, $2B, $41, $2B, $41, $4B, $40, $2B, $41, $00, $00, $78, $40, $A2, $40
     db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
     db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_413C
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetOwnSideFirstSlot
+    dw TargetFirstAlly
     db $78, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5390
     dw Func_039_5F0E
     dw Func_039_5F0E
@@ -570,29 +588,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_5514
     dw Func_039_5514
     dw Func_039_5514
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
     dw Func_039_569C
     dw Func_039_569C
-    dw Func_039_413C
+    dw TargetOwnSideFirstSlot
     dw Func_039_5716
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_5857
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_58B7
     db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
     db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_5DBB
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_65CD
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
@@ -619,11 +637,11 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_5390
     db $4B, $40, $78, $40, $78, $40
     dw Func_039_6416
-    dw Func_039_412B
+    dw TargetSelf
     dw Func_039_5390
     dw Func_039_5390
     dw Func_039_5390
-    dw Func_039_414F
+    dw TargetRandomOtherSlot
     dw Func_039_5390
     dw Func_039_5390
     dw Func_039_6014
@@ -631,45 +649,45 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $CB, $59, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5D67
     dw Func_039_5ADB
     dw Func_039_5B40
     db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
     dw Func_039_5A84
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5A27
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
     db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
     db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
     dw Func_039_5F0E
     dw Func_039_5390
@@ -677,48 +695,48 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_5390
     db $78, $40, $78, $40, $90, $53, $90, $53, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $0E, $5F, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
     dw Func_039_67AD
     dw Func_039_67AD
     dw Func_039_67AD
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
     dw Func_039_6998
     dw Func_039_6998
-    dw Func_039_413C
+    dw TargetOwnSideFirstSlot
     dw Func_039_699B
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_69A1
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_69A4
     db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $91, $66
     db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00, $00, $00
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_6A04
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $91, $66, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
     db $4B, $40, $4B, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     dw Func_039_69E9
     dw Func_039_69C5
     dw Func_039_69CB
@@ -728,84 +746,84 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_69D7
     dw Func_039_69DD
     dw Func_039_69E3
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
     dw Func_039_69C2
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_414F
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetRandomOtherSlot
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $BF, $69, $BF, $69, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $AD, $69, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
     dw Func_039_69B6
     dw Func_039_69B9
     db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
     dw Func_039_69B3
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_69B0
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
     db $00, $00, $78, $40, $A2, $40, $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40
     db $2B, $41, $2B, $41, $78, $40, $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00
     db $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_413C
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetOwnSideFirstSlot
+    dw TargetFirstAlly
     db $78, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5390
     dw Func_039_5F0E
     dw Func_039_5F0E
@@ -816,29 +834,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_5514
     dw Func_039_5514
     dw Func_039_5514
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
     dw Func_039_569C
     dw Func_039_569C
-    dw Func_039_413C
+    dw TargetOwnSideFirstSlot
     dw Func_039_5716
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_5857
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_58B7
     db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
     db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_5DBB
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_65CD
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
@@ -865,11 +883,11 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_5390
     db $4B, $40, $78, $40, $78, $40
     dw Func_039_6416
-    dw Func_039_412B
+    dw TargetSelf
     dw Func_039_5390
     dw Func_039_5390
     dw Func_039_5390
-    dw Func_039_414F
+    dw TargetRandomOtherSlot
     dw Func_039_5390
     dw Func_039_5390
     dw Func_039_6014
@@ -877,45 +895,45 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $CB, $59, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5D67
     dw Func_039_5ADB
     dw Func_039_5B40
     db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
     dw Func_039_5A84
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5A27
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
     db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
     db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
     dw Func_039_5F0E
     dw Func_039_5390
@@ -923,48 +941,48 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_5390
     db $78, $40, $78, $40, $90, $53, $90, $53, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $90, $53, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
     dw Func_039_67AD
     dw Func_039_67AD
     dw Func_039_67AD
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
     dw Func_039_6998
     dw Func_039_6998
-    dw Func_039_413C
+    dw TargetOwnSideFirstSlot
     dw Func_039_699B
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_69A1
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_69A4
     db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $91, $66
     db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00, $00, $00
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_6A04
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $91, $66, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
     db $4B, $40, $4B, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     dw Func_039_69E9
     dw Func_039_69C5
     dw Func_039_69CB
@@ -974,84 +992,84 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_69D7
     dw Func_039_69DD
     dw Func_039_69E3
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
     dw Func_039_69C2
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_414F
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetRandomOtherSlot
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $BF, $69, $BF, $69, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $AD, $69, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
     dw Func_039_69B6
     dw Func_039_69B9
     db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
     dw Func_039_69B3
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_69B0
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
     db $00, $00, $78, $40, $A2, $40, $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40
     db $2B, $41, $2B, $41, $78, $40, $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00
     db $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_6691
-    dw Func_039_412B
-    dw Func_039_413C
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetSelf
+    dw TargetOwnSideFirstSlot
+    dw TargetFirstAlly
     db $78, $40
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
-    dw Func_039_6691
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
+    dw TargetFoeWeightedBySlotOrder
     db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_543C
     dw Func_039_5F0E
     dw Func_039_5F0E
@@ -1062,29 +1080,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_5593
     dw Func_039_5593
     dw Func_039_5593
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
     dw Func_039_569C
     dw Func_039_569C
-    dw Func_039_413C
+    dw TargetOwnSideFirstSlot
     dw Func_039_5716
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_5857
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_58B7
     db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
     db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_5DBB
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_65CD
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
@@ -1111,11 +1129,11 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_543C
     db $4B, $40, $78, $40, $78, $40
     dw Func_039_6416
-    dw Func_039_412B
+    dw TargetSelf
     dw Func_039_543C
     dw Func_039_543C
     dw Func_039_543C
-    dw Func_039_414F
+    dw TargetRandomOtherSlot
     dw Func_039_543C
     dw Func_039_543C
     dw Func_039_6014
@@ -1123,45 +1141,45 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $CB, $59, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5D67
     dw Func_039_5ADB
     dw Func_039_5B40
     db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
     dw Func_039_5A84
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_5A27
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
     db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
     db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
     dw Func_039_5F0E
     dw Func_039_543C
@@ -1169,8 +1187,8 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_543C
     db $78, $40, $78, $40, $3C, $54, $3C, $54, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $0E, $5F, $2B, $41, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_66C5
     dw Func_039_6A0A
     dw Func_039_6A0A
@@ -1181,29 +1199,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_68B0
     dw Func_039_68B0
     dw Func_039_68B0
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
     dw Func_039_6998
     dw Func_039_6998
-    dw Func_039_413C
+    dw TargetOwnSideFirstSlot
     dw Func_039_699B
-    dw Func_039_40A2
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetFirstAlly
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_69A1
-    dw Func_039_40A2
+    dw TargetFirstAlly
     dw Func_039_69A4
     db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $10, $6A
     db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetFirstAlly
     dw Func_039_6A04
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_6AFA
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $22, $6A, $78, $40, $78, $40, $78, $40, $99, $6A, $78, $40
@@ -1230,11 +1248,11 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Func_039_66C5
     db $4B, $40, $78, $40, $78, $40
     dw Func_039_6A25
-    dw Func_039_412B
+    dw TargetSelf
     dw Func_039_66C5
     dw Func_039_66C5
     dw Func_039_66C5
-    dw Func_039_414F
+    dw TargetRandomOtherSlot
     dw Func_039_66C5
     dw Func_039_6A0D
     dw Func_039_6A0D
@@ -1242,54 +1260,54 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $BF, $69, $BF, $69, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $AD, $69, $78, $40, $78, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_6A01
     dw Func_039_69B6
     dw Func_039_69B9
     db $78, $40, $01, $6A, $78, $40, $4B, $40, $78, $40
     dw Func_039_69B3
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_69B0
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_40A2
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetFirstAlly
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     ds $10, $00
     db $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_6A9C
-    dw Func_039_412B
+    dw TargetSelf
     db $00, $00, $78, $40, $A2, $40, $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40
     db $2B, $41, $2B, $41, $78, $40, $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00
     db $2B, $41, $E8, $40, $4B, $40
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
-    dw Func_039_412B
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
+    dw TargetSelf
     dw Func_039_66C5
-    dw Func_039_412B
-    dw Func_039_413C
-    dw Func_039_40A2
+    dw TargetSelf
+    dw TargetOwnSideFirstSlot
+    dw TargetFirstAlly
     db $78, $40
     dw Func_039_6A0A
     dw Func_039_66C5
@@ -1301,7 +1319,7 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleTarget, wBattleDamageLo, wD873
-; points at: wBattleDamageLo, wDA1D
+; points at: wBattleDamageLo, wBattleTargetChoice
 Func_039_5390:: ; heuristic: target of a pointer table; C0
     ld hl, wBattleDamageLo
     ld bc, $0008
@@ -1402,7 +1420,7 @@ Jump_039_5415::
 
 Jump_039_542B::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleTarget]
@@ -1412,7 +1430,7 @@ Jump_039_542B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleTarget, wBattleDamageLo, wD873
-; points at: wBattleDamageLo, wDA1D
+; points at: wBattleDamageLo, wBattleTargetChoice
 Func_039_543C:: ; heuristic: target of a pointer table; C0
     ld hl, wBattleDamageLo
     ld bc, $0008
@@ -1540,7 +1558,7 @@ Jump_039_54ED::
 
 Jump_039_5503::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleTarget]
@@ -1628,7 +1646,7 @@ Jump_039_5553::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, hFFC8, wD86B, wD86C, wD868, wD87D, ...
 ; writes: wD868, wD86B, wD86C, hFFC6, hFFC7, hFFC8, wD87D, wD87E, ...
-; points at: hFFC6, wD868, wD8A7, wBattleMaxHP, wDA1D, wD87D, wD874, wBattleHP
+; points at: hFFC6, wD868, wD8A7, wBattleMaxHP, wBattleTargetChoice, wD87D, wD874, wBattleHP
 Func_039_5593:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -1768,7 +1786,7 @@ Jump_039_566D::
     cp a, $FF
     jr z, Jump_039_5691
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wD86A]
@@ -1785,7 +1803,7 @@ Jump_039_5691::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: wBattleSlotOut, hFFC7, hFFC6, wDA1D
+; points at: wBattleSlotOut, hFFC7, hFFC6, wBattleTargetChoice
 Func_039_569C:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -1858,7 +1876,7 @@ Jump_039_5704::
 
 Jump_039_5708::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], c
@@ -1867,7 +1885,7 @@ Jump_039_5708::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7, hFFC6
 ; writes: hFFC7, hFFC8, hFFC9, hFFC6
-; points at: hFFC7, wBattleStatus, wDA1D
+; points at: hFFC7, wBattleStatus, wBattleTargetChoice
 Func_039_5716:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -1986,7 +2004,7 @@ Jump_039_57B3::
 
 Jump_039_57C1::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -2000,7 +2018,7 @@ Jump_039_57C1::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8
-; points at: wBattleStatus, wDA1D
+; points at: wBattleStatus, wBattleTargetChoice
 Func_039_57D8:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     and a, $04
@@ -2068,7 +2086,7 @@ Jump_039_5831::
 
 Jump_039_5840::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -2082,7 +2100,7 @@ Jump_039_5840::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_5857:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -2137,7 +2155,7 @@ Jump_039_58A1::
     or a, c
     ld c, a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], c
@@ -2200,7 +2218,7 @@ Jump_039_5909::
     inc c
     dec b
     jr nz, Jump_039_58CD
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2260,13 +2278,13 @@ Jump_039_5963::
     inc c
     dec b
     jr nz, Jump_039_5927
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_596B:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     and a, $04
@@ -2321,7 +2339,7 @@ Jump_039_59B5::
     or a, c
     ld c, a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], c
@@ -2387,7 +2405,7 @@ Jump_039_5A1F::
     inc c
     dec b
     jr nz, Jump_039_59E1
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2696,7 +2714,7 @@ Jump_039_5BF1::
     inc c
     dec b
     jr nz, Jump_039_5BBB
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2747,7 +2765,7 @@ Jump_039_5C3B::
     inc c
     dec b
     jr nz, Jump_039_5C0F
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2906,7 +2924,7 @@ Jump_039_5D11::
     inc c
     dec b
     jr nz, Jump_039_5CE3
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2958,7 +2976,7 @@ Jump_039_5D5F::
     inc c
     dec b
     jr nz, Jump_039_5D2F
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3015,7 +3033,7 @@ Jump_039_5DB3::
     inc c
     dec b
     jr nz, Jump_039_5D7D
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3071,7 +3089,7 @@ Jump_039_5DFA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-; points at: wD80E, wDA74, hFFC8, wDA1D
+; points at: wD80E, wDA74, hFFC8, wBattleTargetChoice
 Func_039_5E03:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     and a, $04
@@ -3237,7 +3255,7 @@ Jump_039_5EF7::
 
 Jump_039_5EFA::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFD0]
@@ -3250,7 +3268,7 @@ Jump_039_5EFA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
 ; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
-; points at: hFFCE, wD80E, wDA72, wDA1D
+; points at: hFFCE, wD80E, wDA72, wBattleTargetChoice
 Func_039_5F0E:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
@@ -3375,7 +3393,7 @@ Jump_039_5FF2::
     dec b
     jp nz, Jump_039_5F6B
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC8]
@@ -3650,7 +3668,7 @@ Jump_039_6199::
     inc c
     dec b
     jr nz, Jump_039_6161
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3729,7 +3747,7 @@ Jump_039_621A::
     inc c
     dec b
     jr nz, Jump_039_61BD
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3808,7 +3826,7 @@ Jump_039_629B::
     inc c
     dec b
     jr nz, Jump_039_623E
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3888,7 +3906,7 @@ Jump_039_631C::
     inc c
     dec b
     jr nz, Jump_039_62BF
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3968,7 +3986,7 @@ Jump_039_639D::
     inc c
     dec b
     jr nz, Jump_039_6340
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4040,13 +4058,13 @@ Jump_039_640E::
     inc c
     dec b
     jr nz, Jump_039_63C1
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, hFFC7, wBattleDamageLo, wD873
 ; writes: wBattleTarget, hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
-; points at: wDA1D, wDA78
+; points at: wBattleTargetChoice, wDA78
 Func_039_6416:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -4153,12 +4171,12 @@ Jump_039_64C2::
     inc c
     dec b
     jr nz, Jump_039_646A
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 Jump_039_64CA::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleTarget]
@@ -4242,7 +4260,7 @@ Jump_039_6554::
     inc c
     dec b
     jr nz, Jump_039_64F7
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4314,13 +4332,13 @@ Jump_039_65C5::
     inc c
     dec b
     jr nz, Jump_039_6578
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
-; points at: wDA76, wDA1D
+; points at: wDA76, wBattleTargetChoice
 Func_039_65CD:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -4416,7 +4434,7 @@ Jump_039_666F::
     dec b
     jp nz, Jump_039_65F4
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC8]
@@ -4431,11 +4449,13 @@ Jump_039_668F::
     ld [hl], a
     ret
 
+; after AdvanceRandom, lists the present opposite slots in slot order (count in hFFC6, slots in hFFC7-hFFC9, unused entries $FF) and lets PickWeightedTargetCandidate choose (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC6, hFFC7
-Func_039_6691:: ; heuristic: target of a pointer table; C0
+TargetFoeWeightedBySlotOrder:: ; heuristic: target of a pointer table; C0
+Func_039_6691:: ; address name
     call AdvanceRandom
     ld a, [wBattleActor]
     and a, $04
@@ -4464,7 +4484,7 @@ Jump_039_66BD::
     inc c
     dec b
     jr nz, Jump_039_66A9
-    call Func_039_704E
+    call PickWeightedTargetCandidate
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4598,13 +4618,13 @@ Jump_039_6788::
     ldh [hFFC8], a
 
 Jump_039_67A9::
-    call Func_039_704E
+    call PickWeightedTargetCandidate
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCB, hFFCC, hFFC7, hFFC8, hFFC6, hFFC9, hFFCA
 ; writes: wD09D, wD09E, wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, ...
-; points at: wD09D, hFFC7, wDA1D
+; points at: wD09D, hFFC7, wBattleTargetChoice
 Func_039_67AD:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -4761,7 +4781,7 @@ Jump_039_6895::
     dec d
     jr nz, Jump_039_6820
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -4776,7 +4796,7 @@ Jump_039_68AE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCA, hFFCB, hFFC6, wD876, wD877, wD874, wD875, ...
 ; writes: hFFC6, hFFCA, hFFCB, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873, ...
-; points at: hFFC6, wBattleDamageLo, hFFC7, wDA1D, wD09D
+; points at: hFFC6, wBattleDamageLo, hFFC7, wBattleTargetChoice, wD09D
 Func_039_68B0:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -4906,7 +4926,7 @@ Jump_039_696F::
 
 Jump_039_6988::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC7]
@@ -4916,28 +4936,28 @@ Jump_039_6988::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: wBattleSlotOut, hFFC7, hFFC6, wDA1D
+; points at: wBattleSlotOut, hFFC7, hFFC6, wBattleTargetChoice
 Func_039_6998:: ; heuristic: target of a pointer table; C0
     jp Func_039_569C
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7, hFFC6
 ; writes: hFFC7, hFFC8, hFFC9, hFFC6
-; points at: hFFC7, wBattleStatus, wDA1D
+; points at: hFFC7, wBattleStatus, wBattleTargetChoice
 Func_039_699B:: ; heuristic: target of a pointer table; C0
     jp Func_039_5716
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8
-; points at: wBattleStatus, wDA1D
+; points at: wBattleStatus, wBattleTargetChoice
 Func_039_699E:: ; heuristic: follows a terminator; C0
     jp Func_039_57D8
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_69A1:: ; heuristic: target of a pointer table; C0
     jp Func_039_5857
 
@@ -4958,7 +4978,7 @@ Func_039_69A7:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_69AA:: ; heuristic: follows a terminator; C0
     jp Func_039_596B
 
@@ -5101,14 +5121,14 @@ Func_039_6A04:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-; points at: wD80E, wDA74, hFFC8, wDA1D
+; points at: wD80E, wDA74, hFFC8, wBattleTargetChoice
 Func_039_6A07:: ; heuristic: follows a terminator; C0
     jp Func_039_5E03
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
 ; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
-; points at: hFFCE, wD80E, wDA72, wDA1D
+; points at: hFFCE, wD80E, wDA72, wBattleTargetChoice
 Func_039_6A0A:: ; heuristic: target of a pointer table; C0
     jp Func_039_5F0E
 
@@ -5237,7 +5257,7 @@ Jump_039_6A8E::
     inc c
     dec b
     jr nz, Jump_039_6A41
-    call SetActorWDA1DFromHRAMChoice
+    call SetActorTargetFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5320,14 +5340,14 @@ Jump_039_6AF2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
-; points at: wDA76, wDA1D
+; points at: wDA76, wBattleTargetChoice
 Func_039_6AFA:: ; heuristic: target of a pointer table; C0
     jp Func_039_65CD
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: wBattleStatus, hFFC6, hFFC7, wDA1D
+; points at: wBattleStatus, hFFC6, hFFC7, wBattleTargetChoice
 Func_039_6AFD:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -5338,7 +5358,7 @@ Func_039_6AFD:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: hFFC6, hFFC7, wDA1D
+; points at: hFFC6, hFFC7, wBattleTargetChoice
 Func_039_6B0A:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -5378,9 +5398,9 @@ Jump_039_6B41::
     jr nz, Jump_039_6B1D
     ldh a, [hFFC6]
     or a, a
-    jp nz, Func_039_704E
+    jp nz, PickWeightedTargetCandidate
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleActor]
@@ -5390,7 +5410,7 @@ Jump_039_6B41::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: hFFC6, hFFC7, wDA1D
+; points at: hFFC6, hFFC7, wBattleTargetChoice
 Func_039_6B5D:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     and a, $04
@@ -5430,9 +5450,9 @@ Jump_039_6B94::
     jr nz, Jump_039_6B70
     ldh a, [hFFC6]
     or a, a
-    jp nz, Func_039_704E
+    jp nz, PickWeightedTargetCandidate
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleActor]
@@ -5485,9 +5505,9 @@ Jump_039_6C0E::
     jr nz, Jump_039_6BF4
     ldh a, [hFFC6]
     or a, a
-    jp nz, Func_039_704E
+    jp nz, PickWeightedTargetCandidate
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleActor]
@@ -5535,14 +5555,14 @@ Jump_039_6C67::
     jr nz, Jump_039_6C45
     ldh a, [hFFC6]
     or a, a
-    jp z, Func_039_6691
-    call Func_039_704E
+    jp z, TargetFoeWeightedBySlotOrder
+    call PickWeightedTargetCandidate
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_6C75:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -5612,7 +5632,7 @@ Jump_039_6CD4::
     dec b
     jr nz, Jump_039_6C8A
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -5622,7 +5642,7 @@ Jump_039_6CD4::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_6CE9:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleActor]
     and a, $04
@@ -5695,7 +5715,7 @@ Jump_039_6D4E::
     dec b
     jr nz, Jump_039_6CFE
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -5967,7 +5987,7 @@ Jump_039_6EAE::
 ; 1 call site from 1 routine (e.g. Func_039_5514)
 ; reads: hFFC7, hFFC6, hFFC8, wBattleActor, wBattleTarget
 ; writes: hFFC6, hFFC7, hFFC8, wBattleTarget
-; points at: wD874, wD87D, hFFC7, wDA1D
+; points at: wD874, wD87D, hFFC7, wBattleTargetChoice
 Func_039_6EB6::
     ld a, $00
     ldh [hFFC6], a
@@ -6025,7 +6045,7 @@ Jump_039_6F0A::
     or a, c
     ld [wBattleTarget], a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wBattleTarget]
@@ -6133,10 +6153,10 @@ Jump_039_6FC0::
 
 ; 5 call sites from 5 routines (e.g. Func_039_70FD, Func_039_6014, Func_039_5C43, Func_039_7093, ...)
 ; reads: wBattleActor, hFFC6, hFFC9, hFFD0
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_6FC8::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -6151,14 +6171,14 @@ Jump_039_6FDC::
     ld [hl], a
     ret
 
-; HL = wDA1D + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)
+; HL = wBattleTargetChoice + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)
 ; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_5D67, Func_039_6416, Func_039_5BA5, ...)
 ; reads: wBattleActor, hFFC6, hFFC9, hFFC8, hFFD0
-; points at: wDA1D
-SetActorWDA1DFromHRAMChoice::
+; points at: wBattleTargetChoice
+SetActorTargetFromHRAMChoice::
 Func_039_6FE2:: ; address name
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -6178,10 +6198,10 @@ Jump_039_6FFC::
 
 ; 5 call sites from 5 routines (e.g. Func_039_6A9C, Func_039_5A84, Func_039_5B40, Func_039_5ADB, ...)
 ; reads: wBattleActor, hFFC6, hFFCA, hFFC9, hFFC8, hFFD0
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_7002::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -6204,10 +6224,10 @@ Jump_039_7022::
 
 ; 1 call site from 1 routine (e.g. Func_039_5A27)
 ; reads: wBattleActor, hFFC6, hFFCB, hFFCA, hFFC9, hFFD0
-; points at: wDA1D
+; points at: wBattleTargetChoice
 Func_039_7028::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hFFC6]
@@ -6228,10 +6248,12 @@ Jump_039_7048::
     ld [hl], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_039_66C5, Func_039_6BB0, Func_039_6691)
+; hFFC6 = candidate count, hFFC7-hFFC9 = candidates in priority order: target = the first for one; with two the first when wC5E7 < $AB (171/256), else the second; with three the first when wC5E7 < $80, the second when < $D5, else the third (128, 85 and 43 of 256). Writes wBattleTargetChoice[2 * actor]; with no candidates it stores hFFC7 ($FF) (E-0061)
+; 3 call sites from 3 routines (e.g. Func_039_66C5, Func_039_6BB0, TargetFoeWeightedBySlotOrder)
 ; reads: hFFC6, hFFC7, wBattleActor, wC5E7, hFFC8
-; points at: wDA1D, hFFC7
-Func_039_704E::
+; points at: wBattleTargetChoice, hFFC7
+PickWeightedTargetCandidate::
+Func_039_704E:: ; address name
     ldh a, [hFFC6]
     cp a, $03
     jr z, Jump_039_7069
@@ -6267,7 +6289,7 @@ Jump_039_707A::
 Jump_039_7084::
     ld b, a
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld [hl], b

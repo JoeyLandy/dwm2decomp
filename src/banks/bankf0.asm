@@ -5824,7 +5824,7 @@ Jump_0F0_739B:: ; address name
     ld hl, wCF2B
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC3
     ld b, $01
     ld c, $FE
@@ -5845,7 +5845,7 @@ Jump_0F0_73BD:: ; address name
     ld hl, wCF2B
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECC
     ld b, $01
     ld c, $FE
@@ -5866,7 +5866,7 @@ Jump_0F0_73DF:: ; address name
     ld hl, wCF2B
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
@@ -5887,7 +5887,7 @@ Jump_0F0_7401:: ; address name
     ld hl, wCF2F
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC9
     ld b, $01
     ld c, $FE
@@ -5908,7 +5908,7 @@ Jump_0F0_7423:: ; address name
     ld hl, wCF2F
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
@@ -5942,7 +5942,7 @@ Jump_0F0_7452:: ; address name
     ld hl, wCF31
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC5
     ld b, $01
     ld c, $FE
@@ -5963,7 +5963,7 @@ Jump_0F0_7474:: ; address name
     ld hl, wCF33
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC6
     ld b, $01
     ld c, $FE
@@ -5984,7 +5984,7 @@ Jump_0F0_7496:: ; address name
     ld hl, wCF35
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC8
     ld b, $01
     ld c, $FE
@@ -6005,7 +6005,7 @@ Jump_0F0_74B8:: ; address name
     ld hl, wCF37
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECB
     ld b, $01
     ld c, $FE
@@ -6026,7 +6026,7 @@ Jump_0F0_74DA:: ; address name
     ld hl, wCF2F
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECB
     ld b, $02
     ld c, $FD
@@ -6047,7 +6047,7 @@ Jump_0F0_74FC:: ; address name
     ld hl, wCF2B
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
@@ -6068,7 +6068,7 @@ Jump_0F0_751E:: ; address name
     ld hl, wCF31
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6085,7 +6085,7 @@ Jump_0F0_7536:: ; address name
     ld hl, wCF33
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6102,7 +6102,7 @@ Jump_0F0_754E:: ; address name
     ld hl, wCF35
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6119,7 +6119,7 @@ Jump_0F0_7566:: ; address name
     ld hl, wCF37
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6136,7 +6136,7 @@ Jump_0F0_757E:: ; address name
     ld hl, wCF2B
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6153,7 +6153,7 @@ Jump_0F0_7596:: ; address name
     ld hl, wCF2F
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6170,7 +6170,7 @@ Jump_0F0_75AE:: ; address name
     ld hl, wCF31
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
@@ -6191,7 +6191,7 @@ Jump_0F0_75D0:: ; address name
     ld hl, wCF33
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC5
     ld b, $05
     ld c, $FA
@@ -6212,7 +6212,7 @@ Jump_0F0_75F2:: ; address name
     ld hl, wCF2B
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC6
     ld b, $02
     ld c, $FD
@@ -6233,7 +6233,7 @@ Jump_0F0_7614:: ; address name
     ld hl, wCF35
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC9
     ld b, $05
     ld c, $FA
@@ -6254,7 +6254,7 @@ Jump_0F0_7636:: ; address name
     ld hl, wCF37
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC7
     ld b, $05
     ld c, $FA
@@ -6275,7 +6275,7 @@ Jump_0F0_7658:: ; address name
     ld hl, wCF2F
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC3
     ld b, $05
     ld c, $FA
@@ -6296,7 +6296,7 @@ Jump_0F0_767A:: ; address name
     ld hl, wCF2B
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6313,7 +6313,7 @@ Jump_0F0_7692:: ; address name
     ld hl, wCF2B
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECB
     ld b, $01
     ld c, $FE
@@ -6334,7 +6334,7 @@ Jump_0F0_76B4:: ; address name
     ld hl, wCF2B
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
@@ -6355,7 +6355,7 @@ Jump_0F0_76D6:: ; address name
     ld hl, wCF2B
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECC
     ld b, $02
     ld c, $FD
@@ -6376,7 +6376,7 @@ Jump_0F0_76F8:: ; address name
     ld hl, wCF2B
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $05
     ld c, $FA
@@ -6420,7 +6420,7 @@ Jump_0F0_772E:: ; address name
     ld hl, wCF2B
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECA
     ld b, $02
     call SubtractBClampedAtZero
@@ -6446,7 +6446,7 @@ Jump_0F0_774B:: ; address name
     ld hl, wCF2F
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC9
     ld b, $02
     ld c, $FD
@@ -6467,7 +6467,7 @@ Jump_0F0_776D:: ; address name
     ld hl, wCF31
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
@@ -6488,7 +6488,7 @@ Jump_0F0_778F:: ; address name
     ld hl, wCF33
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC3
     ld b, $02
     ld c, $FD
@@ -6509,7 +6509,7 @@ Jump_0F0_77B1:: ; address name
     ld hl, wCF35
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
@@ -6530,7 +6530,7 @@ Jump_0F0_77D3:: ; address name
     ld hl, wCF37
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
@@ -6551,7 +6551,7 @@ Jump_0F0_77F5:: ; address name
     ld hl, wCF31
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
@@ -6572,7 +6572,7 @@ Jump_0F0_7817:: ; address name
     ld hl, wCF33
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECC
     ld b, $01
     ld c, $FE
@@ -6593,7 +6593,7 @@ Jump_0F0_7839:: ; address name
     ld hl, wCF35
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC6
     ld b, $01
     ld c, $FE
@@ -6614,7 +6614,7 @@ Jump_0F0_785B:: ; address name
     ld hl, wCF37
     ld b, $02
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECB
     ld b, $01
     ld c, $FE
@@ -6675,7 +6675,7 @@ Jump_0F0_7899:: ; address name
     ld hl, wCF2B
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC8
     ld b, $01
     ld c, $FE
@@ -6696,7 +6696,7 @@ Jump_0F0_78BB:: ; address name
     ld hl, wCF2B
     ld b, $08
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
@@ -6717,7 +6717,7 @@ Jump_0F0_78DD:: ; address name
     ld hl, wCF2F
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC7
     ld b, $01
     ld c, $FE
@@ -6738,7 +6738,7 @@ Jump_0F0_78FF:: ; address name
     ld hl, wCF2F
     ld b, $08
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
@@ -6759,7 +6759,7 @@ Jump_0F0_7921:: ; address name
     ld hl, wCF31
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC5
     ld b, $01
     ld c, $FE
@@ -6780,7 +6780,7 @@ Jump_0F0_7943:: ; address name
     ld hl, wCF31
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
@@ -6801,7 +6801,7 @@ Jump_0F0_7965:: ; address name
     ld hl, wCF33
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECC
     ld b, $01
     ld c, $FE
@@ -6822,7 +6822,7 @@ Jump_0F0_7987:: ; address name
     ld hl, wCF33
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECC
     ld b, $02
     ld c, $FD
@@ -6843,7 +6843,7 @@ Jump_0F0_79A9:: ; address name
     ld hl, wCF35
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC3
     ld b, $01
     ld c, $FE
@@ -6864,7 +6864,7 @@ Jump_0F0_79CB:: ; address name
     ld hl, wCF35
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC3
     ld b, $02
     ld c, $FD
@@ -6885,7 +6885,7 @@ Jump_0F0_79ED:: ; address name
     ld hl, wCF37
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC9
     ld b, $01
     ld c, $FE
@@ -6906,7 +6906,7 @@ Jump_0F0_7A0F:: ; address name
     ld hl, wCF37
     ld b, $05
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC9
     ld b, $02
     ld c, $FD
@@ -6927,7 +6927,7 @@ Jump_0F0_7A31:: ; address name
     ld hl, wCF2F
     ld b, $08
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC6
     ld b, $02
     ld c, $FD
@@ -6948,7 +6948,7 @@ Jump_0F0_7A53:: ; address name
     ld hl, wCF31
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
@@ -6969,7 +6969,7 @@ Jump_0F0_7A75:: ; address name
     ld hl, wCF35
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECB
     ld b, $02
     ld c, $FD
@@ -6990,7 +6990,7 @@ Jump_0F0_7A97:: ; address name
     ld hl, wCF37
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECB
     ld b, $02
     ld c, $FD
@@ -7011,7 +7011,7 @@ Jump_0F0_7AB9:: ; address name
     ld hl, wCF33
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECD
     ld b, $02
     ld c, $FD
@@ -7032,7 +7032,7 @@ Jump_0F0_7ADB:: ; address name
     ld hl, wCF35
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECC
     ld b, $02
     ld c, $FD
@@ -7053,7 +7053,7 @@ Jump_0F0_7AFD:: ; address name
     ld hl, wCF31
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
@@ -7074,7 +7074,7 @@ Jump_0F0_7B1F:: ; address name
     ld hl, wCF2B
     ld b, $01
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC4
     ld b, $01
     ld c, $FE
@@ -7095,7 +7095,7 @@ Jump_0F0_7B41:: ; address name
     ld hl, wCF2B
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
@@ -7116,7 +7116,7 @@ Jump_0F0_7B63:: ; address name
     ld hl, wCF2F
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
@@ -7137,7 +7137,7 @@ Jump_0F0_7B85:: ; address name
     ld hl, wCF2B
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECC
     ld b, $02
     ld c, $FD
@@ -7158,7 +7158,7 @@ Jump_0F0_7BA7:: ; address name
     ld hl, wCF2F
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC9
     ld b, $02
     ld c, $FD
@@ -7179,7 +7179,7 @@ Jump_0F0_7BC9:: ; address name
     ld hl, wCF31
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
@@ -7200,7 +7200,7 @@ Jump_0F0_7BEB:: ; address name
     ld hl, wCF33
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCECB
     ld b, $02
     ld c, $FD
@@ -7221,7 +7221,7 @@ Jump_0F0_7C0D:: ; address name
     ld hl, wCF35
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC6
     ld b, $02
     ld c, $FD
@@ -7242,7 +7242,7 @@ Jump_0F0_7C2F:: ; address name
     ld hl, wCF37
     ld b, $03
     ld de, $03E7
-    call Func_0F0_7C64
+    call AddBToWordAtHLCapped
     ld hl, wCEC3
     ld b, $02
     ld c, $FD
@@ -7284,8 +7284,10 @@ Jump_0F0_7C62::
     ld [hl], a
     ret
 
+; HL = address of a word: word = min(word + B, DE) (CompareHLWithDE); DE kept; clobbers A, BC, HL (E-0061)
 ; 66 call sites from 66 routines (e.g. Func_0F0_72C8_Case61, Func_0F0_72C8_Case60, Func_0F0_72C8_Case5F, Func_0F0_72C8_Case5E, ...)
-Func_0F0_7C64::
+AddBToWordAtHLCapped::
+Func_0F0_7C64:: ; address name
     push hl
     ld a, [hl+]
     add a, b
@@ -7294,7 +7296,7 @@ Func_0F0_7C64::
     adc a, $00
     ld h, a
     ld l, c
-    call Func_0F0_7C81
+    call CompareHLWithDE
     ld a, c
     cp a, $FF
     jr nz, Jump_0F0_7C7A
@@ -7313,8 +7315,10 @@ Jump_0F0_7C7A::
     ld [bc], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F0_7C64)
-Func_0F0_7C81::
+; unsigned 16-bit compare: C = 0 when HL < DE, 1 when equal, $FF when HL > DE; clobbers A (E-0061)
+; 1 call site from 1 routine (e.g. AddBToWordAtHLCapped)
+CompareHLWithDE::
+Func_0F0_7C81:: ; address name
     ld a, h
     cp a, d
     jr c, Jump_0F0_7C90

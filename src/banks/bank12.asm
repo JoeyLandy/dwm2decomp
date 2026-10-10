@@ -279,7 +279,7 @@ Jump_012_413C:: ; address name
     ld [wC8C9], a
     xor a, a
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand99_Run
@@ -591,7 +591,7 @@ Jump_012_4310:: ; address name
     ld [wC8C9], a
     xor a, a
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand98_Run
@@ -843,7 +843,7 @@ Jump_012_44AF:: ; address name
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, [wD7FC]
     add a, $05
     call Func_012_6820
@@ -929,7 +929,7 @@ Jump_012_4546:: ; address name
     ld [wC8C9], a
     ld a, $03
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 23 of the `rst $00` table in ScriptCommand96_Run
@@ -1448,7 +1448,7 @@ Jump_012_4863:: ; address name
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, $00
     call Func_012_488B
     xor a, a
@@ -1640,7 +1640,7 @@ Jump_012_49F6::
     ldh [hFF8D], a
     ld a, $00
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, $01
     ld [wC936], a
     ret
@@ -2295,7 +2295,7 @@ Jump_012_4DDC:: ; address name
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2425,7 +2425,7 @@ Jump_012_4EAD:: ; address name
     ld [wC8C9], a
     ld a, $00
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ret
 
 ; implements script command type 92; reached through ScriptCommand92 in bank $10 (E-0038)
@@ -3014,7 +3014,7 @@ Jump_012_51FC:: ; address name
     ldh [hFF8C], a
     ld a, $01
     ld [wC8C6], a
-    farcall Func_05F_6C5A
+    farcall ScriptStartFadeAndAdvanceStep
     ld a, $80
     ld [wC8C5], a
     ld a, [wCC44]

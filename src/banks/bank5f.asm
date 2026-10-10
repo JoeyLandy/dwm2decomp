@@ -433,11 +433,13 @@ Jump_05F_6B4D::
     farcall Func_002_5946
     ret
 
+; wC929 = object number (16-byte entries): sets bit 2 of wCB8C + 16n, stores direction wC92A & 3 at wCB86 + 16n and moves the object one pixel, two when wC92A bit 7 is set: direction 0 adds the step to Y (wCB8B + 16n), 1 adds it to X (wCB8A + 16n), 2 subtracts it from Y, 3 from X. When the moved coordinate equals wC928 it clears bit 2 and sets wC92C = 1, else wC92C = 0 (E-0061)
 ; 145 call sites from 78 routines (e.g. ScriptCommandC7_Run_Case01, ScriptCommand5F_Run_Case17, Func_00F_4774, Func_00F_47F5, ...)
 ; reads: wC929, wC92A, wC928
 ; writes: wC92C
 ; points at: wCB8C
-Func_05F_6B54::
+StepObjectTowardCoord::
+Func_05F_6B54:: ; address name
     ld a, [wC929]
     swap a
     ld hl, wCB8C
@@ -623,10 +625,12 @@ Jump_05F_6C43::
     ldh [hFFC6], a
     ret
 
+; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
 ; 51 call sites from 48 routines (e.g. Func_00F_4FA1, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ScriptCommand4B_Run_Case11, ...)
 ; writes: wModeState, wC8C5, wScriptParam0
 ; points at: wScriptStep
-Func_05F_6C5A::
+ScriptStartFadeAndAdvanceStep::
+Func_05F_6C5A:: ; address name
     ld a, $0F
     call StartPaletteFade
     ld a, $04

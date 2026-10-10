@@ -193,7 +193,7 @@ Jump_030_40E7:: ; address name
 
 ; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, Func_036_714F, RunBattleActions_Case06, Func_03A_6846)
 ; reads: wC58A, wC46B, wBattleActor
-; points at: wDAD8, wDA1D, wDAE9
+; points at: wDAD8, wBattleTargetChoice, wDAE9
 Func_030_4102::
     ld a, [wC58A]
     cp a, $01
@@ -222,7 +222,7 @@ Jump_030_4122::
     bit 7, [hl]
     jr nz, Jump_030_4149
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [hl]
@@ -230,7 +230,7 @@ Jump_030_4122::
     jp nz, Jump_030_4151
 
 Jump_030_4149::
-    farcall Func_039_4001
+    farcall ChooseActionTarget
     jr Jump_030_4152
 
 Jump_030_4151::
@@ -238,7 +238,7 @@ Jump_030_4151::
 
 Jump_030_4152::
     ld a, [wBattleActor]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -341,12 +341,12 @@ Func_030_41DF:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
 ; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
-; points at: wDA1C, wCFF3
+; points at: wBattleActionChoice, wCFF3
 RunBattleCommandEntry_Case04_Sub02::
 Func_030_4203:: ; address name
     push de
     ld a, e
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, [hl]
@@ -603,7 +603,7 @@ Func_030_4396:: ; address name
 
 ; only called from RunBattleCommandEntry_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case06)
-; points at: wDA1C, wD812
+; points at: wBattleActionChoice, wD812
 RunBattleCommandEntry_Case06_Sub01::
 Func_030_439D:: ; address name
     ld c, $00
@@ -615,7 +615,7 @@ Jump_030_43A1::
     jr c, Jump_030_43BF
     ld a, c
     add a, a
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
     cp a, $6E
@@ -699,7 +699,7 @@ Jump_030_4418::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wBattleActor, wD868, wD869, wD86A, wD86B
 ; writes: wBattleStatResultLo, wBattleResolveStep
-; points at: wBattleResolveStep, wD868, wBattleStatus, wDAE0, wDA1C, wDAD8
+; points at: wBattleResolveStep, wD868, wBattleStatus, wDAE0, wBattleActionChoice, wDAD8
 Func_030_43C4_Case01::
 Jump_030_441D:: ; address name
     ld hl, wBattleResolveStep
@@ -771,7 +771,7 @@ Jump_030_4497::
     add_a_to_hl
     ld [hl], $01
     ld a, [wBattleActor]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     call AddDoubleAToHL_Bank30
     ld a, $FF
     ld [hl+], a
@@ -2080,7 +2080,7 @@ Func_030_4F3B::
     ld hl, $4F66
     add hl, de
     add hl, de
-    call Func_000_000B
+    call JumpToWordAtHL
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2790,11 +2790,11 @@ Func_030_540C::
 
 ; 12 call sites from 8 routines (e.g. Func_030_4D25, Func_030_4595, Func_030_502D, Func_030_5440, ...)
 ; reads: wBattleActor
-; points at: wDA1C
+; points at: wBattleActionChoice
 Func_030_541B::
     ld a, [wBattleActor]
     add a, a
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add_a_to_hl
     ret
 

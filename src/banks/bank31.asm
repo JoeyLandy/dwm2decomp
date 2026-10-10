@@ -1812,7 +1812,7 @@ Jump_031_4A3F::
 ; 1 call site from 1 routine (e.g. BattleFight_Step0)
 ; reads: wC984, wC58A, wC57F, wC985
 ; writes: wD892, wD893, wC46B
-; points at: wDAD8, wD854, wD895, wDA1C, wDA5B, wBattleStep, wD80F
+; points at: wDAD8, wD854, wD895, wBattleActionChoice, wDA5B, wBattleStep, wD80F
 BattleFight_Step0_Sub01::
 Func_031_4A65:: ; address name
     ld hl, wDAD8
@@ -1831,7 +1831,7 @@ Jump_031_4A6A::
     ld bc, $000A
     xor a, a
     call FillBytes
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     ld bc, $0010
     ld a, $FF
     call FillBytes
@@ -2230,12 +2230,12 @@ Jump_031_4CED::
 ; only called from RunBattleSetup_Table2_Case05 (E-0047)
 ; 3 call sites from 1 routine (e.g. RunBattleSetup_Table2_Case05)
 ; reads: wC57F
-; points at: wDA1C
+; points at: wBattleActionChoice
 RunBattleSetup_Table2_Case05_Sub01::
 Func_031_4CEE:: ; address name
     ld a, [wC57F]
     and a, $02
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add a, a
     add_a_to_hl
@@ -2863,7 +2863,7 @@ Jump_031_5087:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCFD4, wC46C, wDAD7
 ; writes: wBattleResolveStep, wD869, wCFD4
-; points at: wC46C, wCFD8, wDA1C, wDAD8, wBattleResolveStep, wDA5B, wC29B
+; points at: wC46C, wCFD8, wBattleActionChoice, wDAD8, wBattleResolveStep, wDA5B, wC29B
 Func_031_4EB9_Case02::
 Jump_031_50BF:: ; address name
     ld de, Data_031_63A7
@@ -2888,7 +2888,7 @@ Jump_031_50BF:: ; address name
     or a, a
     jr z, Jump_031_5104
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld [hl], $00
@@ -2936,7 +2936,7 @@ Jump_031_5147::
 
 Jump_031_514E::
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $FF
@@ -3035,7 +3035,7 @@ Jump_031_51CE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCFD4, wC46D
 ; writes: wD869, wBattleResolveStep, wC470
-; points at: wC46D, wBattleResolveStep, wDAD8, wDA1C
+; points at: wC46D, wBattleResolveStep, wDAD8, wBattleActionChoice
 Func_031_4EB9_Case06::
 Jump_031_51F0:: ; address name
     ld de, Data_031_63AF
@@ -3082,7 +3082,7 @@ Jump_031_5242::
     cp a, $01
     jr nz, Jump_031_525C
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $00
@@ -3121,7 +3121,7 @@ Jump_031_5281::
 
 Jump_031_5292::
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $AC
@@ -3263,7 +3263,7 @@ Jump_031_5319:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wJoypadPressed, wCFD4, wC470
 ; writes: wD868
-; points at: wC470, wBattleResolveStep, wDA1C
+; points at: wC470, wBattleResolveStep, wBattleActionChoice
 Func_031_4EB9_Case0E::
 Jump_031_5350:: ; address name
     ld a, [wC57F]
@@ -3293,7 +3293,7 @@ Jump_031_537B::
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, $00
@@ -3418,7 +3418,7 @@ Jump_031_542A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCFF1, wCFD4, wRecordBufferData, wCFD5, wC46E, wRecordBuffer, wCFF2
 ; writes: wD869, wStringIndex
-; points at: wC46E, wBattleMP, wDAD8, wDA1C, wBattleResolveStep
+; points at: wC46E, wBattleMP, wDAD8, wBattleActionChoice, wBattleResolveStep
 Func_031_4EB9_Case12::
 Jump_031_5454:: ; address name
     ld de, Data_031_63A7
@@ -3476,7 +3476,7 @@ Jump_031_5499::
     or a, [hl]
     ld [hl], a
     ld a, [wCFD4]
-    ld hl, wDA1C
+    ld hl, wBattleActionChoice
     add a, a
     add_a_to_hl
     ld a, [wRecordBuffer]
@@ -3750,7 +3750,7 @@ Jump_031_5639::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wJoypadPressed, wRecordBuffer, wCFD4, wC470
 ; writes: wD868, wStringIndex, wBattleResolveStep
-; points at: wC470, wBattleResolveStep, wDA1D
+; points at: wC470, wBattleResolveStep, wBattleTargetChoice
 Func_031_4EB9_Case1A::
 Jump_031_566A:: ; address name
     ld a, [wC57F]
@@ -3806,7 +3806,7 @@ Jump_031_56AF::
 
 Jump_031_56D5::
     ld a, [wCFD4]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wC470]
@@ -3908,7 +3908,7 @@ Jump_031_573C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wJoypadPressed, wCFD4, wC470
 ; writes: wD868
-; points at: wC470, wBattleResolveStep, wDA1D
+; points at: wC470, wBattleResolveStep, wBattleTargetChoice
 Func_031_4EB9_Case1E::
 Jump_031_576F:: ; address name
     ld a, [wC57F]
@@ -3938,7 +3938,7 @@ Jump_031_579A::
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
     ld a, [wCFD4]
-    ld hl, wDA1D
+    ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ld a, [wC470]
@@ -4821,7 +4821,7 @@ Jump_031_5CE8::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC58F, wC57F, wC5E7, wC5E8, wC46B
 ; writes: wC594, wC592, wC593, wC595, wC596, wC590, wC591
-; points at: wDA43, wDA47, wC597, wDA1C, wDA24, wDA5B, wDA5F, wDAD8, ...
+; points at: wDA43, wDA47, wC597, wBattleActionChoice, wDA24, wDA5B, wDA5F, wDAD8, ...
 RunBattleSetup_Case06::
 Jump_031_5CED:: ; address name
     ld a, [wC58A]
@@ -4856,7 +4856,7 @@ Jump_031_5D0B::
     ld [hl+], a
     ld a, [wC46B]
     ld [hl+], a
-    ld de, wDA1C
+    ld de, wBattleActionChoice
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_031_5D33
@@ -4954,7 +4954,7 @@ Jump_031_5DA6::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC58F, wC57F, wC5E7, wC5E8, wC46B, wC5BA, wC5BB
 ; writes: wC594, wC58C, wDAE9, wDAEA, wC5BA, wC5BB, wC5BC, wC5E7, ...
-; points at: wDA47, wDA43, wC5B7, wDA24, wDA1C, wDA5F, wDA5B, wDADC, ...
+; points at: wDA47, wDA43, wC5B7, wDA24, wBattleActionChoice, wDA5F, wDA5B, wDADC, ...
 RunBattleSetup_Case08::
 Jump_031_5DA7:: ; address name
     ld a, [wC58A]
@@ -4993,7 +4993,7 @@ Jump_031_5DC9::
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_031_5DEB
-    ld de, wDA1C
+    ld de, wBattleActionChoice
 
 Jump_031_5DEB::
     ld a, [hl+]
