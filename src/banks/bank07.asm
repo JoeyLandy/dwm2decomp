@@ -3945,7 +3945,7 @@ Jump_007_690E::
 
 Jump_007_6919::
     ld a, $38
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -4268,7 +4268,7 @@ Jump_007_6B23::
     ldh [hFF8F], a
     ldh [hFF92], a
     ld a, $14
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8C], a
     ld [wC6FD], a
@@ -6969,7 +6969,7 @@ Jump_007_7D43::
     ldh [hFF8F], a
     ldh [hFF92], a
     ld a, $14
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8C], a
     ld [wC6FD], a

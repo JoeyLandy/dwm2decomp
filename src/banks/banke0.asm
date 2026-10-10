@@ -5972,7 +5972,7 @@ Jump_0E0_72DB::
     ld a, $10
     call StartPaletteFade
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a

@@ -1428,19 +1428,19 @@ Jump_013_49CE::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC955, hFF90
-; writes: wC955, hFF90, wC8C8, wC8C9, wJoypadHeld, wJoypadPressed, wC8CA, wC914, ...
+; reads: wC955, hMapId
+; writes: wC955, hMapId, wC8C8, wC8C9, wJoypadHeld, wJoypadPressed, wC8CA, wC914, ...
 Func_013_49D5:: ; heuristic: follows a terminator; C0
     ld a, [wC955]
     or a, a
     ret z
     xor a, a
     ld [wC955], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $7F
     jr nz, Jump_013_49F4
     ld a, $92
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $40
     ld [wC8C8], a
     ld a, $40
@@ -1449,7 +1449,7 @@ Func_013_49D5:: ; heuristic: follows a terminator; C0
 
 Jump_013_49F4::
     ld a, $7F
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $40
     ld [wC8C8], a
     ld a, $10

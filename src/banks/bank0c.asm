@@ -552,11 +552,11 @@ Data_00C_4331:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780
-; writes: hFF90, wC527, wD780
+; writes: hMapId, wC527, wD780
 Func_00C_433D:: ; heuristic: target of a pointer table; C0
     call Func_00C_5177
     ld a, $11
-    ldh [hFF90], a
+    ldh [hMapId], a
     call Func_000_1C0C
     farcall Func_004_4AA8
     ld a, $7F

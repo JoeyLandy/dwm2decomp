@@ -2173,12 +2173,12 @@ Jump_004_4DF3::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_004_4C96, Func_004_4C25, Func_004_4D43)
-; reads: wFadeState, hFF90, hFF8F, hFF92, hPlayerY
+; reads: wFadeState, hMapId, hFF8F, hFF92, hPlayerY
 Func_004_4E0F::
     ld a, [wFadeState]
     or a, a
     jr z, Jump_004_4E30
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $5A
     jr nz, Jump_004_4E2E
     ldh a, [hFF8F]
@@ -2214,7 +2214,7 @@ Jump_004_4E35::
     ret
 
 Jump_004_4E40::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld e, a
     ld a, [hl+]
     cp a, e

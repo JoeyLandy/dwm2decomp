@@ -73,5 +73,6 @@
   "CFE6": {"name": "wMonsterId", "note": "16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads", "evidence": "reading"},
   "D081": {"name": "wItemId", "note": "item id used by LoadItemRecord and RunItemEffect; $FF = none", "evidence": "reading"},
   "D084": {"name": "wItemRecord", "note": "13-byte copy of an ItemTable record", "evidence": "reading"},
-  "C61D": {"name": "wInventory", "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)", "evidence": "reading"}
+  "C61D": {"name": "wInventory", "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)", "evidence": "reading"},
+  "FF90": {"name": "hMapId", "note": "map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39)", "evidence": "reading + execution (E-0036)"}
 }

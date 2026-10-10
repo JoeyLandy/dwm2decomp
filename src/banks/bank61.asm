@@ -2011,7 +2011,7 @@ Jump_061_5723::
     dw Data_061_654C
     db $52, $58, $62, $2D, $5D, $62, $07, $59, $63, $AD, $5D, $63
 
-; 1 call site from 1 routine (e.g. Func_011_4002)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)
 ; reads: wCC44
 Func_061_5764::
     ld a, [wCC44]

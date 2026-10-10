@@ -20,7 +20,7 @@ def collect(gb, instructions: int) -> dict[int, set[int]]:
     reads: dict[int, set[int]] = {}
 
     def hook(pc, bank, addr):
-        if not pc <= addr <= pc + 3:  # an instruction fetch reads at the program counter
+        if addr != gb.pc:  # opcode and operand fetches read at the program counter
             reads.setdefault(bank, set()).add(addr)
 
     gb.on_rom_read = hook

@@ -2525,7 +2525,7 @@ Jump_073_51D7::
     ret
 
 Jump_073_51FB::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     sub a, $C8
     add a, a
     ld hl, $5215
@@ -2559,7 +2559,7 @@ Jump_073_524B::
     ret
 
 Jump_073_5265::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $CE
     jr z, Jump_073_5278
     cp a, $D7
@@ -2604,7 +2604,7 @@ Jump_073_52B2::
     ret
 
 Jump_073_52B9::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     sub a, $C8
     ld de, $52D3
     add a, e
@@ -2628,10 +2628,10 @@ Jump_073_52EE::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_073_51BD)
-; reads: hFF90
+; reads: hMapId
 ; points at: wC923
 Func_073_52F5::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     sub a, $C8
     add a, a
     add a, e
@@ -2960,13 +2960,13 @@ Jump_073_555E::
 
 ; 1 call site from 1 routine (e.g. Func_010_4F00)
 ; reads: wC923
-; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
+; writes: hMapId, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_5577::
     ld a, [wC923]
     or a, a
     jr nz, Jump_073_559E
     ld a, $A9
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -3202,13 +3202,13 @@ Jump_073_5729::
 
 ; 1 call site from 1 routine (e.g. Func_010_4E19)
 ; reads: wC923
-; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
+; writes: hMapId, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_572F::
     ld a, [wC923]
     or a, a
     jr nz, Jump_073_575B
     ld a, $28
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ld a, $01
@@ -3560,7 +3560,7 @@ Jump_073_59AF::
     ld hl, hFF8C
     call ClearBit2AtHL_Bank73
     ld a, $19
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -4105,14 +4105,14 @@ Func_073_5D65::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E35)
-; reads: hFF90, hFF8F, hFFC6
+; reads: hMapId, hFF8F, hFFC6
 ; writes: hFFC6, hFFC7, wSpriteSlotCount, wC919
 Func_073_5D71:: ; heuristic: follows a terminator; C0
     xor a, a
     ldh [hFFC6], a
     ld a, $20
     ldh [hFFC7], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $8C
     jr z, Jump_073_5D88
     ldh a, [hFF8F]
@@ -4131,7 +4131,7 @@ Jump_073_5D88::
     ld a, $80
     ld [wC919], a
     ld de, $00C5
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $8C
     jr z, Jump_073_5DAB
     inc de
@@ -4146,13 +4146,13 @@ Jump_073_5DAB::
 
 ; 1 call site from 1 routine (e.g. Func_010_4DA2)
 ; reads: wC923
-; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
+; writes: hMapId, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_5DAF::
     ld a, [wC923]
     or a, a
     jr nz, Jump_073_5DD7
     ld a, $82
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     ld a, $02
@@ -4477,7 +4477,7 @@ Jump_073_5FE4::
     ld hl, $602C
 
 Jump_073_5FFC::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, a
 
 Jump_073_5FFF::
@@ -5746,7 +5746,7 @@ Jump_073_67D5::
     set 1, a
     ld [wCC39], a
     ld a, $40
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -5857,7 +5857,7 @@ Jump_073_6896::
 
 Jump_073_689E::
     ld a, $30
-    ldh [hFF90], a
+    ldh [hMapId], a
     ldh a, [hPlayerX]
     ld [wC8C8], a
     ld a, $E0
@@ -6101,7 +6101,7 @@ Jump_073_6A2B::
 
 Jump_073_6A71::
     ld a, $30
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $05
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -6124,7 +6124,7 @@ Func_073_6A91::
 
 Jump_073_6A99::
     ld a, $36
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -6144,7 +6144,7 @@ Jump_073_6AB8::
 
 ; 1 call site from 1 routine (e.g. Func_010_4CAD)
 ; reads: wC923
-; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
+; writes: hMapId, hFF8F, hFF92, wC8C8, wC8C9, wC8C6, wC919
 Func_073_6ABE::
     ld a, [wC923]
     or a, a
@@ -6153,7 +6153,7 @@ Func_073_6ABE::
     or a, a
     jr nz, Jump_073_6AE9
     ld a, $3C
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -6209,10 +6209,10 @@ Jump_073_6B19::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6AEF)
-; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6
+; writes: hMapId, hFF8F, hFF92, wC8C8, wC8C9, wC8C6
 Func_073_6B1F::
     ld a, $41
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ld a, $01

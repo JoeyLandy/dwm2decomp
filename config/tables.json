@@ -374,6 +374,34 @@
         }
       ],
       "note": "E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wD081) to wD084; RunItemEffect dispatches on the same id; wC61D is a 24-slot bag of such ids, empty at the start of a new game, matching the item menu's 'No items'; the herb handler compares the words at save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a different table. The meaning of the fields is not established beyond the first amount being 10, 50, 500, 200 and 2000 for ids 1-5."
+    },
+    {
+      "bank": "11",
+      "addr": "44B8",
+      "label": "MapTable",
+      "count": 256,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "map record in this bank, indexed by the map number hMapId",
+          "reason": "map record of the map table"
+        }
+      ],
+      "note": "E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000."
+    },
+    {
+      "bank": "11",
+      "addr": "67A6",
+      "label": "MapWarpTable",
+      "count": 256,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of warps for this map number (hMapId); a list ends with $80; maps without warps share one empty list",
+          "reason": "warp list of the map warp table"
+        }
+      ],
+      "note": "E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table)."
     }
   ]
 }

@@ -1231,7 +1231,7 @@ Jump_0A1_4865::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_47D8)
-; reads: hPlayerX, hFF8F, hPlayerY, hFF92, wC944, hFF90, hFFC6, hFFC7, ...
+; reads: hPlayerX, hFF8F, hPlayerY, hFF92, wC944, hMapId, hFFC6, hFFC7, ...
 ; writes: hFFC9, hFFCA, hFFC6, hFFC7, hFFC8, hFFCD, hFFCE, hFFCB, ...
 ; points at: hFFCD, hFFCE
 Func_0A1_4874::
@@ -1266,7 +1266,7 @@ Func_0A1_4874::
     ldh [hFFC8], a
     ldh a, [hFF8F]
     ld c, a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld b, a
     ld b, $00
     dec bc
@@ -1426,10 +1426,10 @@ Jump_0A1_4954::
     dw Data_0A1_5D76
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4874)
-; reads: hFF90, wC88B, wC944, wC88E, wC891, wC890, wC88F
+; reads: hMapId, wC88B, wC944, wC88E, wC891, wC890, wC88F
 ; writes: hFF8F, hFF92, hPlayerX, hPlayerY
 Func_0A1_49A8::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, $01
     cp a, $29
     jp z, Jump_0A1_4A31
@@ -1628,13 +1628,13 @@ Jump_0A1_4ADC::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4AB1)
-; reads: wCC44, hFF90, wC88E, wC891, wC890, wC88F, wCC42, wCD08, ...
+; reads: wCC44, hMapId, wC88E, wC891, wC890, wC88F, wCC42, wCD08, ...
 ; writes: hFFC7, hFFC8
 Func_0A1_4AEC::
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_4B64
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, $01
     cp a, $30
     jr c, Jump_0A1_4B34
@@ -2902,7 +2902,7 @@ Jump_0A1_52D1::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4F8B)
-; reads: wC944, hFF90
+; reads: wC944, hMapId
 ; writes: wStringIndex, wStringCategory, wC53D, wC53E
 ; points at: wC8CF
 Func_0A1_52D4::
@@ -2937,7 +2937,7 @@ Jump_0A1_52FB::
     call WriteVRAMByteInc
     dec b
     jr nz, Jump_0A1_52FB
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     add a, $0A
     ld [wStringIndex], a
     xor a, a
@@ -2965,13 +2965,13 @@ Jump_0A1_5333::
     INCBIN "dwm2-cobi-us.gbc", $28533C, $58
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4F8B)
-; reads: wCC44, hFF90, wC88E, wC891, wC890, wCC42, wCD08
+; reads: wCC44, hMapId, wC88E, wC891, wC890, wCC42, wCD08
 ; writes: hFFC7
 Func_0A1_5394::
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_5406
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, $01
     cp a, $30
     jr c, Jump_0A1_53DC
@@ -3095,7 +3095,7 @@ Func_0A1_542E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4F8B)
-; reads: wFrameCounterLo, wCC44, hFF90, wC88B, hFF8F, hFF92, wC88E, wC891, ...
+; reads: wFrameCounterLo, wCC44, hMapId, wC88B, hFF8F, hFF92, wC88E, wC891, ...
 Func_0A1_5479::
     ld a, [wFrameCounterLo]
     bit 5, a
@@ -3103,7 +3103,7 @@ Func_0A1_5479::
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_55A1
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, $01
     cp a, $29
     jp z, Jump_0A1_553D
@@ -3789,7 +3789,7 @@ Jump_0A1_58FE::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
-; reads: wFadeState, wC8CB, wC468, hFF8C, wCC44, hFF90
+; reads: wFadeState, wC8CB, wC468, hFF8C, wCC44, hMapId
 ; writes: hFFC6, wC944, wC8C7, wModeState, wC5DD
 Func_0A1_5903::
     xor a, a
@@ -3809,7 +3809,7 @@ Func_0A1_5903::
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_59AE
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     ret c
     ld c, $00
@@ -3854,7 +3854,7 @@ Jump_0A1_595D::
     farcall Func_002_5EEE
     ld a, $08
     ld [wModeState], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     jr z, Jump_0A1_59A9
     cp a, $30

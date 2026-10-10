@@ -3002,7 +3002,7 @@ Func_015_570C::
 
 Jump_015_571D::
     ld a, $0D
-    ldh [hFF90], a
+    ldh [hMapId], a
     call Func_000_1C0C
     call Func_000_19A9
     farcall Func_004_4AA8

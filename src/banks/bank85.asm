@@ -1042,7 +1042,7 @@ Jump_085_47B1::
     xor a, a
     ldh [hFF8D], a
     ld a, $48
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $08
     ldh [hFF8F], a
     ld a, $07
@@ -1447,7 +1447,7 @@ Jump_085_4A58::
 
 ; 1 call site from 1 routine (e.g. Func_010_4E74)
 ; reads: wC923, hPlayerX
-; writes: wC919, hFF8F, hFF92, wC8C9, wC8C6, hFF90, wC8C8
+; writes: wC919, hFF8F, hFF92, wC8C9, wC8C6, hMapId, wC8C8
 Func_085_4A6D::
     ld a, [wC923]
     or a, a
@@ -1468,7 +1468,7 @@ Jump_085_4A79::
     cp a, $20
     jr nz, Jump_085_4ABC
     ld a, $0F
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld de, $0025
     call TestFlagBit
     jr c, Jump_085_4AAB
@@ -1492,7 +1492,7 @@ Jump_085_4ABC::
     call TestFlagBit
     jr c, Jump_085_4AD9
     ld a, $10
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $70
     ld [wC8C8], a
     farcall Func_05F_6C5A
@@ -1502,7 +1502,7 @@ Jump_085_4ABC::
 
 Jump_085_4AD9::
     ld a, $0F
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $70
     ld [wC8C8], a
     farcall Func_05F_6C5A
@@ -2225,7 +2225,7 @@ Func_085_501A::
 Jump_085_5022::
     ld hl, wC923
     inc [hl]
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, a
     ld de, $5041
 
@@ -2697,12 +2697,12 @@ Func_085_5329:: ; heuristic: follows a terminator; C0
     dw Func_085_533C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF90, hFF8F
+; reads: hMapId, hFF8F
 ; writes: wSpriteSlotCount, wC919
 Func_085_533C:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wSpriteSlotCount], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $96
     jr nz, Jump_085_534B
     ld de, $0201
@@ -2725,7 +2725,7 @@ Jump_085_5358::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF90, wC92C
+; reads: hMapId, wC92C
 ; writes: wC928, wC929, wC92A, wCB86
 ; points at: wC923
 Func_085_5361:: ; heuristic: target of a pointer table; C0
@@ -2733,7 +2733,7 @@ Func_085_5361:: ; heuristic: target of a pointer table; C0
     ld [wC928], a
     xor a, a
     ld [wC929], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $96
     jr z, Jump_085_5389
     ld a, $02
@@ -2762,12 +2762,12 @@ Jump_085_5389::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF90, hFFC6
+; reads: hMapId, hFFC6
 ; writes: hFFC7, hFFC6, wC923
 Func_085_53A2:: ; heuristic: target of a pointer table; C0
     ld a, $20
     ldh [hFFC7], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $96
     jr nz, Jump_085_53B0
     ld a, $40
@@ -2858,7 +2858,7 @@ Func_085_5421::
 Jump_085_542B::
     ld hl, wC923
     inc [hl]
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $43
     jr z, Jump_085_543A
     ld hl, wC923
@@ -2871,7 +2871,7 @@ Jump_085_543A::
     ret
 
 Jump_085_5441::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $37
     jr nz, Jump_085_544B
     ld a, $10
@@ -3082,7 +3082,7 @@ Jump_085_55C7::
 
 Jump_085_55D0::
     ld a, $26
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -3918,11 +3918,11 @@ Jump_085_5B4E::
     ret
 
 ; 3 call sites from 2 routines (e.g. Func_002_4628, Func_012_469E)
-; reads: hFF90, wC94A, wD7FF, wC82C, hFFC6, hFFC7, wCD04
+; reads: hMapId, wC94A, wD7FF, wC82C, hFFC6, hFFC7, wCD04
 ; writes: wCB8A, wCB9A, wCBAA, wCBBA, wCB8B, wCB9B, wCBAB, wCBBB, ...
 ; points at: wCFDD, hFFC6, wCB91
 Func_085_5B53::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $0B
     ret nz
     ld a, [wC94A]

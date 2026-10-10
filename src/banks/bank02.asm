@@ -982,14 +982,14 @@ Data_002_45C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; start-up for wGameMode = 1; forcing this mode on the emulator shows: water map with the player sprite (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit)
-; reads: hFF90, hFF8F, hFF92, wC88D, wC5E0
+; reads: hMapId, hFF8F, hFF92, wC88D, wC5E0
 ; writes: rIF, wC51F, wC520, wC8C5, wC5E0, wC5EC
 GameMode1_Init::
 Func_002_45C6:: ; address name
     call Func_000_08A6
     xor a, a
     ldh [rIF], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $38
     jr nz, Jump_002_45DB
     ldh a, [hFF8F]
@@ -1033,7 +1033,7 @@ Jump_002_461A::
     jp Jump_000_077A
 
 ; 4 call sites from 4 routines (e.g. GameMode1_Init, Func_002_4AE0, Func_003_4339, Func_0A1_5898)
-; reads: wCC44, hFF90, wC8C7, wC927, wC5E0, wIsCGB
+; reads: wCC44, hMapId, wC8C7, wC927, wC5E0, wIsCGB
 ; writes: hFF8D, hScrollY, hScrollX, hFFA0, hFF9F, rLYC, wFrameCounterLo, wFrameCounterHi, ...
 Func_002_4628::
     ld a, $0F
@@ -1069,7 +1069,7 @@ Func_002_4628::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_002_467D
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $14
     jr z, Jump_002_4680
 
@@ -1248,7 +1248,7 @@ Jump_002_47CB::
     xor a, a
     ld [wC8C7], a
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -1304,7 +1304,7 @@ Jump_002_4846::
     xor a, a
     ld [wC8C7], a
     ld a, $04
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -1583,13 +1583,13 @@ Func_002_4A53::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4745)
-; reads: wCC44, hFF90, hFF8F, hFF92, wCECE, wCF8B
+; reads: wCC44, hMapId, hFF8F, hFF92, wCECE, wCF8B
 ; writes: wCBCF, wCF8B, hFFC6
 Func_002_4A7A::
     ld a, [wCC44]
     bit 7, a
     ret nz
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $00
     ret nz
     ldh a, [hFF8F]
@@ -1619,12 +1619,12 @@ Jump_002_4AA1::
     ret
 
 ; 1 call site from 1 routine (e.g. GameMode1_Init)
-; reads: wCC44, hFF90, hFF8F, hFF92
+; reads: wCC44, hMapId, hFF8F, hFF92
 Func_002_4AB5::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_002_4AC5
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     jr nc, Jump_002_4AC5
 
@@ -1818,7 +1818,7 @@ Jump_002_4C3F::
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
 ; reads: wC8C6, wC957, hFF8C, wC936, wC8C8, wC8C9, hPlayerFacing, hPlayerX, ...
-; writes: hPlayerFacing, wC957, wCC44, hFF8C, hFF90, hFF8F, hFF92, hPlayerX, ...
+; writes: hPlayerFacing, wC957, wCC44, hFF8C, hMapId, hFF8F, hFF92, hPlayerX, ...
 ; points at: wC8C5
 Func_002_4C4E::
     ld a, [wC8C6]
@@ -1846,7 +1846,7 @@ Jump_002_4C6D::
     and a, $B7
     ldh [hFF8C], a
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -1880,7 +1880,7 @@ Jump_002_4C82::
     ld a, [wCC44]
     bit 7, a
     ret nz
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $05
     ret nz
     ldh a, [hFF8C]
@@ -3079,7 +3079,7 @@ Jump_002_54A0::
     ldh [hFF8C], a
     ld hl, hFF8F
     dec [hl]
-    farcall Func_011_4002
+    farcall CheckWarpAtPlayer
     bit 0, c
     jr nz, Jump_002_544D
     ldh a, [hFF8F]
@@ -3166,7 +3166,7 @@ Jump_002_5538::
     ldh [hFF8C], a
     ld hl, hFF8F
     inc [hl]
-    farcall Func_011_4002
+    farcall CheckWarpAtPlayer
     bit 0, c
     jr nz, Jump_002_54E4
     ld a, [wC190]
@@ -3214,7 +3214,7 @@ Jump_002_5588::
 Jump_002_5590::
     ld a, $00
     ldh [hPlayerFacing], a
-    farcall Func_011_4002
+    farcall CheckWarpAtPlayer
     bit 0, c
     jr nz, Jump_002_557C
     ldh a, [hPlayerY]
@@ -3266,7 +3266,7 @@ Jump_002_55EA::
     ldh [hFF8C], a
     ld hl, hFF92
     inc [hl]
-    farcall Func_011_4002
+    farcall CheckWarpAtPlayer
     bit 0, c
     jp nz, Jump_002_557C
     farcall Func_011_4268
@@ -3319,7 +3319,7 @@ Jump_002_564B::
     ldh a, [hPlayerY]
     or a, a
     jr z, Jump_002_56A4
-    farcall Func_011_4002
+    farcall CheckWarpAtPlayer
     bit 0, c
     jr nz, Jump_002_5639
     ldh a, [hFF8C]
@@ -3368,7 +3368,7 @@ Jump_002_56A4::
     ldh [hFF8C], a
     ld hl, hFF92
     dec [hl]
-    farcall Func_011_4002
+    farcall CheckWarpAtPlayer
     bit 0, c
     jp nz, Jump_002_5639
     ldh a, [hFF92]
@@ -4078,7 +4078,7 @@ Data_002_5B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wFadeState, hFF8C, wJoypadHeld, hFF8F, hFF92, hFF90, hPlayerX, hPlayerY
+; reads: wFadeState, hFF8C, wJoypadHeld, hFF8F, hFF92, hMapId, hPlayerX, hPlayerY
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_002_5B2A::
     ld a, [wFadeState]
@@ -4096,7 +4096,7 @@ Func_002_5B2A::
     ldh a, [hFF92]
     or a, d
     ld d, a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld e, a
     ld hl, Data_002_5B89
     ld b, $00
@@ -4859,7 +4859,7 @@ Jump_002_6045::
     ret
 
 ; 8 call sites from 7 routines (e.g. GameMode1_Init, Func_002_4628, Func_000_2950, Func_002_6CD4, ...)
-; reads: wCC44, wCC45, hFF8C, wC608, hFF90
+; reads: wCC44, wCC45, hFF8C, wC608, hMapId
 ; writes: wC608
 ; points at: wCD89
 Func_002_604B::
@@ -4867,7 +4867,7 @@ Func_002_604B::
     ld [wC608], a
 
 ; 9 call sites from 9 routines (e.g. Func_002_4AE0, Func_002_4745, Func_00F_5404, Func_00F_5F06, ...)
-; reads: wCC44, wCC45, hFF8C, wC608, hFF90
+; reads: wCC44, wCC45, hFF8C, wC608, hMapId
 ; points at: wCD89
 Func_002_6050::
     ld a, [wCC44]
@@ -4917,7 +4917,7 @@ Jump_002_6093::
     ret
 
 Jump_002_609D::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     rst $00
     dw Jump_002_6268
     dw Jump_002_626D
@@ -6711,7 +6711,7 @@ Jump_002_6EC7::
     ld hl, Data_002_7006
     add_a_to_hl
     ld a, [hl+]
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, [hl+]
     ldh [hFF8F], a
     ld a, [hl+]

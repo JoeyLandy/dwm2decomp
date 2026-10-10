@@ -441,7 +441,7 @@ Jump_001_461E::
     call Func_000_15DE
     xor a, a
     ld [wC5F8], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld [wC5F9], a
     ldh a, [hFF8F]
     ld [wC5FA], a
@@ -3284,7 +3284,7 @@ Jump_001_5C18::
     ld hl, Data_001_5DAD
     add_a_to_hl
     ld a, [hl]
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ld [wCC44], a
     xor a, a
@@ -3735,7 +3735,7 @@ Jump_001_6017::
 
 Jump_001_601F::
     ld a, [wC5F9]
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, [wC5FA]
     ldh [hFF8F], a
     ld a, [wC5FB]
@@ -5271,10 +5271,10 @@ Func_001_6A98::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_001_6880, Func_001_65A0)
-; writes: hFF90, hFF8F, hFF92, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
+; writes: hMapId, hFF8F, hFF92, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
 Func_001_6ABE::
     ld a, $00
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $02
     ldh [hFF8F], a
     ld a, $00

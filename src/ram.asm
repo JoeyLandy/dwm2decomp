@@ -1655,7 +1655,7 @@ DEF hFF8C EQU $FF8C
 DEF hFF8D EQU $FF8D
 DEF hPlayerX EQU $FF8E ; position along the axis that facings 1 and 3 change in CheckInteractionInFront (reading)
 DEF hFF8F EQU $FF8F
-DEF hFF90 EQU $FF90
+DEF hMapId EQU $FF90 ; map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39) (reading + execution (E-0036))
 DEF hPlayerY EQU $FF91 ; position along the axis that facings 0 and 2 change in CheckInteractionInFront (reading)
 DEF hFF92 EQU $FF92
 DEF hFF93 EQU $FF93

@@ -195,7 +195,7 @@ Jump_00A_410A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_00A_4001)
-; reads: wC6FD, hFFC6, hFFC7, wC915, wCC44, hFF90
+; reads: wC6FD, hFFC6, hFFC7, wC915, wCC44, hMapId
 ; writes: wC8BF, wC915
 ; points at: wC6FE
 Func_00A_4110::
@@ -230,7 +230,7 @@ Jump_00A_413E::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_00A_414F
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $3A
     jr nz, Jump_00A_414F
     ld c, $05
@@ -480,7 +480,7 @@ Jump_00A_42AF::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7)
-; reads: hFF8C, wModeState, wCC44, hFF90, wC6FD, wC88C
+; reads: hFF8C, wModeState, wCC44, hMapId, wC6FD, wC88C
 ; writes: rRAMG, wC88C, wC902, wModeState, wC46B, wC46C, wC915
 ; points at: wC6FE
 Func_00A_42BC::
@@ -502,7 +502,7 @@ Func_00A_42BC::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_00A_42F1
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     ret c
     ld c, a
@@ -1104,7 +1104,7 @@ Jump_00A_47FB::
     INCBIN "dwm2-cobi-us.gbc", $02881C, $198
 
 Jump_00A_49B4::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     jp z, Jump_00A_4ACF
     cp a, $2B
@@ -1669,9 +1669,9 @@ Jump_00A_4D4C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_56E4)
-; reads: hFF90, hFF8C
+; reads: hMapId, hFF8C
 Func_00A_4D5E::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     jp z, Jump_00A_4E79
     cp a, $2B

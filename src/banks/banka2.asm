@@ -185,7 +185,7 @@ Func_0A2_4A40:: ; heuristic: target of a pointer table; C0
     db $F0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFF0, hFF90
+; reads: hFFF0, hMapId
 Func_0A2_4A4F:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -221,7 +221,7 @@ Func_0A2_4A4F:: ; heuristic: target of a pointer table; C0
     db $0A, $20, $0A, $F0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFF0, hFF90
+; reads: hFFF0, hMapId
 Func_0A2_4A88:: ; heuristic: target of a pointer table; C0
     sub a, b
     sub a, b
@@ -291,7 +291,7 @@ Jump_0A2_4B0A::
     inc e
     inc d
     ld [de], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     sub a, b
     ld d, $0A
     inc e
@@ -300,13 +300,13 @@ Jump_0A2_4B0A::
     jr Jump_0A2_4AAD
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF90
+; reads: hMapId
 Func_0A2_4B1D:: ; heuristic: follows a terminator; C0
     inc d
     jr Jump_0A2_4B36
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFF0, hFF90
+; reads: hFFF0, hMapId
 Func_0A2_4B20:: ; heuristic: follows a terminator; C0
     ld [de], a
     ld [hl+], a
@@ -357,7 +357,7 @@ Jump_0A2_4B4B::
     jr Jump_0A2_4B7D
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF90
+; reads: hMapId
 Func_0A2_4B66:: ; heuristic: follows a terminator; C0
     ld a, [bc]
     dec de
@@ -415,7 +415,7 @@ Jump_0A2_4BAB::
 
 Jump_0A2_4BB9::
     rla
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     sub a, b
     ld d, $12
     inc e
@@ -429,7 +429,7 @@ Jump_0A2_4BB9::
     rla
 
 Jump_0A2_4BCC::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     sub a, b
     sub a, b
     sub a, b
@@ -479,7 +479,7 @@ Jump_0A2_4C0A::
     db $F0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF90
+; reads: hMapId
 Func_0A2_4C10:: ; heuristic: target of a pointer table; C0
     sub a, b
 
@@ -494,7 +494,7 @@ Jump_0A2_4C11::
     jr Jump_0A2_4BAB
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF90
+; reads: hMapId
 Func_0A2_4C1B:: ; heuristic: follows a terminator; C0
     inc d
     ld a, [bc]

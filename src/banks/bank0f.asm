@@ -184,7 +184,7 @@ Jump_00F_4147::
 
 Jump_00F_414D::
     ld a, $06
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -992,7 +992,7 @@ Jump_00F_4829::
 
 Jump_00F_4846::
     ld a, $71
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -1143,7 +1143,7 @@ Jump_00F_4968::
 
 Jump_00F_4985::
     ld a, $60
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -1363,7 +1363,7 @@ Jump_00F_4B1B::
 
 Jump_00F_4B38::
     ld a, $49
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -1496,7 +1496,7 @@ Jump_00F_4C20::
 
 Jump_00F_4C3D::
     ld a, $41
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -1722,7 +1722,7 @@ Jump_00F_4DE7::
 
 Jump_00F_4E08::
     ld a, $33
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -1845,7 +1845,7 @@ Jump_00F_4EDA::
 
 Jump_00F_4EF7::
     ld a, $2F
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -1935,7 +1935,7 @@ Jump_00F_4F93::
     ld a, $01
     ld [wC90F], a
     ld a, $26
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -2110,7 +2110,7 @@ Jump_00F_50D2::
 
 Jump_00F_50D9::
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -2403,7 +2403,7 @@ Jump_00F_54E0::
 
 Jump_00F_550B::
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -2907,7 +2907,7 @@ Jump_00F_5889::
 
 Jump_00F_5890::
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -3010,7 +3010,7 @@ Jump_00F_5934::
 
 Jump_00F_594A::
     ld a, $49
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $00
     ldh [hFF8F], a
     ld a, $00
@@ -3029,7 +3029,7 @@ Jump_00F_5962::
 
 Jump_00F_5971::
     ld a, $48
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $07
     ldh [hFF8F], a
     ld a, $05
@@ -4684,7 +4684,7 @@ Jump_00F_65A5::
     xor a, a
     ldh [hFF8D], a
     ld a, $4D
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ld a, $01
@@ -5053,7 +5053,7 @@ Jump_00F_6894::
 
 Jump_00F_689B::
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -6547,7 +6547,7 @@ Jump_00F_7397::
 
 Jump_00F_739E::
     ld a, $05
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -6874,7 +6874,7 @@ Jump_00F_7639::
     or a, a
     ret z
     ld a, $2E
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -6946,7 +6946,7 @@ Jump_00F_76C0::
 
 Jump_00F_76E3::
     ld a, $25
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -6999,7 +6999,7 @@ Func_00F_772E::
 
 Jump_00F_7746::
     ld a, $25
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -7045,7 +7045,7 @@ Jump_00F_7795::
     or a, a
     ret z
     ld a, $26
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -7111,7 +7111,7 @@ Jump_00F_781C::
     or a, a
     ret z
     ld a, $25
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     xor a, a
@@ -7455,7 +7455,7 @@ Jump_00F_7AA2::
     call Func_00F_7F75
     ret nc
     ld a, $06
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
@@ -7499,7 +7499,7 @@ Jump_00F_7AE8::
 
 Jump_00F_7AF9::
     ld a, $00
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     ld a, $02
@@ -7740,7 +7740,7 @@ Jump_00F_7C72::
 
 Jump_00F_7C84::
     ld a, $1C
-    ldh [hFF90], a
+    ldh [hMapId], a
     xor a, a
     ldh [hFF8F], a
     ld a, $01
@@ -7846,7 +7846,7 @@ Jump_00F_7D31::
 
 Jump_00F_7D3C::
     ld a, $1D
-    ldh [hFF90], a
+    ldh [hMapId], a
     ld a, $01
     ldh [hFF8F], a
     ld a, $00

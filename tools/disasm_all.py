@@ -1047,6 +1047,8 @@ class Rom:
                             and not (tb == bank and addr <= tgt < end):
                         self.dlabels[tb].setdefault(tgt, f"Data_{tb:03X}_{tgt:04X}")
                         self.dreason.setdefault((tb, tgt), f.get("reason", "pointer in a sound table"))
+            dl.setdefault(addr, f"Data_{bank:03X}_{addr:04X}")  # a data slice must start at the table
+            self.dreason.setdefault((bank, addr), "start of a structured table")
             self.table_at[(bank, addr)] = dict(t, stride=stride, end=end, sizes=sizes)
         log(f"structured tables: {len(self.table_at)} ({sum(t['count'] for t in self.schemas)} records)")
 

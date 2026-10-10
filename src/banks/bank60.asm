@@ -3628,7 +3628,7 @@ Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
 ; 2 call sites from 2 routines (e.g. Func_002_4628, Func_01C_4258)
-; reads: wCC44, wC893, hFF90
+; reads: wCC44, wC893, hMapId
 ; writes: wCC47, wCD0F, hFFC6
 Func_060_639D::
     ld a, [wCC44]
@@ -3637,7 +3637,7 @@ Func_060_639D::
     ld a, [wC893]
     bit 7, a
     ret z
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     jr z, Jump_060_63E0
     cp a, $30
@@ -3967,7 +3967,7 @@ Jump_060_6590::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wCC44, hFF90, hFF8F, hFF92, wCCEA, wCD04
+; reads: wCC44, hMapId, hFF8F, hFF92, wCCEA, wCD04
 ; writes: wCCE9, wCCEA, wCD0F, hFFC8, hFFC9
 ; points at: wCCEB, hFFC9
 Func_060_65AA::
@@ -3978,7 +3978,7 @@ Func_060_65AA::
     ret
 
 Jump_060_65B5::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $39
     jr nz, Jump_060_65C6
     ldh a, [hFF8F]
@@ -3989,7 +3989,7 @@ Jump_060_65B5::
     ret z
 
 Jump_060_65C6::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $2B
     jr nz, Jump_060_65D7
     ldh a, [hFF8F]
@@ -4000,7 +4000,7 @@ Jump_060_65C6::
     ret z
 
 Jump_060_65D7::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, a
     ld hl, Data_060_663F
     ld b, $00

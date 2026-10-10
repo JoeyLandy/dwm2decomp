@@ -718,7 +718,7 @@ Jump_016_4458::
     ret
 
 Jump_016_4469::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     jr z, Jump_016_449D
     cp a, $30
@@ -755,7 +755,7 @@ Jump_016_449D::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_016_52C9, Func_016_4454)
-; reads: wCC44, hFF90
+; reads: wCC44, hMapId
 ; writes: wItemId
 Func_016_44AD::
     ld a, [wCC44]
@@ -768,7 +768,7 @@ Func_016_44AD::
     ret
 
 Jump_016_44BD::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld hl, Data_016_51C9
     add_a_to_hl
     bit 6, [hl]
@@ -778,7 +778,7 @@ Jump_016_44BD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
-; reads: wCC44, hFF90
+; reads: wCC44, hMapId
 ; writes: wItemId
 Func_016_44D0::
     ld a, [wCC44]
@@ -795,7 +795,7 @@ Func_016_44D0::
     ret
 
 Jump_016_44E6::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld hl, Data_016_51C9
     add_a_to_hl
     bit 5, [hl]
@@ -814,7 +814,7 @@ Jump_016_44FB::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_016_4542
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $2F
     jr nz, Jump_016_4542
     ldh a, [hFF8F]
@@ -861,7 +861,7 @@ Jump_016_4548::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_016_457D
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $40
     jr nz, Jump_016_457D
     ldh a, [hFF8F]
@@ -896,7 +896,7 @@ Jump_016_4583::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_016_45BC
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $49
     jr nz, Jump_016_45BC
     ldh a, [hFF8F]
@@ -935,7 +935,7 @@ Jump_016_45C3::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_016_45F4
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $61
     jr nz, Jump_016_45F4
     ldh a, [hFF8F]
@@ -968,7 +968,7 @@ Jump_016_45FA::
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_016_4626
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $70
     jr c, Jump_016_4626
     cp a, $A0
@@ -1027,7 +1027,7 @@ Func_016_4636::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_6B5E)
-; reads: wCC44, wC901, hFF90
+; reads: wCC44, wC901, hMapId
 Func_016_4645::
     ld a, [wCC44]
     bit 7, a
@@ -1038,7 +1038,7 @@ Func_016_4645::
     jr Jump_016_4663
 
 Jump_016_4655::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld hl, Data_016_51C9
     add_a_to_hl
     bit 4, [hl]
@@ -2161,6 +2161,7 @@ Jump_016_4CBC::
 ; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wD081) to wD084; RunItemEffect dispatches on the same id; wC61D is a 24-slot bag of such ids, empty at the start of a new game, matching the item menu's 'No items'; the herb handler compares the words at save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a different table. The meaning of the fields is not established beyond the first amount being 10, 50, 500, 200 and 2000 for ids 1-5.
 ; record: byte 0 (0, 1, 2 or 6); 16-bit amount (10, 50, 500, 200, 2000 for the first five items); byte 3 (usually $64); byte 4; byte 5; byte 6; byte 7; byte 8; byte 9; byte 10; byte 11; byte 12
 ItemTable::
+Data_016_4CC2:: ; heuristic: start of a structured table; C0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $0A, $00, $64, $00, $00, $04, $02, $00, $03, $04, $1E, $28 ; id 1
     db $00, $32, $00, $64, $00, $00, $04, $03, $00, $03, $04, $3C, $46 ; id 2

@@ -2327,7 +2327,7 @@ Jump_01B_583A::
 
 Jump_01B_5847::
     pop hl
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $A8
     jr c, Jump_01B_5864
     jr Jump_01B_5871

@@ -2,7 +2,7 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wC8CB, wC468, hFF8C, wC918, hFF90, hFF8F, hFF92, wModeState, ...
+; reads: wC8CB, wC468, hFF8C, wC918, hMapId, hFF8F, hFF92, wModeState, ...
 ; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_4001::
     ld a, [wC8CB]
@@ -19,7 +19,7 @@ Func_087_4001::
     ret nz
     inc a
     ld [wC918], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld l, a
     ld h, $00
     add hl, hl
@@ -48,7 +48,7 @@ Jump_087_4031::
     inc hl
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
@@ -298,7 +298,7 @@ Jump_087_4380::
 
 Jump_087_4390::
     ld [wC916], a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $20
     jr nc, Jump_087_43A0
     ld a, $01
@@ -368,7 +368,7 @@ Jump_087_43FC::
     ret
 
 Jump_087_440A::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld l, a
     ld h, $00
     add hl, hl
@@ -402,7 +402,7 @@ Jump_087_4420::
     jr nz, Jump_087_443D
     ld a, [hl]
     ld c, a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, c
     jp nz, Jump_087_44FC
 
@@ -476,7 +476,7 @@ Jump_087_4489::
     jr nz, Jump_087_449F
     ld a, [hl]
     ld c, a
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, c
     jr nz, Jump_087_44FC
 

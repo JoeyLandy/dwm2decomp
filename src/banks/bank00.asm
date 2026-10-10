@@ -4545,14 +4545,14 @@ Jump_000_1A62::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_19A9)
-; reads: wCC44, hFF90, wC88E, wC891
+; reads: wCC44, hMapId, wC88E, wC891
 ; writes: hFFC6
 ; points at: wC88F
 Func_000_1A73::
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_000_1AB3
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld c, a
     ld b, $00
     ld hl, $1AB4
@@ -4700,7 +4700,7 @@ Jump_000_1B6D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_19A9)
-; reads: hFF8F, hFF90
+; reads: hFF8F, hMapId
 ; points at: wC2E2, wC1CA
 Func_000_1B6F::
     ld de, $012B
@@ -4709,7 +4709,7 @@ Func_000_1B6F::
     ldh a, [hFF8F]
     or a, a
     ret nz
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $0D
     jr nz, Jump_000_1B95
     ld hl, wC2E2
@@ -4801,7 +4801,7 @@ Func_000_1BAD::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4628, Func_00C_433D, Func_015_570C)
-; reads: wCC44, hFF90
+; reads: wCC44, hMapId
 ; writes: rROMB0, wC46B, wC46C, wC190, wC191, wC192, wC193, wC90D, ...
 Func_000_1C0C::
     ld a, [wCC44]
@@ -4824,7 +4824,7 @@ Jump_000_1C1A::
     ld b, a
     push hl
     ld hl, vTiles2
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $14
     jr nz, Jump_000_1C51
     ld hl, vTiles1
@@ -4891,10 +4891,10 @@ Jump_000_1C93::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_1C0C)
-; reads: hFF90, wCC37
+; reads: hMapId, wCC37
 ; writes: wC90D
 Func_000_1CA1::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $19
     ret nz
     ld a, [wCC37]
@@ -4907,14 +4907,14 @@ Func_000_1CA1::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_1C0C)
-; reads: wCC37, hFF90
+; reads: wCC37, hMapId
 Func_000_1CB7::
     ld a, [wCC37]
     bit 5, a
     ret nz
     bit 1, a
     ret z
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $01
     jr z, Jump_000_1CCB
     cp a, $02
@@ -4960,10 +4960,10 @@ Func_000_1CF9::
     db $7B, $6A, $BF, $E6, $FF, $22, $9F, $10, $FD, $12, $8F, $08, $FF, $04, $FF, $F8
 
 ; 1 call site from 1 routine (e.g. Func_000_1C0C)
-; reads: hFF90
+; reads: hMapId
 ; writes: wC195, wC197
 Func_000_1D47::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     cp a, $30
     jr z, Jump_000_1D51
     cp a, $B8
@@ -5000,9 +5000,9 @@ Jump_000_1D7E::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_000_19A9, Func_000_1C0C)
-; reads: hFF90
+; reads: hMapId
 Func_000_1D7F::
-    ldh a, [hFF90]
+    ldh a, [hMapId]
     ld l, a
     ld h, $00
     add hl, hl
@@ -10209,6 +10209,7 @@ Jump_000_3DFB::
 ; E-0018 (C2: static reading of Func_000_3354, and 495 emulated sound starts read exactly the banks this table names). Func_000_3354 takes the first entry whose first byte is greater than the sound id; the PREVIOUS entry gives the base id, record array and bank. A first byte of $FF ends the table.
 ; record: first sound id of this range; record array in that bank; ROM bank holding the records and tracks
 SoundBankTable::
+Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $00 ; entry 0
     dw SoundRecords_Bank40
     db $40

@@ -1143,5 +1143,10 @@
     "name": "RunItemEffect",
     "note": "returns when wItemId is $FF; otherwise jumps through a table with one handler per item id (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)",
     "evidence": "reading (E-0034)"
+  },
+  "11:4002": {
+    "name": "CheckWarpAtPlayer",
+    "note": "unless a special mode is set (wCC44 bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wCCEA = 1, sound effect $60 is queued, and the entry's new hMapId, hFF8F, hFF92 and position (wC8C8/wC8C9) are stored",
+    "evidence": "reading (E-0036)"
   }
 }
