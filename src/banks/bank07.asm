@@ -1627,8 +1627,10 @@ Jump_007_507C::
     ret
     INCBIN "dwm2-cobi-us.gbc", $01D086, $78
 
+; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte) (E-0067) (the same 15 bytes appear in 3 banks)
 ; 10 call sites from 10 routines (e.g. Func_007_60E9_Case01, Func_007_6DE3_Table2_Case14, Func_007_6DE3_Table2_Case13, Func_007_6DE3_Table2_Case12, ...)
-Func_007_50FE::
+WriteBCTileAtWordTableEntry_Bank07::
+Func_007_50FE:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -3214,7 +3216,7 @@ Jump_007_61DC::
     ld a, [wC46B]
     ld hl, $5086
     and a, $07
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $69
     call QueueSoundEffect
 
@@ -5461,7 +5463,7 @@ Jump_007_7021::
     ld a, [wC46C]
     ld hl, $509E
     and a, $07
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $02
     ld [wC470], a
     ld a, [wC46C]
@@ -5871,7 +5873,7 @@ Jump_007_7284:: ; address name
     call QueueSoundEffect
     ld a, [wC46E]
     ld hl, $50C2
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, [wC46E]
     and a, $07
     inc a
@@ -5984,7 +5986,7 @@ Jump_007_732C:: ; address name
     ld a, [wD0A3]
     and a, $03
     ld hl, $50D0
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0D
     ld [wD06B], a
     ret
@@ -6007,7 +6009,7 @@ Jump_007_7351:: ; address name
     ld a, [wD0A4]
     and a, $03
     ld hl, $50D6
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0D
     ld [wD06B], a
     ret
@@ -6030,7 +6032,7 @@ Jump_007_7376:: ; address name
     ld a, [wD0A5]
     and a, $03
     ld hl, $50DC
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0D
     ld [wD06B], a
     ret
@@ -6053,7 +6055,7 @@ Jump_007_739B:: ; address name
     ld a, [wD0A6]
     and a, $03
     ld hl, $50E2
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0D
     ld [wD06B], a
     ret
@@ -6076,7 +6078,7 @@ Jump_007_73C0:: ; address name
     ld a, [wD0A7]
     and a, $03
     ld hl, $50E8
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0D
     ld [wD06B], a
     ret
@@ -6099,7 +6101,7 @@ Jump_007_73E5:: ; address name
     ld a, [wD0A8]
     and a, $03
     ld hl, $50EE
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0D
     ld [wD06B], a
     ret
@@ -6122,7 +6124,7 @@ Jump_007_740A:: ; address name
     ld a, [wD0A9]
     and a, $03
     ld hl, $50F4
-    call Func_007_50FE
+    call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0D
     ld [wD06B], a
     ret

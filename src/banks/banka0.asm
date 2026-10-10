@@ -294,9 +294,11 @@ Jump_0A0_41DC::
     jr nz, Jump_0A0_41A8
     ret
 
+; zero-fills the $2F bytes at wD008, where LoadBank35Record writes; BC, HL kept (E-0067) (the same 15 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0A0_43F7)
 ; points at: wD008
-Func_0A0_41E3::
+ClearBank35RecordBuffer_BankA0::
+Func_0A0_41E3:: ; address name
     push bc
     push hl
     ld hl, wD008
@@ -689,7 +691,7 @@ Jump_0A0_4405::
     call Func_0A0_456F
 
 Jump_0A0_4408::
-    call Func_0A0_41E3
+    call ClearBank35RecordBuffer_BankA0
     pop af
     ld [wD868], a
     ret
@@ -701,7 +703,7 @@ Jump_0A0_4408::
 Func_0A0_4410::
     ld a, c
     push bc
-    call Func_0A0_468A
+    call BattlerRecordAddress_BankA0
     pop bc
     ld a, c
     add a, a
@@ -926,7 +928,7 @@ Jump_0A0_4550::
 ; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
 Func_0A0_456F::
     push bc
-    call Func_0A0_468A
+    call BattlerRecordAddress_BankA0
     pop bc
     ld a, c
     add a, a
@@ -1092,8 +1094,10 @@ Jump_0A0_466B::
     farcall Func_019_4298
     ret
 
+; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL = wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the field offset) (E-0067) (the same 23 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. Func_0A0_4410, Func_0A0_456F)
-Func_0A0_468A::
+BattlerRecordAddress_BankA0::
+Func_0A0_468A:: ; address name
     cp a, $03
     jr c, Jump_0A0_4693
     ret z
@@ -1680,10 +1684,10 @@ Func_0A0_494F::
     ld [hl+], a
     ld a, $03
     ld [hl+], a
-    call Func_0A0_4A45
-    call Func_0A0_4A45
-    call Func_0A0_4A45
-    call Func_0A0_4A45
+    call StoreRandomByteAtHL_BankA0
+    call StoreRandomByteAtHL_BankA0
+    call StoreRandomByteAtHL_BankA0
+    call StoreRandomByteAtHL_BankA0
     call CopyWD01ARecordToHL_BankA0
     ld a, $00
     ld [hl+], a
@@ -1698,9 +1702,11 @@ Func_0A0_494F::
     pop bc
     ret
 
+; advances the random table (NextTableByte) and stores the new wC5E7 at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
 ; 4 call sites from 1 routine (e.g. Func_0A0_494F)
 ; reads: wC5E7
-Func_0A0_4A45::
+StoreRandomByteAtHL_BankA0::
+Func_0A0_4A45:: ; address name
     push af
     push bc
     push de
@@ -4741,7 +4747,7 @@ Jump_0A0_5E39:: ; address name
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
-    call Func_0A0_6C81
+    call ShowStringBank09AtTilesHL_BankA0
     farcall Func_01A_727D
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4971,12 +4977,12 @@ Jump_0A0_5FAC:: ; address name
     ld [wStringCategory], a
     ld a, $01
     ld [wStringIndex], a
-    call Func_0A0_6C81
+    call ShowStringBank09AtTilesHL_BankA0
     ld a, $08
     ld [wStringIndex], a
     ld hl, vTiles2 + $50
     ld de, $0801
-    call Func_0A0_6C81
+    call ShowStringBank09AtTilesHL_BankA0
     xor a, a
     ld [wCFD7], a
     ld a, $03
@@ -5117,7 +5123,7 @@ Jump_0A0_60AC:: ; address name
     ld [wStringCategory], a
     ld a, $09
     ld [wStringIndex], a
-    call Func_0A0_6C81
+    call ShowStringBank09AtTilesHL_BankA0
     farcall Func_01A_7299
     ld a, [wCFD4]
     and a, $03
@@ -6454,7 +6460,7 @@ Func_0A0_68CF::
     push hl
     ld hl, vTiles1 + $6D0
     ld de, $0901
-    call Func_0A0_6CBC
+    call ShowStringBank08AtTilesHL_BankA0
     pop hl
     ret
 
@@ -6465,7 +6471,7 @@ Func_0A0_68DE::
     push hl
     ld hl, vTiles1 + $760
     ld de, $0901
-    call Func_0A0_6CBC
+    call ShowStringBank08AtTilesHL_BankA0
     pop hl
     ret
 
@@ -6476,7 +6482,7 @@ Func_0A0_68ED::
     push hl
     ld hl, vTiles1 + $7F0
     ld de, $0901
-    call Func_0A0_6CBC
+    call ShowStringBank08AtTilesHL_BankA0
     pop hl
     ret
 
@@ -6486,7 +6492,7 @@ Func_0A0_68FC::
     ld [wStringIndex], a
     ld hl, vTiles2 + $80
     ld de, $0901
-    call Func_0A0_6CBC
+    call ShowStringBank08AtTilesHL_BankA0
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_6873, Func_0A0_5F2E_Case0C)
@@ -6498,7 +6504,7 @@ Func_0A0_6909::
     ld [wStringIndex], a
     ld hl, vTiles1
     ld de, $0603
-    call Func_0A0_6CBC
+    call ShowStringBank08AtTilesHL_BankA0
     pop af
     ld [wRecordBuffer], a
     xor a, a
@@ -6605,9 +6611,11 @@ Func_0A0_69C1::
     farcall LoadSkillRecord
     ret
 
+; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfWC57FSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F
-Func_0A0_69F1:: ; heuristic: follows a terminator; C0
+CountPresentFoesOfWC57FSide_BankA0:: ; heuristic: follows a terminator; C0
+Func_0A0_69F1:: ; address name
     ld de, $0000
     ld b, $03
     ld a, [wC57F]
@@ -6629,9 +6637,11 @@ Jump_0A0_6A08::
     jr nz, Jump_0A0_6A00
     ret
 
+; side base = (wC57F << 1) & 4: D = how many of its three slots are present; clobbers A, BC (E-0067) (the same 24 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F
-Func_0A0_6A0D:: ; heuristic: follows a terminator; C0
+CountPresentSlotsOfWC57FSide_BankA0:: ; heuristic: follows a terminator; C0
+Func_0A0_6A0D:: ; address name
     ld d, $00
     ld b, $03
     ld a, [wC57F]
@@ -7066,10 +7076,12 @@ Func_0A0_6C54:: ; heuristic: follows a terminator; C0
 Jump_0A0_6C80::
     ret
 
+; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
 ; 4 call sites from 3 routines (e.g. Func_0A0_5E07_Table2_Case00, Func_0A0_5F2E_Case04, Func_0A0_5F2E_Case00)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_0A0_6C81::
+ShowStringBank09AtTilesHL_BankA0::
+Func_0A0_6C81:: ; address name
     ld a, [wC52D]
     ld c, a
     ld a, [wC52E]
@@ -7101,10 +7113,12 @@ Func_0A0_6C81::
     ld [wC530], a
     ret
 
+; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes appear in 2 banks)
 ; 5 call sites from 5 routines (e.g. Func_0A0_6909, Func_0A0_68FC, Func_0A0_68ED, Func_0A0_68DE, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_0A0_6CBC::
+ShowStringBank08AtTilesHL_BankA0::
+Func_0A0_6CBC:: ; address name
     ld a, [wC52D]
     ld c, a
     ld a, [wC52E]

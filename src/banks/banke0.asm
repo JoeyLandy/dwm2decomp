@@ -32,7 +32,7 @@ Jump_0E0_4011:: ; address name
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
-    call Func_0E0_4279
+    call ShowStringBank08AtTilesHLThenDefault_BankE0
     call FillTilesFromRequest
     ld de, $42D3
     ld bc, $1412
@@ -414,9 +414,11 @@ Jump_0E0_4269::
     call WriteVRAMByte
     ret
 
+; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
 ; 3 call sites from 2 routines (e.g. Func_0E0_4001_Case00, Func_0E0_4C7E_Case00)
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_0E0_4279::
+ShowStringBank08AtTilesHLThenDefault_BankE0::
+Func_0E0_4279:: ; address name
     ld a, l
     ld [wC52D], a
     ld a, h
@@ -523,7 +525,7 @@ Jump_0E0_445B:: ; address name
     ld [wStringCategory], a
     ld a, $04
     ld [wStringIndex], a
-    call Func_0E0_5553
+    call ShowStringBank09AtTilesHL_BankE0
     call Func_0E0_50EE
     ld hl, $448A
     ld a, [wC5FE]
@@ -1721,14 +1723,14 @@ Jump_0E0_4CAA:: ; address name
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
-    call Func_0E0_4279
+    call ShowStringBank08AtTilesHLThenDefault_BankE0
     ld hl, vTiles1
     ld de, $1201
     ld a, $0E
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
-    call Func_0E0_4279
+    call ShowStringBank08AtTilesHLThenDefault_BankE0
     ld de, $4D95
     ld bc, $1412
     ld hl, vBGMap0
@@ -2220,10 +2222,12 @@ Func_0E0_510C::
     ds $12, $B4
     db $B5
 
+; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. Func_0E0_443B_Case00)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_0E0_5553::
+ShowStringBank09AtTilesHL_BankE0::
+Func_0E0_5553:: ; address name
     ld a, [wC52D]
     ld c, a
     ld a, [wC52E]
@@ -2402,7 +2406,7 @@ Jump_0E0_573D::
     ld [wStringCategory], a
     ld hl, vTiles1 + $1B0
     ld de, $0801
-    call Func_0E0_5A79
+    call ShowStringBank08AtTilesHLThenDefault_BankE0_5A79
 
 Jump_0E0_578A::
     ld a, [wBattleActor]
@@ -2437,7 +2441,7 @@ Jump_0E0_5795::
     ld [wStringCategory], a
     ld hl, vTiles1 + $6D0
     ld de, $0701
-    call Func_0E0_5A79
+    call ShowStringBank08AtTilesHLThenDefault_BankE0_5A79
     ld a, [wC58A]
     cp a, $01
     ld a, [wBattleActor]
@@ -2628,7 +2632,7 @@ Jump_0E0_58C4::
 Jump_0E0_58F0::
     ld hl, vTiles1 + $120
     ld de, $0901
-    call Func_0E0_5A79
+    call ShowStringBank08AtTilesHLThenDefault_BankE0_5A79
     ld a, [wBattleActor]
     add a, a
     ld de, wBattleActionChoice
@@ -2898,9 +2902,11 @@ Jump_0E0_5A6C::
     farcall ChooseActionTarget
     ret
 
+; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
 ; 3 call sites from 1 routine (e.g. Func_0E0_572D)
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_0E0_5A79::
+ShowStringBank08AtTilesHLThenDefault_BankE0_5A79::
+Func_0E0_5A79:: ; address name
     ld a, l
     ld [wC52D], a
     ld a, h
@@ -7906,9 +7912,11 @@ Jump_0E0_7AD2::
     pop hl
     ret
 
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
-Func_0E0_7AD7:: ; heuristic: follows a terminator; C0
+CheckSlotStatusBlockWide_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7AD7:: ; address name
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -7934,9 +7942,11 @@ Jump_0E0_7AF2::
     pop hl
     ret
 
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
-Func_0E0_7AF6:: ; heuristic: follows a terminator; C0
+SlotHasStatus3Or4Bits_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7AF6:: ; address name
     push hl
     ld hl, wD80F
     call AddAx9ToHL

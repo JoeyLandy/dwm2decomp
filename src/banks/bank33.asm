@@ -511,7 +511,7 @@ Jump_033_5264:: ; address name
     ld bc, $0A0B
     call Func_033_6152
     call Func_033_6247
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     ld hl, wD06B
     inc [hl]
     ret
@@ -1242,7 +1242,7 @@ Jump_033_563B:: ; address name
     ld b, $C3
     ld hl, Data_033_63EF
     call StoreBAtWordTableEntry_Bank33
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1360,7 +1360,7 @@ Jump_033_56FC:: ; address name
     ld bc, $140D
     ld de, $01CC
     call Func_033_60FC
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     xor a, a
     ld [wD7AD], a
     ld hl, wD781
@@ -1742,7 +1742,7 @@ Jump_033_5911:: ; address name
     ld [wStringCategory], a
     ld [wStringIndex], a
     farcall ShowString_Bank07
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     ld hl, wD781
     inc [hl]
     ret
@@ -2206,7 +2206,7 @@ Jump_033_5C63:: ; address name
     ld [wStringCategory], a
     ld [wStringIndex], a
     farcall ShowString_Bank07
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2396,7 +2396,7 @@ Jump_033_5DDF:: ; address name
     ld bc, $0907
     call Func_033_6152
     call Func_033_6074
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     ld a, $01
     ld [wD7FA], a
     ld a, [wD781]
@@ -2428,7 +2428,7 @@ Jump_033_5E23:: ; address name
     ld [wD780], a
     ld a, [wD7B3]
     ld [wD781], a
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     ret
 
 ; entry 15 of the `rst $00` table in Func_033_5215
@@ -2551,7 +2551,7 @@ Jump_033_5EDF:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank1B_481A
     call Func_033_6074
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     xor a, a
     ld a, $12
     ld [wStringIndex], a
@@ -2594,7 +2594,7 @@ Jump_033_5F37:: ; address name
     ld [wD780], a
     ld a, [wD7B3]
     ld [wD781], a
-    call Func_033_6049
+    call SetDefaultStringWindow_Bank33
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2756,9 +2756,11 @@ Func_033_6039::
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
+; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
 ; 9 call sites from 9 routines (e.g. Func_033_5215_Case00, BeginString_Bank07_Cat5_Table2_Case09, BeginString_Bank07_Cat5_Table2_Case07, Func_033_562A_Case04, ...)
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_033_6049::
+SetDefaultStringWindow_Bank33::
+Func_033_6049:: ; address name
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a

@@ -43,7 +43,7 @@ Jump_036_4025:: ; address name
     bit 7, a
     jr z, Jump_036_4069
     ld a, [wBattleTarget]
-    call Func_036_7F3C
+    call CheckSlotStatusBlockWide_Bank36
     jr c, Jump_036_4069
     ld a, [wBattleTarget]
     ld hl, wD854
@@ -120,7 +120,7 @@ Jump_036_407F:: ; address name
     and a, $03
     or a, c
     ld c, a
-    call Func_036_7F3C
+    call CheckSlotStatusBlockWide_Bank36
     jr c, Jump_036_40ED
     ld a, $01
     ld [wDAB2], a
@@ -223,7 +223,7 @@ Jump_036_414B::
 RunBattleResolveStep_Table2_Case00_Sub01::
 Func_036_4162:: ; address name
     ld a, [wBattleTarget]
-    call Func_036_7F5B
+    call SlotHasStatus3Or4Bits_Bank36
     jr z, Jump_036_4191
     ld a, [wCFF5]
     bit 5, a
@@ -262,7 +262,7 @@ Jump_036_41A2::
 
 Jump_036_41AF::
     ld a, [wBattleTarget]
-    call Func_036_7F3C
+    call CheckSlotStatusBlockWide_Bank36
     jr c, Jump_036_421B
     ld a, [wBattleTarget]
     ld hl, wD854
@@ -413,7 +413,7 @@ Jump_036_42A5::
 RunBattleResolveStep_Table2_Case00_Sub04::
 Func_036_42AA:: ; address name
     ld a, [wBattleTarget]
-    call Func_036_7F5B
+    call SlotHasStatus3Or4Bits_Bank36
     jr z, Jump_036_42CB
     ld a, [wCFF5]
     bit 5, a
@@ -450,7 +450,7 @@ Func_036_42D3::
     swap a
     and a, $0F
     ld c, a
-    call Func_036_7F3C
+    call CheckSlotStatusBlockWide_Bank36
     jr c, Jump_036_4315
     ld a, [wBattleTarget]
     ld [wDAD1], a
@@ -529,7 +529,7 @@ Jump_036_4356:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleTarget]
-    call Func_036_7F3C
+    call CheckSlotStatusBlockWide_Bank36
     jr c, ResolveStepEffectChecks
     ld a, [wCFF4]
     bit 6, a
@@ -4119,7 +4119,7 @@ Func_036_5A6C::
 Func_036_5A7A:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     call GetBattleHP
-    call Func_036_64A3
+    call ScaleHLTo80Percent_Bank36
     inc hl
     ld a, l
     ld [wBattleDamageLo], a
@@ -5758,8 +5758,10 @@ Func_036_6494::
     pop de
     ret
 
+; HL = HL * 8 / 10 (24-bit intermediate; Multiply8By16 then Divide24ByA), A = the remainder; DE kept (E-0067) (the same 15 bytes appear in 2 banks)
 ; 3 call sites from 3 routines (e.g. Func_036_64CD, Func_036_64EC, Func_036_5A7A)
-Func_036_64A3::
+ScaleHLTo80Percent_Bank36::
+Func_036_64A3:: ; address name
     push de
     ld b, h
     ld c, l
@@ -5795,7 +5797,7 @@ Func_036_64BE::
 
 ; 3 call sites from 3 routines (e.g. Func_036_640D, Func_036_5993, Func_036_592E)
 Func_036_64CD::
-    call Func_036_64A3
+    call ScaleHLTo80Percent_Bank36
     call ShiftHLRight1
     ret
 
@@ -5820,7 +5822,7 @@ Func_036_64E2:: ; heuristic: follows a terminator; C0
 
 ; 1 call site from 1 routine (e.g. Func_036_771B)
 Func_036_64EC:: ; heuristic: follows a terminator; C0
-    call Func_036_64A3
+    call ScaleHLTo80Percent_Bank36
     call ShiftHLRight1
     call ShiftHLRight1
     call ShiftHLRight1
@@ -9914,9 +9916,11 @@ Jump_036_7F37::
     pop hl
     ret
 
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
 ; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, ResolveStepBegin, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
 ; points at: wD80F
-Func_036_7F3C::
+CheckSlotStatusBlockWide_Bank36::
+Func_036_7F3C:: ; address name
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -9942,9 +9946,11 @@ Jump_036_7F57::
     pop hl
     ret
 
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub04, RunBattleResolveStep_Table2_Case00_Sub01)
 ; points at: wD80F
-Func_036_7F5B::
+SlotHasStatus3Or4Bits_Bank36::
+Func_036_7F5B:: ; address name
     push hl
     ld hl, wD80F
     call AddAx9ToHL

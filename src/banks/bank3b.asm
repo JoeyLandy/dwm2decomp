@@ -2580,9 +2580,11 @@ Jump_03B_5024::
     pop hl
     ret
 
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
-Func_03B_5029:: ; heuristic: follows a terminator; C0
+CheckSlotStatusBlockWide_Bank3B:: ; heuristic: follows a terminator; C0
+Func_03B_5029:: ; address name
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -2608,9 +2610,11 @@ Jump_03B_5044::
     pop hl
     ret
 
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
-Func_03B_5048:: ; heuristic: follows a terminator; C0
+SlotHasStatus3Or4Bits_Bank3B:: ; heuristic: follows a terminator; C0
+Func_03B_5048:: ; address name
     push hl
     ld hl, wD80F
     call AddAx9ToHL

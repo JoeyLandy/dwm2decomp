@@ -5141,7 +5141,7 @@ Jump_01B_683D:: ; address name
     ld b, $C3
     ld hl, Data_01B_786F
     call StoreBAtWordTableEntry_Bank1B
-    call Func_01B_7449
+    call SetDefaultStringWindow_Bank1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -6019,7 +6019,7 @@ Jump_01B_6DB3:: ; address name
     ld bc, $140D
     ld de, $01CC
     call Func_01B_6277
-    call Func_01B_7449
+    call SetDefaultStringWindow_Bank1B
     xor a, a
     ld [wD7FA], a
     ld a, [wD781]
@@ -6337,7 +6337,7 @@ Jump_01B_6FD8:: ; address name
     ld hl, wC3E7
     ld bc, $0907
     call CopyRectTo20ByteRows
-    call Func_01B_7449
+    call SetDefaultStringWindow_Bank1B
     ld a, $01
     ld [wD7FA], a
     ld a, [wD781]
@@ -7049,9 +7049,11 @@ Func_01B_7439:: ; address name
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
+; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
 ; 4 call sites from 4 routines (e.g. Func_01B_74DC, Func_01B_665E_Table3_Case07, Func_01B_6A5E_Table2_Case06, Func_01B_6A5E_Table3_Case06)
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_01B_7449::
+SetDefaultStringWindow_Bank1B::
+Func_01B_7449:: ; address name
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -7190,7 +7192,7 @@ Jump_01B_7525::
     call FillTilesFromRequest
 
 Jump_01B_7533::
-    call Func_01B_7449
+    call SetDefaultStringWindow_Bank1B
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_01B_7205, Func_01B_665E_Table3_Case0C, Func_01B_6A5E_Table2_Case00)

@@ -494,8 +494,10 @@ Jump_003_42F9::
     jr nz, CopyRectToBGMap
     ret
 
+; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle); B kept, C = 0 (E-0067) (the same 28 bytes appear in 2 banks)
 ; 4 call sites from 2 routines (e.g. Func_003_4A36, Func_003_4FBB_Case02)
-Func_003_4313::
+CopyRectToVRAMSourceStrideBPlus14_Bank03::
+Func_003_4313:: ; address name
     push bc
     push hl
 
@@ -516,7 +518,7 @@ Jump_003_4315::
     add hl, bc
     pop bc
     dec c
-    jr nz, Func_003_4313
+    jr nz, CopyRectToVRAMSourceStrideBPlus14_Bank03
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5E68_Table2_Case00, Func_003_5253_Table2_Case00)
@@ -622,10 +624,12 @@ Func_003_43CC::
 Func_003_43D6::
     ld de, $0501
 
+; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
 ; 11 call sites from 8 routines (e.g. Func_003_5900, Func_003_7281, Func_003_65E3, Func_003_5AA7, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_003_43D9::
+ShowStringBank08AtTilesHL_Bank03::
+Func_003_43D9:: ; address name
     ld a, [wC52D]
     ld c, a
     ld a, [wC52E]
@@ -893,8 +897,10 @@ Func_003_4538::
     ld [hl], $BC
     ret
 
+; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte) (E-0067) (the same 15 bytes appear in 3 banks)
 ; 4 call sites from 4 routines (e.g. Func_003_6A60_Table2_Case01, Func_003_6B5E_Case0E, Func_003_6B5E_Case01, Func_003_74E2_Case02)
-Func_003_454C::
+WriteBCTileAtWordTableEntry_Bank03::
+Func_003_454C:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -1726,7 +1732,7 @@ Func_003_4A36::
     ld hl, vBGMap0 + $161
     ld de, wD000
     ld bc, $0606
-    call Func_003_4313
+    call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, $00
     ldh [rSVBK], a
     ld a, $00
@@ -1981,7 +1987,7 @@ Func_003_4BE8::
     ld [wStringCategory], a
     ld hl, vTiles2 + $350
     ld de, $0603
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     ld c, $6F
     ld a, [wC46D]
     and a, $0F
@@ -2042,7 +2048,7 @@ Jump_003_4C47::
     ld [wStringCategory], a
     ld hl, vTiles2 + $4C0
     ld de, $0901
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
@@ -2055,7 +2061,7 @@ Jump_003_4C47::
     ld [wStringCategory], a
     ld hl, vTiles2 + $550
     ld de, $0901
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     ld a, [wC46D]
     and a, $0F
     add a, $C7
@@ -2183,7 +2189,7 @@ Func_003_4D57::
     ld [wStringCategory], a
     ld hl, vTiles2 + $2C0
     ld de, $0602
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     ld c, $34
     ld a, [wC46D]
     and a, $0F
@@ -2246,7 +2252,7 @@ Jump_003_4DDD::
     add_a_to_hl
     deref_hl
     ld de, $0901
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     pop hl
     ret
 
@@ -2374,7 +2380,7 @@ Func_003_4EB6::
     add_a_to_hl
     deref_hl
     ld de, $0901
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     farcall LoadBank35Record
     ld a, [wD008]
     ld [wD09D], a
@@ -2835,21 +2841,21 @@ Jump_003_51B0:: ; address name
     ldh [rSVBK], a
     ld hl, vBGMap0 + $E1
     ld de, wD000
-    call Func_003_4313
+    call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, [wC6FD]
     cp a, $01
     jr z, Jump_003_51F3
     ld hl, vBGMap0 + $E7
     ld de, wD080
     ld bc, $0606
-    call Func_003_4313
+    call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, [wC6FD]
     cp a, $02
     jr z, Jump_003_51F3
     ld hl, vBGMap0 + $ED
     ld de, wD100
     ld bc, $0606
-    call Func_003_4313
+    call CopyRectToVRAMSourceStrideBPlus14_Bank03
 
 Jump_003_51F3::
     ld a, $00
@@ -2972,7 +2978,7 @@ Jump_003_5288:: ; address name
     ld a, [wD095]
     or a, a
     call nz, Func_003_432F
-    call Func_003_5A58
+    call SetupInventoryMenuPages_Bank03
     call Func_003_581E
     call SetMenuRowsForPage_Bank03_59DB
     call Func_003_5900
@@ -3015,7 +3021,7 @@ Jump_003_52C8::
     call SetMenuRowsForPage_Bank03_59DB
     call Func_003_5900
     call Func_003_592E
-    call Func_003_59C7
+    call DrawMenuPageNumber_Bank03
     ret
 
 Jump_003_52DE::
@@ -4046,7 +4052,7 @@ Jump_003_591C::
     ld [wStringCategory], a
     ld hl, vTiles2 + $230
     ld de, $1203
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     ret
 
 ; 4 call sites from 3 routines (e.g. Func_003_5A07, Func_003_5E68, Func_003_5253_Table2_Case01)
@@ -4142,9 +4148,11 @@ Jump_003_5995::
     ld [wC52E], a
     ret
 
+; when wMenuPageCount is non-zero, writes tile $E1 + (wMenuPage & $0F) at vBGMap0 + $10F (E-0067) (the same 20 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_003_5253_Table2_Case01)
 ; reads: wMenuPageCount, wMenuPage
-Func_003_59C7::
+DrawMenuPageNumber_Bank03::
+Func_003_59C7:: ; address name
     ld a, [wMenuPageCount]
     or a, a
     jr z, Jump_003_59DA
@@ -4234,11 +4242,13 @@ Func_003_5A07::
     call Func_003_592E
     ret
 
+; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. Func_003_5E68, Func_003_5253_Table2_Case00)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wC0A7, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
-Func_003_5A58::
+SetupInventoryMenuPages_Bank03::
+Func_003_5A58:: ; address name
     ld hl, wInventory
     ld bc, $1800
 
@@ -4411,7 +4421,7 @@ Jump_003_5B32::
     push af
     ld hl, vTiles2 + $1A0
     ld de, $0901
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     pop af
     ld hl, wC319
     ld c, a
@@ -4464,7 +4474,7 @@ Jump_003_5B92::
     ld [wStringCategory], a
     ld hl, vTiles2 + $1A0
     ld de, $0901
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     pop af
     ld hl, Data_003_5C43
     add a, a
@@ -4655,7 +4665,7 @@ Func_003_5E68::
     ld [wMenuPage], a
     xor a, a
     ld [wC46E], a
-    call Func_003_5A58
+    call SetupInventoryMenuPages_Bank03
     ld hl, wMenuPage
 
 Jump_003_5E76::
@@ -5837,7 +5847,7 @@ Jump_003_6632::
     ld [wStringCategory], a
     ld hl, vTiles2 + $230
     ld de, $1203
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     ret
 
 ; 3 call sites from 2 routines (e.g. Func_003_5E68_Table4_Case02, Func_003_5E68_Table4_Case01)
@@ -6318,7 +6328,7 @@ Jump_003_6ADC:: ; address name
     ld a, [wC46D]
     and a, $07
     ld hl, Func_003_460B
-    call Func_003_454C
+    call WriteBCTileAtWordTableEntry_Bank03
     ld a, [wC46D]
     and a, $07
     inc a
@@ -6516,7 +6526,7 @@ Jump_003_6C36::
     ld a, [wC46E]
     and a, $07
     ld hl, Data_003_462B
-    call Func_003_454C
+    call WriteBCTileAtWordTableEntry_Bank03
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6874,7 +6884,7 @@ Jump_003_6E27:: ; address name
     ld a, [wC470]
     and a, $01
     ld hl, Data_003_4627
-    call Func_003_454C
+    call WriteBCTileAtWordTableEntry_Bank03
     ld a, [wC470]
     and a, $01
     jr nz, Jump_003_6E56
@@ -7600,7 +7610,7 @@ Func_003_7281::
     ld [wStringCategory], a
     ld hl, vTiles2 + $200
     ld de, $0901
-    call Func_003_43D9
+    call ShowStringBank08AtTilesHL_Bank03
     pop hl
     inc hl
     ld a, [hl]
@@ -8037,7 +8047,7 @@ Jump_003_75A4:: ; address name
     ld a, [wC46F]
     and a, $01
     ld hl, Data_003_4645
-    call Func_003_454C
+    call WriteBCTileAtWordTableEntry_Bank03
     ld a, [wC46F]
     and a, $01
     jr nz, Jump_003_75D7

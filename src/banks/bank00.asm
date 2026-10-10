@@ -3864,7 +3864,7 @@ Func_000_16AA:: ; address name
     ret
 
 ; B = B / A (quotient), A = remainder; clobbers D, E
-; 29 call sites from 29 routines (e.g. Func_001_6C48, Func_001_6903, Func_003_5A58, Func_005_69F5, ...)
+; 29 call sites from 29 routines (e.g. Func_001_6C48, Func_001_6903, SetupInventoryMenuPages_Bank03, Func_005_69F5, ...)
 DivideBByA::
 Func_000_16BF:: ; address name
     ld d, $08

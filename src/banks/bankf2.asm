@@ -1068,7 +1068,7 @@ Func_0F2_4B05::
     ld de, $018C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call Func_0F2_4E63
+    call DrawSevenDigitsFromWD7F1_BankF2
     ld a, [wCA81]
     ldh [hFFC6], a
     ld a, [wCA82]
@@ -1139,7 +1139,7 @@ Jump_0F2_4BA8::
     ld de, $020C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call Func_0F2_4E63
+    call DrawSevenDigitsFromWD7F1_BankF2
     ret
 
 Jump_0F2_4BB6::
@@ -1555,9 +1555,11 @@ Jump_0F2_4E5F::
     ld [de], a
     ret
 
+; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. Func_0F2_4B05)
 ; points at: wD7F1
-Func_0F2_4E63::
+DrawSevenDigitsFromWD7F1_BankF2::
+Func_0F2_4E63:: ; address name
     ld de, wD7F1
     ld c, $07
 
@@ -1793,20 +1795,20 @@ Jump_0F2_4F74::
     ld [hl], e
     ei
     inc hl
-    call Func_0F2_4FD6
+    call WriteThreeC3TilesAtHL_BankF2
     ld a, [wCA80]
     push af
     bit 0, a
-    call nz, Func_0F2_4FE7
+    call nz, WriteTileC1AtHL_BankF2
     pop af
     inc hl
     push af
     bit 2, a
-    call nz, Func_0F2_4FF0
+    call nz, WriteTileC0AtHL_BankF2
     pop af
     inc hl
     bit 7, a
-    call nz, Func_0F2_4FF9
+    call nz, WriteTileC2AtHL_BankF2
     inc hl
     inc hl
     ld a, [wCA39]
@@ -1819,8 +1821,10 @@ Jump_0F2_4F74::
     ei
     ret
 
+; writes tile $C3 to the 3 VRAM bytes from HL (WaitForVRAMAccess, interrupts off per byte); HL kept; clobbers C, E (E-0067) (the same 17 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F2_4F47)
-Func_0F2_4FD6::
+WriteThreeC3TilesAtHL_BankF2::
+Func_0F2_4FD6:: ; address name
     push hl
     ld e, $C3
     ld c, $03
@@ -1836,8 +1840,10 @@ Jump_0F2_4FDB::
     pop hl
     ret
 
+; writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F2_4F47)
-Func_0F2_4FE7::
+WriteTileC1AtHL_BankF2::
+Func_0F2_4FE7:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $C1
@@ -1845,8 +1851,10 @@ Func_0F2_4FE7::
     ei
     ret
 
+; writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F2_4F47)
-Func_0F2_4FF0::
+WriteTileC0AtHL_BankF2::
+Func_0F2_4FF0:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $C0
@@ -1854,8 +1862,10 @@ Func_0F2_4FF0::
     ei
     ret
 
+; writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F2_4F47)
-Func_0F2_4FF9::
+WriteTileC2AtHL_BankF2::
+Func_0F2_4FF9:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $C2

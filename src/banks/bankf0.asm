@@ -3680,7 +3680,7 @@ Jump_0F0_605A::
     ret
 
 Jump_0F0_606C::
-    call Func_0F0_624F
+    call SplitWD7ABBy4_BankF0
     xor a, a
     ldh [hFFBA], a
     ld a, [wD781]
@@ -3964,10 +3964,12 @@ Jump_0F0_6241::
     jr nz, Jump_0F0_6241
     ret
 
+; wD7AF = wD7AB / 4 and wD7AB = wD7AB mod 4 (DivideHLByA) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F0_5DE8_Case07)
 ; reads: wD7AB
 ; writes: wD7AB, wD7AF
-Func_0F0_624F::
+SplitWD7ABBy4_BankF0::
+Func_0F0_624F:: ; address name
     ld a, [wD7AB]
     ld l, a
     ld h, $00

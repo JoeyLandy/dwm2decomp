@@ -196,7 +196,7 @@ Jump_0A3_41E4::
     call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
     ldh a, [hFFC6]
-    call Func_0A3_4278
+    call SlotHasStatus3Or4Bits_BankA3
     jr nz, Jump_0A3_4257
 
 Jump_0A3_41FD::
@@ -216,7 +216,7 @@ Jump_0A3_41FD::
     jr c, Jump_0A3_4257
     ldh a, [hFFC6]
     inc a
-    call Func_0A3_4278
+    call SlotHasStatus3Or4Bits_BankA3
     jr nz, Jump_0A3_4257
 
 Jump_0A3_421A::
@@ -238,7 +238,7 @@ Jump_0A3_421A::
     ldh a, [hFFC6]
     inc a
     inc a
-    call Func_0A3_4278
+    call SlotHasStatus3Or4Bits_BankA3
     jr nz, Jump_0A3_4257
 
 Jump_0A3_4239::
@@ -288,9 +288,11 @@ Jump_0A3_4274::
     ld a, $01
     ret
 
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; 3 call sites from 1 routine (e.g. Func_0A3_41CF)
 ; points at: wD80F
-Func_0A3_4278::
+SlotHasStatus3Or4Bits_BankA3::
+Func_0A3_4278:: ; address name
     push hl
     ld hl, wD80F
     call AddAx9ToHL

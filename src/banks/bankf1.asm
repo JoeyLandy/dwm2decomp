@@ -32,7 +32,7 @@ Jump_0F1_4013:: ; address name
     ld a, [wD095]
     or a, a
     call nz, Func_0F1_4866
-    call Func_0F1_43E0
+    call SetupInventoryMenuPages_BankF1
     call Func_0F1_41EE
     call SetMenuRowsForPage_BankF1
     call Func_0F1_42D9
@@ -92,7 +92,7 @@ Jump_0F1_407C::
     call SetMenuRowsForPage_BankF1
     call Func_0F1_42D9
     call Func_0F1_4307
-    call Func_0F1_43A0
+    call DrawMenuPageNumber_BankF1
     ret
 
 Jump_0F1_4092::
@@ -466,7 +466,7 @@ Jump_0F1_42F5::
     ld [wStringCategory], a
     ld hl, vTiles2 + $230
     ld de, $1203
-    call Func_0F1_4A23
+    call ShowStringBank08AtTilesHL_BankF1
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0F1_4001_Table2_Case01)
@@ -562,9 +562,11 @@ Jump_0F1_436E::
     ld [wC52E], a
     ret
 
+; when wMenuPageCount is non-zero, writes tile $E1 + (wMenuPage & $0F) at vBGMap0 + $10F (E-0067) (the same 20 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Table2_Case01)
 ; reads: wMenuPageCount, wMenuPage
-Func_0F1_43A0::
+DrawMenuPageNumber_BankF1::
+Func_0F1_43A0:: ; address name
     ld a, [wMenuPageCount]
     or a, a
     jr z, Jump_0F1_43B3
@@ -611,11 +613,13 @@ Jump_0F1_43DA::
     res 7, [hl]
     ret
 
+; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Table2_Case00)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wC0A7, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
-Func_0F1_43E0::
+SetupInventoryMenuPages_BankF1::
+Func_0F1_43E0:: ; address name
     ld hl, wInventory
     ld bc, $1800
 
@@ -788,7 +792,7 @@ Jump_0F1_44BA::
     push af
     ld hl, vTiles2 + $1A0
     ld de, $0901
-    call Func_0F1_4A23
+    call ShowStringBank08AtTilesHL_BankF1
     pop af
     ld hl, wC319
     ld c, a
@@ -841,7 +845,7 @@ Jump_0F1_451A::
     ld [wStringCategory], a
     ld hl, vTiles2 + $1A0
     ld de, $0901
-    call Func_0F1_4A23
+    call ShowStringBank08AtTilesHL_BankF1
     pop af
     ld hl, Data_0F1_45CB
     add a, a
@@ -1078,8 +1082,10 @@ Jump_0F1_4830::
     jr nz, Jump_0F1_481A
     ret
 
+; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle); B kept, C = 0 (E-0067) (the same 28 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0F1_484A:: ; heuristic: follows a terminator; C0
+CopyRectToVRAMSourceStrideBPlus14_BankF1:: ; heuristic: follows a terminator; C0
+Func_0F1_484A:: ; address name
     push bc
     push hl
 
@@ -1100,7 +1106,7 @@ Jump_0F1_484C::
     add hl, bc
     pop bc
     dec c
-    jr nz, Func_0F1_484A
+    jr nz, CopyRectToVRAMSourceStrideBPlus14_BankF1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Table2_Case00)
@@ -1305,8 +1311,10 @@ Func_0F1_4983::
     ld [hl], $BC
     ret
 
+; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte) (E-0067) (the same 15 bytes appear in 3 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0F1_4997:: ; heuristic: follows a terminator; C0
+WriteBCTileAtWordTableEntry_BankF1:: ; heuristic: follows a terminator; C0
+Func_0F1_4997:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -1378,10 +1386,12 @@ Func_0F1_4A0D:: ; heuristic: follows a terminator; C0
     ld [wStringIndex], a
     ld de, $0501
 
+; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
 ; 3 call sites from 2 routines (e.g. Func_0F1_42D9, Func_0F1_442F)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_0F1_4A23::
+ShowStringBank08AtTilesHL_BankF1::
+Func_0F1_4A23:: ; address name
     ld a, [wC52D]
     ld c, a
     ld a, [wC52E]

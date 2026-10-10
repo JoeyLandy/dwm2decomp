@@ -418,9 +418,11 @@ Jump_019_42EA::
     pop bc
     ret
 
+; zero-fills the $2F bytes at wD008, where LoadBank35Record writes; BC, HL kept (E-0067) (the same 15 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
 ; points at: wD008
-Func_019_42EE::
+ClearBank35RecordBuffer_Bank19::
+Func_019_42EE:: ; address name
     push bc
     push hl
     ld hl, wD008
@@ -1397,9 +1399,9 @@ Jump_019_4771::
     ld a, $03
     ld [hl+], a
     call Func_019_489D
-    call Func_019_488D
-    call Func_019_488D
-    call Func_019_488D
+    call StoreRandomByteAtHL_Bank19
+    call StoreRandomByteAtHL_Bank19
+    call StoreRandomByteAtHL_Bank19
     call CopyWD01ARecordToHL_Bank19
     ld a, $00
     ld [hl+], a
@@ -1427,9 +1429,11 @@ Jump_019_4771::
     pop bc
     ret
 
+; advances the random table (NextTableByte) and stores the new wC5E7 at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
 ; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wC5E7
-Func_019_488D::
+StoreRandomByteAtHL_Bank19::
+Func_019_488D:: ; address name
     push af
     push bc
     push de
@@ -2056,7 +2060,7 @@ Jump_019_4BA1::
     call Func_019_4CF8
 
 Jump_019_4BA4::
-    call Func_019_42EE
+    call ClearBank35RecordBuffer_Bank19
     ret
 
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
@@ -2065,7 +2069,7 @@ Jump_019_4BA4::
 Func_019_4BA8::
     ld a, c
     push bc
-    call Func_019_4E05
+    call BattlerRecordAddress_Bank19
     pop bc
     ld a, c
     add a, a
@@ -2298,7 +2302,7 @@ Jump_019_4CEF::
 ; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
 Func_019_4CF8::
     push bc
-    call Func_019_4E05
+    call BattlerRecordAddress_Bank19
     pop bc
     ld a, c
     add a, a
@@ -2466,8 +2470,10 @@ Jump_019_4DFC::
     call Func_019_4298
     ret
 
+; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL = wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the field offset) (E-0067) (the same 23 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
-Func_019_4E05::
+BattlerRecordAddress_Bank19::
+Func_019_4E05:: ; address name
     cp a, $03
     jr c, Jump_019_4E0E
     ret z

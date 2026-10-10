@@ -5235,7 +5235,7 @@ Jump_01E_6471::
     ret
 
 Jump_01E_6483::
-    call Func_01E_7732
+    call SplitWD7ABBy4_Bank1E
     xor a, a
     ldh [hFFBA], a
     ld a, [wD781]
@@ -6814,7 +6814,7 @@ Func_01E_6F17::
     ld de, $018C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call Func_01E_76C7
+    call DrawSevenDigitsFromWD7F1_Bank1E
     pop hl
     push hl
     ld a, [hl]
@@ -6891,7 +6891,7 @@ Jump_01E_6FBA::
     ld de, $020C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call Func_01E_76C7
+    call DrawSevenDigitsFromWD7F1_Bank1E
     pop hl
     ret
 
@@ -7411,20 +7411,20 @@ Jump_01E_728A::
     pop de
     ld l, e
     ld h, d
-    call Func_01E_7306
+    call WriteThreeC3TilesAtHL_Bank1E
     ldh a, [hFFC6]
     push af
     bit 0, a
-    call nz, Func_01E_7317
+    call nz, WriteTileC0AtHL_Bank1E
     pop af
     inc hl
     push af
     bit 2, a
-    call nz, Func_01E_7320
+    call nz, WriteTileC1AtHL_Bank1E
     pop af
     inc hl
     bit 7, a
-    call nz, Func_01E_7329
+    call nz, WriteTileC2AtHL_Bank1E
     inc hl
     inc hl
     ld e, l
@@ -7450,8 +7450,10 @@ Jump_01E_728A::
     pop hl
     ret
 
+; writes tile $C3 to the 3 VRAM bytes from HL (WaitForVRAMAccess, interrupts off per byte); HL kept; clobbers C, E (E-0067) (the same 17 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_01E_725D)
-Func_01E_7306::
+WriteThreeC3TilesAtHL_Bank1E::
+Func_01E_7306:: ; address name
     push hl
     ld e, $C3
     ld c, $03
@@ -7467,8 +7469,10 @@ Jump_01E_730B::
     pop hl
     ret
 
+; writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_01E_725D)
-Func_01E_7317::
+WriteTileC0AtHL_Bank1E::
+Func_01E_7317:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $C0
@@ -7476,8 +7480,10 @@ Func_01E_7317::
     ei
     ret
 
+; writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_01E_725D)
-Func_01E_7320::
+WriteTileC1AtHL_Bank1E::
+Func_01E_7320:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $C1
@@ -7485,8 +7491,10 @@ Func_01E_7320::
     ei
     ret
 
+; writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_01E_725D)
-Func_01E_7329::
+WriteTileC2AtHL_Bank1E::
+Func_01E_7329:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $C2
@@ -8207,9 +8215,11 @@ Jump_01E_76BC::
 Jump_01E_76C6::
     ret
 
+; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. Func_01E_6F17)
 ; points at: wD7F1
-Func_01E_76C7::
+DrawSevenDigitsFromWD7F1_Bank1E::
+Func_01E_76C7:: ; address name
     ld de, wD7F1
     ld c, $07
 
@@ -8288,10 +8298,12 @@ Jump_01E_770E::
     ld [wC418], a
     ret
 
+; wD7AF = wD7AB / 4 and wD7AB = wD7AB mod 4 (DivideHLByA) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_01E_6074_Table6_Case07)
 ; reads: wD7AB
 ; writes: wD7AB, wD7AF
-Func_01E_7732::
+SplitWD7ABBy4_Bank1E::
+Func_01E_7732:: ; address name
     ld a, [wD7AB]
     ld l, a
     ld h, $00

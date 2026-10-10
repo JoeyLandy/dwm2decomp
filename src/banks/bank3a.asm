@@ -2960,7 +2960,7 @@ Jump_03A_6269:: ; address name
     ld a, $01
     ld [wC970], a
     ld a, [wBattleTarget]
-    call Func_03A_7D6A
+    call CheckSlotStatusBlockWide_Bank3A
     jr c, Jump_03A_629F
     ld hl, wD812
     call AddAx9ToHL
@@ -4740,7 +4740,7 @@ Func_03A_6CD4::
     or a, a
     jr nz, Jump_03A_6D39
     ld a, [wBattleTarget]
-    call Func_03A_7D6A
+    call CheckSlotStatusBlockWide_Bank3A
     jr c, Jump_03A_6D45
     ld hl, wD812
     call AddAx9ToHL
@@ -6334,9 +6334,11 @@ Jump_03A_7D65::
     pop hl
     ret
 
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleActions_Case05, Func_03A_6CD4)
 ; points at: wD80F
-Func_03A_7D6A::
+CheckSlotStatusBlockWide_Bank3A::
+Func_03A_7D6A:: ; address name
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -6362,9 +6364,11 @@ Jump_03A_7D85::
     pop hl
     ret
 
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
-Func_03A_7D89:: ; heuristic: follows a terminator; C0
+SlotHasStatus3Or4Bits_Bank3A:: ; heuristic: follows a terminator; C0
+Func_03A_7D89:: ; address name
     push hl
     ld hl, wD80F
     call AddAx9ToHL

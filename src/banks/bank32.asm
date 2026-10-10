@@ -2792,7 +2792,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
     call Func_032_543C
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    call Func_032_691C
+    call SlotHasStatus3Or4Bits_Bank32
     ret nz
     farcall Func_0A3_413F
     ret
@@ -2802,7 +2802,7 @@ Jump_032_4F32::
     call Func_032_543C
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    call Func_032_691C
+    call SlotHasStatus3Or4Bits_Bank32
     ret nz
     farcall Func_0A3_413F
     ret
@@ -3098,7 +3098,7 @@ Func_032_514C:: ; heuristic: follows a terminator; C0
     ld a, [wRecordBufferData]
     ldh [hFFC8], a
     ld a, [wBattleActor]
-    call Func_032_68FD
+    call CheckSlotStatusBlockWide_Bank32
     jr nc, Jump_032_5178
     ld d, $00
     jr Jump_032_517D
@@ -3128,7 +3128,7 @@ Jump_032_5181::
     ld a, [wRecordBufferData]
     ldh [hFFC8], a
     ld a, [wBattleActor]
-    call Func_032_68FD
+    call CheckSlotStatusBlockWide_Bank32
     jr c, Jump_032_51C3
     ld a, [wBattleActor]
     ld hl, wDA5B
@@ -5514,7 +5514,7 @@ Jump_032_60DF:: ; address name
     push hl
     deref_hl
     push hl
-    call Func_032_6755
+    call ScaleHLTo80Percent_Bank32
     inc hl
     ld a, l
     ld [wD876], a
@@ -6626,8 +6626,10 @@ Func_032_6749::
     scf
     ret
 
+; HL = HL * 8 / 10 (24-bit intermediate; Multiply8By16 then Divide24ByA), A = the remainder; DE kept (E-0067) (the same 15 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_032_604A_Case01)
-Func_032_6755::
+ScaleHLTo80Percent_Bank32::
+Func_032_6755:: ; address name
     push de
     ld b, h
     ld c, l
@@ -6938,9 +6940,11 @@ Jump_032_68F8::
     pop hl
     ret
 
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
 ; 2 call sites from 1 routine (e.g. Func_032_514C)
 ; points at: wD80F
-Func_032_68FD::
+CheckSlotStatusBlockWide_Bank32::
+Func_032_68FD:: ; address name
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -6966,9 +6970,11 @@ Jump_032_6918::
     pop hl
     ret
 
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; 2 call sites from 1 routine (e.g. Func_032_4F0A)
 ; points at: wD80F
-Func_032_691C::
+SlotHasStatus3Or4Bits_Bank32::
+Func_032_691C:: ; address name
     push hl
     ld hl, wD80F
     call AddAx9ToHL

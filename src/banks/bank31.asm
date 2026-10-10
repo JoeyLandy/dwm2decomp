@@ -2036,7 +2036,7 @@ Jump_031_4B8F:: ; address name
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
-    call Func_031_7A02
+    call ShowStringBank09AtTilesHL_Bank31
     call Func_031_7486
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2470,7 +2470,7 @@ Func_031_4E3E:: ; address name
 
 Jump_031_4E46::
     ld a, c
-    call RunBattleSetup_Table2_Case09_Sub01_Sub01
+    call CheckSlotStatusBlockWide_Bank31
     jr c, Jump_031_4E4D
     inc e
 
@@ -2801,7 +2801,7 @@ Jump_031_5040:: ; address name
     ld [wStringCategory], a
     ld a, $01
     ld [wStringIndex], a
-    call Func_031_7A02
+    call ShowStringBank09AtTilesHL_Bank31
     ld a, [wDAD7]
     or a, a
     jr z, Jump_031_5067
@@ -2809,7 +2809,7 @@ Jump_031_5040:: ; address name
     ld [wStringIndex], a
     ld hl, vTiles2 + $50
     ld de, $0801
-    call Func_031_7A02
+    call ShowStringBank09AtTilesHL_Bank31
 
 Jump_031_5067::
     xor a, a
@@ -2991,7 +2991,7 @@ Jump_031_518A:: ; address name
     ld [wStringCategory], a
     ld a, $02
     ld [wStringIndex], a
-    call Func_031_7A02
+    call ShowStringBank09AtTilesHL_Bank31
     call Func_031_74AD
     ld a, [wCFD4]
     and a, $03
@@ -3077,7 +3077,7 @@ Jump_031_5212::
     jr Jump_031_5292
 
 Jump_031_5242::
-    call Func_031_641D
+    call CountPresentFoesOfWC57FSide_Bank31
     ld a, d
     cp a, $01
     jr nz, Jump_031_525C
@@ -3534,7 +3534,7 @@ Jump_031_5523::
     jr Jump_031_5598
 
 Jump_031_552F::
-    call Func_031_641D
+    call CountPresentFoesOfWC57FSide_Bank31
     ld a, d
     cp a, $01
     jr nz, Jump_031_553E
@@ -3551,7 +3551,7 @@ Jump_031_553E::
     jr Jump_031_5598
 
 Jump_031_5549::
-    call Func_031_6439
+    call CountPresentSlotsOfWC57FSide_Bank31
     ld a, d
     cp a, $01
     jr nz, Jump_031_5566
@@ -3698,7 +3698,7 @@ Jump_031_560B:: ; address name
     ld [wStringCategory], a
     ld a, $03
     ld [wStringIndex], a
-    call Func_031_7A02
+    call ShowStringBank09AtTilesHL_Bank31
     call Func_031_6451
     xor a, a
     ld [wC470], a
@@ -4091,7 +4091,7 @@ Jump_031_5855:: ; address name
     ld [wStringIndex], a
     ld hl, vTiles1
     ld de, $0603
-    call Func_031_7A3D
+    call ShowStringBank08AtTilesHL_Bank31
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4283,7 +4283,7 @@ Jump_031_59BC:: ; address name
     ld [wStringCategory], a
     ld a, $03
     ld [wStringIndex], a
-    call Func_031_7A02
+    call ShowStringBank09AtTilesHL_Bank31
     call Func_031_74EE
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4425,7 +4425,7 @@ Jump_031_5AA6:: ; address name
     ld [wStringCategory], a
     ld a, $03
     ld [wStringIndex], a
-    call Func_031_7A02
+    call ShowStringBank09AtTilesHL_Bank31
     call Func_031_645E
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5853,7 +5853,7 @@ Jump_031_62A2::
     ld [wStringIndex], a
     ld hl, vTiles1
     ld de, $0603
-    call Func_031_7A3D
+    call ShowStringBank08AtTilesHL_Bank31
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_031_4EB9_Table2_Case0F, Func_031_4EB9_Table2_Case0B, Func_031_4EB9_Table2_Case06, Func_031_4EB9_Table2_Case02)
@@ -5882,7 +5882,7 @@ Func_031_62F7::
     push hl
     ld hl, vTiles1 + $6D0
     ld de, $0901
-    call Func_031_7A3D
+    call ShowStringBank08AtTilesHL_Bank31
     pop hl
     ret
 
@@ -5893,7 +5893,7 @@ Func_031_6306::
     push hl
     ld hl, vTiles1 + $760
     ld de, $0901
-    call Func_031_7A3D
+    call ShowStringBank08AtTilesHL_Bank31
     pop hl
     ret
 
@@ -5904,7 +5904,7 @@ Func_031_6315::
     push hl
     ld hl, vTiles1 + $7F0
     ld de, $0901
-    call Func_031_7A3D
+    call ShowStringBank08AtTilesHL_Bank31
     pop hl
     ret
 
@@ -5914,7 +5914,7 @@ Func_031_6324::
     ld [wStringIndex], a
     ld hl, vTiles2 + $80
     ld de, $0901
-    call Func_031_7A3D
+    call ShowStringBank08AtTilesHL_Bank31
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_031_61A4, Func_031_4EB9_Case10)
@@ -5926,7 +5926,7 @@ Func_031_6331::
     ld [wStringIndex], a
     ld hl, vTiles1
     ld de, $0603
-    call Func_031_7A3D
+    call ShowStringBank08AtTilesHL_Bank31
     pop af
     ld [wRecordBuffer], a
     xor a, a
@@ -6041,9 +6041,11 @@ Func_031_63ED::
     farcall LoadSkillRecord
     ret
 
+; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfWC57FSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. Func_031_4EB9_Case12, Func_031_4EB9_Case06)
 ; reads: wC57F
-Func_031_641D::
+CountPresentFoesOfWC57FSide_Bank31::
+Func_031_641D:: ; address name
     ld de, $0000
     ld b, $03
     ld a, [wC57F]
@@ -6065,9 +6067,11 @@ Jump_031_6434::
     jr nz, Jump_031_642C
     ret
 
+; side base = (wC57F << 1) & 4: D = how many of its three slots are present; clobbers A, BC (E-0067) (the same 24 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case12)
 ; reads: wC57F
-Func_031_6439::
+CountPresentSlotsOfWC57FSide_Bank31::
+Func_031_6439:: ; address name
     ld d, $00
     ld b, $03
     ld a, [wC57F]
@@ -9723,10 +9727,12 @@ Jump_031_79DA::
 Jump_031_7A01::
     ret
 
+; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
 ; 7 call sites from 6 routines (e.g. RunBattleSetup_Table2_Case01, Func_031_4EB9_Case18, Func_031_4EB9_Case04, Func_031_4EB9_Case00, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_031_7A02::
+ShowStringBank09AtTilesHL_Bank31::
+Func_031_7A02:: ; address name
     ld a, [wC52D]
     ld c, a
     ld a, [wC52E]
@@ -9758,10 +9764,12 @@ Func_031_7A02::
     ld [wC530], a
     ret
 
+; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes appear in 2 banks)
 ; 7 call sites from 7 routines (e.g. Func_031_6331, Func_031_6324, Func_031_6315, Func_031_6306, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_031_7A3D::
+ShowStringBank08AtTilesHL_Bank31::
+Func_031_7A3D:: ; address name
     ld a, [wC52D]
     ld c, a
     ld a, [wC52E]
@@ -9806,10 +9814,10 @@ Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_7ADA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C7ADA, $114
 
-; only called from RunBattleSetup_Table2_Case09_Sub01 (E-0047)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Table2_Case09_Sub01)
 ; points at: wD80F
-RunBattleSetup_Table2_Case09_Sub01_Sub01::
+CheckSlotStatusBlockWide_Bank31::
 Func_031_7BEE:: ; address name
     call CheckSlotStatusBlock
     ret c
@@ -9836,9 +9844,11 @@ Jump_031_7C09::
     pop hl
     ret
 
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
-Func_031_7C0D:: ; heuristic: follows a terminator; C0
+SlotHasStatus3Or4Bits_Bank31:: ; heuristic: follows a terminator; C0
+Func_031_7C0D:: ; address name
     push hl
     ld hl, wD80F
     call AddAx9ToHL
