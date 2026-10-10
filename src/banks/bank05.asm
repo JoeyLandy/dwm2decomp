@@ -160,10 +160,12 @@ Jump_005_4166::
     ld c, $FF
     ret
 
+; C = 0 when bit 6 of wCFF3 (skill record buffer) is set and the actor's status byte 1 (wD80D) bit 0 is set, else $FF (compare refusal code 3 of CheckSkillMPCost) (E-0071)
 ; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
 ; reads: wCFF3, wBattleActor
 ; points at: wD80D
-Func_005_4169::
+SkillPassesStatus1Bit0Check::
+Func_005_4169:: ; address name
     ld a, [wCFF3]
     bit 6, a
     jr z, Jump_005_4180
@@ -217,10 +219,12 @@ Jump_005_41B6::
     ld c, $FF
     ret
 
+; when bit 3 is set in wD80A or wD80B (either side), C = 0 if the skill wRecordBuffer is $84 or wCFF3 bit 6 is set; otherwise C = $FF (compare refusal code 4 of CheckSkillMPCost, which tests only the actor's side) (E-0071)
 ; 6 call sites from 6 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
 ; reads: wRecordBuffer, wCFF3
 ; points at: wD80A
-Func_005_41B9::
+SkillPassesSideFlagBit3Check::
+Func_005_41B9:: ; address name
     ld hl, wD80A
     ld a, [hl+]
     or a, [hl]
@@ -241,9 +245,11 @@ Jump_005_41D3::
     ld c, $FF
     ret
 
+; when bit 7 of wCFF6 (in the skill record buffer) is set and the skill wRecordBuffer is the queued action (QueuedActionMatches), C = 0; otherwise C = $FF (E-0071)
 ; 20 call sites from 20 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
 ; reads: wCFF6, wRecordBuffer
-Func_005_41D6::
+SkillPassesRepeatCheck::
+Func_005_41D6:: ; address name
     ld a, [wCFF6]
     bit 7, a
     jr z, Jump_005_41E8
@@ -267,39 +273,45 @@ Func_005_41EB::
     ld b, $03
     ld hl, wD80E
     ld e, $22
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $C0 clear (AnySlotLacksStatusMask), else 0 (E-0071)
 ; 23 call sites from 23 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_74D1, ...)
 ; reads: wBattleActor
 ; points at: wD811
-Func_005_41FD::
+AnyFoeLacksStatus5Bits67::
+Func_005_41FD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
     ld hl, wD811
     ld e, $C0
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
-; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_74D1, Func_005_7616, Func_005_770A, ...)
+; C = $FF when one of the actor's three opposite slots is present with status byte 2 (wD80E) bit 3 clear (AnySlotLacksStatusMask), else 0 (E-0071)
+; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_74D1, CheckSkillUsableElseResetWDA6E, Func_005_770A, ...)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_420F::
+AnyFoeLacksStatus2Bit3::
+Func_005_420F:: ; address name
     ld hl, wD80E
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
     ld e, $08
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
-; 11 call sites from 11 routines (e.g. Func_005_7080, Func_005_7512, Func_005_7616, Func_005_774F, ...)
+; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wD80F) & $C0 and byte 4 (wD810) & $0C both clear, else 0 (E-0071)
+; 11 call sites from 11 routines (e.g. Func_005_7080, Func_005_7512, CheckSkillUsableElseResetWDA6E, Func_005_774F, ...)
 ; reads: wBattleActor
 ; points at: wD80F, wD810
-Func_005_4221::
+AnyFoeLacksStatus3And4Bits::
+Func_005_4221:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -476,17 +488,19 @@ Jump_005_4319::
     ld c, $01
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 0 (wBattleStatus) bit 6 clear (AnySlotLacksStatusMask), else 0 (E-0071)
 ; 16 call sites from 16 routines (e.g. Func_005_7109, Func_005_71BE, Func_005_72F7, Func_005_7345, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_431C:: ; heuristic: follows a terminator; C0
+AnyFoeLacksStatus0Bit6:: ; heuristic: follows a terminator; C0
+Func_005_431C:: ; address name
     ld hl, wBattleStatus
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
     ld e, $40
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_7345, Func_005_73D7, Func_005_7449, Func_005_7A6C)
@@ -759,7 +773,7 @@ Func_005_4487:: ; heuristic: follows a terminator; C0
     ld hl, wD80E
     ld e, $40
     ld b, $03
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7370, Func_005_78CC, Func_005_7CF3)
@@ -772,7 +786,7 @@ Func_005_4499:: ; heuristic: follows a terminator; C0
     ld b, $03
     ld hl, wBattleStatus
     ld e, $10
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7860)
@@ -785,7 +799,7 @@ Func_005_44AB:: ; heuristic: follows a terminator; C0
     ld hl, wBattleStatus
     ld e, $02
     ld b, $03
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_763E, Func_005_7847)
@@ -798,7 +812,7 @@ Func_005_44BD:: ; heuristic: follows a terminator; C0
     ld b, $03
     ld hl, wBattleStatus
     ld e, $03
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_005_7686, Func_005_72DE, Func_005_77F9, Func_005_7D5B, ...)
@@ -811,7 +825,7 @@ Func_005_44CF::
     ld b, $03
     ld e, $CC
     ld hl, wBattleStatus
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7CC2)
@@ -874,7 +888,7 @@ Func_005_4527:: ; heuristic: follows a terminator; C0
     ld b, $03
     ld hl, wD811
     ld e, $03
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -1001,7 +1015,7 @@ Func_005_45CF:: ; heuristic: follows a terminator; C0
     ld hl, wD80D
     ld b, $03
     ld e, $01
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7410, Func_005_7BBE, Func_005_7CF3)
@@ -1014,7 +1028,7 @@ Func_005_45E1:: ; heuristic: follows a terminator; C0
     ld hl, wD80D
     ld b, $03
     ld e, $80
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7B84)
@@ -1027,7 +1041,7 @@ Func_005_45F3:: ; heuristic: follows a terminator; C0
     ld hl, wD80D
     ld b, $03
     ld e, $40
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; C = $FF when at least one of the actor's three opposite slots passes CheckSlotStatusBlock (present and none of its blocking status bits set); C = 0 when all three are absent or blocked (E-0066)
@@ -1117,7 +1131,7 @@ Func_005_4664::
     ld b, $03
     ld hl, wD80F
     ld e, $FF
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_005_7109, Func_0E2_411C, Func_0E2_41E0, Func_0E2_4567, ...)
@@ -1232,10 +1246,12 @@ Jump_005_4704::
     ld c, $FF
     ret
 
+; C = 0 when the actor's status byte 4 (wD810 + 9 * actor) & $C0 is set, else C = $FF (E-0071)
 ; 17 call sites from 17 routines (e.g. Func_005_7187, Func_005_74B5, Func_005_772B, Func_005_774F, ...)
 ; reads: wBattleActor
 ; points at: wD810
-Func_005_4707::
+ActorLacksStatus4Bits67::
+Func_005_4707:: ; address name
     ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
@@ -1322,7 +1338,7 @@ Func_005_4767:: ; heuristic: follows a terminator; C0
     ld b, $03
     ld e, $40
     ld hl, wD80E
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 11 call sites from 11 routines (e.g. Func_005_7187, Func_005_7786, Func_005_77E0, Func_0E2_4279, ...)
@@ -2492,7 +2508,7 @@ Func_005_4D46:: ; heuristic: follows a terminator; C0
     ld b, $03
     ld e, $40
     ld hl, wD814
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7996)
@@ -5388,7 +5404,7 @@ Func_005_5D20:: ; heuristic: follows a terminator; C0
     ld b, $03
     ld hl, wD80E
     ld e, $04
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_4B6B, Func_0E2_5E46)
@@ -5402,7 +5418,7 @@ Func_005_5D31:: ; heuristic: follows a terminator; C0
     ld b, $03
     ld hl, wD80E
     ld e, $04
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_4C49, Func_0E2_4E71)
@@ -5623,7 +5639,7 @@ Func_005_5E4B:: ; heuristic: follows a terminator; C0
     ld c, a
     ld hl, wD810
     ld e, $0C
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ld a, c
     or a, a
     ret z
@@ -5633,7 +5649,7 @@ Func_005_5E4B:: ; heuristic: follows a terminator; C0
     ld c, a
     ld hl, wD80F
     ld e, $C0
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7370)
@@ -6289,7 +6305,7 @@ Func_005_6229::
     ld hl, wBattleStatus
     ld e, $20
     ld b, $03
-    call Func_005_6FA1
+    call AnySlotLacksStatusMask
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7AA4)
@@ -8745,8 +8761,10 @@ Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $02, $04, $01, $04, $00, $05, $03, $05, $02, $05, $01, $05, $00, $06, $03
     db $06, $02, $06, $01, $00, $03
 
-; 21 call sites from 20 routines (e.g. Func_005_420F, Func_005_41FD, Func_005_41EB, Func_005_4D46, ...)
-Func_005_6FA1::
+; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when some present slot in the range has (HL + 9 * slot) & E clear; C = 0 when every slot is absent or has a masked bit set (E-0071)
+; 21 call sites from 20 routines (e.g. AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, Func_005_41EB, Func_005_4D46, ...)
+AnySlotLacksStatusMask::
+Func_005_6FA1:: ; address name
     ld c, a
 
 Jump_005_6FA2::
@@ -8942,7 +8960,7 @@ Jump_005_707E::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4001)
 Func_005_7080::
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7088
@@ -8958,15 +8976,15 @@ Func_005_708C:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_70C5
-    call Func_005_4169
+    call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
     jr z, Jump_005_70C5
-    call Func_005_41B9
+    call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
     jr z, Jump_005_70C5
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_70C5
@@ -8974,11 +8992,11 @@ Func_005_708C:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_70C5
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_70C5
-    call Func_005_420F
+    call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
     jr z, Jump_005_70C5
@@ -8998,15 +9016,15 @@ Func_005_70C9:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7105
-    call Func_005_4169
+    call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
     jr z, Jump_005_7105
-    call Func_005_41B9
+    call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
     jr z, Jump_005_7105
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7105
@@ -9014,7 +9032,7 @@ Func_005_70C9:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7105
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7105
@@ -9038,15 +9056,15 @@ Func_005_7109:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_4169
+    call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_41B9
+    call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_715B
@@ -9054,11 +9072,11 @@ Func_005_7109:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_715B
@@ -9094,15 +9112,15 @@ Func_005_715F:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7183
-    call Func_005_4169
+    call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
     jr z, Jump_005_7183
-    call Func_005_41B9
+    call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
     jr z, Jump_005_7183
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7183
@@ -9121,7 +9139,7 @@ Func_005_7187:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_71A8
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_71A8
@@ -9145,7 +9163,7 @@ Jump_005_71A8::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_43C8)
 Func_005_71AC:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9161,11 +9179,11 @@ Jump_005_71BA::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_43E9)
 Func_005_71BE:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_71DA
@@ -9185,7 +9203,7 @@ Jump_005_71DA::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4420)
 Func_005_71DE:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9203,7 +9221,7 @@ Jump_005_71EE::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4433)
 Func_005_71F4:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9221,7 +9239,7 @@ Jump_005_7204::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4446)
 Func_005_720A:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9239,7 +9257,7 @@ Jump_005_721A::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4459)
 Func_005_7220:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9257,7 +9275,7 @@ Jump_005_7230::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_446C)
 Func_005_7236:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9293,7 +9311,7 @@ Jump_005_725D::
 
 ; 6 call sites from 6 routines (e.g. Func_005_724F, Func_005_7293, Func_005_72BE, Func_005_72DE, ...)
 Func_005_7261::
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9301,7 +9319,7 @@ Func_005_7261::
     ld a, c
     and a, a
     jr z, Jump_005_7276
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7276
@@ -9313,7 +9331,7 @@ Jump_005_7276::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4536)
 Func_005_727A:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9353,7 +9371,7 @@ Jump_005_72A8::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4619)
 Func_005_72AC:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9413,7 +9431,7 @@ Jump_005_72F3::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_478E)
 Func_005_72F7:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9425,11 +9443,11 @@ Func_005_72F7:: ; heuristic: follows a terminator; C0
     jr z, Jump_005_731E
 
 Jump_005_7308::
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_731E
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_731E
@@ -9445,7 +9463,7 @@ Jump_005_731E::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_47AB)
 Func_005_7322:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9473,7 +9491,7 @@ Func_005_7345:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_736C
@@ -9505,7 +9523,7 @@ Func_005_7370:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_7393
@@ -9529,15 +9547,15 @@ Jump_005_7393::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_48AE, Func_0E2_648D)
 Func_005_7397:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_73D3
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_73D3
@@ -9545,7 +9563,7 @@ Func_005_7397:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_73D3
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_73D3
@@ -9573,11 +9591,11 @@ Jump_005_73D3::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_48CF)
 Func_005_73D7:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_740C
@@ -9593,7 +9611,7 @@ Jump_005_73EF::
     ld a, c
     and a, a
     jr z, Jump_005_740C
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_740C
@@ -9613,11 +9631,11 @@ Jump_005_740C::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_48FD)
 Func_005_7410:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_7445
@@ -9637,7 +9655,7 @@ Jump_005_7428::
     ld a, c
     and a, a
     jr z, Jump_005_7445
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7445
@@ -9653,11 +9671,11 @@ Jump_005_7445::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_491E)
 Func_005_7449:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_747E
@@ -9677,7 +9695,7 @@ Jump_005_7461::
     ld a, c
     and a, a
     jr z, Jump_005_747E
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_747E
@@ -9693,11 +9711,11 @@ Jump_005_747E::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_493F, Func_0E2_4984)
 Func_005_7482:: ; heuristic: follows a terminator; C0
-    call Func_005_7494
+    call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7490
@@ -9707,21 +9725,23 @@ Jump_005_7490::
     call ResetWDA6E
     ret
 
+; runs ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit0Check, SkillPassesSideFlagBit3Check and SkillPassesRepeatCheck in turn; at the first that returns C = 0 it calls ResetWDA6E (E-0071)
 ; 18 call sites from 18 routines (e.g. Func_005_71AC, Func_005_71BE, Func_005_71DE, Func_005_71F4, ...)
-Func_005_7494::
+CheckSkillUsableStatusElseResetWDA6E::
+Func_005_7494:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_74B1
-    call Func_005_4169
+    call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
     jr z, Jump_005_74B1
-    call Func_005_41B9
+    call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
     jr z, Jump_005_74B1
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_74B1
@@ -9737,7 +9757,7 @@ Func_005_74B5:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_74CD
@@ -9757,15 +9777,15 @@ Func_005_74D1::
     ld a, c
     and a, a
     jr z, Jump_005_74F5
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_74F5
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_74F5
-    call Func_005_420F
+    call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
     jr z, Jump_005_74F5
@@ -9805,7 +9825,7 @@ Func_005_7512:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7520
@@ -9817,7 +9837,7 @@ Jump_005_7520::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4FE1)
 Func_005_7524:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9835,7 +9855,7 @@ Jump_005_7534::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5068)
 Func_005_753A:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9853,7 +9873,7 @@ Jump_005_754A::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_507A)
 Func_005_7550:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9871,7 +9891,7 @@ Jump_005_7560::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_508C)
 Func_005_7566:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9889,7 +9909,7 @@ Jump_005_7576::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_509E)
 Func_005_757C:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9907,7 +9927,7 @@ Jump_005_758C::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_50B0)
 Func_005_7592:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9925,7 +9945,7 @@ Jump_005_75A2::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_50C2)
 Func_005_75A8:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9943,7 +9963,7 @@ Jump_005_75B8::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_50D4)
 Func_005_75BE:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9961,7 +9981,7 @@ Jump_005_75CE::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_50E6)
 Func_005_75D4:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9979,7 +9999,7 @@ Jump_005_75E4::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_50F8)
 Func_005_75EA:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -9997,7 +10017,7 @@ Jump_005_75FA::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_510A)
 Func_005_7600:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -10013,25 +10033,27 @@ Jump_005_7610::
     ld c, $00
     ret
 
+; runs ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Bit3 and AnyFoeLacksStatus3And4Bits in turn; at the first that returns C = 0 it calls ResetWDA6E; returns with nothing changed when all pass (E-0071)
 ; 19 call sites from 19 routines (e.g. Func_005_7524, Func_005_763E, Func_005_753A, Func_005_7686, ...)
-Func_005_7616::
+CheckSkillUsableElseResetWDA6E::
+Func_005_7616:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_763A
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_763A
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_763A
-    call Func_005_420F
+    call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
     jr z, Jump_005_763A
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_763A
@@ -10043,7 +10065,7 @@ Jump_005_763A::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_511C)
 Func_005_763E:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -10100,7 +10122,7 @@ Jump_005_7680::
 
 ; 2 call sites from 2 routines (e.g. Func_005_765B, Func_005_7671)
 Func_005_7686::
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -10122,7 +10144,7 @@ Jump_005_769D::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_51F6)
 Func_005_76A3:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -10154,7 +10176,7 @@ Jump_005_76CA::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_526D)
 Func_005_76CE:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -10171,7 +10193,7 @@ Jump_005_76DC::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_530E)
 Func_005_76E2:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -10209,15 +10231,15 @@ Func_005_770A::
     ld a, c
     and a, a
     jr z, Jump_005_7727
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7727
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7727
-    call Func_005_420F
+    call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
     jr z, Jump_005_7727
@@ -10229,7 +10251,7 @@ Jump_005_7727::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5426)
 Func_005_772B:: ; heuristic: follows a terminator; C0
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_774B
@@ -10257,19 +10279,19 @@ Func_005_774F:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7773
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7773
-    call Func_005_420F
+    call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
     jr z, Jump_005_7773
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7773
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7773
@@ -10282,7 +10304,7 @@ Jump_005_7773::
 ; 1 call site from 1 routine (e.g. Func_0E2_54C4)
 Func_005_7777:: ; heuristic: follows a terminator; C0
     call Func_005_770A
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7782
@@ -10318,19 +10340,19 @@ Func_005_779F::
     ld a, c
     and a, a
     jr z, Jump_005_77C3
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_77C3
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_77C3
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_77C3
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_77C3
@@ -10422,7 +10444,7 @@ Func_005_7824:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_7843
@@ -10490,11 +10512,11 @@ Func_005_7879:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_78A4
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_78A4
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_78A4
@@ -10572,11 +10594,11 @@ Func_005_78EC::
     ld a, c
     and a, a
     jr z, Jump_005_7909
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7909
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7909
@@ -10608,7 +10630,7 @@ Func_005_791F:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7942
@@ -10640,11 +10662,11 @@ Func_005_7946:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7971
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7971
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_7971
@@ -10672,7 +10694,7 @@ Func_005_7975:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7992
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7992
@@ -10696,7 +10718,7 @@ Func_005_7996:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_79C1
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_79C1
@@ -10704,7 +10726,7 @@ Func_005_7996:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_79C1
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_79C1
@@ -10720,7 +10742,7 @@ Jump_005_79C1::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5C25)
 Func_005_79C5:: ; heuristic: follows a terminator; C0
-    call Func_005_7616
+    call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -10748,7 +10770,7 @@ Func_005_79E5:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7A09
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7A09
@@ -10850,7 +10872,7 @@ Func_005_7A6C:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7A8D
-    call Func_005_41B9
+    call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
     jr z, Jump_005_7A8D
@@ -10894,7 +10916,7 @@ Func_005_7AA4:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
@@ -10918,7 +10940,7 @@ Jump_005_7AC8::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5E83)
 Func_005_7ACC:: ; heuristic: follows a terminator; C0
-    call Func_005_4707
+    call ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7AD4
@@ -10934,15 +10956,15 @@ Func_005_7AD8:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7B0D
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7B0D
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7B0D
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7B0D
@@ -10970,15 +10992,15 @@ Func_005_7B11:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7B3C
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7B3C
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7B3C
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7B3C
@@ -11022,11 +11044,11 @@ Func_005_7B5C:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7B80
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7B80
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7B80
@@ -11054,11 +11076,11 @@ Func_005_7B84:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
@@ -11090,11 +11112,11 @@ Func_005_7BBE:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7BE2
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7BE2
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7BE2
@@ -11170,15 +11192,15 @@ Func_005_7C24::
     ld a, c
     and a, a
     jr z, Jump_005_7C41
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7C41
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7C41
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_7C41
@@ -11290,7 +11312,7 @@ Func_005_7CC2:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7CE3
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_7CE3
@@ -11330,11 +11352,11 @@ Func_005_7CF3:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7D57
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7D57
-    call Func_005_4221
+    call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
     jr z, Jump_005_7D57
@@ -11342,7 +11364,7 @@ Func_005_7CF3:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7D57
-    call Func_005_431C
+    call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr z, Jump_005_7D57
@@ -11398,11 +11420,11 @@ Func_005_7D5B:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7D91
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7D91
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7D91
@@ -11474,7 +11496,7 @@ Func_005_7DC2:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7DD8
-    call Func_005_41D6
+    call SkillPassesRepeatCheck
     ld a, c
     and a, a
     jr z, Jump_005_7DD8
@@ -11502,7 +11524,7 @@ Jump_005_7DE4::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6425)
 Func_005_7DE8:: ; heuristic: follows a terminator; C0
-    call Func_005_41FD
+    call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr z, Jump_005_7E10

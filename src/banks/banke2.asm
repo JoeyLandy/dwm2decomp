@@ -337,7 +337,7 @@ Func_0E2_4279:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4707
+    farcall ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr nz, Jump_0E2_4292
@@ -1320,7 +1320,7 @@ Jump_0E2_49B4::
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_0E2_49B5:: ; heuristic: follows a terminator; C0
-    farcall Func_005_7494
+    farcall CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -1457,7 +1457,7 @@ Func_0E2_4AB6:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4707
+    farcall ActorLacksStatus4Bits67
     ld a, c
     and a, a
     jr nz, Jump_0E2_4ACF
@@ -2851,7 +2851,7 @@ Jump_0E2_5528::
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_0E2_5529:: ; heuristic: follows a terminator; C0
-    farcall Func_005_7616
+    farcall CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -2936,7 +2936,7 @@ Jump_0E2_55CD::
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_0E2_55CE:: ; heuristic: follows a terminator; C0
-    farcall Func_005_7616
+    farcall CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
@@ -2981,7 +2981,7 @@ Func_0E2_561B:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_431C
+    farcall AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_5634
@@ -3184,7 +3184,7 @@ Func_0E2_57A9:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_431C
+    farcall AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
     jr nz, Jump_0E2_57C2
@@ -3977,7 +3977,7 @@ Func_0E2_5D83:: ; heuristic: follows a terminator; C0
     ret z
     ld bc, $0071
     call AccumulateBank6WordToDA6E
-    farcall Func_005_41FD
+    farcall AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
     jr nz, Jump_0E2_5DA2

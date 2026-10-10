@@ -1123,7 +1123,7 @@ Jump_002_46B3::
 
 Jump_002_46BC::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     xor a, a
     ld [wCBCF], a
     farcall Func_012_6A6A
@@ -4331,7 +4331,7 @@ Func_002_5B9E::
     srl a
     srl a
     add_a_to_hl
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     xor a, a
     ld [wC8CD], a
     ld [wC8CE], a
@@ -5522,7 +5522,7 @@ Func_002_64B3::
 Jump_002_64D7::
     ld l, e
     ld h, d
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     xor a, a
     ld [wC8CD], a
     xor a, a

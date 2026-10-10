@@ -713,7 +713,7 @@ Jump_007_4A68::
     add a, a
     add_a_to_hl
     deref_hl
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_4B1E
     ld a, [wD06A]
     cp a, $01
@@ -780,9 +780,11 @@ Jump_007_4AEB::
     jr nz, Jump_007_4AEB
     ret
 
+; the same effect as CopyRecordRectToScreenBuffer with the copy loop's instructions in a different order: HL = header (word offset, width, rows) followed by tile bytes, copied into wScreenTileBuffer + offset with rows 32 bytes apart (E-0071)
 ; 19 call sites from 19 routines (e.g. GameMode5_Init_Case04, GameMode5_Init_Case01, Func_007_600E_Case08, Func_007_600E_Case07, ...)
 ; points at: wScreenTileBuffer
-Func_007_4AFE::
+CopyRecordRectToScreenBuffer_Bank07::
+Func_007_4AFE:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1129,7 +1131,7 @@ Jump_007_4D45::
     ld a, $C3
     call FillBytes
     ld hl, $5447
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_4B1E
     ld hl, wC46B
     ld bc, $0008
@@ -1865,7 +1867,7 @@ Jump_007_591A:: ; address name
 
 Jump_007_595C::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     call Func_007_600E
     ld a, $FC
     call StartPaletteFade
@@ -1973,7 +1975,7 @@ Jump_007_59C0:: ; address name
 
 Jump_007_5A02::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     call Func_007_600E
     ld a, $FC
     call StartPaletteFade
@@ -2081,7 +2083,7 @@ Jump_007_5A66:: ; address name
 
 Jump_007_5AA8::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     call Func_007_600E
     ld a, $FC
     call StartPaletteFade
@@ -2387,7 +2389,7 @@ Jump_007_5C5F:: ; address name
 
 Jump_007_5CA9::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     call Func_007_600E
     ld a, $FC
     call StartPaletteFade
@@ -2842,7 +2844,7 @@ Jump_007_5F09:: ; address name
 
 Jump_007_5F6D::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     call Func_007_600E
     ld a, $FC
     call StartPaletteFade
@@ -3108,7 +3110,7 @@ Jump_007_60F3:: ; address name
     ld hl, $5207
 
 Jump_007_611B::
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_4B1E
     ld a, [wC894]
     and a, $01
@@ -3192,7 +3194,7 @@ Jump_007_6187::
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
     ld hl, $52FF
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -3332,7 +3334,7 @@ Jump_007_6262:: ; address name
     ld a, h
     ld [wC530], a
     ld hl, $5367
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     farcall Func_016_777B
     ld a, $BC
     ld [wC1B9], a
@@ -3918,7 +3920,7 @@ Jump_007_6633:: ; address name
     ld a, $C3
     call FillBytes
     ld hl, $52D7
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_4B1E
     xor a, a
     ld [wD06B], a
@@ -4014,7 +4016,7 @@ Jump_007_66E0:: ; address name
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
     ld hl, $52FF
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -4073,7 +4075,7 @@ Jump_007_6759:: ; address name
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
     ld hl, $52FF
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -4104,7 +4106,7 @@ Jump_007_67DB:: ; address name
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
     ld hl, $52FF
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -4188,7 +4190,7 @@ Jump_007_6856:: ; address name
 
 Jump_007_687D::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_6897
@@ -5213,7 +5215,7 @@ Jump_007_6EA4:: ; address name
     xor a, a
     ld [wC594], a
     ld hl, $52FF
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -5428,7 +5430,7 @@ Jump_007_6FF1::
     ld d, $C3
     call Func_007_4AE4
     ld hl, $54DB
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_7AD4
     call Func_007_4B1E
     ld a, $06
@@ -5631,7 +5633,7 @@ Jump_007_712D:: ; address name
 Func_007_6DE3_Table2_Case07::
 Jump_007_713C:: ; address name
     ld hl, $52FF
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -5744,7 +5746,7 @@ Jump_007_71CF::
 Func_007_6DE3_Table2_Case0C::
 Jump_007_71D8:: ; address name
     ld hl, $561F
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_4B1E
     ld de, wD0A3
     ld hl, vBGMap0 + $8C
@@ -6177,7 +6179,7 @@ Jump_007_7463::
 Func_007_6DE3_Table2_Case16::
 Jump_007_746C:: ; address name
     ld hl, $578B
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $E0
     ld de, wC278
     ld bc, $1405
@@ -6442,7 +6444,7 @@ Jump_007_760C::
 Func_007_6DE3_Table2_Case19::
 Jump_007_7615:: ; address name
     ld hl, $57F3
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $62
     ld de, wC1FA
     ld bc, $0F0B
@@ -6691,7 +6693,7 @@ Jump_007_7797::
 Func_007_6DE3_Table2_Case1C::
 Jump_007_77A0:: ; address name
     ld hl, $589C
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $E1
     ld de, wC279
     ld bc, $1205
@@ -6879,7 +6881,7 @@ Jump_007_78B7::
 
 Jump_007_78C2::
     ld hl, $52FF
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -7015,7 +7017,7 @@ Jump_007_796A:: ; address name
     ld d, $C3
     call Func_007_4AE4
     ld hl, $54DB
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_6DE3
     call Func_007_7AD4
     call Func_007_4B1E
@@ -7568,7 +7570,7 @@ Jump_007_7C8C:: ; address name
     ld d, $C3
     call Func_007_4AE4
     ld hl, $54DB
-    call Func_007_4AFE
+    call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_6DE3
     call Func_007_7AD4
     call Func_007_4B1E

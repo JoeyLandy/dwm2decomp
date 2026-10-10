@@ -2536,7 +2536,7 @@ Jump_0A1_4FE2:: ; address name
     ld a, $5E
     ld bc, $1412
     ld hl, vBGMap0
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     call Func_0A1_57F9
     call Func_0A1_57BE
     ld a, [wCC44]
@@ -3021,7 +3021,7 @@ Func_0A1_52D4::
     call Func_0A1_5764
     pop de
     ld a, $5D
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     pop hl
     ld hl, vTiles1
     ld b, $58
@@ -3822,7 +3822,7 @@ Func_0A1_57F9::
     ld bc, $0C0C
     ld hl, vBGMap0 + $64
     ld a, $A1
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ret
     ds $90, $34
 

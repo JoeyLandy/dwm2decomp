@@ -709,7 +709,7 @@ DEF wC927 EQU $C927
 DEF wC928 EQU $C928
 DEF wC929 EQU $C929
 DEF wC92A EQU $C92A
-DEF wC92C EQU $C92C
+DEF wStepArrived EQU $C92C ; 1 when the last StepObjectTowardCoord or StepPlayer*TowardWC928 step reached the target coordinate in wC928, else 0 (E-0071) (reading (E-0071))
 DEF wC92D EQU $C92D
 DEF wC92E EQU $C92E
 DEF wC92F EQU $C92F

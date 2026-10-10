@@ -131,7 +131,7 @@ Jump_001_4061:: ; address name
     ld de, Data_001_412F
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     xor a, a
     ld [wC46B], a
     xor a, a
@@ -164,7 +164,7 @@ Jump_001_4297:: ; address name
     ld de, Data_001_42BC
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ld hl, $0000
     call DebugShowMonsterRecord
     ret
@@ -209,7 +209,7 @@ Jump_001_4424:: ; address name
     ld de, Data_001_6F30
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_001_445A
@@ -472,7 +472,7 @@ Jump_001_461E:: ; address name
     ld de, Data_001_46A4
     ld hl, vBGMap0 + $EA
     ld bc, $1001
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     xor a, a
     ld [wC5F8], a
     ldh a, [hMapId]
@@ -536,7 +536,7 @@ Jump_001_46B4:: ; address name
     ld de, Data_001_4733
     ld hl, vBGMap0 + $EA
     ld bc, $1001
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     xor a, a
     ld [wC5F8], a
     ld a, [wC833]
@@ -598,7 +598,7 @@ Jump_001_4743:: ; address name
     ld de, Data_001_47DE
     ld hl, vBGMap0 + $124
     ld bc, $0606
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_001_47C4
@@ -609,7 +609,7 @@ Jump_001_4743:: ; address name
     ld de, Data_001_4802
     ld hl, vBGMap0 + $124
     ld bc, $0606
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ld c, $4F
     ld a, $00
     ldh [c], a
@@ -674,7 +674,7 @@ Jump_001_4826:: ; address name
     ld de, Data_001_488A
     ld hl, vBGMap0 + $A3
     ld bc, $0B04
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     xor a, a
     ld [wC46B], a
     xor a, a
@@ -727,7 +727,7 @@ Jump_001_48B6:: ; address name
     ld de, Data_001_495D
     ld hl, vBGMap0 + $40
     ld bc, $140E
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     xor a, a
     ld hl, wD09D
     ld bc, $0018
@@ -1308,7 +1308,7 @@ GameMode0_Update_Table2_Case21_Sub01::
 Func_001_4D6E:: ; address name
     ld a, [wC0A0]
     ld de, vBGMap0 + $6D
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     jr Jump_001_4DBC
 
 Jump_001_4D79::
@@ -1331,7 +1331,7 @@ GameMode0_Update_Table2_Case21_Sub02::
 Func_001_4D93:: ; address name
     ld a, [wC0A1]
     ld de, vBGMap0 + $AD
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     jr Jump_001_4DBC
 
 Jump_001_4D9E::
@@ -1351,7 +1351,7 @@ GameMode0_Update_Table2_Case21_Sub03::
 Func_001_4DB1:: ; address name
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ED
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     jr Jump_001_4DBC
 
 Jump_001_4DBC::
@@ -1360,7 +1360,7 @@ Jump_001_4DBC::
     jr z, Jump_001_4DCC
     ld a, [wC0A0]
     ld de, vBGMap0 + $6D
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
 
 Jump_001_4DCC::
     ld a, [wC46B]
@@ -1368,7 +1368,7 @@ Jump_001_4DCC::
     jr z, Jump_001_4DDC
     ld a, [wC0A1]
     ld de, vBGMap0 + $AD
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
 
 Jump_001_4DDC::
     ld a, [wC46B]
@@ -1376,7 +1376,7 @@ Jump_001_4DDC::
     jr z, Jump_001_4DEC
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ED
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
 
 Jump_001_4DEC::
     ret
@@ -1430,7 +1430,7 @@ Jump_001_4E2A::
 Jump_001_4E30::
     add_a_to_hl
     ld a, [hl]
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     pop af
     ret
 
@@ -3324,7 +3324,7 @@ Jump_001_5B14::
     ld a, [hl]
     ld d, a
     call Func_001_5B2D
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ret
 
 ; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0)
@@ -3665,7 +3665,7 @@ Jump_001_5D46::
     jr z, Jump_001_5D55
     and a, $7F
     ld de, vBGMap0 + $10A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
 
 Jump_001_5D55::
     ld a, [wC5F9]
@@ -3687,10 +3687,10 @@ Jump_001_5D63::
 Jump_001_5D76::
     ld a, [wC5FB]
     ld de, vBGMap0 + $14A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ld a, [wC5FC]
     ld de, vBGMap0 + $16A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ld hl, vBGMap0 + $109
     ld b, $00
 
@@ -3846,14 +3846,14 @@ Func_001_5E8A:: ; address name
     ld a, [wC5FA]
     and a, $7F
     ld de, vBGMap0 + $12A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ret
 
 Jump_001_5EA4::
     xor a, a
     ld [wC5FA], a
     ld de, vBGMap0 + $12A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ret
 
 ; only called from DebugAutomap_Update (E-0047)
@@ -4111,20 +4111,20 @@ Jump_001_60E7::
 Jump_001_6119::
     ld a, [wC5FA]
     ld de, vBGMap0 + $10A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ld a, [wC5FC]
     ld de, vBGMap0 + $12A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ld a, [wC5FB]
     swap a
     and a, $0F
     ld de, vBGMap0 + $14A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ld a, [wC5FD]
     swap a
     and a, $0F
     ld de, vBGMap0 + $16A
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     ld hl, vBGMap0 + $E9
     ld b, $00
 
@@ -4788,7 +4788,7 @@ DebugSoundTest_Update_Sub01::
 Func_001_6578:: ; address name
     ld a, [wC0A0]
     ld de, vBGMap0 + $E9
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     jr Jump_001_659F
 
 Jump_001_6583::
@@ -4808,7 +4808,7 @@ DebugSoundTest_Update_Sub02::
 Func_001_6596:: ; address name
     ld a, [wC0A1]
     ld de, vBGMap0 + $109
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
 
 Jump_001_659F::
     ret
@@ -4852,7 +4852,7 @@ Jump_001_65CA::
 Jump_001_65D3::
     add_a_to_hl
     ld a, [hl]
-    call Func_001_6A7E
+    call WriteHexByteTilesAtDE
     pop af
     ret
 
@@ -5488,8 +5488,10 @@ Data_001_6A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_001_6A78:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6B, $99, $AB, $99, $EB, $99
 
+; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble), each after WaitForVRAMAccess; DE ends on the second tile (E-0071)
 ; 20 call sites from 11 routines (e.g. GameMode0_Update_Table2_Case21_Sub03, GameMode0_Update_Table2_Case21_Sub04, GameMode0_Update_Table2_Case21_Sub02, GameMode0_Update_Table2_Case21_Sub01, ...)
-Func_001_6A7E::
+WriteHexByteTilesAtDE::
+Func_001_6A7E:: ; address name
     push af
     swap a
     and a, $0F

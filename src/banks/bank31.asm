@@ -8653,10 +8653,12 @@ Func_031_72AC::
 Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7C, $75, $B8, $75, $1E, $76
 
+; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForWD890Count (E-0071)
 ; 16 call sites from 10 routines (e.g. Func_0A0_5E07_Table2_Case00, Func_0A0_5E07_Table2_Case02, Func_0A0_5E07_Table2_Case07, Func_0A0_5F2E_Case02, ...)
 ; reads: wD890
 ; points at: wC285
-Func_031_72C9::
+ClearAndLayoutTileBlocksForWD890Count::
+Func_031_72C9:: ; address name
     call FillWC278WithC3_Bank31
 
 ; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)

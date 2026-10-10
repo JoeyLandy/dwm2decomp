@@ -303,10 +303,12 @@ Jump_05F_6A85::
     farcall BeginStringDisplay_Bank28
     ret
 
+; sets bit 2 of hFF8C (moving) and hPlayerFacing = 0; calls Func_05F_6B43 with the coordinate; then hPlayerY += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
 ; 11 call sites from 9 routines (e.g. ScriptCommand5E_Run_Case23, ScriptCommand40_Run_Case06, ScriptCommand40_Run_Case04, ScriptCommand39_Run_Case21, ...)
 ; reads: hFF8C, hPlayerY, wC928
-; writes: hFF8C, hPlayerFacing, hPlayerY, wC92C
-Func_05F_6A94::
+; writes: hFF8C, hPlayerFacing, hPlayerY, wStepArrived
+StepPlayerDownTowardWC928::
+Func_05F_6A94:: ; address name
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -322,7 +324,7 @@ Func_05F_6A94::
     cp a, c
     jr z, Jump_05F_6AB3
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
 Jump_05F_6AB3::
@@ -330,13 +332,15 @@ Jump_05F_6AB3::
     and a, $FB
     ldh [hFF8C], a
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
+; sets bit 2 of hFF8C (moving) and hPlayerFacing = 1; calls Func_05F_6B43 with the coordinate; then hPlayerX += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
 ; 7 call sites from 6 routines (e.g. ScriptCommand5E_Run_Case23, ScriptCommand49_Run_Case03, ScriptCommand39_Run_Case21, Func_00F_7E1E, ...)
 ; reads: hFF8C, hPlayerX, wC928
-; writes: hFF8C, hPlayerFacing, hPlayerX, wC92C
-Func_05F_6ABF::
+; writes: hFF8C, hPlayerFacing, hPlayerX, wStepArrived
+StepPlayerRightTowardWC928::
+Func_05F_6ABF:: ; address name
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -352,7 +356,7 @@ Func_05F_6ABF::
     cp a, c
     jr z, Jump_05F_6ADF
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
 Jump_05F_6ADF::
@@ -360,13 +364,15 @@ Jump_05F_6ADF::
     and a, $FB
     ldh [hFF8C], a
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
+; sets bit 2 of hFF8C (moving) and hPlayerFacing = 2; calls Func_05F_6B43 with the coordinate; then hPlayerY -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
 ; 15 call sites from 12 routines (e.g. ScriptCommand5E_Run_Case02, ScriptCommand49_Run_Case03, ScriptCommand49_Run_Case02, ScriptCommand49_Run_Case00, ...)
 ; reads: hFF8C, hPlayerY, wC928
-; writes: hFF8C, hPlayerFacing, hPlayerY, wC92C
-Func_05F_6AEB::
+; writes: hFF8C, hPlayerFacing, hPlayerY, wStepArrived
+StepPlayerUpTowardWC928::
+Func_05F_6AEB:: ; address name
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -382,7 +388,7 @@ Func_05F_6AEB::
     cp a, c
     jr z, Jump_05F_6B0B
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
 Jump_05F_6B0B::
@@ -390,13 +396,15 @@ Jump_05F_6B0B::
     and a, $FB
     ldh [hFF8C], a
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
+; sets bit 2 of hFF8C (moving) and hPlayerFacing = 3; calls Func_05F_6B43 with the coordinate; then hPlayerX -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
 ; 16 call sites from 13 routines (e.g. ScriptCommand5F_Run_Case14, ScriptCommand5E_Run_Case02, ScriptCommand49_Run_Case02, ScriptCommand49_Run_Case00, ...)
 ; reads: hFF8C, hPlayerX, wC928
-; writes: hFF8C, hPlayerFacing, hPlayerX, wC92C
-Func_05F_6B17::
+; writes: hFF8C, hPlayerFacing, hPlayerX, wStepArrived
+StepPlayerLeftTowardWC928::
+Func_05F_6B17:: ; address name
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -412,7 +420,7 @@ Func_05F_6B17::
     cp a, c
     jr z, Jump_05F_6B37
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
 Jump_05F_6B37::
@@ -420,10 +428,10 @@ Jump_05F_6B37::
     and a, $FB
     ldh [hFF8C], a
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_05F_6B17, Func_05F_6ABF, Func_05F_6A94, Func_05F_6AEB, ...)
+; 5 call sites from 5 routines (e.g. StepPlayerLeftTowardWC928, StepPlayerRightTowardWC928, StepPlayerDownTowardWC928, StepPlayerUpTowardWC928, ...)
 Func_05F_6B43::
     and a, $0F
     jr nz, Jump_05F_6B4D
@@ -436,7 +444,7 @@ Jump_05F_6B4D::
 ; wC929 = object number (16-byte entries): sets bit 2 of wCB8C + 16n, stores direction wC92A & 3 at wCB86 + 16n and moves the object one pixel, two when wC92A bit 7 is set: direction 0 adds the step to Y (wCB8B + 16n), 1 adds it to X (wCB8A + 16n), 2 subtracts it from Y, 3 from X. When the moved coordinate equals wC928 it clears bit 2 and sets wC92C = 1, else wC92C = 0 (E-0061)
 ; 145 call sites from 78 routines (e.g. ScriptCommandC7_Run_Case01, ScriptCommand5F_Run_Case17, Func_00F_4774, Func_00F_47F5, ...)
 ; reads: wC929, wC92A, wC928
-; writes: wC92C
+; writes: wStepArrived
 ; points at: wCB8C
 StepObjectTowardCoord::
 Func_05F_6B54:: ; address name
@@ -527,7 +535,7 @@ Jump_05F_6BB3::
     cp a, c
     jr z, Jump_05F_6BC2
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     pop hl
     ret
 
@@ -537,7 +545,7 @@ Jump_05F_6BC2::
     and a, $FB
     ld [hl], a
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     ret
 
 ; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
@@ -656,11 +664,13 @@ Func_05F_6C71::
     farcall Func_00A_476E
     ret
 
+; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
 ; 17 call sites from 16 routines (e.g. ScriptCommand32_Run_Case00, ScriptCommand84_Run_Case08, ScriptCommand86_Run_Case02, ScriptCommand81_Run_Case02, ...)
 ; reads: wC928, wC836
 ; writes: wC836
 ; points at: wInventory
-Func_05F_6C8C::
+AppendItemWC928ToInventory::
+Func_05F_6C8C:: ; address name
     push hl
     ld hl, wInventory
 
@@ -684,7 +694,7 @@ Jump_05F_6C9B::
 
 ; 5 call sites from 4 routines (e.g. Func_004_58C2_Case13, Func_004_612B_Case18, Func_013_49D5_Case6F, Func_073_4FD2)
 ; reads: wC6FD, hFFC6
-; writes: rRAMG, wC92C
+; writes: rRAMG, wStepArrived
 ; points at: wC6FE
 Func_05F_6CA9::
     ld a, $0A
@@ -708,21 +718,21 @@ Jump_05F_6CB8::
 
 Jump_05F_6CC8::
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     xor a, a
     ld [rRAMG], a
     ret
 
 Jump_05F_6CD1::
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     xor a, a
     ld [rRAMG], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_4FD2)
 ; reads: wC6FD, hFFC6
-; writes: rRAMG, wC92C
+; writes: rRAMG, wStepArrived
 ; points at: wC6FE
 Func_05F_6CDB::
     ld a, $0A
@@ -746,21 +756,21 @@ Jump_05F_6CEA::
 
 Jump_05F_6CFA::
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     xor a, a
     ld [rRAMG], a
     ret
 
 Jump_05F_6D03::
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     xor a, a
     ld [rRAMG], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_4FD2)
 ; reads: wC6FD, hFFC6
-; writes: rRAMG, wC92C
+; writes: rRAMG, wStepArrived
 ; points at: wC6FE
 Func_05F_6D0D::
     ld a, $0A
@@ -784,14 +794,14 @@ Jump_05F_6D1C::
 
 Jump_05F_6D2C::
     xor a, a
-    ld [wC92C], a
+    ld [wStepArrived], a
     xor a, a
     ld [rRAMG], a
     ret
 
 Jump_05F_6D35::
     ld a, $01
-    ld [wC92C], a
+    ld [wStepArrived], a
     xor a, a
     ld [rRAMG], a
     ret
@@ -929,7 +939,7 @@ Func_05F_6DDB::
 Jump_05F_6E03::
     ld l, e
     ld h, d
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ret
 
 ; 9 call sites from 9 routines (e.g. ScriptCommand5E_Run_Case0D, ScriptCommand58_Run_Case00, ScriptCommand41_Run_Case00, ScriptCommand43_Run_Case00, ...)
@@ -2781,7 +2791,7 @@ Jump_05F_7977:: ; address name
     jr z, Jump_05F_7987
     ld a, [wScriptParam1]
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
 
 Jump_05F_7987::
     ld hl, wScriptStep

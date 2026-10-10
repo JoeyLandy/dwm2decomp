@@ -3040,7 +3040,7 @@ Jump_000_1214::
     ret
 
 ; like WriteVRAMByte but stores at [HL] and increments HL
-; 145 call sites from 81 routines (e.g. Func_000_2950_Case0E, LoadMonsterPictureAttributes, Func_000_1E29, Func_000_1CF9, ...)
+; 145 call sites from 81 routines (e.g. Func_000_2950_Case0E, LoadMonsterPictureAttributes, DrawFullScreenBufferToBGMap, Func_000_1CF9, ...)
 ; reads: rSTAT, hFFD1
 ; writes: hFFD1
 WriteVRAMByteInc::
@@ -3648,9 +3648,11 @@ Jump_000_15D6::
     jr z, Jump_000_15D6
     ret
 
+; A = ROM bank, DE = source in that bank, B = width, C = rows, HL = VRAM with rows 32 bytes apart: switches to the bank, copies the rectangle with WriteVRAMByteInc (interrupts off per byte; source rows packed), then restores the bank; B kept (E-0071)
 ; 16 call sites from 15 routines (e.g. DebugMessageTest_Init, DebugMonsterRecordViewer_Init, DebugSkillViewer_Init, DebugBattleSetup_Init, ...)
 ; writes: rROMB0
-Func_000_15DE::
+CopyRectFromBankToVRAM::
+Func_000_15DE:: ; address name
     push bc
     ld b, a
     ld a, [BANK_NUMBER_BYTE]
@@ -5214,11 +5216,13 @@ Jump_000_1E23::
     xor a, a
     ret
 
+; HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF; on CGB then draws the attribute bytes at wD000 (rSVBK = 2), masked to the palette bits (& $07), into VRAM bank 1; HL kept (E-0071)
 ; 16 call sites from 16 routines (e.g. Func_002_4628, Func_002_5B9E, Func_002_64B3, Func_007_65F1_Table2_Case01, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_000_1E29::
+DrawFullScreenBufferToBGMap::
+Func_000_1E29:: ; address name
     push hl
     ld de, wScreenTileBuffer
     ld bc, $1412
@@ -6424,9 +6428,11 @@ Func_000_241A::
     ld [rROMB0], a
     jr Jump_000_2447
 
+; A = item number: with ROM bank $08 mapped, copies that string of StringTable_ItemNames, including its $F0 terminator, to DE; restores the bank (E-0071)
 ; 15 call sites from 11 routines (e.g. ScriptCommand86_Run_Case00, ScriptCommand84_Run_Case06, ScriptCommand81_Run_Case00, ScriptCommand80_Run_Case00, ...)
 ; writes: rROMB0
-Func_000_2431::
+CopyItemNameToDE::
+Func_000_2431:: ; address name
     sla a
     ld l, a
     ld h, $00
@@ -10766,7 +10772,7 @@ Jump_000_3F37::
     ret
 
 ; Z set when A equals the queued action (wQueuedActionId, wDAAC) or is its partner in one of the pairs $34-$AD, $35-$AE, $6A-$CC, $A1-$CF, $8F-$AA (the pairs are symmetric); Z clear otherwise. A and BC are kept (E-0049)
-; 3 call sites from 3 routines (e.g. Func_005_41D6, CheckSkillMPCost, Func_032_4EE4_Case03)
+; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, Func_032_4EE4_Case03)
 ; reads: wQueuedActionId
 QueuedActionMatches::
 Func_000_3F47:: ; address name

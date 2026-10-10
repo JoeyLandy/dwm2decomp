@@ -3769,7 +3769,7 @@ Jump_004_5A9E:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC7, wC92C, hFFC8
+; reads: hFFC7, wStepArrived, hFFC8
 ; writes: rRAMG
 ; points at: wC6FE, wC8CF, wC147, wC152
 Func_004_58C2_Case13::
@@ -3787,7 +3787,7 @@ Jump_004_5AA5:: ; address name
 
 Jump_004_5AC0::
     farcall Func_05F_6CA9
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     jr z, Jump_004_5AD3
     ld hl, $5C5C
@@ -5518,7 +5518,7 @@ Jump_004_63E6::
 
 ; entry 24 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, wC92C
+; reads: wC6FD, wStepArrived
 Func_004_612B_Case18::
 Jump_004_63ED:: ; address name
     ld de, $0042
@@ -5528,7 +5528,7 @@ Jump_004_63ED:: ; address name
     cp a, $03
     jr nz, Jump_004_640F
     farcall Func_05F_6CA9
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     jr nz, Jump_004_6416
     ld hl, $59DD
@@ -5550,7 +5550,7 @@ Jump_004_641D::
     cp a, $03
     jr nz, Jump_004_6437
     farcall Func_05F_6CA9
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     jr nz, Jump_004_6437
     ld hl, $5A17

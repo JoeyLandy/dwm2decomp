@@ -4043,7 +4043,7 @@ Jump_012_5A53:: ; address name
 Jump_012_5A64::
     ld a, [wScriptParam1]
     ld [wC928], a
-    farcall Func_05F_6C8C
+    farcall AppendItemWC928ToInventory
 
 Jump_012_5A70::
     xor a, a
@@ -4095,7 +4095,7 @@ Jump_012_5A89:: ; address name
 Jump_012_5AB1::
     ld a, [wScriptParam1]
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
     ld a, $06
     call SetWC924ClearWC926
     xor a, a
@@ -5392,7 +5392,7 @@ Jump_012_6257::
     bit 7, a
     jr nz, Jump_012_6279
     ld [wC928], a
-    farcall Func_05F_6C8C
+    farcall AppendItemWC928ToInventory
     jr Jump_012_6279
 
 Jump_012_6279::
@@ -5439,7 +5439,7 @@ Jump_012_62A9::
     cp a, $81
     jr z, Jump_012_62FC
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
     ld a, [wC634]
     cp a, $FF
     jr z, Jump_012_62C3
@@ -5527,7 +5527,7 @@ Jump_012_6328::
     inc hl
     inc hl
     ld [hl], $01
-    farcall Func_05F_6C8C
+    farcall AppendItemWC928ToInventory
     farcall Func_061_45E8
     farcall Func_05F_6DDB
     ld a, $80
@@ -5575,7 +5575,7 @@ Jump_012_6374::
     ld a, [hl]
     and a, $7F
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
     ld a, [wC634]
     cp a, $FF
     jr z, Jump_012_638A
@@ -5653,7 +5653,7 @@ Jump_012_63D4:: ; address name
     ld [hl], a
     ld a, $FF
     ld [wC8FE], a
-    farcall Func_05F_6C8C
+    farcall AppendItemWC928ToInventory
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -5727,7 +5727,7 @@ Jump_012_6441::
     inc hl
     ld a, [hl]
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
     ld a, $06
     call SetWC924ClearWC926
     ld a, $03
@@ -5738,7 +5738,7 @@ Jump_012_6454::
     inc hl
     ld a, [hl]
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
     ld a, $07
     call SetWC924ClearWC926
     ld a, $05
@@ -5786,7 +5786,7 @@ Jump_012_64A4::
     inc hl
     ld a, [hl]
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
     ld a, $02
     call SetWC924ClearWC926
     ld a, $03
@@ -5797,7 +5797,7 @@ Jump_012_64B7::
     inc hl
     ld a, [hl]
     ld de, wC152
-    call Func_000_2431
+    call CopyItemNameToDE
     ld a, $03
     call SetWC924ClearWC926
     ld a, $05

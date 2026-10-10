@@ -3672,7 +3672,7 @@ Jump_013_53E1::
 
 ; entry 111 of the `rst $00` table in Func_013_49D5
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB8A, wC6FD, wC92C
+; reads: wCB8A, wC6FD, wStepArrived
 Func_013_49D5_Case6F::
 Jump_013_53E8:: ; address name
     ld de, $009D
@@ -3696,7 +3696,7 @@ Jump_013_540E::
     cp a, $03
     jr nz, Jump_013_542F
     farcall Func_05F_6CA9
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     jr nz, Jump_013_5428
     ld hl, $5EE6
@@ -7120,7 +7120,7 @@ Jump_013_6BAC::
     call SetRequestPtrC91A_B13
     ld a, $2C
     ld [wC928], a
-    farcall Func_05F_6C8C
+    farcall AppendItemWC928ToInventory
     ret
 
 Jump_013_6BBE::

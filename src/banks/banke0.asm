@@ -1989,7 +1989,7 @@ Func_0E0_4F86::
     ld hl, vBGMap0 + $27
     ld bc, $0401
     ld a, $E0
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ret
     dw Data_0E0_4FAE
     dw Data_0E0_4FB2
@@ -2157,7 +2157,7 @@ Func_0E0_50EE::
     ld de, $511B
     ld bc, $1412
     ld a, $E0
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E0_443B_Case02)
@@ -2166,7 +2166,7 @@ Func_0E0_50FD::
     ld de, $5283
     ld bc, $1412
     ld a, $E0
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E0_4ABB)
@@ -2175,7 +2175,7 @@ Func_0E0_510C::
     ld de, $53EB
     ld bc, $1412
     ld a, $E0
-    call Func_000_15DE
+    call CopyRectFromBankToVRAM
     ret
     db $B0
     ds $12, $B1
@@ -3044,7 +3044,7 @@ Jump_0E0_5B16:: ; address name
 
 Jump_0E0_5BB2::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ld a, $03
     ld [wSpriteSlotCount], a
     ld a, $01
@@ -3556,7 +3556,7 @@ Jump_0E0_5E83:: ; address name
 
 Jump_0E0_5F07::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ld a, $02
     ld [wSpriteSlotCount], a
     ld a, $01
@@ -4215,7 +4215,7 @@ Jump_0E0_62A0:: ; address name
 
 Jump_0E0_636C::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ld a, $02
     ld [wSpriteSlotCount], a
     ld hl, wSpriteSlots
@@ -5097,7 +5097,7 @@ Jump_0E0_685B:: ; address name
 
 Jump_0E0_694D::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ld a, $06
     ld [wSpriteSlotCount], a
     ld hl, wSpriteSlots
@@ -5609,7 +5609,7 @@ Jump_0E0_6C2C:: ; address name
 
 Jump_0E0_6CC8::
     ld hl, vBGMap0
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ld a, $04
     ld [wSpriteSlotCount], a
     ld hl, wSpriteSlots

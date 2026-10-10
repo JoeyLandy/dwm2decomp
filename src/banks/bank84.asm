@@ -1279,7 +1279,7 @@ Jump_084_4BD6::
 Jump_084_4BFE::
     ld l, e
     ld h, d
-    call Func_000_1E29
+    call DrawFullScreenBufferToBGMap
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_084_4A89)

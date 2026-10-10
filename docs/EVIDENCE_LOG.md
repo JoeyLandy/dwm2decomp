@@ -693,6 +693,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - What wC7FB's high nibble means.
 - Binary verification: pending; see the commit.
 
+### E-0071 — Bank-$05 skill checks, player steps, screen and text helpers (batch 7)
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Bank-$05 skill checks.** These follow the C = $FF (pass) / $00 (fail) convention:
+  - AnySlotLacksStatusMask and its users AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus3And4Bits and AnyFoeLacksStatus0Bit6.
+  - ActorLacksStatus4Bits67.
+  - SkillPassesRepeatCheck, SkillPassesStatus1Bit0Check and SkillPassesSideFlagBit3Check.
+  - Two chains that reset wDA6E at the first failed check: CheckSkillUsableElseResetWDA6E and CheckSkillUsableStatusElseResetWDA6E.
+- **Comparison with the bank-$32 gates.** Several of these mirror refusal codes 2, 3 and 4 of CheckSkillMPCost and the bank-$32 gates (E-0049). The side-flag check differs: bank $05 ORs both sides' flags, while bank $32 tests the actor's side only. The bank-$05 callers are probably the enemy AI choosing a skill (inference).
+- **Player steps.** Four StepPlayer*TowardWC928 routines (script movement) set hPlayerFacing 0-3 for down, right, up and left, the same direction numbering as StepObjectTowardCoord's direction byte (E-0061). wC92C is named wStepArrived.
+- **Other routines:**
+  - DrawFullScreenBufferToBGMap and CopyRectFromBankToVRAM (bank 0).
+  - CopyItemNameToDE: bank $08 table at `$4716` = StringTable_ItemNames.
+  - WriteHexByteTilesAtDE (debug screens).
+  - CopyRecordRectToScreenBuffer_Bank07, AppendItemWC928ToInventory, SetBattleSubStep1 and ClearAndLayoutTileBlocksForWD890Count.
+- **Not code.** `Func_003_460B` decodes as a run of `sbc`/`and` with a final `jp hl`. It is probably data reached by a heuristic, so it is left unnamed.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

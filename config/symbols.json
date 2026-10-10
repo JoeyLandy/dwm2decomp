@@ -506,6 +506,7 @@
   "D007": {"name": "wSpeciesIdHi", "note": "high byte of that monster id (E-0069)", "evidence": "reading + data (E-0069)"},
   "D008": {"name": "wSpeciesRecord", "note": "47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069)", "evidence": "reading + data (E-0069)"},
   "D958": {"name": "wBattleMonsterId", "note": "word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfWDAABSlotToDE, GetSlotSpeciesFamily) (E-0069)", "evidence": "reading + data (E-0069)"},
+  "C92C": {"name": "wStepArrived", "note": "1 when the last StepObjectTowardCoord or StepPlayer*TowardWC928 step reached the target coordinate in wC928, else 0 (E-0071)", "evidence": "reading (E-0071)"},
   "DAAC": {"name": "wQueuedActionId", "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)", "evidence": "reading (E-0049)"},
   "D80C": {
     "name": "wBattleStatus",

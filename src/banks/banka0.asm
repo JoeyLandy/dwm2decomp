@@ -4739,7 +4739,7 @@ Jump_0A0_5E39:: ; address name
     set 7, [hl]
     inc hl
     set 7, [hl]
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     farcall Func_031_7536
     ld hl, vTiles1 + $6D0
     ld de, $0701
@@ -4794,7 +4794,7 @@ Jump_0A0_5E93:: ; address name
     ld bc, $0007
     ld a, $00
     call FillBytes
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -4925,7 +4925,7 @@ Jump_0A0_5F5C:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     call Func_0A0_4C74
     farcall Func_01A_727D
     ld a, $01
@@ -5051,7 +5051,7 @@ Jump_0A0_6021:: ; address name
     call Func_0A0_69A1
     cp a, $03
     jr nz, Jump_0A0_606D
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -5086,7 +5086,7 @@ Jump_0A0_606D::
     jr Jump_0A0_609F
 
 Jump_0A0_6095::
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -5178,7 +5178,7 @@ Jump_0A0_6115:: ; address name
     jr z, Jump_0A0_6137
     ld a, $00
     ld [wD869], a
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     jp Jump_0A0_61D9
@@ -5224,7 +5224,7 @@ Jump_0A0_6167::
     jr Jump_0A0_61CA
 
 Jump_0A0_6185::
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld a, $15
     ld [wBattleResolveStep], a
     jr Jump_0A0_61D9
@@ -5234,13 +5234,13 @@ Jump_0A0_6192::
     ld a, d
     or a, a
     jr nz, Jump_0A0_61A6
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld a, $08
     ld [wBattleResolveStep], a
     jr Jump_0A0_61D9
 
 Jump_0A0_61A6::
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     xor a, a
     ld [wD869], a
     ld a, $0C
@@ -5260,7 +5260,7 @@ Jump_0A0_61B7::
 Jump_0A0_61CA::
     ld a, $01
     ld [wD869], a
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -5336,7 +5336,7 @@ Jump_0A0_622A:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5443,7 +5443,7 @@ Jump_0A0_62CD:: ; address name
     jp z, Jump_0A0_6354
     ld a, $69
     call QueueSoundEffect
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld a, $14
     ld [wD869], a
     call Func_0A0_69C1
@@ -5502,7 +5502,7 @@ Jump_0A0_6354::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0A0_636C
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld a, $04
     ld [wD869], a
     ld hl, wBattleResolveStep
@@ -5556,7 +5556,7 @@ Jump_0A0_639B:: ; address name
 ; points at: wBattleResolveStep
 Func_0A0_5F2E_Case10::
 Jump_0A0_63A9:: ; address name
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     call Func_0A0_4CD4
     farcall Func_01A_7276
     ld hl, wBattleResolveStep
@@ -5586,7 +5586,7 @@ Jump_0A0_63CF:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5639,7 +5639,7 @@ Jump_0A0_63FE::
     jr nz, Jump_0A0_63F8
     xor a, a
     ld [wBattleActor], a
-    farcall Func_031_72C9
+    farcall ClearAndLayoutTileBlocksForWD890Count
     call Func_0A0_6A2C
     farcall Func_01A_7276
     farcall Func_031_7536

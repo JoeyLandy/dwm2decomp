@@ -13,7 +13,7 @@ Func_085_4001:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommandCF_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928, wCB86, wScriptStartRequest
 ScriptCommandCF_Run_Case01::
 Jump_085_4009:: ; address name
@@ -24,7 +24,7 @@ Jump_085_4009:: ; address name
     ld a, $60
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     xor a, a
@@ -936,7 +936,7 @@ Func_085_4617:: ; address name
 
 ; entry 3 of the `rst $00` table in ScriptCommand1B_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928, wScriptStartRequest
 ScriptCommand1B_Run_Case03::
 Jump_085_4623:: ; address name
@@ -954,7 +954,7 @@ Jump_085_4623:: ; address name
     ld a, $E0
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld a, $80
@@ -963,7 +963,7 @@ Jump_085_4623:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommand1B_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928
 ; points at: wScriptStep
 ScriptCommand1B_Run_Case02::
@@ -986,7 +986,7 @@ Jump_085_4658:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommand1B_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928
 ; points at: wScriptStep
 ScriptCommand1B_Run_Case01::
@@ -1009,7 +1009,7 @@ Jump_085_4684:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand1B_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928
 ; points at: wScriptStep
 ScriptCommand1B_Run_Case00::
@@ -1030,7 +1030,7 @@ Jump_085_46B0:: ; address name
     farcall StepObjectTowardCoord
 
 Jump_085_46DA::
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld hl, wScriptStep
@@ -1209,7 +1209,7 @@ Jump_085_47B1:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommand7F_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wC92C, hFF8D
+; reads: wScriptParam0, wStepArrived, hFF8D
 ; writes: wC928, hFF8D
 ; points at: wScriptParam0, wScriptStep
 ScriptCommand7F_Run_Case01::
@@ -1220,8 +1220,8 @@ Jump_085_47E3:: ; address name
     ld a, $10
     sub a, c
     ld [wC928], a
-    farcall Func_05F_6AEB
-    ld a, [wC92C]
+    farcall StepPlayerUpTowardWC928
+    ld a, [wStepArrived]
     or a, a
     ret z
     ldh a, [hFF8D]
@@ -1791,7 +1791,7 @@ Func_085_4B0F:: ; address name
 
 ; entry 15 of the `rst $00` table in ScriptCommand6E_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C, wD7F5
+; reads: wStepArrived, wD7F5
 ; writes: hFF8D, wC92A, wC929, wC928, hFFC7, hFFC8, hFFC9, wScriptStartRequest
 ScriptCommand6E_Run_Case0F::
 Jump_085_4B33:: ; address name
@@ -1804,7 +1804,7 @@ Jump_085_4B33:: ; address name
     ld a, $C0
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld a, $03
@@ -1822,7 +1822,7 @@ Jump_085_4B33:: ; address name
 
 ; entry 14 of the `rst $00` table in ScriptCommand6E_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wC92C
+; reads: wScriptParam0, wStepArrived
 ; writes: wC929, wC92A, wC928, wScriptParam0
 ; points at: wScriptParam0, wScriptStep
 ScriptCommand6E_Run_Case0E::
@@ -1837,7 +1837,7 @@ Jump_085_4B6F:: ; address name
     ld a, $70
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld hl, wScriptParam0
@@ -1850,7 +1850,7 @@ Jump_085_4B94::
     ld a, $40
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     xor a, a
@@ -2332,7 +2332,7 @@ Jump_085_4E61::
 
 ; entry 0 of the `rst $00` table in ScriptCommand79_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928, wScriptParam1
 ; points at: wScriptStep
 ScriptCommand79_Run_Case00::
@@ -2368,7 +2368,7 @@ Jump_085_4EAA:: ; address name
     ld a, $30
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
 
@@ -3186,7 +3186,7 @@ Jump_085_5358::
 
 ; entry 4 of the `rst $00` table in ScriptCommand69_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hMapId, wC92C
+; reads: hMapId, wStepArrived
 ; writes: wC928, wC929, wC92A, wCB86
 ; points at: wScriptStep
 ScriptCommand69_Run_Case04::
@@ -3201,7 +3201,7 @@ Jump_085_5361:: ; address name
     ld a, $02
     ld [wC92A], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     xor a, a
@@ -3214,7 +3214,7 @@ Jump_085_5389::
     ld a, $03
     ld [wC92A], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     xor a, a
@@ -3399,7 +3399,7 @@ Func_085_546F:: ; address name
 
 ; entry 8 of the `rst $00` table in ScriptCommand24_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCBBA, wScriptParam0, wCBCA, wC92C
+; reads: wCBBA, wScriptParam0, wCBCA, wStepArrived
 ; writes: wC929, wC92A, wC928, wScriptParam0, wSpriteSlotCount, hFF8D, wScriptStartRequest
 ; points at: wCB9A, wC929
 ScriptCommand24_Run_Case08::
@@ -3464,7 +3464,7 @@ Jump_085_54F1::
     ld a, $B0
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld a, $01
@@ -3477,7 +3477,7 @@ Jump_085_54F1::
 
 ; entry 6 of the `rst $00` table in ScriptCommand24_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC92A, wC928, wC929
 ; points at: wScriptStep
 ScriptCommand24_Run_Case06::
@@ -3495,7 +3495,7 @@ Jump_085_5514:: ; address name
     ld a, $04
     ld [wC929], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld hl, $0186
@@ -3524,7 +3524,7 @@ Jump_085_554F:: ; address name
 
 ; entry 4 of the `rst $00` table in ScriptCommand24_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928
 ; points at: wScriptStep
 ScriptCommand24_Run_Case04::
@@ -3536,7 +3536,7 @@ Jump_085_5562:: ; address name
     ld a, $40
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld hl, wScriptStep
@@ -3654,7 +3654,7 @@ Jump_085_5607:: ; address name
 
 ; entry 5 of the `rst $00` table in ScriptCommand22_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC92C
+; reads: wStepArrived
 ; writes: wC929, wC92A, wC928
 ; points at: wCB9C, wScriptStep
 ScriptCommand22_Run_Case05::
@@ -3666,7 +3666,7 @@ Jump_085_561E:: ; address name
     ld a, $50
     ld [wC928], a
     farcall StepObjectTowardCoord
-    ld a, [wC92C]
+    ld a, [wStepArrived]
     or a, a
     ret z
     ld hl, wCB9C
