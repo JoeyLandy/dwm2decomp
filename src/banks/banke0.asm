@@ -859,7 +859,7 @@ Jump_0E0_46D1::
     ret
 
 Jump_0E0_46DD::
-    ld de, wC198
+    ld de, wBGMapShadow
     ld hl, vBGMap0
     ld bc, $1412
 
@@ -2812,7 +2812,7 @@ Func_0E0_5AD3::
     or a, a
     jp z, Jump_0E0_6FF7
     farcall Func_002_5074
-    call Func_0E0_7480
+    call IncrementSpriteSlotCounters
     ld a, [wD09F]
     dec a
     rst $00
@@ -2865,7 +2865,7 @@ Jump_0E0_5B16::
     call DecompressToVRAM
     ld b, $46
     ld de, Data_046_496B
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -2908,10 +2908,10 @@ Jump_0E0_5BB2::
     ld hl, vBGMap0
     call Func_000_1E29
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $01
     ld [wC90D], a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
     ld a, $01
     ld [hl+], a
     ld a, $00
@@ -2978,33 +2978,33 @@ Jump_0E0_5BB2::
     ld [hl+], a
     call Func_0E0_75BF
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5C32::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wC56C]
     or a, a
     ret nz
     ld a, $04
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $03
     ld de, $6050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $03
     ld c, $02
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5C58::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A7]
     inc a
     ld [wD0A7], a
@@ -3012,9 +3012,9 @@ Jump_0E0_5C58::
     ret nz
     ld a, $03
     ld de, $6060
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wD0A7], a
@@ -3023,57 +3023,57 @@ Jump_0E0_5C58::
     ret
 
 Jump_0E0_5C7B::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $03
     ld de, $6050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5C91::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, $6020
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $00
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $00
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $00
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5CB5::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $03
     ld de, $6040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $03
     ld c, $03
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5CD1::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $6030
     call Func_0E0_74D8
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wD0A7], a
@@ -3082,139 +3082,139 @@ Jump_0E0_5CD1::
     ret
 
 Jump_0E0_5CEA::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $5030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $5040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $01
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5D14::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $01
     ld de, $1040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld a, $00
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5D46::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $5000
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $5000
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $02
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld a, $00
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5D7F::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $01
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $00
     ld de, $6030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5D9F::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, $4030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $02
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5DCA::
-    call Func_0E0_7420
-    call Func_0E0_754F
+    call DrawSpriteSlots
+    call StepWD0A2Mod15
     ret nz
     ld a, $00
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5DDD::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, $4000
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4000
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wC90D], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld [wD09D], a
     xor a, a
@@ -3222,22 +3222,22 @@ Jump_0E0_5DDD::
     ret
 
 Jump_0E0_5E07::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $5030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $5040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5E24::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A7]
     inc a
     ld [wD0A7], a
@@ -3245,12 +3245,12 @@ Jump_0E0_5E24::
     ret nz
     ld a, $02
     ld de, $6030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $6040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
@@ -3305,7 +3305,7 @@ Jump_0E0_5E83::
     call DecompressToVRAM
     ld b, $46
     ld de, Data_046_777A
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -3343,10 +3343,10 @@ Jump_0E0_5F07::
     ld hl, vBGMap0
     call Func_000_1E29
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $01
     ld [wC90D], a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
     ld a, $01
     ld [hl+], a
     ld a, $00
@@ -3397,31 +3397,31 @@ Jump_0E0_5F07::
     ld [hl+], a
     call Func_0E0_75BF
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5F6F::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wC56C]
     or a, a
     ret nz
     ld a, $00
     ld de, $5030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $6030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5F91::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     srl a
     swap a
@@ -3430,7 +3430,7 @@ Jump_0E0_5F91::
     add_a_to_hl
     ld c, [hl]
     ld a, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wD0A3]
     srl a
     swap a
@@ -3439,7 +3439,7 @@ Jump_0E0_5F91::
     add_a_to_hl
     ld c, [hl]
     ld a, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -3449,38 +3449,38 @@ Jump_0E0_5F91::
     ld [wD0A3], a
     ld a, $00
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
     db $03, $02, $03, $00, $03, $01, $00, $01, $02, $01
 
 Jump_0E0_5FED::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $03
-    ld [wCB7D], a
-    call Func_0E0_754F
+    ld [wSpriteSlotCount], a
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_5FFE::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld d, $60
     ld a, [wCB92]
     ld e, a
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     jr nz, Jump_0E0_6022
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld a, $02
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     xor a, a
     ld [wD0A3], a
     ld hl, wD09E
@@ -3502,22 +3502,22 @@ Jump_0E0_6022::
     db $FE, $FE, $FE, $FF, $FF, $FF, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02
 
 Jump_0E0_6048::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $6050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_755E
+    call StepWD0A2Mod30
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_605D::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wD0A3]
     cp a, $20
     jr nc, Jump_0E0_6086
@@ -3535,7 +3535,7 @@ Jump_0E0_605D::
     ret
 
 Jump_0E0_6086::
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -3544,29 +3544,29 @@ Jump_0E0_6086::
     ret
 
 Jump_0E0_6093::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld de, $4030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_60C0::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -3574,7 +3574,7 @@ Jump_0E0_60C0::
     ret nz
     ld a, $02
     ld de, $3030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -3583,26 +3583,26 @@ Jump_0E0_60C0::
     ret
 
 Jump_0E0_60DF::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wCB91]
     cp a, $F0
     jr nz, Jump_0E0_6113
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $00
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $03
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld a, $00
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
@@ -3616,7 +3616,7 @@ Jump_0E0_6113::
     ret
 
 Jump_0E0_6120::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wCB81]
     cp a, $F0
     jr z, Jump_0E0_6136
@@ -3631,13 +3631,13 @@ Jump_0E0_6136::
     cp a, $F0
     jr nz, Jump_0E0_6158
     ld a, $02
-    ld [wCB7D], a
-    call Func_0E0_754F
+    ld [wSpriteSlotCount], a
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wC90D], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld [wD09D], a
     xor a, a
@@ -3653,12 +3653,12 @@ Jump_0E0_6158::
     ret
 
 Jump_0E0_6165::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld d, $50
     ld a, [wCB92]
     ld e, a
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     jr nz, Jump_0E0_617E
     xor a, a
     ld [wD0A3], a
@@ -3680,12 +3680,12 @@ Jump_0E0_617E::
     ret
 
 Jump_0E0_6194::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld d, $60
     ld a, [wCB92]
     ld e, a
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     jr nz, Jump_0E0_61AD
     xor a, a
     ld [wD0A3], a
@@ -3707,12 +3707,12 @@ Jump_0E0_61AD::
     ret
 
 Jump_0E0_61C3::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld d, $40
     ld a, [wCB92]
     ld e, a
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     jr nz, Jump_0E0_61DC
     xor a, a
     ld [wD0A3], a
@@ -3734,12 +3734,12 @@ Jump_0E0_61DC::
     ret
 
 Jump_0E0_61F2::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld d, $50
     ld a, [wCB92]
     ld e, a
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     jr nz, Jump_0E0_620B
     xor a, a
     ld [wD0A3], a
@@ -3761,7 +3761,7 @@ Jump_0E0_620B::
     ret
 
 Jump_0E0_6221::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $10
     jr nc, Jump_0E0_624A
@@ -3782,11 +3782,11 @@ Jump_0E0_6221::
     ret
 
 Jump_0E0_624A::
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld a, $02
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     xor a, a
     ld [wD0A3], a
     ld hl, wD09E
@@ -3856,7 +3856,7 @@ Jump_0E0_62A0::
     call DecompressToVRAM
     ld b, $48
     ld de, Data_048_523C
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -3909,8 +3909,8 @@ Jump_0E0_636C::
     ld hl, vBGMap0
     call Func_000_1E29
     ld a, $02
-    ld [wCB7D], a
-    ld hl, wCB7F
+    ld [wSpriteSlotCount], a
+    ld hl, wSpriteSlots
     ld a, $01
     ld [hl+], a
     ld a, $00
@@ -4009,31 +4009,31 @@ Jump_0E0_636C::
     ld [hl+], a
     call Func_0E0_75BF
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6417::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wC56C]
     or a, a
     ret nz
     ld a, $00
     ld de, $4070
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4080
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6439::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     srl a
     swap a
@@ -4042,7 +4042,7 @@ Jump_0E0_6439::
     add_a_to_hl
     ld c, [hl]
     ld a, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wD0A3]
     srl a
     swap a
@@ -4051,7 +4051,7 @@ Jump_0E0_6439::
     add_a_to_hl
     ld c, [hl]
     ld a, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -4061,81 +4061,81 @@ Jump_0E0_6439::
     ld [wD0A3], a
     ld a, $00
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wD09E
     inc [hl]
     ret
     db $03, $02, $01, $02, $03, $01, $00, $03, $00, $01
 
 Jump_0E0_649A::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $4020
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $04
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_64B0::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $4030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $4020
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_64DE::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $5020
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $06
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_64F4::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $5030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $05
     ld de, $5020
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $04
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6514::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $10
     jr nc, Jump_0E0_653D
@@ -4158,8 +4158,8 @@ Jump_0E0_6514::
 Jump_0E0_653D::
     ld a, $05
     ld c, $00
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -4168,7 +4168,7 @@ Jump_0E0_653D::
     ret
 
 Jump_0E0_6551::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $10
     jr nc, Jump_0E0_657A
@@ -4189,14 +4189,14 @@ Jump_0E0_6551::
     ret
 
 Jump_0E0_657A::
-    call Func_0E0_755E
+    call StepWD0A2Mod30
     ret nz
     ld a, $04
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $05
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     xor a, a
     ld [wD0A3], a
     ld hl, wD09E
@@ -4204,265 +4204,265 @@ Jump_0E0_657A::
     ret
 
 Jump_0E0_6595::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $5020
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $04
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $05
     ld de, $5010
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $05
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $05
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_65BD::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $5010
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $04
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $04
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $00
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $02
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld a, $00
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_65F8::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, sA070
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4070
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $01
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6626::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $3030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $4030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $02
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_664D::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $3040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $3030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $03
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_666D::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $3050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $3040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $02
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_668D::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $2050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $02
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_66A5::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $2040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $01
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld a, $05
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_66DB::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $6030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $05
     ld de, $5030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $04
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $05
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6702::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $6040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $05
     ld de, $6030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $05
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6722::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $6050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $05
     ld de, $6040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $04
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6742::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $7050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $04
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_675A::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $04
     ld de, $7040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $04
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $05
     ld c, $03
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_677D::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $01
     ld de, sA070
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $00
     ld de, sA070
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $02
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $01
-    call Func_0E0_74C5
-    call Func_0E0_754F
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod15
     ret nz
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld [wD09D], a
     xor a, a
@@ -4470,7 +4470,7 @@ Jump_0E0_677D::
     ret
 
 Jump_0E0_67B1::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $10
     jr nc, Jump_0E0_67D3
@@ -4488,11 +4488,11 @@ Jump_0E0_67B1::
     ret
 
 Jump_0E0_67D3::
-    call Func_0E0_757C
+    call StepWD0A2Mod60
     ret nz
     ld a, $05
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     xor a, a
     ld [wD0A3], a
     ld hl, wD09E
@@ -4500,29 +4500,29 @@ Jump_0E0_67D3::
     ret
 
 Jump_0E0_67E7::
-    call Func_0E0_7420
-    call Func_0E0_757C
+    call DrawSpriteSlots
+    call StepWD0A2Mod60
     ret nz
     ld a, $04
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $05
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6801::
-    call Func_0E0_7420
-    call Func_0E0_755E
+    call DrawSpriteSlots
+    call StepWD0A2Mod30
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_680D::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -4530,10 +4530,10 @@ Jump_0E0_680D::
     ret nz
     ld a, $04
     ld de, $7050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $05
     ld de, $6050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, [wD0A4]
     inc a
@@ -4597,7 +4597,7 @@ Jump_0E0_685B::
     call DecompressToVRAM
     ld b, $48
     ld de, Data_048_5C7D
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -4660,8 +4660,8 @@ Jump_0E0_694D::
     ld hl, vBGMap0
     call Func_000_1E29
     ld a, $06
-    ld [wCB7D], a
-    ld hl, wCB7F
+    ld [wSpriteSlotCount], a
+    ld hl, wSpriteSlots
     ld a, $01
     ld [hl+], a
     ld a, $00
@@ -4776,31 +4776,31 @@ Jump_0E0_694D::
     ld [hl+], a
     call Func_0E0_75BF
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6A10::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wC56C]
     or a, a
     ret nz
     ld a, $00
     ld de, $4050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4060
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6A32::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     srl a
     swap a
@@ -4809,7 +4809,7 @@ Jump_0E0_6A32::
     add_a_to_hl
     ld c, [hl]
     ld a, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wD0A3]
     srl a
     swap a
@@ -4818,7 +4818,7 @@ Jump_0E0_6A32::
     add_a_to_hl
     ld c, [hl]
     ld a, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -4828,46 +4828,46 @@ Jump_0E0_6A32::
     ld [wD0A3], a
     ld a, $00
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $07
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6A89::
-    call Func_0E0_7420
-    call Func_0E0_756D
+    call DrawSpriteSlots
+    call StepWD0A2Mod45
     ret nz
     ld a, $01
     ld c, $02
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $06
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6AA1::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4050
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_755E
+    call StepWD0A2Mod30
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6ABE::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $10
     jr nc, Jump_0E0_6AED
@@ -4891,11 +4891,11 @@ Jump_0E0_6ABE::
 
 Jump_0E0_6AED::
     ld a, $05
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wCBAA]
     add a, [hl]
     ld [wCB9A], a
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -4905,7 +4905,7 @@ Jump_0E0_6AED::
     db $03, $02, $01, $00
 
 Jump_0E0_6B0A::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $10
     jr nc, Jump_0E0_6B39
@@ -4929,11 +4929,11 @@ Jump_0E0_6B0A::
 
 Jump_0E0_6B39::
     ld a, $04
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wCBA2]
     add a, [hl]
     ld [wCB92], a
-    call Func_0E0_755E
+    call StepWD0A2Mod30
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -4943,86 +4943,86 @@ Jump_0E0_6B39::
     db $02, $01, $00, $03
 
 Jump_0E0_6B56::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld de, $5040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $5030
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $02
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6B99::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $50A0
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $50A0
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $00
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $01
     ld c, $02
-    call Func_0E0_74C5
-    call Func_0E0_755E
+    call SetSpriteSlotByte5
+    call StepWD0A2Mod30
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6BC4::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, $40A0
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $01
     ld c, $00
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6BE4::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, $40A0
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $40B0
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld [wD09D], a
     xor a, a
@@ -5071,7 +5071,7 @@ Jump_0E0_6C2C::
     call DecompressToVRAM
     ld b, $49
     ld de, Data_049_531F
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -5114,8 +5114,8 @@ Jump_0E0_6CC8::
     ld hl, vBGMap0
     call Func_000_1E29
     ld a, $04
-    ld [wCB7D], a
-    ld hl, wCB7F
+    ld [wSpriteSlotCount], a
+    ld hl, wSpriteSlots
     ld a, $01
     ld [hl+], a
     ld a, $00
@@ -5182,37 +5182,37 @@ Jump_0E0_6CC8::
     ld [hl+], a
     call Func_0E0_75BF
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6D43::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wC56C]
     or a, a
     ret nz
     ld a, $00
     ld de, vTiles0 + $40
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, vTiles2 + $40
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_755E
+    call StepWD0A2Mod30
     ret nz
     ld a, $02
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6D73::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -5220,10 +5220,10 @@ Jump_0E0_6D73::
     ret nz
     ld a, $00
     ld de, $7040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, vTiles0 + $40
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, [wD0A4]
     inc a
@@ -5238,7 +5238,7 @@ Jump_0E0_6D73::
     ret
 
 Jump_0E0_6DA7::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -5246,10 +5246,10 @@ Jump_0E0_6DA7::
     ret nz
     ld a, $02
     ld de, $3040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, [wD0A4]
     inc a
@@ -5268,14 +5268,14 @@ Jump_0E0_6DA7::
 Jump_0E0_6DDF::
     ld a, $02
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ret
 
 Jump_0E0_6DEE::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $20
     jr nc, Jump_0E0_6E12
@@ -5290,19 +5290,19 @@ Jump_0E0_6DEE::
     ld e, a
     ld d, $10
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     jr Jump_0E0_6E29
 
 Jump_0E0_6E12::
     ld a, $02
     ld de, $10A0
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $02
-    call Func_0E0_7492
+    call StepSpriteSlotToward
 
 Jump_0E0_6E29::
     ld a, [wD0A3]
@@ -5321,13 +5321,13 @@ Jump_0E0_6E29::
     ld e, a
     ld d, $10
     ld a, $03
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     jr Jump_0E0_6E56
 
 Jump_0E0_6E4E::
     ld a, $03
     ld de, $3040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
 
 Jump_0E0_6E56::
     ld a, [wD0A3]
@@ -5338,15 +5338,15 @@ Jump_0E0_6E56::
 Jump_0E0_6E5E::
     ld a, $03
     ld de, $10A0
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_755E
+    call StepWD0A2Mod30
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -5357,7 +5357,7 @@ Jump_0E0_6E5E::
     db $00, $00, $00, $00, $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03, $03
 
 Jump_0E0_6EA3::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     cp a, $10
     jr nc, Jump_0E0_6ECC
@@ -5386,10 +5386,10 @@ Jump_0E0_6ECC::
     ret c
     ld a, $00
     ld de, $3040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -5398,42 +5398,42 @@ Jump_0E0_6ECC::
     ret
 
 Jump_0E0_6EEF::
-    call Func_0E0_7420
-    call Func_0E0_757C
+    call DrawSpriteSlots
+    call StepWD0A2Mod60
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6EFB::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, sA040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld a, $01
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6F1B::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $00
     ld de, sA040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, sA040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld [wD09D], a
     xor a, a
@@ -5441,21 +5441,21 @@ Jump_0E0_6F1B::
     ret
 
 Jump_0E0_6F41::
-    call Func_0E0_7420
-    call Func_0E0_757C
+    call DrawSpriteSlots
+    call StepWD0A2Mod60
     ret nz
     ld a, $02
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $03
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6F5B::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -5463,46 +5463,46 @@ Jump_0E0_6F5B::
     ret nz
     ld a, $00
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $01
     ld de, $5040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wD0A3], a
     ld a, $00
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6F8D::
-    call Func_0E0_7420
-    call Func_0E0_757C
+    call DrawSpriteSlots
+    call StepWD0A2Mod60
     ret nz
     ld a, $02
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld a, $03
     ld c, $01
-    call Func_0E0_74C5
+    call SetSpriteSlotByte5
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6FA7::
-    call Func_0E0_7420
-    call Func_0E0_757C
+    call DrawSpriteSlots
+    call StepWD0A2Mod60
     ret nz
     ld hl, wD09E
     inc [hl]
     ret
 
 Jump_0E0_6FB3::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, [wD0A3]
     inc a
     ld [wD0A3], a
@@ -5510,12 +5510,12 @@ Jump_0E0_6FB3::
     ret nz
     ld a, $02
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $5040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
-    call Func_0E0_754F
+    call StepWD0A2Mod15
     ret nz
     xor a, a
     ld [wD0A3], a
@@ -5524,13 +5524,13 @@ Jump_0E0_6FB3::
     ret
 
 Jump_0E0_6FDE::
-    call Func_0E0_7420
+    call DrawSpriteSlots
     ld a, $02
     ld de, $3040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ld a, $03
     ld de, $4040
-    call Func_0E0_7492
+    call StepSpriteSlotToward
     ret nz
     ld hl, wD09E
     inc [hl]
@@ -5938,7 +5938,7 @@ Jump_0E0_72AF::
     ld [wD0A3], a
     call Func_0E0_75BF
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_0E0_72C0::
@@ -5970,7 +5970,7 @@ Jump_0E0_72DB::
     cp a, $FF
     ret nz
     ld a, $10
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $05
     ldh [hFF90], a
     ld a, $01
@@ -6003,7 +6003,7 @@ Jump_0E0_732E::
     or a, [hl]
     ret nz
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
@@ -6081,7 +6081,7 @@ Jump_0E0_73C7::
     ld [wD0A3], a
     call Func_0E0_75BF
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
@@ -6098,7 +6098,7 @@ Jump_0E0_73DC::
     or a, [hl]
     ret nz
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD09E
     inc [hl]
     ret
@@ -6134,34 +6134,36 @@ Jump_0E0_7410::
     jr nz, Func_0E0_740E
     ret
 
+; for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots: loads hSpriteSetIndex, hSpriteOriginX (+8), hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset and hSpriteSubIndex from the slot, then far-calls the routine chosen by the slot's first byte from the 3-byte entries at $7477
 ; 80 call sites from 1 routine (e.g. Func_0E0_5AD3)
-; reads: wCB7D, hFFB0
-; writes: hFFAD, hFFA9, hFFAB, hFFB0, hFFAF, hFFAE
-; points at: wCB7F
-Func_0E0_7420::
-    ld a, [wCB7D]
+; reads: wSpriteSlotCount, hSpriteAttrXor
+; writes: hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset, hSpriteSubIndex
+; points at: wSpriteSlots
+DrawSpriteSlots::
+Func_0E0_7420:: ; address name
+    ld a, [wSpriteSlotCount]
     or a, a
     ret z
     ld b, a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
 
 Jump_0E0_7429::
     push bc
     ld a, [hl+]
     ld c, a
     ld a, [hl+]
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [hl+]
     add a, $08
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, [hl+]
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, [hl+]
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, [hl+]
     ld b, a
     ld a, [hl+]
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, [hl+]
     ld e, a
     ld a, c
@@ -6176,9 +6178,9 @@ Jump_0E0_7429::
     ld a, b
     cp a, $03
     jr nz, Jump_0E0_745C
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     or a, $20
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, $01
 
 Jump_0E0_745C::
@@ -6186,7 +6188,7 @@ Jump_0E0_745C::
     add a, e
 
 Jump_0E0_745E::
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld b, $00
     push hl
     ld hl, $7477
@@ -6208,11 +6210,13 @@ Jump_0E0_745E::
     ret
     db $01, $40, $25, $01, $40, $7F, $0A, $70, $7F
 
+; adds 1 to byte 7 of each of the 8 slots at wSpriteSlots
 ; 1 call site from 1 routine (e.g. Func_0E0_5AD3)
-; points at: wCB7F
-Func_0E0_7480::
+; points at: wSpriteSlots
+IncrementSpriteSlotCounters::
+Func_0E0_7480:: ; address name
     ld b, $08
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
 
 Jump_0E0_7485::
     inc hl
@@ -6228,13 +6232,15 @@ Jump_0E0_7485::
     jr nz, Jump_0E0_7485
     ret
 
+; A = slot number, D = target X, E = target Y: moves the slot's X and Y bytes one step toward the target and adds 1 to its byte 7; returns A = 1 (non-zero) if either moved
 ; 116 call sites from 1 routine (e.g. Func_0E0_5AD3)
-; points at: wCB7F
-Func_0E0_7492::
+; points at: wSpriteSlots
+StepSpriteSlotToward::
+Func_0E0_7492:: ; address name
     ld c, $00
     swap a
     srl a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
     add_a_to_hl
     inc hl
     inc hl
@@ -6278,12 +6284,14 @@ Jump_0E0_74BD::
     or a, a
     ret
 
+; A = slot number: byte 5 of the slot = C
 ; 91 call sites from 1 routine (e.g. Func_0E0_5AD3)
-; points at: wCB7F
-Func_0E0_74C5::
+; points at: wSpriteSlots
+SetSpriteSlotByte5::
+Func_0E0_74C5:: ; address name
     swap a
     srl a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
     add_a_to_hl
     inc hl
     inc hl
@@ -6296,12 +6304,12 @@ Func_0E0_74C5::
 ; 1 call site from 1 routine (e.g. Func_0E0_5AD3)
 ; reads: wD0A7
 ; writes: wD0A7
-; points at: wCB7F
+; points at: wSpriteSlots
 Func_0E0_74D8::
     ld c, $00
     swap a
     srl a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
     add_a_to_hl
     inc hl
     inc hl
@@ -6359,10 +6367,12 @@ Jump_0E0_7532::
     db $01, $01, $01, $01, $01, $01, $01, $01, $02, $02, $02, $02, $00, $02, $02, $02
     db $02, $01, $01, $01, $01, $01, $01, $01, $01, $00
 
+; wD0A2 += 1, reset to 0 when it reaches 15
 ; 31 call sites from 1 routine (e.g. Func_0E0_5AD3)
 ; reads: wD0A2
 ; writes: wD0A2
-Func_0E0_754F::
+StepWD0A2Mod15::
+Func_0E0_754F:: ; address name
     ld a, [wD0A2]
     inc a
     ld [wD0A2], a
@@ -6372,10 +6382,12 @@ Func_0E0_754F::
     ld [wD0A2], a
     ret
 
+; wD0A2 += 1, reset to 0 when it reaches 30
 ; 8 call sites from 1 routine (e.g. Func_0E0_5AD3)
 ; reads: wD0A2
 ; writes: wD0A2
-Func_0E0_755E::
+StepWD0A2Mod30::
+Func_0E0_755E:: ; address name
     ld a, [wD0A2]
     inc a
     ld [wD0A2], a
@@ -6385,10 +6397,12 @@ Func_0E0_755E::
     ld [wD0A2], a
     ret
 
+; wD0A2 += 1, reset to 0 when it reaches 45
 ; 1 call site from 1 routine (e.g. Func_0E0_5AD3)
 ; reads: wD0A2
 ; writes: wD0A2
-Func_0E0_756D::
+StepWD0A2Mod45::
+Func_0E0_756D:: ; address name
     ld a, [wD0A2]
     inc a
     ld [wD0A2], a
@@ -6398,10 +6412,12 @@ Func_0E0_756D::
     ld [wD0A2], a
     ret
 
+; wD0A2 += 1, reset to 0 when it reaches 60
 ; 6 call sites from 1 routine (e.g. Func_0E0_5AD3)
 ; reads: wD0A2
 ; writes: wD0A2
-Func_0E0_757C::
+StepWD0A2Mod60::
+Func_0E0_757C:: ; address name
     ld a, [wD0A2]
     inc a
     ld [wD0A2], a

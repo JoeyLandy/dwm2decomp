@@ -146,7 +146,7 @@ Func_016_40F6::
     ret nz
     ld a, [wD083]
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -174,12 +174,12 @@ Func_016_4118::
     jr z, Jump_016_4195
     ld a, $00
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, Jump_016_4141
     ld a, $00
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -201,12 +201,12 @@ Jump_016_4141::
     jr z, Jump_016_4195
     ld a, $01
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, Jump_016_416B
     ld a, $01
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -228,12 +228,12 @@ Jump_016_416B::
     jr z, Jump_016_4195
     ld a, $02
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, Jump_016_4195
     ld a, $02
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -278,14 +278,14 @@ Func_016_41B3::
     ret nc
     push de
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     pop de
     ret nz
     push de
     ld a, [wD083]
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -309,7 +309,7 @@ Func_016_41B3::
     push hl
     ld a, [wD083]
     ld c, $01
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld e, l
     ld d, h
     pop hl
@@ -326,7 +326,7 @@ Func_016_41FD::
     ret nz
     ld a, [wD083]
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -353,7 +353,7 @@ Func_016_421F::
     ret nz
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 2, [hl]
     ret nz
     ld a, $FF
@@ -365,7 +365,7 @@ Jump_016_4234::
     ret nz
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 3, [hl]
     ret nz
     ld a, $FF
@@ -377,7 +377,7 @@ Jump_016_4249::
     ret nz
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 0, [hl]
     ret nz
     ld a, $FF
@@ -396,7 +396,7 @@ Func_016_425E::
     jr nz, Jump_016_4274
     xor a, a
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 0, [hl]
     jr nz, Jump_016_42AC
 
@@ -409,7 +409,7 @@ Jump_016_4274::
     jr nz, Jump_016_428D
     ld a, $01
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 0, [hl]
     jr nz, Jump_016_42AC
 
@@ -422,7 +422,7 @@ Jump_016_428D::
     jr nz, Jump_016_42A6
     ld a, $02
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 0, [hl]
     jr nz, Jump_016_42AC
 
@@ -455,14 +455,14 @@ Func_016_42C4::
     ret nc
     push de
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     pop de
     ret nz
     push de
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 0, [hl]
     pop de
     ret z
@@ -474,7 +474,7 @@ Func_016_42C4::
     push hl
     ld a, [wD083]
     ld c, $01
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld e, l
     ld d, h
     pop hl
@@ -488,7 +488,7 @@ Jump_016_4301::
     ret nz
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 1, [hl]
     ret nz
     ld a, $FF
@@ -500,7 +500,7 @@ Jump_016_4316::
     ret nz
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 4, [hl]
     ret nz
     ld a, $FF
@@ -513,7 +513,7 @@ Jump_016_4316::
 Func_016_432B::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     ret nz
     ld a, $FF
@@ -525,7 +525,7 @@ Jump_016_433C::
     ret nz
     ld a, [wD083]
     ld c, $63
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -538,7 +538,7 @@ Jump_016_4352::
     ret nz
     ld a, [wD083]
     ld c, $65
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -551,7 +551,7 @@ Jump_016_4368::
     ret nz
     ld a, [wD083]
     ld c, $67
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -564,7 +564,7 @@ Jump_016_437E::
     ret nz
     ld a, [wD083]
     ld c, $69
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -577,7 +577,7 @@ Jump_016_4394::
     ret nz
     ld a, [wD083]
     ld c, $5D
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -590,7 +590,7 @@ Jump_016_43AA::
     ret nz
     ld a, [wD083]
     ld c, $61
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -603,7 +603,7 @@ Jump_016_43C0::
     ret nz
     ld a, [wD083]
     ld c, $6F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $FF
     ret nz
@@ -616,7 +616,7 @@ Jump_016_43D6::
     ret nz
     ld a, [wD083]
     ld c, $6F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
     ret nz
@@ -629,7 +629,7 @@ Jump_016_43EB::
     ret nz
     ld a, [wD083]
     ld c, $70
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $FF
     ret nz
@@ -642,7 +642,7 @@ Jump_016_4401::
     ret nz
     ld a, [wD083]
     ld c, $70
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
     ret nz
@@ -655,7 +655,7 @@ Jump_016_4416::
     ret nz
     ld a, [wD083]
     ld c, $72
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $FF
     ret nz
@@ -668,7 +668,7 @@ Jump_016_442C::
     ret nz
     ld a, [wD083]
     ld c, $72
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
     ret nz
@@ -1014,7 +1014,7 @@ Func_016_4633::
 ; writes: wD081
 Func_016_4636::
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     ret z
     ld a, $FF
@@ -1199,7 +1199,7 @@ Jump_016_475F::
     ld a, [wC5E7]
     ld b, a
     ld a, $0B
-    call Func_000_16BF
+    call DivideBByA
     ld b, a
     ld a, [wD08F]
     add a, b
@@ -1233,7 +1233,7 @@ Func_016_4790::
     ret nz
     ld a, [wD083]
     ld c, $5D
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     ld a, [wD083]
     ld c, $5B
@@ -1245,7 +1245,7 @@ Jump_016_47B0::
     ld a, [wC5E7]
     ld b, a
     ld a, $0B
-    call Func_000_16BF
+    call DivideBByA
     ld b, a
     ld a, [wD08F]
     add a, b
@@ -1259,7 +1259,7 @@ Jump_016_47B0::
 Jump_016_47CE::
     ld a, [wD083]
     ld c, $61
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     ld a, [wD083]
     ld c, $5F
@@ -1270,7 +1270,7 @@ Jump_016_47CE::
 Jump_016_47E5::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     res 2, [hl]
     call Func_016_4C1D
     ret
@@ -1278,7 +1278,7 @@ Jump_016_47E5::
 Jump_016_47F3::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     res 3, [hl]
     call Func_016_4C1D
     ret
@@ -1286,7 +1286,7 @@ Jump_016_47F3::
 Jump_016_4801::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     res 0, [hl]
     call Func_016_4C1D
     ret
@@ -1294,7 +1294,7 @@ Jump_016_4801::
 Jump_016_480F::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     res 1, [hl]
     call Func_016_4C1D
     ret
@@ -1302,7 +1302,7 @@ Jump_016_480F::
 Jump_016_481D::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     res 4, [hl]
     call Func_016_4C1D
     ret
@@ -1313,11 +1313,11 @@ Jump_016_482B::
 Jump_016_482C::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld [hl], $00
     ld a, [wD083]
     ld c, $5D
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     ld a, [wD083]
     ld c, $5B
@@ -1452,7 +1452,7 @@ Jump_016_4922::
     call Func_016_5889
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     set 2, [hl]
     call Func_016_4C1D
     ret
@@ -1673,7 +1673,7 @@ Jump_016_4A47::
 Func_016_4A48::
     ld a, [wD083]
     ld c, $A4
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
     jr nz, Jump_016_4A61
@@ -1853,7 +1853,7 @@ Jump_016_4B4C::
 Func_016_4B4D::
     ldh [hFFC6], a
     ld a, [wD083]
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -1878,7 +1878,7 @@ Jump_016_4B60::
 Func_016_4B68::
     ldh [hFFC6], a
     ld a, [wD083]
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -1921,7 +1921,7 @@ Jump_016_4B8F::
 Func_016_4B97::
     ldh [hFFC6], a
     ld a, [wD083]
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -1961,7 +1961,7 @@ Jump_016_4BBF::
 Func_016_4BC4::
     ldh [hFFC6], a
     ld a, [wD083]
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -2409,7 +2409,7 @@ Jump_016_542B::
 Func_016_543E::
     ld a, [wD083]
     ld c, $5D
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     ld a, [wD083]
     ld c, $5B
@@ -2444,7 +2444,7 @@ Func_016_5473::
     ret nz
     ld a, [wD083]
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -2484,7 +2484,7 @@ Func_016_54AD::
     ret nz
     ld a, [wD083]
     ld c, $5D
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     ld a, [wD083]
     ld c, $5B
@@ -2518,11 +2518,11 @@ Jump_016_54E9::
 Jump_016_54F7::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld [hl], $00
     ld a, [wD083]
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     push hl
     inc hl
     inc hl
@@ -2544,7 +2544,7 @@ Jump_016_54F7::
 Jump_016_5522::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld [hl], $00
     call Func_016_543E
     ld a, $08
@@ -2556,7 +2556,7 @@ Jump_016_5522::
 Jump_016_553A::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     res 2, [hl]
     ld a, $09
     ld [wD08D], a
@@ -2584,7 +2584,7 @@ Func_016_555C::
     ret nz
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     res 0, [hl]
     ret
 
@@ -2602,7 +2602,7 @@ Jump_016_5583::
     ld [wDataBankSave], a
     ld a, [wC46D]
     ld c, $0E
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     and a, $01
     xor a, $01
@@ -2645,7 +2645,7 @@ Jump_016_55CB::
     bit 7, a
     jr z, Jump_016_55E3
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld [wCB7E], a
     ld [wC935], a
 
@@ -2666,7 +2666,7 @@ Jump_016_55E3::
     ld a, [wC5E8]
     ld h, a
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     ld c, $01
     sub a, $19
     jr c, Jump_016_5675
@@ -2764,7 +2764,7 @@ Func_016_56AF::
     ld b, a
     ld a, [wD08F]
     inc a
-    call Func_000_16BF
+    call DivideBByA
     ld b, a
     ld a, [wD090]
     add a, b
@@ -2789,7 +2789,7 @@ Func_016_56CC::
 Func_016_56D9::
     ld a, [wD083]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     ret
 
@@ -2973,7 +2973,7 @@ Func_016_57D1::
     push af
     push hl
     ld c, $5D
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop de
     ld a, [hl+]
     ld b, [hl]
@@ -2981,7 +2981,7 @@ Func_016_57D1::
     pop af
     push bc
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop bc
     call Func_016_58CC
     ret
@@ -2991,7 +2991,7 @@ Func_016_57E8::
     push af
     push hl
     ld c, $61
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop de
     ld a, [hl+]
     ld b, [hl]
@@ -2999,7 +2999,7 @@ Func_016_57E8::
     pop af
     push bc
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop bc
     call Func_016_58CC
     ret
@@ -3218,7 +3218,7 @@ Jump_016_58EF::
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_58F6:: ; heuristic: follows a terminator; C0
     push hl
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop bc
     ld [hl], c
     ret
@@ -3226,7 +3226,7 @@ Func_016_58F6:: ; heuristic: follows a terminator; C0
 ; 5 call sites from 3 routines (e.g. Func_016_54AD, Func_016_543E, Func_016_4790)
 Func_016_58FD::
     push hl
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop bc
     ld a, c
     ld [hl+], a
@@ -3236,7 +3236,7 @@ Func_016_58FD::
 ; 13 call sites from 13 routines (e.g. Func_016_5889, Func_016_587E, Func_016_5873, Func_016_5868, ...)
 Func_016_5906::
     push hl
-    call Func_000_24C5
+    call MapIndexViaWC6FE
     pop hl
     ret
 
@@ -3935,7 +3935,7 @@ Jump_016_5E5A::
     ld a, $6C
     call StoreWC60B
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     xor a, a
@@ -3990,7 +3990,7 @@ Jump_016_5ED1::
 Jump_016_5ED7::
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     ld a, $06
@@ -4005,7 +4005,7 @@ Jump_016_5EEC::
     farcall Func_01A_7315
     call Func_016_64DC
     call Func_016_6705
-    ld de, wC198
+    ld de, wBGMapShadow
     ld hl, vBGMap0
     ld bc, $080B
     call Func_016_7321
@@ -4144,7 +4144,7 @@ Jump_016_6017::
     xor a, a
     ld [wD782], a
     farcall Func_01D_5F2D
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $02D0
     ld a, $C3
     call FillBytes
@@ -4169,7 +4169,7 @@ Jump_016_6058::
     ld [wC2C5], a
     call Func_016_64DC
     call Func_016_6705
-    ld de, wC198
+    ld de, wBGMapShadow
     ld hl, vBGMap0
     ld bc, $1412
     call Func_016_7321
@@ -4388,7 +4388,7 @@ Jump_016_622B::
     ld [wC46B], a
     call Func_016_682F
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     ld hl, wCFCC
@@ -4429,7 +4429,7 @@ Jump_016_6291::
     ret z
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     ld a, $09
@@ -4467,7 +4467,7 @@ Jump_016_62D3::
     ld h, a
     ld [hl], $BC
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     xor a, a
@@ -4550,7 +4550,7 @@ Jump_016_637E::
     xor a, a
     ld [wD782], a
     farcall Func_01D_6026
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $02D0
     ld a, $C3
     call FillBytes
@@ -4596,7 +4596,7 @@ Jump_016_63B9::
 Jump_016_640E::
     call Func_016_65B1
     call Func_016_682F
-    ld de, wC198
+    ld de, wBGMapShadow
     ld hl, vBGMap0
     ld bc, $1412
     call Func_016_7321
@@ -4784,7 +4784,7 @@ Jump_016_652E::
     dec a
     ld b, a
     ld a, $05
-    call Func_000_16BF
+    call DivideBByA
     inc a
     ld [wCFD3], a
     ld a, b
@@ -5649,7 +5649,7 @@ Jump_016_6A6F::
     ld [wD007], a
     call Func_016_5AAF
     ld a, $C3
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $02D0
     call FillBytes
     ld hl, vTiles1
@@ -5767,7 +5767,7 @@ Jump_016_6B83::
     call Func_016_6BD9
     ld a, $00
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld c, $00
     call Func_016_6BE0
     ld a, [wC6FD]
@@ -5775,7 +5775,7 @@ Jump_016_6B83::
     jr z, Jump_016_6BCC
     ld a, $01
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld c, $01
     call Func_016_6BE0
     ld a, [wC6FD]
@@ -5783,7 +5783,7 @@ Jump_016_6B83::
     jr z, Jump_016_6BCC
     ld a, $02
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld c, $02
     call Func_016_6BE0
 
@@ -5871,7 +5871,7 @@ Func_016_6C16::
 Jump_016_6C42::
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     ld a, [wD09D]
@@ -6041,7 +6041,7 @@ Jump_016_6D47::
 
 Jump_016_6D7B::
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     ld a, $04
@@ -6074,7 +6074,7 @@ Jump_016_6DA6::
     ld a, $04
     ld [wCFD3], a
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     ld a, [wC46C]
@@ -6260,7 +6260,7 @@ Jump_016_6F30::
     ld a, [wD7BA]
     ldh [hFF8D], a
     ld a, [wD7BB]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld b, $31
     ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
@@ -6287,7 +6287,7 @@ Jump_016_6F6F::
     ld [hl], $BC
     farcall Func_01A_72FB
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
     call Func_016_7321
     call Func_016_69E2
@@ -6368,7 +6368,7 @@ Jump_016_7023::
     call Func_016_70DB
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     ld a, $04
@@ -6378,7 +6378,7 @@ Jump_016_7023::
 Jump_016_7051::
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $140D
     call Func_016_7321
     farcall Func_01A_72DB
@@ -6904,9 +6904,9 @@ Jump_016_74E2::
     ld a, b
     ld [wD87E], a
     ld a, $14
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     ld a, l
     ld [wD87F], a
     ld a, h
@@ -6949,9 +6949,9 @@ Jump_016_752B::
     ld a, b
     ld [wD87E], a
     ld a, $14
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     ld a, l
     ld [wD87F], a
     ld a, h
@@ -7771,7 +7771,7 @@ Jump_016_7A91::
 Func_016_7A97::
     push hl
     ld c, $0D
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     and a, $0F
     swap a

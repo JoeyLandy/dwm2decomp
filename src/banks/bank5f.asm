@@ -548,7 +548,7 @@ Jump_05F_6C43::
 ; points at: wC923
 Func_05F_6C5A:: ; heuristic: follows a terminator; C0
     ld a, $0F
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $04
     ld [wC5DC], a
     xor a, a
@@ -2715,7 +2715,7 @@ Jump_05F_7AC8::
 
 Jump_05F_7B3B::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 Jump_05F_7B40::

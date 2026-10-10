@@ -4,9 +4,9 @@ SECTION "Bank 1C", ROMX[$4000], BANK[$1C]
 ; 1 call site from 1 routine (e.g. Func_010_65C6)
 ; reads: wIsCGB
 ; writes: wD7F0, wD780, wC46B, wC56D, wC920, wC919
-; points at: wC198, wC3A0, wD000, wD208, wC300, wD168, wD780
+; points at: wBGMapShadow, wC3A0, wD000, wD208, wC300, wD168, wD780
 Func_01C_4001:: ; heuristic: follows a terminator; C0
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld de, wC3A0
     ld bc, $00A0
     call Func_01C_4316
@@ -74,7 +74,7 @@ Func_01C_4075::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wD7F0, wC920, wC919
-; points at: wD780, wC300, wC198, wD168, wD000, wC3A0, wD208
+; points at: wD780, wC300, wBGMapShadow, wD168, wD000, wC3A0, wD208
 Func_01C_408B:: ; heuristic: target of a pointer table; C0
     ld bc, $001A
     ld hl, wD780
@@ -87,7 +87,7 @@ Jump_01C_4091::
     or a, c
     jr nz, Jump_01C_4091
     ld hl, wC300
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $00A0
     call Func_01C_4316
     ld a, [wIsCGB]
@@ -100,7 +100,7 @@ Jump_01C_4091::
 
 Jump_01C_40B6::
     ld hl, wC3A0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $00A0
     call Func_01C_4316
     ld a, [wIsCGB]
@@ -245,7 +245,7 @@ Func_01C_41CD:: ; heuristic: target of a pointer table; C0
     ld a, $87
     ld [wC56D], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD780
     inc [hl]
     ret
@@ -344,7 +344,7 @@ Func_01C_4258:: ; heuristic: follows a terminator; C0
     ld a, $87
     ld [wC56D], a
     ld a, $F8
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD780
     inc [hl]
     xor a, a
@@ -746,12 +746,12 @@ Jump_01C_449B::
 ; 5 call sites from 5 routines (e.g. Func_01C_4001, Func_01C_6A71, Func_01C_453B, Func_01C_40EA, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_01C_449F::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a
@@ -1065,7 +1065,7 @@ Jump_01C_46AA::
     or a, c
     jr nz, Jump_01C_46AA
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_01C_4316
     ld a, [wIsCGB]
@@ -4496,7 +4496,7 @@ Jump_01C_5C0C::
     ld b, h
     pop de
     ld a, e
-    call Func_000_16AA
+    call Multiply8By16
     ld a, e
     ld [wD7D0], a
     ld a, h
@@ -4925,7 +4925,7 @@ Jump_01C_5F00::
     ld a, $09
     call Func_01C_6CAB
     ld a, $0A
-    call Func_000_16E2
+    call Divide24ByA
     ld bc, wD7F1
     ld a, l
     ld [bc], a
@@ -4976,9 +4976,9 @@ Func_01C_5F3E::
     inc hl
     ld b, [hl]
     pop af
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     pop bc
     ret
 
@@ -6232,10 +6232,10 @@ Func_01C_6A8E::
 
 ; 1 call site from 1 routine (e.g. Func_01C_4605)
 ; reads: wIsCGB
-; points at: wC364, wC198, wD1CC, wD000, wD787
+; points at: wC364, wBGMapShadow, wD1CC, wD000, wD787
 Func_01C_6AAC::
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_01C_4316
     ld a, [wIsCGB]
@@ -6505,7 +6505,7 @@ Jump_01C_6D03::
     or a, c
     jr nz, Jump_01C_6D03
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_01C_4316
     ld a, [wIsCGB]

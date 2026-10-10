@@ -109,7 +109,7 @@ DEF wC194 EQU $C194
 DEF wC195 EQU $C195
 DEF wC196 EQU $C196
 DEF wC197 EQU $C197
-DEF wC198 EQU $C198
+DEF wBGMapShadow EQU $C198 ; 32 x 18 byte buffer copied to vBGMap0 (20 x 18 visible) by CopyShadowToBGMap; filled with $C3 (reading)
 DEF wC19A EQU $C19A
 DEF wC19E EQU $C19E
 DEF wC19F EQU $C19F
@@ -887,9 +887,9 @@ DEF wCB43 EQU $CB43
 DEF wCB74 EQU $CB74
 DEF wCB75 EQU $CB75
 DEF wCB76 EQU $CB76
-DEF wCB7D EQU $CB7D
+DEF wSpriteSlotCount EQU $CB7D ; number of 8-byte slots DrawSpriteSlots draws (reading)
 DEF wCB7E EQU $CB7E
-DEF wCB7F EQU $CB7F
+DEF wSpriteSlots EQU $CB7F ; start of the 8-byte slot array DrawSpriteSlots reads (reading)
 DEF wCB80 EQU $CB80
 DEF wCB81 EQU $CB81
 DEF wCB82 EQU $CB82
@@ -1676,14 +1676,14 @@ DEF hScrollX EQU $FFA1 ; copied to rSCX by Func_000_07E0 and by the LCD handler 
 DEF hFFA2 EQU $FFA2
 DEF hScrollY EQU $FFA5 ; copied to rSCY by Func_000_07E0 and by the LCD handler (reading)
 DEF hFFA6 EQU $FFA6
-DEF hFFA9 EQU $FFA9
+DEF hSpriteOriginX EQU $FFA9 ; added to each entry's X (+8) by BuildOamFromSpriteTable (reading)
 DEF hFFAA EQU $FFAA
-DEF hFFAB EQU $FFAB
+DEF hSpriteOriginY EQU $FFAB ; added to each entry's Y (+$10) by BuildOamFromSpriteTable (reading)
 DEF hFFAC EQU $FFAC
-DEF hFFAD EQU $FFAD
-DEF hFFAE EQU $FFAE
-DEF hFFAF EQU $FFAF
-DEF hFFB0 EQU $FFB0
+DEF hSpriteSetIndex EQU $FFAD ; first-level index into the table BuildOamFromSpriteTable reads (reading)
+DEF hSpriteSubIndex EQU $FFAE ; second-level index into the table BuildOamFromSpriteTable reads (reading)
+DEF hSpriteTileOffset EQU $FFAF ; added to each entry's tile number by BuildOamFromSpriteTable (reading)
+DEF hSpriteAttrXor EQU $FFB0 ; XORed into each entry's attribute byte by BuildOamFromSpriteTable (reading)
 DEF hOamNextEntry EQU $FFB1 ; index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28 (reading)
 DEF hFFB3 EQU $FFB3
 DEF hFFB4 EQU $FFB4

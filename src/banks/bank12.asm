@@ -978,7 +978,7 @@ Func_012_45FA:: ; heuristic: target of a pointer table; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC924
-; writes: wC924, wCB7D
+; writes: wC924, wSpriteSlotCount
 ; points at: wCB8B, wC923
 Func_012_461A:: ; heuristic: target of a pointer table; C0
     ld a, [wC924]
@@ -989,21 +989,21 @@ Func_012_461A:: ; heuristic: target of a pointer table; C0
     cp a, $10
     jr nz, Jump_012_4630
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_012_4644
 
 Jump_012_4630::
     cp a, $20
     jr nz, Jump_012_463B
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_012_4644
 
 Jump_012_463B::
     cp a, $30
     jr nz, Jump_012_4644
     ld a, $04
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_012_4644::
     ld hl, wCB8B
@@ -1080,14 +1080,14 @@ Jump_012_4692::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC527, wCB7D, wC90D, wC924
+; writes: wC527, wSpriteSlotCount, wC90D, wC924
 ; points at: wCB8C, wCB9C, wCBAC, wCBBC, wC923
 Func_012_469E:: ; heuristic: target of a pointer table; C0
     farcall Func_085_5B53
     ld a, $7F
     ld [wC527], a
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wCB8C
     call SetBit2AtHL_B12
     ld hl, wCB9C
@@ -1639,7 +1639,7 @@ Func_012_4A9A::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC91C, wC91D, wC91E
-; writes: hFF90, hFF8F, hFF92, hFF8E, hFF91, wCBCF, wCB7D, wC90D, ...
+; writes: hFF90, hFF8F, hFF92, hFF8E, hFF91, wCBCF, wSpriteSlotCount, wC90D, ...
 Func_012_4AC0:: ; heuristic: target of a pointer table; C0
     ld a, $0D
     ldh [hFF90], a
@@ -1654,7 +1654,7 @@ Func_012_4AC0:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wCBCF], a
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     xor a, a
     ld [wC90D], a
     ld a, $01
@@ -1724,7 +1724,7 @@ Func_012_4B19:: ; heuristic: target of a pointer table; C0
 Jump_012_4B56::
     ld b, a
     ld a, $0A
-    call Func_000_16BF
+    call DivideBByA
     ld hl, wC17E
     push af
     ld a, b
@@ -1906,7 +1906,7 @@ Func_012_4C69:: ; heuristic: target of a pointer table; C0
     ld a, $00
     ld [wC8C6], a
     ld a, $0F
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $01
     ld [wC936], a
     ld hl, wC923
@@ -2516,13 +2516,13 @@ Func_012_501E:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB7D, wCD04, hFF93, hFF94, hFF95
+; reads: wSpriteSlotCount, wCD04, hFF93, hFF94, hFF95
 ; writes: hFF98, hFF93, hFF94, hFF95, hFF96, hFF97, wC921
 ; points at: wCB8A, wC923
 Func_012_5038:: ; heuristic: target of a pointer table; C0
     xor a, a
     ldh [hFF98], a
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld c, a
 
 Jump_012_503F::
@@ -2749,7 +2749,7 @@ Func_012_51C0::
     ld a, $01
     ld [wC8C6], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC5E0
     inc [hl]
     ld a, $04
@@ -3466,7 +3466,7 @@ Jump_012_5875::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC921
-; writes: wCB7D, wC921
+; writes: wSpriteSlotCount, wC921
 ; points at: wC923
 Func_012_589B:: ; heuristic: target of a pointer table; C0
     ld a, [wC921]
@@ -3490,12 +3490,12 @@ Jump_012_58B2::
 
 Jump_012_58B8::
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_012_58C3
 
 Jump_012_58BF::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_012_58C3::
     ld a, [wC921]
@@ -3969,7 +3969,7 @@ Jump_012_5BCB::
 
 ; 1 call site from 1 routine (e.g. Func_012_5B9A)
 ; reads: wC195, wC922, hScrollX, hFFA2, wC924, hScrollY, hFFA6, wC925
-; writes: hFFAD, hFFAE, hFFB0, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
+; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
 Func_012_5BD9::
     ld a, [wC195]
     ld a, $10
@@ -3977,13 +3977,13 @@ Func_012_5BD9::
     and a, $0F
     dec a
     add a, $23
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [wC922]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, $07
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, $70
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ldh a, [hScrollX]
     ld l, a
     ldh a, [hFFA2]
@@ -3992,7 +3992,7 @@ Func_012_5BD9::
     add a, $08
     add_a_to_hl
     ld a, l
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, h
     ldh [hFFAA], a
     ldh a, [hScrollY]
@@ -4003,7 +4003,7 @@ Func_012_5BD9::
     add a, $10
     add_a_to_hl
     ld a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, h
     ldh [hFFAC], a
     farcall Func_07F_700A
@@ -4630,7 +4630,7 @@ Jump_012_6017::
     ld c, a
 
 Jump_012_6025::
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     or a, a
     jr z, Jump_012_6037
     ld a, [wCB8A]
@@ -4786,32 +4786,32 @@ Jump_012_60FD::
 
 ; 4 call sites from 2 routines (e.g. Func_012_5EE7, Func_012_5DB6)
 ; reads: wC195, hFF98, hScrollX, hFFA2, wC924, hScrollY, hFFA6, wC925
-; writes: hFFAD, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
-; points at: hFFAD
+; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
+; points at: hSpriteSetIndex
 Func_012_6114::
     ld a, $21
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [wC195]
     and a, $0F
     dec a
     jr z, Jump_012_6124
-    ld hl, hFFAD
+    ld hl, hSpriteSetIndex
     inc [hl]
 
 Jump_012_6124::
     ld a, $07
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ldh a, [hFF98]
     cp a, $01
     jr nz, Jump_012_6132
     ld a, $27
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
 
 Jump_012_6132::
     xor a, a
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, $70
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ldh a, [hScrollX]
     ld l, a
     ldh a, [hFFA2]
@@ -4820,7 +4820,7 @@ Jump_012_6132::
     add a, $08
     add_a_to_hl
     ld a, l
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, h
     ldh [hFFAA], a
     ldh a, [hScrollY]
@@ -4831,7 +4831,7 @@ Jump_012_6132::
     add a, $10
     add_a_to_hl
     ld a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, h
     ldh [hFFAC], a
     farcall Func_07F_700A
@@ -6267,7 +6267,7 @@ Jump_012_69C9::
     ld [rRAMB], a
     pop af
     ld bc, $0195
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $00
     ld l, a
@@ -6498,22 +6498,22 @@ Func_012_6B22:: ; heuristic: follows a terminator; C0
 
 ; 11 call sites from 2 routines (e.g. Func_05F_73A8, Func_073_7024)
 ; reads: hFFC6, wC5F0, wC5F1, wC949
-; writes: hFFAF, hFFB0, hFFAE, hFFAD, hFFA9, hFFAB
+; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
 Func_012_6B33:: ; heuristic: follows a terminator; C0
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_012_6B42
     ld a, $30
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, $03
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     jr Jump_012_6B4A
 
 Jump_012_6B42::
     ld a, $70
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, $07
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
 
 Jump_012_6B4A::
     ld a, [wC5F0]
@@ -6525,15 +6525,15 @@ Jump_012_6B4A::
     ld hl, Data_012_6B7A
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, $1B
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, $40
     add a, $08
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, [wC949]
     add a, $10
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     farcall Func_07F_700A
     ret
 
@@ -7060,7 +7060,7 @@ Jump_012_6EB4::
 
 ; 1 call site from 1 routine (e.g. Func_012_6893)
 ; reads: wC468, hScrollX, hFFA2, hScrollY, hFFA6
-; writes: hFFAF, hFFAD, hFFB0, hFFA9, hFFAA, hFFAB, hFFAC, hFFAE
+; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSubIndex
 ; points at: wCBCF
 Func_012_6EB7::
     ld a, [wC468]
@@ -7074,7 +7074,7 @@ Func_012_6EB7::
 
 ; 9 call sites from 5 routines (e.g. Func_002_4AE0, Func_002_4C4E, Func_024_567C, Func_0F1_5B8E, ...)
 ; reads: wC468, hScrollX, hFFA2, hScrollY, hFFA6
-; writes: hFFAF, hFFAD, hFFB0, hFFA9, hFFAA, hFFAB, hFFAC, hFFAE
+; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSubIndex
 ; points at: wCBCF
 Func_012_6EC6::
     ld a, [wC468]
@@ -7088,11 +7088,11 @@ Func_012_6EC6::
 Jump_012_6ED3::
     inc de
     ld a, [de]
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     inc de
     ld a, [de]
     and a, $7F
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [de]
     bit 7, a
     jr z, Jump_012_6EE7
@@ -7101,12 +7101,12 @@ Jump_012_6ED3::
 
 Jump_012_6EE7::
     xor a, a
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
 
 Jump_012_6EEA::
     inc de
     ld a, [de]
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld l, e
     ld h, d
     inc hl
@@ -7115,7 +7115,7 @@ Jump_012_6EEA::
     ld d, a
     ldh a, [hScrollX]
     add a, d
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFAA], a
@@ -7125,7 +7125,7 @@ Jump_012_6EEA::
     ld d, a
     ldh a, [hScrollY]
     add a, d
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ldh a, [hFFA6]
     adc a, $00
     ldh [hFFAC], a
@@ -7134,7 +7134,7 @@ Jump_012_6EEA::
 
 ; 1 call site from 1 routine (e.g. Func_012_6EC6)
 ; reads: wCBD6
-; writes: hFFAE
+; writes: hSpriteSubIndex
 ; points at: wCBD5
 Func_012_6F17::
     push af
@@ -7147,7 +7147,7 @@ Func_012_6F17::
     ld hl, Data_012_6FF2
     call Func_012_6F96
     ld a, [wCBD6]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F2F::
@@ -7156,7 +7156,7 @@ Jump_012_6F2F::
     ld hl, Data_012_6FF7
     call Func_012_6F96
     ld a, [wCBD6]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F3F::
@@ -7165,7 +7165,7 @@ Jump_012_6F3F::
     ld hl, Data_012_6FFA
     call Func_012_6F96
     ld a, [wCBD6]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F4F::
@@ -7177,7 +7177,7 @@ Jump_012_6F4F::
     ld hl, Data_012_700E
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F68::
@@ -7186,7 +7186,7 @@ Jump_012_6F68::
     ld hl, Data_012_701E
     call Func_012_6F96
     ld a, [wCBD6]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F78::
@@ -7195,7 +7195,7 @@ Jump_012_6F78::
     ld hl, Data_012_7023
     call Func_012_6F96
     ld a, [wCBD6]
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F88::
@@ -7203,7 +7203,7 @@ Jump_012_6F88::
     jr nz, Jump_012_6F95
     ld hl, Data_012_7026
     call Func_012_6FBE
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F95::
@@ -7512,7 +7512,7 @@ Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_012_6893, Func_002_4C4E)
 ; reads: wC468, wC8FE, wC956, wCCE9, wCC44, hScrollX, hFFA2, wC8FF, ...
-; writes: hFFAD, hFFAE, hFFAF, hFFB0, hFFA9, hFFAA, hFFAB, hFFAC
+; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
 Func_012_722A::
     ld a, [wC468]
     bit 7, a
@@ -7523,13 +7523,13 @@ Func_012_722A::
     ld hl, Data_012_7308
     add_a_to_hl
     ld a, [hl+]
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     xor a, a
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, $40
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, $04
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, [wC956]
     bit 7, a
     jp nz, Jump_012_72D5
@@ -7555,7 +7555,7 @@ Jump_012_7261::
 
 Jump_012_7273::
     ld a, e
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, d
     ldh [hFFAA], a
     ldh a, [hScrollY]
@@ -7573,7 +7573,7 @@ Jump_012_7273::
 
 Jump_012_728D::
     ld a, e
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, d
     ldh [hFFAC], a
     farcall Func_07F_700A
@@ -7597,7 +7597,7 @@ Jump_012_729A::
 
 Jump_012_72B4::
     ld a, e
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, d
     ldh [hFFAA], a
     ldh a, [hScrollY]
@@ -7613,7 +7613,7 @@ Jump_012_72B4::
 
 Jump_012_72C8::
     ld a, e
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, d
     ldh [hFFAC], a
     farcall Func_07F_700A
@@ -7633,7 +7633,7 @@ Jump_012_72D5::
 
 Jump_012_72E5::
     ld a, e
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, d
     ldh [hFFAA], a
     ldh a, [hScrollY]
@@ -7649,7 +7649,7 @@ Jump_012_72E5::
 
 Jump_012_72FB::
     ld a, e
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, d
     ldh [hFFAC], a
     farcall Func_07F_700A
@@ -8607,7 +8607,7 @@ Jump_012_78D0::
     ld c, l
     ld b, h
     ld a, $1E
-    call Func_000_16AA
+    call Multiply8By16
     push hl
     ld a, $0A
     ld [rRAMG], a
@@ -9097,7 +9097,7 @@ Func_012_7B9F::
 
 ; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7)
 ; reads: wC8FE, wC91F, wCC44, wC935, wC5E8, wCB83, wCB84, wC634
-; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wCB7F, wCB80, wCB82, ...
+; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wSpriteSlots, wCB80, wCB82, ...
 Func_012_7BB0::
     call Func_012_7D5E
     or a, a
@@ -9117,7 +9117,7 @@ Func_012_7BB0::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC935, hFF90, wC5E8, wCB83, wCB84, wC634
-; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wCB7F, wCB80, wCB82, ...
+; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wSpriteSlots, wCB80, wCB82, ...
 Func_012_7BCC:: ; heuristic: follows a terminator; C0
     ld a, [wC935]
     and a, $0F
@@ -9204,7 +9204,7 @@ Jump_012_7C3B::
     cp a, $01
     ret z
     ld a, $03
-    ld [wCB7F], a
+    ld [wSpriteSlots], a
     ld a, $01
     ld [wCB80], a
     xor a, a
@@ -9229,7 +9229,7 @@ Jump_012_7C3B::
 
 Jump_012_7CA1::
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wC935]
     and a, $0F
     ld hl, Data_012_7D46
@@ -9690,7 +9690,7 @@ Jump_012_7F49::
     ld a, [wC619]
     ld e, a
     ld a, $0A
-    call Func_000_16E2
+    call Divide24ByA
 
 Jump_012_7F5A::
     ld a, [wC617]

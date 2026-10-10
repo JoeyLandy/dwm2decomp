@@ -61,12 +61,12 @@ Jump_0F2_4075::
     and a, $03
     jr nz, Jump_0F2_4075
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $02
     ldh [hFFB9], a
     ld a, $03
@@ -330,8 +330,8 @@ Jump_0F2_422D::
 
 ; 1 call site from 1 routine (e.g. Func_0F2_40A2)
 ; reads: wC5C7, wIsCGB
-; writes: hFFC6, wCBCF, wCBD3, wCBD4, wCB7D, wC527
-; points at: wCB7F, wCB8F, hFFC6
+; writes: hFFC6, wCBCF, wCBD3, wCBD4, wSpriteSlotCount, wC527
+; points at: wSpriteSlots, wCB8F, hFFC6
 Func_0F2_4248::
     ld de, $0000
     call TestFlagBit
@@ -343,7 +343,7 @@ Jump_0F2_4255::
     ld hl, Data_0F2_430E
 
 Jump_0F2_4258::
-    ld de, wCB7F
+    ld de, wSpriteSlots
     ld b, $10
     call Func_0F2_42D9
     ld a, [wC5C7]
@@ -397,7 +397,7 @@ Jump_0F2_42A2::
     ld a, $40
     ld [wCBD4], a
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_0F2_42D8
@@ -466,12 +466,12 @@ Func_0F2_434E:: ; address name
 ; 1 call site from 1 routine (e.g. Func_0F2_4001)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_0F2_436F::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a
@@ -2060,7 +2060,7 @@ Func_0F2_5181:: ; heuristic: follows a terminator; C0
     ld a, [wD7F2]
     ld b, a
     ld a, $03
-    call Func_000_16AA
+    call Multiply8By16
     ld de, Data_0F2_51C3
     add hl, de
     ld c, $03

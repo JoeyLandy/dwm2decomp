@@ -15,9 +15,9 @@ Func_003_4001::
     jp Jump_000_077A
 
 ; 1 call site from 1 routine (e.g. Func_000_048A)
-; reads: wC5DD, wC5DC, wIsCGB, hScrollY, hScrollX, wC933, wCC37, wCB7D
-; writes: wCB7D, wC526, rVBK, hScrollX, hScrollY, wC46D, wC46E, wC46F, ...
-; points at: wC49F, wC198, wC5DD, wC0A0, wD09D
+; reads: wC5DD, wC5DC, wIsCGB, hScrollY, hScrollX, wC933, wCC37, wSpriteSlotCount
+; writes: wSpriteSlotCount, wC526, rVBK, hScrollX, hScrollY, wC46D, wC46E, wC46F, ...
+; points at: wC49F, wBGMapShadow, wC5DD, wC0A0, wD09D
 Func_003_4015::
     ld a, [wC5DD]
     bit 7, a
@@ -41,7 +41,7 @@ Jump_003_4036::
     or a, a
     jp nz, Jump_003_40BE
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_003_4073
@@ -69,7 +69,7 @@ Jump_003_4064::
     ldh [rVBK], a
 
 Jump_003_4073::
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -102,13 +102,13 @@ Jump_003_4073::
 Jump_003_40A6::
     ld l, e
     ld h, d
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
-    call Func_003_42E3
+    call CopyRectToBGMap
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC5DD
     inc [hl]
     ret
@@ -144,7 +144,7 @@ Jump_003_40BE::
     ld [rRAMG], a
     xor a, a
     ld [wD095], a
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -219,10 +219,10 @@ Jump_003_414C::
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld [wC83A], a
     ld a, $00
-    ld [wCB7F], a
+    ld [wSpriteSlots], a
     ld a, $01
     ld [wCB80], a
     ld a, $05
@@ -326,17 +326,19 @@ Jump_003_427D::
     call Func_003_7AE8
     ret
 
+; fills the $240 bytes at wBGMapShadow with $C3 (the same 12 bytes appear in 2 banks)
 ; 14 call sites from 14 routines (e.g. Func_003_7692, Func_003_641E, Func_003_581E, Func_003_499B, ...)
-; points at: wC198
-Func_003_4284::
-    ld hl, wC198
+; points at: wBGMapShadow
+ClearBGMapShadow_Bank03::
+Func_003_4284:: ; address name
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_003_6526, Func_003_649C, Func_003_5874)
-; points at: wC198
+; points at: wBGMapShadow
 Func_003_4290::
     ld e, [hl]
     inc hl
@@ -347,7 +349,7 @@ Func_003_4290::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
 
@@ -370,7 +372,7 @@ Jump_003_42A0::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC198
+; points at: wBGMapShadow
 Func_003_42B0:: ; heuristic: follows a terminator; C0
     ld e, [hl]
     inc hl
@@ -381,7 +383,7 @@ Func_003_42B0:: ; heuristic: follows a terminator; C0
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
 
@@ -410,15 +412,19 @@ Jump_003_42CB::
     jr nz, Jump_003_42BE
     ret
 
+; copies the 20 x 18 tiles at the start of wBGMapShadow to vBGMap0 (CopyRectToBGMap with BC = $1412)
 ; 36 call sites from 13 routines (e.g. Func_003_4015, Func_003_5171, Func_003_4339, Func_003_6A60, ...)
-; points at: wC198
-Func_003_42DA::
+; points at: wBGMapShadow
+CopyShadowToBGMap::
+Func_003_42DA:: ; address name
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
 
+; HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is masked with $9B)
 ; 24 call sites from 13 routines (e.g. Func_003_4015, Func_003_6A60, Func_003_6B5E, Func_003_76D5, ...)
-Func_003_42E3::
+CopyRectToBGMap::
+Func_003_42E3:: ; address name
     push bc
     push hl
     push de
@@ -457,7 +463,7 @@ Jump_003_42F9::
     ld h, a
     pop bc
     dec c
-    jr nz, Func_003_42E3
+    jr nz, CopyRectToBGMap
     ret
 
 ; 4 call sites from 2 routines (e.g. Func_003_4A36, Func_003_5171)
@@ -494,7 +500,7 @@ Func_003_432F::
 ; 12 call sites from 7 routines (e.g. Func_003_4659, Func_003_6A60, Func_003_6B5E, Func_003_5E68, ...)
 ; reads: hFF8E, hFF91, wIsCGB
 ; writes: wC8C8, wC8C9, wC8CA, rRAMG, wC526, wC5E0, wC5DB
-; points at: wC49F, wC198, wC5E0
+; points at: wC49F, wBGMapShadow, wC5E0
 Func_003_4339::
     call Func_003_4389
     ldh a, [hFF8E]
@@ -517,11 +523,11 @@ Func_003_4339::
     call Func_000_0829
 
 Jump_003_4367::
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC5E0
     inc [hl]
     farcall Func_002_4628
@@ -1066,7 +1072,7 @@ Jump_003_46B3::
     or a, a
     jr nz, Jump_003_46BF
     call Func_003_499B
-    call Func_003_42DA
+    call CopyShadowToBGMap
 
 Jump_003_46BF::
     ld hl, wC0A1
@@ -1092,8 +1098,8 @@ Jump_003_46CD::
     call Func_003_4A84
     ld hl, vBGMap0
     ld bc, $1412
-    ld de, wC198
-    call Func_003_42E3
+    ld de, wBGMapShadow
+    call CopyRectToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -1152,7 +1158,7 @@ Jump_003_473F::
     or a, a
     jr nz, Jump_003_474B
     call Func_003_49C2
-    call Func_003_42DA
+    call CopyShadowToBGMap
 
 Jump_003_474B::
     ld hl, wC0A1
@@ -1170,7 +1176,7 @@ Jump_003_4759::
     ld hl, vBGMap0 + $21
     ld bc, $1311
     ld de, wC1B9
-    call Func_003_42E3
+    call CopyRectToBGMap
     call Func_003_4F6F
     ld hl, wC0A1
     inc [hl]
@@ -1235,7 +1241,7 @@ Jump_003_47CC::
     or a, a
     jr nz, Jump_003_47D8
     call Func_003_49E9
-    call Func_003_42DA
+    call CopyShadowToBGMap
 
 Jump_003_47D8::
     ld hl, wC0A1
@@ -1253,7 +1259,7 @@ Jump_003_47E6::
     ld hl, vBGMap0 + $21
     ld bc, $1311
     ld de, wC1B9
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -1316,7 +1322,7 @@ Jump_003_4850::
     or a, a
     jr nz, Jump_003_485C
     call Func_003_4A08
-    call Func_003_42DA
+    call CopyShadowToBGMap
 
 Jump_003_485C::
     ld hl, wC0A1
@@ -1334,7 +1340,7 @@ Jump_003_486A::
     ld hl, vBGMap0 + $21
     ld bc, $1311
     ld de, wC1B9
-    call Func_003_42E3
+    call CopyRectToBGMap
     call Func_003_4FBB
     ld hl, wC0A1
     inc [hl]
@@ -1405,7 +1411,7 @@ Jump_003_48EB::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_48EF::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_4001
     ld e, $01
@@ -1421,7 +1427,7 @@ Func_003_48EF::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_4917::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_4001
     ld e, $04
@@ -1437,7 +1443,7 @@ Func_003_4917::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_493F::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_4001
     ld e, $07
@@ -1451,7 +1457,7 @@ Func_003_493F::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_495F::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_4001
     ld e, $09
@@ -1466,7 +1472,7 @@ Func_003_495F::
 ; reads: wC6FD
 ; points at: wC0A4
 Func_003_497F::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld a, [wC6FD]
     add a, $2D
     ld e, a
@@ -1479,7 +1485,7 @@ Func_003_497F::
 
 ; 2 call sites from 2 routines (e.g. Func_003_4208, Func_003_4659)
 Func_003_499B::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $01
@@ -1493,7 +1499,7 @@ Func_003_499B::
 
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 Func_003_49C2::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $04
@@ -1507,7 +1513,7 @@ Func_003_49C2::
 
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 Func_003_49E9::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $07
@@ -1519,7 +1525,7 @@ Func_003_49E9::
 
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 Func_003_4A08::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $09
@@ -1546,7 +1552,7 @@ Func_003_4A36::
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1657,7 +1663,7 @@ Func_003_4ACE::
     ld c, $56
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     push hl
     ld a, [hl]
     ld l, a
@@ -1676,7 +1682,7 @@ Jump_003_4B0A::
     ld c, $55
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
     jr z, Jump_003_4B27
@@ -1691,7 +1697,7 @@ Jump_003_4B27::
     ld c, $0E
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     and a, $01
     add a, $CC
@@ -1732,7 +1738,7 @@ Func_003_4B52::
     ld c, $63
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     push hl
     ld h, [hl]
@@ -1822,7 +1828,7 @@ Func_003_4BE8::
     ld c, $A4
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     ld [wStringIndex], a
     ld a, $0B
@@ -1833,7 +1839,7 @@ Func_003_4BE8::
     ld c, $6F
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     cp a, $40
     jr c, Jump_003_4C1B
@@ -1894,7 +1900,7 @@ Jump_003_4C47::
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld h, [hl]
     ld [wStringIndex], a
@@ -1915,7 +1921,7 @@ Jump_003_4C47::
     ld c, $6D
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
     jr z, Jump_003_4CB8
@@ -1940,14 +1946,14 @@ Jump_003_4CB8::
     ld c, $0F
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     call Func_003_4414
     ld hl, vTiles2 + $470
     call Func_003_43CC
     ld c, $58
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld [wC8C0], a
     ld e, a
@@ -1965,7 +1971,7 @@ Jump_003_4CB8::
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld [wD006], a
     ld a, [hl]
@@ -1976,14 +1982,14 @@ Jump_003_4CB8::
     ld c, $56
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     ldh [hFFC7], a
     farcall Func_019_7380
     ld c, $56
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop de
     pop bc
     ld a, [hl+]
@@ -2019,7 +2025,7 @@ Func_003_4D57::
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld [wD006], a
     ld a, [hl]
@@ -2035,7 +2041,7 @@ Func_003_4D57::
     ld c, $34
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, $00
     call Func_003_4DBE
@@ -2109,7 +2115,7 @@ Func_003_4E02::
     ld c, $0D
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     swap a
     and a, $0F
@@ -2328,7 +2334,7 @@ Func_003_4F6F::
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld [wD7F1], a
     ld a, [hl]
@@ -2455,7 +2461,7 @@ Jump_003_5057::
     push bc
     ld a, c
     ld c, $0B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -2533,7 +2539,7 @@ Func_003_50DD::
     ld e, a
     ld a, c
     ld c, $5B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     push hl
     ld h, [hl]
@@ -2604,7 +2610,7 @@ Func_003_5137::
     ld [wC530], a
     ld a, c
     ld c, $0B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld h, [hl]
     ld [wStringIndex], a
@@ -2626,7 +2632,7 @@ Func_003_5171::
     push hl
     ld a, c
     ld c, $0E
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     pop hl
     and a, $01
@@ -2654,7 +2660,7 @@ Data_003_51AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $66, $C3, $86, $C3, $A6, $C3
 
 Jump_003_51B0::
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_003_51FB
@@ -2783,7 +2789,7 @@ Jump_003_5288::
     call Func_003_581E
     call Func_003_59DB
     call Func_003_5900
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -2874,7 +2880,7 @@ Jump_003_5340::
 
 Jump_003_5348::
     call Func_003_585D
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -2979,7 +2985,7 @@ Jump_003_53FC::
 
 Jump_003_5401::
     call Func_003_58E6
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3008,7 +3014,7 @@ Jump_003_542F::
     xor a, a
     ld [wC46D], a
     call Func_003_5874
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, [wC6FD]
     ld [wC0A2], a
     ld a, $01
@@ -3028,7 +3034,7 @@ Jump_003_5449::
     ld hl, vBGMap0 + $141
     ld bc, $0903
     ld de, wC2D9
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 Jump_003_5469::
@@ -3045,7 +3051,7 @@ Jump_003_5469::
     and a, $03
     ld [wD083], a
     ld c, $01
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld e, l
     ld d, h
     ld hl, wC140
@@ -3067,7 +3073,7 @@ Jump_003_549C::
 
 Jump_003_54A9::
     call Func_003_58A6
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3290,7 +3296,7 @@ Jump_003_564A::
     ld a, $6C
     call StoreWC60B
     call Func_003_7791
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -3319,12 +3325,12 @@ Jump_003_566D::
     ld a, [wC935]
     bit 7, a
     jr z, Jump_003_56AA
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld [wC96D], a
     ld a, [wCB7E]
     ld [wC96E], a
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld [wCB7E], a
 
 Jump_003_56AA::
@@ -3389,7 +3395,7 @@ Jump_003_5700::
     bit 7, a
     jr z, Jump_003_571F
     ld a, [wC96D]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wC96E]
     ld [wCB7E], a
 
@@ -3414,7 +3420,7 @@ Jump_003_572D::
 
 Jump_003_573F::
     call Func_003_58E6
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3440,7 +3446,7 @@ Jump_003_575F::
     ld a, $01
     ld [wC0A3], a
     call Func_003_58CF
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $6C
     call StoreWC60B
     ld hl, wC0A1
@@ -3526,7 +3532,7 @@ Jump_003_581A::
 ; reads: wC61D, wC0A7, wC0A6
 ; points at: wC2A6
 Func_003_581E::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $0B
     farcall Func_033_4001
     ld e, $0C
@@ -3878,7 +3884,7 @@ Jump_003_5A6E::
 Jump_003_5A72::
     ld b, c
     ld a, $04
-    call Func_000_16BF
+    call DivideBByA
     ld a, c
     and a, $03
     jr z, Jump_003_5A7E
@@ -3960,7 +3966,7 @@ Jump_003_5AEA::
     ld c, $5F
 
 Jump_003_5AED::
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     push hl
     ld h, [hl]
@@ -3997,7 +4003,7 @@ Jump_003_5B15::
     ld c, $69
 
 Jump_003_5B18::
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
 
 Jump_003_5B1B::
     deref_hl
@@ -4011,7 +4017,7 @@ Jump_003_5B1B::
 
 Jump_003_5B32::
     ld a, c
-    call Func_000_24C5
+    call MapIndexViaWC6FE
     call Func_000_2391
     ld c, a
     ld [wStringIndex], a
@@ -4064,7 +4070,7 @@ Jump_003_5B6D::
 Jump_003_5B85::
     ld a, c
     ld c, $A4
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     push af
     or a, a
@@ -4154,7 +4160,7 @@ Jump_003_5BF4::
 Jump_003_5BFA::
     ld a, [wC46D]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     call nz, Func_003_5C16
     bit 2, [hl]
@@ -4318,7 +4324,7 @@ Jump_003_5EA3::
     call Func_003_67B0
     ld a, $00
     ld [rRAMG], a
-    call Func_003_42DA
+    call CopyShadowToBGMap
 
 Jump_003_5EC8::
     ld a, [wC6FD]
@@ -4335,7 +4341,7 @@ Jump_003_5EC8::
     call Func_003_6432
     ld a, $00
     ld [rRAMG], a
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ret
 
 Jump_003_5EF0::
@@ -4357,7 +4363,7 @@ Jump_003_5EF0::
     call Func_003_6A60
     ld a, $00
     ld [rRAMG], a
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ret
 
 Jump_003_5F23::
@@ -4373,7 +4379,7 @@ Jump_003_5F23::
     ld a, [wC46D]
     and a, $03
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
     jr z, Jump_003_5F6F
@@ -4381,7 +4387,7 @@ Jump_003_5F23::
     jr z, Jump_003_5F6F
     ld a, [wC46D]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, Jump_003_5F6A
     ld a, $01
@@ -4414,7 +4420,7 @@ Jump_003_5F7C::
     ld hl, vBGMap0 + $1A0
     ld bc, $1405
     ld de, wC338
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -4457,7 +4463,7 @@ Jump_003_5FBD::
     ld [rRAMG], a
     call Func_003_6432
     call Func_003_6A60
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
@@ -4465,7 +4471,7 @@ Jump_003_5FBD::
     ld a, [wC46D]
     and a, $03
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld bc, $0800
 
 Jump_003_5FF2::
@@ -4487,7 +4493,7 @@ Jump_003_5FFB::
     call Func_003_6A60
     ld a, $00
     ld [rRAMG], a
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -4512,7 +4518,7 @@ Jump_003_601D::
     ld hl, vBGMap0 + $206
     ld bc, $0301
     ld de, wC39E
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 Jump_003_6052::
@@ -4531,7 +4537,7 @@ Jump_003_6052::
     ld hl, vBGMap0 + $206
     ld bc, $0301
     ld de, wC39E
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld a, $00
     ld [rRAMG], a
     ret
@@ -4581,7 +4587,7 @@ Jump_003_60C6::
     call Func_003_650C
     call Func_003_6432
     call Func_003_6A60
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -4620,7 +4626,7 @@ Jump_003_6103::
     call Func_003_650C
     call Func_003_6432
     call Func_003_6A60
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A0
     inc [hl]
     ret
@@ -4641,7 +4647,7 @@ Jump_003_6120::
     ld [rRAMG], a
     call Func_003_6432
     call Func_003_6A60
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, [wC6FD]
     ld [wC0A2], a
     ld hl, wC0A1
@@ -4665,7 +4671,7 @@ Jump_003_6149::
     ld hl, vBGMap0 + $141
     ld bc, $0703
     ld de, wC2D9
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 Jump_003_6178::
@@ -4683,10 +4689,10 @@ Jump_003_6178::
     ld [wD083], a
     call Func_003_6526
     call Func_003_664A
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, [wD083]
     ld c, $01
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld e, l
     ld d, h
     ld hl, wC140
@@ -4729,14 +4735,14 @@ Jump_003_61CE::
 Jump_003_61EA::
     call Func_003_6432
     call Func_003_6A60
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
     ld a, [wC46D]
     ld c, $01
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld e, l
     ld d, h
     ld hl, wC130
@@ -4829,7 +4835,7 @@ Jump_003_62B2::
     jr nz, Jump_003_62D8
     ld a, [wC46D]
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     ld a, l
     ld [wD08F], a
@@ -4845,7 +4851,7 @@ Jump_003_62DB::
     push hl
     ld a, [wC46D]
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop bc
     ld a, [hl]
     sub a, c
@@ -5019,7 +5025,7 @@ Jump_003_640F::
 
 ; 4 call sites from 4 routines (e.g. Func_003_4208, Func_003_657B, Func_003_5E68, Func_003_646F)
 Func_003_641E::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $1C
     farcall Func_033_4001
     ld e, $0C
@@ -5033,7 +5039,7 @@ Func_003_6432::
     ld a, [wC46D]
     and a, $03
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld d, h
     ld e, l
     ld a, [hl]
@@ -5044,7 +5050,7 @@ Jump_003_6443::
     ld de, Data_003_6A98
     ld bc, $0501
     ld hl, wC2A6
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 Jump_003_6450::
@@ -5075,7 +5081,7 @@ Func_003_646F::
     ld a, [wC46D]
     and a, $03
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
@@ -5090,7 +5096,7 @@ Func_003_646F::
 ; reads: wC46D, wCFEE, wC46E, wCFEC, wCFED
 ; points at: wC3A2, wC39E
 Func_003_649C::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $20
     farcall Func_033_4001
     ld e, $0C
@@ -5100,7 +5106,7 @@ Func_003_649C::
     ld a, [wC46D]
     and a, $03
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
@@ -5154,7 +5160,7 @@ Func_003_650C::
 ; reads: wC46E, wC46F, wCFEC, wCFED
 Func_003_6526::
     call FillTilesFromRequest
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $20
     farcall Func_033_4001
     ld e, $0C
@@ -5250,7 +5256,7 @@ Func_003_65E3::
     ld a, [wC46D]
     and a, $03
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [wC46E]
     and a, $07
     ld c, a
@@ -5283,7 +5289,7 @@ Jump_003_6625::
     ld a, [wC46D]
     and a, $03
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
 
 Jump_003_6632::
@@ -5324,7 +5330,7 @@ Jump_003_6662::
 Jump_003_6664::
     ld a, [wC46F]
     and a, $03
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     push hl
     ld h, [hl]
@@ -5341,7 +5347,7 @@ Jump_003_6664::
     ld a, [wC46F]
     and a, $03
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, $C3
     ld [wC2DE], a
     ld [wC2DF], a
@@ -5385,7 +5391,7 @@ Func_003_66BB::
     ld a, [wC46D]
     and a, $03
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -5452,7 +5458,7 @@ Func_003_67B0::
     ld a, [wC46D]
     and a, $03
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld d, h
     ld e, l
     ld a, [hl]
@@ -5554,7 +5560,7 @@ Func_003_69C3::
     ld a, [wC46D]
     and a, $03
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld c, $00
 
 Jump_003_69CF::
@@ -5678,7 +5684,7 @@ Func_003_6A60::
     ld a, [wC46D]
     and a, $03
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld d, h
     ld e, l
     ld a, [hl]
@@ -5689,7 +5695,7 @@ Jump_003_6A71::
     ld de, Data_003_6A98
     ld bc, $0501
     ld hl, wC2A6
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 Jump_003_6A7E::
@@ -5730,7 +5736,7 @@ Jump_003_6AAF::
 
 Jump_003_6ABB::
     call Func_003_7692
-    call Func_003_42DA
+    call CopyShadowToBGMap
     call Func_000_222B
     farcall Func_016_7A64
     ld a, $06
@@ -5790,7 +5796,7 @@ Jump_003_6B33::
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld a, $08
     ld [wStringCategory], a
     ld a, $0D
@@ -5863,7 +5869,7 @@ Jump_003_6B8D::
     ld a, $0C
     ld [hl+], a
     call FillTilesFromRequest
-    call Func_003_42DA
+    call CopyShadowToBGMap
     call Func_003_779A
     call Func_003_78CB
     ld hl, wC0A1
@@ -5951,9 +5957,9 @@ Jump_003_6C52::
 Jump_003_6C6E::
     call Func_003_76C9
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0709
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -6193,7 +6199,7 @@ Jump_003_6DFB::
     ld hl, vBGMap0 + $E0
     ld de, wC278
     ld bc, $0605
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld a, $6C
     call StoreWC60B
     ld a, $02
@@ -6237,11 +6243,11 @@ Jump_003_6E56::
     ld hl, vBGMap0 + $80
     ld de, wC218
     ld bc, $0609
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_003_42E3
+    call CopyRectToBGMap
     call Func_003_779A
     ld a, $02
     ld [wC0A2], a
@@ -6311,7 +6317,7 @@ Jump_003_6EE2::
     xor a, a
     ld [wC0A8], a
     call Func_003_7726
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $04
     ld [wC0A2], a
     ld a, $01
@@ -6340,14 +6346,14 @@ Jump_003_6F00::
     ld hl, vBGMap0 + $EA
     ld de, wC282
     ld bc, $090A
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
     ld a, [wC0A8]
     ld c, $0E
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     swap a
     and a, $03
@@ -6391,7 +6397,7 @@ Jump_003_6F6F::
     ld [rRAMB], a
     ld a, [wC0A8]
     ld c, $0E
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [wC46E]
     and a, $03
     swap a
@@ -6437,7 +6443,7 @@ Jump_003_6FBE::
 
 Jump_003_6FC6::
     call Func_003_7743
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, [wC834]
     ld [wC46E], a
     ld hl, wC0A1
@@ -6586,7 +6592,7 @@ Jump_003_70A4::
     ld [wC0A6], a
     ld [wC0A8], a
     call Func_003_774F
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6689,7 +6695,7 @@ Jump_003_716F::
     ld de, wC2C0
     ld hl, vBGMap0 + $128
     ld bc, $0C09
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6719,7 +6725,7 @@ Jump_003_71AE::
     xor a, a
     ld [wC46E], a
     call Func_003_7281
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     dec [hl]
     ld hl, wC0A1
@@ -6791,7 +6797,7 @@ Func_003_7202::
     ld de, wC1FB
     ld hl, vBGMap0 + $63
     ld bc, $1005
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 Jump_003_7255::
@@ -6854,7 +6860,7 @@ Func_003_7281::
     ld a, [hl]
     push af
     ld c, $0B
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld [wStringIndex], a
     ld a, [hl+]
@@ -6933,7 +6939,7 @@ Func_003_7281::
     ld hl, vBGMap0 + $149
     ld de, wC2E1
     ld bc, $0A07
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_7145, Func_003_705B)
@@ -7088,7 +7094,7 @@ Jump_003_746C::
     call HLToDecimalDigits
     ld de, wC2E6
     call Func_000_2123
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -7117,7 +7123,7 @@ Jump_003_7487::
     ld de, wC200
     ld hl, vBGMap0 + $68
     ld bc, $0601
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 Jump_003_74C2::
@@ -7215,7 +7221,7 @@ Jump_003_7501::
     ld [wC52E], a
     ld a, $C3
     ld [wC1F9], a
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $00
     ld [wStringCategory], a
     ld a, $25
@@ -7239,7 +7245,7 @@ Jump_003_7571::
     ld a, $6C
     call StoreWC60B
     call Func_003_7791
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -7330,17 +7336,17 @@ Jump_003_7630::
 
 Jump_003_7633::
     ld bc, $0240
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld a, $C3
     call FillBytes
-    call Func_003_42DA
+    call CopyShadowToBGMap
     ld a, $06
     ld [wC0A1], a
     ret
 
 ; 7 call sites from 1 routine (e.g. Func_003_74E2)
 ; reads: wD0D5, wD10A
-; writes: rRAMG, rRAMB, hFFAD, hFFAE, hFFAF, hFFB0, hFFA9, hFFAA, ...
+; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hFFAA, ...
 Func_003_7647::
     ld a, $0A
     ld [rRAMG], a
@@ -7353,19 +7359,19 @@ Func_003_7647::
     or a, a
     jr z, Jump_003_7689
     ld a, $29
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     xor a, a
-    ldh [hFFAE], a
-    ldh [hFFAF], a
-    ldh [hFFB0], a
+    ldh [hSpriteSubIndex], a
+    ldh [hSpriteTileOffset], a
+    ldh [hSpriteAttrXor], a
     ld hl, $0080
     ld a, l
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, h
     ldh [hFFAA], a
     ld hl, $0030
     ld a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, h
     ldh [hFFAC], a
     xor a, a
@@ -7384,7 +7390,7 @@ Jump_003_7689::
 
 ; 4 call sites from 4 routines (e.g. Func_003_4208, Func_003_6A60, Func_003_769E, Func_003_7145)
 Func_003_7692::
-    call Func_003_4284
+    call ClearBGMapShadow_Bank03
     ld e, $21
     farcall Func_033_4001
     ret
@@ -7435,11 +7441,11 @@ Func_003_76D5::
     ld hl, vBGMap0 + $80
     ld de, wC218
     ld bc, $0609
-    call Func_003_42E3
+    call CopyRectToBGMap
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_003_42E3
+    call CopyRectToBGMap
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_6B5E)

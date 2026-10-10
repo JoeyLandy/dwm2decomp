@@ -864,9 +864,9 @@ Jump_019_44EC::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_019_419B)
-; points at: wC198
+; points at: wBGMapShadow
 Func_019_4516::
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
 
 Jump_019_451C::
@@ -949,7 +949,7 @@ Jump_019_4560::
 Func_019_456A::
     ld a, c
     ld c, $01
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld b, $0A
 
 Jump_019_4572::
@@ -1447,9 +1447,9 @@ Func_019_48B1::
     ld b, a
     ld a, $01
     add a, $64
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     ld a, [wCFC5]
     cp a, $03
     jr nz, Jump_019_48EB
@@ -1667,7 +1667,7 @@ Jump_019_49D6::
     cp a, $03
     jr z, Jump_019_49F5
     ld a, $14
-    call Func_000_16E2
+    call Divide24ByA
     ld c, a
     ldh a, [hFFCF]
     add a, c
@@ -1690,7 +1690,7 @@ Jump_019_49F5::
     ldh a, [hFFCF]
     ld b, a
     ld a, $14
-    call Func_000_16BF
+    call DivideBByA
     ldh a, [hFFCA]
     add a, b
     ldh [hFFCA], a
@@ -1709,7 +1709,7 @@ Jump_019_49F5::
     ldh a, [hFFCA]
     ld l, a
     ld a, $03
-    call Func_000_16E2
+    call Divide24ByA
     ld a, [wCFC5]
     cp a, $03
     jr nz, Jump_019_4A45
@@ -2517,7 +2517,7 @@ Jump_019_4E5A::
 Func_019_7380::
     ld bc, $0129
     ldh a, [hFFC6]
-    call Func_000_16AA
+    call Multiply8By16
     ldh a, [hFFC7]
     ld c, a
     ld b, $00
@@ -2554,7 +2554,7 @@ Func_019_73A2::
     farcall Func_035_4001
     ld a, [wD00F]
     ld bc, $0129
-    call Func_000_16AA
+    call Multiply8By16
     ld a, [wC9DC]
     dec a
     ld c, a
@@ -2595,7 +2595,7 @@ Func_019_73DF::
     farcall Func_035_4001
     ld a, [wD00F]
     ld bc, $0129
-    call Func_000_16AA
+    call Multiply8By16
     ld a, [wCA81]
     dec a
     ld c, a

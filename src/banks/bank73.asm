@@ -446,7 +446,7 @@ Func_073_42D8:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD04, wIsCGB
 ; writes: wC46B, wC46C, wC46D, wC46E, rSVBK
-; points at: wC198, wC923
+; points at: wBGMapShadow, wC923
 Func_073_42F1:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call NextRandomSeed
@@ -468,7 +468,7 @@ Func_073_42F1:: ; heuristic: target of a pointer table; C0
     ld [wC46E], a
     call Func_073_441D
     ld de, $4378
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld b, $03
 
 Jump_073_432D::
@@ -1967,7 +1967,7 @@ Jump_073_4E76::
 
 ; 1 call site from 1 routine (e.g. Func_073_6038)
 ; reads: wC921
-; writes: wCB7D, wC921, wC919, wC935
+; writes: wSpriteSlotCount, wC921, wC919, wC935
 Func_073_4E9C:: ; heuristic: follows a terminator; C0
     ld a, [wC921]
     cp a, $1E
@@ -1990,12 +1990,12 @@ Jump_073_4EB3::
 
 Jump_073_4EB9::
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_073_4EC4
 
 Jump_073_4EC0::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_073_4EC4::
     ld a, [wC921]
@@ -2553,7 +2553,7 @@ Jump_073_524B::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wC923
     inc [hl]
     ret
@@ -3096,10 +3096,10 @@ Jump_073_5670::
     ldh a, [hFFC6]
     or a, a
     ret z
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     dec a
     dec a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     xor a, a
     ld [wCB96], a
     ld hl, $0725
@@ -3221,7 +3221,7 @@ Func_073_572F::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_073_575B::
@@ -3452,7 +3452,7 @@ Jump_073_58E0::
 
 ; 1 call site from 1 routine (e.g. Func_010_4DEF)
 ; reads: hFFC6
-; writes: hFFC6, hFFC7, wCB7D, wC919
+; writes: hFFC6, hFFC7, wSpriteSlotCount, wC919
 Func_073_58FE::
     xor a, a
     ldh [hFFC6], a
@@ -3463,7 +3463,7 @@ Func_073_58FE::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -3612,7 +3612,7 @@ Jump_073_5A22::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -3702,7 +3702,7 @@ Jump_073_5AA6::
 
 ; 1 call site from 1 routine (e.g. Func_010_4DBE)
 ; reads: hFFC6
-; writes: hFFC6, hFFC7, wCB7D, wC919
+; writes: hFFC6, hFFC7, wSpriteSlotCount, wC919
 Func_073_5ABB::
     xor a, a
     ldh [hFFC6], a
@@ -3713,7 +3713,7 @@ Func_073_5ABB::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -3750,7 +3750,7 @@ Jump_073_5AF2::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wCC3B]
     set 1, a
     ld [wCC3B], a
@@ -3876,7 +3876,7 @@ Jump_073_5BAE::
     srl a
     srl a
     add_a_to_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld de, wC910
     ld a, [hl+]
@@ -4106,7 +4106,7 @@ Func_073_5D65::
 
 ; 1 call site from 1 routine (e.g. Func_010_4E35)
 ; reads: hFF90, hFF8F, hFFC6
-; writes: hFFC6, hFFC7, wCB7D, wC919
+; writes: hFFC6, hFFC7, wSpriteSlotCount, wC919
 Func_073_5D71:: ; heuristic: follows a terminator; C0
     xor a, a
     ldh [hFFC6], a
@@ -4127,7 +4127,7 @@ Jump_073_5D88::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ld de, $00C5
@@ -4396,7 +4396,7 @@ Func_073_5F39::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wC6FD, wCBB6, wCBBA, wCBBB
 ; writes: hFFC7, hFFC8, hFFC9, wC527, wC919
-; points at: wC6FD, wC8EF, wC6FE, wCB7D
+; points at: wC6FD, wC8EF, wC6FE, wSpriteSlotCount
 Func_073_5F55:: ; heuristic: follows a terminator; C0
     ld a, $00
     ldh [hFFC7], a
@@ -4433,7 +4433,7 @@ Func_073_5F55:: ; heuristic: follows a terminator; C0
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     ld a, $80
     ld [wC919], a
@@ -4568,7 +4568,7 @@ Jump_073_6083::
     xor a, a
     ld [wCBCF], a
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $00
     call StoreWC60B
     ld a, $80
@@ -4587,7 +4587,7 @@ Jump_073_60A7::
     cp a, $48
     ret nz
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wCBCF], a
     ld a, $7D
@@ -4622,18 +4622,18 @@ Jump_073_60CD::
 
 ; 1 call site from 1 routine (e.g. Func_010_4D1D)
 ; reads: wC5F0, wCB9B
-; writes: wCB7D, wCB9B, wC919
+; writes: wSpriteSlotCount, wCB9B, wC919
 Func_073_60FE::
     ld a, [wC5F0]
     bit 2, a
     jr z, Jump_073_610C
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_073_6111
 
 Jump_073_610C::
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_073_6111::
     ld a, [wCB9B]
@@ -4642,7 +4642,7 @@ Jump_073_6111::
     cp a, $70
     ret nz
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -5096,7 +5096,7 @@ Jump_073_640A::
     ldh [hFF8D], a
     xor a, a
     ld [wCB96], a
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     inc [hl]
     xor a, a
     ld [wC921], a
@@ -5308,7 +5308,7 @@ Jump_073_653D::
     ld [wC938], a
     ld a, [hl]
     ld [wC939], a
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     ldh a, [hFF98]
     or a, a
@@ -5826,9 +5826,9 @@ Jump_073_6868::
     ld b, $56
 
 ; 1 call site from 1 routine (e.g. Func_073_6882)
-; points at: wC198
+; points at: wBGMapShadow
 Func_073_6875::
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToVRAM
     farcall Func_05F_6DDB
     ret
@@ -5871,7 +5871,7 @@ Jump_073_68B8::
     ld a, [wC921]
     ld b, a
     ld a, $06
-    call Func_000_16BF
+    call DivideBByA
     add a, a
     add a, a
     ld hl, $68F8
@@ -6061,7 +6061,7 @@ Jump_073_6A0B::
     xor a, a
     ld [wCB8B], a
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wC923
     inc [hl]
     ret

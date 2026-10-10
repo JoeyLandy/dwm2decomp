@@ -13,15 +13,15 @@ Func_014_4001::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC364, wC198
+; points at: wC364, wBGMapShadow
 Func_014_400D:: ; heuristic: target of a pointer table; C0
     ld hl, wC364
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC198
+; points at: wBGMapShadow
 Func_014_4010:: ; heuristic: target of a pointer table; C0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_014_57E5
     ld a, [wIsCGB]
@@ -108,7 +108,7 @@ Func_014_4070:: ; heuristic: target of a pointer table; C0
 Func_014_4080:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -188,14 +188,14 @@ Jump_014_40EE::
     ld [hl+], a
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC364, wC198
+; points at: wC364, wBGMapShadow
 Func_014_40F0:: ; heuristic: target of a pointer table; C0
     dec bc
     ld a, b
     or a, c
     jr nz, Jump_014_40EE
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     db $CD, $E5
 
@@ -913,16 +913,16 @@ Func_014_4510:: ; heuristic: target of a pointer table; C0
     call Func_014_58EE
     ld hl, vTiles1 + $240
     ld bc, $0C01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4E0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
     ld a, $01
     ld [wD7FA], a
     ld a, $20
@@ -1171,14 +1171,14 @@ Func_014_46E0:: ; heuristic: target of a pointer table; C0
 Func_014_46F4:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC52D, wD781
 Func_014_4700:: ; heuristic: target of a pointer table; C0
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -1743,16 +1743,16 @@ Data_014_4B02:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Func_014_4B5A:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles1 + $240
     ld bc, $0C01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4E0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
     ld de, Data_014_5B36
     ld hl, wC364
     ld bc, $080B
@@ -3569,12 +3569,12 @@ Jump_014_5849::
 ; 17 call sites from 17 routines (e.g. Func_014_4F7D, Func_014_4990, Func_014_4A1F, Func_014_4760, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_014_585B::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -3722,17 +3722,17 @@ Func_014_5910::
 
 ; 4 call sites from 4 routines (e.g. Func_014_557D, Func_014_4750, Func_014_5910, Func_014_4932)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_014_5925::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -4188,7 +4188,7 @@ Jump_014_5DE0::
     ld hl, Data_014_5EAF
 
 Jump_014_5E10::
-    ld de, wCB7F
+    ld de, wSpriteSlots
     ld b, $10
     call Func_014_5E8C
     ld hl, Data_014_5E93
@@ -4203,7 +4203,7 @@ Jump_014_5E24::
     call Func_014_5E8C
     farcall Func_004_431F
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_014_5E62

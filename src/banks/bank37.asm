@@ -2303,17 +2303,17 @@ Data_037_5A57:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_037_5976, Func_037_4DC7)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_037_5A5D::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a
@@ -2489,12 +2489,12 @@ Jump_037_5B27::
 ; 4 call sites from 2 routines (e.g. Func_037_4DC7, Func_037_5976)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_037_5B3F::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a
@@ -3094,9 +3094,9 @@ Func_037_5E3E::
 Jump_037_5E52::
     push de
     ld a, $33
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     or a, a
     jr z, Jump_037_5E61
     inc hl
@@ -3128,9 +3128,9 @@ Jump_037_5E64::
 Jump_037_5E7D::
     push de
     ld a, $19
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     or a, a
     jr z, Jump_037_5E8C
     inc hl
@@ -3162,9 +3162,9 @@ Jump_037_5E8F::
 Jump_037_5EA8::
     push de
     ld a, $19
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     or a, a
     jr z, Jump_037_5EB7
     inc hl
@@ -3324,9 +3324,9 @@ Func_037_5F4A::
 Jump_037_5F5E::
     push de
     ld a, $C3
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     or a, a
     jr z, Jump_037_5F6D
     inc hl
@@ -3363,9 +3363,9 @@ Jump_037_5F8C::
     push de
     push bc
     ld a, $5B
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     or a, a
     jr z, Jump_037_5F9C
     inc hl

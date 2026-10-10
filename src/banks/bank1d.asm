@@ -2393,13 +2393,13 @@ Jump_01D_54B3::
 Jump_01D_54C9::
     ld a, [wD7CE]
     ld bc, $2710
-    call Func_000_16AA
+    call Multiply8By16
     ld d, $00
     push de
     push hl
     ld a, [wD7CF]
     ld bc, $03E8
-    call Func_000_16AA
+    call Multiply8By16
 
 Jump_01D_54DF::
     ld a, h
@@ -2425,7 +2425,7 @@ Jump_01D_54DF::
     push hl
     ld a, [wD7D0]
     ld bc, $0064
-    call Func_000_16AA
+    call Multiply8By16
     jr Jump_01D_54DF
 
 Jump_01D_5501::
@@ -2532,13 +2532,13 @@ Jump_01D_5589::
 Jump_01D_559F::
     ld a, [wD7CE]
     ld bc, $2710
-    call Func_000_16AA
+    call Multiply8By16
     ld d, $00
     push de
     push hl
     ld a, [wD7CF]
     ld bc, $03E8
-    call Func_000_16AA
+    call Multiply8By16
 
 Jump_01D_55B5::
     ld a, h
@@ -2564,7 +2564,7 @@ Jump_01D_55B5::
     push hl
     ld a, [wD7D0]
     ld bc, $0064
-    call Func_000_16AA
+    call Multiply8By16
     jr Jump_01D_55B5
 
 Jump_01D_55D7::
@@ -5852,11 +5852,11 @@ Jump_01D_69D9::
 
 ; 2 call sites from 2 routines (e.g. Func_01D_6899, Func_01D_5C35)
 ; reads: wC5F0, hScrollX, hFFA2, hScrollY, hFFA6, wD7F1, wD7F2
-; writes: hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC, hFFAD
+; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSetIndex
 Func_01D_69DA::
     ld c, $00
     ld a, e
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, c
     and a, a
     jr nz, Jump_01D_69F1
@@ -5865,31 +5865,31 @@ Func_01D_69DA::
     swap a
     and a, $01
     add a, c
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     jr Jump_01D_69F4
 
 Jump_01D_69F1::
     xor a, a
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
 
 Jump_01D_69F4::
     ld a, h
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ldh a, [hScrollX]
     add a, l
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFAA], a
     ldh a, [hScrollY]
     add a, d
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ldh a, [hFFA6]
     adc a, $00
     ldh [hFFAC], a
     ld a, [wD7F1]
     and a, $7F
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [wD7F2]
     or a, a
     jr nz, Jump_01D_6A2F
@@ -5909,24 +5909,24 @@ Jump_01D_6A2F::
 
 ; 2 call sites from 2 routines (e.g. Func_00C_4FC2, Func_00C_5002)
 ; reads: wD7F6, wD7F3, wD7F4, hScrollX, hFFA2, wD7F5, hScrollY, hFFA6, ...
-; writes: hFFB0, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC, hFFAD
+; writes: hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSetIndex
 Func_01D_6A36::
     ld a, [wD7F6]
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     jr Jump_01D_6A59
 
 ; 6 call sites from 6 routines (e.g. Func_003_4659, Func_014_6804, Func_01E_6810, Func_037_5870, ...)
 ; reads: wD7F6, wC5F0, wD7F3, wD7F4, hScrollX, hFFA2, wD7F5, hScrollY, ...
-; writes: hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC, hFFAD
+; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSetIndex
 Func_01D_6A3D::
     ld c, $00
 
 ; 1 call site from 1 routine (e.g. Func_015_6403)
 ; reads: wD7F6, wC5F0, wD7F3, wD7F4, hScrollX, hFFA2, wD7F5, hScrollY, ...
-; writes: hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC, hFFAD
+; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSetIndex
 Func_01D_6A3F::
     ld a, [wD7F6]
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, c
     and a, a
     jr nz, Jump_01D_6A56
@@ -5935,21 +5935,21 @@ Func_01D_6A3F::
     swap a
     and a, $01
     add a, c
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     jr Jump_01D_6A59
 
 Jump_01D_6A56::
     xor a, a
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
 
 Jump_01D_6A59::
     ld a, [wD7F3]
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, [wD7F4]
     ld b, a
     ldh a, [hScrollX]
     add a, b
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFAA], a
@@ -5957,13 +5957,13 @@ Jump_01D_6A59::
     ld b, a
     ldh a, [hScrollY]
     add a, b
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ldh a, [hFFA6]
     adc a, $00
     ldh [hFFAC], a
     ld a, [wD7F1]
     and a, $7F
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [wD7F2]
     or a, a
     jr nz, Jump_01D_6A9E

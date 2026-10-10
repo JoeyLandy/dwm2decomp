@@ -2527,7 +2527,7 @@ Jump_032_4DD4::
     ld a, [wC5E8]
     ld b, a
     ld a, [hl+]
-    call Func_000_16BF
+    call DivideBByA
     call Func_032_57FD
     cp a, $C8
     jr nz, Jump_032_4DF7
@@ -6182,9 +6182,9 @@ Func_032_6755::
     ld b, h
     ld c, l
     ld a, $08
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $0A
-    call Func_000_16E2
+    call Divide24ByA
     pop de
     ret
 

@@ -888,7 +888,7 @@ Jump_00A_4677::
     ld a, [wCD05]
     ld b, a
     ld a, $05
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     add a, a
     ld de, Data_00A_46EE
@@ -1022,7 +1022,7 @@ Func_00A_476E::
     jr nc, Func_00A_476E
     ld b, a
     ld a, $05
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     ld hl, Data_00A_478F
     add_a_to_hl
@@ -2479,7 +2479,7 @@ Jump_00A_525C::
     ret nz
     call Func_00A_465D
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $04
     ld [wC5DB], a
     xor a, a

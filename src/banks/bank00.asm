@@ -979,7 +979,7 @@ Jump_000_0741::
     ld [rROMB0], a
     ret
 
-; 5 call sites from 3 routines (e.g. Func_000_0FC1, Func_000_0DF2, Func_017_41CF)
+; 5 call sites from 3 routines (e.g. Func_000_0FC1, StartPaletteFade, Func_017_41CF)
 ; points at: wC47F
 Func_000_076B::
     push hl
@@ -2251,11 +2251,13 @@ Jump_000_0DDB::
     ld [wC56E], a
     ret
 
+; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
 ; 91 call sites from 50 routines (e.g. Func_001_4001, Func_001_65A0, Func_002_5F9B, Func_002_4745, ...)
 ; reads: wIsCGB, wC524, wC56C, wC56D, wC56E, wC5E9, wC5EA, wC5EB
 ; writes: wC56C, wC572, wC573, wC574
 ; points at: wC4FF, wC4DF, wC47F, wC4EF, wC56F, wC5E9
-Func_000_0DF2::
+StartPaletteFade::
+Func_000_0DF2:: ; address name
     ld b, a
     ld a, [wIsCGB]
     or a, a
@@ -2562,7 +2564,7 @@ Jump_000_0FFC::
     ld [de], a
     inc de
 
-; 3 call sites from 2 routines (e.g. Func_000_0FC1, Func_000_0DF2)
+; 3 call sites from 2 routines (e.g. Func_000_0FC1, StartPaletteFade)
 ; writes: wC47C
 Func_000_1022::
     ld c, $08
@@ -3623,10 +3625,10 @@ Jump_000_1644::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC198
+; points at: wBGMapShadow
 Func_000_1649:: ; heuristic: follows a terminator; C0
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld c, $20
 
 Jump_000_1651::
@@ -3674,7 +3676,7 @@ Func_000_1679::
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 115 call sites from 96 routines (e.g. Func_000_2950, Func_000_16AA, SRAMRecordAddress, Func_000_19A9, ...)
+; 115 call sites from 96 routines (e.g. Func_000_2950, Multiply8By16, SRAMRecordAddress, Func_000_19A9, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -3714,8 +3716,10 @@ Jump_000_16A5::
     rl b
     ret
 
+; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
 ; 62 call sites from 51 routines (e.g. Func_005_5029, Func_005_4B97, Func_005_676E, Func_005_67B2, ...)
-Func_000_16AA::
+Multiply8By16::
+Func_000_16AA:: ; address name
     push af
     push bc
     ld c, b
@@ -3733,8 +3737,10 @@ Func_000_16AA::
     ld e, a
     ret
 
+; B = B / A (quotient), A = remainder; clobbers D, E
 ; 29 call sites from 29 routines (e.g. Func_001_6C48, Func_001_6903, Func_003_5A58, Func_005_69F5, ...)
-Func_000_16BF::
+DivideBByA::
+Func_000_16BF:: ; address name
     ld d, $08
     ld e, a
     xor a, a
@@ -3779,8 +3785,10 @@ Jump_000_16DE::
     jr nz, Jump_000_16D5
     ret
 
+; E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D
 ; 36 call sites from 30 routines (e.g. Func_005_5029, Func_005_4B97, Func_005_667F, Func_005_676E, ...)
-Func_000_16E2::
+Divide24ByA::
+Func_000_16E2:: ; address name
     ld d, $18
     ld b, a
     xor a, a
@@ -4123,10 +4131,12 @@ Func_000_1872:: ; address name
     ld [rROMB0], a
     ret
 
+; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
 ; 103 call sites from 29 routines (e.g. Func_00D_4BA5, Func_014_4510, Func_014_4700, Func_014_46F4, ...)
 ; reads: rSTAT, wC52D
 ; writes: wC52D
-Func_000_1881::
+FillTilesBxC::
+Func_000_1881:: ; address name
     ld a, b
     ld [wC52D], a
 
@@ -4229,7 +4239,7 @@ Func_000_18D6::
 ; 4 call sites from 2 routines (e.g. Func_061_4472, Func_061_474C)
 ; reads: hFFC6, wC190, hFF92, hFF8F, wIsCGB, hFFC7, hFFC8, hFFC9
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_000_1906::
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -4289,7 +4299,7 @@ Func_000_1906::
     ld d, [hl]
     inc hl
     ld b, [hl]
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToVRAM
     pop af
     ld [rROMB0], a
@@ -4345,7 +4355,7 @@ Jump_000_19A4::
 ; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00F_7BC3, Func_015_570C)
 ; reads: wCC44, wC190, hFF92, hFF8F, wIsCGB, hFFC6, hFFC7, hFFC8, ...
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_000_19A9::
     ld a, [wCC44]
     bit 7, a
@@ -4422,7 +4432,7 @@ Jump_000_19E6::
     ld d, a
     ld a, [hl]
     ld b, a
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToVRAM
     pop af
     ld [rROMB0], a
@@ -5063,10 +5073,10 @@ Jump_000_1E23::
 ; 16 call sites from 12 routines (e.g. Func_002_4628, Func_002_5B9E, Func_002_64B3, Func_007_65F1, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_000_1E29::
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
 
 Jump_000_1E30::
@@ -5160,9 +5170,9 @@ Jump_000_1E9C::
 ; 2 call sites from 2 routines (e.g. Func_000_2637, Func_085_4555)
 ; reads: wC8CB, rSTAT, wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wC198
+; points at: wBGMapShadow
 Func_000_1EA5::
-    ld de, wC198
+    ld de, wBGMapShadow
     ld a, [wC8CB]
     bit 7, a
     jr z, Jump_000_1EC1
@@ -5288,11 +5298,13 @@ Jump_000_1F40::
     ldh [rVBK], a
     ret
 
+; A is first passed through MapIndexViaWC6FE; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress
 ; 138 call sites from 65 routines (e.g. Func_000_1F5E, Func_000_1F6F, Func_001_68CA, Func_003_67B0, ...)
 ; points at: sA000
-Func_000_1F49::
+SRAMRecordAddressMapped::
+Func_000_1F49:: ; address name
     push bc
-    call Func_000_24C5
+    call MapIndexViaWC6FE
     ld c, $A5
     call Multiply8
     ld bc, sA000
@@ -5307,7 +5319,7 @@ Func_000_1F49::
 Func_000_1F5E:: ; heuristic: follows a terminator; C0
     push hl
     push de
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld de, hFFC6
 
 Jump_000_1F66::
@@ -5325,7 +5337,7 @@ Jump_000_1F66::
 Func_000_1F6F:: ; heuristic: follows a terminator; C0
     push hl
     push de
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld de, hFFC6
 
 Jump_000_1F77::
@@ -6374,10 +6386,12 @@ Jump_000_24B9::
     ld [rROMB0], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_000_1F49, Func_003_5AA7, Func_016_5906, Func_0F1_442F)
+; returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case
+; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, Func_003_5AA7, Func_016_5906, Func_0F1_442F)
 ; reads: wC58A, wC5DB
 ; points at: wC6FE
-Func_000_24C5::
+MapIndexViaWC6FE::
+Func_000_24C5:: ; address name
     push bc
     ld b, a
     ld a, [wC58A]

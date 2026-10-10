@@ -2129,9 +2129,9 @@ Func_005_4B97:: ; heuristic: follows a terminator; C0
     ld b, h
     ld c, l
     ld a, $1F
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     push hl
     ld a, [wD8A4]
     and a, $04
@@ -2976,9 +2976,9 @@ Jump_005_5028::
 Func_005_5029::
     ld b, h
     ld c, l
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_4E7C)
@@ -3058,7 +3058,7 @@ Jump_005_5095::
     jr z, Jump_005_50B1
     ld b, a
     ldh a, [hFFC6]
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     cp a, $02
     jr nc, Jump_005_50B4
@@ -3841,8 +3841,10 @@ Jump_005_54FA::
     ld c, $01
     ret
 
+; C = 0
 ; 73 call sites from 73 routines (e.g. Func_005_7187, Func_005_7DDC, Func_0E2_4001, Func_0E2_40BF, ...)
-Func_005_54FD::
+SetCToZero::
+Func_005_54FD:: ; address name
     ld c, $00
     ret
 
@@ -7118,7 +7120,7 @@ Jump_005_66BB::
     ldh a, [hFFC8]
     ld e, a
     ld a, d
-    call Func_000_16E2
+    call Divide24ByA
     ld a, l
     ldh [hFFC9], a
     ld a, h
@@ -7152,7 +7154,7 @@ Jump_005_66F2::
     ldh a, [hFFC8]
     ld e, a
     ld a, d
-    call Func_000_16E2
+    call Divide24ByA
     srl h
     rr l
     srl h
@@ -7261,9 +7263,9 @@ Jump_005_6778::
     ld b, [hl]
     ld c, a
     ld a, $78
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     pop bc
     push bc
     push hl
@@ -7327,9 +7329,9 @@ Jump_005_67D2::
     ld a, $78
     ld b, h
     ld c, l
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     pop bc
     call CompareHLToBC
     pop de
@@ -7424,9 +7426,9 @@ Jump_005_6840::
     ld a, $3C
     ld b, h
     ld c, l
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     pop bc
     call CompareHLToBC
     jr nc, Jump_005_6896
@@ -7742,7 +7744,7 @@ Jump_005_6A46::
     jr z, Jump_005_6A62
     ld b, a
     ldh a, [hFFC6]
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     cp a, $02
     jr nc, Jump_005_6A65
@@ -7827,7 +7829,7 @@ Jump_005_6AC3::
     jr z, Jump_005_6ADF
     ld b, a
     ldh a, [hFFC6]
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     cp a, $02
     jr nc, Jump_005_6AE2
@@ -9095,7 +9097,7 @@ Func_005_7187:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_71A8
-    call Func_005_54FD
+    call SetCToZero
     ld a, c
     and a, a
     jr z, Jump_005_71A8
@@ -11456,7 +11458,7 @@ Jump_005_7DD8::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_63FA, Func_0E2_641E)
 Func_005_7DDC:: ; heuristic: follows a terminator; C0
-    call Func_005_54FD
+    call SetCToZero
     ld a, c
     and a, a
     jr z, Jump_005_7DE4

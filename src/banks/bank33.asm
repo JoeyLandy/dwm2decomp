@@ -2,7 +2,7 @@ SECTION "Bank 33", ROMX[$4000], BANK[$33]
     db $33
 
 ; 64 call sites from 38 routines (e.g. Func_003_48EF, Func_003_4917, Func_003_493F, Func_003_495F, ...)
-; points at: wC198
+; points at: wBGMapShadow
 Func_033_4001::
     ld d, $00
     ld hl, Data_033_405F
@@ -18,7 +18,7 @@ Func_033_4001::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
 
@@ -41,7 +41,7 @@ Jump_033_401B::
     ret
 
 ; 14 call sites from 4 routines (e.g. Func_003_499B, Func_003_49C2, Func_003_49E9, Func_003_4A08)
-; points at: wC198
+; points at: wBGMapShadow
 Func_033_402B::
     ld d, $00
     ld hl, Data_033_405F
@@ -57,7 +57,7 @@ Func_033_402B::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
 
@@ -499,7 +499,7 @@ Jump_033_5264::
     ld bc, $0803
     call Func_033_6152
     ld de, Data_033_62C3
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0A0B
     call Func_033_6152
     call Func_033_6247
@@ -660,7 +660,7 @@ Jump_033_5394::
     ld a, [wC52B]
     or a, a
     ret nz
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0104
 
 Jump_033_539F::
@@ -1599,7 +1599,7 @@ Jump_033_5A2D::
     ret
 
 Jump_033_5A58::
-    ld de, wC198
+    ld de, wBGMapShadow
     ld hl, wC364
     ld bc, $0104
     call CopyBytes
@@ -2497,12 +2497,12 @@ Jump_033_60F7::
 ; 11 call sites from 3 routines (e.g. Func_033_5215, Func_033_562A, Func_033_58C3)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_033_60FC::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a

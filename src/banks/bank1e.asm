@@ -13,7 +13,7 @@ Func_01E_4001::
 
 Jump_01E_400D::
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_01E_7428
     ld a, [wIsCGB]
@@ -45,7 +45,7 @@ Jump_01E_4046::
     call DecompressToVRAM
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD788]
     inc a
     ld [wD788], a
@@ -88,7 +88,7 @@ Jump_01E_4091::
     or a, c
     jr nz, Jump_01E_4091
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_01E_7428
     ld a, [wIsCGB]
@@ -386,7 +386,7 @@ Jump_01E_42A9::
     call CopyRectTo20ByteRows_Bank1E
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -480,10 +480,10 @@ Jump_01E_4371::
 Jump_01E_439E::
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -1243,16 +1243,16 @@ Jump_01E_4933::
 Jump_01E_49B2::
     ld hl, vTiles1 + $240
     ld bc, $0C01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4E0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
     ld de, $7A41
     ld hl, wC364
     ld bc, $080B
@@ -2546,19 +2546,19 @@ Jump_01E_5430::
 Jump_01E_54D6::
     ld hl, vTiles1 + $3F0
     ld bc, $0401
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $470
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $6A0
     ld bc, $0401
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $750
     ld bc, $0801
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -3439,16 +3439,16 @@ Jump_01E_5C16::
 Func_01E_5C37::
     ld hl, vTiles1 + $240
     ld bc, $0C01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4E0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -3683,7 +3683,7 @@ Jump_01E_5DFD::
 Jump_01E_5E06::
     ld hl, vTiles2 + $200
     ld bc, $1504
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3709,7 +3709,7 @@ Jump_01E_5E17::
     call Func_01E_6D2B
     ld hl, vTiles2 + $6C0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
@@ -3723,7 +3723,7 @@ Jump_01E_5E17::
     call Func_01E_6D2B
     ld hl, vTiles2 + $200
     ld bc, $0805
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -3777,7 +3777,7 @@ Jump_01E_5E98::
 Jump_01E_5ED6::
     ld hl, vTiles2 + $200
     ld bc, $1504
-    call Func_000_1881
+    call FillTilesBxC
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
@@ -3855,7 +3855,7 @@ Jump_01E_5F65::
     ld [wD781], a
     ld hl, vTiles2 + $200
     ld bc, $0805
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -4296,7 +4296,7 @@ Jump_01E_6298::
 Jump_01E_62C0::
     ld hl, vTiles2 + $200
     ld bc, $1304
-    call Func_000_1881
+    call FillTilesBxC
     ld de, Data_01F_4A40
     ld hl, vTiles1 + $6D0
     ld b, $1F
@@ -4534,10 +4534,10 @@ Jump_01E_6483::
 Jump_01E_6492::
     ld hl, vTiles2 + $200
     ld bc, $0805
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles2 + $480
     ld bc, $0904
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     sub a, $04
     ld [wD781], a
@@ -5005,10 +5005,10 @@ Jump_01E_6825::
 Jump_01E_6840::
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5070,7 +5070,7 @@ Jump_01E_6870::
 Jump_01E_68D3::
     ld hl, vTiles2 + $200
     ld bc, $0F02
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5287,7 +5287,7 @@ Jump_01E_6A70::
 Jump_01E_6A8F::
     ld hl, vTiles2 + $200
     ld bc, $1504
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -5390,7 +5390,7 @@ Jump_01E_6B3B::
 Jump_01E_6B44::
     ld hl, vTiles2 + $200
     ld bc, $1504
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5416,7 +5416,7 @@ Jump_01E_6B55::
     call Func_01E_6D2B
     ld hl, vTiles2 + $6C0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
@@ -5430,7 +5430,7 @@ Jump_01E_6B55::
     call Func_01E_6D2B
     ld hl, vTiles2 + $200
     ld bc, $0805
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -5500,7 +5500,7 @@ Jump_01E_6C1F::
     ld [rRAMG2], a
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     pop bc
     ld a, b
     ld [wD7F1], a
@@ -5587,7 +5587,7 @@ Jump_01E_6CDB::
     ld [wD781], a
     ld hl, vTiles2 + $200
     ld bc, $0805
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -6955,12 +6955,12 @@ Jump_01E_74B6::
 ; 38 call sites from 11 routines (e.g. Func_01E_4069, Func_01E_4A32, Func_01E_46E5, Func_01E_42C6, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_01E_74C8::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -7174,17 +7174,17 @@ Func_01E_75EB::
 
 ; 5 call sites from 4 routines (e.g. Func_01E_46E5, Func_01E_5A4D, Func_01E_42C6, Func_01E_4A32)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_01E_75F2::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -7428,8 +7428,8 @@ Func_01E_7732::
     ret
 
 ; 10 call sites from 8 routines (e.g. Func_01E_4A32, Func_01E_44EF, Func_00D_47F7, Func_014_4880, ...)
-; reads: hFFB9, hFF8D, wCB7D
-; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wCB7D
+; reads: hFFB9, hFF8D, wSpriteSlotCount
+; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wSpriteSlotCount
 Func_01E_7745::
     ldh a, [hFFB9]
     ld [wD7BC], a
@@ -7438,17 +7438,17 @@ Func_01E_7745::
     ldh [hFFBA], a
     ldh a, [hFF8D]
     ld [wD7BA], a
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld [wD7BB], a
     ld a, $FF
     ldh [hFF8D], a
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_01E_6810, Func_01E_6074, Func_01E_5C63, Func_00D_4C9C, ...)
 ; reads: wD7BC, wD7BA, wD7BB
-; writes: hFFB9, hFFBA, hFF8D, wCB7D
+; writes: hFFB9, hFFBA, hFF8D, wSpriteSlotCount
 Func_01E_7763::
     ld a, [wD7BC]
     ldh [hFFB9], a
@@ -7457,7 +7457,7 @@ Func_01E_7763::
     ld a, [wD7BA]
     ldh [hFF8D], a
     ld a, [wD7BB]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_01E_4A32)

@@ -2,10 +2,10 @@ SECTION "Bank 25", ROMX[$4000], BANK[$25]
     db $25
 
 ; 6 call sites from 6 routines (e.g. Func_001_5EAF, Func_004_44CE, Func_004_4C96, Func_004_4D43, ...)
-; reads: hFFAD, hFFB0
-; writes: hFFB0
+; reads: hSpriteSetIndex, hSpriteAttrXor
+; writes: hSpriteAttrXor
 Func_025_4001::
-    ldh a, [hFFAD]
+    ldh a, [hSpriteSetIndex]
     ld e, a
     ld d, $00
     ld hl, Data_025_411E
@@ -15,9 +15,9 @@ Func_025_4001::
     ld a, [hl]
     and a, $F0
     ld e, a
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     or a, e
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
 
 Jump_025_4017::
     ld de, Data_025_401E
@@ -158,7 +158,7 @@ Data_025_411E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $09411E, $80
 
 ; 1 call site from 1 routine (e.g. Func_025_4001)
-; reads: hOamNextEntry, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; reads: hOamNextEntry, hFFD4, hFFD5, hSpriteOriginY, hFFAC, hFFD2, hFFD3, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_025_419E::
@@ -169,7 +169,7 @@ Func_025_419E::
     ld c, a
     ldh a, [hFFD5]
     ld b, a
-    ldh a, [hFFAB]
+    ldh a, [hSpriteOriginY]
     add a, c
     ldh [hFFB3], a
     ldh a, [hFFAC]
@@ -180,7 +180,7 @@ Func_025_419E::
     ldh a, [hFFD3]
     ld b, a
     ld hl, hFFB5
-    ldh a, [hFFA9]
+    ldh a, [hSpriteOriginX]
     add a, c
     ld c, a
     ld [hl+], a
@@ -194,7 +194,7 @@ Func_025_419E::
     ld a, b
     sbc a, $00
     ld [hl], a
-    ldh a, [hFFAD]
+    ldh a, [hSpriteSetIndex]
     add a, a
     add a, e
     ld l, a
@@ -204,7 +204,7 @@ Func_025_419E::
     ld a, [hl+]
     ld d, [hl]
     ld e, a
-    ldh a, [hFFAE]
+    ldh a, [hSpriteSubIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -218,9 +218,9 @@ Func_025_419E::
     ldh a, [hFFB9]
     or a, a
     jp nz, Jump_025_42E8
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     and a, $20
     jr nz, Jump_025_4270
 
@@ -300,13 +300,13 @@ Jump_025_4255::
     ld a, b
     ld [de], a
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
     ld a, [hl+]
     add a, c
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -396,13 +396,13 @@ Jump_025_42CD::
     ld a, b
     ld [de], a
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
     ld a, [hl+]
     add a, c
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -416,7 +416,7 @@ Jump_025_42CD::
     ret
 
 Jump_025_42E8::
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     and a, $20
     jr nz, Jump_025_4369
 
@@ -503,13 +503,13 @@ Jump_025_4349::
     call Func_025_43E4
     jr nc, Jump_025_4342
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [hl+]
     add a, b
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -605,13 +605,13 @@ Jump_025_43C4::
     call Func_025_43E4
     jr nc, Jump_025_43BD
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [hl+]
     add a, b
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c

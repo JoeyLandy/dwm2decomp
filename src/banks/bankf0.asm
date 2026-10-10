@@ -2021,7 +2021,7 @@ Jump_0F0_5752::
     ld [wD782], a
     xor a, a
     ld [wD092], a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     xor a, a
     ld [wCFA8], a
     ld [wCFA9], a
@@ -2219,9 +2219,9 @@ Jump_0F0_58D9::
     ld [wD783], a
     xor a, a
     ld [wCBCF], a
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     inc a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2596,19 +2596,19 @@ Data_0F0_5BA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Jump_0F0_5C15::
     ld hl, vTiles1 + $3F0
     ld bc, $0401
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $470
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $6A0
     ld bc, $0401
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $750
     ld bc, $0801
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -2927,7 +2927,7 @@ Jump_0F0_5E74::
 Jump_0F0_5ECA::
     ld hl, vTiles2 + $200
     ld bc, $1304
-    call Func_000_1881
+    call FillTilesBxC
     ld de, Data_01F_4A40
     ld hl, vTiles1 + $6D0
     ld b, $1F
@@ -3148,10 +3148,10 @@ Jump_0F0_606C::
 Jump_0F0_607B::
     ld hl, vTiles2 + $200
     ld bc, $0805
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles2 + $480
     ld bc, $0904
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     sub a, $04
     ld [wD781], a
@@ -3198,19 +3198,19 @@ Jump_0F0_60A7::
 Jump_0F0_60E7::
     ld hl, vTiles1 + $3F0
     ld bc, $0401
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $470
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $6A0
     ld bc, $0401
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $750
     ld bc, $0801
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -3325,8 +3325,8 @@ Jump_0F0_61B7::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F0_5B50)
-; reads: hFFB9, hFF8D, wCB7D
-; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wCB7D
+; reads: hFFB9, hFF8D, wSpriteSlotCount
+; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wSpriteSlotCount
 Func_0F0_61F6::
     ldh a, [hFFB9]
     ld [wD7BC], a
@@ -3335,17 +3335,17 @@ Func_0F0_61F6::
     ldh [hFFBA], a
     ldh a, [hFF8D]
     ld [wD7BA], a
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld [wD7BB], a
     ld a, $FF
     ldh [hFF8D], a
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F0_613D)
 ; reads: wD7BC, wD7BA, wD7BB
-; writes: hFFB9, hFFBA, hFF8D, wCB7D
+; writes: hFFB9, hFFBA, hFF8D, wSpriteSlotCount
 Func_0F0_6214::
     ld a, [wD7BC]
     ldh [hFFB9], a
@@ -3355,7 +3355,7 @@ Func_0F0_6214::
     ldh [hFF8D], a
     ld a, [wD7BB]
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 ; 6 call sites from 4 routines (e.g. Func_0F0_4CA0, Func_0F0_56C2, Func_0F0_5888, Func_0F0_5A29)
@@ -3518,12 +3518,12 @@ Jump_0F0_62E0::
 ; 12 call sites from 3 routines (e.g. Func_0F0_4CA0, Func_0F0_5B50, Func_0F0_613D)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_0F0_62F2::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -3717,17 +3717,17 @@ Jump_0F0_63E0::
 
 ; 2 call sites from 2 routines (e.g. Func_0F0_5B50, Func_0F0_4CA0)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_0F0_63EE::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -4042,8 +4042,8 @@ Jump_0F0_67E5::
 
 ; 2 call sites from 1 routine (e.g. Func_0F0_67D2)
 ; reads: wC5C7, wD7F1, wD7EC, wC5A8, wC5A9, wIsCGB, wC5C8, wC5C9
-; writes: hFFC6, wCBCF, wCBD3, wCBD4, wCB7D, wCBA1, wCBA2, hFFC7, ...
-; points at: wCB7F, wCB8F, hFFC6, wCB9F
+; writes: hFFC6, wCBCF, wCBD3, wCBD4, wSpriteSlotCount, wCBA1, wCBA2, hFFC7, ...
+; points at: wSpriteSlots, wCB8F, hFFC6, wCB9F
 Func_0F0_67EE::
     ld de, $0000
     call TestFlagBit
@@ -4055,7 +4055,7 @@ Jump_0F0_67FB::
     ld hl, Data_0F0_6A18
 
 Jump_0F0_67FE::
-    ld de, wCB7F
+    ld de, wSpriteSlots
     ld b, $10
     call Func_0F0_68DF
     ld a, [wC5C7]
@@ -4109,7 +4109,7 @@ Jump_0F0_6848::
     ld a, $40
     ld [wCBD4], a
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wD7F1]
     and a, a
     jr z, Jump_0F0_68D3
@@ -5221,7 +5221,7 @@ Jump_0F0_7390::
     ld hl, wCECA
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ret
 
 Jump_0F0_739B::
@@ -5232,10 +5232,10 @@ Jump_0F0_739B::
     ld hl, wCEC3
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5248,10 +5248,10 @@ Jump_0F0_73BD::
     ld hl, wCECC
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5264,10 +5264,10 @@ Jump_0F0_73DF::
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5280,10 +5280,10 @@ Jump_0F0_7401::
     ld hl, wCEC9
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5296,10 +5296,10 @@ Jump_0F0_7423::
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5307,7 +5307,7 @@ Jump_0F0_7423::
 Jump_0F0_7445::
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5320,10 +5320,10 @@ Jump_0F0_7452::
     ld hl, wCEC5
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5336,10 +5336,10 @@ Jump_0F0_7474::
     ld hl, wCEC6
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5352,10 +5352,10 @@ Jump_0F0_7496::
     ld hl, wCEC8
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5368,10 +5368,10 @@ Jump_0F0_74B8::
     ld hl, wCECB
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5384,10 +5384,10 @@ Jump_0F0_74DA::
     ld hl, wCECB
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5400,10 +5400,10 @@ Jump_0F0_74FC::
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5415,7 +5415,7 @@ Jump_0F0_751E::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5427,7 +5427,7 @@ Jump_0F0_7536::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5439,7 +5439,7 @@ Jump_0F0_754E::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5451,7 +5451,7 @@ Jump_0F0_7566::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5463,7 +5463,7 @@ Jump_0F0_757E::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5475,7 +5475,7 @@ Jump_0F0_7596::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5488,10 +5488,10 @@ Jump_0F0_75AE::
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5504,10 +5504,10 @@ Jump_0F0_75D0::
     ld hl, wCEC5
     ld b, $05
     ld c, $FA
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5520,10 +5520,10 @@ Jump_0F0_75F2::
     ld hl, wCEC6
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5536,10 +5536,10 @@ Jump_0F0_7614::
     ld hl, wCEC9
     ld b, $05
     ld c, $FA
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5552,10 +5552,10 @@ Jump_0F0_7636::
     ld hl, wCEC7
     ld b, $05
     ld c, $FA
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5568,10 +5568,10 @@ Jump_0F0_7658::
     ld hl, wCEC3
     ld b, $05
     ld c, $FA
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5583,7 +5583,7 @@ Jump_0F0_767A::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5596,10 +5596,10 @@ Jump_0F0_7692::
     ld hl, wCECB
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5612,10 +5612,10 @@ Jump_0F0_76B4::
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5628,10 +5628,10 @@ Jump_0F0_76D6::
     ld hl, wCECC
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5644,7 +5644,7 @@ Jump_0F0_76F8::
     ld hl, wCECA
     ld b, $05
     ld c, $FA
-    call Func_0F0_7C51
+    call AddBClampedToC
     xor a, a
     ld [wCEC1], a
     ret
@@ -5653,10 +5653,10 @@ Jump_0F0_7712::
     ld hl, wCECD
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5673,7 +5673,7 @@ Jump_0F0_772E::
     call Func_0F0_7C64
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5691,10 +5691,10 @@ Jump_0F0_774B::
     ld hl, wCEC9
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5707,10 +5707,10 @@ Jump_0F0_776D::
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5723,10 +5723,10 @@ Jump_0F0_778F::
     ld hl, wCEC3
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5739,10 +5739,10 @@ Jump_0F0_77B1::
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5755,10 +5755,10 @@ Jump_0F0_77D3::
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5771,10 +5771,10 @@ Jump_0F0_77F5::
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5787,10 +5787,10 @@ Jump_0F0_7817::
     ld hl, wCECC
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5803,10 +5803,10 @@ Jump_0F0_7839::
     ld hl, wCEC6
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5819,10 +5819,10 @@ Jump_0F0_785B::
     ld hl, wCECB
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5845,7 +5845,7 @@ Jump_0F0_7887::
 Jump_0F0_788C::
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5858,10 +5858,10 @@ Jump_0F0_7899::
     ld hl, wCEC8
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5874,10 +5874,10 @@ Jump_0F0_78BB::
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5890,10 +5890,10 @@ Jump_0F0_78DD::
     ld hl, wCEC7
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5906,10 +5906,10 @@ Jump_0F0_78FF::
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5922,10 +5922,10 @@ Jump_0F0_7921::
     ld hl, wCEC5
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5938,10 +5938,10 @@ Jump_0F0_7943::
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5954,10 +5954,10 @@ Jump_0F0_7965::
     ld hl, wCECC
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5970,10 +5970,10 @@ Jump_0F0_7987::
     ld hl, wCECC
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -5986,10 +5986,10 @@ Jump_0F0_79A9::
     ld hl, wCEC3
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6002,10 +6002,10 @@ Jump_0F0_79CB::
     ld hl, wCEC3
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6018,10 +6018,10 @@ Jump_0F0_79ED::
     ld hl, wCEC9
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6034,10 +6034,10 @@ Jump_0F0_7A0F::
     ld hl, wCEC9
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6050,10 +6050,10 @@ Jump_0F0_7A31::
     ld hl, wCEC6
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6066,10 +6066,10 @@ Jump_0F0_7A53::
     ld hl, wCEC4
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6082,10 +6082,10 @@ Jump_0F0_7A75::
     ld hl, wCECB
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6098,10 +6098,10 @@ Jump_0F0_7A97::
     ld hl, wCECB
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6114,10 +6114,10 @@ Jump_0F0_7AB9::
     ld hl, wCECD
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6130,10 +6130,10 @@ Jump_0F0_7ADB::
     ld hl, wCECC
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6146,10 +6146,10 @@ Jump_0F0_7AFD::
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6162,10 +6162,10 @@ Jump_0F0_7B1F::
     ld hl, wCEC4
     ld b, $01
     ld c, $FE
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6178,10 +6178,10 @@ Jump_0F0_7B41::
     ld hl, wCEC8
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6194,10 +6194,10 @@ Jump_0F0_7B63::
     ld hl, wCEC7
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6210,10 +6210,10 @@ Jump_0F0_7B85::
     ld hl, wCECC
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6226,10 +6226,10 @@ Jump_0F0_7BA7::
     ld hl, wCEC9
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6242,10 +6242,10 @@ Jump_0F0_7BC9::
     ld hl, wCEC5
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6258,10 +6258,10 @@ Jump_0F0_7BEB::
     ld hl, wCECB
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6274,10 +6274,10 @@ Jump_0F0_7C0D::
     ld hl, wCEC6
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
@@ -6290,16 +6290,18 @@ Jump_0F0_7C2F::
     ld hl, wCEC3
     ld b, $02
     ld c, $FD
-    call Func_0F0_7C51
+    call AddBClampedToC
     ld hl, wCECA
     ld b, $02
-    call Func_0F0_7C5B
+    call SubtractBClampedAtZero
     xor a, a
     ld [wCEC1], a
     ret
 
+; [HL] = min([HL] + B, C) (8-bit add, no overflow check); clobbers A, C
 ; 60 call sites from 1 routine (e.g. Func_0F0_72C8)
-Func_0F0_7C51::
+AddBClampedToC::
+Func_0F0_7C51:: ; address name
     inc c
     ld a, [hl]
     add a, b
@@ -6312,8 +6314,10 @@ Jump_0F0_7C59::
     ld [hl], a
     ret
 
+; [HL] = [HL] - B, or 0 when the result has bit 7 set; clobbers A
 ; 68 call sites from 1 routine (e.g. Func_0F0_72C8)
-Func_0F0_7C5B::
+SubtractBClampedAtZero::
+Func_0F0_7C5B:: ; address name
     ld a, [hl]
     sub a, b
     bit 7, a

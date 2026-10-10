@@ -37,10 +37,10 @@ Jump_085_402D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4F46)
-; writes: wCB7D, wC919
+; writes: wSpriteSlotCount, wC919
 Func_085_403D::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -80,7 +80,7 @@ Jump_085_4071::
     farcall Func_001_6E46
     ld hl, $4D52
     call StoreHLInWC924_B85
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     ld hl, wC923
     dec [hl]
@@ -91,7 +91,7 @@ Jump_085_4093::
     call Func_085_57D5
     ret nc
     farcall Func_002_5F22
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     farcall Func_05F_6DDB
     farcall Func_004_449F
@@ -140,7 +140,7 @@ Jump_085_40C3::
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     ld hl, $4D51
     call StoreHLInWC924_B85
@@ -296,7 +296,7 @@ Jump_085_423C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5
 ; writes: hFFC7, hFFC8, hFFC9
-; points at: wCB7D, wC923
+; points at: wSpriteSlotCount, wC923
 Func_085_4249:: ; heuristic: follows a terminator; C0
     ld a, $00
     ldh [hFFC7], a
@@ -307,7 +307,7 @@ Func_085_4249:: ; heuristic: follows a terminator; C0
     farcall Func_001_6E46
     ld hl, $4D52
     call StoreHLInWC924_B85
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     ld hl, wC923
     dec [hl]
@@ -315,13 +315,13 @@ Func_085_4249:: ; heuristic: follows a terminator; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hFFB9, wC919
-; points at: wCB7D
+; points at: wSpriteSlotCount
 Func_085_426B:: ; heuristic: follows a terminator; C0
     xor a, a
     call Func_085_57D5
     ret nc
     farcall Func_002_5F22
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     farcall Func_05F_6DDB
     farcall Func_004_449F
@@ -337,7 +337,7 @@ Func_085_426B:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wC92E, wCB96, wCB9A, wCB9B
 ; writes: hFFC7, hFFC8, hFFC9, wC527
-; points at: wC6FD, wC8EF, wC6FE, wCB7D, wC923
+; points at: wC6FD, wC8EF, wC6FE, wSpriteSlotCount, wC923
 Func_085_429B:: ; heuristic: follows a terminator; C0
     ld a, $00
     ldh [hFFC7], a
@@ -374,7 +374,7 @@ Func_085_429B:: ; heuristic: follows a terminator; C0
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     ld hl, $4D51
     call StoreHLInWC924_B85
@@ -385,7 +385,7 @@ Func_085_429B:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC92E, wD7F5, wCB96, wCB9A, wCB9B
 ; writes: wC923, hFFC7, hFFC8, hFFC9, wC527
-; points at: wCB96, wC92E, wC6FD, wC923, wC8EF, wC6FE, wCB7D
+; points at: wCB96, wC92E, wC6FD, wC923, wC8EF, wC6FE, wSpriteSlotCount
 Func_085_4307:: ; heuristic: follows a terminator; C0
     ld hl, wCB96
     call Func_085_4339
@@ -684,10 +684,10 @@ Func_085_44D2::
 ; 2 call sites from 2 routines (e.g. Func_085_4047, Func_085_43AF)
 ; reads: wIsCGB
 ; writes: rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_085_4505::
     farcall Func_002_5EEE
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld de, $4583
     ld b, $09
 
@@ -1476,7 +1476,7 @@ Jump_085_4A79::
     ld [wC8C8], a
     farcall Func_05F_6C5A
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_085_4AAB::
@@ -1484,7 +1484,7 @@ Jump_085_4AAB::
     ld [wC8C8], a
     farcall Func_05F_6C5A
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_085_4ABC::
@@ -1497,7 +1497,7 @@ Jump_085_4ABC::
     ld [wC8C8], a
     farcall Func_05F_6C5A
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_085_4AD9::
@@ -1507,12 +1507,12 @@ Jump_085_4AD9::
     ld [wC8C8], a
     farcall Func_05F_6C5A
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E6D)
 ; reads: wC923
-; writes: wCB7D, wC919
+; writes: wSpriteSlotCount, wC919
 ; points at: wCB9B, wC923
 Func_085_4AEE::
     ld a, [wC923]
@@ -1524,7 +1524,7 @@ Func_085_4AEE::
     call Func_085_5780
     ret nc
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wC923
     inc [hl]
     ret
@@ -1956,7 +1956,7 @@ Jump_085_4E1F::
     ld d, a
     push hl
     ld b, $93
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToVRAM
     pop hl
     ld a, [wIsCGB]
@@ -2698,10 +2698,10 @@ Func_085_5329:: ; heuristic: follows a terminator; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFF90, hFF8F
-; writes: wCB7D, wC919
+; writes: wSpriteSlotCount, wC919
 Func_085_533C:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ldh a, [hFF90]
     cp a, $96
     jr nz, Jump_085_534B
@@ -2895,7 +2895,7 @@ Jump_085_5455::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -2980,7 +2980,7 @@ Jump_085_54F1::
     or a, a
     ret z
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     xor a, a
     ldh [hFF8D], a
     ld a, $80
@@ -3961,7 +3961,7 @@ Jump_085_5B6B::
     ld [wC8F5], a
     ld [wC8FA], a
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_085_5BA9::
     ld a, [wC94A]

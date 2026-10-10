@@ -10,7 +10,7 @@ Func_01A_4001::
     ld a, [wCFED]
     ld b, a
     ld a, $11
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $D4
     ld l, a
@@ -39,7 +39,7 @@ Func_01A_4022::
     cp a, $FF
     jr z, Jump_01A_4057
     ld a, $11
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $D4
     ld l, a
@@ -90,7 +90,7 @@ Func_01A_408F::
     ld c, a
     ld b, $00
     ld a, $11
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $D4
     ld l, a
@@ -900,7 +900,7 @@ Jump_01A_60E8::
 Func_01A_60F1::
     ld a, [wD868]
     ld c, $56
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld d, h
     ld e, l
     ld hl, Data_01A_4FF8

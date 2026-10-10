@@ -12,7 +12,7 @@ Func_0E2_4001:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_401A
     ld bc, $0000
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_401A::
     farcall Func_005_4B3D
@@ -20,7 +20,7 @@ Jump_0E2_401A::
     and a, a
     jr nz, Jump_0E2_402A
     ld bc, $0001
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_402A::
     farcall Func_005_4C5D
@@ -28,7 +28,7 @@ Jump_0E2_402A::
     and a, a
     jr nz, Jump_0E2_403A
     ld bc, $0002
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_403A::
     farcall Func_005_4CE5
@@ -38,7 +38,7 @@ Jump_0E2_403A::
     and a, a
     jr nz, Jump_0E2_404E
     ld bc, $0003
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_404E::
     farcall Func_005_53CA
@@ -46,15 +46,15 @@ Jump_0E2_404E::
     and a, a
     jr nz, Jump_0E2_405E
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_405E::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_406E
     ld bc, $0006
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_406E::
     farcall Func_005_6481
@@ -62,7 +62,7 @@ Jump_0E2_406E::
     and a, a
     jr nz, Jump_0E2_407E
     ld bc, $0066
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_407E::
     farcall Func_005_6494
@@ -70,7 +70,7 @@ Jump_0E2_407E::
     and a, a
     jr nz, Jump_0E2_408E
     ld bc, $0067
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_408E::
     farcall Func_005_64CC
@@ -78,7 +78,7 @@ Jump_0E2_408E::
     and a, a
     jr nz, Jump_0E2_409E
     ld bc, $0068
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_409E::
     farcall Func_005_6972
@@ -86,7 +86,7 @@ Jump_0E2_409E::
     and a, a
     jr nz, Jump_0E2_40AE
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_40AE::
     farcall Func_005_69DA
@@ -94,7 +94,7 @@ Jump_0E2_40AE::
     and a, a
     jr nz, Jump_0E2_40BE
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_40BE::
     ret
@@ -110,7 +110,7 @@ Func_0E2_40BF:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_40D8
     ld bc, $0008
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_40D8::
     farcall Func_005_5052
@@ -118,15 +118,15 @@ Jump_0E2_40D8::
     and a, a
     jr nz, Jump_0E2_40E8
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_40E8::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_40F8
     ld bc, $000B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_40F8::
     farcall Func_005_557E
@@ -134,7 +134,7 @@ Jump_0E2_40F8::
     and a, a
     jr nz, Jump_0E2_4108
     ld bc, $000C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4108::
     call Func_0E2_6822
@@ -143,7 +143,7 @@ Jump_0E2_4108::
     and a, a
     jr nz, Jump_0E2_411B
     ld bc, $0010
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_411B::
     ret
@@ -161,7 +161,7 @@ Func_0E2_411C:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4139
     ld bc, $0004
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4139::
     farcall Func_005_4E48
@@ -169,7 +169,7 @@ Jump_0E2_4139::
     and a, a
     jr nz, Jump_0E2_4149
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4149::
     farcall Func_005_5052
@@ -177,15 +177,15 @@ Jump_0E2_4149::
     and a, a
     jr nz, Jump_0E2_4159
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4159::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4169
     ld bc, $000B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4169::
     farcall Func_005_557E
@@ -193,7 +193,7 @@ Jump_0E2_4169::
     and a, a
     jr nz, Jump_0E2_4179
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4179::
     call Func_0E2_6822
@@ -202,7 +202,7 @@ Jump_0E2_4179::
     and a, a
     jr nz, Jump_0E2_418C
     ld bc, $0014
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_418C::
     farcall Func_005_577F
@@ -210,7 +210,7 @@ Jump_0E2_418C::
     and a, a
     jr nz, Jump_0E2_419C
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_419C::
     farcall Func_005_57CF
@@ -220,7 +220,7 @@ Jump_0E2_419C::
     and a, a
     jr nz, Jump_0E2_41B0
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_41B0::
     farcall Func_005_64FE
@@ -230,7 +230,7 @@ Jump_0E2_41B0::
     and a, a
     jr nz, Jump_0E2_41C4
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_41C4::
     ret
@@ -248,7 +248,7 @@ Func_0E2_41C5:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_41DF
     ld bc, $00B5
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_41DF::
     ret
@@ -266,17 +266,17 @@ Func_0E2_41E0::
     and a, a
     jr nz, Jump_0E2_41FD
     ld bc, $0004
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_41FD::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4213
     ld bc, $00CD
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00CF
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4213::
     call Func_0E2_6822
@@ -285,7 +285,7 @@ Jump_0E2_4213::
     and a, a
     jr nz, Jump_0E2_4226
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4226::
     farcall Func_005_6153
@@ -295,7 +295,7 @@ Jump_0E2_4226::
     and a, a
     jr nz, Jump_0E2_423A
     ld bc, $00B5
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_423A::
     farcall Func_005_64FE
@@ -305,7 +305,7 @@ Jump_0E2_423A::
     and a, a
     jr nz, Jump_0E2_424E
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_424E::
     farcall Func_005_69F5
@@ -315,7 +315,7 @@ Jump_0E2_424E::
     and a, a
     jr nz, Jump_0E2_4262
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4262::
     farcall Func_005_6A6B
@@ -325,7 +325,7 @@ Jump_0E2_4262::
     and a, a
     jr nz, Jump_0E2_4276
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4276::
     ld c, $01
@@ -342,7 +342,7 @@ Func_0E2_4279:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4292
     ld bc, $0017
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4292::
     farcall Func_005_4777
@@ -350,7 +350,7 @@ Jump_0E2_4292::
     and a, a
     jr nz, Jump_0E2_42A2
     ld bc, $0017
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_42A2::
     farcall Func_005_4B3D
@@ -358,7 +358,7 @@ Jump_0E2_42A2::
     and a, a
     jr nz, Jump_0E2_42B2
     ld bc, $0011
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_42B2::
     farcall Func_005_4BE1
@@ -366,7 +366,7 @@ Jump_0E2_42B2::
     and a, a
     jr nz, Jump_0E2_42C2
     ld bc, $001B
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_42C2::
     farcall Func_005_4C5D
@@ -374,17 +374,17 @@ Jump_0E2_42C2::
     and a, a
     jr nz, Jump_0E2_42D2
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_42D2::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_42E8
     ld bc, $00CD
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00CF
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_42E8::
     call Func_0E2_6843
@@ -393,7 +393,7 @@ Jump_0E2_42E8::
     and a, a
     jr nz, Jump_0E2_42FB
     ld bc, $0019
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_42FB::
     farcall Func_005_64FE
@@ -403,7 +403,7 @@ Jump_0E2_42FB::
     and a, a
     jr nz, Jump_0E2_430F
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_430F::
     ret
@@ -422,7 +422,7 @@ Func_0E2_4310:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Func_0E2_432D
     ld bc, $0069
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 ; 1 call site from 1 routine (e.g. Func_0E2_438D)
 ; reads: wD8A4
@@ -432,7 +432,7 @@ Func_0E2_432D::
     and a, a
     jr nz, Jump_0E2_433D
     ld bc, $001A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_433D::
     farcall Func_005_4664
@@ -440,7 +440,7 @@ Jump_0E2_433D::
     and a, a
     jr nz, Jump_0E2_434D
     ld bc, $001A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_434D::
     farcall Func_005_4BE1
@@ -448,7 +448,7 @@ Jump_0E2_434D::
     and a, a
     jr nz, Jump_0E2_435D
     ld bc, $001B
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_435D::
     ld a, [wD8A4]
@@ -458,17 +458,17 @@ Jump_0E2_435D::
     and a, a
     jr nz, Jump_0E2_4373
     ld bc, $0023
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4373::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4389
     ld bc, $0024
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C8
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4389::
     call Func_0E2_6865
@@ -486,7 +486,7 @@ Func_0E2_438D:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_43A9
     ld bc, $0023
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_43A9::
     farcall Func_005_6556
@@ -496,7 +496,7 @@ Jump_0E2_43A9::
     and a, a
     jr nz, Jump_0E2_43BD
     ld bc, $0069
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_43BD::
     ret
@@ -523,7 +523,7 @@ Func_0E2_43C8:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_43E8
     ld bc, $002E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_43E8::
     ret
@@ -535,14 +535,14 @@ Func_0E2_43E9:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     call Func_0E2_67D5
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_440B
     ld bc, $00BC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C4
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_440B::
     farcall Func_005_667F
@@ -552,7 +552,7 @@ Jump_0E2_440B::
     and a, a
     jr nz, Jump_0E2_441F
     ld bc, $002E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_441F::
     ret
@@ -564,7 +564,7 @@ Func_0E2_4420:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $002A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     call Func_0E2_6865
     ret
 
@@ -575,7 +575,7 @@ Func_0E2_4433:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $002A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     call Func_0E2_6865
     ret
 
@@ -586,7 +586,7 @@ Func_0E2_4446:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $002A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     call Func_0E2_6865
     ret
 
@@ -597,7 +597,7 @@ Func_0E2_4459:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $002A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     call Func_0E2_6865
     ret
 
@@ -612,17 +612,17 @@ Func_0E2_446C:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4485
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4485::
     call Func_0E2_6854
     call Func_0E2_6773
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_449B
     ld bc, $00C1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_449B::
     ret
@@ -638,7 +638,7 @@ Func_0E2_449C:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_44B5
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_44B5::
     farcall Func_005_50E3
@@ -648,7 +648,7 @@ Jump_0E2_44B5::
     and a, a
     jr nz, Jump_0E2_44C9
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_44C9::
     farcall Func_005_517D
@@ -658,17 +658,17 @@ Jump_0E2_44C9::
     and a, a
     jr nz, Jump_0E2_44DD
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_44DD::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_44F3
     ld bc, $00CC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_44F3::
     call Func_0E2_6854
@@ -679,7 +679,7 @@ Jump_0E2_44F3::
     and a, a
     jr nz, Jump_0E2_450A
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_450A::
     call Func_0E2_678C
@@ -690,7 +690,7 @@ Jump_0E2_450A::
     and a, a
     jr nz, Jump_0E2_4521
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4521::
     farcall Func_005_6A6B
@@ -700,7 +700,7 @@ Jump_0E2_4521::
     and a, a
     jr nz, Jump_0E2_4535
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4535::
     ret
@@ -716,7 +716,7 @@ Func_0E2_4536:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_454F
     ld bc, $002D
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_454F::
     farcall Func_005_50B7
@@ -726,7 +726,7 @@ Jump_0E2_454F::
     and a, a
     jr nz, Jump_0E2_4563
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4563::
     call Func_0E2_6854
@@ -745,7 +745,7 @@ Func_0E2_4567:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4584
     ld bc, $0004
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4584::
     farcall Func_005_4B97
@@ -753,7 +753,7 @@ Jump_0E2_4584::
     and a, a
     jr nz, Jump_0E2_4594
     ld bc, $002D
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4594::
     farcall Func_005_50B7
@@ -763,17 +763,17 @@ Jump_0E2_4594::
     and a, a
     jr nz, Jump_0E2_45A8
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_45A8::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_45BE
     ld bc, $00CC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_45BE::
     call Func_0E2_6854
@@ -784,7 +784,7 @@ Jump_0E2_45BE::
     and a, a
     jr nz, Jump_0E2_45D5
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_45D5::
     farcall Func_005_69F5
@@ -794,7 +794,7 @@ Jump_0E2_45D5::
     and a, a
     jr nz, Jump_0E2_45E9
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_45E9::
     farcall Func_005_6A6B
@@ -804,7 +804,7 @@ Jump_0E2_45E9::
     and a, a
     jr nz, Jump_0E2_45FD
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_45FD::
     ret
@@ -822,7 +822,7 @@ Func_0E2_45FE:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4618
     ld bc, $00B3
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4618::
     ret
@@ -840,7 +840,7 @@ Func_0E2_4619::
     and a, a
     jr nz, Jump_0E2_4636
     ld bc, $002F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4636::
     farcall Func_005_5228
@@ -850,15 +850,15 @@ Jump_0E2_4636::
     and a, a
     jr nz, Jump_0E2_464A
     ld bc, $0030
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_464A::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_465A
     ld bc, $00BA
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_465A::
     call Func_0E2_6854
@@ -869,7 +869,7 @@ Jump_0E2_465A::
     and a, a
     jr nz, Jump_0E2_4671
     ld bc, $00B3
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4671::
     ld c, $01
@@ -888,7 +888,7 @@ Func_0E2_4674:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4691
     ld bc, $0004
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4691::
     farcall Func_005_4C5D
@@ -896,7 +896,7 @@ Jump_0E2_4691::
     and a, a
     jr nz, Jump_0E2_46A1
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_46A1::
     farcall Func_005_5275
@@ -906,19 +906,19 @@ Jump_0E2_46A1::
     and a, a
     jr nz, Jump_0E2_46B5
     ld bc, $0031
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_46B5::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_46D1
     ld bc, $00BA
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00CC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_46D1::
     call Func_0E2_6854
@@ -927,7 +927,7 @@ Jump_0E2_46D1::
     and a, a
     jr nz, Jump_0E2_46E4
     ld bc, $0032
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_46E4::
     farcall Func_005_64FE
@@ -937,7 +937,7 @@ Jump_0E2_46E4::
     and a, a
     jr nz, Jump_0E2_46F8
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_46F8::
     farcall Func_005_69F5
@@ -947,7 +947,7 @@ Jump_0E2_46F8::
     and a, a
     jr nz, Jump_0E2_470C
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_470C::
     farcall Func_005_6A6B
@@ -957,7 +957,7 @@ Jump_0E2_470C::
     and a, a
     jr nz, Jump_0E2_4720
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4720::
     ret
@@ -975,7 +975,7 @@ Func_0E2_4721:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_473E
     ld bc, $0004
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_473E::
     farcall Func_005_50B7
@@ -985,15 +985,15 @@ Jump_0E2_473E::
     and a, a
     jr nz, Jump_0E2_4752
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4752::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4762
     ld bc, $00BC
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4762::
     call Func_0E2_6854
@@ -1004,7 +1004,7 @@ Jump_0E2_4762::
     and a, a
     jr nz, Jump_0E2_4779
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4779::
     farcall Func_005_6A6B
@@ -1014,7 +1014,7 @@ Jump_0E2_4779::
     and a, a
     jr nz, Jump_0E2_478D
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_478D::
     ret
@@ -1030,7 +1030,7 @@ Func_0E2_478E:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_47A7
     ld bc, $0034
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_47A7::
     call Func_0E2_6854
@@ -1043,13 +1043,13 @@ Func_0E2_47AB:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0035
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     farcall Func_005_5052
     ld a, c
     and a, a
     jr nz, Jump_0E2_47CA
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_47CA::
     call Func_0E2_6854
@@ -1068,18 +1068,18 @@ Func_0E2_47CE:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_47EB
     ld bc, $0004
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_47EB::
     call Func_0E2_6854
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4804
     ld bc, $00CC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4804::
     farcall Func_005_57A1
@@ -1089,7 +1089,7 @@ Jump_0E2_4804::
     and a, a
     jr nz, Jump_0E2_4818
     ld bc, $0036
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4818::
     farcall Func_005_64FE
@@ -1099,7 +1099,7 @@ Jump_0E2_4818::
     and a, a
     jr nz, Jump_0E2_482C
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_482C::
     farcall Func_005_69F5
@@ -1109,7 +1109,7 @@ Jump_0E2_482C::
     and a, a
     jr nz, Jump_0E2_4840
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4840::
     farcall Func_005_6A6B
@@ -1119,7 +1119,7 @@ Jump_0E2_4840::
     and a, a
     jr nz, Jump_0E2_4854
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4854::
     ret
@@ -1130,12 +1130,12 @@ Func_0E2_4855:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_486E
     ld bc, $00CA
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_486E::
     call Func_0E2_6854
@@ -1146,7 +1146,7 @@ Jump_0E2_486E::
     and a, a
     jr nz, Jump_0E2_4885
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4885::
     farcall Func_005_69F5
@@ -1156,7 +1156,7 @@ Jump_0E2_4885::
     and a, a
     jr nz, Jump_0E2_4899
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4899::
     farcall Func_005_6A6B
@@ -1166,7 +1166,7 @@ Jump_0E2_4899::
     and a, a
     jr nz, Jump_0E2_48AD
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_48AD::
     ret
@@ -1179,12 +1179,12 @@ Func_0E2_48AE:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_48CB
     ld bc, $00D0
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_48CB::
     call Func_0E2_6854
@@ -1196,12 +1196,12 @@ Func_0E2_48CF:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_48E8
     ld bc, $00C0
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_48E8::
     farcall Func_005_57A1
@@ -1211,7 +1211,7 @@ Jump_0E2_48E8::
     and a, a
     jr nz, Jump_0E2_48FC
     ld bc, $0036
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_48FC::
     ret
@@ -1229,7 +1229,7 @@ Func_0E2_48FD:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_491A
     ld bc, $003A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_491A::
     call Func_0E2_6854
@@ -1249,7 +1249,7 @@ Func_0E2_491E:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_493E
     ld bc, $0036
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_493E::
     ret
@@ -1267,7 +1267,7 @@ Func_0E2_493F:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_495C
     ld bc, $003B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_495C::
     farcall Func_005_544F
@@ -1277,15 +1277,15 @@ Jump_0E2_495C::
     and a, a
     jr nz, Jump_0E2_4970
     ld bc, $003C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4970::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4980
     ld bc, $00CE
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4980::
     call Func_0E2_6854
@@ -1304,7 +1304,7 @@ Func_0E2_4984:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_49A1
     ld bc, $003A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_49A1::
     call Func_0E2_6854
@@ -1313,7 +1313,7 @@ Jump_0E2_49A1::
     and a, a
     jr nz, Jump_0E2_49B4
     ld bc, $003D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_49B4::
     ret
@@ -1329,7 +1329,7 @@ Func_0E2_49B5:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_49CE
     ld bc, $003F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_49CE::
     farcall Func_005_5397
@@ -1337,17 +1337,17 @@ Jump_0E2_49CE::
     and a, a
     jr nz, Jump_0E2_49DE
     ld bc, $0040
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_49DE::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_49F4
     ld bc, $00BF
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C5
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_49F4::
     call Func_0E2_6854
@@ -1356,7 +1356,7 @@ Jump_0E2_49F4::
     and a, a
     jr nz, Jump_0E2_4A07
     ld bc, $0042
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A07::
     ret
@@ -1372,7 +1372,7 @@ Func_0E2_4A08:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4A21
     ld bc, $0043
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A21::
     farcall Func_005_4C5D
@@ -1380,7 +1380,7 @@ Jump_0E2_4A21::
     and a, a
     jr nz, Jump_0E2_4A31
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4A31::
     farcall Func_005_4D1A
@@ -1388,7 +1388,7 @@ Jump_0E2_4A31::
     and a, a
     jr nz, Jump_0E2_4A41
     ld bc, $0044
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4A41::
     farcall Func_005_5052
@@ -1396,15 +1396,15 @@ Jump_0E2_4A41::
     and a, a
     jr nz, Jump_0E2_4A51
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A51::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A61
     ld bc, $0045
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A61::
     farcall Func_005_56FC
@@ -1412,7 +1412,7 @@ Jump_0E2_4A61::
     and a, a
     jr nz, Jump_0E2_4A71
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4A71::
     farcall Func_005_5731
@@ -1420,7 +1420,7 @@ Jump_0E2_4A71::
     and a, a
     jr nz, Jump_0E2_4A81
     ld bc, $0046
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A81::
     farcall Func_005_5758
@@ -1428,7 +1428,7 @@ Jump_0E2_4A81::
     and a, a
     jr nz, Jump_0E2_4A91
     ld bc, $0047
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A91::
     farcall Func_005_5CE1
@@ -1436,7 +1436,7 @@ Jump_0E2_4A91::
     and a, a
     jr nz, Jump_0E2_4AA1
     ld bc, $0048
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4AA1::
     farcall Func_005_6392
@@ -1446,7 +1446,7 @@ Jump_0E2_4AA1::
     or a, a
     jr nz, Jump_0E2_4AB5
     ld bc, $003E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4AB5::
     ret
@@ -1462,7 +1462,7 @@ Func_0E2_4AB6:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4ACF
     ld bc, $0049
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4ACF::
     farcall Func_005_4E48
@@ -1470,7 +1470,7 @@ Jump_0E2_4ACF::
     and a, a
     jr nz, Jump_0E2_4ADF
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4ADF::
     farcall Func_005_5052
@@ -1478,7 +1478,7 @@ Jump_0E2_4ADF::
     and a, a
     jr nz, Jump_0E2_4AEF
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4AEF::
     farcall Func_005_557E
@@ -1486,7 +1486,7 @@ Jump_0E2_4AEF::
     and a, a
     jr nz, Jump_0E2_4AFF
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4AFF::
     call Func_0E2_6898
@@ -1495,7 +1495,7 @@ Jump_0E2_4AFF::
     and a, a
     jr nz, Jump_0E2_4B12
     ld bc, $0046
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B12::
     farcall Func_005_5758
@@ -1503,7 +1503,7 @@ Jump_0E2_4B12::
     and a, a
     jr nz, Jump_0E2_4B22
     ld bc, $0047
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B22::
     farcall Func_005_577F
@@ -1511,7 +1511,7 @@ Jump_0E2_4B22::
     and a, a
     jr nz, Jump_0E2_4B32
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B32::
     farcall Func_005_57CF
@@ -1521,7 +1521,7 @@ Jump_0E2_4B32::
     and a, a
     jr nz, Jump_0E2_4B46
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4B46::
     farcall Func_005_5CCE
@@ -1529,7 +1529,7 @@ Jump_0E2_4B46::
     and a, a
     jr nz, Jump_0E2_4B56
     ld bc, $004B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B56::
     farcall Func_005_64FE
@@ -1539,7 +1539,7 @@ Jump_0E2_4B56::
     and a, a
     jr nz, Jump_0E2_4B6A
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4B6A::
     ret
@@ -1555,7 +1555,7 @@ Func_0E2_4B6B:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4B84
     ld bc, $004C
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4B84::
     farcall Func_005_4B3D
@@ -1563,7 +1563,7 @@ Jump_0E2_4B84::
     and a, a
     jr nz, Jump_0E2_4B94
     ld bc, $0011
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4B94::
     farcall Func_005_4E48
@@ -1571,7 +1571,7 @@ Jump_0E2_4B94::
     and a, a
     jr nz, Jump_0E2_4BA4
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4BA4::
     farcall Func_005_5052
@@ -1579,7 +1579,7 @@ Jump_0E2_4BA4::
     and a, a
     jr nz, Jump_0E2_4BB4
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BB4::
     farcall Func_005_53E6
@@ -1587,15 +1587,15 @@ Jump_0E2_4BB4::
     and a, a
     jr nz, Jump_0E2_4BC4
     ld bc, $004D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BC4::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4BD4
     ld bc, $006A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BD4::
     farcall Func_005_557E
@@ -1603,7 +1603,7 @@ Jump_0E2_4BD4::
     and a, a
     jr nz, Jump_0E2_4BE4
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BE4::
     call Func_0E2_6876
@@ -1612,7 +1612,7 @@ Jump_0E2_4BE4::
     and a, a
     jr nz, Jump_0E2_4BF7
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BF7::
     farcall Func_005_57CF
@@ -1622,7 +1622,7 @@ Jump_0E2_4BF7::
     and a, a
     jr nz, Jump_0E2_4C0B
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4C0B::
     farcall Func_005_5D31
@@ -1630,7 +1630,7 @@ Jump_0E2_4C0B::
     and a, a
     jr nz, Jump_0E2_4C1B
     ld bc, $004E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4C1B::
     farcall Func_005_64FE
@@ -1640,7 +1640,7 @@ Jump_0E2_4C1B::
     and a, a
     jr nz, Jump_0E2_4C2F
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4C2F::
     ret
@@ -1656,7 +1656,7 @@ Func_0E2_4C30:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Func_0E2_4C49
     ld bc, $0010
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4CA1)
 Func_0E2_4C49::
@@ -1665,7 +1665,7 @@ Func_0E2_4C49::
     and a, a
     jr nz, Jump_0E2_4C59
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4C59::
     farcall Func_005_4E48
@@ -1673,7 +1673,7 @@ Jump_0E2_4C59::
     and a, a
     jr nz, Jump_0E2_4C69
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4C69::
     farcall Func_005_5052
@@ -1681,7 +1681,7 @@ Jump_0E2_4C69::
     and a, a
     jr nz, Jump_0E2_4C79
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4C79::
     farcall Func_005_557E
@@ -1689,7 +1689,7 @@ Jump_0E2_4C79::
     and a, a
     jr nz, Jump_0E2_4C89
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4C89::
     call Func_0E2_6898
@@ -1700,7 +1700,7 @@ Jump_0E2_4C89::
     and a, a
     jr nz, Jump_0E2_4CA0
     ld bc, $004F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4CA0::
     ret
@@ -1717,7 +1717,7 @@ Func_0E2_4CA1:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4CBD
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4CBD::
     farcall Func_005_57CF
@@ -1727,7 +1727,7 @@ Jump_0E2_4CBD::
     and a, a
     jr nz, Jump_0E2_4CD1
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4CD1::
     farcall Func_005_64FE
@@ -1737,7 +1737,7 @@ Jump_0E2_4CD1::
     and a, a
     jr nz, Jump_0E2_4CE5
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4CE5::
     ret
@@ -1753,7 +1753,7 @@ Func_0E2_4CE6:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4CFF
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4CFF::
     farcall Func_005_4E48
@@ -1761,7 +1761,7 @@ Jump_0E2_4CFF::
     and a, a
     jr nz, Jump_0E2_4D0F
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4D0F::
     farcall Func_005_5052
@@ -1769,7 +1769,7 @@ Jump_0E2_4D0F::
     and a, a
     jr nz, Jump_0E2_4D1F
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4D1F::
     farcall Func_005_557E
@@ -1777,7 +1777,7 @@ Jump_0E2_4D1F::
     and a, a
     jr nz, Jump_0E2_4D2F
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4D2F::
     call Func_0E2_6898
@@ -1786,7 +1786,7 @@ Jump_0E2_4D2F::
     and a, a
     jr nz, Jump_0E2_4D42
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4D42::
     farcall Func_005_57CF
@@ -1796,7 +1796,7 @@ Jump_0E2_4D42::
     and a, a
     jr nz, Jump_0E2_4D56
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4D56::
     farcall Func_005_64CC
@@ -1804,7 +1804,7 @@ Jump_0E2_4D56::
     and a, a
     jr nz, Jump_0E2_4D66
     ld bc, $006B
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4D66::
     farcall Func_005_64FE
@@ -1814,7 +1814,7 @@ Jump_0E2_4D66::
     and a, a
     jr nz, Jump_0E2_4D7A
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4D7A::
     ret
@@ -1830,7 +1830,7 @@ Func_0E2_4D7B:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4D94
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4D94::
     farcall Func_005_4E48
@@ -1838,7 +1838,7 @@ Jump_0E2_4D94::
     and a, a
     jr nz, Jump_0E2_4DA4
     ld bc, $000D
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4DA4::
     farcall Func_005_5052
@@ -1846,7 +1846,7 @@ Jump_0E2_4DA4::
     and a, a
     jr nz, Jump_0E2_4DB4
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4DB4::
     farcall Func_005_557E
@@ -1854,7 +1854,7 @@ Jump_0E2_4DB4::
     and a, a
     jr nz, Jump_0E2_4DC4
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4DC4::
     call Func_0E2_6898
@@ -1863,7 +1863,7 @@ Jump_0E2_4DC4::
     and a, a
     jr nz, Jump_0E2_4DD7
     ld bc, $0010
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4DD7::
     farcall Func_005_57CF
@@ -1873,7 +1873,7 @@ Jump_0E2_4DD7::
     and a, a
     jr nz, Jump_0E2_4DEB
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4DEB::
     ret
@@ -1889,7 +1889,7 @@ Func_0E2_4DEC:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4E05
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4E05::
     farcall Func_005_4E48
@@ -1897,7 +1897,7 @@ Jump_0E2_4E05::
     and a, a
     jr nz, Jump_0E2_4E15
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4E15::
     farcall Func_005_5052
@@ -1905,7 +1905,7 @@ Jump_0E2_4E15::
     and a, a
     jr nz, Jump_0E2_4E25
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4E25::
     farcall Func_005_557E
@@ -1913,7 +1913,7 @@ Jump_0E2_4E25::
     and a, a
     jr nz, Jump_0E2_4E35
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4E35::
     call Func_0E2_6898
@@ -1922,7 +1922,7 @@ Jump_0E2_4E35::
     and a, a
     jr nz, Jump_0E2_4E48
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4E48::
     farcall Func_005_57CF
@@ -1932,7 +1932,7 @@ Jump_0E2_4E48::
     and a, a
     jr nz, Jump_0E2_4E5C
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4E5C::
     farcall Func_005_64FE
@@ -1942,7 +1942,7 @@ Jump_0E2_4E5C::
     and a, a
     jr nz, Jump_0E2_4E70
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4E70::
     ret
@@ -1958,7 +1958,7 @@ Func_0E2_4E71:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4E8A
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4E8A::
     farcall Func_005_4E48
@@ -1966,7 +1966,7 @@ Jump_0E2_4E8A::
     and a, a
     jr nz, Jump_0E2_4E9A
     ld bc, $0008
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4E9A::
     farcall Func_005_5052
@@ -1974,7 +1974,7 @@ Jump_0E2_4E9A::
     and a, a
     jr nz, Jump_0E2_4EAA
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4EAA::
     farcall Func_005_53CA
@@ -1982,17 +1982,17 @@ Jump_0E2_4EAA::
     and a, a
     jr nz, Jump_0E2_4EBA
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4EBA::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_4ED0
     ld bc, $00BE
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00C5
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4ED0::
     farcall Func_005_557E
@@ -2000,7 +2000,7 @@ Jump_0E2_4ED0::
     and a, a
     jr nz, Jump_0E2_4EE0
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4EE0::
     call Func_0E2_6898
@@ -2009,7 +2009,7 @@ Jump_0E2_4EE0::
     and a, a
     jr nz, Jump_0E2_4EF3
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4EF3::
     farcall Func_005_57CF
@@ -2019,7 +2019,7 @@ Jump_0E2_4EF3::
     and a, a
     jr nz, Jump_0E2_4F07
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4F07::
     farcall Func_005_5D44
@@ -2029,7 +2029,7 @@ Jump_0E2_4F07::
     and a, a
     jr nz, Jump_0E2_4F1B
     ld bc, $004F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F1B::
     farcall Func_005_64FE
@@ -2039,7 +2039,7 @@ Jump_0E2_4F1B::
     and a, a
     jr nz, Jump_0E2_4F2F
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4F2F::
     ret
@@ -2055,7 +2055,7 @@ Func_0E2_4F30:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_4F49
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4F49::
     farcall Func_005_4CE5
@@ -2065,7 +2065,7 @@ Jump_0E2_4F49::
     and a, a
     jr nz, Jump_0E2_4F5D
     ld bc, $0003
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4F5D::
     farcall Func_005_4E48
@@ -2073,7 +2073,7 @@ Jump_0E2_4F5D::
     and a, a
     jr nz, Jump_0E2_4F6D
     ld bc, $0008
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4F6D::
     farcall Func_005_5052
@@ -2081,7 +2081,7 @@ Jump_0E2_4F6D::
     and a, a
     jr nz, Jump_0E2_4F7D
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F7D::
     farcall Func_005_53CA
@@ -2089,7 +2089,7 @@ Jump_0E2_4F7D::
     and a, a
     jr nz, Jump_0E2_4F8D
     ld bc, $0055
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F8D::
     farcall Func_005_557E
@@ -2097,7 +2097,7 @@ Jump_0E2_4F8D::
     and a, a
     jr nz, Jump_0E2_4F9D
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F9D::
     call Func_0E2_6898
@@ -2106,7 +2106,7 @@ Jump_0E2_4F9D::
     and a, a
     jr nz, Jump_0E2_4FB0
     ld bc, $0066
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FB0::
     farcall Func_005_6494
@@ -2114,7 +2114,7 @@ Jump_0E2_4FB0::
     and a, a
     jr nz, Jump_0E2_4FC0
     ld bc, $0067
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FC0::
     farcall Func_005_6972
@@ -2122,7 +2122,7 @@ Jump_0E2_4FC0::
     and a, a
     jr nz, Jump_0E2_4FD0
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FD0::
     farcall Func_005_69DA
@@ -2130,7 +2130,7 @@ Jump_0E2_4FD0::
     and a, a
     jr nz, Jump_0E2_4FE0
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_4FE0::
     ret
@@ -2142,7 +2142,7 @@ Func_0E2_4FE1:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FF0::
     farcall Func_005_4C5D
@@ -2150,7 +2150,7 @@ Jump_0E2_4FF0::
     and a, a
     jr nz, Jump_0E2_5000
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5000::
     farcall Func_005_4CE5
@@ -2160,7 +2160,7 @@ Jump_0E2_5000::
     and a, a
     jr nz, Jump_0E2_5014
     ld bc, $0003
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5014::
     farcall Func_005_53CA
@@ -2168,7 +2168,7 @@ Jump_0E2_5014::
     and a, a
     jr nz, Jump_0E2_5024
     ld bc, $0053
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5024::
     call Func_0E2_6898
@@ -2177,7 +2177,7 @@ Jump_0E2_5024::
     and a, a
     jr nz, Jump_0E2_5037
     ld bc, $0066
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5037::
     farcall Func_005_6494
@@ -2185,13 +2185,13 @@ Jump_0E2_5037::
     and a, a
     jr nz, Jump_0E2_5067
     ld bc, $0067
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     farcall Func_005_6972
     ld a, c
     and a, a
     jr nz, Jump_0E2_5057
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5057::
     farcall Func_005_69DA
@@ -2199,7 +2199,7 @@ Jump_0E2_5057::
     and a, a
     jr nz, Jump_0E2_5067
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5067::
     ret
@@ -2211,7 +2211,7 @@ Func_0E2_5068:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2221,7 +2221,7 @@ Func_0E2_507A:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2231,7 +2231,7 @@ Func_0E2_508C:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2241,7 +2241,7 @@ Func_0E2_509E:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2251,7 +2251,7 @@ Func_0E2_50B0:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2261,7 +2261,7 @@ Func_0E2_50C2:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2271,7 +2271,7 @@ Func_0E2_50D4:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2281,7 +2281,7 @@ Func_0E2_50E6:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2291,7 +2291,7 @@ Func_0E2_50F8:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0052
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2301,7 +2301,7 @@ Func_0E2_510A:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0053
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_4FF0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2311,7 +2311,7 @@ Func_0E2_511C:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0054
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_512B::
     farcall Func_005_53CA
@@ -2319,7 +2319,7 @@ Jump_0E2_512B::
     and a, a
     jr nz, Jump_0E2_513B
     ld bc, $0055
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_513B::
     call Func_0E2_6898
@@ -2328,7 +2328,7 @@ Jump_0E2_513B::
     and a, a
     jr nz, Jump_0E2_514E
     ld bc, $0066
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_514E::
     farcall Func_005_6494
@@ -2336,7 +2336,7 @@ Jump_0E2_514E::
     and a, a
     jr nz, Jump_0E2_515E
     ld bc, $0067
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_515E::
     farcall Func_005_64CC
@@ -2344,7 +2344,7 @@ Jump_0E2_515E::
     and a, a
     jr nz, Jump_0E2_516E
     ld bc, $0039
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_516E::
     farcall Func_005_6972
@@ -2352,7 +2352,7 @@ Jump_0E2_516E::
     and a, a
     jr nz, Jump_0E2_517E
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_517E::
     farcall Func_005_69DA
@@ -2360,7 +2360,7 @@ Jump_0E2_517E::
     and a, a
     jr nz, Jump_0E2_518E
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_518E::
     farcall Func_005_69F5
@@ -2370,7 +2370,7 @@ Jump_0E2_518E::
     and a, a
     jr nz, Jump_0E2_51A2
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_51A2::
     farcall Func_005_6A6B
@@ -2380,7 +2380,7 @@ Jump_0E2_51A2::
     and a, a
     jr nz, Jump_0E2_51B6
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_51B6::
     ret
@@ -2392,7 +2392,7 @@ Func_0E2_51B7:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0054
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_512B
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2402,7 +2402,7 @@ Func_0E2_51C9:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0054
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jp Jump_0E2_512B
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2418,7 +2418,7 @@ Func_0E2_51DB:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_51F5
     ld bc, $00B4
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_51F5::
     ret
@@ -2436,15 +2436,15 @@ Func_0E2_51F6::
     and a, a
     jr nz, Jump_0E2_5213
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5213::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5223
     ld bc, $00C8
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5223::
     call Func_0E2_6898
@@ -2453,7 +2453,7 @@ Jump_0E2_5223::
     and a, a
     jr nz, Jump_0E2_5236
     ld bc, $0056
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5236::
     farcall Func_005_604C
@@ -2463,7 +2463,7 @@ Jump_0E2_5236::
     and a, a
     jr nz, Jump_0E2_524A
     ld bc, $00B4
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_524A::
     farcall Func_005_6972
@@ -2471,7 +2471,7 @@ Jump_0E2_524A::
     and a, a
     jr nz, Jump_0E2_525A
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_525A::
     farcall Func_005_69DA
@@ -2479,7 +2479,7 @@ Jump_0E2_525A::
     and a, a
     jr nz, Jump_0E2_526A
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_526A::
     ld c, $01
@@ -2496,7 +2496,7 @@ Func_0E2_526D:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5286
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5286::
     farcall Func_005_53CA
@@ -2504,15 +2504,15 @@ Jump_0E2_5286::
     and a, a
     jr nz, Jump_0E2_5296
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5296::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_52A6
     ld bc, $00C8
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_52A6::
     call Func_0E2_6898
@@ -2521,7 +2521,7 @@ Jump_0E2_52A6::
     and a, a
     jr nz, Jump_0E2_52B9
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_52B9::
     farcall Func_005_57CF
@@ -2531,7 +2531,7 @@ Jump_0E2_52B9::
     and a, a
     jr nz, Jump_0E2_52CD
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_52CD::
     farcall Func_005_5C8C
@@ -2539,7 +2539,7 @@ Jump_0E2_52CD::
     and a, a
     jr nz, Jump_0E2_52DD
     ld bc, $0056
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_52DD::
     farcall Func_005_676E
@@ -2547,7 +2547,7 @@ Jump_0E2_52DD::
     and a, a
     jr nz, Jump_0E2_52ED
     ld bc, $0056
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_52ED::
     farcall Func_005_6972
@@ -2555,7 +2555,7 @@ Jump_0E2_52ED::
     and a, a
     jr nz, Jump_0E2_52FD
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_52FD::
     farcall Func_005_69DA
@@ -2563,7 +2563,7 @@ Jump_0E2_52FD::
     and a, a
     jr nz, Jump_0E2_530D
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_530D::
     ret
@@ -2579,17 +2579,17 @@ Func_0E2_530E:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5327
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5327::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_533D
     ld bc, $00C3
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00CB
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_533D::
     call Func_0E2_6898
@@ -2598,7 +2598,7 @@ Jump_0E2_533D::
     and a, a
     jr nz, Jump_0E2_5350
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5350::
     farcall Func_005_57CF
@@ -2608,7 +2608,7 @@ Jump_0E2_5350::
     and a, a
     jr nz, Jump_0E2_5364
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5364::
     farcall Func_005_6972
@@ -2616,7 +2616,7 @@ Jump_0E2_5364::
     and a, a
     jr nz, Jump_0E2_5374
     ld bc, $0005
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5374::
     farcall Func_005_69DA
@@ -2624,7 +2624,7 @@ Jump_0E2_5374::
     and a, a
     jr nz, Jump_0E2_5384
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5384::
     ret
@@ -2642,7 +2642,7 @@ Func_0E2_5385:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_53A2
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_53A2::
     farcall Func_005_4C5D
@@ -2650,7 +2650,7 @@ Jump_0E2_53A2::
     and a, a
     jr nz, Jump_0E2_53B2
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_53B2::
     farcall Func_005_4E48
@@ -2658,7 +2658,7 @@ Jump_0E2_53B2::
     and a, a
     jr nz, Jump_0E2_53C2
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_53C2::
     farcall Func_005_5052
@@ -2666,7 +2666,7 @@ Jump_0E2_53C2::
     and a, a
     jr nz, Jump_0E2_53D2
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_53D2::
     farcall Func_005_557E
@@ -2674,7 +2674,7 @@ Jump_0E2_53D2::
     and a, a
     jr nz, Jump_0E2_53E2
     ld bc, $000D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_53E2::
     call Func_0E2_6898
@@ -2683,7 +2683,7 @@ Jump_0E2_53E2::
     and a, a
     jr nz, Jump_0E2_53F5
     ld bc, $0057
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_53F5::
     farcall Func_005_57CF
@@ -2693,7 +2693,7 @@ Jump_0E2_53F5::
     and a, a
     jr nz, Jump_0E2_5409
     ld bc, $004A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5409::
     ret
@@ -2709,7 +2709,7 @@ Func_0E2_540A:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5423
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5423::
     jp Jump_0E2_53A2
@@ -2727,17 +2727,17 @@ Func_0E2_5426:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5443
     ld bc, $0058
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5443::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5459
     ld bc, $00BA
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00BF
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5459::
     call Func_0E2_6898
@@ -2754,7 +2754,7 @@ Func_0E2_545D:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5476
     ld bc, $002D
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5476::
     farcall Func_005_4C5D
@@ -2762,7 +2762,7 @@ Jump_0E2_5476::
     and a, a
     jr nz, Jump_0E2_5486
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5486::
     farcall Func_005_50B7
@@ -2772,7 +2772,7 @@ Jump_0E2_5486::
     and a, a
     jr nz, Jump_0E2_549A
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_549A::
     farcall Func_005_53CA
@@ -2780,17 +2780,17 @@ Jump_0E2_549A::
     and a, a
     jr nz, Jump_0E2_54AA
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_54AA::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_54C0
     ld bc, $00BA
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00BF
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_54C0::
     call Func_0E2_6898
@@ -2807,7 +2807,7 @@ Func_0E2_54C4:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_54DD
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_54DD::
     farcall Func_005_50E3
@@ -2817,7 +2817,7 @@ Jump_0E2_54DD::
     and a, a
     jr nz, Jump_0E2_54F1
     ld bc, $0058
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_54F1::
     farcall Func_005_517D
@@ -2827,7 +2827,7 @@ Jump_0E2_54F1::
     and a, a
     jr nz, Jump_0E2_5505
     ld bc, $0059
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5505::
     farcall Func_005_53CA
@@ -2835,7 +2835,7 @@ Jump_0E2_5505::
     and a, a
     jr nz, Jump_0E2_5515
     ld bc, $000A
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5515::
     call Func_0E2_6898
@@ -2844,7 +2844,7 @@ Jump_0E2_5515::
     and a, a
     jr nz, Jump_0E2_5528
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5528::
     ret
@@ -2860,7 +2860,7 @@ Func_0E2_5529:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5542
     ld bc, $005A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5542::
     farcall Func_005_4664
@@ -2868,7 +2868,7 @@ Jump_0E2_5542::
     and a, a
     jr nz, Jump_0E2_5552
     ld bc, $005B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5552::
     farcall Func_005_4C5D
@@ -2876,7 +2876,7 @@ Jump_0E2_5552::
     and a, a
     jr nz, Jump_0E2_5562
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5562::
     farcall Func_005_50E3
@@ -2886,7 +2886,7 @@ Jump_0E2_5562::
     and a, a
     jr nz, Jump_0E2_5576
     ld bc, $0058
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5576::
     farcall Func_005_517D
@@ -2896,7 +2896,7 @@ Jump_0E2_5576::
     and a, a
     jr nz, Jump_0E2_558A
     ld bc, $0059
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_558A::
     farcall Func_005_53CA
@@ -2904,15 +2904,15 @@ Jump_0E2_558A::
     and a, a
     jr nz, Jump_0E2_559A
     ld bc, $005C
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_559A::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_55AA
     ld bc, $00BD
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_55AA::
     call Func_0E2_6898
@@ -2921,7 +2921,7 @@ Jump_0E2_55AA::
     and a, a
     jr nz, Jump_0E2_55BD
     ld bc, $00B0
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_55BD::
     farcall Func_005_69DA
@@ -2929,7 +2929,7 @@ Jump_0E2_55BD::
     and a, a
     jr nz, Jump_0E2_55CD
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_55CD::
     ret
@@ -2945,7 +2945,7 @@ Func_0E2_55CE:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_55E7
     ld bc, $0011
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_55E7::
     farcall Func_005_4C5D
@@ -2953,15 +2953,15 @@ Jump_0E2_55E7::
     and a, a
     jr nz, Jump_0E2_55F7
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_55F7::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5607
     ld bc, $00C4
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5607::
     call Func_0E2_6898
@@ -2970,7 +2970,7 @@ Jump_0E2_5607::
     and a, a
     jr nz, Jump_0E2_561A
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_561A::
     ret
@@ -2986,7 +2986,7 @@ Func_0E2_561B:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5634
     ld bc, $005E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5634::
     farcall Func_005_4C5D
@@ -2994,7 +2994,7 @@ Jump_0E2_5634::
     and a, a
     jr nz, Jump_0E2_5644
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5644::
     farcall Func_005_50E3
@@ -3004,7 +3004,7 @@ Jump_0E2_5644::
     and a, a
     jr nz, Jump_0E2_5658
     ld bc, $005F
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5658::
     farcall Func_005_517D
@@ -3014,7 +3014,7 @@ Jump_0E2_5658::
     and a, a
     jr nz, Jump_0E2_566C
     ld bc, $005F
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_566C::
     farcall Func_005_5397
@@ -3022,7 +3022,7 @@ Jump_0E2_566C::
     and a, a
     jr nz, Jump_0E2_567C
     ld bc, $0060
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_567C::
     farcall Func_005_53CA
@@ -3030,17 +3030,17 @@ Jump_0E2_567C::
     and a, a
     jr nz, Jump_0E2_568C
     ld bc, $005C
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_568C::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_56A2
     ld bc, $00C7
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D0
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_56A2::
     call Func_0E2_6898
@@ -3049,7 +3049,7 @@ Jump_0E2_56A2::
     and a, a
     jr nz, Jump_0E2_56B5
     ld bc, $0062
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_56B5::
     farcall Func_005_69DA
@@ -3057,7 +3057,7 @@ Jump_0E2_56B5::
     and a, a
     jr nz, Jump_0E2_56C5
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_56C5::
     ret
@@ -3075,7 +3075,7 @@ Func_0E2_56C6:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_56E3
     ld bc, $005A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_56E3::
     farcall Func_005_4777
@@ -3083,7 +3083,7 @@ Jump_0E2_56E3::
     and a, a
     jr nz, Jump_0E2_56F3
     ld bc, $0017
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_56F3::
     farcall Func_005_4C5D
@@ -3091,7 +3091,7 @@ Jump_0E2_56F3::
     and a, a
     jr nz, Jump_0E2_5703
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5703::
     farcall Func_005_50E3
@@ -3101,7 +3101,7 @@ Jump_0E2_5703::
     and a, a
     jr nz, Jump_0E2_5717
     ld bc, $005F
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5717::
     farcall Func_005_517D
@@ -3111,7 +3111,7 @@ Jump_0E2_5717::
     and a, a
     jr nz, Jump_0E2_572B
     ld bc, $005F
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_572B::
     farcall Func_005_5397
@@ -3119,7 +3119,7 @@ Jump_0E2_572B::
     and a, a
     jr nz, Jump_0E2_573B
     ld bc, $0060
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_573B::
     farcall Func_005_53CA
@@ -3127,17 +3127,17 @@ Jump_0E2_573B::
     and a, a
     jr nz, Jump_0E2_574B
     ld bc, $005C
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_574B::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5761
     ld bc, $00C7
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D0
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5761::
     call Func_0E2_6898
@@ -3146,7 +3146,7 @@ Jump_0E2_5761::
     and a, a
     jr nz, Jump_0E2_5774
     ld bc, $0063
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5774::
     farcall Func_005_6452
@@ -3154,7 +3154,7 @@ Jump_0E2_5774::
     and a, a
     jr nz, Jump_0E2_5784
     ld bc, $005F
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5784::
     farcall Func_005_67B2
@@ -3164,7 +3164,7 @@ Jump_0E2_5784::
     and a, a
     jr nz, Jump_0E2_5798
     ld bc, $0064
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5798::
     farcall Func_005_69DA
@@ -3172,7 +3172,7 @@ Jump_0E2_5798::
     and a, a
     jr nz, Jump_0E2_57A8
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_57A8::
     ret
@@ -3189,7 +3189,7 @@ Func_0E2_57A9:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_57C2
     ld bc, $005E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_57C2::
     farcall Func_005_4777
@@ -3197,7 +3197,7 @@ Jump_0E2_57C2::
     and a, a
     jr nz, Jump_0E2_57D2
     ld bc, $0017
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_57D2::
     farcall Func_005_6820
@@ -3207,7 +3207,7 @@ Jump_0E2_57D2::
     and a, a
     jr nz, Jump_0E2_57E6
     ld bc, $0064
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_57E6::
     farcall Func_005_4C5D
@@ -3215,7 +3215,7 @@ Jump_0E2_57E6::
     and a, a
     jr nz, Jump_0E2_57F6
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_57F6::
     farcall Func_005_5052
@@ -3223,7 +3223,7 @@ Jump_0E2_57F6::
     and a, a
     jr nz, Jump_0E2_5806
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5806::
     ld a, [wD8A4]
@@ -3233,17 +3233,17 @@ Jump_0E2_5806::
     and a, a
     jr nz, Jump_0E2_581C
     ld bc, $005C
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_581C::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5832
     ld bc, $00C7
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D0
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5832::
     call Func_0E2_6898
@@ -3252,7 +3252,7 @@ Jump_0E2_5832::
     and a, a
     jr nz, Jump_0E2_5845
     ld bc, $005F
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5845::
     farcall Func_005_69DA
@@ -3260,7 +3260,7 @@ Jump_0E2_5845::
     and a, a
     jr nz, Jump_0E2_5855
     ld bc, $0033
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5855::
     ret
@@ -3279,7 +3279,7 @@ Func_0E2_5856:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5873
     ld bc, $0064
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5873::
     jp Jump_0E2_57E6
@@ -3290,12 +3290,12 @@ Func_0E2_5876:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_588F
     ld bc, $00BC
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_588F::
     call Func_0E2_6876
@@ -3306,7 +3306,7 @@ Jump_0E2_5892::
     and a, a
     jr nz, Jump_0E2_58A2
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_58A2::
     farcall Func_005_64FE
@@ -3316,7 +3316,7 @@ Jump_0E2_58A2::
     and a, a
     jr nz, Jump_0E2_58B6
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_58B6::
     farcall Func_005_69F5
@@ -3326,7 +3326,7 @@ Jump_0E2_58B6::
     and a, a
     jr nz, Jump_0E2_58CA
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_58CA::
     farcall Func_005_6A6B
@@ -3336,7 +3336,7 @@ Jump_0E2_58CA::
     and a, a
     jr nz, Jump_0E2_58DE
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_58DE::
     ret
@@ -3371,12 +3371,12 @@ Func_0E2_5900:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5919
     ld bc, $00BD
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5919::
     call Func_0E2_6854
@@ -3389,15 +3389,15 @@ Func_0E2_591F:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0009
-    call Func_0E2_64CE
-    farcall Func_005_54FD
+    call AccumulateBank6WordToDA6E
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5944
     ld bc, $00C2
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00D2
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5944::
     call Func_0E2_6887
@@ -3408,7 +3408,7 @@ Jump_0E2_5944::
     and a, a
     jr nz, Jump_0E2_595B
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_595B::
     farcall Func_005_6A6B
@@ -3418,7 +3418,7 @@ Jump_0E2_595B::
     and a, a
     jr nz, Jump_0E2_596F
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_596F::
     ret
@@ -3429,16 +3429,16 @@ Func_0E2_5970:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5995
     ld bc, $00C2
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00CA
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D2
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5995::
     call Func_0E2_6887
@@ -3447,7 +3447,7 @@ Jump_0E2_5995::
     and a, a
     jr nz, Jump_0E2_59A8
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_59A8::
     farcall Func_005_64FE
@@ -3457,7 +3457,7 @@ Jump_0E2_59A8::
     and a, a
     jr nz, Jump_0E2_59BC
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_59BC::
     farcall Func_005_69F5
@@ -3467,7 +3467,7 @@ Jump_0E2_59BC::
     and a, a
     jr nz, Jump_0E2_59D0
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_59D0::
     farcall Func_005_6A6B
@@ -3477,7 +3477,7 @@ Jump_0E2_59D0::
     and a, a
     jr nz, Jump_0E2_59E4
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_59E4::
     ret
@@ -3488,14 +3488,14 @@ Func_0E2_59E5:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5A04
     ld bc, $00CD
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00CF
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5A04::
     call Func_0E2_6887
@@ -3504,7 +3504,7 @@ Jump_0E2_5A04::
     and a, a
     jr nz, Jump_0E2_5A17
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A17::
     farcall Func_005_6153
@@ -3514,7 +3514,7 @@ Jump_0E2_5A17::
     and a, a
     jr nz, Jump_0E2_5A2B
     ld bc, $00B5
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A2B::
     farcall Func_005_64FE
@@ -3524,7 +3524,7 @@ Jump_0E2_5A2B::
     and a, a
     jr nz, Jump_0E2_5A3F
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5A3F::
     farcall Func_005_69F5
@@ -3534,7 +3534,7 @@ Jump_0E2_5A3F::
     and a, a
     jr nz, Jump_0E2_5A53
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A53::
     farcall Func_005_6A6B
@@ -3544,7 +3544,7 @@ Jump_0E2_5A53::
     and a, a
     jr nz, Jump_0E2_5A67
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A67::
     ret
@@ -3564,14 +3564,14 @@ Func_0E2_5A72::
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5A91
     ld bc, $00C2
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00D2
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A91::
     call Func_0E2_6887
@@ -3580,7 +3580,7 @@ Jump_0E2_5A91::
     and a, a
     jr nz, Jump_0E2_5AA4
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5AA4::
     farcall Func_005_64FE
@@ -3590,7 +3590,7 @@ Jump_0E2_5AA4::
     and a, a
     jr nz, Jump_0E2_5AB8
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5AB8::
     farcall Func_005_69F5
@@ -3600,7 +3600,7 @@ Jump_0E2_5AB8::
     and a, a
     jr nz, Jump_0E2_5ACC
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5ACC::
     farcall Func_005_6A6B
@@ -3610,7 +3610,7 @@ Jump_0E2_5ACC::
     and a, a
     jr nz, Jump_0E2_5AE0
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5AE0::
     call Func_0E2_67F9
@@ -3623,14 +3623,14 @@ Func_0E2_5AE6:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B05
     ld bc, $00BC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C4
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5B05::
     call Func_0E2_6887
@@ -3639,7 +3639,7 @@ Jump_0E2_5B05::
     and a, a
     jr nz, Jump_0E2_5B18
     ld bc, $0029
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B18::
     farcall Func_005_5CF1
@@ -3647,7 +3647,7 @@ Jump_0E2_5B18::
     and a, a
     jr nz, Jump_0E2_5B28
     ld bc, $0029
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B28::
     farcall Func_005_667F
@@ -3657,7 +3657,7 @@ Jump_0E2_5B28::
     and a, a
     jr nz, Jump_0E2_5B3C
     ld bc, $002E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5B3C::
     ret
@@ -3676,7 +3676,7 @@ Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5B5C
     ld bc, $001A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B5C::
     farcall Func_005_4664
@@ -3684,7 +3684,7 @@ Jump_0E2_5B5C::
     and a, a
     jr nz, Jump_0E2_5B6C
     ld bc, $001A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B6C::
     farcall Func_005_4BE1
@@ -3692,7 +3692,7 @@ Jump_0E2_5B6C::
     and a, a
     jr nz, Jump_0E2_5B7C
     ld bc, $001B
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5B7C::
     farcall Func_005_5397
@@ -3700,7 +3700,7 @@ Jump_0E2_5B7C::
     and a, a
     jr nz, Jump_0E2_5B8C
     ld bc, $0023
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B8C::
     farcall Func_005_53A5
@@ -3708,15 +3708,15 @@ Jump_0E2_5B8C::
     and a, a
     jr nz, Jump_0E2_5B9C
     ld bc, $0023
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B9C::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5BAC
     ld bc, $0024
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5BAC::
     call Func_0E2_6887
@@ -3727,7 +3727,7 @@ Jump_0E2_5BAC::
     and a, a
     jr nz, Jump_0E2_5BC3
     ld bc, $0069
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5BC3::
     ret
@@ -3743,7 +3743,7 @@ Func_0E2_5BC4:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5BDD
     ld bc, $006C
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5BDD::
     farcall Func_005_4C5D
@@ -3751,7 +3751,7 @@ Jump_0E2_5BDD::
     and a, a
     jr nz, Jump_0E2_5BED
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5BED::
     farcall Func_005_5275
@@ -3761,15 +3761,15 @@ Jump_0E2_5BED::
     and a, a
     jr nz, Jump_0E2_5C01
     ld bc, $006D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C01::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5C11
     ld bc, $00BE
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C11::
     call Func_0E2_6887
@@ -3778,7 +3778,7 @@ Jump_0E2_5C11::
     and a, a
     jr nz, Jump_0E2_5C24
     ld bc, $0032
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C24::
     ret
@@ -3796,7 +3796,7 @@ Jump_0E2_5C2E::
     and a, a
     jr nz, Jump_0E2_5C3E
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5C3E::
     farcall Func_005_5275
@@ -3806,15 +3806,15 @@ Jump_0E2_5C3E::
     and a, a
     jr nz, Jump_0E2_5C52
     ld bc, $006D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C52::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5C62
     ld bc, $00BA
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5C62::
     call Func_0E2_6854
@@ -3823,7 +3823,7 @@ Jump_0E2_5C62::
     and a, a
     jr nz, Jump_0E2_5C75
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C75::
     farcall Func_005_585D
@@ -3831,7 +3831,7 @@ Jump_0E2_5C75::
     and a, a
     jr nz, Jump_0E2_5C85
     ld bc, $0032
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C85::
     farcall Func_005_64FE
@@ -3841,7 +3841,7 @@ Jump_0E2_5C85::
     and a, a
     jr nz, Jump_0E2_5C99
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5C99::
     farcall Func_005_69F5
@@ -3851,7 +3851,7 @@ Jump_0E2_5C99::
     and a, a
     jr nz, Jump_0E2_5CAD
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5CAD::
     farcall Func_005_6A6B
@@ -3861,7 +3861,7 @@ Jump_0E2_5CAD::
     and a, a
     jr nz, Jump_0E2_5CC1
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5CC1::
     ret
@@ -3880,14 +3880,14 @@ Func_0E2_5CCE:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5CED
     ld bc, $00CC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5CED::
     call Func_0E2_6854
@@ -3896,7 +3896,7 @@ Jump_0E2_5CED::
     and a, a
     jr nz, Jump_0E2_5D00
     ld bc, $0015
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5D00::
     farcall Func_005_64FE
@@ -3906,7 +3906,7 @@ Jump_0E2_5D00::
     and a, a
     jr nz, Jump_0E2_5D14
     ld bc, $0012
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5D14::
     farcall Func_005_69F5
@@ -3916,7 +3916,7 @@ Jump_0E2_5D14::
     and a, a
     jr nz, Jump_0E2_5D28
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5D28::
     farcall Func_005_6A6B
@@ -3926,7 +3926,7 @@ Jump_0E2_5D28::
     and a, a
     jr nz, Jump_0E2_5D3C
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5D3C::
     ret
@@ -3938,13 +3938,13 @@ Func_0E2_5D3D:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $006F
-    call Func_0E2_64CE
-    farcall Func_005_54FD
+    call AccumulateBank6WordToDA6E
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5D5C
     ld bc, $00CA
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5D5C::
     call Func_0E2_6865
@@ -3957,13 +3957,13 @@ Func_0E2_5D60:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $006F
-    call Func_0E2_64CE
-    farcall Func_005_54FD
+    call AccumulateBank6WordToDA6E
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5D7F
     ld bc, $00CC
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5D7F::
     call Func_0E2_6854
@@ -3976,23 +3976,23 @@ Func_0E2_5D83:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     ld bc, $0071
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     farcall Func_005_41FD
     ld a, c
     and a, a
     jr nz, Jump_0E2_5DA2
     ld bc, $0070
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5DA2::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5DB8
     ld bc, $00C9
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00CB
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5DB8::
     call Func_0E2_6854
@@ -4004,12 +4004,12 @@ Func_0E2_5DBC:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5DD5
     ld bc, $00C9
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5DD5::
     call Func_0E2_6854
@@ -4020,7 +4020,7 @@ Jump_0E2_5DD5::
     and a, a
     jr nz, Jump_0E2_5DEC
     ld bc, $0072
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5DEC::
     ret
@@ -4036,7 +4036,7 @@ Func_0E2_5DED:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5E06
     ld bc, $0073
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5E06::
     farcall Func_005_4C5D
@@ -4044,19 +4044,19 @@ Jump_0E2_5E06::
     and a, a
     jr nz, Jump_0E2_5E16
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5E16::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E32
     ld bc, $0074
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00BB
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C7
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5E32::
     call Func_0E2_6854
@@ -4065,7 +4065,7 @@ Jump_0E2_5E32::
     and a, a
     jr nz, Jump_0E2_5E45
     ld bc, $0075
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5E45::
     ret
@@ -4081,15 +4081,15 @@ Func_0E2_5E46:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5E5F
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5E5F::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E6F
     ld bc, $0076
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5E6F::
     call Func_0E2_6876
@@ -4098,7 +4098,7 @@ Jump_0E2_5E6F::
     and a, a
     jr nz, Jump_0E2_5E82
     ld bc, $0077
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5E82::
     ret
@@ -4114,17 +4114,17 @@ Func_0E2_5E83:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5E9C
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5E9C::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5EB2
     ld bc, $00C2
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D2
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5EB2::
     call Func_0E2_6854
@@ -4145,12 +4145,12 @@ Func_0E2_5EC0::
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5ED9
     ld bc, $0078
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5ED9::
     call Func_0E2_6854
@@ -4161,7 +4161,7 @@ Jump_0E2_5ED9::
     and a, a
     jr nz, Jump_0E2_5EF0
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5EF0::
     farcall Func_005_6A6B
@@ -4171,7 +4171,7 @@ Jump_0E2_5EF0::
     and a, a
     jr nz, Jump_0E2_5F04
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F04::
     call Func_0E2_67F9
@@ -4189,7 +4189,7 @@ Func_0E2_5F0A:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_5F23
     ld bc, $0079
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_5F23::
     farcall Func_005_50E3
@@ -4199,7 +4199,7 @@ Jump_0E2_5F23::
     and a, a
     jr nz, Jump_0E2_5F37
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F37::
     farcall Func_005_517D
@@ -4209,15 +4209,15 @@ Jump_0E2_5F37::
     and a, a
     jr nz, Jump_0E2_5F4B
     ld bc, $002C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F4B::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5F5B
     ld bc, $0078
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F5B::
     call Func_0E2_6854
@@ -4228,7 +4228,7 @@ Jump_0E2_5F5B::
     and a, a
     jr nz, Jump_0E2_5F72
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F72::
     farcall Func_005_6A6B
@@ -4238,7 +4238,7 @@ Jump_0E2_5F72::
     and a, a
     jr nz, Jump_0E2_5F86
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F86::
     call Func_0E2_67F9
@@ -4259,12 +4259,12 @@ Func_0E2_5F94::
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_5FAD
     ld bc, $007B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5FAD::
     call Func_0E2_6854
@@ -4275,7 +4275,7 @@ Jump_0E2_5FAD::
     and a, a
     jr nz, Jump_0E2_5FC4
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5FC4::
     farcall Func_005_6A6B
@@ -4285,7 +4285,7 @@ Jump_0E2_5FC4::
     and a, a
     jr nz, Jump_0E2_5FD8
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_5FD8::
     call Func_0E2_67F9
@@ -4307,18 +4307,18 @@ Func_0E2_5FE8::
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_6013
     ld bc, $00C0
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C3
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00CE
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00D3
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6013::
     call Func_0E2_6854
@@ -4329,7 +4329,7 @@ Jump_0E2_6013::
     and a, a
     jr nz, Jump_0E2_602A
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_602A::
     farcall Func_005_6A6B
@@ -4339,7 +4339,7 @@ Jump_0E2_602A::
     and a, a
     jr nz, Jump_0E2_603E
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_603E::
     call Func_0E2_67F9
@@ -4352,12 +4352,12 @@ Func_0E2_6044:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_605D
     ld bc, $007D
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_605D::
     call Func_0E2_6854
@@ -4368,7 +4368,7 @@ Jump_0E2_605D::
     and a, a
     jr nz, Jump_0E2_6074
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6074::
     farcall Func_005_6A6B
@@ -4378,7 +4378,7 @@ Jump_0E2_6074::
     and a, a
     jr nz, Jump_0E2_6088
     ld bc, $0009
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6088::
     ret
@@ -4389,12 +4389,12 @@ Func_0E2_6089:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_60A2
     ld bc, $007E
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_60A2::
     call Func_0E2_6887
@@ -4413,15 +4413,15 @@ Func_0E2_60A6:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_60C3
     ld bc, $007F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_60C3::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_60D3
     ld bc, $0080
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_60D3::
     call Func_0E2_6876
@@ -4438,12 +4438,12 @@ Func_0E2_60D7:: ; heuristic: follows a terminator; C0
     ret z
     ld a, [wD8A4]
     call Func_0E2_656D
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_60FA
     ld bc, $00C1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_60FA::
     farcall Func_005_5500
@@ -4453,7 +4453,7 @@ Jump_0E2_60FA::
     and a, a
     jr nz, Jump_0E2_610E
     ld bc, $0000
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_610E::
     call Func_0E2_6865
@@ -4467,14 +4467,14 @@ Func_0E2_6112:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_6135
     ld bc, $0088
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6135::
     call Func_0E2_6854
@@ -4488,14 +4488,14 @@ Func_0E2_6139:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_615C
     ld bc, $008A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00C1
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_615C::
     call Func_0E2_6865
@@ -4512,14 +4512,14 @@ Func_0E2_6160:: ; heuristic: follows a terminator; C0
     ret z
     ld a, [wD8A4]
     call Func_0E2_672D
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_6189
     ld bc, $00CD
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00D1
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6189::
     call Func_0E2_6854
@@ -4542,15 +4542,15 @@ Jump_0E2_619A::
     and a, a
     jr nz, Jump_0E2_61BE
     ld bc, $003A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_61AE::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_61BE
     ld bc, $008C
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_61BE::
     call Func_0E2_6854
@@ -4587,7 +4587,7 @@ Func_0E2_61E0:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_61F9
     ld bc, $008D
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_61F9::
     farcall Func_005_53FA
@@ -4597,15 +4597,15 @@ Jump_0E2_61F9::
     and a, a
     jr nz, Jump_0E2_620D
     ld bc, $008E
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_620D::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_621D
     ld bc, $00CB
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_621D::
     farcall Func_005_5500
@@ -4615,7 +4615,7 @@ Jump_0E2_621D::
     and a, a
     jr nz, Jump_0E2_6231
     ld bc, $008F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6231::
     call Func_0E2_6854
@@ -4626,7 +4626,7 @@ Jump_0E2_6231::
     and a, a
     jr nz, Jump_0E2_6248
     ld bc, $0090
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6248::
     ret
@@ -4645,7 +4645,7 @@ Func_0E2_6249:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6266
     ld bc, $0091
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6266::
     farcall Func_005_4BE1
@@ -4653,7 +4653,7 @@ Jump_0E2_6266::
     and a, a
     jr nz, Jump_0E2_6276
     ld bc, $0092
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6276::
     ld a, [wD8A4]
@@ -4665,7 +4665,7 @@ Jump_0E2_6276::
     and a, a
     jr nz, Jump_0E2_6290
     ld bc, $008E
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6290::
     call Func_0E2_6876
@@ -4674,7 +4674,7 @@ Jump_0E2_6290::
     and a, a
     jr nz, Jump_0E2_62A3
     ld bc, $0097
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_62A3::
     ret
@@ -4692,7 +4692,7 @@ Func_0E2_62A4:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_62C1
     ld bc, $0007
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_62C1::
     farcall Func_005_53FA
@@ -4702,17 +4702,17 @@ Jump_0E2_62C1::
     and a, a
     jr nz, Jump_0E2_62D5
     ld bc, $0098
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_62D5::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_62EB
     ld bc, $00BB
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00C6
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_62EB::
     call Func_0E2_6854
@@ -4723,7 +4723,7 @@ Jump_0E2_62EB::
     and a, a
     jr nz, Jump_0E2_6302
     ld bc, $009A
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6302::
     ret
@@ -4742,17 +4742,17 @@ Func_0E2_6303:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6322
     ld bc, $00A1
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6322::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_6338
     ld bc, $00C2
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D2
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6338::
     call Func_0E2_6865
@@ -4763,7 +4763,7 @@ Jump_0E2_6338::
     and a, a
     jr nz, Jump_0E2_634F
     ld bc, $0069
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_634F::
     ret
@@ -4774,14 +4774,14 @@ Func_0E2_6350:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_636F
     ld bc, $00CC
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00D3
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_636F::
     call Func_0E2_6865
@@ -4792,7 +4792,7 @@ Jump_0E2_636F::
     and a, a
     jr nz, Jump_0E2_6386
     ld bc, $002E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6386::
     ret
@@ -4809,7 +4809,7 @@ Func_0E2_6387:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_63A0
     ld bc, $001B
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_63A0::
     ld a, [wD8A4]
@@ -4819,7 +4819,7 @@ Jump_0E2_63A0::
     and a, a
     jr nz, Jump_0E2_63B6
     ld bc, $00A3
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_63B6::
     farcall Func_005_53A5
@@ -4827,19 +4827,19 @@ Jump_0E2_63B6::
     and a, a
     jr nz, Jump_0E2_63C6
     ld bc, $00A4
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_63C6::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_63E2
     ld bc, $00CC
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld bc, $00CF
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ld bc, $00D3
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_63E2::
     call Func_0E2_6865
@@ -4850,7 +4850,7 @@ Jump_0E2_63E2::
     and a, a
     jr nz, Jump_0E2_63F9
     ld bc, $0069
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_63F9::
     ret
@@ -4866,12 +4866,12 @@ Func_0E2_6401:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_641A
     ld bc, $00A5
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_641A::
     call Func_0E2_6898
@@ -4895,7 +4895,7 @@ Func_0E2_6425:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6442
     ld bc, $00A6
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6442::
     farcall Func_005_4777
@@ -4903,7 +4903,7 @@ Jump_0E2_6442::
     and a, a
     jr nz, Jump_0E2_6452
     ld bc, $00A7
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6452::
     farcall Func_005_5397
@@ -4911,15 +4911,15 @@ Jump_0E2_6452::
     and a, a
     jr nz, Jump_0E2_6462
     ld bc, $00A8
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6462::
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_6472
     ld bc, $00A9
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6472::
     ret
@@ -4930,12 +4930,12 @@ Func_0E2_6473:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_648C
     ld bc, $0037
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_648C::
     ret
@@ -4948,12 +4948,12 @@ Func_0E2_648D:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    farcall Func_005_54FD
+    farcall SetCToZero
     ld a, c
     and a, a
     jr nz, Jump_0E2_64AA
     ld bc, $0038
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_64AA::
     farcall Func_005_57A1
@@ -4963,16 +4963,18 @@ Jump_0E2_64AA::
     and a, a
     jr nz, Jump_0E2_64BE
     ld bc, $0039
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_64BE::
     ret
     db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65, $C9, $C9
 
+; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70
 ; 304 call sites from 118 routines (e.g. Func_0E2_4001, Func_0E2_656D, Func_0E2_40BF, Func_0E2_6822, ...)
 ; points at: wDA6E, wDA70
-Func_0E2_64CE::
-    call Func_0E2_654B
+AccumulateBank6WordToDA6E::
+Func_0E2_64CE:: ; address name
+    call ReadBank6TableWord
     cp a, $FF
     jr nz, Jump_0E2_64DA
     ld bc, $1388
@@ -4991,20 +4993,22 @@ Jump_0E2_64E0::
     ld b, a
     inc bc
     ld hl, wDA70
-    call Func_0E2_651C
+    call AddBCToWordAtHL
     jr Jump_0E2_64F4
 
 Jump_0E2_64EE::
     ld hl, wDA6E
-    call Func_0E2_651C
+    call AddBCToWordAtHL
 
 Jump_0E2_64F4::
     ret
 
+; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E
 ; 223 call sites from 89 routines (e.g. Func_0E2_4001, Func_0E2_656D, Func_0E2_40BF, Func_0E2_6822, ...)
 ; points at: wDA70, wDA6E
-Func_0E2_64F5::
-    call Func_0E2_654B
+AccumulateBank6WordToDA70::
+Func_0E2_64F5:: ; address name
+    call ReadBank6TableWord
     cp a, $FF
     jr nz, Jump_0E2_6501
     ld bc, $1388
@@ -5023,18 +5027,20 @@ Jump_0E2_6507::
     ld b, a
     inc bc
     ld hl, wDA6E
-    call Func_0E2_651C
+    call AddBCToWordAtHL
     jr Jump_0E2_651B
 
 Jump_0E2_6515::
     ld hl, wDA70
-    call Func_0E2_651C
+    call AddBCToWordAtHL
 
 Jump_0E2_651B::
     ret
 
-; 4 call sites from 2 routines (e.g. Func_0E2_64F5, Func_0E2_64CE)
-Func_0E2_651C::
+; the 16-bit word at [HL] += BC; HL is unchanged
+; 4 call sites from 2 routines (e.g. AccumulateBank6WordToDA70, AccumulateBank6WordToDA6E)
+AddBCToWordAtHL::
+Func_0E2_651C:: ; address name
     push hl
     deref_hl
     add hl, bc
@@ -5049,12 +5055,14 @@ Func_0E2_651C::
     db $00, $44, $4D, $E1, $71, $23, $70, $C9, $AF, $21, $6E, $DA, $22, $22, $3E, $FF
     db $22, $22, $C9
 
-; 2 call sites from 2 routines (e.g. Func_0E2_64F5, Func_0E2_64CE)
+; BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wD2C7 (rows of 27 words); A = its low byte; clobbers HL, E
+; 2 call sites from 2 routines (e.g. AccumulateBank6WordToDA70, AccumulateBank6WordToDA6E)
 ; reads: wD2C7
 ; writes: wDataBank
-Func_0E2_654B::
+ReadBank6TableWord::
+Func_0E2_654B:: ; address name
     ld a, $36
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $01
     ld l, a
@@ -5089,32 +5097,32 @@ Func_0E2_656D:: ; heuristic: follows a terminator; C0
     cp a, $04
     jr z, Jump_0E2_65B1
     ld bc, $0085
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jr Jump_0E2_65B7
 
 Jump_0E2_6591::
     ld bc, $0083
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_65B7
 
 Jump_0E2_6599::
     ld bc, $0083
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_65B7
 
 Jump_0E2_65A1::
     ld bc, $0083
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_65B7
 
 Jump_0E2_65A9::
     ld bc, $0083
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_65B7
 
 Jump_0E2_65B1::
     ld bc, $0084
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_65B7::
     ret
@@ -5136,32 +5144,32 @@ Func_0E2_65B8:: ; heuristic: follows a terminator; C0
     cp a, $04
     jr z, Jump_0E2_65FC
     ld bc, $0086
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_6602
 
 Jump_0E2_65DC::
     ld bc, $0081
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jr Jump_0E2_6602
 
 Jump_0E2_65E4::
     ld bc, $0082
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jr Jump_0E2_6602
 
 Jump_0E2_65EC::
     ld bc, $0083
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_6602
 
 Jump_0E2_65F4::
     ld bc, $0084
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_6602
 
 Jump_0E2_65FC::
     ld bc, $0085
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6602::
     ret
@@ -5195,12 +5203,12 @@ Func_0E2_661A::
     cp a, $02
     jr nc, Jump_0E2_662D
     ld bc, $0093
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jr Jump_0E2_6633
 
 Jump_0E2_662D::
     ld bc, $0094
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6633::
     ret
@@ -5222,32 +5230,32 @@ Func_0E2_6634:: ; heuristic: follows a terminator; C0
     cp a, $04
     jr z, Jump_0E2_6678
     ld bc, $00A0
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jr Jump_0E2_667E
 
 Jump_0E2_6658::
     ld bc, $009B
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_667E
 
 Jump_0E2_6660::
     ld bc, $009C
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_667E
 
 Jump_0E2_6668::
     ld bc, $009D
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_667E
 
 Jump_0E2_6670::
     ld bc, $009E
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jr Jump_0E2_667E
 
 Jump_0E2_6678::
     ld bc, $009F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_667E::
     ret
@@ -5293,7 +5301,7 @@ Jump_0E2_66AC::
     add_a_to_hl
     ld c, [hl]
     ld b, $00
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ret
 
 Data_0E2_66B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5343,7 +5351,7 @@ Jump_0E2_66F2::
     add_a_to_hl
     ld c, [hl]
     ld b, $00
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ret
 
 Data_0E2_66FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5366,7 +5374,7 @@ Func_0E2_670B::
     add_a_to_hl
     ld c, [hl]
     ld b, $00
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5421,7 +5429,7 @@ Jump_0E2_675A::
     add_a_to_hl
     ld c, [hl]
     ld b, $00
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     ret
 
 Data_0E2_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5437,12 +5445,12 @@ Func_0E2_6773::
     and a, a
     jr nz, Jump_0E2_6785
     ld bc, $002B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
     jr Jump_0E2_678B
 
 Jump_0E2_6785::
     ld bc, $0013
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_678B::
     ret
@@ -5454,12 +5462,12 @@ Func_0E2_678C:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_679E
     ld bc, $0013
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     jr Jump_0E2_67A4
 
 Jump_0E2_679E::
     ld bc, $002B
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_67A4::
     ret
@@ -5491,7 +5499,7 @@ Func_0E2_67C0:: ; heuristic: follows a terminator; C0
     or a, a
     ret nz
     ld bc, $00B6
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
     ld c, $FF
     ret
 
@@ -5510,7 +5518,7 @@ Func_0E2_67D5::
     and a, a
     jr nz, Jump_0E2_67E8
     ld bc, $0029
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_67E8::
     farcall Func_005_5CF1
@@ -5518,7 +5526,7 @@ Jump_0E2_67E8::
     and a, a
     jr nz, Jump_0E2_67F8
     ld bc, $0029
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_67F8::
     ret
@@ -5532,7 +5540,7 @@ Func_0E2_67F9:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_680D
     ld bc, $00B1
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_680D::
     farcall Func_005_5FC7
@@ -5542,7 +5550,7 @@ Jump_0E2_680D::
     and a, a
     jr nz, Jump_0E2_6821
     ld bc, $00B2
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6821::
     ret
@@ -5554,7 +5562,7 @@ Func_0E2_6822::
     and a, a
     jr nz, Jump_0E2_6832
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6832::
     farcall Func_005_5731
@@ -5562,7 +5570,7 @@ Jump_0E2_6832::
     and a, a
     jr nz, Jump_0E2_6842
     ld bc, $000F
-    call Func_0E2_64CE
+    call AccumulateBank6WordToDA6E
 
 Jump_0E2_6842::
     ret
@@ -5574,7 +5582,7 @@ Func_0E2_6843:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6853
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6853::
     ret
@@ -5586,7 +5594,7 @@ Func_0E2_6854:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6864
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6864::
     ret
@@ -5598,7 +5606,7 @@ Func_0E2_6865:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6875
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6875::
     ret
@@ -5610,7 +5618,7 @@ Func_0E2_6876:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6886
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6886::
     ret
@@ -5622,7 +5630,7 @@ Func_0E2_6887:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_6897
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_6897::
     ret
@@ -5634,7 +5642,7 @@ Func_0E2_6898:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_0E2_68A8
     ld bc, $000E
-    call Func_0E2_64F5
+    call AccumulateBank6WordToDA70
 
 Jump_0E2_68A8::
     ret

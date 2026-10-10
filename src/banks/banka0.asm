@@ -481,9 +481,9 @@ Jump_0A0_42AC::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0A0_415D, Func_0A0_56A7, Func_0A0_5491)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0A0_42B2::
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
 
 Jump_0A0_42B8::
@@ -1435,7 +1435,7 @@ Func_0A0_4874::
     ld b, a
     push bc
     ld b, $FF
-    call Func_000_16BF
+    call DivideBByA
     ld d, b
     call Func_000_3ED4
     pop bc
@@ -1713,9 +1713,9 @@ Func_0A0_4A55::
     rrca
     and a, $3F
     add a, $64
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     ld a, e
     or a, a
     jr nz, Jump_0A0_4A83
@@ -2155,7 +2155,7 @@ Jump_0A0_4D12::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_4C2C, Func_0A0_4C36)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0A0_4D16::
     ld e, [hl]
     inc hl
@@ -2166,7 +2166,7 @@ Func_0A0_4D16::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
     ret
@@ -2259,7 +2259,7 @@ Jump_0A0_4F19::
     ld a, h
     ld [wC555], a
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $07
     ldh [hFF9F], a
     ld a, $FF
@@ -3170,7 +3170,7 @@ Jump_0A0_55B6::
     ld a, [wC52B]
     or a, a
     ret nz
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $01A0
     ld a, $C3
     call FillBytes
@@ -3572,7 +3572,7 @@ Jump_0A0_57C8::
     xor a, a
     ld [wCACF], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $06
     ld [wC5DB], a
     xor a, a
@@ -3722,7 +3722,7 @@ Jump_0A0_59EB::
     cp a, $01
     ret nz
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $05
     ld [wC5DB], a
     ld a, $01
@@ -6298,7 +6298,7 @@ Data_0A0_6B1A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $4A, $C2
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_4C6A, Func_031_77B9)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0A0_6B1E::
     ld a, c
     cp a, $03
@@ -6308,7 +6308,7 @@ Func_0A0_6B1E::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl
@@ -6328,7 +6328,7 @@ Jump_0A0_6B45::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_4C59, Func_031_7806)
-; points at: wD8BF, wC198
+; points at: wD8BF, wBGMapShadow
 Func_0A0_6B46::
     push bc
     ld a, c
@@ -6348,7 +6348,7 @@ Func_0A0_6B46::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld d, h
     ld e, l
@@ -6360,7 +6360,7 @@ Jump_0A0_6B77::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_4C59, Func_031_785F)
-; points at: wD8DF, wC198
+; points at: wD8DF, wBGMapShadow
 Func_0A0_6B79::
     push bc
     ld a, c
@@ -6384,7 +6384,7 @@ Func_0A0_6B79::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld d, h
     ld e, l
@@ -6396,7 +6396,7 @@ Jump_0A0_6BB1::
     ret
 
 ; 3 call sites from 2 routines (e.g. Func_0A0_6A45, Func_031_78B8)
-; points at: wC198, wD8B7
+; points at: wBGMapShadow, wD8B7
 Func_0A0_6BB3::
     push bc
     ld a, c
@@ -6411,7 +6411,7 @@ Func_0A0_6BB3::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld [hl], $EA
     inc hl
@@ -6434,7 +6434,7 @@ Jump_0A0_6BEE::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_4C6A, Func_031_7914)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0A0_6BF0::
     ld a, c
     cp a, $04
@@ -6447,7 +6447,7 @@ Func_0A0_6BF0::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl
@@ -6467,7 +6467,7 @@ Jump_0A0_6C21::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_4C6A, Func_031_7965)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0A0_6C22::
     ld a, c
     cp a, $04
@@ -6480,7 +6480,7 @@ Func_0A0_6C22::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl
@@ -6500,7 +6500,7 @@ Jump_0A0_6C53::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_79B6)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0A0_6C54:: ; heuristic: follows a terminator; C0
     ld a, c
     cp a, $04
@@ -6513,7 +6513,7 @@ Func_0A0_6C54:: ; heuristic: follows a terminator; C0
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl

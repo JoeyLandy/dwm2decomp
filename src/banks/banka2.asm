@@ -18,7 +18,7 @@ Func_0A2_4001::
     ld b, a
     inc bc
     ld a, $1A
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $56
     ld l, a
@@ -50,7 +50,7 @@ Func_0A2_402D::
     ld b, a
     inc bc
     ld a, $1A
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $56
     ld l, a

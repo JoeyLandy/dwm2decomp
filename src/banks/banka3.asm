@@ -307,7 +307,7 @@ Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Func_0A3_44C4::
     push hl
     ld a, $03
-    call Func_000_16BF
+    call DivideBByA
     or a, a
     jr z, Jump_0A3_4505
     dec a
@@ -418,7 +418,7 @@ Jump_0A3_453A::
 
 Jump_0A3_456D::
     ldh a, [hFFC6]
-    call Func_000_16AA
+    call Multiply8By16
     ld c, h
     ld b, e
     pop hl
@@ -427,7 +427,7 @@ Jump_0A3_456D::
     ld hl, Data_0A3_45A3
     add_a_to_hl
     ld a, [hl]
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $0A
     call DivideHLByA
     ld a, h
@@ -459,7 +459,7 @@ Func_0A3_4917::
     push bc
     push de
     ld a, $03
-    call Func_000_16BF
+    call DivideBByA
     pop de
     pop bc
     or a, a
@@ -763,7 +763,7 @@ Func_0A3_4AAF:: ; heuristic: follows a terminator; C0
     ld a, [wC5E7]
     ld b, a
     ld a, $0E
-    call Func_000_16BF
+    call DivideBByA
     ld hl, Data_0A3_4AFD
     add_a_to_hl
     ld a, [hl]

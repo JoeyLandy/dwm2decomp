@@ -3,11 +3,11 @@ SECTION "Bank 69", ROMX[$4000], BANK[$69]
 
 ; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00C_433D, Func_015_570C)
 ; reads: wCC44, hFF90, hFF8F, hFF92, wCC38, hFFD0, wC190
-; writes: wCB7D, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
-; points at: wCB7F
+; writes: wSpriteSlotCount, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
+; points at: wSpriteSlots
 Func_069_4001::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_069_401E
@@ -89,7 +89,7 @@ Jump_069_4080::
 
 Jump_069_408D::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jp Jump_069_4168
 
 Jump_069_4094::
@@ -173,9 +173,9 @@ Jump_069_40EE::
 
 Jump_069_40F4::
     ld a, [hl+]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld b, a
-    ld de, wCB7F
+    ld de, wSpriteSlots
 
 Jump_069_40FC::
     push bc

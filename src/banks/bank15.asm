@@ -13,7 +13,7 @@ Func_015_4001::
 
 Jump_015_400D::
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_015_66AF
     ld a, [wIsCGB]
@@ -64,7 +64,7 @@ Jump_015_403F::
 Jump_015_4076::
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld de, Data_01F_4230
     ld hl, vTiles1 + $4E0
     ld b, $1F
@@ -163,7 +163,7 @@ Jump_015_412A::
     or a, c
     jr nz, Jump_015_412A
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_015_66AF
     ld a, [wIsCGB]
@@ -483,10 +483,10 @@ Jump_015_43BD::
 Jump_015_43F4::
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -892,13 +892,13 @@ Jump_015_4716::
 Jump_015_4739::
     ld hl, vTiles1 + $240
     ld bc, $0301
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4E0
     ld bc, $1101
-    call Func_000_1881
+    call FillTilesBxC
     ld de, Data_015_747D
     ld hl, wC364
     ld bc, $080B
@@ -2226,16 +2226,16 @@ Jump_015_50FB::
 Func_015_512C::
     ld hl, vTiles1 + $400
     ld bc, $0301
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $470
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0D01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -3019,7 +3019,7 @@ Jump_015_571D::
 
 Jump_015_5746::
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_015_66AF
     ld hl, wC300
@@ -3451,10 +3451,10 @@ Jump_015_5A8A::
 Jump_015_5A97::
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -3520,10 +3520,10 @@ Jump_015_5AFC::
 Jump_015_5B33::
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -3998,7 +3998,7 @@ Jump_015_5F0A::
     jr nz, Jump_015_5F1E
     farcall Func_01C_42B3
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
 
 Jump_015_5F1E::
     ret
@@ -4339,10 +4339,10 @@ Jump_015_61B6::
 Jump_015_61CE::
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -4422,10 +4422,10 @@ Jump_015_625C::
 Jump_015_6276::
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD7B4]
     ld [wD7F1], a
     farcall Func_01D_5CD7
@@ -4513,13 +4513,13 @@ Jump_015_631B::
 Jump_015_6336::
     ld hl, vTiles1 + $240
     ld bc, $0C01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0D01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4E0
     ld bc, $1101
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4972,12 +4972,12 @@ Jump_015_65DF::
 ; 41 call sites from 15 routines (e.g. Func_015_645F, Func_015_642D, Func_015_4182, Func_015_4C0C, ...)
 ; reads: wStringIndex, wC555, wC554, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_015_65F1::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -5297,17 +5297,17 @@ Jump_015_6783::
 
 ; 9 call sites from 6 routines (e.g. Func_015_4C0C, Func_015_47A7, Func_015_4439, Func_015_4182, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_015_6791::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -5727,38 +5727,38 @@ Func_015_69C6::
 Func_015_69E3::
     ld hl, vTiles2 + $7C0
     ld bc, $0401
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $400
     ld bc, $0301
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4A0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
 
 ; 2 call sites from 2 routines (e.g. Func_015_4C0C, Func_015_47A7)
 Func_015_69FE::
     ld hl, vTiles2 + $700
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $750
     ld bc, $0301
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $7D0
     ld bc, $0201
-    call Func_000_1881
+    call FillTilesBxC
     ret
 
 ; 1 call site from 1 routine (e.g. Func_015_4182)
 Func_015_6A1A::
     ld hl, vTiles1 + $240
     ld bc, $0C01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0D01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $4E0
     ld bc, $1101
-    call Func_000_1881
+    call FillTilesBxC
     ret
 
 ; 1 call site from 1 routine (e.g. Func_015_47A7)
@@ -5892,16 +5892,16 @@ Func_015_6ACA:: ; address name
 Func_015_6B00::
     ld hl, vTiles1 + $240
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $470
     ld bc, $0301
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0D01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a

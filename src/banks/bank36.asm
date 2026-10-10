@@ -2009,7 +2009,7 @@ Jump_036_4E46::
     push de
     push af
     ld bc, $0240
-    call Func_000_16AA
+    call Multiply8By16
     ld bc, vTiles2 + $140
     add hl, bc
     pop af
@@ -5583,9 +5583,9 @@ Func_036_6494::
     ld b, h
     ld c, l
     ld a, $55
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     pop de
     ret
 
@@ -5595,9 +5595,9 @@ Func_036_64A3::
     ld b, h
     ld c, l
     ld a, $08
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $0A
-    call Func_000_16E2
+    call Divide24ByA
     pop de
     ret
 
@@ -5618,9 +5618,9 @@ Func_036_64BE::
     ld b, h
     ld c, l
     ld a, $06
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $0A
-    call Func_000_16E2
+    call Divide24ByA
     pop de
     ret
 

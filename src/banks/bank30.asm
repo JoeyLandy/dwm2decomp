@@ -294,9 +294,9 @@ Func_030_41DF::
     ld c, a
     push bc
     ld a, $03
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $0A
-    call Func_000_16E2
+    call Divide24ByA
     pop bc
     call Func_000_3E98
     ld c, e
@@ -381,7 +381,7 @@ Jump_030_427F::
     ld a, [wC5E7]
     ld b, a
     ld a, $09
-    call Func_000_16BF
+    call DivideBByA
     add a, $01
     ld c, a
     ld b, $00
@@ -1003,7 +1003,7 @@ Func_030_469D::
     add_a_to_hl
     ld b, [hl]
     ld a, $0A
-    call Func_000_16BF
+    call DivideBByA
     pop af
     ld hl, wDA3C
     add_a_to_hl

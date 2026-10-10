@@ -1,7 +1,7 @@
 SECTION "Bank 02", ROMX[$4000], BANK[$02]
     db $02
 
-; 1 call site from 1 routine (e.g. Func_000_0DF2)
+; 1 call site from 1 routine (e.g. StartPaletteFade)
 ; reads: wC56C, wC56D
 ; writes: wC572, wC573, wC574, rBGPI, rBGPD, rOBPI, rOBPD
 Func_002_4001::
@@ -1211,7 +1211,7 @@ Jump_002_4786::
 
 Jump_002_4792::
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_002_4798::
@@ -3925,11 +3925,11 @@ Jump_002_5A4C::
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_002_541B)
-; reads: wCB7D, hFFC7, hFFC6
+; reads: wSpriteSlotCount, hFFC7, hFFC6
 ; writes: hFFC6, hFFC7
 ; points at: wCB8A
 Func_002_5A51::
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     or a, a
     ret z
     push bc
@@ -3941,7 +3941,7 @@ Func_002_5A51::
     swap a
     and a, $0F
     ldh [hFFC7], a
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld b, a
     ld c, $01
     ld hl, wCB8A
@@ -4266,7 +4266,7 @@ Jump_002_5C83::
     and a, $E0
     or a, c
     ld e, a
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld a, [wC469]
     add_a_to_hl
     call Func_002_5DC8
@@ -4302,7 +4302,7 @@ Jump_002_5CCC::
     and a, $E0
     or a, c
     ld e, a
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld a, [wC469]
     ld c, a
     ld a, $13
@@ -4623,11 +4623,11 @@ Jump_002_5EE9::
     ret
 
 ; 22 call sites from 19 routines (e.g. Func_002_4FE8, Func_002_4F4C, Func_002_64E5, Func_00A_43EC, ...)
-; reads: wIsCGB, wCB7D
+; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wCB7E
-; points at: wC198, wD000, wD2D0
+; points at: wBGMapShadow, wD000, wD2D0
 Func_002_5EEE::
-    ld de, wC198
+    ld de, wBGMapShadow
     ld hl, vBGMap1
     ld bc, $0168
 
@@ -4652,17 +4652,17 @@ Jump_002_5EF7::
     ldh [rSVBK], a
 
 Jump_002_5F1B::
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld [wCB7E], a
     ret
 
 ; 7 call sites from 6 routines (e.g. Func_002_4628, Func_073_4139, Func_085_4047, Func_085_426B, ...)
 ; reads: wIsCGB, wCB7E
-; writes: rSVBK, wCB7D
-; points at: wC198, wD2D0, wD000
+; writes: rSVBK, wSpriteSlotCount
+; points at: wBGMapShadow, wD2D0, wD000
 Func_002_5F22::
     ld hl, vBGMap1
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0168
 
 Jump_002_5F2B::
@@ -4690,7 +4690,7 @@ Jump_002_5F2B::
 
 Jump_002_5F52::
     ld a, [wCB7E]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
@@ -4841,7 +4841,7 @@ Jump_002_603F::
 
 Jump_002_6045::
     ld a, $FD
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 ; 8 call sites from 7 routines (e.g. Func_002_45C6, Func_002_4628, Func_000_2950, Func_002_6CD4, ...)
@@ -5312,7 +5312,7 @@ Jump_002_64D7::
 ; 3 call sites from 3 routines (e.g. Func_002_4745, Func_002_4AE0, Func_002_4C4E)
 ; reads: wC56C, wC8CB, wC468, hFF8C, wC562, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hFFB9, wC8C7, rSVBK, wC8CE, wC5DC, wC46B
-; points at: wC300, wC198, wD168, wD000, wC30C
+; points at: wC300, wBGMapShadow, wD168, wD000, wC30C
 Func_002_64E5::
     ld a, [wC56C]
     or a, a
@@ -5339,7 +5339,7 @@ Func_002_64E5::
     farcall Func_002_5EEE
     farcall Func_004_4470
     ld hl, wC300
-    ld de, wC198
+    ld de, wBGMapShadow
     ld b, $64
 
 Jump_002_6525::
@@ -5599,7 +5599,7 @@ Jump_002_66C8::
 ; 1 call site from 1 routine (e.g. Func_002_64E5)
 ; reads: wC8CB, wC468, wC6FD, hFF8C, wC8CD, wC8CE, wIsCGB
 ; writes: wC8CE, wC8CD, hFFB9, rSVBK
-; points at: wC364, wC198, wD1CC
+; points at: wC364, wBGMapShadow, wD1CC
 Func_002_66CC::
     ld de, $0002
     call TestFlagBit
@@ -5633,7 +5633,7 @@ Func_002_66CC::
     ld a, $03
     ldh [hFFB9], a
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld a, e
     add a, $F0
     ld e, a
@@ -5982,13 +5982,13 @@ Data_002_695E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 9 call sites from 8 routines (e.g. Func_002_4AE0, Func_007_4B27, Func_007_4E11, Func_01B_660D, ...)
 ; reads: wC8CB, wIsCGB, hScrollY, hScrollX, wC8CC
 ; writes: rSVBK
-; points at: wC300, wC198, wC8CC
+; points at: wC300, wBGMapShadow, wC8CC
 Func_002_69D0::
     ld a, [wC8CB]
     and a, $03
     ret z
     ld hl, wC300
-    ld de, wC198
+    ld de, wBGMapShadow
     ld a, [wC8CB]
     bit 7, a
     jr nz, Jump_002_69EB
@@ -7841,11 +7841,11 @@ Jump_002_7542::
 ; 1 call site from 1 routine (e.g. Func_002_7347)
 ; reads: wCB7E, wC848, wC858, wC868, wC878, wC888, hFFC6, hFFC7, ...
 ; writes: wC83A, wC848, wC858, wC868, wC878, wC888, rRAMB, hFFC8, ...
-; points at: wCB7F, wC83B, sBB01
+; points at: wSpriteSlots, wC83B, sBB01
 Func_002_755E::
     ld a, [wCB7E]
     ld [wC83A], a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
     ld de, wC83B
     ld bc, $0050
     call CopyBytes

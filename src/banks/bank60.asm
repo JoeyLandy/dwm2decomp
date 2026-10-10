@@ -417,7 +417,7 @@ Func_060_4338:: ; heuristic: follows a terminator; C0
     ld a, [wCD05]
     ld b, a
     ld a, $0A
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     add a, a
     add a, b
@@ -665,7 +665,7 @@ Jump_060_4626::
     ld a, [wCD05]
     ld b, a
     ld a, $05
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     ld c, $07
     call Multiply8
@@ -1019,7 +1019,7 @@ Jump_060_4B3B::
     ld a, [wCD05]
     ld b, a
     ld a, $0A
-    call Func_000_16BF
+    call DivideBByA
     ld a, b
     add a, a
     ld hl, Data_060_4C58
@@ -4526,7 +4526,7 @@ Func_060_6C96::
     ld [rRAMB], a
     ld a, [wCC42]
     ld bc, $0195
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $00
     ld l, a
@@ -4561,7 +4561,7 @@ Func_060_6CD1::
     ld [rRAMB], a
     ld a, [wCC42]
     ld bc, $0195
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $00
     ld l, a

@@ -1668,7 +1668,7 @@ Jump_039_55C7::
     bit 0, a
     jr z, Jump_039_55D3
     ld a, $1E
-    call Func_000_16AA
+    call Multiply8By16
     jr Jump_039_55D5
 
 Jump_039_55D3::
@@ -1700,9 +1700,9 @@ Jump_039_55E4::
     ldh a, [hFFC8]
     ld e, a
     ld a, [wD868]
-    call Func_000_16E2
+    call Divide24ByA
     ld a, [wD868]
-    call Func_000_16E2
+    call Divide24ByA
     ld a, l
     ld [wD87D], a
     ld a, h
@@ -1981,7 +1981,7 @@ Jump_039_57B3::
     ld a, [wC5E7]
     ld b, a
     ld a, $03
-    call Func_000_16BF
+    call DivideBByA
     ldh [hFFC6], a
 
 Jump_039_57C1::
@@ -5919,7 +5919,7 @@ Func_039_6E61::
     ld a, [wD873]
     ld b, a
     ld a, $32
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     ld [wD872], a
     ld a, h
@@ -6416,9 +6416,9 @@ Jump_039_716D::
 
 Jump_039_716F::
     ld a, $55
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     jr Jump_039_717F
 
 Jump_039_717B::
@@ -6444,9 +6444,9 @@ Func_039_7180::
     add a, a
     add_a_to_hl
     ld a, $5A
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     pop af
     or a, a
     jr z, Jump_039_71B6
@@ -6462,9 +6462,9 @@ Jump_039_71B6::
 
 Jump_039_71B8::
     ld a, $55
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
-    call Func_000_16E2
+    call Divide24ByA
     jr Jump_039_71C8
 
 Jump_039_71C4::

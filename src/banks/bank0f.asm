@@ -223,7 +223,7 @@ Jump_00F_4171::
 
 Jump_00F_418E::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     xor a, a
     ld [wCBCF], a
     ld a, $E0
@@ -244,7 +244,7 @@ Jump_00F_418E::
     ld a, $FB
     ld [wStringIndex], a
     farcall ShowString_Bank28
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld a, $C3
     ld bc, $0168
     call FillBytes
@@ -311,7 +311,7 @@ Jump_00F_41F1::
 Jump_00F_423E::
     farcall Func_05F_6DDB
     ld a, $FE
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, $0258
     ld a, l
     ld [wC921], a
@@ -334,7 +334,7 @@ Jump_00F_4266::
 
 Jump_00F_4270::
     ld a, $3F
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC923
     inc [hl]
     ret
@@ -612,7 +612,7 @@ Jump_00F_4493::
 
 Jump_00F_44B1::
     ld a, $10
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $00
     ld [wC5DB], a
     ld a, $08
@@ -2201,7 +2201,7 @@ Jump_00F_5175::
     or a, a
     ret z
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld de, $00D1
     call SetFlagBit
     ld a, [wCC3C]
@@ -2373,7 +2373,7 @@ Jump_00F_549F::
     call SetFlagBit
     farcall Func_002_6050
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, $0A7D
     call StoreHLInWC924_B0F
     ld hl, wC923
@@ -2470,7 +2470,7 @@ Jump_00F_5577::
     ldh a, [hFF91]
     ld [wC8C9], a
     ld a, $01
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $03
     ld [wC8C6], a
     ld a, $04
@@ -2483,7 +2483,7 @@ Jump_00F_5577::
 
 Jump_00F_55A7::
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_00F_55AC::
     farcall Func_012_653F
@@ -2728,19 +2728,19 @@ Jump_00F_5733::
 
 Jump_00F_5739::
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_00F_5745
 
 Jump_00F_5740::
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_00F_5745::
     ld b, $78
     call StepWC921Counter_Bank0F
     ret nc
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     xor a, a
     ld [wC921], a
     ld de, $00C2
@@ -2989,19 +2989,19 @@ Jump_00F_5922::
 
 Jump_00F_5928::
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_00F_5934
 
 Jump_00F_592F::
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_00F_5934::
     ld b, $78
     call StepWC921Counter_Bank0F
     ret nc
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, $0A07
     call StoreHLInWC924_B0F
     ld hl, wC923
@@ -3311,7 +3311,7 @@ Jump_00F_5B5F::
     or a, a
     ret z
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $03
     ld [wCB96], a
     ld hl, $0AF2
@@ -3379,19 +3379,19 @@ Jump_00F_5BDE::
 
 Jump_00F_5BE4::
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_00F_5BF0
 
 Jump_00F_5BEB::
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_00F_5BF0::
     ld b, $78
     call StepWC921Counter_Bank0F
     ret nc
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, $4AEE
     call StoreHLInWC924_B0F
     ld hl, wC923
@@ -3623,7 +3623,7 @@ Jump_00F_5DCC::
     ldh a, [hFFC6]
     or a, a
     ret z
-    ld hl, wCB7D
+    ld hl, wSpriteSlotCount
     dec [hl]
     ld hl, $0AD0
     call StoreHLInWC924_B0F
@@ -5183,7 +5183,7 @@ Jump_00F_6979::
     cp a, $04
     ret nz
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -5264,7 +5264,7 @@ Jump_00F_6A21::
     ld a, $65
     call StoreWC60B
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wC923
     inc [hl]
     ret
@@ -5736,7 +5736,7 @@ Jump_00F_6D80::
     cp a, $A0
     ret nz
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wC923
     inc [hl]
     ret
@@ -6113,7 +6113,7 @@ Jump_00F_7079::
     cp a, $E0
     ret nz
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -6138,7 +6138,7 @@ Jump_00F_7099::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -6161,7 +6161,7 @@ Jump_00F_70BD::
 
 Jump_00F_70E2::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $80
     ld [wC919], a
     ret
@@ -6586,7 +6586,7 @@ Jump_00F_73D8::
     or a, a
     ret z
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, $01A1
     call StoreHLInWC924_B0F
     ld hl, wC923
@@ -6693,7 +6693,7 @@ Jump_00F_749D::
     or a, a
     ret z
     ld a, $01
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld de, Data_07D_5B5F
     ld b, $7D
     ld hl, vTiles0 + $500

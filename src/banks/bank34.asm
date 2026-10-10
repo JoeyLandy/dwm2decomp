@@ -28,7 +28,7 @@ Jump_034_401D::
     ld a, [wCFE7]
     ld b, a
     ld a, $1A
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $75
     ld l, a
@@ -63,7 +63,7 @@ Jump_034_4055::
     ld a, [wCFE7]
     ld b, a
     ld a, $1A
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $75
     ld l, a

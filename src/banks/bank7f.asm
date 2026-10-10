@@ -104,7 +104,7 @@ Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $74, $62, $74, $62, $26, $6F, $74, $62, $98, $6F
 
 ; 1 call site from 1 routine (e.g. Func_07F_4001)
-; reads: hOamNextEntry, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; reads: hOamNextEntry, hFFD4, hFFD5, hSpriteOriginY, hFFAC, hFFD2, hFFD3, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_07F_40CC::
@@ -115,7 +115,7 @@ Func_07F_40CC::
     ld c, a
     ldh a, [hFFD5]
     ld b, a
-    ldh a, [hFFAB]
+    ldh a, [hSpriteOriginY]
     add a, c
     ldh [hFFB3], a
     ldh a, [hFFAC]
@@ -126,7 +126,7 @@ Func_07F_40CC::
     ldh a, [hFFD3]
     ld b, a
     ld hl, hFFB5
-    ldh a, [hFFA9]
+    ldh a, [hSpriteOriginX]
     add a, c
     ld c, a
     ld [hl+], a
@@ -140,7 +140,7 @@ Func_07F_40CC::
     ld a, b
     sbc a, $00
     ld [hl], a
-    ldh a, [hFFAD]
+    ldh a, [hSpriteSetIndex]
     add a, a
     add a, e
     ld l, a
@@ -150,7 +150,7 @@ Func_07F_40CC::
     ld a, [hl+]
     ld d, [hl]
     ld e, a
-    ldh a, [hFFAE]
+    ldh a, [hSpriteSubIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -164,9 +164,9 @@ Func_07F_40CC::
     ldh a, [hFFB9]
     or a, a
     jp nz, Jump_07F_4216
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     and a, $20
     jr nz, Jump_07F_419E
 
@@ -246,13 +246,13 @@ Jump_07F_4183::
     ld a, b
     ld [de], a
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
     ld a, [hl+]
     add a, c
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -342,13 +342,13 @@ Jump_07F_41FB::
     ld a, b
     ld [de], a
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
     ld a, [hl+]
     add a, c
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -362,7 +362,7 @@ Jump_07F_41FB::
     ret
 
 Jump_07F_4216::
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     and a, $20
     jr nz, Jump_07F_4297
 
@@ -449,13 +449,13 @@ Jump_07F_4277::
     call Func_07F_4312
     jr nc, Jump_07F_4270
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [hl+]
     add a, b
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -551,13 +551,13 @@ Jump_07F_42F2::
     call Func_07F_4312
     jr nc, Jump_07F_42EB
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [hl+]
     add a, b
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -978,7 +978,7 @@ Data_07F_7011:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_7B24
 
 ; 1 call site from 1 routine (e.g. Func_07F_700A)
-; reads: hOamNextEntry, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; reads: hOamNextEntry, hFFD4, hFFD5, hSpriteOriginY, hFFAC, hFFD2, hFFD3, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_07F_7065::
@@ -989,7 +989,7 @@ Func_07F_7065::
     ld c, a
     ldh a, [hFFD5]
     ld b, a
-    ldh a, [hFFAB]
+    ldh a, [hSpriteOriginY]
     add a, c
     ldh [hFFB3], a
     ldh a, [hFFAC]
@@ -1000,7 +1000,7 @@ Func_07F_7065::
     ldh a, [hFFD3]
     ld b, a
     ld hl, hFFB5
-    ldh a, [hFFA9]
+    ldh a, [hSpriteOriginX]
     add a, c
     ld c, a
     ld [hl+], a
@@ -1014,7 +1014,7 @@ Func_07F_7065::
     ld a, b
     sbc a, $00
     ld [hl], a
-    ldh a, [hFFAD]
+    ldh a, [hSpriteSetIndex]
     add a, a
     add a, e
     ld l, a
@@ -1024,7 +1024,7 @@ Func_07F_7065::
     ld a, [hl+]
     ld d, [hl]
     ld e, a
-    ldh a, [hFFAE]
+    ldh a, [hSpriteSubIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -1038,9 +1038,9 @@ Func_07F_7065::
     ldh a, [hFFB9]
     or a, a
     jp nz, Jump_07F_71AF
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     and a, $20
     jr nz, Jump_07F_7137
 
@@ -1120,13 +1120,13 @@ Jump_07F_711C::
     ld a, b
     ld [de], a
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
     ld a, [hl+]
     add a, c
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -1216,13 +1216,13 @@ Jump_07F_7194::
     ld a, b
     ld [de], a
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld c, a
     ld a, [hl+]
     add a, c
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -1236,7 +1236,7 @@ Jump_07F_7194::
     ret
 
 Jump_07F_71AF::
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     and a, $20
     jr nz, Jump_07F_7230
 
@@ -1323,13 +1323,13 @@ Jump_07F_7210::
     call Func_07F_72AB
     jr nc, Jump_07F_7209
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [hl+]
     add a, b
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c
@@ -1425,13 +1425,13 @@ Jump_07F_728B::
     call Func_07F_72AB
     jr nc, Jump_07F_7284
     inc e
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [hl+]
     add a, b
     ld [de], a
     inc e
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     ld c, a
     ld a, [hl+]
     xor a, c

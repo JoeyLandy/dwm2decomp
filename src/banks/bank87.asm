@@ -143,7 +143,7 @@ Jump_087_4096::
     ds $A6, $00
 
 ; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
-; reads: wC8CB, wC468, hFF8C, wC562, wCB7D, hFF8E, hFF91, hFF98, ...
+; reads: wC8CB, wC468, hFF8C, wC562, wSpriteSlotCount, hFF8E, hFF91, hFF98, ...
 ; writes: wC916, wC917, wC55E, wC562
 Func_087_42A0::
     ld a, [wC8CB]
@@ -158,7 +158,7 @@ Func_087_42A0::
     ld a, [wC562]
     bit 0, a
     ret z
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     or a, a
     jp z, Jump_087_43FC
     ldh a, [hFF8E]
@@ -627,11 +627,11 @@ Jump_087_4537::
     INCBIN "dwm2-cobi-us.gbc", $21C61B, $EE
 
 ; 1 call site from 1 routine (e.g. Func_087_42A0)
-; reads: wCB7D, hFFC7, hFFC6
+; reads: wSpriteSlotCount, hFFC7, hFFC6
 ; writes: hFFC6, hFFC7
 ; points at: wCB8A
 Func_087_4709::
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     or a, a
     ret z
     ld a, c
@@ -642,7 +642,7 @@ Func_087_4709::
     swap a
     and a, $0F
     ldh [hFFC7], a
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld b, a
     ld c, $01
     ld hl, wCB8A

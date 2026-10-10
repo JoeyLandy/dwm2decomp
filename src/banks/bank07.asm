@@ -593,7 +593,7 @@ Jump_007_4952::
 
 Jump_007_4985::
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, hFF8A
     ld bc, $000E
     xor a, a
@@ -744,9 +744,9 @@ Jump_007_4A9D::
     jp Jump_000_077A
 
 ; 5 call sites from 4 routines (e.g. Func_007_486E, Func_007_6DE3, Func_007_7807, Func_007_7C5F)
-; points at: wC198
+; points at: wBGMapShadow
 Func_007_4AE4::
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $1412
     ld a, d
 
@@ -767,7 +767,7 @@ Jump_007_4AEB::
     ret
 
 ; 19 call sites from 12 routines (e.g. Func_007_4B27, Func_007_486E, Func_007_65F1, Func_007_60E9, ...)
-; points at: wC198
+; points at: wBGMapShadow
 Func_007_4AFE::
     ld e, [hl]
     inc hl
@@ -778,7 +778,7 @@ Func_007_4AFE::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
 
@@ -801,10 +801,10 @@ Jump_007_4B0E::
     ret
 
 ; 12 call sites from 9 routines (e.g. Func_007_4B27, Func_007_486E, Func_007_7807, Func_007_60E9, ...)
-; points at: wC198
+; points at: wBGMapShadow
 Func_007_4B1E::
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
 
 ; 10 call sites from 8 routines (e.g. Func_007_65F1, Func_007_60E9, Func_007_6DE3, Func_007_7724, ...)
@@ -876,7 +876,7 @@ Jump_007_4B7B::
 
 Jump_007_4B95::
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld b, $46
     ld de, Data_046_4001
     ld hl, vTiles1
@@ -977,7 +977,7 @@ Jump_007_4C5A::
 
 Jump_007_4C74::
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld b, $46
     ld de, Data_046_4001
     ld hl, vTiles1
@@ -1067,7 +1067,7 @@ Jump_007_4D2B::
 
 Jump_007_4D45::
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld b, $31
     ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
@@ -1092,7 +1092,7 @@ Jump_007_4D45::
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -1254,7 +1254,7 @@ Jump_007_4E8D::
     call Func_007_4F29
     farcall Func_012_64F8
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld b, $46
     ld de, Data_046_4001
     ld hl, vTiles1
@@ -1770,7 +1770,7 @@ Jump_007_591A::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_40D6
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -1794,7 +1794,7 @@ Jump_007_595C::
     call Func_000_1E29
     call Func_007_600E
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
 
 Jump_007_596A::
     ld hl, wD06B
@@ -1833,7 +1833,7 @@ Func_007_5999:: ; heuristic: follows a terminator; C0
     ld a, $01
     ld [wD06A], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_59A8::
@@ -1842,7 +1842,7 @@ Jump_007_59A8::
     xor a, a
     ld [wD06B], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_59B6::
@@ -1862,7 +1862,7 @@ Jump_007_59C0::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_45A7
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -1886,7 +1886,7 @@ Jump_007_5A02::
     call Func_000_1E29
     call Func_007_600E
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
 
 Jump_007_5A10::
     ld hl, wD06B
@@ -1925,7 +1925,7 @@ Func_007_5A3F:: ; heuristic: follows a terminator; C0
     ld a, $02
     ld [wD06A], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_5A4E::
@@ -1934,7 +1934,7 @@ Jump_007_5A4E::
     xor a, a
     ld [wD06B], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_5A5C::
@@ -1954,7 +1954,7 @@ Jump_007_5A66::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_4946
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -1978,7 +1978,7 @@ Jump_007_5AA8::
     call Func_000_1E29
     call Func_007_600E
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
 
 Jump_007_5AB6::
     ld hl, wD06B
@@ -2006,7 +2006,7 @@ Jump_007_5AC2::
     ld a, $03
     ld [wD06A], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_5AE9::
@@ -2017,7 +2017,7 @@ Jump_007_5AE9::
     xor a, a
     ld [wD06B], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_5AFB::
@@ -2030,7 +2030,7 @@ Jump_007_5AFB::
     xor a, a
     ld [wD06B], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 ; 1 call site from 1 routine (e.g. Func_007_5A3F)
@@ -2132,7 +2132,7 @@ Jump_007_5BAA::
     call Func_007_5EA2
     call Func_007_600E
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $DD
     call StoreWC60B
     ld hl, wD06B
@@ -2203,7 +2203,7 @@ Jump_007_5C40::
     ld hl, wD06B
     inc [hl]
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_5C5F::
@@ -2219,7 +2219,7 @@ Jump_007_5C5F::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_590F
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -2243,7 +2243,7 @@ Jump_007_5CA9::
     call Func_000_1E29
     call Func_007_600E
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD06B
     inc [hl]
     ld a, $5A
@@ -2261,7 +2261,7 @@ Jump_007_5CC1::
     ld hl, wD06B
     inc [hl]
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_5CD8::
@@ -2300,7 +2300,7 @@ Jump_007_5CD8::
 Jump_007_5D24::
     call Func_007_600E
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld hl, wD09D
     ld bc, $004C
@@ -2385,22 +2385,22 @@ Jump_007_5DB6::
     xor a, a
     ld [wD06B], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_007_5B14)
 ; reads: wD09E
-; writes: hFFA9, hFFAB, hFFAD, hFFAE, hFFAF, hFFB0
+; writes: hSpriteOriginX, hSpriteOriginY, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor
 Func_007_5DD6::
     ld a, $50
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, [wD09E]
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     xor a, a
-    ldh [hFFAD], a
-    ldh [hFFAE], a
-    ldh [hFFAF], a
-    ldh [hFFB0], a
+    ldh [hSpriteSetIndex], a
+    ldh [hSpriteSubIndex], a
+    ldh [hSpriteTileOffset], a
+    ldh [hSpriteAttrXor], a
     farcall Func_07F_700A
     ret
 
@@ -2536,21 +2536,21 @@ Jump_007_5E77::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_007_5DF5)
-; writes: hFFAE, hFFA9, hFFAB, hFFAD, hFFAF, hFFB0
+; writes: hSpriteSubIndex, hSpriteOriginX, hSpriteOriginY, hSpriteSetIndex, hSpriteTileOffset, hSpriteAttrXor
 Func_007_5E80::
     ld a, [hl+]
     and a, $03
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, [hl+]
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, [hl+]
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, $1E
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, $10
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, $01
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     inc hl
     inc hl
     push hl
@@ -2635,7 +2635,7 @@ Jump_007_5F09::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_582B
-    ld hl, wC198
+    ld hl, wBGMapShadow
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -2664,7 +2664,7 @@ Jump_007_5F6D::
     call Func_000_1E29
     call Func_007_600E
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD06B
     inc [hl]
     xor a, a
@@ -2706,7 +2706,7 @@ Jump_007_5F9D::
 
 Jump_007_5FC0::
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld [wD06B], a
     ld a, $02
@@ -2715,7 +2715,7 @@ Jump_007_5FC0::
 
 Jump_007_5FCF::
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $01
     ld [wC5DC], a
     ld a, $00
@@ -2728,25 +2728,25 @@ Jump_007_5FCF::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; writes: hFFAD, hFFAE, hFFAF, hFFAA, hFFAC, hFFB0, hFFA9, hFFAB
+; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hFFAA, hFFAC, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginY
 Func_007_5FE8:: ; heuristic: follows a terminator; C0
     ld a, [wIsCGB]
     or a, a
     ret z
     xor a, a
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, $01
     xor a, $01
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     xor a, a
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ldh [hFFAA], a
     ldh [hFFAC], a
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, $38
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, $30
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     farcall Func_0E1_5AB7
     ret
 
@@ -2888,7 +2888,7 @@ Jump_007_60F3::
     call SerialSendByte
     ld a, $01
     ld [wD781], a
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -3128,7 +3128,7 @@ Jump_007_62CE::
     ld a, [wC562]
     and a, $02
     jr z, Jump_007_62E9
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -3186,7 +3186,7 @@ Jump_007_6319::
 
 ; 3 call sites from 1 routine (e.g. Func_007_6213)
 ; reads: wD0D5, wD10A
-; writes: rRAMG, rRAMB, hFFAD, hFFAE, hFFAF, hFFB0, hFFA9, hFFAA, ...
+; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hFFAA, ...
 Func_007_635A::
     ld a, $0A
     ld [rRAMG], a
@@ -3199,19 +3199,19 @@ Func_007_635A::
     or a, a
     jr z, Jump_007_639C
     ld a, $29
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     xor a, a
-    ldh [hFFAE], a
-    ldh [hFFAF], a
-    ldh [hFFB0], a
+    ldh [hSpriteSubIndex], a
+    ldh [hSpriteTileOffset], a
+    ldh [hSpriteAttrXor], a
     ld hl, $0080
     ld a, l
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, h
     ldh [hFFAA], a
     ld hl, $0040
     ld a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, h
     ldh [hFFAC], a
     xor a, a
@@ -3613,7 +3613,7 @@ Jump_007_6633::
     ld [rRAMB], a
     xor a, a
     ld [rRAMG], a
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -3637,7 +3637,7 @@ Jump_007_66A2::
     ld a, $01
     ld [wD781], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC5DB
     ld a, $01
     ld [hl+], a
@@ -3819,7 +3819,7 @@ Jump_007_683A::
 
 Jump_007_684C::
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD06B
     inc [hl]
     ret
@@ -3829,7 +3829,7 @@ Jump_007_6856::
     or a, a
     ret nz
     ld a, $C3
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $02D0
     call FillBytes
     ld a, [wIsCGB]
@@ -3873,7 +3873,7 @@ Jump_007_6897::
     ld a, h
     ld [wC530], a
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wD06B
     inc [hl]
     ret
@@ -4856,7 +4856,7 @@ Jump_007_6EFB::
     ld [hl+], a
     ld [hl], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ret
 
 Jump_007_6F34::
@@ -6501,7 +6501,7 @@ Jump_007_7A9C::
     ret
 
 Jump_007_7AA7::
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0280
     ld a, $C3
     call FillBytes

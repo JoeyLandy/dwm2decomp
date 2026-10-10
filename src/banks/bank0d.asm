@@ -379,11 +379,11 @@ Jump_00D_45FB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wD7F0, wC920, wC919
-; points at: wC364, wC198, wD1CC, wD000, wD780
+; points at: wC364, wBGMapShadow, wD1CC, wD000, wD780
 Func_00D_4602:: ; heuristic: target of a pointer table; C0
     ld sp, hl
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_00D_4E7B
     ld a, [wIsCGB]
@@ -1255,16 +1255,16 @@ Func_00D_4B98:: ; heuristic: target of a pointer table; C0
 Func_00D_4BA5:: ; heuristic: target of a pointer table; C0
     ld hl, vTiles1 + $400
     ld bc, $0301
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $470
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $500
     ld bc, $0F01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $700
     ld bc, $0D01
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -1653,12 +1653,12 @@ Jump_00D_4DF3::
 ; 30 call sites from 24 routines (e.g. Func_00D_5C00, Func_00D_5800, Func_00D_74FC, Func_00D_7352, ...)
 ; reads: wC554, wC555, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_00D_4E05:: ; heuristic: follows a terminator; C0
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -1821,17 +1821,17 @@ Func_00D_4EC7:: ; address name
 
 ; 4 call sites from 4 routines (e.g. Func_00D_720E, Func_00D_5BDF, Func_00D_6509, Func_00D_517A)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_00D_4ED5:: ; heuristic: follows a terminator; C0
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -2603,7 +2603,7 @@ Jump_00D_55D0::
     or a, c
     jr nz, Jump_00D_55D0
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_00D_4E7B
     ld a, [wIsCGB]
@@ -4451,7 +4451,7 @@ Jump_00D_6440::
     or a, c
     jr nz, Jump_00D_6440
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_00D_4E7B
     ld a, [wIsCGB]
@@ -6664,10 +6664,10 @@ Func_00D_74F1:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: hFFBA, wC920, wC919
-; points at: wC364, wC198, wC300, wC29C, wD1CC, wD000, wD168, wD104
+; points at: wC364, wBGMapShadow, wC300, wC29C, wD1CC, wD000, wD168, wD104
 Func_00D_74FC:: ; heuristic: target of a pointer table; C0
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_00D_4E7B
     ld hl, wC300

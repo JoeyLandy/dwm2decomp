@@ -2431,7 +2431,7 @@ Jump_00E_5F39::
     ld a, c
     ld c, e
     ld b, d
-    call Func_000_16AA
+    call Multiply8By16
     ld a, $64
     call DivideHLByA
     and a, a

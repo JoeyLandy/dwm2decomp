@@ -1590,7 +1590,7 @@ Func_081_5453::
     ld h, a
     ld a, [hl]
     ld bc, $0129
-    call Func_000_16AA
+    call Multiply8By16
     ld a, [wD0E8]
     dec a
     ld c, a

@@ -1750,7 +1750,7 @@ Jump_01B_53DB::
 
 Jump_01B_53E9::
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_01B_62EC
     ld a, [wIsCGB]
@@ -3110,7 +3110,7 @@ Jump_01B_5D18::
     jr z, Jump_01B_5D70
     and a, $3F
     ld bc, $0195
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $00
     ld l, a
@@ -3400,7 +3400,7 @@ Jump_01B_5EEC::
     ldh a, [hFFC6]
     and a, $7F
     ld bc, $0195
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $00
     ld l, a
@@ -3910,12 +3910,12 @@ Jump_01B_625F::
 ; 18 call sites from 7 routines (e.g. Func_01B_5C3B, Func_01B_5A41, Func_01B_6203, Func_01B_53CE, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_01B_6277::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a
@@ -4129,17 +4129,17 @@ Jump_01B_6360::
 
 ; 1 call site from 1 routine (e.g. Func_01B_6203)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_01B_6371::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a

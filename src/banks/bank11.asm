@@ -187,7 +187,7 @@ Jump_011_4105::
     and a, $0F
     ld [wC8C6], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC5E0
     inc [hl]
     ld a, $04
@@ -386,7 +386,7 @@ Jump_011_4235::
     and a, $0F
     ld [wC8C6], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC5E0
     inc [hl]
     xor a, a
@@ -558,7 +558,7 @@ Func_011_4340::
     ld a, $01
     ld [wC8C6], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC5E0
     inc [hl]
     ld a, $04
@@ -583,7 +583,7 @@ Func_011_438F::
     ld a, $60
     call StoreWC60B
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $04
     ld [wC5DC], a
     xor a, a
@@ -715,7 +715,7 @@ Jump_011_442B::
     ld a, $03
     ld [wC8C6], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC5E0
     inc [hl]
     xor a, a

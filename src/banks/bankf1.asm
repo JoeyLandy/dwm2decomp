@@ -271,7 +271,7 @@ Jump_0F1_41E0::
 ; reads: wC61D, wC0A7, wC0A6
 ; points at: wC2A6
 Func_0F1_41EE::
-    call Func_0F1_49E1
+    call ClearBGMapShadow_BankF1
     ld e, $0B
     farcall Func_033_4001
     ld e, $0C
@@ -583,7 +583,7 @@ Jump_0F1_43F6::
 Jump_0F1_43FA::
     ld b, c
     ld a, $04
-    call Func_000_16BF
+    call DivideBByA
     ld a, c
     and a, $03
     jr z, Jump_0F1_4406
@@ -665,7 +665,7 @@ Jump_0F1_4472::
     ld c, $5F
 
 Jump_0F1_4475::
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     push hl
     ld h, [hl]
@@ -702,7 +702,7 @@ Jump_0F1_449D::
     ld c, $69
 
 Jump_0F1_44A0::
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
 
 Jump_0F1_44A3::
     deref_hl
@@ -716,7 +716,7 @@ Jump_0F1_44A3::
 
 Jump_0F1_44BA::
     ld a, c
-    call Func_000_24C5
+    call MapIndexViaWC6FE
     call Func_000_2391
     ld c, a
     ld [wStringIndex], a
@@ -769,7 +769,7 @@ Jump_0F1_44F5::
 Jump_0F1_450D::
     ld a, c
     ld c, $A4
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     push af
     or a, a
@@ -859,7 +859,7 @@ Jump_0F1_457C::
 Jump_0F1_4582::
     ld a, [wC46D]
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     bit 7, [hl]
     call nz, Func_0F1_459E
     bit 2, [hl]
@@ -969,10 +969,10 @@ Data_0F1_47C8:: ; heuristic: target of a monotone pointer table; C0
     db $C9
 
 ; 3 call sites from 1 routine (e.g. Func_0F1_4001)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0F1_4811::
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
 
 Jump_0F1_481A::
@@ -1257,17 +1257,19 @@ Func_0F1_4997:: ; heuristic: follows a terminator; C0
     db $30, $C5, $21, $2B, $40, $06, $08, $D7, $E1, $7D, $EA, $2F, $C5, $7C, $EA, $30
     db $C5, $E1, $7D, $EA, $2D, $C5, $7C, $EA, $2E, $C5, $C9
 
+; fills the $240 bytes at wBGMapShadow with $C3 (the same 12 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_41EE)
-; points at: wC198
-Func_0F1_49E1::
-    ld hl, wC198
+; points at: wBGMapShadow
+ClearBGMapShadow_BankF1::
+Func_0F1_49E1:: ; address name
+    ld hl, wBGMapShadow
     ld bc, $0240
     ld a, $C3
     call FillBytes
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4244)
-; points at: wC198
+; points at: wBGMapShadow
 Func_0F1_49ED:: ; heuristic: follows a terminator; C0
     ld e, [hl]
     inc hl
@@ -1278,7 +1280,7 @@ Func_0F1_49ED:: ; heuristic: follows a terminator; C0
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
 
@@ -1378,9 +1380,9 @@ Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 6 call sites from 5 routines (e.g. Func_007_4B27, Func_007_4E11, Func_01B_660D, Func_024_4001, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_0F1_4AA8::
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $02D0
 
 Jump_0F1_4AAE::
@@ -2482,10 +2484,10 @@ Func_0F1_5285::
 Jump_0F1_5293::
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -2576,7 +2578,7 @@ Jump_0F1_533C::
 Func_0F1_5344::
     ld hl, vTiles1 + $500
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, wCA2C
     call CopyShortStringToWC8CF_BankF1
     ld de, vTiles1 + $500
@@ -2677,7 +2679,7 @@ Jump_0F1_53D9::
 Jump_0F1_5412::
     ld hl, vTiles2 + $200
     ld bc, $0F02
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2686,10 +2688,10 @@ Jump_0F1_5412::
 Jump_0F1_5423::
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     ld hl, vTiles1 + $780
     ld bc, $0501
-    call Func_000_1881
+    call FillTilesBxC
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2903,7 +2905,7 @@ Jump_0F1_55E9::
     farcall Func_0F2_4F47
     ld hl, vTiles1 + $270
     ld bc, $0901
-    call Func_000_1881
+    call FillTilesBxC
     call Func_0F1_57CD
     ld de, Data_01F_4AD0
     ld hl, vTiles2 + $6F0
@@ -3327,17 +3329,17 @@ Data_0F1_58F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_0F1_5812, Func_0F1_4D4E)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_0F1_58FA::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -3501,12 +3503,12 @@ Jump_0F1_59B8::
 ; 4 call sites from 2 routines (e.g. Func_0F1_4D4E, Func_0F1_5812)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_0F1_59CA::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -3615,7 +3617,7 @@ Jump_0F1_5AE0::
     jr nz, Jump_0F1_5AF7
     farcall Func_01C_42B3
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     xor a, a
     ld [wD7EE], a
     ret
@@ -3711,9 +3713,9 @@ Jump_0F1_5B68::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_5AD5)
-; reads: wCB7D, wD7F1
+; reads: wSpriteSlotCount, wD7F1
 Func_0F1_5B8E::
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     and a, a
     ret z
     farcall Func_004_44CE

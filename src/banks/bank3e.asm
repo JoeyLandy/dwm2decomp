@@ -3,9 +3,9 @@ SECTION "Bank 3E", ROMX[$4000], BANK[$3E]
 
 ; 1 call site from 1 routine (e.g. Func_03A_5383)
 ; reads: wD804, wD801, wDAB7
-; points at: hFFA9
+; points at: hSpriteOriginX
 Func_03E_4001::
-    ld hl, hFFA9
+    ld hl, hSpriteOriginX
     ld a, [wD804]
     ld [hl+], a
     ld a, $00
@@ -29,16 +29,16 @@ Data_03E_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $91, $40, $9E, $41, $C2, $44, $5F, $48, $1E, $4B, $CD, $4E, $CD, $52, $A7, $53
     db $19, $56, $26, $60, $FC, $61, $1A, $67, $16, $76, $3A, $7A
 
-; DE = two-level table; entries are chosen by hFFAD and hFFAE; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hFFAB + b + $10, X = hFFA9 + b + 8, tile += hFFAF, flags ^= hFFB0) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
+; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
 ; 1 call site from 1 routine (e.g. Func_03E_4001)
-; reads: hOamNextEntry, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; reads: hOamNextEntry, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginY, hSpriteOriginX, hSpriteTileOffset, hSpriteAttrXor
 ; writes: hOamNextEntry
 BuildOamFromSpriteTable_Bank3E::
 Func_03E_4040:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $28
     jr nc, Jump_03E_4090
-    ldh a, [hFFAD]
+    ldh a, [hSpriteSetIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -46,7 +46,7 @@ Func_03E_4040:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [hFFAE]
+    ldh a, [hSpriteSubIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -66,18 +66,18 @@ Jump_03E_4063::
     cp a, $80
     jr z, Jump_03E_4090
     ld b, a
-    ldh a, [hFFAB]
+    ldh a, [hSpriteOriginY]
     add a, b
     add a, $10
     ld [hl+], a
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [hFFA9]
+    ldh a, [hSpriteOriginX]
     add a, b
     add a, $08
     ld [hl+], a
-    ldh a, [hFFAF]
+    ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [de]
     inc de
@@ -86,7 +86,7 @@ Jump_03E_4063::
     ld a, [de]
     inc de
     ld b, a
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     xor a, b
     ld [hl+], a
     ldh a, [hOamNextEntry]

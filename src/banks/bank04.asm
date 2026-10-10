@@ -9,8 +9,8 @@ Func_004_4001::
 
 ; 2 call sites from 1 routine (e.g. Func_069_4001)
 ; reads: wC88D, wC83A
-; writes: wC88D, wCB7D
-; points at: wC83B, wCB7F
+; writes: wC88D, wSpriteSlotCount
+; points at: wC83B, wSpriteSlots
 Func_004_4008::
     ld a, [wC88D]
     bit 7, a
@@ -18,16 +18,16 @@ Func_004_4008::
     xor a, a
     ld [wC88D], a
     ld a, [wC83A]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld hl, wC83B
-    ld de, wCB7F
+    ld de, wSpriteSlots
     ld bc, $0050
     call CopyBytes
     ret
 
 ; 1 call site from 1 routine (e.g. Func_069_4001)
 ; reads: wCC44, wCC45, wCD06, wCD07, wCD0B, wC967
-; writes: wC967, hFFCF, wCB7D
+; writes: wC967, hFFCF, wSpriteSlotCount
 ; points at: wCE7E, wCDAF, wCD89, wCDAC
 Func_004_4025::
     xor a, a
@@ -86,7 +86,7 @@ Jump_004_4082::
     bit 7, a
     jr z, Jump_004_408E
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 Jump_004_408E::
@@ -135,7 +135,7 @@ Jump_004_40C4::
 
 Jump_004_40DA::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 Jump_004_40DF::
@@ -167,7 +167,7 @@ Jump_004_40F8::
 
 Jump_004_4112::
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 Jump_004_4117::
@@ -181,8 +181,8 @@ Jump_004_4117::
 
 ; 4 call sites from 1 routine (e.g. Func_004_4025)
 ; reads: wC190, hFF92, hFF8F, hFFCF, hFFC8, hFFC6, wCD0B, hFFD0, ...
-; writes: wCB7D, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, hFFC9, ...
-; points at: wCB7F, wCE7B
+; writes: wSpriteSlotCount, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, hFFC9, ...
+; points at: wSpriteSlots, wCE7B
 Func_004_4129::
     ld a, [hl+]
     ld e, a
@@ -216,7 +216,7 @@ Func_004_4129::
     cp a, $FF
     jr nz, Jump_004_415B
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ret
 
 Jump_004_415B::
@@ -231,9 +231,9 @@ Jump_004_415F::
     ld l, e
     ld h, d
     ld a, [hl+]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld b, a
-    ld de, wCB7F
+    ld de, wSpriteSlots
 
 Jump_004_416D::
     push bc
@@ -612,20 +612,20 @@ Func_004_449F::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_004_4001, Func_014_6804, Func_024_567C, Func_0F1_5B8E, ...)
-; reads: wC468, wCB7D, hScrollX, hFFA2, hScrollY, hFFA6, hFFB0, hFFC6
-; writes: hFFC6, hFFB0, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC, hFFAE, ...
-; points at: wCB7F
+; reads: wC468, wSpriteSlotCount, hScrollX, hFFA2, hScrollY, hFFA6, hSpriteAttrXor, hFFC6
+; writes: hFFC6, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSubIndex, ...
+; points at: wSpriteSlots
 Func_004_44CE::
     ld a, [wC468]
     bit 7, a
     ret nz
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     or a, a
     ret z
     call Func_004_456D
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld b, a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
 
 Jump_004_44E3::
     push hl
@@ -639,10 +639,10 @@ Jump_004_44E3::
     inc hl
     ld a, [hl+]
     and a, $07
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     inc hl
     ld a, [hl+]
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     inc hl
     inc hl
     ld a, [hl+]
@@ -650,7 +650,7 @@ Jump_004_44E3::
     ld d, a
     ldh a, [hScrollX]
     add a, d
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFAA], a
@@ -659,7 +659,7 @@ Jump_004_44E3::
     ld d, a
     ldh a, [hScrollY]
     add a, d
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ldh a, [hFFA6]
     adc a, $00
     ldh [hFFAC], a
@@ -668,14 +668,14 @@ Jump_004_44E3::
     bit 7, a
     jr z, Jump_004_4526
     push af
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     or a, $20
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     pop af
     and a, $7F
 
 Jump_004_4526::
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     pop hl
     push bc
     ldh a, [hFFC6]
@@ -683,7 +683,7 @@ Jump_004_4526::
     jr nz, Jump_004_4555
     ld a, [hl+]
     and a, $7F
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [hl-]
     or a, a
     jr nz, Jump_004_454D
@@ -704,7 +704,7 @@ Jump_004_454D::
 Jump_004_4555::
     ld a, [hl+]
     inc hl
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     farcall Func_07F_4001
 
 Jump_004_455F::
@@ -717,12 +717,12 @@ Jump_004_455F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_44CE)
-; reads: wCB7D
-; points at: wCB7F
+; reads: wSpriteSlotCount
+; points at: wSpriteSlots
 Func_004_456D::
-    ld a, [wCB7D]
+    ld a, [wSpriteSlotCount]
     ld b, a
-    ld hl, wCB7F
+    ld hl, wSpriteSlots
 
 Jump_004_4574::
     push bc
@@ -1373,7 +1373,7 @@ Jump_004_48CD::
 
 ; 3 call sites from 2 routines (e.g. Func_004_4852, Func_004_456D)
 ; reads: wC192
-; points at: wC198, wC910
+; points at: wBGMapShadow, wC910
 Func_004_4904::
     push bc
     push de
@@ -1393,7 +1393,7 @@ Func_004_4904::
     srl a
     srl a
     add_a_to_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld de, wC910
     ld a, [hl+]
@@ -1439,7 +1439,7 @@ Jump_004_4955::
 
 ; 1 call site from 1 routine (e.g. Func_004_4852)
 ; reads: wC196
-; points at: wC198, wC910
+; points at: wBGMapShadow, wC910
 Func_004_495A::
     push bc
     push de
@@ -1459,7 +1459,7 @@ Func_004_495A::
     srl a
     srl a
     add_a_to_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld de, wC910
     ld a, [hl+]
@@ -1826,46 +1826,46 @@ Jump_004_4BDD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
-; reads: hFFAB, hFFAC, hFFB0, hFF8C
-; writes: hFFAB, hFFAC, hFFAF, hFFB0, hFFAD, hFFAE
+; reads: hSpriteOriginY, hFFAC, hSpriteAttrXor, hFF8C
+; writes: hSpriteOriginY, hFFAC, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex
 Func_004_4BE4::
-    ldh a, [hFFAB]
+    ldh a, [hSpriteOriginY]
     ld l, a
     ldh a, [hFFAC]
     ld h, a
     ld a, $08
     add_a_to_hl
     ld a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, h
     ldh [hFFAC], a
     ld a, $70
-    ldh [hFFAF], a
-    ldh a, [hFFB0]
+    ldh [hSpriteTileOffset], a
+    ldh a, [hSpriteAttrXor]
     and a, $F8
     or a, $07
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ldh a, [hFF8C]
     bit 3, a
     jr z, Jump_004_4C17
     ld a, $21
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     xor a, a
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     farcall Func_07F_700A
     ret
 
 Jump_004_4C17::
     ld a, $22
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     xor a, a
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     farcall Func_07F_700A
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
 ; reads: hFF8D, hFF8A, wC8F0, wC8F1, hFF99, hScrollX, hFFA2, hScrollY, ...
-; writes: hFFAD, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
+; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
 Func_004_4C25::
     ldh a, [hFF8D]
     bit 1, a
@@ -1876,9 +1876,9 @@ Func_004_4C25::
     ldh a, [hFF8A]
     inc a
     and a, $01
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, $01
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, [wC8F0]
     ld b, a
     ld a, [wC8F1]
@@ -1894,7 +1894,7 @@ Jump_004_4C4E::
     cp a, $03
     jr nz, Jump_004_4C5B
     ld a, $21
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, $01
 
 Jump_004_4C5B::
@@ -1905,15 +1905,15 @@ Jump_004_4C5B::
     srl a
     and a, $01
     add a, c
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, $10
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, [wC8F0]
     add a, $08
     ld l, a
     ldh a, [hScrollX]
     add a, l
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFAA], a
@@ -1922,7 +1922,7 @@ Jump_004_4C5B::
     ld l, a
     ldh a, [hScrollY]
     add a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ldh a, [hFFA6]
     adc a, $00
     ldh [hFFAC], a
@@ -1931,15 +1931,15 @@ Jump_004_4C5B::
 
 ; 3 call sites from 1 routine (e.g. Func_004_4BB0)
 ; reads: hFF8D, hFF8A, hFF8E, hFF91, hFF99, hScrollX, hFFA2, hScrollY, ...
-; writes: hFFAD, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
+; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
 Func_004_4C96::
     ldh a, [hFF8D]
     bit 0, a
     ret nz
     ldh a, [hFF8A]
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, $00
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ldh a, [hFF8E]
     ld b, a
     ldh a, [hFF91]
@@ -1955,7 +1955,7 @@ Jump_004_4CB3::
     cp a, $03
     jr nz, Jump_004_4CBF
     ld a, $20
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, $01
 
 Jump_004_4CBF::
@@ -1966,15 +1966,15 @@ Jump_004_4CBF::
     srl a
     and a, $01
     add a, c
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, $00
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ldh a, [hFF8E]
     add a, $08
     ld l, a
     ldh a, [hScrollX]
     add a, l
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFAA], a
@@ -1983,7 +1983,7 @@ Jump_004_4CBF::
     ld l, a
     ldh a, [hScrollY]
     add a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld l, a
     ldh a, [hFFA6]
     adc a, $00
@@ -1999,7 +1999,7 @@ Jump_004_4CBF::
     sbc a, $00
     ld h, a
     ld a, l
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, h
     ldh [hFFAC], a
 
@@ -2016,13 +2016,13 @@ Jump_004_4D13::
     and a, $01
     jr z, Jump_004_4D1D
     ldh a, [hFF94]
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     jr Jump_004_4D0C
 
 Jump_004_4D1D::
     ldh a, [hFF94]
     and a, $7F
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ldh a, [hFF95]
     or a, a
     jr nz, Jump_004_4D3C
@@ -2042,7 +2042,7 @@ Jump_004_4D3C::
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
 ; reads: wC6FD, hFFCF, hFF8D, hFF99, hFFC6, hScrollX, hFFA2, hScrollY, ...
-; writes: hFFCF, hFFC6, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, ...
+; writes: hFFCF, hFFC6, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, ...
 ; points at: wC8EF, wC701
 Func_004_4D43::
     ld a, $02
@@ -2068,7 +2068,7 @@ Jump_004_4D57::
     ld a, $03
     sub a, b
     inc a
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     push bc
     inc hl
     ld a, [hl+]
@@ -2088,9 +2088,9 @@ Jump_004_4D7C::
     ld a, [hl+]
     cp a, $03
     jr nz, Jump_004_4D89
-    ldh a, [hFFB0]
+    ldh a, [hSpriteAttrXor]
     or a, $20
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, $01
 
 Jump_004_4D89::
@@ -2101,15 +2101,15 @@ Jump_004_4D89::
     srl a
     and a, $01
     add a, c
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ldh a, [hFFC6]
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ld a, [hl+]
     add a, $08
     ld c, a
     ldh a, [hScrollX]
     add a, c
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFAA], a
@@ -2118,7 +2118,7 @@ Jump_004_4D89::
     ld c, a
     ldh a, [hScrollY]
     add a, c
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ldh a, [hFFA6]
     adc a, $00
     ldh [hFFAC], a
@@ -2128,14 +2128,14 @@ Jump_004_4D89::
     cp a, $FF
     jr nz, Jump_004_4DCB
     ld a, $19
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     farcall Func_07F_700A
     jr Jump_004_4DF3
 
 Jump_004_4DCB::
     ld a, [de]
     and a, $7F
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     inc de
     ld a, [de]
     or a, a

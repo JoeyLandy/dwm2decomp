@@ -127,12 +127,12 @@ Jump_024_40EA::
     and a, $03
     jr nz, Jump_024_40EA
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
     xor a, a
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     ld a, $02
     ldh [hFFB9], a
     ld a, $03
@@ -1867,12 +1867,12 @@ Jump_024_4E3F::
 ; 18 call sites from 2 routines (e.g. Func_024_4001, Func_024_4117)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_024_4E57::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld a, l
     ld e, a
@@ -3075,8 +3075,8 @@ Func_024_567C::
 
 ; 2 call sites from 1 routine (e.g. Func_024_4117)
 ; reads: wCA99, wD092, wCA36, wCA37, wIsCGB, wC991, wC992
-; writes: hFFC6, hFFC7, wCBA1, wCBA2, wCB7D, wC527, wCBCF, wCBD3, ...
-; points at: wCB7F, wCB8F, hFFC6, wCB9F
+; writes: hFFC6, hFFC7, wCBA1, wCBA2, wSpriteSlotCount, wC527, wCBCF, wCBD3, ...
+; points at: wSpriteSlots, wCB8F, hFFC6, wCB9F
 Func_024_568E::
     ld de, $0000
     call TestFlagBit
@@ -3088,7 +3088,7 @@ Jump_024_569B::
     ld hl, Data_024_5BF9
 
 Jump_024_569E::
-    ld de, wCB7F
+    ld de, wSpriteSlots
     ld b, $10
     call Func_024_578B
     ld hl, Data_024_5C09
@@ -3177,7 +3177,7 @@ Jump_024_574F::
 
 Jump_024_575B::
     ld a, $03
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     jr Jump_024_577F
 
 Jump_024_5762::
@@ -3191,7 +3191,7 @@ Jump_024_5762::
     ld a, $40
     ld [wCBD4], a
     ld a, $02
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
 
 Jump_024_577F::
     ld a, [wIsCGB]
@@ -4309,7 +4309,7 @@ Jump_024_659A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wIsCGB, wD781, wD783, wD784
 ; writes: hFFB9, wD782, wD781, wD783, wD784
-; points at: wC364, wC198, wC300, wC29C, wD1CC, wD000, wD168, wD104
+; points at: wC364, wBGMapShadow, wC300, wC29C, wD1CC, wD000, wD168, wD104
 Func_024_65B1:: ; heuristic: target of a pointer table; C0
     ld a, [wD782]
     and a, a
@@ -4349,7 +4349,7 @@ Jump_024_65CA::
 
 Jump_024_65F4::
     ld hl, wC364
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $0104
     call Func_024_6887
     ld hl, wC300
@@ -4612,12 +4612,12 @@ Jump_024_6825::
 ; 9 call sites from 8 routines (e.g. Func_024_6655, Func_024_65B1, Func_024_6535, Func_024_6AE4, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_024_6837::
     push de
     push bc
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h
@@ -5032,17 +5032,17 @@ Data_024_6A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_024_62C9)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wC198, wD000
+; points at: wBGMapShadow, wD000
 Func_024_6A90::
     push bc
     push hl
     push de
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     ld e, l
     ld d, h

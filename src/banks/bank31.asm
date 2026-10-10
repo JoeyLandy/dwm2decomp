@@ -64,7 +64,7 @@ Jump_031_404B::
     ld a, h
     ld [wC555], a
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $07
     ldh [hFF9F], a
     ld a, $FF
@@ -1105,7 +1105,7 @@ Jump_031_471C::
     dw Jump_031_474A
 
 Jump_031_4724::
-    ld de, wC198
+    ld de, wBGMapShadow
     ld hl, vBGMap0
     ld bc, $1412
     call Func_031_753F
@@ -1136,7 +1136,7 @@ Jump_031_4751::
     ld a, [wD7BA]
     ldh [hFF8D], a
     ld a, [wD7BB]
-    ld [wCB7D], a
+    ld [wSpriteSlotCount], a
     call Func_031_47C7
     ld b, $31
     ld de, Data_031_7C1E
@@ -1163,11 +1163,11 @@ Jump_031_4793::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_46C1)
-; points at: wC198
+; points at: wBGMapShadow
 Func_031_47A9::
     call Func_031_47C7
     ld hl, vBGMap0
-    ld de, wC198
+    ld de, wBGMapShadow
     ld bc, $1412
     call Func_031_753F
     ret
@@ -1262,7 +1262,7 @@ Jump_031_485D::
     ld a, $80
     ldh [hFFBA], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wCFCA
     inc [hl]
     ret
@@ -1381,7 +1381,7 @@ Jump_031_4926::
 
 Jump_031_4931::
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     farcall Func_0A3_4B0B
     ld a, $06
     ld [wC5DB], a
@@ -5776,7 +5776,7 @@ Jump_031_6653::
     ld a, c
     push bc
     ld c, $55
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     pop bc
     call Func_031_66AE
     call Func_031_66E2
@@ -5817,7 +5817,7 @@ Func_031_6678::
     push af
     ld a, c
     ld c, $0E
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     and a, $0F
     pop bc
@@ -6118,7 +6118,7 @@ Jump_031_67F7::
     ld e, a
     ld a, d
     push af
-    call Func_000_16E2
+    call Divide24ByA
     pop af
     ld a, l
     ldh [hFFC6], a
@@ -6176,7 +6176,7 @@ Func_031_6885::
     push bc
     ld a, c
     ld c, $58
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     ld c, a
     ld a, [hl+]
@@ -6275,7 +6275,7 @@ Jump_031_6925::
     ld [rRAMB], a
     ld a, [wD868]
     ld c, $01
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     call Func_031_6D87
     push hl
     ld a, [wD868]
@@ -6318,7 +6318,7 @@ Jump_031_6973::
     ld [rRAMB], a
     ld a, [wD868]
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld de, wD09D
     ld b, $08
 
@@ -6420,7 +6420,7 @@ Jump_031_6A0A::
 Func_031_6A2D::
     ld a, [wD868]
     ld c, $56
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     inc [hl]
     ld a, l
     add a, $07
@@ -6487,7 +6487,7 @@ Func_031_6A8B::
 Func_031_6A92::
     ld a, [wD868]
     ld c, $56
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl+]
     cp a, [hl]
     ret c
@@ -6504,7 +6504,7 @@ Func_031_6A92::
 Func_031_6AAE::
     ld a, [wD868]
     ld c, $34
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld de, wD09D
     ld b, $08
 
@@ -6584,7 +6584,7 @@ Jump_031_6B1C::
     ld a, $0F
 
 Jump_031_6B1E::
-    call Func_000_16E2
+    call Divide24ByA
     ld a, l
     ld [wDA6B], a
     ld a, h
@@ -7190,7 +7190,7 @@ Jump_031_6E79::
     farcall Func_01A_7276
     ld hl, vBGMap0
     ld bc, $1412
-    ld de, wC198
+    ld de, wBGMapShadow
 
 Jump_031_6EAC::
     push bc
@@ -7224,7 +7224,7 @@ Jump_031_6ECA::
     and a, $03
     ld [wCFD6], a
     ld a, $04
-    call Func_000_16BF
+    call DivideBByA
     cp a, $00
     jr nz, Jump_031_6EDB
     dec b
@@ -7258,7 +7258,7 @@ Jump_031_6EF7::
     ld [rRAMB], a
     ld a, [wD868]
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
@@ -7568,7 +7568,7 @@ Jump_031_715E::
     ld [rRAMB], a
     ld a, [wD868]
     ld c, $5F
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     deref_hl
     xor a, a
     ld [rRAMG], a
@@ -7660,7 +7660,7 @@ Func_031_71C4::
 ; 6 call sites from 6 routines (e.g. Func_031_47C7, Func_031_46C1, Func_016_733F, Func_019_419B, ...)
 ; reads: wIsCGB
 ; writes: rVBK
-; points at: wC198
+; points at: wBGMapShadow
 Func_031_71F5::
     ld a, [wIsCGB]
     or a, a
@@ -7689,7 +7689,7 @@ Jump_031_7207::
     ldh [rVBK], a
 
 Jump_031_721B::
-    ld hl, wC198
+    ld hl, wBGMapShadow
     ld bc, $0240
 
 Jump_031_7221::
@@ -7749,7 +7749,7 @@ Jump_031_7270::
     push bc
     ld a, c
     ld bc, $004E
-    call Func_000_16AA
+    call Multiply8By16
     ld a, l
     add a, $D5
     ld l, a
@@ -8251,7 +8251,7 @@ Jump_031_7557::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_72AC)
-; points at: wC198
+; points at: wBGMapShadow
 Func_031_755B::
     ld e, [hl]
     inc hl
@@ -8262,7 +8262,7 @@ Func_031_755B::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wC198
+    ld hl, wBGMapShadow
     add hl, de
     pop de
     ret
@@ -8478,7 +8478,7 @@ Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 7 call sites from 6 routines (e.g. Func_031_6885, Func_031_7450, Func_031_7431, Func_031_7412, ...)
 ; reads: wC58A, wC57F
-; points at: wC198
+; points at: wBGMapShadow
 Func_031_77B9::
     ld a, [wC58A]
     or a, a
@@ -8511,7 +8511,7 @@ Jump_031_77DD::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl
@@ -8532,7 +8532,7 @@ Jump_031_7805::
 
 ; 6 call sites from 5 routines (e.g. Func_031_73DD, Func_031_73BE, Func_031_739F, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wD8BF, wC198
+; points at: wD8BF, wBGMapShadow
 Func_031_7806::
     ld a, [wC58A]
     cp a, $02
@@ -8576,7 +8576,7 @@ Jump_031_782B::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld d, h
     ld e, l
@@ -8589,7 +8589,7 @@ Jump_031_785D::
 
 ; 6 call sites from 5 routines (e.g. Func_031_73DD, Func_031_73BE, Func_031_739F, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wD8DF, wC198
+; points at: wD8DF, wBGMapShadow
 Func_031_785F::
     ld a, [wC58A]
     cp a, $02
@@ -8633,7 +8633,7 @@ Jump_031_7884::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld d, h
     ld e, l
@@ -8646,7 +8646,7 @@ Jump_031_78B6::
 
 ; 2 call sites from 1 routine (e.g. Func_031_76AE)
 ; reads: wC58A, wC57F
-; points at: wC198, wD8B7
+; points at: wBGMapShadow, wD8B7
 Func_031_78B8::
     ld a, [wC58A]
     cp a, $02
@@ -8681,7 +8681,7 @@ Jump_031_78DD::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     ld [hl], $EA
     inc hl
@@ -8705,7 +8705,7 @@ Jump_031_7912::
 
 ; 6 call sites from 5 routines (e.g. Func_031_7450, Func_031_7431, Func_031_7412, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wC198
+; points at: wBGMapShadow
 Func_031_7914::
     ld a, [wC58A]
     or a, a
@@ -8738,7 +8738,7 @@ Jump_031_7938::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl
@@ -8759,7 +8759,7 @@ Jump_031_7964::
 
 ; 6 call sites from 5 routines (e.g. Func_031_7450, Func_031_7431, Func_031_7412, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wC198
+; points at: wBGMapShadow
 Func_031_7965::
     ld a, [wC58A]
     or a, a
@@ -8792,7 +8792,7 @@ Jump_031_7989::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl
@@ -8813,7 +8813,7 @@ Jump_031_79B5::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F
-; points at: wC198
+; points at: wBGMapShadow
 Func_031_79B6:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     or a, a
@@ -8846,7 +8846,7 @@ Jump_031_79DA::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wC198
+    ld de, wBGMapShadow
     add hl, de
     pop de
     push hl

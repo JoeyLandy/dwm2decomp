@@ -24,7 +24,7 @@ Func_001_4001::
     ld [wC5F7], a
     call Func_001_4045
     ld a, $FC
-    call Func_000_0DF2
+    call StartPaletteFade
     ld a, $03
     ld [wC5EC], a
     ld a, $01
@@ -4356,12 +4356,12 @@ Jump_001_643F::
 
 Jump_001_644D::
     ld a, $00
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, [wC5FD]
     cp a, $03
     jr nz, Jump_001_645E
     ld a, $20
-    ldh [hFFB0], a
+    ldh [hSpriteAttrXor], a
     ld a, $01
 
 Jump_001_645E::
@@ -4371,9 +4371,9 @@ Jump_001_645E::
     swap a
     and a, $01
     add a, c
-    ldh [hFFAE], a
+    ldh [hSpriteSubIndex], a
     ld a, $20
-    ldh [hFFAF], a
+    ldh [hSpriteTileOffset], a
     ldh a, [hScrollX]
     ld c, a
     ldh a, [hFFA2]
@@ -4385,7 +4385,7 @@ Jump_001_645E::
     adc a, $00
     ld b, a
     ld a, c
-    ldh [hFFA9], a
+    ldh [hSpriteOriginX], a
     ld a, b
     ldh [hFFAA], a
     ldh a, [hScrollY]
@@ -4399,12 +4399,12 @@ Jump_001_645E::
     adc a, $00
     ld b, a
     ld a, c
-    ldh [hFFAB], a
+    ldh [hSpriteOriginY], a
     ld a, b
     ldh [hFFAC], a
     ld a, [wC5FB]
     and a, $7F
-    ldh [hFFAD], a
+    ldh [hSpriteSetIndex], a
     ld a, [wC5FC]
     or a, a
     jr nz, Jump_001_64B9
@@ -4640,7 +4640,7 @@ Jump_001_6696::
     xor a, a
     ld [wC5DC], a
     ld a, $04
-    call Func_000_0DF2
+    call StartPaletteFade
     ld hl, wC5DF
     inc [hl]
     ld hl, wD066
@@ -5011,7 +5011,7 @@ Jump_001_68C6::
 ; 1 call site from 1 routine (e.g. Func_001_6880)
 Func_001_68CA::
     ld c, $00
-    call Func_000_1F49
+    call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $02
     ret
@@ -5190,7 +5190,7 @@ Jump_001_6A0C::
 Jump_001_6A46::
     ld b, [hl]
     ld a, $0A
-    call Func_000_16BF
+    call DivideBByA
     ld c, a
     push bc
     ld a, [wC46B]
@@ -5668,7 +5668,7 @@ Jump_001_6D33::
     ld a, [wC5E7]
     ld b, a
     ld a, $0E
-    call Func_000_16BF
+    call DivideBByA
     ld [wD09E], a
     ld a, [wD868]
     ld c, $01
