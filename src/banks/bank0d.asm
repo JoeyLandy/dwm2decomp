@@ -241,7 +241,7 @@ Jump_00D_4635:: ; address name
     dw ScriptCommandEF_Run_Table2_Case01
     dw ScriptCommandEF_Run_Table2_Case02
 
-; 1 call site from 1 routine (e.g. Func_00D_4B30_Case01)
+; 1 call site from 1 routine (e.g. EndScriptCommandAndIncWD782_Case01)
 ; reads: wD781
 ; writes: wD781
 Func_00D_463F::
@@ -688,7 +688,7 @@ Jump_00D_48EB::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00D_4B30_Case03)
+; 1 call site from 1 routine (e.g. EndScriptCommandAndIncWD782_Case03)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC3BB, wC462, wC463
@@ -764,7 +764,7 @@ Func_00D_491A_Case00::
 Jump_00D_499A:: ; address name
     xor a, a
     ld [wTwoChoiceCursor], a
-    call Func_00D_4B30
+    call EndScriptCommandAndIncWD782
     ret
 
 ; entry 1 of the `rst $00` table in Func_00D_491A
@@ -773,7 +773,7 @@ Jump_00D_499A:: ; address name
 ; writes: wTwoChoiceCursor, rRAMG2
 Func_00D_491A_Case01::
 Jump_00D_49A2:: ; address name
-    call Func_00D_4B18
+    call GetWD789Cell4AddressWithSRAM
     ld c, $00
     ld de, $0000
 
@@ -840,7 +840,7 @@ Jump_00D_49F2::
     ld [wTwoChoiceCursor], a
     xor a, a
     ld [rRAMG2], a
-    call Func_00D_4B30
+    call EndScriptCommandAndIncWD782
     ret
 
 Data_00D_49FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -851,7 +851,7 @@ Data_00D_49FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wTwoChoiceCursor, rRAMG2
 Func_00D_491A_Case02::
 Jump_00D_4A03:: ; address name
-    call Func_00D_4B18
+    call GetWD789Cell4AddressWithSRAM
     ld a, [hl]
     ld c, $3C
     call SRAMRecordAddress
@@ -899,7 +899,7 @@ Jump_00D_4A3A::
 ; writes: wTwoChoiceCursor, rRAMG2
 Func_00D_491A_Case03::
 Jump_00D_4A3F:: ; address name
-    call Func_00D_4B18
+    call GetWD789Cell4AddressWithSRAM
     ld a, [hl]
     ld c, $57
     call LoadSRAMRecordByte
@@ -931,7 +931,7 @@ Jump_00D_4A64::
 ; writes: wTwoChoiceCursor, rRAMG2
 Func_00D_491A_Case04::
 Jump_00D_4A69:: ; address name
-    call Func_00D_4B18
+    call GetWD789Cell4AddressWithSRAM
     ld b, $00
     push hl
     push bc
@@ -1005,7 +1005,7 @@ Jump_00D_4ABB::
 ; writes: wTwoChoiceCursor, rRAMG2
 Func_00D_491A_Case05::
 Jump_00D_4ABF:: ; address name
-    call Func_00D_4B18
+    call GetWD789Cell4AddressWithSRAM
     ld a, [hl]
     ld c, $0E
     call LoadSRAMRecordByte
@@ -1051,10 +1051,12 @@ Jump_00D_4ACF:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; enables SRAM (bank 0), far-calls SetWD7F5ToWD789Cell4 and returns HL = wD7F5 (high) / wD7F6 (low) (E-0119)
 ; 5 call sites from 5 routines (e.g. Func_00D_491A_Case05, Func_00D_491A_Case04, Func_00D_491A_Case03, Func_00D_491A_Case02, ...)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG2, rRAMB
-Func_00D_4B18::
+GetWD789Cell4AddressWithSRAM::
+Func_00D_4B18:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -1066,10 +1068,12 @@ Func_00D_4B18::
     ld l, a
     ret
 
+; wD782 += 1, wScriptCommandType = 0, wScriptStartRequest = $80 (E-0119)
 ; 2 call sites from 2 routines (e.g. Func_00D_491A_Case01, Func_00D_491A_Case00)
 ; reads: wD782
 ; writes: wD782, wScriptCommandType, wScriptStartRequest
-Func_00D_4B30::
+EndScriptCommandAndIncWD782::
+Func_00D_4B30:: ; address name
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -1105,22 +1109,22 @@ ScriptCommandEF_Run_Case0F::
 Jump_00D_4B5D:: ; address name
     ld a, [wD781]
     rst $00
-    dw Func_00D_4B30_Case00
-    dw Func_00D_4B30_Case01
-    dw Func_00D_4B30_Case02
-    dw Func_00D_4B30_Case03
-    dw Func_00D_4B30_Case04
-    dw Func_00D_4B30_Case05
-    dw Func_00D_4B30_Case06
-    dw Func_00D_4B30_Case07
-    dw Func_00D_4B30_Case08
+    dw EndScriptCommandAndIncWD782_Case00
+    dw EndScriptCommandAndIncWD782_Case01
+    dw EndScriptCommandAndIncWD782_Case02
+    dw EndScriptCommandAndIncWD782_Case03
+    dw EndScriptCommandAndIncWD782_Case04
+    dw EndScriptCommandAndIncWD782_Case05
+    dw EndScriptCommandAndIncWD782_Case06
+    dw EndScriptCommandAndIncWD782_Case07
+    dw EndScriptCommandAndIncWD782_Case08
 
-; entry 0 of the `rst $00` table in Func_00D_4B30
+; entry 0 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC526, wD781
 ; points at: wBGPaletteBuffer
-Func_00D_4B30_Case00::
+EndScriptCommandAndIncWD782_Case00::
 Jump_00D_4B73:: ; address name
     ld hl, vTiles2
     ld de, Data_049_4418
@@ -1138,9 +1142,9 @@ Jump_00D_4B73:: ; address name
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in Func_00D_4B30
+; entry 1 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
-Func_00D_4B30_Case01::
+EndScriptCommandAndIncWD782_Case01::
 Jump_00D_4B98:: ; address name
     ld hl, Data_00D_509F
     ld de, Data_00D_50AF
@@ -1148,12 +1152,12 @@ Jump_00D_4B98:: ; address name
     call Func_00D_463F
     ret
 
-; entry 2 of the `rst $00` table in Func_00D_4B30
+; entry 2 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC52D
-Func_00D_4B30_Case02::
+EndScriptCommandAndIncWD782_Case02::
 Jump_00D_4BA5:: ; address name
     ld hl, vTiles1 + $400
     ld bc, $0301
@@ -1180,19 +1184,19 @@ Jump_00D_4BA5:: ; address name
     ld [wD781], a
     ret
 
-; entry 3 of the `rst $00` table in Func_00D_4B30
+; entry 3 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD7F5, wD781
-Func_00D_4B30_Case03::
+EndScriptCommandAndIncWD782_Case03::
 Jump_00D_4BDE:: ; address name
     call Func_00D_491A
 
-; entry 4 of the `rst $00` table in Func_00D_4B30
+; entry 4 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD7F5, wD781
-Func_00D_4B30_Case04::
+EndScriptCommandAndIncWD782_Case04::
 Jump_00D_4BE1:: ; address name
     ld a, $01
     ld [wD7F5], a
@@ -1202,11 +1206,11 @@ Jump_00D_4BE1:: ; address name
     ld [wD781], a
     ret
 
-; entry 5 of the `rst $00` table in Func_00D_4B30
+; entry 5 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD7F1, wD7F2, wD781
-Func_00D_4B30_Case05::
+EndScriptCommandAndIncWD782_Case05::
 Jump_00D_4BF4:: ; address name
     ld de, Data_01F_4990
     ld hl, vTiles1 + $4E0
@@ -1222,12 +1226,12 @@ Jump_00D_4BF4:: ; address name
     ld [wD781], a
     ret
 
-; entry 6 of the `rst $00` table in Func_00D_4B30
+; entry 6 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD781
 ; writes: wD781
 ; points at: wC410
-Func_00D_4B30_Case06::
+EndScriptCommandAndIncWD782_Case06::
 Jump_00D_4C17:: ; address name
     ld a, [wD7AB]
     ld b, $BC
@@ -1242,12 +1246,12 @@ Jump_00D_4C17:: ; address name
     ld [wD781], a
     ret
 
-; entry 7 of the `rst $00` table in Func_00D_4B30
+; entry 7 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7BD, wD781
 ; writes: wC8C0, wC8C1, wC8C2, wStringIndex, wStringCategory, wD781
 ; points at: wD7F4, wC130, wC52D
-Func_00D_4B30_Case07::
+EndScriptCommandAndIncWD782_Case07::
 Jump_00D_4C36:: ; address name
     ld a, [wD7BD]
     and a, a
@@ -1314,12 +1318,12 @@ Jump_00D_4C7A::
     ld [wD781], a
     ret
 
-; entry 8 of the `rst $00` table in Func_00D_4B30
+; entry 8 of the `rst $00` table in EndScriptCommandAndIncWD782
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B2, wD7B3
 ; writes: wC527, hFFBA, wD782, wD780, wD781, wScriptCommandType, wScriptStartRequest
 ; points at: wC52D
-Func_00D_4B30_Case08::
+EndScriptCommandAndIncWD782_Case08::
 Jump_00D_4C9C:: ; address name
     farcall Func_004_4AA8
     ld a, $7F
@@ -1357,7 +1361,7 @@ Jump_00D_4C9C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; 4 call sites from 3 routines (e.g. Func_00D_463F_Case0F, Func_00D_463F_Case06, Func_00D_4B30_Case07)
+; 4 call sites from 3 routines (e.g. Func_00D_463F_Case0F, Func_00D_463F_Case06, EndScriptCommandAndIncWD782_Case07)
 ; reads: wD7F5, wD7F6, hFFC6
 ; writes: rRAMG2, rRAMB
 Func_00D_4CF4::
@@ -1503,7 +1507,7 @@ Data_00D_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $01, $6D, $01
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 21 call sites from 21 routines (e.g. ScriptCommandEF_Run_Table2_Case02, ScriptCommandEF_Run_Table2_Case01, Func_00D_491A, Func_00D_4B30_Case06, ...)
+; 21 call sites from 21 routines (e.g. ScriptCommandEF_Run_Table2_Case02, ScriptCommandEF_Run_Table2_Case01, Func_00D_491A, EndScriptCommandAndIncWD782_Case06, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank0D::
@@ -1561,7 +1565,7 @@ Jump_00D_4DF3::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
-; 30 call sites from 27 routines (e.g. ScriptCommandF3_Run_Case04, ScriptCommandEF_Run_Table2_Case02, Func_00D_463F_Case11, Func_00D_4B30_Case08, ...)
+; 30 call sites from 27 routines (e.g. ScriptCommandF3_Run_Case04, ScriptCommandEF_Run_Table2_Case02, Func_00D_463F_Case11, EndScriptCommandAndIncWD782_Case08, ...)
 ; reads: wC554, wC555, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -1676,7 +1680,7 @@ Jump_00D_4E88::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 9 call sites from 9 routines (e.g. Func_00D_463F_Case06, Func_00D_4B30_Case06, Func_00D_4F29, Func_00D_5702_Case05, ...)
+; 9 call sites from 9 routines (e.g. Func_00D_463F_Case06, EndScriptCommandAndIncWD782_Case06, Func_00D_4F29, Func_00D_5702_Case05, ...)
 StoreBAtWordTableEntry_Bank0D::
 Func_00D_4E96:: ; address name
     push bc
@@ -1815,7 +1819,7 @@ Jump_00D_4F2D::
     jr c, Jump_00D_4F2D
     ret
 
-; 3 call sites from 3 routines (e.g. Func_00D_463F, Func_00D_4B30_Case01, Func_00D_720E_Case01)
+; 3 call sites from 3 routines (e.g. Func_00D_463F, EndScriptCommandAndIncWD782_Case01, Func_00D_720E_Case01)
 ; reads: wD785
 ; writes: wD785, wD784
 Func_00D_4F3D::
@@ -3233,7 +3237,7 @@ Jump_00D_5A2F::
 ; writes: wD781
 Func_00D_5702_Case09::
 Jump_00D_5A3C:: ; address name
-    farcall Func_015_645F
+    farcall CopyRect70C5ToWC364AndDraw
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3364,7 +3368,7 @@ Jump_00D_5B06:: ; address name
     ret
 
 Jump_00D_5B1B::
-    call Func_00D_5C47
+    call BlankTwoTilePairsAndDraw
     ld a, [wD781]
     add a, $05
     ld [wD781], a
@@ -3459,7 +3463,7 @@ Jump_00D_5B7C::
 ; points at: wC130
 Func_00D_5702_Case0F::
 Jump_00D_5BBF:: ; address name
-    call Func_00D_5C47
+    call BlankTwoTilePairsAndDraw
     farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a
@@ -3530,9 +3534,11 @@ Jump_00D_5C38::
     ld [wScriptStartRequest], a
     ret
 
+; writes $C3 to wC3B0-wC3B1 and wC3C4-wC3C5, then DrawScreenBufferRect_Bank0D (20 x 13 at the scroll origin) (E-0119)
 ; 2 call sites from 2 routines (e.g. Func_00D_5702_Case0F, Func_00D_5702_Case0D)
 ; points at: wC3B0, wC3C4
-Func_00D_5C47::
+BlankTwoTilePairsAndDraw::
+Func_00D_5C47:: ; address name
     ld a, $C3
     ld hl, wC3B0
     ld [hl+], a
@@ -6250,8 +6256,10 @@ Data_00D_7106:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_710E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $03, $04, $04, $05, $05, $0A
 
+; far-calls ScriptCommandE9_Run (E-0119)
 ; 1 call site from 1 routine (e.g. Func_010_663D)
-Func_00D_7115::
+ScriptCommandE9_RunFar::
+Func_00D_7115:: ; address name
     farcall ScriptCommandE9_Run
     ret
 

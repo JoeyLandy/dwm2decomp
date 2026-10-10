@@ -1258,7 +1258,7 @@ Func_000_0829:: ; address name
     bit 7, a
     jr z, Jump_000_0841
     ldh [rBGPI], a
-    call Func_000_0897
+    call HLFromABits3To5
     ld a, l
     add a, $9F
     ld l, a
@@ -1301,7 +1301,7 @@ Func_000_085C:: ; address name
     bit 7, a
     jr z, Jump_000_0876
     ldh [rOBPI], a
-    call Func_000_0897
+    call HLFromABits3To5
     ld a, l
     add a, $DF
     ld l, a
@@ -1341,8 +1341,10 @@ Jump_000_088B::
     jr nz, Jump_000_0887
     ret
 
+; HL = A & $38 (bits 3-5), H = 0 (E-0119)
 ; 2 call sites from 2 routines (e.g. VBlankHandler_Sub01, UploadBGPalettes)
-Func_000_0897::
+HLFromABits3To5::
+Func_000_0897:: ; address name
     res 7, a
     and a, $38
     ld l, a
@@ -4320,7 +4322,7 @@ Func_000_1872:: ; address name
     ret
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
-; 103 call sites from 44 routines (e.g. Func_00D_4B30_Case02, ScriptCommandEC_Run_Case02, Func_014_43CC_Case3C, Func_014_43CC_Case05, ...)
+; 103 call sites from 44 routines (e.g. EndScriptCommandAndIncWD782_Case02, ScriptCommandEC_Run_Case02, Func_014_43CC_Case3C, Func_014_43CC_Case05, ...)
 ; reads: rSTAT, wC52D
 ; writes: wC52D
 FillTilesBxC::
@@ -8825,19 +8827,23 @@ Jump_000_32BA::
     ld [wDD19], a
     ret
 
+; wDD15 = 0, wDD09 = wDD16 (sound engine state) (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDD16
 ; writes: wDD15, wDD09
-Func_000_32C6:: ; heuristic: follows a terminator; C0
+SetWDD15To0AndWDD09FromWDD16:: ; heuristic: follows a terminator; C0
+Func_000_32C6:: ; address name
     xor a, a
     ld [wDD15], a
     ld a, [wDD16]
     ld [wDD09], a
     ret
 
+; wDD15 = 4, wDD09 = 0 (sound engine state) (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDD15, wDD09
-Func_000_32D1:: ; heuristic: follows a terminator; C0
+SetWDD15To4AndClearWDD09:: ; heuristic: follows a terminator; C0
+Func_000_32D1:: ; address name
     ld a, $04
     ld [wDD15], a
     xor a, a
@@ -9936,7 +9942,7 @@ Jump_000_38B0::
     ret
 
 Jump_000_38C2::
-    call Func_000_3B51
+    call ReturnTwiceIfWDD08AndWDD0B
     xor a, a
     ldh [rNR30], a
     ret
@@ -10028,7 +10034,7 @@ Jump_000_3930::
 Jump_000_3938::
     xor a, a
     ldh [hFFE7], a
-    call Func_000_3B51
+    call ReturnTwiceIfWDD08AndWDD0B
     ld a, [wSoundHwChannel]
     cp a, $02
     jr nz, Jump_000_394C
@@ -10159,7 +10165,7 @@ Jump_000_39EC::
 ; reads: wSoundHwChannel, hFFF0, hFFDA, wDD0E, hFFEB, wDD0D
 SoundTick_Sub04::
 Func_000_39F8:: ; address name
-    call Func_000_3B51
+    call ReturnTwiceIfWDD08AndWDD0B
     ld a, [wSoundHwChannel]
     cp a, $03
     ret z
@@ -10274,7 +10280,7 @@ Jump_000_3A69::
 ; points at: hFFE0
 SoundTick_Sub05::
 Func_000_3A7A:: ; address name
-    call Func_000_3B51
+    call ReturnTwiceIfWDD08AndWDD0B
     ldh a, [hFFEB]
     and a, a
     jr nz, Jump_000_3A89
@@ -10416,7 +10422,7 @@ Jump_000_3B20::
 ; reads: wDD0D, hFFEC
 SoundNextEvent_Sub02::
 Func_000_3B39:: ; address name
-    call Func_000_3B51
+    call ReturnTwiceIfWDD08AndWDD0B
     ld a, $00
     jp Func_000_3A2F
 
@@ -10426,7 +10432,7 @@ Func_000_3B39:: ; address name
 ; writes: wDD09
 SoundNextEvent_Sub03::
 Func_000_3B41:: ; address name
-    call Func_000_3B51
+    call ReturnTwiceIfWDD08AndWDD0B
     ld a, [wDD0B]
     cpl
     ld b, a
@@ -10435,9 +10441,11 @@ Func_000_3B41:: ; address name
     ld [wDD09], a
     ret
 
+; when wDD08 & wDD0B is non-zero, drops the caller's return address (pop af) so it returns to the caller's caller; otherwise returns normally with Z set (E-0119)
 ; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_Sub02, SoundNextEvent_Sub03, SoundTick_Sub05, ...)
 ; reads: wDD0B, wDD08
-Func_000_3B51::
+ReturnTwiceIfWDD08AndWDD0B::
+Func_000_3B51:: ; address name
     ld a, [wDD0B]
     ld b, a
     ld a, [wDD08]

@@ -498,7 +498,7 @@ Jump_03A_4B04::
     farcall Func_032_4001
 
 Jump_03A_4B18::
-    call Func_03A_536D
+    call AdvanceWD804By4InMode3
     ld a, [wDAB3]
     or a, a
     jr z, Jump_03A_4B2B
@@ -1904,10 +1904,12 @@ Func_03A_52A4:: ; address name
 Data_03A_52B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0E92B9, $B4
 
+; when wDAB9 is 3: wD804 += 4, and once it reaches $D0 wDAAA = 0 (E-0119)
 ; 2 call sites from 2 routines (e.g. Func_03A_4ADB, Func_03A_54DC)
 ; reads: wDAB9, wD804
 ; writes: wD804, wDAAA
-Func_03A_536D::
+AdvanceWD804By4InMode3::
+Func_03A_536D:: ; address name
     ld a, [wDAB9]
     cp a, $03
     ret nz
@@ -2145,7 +2147,7 @@ Func_03A_54DC::
 
 Jump_03A_54F0::
     farcall Func_032_4001
-    call Func_03A_536D
+    call AdvanceWD804By4InMode3
     ld a, [wDAB3]
     or a, a
     jr z, Jump_03A_5509

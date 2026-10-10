@@ -1043,7 +1043,7 @@ Func_00F_4595:: ; address name
     db $6A, $51
     dw Func_00F_47F5
     dw Func_00F_47BC
-    dw Func_00F_47A8
+    dw ScriptStepDeltaWCBABThenCopy
     dw Func_00F_4774
     INCBIN "dwm2-cobi-us.gbc", $03C6A3, $D1
 
@@ -1073,11 +1073,13 @@ Func_00F_4774:: ; heuristic: target of a pointer table; C0
     inc [hl]
     ret
 
+; ScriptApplyStepDeltaAtDE on wCBAB, copies wCBAB to wCBBB, and when the move finishes (carry) wScriptStep += 1 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCBAB
 ; writes: wCBBB
 ; points at: wCBAB, wScriptStep
-Func_00F_47A8:: ; heuristic: target of a pointer table; C0
+ScriptStepDeltaWCBABThenCopy:: ; heuristic: target of a pointer table; C0
+Func_00F_47A8:: ; address name
     ld de, wCBAB
     call ScriptApplyStepDeltaAtDE
     push af

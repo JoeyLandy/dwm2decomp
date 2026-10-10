@@ -3055,13 +3055,13 @@ Jump_060_5F5E::
     call Func_060_60E0
     ld [hl], $00
     ld hl, $0004
-    call Func_060_60F8
+    call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $01
     ld hl, $0008
-    call Func_060_60F8
+    call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $02
     ld hl, $000C
-    call Func_060_60F8
+    call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $03
     ldh a, [hFFCD]
     swap a
@@ -3151,7 +3151,7 @@ Jump_060_5FF2::
     call Func_060_60E0
     ld [hl], $00
     ld hl, $0004
-    call Func_060_60F8
+    call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $01
     ldh a, [hFFCD]
     swap a
@@ -3226,7 +3226,7 @@ Jump_060_605E::
     call Func_060_60E0
     ld [hl], $00
     ld hl, $0008
-    call Func_060_60F8
+    call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $01
     ldh a, [hFFCD]
     swap a
@@ -3334,9 +3334,11 @@ Func_060_60E0::
     ldh [hFFCA], a
     ret
 
+; HL += the word hFFC6/hFFC7, then stores hFFC8, hFFC9, hFFCA at HL - 3 onward (E-0119)
 ; 5 call sites from 3 routines (e.g. Func_060_5EE1_Case03, Func_060_5EE1_Case02, Func_060_5EE1_Case01)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
-Func_060_60F8::
+StoreHFFC8To3BytesBeforeHLPlusHFFC6::
+Func_060_60F8:: ; address name
     ldh a, [hFFC6]
     add a, l
     ld l, a

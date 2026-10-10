@@ -587,7 +587,7 @@ Jump_00A_4309::
     jr Jump_00A_4350
 
 Jump_00A_431E::
-    call Func_00A_4362
+    call ToggleWC88CLowBitOnce
 
 Jump_00A_4321::
     pop bc
@@ -612,7 +612,7 @@ Jump_00A_432D::
     jr Jump_00A_4355
 
 Jump_00A_4349::
-    call Func_00A_4362
+    call ToggleWC88CLowBitOnce
     and a, $01
     jr nz, Jump_00A_4321
 
@@ -630,10 +630,12 @@ Jump_00A_4355::
     ld [rRAMG], a
     ret
 
+; when wC88C bit 7 is clear: wC88C = ((wC88C + 1) & 1) | $80 (E-0119)
 ; 2 call sites from 1 routine (e.g. Func_00A_42BC)
 ; reads: wC88C
 ; writes: wC88C
-Func_00A_4362::
+ToggleWC88CLowBitOnce::
+Func_00A_4362:: ; address name
     ld a, [wC88C]
     bit 7, a
     ret nz

@@ -4557,7 +4557,7 @@ Jump_013_5941:: ; address name
     dw Talk0043_HeroCheckedTheOdd
     dw Talk0036_ThereWereManyWild
     dw Talk0037_HeroTriedToOpen
-    dw Func_013_781C
+    dw StartScript5660WithBank0E
     dw TalkMsg0268_YepShesTakingGood
     dw Data_013_7852
     dw Data_013_7859
@@ -4594,7 +4594,7 @@ Jump_013_5941:: ; address name
     dw Data_013_7A93
     dw Talk00FC_YouHaveToEat
     dw TalkMsg0A74_TheMedalMasterWas
-    dw Func_013_7ABD
+    dw IfFlag0023StartScript57A2
     dw Msg013C_ISawALake
     dw Msg013D_StrongMonstersAreIn
     dw TalkMsg0A35_ImABugSo
@@ -4630,7 +4630,7 @@ Jump_013_5941:: ; address name
     dw Func_013_7F31
     dw Func_013_7F4E
     dw Func_013_7F6A
-    dw Func_013_7F86
+    dw IfFlag0021StartScript5988
 
 ; entry 0 of the `rst $00` table in Msg01F0
 ; no direct call (reached through a table, a jump or a vector)
@@ -9015,9 +9015,11 @@ Func_013_780F:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
+; wD7FB = 1, StartScriptAtHL_B13 with HL = $5660, then wDataBank = $0E (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7FB, wDataBank
-Func_013_781C:: ; heuristic: target of a pointer table; C0
+StartScript5660WithBank0E:: ; heuristic: target of a pointer table; C0
+Func_013_781C:: ; address name
     ld a, $01
     ld [wD7FB], a
     ld hl, $5660
@@ -9296,8 +9298,10 @@ Jump_013_7AB6::
     call StartMessageCommand09HL_B13
     ret
 
+; when story flag $23 is set, StartScriptAtHL_B13 with HL = $57A2 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-Func_013_7ABD:: ; heuristic: target of a pointer table; C0
+IfFlag0023StartScript57A2:: ; heuristic: target of a pointer table; C0
+Func_013_7ABD:: ; address name
     ld de, $0023
     call TestFlagBit
     ret nc
@@ -9777,8 +9781,10 @@ Jump_013_7F78::
     call SetFlagBit
     ret
 
+; when story flag $21 is set, StartScriptAtHL_B13 with HL = $5988 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-Func_013_7F86:: ; heuristic: target of a pointer table; C0
+IfFlag0021StartScript5988:: ; heuristic: target of a pointer table; C0
+Func_013_7F86:: ; address name
     ld de, $0021
     call TestFlagBit
     ret nc

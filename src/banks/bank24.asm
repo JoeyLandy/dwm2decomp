@@ -5957,7 +5957,7 @@ Jump_024_704B::
     jr Jump_024_7062
 
 Jump_024_7057::
-    farcall Func_01C_68FA
+    farcall LoadWD7F1ByteForWD7B5WD7B6
     ld a, [wD7F1]
     jr Jump_024_707A
 

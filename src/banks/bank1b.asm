@@ -2764,7 +2764,7 @@ Jump_01B_5931:: ; address name
     ld [de], a
     inc de
     push de
-    call Func_01B_6170
+    call WordAddressForWD789Cell4Item
     pop de
     ld a, [hl+]
     ld [de], a
@@ -4090,9 +4090,11 @@ Func_01B_6153::
     ld h, a
     ret
 
+; far-calls SetWD7F5ToWD789Cell4, reads the byte at that address and returns HL = $C787 + 2 * that byte (E-0119)
 ; 1 call site from 1 routine (e.g. Func_01B_53CE_Table3_Case0E)
 ; reads: wD7F5, wD7F6
-Func_01B_6170::
+WordAddressForWD789Cell4Item::
+Func_01B_6170:: ; address name
     farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
     ld h, a

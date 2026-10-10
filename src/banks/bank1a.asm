@@ -965,7 +965,7 @@ Jump_01A_6066::
     ld a, [hl]
     cp a, $FF
     jr z, Jump_01A_6080
-    call Func_01A_60DF
+    call FindByteAtHLInEightAtDEAndStepHL
     jr nz, Jump_01A_6080
     ld a, [hl]
     cp a, $FF
@@ -1055,8 +1055,10 @@ Jump_01A_60D8::
 Jump_01A_60DE::
     ret
 
+; FindByteAtHLInEightAtDE_Bank1A with DE kept, then HL += 1 (E-0119)
 ; 1 call site from 1 routine (e.g. Func_01A_5FA7)
-Func_01A_60DF::
+FindByteAtHLInEightAtDEAndStepHL::
+Func_01A_60DF:: ; address name
     push de
     call FindByteAtHLInEightAtDE_Bank1A
     pop de
@@ -1064,7 +1066,7 @@ Func_01A_60DF::
     ret
 
 ; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_01A_60DF)
+; 1 call site from 1 routine (e.g. FindByteAtHLInEightAtDEAndStepHL)
 FindByteAtHLInEightAtDE_Bank1A::
 Func_01A_60E6:: ; address name
     ld b, $08
@@ -1756,32 +1758,32 @@ Func_01A_6418::
     ld d, a
     call Func_01A_64A2
     ld a, [wD014]
-    call Func_01A_6562
+    call ReadByteTable6616Row
     ld b, $00
     call AddWD09CIfWD09BMatchesB
     ld [wD095], a
     ld a, [wD015]
-    call Func_01A_6562
+    call ReadByteTable6616Row
     ld b, $01
     call AddWD09CIfWD09BMatchesB
     ld [wD096], a
     ld a, [wD016]
-    call Func_01A_6562
+    call ReadByteTable6616Row
     ld b, $02
     call AddWD09CIfWD09BMatchesB
     ld [wD097], a
     ld a, [wD017]
-    call Func_01A_6562
+    call ReadByteTable6616Row
     ld b, $03
     call AddWD09CIfWD09BMatchesB
     ld [wD098], a
     ld a, [wD018]
-    call Func_01A_6562
+    call ReadByteTable6616Row
     ld b, $04
     call AddWD09CIfWD09BMatchesB
     ld [wD099], a
     ld a, [wD019]
-    call Func_01A_6562
+    call ReadByteTable6616Row
     ld b, $05
     call AddWD09CIfWD09BMatchesB
     ld [wD09A], a
@@ -1934,8 +1936,10 @@ Jump_01A_655C::
 Jump_01A_6561::
     ret
 
+; C = the byte at $6616 + $63 * A + D (a table with $63-byte rows); DE kept (E-0119)
 ; 6 call sites from 1 routine (e.g. Func_01A_6418)
-Func_01A_6562::
+ReadByteTable6616Row::
+Func_01A_6562:: ; address name
     push de
     ld c, $63
     call Multiply8
@@ -2066,7 +2070,7 @@ Jump_01A_6613::
     INCBIN "dwm2-cobi-us.gbc", $06A616, $C60
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7345 (E-0079)
-; 9 call sites from 9 routines (e.g. Func_016_733F, Func_031_6E67_Case00, Func_031_6E67_Case03, Func_031_746F, ...)
+; 9 call sites from 9 routines (e.g. Func_016_733F, Func_031_6E67_Case00, Func_031_6E67_Case03, ClearWindowAndCopyRect7345Far, ...)
 CopyRectRecord7345ToScreenBuffer::
 Func_01A_7276:: ; address name
     ld hl, Data_01A_7345

@@ -3267,7 +3267,7 @@ Func_010_6636:: ; address name
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_663D:: ; heuristic: follows a terminator; C0
-    farcall Func_00D_7115
+    farcall ScriptCommandE9_RunFar
     ret
 
 ; runs one frame of script command type F6 (entry 245 of ScriptCommandHandlers)

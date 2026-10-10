@@ -3140,9 +3140,9 @@ Func_004_5616:: ; address name
     dw Func_004_5616_Case01
     dw Func_004_5616_Case02
     db $00, $00
-    dw Func_004_568B
+    dw StartScript4F73AndSetFlag5
     dw Func_004_5698
-    dw Func_004_56AF
+    dw IfFlag000AStartScript4F9D
     dw Talk0046_ThanksForComingBy
     dw Data_004_5731
     dw Data_004_5738
@@ -3205,8 +3205,10 @@ Jump_004_567D:: ; address name
     ret
     db $21, $44, $00, $CD, $BB, $55, $C9
 
+; StartScriptAtHL_B04 with HL = $4F73, then sets story flag 5 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_568B:: ; heuristic: target of a pointer table; C0
+StartScript4F73AndSetFlag5:: ; heuristic: target of a pointer table; C0
+Func_004_568B:: ; address name
     ld hl, $4F73
     call StartScriptAtHL_B04
     ld de, $0005
@@ -3225,8 +3227,10 @@ Func_004_5698:: ; heuristic: target of a pointer table; C0
     call SetFlagBit
     ret
 
+; when story flag $0A is set, StartScriptAtHL_B04 with HL = $4F9D (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_56AF:: ; heuristic: target of a pointer table; C0
+IfFlag000AStartScript4F9D:: ; heuristic: target of a pointer table; C0
+Func_004_56AF:: ; address name
     ld de, $000A
     call TestFlagBit
     ret nc
@@ -6825,7 +6829,7 @@ Func_004_6A35:: ; address name
     dw TalkMsg079A_TheOldPeopleAcross
     dw TalkMsg079B_MonstersHaveTakenTo
     dw TalkMsg079C_GrrrrImSoAngry
-    dw Func_004_73C7
+    dw StartScript643EInBank10
     dw Func_004_73D8
     dw TalkMsg079F_IfYouTravelWest
     dw Talk07D7_MilayouIEBeen
@@ -8157,9 +8161,11 @@ Jump_004_73C0::
     call StartMessageCommand09HL_B04
     ret
 
+; wD7FB = $11, wDataBank = $10, then StartScriptAtHL_B04 with HL = Data_010_643E (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7FB, wDataBank
-Func_004_73C7:: ; heuristic: target of a pointer table; C0
+StartScript643EInBank10:: ; heuristic: target of a pointer table; C0
+Func_004_73C7:: ; address name
     ld a, $11
     ld [wD7FB], a
     ld a, $10

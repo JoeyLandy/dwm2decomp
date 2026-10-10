@@ -4481,7 +4481,7 @@ Jump_014_60CF::
 ; writes: wD7F5
 ; points at: wCFAD
 Func_014_60E6:: ; heuristic: follows a terminator; C0
-    call Func_014_6C3F
+    call CopyTileForWCFC2
     ld hl, wCFAD
 
 Jump_014_60EC::
@@ -4749,7 +4749,7 @@ Jump_014_62DD::
     ld [hl-], a
 
 Jump_014_62E0::
-    call Func_014_6C3F
+    call CopyTileForWCFC2
     ld a, [wCFC3]
     and a, a
     jr z, Jump_014_62EF
@@ -4984,7 +4984,7 @@ Jump_014_641A::
     inc hl
     ld a, $8E
     ld [hl], a
-    call Func_014_6C3F
+    call CopyTileForWCFC2
     jr Jump_014_63FD
 
 Jump_014_6431::
@@ -4994,7 +4994,7 @@ Jump_014_6431::
     jr z, Jump_014_63FD
     ld a, $8D
     ld [hl], a
-    call Func_014_6C3F
+    call CopyTileForWCFC2
     jr Jump_014_63FD
 
 Jump_014_643F::
@@ -5880,7 +5880,7 @@ Data_014_697D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 2 call sites from 2 routines (e.g. Func_014_6C3F, Func_014_5CA8_Table2_Case02)
+; 2 call sites from 2 routines (e.g. CopyTileForWCFC2, Func_014_5CA8_Table2_Case02)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank14::
 Func_014_6981:: ; address name
@@ -6408,9 +6408,11 @@ Jump_014_6C33::
     ld a, $FF
     ret
 
+; copies the 16-byte tile at Data_014_6C60 to the VRAM address from the word table Data_014_6C56 + 2 * wCFC2 (CopyTileBytesToVRAM_Bank14) (E-0119)
 ; 4 call sites from 3 routines (e.g. Func_014_631C, CopyBytesDEFromHL_Bank14_Case01, Func_014_60E6)
 ; reads: wCFC2
-Func_014_6C3F::
+CopyTileForWCFC2::
+Func_014_6C3F:: ; address name
     ld hl, Data_014_6C56
     ld a, [wCFC2]
     add a, a

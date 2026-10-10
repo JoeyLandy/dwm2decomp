@@ -392,7 +392,7 @@ Jump_015_422B:: ; address name
     dw Func_015_47A7
     dw Func_015_4182_Case1B
     dw Func_015_4182_Case1C
-    dw Func_015_4439
+    dw DrawScreenBufferAtScrollAndIncWD781
     dw Func_015_4182_Case1E
     dw Func_015_4182_Case1F
     dw Func_015_4182_Case20
@@ -605,10 +605,12 @@ Jump_015_4418:: ; address name
     ld [wD781], a
     ret
 
+; DrawScreenBufferRect_Bank15 (20 x 13 from buffer offset $01CC at the scroll origin), then wD781 += 1 (E-0119)
 ; 1 call site from 1 routine (e.g. Func_015_4182_Case07)
 ; reads: wD781
 ; writes: wD781
-Func_015_4439::
+DrawScreenBufferAtScrollAndIncWD781::
+Func_015_4439:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -627,7 +629,7 @@ Jump_015_444D:: ; address name
     ld b, $BB
     ld hl, Data_015_73A1
     call StoreBAtWordTableEntry_Bank15
-    call Func_015_4439
+    call DrawScreenBufferAtScrollAndIncWD781
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_015_73A1
@@ -1077,7 +1079,7 @@ Jump_015_4739:: ; address name
 ; points at: wC42E, wC42F
 Func_015_4182_Case16::
 Jump_015_4768:: ; address name
-    call Func_015_69C6
+    call LoadRecordWD7B4Byte0EBit0
     call Func_015_693F
     jp Jump_015_4369
 
@@ -1742,7 +1744,7 @@ Func_015_4C0C::
     ld a, [wC58A]
     and a, a
     jr z, Jump_015_4C15
-    call Func_015_645F
+    call CopyRect70C5ToWC364AndDraw
 
 Jump_015_4C15::
     ld a, [wD781]
@@ -5101,7 +5103,7 @@ Jump_015_629F:: ; address name
     ld [wD7F1], a
     call Func_015_6866
     pop af
-    call Func_015_6360
+    call CopyRect7351ToWC410AndIncWD781
     ret
 
 ; entry 1 of the `rst $00` table in Func_015_60BF
@@ -5111,7 +5113,7 @@ Jump_015_629F:: ; address name
 ; points at: wC42E, wC42F
 Func_015_60BF_Table2_Case01::
 Jump_015_62C9:: ; address name
-    call Func_015_69C6
+    call LoadRecordWD7B4Byte0EBit0
     call Func_015_693F
     jp Jump_015_62F7
 
@@ -5138,7 +5140,7 @@ Jump_015_62D9:: ; address name
     dw Func_015_4182_Case04
     dw Func_015_4182_Case05
     dw Func_015_4182_Case06
-    dw Func_015_6360
+    dw CopyRect7351ToWC410AndIncWD781
     dw Func_015_5A2D_Table2_Case08
 
 ; entry 2 of the `rst $00` table in Func_015_60BF
@@ -5204,11 +5206,13 @@ Jump_015_6359:: ; address name
     farcall Func_01F_5C15
     ret
 
+; copies the 8 x 5 rectangle Data_015_7351 into wC410 (CopyRectTo20ByteRows_Bank15), then wD781 += 1 (E-0119)
 ; 1 call site from 1 routine (e.g. Func_015_60BF_Table2_Case09)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC410
-Func_015_6360::
+CopyRect7351ToWC410AndIncWD781::
+Func_015_6360:: ; address name
     ld de, Data_015_7351
     ld hl, wC410
     ld bc, $0805
@@ -5373,9 +5377,11 @@ Jump_015_644D::
     call DrawScreenBufferRect_Bank15
     ret
 
+; copies the 20 x 11 rectangle Data_015_70C5 into wC364, then DrawScreenBufferRect_Bank15 (20 x 13 at the scroll origin) (E-0119)
 ; 3 call sites from 3 routines (e.g. Func_015_4C0C, Func_00D_5702_Case09, Func_0F0_4CA0_Table5_Case01)
 ; points at: wC364
-Func_015_645F::
+CopyRect70C5ToWC364AndDraw::
+Func_015_645F:: ; address name
     ld de, Data_015_70C5
     ld hl, wC364
     ld bc, $140B
@@ -6402,10 +6408,12 @@ Jump_015_69B1::
     farcall Func_01D_5F9C
     ret
 
+; with SRAM bank 0 enabled: wD7F1 = bit 0 of byte $0E of record wD7B4 (LoadSRAMRecordByte) (E-0119)
 ; 2 call sites from 2 routines (e.g. Func_015_4182_Case16, Func_015_60BF_Table2_Case01)
 ; reads: wD7B4, hFFC6
 ; writes: rRAMG2, rRAMB, wD7F1
-Func_015_69C6::
+LoadRecordWD7B4Byte0EBit0::
+Func_015_69C6:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

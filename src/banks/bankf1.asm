@@ -3678,7 +3678,7 @@ Func_0F1_5834:: ; address name
     farcall BeginStringDisplay_Bank0E
     ret
 
-; 3 call sites from 3 routines (e.g. Func_0F1_4AD0_Table3_Case18, Func_01B_6A5E_Table2_Case07, Func_033_562A_Case06)
+; 3 call sites from 3 routines (e.g. Func_0F1_4AD0_Table3_Case18, Func_01B_6A5E_Table2_Case07, CopyRect62C3ToWC36EAndIncWD781_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wD783
 Func_0F1_5842::

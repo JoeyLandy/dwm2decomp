@@ -2767,7 +2767,7 @@ Jump_016_52D6::
 Func_016_52C9_Case00::
 Jump_016_52FF:: ; address name
     call ItemUsable_Herb
-    call Func_016_53CE
+    call SetWD08D12IfItemRefused
     ret
 
 ; entry 3 of the `rst $00` table in Func_016_52C9
@@ -2775,7 +2775,7 @@ Jump_016_52FF:: ; address name
 Func_016_52C9_Case03::
 Jump_016_5306:: ; address name
     call ItemUsable_WorldDew
-    call Func_016_53CE
+    call SetWD08D12IfItemRefused
     ret
 
 ; entry 5 of the `rst $00` table in Func_016_52C9
@@ -2797,7 +2797,7 @@ Jump_016_531E::
     call ItemUsable_Potion
 
 Jump_016_5321::
-    call Func_016_53CE
+    call SetWD08D12IfItemRefused
     ret
 
 ; entry 8 of the `rst $00` table in Func_016_52C9
@@ -2805,7 +2805,7 @@ Jump_016_5321::
 Func_016_52C9_Case08::
 Jump_016_5325:: ; address name
     call ItemUsable_WorldLeaf
-    call Func_016_53CE
+    call SetWD08D12IfItemRefused
     ret
 
 ; entry 10 of the `rst $00` table in Func_016_52C9
@@ -2813,7 +2813,7 @@ Jump_016_5325:: ; address name
 Func_016_52C9_Case0A::
 Jump_016_532C:: ; address name
     call ItemUsable_Antidote
-    call Func_016_53CE
+    call SetWD08D12IfItemRefused
     ret
 
 ; entry 11 of the `rst $00` table in Func_016_52C9
@@ -2821,7 +2821,7 @@ Jump_016_532C:: ; address name
 Func_016_52C9_Case0B::
 Jump_016_5333:: ; address name
     call Func_016_425E
-    call Func_016_53CE
+    call SetWD08D12IfItemRefused
     ret
 
 ; entry 12 of the `rst $00` table in Func_016_52C9
@@ -2834,7 +2834,7 @@ Jump_016_533A:: ; address name
     ld a, [wD082]
     cp a, $10
     jr z, Jump_016_5348
-    call Func_016_53DA
+    call SetWD08D14IfItemRefused
     ret
 
 Jump_016_5348::
@@ -2854,7 +2854,7 @@ Jump_016_5355::
 Func_016_52C9_Case0F::
 Jump_016_5359:: ; address name
     call ItemUsable_ExitBell
-    call Func_016_53DA
+    call SetWD08D14IfItemRefused
     ret
 
 ; entry 17 of the `rst $00` table in Func_016_52C9
@@ -2864,7 +2864,7 @@ Jump_016_5359:: ; address name
 Func_016_52C9_Case11::
 Jump_016_5360:: ; address name
     call ItemUsable_Repellent
-    call Func_016_53DA
+    call SetWD08D14IfItemRefused
     ret z
     ld a, [wGoldHi]
     or a, a
@@ -2901,7 +2901,7 @@ Jump_016_5385::
 Func_016_52C9_Case12::
 Jump_016_5398:: ; address name
     call ItemUsable_Warp
-    call Func_016_53DA
+    call SetWD08D14IfItemRefused
     ret z
     ld a, [wCC47]
     or a, a
@@ -2937,13 +2937,15 @@ Jump_016_53C6::
 Func_016_52C9_Case13::
 Jump_016_53C7:: ; address name
     call ItemUsable_WarpWing
-    call Func_016_53DA
+    call SetWD08D14IfItemRefused
     ret
 
+; when wItemId is $FF (refused): wD08D = $12 (E-0119)
 ; 6 call sites from 6 routines (e.g. Func_016_52C9_Case0B, Func_016_52C9_Case0A, Func_016_52C9_Case08, Func_016_52C9_Case05, ...)
 ; reads: wItemId
 ; writes: wD08D
-Func_016_53CE::
+SetWD08D12IfItemRefused::
+Func_016_53CE:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret nz
@@ -2951,10 +2953,12 @@ Func_016_53CE::
     ld [wD08D], a
     ret
 
+; when wItemId is $FF (refused): wD08D = $14 (E-0119)
 ; 5 call sites from 5 routines (e.g. Func_016_52C9_Case13, Func_016_52C9_Case12, Func_016_52C9_Case11, Func_016_52C9_Case0F, ...)
 ; reads: wItemId
 ; writes: wD08D
-Func_016_53DA::
+SetWD08D14IfItemRefused::
+Func_016_53DA:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret nz
@@ -6169,7 +6173,7 @@ Func_016_682F::
     call Func_016_6891
     xor a, a
     ld [rRAMG], a
-    call Func_016_6917
+    call DrawListPageDigitIfLong
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -6272,10 +6276,12 @@ Func_016_68F0:: ; address name
 Data_016_690F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $43, $C2, $83, $C2, $C3, $C2, $03, $C3
 
+; when wD7A9 is 5 or more: wC320 = $E1 + wCFD1 (the page number tile) (E-0119)
 ; 1 call site from 1 routine (e.g. Func_016_682F)
 ; reads: wD7A9, wCFD1
 ; writes: wC320
-Func_016_6917::
+DrawListPageDigitIfLong::
+Func_016_6917:: ; address name
     ld a, [wD7A9]
     cp a, $05
     ret c

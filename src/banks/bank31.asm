@@ -146,7 +146,7 @@ Jump_031_40E4:: ; address name
 ; points at: wBattleStep
 BattlePhase0_Step1::
 Jump_031_40EE:: ; address name
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     call DrawWC278RowsToBGMapRow7
     ld hl, wBattleStep
     inc [hl]
@@ -685,7 +685,7 @@ BattleEnd_Step0::
 Jump_031_43FE:: ; address name
     ld a, $02
     call QueueMusic
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     call DrawWC278RowsToBGMapRow7
     ld hl, wBattleStep
     inc [hl]
@@ -1230,7 +1230,7 @@ Jump_031_46EE::
     call ClearAttributesAndScreenBuffer_Bank31
     call CopyRectRecordForWD88F_Bank31
     call Func_031_7389
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     ld a, $6C
     call QueueSoundEffect
     ld hl, wBattleSubPhase
@@ -1359,7 +1359,7 @@ Func_031_47C7:: ; address name
     call Func_031_7389
     call LayoutTileBlocksForWD890Count
     call Func_031_7321
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_031_46C1_Case04, Func_031_46C1_Case03, BuildBattleScreenBuffer, Func_031_46C1_Table2_Case00)
@@ -2305,7 +2305,7 @@ Jump_031_4D1D::
 ; points at: wBattleResolveStep
 RunBattleSetup_Table2_Case06::
 Jump_031_4D3D:: ; address name
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     call DrawWC338RowsToBGMapRow13
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
@@ -2335,7 +2335,7 @@ Jump_031_4D4E:: ; address name
 ; points at: wC130, wC60C, wBattleResolveStep
 RunBattleSetup_Table2_Case08::
 Jump_031_4D65:: ; address name
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     call DrawWC338RowsToBGMapRow13
     ld hl, wC130
     ld de, wC60C
@@ -2618,7 +2618,7 @@ Jump_031_4F00::
 ; points at: wBattleResolveStep
 RunBattleSetup_Table2_Case0B::
 Jump_031_4F0F:: ; address name
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     call DrawWC338RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
@@ -2728,7 +2728,7 @@ Jump_031_4FA8:: ; address name
 ; points at: wBattleResolveStep
 RunBattleSetup_Table2_Case0F::
 Jump_031_4FCE:: ; address name
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     call DrawWC338RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
@@ -3170,7 +3170,7 @@ Jump_031_52C0::
 Func_031_4EB9_Case08::
 Jump_031_52C4:: ; address name
     call DrawWC2B8LeftToBGMapRow9_74B4
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -3650,7 +3650,7 @@ Jump_031_55CF:: ; address name
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
     call DrawWC2A4AndWC2B8Rects
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -3805,7 +3805,7 @@ Jump_031_56AF::
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
     call DrawWC2A4AndWC2B8Rects
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     ld a, $65
     ld [wStringIndex], a
     ld a, $21
@@ -4706,7 +4706,7 @@ Jump_031_5C53::
 Func_031_4EB9_Table2_Case10::
 Jump_031_5C58:: ; address name
     call DrawWC2B8RowsToBGMapRow9
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4773,7 +4773,7 @@ Jump_031_5C98::
     ld [wBattleActor], a
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_746F
+    call ClearWindowAndCopyRect7345Far
     call DrawWC278RowsToBGMapRow7
     ld hl, wBattleSubPhase
     inc [hl]
@@ -8985,8 +8985,10 @@ Jump_031_7465::
     call CopySlotPanelRowToVRAM
     ret
 
+; FillTilesFromRequest, then far-calls CopyRectRecord7345ToScreenBuffer (E-0119)
 ; 13 call sites from 13 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, BuildBattleScreenBuffer, Func_031_46C1_Case00, ...)
-Func_031_746F::
+ClearWindowAndCopyRect7345Far::
+Func_031_746F:: ; address name
     call FillTilesFromRequest
     farcall CopyRectRecord7345ToScreenBuffer
     ret

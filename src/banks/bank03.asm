@@ -1850,11 +1850,11 @@ Jump_003_4B0A::
     or a, a
     jr z, Jump_003_4B27
     bit 7, a
-    call nz, Func_003_4B3A
+    call nz, SetWC1C8TileC2
     bit 0, a
-    call nz, Func_003_4B42
+    call nz, SetWC1C6TileC0
     bit 2, a
-    call nz, Func_003_4B4A
+    call nz, SetWC1C7TileC1
 
 Jump_003_4B27::
     ld c, $0E
@@ -1867,27 +1867,33 @@ Jump_003_4B27::
     ld [wC1CA], a
     ret
 
+; wC1C8 = $C2; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. Func_003_4ACE)
 ; writes: wC1C8
-Func_003_4B3A::
+SetWC1C8TileC2::
+Func_003_4B3A:: ; address name
     push af
     ld a, $C2
     ld [wC1C8], a
     pop af
     ret
 
+; wC1C6 = $C0; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. Func_003_4ACE)
 ; writes: wC1C6
-Func_003_4B42::
+SetWC1C6TileC0::
+Func_003_4B42:: ; address name
     push af
     ld a, $C0
     ld [wC1C6], a
     pop af
     ret
 
+; wC1C7 = $C1; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. Func_003_4ACE)
 ; writes: wC1C7
-Func_003_4B4A::
+SetWC1C7TileC1::
+Func_003_4B4A:: ; address name
     push af
     ld a, $C1
     ld [wC1C7], a
@@ -5012,7 +5018,7 @@ Jump_003_6083::
     jr z, Jump_003_60B8
     ld a, $69
     call QueueSoundEffect
-    call Func_003_66EE
+    call LookupWD082ForRecordBuffer
     jr z, Jump_003_60A7
     call Func_003_66BB
     jr nz, Jump_003_60AE
@@ -5996,10 +6002,12 @@ Jump_003_66E5::
     bit 7, d
     ret
 
+; wD082 = Data_003_6700[wRecordBuffer]; Z set when it is $FF (E-0119)
 ; 1 call site from 1 routine (e.g. Func_003_5E68_Table3_Case01)
 ; reads: wRecordBuffer
 ; writes: wD082
-Func_003_66EE::
+LookupWD082ForRecordBuffer::
+Func_003_66EE:: ; address name
     ld a, [wRecordBuffer]
     ld hl, Data_003_6700
     add_a_to_hl

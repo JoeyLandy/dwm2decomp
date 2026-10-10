@@ -1308,6 +1308,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Data tables named by structure only.** RunEffectTestEntryA reads 4-byte (actor, target, action, flags) entries, which looks like a test list. DecompressGraphicsAToTiles0 reads a far-pointer table.
 - Binary verification: pending; see the commit.
 
+### E-0119 — Remaining self-contained short routines
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** 38 short routines skipped in E-0114-E-0118 because their purpose was unclear are named by what they do, mechanically where the meaning is unknown. These include:
+  - story-flag-gated script starts (IfFlag000AStartScript4F9D …) and script-start wrappers;
+  - sound-engine state setters (wDD15/wDD09) and ReturnTwiceIfWDD08AndWDD0B, which pops the caller's return address;
+  - screen-buffer draw steps that advance wD781;
+  - item-refusal markers (wD08D = $12 or $14);
+  - table readers.
+- **Possibly data.** `36:6A59`, `3D:4E56`, `3E:7615` and `92:580E` decode as implausible runs (`halt`, `rst $20`, `ld sp, hl`) and remain unnamed.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

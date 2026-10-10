@@ -8266,11 +8266,13 @@ Data_002_75F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8A, $FF, $0E, $00, $0C, $C6, $91, $02, $D7, $CB, $6B, $00, $42, $CC, $B5, $00
     db $00, $00, $00, $00
 
-; 1 call site from 1 routine (e.g. Func_033_562A_Case0C)
+; only called from CopyRect62C3ToWC36EAndIncWD781_Case0C (E-0047)
+; 1 call site from 1 routine (e.g. CopyRect62C3ToWC36EAndIncWD781_Case0C)
 ; reads: sBB00, hFFC8, hFFC9, sBF98, sBF99
 ; writes: rRAMG, rRAMB, hFFC8, hFFC9
 ; points at: sBB01, hFF8A, wC60C, wCBD7, wCC42
-Func_002_760B::
+CopyRect62C3ToWC36EAndIncWD781_Case0C_Sub01::
+Func_002_760B:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, $01
@@ -8328,7 +8330,7 @@ Jump_002_766D::
     ret
 
 ; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hFFC8/hFFC9; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
-; 4 call sites from 1 routine (e.g. Func_002_760B)
+; 4 call sites from 1 routine (e.g. CopyRect62C3ToWC36EAndIncWD781_Case0C_Sub01)
 ; reads: hFFC8, hFFC9
 ; writes: hFFC8, hFFC9
 CopyBytesWithChecksum_Bank02_7674::
@@ -8348,7 +8350,7 @@ Func_002_7674:: ; address name
     jr nz, CopyBytesWithChecksum_Bank02_7674
     ret
 
-; 2 call sites from 2 routines (e.g. Func_033_562A_Case0C, Func_0A0_5491_Case01)
+; 2 call sites from 2 routines (e.g. CopyRect62C3ToWC36EAndIncWD781_Case0C, Func_0A0_5491_Case01)
 ; reads: hFFC8, hFFC9
 ; writes: rRAMG, rRAMB, hFFC8, hFFC9, sBF98, sBF99, sBB00
 ; points at: sBB01, hFF8A, wC60C, wCBD7, wCC42

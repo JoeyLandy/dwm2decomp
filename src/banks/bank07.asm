@@ -5553,19 +5553,19 @@ Jump_007_70AF::
     ld a, $01
     ld [hl+], a
     ld a, [wD09E]
-    call Func_007_70E9
+    call SetHLBit7FromInverseABit0
     inc hl
     inc hl
     inc hl
     ld a, [wD09F]
-    call Func_007_70E9
+    call SetHLBit7FromInverseABit0
     ld a, [wD0A0]
-    call Func_007_70E9
+    call SetHLBit7FromInverseABit0
     inc hl
     ld a, [wD0A1]
-    call Func_007_70E9
+    call SetHLBit7FromInverseABit0
     ld a, [wD0A2]
-    call Func_007_70E9
+    call SetHLBit7FromInverseABit0
     ld a, $02
     ld [wD059], a
     call Func_007_4E11
@@ -5575,8 +5575,10 @@ Jump_007_70AF::
     inc [hl]
     ret
 
+; bit 7 of [HL] = NOT bit 0 of A (the other bits kept); HL += 1 (E-0119)
 ; 5 call sites from 1 routine (e.g. Func_007_6DE3_Table2_Case03)
-Func_007_70E9::
+SetHLBit7FromInverseABit0::
+Func_007_70E9:: ; address name
     rrca
     and a, $80
     xor a, $80

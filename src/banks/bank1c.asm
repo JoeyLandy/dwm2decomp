@@ -5917,10 +5917,12 @@ Func_01C_68DF:: ; address name
     ld [wD7F1], a
     ret
 
+; LoadWD7F1PointerForWD7FB, then wD7F1 = the byte at that pointer + 4 * wD7B6 + wD7B5 (E-0119)
 ; 1 call site from 1 routine (e.g. Func_024_7045)
 ; reads: wD7B6, wD7B5
 ; writes: wD7F1
-Func_01C_68FA::
+LoadWD7F1ByteForWD7B5WD7B6::
+Func_01C_68FA:: ; address name
     call LoadWD7F1PointerForWD7FB
     ld a, [wD7B6]
     ld e, a

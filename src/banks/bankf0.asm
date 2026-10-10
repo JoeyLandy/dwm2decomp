@@ -1200,7 +1200,7 @@ Jump_0F0_5094::
 ; points at: wD781
 Func_0F0_4CA0_Table5_Case01::
 Jump_0F0_50A4:: ; address name
-    farcall Func_015_645F
+    farcall CopyRect70C5ToWC364AndDraw
     ld hl, wD781
     inc [hl]
     ret

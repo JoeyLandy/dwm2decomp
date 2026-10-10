@@ -2,7 +2,7 @@ SECTION "Bank 1E", ROMX[$4000], BANK[$1E]
     db $1E
 
 ; implements script command type E9; reached through ScriptCommandE9 in bank $10 (E-0038)
-; 2 call sites from 2 routines (e.g. Func_00D_7115, ScriptCommandE9)
+; 2 call sites from 2 routines (e.g. ScriptCommandE9_RunFar, ScriptCommandE9)
 ; reads: wD788
 ScriptCommandE9_Run::
 Func_01E_4001:: ; address name
@@ -8356,7 +8356,7 @@ Func_01E_7745:: ; address name
     ret
 
 ; hFFB9 = wD7BC, hFFBA = $80, hFF8D = wD7BA, wSpriteSlotCount = wD7BB: puts back the values SaveAndHideSpriteState stored (hFFBA is set to $80 rather than restored) (E-0078)
-; 5 call sites from 5 routines (e.g. Func_01E_6074_Table8_Case0D, Func_01E_6074_Table6_Case11, Func_01E_5A4D_Case0D, Func_00D_4B30_Case08, ...)
+; 5 call sites from 5 routines (e.g. Func_01E_6074_Table8_Case0D, Func_01E_6074_Table6_Case11, Func_01E_5A4D_Case0D, EndScriptCommandAndIncWD782_Case08, ...)
 ; reads: wD7BC, wD7BA, wD7BB
 ; writes: hFFB9, hFFBA, hFF8D, wSpriteSlotCount
 RestoreSpriteStateFromWD7BA::

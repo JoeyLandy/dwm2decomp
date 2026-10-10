@@ -3796,7 +3796,7 @@ Func_01D_5D84:: ; address name
     ret
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
-; 28 call sites from 28 routines (e.g. Func_00D_463F_Case0F, Func_00D_491A_Case06, Func_00D_4B18, Func_00D_4CF4, ...)
+; 28 call sites from 28 routines (e.g. Func_00D_463F_Case0F, Func_00D_491A_Case06, GetWD789Cell4AddressWithSRAM, Func_00D_4CF4, ...)
 ; reads: wD7AF, wD7AB
 ; writes: wD7F5, wD7F6
 ; points at: wD789
@@ -4330,7 +4330,7 @@ Jump_01D_6075::
     ld [rRAMG2], a
     ret
 
-; 8 call sites from 8 routines (e.g. Func_00D_4B30_Case04, Func_015_4F4C_Case04, Func_015_5A2D_Table2_Case04, Func_01E_4A32_Table2_Case19, ...)
+; 8 call sites from 8 routines (e.g. EndScriptCommandAndIncWD782_Case04, Func_015_4F4C_Case04, Func_015_5A2D_Table2_Case04, Func_01E_4A32_Table2_Case19, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hFFC6, hFFC7, wDataBank, wD7B0
 ; writes: rRAMG2, rRAMB, wDataBank, wC8DE
 ; points at: wD789, wC8CF
@@ -4645,7 +4645,7 @@ Func_01D_62FF:: ; address name
     add_a_to_hl
     ret
 
-; 10 call sites from 10 routines (e.g. Func_00D_463F_Case11, Func_00D_4B30_Case05, Func_015_4F4C_Case05, Func_015_60BF, ...)
+; 10 call sites from 10 routines (e.g. Func_00D_463F_Case11, EndScriptCommandAndIncWD782_Case05, Func_015_4F4C_Case05, Func_015_60BF, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hFFC6, wD7F2, wD7F1, wD7B0
 ; writes: rRAMG2, rRAMB
 ; points at: wD789
