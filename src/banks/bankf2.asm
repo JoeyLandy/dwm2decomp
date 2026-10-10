@@ -29,7 +29,7 @@ Jump_0F2_4013::
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    farcall Func_0F1_4AA8
+    farcall ClearScreenBufferAndAttributes_BankF1
     xor a, a
     ldh [hScrollY], a
     ldh [hScrollX], a

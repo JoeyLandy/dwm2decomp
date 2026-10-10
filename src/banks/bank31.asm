@@ -4103,7 +4103,7 @@ Jump_031_5855:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Table2_Case01::
 Jump_031_589C:: ; address name
-    call Func_031_74C8
+    call DrawWC2B8RowsToBGMapRow9
     ld a, [wD868]
     or a, a
     ret z
@@ -4182,7 +4182,7 @@ Jump_031_5921::
 Jump_031_5933::
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_74C8
+    call DrawWC2B8RowsToBGMapRow9
     ld a, $08
     ld [wBattleResolveStep], a
     jr Jump_031_59AF
@@ -4197,7 +4197,7 @@ Jump_031_5943::
     jr Jump_031_59AF
 
 Jump_031_5953::
-    call Func_031_74C8
+    call DrawWC2B8RowsToBGMapRow9
     ld a, $0C
     ld [wBattleResolveStep], a
     jr Jump_031_59AF
@@ -4255,7 +4255,7 @@ Jump_031_59AF::
 ; writes: wBattleResolveStep, wBattleSubPhase
 Func_031_4EB9_Table2_Case03::
 Jump_031_59B0:: ; address name
-    call Func_031_74C8
+    call DrawWC2B8RowsToBGMapRow9
     xor a, a
     ld [wBattleResolveStep], a
     xor a, a
@@ -4274,7 +4274,7 @@ Jump_031_59BC:: ; address name
     ld [wC46F], a
     ld a, [wD869]
     or a, a
-    call z, Func_031_74C8
+    call z, DrawWC2B8RowsToBGMapRow9
     xor a, a
     ld [wD869], a
     ld hl, vTiles1 + $6D0
@@ -4697,7 +4697,7 @@ Jump_031_5C53::
 ; points at: wBattleResolveStep
 Func_031_4EB9_Table2_Case10::
 Jump_031_5C58:: ; address name
-    call Func_031_74C8
+    call DrawWC2B8RowsToBGMapRow9
     call Func_031_746F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -9011,10 +9011,12 @@ Func_031_74C1::
     farcall Func_01A_72A0
     ret
 
+; copies a 20 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9) with CopyRect32StrideToVRAM, then wD868 = 1 (E-0077)
 ; 6 call sites from 5 routines (e.g. Func_031_4EB9_Table2_Case10, Func_031_4EB9_Table2_Case04, Func_031_4EB9_Table2_Case03, Func_031_4EB9_Table2_Case02, ...)
 ; writes: wD868
 ; points at: wC2B8
-Func_031_74C8::
+DrawWC2B8RowsToBGMapRow9::
+Func_031_74C8:: ; address name
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $1409
@@ -9572,7 +9574,7 @@ Jump_031_78DD::
     call HLToDecimalDigits
     pop bc
     pop de
-    call Func_000_210D
+    call WriteTwoDigitTilesFromWC8C1
 
 Jump_031_7912::
     pop bc

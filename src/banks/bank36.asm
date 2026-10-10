@@ -4720,7 +4720,7 @@ Jump_036_5F32::
     ld a, [wCFF7]
     ld b, a
     ld hl, wBattleMaxHP
-    call Func_036_608B
+    call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleHP
     call Func_036_6701
@@ -4729,7 +4729,7 @@ Jump_036_5F32::
     ld a, [wCFF9]
     ld b, a
     ld hl, wBattleMaxMP
-    call Func_036_608B
+    call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleMP
     call Func_036_6701
@@ -4738,25 +4738,25 @@ Jump_036_5F32::
     ld a, [wCFFB]
     ld b, a
     ld hl, wBattleATK
-    call Func_036_608B
+    call StoreBCAtActorWordEntry
     ld a, [wCFFC]
     ld c, a
     ld a, [wCFFD]
     ld b, a
     ld hl, wBattleDEF
-    call Func_036_608B
+    call StoreBCAtActorWordEntry
     ld a, [wCFFE]
     ld c, a
     ld a, [wCFFF]
     ld b, a
     ld hl, wBattleAGL
-    call Func_036_608B
+    call StoreBCAtActorWordEntry
     ld a, [wD000]
     ld c, a
     ld a, [wD001]
     ld b, a
     ld hl, wBattleINT
-    call Func_036_608B
+    call StoreBCAtActorWordEntry
     ld a, [wRecordBuffer]
     ld l, a
     ld a, [wCFED]
@@ -4888,9 +4888,11 @@ Func_036_6081:: ; heuristic: follows a terminator; C0
     ld [hl], c
     ret
 
+; HL = table: stores BC (low byte first) at HL + 2 * wBattleActor; HL ends on the high byte (E-0077)
 ; 6 call sites from 1 routine (e.g. Func_036_5F25)
 ; reads: wBattleActor
-Func_036_608B::
+StoreBCAtActorWordEntry::
+Func_036_608B:: ; address name
     ld a, [wBattleActor]
     add a, a
     add_a_to_hl

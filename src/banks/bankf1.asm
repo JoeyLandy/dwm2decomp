@@ -1452,11 +1452,13 @@ Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E4, $98, $2F, $99, $6F, $99, $82, $99, $84, $99, $86, $99, $88, $99, $8A, $99
     db $8C, $99, $8E, $99, $90, $99
 
+; fills the $2D0 bytes $C198-$C467 (wScreenTileBuffer, $240 bytes, and the $90 bytes after it) with $C3; on CGB continues with the attribute buffer (not fully read) (E-0077)
 ; 6 call sites from 6 routines (e.g. GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, Func_01B_660D, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_0F1_4AA8::
+ClearScreenBufferAndAttributes_BankF1::
+Func_0F1_4AA8:: ; address name
     ld hl, wScreenTileBuffer
     ld bc, $02D0
 

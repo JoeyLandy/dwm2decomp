@@ -4,7 +4,7 @@ SECTION "Bank 02", ROMX[$4000], BANK[$02]
 ; only called from StartPaletteFade (E-0047)
 ; 1 call site from 1 routine (e.g. StartPaletteFade)
 ; reads: wFadeState, wC56D
-; writes: wFadeLevel, wC573, wC574, rBGPI, rBGPD, rOBPI, rOBPD
+; writes: wFadeLevel, wFadeDelay, wFadeDelayCounter, rBGPI, rBGPD, rOBPI, rOBPD
 StartPaletteFade_Sub01::
 Func_002_4001:: ; address name
     ld a, [wFadeState]
@@ -16,8 +16,8 @@ Func_002_4001:: ; address name
     ld a, [wFadeState]
     srl a
     srl a
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_002_401C::
@@ -37,8 +37,8 @@ Jump_002_4030::
     cpl
     srl a
     srl a
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     di
     call WaitForVRAMAccess
     ld a, $80
@@ -75,18 +75,20 @@ Jump_002_4062::
     jr nz, Jump_002_4062
     ret
 
+; one CGB fade step: counts wFadeDelayCounter down and, when it reaches 0, reloads it from wFadeDelay and moves wFadeLevel by 5. With wFadeState bit 7 clear (fading out) the level rises to at most $1F and WriteAllFadedPalettesFloor writes the palettes; with bit 7 set (fading in) it falls to at least 0 and WriteAllFadedPalettesAdd writes them. wFadeState = 0 when the level reaches $1F or 0 (E-0077)
 ; 1 call site from 1 routine (e.g. Func_000_10AB)
-; reads: wFadeState, wC574, wFadeLevel, wC573
-; writes: wC574, wFadeLevel, wFadeState
-Func_002_4071::
+; reads: wFadeState, wFadeDelayCounter, wFadeLevel, wFadeDelay
+; writes: wFadeDelayCounter, wFadeLevel, wFadeState
+StepCGBFade::
+Func_002_4071:: ; address name
     ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_002_40A2
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_002_4083
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_002_4083::
@@ -99,19 +101,19 @@ Jump_002_4083::
 Jump_002_408E::
     ld [wFadeLevel], a
     call WriteAllFadedPalettesFloor
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     cp a, $1F
     jr z, Jump_002_40CA
     ret
 
 Jump_002_40A2::
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_002_40AD
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_002_40AD::
@@ -124,8 +126,8 @@ Jump_002_40AD::
 Jump_002_40B7::
     ld [wFadeLevel], a
     call WriteAllFadedPalettesAdd
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     or a, a
     jr z, Jump_002_40CA
@@ -137,7 +139,7 @@ Jump_002_40CA::
     ret
 
 ; rBGPI = $80 (palette 0, auto-increment), the 8 BG palettes from wC49F through WriteFadedPaletteFloorToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wC4DF through WriteFadedPaletteFloorToOBPD (E-0076)
-; 1 call site from 1 routine (e.g. Func_002_4071)
+; 1 call site from 1 routine (e.g. StepCGBFade)
 ; writes: rBGPI, rOBPI
 ; points at: wBGPaletteBuffer, wOBJPaletteBuffer
 WriteAllFadedPalettesFloor::
@@ -303,7 +305,7 @@ Jump_002_4196::
     ret
 
 ; rBGPI = $80, the 8 BG palettes from wC49F through WriteFadedPaletteAddToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wC4DF through WriteFadedPaletteAddToOBPD (E-0076)
-; 1 call site from 1 routine (e.g. Func_002_4071)
+; 1 call site from 1 routine (e.g. StepCGBFade)
 ; writes: rBGPI, rOBPI
 ; points at: wBGPaletteBuffer, wOBJPaletteBuffer
 WriteAllFadedPalettesAdd::
@@ -5989,7 +5991,7 @@ Jump_002_679A::
     inc d
 
 Jump_002_67B7::
-    call Func_000_210D
+    call WriteTwoDigitTilesFromWC8C1
     ldh a, [hFFCB]
     ld c, $5B
     call LoadSRAMRecordWord

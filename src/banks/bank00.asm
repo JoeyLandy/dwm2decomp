@@ -2362,7 +2362,7 @@ Jump_000_0DDB::
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
 ; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, Func_002_5F9B, Func_002_4745_Case00, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
-; writes: wFadeState, wFadeLevel, wC573, wC574
+; writes: wFadeState, wFadeLevel, wFadeDelay, wFadeDelayCounter
 ; points at: wC4FF, wOBJPaletteBuffer, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
 StartPaletteFade::
 Func_000_0DF2:: ; address name
@@ -2392,8 +2392,8 @@ Jump_000_0E11::
     ld a, [wFadeState]
     srl a
     srl a
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     jp Jump_000_0F3D
 
 Jump_000_0E2C::
@@ -2405,8 +2405,8 @@ Jump_000_0E2C::
     cpl
     srl a
     srl a
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     ld hl, wC4FF
     ld de, wOBJPaletteBuffer
     ld c, $20
@@ -2480,8 +2480,8 @@ Jump_000_0EA8::
     ld [wFadeLevel], a
     ld a, [wFadeState]
     add a, $02
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     jr Jump_000_0F3D
 
 Jump_000_0ED8::
@@ -2492,8 +2492,8 @@ Jump_000_0ED8::
     ld a, [wFadeState]
     cpl
     add a, $02
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     ld a, $00
     ld hl, wC5E9
     ld [hl+], a
@@ -2517,8 +2517,8 @@ Jump_000_0EF7::
     ld [wFadeLevel], a
     ld a, [wFadeState]
     add a, $02
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     jr Jump_000_0F3D
 
 Jump_000_0F20::
@@ -2529,8 +2529,8 @@ Jump_000_0F20::
     ld a, [wFadeState]
     cpl
     add a, $02
-    ld [wC573], a
-    ld [wC574], a
+    ld [wFadeDelay], a
+    ld [wFadeDelayCounter], a
     ld a, $FF
     ld hl, wC5E9
     ld [hl+], a
@@ -2559,8 +2559,8 @@ Jump_000_0F47::
 
 ; does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)
 ; 2 call sites from 2 routines (e.g. VBlankHandler, RunFrameTickFadeAndCounter_Bank1B)
-; reads: wFadeState, wIsCGB, wSGBActive, wC574, wFadeLevel, wC573, wC56D
-; writes: wC574, wFadeLevel, wFadeState
+; reads: wFadeState, wIsCGB, wSGBActive, wFadeDelayCounter, wFadeLevel, wFadeDelay, wC56D
+; writes: wFadeDelayCounter, wFadeLevel, wFadeState
 StepFade::
 Func_000_0F4E:: ; address name
     ld a, [wFadeState]
@@ -2577,11 +2577,11 @@ Func_000_0F4E:: ; address name
     ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_000_0F98
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_000_0F78
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_000_0F78::
@@ -2594,19 +2594,19 @@ Jump_000_0F78::
 Jump_000_0F83::
     ld [wFadeLevel], a
     call StepFade_Sub01
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     cp a, $1F
     jp z, Jump_000_1205
     ret
 
 Jump_000_0F98::
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_000_0FA3
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_000_0FA3::
@@ -2619,8 +2619,8 @@ Jump_000_0FA3::
 Jump_000_0FAD::
     ld [wFadeLevel], a
     call StepFade_Sub01
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     or a, a
     jp z, Jump_000_1205
@@ -2807,7 +2807,7 @@ Jump_000_10C6::
     ret
 
 Jump_000_10C7::
-    farcall Func_002_4071
+    farcall StepCGBFade
     ret
 
 Jump_000_10CE::
@@ -2817,17 +2817,17 @@ Jump_000_10CE::
     ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_000_10FE
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_000_10E8
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_000_10E8::
     call Func_000_111F
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     inc a
     ld [wFadeLevel], a
@@ -2836,17 +2836,17 @@ Jump_000_10E8::
     ret
 
 Jump_000_10FE::
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_000_1109
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_000_1109::
     call Func_000_111F
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     dec a
     ld [wFadeLevel], a
@@ -2914,17 +2914,17 @@ Jump_000_116D::
     ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_000_1194
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_000_117F
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_000_117F::
     call Func_000_11B4
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     inc a
     ld [wFadeLevel], a
@@ -2933,17 +2933,17 @@ Jump_000_117F::
     ret
 
 Jump_000_1194::
-    ld a, [wC574]
+    ld a, [wFadeDelayCounter]
     or a, a
     jr z, Jump_000_119F
     dec a
-    ld [wC574], a
+    ld [wFadeDelayCounter], a
     ret
 
 Jump_000_119F::
     call Func_000_11B4
-    ld a, [wC573]
-    ld [wC574], a
+    ld a, [wFadeDelay]
+    ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     dec a
     ld [wFadeLevel], a
@@ -5804,9 +5804,11 @@ Jump_000_20DF::
     ret
     ds $24, $00
 
+; DE = destination: writes wC8C1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wC8C2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
 ; 7 call sites from 7 routines (e.g. Func_002_6788, Func_003_50DD, Func_003_7281, Func_003_74D1, ...)
 ; points at: wC8C1
-Func_000_210D::
+WriteTwoDigitTilesFromWC8C1::
+Func_000_210D:: ; address name
     push hl
     ld hl, wC8C1
     ld a, [hl+]
@@ -8345,7 +8347,7 @@ Jump_000_2F03::
     ld e, $40
     ld d, $42
     call Func_000_2F5A
-    call Func_000_2FDC
+    call StoreAThenTerminator
 
 Jump_000_2F11::
     ld a, $01
@@ -8353,7 +8355,7 @@ Jump_000_2F11::
     ld e, $A0
     ld d, $86
     call Func_000_2F5A
-    call Func_000_2FDC
+    call StoreAThenTerminator
 
 Jump_000_2F1F::
     ld a, $00
@@ -8361,7 +8363,7 @@ Jump_000_2F1F::
     ld e, $10
     ld d, $27
     call Func_000_2F5A
-    call Func_000_2FDC
+    call StoreAThenTerminator
     ldh a, [hFFC6]
     ld c, a
     ldh a, [hFFC7]
@@ -8448,21 +8450,21 @@ Func_000_2F84::
 Jump_000_2FA7::
     ld de, $03E8
     call Func_000_2FC7
-    call Func_000_2FDC
+    call StoreAThenTerminator
 
 Jump_000_2FB0::
     ld de, $0064
     call Func_000_2FC7
-    call Func_000_2FDC
+    call StoreAThenTerminator
 
 Jump_000_2FB9::
     ld de, $000A
     call Func_000_2FC7
-    call Func_000_2FDC
+    call StoreAThenTerminator
 
 Jump_000_2FC2::
     ld a, c
-    call Func_000_2FDC
+    call StoreAThenTerminator
     ret
 
 ; 6 call sites from 1 routine (e.g. Func_000_2F84)
@@ -8489,8 +8491,10 @@ Jump_000_2FCA::
     pop hl
     ret
 
+; [HL] = A, HL += 1, [HL] = $F0 (string terminator) (E-0077)
 ; 7 call sites from 2 routines (e.g. Func_000_2F84, Func_000_2ECF)
-Func_000_2FDC::
+StoreAThenTerminator::
+Func_000_2FDC:: ; address name
     ld [hl+], a
     ld a, $F0
     ld [hl], a
@@ -9946,10 +9950,10 @@ Jump_000_394C::
     and a, a
     ldh a, [hFFE2]
     ld c, $10
-    call z, Func_000_3A4E
+    call z, WriteChannelRegisterC
     ld a, l
     ld c, $13
-    call Func_000_3A4E
+    call WriteChannelRegisterC
     ld a, l
     cp a, $02
     jr c, Jump_000_396F
@@ -9972,7 +9976,7 @@ Jump_000_3971::
     and a, $C0
     or a, $3F
     ld c, $11
-    call Func_000_3A4E
+    call WriteChannelRegisterC
 
 Jump_000_3989::
     ld a, h
@@ -9982,7 +9986,7 @@ Jump_000_3989::
 Jump_000_398E::
     ldh [hFFEC], a
     ld c, $14
-    call Func_000_3A4E
+    call WriteChannelRegisterC
     call Func_000_3A5D
 
 Jump_000_3998::
@@ -10083,7 +10087,7 @@ Func_000_39F8:: ; address name
     ldh a, [hFFEB]
     add a, [hl]
     ld c, $13
-    jr Func_000_3A4E
+    jr WriteChannelRegisterC
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
@@ -10121,13 +10125,15 @@ Jump_000_3A38::
     ldh [c], a
     ldh a, [hFFEC]
     ld c, $14
-    call Func_000_3A4E
+    call WriteChannelRegisterC
     call Func_000_3A5D
     ret
 
+; A = value, C = register offset: writes A to $FF00 + wDD0D + C (wDD0D holds the current sound channel's register base); B = A (E-0077)
 ; 5 call sites from 2 routines (e.g. SoundNextEvent, Func_000_3A2F)
 ; reads: wDD0D
-Func_000_3A4E::
+WriteChannelRegisterC::
+Func_000_3A4E:: ; address name
     ld b, a
     ld a, [wDD0D]
     add a, c
@@ -10139,7 +10145,7 @@ Func_000_3A4E::
 Jump_000_3A57::
     ldh a, [hFFE0]
     ld c, $12
-    jr Func_000_3A4E
+    jr WriteChannelRegisterC
 
 ; 2 call sites from 2 routines (e.g. SoundNextEvent, Func_000_3A2F)
 ; reads: wDD0D

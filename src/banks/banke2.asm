@@ -427,7 +427,7 @@ Func_0E2_4310:: ; heuristic: follows a terminator; C0
 ; 1 call site from 1 routine (e.g. Func_0E2_438D)
 ; reads: wBattleActor
 Func_0E2_432D::
-    farcall Func_005_44CF
+    farcall AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
     jr nz, Jump_0E2_433D
@@ -3671,7 +3671,7 @@ Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     ret z
     ld a, [wBattleActor]
     call Func_0E2_66C5
-    farcall Func_005_44CF
+    farcall AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B5C

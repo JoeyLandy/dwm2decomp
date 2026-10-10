@@ -787,6 +787,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also named:** ShowSkillNameAtSlotB (category 4 = StringTable_SkillNames), CopyTileBytesToVRAMCounted_BankF2, DrawWC338RowsToBGMapRow13_BankA0.
 - Binary verification: pending; see the commit.
 
+### E-0077 — CGB fade step, battler names, batch 12
+
+- Kind: OBSERVATION (full reading only, except where marked; C1).
+- **Fade step.** `StepCGBFade` (`02:4071`) is the CGB fade step that drives the E-0076 writers. Its RAM is named wFadeDelay (`$C573`) and wFadeDelayCounter (`$C574`).
+- **Battler names.** `CopyBattlerNameToHL` (`3A:79A0`) shows that offset 0 of each 78-byte battler record (wBattlerRecords) holds the monster's name, copied as 5 glyphs.
+- **Partly read.** CopySlotNameToHL and CopyTargetNameToWC130 cover more slots than were read, and their notes say so. The CGB tail of ClearScreenBufferAndAttributes_BankF1 is not read; it fills $90 bytes past wScreenTileBuffer.
+- **Also named:**
+  - sound and text: WriteChannelRegisterC (sound-register write relative to wDD0D), StoreAThenTerminator;
+  - tiles: WriteTwoDigitTilesFromWC8C1, FillVRAMRectWithTileSequence, three DrawWCxxxRows routines;
+  - battle and helpers: AnyFoeLacksStatus0MaskCC, RandomBelowC, LoadBCFromHL, StoreBCAtActorWordEntry.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -1824,7 +1824,7 @@ Func_003_4ACE::
     ld h, $00
     call HLToDecimalDigits
     ld de, wC1C4
-    call Func_000_210D
+    call WriteTwoDigitTilesFromWC8C1
     pop hl
     ld a, [hl+]
     cp a, [hl]
@@ -2754,7 +2754,7 @@ Func_003_50DD::
     push de
     call HLToDecimalDigits
     pop de
-    call Func_000_210D
+    call WriteTwoDigitTilesFromWC8C1
     pop bc
     ret
 
@@ -7633,7 +7633,7 @@ Func_003_7281::
     ld h, $00
     call HLToDecimalDigits
     ld de, wC2E9
-    call Func_000_210D
+    call WriteTwoDigitTilesFromWC8C1
     pop hl
     ld a, l
     add a, $05
@@ -7905,7 +7905,7 @@ Func_003_74D1::
     push de
     call Func_003_74CA
     pop de
-    call Func_000_210D
+    call WriteTwoDigitTilesFromWC8C1
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_7335_Case01, Func_003_7335_Case00)

@@ -15,7 +15,7 @@ Func_03B_4001:: ; address name
     ld a, c
     ld e, $1D
     call BattlerRecordFieldAddress
-    call Func_03B_42F0
+    call LoadBCFromHL
     jr Jump_03B_403C
 
 Jump_03B_4013::
@@ -58,7 +58,7 @@ Func_03B_4045:: ; address name
     ld a, c
     ld e, $21
     call BattlerRecordFieldAddress
-    call Func_03B_42F0
+    call LoadBCFromHL
     jr Jump_03B_4080
 
 Jump_03B_4057::
@@ -101,7 +101,7 @@ Func_03B_4089:: ; address name
     ld a, c
     ld e, $23
     call BattlerRecordFieldAddress
-    call Func_03B_42F0
+    call LoadBCFromHL
     jr Jump_03B_40C4
 
 Jump_03B_409B::
@@ -144,7 +144,7 @@ Func_03B_40CD:: ; address name
     ld a, c
     ld e, $25
     call BattlerRecordFieldAddress
-    call Func_03B_42F0
+    call LoadBCFromHL
     jr Jump_03B_4108
 
 Jump_03B_40DF::
@@ -187,7 +187,7 @@ Func_03B_4111:: ; address name
     ld a, c
     ld e, $27
     call BattlerRecordFieldAddress
-    call Func_03B_42F0
+    call LoadBCFromHL
     jr Jump_03B_414C
 
 Jump_03B_4123::
@@ -230,7 +230,7 @@ Func_03B_4155:: ; address name
     ld a, c
     ld e, $29
     call BattlerRecordFieldAddress
-    call Func_03B_42F0
+    call LoadBCFromHL
     jr Jump_03B_4190
 
 Jump_03B_4167::
@@ -483,8 +483,10 @@ Func_03B_42E6:: ; address name
     deref_hl
     ret
 
+; C = [HL], B = [HL + 1]; HL ends on the high byte (E-0077)
 ; 6 call sites from 6 routines (e.g. GetBaseINT, GetBaseATK, GetBaseMP, GetBaseHP, ...)
-Func_03B_42F0::
+LoadBCFromHL::
+Func_03B_42F0:: ; address name
     ld a, [hl+]
     ld b, [hl]
     ld c, a

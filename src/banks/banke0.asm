@@ -6301,7 +6301,7 @@ Jump_0E0_712D::
     ld b, $12
     ld c, $02
     ld de, $0020
-    call Func_0E0_740E
+    call FillVRAMRectWithTileSequence
     ld a, l
     and a, $E0
     add a, $01
@@ -6334,7 +6334,7 @@ Jump_0E0_717B::
     ld de, $0040
     ld b, $12
     ld c, $01
-    call Func_0E0_740E
+    call FillVRAMRectWithTileSequence
     ld a, l
     and a, $E0
     add a, $01
@@ -6438,7 +6438,7 @@ Jump_0E0_7208::
     or a, a
     jr z, Jump_0E0_7240
     ld a, $80
-    call Func_0E0_740E
+    call FillVRAMRectWithTileSequence
 
 Jump_0E0_7240::
     ld a, l
@@ -6453,7 +6453,7 @@ Jump_0E0_7240::
     or a, a
     jr z, Jump_0E0_7259
     ld a, $A4
-    call Func_0E0_740E
+    call FillVRAMRectWithTileSequence
 
 Jump_0E0_7259::
     ld hl, wD09E
@@ -6658,7 +6658,7 @@ Jump_0E0_73A2::
     ld hl, vBGMap0 + $E3
     ld de, $0040
     ld bc, $0E02
-    call Func_0E0_740E
+    call FillVRAMRectWithTileSequence
     ld a, [wSGBActive]
     or a, a
     ld hl, $0168
@@ -6718,8 +6718,10 @@ Jump_0E0_73FC:: ; address name
     ld [wD09E], a
     ret
 
+; A = first tile, B = width, C = rows, HL = VRAM address, DE = row stride: writes consecutive tile numbers with WriteVRAMByteInc (interrupts off per byte), adding DE to the row start after each row; A ends past the last tile (E-0077)
 ; 5 call sites from 2 routines (e.g. Func_0E0_5AD3_Table8_Case00, Func_0E0_5AD3_Table7_Case00)
-Func_0E0_740E::
+FillVRAMRectWithTileSequence::
+Func_0E0_740E:: ; address name
     push bc
     push hl
 
@@ -6734,7 +6736,7 @@ Jump_0E0_7410::
     pop bc
     add hl, de
     dec c
-    jr nz, Func_0E0_740E
+    jr nz, FillVRAMRectWithTileSequence
     ret
 
 ; for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots: loads hSpriteSetIndex, hSpriteOriginX (+8), hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset and hSpriteSubIndex from the slot, then far-calls the routine chosen by the slot's first byte from the 3-byte entries at $7477

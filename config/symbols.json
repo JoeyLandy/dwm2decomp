@@ -433,6 +433,8 @@
   "C49F": {"name": "wBGPaletteBuffer", "note": "8 CGB background palettes (4 RGB555 colours each, 64 bytes) that the fade routines read and write to rBGPD (WriteAllFadedPalettesFloor/Add) (E-0076)", "evidence": "reading (E-0076)"},
   "C4DF": {"name": "wOBJPaletteBuffer", "note": "8 CGB object palettes (64 bytes) that the fade routines write to rOBPD (E-0076)", "evidence": "reading (E-0076)"},
   "C572": {"name": "wFadeLevel", "note": "the 5-bit level the fade routines apply to each colour component (E-0076)", "evidence": "reading (E-0076)"},
+  "C573": {"name": "wFadeDelay", "note": "frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077)", "evidence": "reading (E-0077)"},
+  "C574": {"name": "wFadeDelayCounter", "note": "counts down to the next CGB fade step (StepCGBFade) (E-0077)", "evidence": "reading (E-0077)"},
   "C920": {
     "name": "wScriptCommandType",
     "note": "the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1)",

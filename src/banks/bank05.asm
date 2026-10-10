@@ -815,10 +815,12 @@ Func_005_44BD:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 0 (wBattleStatus) & $CC clear (AnySlotLacksStatusMask), else 0 (E-0077)
 ; 7 call sites from 7 routines (e.g. Func_005_7686, Func_005_72DE, Func_005_77F9, Func_005_7D5B, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_44CF::
+AnyFoeLacksStatus0MaskCC::
+Func_005_44CF:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -9423,7 +9425,7 @@ Func_005_72DE:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_44CF
+    call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
     jr z, Jump_005_72F3
@@ -10134,7 +10136,7 @@ Func_005_7686::
     ld a, c
     and a, a
     ret z
-    call Func_005_44CF
+    call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
     jr z, Jump_005_769D
@@ -10416,7 +10418,7 @@ Func_005_77F9:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_44CF
+    call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
     jr z, Jump_005_780E
@@ -11436,7 +11438,7 @@ Func_005_7D5B:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7D91
-    call Func_005_44CF
+    call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
     jr z, Jump_005_7D91
@@ -11536,7 +11538,7 @@ Func_005_7DE8:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7E10
-    call Func_005_44CF
+    call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
     jr z, Jump_005_7E10

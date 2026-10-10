@@ -907,7 +907,7 @@ Jump_007_4B95::
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
-    farcall Func_0F1_4AA8
+    farcall ClearScreenBufferAndAttributes_BankF1
     ld hl, vBGMap0
     ld bc, $0240
     ld a, $C3
@@ -1014,7 +1014,7 @@ Jump_007_4C74::
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
-    farcall Func_0F1_4AA8
+    farcall ClearScreenBufferAndAttributes_BankF1
     ld hl, vBGMap0
     ld bc, $0240
     ld a, $C3
@@ -1311,7 +1311,7 @@ Jump_007_4E8D::
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
-    farcall Func_0F1_4AA8
+    farcall ClearScreenBufferAndAttributes_BankF1
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest

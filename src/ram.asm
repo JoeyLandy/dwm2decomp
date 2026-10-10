@@ -420,8 +420,8 @@ DEF wC56F EQU $C56F
 DEF wC570 EQU $C570
 DEF wC571 EQU $C571
 DEF wFadeLevel EQU $C572 ; the 5-bit level the fade routines apply to each colour component (E-0076) (reading (E-0076))
-DEF wC573 EQU $C573
-DEF wC574 EQU $C574
+DEF wFadeDelay EQU $C573 ; frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077) (reading (E-0077))
+DEF wFadeDelayCounter EQU $C574 ; counts down to the next CGB fade step (StepCGBFade) (E-0077) (reading (E-0077))
 DEF wC576 EQU $C576
 DEF wC577 EQU $C577
 DEF wC578 EQU $C578

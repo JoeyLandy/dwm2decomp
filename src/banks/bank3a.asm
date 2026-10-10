@@ -5043,7 +5043,7 @@ Func_03A_7508::
     ld a, [hl]
     ld hl, wC150
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     jr Jump_03A_753D
 
 Jump_03A_7532::
@@ -5276,7 +5276,7 @@ Jump_03A_7784::
     ret
 
 Jump_03A_77BE::
-    call Func_03A_7927
+    call CopyTargetNameToWC130
     jr Jump_03A_77CB
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5291,7 +5291,7 @@ Jump_03A_77CB::
     ret
 
 Jump_03A_77CF::
-    call Func_03A_7927
+    call CopyTargetNameToWC130
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5382,7 +5382,7 @@ Jump_03A_780B::
     ret
 
 Jump_03A_7845::
-    call Func_03A_7927
+    call CopyTargetNameToWC130
     jr Jump_03A_7852
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5397,7 +5397,7 @@ Jump_03A_7852::
     ret
 
 Jump_03A_7856::
-    call Func_03A_7927
+    call CopyTargetNameToWC130
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5496,7 +5496,7 @@ Jump_03A_7893::
     ret
 
 Jump_03A_78D9::
-    call Func_03A_7927
+    call CopyTargetNameToWC130
     jr Jump_03A_78E6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5511,7 +5511,7 @@ Jump_03A_78E6::
     ret
 
 Jump_03A_78EA::
-    call Func_03A_7927
+    call CopyTargetNameToWC130
     ret
 
 ; 3 call sites from 2 routines (e.g. Func_03A_7508, Func_03A_7715)
@@ -5522,7 +5522,7 @@ Func_03A_78EE::
     ld a, [wBattleActor]
     ld hl, wC130
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5533,7 +5533,7 @@ Func_03A_78FB:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     ld hl, wC140
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_03A_7508, Func_03A_7715)
@@ -5545,7 +5545,7 @@ Func_03A_7908::
     ldh a, [hFFC6]
     ld hl, wC140
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
 
 ; 1 call site from 1 routine (e.g. Func_03A_7508)
@@ -5559,15 +5559,17 @@ Func_03A_791A::
     call CopyStringHLToDE
     ret
 
+; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC130 (E-0077)
 ; 6 call sites from 6 routines (e.g. Func_03A_774C, Func_03A_77C3, Func_03A_77D3, Func_03A_784A, ...)
 ; reads: wBattleTarget
 ; writes: wD86C
 ; points at: wC130
-Func_03A_7927::
+CopyTargetNameToWC130::
+Func_03A_7927:: ; address name
     ld a, [wBattleTarget]
     ld hl, wC130
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5578,7 +5580,7 @@ Func_03A_7934:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     ld hl, wC140
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5589,7 +5591,7 @@ Func_03A_7941:: ; heuristic: follows a terminator; C0
     ld a, [wBattleTarget]
     ld hl, wC150
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
     db $21, $40, $C1, $FA, $72, $D8, $4F, $FA, $73, $D8, $47, $CD, $84, $2F, $C9
 
@@ -5602,7 +5604,7 @@ Func_03A_795D::
     and a, $04
     ld hl, wC130
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5641,19 +5643,23 @@ Func_03A_798D:: ; heuristic: follows a terminator; C0
     and a, $04
     ld hl, wC130
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ret
 
+; A = battle slot: slots 0-2 go to CopyBattlerNameToHL; other slots take paths that check slot 3/7, wC58A and wDAD4 (not fully read) (E-0077)
 ; 10 call sites from 10 routines (e.g. Func_03A_7BF9, Func_03A_7508, Func_03A_78EE, Func_03A_7908, ...)
 ; reads: wC58A, wD86C
 ; writes: wD869
 ; points at: wDAD4
-Func_03A_799C::
+CopySlotNameToHL::
+Func_03A_799C:: ; address name
     cp a, $03
     jr nc, Jump_03A_79BB
 
-; 1 call site from 1 routine (e.g. Func_03A_79ED)
-Func_03A_79A0::
+; A = battle slot (0-2 or 4-6): copies the name at offset 0 of the slot's battler record (5 glyphs, CopyFiveGlyphsPlusMarks) to HL and leaves HL on the $F0 terminator; BC kept (E-0077)
+; 1 call site from 1 routine (e.g. CopyBattlerNameToHL_Sub01)
+CopyBattlerNameToHL::
+Func_03A_79A0:: ; address name
     push hl
     push bc
     ld e, $00
@@ -5676,7 +5682,7 @@ Jump_03A_79B0::
 Jump_03A_79B7::
     ld a, b
     pop bc
-    jr Func_03A_79A0
+    jr CopyBattlerNameToHL
 
 Jump_03A_79BB::
     push bc
@@ -5708,15 +5714,17 @@ Jump_03A_79E1::
 
 Jump_03A_79E4::
     push af
-    call Func_03A_79ED
+    call CopyBattlerNameToHL_Sub01
     pop af
-    call Func_03A_7A6E
+    call CopyBattlerNameToHL_Sub02
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_79A0)
+; only called from CopyBattlerNameToHL (E-0047)
+; 1 call site from 1 routine (e.g. CopyBattlerNameToHL)
 ; writes: wD87C, wD87A, wD87B
 ; points at: wBattleMonsterId
-Func_03A_79ED::
+CopyBattlerNameToHL_Sub01::
+Func_03A_79ED:: ; address name
     ld [wD87C], a
     push hl
     ld hl, wBattleMonsterId
@@ -5739,7 +5747,7 @@ Func_03A_79ED::
     ret
 
 Jump_03A_7A10::
-    call Func_03A_79A0
+    call CopyBattlerNameToHL
     ld a, $47
     ld [hl+], a
     ld [hl], $F0
@@ -5815,11 +5823,13 @@ Jump_03A_7A68::
     ld [wD869], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_79A0)
+; only called from CopyBattlerNameToHL (E-0047)
+; 1 call site from 1 routine (e.g. CopyBattlerNameToHL)
 ; reads: wD87C, wC0A0, wD87A, wD87B
 ; writes: wC0A0
 ; points at: wBattleMonsterId, wC0A0
-Func_03A_7A6E::
+CopyBattlerNameToHL_Sub02::
+Func_03A_7A6E:: ; address name
     call Func_03A_7AE3
     inc b
     ld c, $04
@@ -5903,7 +5913,7 @@ Jump_03A_7ADD::
     ld [hl], a
     ret
 
-; 6 call sites from 5 routines (e.g. Func_03A_7A6E, Func_03A_7B66, Func_03B_4711, Func_03B_4C95, ...)
+; 6 call sites from 5 routines (e.g. CopyBattlerNameToHL_Sub02, Func_03A_7B66, Func_03B_4711, Func_03B_4C95, ...)
 ; reads: wC58A, wC57F
 ; points at: wC0A0, wBattleMonsterId, wC0A8
 Func_03A_7AE3::
@@ -6109,7 +6119,7 @@ Func_03A_7BF9::
     push hl
     ld hl, wC130
     ld [wD86C], a
-    call Func_03A_799C
+    call CopySlotNameToHL
     ld a, $08
     ld [wStringCategory], a
     ld a, $05

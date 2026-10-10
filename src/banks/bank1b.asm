@@ -4775,7 +4775,7 @@ Jump_01B_6613::
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    farcall Func_0F1_4AA8
+    farcall ClearScreenBufferAndAttributes_BankF1
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a

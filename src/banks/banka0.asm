@@ -6980,7 +6980,7 @@ Func_0A0_6BB3::
     call HLToDecimalDigits
     pop bc
     pop de
-    call Func_000_210D
+    call WriteTwoDigitTilesFromWC8C1
 
 Jump_0A0_6BEE::
     pop bc

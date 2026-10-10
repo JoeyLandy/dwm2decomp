@@ -364,7 +364,7 @@ Func_084_41F2::
     add a, c
     ldh [hFFC8], a
     ld c, $05
-    call Func_084_43AC
+    call RandomBelowC
     ld c, a
     ldh a, [hFFC8]
     add a, c
@@ -391,7 +391,7 @@ Jump_084_4241::
     xor a, a
     ldh [hFFC8], a
     ld c, $09
-    call Func_084_43AC
+    call RandomBelowC
     sla a
     sla a
     sla a
@@ -400,7 +400,7 @@ Jump_084_4241::
     add a, c
     ldh [hFFC8], a
     ld c, $08
-    call Func_084_43AC
+    call RandomBelowC
     ld c, a
     ldh a, [hFFC8]
     add a, c
@@ -441,7 +441,7 @@ Jump_084_4282::
 
 Jump_084_4291::
     ld c, $0A
-    call Func_084_43AC
+    call RandomBelowC
     add a, e
     ld e, a
     jr nc, Jump_084_429B
@@ -451,7 +451,7 @@ Jump_084_429B::
     ld a, [de]
     ld b, a
     ld c, $08
-    call Func_084_43AC
+    call RandomBelowC
     add a, b
     ld [hl+], a
     ld e, a
@@ -576,14 +576,16 @@ Jump_084_438C::
     pop hl
     ret
 
+; repeats NextRandomSeed until wCD04 & $0F is below C (C must be 1-16); returns A = that value (E-0077)
 ; 5 call sites from 1 routine (e.g. Func_084_41F2)
 ; reads: wCD04
-Func_084_43AC::
+RandomBelowC::
+Func_084_43AC:: ; address name
     call NextRandomSeed
     ld a, [wCD04]
     and a, $0F
     cp a, c
-    jr nc, Func_084_43AC
+    jr nc, RandomBelowC
     ret
 
 ; 3 call sites from 3 routines (e.g. LoadMapScreen, ScriptCommand0A_Run_Case04, ScriptCommand74_Run)
