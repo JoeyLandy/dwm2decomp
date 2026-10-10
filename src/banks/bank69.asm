@@ -1,7 +1,7 @@
 SECTION "Bank 69", ROMX[$4000], BANK[$69]
     db $69
 
-; 4 call sites from 4 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
+; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC38, hFFD0, wMapWidthScreens
 ; writes: wSpriteSlotCount, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
 ; points at: wSpriteSlots

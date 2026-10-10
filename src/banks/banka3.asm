@@ -83,7 +83,7 @@ Func_0A3_413F:: ; address name
     ret
 
 ; hFFC6 = the slot for the actor through its side's wC953 formation (Data_0A3_4181), $FF when none (E-0124)
-; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, Func_032_514C, PayActorMPCost, ...)
+; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, CheckFormationPartnersCanAct, PayActorMPCost, ...)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wC953
@@ -894,7 +894,7 @@ Jump_0A3_4B1A::
     jr nz, Jump_0A3_4B1A
 
 Jump_0A3_4B4C::
-    farcall Func_0F2_65E6
+    farcall ClampPartyHPAndMPToMax
     xor a, a
     ld [rRAMG], a
     ret

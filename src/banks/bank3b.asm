@@ -1221,7 +1221,7 @@ Func_03B_4711::
     ld hl, wD88B
     ld bc, $0003
     call FillBytes
-    farcall Func_03A_7AE3
+    farcall ListSideMonsterIdsToWC0A0
     ld a, d
     cp a, $03
     jr z, Jump_03B_4735
@@ -1541,7 +1541,7 @@ Func_03B_48E9:: ; address name
     ret
 
 ; the target's wD93F word -= Data_03B_492A[action - $19], floored at 0 (E-0124)
-; 2 call sites from 2 routines (e.g. Func_03B_4D1C, ApplyTargetWD93FReduction)
+; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithWD93FReduction, ApplyTargetWD93FReduction)
 ; reads: wBattleTarget, wBattleActionId
 ; points at: wD93F
 SubtractActionAmountFromTargetWD93F::
@@ -1581,7 +1581,7 @@ Data_03B_492A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $00, $0A, $00, $14, $00, $64, $00, $05, $00
 
 ; adds the word Data_03B_4949[action - $19] to wD89F, capped at 1800 (E-0122)
-; 2 call sites from 2 routines (e.g. Func_03B_4D1C, ApplyTargetWD93FReduction)
+; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithWD93FReduction, ApplyTargetWD93FReduction)
 ; reads: wBattleActionId
 AddActionAmountToWD89F::
 Func_03B_4934:: ; address name
@@ -1649,10 +1649,12 @@ Jump_03B_4987::
     ld [wD8A0], a
     ret
 
+; actions $24 onward: damage = random in the range from Data_03B_4A24[action - $24], then scaled by the target's resistance level for that element (85 percent at level 1, less above) (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
-Func_03B_4990:: ; heuristic: follows a terminator; C0
+RollTableDamageScaledByResistance:: ; heuristic: follows a terminator; C0
+Func_03B_4990:: ; address name
     ld a, [wBattleActionId]
     sub a, $24
     add a, a
@@ -1765,7 +1767,7 @@ Func_03B_4A34:: ; address name
     ret
 
 ; wBattleDamageLo/wD873 = RandomInRange(HL, BC) (E-0116)
-; 4 call sites from 3 routines (e.g. Func_03B_4990, RestoreTargetHPIfHurt_Sub01, RestoreTargetMPIfLow_Sub01)
+; 4 call sites from 3 routines (e.g. RollTableDamageScaledByResistance, RestoreTargetHPIfHurt_Sub01, RestoreTargetMPIfLow_Sub01)
 ; writes: wBattleDamageLo, wD873
 SetDamageRandomInRange::
 Func_03B_4A40:: ; address name
@@ -1788,7 +1790,7 @@ Func_03B_4A4C:: ; address name
     ret
 
 ; A = byte 0 of the target's 7-byte wDA72 record (E-0126)
-; 1 call site from 1 routine (e.g. Func_03B_4990)
+; 1 call site from 1 routine (e.g. RollTableDamageScaledByResistance)
 ; reads: wBattleTarget
 ; points at: wDA72
 TargetWDA72Byte0_Bank3B::
@@ -1797,7 +1799,7 @@ Func_03B_4A56:: ; address name
     jr Jump_03B_4A77
 
 ; A = byte 1 of the target's 7-byte wDA72 record (E-0126)
-; 3 call sites from 1 routine (e.g. Func_03B_4990)
+; 3 call sites from 1 routine (e.g. RollTableDamageScaledByResistance)
 ; reads: wBattleTarget
 ; points at: wDA73
 TargetWDA72Byte1_Bank3B::
@@ -1982,7 +1984,7 @@ Func_03B_4B02:: ; address name
     dw ApplyTargetWD93FReduction
     dw ApplyTargetWD93FReduction
     dw ApplyTargetWD93FReduction
-    dw Func_03B_4D1C
+    dw InflictStatus0Bit0WithWD93FReduction
     dw SetWD894AndMessage98
     dw JumpToEffectFailurePath4F15
     INCBIN "dwm2-cobi-us.gbc", $0ECB51, $41
@@ -2204,7 +2206,7 @@ Jump_03B_4CC8::
     ld a, [wBattleTarget]
     cp a, $03
     jr c, Jump_03B_4CE2
-    farcall Func_03A_7AE3
+    farcall ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
     jr z, Jump_03B_4CE2
@@ -2240,11 +2242,13 @@ Jump_03B_4D0E::
     ld bc, $0000
     jp Jump_03B_4EFA
 
+; reduces the target's wD93F (or adds to wD89F for local targets); when status bits 0-1 are clear and the chance roll passes, sets status bit 0 (message $75) (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABA, wBattleTarget
 ; writes: wDAC0, wDAC1, wDAC3
 ; points at: wBattleStatus
-Func_03B_4D1C:: ; heuristic: target of a pointer table; C0
+InflictStatus0Bit0WithWD93FReduction:: ; heuristic: target of a pointer table; C0
+Func_03B_4D1C:: ; address name
     call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_4D2C
     ld a, [wDABA]
@@ -2297,7 +2301,7 @@ Jump_03B_4D59::
     ld a, [wBattleTarget]
     cp a, $03
     jr c, Jump_03B_4DA3
-    farcall Func_03A_7AE3
+    farcall ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
     jr z, Jump_03B_4DA3
@@ -2318,7 +2322,7 @@ Jump_03B_4DAC::
     ld a, [wBattleTarget]
     cp a, $03
     jr c, Jump_03B_4DCF
-    farcall Func_03A_7AE3
+    farcall ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
     jr z, Jump_03B_4DCF
@@ -2423,7 +2427,7 @@ Jump_03B_4E5D::
     INCBIN "dwm2-cobi-us.gbc", $0ECE60, $6F
 
 ; clears wBattleDamageLo/wD873 (the damage word), then wDAC2 = L, wDAC0 = C, wDAC1 = B (the same instructions as the bank-$36 copy) (E-0073)
-; 1 call site from 1 routine (e.g. Func_03B_4D1C)
+; 1 call site from 1 routine (e.g. InflictStatus0Bit0WithWD93FReduction)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ClearDamageAndStoreWDAC0_Bank3B::
 Func_03B_4ECF:: ; address name
@@ -2451,7 +2455,7 @@ Jump_03B_4EEA::
     jr Jump_03B_4EF6
 
 ; wDAC3 = $B5 and the word wDAC0 = $0180 (E-0122)
-; 1 call site from 1 routine (e.g. Func_03B_4D1C)
+; 1 call site from 1 routine (e.g. InflictStatus0Bit0WithWD93FReduction)
 ; writes: wDAC3, wDAC0, wDAC1
 SetWDAC3B5AndWDAC0To0180::
 Func_03B_4EF1:: ; address name
@@ -2545,7 +2549,7 @@ Jump_03B_4F6E::
     ret
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
-; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, Func_03B_4D1C, ApplyTargetWD93FReduction)
+; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, InflictStatus0Bit0WithWD93FReduction, ApplyTargetWD93FReduction)
 ; reads: wC58A, wC57F, wBattleTarget
 TargetOnLocalSide_Bank3B::
 Func_03B_4F74:: ; address name
@@ -2592,7 +2596,7 @@ Func_03B_4FB8:: ; address name
     ret
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case08, Func_03B_4D1C)
+; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case08, InflictStatus0Bit0WithWD93FReduction)
 ; points at: wD095
 SetBit2OfWD095Indexed_Bank3B::
 Func_03B_4FC5:: ; address name

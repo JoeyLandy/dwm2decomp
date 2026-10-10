@@ -886,7 +886,7 @@ Jump_037_4E94::
     jr nz, Jump_037_4E94
     xor a, a
     ld [rRAMG2], a
-    call Func_037_5BC6
+    call UnpackLinkRecordToWD09D
     ld a, $07
     call ShowStringIndexA_Bank37
     call RunFunc5A5DAt0278AndStep
@@ -1902,7 +1902,7 @@ Jump_037_54D1:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     xor a, a
     ld [wD781], a
     ld [wD782], a
@@ -2026,7 +2026,7 @@ Jump_037_55A0:: ; address name
     ld a, $C7
     ld [wD7F4], a
     farcall DrawFamilyIconAndCountForWCA38
-    farcall Func_0F2_4B05
+    farcall DrawWCA83ExpAndToNextLevel
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2110,7 +2110,7 @@ Jump_037_563F::
 ; writes: wD781
 Func_037_4AFD_Case0D_Case16::
 Jump_037_564E:: ; address name
-    farcall Func_0F2_4F47
+    farcall DrawLevelAndStatusRowForWCA81
     ld a, $0F
     ld [wD781], a
     ret
@@ -2145,7 +2145,7 @@ Jump_037_5668:: ; address name
 ; writes: wD781
 Func_037_4AFD_Case0D_Case19::
 Jump_037_5676:: ; address name
-    farcall Func_01F_7601
+    farcall ShowWCA2BSkillNamesOrNone
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2241,7 +2241,7 @@ Jump_037_5707::
 ; writes: wC52D, wC52E, wC52F, wC530, wD781
 Func_037_4AFD_Case0D_Case1D::
 Jump_037_5715:: ; address name
-    farcall Func_0F2_4F47
+    farcall DrawLevelAndStatusRowForWCA81
     ld hl, vTiles1 + $270
     ld a, l
     ld [wC52D], a
@@ -3047,11 +3047,13 @@ Func_037_5BB6:: ; address name
     ld [de], a
     ret
 
+; unpacks the received partner record at wC986 into wD09D: names, species, family, parents, skills and scaled stats (E-0129)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case12)
 ; reads: wD043
 ; writes: wD043
 ; points at: wD09D, wC986
-Func_037_5BC6::
+UnpackLinkRecordToWD09D::
+Func_037_5BC6:: ; address name
     ld hl, wD09D
     ld de, wC986
     ld a, [de]
@@ -3096,7 +3098,7 @@ Jump_037_5C07::
     call MapAndCompactSkillList63D3
     ld b, $12
     call CopyBBytesHLToDE_Bank37
-    call Func_037_5E3E
+    call ScaleStatWordsToLinkFormat
     ld a, [de]
     ld [hl+], a
     inc de
@@ -3205,7 +3207,7 @@ Jump_037_5C95::
     ret
 
 ; DE += 4, writes two $FF bytes and falls into the '???' name entry (E-0126)
-; 1 call site from 1 routine (e.g. Func_037_5BC6)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
 WriteFFPairAndUnknownName::
 Func_037_5CBC:: ; address name
     ld a, e
@@ -3219,7 +3221,7 @@ Func_037_5CBC:: ; address name
     ld [hl+], a
 
 ; calls WriteUnknownNamePlaceholder_Bank37 and falls into it again (E-0126)
-; 1 call site from 1 routine (e.g. Func_037_5BC6)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
 WriteUnknownNameEntry_5CC8::
 Func_037_5CC8:: ; address name
     call WriteUnknownNamePlaceholder_Bank37
@@ -3289,7 +3291,7 @@ Func_037_5CF1:: ; address name
     ret
 
 ; copies B bytes from HL to DE; HL and DE advance, B = 0 (E-0115)
-; 5 call sites from 3 routines (e.g. UnpackLinkRecordToWCA2B, Copy26BytesThenWD034, Func_037_5BC6)
+; 5 call sites from 3 routines (e.g. UnpackLinkRecordToWCA2B, Copy26BytesThenWD034, UnpackLinkRecordToWD09D)
 CopyBBytesHLToDE_Bank37::
 Func_037_5D08:: ; address name
     ld a, [de]
@@ -3363,7 +3365,7 @@ Jump_037_5D5D::
     ret
 
 ; converts 8 name bytes at DE to the game's glyphs ($0A-$3D + $1A, special marks $93-$95, $AB, $B5), padding after the fourth with $F0 (E-0127)
-; 6 call sites from 1 routine (e.g. Func_037_5BC6)
+; 6 call sites from 1 routine (e.g. UnpackLinkRecordToWD09D)
 ConvertNameBytesFromLinkFormat::
 Func_037_5D5E:: ; address name
     ld c, $00
@@ -3426,7 +3428,7 @@ Jump_037_5DA1::
     ret
 
 ; reads a word index at DE (DE += 2) and appends the byte at $6175 + index to [HL+] (E-0121)
-; 3 call sites from 1 routine (e.g. Func_037_5BC6)
+; 3 call sites from 1 routine (e.g. UnpackLinkRecordToWD09D)
 AppendTable6175ByteForWordAtDE::
 Func_037_5DA9:: ; address name
     push hl
@@ -3448,7 +3450,7 @@ Func_037_5DA9:: ; address name
     ret
 
 ; A = [DE] & $0F (DE += 1); for 9 looks up the species at Data_037_5FC7[[HL - 1]] and uses its family; 10 becomes 9; stores it at [HL+] (E-0124)
-; 1 call site from 1 routine (e.g. Func_037_5BC6)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 FamilyNibbleOrSpeciesFamily::
@@ -3486,7 +3488,7 @@ Jump_037_5DE9::
     ret
 
 ; maps $21 bytes through Data_037_63D3 and compacts the 8- and $19-entry lists, dropping $FE/$FF entries (E-0127)
-; 1 call site from 1 routine (e.g. Func_037_5BC6)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
 ; points at: wD21D, wD225
 MapAndCompactSkillList63D3::
 Func_037_5DEB:: ; address name
@@ -3559,8 +3561,10 @@ Jump_037_5E36::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_037_5BC6)
-Func_037_5E3E::
+; converts three stat words at DE: 999 becomes $01FF/$00FF, otherwise word * $33 or $19 / 100 rounded up; stores them at HL (E-0129)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
+ScaleStatWordsToLinkFormat::
+Func_037_5E3E:: ; address name
     push hl
     ld a, [de]
     ld c, a

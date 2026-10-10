@@ -2864,7 +2864,7 @@ Jump_016_5348::
     ret
 
 Jump_016_5355::
-    call Func_016_56E4
+    call CollectUniqueEncounterIdsToWD09F
     ret
 
 ; entry 15 of the `rst $00` table in Func_016_52C9
@@ -3527,15 +3527,17 @@ Func_016_56D9:: ; address name
     bit 7, [hl]
     ret
 
+; for special maps copies the eight monster entries of the current screen (AddressOfWCD10EntryForCurrentScreen) to wD09F, removes duplicates and stores the count in wD09D; normal maps use Func_00A_4D5E (E-0129)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0C)
 ; reads: wCC44, wD09F, wD0A0, wD09E
 ; writes: wD09E, wD09D
 ; points at: wD09F, wD0A1
-Func_016_56E4::
+CollectUniqueEncounterIdsToWD09F::
+Func_016_56E4:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_016_56F2
-    farcall Func_00A_4D5E
+    farcall CollectUniqueEncounterIdsToWD09F_Sub01
     ret
 
 Jump_016_56F2::
@@ -3634,7 +3636,7 @@ Jump_016_5759::
     ret
 
 ; HL = wCD10 + 2 * an index from the current map screen and the wCD70 table (index $20 when bit 3 of hFF8C is set) (E-0127)
-; 1 call site from 1 routine (e.g. Func_016_56E4)
+; 1 call site from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F)
 ; reads: hFF8C, wCC44, hMapScreenY, hMapScreenX, wCC45
 ; points at: wCD70, wCD10, wCD88
 AddressOfWCD10EntryForCurrentScreen::
@@ -4593,7 +4595,7 @@ Jump_016_5D51:: ; address name
     jr nc, Jump_016_5D71
     and a, $01
     jr z, Jump_016_5D7A
-    farcall Func_061_606D
+    farcall KeyWorldAreaEncounterIndex
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_016_5D7A
@@ -8210,11 +8212,13 @@ Jump_016_7577::
 Data_016_75EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E
 
+; checks the save; when valid, loads the player name, play time, party summaries and other title-screen details from SRAM bank 1 into wD0D5 onward (E-0129)
 ; 1 call site from 1 routine (e.g. Func_016_7783)
 ; reads: hFFC6, sBC00, sBC01, sBC02, sBC03, sBD3A, sBE0D, sBB07, ...
 ; writes: wBattlerRecords, rRAMG, rRAMB, wD0E5, wD09D, wD09E, wD09F, wD10A, ...
 ; points at: wBattlerRecords, sBB0F, wD0D6, sBD30, wD0E0, wD0E6, wD0F2, wD0FE, ...
-Func_016_75EE::
+LoadSaveFileSummary::
+Func_016_75EE:: ; address name
     ld hl, wBattlerRecords
     ld bc, $003C
     xor a, a
@@ -8306,7 +8310,7 @@ Jump_016_76B5::
     ret
 
 ; the same 7 bytes as CopyBytesDEFromHL (34:406E)
-; 2 call sites from 1 routine (e.g. Func_016_75EE)
+; 2 call sites from 1 routine (e.g. LoadSaveFileSummary)
 CopyBytesDEFromHL_Bank16::
 Func_016_76B6:: ; address name
     ld a, [hl+]
@@ -8317,7 +8321,7 @@ Func_016_76B6:: ; address name
     ret
 
 ; for SRAM bank-1 record wD09D writes its family nibble, a packed field from bytes $21/$27 (Func_016_7720) and field $62 & $7F to the buffer at wD09E (E-0127)
-; 3 call sites from 1 routine (e.g. Func_016_75EE)
+; 3 call sites from 1 routine (e.g. LoadSaveFileSummary)
 ; reads: wD09D, wD09E, wD09F, wD0A0, wD0A1
 ; writes: wD0A0, wD0A1
 BuildRecordSummaryForWD09D::
@@ -8501,7 +8505,7 @@ Func_016_7783:: ; heuristic: follows a terminator; C0
     ld [wC527], a
 
 Jump_016_77A6::
-    call Func_016_75EE
+    call LoadSaveFileSummary
     ld a, [wBattlerRecords]
     or a, a
     jp nz, Jump_016_7832
@@ -8627,13 +8631,13 @@ Jump_016_788B::
     ld b, a
     ld c, $00
     ld hl, wD0E6
-    call Func_016_78F9
+    call DrawSaveSummaryPartyEntryC
     ld c, $01
     ld hl, wD0F2
-    call Func_016_78F9
+    call DrawSaveSummaryPartyEntryC
     ld c, $02
     ld hl, wD0FE
-    call Func_016_78F9
+    call DrawSaveSummaryPartyEntryC
     call BlankTwoTileCellByGameMode
     call ShowKeyNameOrStringForWD10B
     ld hl, vTiles1
@@ -8660,7 +8664,7 @@ Func_016_78C7:: ; address name
     inc de
 
 ; writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. Func_016_7783, Func_016_78F9)
+; 2 call sites from 2 routines (e.g. Func_016_7783, DrawSaveSummaryPartyEntryC)
 ; points at: wC8C1
 WriteTwoDigitTilesWC8C1NoBlank_Bank16::
 Func_016_78CF:: ; address name
@@ -8675,7 +8679,7 @@ Func_016_78CF:: ; address name
     ret
 
 ; window at DE: copies 10 bytes from HL to wC130 with a $F0 terminator and shows it (ShowString_Bank08) (E-0122)
-; 2 call sites from 2 routines (e.g. Func_016_7783, Func_016_78F9)
+; 2 call sites from 2 routines (e.g. Func_016_7783, DrawSaveSummaryPartyEntryC)
 ; writes: wC52D, wC52E
 ; points at: wC130
 ShowTenByteNameAtDE::
@@ -8698,11 +8702,13 @@ Jump_016_78E9::
     farcall ShowString_Bank08
     ret
 
+; for summary entry C (below B) loads its family icon, shows its 10-byte name and writes its level; otherwise blanks the entry (E-0129)
 ; 3 call sites from 1 routine (e.g. Func_016_7783)
 ; reads: wGameMode
 ; writes: wD09D, wD09E
 ; points at: hFFF7
-Func_016_78F9::
+DrawSaveSummaryPartyEntryC::
+Func_016_78F9:: ; address name
     ld a, c
     cp a, b
     jr nc, Jump_016_7969
@@ -8908,7 +8914,7 @@ Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $C2, $A2, $C2, $E2, $C2
 
 ; writes the 16-byte icon tile of family wD09D (Data_016_7ACD + 16 * family) to VRAM tile wD09E through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)
-; 19 call sites from 19 routines (e.g. Func_016_78F9, ShowSpeciesNameAndIconForSlotB, ScriptCommandF6_Run_Case10_Case04, ScriptCommandF6_Run_Case10_Case06_Sub02, ...)
+; 19 call sites from 19 routines (e.g. DrawSaveSummaryPartyEntryC, ShowSpeciesNameAndIconForSlotB, ScriptCommandF6_Run_Case10_Case04, ScriptCommandF6_Run_Case10_Case06_Sub02, ...)
 ; reads: wD09D
 LoadFamilyIconTileForWD09D::
 Func_016_7A48:: ; address name

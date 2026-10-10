@@ -2759,7 +2759,7 @@ Jump_033_6024::
     ld [wD7A9], a
     xor a, a
     ld [rRAMG2], a
-    farcall Func_01D_5F9C
+    farcall MovePartyRecordsToFrontOfList
     ret
 
 ; the same 16 bytes as ShowStringA10_Bank1B (1B:7439)

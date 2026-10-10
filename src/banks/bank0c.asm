@@ -2611,7 +2611,7 @@ Func_00C_5177:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     ret
 
 Data_00C_51AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3363,7 +3363,7 @@ Jump_00C_662D::
     jp Jump_00C_6663
 
 Jump_00C_663F::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     and a, a
     jr z, Jump_00C_664E
@@ -4780,7 +4780,7 @@ Jump_00C_6F5E:: ; address name
     jr Jump_00C_6F99
 
 Jump_00C_6F8B::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     ld [wC892], a
     and a, a

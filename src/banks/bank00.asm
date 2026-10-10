@@ -2377,7 +2377,7 @@ Func_000_0DA8:: ; address name
     ret
 
 ; wC56F-wC571 = wC5E9-wC5EB; then clears wFadeLevel and the four bytes after it and wFadeState, and sets wC56D = 7 and wC56E = $1F (E-0090)
-; 4 call sites from 4 routines (e.g. Func_000_0150, Func_002_5F9B, ResetLinkScreenPalettes, ResetScreenPalettes_E0)
+; 4 call sites from 4 routines (e.g. Func_000_0150, SendSGBFieldPaletteSet, ResetLinkScreenPalettes, ResetScreenPalettes_E0)
 ; reads: wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wC56D, wC56E
 ; points at: wC56F, wFadeLevel
@@ -2408,7 +2408,7 @@ Jump_000_0DDB::
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
-; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, Func_002_5F9B, RunWC8C7Phase_Case00, ...)
+; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, SendSGBFieldPaletteSet, RunWC8C7Phase_Case00, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wFadeLevel, wFadeDelay, wFadeDelayCounter
 ; points at: wC4FF, wOBJPaletteBuffer, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
@@ -3955,7 +3955,7 @@ Jump_000_16DE::
     ret
 
 ; E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D
-; 36 call sites from 30 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, Func_005_667F, AIScore_BiAttack_Sub01, ...)
+; 36 call sites from 30 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, AIGateCompareAllyStatAverages, AIScore_BiAttack_Sub01, ...)
 Divide24ByA::
 Func_000_16E2:: ; address name
     ld d, $18
@@ -4528,7 +4528,7 @@ Jump_000_19A4::
     ret
 
 ; loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set
-; 4 call sites from 4 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
+; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hFFC6, hFFC7, hFFC8, ...
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -4930,7 +4930,7 @@ Func_000_1BAD:: ; address name
     ret
 
 ; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use RunWCC44Type_420D) (E-0128)
-; 3 call sites from 3 routines (e.g. Func_002_4628, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
+; 3 call sites from 3 routines (e.g. InitFieldScreen, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, hMapId
 ; writes: rROMB0, wC46B, wC46C, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, ...
 LoadMapHeader::
@@ -5270,7 +5270,7 @@ Jump_000_1E23::
     ret
 
 ; HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF; on CGB then draws the attribute bytes at wD000 (rSVBK = 2), masked to the palette bits (& $07), into VRAM bank 1; HL kept (E-0071)
-; 16 call sites from 16 routines (e.g. Func_002_4628, RedrawScreenBufferIfWC8CDBit7, FieldModeStateDispatch_Case02_Sub01_Sub02, GameMode5_Update_Case01_Case06_Case01, ...)
+; 16 call sites from 16 routines (e.g. InitFieldScreen, RedrawScreenBufferIfWC8CDBit7, FieldModeStateDispatch_Case02_Sub01_Sub02, GameMode5_Update_Case01_Case06_Case01, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -5500,7 +5500,7 @@ Jump_000_1F40::
     ret
 
 ; A is first passed through MapIndexViaWC6FE; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress
-; 138 call sites from 100 routines (e.g. StoreHFFC6ToSRAMRecordBytes, LoadSRAMRecordBytesToHFFC6, DebugBattleSetup_Update_Sub01_Sub01, Func_003_67B0, ...)
+; 138 call sites from 100 routines (e.g. StoreHFFC6ToSRAMRecordBytes, LoadSRAMRecordBytesToHFFC6, DebugBattleSetup_Update_Sub01_Sub01, ShowRecordSkillPageNames_Bank03, ...)
 ; points at: sA000
 SRAMRecordAddressMapped::
 Func_000_1F49:: ; address name
@@ -6128,7 +6128,7 @@ Jump_000_2221::
     ret
 
 ; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToWC8CF, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
-; 22 call sites from 22 routines (e.g. Func_002_4628, RunWC8C7Phase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
+; 22 call sites from 22 routines (e.g. InitFieldScreen, RunWC8C7Phase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
 ; reads: wC6FD
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, rRAMG, wC8D9
 ; points at: wC6FE
@@ -10741,7 +10741,7 @@ Func_000_3E7A:: ; address name
     ret
 
 ; CompareHLToBC with shortcuts when BC or HL is zero: equal zeros give A = 0 and NC, HL = 0 < BC gives carry (E-0124)
-; 5 call sites from 4 routines (e.g. Func_005_667F, ChooseTarget_MegaMagic, ChooseTarget_Blaze, ChooseTarget_Beat)
+; 5 call sites from 4 routines (e.g. AIGateCompareAllyStatAverages, ChooseTarget_MegaMagic, ChooseTarget_Blaze, ChooseTarget_Beat)
 CompareHLToBCFastZero:: ; heuristic: follows a terminator; C0
 Func_000_3E80:: ; address name
     ld a, b

@@ -312,7 +312,7 @@ Jump_015_41BD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandED_Run_Case02::
 Jump_015_41E1:: ; address name
-    call Func_015_6478
+    call HandleThreeOptionMenuInput_15
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommandED_Run
@@ -2650,7 +2650,7 @@ ScriptCommandED_Run_Case05_Case04::
 Jump_015_51D6:: ; address name
     ld a, $01
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4597,7 +4597,7 @@ Jump_015_5F1F:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4832,7 +4832,7 @@ ScriptCommandED_Run_Case0F_Case04::
 Jump_015_60AC:: ; address name
     ld a, $01
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5432,10 +5432,12 @@ Func_015_645F:: ; address name
     call DrawScreenBufferRect_Bank15
     ret
 
+; up/down moves wD786 over three options with sound $69; A chooses (option 2 cancels), sets wTwoChoiceCursor and requests script $80; B cancels (E-0129)
 ; 2 call sites from 2 routines (e.g. ScriptCommandED_Run_Case02, ScriptCommandEF_Run_Case02)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD786, wD780
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wC89D, wD780, wD7AB, wD7AD, wD7AF, ...
-Func_015_6478::
+HandleThreeOptionMenuInput_15::
+Func_015_6478:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_015_6494
@@ -5527,7 +5529,7 @@ Jump_015_6511::
     ret
 
 ; once the joypad repeat timer reaches $14, cycles wD787 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
-; 4 call sites from 1 routine (e.g. Func_015_6478)
+; 4 call sites from 1 routine (e.g. HandleThreeOptionMenuInput_15)
 ; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
 BlinkCursorWD787_Bank15::
@@ -5550,7 +5552,7 @@ Jump_015_653E::
     jr Jump_015_6548
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. Func_015_6478)
+; 2 call sites from 1 routine (e.g. HandleThreeOptionMenuInput_15)
 ; reads: wD786
 DrawBlankTileC3_6542::
 Func_015_6542:: ; address name
@@ -5558,7 +5560,7 @@ Func_015_6542:: ; address name
     jr Jump_015_6548
 
 ; B = $BC, then writes B at the scroll position + Data_015_6566[wD786] (E-0124)
-; 1 call site from 1 routine (e.g. Func_015_6478)
+; 1 call site from 1 routine (e.g. HandleThreeOptionMenuInput_15)
 ; reads: wD786
 DrawArrowTileBCAtWD786Entry_Bank15::
 Func_015_6546:: ; address name
@@ -6103,7 +6105,7 @@ Jump_015_67E1::
     ret
 
 ; HL = table of addresses, C = count: stores tile $C3 at the address in each of the first C entries (StoreBAtWordTableEntry_Bank15) (E-0074)
-; 9 call sites from 9 routines (e.g. Func_015_6478, ScriptCommandED_Run_Case04_Case25, ScriptCommandED_Run_Case04_Case12, ScriptCommandED_Run_Case04_Case10, ...)
+; 9 call sites from 9 routines (e.g. HandleThreeOptionMenuInput_15, ScriptCommandED_Run_Case04_Case25, ScriptCommandED_Run_Case04_Case12, ScriptCommandED_Run_Case04_Case10, ...)
 BlankWordTableTargets::
 Func_015_67E5:: ; address name
     ld a, c
@@ -6469,7 +6471,7 @@ Jump_015_69B1::
     ld [wD7A9], a
     xor a, a
     ld [rRAMG2], a
-    farcall Func_01D_5F9C
+    farcall MovePartyRecordsToFrontOfList
     ret
 
 ; with SRAM bank 0 enabled: wD7F1 = bit 0 of byte $0E of record wD7B4 (LoadSRAMRecordByte) (E-0119)

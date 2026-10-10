@@ -81,7 +81,7 @@ Func_060_4076:: ; address name
     call LoadKeyWorldParamsForWC833
     call Func_060_408F
     call FillWCD11LevelsForWCD05
-    call Func_060_4274
+    call RollKeyWorldMonsterTableWCD50
     call FillWCD51LevelsSlope
     call RollKeyWorldMonsterIds
     call RollKeyWorldEncounterTable
@@ -260,11 +260,13 @@ Jump_060_4267::
     jr nz, Jump_060_423C
     ret
 
+; fills 8 two-byte entries from wCD50 with random monster ids from the band lists (Data_060_4123 row wCD02) (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD04, wCD02, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wCD10
-Func_060_4274::
+RollKeyWorldMonsterTableWCD50::
+Func_060_4274:: ; address name
     ld b, $08
     ld a, $40
     ld de, wCD10
@@ -623,11 +625,13 @@ Jump_060_45E7::
     inc hl
     jp Jump_060_45B6
 
+; like RollKeyWorldEncounterTable, with each entry's level from wCD05 / 5 * 7 plus the area value, capped at 99 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD05, hFFC8
 ; writes: hFFC6, hFFC8
 ; points at: wCE7B, wCD7B, wCD74
-Func_060_4607:: ; heuristic: follows a terminator; C0
+RollKeyWorldEncounterTableLevels:: ; heuristic: follows a terminator; C0
+Func_060_4607:: ; address name
     ld b, $10
     ld hl, wCE7B
     xor a, a
@@ -802,7 +806,7 @@ Jump_060_46FE::
     ret
 
 ; hFFC7 = wCCF7[random & 1], stepping back over $FF entries (E-0124)
-; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, Func_060_4607)
+; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
 ; reads: wCD03
 ; writes: hFFC7
 ; points at: wCCF7
@@ -829,7 +833,7 @@ Jump_060_4721::
     ret
 
 ; DE = a random entry of the list Data_060_6D6D[16 * hFFC7 + 2 * hFFC6]; carry when valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
-; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, Func_060_4607)
+; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
 ; reads: hFFC7, hFFC6, wCD04
 PickRandomMonsterFromBandList::
 Func_060_4724:: ; address name
@@ -901,7 +905,7 @@ Jump_060_476C::
     ret
 
 ; A = 2-7 by thresholds 20, 40, 60, 70, 80, 90, 95 (E-0125)
-; 3 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, Func_060_4607)
+; 3 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
 BandForA_4773::
 Func_060_4773:: ; address name
     cp a, $14
@@ -1664,7 +1668,7 @@ Jump_060_4FCF::
     ld a, b
     cp a, $04
     jr nz, Jump_060_4FA2
-    call Func_060_4FEA
+    call PlaceTwoRandomOpenCells
     pop hl
     inc hl
     inc hl
@@ -1682,10 +1686,12 @@ Jump_060_4FE4::
     ld [hl], $FF
     ret
 
+; picks two random open cells (ReadKeyWorldCellIsSolid) in the areas named by hFFC7 and hFFC8, avoiding the previous cell, and stores their positions (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub06)
 ; reads: hFFC7, wCD04, hFFCA, hFFC9, hFFC8
 ; writes: hFFCA, hFFC9
-Func_060_4FEA::
+PlaceTwoRandomOpenCells::
+Func_060_4FEA:: ; address name
     ldh a, [hFFC7]
     and a, $FE
     add a, a
@@ -1711,7 +1717,7 @@ Func_060_4FEA::
     ldh [hFFC9], a
     call ReadKeyWorldCellIsSolid
     or a, a
-    jr z, Func_060_4FEA
+    jr z, PlaceTwoRandomOpenCells
     ldh a, [hFFC9]
     and a, $0F
     swap a
@@ -1729,7 +1735,7 @@ Func_060_4FEA::
     cp a, c
     jr nz, Jump_060_5034
     pop hl
-    jr Func_060_4FEA
+    jr PlaceTwoRandomOpenCells
 
 Jump_060_5034::
     pop hl
@@ -1773,7 +1779,7 @@ Jump_060_5036::
     ret
 
 ; reads the cell at (hFFC9, hFFCA) from the area map chunk in wCD60; A = 1 when its byte is not $FF, else 0 (E-0128)
-; 3 call sites from 2 routines (e.g. Func_060_528B, Func_060_4FEA)
+; 3 call sites from 2 routines (e.g. Func_060_528B, PlaceTwoRandomOpenCells)
 ; reads: hFFCA, hFFC9
 ReadKeyWorldCellIsSolid::
 Func_060_5075:: ; address name
@@ -2350,7 +2356,7 @@ Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
 ; wCD0F = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
-; 3 call sites from 3 routines (e.g. Func_060_62F9, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; writes: wCD0F
 SetWCD0FBandForA::
 Func_060_53C3:: ; address name
@@ -2379,7 +2385,7 @@ Jump_060_53DF::
     ld [wCD0F], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_060_62F9, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 2 call sites from 2 routines (e.g. RefreshKeyWorldObjectsOnEntry, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; reads: wCD0D, wCD04, wCD0E, hFFC9, hFFCA, hFFC6, wCC47, hFFCB, ...
 ; writes: wC94F, hFFC9, hFFCA, hFFCB
 ; points at: wCC4C
@@ -2518,7 +2524,7 @@ Jump_060_54AB::
     ld a, $01
     ret
 
-; 3 call sites from 3 routines (e.g. Func_060_62F9, RemoveWCC48EntryMatching, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, RemoveWCC48EntryMatching, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; reads: wCD0F, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_060_54BB::
@@ -3609,11 +3615,13 @@ Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_060_6866
     db $10, $6A, $68
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run_Case07)
+; on key-world maps with bit 7 of wC893 set: sets the object count wCC47 from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wC890 object (E-0129)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
 ; reads: wCC44, wC893, wC833, wCD0F, wCC47, wC88E, wC891, wCC42, ...
 ; writes: wC893, wCC47, hFFC6
 ; points at: wCC48, wCC4C
-Func_060_62F9::
+RefreshKeyWorldObjectsOnEntry::
+Func_060_62F9:: ; address name
     ld a, [wCC44]
     cp a, $80
     ret nz
@@ -3672,7 +3680,7 @@ Jump_060_634E::
     ld a, [wCC47]
     sub a, b
     ld [wCC47], a
-    jr z, Func_060_62F9
+    jr z, RefreshKeyWorldObjectsOnEntry
     ld a, [wC88E]
     or a, a
     ret z
@@ -3711,7 +3719,7 @@ Jump_060_6382::
 Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run_Case07)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
 ; reads: wCC44, wC893, hMapId
 ; writes: wCC47, wCD0F, hFFC6
 Func_060_639D::

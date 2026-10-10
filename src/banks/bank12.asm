@@ -4392,11 +4392,13 @@ Func_012_5C31:: ; address name
     ld b, $7E
     jr Jump_012_5C4E
 
+; decompresses sprite graphics from bank $7E to vTiles0 + $700 (with a CGB palette), places it 16 pixels in front of the player and advances wScriptStep (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC195, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wMessageIndex, wMessageGroup, wFollowerRecords, wC8F4, wC8F9, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
-Func_012_5C3F:: ; heuristic: follows a terminator; C0
+SpawnScriptSpriteInFrontOfPlayer:: ; heuristic: follows a terminator; C0
+Func_012_5C3F:: ; address name
     dec a
     jr nz, Jump_012_5C49
     ld de, $5A15
@@ -5507,7 +5509,7 @@ Jump_012_62C9::
     ret
 
 Jump_012_62DA::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_012_62EB
@@ -6589,11 +6591,13 @@ Func_012_6893:: ; address name
     call RunFunc722AAnd6EB7_Sub01
     ret
 
+; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
 ; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, DispatchTalkEvent_Case01_Case65, ...)
 ; reads: hFFC6, hFFC8, hFFC7, hFFD0, wC966, wCD03, wCD04, wC836
 ; writes: wC966, hFFC6, hFFC7, hFFD0, wC836
 ; points at: wC70A, wC787
-Func_012_689A::
+GenerateNewKeyEntry::
+Func_012_689A:: ; address name
     xor a, a
     ld [wC966], a
 
@@ -6689,7 +6693,7 @@ Jump_012_68FF::
     ret
 
 ; hFFC6 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack bit 7 of byte 3 (E-0125)
-; 3 call sites from 3 routines (e.g. Func_012_689A, ScriptStepCheckKeyListFull_6A80, ScriptStepCheckKeyListFull_6B45)
+; 3 call sites from 3 routines (e.g. GenerateNewKeyEntry, ScriptStepCheckKeyListFull_6A80, ScriptStepCheckKeyListFull_6B45)
 ; writes: hFFC6
 ; points at: wKeyList
 FindFreeKeySlotToHFFC6::
@@ -6735,7 +6739,7 @@ Jump_012_6948::
     ret
 
 ; writes key entry hFFC6: byte 0 = hFFC7 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hFFC7-hFFC9 (E-0125)
-; 12 call sites from 10 routines (e.g. Func_012_689A, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
+; 12 call sites from 10 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
 ; reads: hFFC6, hFFC7, wCD05, hFFC8, hFFC9
 ; writes: hFFC6
 WriteKeyEntryHFFC6::
@@ -6950,7 +6954,7 @@ Jump_012_6A5D::
     ret
 
 ; on map $7F or $92 at screen (0, 0), or with wCC44 = $82, runs field command $12 and places objects at wCBD3/4 and wCBCF (E-0127)
-; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
 ; writes: hFFC6, wCBD3, wCBD4, wCBCF
 PlaceSpecialMapObjectsOnEntry::
@@ -7130,7 +7134,7 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
 ; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
-; 51 call sites from 49 routines (e.g. PlaceSpecialMapObjectsOnEntry, Func_002_4628, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
+; 51 call sites from 49 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
 ; reads: hFFC6
 RunFieldCommandHFFC6::
 Func_012_6B98:: ; address name
@@ -8009,7 +8013,7 @@ Data_012_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B04C, $58
 
 ; wC8FE = $FF; on town maps (or special maps of type 0) finds the wCC48 entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
-; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC47, wC8FE, wIsCGB
 ; writes: wC8FE, wC900, wC8FF, wC527
 ; points at: wCC48, wOBJPaletteBuffer
@@ -8083,7 +8087,7 @@ Jump_012_7101::
     jr Jump_012_715E
 
 ; on maps from $30 (or special map $85) finds the wCCEB entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
-; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, wCCE9, hMapScreenX, hMapScreenY, wC8FE, wIsCGB
 ; writes: wCCE9, wC900, wC8FF, wC8FE, wC527
 ; points at: wCCEB, wOBJPaletteBuffer
@@ -9849,7 +9853,7 @@ Func_012_7B9F:: ; address name
     ret
 
 ; returns unless Func_012_7D5E is 0, wC8FE is $FF and no script runs; then, unless bit 7 of wCC44 is set, wC935 = 0 (E-0122)
-; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
 ; reads: wC8FE, wScriptRunning, wCC44, wC935, wC5E8, wCB83, wCB84, wC634
 ; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wSpriteSlots, wCB80, wCB82, ...
 ClearWC935WhenFieldIdle::

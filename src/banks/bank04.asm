@@ -6,7 +6,7 @@ SECTION "Bank 04", ROMX[$4000], BANK[$04]
 FieldStateCommonUpdate::
 Func_004_4001:: ; address name
     call AdvanceHFF99AndRunHFF8BMode
-    call Func_004_44CE
+    call UpdateAndDrawSpriteSlots
     ret
 
 ; when wC88D bit 7 is set: clears wC88D, wSpriteSlotCount = wC83A and the $50 bytes at wC83B go back to wSpriteSlots (undoes SnapshotSpritesForSave) (E-0117)
@@ -623,11 +623,13 @@ Func_004_449F:: ; address name
     ld [wCBCC], a
     ret
 
+; unless bit 7 of wC468 is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
 ; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunWCFA8StateWhenNotFading_Shared01, GameMode6_Update_Shared06, GameMode5_Update_Case07_Sub01_Sub03, ...)
 ; reads: wC468, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hFFC6
 ; writes: hFFC6, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
 ; points at: wSpriteSlots
-Func_004_44CE::
+UpdateAndDrawSpriteSlots::
+Func_004_44CE:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -729,7 +731,7 @@ Jump_004_455F::
     ret
 
 ; for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for its type byte (jump table of six) (E-0124)
-; 1 call site from 1 routine (e.g. Func_004_44CE)
+; 1 call site from 1 routine (e.g. UpdateAndDrawSpriteSlots)
 ; reads: wSpriteSlotCount
 ; points at: wSpriteSlots
 UpdateSpriteSlots::
@@ -1664,7 +1666,7 @@ Jump_004_4A43::
     INCBIN "dwm2-cobi-us.gbc", $010A46, $62
 
 ; hFF8B = sprite mode from story flags $19F, $25 and 2 and bit 3 of hFF8C, then loads the matching player and follower sprite graphics (E-0128)
-; 32 call sites from 32 routines (e.g. Func_002_4628, RunWC8C7Phase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
+; 32 call sites from 32 routines (e.g. InitFieldScreen, RunWC8C7Phase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
 ; reads: hFF8C, hFF8B
 ; writes: hFF8B, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 LoadPlayerAndFollowerSpriteGraphics::

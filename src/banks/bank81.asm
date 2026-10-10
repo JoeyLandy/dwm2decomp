@@ -1580,7 +1580,7 @@ Data_081_5451:: ; heuristic: target of a monotone pointer table; C0
     db $FF, $0A
 
 ; copies three bytes of table $555D entry ($5486[wD0A6] * $129 + 3 * (wD0E8 - 1)) to wD0EA (E-0121)
-; 1 call site from 1 routine (e.g. Func_037_5BC6)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
 ; reads: wD0A6, wD0E8
 ; points at: wD0EA
 LoadTable555DEntryForWD0A6ToWD0EA::

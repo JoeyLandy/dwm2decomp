@@ -1641,7 +1641,7 @@ Jump_061_5443:: ; address name
     ldh [rSVBK], a
 
 Jump_061_54E2::
-    call Func_061_55AF
+    call DrawWCD7BEntryTilesForScreen
     call Func_061_562F
     call Func_061_54EC
     ret
@@ -1775,11 +1775,13 @@ Jump_061_5585::
     ldh [rSVBK], a
     ret
 
+; for the wCD7B entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73) at wC240 with CGB attribute 5 (E-0129)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCD7B, wC240, wD0A8
-Func_061_55AF::
+DrawWCD7BEntryTilesForScreen::
+Func_061_55AF:: ; address name
     ld hl, wCD7B
 
 Jump_061_55B2::
@@ -2010,7 +2012,7 @@ Jump_061_56E2::
     ret
 
 ; writes tiles A, A+1 at DE and A+$10, A+$11 one 20-tile row below (E-0121)
-; 6 call sites from 3 routines (e.g. Func_061_54EC, Func_061_562F, Func_061_55AF)
+; 6 call sites from 3 routines (e.g. Func_061_54EC, Func_061_562F, DrawWCD7BEntryTilesForScreen)
 Write2x2TileBlockAtDE::
 Func_061_56E3:: ; address name
     ld [de], a
@@ -2068,7 +2070,7 @@ Func_061_56F8:: ; address name
     ret
 
 ; writes tile A to two cells at DE and two cells one 20-tile row below (E-0125)
-; 5 call sites from 3 routines (e.g. Func_061_54EC, Func_061_562F, Func_061_55AF)
+; 5 call sites from 3 routines (e.g. Func_061_54EC, Func_061_562F, DrawWCD7BEntryTilesForScreen)
 Write2x2SameTileAtDE::
 Func_061_5718:: ; address name
     ld [de], a
@@ -3582,11 +3584,13 @@ Jump_061_6065::
     inc hl
     jp Jump_061_5F4C
 
+; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
 ; 1 call site from 1 routine (e.g. Func_016_5D13_Case00)
 ; reads: wCD07, wCC44, wCC45, hMapScreenY, hMapScreenX
 ; writes: hFFC6
 ; points at: wCD88, wCD74, wCE7E
-Func_061_606D::
+KeyWorldAreaEncounterIndex::
+Func_061_606D:: ; address name
     ld a, [wCD07]
     bit 7, a
     jr z, Jump_061_6079

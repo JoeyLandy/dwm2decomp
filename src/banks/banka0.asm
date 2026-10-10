@@ -3353,7 +3353,7 @@ Jump_0A0_54A0::
     jr nz, Jump_0A0_54A0
 
 Jump_0A0_54D2::
-    farcall Func_0F2_65E6
+    farcall ClampPartyHPAndMPToMax
     xor a, a
     ld [rRAMG], a
     ret

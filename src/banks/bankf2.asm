@@ -38,7 +38,7 @@ Jump_0F2_4013::
     ld de, $01CC
     call DrawScreenBufferRectToBGMap_1B_BankF2
     farcall LoadPalette0FromData53C6
-    farcall Func_002_5F9B
+    farcall SendSGBFieldPaletteSet
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -588,7 +588,7 @@ Func_0F2_436F:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode8_Update)
 GameMode8_Update_Sub01::
 Func_0F2_43C3:: ; address name
-    farcall Func_004_44CE
+    farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
     ret
 
@@ -1067,11 +1067,13 @@ Func_0F2_4AFE:: ; address name
     call DrawWCA3ANameAtTiles2290
     ret
 
+; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
 ; reads: wCA83, wCA84, wCA85, wCA81, wCA82, hFFC6, wCA36, wCA37, ...
 ; writes: wC8C0, wC8C1, wC8C2, hFFC6, hFFC7, wSpeciesIdLo, wSpeciesIdHi, hFFC8, ...
 ; points at: hFFC8
-Func_0F2_4B05::
+DrawWCA83ExpAndToNextLevel::
+Func_0F2_4B05:: ; address name
     ld a, [wCA83]
     ld [wC8C0], a
     ld a, [wCA84]
@@ -1588,7 +1590,7 @@ Jump_0F2_4E5F::
     ret
 
 ; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
-; 2 call sites from 1 routine (e.g. Func_0F2_4B05)
+; 2 call sites from 1 routine (e.g. DrawWCA83ExpAndToNextLevel)
 ; points at: wD7F1
 DrawSevenDigitsFromWD7F1_BankF2::
 Func_0F2_4E63:: ; address name
@@ -1766,11 +1768,13 @@ Data_0F2_4F41:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
+; writes the level wCA81 (marked $6F at the cap wCA82), its digits and the status marks from wCA80 into the BG map (E-0129)
 ; 5 call sites from 5 routines (e.g. DrawWCA2BStatsScreen, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case16, ...)
 ; reads: hFFC7, hFFC6, wC8C1, wC8C2, wCA80, wCA39
 ; writes: hFFC6, hFFC7
 ; points at: wCA81
-Func_0F2_4F47::
+DrawLevelAndStatusRowForWCA81::
+Func_0F2_4F47:: ; address name
     ld hl, wCA81
     ld a, [hl+]
     ldh [hFFC6], a
@@ -1858,7 +1862,7 @@ Jump_0F2_4F74::
     ret
 
 ; writes tile $C3 to the 3 VRAM bytes from HL (WaitForVRAMAccess, interrupts off per byte); HL kept; clobbers C, E (E-0067) (the same 17 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_0F2_4F47)
+; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
 WriteThreeC3TilesAtHL_BankF2::
 Func_0F2_4FD6:: ; address name
     push hl
@@ -1877,7 +1881,7 @@ Jump_0F2_4FDB::
     ret
 
 ; writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_0F2_4F47)
+; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
 WriteTileC1AtHL_BankF2::
 Func_0F2_4FE7:: ; address name
     di
@@ -1888,7 +1892,7 @@ Func_0F2_4FE7:: ; address name
     ret
 
 ; writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_0F2_4F47)
+; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
 WriteTileC0AtHL_BankF2::
 Func_0F2_4FF0:: ; address name
     di
@@ -1899,7 +1903,7 @@ Func_0F2_4FF0:: ; address name
     ret
 
 ; writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_0F2_4F47)
+; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
 WriteTileC2AtHL_BankF2::
 Func_0F2_4FF9:: ; address name
     di
@@ -1913,7 +1917,7 @@ Func_0F2_4FF9:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, RunWD780StateWhenNotFading_F1_Case0D_Case04)
 DrawWCA2BStatsScreen::
 Func_0F2_5002:: ; address name
-    call Func_0F2_4F47
+    call DrawLevelAndStatusRowForWCA81
     call DrawFiveWCA2BStatsColumn
     call DrawFourWCA2BStatsDigits
     ret
@@ -2124,7 +2128,7 @@ Jump_0F2_5141::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 8 call sites from 6 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn, Func_0F2_4B05, DrawFamilyIconAndCountForWCA38, ...)
+; 8 call sites from 6 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn, DrawWCA83ExpAndToNextLevel, DrawFamilyIconAndCountForWCA38, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF2_514D::
 Func_0F2_514D:: ; address name
@@ -2851,11 +2855,13 @@ Data_0F2_6526:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_6586:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3CA586, $60
 
+; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed them (E-0129)
 ; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub01, BattleEnd_Step7_Case02_Sub01)
 ; reads: wC6FD, wCF8B, wCF8C
 ; writes: wCF8B, wCF8C
 ; points at: wC6FE
-Func_0F2_65E6::
+ClampPartyHPAndMPToMax::
+Func_0F2_65E6:: ; address name
     ld a, [wC6FD]
     and a, a
     ret z
@@ -2953,7 +2959,7 @@ Jump_0F2_6675::
     ret
 
 ; the same 21 bytes as CompareHLWithDE (F0:7C81)
-; 2 call sites from 1 routine (e.g. Func_0F2_65E6)
+; 2 call sites from 1 routine (e.g. ClampPartyHPAndMPToMax)
 CompareHLWithDE_BankF2::
 Func_0F2_667D:: ; address name
     ld a, h

@@ -1436,7 +1436,7 @@ Jump_085_4905::
     jr Jump_085_4921
 
 Jump_085_4912::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_085_48E9
@@ -1549,7 +1549,7 @@ Jump_085_49B2::
     jr Jump_085_49CE
 
 Jump_085_49BF::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_085_4996
@@ -4525,7 +4525,7 @@ Jump_085_5B4E::
     ldh [hFFC6], a
     ret
 
-; 3 call sites from 2 routines (e.g. Func_002_4628, ScriptCommand96_Run_Case07)
+; 3 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommand96_Run_Case07)
 ; reads: hMapId, wC94A, wD7FF, wC82C, hFFC6, hFFC7, wCD04
 ; writes: wCB8A, wCB9A, wCBAA, wCBBA, wCB8B, wCB9B, wCBAB, wCBBB, ...
 ; points at: wCFDD, hFFC6, wCB91
@@ -4816,65 +4816,19 @@ Func_085_5D6F:: ; address name
     cp a, $63
     jr nc, ScriptCommand84_Run_Case04_Sub01_Sub02
     ret
+    db $19, $1A, $1B, $1B, $1C, $2C, $00, $00, $01, $07, $28, $22, $0C, $2C, $00, $00
+    db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07
+    db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
+    db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0A, $06, $00, $01
 
-; no direct call (reached through a table, a jump or a vector)
+; for each party record adds 100 to the INT word (field $69), capped at 999; far-called by Talk00FC_YouHaveToEat (E-0129)
+; 1 call site from 1 routine (e.g. Talk00FC_YouHaveToEat)
 ; reads: wC6FD
 ; writes: rRAMG
 ; points at: wC6FE
-Func_085_5D7C:: ; heuristic: follows a terminator; C0
-    add hl, de
-    ld a, [de]
-    dec de
-    dec de
-    inc e
-    inc l
-    nop
-    nop
-    ld bc, $2807
-    ld [hl+], a
-    inc c
-    inc l
-    nop
-    nop
-    nop
-    inc b
-    dec b
-    dec b
-    dec b
-    dec b
-    inc b
-    inc b
-    inc b
-    inc b
-    ld b, $00
-    inc b
-    rlca
-    rlca
-    rlca
-    rlca
-    rlca
-    rlca
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    ld [$0808], sp
-    ld [$0008], sp
-    nop
-    dec b
-    nop
-    add hl, bc
-    add hl, bc
-    add hl, bc
-    add hl, bc
-    add hl, bc
-    add hl, bc
-    add hl, bc
-    ld a, [bc]
-    ld b, $00
-    ld bc, $0A3E
+AddHundredToPartyINTCapped999::
+Func_085_5DB9:: ; address name
+    ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
     ld b, a

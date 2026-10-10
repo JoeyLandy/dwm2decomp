@@ -2,7 +2,7 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-; 12 call sites from 11 routines (e.g. AIScore_BiAttack_Sub02_Sub01, AIScore_Transform_Sub01, Func_005_50E3, AIScore_Sap_Sub02_Sub01, ...)
+; 12 call sites from 11 routines (e.g. AIScore_BiAttack_Sub02_Sub01, AIScore_Transform_Sub01, PassIfFoeAverageDEFAtMostTwiceAllyATK, AIScore_Sap_Sub02_Sub01, ...)
 ; points at: wBattleATK
 GetBattleATK_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_4001:: ; address name
@@ -58,7 +58,7 @@ Func_005_401F:: ; address name
     jr Jump_005_402E
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, Func_005_667F, AIScore_Berserker_Sub01, AIScore_Ramming_Sub01, ...)
+; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_Sub01, AIScore_Ramming_Sub01, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank05_4024:: ; heuristic: follows a terminator; C0
 Func_005_4024:: ; address name
@@ -3316,11 +3316,13 @@ Jump_005_50E0::
     ld c, $01
     ret
 
+; C = 1 when the AI mode is below 2; otherwise $FF when the foes' average DEF is at most twice the allies' average ATK, else $00 (E-0129)
 ; 7 call sites from 7 routines (e.g. AIScore_Sap, AIScore_ChargeUp, AIScore_HighJump, AIScore_EvilSlash, ...)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: hFFC6, hFFC9
-Func_005_50E3:: ; heuristic: follows a terminator; C0
+PassIfFoeAverageDEFAtMostTwiceAllyATK:: ; heuristic: follows a terminator; C0
+Func_005_50E3:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -3607,11 +3609,13 @@ Jump_005_5272::
     ld c, $01
     ret
 
+; C = 1 when the AI mode is below 2; otherwise $FF when the able foes' average ATK is at most twice the allies' average DEF, else $00 (E-0129)
 ; 3 call sites from 3 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: hFFC6, hFFC9
-Func_005_5275:: ; heuristic: follows a terminator; C0
+PassIfFoeAverageATKAtMostTwiceAllyDEF:: ; heuristic: follows a terminator; C0
+Func_005_5275:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -4870,10 +4874,12 @@ Jump_005_5916::
     ld c, $FF
     ret
 
+; C = 1 when the AI mode is below 3; with exactly one other occupied ally that has at most 20 MP, checks its skills ($A0, $1E/$1F) and status; returns $00 or $FF (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD989, wD80D
-Func_005_5919:: ; heuristic: follows a terminator; C0
+AIGateLoneAllyMPAndSkills:: ; heuristic: follows a terminator; C0
+Func_005_5919:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
@@ -7153,11 +7159,13 @@ Jump_005_667C::
     ld c, $FF
     ret
 
+; C = 1 when the AI mode is below 4 or the actor knows a heal skill; otherwise compares the stat sums of the empty and occupied ally slots and returns $00 or $FF (E-0129)
 ; 4 call sites from 4 routines (e.g. AIScore_Vivify, AIScore_Farewell, AIScore_LifeDance, AIScore_LifeSong)
 ; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wD988
-Func_005_667F:: ; heuristic: follows a terminator; C0
+AIGateCompareAllyStatAverages:: ; heuristic: follows a terminator; C0
+Func_005_667F:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $04
@@ -7261,7 +7269,7 @@ Jump_005_671D::
     ret
 
 ; walks B skill numbers at every other byte from HL + 1: Z as soon as one is $16-$1A, $7C, $9F or $A1; otherwise A = 1 and Z clear (E-0120)
-; 1 call site from 1 routine (e.g. Func_005_667F)
+; 1 call site from 1 routine (e.g. AIGateCompareAllyStatAverages)
 SkillListHasAnyOf16To1A7C9FA1::
 Func_005_6720:: ; address name
     inc hl
@@ -7289,7 +7297,7 @@ Func_005_6720:: ; address name
     ret
 
 ; adds MaxHP + MaxMP + ATK + DEF of slot C to the 24-bit total at hFFC6-hFFC8; D += 1 (E-0121)
-; 2 call sites from 1 routine (e.g. Func_005_667F)
+; 2 call sites from 1 routine (e.g. AIGateCompareAllyStatAverages)
 ; reads: hFFC6, hFFC7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8
 AddSlotStatSumToHFFC6::
@@ -8407,7 +8415,7 @@ Jump_005_6D06::
     ret
 
 ; slot C: returns NZ when bit 1 of status byte 0 is set, otherwise A = status byte 4 & 3 with flags from it (E-0122)
-; 1 call site from 1 routine (e.g. Func_005_5275)
+; 1 call site from 1 routine (e.g. PassIfFoeAverageATKAtMostTwiceAllyDEF)
 ; points at: wD80D
 SlotStatus0Bit1OrStatus4Bits01:: ; heuristic: follows a terminator; C0
 Func_005_6D07:: ; address name

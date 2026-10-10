@@ -3028,7 +3028,7 @@ ScriptCommandE8_Run_Case06_Case19::
 Jump_01E_556A:: ; address name
     xor a, a
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5483,7 +5483,7 @@ Func_01E_65FE:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -8242,7 +8242,7 @@ Jump_01E_7684::
     ret
 
 ; the same 57 bytes as UnpackBCDToDigitsWD7F1 (15:6676)
-; 6 call sites from 4 routines (e.g. ScriptCommandE8_Run_Case09_Case13_Sub01, ScriptCommandF7_Run_Shared02, ScriptCommandE2_Run_Case03_Case05, Func_0F2_4B05)
+; 6 call sites from 4 routines (e.g. ScriptCommandE8_Run_Case09_Case13_Sub01, ScriptCommandF7_Run_Shared02, ScriptCommandE2_Run_Case03_Case05, DrawWCA83ExpAndToNextLevel)
 ; points at: hFFC9, wD7F1
 UnpackBCDToDigitsWD7F1_Bank1E::
 Func_01E_768E:: ; address name

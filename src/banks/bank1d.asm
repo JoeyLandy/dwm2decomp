@@ -4270,10 +4270,12 @@ Jump_01D_5F8D::
     xor a, a
     ld [rRAMG2], a
 
+; moves the party records found in the record list wD789 to its front and pads the list to $1E entries with $FF (E-0129)
 ; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Shared05, Func_01B_7399, Func_033_5F99)
 ; reads: wD7A9, wC6FD
 ; points at: wD789, wC6FE, wD7BE
-Func_01D_5F9C::
+MovePartyRecordsToFrontOfList::
+Func_01D_5F9C:: ; address name
     ld a, [wD7A9]
     and a, a
     ret z
@@ -4450,11 +4452,13 @@ Jump_01D_6075::
     ld [rRAMG2], a
     ret
 
+; for the visible entries of page wD7AF draws the species name (field $0B, category 2 of the bank-08 database) of each listed record (E-0129)
 ; 8 call sites from 8 routines (e.g. ScriptCommandEF_Run_Case0F_Case04, ScriptCommandED_Run_Case05_Case04, ScriptCommandED_Run_Case0F_Case04, ScriptCommandE8_Run_Case06_Case19, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hFFC6, hFFC7, wDataBank, wD7B0
 ; writes: rRAMG2, rRAMB, wDataBank, wC8DE
 ; points at: wD789, wC8CF
-Func_01D_6088::
+DrawRecordListPageSpeciesNames::
+Func_01D_6088:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -4550,7 +4554,7 @@ Jump_01D_6124::
     ret
 
 ; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
-; 4 call sites from 3 routines (e.g. Func_01D_6088, ScriptCommandED_Run_Case04_Case1C, DrawRecordNameAndSpeciesName)
+; 4 call sites from 3 routines (e.g. DrawRecordListPageSpeciesNames, ScriptCommandED_Run_Case04_Case1C, DrawRecordNameAndSpeciesName)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
 ; points at: wC8CF

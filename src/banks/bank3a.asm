@@ -281,7 +281,7 @@ Jump_03A_4970::
     ld a, h
     ld [wCB76], a
     farcall TickWCB75Sequence
-    call Func_03A_4A3A
+    call SetEffectSpriteXForTargets
     ld a, [wD801]
     ld c, a
     call LoadEffectOBJPaletteC
@@ -358,11 +358,13 @@ Jump_03A_4A33::
     ld [wD868], a
     ret
 
+; sets wD804 (and the wD805 list for all targets) to the screen X of the target from Data_03A_4AD5 by wDAB9 and the side count wD890 (E-0129)
 ; 9 call sites from 5 routines (e.g. SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01, DrawEffectSpriteForWD801Range_Sub01, ...)
 ; reads: wDAB9, wD890, wC58A, wC57F, wD868, wD805
 ; writes: wD804
 ; points at: wD805
-Func_03A_4A3A::
+SetEffectSpriteXForTargets::
+Func_03A_4A3A:: ; address name
     ld a, [wDAB9]
     cp a, $00
     jr z, Jump_03A_4A4F
@@ -609,7 +611,7 @@ Jump_03A_4BB5::
     ld a, h
     ld [wCB76], a
     farcall TickWCB75Sequence
-    call Func_03A_4A3A
+    call SetEffectSpriteXForTargets
     ld a, [wD801]
     ld c, a
     call LoadEffectOBJPaletteC
@@ -2145,7 +2147,7 @@ Func_03A_548F:: ; address name
     ld a, h
     ld [wCB76], a
     farcall TickWCB75Sequence
-    call Func_03A_4A3A
+    call SetEffectSpriteXForTargets
     ld a, [wD801]
     ld c, a
     call LoadEffectOBJPaletteC
@@ -5103,11 +5105,13 @@ Data_03A_74F7:: ; heuristic: target of a monotone pointer table; C0
     db $CD, $EE, $78, $CD, $08, $79, $C9, $CD, $41, $79, $CD, $EE, $78, $CD, $08, $79
     db $C9
 
+; copies the actor, skill and target names to wC130/wC140/wC150 and picks the action message from Data_03A_7603 (or special messages $49-$4C) (E-0129)
 ; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, Func_032_4ADC_Case01_Case00, Func_032_4ADC_Case01_Case03, Func_032_5820_Case01)
 ; reads: wBattleActionId, wBattleActor, wC982
 ; writes: wC982, wD86C, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wC150
-Func_03A_7508::
+BuildActionMessageNames::
+Func_03A_7508:: ; address name
     push de
     ld a, [wBattleActionId]
     cp a, $D0
@@ -5490,11 +5494,13 @@ Jump_03A_7856::
     call CopyTargetNameToWC130
     ret
 
+; when the hFFC6 targets are all the same, copies the target name to wC130; otherwise writes "The monsters" (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wBattleTarget, wBattleStatResultLo
 ; writes: wBattleStatResultLo
 ; points at: wC0A0, wC0A8, wC130
-Func_03A_785A:: ; heuristic: follows a terminator; C0
+WriteTargetNameOrTheMonsters:: ; heuristic: follows a terminator; C0
+Func_03A_785A:: ; address name
     ldh a, [hFFC6]
     ld b, a
     ld a, b
@@ -5607,7 +5613,7 @@ Jump_03A_78EA::
     ret
 
 ; wD86C = wBattleActor, then CopySlotNameToHL with HL = wC130 (E-0113)
-; 3 call sites from 2 routines (e.g. Func_03A_7508, ShowSpecialActionMessage)
+; 3 call sites from 2 routines (e.g. BuildActionMessageNames, ShowSpecialActionMessage)
 ; reads: wBattleActor
 ; writes: wD86C
 ; points at: wC130
@@ -5633,7 +5639,7 @@ Func_03A_78FB:: ; address name
     ret
 
 ; far-calls Func_0A3_414F (which maps the actor to a slot in hFFC6), then copies that slot's name to wC140 (CopySlotNameToHL) (E-0113)
-; 2 call sites from 2 routines (e.g. Func_03A_7508, ShowSpecialActionMessage)
+; 2 call sites from 2 routines (e.g. BuildActionMessageNames, ShowSpecialActionMessage)
 ; reads: hFFC6
 ; writes: wD86C
 ; points at: wC140
@@ -5647,7 +5653,7 @@ Func_03A_7908:: ; address name
     ret
 
 ; copies string wBattleActionId of category 4 (skill names) to wC140 (CopyStringHLToDE) (E-0116)
-; 1 call site from 1 routine (e.g. Func_03A_7508)
+; 1 call site from 1 routine (e.g. BuildActionMessageNames)
 ; reads: wBattleActionId
 ; points at: wC140
 CopyActionSkillNameToWC140::
@@ -5761,7 +5767,7 @@ Func_03A_798D:: ; address name
     ret
 
 ; A = battle slot: slots 0-2 go to CopyBattlerNameToHL; other slots take paths that check slot 3/7, wC58A and wDAD4 (not fully read) (E-0077)
-; 10 call sites from 10 routines (e.g. RunBattleSetup_Shared06_Sub01, Func_03A_7508, CopyActorNameToWC130, CopyMappedSlotNameToWC140, ...)
+; 10 call sites from 10 routines (e.g. RunBattleSetup_Shared06_Sub01, BuildActionMessageNames, CopyActorNameToWC130, CopyMappedSlotNameToWC140, ...)
 ; reads: wC58A, wD86C
 ; writes: wD869
 ; points at: wDAD4
@@ -5944,7 +5950,7 @@ Jump_03A_7A68::
 ; points at: wBattleMonsterId, wC0A0
 CopyBattlerNameToHL_Sub02::
 Func_03A_7A6E:: ; address name
-    call Func_03A_7AE3
+    call ListSideMonsterIdsToWC0A0
     inc b
     ld c, $04
     xor a, a
@@ -6027,10 +6033,12 @@ Jump_03A_7ADD::
     ld [hl], a
     ret
 
+; clears wC0A0 ($10 bytes) and lists the species ids of the occupied slots of the shown side at wC0A0 and of the other side at wC0A8 (E-0129)
 ; 6 call sites from 5 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, Func_03B_4711, ApplyTargetWD93FReduction, ...)
 ; reads: wC58A, wC57F
 ; points at: wC0A0, wBattleMonsterId, wC0A8
-Func_03A_7AE3::
+ListSideMonsterIdsToWC0A0::
+Func_03A_7AE3:: ; address name
     xor a, a
     ld hl, wC0A0
     ld bc, $0010
@@ -6140,7 +6148,7 @@ Jump_03A_7B74::
     ret
 
 Jump_03A_7B77::
-    call Func_03A_7AE3
+    call ListSideMonsterIdsToWC0A0
     ld a, e
     cp a, $01
     jr z, Jump_03A_7B74

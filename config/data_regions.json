@@ -144,6 +144,12 @@
       "start": "61FB",
       "end": "6220",
       "reason": "map bytes in bank $0A whose words ($1362) the pointer-table scan read as bank-0 code pointers (E-0126)"
+    },
+    {
+      "bank": "85",
+      "start": "5D7C",
+      "end": "5DB9",
+      "reason": "a 61-byte table read through `ld hl, $5D7C` / `ld hl, $5D8C` by the routine before it; the follows-a-terminator guess decoded it as code and swallowed the start of AddHundredToPartyINTCapped999 at $5DB9, which Talk00FC_YouHaveToEat far-calls (E-0129)"
     }
   ]
 }

@@ -321,7 +321,7 @@ ScriptCommandEF_Run_Case02::
 Jump_00D_46B6:: ; address name
     ld a, $01
     ld [wC89D], a
-    farcall Func_015_6478
+    farcall HandleThreeOptionMenuInput_15
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommandEF_Run
@@ -1204,7 +1204,7 @@ ScriptCommandEF_Run_Case0F_Case04::
 Jump_00D_4BE1:: ; address name
     ld a, $01
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a

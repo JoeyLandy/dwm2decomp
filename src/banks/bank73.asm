@@ -1832,7 +1832,7 @@ Jump_073_4C2F::
     ret
 
 Jump_073_4C41::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_073_4C2F

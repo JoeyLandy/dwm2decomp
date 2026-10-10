@@ -3960,7 +3960,7 @@ Jump_014_5CD5::
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     xor a, a
     ldh [hScrollY], a
     ldh [hScrollX], a
@@ -4527,10 +4527,12 @@ Jump_014_60CF::
     ld [wD7F5], a
     ret
 
+; on the last glyph of the name entry wCFAD adds or cycles the marks $8D and $8E when the glyph allows them (lists Data_014_688A and 68CA), with sound $69 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7F5
 ; points at: wCFAD
-Func_014_60E6:: ; heuristic: follows a terminator; C0
+ToggleVoicingMarkOnNameEntry:: ; heuristic: follows a terminator; C0
+Func_014_60E6:: ; address name
     call CopyTileForWCFC2
     ld hl, wCFAD
 
@@ -5572,7 +5574,7 @@ Jump_014_6734:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     ld a, [wCFAA]
     inc a
     ld [wCFAA], a
@@ -5713,7 +5715,7 @@ Func_014_6804:: ; address name
     ld a, [wD7F1]
     or a, a
     jr nz, Jump_014_6830
-    farcall Func_004_44CE
+    farcall UpdateAndDrawSpriteSlots
     jr Jump_014_6856
 
 Jump_014_6830::
@@ -5762,7 +5764,7 @@ Jump_014_6856::
     ret
 
 ; A = 0 when [HL] is in the $FF-terminated list Data_014_688A, else $FF (E-0124)
-; 2 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, Func_014_60E6)
+; 2 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList688A::
 Func_014_6875:: ; address name
     ld de, Data_014_688A
@@ -5792,7 +5794,7 @@ Data_014_688A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $67, $68, $69, $6A, $6B, $6C, $6E, $6F, $26, $5A, $FF
 
 ; A = 0 when [HL] is in the $FF-terminated list Data_014_68CA, else $FF (E-0124)
-; 3 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, Func_014_60E6)
+; 3 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList68CA::
 Func_014_68B5:: ; address name
     ld de, Data_014_68CA
@@ -6489,7 +6491,7 @@ Jump_014_6C33::
     ret
 
 ; copies the 16-byte tile at Data_014_6C60 to the VRAM address from the word table Data_014_6C56 + 2 * wCFC2 (CopyTileBytesToVRAM_Bank14) (E-0119)
-; 4 call sites from 3 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, RunWCFA8StateWhenNotFading_Case01_Case01, Func_014_60E6)
+; 4 call sites from 3 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, RunWCFA8StateWhenNotFading_Case01_Case01, ToggleVoicingMarkOnNameEntry)
 ; reads: wCFC2
 CopyTileForWCFC2::
 Func_014_6C3F:: ; address name

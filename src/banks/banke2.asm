@@ -538,7 +538,7 @@ Func_0E2_43C8:: ; address name
     and a, a
     ret z
     call AIAddPenaltyFor5758And5CF1
-    farcall Func_005_667F
+    farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
     jr z, Jump_0E2_43E8
@@ -569,7 +569,7 @@ Func_0E2_43E9:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_440B::
-    farcall Func_005_667F
+    farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
     jr z, Jump_0E2_441F
@@ -677,7 +677,7 @@ Func_0E2_449C:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_44B5::
-    farcall Func_005_50E3
+    farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
     jr z, Jump_0E2_44C9
@@ -945,7 +945,7 @@ Jump_0E2_4691::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_46A1::
-    farcall Func_005_5275
+    farcall PassIfFoeAverageATKAtMostTwiceAllyDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_46B5
@@ -2854,7 +2854,7 @@ Func_0E2_5426:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_50E3
+    farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5443
@@ -2948,7 +2948,7 @@ Func_0E2_54C4:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_54DD::
-    farcall Func_005_50E3
+    farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
     jr z, Jump_0E2_54F1
@@ -3019,7 +3019,7 @@ Jump_0E2_5552::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5562::
-    farcall Func_005_50E3
+    farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5576
@@ -3141,7 +3141,7 @@ Jump_0E2_5634::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5644::
-    farcall Func_005_50E3
+    farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5658
@@ -3240,7 +3240,7 @@ Jump_0E2_56F3::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5703::
-    farcall Func_005_50E3
+    farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5717
@@ -3822,7 +3822,7 @@ Jump_0E2_5B18::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B28::
-    farcall Func_005_667F
+    farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5B3C
@@ -3930,7 +3930,7 @@ Jump_0E2_5BDD::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5BED::
-    farcall Func_005_5275
+    farcall PassIfFoeAverageATKAtMostTwiceAllyDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5C01
@@ -3977,7 +3977,7 @@ Jump_0E2_5C2E::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5C3E::
-    farcall Func_005_5275
+    farcall PassIfFoeAverageATKAtMostTwiceAllyDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5C52
@@ -4394,7 +4394,7 @@ Func_0E2_5F0A:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5F23::
-    farcall Func_005_50E3
+    farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5F37
@@ -5025,7 +5025,7 @@ Func_0E2_6350:: ; address name
 
 Jump_0E2_636F::
     call WeighWD044RuleBit4
-    farcall Func_005_667F
+    farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6386

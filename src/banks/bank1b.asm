@@ -7150,7 +7150,7 @@ Jump_01B_7424::
     ld [wD7A9], a
     xor a, a
     ld [rRAMG2], a
-    farcall Func_01D_5F9C
+    farcall MovePartyRecordsToFrontOfList
     ret
 
 ; wStringIndex = A + $10, wStringCategory = 0, then far-calls BeginStringDisplay_Bank1B_480C (E-0063)

@@ -71,7 +71,7 @@ Jump_024_4057::
     ld de, $01CC
     call DrawScreenBufferRectToBGMap_24
     farcall LoadPalette0FromData53C6
-    farcall Func_002_5F9B
+    farcall SendSGBFieldPaletteSet
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -1294,7 +1294,7 @@ GameMode6_Update_Case05_Case03::
 Jump_024_4842:: ; address name
     xor a, a
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1731,7 +1731,7 @@ GameMode6_Update_Case0E_Case02::
 Jump_024_4B40:: ; address name
     xor a, a
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3553,7 +3553,7 @@ Jump_024_5653:: ; address name
 ; reads: wCA99
 GameMode6_Update_Shared06::
 Func_024_567C:: ; address name
-    farcall Func_004_44CE
+    farcall UpdateAndDrawSpriteSlots
     ld a, [wCA99]
     and a, a
     ret z

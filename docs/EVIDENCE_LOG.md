@@ -1447,6 +1447,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - 32:4C9C is named mechanically (RollStatusTickEffect): which status it serves is not established.
 - Binary verification: build/run90 PASS, 0 differing bytes; tests OK.
 
+### E-0129 — Routines of 81-100 instructions; record stat fields
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** 47 routines of 81-100 instructions are named; the unnamed count goes from 120 to 72. These include:
+  - the field entry routine (02:4628 InitFieldScreen) and the sprite slot drawer (04:44CE);
+  - the AI scoring entry for table A (30:4AD3) and the healing effect (36:5223);
+  - the SRAM bank-1 record checksum (02:737F) and the title-screen save summary (16:75EE);
+  - link record unpacking (37:5BC6);
+  - the voicing-mark toggle for name entry (14:60E6).
+- **Record stat words.** Fields $5D, $61, $63, $65, $67, $69 are max HP, max MP, ATK, DEF, AGL and INT. Evidence: the level-up gains in 1A:6587 and 31:6A2D walk them in that order, and 73:4956 lists the same six. C1.
+- **85:5D7C to 5DB9.** This range is data. Its false code entry covered $5DB9, which Talk00FC_YouHaveToEat far-calls (`ld hl, $5DB9 / ld b, $85 / rst $10`). With a new data region in `config/data_regions.json`, $5DB9 decodes as AddHundredToPartyINTCapped999: INT + 100, capped at 999, after the "eat your vegetables" talk.
+- Binary verification: build/run91 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

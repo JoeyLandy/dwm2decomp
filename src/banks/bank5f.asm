@@ -2907,7 +2907,7 @@ Jump_05F_79E8::
     ret
 
 Jump_05F_79F5::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_05F_79E8

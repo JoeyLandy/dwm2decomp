@@ -2815,7 +2815,7 @@ Func_032_4F0A:: ; address name
     and a, $07
     jr z, Jump_032_4F32
     push de
-    farcall Func_03A_7508
+    farcall BuildActionMessageNames
     pop af
     cp a, $01
     call nz, CheckActionD0ToE3OrSpecial
@@ -2869,7 +2869,7 @@ Jump_032_4F85::
     cp a, $07
     jp z, Jump_032_4FFB
     push de
-    farcall Func_03A_7508
+    farcall BuildActionMessageNames
     pop af
     cp a, $01
     call nz, CheckActionD0ToE3OrSpecial
@@ -3081,7 +3081,7 @@ Jump_032_510E:: ; address name
     call QueuedActionMatches
     ret nz
     ld d, $02
-    farcall Func_03A_7508
+    farcall BuildActionMessageNames
     ld a, [wRecordBufferData]
     or a, a
     call nz, CheckActionD0ToE3OrSpecial
@@ -3110,11 +3110,13 @@ Jump_032_5143::
     dec [hl]
     ret
 
+; for the actor and its formation partner checks status blocks and MP costs of their stored actions (wDA2C) and returns flags in hFFC7 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRecordBufferData, hFFC6, hFFC7
 ; writes: hFFC7, wRecordBuffer, wCFED, hFFC8, wBattleActor
 ; points at: wDA2C, wDA5B
-Func_032_514C:: ; heuristic: follows a terminator; C0
+CheckFormationPartnersCanAct:: ; heuristic: follows a terminator; C0
+Func_032_514C:: ; address name
     xor a, a
     ldh [hFFC7], a
     ld a, [wBattleActor]
@@ -3216,7 +3218,7 @@ Jump_032_51F3::
     ret
 
 ; for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)
-; 6 call sites from 4 routines (e.g. Func_032_5820_Case01, Func_032_4ADC_Case01_Case04, Func_032_4ADC_Case01_Case00, Func_032_514C)
+; 6 call sites from 4 routines (e.g. Func_032_5820_Case01, Func_032_4ADC_Case01_Case04, Func_032_4ADC_Case01_Case00, CheckFormationPartnersCanAct)
 ; reads: wBattleActionId, wBattleActor, hFFC8, wCFF3, wRecordBufferData
 ; writes: hFFC8
 ; points at: wD80E
@@ -4154,7 +4156,7 @@ Func_032_57FD:: ; address name
     ret
 
 ; wBattleActionId = wRecordBuffer = the actor's chosen action (wBattleActionChoice), wCFED = 0, then far-calls LoadSkillRecord (E-0118)
-; 7 call sites from 4 routines (e.g. PayActorMPCost, Func_032_4ADC_Case01_Case01, Func_032_4ADC_Case01_Case00, Func_032_514C)
+; 7 call sites from 4 routines (e.g. PayActorMPCost, Func_032_4ADC_Case01_Case01, Func_032_4ADC_Case01_Case00, CheckFormationPartnersCanAct)
 ; reads: wBattleActor
 ; writes: wBattleActionId, wRecordBuffer, wCFED
 ; points at: wBattleActionChoice
@@ -4279,7 +4281,7 @@ Jump_032_58B3:: ; address name
     cp a, $07
     jr z, Jump_032_58D9
     push de
-    farcall Func_03A_7508
+    farcall BuildActionMessageNames
     pop af
     cp a, $01
     jr z, Jump_032_58D4
@@ -7021,7 +7023,7 @@ Jump_032_68F8::
     ret
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
-; 2 call sites from 1 routine (e.g. Func_032_514C)
+; 2 call sites from 1 routine (e.g. CheckFormationPartnersCanAct)
 ; points at: wD80F
 CheckSlotStatusBlockWide_Bank32::
 Func_032_68FD:: ; address name

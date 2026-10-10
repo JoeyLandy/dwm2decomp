@@ -7520,7 +7520,7 @@ Jump_013_6D68:: ; address name
     ld a, [wC892]
     or a, a
     jr nz, Jump_013_6DA7
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     ld [wC892], a
     or a, a
@@ -8637,7 +8637,7 @@ Func_013_74F1:: ; address name
     ld de, $011E
     call TestFlagBit
     jr c, Jump_013_7518
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_750B
@@ -8751,7 +8751,7 @@ Jump_013_7617::
     ret
 
 Jump_013_7624::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_013_7600
@@ -8815,7 +8815,7 @@ Jump_013_7697::
     ret
 
 Jump_013_76A4::
-    farcall Func_012_689A
+    farcall GenerateNewKeyEntry
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_013_7680
@@ -9279,9 +9279,7 @@ Data_013_7A93:: ; heuristic: target of a monotone pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 Talk00FC_YouHaveToEat:: ; heuristic: target of a pointer table; C0
 Func_013_7A9A:: ; address name
-    ld hl, $5DB9
-    ld b, $85
-    rst $10
+    farcall AddHundredToPartyINTCapped999
     ld hl, $00FC
     call StartMessageCommand09HL_B13
     ret

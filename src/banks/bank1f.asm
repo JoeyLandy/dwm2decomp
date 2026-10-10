@@ -913,10 +913,12 @@ Jump_01F_5D89::
     jr nz, Jump_01F_5D3B
     ret
 
+; writes a wD7F3 x wD7F4 tile rectangle from wD7F1/2 to the BG map at wD7F5/6 (wrapping); on CGB, unless wD7F7 is set, clears its attributes (E-0129)
 ; 10 call sites from 10 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, ScriptCommandF6_Run_Shared06, RunWCFA8StateWhenNotFading_Case00_Case00, RunWCFA8StateWhenNotFading_Case06_Case00, ...)
 ; reads: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, rSTAT, wIsCGB, ...
 ; writes: rVBK
-Func_01F_5D9A::
+DrawTileRectAndClearAttrs_5D9A::
+Func_01F_5D9A:: ; address name
     ld a, [wD7F1]
     ld d, a
     ld a, [wD7F2]
@@ -1273,7 +1275,7 @@ Func_01F_7494:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    call Func_01F_5D9A
+    call DrawTileRectAndClearAttrs_5D9A
     ld de, Data_01F_4250
     ld hl, vTiles1 + $7E0
     ld b, $1F
@@ -1437,11 +1439,13 @@ Func_01F_7591:: ; address name
     call DrawTileRectFromWD7F1Params
     ret
 
+; shows the eight skill names of the record at wCA2B (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, RunWD780StateWhenNotFading_F1_Case0D_Case19)
 ; reads: wCA5F
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wCA2B
-Func_01F_7601::
+ShowWCA2BSkillNamesOrNone::
+Func_01F_7601:: ; address name
     ld a, [wCA5F]
     cp a, $FF
     jr z, Jump_01F_760D

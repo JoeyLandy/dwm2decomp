@@ -91,7 +91,7 @@ Jump_0F1_407C::
     res 7, [hl]
     call SetMenuRowsForPage_BankF1
     call ShowSelectedItemDescription_BankF1
-    call Func_0F1_4307
+    call ShowInventoryPageItemNames_BankF1
     call DrawMenuPageNumber_BankF1
     ret
 
@@ -141,7 +141,7 @@ Jump_0F1_40EC::
     ret z
     farcall SortInventory
     call ShowSelectedItemDescription_BankF1
-    call Func_0F1_4307
+    call ShowInventoryPageItemNames_BankF1
     ret
 
 ; entry 1 of the `rst $00` table in Func_0F1_4001
@@ -485,11 +485,13 @@ Jump_0F1_42F5::
     call ShowStringBank08AtTilesHL_BankF1
     ret
 
+; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wC61E entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ; 2 call sites from 1 routine (e.g. Func_0F1_4001_Case00_Case01)
 ; reads: wC52D, wC52E, wC52F, wC530, wInventory, wMenuPage
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC61E, wInventory
-Func_0F1_4307::
+ShowInventoryPageItemNames_BankF1::
+Func_0F1_4307:: ; address name
     ld a, [wC52D]
     ld l, a
     ld a, [wC52E]
@@ -3043,7 +3045,7 @@ Jump_0F1_53D9:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     xor a, a
     ld [wD781], a
     ld [wD782], a
@@ -3143,7 +3145,7 @@ Jump_0F1_5478:: ; address name
     ld a, $C7
     ld [wD7F4], a
     farcall DrawFamilyIconAndCountForWCA38
-    farcall Func_0F2_4B05
+    farcall DrawWCA83ExpAndToNextLevel
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3227,7 +3229,7 @@ Jump_0F1_5517::
 ; writes: wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case16::
 Jump_0F1_5526:: ; address name
-    farcall Func_0F2_4F47
+    farcall DrawLevelAndStatusRowForWCA81
     ld a, $0F
     ld [wD781], a
     ret
@@ -3262,7 +3264,7 @@ Jump_0F1_5540:: ; address name
 ; writes: wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case19::
 Jump_0F1_554E:: ; address name
-    farcall Func_01F_7601
+    farcall ShowWCA2BSkillNamesOrNone
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3357,7 +3359,7 @@ Jump_0F1_55DB::
 ; points at: wC52D
 RunWD780StateWhenNotFading_F1_Case0D_Case1D::
 Jump_0F1_55E9:: ; address name
-    farcall Func_0F2_4F47
+    farcall DrawLevelAndStatusRowForWCA81
     ld hl, vTiles1 + $270
     ld bc, $0901
     call FillTilesBxC
@@ -4253,7 +4255,7 @@ Func_0F1_5B8E:: ; address name
     ld a, [wSpriteSlotCount]
     and a, a
     ret z
-    farcall Func_004_44CE
+    farcall UpdateAndDrawSpriteSlots
     ld a, [wD7F1]
     and a, a
     ret z

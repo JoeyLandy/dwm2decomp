@@ -1612,7 +1612,7 @@ Jump_0F0_52F9::
     call DivideHLByA
     ld a, l
     ld [wCE9E], a
-    call Func_0F0_6AFE
+    call RaiseRandomLowestResistance
 
 Jump_0F0_5323::
     ld a, [wCED9]
@@ -1929,7 +1929,7 @@ Jump_0F0_54B9:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     call Run67EEWithWD7F1ForWD7EC
     xor a, a
     ldh [hFFB9], a
@@ -3154,7 +3154,7 @@ RunWD781Step_F0_5B50_Case04::
 Jump_0F0_5CAC:: ; address name
     xor a, a
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3398,7 +3398,7 @@ Func_0F0_5E2C:: ; address name
     ld [wD7F4], a
     xor a, a
     ld [wD7F7], a
-    farcall Func_01F_5D9A
+    farcall DrawTileRectAndClearAttrs_5D9A
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -3865,7 +3865,7 @@ RunWD781Step_F0_5DE8_Case0E::
 Jump_0F0_6176:: ; address name
     xor a, a
     ld [wD7F5], a
-    farcall Func_01D_6088
+    farcall DrawRecordListPageSpeciesNames
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4861,11 +4861,13 @@ Data_0F0_6A48:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F0_6A58:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $A6, $FF
 
+; while wCE9E > 0 and some resistance at wCF41 is below 3: picks at random one of the lowest-level resistances (levels 0, then 1, 2) and raises it (E-0129)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case11)
 ; reads: wCE9E, wCF8B, wCFA7, wCF8C
 ; writes: wCE9E, wCF8B, wCFA7
 ; points at: wCF41, wCF8C
-Func_0F0_6AFE::
+RaiseRandomLowestResistance::
+Func_0F0_6AFE:: ; address name
     ld a, [wCE9E]
     and a, a
     ret z
@@ -4965,7 +4967,7 @@ Jump_0F0_6B80::
     add_a_to_hl
     ld a, [hl]
     cp a, $0F
-    jp z, Func_0F0_6AFE
+    jp z, RaiseRandomLowestResistance
     jr Jump_0F0_6B93
 
 Jump_0F0_6B90::
@@ -4977,7 +4979,7 @@ Jump_0F0_6B93::
     ld a, [hl]
     inc a
     ld [hl], a
-    jp Func_0F0_6AFE
+    jp RaiseRandomLowestResistance
 
 ; loads species wCED9 and copies its bytes wD010-wD012 to wCF0A and the 27 bytes at wD01A to wCF41; wCF29 = wCF2B, wCF2D = wCF2F (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case11)

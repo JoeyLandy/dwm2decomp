@@ -531,11 +531,13 @@ Jump_00A_42AF::
     ld [wC46C], a
     ret
 
+; in the field (story flag 2, not in mode states 1 or 7, outside listed maps): when a party member has status bit 2 or 0 of field $55, switches to mode state 7 and toggles wC88C (E-0129)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: hFF8C, wModeState, wCC44, hMapId, wC6FD, wC88C
 ; writes: rRAMG, wC88C, wC902, wModeState, wC46B, wC46C, wC915
 ; points at: wC6FE
-Func_00A_42BC::
+EnterStatusEffectFieldState::
+Func_00A_42BC:: ; address name
     ldh a, [hFF8C]
     bit 7, a
     ret nz
@@ -643,7 +645,7 @@ Jump_00A_4355::
     ret
 
 ; when wC88C bit 7 is clear: wC88C = ((wC88C + 1) & 1) | $80 (E-0119)
-; 2 call sites from 1 routine (e.g. Func_00A_42BC)
+; 2 call sites from 1 routine (e.g. EnterStatusEffectFieldState)
 ; reads: wC88C
 ; writes: wC88C
 ToggleWC88CLowBitOnce::
@@ -1751,9 +1753,11 @@ Jump_00A_4D4C::
     ld [wCFDC], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_56E4)
+; only called from CollectUniqueEncounterIdsToWD09F (E-0047)
+; 1 call site from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F)
 ; reads: hMapId, hFF8C
-Func_00A_4D5E::
+CollectUniqueEncounterIdsToWD09F_Sub01::
+Func_00A_4D5E:: ; address name
     ldh a, [hMapId]
     cp a, $20
     jp z, Jump_00A_4E79
@@ -2187,7 +2191,7 @@ Jump_00A_504E::
     ret
 
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
-; 48 call sites from 1 routine (e.g. Func_00A_4D5E)
+; 48 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
 ; reads: hMapScreenY, hMapScreenX, wD09D, hFFC6, hFFC7
 ; writes: wD09D, wD09E, wMonsterId, wCFE7, hFFC6
 ; points at: wD09F, hFFC6
@@ -2209,7 +2213,7 @@ Func_00A_5057:: ; address name
     ld d, a
 
 ; DE += 2; wD09D = the number of non-zero entries (up to 5); copies their monster ids to wD09F and replaces each with two bytes of its monster table entry (E-0127)
-; 4 call sites from 1 routine (e.g. Func_00A_4D5E)
+; 4 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
 ; reads: wD09D, hFFC6, hFFC7
 ; writes: wD09D, wD09E, wMonsterId, wCFE7, hFFC6
 ; points at: wD09F, hFFC6

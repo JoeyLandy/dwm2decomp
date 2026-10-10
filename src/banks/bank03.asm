@@ -566,7 +566,7 @@ Jump_003_4367::
     call CopyTileBufferToBGMap
     ld hl, wC5E0
     inc [hl]
-    farcall Func_002_4628
+    farcall InitFieldScreen
     xor a, a
     ld [wC5E0], a
     ld a, $01
@@ -3099,7 +3099,7 @@ Jump_003_52C8::
     res 7, [hl]
     call SetMenuRowsForPage_Bank03_59DB
     call ShowSelectedItemDescription
-    call Func_003_592E
+    call ShowInventoryPageItemNames_Bank03
     call DrawMenuPageNumber_Bank03
     ret
 
@@ -3147,7 +3147,7 @@ Jump_003_5330::
     ret z
     farcall SortInventory
     call ShowSelectedItemDescription
-    call Func_003_592E
+    call ShowInventoryPageItemNames_Bank03
     ret
 
 ; entry 1 of the `rst $00` table in PauseMenu_Items
@@ -4150,11 +4150,13 @@ Jump_003_591C::
     call ShowStringBank08AtTilesHL_Bank03
     ret
 
+; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wC61E entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ; 4 call sites from 3 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, ResetInventoryMenuToFirstPage, PauseMenu_Items_Case00_Case01)
 ; reads: wC52D, wC52E, wC52F, wC530, wInventory, wMenuPage
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC61E, wInventory
-Func_003_592E::
+ShowInventoryPageItemNames_Bank03::
+Func_003_592E:: ; address name
     ld a, [wC52D]
     ld l, a
     ld a, [wC52E]
@@ -4336,7 +4338,7 @@ Func_003_5A07:: ; address name
     ld a, h
     ld [wC52E], a
     call ShowSelectedItemDescription
-    call Func_003_592E
+    call ShowInventoryPageItemNames_Bank03
     ret
 
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
@@ -4782,7 +4784,7 @@ Jump_003_5E76::
     jr Jump_003_5E76
 
 Jump_003_5E7E::
-    call Func_003_592E
+    call ShowInventoryPageItemNames_Bank03
     xor a, a
     ld [wC0A0], a
     ld [wC0A1], a
@@ -4831,7 +4833,7 @@ Jump_003_5EA3:: ; address name
     ld a, $00
     ld [rRAMB], a
     call LoadScreenBlocks1CAnd0C
-    call Func_003_67B0
+    call ShowRecordSkillPageNames_Bank03
     ld a, $00
     ld [rRAMG], a
     call CopyTileBufferToBGMap
@@ -4875,7 +4877,7 @@ Jump_003_5EF0:: ; address name
     ld [rRAMB], a
     call PauseMenu_Skills_Shared04
     call PauseMenu_Skills_Shared01
-    call Func_003_67B0
+    call ShowRecordSkillPageNames_Bank03
     call PauseMenu_Skills_Shared05
     ld a, $00
     ld [rRAMG], a
@@ -5029,7 +5031,7 @@ Jump_003_5FFB::
     ld [wMenuRowCount], a
     call PauseMenu_Skills_Shared01
     call SetMenuRowsForPage_Bank03
-    call Func_003_67B0
+    call ShowRecordSkillPageNames_Bank03
     call PauseMenu_Skills_Shared05
     ld a, $00
     ld [rRAMG], a
@@ -5078,7 +5080,7 @@ Jump_003_6052::
     res 7, [hl]
     call SetMenuRowsForPage_Bank03
     call PauseMenu_Skills_Shared02
-    call Func_003_67B0
+    call ShowRecordSkillPageNames_Bank03
     call PauseMenu_Skills_Shared05
     ld hl, vBGMap0 + $206
     ld bc, $0301
@@ -5913,7 +5915,7 @@ Func_003_6595:: ; address name
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    call Func_003_67B0
+    call ShowRecordSkillPageNames_Bank03
     ret
 
 ; only called from routines of PauseMenu_Skills (E-0098)
@@ -6118,10 +6120,12 @@ Data_003_6700:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $7D, $FF
     db $0C, $0D, $0E, $0F, $10, $11, $12, $13, $FF, $FF, $FF, $FF, $FF, $FF
 
+; shows four skill names of record wC46D & 3 for page wMenuPage (or string $0E when it has none) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ; 5 call sites from 5 routines (e.g. ShowString1Bank09AtTiles16E0ThenDetails, PauseMenu_Skills_Case00_Case01, PauseMenu_Skills_Case00_Case00, PauseMenu_Skills_Case01_Case01, ...)
 ; reads: wC52D, wC52E, wC52F, wC530, wC46D, wMenuPage
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
-Func_003_67B0::
+ShowRecordSkillPageNames_Bank03::
+Func_003_67B0:: ; address name
     ld a, [wC52D]
     ld l, a
     ld a, [wC52E]

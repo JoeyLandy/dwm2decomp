@@ -966,9 +966,9 @@ Jump_030_45CB::
 
 Data_030_45D0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $46, $49
-    dw Func_030_4AD3
-    dw Func_030_4AD3
-    dw Func_030_4AD3
+    dw ScoreActionsWithAIScoreTableA
+    dw ScoreActionsWithAIScoreTableA
+    dw ScoreActionsWithAIScoreTableA
     dw UseAIScoreTableB
 
 ; clears wD2AD ($14 bytes), sets wDA3C-wDA42 = 0, 0, 0, 1, 2, 3, 3, then adds personality, HP and other weights (Func_030_4617, 46BA, 47B9, 483F); wD871 = 0 (E-0124)
@@ -1601,11 +1601,13 @@ Func_030_4AC6:: ; address name
     ld [wDA6C], a
     jr Jump_030_4ADE
 
+; sets wDA6B/C to AIScoreRoutineTableA; for AI-controlled actors estimates damage, scores the eight skills, attack (0) and $AC into wD2AD, and doubles the weight of the preferred kind (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC58A, wDA3F
 ; writes: wDA6B, wDA6C
 ; points at: wD988, wD2AD
-Func_030_4AD3:: ; heuristic: target of a pointer table; C0
+ScoreActionsWithAIScoreTableA:: ; heuristic: target of a pointer table; C0
+Func_030_4AD3:: ; address name
     ld hl, AIScoreRoutineTableA
     ld a, l
     ld [wDA6B], a
@@ -1706,7 +1708,7 @@ Jump_030_4B72::
     ret
 
 ; doubles the word at DE unless its bit 15 is already set (E-0122)
-; 3 call sites from 1 routine (e.g. Func_030_4AD3)
+; 3 call sites from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 DoubleWordAtDEUnlessBit15::
 Func_030_4B76:: ; address name
     push de
@@ -1728,7 +1730,7 @@ Jump_030_4B86::
     ret
 
 ; divides the word at DE by 4 unless its bit 15 is set (E-0124)
-; 1 call site from 1 routine (e.g. Func_030_4AD3)
+; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 QuarterWordAtDEUnlessBit15::
 Func_030_4B88:: ; address name
     push de
@@ -1752,7 +1754,7 @@ Jump_030_4B9D::
     ret
 
 ; A = [HL], then falls into ScoreSkillForAI (E-0126)
-; 1 call site from 1 routine (e.g. Func_030_4AD3)
+; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wCFF1, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
 ; writes: wDA6E, wDA6F, wDA70, wDA71
 ScoreSkillAtHLForAI::
@@ -1760,7 +1762,7 @@ Func_030_4B9F:: ; address name
     ld a, [hl]
 
 ; A = skill number ($FF skips): AddSkillBaseWeightAndLoadSkill; when wCFF1 bit 0 (in the skill record) is set, clears wDA6E-wDA71 and far-calls the skill's AI scoring routine from the table in wDA6B/wDA6C (AIScoreRoutineTableA or B), then folds the accumulated weights into the word at DE (the rest is not fully read) (E-0083)
-; 2 call sites from 1 routine (e.g. Func_030_4AD3)
+; 2 call sites from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wCFF1, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
 ; writes: wDA6E, wDA6F, wDA70, wDA71
 ScoreSkillForAI::
@@ -1833,7 +1835,7 @@ Jump_030_4BFF::
     ret
 
 ; picks the largest of the ten wD2AD weights (ties at random); index 8 chooses action 0, 9 chooses $AC, others the actor's skill in that slot (E-0127)
-; 1 call site from 1 routine (e.g. Func_030_4AD3)
+; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wC5E7, wBattleActor, hFFC6
 ; writes: hFFC6
 ; points at: wD2AD, wD989
@@ -1903,7 +1905,7 @@ Jump_030_4C5E::
     ret
 
 ; for each foe stores (actor ATK - foe DEF / 2) / 2, floored at 0, in wD2C1[foe & 3] (0 for empty slots) (E-0125)
-; 1 call site from 1 routine (e.g. Func_030_4AD3)
+; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wBattleActor
 ; points at: wD2C1
 EstimateDamageVsEachFoeToWD2C1::

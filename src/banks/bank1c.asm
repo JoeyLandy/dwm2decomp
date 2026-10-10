@@ -394,7 +394,7 @@ Jump_01C_4258:: ; address name
     ret
 
 Jump_01C_428E::
-    farcall Func_060_62F9
+    farcall RefreshKeyWorldObjectsOnEntry
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommandE0_Run
@@ -5719,7 +5719,7 @@ Func_01C_67D0:: ; address name
     push bc
     push hl
     xor a, a
-    call Func_01C_6823
+    call CopyRectToBGMapWrapped_1C
     pop hl
     push hl
     ld a, l
@@ -5743,7 +5743,7 @@ Func_01C_67D0:: ; address name
     ld a, $02
     ldh [rSVBK], a
     xor a, a
-    call Func_01C_6823
+    call CopyRectToBGMapWrapped_1C
     ld a, $00
     ldh [rSVBK], a
     ld a, $00
@@ -5759,7 +5759,7 @@ Func_01C_6806:: ; address name
     push bc
     push hl
     xor a, a
-    call Func_01C_6823
+    call CopyRectToBGMapWrapped_1C
     pop hl
     push hl
     ld a, l
@@ -5777,10 +5777,12 @@ Func_01C_6806:: ; address name
     pop de
     ret
 
+; copies a B x C rectangle from DE to the BG map at HL, wrapping at the screen and map edges (E-0129)
 ; 3 call sites from 2 routines (e.g. ClearRectSetWC554Plus1C1_Bank1C, ClearRectBothBanksSetWC554Plus1C1)
 ; reads: hScrollX, rSTAT, hFFC5
 ; writes: hFFC5
-Func_01C_6823::
+CopyRectToBGMapWrapped_1C::
+Func_01C_6823:: ; address name
     push hl
     push bc
     push de

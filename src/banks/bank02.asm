@@ -944,10 +944,12 @@ Jump_002_4519::
     ld [wD041], a
     jp Jump_002_45C1
 
+; writes four colours of the palette at HL to rOBPD, each chosen by a 2-bit shade of wC5EA through Data_002_45C2; HL += 8 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5EA
 ; writes: rOBPD
-Func_002_452C:: ; heuristic: follows a terminator; C0
+WriteCGBObjPaletteFromDMGShadesWC5EA:: ; heuristic: follows a terminator; C0
+Func_002_452C:: ; address name
     push hl
     ld a, [wC5EA]
     and a, $03
@@ -1083,7 +1085,7 @@ Jump_002_45DB::
     ld a, [hl]
     ld [wC520], a
     farcall SendSGBPaletteSetPacket
-    call Func_002_4628
+    call InitFieldScreen
     xor a, a
     ld [wC8C5], a
     ld a, [wC5E0]
@@ -1100,10 +1102,12 @@ Jump_002_461A::
     ld a, $03
     jp Jump_000_077A
 
+; enters the field: loads the map header, resets scroll and timers, reorders the party, loads names and sprites, finds triggers, draws the map screen and places objects (E-0129)
 ; 4 call sites from 4 routines (e.g. GameMode1_Init, FieldModeStateDispatch_Case04, ExitPauseMenuToField, EnterGameMode1WithDefaultPalettes)
 ; reads: wCC44, hMapId, wC8C7, wC927, wC5E0, wIsCGB
 ; writes: hFF8D, hScrollY, hScrollX, hFFA0, hFF9F, rLYC, wFrameCounterLo, wFrameCounterHi, ...
-Func_002_4628::
+InitFieldScreen::
+Func_002_4628:: ; address name
     ld a, $0F
     ldh [hFF8D], a
     call LoadMapHeader
@@ -1132,7 +1136,7 @@ Func_002_4628::
     call MoveIncapacitatedPartyMembersBack
     call MoveIncapacitatedPartyMembersBack
     farcall Func_060_639D
-    farcall Func_060_62F9
+    farcall RefreshKeyWorldObjectsOnEntry
     call WritePlayerNameWithFlag0SuffixToWC130
     ld a, [wCC44]
     bit 7, a
@@ -1190,7 +1194,7 @@ Jump_002_46EE::
     call RestartMapMusic
 
 Jump_002_46F7::
-    call Func_002_5F9B
+    call SendSGBFieldPaletteSet
     call RunWC8C7Phase
     xor a, a
     ldh [hFF8D], a
@@ -1202,7 +1206,7 @@ Jump_002_46F7::
     ret
 
 ; copies the player name to wC130 with a terminator, then a two-tile suffix ($58 $87 when story flag 0 is set, else $87 $60) (E-0124)
-; 10 call sites from 10 routines (e.g. Func_002_4628, ScriptCommandF6_Run_Case08, ScriptCommandF7_Run_Case23, ScriptCommandF7_Run_Case23_Sub01, ...)
+; 10 call sites from 10 routines (e.g. InitFieldScreen, ScriptCommandF6_Run_Case08, ScriptCommandF7_Run_Case23, ScriptCommandF7_Run_Case23_Sub01, ...)
 ; writes: wC13A, wC13C, wC13D, wC13E
 ; points at: wC60C, wC130
 WritePlayerNameWithFlag0SuffixToWC130::
@@ -1234,7 +1238,7 @@ Jump_002_4735::
     ret
 
 ; runs the routine for wC8C7 & 3 (jump table; phase 3 reuses phase 0) (E-0122)
-; 1 call site from 1 routine (e.g. Func_002_4628)
+; 1 call site from 1 routine (e.g. InitFieldScreen)
 ; reads: wC8C7
 RunWC8C7Phase::
 Func_002_4745:: ; address name
@@ -1379,7 +1383,7 @@ Jump_002_4824::
     ld [wC916], a
     farcall DispatchTalkEvent
     farcall FetchScriptCommand
-    jp Func_002_4628
+    jp InitFieldScreen
 
 Jump_002_4846::
     farcall FullyHealParty
@@ -1422,7 +1426,7 @@ Jump_002_4846::
     ld [wScriptCommandType], a
     ld a, $01
     ld [wScriptInDataBank], a
-    jp Func_002_4628
+    jp InitFieldScreen
 
 Jump_002_48AE::
     farcall FullyHealParty
@@ -1759,7 +1763,7 @@ Func_002_4AD8:: ; address name
     jp z, Jump_002_5FF7
 
 ; advances the play time, then runs the routine for wModeState & $0F (nine states) (E-0122)
-; 1 call site from 1 routine (e.g. Func_002_5F9B)
+; 1 call site from 1 routine (e.g. SendSGBFieldPaletteSet)
 ; reads: wModeState
 FieldModeStateDispatch::
 Func_002_4AE0:: ; address name
@@ -1931,7 +1935,7 @@ Jump_002_4C3F::
     call PlayMapMusic
     xor a, a
     ld [wC8C7], a
-    call Func_002_4628
+    call InitFieldScreen
     ret
 
 ; only called from FieldModeStateDispatch_Case04 (E-0047)
@@ -3905,7 +3909,7 @@ Jump_002_58BF::
     farcall CheckStepTriggerAndDispatchTalk
     farcall Func_011_4130
     farcall RunPlayerMoveTypeWC194
-    farcall Func_00A_42BC
+    farcall EnterStatusEffectFieldState
     farcall CountDownWD069ThenDispatchTalkEvent
     ret
 
@@ -4465,7 +4469,7 @@ Jump_002_5BF4:: ; address name
     farcall Func_00A_43EC
     farcall Func_011_4130
     farcall RunPlayerMoveTypeWC194
-    farcall Func_00A_42BC
+    farcall EnterStatusEffectFieldState
     farcall CountDownWD069ThenDispatchTalkEvent
     xor a, a
     ld [wC468], a
@@ -4848,7 +4852,7 @@ Func_002_5E82:: ; address name
     call MoveIncapacitatedPartyMembersBack
 
 ; reorders the party list so a member with bit 7 of field $55 set moves behind one without it (second/third and first/second pairs) (E-0127)
-; 19 call sites from 10 routines (e.g. Func_002_4628, RunFunc5E85Twice, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
+; 19 call sites from 10 routines (e.g. InitFieldScreen, RunFunc5E85Twice, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
 MoveIncapacitatedPartyMembersBack::
@@ -4944,7 +4948,7 @@ Jump_002_5F1B::
     ret
 
 ; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
-; 7 call sites from 7 routines (e.g. Func_002_4628, ScriptCommand82_Run_Case0A_Case08, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case0D, ...)
+; 7 call sites from 7 routines (e.g. InitFieldScreen, ScriptCommand82_Run_Case0A_Case08, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case0D, ...)
 ; reads: wIsCGB, wCB7E
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wD2D0, wD000
@@ -5039,10 +5043,12 @@ Jump_002_5F75::
     ld [hl], c
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4628, GameMode6_Init, GameMode8_Init)
+; on the Super Game Boy sends PAL_SET for wC51F and loads the object palettes; wC5E0 1 becomes 2. The following entry clears the joypad state and runs the field mode states (E-0129)
+; 3 call sites from 3 routines (e.g. InitFieldScreen, GameMode6_Init, GameMode8_Init)
 ; reads: wSGBActive, wC51F, wC520, wC5E0
 ; writes: wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, wC57E, ...
-Func_002_5F9B::
+SendSGBFieldPaletteSet::
+Func_002_5F9B:: ; address name
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_002_5FEB
@@ -5136,7 +5142,7 @@ Jump_002_6045::
     ret
 
 ; wC608 = $FF (no current music), then falls into PlayMapMusic so the map's music always restarts (E-0122)
-; 10 call sites from 10 routines (e.g. GameMode1_Init, Func_002_4628, Func_000_2950_Case09, RunWC46BMenuState_Case05, ...)
+; 10 call sites from 10 routines (e.g. GameMode1_Init, InitFieldScreen, Func_000_2950_Case09, RunWC46BMenuState_Case05, ...)
 ; reads: wCC44, wCC45, hFF8C, wC608, hMapId
 ; writes: wC608
 ; points at: wCD89
@@ -7230,7 +7236,7 @@ Data_002_7006:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $00B006, $68
 
 ; with SRAM bank 1 selected: hFFC6 = 1 when sBB00 is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
-; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, Func_015_6B00, Func_016_75EE)
+; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, Func_015_6B00, LoadSaveFileSummary)
 ; reads: sBB00
 ; writes: rRAMG, rRAMB, hFFC6
 CheckSaveData::
@@ -7871,7 +7877,7 @@ Jump_002_7364::
     jr Jump_002_7377
 
 Jump_002_736C::
-    call Func_002_737F
+    call ComputeSRAMBank1RecordChecksum
     ld a, [wC8C3]
     or a, $80
     ld [wC8C3], a
@@ -7882,10 +7888,12 @@ Jump_002_7377::
     ld [rRAMB], a
     ret
 
+; sums $29A * 10 bytes from sA06F in SRAM bank 1 and stores the complement plus $4321 at sBA73 (E-0129)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_Sub01)
 ; writes: rRAMB
 ; points at: sA06F, sBA73
-Func_002_737F::
+ComputeSRAMBank1RecordChecksum::
+Func_002_737F:: ; address name
     ld a, $01
     ld [rRAMB], a
     ld hl, sA06F
@@ -8584,7 +8592,7 @@ Jump_002_772A::
     jr nz, Jump_002_7741
     ld a, $0A
     ld [rRAMG], a
-    call Func_002_737F
+    call ComputeSRAMBank1RecordChecksum
     ld a, $80
     ld [wC8C3], a
 

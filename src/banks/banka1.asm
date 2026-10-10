@@ -3928,7 +3928,7 @@ Func_0A1_5898:: ; address name
     ld [wC5E0], a
     ld a, $40
     ld [wDataBankSave], a
-    farcall Func_002_4628
+    farcall InitFieldScreen
     ld hl, wC5E9
     ld a, $D2
     ld [hl+], a

@@ -2859,11 +2859,13 @@ Func_036_5215:: ; address name
     call ScaleDamageByFlagsAtHL
     ret
 
+; restores the target's HP by the rolled skill amount, or fully for actions $20, $B1, $7B, $DA (with other cases for $18, $1A, $CF), capped at its max HP (E-0129)
 ; 2 call sites from 2 routines (e.g. ActionEffect_ActionDA, ActionEffect_Heal)
 ; reads: wBattleActionId, wBattleDamageLo, wD873, wBattleTarget, wBattleActor, wC58A
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleHP, wBattleMaxHP, wDAFA
-Func_036_5223::
+HealTargetHP::
+Func_036_5223:: ; address name
     ld a, [wBattleActionId]
     cp a, $18
     jp z, Jump_036_52CC
@@ -5373,7 +5375,7 @@ Jump_036_60CD::
     ret
 
 ; level = bits 0-1 of the target's wDA72 byte 4 (forced to 4 by bit 2 of the actor's wD854); level 4 returns carry; otherwise rolls the sided chance, E = 0 on carry else 1 (E-0122)
-; 3 call sites from 3 routines (e.g. ActionEffect_PoisonGas, ResolveStep0EEffect_Case00, Func_03B_4D1C)
+; 3 call sites from 3 routines (e.g. ActionEffect_PoisonGas, ResolveStep0EEffect_Case00, InflictStatus0Bit0WithWD93FReduction)
 RollTargetWDA72Byte4Bits01ChanceToE::
 Func_036_60D1:: ; address name
     call HLToWD814EntryOfWD8A5_Bank36
@@ -5486,7 +5488,7 @@ Jump_036_6155::
     ret
 
 ; picks a base and spread from the loaded skill record: wCFFB/wCFFC and wCFFD for actors in slots 4-7 when wC58A is not 1, otherwise wCFF7/wCFF8 and wCFF9; the spread goes to wD86A and RollDamageBaseToBasePlusWD86A sets the damage word; then falls into HLToWD814EntryOfWD8A5_Bank36 (E-0095)
-; 15 call sites from 15 routines (e.g. SkillDamageScaledByWDA72Byte6Bits32, ActionEffect_Watershot_Sub01, ActionEffect_RockThrow_Sub01, Func_036_5223, ...)
+; 15 call sites from 15 routines (e.g. SkillDamageScaledByWDA72Byte6Bits32, ActionEffect_Watershot_Sub01, ActionEffect_RockThrow_Sub01, HealTargetHP, ...)
 ; reads: wC58A, wBattleActor, wCFFB, wCFFC, wCFFD, wBattleTarget, wCFF7, wCFF8, ...
 ; writes: wD86A
 ; points at: wD814
@@ -6141,7 +6143,7 @@ Jump_036_63F9::
     ret
 
 ; damage = 40 percent; the following entries scale it to 30 percent, a quarter or 0 (E-0125)
-; 1 call site from 1 routine (e.g. Func_036_5223)
+; 1 call site from 1 routine (e.g. HealTargetHP)
 ; reads: wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ScaleDamageTo40Percent::
@@ -7172,7 +7174,7 @@ Jump_036_6990::
     deref_hl
     call CompareHLToBC
     jr z, Jump_036_69B4
-    call Func_036_5223
+    call HealTargetHP
     ld a, $01
     ldh [hFFC6], a
 
@@ -7634,7 +7636,7 @@ Jump_036_6C30::
     deref_hl
     call CompareHLToBC
     jr z, Jump_036_6C58
-    call Func_036_5223
+    call HealTargetHP
     ld l, $37
     ld bc, $4090
     jp Jump_036_7CA3
@@ -10937,7 +10939,7 @@ Func_036_7E33:: ; address name
     jr ReadBattleWordFromArray
 
 ; A = battle slot: HL = the word for that slot in the array at wBattleMaxHP (Func_036_7E5B)
-; 2 call sites from 2 routines (e.g. Func_036_5223, ActionEffect_Geyser)
+; 2 call sites from 2 routines (e.g. HealTargetHP, ActionEffect_Geyser)
 ; points at: wBattleMaxHP
 GetBattleMaxHP::
 Func_036_7E38:: ; address name

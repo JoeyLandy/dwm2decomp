@@ -2596,7 +2596,7 @@ Jump_019_4E5A::
     INCBIN "dwm2-cobi-us.gbc", $064E60, $2520
 
 ; copies the 3 bytes at $4E60 + $129 * hFFC6 + 3 * hFFC7 into hFFC8-hFFCA (E-0120)
-; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, RecordReachedNextLevelExp, Func_0F2_4B05)
+; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9, hFFCA
 LoadTable4E60EntryToHFFC8::

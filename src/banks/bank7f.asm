@@ -2,7 +2,7 @@ SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7F
 
 ; DrawMetaSpriteAt_40CC with DE = Data_07F_4008 (E-0116)
-; 3 call sites from 3 routines (e.g. Func_004_44CE, AdvanceHFF99AndRunHFF8BMode_Case01_Sub01, AdvanceHFF99AndRunHFF8BMode_Shared01)
+; 3 call sites from 3 routines (e.g. UpdateAndDrawSpriteSlots, AdvanceHFF99AndRunHFF8BMode_Case01_Sub01, AdvanceHFF99AndRunHFF8BMode_Shared01)
 DrawMetaSprite4008::
 Func_07F_4001:: ; address name
     ld de, Data_07F_4008

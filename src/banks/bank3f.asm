@@ -21,7 +21,7 @@ Func_03F_4001:: ; address name
     ld [wD868], a
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03F_402B
-    farcall Func_03A_4A3A
+    farcall SetEffectSpriteXForTargets
     call DrawEffectSpriteAtWD804_Bank3F
 
 Jump_03F_402B::
@@ -35,7 +35,7 @@ Jump_03F_402B::
     ld a, [hl]
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03F_4045
-    farcall Func_03A_4A3A
+    farcall SetEffectSpriteXForTargets
     call DrawEffectSpriteAtWD804_Bank3F
 
 Jump_03F_4045::
@@ -49,7 +49,7 @@ Jump_03F_4045::
     ld a, [hl]
     call CarryUnlessWDA63SlotEmpty
     ret c
-    farcall Func_03A_4A3A
+    farcall SetEffectSpriteXForTargets
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
 ; 2 call sites from 1 routine (e.g. DrawEffectSpriteForWD801Range_Sub02)
