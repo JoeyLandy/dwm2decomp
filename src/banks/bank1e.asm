@@ -6803,7 +6803,7 @@ Func_01E_6F17::
     push hl
     ld a, [hl]
     ld c, $58
-    call Func_000_1F95
+    call LoadRecordThreeBytesToHFFC6
     ldh a, [hFFC6]
     ld [wC8C0], a
     ldh a, [hFFC7]
@@ -6861,7 +6861,7 @@ Func_01E_6F17::
     push de
     ld a, [hl]
     ld c, $58
-    call Func_000_1F95
+    call LoadRecordThreeBytesToHFFC6
     pop de
     pop bc
     ldh a, [hFFC6]

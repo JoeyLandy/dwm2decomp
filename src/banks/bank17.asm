@@ -161,7 +161,7 @@ Func_017_41CF::
     ld a, [wSGBActive]
     or a, a
     ret z
-    call Func_000_076B
+    call ClearSGBPacketBuffer
     ld a, $51
     ld [wSGBPacketBuffer], a
     ld a, [wC51F]

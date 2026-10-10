@@ -7,7 +7,7 @@ SECTION "Bank 31", ROMX[$4000], BANK[$31]
 ; writes: wC51F, wC520, hScrollX, hScrollXHi, hScrollY, hScrollYHi, rVBK, wC554, ...
 GameMode4_Init::
 Func_031_4001:: ; address name
-    call Func_000_08A6
+    call ClearSTATInterruptSources
     ld a, $02
     call QueueMusic
     ld a, [wSGBActive]

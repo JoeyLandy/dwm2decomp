@@ -1038,7 +1038,7 @@ Data_002_45C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: rIF, wC51F, wC520, wC8C5, wC5E0, wC5EC
 GameMode1_Init::
 Func_002_45C6:: ; address name
-    call Func_000_08A6
+    call ClearSTATInterruptSources
     xor a, a
     ldh [rIF], a
     ldh a, [hMapId]

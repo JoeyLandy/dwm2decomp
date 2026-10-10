@@ -1061,9 +1061,11 @@ Jump_000_0741::
     ld [rROMB0], a
     ret
 
+; zero-fills the 16 bytes of wSGBPacketBuffer; BC, HL kept (E-0108)
 ; 5 call sites from 3 routines (e.g. StepFade_Sub01, StartPaletteFade, Func_017_41CF)
 ; points at: wSGBPacketBuffer
-Func_000_076B::
+ClearSGBPacketBuffer::
+Func_000_076B:: ; address name
     push hl
     push bc
     xor a, a
@@ -1083,12 +1085,12 @@ Jump_000_077A::
     ld a, [wC58A]
     or a, a
     jr z, Jump_000_0784
-    call Func_000_14D1
+    call ClearSGBPacketBuffer_Sub02
 
 Jump_000_0784::
-    call Func_000_07AA
+    call ClearSGBPacketBuffer_Sub01
     pop af
-    call Func_000_07D8
+    call ClearSGBPacketBuffer_Shared01
     ei
     ret
 
@@ -1122,11 +1124,13 @@ Jump_000_079C::
     res 7, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_076B)
+; only called from ClearSGBPacketBuffer (E-0047)
+; 1 call site from 1 routine (e.g. ClearSGBPacketBuffer)
 ; reads: wSGBActive
 ; writes: rLCDC, wSGBPacketIndex
 ; points at: wC5EC
-Func_000_07AA::
+ClearSGBPacketBuffer_Sub01::
+Func_000_07AA:: ; address name
     ld hl, wC5EC
     set 7, [hl]
     ld a, [hl]
@@ -1141,17 +1145,21 @@ Func_000_07AA::
     ret
     db $C9, $AF, $E0, $0F, $F0, $FF, $E6, $F7, $E0, $FF, $C9
 
-; 3 call sites from 2 routines (e.g. Func_000_14D1, Func_01B_4001_Case00)
+; waits until rSC bit 7 (transfer in progress) clears (E-0108)
+; 3 call sites from 2 routines (e.g. ClearSGBPacketBuffer_Sub02, Func_01B_4001_Case00)
 ; reads: rSC
-Func_000_07D1::
+WaitSerialTransferDone::
+Func_000_07D1:: ; address name
     ldh a, [rSC]
     bit 7, a
-    jr nz, Func_000_07D1
+    jr nz, WaitSerialTransferDone
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_076B, Func_000_14D1)
+; only called from routines of ClearSGBPacketBuffer (E-0098)
+; 2 call sites from 2 routines (e.g. ClearSGBPacketBuffer, ClearSGBPacketBuffer_Sub02)
 ; writes: rIF, rIE
-Func_000_07D8::
+ClearSGBPacketBuffer_Shared01::
+Func_000_07D8:: ; address name
     ld b, a
     xor a, a
     ldh [rIF], a
@@ -1340,17 +1348,19 @@ Func_000_089F:: ; heuristic: follows a terminator; C0
     ldh [rSTAT], a
     ret
 
+; rSTAT &= $07: clears the LCD-status interrupt source bits 3-6, keeping the mode and coincidence flags (E-0108)
 ; 4 call sites from 4 routines (e.g. GameMode1_Init, GameMode5_Init, GameMode4_Init, GameMode7_Init)
 ; reads: rSTAT
 ; writes: rSTAT
-Func_000_08A6::
+ClearSTATInterruptSources::
+Func_000_08A6:: ; address name
     ldh a, [rSTAT]
     and a, $07
     ldh [rSTAT], a
     ret
 
 ; with interrupts off, LoadSerialByte, then sets rSC bits 0 (internal clock) and 7 (start transfer) (E-0073)
-; 3 call sites from 3 routines (e.g. Func_000_15C2, Func_000_1583, Func_007_600E_Case00)
+; 3 call sites from 3 routines (e.g. ClearSGBPacketBuffer_Sub02_Sub02, ClearSGBPacketBuffer_Sub02_Sub01, Func_007_600E_Case00)
 StartSerialTransferInternalClock::
 Func_000_08AD:: ; address name
     di
@@ -1362,7 +1372,7 @@ Func_000_08AD:: ; address name
     ret
 
 ; A is stored in rSB and rSC becomes $80 (transfer start, external clock); interrupts are off during the write
-; 32 call sites from 23 routines (e.g. Func_000_14D1, Func_000_15C2, Func_000_1583, Func_007_600E_Case08, ...)
+; 32 call sites from 23 routines (e.g. ClearSGBPacketBuffer_Sub02, ClearSGBPacketBuffer_Sub02_Sub02, ClearSGBPacketBuffer_Sub02_Sub01, Func_007_600E_Case08, ...)
 SerialSendByte::
 Func_000_08BA:: ; address name
     di
@@ -2436,24 +2446,24 @@ Jump_000_0E63::
     inc hl
     dec c
     jr nz, Jump_000_0E63
-    call Func_000_076B
+    call ClearSGBPacketBuffer
     ld hl, wOBJPaletteBuffer
     ld de, wSGBPacketBuffer
     ld a, $01
     ld [de], a
     inc de
-    call Func_000_1022
+    call CopySGBPacketFieldsAndSend
     call SpinDelay
     ld a, [wC56E]
     bit 4, a
     jp z, Jump_000_0F3D
-    call Func_000_076B
+    call ClearSGBPacketBuffer
     ld hl, wC4EF
     ld de, wSGBPacketBuffer
     ld a, $09
     ld [de], a
     inc de
-    call Func_000_1022
+    call CopySGBPacketFieldsAndSend
     call SpinDelay
     jp Jump_000_0F3D
 
@@ -2660,27 +2670,29 @@ Func_000_0FC1:: ; address name
     call nz, StepFade_Sub01_Sub01
 
 Jump_000_0FFC::
-    call Func_000_076B
+    call ClearSGBPacketBuffer
     ld hl, wOBJPaletteBuffer
     ld de, wSGBPacketBuffer
     ld a, $01
     ld [de], a
     inc de
-    call Func_000_1022
+    call CopySGBPacketFieldsAndSend
     ld a, [wC56E]
     bit 4, a
     ret z
     call SpinDelay
-    call Func_000_076B
+    call ClearSGBPacketBuffer
     ld hl, wC4EF
     ld de, wSGBPacketBuffer
     ld a, $09
     ld [de], a
     inc de
 
+; copies 8 bytes from HL to DE, skips 2 source bytes, copies 6 more, then wSGBPacketIndex = $FF and far-calls SendSGBPacketSet (E-0108)
 ; 3 call sites from 2 routines (e.g. StepFade_Sub01, StartPaletteFade)
 ; writes: wSGBPacketIndex
-Func_000_1022::
+CopySGBPacketFieldsAndSend::
+Func_000_1022:: ; address name
     ld c, $08
 
 Jump_000_1024::
@@ -2864,42 +2876,48 @@ Func_000_111F::
     bit 0, a
     ld a, [wC56F]
     ld hl, wC5E9
-    call nz, Func_000_1145
+    call nz, LightenDMGPaletteByFadeLevel
     ld a, [wC56D]
     bit 1, a
     ld a, [wC570]
     inc hl
-    call nz, Func_000_1145
+    call nz, LightenDMGPaletteByFadeLevel
     ld a, [wC56D]
     bit 2, a
     ld a, [wC571]
     inc hl
-    jr nz, Func_000_1145
+    jr nz, LightenDMGPaletteByFadeLevel
     ret
 
+; A = a DMG palette byte: each 2-bit shade - wFadeLevel, at least 0 (white), is packed back and stored at [HL] (LightenDMGShade and LightenDMGShadeNext) (E-0108)
 ; 2 call sites from 1 routine (e.g. Func_000_111F)
 ; reads: wFadeLevel
-Func_000_1145::
+LightenDMGPaletteByFadeLevel::
+Func_000_1145:: ; address name
     ld d, a
     ld a, [wFadeLevel]
     ld b, a
     ld c, $00
     ld a, d
-    call Func_000_1160
-    call Func_000_115B
-    call Func_000_115B
-    call Func_000_115B
+    call LightenDMGShade
+    call LightenDMGShadeNext
+    call LightenDMGShadeNext
+    call LightenDMGShadeNext
     ld [hl], c
     ret
 
-; 3 call sites from 1 routine (e.g. Func_000_1145)
-Func_000_115B::
+; rotates D right by 2 to bring the next shade down, then LightenDMGShade (E-0108)
+; 3 call sites from 1 routine (e.g. LightenDMGPaletteByFadeLevel)
+LightenDMGShadeNext::
+Func_000_115B:: ; address name
     rrc d
     rrc d
     ld a, d
 
-; 1 call site from 1 routine (e.g. Func_000_1145)
-Func_000_1160::
+; subtracts B (the level) from the 2-bit shade in A & 3 (at least 0), ORs it into C and rotates C right by 2 (E-0108)
+; 1 call site from 1 routine (e.g. LightenDMGPaletteByFadeLevel)
+LightenDMGShade::
+Func_000_1160:: ; address name
     and a, $03
     sub a, b
     jr nc, Jump_000_1166
@@ -2924,7 +2942,7 @@ Jump_000_116D::
     ret
 
 Jump_000_117F::
-    call Func_000_11B4
+    call LightenDMGShade_Sub01
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
@@ -2943,7 +2961,7 @@ Jump_000_1194::
     ret
 
 Jump_000_119F::
-    call Func_000_11B4
+    call LightenDMGShade_Sub01
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
@@ -2953,50 +2971,58 @@ Jump_000_119F::
     jr z, Jump_000_1205
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_1160)
+; only called from LightenDMGShade (E-0047)
+; 2 call sites from 1 routine (e.g. LightenDMGShade)
 ; reads: wC56D, wC56F, wC570, wC571, wFadeLevel
 ; points at: wC5E9
-Func_000_11B4::
+LightenDMGShade_Sub01::
+Func_000_11B4:: ; address name
     ld a, [wC56D]
     bit 0, a
     ld a, [wC56F]
     ld hl, wC5E9
-    call nz, Func_000_11DA
+    call nz, DarkenDMGPaletteByFadeLevel
     ld a, [wC56D]
     bit 1, a
     ld a, [wC570]
     inc hl
-    call nz, Func_000_11DA
+    call nz, DarkenDMGPaletteByFadeLevel
     ld a, [wC56D]
     bit 2, a
     ld a, [wC571]
     inc hl
-    jr nz, Func_000_11DA
+    jr nz, DarkenDMGPaletteByFadeLevel
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_11B4)
+; A = a DMG palette byte (four 2-bit shades): each shade + wFadeLevel, capped at 3 (black), is packed back and stored at [HL] (DarkenDMGShade and DarkenDMGShadeNext) (E-0108)
+; 2 call sites from 1 routine (e.g. LightenDMGShade_Sub01)
 ; reads: wFadeLevel
-Func_000_11DA::
+DarkenDMGPaletteByFadeLevel::
+Func_000_11DA:: ; address name
     ld d, a
     ld a, [wFadeLevel]
     ld b, a
     ld c, $00
     ld a, d
-    call Func_000_11F5
-    call Func_000_11F0
-    call Func_000_11F0
-    call Func_000_11F0
+    call DarkenDMGShade
+    call DarkenDMGShadeNext
+    call DarkenDMGShadeNext
+    call DarkenDMGShadeNext
     ld [hl], c
     ret
 
-; 3 call sites from 1 routine (e.g. Func_000_11DA)
-Func_000_11F0::
+; rotates D right by 2 to bring the next shade down, then DarkenDMGShade (E-0108)
+; 3 call sites from 1 routine (e.g. DarkenDMGPaletteByFadeLevel)
+DarkenDMGShadeNext::
+Func_000_11F0:: ; address name
     rrc d
     rrc d
     ld a, d
 
-; 1 call site from 1 routine (e.g. Func_000_11DA)
-Func_000_11F5::
+; adds B (the level) to the 2-bit shade in A & 3, caps it at 3, ORs it into C and rotates C right by 2 (E-0108)
+; 1 call site from 1 routine (e.g. DarkenDMGPaletteByFadeLevel)
+DarkenDMGShade::
+Func_000_11F5:: ; address name
     and a, $03
     add a, b
     cp a, $03
@@ -3488,16 +3514,18 @@ Jump_000_14CF::
     ret
     db $C9
 
-; 1 call site from 1 routine (e.g. Func_000_076B)
+; only called from ClearSGBPacketBuffer (E-0047)
+; 1 call site from 1 routine (e.g. ClearSGBPacketBuffer)
 ; reads: wC58A, wC580, wC57F, wC581, rSB, wIsCGB
 ; writes: wC580, wC582, wC57F
 ; points at: wJoypadHeld
-Func_000_14D1::
+ClearSGBPacketBuffer_Sub02::
+Func_000_14D1:: ; address name
     ld a, [wC58A]
     or a, a
     jp z, Jump_000_1575
     ld a, $08
-    call Func_000_07D8
+    call ClearSGBPacketBuffer_Shared01
     ld a, [wC580]
     set 7, a
     res 6, a
@@ -3518,18 +3546,18 @@ Jump_000_14F6::
     ld a, [wC581]
     cp a, $05
     jr nz, Jump_000_150D
-    call Func_000_15C2
-    call Func_000_07D1
+    call ClearSGBPacketBuffer_Sub02_Sub02
+    call WaitSerialTransferDone
     ldh a, [rSB]
     cp a, $F5
-    call nz, Func_000_15C2
+    call nz, ClearSGBPacketBuffer_Sub02_Sub02
     jr Jump_000_1558
 
 Jump_000_150D::
-    call Func_000_1583
+    call ClearSGBPacketBuffer_Sub02_Sub01
     cp a, $02
     jr z, Jump_000_1517
-    call Func_000_07D1
+    call WaitSerialTransferDone
 
 Jump_000_1517::
     ldh a, [rSB]
@@ -3537,7 +3565,7 @@ Jump_000_1517::
     jr z, Jump_000_1524
     cp a, $71
     jr z, Jump_000_1524
-    call Func_000_1583
+    call ClearSGBPacketBuffer_Sub02_Sub01
 
 Jump_000_1524::
     ld b, a
@@ -3596,10 +3624,12 @@ Jump_000_157E::
     jr nz, Jump_000_157E
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_14D1)
+; only called from ClearSGBPacketBuffer_Sub02 (E-0047)
+; 2 call sites from 1 routine (e.g. ClearSGBPacketBuffer_Sub02)
 ; reads: wC57F, wIsCGB, wC588, wC589, wC580
 ; writes: wC588, wC589, wC58E
-Func_000_1583::
+ClearSGBPacketBuffer_Sub02_Sub01::
+Func_000_1583:: ; address name
     ld a, [wC57F]
     bit 1, a
     jr nz, Jump_000_1594
@@ -3634,9 +3664,11 @@ Jump_000_15BC::
     ld [wC58E], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_14D1)
+; only called from ClearSGBPacketBuffer_Sub02 (E-0047)
+; 2 call sites from 1 routine (e.g. ClearSGBPacketBuffer_Sub02)
 ; reads: wC57F, wC580
-Func_000_15C2::
+ClearSGBPacketBuffer_Sub02_Sub02::
+Func_000_15C2:: ; address name
     ld a, [wC57F]
     bit 1, a
     ld a, $F5
@@ -5532,9 +5564,11 @@ Func_000_1F89:: ; address name
     pop hl
     ret
 
+; A = record, C = field offset (SRAMRecordAddress): copies three bytes from the record to hFFC6-hFFC8; HL kept (E-0108)
 ; 3 call sites from 2 routines (e.g. Func_012_77AC, Func_01E_6F17)
 ; writes: hFFC6, hFFC7, hFFC8
-Func_000_1F95::
+LoadRecordThreeBytesToHFFC6::
+Func_000_1F95:: ; address name
     push hl
     call SRAMRecordAddress
     ld a, [hl+]
@@ -5589,7 +5623,7 @@ Jump_000_1FBD::
     ret
 
 ; A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)
-; 90 call sites from 59 routines (e.g. CopyRecordNameToWC8CF, LoadSRAMRecordWord, Func_000_1F95, LoadSRAMRecordByte, ...)
+; 90 call sites from 59 routines (e.g. CopyRecordNameToWC8CF, LoadSRAMRecordWord, LoadRecordThreeBytesToHFFC6, LoadSRAMRecordByte, ...)
 ; points at: sA000
 SRAMRecordAddress::
 Func_000_1FD1:: ; address name

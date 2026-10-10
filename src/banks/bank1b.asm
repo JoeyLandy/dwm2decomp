@@ -43,7 +43,7 @@ Jump_01B_402A:: ; address name
     xor a, a
     ld [wD783], a
     ld [wD784], a
-    call Func_000_07D1
+    call WaitSerialTransferDone
     ld a, [wD781]
     ld [wD784], a
     ldh a, [rSB]

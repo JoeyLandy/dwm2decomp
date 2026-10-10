@@ -1173,6 +1173,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Banks $31 and $A0 are not copies of each other (30 unique twins).
 - Binary verification: pending; see the commit.
 
+### E-0108 — DMG palette fade steps and bank-0 hardware helpers
+
+- Kind: OBSERVATION (full reading; hardware register meanings from the documented Game Boy behaviour, HARDWARE).
+- **DMG fade.** DarkenDMGPaletteByFadeLevel and LightenDMGPaletteByFadeLevel rebuild a DMG palette byte shade by shade, through four small helpers. The shift by wFadeLevel is capped at 3 or floored at 0. They are the DMG counterpart of the CGB writers (E-0076).
+- **Hardware helpers.** ClearSGBPacketBuffer, CopySGBPacketFieldsAndSend, ClearSTATInterruptSources (rSTAT &= 7) and WaitSerialTransferDone (rSC bit 7).
+- **Record helper.** LoadRecordThreeBytesToHFFC6.
+- **Not named.** `00:3340` sets wSoundId and searches a table at `$3E24`, which is the $FF terminator of SoundBankTable followed by code. Its callers have no references, so it may be unused or broken; it is left unnamed.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

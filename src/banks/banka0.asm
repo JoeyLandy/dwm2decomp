@@ -2246,7 +2246,7 @@ Data_0A0_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wC51F, wC520, hScrollX, hScrollXHi, hScrollY, hScrollYHi, rVBK, wC554, ...
 GameMode7_Init::
 Func_0A0_4ECF:: ; address name
-    call Func_000_08A6
+    call ClearSTATInterruptSources
     ld a, $02
     call QueueMusic
     ld a, [wSGBActive]

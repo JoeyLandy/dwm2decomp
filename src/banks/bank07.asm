@@ -475,7 +475,7 @@ Func_007_486E:: ; address name
     ld hl, wD06A
     ld bc, $0008
     call FillBytes
-    call Func_000_08A6
+    call ClearSTATInterruptSources
     xor a, a
     ld [wC58C], a
     ld a, [wModeState]

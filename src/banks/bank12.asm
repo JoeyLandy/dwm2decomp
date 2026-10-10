@@ -9046,7 +9046,7 @@ Jump_012_77D0::
     push hl
     ld a, [hl]
     ld c, $58
-    call Func_000_1F95
+    call LoadRecordThreeBytesToHFFC6
     ldh a, [hFFC6]
     ld l, a
     ldh a, [hFFC7]
