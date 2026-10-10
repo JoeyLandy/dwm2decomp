@@ -1225,7 +1225,7 @@ Jump_031_46EE::
     ld [wD960], a
     ld a, h
     ld [wD961], a
-    call Func_031_71F5
+    call ClearAttributesAndScreenBuffer_Bank31
     call CopyRectRecordForWD88F_Bank31
     call Func_031_7389
     call Func_031_746F
@@ -1348,7 +1348,7 @@ Jump_031_47B9:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_031_47A9, Func_031_46C1_Case02)
 Func_031_47C7::
     call Func_031_47DD
-    call Func_031_71F5
+    call ClearAttributesAndScreenBuffer_Bank31
     call CopyRectRecordForWD88F_Bank31
     call Func_031_7389
     call LayoutTileBlocksForWD890Count
@@ -2670,7 +2670,7 @@ Jump_031_4F50:: ; address name
     jr z, Jump_031_4F8F
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_74A0
+    call DrawWC278Rect12x11ToBGMapRow7
     ld a, $01
     ld [wBattleResolveStep], a
     xor a, a
@@ -2840,7 +2840,7 @@ Jump_031_5087:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld [wC46C], a
-    call Func_031_74A0
+    call DrawWC278Rect12x11ToBGMapRow7
     ld hl, Data_031_63A7
     ld a, [wC46C]
     and a, $03
@@ -2966,7 +2966,7 @@ Jump_031_517C::
 ; writes: wBattleResolveStep, wBattleSubPhase
 Func_031_4EB9_Case03::
 Jump_031_517D:: ; address name
-    call Func_031_74A0
+    call DrawWC278Rect12x11ToBGMapRow7
     ld a, $01
     ld [wBattleResolveStep], a
     xor a, a
@@ -2982,7 +2982,7 @@ Func_031_4EB9_Case04::
 Jump_031_518A:: ; address name
     ld a, [wD869]
     or a, a
-    call z, Func_031_74A0
+    call z, DrawWC278Rect12x11ToBGMapRow7
     xor a, a
     ld [wD869], a
     ld hl, vTiles1 + $6D0
@@ -3394,7 +3394,7 @@ Jump_031_53CD:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case11::
 Jump_031_542A:: ; address name
-    call Func_031_7509
+    call DrawWC2A4AndWC2B8Rects
     ld hl, Data_031_63A7
     ld a, [wC46E]
     and a, $03
@@ -3627,7 +3627,7 @@ Jump_031_55AD::
 ; writes: wBattleResolveStep, wD869
 Func_031_4EB9_Case13::
 Jump_031_55C1:: ; address name
-    call Func_031_7509
+    call DrawWC2A4AndWC2B8Rects
     ld a, [wD869]
     ld [wBattleResolveStep], a
     xor a, a
@@ -3641,7 +3641,7 @@ Func_031_4EB9_Case14::
 Jump_031_55CF:: ; address name
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_7509
+    call DrawWC2A4AndWC2B8Rects
     call Func_031_746F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3796,7 +3796,7 @@ Jump_031_56AF::
     jr nz, Jump_031_56D5
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_7509
+    call DrawWC2A4AndWC2B8Rects
     call Func_031_746F
     ld a, $65
     ld [wStringIndex], a
@@ -5641,26 +5641,28 @@ Func_031_6153::
     ld a, [hl+]
     inc hl
     cp a, $FF
-    call z, Func_031_61A2
+    call z, ReturnZero_61A2
     call Func_031_62F7
     ld a, [hl+]
     inc hl
     cp a, $FF
-    call z, Func_031_61A2
+    call z, ReturnZero_61A2
     call Func_031_6306
     ld a, [hl+]
     inc hl
     cp a, $FF
-    call z, Func_031_61A2
+    call z, ReturnZero_61A2
     call Func_031_6315
     ld a, [hl]
     cp a, $FF
-    call z, Func_031_61A2
+    call z, ReturnZero_61A2
     call Func_031_6324
     ret
 
+; A = 0 (xor a, so Z set and carry clear); a two-byte handler stub (E-0110)
 ; 4 call sites from 1 routine (e.g. Func_031_6153)
-Func_031_61A2::
+ReturnZero_61A2::
+Func_031_61A2:: ; address name
     xor a, a
     ret
 
@@ -5798,24 +5800,26 @@ Func_031_624F::
     add_a_to_hl
     ld a, [hl+]
     cp a, $FF
-    call z, Func_031_6286
+    call z, ReturnZero_6286
     call Func_031_62F7
     ld a, [hl+]
     cp a, $FF
-    call z, Func_031_6286
+    call z, ReturnZero_6286
     call Func_031_6306
     ld a, [hl+]
     cp a, $FF
-    call z, Func_031_6286
+    call z, ReturnZero_6286
     call Func_031_6315
     ld a, [hl]
     cp a, $FF
-    call z, Func_031_6286
+    call z, ReturnZero_6286
     call Func_031_6324
     ret
 
+; A = 0 (xor a, so Z set and carry clear); a two-byte handler stub (E-0110)
 ; 4 call sites from 1 routine (e.g. Func_031_624F)
-Func_031_6286::
+ReturnZero_6286::
+Func_031_6286:: ; address name
     xor a, a
     ret
 
@@ -6859,7 +6863,7 @@ Jump_031_67F7::
     ld hl, wC130
     call Func_000_2ECF
     ld hl, $0500
-    call Func_031_6DDD
+    call ShowStringHL_Bank31
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -7036,7 +7040,7 @@ Jump_031_6925:: ; address name
     pop hl
     call Func_031_6D96
     ld hl, $0501
-    call Func_031_6DDD
+    call ShowStringHL_Bank31
     xor a, a
     ld [rRAMG], a
     ld hl, wBattleSubPhase
@@ -7129,7 +7133,7 @@ Jump_031_69A4:: ; address name
 
 Jump_031_69E2::
     push bc
-    call Func_031_6DDD
+    call ShowStringHL_Bank31
     pop bc
     ld hl, wD09D
     ld b, $38
@@ -7863,9 +7867,11 @@ Func_031_6D96::
     call WriteDecimalByteString
     ret
 
+; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank2F (E-0110)
 ; 6 call sites from 6 routines (e.g. Func_031_67AA_Case00, Func_031_6885_Case01, Func_031_6885_Table2_Case01, Func_031_6E67_Case05, ...)
 ; writes: wStringCategory, wStringIndex
-Func_031_6DDD::
+ShowStringHL_Bank31::
+Func_031_6DDD:: ; address name
     ld a, h
     ld [wStringCategory], a
     ld a, l
@@ -8007,7 +8013,7 @@ Jump_031_6E79:: ; address name
     inc [hl]
     xor a, a
     ld [wBattleResolveStep], a
-    farcall Func_031_71F5
+    farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForWD88F_Bank31
     farcall Func_031_7389
     call FillTilesFromRequest
@@ -8061,7 +8067,7 @@ Jump_031_6EDB::
     ld a, $03
     ld [wCFD3], a
     ld hl, $0506
-    call Func_031_6DDD
+    call ShowStringHL_Bank31
     ld hl, wBattleSubStep
     inc [hl]
     xor a, a
@@ -8188,7 +8194,7 @@ Jump_031_6FB1:: ; address name
     ld bc, $1405
     call CopyRect32StrideToVRAM
     ld hl, $0508
-    call Func_031_6DDD
+    call ShowStringHL_Bank31
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -8246,7 +8252,7 @@ Jump_031_700F:: ; address name
     add_a_to_hl
     ld [hl], $FF
     ld hl, $0509
-    call Func_031_6DDD
+    call ShowStringHL_Bank31
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -8514,11 +8520,13 @@ Func_031_71C4::
     ret nz
     ret
 
+; on CGB writes 0 to the 20 x 18 visible attributes of vBGMap0 in VRAM bank 1 (rows 32 apart, WriteVRAMByteInc); then fills the $240 bytes of wScreenTileBuffer with $C3; what follows is not read (E-0110)
 ; 6 call sites from 6 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wIsCGB
 ; writes: rVBK
 ; points at: wScreenTileBuffer
-Func_031_71F5::
+ClearAttributesAndScreenBuffer_Bank31::
+Func_031_71F5:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_031_721B
@@ -8754,39 +8762,41 @@ Jump_031_7333::
 Jump_031_7340::
     ld c, $01
     ld hl, vBGMap0 + $E7
-    call Func_031_7379
+    call LoadMonsterPictureAttributesFromDE
     ret
 
 Jump_031_7349::
     ld c, $01
     ld hl, vBGMap0 + $E4
-    call Func_031_7379
+    call LoadMonsterPictureAttributesFromDE
     ld c, $03
     inc de
     inc de
     ld hl, vBGMap0 + $EA
-    call Func_031_7379
+    call LoadMonsterPictureAttributesFromDE
     ret
 
 Jump_031_735C::
     ld c, $01
     ld hl, vBGMap0 + $E1
-    call Func_031_7379
+    call LoadMonsterPictureAttributesFromDE
     ld c, $03
     inc de
     inc de
     ld hl, vBGMap0 + $E7
-    call Func_031_7379
+    call LoadMonsterPictureAttributesFromDE
     ld c, $05
     inc de
     inc de
     ld hl, vBGMap0 + $ED
-    call Func_031_7379
+    call LoadMonsterPictureAttributesFromDE
     ret
 
+; hFFC6 = C (palette number), DE = the monster id word stored at [DE], then LoadMonsterPictureAttributes (HL = BG map address from the caller); DE kept (E-0110)
 ; 6 call sites from 1 routine (e.g. Func_031_7321)
 ; writes: hFFC6
-Func_031_7379::
+LoadMonsterPictureAttributesFromDE::
+Func_031_7379:: ; address name
     push de
     ld a, c
     ldh [hFFC6], a
@@ -8989,9 +8999,11 @@ Func_031_7499::
     farcall Func_01A_7284
     ret
 
+; copies a 12 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7) with CopyRect32StrideToVRAM (E-0110)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_Table2_Case0D, Func_031_4EB9_Case04, Func_031_4EB9_Case03, Func_031_4EB9_Case01)
 ; points at: wC278
-Func_031_74A0::
+DrawWC278Rect12x11ToBGMapRow7::
+Func_031_74A0:: ; address name
     ld de, wC278
     ld hl, vBGMap0 + $E0
     ld bc, $0C0B
@@ -9068,9 +9080,11 @@ Func_031_7502::
     farcall Func_01A_72B5
     ret
 
+; copies a 7 x 1 rectangle from wC2A4 to vBGMap0 + $10C (row 8, column 12) and a 20 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9), both with CopyRect32StrideToVRAM (E-0110)
 ; 4 call sites from 4 routines (e.g. Func_031_4EB9_Case1A, Func_031_4EB9_Case14, Func_031_4EB9_Case13, Func_031_4EB9_Case11)
 ; points at: wC2A4, wC2B8
-Func_031_7509::
+DrawWC2A4AndWC2B8Rects::
+Func_031_7509:: ; address name
     ld de, wC2A4
     ld hl, vBGMap0 + $10C
     ld bc, $0701
@@ -9107,7 +9121,7 @@ Func_031_7536:: ; address name
     ld bc, $140B
 
 ; B = width, C = rows, DE = source with 32-byte rows, HL = VRAM address with 32-byte rows: copies a B x C rectangle with WriteVRAMByteInc. DE ends 32 * C past its start and HL at the start of the row below; B kept, C = 0 (E-0060)
-; 18 call sites from 15 routines (e.g. Func_031_47A9, DrawWC338RowsToBGMapRow13, Func_031_74A0, RunBattleSetup_Table2_Case0C, ...)
+; 18 call sites from 15 routines (e.g. Func_031_47A9, DrawWC338RowsToBGMapRow13, DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_Table2_Case0C, ...)
 CopyRect32StrideToVRAM::
 Func_031_753F:: ; address name
     push bc
@@ -9249,7 +9263,7 @@ Jump_031_7710::
     ld hl, Data_031_77B3
     add a, a
     add_a_to_hl
-    call Func_031_7797
+    call DerefHL_Bank31
     ld [hl], $C3
     jr Jump_031_773A
 
@@ -9260,7 +9274,7 @@ Jump_031_7726::
     ld hl, Data_031_77B3
     add a, a
     add_a_to_hl
-    call Func_031_7797
+    call DerefHL_Bank31
     ld [hl], $C2
 
 Jump_031_773A::
@@ -9271,7 +9285,7 @@ Jump_031_773A::
 Func_031_773C::
     push hl
     ld hl, Data_031_779B
-    call Func_031_778E
+    call ReadWordTableEntryForSlotC
     ld a, $C3
     ld [hl+], a
     ld [hl+], a
@@ -9285,7 +9299,7 @@ Func_031_773C::
 Func_031_774C::
     push hl
     ld hl, Data_031_779B
-    call Func_031_778E
+    call ReadWordTableEntryForSlotC
     ld [hl], $C0
     pop hl
     ret
@@ -9294,7 +9308,7 @@ Func_031_774C::
 Func_031_7757::
     push hl
     ld hl, Data_031_77A7
-    call Func_031_778E
+    call ReadWordTableEntryForSlotC
     ld [hl], $C1
     pop hl
     ret
@@ -9303,7 +9317,7 @@ Func_031_7757::
 Func_031_7762::
     push hl
     ld hl, Data_031_77A7
-    call Func_031_778E
+    call ReadWordTableEntryForSlotC
     ld [hl], $C7
     pop hl
     ret
@@ -9312,7 +9326,7 @@ Func_031_7762::
 Func_031_776D::
     push hl
     ld hl, Data_031_77AD
-    call Func_031_778E
+    call ReadWordTableEntryForSlotC
     ld [hl], $C8
     pop hl
     ret
@@ -9321,7 +9335,7 @@ Func_031_776D::
 Func_031_7778::
     push hl
     ld hl, Data_031_77A1
-    call Func_031_778E
+    call ReadWordTableEntryForSlotC
     ld [hl], $C9
     pop hl
     ret
@@ -9330,23 +9344,27 @@ Func_031_7778::
 Func_031_7783::
     push hl
     ld hl, Data_031_77B3
-    call Func_031_778E
+    call ReadWordTableEntryForSlotC
     ld [hl], $CA
     pop hl
     ret
 
+; HL = table: HL = the word at HL + 2 * (C & 3) (falls into DerefHL_Bank31) (E-0110)
 ; 7 call sites from 7 routines (e.g. Func_031_776D, Func_031_7783, Func_031_774C, Func_031_7778, ...)
-Func_031_778E::
+ReadWordTableEntryForSlotC::
+Func_031_778E:: ; address name
     ld a, c
     and a, $03
     add a, a
     add a, l
     ld l, a
-    jr nc, Func_031_7797
+    jr nc, DerefHL_Bank31
     inc h
 
+; HL = the word at HL; A = its low byte (E-0110)
 ; 2 call sites from 1 routine (e.g. Func_031_76AE)
-Func_031_7797::
+DerefHL_Bank31::
+Func_031_7797:: ; address name
     deref_hl
     ret
 

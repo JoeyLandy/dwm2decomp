@@ -209,7 +209,7 @@ Jump_019_4199::
 GameMode4_Init_Sub01_Sub02::
 Func_019_419B:: ; address name
     farcall GameMode4_Init_Sub01_Sub02_Sub02
-    farcall Func_031_71F5
+    farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForWD88F_Bank31
     farcall LayoutTileBlocksForWD890Count
     farcall Func_031_7389

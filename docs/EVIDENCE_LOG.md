@@ -1190,6 +1190,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Partly read.** The checksum comparisons, the sum accumulation in CopySaveBlocksToSRAMWithSum, and the other step routines (`7333` and `7347` follow the same pattern). Their notes say so.
 - Binary verification: pending; see the commit.
 
+### E-0110 — Bank-$31 battle display helpers
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **Named:**
+  - ReadWordTableEntryForSlotC and DerefHL_Bank31;
+  - LoadMonsterPictureAttributesFromDE;
+  - the rectangle draws DrawWC2A4AndWC2B8Rects and DrawWC278Rect12x11ToBGMapRow7;
+  - ClearAttributesAndScreenBuffer_Bank31 (partly read);
+  - ShowStringHL_Bank31;
+  - two `xor a / ret` stubs, ReturnZero_6286 and ReturnZero_61A2.
+- **Left unnamed.** The per-slot routines that branch on wC58A/wC57F (`77B9`, `76AE`, `785F`, `7806`) hand mode 2 to bank $A0. They are not named yet.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

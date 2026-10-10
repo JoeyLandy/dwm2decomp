@@ -7698,7 +7698,7 @@ Jump_016_7324::
 
 ; 11 call sites from 11 routines (e.g. Func_016_6C16_Case13, Func_016_6C16_Case12, Func_016_6C16_Case0F, Func_016_6C16_Case0C, ...)
 Func_016_733F::
-    farcall Func_031_71F5
+    farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForWD88F_Bank31
     farcall Func_031_7389
     farcall LayoutTileBlocksForWD890Count

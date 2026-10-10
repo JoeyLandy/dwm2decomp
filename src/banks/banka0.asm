@@ -207,7 +207,7 @@ Func_0A0_40B0:: ; address name
 ; writes: wC526
 GameMode7_Init_Sub01_Sub02::
 Func_0A0_415D:: ; address name
-    farcall Func_031_71F5
+    farcall ClearAttributesAndScreenBuffer_Bank31
     call GameMode7_Init_Sub01_Sub02_Sub01
     call GameMode7_Init_Sub01_Sub02_Sub02
     call GameMode7_Init_Sub01_Sub02_Sub03
@@ -6744,7 +6744,7 @@ Jump_0A0_6A7F::
     ld hl, Data_0A0_6B1A
     add a, a
     add_a_to_hl
-    call Func_0A0_6B06
+    call DerefHL_BankA0
     ld [hl], $C3
     jr Jump_0A0_6AA9
 
@@ -6755,7 +6755,7 @@ Jump_0A0_6A95::
     ld hl, Data_0A0_6B1A
     add a, a
     add_a_to_hl
-    call Func_0A0_6B06
+    call DerefHL_BankA0
     ld [hl], $C2
 
 Jump_0A0_6AA9::
@@ -6766,7 +6766,7 @@ Jump_0A0_6AA9::
 Func_0A0_6AAB::
     push hl
     ld hl, Data_0A0_6B0A
-    call Func_0A0_6AFD
+    call ReadWordTableEntryForSlotC_BankA0
     ld a, $C3
     ld [hl+], a
     ld [hl+], a
@@ -6780,7 +6780,7 @@ Func_0A0_6AAB::
 Func_0A0_6ABB::
     push hl
     ld hl, Data_0A0_6B0A
-    call Func_0A0_6AFD
+    call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C0
     pop hl
     ret
@@ -6789,7 +6789,7 @@ Func_0A0_6ABB::
 Func_0A0_6AC6::
     push hl
     ld hl, Data_0A0_6B12
-    call Func_0A0_6AFD
+    call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C1
     pop hl
     ret
@@ -6798,7 +6798,7 @@ Func_0A0_6AC6::
 Func_0A0_6AD1::
     push hl
     ld hl, Data_0A0_6B12
-    call Func_0A0_6AFD
+    call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C7
     pop hl
     ret
@@ -6807,7 +6807,7 @@ Func_0A0_6AD1::
 Func_0A0_6ADC::
     push hl
     ld hl, Data_0A0_6B16
-    call Func_0A0_6AFD
+    call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C8
     pop hl
     ret
@@ -6816,7 +6816,7 @@ Func_0A0_6ADC::
 Func_0A0_6AE7::
     push hl
     ld hl, Data_0A0_6B0E
-    call Func_0A0_6AFD
+    call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C9
     pop hl
     ret
@@ -6825,23 +6825,27 @@ Func_0A0_6AE7::
 Func_0A0_6AF2::
     push hl
     ld hl, Data_0A0_6B1A
-    call Func_0A0_6AFD
+    call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $CA
     pop hl
     ret
 
+; the same 13 bytes as ReadWordTableEntryForSlotC (31:778E)
 ; 7 call sites from 7 routines (e.g. Func_0A0_6ADC, Func_0A0_6AF2, Func_0A0_6ABB, Func_0A0_6AE7, ...)
-Func_0A0_6AFD::
+ReadWordTableEntryForSlotC_BankA0::
+Func_0A0_6AFD:: ; address name
     ld a, c
     and a, $03
     add a, a
     add a, l
     ld l, a
-    jr nc, Func_0A0_6B06
+    jr nc, DerefHL_BankA0
     inc h
 
+; the same 4 bytes as DerefHL_Bank31 (31:7797)
 ; 2 call sites from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6B06::
+DerefHL_BankA0::
+Func_0A0_6B06:: ; address name
     deref_hl
     ret
 
