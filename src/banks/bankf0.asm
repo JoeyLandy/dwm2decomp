@@ -6473,7 +6473,7 @@ Func_0F0_7D03::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_6211)
+; 1 call site from 1 routine (e.g. ScriptCommand86_Run)
 ; reads: wC616
 ; points at: wCE9B, wCECE, wC60C, wCEE7
 Func_0F0_7D0A::

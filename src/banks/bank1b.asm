@@ -4550,14 +4550,14 @@ Jump_01B_6747::
     ld a, [wC52B]
     and a, a
     ret nz
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_01B_6753::
     ld a, [wC52B]
     and a, a
     ret nz
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 ; 1 call site from 1 routine (e.g. BeginString_Bank07_Cat5)
@@ -5656,7 +5656,7 @@ Jump_01B_6F68::
     ret
 
 Jump_01B_6F8F::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz

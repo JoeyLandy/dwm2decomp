@@ -6354,7 +6354,7 @@ Jump_016_6F01::
     ret
 
 Jump_016_6F30::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz

@@ -4184,7 +4184,7 @@ Func_000_1872:: ; address name
     ret
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
-; 103 call sites from 27 routines (e.g. Func_00D_4B30, Func_014_4001, Func_014_43CC, Func_014_4B5A, ...)
+; 103 call sites from 27 routines (e.g. Func_00D_4B30, ScriptCommandEC_Run, Func_014_43CC, Func_014_4B5A, ...)
 ; reads: rSTAT, wC52D
 ; writes: wC52D
 FillTilesBxC::
@@ -5449,7 +5449,7 @@ Func_000_1F95::
     ret
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
-; 29 call sites from 23 routines (e.g. Func_000_222B, Func_004_58C2, Func_012_5728, Func_014_56B0, ...)
+; 29 call sites from 23 routines (e.g. Func_000_222B, Func_004_58C2, ScriptCommand87_Run, Func_014_56B0, ...)
 ; points at: wC8CF
 CopyRecordNameToWC8CF::
 Func_000_1FA4:: ; address name
@@ -6200,7 +6200,7 @@ Jump_000_2378::
     ret
 
 ; A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeHFFC6 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)
-; 4 call sites from 4 routines (e.g. Func_003_5AA7, Func_00F_409A, Func_01E_6D42, Func_0F1_442F)
+; 4 call sites from 4 routines (e.g. Func_003_5AA7, ScriptCommand62_Run, Func_01E_6D42, Func_0F1_442F)
 ; reads: hFFCC
 ; writes: hFFCC
 PersonalityIndexOfRecord::
@@ -6244,7 +6244,7 @@ Func_000_23BD:: ; address name
     inc c
     ret
 
-; 9 call sites from 5 routines (e.g. Func_012_5A2F, Func_012_63A1, Func_073_4C5D, Func_073_44A5, ...)
+; 9 call sites from 5 routines (e.g. ScriptCommand84_Run, ScriptCommand80_Run, Func_073_4C5D, Func_073_44A5, ...)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC8
 Func_000_23CA::
@@ -6332,7 +6332,7 @@ Func_000_241A::
     ld [rROMB0], a
     jr Jump_000_2447
 
-; 15 call sites from 8 routines (e.g. Func_012_6211, Func_012_5A2F, Func_012_630E, Func_012_63A1, ...)
+; 15 call sites from 8 routines (e.g. ScriptCommand86_Run, ScriptCommand84_Run, ScriptCommand81_Run, ScriptCommand80_Run, ...)
 ; writes: rROMB0
 Func_000_2431::
     sla a

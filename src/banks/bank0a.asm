@@ -1035,7 +1035,7 @@ Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32, $34, $36, $38, $3A
     db $3C, $41, $46, $50, $50
 
-; 14 call sites from 14 routines (e.g. Func_00F_59E6, Func_00F_5AF3, Func_00F_5D9D, Func_00F_60E6, ...)
+; 14 call sites from 14 routines (e.g. ScriptCommand4A_Run, ScriptCommand66_Run, ScriptCommand48_Run, ScriptCommand41_Run, ...)
 ; reads: hFFC6
 ; writes: wCFDC, wCFDD, wCFDE, wCFDF, wCFE0, wCFE1, wCFE2, wC903, ...
 Func_00A_47A4::

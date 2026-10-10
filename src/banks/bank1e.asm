@@ -1,9 +1,11 @@
 SECTION "Bank 1E", ROMX[$4000], BANK[$1E]
     db $1E
 
+; implements script command type E9; reached through ScriptCommandE9 in bank $10 (E-0038)
 ; 2 call sites from 2 routines (e.g. Func_00D_7115, ScriptCommandE9)
 ; reads: wD788
-Func_01E_4001::
+ScriptCommandE9_Run::
+Func_01E_4001:: ; address name
     ld a, [wD788]
     rst $00
     dw Jump_01E_400D
@@ -35,7 +37,7 @@ Jump_01E_402B::
     ret
 
 Jump_01E_403F::
-    farcall Func_015_4001
+    farcall ScriptCommandEE_Run
     ret
 
 Jump_01E_4046::
@@ -52,12 +54,14 @@ Jump_01E_4046::
     ret
 
 Jump_01E_4062::
-    farcall Func_015_4001
+    farcall ScriptCommandEE_Run
     ret
 
-; 18 call sites from 16 routines (e.g. Func_00D_4B30, Func_00D_711C, Func_00D_720E, ScriptCommandE8, ...)
+; implements script command type E8; reached through ScriptCommandE8 in bank $10 (E-0038)
+; 18 call sites from 16 routines (e.g. Func_00D_4B30, ScriptCommandF4_Run, Func_00D_720E, ScriptCommandE8, ...)
 ; reads: wD780
-Func_01E_4069::
+ScriptCommandE8_Run::
+Func_01E_4069:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_01E_408B
@@ -259,7 +263,7 @@ Jump_01E_41D0::
     ld [wScriptStartRequest], a
     ret
 
-; 3 call sites from 1 routine (e.g. Func_01E_4069)
+; 3 call sites from 1 routine (e.g. ScriptCommandE8_Run)
 ; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
 Func_01E_41DF::
@@ -276,19 +280,19 @@ Func_01E_41DF::
     xor a, a
     ld [wD787], a
 
-; 1 call site from 1 routine (e.g. Func_01E_4069)
+; 1 call site from 1 routine (e.g. ScriptCommandE8_Run)
 ; reads: wD786
 Func_01E_41F9::
     ld b, $BB
     jr Jump_01E_4203
 
-; 2 call sites from 1 routine (e.g. Func_01E_4069)
+; 2 call sites from 1 routine (e.g. ScriptCommandE8_Run)
 ; reads: wD786
 Func_01E_41FD::
     ld b, $C3
     jr Jump_01E_4203
 
-; 1 call site from 1 routine (e.g. Func_01E_4069)
+; 1 call site from 1 routine (e.g. ScriptCommandE8_Run)
 ; reads: wD786
 Func_01E_4201::
     ld b, $BC
@@ -6778,7 +6782,7 @@ Jump_01E_740A::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 41 call sites from 10 routines (e.g. Func_01E_4069, Func_01E_4A32, Func_01E_46E5, Func_01E_42C6, ...)
+; 41 call sites from 10 routines (e.g. ScriptCommandE8_Run, Func_01E_4A32, Func_01E_46E5, Func_01E_42C6, ...)
 StoreBAtWordTableEntry_Bank1E::
 Func_01E_741A:: ; address name
     push bc
@@ -6792,7 +6796,7 @@ Func_01E_741A:: ; address name
     ld [de], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_01E_4001, Func_01E_4069, Func_01E_4918, Func_01E_75F2)
+; 4 call sites from 4 routines (e.g. ScriptCommandE9_Run, ScriptCommandE8_Run, Func_01E_4918, Func_01E_75F2)
 Func_01E_7428::
     ld a, [de]
     inc de
@@ -6804,7 +6808,7 @@ Func_01E_7428::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 3 routines (e.g. Func_01E_4001, Func_01E_4069, Func_01E_75F2)
+; 3 call sites from 3 routines (e.g. ScriptCommandE9_Run, ScriptCommandE8_Run, Func_01E_75F2)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank1E::
 Func_01E_7431:: ; address name
@@ -6846,7 +6850,7 @@ Jump_01E_7446::
     jr nz, Jump_01E_7445
     ret
 
-; 14 call sites from 8 routines (e.g. Func_01E_4069, Func_01E_4A32, Func_01E_42C6, Func_01E_6074, ...)
+; 14 call sites from 8 routines (e.g. ScriptCommandE8_Run, Func_01E_4A32, Func_01E_42C6, Func_01E_6074, ...)
 ; writes: wD784
 Func_01E_7454::
     ld b, $00
@@ -6895,7 +6899,7 @@ Jump_01E_7486::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 33 call sites from 8 routines (e.g. Func_01E_4069, Func_01E_4A32, Func_01E_4201, Func_01E_42C6, ...)
+; 33 call sites from 8 routines (e.g. ScriptCommandE8_Run, Func_01E_4A32, Func_01E_4201, Func_01E_42C6, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank1E::
@@ -6952,7 +6956,7 @@ Jump_01E_74B6::
     ldh [rSVBK], a
     ret
 
-; 38 call sites from 11 routines (e.g. Func_01E_4001, Func_01E_4069, Func_01E_4A32, Func_01E_46E5, ...)
+; 38 call sites from 11 routines (e.g. ScriptCommandE9_Run, ScriptCommandE8_Run, Func_01E_4A32, Func_01E_46E5, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -7006,7 +7010,7 @@ Jump_01E_74EE::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 86 call sites from 27 routines (e.g. Func_01E_4001, Func_01E_4201, Func_01E_7233, Func_01E_7564, ...)
+; 86 call sites from 27 routines (e.g. ScriptCommandE9_Run, Func_01E_4201, Func_01E_7233, Func_01E_7564, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1E::
 Func_01E_750F:: ; address name

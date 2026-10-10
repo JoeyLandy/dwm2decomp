@@ -446,7 +446,7 @@ Jump_004_4309::
     ld [wCB86], a
     ret
 
-; 25 call sites from 15 routines (e.g. Func_004_4B2D, Func_004_4AA8, Func_004_4129, Func_00F_60E6, ...)
+; 25 call sites from 15 routines (e.g. Func_004_4B2D, Func_004_4AA8, Func_004_4129, ScriptCommand41_Run, ...)
 ; reads: hFFC8, hFFC6, hFFC7, hFFCA, hFFCB, wIsCGB, hFFC9
 ; points at: wC4DF
 Func_004_431F::
@@ -1702,7 +1702,7 @@ Jump_004_4B23::
     call Func_004_4B7E
     ret
 
-; 5 call sites from 3 routines (e.g. Func_004_4AA8, Func_012_4FEA, Func_012_50B3)
+; 5 call sites from 3 routines (e.g. Func_004_4AA8, ScriptCommandA0_Run, ScriptCommandA1_Run)
 ; reads: hFF93, hFF94, hFF95
 ; writes: hFFC6, hFF8A, hFFC7, hFFC9, hFFC8, hFFCA, hFFCB
 Func_004_4B2D::

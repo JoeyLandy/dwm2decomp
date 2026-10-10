@@ -763,7 +763,7 @@ Jump_01D_4A5A::
     jr c, Jump_01D_4A55
     ret
 
-; 5 call sites from 4 routines (e.g. Func_01D_460F, Func_01D_5ADF, Func_01D_508B, Func_01C_6CEF)
+; 5 call sites from 4 routines (e.g. Func_01D_460F, Func_01D_5ADF, Func_01D_508B, ScriptCommandE5_Run)
 ; writes: wD7BC, wD7B0
 ; points at: wC635, wInventory
 Func_01D_4A62::
@@ -3883,7 +3883,7 @@ Func_01D_5DF9::
     farcall ShowString_Bank08
     ret
 
-; 13 call sites from 8 routines (e.g. Func_014_40CC, Func_014_4BA0, Func_014_4F30, Func_01E_4069, ...)
+; 13 call sites from 8 routines (e.g. ScriptCommandEB_Run, Func_014_4BA0, Func_014_4F30, ScriptCommandE8_Run, ...)
 ; reads: wD7AA
 ; writes: wD7AA, rRAMG2, rRAMB
 ; points at: sA000
@@ -3924,7 +3924,7 @@ Jump_01D_5E69::
     ld [rRAMG2], a
     ret
 
-; 19 call sites from 10 routines (e.g. Func_01D_6B32, Func_014_40CC, Func_014_43CC, Func_014_4BA0, ...)
+; 19 call sites from 10 routines (e.g. Func_01D_6B32, ScriptCommandEB_Run, Func_014_43CC, Func_014_4BA0, ...)
 ; reads: wD7A9, wC6FD
 ; writes: wD7A9, rRAMG2, rRAMB
 ; points at: wD789, wC6FE, sA000
@@ -4560,7 +4560,7 @@ Data_01D_6299:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $9B, $62, $C0, $97, $D0, $97, $E0, $97, $F0, $97, $00, $8C, $10, $8C, $20, $8C
     db $A0, $8C, $B0, $8C
 
-; 6 call sites from 6 routines (e.g. Func_00C_4312, Func_014_4001, Func_014_4BA0, Func_015_4001, ...)
+; 6 call sites from 6 routines (e.g. Func_00C_4312, ScriptCommandEC_Run, Func_014_4BA0, ScriptCommandEE_Run, ...)
 ; reads: wC6FD
 ; writes: rRAMG2, rRAMB, wC8D9
 ; points at: wC6FE, wC52D
@@ -5005,7 +5005,7 @@ Jump_01D_6532::
     ld [wD7F9], a
     ret
 
-; 27 call sites from 25 routines (e.g. Func_00C_659F, Func_00C_6922, Func_00C_69D5, Func_00C_6CA1, ...)
+; 27 call sites from 25 routines (e.g. ScriptCommandF7_Run, Func_00C_6922, Func_00C_69D5, Func_00C_6CA1, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7FA
 ; writes: wD7F9, wD7FA, wD783
 Func_01D_6540::
@@ -6125,7 +6125,7 @@ Jump_01D_6C02::
     ld [wScriptStartRequest], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_014_4001, Func_015_47A7, Func_015_4C0C, Func_015_512C, ...)
+; 7 call sites from 7 routines (e.g. ScriptCommandEC_Run, Func_015_47A7, Func_015_4C0C, Func_015_512C, ...)
 ; reads: wD7F3, wD7F4, wD785, wD7F1, wD7F2, wD784
 ; writes: wD784, wD785, wD7F5
 Func_01D_6C14::
@@ -6218,7 +6218,7 @@ Jump_01D_6C7C::
     jr nz, Jump_01D_6C7B
     ret
 
-; 2 call sites from 2 routines (e.g. Func_014_40CC, Func_01E_4069)
+; 2 call sites from 2 routines (e.g. ScriptCommandEB_Run, ScriptCommandE8_Run)
 ; reads: wD785, wD7F1, wD7F2, wD784
 ; writes: wD7F1, wD7F2, wD784, wD785
 ; points at: wD781

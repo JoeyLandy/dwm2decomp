@@ -1203,5 +1203,925 @@
     "name": "ScriptFetchGeneric2",
     "note": "the same five instructions as ScriptFetchGeneric, used by 30 opcodes",
     "evidence": "reading (E-0039)"
+  },
+  "12:59AC": {
+    "name": "ScriptCommand9E_Run",
+    "note": "implements script command type 9E; reached through ScriptCommand9E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4001": {
+    "name": "ScriptCommand9D_Run",
+    "note": "implements script command type 9D; reached through ScriptCommand9D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4013": {
+    "name": "ScriptCommand9C_Run",
+    "note": "implements script command type 9C; reached through ScriptCommand9C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:550E": {
+    "name": "ScriptCommand9B_Run",
+    "note": "implements script command type 9B; reached through ScriptCommand9B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4030": {
+    "name": "ScriptCommand9A_Run",
+    "note": "implements script command type 9A; reached through ScriptCommand9A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4064": {
+    "name": "ScriptCommand99_Run",
+    "note": "implements script command type 99; reached through ScriptCommand99 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4210": {
+    "name": "ScriptCommand98_Run",
+    "note": "implements script command type 98; reached through ScriptCommand98 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:44DB": {
+    "name": "ScriptCommand95_Run",
+    "note": "implements script command type 95; reached through ScriptCommand95 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:43DA": {
+    "name": "ScriptCommand96_Run",
+    "note": "implements script command type 96; reached through ScriptCommand96 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4F1E": {
+    "name": "ScriptCommand90_Run",
+    "note": "implements script command type 90; reached through ScriptCommand90 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4EF9": {
+    "name": "ScriptCommand91_Run",
+    "note": "implements script command type 91; reached through ScriptCommand91 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4ECE": {
+    "name": "ScriptCommand92_Run",
+    "note": "implements script command type 92; reached through ScriptCommand92 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4E55": {
+    "name": "ScriptCommand93_Run",
+    "note": "implements script command type 93; reached through ScriptCommand93 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4E4B": {
+    "name": "ScriptCommand94_Run",
+    "note": "implements script command type 94; reached through ScriptCommand94 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4A1E": {
+    "name": "ScriptCommand8D_Run",
+    "note": "implements script command type 8D; reached through ScriptCommand8D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4A9A": {
+    "name": "ScriptCommand8C_Run",
+    "note": "implements script command type 8C; reached through ScriptCommand8C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4C07": {
+    "name": "ScriptCommand8B_Run",
+    "note": "implements script command type 8B; reached through ScriptCommand8B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4965": {
+    "name": "ScriptCommand8F_Run",
+    "note": "implements script command type 8F; reached through ScriptCommand8F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4919": {
+    "name": "ScriptCommand9F_Run",
+    "note": "implements script command type 9F; reached through ScriptCommand9F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:4FEA": {
+    "name": "ScriptCommandA0_Run",
+    "note": "implements script command type A0; reached through ScriptCommandA0 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:50B3": {
+    "name": "ScriptCommandA1_Run",
+    "note": "implements script command type A1; reached through ScriptCommandA1 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:50E5": {
+    "name": "ScriptCommand8E_Run",
+    "note": "implements script command type 8E; reached through ScriptCommand8E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:51F4": {
+    "name": "ScriptCommand8A_Run",
+    "note": "implements script command type 8A; reached through ScriptCommand8A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:63A1": {
+    "name": "ScriptCommand80_Run",
+    "note": "implements script command type 80; reached through ScriptCommand80 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:630E": {
+    "name": "ScriptCommand81_Run",
+    "note": "implements script command type 81; reached through ScriptCommand81 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:6211": {
+    "name": "ScriptCommand86_Run",
+    "note": "implements script command type 86; reached through ScriptCommand86 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:4001": {
+    "name": "ScriptCommand82_Run",
+    "note": "implements script command type 82; reached through ScriptCommand82 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:5CE5": {
+    "name": "ScriptCommand83_Run",
+    "note": "implements script command type 83; reached through ScriptCommand83 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:5A2F": {
+    "name": "ScriptCommand84_Run",
+    "note": "implements script command type 84; reached through ScriptCommand84 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:5854": {
+    "name": "ScriptCommand85_Run",
+    "note": "implements script command type 85; reached through ScriptCommand85 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:5728": {
+    "name": "ScriptCommand87_Run",
+    "note": "implements script command type 87; reached through ScriptCommand87 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:55E8": {
+    "name": "ScriptCommand88_Run",
+    "note": "implements script command type 88; reached through ScriptCommand88 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "12:5534": {
+    "name": "ScriptCommand89_Run",
+    "note": "implements script command type 89; reached through ScriptCommand89 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "5F:78CE": {
+    "name": "ScriptCommand06_Run",
+    "note": "implements script command type 06; reached through ScriptCommand06 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "5F:787C": {
+    "name": "ScriptCommand05_Run",
+    "note": "implements script command type 05; reached through ScriptCommand05 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "5F:7969": {
+    "name": "ScriptCommand0A_Run",
+    "note": "implements script command type 0A; reached through ScriptCommand0A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "5F:7907": {
+    "name": "ScriptCommand0C_Run",
+    "note": "implements script command type 0C; reached through ScriptCommand0C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "5F:7AB2": {
+    "name": "ScriptCommand0E_Run",
+    "note": "implements script command type 0E; reached through ScriptCommand0E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:79F4": {
+    "name": "ScriptCommand11_Run",
+    "note": "implements script command type 11; reached through ScriptCommand11 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:77CC": {
+    "name": "ScriptCommand12_Run",
+    "note": "implements script command type 12; reached through ScriptCommand12 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:765D": {
+    "name": "ScriptCommand13_Run",
+    "note": "implements script command type 13; reached through ScriptCommand13 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:75DD": {
+    "name": "ScriptCommand14_Run",
+    "note": "implements script command type 14; reached through ScriptCommand14 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:73A0": {
+    "name": "ScriptCommand15_Run",
+    "note": "implements script command type 15; reached through ScriptCommand15 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:7024": {
+    "name": "ScriptCommand16_Run",
+    "note": "implements script command type 16; reached through ScriptCommand16 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:758C": {
+    "name": "ScriptCommand17_Run",
+    "note": "implements script command type 17; reached through ScriptCommand17 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:567B": {
+    "name": "ScriptCommand18_Run",
+    "note": "implements script command type 18; reached through ScriptCommand18 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6F5B": {
+    "name": "ScriptCommand19_Run",
+    "note": "implements script command type 19; reached through ScriptCommand19 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6F14": {
+    "name": "ScriptCommand1A_Run",
+    "note": "implements script command type 1A; reached through ScriptCommand1A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4617": {
+    "name": "ScriptCommand1B_Run",
+    "note": "implements script command type 1B; reached through ScriptCommand1B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7A2D": {
+    "name": "ScriptCommand1C_Run",
+    "note": "implements script command type 1C; reached through ScriptCommand1C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:786F": {
+    "name": "ScriptCommand1D_Run",
+    "note": "implements script command type 1D; reached through ScriptCommand1D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6E5F": {
+    "name": "ScriptCommand1E_Run",
+    "note": "implements script command type 1E; reached through ScriptCommand1E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:772E": {
+    "name": "ScriptCommand1F_Run",
+    "note": "implements script command type 1F; reached through ScriptCommand1F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6F7C": {
+    "name": "ScriptCommand20_Run",
+    "note": "implements script command type 20; reached through ScriptCommand20 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6EE7": {
+    "name": "ScriptCommand21_Run",
+    "note": "implements script command type 21; reached through ScriptCommand21 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:55F5": {
+    "name": "ScriptCommand22_Run",
+    "note": "implements script command type 22; reached through ScriptCommand22 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7625": {
+    "name": "ScriptCommand23_Run",
+    "note": "implements script command type 23; reached through ScriptCommand23 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:546F": {
+    "name": "ScriptCommand24_Run",
+    "note": "implements script command type 24; reached through ScriptCommand24 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6EBA": {
+    "name": "ScriptCommand25_Run",
+    "note": "implements script command type 25; reached through ScriptCommand25 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6E17": {
+    "name": "ScriptCommand26_Run",
+    "note": "implements script command type 26; reached through ScriptCommand26 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:72D9": {
+    "name": "ScriptCommand27_Run",
+    "note": "implements script command type 27; reached through ScriptCommand27 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7271": {
+    "name": "ScriptCommand28_Run",
+    "note": "implements script command type 28; reached through ScriptCommand28 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:70EC": {
+    "name": "ScriptCommand29_Run",
+    "note": "implements script command type 29; reached through ScriptCommand29 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4047": {
+    "name": "ScriptCommand2A_Run",
+    "note": "implements script command type 2A; reached through ScriptCommand2A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6B98": {
+    "name": "ScriptCommand2B_Run",
+    "note": "implements script command type 2B; reached through ScriptCommand2B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6B5B": {
+    "name": "ScriptCommand2C_Run",
+    "note": "implements script command type 2C; reached through ScriptCommand2C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6AFF": {
+    "name": "ScriptCommand2D_Run",
+    "note": "implements script command type 2D; reached through ScriptCommand2D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6AEF": {
+    "name": "ScriptCommand2E_Run",
+    "note": "implements script command type 2E; reached through ScriptCommand2E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6ABE": {
+    "name": "ScriptCommand2F_Run",
+    "note": "implements script command type 2F; reached through ScriptCommand2F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6A91": {
+    "name": "ScriptCommand30_Run",
+    "note": "implements script command type 30; reached through ScriptCommand30 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:5421": {
+    "name": "ScriptCommand31_Run",
+    "note": "implements script command type 31; reached through ScriptCommand31 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7093": {
+    "name": "ScriptCommand32_Run",
+    "note": "implements script command type 32; reached through ScriptCommand32 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6969": {
+    "name": "ScriptCommand33_Run",
+    "note": "implements script command type 33; reached through ScriptCommand33 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6941": {
+    "name": "ScriptCommand34_Run",
+    "note": "implements script command type 34; reached through ScriptCommand34 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:679F": {
+    "name": "ScriptCommand35_Run",
+    "note": "implements script command type 35; reached through ScriptCommand35 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7049": {
+    "name": "ScriptCommand36_Run",
+    "note": "implements script command type 36; reached through ScriptCommand36 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:6F65": {
+    "name": "ScriptCommand37_Run",
+    "note": "implements script command type 37; reached through ScriptCommand37 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:6D2B": {
+    "name": "ScriptCommand38_Run",
+    "note": "implements script command type 38; reached through ScriptCommand38 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:67BA": {
+    "name": "ScriptCommand39_Run",
+    "note": "implements script command type 39 (also 3B); reached through ScriptCommand39 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:65B0": {
+    "name": "ScriptCommand3A_Run",
+    "note": "implements script command type 3A; reached through ScriptCommand3A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:630F": {
+    "name": "ScriptCommand3C_Run",
+    "note": "implements script command type 3C; reached through ScriptCommand3C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:61A7": {
+    "name": "ScriptCommand3D_Run",
+    "note": "implements script command type 3D; reached through ScriptCommand3D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6126": {
+    "name": "ScriptCommand3E_Run",
+    "note": "implements script command type 3E; reached through ScriptCommand3E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:60FE": {
+    "name": "ScriptCommand3F_Run",
+    "note": "implements script command type 3F; reached through ScriptCommand3F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:6681": {
+    "name": "ScriptCommand40_Run",
+    "note": "implements script command type 40; reached through ScriptCommand40 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:60E6": {
+    "name": "ScriptCommand41_Run",
+    "note": "implements script command type 41; reached through ScriptCommand41 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:64F3": {
+    "name": "ScriptCommand42_Run",
+    "note": "implements script command type 42; reached through ScriptCommand42 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:631F": {
+    "name": "ScriptCommand43_Run",
+    "note": "implements script command type 43; reached through ScriptCommand43 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6079": {
+    "name": "ScriptCommand44_Run",
+    "note": "implements script command type 44; reached through ScriptCommand44 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:6277": {
+    "name": "ScriptCommand45_Run",
+    "note": "implements script command type 45; reached through ScriptCommand45 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:5F06": {
+    "name": "ScriptCommand46_Run",
+    "note": "implements script command type 46; reached through ScriptCommand46 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:6038": {
+    "name": "ScriptCommand47_Run",
+    "note": "implements script command type 47; reached through ScriptCommand47 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:5D9D": {
+    "name": "ScriptCommand48_Run",
+    "note": "implements script command type 48; reached through ScriptCommand48 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:5C3B": {
+    "name": "ScriptCommand49_Run",
+    "note": "implements script command type 49; reached through ScriptCommand49 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:59E6": {
+    "name": "ScriptCommand4A_Run",
+    "note": "implements script command type 4A; reached through ScriptCommand4A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:57EA": {
+    "name": "ScriptCommand4B_Run",
+    "note": "implements script command type 4B; reached through ScriptCommand4B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5FBC": {
+    "name": "ScriptCommand4C_Run",
+    "note": "implements script command type 4C; reached through ScriptCommand4C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4207": {
+    "name": "ScriptCommand4D_Run",
+    "note": "implements script command type 4D; reached through ScriptCommand4D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:56CD": {
+    "name": "ScriptCommand4E_Run",
+    "note": "implements script command type 4E; reached through ScriptCommand4E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5F39": {
+    "name": "ScriptCommand4F_Run",
+    "note": "implements script command type 4F; reached through ScriptCommand4F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5EB3": {
+    "name": "ScriptCommand50_Run",
+    "note": "implements script command type 50; reached through ScriptCommand50 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5DDD": {
+    "name": "ScriptCommand51_Run",
+    "note": "implements script command type 51; reached through ScriptCommand51 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5DAF": {
+    "name": "ScriptCommand52_Run",
+    "note": "implements script command type 52; reached through ScriptCommand52 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5C5F": {
+    "name": "ScriptCommand53_Run",
+    "note": "implements script command type 53; reached through ScriptCommand53 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5AE4": {
+    "name": "ScriptCommand54_Run",
+    "note": "implements script command type 54; reached through ScriptCommand54 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5AD6": {
+    "name": "ScriptCommand55_Run",
+    "note": "implements script command type 55; reached through ScriptCommand55 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5ABB": {
+    "name": "ScriptCommand56_Run",
+    "note": "implements script command type 56; reached through ScriptCommand56 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5A16": {
+    "name": "ScriptCommand57_Run",
+    "note": "implements script command type 57; reached through ScriptCommand57 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:5404": {
+    "name": "ScriptCommand58_Run",
+    "note": "implements script command type 58; reached through ScriptCommand58 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5987": {
+    "name": "ScriptCommand59_Run",
+    "note": "implements script command type 59 (also 5A); reached through ScriptCommand59 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:5248": {
+    "name": "ScriptCommand5B_Run",
+    "note": "implements script command type 5B; reached through ScriptCommand5B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5919": {
+    "name": "ScriptCommand5C_Run",
+    "note": "implements script command type 5C; reached through ScriptCommand5C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:58FE": {
+    "name": "ScriptCommand5D_Run",
+    "note": "implements script command type 5D; reached through ScriptCommand5D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:4595": {
+    "name": "ScriptCommand5E_Run",
+    "note": "implements script command type 5E; reached through ScriptCommand5E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:40E9": {
+    "name": "ScriptCommand5F_Run",
+    "note": "implements script command type 5F; reached through ScriptCommand5F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:587A": {
+    "name": "ScriptCommand60_Run",
+    "note": "implements script command type 60; reached through ScriptCommand60 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5761": {
+    "name": "ScriptCommand61_Run",
+    "note": "implements script command type 61; reached through ScriptCommand61 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:409A": {
+    "name": "ScriptCommand62_Run",
+    "note": "implements script command type 62; reached through ScriptCommand62 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:572F": {
+    "name": "ScriptCommand63_Run",
+    "note": "implements script command type 63; reached through ScriptCommand63 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:571D": {
+    "name": "ScriptCommand64_Run",
+    "note": "implements script command type 64; reached through ScriptCommand64 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:5065": {
+    "name": "ScriptCommand65_Run",
+    "note": "implements script command type 65; reached through ScriptCommand65 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:5AF3": {
+    "name": "ScriptCommand66_Run",
+    "note": "implements script command type 66; reached through ScriptCommand66 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5D71": {
+    "name": "ScriptCommand67_Run",
+    "note": "implements script command type 67; reached through ScriptCommand67 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5A57": {
+    "name": "ScriptCommand68_Run",
+    "note": "implements script command type 68; reached through ScriptCommand68 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:532C": {
+    "name": "ScriptCommand69_Run",
+    "note": "implements script command type 69; reached through ScriptCommand69 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7D97": {
+    "name": "ScriptCommand6A_Run",
+    "note": "implements script command type 6A; reached through ScriptCommand6A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7D62": {
+    "name": "ScriptCommand6B_Run",
+    "note": "implements script command type 6B; reached through ScriptCommand6B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4D8D": {
+    "name": "ScriptCommand6C_Run",
+    "note": "implements script command type 6C; reached through ScriptCommand6C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4C24": {
+    "name": "ScriptCommand6D_Run",
+    "note": "implements script command type 6D; reached through ScriptCommand6D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4B0F": {
+    "name": "ScriptCommand6E_Run",
+    "note": "implements script command type 6E; reached through ScriptCommand6E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4AEE": {
+    "name": "ScriptCommand6F_Run",
+    "note": "implements script command type 6F; reached through ScriptCommand6F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4A6D": {
+    "name": "ScriptCommand70_Run",
+    "note": "implements script command type 70; reached through ScriptCommand70 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:494D": {
+    "name": "ScriptCommand71_Run",
+    "note": "implements script command type 71; reached through ScriptCommand71 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:48A0": {
+    "name": "ScriptCommand72_Run",
+    "note": "implements script command type 72; reached through ScriptCommand72 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:505A": {
+    "name": "ScriptCommand73_Run",
+    "note": "implements script command type 73; reached through ScriptCommand73 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4858": {
+    "name": "ScriptCommand74_Run",
+    "note": "implements script command type 74; reached through ScriptCommand74 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7CFB": {
+    "name": "ScriptCommand75_Run",
+    "note": "implements script command type 75; reached through ScriptCommand75 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7CA5": {
+    "name": "ScriptCommand76_Run",
+    "note": "implements script command type 76; reached through ScriptCommand76 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:7AC6": {
+    "name": "ScriptCommand77_Run",
+    "note": "implements script command type 77; reached through ScriptCommand77 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4717": {
+    "name": "ScriptCommand78_Run",
+    "note": "implements script command type 78; reached through ScriptCommand78 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4DA6": {
+    "name": "ScriptCommand79_Run",
+    "note": "implements script command type 79; reached through ScriptCommand79 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:46E4": {
+    "name": "ScriptCommand7A_Run",
+    "note": "implements script command type 7A; reached through ScriptCommand7A in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:49FA": {
+    "name": "ScriptCommand7B_Run",
+    "note": "implements script command type 7B; reached through ScriptCommand7B in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4A2B": {
+    "name": "ScriptCommand7C_Run",
+    "note": "implements script command type 7C; reached through ScriptCommand7C in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4755": {
+    "name": "ScriptCommand7D_Run",
+    "note": "implements script command type 7D; reached through ScriptCommand7D in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:481C": {
+    "name": "ScriptCommand7E_Run",
+    "note": "implements script command type 7E; reached through ScriptCommand7E in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:479B": {
+    "name": "ScriptCommand7F_Run",
+    "note": "implements script command type 7F; reached through ScriptCommand7F in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:568E": {
+    "name": "ScriptCommandC0_Run",
+    "note": "implements script command type C0; reached through ScriptCommandC0 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:55C5": {
+    "name": "ScriptCommandC1_Run",
+    "note": "implements script command type C1; reached through ScriptCommandC1 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4F14": {
+    "name": "ScriptCommandC2_Run",
+    "note": "implements script command type C2; reached through ScriptCommandC2 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:55A4": {
+    "name": "ScriptCommandC3_Run",
+    "note": "implements script command type C3; reached through ScriptCommandC3 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5577": {
+    "name": "ScriptCommandC6_Run",
+    "note": "implements script command type C6; reached through ScriptCommandC6 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:50F2": {
+    "name": "ScriptCommandC4_Run",
+    "note": "implements script command type C4; reached through ScriptCommandC4 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5449": {
+    "name": "ScriptCommandC5_Run",
+    "note": "implements script command type C5; reached through ScriptCommandC5 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0F:4001": {
+    "name": "ScriptCommandC7_Run",
+    "note": "implements script command type C7; reached through ScriptCommandC7 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:541D": {
+    "name": "ScriptCommandC8_Run",
+    "note": "implements script command type C8; reached through ScriptCommandC8 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:53AB": {
+    "name": "ScriptCommandC9_Run",
+    "note": "implements script command type C9; reached through ScriptCommandC9 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5378": {
+    "name": "ScriptCommandCA_Run",
+    "note": "implements script command type CA; reached through ScriptCommandCA in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:51BD": {
+    "name": "ScriptCommandCB_Run",
+    "note": "implements script command type CB; reached through ScriptCommandCB in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "73:5546": {
+    "name": "ScriptCommandCC_Run",
+    "note": "implements script command type CC; reached through ScriptCommandCC in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:501A": {
+    "name": "ScriptCommandCD_Run",
+    "note": "implements script command type CD; reached through ScriptCommandCD in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:403D": {
+    "name": "ScriptCommandCE_Run",
+    "note": "implements script command type CE; reached through ScriptCommandCE in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "85:4001": {
+    "name": "ScriptCommandCF_Run",
+    "note": "implements script command type CF; reached through ScriptCommandCF in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1C:4075": {
+    "name": "ScriptCommandE0_Run",
+    "note": "implements script command type E0; reached through ScriptCommandE0 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1C:4001": {
+    "name": "ScriptCommandE1_Run",
+    "note": "implements script command type E1; reached through ScriptCommandE1 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1C:4696": {
+    "name": "ScriptCommandE2_Run",
+    "note": "implements script command type E2; reached through ScriptCommandE2 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1C:4605": {
+    "name": "ScriptCommandE3_Run",
+    "note": "implements script command type E3; reached through ScriptCommandE3 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1C:6CEF": {
+    "name": "ScriptCommandE5_Run",
+    "note": "implements script command type E5; reached through ScriptCommandE5 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1C:6CEB": {
+    "name": "ScriptCommandE6_Run",
+    "note": "implements script command type E6; reached through ScriptCommandE6 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1E:4069": {
+    "name": "ScriptCommandE8_Run",
+    "note": "implements script command type E8; reached through ScriptCommandE8 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "1E:4001": {
+    "name": "ScriptCommandE9_Run",
+    "note": "implements script command type E9; reached through ScriptCommandE9 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "14:40CC": {
+    "name": "ScriptCommandEB_Run",
+    "note": "implements script command type EB; reached through ScriptCommandEB in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "14:4001": {
+    "name": "ScriptCommandEC_Run",
+    "note": "implements script command type EC; reached through ScriptCommandEC in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "15:40FA": {
+    "name": "ScriptCommandED_Run",
+    "note": "implements script command type ED; reached through ScriptCommandED in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "15:4001": {
+    "name": "ScriptCommandEE_Run",
+    "note": "implements script command type EE; reached through ScriptCommandEE in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0D:45D1": {
+    "name": "ScriptCommandEF_Run",
+    "note": "implements script command type EF; reached through ScriptCommandEF in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0D:5159": {
+    "name": "ScriptCommandF0_Run",
+    "note": "implements script command type F0; reached through ScriptCommandF0 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0D:50E5": {
+    "name": "ScriptCommandF1_Run",
+    "note": "implements script command type F1; reached through ScriptCommandF1 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0D:55BE": {
+    "name": "ScriptCommandF2_Run",
+    "note": "implements script command type F2; reached through ScriptCommandF2 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0D:6310": {
+    "name": "ScriptCommandF3_Run",
+    "note": "implements script command type F3; reached through ScriptCommandF3 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0D:711C": {
+    "name": "ScriptCommandF4_Run",
+    "note": "implements script command type F4; reached through ScriptCommandF4 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0C:4001": {
+    "name": "ScriptCommandF6_Run",
+    "note": "implements script command type F6; reached through ScriptCommandF6 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "0C:659F": {
+    "name": "ScriptCommandF7_Run",
+    "note": "implements script command type F7; reached through ScriptCommandF7 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "24:60DB": {
+    "name": "ScriptCommandF8_Run",
+    "note": "implements script command type F8; reached through ScriptCommandF8 in bank $10 (E-0038)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038)"
   }
 }

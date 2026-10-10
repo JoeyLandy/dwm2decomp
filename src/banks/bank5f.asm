@@ -33,7 +33,7 @@ Data_05F_684E:: ; heuristic: stream in a run of back-to-back compressed streams;
 Data_05F_68C8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $17E8C8, $6E
 
-; 6 call sites from 6 routines (e.g. Func_05F_77C7, Func_00F_7F75, Func_012_6828, Func_073_7024, ...)
+; 6 call sites from 6 routines (e.g. Func_05F_77C7, Func_00F_7F75, Func_012_6828, ScriptCommand16_Run, ...)
 ; reads: wC926
 Func_05F_6936::
     ld a, [wC926]
@@ -152,7 +152,7 @@ Func_05F_69F3::
     ld a, [wC925]
     ld h, a
 
-; 1 call site from 1 routine (e.g. Func_05F_7969)
+; 1 call site from 1 routine (e.g. ScriptCommand0A_Run)
 ; reads: wCC44
 ; writes: wStringIndex, wStringCategory
 Func_05F_69FB::
@@ -243,7 +243,7 @@ Jump_05F_6A85::
     farcall BeginStringDisplay_Bank28
     ret
 
-; 11 call sites from 7 routines (e.g. Func_00F_4FA1, Func_00F_6681, Func_00F_67BA, Func_00F_7625, ...)
+; 11 call sites from 7 routines (e.g. Func_00F_4FA1, ScriptCommand40_Run, ScriptCommand39_Run, ScriptCommand23_Run, ...)
 ; reads: hFF8C, hPlayerY, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerY, wC92C
 Func_05F_6A94::
@@ -273,7 +273,7 @@ Jump_05F_6AB3::
     ld [wC92C], a
     ret
 
-; 7 call sites from 6 routines (e.g. Func_00F_4FA1, Func_00F_5C3B, Func_00F_67BA, Func_00F_7E1E, ...)
+; 7 call sites from 6 routines (e.g. Func_00F_4FA1, ScriptCommand49_Run, ScriptCommand39_Run, Func_00F_7E1E, ...)
 ; reads: hFF8C, hPlayerX, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerX, wC92C
 Func_05F_6ABF::
@@ -303,7 +303,7 @@ Jump_05F_6ADF::
     ld [wC92C], a
     ret
 
-; 15 call sites from 8 routines (e.g. Func_00F_4FA1, Func_00F_5C3B, Func_00F_5F06, Func_00F_6681, ...)
+; 15 call sites from 8 routines (e.g. Func_00F_4FA1, ScriptCommand49_Run, ScriptCommand46_Run, ScriptCommand40_Run, ...)
 ; reads: hFF8C, hPlayerY, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerY, wC92C
 Func_05F_6AEB::
@@ -333,7 +333,7 @@ Jump_05F_6B0B::
     ld [wC92C], a
     ret
 
-; 16 call sites from 8 routines (e.g. Func_00F_40E9, Func_00F_4FA1, Func_00F_5C3B, Func_00F_67BA, ...)
+; 16 call sites from 8 routines (e.g. ScriptCommand5F_Run, Func_00F_4FA1, ScriptCommand49_Run, ScriptCommand39_Run, ...)
 ; reads: hFF8C, hPlayerX, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerX, wC92C
 Func_05F_6B17::
@@ -373,7 +373,7 @@ Jump_05F_6B4D::
     farcall Func_002_5946
     ret
 
-; 145 call sites from 36 routines (e.g. Func_00F_4001, Func_00F_40E9, Func_00F_4774, Func_00F_47F5, ...)
+; 145 call sites from 36 routines (e.g. ScriptCommandC7_Run, ScriptCommand5F_Run, Func_00F_4774, Func_00F_47F5, ...)
 ; reads: wC929, wC92A, wC928
 ; writes: wC92C
 ; points at: wCB8C
@@ -479,7 +479,7 @@ Jump_05F_6BC2::
     ret
 
 ; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
-; 66 call sites from 35 routines (e.g. Func_05F_73A8, Func_00F_40E9, Func_00F_47F5, Func_00F_5D9D, ...)
+; 66 call sites from 35 routines (e.g. Func_05F_73A8, ScriptCommand5F_Run, Func_00F_47F5, ScriptCommand48_Run, ...)
 ; reads: wC928, wC929, wScriptParam0
 AddStepDeltaToPointedByte::
 Func_05F_6BCD:: ; address name
@@ -501,7 +501,7 @@ Func_05F_6BCD:: ; address name
 Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
-; 20 call sites from 19 routines (e.g. Func_00F_4FA1, Func_00F_56CD, Func_00F_59E6, Func_00F_5AF3, ...)
+; 20 call sites from 19 routines (e.g. Func_00F_4FA1, ScriptCommand4E_Run, ScriptCommand4A_Run, ScriptCommand66_Run, ...)
 ; reads: wScriptParam0, hFFC6, hFFC7
 ; writes: wScriptParam0, hFFC6
 ; points at: wCB8B
@@ -563,7 +563,7 @@ Jump_05F_6C43::
     ldh [hFFC6], a
     ret
 
-; 51 call sites from 39 routines (e.g. Func_00F_4FA1, Func_00F_5404, Func_00F_57EA, Func_00F_64F3, ...)
+; 51 call sites from 39 routines (e.g. Func_00F_4FA1, ScriptCommand58_Run, ScriptCommand4B_Run, ScriptCommand42_Run, ...)
 ; writes: wModeState, wC8C5, wScriptParam0
 ; points at: wScriptStep
 Func_05F_6C5A::
@@ -579,7 +579,7 @@ Func_05F_6C5A::
     inc [hl]
     ret
 
-; 5 call sites from 5 routines (e.g. Func_012_4030, Func_012_44DB, Func_012_5854, Func_012_59AC, ...)
+; 5 call sites from 5 routines (e.g. ScriptCommand9A_Run, ScriptCommand95_Run, ScriptCommand85_Run, ScriptCommand9E_Run, ...)
 ; writes: wModeState, wC904, wC8C7
 Func_05F_6C71::
     ld a, $03
@@ -592,7 +592,7 @@ Func_05F_6C71::
     farcall Func_00A_476E
     ret
 
-; 17 call sites from 13 routines (e.g. Func_00F_7093, Func_012_5A2F, Func_012_6211, Func_012_630E, ...)
+; 17 call sites from 13 routines (e.g. ScriptCommand32_Run, ScriptCommand84_Run, ScriptCommand86_Run, ScriptCommand81_Run, ...)
 ; reads: wC928, wC836
 ; writes: wC836
 ; points at: wInventory
@@ -732,7 +732,7 @@ Jump_05F_6D35::
     ld [rRAMG], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_073_61A7, Func_073_630F, Func_073_65B0)
+; 3 call sites from 3 routines (e.g. ScriptCommand3D_Run, ScriptCommand3C_Run, ScriptCommand3A_Run)
 ; reads: hFF8D, hFFC6
 ; writes: hFF8D, wD7F1, wD7F2, wC527
 ; points at: wC6FE
@@ -758,7 +758,7 @@ Func_05F_6D3F::
     ldh [hFF8D], a
     ret
 
-; 7 call sites from 6 routines (e.g. Func_013_5EF4, Func_013_78DE, Func_085_4047, Func_085_4339, ...)
+; 7 call sites from 6 routines (e.g. Func_013_5EF4, Func_013_78DE, ScriptCommand2A_Run, Func_085_4339, ...)
 ; reads: wD7F5, wC7C7
 ; writes: wD7F1, wD7F2, wD7F5
 Func_05F_6D78::
@@ -786,7 +786,7 @@ Func_05F_6D78::
 Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
-; 10 call sites from 8 routines (e.g. Func_004_6F9A, Func_00F_5404, Func_00F_57EA, Func_00F_67BA, ...)
+; 10 call sites from 8 routines (e.g. Func_004_6F9A, ScriptCommand58_Run, ScriptCommand4B_Run, ScriptCommand39_Run, ...)
 ; reads: hFFC6
 ; points at: wC707
 Func_05F_6DAC::
@@ -833,7 +833,7 @@ Jump_05F_6DD6::
     pop hl
     ret
 
-; 23 call sites from 22 routines (e.g. Func_00F_40E9, Func_00F_4FA1, Func_00F_631F, Func_00F_64F3, ...)
+; 23 call sites from 22 routines (e.g. ScriptCommand5F_Run, Func_00F_4FA1, ScriptCommand43_Run, ScriptCommand42_Run, ...)
 ; reads: hScrollY, hScrollX
 Func_05F_6DDB::
     ldh a, [hScrollY]
@@ -868,7 +868,7 @@ Jump_05F_6E03::
     call Func_000_1E29
     ret
 
-; 9 call sites from 9 routines (e.g. Func_00F_4FA1, Func_00F_5404, Func_00F_60E6, Func_00F_631F, ...)
+; 9 call sites from 9 routines (e.g. Func_00F_4FA1, ScriptCommand58_Run, ScriptCommand41_Run, ScriptCommand43_Run, ...)
 ; reads: hScrollY, hScrollX
 Func_05F_6E09::
     ldh a, [hScrollY]
@@ -925,7 +925,7 @@ Jump_05F_6E44::
     jr nz, Jump_05F_6E44
     ret
 
-; 1 call site from 1 routine (e.g. Func_073_6B5B)
+; 1 call site from 1 routine (e.g. ScriptCommand2C_Run)
 ; reads: wC92D
 Func_05F_6E58::
     ld a, [wC92D]
@@ -1249,7 +1249,7 @@ Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $00, $01, $00, $02, $01, $01, $01, $01, $01, $01, $02, $00, $01, $00, $02
     db $00, $02, $00, $01, $FF, $02, $FF, $01, $FF, $01, $FE, $01, $FF, $00, $FE, $00
 
-; 2 call sites from 2 routines (e.g. Func_00F_5F06, Func_00F_772E)
+; 2 call sites from 2 routines (e.g. ScriptCommand46_Run, ScriptCommand1F_Run)
 ; reads: wC92D
 Func_05F_70D2::
     ld a, [wC92D]
@@ -1604,7 +1604,7 @@ Jump_05F_7345::
     inc [hl]
     ret
 
-; 4 call sites from 4 routines (e.g. Func_00F_4FA1, Func_00F_57EA, Func_00F_67BA, Func_00F_72D9)
+; 4 call sites from 4 routines (e.g. Func_00F_4FA1, ScriptCommand4B_Run, ScriptCommand39_Run, ScriptCommand27_Run)
 ; reads: wC92D
 Func_05F_7363::
     ld a, [wC92D]
@@ -2318,10 +2318,12 @@ Func_05F_785C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; implements script command type 05; reached through ScriptCommand05 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand05)
 ; reads: wC468, hFF8C, wScriptParam1, wScriptParam0, wJoypadHeld
 ; writes: wJoypadHeld, wJoypadPressed, wScriptStartRequest, wScriptParam1
-Func_05F_787C::
+ScriptCommand05_Run::
+Func_05F_787C:: ; address name
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -2371,11 +2373,13 @@ Jump_05F_78C5::
     ld [wJoypadHeld], a
     ret
 
+; implements script command type 06; reached through ScriptCommand06 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand06)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptStartRequest
 ; points at: hPlayerFacing, wC8EF
-Func_05F_78CE::
+ScriptCommand06_Run::
+Func_05F_78CE:: ; address name
     ld a, [wScriptParam0]
     bit 7, a
     jr nz, Jump_05F_78EE
@@ -2412,11 +2416,13 @@ Jump_05F_78FD::
     ld [wScriptStartRequest], a
     ret
 
+; implements script command type 0C; reached through ScriptCommand0C in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand0C)
 ; reads: wScriptParam1, wScriptParam0
 ; writes: wScriptParam0, wScriptCommandType, wScriptStartRequest
 ; points at: hPlayerY, wC8F1, wCB8B
-Func_05F_7907::
+ScriptCommand0C_Run::
+Func_05F_7907:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_05F_7927
@@ -2473,9 +2479,11 @@ Jump_05F_7933::
 Data_05F_7959:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
+; implements script command type 0A; reached through ScriptCommand0A in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand0A)
 ; reads: wScriptStep
-Func_05F_7969::
+ScriptCommand0A_Run::
+Func_05F_7969:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_05F_7977
@@ -2658,11 +2666,13 @@ Jump_05F_7A8C::
     ld [wModeState], a
     ret
 
+; implements script command type 0E; reached through ScriptCommand0E in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand0E)
 ; reads: wScriptStep, wScriptParam0
 ; writes: hFFC6, wScriptCommandType, wScriptStartRequest
 ; points at: wScriptStep
-Func_05F_7AB2::
+ScriptCommand0E_Run::
+Func_05F_7AB2:: ; address name
     ld a, [wScriptStep]
     or a, a
     jr nz, Jump_05F_7AC8

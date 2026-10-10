@@ -2989,7 +2989,7 @@ Jump_002_5408::
     ret
 
 ; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
-; 12 call sites from 6 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
+; 12 call sites from 6 routines (e.g. Func_002_4C4E, Func_002_4AE0, ScriptCommand49_Run, ScriptCommand40_Run, ...)
 ; reads: wFadeState, hFF9A, hFF8C, wC468, wJoypadPressed, hPlayerFacing, hPlayerX, wScriptRunning, ...
 ; writes: hFF9A, hPlayerFacing, hFF8C, hFF9B, hFF9C, hMapScreenX, wC468, wC46A, ...
 ; points at: hFFF0, hMapScreenX, hMapScreenY, hFF80, hFFF8
@@ -4183,7 +4183,7 @@ Func_002_5B9E::
     ld [wC8CE], a
     ret
 
-; 12 call sites from 6 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
+; 12 call sites from 6 routines (e.g. Func_002_4C4E, Func_002_4AE0, ScriptCommand49_Run, ScriptCommand40_Run, ...)
 ; reads: wC468
 Func_002_5BD7::
     ld a, [wC468]
@@ -4570,13 +4570,13 @@ Jump_002_5E6C::
     jr nz, Jump_002_5E6C
     ret
 
-; 4 call sites from 4 routines (e.g. Func_002_4745, Func_003_432F, Func_024_60DB, Func_0F1_4866)
+; 4 call sites from 4 routines (e.g. Func_002_4745, Func_003_432F, ScriptCommandF8_Run, Func_0F1_4866)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
 Func_002_5E82::
     call Func_002_5E85
 
-; 19 call sites from 10 routines (e.g. Func_002_4628, Func_002_5E82, Func_00F_5404, Func_012_55F8, ...)
+; 19 call sites from 10 routines (e.g. Func_002_4628, Func_002_5E82, ScriptCommand58_Run, Func_012_55F8, ...)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
 Func_002_5E85::
@@ -4668,7 +4668,7 @@ Jump_002_5F1B::
     ld [wCB7E], a
     ret
 
-; 7 call sites from 5 routines (e.g. Func_002_4628, Func_073_4001, Func_085_4047, Func_085_4207, ...)
+; 7 call sites from 5 routines (e.g. Func_002_4628, ScriptCommand82_Run, ScriptCommand2A_Run, ScriptCommand4D_Run, ...)
 ; reads: wIsCGB, wCB7E
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wD2D0, wD000
@@ -4866,7 +4866,7 @@ Func_002_604B::
     ld a, $FF
     ld [wC608], a
 
-; 9 call sites from 9 routines (e.g. Func_002_4AE0, Func_002_4745, Func_00F_5404, Func_00F_5F06, ...)
+; 9 call sites from 9 routines (e.g. Func_002_4AE0, Func_002_4745, ScriptCommand58_Run, ScriptCommand46_Run, ...)
 ; reads: wCC44, wCC45, hFF8C, wC608, hMapId
 ; points at: wCD89
 Func_002_6050::

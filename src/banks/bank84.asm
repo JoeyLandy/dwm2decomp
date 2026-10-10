@@ -556,7 +556,7 @@ Func_084_43AC::
     jr nc, Func_084_43AC
     ret
 
-; 3 call sites from 3 routines (e.g. LoadMapScreen, Func_05F_7969, Func_085_4858)
+; 3 call sites from 3 routines (e.g. LoadMapScreen, ScriptCommand0A_Run, ScriptCommand74_Run)
 ; reads: hMapId, hMapScreenX, hMapScreenY
 ; writes: hFFC6
 Func_084_43B8::

@@ -1,9 +1,11 @@
 SECTION "Bank 0C", ROMX[$4000], BANK[$0C]
     db $0C
 
+; implements script command type F6; reached through ScriptCommandF6 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF6)
 ; reads: wD780
-Func_00C_4001::
+ScriptCommandF6_Run::
+Func_00C_4001:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_00C_4027
@@ -447,7 +449,7 @@ Jump_00C_42D3::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_4001)
+; 1 call site from 1 routine (e.g. ScriptCommandF6_Run)
 ; reads: wJoypadRepeatTimer, wD785, wD786
 ; writes: wD785
 Func_00C_42F0::
@@ -464,19 +466,19 @@ Func_00C_42F0::
     xor a, a
     ld [wD785], a
 
-; 2 call sites from 1 routine (e.g. Func_00C_4001)
+; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run)
 ; reads: wD786
 Func_00C_430A::
     ld b, $BB
     jr Jump_00C_4314
 
-; 2 call sites from 1 routine (e.g. Func_00C_4001)
+; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run)
 ; reads: wD786
 Func_00C_430E::
     ld b, $C3
     jr Jump_00C_4314
 
-; 2 call sites from 1 routine (e.g. Func_00C_4001)
+; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run)
 ; reads: wD786
 Func_00C_4312::
     ld b, $BC
@@ -2035,7 +2037,7 @@ Jump_00C_4F57::
 Data_00C_4F68:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $92, $90, $92, $20, $93, $B0, $93, $40, $94, $D0, $94
 
-; 2 call sites from 2 routines (e.g. Func_00C_4001, Func_00C_45DA)
+; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run, Func_00C_45DA)
 ; reads: wD787
 ; writes: wD09D, wD09E
 Func_00C_4F74::
@@ -2206,7 +2208,7 @@ Jump_00C_5083::
     ld a, [de]
     ret
 
-; 4 call sites from 2 routines (e.g. Func_00C_45DA, Func_00C_4001)
+; 4 call sites from 2 routines (e.g. Func_00C_45DA, ScriptCommandF6_Run)
 ; reads: wD787, wC8C1, wD7F1, wC8C2
 ; writes: wC8C1
 ; points at: wD78E
@@ -2303,7 +2305,7 @@ Data_00C_5103:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_510F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7E, $C3, $A6, $C3, $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
 
-; 3 call sites from 2 routines (e.g. Func_00C_45DA, Func_00C_4001)
+; 3 call sites from 2 routines (e.g. Func_00C_45DA, ScriptCommandF6_Run)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wC364, wD1CC
@@ -2362,7 +2364,7 @@ Jump_00C_5148::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 40 call sites from 13 routines (e.g. Func_00C_659F, Func_00C_6FCB, Func_00C_6CA1, Func_00C_69D5, ...)
+; 40 call sites from 13 routines (e.g. ScriptCommandF7_Run, Func_00C_6FCB, Func_00C_6CA1, Func_00C_69D5, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank0C::
 Func_00C_5156:: ; address name
@@ -2383,7 +2385,7 @@ Func_00C_5156:: ; address name
     add_a_to_hl
     ret
 
-; 4 call sites from 3 routines (e.g. Func_00C_45DA, Func_00C_4312, Func_00C_4001)
+; 4 call sites from 3 routines (e.g. Func_00C_45DA, Func_00C_4312, ScriptCommandF6_Run)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 Func_00C_5177::
     ld hl, Data_00C_51AB
@@ -2469,7 +2471,7 @@ Jump_00C_51E3::
     ldh [rSVBK], a
     ret
 
-; 29 call sites from 9 routines (e.g. Func_00C_659F, Func_00C_6FCB, Func_00C_6CA1, Func_00C_69D5, ...)
+; 29 call sites from 9 routines (e.g. ScriptCommandF7_Run, Func_00C_6FCB, Func_00C_6CA1, Func_00C_69D5, ...)
 ; reads: wStringIndex, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -2546,7 +2548,7 @@ Jump_00C_524B::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 12 call sites from 6 routines (e.g. Func_00C_69D5, Func_00C_5247, Func_00C_659F, Func_00C_45DA, ...)
+; 12 call sites from 6 routines (e.g. Func_00C_69D5, Func_00C_5247, ScriptCommandF7_Run, Func_00C_45DA, ...)
 StoreBAtWordTableEntry_Bank0C::
 Func_00C_525B:: ; address name
     push bc
@@ -2560,7 +2562,7 @@ Func_00C_525B:: ; address name
     ld [de], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_00C_4001, Func_00C_45DA)
+; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run, Func_00C_45DA)
 ; writes: wC52D, wC52E, wC52F, wC530
 Func_00C_5269::
     ld hl, vTiles2 + $20
@@ -2619,7 +2621,7 @@ Func_00C_529D::
     call FillTilesFromRequest
     ret
 
-; 4 call sites from 4 routines (e.g. Func_00C_72CC, Func_00C_6FCB, Func_00C_659F, Func_00C_4312)
+; 4 call sites from 4 routines (e.g. Func_00C_72CC, Func_00C_6FCB, ScriptCommandF7_Run, Func_00C_4312)
 Func_00C_52D0::
     ld a, [de]
     inc de
@@ -2631,7 +2633,7 @@ Func_00C_52D0::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
-; 4 call sites from 4 routines (e.g. Func_00C_72CC, Func_00C_6FCB, Func_00C_659F, Func_00C_4312)
+; 4 call sites from 4 routines (e.g. Func_00C_72CC, Func_00C_6FCB, ScriptCommandF7_Run, Func_00C_4312)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank0C::
 Func_00C_52D9:: ; address name
@@ -3031,9 +3033,11 @@ Data_00C_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $03251B, $6C
     ds $18, $FE
 
+; implements script command type F7; reached through ScriptCommandF7 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF7)
 ; reads: wD780
-Func_00C_659F::
+ScriptCommandF7_Run::
+Func_00C_659F:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_00C_66D7
@@ -3466,7 +3470,7 @@ Jump_00C_688C::
 Data_00C_68D1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0B, $0A, $1C
 
-; 1 call site from 1 routine (e.g. Func_00C_659F)
+; 1 call site from 1 routine (e.g. ScriptCommandF7_Run)
 ; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
 Func_00C_68D5::
@@ -3483,13 +3487,13 @@ Func_00C_68D5::
     xor a, a
     ld [wD787], a
 
-; 2 call sites from 1 routine (e.g. Func_00C_659F)
+; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run)
 ; reads: wD786
 Func_00C_68EF::
     ld b, $BB
     jr Jump_00C_68F9
 
-; 2 call sites from 1 routine (e.g. Func_00C_659F)
+; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run)
 ; reads: wD786
 Func_00C_68F3::
     ld b, $C3
@@ -4468,7 +4472,7 @@ Func_00C_701C::
 Data_00C_7037:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0C, $0C, $0B, $0A, $1C
 
-; 3 call sites from 2 routines (e.g. Func_00C_6CA1, Func_012_43DA)
+; 3 call sites from 2 routines (e.g. Func_00C_6CA1, ScriptCommand96_Run)
 ; reads: wD588, wD7FC
 ; writes: wD588, wD78C
 Func_00C_703D::
@@ -4479,7 +4483,7 @@ Func_00C_703D::
     ld [wD78C], a
     ret
 
-; 5 call sites from 2 routines (e.g. Func_00C_69D5, Func_012_44DB)
+; 5 call sites from 2 routines (e.g. Func_00C_69D5, ScriptCommand95_Run)
 ; reads: wD7FF, wD7FC, wD78E
 ; writes: wD78E, wD786, wD7FA, wD7FF
 Func_00C_704B::
@@ -4494,7 +4498,7 @@ Func_00C_704B::
     ld [wD7FF], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_659F)
+; 1 call site from 1 routine (e.g. ScriptCommandF7_Run)
 ; reads: wC82C
 ; points at: wC3C9, wC3F1, wC419, wC441
 Func_00C_7064::
@@ -4530,7 +4534,7 @@ Jump_00C_708B::
     ld [hl], a
     ret
 
-; 5 call sites from 3 routines (e.g. Func_00C_6CA1, Func_00C_69D5, Func_00C_659F)
+; 5 call sites from 3 routines (e.g. Func_00C_6CA1, Func_00C_69D5, ScriptCommandF7_Run)
 ; reads: wC617, wC618, wC619
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC370, wC386, wD7F3
@@ -4935,7 +4939,7 @@ Jump_00C_72C9::
     ld a, b
     dec b
 
-; 7 call sites from 4 routines (e.g. Func_00C_659F, Func_00C_6FCB, Func_00C_6CA1, Func_00C_69D5)
+; 7 call sites from 4 routines (e.g. ScriptCommandF7_Run, Func_00C_6FCB, Func_00C_6CA1, Func_00C_69D5)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
 Func_00C_72CC::
@@ -5109,7 +5113,7 @@ Jump_00C_737E::
     jp c, Jump_00C_7336
     ret
 
-; 3 call sites from 3 routines (e.g. Func_00C_659F, Func_00C_750F, Func_00C_7326)
+; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run, Func_00C_750F, Func_00C_7326)
 ; reads: wC5E7
 Func_00C_73B3::
     push bc
@@ -5150,7 +5154,7 @@ Func_00C_73C7::
     ldh [hFFB9], a
     farcall Func_004_449F
 
-; 2 call sites from 1 routine (e.g. Func_012_43DA)
+; 2 call sites from 1 routine (e.g. ScriptCommand96_Run)
 ; reads: wD588
 ; writes: wC903, wCFDC
 ; points at: wD5B1, wCFDD
@@ -5205,7 +5209,7 @@ Func_00C_741F::
     ldh [hFFB9], a
     farcall Func_004_449F
 
-; 2 call sites from 1 routine (e.g. Func_012_44DB)
+; 2 call sites from 1 routine (e.g. ScriptCommand95_Run)
 ; reads: wD78E
 ; writes: wC903, wCFDC
 ; points at: wCFDD
@@ -5264,7 +5268,7 @@ Func_00C_7478::
     ldh [hFFB9], a
     farcall Func_004_449F
 
-; 2 call sites from 1 routine (e.g. Func_012_44DB)
+; 2 call sites from 1 routine (e.g. ScriptCommand95_Run)
 ; reads: wD786, wD78E
 ; writes: wC903, wCFDC
 ; points at: wCFDD
@@ -5346,7 +5350,7 @@ Jump_00C_750B::
     ld [wD7FA], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_659F)
+; 1 call site from 1 routine (e.g. ScriptCommandF7_Run)
 ; writes: wD7F1
 Func_00C_750F::
     ld b, $1F
@@ -5384,7 +5388,7 @@ Data_00C_7538:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $5A, $5B, $5C, $5D
     db $5E, $5F, $60, $61
 
-; 2 call sites from 1 routine (e.g. Func_00C_659F)
+; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run)
 ; reads: wD7F1
 ; writes: wD7F1
 ; points at: wInventory
@@ -5457,7 +5461,7 @@ Jump_00C_75B8::
     ld [hl+], a
     ret
 
-; 3 call sites from 2 routines (e.g. Func_00C_755C, Func_00C_659F)
+; 3 call sites from 2 routines (e.g. Func_00C_755C, ScriptCommandF7_Run)
 ; writes: wD7F1, wD7F2, wD7F3
 Func_00C_75BC::
     ld hl, $1770

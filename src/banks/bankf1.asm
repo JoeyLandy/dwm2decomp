@@ -1439,7 +1439,7 @@ Func_0F1_4AD0::
     dw Jump_0F1_525E
 
 Jump_0F1_4AFD::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -1588,7 +1588,7 @@ Jump_0F1_4BE5::
     ret
 
 Jump_0F1_4C01::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_0F1_4C08::
@@ -1607,7 +1607,7 @@ Jump_0F1_4C08::
     ret
 
 Jump_0F1_4C24::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ld a, [wD7F9]
     cp a, $FE
     ret nz
@@ -1623,7 +1623,7 @@ Jump_0F1_4C40::
     ld a, [wC52B]
     and a, a
     ret nz
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_0F1_4C4C::
@@ -1633,7 +1633,7 @@ Jump_0F1_4C4C::
     ld a, [wC52B]
     and a, a
     ret nz
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ld a, $09
     call BeginString_Bank0E_Cat0
     ret
@@ -1691,7 +1691,7 @@ Jump_0F1_4CB7::
     ld a, [wC52B]
     and a, a
     ret nz
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     xor a, a
     ld [wD7B4], a
     ld [wD782], a
@@ -1712,7 +1712,7 @@ Jump_0F1_4CCA::
     ret
 
 Jump_0F1_4CE2::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ld de, Data_01F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
@@ -2435,7 +2435,7 @@ Jump_0F1_5235::
     ret
 
 Jump_0F1_5242::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz
@@ -2462,7 +2462,7 @@ Jump_0F1_525E::
     dw Jump_0F1_5276
 
 Jump_0F1_5276::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_0F1_527D::
@@ -3013,7 +3013,7 @@ Jump_0F1_56B7::
     push af
     ld a, $11
     ld [wD780], a
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     pop af
     ret
 
@@ -3022,7 +3022,7 @@ Jump_0F1_56C8::
     push af
     ld a, $11
     ld [wD780], a
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     pop af
     ld [wD780], a
     ret

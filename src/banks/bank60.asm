@@ -3525,7 +3525,7 @@ Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_060_6866
     db $10, $6A, $68
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, Func_01C_4075)
+; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run)
 ; reads: wCC44, wC893, wC833, wCD0F, wCC47, wC88E, wC891, wCC42, ...
 ; writes: wC893, wCC47, hFFC6
 ; points at: wCC48, wCC4C
@@ -3627,7 +3627,7 @@ Jump_060_6382::
 Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, Func_01C_4075)
+; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run)
 ; reads: wCC44, wC893, hMapId
 ; writes: wCC47, wCD0F, hFFC6
 Func_060_639D::

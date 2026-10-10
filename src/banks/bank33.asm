@@ -1045,7 +1045,7 @@ Jump_033_5609::
     ld a, [wC52B]
     and a, a
     ret nz
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_033_5615::
@@ -1832,7 +1832,7 @@ Jump_033_5BE9::
     ret
 
 Jump_033_5C1A::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz
@@ -2871,7 +2871,7 @@ Func_033_6490:: ; address name
     db $11, $A5, $64, $CD, $FE, $25, $C9
 
 ; Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 1 routine (e.g. Func_00C_659F)
+; 3 call sites from 1 routine (e.g. ScriptCommandF7_Run)
 ShowString_Bank33_649E::
 Func_033_649E:: ; address name
     call BeginStringDisplay_Bank33_6490

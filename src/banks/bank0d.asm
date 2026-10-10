@@ -159,9 +159,11 @@ Data_00D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0, "MeteOrb", $F0, "MadCat", $F0, "HornBeet", $F0, "SkyDragon", $F0, "Octogon", $F0, "Serva"
     db "nt", $F0, "Darck", $F0
 
-; 2 call sites from 2 routines (e.g. Func_00D_5159, ScriptCommandEF)
+; implements script command type EF; reached through ScriptCommandEF in bank $10 (E-0038)
+; 2 call sites from 2 routines (e.g. ScriptCommandF0_Run, ScriptCommandEF)
 ; reads: wD780
-Func_00D_45D1::
+ScriptCommandEF_Run::
+Func_00D_45D1:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_00D_45F6
@@ -363,7 +365,7 @@ Jump_00D_4710::
     dw Jump_00D_4988
 
 Jump_00D_473A::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_00D_4741::
@@ -977,7 +979,7 @@ Func_00D_4B30::
     ret
 
 Jump_00D_4B41::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz
@@ -1479,7 +1481,7 @@ Func_00D_4E5A:: ; address name
     add_a_to_hl
     ret
 
-; 6 call sites from 5 routines (e.g. Func_00D_4ED5, Func_00D_63F6, Func_00D_55BE, Func_00D_45D1, ...)
+; 6 call sites from 5 routines (e.g. Func_00D_4ED5, Func_00D_63F6, ScriptCommandF2_Run, ScriptCommandEF_Run, ...)
 Func_00D_4E7B::
     ld a, [de]
     inc de
@@ -1491,7 +1493,7 @@ Func_00D_4E7B::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 6 call sites from 5 routines (e.g. Func_00D_4ED5, Func_00D_63F6, Func_00D_55BE, Func_00D_45D1, ...)
+; 6 call sites from 5 routines (e.g. Func_00D_4ED5, Func_00D_63F6, ScriptCommandF2_Run, ScriptCommandEF_Run, ...)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank0D::
 Func_00D_4E84:: ; address name
@@ -1735,9 +1737,11 @@ Data_00D_50BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $74, $75, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
+; implements script command type F1; reached through ScriptCommandF1 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF1)
 ; reads: wD788
-Func_00D_50E5::
+ScriptCommandF1_Run::
+Func_00D_50E5:: ; address name
     ld a, [wD788]
     rst $00
     dw Jump_00D_50F1
@@ -1746,7 +1750,7 @@ Func_00D_50E5::
     dw Jump_00D_50F1
 
 Jump_00D_50F1::
-    farcall Func_015_4001
+    farcall ScriptCommandEE_Run
     ret
 
 Jump_00D_50F8::
@@ -1791,9 +1795,11 @@ Jump_00D_50F8::
     ld [wScriptStartRequest], a
     ret
 
+; implements script command type F0; reached through ScriptCommandF0 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF0)
 ; reads: wD780
-Func_00D_5159::
+ScriptCommandF0_Run::
+Func_00D_5159:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_00D_516B
@@ -1805,7 +1811,7 @@ Func_00D_5159::
     dw Jump_00D_530F
 
 Jump_00D_516B::
-    farcall Func_00D_45D1
+    farcall ScriptCommandEF_Run
     ret
 
 Jump_00D_5172::
@@ -2310,9 +2316,11 @@ Data_00D_552E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_5576:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $035576, $48
 
+; implements script command type F2; reached through ScriptCommandF2 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF2)
 ; reads: wD780
-Func_00D_55BE::
+ScriptCommandF2_Run::
+Func_00D_55BE:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_00D_55CA
@@ -3902,9 +3910,11 @@ Data_00D_6292:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_62B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0362B0, $60
 
+; implements script command type F3; reached through ScriptCommandF3 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF3)
 ; reads: wD780
-Func_00D_6310::
+ScriptCommandF3_Run::
+Func_00D_6310:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_00D_643A
@@ -4048,7 +4058,7 @@ Jump_00D_63E2::
     ld [wScriptStartRequest], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_00D_6310)
+; 2 call sites from 1 routine (e.g. ScriptCommandF3_Run)
 ; points at: wInventory, wC61E
 Func_00D_63F6::
     push hl
@@ -5519,7 +5529,7 @@ Func_00D_6DA7::
 Data_00D_6DC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A4, $00, $E4, $00, $24, $01, $64, $01
 
-; 2 call sites from 2 routines (e.g. Func_00D_6310, Func_00D_63F6)
+; 2 call sites from 2 routines (e.g. ScriptCommandF3_Run, Func_00D_63F6)
 ; points at: wInventory
 Func_00D_6DD0::
     ld hl, wInventory
@@ -5745,12 +5755,14 @@ Data_00D_710E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_010_663D)
 Func_00D_7115::
-    farcall Func_01E_4001
+    farcall ScriptCommandE9_Run
     ret
 
+; implements script command type F4; reached through ScriptCommandF4 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4)
 ; reads: wD780
-Func_00D_711C::
+ScriptCommandF4_Run::
+Func_00D_711C:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_00D_7144
@@ -5773,7 +5785,7 @@ Func_00D_711C::
     dw Jump_00D_7578
 
 Jump_00D_7144::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, $08
     ld [wD7F0], a
     ld a, [wD780]
@@ -5817,11 +5829,11 @@ Jump_00D_7159::
     dw Jump_00D_74FC
 
 Jump_00D_7195::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_00D_719C::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ld de, Data_01F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
@@ -6282,7 +6294,7 @@ Jump_00D_7532::
     ret
 
 Jump_00D_755C::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz
@@ -6309,7 +6321,7 @@ Jump_00D_7578::
     dw Jump_00D_7590
 
 Jump_00D_7590::
-    farcall Func_015_40FA
+    farcall ScriptCommandED_Run
     ret
 
 Jump_00D_7597::
@@ -6600,7 +6612,7 @@ Func_00D_77C2::
     ld [wC936], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00D_711C)
+; 1 call site from 1 routine (e.g. ScriptCommandF4_Run)
 ; reads: hFFC6, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
 Func_00D_7812::

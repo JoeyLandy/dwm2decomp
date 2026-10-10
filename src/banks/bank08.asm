@@ -18,7 +18,7 @@ Jump_008_400F::
     ret
 
 ; if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F
-; 3 call sites from 3 routines (e.g. Func_000_2E81, Func_012_4A9A, Func_0A1_52D4)
+; 3 call sites from 3 routines (e.g. Func_000_2E81, ScriptCommand8C_Run, Func_0A1_52D4)
 ; reads: wStringCategory
 CopyStringToBuffer_Bank08::
 Func_008_4016:: ; address name

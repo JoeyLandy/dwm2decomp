@@ -1,9 +1,11 @@
 SECTION "Bank 12", ROMX[$4000], BANK[$12]
     db $12
 
+; implements script command type 9D; reached through ScriptCommand9D in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9D)
 ; reads: wScriptStep
-Func_012_4001::
+ScriptCommand9D_Run::
+Func_012_4001:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4009
@@ -16,9 +18,11 @@ Jump_012_4009::
     inc [hl]
     ret
 
+; implements script command type 9C; reached through ScriptCommand9C in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9C)
 ; reads: wScriptStep
-Func_012_4013::
+ScriptCommand9C_Run::
+Func_012_4013:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4026
@@ -39,11 +43,13 @@ Jump_012_4026::
     inc [hl]
     ret
 
+; implements script command type 9A; reached through ScriptCommand9A in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9A)
 ; reads: wScriptStep, wCC44, wCD03
 ; writes: wScriptStartRequest, wC903, wC905
 ; points at: wScriptStep
-Func_012_4030::
+ScriptCommand9A_Run::
+Func_012_4030:: ; address name
     ld a, [wScriptStep]
     or a, a
     jr z, Jump_012_403C
@@ -71,9 +77,11 @@ Jump_012_404C::
     inc [hl]
     ret
 
+; implements script command type 99; reached through ScriptCommand99 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand99)
 ; reads: wScriptStep
-Func_012_4064::
+ScriptCommand99_Run::
+Func_012_4064:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_41ED
@@ -289,9 +297,11 @@ Jump_012_41ED::
     inc [hl]
     jp Jump_012_43C6
 
+; implements script command type 98; reached through ScriptCommand98 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand98)
 ; reads: wScriptStep
-Func_012_4210::
+ScriptCommand98_Run::
+Func_012_4210:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_43A6
@@ -382,7 +392,7 @@ Jump_012_4299::
     dec [hl]
     ret
 
-; 8 call sites from 2 routines (e.g. Func_012_4064, Func_012_4210)
+; 8 call sites from 2 routines (e.g. ScriptCommand99_Run, ScriptCommand98_Run)
 ; reads: wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
 ; points at: wScriptStep
@@ -533,9 +543,11 @@ Jump_012_43C6::
     inc [hl]
     ret
 
+; implements script command type 96; reached through ScriptCommand96 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand96)
 ; reads: wScriptStep
-Func_012_43DA::
+ScriptCommand96_Run::
+Func_012_43DA:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_44AF
@@ -666,9 +678,11 @@ Jump_012_44AF::
     ld [wC94A], a
     ret
 
+; implements script command type 95; reached through ScriptCommand95 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand95)
 ; reads: wScriptStep
-Func_012_44DB::
+ScriptCommand95_Run::
+Func_012_44DB:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4863
@@ -1183,7 +1197,7 @@ Jump_012_4863::
     ld [wC94A], a
     ret
 
-; 13 call sites from 2 routines (e.g. Func_012_43DA, Func_012_44DB)
+; 13 call sites from 2 routines (e.g. ScriptCommand96_Run, ScriptCommand95_Run)
 ; reads: wC94A, wC82C
 Func_012_488B::
     ld de, Data_012_48B9
@@ -1225,9 +1239,11 @@ Jump_012_48B4::
 Data_012_48B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0488B9, $60
 
+; implements script command type 9F; reached through ScriptCommand9F in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9F)
 ; reads: wScriptStep
-Func_012_4919::
+ScriptCommand9F_Run::
+Func_012_4919:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4D6B
@@ -1267,9 +1283,11 @@ Jump_012_494B::
     ld [wScriptRunning], a
     ret
 
+; implements script command type 8F; reached through ScriptCommand8F in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand8F)
 ; reads: wScriptStep
-Func_012_4965::
+ScriptCommand8F_Run::
+Func_012_4965:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4DDC
@@ -1357,9 +1375,11 @@ Jump_012_49F6::
 Data_012_4A14:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $17, $04, $17, $04, $17, $17, $17, $04, $04
 
+; implements script command type 8D; reached through ScriptCommand8D in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand8D)
 ; reads: wScriptStep
-Func_012_4A1E::
+ScriptCommand8D_Run::
+Func_012_4A1E:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4DDC
@@ -1420,9 +1440,11 @@ Jump_012_4A5A::
     inc [hl]
     ret
 
+; implements script command type 8C; reached through ScriptCommand8C in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand8C)
 ; reads: wScriptStep
-Func_012_4A9A::
+ScriptCommand8C_Run::
+Func_012_4A9A:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4DDC
@@ -1613,9 +1635,11 @@ Jump_012_4BB4::
     inc [hl]
     ret
 
+; implements script command type 8B; reached through ScriptCommand8B in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand8B)
 ; reads: wScriptStep
-Func_012_4C07::
+ScriptCommand8B_Run::
+Func_012_4C07:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4DDC
@@ -1917,18 +1941,22 @@ Func_012_4DFB:: ; heuristic: follows a terminator; C0
     inc [hl]
     ret
 
+; implements script command type 94; reached through ScriptCommand94 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand94)
 ; reads: wScriptStep
-Func_012_4E4B::
+ScriptCommand94_Run::
+Func_012_4E4B:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4FD7
     dw Jump_012_4FBC
     dw Jump_012_4F2E
 
+; implements script command type 93; reached through ScriptCommand93 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand93)
 ; reads: wScriptStep
-Func_012_4E55::
+ScriptCommand93_Run::
+Func_012_4E55:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4FD7
@@ -1997,9 +2025,11 @@ Jump_012_4EAD::
     farcall Func_05F_6C5A
     ret
 
+; implements script command type 92; reached through ScriptCommand92 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand92)
 ; reads: wScriptStep
-Func_012_4ECE::
+ScriptCommand92_Run::
+Func_012_4ECE:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4FD7
@@ -2025,9 +2055,11 @@ Jump_012_4EDE::
     inc [hl]
     ret
 
+; implements script command type 91; reached through ScriptCommand91 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand91)
 ; reads: wScriptStep
-Func_012_4EF9::
+ScriptCommand91_Run::
+Func_012_4EF9:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4FD7
@@ -2050,9 +2082,11 @@ Jump_012_4F03::
     inc [hl]
     ret
 
+; implements script command type 90; reached through ScriptCommand90 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand90)
 ; reads: wScriptStep
-Func_012_4F1E::
+ScriptCommand90_Run::
+Func_012_4F1E:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_4FD7
@@ -2160,9 +2194,11 @@ Jump_012_4FD7::
     inc [hl]
     ret
 
+; implements script command type A0; reached through ScriptCommandA0 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandA0)
 ; reads: wScriptStep
-Func_012_4FEA::
+ScriptCommandA0_Run::
+Func_012_4FEA:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_5097
@@ -2282,9 +2318,11 @@ Jump_012_50AE::
     inc [hl]
     ret
 
+; implements script command type A1; reached through ScriptCommandA1 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandA1)
 ; reads: wScriptStep
-Func_012_50B3::
+ScriptCommandA1_Run::
+Func_012_50B3:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_50DB
@@ -2316,9 +2354,11 @@ Jump_012_50DB::
     inc [hl]
     ret
 
+; implements script command type 8E; reached through ScriptCommand8E in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand8E)
 ; reads: wScriptStep
-Func_012_50E5::
+ScriptCommand8E_Run::
+Func_012_50E5:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_557C
@@ -2402,7 +2442,7 @@ Jump_012_519E::
     call Func_012_51C0
     ret
 
-; 2 call sites from 1 routine (e.g. Func_012_50E5)
+; 2 call sites from 1 routine (e.g. ScriptCommand8E_Run)
 ; reads: hFF8C
 ; writes: wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hFF8C
 ; points at: wC5E0
@@ -2416,7 +2456,7 @@ Func_012_51B1::
     ld [wC8C9], a
     inc de
 
-; 1 call site from 1 routine (e.g. Func_012_50E5)
+; 1 call site from 1 routine (e.g. ScriptCommand8E_Run)
 ; reads: hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hFF8C
 ; points at: wC5E0
@@ -2448,9 +2488,11 @@ Func_012_51C0::
     ldh [hFF8C], a
     ret
 
+; implements script command type 8A; reached through ScriptCommand8A in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand8A)
 ; reads: wScriptStep
-Func_012_51F4::
+ScriptCommand8A_Run::
+Func_012_51F4:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_557C
@@ -2557,9 +2599,11 @@ Jump_012_52A6::
 Data_012_52AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0492AD, $261
 
+; implements script command type 9B; reached through ScriptCommand9B in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9B)
 ; reads: wScriptStep
-Func_012_550E::
+ScriptCommand9B_Run::
+Func_012_550E:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_5520
@@ -2582,9 +2626,11 @@ Jump_012_5520::
     ldh [hPlayerFacing], a
     ret
 
+; implements script command type 89; reached through ScriptCommand89 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand89)
 ; reads: wScriptStep
-Func_012_5534::
+ScriptCommand89_Run::
+Func_012_5534:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_557C
@@ -2687,9 +2733,11 @@ Jump_012_55D7::
     inc [hl]
     ret
 
+; implements script command type 88; reached through ScriptCommand88 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand88)
 ; reads: wScriptStep
-Func_012_55E8::
+ScriptCommand88_Run::
+Func_012_55E8:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_5633
@@ -2699,7 +2747,7 @@ Func_012_55E8::
     dw Jump_012_56E8
     dw Jump_012_571D
 
-; 2 call sites from 2 routines (e.g. Func_012_5534, Func_012_5728)
+; 2 call sites from 2 routines (e.g. ScriptCommand89_Run, ScriptCommand87_Run)
 Func_012_55F8::
     dw $44FA
     db $CC, $CB, $7F, $28, $06, $21, $96, $6C, $06, $60, $D7, $3E, $50, $EA, $C8, $C8
@@ -2844,9 +2892,11 @@ Jump_012_571D::
     ld [wScriptStartRequest], a
     ret
 
+; implements script command type 87; reached through ScriptCommand87 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand87)
 ; reads: wScriptStep
-Func_012_5728::
+ScriptCommand87_Run::
+Func_012_5728:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_5834
@@ -3022,9 +3072,11 @@ Jump_012_5842::
     inc [hl]
     ret
 
+; implements script command type 85; reached through ScriptCommand85 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand85)
 ; reads: wScriptStep
-Func_012_5854::
+ScriptCommand85_Run::
+Func_012_5854:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_5994
@@ -3221,9 +3273,11 @@ Jump_012_5994::
     inc [hl]
     ret
 
+; implements script command type 9E; reached through ScriptCommand9E in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9E)
 ; reads: wScriptStep
-Func_012_59AC::
+ScriptCommand9E_Run::
+Func_012_59AC:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_5A17
@@ -3290,10 +3344,12 @@ Jump_012_5A17::
     inc [hl]
     ret
 
+; implements script command type 84; reached through ScriptCommand84 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand84)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Func_012_5A2F::
+ScriptCommand84_Run::
+Func_012_5A2F:: ; address name
     ld a, [wScriptStep]
     cp a, $07
     jr z, Jump_012_5A3D
@@ -3501,7 +3557,7 @@ Jump_012_5B8C::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_073_6126)
+; 1 call site from 1 routine (e.g. ScriptCommand3E_Run)
 ; reads: wScriptParam0
 ; writes: wScriptParam1
 ; points at: wScriptStep
@@ -3588,7 +3644,7 @@ Func_012_5BD9::
     farcall DrawMetaSprite
     ret
 
-; 1 call site from 1 routine (e.g. Func_073_6126)
+; 1 call site from 1 routine (e.g. ScriptCommand3E_Run)
 ; points at: wScriptStep
 Func_012_5C27::
     ld a, $83
@@ -3597,7 +3653,7 @@ Func_012_5C27::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_073_6126)
+; 1 call site from 1 routine (e.g. ScriptCommand3E_Run)
 ; reads: wC195, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wScriptParam0
 ; points at: wC4DF, wScriptStep
@@ -3711,9 +3767,11 @@ Jump_012_5CD1::
     inc [hl]
     ret
 
+; implements script command type 83; reached through ScriptCommand83 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand83)
 ; reads: wScriptParam1
-Func_012_5CE5::
+ScriptCommand83_Run::
+Func_012_5CE5:: ; address name
     ld a, [wScriptParam1]
     dec a
     jr nz, Jump_012_5CEF
@@ -3730,7 +3788,7 @@ Jump_012_5CF6::
     call Func_012_5CFA
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_5CE5)
+; 1 call site from 1 routine (e.g. ScriptCommand83_Run)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
 Func_012_5CFA::
@@ -3839,7 +3897,7 @@ Jump_012_5DB1::
     dec [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_5CE5)
+; 1 call site from 1 routine (e.g. ScriptCommand83_Run)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
 Func_012_5DB6::
@@ -4027,7 +4085,7 @@ Jump_012_5ECF::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_5CE5)
+; 1 call site from 1 routine (e.g. ScriptCommand83_Run)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
 Func_012_5EE7::
@@ -4490,7 +4548,7 @@ Jump_012_61D7::
     inc [hl]
     ret
 
-; 7 call sites from 7 routines (e.g. Func_00F_67BA, Func_00F_6D4D, Func_073_5761, Func_073_6126, ...)
+; 7 call sites from 7 routines (e.g. ScriptCommand39_Run, Func_00F_6D4D, ScriptCommand61_Run, ScriptCommand3E_Run, ...)
 ; reads: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
 Func_012_61EF::
@@ -4511,9 +4569,11 @@ Jump_012_6200::
     inc [hl]
     ret
 
+; implements script command type 86; reached through ScriptCommand86 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand86)
 ; reads: wScriptStep
-Func_012_6211::
+ScriptCommand86_Run::
+Func_012_6211:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_6295
@@ -4647,9 +4707,11 @@ Jump_012_62FC::
     ld [wScriptStep], a
     ret
 
+; implements script command type 81; reached through ScriptCommand81 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand81)
 ; reads: wScriptStep
-Func_012_630E::
+ScriptCommand81_Run::
+Func_012_630E:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_635B
@@ -4737,9 +4799,11 @@ Jump_012_6390::
     ld [wScriptParam1], a
     ret
 
+; implements script command type 80; reached through ScriptCommand80 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand80)
 ; reads: wScriptStep
-Func_012_63A1::
+ScriptCommand80_Run::
+Func_012_63A1:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Jump_012_642B
@@ -4922,7 +4986,7 @@ Jump_012_64CA::
     ld [wScriptParam0], a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_012_63A1)
+; 4 call sites from 1 routine (e.g. ScriptCommand80_Run)
 ; reads: wCCE9, wC900
 ; points at: wCC48, wCCEB
 Func_012_64D5::
@@ -4945,7 +5009,7 @@ Jump_012_64EA::
     add_a_to_hl
     ret
 
-; 10 call sites from 8 routines (e.g. Func_012_44DB, Func_012_55F8, Func_002_4745, Func_007_4E11, ...)
+; 10 call sites from 8 routines (e.g. ScriptCommand95_Run, Func_012_55F8, Func_002_4745, Func_007_4E11, ...)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE
@@ -4995,7 +5059,7 @@ Jump_012_6504::
     ld [rRAMG], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_00F_5404, Func_00F_59E6, Func_00F_60E6, Func_012_4FEA, ...)
+; 7 call sites from 7 routines (e.g. ScriptCommand58_Run, ScriptCommand4A_Run, ScriptCommand41_Run, ScriptCommandA0_Run, ...)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wC526, wScriptParam0
 ; points at: wC5E9, wC0F0, wC49F, wScriptStep
@@ -5061,7 +5125,7 @@ Jump_012_6591::
     ret
 
 ; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
-; 10 call sites from 8 routines (e.g. Func_012_44DB, Func_012_4A9A, Func_012_4C07, Func_012_5534, ...)
+; 10 call sites from 8 routines (e.g. ScriptCommand95_Run, ScriptCommand8C_Run, ScriptCommand8B_Run, ScriptCommand89_Run, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 StepWC921Counter_Bank12::
@@ -5106,7 +5170,7 @@ Jump_012_65C5::
     ret
 
 ; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. Func_012_4E55, Func_012_4F1E)
+; 2 call sites from 2 routines (e.g. ScriptCommand93_Run, ScriptCommand90_Run)
 SetBit1AtHL_Bank12::
 Func_012_65EB:: ; address name
     ld a, [hl]
@@ -5115,7 +5179,7 @@ Func_012_65EB:: ; address name
     ret
 
 ; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
-; 1 call site from 1 routine (e.g. Func_012_4F1E)
+; 1 call site from 1 routine (e.g. ScriptCommand90_Run)
 ClearBit1AtHL_Bank12::
 Func_012_65F0:: ; address name
     ld a, [hl]
@@ -5124,7 +5188,7 @@ Func_012_65F0:: ; address name
     ret
 
 ; sets bit 2 of the byte at [HL]; only A is clobbered
-; 14 call sites from 6 routines (e.g. Func_012_4064, Func_012_42B5, Func_012_43DA, Func_012_44DB, ...)
+; 14 call sites from 6 routines (e.g. ScriptCommand99_Run, Func_012_42B5, ScriptCommand96_Run, ScriptCommand95_Run, ...)
 SetBit2AtHL_B12::
 Func_012_65F5:: ; address name
     ld a, [hl]
@@ -5133,7 +5197,7 @@ Func_012_65F5:: ; address name
     ret
 
 ; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
-; 7 call sites from 3 routines (e.g. Func_012_4210, Func_012_44DB, Func_012_4C07)
+; 7 call sites from 3 routines (e.g. ScriptCommand98_Run, ScriptCommand95_Run, ScriptCommand8B_Run)
 ClearBit2AtHL_Bank12::
 Func_012_65FA:: ; address name
     ld a, [hl]
@@ -5141,7 +5205,7 @@ Func_012_65FA:: ; address name
     ld [hl], a
     ret
 
-; 21 call sites from 6 routines (e.g. Func_012_4064, Func_012_42B5, Func_012_44DB, Func_012_4ECE, ...)
+; 21 call sites from 6 routines (e.g. ScriptCommand99_Run, Func_012_42B5, ScriptCommand95_Run, ScriptCommand92_Run, ...)
 Func_012_65FF::
     and a, $0F
     jr nz, Jump_012_6609
@@ -5454,7 +5518,7 @@ Jump_012_680E::
     inc [hl]
     ret
 
-; 4 call sites from 2 routines (e.g. Func_012_59AC, Func_012_5854)
+; 4 call sites from 2 routines (e.g. ScriptCommand9E_Run, ScriptCommand85_Run)
 ; writes: wC924, wC925, wC926
 Func_012_6813::
     ld a, l
@@ -5465,7 +5529,7 @@ Func_012_6813::
     ld [wC926], a
     ret
 
-; 35 call sites from 13 routines (e.g. Func_012_50B3, Func_012_4001, Func_012_4013, Func_012_488B, ...)
+; 35 call sites from 13 routines (e.g. ScriptCommandA1_Run, ScriptCommand9D_Run, ScriptCommand9C_Run, Func_012_488B, ...)
 ; writes: wC924, wC926
 Func_012_6820::
     ld [wC924], a
@@ -5473,7 +5537,7 @@ Func_012_6820::
     ld [wC926], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_012_59AC, Func_012_5854)
+; 2 call sites from 2 routines (e.g. ScriptCommand9E_Run, ScriptCommand85_Run)
 ; reads: wC926
 ; writes: wC928
 Func_012_6828::
@@ -5489,7 +5553,7 @@ Jump_012_683A::
     scf
     ret
 
-; 11 call sites from 10 routines (e.g. Func_012_50B3, Func_012_4013, Func_012_4A9A, Func_012_4C07, ...)
+; 11 call sites from 10 routines (e.g. ScriptCommandA1_Run, ScriptCommand9C_Run, ScriptCommand8C_Run, ScriptCommand8B_Run, ...)
 ; reads: wC926
 Func_012_683C::
     call Func_012_6610
@@ -5505,13 +5569,13 @@ Jump_012_6848::
     scf
     ret
 
-; 4 call sites from 2 routines (e.g. Func_012_43DA, Func_012_44DB)
+; 4 call sites from 2 routines (e.g. ScriptCommand96_Run, ScriptCommand95_Run)
 ; reads: wC926
 Func_012_684A::
     call Func_012_66DA
     jr Jump_012_683F
 
-; 1 call site from 1 routine (e.g. Func_012_5854)
+; 1 call site from 1 routine (e.g. ScriptCommand85_Run)
 ; reads: wC926
 Func_012_684F::
     call Func_012_6787
@@ -5560,7 +5624,7 @@ Func_012_6893::
     call Func_012_6EB7
     ret
 
-; 11 call sites from 10 routines (e.g. Func_00C_659F, Func_00C_6CA1, Func_012_6211, Func_013_5EF4, ...)
+; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run, Func_00C_6CA1, ScriptCommand86_Run, Func_013_5EF4, ...)
 ; reads: hFFC6, hFFC8, hFFC7, hFFD0, wC966, wCD03, wCD04, wC836
 ; writes: wC966, hFFC6, hFFC7, hFFD0, wC836
 ; points at: wC70A, wC787
@@ -5703,7 +5767,7 @@ Jump_012_6948::
     ldh [hFFC6], a
     ret
 
-; 12 call sites from 10 routines (e.g. Func_012_689A, Func_004_581C, Func_00C_6CA1, Func_00F_5404, ...)
+; 12 call sites from 10 routines (e.g. Func_012_689A, Func_004_581C, Func_00C_6CA1, ScriptCommand58_Run, ...)
 ; reads: hFFC6, hFFC7, wCD05, hFFC8, hFFC9
 ; writes: hFFC6
 Func_012_6955::
@@ -5745,7 +5809,7 @@ Jump_012_6973::
     ld [hl], a
     ret
 
-; 11 call sites from 9 routines (e.g. Func_004_581C, Func_00C_6CA1, Func_00F_5404, Func_013_7598, ...)
+; 11 call sites from 9 routines (e.g. Func_004_581C, Func_00C_6CA1, ScriptCommand58_Run, Func_013_7598, ...)
 ; writes: hFFC6
 ; points at: wC707
 Func_012_6990::
@@ -5977,7 +6041,7 @@ Jump_012_6ABC::
     ld [wCBCF], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_05F_73A8, Func_073_7024)
+; 2 call sites from 2 routines (e.g. Func_05F_73A8, ScriptCommand16_Run)
 ; reads: hFFC6, wIsCGB
 ; writes: wC949, wC527
 ; points at: wC4DF
@@ -6027,7 +6091,7 @@ Jump_012_6B15::
     ld [wC527], a
     ret
 
-; 11 call sites from 2 routines (e.g. Func_05F_73A8, Func_073_7024)
+; 11 call sites from 2 routines (e.g. Func_05F_73A8, ScriptCommand16_Run)
 ; reads: wC949
 ; writes: wC949
 Func_012_6B22::
@@ -6041,7 +6105,7 @@ Func_012_6B22::
     ld [wC949], a
     ret
 
-; 11 call sites from 2 routines (e.g. Func_05F_73A8, Func_073_7024)
+; 11 call sites from 2 routines (e.g. Func_05F_73A8, ScriptCommand16_Run)
 ; reads: hFFC6, wFrameCounterLo, wFrameCounterHi, wC949
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
 Func_012_6B33::
@@ -8915,7 +8979,7 @@ Jump_012_7D93::
     xor a, a
     ret
 
-; 7 call sites from 5 routines (e.g. Func_013_5EF4, Func_05F_6D3F, Func_073_61A7, Func_073_630F, ...)
+; 7 call sites from 5 routines (e.g. Func_013_5EF4, Func_05F_6D3F, ScriptCommand3D_Run, ScriptCommand3C_Run, ...)
 ; reads: hFFC6, hFFC7, wC6FD
 ; writes: rRAMG, hFFC6
 ; points at: wC6FE
@@ -9143,7 +9207,7 @@ Jump_012_7EB7::
     ld [wC619], a
     ret
 
-; 12 call sites from 5 routines (e.g. Func_012_5A2F, ScriptFetch0E, Func_012_63A1, Func_013_70D9, ...)
+; 12 call sites from 5 routines (e.g. ScriptCommand84_Run, ScriptFetch0E, ScriptCommand80_Run, Func_013_70D9, ...)
 ; reads: hFFC6, hFFC7, wC617, wC618, wC619
 ; writes: wC617, wC618, wC619
 Func_012_7EC2::

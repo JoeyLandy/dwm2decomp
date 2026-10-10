@@ -5761,7 +5761,7 @@ Jump_001_6E3E::
     ld [hl+], a
     ret
 
-; 10 call sites from 7 routines (e.g. Func_013_5EF4, Func_073_5F55, Func_085_4047, Func_085_4207, ...)
+; 10 call sites from 7 routines (e.g. Func_013_5EF4, Func_073_5F55, ScriptCommand2A_Run, ScriptCommand4D_Run, ...)
 ; reads: hFFC7, hFFC8, wD868
 ; writes: rRAMG, rRAMB, wD869, wD86A
 Func_001_6E46::

@@ -1129,7 +1129,7 @@ Jump_031_474A::
     ret
 
 Jump_031_4751::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz

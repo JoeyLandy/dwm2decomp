@@ -1,9 +1,11 @@
 SECTION "Bank 15", ROMX[$4000], BANK[$15]
     db $15
 
-; 4 call sites from 3 routines (e.g. Func_00D_50E5, ScriptCommandEE, Func_01E_4001)
+; implements script command type EE; reached through ScriptCommandEE in bank $10 (E-0038)
+; 4 call sites from 3 routines (e.g. ScriptCommandF1_Run, ScriptCommandEE, ScriptCommandE9_Run)
 ; reads: wD788
-Func_015_4001::
+ScriptCommandEE_Run::
+Func_015_4001:: ; address name
     ld a, [wD788]
     rst $00
     dw Jump_015_400D
@@ -126,9 +128,11 @@ Jump_015_40D3::
     ld [wScriptStartRequest], a
     ret
 
-; 27 call sites from 13 routines (e.g. Func_00D_463F, Func_00D_711C, Func_00D_720E, ScriptCommandED, ...)
+; implements script command type ED; reached through ScriptCommandED in bank $10 (E-0038)
+; 27 call sites from 13 routines (e.g. Func_00D_463F, ScriptCommandF4_Run, Func_00D_720E, ScriptCommandED, ...)
 ; reads: wD780
-Func_015_40FA::
+ScriptCommandED_Run::
+Func_015_40FA:: ; address name
     ld a, [wD780]
     rst $00
     dw Jump_015_4124
@@ -4102,7 +4106,7 @@ Jump_015_5FAD::
     ret
 
 Jump_015_5FD9::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz
@@ -4127,7 +4131,7 @@ Jump_015_5FFC::
     ret
 
 Jump_015_600C::
-    farcall Func_01E_4069
+    farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
     ret nz
@@ -4543,7 +4547,7 @@ Func_015_6360::
     ld [wD781], a
     ret
 
-; 6 call sites from 6 routines (e.g. Func_015_4001, Func_015_4439, Func_015_570C, Func_015_5A67, ...)
+; 6 call sites from 6 routines (e.g. ScriptCommandEE_Run, Func_015_4439, Func_015_570C, Func_015_5A67, ...)
 ; reads: wD785
 ; writes: wD785, wD784
 Func_015_6374::
@@ -4969,7 +4973,7 @@ Jump_015_65DF::
     ldh [rSVBK], a
     ret
 
-; 41 call sites from 15 routines (e.g. Func_015_4001, Func_015_4182, Func_015_4C0C, Func_015_642D, ...)
+; 41 call sites from 15 routines (e.g. ScriptCommandEE_Run, Func_015_4182, Func_015_4C0C, Func_015_642D, ...)
 ; reads: wStringIndex, wC555, wC554, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -5034,7 +5038,7 @@ Jump_015_6634::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 45 call sites from 17 routines (e.g. Func_015_4001, Func_015_6546, Func_015_4182, Func_015_4C0C, ...)
+; 45 call sites from 17 routines (e.g. ScriptCommandEE_Run, Func_015_6546, Func_015_4182, Func_015_4C0C, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank15::
 Func_015_6655:: ; address name
@@ -5101,7 +5105,7 @@ Jump_015_66A4::
 Jump_015_66AE::
     ret
 
-; 6 call sites from 5 routines (e.g. Func_015_4001, Func_015_40FA, Func_015_6791, Func_015_5896, ...)
+; 6 call sites from 5 routines (e.g. ScriptCommandEE_Run, ScriptCommandED_Run, Func_015_6791, Func_015_5896, ...)
 Func_015_66AF::
     ld a, [de]
     inc de
@@ -5113,7 +5117,7 @@ Func_015_66AF::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 6 call sites from 5 routines (e.g. Func_015_4001, Func_015_40FA, Func_015_6791, Func_015_58B4, ...)
+; 6 call sites from 5 routines (e.g. ScriptCommandEE_Run, ScriptCommandED_Run, Func_015_6791, Func_015_58B4, ...)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank15::
 Func_015_66B8:: ; address name
@@ -5480,7 +5484,7 @@ Func_015_6866::
     ld [rRAMG2], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_015_4771, Func_015_4182, Func_00D_711C, Func_037_4AFD, ...)
+; 5 call sites from 5 routines (e.g. Func_015_4771, Func_015_4182, ScriptCommandF4_Run, Func_037_4AFD, ...)
 ; reads: wD7F1, wD7F2, wD7F3, hFFC6, wC8C1, wC8C2
 ; writes: rRAMG2, rRAMB
 Func_015_688D::
@@ -5530,7 +5534,7 @@ Func_015_688D::
     pop bc
     ret
 
-; 7 call sites from 6 routines (e.g. Func_015_47A7, Func_015_688D, Func_00D_6310, Func_00D_6509, ...)
+; 7 call sites from 6 routines (e.g. Func_015_47A7, Func_015_688D, ScriptCommandF3_Run, Func_00D_6509, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1
 Func_015_68DC::
@@ -5556,7 +5560,7 @@ Func_015_68F3::
     ld [hl], a
     ret
 
-; 12 call sites from 7 routines (e.g. Func_015_68F3, Func_015_47A7, Func_001_5535, Func_00C_4001, ...)
+; 12 call sites from 7 routines (e.g. Func_015_68F3, Func_015_47A7, Func_001_5535, ScriptCommandF6_Run, ...)
 ; reads: wD7F1, wD7F2, wD7F3, wD7F4
 ; writes: wD7F5
 Func_015_68FA::

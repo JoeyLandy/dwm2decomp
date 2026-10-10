@@ -786,7 +786,7 @@ Jump_061_44D7::
     call Func_061_44DB
     ret
 
-; 3 call sites from 2 routines (e.g. Func_061_4472, Func_012_6211)
+; 3 call sites from 2 routines (e.g. Func_061_4472, ScriptCommand86_Run)
 ; reads: wCC45, wIsCGB
 ; writes: rSVBK
 ; points at: wCDAF, wC244
@@ -963,7 +963,7 @@ Jump_061_45E1::
     call Func_061_45E8
     ret
 
-; 2 call sites from 2 routines (e.g. Func_061_44DB, Func_012_630E)
+; 2 call sites from 2 routines (e.g. Func_061_44DB, ScriptCommand81_Run)
 ; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCDB0, wCDAD
