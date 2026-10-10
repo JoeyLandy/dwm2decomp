@@ -1554,20 +1554,20 @@ Func_010_49D3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand04:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49DA:: ; address name
-    farcall Func_05F_785C
+    farcall ScriptWaitFrames
     ret
 
 ; runs one frame of script command type 03 (entry 2 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand03:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49E1:: ; address name
-    farcall Func_05F_77D8
+    farcall ScriptStepObject
 
 ; runs one frame of script command type 02 (entry 1 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand02:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49E7:: ; address name
-    farcall Func_05F_77D8
+    farcall ScriptStepObject
     ret
 
 ; runs one frame of script command type 0A (entry 9 of ScriptCommandHandlers)

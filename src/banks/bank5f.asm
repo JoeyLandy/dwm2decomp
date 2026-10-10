@@ -2199,10 +2199,12 @@ Jump_05F_77D6::
     scf
     ret
 
+; script commands 02 and 03 (and 05 through Func_05F_787C): wScriptParam0 low nibble is an object number (16-byte entries from wCB7F), its high nibble a direction 0-3; sets bit 2 of the object's flag byte and moves the object's position by one unit in that direction
 ; 2 call sites from 2 routines (e.g. ScriptCommand03, ScriptCommand02)
 ; reads: wScriptParam0, wScriptStep, wScriptParam1
 ; writes: wScriptStep, wScriptParam1, wScriptCommandType, wScriptStartRequest
-Func_05F_77D8::
+ScriptStepObject::
+Func_05F_77D8:: ; address name
     ld c, $10
     ld a, [wScriptParam0]
     and a, $0F
@@ -2290,10 +2292,12 @@ Jump_05F_783B::
     ld [wScriptStartRequest], a
     ret
 
+; script command 04: wScriptParam0/1 is a 16-bit counter that falls by one each frame; at zero it clears wScriptCommandType and sets wScriptStartRequest = $80 so the next script byte is fetched (the opening's waits of 30, 60 and 90 frames showed the counter at 29, 59 and 89)
 ; 1 call site from 1 routine (e.g. ScriptCommand04)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptParam0, wScriptParam1, wScriptCommandType, wScriptStartRequest
-Func_05F_785C::
+ScriptWaitFrames::
+Func_05F_785C:: ; address name
     ld a, [wScriptParam0]
     ld l, a
     ld a, [wScriptParam1]

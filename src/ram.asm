@@ -889,7 +889,7 @@ DEF wCB75 EQU $CB75
 DEF wCB76 EQU $CB76
 DEF wSpriteSlotCount EQU $CB7D ; number of 8-byte slots DrawSpriteSlots draws (reading)
 DEF wCB7E EQU $CB7E
-DEF wSpriteSlots EQU $CB7F ; start of the 8-byte slot array DrawSpriteSlots reads (reading)
+DEF wSpriteSlots EQU $CB7F ; start of an array of objects: 8-byte slots in the bank $E0 intro (DrawSpriteSlots), 16-byte entries in field mode (the script commands, ScriptStepObject) (reading)
 DEF wCB80 EQU $CB80
 DEF wCB81 EQU $CB81
 DEF wCB82 EQU $CB82

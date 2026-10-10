@@ -52,6 +52,12 @@ Forcing skips set-up, so the screens are partial. The routines are `GameMode0_In
 - **Field mode:** `UpdatePlayerMovement` and `CheckInteractionInFront` read the D-pad and A button; the player's
   facing is `hPlayerFacing` (0 down, 1 right, 2 up, 3 left), its position `hPlayerX`/`hPlayerY` in steps of 16;
   `TileBlockedAtPixel` tests the tiles ahead; `IncrementPlayTime` keeps the play clock (`wPlay*`).
+- **Maps (E-0036, E-0037):** `hMapId` indexes `MapTable` (bank `$11`, 256 words; map names are the system strings from index 10, so
+  map 29 is "Deck", the opening ship); a record names the tileset stream, the width and height in screens, the highest
+  blocking tile id and, per screen, the streams that fill `wScreenTileBuffer` (tile ids) and the attribute map. `LoadMapScreen`
+  builds the screen at (`hMapScreenX`, `hMapScreenY`); `MapWarpTable` lists doors; `CheckWarpAtPlayer` takes them.
+- **Event scripts (E-0038):** `StartEventScript` runs a byte-coded script each frame (`FetchScriptCommand` reads an opcode,
+  `ExecuteScriptCommand` runs one of 248 command types; `ScriptWaitFrames` is type 04).
 - **Super Game Boy:** `SendSGBPacketSet`, `SGBTransferCompressed`, `SGBTransferRaw` follow the documented packet
   protocol and are skipped unless `wSGBActive`.
 - **Saves:** records of `$A5` bytes at `sA000` (`SRAMRecordAddress`).
