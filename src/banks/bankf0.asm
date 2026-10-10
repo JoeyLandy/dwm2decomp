@@ -4270,15 +4270,17 @@ Func_0F0_63BA::
     ld [hl], a
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 1 call site from 1 routine (e.g. Func_0F0_63EE)
-Func_0F0_63D3::
+CopyBytesDEToHL_BankF0::
+Func_0F0_63D3:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_0F0_63D3
+    jr nz, CopyBytesDEToHL_BankF0
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
@@ -4323,7 +4325,7 @@ Func_0F0_63EE::
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_0F0_63D3
+    call CopyBytesDEToHL_BankF0
     pop de
     pop hl
     ld a, [wIsCGB]

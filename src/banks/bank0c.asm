@@ -576,7 +576,7 @@ Jump_00C_4360:: ; address name
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_00C_52D0
+    call CopyBytesDEToHL_Bank0C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_00C_437E
@@ -2807,15 +2807,17 @@ Func_00C_529D::
     call FillTilesFromRequest
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 4 call sites from 4 routines (e.g. Func_00C_72CC, Func_00C_6FCB, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
-Func_00C_52D0::
+CopyBytesDEToHL_Bank0C::
+Func_00C_52D0:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_00C_52D0
+    jr nz, CopyBytesDEToHL_Bank0C
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
@@ -3424,7 +3426,7 @@ Jump_00C_66DC::
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_00C_52D0
+    call CopyBytesDEToHL_Bank0C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_00C_66FF
@@ -4791,7 +4793,7 @@ Func_00C_6FCB::
     ld hl, wC300
     ld de, wC29C
     ld bc, $0064
-    call Func_00C_52D0
+    call CopyBytesDEToHL_Bank0C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_00C_6FFF
@@ -5324,7 +5326,7 @@ Func_00C_72CC::
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_00C_52D0
+    call CopyBytesDEToHL_Bank0C
     pop de
     pop hl
     ld a, [wIsCGB]

@@ -7804,9 +7804,11 @@ Func_0E0_7A00:: ; address name
     add_a_to_hl
     ret
 
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F, wBattleActor
-Func_0E0_7A07:: ; heuristic: follows a terminator; C0
+ActorOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7A07:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0E0_7A1C
@@ -7823,9 +7825,11 @@ Jump_0E0_7A1C::
     cp a, $04
     ret
 
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F, wBattleTarget
-Func_0E0_7A22:: ; heuristic: follows a terminator; C0
+TargetOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7A22:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0E0_7A37

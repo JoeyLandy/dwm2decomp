@@ -810,13 +810,13 @@ Func_001_4AA4::
     ld de, Data_001_4ACC
     ld hl, wC49F
     ld bc, $0008
-    call Func_000_1679
+    call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wC526], a
     ld de, Data_001_4ACC
     ld hl, wC49F
     ld bc, $0008
-    call Func_000_1679
+    call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wC527], a
     ret
@@ -5772,7 +5772,7 @@ Jump_001_6C8D::
     ld [hl+], a
     ld de, wC60C
     ld b, $0B
-    call Func_001_6E25
+    call CopyBBytesDEToHL_Bank01
     ld a, $FF
     ld [hl+], a
     ld [hl+], a
@@ -5929,7 +5929,7 @@ Jump_001_6D33::
     ld h, a
     ld de, wD01A
     ld b, $1B
-    call Func_001_6E25
+    call CopyBBytesDEToHL_Bank01
     call Func_001_6E31
     call Func_001_6E31
     ld [hl], $00
@@ -5968,7 +5968,7 @@ Jump_001_6DD9::
     sbc a, $00
     ld h, a
     ld b, $0A
-    call Func_001_6E25
+    call CopyBBytesDEToHL_Bank01
 
 Jump_001_6DF4::
     ld a, [wD006]
@@ -5992,13 +5992,15 @@ Jump_001_6DF4::
     farcall Func_016_5AAF
     ret
 
+; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 ; 3 call sites from 1 routine (e.g. Func_001_6C48)
-Func_001_6E25::
+CopyBBytesDEToHL_Bank01::
+Func_001_6E25:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Func_001_6E25
+    jr nz, CopyBBytesDEToHL_Bank01
     ret
 
 ; 1 call site from 1 routine (e.g. Func_001_6C48)

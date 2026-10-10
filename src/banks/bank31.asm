@@ -797,7 +797,7 @@ Func_031_4493:: ; address name
 ; points at: wBattleStep, wC986, wC60C
 BattleEnd_Step3::
 Jump_031_449C:: ; address name
-    call BattleEnd_Step3_Sub08
+    call BattleEnd_Step3_Sub07
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -839,8 +839,8 @@ Jump_031_44D1::
     ret nc
     ld a, [wC58A]
     or a, a
-    call z, BattleEnd_Step3_Sub06
-    call BattleEnd_Step3_Sub07
+    call z, BattleEnd_Step3_Sub05
+    call BattleEnd_Step3_Sub06
     ld a, [wDAAB]
     dec a
     ld c, $4E
@@ -859,25 +859,25 @@ Jump_031_44D1::
     adc a, $00
     ld h, a
     ld b, $0E
-    call BattleEnd_Step3_Sub03
+    call CopyBBytesDEToHL_Bank31
     push de
     ld de, wC60C
     ld b, $0B
-    call BattleEnd_Step3_Sub03
+    call CopyBBytesDEToHL_Bank31
     pop de
     ld a, $FF
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    call BattleEnd_Step3_Sub05
+    call BattleEnd_Step3_Sub04
     ld a, $FF
     ld [hl+], a
-    call BattleEnd_Step3_Sub05
+    call BattleEnd_Step3_Sub04
     ld a, $FF
     ld [hl+], a
     ld b, $08
-    call BattleEnd_Step3_Sub04
+    call BattleEnd_Step3_Sub03
     ld a, $FF
     ld b, $19
 
@@ -893,16 +893,16 @@ Jump_031_452D::
     ld [hl+], a
     ld [hl+], a
     ld b, $15
-    call BattleEnd_Step3_Sub03
+    call CopyBBytesDEToHL_Bank31
     xor a, a
     ld [hl+], a
     ld [hl+], a
     ld b, $1F
-    call BattleEnd_Step3_Sub03
-    call BattleEnd_Step3_Sub05
+    call CopyBBytesDEToHL_Bank31
+    call BattleEnd_Step3_Sub04
     ld a, $00
     ld [hl+], a
-    call BattleEnd_Step3_Sub05
+    call BattleEnd_Step3_Sub04
     ld a, $00
     ld [hl+], a
     ld a, [de]
@@ -912,20 +912,20 @@ Jump_031_452D::
     farcall Func_019_73A2
     ret
 
-; only called from BattleEnd_Step3 (E-0047)
+; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 ; 4 call sites from 1 routine (e.g. BattleEnd_Step3)
-BattleEnd_Step3_Sub03::
+CopyBBytesDEToHL_Bank31::
 Func_031_4566:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, BattleEnd_Step3_Sub03
+    jr nz, CopyBBytesDEToHL_Bank31
     ret
 
 ; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
-BattleEnd_Step3_Sub04::
+BattleEnd_Step3_Sub03::
 Func_031_456D:: ; address name
     push hl
     ld a, $FF
@@ -961,7 +961,7 @@ Jump_031_4581::
 
 ; only called from BattleEnd_Step3 (E-0047)
 ; 4 call sites from 1 routine (e.g. BattleEnd_Step3)
-BattleEnd_Step3_Sub05::
+BattleEnd_Step3_Sub04::
 Func_031_458E:: ; address name
     ld a, $98
     ld [hl+], a
@@ -985,7 +985,7 @@ Jump_031_459E::
 ; reads: wD890, wDA6B, wDA6C, wDA6D
 ; writes: wDA6B, wDA6C, wDA6D
 ; points at: wBattleSlotOut
-BattleEnd_Step3_Sub06::
+BattleEnd_Step3_Sub05::
 Func_031_45A3:: ; address name
     ld a, [wD890]
     ld b, a
@@ -1034,7 +1034,7 @@ Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wCFC5, wD890, wCFDF, wCFE0, wCFDD, wCFDE
 ; writes: hFFC6, hFFC7, wDAAB, wCB7E
 ; points at: wCFDF, wCFDD
-BattleEnd_Step3_Sub07::
+BattleEnd_Step3_Sub06::
 Func_031_45F2:: ; address name
     ld a, [wCFC5]
     cp a, $02
@@ -1083,12 +1083,12 @@ Jump_031_4631::
 
 Jump_031_4640::
     ld hl, $0008
-    call BattleEnd_Step3_Sub07_Sub01
+    call BattleEnd_Step3_Sub06_Sub01
     jr Jump_031_4680
 
 Jump_031_4648::
     ld hl, $001B
-    call BattleEnd_Step3_Sub07_Sub01
+    call BattleEnd_Step3_Sub06_Sub01
     jr Jump_031_4680
 
 Jump_031_4650::
@@ -1105,28 +1105,28 @@ Jump_031_4650::
 
 Jump_031_4663::
     ld hl, $0183
-    call BattleEnd_Step3_Sub07_Sub01
+    call BattleEnd_Step3_Sub06_Sub01
     jr Jump_031_4680
 
 Jump_031_466B::
     ld a, $02
     ld [wCB7E], a
     ld hl, $01AC
-    call BattleEnd_Step3_Sub07_Sub01
+    call BattleEnd_Step3_Sub06_Sub01
     jr Jump_031_4680
 
 Jump_031_4678::
     ld hl, $01AF
-    call BattleEnd_Step3_Sub07_Sub01
+    call BattleEnd_Step3_Sub06_Sub01
     jr Jump_031_4680
 
 Jump_031_4680::
     ret
 
-; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 5 call sites from 1 routine (e.g. BattleEnd_Step3_Sub07)
+; only called from BattleEnd_Step3_Sub06 (E-0047)
+; 5 call sites from 1 routine (e.g. BattleEnd_Step3_Sub06)
 ; reads: hFFC6, hFFC7
-BattleEnd_Step3_Sub07_Sub01::
+BattleEnd_Step3_Sub06_Sub01::
 Func_031_4681:: ; address name
     ldh a, [hFFC6]
     ld e, a
@@ -1137,7 +1137,7 @@ Func_031_4681:: ; address name
     inc de
     ld a, h
     ld [de], a
-    farcall BattleEnd_Step3_Sub07_Sub01_Sub01
+    farcall BattleEnd_Step3_Sub06_Sub01_Sub01
     ret
 
 ; wBattlePhase 2, wBattleStep 4 (E-0044)
@@ -6452,7 +6452,7 @@ Jump_031_6635::
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wC58A, wD88F
 ; writes: rRAMG, rRAMB
-BattleEnd_Step3_Sub08::
+BattleEnd_Step3_Sub07::
 Func_031_663D:: ; address name
     ld a, [wC58A]
     or a, a
@@ -6467,17 +6467,17 @@ Func_031_663D:: ; address name
 
 Jump_031_6653::
     push bc
-    call BattleEnd_Step3_Sub08_Sub01
+    call BattleEnd_Step3_Sub07_Sub01
     ld a, c
     push bc
     ld c, $55
     call SRAMRecordAddressMapped
     pop bc
-    call BattleEnd_Step3_Sub08_Sub02
-    call BattleEnd_Step3_Sub08_Sub03
-    call BattleEnd_Step3_Sub08_Sub04
-    call BattleEnd_Step3_Sub08_Sub05
-    call BattleEnd_Step3_Sub08_Sub06
+    call BattleEnd_Step3_Sub07_Sub02
+    call BattleEnd_Step3_Sub07_Sub03
+    call BattleEnd_Step3_Sub07_Sub04
+    call BattleEnd_Step3_Sub07_Sub05
+    call BattleEnd_Step3_Sub07_Sub06
     pop bc
     inc c
     dec b
@@ -6488,12 +6488,12 @@ Jump_031_6653::
 Jump_031_6677::
     ret
 
-; only called from BattleEnd_Step3_Sub08 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
+; only called from BattleEnd_Step3_Sub07 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
 ; reads: wC46B
 ; writes: wC835
 ; points at: wDA43, wDA4B
-BattleEnd_Step3_Sub08_Sub01::
+BattleEnd_Step3_Sub07_Sub01::
 Func_031_6678:: ; address name
     push bc
     ld a, c
@@ -6526,11 +6526,11 @@ Func_031_6678:: ; address name
     pop bc
     ret
 
-; only called from BattleEnd_Step3_Sub08 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
+; only called from BattleEnd_Step3_Sub07 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
 ; reads: wCFC5
 ; points at: wBattleSlotOut, wBattleStatus
-BattleEnd_Step3_Sub08_Sub02::
+BattleEnd_Step3_Sub07_Sub02::
 Func_031_66AE:: ; address name
     ld [hl], $00
     ld a, c
@@ -6554,34 +6554,34 @@ Jump_031_66B9::
     ld a, [hl]
     pop hl
     bit 5, a
-    call nz, BattleEnd_Step3_Sub08_Sub02_Sub01
+    call nz, BattleEnd_Step3_Sub07_Sub02_Sub01
     and a, $03
-    call nz, BattleEnd_Step3_Sub08_Sub02_Sub02
+    call nz, BattleEnd_Step3_Sub07_Sub02_Sub02
     ret
 
 Jump_031_66D9::
     set 7, [hl]
     ret
 
-; only called from BattleEnd_Step3_Sub08_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08_Sub02)
-BattleEnd_Step3_Sub08_Sub02_Sub01::
+; only called from BattleEnd_Step3_Sub07_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_Sub02)
+BattleEnd_Step3_Sub07_Sub02_Sub01::
 Func_031_66DC:: ; address name
     set 0, [hl]
     ret
 
-; only called from BattleEnd_Step3_Sub08_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08_Sub02)
-BattleEnd_Step3_Sub08_Sub02_Sub02::
+; only called from BattleEnd_Step3_Sub07_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_Sub02)
+BattleEnd_Step3_Sub07_Sub02_Sub02::
 Func_031_66DF:: ; address name
     set 2, [hl]
     ret
 
-; only called from BattleEnd_Step3_Sub08 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
+; only called from BattleEnd_Step3_Sub07 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
 ; writes: wD868
 ; points at: wBattleHP
-BattleEnd_Step3_Sub08_Sub03::
+BattleEnd_Step3_Sub07_Sub03::
 Func_031_66E2:: ; address name
     ld a, [hl]
     ld [wD868], a
@@ -6636,10 +6636,10 @@ Jump_031_671C::
     inc hl
     ret
 
-; only called from BattleEnd_Step3_Sub08 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
+; only called from BattleEnd_Step3_Sub07 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
 ; points at: wBattleMP
-BattleEnd_Step3_Sub08_Sub04::
+BattleEnd_Step3_Sub07_Sub04::
 Func_031_6723:: ; address name
     push hl
     inc hl
@@ -6684,11 +6684,11 @@ Jump_031_6749::
     ld h, a
     ret
 
-; only called from BattleEnd_Step3_Sub08 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
+; only called from BattleEnd_Step3_Sub07 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
 ; reads: wD868
 ; points at: wD93F
-BattleEnd_Step3_Sub08_Sub05::
+BattleEnd_Step3_Sub07_Sub05::
 Func_031_6757:: ; address name
     ld a, [wD868]
     bit 7, a
@@ -6717,11 +6717,11 @@ Jump_031_676D::
     ld h, a
     ret
 
-; only called from BattleEnd_Step3_Sub08 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
+; only called from BattleEnd_Step3_Sub07 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
 ; reads: wD868
 ; points at: wSlotPersonalityHi, wSlotPersonalityLo, wD980, wSlotPersonalityMid
-BattleEnd_Step3_Sub08_Sub06::
+BattleEnd_Step3_Sub07_Sub06::
 Func_031_6776:: ; address name
     ld a, [wD868]
     bit 7, a

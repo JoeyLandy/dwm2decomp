@@ -8160,7 +8160,7 @@ Jump_073_715A:: ; address name
     ldh [hFFC6], a
     farcall Func_012_6B33
     ld de, wCB86
-    call Func_073_7A51
+    call RotateDirectionAtDEEvery32_Bank73
     ld b, $78
     call StepWC921Counter_Bank73
     ret nc
@@ -8182,7 +8182,7 @@ Jump_073_7180:: ; address name
     ldh [hFFC6], a
     farcall Func_012_6B33
     ld de, wCB86
-    call Func_073_7A51
+    call RotateDirectionAtDEEvery32_Bank73
     ld hl, wScriptParam0
     inc [hl]
     ld a, $01
@@ -8212,7 +8212,7 @@ Jump_073_71BC:: ; address name
     ldh [hFFC6], a
     farcall Func_012_6B33
     ld de, wCB86
-    call Func_073_7A51
+    call RotateDirectionAtDEEvery32_Bank73
     ld de, wCB9B
     ld hl, $005A
     call Func_073_7A7F
@@ -8228,7 +8228,7 @@ Jump_073_71DB:: ; address name
     call Func_073_7AB2
     push af
     ld de, wCB86
-    call Func_073_7A51
+    call RotateDirectionAtDEEvery32_Bank73
     ld hl, wScriptParam0
     inc [hl]
     pop af
@@ -9571,9 +9571,11 @@ Func_073_7A4C:: ; address name
     ld [hl], a
     ret
 
+; when wScriptParam0 & $1F = 0: [DE] = ([DE] + 1) & 3, the next of four directions; otherwise returns with A = wScriptParam0 & $1F (E-0064) (the same 12 bytes appear in 3 banks)
 ; 4 call sites from 4 routines (e.g. ScriptCommand16_Run_Case16, ScriptCommand16_Run_Case15, ScriptCommand16_Run_Case13, ScriptCommand16_Run_Case12)
 ; reads: wScriptParam0
-Func_073_7A51::
+RotateDirectionAtDEEvery32_Bank73::
+Func_073_7A51:: ; address name
     ld a, [wScriptParam0]
     and a, $1F
     ret nz

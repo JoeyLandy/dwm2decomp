@@ -67,7 +67,7 @@ Jump_03A_405D::
     jp Jump_03A_48EC
 
 Jump_03A_4062::
-    call Func_03A_7CB5
+    call TargetOnLocalSide_Bank3A
     ld a, $02
     jp c, Jump_03A_40B3
     ld a, $03
@@ -102,13 +102,13 @@ Jump_03A_407E::
     ld a, [wCFF2]
     cp a, $80
     jr z, Jump_03A_40A2
-    call Func_03A_7C9A
+    call ActorOnLocalSide_Bank3A
     jr nc, Jump_03A_40AA
     inc hl
     jr Jump_03A_40AA
 
 Jump_03A_40A2::
-    call Func_03A_7CB5
+    call TargetOnLocalSide_Bank3A
     jr c, Jump_03A_40AA
     inc hl
     jr Jump_03A_40AA
@@ -2638,7 +2638,7 @@ Jump_03A_57B4::
     ld b, $00
     add hl, bc
     add hl, bc
-    call Func_03A_7C9A
+    call ActorOnLocalSide_Bank3A
     jr nc, Jump_03A_57C2
     inc hl
 
@@ -3383,7 +3383,7 @@ Jump_03A_64D8::
 Func_03A_64F8::
     push bc
     ld a, [wBattleActor]
-    call Func_03A_7C66
+    call GetBattleMaxHP_Bank3A
     ld a, b
     call DivideHLByA
     ld a, h
@@ -4240,10 +4240,10 @@ Jump_03A_69C2:: ; address name
 
 Jump_03A_69F2::
     ld a, [wBattleTarget]
-    call Func_03A_7C6B
+    call GetBattleMaxMP_Bank3A
     push hl
     ld a, [wBattleTarget]
-    call Func_03A_7C75
+    call GetBattleMP_Bank3A
     pop bc
     call CompareHLToBC
     jr z, Func_03A_69AA_Case01
@@ -4682,7 +4682,7 @@ Func_03A_6C93::
 ; writes: wDABE
 Func_03A_6C93_Case00::
 Jump_03A_6CAC:: ; address name
-    call Func_03A_7CB5
+    call TargetOnLocalSide_Bank3A
     ld d, $85
     jr c, Jump_03A_6CC9
     ld d, $E8
@@ -4693,7 +4693,7 @@ Jump_03A_6CAC:: ; address name
 ; writes: wDABE
 Func_03A_6C93_Case01::
 Jump_03A_6CB7:: ; address name
-    call Func_03A_7CB5
+    call TargetOnLocalSide_Bank3A
     ld d, $80
     jr c, Jump_03A_6CC9
     ld d, $E7
@@ -6153,22 +6153,28 @@ Jump_03A_7C1E::
     ret
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23
 
+; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. Func_03A_64F8)
 ; points at: wBattleMaxHP
-Func_03A_7C66::
+GetBattleMaxHP_Bank3A::
+Func_03A_7C66:: ; address name
     ld hl, wBattleMaxHP
     jr Jump_03A_7C89
 
+; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. Func_03A_69AA_Case00)
 ; points at: wBattleMaxMP
-Func_03A_7C6B::
+GetBattleMaxMP_Bank3A::
+Func_03A_7C6B:: ; address name
     ld hl, wBattleMaxMP
     jr Jump_03A_7C89
     db $21, $BF, $D8, $18, $14
 
+; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. Func_03A_69AA_Case00)
 ; points at: wBattleMP
-Func_03A_7C75::
+GetBattleMP_Bank3A::
+Func_03A_7C75:: ; address name
     ld hl, wBattleMP
     jr Jump_03A_7C89
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
@@ -6187,9 +6193,11 @@ Func_03A_7C93:: ; address name
     add_a_to_hl
     ret
 
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; 2 call sites from 2 routines (e.g. SelectEffectByWDAD3Flags, SelectEffectByWDAD2Flags)
 ; reads: wC58A, wC57F, wBattleActor
-Func_03A_7C9A::
+ActorOnLocalSide_Bank3A::
+Func_03A_7C9A:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_03A_7CAF
@@ -6206,9 +6214,11 @@ Jump_03A_7CAF::
     cp a, $04
     ret
 
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; 4 call sites from 3 routines (e.g. Func_03A_6C93_Case01, Func_03A_6C93_Case00, SelectEffectByWDAD2Flags)
 ; reads: wC58A, wC57F, wBattleTarget
-Func_03A_7CB5::
+TargetOnLocalSide_Bank3A::
+Func_03A_7CB5:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_03A_7CCA

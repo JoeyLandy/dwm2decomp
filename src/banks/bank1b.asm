@@ -1816,7 +1816,7 @@ Func_01B_53AF::
     ld de, Data_01B_53C6
     ld hl, wC49F
     ld bc, $0008
-    call Func_000_1679
+    call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wC526], a
     ret
@@ -1858,7 +1858,7 @@ Jump_01B_53E9:: ; address name
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_01B_62EC
+    call CopyBytesDEToHL_Bank1B
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01B_5407
@@ -4377,15 +4377,17 @@ Func_01B_62CB:: ; address name
     add_a_to_hl
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 2 call sites from 2 routines (e.g. Func_01B_53CE_Table2_Case00, Func_01B_6371)
-Func_01B_62EC::
+CopyBytesDEToHL_Bank1B::
+Func_01B_62EC:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_01B_62EC
+    jr nz, CopyBytesDEToHL_Bank1B
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
@@ -4536,7 +4538,7 @@ Func_01B_6371::
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_01B_62EC
+    call CopyBytesDEToHL_Bank1B
     pop de
     pop hl
     ld a, [wIsCGB]

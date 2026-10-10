@@ -399,5 +399,31 @@ class SlotStatusBlock(unittest.TestCase):
         self.assertFalse(gb.f & 0x10, "present and clear")
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class DamageDivisors(unittest.TestCase):
+    """ComputeBasicDamage divides by 16, not 4 (E-0064; C2 on our emulator). Actor ATK 1000, varied random state."""
+
+    def damage_range(self, bc: int) -> tuple[int, int]:
+        out = []
+        for seed in range(0, 128, 4):
+            gb = call(0x36, 0x5025, mem={0xD8A4: 0, 0xD8FF: 1000 & 0xFF, 0xD900: 1000 >> 8, 0xC5E8: seed, 0xC5E7: seed * 7 & 0xFF},
+                      b=bc >> 8, c=bc & 0xFF)
+            out.append(gb.rb(0xD872) | gb.rb(0xD873) << 8)
+        return min(out), max(out)
+
+    def test_large_difference(self):
+        # half = 500: damage = 500 + RandomInRange(-31, 31) + RandomInRange(-1, 1); with /4 it would reach 250-750
+        low, high = self.damage_range(0)
+        self.assertGreaterEqual(low, 500 - 32)
+        self.assertLessEqual(high, 500 + 32)
+
+    def test_small_difference(self):
+        # half = 5 <= ATK / 16 = 62: damage = RandomInRange(0, 62); with /4 it would reach 250
+        low, high = self.damage_range(990)
+        self.assertGreaterEqual(low, 0)
+        self.assertLessEqual(high, 62)
+        self.assertGreater(high, 31, "the range is not narrower than ATK / 16")
+
+
 if __name__ == "__main__":
     unittest.main()

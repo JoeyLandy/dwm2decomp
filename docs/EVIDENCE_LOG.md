@@ -600,6 +600,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - what wC924 and wC926 do.
 - Binary verification: pending; see the commit.
 
+### E-0064 — Damage divisors corrected; library families; stat getters in every battle bank
+
+- Kind: OBSERVATION (reading; the damage correction is also executed on our emulator, C2).
+- **Correction to ComputeBasicDamage (E-0043's note).** The helper it calls three times (`36:6510`) shifts HL right twice and then falls through `36:6518` (one shift) and `36:651C` (one shift). That is four shifts, a division by 16, not 4. Executed with actor ATK 1000:
+  - BC = 0: damage stayed within 469–531 over 512 random states, i.e. 500 ± 31 ± 1. The old note predicted 250–750.
+  - BC = 990: damage stayed within 0–62. The old note predicted 0–250.
+  - Test: `DamageDivisors`. The corrected formula: with half = (ATK − BC) / 2, damage = RandomInRange(0, ATK/16) when ATK/16 ≥ half, else half ± half/16 ± 1.
+- **ComputeAttackDamage.** `36:5013` (14 call sites) sets BC = target DEF / 2 before falling into ComputeBasicDamage.
+- **Library families** added to `config/name_families.json`, each read once:
+  - CopyBytesDEToHL (13 copies);
+  - ActorOnLocalSide and TargetOnLocalSide (11 copies each);
+  - CopyBBytesDEToHL, RotateDirectionAtDEEvery32, ReadTileBuffer2x2AtPixel and SetMenuRowsForPage (3 each).
+  - The "local side" reading of the wC58A = 1 / wC57F bit 1 reversal is an inference.
+- **Stat getters.** 18 more per-bank `GetBattle*` stubs (banks $05, $32, $3A, $3B, $A1, $A3, $E2). A script matched `ld hl, wBattleX / jr` to the shared tail `add a, a / add_a_to_hl / deref_hl / ret`, so they get `GetBattleX_BankBB`.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

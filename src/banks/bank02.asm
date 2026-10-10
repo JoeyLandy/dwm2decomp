@@ -516,13 +516,13 @@ Func_002_42FA::
     ld hl, wC49F
     ld de, Data_002_4322
     ld bc, $0008
-    call Func_000_1679
+    call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wC526], a
     ld hl, wC4DF
     ld de, Data_002_4322
     ld bc, $0008
-    call Func_000_1679
+    call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wC527], a
     ret

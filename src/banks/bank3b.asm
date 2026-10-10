@@ -608,7 +608,7 @@ Jump_03B_438A:: ; address name
     jr c, Jump_03B_43E9
     cp a, $1E
     jr nc, Jump_03B_43E9
-    call Func_03B_4F74
+    call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_43E9
     ld a, [wCFC5]
     cp a, $03
@@ -1423,7 +1423,7 @@ Jump_03B_4873::
     adc a, d
     ld b, a
     ld a, [wBattleTarget]
-    call Func_03B_4F25
+    call GetBattleMaxHP_Bank3B
     call CompareHLToBC
     jr nc, Jump_03B_4896
     call Func_03B_48E9
@@ -1475,7 +1475,7 @@ Jump_03B_48C1::
     adc a, d
     ld b, a
     ld a, [wBattleTarget]
-    call Func_03B_4F2A
+    call GetBattleMaxMP_Bank3B
     call CompareHLToBC
     jr nc, Jump_03B_48E4
     call Func_03B_48E9
@@ -2108,7 +2108,7 @@ Jump_03B_4C91::
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wBattleStatus
 Func_03B_4C95:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F74
+    call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_4C9F
     call Func_03B_4934
     jr Jump_03B_4CC8
@@ -2177,7 +2177,7 @@ Jump_03B_4D0E::
 ; writes: wDAC0, wDAC1, wDAC3
 ; points at: wBattleStatus
 Func_03B_4D1C:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F74
+    call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_4D2C
     ld a, [wDABA]
     or a, a
@@ -2409,15 +2409,19 @@ Jump_03B_4F15::
     ret
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23
 
+; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. Func_03B_483A)
 ; points at: wBattleMaxHP
-Func_03B_4F25::
+GetBattleMaxHP_Bank3B::
+Func_03B_4F25:: ; address name
     ld hl, wBattleMaxHP
     jr Jump_03B_4F48
 
+; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. Func_03B_489B)
 ; points at: wBattleMaxMP
-Func_03B_4F2A::
+GetBattleMaxMP_Bank3B::
+Func_03B_4F2A:: ; address name
     ld hl, wBattleMaxMP
     jr Jump_03B_4F48
     db $21, $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21
@@ -2437,9 +2441,11 @@ Func_03B_4F52:: ; address name
     add_a_to_hl
     ret
 
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F, wBattleActor
-Func_03B_4F59:: ; heuristic: follows a terminator; C0
+ActorOnLocalSide_Bank3B:: ; heuristic: follows a terminator; C0
+Func_03B_4F59:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_03B_4F6E
@@ -2456,9 +2462,11 @@ Jump_03B_4F6E::
     cp a, $04
     ret
 
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, Func_03B_4D1C, Func_03B_4C95)
 ; reads: wC58A, wC57F, wBattleTarget
-Func_03B_4F74::
+TargetOnLocalSide_Bank3B::
+Func_03B_4F74:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_03B_4F89

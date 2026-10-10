@@ -2227,7 +2227,7 @@ Jump_032_4BE1:: ; address name
     call Func_032_4C9C
     jr nc, Func_032_4ADC_Table2_Case03
     ld a, [wBattleActor]
-    call Func_032_6803
+    call GetBattleHP_Bank32
     ld a, h
     or a, l
     ret nz
@@ -2405,7 +2405,7 @@ Jump_032_4CD4::
     ld d, $10
     call Func_032_4D23
     ld a, [wBattleActor]
-    call Func_032_6803
+    call GetBattleHP_Bank32
     ld a, h
     or a, l
     jr nz, Jump_032_4D2A
@@ -2481,7 +2481,7 @@ Func_032_4D2C::
 ; points at: wBattleMP
 Func_032_4D5A::
     ld a, [wBattleActor]
-    call Func_032_67FE
+    call GetBattleMaxMP_Bank32
     ld a, h
     or a, l
     jr nz, Jump_032_4D69
@@ -3205,7 +3205,7 @@ Jump_032_5206::
 
 Jump_032_520B::
     ld a, [wBattleActor]
-    call Func_032_6808
+    call GetBattleMP_Bank32
     ldh a, [hFFC8]
     or a, a
     jr z, Jump_032_522D
@@ -4567,7 +4567,7 @@ Jump_032_5A63:: ; address name
     cp a, $91
     jr nz, Jump_032_5A86
     ld d, $8A
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr c, Jump_032_5A84
     inc d
 
@@ -4576,7 +4576,7 @@ Jump_032_5A84::
 
 Jump_032_5A86::
     ld d, $8B
-    call Func_032_6848
+    call TargetOnLocalSide_Bank32
     jr nc, Jump_032_5A8E
     dec d
 
@@ -4898,7 +4898,7 @@ Func_032_5C3F:: ; address name
     inc hl
     ld [hl], b
     ld a, [wBattleTarget]
-    call Func_032_6803
+    call GetBattleHP_Bank32
     call CompareHLToBC
     jr c, Jump_032_5C95
     ld a, [wBattleTarget]
@@ -4923,7 +4923,7 @@ Jump_032_5C95::
     inc hl
     ld [hl], b
     ld a, [wBattleTarget]
-    call Func_032_6808
+    call GetBattleMP_Bank32
     call CompareHLToBC
     jr c, Jump_032_5CCA
     ld a, [wBattleTarget]
@@ -5374,7 +5374,7 @@ Jump_032_5FF8::
     ld a, $08
     ld [wDAD3], a
     farcall SelectEffectByWDAD3Flags
-    call Func_032_6848
+    call TargetOnLocalSide_Bank32
     ld a, $74
     jr c, Jump_032_6044
     dec a
@@ -5550,7 +5550,7 @@ Jump_032_6112::
 Jump_032_6121::
     ld a, $35
     ld [wC0A0], a
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr nc, Jump_032_612F
     ld hl, wC0A0
     inc [hl]
@@ -5647,7 +5647,7 @@ Jump_032_61B1:: ; address name
     call SetBit2OfWD095Indexed_Bank32
     ld a, $90
     ld [wC0A0], a
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr c, Jump_032_61C6
     ld a, $8D
     ld [wC0A0], a
@@ -5817,7 +5817,7 @@ Jump_032_62A3:: ; address name
     call SetBit2OfWD095Indexed_Bank32
     ld a, $90
     ld [wC0A0], a
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr c, Jump_032_62B8
     ld a, $8D
     ld [wC0A0], a
@@ -5899,7 +5899,7 @@ Jump_032_630B:: ; address name
     and a, $01
     jr z, Jump_032_6366
     ld a, [wBattleActor]
-    call Func_032_6803
+    call GetBattleHP_Bank32
     push hl
     ld a, $64
     call DivideHLByA
@@ -6047,7 +6047,7 @@ Jump_032_63E9:: ; address name
     ld d, $8C
     jr z, Jump_032_6401
     ld d, $90
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr c, Jump_032_6401
     ld d, $8D
 
@@ -6195,7 +6195,7 @@ Jump_032_64B6::
 Jump_032_64C5::
     ld a, $35
     ld [wC0A0], a
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr nc, Jump_032_64D3
     ld hl, wC0A0
     inc [hl]
@@ -6292,7 +6292,7 @@ Jump_032_6555:: ; address name
     call SetBit2OfWD095Indexed_Bank32
     ld a, $90
     ld [wC0A0], a
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr c, Jump_032_656A
     ld a, $8D
     ld [wC0A0], a
@@ -6520,7 +6520,7 @@ Jump_032_66AD::
 Jump_032_66B5::
     ld a, [wBattleTarget]
     call SetBit0OfWD095Indexed_Bank32
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     ld d, $35
     jr c, Jump_032_66C4
     ld d, $36
@@ -6597,7 +6597,7 @@ Jump_032_6718:: ; address name
     call SetBit2OfWD095Indexed_Bank32
     ld a, $8A
     ld [wC0A0], a
-    call Func_032_682D
+    call ActorOnLocalSide_Bank32
     jr c, Jump_032_672D
     ld a, $8B
     ld [wC0A0], a
@@ -6688,7 +6688,7 @@ Jump_032_678D:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank32
     ld d, $8B
-    call Func_032_6848
+    call TargetOnLocalSide_Bank32
     jr nc, Jump_032_67A3
     dec d
 
@@ -6750,21 +6750,27 @@ Jump_032_67E2::
     ret
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E
 
+; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. Func_032_4D5A)
 ; points at: wBattleMaxMP
-Func_032_67FE::
+GetBattleMaxMP_Bank32::
+Func_032_67FE:: ; address name
     ld hl, wBattleMaxMP
     jr Jump_032_681C
 
+; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
 ; 4 call sites from 4 routines (e.g. RecomputeTargetMaxHPAndMP, Func_032_4ADC_Table2_Case02, Func_032_4C9C, Func_032_627C_Table2_Case01)
 ; points at: wBattleHP
-Func_032_6803::
+GetBattleHP_Bank32::
+Func_032_6803:: ; address name
     ld hl, wBattleHP
     jr Jump_032_681C
 
+; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, CheckSkillMPCost)
 ; points at: wBattleMP
-Func_032_6808::
+GetBattleMP_Bank32::
+Func_032_6808:: ; address name
     ld hl, wBattleMP
     jr Jump_032_681C
     db $21, $1F, $D9, $18, $0A
@@ -6793,9 +6799,11 @@ Func_032_6826:: ; address name
     add_a_to_hl
     ret
 
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; 9 call sites from 9 routines (e.g. Func_032_6662_Case01, RunDefeatSequence_Case02, Func_032_66F1_Case02, Func_032_604A_Case01, ...)
 ; reads: wC58A, wC57F, wBattleActor
-Func_032_682D::
+ActorOnLocalSide_Bank32::
+Func_032_682D:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_032_6842
@@ -6812,9 +6820,11 @@ Jump_032_6842::
     cp a, $04
     ret
 
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; 3 call sites from 3 routines (e.g. Func_032_6764_Case02, ResolveStep0EEffect_Case00, RunDefeatSequence_Case02)
 ; reads: wC58A, wC57F, wBattleTarget
-Func_032_6848::
+TargetOnLocalSide_Bank32::
+Func_032_6848:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_032_685D

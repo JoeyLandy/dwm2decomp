@@ -1,45 +1,59 @@
 SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
+; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 ; 12 call sites from 11 routines (e.g. Func_005_6985, Func_005_544F, Func_005_50E3, Func_005_65C1, ...)
 ; points at: wBattleATK
-Func_005_4001:: ; heuristic: follows a terminator; C0
+GetBattleATK_Bank05:: ; heuristic: follows a terminator; C0
+Func_005_4001:: ; address name
     ld hl, wBattleATK
     jr Jump_005_402E
 
+; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
 ; 18 call sites from 15 routines (e.g. Func_005_443B, Func_005_6B20, Func_005_6985, Func_005_6CC2, ...)
 ; points at: wBattleDEF
-Func_005_4006::
+GetBattleDEF_Bank05::
+Func_005_4006:: ; address name
     ld hl, wBattleDEF
     jr Jump_005_402E
 
+; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
 ; 19 call sites from 14 routines (e.g. Func_005_64DF, Func_005_5317, Func_005_6B9E, Func_005_6556, ...)
 ; points at: wBattleMaxHP
-Func_005_400B::
+GetBattleMaxHP_Bank05::
+Func_005_400B:: ; address name
     ld hl, wBattleMaxHP
     jr Jump_005_402E
 
+; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 ; 12 call sites from 7 routines (e.g. Func_005_558B, Func_005_544F, Func_005_6FFD, Func_005_6741, ...)
 ; points at: wBattleMaxMP
-Func_005_4010::
+GetBattleMaxMP_Bank05::
+Func_005_4010:: ; address name
     ld hl, wBattleMaxMP
     jr Jump_005_402E
 
+; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
 ; 25 call sites from 21 routines (e.g. Func_005_6494, Func_005_4C5D, Func_005_64DF, Func_005_5317, ...)
 ; points at: wBattleHP
-Func_005_4015::
+GetBattleHP_Bank05::
+Func_005_4015:: ; address name
     ld hl, wBattleHP
     jr Jump_005_402E
 
+; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
 ; 9 call sites from 9 routines (e.g. Func_005_5500, Func_005_558B, Func_005_6FFD, Func_005_62E1, ...)
 ; points at: wBattleMP
-Func_005_401A::
+GetBattleMP_Bank05::
+Func_005_401A:: ; address name
     ld hl, wBattleMP
     jr Jump_005_402E
 
+; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
 ; 10 call sites from 8 routines (e.g. Func_005_4461, Func_005_6B5F, Func_005_6DFF, Func_005_4B97, ...)
 ; points at: wBattleAGL
-Func_005_401F::
+GetBattleAGL_Bank05::
+Func_005_401F:: ; address name
     ld hl, wBattleAGL
     jr Jump_005_402E
 
@@ -67,9 +81,11 @@ Func_005_4038:: ; address name
     add_a_to_hl
     ret
 
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F, wBattleActor
-Func_005_403F:: ; heuristic: follows a terminator; C0
+ActorOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
+Func_005_403F:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_005_4054
@@ -86,9 +102,11 @@ Jump_005_4054::
     cp a, $04
     ret
 
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F, wBattleTarget
-Func_005_405A:: ; heuristic: follows a terminator; C0
+TargetOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
+Func_005_405A:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_005_406F
@@ -680,7 +698,7 @@ Jump_005_4445::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4457
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, h
     or a, a
     jr nz, Jump_005_445E
@@ -712,7 +730,7 @@ Jump_005_446B::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_447D
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, h
     or a, a
     jr nz, Jump_005_4484
@@ -1552,14 +1570,14 @@ Jump_005_488A::
     cp a, $30
     jr z, Jump_005_48BF
     ld a, c
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, h
     jr nz, Jump_005_48C6
     ld a, l
     cp a, $02
     jr nc, Jump_005_48C6
     ld a, c
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, h
     jr nz, Jump_005_48C6
     ld a, l
@@ -1687,7 +1705,7 @@ Jump_005_4953::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_496D
-    call Func_005_401A
+    call GetBattleMP_Bank05
     ld a, h
     or a, l
     jr z, Jump_005_496D
@@ -1723,7 +1741,7 @@ Jump_005_4981::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_49A0
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, h
     or a, a
     jr nz, Jump_005_4993
@@ -1764,7 +1782,7 @@ Jump_005_49B4::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_49D3
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, h
     or a, a
     jr nz, Jump_005_49C6
@@ -2023,10 +2041,10 @@ Jump_005_4B1A::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4B31
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     add hl, hl
     add hl, hl
     pop bc
@@ -2127,7 +2145,7 @@ Jump_005_4B94::
 ; reads: wBattleActor
 Func_005_4B97:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld b, h
     ld c, l
     ld a, $1F
@@ -2146,7 +2164,7 @@ Jump_005_4BB7::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4BCE
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, h
     cp a, d
     jr z, Jump_005_4BC8
@@ -2312,7 +2330,7 @@ Jump_005_4C71::
     cp a, $02
     jr nc, Jump_005_4C99
     ld a, d
-    call Func_005_4015
+    call GetBattleHP_Bank05
     push hl
     ld hl, wD2C1
     ld a, d
@@ -3128,7 +3146,7 @@ Jump_005_50FF::
     ld hl, hFFC6
     inc [hl]
     ld a, c
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFC7]
     add a, l
     ldh [hFFC7], a
@@ -3163,7 +3181,7 @@ Jump_005_513B::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5152
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ldh a, [hFFCA]
     add a, l
     ldh [hFFCA], a
@@ -3214,7 +3232,7 @@ Func_005_517D:: ; heuristic: follows a terminator; C0
     cp a, $02
     jr c, Jump_005_51E7
     ld a, [wBattleActor]
-    call Func_005_4001
+    call GetBattleATK_Bank05
     add hl, hl
     push hl
     ld a, [wBattleActor]
@@ -3236,7 +3254,7 @@ Jump_005_519E::
     jr Jump_005_51E0
 
 Jump_005_51AA::
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, l
     ldh [hFFC6], a
     ld a, h
@@ -3249,7 +3267,7 @@ Jump_005_51B7::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_51CE
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFC6]
     sub a, l
     ldh a, [hFFC7]
@@ -3299,7 +3317,7 @@ Func_005_51EA:: ; heuristic: follows a terminator; C0
     jr c, Jump_005_5225
     call Func_005_6CC2
     ld a, [wBattleActor]
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ldh a, [hFFC6]
     ld c, a
     ldh a, [hFFC7]
@@ -3349,7 +3367,7 @@ Jump_005_523D::
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5266
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ldh a, [hFFC6]
     ld c, a
     ldh a, [hFFC7]
@@ -3415,7 +3433,7 @@ Jump_005_5291::
     ld hl, hFFC6
     inc [hl]
     ld a, c
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ldh a, [hFFC7]
     add a, l
     ldh [hFFC7], a
@@ -3452,7 +3470,7 @@ Jump_005_52D5::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_52EC
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFCA]
     add a, l
     ldh [hFFCA], a
@@ -3498,19 +3516,19 @@ Jump_005_5314::
 ; reads: hFFC6
 Func_005_5317::
     ldh a, [hFFC6]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     add hl, hl
     ld a, $03
     call DivideHLByA
     push hl
     ldh a, [hFFC6]
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     push hl
     call CompareHLToBC
     jr nc, Jump_005_537F
     ldh a, [hFFC6]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     srl h
     rr l
     push hl
@@ -3520,7 +3538,7 @@ Func_005_5317::
     call CompareHLToBC
     jr nc, Jump_005_5383
     ldh a, [hFFC6]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld a, $03
     call DivideHLByA
     push hl
@@ -3530,7 +3548,7 @@ Func_005_5317::
     call CompareHLToBC
     jr nc, Jump_005_5387
     ldh a, [hFFC6]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     srl h
     rr l
     srl h
@@ -3542,7 +3560,7 @@ Func_005_5317::
     call CompareHLToBC
     jr nc, Jump_005_538B
     ldh a, [hFFC6]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld a, $0A
     call DivideHLByA
     push hl
@@ -3739,25 +3757,25 @@ Func_005_544F:: ; heuristic: follows a terminator; C0
     cp a, $02
     jp c, Jump_005_54FA
     ld a, [wBattleActor]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld a, l
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
     ld a, [wBattleActor]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     ld a, l
     ldh [hFFC8], a
     ld a, h
     ldh [hFFC9], a
     ld a, [wBattleActor]
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ld a, l
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
     ld a, [wBattleActor]
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, l
     ldh [hFFCC], a
     ld a, h
@@ -3774,7 +3792,7 @@ Jump_005_5494::
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_54EE
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ldh a, [hFFC6]
     ld c, a
     ldh a, [hFFC7]
@@ -3786,7 +3804,7 @@ Jump_005_5494::
 
 Jump_005_54AF::
     ld a, e
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     ldh a, [hFFC8]
     ld c, a
     ldh a, [hFFC9]
@@ -3798,7 +3816,7 @@ Jump_005_54AF::
 
 Jump_005_54C2::
     ld a, e
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ldh a, [hFFCA]
     ld c, a
     ldh a, [hFFCB]
@@ -3810,7 +3828,7 @@ Jump_005_54C2::
 
 Jump_005_54D5::
     ld a, e
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFCC]
     ld c, a
     ldh a, [hFFCD]
@@ -3891,7 +3909,7 @@ Jump_005_552A::
 Jump_005_5530::
     ld a, c
     ld hl, wBattleMP
-    call Func_005_401A
+    call GetBattleMP_Bank05
     add hl, hl
     push hl
     ld a, c
@@ -3955,14 +3973,14 @@ Jump_005_5588::
 ; reads: wBattleActor
 Func_005_558B:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     ld b, h
     ld c, l
     add hl, hl
     add hl, bc
     push hl
     ld a, [wBattleActor]
-    call Func_005_401A
+    call GetBattleMP_Bank05
     add hl, hl
     add hl, hl
     pop bc
@@ -4410,12 +4428,12 @@ Jump_005_5800::
 ; points at: wDA75
 Func_005_5803:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld a, $0A
     call DivideHLByA
     push hl
     ld a, [wBattleActor]
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     jr c, Jump_005_581D
@@ -4489,7 +4507,7 @@ Jump_005_586E::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5882
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ldh a, [hFFC6]
     add a, l
     ldh [hFFC6], a
@@ -4523,7 +4541,7 @@ Jump_005_58A1::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_58B5
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFC6]
     add a, l
     ldh [hFFC6], a
@@ -4568,7 +4586,7 @@ Jump_005_58E3::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_58F7
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ldh a, [hFFC6]
     add a, l
     ldh [hFFC6], a
@@ -4657,7 +4675,7 @@ Jump_005_595C::
     jr nz, Jump_005_59B7
     ld e, l
     ld a, l
-    call Func_005_401A
+    call GetBattleMP_Bank05
     ld a, h
     and a, a
     jr nz, Jump_005_59B7
@@ -4778,7 +4796,7 @@ Jump_005_5A12::
     ld a, [hl]
     ld d, a
     ld a, c
-    call Func_005_401A
+    call GetBattleMP_Bank05
     ld a, h
     and a, a
     jr nz, Jump_005_59D9
@@ -4919,7 +4937,7 @@ Jump_005_5ACB::
     push de
     ld d, a
     ld a, c
-    call Func_005_401A
+    call GetBattleMP_Bank05
     ld a, h
     and a, a
     jr nz, Jump_005_5AEA
@@ -5094,31 +5112,31 @@ Jump_005_5BB9::
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
 Func_005_5BBC::
     ld a, [wBattleActor]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld a, l
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
     ld a, [wBattleActor]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     ld a, l
     ldh [hFFC8], a
     ld a, h
     ldh [hFFC9], a
     ld a, [wBattleActor]
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ld a, l
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
     ld a, [wBattleActor]
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, l
     ldh [hFFCC], a
     ld a, h
     ldh [hFFCD], a
     ld a, [wBattleActor]
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, l
     ldh [hFFCE], a
     ld a, h
@@ -5259,7 +5277,7 @@ Jump_005_5C96::
     push bc
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     ld c, l
     ld b, h
     pop hl
@@ -5389,7 +5407,7 @@ Func_005_5D44:: ; heuristic: follows a terminator; C0
     cp a, $03
     jr c, Jump_005_5D86
     ld a, [wBattleActor]
-    call Func_005_4015
+    call GetBattleHP_Bank05
     ld c, l
     ld b, h
     sra h
@@ -5407,7 +5425,7 @@ Jump_005_5D67::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5D7A
-    call Func_005_4015
+    call GetBattleHP_Bank05
     ld a, l
     sub a, e
     ld l, a
@@ -6322,7 +6340,7 @@ Jump_005_627F::
     call Func_005_6298
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     pop bc
@@ -6341,7 +6359,7 @@ Jump_005_6295::
 ; reads: wRecordBuffer
 Func_005_6298::
     push bc
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld a, [wRecordBuffer]
     cp a, $16
     jr z, Jump_005_62BB
@@ -6417,10 +6435,10 @@ Jump_005_62F3::
 Jump_005_62F9::
     push bc
     ld a, c
-    call Func_005_401A
+    call GetBattleMP_Bank05
     push hl
     ld a, c
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     pop bc
     call CompareHLToBC
     pop bc
@@ -6439,19 +6457,19 @@ Jump_005_630F::
 ; reads: hFFC6
 Func_005_6312:: ; heuristic: follows a terminator; C0
     ldh a, [hFFC6]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     add hl, hl
     ld a, $03
     call DivideHLByA
     push hl
     ldh a, [hFFC6]
-    call Func_005_401A
+    call GetBattleMP_Bank05
     pop bc
     push hl
     call CompareHLToBC
     jr nc, Jump_005_637A
     ldh a, [hFFC6]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     srl h
     rr l
     push hl
@@ -6461,7 +6479,7 @@ Func_005_6312:: ; heuristic: follows a terminator; C0
     call CompareHLToBC
     jr nc, Jump_005_637E
     ldh a, [hFFC6]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     ld a, $03
     call DivideHLByA
     push hl
@@ -6471,7 +6489,7 @@ Func_005_6312:: ; heuristic: follows a terminator; C0
     call CompareHLToBC
     jr nc, Jump_005_6382
     ldh a, [hFFC6]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     srl h
     rr l
     srl h
@@ -6483,7 +6501,7 @@ Func_005_6312:: ; heuristic: follows a terminator; C0
     call CompareHLToBC
     jr nc, Jump_005_6386
     ldh a, [hFFC6]
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     ld a, $0A
     call DivideHLByA
     push hl
@@ -6551,10 +6569,10 @@ Jump_005_63AC::
 Jump_005_63B2::
     push bc
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     push hl
     ld a, c
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     pop bc
     add hl, bc
     ld bc, $0578
@@ -6747,7 +6765,7 @@ Jump_005_649E::
     add hl, hl
     add hl, hl
     push hl
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     pop bc
@@ -6786,13 +6804,13 @@ Jump_005_64DC::
 ; reads: wBattleActor
 Func_005_64DF:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld a, $03
     call DivideHLByA
     add hl, hl
     push hl
     ld a, [wBattleActor]
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     jr c, Jump_005_64FB
@@ -6893,12 +6911,12 @@ Jump_005_657E::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6599
     ld a, c
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     srl h
     rr l
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     jr nc, Jump_005_6599
@@ -6958,7 +6976,7 @@ Jump_005_65D0::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_65E4
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ldh a, [hFFC6]
     add a, l
     ldh [hFFC6], a
@@ -6993,7 +7011,7 @@ Jump_005_6605::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6619
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFC6]
     add a, l
     ldh [hFFC6], a
@@ -7039,7 +7057,7 @@ Jump_005_6649::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_665D
-    call Func_005_4015
+    call GetBattleHP_Bank05
     ldh a, [hFFC6]
     add a, l
     ldh [hFFC6], a
@@ -7212,20 +7230,20 @@ Func_005_6720::
 Func_005_6741::
     push de
     ld a, c
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     push hl
     ld a, c
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     pop de
     add hl, de
     push hl
     ld a, c
-    call Func_005_4001
+    call GetBattleATK_Bank05
     pop de
     add hl, de
     push hl
     ld a, c
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     pop de
     add hl, de
     pop de
@@ -7272,7 +7290,7 @@ Jump_005_6778::
     push bc
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     pop bc
@@ -7323,11 +7341,11 @@ Jump_005_67D2::
     cp a, $02
     jr c, Jump_005_681A
     ld a, [wBattleActor]
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, e
     push de
     push hl
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, $78
     ld b, h
     ld c, l
@@ -7347,7 +7365,7 @@ Jump_005_67D2::
     add hl, hl
     push hl
     ld a, e
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     jr c, Jump_005_6817
@@ -7421,10 +7439,10 @@ Jump_005_6840::
     pop de
     jr nc, Jump_005_6896
     ld a, e
-    call Func_005_4015
+    call GetBattleHP_Bank05
     push hl
     ld a, [wBattleActor]
-    call Func_005_4015
+    call GetBattleHP_Bank05
     ld a, $3C
     ld b, h
     ld c, l
@@ -7503,12 +7521,12 @@ Jump_005_68F5::
 
 Jump_005_68FB::
     ld a, [wBattleActor]
-    call Func_005_4015
+    call GetBattleHP_Bank05
     srl h
     rr l
     push hl
     ld a, [wBattleActor]
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     jr nc, Jump_005_696C
@@ -7530,7 +7548,7 @@ Jump_005_6920::
     push hl
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     pop hl
@@ -7615,7 +7633,7 @@ Jump_005_6996::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_69AD
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFCA]
     add a, l
     ldh [hFFCA], a
@@ -7637,7 +7655,7 @@ Jump_005_69AD::
     call DivideHLByA
     push hl
     ld a, [wBattleActor]
-    call Func_005_4001
+    call GetBattleATK_Bank05
     ld d, h
     ld e, l
     srl d
@@ -7898,7 +7916,7 @@ Func_005_6B16:: ; address name
 ; 1 call site from 1 routine (e.g. Func_005_4C23)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A
 Func_005_6B20:: ; heuristic: follows a terminator; C0
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, l
     sub a, $E7
     ld a, h
@@ -7949,7 +7967,7 @@ Jump_005_6B5D::
 ; 1 call site from 1 routine (e.g. Func_005_4C40)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A
 Func_005_6B5F:: ; heuristic: follows a terminator; C0
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ld a, l
     sub a, $E7
     ld a, h
@@ -8001,7 +8019,7 @@ Jump_005_6B9C::
 Func_005_6B9E:: ; heuristic: follows a terminator; C0
     push bc
     ld a, c
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     ld c, l
     ld b, h
     add hl, hl
@@ -8014,7 +8032,7 @@ Func_005_6B9E:: ; heuristic: follows a terminator; C0
     push bc
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
     pop bc
@@ -8024,11 +8042,11 @@ Func_005_6B9E:: ; heuristic: follows a terminator; C0
 Func_005_6BBC:: ; heuristic: follows a terminator; C0
     push bc
     push af
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     pop af
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     add hl, hl
     pop bc
     call CompareHLToBC
@@ -8039,11 +8057,11 @@ Func_005_6BBC:: ; heuristic: follows a terminator; C0
 Func_005_6BCE:: ; heuristic: follows a terminator; C0
     push bc
     push af
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     pop af
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     add hl, hl
     add hl, hl
     pop bc
@@ -8055,11 +8073,11 @@ Func_005_6BCE:: ; heuristic: follows a terminator; C0
 Func_005_6BE1:: ; heuristic: follows a terminator; C0
     push bc
     push af
-    call Func_005_400B
+    call GetBattleMaxHP_Bank05
     pop af
     push hl
     ld a, c
-    call Func_005_4015
+    call GetBattleHP_Bank05
     add hl, hl
     ld b, h
     ld c, l
@@ -8073,7 +8091,7 @@ Func_005_6BE1:: ; heuristic: follows a terminator; C0
 
 ; 2 call sites from 2 routines (e.g. Func_005_5397, Func_005_53A5)
 Func_005_6BF8::
-    call Func_005_4015
+    call GetBattleHP_Bank05
     ld a, h
     or a, a
     ret nz
@@ -8244,7 +8262,7 @@ Jump_005_6CD1::
 
 Jump_005_6CDD::
     ld a, c
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ld a, l
     ldh [hFFC6], a
     ld a, h
@@ -8257,7 +8275,7 @@ Jump_005_6CEB::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6D02
-    call Func_005_4006
+    call GetBattleDEF_Bank05
     ldh a, [hFFC6]
     sub a, l
     ldh a, [hFFC7]
@@ -8472,7 +8490,7 @@ Jump_005_6E09::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6E20
-    call Func_005_401F
+    call GetBattleAGL_Bank05
     ldh a, [hFFC7]
     add a, l
     ldh [hFFC7], a
@@ -8808,7 +8826,7 @@ Jump_005_6FFA::
 Func_005_6FFD:: ; heuristic: follows a terminator; C0
     push bc
     ld a, c
-    call Func_005_4010
+    call GetBattleMaxMP_Bank05
     ld c, l
     ld b, h
     add hl, hl
@@ -8821,7 +8839,7 @@ Func_005_6FFD:: ; heuristic: follows a terminator; C0
     push bc
     push hl
     ld a, c
-    call Func_005_401A
+    call GetBattleMP_Bank05
     pop bc
     call CompareHLToBC
     pop bc

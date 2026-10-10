@@ -2972,7 +2972,7 @@ Jump_003_5288:: ; address name
     call nz, Func_003_432F
     call Func_003_5A58
     call Func_003_581E
-    call Func_003_59DB
+    call SetMenuRowsForPage_Bank03_59DB
     call Func_003_5900
     call CopyTileBufferToBGMap
     ld hl, wC0A1
@@ -3010,7 +3010,7 @@ Jump_003_52C8::
     bit 7, [hl]
     jr z, Jump_003_52DE
     res 7, [hl]
-    call Func_003_59DB
+    call SetMenuRowsForPage_Bank03_59DB
     call Func_003_5900
     call Func_003_592E
     call Func_003_59C7
@@ -4155,11 +4155,13 @@ Func_003_59C7::
 Jump_003_59DA::
     ret
 
+; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. Func_003_5253_Table2_Case01, Func_003_5253_Table2_Case00)
 ; reads: wC0A7, wMenuPage, wMenuLastPageRows, wC46E
 ; writes: wMenuRowCount, wC46E
 ; points at: wMenuPage
-Func_003_59DB::
+SetMenuRowsForPage_Bank03_59DB::
+Func_003_59DB:: ; address name
     ld a, [wC0A7]
     dec a
     ld c, a
@@ -4909,7 +4911,7 @@ Jump_003_5FFB::
     call Func_003_69FF
     ld [wMenuRowCount], a
     call Func_003_6432
-    call Func_003_6A34
+    call SetMenuRowsForPage_Bank03
     call Func_003_67B0
     call Func_003_6A60
     ld a, $00
@@ -4957,7 +4959,7 @@ Jump_003_6052::
     ld a, $00
     ld [rRAMB], a
     res 7, [hl]
-    call Func_003_6A34
+    call SetMenuRowsForPage_Bank03
     call Func_003_65E3
     call Func_003_67B0
     call Func_003_6A60
@@ -6178,11 +6180,13 @@ Jump_003_6A31::
 Jump_003_6A33::
     ret
 
+; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. Func_003_5E68_Table3_Case01, Func_003_5E68_Table3_Case00)
 ; reads: wC0A7, wMenuPage, wMenuLastPageRows, wC46E
 ; writes: wMenuRowCount, wC46E
 ; points at: wMenuPage
-Func_003_6A34::
+SetMenuRowsForPage_Bank03::
+Func_003_6A34:: ; address name
     ld a, [wC0A7]
     dec a
     ld c, a

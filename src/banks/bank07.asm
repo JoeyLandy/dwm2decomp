@@ -4395,7 +4395,7 @@ Func_007_6975::
     ld [hl+], a
     ld de, wC60C
     ld b, $0B
-    call Func_007_6AD5
+    call CopyBBytesDEToHL_Bank07
     ld a, $FF
     ld [hl+], a
     ld [hl+], a
@@ -4528,7 +4528,7 @@ Func_007_6975::
     ld h, a
     ld de, wD01A
     ld b, $1B
-    call Func_007_6AD5
+    call CopyBBytesDEToHL_Bank07
     ld a, l
     add a, $16
     ld l, a
@@ -4554,13 +4554,15 @@ Func_007_6AD0::
     jr nz, Func_007_6AD0
     ret
 
+; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 ; 2 call sites from 1 routine (e.g. Func_007_6975)
-Func_007_6AD5::
+CopyBBytesDEToHL_Bank07::
+Func_007_6AD5:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Func_007_6AD5
+    jr nz, CopyBBytesDEToHL_Bank07
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_007_6975)

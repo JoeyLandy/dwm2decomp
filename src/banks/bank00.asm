@@ -3784,15 +3784,17 @@ Jump_000_1654::
     jr nz, Jump_000_1651
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 5 call sites from 3 routines (e.g. Func_001_4AA4, Func_002_42FA, Func_01B_53AF)
-Func_000_1679::
+CopyBytesDEToHL_Bank00::
+Func_000_1679:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_000_1679
+    jr nz, CopyBytesDEToHL_Bank00
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C

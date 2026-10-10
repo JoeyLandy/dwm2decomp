@@ -34,7 +34,7 @@ Jump_0F1_4013:: ; address name
     call nz, Func_0F1_4866
     call Func_0F1_43E0
     call Func_0F1_41EE
-    call Func_0F1_43B4
+    call SetMenuRowsForPage_BankF1
     call Func_0F1_42D9
     call CopyTileBufferToBGMap_BankF1
     ld hl, vTiles1 + $720
@@ -89,7 +89,7 @@ Jump_0F1_407C::
     bit 7, [hl]
     jr z, Jump_0F1_4092
     res 7, [hl]
-    call Func_0F1_43B4
+    call SetMenuRowsForPage_BankF1
     call Func_0F1_42D9
     call Func_0F1_4307
     call Func_0F1_43A0
@@ -577,11 +577,13 @@ Func_0F1_43A0::
 Jump_0F1_43B3::
     ret
 
+; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case01, Func_0F1_4001_Table2_Case00)
 ; reads: wC0A7, wMenuPage, wMenuLastPageRows, wC46E
 ; writes: wMenuRowCount, wC46E
 ; points at: wMenuPage
-Func_0F1_43B4::
+SetMenuRowsForPage_BankF1::
+Func_0F1_43B4:: ; address name
     ld a, [wC0A7]
     dec a
     ld c, a
@@ -3800,7 +3802,7 @@ Func_0F1_58FA::
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_0F1_594E
+    call CopyBytesDEToHL_BankF1
     pop de
     pop hl
     ld a, [wIsCGB]
@@ -3841,15 +3843,17 @@ Jump_0F1_594A::
     jr nz, Func_0F1_58FA
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_58FA)
-Func_0F1_594E::
+CopyBytesDEToHL_BankF1::
+Func_0F1_594E:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_0F1_594E
+    jr nz, CopyBytesDEToHL_BankF1
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)

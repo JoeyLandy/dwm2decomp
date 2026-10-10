@@ -23,7 +23,7 @@ Jump_014_400D:: ; address name
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_014_57E5
+    call CopyBytesDEToHL_Bank14
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_014_402B
@@ -168,7 +168,7 @@ Jump_014_40EE::
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_014_57E5
+    call CopyBytesDEToHL_Bank14
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_014_4113
@@ -1501,7 +1501,7 @@ Func_014_4A54::
     push de
     push bc
     ld bc, $0006
-    call Func_014_57E5
+    call CopyBytesDEToHL_Bank14
     pop bc
     pop de
     pop hl
@@ -2108,7 +2108,7 @@ Func_014_4F30::
     push de
     push bc
     ld bc, $0006
-    call Func_014_57E5
+    call CopyBytesDEToHL_Bank14
     pop bc
     pop de
     pop hl
@@ -3350,15 +3350,17 @@ Jump_014_57D6::
     ld [wC132], a
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 5 call sites from 5 routines (e.g. ScriptCommandEC_Run_Case00, ScriptCommandEB_Run_Case00, Func_014_5925, Func_014_4F30, ...)
-Func_014_57E5::
+CopyBytesDEToHL_Bank14::
+Func_014_57E5:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_014_57E5
+    jr nz, CopyBytesDEToHL_Bank14
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
@@ -3639,7 +3641,7 @@ Func_014_5925::
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_014_57E5
+    call CopyBytesDEToHL_Bank14
     pop de
     pop hl
     ld a, [wIsCGB]

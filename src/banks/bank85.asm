@@ -3884,9 +3884,11 @@ Func_085_576F:: ; address name
     ld [hl], a
     ret
 
+; when wScriptParam0 & $1F = 0: [DE] = ([DE] + 1) & 3, the next of four directions; otherwise returns with A = wScriptParam0 & $1F (E-0064) (the same 12 bytes appear in 3 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
-Func_085_5774:: ; heuristic: follows a terminator; C0
+RotateDirectionAtDEEvery32_Bank85:: ; heuristic: follows a terminator; C0
+Func_085_5774:: ; address name
     ld a, [wScriptParam0]
     and a, $1F
     ret nz

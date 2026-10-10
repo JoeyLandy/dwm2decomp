@@ -6602,10 +6602,10 @@ Jump_016_6B83::
     inc hl
     ld b, $0A
     ld de, wD09E
-    call Func_016_6BD9
+    call CopyBBytesDEToHL_Bank16
     ld de, wC991
     ld b, $9A
-    call Func_016_6BD9
+    call CopyBBytesDEToHL_Bank16
     ld a, $00
     ld c, $55
     call SRAMRecordAddressMapped
@@ -6637,13 +6637,15 @@ Jump_016_6BCC::
     ld [rRAMG], a
     ret
 
+; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 ; 2 call sites from 1 routine (e.g. Func_016_6A4E_Case04)
-Func_016_6BD9::
+CopyBBytesDEToHL_Bank16::
+Func_016_6BD9:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Func_016_6BD9
+    jr nz, CopyBBytesDEToHL_Bank16
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_6A4E_Case04)

@@ -2289,15 +2289,17 @@ Func_024_4EAB:: ; address name
     add_a_to_hl
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_024_4ECC:: ; heuristic: follows a terminator; C0
+CopyBytesDEToHL_Bank24_4ECC:: ; heuristic: follows a terminator; C0
+Func_024_4ECC:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_024_4ECC
+    jr nz, CopyBytesDEToHL_Bank24_4ECC
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
@@ -4871,11 +4873,11 @@ Jump_024_65F4::
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_024_6887
+    call CopyBytesDEToHL_Bank24
     ld hl, wC300
     ld de, wC29C
     ld bc, $0064
-    call Func_024_6887
+    call CopyBytesDEToHL_Bank24
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_024_662A
@@ -5302,15 +5304,17 @@ Func_024_6866:: ; address name
     add_a_to_hl
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 4 call sites from 3 routines (e.g. ScriptCommandF8_Run_Table3_Case0B, Func_024_6B19, ScriptCommandF8_Run_Table3_Case04_Sub01)
-Func_024_6887::
+CopyBytesDEToHL_Bank24::
+Func_024_6887:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_024_6887
+    jr nz, CopyBytesDEToHL_Bank24
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
@@ -5705,7 +5709,7 @@ Func_024_6A90:: ; address name
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_024_6887
+    call CopyBytesDEToHL_Bank24
     pop de
     pop hl
     ld a, [wIsCGB]
@@ -5782,7 +5786,7 @@ Func_024_6B19::
     push de
     push bc
     ld bc, $0006
-    call Func_024_6887
+    call CopyBytesDEToHL_Bank24
     pop bc
     pop de
     pop hl

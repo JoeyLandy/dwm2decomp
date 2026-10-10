@@ -201,7 +201,7 @@ Jump_036_4127:: ; address name
     ret z
     res 3, [hl]
     ld d, $E9
-    call Func_036_7E87
+    call TargetOnLocalSide_Bank36
     jr c, Jump_036_414B
     inc d
 
@@ -381,7 +381,7 @@ Func_036_425A:: ; address name
     ld [wDABE], a
 
 Jump_036_4280::
-    call Func_036_7E87
+    call TargetOnLocalSide_Bank36
     ld d, $C5
     jr c, Jump_036_4289
     ld d, $C6
@@ -884,7 +884,7 @@ Jump_036_45D3::
     ld hl, wD80E
     call AddAx9ToHL
     set 7, [hl]
-    call Func_036_7E6C
+    call ActorOnLocalSide_Bank36
     ld d, $9C
     jr c, Jump_036_45E7
     ld d, $9D
@@ -1499,7 +1499,7 @@ Func_036_4991:: ; address name
     jr nz, Jump_036_49A1
 
 Jump_036_4998::
-    call Func_036_7E87
+    call TargetOnLocalSide_Bank36
     ret nc
     ld hl, wC0A0
     inc [hl]
@@ -1509,7 +1509,7 @@ Jump_036_49A1::
     ld a, [wDABF]
     bit 0, a
     jr nz, Jump_036_4998
-    call Func_036_7E6C
+    call ActorOnLocalSide_Bank36
     ret c
     ld a, [wBattleActionId]
     cp a, $34
@@ -1608,7 +1608,7 @@ Jump_036_4A32::
 ; points at: wC0A0
 ResolveStepDamageMessage_Sub04::
 Func_036_4A38:: ; address name
-    call Func_036_7E6C
+    call ActorOnLocalSide_Bank36
     ret c
     ld a, [wBattleActionId]
     cp a, $72
@@ -1721,7 +1721,7 @@ Jump_036_4AE5::
     jr z, Jump_036_4B06
     ld a, [wDAC2]
     ld d, a
-    call Func_036_7E6C
+    call ActorOnLocalSide_Bank36
     jr c, Jump_036_4B0A
     ld d, $CD
     jr Jump_036_4B0A
@@ -2416,7 +2416,7 @@ ResolveStepEffectChecks_Sub03::
 Func_036_4FBC:: ; address name
     ld a, $84
     call QueueSoundEffect
-    call Func_036_7E6C
+    call ActorOnLocalSide_Bank36
     ld d, $D0
     jr c, Jump_036_4FCA
     ld d, $D1
@@ -2473,11 +2473,13 @@ Func_036_5009:: ; address name
     ld [wBattleResolveStep], a
     ret
 
+; AdvanceRandom, then BC = the target's DEF (wBattleDEF) / 2 and falls into ComputeBasicDamage with HL = the actor's ATK (E-0064)
 ; 14 call sites from 13 routines (e.g. Func_036_5522, Func_036_6098, Func_036_5533, Func_036_5544, ...)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_5013::
+ComputeAttackDamage::
+Func_036_5013:: ; address name
     call AdvanceRandom
     ld a, [wBattleTarget]
     ld hl, wBattleDEF
@@ -2485,9 +2487,9 @@ Func_036_5013::
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    call Func_036_650B
+    call ShiftBCRight1
 
-; the damage formula: HL = the acting slot's value from the array at wD8FF (Func_036_7E2E), BC = the value to compare with, set by the caller. If HL <= BC the damage is RandomInRange(0, 1). Otherwise, with diff = HL - BC: when HL / 4 >= diff / 2 the damage is RandomInRange(0, HL / 4); else it is diff / 2 + RandomInRange(-(diff / 4), diff / 4) + RandomInRange(-1, 1). The 16-bit result goes to wBattleDamageLo/Hi
+; the damage formula: HL = the acting slot's value from the array at wD8FF (Func_036_7E2E), BC = the value to compare with, set by the caller. If HL <= BC the damage is RandomInRange(0, 1). Otherwise, with half = (HL - BC) / 2: when HL / 16 >= half the damage is RandomInRange(0, HL / 16); else it is half + RandomInRange(-(half / 16), half / 16) + RandomInRange(-1, 1). The 16-bit result goes to wBattleDamageLo/Hi. The divisors are 16, not 4: ShiftHLRight4 falls through two more shifts (corrected in E-0064)
 ; 2 call sites from 1 routine (e.g. Func_036_50DC)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wD873
@@ -2510,7 +2512,7 @@ Func_036_5025:: ; address name
     push bc
     ld b, d
     ld c, e
-    call ComputeBasicDamage_Sub01
+    call ShiftHLRight4
     call CompareHLToBC
     pop bc
     pop hl
@@ -2525,7 +2527,7 @@ Jump_036_504E::
     jr Jump_036_508B
 
 Jump_036_5059::
-    call ComputeBasicDamage_Sub01
+    call ShiftHLRight4
     ld c, l
     ld b, h
     ld hl, $0000
@@ -2536,7 +2538,7 @@ Jump_036_5066::
     ld l, e
     ld h, d
     push hl
-    call ComputeBasicDamage_Sub01
+    call ShiftHLRight4
     ld c, l
     ld b, h
     ld a, l
@@ -2658,7 +2660,7 @@ Func_036_50DC:: ; heuristic: follows a terminator; C0
 Func_036_511D:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     push af
-    call Func_036_5013
+    call ComputeAttackDamage
     ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wD873]
@@ -2667,7 +2669,7 @@ Func_036_511D:: ; heuristic: follows a terminator; C0
     farcall Func_0A3_414F
     ldh a, [hFFC6]
     ld [wBattleActor], a
-    call Func_036_5013
+    call ComputeAttackDamage
     pop de
     ld a, [wBattleDamageLo]
     ld l, a
@@ -2967,7 +2969,7 @@ Func_036_5360::
     jr Jump_036_5383
 
 Jump_036_5380::
-    call Func_036_650B
+    call ShiftBCRight1
 
 Jump_036_5383::
     ld a, c
@@ -3077,7 +3079,7 @@ Jump_036_5401::
     jr Jump_036_541A
 
 Jump_036_5417::
-    call Func_036_650B
+    call ShiftBCRight1
 
 Jump_036_541A::
     ld a, [wBattleTarget]
@@ -3133,7 +3135,7 @@ Func_036_5441::
     jr Jump_036_5462
 
 Jump_036_545F::
-    call Func_036_650B
+    call ShiftBCRight1
 
 Jump_036_5462::
     ld a, c
@@ -3224,7 +3226,7 @@ Func_036_54BE:: ; address name
     jr Jump_036_54D7
 
 Jump_036_54D4::
-    call Func_036_650B
+    call ShiftBCRight1
 
 Jump_036_54D7::
     ld a, [wBattleTarget]
@@ -3282,7 +3284,7 @@ Jump_036_5520::
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5522:: ; heuristic: follows a terminator; C0
-    call Func_036_5013
+    call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61A6
     swap a
@@ -3292,7 +3294,7 @@ Func_036_5522:: ; heuristic: follows a terminator; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5533:: ; heuristic: follows a terminator; C0
-    call Func_036_5013
+    call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     rlca
@@ -3303,7 +3305,7 @@ Func_036_5533:: ; heuristic: follows a terminator; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5544:: ; heuristic: follows a terminator; C0
-    call Func_036_5013
+    call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     swap a
@@ -3313,7 +3315,7 @@ Func_036_5544:: ; heuristic: follows a terminator; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5555:: ; heuristic: follows a terminator; C0
-    call Func_036_5013
+    call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     rrca
@@ -3329,7 +3331,7 @@ Func_036_5555:: ; heuristic: follows a terminator; C0
 Func_036_5566:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $00
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3339,7 +3341,7 @@ Func_036_5566:: ; heuristic: follows a terminator; C0
 Func_036_5571:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $01
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3349,7 +3351,7 @@ Func_036_5571:: ; heuristic: follows a terminator; C0
 Func_036_557C:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $02
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3359,7 +3361,7 @@ Func_036_557C:: ; heuristic: follows a terminator; C0
 Func_036_5587:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $03
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3369,7 +3371,7 @@ Func_036_5587:: ; heuristic: follows a terminator; C0
 Func_036_5592:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $05
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3379,7 +3381,7 @@ Func_036_5592:: ; heuristic: follows a terminator; C0
 Func_036_559D:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $04
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3389,7 +3391,7 @@ Func_036_559D:: ; heuristic: follows a terminator; C0
 Func_036_55A8:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $06
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3399,7 +3401,7 @@ Func_036_55A8:: ; heuristic: follows a terminator; C0
 Func_036_55B3:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $07
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3409,7 +3411,7 @@ Func_036_55B3:: ; heuristic: follows a terminator; C0
 Func_036_55BE:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $08
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3419,7 +3421,7 @@ Func_036_55BE:: ; heuristic: follows a terminator; C0
 Func_036_55C9:: ; heuristic: follows a terminator; C0
     call Func_036_6594
     cp a, $09
-    jp nz, Func_036_5013
+    jp nz, ComputeAttackDamage
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3427,7 +3429,7 @@ Func_036_55C9:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wD8A7
 Func_036_55D4:: ; heuristic: follows a terminator; C0
-    call Func_036_5013
+    call ComputeAttackDamage
     ld a, [wBattleTarget]
     ld hl, wD8A7
     add_a_to_hl
@@ -3864,7 +3866,7 @@ Func_036_58C5::
     ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_036_58E8
-    call Func_036_650B
+    call ShiftBCRight1
     jr Jump_036_58ED
 
 Jump_036_58E8::
@@ -3885,7 +3887,7 @@ Jump_036_58F9::
     ld a, h
     ld [wD873], a
     call Func_036_64D4
-    call Func_036_651C
+    call ShiftHLRight1
     ld b, h
     ld c, l
     ld a, l
@@ -3927,7 +3929,7 @@ Func_036_592E::
     jr c, Jump_036_594E
     ld b, h
     ld c, l
-    call Func_036_650B
+    call ShiftBCRight1
     jr Jump_036_5952
 
 Jump_036_594E::
@@ -3947,7 +3949,7 @@ Jump_036_595E::
     ld a, h
     ld [wD873], a
     call Func_036_64CD
-    call Func_036_6518
+    call ShiftHLRight2
     ld b, h
     ld c, l
     ld a, l
@@ -3990,7 +3992,7 @@ Func_036_5993::
     jr c, Jump_036_59B6
     ld b, h
     ld c, l
-    call Func_036_650B
+    call ShiftBCRight1
     jr Jump_036_59BA
 
 Jump_036_59B6::
@@ -4022,7 +4024,7 @@ Jump_036_59D3::
     ld a, h
     ld [wD873], a
     call Func_036_64CD
-    call Func_036_6518
+    call ShiftHLRight2
     ld b, h
     ld c, l
     ld a, l
@@ -4174,7 +4176,7 @@ Jump_036_5AD8::
     ld a, [wD873]
     ld h, a
     dec hl
-    call Func_036_651C
+    call ShiftHLRight1
 
 Jump_036_5AE4::
     ld a, h
@@ -4910,7 +4912,7 @@ Func_036_6098:: ; heuristic: follows a terminator; C0
     ld a, $00
     ld [hl-], a
     ld [hl], $C8
-    call Func_036_5013
+    call ComputeAttackDamage
     pop bc
     pop hl
     ld a, c
@@ -5636,7 +5638,7 @@ Jump_036_63F9::
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_036_651C
+    call ShiftHLRight1
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5675,7 +5677,7 @@ Jump_036_6435::
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_036_6518
+    call ShiftHLRight2
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5707,7 +5709,7 @@ Func_036_6451::
 Func_036_6465::
     ld b, h
     ld c, l
-    call Func_036_651C
+    call ShiftHLRight1
     add hl, bc
     ret
 
@@ -5733,12 +5735,12 @@ Func_036_6477::
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_6482:: ; heuristic: follows a terminator; C0
-    call Func_036_651C
+    call ShiftHLRight1
     ld b, h
     ld c, l
-    call Func_036_650B
+    call ShiftBCRight1
     add hl, bc
-    call Func_036_650B
+    call ShiftBCRight1
     add hl, bc
     call Func_036_6507
     add hl, bc
@@ -5771,10 +5773,10 @@ Func_036_64A3::
 ; 1 call site from 1 routine (e.g. Func_036_6346)
 Func_036_64B2::
     push bc
-    call Func_036_651C
+    call ShiftHLRight1
     ld b, h
     ld c, l
-    call Func_036_650B
+    call ShiftBCRight1
     add hl, bc
     pop bc
     ret
@@ -5794,13 +5796,13 @@ Func_036_64BE::
 ; 3 call sites from 3 routines (e.g. Func_036_640D, Func_036_5993, Func_036_592E)
 Func_036_64CD::
     call Func_036_64A3
-    call Func_036_651C
+    call ShiftHLRight1
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_640D, Func_036_58C5)
 Func_036_64D4::
     call Func_036_64BE
-    call Func_036_651C
+    call ShiftHLRight1
     ret
 
 ; 4 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, Func_036_5441, Func_036_5360, Func_036_53EF)
@@ -5812,17 +5814,17 @@ Func_036_64DB::
 ; 1 call site from 1 routine (e.g. Func_036_771B)
 Func_036_64E2:: ; heuristic: follows a terminator; C0
     call Func_036_64BE
-    call Func_036_651C
-    call Func_036_651C
+    call ShiftHLRight1
+    call ShiftHLRight1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_771B)
 Func_036_64EC:: ; heuristic: follows a terminator; C0
     call Func_036_64A3
-    call Func_036_651C
-    call Func_036_651C
-    call Func_036_651C
-    call Func_036_651C
+    call ShiftHLRight1
+    call ShiftHLRight1
+    call ShiftHLRight1
+    call ShiftHLRight1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6558)
@@ -5841,28 +5843,34 @@ Func_036_6507::
     srl b
     rr c
 
-; 11 call sites from 10 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, Func_036_64B2, Func_036_5013, Func_036_6482, ...)
-Func_036_650B::
+; BC >>= 1 (unsigned) (E-0064)
+; 11 call sites from 10 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, Func_036_64B2, ComputeAttackDamage, Func_036_6482, ...)
+ShiftBCRight1::
+Func_036_650B:: ; address name
     srl b
     rr c
     ret
 
-; only called from ComputeBasicDamage (E-0047)
+; HL >>= 4 (unsigned): two shifts, then falls through ShiftHLRight2 (E-0064)
 ; 3 call sites from 1 routine (e.g. ComputeBasicDamage)
-ComputeBasicDamage_Sub01:: ; heuristic: follows a terminator; C0
+ShiftHLRight4:: ; heuristic: follows a terminator; C0
 Func_036_6510:: ; address name
     srl h
     rr l
     srl h
     rr l
 
+; HL >>= 2 (unsigned): one shift, then falls through ShiftHLRight1 (E-0064)
 ; 3 call sites from 3 routines (e.g. Func_036_640D, Func_036_5993, Func_036_592E)
-Func_036_6518::
+ShiftHLRight2::
+Func_036_6518:: ; address name
     srl h
     rr l
 
+; HL >>= 1 (unsigned) (E-0064)
 ; 15 call sites from 11 routines (e.g. Func_036_7D13, Func_036_64E2, Func_036_6346, Func_036_64B2, ...)
-Func_036_651C::
+ShiftHLRight1::
+Func_036_651C:: ; address name
     srl h
     rr l
     ret
@@ -6186,7 +6194,7 @@ Func_036_66E0:: ; heuristic: follows a terminator; C0
     ld [hl], b
     dec hl
     ld [hl], c
-    call Func_036_5013
+    call ComputeAttackDamage
     pop bc
     pop hl
     ld a, c
@@ -6803,7 +6811,7 @@ Jump_036_6B6A::
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
 Func_036_6B75::
-    call Func_036_5013
+    call ComputeAttackDamage
     jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7033,7 +7041,7 @@ Jump_036_6CC1::
     ld a, e
     ld [hl+], a
     ld [hl], d
-    call Func_036_7E87
+    call TargetOnLocalSide_Bank36
     jr c, Jump_036_6CE2
     ld a, [wBattleTarget]
     ld b, a
@@ -7937,7 +7945,7 @@ Data_036_7268:: ; heuristic: target of a monotone pointer table; C0
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
 Func_036_72E0::
-    call Func_036_5013
+    call ComputeAttackDamage
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
@@ -8049,7 +8057,7 @@ Func_036_7387:: ; heuristic: target of a pointer table; C0
     ld hl, wD80E
     call AddAx9ToHL
     res 7, [hl]
-    call Func_036_5013
+    call ComputeAttackDamage
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
@@ -9126,7 +9134,7 @@ Func_036_7AAC:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     or a, $8C
     ld [hl], a
-    call Func_036_7E87
+    call TargetOnLocalSide_Bank36
     ld l, $73
     jr nc, Jump_036_7AC7
     ld l, $74
@@ -9247,7 +9255,7 @@ Func_036_7B6B:: ; heuristic: target of a pointer table; C0
     ld a, [wC5E7]
     cp a, $40
     jr c, Jump_036_7B81
-    call Func_036_5013
+    call ComputeAttackDamage
     ld hl, wD136
     ld bc, vTiles0 + $A8
     jp Jump_036_7C8B
@@ -9266,7 +9274,7 @@ Func_036_7B89:: ; heuristic: target of a pointer table; C0
     ld a, [wC5E7]
     cp a, $C0
     jr c, Jump_036_7B99
-    call Func_036_5013
+    call ComputeAttackDamage
     jp ResolveStepComputeDamage_Sub02
 
 Jump_036_7B99::
@@ -9313,7 +9321,7 @@ Func_036_7BC9:: ; heuristic: target of a pointer table; C0
     ld hl, wBattleSlotOut
     add_a_to_hl
     ld [hl], $FF
-    call Func_036_7E87
+    call TargetOnLocalSide_Bank36
     jr c, Jump_036_7BF5
     ld a, [wBattleTarget]
     and a, $03
@@ -9549,7 +9557,7 @@ Func_036_7D13:: ; heuristic: follows a terminator; C0
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_036_651C
+    call ShiftHLRight1
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -9767,9 +9775,11 @@ Func_036_7E65:: ; address name
     add_a_to_hl
     ret
 
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, ResolveStepChanceRoll, ResolveStepEffectChecks_Sub03)
 ; reads: wC58A, wC57F, wBattleActor
-Func_036_7E6C::
+ActorOnLocalSide_Bank36::
+Func_036_7E6C:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_036_7E81
@@ -9786,9 +9796,11 @@ Jump_036_7E81::
     cp a, $04
     ret
 
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; 6 call sites from 6 routines (e.g. ResolveStepDamageMessage_Sub03, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub03, Func_036_6C9A, ...)
 ; reads: wC58A, wC57F, wBattleTarget
-Func_036_7E87::
+TargetOnLocalSide_Bank36::
+Func_036_7E87:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_036_7E9C

@@ -11,7 +11,7 @@ Func_01C_4001:: ; address name
     ld hl, wScreenTileBuffer
     ld de, wC3A0
     ld bc, $00A0
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01C_401F
@@ -24,7 +24,7 @@ Jump_01C_401F::
     ld hl, wC300
     ld de, wC3A0
     ld bc, $00A0
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01C_403D
@@ -98,7 +98,7 @@ Jump_01C_4091::
     ld hl, wC300
     ld de, wScreenTileBuffer
     ld bc, $00A0
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01C_40B6
@@ -111,7 +111,7 @@ Jump_01C_40B6::
     ld hl, wC3A0
     ld de, wScreenTileBuffer
     ld bc, $00A0
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01C_40D4
@@ -481,15 +481,17 @@ Jump_01C_4307::
     ldh [rSVBK], a
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 8 call sites from 6 routines (e.g. ScriptCommandE1_Run, ScriptCommandE5_Run_Case00, ScriptCommandE3_Run_Case00_Sub01, ScriptCommandE2_Run_Case00, ...)
-Func_01C_4316::
+CopyBytesDEToHL_Bank1C::
+Func_01C_4316:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_01C_4316
+    jr nz, CopyBytesDEToHL_Bank1C
     ret
 
 ; 11 call sites from 5 routines (e.g. ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, ScriptCommandE2_Run_Table2_Case03, Func_01C_6A71, ...)
@@ -885,7 +887,7 @@ Func_01C_451D:: ; address name
     ld hl, wC300
     ld de, wC3A0
     ld bc, $00A0
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     ret z
@@ -1134,7 +1136,7 @@ Jump_01C_46AA::
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01C_46CF
@@ -6206,7 +6208,7 @@ Func_01C_6AAC:: ; address name
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01C_6ACA
@@ -6502,7 +6504,7 @@ Jump_01C_6D03::
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call Func_01C_4316
+    call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01C_6D28

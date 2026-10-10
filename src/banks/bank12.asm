@@ -5021,7 +5021,7 @@ Jump_012_6025::
     jr z, Jump_012_606A
 
 Jump_012_6037::
-    call Func_012_6854
+    call ReadTileBuffer2x2AtPixel_Bank12_6854
     ld b, $04
     ld hl, wC910
     ld b, $02
@@ -6479,9 +6479,11 @@ Func_012_684F:: ; address name
     call ScriptCommand85_Run_Case05_Sub01_Sub01
     jr Jump_012_683F
 
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. Func_012_5EE7_Case08)
 ; writes: wC910, wC911, wC912, wC913
-Func_012_6854::
+ReadTileBuffer2x2AtPixel_Bank12_6854::
+Func_012_6854:: ; address name
     ld a, c
     srl a
     srl a
@@ -8464,7 +8466,7 @@ Jump_012_743A::
     jr Jump_012_7440
 
 Jump_012_7440::
-    call Func_012_75A1
+    call ReadTileBuffer2x2AtPixel_Bank12
     ld a, [wCC44]
     cp a, $86
     jp z, Jump_012_74FB
@@ -8660,9 +8662,11 @@ Data_012_7581:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. Func_012_7BCC, Func_012_73F3)
 ; writes: wC910, wC911, wC912, wC913
-Func_012_75A1::
+ReadTileBuffer2x2AtPixel_Bank12::
+Func_012_75A1:: ; address name
     ld a, c
     srl a
     srl a
@@ -9817,7 +9821,7 @@ Jump_012_7C3B::
     ld b, a
     ld a, [wCB84]
     ld c, a
-    call Func_012_75A1
+    call ReadTileBuffer2x2AtPixel_Bank12
     call Func_012_7CD9
     cp a, $01
     ret z

@@ -1156,11 +1156,11 @@ Func_019_4632::
 Data_019_4641:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $064641, $70
 
-; only called from BattleEnd_Step3_Sub07_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_Sub01)
+; only called from BattleEnd_Step3_Sub06_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub06_Sub01)
 ; reads: wDAAB
 ; points at: wD20D, wD1BF
-BattleEnd_Step3_Sub07_Sub01_Sub01::
+BattleEnd_Step3_Sub06_Sub01_Sub01::
 Func_019_46B1:: ; address name
     ld de, wD20D
     ld a, [wDAAB]
@@ -1235,7 +1235,7 @@ Jump_019_46FD::
     jr nz, Jump_019_46FD
     ret
 
-; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07, BattleEnd_Step3_Sub07_Sub01_Sub01)
+; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07, BattleEnd_Step3_Sub06_Sub01_Sub01)
 ; reads: wRecordBuffer, wCFED
 ; writes: wMonsterId, wCFE7, wD006, wD007
 ; points at: wCFDD

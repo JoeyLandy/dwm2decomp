@@ -2739,7 +2739,7 @@ Func_037_5A5D::
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_037_5AB7
+    call CopyBytesDEToHL_Bank37
     pop de
     pop hl
     ld a, [wIsCGB]
@@ -2784,15 +2784,17 @@ Jump_037_5AB1::
     jr c, Func_037_5A5D
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 ; 1 call site from 1 routine (e.g. Func_037_5A5D)
-Func_037_5AB7::
+CopyBytesDEToHL_Bank37::
+Func_037_5AB7:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_037_5AB7
+    jr nz, CopyBytesDEToHL_Bank37
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)

@@ -1,9 +1,11 @@
 SECTION "Bank A1", ROMX[$4000], BANK[$A1]
     db $A1
 
+; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleATK
-Func_0A1_4001:: ; heuristic: follows a terminator; C0
+GetBattleATK_BankA1:: ; heuristic: follows a terminator; C0
+Func_0A1_4001:: ; address name
     ld hl, wBattleATK
     jr Jump_0A1_402E
     db $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E, $21, $EF, $D8, $18, $19, $21
@@ -24,9 +26,11 @@ Func_0A1_4038:: ; address name
     add_a_to_hl
     ret
 
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F, wBattleActor
-Func_0A1_403F:: ; heuristic: follows a terminator; C0
+ActorOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
+Func_0A1_403F:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0A1_4054
@@ -43,9 +47,11 @@ Jump_0A1_4054::
     cp a, $04
     ret
 
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F, wBattleTarget
-Func_0A1_405A:: ; heuristic: follows a terminator; C0
+TargetOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
+Func_0A1_405A:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_0A1_406F

@@ -492,7 +492,7 @@ Jump_00A_427B::
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call Func_00A_461E
+    call ReadTileBuffer2x2AtPixel_Bank0A
     ldh a, [hFFC7]
     ld c, a
     ld a, [wC910]
@@ -781,7 +781,7 @@ Jump_00A_4451::
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call Func_00A_461E
+    call ReadTileBuffer2x2AtPixel_Bank0A
     pop hl
     ld b, $02
 
@@ -862,9 +862,11 @@ Jump_00A_44D3::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0284FE, $120
 
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. Func_00A_43EC, Func_00A_4214_Case05)
 ; writes: wC910, wC911, wC912, wC913
-Func_00A_461E::
+ReadTileBuffer2x2AtPixel_Bank0A::
+Func_00A_461E:: ; address name
     ld a, c
     srl a
     srl a
