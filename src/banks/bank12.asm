@@ -6183,7 +6183,7 @@ Jump_012_66CA::
     pop af
     or a, a
     jr nz, Jump_012_66D4
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
 
 Jump_012_66D4::
     ld a, $FF

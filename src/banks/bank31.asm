@@ -256,7 +256,7 @@ Jump_031_416B:: ; address name
     ld [wC962], a
     ld de, wC958
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     jp Jump_031_4213
 
 Jump_031_418E::
@@ -4785,7 +4785,7 @@ Jump_031_5CB5:: ; address name
     jr z, Jump_031_5CD8
     ld de, wC958
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     ld a, $00
     ld [wStringCategory], a
     ld a, $22
@@ -7699,7 +7699,7 @@ Jump_031_6CD2::
     ld d, h
     ld e, l
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     ld a, [wC6FE]
     ld c, $34
     call SRAMRecordAddress

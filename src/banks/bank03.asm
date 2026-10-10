@@ -883,8 +883,10 @@ Func_003_451C::
     ld [hl], $BB
     ret
 
+; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC there (E-0072) (the same 20 bytes appear in 2 banks)
 ; 15 call sites from 14 routines (e.g. Func_003_769E, Func_003_7707, Func_003_76D5, Func_003_705B_Case03, ...)
-Func_003_4538::
+WriteBCTileToScreenBufferAtTableEntry_Bank03::
+Func_003_4538:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -3047,7 +3049,7 @@ Jump_003_52DE::
     call CopyStringHLToDE
     ld de, wC60C
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     farcall LoadItemRecord
     ld hl, wC0A0
     inc [hl]
@@ -3305,7 +3307,7 @@ Jump_003_5469::
     ld e, l
     ld d, h
     ld hl, wC140
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     xor a, a
     ld [rRAMG], a
     ld hl, wC0A1
@@ -3955,7 +3957,7 @@ Func_003_585D::
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_58A6, Func_003_5253_Table4_Case04)
@@ -3988,7 +3990,7 @@ Func_003_58A6::
     ld a, [wC46D]
     and a, $03
     ld hl, Func_003_460B
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_58CF)
@@ -4008,7 +4010,7 @@ Func_003_58CF::
     ld a, [wC46F]
     and a, $03
     ld hl, Data_003_461F
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5253_Table4_Case01, Func_003_5253_Table5_Case00)
@@ -4021,7 +4023,7 @@ Func_003_58E6::
     ld a, [wC46F]
     and a, $03
     ld hl, Data_003_461F
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
 ; 5 call sites from 3 routines (e.g. Func_003_5A07, Func_003_5253_Table2_Case01, Func_003_5253_Table2_Case00)
@@ -5172,7 +5174,7 @@ Jump_003_6178::
     ld e, l
     ld d, h
     ld hl, wC140
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     ld a, $00
     ld [rRAMG], a
     ld hl, wC0A0
@@ -5232,7 +5234,7 @@ Jump_003_61EA:: ; address name
     ld e, l
     ld d, h
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     ld a, [wRecordBuffer]
     ld l, a
     ld h, $04
@@ -5636,7 +5638,7 @@ Func_003_646F::
     ld a, [wC46D]
     and a, $03
     ld hl, Func_003_460B
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68_Table4_Case01)
@@ -5671,7 +5673,7 @@ Jump_003_64DA::
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wRecordBuffer]
     ld l, a
     ld a, [wCFED]
@@ -5698,7 +5700,7 @@ Func_003_650C::
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $10
     farcall CopyBlockToTileBuffer
     ret
@@ -5715,11 +5717,11 @@ Func_003_6526::
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wC46F]
     and a, $03
     ld hl, Func_003_460B
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wRecordBuffer]
     ld l, a
     ld a, [wCFED]
@@ -5748,7 +5750,7 @@ Func_003_657B::
     ld a, [wC46D]
     and a, $03
     ld hl, Func_003_460B
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $10
     farcall CopyBlockToTileBuffer
     ret
@@ -7420,7 +7422,7 @@ Jump_003_716F:: ; address name
     ld a, [wC46D]
     and a, $07
     ld hl, Func_003_460B
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     call Func_003_7202
     ld de, wC2C0
     ld hl, vBGMap0 + $128
@@ -8200,7 +8202,7 @@ Func_003_769E::
     ld a, [wC46D]
     and a, $07
     ld hl, Func_003_460B
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_76C9, Func_003_6B5E_Case00)
@@ -8235,7 +8237,7 @@ Func_003_76D5::
     ld a, [wC46F]
     and a, $07
     ld hl, Data_003_4633
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld hl, vBGMap0 + $80
     ld de, wC218
     ld bc, $0609
@@ -8253,7 +8255,7 @@ Func_003_7707::
     ld a, [wC46F]
     and a, $07
     ld hl, Data_003_4633
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $25
     farcall CopyBlockToTileBuffer
     ld e, $10
@@ -8305,7 +8307,7 @@ Func_003_776C::
     ld a, [wC46D]
     and a, $07
     ld hl, Func_003_460B
-    call Func_003_4538
+    call WriteBCTileToScreenBufferAtTableEntry_Bank03
     call FillTilesFromRequest
     ld e, $10
     farcall CopyBlockToTileBuffer

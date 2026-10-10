@@ -5608,7 +5608,7 @@ Func_03A_795D::
 Func_03A_796C:: ; heuristic: follows a terminator; C0
     ld de, wC60C
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5616,7 +5616,7 @@ Func_03A_796C:: ; heuristic: follows a terminator; C0
 Func_03A_7976:: ; heuristic: follows a terminator; C0
     ld de, wC60C
     ld hl, wC140
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5661,7 +5661,7 @@ Func_03A_79A0::
     pop bc
     pop hl
     push hl
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     pop hl
 
 Jump_03A_79B0::

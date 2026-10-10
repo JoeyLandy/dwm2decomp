@@ -158,7 +158,7 @@ Jump_05F_69E1::
     ld a, [wC928]
     or a, a
     jr nz, Jump_05F_69ED
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
 
 Jump_05F_69ED::
     ld a, $FF
@@ -2972,7 +2972,7 @@ Jump_05F_7A8C:: ; address name
     ret nz
     farcall Func_084_43B8
     farcall Func_05F_6DDB
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a
     ld [wScriptCommandType], a
     xor a, a

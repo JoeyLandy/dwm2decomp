@@ -122,7 +122,7 @@ Jump_085_4093:: ; address name
     ld hl, wSpriteSlotCount
     dec [hl]
     farcall Func_05F_6DDB
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a
     ldh [hFFB9], a
     farcall Func_002_6050
@@ -394,7 +394,7 @@ Jump_085_426B:: ; address name
     ld hl, wSpriteSlotCount
     dec [hl]
     farcall Func_05F_6DDB
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a
     ldh [hFFB9], a
     farcall Func_002_6050
@@ -561,7 +561,7 @@ Jump_085_4390:: ; address name
     call Func_085_4555
     ld hl, wCD56
     call StoreHLInWC924_B85
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     ld a, $01
     ld [wScriptStep], a
     ret

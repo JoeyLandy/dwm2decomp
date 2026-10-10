@@ -5317,7 +5317,7 @@ Func_002_6391::
     jr z, Jump_002_63BD
     xor a, a
     ld [wC8C7], a
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a
     ldh [hFFB9], a
     call Func_002_64B3

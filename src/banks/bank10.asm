@@ -1840,7 +1840,7 @@ Jump_010_4A01:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a
     ld [wScriptCommandType], a
     xor a, a
@@ -1964,7 +1964,7 @@ Jump_010_4AB3:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
 
 Jump_010_4AC6::
     xor a, a

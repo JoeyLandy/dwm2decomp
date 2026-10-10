@@ -2400,7 +2400,7 @@ Jump_073_4F99::
     pop af
     or a, a
     jr nz, Jump_073_4FA3
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
 
 Jump_073_4FA3::
     ld a, $FF

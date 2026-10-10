@@ -3407,7 +3407,7 @@ Jump_007_6319::
     xor a, a
     ld [wD069], a
     ld [wD091], a
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a

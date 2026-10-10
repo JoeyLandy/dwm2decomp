@@ -6551,7 +6551,7 @@ Jump_000_24B9::
     ret
 
 ; returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case
-; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, Func_003_5AA7, Func_016_5906, Func_0F1_442F)
+; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, Func_003_5AA7, MapIndexViaWC6FEKeepHL, Func_0F1_442F)
 ; reads: wC58A, wGameMode
 ; points at: wC6FE
 MapIndexViaWC6FE::
@@ -8490,8 +8490,10 @@ Func_000_2FDC::
     ld [hl], a
     ret
 
+; copies from DE to HL until 5 glyphs other than $8D and $8E have been copied ($8D/$8E, which have no charmap entry, are copied without counting); a $8D or $8E right after the fifth glyph is copied too; then writes $F0. Clobbers A, B; DE and HL advance (E-0072)
 ; 14 call sites from 14 routines (e.g. Func_003_5E68_Table4_Case02, Func_003_5E68_Table5_Case00, Func_003_5253_Table2_Case01, Func_003_5253_Table4_Case05, ...)
-Func_000_2FE1::
+CopyFiveGlyphsPlusMarks::
+Func_000_2FE1:: ; address name
     ld b, $05
 
 Jump_000_2FE3::
@@ -10740,7 +10742,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 295 call sites from 240 routines (e.g. CheckSlotStatusBlock, Func_005_69DA, Func_005_6972, Func_005_53CA, ...)
+; 295 call sites from 240 routines (e.g. CheckSlotStatusBlock, ActorLacksStatus2Bit1And4Bits01, Func_005_6972, ActorLacksStatus1Bits23And4Bits01, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de

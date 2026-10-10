@@ -3665,10 +3665,12 @@ Jump_005_53C7::
     ld c, $FF
     ret
 
+; C = 0 when the actor's status byte 1 (wD80D) & $0C or byte 4 & $03 is set, else C = $FF (E-0072)
 ; 14 call sites from 14 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4E71, Func_0E2_4F30, ...)
 ; reads: wBattleActor
 ; points at: wD80D
-Func_005_53CA::
+ActorLacksStatus1Bits23And4Bits01::
+Func_005_53CA:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
@@ -7699,10 +7701,12 @@ Jump_005_69D7::
     ld c, $FF
     ret
 
+; C = 0 when the actor's status byte 2 (wD80E) bit 1 or byte 4 & $03 is set, else C = $FF (E-0072)
 ; 14 call sites from 14 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, Func_0E2_511C, ...)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_69DA::
+ActorLacksStatus2Bit1And4Bits01::
+Func_005_69DA:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
@@ -8548,46 +8552,48 @@ Func_005_6E30:: ; heuristic: follows a terminator; C0
     ld hl, wD80D
     call AddAx9ToHL
     bit 2, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 3, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 4, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 5, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     inc hl
     bit 0, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 1, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 2, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 3, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 5, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     bit 6, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     inc hl
     inc hl
     inc hl
     ld a, [hl]
     and a, $0C
-    call nz, Func_005_6E89
+    call nz, IncrementD
     ld a, [hl]
     and a, $C0
-    call nz, Func_005_6E89
+    call nz, IncrementD
     inc hl
     bit 6, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     inc hl
     inc hl
     bit 6, [hl]
-    call nz, Func_005_6E89
+    call nz, IncrementD
     ret
 
+; D += 1 (E-0072)
 ; 14 call sites from 1 routine (e.g. Func_005_6E30)
-Func_005_6E89::
+IncrementD::
+Func_005_6E89:: ; address name
     inc d
     ret
 
@@ -10259,7 +10265,7 @@ Func_005_772B:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_774B
-    call Func_005_53CA
+    call ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr z, Jump_005_774B

@@ -6809,7 +6809,7 @@ Jump_00D_74BB:: ; address name
     ld [wScriptInDataBank], a
     xor a, a
     ldh [hFFB9], a
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
     ld a, [wD781]
     inc a
     ld [wD781], a

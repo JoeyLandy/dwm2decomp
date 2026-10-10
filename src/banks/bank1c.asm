@@ -1965,7 +1965,7 @@ Jump_01C_4B95:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     ret z
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     xor a, a
     ld [wD7C7], a
     ld a, $01
@@ -1985,7 +1985,7 @@ Jump_01C_4BE4::
     cp a, $02
     jr c, Jump_01C_4C05
     call Func_01C_4C9E
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     ld a, [wD7BA]
     ld b, a
     ld a, [wD7B6]
@@ -2012,7 +2012,7 @@ Jump_01C_4C12::
     cp a, $02
     jr c, Jump_01C_4C05
     call Func_01C_4C9E
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     ld a, [wD7B6]
     and a, a
     jr nz, Jump_01C_4C2C
@@ -2028,7 +2028,7 @@ Jump_01C_4C30::
     ld a, [wD7B7]
     and a, a
     jr z, Jump_01C_4C4B
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     call Func_01C_4C9E
     ld a, [wD7B5]
     and a, a
@@ -2054,7 +2054,7 @@ Jump_01C_4C58::
     ld a, [wD7B7]
     and a, a
     jr z, Jump_01C_4C4B
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     call Func_01C_4C9E
     ld a, [wD7B7]
     ld b, a
@@ -2072,7 +2072,7 @@ Jump_01C_4C74::
     call Func_01C_4CA2
     ld a, $69
     call QueueSoundEffect
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2138,7 +2138,7 @@ Data_01C_4CC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wD7C7, wD780, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, ...
 Func_01C_4867_Case07::
 Jump_01C_4CCC:: ; address name
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     ld a, [wD7B0]
     cp a, $18
     jr c, Jump_01C_4CF3
@@ -3849,7 +3849,7 @@ Jump_01C_575B:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 1, a
     ret z
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     xor a, a
     ld [wD7C7], a
     ld a, $01
@@ -3868,7 +3868,7 @@ Jump_01C_57AA::
     ld a, [wD7BB]
     cp a, $02
     jr c, Jump_01C_57C8
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     ld a, [wD7BB]
     ld b, a
     ld a, [wD7B6]
@@ -3894,7 +3894,7 @@ Jump_01C_57D5::
     ld a, [wD7BB]
     cp a, $02
     jr c, Jump_01C_57C8
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     ld a, [wD7B6]
     and a, a
     jr nz, Jump_01C_57EC
@@ -3912,7 +3912,7 @@ Jump_01C_57F0::
     ld a, [wD7B7]
     and a, a
     jr z, Jump_01C_580F
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     call Func_01C_4C9E
     ld a, [wD7B5]
     and a, a
@@ -3940,7 +3940,7 @@ Jump_01C_581C::
     ld a, [wD7B7]
     and a, a
     jr z, Jump_01C_580F
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     call Func_01C_4C9E
     ld a, [wD7B7]
     ld b, a
@@ -3958,7 +3958,7 @@ Jump_01C_583C::
     ld a, $69
     call QueueSoundEffect
     call Func_01C_4CA2
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     xor a, a
     ld [wD7C7], a
     ld a, [wD781]
@@ -3973,7 +3973,7 @@ Jump_01C_583C::
 ; points at: wD7D5
 Func_01C_52E8_Case06::
 Jump_01C_5853:: ; address name
-    call Func_01C_6ADB
+    call ResetWD7C2Counters
     ld hl, wD7D5
     ld a, [wD7B6]
     ld e, a
@@ -6226,9 +6226,11 @@ Jump_01C_6ACA::
     inc [hl]
     ret
 
+; clears wD7C2-wD7C6, wD7C8 and wD7C9, and sets wD7C7 = $3C (60) (E-0072)
 ; 14 call sites from 4 routines (e.g. Func_01C_4867_Case07, Func_01C_4867_Case06, Func_01C_52E8_Case06, Func_01C_52E8_Case05)
 ; writes: wD7C2, wD7C3, wD7C4, wD7C5, wD7C6, wD7C8, wD7C9, wD7C7
-Func_01C_6ADB::
+ResetWD7C2Counters::
+Func_01C_6ADB:: ; address name
     xor a, a
     ld [wD7C2], a
     ld [wD7C3], a

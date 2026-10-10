@@ -5657,7 +5657,7 @@ Func_0A0_5E07_Case04::
 Jump_0A0_6424:: ; address name
     ld de, wD05A
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     ld a, $00
     ld [wStringCategory], a
     ld a, $22

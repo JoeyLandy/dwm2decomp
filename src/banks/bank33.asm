@@ -505,11 +505,11 @@ Jump_033_5264:: ; address name
     ld de, Data_033_62AB
     ld hl, wC1A4
     ld bc, $0803
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld de, Data_033_62C3
     ld hl, wScreenTileBuffer
     ld bc, $0A0B
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     call Func_033_6247
     call SetDefaultStringWindow_Bank33
     ld hl, wD06B
@@ -1212,7 +1212,7 @@ Func_033_562A::
     ld de, Data_033_62C3
     ld hl, wC36E
     ld bc, $0A0B
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld hl, wD781
     inc [hl]
     ret
@@ -1355,7 +1355,7 @@ Jump_033_56FC:: ; address name
     ld de, Data_033_63C7
     ld hl, wC410
     ld bc, $0805
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -1684,7 +1684,7 @@ Jump_033_5911:: ; address name
     ld de, Data_033_6331
     ld hl, wC364
     ld bc, $0A0B
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld hl, vTiles2 + $50
     ld a, l
     ld [wC52D], a
@@ -1727,7 +1727,7 @@ Jump_033_5911:: ; address name
     ld de, Data_033_63F9
     ld hl, wC3E7
     ld bc, $0907
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld hl, vTiles1 + $4E0
     ld a, l
     ld [wC52D], a
@@ -2190,7 +2190,7 @@ Jump_033_5C63:: ; address name
     ld de, Data_033_6331
     ld hl, wC364
     ld bc, $0A0B
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     call Func_033_6247
     ld hl, vTiles1 + $4E0
     ld a, l
@@ -2256,7 +2256,7 @@ Jump_033_5CAC:: ; address name
     ld de, Data_033_5D5F
     ld hl, wC440
     ld bc, $0D02
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     pop af
     ld [wD7F1], a
     ld hl, wC443
@@ -2335,14 +2335,14 @@ Jump_033_5D80:: ; address name
     ld de, Data_033_62C3
     ld hl, wC36E
     ld bc, $0A0B
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld de, wC895
     ld hl, wC3B1
     call Func_033_61FB
     ld de, Data_033_6331
     ld hl, wC364
     ld bc, $0A0B
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld de, wC5B7
     ld hl, wC3A7
     call Func_033_61FB
@@ -2394,7 +2394,7 @@ Jump_033_5DDF:: ; address name
     ld de, Data_033_63F9
     ld hl, wC3E7
     ld bc, $0907
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     call Func_033_6074
     call SetDefaultStringWindow_Bank33
     ld a, $01
@@ -2458,7 +2458,7 @@ Jump_033_5E6B:: ; address name
     ld de, Data_033_6438
     ld hl, wC364
     ld bc, $080B
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_033_63EF
@@ -2562,7 +2562,7 @@ Jump_033_5EDF:: ; address name
     ld de, Data_033_63C7
     ld hl, wC410
     ld bc, $0805
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     xor a, a
     ld [wD7AD], a
     ld a, [wD781]
@@ -2619,7 +2619,7 @@ Func_033_5F83::
     ld de, Data_033_639F
     ld hl, wC410
     ld bc, $0805
-    call Func_033_6152
+    call CopyRectTo20ByteRowsJp_Bank33
     ld de, wC895
     ld hl, wC3B1
     call Func_033_61FB
@@ -2953,10 +2953,12 @@ Func_033_60FC::
     ldh [c], a
     ret
 
+; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (E-0072)
 ; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, Func_033_5F83, BeginString_Bank07_Cat5_Table2_Case09, Func_033_562A, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_033_6152::
+CopyRectTo20ByteRowsJp_Bank33::
+Func_033_6152:: ; address name
     push hl
     push bc
 
@@ -3517,7 +3519,7 @@ Data_033_6F6E:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, GameMode0_Update_Table2_Case1F, Func_024_4EE8)
+; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, GameMode0_Update_Table2_Case1F, ShowStringAInDefaultWindow_Bank24)
 BeginStringDisplay_Bank33_7037::
 Func_033_7037:: ; address name
     ld de, Data_033_704C

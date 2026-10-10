@@ -711,6 +711,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Not code.** `Func_003_460B` decodes as a run of `sbc`/`and` with a final `jp hl`. It is probably data reached by a heuristic, so it is left unnamed.
 - Binary verification: pending; see the commit.
 
+### E-0072 — Batch 8: string wrappers, status predicates, small helpers
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Fourteen routines read:**
+  - String display: ShowStringCategory5_Bank16, ShowStringAInDefaultWindow_Bank24.
+  - Battle status predicates using the C = $FF/$00 convention: ActorLacksStatus2Bit1And4Bits01 and ActorLacksStatus1Bits23And4Bits01.
+  - Indexing helpers: GridIndexFromWD786WD787 (6 columns), ActorActionChoiceAddress, GetActorWDA43Low2, MapIndexViaWC6FEKeepHL.
+  - Object and counter state: ClearBit1OfPlayerAndObjectFlags, ResetWD7C2Counters.
+  - Small helpers: CopyFiveGlyphsPlusMarks, IncrementD.
+  - A family, WriteBCTileToScreenBufferAtTableEntry.
+  - CopyRectTo20ByteRowsJp_Bank33, which has the same instructions as the bank-$24 copy.
+- **Why the bank-$33 copy needed a hand name.** The automatic copy naming skips hand names that end in `_BankBB`.
+- **The $2998 offset.** It maps $9800 to $C198 (wScreenTileBuffer), so the table holds BG-map addresses for positions mirrored in the buffer.
+- **Unknowns.** $8D and $8E have no charmap entry. Being skipped in the 5-glyph count suggests combining marks left over from the Japanese text system; not checked.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

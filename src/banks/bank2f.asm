@@ -2,7 +2,7 @@ SECTION "Bank 2F", ROMX[$4000], BANK[$2F]
     db $2F
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 31 call sites from 31 routines (e.g. ShowString_Bank2F, GameMode0_Update_Table2_Case0F, Func_016_6955, Func_031_40CC_Table3_Case03, ...)
+; 31 call sites from 31 routines (e.g. ShowString_Bank2F, GameMode0_Update_Table2_Case0F, ShowStringCategory5_Bank16, Func_031_40CC_Table3_Case03, ...)
 BeginStringDisplay_Bank2F::
 Func_02F_4001:: ; address name
     ld de, Data_02F_4016

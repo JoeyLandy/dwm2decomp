@@ -703,7 +703,7 @@ Jump_00C_4448:: ; address name
     ld hl, wC36C
     ld bc, $0C0D
     call CopyRectTo20ByteRows_Bank0C
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -768,7 +768,7 @@ Jump_00C_449D:: ; address name
     ret
 
 Jump_00C_44C3::
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -790,7 +790,7 @@ Jump_00C_44D9::
 Jump_00C_44DA::
     ld [wD78B], a
     push af
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -830,7 +830,7 @@ Jump_00C_451C::
     ld a, [wD78B]
     and a, a
     jr nz, Jump_00C_4530
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -880,7 +880,7 @@ Jump_00C_4560::
     jr Jump_00C_4544
 
 Jump_00C_4563::
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     add a, a
     ld de, Data_00C_5916
     add a, e
@@ -1430,13 +1430,13 @@ Jump_00C_49DA:: ; address name
     ld a, h
     ld [wC530], a
     farcall ShowString_Bank08
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     and a, $0F
     ld [wD09D], a
     ld a, $2F
     ld [wD09E], a
     farcall Func_016_7A48
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld [wStringIndex], a
     ld a, $02
     ld [wStringCategory], a
@@ -1674,7 +1674,7 @@ Jump_00C_4BCB::
     jr c, Jump_00C_4BF8
     xor a, a
     ld [wD78A], a
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -1706,7 +1706,7 @@ Jump_00C_4BF8::
 Jump_00C_4BFC::
     call Func_00C_5050
     push hl
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     add a, a
     ld hl, Data_00C_592E
     add_a_to_hl
@@ -1756,7 +1756,7 @@ Jump_00C_4C4F::
     jr nz, Jump_00C_4C72
 
 Jump_00C_4C5B::
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -1784,7 +1784,7 @@ Jump_00C_4C7E::
 Jump_00C_4C82::
     call Func_00C_5050
     push hl
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     add a, a
     ld hl, Data_00C_592E
     add_a_to_hl
@@ -2107,7 +2107,7 @@ Jump_00C_4EA4::
 ; reads: wD78B
 ; writes: wStringCategory, wStringIndex, wC52D, wC52E, wC52F, wC530
 Func_00C_4EC7::
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     add a, a
     ld de, Data_00C_5916
     add a, e
@@ -2329,7 +2329,7 @@ Func_00C_501F::
     inc hl
     inc hl
     push hl
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -2350,7 +2350,7 @@ Jump_00C_5043::
 
 ; 15 call sites from 10 routines (e.g. Func_00C_45DA_Case08, Func_00C_4FC2, Func_00C_45DA_Case07, Func_00C_45DA_Case06, ...)
 Func_00C_5050::
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     add a, a
     ld de, Data_00C_5916
     add a, e
@@ -2373,7 +2373,7 @@ Jump_00C_505C::
 ; 6 call sites from 3 routines (e.g. ScriptCommandF6_Run_Case0C, Func_00C_4EC7, Func_00C_45DA_Case08)
 ; reads: wD78B
 Func_00C_506C::
-    call Func_00C_52EC
+    call GridIndexFromWD786WD787
     add a, a
     ld hl, Data_00C_594F
     add_a_to_hl
@@ -2841,9 +2841,11 @@ Jump_00C_52DD::
     ldh [rSVBK], a
     ret
 
+; A = 6 * wD787 + wD786 (row-major index in a 6-column grid: wD786 column, wD787 row); BC kept (E-0072)
 ; 15 call sites from 8 routines (e.g. ScriptCommandF6_Run_Case0C, Func_00C_506C, Func_00C_501F, ScriptCommandF6_Run_Case0A, ...)
 ; reads: wD787, wD786
-Func_00C_52EC::
+GridIndexFromWD786WD787::
+Func_00C_52EC:: ; address name
     push bc
     ld a, [wD787]
     add a, a
@@ -5520,7 +5522,7 @@ Func_00C_73C7:: ; address name
     ld [wScriptInDataBank], a
     xor a, a
     ldh [hFFB9], a
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
 
 ; 2 call sites from 2 routines (e.g. ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
 ; reads: wD588
@@ -5577,7 +5579,7 @@ Func_00C_741F::
     ld [wScriptInDataBank], a
     xor a, a
     ldh [hFFB9], a
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
 
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD78E
@@ -5636,7 +5638,7 @@ Func_00C_7478::
     ld [wScriptInDataBank], a
     xor a, a
     ldh [hFFB9], a
-    farcall Func_004_449F
+    farcall ClearBit1OfPlayerAndObjectFlags
 
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD786, wD78E

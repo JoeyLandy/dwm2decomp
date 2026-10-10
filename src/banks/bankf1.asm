@@ -118,7 +118,7 @@ Jump_0F1_4092::
     call CopyStringHLToDE
     ld de, wC60C
     ld hl, wC130
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     farcall LoadItemRecord
     ld hl, wC0A0
     inc [hl]
@@ -366,7 +366,7 @@ Func_0F1_422D::
     ld a, [wC46E]
     and a, $07
     ld hl, $4A6A
-    call Func_0F1_4983
+    call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4276)
@@ -399,7 +399,7 @@ Func_0F1_4276:: ; heuristic: follows a terminator; C0
     ld a, [wC46D]
     and a, $03
     ld hl, Func_0F1_4A5E
-    call Func_0F1_4983
+    call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_429C)
@@ -419,7 +419,7 @@ Func_0F1_429C:: ; heuristic: follows a terminator; C0
     ld a, [wC46F]
     and a, $03
     ld hl, Data_0F1_4A72
-    call Func_0F1_4983
+    call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Table4_Case01)
@@ -435,7 +435,7 @@ Func_0F1_42B6::
     ld a, [wC46F]
     and a, $03
     ld hl, Data_0F1_4A72
-    call Func_0F1_4983
+    call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
 ; 4 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case01, Func_0F1_4001_Table2_Case00)
@@ -1297,8 +1297,10 @@ Jump_0F1_4957::
     db $FA, $6D, $C4, $E6, $03, $21, $5E, $4A, $87, $85, $6F, $30, $01, $24, $2A, $66
     db $6F, $7D, $C6, $98, $6F, $7C, $CE, $29, $67, $36, $BB, $C9
 
+; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC there (E-0072) (the same 20 bytes appear in 2 banks)
 ; 4 call sites from 4 routines (e.g. Func_0F1_422D, Func_0F1_42B6, Func_0F1_4276, Func_0F1_429C)
-Func_0F1_4983::
+WriteBCTileToScreenBufferAtTableEntry_BankF1::
+Func_0F1_4983:: ; address name
     add a, a
     add_a_to_hl
     deref_hl

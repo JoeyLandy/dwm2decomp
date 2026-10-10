@@ -754,7 +754,7 @@ Jump_030_4438::
     jr c, Jump_030_4497
 
 Jump_030_4480::
-    call Func_030_540C
+    call GetActorWDA43Low2
     res 6, [hl]
     ld a, [wBattleActor]
     ld hl, wDAE0
@@ -764,7 +764,7 @@ Jump_030_4480::
     jr Jump_030_44DF
 
 Jump_030_4497::
-    call Func_030_540C
+    call GetActorWDA43Low2
     set 6, [hl]
     ld a, [wBattleActor]
     ld hl, wDAE0
@@ -827,7 +827,7 @@ Func_030_4506::
 ; reads: wBattleActor
 ; points at: wD868
 Func_030_450B::
-    call Func_030_540C
+    call GetActorWDA43Low2
     cp a, $03
     ret z
     ld hl, Data_030_4519
@@ -861,7 +861,7 @@ Func_030_4536::
     ld hl, Data_030_5587
     add_a_to_hl
     push hl
-    call Func_030_540C
+    call GetActorWDA43Low2
     pop hl
     add_a_to_hl
     ld a, [hl]
@@ -938,7 +938,7 @@ Func_030_4595::
     jr Jump_030_45CB
 
 Jump_030_45C7::
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], b
 
 Jump_030_45CB::
@@ -1020,7 +1020,7 @@ Jump_030_4650::
     and a, $03
     cp a, $01
     jr nz, Jump_030_466C
-    call Func_030_540C
+    call GetActorWDA43Low2
     cp a, $03
     jr z, Jump_030_4687
     ld hl, wDA3C
@@ -1168,7 +1168,7 @@ Jump_030_4752::
     jr Jump_030_4768
 
 Jump_030_4759::
-    call Func_030_540C
+    call GetActorWDA43Low2
     cp a, $03
     jr z, Jump_030_4768
     ld hl, wDA3E
@@ -1246,7 +1246,7 @@ Func_030_47B9::
     jr c, Jump_030_47E6
 
 Jump_030_47CA::
-    call Func_030_540C
+    call GetActorWDA43Low2
     cp a, $03
     ret z
     ld hl, wDA3C
@@ -1474,7 +1474,7 @@ Jump_030_4923::
     jr Jump_030_493C
 
 Jump_030_492F::
-    call Func_030_540C
+    call GetActorWDA43Low2
     cp a, $03
     jr z, Jump_030_493A
     sla e
@@ -1514,13 +1514,13 @@ Jump_030_4959::
     jr nc, Jump_030_496E
 
 Jump_030_4960::
-    call Func_030_540C
+    call GetActorWDA43Low2
     cp a, $03
     jr nz, Jump_030_496E
 
 Jump_030_4967::
     ld b, $00
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], b
     ret
 
@@ -1535,7 +1535,7 @@ Jump_030_496E::
     dec a
     call ReadBattleWordFromArray_Bank30
     call JumpToHL
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld b, [hl]
     ld a, [wD871]
     cp a, $FF
@@ -1587,11 +1587,11 @@ Jump_030_4AF1::
     jr nc, Jump_030_4B06
 
 Jump_030_4AF8::
-    call Func_030_540C
+    call GetActorWDA43Low2
     cp a, $03
     jr nz, Jump_030_4B06
     ld b, $00
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], b
     ret
 
@@ -1846,7 +1846,7 @@ Jump_030_4C5C::
     ld b, $AC
 
 Jump_030_4C5E::
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], b
     ret
 
@@ -2009,7 +2009,7 @@ Jump_030_4D24::
 
 ; 1 call site from 1 routine (e.g. Func_030_4CFC)
 Func_030_4D25::
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld c, [hl]
     ld b, $00
     ld hl, Data_030_4D34
@@ -2268,22 +2268,22 @@ Jump_030_507E::
     cp a, $FF
     jr z, Jump_030_50A6
     call Func_030_5209
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], c
     ret
 
 Jump_030_509A::
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], $AB
     ret
 
 Jump_030_50A0::
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], $AC
     ret
 
 Jump_030_50A6::
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], $00
     ret
 
@@ -2688,7 +2688,7 @@ Jump_030_52F2::
     ld e, $10
 
 Jump_030_5307::
-    call Func_030_540C
+    call GetActorWDA43Low2
     ld hl, Data_030_5384
     call ReadBattleWordFromArray_Bank30
     add hl, de
@@ -2701,7 +2701,7 @@ Jump_030_5307::
 ; points at: hFFC6
 Func_030_5319::
     push hl
-    call Func_030_540C
+    call GetActorWDA43Low2
     ld c, [hl]
     pop hl
     ld de, hFFC6
@@ -2739,7 +2739,7 @@ Func_030_533E::
     add hl, bc
     ld e, [hl]
     push hl
-    call Func_030_540C
+    call GetActorWDA43Low2
     bit 6, [hl]
     pop hl
     jr z, Jump_030_5357
@@ -2777,10 +2777,12 @@ Func_030_5378::
 Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
+; A = wDA43[wBattleActor] & 3 (E-0072)
 ; 13 call sites from 12 routines (e.g. Func_030_48F3, Func_030_47B9, Func_030_46BA, Func_030_4617, ...)
 ; reads: wBattleActor
 ; points at: wDA43
-Func_030_540C::
+GetActorWDA43Low2::
+Func_030_540C:: ; address name
     ld a, [wBattleActor]
     ld hl, wDA43
     add_a_to_hl
@@ -2788,10 +2790,12 @@ Func_030_540C::
     and a, $03
     ret
 
+; HL = wBattleActionChoice + 2 * wBattleActor (the actor's action byte; the target follows) (E-0072)
 ; 12 call sites from 8 routines (e.g. Func_030_4D25, Func_030_4595, Func_030_502D, Func_030_5440, ...)
 ; reads: wBattleActor
 ; points at: wBattleActionChoice
-Func_030_541B::
+ActorActionChoiceAddress::
+Func_030_541B:: ; address name
     ld a, [wBattleActor]
     add a, a
     ld hl, wBattleActionChoice
@@ -2840,7 +2844,7 @@ Func_030_5440::
     ld hl, Data_030_45D0
     call ReadBattleWordFromArray_Bank30
     call JumpToHL
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld [hl], b
     call Func_030_4CFC
     xor a, a
@@ -3009,7 +3013,7 @@ Jump_030_556B::
 ; reads: wC5F8, wC5FA, wC5E7, wC5F9
 Func_030_556C:: ; heuristic: follows a terminator; C0
     call AdvanceRandom
-    call Func_030_541B
+    call ActorActionChoiceAddress
     ld a, [wC5F8]
     or a, a
     jr z, Jump_030_5586

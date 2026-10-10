@@ -76,6 +76,7 @@
     {"canonical": "19:42EE", "name": "ClearSpeciesRecordBuffer", "note": "zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067)", "evidence": "reading (E-0067)"},
     {"canonical": "1E:7317", "name": "WriteTileC0AtHL", "note": "writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067)", "evidence": "reading (E-0067)"},
     {"canonical": "1E:7320", "name": "WriteTileC1AtHL", "note": "writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067)", "evidence": "reading (E-0067)"},
-    {"canonical": "1E:7329", "name": "WriteTileC2AtHL", "note": "writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067)", "evidence": "reading (E-0067)"}
+    {"canonical": "1E:7329", "name": "WriteTileC2AtHL", "note": "writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067)", "evidence": "reading (E-0067)"},
+    {"canonical": "03:4538", "name": "WriteBCTileToScreenBufferAtTableEntry", "note": "HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC there (E-0072)", "evidence": "reading (E-0072)"}
   ]
 }

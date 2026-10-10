@@ -320,7 +320,7 @@ Func_016_41B3::
     ld e, l
     ld d, h
     pop hl
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     pop de
     inc d
     ret
@@ -495,7 +495,7 @@ Func_016_42C4::
     ld e, l
     ld d, h
     pop hl
-    call Func_000_2FE1
+    call CopyFiveGlyphsPlusMarks
     pop de
     inc d
     ret
@@ -3666,7 +3666,7 @@ Func_016_57E8::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case0D)
 Func_016_57FF::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $63
     ld de, $03E7
     call Func_016_58AD
@@ -3674,7 +3674,7 @@ Func_016_57FF::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case0E)
 Func_016_580B::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $65
     ld de, $03E7
     call Func_016_58AD
@@ -3682,7 +3682,7 @@ Func_016_580B::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case0F)
 Func_016_5817::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $67
     ld de, $03E7
     call Func_016_58AD
@@ -3690,7 +3690,7 @@ Func_016_5817::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case10)
 Func_016_5823::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $69
     ld de, $03E7
     call Func_016_58AD
@@ -3698,7 +3698,7 @@ Func_016_5823::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case11)
 Func_016_582F::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $5D
     ld de, $03E7
     call Func_016_58AD
@@ -3706,7 +3706,7 @@ Func_016_582F::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case12)
 Func_016_583B::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $61
     ld de, $03E7
     call Func_016_58AD
@@ -3714,7 +3714,7 @@ Func_016_583B::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case13)
 Func_016_5847::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $6F
     ld e, $FF
     call Func_016_5897
@@ -3722,7 +3722,7 @@ Func_016_5847::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case14)
 Func_016_5852::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $6F
     ld e, $00
     call Func_016_58A2
@@ -3730,7 +3730,7 @@ Func_016_5852::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case15)
 Func_016_585D::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $70
     ld e, $FF
     call Func_016_5897
@@ -3738,7 +3738,7 @@ Func_016_585D::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case16)
 Func_016_5868::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $70
     ld e, $00
     call Func_016_58A2
@@ -3746,7 +3746,7 @@ Func_016_5868::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case17)
 Func_016_5873::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $72
     ld e, $FF
     call Func_016_5897
@@ -3754,7 +3754,7 @@ Func_016_5873::
 
 ; 1 call site from 1 routine (e.g. Func_016_468E_Case18)
 Func_016_587E::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     ld c, $72
     ld e, $00
     call Func_016_58A2
@@ -3762,7 +3762,7 @@ Func_016_587E::
 
 ; 2 call sites from 2 routines (e.g. Func_016_468E_Case1D, Func_016_468E_Case19)
 Func_016_5889::
-    call Func_016_5906
+    call MapIndexViaWC6FEKeepHL
     push hl
     ld c, $6B
     call SRAMRecordAddress
@@ -3893,8 +3893,10 @@ Func_016_58FD::
     ld [hl], b
     ret
 
+; MapIndexViaWC6FE with HL preserved (E-0072)
 ; 13 call sites from 13 routines (e.g. Func_016_5889, Func_016_587E, Func_016_5873, Func_016_5868, ...)
-Func_016_5906::
+MapIndexViaWC6FEKeepHL::
+Func_016_5906:: ; address name
     push hl
     call MapIndexViaWC6FE
     pop hl
@@ -4477,7 +4479,7 @@ Jump_016_5D51:: ; address name
 Jump_016_5D71::
     ld a, $1E
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ret
 
 Jump_016_5D7A::
@@ -4520,7 +4522,7 @@ Jump_016_5DA0:: ; address name
     ret nz
     ld a, $0B
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4573,7 +4575,7 @@ Jump_016_5DE6:: ; address name
     call Func_016_6A10
     ld a, $0C
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld a, $01
     ld [wBattleSubStep], a
     ret
@@ -4618,7 +4620,7 @@ Func_016_5D13_Case06::
 Jump_016_5E3B:: ; address name
     ld a, $0D
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4635,7 +4637,7 @@ Jump_016_5E48:: ; address name
     ret nz
     ld a, $0E
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4703,7 +4705,7 @@ Jump_016_5E96:: ; address name
     jr nz, Jump_016_5ED1
     ld a, $0F
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld a, $09
     ld [wBattleSubStep], a
     ret
@@ -4978,7 +4980,7 @@ Jump_016_60B5:: ; address name
 Jump_016_60DF::
     ld a, $15
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld a, $09
     ld [wBattleSubStep], a
     ret
@@ -5056,7 +5058,7 @@ Jump_016_6151:: ; address name
     inc [hl]
     ld a, $13
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ret
 
 ; entry 21 of the `rst $00` table in Func_016_5D13
@@ -5330,7 +5332,7 @@ Jump_016_631B:: ; address name
     call CopyStringHLToDE
     ld a, $18
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     xor a, a
     ld [rRAMG], a
     ret
@@ -6250,9 +6252,11 @@ Jump_016_694B::
     ld [de], a
     ret
 
+; wStringCategory = 5 (wStringIndex set by the caller), then far-calls BeginStringDisplay_Bank2F (E-0072)
 ; 16 call sites from 14 routines (e.g. Func_016_69E2, Func_016_6C16_Case0C, Func_016_6C16_Case05, Func_016_6C16_Case03, ...)
 ; writes: wStringCategory
-Func_016_6955::
+ShowStringCategory5_Bank16::
+Func_016_6955:: ; address name
     ld a, $05
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -6363,7 +6367,7 @@ Jump_016_6A01::
     jr nz, Jump_016_6A01
     ld a, $1D
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_016_6A4E_Case00, Func_016_5D13_Case04, Func_016_5D13_Case00)
@@ -6436,7 +6440,7 @@ Jump_016_6A5C:: ; address name
     call Func_016_6A10
     ld a, $14
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -6850,13 +6854,13 @@ Jump_016_6CF5:: ; address name
     jr z, Jump_016_6D08
     ld a, $20
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ret
 
 Jump_016_6D08::
     ld a, $1A
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ret
 
 ; entry 4 of the `rst $00` table in Func_016_6C16
@@ -6895,13 +6899,13 @@ Jump_016_6D2B::
     jr z, Jump_016_6D3E
     ld a, $21
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ret
 
 Jump_016_6D3E::
     ld a, $1B
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ret
 
 ; entry 6 of the `rst $00` table in Func_016_6C16
@@ -7128,7 +7132,7 @@ Jump_016_6EC0::
     jr nz, Jump_016_6EC0
     ld a, $1A
     ld [wStringIndex], a
-    call Func_016_6955
+    call ShowStringCategory5_Bank16
     ld a, $12
     ld [wBattleSubStep], a
     ret

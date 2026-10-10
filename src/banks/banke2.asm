@@ -41,7 +41,7 @@ Jump_0E2_403A::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_404E::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_405E
@@ -89,7 +89,7 @@ Jump_0E2_409E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_40AE::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_40BE
@@ -1977,7 +1977,7 @@ Jump_0E2_4E9A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4EAA::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_4EBA
@@ -2084,7 +2084,7 @@ Jump_0E2_4F6D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F7D::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_4F8D
@@ -2125,7 +2125,7 @@ Jump_0E2_4FC0::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FD0::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_4FE0
@@ -2163,7 +2163,7 @@ Jump_0E2_5000::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5014::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5024
@@ -2194,7 +2194,7 @@ Jump_0E2_5037::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5057::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5067
@@ -2314,7 +2314,7 @@ Func_0E2_511C:: ; heuristic: follows a terminator; C0
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_512B::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_513B
@@ -2355,7 +2355,7 @@ Jump_0E2_516E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_517E::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_518E
@@ -2474,7 +2474,7 @@ Jump_0E2_524A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_525A::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_526A
@@ -2499,7 +2499,7 @@ Func_0E2_526D:: ; heuristic: follows a terminator; C0
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5286::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5296
@@ -2558,7 +2558,7 @@ Jump_0E2_52ED::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_52FD::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_530D
@@ -2574,7 +2574,7 @@ Func_0E2_530E:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5327
@@ -2619,7 +2619,7 @@ Jump_0E2_5364::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5374::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5384
@@ -2704,7 +2704,7 @@ Func_0E2_540A:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5423
@@ -2775,7 +2775,7 @@ Jump_0E2_5486::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_549A::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_54AA
@@ -2830,7 +2830,7 @@ Jump_0E2_54F1::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5505::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5515
@@ -2839,7 +2839,7 @@ Jump_0E2_5505::
 
 Jump_0E2_5515::
     call Func_0E2_6898
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5528
@@ -2899,7 +2899,7 @@ Jump_0E2_5576::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_558A::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_559A
@@ -2924,7 +2924,7 @@ Jump_0E2_55AA::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_55BD::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_55CD
@@ -2965,7 +2965,7 @@ Jump_0E2_55F7::
 
 Jump_0E2_5607::
     call Func_0E2_6898
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_561A
@@ -3025,7 +3025,7 @@ Jump_0E2_566C::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_567C::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_568C
@@ -3052,7 +3052,7 @@ Jump_0E2_56A2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_56B5::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_56C5
@@ -3122,7 +3122,7 @@ Jump_0E2_572B::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_573B::
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_574B
@@ -3167,7 +3167,7 @@ Jump_0E2_5784::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5798::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_57A8
@@ -3228,7 +3228,7 @@ Jump_0E2_57F6::
 Jump_0E2_5806::
     ld a, [wBattleActor]
     call Func_0E2_670B
-    farcall Func_005_53CA
+    farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_581C
@@ -3255,7 +3255,7 @@ Jump_0E2_5832::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5845::
-    farcall Func_005_69DA
+    farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
     jr nz, Jump_0E2_5855

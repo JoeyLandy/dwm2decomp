@@ -245,12 +245,12 @@ Jump_024_418D::
     jr z, Jump_024_41BB
     and a, $01
     add a, $01
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ret
 
 Jump_024_41BB::
     xor a, a
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ret
 
 Jump_024_41C0::
@@ -469,7 +469,7 @@ Jump_024_4309:: ; address name
 GameMode6_Update_Table3_Case03::
 Jump_024_4319:: ; address name
     ld a, $05
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -522,7 +522,7 @@ Jump_024_4369::
     and a, a
     jr nz, Jump_024_437D
     ld a, $07
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
     add a, $02
     ld [wD781], a
@@ -532,7 +532,7 @@ Jump_024_437D::
     call Func_024_4D65
     call Func_024_4F0C
     ld a, $06
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -626,7 +626,7 @@ Jump_024_43F1::
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, $05
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -651,7 +651,7 @@ Jump_024_4438:: ; address name
     and a, a
     jr nz, Jump_024_444C
     ld a, $11
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
     sub a, $02
     ld [wD781], a
@@ -741,7 +741,7 @@ Jump_024_44BA::
     call Func_024_4E57
     ld a, [wTwoChoiceCursor]
     add a, $08
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     xor a, a
     ld [wD781], a
     ld a, [wD780]
@@ -974,7 +974,7 @@ Jump_024_460F::
     ld a, $02
     ld [wD782], a
     ld a, $12
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ret
 
 Jump_024_4621::
@@ -1039,7 +1039,7 @@ Jump_024_4678::
     ld [wD7AF], a
     ld [wD7AB], a
     ld a, $07
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, $02
     ld [wD780], a
     ld a, $08
@@ -1105,13 +1105,13 @@ Jump_024_46F9::
     and a, a
     jr nz, Jump_024_4713
     ld a, $12
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     jr Jump_024_46D2
 
 Jump_024_4713::
     call GameMode6_Update_Table5_Case0A_Sub01
     ld a, $0A
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
     add a, $02
     ld [wD781], a
@@ -1489,7 +1489,7 @@ Jump_024_498D::
     call GameMode6_Update_Table7_Case08_Sub01
     call CopyMonsterNameToBuffer_B24
     ld a, $0A
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
     add a, $02
     ld [wD781], a
@@ -2325,9 +2325,11 @@ Jump_024_4ED9::
     ldh [rSVBK], a
     ret
 
+; wStringIndex = A, wStringCategory = 0, string window = vTiles1 with size word $1202 (as SetDefaultStringWindow), then far-calls BeginStringDisplay_Bank33_7037 (E-0072)
 ; 15 call sites from 12 routines (e.g. GameMode6_Update_Table2_Case00, GameMode6_Update_Table3_Case0C, GameMode6_Update_Table3_Case0A, GameMode6_Update_Table3_Case08, ...)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
-Func_024_4EE8::
+ShowStringAInDefaultWindow_Bank24::
+Func_024_4EE8:: ; address name
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
@@ -3222,7 +3224,7 @@ Func_024_5434_Case08::
 Jump_024_54DA:: ; address name
     call Func_024_4F12
     ld a, $03
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -3441,7 +3443,7 @@ Func_024_5553_Case08::
 Jump_024_5603:: ; address name
     call Func_024_4F0C
     ld a, $04
-    call Func_024_4EE8
+    call ShowStringAInDefaultWindow_Bank24
     ld a, [wD782]
     inc a
     ld [wD782], a

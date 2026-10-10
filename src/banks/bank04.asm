@@ -587,10 +587,12 @@ Func_004_4470::
     ld [wCBCC], a
     ret
 
+; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
 ; 15 call sites from 15 routines (e.g. Func_002_6391, Func_007_6213_Table2_Case02, ScriptCommandF7_Run_Case1A_Sub01, Func_00C_741F, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
-Func_004_449F::
+ClearBit1OfPlayerAndObjectFlags::
+Func_004_449F:: ; address name
     ldh a, [hFF8C]
     and a, $FD
     ldh [hFF8C], a
