@@ -3785,7 +3785,7 @@ Jump_012_58E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $0129
-    call Func_012_6813
+    call StoreHLInWC924_B0F_Bank12
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand85_Run
@@ -3898,7 +3898,7 @@ Jump_012_5994:: ; address name
     and a, $0F
     ld hl, $00D0
     add_a_to_hl
-    call Func_012_6813
+    call StoreHLInWC924_B0F_Bank12
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3943,7 +3943,7 @@ Jump_012_59D3:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $012A
-    call Func_012_6813
+    call StoreHLInWC924_B0F_Bank12
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand9E_Run
@@ -3990,7 +3990,7 @@ Jump_012_5A17:: ; address name
     and a, $0F
     ld hl, $00E0
     add_a_to_hl
-    call Func_012_6813
+    call StoreHLInWC924_B0F_Bank12
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -6398,9 +6398,11 @@ Jump_012_680E::
     inc [hl]
     ret
 
+; the same 13 bytes as StoreHLInWC924_B0F (0F:7F68)
 ; 4 call sites from 4 routines (e.g. ScriptCommand9E_Run_Case02, ScriptCommand9E_Run_Case00, ScriptCommand85_Run_Case04, ScriptCommand85_Run_Case00)
 ; writes: wC924, wC925, wC926
-Func_012_6813::
+StoreHLInWC924_B0F_Bank12::
+Func_012_6813:: ; address name
     ld a, l
     ld [wC924], a
     ld a, h

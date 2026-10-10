@@ -2490,7 +2490,7 @@ Jump_085_4F8E:: ; address name
 ScriptCommandC2_Run_Case00::
 Jump_085_4F9E:: ; address name
     ld hl, wCBAC
-    call Func_085_576A
+    call SetBit2AtHL_B0F_Bank85
     ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_085_4FBE
@@ -3858,8 +3858,10 @@ Func_085_5765:: ; address name
     ld [hl], a
     ret
 
+; the same 5 bytes as SetBit2AtHL_B0F (0F:7ECE)
 ; 1 call site from 1 routine (e.g. ScriptCommandC2_Run_Case00)
-Func_085_576A::
+SetBit2AtHL_B0F_Bank85::
+Func_085_576A:: ; address name
     ld a, [hl]
     or a, $04
     ld [hl], a

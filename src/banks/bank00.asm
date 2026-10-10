@@ -1750,7 +1750,7 @@ Jump_000_0B34::
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.
-; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, Func_00D_5ED6, Func_014_5E8C_Case04, Func_015_78C5, ...)
+; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, Func_00D_5ED6, CopyBytesDEFromHL_Bank14_Case04, Func_015_78C5, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 OrFromBankWaitVRAM::

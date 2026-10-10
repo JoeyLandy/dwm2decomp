@@ -31,7 +31,7 @@ Func_0A2_4001::
     ldh a, [hFFC6]
     ld b, a
     pop de
-    call Func_0A2_404F
+    call CopyBytesDEFromHL_BankA2
     ret
 
 ; 1 call site from 1 routine (e.g. LoadMonsterRecordTo)
@@ -60,13 +60,15 @@ Func_0A2_402D::
     pop de
     ld b, $1A
 
+; the same 7 bytes as CopyBytesDEFromHL (34:406E)
 ; 1 call site from 1 routine (e.g. Func_0A2_4001)
-Func_0A2_404F::
+CopyBytesDEFromHL_BankA2::
+Func_0A2_404F:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Func_0A2_404F
+    jr nz, CopyBytesDEFromHL_BankA2
     ret
     db $00, $00, $FF, $FF, $FF, $FF
     ds $14, $00

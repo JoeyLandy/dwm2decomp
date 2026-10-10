@@ -8013,11 +8013,11 @@ Jump_016_760B::
     ld hl, sBB0F
     ld de, wD0D6
     ld b, $0A
-    call Func_016_76B6
+    call CopyBytesDEFromHL_Bank16
     ld hl, sBD30
     ld de, wD0E0
     ld b, $05
-    call Func_016_76B6
+    call CopyBytesDEFromHL_Bank16
     ld a, [sBC00]
     ld [wD0E5], a
     push af
@@ -8081,13 +8081,15 @@ Jump_016_767E::
 Jump_016_76B5::
     ret
 
+; the same 7 bytes as CopyBytesDEFromHL (34:406E)
 ; 2 call sites from 1 routine (e.g. Func_016_75EE)
-Func_016_76B6::
+CopyBytesDEFromHL_Bank16::
+Func_016_76B6:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Func_016_76B6
+    jr nz, CopyBytesDEFromHL_Bank16
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_75EE)

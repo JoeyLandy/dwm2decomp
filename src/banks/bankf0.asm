@@ -4642,7 +4642,7 @@ Jump_0F0_67FB::
 Jump_0F0_67FE::
     ld de, wSpriteSlots
     ld b, $10
-    call Func_0F0_68DF
+    call CopyBytesDEFromHL_BankF0
     ld a, [wC5C7]
     and a, a
     jr nz, Jump_0F0_6811
@@ -4655,7 +4655,7 @@ Jump_0F0_6811::
 Jump_0F0_6814::
     ld de, wCB8F
     ld b, $10
-    call Func_0F0_68DF
+    call CopyBytesDEFromHL_BankF0
     ld de, $0000
     call TestFlagBit
     jr c, Jump_0F0_6829
@@ -4668,7 +4668,7 @@ Jump_0F0_6829::
 Jump_0F0_682C::
     ld de, hFFC6
     ld b, $06
-    call Func_0F0_68DF
+    call CopyBytesDEFromHL_BankF0
     farcall Func_004_431F
     ld a, [wC5C7]
     and a, a
@@ -4682,7 +4682,7 @@ Jump_0F0_6845::
 Jump_0F0_6848::
     ld de, hFFC6
     ld b, $06
-    call Func_0F0_68DF
+    call CopyBytesDEFromHL_BankF0
     farcall Func_004_431F
     ld a, $0D
     ldh [hFFC6], a
@@ -4701,7 +4701,7 @@ Jump_0F0_6848::
     ld hl, Data_0F0_6A48
     ld de, wCB9F
     ld b, $10
-    call Func_0F0_68DF
+    call CopyBytesDEFromHL_BankF0
     ld a, [wD7EC]
     cp a, $03
     jr nz, Jump_0F0_6899
@@ -4721,7 +4721,7 @@ Jump_0F0_68A5::
     ld hl, Data_0F0_6A02
     ld de, hFFC6
     ld b, $06
-    call Func_0F0_68DF
+    call CopyBytesDEFromHL_BankF0
     ld a, [wD7EC]
     cp a, $03
     jr nz, Jump_0F0_68C3
@@ -4750,13 +4750,15 @@ Jump_0F0_68D3::
 Jump_0F0_68DE::
     ret
 
+; the same 7 bytes as CopyBytesDEFromHL (34:406E)
 ; 6 call sites from 1 routine (e.g. Func_0F0_67EE)
-Func_0F0_68DF::
+CopyBytesDEFromHL_BankF0::
+Func_0F0_68DF:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Func_0F0_68DF
+    jr nz, CopyBytesDEFromHL_BankF0
     ret
 
 Data_0F0_68E6:: ; heuristic: pointer load in the same bank (bank assumed); C0

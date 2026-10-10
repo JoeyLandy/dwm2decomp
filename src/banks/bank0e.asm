@@ -2571,7 +2571,7 @@ Func_00E_5FF9::
     add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
-    call Func_00E_6032
+    call GradeHFFC6_Bank0E
     ld a, $09
     call Multiply8
     ld b, l
@@ -2581,7 +2581,7 @@ Func_00E_5FF9::
     add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
-    call Func_00E_6032
+    call GradeHFFC6_Bank0E
     ld a, c
     add a, a
     add a, c
@@ -2592,14 +2592,16 @@ Func_00E_5FF9::
     add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
-    call Func_00E_6032
+    call GradeHFFC6_Bank0E
     ld a, c
     add a, b
     ret
 
+; the same 13 bytes as GradeHFFC6 (00:23BD)
 ; 3 call sites from 1 routine (e.g. Func_00E_5FF9)
 ; reads: hFFC6
-Func_00E_6032::
+GradeHFFC6_Bank0E::
+Func_00E_6032:: ; address name
     ldh a, [hFFC6]
     ld c, $00
     cp a, $C0

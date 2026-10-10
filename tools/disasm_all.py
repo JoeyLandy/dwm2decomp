@@ -980,6 +980,48 @@ class Rom:
                         f" (the same {size} bytes appear in {len(found)} banks)" if len(found) > 1 else "")
                 self.names[(bank, addr)] = info
             log(f"family {fam['name']}: {len(found)} copies of {size} bytes")
+        self.name_copies_of_named_routines(used)
+
+    def name_copies_of_named_routines(self, used: set[str]) -> None:
+        """Give byte-identical copies of every hand-named leaf routine the same name plus its bank.
+
+        A routine named in config/names.json that has no call into a switchable bank may be
+        repeated in other banks (the library of E-0027). Identical bytes behave identically, so the
+        copies take `Name_BankBB` (with the address added when a bank holds two). Routines under
+        4 bytes are skipped: a `ret` or `ld a, b` would match everywhere."""
+        by_size: dict[int, list] = {}
+        for (bank, addr), info in list(self.names.items()):
+            if info.get("data") or info["name"].endswith(tuple(f"_Bank{b:02X}" for b in range(256))) or                     info.get("evidence", "").startswith("structure"):
+                continue  # names made from table position or stub shape say nothing about a copy
+            if addr not in self.insn.get(bank, {}) or self.labels[bank].get(addr, "").startswith(("Jump_", "Jr_")):
+                continue
+            size = self.routine_extent(bank, addr)
+            if size and size >= 4:
+                by_size.setdefault(size, []).append((bank, addr, info))
+        entries = {}
+        for bank in range(self.nbanks):
+            for addr, label in self.labels[bank].items():
+                if label.startswith("Func_") and addr in self.insn[bank] and (bank, addr) not in self.names:
+                    entries.setdefault(bank, []).append(addr)
+        added = 0
+        for size, items in by_size.items():
+            for bank, addr, info in items:
+                want = self.data[bank * BANK + addr - self.base(bank):][:size]
+                for cb, addrs in entries.items():
+                    for ca in addrs:
+                        if (cb, ca) in self.names or (cb, ca) == (bank, addr):
+                            continue
+                        off = cb * BANK + ca - self.base(cb)
+                        if self.data[off:off + size] != want or self.routine_extent(cb, ca) != size:
+                            continue
+                        name = f"{info['name']}_Bank{cb:02X}"
+                        if name in used:
+                            name += f"_{ca:04X}"
+                        used.add(name)
+                        self.names[(cb, ca)] = {"name": name, "evidence": info.get("evidence", "reading"),
+                                                "note": f"the same {size} bytes as {info['name']} ({bank:02X}:{addr:04X})"}
+                        added += 1
+        log(f"copies of hand-named routines named: {added}")
 
     def name_dispatch_cases(self) -> None:
         """Name the jump targets of `rst $00` inline tables `Parent_CaseNN` (E-0040).

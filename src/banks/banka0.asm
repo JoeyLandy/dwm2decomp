@@ -549,7 +549,7 @@ Jump_0A0_42F8::
 Func_0A0_4301::
     inc hl
     ld b, $0E
-    call Func_0A0_4344
+    call CopyBytesDEFromHL_BankA0
     ld a, l
     add a, $25
     ld l, a
@@ -557,7 +557,7 @@ Func_0A0_4301::
     adc a, $00
     ld h, a
     ld b, $08
-    call Func_0A0_4344
+    call CopyBytesDEFromHL_BankA0
     xor a, a
     ld [de], a
     inc de
@@ -568,14 +568,14 @@ Func_0A0_4301::
     adc a, $00
     ld h, a
     ld b, $01
-    call Func_0A0_4344
+    call CopyBytesDEFromHL_BankA0
     inc hl
     ld b, $15
-    call Func_0A0_4344
+    call CopyBytesDEFromHL_BankA0
     inc hl
     inc hl
     ld b, $1F
-    call Func_0A0_4344
+    call CopyBytesDEFromHL_BankA0
     ld a, l
     add a, $16
     ld l, a
@@ -591,13 +591,15 @@ Func_0A0_4301::
     inc de
     ret
 
+; the same 7 bytes as CopyBytesDEFromHL (34:406E)
 ; 5 call sites from 1 routine (e.g. Func_0A0_4301)
-Func_0A0_4344::
+CopyBytesDEFromHL_BankA0::
+Func_0A0_4344:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Func_0A0_4344
+    jr nz, CopyBytesDEFromHL_BankA0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_4301)

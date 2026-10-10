@@ -34,7 +34,7 @@ Jump_0F1_4013:: ; address name
     call Func_0F1_41EE
     call Func_0F1_43B4
     call Func_0F1_42D9
-    call Func_0F1_4811
+    call CopyTileBufferToBGMap_BankF1
     ld hl, vTiles1 + $720
     ld a, l
     ld [wC52D], a
@@ -159,7 +159,7 @@ Jump_0F1_40FC:: ; address name
 Func_0F1_4001_Table3_Case00::
 Jump_0F1_4104:: ; address name
     call Func_0F1_422D
-    call Func_0F1_4811
+    call CopyTileBufferToBGMap_BankF1
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -289,7 +289,7 @@ Jump_0F1_41B9::
 Func_0F1_4001_Table4_Case01::
 Jump_0F1_41C6:: ; address name
     call Func_0F1_42B6
-    call Func_0F1_4811
+    call CopyTileBufferToBGMap_BankF1
     ld hl, wC0A1
     inc [hl]
     ret
@@ -1023,9 +1023,11 @@ Data_0F1_47C8:: ; heuristic: target of a monotone pointer table; C0
     db $38, $04, $2B, $35, $18, $F8, $CD, $07, $43, $AF, $EA, $A0, $C0, $EA, $A1, $C0
     db $C9
 
+; the same 57 bytes as CopyTileBufferToBGMap (03:42DA)
 ; 3 call sites from 3 routines (e.g. Func_0F1_4001_Table2_Case00, Func_0F1_4001_Table3_Case00, Func_0F1_4001_Table4_Case01)
 ; points at: wScreenTileBuffer
-Func_0F1_4811::
+CopyTileBufferToBGMap_BankF1::
+Func_0F1_4811:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $1412

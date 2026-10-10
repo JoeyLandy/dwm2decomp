@@ -102,7 +102,7 @@ Func_031_40A5:: ; address name
     ret
 
 Jump_031_40C9::
-    call Func_031_4A23
+    call IncrementPlayTime_Bank31
 
 ; 1 call site from 1 routine (e.g. Func_01B_43FA_Case01)
 ; reads: wCFC8
@@ -1727,10 +1727,12 @@ Jump_031_4A00::
 Jump_031_4A22::
     ret
 
+; the same 66 bytes as IncrementPlayTime (02:5F59)
 ; 1 call site from 1 routine (e.g. GameMode4_Update)
 ; reads: wPlayHoursLo, wPlayHoursHi, wPlayMinutes
 ; points at: wPlayFrames
-Func_031_4A23::
+IncrementPlayTime_Bank31::
+Func_031_4A23:: ; address name
     ld a, [wPlayHoursLo]
     ld l, a
     ld a, [wPlayHoursHi]

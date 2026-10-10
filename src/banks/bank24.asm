@@ -3519,11 +3519,11 @@ Jump_024_569B::
 Jump_024_569E::
     ld de, wSpriteSlots
     ld b, $10
-    call Func_024_578B
+    call CopyBytesDEFromHL_Bank24
     ld hl, Data_024_5C09
     ld de, wCB8F
     ld b, $10
-    call Func_024_578B
+    call CopyBytesDEFromHL_Bank24
     ld de, $0000
     call TestFlagBit
     jr c, Jump_024_56BE
@@ -3536,12 +3536,12 @@ Jump_024_56BE::
 Jump_024_56C1::
     ld de, hFFC6
     ld b, $06
-    call Func_024_578B
+    call CopyBytesDEFromHL_Bank24
     farcall Func_004_431F
     ld hl, Data_024_5BDD
     ld de, hFFC6
     ld b, $06
-    call Func_024_578B
+    call CopyBytesDEFromHL_Bank24
     farcall Func_004_431F
     ld a, [wCA99]
     and a, a
@@ -3549,7 +3549,7 @@ Jump_024_56C1::
     ld hl, Data_024_5BE3
     ld de, hFFC6
     ld b, $06
-    call Func_024_578B
+    call CopyBytesDEFromHL_Bank24
     ld a, [wD092]
     cp a, $08
     jr z, Jump_024_5709
@@ -3585,7 +3585,7 @@ Jump_024_572A::
 Jump_024_572D::
     ld de, wCB9F
     ld b, $10
-    call Func_024_578B
+    call CopyBytesDEFromHL_Bank24
     ld a, [wD092]
     cp a, $08
     jr z, Jump_024_574F
@@ -3632,13 +3632,15 @@ Jump_024_577F::
 Jump_024_578A::
     ret
 
+; the same 7 bytes as CopyBytesDEFromHL (34:406E)
 ; 6 call sites from 1 routine (e.g. Func_024_568E)
-Func_024_578B::
+CopyBytesDEFromHL_Bank24::
+Func_024_578B:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Func_024_578B
+    jr nz, CopyBytesDEFromHL_Bank24
     ret
 
 Data_024_5792:: ; heuristic: pointer load in the same bank (bank assumed); C0

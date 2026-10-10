@@ -4055,7 +4055,7 @@ Jump_014_5DE0:: ; address name
 Jump_014_5E10::
     ld de, wSpriteSlots
     ld b, $10
-    call Func_014_5E8C
+    call CopyBytesDEFromHL_Bank14
     ld hl, Data_014_5E93
     ld a, [wD7F2]
     or a, a
@@ -4065,7 +4065,7 @@ Jump_014_5E10::
 Jump_014_5E24::
     ld de, hFFC6
     ld b, $06
-    call Func_014_5E8C
+    call CopyBytesDEFromHL_Bank14
     farcall Func_004_431F
     ld a, $01
     ld [wSpriteSlotCount], a
@@ -4122,13 +4122,15 @@ Jump_014_5E62::
     ld [wD7F5], a
     ret
 
+; the same 7 bytes as CopyBytesDEFromHL (34:406E)
 ; 2 call sites from 1 routine (e.g. Func_014_5CA8_Table2_Case03)
-Func_014_5E8C::
+CopyBytesDEFromHL_Bank14::
+Func_014_5E8C:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Func_014_5E8C
+    jr nz, CopyBytesDEFromHL_Bank14
     ret
 
 Data_014_5E93:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4246,22 +4248,22 @@ Jump_014_5F57:: ; address name
     call Func_014_6804
     ld a, [wCFA9]
     rst $00
-    dw Func_014_5E8C_Case00
-    dw Func_014_5E8C_Case01
-    dw Func_014_5E8C_Case02
-    dw Func_014_5E8C_Case03
-    dw Func_014_5E8C_Case04
-    dw Func_014_5E8C_Case00
-    dw Func_014_5E8C_Case01
-    dw Func_014_5E8C_Case02
-    dw Func_014_5E8C_Case03
-    dw Func_014_5E8C_Case09
+    dw CopyBytesDEFromHL_Bank14_Case00
+    dw CopyBytesDEFromHL_Bank14_Case01
+    dw CopyBytesDEFromHL_Bank14_Case02
+    dw CopyBytesDEFromHL_Bank14_Case03
+    dw CopyBytesDEFromHL_Bank14_Case04
+    dw CopyBytesDEFromHL_Bank14_Case00
+    dw CopyBytesDEFromHL_Bank14_Case01
+    dw CopyBytesDEFromHL_Bank14_Case02
+    dw CopyBytesDEFromHL_Bank14_Case03
+    dw CopyBytesDEFromHL_Bank14_Case09
 
-; entry 0 of the `rst $00` table in Func_014_5E8C
+; entry 0 of the `rst $00` table in CopyBytesDEFromHL_Bank14
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wCFA9, wCFBF, wCFC0
 ; writes: wCFBF, wCFC0, wD7F5, wCFA9
-Func_014_5E8C_Case00::
+CopyBytesDEFromHL_Bank14_Case00::
 Jump_014_5F72:: ; address name
     call Func_014_6992
     ld b, $55
@@ -4573,7 +4575,7 @@ Jump_014_6164::
     ld [wD7F5], a
     ret
 
-; 6 call sites from 1 routine (e.g. Func_014_5E8C_Case00)
+; 6 call sites from 1 routine (e.g. CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC1, wCFC0, wCFBF
 ; writes: wCFC1
 Func_014_6172::
@@ -4591,13 +4593,13 @@ Jump_014_6185::
     ld b, $55
     jr Jump_014_618F
 
-; 7 call sites from 2 routines (e.g. Func_014_631C, Func_014_5E8C_Case00)
+; 7 call sites from 2 routines (e.g. Func_014_631C, CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC0, wCFBF
 Func_014_6189::
     ld b, $C3
     jr Jump_014_618F
 
-; 1 call site from 1 routine (e.g. Func_014_5E8C_Case00)
+; 1 call site from 1 routine (e.g. CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC0, wCFBF
 Func_014_618D::
     ld b, $55
@@ -4663,12 +4665,12 @@ Jump_014_61D2::
 Data_014_61E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0521E2, $AA
 
-; entry 1 of the `rst $00` table in Func_014_5E8C
+; entry 1 of the `rst $00` table in CopyBytesDEFromHL_Bank14
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCFC2, wCFA9, wCFC3
 ; writes: wCFA9, wD7F5, wCFC3, wCFC2
 ; points at: wCFAD
-Func_014_5E8C_Case01::
+CopyBytesDEFromHL_Bank14_Case01::
 Jump_014_628C:: ; address name
     ld b, $55
     call Func_014_6A0D
@@ -4752,12 +4754,12 @@ Jump_014_62F6::
     ld [wD7F5], a
     ret
 
-; entry 2 of the `rst $00` table in Func_014_5E8C
+; entry 2 of the `rst $00` table in CopyBytesDEFromHL_Bank14
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCFC0, wCFBF, wCFC2, wCFA9, wCFC3, wCFA8
 ; writes: wCFC3, wCFC2, wCFA9, wD7F5, wCFBF, wCFC0, wCFA8
 ; points at: wCFAD
-Func_014_5E8C_Case02::
+CopyBytesDEFromHL_Bank14_Case02::
 Jump_014_6302:: ; address name
     ld a, [wCFC0]
     ld hl, Data_014_6F4E
@@ -5015,11 +5017,11 @@ Jump_014_646A::
     ld [wD7F5], a
     ret
 
-; entry 3 of the `rst $00` table in Func_014_5E8C
+; entry 3 of the `rst $00` table in CopyBytesDEFromHL_Bank14
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCFA8
 ; writes: wCFA8, wD7F5
-Func_014_5E8C_Case03::
+CopyBytesDEFromHL_Bank14_Case03::
 Jump_014_6476:: ; address name
     call Func_014_6C70
     call Func_014_6992
@@ -5030,11 +5032,11 @@ Jump_014_6476:: ; address name
     ld [wD7F5], a
     ret
 
-; entry 4 of the `rst $00` table in Func_014_5E8C
+; entry 4 of the `rst $00` table in CopyBytesDEFromHL_Bank14
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCFA9
 ; writes: wCFA9, wD7F5
-Func_014_5E8C_Case04::
+CopyBytesDEFromHL_Bank14_Case04::
 Jump_014_6488:: ; address name
     ld hl, Data_014_6DF6
     ld de, Data_014_6E98
@@ -5055,10 +5057,10 @@ Jump_014_64A9::
     ld [wD7F5], a
     ret
 
-; entry 9 of the `rst $00` table in Func_014_5E8C
+; entry 9 of the `rst $00` table in CopyBytesDEFromHL_Bank14
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCFA9, wD7F5
-Func_014_5E8C_Case09::
+CopyBytesDEFromHL_Bank14_Case09::
 Jump_014_64AE:: ; address name
     ld hl, Data_014_6DF6
     ld de, Data_014_6DF8
@@ -5883,7 +5885,7 @@ Jump_014_6984::
     jr nz, Jump_014_6983
     ret
 
-; 2 call sites from 2 routines (e.g. Func_014_5E8C_Case03, Func_014_5E8C_Case00)
+; 2 call sites from 2 routines (e.g. CopyBytesDEFromHL_Bank14_Case03, CopyBytesDEFromHL_Bank14_Case00)
 ; writes: wCFBC
 ; points at: wCFAD
 Func_014_6992::
@@ -5933,7 +5935,7 @@ Jump_014_69CA::
     db $C5, $D1, $CD, $40, $2E, $7B, $EA, $33, $C5, $EA, $37, $C5, $7A, $EA, $34, $C5
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
-; 6 call sites from 4 routines (e.g. Func_014_631C, Func_014_6CEA, Func_014_5E8C_Case01, Func_014_5E8C_Case00)
+; 6 call sites from 4 routines (e.g. Func_014_631C, Func_014_6CEA, CopyBytesDEFromHL_Bank14_Case01, CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC2, rSTAT
 Func_014_6A0D::
     push bc
@@ -5953,7 +5955,7 @@ Jump_014_6A1F::
     ei
     ret
 
-; 2 call sites from 2 routines (e.g. Func_014_5CA8_Table2_Case04, Func_014_5E8C_Case01)
+; 2 call sites from 2 routines (e.g. Func_014_5CA8_Table2_Case04, CopyBytesDEFromHL_Bank14_Case01)
 ; points at: wCFAD
 Func_014_6A28::
     ld hl, wCFAD
@@ -6332,7 +6334,7 @@ Jump_014_6BF3::
     ld h, a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_014_5CA8_Table2_Case01, Func_014_5E8C_Case09, Func_014_5E8C_Case04)
+; 3 call sites from 3 routines (e.g. Func_014_5CA8_Table2_Case01, CopyBytesDEFromHL_Bank14_Case09, CopyBytesDEFromHL_Bank14_Case04)
 ; reads: wCFAB
 ; writes: wCFAB, wCFAC
 Func_014_6BF8::
@@ -6386,7 +6388,7 @@ Jump_014_6C33::
     ld a, $FF
     ret
 
-; 4 call sites from 3 routines (e.g. Func_014_631C, Func_014_5E8C_Case01, Func_014_60E6)
+; 4 call sites from 3 routines (e.g. Func_014_631C, CopyBytesDEFromHL_Bank14_Case01, Func_014_60E6)
 ; reads: wCFC2
 Func_014_6C3F::
     ld hl, Data_014_6C56
@@ -6407,7 +6409,7 @@ Data_014_6C56:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_6C60:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
-; 1 call site from 1 routine (e.g. Func_014_5E8C_Case03)
+; 1 call site from 1 routine (e.g. CopyBytesDEFromHL_Bank14_Case03)
 ; reads: wD7F1, wC5E7, wD7F3, wD7F2
 ; writes: wCFC2, wCFC3
 ; points at: wCFAD
