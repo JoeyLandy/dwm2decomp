@@ -3821,7 +3821,7 @@ Jump_00C_698B::
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_00C_69BF
@@ -4434,7 +4434,7 @@ Jump_00C_6D76::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_00C_6DAF
@@ -4992,7 +4992,7 @@ Jump_00C_7116::
     ld c, $5D
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     ld hl, $0000
@@ -5001,7 +5001,7 @@ Jump_00C_7116::
     ld c, $61
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5009,7 +5009,7 @@ Jump_00C_7116::
     ld c, $63
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5017,7 +5017,7 @@ Jump_00C_7116::
     ld c, $65
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5025,7 +5025,7 @@ Jump_00C_7116::
     ld c, $67
     call LoadSRAMRecordWord
     ld hl, $0000
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     ld c, l
     ld b, h
     pop hl
@@ -5037,7 +5037,7 @@ Jump_00C_7116::
     ld c, $69
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     srl h
     rr l
     ld c, l
@@ -5083,7 +5083,7 @@ Jump_00C_719D::
     ld c, $5D
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     ld hl, $0000
@@ -5092,7 +5092,7 @@ Jump_00C_719D::
     ld c, $61
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5100,7 +5100,7 @@ Jump_00C_719D::
     ld c, $63
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5108,7 +5108,7 @@ Jump_00C_719D::
     ld c, $65
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5116,7 +5116,7 @@ Jump_00C_719D::
     ld c, $67
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5124,7 +5124,7 @@ Jump_00C_719D::
     ld c, $69
     call LoadSRAMRecordWord
     pop hl
-    call Func_00C_7246
+    call AddHFFC6WordToHL
     pop de
     push de
     push hl
@@ -5188,9 +5188,11 @@ Jump_00C_7231::
     ld [rRAMG2], a
     ret
 
+; HL += the word in hFFC6/hFFC7; clobbers A (E-0073)
 ; 12 call sites from 1 routine (e.g. Func_00C_70FE)
 ; reads: hFFC6, hFFC7
-Func_00C_7246::
+AddHFFC6WordToHL::
+Func_00C_7246:: ; address name
     ldh a, [hFFC6]
     add a, l
     ld l, a

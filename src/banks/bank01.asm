@@ -283,15 +283,15 @@ Jump_001_4472:: ; address name
     ld hl, vBGMap0 + $60
     ld bc, $1001
     ld a, $80
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld hl, vBGMap0 + $A0
     ld bc, $1004
     ld a, $90
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld hl, vBGMap0 + $120
     ld bc, $1002
     ld a, $B0
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld a, $FC
     ld [vBGMap0 + $181], a
     ld [vBGMap0 + $1E1], a
@@ -365,19 +365,19 @@ Jump_001_4472:: ; address name
     ld hl, vBGMap0 + $8A
     ld bc, $0901
     ld a, $20
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld hl, vBGMap0 + $EA
     ld bc, $0901
     ld a, $30
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld hl, vBGMap0 + $12A
     ld bc, $0901
     ld a, $40
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld hl, vBGMap0 + $AA
     ld bc, $0901
     ld a, $50
-    call Func_001_4A75
+    call FillRectWithTileSequence
     xor a, a
     ld [wD7F1], a
     add a, $10
@@ -425,7 +425,7 @@ Jump_001_45EA:: ; address name
     ld hl, vBGMap0 + $A3
     ld bc, $1002
     ld a, $80
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ret
 
 ; init for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
@@ -467,7 +467,7 @@ Jump_001_461E:: ; address name
     ld hl, vBGMap0 + $A3
     ld bc, $1007
     ld a, $80
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld a, $01
     ld de, Data_001_46A4
     ld hl, vBGMap0 + $EA
@@ -531,7 +531,7 @@ Jump_001_46B4:: ; address name
     ld hl, vBGMap0 + $A3
     ld bc, $1007
     ld a, $80
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld a, $01
     ld de, Data_001_4733
     ld hl, vBGMap0 + $EA
@@ -593,7 +593,7 @@ Jump_001_4743:: ; address name
     ld hl, vBGMap0 + $A3
     ld bc, $1002
     ld a, $80
-    call Func_001_4A75
+    call FillRectWithTileSequence
     ld a, $01
     ld de, Data_001_47DE
     ld hl, vBGMap0 + $124
@@ -765,9 +765,11 @@ Data_001_495D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $19, $00
     INCBIN "dwm2-cobi-us.gbc", $004985, $F0
 
+; A = first tile, B = width, C = rows, HL = BG map address (rows 32 apart): writes consecutive tile numbers A, A + 1, ... row by row; on CGB then zero-fills the $240 bytes at vBGMap0 in VRAM bank 1 (all attributes 0, regardless of the rectangle) (E-0073)
 ; 11 call sites from 5 routines (e.g. DebugResultsDisplay_Init, DebugMonsterPictureViewer_Init, DebugAutomap_Init, DebugMapEditor_Init, ...)
 ; reads: wIsCGB
-Func_001_4A75::
+FillRectWithTileSequence::
+Func_001_4A75:: ; address name
     push hl
     ld d, b
 
@@ -783,7 +785,7 @@ Jump_001_4A77::
     add_a_to_hl
     ld a, e
     dec c
-    jr nz, Func_001_4A75
+    jr nz, FillRectWithTileSequence
     ld a, [wIsCGB]
     or a, a
     ret z

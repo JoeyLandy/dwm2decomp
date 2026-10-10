@@ -1175,7 +1175,7 @@ Jump_01E_4782::
 ; points at: sA000
 Func_01E_4201_Case10::
 Jump_01E_47B2:: ; address name
-    farcall Func_01D_6D70
+    farcall LoadWD7FFFromWC7C7Table
     ld d, c
     ld a, $0A
     ld [rRAMG2], a

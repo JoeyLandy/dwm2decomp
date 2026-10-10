@@ -2298,7 +2298,7 @@ Jump_031_4D1D::
 RunBattleSetup_Table2_Case06::
 Jump_031_4D3D:: ; address name
     call Func_031_746F
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2315,7 +2315,7 @@ Jump_031_4D4E:: ; address name
     ret nz
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     call Func_031_7486
     ld a, $02
     ld [wBattleResolveStep], a
@@ -2328,7 +2328,7 @@ Jump_031_4D4E:: ; address name
 RunBattleSetup_Table2_Case08::
 Jump_031_4D65:: ; address name
     call Func_031_746F
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld hl, wC130
     ld de, wC60C
     ld b, $0A
@@ -2611,7 +2611,7 @@ Jump_031_4F00::
 RunBattleSetup_Table2_Case0B::
 Jump_031_4F0F:: ; address name
     call Func_031_746F
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
     ld a, $27
@@ -2721,7 +2721,7 @@ Jump_031_4FA8:: ; address name
 RunBattleSetup_Table2_Case0F::
 Jump_031_4FCE:: ; address name
     call Func_031_746F
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
     ld a, $20
@@ -3173,7 +3173,7 @@ Jump_031_52C4:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case09::
 Jump_031_52CF:: ; address name
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
     ld a, $29
@@ -3203,7 +3203,7 @@ Jump_031_52E7:: ; address name
 ; writes: wBattleResolveStep
 Func_031_4EB9_Case0B::
 Jump_031_52F7:: ; address name
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld a, $04
     ld [wBattleResolveStep], a
     ret
@@ -3653,7 +3653,7 @@ Jump_031_55CF:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case15::
 Jump_031_55E0:: ; address name
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -3681,7 +3681,7 @@ Jump_031_55F2:: ; address name
 ; writes: wBattleResolveStep
 Func_031_4EB9_Case17::
 Jump_031_5602:: ; address name
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld a, $10
     ld [wBattleResolveStep], a
     ret
@@ -4013,7 +4013,7 @@ Jump_031_580D::
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case21::
 Jump_031_580E:: ; address name
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -4026,7 +4026,7 @@ Jump_031_580E:: ; address name
 ; writes: wBattleResolveStep
 Func_031_4EB9_Case23::
 Jump_031_5820:: ; address name
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld a, $18
     ld [wBattleResolveStep], a
     ret
@@ -4708,7 +4708,7 @@ Jump_031_5C58:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Table2_Case11::
 Jump_031_5C63:: ; address name
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4737,7 +4737,7 @@ Jump_031_5C80:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_031_7479
+    call DrawWC338RowsToBGMapRow13
     xor a, a
     ld [wBattleResolveStep], a
     ret
@@ -8949,9 +8949,11 @@ Func_031_746F::
     farcall Func_01A_7276
     ret
 
+; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)
 ; 13 call sites from 13 routines (e.g. RunBattleSetup_Table2_Case0F, RunBattleSetup_Table2_Case0B, RunBattleSetup_Table2_Case08, RunBattleSetup_Table2_Case07, ...)
 ; points at: wC338
-Func_031_7479::
+DrawWC338RowsToBGMapRow13::
+Func_031_7479:: ; address name
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $1405
@@ -9085,7 +9087,7 @@ Func_031_7536::
     ld bc, $140B
 
 ; B = width, C = rows, DE = source with 32-byte rows, HL = VRAM address with 32-byte rows: copies a B x C rectangle with WriteVRAMByteInc. DE ends 32 * C past its start and HL at the start of the row below; B kept, C = 0 (E-0060)
-; 18 call sites from 15 routines (e.g. Func_031_47A9, Func_031_7479, Func_031_74A0, RunBattleSetup_Table2_Case0C, ...)
+; 18 call sites from 15 routines (e.g. Func_031_47A9, DrawWC338RowsToBGMapRow13, Func_031_74A0, RunBattleSetup_Table2_Case0C, ...)
 CopyRect32StrideToVRAM::
 Func_031_753F:: ; address name
     push bc

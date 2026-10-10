@@ -454,7 +454,7 @@ Jump_014_429B::
     and a, a
     jr z, Jump_014_42F1
     farcall Func_01D_6DF8
-    farcall Func_01D_6D70
+    farcall LoadWD7FFFromWC7C7Table
     ld a, [wD7F5]
     cp a, c
     jr c, Jump_014_42DA
@@ -503,7 +503,7 @@ Jump_014_4309::
     and a, a
     jp z, Jump_014_43B1
     farcall Func_01D_5F2D
-    farcall Func_01D_6D70
+    farcall LoadWD7FFFromWC7C7Table
     ld a, [wD7A9]
     cp a, c
     jr nc, Jump_014_4339

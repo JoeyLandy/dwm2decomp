@@ -607,7 +607,7 @@ Jump_00D_4869:: ; address name
     xor a, a
     ld [wD7F2], a
     ld [wD7F3], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     and a, a
     jr nz, Jump_00D_48AF
@@ -626,7 +626,7 @@ Jump_00D_4894::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     and a, a
     jr z, Jump_00D_48C5
@@ -3159,7 +3159,7 @@ Jump_00D_599F::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_00D_59D2

@@ -4370,7 +4370,7 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld a, [wCFED]
     ld b, a
     ld hl, wBattleMonsterId
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wCFF5]
     ld c, a
     ld hl, wD8B7
@@ -4380,52 +4380,52 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld a, [wCFF7]
     ld b, a
     ld hl, wBattleHP
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wCFF6]
     ld c, a
     ld a, [wCFF7]
     ld b, a
     ld hl, wBattleMaxHP
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wCFF8]
     ld c, a
     ld a, [wCFF9]
     ld b, a
     ld hl, wBattleMP
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wCFF8]
     ld c, a
     ld a, [wCFF9]
     ld b, a
     ld hl, wBattleMaxMP
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wCFFA]
     ld c, a
     ld a, [wCFFB]
     ld b, a
     ld hl, wBattleATK
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wCFFC]
     ld c, a
     ld a, [wCFFD]
     ld b, a
     ld hl, wBattleDEF
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wCFFE]
     ld c, a
     ld a, [wCFFF]
     ld b, a
     ld hl, wBattleAGL
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wD000]
     ld c, a
     ld a, [wD001]
     ld b, a
     ld hl, wBattleINT
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld bc, $03E7
     ld hl, wD93F
-    call Func_036_5D84
+    call StoreBCAtWordEntryWD871
     ld a, [wD002]
     ld c, a
     ld hl, wSlotPersonalityHi
@@ -4551,9 +4551,11 @@ Func_036_5D7A::
     ld [hl], c
     ret
 
+; HL = table: stores BC (low byte first) at HL + 2 * wD871 (E-0073)
 ; 10 call sites from 1 routine (e.g. Func_036_5BC4)
 ; reads: wD871
-Func_036_5D84::
+StoreBCAtWordEntryWD871::
+Func_036_5D84:: ; address name
     ld a, [wD871]
     add a, a
     add_a_to_hl
@@ -6701,7 +6703,7 @@ Jump_036_6AB7::
 Jump_036_6AC2::
     ld l, $93
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
@@ -6717,7 +6719,7 @@ Func_036_6ACA:: ; heuristic: target of a pointer table; C0
     set 7, [hl]
     ld l, $9E
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wBattleActor, hFFC6, wC982, wC983, wDAD1, wDABD
@@ -7066,7 +7068,7 @@ Jump_036_6CE2::
     call Func_036_7D79
     ld l, $50
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6CED::
     ld h, $67
@@ -7146,7 +7148,7 @@ Func_036_6D4E:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld l, $4E
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6D61::
     jp Jump_036_7CB0
@@ -7168,7 +7170,7 @@ Func_036_6D64:: ; heuristic: target of a pointer table; C0
     ld [hl], $03
     ld l, $83
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6D84::
     jp Jump_036_7CB0
@@ -7192,7 +7194,7 @@ Jump_036_6D97::
 
 Jump_036_6D99::
     ld bc, $4090
-    call Func_036_7C9C
+    call ClearDamageAndStoreWDAC0_Bank36
     pop hl
     ld a, [hl]
     and a, $33
@@ -7217,7 +7219,7 @@ Func_036_6DB5:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld l, $51
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6DC8::
     jp Jump_036_7CB0
@@ -7327,7 +7329,7 @@ Func_036_6E5B:: ; heuristic: follows a terminator; C0
     set 2, [hl]
     ld l, $43
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6E72::
     jp Jump_036_7CD3
@@ -7352,7 +7354,7 @@ Func_036_6E75:: ; address name
     set 1, [hl]
     ld l, $4A
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6E9A::
     ld a, [wDAC0]
@@ -7383,7 +7385,7 @@ Func_036_6EA8:: ; heuristic: follows a terminator; C0
     ld [hl], a
     ld l, $73
     ld bc, $4098
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6EC9::
     ld a, [wBattleActionId]
@@ -7414,7 +7416,7 @@ Func_036_6EE2:: ; heuristic: follows a terminator; C0
     set 0, [hl]
     ld l, $3F
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6EF9::
     jp Jump_036_7CD3
@@ -7523,7 +7525,7 @@ Func_036_6F96:: ; heuristic: follows a terminator; C0
     set 0, [hl]
     ld l, $3B
     ld bc, $4098
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6FBB::
     jp Jump_036_7CD3
@@ -7549,7 +7551,7 @@ Func_036_6FC1:: ; heuristic: follows a terminator; C0
     set 4, [hl]
     ld l, $42
     ld bc, $4098
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_6FE6::
     ld h, $CF
@@ -7602,7 +7604,7 @@ Jump_036_7025::
     farcall Func_03A_7B66
     ld l, d
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleActionId
@@ -7623,7 +7625,7 @@ Func_036_703D:: ; heuristic: follows a terminator; C0
     ld [hl], a
     ld l, $4B
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_705F::
     bit 1, [hl]
@@ -7634,7 +7636,7 @@ Jump_036_705F::
     ld [hl], a
     ld l, $4C
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7071::
     ld h, $CC
@@ -7677,7 +7679,7 @@ Jump_036_709B::
     jr z, Jump_036_70AB
     ld l, $4D
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_70AB::
     jp Jump_036_7CD3
@@ -7713,7 +7715,7 @@ Jump_036_70C5::
 Func_036_70CC:: ; heuristic: follows a terminator; C0
     ld l, $52
     ld bc, $4090
-    call Func_036_7C9C
+    call ClearDamageAndStoreWDAC0_Bank36
     call Func_036_5703
     ld a, [wBattleActor]
     ld hl, wDAD8
@@ -7772,12 +7774,12 @@ Func_036_710F:: ; heuristic: follows a terminator; C0
     jr z, Jump_036_7147
     ld l, $44
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7147::
     ld l, $F7
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
@@ -8099,7 +8101,7 @@ Jump_036_73DF::
     set 6, [hl]
     ld l, $76
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_73E9::
     jp Jump_036_7CD3
@@ -8149,7 +8151,7 @@ Jump_036_7425::
 
 Jump_036_742B::
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7431::
     jp Jump_036_7CD3
@@ -8176,7 +8178,7 @@ Jump_036_7450::
     set 5, [hl]
     ld l, $D9
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_745A::
     jp Jump_036_7CD3
@@ -8222,7 +8224,7 @@ Func_036_747E:: ; heuristic: target of a pointer table; C0
     call Func_036_7D65
     ld l, $58
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_749A::
     jp Jump_036_7CB7
@@ -8323,7 +8325,7 @@ Jump_036_74F8::
     sub a, $2A
     ld l, a
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7531::
     ld h, $B5
@@ -8351,7 +8353,7 @@ Func_036_753C:: ; heuristic: target of a pointer table; C0
     set 7, [hl]
     ld l, $D5
     ld bc, $0098
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7561::
     ld h, $B5
@@ -8369,7 +8371,7 @@ Func_036_7571:: ; heuristic: target of a pointer table; C0
     farcall Func_032_6581
     ld l, $60
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep, wDAC3, wDAC0, wDAC1
@@ -8396,7 +8398,7 @@ Func_036_7599:: ; heuristic: target of a pointer table; C0
     ld [wBattleSubStep], a
     ld l, $5E
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7, wBattleActionId, wD871
@@ -8452,7 +8454,7 @@ Jump_036_75DD::
     ld [wBattleTarget], a
     ld l, $61
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7617::
     ld h, $72
@@ -8527,7 +8529,7 @@ Jump_036_7680::
     sub a, $31
     ld l, a
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_768C::
     ld h, $71
@@ -8552,7 +8554,7 @@ Func_036_7697:: ; heuristic: target of a pointer table; C0
     call Func_036_7D65
     ld l, $5D
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_76B4::
     ld a, [wBattleTarget]
@@ -8582,7 +8584,7 @@ Func_036_76CD:: ; heuristic: target of a pointer table; C0
     call Func_036_7D65
     ld l, $59
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_76E9::
     ld h, $B5
@@ -8607,7 +8609,7 @@ Func_036_76F4:: ; heuristic: target of a pointer table; C0
     call Func_036_7D65
     ld l, $5C
     ld bc, $0090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7710::
     ld h, $6B
@@ -8717,7 +8719,7 @@ Func_036_77B5:: ; heuristic: target of a pointer table; C0
     set 6, [hl]
     ld l, $DE
     ld bc, $4098
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_77DB::
     jp Jump_036_7CB7
@@ -8740,7 +8742,7 @@ Func_036_77DE:: ; heuristic: target of a pointer table; C0
     set 7, [hl]
     ld l, $64
     ld bc, $4098
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7803::
     jp Jump_036_7CB7
@@ -9147,7 +9149,7 @@ Func_036_7AAC:: ; heuristic: target of a pointer table; C0
 
 Jump_036_7AC7::
     ld bc, $4090
-    jp Func_036_7C9C
+    jp ClearDamageAndStoreWDAC0_Bank36
 
 Jump_036_7ACD::
     ld h, $D4
@@ -9464,9 +9466,11 @@ Jump_036_7C8B::
     ld [wDAC1], a
     ret
 
+; clears wBattleDamageLo/wD873 (the damage word), then wDAC2 = L, wDAC0 = C, wDAC1 = B (E-0073)
 ; 2 call sites from 2 routines (e.g. Func_036_70CC, Func_036_6D87)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
-Func_036_7C9C::
+ClearDamageAndStoreWDAC0_Bank36::
+Func_036_7C9C:: ; address name
     xor a, a
     ld [wBattleDamageLo], a
     ld [wD873], a

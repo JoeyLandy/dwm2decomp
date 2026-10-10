@@ -379,7 +379,7 @@ Jump_024_4271:: ; address name
 
 Jump_024_4284::
     farcall Func_01D_5E3F
-    farcall Func_01D_6D70
+    farcall LoadWD7FFFromWC7C7Table
     ld a, [wD7FF]
     ld b, a
     ld a, [wD7AA]
@@ -407,7 +407,7 @@ Jump_024_42A4::
 ; points at: sA000, wCA2B
 GameMode6_Update_Table3_Case01::
 Jump_024_42B3:: ; address name
-    farcall Func_01D_6D70
+    farcall LoadWD7FFFromWC7C7Table
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -4714,7 +4714,7 @@ Jump_024_64C8::
     ld [wD7F2], a
     ld a, [wD789]
     ld [wD7F1], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jr z, Jump_024_650A

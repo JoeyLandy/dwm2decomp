@@ -754,7 +754,7 @@ Jump_000_057C::
     ld a, $00
     ld [wC582], a
     ld a, [wC594]
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 Jump_000_059D::
     ld hl, wC592
@@ -776,13 +776,13 @@ Jump_000_059D::
     ld a, $00
     ld [wC582], a
     ld a, [hl]
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 Jump_000_05C7::
     ld a, $00
     ld [wC582], a
     ld a, $F0
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 ; returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step
 ; 44 call sites from 15 routines (e.g. Func_000_0150, DetectSGB, StepFade_Sub01, StartPaletteFade, ...)
@@ -1349,8 +1349,10 @@ Func_000_08A6::
     ldh [rSTAT], a
     ret
 
+; with interrupts off, LoadSerialByte, then sets rSC bits 0 (internal clock) and 7 (start transfer) (E-0073)
 ; 3 call sites from 3 routines (e.g. Func_000_15C2, Func_000_1583, Func_007_600E_Case00)
-Func_000_08AD::
+StartSerialTransferInternalClock::
+Func_000_08AD:: ; address name
     di
     call LoadSerialByte
     ld hl, rSC
@@ -1372,7 +1374,7 @@ Func_000_08BA:: ; address name
     ret
 
 ; rSC = 0, rSB = A
-; 2 call sites from 2 routines (e.g. SerialSendByte, Func_000_08AD)
+; 2 call sites from 2 routines (e.g. SerialSendByte, StartSerialTransferInternalClock)
 ; writes: rSC, rSB
 LoadSerialByte::
 Func_000_08C7:: ; address name
@@ -2556,7 +2558,7 @@ Jump_000_0F47::
     ret
 
 ; does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)
-; 2 call sites from 2 routines (e.g. VBlankHandler, Func_01B_47CA)
+; 2 call sites from 2 routines (e.g. VBlankHandler, RunFrameTickFadeAndCounter_Bank1B)
 ; reads: wFadeState, wIsCGB, wSGBActive, wC574, wC572, wC573, wC56D
 ; writes: wC574, wC572, wFadeState
 StepFade::
@@ -3601,7 +3603,7 @@ Func_000_1583::
     jr nz, Jump_000_1594
     ld a, [wIsCGB]
     or a, $70
-    call Func_000_08AD
+    call StartSerialTransferInternalClock
     jr Jump_000_159C
 
 Jump_000_1594::
@@ -3640,7 +3642,7 @@ Func_000_15C2::
     ld a, [wC57F]
     bit 1, a
     ld a, $F5
-    call z, Func_000_08AD
+    call z, StartSerialTransferInternalClock
 
 Jump_000_15D6::
     ld a, [wC580]
@@ -6835,7 +6837,7 @@ Jump_000_2616::
     jr nz, Jump_000_2616
     ret
 
-; 3 call sites from 3 routines (e.g. VBlankHandler, RunStringDisplayToEnd, Func_01B_47CA)
+; 3 call sites from 3 routines (e.g. VBlankHandler, RunStringDisplayToEnd, RunFrameTickFadeAndCounter_Bank1B)
 ; reads: wC52C, wStringBank, wC52B, wFrameCounterLo, wC550, wJoypadPressedRepeat, wC567, wC552, ...
 ; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
 ; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...

@@ -696,14 +696,14 @@ Jump_007_49B3::
     ldh [rVBK], a
     ld d, $00
     call Func_007_4AE4
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     xor a, a
     ldh [rVBK], a
 
 Jump_007_4A68::
     ld d, $C3
     call Func_007_4AE4
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     farcall Func_002_706E
     ldh a, [hFFC6]
     ld [wD06A], a
@@ -714,7 +714,7 @@ Jump_007_4A68::
     add_a_to_hl
     deref_hl
     call CopyRecordRectToScreenBuffer_Bank07
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     ld a, [wD06A]
     cp a, $01
     jr z, Jump_007_4A9B
@@ -816,15 +816,19 @@ Jump_007_4B0E::
     jr nz, Jump_007_4B0C
     ret
 
+; copies the 20 x 18 entries of wScreenTileBuffer to vBGMap0 (rows 32 apart) with CopyRect32StrideToVRAM_Bank07 (E-0073)
 ; 12 call sites from 10 routines (e.g. GameMode5_Init_Case04, GameMode5_Init_Case01, Func_007_6C12_Case05, Func_007_60E9_Case00, ...)
 ; points at: wScreenTileBuffer
-Func_007_4B1E::
+DrawScreenBufferToBGMap0_Bank07::
+Func_007_4B1E:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $1412
 
+; the same instructions as CopyRect32StrideToVRAM_Bank16: B = width, C = rows, DE = source and HL = VRAM, both with rows 32 bytes apart; copies with WriteVRAMByteInc; B kept, C = 0 (E-0073)
 ; 10 call sites from 10 routines (e.g. Func_007_600E_Case08, Func_007_600E_Case07, Func_007_600E_Case04, Func_007_60E9_Case01, ...)
-Func_007_4B27::
+CopyRect32StrideToVRAM_Bank07::
+Func_007_4B27:: ; address name
     push bc
     push de
     push hl
@@ -847,7 +851,7 @@ Jump_007_4B2A::
     ld d, a
     pop bc
     dec c
-    jr nz, Func_007_4B27
+    jr nz, CopyRect32StrideToVRAM_Bank07
     ret
 
 ; entry 2 of the `rst $00` table in GameMode5_Init
@@ -1132,7 +1136,7 @@ Jump_007_4D45::
     call FillBytes
     ld hl, $5447
     call CopyRecordRectToScreenBuffer_Bank07
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     ld hl, wC46B
     ld bc, $0008
     xor a, a
@@ -3057,7 +3061,7 @@ Jump_007_60B0:: ; address name
     ld [wD786], a
     ld a, b
     ld [wC588], a
-    call Func_000_08AD
+    call StartSerialTransferInternalClock
     ld a, $01
     ld [wD786], a
 
@@ -3111,7 +3115,7 @@ Jump_007_60F3:: ; address name
 
 Jump_007_611B::
     call CopyRecordRectToScreenBuffer_Bank07
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     ld a, [wC894]
     and a, $01
     ld a, $07
@@ -3198,7 +3202,7 @@ Jump_007_6187::
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     ld a, $05
     ld [wD06A], a
     ret
@@ -3338,7 +3342,7 @@ Jump_007_6262:: ; address name
     farcall Func_016_777B
     ld a, $BC
     ld [wC1B9], a
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     call Func_007_635A
     ld hl, wD06C
     inc [hl]
@@ -3921,7 +3925,7 @@ Jump_007_6633:: ; address name
     call FillBytes
     ld hl, $52D7
     call CopyRecordRectToScreenBuffer_Bank07
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     xor a, a
     ld [wD06B], a
     ld hl, wD06A
@@ -4020,7 +4024,7 @@ Jump_007_66E0:: ; address name
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     ld a, $05
     ld [wD06A], a
     ret
@@ -4079,7 +4083,7 @@ Jump_007_6759:: ; address name
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     ld a, $05
     ld [wD06A], a
     ret
@@ -4110,7 +4114,7 @@ Jump_007_67DB:: ; address name
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06A
     inc [hl]
     ret
@@ -5219,7 +5223,7 @@ Jump_007_6EA4:: ; address name
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06B
     inc [hl]
     ret
@@ -5432,7 +5436,7 @@ Jump_007_6FF1::
     ld hl, $54DB
     call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_7AD4
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     ld a, $06
     ld [wC46F], a
     ld hl, wD06B
@@ -5637,7 +5641,7 @@ Jump_007_713C:: ; address name
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06B
     inc [hl]
     ret
@@ -5747,7 +5751,7 @@ Func_007_6DE3_Table2_Case0C::
 Jump_007_71D8:: ; address name
     ld hl, $561F
     call CopyRecordRectToScreenBuffer_Bank07
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     ld de, wD0A3
     ld hl, vBGMap0 + $8C
     ld a, [wD044]
@@ -6183,7 +6187,7 @@ Jump_007_746C:: ; address name
     ld hl, vBGMap0 + $E0
     ld de, wC278
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     call Func_007_7535
     call Func_007_7594
     ld a, [wD047]
@@ -6448,7 +6452,7 @@ Jump_007_7615:: ; address name
     ld hl, vBGMap0 + $62
     ld de, wC1FA
     ld bc, $0F0B
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     call Func_007_7716
     ld hl, wD06B
     inc [hl]
@@ -6697,7 +6701,7 @@ Jump_007_77A0:: ; address name
     ld hl, vBGMap0 + $E1
     ld de, wC279
     ld bc, $1205
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     call Func_007_7807
     ld hl, wD06B
     inc [hl]
@@ -6885,7 +6889,7 @@ Jump_007_78C2::
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_007_4B27
+    call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06B
     inc [hl]
     ret
@@ -7020,7 +7024,7 @@ Jump_007_796A:: ; address name
     call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_6DE3
     call Func_007_7AD4
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     ld a, $02
     ld [wC470], a
     ld a, $00
@@ -7212,7 +7216,7 @@ Jump_007_7AA7::
     ld bc, $0280
     ld a, $C3
     call FillBytes
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     xor a, a
     ld [wC594], a
     xor a, a
@@ -7573,7 +7577,7 @@ Jump_007_7C8C:: ; address name
     call CopyRecordRectToScreenBuffer_Bank07
     call Func_007_6DE3
     call Func_007_7AD4
-    call Func_007_4B1E
+    call DrawScreenBufferToBGMap0_Bank07
     ld a, $02
     ld [wC470], a
     ld a, $00

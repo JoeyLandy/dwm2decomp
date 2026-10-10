@@ -159,22 +159,22 @@ Jump_01C_40F2::
     ld de, wD782
     ld hl, wC30C
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
     ld hl, wC1A4
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     jr Jump_01C_413A
 
 Jump_01C_4122::
     ld de, wD782
     ld hl, wC370
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
     ld hl, wC208
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
 
 Jump_01C_413A::
     call BGMapAddressAtScroll_Bank1C
@@ -216,7 +216,7 @@ Jump_01C_4170:: ; address name
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    call Func_01C_440F
+    call IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jr z, Jump_01C_41B4
@@ -494,10 +494,12 @@ Func_01C_4316:: ; address name
     jr nz, CopyBytesDEToHL_Bank1C
     ret
 
+; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (E-0073)
 ; 11 call sites from 5 routines (e.g. ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, ScriptCommandE2_Run_Table2_Case03, Func_01C_6A71, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_01C_431F::
+CopyRectTo20ByteRowsJp_Bank1C::
+Func_01C_431F:: ; address name
     push hl
     push bc
 
@@ -674,10 +676,12 @@ Jump_01C_440B::
     jr nz, Jump_01C_43BA
     ret
 
+; compares the 24-bit value wD7F3:wD7F2:wD7F1 (wD7F3 most significant) with wC619:wC618:wC617: wD7F1 = $FF when it is greater, 0 when it is less or equal (the low byte is overwritten with the result) (E-0073)
 ; 10 call sites from 9 routines (e.g. ScriptCommandE0_Run_Case02, Func_01C_4867_Case0C, ScriptCommandF7_Run_Case04, ScriptCommandF7_Run_Case17, ...)
 ; reads: wC619, wD7F3, wC618, wD7F2, wC617, wD7F1
 ; writes: wD7F1
-Func_01C_440F::
+IsWD7F1Above24BitWC617::
+Func_01C_440F:: ; address name
     ld a, [wC619]
     ld b, a
     ld a, [wD7F3]
@@ -923,22 +927,22 @@ Jump_01C_4543::
     ld de, wD782
     ld hl, wC30C
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
     ld hl, wC1A4
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     jr Jump_01C_458B
 
 Jump_01C_4573::
     ld de, wD782
     ld hl, wC370
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
     ld hl, wC208
     ld bc, $0803
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
 
 Jump_01C_458B::
     call BGMapAddressAtScroll_Bank1C
@@ -1209,7 +1213,7 @@ Jump_01C_4714:: ; address name
     ld de, Data_01C_4738
     ld hl, wC364
     ld bc, $0807
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     call Func_01C_6A71
     xor a, a
     ld [wD781], a
@@ -2973,7 +2977,7 @@ Jump_01C_51ED::
     ld [wD7F2], a
     ld a, [wD7CE]
     ld [wD7F1], a
-    call Func_01C_440F
+    call IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jp z, Jump_01C_525D
@@ -6170,7 +6174,7 @@ Func_01C_6A71::
     ld de, wD788
     ld hl, wC370
     ld bc, $0805
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     call BGMapAddressAtScroll_Bank1C_67AF
     ld bc, $140D
     ld de, $01CC
@@ -6630,7 +6634,7 @@ Jump_01C_6DCB:: ; address name
     ld de, Data_01C_6DEF
     ld hl, wC364
     ld bc, $0B07
-    call Func_01C_431F
+    call CopyRectTo20ByteRowsJp_Bank1C
     call Func_01C_6A71
     xor a, a
     ld [wD781], a

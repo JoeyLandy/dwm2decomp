@@ -2352,7 +2352,7 @@ Jump_015_4FC4::
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_015_5003
@@ -3131,7 +3131,7 @@ Jump_015_5504:: ; address name
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    farcall Func_01C_440F
+    farcall IsWD7F1Above24BitWC617
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_015_5555

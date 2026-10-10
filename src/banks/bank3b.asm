@@ -1998,7 +1998,7 @@ Func_03B_4BE8:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld l, $4E
     ld bc, $4090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4BFB::
     jp Jump_03B_4EE3
@@ -2020,7 +2020,7 @@ Func_03B_4BFE:: ; heuristic: target of a pointer table; C0
     ld [hl], $03
     ld l, $4F
     ld bc, $4090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4C1E::
     jp Jump_03B_4EE3
@@ -2036,7 +2036,7 @@ Func_03B_4C21:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld l, $51
     ld bc, $4090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4C34::
     jp Jump_03B_4EE3
@@ -2058,7 +2058,7 @@ Func_03B_4C37:: ; heuristic: target of a pointer table; C0
     ld [hl], $03
     ld l, $82
     ld bc, $4090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4C57::
     jp Jump_03B_4EE3
@@ -2080,7 +2080,7 @@ Func_03B_4C5A:: ; heuristic: target of a pointer table; C0
     ld [hl], $03
     ld l, $83
     ld bc, $4090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4C7A::
     jp Jump_03B_4EE3
@@ -2142,12 +2142,12 @@ Jump_03B_4CC8::
     jr z, Jump_03B_4CE2
     ld l, $FD
     ld bc, $0090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4CE2::
     ld l, $95
     ld bc, $0090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4CEA::
     ld h, $E6
@@ -2222,7 +2222,7 @@ Jump_03B_4D59::
     call SetBit2OfWD095Indexed_Bank3B
     ld l, $75
     ld bc, $0090
-    call Func_03B_4ECF
+    call ClearDamageAndStoreWDAC0_Bank3B
     ld a, [wDABA]
     or a, a
     ret nz
@@ -2293,7 +2293,7 @@ Func_03B_4E0A:: ; heuristic: target of a pointer table; C0
     ld [wD894], a
     ld l, $98
     ld bc, $0090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
     db $C9
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2319,7 +2319,7 @@ Func_03B_4E1B:: ; heuristic: follows a terminator; C0
     set 0, [hl]
     ld l, $3B
     ld bc, $4098
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4E40::
     jp Jump_03B_4F15
@@ -2340,15 +2340,17 @@ Func_03B_4E46:: ; heuristic: follows a terminator; C0
     set 2, [hl]
     ld l, $43
     ld bc, $0090
-    jp Func_03B_4ECF
+    jp ClearDamageAndStoreWDAC0_Bank3B
 
 Jump_03B_4E5D::
     jp Jump_03B_4F15
     INCBIN "dwm2-cobi-us.gbc", $0ECE60, $6F
 
+; clears wBattleDamageLo/wD873 (the damage word), then wDAC2 = L, wDAC0 = C, wDAC1 = B (the same instructions as the bank-$36 copy) (E-0073)
 ; 1 call site from 1 routine (e.g. Func_03B_4D1C)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
-Func_03B_4ECF::
+ClearDamageAndStoreWDAC0_Bank3B::
+Func_03B_4ECF:: ; address name
     xor a, a
     ld [wBattleDamageLo], a
     ld [wD873], a

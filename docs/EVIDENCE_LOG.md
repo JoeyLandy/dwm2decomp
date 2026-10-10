@@ -727,6 +727,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Unknowns.** $8D and $8E have no charmap entry. Being skipped in the 5-glyph count suggests combining marks left over from the Japanese text system; not checked.
 - Binary verification: pending; see the commit.
 
+### E-0073 — Batch 9: screen copies, serial start, small helpers
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Routines read:**
+  - Screen copies: DrawWC338RowsToBGMapRow13, DrawScreenBufferToBGMap0_Bank07, CopyRect32StrideToVRAM_Bank07 and CopyRectTo20ByteRowsJp_Bank1C. The last two have the same instructions as already-named copies.
+  - FillRectWithTileSequence.
+  - ClearDamageAndStoreWDAC0 in banks $36 and $3B.
+  - StartSerialTransferInternalClock.
+  - Small helpers: StoreBCAtWordEntryWD871, LoadWD7FFFromWC7C7Table, RunFrameTickFadeAndCounter_Bank1B and IsWD7F1Above24BitWC617.
+  - The AddHFFC6WordToHL family.
+- **The 24-bit comparison.** It treats wC617-wC619 as a 24-bit number (perhaps gold; not checked).
+- **Serial start.** It uses the documented SM83/Game Boy serial-control bits: rSC bit 7 starts a transfer, bit 0 selects the internal clock.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

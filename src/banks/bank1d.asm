@@ -3888,7 +3888,7 @@ Func_01D_5DF9::
 ; writes: wD7AA, rRAMG2, rRAMB
 ; points at: sA000
 Func_01D_5E3F::
-    call Func_01D_6D70
+    call LoadWD7FFFromWC7C7Table
     ld d, c
     xor a, a
     ld [wD7AA], a
@@ -3929,7 +3929,7 @@ Jump_01D_5E69::
 ; writes: wD7A9, rRAMG2, rRAMB
 ; points at: wD789, wC6FE, sA000
 Func_01D_5E79::
-    call Func_01D_6D70
+    call LoadWD7FFFromWC7C7Table
     ld b, c
     ld hl, wD789
 
@@ -3990,7 +3990,7 @@ Jump_01D_5EC2::
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, sA000
 Func_01D_5ECE::
-    call Func_01D_6D70
+    call LoadWD7FFFromWC7C7Table
     ld hl, wD789
     ld b, $1E
 
@@ -4062,7 +4062,7 @@ Jump_01D_5F1B::
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wC6FE
 Func_01D_5F2D::
-    call Func_01D_6D70
+    call LoadWD7FFFromWC7C7Table
     ld hl, wD789
     ld b, $1E
 
@@ -4249,7 +4249,7 @@ Jump_01D_6025::
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, sA000
 Func_01D_6026::
-    call Func_01D_6D70
+    call LoadWD7FFFromWC7C7Table
     ld hl, wD789
     ld b, $1E
 
@@ -6338,10 +6338,12 @@ Func_01D_6D07::
 Data_01D_6D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $076D20, $50
 
+; C = wD7FF = Data_01D_6D81[wC7C7] (E-0073)
 ; 10 call sites from 9 routines (e.g. Func_01D_6026, Func_01D_5ECE, Func_01D_5F2D, Func_01D_5E79, ...)
 ; reads: wC7C7
 ; writes: wD7FF
-Func_01D_6D70::
+LoadWD7FFFromWC7C7Table::
+Func_01D_6D70:: ; address name
     ld a, [wC7C7]
     ld de, Data_01D_6D81
     add a, e

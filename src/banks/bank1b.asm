@@ -572,7 +572,7 @@ Jump_01B_4406:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_031_40CC
     ld hl, wC5ED
     res 1, [hl]
@@ -619,7 +619,7 @@ Jump_01B_443D:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_0F1_4AD0
     ld hl, wC5ED
     res 1, [hl]
@@ -666,7 +666,7 @@ Jump_01B_4474:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_01B_53CE
     ld hl, wC5ED
     res 1, [hl]
@@ -713,7 +713,7 @@ Jump_01B_44AB:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_007_6C12
     ld hl, wC5ED
     res 1, [hl]
@@ -760,7 +760,7 @@ Jump_01B_44E2:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_037_4AFD
     ld hl, wC5ED
     res 1, [hl]
@@ -807,7 +807,7 @@ Jump_01B_4519:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_033_5215
     ld hl, wC5ED
     res 1, [hl]
@@ -854,7 +854,7 @@ Jump_01B_4550:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_0A0_4F8E
     ld hl, wC5ED
     res 1, [hl]
@@ -901,7 +901,7 @@ Jump_01B_4587:: ; address name
     bit 7, [hl]
     res 7, [hl]
     ret nz
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     farcall Func_0F0_4CA0
     ld hl, wC5ED
     res 1, [hl]
@@ -935,7 +935,7 @@ Jump_01B_45B2::
     ld a, $01
     ld [wC582], a
     ld a, [wJoypadHeld]
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 Jump_01B_45DB::
     ld a, $20
@@ -948,7 +948,7 @@ Jump_01B_45DD::
     ld a, $01
     ld [wC582], a
     ld a, $F3
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wC58C, rSB, wC560, wC586, wC56A, wC56B, wC594, ...
@@ -979,7 +979,7 @@ Jump_01B_460D::
     ld a, [wC586]
     ld [wC560], a
     call UpdateJoypadPresses
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     xor a, a
     ld [wC582], a
     ld hl, wC5ED
@@ -1020,7 +1020,7 @@ Func_01B_465B:: ; heuristic: follows a terminator; C0
     ld [wC582], a
     ld a, $FA
     call SerialSendByte
-    call Func_01B_47CA
+    call RunFrameTickFadeAndCounter_Bank1B
     ld hl, wC5ED
     res 1, [hl]
     ret
@@ -1064,7 +1064,7 @@ Jump_01B_469B::
     ld a, $01
     ld [wC582], a
     ld a, [wC594]
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 Jump_01B_46C3::
     ld hl, wC592
@@ -1106,7 +1106,7 @@ Jump_01B_46C3::
     ld a, $01
     ld [wC582], a
     ld a, [hl]
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 Jump_01B_471E::
     ld a, $01
@@ -1117,7 +1117,7 @@ Jump_01B_471E::
     call PollJoypad
     call UpdateJoypadPresses
     ld a, $F0
-    jp Func_000_08AD
+    jp StartSerialTransferInternalClock
 
 ; 8 call sites from 8 routines (e.g. Func_01B_43FA_Case01, Func_01B_4431_Case01, Func_01B_4468_Case01, Func_01B_449F_Case01, ...)
 ; reads: wC57F, wC58C, rSB, wC594, wC586, wC590, wC591, wC592, ...
@@ -1200,10 +1200,12 @@ Jump_01B_47B6::
     call SerialSendByte
     ret
 
+; calls Func_000_2620 when wC52B is non-zero, then StepFade; adds 1 to the 16-bit wFrameCounterLo/Hi and clears wC58D and wC58E (E-0073)
 ; 10 call sites from 10 routines (e.g. Func_01B_43FA_Case01, Func_01B_4431_Case01, Func_01B_4468_Case01, Func_01B_449F_Case01, ...)
 ; reads: wC52B, wFrameCounterLo, wFrameCounterHi
 ; writes: wFrameCounterLo, wFrameCounterHi, wC58D, wC58E
-Func_01B_47CA::
+RunFrameTickFadeAndCounter_Bank1B::
+Func_01B_47CA:: ; address name
     ld a, [wC52B]
     or a, a
     jr z, Jump_01B_47D3
