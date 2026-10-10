@@ -2,11 +2,11 @@ SECTION "Bank A2", ROMX[$4000], BANK[$A2]
     db $A2
 
 ; 1 call site from 1 routine (e.g. Func_034_4008)
-; reads: wCFE6, wCFE7, hFFC6
+; reads: wMonsterId, wCFE7, hFFC6
 Func_0A2_4001::
     push de
     push bc
-    ld a, [wCFE6]
+    ld a, [wMonsterId]
     ld c, a
     ld a, [wCFE7]
     ld b, a
@@ -34,11 +34,11 @@ Func_0A2_4001::
     call Func_0A2_404F
     ret
 
-; 1 call site from 1 routine (e.g. Func_034_4040)
-; reads: wCFE6, wCFE7
+; 1 call site from 1 routine (e.g. LoadMonsterRecordTo)
+; reads: wMonsterId, wCFE7
 Func_0A2_402D::
     push de
-    ld a, [wCFE6]
+    ld a, [wMonsterId]
     ld c, a
     ld a, [wCFE7]
     ld b, a

@@ -306,7 +306,7 @@ Func_030_41DF::
 
 ; 1 call site from 1 routine (e.g. Func_030_4102)
 ; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
-; writes: wSkillId, wCFED, wD868, wD869, wD86A, wD86B
+; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wDA1C, wCFF3
 Func_030_4203::
     push de
@@ -325,7 +325,7 @@ Func_030_4203::
     push bc
     push de
     push hl
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     ld a, [wD868]
@@ -1843,7 +1843,7 @@ Jump_030_4C96::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_030_4BA0)
-; writes: wSkillId, wCFED
+; writes: wRecordBuffer, wCFED
 Func_030_4CAB::
     push de
     push af
@@ -1873,7 +1873,7 @@ Func_030_4CAB::
 Jump_030_4CC9::
     pop af
     push af
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     farcall LoadSkillRecord
@@ -2253,7 +2253,7 @@ Jump_030_50CD::
 
 ; 1 call site from 1 routine (e.g. Func_030_502D)
 ; reads: wD8A4, wCFF1
-; writes: wSkillId, wD868, wCFED, wD869, wD86A, wD86B
+; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
 ; points at: wD989, wCFF1, wC0A0
 Func_030_50D2::
     ld a, [wD8A4]
@@ -2269,7 +2269,7 @@ Jump_030_50E3::
     jr z, Jump_030_5123
     push hl
     push bc
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     ld a, $03
     ld [wD868], a
     xor a, a
@@ -2308,9 +2308,9 @@ Jump_030_5123::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_030_502D)
-; reads: wD8A4, wSkillRecord
-; writes: wSkillId, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wD8DF, wC0A0, wSkillRecord, wC0A8
+; reads: wD8A4, wRecordBufferData
+; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
+; points at: wD8DF, wC0A0, wRecordBufferData, wC0A8
 Func_030_5129::
     ld a, [wD8A4]
     ld hl, wD8DF
@@ -2330,14 +2330,14 @@ Jump_030_513F::
     push hl
     push bc
     push de
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     ld a, $00
     ld [wD868], a
     xor a, a
     ld [wCFED], a
     ld a, $01
     ld [wD869], a
-    ld hl, wSkillRecord
+    ld hl, wRecordBufferData
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -2345,7 +2345,7 @@ Jump_030_513F::
     farcall LoadSkillRecordPart
     pop de
     pop bc
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld l, a
     ld h, $00
     call CompareHLToBC
@@ -2459,25 +2459,25 @@ Jump_030_5207::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_030_502D)
-; reads: wC0A0, wSkillRecord
-; writes: wSkillId, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wSkillRecord, wC0A1, wC0A0
+; reads: wC0A0, wRecordBufferData
+; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
+; points at: wRecordBufferData, wC0A1, wC0A0
 Func_030_5209::
     ld a, [wC0A0]
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     ld a, $00
     ld [wD868], a
     xor a, a
     ld [wCFED], a
     ld a, $01
     ld [wD869], a
-    ld hl, wSkillRecord
+    ld hl, wRecordBufferData
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
     farcall LoadSkillRecordPart
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld c, a
     ld b, $00
     ld hl, wC0A1
@@ -2490,20 +2490,20 @@ Jump_030_523A::
     push hl
     push de
     push bc
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     ld a, $00
     ld [wD868], a
     xor a, a
     ld [wCFED], a
     ld a, $01
     ld [wD869], a
-    ld hl, wSkillRecord
+    ld hl, wRecordBufferData
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
     farcall LoadSkillRecordPart
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld l, a
     ld h, $00
     pop bc

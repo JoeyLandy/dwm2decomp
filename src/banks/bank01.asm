@@ -156,7 +156,7 @@ Jump_001_4297::
     ld bc, $1412
     call Func_000_15DE
     ld hl, $0000
-    call Func_001_4F80
+    call DebugShowMonsterRecord
     ret
 
 Data_001_42BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1339,9 +1339,9 @@ Jump_001_4F1F::
     ld h, a
     ld bc, $02AB
     call CompareHLToBC
-    jr c, Func_001_4F80
+    jr c, DebugShowMonsterRecord
     ld hl, $02AB
-    jr Func_001_4F80
+    jr DebugShowMonsterRecord
 
 Jump_001_4F34::
     ld a, [wJoypadPressedRepeat]
@@ -1381,23 +1381,25 @@ Jump_001_4F6D::
     ld h, a
     ld bc, $02AB
     call CompareHLToBC
-    jr c, Func_001_4F80
+    jr c, DebugShowMonsterRecord
     ld hl, $0000
 
+; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen
 ; 1 call site from 1 routine (e.g. Func_001_4045)
-; reads: wCFE6, wCFE7, wC52D, wC52E, wC52F, wC530, wSkillId, wCFED, ...
-; writes: wC5F8, wC5F9, wCFE6, wCFE7, wStringCategory, wStringIndex, wC52D, wC52E, ...
-Func_001_4F80::
+; reads: wMonsterId, wCFE7, wC52D, wC52E, wC52F, wC530, wRecordBuffer, wCFED, ...
+; writes: wC5F8, wC5F9, wMonsterId, wCFE7, wStringCategory, wStringIndex, wC52D, wC52E, ...
+DebugShowMonsterRecord::
+Func_001_4F80:: ; address name
     ld a, l
     ld [wC5F8], a
     ld a, h
     ld [wC5F9], a
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
-    ld a, [wCFE6]
+    farcall LoadMonsterRecord
+    ld a, [wMonsterId]
     ld hl, vBGMap0 + $24
     ld bc, $0100
     call Func_001_5420
@@ -1406,7 +1408,7 @@ Func_001_4F80::
     call Func_001_542C
     ld a, [wCFE7]
     ld [wStringCategory], a
-    ld a, [wCFE6]
+    ld a, [wMonsterId]
     ld [wStringIndex], a
     ld hl, vTiles2 + $400
     ld de, $0901
@@ -1439,14 +1441,14 @@ Func_001_4F80::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld hl, vBGMap0 + $4F
     ld bc, $0100
     call Func_001_5420
     ld a, [wCFED]
     ld hl, vBGMap0 + $4F
     call Func_001_542C
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $66
     ld bc, $0100
     call Func_001_5420
@@ -1581,26 +1583,26 @@ Jump_001_512D::
     ld bc, $0100
     call Func_001_5420
     ld a, [wC5F8]
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     xor a, a
     ld [wD868], a
     ld a, $11
     ld [wD869], a
-    ld hl, wSkillRecord
+    ld hl, wRecordBufferData
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
     farcall LoadSkillRecordPart
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $90
     ld bc, $0100
     call Func_001_53DC
     ld a, $04
     ld [wStringCategory], a
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     or a, a
     jr nz, Jump_001_517F
     ld a, $0E
@@ -1717,7 +1719,7 @@ Jump_001_517F::
     call Func_001_52CD
     ret
 
-; 4 call sites from 1 routine (e.g. Func_001_4F80)
+; 4 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 ; writes: wC8C0, wC8C1, wC8C2, hFFC7, hFFC6
 ; points at: hFFC9
 Func_001_52AF::
@@ -1738,7 +1740,7 @@ Func_001_52AF::
     ldh [hFFC6], a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_001_4F80)
+; 4 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 ; reads: hFFC7, hFFC6
 Func_001_52CD::
     ld e, $00
@@ -1794,7 +1796,7 @@ Jump_001_5301::
     ei
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_4F80)
+; 1 call site from 1 routine (e.g. DebugShowMonsterRecord)
 Func_001_5311::
     or a, a
     ret z
@@ -1831,7 +1833,7 @@ Jump_001_5342::
     ld a, c
     ret
 
-; 4 call sites from 1 routine (e.g. Func_001_4F80)
+; 4 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 Func_001_5344::
     ld d, a
     ld e, $00
@@ -1861,7 +1863,7 @@ Jump_001_5357::
 Data_001_5364:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $40, $20, $10, $08, $04, $02, $01
 
-; 7 call sites from 1 routine (e.g. Func_001_4F80)
+; 7 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 ; reads: hFFC8, hFFC7, hFFC6
 ; writes: wC8C0, wC8C1, wC8C2
 Func_001_536C::
@@ -1955,7 +1957,7 @@ Jump_001_53CC::
     ei
     ret
 
-; 7 call sites from 1 routine (e.g. Func_001_4F80)
+; 7 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 Func_001_53DC::
     cp a, $64
     jr nc, Jump_001_53EE
@@ -2016,7 +2018,7 @@ Func_001_5417::
     pop af
     ret
 
-; 7 call sites from 1 routine (e.g. Func_001_4F80)
+; 7 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 Func_001_5420::
     inc hl
     push af
@@ -2027,7 +2029,7 @@ Func_001_5420::
     inc hl
     pop af
 
-; 2 call sites from 1 routine (e.g. Func_001_4F80)
+; 2 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 Func_001_542C::
     and a, $0F
     ld d, a
@@ -5459,17 +5461,17 @@ Func_001_6C1F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_001_6E91)
-; reads: hFFC9, wD868, wSkillId, wCFED, wD869, wC5E8, wSkillRecord, wCFEF, ...
-; writes: wCFE6, wCFE7, wC9DC, wD006, wD007, wD09D, wD09E, wD09F, ...
+; reads: hFFC9, wD868, wRecordBuffer, wCFED, wD869, wC5E8, wRecordBufferData, wCFEF, ...
+; writes: wMonsterId, wCFE7, wC9DC, wD006, wD007, wD09D, wD09E, wD09F, ...
 ; points at: wC60C, wD01A
 Func_001_6C48::
     ldh a, [hFFC9]
     push af
     ld a, e
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, d
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wD868]
     ld c, $00
     call SRAMRecordAddress
@@ -5481,7 +5483,7 @@ Func_001_6C48::
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld [hl+], a
     ld a, [wCFED]
     ld [hl+], a
@@ -5512,7 +5514,7 @@ Jump_001_6C8D::
     ld [hl+], a
     call Func_001_6E31
     call Func_001_6E31
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld [hl+], a
     ld a, [wCFEF]
     ld [hl+], a
@@ -5614,7 +5616,7 @@ Jump_001_6D33::
     ld [hl+], a
     ld a, [wD005]
     ld [hl+], a
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld l, a
     ld a, [wCFED]
     ld h, a

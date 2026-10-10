@@ -204,6 +204,106 @@
         }
       ],
       "note": "E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10)."
+    },
+    {
+      "bank": "34",
+      "addr": "4075",
+      "label": "MonsterTable",
+      "count": 592,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "16-bit value, at most $0179 (meaning not established)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 1 (SkillTable index, $FF = none)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 2"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 3"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 4"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "16-bit value, up to $E8EE (meaning not established)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 8, values 0-7"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 9, values 0-99"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base HP"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base MP"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base ATK"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base DEF"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base AGL"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base INT"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 22: one of four per-monster values (e.g. $C8, $64)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 23"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 24"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 25"
+        }
+      ],
+      "note": "E-0033 (C1: LoadMonsterRecord copies a 26-byte record from here by 16-bit id (wCFE6/wCFE7); ids at or above $250 use bank $A2 instead, so this table has 592 records; record 1 holds 25, 0, 10, 7, 8, 7 and then $C8 $C8 $64 $C8, exactly the values the opening monster's save record shows for its HP, MP, ATK, DEF, AGL, INT and next four bytes; the order of the six stat words is the game's usual order and is assumed). Skill ids stay below 175 (one record, id 88, has $C8 in the fourth slot)."
     }
   ]
 }

@@ -3249,11 +3249,11 @@ Jump_039_5EFA::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A6, wC58A, wD8A4, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
-; writes: wSkillId, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
+; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
 ; points at: hFFCE, wD80E, wDA72, wDA1D
 Func_039_5F0E:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A6]
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     ld a, $02
@@ -5107,7 +5107,7 @@ Func_039_6A07:: ; heuristic: follows a terminator; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A6, wC58A, wD8A4, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
-; writes: wSkillId, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
+; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
 ; points at: hFFCE, wD80E, wDA72, wDA1D
 Func_039_6A0A:: ; heuristic: target of a pointer table; C0
     jp Func_039_5F0E

@@ -3991,8 +3991,8 @@ Func_007_695A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_007_65F1)
-; reads: wSkillId, wCFED, wSkillRecord, wCFEF, wCFF0, wCFF1, wCFF5, wCFF6, ...
-; writes: rRAMG, rRAMB, wCFE6, wCFE7, wD006, wD007
+; reads: wRecordBuffer, wCFED, wRecordBufferData, wCFEF, wCFF0, wCFF1, wCFF5, wCFF6, ...
+; writes: rRAMG, rRAMB, wMonsterId, wCFE7, wD006, wD007
 ; points at: sA000, wC60C, sA00D, wD01A, sA08E, sA099, sA01E, sA029
 Func_007_6975::
     ld a, $0A
@@ -4001,10 +4001,10 @@ Func_007_6975::
     ld [rRAMB], a
     ld hl, $0001
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld hl, sA000
     ld a, $02
     ld [hl+], a
@@ -4025,7 +4025,7 @@ Func_007_6975::
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld [hl+], a
     ld a, [wCFED]
     ld [hl+], a
@@ -4046,7 +4046,7 @@ Func_007_6975::
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld [hl+], a
     ld a, [wCFEF]
     ld [hl+], a
@@ -4120,7 +4120,7 @@ Func_007_6975::
     ld [hl+], a
     ld a, [wD005]
     ld [hl+], a
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld l, a
     ld a, [wCFED]
     ld h, a

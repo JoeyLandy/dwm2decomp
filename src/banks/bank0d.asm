@@ -5453,8 +5453,8 @@ Func_00D_6B45:: ; heuristic: follows a terminator; C0
     jr Jump_00D_6B25
 
 ; 1 call site from 1 routine (e.g. Func_00D_6AEC)
-; reads: wD7F5, wD7F6, wSkillId, wCFED, wD008, wCADE, wD010, wD011, ...
-; writes: wCFE6, wCFE7, wD006, wD007, wCADB, wCADC, rRAMG2, rRAMB
+; reads: wD7F5, wD7F6, wRecordBuffer, wCFED, wD008, wCADE, wD010, wD011, ...
+; writes: wMonsterId, wCFE7, wD006, wD007, wCADB, wCADC, rRAMG2, rRAMB
 ; points at: wC986, wC60C, wD01A
 Func_00D_6B55::
     push hl
@@ -5477,11 +5477,11 @@ Jump_00D_6B5B::
     ld hl, $0179
     add_a_to_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
-    ld a, [wSkillId]
+    farcall LoadMonsterRecord
+    ld a, [wRecordBuffer]
     ld [wD006], a
     ld a, [wCFED]
     ld [wD007], a
@@ -5491,7 +5491,7 @@ Jump_00D_6B5B::
     ld a, $01
     ld [hl+], a
     call Func_00D_6CBA
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld [hl+], a
     ld [wCADB], a
     ld a, [wCFED]

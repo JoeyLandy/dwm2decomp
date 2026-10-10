@@ -8006,7 +8006,7 @@ Func_000_2E81::
     ret
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
-; 46 call sites from 24 routines (e.g. GameMode0_Init, Func_001_4F80, GameMode2_Update, Func_007_4E11, ...)
+; 46 call sites from 24 routines (e.g. GameMode0_Init, DebugShowMonsterRecord, GameMode2_Update, Func_007_4E11, ...)
 ; writes: wC52D, wC52E, wC52F, wC530
 FillTilesRequest::
 Func_000_2E98:: ; address name

@@ -68,6 +68,7 @@
   "D970": {"name": "wSlotPersonalityMid", "note": "second array, weight 3", "evidence": "reading"},
   "D978": {"name": "wSlotPersonalityLo", "note": "third array, weight 1", "evidence": "reading"},
   "D2C7": {"name": "wPersonalityIndex", "note": "column index (0-26) into the bank-6 table; set from PersonalityIndexOfSlot in banks $30 and $E0 before ReadBank6TableWord", "evidence": "reading"},
-  "CFEC": {"name": "wSkillId", "note": "low byte of the 16-bit skill record number LoadSkillRecord reads (wCFED is the high byte)", "evidence": "reading"},
-  "CFEE": {"name": "wSkillRecord", "note": "first byte of the 17-byte copy of a SkillTable record", "evidence": "reading"}
+  "CFEC": {"name": "wRecordBuffer", "note": "scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here", "evidence": "reading"},
+  "CFEE": {"name": "wRecordBufferData", "note": "where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer)", "evidence": "reading"},
+  "CFE6": {"name": "wMonsterId", "note": "16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads", "evidence": "reading"}
 }

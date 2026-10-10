@@ -1034,12 +1034,32 @@
   },
   "1A:4001": {
     "name": "LoadSkillRecord",
-    "note": "wCFEC/wCFED = record number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE",
+    "note": "wCFEC/wCFED (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE",
     "evidence": "reading + execution (E-0032)"
   },
   "1A:4022": {
     "name": "LoadSkillRecordPart",
     "note": "like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead",
     "evidence": "reading"
+  },
+  "34:4001": {
+    "name": "LoadMonsterRecord",
+    "note": "wCFE6/wCFE7 = monster id: copies its 26-byte MonsterTable record to wCFEC (ids at or above $250 come from bank $A2 through Func_0A2_402D)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "34:4040": {
+    "name": "LoadMonsterRecordTo",
+    "note": "DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE]",
+    "evidence": "reading"
+  },
+  "34:406E": {
+    "name": "CopyBytesDEFromHL",
+    "note": "B bytes from [HL] to [DE]; HL and DE advance",
+    "evidence": "reading"
+  },
+  "01:4F80": {
+    "name": "DebugShowMonsterRecord",
+    "note": "HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen",
+    "evidence": "reading (E-0033)"
   }
 }

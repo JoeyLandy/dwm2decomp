@@ -2545,7 +2545,7 @@ Jump_03A_6193::
 
 Jump_03A_619A::
     ld a, [wD8A6]
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     farcall LoadSkillRecord
@@ -3862,7 +3862,7 @@ Jump_03A_69F2::
     ld a, [wD873]
     ld d, a
     push de
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld e, a
     ld d, $00
     ld a, e

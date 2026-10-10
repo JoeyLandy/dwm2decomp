@@ -3015,7 +3015,7 @@ Jump_031_5454::
     add a, a
     add_a_to_hl
     deref_hl
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld c, a
     cp a, $FF
     jr nz, Jump_031_5499
@@ -3052,7 +3052,7 @@ Jump_031_5499::
     ld hl, wDA1C
     add a, a
     add_a_to_hl
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld [hl+], a
     cp a, $35
     jr z, Jump_031_5523
@@ -3128,7 +3128,7 @@ Jump_031_5549::
     ld a, d
     cp a, $01
     jr nz, Jump_031_5566
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_5566
     cp a, $1F
@@ -3253,7 +3253,7 @@ Jump_031_560B::
 
 Jump_031_562A::
     call Func_031_74E1
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_5639
     cp a, $1F
@@ -3309,7 +3309,7 @@ Jump_031_5693::
     jr z, Jump_031_56FD
     ld a, $69
     call QueueSoundEffect
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     cp a, $1B
     jr z, Jump_031_56AF
     cp a, $1C
@@ -3367,7 +3367,7 @@ Jump_031_56FE::
 
 Jump_031_5708::
     call Func_031_7522
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_5717
     cp a, $1F
@@ -3387,7 +3387,7 @@ Jump_031_5717::
 
 Jump_031_572D::
     call Func_031_7529
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_573C
     cp a, $1F
@@ -5235,8 +5235,8 @@ Func_031_6324::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_031_61A4, Func_031_4EB9)
-; reads: wSkillRecord, wCFD4
-; writes: wStringIndex, wSkillId, wCFED
+; reads: wRecordBufferData, wCFD4
+; writes: wStringIndex, wRecordBuffer, wCFED
 ; points at: wD8DF, wC388
 Func_031_6331::
     push af
@@ -5245,11 +5245,11 @@ Func_031_6331::
     ld de, $0603
     call Func_031_7A3D
     pop af
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     farcall LoadSkillRecord
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     cp a, $FF
     jr nz, Jump_031_6364
     ld a, [wCFD4]
@@ -5334,7 +5334,7 @@ Func_031_63CD::
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9)
 ; reads: wC46E, wCFD5, wCFD4
-; writes: wSkillId, wCFED
+; writes: wRecordBuffer, wCFED
 ; points at: wD989
 Func_031_63ED::
     ld a, [wC46E]
@@ -5352,7 +5352,7 @@ Func_031_63ED::
     swap a
     add_a_to_hl
     ld a, [hl]
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     farcall LoadSkillRecord
@@ -5405,10 +5405,10 @@ Jump_031_644C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9)
-; reads: wSkillId, wC57F, wD86D, wD86E, wD86F
+; reads: wRecordBuffer, wC57F, wD86D, wD86E, wD86F
 ; points at: wDA63, wD86D, wC31A
 Func_031_6451::
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_6465
     cp a, $1F
@@ -7522,8 +7522,8 @@ Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
 ; 2 call sites from 2 routines (e.g. Func_031_719E, Func_031_6E67)
-; reads: wCFD5, wC46B, wSkillId, wD868, wSkillRecord
-; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory, wSkillId, wCFED, ...
+; reads: wCFD5, wC46B, wRecordBuffer, wD868, wRecordBufferData
+; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory, wRecordBuffer, wCFED, ...
 ; points at: wD09D, wC39E
 Func_031_7105::
     ld hl, vTiles2 + $260
@@ -7553,11 +7553,11 @@ Func_031_7105::
     ld [wStringCategory], a
     farcall ShowString_Bank08
     pop af
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     farcall LoadSkillRecord
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     cp a, $3D
     jr z, Jump_031_715E
     cp a, $20
@@ -7579,7 +7579,7 @@ Jump_031_715E::
     jr Jump_031_717E
 
 Jump_031_7178::
-    ld a, [wSkillRecord]
+    ld a, [wRecordBufferData]
     ld l, a
     ld h, $00
 

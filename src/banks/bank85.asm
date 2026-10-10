@@ -4020,7 +4020,7 @@ Jump_085_5C08::
     ld a, h
     ldh [hFFCB], a
     ld a, [de]
-    ld [wCFE6], a
+    ld [wMonsterId], a
     inc de
     ld a, [de]
     ld [wCFE7], a

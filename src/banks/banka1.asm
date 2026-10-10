@@ -424,7 +424,7 @@ Func_0A1_437D::
 
 ; 1 call site from 1 routine (e.g. Func_0A1_413F)
 ; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
-; writes: wSkillId, wCFED, wD868, wD869, wD86A, wD86B
+; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wDA1C, wCFF3
 Func_0A1_43A1::
     push de
@@ -443,7 +443,7 @@ Func_0A1_43A1::
     push bc
     push de
     push hl
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
     ld a, [wD868]

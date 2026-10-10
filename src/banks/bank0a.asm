@@ -2105,7 +2105,7 @@ Jump_00A_504E::
 
 ; 48 call sites from 1 routine (e.g. Func_00A_4D5E)
 ; reads: hFF92, hFF8F, wD09D, hFFC6, hFFC7
-; writes: wD09D, wD09E, wCFE6, wCFE7, hFFC6
+; writes: wD09D, wD09E, wMonsterId, wCFE7, hFFC6
 ; points at: wD09F, hFFC6
 Func_00A_5057::
     sla a
@@ -2125,7 +2125,7 @@ Func_00A_5057::
 
 ; 4 call sites from 1 routine (e.g. Func_00A_4D5E)
 ; reads: wD09D, hFFC6, hFFC7
-; writes: wD09D, wD09E, wCFE6, wCFE7, hFFC6
+; writes: wD09D, wD09E, wMonsterId, wCFE7, hFFC6
 ; points at: wD09F, hFFC6
 Func_00A_5071::
     inc de
@@ -2175,7 +2175,7 @@ Jump_00A_5096::
 Jump_00A_50A6::
     push bc
     ld a, [hl+]
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, [hl-]
     ld [wCFE7], a
     push hl

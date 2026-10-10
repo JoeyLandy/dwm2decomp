@@ -484,7 +484,7 @@ Jump_019_433F::
 
 ; 4 call sites from 4 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_0A0_4410, Func_0A0_456F)
 ; reads: wD868, wD86A, wD86B
-; writes: wCFED, wSkillId, wD868, wD869, wD86A, wD86B
+; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
 Func_019_4349::
     ld a, [wD868]
@@ -492,7 +492,7 @@ Func_019_4349::
 
 ; 6 call sites from 6 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_032_5C3F, Func_036_4A38, ...)
 ; reads: wD868, wD86A, wD86B
-; writes: wCFED, wSkillId, wD868, wD869, wD86A, wD86B
+; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
 Func_019_434D::
     ld hl, wD988
@@ -571,7 +571,7 @@ Jump_019_43AA::
     jr z, Jump_019_43E4
     push bc
     ld a, [de]
-    ld [wSkillId], a
+    ld [wRecordBuffer], a
     ld a, $03
     ld [wD868], a
     ld a, $01
@@ -1210,8 +1210,8 @@ Jump_019_46FD::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_019_46DD, Func_019_46B1)
-; reads: wSkillId, wCFED
-; writes: wCFE6, wCFE7, wD006, wD007
+; reads: wRecordBuffer, wCFED
+; writes: wMonsterId, wCFE7, wD006, wD007
 ; points at: wCFDD
 Func_019_470F::
     push bc
@@ -1221,17 +1221,17 @@ Func_019_470F::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
     push de
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     pop de
     pop bc
     push de
     call Func_019_4A9A
     pop de
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld l, a
     ld a, [wCFED]
     ld h, a
@@ -1794,8 +1794,8 @@ Func_019_4A74::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_019_470F)
-; reads: wSkillId, wCFED, wCFF5, wCFF2, wCFF3, wD002, wD003, wD005, ...
-; points at: wSkillRecord, wCFF6
+; reads: wRecordBuffer, wCFED, wCFF5, wCFF2, wCFF3, wD002, wD003, wD005, ...
+; points at: wRecordBufferData, wCFF6
 Func_019_4A9A::
     push bc
     ld b, $0A
@@ -1806,7 +1806,7 @@ Jump_019_4A9F::
     inc de
     dec b
     jr nz, Jump_019_4A9F
-    ld a, [wSkillId]
+    ld a, [wRecordBuffer]
     ld [de], a
     inc de
     ld a, [wCFED]
@@ -1815,7 +1815,7 @@ Jump_019_4A9F::
     inc de
     inc de
     ld b, $04
-    ld hl, wSkillRecord
+    ld hl, wRecordBufferData
 
 Jump_019_4AB5::
     ld a, [hl+]

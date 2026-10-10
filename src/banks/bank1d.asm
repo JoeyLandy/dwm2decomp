@@ -3589,9 +3589,9 @@ Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 6 call sites from 5 routines (e.g. Func_007_6ADC, Func_007_7C5F, Func_01E_5C63, Func_033_51C6, ...)
 ; writes: wD7F1, wD7F2
-; points at: wSkillId, wD7F1, hFFC6
+; points at: wRecordBuffer, wD7F1, hFFC6
 Func_01D_5BF2::
-    ld hl, wSkillId
+    ld hl, wRecordBuffer
     ld de, wD7F1
     ld b, $09
 
@@ -3617,7 +3617,7 @@ Jump_01D_5C05::
     ld a, h
     ld [wD7F2], a
     call Func_01D_6899
-    ld hl, wSkillId
+    ld hl, wRecordBuffer
     ld de, wD7F1
     ld b, $09
 
@@ -3641,9 +3641,9 @@ Jump_01D_5C2E::
 ; 6 call sites from 5 routines (e.g. Func_007_6ADC, Func_007_7C5F, Func_01E_5C63, Func_033_51C6, ...)
 ; reads: hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2
-; points at: wSkillId, wD7F1, hFFC6
+; points at: wRecordBuffer, wD7F1, hFFC6
 Func_01D_5C35::
-    ld hl, wSkillId
+    ld hl, wRecordBuffer
     ld de, wD7F1
     ld b, $09
 
@@ -3683,7 +3683,7 @@ Jump_01D_5C48::
     ld d, $40
     ld c, $00
     call Func_01D_69DA
-    ld hl, wSkillId
+    ld hl, wRecordBuffer
     ld de, wD7F1
     ld b, $09
 

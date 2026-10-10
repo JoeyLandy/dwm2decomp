@@ -3,7 +3,7 @@ SECTION "Bank 3B", ROMX[$4000], BANK[$3B]
 
 ; 3 call sites from 3 routines (e.g. Func_032_5C3F, Func_036_4A38, Func_036_65E8)
 ; reads: wCFF6, wCFF7
-; writes: wDAC4, wDAC5, wCFE6, wCFE7
+; writes: wDAC4, wDAC5, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4001::
     ld a, c
@@ -26,10 +26,10 @@ Jump_03B_4013::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wCFF6]
     ld c, a
     ld a, [wCFF7]
@@ -44,7 +44,7 @@ Jump_03B_403C::
 
 ; 3 call sites from 3 routines (e.g. Func_032_5C3F, Func_036_4A38, Func_036_6605)
 ; reads: wCFF8, wCFF9
-; writes: wDAC4, wDAC5, wCFE6, wCFE7
+; writes: wDAC4, wDAC5, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4045::
     ld a, c
@@ -67,10 +67,10 @@ Jump_03B_4057::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wCFF8]
     ld c, a
     ld a, [wCFF9]
@@ -85,7 +85,7 @@ Jump_03B_4080::
 
 ; 3 call sites from 3 routines (e.g. Func_032_5C3F, Func_036_4A38, Func_036_6622)
 ; reads: wCFFA, wCFFB
-; writes: wDAC4, wDAC5, wCFE6, wCFE7
+; writes: wDAC4, wDAC5, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4089::
     ld a, c
@@ -108,10 +108,10 @@ Jump_03B_409B::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wCFFA]
     ld c, a
     ld a, [wCFFB]
@@ -126,7 +126,7 @@ Jump_03B_40C4::
 
 ; 7 call sites from 7 routines (e.g. Func_005_6B20, Func_032_5BE8, Func_032_5C3F, Func_032_6581, ...)
 ; reads: wCFFC, wCFFD
-; writes: wDAC4, wDAC5, wCFE6, wCFE7
+; writes: wDAC4, wDAC5, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_40CD::
     ld a, c
@@ -149,10 +149,10 @@ Jump_03B_40DF::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wCFFC]
     ld c, a
     ld a, [wCFFD]
@@ -167,7 +167,7 @@ Jump_03B_4108::
 
 ; 7 call sites from 7 routines (e.g. Func_005_6B5F, Func_032_5BE8, Func_032_5C3F, Func_032_6581, ...)
 ; reads: wCFFE, wCFFF
-; writes: wDAC4, wDAC5, wCFE6, wCFE7
+; writes: wDAC4, wDAC5, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4111::
     ld a, c
@@ -190,10 +190,10 @@ Jump_03B_4123::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wCFFE]
     ld c, a
     ld a, [wCFFF]
@@ -208,7 +208,7 @@ Jump_03B_414C::
 
 ; 2 call sites from 2 routines (e.g. Func_032_5C3F, Func_036_4A38)
 ; reads: wD000, wD001
-; writes: wDAC4, wDAC5, wCFE6, wCFE7
+; writes: wDAC4, wDAC5, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4155::
     ld a, c
@@ -231,10 +231,10 @@ Jump_03B_4167::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wD000]
     ld c, a
     ld a, [wD001]
@@ -249,7 +249,7 @@ Jump_03B_4190::
 
 ; 2 call sites from 2 routines (e.g. Func_032_5C3F, Func_036_4A38)
 ; reads: wCFF5
-; writes: wDAC4, wCFE6, wCFE7
+; writes: wDAC4, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4199::
     ld a, c
@@ -272,10 +272,10 @@ Jump_03B_41A9::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wCFF5]
     ld c, a
 
@@ -286,7 +286,7 @@ Jump_03B_41CE::
 
 ; 2 call sites from 2 routines (e.g. Func_032_5C3F, Func_036_4A38)
 ; reads: wD002
-; writes: wDAC4, wCFE6, wCFE7
+; writes: wDAC4, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_41D3::
     ld a, c
@@ -309,10 +309,10 @@ Jump_03B_41E3::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wD002]
     ld c, a
 
@@ -323,7 +323,7 @@ Jump_03B_4208::
 
 ; 2 call sites from 2 routines (e.g. Func_032_5C3F, Func_036_4A38)
 ; reads: wD004
-; writes: wDAC4, wCFE6, wCFE7
+; writes: wDAC4, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_420D::
     ld a, c
@@ -346,10 +346,10 @@ Jump_03B_421D::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wD004]
     ld c, a
 
@@ -360,7 +360,7 @@ Jump_03B_4242::
 
 ; 2 call sites from 2 routines (e.g. Func_032_5C3F, Func_036_4A38)
 ; reads: wD003
-; writes: wDAC4, wCFE6, wCFE7
+; writes: wDAC4, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4247::
     ld a, c
@@ -383,10 +383,10 @@ Jump_03B_4257::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wD003]
     ld c, a
 
@@ -397,7 +397,7 @@ Jump_03B_427C::
 
 ; 2 call sites from 2 routines (e.g. Func_032_5C3F, Func_036_4A38)
 ; reads: wD005
-; writes: wDAC4, wCFE6, wCFE7
+; writes: wDAC4, wMonsterId, wCFE7
 ; points at: wDAAE
 Func_03B_4281::
     ld a, c
@@ -420,10 +420,10 @@ Jump_03B_4291::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wCFE6], a
+    ld [wMonsterId], a
     ld a, h
     ld [wCFE7], a
-    farcall Func_034_4001
+    farcall LoadMonsterRecord
     ld a, [wD005]
     ld c, a
 

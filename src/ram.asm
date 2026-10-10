@@ -1108,11 +1108,11 @@ DEF wCFE2 EQU $CFE2
 DEF wCFE3 EQU $CFE3
 DEF wCFE4 EQU $CFE4
 DEF wCFE5 EQU $CFE5
-DEF wCFE6 EQU $CFE6
+DEF wMonsterId EQU $CFE6 ; 16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads (reading)
 DEF wCFE7 EQU $CFE7
-DEF wSkillId EQU $CFEC ; low byte of the 16-bit skill record number LoadSkillRecord reads (wCFED is the high byte) (reading)
+DEF wRecordBuffer EQU $CFEC ; scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here (reading)
 DEF wCFED EQU $CFED
-DEF wSkillRecord EQU $CFEE ; first byte of the 17-byte copy of a SkillTable record (reading)
+DEF wRecordBufferData EQU $CFEE ; where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer) (reading)
 DEF wCFEF EQU $CFEF
 DEF wCFF0 EQU $CFF0
 DEF wCFF1 EQU $CFF1
