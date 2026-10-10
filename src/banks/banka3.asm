@@ -603,12 +603,12 @@ Jump_0A3_49D0::
     pop hl
     ret
 
-; only called from RunBattleResolveStep_Case05_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case05_Sub01)
+; only called from RollWC5E7BelowChance (E-0047)
+; 1 call site from 1 routine (e.g. RollWC5E7BelowChance)
 ; reads: wC58A, wBattleActor
 ; writes: hFFC6
 ; points at: wD958
-RunBattleResolveStep_Case05_Sub01_Sub01::
+RollWC5E7BelowChance_Sub01::
 Func_0A3_49D5:: ; address name
     ld a, [wC58A]
     or a, a

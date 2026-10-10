@@ -13,7 +13,7 @@ Func_036_4001:: ; address name
     dw ResolveStepCallEffect82
     dw ResolveStepFlagBit7Effect
     dw RunBattleResolveStep_Case04
-    dw RunBattleResolveStep_Case05
+    dw ResolveStepChanceRoll
     dw RunBattleResolveStep_Case06
     dw RunBattleResolveStep_Case07
     dw RunBattleResolveStep_Case08
@@ -842,11 +842,11 @@ Func_036_4582:: ; address name
     cp a, $A1
     ret
 
-; entry 5 of the `rst $00` table in RunBattleResolveStep
+; resolve step $05: advances wBattleResolveStep. With wCFF4 bits 3-4 both clear it continues into case 6. Bit 4 with the actor's status byte 1 bit 2 set continues into case 6. With wCFF4 bit 3 set and wD854 bit 0 (target) and status byte 1 bit 3 (actor) both clear, it rolls RollWC5E7BelowChance: on success it sets bit 7 of the actor's status byte 2 (wD80E), calls Func_036_7E6C, shows message $9C (carry) or $9D through 3A:7193, queues sound $83 and advances the step again; on failure, or when bit 3 is clear, it clears that bit (E-0052)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCFF4, wBattleActor
 ; points at: wBattleResolveStep, wD80D, wD854, wD80E
-RunBattleResolveStep_Case05::
+ResolveStepChanceRoll::
 Jump_036_458E:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -876,7 +876,7 @@ Jump_036_45AA::
     bit 3, [hl]
     jr nz, Jump_036_45D3
     call AdvanceRandom
-    call RunBattleResolveStep_Case05_Sub01
+    call RollWC5E7BelowChance
     jr nc, Jump_036_45F7
 
 Jump_036_45D3::
@@ -1394,14 +1394,14 @@ Jump_036_490F:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; only called from RunBattleResolveStep_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case05)
+; farcalls RunBattleResolveStep_Case05_Sub01_Sub01 (not read) and returns the comparison of wC5E7 with hFFC6 (taken as 4 when hFFC6 is 3): carry set when wC5E7 is below that value (E-0052)
+; 1 call site from 1 routine (e.g. ResolveStepChanceRoll)
 ; reads: hFFC6, wC5E7
-RunBattleResolveStep_Case05_Sub01::
+RollWC5E7BelowChance::
 Func_036_4918:: ; address name
     push bc
     push hl
-    farcall RunBattleResolveStep_Case05_Sub01_Sub01
+    farcall RollWC5E7BelowChance_Sub01
     pop hl
     pop bc
     ldh a, [hFFC6]
@@ -9754,14 +9754,14 @@ Func_036_7E5B:: ; address name
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
-; 56 call sites from 31 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, RunBattleResolveStep_Case07, RunBattleResolveStep_Case05, Func_036_42D3, ...)
+; 56 call sites from 31 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, RunBattleResolveStep_Case07, ResolveStepChanceRoll, Func_036_42D3, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
     add a, a
     add_a_to_hl
     ret
 
-; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, RunBattleResolveStep_Case05, RunBattleResolveStep_Case04_Sub03)
+; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, ResolveStepChanceRoll, RunBattleResolveStep_Case04_Sub03)
 ; reads: wC58A, wC57F, wBattleActor
 Func_036_7E6C::
     ld a, [wC58A]
