@@ -351,5 +351,22 @@ class ActionGates(unittest.TestCase):
         self.assertEqual((gb.d, bool(gb.f & 0x10)), (5, False))
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class ResolveStepHelpers(unittest.TestCase):
+    """Resolve-step cases and helpers read on the emulator (E-0050; C2 on our emulator)."""
+
+    def test_case0f_advances_sub_phase_and_restarts_resolve_steps(self):
+        gb = call(0x36, 0x490F, mem={0xCFCA: 3, 0xCFCB: 0x0F})
+        self.assertEqual((gb.rb(0xCFCA), gb.rb(0xCFCB)), (4, 0))
+
+    def test_action91_with_status_bit6_sets_zero_flag(self):
+        gb = call(0x36, 0x433F, mem={0xD8A4: 0, 0xD8A6: 0x91, 0xD80F: 0x40})
+        self.assertTrue(gb.f & 0x80)
+        gb = call(0x36, 0x433F, mem={0xD8A4: 0, 0xD8A6: 0x91, 0xD80F: 0x00})
+        self.assertFalse(gb.f & 0x80)
+        gb = call(0x36, 0x433F, mem={0xD8A4: 0, 0xD8A6: 0x90, 0xD80F: 0x40})
+        self.assertFalse(gb.f & 0x80)
+
+
 if __name__ == "__main__":
     unittest.main()

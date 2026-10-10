@@ -2299,6 +2299,31 @@
     "note": "carry set = may proceed; clear with D = 6 when bit 6 of the actor's status byte 1 (wD80D + 9 * actor) is set (E-0049)",
     "evidence": "reading + execution (E-0049)"
   },
+  "36:490F": {
+    "name": "ResolveStepAdvanceSubPhase",
+    "note": "resolve step $0F: increments wBattleSubPhase and sets wBattleResolveStep to 0 (E-0050)",
+    "evidence": "reading + execution (E-0050)"
+  },
+  "36:433F": {
+    "name": "ActionIs91AndStatusBit6Set",
+    "note": "Z set when wBattleActionId = $91 and bit 6 of the actor's status byte 3 (wD80F + 9 * actor) is set; Z clear otherwise (A is $40 or 0 for $91, the comparison result otherwise). Used by RunBattleResolveStep_Case02 (E-0050)",
+    "evidence": "reading + execution (E-0050)"
+  },
+  "36:431F": {
+    "name": "ResolveStepCallEffect82",
+    "note": "resolve step $02: advances wBattleResolveStep; when wDABD is non-zero and wDAB2 is zero and ActionIs91AndStatusBit6Set is not set, it stores $82 in wDAD2 and farcalls 3A:4001. When wDABD is zero or wDAB2 is non-zero it continues as ResolveStepFlagBit7Effect; when ActionIs91AndStatusBit6Set is set it returns (E-0050)",
+    "evidence": "reading (E-0050)"
+  },
+  "36:4356": {
+    "name": "ResolveStepFlagBit7Effect",
+    "note": "resolve step $03: advances wBattleResolveStep. When wBattleTarget is present (Func_036_7F3C does not set carry), wCFF4 bit 6 is set, and the target's wD854 byte has bit 7 set, it farcalls 3A:6EE5 with D = $35, calls Func_036_4FD1 and queues sound $84; otherwise it goes on to case 4 (E-0050)",
+    "evidence": "reading (E-0050)"
+  },
+  "36:48DE": {
+    "name": "ResolveStepBranchOnAction",
+    "note": "resolve step $0B: wBattleActionId $82 jumps to 36:4A9D; $83, $84 and $B3 jump to 36:4B16; any other action advances wBattleResolveStep and returns (E-0050)",
+    "evidence": "reading (E-0050)"
+  },
   "32:51F9": {
     "name": "CheckSkillMPCost",
     "note": "for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)",

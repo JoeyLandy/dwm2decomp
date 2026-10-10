@@ -10,8 +10,8 @@ Func_036_4001:: ; address name
     rst $00
     dw RunBattleResolveStep_Case00
     dw RunBattleResolveStep_Case01
-    dw RunBattleResolveStep_Case02
-    dw RunBattleResolveStep_Case03
+    dw ResolveStepCallEffect82
+    dw ResolveStepFlagBit7Effect
     dw RunBattleResolveStep_Case04
     dw RunBattleResolveStep_Case05
     dw RunBattleResolveStep_Case06
@@ -19,11 +19,11 @@ Func_036_4001:: ; address name
     dw RunBattleResolveStep_Case08
     dw RunBattleResolveStep_Case09
     dw ResolveStepDamageMessage
-    dw RunBattleResolveStep_Case0B
+    dw ResolveStepBranchOnAction
     dw ResolveStepApplyDamage
     dw ResolveStepDefeat
     dw RunBattleResolveStep_Case0E
-    dw RunBattleResolveStep_Case0F
+    dw ResolveStepAdvanceSubPhase
 
 ; entry 0 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
@@ -477,33 +477,33 @@ Jump_036_4317::
     scf
     ret
 
-; entry 2 of the `rst $00` table in RunBattleResolveStep
+; resolve step $02: advances wBattleResolveStep; when wDABD is non-zero and wDAB2 is zero and ActionIs91AndStatusBit6Set is not set, it stores $82 in wDAD2 and farcalls 3A:4001. When wDABD is zero or wDAB2 is non-zero it continues as ResolveStepFlagBit7Effect; when ActionIs91AndStatusBit6Set is set it returns (E-0050)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABD, wDAB2, wBattleTarget, wCFF4, wBattleActionId, wBattleActor, wDAC0, wCFF3, ...
 ; writes: wDAD2, wDAC0
 ; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wBattleAGL
-RunBattleResolveStep_Case02::
+ResolveStepCallEffect82::
 Jump_036_431F:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wDABD]
     or a, a
-    jr z, RunBattleResolveStep_Case03
+    jr z, ResolveStepFlagBit7Effect
     ld a, [wDAB2]
     or a, a
-    jr nz, RunBattleResolveStep_Case03
-    call RunBattleResolveStep_Case02_Sub01
+    jr nz, ResolveStepFlagBit7Effect
+    call ActionIs91AndStatusBit6Set
     ret z
     ld a, $82
     ld [wDAD2], a
     farcall Func_03A_4001
     ret
 
-; only called from RunBattleResolveStep_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case02)
+; Z set when wBattleActionId = $91 and bit 6 of the actor's status byte 3 (wD80F + 9 * actor) is set; Z clear otherwise (A is $40 or 0 for $91, the comparison result otherwise). Used by RunBattleResolveStep_Case02 (E-0050)
+; 1 call site from 1 routine (e.g. ResolveStepCallEffect82)
 ; reads: wBattleActionId, wBattleActor
 ; points at: wD80F
-RunBattleResolveStep_Case02_Sub01::
+ActionIs91AndStatusBit6Set::
 Func_036_433F:: ; address name
     ld a, [wBattleActionId]
     cp a, $91
@@ -519,12 +519,12 @@ Jump_036_4347::
     xor a, $40
     ret
 
-; entry 3 of the `rst $00` table in RunBattleResolveStep
+; resolve step $03: advances wBattleResolveStep. When wBattleTarget is present (Func_036_7F3C does not set carry), wCFF4 bit 6 is set, and the target's wD854 byte has bit 7 set, it farcalls 3A:6EE5 with D = $35, calls Func_036_4FD1 and queues sound $84; otherwise it goes on to case 4 (E-0050)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wCFF4, wBattleActionId, wBattleActor, wDAC0, wCFF3, wC5E7
 ; writes: wDAC0
 ; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wBattleAGL
-RunBattleResolveStep_Case03::
+ResolveStepFlagBit7Effect::
 Jump_036_4356:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1341,12 +1341,12 @@ Func_036_48CB:: ; address name
     call Func_036_4E26
     ret
 
-; entry 11 of the `rst $00` table in RunBattleResolveStep
+; resolve step $0B: wBattleActionId $82 jumps to 36:4A9D; $83, $84 and $B3 jump to 36:4B16; any other action advances wBattleResolveStep and returns (E-0050)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleSubStep, wSoundChannelSlots, wBattleSubPhase, wDAC0, wDAC3, wDAC2
 ; writes: wBattleResolveStep, wBattleSubStep
 ; points at: wBattleResolveStep, wDC20, wBattleSubPhase
-RunBattleResolveStep_Case0B::
+ResolveStepBranchOnAction::
 Jump_036_48DE:: ; address name
     ld a, [wBattleActionId]
     cp a, $82
@@ -1382,11 +1382,11 @@ Jump_036_4908:: ; address name
     farcall RunBattleResolveStep_Case0E_Sub01
     ret
 
-; entry 15 of the `rst $00` table in RunBattleResolveStep
+; resolve step $0F: increments wBattleSubPhase and sets wBattleResolveStep to 0 (E-0050)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
 ; points at: wBattleSubPhase
-RunBattleResolveStep_Case0F::
+ResolveStepAdvanceSubPhase::
 Jump_036_490F:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -2423,7 +2423,7 @@ Jump_036_4FCA::
     farcall Func_03A_7193
     ret
 
-; 8 call sites from 7 routines (e.g. RunBattleResolveStep_Case04, RunBattleResolveStep_Case03, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub04, ...)
+; 8 call sites from 7 routines (e.g. RunBattleResolveStep_Case04, ResolveStepFlagBit7Effect, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub04, ...)
 ; reads: wBattleActionId, wBattleActor
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wD810
@@ -9894,7 +9894,7 @@ Jump_036_7F37::
     pop hl
     ret
 
-; 5 call sites from 5 routines (e.g. RunBattleResolveStep_Case03, RunBattleResolveStep_Case00, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
+; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, RunBattleResolveStep_Case00, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
 ; points at: wD80F
 Func_036_7F3C::
     call Func_000_3E25
