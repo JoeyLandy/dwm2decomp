@@ -2,7 +2,7 @@ SECTION "Bank 0B", ROMX[$4000], BANK[$0B]
     db $0B
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank0B, GameMode0_Update)
+; 2 call sites from 2 routines (e.g. ShowString_Bank0B, GameMode0_Update_Table2_Case20)
 BeginStringDisplay_Bank0B::
 Func_00B_4001:: ; address name
     ld de, Data_00B_4016
@@ -11,7 +11,7 @@ Func_00B_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_00B_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 3 routines (e.g. Func_00C_45DA, Func_00C_4E16, Func_00C_4EC7)
+; 6 call sites from 5 routines (e.g. Func_00C_45DA_Case04, Func_00C_45DA_Case05, Func_00C_45DA_Case07, Func_00C_4E16, ...)
 ShowString_Bank0B::
 Func_00B_400F:: ; address name
     call BeginStringDisplay_Bank0B

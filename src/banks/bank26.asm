@@ -1,7 +1,7 @@
 SECTION "Bank 26", ROMX[$4000], BANK[$26]
     db $26
 
-; 6 call sites from 6 routines (e.g. Func_001_5EAF, Func_004_44CE, Func_004_4C96, Func_004_4D43, ...)
+; 6 call sites from 6 routines (e.g. GameMode0_Update_Case04, Func_004_44CE, Func_004_4C96, Func_004_4D43, ...)
 ; reads: hSpriteSetIndex, hSpriteAttrXor
 ; writes: hSpriteAttrXor
 Func_026_4001::

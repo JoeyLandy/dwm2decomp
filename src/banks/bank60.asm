@@ -1,7 +1,7 @@
 SECTION "Bank 60", ROMX[$4000], BANK[$60]
     db $60
 
-; 1 call site from 1 routine (e.g. Func_002_6CD4)
+; 1 call site from 1 routine (e.g. Func_002_6C40_Case05)
 ; reads: wC833, hFFC6
 ; writes: wCC42, wCD03, wCD04
 ; points at: wC787
@@ -2949,25 +2949,30 @@ Func_060_5EE1::
     ld a, [wCD04]
     and a, $0F
     rst $00
-    dw Jump_060_609E
-    dw Jump_060_6031
-    dw Jump_060_5FBF
-    dw Jump_060_5F0C
-    dw Jump_060_5FBF
-    dw Jump_060_6031
-    dw Jump_060_609E
-    dw Jump_060_6031
-    dw Jump_060_5FBF
-    dw Jump_060_5F0C
-    dw Jump_060_5FBF
-    dw Jump_060_6031
-    dw Jump_060_609E
-    dw Jump_060_6031
-    dw Jump_060_5FBF
-    dw Jump_060_5F0C
+    dw Func_060_5EE1_Case00
+    dw Func_060_5EE1_Case01
+    dw Func_060_5EE1_Case02
+    dw Func_060_5EE1_Case03
+    dw Func_060_5EE1_Case02
+    dw Func_060_5EE1_Case01
+    dw Func_060_5EE1_Case00
+    dw Func_060_5EE1_Case01
+    dw Func_060_5EE1_Case02
+    dw Func_060_5EE1_Case03
+    dw Func_060_5EE1_Case02
+    dw Func_060_5EE1_Case01
+    dw Func_060_5EE1_Case00
+    dw Func_060_5EE1_Case01
+    dw Func_060_5EE1_Case02
+    dw Func_060_5EE1_Case03
     db $C9, $C9
 
-Jump_060_5F0C::
+; entry 3 of the `rst $00` table in Func_060_5EE1
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
+; writes: hFFD0
+Func_060_5EE1_Case03::
+Jump_060_5F0C:: ; address name
     ld a, b
     and a, $01
     cp a, $01
@@ -3079,7 +3084,12 @@ Jump_060_5F5E::
     ld a, $01
     ret
 
-Jump_060_5FBF::
+; entry 2 of the `rst $00` table in Func_060_5EE1
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
+; writes: hFFD0
+Func_060_5EE1_Case02::
+Jump_060_5FBF:: ; address name
     ld a, b
     and a, $01
     cp a, $01
@@ -3152,7 +3162,12 @@ Jump_060_5FF2::
     ld a, $01
     ret
 
-Jump_060_6031::
+; entry 1 of the `rst $00` table in Func_060_5EE1
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
+; writes: hFFD0
+Func_060_5EE1_Case01::
+Jump_060_6031:: ; address name
     ld a, b
     cp a, $02
     jr c, Jump_060_6038
@@ -3223,7 +3238,12 @@ Jump_060_605E::
     ld a, $01
     ret
 
-Jump_060_609E::
+; entry 0 of the `rst $00` table in Func_060_5EE1
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCD03, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFD0
+; writes: hFFD0
+Func_060_5EE1_Case00::
+Jump_060_609E:: ; address name
     call NextRandomSeed
     ld a, [wCD03]
     and a, $1F
@@ -3266,7 +3286,7 @@ Jump_060_60B2::
     ld a, $01
     ret
 
-; 4 call sites from 1 routine (e.g. Func_060_5EE1)
+; 4 call sites from 4 routines (e.g. Func_060_5EE1_Case03, Func_060_5EE1_Case02, Func_060_5EE1_Case01, Func_060_5EE1_Case00)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9, hFFCA
 Func_060_60E0::
@@ -3290,7 +3310,7 @@ Func_060_60E0::
     ldh [hFFCA], a
     ret
 
-; 5 call sites from 1 routine (e.g. Func_060_5EE1)
+; 5 call sites from 3 routines (e.g. Func_060_5EE1_Case03, Func_060_5EE1_Case02, Func_060_5EE1_Case01)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 Func_060_60F8::
     ldh a, [hFFC6]
@@ -3525,7 +3545,7 @@ Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_060_6866
     db $10, $6A, $68
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run)
+; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run_Case07)
 ; reads: wCC44, wC893, wC833, wCD0F, wCC47, wC88E, wC891, wCC42, ...
 ; writes: wC893, wCC47, hFFC6
 ; points at: wCC48, wCC4C
@@ -3627,7 +3647,7 @@ Jump_060_6382::
 Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run)
+; 2 call sites from 2 routines (e.g. Func_002_4628, ScriptCommandE0_Run_Case07)
 ; reads: wCC44, wC893, hMapId
 ; writes: wCC47, wCD0F, hFFC6
 Func_060_639D::
@@ -3966,7 +3986,7 @@ Jump_060_6590::
     ld a, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0)
+; 1 call site from 1 routine (e.g. Func_002_4AE0_Case04)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCCEA, wCD04
 ; writes: wCCE9, wCCEA, wCD0F, hFFC8, hFFC9
 ; points at: wCCEB, hFFC9
@@ -4474,7 +4494,7 @@ Data_060_6A09:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182B05, $15C
 
-; 3 call sites from 3 routines (e.g. Func_060_4001, Func_001_5DBA, Func_01B_5C3B)
+; 3 call sites from 3 routines (e.g. Func_060_4001, Func_001_5DBA, Func_01B_53CE_Table3_Case21)
 ; reads: hFFC6
 ; writes: rRAMB, rRAMG, hFFC6
 ; points at: sA000
@@ -4514,7 +4534,7 @@ Jump_060_6C8E::
     ld [rRAMB], a
     ret
 
-; 6 call sites from 5 routines (e.g. Func_001_5DBA, Func_002_4745, Func_002_4F4C, Func_002_6CD4, ...)
+; 6 call sites from 5 routines (e.g. Func_001_5DBA, Func_002_4745_Case02, Func_002_4F4C_Case07, Func_002_6C40_Case05, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07
@@ -4549,7 +4569,7 @@ Func_060_6C96::
     ld [rRAMB], a
     ret
 
-; 8 call sites from 6 routines (e.g. Func_001_5BE8, Func_002_6CD4, Func_007_4B27, Func_007_4E11, ...)
+; 8 call sites from 8 routines (e.g. GameMode0_Update_Case03, Func_002_6C40_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07

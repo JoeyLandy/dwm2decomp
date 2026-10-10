@@ -204,7 +204,7 @@ Jump_011_4105::
     ld c, $01
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_56DC, Func_002_5BD7)
+; 3 call sites from 3 routines (e.g. Func_002_4AE0_Case07, Func_002_56DC, Func_002_5BD7_Case03)
 ; reads: wCC44, hMapId, hFF8C, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8C9
 ; writes: hFF8C, wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
 ; points at: wC5E0

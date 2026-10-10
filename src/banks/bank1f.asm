@@ -232,7 +232,7 @@ Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07D094, $17A
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 1 call site from 1 routine (e.g. GameMode0_Update)
+; 1 call site from 1 routine (e.g. GameMode0_Update_Table2_Case17)
 BeginStringDisplay_Bank1F::
 Func_01F_520E:: ; address name
     ld de, Data_01F_5223
@@ -630,7 +630,7 @@ Data_01F_5B76:: ; heuristic: bank from RAM variable $D7FE; C0
 Data_01F_5BA8:: ; heuristic: bank from RAM variable $D7FE; C0
     INCBIN "dwm2-cobi-us.gbc", $07DBA8, $6D
 
-; 8 call sites from 8 routines (e.g. Func_014_4BA0, Func_015_4182, Func_015_5A67, Func_015_60BF, ...)
+; 8 call sites from 8 routines (e.g. Func_014_43CC_Case20, Func_015_4182_Case03, Func_015_54C0_Case0E, Func_015_60BF_Table2_Case06, ...)
 ; reads: wD7AF, wD7B1, wD7A9, wD781, wD7B0
 ; writes: rRAMG2, rRAMB, wC8D9, wD781
 ; points at: wD789
@@ -807,7 +807,7 @@ Func_01F_5CF8::
 Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
-; 25 call sites from 14 routines (e.g. Func_01F_73EC, Func_01F_74E3, Func_01F_753A, Func_01F_7591, ...)
+; 25 call sites from 18 routines (e.g. Func_01F_73EC, Func_01F_74E3, Func_01F_753A, Func_01F_7591, ...)
 ; reads: wD7F6, rSTAT, wIsCGB, wD7F7
 ; writes: rVBK
 ; points at: wD7F1
@@ -905,7 +905,7 @@ Jump_01F_5D89::
     jr nz, Jump_01F_5D3B
     ret
 
-; 10 call sites from 10 routines (e.g. Func_01F_7494, Func_00C_5177, Func_014_5CA8, Func_014_631C, ...)
+; 10 call sites from 10 routines (e.g. Func_01F_7494, Func_00C_5177, Func_014_5CA8_Table2_Case00, Func_014_631C_Table3_Case00, ...)
 ; reads: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, rSTAT, wIsCGB, ...
 ; writes: rVBK
 Func_01F_5D9A::
@@ -1093,7 +1093,7 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $12, $B4
     INCBIN "dwm2-cobi-us.gbc", $07F1EE, $187
 
-; 2 call sites from 2 routines (e.g. Func_037_5344, Func_0F1_5285)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case01, Func_0F1_5285_Case01)
 Func_01F_7375::
     ld c, $00
 
@@ -1155,7 +1155,7 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case05, Func_0F1_5285_Case05)
 ; reads: wD782, wCA36, wCA37, wIsCGB, wD781
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wD782, ...
 Func_01F_73EC::
@@ -1240,7 +1240,7 @@ Jump_01F_745C::
     ld [wD781], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344, Func_0F1_5285)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case00, Func_0F1_5285_Case00)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 Func_01F_7494::
     call BGMapAddressAtScroll_Bank1F
@@ -1277,7 +1277,7 @@ Func_01F_7494::
     call CopyFromBankWaitVRAM
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case15, Func_0F1_5285_Case15)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 Func_01F_74E3::
     call BGMapAddressAtScroll_Bank1F
@@ -1320,7 +1320,7 @@ Func_01F_74E3::
     call Func_01F_5D2A
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case17, Func_0F1_5285_Case17)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 Func_01F_753A::
     call BGMapAddressAtScroll_Bank1F
@@ -1363,7 +1363,7 @@ Func_01F_753A::
     call Func_01F_5D2A
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case18, Func_0F1_5285_Case18)
 ; writes: wC52D, wC52E, wC52F, wC530, wD7F5, wD7F6, wD7F1, wD7F2, ...
 Func_01F_7591::
     ld hl, vTiles2 + $200
@@ -1417,7 +1417,7 @@ Func_01F_7591::
     call Func_01F_5D2A
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case19, Func_0F1_5285_Case19)
 ; reads: wCA5F
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wCA2B
@@ -1521,7 +1521,7 @@ Jump_01F_769E::
     ld [wC530], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case1B, Func_0F1_5285_Case1B)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wC52D, ...
 Func_01F_76B5::
     call BGMapAddressAtScroll_Bank1F
@@ -1596,7 +1596,7 @@ Func_01F_76B5::
     ld [wC530], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case1C, Func_0F1_5285_Case1C)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
 Func_01F_7754::
     call BGMapAddressAtScroll_Bank1F

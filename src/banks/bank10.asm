@@ -2,7 +2,7 @@ SECTION "Bank 10", ROMX[$4000], BANK[$10]
     db $10
 
 ; one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand
-; 1 call site from 1 routine (e.g. Func_002_4AE0)
+; 1 call site from 1 routine (e.g. Func_002_4AE0_Case01)
 RunEventScriptFrame::
 Func_010_4001:: ; address name
     call FetchScriptCommand
@@ -10,7 +10,7 @@ Func_010_4001:: ; address name
     ret
 
 ; does nothing during a fade or unless wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning); reads the opcode at wScriptPointer (through ReadWordFromDataBank when wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when wCC44 bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance wScriptPointer
-; 5 call sites from 5 routines (e.g. RunEventScriptFrame, Func_002_4745, Func_002_6CD4, Func_007_6ADC, ...)
+; 5 call sites from 5 routines (e.g. RunEventScriptFrame, Func_002_4745_Case02, Func_002_6C40_Case05, GameMode5_Update_Case02, ...)
 ; reads: wFadeState, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
 ; writes: wScriptStartRequest, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 FetchScriptCommand::
@@ -1824,12 +1824,17 @@ ScriptCommand09:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49F5:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Jump_010_4A27
-    dw Jump_010_4A67
-    dw Jump_010_4A84
-    dw Jump_010_4A01
+    dw ScriptCommand09_Case00
+    dw ScriptCommand09_Case01
+    dw ScriptCommand09_Case02
+    dw ScriptCommand09_Case03
 
-Jump_010_4A01::
+; entry 3 of the `rst $00` table in ScriptCommand09
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC8CB
+; writes: wScriptCommandType, wScriptRunning, wModeState
+ScriptCommand09_Case03::
+Jump_010_4A01:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
@@ -1849,12 +1854,18 @@ ScriptCommand01:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4A1B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Jump_010_4A27
-    dw Jump_010_4A67
-    dw Jump_010_4A84
-    dw Jump_010_4AB3
+    dw ScriptCommand09_Case00
+    dw ScriptCommand09_Case01
+    dw ScriptCommand09_Case02
+    dw ScriptCommand01_Case03
 
-Jump_010_4A27::
+; entry 0 of the `rst $00` table in ScriptCommand09
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptParam1, hPlayerY
+; writes: wC8CB, wC8CC, hFFB9
+; points at: wScriptStep
+ScriptCommand09_Case00::
+Jump_010_4A27:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_010_4A62
@@ -1884,7 +1895,12 @@ Jump_010_4A62::
     inc [hl]
     ret
 
-Jump_010_4A67::
+; entry 1 of the `rst $00` table in ScriptCommand09
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptParam1, wC8CB, wScriptParam0
+; points at: wScriptStep
+ScriptCommand09_Case01::
+Jump_010_4A67:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_010_4A74
@@ -1902,7 +1918,13 @@ Jump_010_4A74::
     inc [hl]
     ret
 
-Jump_010_4A84::
+; entry 2 of the `rst $00` table in ScriptCommand09
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B, wScriptParam1, hPlayerY
+; writes: hFFB9, wC8CB, wC8CC
+; points at: wScriptStep
+ScriptCommand09_Case02::
+Jump_010_4A84:: ; address name
     ld a, [wC52B]
     bit 0, a
     ret nz
@@ -1928,7 +1950,12 @@ Jump_010_4AAE::
     inc [hl]
     ret
 
-Jump_010_4AB3::
+; entry 3 of the `rst $00` table in ScriptCommand01
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptParam1, wC8CB
+; writes: wScriptCommandType, wScriptStartRequest
+ScriptCommand01_Case03::
+Jump_010_4AB3:: ; address name
     ld a, [wScriptParam1]
     bit 6, a
     jr nz, Jump_010_4AC6
@@ -1944,7 +1971,7 @@ Jump_010_4AC6::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. ScriptCommand01)
+; 1 call site from 1 routine (e.g. ScriptCommand09_Case01)
 ; reads: wD7F0, wCC44
 ; writes: wStringIndex, wStringCategory
 Func_010_4AD0::
@@ -2005,66 +2032,102 @@ Jump_010_4B2D::
     ld [wStringCategory], a
     ld a, h
     rst $00
-    dw Jump_010_4B53
-    dw Jump_010_4B5A
-    dw Jump_010_4B61
-    dw Jump_010_4B68
-    dw Jump_010_4B6F
-    dw Jump_010_4B76
-    dw Jump_010_4B7D
-    dw Jump_010_4B7D
-    dw Jump_010_4B84
-    dw Jump_010_4B8B
-    dw Jump_010_4B8B
-    dw Jump_010_4B92
-    dw Jump_010_4B99
-    dw Jump_010_4BA0
+    dw Func_010_4AD0_Case00
+    dw Func_010_4AD0_Case01
+    dw Func_010_4AD0_Case02
+    dw Func_010_4AD0_Case03
+    dw Func_010_4AD0_Case04
+    dw Func_010_4AD0_Case05
+    dw Func_010_4AD0_Case06
+    dw Func_010_4AD0_Case06
+    dw Func_010_4AD0_Case08
+    dw Func_010_4AD0_Case09
+    dw Func_010_4AD0_Case09
+    dw Func_010_4AD0_Case0B
+    dw Func_010_4AD0_Case0C
+    dw Func_010_4AD0_Case0D
 
-Jump_010_4B53::
+; entry 0 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case00::
+Jump_010_4B53:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
-Jump_010_4B5A::
+; entry 1 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case01::
+Jump_010_4B5A:: ; address name
     farcall Func_029_4001
     ret
 
-Jump_010_4B61::
+; entry 2 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case02::
+Jump_010_4B61:: ; address name
     farcall Func_02A_4001
     ret
 
-Jump_010_4B68::
+; entry 3 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case03::
+Jump_010_4B68:: ; address name
     farcall Func_02B_4001
     ret
 
-Jump_010_4B6F::
+; entry 4 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case04::
+Jump_010_4B6F:: ; address name
     farcall Func_02C_4001
     ret
 
-Jump_010_4B76::
+; entry 5 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case05::
+Jump_010_4B76:: ; address name
     farcall Func_02D_4001
     ret
 
-Jump_010_4B7D::
+; entry 6 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case06::
+Jump_010_4B7D:: ; address name
     farcall Func_02E_4001
     ret
 
-Jump_010_4B84::
+; entry 8 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case08::
+Jump_010_4B84:: ; address name
     farcall Func_07C_4001
     ret
 
-Jump_010_4B8B::
+; entry 9 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case09::
+Jump_010_4B8B:: ; address name
     farcall Func_080_4001
     ret
 
-Jump_010_4B92::
+; entry 11 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case0B::
+Jump_010_4B92:: ; address name
     farcall Func_082_4001
     ret
 
-Jump_010_4B99::
+; entry 12 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case0C::
+Jump_010_4B99:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
-Jump_010_4BA0::
+; entry 13 of the `rst $00` table in Func_010_4AD0
+; no direct call (reached through a table, a jump or a vector)
+Func_010_4AD0_Case0D::
+Jump_010_4BA0:: ; address name
     farcall Func_089_4001
     ret
 

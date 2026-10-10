@@ -1,7 +1,7 @@
 SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
-; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4F0A, Func_032_5820, ...)
+; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4EE4_Case02, Func_032_5820_Case00, ...)
 ; reads: wD8A4, wC58A
 ; writes: wD8A6
 ; points at: wDA1C, wDA53

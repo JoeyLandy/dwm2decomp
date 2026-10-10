@@ -1,7 +1,7 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0E
 
-; 1 call site from 1 routine (e.g. GameMode0_Update)
+; 1 call site from 1 routine (e.g. GameMode0_Update_Table2_Case1C)
 ; reads: wStringIndex
 Func_00E_4001::
     ld a, [wStringIndex]
@@ -788,7 +788,7 @@ Data_00E_5350:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank0E, GameMode0_Update, Func_037_5999, BeginString_Bank0E_Cat0)
+; 4 call sites from 4 routines (e.g. ShowString_Bank0E, GameMode0_Update_Table2_Case1D, Func_037_5999, BeginString_Bank0E_Cat0)
 BeginStringDisplay_Bank0E::
 Func_00E_5370:: ; address name
     ld de, Data_00E_5385
@@ -797,7 +797,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. Func_037_4DC7, Func_037_542C, Func_0F1_4D4E, Func_0F1_5344, ...)
+; 6 call sites from 6 routines (e.g. Func_037_4AFD_Table3_Case16, Func_037_542C_Case08, Func_0F1_4AD0_Table3_Case16, Func_0F1_5344_Case08, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -959,7 +959,7 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
     db "be in the Vault.", $F7
     db $F0
 
-; 6 call sites from 6 routines (e.g. Func_001_5535, Func_007_7DE5, Func_00D_720E, Func_015_47A7, ...)
+; 6 call sites from 6 routines (e.g. Func_001_5535, Func_007_7DE5, ScriptCommandF4_Run_Table2_Case14, Func_015_4182_Case1C, ...)
 ; reads: wD7F6, wD7F7, wD7F5, wC616, wD7F1, wD00E, wCFA8
 ; writes: wD7F6, wD7F7, wD006, wD007, wCFA8, wD7F5
 ; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...
@@ -1879,7 +1879,7 @@ Func_00E_5C11::
     ld a, [wD012]
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_45DA)
+; 1 call site from 1 routine (e.g. Func_00C_45DA_Case04)
 ; reads: wD7F1, wD7F2, wD010, wD011, wD012
 ; writes: wD006, wD007, wD7F5, wD7F6, wD7F7
 Func_00E_5C2B::
@@ -2487,7 +2487,7 @@ Jump_00E_5F7C::
 Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
-; 2 call sites from 2 routines (e.g. Func_00E_5EE8, Func_0F1_4D4E)
+; 2 call sites from 2 routines (e.g. Func_00E_5EE8, Func_0F1_4AD0_Table3_Case16)
 ; writes: wD7F5
 ; points at: wC986, wCA2B
 Func_00E_5F91::

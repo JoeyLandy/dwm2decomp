@@ -1,29 +1,35 @@
 SECTION "Bank 36", ROMX[$4000], BANK[$36]
     db $36
 
-; 2 call sites from 2 routines (e.g. Func_03A_6157, Func_03A_68C9)
+; 2 call sites from 2 routines (e.g. Func_03A_6157_Case01, Func_03A_68C9_Case01)
 ; reads: wCFCB
 Func_036_4001::
     ld a, [wCFCB]
     rst $00
-    dw Jump_036_4025
-    dw Jump_036_4077
-    dw Jump_036_431F
-    dw Jump_036_4356
-    dw Jump_036_438A
-    dw Jump_036_458E
-    dw Jump_036_4603
-    dw Jump_036_460B
-    dw Jump_036_4776
-    dw Jump_036_47F1
-    dw Jump_036_4806
-    dw Jump_036_48DE
-    dw Jump_036_48FA
-    dw Jump_036_4901
-    dw Jump_036_4908
-    dw Jump_036_490F
+    dw Func_036_4001_Case00
+    dw Func_036_4001_Case01
+    dw Func_036_4001_Case02
+    dw Func_036_4001_Case03
+    dw Func_036_4001_Case04
+    dw Func_036_4001_Case05
+    dw Func_036_4001_Case06
+    dw Func_036_4001_Case07
+    dw Func_036_4001_Case08
+    dw Func_036_4001_Case09
+    dw Func_036_4001_Case0A
+    dw Func_036_4001_Case0B
+    dw Func_036_4001_Case0C
+    dw Func_036_4001_Case0D
+    dw Func_036_4001_Case0E
+    dw Func_036_4001_Case0F
 
-Jump_036_4025::
+; entry 0 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDABD, wCFF3, wD8A5, wCFCC
+; writes: wCFCC, wC971
+; points at: wCFCB, wD854
+Func_036_4001_Case00::
+Jump_036_4025:: ; address name
     ld hl, wCFCB
     inc [hl]
     xor a, a
@@ -59,13 +65,23 @@ Jump_036_4069::
     add_a_to_hl
     res 5, [hl]
 
-Jump_036_4077::
+; entry 1 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCFCC
+Func_036_4001_Case01::
+Jump_036_4077:: ; address name
     ld a, [wCFCC]
     rst $00
-    dw Jump_036_407F
-    dw Jump_036_4127
+    dw Func_036_4001_Table2_Case00
+    dw Func_036_4001_Table2_Case01
 
-Jump_036_407F::
+; entry 0 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDABD, wCFF2, wCFF3, wD8A5, wD8A4, wDAC0
+; writes: wC981, wDAB2, wD8A5, wCFCC, wDABE, wDAC0
+; points at: wD80A, wDA1D, wCFCC, wCFCB, wD80E
+Func_036_4001_Table2_Case00::
+Jump_036_407F:: ; address name
     xor a, a
     ld [wC981], a
     ld a, [wDABD]
@@ -73,10 +89,10 @@ Jump_036_407F::
     jp nz, Jump_036_411F
     ld a, [wCFF2]
     cp a, $40
-    jp z, Jump_036_4127
+    jp z, Func_036_4001_Table2_Case01
     and a, $F0
     cp a, $20
-    jp z, Jump_036_4127
+    jp z, Func_036_4001_Table2_Case01
     ld a, [wCFF3]
     bit 4, a
     jr z, Jump_036_40ED
@@ -151,7 +167,7 @@ Jump_036_4117::
     jr c, Jump_036_411E
 
 Jump_036_411C::
-    jr Jump_036_4127
+    jr Func_036_4001_Table2_Case01
 
 Jump_036_411E::
     ret
@@ -162,7 +178,13 @@ Jump_036_411F::
     ld hl, wCFCB
     inc [hl]
 
-Jump_036_4127::
+; entry 1 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5, wCFF3, wDAC0
+; writes: wCFCC, wDABE, wDAC0
+; points at: wCFCB, wD80E
+Func_036_4001_Table2_Case01::
+Jump_036_4127:: ; address name
     ld hl, wCFCB
     inc [hl]
     xor a, a
@@ -191,7 +213,7 @@ Jump_036_414B::
     call Func_036_4FD1
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001)
+; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
 ; reads: wD8A5, wCFF5, wD8A6, wD8A4
 ; writes: wDAD1, wD8A5
 ; points at: wD812, wD854, wD810, wDA1D, wDABF
@@ -292,7 +314,7 @@ Jump_036_421B::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001)
+; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
 ; reads: wD8A5, wD8A4
 ; writes: wDABE, wC981
 ; points at: wD80E
@@ -328,7 +350,7 @@ Jump_036_4255::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001)
+; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
 ; reads: wD8A5, wCFF5, wD8A4
 ; writes: wDABE, wC981
 ; points at: wD80E
@@ -377,7 +399,7 @@ Jump_036_42A5::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001)
+; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
 ; reads: wD8A5, wCFF5
 Func_036_42AA::
     ld a, [wD8A5]
@@ -445,15 +467,21 @@ Jump_036_4317::
     scf
     ret
 
-Jump_036_431F::
+; entry 2 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDABD, wDAB2, wD8A5, wCFF4, wD8A6, wD8A4, wDAC0, wCFF3, ...
+; writes: wDAD2, wDAC0
+; points at: wCFCB, wD854, wD810, wD811, wD80F, wD80D, wD80C, wD91F
+Func_036_4001_Case02::
+Jump_036_431F:: ; address name
     ld hl, wCFCB
     inc [hl]
     ld a, [wDABD]
     or a, a
-    jr z, Jump_036_4356
+    jr z, Func_036_4001_Case03
     ld a, [wDAB2]
     or a, a
-    jr nz, Jump_036_4356
+    jr nz, Func_036_4001_Case03
     call Func_036_433F
     ret z
     ld a, $82
@@ -461,7 +489,7 @@ Jump_036_431F::
     farcall Func_03A_4001
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_42D3)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case02)
 ; reads: wD8A6, wD8A4
 ; points at: wD80F
 Func_036_433F::
@@ -479,21 +507,27 @@ Jump_036_4347::
     xor a, $40
     ret
 
-Jump_036_4356::
+; entry 3 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5, wCFF4, wD8A6, wD8A4, wDAC0, wCFF3, wC5E7
+; writes: wDAC0
+; points at: wCFCB, wD854, wD810, wD811, wD80F, wD80D, wD80C, wD91F
+Func_036_4001_Case03::
+Jump_036_4356:: ; address name
     ld hl, wCFCB
     inc [hl]
     ld a, [wD8A5]
     call Func_036_7F3C
-    jr c, Jump_036_438A
+    jr c, Func_036_4001_Case04
     ld a, [wCFF4]
     bit 6, a
-    jr z, Jump_036_438A
+    jr z, Func_036_4001_Case04
     ld a, [wD8A5]
     ld hl, wD854
     add a, a
     add_a_to_hl
     bit 7, [hl]
-    jr z, Jump_036_438A
+    jr z, Func_036_4001_Case04
     ld d, $35
     farcall Func_03A_6EE5
     call Func_036_4FD1
@@ -501,7 +535,13 @@ Jump_036_4356::
     call QueueSoundEffect
     ret
 
-Jump_036_438A::
+; entry 4 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5, wCFF4, wD8A6, wD8A4, wDAC0, wCFF3, wC5E7
+; writes: wDAC0
+; points at: wCFCB, wD810, wD811, wD80F, wD80D, wD854, wD80C, wD91F
+Func_036_4001_Case04::
+Jump_036_438A:: ; address name
     call Func_036_454F
     jr z, Jump_036_439B
     ld a, [wD8A5]
@@ -738,7 +778,7 @@ Jump_036_4543::
     call Func_036_4FD1
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_433F)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
 ; reads: wD8A6
 Func_036_454F::
     ld a, [wD8A6]
@@ -775,7 +815,7 @@ Func_036_454F::
     cp a, $CE
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_433F)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
 ; reads: wD8A6
 Func_036_4582::
     ld a, [wD8A6]
@@ -786,19 +826,24 @@ Func_036_4582::
     cp a, $A1
     ret
 
-Jump_036_458E::
+; entry 5 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCFF4, wD8A4
+; points at: wCFCB, wD80D, wD854, wD80E
+Func_036_4001_Case05::
+Jump_036_458E:: ; address name
     ld hl, wCFCB
     inc [hl]
     ld a, [wCFF4]
     and a, $18
-    jr z, Jump_036_4603
+    jr z, Func_036_4001_Case06
     bit 4, a
     jr z, Jump_036_45AA
     ld a, [wD8A4]
     ld hl, wD80D
     call AddAx9ToHL
     bit 2, [hl]
-    jr nz, Jump_036_4603
+    jr nz, Func_036_4001_Case06
 
 Jump_036_45AA::
     ld a, [wCFF4]
@@ -843,13 +888,23 @@ Jump_036_45F7::
     res 7, [hl]
     ret
 
-Jump_036_4603::
+; entry 6 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; points at: wCFCB
+Func_036_4001_Case06::
+Jump_036_4603:: ; address name
     ld hl, wCFCB
     inc [hl]
     call Func_036_6717
     ret
 
-Jump_036_460B::
+; entry 7 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wSoundChannelSlots, wCFF4, wD872, wD873, wD8A5, wCFF3, wD8A6
+; writes: wD872, wD873
+; points at: wD80E, wDC20, wCFCB, wD80D, wD854, wD813, wD812, wD810
+Func_036_4001_Case07::
+Jump_036_460B:: ; address name
     ld a, [wD8A4]
     ld hl, wD80E
     call AddAx9ToHL
@@ -1045,7 +1100,13 @@ Jump_036_4742::
 Jump_036_4775::
     ret
 
-Jump_036_4776::
+; entry 8 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A6, wSoundChannelSlots, wDAC0, wD872, wD873, wDABA
+; writes: wDAC0, wDAD2, wDAD3
+; points at: wDC20, wCFCB
+Func_036_4001_Case08::
+Jump_036_4776:: ; address name
     ld a, [wD8A6]
     cp a, $CD
     jr nz, Jump_036_4787
@@ -1116,7 +1177,12 @@ Jump_036_47D6::
     farcall Func_03A_5762
     ret
 
-Jump_036_47F1::
+; entry 9 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDAD2
+; points at: wCFCB
+Func_036_4001_Case09::
+Jump_036_47F1:: ; address name
     ld hl, wCFCB
     inc [hl]
     ld a, $13
@@ -1126,7 +1192,13 @@ Jump_036_47F1::
     call QueueSoundEffect
     ret
 
-Jump_036_4806::
+; entry 10 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDAC0, wDAC2, wD8A6, wC0A0, hFFC6, wD8A4, wD8A5, wDAC3, ...
+; writes: wC0A0, wD8A4
+; points at: wCFCB, wC0A0, wD958
+Func_036_4001_Case0A::
+Jump_036_4806:: ; address name
     ld hl, wCFCB
     inc [hl]
     ld a, [wDAC0]
@@ -1235,7 +1307,7 @@ Jump_036_48B5::
     pop af
     ld [wD8A4], a
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
 ; reads: wD8A4
 ; points at: wC0A0
 Func_036_48CB::
@@ -1251,7 +1323,13 @@ Func_036_48CB::
     call Func_036_4E26
     ret
 
-Jump_036_48DE::
+; entry 11 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A6, wCFCC, wSoundChannelSlots, wCFCA, wDAC0, wDAC3, wDAC2
+; writes: wCFCB, wCFCC
+; points at: wCFCB, wDC20, wCFCA
+Func_036_4001_Case0B::
+Jump_036_48DE:: ; address name
     ld a, [wD8A6]
     cp a, $82
     jp z, Jump_036_4A9D
@@ -1265,26 +1343,40 @@ Jump_036_48DE::
     inc [hl]
     ret
 
-Jump_036_48FA::
+; entry 12 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+Func_036_4001_Case0C::
+Jump_036_48FA:: ; address name
     farcall Func_032_59DF
     ret
 
-Jump_036_4901::
+; entry 13 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+Func_036_4001_Case0D::
+Jump_036_4901:: ; address name
     farcall Func_032_5A3A
     ret
 
-Jump_036_4908::
+; entry 14 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+Func_036_4001_Case0E::
+Jump_036_4908:: ; address name
     farcall Func_032_5EAB
     ret
 
-Jump_036_490F::
+; entry 15 of the `rst $00` table in Func_036_4001
+; no direct call (reached through a table, a jump or a vector)
+; writes: wCFCB
+; points at: wCFCA
+Func_036_4001_Case0F::
+Jump_036_490F:: ; address name
     ld hl, wCFCA
     inc [hl]
     xor a, a
     ld [wCFCB], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case05)
 ; reads: hFFC6, wC5E7
 Func_036_4918::
     push bc
@@ -1303,7 +1395,7 @@ Jump_036_492B::
     cp a, b
     ret
 
-; 3 call sites from 3 routines (e.g. Func_036_4582, Func_036_7353, Func_036_7314)
+; 3 call sites from 3 routines (e.g. Func_036_4001_Case07, Func_036_7353, Func_036_7314)
 Func_036_4930::
     push hl
     ld bc, $0014
@@ -1328,7 +1420,7 @@ Func_036_4930::
     call Func_000_3E98
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case07)
 Func_036_494E::
     ld c, l
     ld b, h
@@ -1344,7 +1436,7 @@ Func_036_494E::
     call Func_000_3E98
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_4A38, Func_036_4582)
+; 2 call sites from 2 routines (e.g. Func_036_4A38, Func_036_4001_Case0A)
 ; reads: wDAC0, wDABD, wDABF, wDAD1, wD8A4
 ; writes: wD8A5, wDAD1
 ; points at: wDA1D
@@ -1373,7 +1465,7 @@ Func_036_4961::
     ld [wDAD1], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
 ; reads: wD8A6, wDABF, wDAC2
 ; writes: wC0A0
 ; points at: wC0A0, wD872
@@ -1485,7 +1577,7 @@ Jump_036_4A32::
     ld [wC0A0], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
 ; reads: wD8A6
 ; writes: wC0A0
 ; points at: wC0A0
@@ -1621,14 +1713,19 @@ Jump_036_4B0A::
 Jump_036_4B16::
     ld a, [wCFCC]
     rst $00
-    dw Jump_036_4B26
-    dw Jump_036_4B41
-    dw Jump_036_4D42
-    dw Jump_036_4D7F
-    dw Jump_036_4DD6
-    dw Jump_036_4DF3
+    dw Func_036_4A38_Case00
+    dw Func_036_4A38_Case01
+    dw Func_036_4A38_Case02
+    dw Func_036_4A38_Case03
+    dw Func_036_4A38_Case04
+    dw Func_036_4A38_Case05
 
-Jump_036_4B26::
+; entry 0 of the `rst $00` table in Func_036_4A38
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5
+; points at: wCFCC, wD80E
+Func_036_4A38_Case00::
+Jump_036_4B26:: ; address name
     ld hl, wCFCC
     inc [hl]
     ld a, [wD8A5]
@@ -1641,7 +1738,13 @@ Jump_036_4B26::
     farcall Func_03A_7193
     ret
 
-Jump_036_4B41::
+; entry 1 of the `rst $00` table in Func_036_4A38
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5, wDAC4, wDAC5
+; writes: wD868
+; points at: wCFCC, wD80D, wDAD8, wD8CF, wD8BF, wD8EF, wD8DF, wD8FF, ...
+Func_036_4A38_Case01::
+Jump_036_4B41:: ; address name
     ld hl, wCFCC
     inc [hl]
     ld hl, wCFCC
@@ -1832,7 +1935,7 @@ Jump_036_4CCF::
     ld [hl], b
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4A38)
+; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
 ; reads: wD8A5
 ; writes: wD868, wD869, wD86A, wD86B
 ; points at: wDA72
@@ -1869,7 +1972,12 @@ Jump_036_4D33::
     farcall Func_019_44B9
     ret
 
-Jump_036_4D42::
+; entry 2 of the `rst $00` table in Func_036_4A38
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5, wC58A
+; points at: wCFCC, wD958, wDA5B, wDAD4
+Func_036_4A38_Case02::
+Jump_036_4D42:: ; address name
     ld hl, wCFCC
     inc [hl]
     ld a, [wD8A5]
@@ -1901,7 +2009,12 @@ Jump_036_4D53::
     ld [hl], $FF
     ret
 
-Jump_036_4D7F::
+; entry 3 of the `rst $00` table in Func_036_4A38
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5
+; points at: wCFCC, wDA63, wDA5B, wD80C, wD80A
+Func_036_4A38_Case03::
+Jump_036_4D7F:: ; address name
     ld hl, wCFCC
     inc [hl]
     ld a, [wD8A5]
@@ -1943,7 +2056,13 @@ Jump_036_4D7F::
     res 2, [hl]
     ret
 
-Jump_036_4DD6::
+; entry 4 of the `rst $00` table in Func_036_4A38
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A5
+; writes: wDAAC, wDAAD
+; points at: wCFCC, wD814
+Func_036_4A38_Case04::
+Jump_036_4DD6:: ; address name
     ld hl, wCFCC
     inc [hl]
     ld a, [wD8A5]
@@ -1958,7 +2077,13 @@ Jump_036_4DD6::
     ld [wDAAD], a
     ret
 
-Jump_036_4DF3::
+; entry 5 of the `rst $00` table in Func_036_4A38
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD80A, wD80B, wD8A6
+; writes: wCFCB, wCFCC, wD80A, wD80B
+; points at: wCFCA
+Func_036_4A38_Case05::
+Jump_036_4DF3:: ; address name
     ld hl, wCFCA
     inc [hl]
     xor a, a
@@ -1982,7 +2107,7 @@ Jump_036_4DF3::
     ld [wD80B], a
     ret
 
-; 5 call sites from 4 routines (e.g. Func_036_48CB, Func_036_4582, Func_036_4D0C, Func_036_6C9A)
+; 5 call sites from 4 routines (e.g. Func_036_48CB, Func_036_4001_Case0A, Func_036_4A38_Case02, Func_036_6C9A)
 ; reads: wC58A, wC57F, wIsCGB, wD890, wC985, wC984
 ; writes: wC526, hFFC6
 Func_036_4E26::
@@ -2255,7 +2380,7 @@ Jump_036_4FBA::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_433F)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
 Func_036_4FBC::
     ld a, $84
     call QueueSoundEffect
@@ -2268,7 +2393,7 @@ Jump_036_4FCA::
     farcall Func_03A_7193
     ret
 
-; 8 call sites from 6 routines (e.g. Func_036_433F, Func_036_4001, Func_036_42AA, Func_036_425A, ...)
+; 8 call sites from 7 routines (e.g. Func_036_4001_Case04, Func_036_4001_Case03, Func_036_4001_Table2_Case01, Func_036_42AA, ...)
 ; reads: wD8A6, wD8A4
 ; writes: wCFCA, wCFCB
 ; points at: wD810
@@ -2303,7 +2428,7 @@ Jump_036_4FF3::
     ld [hl], a
     jr Jump_036_4FE9
 
-; 2 call sites from 2 routines (e.g. Func_036_4961, Func_036_433F)
+; 2 call sites from 2 routines (e.g. Func_036_4961, Func_036_4001_Case04)
 ; writes: wCFCA, wCFCB
 Func_036_5009::
     ld a, $03
@@ -4774,7 +4899,7 @@ Jump_036_60CD::
     call Func_036_621C
     ret
 
-; 3 call sites from 3 routines (e.g. Func_036_73EC, Func_032_5EAB, Func_03B_4D1C)
+; 3 call sites from 3 routines (e.g. Func_036_73EC, Func_032_5EAB_Case00, Func_03B_4D1C)
 Func_036_60D1::
     call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61BA
@@ -4792,7 +4917,7 @@ Jump_036_60E2::
     ld e, $01
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_73C3, Func_032_5EAB)
+; 2 call sites from 2 routines (e.g. Func_036_73C3, Func_032_5EAB_Case00)
 Func_036_60EB::
     call Func_036_6141
     jp z, Jump_036_613D
@@ -4814,7 +4939,7 @@ Jump_036_6104::
     ld e, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_5EAB)
+; 1 call site from 1 routine (e.g. Func_032_5EAB_Case00)
 Func_036_610D::
     call Func_036_5F01
     ld e, $00
@@ -6043,7 +6168,7 @@ Jump_036_6712::
     ld [hl], b
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case06)
 ; reads: wD8A6
 Func_036_6717::
     ld a, [wD8A6]
@@ -7539,7 +7664,7 @@ Func_036_70CC:: ; heuristic: follows a terminator; C0
     res 4, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
 ; reads: wC58A, wD8A4, wD8A5
 ; points at: wDAD4
 Func_036_70F4::
@@ -9253,7 +9378,7 @@ Jump_036_7C7D::
     ld bc, vTiles0 + $A8
     jr Jump_036_7C8B
 
-; 1 call site from 1 routine (e.g. Func_036_4582)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case07)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
 Func_036_7C85::
@@ -9522,7 +9647,7 @@ Jump_036_7DD1::
     db $72, $0B, $5E, $0B, $5E, $13, $50, $13, $50, $6C, $5A, $13, $50, $E0, $72, $13
     db $50, $13, $50, $13, $50, $E0, $72, $13, $50
 
-; 4 call sites from 4 routines (e.g. Func_036_4582, Func_036_5025, Func_036_7353, Func_036_7314)
+; 4 call sites from 4 routines (e.g. Func_036_4001_Case07, Func_036_5025, Func_036_7353, Func_036_7314)
 ; points at: wD8FF
 Func_036_7E2E::
     ld hl, wD8FF
@@ -9546,20 +9671,20 @@ Func_036_7E3D::
     ld hl, wD8EF
     jr Func_036_7E5B
 
-; 6 call sites from 5 routines (e.g. Func_036_4A38, Func_036_5A7A, Func_036_5A98, Func_036_7BF8, ...)
+; 6 call sites from 5 routines (e.g. Func_036_4A38_Case01, Func_036_5A7A, Func_036_5A98, Func_036_7BF8, ...)
 ; points at: wD8BF
 Func_036_7E42::
     ld hl, wD8BF
     jr Func_036_7E5B
 
-; 3 call sites from 3 routines (e.g. Func_036_4A38, Func_036_65D6, Func_036_6EFC)
+; 3 call sites from 3 routines (e.g. Func_036_4A38_Case01, Func_036_65D6, Func_036_6EFC)
 ; points at: wD8DF
 Func_036_7E47::
     ld hl, wD8DF
     jr Func_036_7E5B
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-; 1 call site from 1 routine (e.g. Func_036_433F)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
 Func_036_7E5B::
     add a, a
     add_a_to_hl
@@ -9567,14 +9692,14 @@ Func_036_7E5B::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
-; 56 call sites from 30 routines (e.g. Func_036_54BE, Func_036_4582, Func_036_42D3, Func_036_4162, ...)
+; 56 call sites from 31 routines (e.g. Func_036_54BE, Func_036_4001_Case07, Func_036_4001_Case05, Func_036_42D3, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
     add a, a
     add_a_to_hl
     ret
 
-; 5 call sites from 4 routines (e.g. Func_036_4A38, Func_036_4991, Func_036_4582, Func_036_4FBC)
+; 5 call sites from 4 routines (e.g. Func_036_4A38, Func_036_4991, Func_036_4001_Case05, Func_036_4FBC)
 ; reads: wC58A, wC57F, wD8A4
 Func_036_7E6C::
     ld a, [wC58A]
@@ -9593,7 +9718,7 @@ Jump_036_7E81::
     cp a, $04
     ret
 
-; 6 call sites from 6 routines (e.g. Func_036_4991, Func_036_4001, Func_036_425A, Func_036_6C9A, ...)
+; 6 call sites from 6 routines (e.g. Func_036_4991, Func_036_4001_Table2_Case01, Func_036_425A, Func_036_6C9A, ...)
 ; reads: wC58A, wC57F, wD8A5
 Func_036_7E87::
     ld a, [wC58A]
@@ -9615,7 +9740,7 @@ Jump_036_7E9C::
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 3 call sites from 3 routines (e.g. Func_036_4A38, Func_036_5F25, Func_036_5703)
+; 3 call sites from 3 routines (e.g. Func_036_4A38_Case01, Func_036_5F25, Func_036_5703)
 ; points at: wD095
 SetBit0OfWD095Indexed_Bank36::
 Func_036_7EBE:: ; address name
@@ -9627,7 +9752,7 @@ Func_036_7EBE:: ; address name
     ret
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 5 call sites from 4 routines (e.g. Func_036_4582, Func_036_4A38, Func_036_5F25, Func_036_5703)
+; 5 call sites from 4 routines (e.g. Func_036_4001_Case0A, Func_036_4A38_Case01, Func_036_5F25, Func_036_5703)
 ; points at: wD095
 SetBit1OfWD095Indexed_Bank36::
 Func_036_7ECB:: ; address name
@@ -9709,7 +9834,7 @@ Jump_036_7F37::
     pop hl
     ret
 
-; 5 call sites from 4 routines (e.g. Func_036_433F, Func_036_4001, Func_036_42D3, Func_036_4162)
+; 5 call sites from 5 routines (e.g. Func_036_4001_Case03, Func_036_4001_Case00, Func_036_4001_Table2_Case00, Func_036_42D3, ...)
 ; points at: wD80F
 Func_036_7F3C::
     call Func_000_3E25

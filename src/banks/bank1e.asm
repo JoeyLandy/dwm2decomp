@@ -8,12 +8,18 @@ ScriptCommandE9_Run::
 Func_01E_4001:: ; address name
     ld a, [wD788]
     rst $00
-    dw Jump_01E_400D
-    dw Jump_01E_403F
-    dw Jump_01E_4046
-    dw Jump_01E_4062
+    dw ScriptCommandE9_Run_Case00
+    dw ScriptCommandE9_Run_Case01
+    dw ScriptCommandE9_Run_Case02
+    dw ScriptCommandE9_Run_Case03
 
-Jump_01E_400D::
+; entry 0 of the `rst $00` table in ScriptCommandE9_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wIsCGB, wD788
+; writes: wD788
+; points at: wC364, wScreenTileBuffer, wD1CC, wD000
+ScriptCommandE9_Run_Case00::
+Jump_01E_400D:: ; address name
     ld hl, wC364
     ld de, wScreenTileBuffer
     ld bc, $0104
@@ -36,11 +42,19 @@ Jump_01E_402B::
     ld [wD788], a
     ret
 
-Jump_01E_403F::
+; entry 1 of the `rst $00` table in ScriptCommandE9_Run
+; no direct call (reached through a table, a jump or a vector)
+ScriptCommandE9_Run_Case01::
+Jump_01E_403F:: ; address name
     farcall ScriptCommandEE_Run
     ret
 
-Jump_01E_4046::
+; entry 2 of the `rst $00` table in ScriptCommandE9_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD788
+; writes: wD788
+ScriptCommandE9_Run_Case02::
+Jump_01E_4046:: ; address name
     ld b, $46
     ld de, Data_046_4001
     ld hl, vTiles1
@@ -53,34 +67,43 @@ Jump_01E_4046::
     ld [wD788], a
     ret
 
-Jump_01E_4062::
+; entry 3 of the `rst $00` table in ScriptCommandE9_Run
+; no direct call (reached through a table, a jump or a vector)
+ScriptCommandE9_Run_Case03::
+Jump_01E_4062:: ; address name
     farcall ScriptCommandEE_Run
     ret
 
 ; implements script command type E8; reached through ScriptCommandE8 in bank $10 (E-0038)
-; 18 call sites from 16 routines (e.g. Func_00D_4B30, ScriptCommandF4_Run, Func_00D_720E, ScriptCommandE8, ...)
+; 18 call sites from 18 routines (e.g. ScriptCommandEF_Run_Case0D, ScriptCommandF4_Run_Case00, ScriptCommandF4_Run_Case0C, ScriptCommandE8, ...)
 ; reads: wD780
 ScriptCommandE8_Run::
 Func_01E_4069:: ; address name
     ld a, [wD780]
     rst $00
-    dw Jump_01E_408B
-    dw Jump_01E_40D1
-    dw Jump_01E_412A
-    dw Jump_01E_422D
-    dw Jump_01E_4234
-    dw Jump_01E_4C78
-    dw Jump_01E_506C
-    dw Jump_01E_568E
-    dw Jump_01E_65B8
-    dw Jump_01E_5B50
-    dw Jump_01E_60F4
-    dw Jump_01E_6298
-    dw Jump_01E_600F
-    dw Jump_01E_625A
-    dw Jump_01E_5FAA
+    dw ScriptCommandE8_Run_Case00
+    dw ScriptCommandE8_Run_Case01
+    dw ScriptCommandE8_Run_Case02
+    dw ScriptCommandE8_Run_Case03
+    dw ScriptCommandE8_Run_Case04
+    dw ScriptCommandE8_Run_Case05
+    dw ScriptCommandE8_Run_Case06
+    dw ScriptCommandE8_Run_Case07
+    dw ScriptCommandE8_Run_Case08
+    dw ScriptCommandE8_Run_Case09
+    dw ScriptCommandE8_Run_Case0A
+    dw ScriptCommandE8_Run_Case0B
+    dw ScriptCommandE8_Run_Case0C
+    dw ScriptCommandE8_Run_Case0D
+    dw ScriptCommandE8_Run_Case0E
 
-Jump_01E_408B::
+; entry 0 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wIsCGB
+; writes: wD7F0, hFFBA, wD7FC, wScriptCommandType, wScriptStartRequest
+; points at: wD780, wC364, wScreenTileBuffer, wD1CC, wD000
+ScriptCommandE8_Run_Case00::
+Jump_01E_408B:: ; address name
     ld hl, wD780
     ld bc, $006F
 
@@ -118,19 +141,30 @@ Jump_01E_40B6::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_40D1::
+; entry 1 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case01::
+Jump_01E_40D1:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_40DD
-    dw Jump_01E_40E4
-    dw Jump_01E_40F2
-    dw Jump_01E_4100
+    dw ScriptCommandE8_Run_Table2_Case00
+    dw ScriptCommandE8_Run_Table2_Case01
+    dw ScriptCommandE8_Run_Table2_Case02
+    dw ScriptCommandE8_Run_Table2_Case03
 
-Jump_01E_40DD::
+; entry 0 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+ScriptCommandE8_Run_Table2_Case00::
+Jump_01E_40DD:: ; address name
     farcall Func_01D_6C8A
     ret
 
-Jump_01E_40E4::
+; entry 1 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
+ScriptCommandE8_Run_Table2_Case01::
+Jump_01E_40E4:: ; address name
     ld hl, $778C
     ld de, $77CE
     call Func_01E_7454
@@ -138,14 +172,25 @@ Jump_01E_40E4::
     inc [hl]
     ret
 
-Jump_01E_40F2::
+; entry 2 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+ScriptCommandE8_Run_Table2_Case02::
+Jump_01E_40F2:: ; address name
     farcall Func_01D_5E79
     ld a, [wD781]
     inc a
     ld [wD781], a
     ret
 
-Jump_01E_4100::
+; entry 3 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD780
+; writes: wD781, wD780
+; points at: wC364
+ScriptCommandE8_Run_Table2_Case03::
+Jump_01E_4100:: ; address name
     ld de, $79C8
     ld hl, wC364
     ld bc, $0B0B
@@ -162,7 +207,12 @@ Jump_01E_4100::
     ld [wD780], a
     ret
 
-Jump_01E_412A::
+; entry 2 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD786, wD780
+; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD780, wD7AB, wD7AD, wD7AF, wD786
+ScriptCommandE8_Run_Case02::
+Jump_01E_412A:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01E_4146
@@ -263,7 +313,7 @@ Jump_01E_41D0::
     ld [wScriptStartRequest], a
     ret
 
-; 3 call sites from 1 routine (e.g. ScriptCommandE8_Run)
+; 3 call sites from 1 routine (e.g. ScriptCommandE8_Run_Case02)
 ; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
 Func_01E_41DF::
@@ -280,19 +330,19 @@ Func_01E_41DF::
     xor a, a
     ld [wD787], a
 
-; 1 call site from 1 routine (e.g. ScriptCommandE8_Run)
+; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case02)
 ; reads: wD786
 Func_01E_41F9::
     ld b, $BB
     jr Jump_01E_4203
 
-; 2 call sites from 1 routine (e.g. ScriptCommandE8_Run)
+; 2 call sites from 1 routine (e.g. ScriptCommandE8_Run_Case02)
 ; reads: wD786
 Func_01E_41FD::
     ld b, $C3
     jr Jump_01E_4203
 
-; 1 call site from 1 routine (e.g. ScriptCommandE8_Run)
+; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case02)
 ; reads: wD786
 Func_01E_4201::
     ld b, $BC
@@ -318,64 +368,77 @@ Jump_01E_4203::
     ret
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
-Jump_01E_422D::
+; entry 3 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+ScriptCommandE8_Run_Case03::
+Jump_01E_422D:: ; address name
     farcall Func_01D_6B32
     ret
 
-Jump_01E_4234::
+; entry 4 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case04::
+Jump_01E_4234:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_429A
-    dw Jump_01E_4371
-    dw Jump_01E_439E
-    dw Jump_01E_43C2
-    dw Jump_01E_43E0
-    dw Jump_01E_440A
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_44A1
-    dw Jump_01E_44B5
-    dw Jump_01E_44C3
-    dw Jump_01E_4517
+    dw Func_01E_4201_Case00
+    dw Func_01E_4201_Case01
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case03
+    dw Func_01E_4201_Case04
+    dw Func_01E_4201_Case05
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case09
+    dw Func_01E_4201_Case0A
+    dw Func_01E_4201_Case0B
+    dw Func_01E_4201_Case0C
     dw Func_01E_46E5
-    dw Jump_01E_4720
-    dw Jump_01E_473B
-    dw Jump_01E_47B2
-    dw Jump_01E_4831
-    dw Jump_01E_4890
-    dw Jump_01E_4933
-    dw Jump_01E_49B2
+    dw Func_01E_4201_Case0E
+    dw Func_01E_4201_Case0F
+    dw Func_01E_4201_Case10
+    dw Func_01E_4201_Case11
+    dw Func_01E_4201_Case12
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case14
     dw Func_01E_49EA
     dw Func_01E_4A32
-    dw Jump_01E_4A39
-    dw Jump_01E_439E
-    dw Jump_01E_4A5E
-    dw Jump_01E_43E0
-    dw Jump_01E_4A74
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_4B05
-    dw Jump_01E_44B5
-    dw Jump_01E_44C3
-    dw Jump_01E_4517
+    dw Func_01E_4201_Case17
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case19
+    dw Func_01E_4201_Case04
+    dw Func_01E_4201_Case1B
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4201_Case22
+    dw Func_01E_4201_Case0A
+    dw Func_01E_4201_Case0B
+    dw Func_01E_4201_Case0C
     dw Func_01E_46E5
-    dw Jump_01E_4B42
-    dw Jump_01E_4B5D
-    dw Jump_01E_4BE1
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_4C42
+    dw Func_01E_4201_Case27
+    dw Func_01E_4201_Case28
+    dw Func_01E_4201_Case29
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4201_Case30
 
-Jump_01E_429A::
+; entry 0 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782, wD781, wC6FD
+; writes: wD782, wD781, rRAMG2, rRAMB, wC8D9
+; points at: wC378, wC6FE, wC364
+Func_01E_4201_Case00::
+Jump_01E_429A:: ; address name
     ld a, [wD782]
     and a, a
     jp z, Jump_01E_42A9
@@ -396,7 +459,7 @@ Jump_01E_42A9::
     ld [wD782], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_6074)
+; 1 call site from 1 routine (e.g. Func_01E_5C63_Table4_Case07)
 ; reads: wC6FD, wD782
 ; writes: rRAMG2, rRAMB, wC8D9, wD782
 ; points at: wC6FE
@@ -460,7 +523,13 @@ Jump_01E_430D::
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $00, $8D, $50, $8D, $A0, $8D
 
-Jump_01E_4371::
+; entry 1 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD781
+; writes: wD7F1, wD781
+; points at: wD789, wC36C
+Func_01E_4201_Case01::
+Jump_01E_4371:: ; address name
     ld a, [wD7AB]
     ld hl, wD789
     add_a_to_hl
@@ -481,7 +550,11 @@ Jump_01E_4371::
     ld [wD781], a
     ret
 
-Jump_01E_439E::
+; entry 2 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC52D, wD781
+Func_01E_4201_Case02::
+Jump_01E_439E:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
     call FillTilesBxC
@@ -500,7 +573,13 @@ Jump_01E_439E::
     inc [hl]
     ret
 
-Jump_01E_43C2::
+; entry 3 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD781
+; writes: wD7F1, wD781
+; points at: wD789
+Func_01E_4201_Case03::
+Jump_01E_43C2:: ; address name
     ld a, [wD7AB]
     ld hl, wD789
     add_a_to_hl
@@ -513,7 +592,12 @@ Jump_01E_43C2::
     ld [wD781], a
     ret
 
-Jump_01E_43E0::
+; entry 4 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD781
+; writes: wD781
+Func_01E_4201_Case04::
+Jump_01E_43E0:: ; address name
     ld a, [wD7AB]
     ld b, $BB
     ld hl, $7880
@@ -531,7 +615,12 @@ Jump_01E_43E0::
     ld [wD781], a
     ret
 
-Jump_01E_440A::
+; entry 5 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7AB, wD781
+; writes: wD7F9, wD7FA, wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4201_Case05::
+Jump_01E_440A:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_65F6
@@ -579,7 +668,12 @@ Jump_01E_4442::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4463::
+; entry 6 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD7F2, wD781
+Func_01E_4201_Case06::
+Jump_01E_4463:: ; address name
     ld c, $0D
     ld hl, $01D4
     ld de, $0008
@@ -593,7 +687,12 @@ Jump_01E_4463::
     ld [wD781], a
     ret
 
-Jump_01E_447F::
+; entry 7 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_4201_Case07::
+Jump_01E_447F:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -603,7 +702,11 @@ Jump_01E_447F::
     ld [wD781], a
     ret
 
-Jump_01E_4493::
+; entry 8 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
+Func_01E_4201_Case08::
+Jump_01E_4493:: ; address name
     ld hl, $7810
     ld de, $7824
     call Func_01E_7454
@@ -611,7 +714,11 @@ Jump_01E_4493::
     inc [hl]
     ret
 
-Jump_01E_44A1::
+; entry 9 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD780, wScriptCommandType, wScriptStartRequest
+Func_01E_4201_Case09::
+Jump_01E_44A1:: ; address name
     ld a, $03
     ld [wD781], a
     ld a, $01
@@ -622,7 +729,11 @@ Jump_01E_44A1::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_44B5::
+; entry 10 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
+Func_01E_4201_Case0A::
+Jump_01E_44B5:: ; address name
     ld hl, $7864
     ld de, $7872
     call Func_01E_7454
@@ -630,7 +741,13 @@ Jump_01E_44B5::
     inc [hl]
     ret
 
-Jump_01E_44C3::
+; entry 11 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7AD, wD7AE, wD781
+; points at: wC410
+Func_01E_4201_Case0B::
+Jump_01E_44C3:: ; address name
     ld de, $44EF
     ld hl, wC410
     ld bc, $0805
@@ -666,7 +783,12 @@ Func_01E_44EF:: ; heuristic: follows a terminator; C0
     db $72, $73, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $74, $75
     db $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-Jump_01E_4517::
+; entry 12 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD781, wD7AD, wD780, wD7B7, wD7AB, wC6FD, ...
+; writes: wD7FA, wD781, wScriptCommandType, wScriptStartRequest, wD7B2, wD7B3, wD780, wD782, ...
+Func_01E_4201_Case0C::
+Jump_01E_4517:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01E_4533
@@ -876,7 +998,7 @@ Jump_01E_4687::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_44EF)
+; 1 call site from 1 routine (e.g. Func_01E_4201_Case0C)
 ; reads: wJoypadRepeatTimer, wD7AE, wD7AD
 ; writes: wD7AE
 Func_01E_469D::
@@ -893,19 +1015,19 @@ Func_01E_469D::
     xor a, a
     ld [wD7AE], a
 
-; 1 call site from 1 routine (e.g. Func_01E_44EF)
+; 1 call site from 1 routine (e.g. Func_01E_4201_Case0C)
 ; reads: wD7AD
 Func_01E_46B7::
     ld b, $BB
     jr Jump_01E_46C1
 
-; 2 call sites from 1 routine (e.g. Func_01E_44EF)
+; 2 call sites from 1 routine (e.g. Func_01E_4201_Case0C)
 ; reads: wD7AD
 Func_01E_46BB::
     ld b, $C3
     jr Jump_01E_46C1
 
-; 1 call site from 1 routine (e.g. Func_01E_44EF)
+; 1 call site from 1 routine (e.g. Func_01E_4201_Case0C)
 ; reads: wD7AD
 Func_01E_46BF::
     ld b, $BC
@@ -931,7 +1053,7 @@ Jump_01E_46C1::
     ret
     db $2D, $01, $6D, $01
 
-; 5 call sites from 2 routines (e.g. Func_01E_4A32, Func_01E_46E5)
+; 5 call sites from 5 routines (e.g. Func_01E_4201_Case29, Func_01E_4201_Case0F, Func_01E_4A32_Case48, Func_01E_4A32_Case2F, ...)
 ; reads: wD7AB, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC410
@@ -958,7 +1080,11 @@ Func_01E_46E5::
     ret
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-Jump_01E_4720::
+; entry 14 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4201_Case0E::
+Jump_01E_4720:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -971,7 +1097,13 @@ Jump_01E_4720::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_473B::
+; entry 15 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wC6FD
+; writes: rRAMG2, rRAMB, hFFC6, wC6FD, wC527, wD781, wD7AB, wD7AD, ...
+; points at: wD789, wC6FE
+Func_01E_4201_Case0F::
+Jump_01E_473B:: ; address name
     ld a, [wD7AB]
     ld hl, wD789
     add_a_to_hl
@@ -1028,7 +1160,13 @@ Jump_01E_4782::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_47B2::
+; entry 16 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786, wD781
+; writes: rRAMG2, rRAMB, wD7FA, wD780, wD781, wD782, wScriptCommandType, wScriptStartRequest
+; points at: sA000
+Func_01E_4201_Case10::
+Jump_01E_47B2:: ; address name
     farcall Func_01D_6D70
     ld d, c
     ld a, $0A
@@ -1101,7 +1239,13 @@ Jump_01E_4817::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4831::
+; entry 17 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786, wD781
+; writes: wD781, wD7FA
+; points at: wC412
+Func_01E_4201_Case11::
+Jump_01E_4831:: ; address name
     ld de, Data_01F_4370
     ld hl, vTiles1 + $5F0
     ld b, $1F
@@ -1130,7 +1274,12 @@ Jump_01E_4831::
     db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
     db $C3, $B7, $B6, $C3, $F3, $A6, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
 
-Jump_01E_4890::
+; entry 18 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7FA, wD781
+; writes: wD781, wD782, wScriptCommandType, wScriptStartRequest, wD7FA, wD780
+Func_01E_4201_Case12::
+Jump_01E_4890:: ; address name
     farcall Func_01D_6540
     ld a, [wD7F9]
     and a, a
@@ -1173,7 +1322,7 @@ Jump_01E_48C4::
     ld [wScriptStartRequest], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_01E_46E5)
+; 2 call sites from 1 routine (e.g. Func_01E_4201_Case12)
 ; reads: wIsCGB, rSVBK
 ; writes: rSVBK
 ; points at: wC412, wC246, wD27A, wD0AE
@@ -1226,7 +1375,13 @@ Jump_01E_492F::
     jr nz, Func_01E_4918
     ret
 
-Jump_01E_4933::
+; entry 19 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7AF, wD7AE, wD781
+; points at: wC364
+Func_01E_4201_Case13::
+Jump_01E_4933:: ; address name
     ld de, $495A
     ld hl, wC364
     ld bc, $080B
@@ -1244,7 +1399,13 @@ Jump_01E_4933::
     ret
     INCBIN "dwm2-cobi-us.gbc", $07895A, $58
 
-Jump_01E_49B2::
+; entry 20 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+; points at: wC364
+Func_01E_4201_Case14::
+Jump_01E_49B2:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0C01
     call FillTilesBxC
@@ -1266,7 +1427,7 @@ Jump_01E_49B2::
     ld [wD781], a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_01E_5C63)
+; 4 call sites from 4 routines (e.g. Func_01E_5A4D_Table2_Case03, Func_01E_5C63_Case03, Func_01E_5C63_Table2_Case03, Func_01E_5C63_Table3_Case03)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC42E, wC42F
@@ -1274,10 +1435,16 @@ Func_01E_49EA::
     farcall Func_01D_5ECE
     jr Func_01E_49F8
 
-Jump_01E_49F2::
+; entry 6 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC42E, wC42F
+Func_01E_4A32_Table2_Case06::
+Jump_01E_49F2:: ; address name
     farcall Func_01D_5F2D
 
-; 5 call sites from 2 routines (e.g. Func_01E_5C63, Func_01E_6074)
+; 5 call sites from 5 routines (e.g. Func_01E_5C63_Table4_Case01, Func_01E_6074_Table2_Case03, Func_01E_6074_Table3_Case03, Func_01E_6074_Table4_Case03, ...)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC42E, wC42F
@@ -1314,7 +1481,13 @@ Func_01E_4A32::
     farcall Func_01F_5C15
     ret
 
-Jump_01E_4A39::
+; entry 23 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD781
+; points at: wC36C
+Func_01E_4201_Case17::
+Jump_01E_4A39:: ; address name
     call Func_01E_76EB
     ld a, [hl]
     ld b, a
@@ -1333,7 +1506,12 @@ Jump_01E_4A39::
     ld [wD781], a
     ret
 
-Jump_01E_4A5E::
+; entry 25 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD781
+Func_01E_4201_Case19::
+Jump_01E_4A5E:: ; address name
     call Func_01E_76EB
     ld a, [hl]
     ld b, a
@@ -1344,7 +1522,13 @@ Jump_01E_4A5E::
     ld [wD781], a
     ret
 
-Jump_01E_4A74::
+; entry 27 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD7AB
+; writes: wD7F9, wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; points at: wC52D
+Func_01E_4201_Case1B::
+Jump_01E_4A74:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -1405,7 +1589,12 @@ Jump_01E_4AD7::
     ld [wD781], a
     ret
 
-Jump_01E_4AE0::
+; entry 32 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_4201_Case20::
+Jump_01E_4AE0:: ; address name
     ld hl, $7838
     ld de, $784E
     call Func_01E_7454
@@ -1414,7 +1603,12 @@ Jump_01E_4AE0::
     ld [wD781], a
     ret
 
-Jump_01E_4AF1::
+; entry 33 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_4201_Case21::
+Jump_01E_4AF1:: ; address name
     farcall Func_01D_62AD
     farcall Func_01D_5E79
     ld a, [wD781]
@@ -1422,7 +1616,13 @@ Jump_01E_4AF1::
     ld [wD781], a
     ret
 
-Jump_01E_4B05::
+; entry 34 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786
+; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; points at: wC364
+Func_01E_4201_Case22::
+Jump_01E_4B05:: ; address name
     ld de, $79C8
     ld hl, wC364
     ld bc, $0B0B
@@ -1446,7 +1646,11 @@ Jump_01E_4B05::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4B42::
+; entry 39 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4201_Case27::
+Jump_01E_4B42:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -1459,7 +1663,13 @@ Jump_01E_4B42::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4B5D::
+; entry 40 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC6FE, wD781
+; writes: rRAMG2, rRAMB, wC8D9, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wC8CF, wC130, wC52D
+Func_01E_4201_Case28::
+Jump_01E_4B5D:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -1544,7 +1754,12 @@ Jump_01E_4BBE::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4BE1::
+; entry 41 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; writes: rRAMG2, rRAMB, hFFC6, wC6FE, wC527, wD7AB, wD7AD, wD7AF, ...
+; points at: wC6FE
+Func_01E_4201_Case29::
+Jump_01E_4BE1:: ; address name
     ld hl, wC6FE
     ld a, $0A
     ld [rRAMG2], a
@@ -1588,7 +1803,12 @@ Jump_01E_4BE1::
     ld [wD7AE], a
     ret
 
-Jump_01E_4C42::
+; entry 48 of the `rst $00` table in Func_01E_4201
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD780, wD7FA, wScriptCommandType, wScriptStartRequest
+; points at: wC364
+Func_01E_4201_Case30::
+Jump_01E_4C42:: ; address name
     ld de, $79C8
     ld hl, wC364
     ld bc, $0B0B
@@ -1610,91 +1830,99 @@ Jump_01E_4C42::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4C78::
+; entry 5 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case05::
+Jump_01E_4C78:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_4933
-    dw Jump_01E_49B2
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case14
     dw Func_01E_49EA
     dw Func_01E_4A32
-    dw Jump_01E_4A39
-    dw Jump_01E_439E
-    dw Jump_01E_4A5E
-    dw Jump_01E_43E0
-    dw Jump_01E_4A74
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_4C42
-    dw Jump_01E_44B5
-    dw Jump_01E_44C3
-    dw Jump_01E_4517
+    dw Func_01E_4201_Case17
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case19
+    dw Func_01E_4201_Case04
+    dw Func_01E_4201_Case1B
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4201_Case30
+    dw Func_01E_4201_Case0A
+    dw Func_01E_4201_Case0B
+    dw Func_01E_4201_Case0C
     dw Func_01E_46E5
-    dw Jump_01E_4D1C
-    dw Jump_01E_4D37
-    dw Jump_01E_4D5B
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_4C42
-    dw Jump_01E_4831
-    dw Jump_01E_4890
-    dw Jump_01E_429A
-    dw Jump_01E_4371
-    dw Jump_01E_439E
-    dw Jump_01E_43C2
-    dw Jump_01E_43E0
-    dw Jump_01E_4DB5
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4E0E
-    dw Jump_01E_44B5
-    dw Jump_01E_44C3
-    dw Jump_01E_4517
+    dw Func_01E_4A32_Case14
+    dw Func_01E_4A32_Case15
+    dw Func_01E_4A32_Case16
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4201_Case30
+    dw Func_01E_4201_Case11
+    dw Func_01E_4201_Case12
+    dw Func_01E_4201_Case00
+    dw Func_01E_4201_Case01
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case03
+    dw Func_01E_4201_Case04
+    dw Func_01E_4A32_Case25
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4A32_Case29
+    dw Func_01E_4201_Case0A
+    dw Func_01E_4201_Case0B
+    dw Func_01E_4201_Case0C
     dw Func_01E_46E5
-    dw Jump_01E_4E4B
-    dw Jump_01E_4F9D
-    dw Jump_01E_4E66
-    dw Jump_01E_4933
-    dw Jump_01E_49B2
+    dw Func_01E_4A32_Case2E
+    dw Func_01E_4A32_Case2F
+    dw Func_01E_4A32_Case30
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case14
     dw Func_01E_49EA
     dw Func_01E_4A32
-    dw Jump_01E_4A39
-    dw Jump_01E_439E
-    dw Jump_01E_4A5E
-    dw Jump_01E_43E0
-    dw Jump_01E_4F31
-    dw Jump_01E_4EA3
-    dw Jump_01E_4EC3
-    dw Jump_01E_4ED4
-    dw Jump_01E_4FAC
-    dw Jump_01E_4371
-    dw Jump_01E_439E
-    dw Jump_01E_43C2
-    dw Jump_01E_4EFE
-    dw Jump_01E_44B5
-    dw Jump_01E_44C3
-    dw Jump_01E_4517
+    dw Func_01E_4201_Case17
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case19
+    dw Func_01E_4201_Case04
+    dw Func_01E_4A32_Case39
+    dw Func_01E_4A32_Case3A
+    dw Func_01E_4A32_Case3B
+    dw Func_01E_4A32_Case3C
+    dw Func_01E_4A32_Case3D
+    dw Func_01E_4201_Case01
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case03
+    dw Func_01E_4A32_Case41
+    dw Func_01E_4201_Case0A
+    dw Func_01E_4201_Case0B
+    dw Func_01E_4201_Case0C
     dw Func_01E_46E5
-    dw Jump_01E_4FBB
-    dw Jump_01E_4FD6
-    dw Jump_01E_4FF7
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_4C42
+    dw Func_01E_4A32_Case46
+    dw Func_01E_4A32_Case47
+    dw Func_01E_4A32_Case48
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4201_Case30
 
-Jump_01E_4D1C::
+; entry 20 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Case14::
+Jump_01E_4D1C:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -1707,7 +1935,13 @@ Jump_01E_4D1C::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4D37::
+; entry 21 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+; points at: wC52D
+Func_01E_4A32_Case15::
+Jump_01E_4D37:: ; address name
     farcall Func_002_470B
     ld a, [wD781]
     inc a
@@ -1726,7 +1960,13 @@ Jump_01E_4D37::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4D5B::
+; entry 22 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC6FD
+; writes: rRAMG2, rRAMB, hFFC6, wC6FD, wC527, wD7AB, wD7AD, wD7AF, ...
+; points at: wC6FE
+Func_01E_4A32_Case16::
+Jump_01E_4D5B:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -1764,7 +2004,12 @@ Jump_01E_4D5B::
     ld [wD7AE], a
     ret
 
-Jump_01E_4DB5::
+; entry 37 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7AB, wD781
+; writes: wD7F9, wD7FA, wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Case25::
+Jump_01E_4DB5:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_65F6
@@ -1812,7 +2057,13 @@ Jump_01E_4DED::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4E0E::
+; entry 41 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786
+; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; points at: wC364
+Func_01E_4A32_Case29::
+Jump_01E_4E0E:: ; address name
     ld de, $79C8
     ld hl, wC364
     ld bc, $0B0B
@@ -1836,7 +2087,11 @@ Jump_01E_4E0E::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4E4B::
+; entry 46 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Case2E::
+Jump_01E_4E4B:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -1849,7 +2104,13 @@ Jump_01E_4E4B::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4E66::
+; entry 48 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781, wD7AB
+; writes: wD781, wD7B5, wD7B4, wD7AB, wD7AF, wScriptCommandType, wScriptStartRequest
+; points at: wD789
+Func_01E_4A32_Case30::
+Jump_01E_4E66:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -1874,7 +2135,13 @@ Jump_01E_4E66::
     ret
     db $C9
 
-Jump_01E_4EA3::
+; entry 58 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+; points at: wC364
+Func_01E_4A32_Case3A::
+Jump_01E_4EA3:: ; address name
     ld de, $7A99
     ld hl, wC364
     ld bc, $080B
@@ -1888,7 +2155,12 @@ Jump_01E_4EA3::
     ld [wD781], a
     ret
 
-Jump_01E_4EC3::
+; entry 59 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_4A32_Case3B::
+Jump_01E_4EC3:: ; address name
     ld hl, $7838
     ld de, $784E
     call Func_01E_7454
@@ -1897,7 +2169,13 @@ Jump_01E_4EC3::
     ld [wD781], a
     ret
 
-Jump_01E_4ED4::
+; entry 60 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B5, wD781
+; writes: wD7AB, wD7AF, wD781
+; points at: wC364
+Func_01E_4A32_Case3C::
+Jump_01E_4ED4:: ; address name
     ld de, $7AF1
     ld hl, wC364
     ld bc, $080B
@@ -1915,7 +2193,12 @@ Jump_01E_4ED4::
     ld [wD781], a
     ret
 
-Jump_01E_4EFE::
+; entry 65 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; points at: wC52D
+Func_01E_4A32_Case41::
+Jump_01E_4EFE:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140B
     ld de, $01CC
@@ -1939,7 +2222,13 @@ Jump_01E_4EFE::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4F31::
+; entry 57 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD7AB
+; writes: wD7F9, wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; points at: wC52D
+Func_01E_4A32_Case39::
+Jump_01E_4F31:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -2000,7 +2289,11 @@ Jump_01E_4F94::
     ld [wD781], a
     ret
 
-Jump_01E_4F9D::
+; entry 47 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB
+Func_01E_4A32_Case2F::
+Jump_01E_4F9D:: ; address name
     call Func_01E_46E5
     ld a, [wD7AB]
     ld b, $BC
@@ -2008,7 +2301,13 @@ Jump_01E_4F9D::
     call StoreBAtWordTableEntry_Bank1E
     ret
 
-Jump_01E_4FAC::
+; entry 61 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782, wD781, wC6FD
+; writes: wD782, wD781, rRAMG2, rRAMB, wC8D9
+; points at: wC378, wC6FE, wC364
+Func_01E_4A32_Case3D::
+Jump_01E_4FAC:: ; address name
     ld a, [wD782]
     and a, a
     jp z, Jump_01E_42A9
@@ -2016,7 +2315,11 @@ Jump_01E_4FAC::
     jp z, Func_01E_42C6
     jp Jump_01E_430D
 
-Jump_01E_4FBB::
+; entry 70 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Case46::
+Jump_01E_4FBB:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -2029,7 +2332,13 @@ Jump_01E_4FBB::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4FD6::
+; entry 71 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B4, wD781
+; writes: rRAMG2, rRAMB, wC8D9, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wC8CF, wC130, wC52D
+Func_01E_4A32_Case47::
+Jump_01E_4FD6:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -2044,7 +2353,13 @@ Jump_01E_4FD6::
     ld c, $00
     jp Jump_01E_4B7B
 
-Jump_01E_4FF7::
+; entry 72 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B4, wD7B5
+; writes: rRAMG2, rRAMB, hFFC6, wD7B5, wD7B4, wC527, wD7AB, wD7AD, ...
+; points at: wC6FE
+Func_01E_4A32_Case48::
+Jump_01E_4FF7:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -2094,42 +2409,52 @@ Jump_01E_4FF7::
     ld [wD7AE], a
     ret
 
-Jump_01E_506C::
+; entry 6 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case06::
+Jump_01E_506C:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_50AE
-    dw Jump_01E_50BE
-    dw Jump_01E_512E
-    dw Jump_01E_51E6
-    dw Jump_01E_4933
-    dw Jump_01E_49B2
-    dw Jump_01E_49F2
+    dw Func_01E_4A32_Table2_Case00
+    dw Func_01E_4A32_Table2_Case01
+    dw Func_01E_4A32_Table2_Case02
+    dw Func_01E_4A32_Table2_Case03
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case14
+    dw Func_01E_4A32_Table2_Case06
     dw Func_01E_4A32
-    dw Jump_01E_525F
-    dw Jump_01E_439E
-    dw Jump_01E_4A5E
-    dw Jump_01E_43E0
-    dw Jump_01E_5290
-    dw Jump_01E_5300
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_536A
-    dw Jump_01E_540F
-    dw Jump_01E_5429
-    dw Jump_01E_5430
-    dw Jump_01E_54D6
-    dw Jump_01E_5518
-    dw Jump_01E_556A
-    dw Jump_01E_557C
-    dw Jump_01E_559E
-    dw Jump_01E_5300
-    dw Jump_01E_55F3
-    dw Jump_01E_5654
+    dw Func_01E_4A32_Table2_Case08
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case19
+    dw Func_01E_4201_Case04
+    dw Func_01E_4A32_Table2_Case0C
+    dw Func_01E_4A32_Table2_Case0D
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4A32_Table2_Case13
+    dw Func_01E_4A32_Table2_Case14
+    dw Func_01E_4A32_Table2_Case15
+    dw Func_01E_4A32_Table2_Case16
+    dw Func_01E_4A32_Table2_Case17
+    dw Func_01E_4A32_Table2_Case18
+    dw Func_01E_4A32_Table2_Case19
+    dw Func_01E_4A32_Table2_Case1A
+    dw Func_01E_4A32_Table2_Case1B
+    dw Func_01E_4A32_Table2_Case0D
+    dw Func_01E_4A32_Table2_Case1D
+    dw Func_01E_4A32_Table2_Case1E
 
-Jump_01E_50AE::
+; entry 0 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781, wD7A9, wC8C1, wC8C2, wD7B9, wD786
+; writes: wD781, wD7B7
+; points at: wC40B, wC429, wC451
+Func_01E_4A32_Table2_Case00::
+Jump_01E_50AE:: ; address name
     ld hl, $793C
     ld de, $791C
     call Func_01E_7454
@@ -2137,7 +2462,13 @@ Jump_01E_50AE::
     inc a
     ld [wD781], a
 
-Jump_01E_50BE::
+; entry 1 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7A9, wC8C1, wC8C2, wD7B9, wD786, wD781
+; writes: wD7B7, wD781
+; points at: wC40B, wC429, wC451
+Func_01E_4A32_Table2_Case01::
+Jump_01E_50BE:: ; address name
     ld de, $7BBE
     ld hl, wC40B
     ld bc, $0D05
@@ -2184,7 +2515,13 @@ Jump_01E_50BE::
     ld [wD781], a
     ret
 
-Jump_01E_512E::
+; entry 2 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7B7, wD781, wD7B9, wD780
+; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7B7, wD7B8
+; points at: wC52D
+Func_01E_4A32_Table2_Case02::
+Jump_01E_512E:: ; address name
     farcall Func_01D_642A
     ld a, [wD7F9]
     and a, a
@@ -2280,7 +2617,13 @@ Jump_01E_51D7::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_51E6::
+; entry 3 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786
+; writes: wD7F1, wD7F2, wD781, wD782, wD780, wScriptCommandType, wScriptStartRequest
+; points at: wC364
+Func_01E_4A32_Table2_Case03::
+Jump_01E_51E6:: ; address name
     ld c, $05
     ld hl, $0273
     ld de, $00A7
@@ -2327,7 +2670,13 @@ Jump_01E_51E6::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_525F::
+; entry 8 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD781
+; points at: wC36C
+Func_01E_4A32_Table2_Case08::
+Jump_01E_525F:: ; address name
     call Func_01E_76EB
     ld a, [hl]
     ld b, a
@@ -2349,7 +2698,13 @@ Jump_01E_525F::
     ld [wD781], a
     ret
 
-Jump_01E_5290::
+; entry 12 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD7AB
+; writes: wD7F9, wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wD7AB
+; points at: wC52D
+Func_01E_4A32_Table2_Case0C::
+Jump_01E_5290:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -2412,7 +2767,13 @@ Jump_01E_52F7::
     ld [wD781], a
     ret
 
-Jump_01E_5300::
+; entry 13 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7A9, wC8C1, wC8C2, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC40B, wC429
+Func_01E_4A32_Table2_Case0D::
+Jump_01E_5300:: ; address name
     ld c, $09
     ld hl, $01D4
     ld de, $0008
@@ -2445,7 +2806,13 @@ Jump_01E_5300::
     db $7D, $7E, $DF, $7F, $FE, $FF, $76, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $B7
 
-Jump_01E_536A::
+; entry 19 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786, wD7A9, wC8C1, wC8C2, wD7B9
+; writes: wD7B7, wD781, wD7FA, wScriptCommandType, wScriptStartRequest
+; points at: wC364, wC40B, wC429, wC451
+Func_01E_4A32_Table2_Case13::
+Jump_01E_536A:: ; address name
     ld de, $79C8
     ld hl, wC364
     ld bc, $0B0B
@@ -2510,7 +2877,11 @@ Jump_01E_536A::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_540F::
+; entry 20 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7B2, wD7B3, wD781, wD782, wD780
+Func_01E_4A32_Table2_Case14::
+Jump_01E_540F:: ; address name
     ld a, $06
     ld [wD7B2], a
     ld a, $0C
@@ -2523,11 +2894,20 @@ Jump_01E_540F::
     call Func_01E_7745
     ret
 
-Jump_01E_5429::
+; entry 21 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+Func_01E_4A32_Table2_Case15::
+Jump_01E_5429:: ; address name
     farcall Func_01D_6C9F
     ret
 
-Jump_01E_5430::
+; entry 22 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B7, wD781
+; writes: wD781
+; points at: wC36B
+Func_01E_4A32_Table2_Case16::
+Jump_01E_5430:: ; address name
     ld de, $5461
     ld hl, wC36B
     ld bc, $0D09
@@ -2547,7 +2927,13 @@ Jump_01E_5430::
     ret
     INCBIN "dwm2-cobi-us.gbc", $079461, $75
 
-Jump_01E_54D6::
+; entry 23 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+; points at: wC52D
+Func_01E_4A32_Table2_Case17::
+Jump_01E_54D6:: ; address name
     ld hl, vTiles1 + $3F0
     ld bc, $0401
     call FillTilesBxC
@@ -2576,7 +2962,13 @@ Jump_01E_54D6::
     ld [wD781], a
     ret
 
-Jump_01E_5518::
+; entry 24 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC36B, wC412, wC413
+Func_01E_4A32_Table2_Case18::
+Jump_01E_5518:: ; address name
     ld de, $7B49
     ld hl, wC36B
     ld bc, $0D09
@@ -2612,7 +3004,12 @@ Jump_01E_5556::
     ld [wD781], a
     ret
 
-Jump_01E_556A::
+; entry 25 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F5, wD781
+Func_01E_4A32_Table2_Case19::
+Jump_01E_556A:: ; address name
     xor a, a
     ld [wD7F5], a
     farcall Func_01D_6088
@@ -2621,7 +3018,12 @@ Jump_01E_556A::
     ld [wD781], a
     ret
 
-Jump_01E_557C::
+; entry 26 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD7F2, wD781
+Func_01E_4A32_Table2_Case1A::
+Jump_01E_557C:: ; address name
     ld de, Data_01F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
@@ -2636,7 +3038,12 @@ Jump_01E_557C::
     ld [wD781], a
     ret
 
-Jump_01E_559E::
+; entry 27 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781
+; writes: wD7F9, wD7B2, wD7B3, wD781, wD782, wD780, wD7AB
+Func_01E_4A32_Table2_Case1B::
+Jump_01E_559E:: ; address name
     ld a, $01
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -2685,7 +3092,13 @@ Jump_01E_55D9::
     call Func_01E_7745
     ret
 
-Jump_01E_55F3::
+; entry 29 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+; points at: wC36B
+Func_01E_4A32_Table2_Case1D::
+Jump_01E_55F3:: ; address name
     ld de, $7BFF
     ld hl, wC36B
     ld bc, $0408
@@ -2724,7 +3137,12 @@ Jump_01E_55F3::
     ld [wD781], a
     ret
 
-Jump_01E_5654::
+; entry 30 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7B7
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Table2_Case1E::
+Jump_01E_5654:: ; address name
     ld a, $9E
     ld [wD7F1], a
     xor a, a
@@ -2750,70 +3168,80 @@ Jump_01E_5654::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_568E::
+; entry 7 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case07::
+Jump_01E_568E:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_50AE
-    dw Jump_01E_50BE
-    dw Jump_01E_5708
-    dw Jump_01E_51E6
-    dw Jump_01E_4933
-    dw Jump_01E_49B2
-    dw Jump_01E_49F2
+    dw Func_01E_4A32_Table2_Case00
+    dw Func_01E_4A32_Table2_Case01
+    dw Func_01E_4A32_Table3_Case02
+    dw Func_01E_4A32_Table2_Case03
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case14
+    dw Func_01E_4A32_Table2_Case06
     dw Func_01E_4A32
-    dw Jump_01E_525F
-    dw Jump_01E_439E
-    dw Jump_01E_4A5E
-    dw Jump_01E_43E0
-    dw Jump_01E_5290
-    dw Jump_01E_5300
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_536A
-    dw Jump_01E_44B5
-    dw Jump_01E_44C3
-    dw Jump_01E_4517
-    dw Jump_01E_5774
-    dw Jump_01E_57EB
-    dw Jump_01E_581C
-    dw Jump_01E_586E
-    dw Jump_01E_4463
-    dw Jump_01E_447F
-    dw Jump_01E_4493
-    dw Jump_01E_4933
-    dw Jump_01E_4AE0
-    dw Jump_01E_4AF1
-    dw Jump_01E_4C42
-    dw Jump_01E_5429
-    dw Jump_01E_5430
-    dw Jump_01E_54D6
-    dw Jump_01E_5518
-    dw Jump_01E_556A
-    dw Jump_01E_557C
-    dw Jump_01E_58B0
-    dw Jump_01E_5300
-    dw Jump_01E_55F3
-    dw Jump_01E_5654
-    dw Jump_01E_44B5
-    dw Jump_01E_44C3
-    dw Jump_01E_4517
-    dw Jump_01E_592B
-    dw Jump_01E_5994
-    dw Jump_01E_59D4
-    dw Jump_01E_5A05
-    dw Jump_01E_5A16
-    dw Jump_01E_4463
-    dw Jump_01E_5B06
-    dw Jump_01E_5A88
-    dw Jump_01E_5AB0
-    dw Jump_01E_4493
-    dw Jump_01E_4AF1
-    dw Jump_01E_5B32
+    dw Func_01E_4A32_Table2_Case08
+    dw Func_01E_4201_Case02
+    dw Func_01E_4201_Case19
+    dw Func_01E_4201_Case04
+    dw Func_01E_4A32_Table2_Case0C
+    dw Func_01E_4A32_Table2_Case0D
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4A32_Table2_Case13
+    dw Func_01E_4201_Case0A
+    dw Func_01E_4201_Case0B
+    dw Func_01E_4201_Case0C
+    dw Func_01E_4A32_Table3_Case17
+    dw Func_01E_4A32_Table3_Case18
+    dw Func_01E_4A32_Table3_Case19
+    dw Func_01E_4A32_Table3_Case1A
+    dw Func_01E_4201_Case06
+    dw Func_01E_4201_Case07
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case13
+    dw Func_01E_4201_Case20
+    dw Func_01E_4201_Case21
+    dw Func_01E_4201_Case30
+    dw Func_01E_4A32_Table2_Case15
+    dw Func_01E_4A32_Table2_Case16
+    dw Func_01E_4A32_Table2_Case17
+    dw Func_01E_4A32_Table2_Case18
+    dw Func_01E_4A32_Table2_Case19
+    dw Func_01E_4A32_Table2_Case1A
+    dw Func_01E_4A32_Table3_Case28
+    dw Func_01E_4A32_Table2_Case0D
+    dw Func_01E_4A32_Table2_Case1D
+    dw Func_01E_4A32_Table2_Case1E
+    dw Func_01E_4201_Case0A
+    dw Func_01E_4201_Case0B
+    dw Func_01E_4201_Case0C
+    dw Func_01E_4A32_Table3_Case2F
+    dw Func_01E_4A32_Table3_Case30
+    dw Func_01E_4A32_Table3_Case31
+    dw Func_01E_4A32_Table3_Case32
+    dw Func_01E_4A32_Table3_Case33
+    dw Func_01E_4201_Case06
+    dw Func_01E_4A32_Table3_Case35
+    dw Func_01E_4A32_Table3_Case36
+    dw Func_01E_4A32_Table3_Case37
+    dw Func_01E_4201_Case08
+    dw Func_01E_4201_Case21
+    dw Func_01E_4A32_Table3_Case3A
 
-Jump_01E_5708::
+; entry 2 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD7B7, wD7A9, wD781, wD7B9, wD780
+; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD781, wD7B7, wD7B8
+; points at: wC52D
+Func_01E_4A32_Table3_Case02::
+Jump_01E_5708:: ; address name
     farcall Func_01D_642A
     ld a, [wD7F9]
     and a, a
@@ -2867,7 +3295,13 @@ Jump_01E_5743::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5774::
+; entry 23 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7A9, wC8C1, wC8C2, wD7B9, wD781
+; writes: wD781
+; points at: wC40B, wC41F, wC429, wC451
+Func_01E_4A32_Table3_Case17::
+Jump_01E_5774:: ; address name
     ld de, $7BBE
     ld hl, wC40B
     ld bc, $0D05
@@ -2911,7 +3345,12 @@ Jump_01E_5774::
     ret
     db $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B7, $B5
 
-Jump_01E_57EB::
+; entry 24 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD7B7
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Table3_Case18::
+Jump_01E_57EB:: ; address name
     ld a, [wD7AB]
     ld b, $C3
     ld hl, $7880
@@ -2932,7 +3371,13 @@ Jump_01E_57EB::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_581C::
+; entry 25 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: rRAMG2, rRAMB, wC8D9, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wC8CF, wC130, wC52D
+Func_01E_4A32_Table3_Case19::
+Jump_01E_581C:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -2981,7 +3426,11 @@ Jump_01E_5849::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_586E::
+; entry 26 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wC527, wD7AB, wD7AD, wD7AF, ...
+Func_01E_4A32_Table3_Case1A::
+Jump_01E_586E:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3006,7 +3455,13 @@ Jump_01E_586E::
     ld [wD7AE], a
     ret
 
-Jump_01E_58B0::
+; entry 40 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD7AB
+; writes: wD7F9, wD7FA, wD781, wScriptCommandType, wScriptStartRequest, wD7AB
+; points at: wC52D
+Func_01E_4A32_Table3_Case28::
+Jump_01E_58B0:: ; address name
     ld a, $01
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -3076,7 +3531,13 @@ Jump_01E_58FD::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_592B::
+; entry 47 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7A9, wC8C1, wC8C2, wD7B9, wD781
+; writes: wD781
+; points at: wC40B, wC429, wC451
+Func_01E_4A32_Table3_Case2F::
+Jump_01E_592B:: ; address name
     ld de, $7BBE
     ld hl, wC40B
     ld bc, $0D05
@@ -3116,7 +3577,13 @@ Jump_01E_592B::
     ret
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-Jump_01E_5994::
+; entry 48 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC412, wC413
+Func_01E_4A32_Table3_Case30::
+Jump_01E_5994:: ; address name
     farcall Func_01D_6026
     call Func_01E_71E1
     ld a, [wD7B0]
@@ -3145,7 +3612,12 @@ Jump_01E_59CC::
     ld [wD781], a
     ret
 
-Jump_01E_59D4::
+; entry 49 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD7B7
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Table3_Case31::
+Jump_01E_59D4:: ; address name
     ld a, [wD7AB]
     ld b, $C3
     ld hl, $788E
@@ -3166,7 +3638,12 @@ Jump_01E_59D4::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5A05::
+; entry 50 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Table3_Case32::
+Jump_01E_5A05:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3176,7 +3653,11 @@ Jump_01E_5A05::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5A16::
+; entry 51 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7AB, wD7AD, wD7AF, wD7AC, ...
+Func_01E_4A32_Table3_Case33::
+Jump_01E_5A16:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3198,7 +3679,7 @@ Jump_01E_5A16::
     ld [wD7AE], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_01E_4A32)
+; 2 call sites from 2 routines (e.g. Func_01E_4A32_Table3_Case33, Func_01E_4A32_Table3_Case1A)
 ; reads: wD7AB, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC410
@@ -3225,7 +3706,12 @@ Func_01E_5A4D::
     ret
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-Jump_01E_5A88::
+; entry 54 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD781
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781
+Func_01E_4A32_Table3_Case36::
+Jump_01E_5A88:: ; address name
     ld a, $9E
     ld [wD7F1], a
     xor a, a
@@ -3244,7 +3730,12 @@ Jump_01E_5A88::
     ld [wD781], a
     ret
 
-Jump_01E_5AB0::
+; entry 55 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_4A32_Table3_Case37::
+Jump_01E_5AB0:: ; address name
     ld de, Data_01F_4370
     ld hl, vTiles1 + $5F0
     ld b, $1F
@@ -3280,7 +3771,13 @@ Jump_01E_5AB0::
     ld [wD781], a
     ret
 
-Jump_01E_5B06::
+; entry 53 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+; points at: wC36B, wC40B
+Func_01E_4A32_Table3_Case35::
+Jump_01E_5B06:: ; address name
     ld de, $7BFF
     ld hl, wC36B
     ld bc, $0408
@@ -3298,7 +3795,11 @@ Jump_01E_5B06::
     ld [wD781], a
     ret
 
-Jump_01E_5B32::
+; entry 58 of the `rst $00` table in Func_01E_4A32
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD780, wD7FA, wScriptCommandType, wScriptStartRequest
+Func_01E_4A32_Table3_Case3A::
+Jump_01E_5B32:: ; address name
     farcall Func_01D_5E3F
     xor a, a
     ld [wD781], a
@@ -3312,44 +3813,53 @@ Jump_01E_5B32::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5B50::
+; entry 9 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case09::
+Jump_01E_5B50:: ; address name
     ld a, [wD781]
     rst $00
     dw Func_01E_65FE
-    dw Jump_01E_6635
-    dw Jump_01E_6646
-    dw Jump_01E_5B96
+    dw Func_01E_5A4D_Case01
+    dw Func_01E_5A4D_Case02
+    dw Func_01E_5A4D_Case03
     dw Func_01E_667C
-    dw Jump_01E_669D
-    dw Jump_01E_5BD0
+    dw Func_01E_5A4D_Case05
+    dw Func_01E_5A4D_Case06
     dw Func_01E_65FE
-    dw Jump_01E_679E
-    dw Jump_01E_67B1
+    dw Func_01E_5A4D_Case08
+    dw Func_01E_5A4D_Case09
     dw Func_01E_6810
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_5C85
-    dw Jump_01E_68D3
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_68E4
-    dw Jump_01E_6907
-    dw Jump_01E_6920
-    dw Jump_01E_694D
-    dw Jump_01E_5D1F
-    dw Jump_01E_6A57
-    dw Jump_01E_5E98
-    dw Jump_01E_5ED6
-    dw Jump_01E_6A70
-    dw Jump_01E_6B10
-    dw Jump_01E_5DC5
-    dw Jump_01E_6BC6
-    dw Jump_01E_6C1F
-    dw Jump_01E_6C69
-    dw Jump_01E_6C97
-    dw Jump_01E_5F1D
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case0D
+    dw Func_01E_5A4D_Case0E
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case11
+    dw Func_01E_5A4D_Case12
+    dw Func_01E_5A4D_Case13
+    dw Func_01E_5A4D_Case14
+    dw Func_01E_5A4D_Case15
+    dw Func_01E_5A4D_Case16
+    dw Func_01E_5A4D_Case17
+    dw Func_01E_5A4D_Case18
+    dw Func_01E_5A4D_Case19
+    dw Func_01E_5A4D_Case1A
+    dw Func_01E_5A4D_Case1B
+    dw Func_01E_5A4D_Case1C
+    dw Func_01E_5A4D_Case1D
+    dw Func_01E_5A4D_Case1E
+    dw Func_01E_5A4D_Case1F
+    dw Func_01E_5A4D_Case20
 
-Jump_01E_5B96::
+; entry 3 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD781
+; writes: wD7F3, wD7F4, wD7F7, wD7F1, wD7F2, wD781
+Func_01E_5A4D_Case03::
+Jump_01E_5B96:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $6717
     ld a, $14
@@ -3377,15 +3887,24 @@ Jump_01E_5BC8::
     ld [wD781], a
     ret
 
-Jump_01E_5BD0::
+; entry 6 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5A4D_Case06::
+Jump_01E_5BD0:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5BDC
+    dw Func_01E_5A4D_Table2_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_5C78
+    dw Func_01E_5A4D_Table2_Case03
 
-Jump_01E_5BDC::
+; entry 0 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD782
+; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781, wD782
+Func_01E_5A4D_Table2_Case00::
+Jump_01E_5BDC:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -3437,7 +3956,7 @@ Jump_01E_5C16::
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_5C63)
+; 1 call site from 1 routine (e.g. Func_01E_5C63_Table4_Case01)
 ; reads: wD782
 ; writes: wD782
 Func_01E_5C37::
@@ -3458,7 +3977,7 @@ Func_01E_5C37::
     ld [wD782], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_5C63)
+; 1 call site from 1 routine (e.g. Func_01E_5C63_Table4_Case01)
 ; reads: wD781, wD782
 ; writes: wD781, wD782
 Func_01E_5C63::
@@ -3472,7 +3991,11 @@ Func_01E_5C63::
     ld [wD782], a
     ret
 
-Jump_01E_5C78::
+; entry 3 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD782
+Func_01E_5A4D_Table2_Case03::
+Jump_01E_5C78:: ; address name
     call Func_01E_49EA
     ld a, $04
     ld [wD781], a
@@ -3480,7 +4003,13 @@ Jump_01E_5C78::
     ld [wD782], a
     ret
 
-Jump_01E_5C85::
+; entry 13 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDataBank, wD7B2, wD7B3, wD7AB, wD780, wScriptCommandType
+; writes: wC527, hFFBA, wD782, wD780, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wC52D
+Func_01E_5A4D_Case0D::
+Jump_01E_5C85:: ; address name
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -3552,15 +4081,24 @@ Jump_01E_5CD5::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5D1F::
+; entry 21 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5A4D_Case15::
+Jump_01E_5D1F:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5D2B
+    dw Func_01E_5C63_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_5DBD
+    dw Func_01E_5C63_Case03
 
-Jump_01E_5D2B::
+; entry 0 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wGameMode, wD7F9, wD781, wD782
+; writes: wD7F9, hFFBA, wD781, wD7F3, wD7F4, wD7F7, wD782
+Func_01E_5C63_Case00::
+Jump_01E_5D2B:: ; address name
     ld a, [wGameMode]
     cp a, $05
     jr z, Jump_01E_5D38
@@ -3639,21 +4177,35 @@ Jump_01E_5D7E::
     ld [wD781], a
     ret
 
-Jump_01E_5DBD::
+; entry 3 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD782
+Func_01E_5C63_Case03::
+Jump_01E_5DBD:: ; address name
     call Func_01E_49EA
     xor a, a
     ld [wD782], a
     ret
 
-Jump_01E_5DC5::
+; entry 27 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5A4D_Case1B::
+Jump_01E_5DC5:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5DD1
+    dw Func_01E_5C63_Table2_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_5E88
+    dw Func_01E_5C63_Table2_Case03
 
-Jump_01E_5DD1::
+; entry 0 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781, wD782
+; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781, wD782
+; points at: wC52D
+Func_01E_5C63_Table2_Case00::
+Jump_01E_5DD1:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -3741,7 +4293,12 @@ Jump_01E_5E17::
     ld [wD781], a
     ret
 
-Jump_01E_5E88::
+; entry 3 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wD782
+Func_01E_5C63_Table2_Case03::
+Jump_01E_5E88:: ; address name
     call Func_01E_49EA
     ld a, [wD781]
     sub a, $04
@@ -3750,7 +4307,12 @@ Jump_01E_5E88::
     ld [wD782], a
     ret
 
-Jump_01E_5E98::
+; entry 23 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F3, wD7F4, wD7F7, wD781
+Func_01E_5A4D_Case17::
+Jump_01E_5E98:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
@@ -3778,7 +4340,12 @@ Jump_01E_5E98::
     ld [wD781], a
     ret
 
-Jump_01E_5ED6::
+; entry 24 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F3, wD7F4, wD7F7, wD781
+Func_01E_5A4D_Case18::
+Jump_01E_5ED6:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $1504
     call FillTilesBxC
@@ -3809,15 +4376,25 @@ Jump_01E_5ED6::
     ld [wD781], a
     ret
 
-Jump_01E_5F1D::
+; entry 32 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5A4D_Case20::
+Jump_01E_5F1D:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5F29
+    dw Func_01E_5C63_Table3_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_5F99
+    dw Func_01E_5C63_Table3_Case03
 
-Jump_01E_5F29::
+; entry 0 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wGameMode, wD781, wD782
+; writes: wD7F9, hFFBA, wD781, wD782
+; points at: wC52D
+Func_01E_5C63_Table3_Case00::
+Jump_01E_5F29:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -3884,7 +4461,13 @@ Jump_01E_5F90::
     ld [wD781], a
     ret
 
-Jump_01E_5F99::
+; entry 3 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wD782, hFFBA
+; points at: wC52D
+Func_01E_5C63_Table3_Case03::
+Jump_01E_5F99:: ; address name
     call Func_01E_49EA
     ld a, [wD781]
     dec a
@@ -3893,44 +4476,53 @@ Jump_01E_5F99::
     ld [wD782], a
     jp Jump_01E_5F65
 
-Jump_01E_5FAA::
+; entry 14 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case0E::
+Jump_01E_5FAA:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_61B4
-    dw Jump_01E_6055
-    dw Jump_01E_6646
-    dw Jump_01E_5FF0
-    dw Jump_01E_616A
-    dw Jump_01E_669D
-    dw Jump_01E_6183
-    dw Jump_01E_60E1
-    dw Jump_01E_60EC
-    dw Jump_01E_60EC
-    dw Jump_01E_619F
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_5C85
-    dw Jump_01E_68D3
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_68E4
-    dw Jump_01E_6907
-    dw Jump_01E_6920
-    dw Jump_01E_694D
-    dw Jump_01E_61C5
-    dw Jump_01E_6A57
-    dw Jump_01E_5E98
-    dw Jump_01E_5ED6
-    dw Jump_01E_6A70
-    dw Jump_01E_6B10
-    dw Jump_01E_61F1
-    dw Jump_01E_6BC6
-    dw Jump_01E_6C1F
-    dw Jump_01E_6C69
-    dw Jump_01E_6C97
-    dw Jump_01E_6225
+    dw Func_01E_5C63_Table4_Case00
+    dw Func_01E_5C63_Table4_Case01
+    dw Func_01E_5A4D_Case02
+    dw Func_01E_5C63_Table4_Case03
+    dw Func_01E_5C63_Table4_Case04
+    dw Func_01E_5A4D_Case05
+    dw Func_01E_5C63_Table4_Case06
+    dw Func_01E_5C63_Table4_Case07
+    dw Func_01E_5C63_Table4_Case08
+    dw Func_01E_5C63_Table4_Case08
+    dw Func_01E_5C63_Table4_Case0A
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case0D
+    dw Func_01E_5A4D_Case0E
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case11
+    dw Func_01E_5A4D_Case12
+    dw Func_01E_5A4D_Case13
+    dw Func_01E_5A4D_Case14
+    dw Func_01E_5C63_Table4_Case15
+    dw Func_01E_5A4D_Case16
+    dw Func_01E_5A4D_Case17
+    dw Func_01E_5A4D_Case18
+    dw Func_01E_5A4D_Case19
+    dw Func_01E_5A4D_Case1A
+    dw Func_01E_5C63_Table4_Case1B
+    dw Func_01E_5A4D_Case1C
+    dw Func_01E_5A4D_Case1D
+    dw Func_01E_5A4D_Case1E
+    dw Func_01E_5A4D_Case1F
+    dw Func_01E_5C63_Table4_Case20
 
-Jump_01E_5FF0::
+; entry 3 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F3, wD7F4, wD7F7, wD781
+Func_01E_5C63_Table4_Case03::
+Jump_01E_5FF0:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $69E7
     ld a, $14
@@ -3945,44 +4537,52 @@ Jump_01E_5FF0::
     ld [wD781], a
     ret
 
-Jump_01E_600F::
+; entry 12 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case0C::
+Jump_01E_600F:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_61B4
-    dw Jump_01E_6055
-    dw Jump_01E_6646
-    dw Jump_01E_5B96
-    dw Jump_01E_616A
-    dw Jump_01E_669D
-    dw Jump_01E_6183
-    dw Jump_01E_60E1
-    dw Jump_01E_60EC
-    dw Jump_01E_60EC
-    dw Jump_01E_619F
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_5C85
-    dw Jump_01E_68D3
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_68E4
-    dw Jump_01E_6907
-    dw Jump_01E_6920
-    dw Jump_01E_694D
-    dw Jump_01E_61C5
-    dw Jump_01E_6A57
-    dw Jump_01E_5E98
-    dw Jump_01E_5ED6
-    dw Jump_01E_6A70
-    dw Jump_01E_6B10
-    dw Jump_01E_61F1
-    dw Jump_01E_6BC6
-    dw Jump_01E_6C1F
-    dw Jump_01E_6C69
-    dw Jump_01E_6C97
-    dw Jump_01E_6225
+    dw Func_01E_5C63_Table4_Case00
+    dw Func_01E_5C63_Table4_Case01
+    dw Func_01E_5A4D_Case02
+    dw Func_01E_5A4D_Case03
+    dw Func_01E_5C63_Table4_Case04
+    dw Func_01E_5A4D_Case05
+    dw Func_01E_5C63_Table4_Case06
+    dw Func_01E_5C63_Table4_Case07
+    dw Func_01E_5C63_Table4_Case08
+    dw Func_01E_5C63_Table4_Case08
+    dw Func_01E_5C63_Table4_Case0A
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case0D
+    dw Func_01E_5A4D_Case0E
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case11
+    dw Func_01E_5A4D_Case12
+    dw Func_01E_5A4D_Case13
+    dw Func_01E_5A4D_Case14
+    dw Func_01E_5C63_Table4_Case15
+    dw Func_01E_5A4D_Case16
+    dw Func_01E_5A4D_Case17
+    dw Func_01E_5A4D_Case18
+    dw Func_01E_5A4D_Case19
+    dw Func_01E_5A4D_Case1A
+    dw Func_01E_5C63_Table4_Case1B
+    dw Func_01E_5A4D_Case1C
+    dw Func_01E_5A4D_Case1D
+    dw Func_01E_5A4D_Case1E
+    dw Func_01E_5A4D_Case1F
+    dw Func_01E_5C63_Table4_Case20
 
-Jump_01E_6055::
+; entry 1 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD782, wD781
+Func_01E_5C63_Table4_Case01::
+Jump_01E_6055:: ; address name
     ld hl, $7898
     ld de, $78DA
     call Func_01E_7454
@@ -3996,7 +4596,7 @@ Jump_01E_6055::
     ld [wD781], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_01E_6074, Func_01E_5C63)
+; 2 call sites from 2 routines (e.g. Func_01E_6074_Table6_Case01, Func_01E_5C63_Table4_Case01)
 Func_01E_6074::
     ld c, $00
     ld b, $10
@@ -4051,57 +4651,75 @@ Jump_01E_609E::
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-Jump_01E_60E1::
+; entry 7 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD782
+Func_01E_5C63_Table4_Case07::
+Jump_01E_60E1:: ; address name
     call Func_01E_65FE
     call Func_01E_42C6
     xor a, a
     ld [wD782], a
     ret
 
-Jump_01E_60EC::
+; entry 8 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_5C63_Table4_Case08::
+Jump_01E_60EC:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
     ret
 
-Jump_01E_60F4::
+; entry 10 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case0A::
+Jump_01E_60F4:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_61B4
-    dw Jump_01E_6635
-    dw Jump_01E_6646
-    dw Jump_01E_5B96
-    dw Jump_01E_616A
-    dw Jump_01E_669D
-    dw Jump_01E_6183
+    dw Func_01E_5C63_Table4_Case00
+    dw Func_01E_5A4D_Case01
+    dw Func_01E_5A4D_Case02
+    dw Func_01E_5A4D_Case03
+    dw Func_01E_5C63_Table4_Case04
+    dw Func_01E_5A4D_Case05
+    dw Func_01E_5C63_Table4_Case06
     dw Func_01E_65FE
-    dw Jump_01E_679E
-    dw Jump_01E_67B1
-    dw Jump_01E_613A
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_5C85
-    dw Jump_01E_68D3
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_68E4
-    dw Jump_01E_6907
-    dw Jump_01E_6920
-    dw Jump_01E_694D
-    dw Jump_01E_61C5
-    dw Jump_01E_6A57
-    dw Jump_01E_5E98
-    dw Jump_01E_5ED6
-    dw Jump_01E_6A70
-    dw Jump_01E_6B10
-    dw Jump_01E_61F1
-    dw Jump_01E_6BC6
-    dw Jump_01E_6C1F
-    dw Jump_01E_6C69
-    dw Jump_01E_6C97
-    dw Jump_01E_6225
+    dw Func_01E_5A4D_Case08
+    dw Func_01E_5A4D_Case09
+    dw Func_01E_6074_Case0A
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case0D
+    dw Func_01E_5A4D_Case0E
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case11
+    dw Func_01E_5A4D_Case12
+    dw Func_01E_5A4D_Case13
+    dw Func_01E_5A4D_Case14
+    dw Func_01E_5C63_Table4_Case15
+    dw Func_01E_5A4D_Case16
+    dw Func_01E_5A4D_Case17
+    dw Func_01E_5A4D_Case18
+    dw Func_01E_5A4D_Case19
+    dw Func_01E_5A4D_Case1A
+    dw Func_01E_5C63_Table4_Case1B
+    dw Func_01E_5A4D_Case1C
+    dw Func_01E_5A4D_Case1D
+    dw Func_01E_5A4D_Case1E
+    dw Func_01E_5A4D_Case1F
+    dw Func_01E_5C63_Table4_Case20
 
-Jump_01E_613A::
+; entry 10 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD781
+Func_01E_6074_Case0A::
+Jump_01E_613A:: ; address name
     ld hl, $793C
     ld de, $791C
     call Func_01E_7454
@@ -4126,7 +4744,11 @@ Jump_01E_613A::
     ld [wD781], a
     ret
 
-Jump_01E_616A::
+; entry 4 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7F1
+Func_01E_5C63_Table4_Case04::
+Jump_01E_616A:: ; address name
     call Func_01E_667C
     ld a, $01
     ld [wD7F1], a
@@ -4136,15 +4758,23 @@ Jump_01E_616A::
     farcall Func_01D_6AA5
     ret
 
-Jump_01E_6183::
+; entry 6 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5C63_Table4_Case06::
+Jump_01E_6183:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5BDC
+    dw Func_01E_5A4D_Table2_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_618F
+    dw Func_01E_6074_Table2_Case03
 
-Jump_01E_618F::
+; entry 3 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD781, wD782
+Func_01E_6074_Table2_Case03::
+Jump_01E_618F:: ; address name
     call Func_01E_49F8
     call Func_01E_7702
     ld a, $04
@@ -4153,7 +4783,10 @@ Jump_01E_618F::
     ld [wD782], a
     ret
 
-Jump_01E_619F::
+; entry 10 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+Func_01E_5C63_Table4_Case0A::
+Jump_01E_619F:: ; address name
     ld hl, $793C
     ld de, $791C
     call Func_01E_7454
@@ -4164,7 +4797,10 @@ Jump_01E_619F::
     call Func_01E_75C5
     ret
 
-Jump_01E_61B4::
+; entry 0 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+Func_01E_5C63_Table4_Case00::
+Jump_01E_61B4:: ; address name
     call Func_01E_65FE
     ld de, Data_01F_4A70
     ld hl, vTiles1 + $7F0
@@ -4173,15 +4809,23 @@ Jump_01E_61B4::
     call CopyFromBankWaitVRAM
     ret
 
-Jump_01E_61C5::
+; entry 21 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5C63_Table4_Case15::
+Jump_01E_61C5:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5D2B
+    dw Func_01E_5C63_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_61D1
+    dw Func_01E_6074_Table3_Case03
 
-Jump_01E_61D1::
+; entry 3 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7F1, wD782
+Func_01E_6074_Table3_Case03::
+Jump_01E_61D1:: ; address name
     call Func_01E_49F8
     call Func_01E_7702
     ld a, $01
@@ -4194,15 +4838,24 @@ Jump_01E_61D1::
     ld [wD782], a
     ret
 
-Jump_01E_61F1::
+; entry 27 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5C63_Table4_Case1B::
+Jump_01E_61F1:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5DD1
+    dw Func_01E_5C63_Table2_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_61FD
+    dw Func_01E_6074_Table4_Case03
 
-Jump_01E_61FD::
+; entry 3 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD781, wD782
+Func_01E_6074_Table4_Case03::
+Jump_01E_61FD:: ; address name
     call Func_01E_49F8
     call Func_01E_7702
     ld a, $01
@@ -4218,15 +4871,25 @@ Jump_01E_61FD::
     ld [wD782], a
     ret
 
-Jump_01E_6225::
+; entry 32 of the `rst $00` table in Func_01E_5C63
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+Func_01E_5C63_Table4_Case20::
+Jump_01E_6225:: ; address name
     ld a, [wD782]
     rst $00
-    dw Jump_01E_5F29
+    dw Func_01E_5C63_Table3_Case00
     dw Func_01E_5C37
     dw Func_01E_5C63
-    dw Jump_01E_6231
+    dw Func_01E_6074_Table5_Case03
 
-Jump_01E_6231::
+; entry 3 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD781, wD782, hFFBA
+; points at: wC52D
+Func_01E_6074_Table5_Case03::
+Jump_01E_6231:: ; address name
     call Func_01E_49F8
     call Func_01E_7702
     ld a, $01
@@ -4242,29 +4905,37 @@ Jump_01E_6231::
     ld [wD782], a
     jp Jump_01E_5F65
 
-Jump_01E_625A::
+; entry 13 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case0D::
+Jump_01E_625A:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_61B4
-    dw Jump_01E_6282
-    dw Jump_01E_6646
-    dw Jump_01E_62C0
-    dw Jump_01E_62EF
-    dw Jump_01E_6325
-    dw Jump_01E_6399
-    dw Jump_01E_6437
-    dw Jump_01E_6492
-    dw Jump_01E_60E1
-    dw Jump_01E_679E
-    dw Jump_01E_67B1
-    dw Jump_01E_64AD
-    dw Jump_01E_54D6
-    dw Jump_01E_6519
-    dw Jump_01E_556A
-    dw Jump_01E_656F
-    dw Jump_01E_64BE
+    dw Func_01E_5C63_Table4_Case00
+    dw Func_01E_6074_Table6_Case01
+    dw Func_01E_5A4D_Case02
+    dw Func_01E_6074_Table6_Case03
+    dw Func_01E_6074_Table6_Case04
+    dw Func_01E_6074_Table6_Case05
+    dw Func_01E_6074_Table6_Case06
+    dw Func_01E_6074_Table6_Case07
+    dw Func_01E_6074_Table6_Case08
+    dw Func_01E_5C63_Table4_Case07
+    dw Func_01E_5A4D_Case08
+    dw Func_01E_5A4D_Case09
+    dw Func_01E_6074_Table6_Case0C
+    dw Func_01E_4A32_Table2_Case17
+    dw Func_01E_6074_Table6_Case0E
+    dw Func_01E_4A32_Table2_Case19
+    dw Func_01E_6074_Table6_Case10
+    dw Func_01E_6074_Table6_Case11
 
-Jump_01E_6282::
+; entry 1 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD782, wD781
+Func_01E_6074_Table6_Case01::
+Jump_01E_6282:: ; address name
     ld hl, $7898
     ld de, $78DA
     call Func_01E_7454
@@ -4275,29 +4946,38 @@ Jump_01E_6282::
     ld [wD781], a
     ret
 
-Jump_01E_6298::
+; entry 11 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case0B::
+Jump_01E_6298:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_01E_61B4
-    dw Jump_01E_6635
-    dw Jump_01E_6646
-    dw Jump_01E_62C0
-    dw Jump_01E_62EF
-    dw Jump_01E_6325
-    dw Jump_01E_6399
-    dw Jump_01E_6437
-    dw Jump_01E_6492
+    dw Func_01E_5C63_Table4_Case00
+    dw Func_01E_5A4D_Case01
+    dw Func_01E_5A4D_Case02
+    dw Func_01E_6074_Table6_Case03
+    dw Func_01E_6074_Table6_Case04
+    dw Func_01E_6074_Table6_Case05
+    dw Func_01E_6074_Table6_Case06
+    dw Func_01E_6074_Table6_Case07
+    dw Func_01E_6074_Table6_Case08
     dw Func_01E_65FE
-    dw Jump_01E_679E
-    dw Jump_01E_67B1
-    dw Jump_01E_64AD
-    dw Jump_01E_54D6
-    dw Jump_01E_6519
-    dw Jump_01E_556A
-    dw Jump_01E_656F
-    dw Jump_01E_64BE
+    dw Func_01E_5A4D_Case08
+    dw Func_01E_5A4D_Case09
+    dw Func_01E_6074_Table6_Case0C
+    dw Func_01E_4A32_Table2_Case17
+    dw Func_01E_6074_Table6_Case0E
+    dw Func_01E_4A32_Table2_Case19
+    dw Func_01E_6074_Table6_Case10
+    dw Func_01E_6074_Table6_Case11
 
-Jump_01E_62C0::
+; entry 3 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AF, wD7AB, wD781
+; writes: wD7AB, wD7AF, wD781
+Func_01E_6074_Table6_Case03::
+Jump_01E_62C0:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $1304
     call FillTilesBxC
@@ -4320,7 +5000,12 @@ Jump_01E_62C0::
     ld [wD781], a
     ret
 
-Jump_01E_62EF::
+; entry 4 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F3, wD7F4, wD7F7, wD7F1, wD7F2, wD781
+Func_01E_6074_Table6_Case04::
+Jump_01E_62EF:: ; address name
     farcall Func_01D_6D07
     call BGMapAddressAtScroll_Bank1E
     ld de, $6E7F
@@ -4342,7 +5027,12 @@ Jump_01E_62EF::
     ld [wD781], a
     ret
 
-Jump_01E_6325::
+; entry 5 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7A9, wD781
+; writes: hFFBA, wD781
+Func_01E_6074_Table6_Case05::
+Jump_01E_6325:: ; address name
     call Func_01E_76F3
     ld a, [hl]
     ld b, a
@@ -4402,7 +5092,12 @@ Jump_01E_6391::
     ld [wD781], a
     ret
 
-Jump_01E_6399::
+; entry 6 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782, hFFC6, hFFC7, wIsCGB, wD781
+; writes: rRAMG2, rRAMB, wD782, wC526, hFFC6, wD7F3, wD7F4, wD7F7, ...
+Func_01E_6074_Table6_Case06::
+Jump_01E_6399:: ; address name
     ld a, [wD782]
     and a, a
     jp nz, Jump_01E_63D3
@@ -4484,7 +5179,12 @@ Jump_01E_640A::
     ld [wD781], a
     ret
 
-Jump_01E_6437::
+; entry 7 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wC58A, wC581, wD781, wD7B9
+; writes: wD7F1, wD7F2, hFFBA, wD781
+Func_01E_6074_Table6_Case07::
+Jump_01E_6437:: ; address name
     farcall Func_01D_64D6
     ld a, [wD7F9]
     and a, a
@@ -4535,7 +5235,12 @@ Jump_01E_6483::
     ld [wD781], a
     ret
 
-Jump_01E_6492::
+; entry 8 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_6074_Table6_Case08::
+Jump_01E_6492:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $0805
     call FillTilesBxC
@@ -4547,7 +5252,12 @@ Jump_01E_6492::
     ld [wD781], a
     ret
 
-Jump_01E_64AD::
+; entry 12 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_6074_Table6_Case0C::
+Jump_01E_64AD:: ; address name
     ld hl, $793C
     ld de, $791C
     call Func_01E_7454
@@ -4556,7 +5266,13 @@ Jump_01E_64AD::
     ld [wD781], a
     ret
 
-Jump_01E_64BE::
+; entry 17 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B2, wD7B3
+; writes: wC527, hFFBA, wD782, wD780, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wC52D
+Func_01E_6074_Table6_Case11::
+Jump_01E_64BE:: ; address name
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -4596,7 +5312,13 @@ Jump_01E_64BE::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_6519::
+; entry 14 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD7B2, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC36B, wC412, wC413, wC410
+Func_01E_6074_Table6_Case0E::
+Jump_01E_6519:: ; address name
     ld de, $7B49
     ld hl, wC36B
     ld bc, $0D09
@@ -4636,7 +5358,12 @@ Jump_01E_6559::
     jr Jump_01E_654A
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
 
-Jump_01E_656F::
+; entry 16 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD786, wD7B2, wD781, wD7AB
+; writes: wD7F1, wD7F2, wD781
+Func_01E_6074_Table6_Case10::
+Jump_01E_656F:: ; address name
     ld de, Data_01F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
@@ -4669,44 +5396,48 @@ Jump_01E_65A5::
     ld [wD781], a
     ret
 
-Jump_01E_65B8::
+; entry 8 of the `rst $00` table in ScriptCommandE8_Run
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+ScriptCommandE8_Run_Case08::
+Jump_01E_65B8:: ; address name
     ld a, [wD781]
     rst $00
     dw Func_01E_65FE
-    dw Jump_01E_6635
-    dw Jump_01E_6646
-    dw Jump_01E_664E
+    dw Func_01E_5A4D_Case01
+    dw Func_01E_5A4D_Case02
+    dw Func_01E_6074_Table8_Case03
     dw Func_01E_667C
-    dw Jump_01E_669D
-    dw Jump_01E_6753
+    dw Func_01E_5A4D_Case05
+    dw Func_01E_6074_Table8_Case06
     dw Func_01E_65FE
-    dw Jump_01E_679E
-    dw Jump_01E_67B1
+    dw Func_01E_5A4D_Case08
+    dw Func_01E_5A4D_Case09
     dw Func_01E_6810
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_6870
-    dw Jump_01E_68D3
-    dw Jump_01E_6840
-    dw Jump_01E_685A
-    dw Jump_01E_68E4
-    dw Jump_01E_6907
-    dw Jump_01E_6920
-    dw Jump_01E_694D
-    dw Jump_01E_69AD
-    dw Jump_01E_6A57
-    dw Jump_01E_5E98
-    dw Jump_01E_5ED6
-    dw Jump_01E_6A70
-    dw Jump_01E_6B10
-    dw Jump_01E_6B1F
-    dw Jump_01E_6BC6
-    dw Jump_01E_6C1F
-    dw Jump_01E_6C69
-    dw Jump_01E_6C97
-    dw Jump_01E_6CAB
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_6074_Table8_Case0D
+    dw Func_01E_5A4D_Case0E
+    dw Func_01E_5A4D_Case0B
+    dw Func_01E_5A4D_Case0C
+    dw Func_01E_5A4D_Case11
+    dw Func_01E_5A4D_Case12
+    dw Func_01E_5A4D_Case13
+    dw Func_01E_5A4D_Case14
+    dw Func_01E_6074_Table8_Case15
+    dw Func_01E_5A4D_Case16
+    dw Func_01E_5A4D_Case17
+    dw Func_01E_5A4D_Case18
+    dw Func_01E_5A4D_Case19
+    dw Func_01E_5A4D_Case1A
+    dw Func_01E_6074_Table8_Case1B
+    dw Func_01E_5A4D_Case1C
+    dw Func_01E_5A4D_Case1D
+    dw Func_01E_5A4D_Case1E
+    dw Func_01E_5A4D_Case1F
+    dw Func_01E_6074_Table8_Case20
 
-; 2 call sites from 1 routine (e.g. Func_01E_6074)
+; 2 call sites from 2 routines (e.g. Func_01E_5C63_Table4_Case07, Func_01E_5C63_Table4_Case00)
 ; reads: wD781
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, hScrollX, ...
 Func_01E_65FE::
@@ -4735,7 +5466,12 @@ Func_01E_65FE::
     ld [wD781], a
     ret
 
-Jump_01E_6635::
+; entry 1 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_5A4D_Case01::
+Jump_01E_6635:: ; address name
     ld hl, $7898
     ld de, $78DA
     call Func_01E_7454
@@ -4744,13 +5480,23 @@ Jump_01E_6635::
     ld [wD781], a
     ret
 
-Jump_01E_6646::
+; entry 2 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_5A4D_Case02::
+Jump_01E_6646:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
     ret
 
-Jump_01E_664E::
+; entry 3 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F3, wD7F4, wD7F7, wD781
+Func_01E_6074_Table8_Case03::
+Jump_01E_664E:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $5E37
     ld a, $14
@@ -4771,7 +5517,7 @@ Jump_01E_664E::
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_6074)
+; 1 call site from 1 routine (e.g. Func_01E_5C63_Table4_Case04)
 ; reads: wD781
 ; writes: rRAMG2, rRAMB, wD781
 Func_01E_667C::
@@ -4790,7 +5536,12 @@ Func_01E_667C::
     ld [wD781], a
     ret
 
-Jump_01E_669D::
+; entry 5 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782, hFFC6, hFFC7, wIsCGB, wD781
+; writes: wD7F3, wD7F4, wD7F7, rRAMG2, rRAMB, wD782, wC526, hFFC6, ...
+Func_01E_5A4D_Case05::
+Jump_01E_669D:: ; address name
     ld a, [wD782]
     and a, a
     jp nz, Jump_01E_66EF
@@ -4882,7 +5633,12 @@ Jump_01E_6726::
     ld [wD781], a
     ret
 
-Jump_01E_6753::
+; entry 6 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781
+; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781
+Func_01E_6074_Table8_Case06::
+Jump_01E_6753:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_65F6
@@ -4924,7 +5680,12 @@ Jump_01E_677D::
     ld [wD781], a
     ret
 
-Jump_01E_679E::
+; entry 8 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wC526, wD781
+Func_01E_5A4D_Case08::
+Jump_01E_679E:: ; address name
     farcall Func_01D_5D47
     ld a, $7F
     ld [wC526], a
@@ -4933,7 +5694,12 @@ Jump_01E_679E::
     ld [wD781], a
     ret
 
-Jump_01E_67B1::
+; entry 9 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD780, wD7AB, wD781
+; writes: wD781
+Func_01E_5A4D_Case09::
+Jump_01E_67B1:: ; address name
     ld hl, $7864
     ld de, $7872
     call Func_01E_7454
@@ -4978,7 +5744,7 @@ Jump_01E_6808::
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_6074)
+; 1 call site from 1 routine (e.g. Func_01E_5C63_Table4_Case0A)
 ; reads: wD780, wD781
 ; writes: wD7F1, wD781
 Func_01E_6810::
@@ -5006,7 +5772,12 @@ Jump_01E_6825::
     ld [wD781], a
     ret
 
-Jump_01E_6840::
+; entry 11 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_5A4D_Case0B::
+Jump_01E_6840:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
     call FillTilesBxC
@@ -5018,7 +5789,12 @@ Jump_01E_6840::
     ld [wD781], a
     ret
 
-Jump_01E_685A::
+; entry 12 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F1, wD781
+Func_01E_5A4D_Case0C::
+Jump_01E_685A:: ; address name
     call Func_01E_76EB
     ld a, [hl]
     ld b, a
@@ -5029,7 +5805,13 @@ Jump_01E_685A::
     ld [wD781], a
     ret
 
-Jump_01E_6870::
+; entry 13 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B2, wD7B3
+; writes: wC527, hFFBA, wD782, wD780, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wC52D
+Func_01E_6074_Table8_Case0D::
+Jump_01E_6870:: ; address name
     farcall Func_01D_5E79
     call Func_01E_76F3
     ld a, [hl]
@@ -5071,7 +5853,12 @@ Jump_01E_6870::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_68D3::
+; entry 14 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_5A4D_Case0E::
+Jump_01E_68D3:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $0F02
     call FillTilesBxC
@@ -5080,7 +5867,12 @@ Jump_01E_68D3::
     ld [wD781], a
     ret
 
-Jump_01E_68E4::
+; entry 17 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F3, wD7F4, wD7F7, wD781
+Func_01E_5A4D_Case11::
+Jump_01E_68E4:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
@@ -5097,7 +5889,12 @@ Jump_01E_68E4::
     ld [wD781], a
     ret
 
-Jump_01E_6907::
+; entry 18 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFC7, wD781
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, ...
+Func_01E_5A4D_Case12::
+Jump_01E_6907:: ; address name
     call Func_01E_76EB
     ld a, [hl]
     push hl
@@ -5111,7 +5908,12 @@ Jump_01E_6907::
     xor a, a
     ld [rRAMG2], a
 
-Jump_01E_6920::
+; entry 19 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFC7, wD781
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, ...
+Func_01E_5A4D_Case13::
+Jump_01E_6920:: ; address name
     call Func_01E_76EB
     push hl
     ld a, $0A
@@ -5134,7 +5936,12 @@ Jump_01E_6920::
     xor a, a
     ld [rRAMG2], a
 
-Jump_01E_694D::
+; entry 20 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFC7, wD781
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, ...
+Func_01E_5A4D_Case14::
+Jump_01E_694D:: ; address name
     call Func_01E_76EB
     ld a, $0A
     ld [rRAMG2], a
@@ -5174,7 +5981,12 @@ Jump_01E_694D::
     ld [wD781], a
     ret
 
-Jump_01E_69AD::
+; entry 21 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFC7, wD7F9, wD781
+; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, ...
+Func_01E_6074_Table8_Case15::
+Jump_01E_69AD:: ; address name
     call Func_01E_76EB
     ld a, $0A
     ld [rRAMG2], a
@@ -5258,7 +6070,11 @@ Jump_01E_6A18::
     ld [wD781], a
     ret
 
-Jump_01E_6A57::
+; entry 22 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; writes: rRAMG2, rRAMB, wD781
+Func_01E_5A4D_Case16::
+Jump_01E_6A57:: ; address name
     call Func_01E_76EB
     ld a, $0A
     ld [rRAMG2], a
@@ -5271,7 +6087,13 @@ Jump_01E_6A57::
     ld [wD781], a
     ret
 
-Jump_01E_6A70::
+; entry 25 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hFFCB, wD781
+; writes: rRAMG2, rRAMB, hFFCB, wC52F, wC530, wStringCategory, wC52D, wC52E, ...
+; points at: wC52D
+Func_01E_5A4D_Case19::
+Jump_01E_6A70:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5363,14 +6185,25 @@ Jump_01E_6AFF::
     ld [hl+], a
     ld [hl], $12
 
-Jump_01E_6B10::
+; entry 26 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781
+Func_01E_5A4D_Case1A::
+Jump_01E_6B10:: ; address name
     farcall Func_01D_5DF9
     ld a, [wD781]
     add a, $02
     ld [wD781], a
     ret
 
-Jump_01E_6B1F::
+; entry 27 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781
+; writes: wD7F9, wD7F3, wD7F4, wD7F7, wD781
+; points at: wC52D
+Func_01E_6074_Table8_Case1B::
+Jump_01E_6B1F:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_65F6
@@ -5448,7 +6281,12 @@ Jump_01E_6B55::
     ld [wD781], a
     ret
 
-Jump_01E_6BC6::
+; entry 28 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782, wD781
+; writes: wD7F3, wD7F4, wD7F7, wD782, wD781
+Func_01E_5A4D_Case1C::
+Jump_01E_6BC6:: ; address name
     ld a, [wD782]
     and a, a
     jr nz, Jump_01E_6C0A
@@ -5490,7 +6328,12 @@ Jump_01E_6C0A::
     ld [wD781], a
     ret
 
-Jump_01E_6C1F::
+; entry 29 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; writes: rRAMG2, rRAMB, wD7F1, wD781
+; points at: wC52D
+Func_01E_5A4D_Case1D::
+Jump_01E_6C1F:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5526,7 +6369,12 @@ Jump_01E_6C1F::
     ld [wD781], a
     ret
 
-Jump_01E_6C69::
+; entry 30 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD7F3, wD7F4, wD7F7, wD7F1, wD7F2, hFFBA, wD781
+Func_01E_5A4D_Case1E::
+Jump_01E_6C69:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
@@ -5547,7 +6395,12 @@ Jump_01E_6C69::
     farcall Func_01D_682A
     pop hl
 
-Jump_01E_6C97::
+; entry 31 of the `rst $00` table in Func_01E_5A4D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: hFFBA, wD781
+Func_01E_5A4D_Case1F::
+Jump_01E_6C97:: ; address name
     ld b, [hl]
     call Func_01E_6D70
     call Func_01E_6FEB
@@ -5558,7 +6411,13 @@ Jump_01E_6C97::
     ld [wD781], a
     ret
 
-Jump_01E_6CAB::
+; entry 32 of the `rst $00` table in Func_01E_6074
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F9, wD781
+; writes: wD7F9, wD7F1, wD7F2, hFFBA, wD781
+; points at: wC52D
+Func_01E_6074_Table8_Case20::
+Jump_01E_6CAB:: ; address name
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_65F6
@@ -5616,7 +6475,7 @@ Jump_01E_6D06::
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_6074)
+; 1 call site from 1 routine (e.g. Func_01E_6074_Table6_Case06)
 ; writes: wD7F3, wD7F4, wD7F7
 Func_01E_6D0F::
     call BGMapAddressAtScroll_Bank1E
@@ -5632,7 +6491,7 @@ Func_01E_6D0F::
     call Func_01E_6D2B
     ret
 
-; 27 call sites from 7 routines (e.g. Func_01E_6810, Func_01E_667C, Func_01E_65FE, Func_01E_5A4D, ...)
+; 27 call sites from 19 routines (e.g. Func_01E_6074_Table8_Case1B, Func_01E_6074_Table8_Case15, Func_01E_6074_Table8_Case06, Func_01E_6074_Table8_Case03, ...)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2
 Func_01E_6D2B::
     ld a, h
@@ -5646,7 +6505,7 @@ Func_01E_6D2B::
     farcall Func_01F_5D2A
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_6810)
+; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case12)
 ; writes: wStringIndex, wStringCategory
 ; points at: wC52D
 Func_01E_6D42::
@@ -5675,7 +6534,7 @@ Func_01E_6D42::
     ld [hl], $12
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01E_6074, Func_01E_6810, Func_01E_6FE3)
+; 3 call sites from 3 routines (e.g. Func_01E_6074_Table6_Case05, Func_01E_5A4D_Case1F, Func_01E_6FE3)
 ; reads: hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, wC8CF, wC8D0, wC8D1, wC8D2, wC8D9, wD7F1, ...
 Func_01E_6D70::
@@ -5900,7 +6759,7 @@ Func_01E_6E84::
     ret
     db $1A, $8E, $1A, $1E, $1C, $99, $1C, $29, $1C, $99, $1C, $29, $1A, $8E, $1A, $1E
 
-; 1 call site from 1 routine (e.g. Func_01E_6810)
+; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case12)
 ; writes: wC8D9
 Func_01E_6EE2::
     push hl
@@ -5925,7 +6784,7 @@ Func_01E_6EE2::
     call CopyGlyphTilesToVRAM
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_6810)
+; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case13)
 ; reads: hFFC6, hFFC7, hFFC8, wD00F
 ; writes: wC8C0, wC8C1, wC8C2, wD006, wD007, hFFC6, hFFC7, wD7F1, ...
 ; points at: hFFC8
@@ -6040,14 +6899,14 @@ Jump_01E_6FC9::
     ld [wD7F7], a
     jr Jump_01E_6FBA
 
-; 1 call site from 1 routine (e.g. Func_0F0_5E2C)
+; 1 call site from 1 routine (e.g. Func_0F0_5DE8_Case05)
 Func_01E_6FE3::
     ld b, e
     call Func_01E_6D70
     call Func_01E_6FEB
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01E_6074, Func_01E_6810, Func_01E_6FE3)
+; 3 call sites from 3 routines (e.g. Func_01E_6074_Table6_Case05, Func_01E_5A4D_Case1F, Func_01E_6FE3)
 ; reads: hFFC6, hFFC7, rSTAT
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F5, wD7F2, wD7F3, wD7F4
 Func_01E_6FEB::
@@ -6222,7 +7081,7 @@ Func_01E_70E3::
     pop bc
     jp Jump_01E_710A
 
-; 1 call site from 1 routine (e.g. Func_01E_6810)
+; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case13)
 ; reads: hFFC6, wD7F4, wD7F1, wD7F2, wD7F3, rSTAT, wC8C1, wC8C2
 ; writes: wD09D, wD09E
 Func_01E_70EF::
@@ -6300,7 +7159,7 @@ Jump_01E_7155::
     ei
     ret
 
-; 12 call sites from 12 routines (e.g. Func_01E_49F8, Func_01E_5C63, Func_014_4BA0, Func_015_4182, ...)
+; 12 call sites from 12 routines (e.g. Func_01E_49F8, Func_01E_5C63, Func_014_4BA0, Func_015_4182_Case02, ...)
 ; reads: wD7A9, wD7AF, wD7AB
 ; writes: wD7B0, wD7AF, wD7B1, wD7AB
 Func_01E_7163::
@@ -6386,7 +7245,7 @@ Func_01E_71B5::
     ret
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
-; 11 call sites from 9 routines (e.g. Func_01E_4A32, Func_01E_6074, Func_00D_491A, Func_015_512C, ...)
+; 11 call sites from 11 routines (e.g. Func_01E_4A32_Table3_Case30, Func_01E_4A32_Table2_Case18, Func_01E_6074_Table6_Case0E, Func_00D_491A, ...)
 ; reads: wD7A9, wD7AF, wD7AB
 ; writes: wD7B0, wD7AF, wD7B1, wD7AB
 Func_01E_71E1::
@@ -6470,7 +7329,7 @@ Func_01E_7233::
     ret
     db $28, $00, $68, $00, $A8, $00, $E8, $00
 
-; 3 call sites from 2 routines (e.g. Func_01E_667C, Func_01E_6810)
+; 3 call sites from 3 routines (e.g. Func_01E_667C, Func_01E_5A4D_Case1D, Func_01E_5A4D_Case16)
 ; reads: hFFC7, hFFC6, wC8C1, wC8C2
 Func_01E_725D::
     push hl
@@ -6761,7 +7620,7 @@ Jump_01E_739B::
     ret
     db $5B, $5D, $5F, $61, $CC, $01, $D0, $01, $0C, $02, $10, $02
 
-; 1 call site from 1 routine (e.g. Func_01E_5C63)
+; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case0D)
 Func_01E_7406::
     ld a, c
     ld b, a
@@ -6782,7 +7641,7 @@ Jump_01E_740A::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 41 call sites from 10 routines (e.g. ScriptCommandE8_Run, Func_01E_4A32, Func_01E_46E5, Func_01E_42C6, ...)
+; 41 call sites from 29 routines (e.g. ScriptCommandE8_Run_Case02, Func_01E_4201_Case22, Func_01E_4201_Case10, Func_01E_4201_Case05, ...)
 StoreBAtWordTableEntry_Bank1E::
 Func_01E_741A:: ; address name
     push bc
@@ -6796,7 +7655,7 @@ Func_01E_741A:: ; address name
     ld [de], a
     ret
 
-; 4 call sites from 4 routines (e.g. ScriptCommandE9_Run, ScriptCommandE8_Run, Func_01E_4918, Func_01E_75F2)
+; 4 call sites from 4 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case00, Func_01E_4918, Func_01E_75F2)
 Func_01E_7428::
     ld a, [de]
     inc de
@@ -6808,7 +7667,7 @@ Func_01E_7428::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 3 routines (e.g. ScriptCommandE9_Run, ScriptCommandE8_Run, Func_01E_75F2)
+; 3 call sites from 3 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case00, Func_01E_75F2)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank1E::
 Func_01E_7431:: ; address name
@@ -6850,7 +7709,7 @@ Jump_01E_7446::
     jr nz, Jump_01E_7445
     ret
 
-; 14 call sites from 8 routines (e.g. ScriptCommandE8_Run, Func_01E_4A32, Func_01E_42C6, Func_01E_6074, ...)
+; 14 call sites from 14 routines (e.g. ScriptCommandE8_Run_Table2_Case01, Func_01E_4A32_Case3B, Func_01E_4201_Case0A, Func_01E_4201_Case20, ...)
 ; writes: wD784
 Func_01E_7454::
     ld b, $00
@@ -6899,7 +7758,7 @@ Jump_01E_7486::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 33 call sites from 8 routines (e.g. ScriptCommandE8_Run, Func_01E_4A32, Func_01E_4201, Func_01E_42C6, ...)
+; 33 call sites from 27 routines (e.g. ScriptCommandE8_Run_Table2_Case03, Func_01E_4201_Case22, Func_01E_4201_Case00, Func_01E_4A32_Case3C, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank1E::
@@ -6956,7 +7815,7 @@ Jump_01E_74B6::
     ldh [rSVBK], a
     ret
 
-; 38 call sites from 11 routines (e.g. ScriptCommandE9_Run, ScriptCommandE8_Run, Func_01E_4A32, Func_01E_46E5, ...)
+; 38 call sites from 33 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Table2_Case03, Func_01E_4201_Case27, Func_01E_4201_Case22, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -7010,7 +7869,7 @@ Jump_01E_74EE::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 86 call sites from 27 routines (e.g. ScriptCommandE9_Run, Func_01E_4201, Func_01E_7233, Func_01E_7564, ...)
+; 86 call sites from 67 routines (e.g. ScriptCommandE9_Run_Case00, Func_01E_4201, Func_01E_7233, Func_01E_7564, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1E::
 Func_01E_750F:: ; address name
@@ -7031,7 +7890,7 @@ Func_01E_750F:: ; address name
     add_a_to_hl
     ret
 
-; 4 call sites from 3 routines (e.g. Func_01E_49F8, Func_01E_4A32, Func_01E_5A4D)
+; 4 call sites from 4 routines (e.g. Func_01E_49F8, Func_01E_4A32_Table3_Case30, Func_01E_4A32_Table2_Case18, Func_01E_5A4D_Case03)
 Func_01E_7530::
     push de
     call BGMapAddressAtScroll_Bank1E
@@ -7060,7 +7919,7 @@ Func_01E_7530::
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 4 call sites from 3 routines (e.g. Func_01E_49F8, Func_01E_4A32, Func_01E_6074)
+; 4 call sites from 4 routines (e.g. Func_01E_49F8, Func_01E_4A32_Table3_Case30, Func_01E_4A32_Table2_Case18, Func_01E_6074_Table6_Case0E)
 StoreC5BEC6AtHLStride2_Bank1E::
 Func_01E_7556:: ; address name
     ld a, $C5
@@ -7075,7 +7934,7 @@ Func_01E_7556:: ; address name
     ld [hl], a
     ret
 
-; 11 call sites from 10 routines (e.g. Func_01E_49F8, Func_01E_4A32, Func_01E_5A4D, Func_00D_5702, ...)
+; 11 call sites from 11 routines (e.g. Func_01E_49F8, Func_01E_4A32_Table3_Case30, Func_01E_4A32_Table2_Case18, Func_01E_5A4D_Case03, ...)
 ; reads: wD7F1, wD7F2, wD7AF, wD7B0
 Func_01E_7564::
     ld a, [wD7F1]
@@ -7113,7 +7972,7 @@ Func_01E_7564::
     ei
     ret
 
-; 20 call sites from 17 routines (e.g. Func_01E_49F8, Func_01E_4A32, Func_01E_6074, Func_00D_491A, ...)
+; 20 call sites from 20 routines (e.g. Func_01E_49F8, Func_01E_4A32_Table3_Case30, Func_01E_4A32_Table2_Case18, Func_01E_6074_Table6_Case0E, ...)
 ; reads: wD7F1, wD7F2, wD7AF, wD7B0
 Func_01E_759A::
     ld a, [wD7F1]
@@ -7132,7 +7991,7 @@ Func_01E_759A::
     ld [hl], a
     ret
 
-; 21 call sites from 12 routines (e.g. Func_01E_4A32, Func_01E_7399, Func_01E_7332, Func_01E_725D, ...)
+; 21 call sites from 16 routines (e.g. Func_01E_4A32_Table3_Case2F, Func_01E_4A32_Table3_Case17, Func_01E_4A32_Table2_Case13, Func_01E_4A32_Table2_Case0D, ...)
 ; points at: wC8C0
 Func_01E_75B3::
     ld hl, wC8C0
@@ -7150,7 +8009,7 @@ Func_01E_75B3::
 Jump_01E_75C4::
     ret
 
-; 8 call sites from 4 routines (e.g. Func_01E_42C6, Func_01E_4A32, Func_01E_6810, Func_01E_6074)
+; 8 call sites from 7 routines (e.g. Func_01E_4201_Case01, Func_01E_4201_Case17, Func_01E_4A32_Table2_Case08, Func_01E_6074_Table8_Case0D, ...)
 ; reads: hFFC6
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
 Func_01E_75C5::
@@ -7171,12 +8030,12 @@ Func_01E_75C5::
     ld [rRAMG2], a
     ret
 
-; 5 call sites from 4 routines (e.g. Func_01E_42C6, Func_01E_4A32, Func_01E_6810, Func_01E_6074)
+; 5 call sites from 5 routines (e.g. Func_01E_4201_Case01, Func_01E_4201_Case17, Func_01E_4A32_Table2_Case08, Func_01E_6810, ...)
 Func_01E_75EB::
     farcall Func_01D_5B4D
     ret
 
-; 5 call sites from 4 routines (e.g. Func_01E_46E5, Func_01E_5A4D, Func_01E_42C6, Func_01E_4A32)
+; 5 call sites from 5 routines (e.g. Func_01E_46E5, Func_01E_5A4D, Func_01E_4201_Case06, Func_01E_4A32_Table2_Case0D, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
 Func_01E_75F2::
@@ -7238,7 +8097,7 @@ Jump_01E_7642::
     jr nz, Func_01E_75F2
     ret
 
-; 2 call sites from 2 routines (e.g. Func_01E_42C6, Func_01E_65FE)
+; 2 call sites from 2 routines (e.g. Func_01E_42C6, Func_01E_6074_Table8_Case03)
 ; reads: hFFC6, rSTAT, wC6FD
 ; writes: rRAMG2, rRAMB
 ; points at: wD789
@@ -7290,7 +8149,7 @@ Jump_01E_7684::
     jr nz, Jump_01E_7648
     ret
 
-; 6 call sites from 4 routines (e.g. Func_01E_6F17, Func_00C_7098, Func_01C_4867, Func_0F2_4B05)
+; 6 call sites from 4 routines (e.g. Func_01E_6F17, Func_00C_7098, Func_01C_4867_Case05, Func_0F2_4B05)
 ; points at: hFFC9, wD7F1
 Func_01E_768E::
     ld de, hFFC9
@@ -7354,7 +8213,7 @@ Jump_01E_76CC::
     jr nz, Jump_01E_76CC
     ret
 
-; 9 call sites from 2 routines (e.g. Func_01E_4A32, Func_01E_46E5)
+; 9 call sites from 4 routines (e.g. Func_01E_4201_Case29, Func_01E_4201_Case0F, Func_01E_4A32_Case48, Func_01E_4A32_Case16)
 ; points at: hFFC6
 Func_01E_76DA::
     push hl
@@ -7372,13 +8231,13 @@ Jump_01E_76E2::
     pop hl
     ret
 
-; 30 call sites from 5 routines (e.g. Func_01E_4A32, Func_01E_6810, Func_01E_667C, Func_01E_6074, ...)
+; 30 call sites from 25 routines (e.g. Func_01E_4201_Case29, Func_01E_4201_Case28, Func_01E_4A32_Case48, Func_01E_4A32_Case16, ...)
 ; reads: wD7F5, wD7F6
 Func_01E_76EB::
     farcall SetWD7F5ToWD789Cell5
     jr Jump_01E_76F9
 
-; 8 call sites from 4 routines (e.g. Func_01E_4A32, Func_01E_6810, Func_01E_6074, Func_0F1_5B38)
+; 8 call sites from 7 routines (e.g. Func_01E_4A32_Table3_Case33, Func_01E_6074_Table8_Case0D, Func_01E_6074_Table6_Case07, Func_01E_6074_Table6_Case06, ...)
 ; reads: wD7F5, wD7F6
 Func_01E_76F3::
     farcall SetWD7F5ToWD789Cell4
@@ -7390,7 +8249,7 @@ Jump_01E_76F9::
     ld l, a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_01E_6074)
+; 4 call sites from 4 routines (e.g. Func_01E_6074_Table2_Case03, Func_01E_6074_Table3_Case03, Func_01E_6074_Table4_Case03, Func_01E_6074_Table5_Case03)
 ; writes: wC378, wC3A0, wC3C8, wC3F0, wC418
 Func_01E_7702::
     call BGMapAddressAtScroll_Bank1E
@@ -7417,7 +8276,7 @@ Jump_01E_770E::
     ld [wC418], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_6074)
+; 1 call site from 1 routine (e.g. Func_01E_6074_Table6_Case07)
 ; reads: wD7AB
 ; writes: wD7AB, wD7AF
 Func_01E_7732::
@@ -7431,7 +8290,7 @@ Func_01E_7732::
     ld [wD7AF], a
     ret
 
-; 10 call sites from 8 routines (e.g. Func_01E_4A32, Func_01E_44EF, Func_00D_463F, Func_014_43CC, ...)
+; 10 call sites from 10 routines (e.g. Func_01E_4A32_Table2_Case1B, Func_01E_4A32_Table2_Case14, Func_01E_4201_Case0C, Func_00D_463F_Case0C, ...)
 ; reads: hFFB9, hFF8D, wSpriteSlotCount
 ; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wSpriteSlotCount
 Func_01E_7745::
@@ -7450,7 +8309,7 @@ Func_01E_7745::
     ld [wSpriteSlotCount], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_01E_6810, Func_01E_6074, Func_01E_5C63, Func_00D_4B30, ...)
+; 5 call sites from 5 routines (e.g. Func_01E_6074_Table8_Case0D, Func_01E_6074_Table6_Case11, Func_01E_5A4D_Case0D, Func_00D_4B30_Case08, ...)
 ; reads: wD7BC, wD7BA, wD7BB
 ; writes: hFFB9, hFFBA, hFF8D, wSpriteSlotCount
 Func_01E_7763::
@@ -7464,7 +8323,7 @@ Func_01E_7763::
     ld [wSpriteSlotCount], a
     ret
 
-; 3 call sites from 1 routine (e.g. Func_01E_4A32)
+; 3 call sites from 2 routines (e.g. Func_01E_4A32_Table2_Case02, Func_01E_4A32_Table3_Case02)
 Func_01E_7778::
     xor a, a
     ld b, $C3

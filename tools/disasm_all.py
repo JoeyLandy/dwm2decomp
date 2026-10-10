@@ -135,6 +135,7 @@ class Rom:
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
         self.names: dict[tuple[int, int], dict] = {}  # config/names.json: evidence-backed routine names
+        self.dispatch: dict[tuple[int, int], list] = {}  # rst $00 table start -> [(bank, target)]
         self.families: list[dict] = []  # config/name_families.json: names for copies of library routines
         self.text_enabled = True  # render prose runs as db strings (--no-text turns it off)
         self._text_runs: dict[int, list[tuple[int, int]]] = {}
@@ -219,6 +220,7 @@ class Rom:
                     self.add_entry(b, hl, "Func")
             if kind == "rst" and tgt == 0x00:
                 self.tables.append((bank, pc + 1))
+                self.dispatch[(bank, pc + 1)] = []  # inline jump table of `rst $00`
                 return
             if kind in ("jr", "jp", "ret", "jphl"):
                 return
@@ -251,6 +253,8 @@ class Rom:
             if not words:
                 continue
             did = True
+            if (bank, start) in self.dispatch:
+                self.dispatch[(bank, start)] = [(tb, ta) for _p, _w, (tb, ta) in words]
             for p, w, (tb, ta) in words:
                 self.insn[bank][p] = ("dw", w)
                 cov.update((p, p + 1))
@@ -977,6 +981,39 @@ class Rom:
                 self.names[(bank, addr)] = info
             log(f"family {fam['name']}: {len(found)} copies of {size} bytes")
 
+    def name_dispatch_cases(self) -> None:
+        """Name the jump targets of `rst $00` inline tables `Parent_CaseNN` (E-0040).
+
+        The parent is the routine whose code holds the `rst $00`; NN is the entry's index in the
+        table. A target takes the name of the first table that lists it, and only plain `Jump_`
+        labels are renamed (routines already have a name or an address name of their own)."""
+        done = 0
+        tables_of: dict[str, int] = {}
+        for (bank, start), targets in sorted(self.dispatch.items()):
+            if not targets:
+                continue
+            labels = self.labels[bank]
+            parents = [a for a in labels if a < start and labels[a].startswith(("Func_", "Data_")) is False
+                       and not labels[a].startswith("Jump_")] + [a for a in labels if a < start and labels[a].startswith("Func_")]
+            if not parents:
+                continue
+            parent = labels[max(parents)]
+            info = self.names.get((bank, max(parents)))
+            if info:
+                parent = info["name"]
+            tables_of[parent] = k = tables_of.get(parent, 0) + 1
+            stem = f"{parent}_Case" if k == 1 else f"{parent}_Table{k}_Case"  # a routine can hold several tables
+            for n, (tb, ta) in enumerate(targets):
+                if tb != bank or (tb, ta) in self.names or not self.labels[tb].get(ta, "").startswith("Jump_"):
+                    continue
+                if ta not in self.insn[tb]:
+                    continue
+                self.names[(tb, ta)] = {"name": f"{stem}{n:02X}",
+                                        "note": f"entry {n} of the `rst $00` table in {parent}",
+                                        "evidence": "structure of the table"}
+                done += 1
+        log(f"jump-table cases named: {done}")
+
     def apply_names(self) -> None:
         """Rename code labels listed in config/names.json; keep the address name as an alias.
 
@@ -1227,6 +1264,7 @@ class Rom:
         self.prepare_tables()
         self.prepare_tracks()
         self.expand_families(self.families)
+        self.name_dispatch_cases()
         self.apply_names()
         self.build_xrefs()
         log(f"cross-references: {len(self.callers)} routines are called, "

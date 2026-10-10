@@ -2,7 +2,7 @@ SECTION "Bank 13", ROMX[$4000], BANK[$13]
     db $13
 
 ; HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
-; 697 call sites from 48 routines (e.g. Func_013_5EF4, Func_013_5C0B, Func_013_5922, Func_013_49D5, ...)
+; 697 call sites from 339 routines (e.g. Func_013_5922_Case7F, Func_013_5922_Case7E, Func_013_5922_Case7D, Func_013_5922_Case7C, ...)
 ; writes: wScriptParam0, wScriptParam1, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 SetRequestPtrC921_B13::
 Func_013_4001:: ; address name
@@ -24,7 +24,7 @@ Func_013_4001:: ; address name
     ret
 
 ; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
-; 33 call sites from 18 routines (e.g. Func_013_5EF4, Func_013_49D5, Func_013_405C, Func_013_7DEC, ...)
+; 33 call sites from 33 routines (e.g. Func_013_5922_Case79, Func_013_5922_Case63, Func_013_49D5_Case5C, Func_013_49D5_Case47, ...)
 ; writes: wC924, wC925, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 SetRequestPtrC924FromDE_B13::
 Func_013_4025:: ; address name
@@ -46,7 +46,7 @@ Func_013_4025:: ; address name
     ret
 
 ; HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1
-; 215 call sites from 22 routines (e.g. Func_013_5922, Func_013_5EF4, Func_013_5C0B, Func_013_49D5, ...)
+; 215 call sites from 113 routines (e.g. Func_013_405C_Case08, Func_013_5922_Case7F, Func_013_5922_Case77, Func_013_5922_Case72, ...)
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
 SetRequestPtrC91A_B13::
 Func_013_4049:: ; address name
@@ -60,7 +60,7 @@ Func_013_4049:: ; address name
     ld [wModeState], a
     ret
 
-; 39 call sites from 23 routines (e.g. Func_002_4745, Func_002_4E9E, Func_002_4ED6, Func_002_5B2A, ...)
+; 39 call sites from 26 routines (e.g. Func_002_4745_Case02, Func_002_4745_Case01, Func_002_4E9E, Func_002_4ED6, ...)
 ; reads: wCC44, wC917, wCC45, wC916
 ; writes: wScriptStartRequest, wModeState, wC917, wC916, wScriptParam0, wScriptParam1, wScriptCommandType, wScriptRunning, ...
 ; points at: wCD89, wCDAE
@@ -131,190 +131,233 @@ Jump_013_40C8::
 Jump_013_40E9::
     ld a, [wC917]
     rst $00
-    dw Jump_013_4103
-    dw Jump_013_5941
-    dw Jump_013_4126
-    dw Jump_013_412D
-    dw Jump_013_4A23
-    dw Jump_013_4134
-    dw Jump_013_411F
-    dw Jump_013_4111
-    dw Jump_013_593A
-    dw Jump_013_4118
-    dw Jump_013_410A
+    dw Func_013_405C_Case00
+    dw Func_013_405C_Case01
+    dw Func_013_405C_Case02
+    dw Func_013_405C_Case03
+    dw Func_013_405C_Case04
+    dw Func_013_405C_Case05
+    dw Func_013_405C_Case06
+    dw Func_013_405C_Case07
+    dw Func_013_405C_Case08
+    dw Func_013_405C_Case09
+    dw Func_013_405C_Case0A
 
-Jump_013_4103::
+; entry 0 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case00::
+Jump_013_4103:: ; address name
     farcall Func_004_6892
     ret
 
-Jump_013_410A::
+; entry 10 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case0A::
+Jump_013_410A:: ; address name
     farcall Func_004_5616
     ret
 
-Jump_013_4111::
+; entry 7 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case07::
+Jump_013_4111:: ; address name
     farcall Func_004_6A35
     ret
 
-Jump_013_4118::
+; entry 9 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case09::
+Jump_013_4118:: ; address name
     farcall Func_004_7B29
     ret
 
-Jump_013_411F::
+; entry 6 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case06::
+Jump_013_411F:: ; address name
     farcall Func_004_6827
     ret
 
-Jump_013_4126::
+; entry 2 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case02::
+Jump_013_4126:: ; address name
     farcall Func_004_612B
     ret
 
-Jump_013_412D::
+; entry 3 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case03::
+Jump_013_412D:: ; address name
     farcall Func_004_58C2
     ret
 
-Jump_013_4134::
+; entry 5 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC916
+Func_013_405C_Case05::
+Jump_013_4134:: ; address name
     ld a, [wC916]
     rst $00
-    dw Jump_013_421E
-    dw Jump_013_4225
-    dw Jump_013_422C
-    dw Jump_013_4233
-    dw Jump_013_423A
-    dw Jump_013_4241
-    dw Jump_013_4257
-    dw Jump_013_425E
-    dw Jump_013_4265
-    dw Jump_013_427B
-    dw Jump_013_4282
-    dw Jump_013_42A7
-    dw Jump_013_42B3
-    dw Jump_013_42BA
-    dw Jump_013_42D0
-    dw Jump_013_42DC
-    dw Jump_013_42FB
-    dw Jump_013_430C
-    dw Jump_013_4313
-    dw Jump_013_4324
-    dw Jump_013_4335
-    dw Jump_013_433C
-    dw Jump_013_4375
-    dw Jump_013_43B0
-    dw Jump_013_43B7
-    dw Jump_013_43BE
-    dw Jump_013_43C5
-    dw Jump_013_43CC
-    dw Jump_013_43E2
-    dw Jump_013_43F8
-    dw Jump_013_440E
-    dw Jump_013_4424
-    dw Jump_013_443C
-    dw Jump_013_4443
-    dw Jump_013_444A
-    dw Jump_013_4451
-    dw Jump_013_445D
-    dw Jump_013_446E
-    dw Jump_013_4475
-    dw Jump_013_447C
-    dw Jump_013_4483
-    dw Jump_013_448F
-    dw Jump_013_44A7
-    dw Jump_013_44C3
-    dw Jump_013_44CA
-    dw Jump_013_44DB
-    dw Jump_013_44E2
-    dw Jump_013_44F8
-    dw Jump_013_44FF
-    dw Jump_013_4524
-    dw Jump_013_452B
-    dw Jump_013_4532
-    dw Jump_013_4548
-    dw Jump_013_45A6
-    dw Jump_013_4619
-    dw Jump_013_462F
-    dw Jump_013_4645
-    dw Jump_013_464C
-    dw Jump_013_4653
-    dw Jump_013_4664
-    dw Jump_013_4670
-    dw Jump_013_4695
-    dw Jump_013_469C
-    dw Jump_013_46A3
-    dw Jump_013_46AF
-    dw Jump_013_46B6
-    dw Jump_013_46BD
-    dw Jump_013_46C4
-    dw Jump_013_46DA
-    dw Jump_013_46E1
-    dw Jump_013_46E8
-    dw Jump_013_46EF
-    dw Jump_013_4712
-    dw Jump_013_4723
-    dw Jump_013_4734
-    dw Jump_013_474A
-    dw Jump_013_475B
-    dw Jump_013_4774
-    dw Jump_013_477B
-    dw Jump_013_4782
-    dw Jump_013_4789
-    dw Jump_013_4790
-    dw Jump_013_4797
-    dw Jump_013_479E
-    dw Jump_013_47A5
-    dw Jump_013_47BB
-    dw Jump_013_47D1
-    dw Jump_013_47E2
-    dw Jump_013_47F8
-    dw Jump_013_47FF
-    dw Jump_013_4806
-    dw Jump_013_4864
-    dw Jump_013_4875
-    dw Jump_013_487C
-    dw Jump_013_4883
-    dw Jump_013_488A
-    dw Jump_013_4891
-    dw Jump_013_4898
-    dw Jump_013_489F
-    dw Jump_013_48B0
-    dw Jump_013_48B7
-    dw Jump_013_48C8
-    dw Jump_013_48D9
-    dw Jump_013_48EA
-    dw Jump_013_4969
-    dw Jump_013_4970
-    dw Jump_013_4977
-    dw Jump_013_4987
-    dw Jump_013_498E
-    dw Jump_013_4995
-    dw Jump_013_499C
-    dw Jump_013_49B5
-    dw Jump_013_49CE
+    dw Func_013_405C_Table2_Case00
+    dw Func_013_405C_Table2_Case01
+    dw Func_013_405C_Table2_Case02
+    dw Func_013_405C_Table2_Case03
+    dw Func_013_405C_Table2_Case04
+    dw Func_013_405C_Table2_Case05
+    dw Func_013_405C_Table2_Case06
+    dw Func_013_405C_Table2_Case07
+    dw Func_013_405C_Table2_Case08
+    dw Func_013_405C_Table2_Case09
+    dw Func_013_405C_Table2_Case0A
+    dw Func_013_405C_Table2_Case0B
+    dw Func_013_405C_Table2_Case0C
+    dw Func_013_405C_Table2_Case0D
+    dw Func_013_405C_Table2_Case0E
+    dw Func_013_405C_Table2_Case0F
+    dw Func_013_405C_Table2_Case10
+    dw Func_013_405C_Table2_Case11
+    dw Func_013_405C_Table2_Case12
+    dw Func_013_405C_Table2_Case13
+    dw Func_013_405C_Table2_Case14
+    dw Func_013_405C_Table2_Case15
+    dw Func_013_405C_Table2_Case16
+    dw Func_013_405C_Table2_Case17
+    dw Func_013_405C_Table2_Case18
+    dw Func_013_405C_Table2_Case19
+    dw Func_013_405C_Table2_Case1A
+    dw Func_013_405C_Table2_Case1B
+    dw Func_013_405C_Table2_Case1C
+    dw Func_013_405C_Table2_Case1D
+    dw Func_013_405C_Table2_Case1E
+    dw Func_013_405C_Table2_Case1F
+    dw Func_013_405C_Table2_Case20
+    dw Func_013_405C_Table2_Case21
+    dw Func_013_405C_Table2_Case22
+    dw Func_013_405C_Table2_Case23
+    dw Func_013_405C_Table2_Case24
+    dw Func_013_405C_Table2_Case25
+    dw Func_013_405C_Table2_Case26
+    dw Func_013_405C_Table2_Case27
+    dw Func_013_405C_Table2_Case28
+    dw Func_013_405C_Table2_Case29
+    dw Func_013_405C_Table2_Case2A
+    dw Func_013_405C_Table2_Case2B
+    dw Func_013_405C_Table2_Case2C
+    dw Func_013_405C_Table2_Case2D
+    dw Func_013_405C_Table2_Case2E
+    dw Func_013_405C_Table2_Case2F
+    dw Func_013_405C_Table2_Case30
+    dw Func_013_405C_Table2_Case31
+    dw Func_013_405C_Table2_Case32
+    dw Func_013_405C_Table2_Case33
+    dw Func_013_405C_Table2_Case34
+    dw Func_013_405C_Table2_Case35
+    dw Func_013_405C_Table2_Case36
+    dw Func_013_405C_Table2_Case37
+    dw Func_013_405C_Table2_Case38
+    dw Func_013_405C_Table2_Case39
+    dw Func_013_405C_Table2_Case3A
+    dw Func_013_405C_Table2_Case3B
+    dw Func_013_405C_Table2_Case3C
+    dw Func_013_405C_Table2_Case3D
+    dw Func_013_405C_Table2_Case3E
+    dw Func_013_405C_Table2_Case3F
+    dw Func_013_405C_Table2_Case40
+    dw Func_013_405C_Table2_Case41
+    dw Func_013_405C_Table2_Case42
+    dw Func_013_405C_Table2_Case43
+    dw Func_013_405C_Table2_Case44
+    dw Func_013_405C_Table2_Case45
+    dw Func_013_405C_Table2_Case46
+    dw Func_013_405C_Table2_Case47
+    dw Func_013_405C_Table2_Case48
+    dw Func_013_405C_Table2_Case49
+    dw Func_013_405C_Table2_Case4A
+    dw Func_013_405C_Table2_Case4B
+    dw Func_013_405C_Table2_Case4C
+    dw Func_013_405C_Table2_Case4D
+    dw Func_013_405C_Table2_Case4E
+    dw Func_013_405C_Table2_Case4F
+    dw Func_013_405C_Table2_Case50
+    dw Func_013_405C_Table2_Case51
+    dw Func_013_405C_Table2_Case52
+    dw Func_013_405C_Table2_Case53
+    dw Func_013_405C_Table2_Case54
+    dw Func_013_405C_Table2_Case55
+    dw Func_013_405C_Table2_Case56
+    dw Func_013_405C_Table2_Case57
+    dw Func_013_405C_Table2_Case58
+    dw Func_013_405C_Table2_Case59
+    dw Func_013_405C_Table2_Case5A
+    dw Func_013_405C_Table2_Case5B
+    dw Func_013_405C_Table2_Case5C
+    dw Func_013_405C_Table2_Case5D
+    dw Func_013_405C_Table2_Case5E
+    dw Func_013_405C_Table2_Case5F
+    dw Func_013_405C_Table2_Case60
+    dw Func_013_405C_Table2_Case61
+    dw Func_013_405C_Table2_Case62
+    dw Func_013_405C_Table2_Case63
+    dw Func_013_405C_Table2_Case64
+    dw Func_013_405C_Table2_Case65
+    dw Func_013_405C_Table2_Case66
+    dw Func_013_405C_Table2_Case67
+    dw Func_013_405C_Table2_Case68
+    dw Func_013_405C_Table2_Case69
+    dw Func_013_405C_Table2_Case6A
+    dw Func_013_405C_Table2_Case6B
+    dw Func_013_405C_Table2_Case6C
+    dw Func_013_405C_Table2_Case6D
+    dw Func_013_405C_Table2_Case6E
+    dw Func_013_405C_Table2_Case6F
+    dw Func_013_405C_Table2_Case70
     db $00, $00, $D5, $49
 
-Jump_013_421E::
+; entry 0 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case00::
+Jump_013_421E:: ; address name
     ld hl, $0400
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4225::
+; entry 1 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case01::
+Jump_013_4225:: ; address name
     ld hl, $0401
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_422C::
+; entry 2 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case02::
+Jump_013_422C:: ; address name
     ld hl, $0402
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4233::
+; entry 3 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case03::
+Jump_013_4233:: ; address name
     ld hl, $0403
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_423A::
+; entry 4 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case04::
+Jump_013_423A:: ; address name
     ld hl, $0404
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4241::
+; entry 5 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case05::
+Jump_013_4241:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_4250
@@ -327,17 +370,26 @@ Jump_013_4250::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4257::
+; entry 6 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case06::
+Jump_013_4257:: ; address name
     ld hl, $0407
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_425E::
+; entry 7 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case07::
+Jump_013_425E:: ; address name
     ld hl, $0406
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4265::
+; entry 8 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case08::
+Jump_013_4265:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, Jump_013_4274
@@ -350,12 +402,18 @@ Jump_013_4274::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_427B::
+; entry 9 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case09::
+Jump_013_427B:: ; address name
     ld hl, $0409
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4282::
+; entry 10 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case0A::
+Jump_013_4282:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, Jump_013_42A0
@@ -376,19 +434,29 @@ Jump_013_42A0::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_42A7::
+; entry 11 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_405C_Table2_Case0B::
+Jump_013_42A7:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_5FE8
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_42B3::
+; entry 12 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case0C::
+Jump_013_42B3:: ; address name
     ld hl, $040E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_42BA::
+; entry 13 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case0D::
+Jump_013_42BA:: ; address name
     ld de, $00A0
     call TestFlagBit
     jr c, Jump_013_42C9
@@ -401,14 +469,22 @@ Jump_013_42C9::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_42D0::
+; entry 14 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_405C_Table2_Case0E::
+Jump_013_42D0:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6003
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_42DC::
+; entry 15 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC26A, hFFC6
+Func_013_405C_Table2_Case0F::
+Jump_013_42DC:: ; address name
     ld a, [wC26A]
     cp a, $68
     ret z
@@ -425,7 +501,11 @@ Jump_013_42F4::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_42FB::
+; entry 16 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case10::
+Jump_013_42FB:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
@@ -434,12 +514,19 @@ Jump_013_42FB::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_430C::
+; entry 17 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case11::
+Jump_013_430C:: ; address name
     ld hl, $0413
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4313::
+; entry 18 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case12::
+Jump_013_4313:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $61
@@ -448,7 +535,11 @@ Jump_013_4313::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_4324::
+; entry 19 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case13::
+Jump_013_4324:: ; address name
     ld a, $03
     ld [wScriptParam0], a
     ld a, $00
@@ -457,12 +548,20 @@ Jump_013_4324::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_4335::
+; entry 20 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case14::
+Jump_013_4335:: ; address name
     ld hl, $600A
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_433C::
+; entry 21 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC836
+; writes: wC836
+Func_013_405C_Table2_Case15::
+Jump_013_433C:: ; address name
     ld de, $00A6
     call TestFlagBit
     ret nc
@@ -491,7 +590,11 @@ Jump_013_436E::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4375::
+; entry 22 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFF93, wCB8A
+Func_013_405C_Table2_Case16::
+Jump_013_4375:: ; address name
     ld de, $0209
     call TestFlagBit
     jr c, Jump_013_43A9
@@ -526,27 +629,42 @@ Jump_013_43A9::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_43B0::
+; entry 23 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case17::
+Jump_013_43B0:: ; address name
     ld hl, $041E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_43B7::
+; entry 24 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case18::
+Jump_013_43B7:: ; address name
     ld hl, $041F
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_43BE::
+; entry 25 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case19::
+Jump_013_43BE:: ; address name
     ld hl, $0420
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_43C5::
+; entry 26 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case1A::
+Jump_013_43C5:: ; address name
     ld hl, $0421
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_43CC::
+; entry 27 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case1B::
+Jump_013_43CC:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, Jump_013_43DB
@@ -559,7 +677,10 @@ Jump_013_43DB::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_43E2::
+; entry 28 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case1C::
+Jump_013_43E2:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, Jump_013_43F1
@@ -572,7 +693,10 @@ Jump_013_43F1::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_43F8::
+; entry 29 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case1D::
+Jump_013_43F8:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_4407
@@ -585,7 +709,10 @@ Jump_013_4407::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_440E::
+; entry 30 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case1E::
+Jump_013_440E:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_441D
@@ -598,7 +725,11 @@ Jump_013_441D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4424::
+; entry 31 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFF93
+Func_013_405C_Table2_Case1F::
+Jump_013_4424:: ; address name
     ldh a, [hFF93]
     bit 7, a
     jr z, Jump_013_442E
@@ -615,29 +746,46 @@ Jump_013_4435::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_443C::
+; entry 32 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case20::
+Jump_013_443C:: ; address name
     ld hl, $042A
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4443::
+; entry 33 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case21::
+Jump_013_4443:: ; address name
     ld hl, $042B
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_444A::
+; entry 34 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case22::
+Jump_013_444A:: ; address name
     ld hl, $042C
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4451::
+; entry 35 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_405C_Table2_Case23::
+Jump_013_4451:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_603A
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_445D::
+; entry 36 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_405C_Table2_Case24::
+Jump_013_445D:: ; address name
     ld a, $0D
     ld [wD7FB], a
     ld a, $10
@@ -646,29 +794,46 @@ Jump_013_445D::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_446E::
+; entry 37 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case25::
+Jump_013_446E:: ; address name
     ld hl, $0430
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4475::
+; entry 38 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case26::
+Jump_013_4475:: ; address name
     ld hl, $04AA
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_447C::
+; entry 39 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case27::
+Jump_013_447C:: ; address name
     ld hl, $0DD3
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4483::
+; entry 40 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_405C_Table2_Case28::
+Jump_013_4483:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6048
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_448F::
+; entry 41 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+Func_013_405C_Table2_Case29::
+Jump_013_448F:: ; address name
     ld de, $00A4
     call TestFlagBit
     ret nc
@@ -680,7 +845,10 @@ Jump_013_448F::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_44A7::
+; entry 42 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case2A::
+Jump_013_44A7:: ; address name
     ld de, $00A9
     call TestFlagBit
     jr c, Jump_013_44BC
@@ -695,12 +863,19 @@ Jump_013_44BC::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_44C3::
+; entry 43 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case2B::
+Jump_013_44C3:: ; address name
     ld hl, $0436
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_44CA::
+; entry 44 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case2C::
+Jump_013_44CA:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
@@ -709,12 +884,18 @@ Jump_013_44CA::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_44DB::
+; entry 45 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case2D::
+Jump_013_44DB:: ; address name
     ld hl, $0437
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_44E2::
+; entry 46 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case2E::
+Jump_013_44E2:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_44F1
@@ -727,12 +908,18 @@ Jump_013_44F1::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_44F8::
+; entry 47 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case2F::
+Jump_013_44F8:: ; address name
     ld hl, $6062
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_44FF::
+; entry 48 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case30::
+Jump_013_44FF:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_451D
@@ -753,17 +940,26 @@ Jump_013_451D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4524::
+; entry 49 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case31::
+Jump_013_4524:: ; address name
     ld hl, $043E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_452B::
+; entry 50 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case32::
+Jump_013_452B:: ; address name
     ld hl, $043F
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4532::
+; entry 51 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case33::
+Jump_013_4532:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_4541
@@ -776,7 +972,12 @@ Jump_013_4541::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4548::
+; entry 52 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
+Func_013_405C_Table2_Case34::
+Jump_013_4548:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_459F
@@ -823,7 +1024,12 @@ Jump_013_459F::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_45A6::
+; entry 53 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
+Func_013_405C_Table2_Case35::
+Jump_013_45A6:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_4612
@@ -880,7 +1086,10 @@ Jump_013_4612::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4619::
+; entry 54 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case36::
+Jump_013_4619:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_4628
@@ -893,7 +1102,10 @@ Jump_013_4628::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_462F::
+; entry 55 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case37::
+Jump_013_462F:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_463E
@@ -906,17 +1118,27 @@ Jump_013_463E::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4645::
+; entry 56 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case38::
+Jump_013_4645:: ; address name
     ld hl, $606F
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_464C::
+; entry 57 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case39::
+Jump_013_464C:: ; address name
     ld hl, $044A
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4653::
+; entry 58 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_405C_Table2_Case3A::
+Jump_013_4653:: ; address name
     ld a, $0E
     ld [wD7FB], a
     ld a, $10
@@ -925,14 +1147,21 @@ Jump_013_4653::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4664::
+; entry 59 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_405C_Table2_Case3B::
+Jump_013_4664:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_6083
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4670::
+; entry 60 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case3C::
+Jump_013_4670:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_468E
@@ -953,39 +1182,61 @@ Jump_013_468E::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4695::
+; entry 61 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case3D::
+Jump_013_4695:: ; address name
     ld hl, $0450
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_469C::
+; entry 62 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case3E::
+Jump_013_469C:: ; address name
     ld hl, $0314
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46A3::
+; entry 63 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_405C_Table2_Case3F::
+Jump_013_46A3:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6048
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_46AF::
+; entry 64 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case40::
+Jump_013_46AF:: ; address name
     ld hl, $0452
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46B6::
+; entry 65 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case41::
+Jump_013_46B6:: ; address name
     ld hl, $0453
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46BD::
+; entry 66 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case42::
+Jump_013_46BD:: ; address name
     ld hl, $0454
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46C4::
+; entry 67 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case43::
+Jump_013_46C4:: ; address name
     ld de, $00A8
     call TestFlagBit
     jr c, Jump_013_46D3
@@ -998,22 +1249,35 @@ Jump_013_46D3::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46DA::
+; entry 68 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case44::
+Jump_013_46DA:: ; address name
     ld hl, $0457
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46E1::
+; entry 69 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case45::
+Jump_013_46E1:: ; address name
     ld hl, $0458
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46E8::
+; entry 70 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case46::
+Jump_013_46E8:: ; address name
     ld hl, $0459
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_46EF::
+; entry 71 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+Func_013_405C_Table2_Case47::
+Jump_013_46EF:: ; address name
     farcall Func_085_594E
     ldh a, [hFFC6]
     or a, a
@@ -1034,7 +1298,11 @@ Jump_013_470B::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4712::
+; entry 72 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case48::
+Jump_013_4712:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4E
@@ -1043,7 +1311,11 @@ Jump_013_4712::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_4723::
+; entry 73 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case49::
+Jump_013_4723:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $39
@@ -1052,7 +1324,10 @@ Jump_013_4723::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_4734::
+; entry 74 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case4A::
+Jump_013_4734:: ; address name
     ld de, $00AD
     call TestFlagBit
     jr c, Jump_013_4743
@@ -1065,7 +1340,11 @@ Jump_013_4743::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_474A::
+; entry 75 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case4B::
+Jump_013_474A:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $3A
@@ -1074,7 +1353,11 @@ Jump_013_474A::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_475B::
+; entry 76 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+Func_013_405C_Table2_Case4C::
+Jump_013_475B:: ; address name
     farcall Func_085_5A75
     ldh a, [hFFC6]
     or a, a
@@ -1088,42 +1371,66 @@ Jump_013_476D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4774::
+; entry 77 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case4D::
+Jump_013_4774:: ; address name
     ld hl, $0462
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_477B::
+; entry 78 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case4E::
+Jump_013_477B:: ; address name
     ld hl, $60CE
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4782::
+; entry 79 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case4F::
+Jump_013_4782:: ; address name
     ld hl, $04A8
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4789::
+; entry 80 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case50::
+Jump_013_4789:: ; address name
     ld hl, $04A9
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4790::
+; entry 81 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case51::
+Jump_013_4790:: ; address name
     ld hl, $60D0
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4797::
+; entry 82 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case52::
+Jump_013_4797:: ; address name
     ld hl, $0463
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_479E::
+; entry 83 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case53::
+Jump_013_479E:: ; address name
     ld hl, $040E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_47A5::
+; entry 84 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case54::
+Jump_013_47A5:: ; address name
     ld de, $00B2
     call TestFlagBit
     jr c, Jump_013_47B4
@@ -1136,7 +1443,10 @@ Jump_013_47B4::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_47BB::
+; entry 85 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case55::
+Jump_013_47BB:: ; address name
     ld de, $00B3
     call TestFlagBit
     jr c, Jump_013_47CA
@@ -1149,7 +1459,11 @@ Jump_013_47CA::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_47D1::
+; entry 86 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case56::
+Jump_013_47D1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $3B
@@ -1158,7 +1472,10 @@ Jump_013_47D1::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_47E2::
+; entry 87 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case57::
+Jump_013_47E2:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_47F1
@@ -1171,17 +1488,28 @@ Jump_013_47F1::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_47F8::
+; entry 88 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case58::
+Jump_013_47F8:: ; address name
     ld hl, $046E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_47FF::
+; entry 89 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case59::
+Jump_013_47FF:: ; address name
     ld hl, $046F
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4806::
+; entry 90 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
+Func_013_405C_Table2_Case5A::
+Jump_013_4806:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_485D
@@ -1228,7 +1556,11 @@ Jump_013_485D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4864::
+; entry 91 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case5B::
+Jump_013_4864:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
@@ -1237,37 +1569,59 @@ Jump_013_4864::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_4875::
+; entry 92 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case5C::
+Jump_013_4875:: ; address name
     ld hl, $6131
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_487C::
+; entry 93 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case5D::
+Jump_013_487C:: ; address name
     ld hl, $6059
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4883::
+; entry 94 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case5E::
+Jump_013_4883:: ; address name
     ld hl, $0DE2
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_488A::
+; entry 95 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case5F::
+Jump_013_488A:: ; address name
     ld hl, $0476
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4891::
+; entry 96 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case60::
+Jump_013_4891:: ; address name
     ld hl, $0477
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4898::
+; entry 97 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case61::
+Jump_013_4898:: ; address name
     ld hl, $0478
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_489F::
+; entry 98 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case62::
+Jump_013_489F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
@@ -1276,12 +1630,19 @@ Jump_013_489F::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_48B0::
+; entry 99 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case63::
+Jump_013_48B0:: ; address name
     ld hl, $0450
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_48B7::
+; entry 100 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case64::
+Jump_013_48B7:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $60
@@ -1290,7 +1651,11 @@ Jump_013_48B7::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_48C8::
+; entry 101 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case65::
+Jump_013_48C8:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $25
@@ -1299,7 +1664,11 @@ Jump_013_48C8::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_48D9::
+; entry 102 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_405C_Table2_Case66::
+Jump_013_48D9:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $45
@@ -1308,7 +1677,12 @@ Jump_013_48D9::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_48EA::
+; entry 103 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
+Func_013_405C_Table2_Case67::
+Jump_013_48EA:: ; address name
     ld de, $00C0
     call TestFlagBit
     jr c, Jump_013_4962
@@ -1359,17 +1733,28 @@ Jump_013_4962::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4969::
+; entry 104 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case68::
+Jump_013_4969:: ; address name
     ld hl, $6152
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4970::
+; entry 105 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case69::
+Jump_013_4970:: ; address name
     ld hl, $6198
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4977::
+; entry 106 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hPlayerY
+; writes: wCB96
+Func_013_405C_Table2_Case6A::
+Jump_013_4977:: ; address name
     xor a, a
     ld [wCB96], a
     ldh a, [hPlayerY]
@@ -1379,22 +1764,35 @@ Jump_013_4977::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4987::
+; entry 107 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case6B::
+Jump_013_4987:: ; address name
     ld hl, $04A6
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_498E::
+; entry 108 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case6C::
+Jump_013_498E:: ; address name
     ld hl, $04A4
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4995::
+; entry 109 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case6D::
+Jump_013_4995:: ; address name
     ld hl, $04A5
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_499C::
+; entry 110 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+Func_013_405C_Table2_Case6E::
+Jump_013_499C:: ; address name
     farcall Func_085_5A75
     ldh a, [hFFC6]
     or a, a
@@ -1408,7 +1806,11 @@ Jump_013_49AE::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_49B5::
+; entry 111 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+Func_013_405C_Table2_Case6F::
+Jump_013_49B5:: ; address name
     farcall Func_085_5A75
     ldh a, [hFFC6]
     or a, a
@@ -1422,7 +1824,10 @@ Jump_013_49C7::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_49CE::
+; entry 112 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Table2_Case70::
+Jump_013_49CE:: ; address name
     ld hl, $0413
     call SetRequestPtrC921_B13
     ret
@@ -1472,137 +1877,141 @@ Jump_013_4A02::
     ld [wC8C6], a
     ret
 
-Jump_013_4A23::
+; entry 4 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC916
+Func_013_405C_Case04::
+Jump_013_4A23:: ; address name
     ld a, [wC916]
     rst $00
-    dw Jump_013_4B7D
-    dw Jump_013_4B84
-    dw Jump_013_4B8B
-    dw Jump_013_4B92
-    dw Jump_013_4B99
-    dw Jump_013_4BAF
-    dw Jump_013_4BC5
-    dw Jump_013_4BDB
-    dw Jump_013_4BF1
-    dw Jump_013_4BF8
-    dw Jump_013_4C0E
-    dw Jump_013_4C24
-    dw Jump_013_4C51
-    dw Jump_013_4C67
-    dw Jump_013_4C78
-    dw Jump_013_4C7F
-    dw Jump_013_4C90
-    dw Jump_013_4C97
-    dw Jump_013_4C9E
-    dw Jump_013_4CAA
-    dw Jump_013_4CB1
-    dw Jump_013_4CF7
-    dw Jump_013_4D2B
-    dw Jump_013_4D41
-    dw Jump_013_4D57
-    dw Jump_013_4D9A
-    dw Jump_013_4DA1
-    dw Jump_013_4DA8
-    dw Jump_013_4DAF
-    dw Jump_013_4DC5
-    dw Jump_013_4DCC
-    dw Jump_013_4DE2
-    dw Jump_013_4DF8
-    dw Jump_013_4DFF
-    dw Jump_013_4E15
-    dw Jump_013_4E1C
-    dw Jump_013_4E32
-    dw Jump_013_4E48
-    dw Jump_013_4E5E
-    dw Jump_013_4E65
-    dw Jump_013_4E7B
-    dw Jump_013_4E82
-    dw Jump_013_4E93
-    dw Jump_013_4EA4
-    dw Jump_013_4EB5
-    dw Jump_013_4EC1
-    dw Jump_013_4EC8
-    dw Jump_013_4ECF
-    dw Jump_013_4ED6
-    dw Jump_013_4EDD
-    dw Jump_013_4EF3
-    dw Jump_013_4EFA
-    dw Jump_013_4F10
-    dw Jump_013_4F43
-    dw Jump_013_4F4A
-    dw Jump_013_4F56
-    dw Jump_013_4F5D
-    dw Jump_013_4F73
-    dw Jump_013_4F98
-    dw Jump_013_4FBD
-    dw Jump_013_4FD3
-    dw Jump_013_4FF8
-    dw Jump_013_501D
-    dw Jump_013_5033
-    dw Jump_013_503A
-    dw Jump_013_5041
-    dw Jump_013_5048
-    dw Jump_013_504F
-    dw Jump_013_5056
-    dw Jump_013_505D
-    dw Jump_013_5064
-    dw Jump_013_506B
-    dw Jump_013_507C
-    dw Jump_013_5114
-    dw Jump_013_5130
-    dw Jump_013_5137
-    dw Jump_013_513E
-    dw Jump_013_5145
-    dw Jump_013_51AF
-    dw Jump_013_51B6
-    dw Jump_013_51CC
-    dw Jump_013_51E2
-    dw Jump_013_51E9
-    dw Jump_013_51FF
-    dw Jump_013_5215
-    dw Jump_013_523A
-    dw Jump_013_5250
-    dw Jump_013_5257
-    dw Jump_013_525E
-    dw Jump_013_5274
-    dw Jump_013_528A
-    dw Jump_013_52A0
-    dw Jump_013_52A7
-    dw Jump_013_52B8
-    dw Jump_013_52BF
-    dw Jump_013_52CB
-    dw Jump_013_52DC
-    dw Jump_013_52F2
-    dw Jump_013_52F9
-    dw Jump_013_5300
-    dw Jump_013_5307
-    dw Jump_013_530E
-    dw Jump_013_5315
-    dw Jump_013_533A
-    dw Jump_013_535F
-    dw Jump_013_5384
-    dw Jump_013_538B
-    dw Jump_013_53A1
-    dw Jump_013_53A8
-    dw Jump_013_53BE
-    dw Jump_013_53D4
-    dw Jump_013_53E8
-    dw Jump_013_544B
-    dw Jump_013_5452
-    dw Jump_013_5477
-    dw Jump_013_54CA
-    dw Jump_013_54D1
-    dw Jump_013_54E7
-    dw Jump_013_54FD
-    dw Jump_013_5513
-    dw Jump_013_5529
-    dw Jump_013_5530
-    dw Jump_013_5546
-    dw Jump_013_555C
-    dw Jump_013_5563
-    dw Jump_013_559D
-    dw Jump_013_55AE
-    dw Jump_013_55C4
+    dw Func_013_49D5_Case00
+    dw Func_013_49D5_Case01
+    dw Func_013_49D5_Case02
+    dw Func_013_49D5_Case03
+    dw Func_013_49D5_Case04
+    dw Func_013_49D5_Case05
+    dw Func_013_49D5_Case06
+    dw Func_013_49D5_Case07
+    dw Func_013_49D5_Case08
+    dw Func_013_49D5_Case09
+    dw Func_013_49D5_Case0A
+    dw Func_013_49D5_Case0B
+    dw Func_013_49D5_Case0C
+    dw Func_013_49D5_Case0D
+    dw Func_013_49D5_Case0E
+    dw Func_013_49D5_Case0F
+    dw Func_013_49D5_Case10
+    dw Func_013_49D5_Case11
+    dw Func_013_49D5_Case12
+    dw Func_013_49D5_Case13
+    dw Func_013_49D5_Case14
+    dw Func_013_49D5_Case15
+    dw Func_013_49D5_Case16
+    dw Func_013_49D5_Case17
+    dw Func_013_49D5_Case18
+    dw Func_013_49D5_Case19
+    dw Func_013_49D5_Case1A
+    dw Func_013_49D5_Case1B
+    dw Func_013_49D5_Case1C
+    dw Func_013_49D5_Case1D
+    dw Func_013_49D5_Case1E
+    dw Func_013_49D5_Case1F
+    dw Func_013_49D5_Case20
+    dw Func_013_49D5_Case21
+    dw Func_013_49D5_Case22
+    dw Func_013_49D5_Case23
+    dw Func_013_49D5_Case24
+    dw Func_013_49D5_Case25
+    dw Func_013_49D5_Case26
+    dw Func_013_49D5_Case27
+    dw Func_013_49D5_Case28
+    dw Func_013_49D5_Case29
+    dw Func_013_49D5_Case2A
+    dw Func_013_49D5_Case2B
+    dw Func_013_49D5_Case2C
+    dw Func_013_49D5_Case2D
+    dw Func_013_49D5_Case2E
+    dw Func_013_49D5_Case2F
+    dw Func_013_49D5_Case30
+    dw Func_013_49D5_Case31
+    dw Func_013_49D5_Case32
+    dw Func_013_49D5_Case33
+    dw Func_013_49D5_Case34
+    dw Func_013_49D5_Case35
+    dw Func_013_49D5_Case36
+    dw Func_013_49D5_Case37
+    dw Func_013_49D5_Case38
+    dw Func_013_49D5_Case39
+    dw Func_013_49D5_Case3A
+    dw Func_013_49D5_Case3B
+    dw Func_013_49D5_Case3C
+    dw Func_013_49D5_Case3D
+    dw Func_013_49D5_Case3E
+    dw Func_013_49D5_Case3F
+    dw Func_013_49D5_Case40
+    dw Func_013_49D5_Case41
+    dw Func_013_49D5_Case42
+    dw Func_013_49D5_Case43
+    dw Func_013_49D5_Case44
+    dw Func_013_49D5_Case45
+    dw Func_013_49D5_Case46
+    dw Func_013_49D5_Case47
+    dw Func_013_49D5_Case48
+    dw Func_013_49D5_Case49
+    dw Func_013_49D5_Case4A
+    dw Func_013_49D5_Case4B
+    dw Func_013_49D5_Case4C
+    dw Func_013_49D5_Case4D
+    dw Func_013_49D5_Case4E
+    dw Func_013_49D5_Case4F
+    dw Func_013_49D5_Case50
+    dw Func_013_49D5_Case51
+    dw Func_013_49D5_Case52
+    dw Func_013_49D5_Case53
+    dw Func_013_49D5_Case54
+    dw Func_013_49D5_Case55
+    dw Func_013_49D5_Case56
+    dw Func_013_49D5_Case57
+    dw Func_013_49D5_Case58
+    dw Func_013_49D5_Case59
+    dw Func_013_49D5_Case5A
+    dw Func_013_49D5_Case5B
+    dw Func_013_49D5_Case5C
+    dw Func_013_49D5_Case5D
+    dw Func_013_49D5_Case5E
+    dw Func_013_49D5_Case5F
+    dw Func_013_49D5_Case60
+    dw Func_013_49D5_Case61
+    dw Func_013_49D5_Case62
+    dw Func_013_49D5_Case63
+    dw Func_013_49D5_Case64
+    dw Func_013_49D5_Case65
+    dw Func_013_49D5_Case66
+    dw Func_013_49D5_Case67
+    dw Func_013_49D5_Case68
+    dw Func_013_49D5_Case69
+    dw Func_013_49D5_Case6A
+    dw Func_013_49D5_Case6B
+    dw Func_013_49D5_Case6C
+    dw Func_013_49D5_Case6D
+    dw Func_013_49D5_Case6E
+    dw Func_013_49D5_Case6F
+    dw Func_013_49D5_Case70
+    dw Func_013_49D5_Case71
+    dw Func_013_49D5_Case72
+    dw Func_013_49D5_Case73
+    dw Func_013_49D5_Case74
+    dw Func_013_49D5_Case75
+    dw Func_013_49D5_Case76
+    dw Func_013_49D5_Case77
+    dw Func_013_49D5_Case78
+    dw Func_013_49D5_Case79
+    dw Func_013_49D5_Case7A
+    dw Func_013_49D5_Case7B
+    dw Func_013_49D5_Case7C
+    dw Func_013_49D5_Case7D
+    dw Func_013_49D5_Case7E
+    dw Func_013_49D5_Case7F
     dw Data_013_55CB
     dw Data_013_55D7
     dw Data_013_55DE
@@ -1647,27 +2056,42 @@ Jump_013_4A23::
     dw Func_013_5922
     db $33, $59
 
-Jump_013_4B7D::
+; entry 0 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case00::
+Jump_013_4B7D:: ; address name
     ld hl, $0300
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4B84::
+; entry 1 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case01::
+Jump_013_4B84:: ; address name
     ld hl, $0301
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4B8B::
+; entry 2 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case02::
+Jump_013_4B8B:: ; address name
     ld hl, $0302
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4B92::
+; entry 3 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case03::
+Jump_013_4B92:: ; address name
     ld hl, $0303
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4B99::
+; entry 4 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case04::
+Jump_013_4B99:: ; address name
     ld de, $0086
     call TestFlagBit
     jr c, Jump_013_4BA8
@@ -1680,7 +2104,10 @@ Jump_013_4BA8::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4BAF::
+; entry 5 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case05::
+Jump_013_4BAF:: ; address name
     ld de, $0086
     call TestFlagBit
     jr c, Jump_013_4BBE
@@ -1693,7 +2120,10 @@ Jump_013_4BBE::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4BC5::
+; entry 6 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case06::
+Jump_013_4BC5:: ; address name
     ld de, $0086
     call TestFlagBit
     jr c, Jump_013_4BD4
@@ -1706,7 +2136,10 @@ Jump_013_4BD4::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4BDB::
+; entry 7 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case07::
+Jump_013_4BDB:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4BEA
@@ -1719,12 +2152,18 @@ Jump_013_4BEA::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4BF1::
+; entry 8 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case08::
+Jump_013_4BF1:: ; address name
     ld hl, $5D5B
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4BF8::
+; entry 9 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case09::
+Jump_013_4BF8:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4C07
@@ -1737,7 +2176,10 @@ Jump_013_4C07::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4C0E::
+; entry 10 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case0A::
+Jump_013_4C0E:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4C1D
@@ -1750,7 +2192,12 @@ Jump_013_4C1D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4C24::
+; entry 11 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
+Func_013_49D5_Case0B::
+Jump_013_4C24:: ; address name
     ld de, $0081
     call TestFlagBit
     jr c, Jump_013_4C4A
@@ -1774,7 +2221,10 @@ Jump_013_4C4A::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4C51::
+; entry 12 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case0C::
+Jump_013_4C51:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4C60
@@ -1787,7 +2237,11 @@ Jump_013_4C60::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4C67::
+; entry 13 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_49D5_Case0D::
+Jump_013_4C67:: ; address name
     ld a, $07
     ld [wD7FB], a
     ld a, $10
@@ -1796,12 +2250,19 @@ Jump_013_4C67::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4C78::
+; entry 14 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case0E::
+Jump_013_4C78:: ; address name
     ld hl, $0311
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4C7F::
+; entry 15 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_49D5_Case0F::
+Jump_013_4C7F:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
@@ -1810,29 +2271,46 @@ Jump_013_4C7F::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_4C90::
+; entry 16 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case10::
+Jump_013_4C90:: ; address name
     ld hl, $0313
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4C97::
+; entry 17 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case11::
+Jump_013_4C97:: ; address name
     ld hl, $0314
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4C9E::
+; entry 18 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_49D5_Case12::
+Jump_013_4C9E:: ; address name
     ld hl, $5D6F
     call SetRequestPtrC91A_B13
     ld a, $10
     ld [wDataBank], a
     ret
 
-Jump_013_4CAA::
+; entry 19 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case13::
+Jump_013_4CAA:: ; address name
     ld hl, $0315
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4CB1::
+; entry 20 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wJoypadHeld, wJoypadPressed
+Func_013_49D5_Case14::
+Jump_013_4CB1:: ; address name
     ld de, $01E4
     call TestFlagBit
     jr c, Jump_013_4CED
@@ -1871,7 +2349,10 @@ Jump_013_4CED::
     ld [wJoypadPressed], a
     ret
 
-Jump_013_4CF7::
+; entry 21 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case15::
+Jump_013_4CF7:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4D24
@@ -1900,7 +2381,10 @@ Jump_013_4D24::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4D2B::
+; entry 22 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case16::
+Jump_013_4D2B:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4D3A
@@ -1913,7 +2397,10 @@ Jump_013_4D3A::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4D41::
+; entry 23 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case17::
+Jump_013_4D41:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4D50
@@ -1926,7 +2413,10 @@ Jump_013_4D50::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4D57::
+; entry 24 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case18::
+Jump_013_4D57:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4D93
@@ -1963,22 +2453,34 @@ Jump_013_4D93::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4D9A::
+; entry 25 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case19::
+Jump_013_4D9A:: ; address name
     ld hl, $0ABD
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DA1::
+; entry 26 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case1A::
+Jump_013_4DA1:: ; address name
     ld hl, $0ABE
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DA8::
+; entry 27 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case1B::
+Jump_013_4DA8:: ; address name
     ld hl, $0ABC
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DAF::
+; entry 28 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case1C::
+Jump_013_4DAF:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4DBE
@@ -1991,12 +2493,18 @@ Jump_013_4DBE::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DC5::
+; entry 29 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case1D::
+Jump_013_4DC5:: ; address name
     ld hl, $0325
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DCC::
+; entry 30 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case1E::
+Jump_013_4DCC:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4DDB
@@ -2009,7 +2517,10 @@ Jump_013_4DDB::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DE2::
+; entry 31 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case1F::
+Jump_013_4DE2:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4DF1
@@ -2022,12 +2533,18 @@ Jump_013_4DF1::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DF8::
+; entry 32 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case20::
+Jump_013_4DF8:: ; address name
     ld hl, $0328
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4DFF::
+; entry 33 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case21::
+Jump_013_4DFF:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4E0E
@@ -2040,12 +2557,18 @@ Jump_013_4E0E::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E15::
+; entry 34 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case22::
+Jump_013_4E15:: ; address name
     ld hl, $032A
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E1C::
+; entry 35 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case23::
+Jump_013_4E1C:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4E2B
@@ -2058,7 +2581,10 @@ Jump_013_4E2B::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E32::
+; entry 36 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case24::
+Jump_013_4E32:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4E41
@@ -2071,7 +2597,10 @@ Jump_013_4E41::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E48::
+; entry 37 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case25::
+Jump_013_4E48:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4E57
@@ -2084,12 +2613,18 @@ Jump_013_4E57::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E5E::
+; entry 38 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case26::
+Jump_013_4E5E:: ; address name
     ld hl, $032E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E65::
+; entry 39 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case27::
+Jump_013_4E65:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4E74
@@ -2102,12 +2637,19 @@ Jump_013_4E74::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E7B::
+; entry 40 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case28::
+Jump_013_4E7B:: ; address name
     ld hl, $0330
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4E82::
+; entry 41 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_49D5_Case29::
+Jump_013_4E82:: ; address name
     ld a, $0A
     ld [wD7FB], a
     ld a, $10
@@ -2116,7 +2658,11 @@ Jump_013_4E82::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4E93::
+; entry 42 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_49D5_Case2A::
+Jump_013_4E93:: ; address name
     ld a, $08
     ld [wD7FB], a
     ld a, $10
@@ -2125,7 +2671,11 @@ Jump_013_4E93::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4EA4::
+; entry 43 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_49D5_Case2B::
+Jump_013_4EA4:: ; address name
     ld a, $09
     ld [wD7FB], a
     ld a, $10
@@ -2134,34 +2684,53 @@ Jump_013_4EA4::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4EB5::
+; entry 44 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_49D5_Case2C::
+Jump_013_4EB5:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld hl, $5DCC
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_4EC1::
+; entry 45 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case2D::
+Jump_013_4EC1:: ; address name
     ld hl, $0312
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4EC8::
+; entry 46 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case2E::
+Jump_013_4EC8:: ; address name
     ld hl, $0D3B
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4ECF::
+; entry 47 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case2F::
+Jump_013_4ECF:: ; address name
     ld hl, $0314
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4ED6::
+; entry 48 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case30::
+Jump_013_4ED6:: ; address name
     ld hl, $0313
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4EDD::
+; entry 49 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case31::
+Jump_013_4EDD:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4EEC
@@ -2174,12 +2743,18 @@ Jump_013_4EEC::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4EF3::
+; entry 50 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case32::
+Jump_013_4EF3:: ; address name
     ld hl, $0335
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4EFA::
+; entry 51 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case33::
+Jump_013_4EFA:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_4F09
@@ -2192,7 +2767,12 @@ Jump_013_4F09::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4F10::
+; entry 52 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
+Func_013_49D5_Case34::
+Jump_013_4F10:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_4F1F
@@ -2218,24 +2798,37 @@ Jump_013_4F3C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4F43::
+; entry 53 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case35::
+Jump_013_4F43:: ; address name
     ld hl, $0ABF
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4F4A::
+; entry 54 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_49D5_Case36::
+Jump_013_4F4A:: ; address name
     ld hl, $5DC5
     call SetRequestPtrC91A_B13
     ld a, $10
     ld [wDataBank], a
     ret
 
-Jump_013_4F56::
+; entry 55 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case37::
+Jump_013_4F56:: ; address name
     ld hl, $0338
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4F5D::
+; entry 56 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case38::
+Jump_013_4F5D:: ; address name
     ld de, $0086
     call TestFlagBit
     jr c, Jump_013_4F6C
@@ -2248,7 +2841,10 @@ Jump_013_4F6C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4F73::
+; entry 57 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case39::
+Jump_013_4F73:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4F91
@@ -2269,7 +2865,10 @@ Jump_013_4F91::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4F98::
+; entry 58 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case3A::
+Jump_013_4F98:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4FB6
@@ -2290,7 +2889,10 @@ Jump_013_4FB6::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4FBD::
+; entry 59 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case3B::
+Jump_013_4FBD:: ; address name
     ld de, $0086
     call TestFlagBit
     jr c, Jump_013_4FCC
@@ -2303,7 +2905,10 @@ Jump_013_4FCC::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4FD3::
+; entry 60 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case3C::
+Jump_013_4FD3:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_4FF1
@@ -2324,7 +2929,10 @@ Jump_013_4FF1::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_4FF8::
+; entry 61 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case3D::
+Jump_013_4FF8:: ; address name
     ld de, $0094
     call TestFlagBit
     jr c, Jump_013_5016
@@ -2345,7 +2953,10 @@ Jump_013_5016::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_501D::
+; entry 62 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case3E::
+Jump_013_501D:: ; address name
     ld de, $0086
     call TestFlagBit
     jr c, Jump_013_502C
@@ -2358,47 +2969,75 @@ Jump_013_502C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5033::
+; entry 63 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case3F::
+Jump_013_5033:: ; address name
     ld hl, $0340
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_503A::
+; entry 64 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case40::
+Jump_013_503A:: ; address name
     ld hl, $0345
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5041::
+; entry 65 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case41::
+Jump_013_5041:: ; address name
     ld hl, $0341
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5048::
+; entry 66 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case42::
+Jump_013_5048:: ; address name
     ld hl, $0342
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_504F::
+; entry 67 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case43::
+Jump_013_504F:: ; address name
     ld hl, $0344
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5056::
+; entry 68 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case44::
+Jump_013_5056:: ; address name
     ld hl, $0343
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_505D::
+; entry 69 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case45::
+Jump_013_505D:: ; address name
     ld hl, $5DD3
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_5064::
+; entry 70 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case46::
+Jump_013_5064:: ; address name
     ld hl, $5E02
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_506B::
+; entry 71 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_49D5_Case47::
+Jump_013_506B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $40
@@ -2407,7 +3046,10 @@ Jump_013_506B::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_507C::
+; entry 72 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case48::
+Jump_013_507C:: ; address name
     ld de, $01E5
     call TestFlagBit
     jp c, Jump_013_510D
@@ -2484,7 +3126,10 @@ Jump_013_510D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5114::
+; entry 73 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case49::
+Jump_013_5114:: ; address name
     ld de, $0089
     call TestFlagBit
     jr c, Jump_013_5129
@@ -2499,22 +3144,34 @@ Jump_013_5129::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5130::
+; entry 74 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case4A::
+Jump_013_5130:: ; address name
     ld hl, $5E2F
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_5137::
+; entry 75 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case4B::
+Jump_013_5137:: ; address name
     ld hl, $5E37
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_513E::
+; entry 76 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case4C::
+Jump_013_513E:: ; address name
     ld hl, $5E5A
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_5145::
+; entry 77 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case4D::
+Jump_013_5145:: ; address name
     ld de, $0093
     call TestFlagBit
     jr c, Jump_013_51A8
@@ -2567,12 +3224,18 @@ Jump_013_51A8::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_51AF::
+; entry 78 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case4E::
+Jump_013_51AF:: ; address name
     ld hl, $037E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_51B6::
+; entry 79 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case4F::
+Jump_013_51B6:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_51C5
@@ -2585,7 +3248,10 @@ Jump_013_51C5::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_51CC::
+; entry 80 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case50::
+Jump_013_51CC:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_51DB
@@ -2598,12 +3264,18 @@ Jump_013_51DB::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_51E2::
+; entry 81 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case51::
+Jump_013_51E2:: ; address name
     ld hl, $0381
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_51E9::
+; entry 82 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case52::
+Jump_013_51E9:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_51F8
@@ -2616,7 +3288,10 @@ Jump_013_51F8::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_51FF::
+; entry 83 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case53::
+Jump_013_51FF:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_520E
@@ -2629,7 +3304,10 @@ Jump_013_520E::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5215::
+; entry 84 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case54::
+Jump_013_5215:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_5233
@@ -2650,7 +3328,10 @@ Jump_013_5233::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_523A::
+; entry 85 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case55::
+Jump_013_523A:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_5249
@@ -2663,17 +3344,26 @@ Jump_013_5249::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5250::
+; entry 86 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case56::
+Jump_013_5250:: ; address name
     ld hl, $0386
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5257::
+; entry 87 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case57::
+Jump_013_5257:: ; address name
     ld hl, $0387
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_525E::
+; entry 88 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case58::
+Jump_013_525E:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_526D
@@ -2686,7 +3376,10 @@ Jump_013_526D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5274::
+; entry 89 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case59::
+Jump_013_5274:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_5283
@@ -2699,7 +3392,10 @@ Jump_013_5283::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_528A::
+; entry 90 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case5A::
+Jump_013_528A:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_5299
@@ -2712,12 +3408,19 @@ Jump_013_5299::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_52A0::
+; entry 91 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case5B::
+Jump_013_52A0:: ; address name
     ld hl, $0312
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_52A7::
+; entry 92 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_49D5_Case5C::
+Jump_013_52A7:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $2C
@@ -2726,19 +3429,30 @@ Jump_013_52A7::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_52B8::
+; entry 93 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case5D::
+Jump_013_52B8:: ; address name
     ld hl, $0313
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_52BF::
+; entry 94 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_49D5_Case5E::
+Jump_013_52BF:: ; address name
     ld hl, $5E87
     call SetRequestPtrC91A_B13
     ld a, $10
     ld [wDataBank], a
     ret
 
-Jump_013_52CB::
+; entry 95 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_49D5_Case5F::
+Jump_013_52CB:: ; address name
     ld a, $0B
     ld [wD7FB], a
     ld a, $10
@@ -2747,7 +3461,10 @@ Jump_013_52CB::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_52DC::
+; entry 96 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case60::
+Jump_013_52DC:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_52EB
@@ -2760,32 +3477,50 @@ Jump_013_52EB::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_52F2::
+; entry 97 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case61::
+Jump_013_52F2:: ; address name
     ld hl, $038D
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_52F9::
+; entry 98 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case62::
+Jump_013_52F9:: ; address name
     ld hl, $038E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5300::
+; entry 99 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case63::
+Jump_013_5300:: ; address name
     ld hl, $038F
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5307::
+; entry 100 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case64::
+Jump_013_5307:: ; address name
     ld hl, $0390
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_530E::
+; entry 101 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case65::
+Jump_013_530E:: ; address name
     ld hl, $0391
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5315::
+; entry 102 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case66::
+Jump_013_5315:: ; address name
     ld de, $0096
     call TestFlagBit
     jr c, Jump_013_5333
@@ -2806,7 +3541,10 @@ Jump_013_5333::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_533A::
+; entry 103 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case67::
+Jump_013_533A:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_5358
@@ -2827,7 +3565,10 @@ Jump_013_5358::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_535F::
+; entry 104 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case68::
+Jump_013_535F:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_537D
@@ -2848,12 +3589,18 @@ Jump_013_537D::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5384::
+; entry 105 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case69::
+Jump_013_5384:: ; address name
     ld hl, $0397
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_538B::
+; entry 106 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case6A::
+Jump_013_538B:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_539A
@@ -2866,12 +3613,18 @@ Jump_013_539A::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_53A1::
+; entry 107 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case6B::
+Jump_013_53A1:: ; address name
     ld hl, $0399
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_53A8::
+; entry 108 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case6C::
+Jump_013_53A8:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_53B7
@@ -2884,7 +3637,10 @@ Jump_013_53B7::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_53BE::
+; entry 109 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case6D::
+Jump_013_53BE:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_53CD
@@ -2897,7 +3653,11 @@ Jump_013_53CD::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_53D4::
+; entry 110 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; reads: hPlayerY
+Func_013_49D5_Case6E::
+Jump_013_53D4:: ; address name
     ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_013_53E1
@@ -2910,7 +3670,11 @@ Jump_013_53E1::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_53E8::
+; entry 111 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCB8A, wC6FD, wC92C
+Func_013_49D5_Case6F::
+Jump_013_53E8:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_5444
@@ -2964,12 +3728,18 @@ Jump_013_5444::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_544B::
+; entry 112 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case70::
+Jump_013_544B:: ; address name
     ld hl, $5EF5
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_5452::
+; entry 113 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case71::
+Jump_013_5452:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, Jump_013_5470
@@ -2990,7 +3760,12 @@ Jump_013_5470::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5477::
+; entry 114 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6
+; writes: hFFC6
+Func_013_49D5_Case72::
+Jump_013_5477:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_54C3
@@ -3035,12 +3810,18 @@ Jump_013_54C3::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_54CA::
+; entry 115 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case73::
+Jump_013_54CA:: ; address name
     ld hl, $03A6
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_54D1::
+; entry 116 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case74::
+Jump_013_54D1:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_54E0
@@ -3053,7 +3834,10 @@ Jump_013_54E0::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_54E7::
+; entry 117 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case75::
+Jump_013_54E7:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_54F6
@@ -3066,7 +3850,10 @@ Jump_013_54F6::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_54FD::
+; entry 118 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case76::
+Jump_013_54FD:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_550C
@@ -3079,7 +3866,10 @@ Jump_013_550C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5513::
+; entry 119 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case77::
+Jump_013_5513:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_5522
@@ -3092,12 +3882,18 @@ Jump_013_5522::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5529::
+; entry 120 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case78::
+Jump_013_5529:: ; address name
     ld hl, $03AB
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5530::
+; entry 121 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case79::
+Jump_013_5530:: ; address name
     ld de, $01E2
     call TestFlagBit
     jr c, Jump_013_553F
@@ -3110,7 +3906,10 @@ Jump_013_553F::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5546::
+; entry 122 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case7A::
+Jump_013_5546:: ; address name
     ld de, $01E2
     call TestFlagBit
     jr c, Jump_013_5555
@@ -3123,12 +3922,20 @@ Jump_013_5555::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_555C::
+; entry 123 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case7B::
+Jump_013_555C:: ; address name
     ld hl, $03AF
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5563::
+; entry 124 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, hPlayerX
+; writes: hFFC6
+Func_013_49D5_Case7C::
+Jump_013_5563:: ; address name
     ld de, $0097
     call TestFlagBit
     jr c, Jump_013_5596
@@ -3160,7 +3967,11 @@ Jump_013_5596::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_559D::
+; entry 125 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_49D5_Case7D::
+Jump_013_559D:: ; address name
     ld a, $0C
     ld [wD7FB], a
     ld a, $10
@@ -3169,7 +3980,10 @@ Jump_013_559D::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_55AE::
+; entry 126 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case7E::
+Jump_013_55AE:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_55BD
@@ -3182,7 +3996,10 @@ Jump_013_55BD::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_55C4::
+; entry 127 of the `rst $00` table in Func_013_49D5
+; no direct call (reached through a table, a jump or a vector)
+Func_013_49D5_Case7F::
+Jump_013_55C4:: ; address name
     ld hl, $5F12
     call SetRequestPtrC91A_B13
     ret
@@ -3534,142 +4351,149 @@ Func_013_5922:: ; heuristic: target of a pointer table; C0
     ret
     db $21, $C9, $5F, $CD, $49, $40, $C9
 
-Jump_013_593A::
+; entry 8 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_013_405C_Case08::
+Jump_013_593A:: ; address name
     ld hl, $512D
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_5941::
+; entry 1 of the `rst $00` table in Func_013_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC916
+Func_013_405C_Case01::
+Jump_013_5941:: ; address name
     ld a, [wC916]
     rst $00
-    dw Jump_013_5B33
-    dw Jump_013_5B34
-    dw Jump_013_5B3B
-    dw Jump_013_5D43
-    dw Jump_013_5D4A
-    dw Jump_013_5D6F
-    dw Jump_013_5D76
-    dw Jump_013_5D7D
-    dw Jump_013_5F63
-    dw Jump_013_5F8E
-    dw Jump_013_5FD2
-    dw Jump_013_6048
-    dw Jump_013_60AF
-    dw Jump_013_6110
-    dw Jump_013_6127
-    dw Jump_013_616A
-    dw Jump_013_618F
-    dw Jump_013_621D
-    dw Jump_013_62A9
-    dw Jump_013_62FB
-    dw Jump_013_6302
-    dw Jump_013_6327
-    dw Jump_013_6397
-    dw Jump_013_6407
-    dw Jump_013_645F
-    dw Jump_013_647B
-    dw Jump_013_65EC
-    dw Jump_013_664D
-    dw Jump_013_66ED
-    dw Jump_013_678D
-    dw Jump_013_67A3
-    dw Jump_013_67C9
-    dw Jump_013_67D0
-    dw Jump_013_6832
-    dw Jump_013_685D
-    dw Jump_013_6873
-    dw Jump_013_6898
-    dw Jump_013_68BD
-    dw Jump_013_68DB
-    dw Jump_013_68E2
-    dw Jump_013_6947
-    dw Jump_013_694E
-    dw Jump_013_6955
-    dw Jump_013_695C
-    dw Jump_013_6963
-    dw Jump_013_696A
-    dw Jump_013_6971
-    dw Jump_013_6978
-    dw Jump_013_699B
-    dw Jump_013_69A2
-    dw Jump_013_69B8
-    dw Jump_013_69DA
-    dw Jump_013_69DA
-    dw Jump_013_69DA
-    dw Jump_013_6A14
-    dw Jump_013_6A1B
-    dw Jump_013_6A22
-    dw Jump_013_6A47
-    dw Jump_013_6A6C
-    dw Jump_013_6A82
-    dw Jump_013_6A89
-    dw Jump_013_6A90
-    dw Jump_013_6A97
-    dw Jump_013_6ABC
-    dw Jump_013_6AC3
-    dw Jump_013_6ACA
-    dw Jump_013_6AD1
-    dw Jump_013_6B32
-    dw Jump_013_6B39
-    dw Jump_013_6B40
-    dw Jump_013_6B4E
-    dw Jump_013_6B6F
-    dw Jump_013_6B76
-    dw Jump_013_6B7D
-    dw Jump_013_6B84
-    dw Jump_013_6B8B
-    dw Jump_013_6BD4
-    dw Jump_013_6BFA
-    dw Jump_013_6C01
-    dw Jump_013_6C08
-    dw Jump_013_6C0F
-    dw Jump_013_6C16
-    dw Jump_013_6C1D
-    dw Jump_013_6C24
-    dw Jump_013_6C2B
-    dw Jump_013_6C32
-    dw Jump_013_6C48
-    dw Jump_013_6C5E
-    dw Jump_013_6C65
-    dw Jump_013_6C6C
-    dw Jump_013_6C73
-    dw Jump_013_6C7A
-    dw Jump_013_6C81
-    dw Jump_013_6C88
-    dw Jump_013_6C8F
-    dw Jump_013_6CA5
-    dw Jump_013_6CAC
-    dw Jump_013_6CB3
-    dw Jump_013_6D3A
-    dw Jump_013_6D41
-    dw Jump_013_6D52
-    dw Jump_013_6D68
-    dw Jump_013_6DD1
-    dw Jump_013_6E09
-    dw Jump_013_6E3D
-    dw Jump_013_6E71
-    dw Jump_013_6EA3
-    dw Jump_013_6EDE
-    dw Jump_013_6EE5
-    dw Jump_013_6EEC
-    dw Jump_013_6EF3
-    dw Jump_013_6EFA
-    dw Jump_013_6F01
-    dw Jump_013_6F08
-    dw Jump_013_6F0F
-    dw Jump_013_6F41
-    dw Jump_013_6F48
-    dw Jump_013_6F4F
-    dw Jump_013_6F56
-    dw Jump_013_6F5D
-    dw Jump_013_6FC5
-    dw Jump_013_6FCC
-    dw Jump_013_6FDD
-    dw Jump_013_6FE4
-    dw Jump_013_6FEB
-    dw Jump_013_7002
-    dw Jump_013_7019
-    dw Jump_013_7030
+    dw Func_013_5922_Case00
+    dw Func_013_5922_Case01
+    dw Func_013_5922_Case02
+    dw Func_013_5922_Case03
+    dw Func_013_5922_Case04
+    dw Func_013_5922_Case05
+    dw Func_013_5922_Case06
+    dw Func_013_5922_Case07
+    dw Func_013_5922_Case08
+    dw Func_013_5922_Case09
+    dw Func_013_5922_Case0A
+    dw Func_013_5922_Case0B
+    dw Func_013_5922_Case0C
+    dw Func_013_5922_Case0D
+    dw Func_013_5922_Case0E
+    dw Func_013_5922_Case0F
+    dw Func_013_5922_Case10
+    dw Func_013_5922_Case11
+    dw Func_013_5922_Case12
+    dw Func_013_5922_Case13
+    dw Func_013_5922_Case14
+    dw Func_013_5922_Case15
+    dw Func_013_5922_Case16
+    dw Func_013_5922_Case17
+    dw Func_013_5922_Case18
+    dw Func_013_5922_Case19
+    dw Func_013_5922_Case1A
+    dw Func_013_5922_Case1B
+    dw Func_013_5922_Case1C
+    dw Func_013_5922_Case1D
+    dw Func_013_5922_Case1E
+    dw Func_013_5922_Case1F
+    dw Func_013_5922_Case20
+    dw Func_013_5922_Case21
+    dw Func_013_5922_Case22
+    dw Func_013_5922_Case23
+    dw Func_013_5922_Case24
+    dw Func_013_5922_Case25
+    dw Func_013_5922_Case26
+    dw Func_013_5922_Case27
+    dw Func_013_5922_Case28
+    dw Func_013_5922_Case29
+    dw Func_013_5922_Case2A
+    dw Func_013_5922_Case2B
+    dw Func_013_5922_Case2C
+    dw Func_013_5922_Case2D
+    dw Func_013_5922_Case2E
+    dw Func_013_5922_Case2F
+    dw Func_013_5922_Case30
+    dw Func_013_5922_Case31
+    dw Func_013_5922_Case32
+    dw Func_013_5922_Case33
+    dw Func_013_5922_Case33
+    dw Func_013_5922_Case33
+    dw Func_013_5922_Case36
+    dw Func_013_5922_Case37
+    dw Func_013_5922_Case38
+    dw Func_013_5922_Case39
+    dw Func_013_5922_Case3A
+    dw Func_013_5922_Case3B
+    dw Func_013_5922_Case3C
+    dw Func_013_5922_Case3D
+    dw Func_013_5922_Case3E
+    dw Func_013_5922_Case3F
+    dw Func_013_5922_Case40
+    dw Func_013_5922_Case41
+    dw Func_013_5922_Case42
+    dw Func_013_5922_Case43
+    dw Func_013_5922_Case44
+    dw Func_013_5922_Case45
+    dw Func_013_5922_Case46
+    dw Func_013_5922_Case47
+    dw Func_013_5922_Case48
+    dw Func_013_5922_Case49
+    dw Func_013_5922_Case4A
+    dw Func_013_5922_Case4B
+    dw Func_013_5922_Case4C
+    dw Func_013_5922_Case4D
+    dw Func_013_5922_Case4E
+    dw Func_013_5922_Case4F
+    dw Func_013_5922_Case50
+    dw Func_013_5922_Case51
+    dw Func_013_5922_Case52
+    dw Func_013_5922_Case53
+    dw Func_013_5922_Case54
+    dw Func_013_5922_Case55
+    dw Func_013_5922_Case56
+    dw Func_013_5922_Case57
+    dw Func_013_5922_Case58
+    dw Func_013_5922_Case59
+    dw Func_013_5922_Case5A
+    dw Func_013_5922_Case5B
+    dw Func_013_5922_Case5C
+    dw Func_013_5922_Case5D
+    dw Func_013_5922_Case5E
+    dw Func_013_5922_Case5F
+    dw Func_013_5922_Case60
+    dw Func_013_5922_Case61
+    dw Func_013_5922_Case62
+    dw Func_013_5922_Case63
+    dw Func_013_5922_Case64
+    dw Func_013_5922_Case65
+    dw Func_013_5922_Case66
+    dw Func_013_5922_Case67
+    dw Func_013_5922_Case68
+    dw Func_013_5922_Case69
+    dw Func_013_5922_Case6A
+    dw Func_013_5922_Case6B
+    dw Func_013_5922_Case6C
+    dw Func_013_5922_Case6D
+    dw Func_013_5922_Case6E
+    dw Func_013_5922_Case6F
+    dw Func_013_5922_Case70
+    dw Func_013_5922_Case71
+    dw Func_013_5922_Case72
+    dw Func_013_5922_Case73
+    dw Func_013_5922_Case74
+    dw Func_013_5922_Case75
+    dw Func_013_5922_Case76
+    dw Func_013_5922_Case77
+    dw Func_013_5922_Case78
+    dw Func_013_5922_Case79
+    dw Func_013_5922_Case7A
+    dw Func_013_5922_Case7B
+    dw Func_013_5922_Case7C
+    dw Func_013_5922_Case7D
+    dw Func_013_5922_Case7E
+    dw Func_013_5922_Case7F
     db $D2, $70
     dw Func_013_70D9
     dw Func_013_727A
@@ -3780,15 +4604,25 @@ Jump_013_5941::
     dw Func_013_7F6A
     dw Func_013_7F86
 
-Jump_013_5B33::
+; entry 0 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case00::
+Jump_013_5B33:: ; address name
     ret
 
-Jump_013_5B34::
+; entry 1 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case01::
+Jump_013_5B34:: ; address name
     ld hl, $5895
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_5B3B::
+; entry 2 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: hFFC6
+Func_013_5922_Case02::
+Jump_013_5B3B:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_5BDF
@@ -3894,7 +4728,7 @@ Jump_013_5C04::
     call SetRequestPtrC921_B13
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_5922)
+; 1 call site from 1 routine (e.g. Func_013_5922_Case02)
 ; reads: hFFC6
 ; writes: hFFC6
 Func_013_5C0B::
@@ -4046,12 +4880,18 @@ Jump_013_5D3C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5D43::
+; entry 3 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case03::
+Jump_013_5D43:: ; address name
     ld hl, $0023
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5D4A::
+; entry 4 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case04::
+Jump_013_5D4A:: ; address name
     ld de, $0022
     call TestFlagBit
     jr c, Jump_013_5D59
@@ -4072,17 +4912,27 @@ Jump_013_5D68::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_5D6F::
+; entry 5 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case05::
+Jump_013_5D6F:: ; address name
     ld hl, $0026
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5D76::
+; entry 6 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case06::
+Jump_013_5D76:: ; address name
     ld hl, $0027
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5D7D::
+; entry 7 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC6FD, hFFC7, hFFC6
+Func_013_5922_Case07::
+Jump_013_5D7D:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_5E7A
@@ -4287,7 +5137,7 @@ Jump_013_5EE7::
     call SetRequestPtrC921_B13
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_5C0B)
+; 1 call site from 1 routine (e.g. Func_013_5922_Case07)
 ; reads: hFFC6, wC6FD, wC634
 ; writes: hFFC6, hFFC7
 Func_013_5EF4::
@@ -4351,7 +5201,10 @@ Jump_013_5F5C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5F63::
+; entry 8 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case08::
+Jump_013_5F63:: ; address name
     ld de, $000C
     call TestFlagBit
     jr c, Jump_013_5F87
@@ -4374,7 +5227,10 @@ Jump_013_5F87::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5F8E::
+; entry 9 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case09::
+Jump_013_5F8E:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_5FCB
@@ -4411,7 +5267,10 @@ Jump_013_5FCB::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_5FD2::
+; entry 10 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case0A::
+Jump_013_5FD2:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6041
@@ -4474,7 +5333,10 @@ Jump_013_6041::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6048::
+; entry 11 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case0B::
+Jump_013_6048:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_60A8
@@ -4529,7 +5391,10 @@ Jump_013_60A8::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_60AF::
+; entry 12 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case0C::
+Jump_013_60AF:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6109
@@ -4582,7 +5447,12 @@ Jump_013_6109::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6110::
+; entry 13 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC836
+; writes: wC836
+Func_013_5922_Case0D::
+Jump_013_6110:: ; address name
     call Func_013_7F94
     jr c, Jump_013_6116
     ret
@@ -4596,7 +5466,10 @@ Jump_013_6116::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6127::
+; entry 14 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case0E::
+Jump_013_6127:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6163
@@ -4633,7 +5506,10 @@ Jump_013_6163::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_616A::
+; entry 15 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case0F::
+Jump_013_616A:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6188
@@ -4654,7 +5530,12 @@ Jump_013_6188::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_618F::
+; entry 16 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC37
+; writes: wCC37, wD7FB, wDataBank
+Func_013_5922_Case10::
+Jump_013_618F:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_61FD
@@ -4726,7 +5607,11 @@ Jump_013_6216::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_621D::
+; entry 17 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_5922_Case11::
+Jump_013_621D:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_628A
@@ -4793,7 +5678,10 @@ Jump_013_628A::
     call SetFlagBit
     ret
 
-Jump_013_62A9::
+; entry 18 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case12::
+Jump_013_62A9:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_62F4
@@ -4838,12 +5726,18 @@ Jump_013_62F4::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_62FB::
+; entry 19 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case13::
+Jump_013_62FB:: ; address name
     ld hl, $0038
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6302::
+; entry 20 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case14::
+Jump_013_6302:: ; address name
     ld de, $0002
     call TestFlagBit
     jr c, Jump_013_6320
@@ -4864,7 +5758,10 @@ Jump_013_6320::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6327::
+; entry 21 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case15::
+Jump_013_6327:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6390
@@ -4925,7 +5822,10 @@ Jump_013_6390::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6397::
+; entry 22 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case16::
+Jump_013_6397:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6400
@@ -4986,7 +5886,12 @@ Jump_013_6400::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6407::
+; entry 23 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: hMapScreenX
+; writes: hFFC6, wCBD3, wCBD4
+Func_013_5922_Case17::
+Jump_013_6407:: ; address name
     ld de, $0009
     call TestFlagBit
     jr c, Jump_013_641C
@@ -5031,7 +5936,10 @@ Jump_013_6438::
     call SetFlagBit
     ret
 
-Jump_013_645F::
+; entry 24 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case18::
+Jump_013_645F:: ; address name
     ld de, $0008
     call TestFlagBit
     jr c, Jump_013_6474
@@ -5046,7 +5954,12 @@ Jump_013_6474::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_647B::
+; entry 25 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC632, hFFC7, hFFC6
+; writes: hFFC6
+Func_013_5922_Case19::
+Jump_013_647B:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_659E
@@ -5234,7 +6147,10 @@ Jump_013_65E5::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_65EC::
+; entry 26 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case1A::
+Jump_013_65EC:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6646
@@ -5287,7 +6203,11 @@ Jump_013_6646::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_664D::
+; entry 27 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_5922_Case1B::
+Jump_013_664D:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld de, $0025
@@ -5365,7 +6285,11 @@ Jump_013_66DE::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_66ED::
+; entry 28 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_5922_Case1C::
+Jump_013_66ED:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld de, $0025
@@ -5443,7 +6367,10 @@ Jump_013_677E::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_678D::
+; entry 29 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case1D::
+Jump_013_678D:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_679C
@@ -5456,7 +6383,10 @@ Jump_013_679C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_67A3::
+; entry 30 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case1E::
+Jump_013_67A3:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_67C2
@@ -5477,12 +6407,18 @@ Jump_013_67C2::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_67C9::
+; entry 31 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case1F::
+Jump_013_67C9:: ; address name
     ld hl, $04D0
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_67D0::
+; entry 32 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case20::
+Jump_013_67D0:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, Jump_013_6823
@@ -5535,7 +6471,10 @@ Jump_013_6823::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6832::
+; entry 33 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case21::
+Jump_013_6832:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6856
@@ -5558,7 +6497,10 @@ Jump_013_6856::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_685D::
+; entry 34 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case22::
+Jump_013_685D:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_686C
@@ -5571,7 +6513,10 @@ Jump_013_686C::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6873::
+; entry 35 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case23::
+Jump_013_6873:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6891
@@ -5592,7 +6537,10 @@ Jump_013_6891::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6898::
+; entry 36 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case24::
+Jump_013_6898:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_68B6
@@ -5613,7 +6561,10 @@ Jump_013_68B6::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_68BD::
+; entry 37 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case25::
+Jump_013_68BD:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_68CD
@@ -5631,12 +6582,20 @@ Jump_013_68D4::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_68DB::
+; entry 38 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case26::
+Jump_013_68DB:: ; address name
     ld hl, $0224
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_68E2::
+; entry 39 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC6FD, hFFC6
+; writes: hFFC6, hFFC7
+Func_013_5922_Case27::
+Jump_013_68E2:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6940
@@ -5692,42 +6651,66 @@ Jump_013_6940::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6947::
+; entry 40 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case28::
+Jump_013_6947:: ; address name
     ld hl, $0D8C
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_694E::
+; entry 41 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case29::
+Jump_013_694E:: ; address name
     ld hl, $0D8D
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6955::
+; entry 42 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case2A::
+Jump_013_6955:: ; address name
     ld hl, $022D
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_695C::
+; entry 43 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case2B::
+Jump_013_695C:: ; address name
     ld hl, $5476
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6963::
+; entry 44 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case2C::
+Jump_013_6963:: ; address name
     ld hl, $022C
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_696A::
+; entry 45 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case2D::
+Jump_013_696A:: ; address name
     ld hl, $0005
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6971::
+; entry 46 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case2E::
+Jump_013_6971:: ; address name
     ld hl, $0006
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6978::
+; entry 47 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case2F::
+Jump_013_6978:: ; address name
     ld de, $0013
     call TestFlagBit
     jr c, Jump_013_6988
@@ -5749,12 +6732,18 @@ Jump_013_6994::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_699B::
+; entry 48 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case30::
+Jump_013_699B:: ; address name
     ld hl, $5120
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_69A2::
+; entry 49 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case31::
+Jump_013_69A2:: ; address name
     ld de, $0013
     call TestFlagBit
     jr c, Jump_013_69B1
@@ -5767,7 +6756,10 @@ Jump_013_69B1::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_69B8::
+; entry 50 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case32::
+Jump_013_69B8:: ; address name
     ld de, $0013
     call TestFlagBit
     jr c, Jump_013_69D3
@@ -5786,7 +6778,12 @@ Jump_013_69D3::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_69DA::
+; entry 51 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wC916
+; writes: hFFC7, hFFC8, hFFC9
+Func_013_5922_Case33::
+Jump_013_69DA:: ; address name
     farcall Func_05F_6D78
     ld a, [wD7F5]
     cp a, $FF
@@ -5813,17 +6810,26 @@ Jump_013_69EE::
     farcall Func_001_6E46
     ret
 
-Jump_013_6A14::
+; entry 54 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case36::
+Jump_013_6A14:: ; address name
     ld hl, $0BAC
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A1B::
+; entry 55 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case37::
+Jump_013_6A1B:: ; address name
     ld hl, $0D84
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A22::
+; entry 56 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case38::
+Jump_013_6A22:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6A40
@@ -5844,7 +6850,10 @@ Jump_013_6A40::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A47::
+; entry 57 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case39::
+Jump_013_6A47:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6A65
@@ -5865,7 +6874,10 @@ Jump_013_6A65::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A6C::
+; entry 58 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case3A::
+Jump_013_6A6C:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6A7B
@@ -5878,22 +6890,34 @@ Jump_013_6A7B::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A82::
+; entry 59 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case3B::
+Jump_013_6A82:: ; address name
     ld hl, $0243
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A89::
+; entry 60 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case3C::
+Jump_013_6A89:: ; address name
     ld hl, $0244
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A90::
+; entry 61 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case3D::
+Jump_013_6A90:: ; address name
     ld hl, $0245
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6A97::
+; entry 62 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case3E::
+Jump_013_6A97:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6AB5
@@ -5914,22 +6938,36 @@ Jump_013_6AB5::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6ABC::
+; entry 63 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case3F::
+Jump_013_6ABC:: ; address name
     ld hl, $0249
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6AC3::
+; entry 64 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case40::
+Jump_013_6AC3:: ; address name
     ld hl, $0256
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6ACA::
+; entry 65 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case41::
+Jump_013_6ACA:: ; address name
     ld hl, $02B0
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6AD1::
+; entry 66 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5
+; writes: hFFC7, hFFC8, hFFC9
+Func_013_5922_Case42::
+Jump_013_6AD1:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6AEF
@@ -5976,17 +7014,26 @@ Jump_013_6B2B::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B32::
+; entry 67 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case43::
+Jump_013_6B32:: ; address name
     ld hl, $025A
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B39::
+; entry 68 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case44::
+Jump_013_6B39:: ; address name
     ld hl, $025B
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B40::
+; entry 69 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case45::
+Jump_013_6B40:: ; address name
     ld de, $0134
     call TestFlagBit
     ret nc
@@ -5994,7 +7041,11 @@ Jump_013_6B40::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B4E::
+; entry 70 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_5922_Case46::
+Jump_013_6B4E:: ; address name
     ld a, $96
     ld [wDataBank], a
     ld de, $0111
@@ -6011,27 +7062,44 @@ Jump_013_6B68::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6B6F::
+; entry 71 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case47::
+Jump_013_6B6F:: ; address name
     ld hl, $04C5
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B76::
+; entry 72 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case48::
+Jump_013_6B76:: ; address name
     ld hl, $04C6
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B7D::
+; entry 73 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case49::
+Jump_013_6B7D:: ; address name
     ld hl, $04C7
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B84::
+; entry 74 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case4A::
+Jump_013_6B84:: ; address name
     ld hl, $08C0
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6B8B::
+; entry 75 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC634
+; writes: wC928
+Func_013_5922_Case4B::
+Jump_013_6B8B:: ; address name
     ld de, $01A3
     call TestFlagBit
     jr nc, Jump_013_6BBE
@@ -6068,7 +7136,11 @@ Jump_013_6BCD::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6BD4::
+; entry 76 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_5922_Case4C::
+Jump_013_6BD4:: ; address name
     ld de, $010A
     call TestFlagBit
     jr c, Jump_013_6BEE
@@ -6087,47 +7159,74 @@ Jump_013_6BEE::
     ld [wDataBank], a
     ret
 
-Jump_013_6BFA::
+; entry 77 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case4D::
+Jump_013_6BFA:: ; address name
     ld hl, $0A50
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C01::
+; entry 78 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case4E::
+Jump_013_6C01:: ; address name
     ld hl, $0A52
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C08::
+; entry 79 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case4F::
+Jump_013_6C08:: ; address name
     ld hl, $0A53
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C0F::
+; entry 80 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case50::
+Jump_013_6C0F:: ; address name
     ld hl, $0A59
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C16::
+; entry 81 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case51::
+Jump_013_6C16:: ; address name
     ld hl, $54B9
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6C1D::
+; entry 82 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case52::
+Jump_013_6C1D:: ; address name
     ld hl, $54C0
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6C24::
+; entry 83 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case53::
+Jump_013_6C24:: ; address name
     ld hl, $0A5D
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C2B::
+; entry 84 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case54::
+Jump_013_6C2B:: ; address name
     ld hl, $54C7
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6C32::
+; entry 85 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case55::
+Jump_013_6C32:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6C41
@@ -6140,7 +7239,10 @@ Jump_013_6C41::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C48::
+; entry 86 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case56::
+Jump_013_6C48:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6C57
@@ -6153,42 +7255,66 @@ Jump_013_6C57::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C5E::
+; entry 87 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case57::
+Jump_013_6C5E:: ; address name
     ld hl, $027E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C65::
+; entry 88 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case58::
+Jump_013_6C65:: ; address name
     ld hl, $028C
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C6C::
+; entry 89 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case59::
+Jump_013_6C6C:: ; address name
     ld hl, $028D
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C73::
+; entry 90 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case5A::
+Jump_013_6C73:: ; address name
     ld hl, $028E
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C7A::
+; entry 91 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case5B::
+Jump_013_6C7A:: ; address name
     ld hl, $0287
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C81::
+; entry 92 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case5C::
+Jump_013_6C81:: ; address name
     ld hl, $0286
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C88::
+; entry 93 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case5D::
+Jump_013_6C88:: ; address name
     ld hl, $028F
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6C8F::
+; entry 94 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case5E::
+Jump_013_6C8F:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6C9E
@@ -6201,17 +7327,27 @@ Jump_013_6C9E::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6CA5::
+; entry 95 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case5F::
+Jump_013_6CA5:: ; address name
     ld hl, $0290
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6CAC::
+; entry 96 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case60::
+Jump_013_6CAC:: ; address name
     ld hl, $0291
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6CB3::
+; entry 97 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC82C
+Func_013_5922_Case61::
+Jump_013_6CB3:: ; address name
     ld a, [wC82C]
     or a, a
     jr nz, Jump_013_6CCF
@@ -6292,12 +7428,19 @@ Jump_013_6D33::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6D3A::
+; entry 98 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case62::
+Jump_013_6D3A:: ; address name
     ld hl, $0296
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6D41::
+; entry 99 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_5922_Case63::
+Jump_013_6D41:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
@@ -6306,7 +7449,10 @@ Jump_013_6D41::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_6D52::
+; entry 100 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case64::
+Jump_013_6D52:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6D61
@@ -6319,7 +7465,12 @@ Jump_013_6D61::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6D68::
+; entry 101 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC82C, wC892, hFFC6
+; writes: wDataBank, wD7FB, wC892
+Func_013_5922_Case65::
+Jump_013_6D68:: ; address name
     ld a, $0C
     ld [wDataBank], a
     xor a, a
@@ -6377,7 +7528,11 @@ Jump_013_6DCA::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6DD1::
+; entry 102 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FB, wDataBank
+Func_013_5922_Case66::
+Jump_013_6DD1:: ; address name
     farcall Func_002_5EEE
     call Func_013_7FB0
     ld de, $010E
@@ -6404,7 +7559,10 @@ Jump_013_6E02::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6E09::
+; entry 103 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case67::
+Jump_013_6E09:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6E36
@@ -6433,7 +7591,10 @@ Jump_013_6E36::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6E3D::
+; entry 104 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case68::
+Jump_013_6E3D:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6E6A
@@ -6462,7 +7623,11 @@ Jump_013_6E6A::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6E71::
+; entry 105 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_5922_Case69::
+Jump_013_6E71:: ; address name
     ld a, $96
     ld [wDataBank], a
     ld de, $0025
@@ -6488,7 +7653,11 @@ Jump_013_6E94::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6EA3::
+; entry 106 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_5922_Case6A::
+Jump_013_6EA3:: ; address name
     farcall Func_002_5EEE
     call Func_013_7FB0
     ld a, $15
@@ -6516,42 +7685,67 @@ Jump_013_6ECF::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6EDE::
+; entry 107 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case6B::
+Jump_013_6EDE:: ; address name
     ld hl, $55CE
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6EE5::
+; entry 108 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case6C::
+Jump_013_6EE5:: ; address name
     ld hl, $08D8
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6EEC::
+; entry 109 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case6D::
+Jump_013_6EEC:: ; address name
     ld hl, $08D9
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6EF3::
+; entry 110 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case6E::
+Jump_013_6EF3:: ; address name
     ld hl, $08CD
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6EFA::
+; entry 111 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case6F::
+Jump_013_6EFA:: ; address name
     ld hl, $02DC
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6F01::
+; entry 112 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case70::
+Jump_013_6F01:: ; address name
     ld hl, $0DD4
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6F08::
+; entry 113 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case71::
+Jump_013_6F08:: ; address name
     ld hl, $02DD
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6F0F::
+; entry 114 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+Func_013_5922_Case72::
+Jump_013_6F0F:: ; address name
     ld a, $0C
     ld [wDataBank], a
     ld de, $0025
@@ -6577,27 +7771,44 @@ Jump_013_6F32::
     call SetRequestPtrC91A_B13
     ret
 
-Jump_013_6F41::
+; entry 115 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case73::
+Jump_013_6F41:: ; address name
     ld hl, $0A6F
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6F48::
+; entry 116 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case74::
+Jump_013_6F48:: ; address name
     ld hl, $0A75
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6F4F::
+; entry 117 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case75::
+Jump_013_6F4F:: ; address name
     ld hl, $0A76
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6F56::
+; entry 118 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case76::
+Jump_013_6F56:: ; address name
     ld hl, $0A77
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6F5D::
+; entry 119 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC836
+; writes: wC836
+Func_013_5922_Case77::
+Jump_013_6F5D:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_6FBE
@@ -6653,12 +7864,19 @@ Jump_013_6FBE::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6FC5::
+; entry 120 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case78::
+Jump_013_6FC5:: ; address name
     ld hl, $0269
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6FCC::
+; entry 121 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+Func_013_5922_Case79::
+Jump_013_6FCC:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2E
@@ -6667,17 +7885,26 @@ Jump_013_6FCC::
     call SetRequestPtrC924FromDE_B13
     ret
 
-Jump_013_6FDD::
+; entry 122 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case7A::
+Jump_013_6FDD:: ; address name
     ld hl, $026A
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6FE4::
+; entry 123 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case7B::
+Jump_013_6FE4:: ; address name
     ld hl, $0A32
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_6FEB::
+; entry 124 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case7C::
+Jump_013_6FEB:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_6FFB
@@ -6690,7 +7917,10 @@ Jump_013_6FFB::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_7002::
+; entry 125 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case7D::
+Jump_013_7002:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_7012
@@ -6703,7 +7933,10 @@ Jump_013_7012::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_7019::
+; entry 126 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+Func_013_5922_Case7E::
+Jump_013_7019:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_7029
@@ -6716,7 +7949,12 @@ Jump_013_7029::
     call SetRequestPtrC921_B13
     ret
 
-Jump_013_7030::
+; entry 127 of the `rst $00` table in Func_013_5922
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFC6, wC6FD, wC634, wCB9A
+; writes: hFFC6, hFFC7, wD7FB, wDataBank
+Func_013_5922_Case7F::
+Jump_013_7030:: ; address name
     ld de, $0134
     call TestFlagBit
     jr c, Jump_013_7096
@@ -8426,7 +9664,7 @@ Func_013_7F86:: ; heuristic: target of a pointer table; C0
     call SetRequestPtrC91A_B13
     ret
 
-; 5 call sites from 4 routines (e.g. Func_013_5EF4, Func_013_5C0B, Func_013_5922, Func_013_405C)
+; 5 call sites from 5 routines (e.g. Func_013_5922_Case77, Func_013_5922_Case0D, Func_013_5922_Case07, Func_013_5922_Case02, ...)
 ; reads: wC634
 ; points at: wInventory
 Func_013_7F94::
@@ -8454,7 +9692,7 @@ Jump_013_7FAE::
     scf
     ret
 
-; 8 call sites from 6 routines (e.g. Func_013_5EF4, Func_013_7E9F, Func_013_7E05, Func_013_76DF, ...)
+; 8 call sites from 7 routines (e.g. Func_013_5922_Case6A, Func_013_5922_Case66, Func_013_7E9F, Func_013_7E05, ...)
 ; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, ...
 ; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
 Func_013_7FB0::

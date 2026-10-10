@@ -1,7 +1,7 @@
 SECTION "Bank 30", ROMX[$4000], BANK[$30]
     db $30
 
-; 1 call site from 1 routine (e.g. Func_031_4365)
+; 1 call site from 1 routine (e.g. Func_031_4365_Case02)
 ; reads: wC52B, wCFCA
 Func_030_4001::
     ld a, [wC52B]
@@ -9,15 +9,21 @@ Func_030_4001::
     ret nz
     ld a, [wCFCA]
     rst $00
-    dw Jump_030_4018
-    dw Jump_030_40A0
-    dw Jump_030_40E3
-    dw Jump_030_40E7
-    dw Jump_030_4160
-    dw Jump_030_42B7
-    dw Jump_030_434C
+    dw Func_030_4001_Case00
+    dw Func_030_4001_Case01
+    dw Func_030_4001_Case02
+    dw Func_030_4001_Case03
+    dw Func_030_4001_Case04
+    dw Func_030_4001_Case05
+    dw Func_030_4001_Case06
 
-Jump_030_4018::
+; entry 0 of the `rst $00` table in Func_030_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wD88F
+; writes: wDAE8
+; points at: wCFCA, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wD980
+Func_030_4001_Case00::
+Jump_030_4018:: ; address name
     ld hl, wCFCA
     inc [hl]
     ld a, [wC58A]
@@ -88,7 +94,7 @@ Jump_030_4070::
 Jump_030_408C::
     ret
 
-; 4 call sites from 1 routine (e.g. Func_030_4001)
+; 4 call sites from 1 routine (e.g. Func_030_4001_Case00)
 Func_030_408D::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
@@ -107,7 +113,13 @@ Jump_030_409A::
     jr nz, Func_030_408D
     ret
 
-Jump_030_40A0::
+; entry 1 of the `rst $00` table in Func_030_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wD8A4
+; writes: wD8A4, wCFCB
+; points at: wDA5B, wCFCA
+Func_030_4001_Case01::
+Jump_030_40A0:: ; address name
     ld a, [wC58A]
     or a, a
     call nz, Func_000_3EDE
@@ -149,11 +161,20 @@ Jump_030_40D6::
 Jump_030_40E2::
     ret
 
-Jump_030_40E3::
+; entry 2 of the `rst $00` table in Func_030_4001
+; no direct call (reached through a table, a jump or a vector)
+Func_030_4001_Case02::
+Jump_030_40E3:: ; address name
     call Func_030_43C4
     ret
 
-Jump_030_40E7::
+; entry 3 of the `rst $00` table in Func_030_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4
+; writes: wCFCA
+; points at: wDA5B, wD8A4
+Func_030_4001_Case03::
+Jump_030_40E7:: ; address name
     call Func_030_4102
     ld a, [wD8A4]
     ld hl, wDA5B
@@ -166,7 +187,7 @@ Jump_030_40E7::
     inc [hl]
     ret
 
-; 5 call sites from 4 routines (e.g. Func_030_408D, Func_036_714F, Func_03A_61F8, Func_03A_6846)
+; 5 call sites from 4 routines (e.g. Func_030_4001_Case03, Func_036_714F, Func_03A_6157_Case06, Func_03A_6846)
 ; reads: wC58A, wC46B, wD8A4
 ; points at: wDAD8, wDA1D, wDAE9
 Func_030_4102::
@@ -219,7 +240,13 @@ Jump_030_4152::
     ld d, [hl]
     ret
 
-Jump_030_4160::
+; entry 4 of the `rst $00` table in Func_030_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD871
+; writes: wD89E, wD871, wD87A, wD87B
+; points at: wD895, wD868, wD87D, wDA5B, wD87A, wD871, wCFCA
+Func_030_4001_Case04::
+Jump_030_4160:: ; address name
     ld hl, wD895
     ld bc, $0009
     ld a, $FF
@@ -280,7 +307,7 @@ Jump_030_41D2::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4102)
+; 1 call site from 1 routine (e.g. Func_030_4001_Case04)
 ; points at: wD91F
 Func_030_41DF::
     push de
@@ -304,7 +331,7 @@ Func_030_41DF::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4102)
+; 1 call site from 1 routine (e.g. Func_030_4001_Case04)
 ; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wDA1C, wCFF3
@@ -396,7 +423,7 @@ Jump_030_4295::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4102)
+; 1 call site from 1 routine (e.g. Func_030_4001_Case04)
 ; reads: wD892, wD871
 ; points at: wD87A, wD868
 Func_030_4297::
@@ -415,7 +442,13 @@ Func_030_4297::
     ld [hl], $10
     ret
 
-Jump_030_42B7::
+; entry 5 of the `rst $00` table in Func_030_4001
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD87A, wD87B, wD872, wD873, wD874, wD875, wD89E
+; writes: wD87A, wD87B, wD872, wD873, wD874, wD875, wD89E
+; points at: wD87D, wD87F, wD868, wD87A, wD895, wCFCA
+Func_030_4001_Case05::
+Jump_030_42B7:: ; address name
     ld d, $08
 
 Jump_030_42B9::
@@ -510,7 +543,12 @@ Jump_030_4342::
     inc [hl]
     ret
 
-Jump_030_434C::
+; entry 6 of the `rst $00` table in Func_030_4001
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD2C8, wD2C9, wD2CA, wD2CB, wCFCA
+; points at: wD8BF, wD8CF, wCFC9, wCFCB
+Func_030_4001_Case06::
+Jump_030_434C:: ; address name
     ld hl, wD8BF
     ld bc, $0000
     call AddWordAtHLToBC_Bank30
@@ -542,7 +580,7 @@ Jump_030_434C::
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
-; 6 call sites from 1 routine (e.g. Func_030_4297)
+; 6 call sites from 1 routine (e.g. Func_030_4001_Case06)
 AddWordAtHLToBC_Bank30::
 Func_030_4396:: ; address name
     ld a, [hl+]
@@ -553,7 +591,7 @@ Func_030_4396:: ; address name
     ld b, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4297)
+; 1 call site from 1 routine (e.g. Func_030_4001_Case06)
 ; points at: wDA1C, wD812
 Func_030_439D::
     ld c, $00
@@ -581,17 +619,23 @@ Jump_030_43BF::
     jr nz, Jump_030_43A1
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_408D, Func_0A1_413F)
+; 2 call sites from 2 routines (e.g. Func_030_4001_Case02, Func_0A1_413F_Case02)
 ; reads: wCFCB
 Func_030_43C4::
     ld a, [wCFCB]
     rst $00
-    dw Jump_030_43D0
-    dw Jump_030_441D
+    dw Func_030_43C4_Case00
+    dw Func_030_43C4_Case01
     dw Func_030_4595
-    dw Jump_030_4CF0
+    dw Func_030_43C4_Case03
 
-Jump_030_43D0::
+; entry 0 of the `rst $00` table in Func_030_43C4
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD8A4, wC58A, wC46B, wDAE9
+; writes: wPersonalityIndex
+; points at: wDAE9, wCFCB
+Func_030_43C4_Case00::
+Jump_030_43D0:: ; address name
     ld a, [wD8A4]
     call PersonalityIndexOfSlot_Bank30
     ld [wPersonalityIndex], a
@@ -639,7 +683,13 @@ Jump_030_4418::
     inc [hl]
     ret
 
-Jump_030_441D::
+; entry 1 of the `rst $00` table in Func_030_43C4
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58A, wD8A4, wD868, wD869, wD86A, wD86B
+; writes: wDAC4, wCFCB
+; points at: wCFCB, wD868, wD80C, wDAE0, wDA1C, wDAD8
+Func_030_43C4_Case01::
+Jump_030_441D:: ; address name
     ld hl, wCFCB
     inc [hl]
     xor a, a
@@ -732,7 +782,7 @@ Jump_030_4497::
 Jump_030_44DF::
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wD8A4
 ; points at: wD93F
 Func_030_44E0::
@@ -754,14 +804,14 @@ Func_030_44E0::
 Jump_030_4505::
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wD8A4
 ; points at: wD980, wD868
 Func_030_4506::
     ld hl, wD980
     jr Jump_030_451F
 
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wD8A4
 ; points at: wD868
 Func_030_450B::
@@ -789,7 +839,7 @@ Jump_030_451F::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wPersonalityIndex
 ; points at: wD868
 Func_030_4536::
@@ -811,7 +861,7 @@ Func_030_4536::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wD8A4, wD86A, wD86B
 ; writes: wD86A, wD86B
 ; points at: wD93F
@@ -831,7 +881,7 @@ Func_030_4558::
     rr l
     jr Jump_030_4586
 
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wC5E7, wD86A, wD86B
 ; writes: wD86A, wD86B
 Func_030_4579::
@@ -1900,7 +1950,12 @@ Func_030_4CDB::
     pop af
     ret
 
-Jump_030_4CF0::
+; entry 3 of the `rst $00` table in Func_030_43C4
+; no direct call (reached through a table, a jump or a vector)
+; writes: wCFCB
+; points at: wCFCA
+Func_030_43C4_Case03::
+Jump_030_4CF0:: ; address name
     call Func_030_4CFC
     ld hl, wCFCA
     inc [hl]
@@ -1908,7 +1963,7 @@ Jump_030_4CF0::
     ld [wCFCB], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_4CDB, Func_030_5440)
+; 2 call sites from 2 routines (e.g. Func_030_43C4_Case03, Func_030_5440)
 ; reads: wC58A, wD8A4
 Func_030_4CFC::
     ld a, [wC58A]
@@ -2154,7 +2209,7 @@ Jump_030_5016::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wD8A4, wC0A0, wC0A8
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wC0A0
 Func_030_502D::
@@ -2529,7 +2584,7 @@ Jump_030_527C::
     ld c, [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_4595, Func_030_43C4)
+; 2 call sites from 2 routines (e.g. Func_030_4595, Func_030_43C4_Case00)
 ; reads: wD8A4
 ; points at: wD80F
 Func_030_5287::
@@ -2567,7 +2622,7 @@ Jump_030_52AB::
 Jump_030_52B4::
     ret
 
-; 2 call sites from 1 routine (e.g. Func_030_43C4)
+; 2 call sites from 1 routine (e.g. Func_030_43C4_Case01)
 ; reads: wC58A, wD8A4
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD8B7, wD980
@@ -2753,7 +2808,7 @@ Jump_030_543E::
     ld [hl], a
     ret
 
-; 3 call sites from 2 routines (e.g. Func_032_4F0A, Func_0E0_5A35)
+; 3 call sites from 2 routines (e.g. Func_032_4EE4_Case00, Func_0E0_5A35)
 ; reads: wD8A4
 ; writes: wPersonalityIndex, wD2CC
 ; points at: wDA53
@@ -3239,7 +3294,7 @@ Func_030_5C68::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
-; 1 call site from 1 routine (e.g. Func_030_43C4)
+; 1 call site from 1 routine (e.g. Func_030_43C4_Case01)
 AddDoubleAToHL_Bank30::
 Func_030_5C72:: ; address name
     add a, a
@@ -3286,7 +3341,7 @@ Jump_030_5CA9::
     INCBIN "dwm2-cobi-us.gbc", $0C1CAF, $43
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
-; 2 call sites from 2 routines (e.g. Func_030_43C4, Func_030_5440)
+; 2 call sites from 2 routines (e.g. Func_030_43C4_Case00, Func_030_5440)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank30::
 Func_030_5CF2:: ; address name

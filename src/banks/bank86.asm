@@ -2,7 +2,7 @@ SECTION "Bank 86", ROMX[$4000], BANK[$86]
     db $86
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. GameMode0_Update, Func_010_4AD0, Func_05F_69FB)
+; 3 call sites from 3 routines (e.g. GameMode0_Update_Table2_Case0C, Func_010_4AD0_Case0C, Func_05F_69FB_Case0C)
 BeginStringDisplay_Bank86::
 Func_086_4001:: ; address name
     ld de, Data_086_4016

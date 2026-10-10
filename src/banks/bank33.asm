@@ -397,7 +397,7 @@ Data_033_505A:: ; heuristic: target of a monotone pointer table; C0
     ds $12, $B4
     db $B5
 
-; 1 call site from 1 routine (e.g. GameMode5_Update)
+; 1 call site from 1 routine (e.g. GameMode5_Update_Case05)
 ; reads: wD06A, wD780, wD781, wD782
 Func_033_51C6::
     call Func_000_0535
@@ -449,7 +449,7 @@ Jump_033_520E::
     farcall Func_0F2_4EDD
     ret
 
-; 1 call site from 1 routine (e.g. Func_01B_450D)
+; 1 call site from 1 routine (e.g. Func_01B_450D_Case01)
 ; reads: wD06A, wD06B, wFadeState, wD780
 Func_033_5215::
     ld a, [wD06A]
@@ -457,20 +457,20 @@ Func_033_5215::
     jr nz, Jump_033_523B
     ld a, [wD06B]
     rst $00
-    dw Jump_033_5264
-    dw Jump_033_5287
-    dw Jump_033_52A8
-    dw Jump_033_52BB
-    dw Jump_033_5338
-    dw Jump_033_537D
-    dw Jump_033_538A
-    dw Jump_033_53D4
-    dw Jump_033_5433
-    dw Jump_033_545B
-    dw Jump_033_5483
-    dw Jump_033_5497
-    dw Jump_033_5502
-    dw Jump_033_552A
+    dw Func_033_5215_Case00
+    dw Func_033_5215_Case01
+    dw Func_033_5215_Case02
+    dw Func_033_5215_Case03
+    dw Func_033_5215_Case04
+    dw Func_033_5215_Case05
+    dw Func_033_5215_Case06
+    dw Func_033_5215_Case07
+    dw Func_033_5215_Case08
+    dw Func_033_5215_Case09
+    dw Func_033_5215_Case0A
+    dw Func_033_5215_Case0B
+    dw Func_033_5215_Case0C
+    dw Func_033_5215_Case0D
 
 Jump_033_523B::
     ld a, [wFadeState]
@@ -478,24 +478,28 @@ Jump_033_523B::
     ret nz
     ld a, [wD780]
     rst $00
-    dw Jump_033_555F
-    dw Jump_033_5564
-    dw Jump_033_556F
-    dw Jump_033_55E0
-    dw Jump_033_55E5
-    dw Jump_033_5883
-    dw Jump_033_5C1A
-    dw Jump_033_5C1A
-    dw Jump_033_5C1A
-    dw Jump_033_5C1A
-    dw Jump_033_5C1A
-    dw Jump_033_5C1A
-    dw Jump_033_5C1A
-    dw Jump_033_5C36
-    dw Jump_033_5C4F
-    dw Jump_033_5E57
+    dw Func_033_5215_Table2_Case00
+    dw Func_033_5215_Table2_Case01
+    dw Func_033_5215_Table2_Case02
+    dw Func_033_5215_Table2_Case03
+    dw Func_033_5215_Table2_Case04
+    dw Func_033_5215_Table2_Case05
+    dw Func_033_5215_Table2_Case06
+    dw Func_033_5215_Table2_Case06
+    dw Func_033_5215_Table2_Case06
+    dw Func_033_5215_Table2_Case06
+    dw Func_033_5215_Table2_Case06
+    dw Func_033_5215_Table2_Case06
+    dw Func_033_5215_Table2_Case06
+    dw Func_033_5215_Table2_Case0D
+    dw Func_033_5215_Table2_Case0E
+    dw Func_033_5215_Table2_Case0F
 
-Jump_033_5264::
+; entry 0 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; points at: wC1A4, wScreenTileBuffer, wD06B
+Func_033_5215_Case00::
+Jump_033_5264:: ; address name
     ld de, Data_033_62AB
     ld hl, wC1A4
     ld bc, $0803
@@ -510,7 +514,12 @@ Jump_033_5264::
     inc [hl]
     ret
 
-Jump_033_5287::
+; entry 1 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC594
+; points at: wC895, wC1DB, wD06B
+Func_033_5215_Case01::
+Jump_033_5287:: ; address name
     xor a, a
     ld [wC594], a
     call Func_033_6197
@@ -525,7 +534,13 @@ Jump_033_5287::
     inc [hl]
     ret
 
-Jump_033_52A8::
+; entry 2 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wFadeState
+; writes: wC594
+; points at: wD06B
+Func_033_5215_Case02::
+Jump_033_52A8:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
@@ -537,7 +552,13 @@ Jump_033_52A8::
     ld [wC594], a
     ret
 
-Jump_033_52BB::
+; entry 3 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wC52B, wC552, wC617, wC618, wC619, wD06B
+; writes: wC594, wD06A, wD780, wD06B, wC619, wC618, wC617
+; points at: wD06B
+Func_033_5215_Case03::
+Jump_033_52BB:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr nz, Jump_033_52D7
@@ -601,7 +622,13 @@ Jump_033_531E::
     ld [wC594], a
     ret
 
-Jump_033_5338::
+; entry 4 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594, wD06A, wD780
+; points at: wD06B
+Func_033_5215_Case04::
+Jump_033_5338:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr z, Jump_033_5348
@@ -642,7 +669,12 @@ Jump_033_536B::
     inc [hl]
     ret
 
-Jump_033_537D::
+; entry 5 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC594, wD06C
+; points at: wD06B
+Func_033_5215_Case05::
+Jump_033_537D:: ; address name
     xor a, a
     ld [wC594], a
     ld hl, wD06B
@@ -651,14 +683,23 @@ Jump_033_537D::
     ld [wD06C], a
     ret
 
-Jump_033_538A::
+; entry 6 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD06C
+Func_033_5215_Case06::
+Jump_033_538A:: ; address name
     ld a, [wD06C]
     rst $00
-    dw Jump_033_5394
-    dw Jump_033_53AC
-    dw Jump_033_53C2
+    dw Func_033_5215_Table3_Case00
+    dw Func_033_5215_Table3_Case01
+    dw Func_033_5215_Table3_Case02
 
-Jump_033_5394::
+; entry 0 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+; points at: wScreenTileBuffer, wD06C
+Func_033_5215_Table3_Case00::
+Jump_033_5394:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
@@ -676,7 +717,11 @@ Jump_033_539F::
     inc [hl]
     ret
 
-Jump_033_53AC::
+; entry 1 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD06C
+Func_033_5215_Table3_Case01::
+Jump_033_53AC:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $0000
@@ -687,7 +732,11 @@ Jump_033_53AC::
     inc [hl]
     ret
 
-Jump_033_53C2::
+; entry 2 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD06B, wD06C, wD06A, wD780
+Func_033_5215_Table3_Case02::
+Jump_033_53C2:: ; address name
     xor a, a
     ld [wD06B], a
     xor a, a
@@ -698,7 +747,13 @@ Jump_033_53C2::
     ld [wD780], a
     ret
 
-Jump_033_53D4::
+; entry 7 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B, wC552, wC617, wC618, wC619
+; writes: wC594, wC619, wC618, wC617
+; points at: wD06B
+Func_033_5215_Case07::
+Jump_033_53D4:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
@@ -749,7 +804,13 @@ Jump_033_5419::
     inc [hl]
     ret
 
-Jump_033_5433::
+; entry 8 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594, wD06A, wD780
+; points at: wD06B
+Func_033_5215_Case08::
+Jump_033_5433:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr z, Jump_033_5446
@@ -772,7 +833,13 @@ Jump_033_5446::
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_545B::
+; entry 9 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594, wD06A, wD780
+; points at: wD06B
+Func_033_5215_Case09::
+Jump_033_545B:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr z, Jump_033_546E
@@ -797,7 +864,11 @@ Jump_033_546E::
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_5483::
+; entry 10 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC594, wD06A, wD06B, wD780
+Func_033_5215_Case0A::
+Jump_033_5483:: ; address name
     ld a, $FE
     ld [wC594], a
     ld a, $01
@@ -808,7 +879,13 @@ Jump_033_5483::
     ld [wD780], a
     ret
 
-Jump_033_5497::
+; entry 11 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594, wD06A, wD780
+; points at: wD06B
+Func_033_5215_Case0B::
+Jump_033_5497:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr z, Jump_033_54ED
@@ -868,7 +945,12 @@ Jump_033_54ED::
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_5502::
+; entry 12 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wD06B, wC594, wD06A, wD780
+Func_033_5215_Case0C::
+Jump_033_5502:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr z, Jump_033_5515
@@ -893,7 +975,12 @@ Jump_033_5515::
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_552A::
+; entry 13 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594, wD06A, wD06B, wD780
+Func_033_5215_Case0D::
+Jump_033_552A:: ; address name
     ld a, [wC58F]
     cp a, $10
     jr z, Jump_033_553C
@@ -916,7 +1003,7 @@ Jump_033_553C::
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07
-; 34 call sites from 3 routines (e.g. Func_033_5215, Func_033_562A, Func_033_58C3)
+; 34 call sites from 19 routines (e.g. Func_033_5215_Case0C, Func_033_5215_Case0B, Func_033_5215_Case09, Func_033_5215_Case08, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank07_Cat5::
 Func_033_5550:: ; address name
@@ -926,12 +1013,21 @@ Func_033_5550:: ; address name
     farcall BeginStringDisplay_Bank07
     ret
 
-Jump_033_555F::
+; entry 0 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD780
+Func_033_5215_Table2_Case00::
+Jump_033_555F:: ; address name
     ld hl, wD780
     inc [hl]
     ret
 
-Jump_033_5564::
+; entry 1 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+; points at: wD780
+Func_033_5215_Table2_Case01::
+Jump_033_5564:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -940,16 +1036,25 @@ Jump_033_5564::
     inc [hl]
     ret
 
-Jump_033_556F::
+; entry 2 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+Func_033_5215_Table2_Case02::
+Jump_033_556F:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_033_557D
-    dw Jump_033_558F
-    dw Jump_033_559E
-    dw Jump_033_55AD
-    dw Jump_033_55BC
+    dw BeginString_Bank07_Cat5_Case00
+    dw BeginString_Bank07_Cat5_Case01
+    dw BeginString_Bank07_Cat5_Case02
+    dw BeginString_Bank07_Cat5_Case03
+    dw BeginString_Bank07_Cat5_Case04
 
-Jump_033_557D::
+; entry 0 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wD781
+; writes: wC594, wD781
+BeginString_Bank07_Cat5_Case00::
+Jump_033_557D:: ; address name
     ld a, [wC58F]
     cp a, $FE
     ret nz
@@ -960,7 +1065,12 @@ Jump_033_557D::
     ld [wD781], a
     ret
 
-Jump_033_558F::
+; entry 1 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+; points at: wD781
+BeginString_Bank07_Cat5_Case01::
+Jump_033_558F:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -970,7 +1080,13 @@ Jump_033_558F::
     inc [hl]
     ret
 
-Jump_033_559E::
+; entry 2 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+; writes: wC594
+; points at: wD781
+BeginString_Bank07_Cat5_Case02::
+Jump_033_559E:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -980,7 +1096,13 @@ Jump_033_559E::
     inc [hl]
     ret
 
-Jump_033_55AD::
+; entry 3 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594
+; points at: wD781
+BeginString_Bank07_Cat5_Case03::
+Jump_033_55AD:: ; address name
     ld a, [wC58F]
     cp a, $01
     ret nz
@@ -990,7 +1112,12 @@ Jump_033_55AD::
     inc [hl]
     ret
 
-Jump_033_55BC::
+; entry 4 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+; points at: wD780, wGameMode, wModeChangeRequest
+BeginString_Bank07_Cat5_Case04::
+Jump_033_55BC:: ; address name
     ld a, [wC52B]
     bit 0, a
     ret nz
@@ -1016,53 +1143,68 @@ Jump_033_55C8::
     inc [hl]
     ret
 
-Jump_033_55E0::
+; entry 3 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD780
+Func_033_5215_Table2_Case03::
+Jump_033_55E0:: ; address name
     ld hl, wD780
     inc [hl]
     ret
 
-Jump_033_55E5::
+; entry 4 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+Func_033_5215_Table2_Case04::
+Jump_033_55E5:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_033_5609
-    dw Jump_033_5609
-    dw Jump_033_5615
-    dw Jump_033_5609
+    dw BeginString_Bank07_Cat5_Table2_Case00
+    dw BeginString_Bank07_Cat5_Table2_Case00
+    dw BeginString_Bank07_Cat5_Table2_Case02
+    dw BeginString_Bank07_Cat5_Table2_Case00
     dw Func_033_561C
     dw Func_033_5623
     dw Func_033_562A
-    dw Jump_033_563B
-    dw Jump_033_5676
-    dw Jump_033_56FC
-    dw Jump_033_574F
-    dw Jump_033_57B2
-    dw Jump_033_57DC
-    dw Jump_033_57F8
-    dw Jump_033_5839
-    dw Jump_033_5874
+    dw BeginString_Bank07_Cat5_Table2_Case07
+    dw BeginString_Bank07_Cat5_Table2_Case08
+    dw BeginString_Bank07_Cat5_Table2_Case09
+    dw BeginString_Bank07_Cat5_Table2_Case0A
+    dw BeginString_Bank07_Cat5_Table2_Case0B
+    dw BeginString_Bank07_Cat5_Table2_Case0C
+    dw BeginString_Bank07_Cat5_Table2_Case0D
+    dw BeginString_Bank07_Cat5_Table2_Case0E
+    dw BeginString_Bank07_Cat5_Table2_Case0F
 
-Jump_033_5609::
+; entry 0 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+BeginString_Bank07_Cat5_Table2_Case00::
+Jump_033_5609:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
     farcall ScriptCommandED_Run
     ret
 
-Jump_033_5615::
+; entry 2 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+BeginString_Bank07_Cat5_Table2_Case02::
+Jump_033_5615:: ; address name
     farcall Func_01B_675F
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3)
+; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case03)
 Func_033_561C::
     farcall Func_01B_67A5
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3)
+; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case04)
 Func_033_5623::
     farcall Func_01B_67F0
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3)
+; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case05)
 ; points at: wC36E, wD781
 Func_033_562A::
     ld de, Data_033_62C3
@@ -1073,7 +1215,13 @@ Func_033_562A::
     inc [hl]
     ret
 
-Jump_033_563B::
+; entry 7 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B, wD7AB, wD781
+; writes: wD781
+; points at: wC895, wC3B1
+BeginString_Bank07_Cat5_Table2_Case07::
+Jump_033_563B:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -1098,7 +1246,13 @@ Jump_033_563B::
     ld [wD781], a
     ret
 
-Jump_033_5676::
+; entry 8 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wD7F9, wD7AB, wD781
+; writes: wD780, wD781, wD782, wC594, wD7F9
+; points at: wD781
+BeginString_Bank07_Cat5_Table2_Case08::
+Jump_033_5676:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr nz, Jump_033_5694
@@ -1169,7 +1323,13 @@ Jump_033_56E1::
     call Func_033_6039
     ret
 
-Jump_033_56FC::
+; entry 9 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7AD
+; points at: wC410, wD781
+BeginString_Bank07_Cat5_Table2_Case09::
+Jump_033_56FC:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -1205,7 +1365,13 @@ Jump_033_56FC::
     inc [hl]
     ret
 
-Jump_033_574F::
+; entry 10 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wD7F5, wD7AD, wD780, wD781
+; writes: wD780, wD781, wD782, wC594, wD7F5, wD7B2, wD7B3
+; points at: wD781
+BeginString_Bank07_Cat5_Table2_Case0A::
+Jump_033_574F:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr nz, Jump_033_576D
@@ -1260,7 +1426,12 @@ Jump_033_57A9::
     inc [hl]
     ret
 
-Jump_033_57B2::
+; entry 11 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B, wD781
+; writes: wD781
+BeginString_Bank07_Cat5_Table2_Case0B::
+Jump_033_57B2:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -1279,7 +1450,11 @@ Jump_033_57B2::
     ld [wD781], a
     ret
 
-Jump_033_57DC::
+; entry 12 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD7DC
+BeginString_Bank07_Cat5_Table2_Case0C::
+Jump_033_57DC:: ; address name
     call Func_033_5F83
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
@@ -1292,7 +1467,13 @@ Jump_033_57DC::
     call Func_033_60A7
     ret
 
-Jump_033_57F8::
+; entry 13 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7DD
+; writes: rRAMG, rRAMB, wC595, wC596, wC590, wC591, wC94B, wC594
+; points at: wC986, wCA2B, wD781
+BeginString_Bank07_Cat5_Table2_Case0D::
+Jump_033_57F8:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -1328,7 +1509,13 @@ Jump_033_5816::
     inc [hl]
     ret
 
-Jump_033_5839::
+; entry 14 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wD780, wD781, wD782, wC594, wC592, wC593, wC58C
+; points at: wD781
+BeginString_Bank07_Cat5_Table2_Case0E::
+Jump_033_5839:: ; address name
     ld a, [wC58F]
     cp a, $01
     jr z, Jump_033_585A
@@ -1359,7 +1546,13 @@ Jump_033_585A::
     inc [hl]
     ret
 
-Jump_033_5874::
+; entry 15 of the `rst $00` table in BeginString_Bank07_Cat5
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wD781
+; points at: wD780
+BeginString_Bank07_Cat5_Table2_Case0F::
+Jump_033_5874:: ; address name
     ld a, [wC58F]
     cp a, $F0
     ret nz
@@ -1369,29 +1562,38 @@ Jump_033_5874::
     ld [wD781], a
     ret
 
-Jump_033_5883::
+; entry 5 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+Func_033_5215_Table2_Case05::
+Jump_033_5883:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_033_58AB
-    dw Jump_033_58CD
-    dw Jump_033_58D7
-    dw Jump_033_5902
-    dw Jump_033_5911
-    dw Jump_033_59B9
-    dw Jump_033_59D3
-    dw Jump_033_5A58
-    dw Jump_033_5A72
-    dw Jump_033_5AAF
-    dw Jump_033_5AB9
-    dw Jump_033_5AC8
-    dw Jump_033_5AF9
-    dw Jump_033_5B38
-    dw Jump_033_5B68
-    dw Jump_033_5BA5
-    dw Jump_033_5BDC
-    dw Jump_033_5BE9
+    dw Func_033_562A_Case00
+    dw Func_033_562A_Case01
+    dw Func_033_562A_Case02
+    dw Func_033_562A_Case03
+    dw Func_033_562A_Case04
+    dw Func_033_562A_Case05
+    dw Func_033_562A_Case06
+    dw Func_033_562A_Case07
+    dw Func_033_562A_Case08
+    dw Func_033_562A_Case09
+    dw Func_033_562A_Case0A
+    dw Func_033_562A_Case0B
+    dw Func_033_562A_Case0C
+    dw Func_033_562A_Case0D
+    dw Func_033_562A_Case0E
+    dw Func_033_562A_Case0F
+    dw Func_033_562A_Case10
+    dw Func_033_562A_Case11
 
-Jump_033_58AB::
+; entry 0 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC594
+; points at: wD781, wC895, wC597, wC60C
+Func_033_562A_Case00::
+Jump_033_58AB:: ; address name
     ld hl, wD781
     inc [hl]
     xor a, a
@@ -1403,7 +1605,7 @@ Jump_033_58AB::
     ld hl, wC60C
     ld b, $0B
 
-; 1 call site from 1 routine (e.g. Func_033_562A)
+; 1 call site from 1 routine (e.g. Func_033_562A_Case00)
 Func_033_58C3::
     ld a, [hl+]
     ld [de], a
@@ -1414,14 +1616,25 @@ Func_033_58C3::
     ld [de], a
     ret
 
-Jump_033_58CD::
+; entry 1 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC594
+; points at: wD781
+Func_033_562A_Case01::
+Jump_033_58CD:: ; address name
     ld a, $01
     ld [wC594], a
     ld hl, wD781
     inc [hl]
     ret
 
-Jump_033_58D7::
+; entry 2 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC595, wC596, wC590, wC591, wC592, wC594
+; points at: wC597, wC5B7, wD781
+Func_033_562A_Case02::
+Jump_033_58D7:: ; address name
     ld a, [wC58F]
     cp a, $01
     ret nz
@@ -1443,7 +1656,13 @@ Jump_033_58D7::
     inc [hl]
     ret
 
-Jump_033_5902::
+; entry 3 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594
+; points at: wD781
+Func_033_562A_Case03::
+Jump_033_5902:: ; address name
     ld a, [wC58F]
     cp a, $F0
     ret nz
@@ -1453,7 +1672,13 @@ Jump_033_5902::
     inc [hl]
     ret
 
-Jump_033_5911::
+; entry 4 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5C6
+; writes: wC52D, wC52E, wC52F, wC530, wC8D9, wC963, wStringCategory, wStringIndex
+; points at: wC364, wC8CF, wC5BB, wC5B7, wC3A7, wC3E7, wD781
+Func_033_562A_Case04::
+Jump_033_5911:: ; address name
     ld de, Data_033_6331
     ld hl, wC364
     ld bc, $0A0B
@@ -1520,7 +1745,12 @@ Jump_033_5911::
     inc [hl]
     ret
 
-Jump_033_59B9::
+; entry 5 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7FA
+; points at: wD781
+Func_033_562A_Case05::
+Jump_033_59B9:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -1533,7 +1763,13 @@ Jump_033_59B9::
     inc [hl]
     ret
 
-Jump_033_59D3::
+; entry 6 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wD7F9, wD7FA, wD780, wD781, wD7AB, wD7AF
+; writes: wD780, wD781, wD782, wC594, wD7B2, wD7B3, wD7B5, wD7B6, ...
+; points at: wD781
+Func_033_562A_Case06::
+Jump_033_59D3:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr nz, Jump_033_59F1
@@ -1602,7 +1838,12 @@ Jump_033_5A2D::
     ld [wD782], a
     ret
 
-Jump_033_5A58::
+; entry 7 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC594
+; points at: wScreenTileBuffer, wC364, wD781
+Func_033_562A_Case07::
+Jump_033_5A58:: ; address name
     ld de, wScreenTileBuffer
     ld hl, wC364
     ld bc, $0104
@@ -1615,7 +1856,13 @@ Jump_033_5A58::
     inc [hl]
     ret
 
-Jump_033_5A72::
+; entry 8 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wC52B, wC552
+; writes: wD780, wD781, wD782, wC594
+; points at: wD781
+Func_033_562A_Case08::
+Jump_033_5A72:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr nz, Jump_033_5A90
@@ -1650,14 +1897,24 @@ Jump_033_5AAA::
     inc [hl]
     ret
 
-Jump_033_5AAF::
+; entry 9 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
+Func_033_562A_Case09::
+Jump_033_5AAF:: ; address name
     ld hl, wD781
     inc [hl]
     ld a, $0C
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_5AB9::
+; entry 10 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B
+; writes: wC594
+; points at: wD781
+Func_033_562A_Case0A::
+Jump_033_5AB9:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -1667,7 +1924,13 @@ Jump_033_5AB9::
     ld [wC594], a
     ret
 
-Jump_033_5AC8::
+; entry 11 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594, wD780, wD781, wD782
+; points at: wD781
+Func_033_562A_Case0B::
+Jump_033_5AC8:: ; address name
     ld a, [wC58F]
     cp a, $FE
     jr z, Jump_033_5AD4
@@ -1696,7 +1959,13 @@ Jump_033_5AEB::
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_5AF9::
+; entry 12 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC52B, wC617, wC618, wC619, wD09D, wD09E, wD09F
+; writes: wD09D, wD09E, wD09F, wC617, wC618, wC619, wC594
+; points at: wD781
+Func_033_562A_Case0C::
+Jump_033_5AF9:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -1720,7 +1989,13 @@ Jump_033_5AF9::
     ld [wC594], a
     ret
 
-Jump_033_5B38::
+; entry 13 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wD7F5, wD7F6, wD781
+; writes: wC594, wD065, wD781
+; points at: wC5BB, wD05A
+Func_033_562A_Case0D::
+Jump_033_5B38:: ; address name
     ld a, [wC58F]
     cp a, $05
     ret nz
@@ -1742,7 +2017,13 @@ Jump_033_5B38::
     ld [wD781], a
     ret
 
-Jump_033_5B68::
+; entry 14 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781, wC5E7, wC5E8
+; writes: wD781, wC59A, wC59B, wC595, wC596, wC590, wC591, wC592, ...
+; points at: wC59A, wC5BA
+Func_033_562A_Case0E::
+Jump_033_5B68:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1770,7 +2051,12 @@ Jump_033_5B68::
     ld [wC58C], a
     ret
 
-Jump_033_5BA5::
+; entry 15 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F, wC57F, wC5E7, wC5E8, wD781, wC5BA, wC5BB
+; writes: wC594, wC58C, wC5BA, wC5BB, wD781, wC5E7, wC5E8
+Func_033_562A_Case0F::
+Jump_033_5BA5:: ; address name
     ld a, [wC58F]
     cp a, $F0
     ret nz
@@ -1799,7 +2085,12 @@ Jump_033_5BD4::
     ld [wD781], a
     ret
 
-Jump_033_5BDC::
+; entry 16 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wD781, wC594
+Func_033_562A_Case10::
+Jump_033_5BDC:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1807,7 +2098,12 @@ Jump_033_5BDC::
     ld [wC594], a
     ret
 
-Jump_033_5BE9::
+; entry 17 of the `rst $00` table in Func_033_562A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC58F
+; writes: wC594, wGameMode, wModeState, wC5DD, wC5DE, wModeChangeRequest, wC581, wC582, ...
+Func_033_562A_Case11::
+Jump_033_5BE9:: ; address name
     ld a, [wC58F]
     cp a, $D2
     ret nz
@@ -1831,7 +2127,12 @@ Jump_033_5BE9::
     ld [wC58F], a
     ret
 
-Jump_033_5C1A::
+; entry 6 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781, wD780
+; writes: wD781, wD782, wD780
+Func_033_5215_Table2_Case06::
+Jump_033_5C1A:: ; address name
     farcall ScriptCommandE8_Run
     ld a, [wD781]
     cp a, $0A
@@ -1844,7 +2145,12 @@ Jump_033_5C1A::
     ld [wD780], a
     ret
 
-Jump_033_5C36::
+; entry 13 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD780, wD7B5, wD7B6
+; writes: wD7AB, wD7AF
+Func_033_5215_Table2_Case0D::
+Jump_033_5C36:: ; address name
     farcall Func_0F1_4AD0
     ld a, [wD780]
     cp a, $0E
@@ -1855,19 +2161,29 @@ Jump_033_5C36::
     ld [wD7AF], a
     ret
 
-Jump_033_5C4F::
+; entry 14 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+Func_033_5215_Table2_Case0E::
+Jump_033_5C4F:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_033_5C63
-    dw Jump_033_5CA7
-    dw Jump_033_5CA7
-    dw Jump_033_5CAC
-    dw Jump_033_5D79
-    dw Jump_033_5D80
-    dw Jump_033_5DDF
-    dw Jump_033_5E23
+    dw Func_033_58C3_Case00
+    dw Func_033_58C3_Case01
+    dw Func_033_58C3_Case01
+    dw Func_033_58C3_Case03
+    dw Func_033_58C3_Case04
+    dw Func_033_58C3_Case05
+    dw Func_033_58C3_Case06
+    dw Func_033_58C3_Case07
 
-Jump_033_5C63::
+; entry 0 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD781
+; points at: wC364
+Func_033_58C3_Case00::
+Jump_033_5C63:: ; address name
     farcall Func_01B_7205
     ld de, Data_033_6331
     ld hl, wC364
@@ -1894,12 +2210,22 @@ Jump_033_5C63::
     ld [wD781], a
     ret
 
-Jump_033_5CA7::
+; entry 1 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; points at: wD781
+Func_033_58C3_Case01::
+Jump_033_5CA7:: ; address name
     ld hl, wD781
     inc [hl]
     ret
 
-Jump_033_5CAC::
+; entry 3 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7F5, wD7F6, hFFC6, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2, ...
+; writes: wD7F1, rRAMG2, rRAMB, wD09D, wD09E, wD7F2, wD7F3, wD781
+; points at: wC440, wC443
+Func_033_58C3_Case03::
+Jump_033_5CAC:: ; address name
     farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
@@ -1991,11 +2317,19 @@ Data_033_5D5F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $EA, $ED, $C3, $C3, $F8, $F9, $FA, $FB, $FC, $C3, $C7, $B7, $B3, $B4, $B4
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-Jump_033_5D79::
+; entry 4 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+Func_033_58C3_Case04::
+Jump_033_5D79:: ; address name
     farcall Func_01B_67F0
     ret
 
-Jump_033_5D80::
+; entry 5 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; writes: wC52D, wC52E, wC52F, wC530, wC8D9
+; points at: wC36E, wC895, wC3B1, wC364, wC5B7, wC3A7, wC8CF, wC5BB, ...
+Func_033_58C3_Case05::
+Jump_033_5D80:: ; address name
     ld de, Data_033_62C3
     ld hl, wC36E
     ld bc, $0A0B
@@ -2033,7 +2367,13 @@ Jump_033_5D80::
     inc [hl]
     ret
 
-Jump_033_5DDF::
+; entry 6 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7FA, wD781
+; points at: wC3E7
+Func_033_58C3_Case06::
+Jump_033_5DDF:: ; address name
     ld hl, vTiles2 + $300
     ld a, l
     ld [wC52D], a
@@ -2062,7 +2402,12 @@ Jump_033_5DDF::
     ld [wD781], a
     ret
 
-Jump_033_5E23::
+; entry 7 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B2, wD7B3
+; writes: hFFBA, wD782, wD780, wD781
+Func_033_58C3_Case07::
+Jump_033_5E23:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -2084,19 +2429,29 @@ Jump_033_5E23::
     call Func_033_6049
     ret
 
-Jump_033_5E57::
+; entry 15 of the `rst $00` table in Func_033_5215
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+Func_033_5215_Table2_Case0F::
+Jump_033_5E57:: ; address name
     ld a, [wD781]
     rst $00
-    dw Jump_033_5E6B
-    dw Jump_033_5E97
-    dw Jump_033_5EC6
-    dw Jump_033_5E93
-    dw Jump_033_5ED7
-    dw Jump_033_5EDB
-    dw Jump_033_5EDF
-    dw Jump_033_5F37
+    dw Func_033_58C3_Table2_Case00
+    dw Func_033_58C3_Table2_Case01
+    dw Func_033_58C3_Table2_Case02
+    dw Func_033_58C3_Table2_Case03
+    dw Func_033_58C3_Table2_Case04
+    dw Func_033_58C3_Table2_Case05
+    dw Func_033_58C3_Table2_Case06
+    dw Func_033_58C3_Table2_Case07
 
-Jump_033_5E6B::
+; entry 0 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7AB, wD781
+; writes: wD781
+; points at: wC364
+Func_033_58C3_Table2_Case00::
+Jump_033_5E6B:: ; address name
     farcall Func_01B_7205
     ld de, Data_033_6438
     ld hl, wC364
@@ -2112,11 +2467,20 @@ Jump_033_5E6B::
     ld [wD781], a
     ret
 
-Jump_033_5E93::
+; entry 3 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+Func_033_58C3_Table2_Case03::
+Jump_033_5E93:: ; address name
     call Func_033_561C
     ret
 
-Jump_033_5E97::
+; entry 1 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B0, wD781
+; writes: wD7F1, wD7F2, wD781
+; points at: wC42E, wC42F
+Func_033_58C3_Table2_Case01::
+Jump_033_5E97:: ; address name
     call Func_033_5F99
     farcall Func_01E_7163
     ld a, [wD7B0]
@@ -2137,22 +2501,38 @@ Jump_033_5EBE::
     ld [wD781], a
     ret
 
-Jump_033_5EC6::
+; entry 2 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; writes: wD7F1
+Func_033_58C3_Table2_Case02::
+Jump_033_5EC6:: ; address name
     farcall Func_01F_5C15
     xor a, a
     ld [wD7F1], a
     farcall Func_01D_6AA5
     ret
 
-Jump_033_5ED7::
+; entry 4 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+Func_033_58C3_Table2_Case04::
+Jump_033_5ED7:: ; address name
     call Func_033_5623
     ret
 
-Jump_033_5EDB::
+; entry 5 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+Func_033_58C3_Table2_Case05::
+Jump_033_5EDB:: ; address name
     call Func_033_562A
     ret
 
-Jump_033_5EDF::
+; entry 6 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD781
+; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7AD, wD781
+; points at: wC895, wC3B1, wC410
+Func_033_58C3_Table2_Case06::
+Jump_033_5EDF:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
     ld [wC52D], a
@@ -2188,7 +2568,12 @@ Jump_033_5EDF::
     ld [wD781], a
     ret
 
-Jump_033_5F37::
+; entry 7 of the `rst $00` table in Func_033_58C3
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7B2, wD7B3
+; writes: hFFBA, wD782, wD780, wD781
+Func_033_58C3_Table2_Case07::
+Jump_033_5F37:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -2226,7 +2611,7 @@ Func_033_5F6B:: ; heuristic: follows a terminator; C0
     ld [rRAMB], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_033_562A)
+; 2 call sites from 2 routines (e.g. BeginString_Bank07_Cat5_Table2_Case0C, BeginString_Bank07_Cat5_Table2_Case0B)
 ; points at: wC410, wC895, wC3B1
 Func_033_5F83::
     ld de, Data_033_639F
@@ -2238,7 +2623,7 @@ Func_033_5F83::
     call Func_033_61FB
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3)
+; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case01)
 ; reads: wD7DC, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wD7DD
@@ -2359,7 +2744,7 @@ Jump_033_6024::
     farcall Func_01D_5F9C
     ret
 
-; 3 call sites from 2 routines (e.g. BeginString_Bank07_Cat5, Func_033_562A)
+; 3 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Case01, BeginString_Bank07_Cat5_Table2_Case0C, BeginString_Bank07_Cat5_Table2_Case08)
 ; writes: wStringIndex, wStringCategory
 Func_033_6039::
     add a, $10
@@ -2369,7 +2754,7 @@ Func_033_6039::
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
-; 9 call sites from 3 routines (e.g. Func_033_5215, Func_033_562A, Func_033_58C3)
+; 9 call sites from 9 routines (e.g. Func_033_5215_Case00, BeginString_Bank07_Cat5_Table2_Case09, BeginString_Bank07_Cat5_Table2_Case07, Func_033_562A_Case04, ...)
 ; writes: wC52D, wC52E, wC52F, wC530
 Func_033_6049::
     ld hl, vTiles1
@@ -2384,7 +2769,7 @@ Func_033_6049::
     ld [wC530], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_033_562A)
+; 2 call sites from 2 routines (e.g. BeginString_Bank07_Cat5_Table2_Case0A, BeginString_Bank07_Cat5_Table2_Case08)
 ; reads: wD7F5, wD7F6
 ; points at: wD7DD
 Func_033_6060::
@@ -2398,7 +2783,7 @@ Func_033_6060::
     ld [de], a
     ret
 
-; 3 call sites from 2 routines (e.g. Func_033_562A, Func_033_58C3)
+; 3 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Table2_Case08, Func_033_58C3_Case06, Func_033_58C3_Table2_Case06)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wC8CF, wC130
@@ -2430,7 +2815,7 @@ Jump_033_6099::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_562A)
+; 1 call site from 1 routine (e.g. BeginString_Bank07_Cat5_Table2_Case0C)
 ; reads: wD7DC, wD781
 ; writes: wD7B4, wD7E0, wD7DC, wD782, wD781
 Func_033_60A7::
@@ -2448,7 +2833,7 @@ Func_033_60A7::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 4 call sites from 2 routines (e.g. Func_033_562A, Func_033_58C3)
+; 4 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Table2_Case08, BeginString_Bank07_Cat5_Table2_Case07, Func_033_58C3_Table2_Case00)
 StoreBAtWordTableEntry_Bank33::
 Func_033_60C3:: ; address name
     push bc
@@ -2464,7 +2849,7 @@ Func_033_60C3:: ; address name
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 11 call sites from 3 routines (e.g. Func_033_5215, Func_033_562A, Func_033_58C3)
+; 11 call sites from 9 routines (e.g. Func_033_5215_Case01, Func_033_5215_Table3_Case01, BeginString_Bank07_Cat5_Table2_Case0C, BeginString_Bank07_Cat5_Table2_Case0B, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank33::
 Func_033_60D3:: ; address name
@@ -2498,7 +2883,7 @@ Jump_033_60F7::
     ld h, a
     ret
 
-; 11 call sites from 3 routines (e.g. Func_033_5215, Func_033_562A, Func_033_58C3)
+; 11 call sites from 9 routines (e.g. Func_033_5215_Case01, Func_033_5215_Table3_Case01, BeginString_Bank07_Cat5_Table2_Case0C, BeginString_Bank07_Cat5_Table2_Case0B, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -2562,7 +2947,7 @@ Func_033_60FC::
     ldh [c], a
     ret
 
-; 14 call sites from 4 routines (e.g. Func_033_5215, Func_033_5F83, Func_033_562A, Func_033_58C3)
+; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, Func_033_5F83, BeginString_Bank07_Cat5_Table2_Case09, Func_033_562A, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 Func_033_6152::
@@ -2626,7 +3011,7 @@ Jump_033_617F::
     ldh [rSVBK], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_5215)
+; 1 call site from 1 routine (e.g. Func_033_5215_Case01)
 ; reads: wC617, wC618, wC619, hFFC8, hFFC7, hFFC6
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC1BA
@@ -2699,7 +3084,7 @@ Jump_033_61F2::
     ld [hl], a
     ret
 
-; 7 call sites from 4 routines (e.g. Func_033_5215, Func_033_5F83, Func_033_562A, Func_033_58C3)
+; 7 call sites from 6 routines (e.g. Func_033_5215_Case01, Func_033_5F83, BeginString_Bank07_Cat5_Table2_Case07, Func_033_562A_Case04, ...)
 ; reads: wC8C1, wC8C2
 Func_033_61FB::
     call Func_033_6204
@@ -2735,7 +3120,7 @@ Jump_033_6217::
     ld h, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_562A)
+; 1 call site from 1 routine (e.g. BeginString_Bank07_Cat5_Table2_Case0B)
 Func_033_6227::
     ld a, c
     ld b, a
@@ -2764,7 +3149,7 @@ Jump_033_622B::
     jr c, Jump_033_622B
     ret
 
-; 3 call sites from 2 routines (e.g. Func_033_5215, Func_033_58C3)
+; 3 call sites from 3 routines (e.g. Func_033_5215_Case00, Func_033_58C3_Case00, Func_033_58C3_Table2_Case00)
 ; writes: wC52D, wC52E, wC52F, wC530, wC8D9, wStringCategory, wStringIndex
 ; points at: wC8CF, wC60C
 Func_033_6247::
@@ -2805,7 +3190,7 @@ Func_033_6247::
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 1 call site from 1 routine (e.g. Func_033_58C3)
+; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case01)
 StoreC5BEC6AtHLStride2_Bank33::
 Func_033_629D:: ; address name
     ld a, $C5
@@ -2862,7 +3247,7 @@ Data_033_6438:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0CE438, $58
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank33_649E, GameMode0_Update)
+; 2 call sites from 2 routines (e.g. ShowString_Bank33_649E, GameMode0_Update_Table2_Case1A)
 BeginStringDisplay_Bank33_6490::
 Func_033_6490:: ; address name
     ld de, Data_033_64A5
@@ -2871,7 +3256,7 @@ Func_033_6490:: ; address name
     db $11, $A5, $64, $CD, $FE, $25, $C9
 
 ; Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 1 routine (e.g. ScriptCommandF7_Run)
+; 3 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case00)
 ShowString_Bank33_649E::
 Func_033_649E:: ; address name
     call BeginStringDisplay_Bank33_6490
@@ -3124,7 +3509,7 @@ Data_033_6F6E:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, GameMode0_Update, Func_024_4EE8)
+; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, GameMode0_Update_Table2_Case1F, Func_024_4EE8)
 BeginStringDisplay_Bank33_7037::
 Func_033_7037:: ; address name
     ld de, Data_033_704C
@@ -3133,7 +3518,7 @@ Func_033_7037:: ; address name
     db $11, $4C, $70, $CD, $FE, $25, $C9
 
 ; Func_033_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 7 call sites from 3 routines (e.g. GameMode6_Update, Func_024_4D65, Func_024_4DA8)
+; 7 call sites from 7 routines (e.g. GameMode6_Update_Table7_Case07, GameMode6_Update_Table8_Case00, GameMode6_Update_Table8_Case04, GameMode6_Update_Table9_Case00, ...)
 ShowString_Bank33_7045::
 Func_033_7045:: ; address name
     call BeginStringDisplay_Bank33_7037

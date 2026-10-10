@@ -112,7 +112,7 @@ Jump_0A3_417D::
 Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $02, $01, $02
 
-; 2 call sites from 2 routines (e.g. Func_030_4297, Func_0A1_413F)
+; 2 call sites from 2 routines (e.g. Func_030_4001_Case06, Func_0A1_413F_Case06)
 ; reads: wC58A
 ; writes: wC953, wC954
 ; points at: wDA1C, wDA2C, wDA24
@@ -521,7 +521,7 @@ Jump_0A3_494E::
     ld a, $02
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_4F0A)
+; 1 call site from 1 routine (e.g. Func_032_4EE4_Case00)
 ; reads: wD8A4
 ; writes: hFFC6
 ; points at: wDA1C
@@ -635,7 +635,7 @@ Jump_0A3_49EE::
     ldh [hFFC6], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4A38)
+; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
 ; reads: wD8A5
 ; points at: wDA1C, wDA5B
 Func_0A3_4A02::
@@ -706,7 +706,7 @@ Jump_0A3_4A59::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001)
+; 1 call site from 1 routine (e.g. Func_036_4001_Case00)
 ; reads: wD8A5
 ; points at: wD86D
 Func_0A3_4A5F::
@@ -807,7 +807,7 @@ Jump_0A3_4AF3::
 Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
-; 1 call site from 1 routine (e.g. Func_031_48C3)
+; 1 call site from 1 routine (e.g. Func_031_48C3_Case02)
 ; reads: wC6FD
 ; writes: rRAMG
 ; points at: wC6FE, wC972

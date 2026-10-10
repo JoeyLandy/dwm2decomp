@@ -2,7 +2,7 @@ SECTION "Bank 09", ROMX[$4000], BANK[$09]
     db $09
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. ShowString_Bank09, GameMode0_Update, Func_012_6610, Func_012_66DA, ...)
+; 5 call sites from 5 routines (e.g. ShowString_Bank09, GameMode0_Update_Table2_Case01, Func_012_6610_Case01, Func_012_66DA_Case01, ...)
 BeginStringDisplay_Bank09::
 Func_009_4001:: ; address name
     ld de, Data_009_4016
@@ -10,7 +10,7 @@ Func_009_4001:: ; address name
     ret
 
 ; ld de, this bank's string table / CopyStringToBuffer
-; 2 call sites from 2 routines (e.g. Func_003_6B5E, Func_073_49C5)
+; 2 call sites from 2 routines (e.g. Func_003_6B5E_Case03, Func_073_49C5)
 CopyStringToBuffer_Bank09::
 Func_009_4008:: ; address name
     ld de, Data_009_4016

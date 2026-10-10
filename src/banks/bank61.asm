@@ -1,7 +1,7 @@
 SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
-; 2 call sites from 2 routines (e.g. Func_00A_465D, Func_085_5C92)
+; 2 call sites from 2 routines (e.g. Func_00A_465D_Case05, Func_085_5C92)
 ; reads: wC6FD, hFFC6, hFFC7, hFFCA, hFFCB
 ; writes: wCD05, hFFCA, hFFCB, rRAMG
 ; points at: wC6FE
@@ -123,7 +123,7 @@ Jump_061_40B0::
     ld [wCD05], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_00A_465D, Func_012_6955)
+; 2 call sites from 2 routines (e.g. Func_00A_465D_Case06, Func_012_6955)
 ; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
 ; writes: wCD05, hFFCA, hFFCB, hFFCC, hFFCD, rRAMG, hFFC8, hFFC9
 ; points at: wC6FE
@@ -367,22 +367,32 @@ Func_061_420D::
     ld a, [wCC44]
     and a, $07
     rst $00
-    dw Jump_061_43CF
-    dw Jump_061_4325
-    dw Jump_061_439F
-    dw Jump_061_43B9
-    dw Jump_061_43B9
-    dw Jump_061_4261
-    dw Jump_061_422B
-    dw Jump_061_4223
+    dw Func_061_420D_Case00
+    dw Func_061_420D_Case01
+    dw Func_061_420D_Case02
+    dw Func_061_420D_Case03
+    dw Func_061_420D_Case03
+    dw Func_061_420D_Case05
+    dw Func_061_420D_Case06
+    dw Func_061_420D_Case07
 
-Jump_061_4223::
+; entry 7 of the `rst $00` table in Func_061_420D
+; no direct call (reached through a table, a jump or a vector)
+; writes: hFFC6
+Func_061_420D_Case07::
+Jump_061_4223:: ; address name
     ld a, $66
     ldh [hFFC6], a
     call LoadSpecialMapHeader
     ret
 
-Jump_061_422B::
+; entry 6 of the `rst $00` table in Func_061_420D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45, hFFC6
+; writes: hFFC6
+; points at: wCD89, wCDAF
+Func_061_420D_Case06::
+Jump_061_422B:: ; address name
     ld a, [wCC45]
     sla a
     sla a
@@ -411,7 +421,13 @@ Jump_061_422B::
     call LoadSpecialMapHeader
     ret
 
-Jump_061_4261::
+; entry 5 of the `rst $00` table in Func_061_420D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45, wIsCGB
+; writes: wC526, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC90D, wC195, wC197, wC196, ...
+; points at: wCDAE, wC49F
+Func_061_420D_Case05::
+Jump_061_4261:: ; address name
     ld a, [wCC45]
     swap a
     ld hl, wCDAE
@@ -529,7 +545,13 @@ Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BA
     dw Data_061_707E
 
-Jump_061_4325::
+; entry 1 of the `rst $00` table in Func_061_420D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wIsCGB, wCC45
+; writes: wC526, wMaxBlockingTile, wC90D, wC195, wC196, wMapWidthScreens, wMapHeightScreens, wC901, ...
+; points at: wC49F, wCD7B
+Func_061_420D_Case01::
+Jump_061_4325:: ; address name
     ld de, Data_06E_74E4
     ld b, $6E
     ld hl, vTiles2
@@ -597,7 +619,13 @@ Jump_061_4380::
     ld [wC194], a
     ret
 
-Jump_061_439F::
+; entry 2 of the `rst $00` table in Func_061_420D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45, hFFC6
+; writes: hFFC6, wCD06
+; points at: hFFC6
+Func_061_420D_Case02::
+Jump_061_439F:: ; address name
     ld a, $61
     ldh [hFFC6], a
     ld a, [wCC45]
@@ -613,7 +641,13 @@ Jump_061_43AE::
     call LoadSpecialMapHeader
     ret
 
-Jump_061_43B9::
+; entry 3 of the `rst $00` table in Func_061_420D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45
+; writes: hFFC6
+; points at: wCDAC
+Func_061_420D_Case03::
+Jump_061_43B9:: ; address name
     ld hl, wCDAC
     ld a, [wCC45]
     swap a
@@ -624,7 +658,13 @@ Jump_061_43B9::
     call LoadSpecialMapHeader
     ret
 
-Jump_061_43CF::
+; entry 0 of the `rst $00` table in Func_061_420D
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCD0B, wIsCGB, wC195
+; writes: wC526, wMaxBlockingTile, wC90D, wC901, wC194, wC196, wC197, wC195
+; points at: wC49F
+Func_061_420D_Case00::
+Jump_061_43CF:: ; address name
     ld a, [wCD0B]
     ld c, a
     sla a
@@ -726,22 +766,32 @@ Func_061_4472::
     ld a, [wCC44]
     and a, $07
     rst $00
-    dw Jump_061_5443
-    dw Jump_061_5418
-    dw Jump_061_541A
-    dw Jump_061_542D
-    dw Jump_061_542D
-    dw Jump_061_4533
-    dw Jump_061_4490
-    dw Jump_061_4488
+    dw Func_061_4472_Case00
+    dw Func_061_4472_Case01
+    dw Func_061_4472_Case02
+    dw Func_061_4472_Case03
+    dw Func_061_4472_Case03
+    dw Func_061_4472_Case05
+    dw Func_061_4472_Case06
+    dw Func_061_4472_Case07
 
-Jump_061_4488::
+; entry 7 of the `rst $00` table in Func_061_4472
+; no direct call (reached through a table, a jump or a vector)
+; writes: hFFC6
+Func_061_4472_Case07::
+Jump_061_4488:: ; address name
     ld a, $66
     ldh [hFFC6], a
     call Func_000_1906
     ret
 
-Jump_061_4490::
+; entry 6 of the `rst $00` table in Func_061_4472
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45, hFFC6
+; writes: hFFC6
+; points at: wCD89, wCDAF
+Func_061_4472_Case06::
+Jump_061_4490:: ; address name
     ld a, [wCC45]
     sla a
     sla a
@@ -786,7 +836,7 @@ Jump_061_44D7::
     call Func_061_44DB
     ret
 
-; 3 call sites from 2 routines (e.g. Func_061_4472, ScriptCommand86_Run)
+; 3 call sites from 3 routines (e.g. Func_061_4472_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
 ; reads: wCC45, wIsCGB
 ; writes: rSVBK
 ; points at: wCDAF, wC244
@@ -849,7 +899,13 @@ Jump_061_44F1::
     ldh [rSVBK], a
     ret
 
-Jump_061_4533::
+; entry 5 of the `rst $00` table in Func_061_4472
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45, wCC43, hMapScreenY, hMapScreenX, wIsCGB
+; writes: hFFC6, rSVBK
+; points at: wCDAD, wScreenTileBuffer, wD000
+Func_061_4472_Case05::
+Jump_061_4533:: ; address name
     ld a, [wCC45]
     swap a
     ld hl, wCDAD
@@ -963,7 +1019,7 @@ Jump_061_45E1::
     call Func_061_45E8
     ret
 
-; 2 call sites from 2 routines (e.g. Func_061_44DB, ScriptCommand81_Run)
+; 2 call sites from 2 routines (e.g. Func_061_4472_Case05, ScriptCommand81_Run_Case02)
 ; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCDB0, wCDAD
@@ -1229,7 +1285,7 @@ Func_061_4706::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_44DB)
+; 1 call site from 1 routine (e.g. Func_061_4472_Case05)
 ; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, hFFC6, wIsCGB
 ; writes: hFFC6, rSVBK
 ; points at: wCD89, wCDAD, wCE2D, wC240, wD0A8
@@ -1421,11 +1477,20 @@ Data_061_4810:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $50, $04
     ds $30, $00
 
-Jump_061_5418::
+; entry 1 of the `rst $00` table in Func_061_4472
+; no direct call (reached through a table, a jump or a vector)
+Func_061_4472_Case01::
+Jump_061_5418:: ; address name
     ret
     db $C9
 
-Jump_061_541A::
+; entry 2 of the `rst $00` table in Func_061_4472
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45
+; writes: hFFC6
+; points at: hFFC6
+Func_061_4472_Case02::
+Jump_061_541A:: ; address name
     ld a, $61
     ldh [hFFC6], a
     ld a, [wCC45]
@@ -1438,7 +1503,13 @@ Jump_061_5429::
     call Func_000_1906
     ret
 
-Jump_061_542D::
+; entry 3 of the `rst $00` table in Func_061_4472
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCC45
+; writes: hFFC6
+; points at: wCDAC
+Func_061_4472_Case03::
+Jump_061_542D:: ; address name
     ld hl, wCDAC
     ld a, [wCC45]
     swap a
@@ -1449,7 +1520,13 @@ Jump_061_542D::
     call Func_000_1906
     ret
 
-Jump_061_5443::
+; entry 0 of the `rst $00` table in Func_061_4472
+; no direct call (reached through a table, a jump or a vector)
+; reads: hMapScreenY, hMapScreenX, wIsCGB
+; writes: rSVBK
+; points at: wScreenTileBuffer, wD000
+Func_061_4472_Case00::
+Jump_061_5443:: ; address name
     ldh a, [hMapScreenY]
     and a, $FC
     add a, a
@@ -1557,7 +1634,7 @@ Jump_061_54E2::
     call Func_061_54EC
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_474C)
+; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: wCC44, wC88E, wC891, wCC42, hMapScreenX, hMapScreenY, wC890, wC88F, ...
 ; writes: rSVBK
 Func_061_54EC::
@@ -1686,7 +1763,7 @@ Jump_061_5585::
     ldh [rSVBK], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_474C)
+; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCD7B, wC240, wD0A8
@@ -1789,7 +1866,7 @@ Jump_061_5627::
 Jump_061_562E::
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_474C)
+; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCD8B, wC240, wD0A8
@@ -2017,44 +2094,65 @@ Func_061_5764::
     ld a, [wCC44]
     and a, $07
     rst $00
-    dw Jump_061_577A
-    dw Jump_061_577D
-    dw Jump_061_5780
-    dw Jump_061_5784
-    dw Jump_061_5788
-    dw Jump_061_578C
-    dw Jump_061_577A
-    dw Jump_061_5790
+    dw Func_061_5764_Case00
+    dw Func_061_5764_Case01
+    dw Func_061_5764_Case02
+    dw Func_061_5764_Case03
+    dw Func_061_5764_Case04
+    dw Func_061_5764_Case05
+    dw Func_061_5764_Case00
+    dw Func_061_5764_Case07
 
-Jump_061_577A::
+; entry 0 of the `rst $00` table in Func_061_5764
+; no direct call (reached through a table, a jump or a vector)
+Func_061_5764_Case00::
+Jump_061_577A:: ; address name
     ld c, $00
     ret
 
-Jump_061_577D::
+; entry 1 of the `rst $00` table in Func_061_5764
+; no direct call (reached through a table, a jump or a vector)
+Func_061_5764_Case01::
+Jump_061_577D:: ; address name
     ld c, $00
     ret
 
-Jump_061_5780::
+; entry 2 of the `rst $00` table in Func_061_5764
+; no direct call (reached through a table, a jump or a vector)
+Func_061_5764_Case02::
+Jump_061_5780:: ; address name
     call Func_061_585A
     ret
 
-Jump_061_5784::
+; entry 3 of the `rst $00` table in Func_061_5764
+; no direct call (reached through a table, a jump or a vector)
+Func_061_5764_Case03::
+Jump_061_5784:: ; address name
     call Func_061_58BC
     ret
 
-Jump_061_5788::
+; entry 4 of the `rst $00` table in Func_061_5764
+; no direct call (reached through a table, a jump or a vector)
+Func_061_5764_Case04::
+Jump_061_5788:: ; address name
     call Func_061_5807
     ret
 
-Jump_061_578C::
+; entry 5 of the `rst $00` table in Func_061_5764
+; no direct call (reached through a table, a jump or a vector)
+Func_061_5764_Case05::
+Jump_061_578C:: ; address name
     call Func_061_57A4
     ret
 
-Jump_061_5790::
+; entry 7 of the `rst $00` table in Func_061_5764
+; no direct call (reached through a table, a jump or a vector)
+Func_061_5764_Case07::
+Jump_061_5790:: ; address name
     call Func_061_5794
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_5764)
+; 1 call site from 1 routine (e.g. Func_061_5764_Case07)
 ; reads: hMapScreenY
 Func_061_5794::
     ldh a, [hMapScreenY]
@@ -2067,7 +2165,7 @@ Jump_061_579D::
     farcall Func_011_4268
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_5764)
+; 1 call site from 1 routine (e.g. Func_061_5764_Case05)
 ; reads: wCC43, wCC45, hMapScreenX, hMapScreenY, hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
 ; points at: wCD89
@@ -2124,7 +2222,7 @@ Jump_061_57AD::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_5764)
+; 1 call site from 1 routine (e.g. Func_061_5764_Case04)
 ; reads: hMapScreenY, wCC45, hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wModeState, wC8C5, ...
 ; points at: wCDAD
@@ -2170,7 +2268,7 @@ Jump_061_5810::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_5764)
+; 1 call site from 1 routine (e.g. Func_061_5764_Case02)
 ; reads: hMapScreenY, wCC45, hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
 ; points at: wCD78
@@ -2225,7 +2323,7 @@ Jump_061_587C::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_5764)
+; 1 call site from 1 routine (e.g. Func_061_5764_Case03)
 ; reads: wCC45, hMapScreenX, hMapScreenY, hFF8C
 ; writes: wC8CA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wModeState, wC8C5, hFF8C, ...
 ; points at: wCDAC, wCD88
@@ -2351,19 +2449,25 @@ Func_061_596F::
     ld a, [wCC44]
     and a, $07
     rst $00
-    dw Jump_061_5986
-    dw Jump_061_5996
-    dw Jump_061_599A
-    dw Jump_061_599E
-    dw Jump_061_5985
-    dw Jump_061_59A2
-    dw Jump_061_59A6
-    dw Jump_061_5985
+    dw Func_061_596F_Case00
+    dw Func_061_596F_Case01
+    dw Func_061_596F_Case02
+    dw Func_061_596F_Case03
+    dw Func_061_596F_Case04
+    dw Func_061_596F_Case05
+    dw Func_061_596F_Case06
+    dw Func_061_596F_Case04
 
-Jump_061_5985::
+; entry 4 of the `rst $00` table in Func_061_596F
+; no direct call (reached through a table, a jump or a vector)
+Func_061_596F_Case04::
+Jump_061_5985:: ; address name
     ret
 
-Jump_061_5986::
+; entry 0 of the `rst $00` table in Func_061_596F
+; no direct call (reached through a table, a jump or a vector)
+Func_061_596F_Case00::
+Jump_061_5986:: ; address name
     call Func_061_5E8D
     or a, a
     ret nz
@@ -2375,27 +2479,42 @@ Jump_061_5986::
     ret nz
     ret
 
-Jump_061_5996::
+; entry 1 of the `rst $00` table in Func_061_596F
+; no direct call (reached through a table, a jump or a vector)
+Func_061_596F_Case01::
+Jump_061_5996:: ; address name
     call Func_061_5CCF
     ret
 
-Jump_061_599A::
+; entry 2 of the `rst $00` table in Func_061_596F
+; no direct call (reached through a table, a jump or a vector)
+Func_061_596F_Case02::
+Jump_061_599A:: ; address name
     call Func_061_5BBB
     ret
 
-Jump_061_599E::
+; entry 3 of the `rst $00` table in Func_061_596F
+; no direct call (reached through a table, a jump or a vector)
+Func_061_596F_Case03::
+Jump_061_599E:: ; address name
     call Func_061_5C07
     ret
 
-Jump_061_59A2::
+; entry 5 of the `rst $00` table in Func_061_596F
+; no direct call (reached through a table, a jump or a vector)
+Func_061_596F_Case05::
+Jump_061_59A2:: ; address name
     call Func_061_5A33
     ret
 
-Jump_061_59A6::
+; entry 6 of the `rst $00` table in Func_061_596F
+; no direct call (reached through a table, a jump or a vector)
+Func_061_596F_Case06::
+Jump_061_59A6:: ; address name
     call Func_061_59AA
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case06)
 ; reads: hPlayerX, hPlayerY, wCC45, wCC43, hFF8C
 ; writes: wCC43, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wCCEA, ...
 ; points at: wCDAD, wCE2D
@@ -2475,7 +2594,7 @@ Jump_061_59DD::
 Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case05)
 ; reads: hPlayerX, hFF8C, hPlayerY, wCC45, wCC43, hMapScreenX, hMapScreenY, hFFC7, ...
 ; writes: hFF8C, hFFC6, hFFC7, wCC43, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
 ; points at: wCD89, wCDAC, wCE2D, wCD88
@@ -2694,7 +2813,7 @@ Jump_061_5B6B::
 Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case02)
 ; reads: hPlayerX, hPlayerY, wC955, wCC45, hFF8C
 ; writes: wC955, wCC45, wC8C8, wC8C9, wC8CA, wC914, wModeState, wC46B, ...
 Func_061_5BBB::
@@ -2738,7 +2857,7 @@ Jump_061_5BC4::
     ld [wC8C6], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case03)
 ; reads: wCC45, hFF8C, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; writes: hFF8C, wC8CA, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wCC44, wModeState, ...
 ; points at: wCDAC
@@ -2873,11 +2992,11 @@ Jump_061_5CCB::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case01)
 Func_061_5CCF::
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case00)
 ; reads: hFF8C, hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hFFC8, hFFC7
 ; writes: hFFC7, hFF8C, hFFC8, wCC45, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
 ; points at: wCD8B, wCDAC, wCDAD, wCE2D
@@ -3127,7 +3246,7 @@ Jump_061_5E7A::
 Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case00)
 ; reads: wC88E, wC891, wCC42, hMapScreenX, hMapScreenY, wC890, hPlayerX, hPlayerY, ...
 ; writes: wC8C7, wC8C5, wModeState, hFF8C, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
 Func_061_5E8D::
@@ -3228,7 +3347,7 @@ Jump_061_5EF0::
     ld a, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_061_596F)
+; 1 call site from 1 routine (e.g. Func_061_596F_Case00)
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hFF8C
 ; writes: wC8C8, wC8C9, wC8CA, wC8C7, wC8C5, wModeState, hFF8C, wCC45, ...
 ; points at: wCD7B
@@ -3417,7 +3536,7 @@ Jump_061_6065::
     inc hl
     jp Jump_061_5F4C
 
-; 1 call site from 1 routine (e.g. Func_016_5D13)
+; 1 call site from 1 routine (e.g. Func_016_5D13_Case00)
 ; reads: wCD07, wCC44, wCC45, hMapScreenY, hMapScreenX
 ; writes: hFFC6
 ; points at: wCD88, wCD74, wCE7E

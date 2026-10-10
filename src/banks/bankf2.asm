@@ -2,7 +2,7 @@ SECTION "Bank F2", ROMX[$4000], BANK[$F2]
     db $F2
 
 ; start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when forced (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit)
+; 1 call site from 1 routine (e.g. RunGameModeInit_Case08)
 ; reads: wC8C3, wC8CB
 ; writes: wC8C3, wC8C4, hScrollY, hScrollX, wC52D, wC52E, wC52F, wC530, ...
 ; points at: wD780
@@ -77,7 +77,7 @@ Jump_0F2_4075::
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 8
-; 1 call site from 1 routine (e.g. RunGameModeUpdate)
+; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case08)
 ; reads: wFadeState, wD782, wC52B
 GameMode8_Update::
 Func_0F2_40A2:: ; address name
@@ -95,29 +95,39 @@ Jump_0F2_40B0::
     ret nz
     ld a, [wD782]
     rst $00
-    dw Jump_0F2_40D5
-    dw Jump_0F2_40E0
-    dw Jump_0F2_40F6
-    dw Jump_0F2_40E0
-    dw Jump_0F2_411C
-    dw Jump_0F2_412E
-    dw Jump_0F2_40E0
-    dw Jump_0F2_40E0
-    dw Jump_0F2_414F
-    dw Jump_0F2_40E0
-    dw Jump_0F2_40E0
-    dw Jump_0F2_415F
-    dw Jump_0F2_4185
-    dw Jump_0F2_41C8
+    dw GameMode8_Update_Case00
+    dw GameMode8_Update_Case01
+    dw GameMode8_Update_Case02
+    dw GameMode8_Update_Case01
+    dw GameMode8_Update_Case04
+    dw GameMode8_Update_Case05
+    dw GameMode8_Update_Case01
+    dw GameMode8_Update_Case01
+    dw GameMode8_Update_Case08
+    dw GameMode8_Update_Case01
+    dw GameMode8_Update_Case01
+    dw GameMode8_Update_Case0B
+    dw GameMode8_Update_Case0C
+    dw GameMode8_Update_Case0D
 
-Jump_0F2_40D5::
+; entry 0 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+; writes: wD782
+GameMode8_Update_Case00::
+Jump_0F2_40D5:: ; address name
     call Func_0F2_4248
     ld a, [wD782]
     inc a
     ld [wD782], a
     ret
 
-Jump_0F2_40E0::
+; entry 1 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD783, wD782
+; writes: wD783, wD782
+GameMode8_Update_Case01::
+Jump_0F2_40E0:: ; address name
     ld a, [wD783]
     inc a
     ld [wD783], a
@@ -130,7 +140,12 @@ Jump_0F2_40E0::
     ld [wD782], a
     ret
 
-Jump_0F2_40F6::
+; entry 2 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCB98, wCB9A, wCB9C, wD782
+; writes: wCB9A, wCB9C, wD782
+GameMode8_Update_Case02::
+Jump_0F2_40F6:: ; address name
     ld a, [wCB98]
     and a, $03
     and a, a
@@ -150,7 +165,12 @@ Jump_0F2_40F6::
     ld [wD782], a
     ret
 
-Jump_0F2_411C::
+; entry 4 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+; writes: wCBCF, wD7F1, wD782
+GameMode8_Update_Case04::
+Jump_0F2_411C:: ; address name
     ld a, $80
     ld [wCBCF], a
     ld a, $01
@@ -160,7 +180,12 @@ Jump_0F2_411C::
     ld [wD782], a
     ret
 
-Jump_0F2_412E::
+; entry 5 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCB88, wCB8A, wCB8C, wD782
+; writes: wCB8A, wCB8C, wD782
+GameMode8_Update_Case05::
+Jump_0F2_412E:: ; address name
     ld a, [wCB88]
     and a, $03
     and a, a
@@ -178,7 +203,12 @@ Jump_0F2_412E::
     ld [wD782], a
     ret
 
-Jump_0F2_414F::
+; entry 8 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD782
+; writes: wCBCF, wD7F1, wD782
+GameMode8_Update_Case08::
+Jump_0F2_414F:: ; address name
     ld a, $00
     ld [wCBCF], a
     ld [wD7F1], a
@@ -187,7 +217,12 @@ Jump_0F2_414F::
     ld [wD782], a
     ret
 
-Jump_0F2_415F::
+; entry 11 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCB8C, wCB88, wCB8A, wD782
+; writes: wCB8C, wCB86, wCB8A, wD782
+GameMode8_Update_Case0B::
+Jump_0F2_415F:: ; address name
     ld a, [wCB8C]
     res 1, a
     ld [wCB8C], a
@@ -207,7 +242,12 @@ Jump_0F2_415F::
     ld [wD782], a
     ret
 
-Jump_0F2_4185::
+; entry 12 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+; writes: wStringIndex, wStringCategory
+; points at: wC60C, wC130, wCADB, wC8CF, wC140, wD782
+GameMode8_Update_Case0C::
+Jump_0F2_4185:: ; address name
     ld hl, wC60C
     ld de, wC130
     ld c, $0A
@@ -232,7 +272,7 @@ Jump_0F2_4185::
     inc [hl]
     ret
 
-; 2 call sites from 1 routine (e.g. GameMode8_Update)
+; 2 call sites from 1 routine (e.g. GameMode8_Update_Case0C)
 Func_0F2_41BA::
     ld a, [hl+]
     cp a, $F0
@@ -247,12 +287,15 @@ Jump_0F2_41C4::
     ld [de], a
     ret
 
-Jump_0F2_41C8::
+; entry 13 of the `rst $00` table in GameMode8_Update
+; no direct call (reached through a table, a jump or a vector)
+GameMode8_Update_Case0D::
+Jump_0F2_41C8:: ; address name
     call Func_0F2_4227
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. GameMode8_Update)
+; 1 call site from 1 routine (e.g. GameMode8_Update_Case0C)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC8CF
@@ -308,7 +351,7 @@ Jump_0F2_4219::
     jr nz, Jump_0F2_4219
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_41BA)
+; 1 call site from 1 routine (e.g. GameMode8_Update_Case0D)
 ; writes: wC94B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wD780
 Func_0F2_4227::
@@ -332,7 +375,7 @@ Jump_0F2_422D::
     ld [wModeChangeRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. GameMode8_Update)
+; 1 call site from 1 routine (e.g. GameMode8_Update_Case00)
 ; reads: wC5C7, wIsCGB
 ; writes: hFFC6, wCBCF, wCBD3, wCBD4, wSpriteSlotCount, wC527
 ; points at: wSpriteSlots, wCB8F, hFFC6
@@ -536,7 +579,7 @@ Func_0F2_43C3::
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_BankF2, GameMode0_Update)
+; 2 call sites from 2 routines (e.g. ShowString_BankF2, GameMode0_Update_Table2_Case1E)
 BeginStringDisplay_BankF2::
 Func_0F2_43D0:: ; address name
     ld de, Data_0F2_43E5
@@ -545,7 +588,7 @@ Func_0F2_43D0:: ; address name
     db $11, $E5, $43, $CD, $FE, $25, $C9
 
 ; Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. Func_00D_4B30, Func_00D_525F)
+; 2 call sites from 2 routines (e.g. Func_00D_4B30_Case07, Func_00D_525F_Case03)
 ShowString_BankF2::
 Func_0F2_43DE:: ; address name
     call BeginStringDisplay_BankF2
@@ -834,7 +877,7 @@ Data_0F2_48D1:: ; heuristic: target of a monotone pointer table; C0
     db "another name.", $F7
     db $F0
 
-; 4 call sites from 4 routines (e.g. Func_037_5344, Func_037_542C, Func_0F1_5285, Func_0F1_5344)
+; 4 call sites from 4 routines (e.g. Func_037_5344_Case01, Func_037_5344_Case1C, Func_0F1_5285_Case01, Func_0F1_5285_Case1C)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 Func_0F2_49CF::
     ld a, $10
@@ -990,13 +1033,13 @@ Func_0F2_4AF3::
     inc c
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case12, Func_0F1_5285_Case12)
 Func_0F2_4AFE::
     call Func_0F2_4A94
     call Func_0F2_4A61
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case13, Func_0F1_5285_Case13)
 ; reads: wCA83, wCA84, wCA85, wCA81, wCA82, hFFC6, wCA36, wCA37, ...
 ; writes: wC8C0, wC8C1, wC8C2, hFFC6, hFFC7, wD006, wD007, hFFC8, ...
 ; points at: hFFC8
@@ -1099,7 +1142,7 @@ Jump_0F2_4BB6::
     ld [wD7F7], a
     jr Jump_0F2_4BA8
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case14, Func_0F1_5285_Case14)
 ; reads: wCACF
 ; writes: wStringIndex, wStringCategory, rRAMG2, wC52D, wC52E, wC52F, wC530
 Func_0F2_4BD0::
@@ -1122,7 +1165,7 @@ Func_0F2_4BD0::
     farcall ShowString_Bank08
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case1A, Func_0F1_5285_Case1A)
 ; reads: wCA36, wCA37, wD013
 ; writes: wD006, wD007, wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 Func_0F2_4BFC::
@@ -1148,7 +1191,7 @@ Func_0F2_4BFC::
     farcall ShowString_Bank08
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case1F, Func_0F1_5285_Case1F)
 Func_0F2_4C36::
     call Func_0F2_4C3D
     call Func_0F2_4D72
@@ -1518,7 +1561,7 @@ Jump_0F2_4E68::
     jr nz, Jump_0F2_4E68
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case1E, Func_0F1_5285_Case1E)
 ; reads: wCA38, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7, wD7F1, wD7F2
 ; points at: wCA2B, wD7F3
@@ -1594,7 +1637,7 @@ Jump_0F2_4ECC::
 Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
-; 4 call sites from 3 routines (e.g. Func_007_6ADC, Func_007_7C5F, Func_033_51C6)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, Func_007_7C5F_Case04, Func_033_51C6)
 ; reads: wCA38, hFFC7, hFFC6
 ; writes: hFFC6, wD7F1, wD7F2
 ; points at: wD7F3
@@ -1673,7 +1716,7 @@ Data_0F2_4F41:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
-; 5 call sites from 3 routines (e.g. Func_0F2_5002, Func_037_542C, Func_0F1_5344)
+; 5 call sites from 5 routines (e.g. Func_0F2_5002, Func_037_5344_Case16, Func_037_5344_Case1D, Func_0F1_5285_Case16, ...)
 ; reads: hFFC7, hFFC6, wC8C1, wC8C2, wCA80, wCA39
 ; writes: hFFC6, hFFC7
 ; points at: wCA81
@@ -1808,7 +1851,7 @@ Func_0F2_4FF9::
     ei
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case04, Func_0F1_5285_Case04)
 Func_0F2_5002::
     call Func_0F2_4F47
     call Func_0F2_505C
@@ -1947,7 +1990,7 @@ Func_0F2_50C6::
     pop bc
     jp Jump_0F2_50F8
 
-; 2 call sites from 2 routines (e.g. Func_037_542C, Func_0F1_5344)
+; 2 call sites from 2 routines (e.g. Func_037_5344_Case13, Func_0F1_5285_Case13)
 ; reads: wCA38, wD7F4, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2
 ; writes: wD09D, wD09E
 ; points at: wCA2B
@@ -2054,7 +2097,7 @@ Jump_0F2_5172::
     jr nz, Jump_0F2_5170
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_45DA)
+; 1 call site from 1 routine (e.g. Func_00C_45DA_Case04)
 ; reads: wD7F1, wD7F2, wD7F3
 ; writes: wD7F5, wD7F6, wD7F7
 ; points at: wD7F1, wD7F5
@@ -2297,12 +2340,12 @@ Data_0F2_616B:: ; heuristic: target of a monotone pointer table; C0
     ds $11, $00
     INCBIN "dwm2-cobi-us.gbc", $3CA1FB, $138
 
-; 1 call site from 1 routine (e.g. Func_01B_53CE)
+; 1 call site from 1 routine (e.g. Func_01B_53CE_Table3_Case05)
 Func_0F2_6333::
     ret
     db $CD, $55, $63, $CD, $46, $63, $C9
 
-; 1 call site from 1 routine (e.g. Func_00D_5702)
+; 1 call site from 1 routine (e.g. Func_00D_5702_Case05)
 ; writes: wD781
 Func_0F2_633B::
     call Func_0F2_6355
@@ -2523,7 +2566,7 @@ Func_0F2_6449::
     call Func_0F2_64C7
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_6F00)
+; 1 call site from 1 routine (e.g. Func_01C_6F00_Case0E)
 ; reads: wCF8B
 ; points at: wD09D
 Func_0F2_6454::
@@ -2838,7 +2881,7 @@ Jump_0F2_668F::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_5EF4)
+; 1 call site from 1 routine (e.g. Func_013_5922_Case65)
 ; points at: wD580
 Func_0F2_6692::
     ld hl, wD580

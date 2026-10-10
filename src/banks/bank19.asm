@@ -339,7 +339,7 @@ Jump_019_4291::
     jr nz, Jump_019_425D
     ret
 
-; 8 call sites from 8 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_032_5C3F, Func_036_4A38, ...)
+; 8 call sites from 8 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_032_5C3F, Func_036_4A38_Case01, ...)
 ; points at: wDA53, wD92F
 Func_019_4298::
     push bc
@@ -490,7 +490,7 @@ Func_019_4349::
     ld a, [wD868]
     ld c, a
 
-; 6 call sites from 6 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_032_5C3F, Func_036_4A38, ...)
+; 6 call sites from 6 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_032_5C3F, Func_036_4A38_Case01, ...)
 ; reads: wD868, wD86A, wD86B
 ; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
@@ -2538,7 +2538,7 @@ Func_019_7380::
     ldh [hFFCA], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_001_6C48, Func_031_4493)
+; 2 call sites from 2 routines (e.g. Func_001_6C48, Func_031_4365_Table2_Case03)
 ; reads: wC991, wC992, wD00F, wC9DC
 ; writes: wD006, wD007
 ; points at: wC9DE

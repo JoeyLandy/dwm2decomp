@@ -31,7 +31,7 @@ Jump_01A_401B::
     ret
 
 ; like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead
-; 17 call sites from 16 routines (e.g. DebugShowMonsterRecord, Func_005_4286, Func_005_640A, Func_005_6C02, ...)
+; 17 call sites from 16 routines (e.g. GameMode0_Update_Case09, Func_005_4286, Func_005_640A, Func_005_6C02, ...)
 ; reads: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 LoadSkillRecordPart::
 Func_01A_4022:: ; address name
@@ -1077,7 +1077,7 @@ Jump_01A_60E8::
     inc b
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_6885)
+; 1 call site from 1 routine (e.g. Func_031_6885_Table2_Case01)
 ; reads: wD868, hFFCC
 ; writes: hFFCC, hFFC9, hFFCA, hFFCB
 Func_01A_60F1::
@@ -1349,7 +1349,7 @@ Jump_01A_6242::
     inc b
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4493)
+; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case03)
 ; reads: wC991, wC992
 ; writes: wD006, wD007
 ; points at: wD09D, wD010, wC9C2
@@ -1519,7 +1519,7 @@ Jump_01A_6318::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_6C2F)
+; 1 call site from 1 routine (e.g. Func_031_6C2F_Case01)
 ; writes: hFFC6
 Func_01A_631A::
     xor a, a
@@ -1711,7 +1711,7 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $02, $02, $03, $03, $03, $03, $04, $05, $05, $06, $07, $03, $04, $05
     db $06, $07, $08, $04, $05, $06, $07, $07, $08, $0B, $0C, $0D, $0C, $0C, $0E, $10
 
-; 2 call sites from 2 routines (e.g. Func_031_6885, Func_031_6B2E)
+; 2 call sites from 2 routines (e.g. Func_031_6885_Case01, Func_031_67AA_Case07)
 ; reads: wD869, wD014, wD015, wD016, wD017, wD018, wD019
 ; writes: wD006, wD007, wD095, wD096, wD097, wD098, wD099, wD09A
 ; points at: wD095
@@ -2049,13 +2049,13 @@ Jump_01A_6613::
     ret
     INCBIN "dwm2-cobi-us.gbc", $06A616, $C60
 
-; 9 call sites from 5 routines (e.g. Func_016_733F, Func_031_6E67, Func_031_746F, Func_0A0_415D, ...)
+; 9 call sites from 9 routines (e.g. Func_016_733F, Func_031_6E67_Case00, Func_031_6E67_Case03, Func_031_746F, ...)
 Func_01A_7276::
     ld hl, Data_01A_7345
     call Func_01A_7321
     ret
 
-; 3 call sites from 3 routines (e.g. Func_031_7486, Func_0A0_5E07, Func_0A0_5F2E)
+; 3 call sites from 3 routines (e.g. Func_031_7486, Func_0A0_5E07_Table2_Case00, Func_0A0_5E07_Table2_Case07)
 Func_01A_727D::
     ld hl, Data_01A_73AD
     call Func_01A_7321
@@ -2067,7 +2067,7 @@ Func_01A_7284::
     call Func_01A_7321
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_5F2E)
+; 1 call site from 1 routine (e.g. Func_0A0_5F2E_Case00)
 Func_01A_728B::
     ld hl, Data_01A_747F
     call Func_01A_7321
@@ -2079,7 +2079,7 @@ Func_01A_7292::
     call Func_01A_7321
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_5F2E)
+; 1 call site from 1 routine (e.g. Func_0A0_5F2E_Case04)
 Func_01A_7299::
     ld hl, Data_01A_75AB
     call Func_01A_7321
@@ -2103,7 +2103,7 @@ Func_01A_72AE::
     call Func_01A_7321
     ret
 
-; 2 call sites from 2 routines (e.g. Func_031_7502, Func_0A0_5F2E)
+; 2 call sites from 2 routines (e.g. Func_031_7502, Func_0A0_5F2E_Case0C)
 Func_01A_72B5::
     ld hl, Data_01A_7600
     call Func_01A_7321
@@ -2117,7 +2117,7 @@ Func_01A_72C2::
     call Func_01A_7321
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_6E67)
+; 1 call site from 1 routine (e.g. Func_031_6E67_Case01)
 Func_01A_72C9::
     ld hl, Data_01A_77B6
     call Func_01A_7321
@@ -2127,7 +2127,7 @@ Func_01A_72C9::
     call QueueSoundEffect
     ret
 
-; 7 call sites from 4 routines (e.g. Func_016_5D13, Func_016_6C16, Func_031_4EB9, Func_031_6E67)
+; 7 call sites from 7 routines (e.g. Func_016_5D13_Case03, Func_016_6C16_Case00, Func_016_6C16_Case0C, Func_016_6C16_Case10, ...)
 Func_01A_72DB::
     ld de, Data_01F_4330
     ld hl, vTiles1 + $6D0
@@ -2140,13 +2140,13 @@ Func_01A_72DB::
     call QueueSoundEffect
     ret
 
-; 3 call sites from 1 routine (e.g. Func_016_5D13)
+; 3 call sites from 3 routines (e.g. Func_016_5D13_Case0A, Func_016_5D13_Case0F, Func_016_5D13_Case16)
 Func_01A_72F4::
     ld hl, Data_01A_7848
     call Func_01A_7321
     ret
 
-; 6 call sites from 2 routines (e.g. Func_016_5D13, Func_016_6C16)
+; 6 call sites from 6 routines (e.g. Func_016_5D13_Case0E, Func_016_5D13_Case11, Func_016_5D13_Case18, Func_016_5D13_Case1B, ...)
 Func_01A_72FB::
     ld hl, Data_01A_787E
     call Func_01A_7321
@@ -2154,7 +2154,7 @@ Func_01A_72FB::
     call QueueSoundEffect
     ret
 
-; 3 call sites from 1 routine (e.g. Func_016_5D13)
+; 3 call sites from 3 routines (e.g. Func_016_5D13_Case16, Func_016_5D13_Case18, Func_016_5D13_Case1B)
 Func_01A_7307::
     ld hl, Data_01A_78AA
     call Func_01A_7321
@@ -2166,7 +2166,7 @@ Func_01A_730E::
     call Func_01A_7321
     ret
 
-; 2 call sites from 1 routine (e.g. Func_016_5D13)
+; 2 call sites from 2 routines (e.g. Func_016_5D13_Case0C, Func_016_5D13_Case11)
 Func_01A_7315::
     ld hl, Data_01A_796F
     call Func_01A_7321

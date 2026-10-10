@@ -1,7 +1,7 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0)
+; 1 call site from 1 routine (e.g. Func_002_4AE0_Case00)
 ; reads: wC8CB, wC468, hFF8C, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
 ; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_4001::
@@ -142,7 +142,7 @@ Jump_087_4096::
     db $05, $5F, $00, $00, $1A, $5F
     ds $A6, $00
 
-; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
+; 2 call sites from 2 routines (e.g. Func_002_4AE0_Case00, Func_002_4AE0_Case05)
 ; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_42A0::

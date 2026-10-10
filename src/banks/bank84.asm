@@ -64,23 +64,33 @@ Jump_084_405A::
 Func_084_405C::
     ldh a, [hFFC6]
     rst $00
-    dw Jump_084_406D
-    dw Jump_084_4072
-    dw Jump_084_4091
-    dw Jump_084_40C2
-    dw Jump_084_40F3
-    dw Jump_084_4156
-    dw Jump_084_406E
+    dw Func_084_405C_Case00
+    dw Func_084_405C_Case01
+    dw Func_084_405C_Case02
+    dw Func_084_405C_Case03
+    dw Func_084_405C_Case04
+    dw Func_084_405C_Case05
+    dw Func_084_405C_Case06
 
-Jump_084_406D::
+; entry 0 of the `rst $00` table in Func_084_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_084_405C_Case00::
+Jump_084_406D:: ; address name
     ret
 
-Jump_084_406E::
+; entry 6 of the `rst $00` table in Func_084_405C
+; no direct call (reached through a table, a jump or a vector)
+Func_084_405C_Case06::
+Jump_084_406E:: ; address name
     ld a, $54
     ld [de], a
     ret
 
-Jump_084_4072::
+; entry 1 of the `rst $00` table in Func_084_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCD0B, hFFCE, hFFCF
+Func_084_405C_Case01::
+Jump_084_4072:: ; address name
     ld hl, Data_084_41AE
     ld a, [wCD0B]
     add_a_to_hl
@@ -103,7 +113,11 @@ Jump_084_408A::
     jr nz, Jump_084_408A
     ret
 
-Jump_084_4091::
+; entry 2 of the `rst $00` table in Func_084_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCD0B, wCD04, hFFCE, hFFCF
+Func_084_405C_Case02::
+Jump_084_4091:: ; address name
     ld hl, Data_084_41B8
     ld a, [wCD0B]
     add_a_to_hl
@@ -137,7 +151,11 @@ Jump_084_40BB::
     jr nz, Jump_084_40BB
     ret
 
-Jump_084_40C2::
+; entry 3 of the `rst $00` table in Func_084_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCD0B, wCD04, hFFCE, hFFCF
+Func_084_405C_Case03::
+Jump_084_40C2:: ; address name
     ld hl, Data_084_41B8
     ld a, [wCD0B]
     add_a_to_hl
@@ -171,7 +189,12 @@ Jump_084_40EC::
     jr nz, Jump_084_40EC
     ret
 
-Jump_084_40F3::
+; entry 4 of the `rst $00` table in Func_084_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFCE, hFFCF, wCC46, wCD0B, wCD04
+; writes: hFFC6
+Func_084_405C_Case04::
+Jump_084_40F3:: ; address name
     ldh a, [hFFCE]
     ld l, a
     ldh a, [hFFCF]
@@ -235,7 +258,12 @@ Jump_084_4150::
     call Func_084_41F2
     ret
 
-Jump_084_4156::
+; entry 5 of the `rst $00` table in Func_084_405C
+; no direct call (reached through a table, a jump or a vector)
+; reads: hFFCE, hFFCF, wCC46, wCD04
+; writes: hFFC6
+Func_084_405C_Case05::
+Jump_084_4156:: ; address name
     ldh a, [hFFCE]
     ld l, a
     ldh a, [hFFCF]
@@ -309,7 +337,7 @@ Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0B, $01, $00, $0B, $00, $0B
 
-; 2 call sites from 1 routine (e.g. Func_084_405C)
+; 2 call sites from 2 routines (e.g. Func_084_405C_Case05, Func_084_405C_Case04)
 ; reads: wCC46, hFFC8, hFFCA, hFFC6, hFFC9
 ; writes: hFFC8, hFFC9, wCC46
 ; points at: wCE2C
@@ -556,7 +584,7 @@ Func_084_43AC::
     jr nc, Func_084_43AC
     ret
 
-; 3 call sites from 3 routines (e.g. LoadMapScreen, ScriptCommand0A_Run, ScriptCommand74_Run)
+; 3 call sites from 3 routines (e.g. LoadMapScreen, ScriptCommand0A_Run_Case04, ScriptCommand74_Run)
 ; reads: hMapId, hMapScreenX, hMapScreenY
 ; writes: hFFC6
 Func_084_43B8::
@@ -694,7 +722,7 @@ Jump_084_4457::
 Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $210461, $361
 
-; 1 call site from 1 routine (e.g. Func_016_4454)
+; 1 call site from 1 routine (e.g. RunItemEffect_Case2E)
 ; reads: hFF8C, wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC88E, ...
 ; writes: hFFD0, wC83B, wC83C, wC83D, wC83E, wC88E, wC88F, wC890, ...
 ; points at: wCD7B, wCD8B
@@ -1028,7 +1056,7 @@ Jump_084_4A87::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_4745)
+; 1 call site from 1 routine (e.g. Func_002_4745_Case01)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wC83B, wC83E, wC83D, wC83C, ...
 ; writes: hFFB9, hFFC6, rSVBK
 Func_084_4A89::
