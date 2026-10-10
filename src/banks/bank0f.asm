@@ -358,7 +358,7 @@ Jump_00F_41F1::
     ld a, h
     ld [wC57E], a
     call SpinDelay
-    farcall Func_017_421A
+    farcall LoadSGBObjectPalettesFromPointers
     ld hl, $425E
     ld de, wC4FF
     ld bc, $0008
@@ -736,7 +736,7 @@ Jump_00F_447A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5F_Run_Case09::
 Jump_00F_448C:: ; address name
-    farcall Func_073_734D
+    farcall ScriptStepSetObjectBit2AndWait
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommand5F_Run
@@ -2605,7 +2605,7 @@ Jump_00F_50BE:: ; address name
     ld [wCB9B], a
     xor a, a
     ld [wCBCF], a
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2770,15 +2770,15 @@ Jump_00F_5217:: ; address name
     ld a, [wScriptParam1]
     and a, $0F
     rst $00
-    dw Func_00F_4FA1_Case00
-    dw Func_00F_4FA1_Case01
+    dw ScriptCommand5E_Run_Case28_Case00
+    dw ScriptCommand5E_Run_Case28_Case01
 
-; entry 0 of the `rst $00` table in Func_00F_4FA1
+; entry 0 of the `rst $00` table in ScriptCommand5E_Run_Case28
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC92D, wScriptParam1
 ; writes: wC92D, wCBD4, wCBD3
 ; points at: wScriptParam1
-Func_00F_4FA1_Case00::
+ScriptCommand5E_Run_Case28_Case00::
 Jump_00F_522A:: ; address name
     ld a, [wC92D]
     bit 0, a
@@ -2820,12 +2820,12 @@ Jump_00F_5240::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_00F_4FA1
+; entry 1 of the `rst $00` table in ScriptCommand5E_Run_Case28
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: wC92D, wScriptParam1
 ; points at: wScriptStep
-Func_00F_4FA1_Case01::
+ScriptCommand5E_Run_Case28_Case01::
 Jump_00F_526C:: ; address name
     ld a, [wScriptParam1]
     add a, $10
@@ -2950,7 +2950,7 @@ Jump_00F_549F:: ; address name
     ret z
     ld de, $00C3
     call SetFlagBit
-    farcall Func_002_6050
+    farcall PlayMapMusic
     ld a, $01
     ld [wSpriteSlotCount], a
     ld hl, $0A7D
@@ -3338,7 +3338,7 @@ Jump_00F_56BC:: ; address name
 ; points at: wScriptStep
 ScriptCommand58_Run_Case00::
 Jump_00F_56C2:: ; address name
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4410,7 +4410,7 @@ Jump_00F_5CEE::
 ScriptCommand49_Run_Case01::
 Jump_00F_5D03:: ; address name
     farcall UpdatePlayerMovement
-    farcall Func_002_5BD7
+    farcall RunWC468ActionIfBit7
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -4477,7 +4477,7 @@ Jump_00F_5D5F::
     ld a, h
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
-    farcall Func_002_5BD7
+    farcall RunWC468ActionIfBit7
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4762,7 +4762,7 @@ Jump_00F_5F2C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand46_Run_Case0F::
 Jump_00F_5F36:: ; address name
-    farcall Func_05F_70D2
+    farcall RunWC92DStep
     ret
 
 ; entry 14 of the `rst $00` table in ScriptCommand46_Run
@@ -4850,7 +4850,7 @@ Jump_00F_5F8E:: ; address name
     ret z
     ld hl, hFF8C
     call SetBit2AtHL_B0F
-    farcall Func_002_6050
+    farcall PlayMapMusic
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -5275,7 +5275,7 @@ Jump_00F_6252:: ; address name
     ld de, $0085
     call TestFlagBit
     jr c, Jump_00F_626B
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     ld de, $0085
     call SetFlagBit
     ld hl, wScriptStep
@@ -5688,7 +5688,7 @@ Jump_00F_64BA:: ; address name
 ; points at: wScriptStep
 ScriptCommand43_Run_Case00::
 Jump_00F_64D4:: ; address name
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     ld a, $05
     ldh [hFFC6], a
     farcall Func_012_6B98
@@ -6043,7 +6043,7 @@ Jump_00F_66B6:: ; address name
     ld a, h
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
-    farcall Func_002_5BD7
+    farcall RunWC468ActionIfBit7
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -6104,7 +6104,7 @@ Jump_00F_6735::
 ScriptCommand42_Run_Case01::
 Jump_00F_6750:: ; address name
     farcall UpdatePlayerMovement
-    farcall Func_002_5BD7
+    farcall RunWC468ActionIfBit7
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -6147,7 +6147,7 @@ Jump_00F_6767:: ; address name
     ld a, h
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
-    farcall Func_002_5BD7
+    farcall RunWC468ActionIfBit7
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -6461,7 +6461,7 @@ Jump_00F_6979::
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
-    farcall Func_002_6050
+    farcall PlayMapMusic
     ret
 
 ; entry 34 of the `rst $00` table in ScriptCommand39_Run
@@ -6997,7 +6997,7 @@ Jump_00F_6CAB:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     ld hl, $086C
     call StartMessageHL_B0F
     ld hl, wScriptStep
@@ -7008,7 +7008,7 @@ Jump_00F_6CAB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand43_Run_Case04::
 Jump_00F_6D00:: ; address name
-    farcall Func_012_61EF
+    farcall ScriptStepMoveFollowersToLeader
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand39_Run
@@ -7196,7 +7196,7 @@ Jump_00F_6E31:: ; address name
     ld [wCBD4], a
     cp a, $40
     ret nz
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     ld a, $66
     call QueueSoundEffect
     xor a, a
@@ -7374,7 +7374,7 @@ Jump_00F_6F0C:: ; address name
 ; points at: wCB8C, wCB9C, wCBAC
 ScriptCommand38_Run_Case00::
 Jump_00F_6F4C:: ; address name
-    farcall Func_012_61EF
+    farcall ScriptStepMoveFollowersToLeader
     ld hl, wCB8C
     call SetBit2AtHL_B0F
     ld hl, wCB9C
@@ -7902,7 +7902,7 @@ Func_00F_7271:: ; address name
 ; points at: wScriptStep
 ScriptCommand28_Run_Case00::
 Jump_00F_727B:: ; address name
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     ld a, $7D
     call QueueSoundEffect
     ld hl, wScriptStep
@@ -8720,7 +8720,7 @@ Jump_00F_777E:: ; address name
     ld b, $B4
     call StepWC921Counter_Bank0F
     ret nc
-    farcall Func_002_604B
+    farcall RestartMapMusic
     ld hl, $0152
     call StartMessageHL_B0F
     ld hl, wScriptStep
@@ -8789,7 +8789,7 @@ Jump_00F_77F1:: ; address name
     ld b, $B4
     call StepWC921Counter_Bank0F
     ret nc
-    farcall Func_002_604B
+    farcall RestartMapMusic
     xor a, a
     ld [wC92D], a
     ld hl, wScriptStep
@@ -8800,7 +8800,7 @@ Jump_00F_77F1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand1F_Run_Case07::
 Jump_00F_7806:: ; address name
-    farcall Func_05F_70D2
+    farcall RunWC92DStep
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommand1F_Run
@@ -8851,7 +8851,7 @@ Jump_00F_781C::
 ; writes: wCC38, wScriptStartRequest
 ScriptCommand1F_Run_Case09::
 Jump_00F_785B:: ; address name
-    farcall Func_002_6050
+    farcall PlayMapMusic
     ld a, [wCC38]
     or a, $01
     ld [wCC38], a

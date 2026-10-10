@@ -190,17 +190,19 @@ Jump_017_41F4::
     ld a, [wC520]
     or a, $80
     ld [de], a
-    call Func_017_421A
+    call LoadSGBObjectPalettesFromPointers
     ld a, $FF
     ld [wSGBPacketIndex], a
     farcall_b Func_017_4001
     call SpinDelay
     ret
 
+; when the Super Game Boy is active, converts the four palettes pointed to by wC577-wC57E into wOBJPaletteBuffer, wC4E7, wC4EF and wC4F7 (Func_017_4258) (E-0121)
 ; 7 call sites from 7 routines (e.g. Func_017_41CF, Func_002_5F9B, GameMode5_Init_Case00, Func_007_600E, ...)
 ; reads: wSGBActive, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
 ; points at: wOBJPaletteBuffer, wC4E7, wC4EF, wC4F7
-Func_017_421A::
+LoadSGBObjectPalettesFromPointers::
+Func_017_421A:: ; address name
     ld a, [wSGBActive]
     or a, a
     ret z
@@ -209,29 +211,31 @@ Func_017_421A::
     ld a, [wC578]
     ld h, a
     ld de, wOBJPaletteBuffer
-    call Func_017_4258
+    call LoadSGBObjectPalettesFromPointers_Sub01
     ld de, wC4E7
     ld a, [wC579]
     ld l, a
     ld a, [wC57A]
     ld h, a
-    call Func_017_4258
+    call LoadSGBObjectPalettesFromPointers_Sub01
     ld de, wC4EF
     ld a, [wC57B]
     ld l, a
     ld a, [wC57C]
     ld h, a
-    call Func_017_4258
+    call LoadSGBObjectPalettesFromPointers_Sub01
     ld de, wC4F7
     ld a, [wC57D]
     ld l, a
     ld a, [wC57E]
     ld h, a
-    call Func_017_4258
+    call LoadSGBObjectPalettesFromPointers_Sub01
     ret
 
-; 4 call sites from 1 routine (e.g. Func_017_421A)
-Func_017_4258::
+; only called from LoadSGBObjectPalettesFromPointers (E-0047)
+; 4 call sites from 1 routine (e.g. LoadSGBObjectPalettesFromPointers)
+LoadSGBObjectPalettesFromPointers_Sub01::
+Func_017_4258:: ; address name
     add hl, hl
     add hl, hl
     add hl, hl

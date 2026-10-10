@@ -2,7 +2,7 @@ SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $F0, $C6, $CD, $92, $4A, $C9
 
 ; wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)
-; 4 call sites from 4 routines (e.g. Func_003_5253_Table2_Case01, LoadSelectedInventoryItemRecord, Func_03B_42F4_Case0B, Func_0F1_4001_Table2_Case01)
+; 4 call sites from 4 routines (e.g. PauseMenu_Items_Case00_Case01, LoadSelectedInventoryItemRecord, Func_03B_42F4_Case0B, Func_0F1_4001_Case00_Case01)
 ; reads: wItemId
 ; points at: wItemRecord
 LoadItemRecord::
@@ -30,7 +30,7 @@ Jump_016_401E::
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
-; 3 call sites from 3 routines (e.g. Func_003_5253_Table4_Case08, Func_003_5253_Table4_Case16, Func_003_5253_Table4_Case1B)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_Case08, PauseMenu_Items_Case02_Case16, PauseMenu_Items_Case02_Case1B)
 ; reads: wItemId
 CheckItemUsable::
 Func_016_4025:: ; address name
@@ -461,21 +461,23 @@ Jump_016_42A6::
 Jump_016_42AC::
     ld d, $00
     ld a, $00
-    call Func_016_42C4
+    call CopyEligibleRecordNameToWC160Row
     ld a, $01
-    call Func_016_42C4
+    call CopyEligibleRecordNameToWC160Row
     ld a, $02
-    call Func_016_42C4
+    call CopyEligibleRecordNameToWC160Row
     ld a, $32
     add a, d
     ld [wD08E], a
     ret
 
+; if record A (< wC6FD) has field $55 bit 7 clear and bit 0 set, copies its name and marks (field 1) to wC160 + 16 * D and increments D (E-0121)
 ; 3 call sites from 1 routine (e.g. Func_016_425E)
 ; reads: wD083
 ; writes: wD083
 ; points at: wC6FD, wC160
-Func_016_42C4::
+CopyEligibleRecordNameToWC160Row::
+Func_016_42C4:: ; address name
     ld [wD083], a
     ld hl, wC6FD
     cp a, [hl]
@@ -1187,9 +1189,11 @@ Func_016_4636:: ; address name
     or a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_003_6B5E)
+; only called from Bank16Func4645ResultTest (E-0047)
+; 1 call site from 1 routine (e.g. Bank16Func4645ResultTest)
 ; reads: wCC44, wC901, hMapId
-Func_016_4645::
+Bank16Func4645ResultTest_Sub01::
+Func_016_4645:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_016_4655
@@ -1251,7 +1255,7 @@ Jump_016_4688::
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a 95-entry table with one effect per item id. The Herb entry adds (wC5E7 after NextTableByte) / 11 + wD08F to record wD083 (Func_016_57D1) and then runs ConsumeSelectedItemByChance; CheckItemUsable is the matching usability check (E-0089)
-; 3 call sites from 3 routines (e.g. Func_003_5253_Table4_Case0B, Func_003_5253_Table4_Case19, Func_003_5253_Table4_Case1D)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_Case0B, PauseMenu_Items_Case02_Case19, PauseMenu_Items_Case02_Case1D)
 ; reads: wItemId
 ApplyItemEffect::
 Func_016_468E:: ; address name
@@ -1382,7 +1386,7 @@ Jump_016_475F:: ; address name
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_57D1
+    call AddHLToRecordHPCapped
     call ConsumeSelectedItemByChance
     ret
 
@@ -1437,7 +1441,7 @@ Jump_016_47B0:: ; address name
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_57E8
+    call AddHLToRecordMPCapped
     call ConsumeSelectedItemByChance
     ret
 
@@ -1709,7 +1713,7 @@ Jump_016_4912:: ; address name
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5889
+    call ApplyMeatToRecordField6B
     call ConsumeSelectedItemByChance
     ret
 
@@ -1722,7 +1726,7 @@ Jump_016_4922:: ; address name
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5889
+    call ApplyMeatToRecordField6B
     ld a, [wD083]
     ld c, $55
     call SRAMRecordAddressMapped
@@ -2101,7 +2105,7 @@ Jump_016_4A61::
     push af
     call CompactInventory
     pop af
-    call Func_016_4A92
+    call CallFunc4A98KeepA
     ld l, a
     ld h, $05
     ld de, wC160
@@ -2110,15 +2114,19 @@ Jump_016_4A61::
     ldh [hFFC6], a
     ret
 
+; calls Func_016_4A98 preserving A (E-0122)
 ; 1 call site from 1 routine (e.g. Func_016_4A48)
-Func_016_4A92::
+CallFunc4A98KeepA::
+Func_016_4A92:: ; address name
     push af
-    call Func_016_4A98
+    call CallFunc4A98KeepA_Sub01
     pop af
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_4A92)
-Func_016_4A98::
+; only called from CallFunc4A98KeepA (E-0047)
+; 1 call site from 1 routine (e.g. CallFunc4A98KeepA)
+CallFunc4A98KeepA_Sub01::
+Func_016_4A98:: ; address name
     sub a, $40
     rst $00
     dw Func_016_4A98_Case00
@@ -2523,7 +2531,7 @@ Func_016_4C1D:: ; address name
     ret
 
 ; copies the 24 wInventory bytes to wD09D, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
-; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, Func_016_4A48, Func_016_4C9E, Func_003_5253_Table5_Case04, ...)
+; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, Func_016_4A48, Func_016_4C9E, PauseMenu_Items_Case03_Case04, ...)
 ; points at: wD09D, wInventory
 CompactInventory::
 Func_016_4C48:: ; address name
@@ -2728,10 +2736,12 @@ Data_016_51C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0591E9, $C3
     ds $1D, $00
 
-; 1 call site from 1 routine (e.g. Func_003_5E68_Table5_Case02)
+; only called from PauseMenu_Skills_Case03_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02)
 ; reads: wD082
 ; writes: wItemId
-Func_016_52C9::
+PauseMenu_Skills_Case03_Case02_Sub01::
+Func_016_52C9:: ; address name
     ld a, [wD082]
     cp a, $14
     jr c, Jump_016_52D6
@@ -2966,9 +2976,11 @@ Func_016_53DA:: ; address name
     ld [wD08D], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_003_5E68_Table5_Case07)
+; only called from PauseMenu_Skills_Case03_Case07 (E-0047)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07)
 ; reads: wItemId, wD082
-Func_016_53E6::
+PauseMenu_Skills_Case03_Case07_Sub01::
+Func_016_53E6:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret z
@@ -3004,7 +3016,7 @@ Jump_016_5418:: ; address name
     ld [wD08F], a
     ld a, $1E
     ld [wD090], a
-    call Func_016_56AF
+    call HealRecordHPByRandomAmount
     ld a, $06
     ld [wD08D], a
     ret
@@ -3018,7 +3030,7 @@ Jump_016_542B:: ; address name
     ld [wD08F], a
     ld a, $4B
     ld [wD090], a
-    call Func_016_56AF
+    call HealRecordHPByRandomAmount
     ld a, $06
     ld [wD08D], a
     ret
@@ -3054,16 +3066,18 @@ Jump_016_5457:: ; address name
     ld a, [wD08E]
     ld [wD08D], a
     ld a, $00
-    call Func_016_5473
+    call HealPartyRecordAIfHurt
     ld a, $01
-    call Func_016_5473
+    call HealPartyRecordAIfHurt
     ld a, $02
 
+; A = party index: returns when it is not below wC6FD, when record byte $55 bit 7 is set, or when HP ($5B) already equals max HP ($5D); otherwise Func_016_56AF (a random heal) (E-0120)
 ; 2 call sites from 1 routine (e.g. Func_016_53E6_Case03)
 ; reads: wD083
 ; writes: wD083
 ; points at: wC6FD
-Func_016_5473::
+HealPartyRecordAIfHurt::
+Func_016_5473:: ; address name
     ld hl, wC6FD
     cp a, [hl]
     ret nc
@@ -3087,7 +3101,7 @@ Func_016_5473::
     ld a, h
     or a, l
     ret z
-    call Func_016_56AF
+    call HealRecordHPByRandomAmount
     ret
 
 ; entry 4 of the `rst $00` table in Func_016_53E6
@@ -3134,7 +3148,7 @@ Func_016_53E6_Case05::
 Jump_016_54CD:: ; address name
     ld a, $0F
     ld [wD08F], a
-    call Func_016_56CC
+    call HealRecordMPByWD08F
     ld a, $07
     ld [wD08D], a
     ret
@@ -3146,7 +3160,7 @@ Func_016_53E6_Case06::
 Jump_016_54DB:: ; address name
     ld a, $1E
     ld [wD08F], a
-    call Func_016_56CC
+    call HealRecordMPByWD08F
     ld a, $07
     ld [wD08D], a
     ret
@@ -3158,7 +3172,7 @@ Func_016_53E6_Case07::
 Jump_016_54E9:: ; address name
     ld a, $50
     ld [wD08F], a
-    call Func_016_56CC
+    call HealRecordMPByWD08F
     ld a, $07
     ld [wD08D], a
     ret
@@ -3462,9 +3476,11 @@ Jump_016_569E:: ; address name
     ld [wItemId], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_016_5473, Func_016_53E6_Case01, Func_016_53E6_Case00)
+; reads the next table byte, then heals record wD083's HP by wC5E7 / (wD08F + 1) + wD090 (capped at max HP) (E-0122)
+; 3 call sites from 3 routines (e.g. HealPartyRecordAIfHurt, Func_016_53E6_Case01, Func_016_53E6_Case00)
 ; reads: wC5E7, wD08F, wD090, wD083
-Func_016_56AF::
+HealRecordHPByRandomAmount::
+Func_016_56AF:: ; address name
     call NextTableByte
     ld a, [wC5E7]
     ld b, a
@@ -3477,21 +3493,23 @@ Func_016_56AF::
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_57D1
+    call AddHLToRecordHPCapped
     ret
 
+; heals record wD083's MP by wD08F (capped at max MP) (E-0122)
 ; 3 call sites from 3 routines (e.g. Func_016_53E6_Case07, Func_016_53E6_Case06, Func_016_53E6_Case05)
 ; reads: wD08F, wD083
-Func_016_56CC::
+HealRecordMPByWD08F::
+Func_016_56CC:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_57E8
+    call AddHLToRecordMPCapped
     ret
 
 ; Z clear when bit 7 of byte $55 of record wD083 is set (SRAMRecordAddressMapped); HL points at it (E-0114)
-; 3 call sites from 3 routines (e.g. ClearPartyRecordFlag55Bit0, FullHealPartyRecordA, Func_016_5473)
+; 3 call sites from 3 routines (e.g. ClearPartyRecordFlag55Bit0, FullHealPartyRecordA, HealPartyRecordAIfHurt)
 ; reads: wD083
 TestWD083RecordFlag55Bit7::
 Func_016_56D9:: ; address name
@@ -3676,8 +3694,10 @@ Jump_016_57C6::
     add_a_to_hl
     ret
 
-; 2 call sites from 2 routines (e.g. Func_016_56AF, ItemApply_Herb)
-Func_016_57D1::
+; adds HL to record A's HP (field $5B), capped at its max HP (field $5D), through Func_016_58CC (E-0122)
+; 2 call sites from 2 routines (e.g. HealRecordHPByRandomAmount, ItemApply_Herb)
+AddHLToRecordHPCapped::
+Func_016_57D1:: ; address name
     push af
     push hl
     ld c, $5D
@@ -3694,8 +3714,10 @@ Func_016_57D1::
     call Func_016_58CC
     ret
 
-; 2 call sites from 2 routines (e.g. Func_016_56CC, ItemApply_Potion)
-Func_016_57E8::
+; adds HL to record A's MP (field $5F), capped at its max MP (field $61), through Func_016_58CC (E-0122)
+; 2 call sites from 2 routines (e.g. HealRecordMPByWD08F, ItemApply_Potion)
+AddHLToRecordMPCapped::
+Func_016_57E8:: ; address name
     push af
     push hl
     ld c, $61
@@ -3719,7 +3741,7 @@ Func_016_57FF:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $63
     ld de, $03E7
-    call Func_016_58AD
+    call AddToRecordFieldWordCapped
     ret
 
 ; only called from ItemApply_DEFseed (E-0047)
@@ -3729,7 +3751,7 @@ Func_016_580B:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $65
     ld de, $03E7
-    call Func_016_58AD
+    call AddToRecordFieldWordCapped
     ret
 
 ; only called from ItemApply_AGLseed (E-0047)
@@ -3739,7 +3761,7 @@ Func_016_5817:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $67
     ld de, $03E7
-    call Func_016_58AD
+    call AddToRecordFieldWordCapped
     ret
 
 ; only called from ItemApply_INTseed (E-0047)
@@ -3749,7 +3771,7 @@ Func_016_5823:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $69
     ld de, $03E7
-    call Func_016_58AD
+    call AddToRecordFieldWordCapped
     ret
 
 ; only called from ItemApply_LifeAcorn (E-0047)
@@ -3759,7 +3781,7 @@ Func_016_582F:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $5D
     ld de, $03E7
-    call Func_016_58AD
+    call AddToRecordFieldWordCapped
     ret
 
 ; only called from ItemApply_MysticNut (E-0047)
@@ -3769,7 +3791,7 @@ Func_016_583B:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $61
     ld de, $03E7
-    call Func_016_58AD
+    call AddToRecordFieldWordCapped
     ret
 
 ; only called from ItemApply_Quest (E-0047)
@@ -3779,7 +3801,7 @@ Func_016_5847:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $6F
     ld e, $FF
-    call Func_016_5897
+    call AddToRecordFieldByteCapped
     ret
 
 ; only called from ItemApply_Horror (E-0047)
@@ -3789,7 +3811,7 @@ Func_016_5852:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $6F
     ld e, $00
-    call Func_016_58A2
+    call SubtractFromRecordFieldByteFloored
     ret
 
 ; only called from ItemApply_BeNice (E-0047)
@@ -3799,7 +3821,7 @@ Func_016_585D:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $70
     ld e, $FF
-    call Func_016_5897
+    call AddToRecordFieldByteCapped
     ret
 
 ; only called from ItemApply_Cheater (E-0047)
@@ -3809,7 +3831,7 @@ Func_016_5868:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $70
     ld e, $00
-    call Func_016_58A2
+    call SubtractFromRecordFieldByteFloored
     ret
 
 ; only called from ItemApply_Smart (E-0047)
@@ -3819,7 +3841,7 @@ Func_016_5873:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $72
     ld e, $FF
-    call Func_016_5897
+    call AddToRecordFieldByteCapped
     ret
 
 ; only called from ItemApply_Comedy (E-0047)
@@ -3829,41 +3851,49 @@ Func_016_587E:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $72
     ld e, $00
-    call Func_016_58A2
+    call SubtractFromRecordFieldByteFloored
     ret
 
+; for the record selected through wC6FE, applies Func_016_58E0 to field $6B (E-0122)
 ; 2 call sites from 2 routines (e.g. ItemApply_BadMeat, ItemApply_BeefJerky)
-Func_016_5889::
+ApplyMeatToRecordField6B::
+Func_016_5889:: ; address name
     call MapIndexViaWC6FEKeepHL
     push hl
     ld c, $6B
     call SRAMRecordAddress
     pop de
-    call Func_016_58E0
+    call ApplyMeatToRecordField6B_Sub01
     ret
 
+; field C of record A: adds E, capped at the limit passed in DE's partner (Func_016_58B8) (E-0122)
 ; 3 call sites from 3 routines (e.g. ItemApply_Smart_Sub01, ItemApply_BeNice_Sub01, ItemApply_Quest_Sub01)
-Func_016_5897::
+AddToRecordFieldByteCapped::
+Func_016_5897:: ; address name
     push hl
     push de
     call SRAMRecordAddress
     pop bc
     pop de
-    call Func_016_58B8
+    call AddEToByteAtHLCappedAtC
     ret
 
+; field C of record A: subtracts E, floored at the limit (Func_016_58C2) (E-0122)
 ; 3 call sites from 3 routines (e.g. ItemApply_Comedy_Sub01, ItemApply_Cheater_Sub01, ItemApply_Horror_Sub01)
-Func_016_58A2::
+SubtractFromRecordFieldByteFloored::
+Func_016_58A2:: ; address name
     push hl
     push de
     call SRAMRecordAddress
     pop bc
     pop de
-    call Func_016_58C2
+    call SubtractEFromByteAtHLFlooredAtC
     ret
 
+; field C of record A: adds the amount, capped at the limit (Func_016_58CC) (E-0122)
 ; 6 call sites from 6 routines (e.g. ItemApply_MysticNut_Sub01, ItemApply_LifeAcorn_Sub01, ItemApply_INTseed_Sub01, ItemApply_AGLseed_Sub01, ...)
-Func_016_58AD::
+AddToRecordFieldWordCapped::
+Func_016_58AD:: ; address name
     push hl
     push de
     call SRAMRecordAddress
@@ -3872,8 +3902,10 @@ Func_016_58AD::
     call Func_016_58CC
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_5897)
-Func_016_58B8::
+; [HL] += E, capped at C (also on overflow) (E-0122)
+; 1 call site from 1 routine (e.g. AddToRecordFieldByteCapped)
+AddEToByteAtHLCappedAtC::
+Func_016_58B8:: ; address name
     ld a, [hl]
     add a, e
     jr c, Jump_016_58BF
@@ -3887,8 +3919,10 @@ Jump_016_58C0::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_58A2)
-Func_016_58C2::
+; [HL] -= E, floored at C (also on underflow) (E-0122)
+; 1 call site from 1 routine (e.g. SubtractFromRecordFieldByteFloored)
+SubtractEFromByteAtHLFlooredAtC::
+Func_016_58C2:: ; address name
     ld a, [hl]
     sub a, e
     jr c, Jump_016_58C9
@@ -3902,7 +3936,7 @@ Jump_016_58CA::
     ld [hl], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_016_57E8, Func_016_57D1, Func_016_58AD)
+; 3 call sites from 3 routines (e.g. AddHLToRecordMPCapped, AddHLToRecordHPCapped, AddToRecordFieldWordCapped)
 Func_016_58CC::
     push hl
     deref_hl
@@ -3925,8 +3959,10 @@ Jump_016_58DB::
     ld [hl], b
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_5889)
-Func_016_58E0::
+; only called from ApplyMeatToRecordField6B (E-0047)
+; 1 call site from 1 routine (e.g. ApplyMeatToRecordField6B)
+ApplyMeatToRecordField6B_Sub01::
+Func_016_58E0:: ; address name
     push hl
     deref_hl
     ld a, l
@@ -3970,7 +4006,7 @@ Func_016_58FD:: ; address name
     ret
 
 ; MapIndexViaWC6FE with HL preserved (E-0072)
-; 13 call sites from 13 routines (e.g. Func_016_5889, ItemApply_Comedy_Sub01, ItemApply_Smart_Sub01, ItemApply_Cheater_Sub01, ...)
+; 13 call sites from 13 routines (e.g. ApplyMeatToRecordField6B, ItemApply_Comedy_Sub01, ItemApply_Smart_Sub01, ItemApply_Cheater_Sub01, ...)
 MapIndexViaWC6FEKeepHL::
 Func_016_5906:: ; address name
     push hl
@@ -3978,7 +4014,7 @@ Func_016_5906:: ; address name
     pop hl
     ret
 
-; 3 call sites from 3 routines (e.g. Func_003_5253_Table2_Case01, Func_031_4EB9_Table2_Case02, Func_0F1_4001_Table2_Case01)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case00_Case01, RunBattleSetup_Case02_Case02, Func_0F1_4001_Case00_Case01)
 ; reads: wC836, wD09D, wD09E
 ; writes: wD09D, wD09E, wC836
 ; points at: wD09F, wInventory, wD0A0
@@ -4093,7 +4129,7 @@ Data_016_5A0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $059A0E, $70
 
 ; monster id = wSpeciesIdLo/Hi: HL = wSpeciesFlags + id / 8, B = the mask 1 << (id & 7) (Data_016_5AA7); C = A = [HL] & B, so Z is set when the species' bit is clear (E-0070)
-; 12 call sites from 12 routines (e.g. SetSpeciesFlag, CountSpeciesPerFamilyFlaggedOrListed, BattleEnd_Step3_Sub01_Sub01, Func_016_5B7E, ...)
+; 12 call sites from 12 routines (e.g. SetSpeciesFlag, CountSpeciesPerFamilyFlaggedOrListed, BattleEnd_Step3_Sub01_Sub01, BattleEnd_Step5_Case00_Sub01, ...)
 ; reads: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wSpeciesFlags
 TestSpeciesFlag::
@@ -4125,7 +4161,7 @@ Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
-; 8 call sites from 8 routines (e.g. Func_016_6A4E_Case01, Func_001_6C48, InitWD06ABlock_Table2_Case06_Sub01, Func_00D_6B55, ...)
+; 8 call sites from 8 routines (e.g. RunBattleSubStep_6A4E_Case01, Func_001_6C48, GameMode5_Update_Case01_Case06_Case06_Sub01, ScriptCommandF3_Run_Case05_Case0E_Sub01, ...)
 ; reads: wC7FB
 ; writes: wC7FB
 SetSpeciesFlag::
@@ -4142,7 +4178,7 @@ Func_016_5AAF:: ; address name
     ret
 
 ; zeroes the 11 per-family counters at wD09D, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wD09D[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wC7FC (wD7F5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
-; 2 call sites from 2 routines (e.g. Func_003_7335_Case00, Func_085_5B04)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_Case00, TotalSpeciesFlaggedOrListed)
 ; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wD7F5
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F1, wD7F2, wD7F3, wD7F4
 ; points at: wD09D, wC7FC
@@ -4265,11 +4301,13 @@ Jump_016_5B61::
     jr c, Jump_016_5B44
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_46C1_Case00)
+; only called from BattleEnd_Step5_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case00)
 ; reads: wC58A, wCFC5, wDAAB, wC5E7, wC5E8, wD00C, wD894, wD89F, ...
 ; writes: wD890, wSpeciesIdLo, wSpeciesIdHi, wDAAB
 ; points at: wD8A1, wBattleMonsterId
-Func_016_5B7E::
+BattleEnd_Step5_Case00_Sub01::
+Func_016_5B7E:: ; address name
     ld a, $01
     ld [wD890], a
     ld a, [wC58A]
@@ -4488,9 +4526,11 @@ Data_016_5D03:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_5D0B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $11, $12, $13, $14, $15, $16, $07
 
-; 1 call site from 1 routine (e.g. Func_031_46C1_Table2_Case01)
+; only called from BattleEnd_Step5_Case01_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_Case01)
 ; reads: wBattleSubStep
-Func_016_5D13::
+BattleEnd_Step5_Case01_Case01_Sub01::
+Func_016_5D13:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw Func_016_5D13_Case00
@@ -4605,7 +4645,7 @@ Jump_016_5DB2:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    farcall Func_01A_72DB
+    farcall LoadCursorTileAndRect7826
     ld de, wC2A6
     ld hl, vBGMap0 + $10E
     ld bc, $0605
@@ -4632,7 +4672,7 @@ Func_016_5D13_Case04::
 Jump_016_5DE6:: ; address name
     ld de, wC46B
     ld hl, Data_016_66E7
-    call Func_016_6480
+    call SetDEFlagOnBButton
     ret z
     ld hl, wBattleSubStep
     inc [hl]
@@ -4720,7 +4760,7 @@ Jump_016_5E5A:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     farcall CopyRectRecord7848ToScreenBuffer
     ld a, $6C
     call QueueSoundEffect
@@ -4751,7 +4791,7 @@ Func_016_5D13_Case0B::
 Jump_016_5E96:: ; address name
     ld de, wC46B
     ld hl, Data_016_6701
-    call Func_016_6480
+    call SetDEFlagOnBButton
     ret z
     ld a, [wJoypadPressed]
     and a, $02
@@ -4784,7 +4824,7 @@ Jump_016_5ED1::
     ret
 
 Jump_016_5ED7::
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
@@ -5200,7 +5240,7 @@ Jump_016_61A8::
 ; points at: wScreenTileBuffer, wBattleSubStep
 Func_016_5D13_Case16::
 Jump_016_61D2:: ; address name
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     farcall CopyRectRecord7848ToScreenBuffer
     ld a, $BC
     ld [wC303], a
@@ -5244,7 +5284,7 @@ Jump_016_622B::
     ld [wCFD1], a
     ld a, [wCFD6]
     ld [wC46B], a
-    call Func_016_682F
+    call DrawFourListEntriesForPageWCFD1
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
@@ -5266,7 +5306,7 @@ Jump_016_6250:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_016_6279
-    call Func_016_682F
+    call DrawFourListEntriesForPageWCFD1
     ld hl, vBGMap0 + $AB
     ld de, wC243
     ld bc, $0107
@@ -5291,7 +5331,7 @@ Jump_016_6279::
 Jump_016_6291::
     bit 1, a
     ret z
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
@@ -5307,7 +5347,7 @@ Jump_016_6291::
 ; points at: wScreenTileBuffer, wBattleSubStep
 Func_016_5D13_Case18::
 Jump_016_62A9:: ; address name
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     farcall CopyRectRecord78AAToScreenBuffer
     farcall CopyRectRecord787EAndPlaySound6C
     ld a, [wCFD2]
@@ -5323,7 +5363,7 @@ Jump_016_62A9:: ; address name
     ld [wC323], a
 
 Jump_016_62D3::
-    call Func_016_682F
+    call DrawFourListEntriesForPageWCFD1
     ld a, [wCFD6]
     ld hl, Data_016_66EF
     add a, a
@@ -5350,7 +5390,7 @@ Jump_016_62D3::
     ld [wCFD2], a
     ld a, $02
     ld [wCFD3], a
-    call Func_016_69AB
+    call ShowListedRecordNameMessage
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -5483,7 +5523,7 @@ Jump_016_63B9:: ; address name
 
 Jump_016_640E::
     call Func_016_65B1
-    call Func_016_682F
+    call DrawFourListEntriesForPageWCFD1
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
@@ -5496,7 +5536,7 @@ Jump_016_640E::
     ld [wCFD2], a
     ld a, $02
     ld [wCFD3], a
-    call Func_016_69AB
+    call ShowListedRecordNameMessage
     ld a, $19
     ld [wBattleSubStep], a
     ret
@@ -5540,9 +5580,11 @@ Jump_016_643D:: ; address name
     ld [wBattleSubStep], a
     ret
 
+; runs Func_016_65FF; unless A is pressed, writes 1 at DE when B is pressed (E-0122)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case0B, Func_016_5D13_Case04)
 ; reads: wJoypadPressed
-Func_016_6480::
+SetDEFlagOnBButton::
+Func_016_6480:: ; address name
     call Func_016_65FF
     ld a, [wJoypadPressed]
     and a, $01
@@ -6045,11 +6087,13 @@ Jump_016_6792::
 Jump_016_67A4::
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_7078)
+; draws four values from wD868 at vTiles2 + $3B0 with size $0105 (Func_016_67E0), preserving the window settings (E-0121)
+; 1 call site from 1 routine (e.g. CopyRect7923AndDrawWD868Values)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52F, wC530, wC52D, wC52E
 ; points at: wD868
-Func_016_67A5::
+DrawWD868ValuesAtTiles23B0::
+Func_016_67A5:: ; address name
     ld a, [wC52D]
     ld l, a
     ld a, [wC52E]
@@ -6081,7 +6125,7 @@ Func_016_67A5::
     ld [wC52E], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_016_67A5, Func_016_6705)
+; 2 call sites from 2 routines (e.g. DrawWD868ValuesAtTiles23B0, Func_016_6705)
 ; writes: rRAMG, rRAMB, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC130
 Func_016_67E0::
@@ -6137,11 +6181,13 @@ Jump_016_6810::
     ld [rRAMG], a
     ret
 
+; for the four entries of WD789 page wCFD1 runs Func_016_6891 with wD868 = 0-3, draws the page digit, then restores the default window (E-0121)
 ; 4 call sites from 4 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18, Func_016_5D13_Case17, Func_016_5D13_Case16)
 ; reads: wCFD1
 ; writes: wC52F, wC530, rRAMG, rRAMB, wD868, wC52D, wC52E
 ; points at: wD789
-Func_016_682F::
+DrawFourListEntriesForPageWCFD1::
+Func_016_682F:: ; address name
     ld hl, $0901
     ld a, l
     ld [wC52F], a
@@ -6158,19 +6204,19 @@ Func_016_682F::
     add_a_to_hl
     ld a, $00
     ld [wD868], a
-    call Func_016_6891
+    call DrawFourListEntriesForPageWCFD1_Sub01
     inc hl
     ld a, $01
     ld [wD868], a
-    call Func_016_6891
+    call DrawFourListEntriesForPageWCFD1_Sub01
     inc hl
     ld a, $02
     ld [wD868], a
-    call Func_016_6891
+    call DrawFourListEntriesForPageWCFD1_Sub01
     inc hl
     ld a, $03
     ld [wD868], a
-    call Func_016_6891
+    call DrawFourListEntriesForPageWCFD1_Sub01
     xor a, a
     ld [rRAMG], a
     call DrawListPageDigitIfLong
@@ -6186,14 +6232,16 @@ Func_016_682F::
     ld [wC530], a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_016_682F)
+; only called from DrawFourListEntriesForPageWCFD1 (E-0047)
+; 4 call sites from 1 routine (e.g. DrawFourListEntriesForPageWCFD1)
 ; reads: wD868
-Func_016_6891::
+DrawFourListEntriesForPageWCFD1_Sub01::
+Func_016_6891:: ; address name
     ld a, [hl]
     cp a, $FF
     jr z, Jump_016_68CB
     push hl
-    call Func_016_68E5
+    call DrawFourListEntriesForPageWCFD1_Sub01_Sub01
     pop hl
     ld a, [hl]
     push hl
@@ -6240,10 +6288,12 @@ Jump_016_68CB::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_6891)
+; only called from DrawFourListEntriesForPageWCFD1_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageWCFD1_Sub01)
 ; reads: wD868
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E
-Func_016_68E5::
+DrawFourListEntriesForPageWCFD1_Sub01_Sub01::
+Func_016_68E5:: ; address name
     ld c, $0B
     call SRAMRecordAddress
     ld c, [hl]
@@ -6253,7 +6303,7 @@ Func_016_68E5::
     ld b, a
 
 ; wStringCategory = B, wStringIndex = C, string window destination = $9400 + 256 * wD868, then ShowString_Bank08 (E-0118)
-; 1 call site from 1 routine (e.g. Func_016_6891)
+; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageWCFD1_Sub01)
 ; reads: wD868
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E
 ShowStringBCAtTileRowWD868::
@@ -6277,7 +6327,7 @@ Data_016_690F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $43, $C2, $83, $C2, $C3, $C2, $03, $C3
 
 ; when wD7A9 is 5 or more: wC320 = $E1 + wCFD1 (the page number tile) (E-0119)
-; 1 call site from 1 routine (e.g. Func_016_682F)
+; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageWCFD1)
 ; reads: wD7A9, wCFD1
 ; writes: wC320
 DrawListPageDigitIfLong::
@@ -6388,11 +6438,13 @@ Jump_016_6995::
     call ShowStringCategory5Immediate_Bank16
     ret
 
+; copies the monster name of record wD789[wC471 * 4 + wCFD6] (its id word at field $0B) into wC140, then shows string $17 of category 5 (ShowStringCategory5Immediate_Bank16) (E-0120)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18)
 ; reads: wC471, wCFD6
 ; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wD789, wC140
-Func_016_69AB::
+ShowListedRecordNameMessage::
+Func_016_69AB:: ; address name
     ld a, [wC471]
     add a, a
     add a, a
@@ -6448,7 +6500,7 @@ Jump_016_6A01::
     call ShowStringCategory5_Bank16
     ret
 
-; 3 call sites from 3 routines (e.g. Func_016_6A4E_Case00, Func_016_5D13_Case04, Func_016_5D13_Case00)
+; 3 call sites from 3 routines (e.g. RunBattleSubStep_6A4E_Case00, Func_016_5D13_Case04, Func_016_5D13_Case00)
 ; reads: wDAAB
 ; points at: wD8AF
 Func_016_6A10::
@@ -6497,22 +6549,24 @@ Func_016_6A36:: ; address name
     call CopyStringHLToDE
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_46C1_Case03)
+; runs the routine for wBattleSubStep (jump table of five) (E-0122)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case03)
 ; reads: wBattleSubStep
-Func_016_6A4E::
+RunBattleSubStep_6A4E::
+Func_016_6A4E:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw Func_016_6A4E_Case00
-    dw Func_016_6A4E_Case01
-    dw Func_016_6A4E_Case02
-    dw Func_016_6A4E_Case03
-    dw Func_016_6A4E_Case04
+    dw RunBattleSubStep_6A4E_Case00
+    dw RunBattleSubStep_6A4E_Case01
+    dw RunBattleSubStep_6A4E_Case02
+    dw RunBattleSubStep_6A4E_Case03
+    dw RunBattleSubStep_6A4E_Case04
 
-; entry 0 of the `rst $00` table in Func_016_6A4E
+; entry 0 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wC130, wBattleSubStep
-Func_016_6A4E_Case00::
+RunBattleSubStep_6A4E_Case00::
 Jump_016_6A5C:: ; address name
     ld de, wC130
     call Func_016_6A10
@@ -6523,12 +6577,12 @@ Jump_016_6A5C:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_016_6A4E
+; entry 1 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wDAAB
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wSpeciesIdLo, wD7F5, wSpeciesIdHi, wC52D, ...
 ; points at: wCFA8, wD8AF, wC986, wScreenTileBuffer, wBattleSubStep
-Func_016_6A4E_Case01::
+RunBattleSubStep_6A4E_Case01::
 Jump_016_6A6F:: ; address name
     ld a, [wC52B]
     or a, a
@@ -6585,12 +6639,12 @@ Jump_016_6A6F:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_016_6A4E
+; entry 2 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAAB, wD7F5
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5
 ; points at: wD8AF, wC986, wCFCF, wD09E, wC8CF, wBattleSubStep
-Func_016_6A4E_Case02::
+RunBattleSubStep_6A4E_Case02::
 Jump_016_6AE3:: ; address name
     ld a, $01
     ld [wD7F1], a
@@ -6619,7 +6673,7 @@ Jump_016_6AE3:: ; address name
     ld [wD7F4], a
     ld a, [hl]
     ld [wD7F5], a
-    farcall Func_014_5CA8
+    farcall RunWCFA8StateWhenNotFading
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -6647,21 +6701,21 @@ Jump_016_6B47::
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_016_6A4E
+; entry 3 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-Func_016_6A4E_Case03::
+RunBattleSubStep_6A4E_Case03::
 Jump_016_6B52:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_016_6A4E
+; entry 4 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC7C7, wC6FD
 ; writes: rRAMG, rRAMB, wBattleSubStep, wD09D
 ; points at: sA000, wBattleSubPhase, wD09E, wC991
-Func_016_6A4E_Case04::
+RunBattleSubStep_6A4E_Case04::
 Jump_016_6B57:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -6732,7 +6786,7 @@ Jump_016_6BCC::
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
-; 2 call sites from 1 routine (e.g. Func_016_6A4E_Case04)
+; 2 call sites from 1 routine (e.g. RunBattleSubStep_6A4E_Case04)
 CopyBBytesDEToHL_Bank16::
 Func_016_6BD9:: ; address name
     ld a, [de]
@@ -6743,7 +6797,7 @@ Func_016_6BD9:: ; address name
     ret
 
 ; HL = a record flag byte, C = battle slot: unless bit 7 is set, marks the slot present (wBattleSlotOut = 0), clears its status byte 0 and sets status bit 0 when flag bit 2 is set and status bit 5 when flag bit 0 is set (E-0118)
-; 3 call sites from 1 routine (e.g. Func_016_6A4E_Case04)
+; 3 call sites from 1 routine (e.g. RunBattleSubStep_6A4E_Case04)
 ; points at: wBattleSlotOut, wBattleStatus
 InitSlotFromRecordFlags::
 Func_016_6BE0:: ; address name
@@ -6785,9 +6839,11 @@ Jump_016_6C0A::
     ld [hl], $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_46C1_Case04)
+; only called from BattleEnd_Step5_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case04)
 ; reads: wBattleSubStep
-Func_016_6C16::
+BattleEnd_Step5_Case04_Sub01::
+Func_016_6C16:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw Func_016_6C16_Case00
@@ -6818,7 +6874,7 @@ Func_016_6C16::
 ; points at: wScreenTileBuffer, wD868, wC6FE, wC130, wBattleSubStep
 Func_016_6C16_Case00::
 Jump_016_6C42:: ; address name
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
@@ -6857,7 +6913,7 @@ Jump_016_6C7A::
     ld [de], a
     xor a, a
     ld [rRAMG], a
-    farcall Func_01A_72DB
+    farcall LoadCursorTileAndRect7826
     ld a, $19
     ld [wStringIndex], a
     call ShowStringCategory5Immediate_Bank16
@@ -7017,7 +7073,7 @@ Jump_016_6D47:: ; address name
     call Func_016_70C5
     call LoadRecordListNameTiles
     call Func_016_70DB
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -7042,7 +7098,7 @@ Jump_016_6D7B:: ; address name
 ; points at: wC2C7, wBattleSubStep
 Func_016_6C16_Case08::
 Jump_016_6D8D:: ; address name
-    call Func_016_7078
+    call CopyRect7923AndDrawWD868Values
     ld a, $1C
     ld [wStringIndex], a
     call ShowStringCategory5Immediate_Bank16
@@ -7225,8 +7281,8 @@ Jump_016_6ED4::
     ld a, [wJoypadPressed]
     and a, $02
     ret z
-    call Func_016_733F
-    farcall Func_01A_72DB
+    call BuildBattleMenuScreen_733F
+    farcall LoadCursorTileAndRect7826
     ld a, $11
     ld [wBattleSubStep], a
     ret
@@ -7311,8 +7367,8 @@ Jump_016_6F30:: ; address name
 ; points at: wScreenTileBuffer
 Func_016_6C16_Case0F::
 Jump_016_6F6F:: ; address name
-    call Func_016_733F
-    call Func_016_7078
+    call BuildBattleMenuScreen_733F
+    call CopyRect7923AndDrawWD868Values
     ld a, [wD7AB]
     ld [wC46C], a
     ld hl, Data_016_66DD
@@ -7352,7 +7408,7 @@ Jump_016_6FA4:: ; address name
     ld [wC2E5], a
     ld [wC305], a
     ld [wC325], a
-    farcall Func_01A_72DB
+    farcall LoadCursorTileAndRect7826
     ld hl, vBGMap0 + $10C
     ld hl, wC2A4
     ld bc, $0805
@@ -7370,7 +7426,7 @@ Jump_016_6FA4:: ; address name
 ; points at: wC2C7
 Func_016_6C16_Case11::
 Jump_016_6FEE:: ; address name
-    call Func_016_7078
+    call CopyRect7923AndDrawWD868Values
     ld hl, wC2C7
     ld [hl], $BC
     xor a, a
@@ -7417,7 +7473,7 @@ Jump_016_7023::
     jr nz, Jump_016_7023
     call LoadRecordListNameTiles
     call Func_016_70DB
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
@@ -7432,12 +7488,12 @@ Jump_016_7023::
 ; points at: wScreenTileBuffer
 Func_016_6C16_Case13::
 Jump_016_7051:: ; address name
-    call Func_016_733F
+    call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
     call CopyRect32StrideToVRAM_Bank16
-    farcall Func_01A_72DB
+    farcall LoadCursorTileAndRect7826
     ld a, $19
     ld [wStringIndex], a
     call ShowStringCategory5Immediate_Bank16
@@ -7447,10 +7503,12 @@ Jump_016_7051:: ; address name
     ld [wC46B], a
     ret
 
+; copies rectangle record $7923 to the screen buffer and draws the wD868 values at vTiles2 + $3B0 (E-0122)
 ; 3 call sites from 3 routines (e.g. Func_016_6C16_Case11, Func_016_6C16_Case0F, Func_016_6C16_Case08)
-Func_016_7078::
+CopyRect7923AndDrawWD868Values::
+Func_016_7078:: ; address name
     farcall CopyRectRecord7923ToScreenBuffer
-    call Func_016_67A5
+    call DrawWD868ValuesAtTiles23B0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_6C16_Case12)
@@ -7730,11 +7788,13 @@ Jump_016_7324::
     jr nz, CopyRect32StrideToVRAM_Bank16
     ret
 
+; clears attributes and the screen buffer and lays out the battle menu rectangles (bank $31 routines for wD88F and wD890) (E-0122)
 ; 11 call sites from 11 routines (e.g. Func_016_6C16_Case13, Func_016_6C16_Case12, Func_016_6C16_Case0F, Func_016_6C16_Case0C, ...)
-Func_016_733F::
+BuildBattleMenuScreen_733F::
+Func_016_733F:: ; address name
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForWD88F_Bank31
-    farcall Func_031_7389
+    farcall DrawPartySlotStatusPanels
     farcall LayoutTileBlocksForWD890Count
     farcall Func_031_7321
     farcall CopyRectRecord7345ToScreenBuffer
@@ -8364,7 +8424,7 @@ Jump_016_776C::
 Jump_016_777A::
     ret
 
-; 2 call sites from 2 routines (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00_Sub01, Func_007_6213_Table2_Case00)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_Sub01, RunWD06BSubState_60E9_Case02_Case00_Case00)
 ; reads: wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, wC1E9, ...
@@ -8489,7 +8549,7 @@ Jump_016_7832::
     ld de, vTiles2 + $400
 
 Jump_016_7857::
-    call Func_016_78DC
+    call ShowTenByteNameAtDE
     ld a, [wD0E3]
     ld l, a
     ld a, [wD0E4]
@@ -8526,7 +8586,7 @@ Jump_016_788B::
     ld c, $02
     ld hl, wD0FE
     call Func_016_78F9
-    call Func_016_7990
+    call BlankTwoTileCellByGameMode
     call Func_016_79B5
     ld hl, vTiles1
     ld a, l
@@ -8564,10 +8624,12 @@ Func_016_78CF:: ; address name
     ld [de], a
     ret
 
+; window at DE: copies 10 bytes from HL to wC130 with a $F0 terminator and shows it (ShowString_Bank08) (E-0122)
 ; 2 call sites from 2 routines (e.g. Func_016_7783, Func_016_78F9)
 ; writes: wC52D, wC52E
 ; points at: wC130
-Func_016_78DC::
+ShowTenByteNameAtDE::
+Func_016_78DC:: ; address name
     ld a, e
     ld [wC52D], a
     ld a, d
@@ -8612,7 +8674,7 @@ Jump_016_7912::
     ld a, [hl]
     ld [wD09E], a
     push hl
-    call Func_016_7A48
+    call LoadFamilyPaletteForWD09D
     pop hl
     ld a, [hl]
     swap a
@@ -8631,7 +8693,7 @@ Jump_016_7912::
     ld d, a
     pop hl
     push hl
-    call Func_016_78DC
+    call ShowTenByteNameAtDE
     pop hl
     ld a, l
     add a, $0A
@@ -8687,10 +8749,12 @@ Jump_016_798A::
     pop bc
     ret
 
+; writes $C3 to wC227/8 and wC247/8, or to wC267/8 and wC287/8 in game mode 5 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_016_7783)
 ; reads: wGameMode
 ; writes: wC227, wC228, wC247, wC248, wC267, wC268, wC287, wC288
-Func_016_7990::
+BlankTwoTileCellByGameMode::
+Func_016_7990:: ; address name
     ld a, [wGameMode]
     cp a, $05
     jr z, Jump_016_79A6
@@ -8791,9 +8855,11 @@ Data_016_7A3C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $C2, $A2, $C2, $E2, $C2
 
-; 19 call sites from 19 routines (e.g. Func_016_78F9, Func_003_4EB6, Func_00C_45DA_Case04, Func_00C_4E75, ...)
+; loads the 16 palette bytes of family wD09D (Data_016_7ACD + 16 * family) through Func_016_7AAF; wD09E selects the slot (E-0122)
+; 19 call sites from 19 routines (e.g. Func_016_78F9, ShowSpeciesNameAndIconForSlotB, ScriptCommandF6_Run_Case10_Case04, ScriptCommandF6_Run_Case10_Case06_Sub02, ...)
 ; reads: wD09D
-Func_016_7A48::
+LoadFamilyPaletteForWD09D::
+Func_016_7A48:: ; address name
     ld a, [wD09D]
     swap a
     ld de, Data_016_7ACD
@@ -8807,15 +8873,17 @@ Jump_016_7A55::
     call Func_016_7AAF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_003_7335_Case00, GameMode5_Init_Case04)
-Func_016_7A5B::
+; loads $B0 bytes from Data_016_7ACD (all eleven family palettes) through Func_016_7AAF (E-0122)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_Case00, GameMode5_Init_Case04)
+LoadAllFamilyPalettes::
+Func_016_7A5B:: ; address name
     ld de, Data_016_7ACD
     ld b, $B0
     call Func_016_7AAF
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
-; 6 call sites from 6 routines (e.g. Func_002_66CC, Func_003_4208_Case00, Func_003_6A60_Table2_Case00, ScriptCommandF6_Run_Case08, ...)
+; 6 call sites from 6 routines (e.g. Func_002_66CC, Func_003_4208_Case00, PauseMenu_State3_Case00_Case00, ScriptCommandF6_Run_Case08, ...)
 ; reads: wC6FD
 ; writes: rRAMG, rRAMB
 LoadTilesForPartyRecords::
@@ -8866,7 +8934,7 @@ Jump_016_7AAA::
     pop af
     jr Jump_016_7AB2
 
-; 2 call sites from 2 routines (e.g. Func_016_7A48, Func_016_7A5B)
+; 2 call sites from 2 routines (e.g. LoadFamilyPaletteForWD09D, LoadAllFamilyPalettes)
 ; reads: wD09E
 Func_016_7AAF::
     ld a, [wD09E]

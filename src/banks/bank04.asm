@@ -1,8 +1,10 @@
 SECTION "Bank 04", ROMX[$4000], BANK[$04]
     db $04
 
-; 7 call sites from 7 routines (e.g. Func_002_4AE0_Case00, Func_002_4AE0_Case01, Func_002_4AE0_Case02, Func_002_4AE0_Case03, ...)
-Func_004_4001::
+; runs Func_004_4BB0 and Func_004_44CE; shared by the field mode states (E-0122)
+; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case03, ...)
+FieldStateCommonUpdate::
+Func_004_4001:: ; address name
     call Func_004_4BB0
     call Func_004_44CE
     ret
@@ -567,10 +569,12 @@ Jump_004_4396::
     db $E3, $45, $99, $46, $D8, $46, $FF, $46, $34, $47, $73, $47, $32, $48, $5F, $48
     db $D6, $48, $BD, $49, $D7, $4A
 
-; 11 call sites from 11 routines (e.g. Func_002_64E5, ScriptCommand09_Case00, RunMessageBox_Bank12_Case00, Func_012_66DA_Case00, ...)
+; sets bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a message) (E-0120)
+; 11 call sites from 11 routines (e.g. Func_002_64E5, ScriptCommand09_Case00, RunMessageBox_Bank12_Case00, RunMessageBoxStateIfActive_Bank12_Case00, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
-Func_004_4470::
+SetBit1OfPlayerAndObjectFlags::
+Func_004_4470:: ; address name
     ldh a, [hFF8C]
     or a, $02
     ldh [hFF8C], a
@@ -592,7 +596,7 @@ Func_004_4470::
     ret
 
 ; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
-; 15 call sites from 15 routines (e.g. Func_002_6391, Func_007_6213_Table2_Case02, ScriptCommandF7_Run_Case1A_Sub01, ScriptCommandF7_Run_Shared03, ...)
+; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_Sub01, RunWD06BSubState_60E9_Case02_Case00_Case02, ScriptCommandF7_Run_Case1A_Sub01, ScriptCommandF7_Run_Shared03, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ClearBit1OfPlayerAndObjectFlags::
@@ -617,7 +621,7 @@ Func_004_449F:: ; address name
     ld [wCBCC], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_004_4001, Func_014_6804, GameMode6_Update_Shared06, GameMode5_Update_Case07_Sub01_Sub03, ...)
+; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunWCFA8StateWhenNotFading_Shared01, GameMode6_Update_Shared06, GameMode5_Update_Case07_Sub01_Sub03, ...)
 ; reads: wC468, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hFFC6
 ; writes: hFFC6, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
 ; points at: wSpriteSlots
@@ -1165,7 +1169,7 @@ Jump_004_4784::
     ld b, a
     ld a, [hl]
     ld c, a
-    call Func_004_4852
+    call RunWC935Type0AOrOther
     cp a, $01
     jp z, Jump_004_4845
     call Func_004_49B0
@@ -1193,7 +1197,7 @@ Jump_004_47CD::
     ld b, a
     ld a, [hl]
     ld c, a
-    call Func_004_4852
+    call RunWC935Type0AOrOther
     cp a, $01
     jr z, Jump_004_4845
     call Func_004_49B0
@@ -1223,7 +1227,7 @@ Jump_004_47F4::
     ld a, [hl]
     sub a, $10
     ld c, a
-    call Func_004_4852
+    call RunWC935Type0AOrOther
     cp a, $01
     jr z, Jump_004_4845
     call Func_004_49B0
@@ -1253,7 +1257,7 @@ Jump_004_481C::
     ld a, [hl]
     add a, $11
     ld c, a
-    call Func_004_4852
+    call RunWC935Type0AOrOther
     cp a, $01
     jr z, Jump_004_4845
     call Func_004_49B0
@@ -1280,9 +1284,11 @@ Jump_004_4846::
     ld a, [hl]
     jp Jump_004_45A7
 
+; runs Func_004_495A when wC935 & $0F = $0A, else Func_004_4904 (E-0122)
 ; 4 call sites from 1 routine (e.g. Func_004_456D_Case03)
 ; reads: wC935
-Func_004_4852::
+RunWC935Type0AOrOther::
+Func_004_4852:: ; address name
     ld a, [wC935]
     and a, $0F
     cp a, $0A
@@ -1291,7 +1297,7 @@ Func_004_4852::
     ret
 
 Jump_004_485F::
-    call Func_004_495A
+    call RunWC935Type0AOrOther_Sub01
     ret
 
 ; entry 4 of the `rst $00` table in Func_004_456D
@@ -1401,7 +1407,7 @@ Jump_004_48CD::
     db $00, $10, $01, $0E, $02, $0E, $01, $0E, $02, $0E, $00, $20, $06, $0E, $07, $20
     db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
 
-; 3 call sites from 2 routines (e.g. Func_004_4852, Func_004_456D_Case02)
+; 3 call sites from 2 routines (e.g. RunWC935Type0AOrOther, Func_004_456D_Case02)
 ; reads: wMaxBlockingTile
 ; points at: wScreenTileBuffer, wC910
 Func_004_4904::
@@ -1467,10 +1473,12 @@ Jump_004_4955::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_004_4852)
+; only called from RunWC935Type0AOrOther (E-0047)
+; 1 call site from 1 routine (e.g. RunWC935Type0AOrOther)
 ; reads: wC196
 ; points at: wScreenTileBuffer, wC910
-Func_004_495A::
+RunWC935Type0AOrOther_Sub01::
+Func_004_495A:: ; address name
     push bc
     push de
     ld a, c
@@ -1647,7 +1655,7 @@ Jump_004_4A43::
     ret
     INCBIN "dwm2-cobi-us.gbc", $010A46, $62
 
-; 32 call sites from 32 routines (e.g. Func_002_4628, Func_002_4745_Case02, Func_002_4A53, ScriptCommandF6_Run_Case06, ...)
+; 32 call sites from 32 routines (e.g. Func_002_4628, RunWC8C7Phase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
 ; reads: hFF8C, hFF8B
 ; writes: hFF8B, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 Func_004_4AA8::
@@ -1729,7 +1737,7 @@ Jump_004_4AF1::
 Jump_004_4B23::
     call Func_004_4B2D
     call Func_000_228A
-    call Func_004_4B7E
+    call LoadAltObjectGraphicsIfHFF8CBit3
     ret
 
 ; 5 call sites from 3 routines (e.g. Func_004_4AA8, ScriptCommandA0_Run_Case04, ScriptCommandA1_Run_Case02)
@@ -1787,11 +1795,13 @@ Jump_004_4B5E::
     call DecompressGraphicsHFFC6ToHFFCA
     ret
 
+; when hFF8C bit 3 is set: decompresses Data_07E_58FF (bank $7E) to vTiles0 + $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer (wC527 = $7F) (E-0120)
 ; 1 call site from 1 routine (e.g. Func_004_4AA8)
 ; reads: hFF8C
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
-Func_004_4B7E::
+LoadAltObjectGraphicsIfHFF8CBit3::
+Func_004_4B7E:: ; address name
     ldh a, [hFF8C]
     bit 3, a
     ret z
@@ -1816,7 +1826,7 @@ Func_004_4B7E::
     ld [wC527], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_004_4001, Func_002_4AE0_Case04)
+; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_Case04)
 ; reads: hFF8C, hFF99, hFF8B
 ; writes: hFF99
 ; points at: hFF99
@@ -3141,7 +3151,7 @@ Func_004_5616:: ; address name
     dw Func_004_5616_Case02
     db $00, $00
     dw StartScript4F73AndSetFlag5
-    dw Func_004_5698
+    dw StartScript4F7CAndSetFlag06
     dw IfFlag000AStartScript4F9D
     dw Talk0046_ThanksForComingBy
     dw Data_004_5731
@@ -3215,9 +3225,11 @@ Func_004_568B:: ; address name
     call SetFlagBit
     ret
 
+; map event: starts script $4F7C, runs Func_012_6B98 with hFFC6 = 0 and sets story flag 6 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hFFC6
-Func_004_5698:: ; heuristic: target of a pointer table; C0
+StartScript4F7CAndSetFlag06:: ; heuristic: target of a pointer table; C0
+Func_004_5698:: ; address name
     ld hl, $4F7C
     call StartScriptAtHL_B04
     ld a, $00
@@ -6830,7 +6842,7 @@ Func_004_6A35:: ; address name
     dw TalkMsg079B_MonstersHaveTakenTo
     dw TalkMsg079C_GrrrrImSoAngry
     dw StartScript643EInBank10
-    dw Func_004_73D8
+    dw StartScript6445ByPlayerX30
     dw TalkMsg079F_IfYouTravelWest
     dw Talk07D7_MilayouIEBeen
     db $97, $74
@@ -6839,9 +6851,9 @@ Func_004_6A35:: ; address name
     dw TalkMsg07AE_ThatDealersWaresCould
     dw Talk07AF_HowDoesThisOrnament
     dw TalkMsg07B8_WhoAreYouYou
-    dw Func_004_7624
+    dw StartScript6496Or64A6ByFlag1BA
     dw Talk07BF_HeroFoundThePretty
-    dw Func_004_7657
+    dw StartScript6509Or652CByFlag1C2
     dw Msg01C8_ThisIsAGreat
     dw Msg01C9_ThisIsAGreat
     db $8F, $76, $96, $76, $9D, $76, $A4, $76, $B5, $76
@@ -8174,10 +8186,12 @@ Func_004_73C7:: ; address name
     call StartScriptAtHL_B04
     ret
 
+; map event: wCB86 = 0 if hPlayerX = $30 else 1, starts script $6445 and sets wDataBank = $10 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: wCB86, wDataBank
-Func_004_73D8:: ; heuristic: target of a pointer table; C0
+StartScript6445ByPlayerX30:: ; heuristic: target of a pointer table; C0
+Func_004_73D8:: ; address name
     xor a, a
     ld [wCB86], a
     ldh a, [hPlayerX]
@@ -8510,8 +8524,10 @@ Jump_004_761D::
     call StartMessageCommand09HL_B04
     ret
 
+; map event: starts script $64A6 if story flag $1BA is set, else $6496 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7624:: ; heuristic: target of a pointer table; C0
+StartScript6496Or64A6ByFlag1BA:: ; heuristic: target of a pointer table; C0
+Func_004_7624:: ; address name
     ld de, $01BA
     call TestFlagBit
     jr c, Jump_004_7633
@@ -8545,8 +8561,10 @@ Jump_004_7646::
     call StartScriptAtHL_B04
     ret
 
+; map event: starts script $652C if story flag $1C2 is set, else $6509 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7657:: ; heuristic: target of a pointer table; C0
+StartScript6509Or652CByFlag1C2:: ; heuristic: target of a pointer table; C0
+Func_004_7657:: ; address name
     ld de, $01C2
     call TestFlagBit
     jr c, Jump_004_7666

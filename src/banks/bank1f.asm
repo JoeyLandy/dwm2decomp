@@ -232,7 +232,7 @@ Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07D094, $17A
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 1 call site from 1 routine (e.g. GameMode0_Update_Table2_Case17)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case17)
 BeginStringDisplay_Bank1F::
 Func_01F_520E:: ; address name
     ld de, Data_01F_5223
@@ -630,7 +630,7 @@ Data_01F_5B76:: ; heuristic: bank from RAM variable $D7FE; C0
 Data_01F_5BA8:: ; heuristic: bank from RAM variable $D7FE; C0
     INCBIN "dwm2-cobi-us.gbc", $07DBA8, $6D
 
-; 8 call sites from 8 routines (e.g. Func_014_43CC_Case20, Func_015_4182_Case03, Func_015_54C0_Case0E, Func_015_60BF_Table2_Case06, ...)
+; 8 call sites from 8 routines (e.g. ScriptCommandEB_Run_Case05_Case20, ScriptCommandED_Run_Case04_Case03, ScriptCommandED_Run_Case07_Case0E, ScriptCommandED_Run_Case12_Case06, ...)
 ; reads: wD7AF, wD7B1, wD7A9, wD781, wD7B0
 ; writes: rRAMG2, rRAMB, wC8D9, wD781
 ; points at: wD789
@@ -746,7 +746,7 @@ Jump_01F_5CB0::
     jr z, Jump_01F_5CCF
     cp a, $8E
     jr z, Jump_01F_5CCF
-    call Func_01F_5CF8
+    call GlyphCopyArgsForA
     call CopyFromBankWaitVRAM
     jr Jump_01F_5CDE
 
@@ -756,7 +756,7 @@ Jump_01F_5CCF::
     dec a
     ld [wD785], a
     pop af
-    call Func_01F_5CF8
+    call GlyphCopyArgsForA
     call OrFromBankWaitVRAM
 
 Jump_01F_5CDE::
@@ -776,9 +776,11 @@ Jump_01F_5CEF::
     ld [wD784], a
     ret
 
+; DE = Data_01F_4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_01F_5D20 + 2 * wD785, B = $1F (bank), C = 16 (bytes) (E-0120)
 ; 2 call sites from 1 routine (e.g. Func_01F_5CA6)
 ; reads: wD785
-Func_01F_5CF8::
+GlyphCopyArgsForA::
+Func_01F_5CF8:: ; address name
     swap a
     ld d, a
     and a, $F0
@@ -808,7 +810,7 @@ Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
 ; parameters wD7F1/wD7F2 = source (high, low), wD7F3 = width, wD7F4 = rows, wD7F5/wD7F6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wD7F7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
-; 25 call sites from 18 routines (e.g. Func_01F_73EC, Func_01F_74E3, Func_01F_753A, Func_01F_7591, ...)
+; 25 call sites from 18 routines (e.g. Func_01F_73EC, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, Func_01F_7591, ...)
 ; reads: wD7F6, rSTAT, wIsCGB, wD7F7
 ; writes: rVBK
 ; points at: wD7F1
@@ -907,7 +909,7 @@ Jump_01F_5D89::
     jr nz, Jump_01F_5D3B
     ret
 
-; 10 call sites from 10 routines (e.g. Func_01F_7494, Func_00C_5177, Func_014_5CA8_Table2_Case00, Func_014_631C_Table3_Case00, ...)
+; 10 call sites from 10 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, ScriptCommandF6_Run_Shared06, RunWCFA8StateWhenNotFading_Case00_Case00, RunWCFA8StateWhenNotFading_Case06_Case00, ...)
 ; reads: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, rSTAT, wIsCGB, ...
 ; writes: rVBK
 Func_01F_5D9A::
@@ -1095,7 +1097,7 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $12, $B4
     INCBIN "dwm2-cobi-us.gbc", $07F1EE, $187
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case01, Func_0F1_5285_Case01)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_0F1_4AD0_Case0D_Case01)
 Func_01F_7375::
     ld c, $00
 
@@ -1157,7 +1159,7 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case05, Func_0F1_5285_Case05)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, Func_0F1_4AD0_Case0D_Case05)
 ; reads: wD782, wCA36, wCA37, wIsCGB, wD781
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wD782, ...
 Func_01F_73EC::
@@ -1242,9 +1244,11 @@ Jump_01F_745C::
     ld [wD781], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case00, Func_0F1_5285_Case00)
+; draws the 32 x 32 tile map Data_01F_5E12 at the scroll origin, then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case00, Func_0F1_4AD0_Case0D_Case00)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
-Func_01F_7494::
+DrawTileMap5E12AndLoadFrameTiles::
+Func_01F_7494:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld a, h
     ld [wD7F5], a
@@ -1279,9 +1283,11 @@ Func_01F_7494::
     call CopyFromBankWaitVRAM
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case15, Func_0F1_5285_Case15)
+; draws the tile rectangles Data_01F_662B (12 x 15 at scroll + $68) and Data_01F_653F (8 x 7 at scroll + $160) (E-0121)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case15, Func_0F1_4AD0_Case0D_Case15)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
-Func_01F_74E3::
+DrawRects662BAnd653F::
+Func_01F_74E3:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0068
     add hl, de
@@ -1322,9 +1328,11 @@ Func_01F_74E3::
     call DrawTileRectFromWD7F1Params
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case17, Func_0F1_5285_Case17)
+; draws the tile rectangles Data_01F_6B4F (12 x 18 at scroll + 8) and Data_01F_6C27 (8 x 7 at scroll + $160) (E-0121)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case17, Func_0F1_4AD0_Case0D_Case17)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
-Func_01F_753A::
+DrawRects6B4FAnd6C27::
+Func_01F_753A:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
     add hl, de
@@ -1365,7 +1373,7 @@ Func_01F_753A::
     call DrawTileRectFromWD7F1Params
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case18, Func_0F1_5285_Case18)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case18, Func_0F1_4AD0_Case0D_Case18)
 ; writes: wC52D, wC52E, wC52F, wC530, wD7F5, wD7F6, wD7F1, wD7F2, ...
 Func_01F_7591::
     ld hl, vTiles2 + $200
@@ -1419,7 +1427,7 @@ Func_01F_7591::
     call DrawTileRectFromWD7F1Params
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case19, Func_0F1_5285_Case19)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, Func_0F1_4AD0_Case0D_Case19)
 ; reads: wCA5F
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wCA2B
@@ -1523,7 +1531,7 @@ Jump_01F_769E::
     ld [wC530], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case1B, Func_0F1_5285_Case1B)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1B, Func_0F1_4AD0_Case0D_Case1B)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wC52D, ...
 Func_01F_76B5::
     call BGMapAddressAtScroll_Bank1F
@@ -1598,9 +1606,11 @@ Func_01F_76B5::
     ld [wC530], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case1C, Func_0F1_5285_Case1C)
+; draws the tile rectangles Data_01F_5E13 (12 x 3 at scroll + 8) and Data_01F_66DF (8 x 7 at scroll + $160) (E-0121)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1C, Func_0F1_4AD0_Case0D_Case1C)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7
-Func_01F_7754::
+DrawRects5E13And66DF::
+Func_01F_7754:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
     add hl, de
@@ -1642,7 +1652,7 @@ Func_01F_7754::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 14 call sites from 7 routines (e.g. Func_01F_7494, Func_01F_73EC, Func_01F_74E3, Func_01F_753A, ...)
+; 14 call sites from 7 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, Func_01F_73EC, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1F::
 Func_01F_77AB:: ; address name

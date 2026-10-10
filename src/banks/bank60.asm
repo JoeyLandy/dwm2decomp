@@ -1,11 +1,13 @@
 SECTION "Bank 60", ROMX[$4000], BANK[$60]
     db $60
 
-; 1 call site from 1 routine (e.g. Func_002_6C40_Case05)
+; only called from RunWC46BMenuState_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case05)
 ; reads: wC833, hFFC6
 ; writes: wCC42, wCD03, wCD04
 ; points at: wC787
-Func_060_4001::
+RunWC46BMenuState_Case05_Sub01::
+Func_060_4001:: ; address name
     ld a, [wC833]
     ld l, a
     ld h, $00
@@ -75,7 +77,7 @@ Func_060_4035:: ; address name
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 DebugAutomap_Update_Sub01_Sub01_Sub01::
 Func_060_4076:: ; address name
-    call Func_060_47A7
+    call LoadWC969TripleForWCD05
     call Func_060_436B
     call Func_060_408F
     call Func_060_4233
@@ -929,10 +931,12 @@ Jump_060_47A4::
     ld a, $07
     ret
 
+; copies three bytes of entry wCD05 of the 8-byte table at $47C5 to wC969-wC96B (E-0121)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD05
 ; writes: wC969, wC96A, wC96B
-Func_060_47A7::
+LoadWC969TripleForWCD05::
+Func_060_47A7:: ; address name
     ld a, [wCD05]
     ld l, a
     ld h, $00
@@ -963,7 +967,7 @@ DebugAutomap_Update_Sub01_Sub01_Sub02::
 Func_060_4AE5:: ; address name
     xor a, a
     ld [wCD07], a
-    call Func_060_4C6C
+    call ClearWC88EWhenWC891MatchesWCC42
     xor a, a
     ld hl, wCE93
     ld b, $08
@@ -972,7 +976,7 @@ Jump_060_4AF2::
     ld [hl+], a
     dec b
     jr nz, Jump_060_4AF2
-    call Func_060_4C85
+    call PickRandomNonzeroFromTable4CC1
     ld a, [wCD05]
     ld l, a
     ld h, $00
@@ -1135,10 +1139,12 @@ Data_060_4C58:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $0F, $08, $0F, $08, $0F, $10, $1F, $10, $1F, $10, $1F, $10, $1F, $10, $1F
     db $10, $1F, $10, $1F
 
+; when wC88E is set and wC891 has bit 7 with low bits equal to wCC42, clears wC88E (E-0122)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
 ; reads: wC88E, wC891, wCC42
 ; writes: wC88E
-Func_060_4C6C::
+ClearWC88EWhenWC891MatchesWCC42::
+Func_060_4C6C:: ; address name
     ld a, [wC88E]
     or a, a
     ret z
@@ -1154,10 +1160,12 @@ Func_060_4C6C::
     ld [wC88E], a
     ret
 
+; repeatedly picks entry (wCD03 & 3) of the 4-byte row of Data_060_4CC1 selected by the second byte of the wC708 entry wC833 until it is non-zero; wCD0B = entry - 1 (E-0121)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
 ; reads: wCD03, wC833
 ; writes: wCD0B
-Func_060_4C85::
+PickRandomNonzeroFromTable4CC1::
+Func_060_4C85:: ; address name
     call NextRandomSeed
     ld a, [wCD03]
     and a, $07
@@ -1186,7 +1194,7 @@ Func_060_4C85::
     add_a_to_hl
     ld a, [hl]
     or a, a
-    jr z, Func_060_4C85
+    jr z, PickRandomNonzeroFromTable4CC1
     dec a
     ld [wCD0B], a
     ret
@@ -2319,7 +2327,7 @@ Jump_060_53A7::
 Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
-; 3 call sites from 3 routines (e.g. Func_060_62F9, Func_060_686C, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 3 call sites from 3 routines (e.g. Func_060_62F9, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; writes: wCD0F
 Func_060_53C3::
     cp a, $0B
@@ -2673,10 +2681,12 @@ Data_060_555F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $59, $00, $5A, $5D, $00, $00, $5E, $5F, $61, $62, $63, $00, $64
     ds $11, $00
 
-; 2 call sites from 2 routines (e.g. Func_060_686C, Func_060_65AA)
+; only called from routines of FieldModeStateDispatch (E-0098)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01, FieldModeStateDispatch_Case04_Sub02)
 ; reads: wCD0F, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_060_596F::
+FieldModeStateDispatch_Shared05::
+Func_060_596F:: ; address name
     ld a, [wCD0F]
     and a, $0F
     ld l, a
@@ -3052,7 +3062,7 @@ Jump_060_5F1C::
     inc d
 
 Jump_060_5F5E::
-    call Func_060_60E0
+    call StoreThreeBytesBeforeHFFC6Pointer
     ld [hl], $00
     ld hl, $0004
     call StoreHFFC8To3BytesBeforeHLPlusHFFC6
@@ -3148,7 +3158,7 @@ Jump_060_5FC8::
     inc d
 
 Jump_060_5FF2::
-    call Func_060_60E0
+    call StoreThreeBytesBeforeHFFC6Pointer
     ld [hl], $00
     ld hl, $0004
     call StoreHFFC8To3BytesBeforeHLPlusHFFC6
@@ -3223,7 +3233,7 @@ Jump_060_6038::
     inc d
 
 Jump_060_605E::
-    call Func_060_60E0
+    call StoreThreeBytesBeforeHFFC6Pointer
     ld [hl], $00
     ld hl, $0008
     call StoreHFFC8To3BytesBeforeHLPlusHFFC6
@@ -3281,7 +3291,7 @@ Jump_060_609E:: ; address name
     inc d
 
 Jump_060_60B2::
-    call Func_060_60E0
+    call StoreThreeBytesBeforeHFFC6Pointer
     ld [hl], $00
     ldh a, [hFFCD]
     swap a
@@ -3310,10 +3320,12 @@ Jump_060_60B2::
     ld a, $01
     ret
 
+; copies three bytes at DE to the address in hFFC6/hFFC7 minus 3 and to hFFC8-hFFCA (E-0121)
 ; 4 call sites from 4 routines (e.g. Func_060_5EE1_Case03, Func_060_5EE1_Case02, Func_060_5EE1_Case01, Func_060_5EE1_Case00)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9, hFFCA
-Func_060_60E0::
+StoreThreeBytesBeforeHFFC6Pointer::
+Func_060_60E0:: ; address name
     ldh a, [hFFC6]
     ld l, a
     ldh a, [hFFC7]
@@ -4012,15 +4024,17 @@ Jump_060_6590::
     ld a, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0_Case04)
+; only called from FieldModeStateDispatch_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCCEA, wCD04
 ; writes: wCCE9, wCCEA, wCD0F, hFFC8, hFFC9
 ; points at: wCCEB, hFFC9
-Func_060_65AA::
+FieldModeStateDispatch_Case04_Sub02::
+Func_060_65AA:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_060_65B5
-    call Func_060_686C
+    call FieldModeStateDispatch_Case04_Sub02_Sub01
     ret
 
 Jump_060_65B5::
@@ -4093,8 +4107,8 @@ Jump_060_65EF::
 Jump_060_661E::
     push de
     push bc
-    call Func_060_596F
-    call Func_060_664A
+    call FieldModeStateDispatch_Shared05
+    call WriteTable669CWordForHFFC8HFFC9
     ld hl, hFFC9
     inc [hl]
     pop bc
@@ -4113,9 +4127,11 @@ Data_060_6634:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_060_663F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $38, $39, $3A, $53, $5D, $82, $83, $AD, $AE, $FF
 
-; 1 call site from 1 routine (e.g. Func_060_65AA)
+; DE += 2; writes the word at $669C + 16 * hFFC8 + 2 * Data_060_6677[hFFC9] at DE (E-0121)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02)
 ; reads: hFFC8, hFFC9
-Func_060_664A::
+WriteTable669CWordForHFFC8HFFC9::
+Func_060_664A:: ; address name
     inc de
     inc de
     ldh a, [hFFC8]
@@ -4329,11 +4345,13 @@ Data_060_685F:: ; heuristic: target of a monotone pointer table; C0
 Data_060_6866:: ; heuristic: target of a monotone pointer table; C0
     db $00, $00, $00, $00, $00, $00
 
-; 1 call site from 1 routine (e.g. Func_060_65AA)
+; only called from FieldModeStateDispatch_Case04_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02)
 ; reads: wCC44, wCC43, wCC45, wCCEA, wC833, wCCED, wCCF1, wCCEE, ...
 ; writes: wCCE9, wCCEA
 ; points at: wCDB0, wCCEB
-Func_060_686C::
+FieldModeStateDispatch_Case04_Sub02_Sub01::
+Func_060_686C:: ; address name
     ld a, [wCC44]
     and a, $07
     cp a, $05
@@ -4389,8 +4407,8 @@ Jump_060_687A::
 Jump_060_68C2::
     push de
     push bc
-    call Func_060_596F
-    call Func_060_68EB
+    call FieldModeStateDispatch_Shared05
+    call WriteRandomEntryFromTable690E
     pop bc
     pop de
     inc de
@@ -4413,10 +4431,12 @@ Jump_060_68C2::
     ld [wCCE9], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_686C)
+; DE += 2; advances the random seed; hFFC6 = wCD04 & 7; writes Data_060_690E[hFFC6] at DE, calls Func_061_4706, then writes hFFC6 at the next byte (E-0121)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01)
 ; reads: wCD04, hFFC6
 ; writes: hFFC6
-Func_060_68EB::
+WriteRandomEntryFromTable690E::
+Func_060_68EB:: ; address name
     inc de
     inc de
     call NextRandomSeed
@@ -4429,7 +4449,7 @@ Func_060_68EB::
     ld [de], a
     inc de
     push de
-    farcall Func_061_4706
+    farcall LookupTable4818NibblePairForHFFC6
     pop de
     ldh a, [hFFC6]
     ld [de], a
@@ -4513,7 +4533,7 @@ Data_060_6A09:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182B05, $15C
 
-; 3 call sites from 3 routines (e.g. Func_060_4001, DebugAutomap_Update_Sub01, Func_01B_53CE_Table3_Case21)
+; 3 call sites from 3 routines (e.g. RunWC46BMenuState_Case05_Sub01, DebugAutomap_Update_Sub01, RunWD780StateWhenNotFading_1B_Case01_Case21)
 ; reads: hFFC6
 ; writes: rRAMB, rRAMG, hFFC6
 ; points at: sA000
@@ -4553,11 +4573,13 @@ Jump_060_6C8E::
     ld [rRAMB], a
     ret
 
-; 6 call sites from 5 routines (e.g. DebugAutomap_Update_Sub01, Func_002_4745_Case02, Func_002_4F4C_Case07, Func_002_6C40_Case05, ...)
+; when wCC42 < 20, writes wCC42 + $50 and the $194 bytes at wCD07 to SRAM bank 2 at $A000 + $195 * wCC42 (E-0121)
+; 6 call sites from 5 routines (e.g. DebugAutomap_Update_Sub01, RunWC8C7Phase_Case02, Func_002_4F4C_Case07, RunWC46BMenuState_Case05, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07
-Func_060_6C96::
+SaveWCD07RecordToSRAMSlotWCC42::
+Func_060_6C96:: ; address name
     ld a, [wCC42]
     cp a, $14
     ret nc
@@ -4588,7 +4610,7 @@ Func_060_6C96::
     ld [rRAMB], a
     ret
 
-; 8 call sites from 8 routines (e.g. DebugAutomap_Update, Func_002_6C40_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
+; 8 call sites from 8 routines (e.g. DebugAutomap_Update, RunWC46BMenuState_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07

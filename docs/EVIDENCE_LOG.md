@@ -1361,6 +1361,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Data mis-decoded as code, left unnamed: 12:55F8, 36:6A59, 36:746B, 3D:4E3D, 7A:4001, 92:5805, 92:580E, E0:55BF.
 - Binary verification: pending; see the commit.
 
+### E-0123 — Tables inside jump-table cases are named after their case
+
+- Kind: DECISION (generator rule; structural naming, C1).
+- **Problem.** `name_dispatch_cases` named a `rst $00` table's targets after the nearest routine label before the table. A table inside a case (for example the table at 37:53C0, inside `Func_037_4AFD_Case0D`) was attributed to an unrelated routine. Its targets were then called `ShowString0EAndStep_Bank37_CaseNN`, which says the wrong thing once that routine had a name.
+- **Rule.** When the nearest label before the table is already named (a case or a hand name) and lies after the chosen routine label, it becomes the parent. 1993 nested case labels change, for example `Func_037_4AFD_Case0D_Case04`, `DispatchTalkEvent_Case05_Case61` and `ScriptCommandF8_Run_Case02_Case09`. Address-only routines fall from 943 to 786, because helper names now resolve through the corrected parents.
+- **Test.** `tests/test_generated_source.py::NestedDispatchCases`.
+- **Commits.** The regenerated `src/` for E-0120-E-0122 was not committed with those entries; it is committed here.
+- Binary verification: build/run81 PASS, 0 differing bytes; 140 tests OK (3 skipped) before the new test was added.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

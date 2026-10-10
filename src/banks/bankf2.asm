@@ -332,10 +332,12 @@ Func_0F2_41CC:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
+; clears the default window, wC8CB = 1, wC8CC = 0, hFFB9 = 2, then repeatedly far-calls Func_002_69D0 until wC8CB & 3 = 0 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB
 ; writes: wC8CB, wC8CC, hFFB9
-Func_0F2_4202:: ; heuristic: follows a terminator; C0
+RunTextUntilWC8CBDone_BankF2:: ; heuristic: follows a terminator; C0
+Func_0F2_4202:: ; address name
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -591,7 +593,7 @@ Func_0F2_43C3:: ; address name
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_BankF2, GameMode0_Update_Table2_Case1E)
+; 2 call sites from 2 routines (e.g. ShowString_BankF2, DebugMessageTest_Update_Case1E)
 BeginStringDisplay_BankF2::
 Func_0F2_43D0:: ; address name
     ld de, Data_0F2_43E5
@@ -600,7 +602,7 @@ Func_0F2_43D0:: ; address name
     db $11, $E5, $43, $CD, $FE, $25, $C9
 
 ; Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. EndScriptCommandAndIncWD782_Case07, ClearStringWindowAt1500AndIncWD781_Case03)
+; 2 call sites from 2 routines (e.g. ScriptCommandEF_Run_Case0F_Case07, ScriptCommandF0_Run_Case06_Case03)
 ShowString_BankF2::
 Func_0F2_43DE:: ; address name
     call BeginStringDisplay_BankF2
@@ -889,9 +891,11 @@ Data_0F2_48D1:: ; heuristic: target of a monotone pointer table; C0
     db "another name.", $F7
     db $F0
 
-; 4 call sites from 4 routines (e.g. Func_037_5344_Case01, Func_037_5344_Case1C, Func_0F1_5285_Case01, Func_0F1_5285_Case1C)
+; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
+; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_037_4AFD_Case0D_Case1C, Func_0F1_4AD0_Case0D_Case01, Func_0F1_4AD0_Case0D_Case1C)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
-Func_0F2_49CF::
+ShowString10Bank0EAtTiles2020ThenDefault::
+Func_0F2_49CF:: ; address name
     ld a, $10
     ld [wStringIndex], a
     xor a, a
@@ -919,9 +923,11 @@ Func_0F2_49CF::
     ld [wC530], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344, Func_0F1_5285)
+; shows string $0E of category 0 (ShowString_Bank0E) at vTiles2 + $700 with size $0107, restores the default window and copies two tiles from bank $1F to vTiles1 + $6E0 and + $6F0 (E-0121)
+; 2 call sites from 2 routines (e.g. ShowString0EAndStep_Bank37, ShowString0EAndStep_BankF1)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
-Func_0F2_4A0B::
+ShowString0EBank0EAtTiles2700AndLoadTiles::
+Func_0F2_4A0B:: ; address name
     ld a, $0E
     ld [wStringIndex], a
     xor a, a
@@ -959,10 +965,12 @@ Func_0F2_4A0B::
     call CopyFromBankWaitVRAM
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_4AFE)
+; clears five tiles at vTiles2 + $290 (copying $2940) and draws the name at wCA3A there (E-0121)
+; 1 call site from 1 routine (e.g. ShowPersonalityNameAndWCA3AName)
 ; writes: wC8D9
 ; points at: wCA3A
-Func_0F2_4A61::
+DrawWCA3ANameAtTiles2290::
+Func_0F2_4A61:: ; address name
     ld hl, $2940
     ld de, vTiles2 + $290
     call CopyTileBytesToVRAMCounted_BankF2
@@ -982,10 +990,12 @@ Func_0F2_4A61::
     call CopyGlyphTilesToVRAM
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_4AFE)
+; shows personality name CombinedPersonalityLevelIndex (category 7) at vTiles2 + $200 with size $0109, then restores the default window (E-0121)
+; 1 call site from 1 routine (e.g. ShowPersonalityNameAndWCA3AName)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
-Func_0F2_4A94::
-    call Func_0F2_4AD3
+ShowCombinedPersonalityName::
+Func_0F2_4A94:: ; address name
+    call CombinedPersonalityLevelIndex
     ld c, a
     ld [wStringIndex], a
     ld a, $07
@@ -1013,9 +1023,11 @@ Func_0F2_4A94::
     ld [wC530], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_4A94)
+; returns 9 * PersonalityLevelOfA(wCA9A) + 3 * PersonalityLevelOfA(wCA9D) + PersonalityLevelOfA(wCA9B) (E-0121)
+; 1 call site from 1 routine (e.g. ShowCombinedPersonalityName)
 ; reads: wCA9A, wCA9D, wCA9B
-Func_0F2_4AD3::
+CombinedPersonalityLevelIndex::
+Func_0F2_4AD3:: ; address name
     ld a, [wCA9A]
     call PersonalityLevelOfA
     ld a, $09
@@ -1035,7 +1047,7 @@ Func_0F2_4AD3::
     ret
 
 ; C = 0 when A >= $C0, 1 when A >= $40, else 2 (the g(v) of PersonalityIndexOfSlot) (E-0116)
-; 3 call sites from 1 routine (e.g. Func_0F2_4AD3)
+; 3 call sites from 1 routine (e.g. CombinedPersonalityLevelIndex)
 PersonalityLevelOfA::
 Func_0F2_4AF3:: ; address name
     ld c, $00
@@ -1047,13 +1059,15 @@ Func_0F2_4AF3:: ; address name
     inc c
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case12, Func_0F1_5285_Case12)
-Func_0F2_4AFE::
-    call Func_0F2_4A94
-    call Func_0F2_4A61
+; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case12, Func_0F1_4AD0_Case0D_Case12)
+ShowPersonalityNameAndWCA3AName::
+Func_0F2_4AFE:: ; address name
+    call ShowCombinedPersonalityName
+    call DrawWCA3ANameAtTiles2290
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case13, Func_0F1_5285_Case13)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, Func_0F1_4AD0_Case0D_Case13)
 ; reads: wCA83, wCA84, wCA85, wCA81, wCA82, hFFC6, wCA36, wCA37, ...
 ; writes: wC8C0, wC8C1, wC8C2, hFFC6, hFFC7, wSpeciesIdLo, wSpeciesIdHi, hFFC8, ...
 ; points at: hFFC8
@@ -1092,7 +1106,7 @@ Func_0F2_4B05::
     pop bc
     ld a, b
     ldh [hFFC7], a
-    farcall Func_019_7380
+    farcall LoadTable4E60EntryToHFFC8
     ld de, hFFC8
     ld a, [de]
     ld c, a
@@ -1156,10 +1170,12 @@ Jump_0F2_4BB6::
     ld [wD7F7], a
     jr Jump_0F2_4BA8
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case14, Func_0F1_5285_Case14)
+; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case14, Func_0F1_4AD0_Case0D_Case14)
 ; reads: wCACF
 ; writes: wStringIndex, wStringCategory, rRAMG2, wC52D, wC52E, wC52F, wC530
-Func_0F2_4BD0::
+ShowWCACFCategory11StringAtTiles2320::
+Func_0F2_4BD0:: ; address name
     ld a, [wCACF]
     ld [wStringIndex], a
     ld a, $0B
@@ -1179,10 +1195,12 @@ Func_0F2_4BD0::
     farcall ShowString_Bank08
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case1A, Func_0F1_5285_Case1A)
+; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1A, Func_0F1_4AD0_Case0D_Case1A)
 ; reads: wCA36, wCA37, wD013
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
-Func_0F2_4BFC::
+ShowSpeciesCategory13StringAtTiles2680::
+Func_0F2_4BFC:: ; address name
     ld a, [wCA36]
     ld [wSpeciesIdLo], a
     ld a, [wCA37]
@@ -1205,7 +1223,7 @@ Func_0F2_4BFC::
     farcall ShowString_Bank08
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case1F, Func_0F1_5285_Case1F)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1F, Func_0F1_4AD0_Case0D_Case1F)
 Func_0F2_4C36::
     call Func_0F2_4C3D
     call Func_0F2_4D72
@@ -1274,7 +1292,7 @@ Jump_0F2_4C7E::
     inc de
     push de
     ld [wD7F3], a
-    call Func_0F2_4D2B
+    call ShowWCA2BEntryStringAtWD7F1
     pop de
 
 Jump_0F2_4CA8::
@@ -1334,7 +1352,7 @@ Jump_0F2_4CEE::
     inc de
     push de
     ld [wD7F3], a
-    call Func_0F2_4D2B
+    call ShowWCA2BEntryStringAtWD7F1
     pop de
 
 Jump_0F2_4D18::
@@ -1346,11 +1364,13 @@ Jump_0F2_4D18::
     call CopyGlyphTilesToVRAM
     ret
 
+; shows string wCA2B[wD7F3] of category wCA2C[wD7F3] + 2 at the address in wD7F1/2 with size $0109 (E-0121)
 ; 2 call sites from 1 routine (e.g. Func_0F2_4C3D)
 ; reads: wD7F3, wD7F1, wD7F2
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ; points at: wCA2B
-Func_0F2_4D2B::
+ShowWCA2BEntryStringAtWD7F1::
+Func_0F2_4D2B:: ; address name
     ld a, [wD7F3]
     ld hl, wCA2B
     add_a_to_hl
@@ -1430,7 +1450,7 @@ Jump_0F2_4D9E::
     ld [wD7F4], a
     call Func_0F2_50C6
     pop de
-    call Func_0F2_4E26
+    call PickNameBufferForFirstByte_BankF2
     inc de
     inc de
     push de
@@ -1480,7 +1500,7 @@ Jump_0F2_4DF0::
     ld [wD7F4], a
     call Func_0F2_50C6
     pop de
-    call Func_0F2_4E26
+    call PickNameBufferForFirstByte_BankF2
     push de
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $018E
@@ -1496,9 +1516,11 @@ Jump_0F2_4DF0::
 Jump_0F2_4E25::
     ret
 
+; BC = wCCCD when the byte at DE is $98 (the ??? placeholder), else wCDCC (E-0122)
 ; 2 call sites from 1 routine (e.g. Func_0F2_4D72)
 ; points at: wCDCC, wCCCD
-Func_0F2_4E26::
+PickNameBufferForFirstByte_BankF2::
+Func_0F2_4E26:: ; address name
     ld a, [de]
     cp a, $98
     jr z, Jump_0F2_4E30
@@ -1538,7 +1560,7 @@ Jump_0F2_4E48::
     ret
 
 ; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
-; 5 call sites from 2 routines (e.g. Func_0F2_4A61, Func_0F2_4C3D)
+; 5 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, Func_0F2_4C3D)
 ; points at: wC8CF
 CopyShortStringToWC8CF_BankF2::
 Func_0F2_4E50:: ; address name
@@ -1579,7 +1601,7 @@ Jump_0F2_4E68::
     jr nz, Jump_0F2_4E68
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case1E, Func_0F1_5285_Case1E)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1E, Func_0F1_4AD0_Case0D_Case1E)
 ; reads: wCA38, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7, wD7F1, wD7F2
 ; points at: wCA2B, wD7F3
@@ -1655,7 +1677,7 @@ Jump_0F2_4ECC::
 Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
-; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, Func_007_7C5F_Case04, GameMode5_Update_Case05_Sub01)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wCA38, hFFC7, hFFC6
 ; writes: hFFC6, wD7F1, wD7F2
 ; points at: wD7F3
@@ -1715,7 +1737,7 @@ Jump_0F2_4F1F::
     dec c
     jr nz, Jump_0F2_4F1F
     ld c, $00
-    farcall Func_01D_6A3D
+    farcall DrawMetaSpritePartC0
 
 Jump_0F2_4F2D::
     pop bc
@@ -1734,7 +1756,7 @@ Data_0F2_4F41:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
-; 5 call sites from 5 routines (e.g. Func_0F2_5002, Func_037_5344_Case16, Func_037_5344_Case1D, Func_0F1_5285_Case16, ...)
+; 5 call sites from 5 routines (e.g. Func_0F2_5002, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, Func_0F1_4AD0_Case0D_Case16, ...)
 ; reads: hFFC7, hFFC6, wC8C1, wC8C2, wCA80, wCA39
 ; writes: hFFC6, hFFC7
 ; points at: wCA81
@@ -1877,7 +1899,7 @@ Func_0F2_4FF9:: ; address name
     ei
     ret
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case04, Func_0F1_5285_Case04)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, Func_0F1_4AD0_Case0D_Case04)
 Func_0F2_5002::
     call Func_0F2_4F47
     call Func_0F2_505C
@@ -1917,7 +1939,7 @@ Jump_0F2_500E::
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call Func_0F2_50A4
+    call WriteThreeDigitsWC8C0AtHL
     inc c
     ld a, c
     cp a, $04
@@ -1962,7 +1984,7 @@ Jump_0F2_5073::
     farcall BlankLeadingZeroDigitsWC8C0
     pop hl
     push hl
-    call Func_0F2_50A4
+    call WriteThreeDigitsWC8C0AtHL
     pop hl
     ld a, $40
     add_a_to_hl
@@ -1976,9 +1998,11 @@ Jump_0F2_5073::
 Data_0F2_509F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $63, $65, $67, $69, $6B
 
+; writes wC8C0, wC8C1, wC8C2 as digit tiles ($E0 + n) at HL (E-0121)
 ; 2 call sites from 2 routines (e.g. Func_0F2_500C, Func_0F2_505C)
 ; reads: wC8C0, wC8C1, wC8C2
-Func_0F2_50A4::
+WriteThreeDigitsWC8C0AtHL::
+Func_0F2_50A4:: ; address name
     di
     call WaitForVRAMAccess
     ld a, [wC8C0]
@@ -2016,7 +2040,7 @@ Func_0F2_50C6::
     pop bc
     jp Jump_0F2_50F8
 
-; 2 call sites from 2 routines (e.g. Func_037_5344_Case13, Func_0F1_5285_Case13)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, Func_0F1_4AD0_Case0D_Case13)
 ; reads: wCA38, wD7F4, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2
 ; writes: wD09D, wD09E
 ; points at: wCA2B
@@ -2027,7 +2051,7 @@ Func_0F2_50E2::
     ld [wD09D], a
     ld a, [wD7F4]
     ld [wD09E], a
-    farcall Func_016_7A48
+    farcall LoadFamilyPaletteForWD09D
     pop bc
 
 Jump_0F2_50F8::
@@ -2102,7 +2126,7 @@ Func_0F2_514D:: ; address name
     ret
 
 ; copies 16 bytes from HL to DE, each written with interrupts off after rSTAT bit 1 clears (the same effect as CopyTileBytesToVRAM, with a counter kept on the stack); HL and DE advance (E-0076)
-; 7 call sites from 2 routines (e.g. Func_0F2_4A61, Func_0F2_4D72)
+; 7 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, Func_0F2_4D72)
 ; reads: rSTAT
 CopyTileBytesToVRAMCounted_BankF2::
 Func_0F2_516E:: ; address name
@@ -2125,11 +2149,13 @@ Jump_0F2_5172::
     jr nz, Jump_0F2_5170
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_45DA_Case04)
+; only called from ScriptCommandF6_Run_Case10_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case04)
 ; reads: wD7F1, wD7F2, wD7F3
 ; writes: wD7F5, wD7F6, wD7F7
 ; points at: wD7F1, wD7F5
-Func_0F2_5181::
+ScriptCommandF6_Run_Case10_Case04_Sub01::
+Func_0F2_5181:: ; address name
     ld a, [wD7F1]
     ld c, a
     ld a, [wD7F2]
@@ -2369,24 +2395,28 @@ Data_0F2_616B:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $3CA1FB, $138
 
 ; a bare ret (E-0116)
-; 1 call site from 1 routine (e.g. Func_01B_53CE_Table3_Case05)
+; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_1B_Case01_Case05)
 ReturnStub_6333::
 Func_0F2_6333:: ; address name
     ret
     db $CD, $55, $63, $CD, $46, $63, $C9
 
-; 1 call site from 1 routine (e.g. Func_00D_5702_Case05)
+; only called from ScriptCommandF2_Run_Case03_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05)
 ; writes: wD781
-Func_0F2_633B::
-    call Func_0F2_6355
-    call Func_0F2_6346
+ScriptCommandF2_Run_Case03_Case05_Sub01::
+Func_0F2_633B:: ; address name
+    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01
+    call CopyWD09EToKeyList
     xor a, a
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_633B)
+; copies $C0 bytes from wD09E to wKeyList (E-0122)
+; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01)
 ; points at: wD09E, wKeyList
-Func_0F2_6346::
+CopyWD09EToKeyList::
+Func_0F2_6346:: ; address name
     ld hl, wD09E
     ld de, wKeyList
     ld c, $C0
@@ -2399,11 +2429,13 @@ Jump_0F2_634E::
     jr nz, Jump_0F2_634E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_633B)
+; only called from ScriptCommandF2_Run_Case03_Case05_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01)
 ; reads: wD09D
 ; writes: wD15E, wD09D
 ; points at: wD09E, wKeyList
-Func_0F2_6355::
+ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01::
+Func_0F2_6355:: ; address name
     ld hl, wD09E
     ld c, $C0
 
@@ -2421,9 +2453,9 @@ Jump_0F2_635A::
     ld [wD09D], a
     ld hl, wKeyList
     ld de, wD09E
-    call Func_0F2_63EF
+    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02
     ld hl, wKeyList
-    call Func_0F2_6393
+    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01
     ret
 
 Jump_0F2_637F::
@@ -2431,16 +2463,18 @@ Jump_0F2_637F::
     ld [wD09D], a
     ld hl, wKeyList
     ld de, wD09E
-    call Func_0F2_6393
+    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01
     ld hl, wKeyList
-    call Func_0F2_63EF
+    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0F2_6355)
+; only called from ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
 ; reads: wD15E
 ; writes: wD15E
 ; points at: wC787, wD11E
-Func_0F2_6393::
+ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01::
+Func_0F2_6393:: ; address name
     ld b, $00
     ld c, $20
 
@@ -2513,11 +2547,13 @@ Jump_0F2_63E3::
     jr nz, Jump_0F2_6397
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0F2_6355)
+; only called from ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
 ; reads: wD15E
 ; writes: wD15E
 ; points at: wC787, wD11E
-Func_0F2_63EF::
+ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02::
+Func_0F2_63EF:: ; address name
     ld b, $00
     ld c, $20
 
@@ -2585,7 +2621,7 @@ Jump_0F2_643C::
     jr nz, Jump_0F2_63F3
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01D_485C, Func_01D_4BF9, Func_01D_5101)
+; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, ScriptCommandE5_Run_Case03_Case0B_Sub01, ScriptCommandE5_Run_Case03_Case0E_Sub02)
 ; reads: wD780, wCF8B
 ; writes: wCF8B
 ; points at: wD09D, wInventory, wD7D5
@@ -2596,10 +2632,12 @@ Func_0F2_6449::
     call Func_0F2_64C7
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_6F00_Case0E)
+; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E)
 ; reads: wCF8B
 ; points at: wD09D
-Func_0F2_6454::
+ScriptCommandE5_Run_Case03_Case0E_Sub03::
+Func_0F2_6454:: ; address name
     ld hl, wD09D
     ld b, $18
 
@@ -2618,7 +2656,7 @@ Jump_0F2_6469::
     ld de, Data_0F2_6526
 
 Jump_0F2_646C::
-    call Func_0F2_648E
+    call ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01
     ret
 
 Jump_0F2_6470::
@@ -2644,9 +2682,11 @@ Jump_0F2_6487::
 Jump_0F2_648B::
     ld [wCF8B], a
 
-; 1 call site from 1 routine (e.g. Func_0F2_6454)
+; only called from ScriptCommandE5_Run_Case03_Case0E_Sub03 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E_Sub03)
 ; points at: wInventory, wD09D, wD7D5
-Func_0F2_648E::
+ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01::
+Func_0F2_648E:: ; address name
     ld b, $00
 
 Jump_0F2_6490::
@@ -2787,7 +2827,7 @@ Data_0F2_6526:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_6586:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3CA586, $60
 
-; 2 call sites from 2 routines (e.g. Func_0A0_5491, SetFollowersToPlayer_Case02_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub01, BattleEnd_Step7_Case02_Sub01)
 ; reads: wC6FD, wCF8B, wCF8C
 ; writes: wCF8B, wCF8C
 ; points at: wC6FE
@@ -2913,10 +2953,10 @@ Jump_0F2_668F::
     ld c, $01
     ret
 
-; only called from Msg01F0_Case65 (E-0047)
-; 1 call site from 1 routine (e.g. Msg01F0_Case65)
+; only called from DispatchTalkEvent_Case01_Case65 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_Case65)
 ; points at: wD580
-Msg01F0_Case65_Sub01::
+DispatchTalkEvent_Case01_Case65_Sub01::
 Func_0F2_6692:: ; address name
     ld hl, wD580
     ld bc, $020F

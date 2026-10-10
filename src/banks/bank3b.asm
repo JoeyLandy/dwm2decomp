@@ -131,7 +131,7 @@ Jump_03B_40C4::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's DEF word (wCFFC) is returned; otherwise the word at offset $25 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 7 call sites from 7 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, Func_032_5BE8, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, ResetTargetAGLAndDEFToBase, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
 ; reads: wCFFC, wCFFD
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -174,7 +174,7 @@ Jump_03B_4108::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's AGL word (wCFFE) is returned; otherwise the word at offset $27 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 7 call sites from 7 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, Func_032_5BE8, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, ResetTargetAGLAndDEFToBase, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
 ; reads: wCFFE, wCFFF
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -557,7 +557,7 @@ Jump_03B_434B::
     ld c, $00
 
 Jump_03B_4356::
-    call Func_03B_4373
+    call AllThreeSlotsFromCOccupied
     ld a, c
     ld [wBattleTarget], a
 
@@ -573,8 +573,10 @@ Jump_03B_4364::
     ld [wBattleResolveStep], a
     ret
 
+; returns carry only when slots C, C + 1 and C + 2 are all occupied (CarryUnlessWDA63SlotEmpty) (E-0122)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case00)
-Func_03B_4373::
+AllThreeSlotsFromCOccupied::
+Func_03B_4373:: ; address name
     ld b, $03
 
 Jump_03B_4375::
@@ -660,7 +662,7 @@ Jump_03B_43E9::
     ret
 
 Jump_03B_43F5::
-    call Func_03B_444A
+    call Call774CWithWD890
     ld d, $7E
     farcall ShowBattleTextCategory0
     ld a, $0B
@@ -668,7 +670,7 @@ Jump_03B_43F5::
     ret
 
 Jump_03B_4406::
-    call Func_03B_444A
+    call Call774CWithWD890
     ld d, $E6
     farcall ShowBattleText
     ld a, $0B
@@ -676,7 +678,7 @@ Jump_03B_4406::
     ret
 
 Jump_03B_4417::
-    call Func_03B_444A
+    call Call774CWithWD890
     ld d, $7B
     farcall ShowBattleTextCategory0
     ld a, $0B
@@ -684,7 +686,7 @@ Jump_03B_4417::
     ret
 
 Jump_03B_4428::
-    call Func_03B_444A
+    call Call774CWithWD890
     ld d, $7D
     farcall ShowBattleTextCategory0
     ld a, $0B
@@ -692,20 +694,22 @@ Jump_03B_4428::
     ret
 
 Jump_03B_4439::
-    call Func_03B_444A
+    call Call774CWithWD890
     ld d, $7C
     farcall ShowBattleTextCategory0
     ld a, $0B
     ld [wBattleResolveStep], a
     ret
 
+; hFFC6 = wD890, then far-calls Func_03A_774C (E-0122)
 ; 5 call sites from 1 routine (e.g. Func_03B_42F4_Case02)
 ; reads: wD890
 ; writes: hFFC6
-Func_03B_444A::
+Call774CWithWD890::
+Func_03B_444A:: ; address name
     ld a, [wD890]
     ldh [hFFC6], a
-    farcall Func_03A_774C
+    farcall Call774CWithWD890_Sub01
     ret
 
 ; entry 3 of the `rst $00` table in Func_03B_42F4
@@ -828,7 +832,7 @@ Jump_03B_450A::
     ret
 
 Jump_03B_450E::
-    call Func_03B_4953
+    call AddHLToWD89FCappedAt1800
     ret
 
 ; entry 6 of the `rst $00` table in Func_03B_42F4
@@ -943,7 +947,7 @@ Jump_03B_459E::
 ; no direct call (reached through a table, a jump or a vector)
 Func_03B_42F4_Case09::
 Jump_03B_459F:: ; address name
-    farcall Func_032_6764
+    farcall RunBattleSubStep2_6764
     ret
 
 ; entry 10 of the `rst $00` table in Func_03B_42F4
@@ -1019,7 +1023,7 @@ Jump_03B_4607::
     ret
 
 Jump_03B_4627::
-    call Func_03B_4635
+    call RunOnce4650Then4673
     ret z
     ld a, c
     ld [wBattleTarget], a
@@ -1027,28 +1031,32 @@ Jump_03B_4627::
     ld [wBattleResolveStep], a
     ret
 
+; runs Func_03B_4650 once (marked by bit 7 of wDABA), then Func_03B_4673 each time; returns wDABA & $7F (E-0122)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case0A)
 ; reads: wDABA
 ; writes: wDABA
-Func_03B_4635::
+RunOnce4650Then4673::
+Func_03B_4635:: ; address name
     ld a, [wDABA]
     bit 7, a
     jr nz, Jump_03B_4647
-    call Func_03B_4650
+    call RunOnce4650Then4673_Sub01
     ld a, [wDABA]
     or a, $80
     ld [wDABA], a
 
 Jump_03B_4647::
-    call Func_03B_4673
+    call RunOnce4650Then4673_Sub02
     ld a, [wDABA]
     and a, $7F
     ret
 
-; 1 call site from 1 routine (e.g. Func_03B_4635)
+; only called from RunOnce4650Then4673 (E-0047)
+; 1 call site from 1 routine (e.g. RunOnce4650Then4673)
 ; reads: wBattleTarget
 ; points at: wDABA
-Func_03B_4650::
+RunOnce4650Then4673_Sub01::
+Func_03B_4650:: ; address name
     ld b, $04
     ld a, [wBattleTarget]
     and a, $04
@@ -1076,10 +1084,12 @@ Jump_03B_466C::
     jr nz, Jump_03B_4658
     ret
 
-; 1 call site from 1 routine (e.g. Func_03B_4635)
+; only called from RunOnce4650Then4673 (E-0047)
+; 1 call site from 1 routine (e.g. RunOnce4650Then4673)
 ; reads: wBattleTarget, wCFF2
 ; points at: wDABA
-Func_03B_4673::
+RunOnce4650Then4673_Sub02::
+Func_03B_4673:: ; address name
     ld a, [wBattleTarget]
     inc a
     ld c, a
@@ -1552,25 +1562,29 @@ Jump_03B_4925::
 Data_03B_492A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $00, $0A, $00, $14, $00, $64, $00, $05, $00
 
+; adds the word Data_03B_4949[action - $19] to wD89F, capped at 1800 (E-0122)
 ; 2 call sites from 2 routines (e.g. Func_03B_4D1C, Func_03B_4C95)
 ; reads: wBattleActionId
-Func_03B_4934::
+AddActionAmountToWD89F::
+Func_03B_4934:: ; address name
     ld a, [wBattleActionId]
     sub a, $19
     add a, a
     ld hl, Data_03B_4949
     add_a_to_hl
     deref_hl
-    call Func_03B_4953
+    call AddHLToWD89FCappedAt1800
     ret
 
 Data_03B_4949:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $00, $1E, $00, $64, $00, $E7, $03, $05, $00
 
-; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case05, Func_03B_4934)
+; wD89F += HL, capped at $0708 (1800) (E-0122)
+; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case05, AddActionAmountToWD89F)
 ; reads: wD89F, wD8A0
 ; writes: wD89F, wD8A0
-Func_03B_4953::
+AddHLToWD89FCappedAt1800::
+Func_03B_4953:: ; address name
     ld a, [wD89F]
     ld c, a
     ld a, [wD8A0]
@@ -1725,7 +1739,7 @@ Func_03B_4A34::
     call HLToWD814EntryOfWD8A5_Bank3B
     call Func_03B_4A60
     and a, $03
-    call Func_03B_4A86
+    call RollChanceByHLBits6And7_Bank3B
     ret
 
 ; wBattleDamageLo/wD873 = RandomInRange(HL, BC) (E-0116)
@@ -1790,11 +1804,13 @@ Jump_03B_4A84::
     ld a, [de]
     ret
 
+; bit 6 of [HL]: Func_03B_4ABF; else bit 7: RollChanceByLevel_100_100_75_0_Bank3B; else RollChanceForLevelA_Bank3B (E-0122)
 ; 1 call site from 1 routine (e.g. Func_03B_4A34)
-Func_03B_4A86:: ; heuristic: follows a terminator; C0
+RollChanceByHLBits6And7_Bank3B:: ; heuristic: follows a terminator; C0
+Func_03B_4A86:: ; address name
     bit 6, [hl]
     jr z, Jump_03B_4A8F
-    call Func_03B_4ABF
+    call RollChanceByHLBits6And7_Bank3B_Sub01
     jr Jump_03B_4A9B
 
 Jump_03B_4A8F::
@@ -1804,14 +1820,16 @@ Jump_03B_4A8F::
     jr Jump_03B_4A9B
 
 Jump_03B_4A98::
-    call Func_03B_4A9C
+    call RollChanceForLevelA_Bank3B
 
 Jump_03B_4A9B::
     ret
 
-; 1 call site from 1 routine (e.g. Func_03B_4A86)
+; level A: 0 returns carry; 1 and 2 take two chance rolls; 3 returns no carry (E-0122)
+; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
 ; reads: wC5E7
-Func_03B_4A9C::
+RollChanceForLevelA_Bank3B::
+Func_03B_4A9C:: ; address name
     and a, a
     jr nz, Jump_03B_4AA1
     scf
@@ -1833,7 +1851,7 @@ Jump_03B_4AAF::
     ret
 
 ; the same instruction sequence as RollChanceByLevel_100_100_75_0 (bank $36) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. Func_03B_4A86)
+; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
 ; reads: wC5E7
 RollChanceByLevel_100_100_75_0_Bank3B::
 Func_03B_4AB2:: ; address name
@@ -1850,9 +1868,11 @@ Jump_03B_4ABC::
     ccf
     ret
 
-; 1 call site from 1 routine (e.g. Func_03B_4A86)
+; only called from RollChanceByHLBits6And7_Bank3B (E-0047)
+; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
 ; reads: wC5E7
-Func_03B_4ABF::
+RollChanceByHLBits6And7_Bank3B_Sub01::
+Func_03B_4ABF:: ; address name
     and a, a
     jr nz, Jump_03B_4AC4
     scf
@@ -1921,13 +1941,13 @@ Func_03B_4B02:: ; address name
     call JumpToWordAtHL
     ret
     db $91, $4B, $92, $4B, $92, $4B, $92, $4B, $BD, $4B, $BD, $4B
-    dw Func_03B_4BE8
-    dw Func_03B_4BFE
-    dw Func_03B_4C21
-    dw Func_03B_4C37
-    dw Func_03B_4C5A
+    dw CureTargetStatus0Bits01
+    dw CureTargetStatus0Bit6
+    dw CureTargetStatus0Bit5
+    dw CureTargetStatus0Bits237
+    dw CureTargetStatus0Bit4
     dw Func_03B_4B92
-    dw Func_03B_4C7D
+    dw ApplyTargetMaxHPIfPresent
     db $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C
     db $94, $4C, $94, $4C, $94, $4C, $94, $4C
     dw Func_03B_4C95
@@ -1935,7 +1955,7 @@ Func_03B_4B02:: ; address name
     dw Func_03B_4C95
     dw Func_03B_4C95
     dw Func_03B_4D1C
-    dw Func_03B_4E0A
+    dw SetWD894AndMessage98
     dw Func_03B_4E18
     INCBIN "dwm2-cobi-us.gbc", $0ECB51, $41
 
@@ -1989,9 +2009,11 @@ Func_03B_4BBD:: ; heuristic: follows a terminator; C0
 Jump_03B_4BE5::
     jp Jump_03B_4EE3
 
+; clears status byte 0 bits 0-1 of the target when set (message $4E); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
-Func_03B_4BE8:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bits01:: ; heuristic: target of a pointer table; C0
+Func_03B_4BE8:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $03
     jr z, Jump_03B_4BFB
@@ -2005,11 +2027,13 @@ Func_03B_4BE8:: ; heuristic: target of a pointer table; C0
 Jump_03B_4BFB::
     jp Jump_03B_4EE3
 
+; clears status byte 0 bit 6 of the target when set (message $4F, wDA5B[target] = 3); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
-Func_03B_4BFE:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bit6:: ; heuristic: target of a pointer table; C0
+Func_03B_4BFE:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $40
     jr z, Jump_03B_4C1E
@@ -2027,9 +2051,11 @@ Func_03B_4BFE:: ; heuristic: target of a pointer table; C0
 Jump_03B_4C1E::
     jp Jump_03B_4EE3
 
+; clears status byte 0 bit 5 of the target when set (message $51); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
-Func_03B_4C21:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bit5:: ; heuristic: target of a pointer table; C0
+Func_03B_4C21:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $20
     jr z, Jump_03B_4C34
@@ -2043,11 +2069,13 @@ Func_03B_4C21:: ; heuristic: target of a pointer table; C0
 Jump_03B_4C34::
     jp Jump_03B_4EE3
 
+; clears status byte 0 bits 2, 3 and 7 of the target when set (message $82, wDA5B[target] = 3); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
-Func_03B_4C37:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bits237:: ; heuristic: target of a pointer table; C0
+Func_03B_4C37:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $8C
     jr z, Jump_03B_4C57
@@ -2065,11 +2093,13 @@ Func_03B_4C37:: ; heuristic: target of a pointer table; C0
 Jump_03B_4C57::
     jp Jump_03B_4EE3
 
+; clears status byte 0 bit 4 of the target when set (message $83, wDA5B[target] = 3); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
-Func_03B_4C5A:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bit4:: ; heuristic: target of a pointer table; C0
+Func_03B_4C5A:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $10
     jr z, Jump_03B_4C7A
@@ -2087,15 +2117,17 @@ Func_03B_4C5A:: ; heuristic: target of a pointer table; C0
 Jump_03B_4C7A::
     jp Jump_03B_4EE3
 
+; if the target slot is occupied, far-calls ApplyTargetMaxHPAmount; otherwise one of two failure paths (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleResolveStep, wDAC3, wDAC0, wDAC1
-Func_03B_4C7D:: ; heuristic: target of a pointer table; C0
+ApplyTargetMaxHPIfPresent:: ; heuristic: target of a pointer table; C0
+Func_03B_4C7D:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_03B_4C8E
     jr z, Jump_03B_4C91
-    farcall Func_036_6D0A
+    farcall ApplyTargetMaxHPAmount
     ret
 
 Jump_03B_4C8E::
@@ -2112,7 +2144,7 @@ Jump_03B_4C91::
 Func_03B_4C95:: ; heuristic: target of a pointer table; C0
     call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_4C9F
-    call Func_03B_4934
+    call AddActionAmountToWD89F
     jr Jump_03B_4CC8
 
 Jump_03B_4C9F::
@@ -2184,7 +2216,7 @@ Func_03B_4D1C:: ; heuristic: target of a pointer table; C0
     ld a, [wDABA]
     or a, a
     jr nz, Jump_03B_4D59
-    call Func_03B_4934
+    call AddActionAmountToWD89F
     jr Jump_03B_4D59
 
 Jump_03B_4D2C::
@@ -2214,7 +2246,7 @@ Jump_03B_4D59::
     and a, $03
     jr nz, Jump_03B_4DAC
     push hl
-    farcall Func_036_60D1
+    farcall RollTargetWDA72Byte4Bits01ChanceToE
     pop hl
     ld a, e
     or a, a
@@ -2245,7 +2277,7 @@ Jump_03B_4DA3::
     ret
 
 Jump_03B_4DAC::
-    call Func_03B_4EF1
+    call SetWDAC3B5AndWDAC0To0180
     ld a, [wDABA]
     or a, a
     ret nz
@@ -2288,9 +2320,11 @@ Jump_03B_4DFC::
     ld bc, $0000
     jp Jump_03B_4EFA
 
+; wD894 = 1 and stores message $98 (ClearDamageAndStoreWDAC0_Bank3B) (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD894, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
-Func_03B_4E0A:: ; heuristic: target of a pointer table; C0
+SetWD894AndMessage98:: ; heuristic: target of a pointer table; C0
+Func_03B_4E0A:: ; address name
     ld a, $01
     ld [wD894], a
     ld l, $98
@@ -2329,11 +2363,13 @@ Jump_03B_4E40::
 Jump_03B_4E43::
     jp Jump_03B_4EEA
 
+; sets bit 2 of the target's status byte 0 (message $43); if already set takes the failure path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleResolveStep
 ; points at: wD80D
-Func_03B_4E46:: ; heuristic: follows a terminator; C0
+InflictTargetStatus0Bit2:: ; heuristic: follows a terminator; C0
+Func_03B_4E46:: ; address name
     ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
@@ -2376,9 +2412,11 @@ Jump_03B_4EEA::
     ld bc, $0080
     jr Jump_03B_4EF6
 
+; wDAC3 = $B5 and the word wDAC0 = $0180 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_03B_4D1C)
 ; writes: wDAC3, wDAC0, wDAC1
-Func_03B_4EF1::
+SetWDAC3B5AndWDAC0To0180::
+Func_03B_4EF1:: ; address name
     ld h, $B5
     ld bc, $0180
 
@@ -2394,7 +2432,7 @@ Jump_03B_4EFA::
     ret
 
 ; clears wBattleDamageLo/wD873, then A = status byte 0 of wBattleTarget (wBattleStatus + 9 * target), HL pointing at it (E-0078)
-; 5 call sites from 5 routines (e.g. Func_03B_4C5A, Func_03B_4C37, Func_03B_4C21, Func_03B_4BFE, ...)
+; 5 call sites from 5 routines (e.g. CureTargetStatus0Bit4, CureTargetStatus0Bits237, CureTargetStatus0Bit5, CureTargetStatus0Bit6, ...)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleStatus
@@ -2634,10 +2672,12 @@ Jump_03B_5057::
     pop hl
     ret
 
+; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
 ; 1 call site from 1 routine (e.g. Func_03A_5383)
 ; reads: wD804, wD801, wDAB7
 ; points at: hSpriteOriginX
-Func_03B_5059::
+DrawEffectSpriteAtWD804_Bank3B::
+Func_03B_5059:: ; address name
     ld hl, hSpriteOriginX
     ld a, [wD804]
     ld [hl+], a
@@ -2712,7 +2752,7 @@ Data_03B_507C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_03B_6901
 
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
-; 1 call site from 1 routine (e.g. Func_03B_5059)
+; 1 call site from 1 routine (e.g. DrawEffectSpriteAtWD804_Bank3B)
 ; reads: hOamNextEntry, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginY, hSpriteOriginX, hSpriteTileOffset, hSpriteAttrXor
 ; writes: hOamNextEntry
 BuildOamFromSpriteTable_Bank3B::

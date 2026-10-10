@@ -2,7 +2,7 @@ SECTION "Bank 10", ROMX[$4000], BANK[$10]
     db $10
 
 ; one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand
-; 1 call site from 1 routine (e.g. Func_002_4AE0_Case01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case01)
 RunEventScriptFrame::
 Func_010_4001:: ; address name
     call FetchScriptCommand
@@ -10,7 +10,7 @@ Func_010_4001:: ; address name
     ret
 
 ; does nothing during a fade or unless wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning); reads the opcode at wScriptPointer (through ReadWordFromDataBank when wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when wCC44 bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance wScriptPointer
-; 5 call sites from 5 routines (e.g. RunEventScriptFrame, Func_002_4745_Case02, Func_002_6C40_Case05, GameMode5_Update_Case02, ...)
+; 5 call sites from 5 routines (e.g. RunEventScriptFrame, RunWC8C7Phase_Case02, RunWC46BMenuState_Case05, GameMode5_Update_Case02, ...)
 ; reads: wFadeState, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
 ; writes: wScriptStartRequest, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 FetchScriptCommand::
@@ -758,7 +758,7 @@ Jump_010_4477::
     jp Jump_010_401D
 
 Jump_010_447D::
-    farcall Func_002_604B
+    farcall RestartMapMusic
     jp Jump_010_401D
 
 ; fetch handler shared by 123 opcodes: wScriptCommandType = the opcode byte, then StartEventScript with the pointer just after it; the command reads its own arguments from the script
@@ -1871,7 +1871,7 @@ Jump_010_4A27:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_010_4A62
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest

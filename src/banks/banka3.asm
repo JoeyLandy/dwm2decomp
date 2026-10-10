@@ -69,10 +69,12 @@ Jump_0A3_406F::
     ret
     INCBIN "dwm2-cobi-us.gbc", $28C075, $CA
 
+; runs Func_0A3_414F, then wDA5B[hFFC6] = 3 (E-0122)
 ; 21 call sites from 20 routines (e.g. Func_032_4F0A, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
 ; reads: hFFC6
 ; points at: wDA5B
-Func_0A3_413F::
+RunA3414FAndMarkWDA5B3::
+Func_0A3_413F:: ; address name
     call Func_0A3_414F
     ldh a, [hFFC6]
     ld hl, wDA5B
@@ -80,7 +82,7 @@ Func_0A3_413F::
     ld [hl], $03
     ret
 
-; 16 call sites from 13 routines (e.g. Func_0A3_413F, Func_032_4F0A, Func_032_514C, Func_032_5397, ...)
+; 16 call sites from 13 routines (e.g. RunA3414FAndMarkWDA5B3, Func_032_4F0A, Func_032_514C, Func_032_5397, ...)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wC953
@@ -529,13 +531,11 @@ Jump_0A3_494E::
     ld a, $02
     ret
 
-; only called from ClearActorStatus3Bits0To5_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. ClearActorStatus3Bits0To5_Case00)
+; 1 call site from 1 routine (e.g. Func_032_4ADC_Case01_Case00)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wBattleActionChoice
-ClearActorStatus3Bits0To5_Case00_Sub01::
-Func_0A3_4960:: ; address name
+Func_0A3_4960::
     ld a, [wBattleActor]
     add a, a
     ld hl, wBattleActionChoice
@@ -823,12 +823,12 @@ Jump_0A3_4AF3::
 Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
-; only called from SetFollowersToPlayer_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. SetFollowersToPlayer_Case02)
+; only called from BattleEnd_Step7_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step7_Case02)
 ; reads: wC6FD
 ; writes: rRAMG
 ; points at: wC6FE, wC972
-SetFollowersToPlayer_Case02_Sub01::
+BattleEnd_Step7_Case02_Sub01::
 Func_0A3_4B0B:: ; address name
     ld a, $0A
     ld [rRAMG], a

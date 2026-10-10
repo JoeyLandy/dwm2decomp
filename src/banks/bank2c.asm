@@ -2,7 +2,7 @@ SECTION "Bank 2C", ROMX[$4000], BANK[$2C]
     db $2C
 
 ; message bank $2C: when wStringIndex < $91, BeginStringDisplay with this bank's table Data_02C_4032; otherwise far-calls Func_098_4026 (E-0080)
-; 3 call sites from 3 routines (e.g. GameMode0_Update_Table2_Case06, Func_010_4AD0_Case04, ShowMessageHL_Case04)
+; 3 call sites from 3 routines (e.g. DebugMessageTest_Update_Case06, Func_010_4AD0_Case04, ShowMessageHL_Case04)
 ; reads: wStringIndex
 BeginStringDisplay_Bank2C::
 Func_02C_4001:: ; address name

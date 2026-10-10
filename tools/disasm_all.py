@@ -1130,8 +1130,14 @@ class Rom:
                        and not labels[a].startswith("Jump_")] + [a for a in labels if a < start and labels[a].startswith("Func_")]
             if not parents:
                 continue
-            parent = labels[max(parents)]
-            info = self.names.get((bank, max(parents)))
+            owner = max(parents)
+            # a table inside an already-named jump-table case belongs to that case, not to the
+            # routine label before it (E-0123)
+            nearest = max((a for a in labels if a < start), default=owner)
+            if nearest > owner and (bank, nearest) in self.names:
+                owner = nearest
+            parent = labels[owner]
+            info = self.names.get((bank, owner))
             if info:
                 parent = info["name"]
             tables_of[parent] = k = tables_of.get(parent, 0) + 1

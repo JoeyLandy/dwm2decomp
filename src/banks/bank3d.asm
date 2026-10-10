@@ -8,7 +8,7 @@ SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
 Func_03D_4001::
     ld a, [wD801]
     cp a, $2C
-    jr nz, Func_03D_4054
+    jr nz, DrawEffectSpriteAtWD804_Bank3D
     ld a, [wD890]
     ld [wD871], a
     ld a, [wBattleTarget]
@@ -17,7 +17,7 @@ Func_03D_4001::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03D_4024
     farcall Func_03A_4A3A
-    call Func_03D_4054
+    call DrawEffectSpriteAtWD804_Bank3D
 
 Jump_03D_4024::
     ld hl, wD871
@@ -31,7 +31,7 @@ Jump_03D_4024::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03D_403E
     farcall Func_03A_4A3A
-    call Func_03D_4054
+    call DrawEffectSpriteAtWD804_Bank3D
 
 Jump_03D_403E::
     ld hl, wD871
@@ -46,10 +46,12 @@ Jump_03D_403E::
     ret c
     farcall Func_03A_4A3A
 
+; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
 ; 2 call sites from 1 routine (e.g. Func_03D_4001)
 ; reads: wD804, wD801, wDAB7
 ; points at: hSpriteOriginX
-Func_03D_4054::
+DrawEffectSpriteAtWD804_Bank3D::
+Func_03D_4054:: ; address name
     ld hl, hSpriteOriginX
     ld a, [wD804]
     ld [hl+], a
@@ -74,7 +76,7 @@ Data_03D_4077:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0F4077, $5A
 
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
-; 1 call site from 1 routine (e.g. Func_03D_4054)
+; 1 call site from 1 routine (e.g. DrawEffectSpriteAtWD804_Bank3D)
 ; reads: hOamNextEntry, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginY, hSpriteOriginX, hSpriteTileOffset, hSpriteAttrXor
 ; writes: hOamNextEntry
 BuildOamFromSpriteTable_Bank3D::

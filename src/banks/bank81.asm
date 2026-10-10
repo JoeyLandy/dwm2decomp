@@ -1,10 +1,12 @@
 SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
-; 1 call site from 1 routine (e.g. Func_037_5FB8)
+; only called from CallFunc4001InBank81KeepRegs (E-0047)
+; 1 call site from 1 routine (e.g. CallFunc4001InBank81KeepRegs)
 ; reads: wCA36, wCA37, wCA38, wCA45, wCA46, wSpeciesRecord, wCA47, wCA48, ...
 ; writes: wD2AD, wD2AE, wD2B3, wD2AF, wD2B0, wSpeciesIdLo, wSpeciesIdHi, wD2B4, ...
-Func_081_4001::
+CallFunc4001InBank81KeepRegs_Sub01::
+Func_081_4001:: ; address name
     ld a, [wCA36]
     ld l, a
     ld a, [wCA37]
@@ -79,7 +81,7 @@ Func_081_4001::
     ldh [hFFCA], a
     ld a, [wD2B5]
     ldh [hFFCB], a
-    call Func_081_40E2
+    call CallFunc4001InBank81KeepRegs_Sub01_Sub01
     pop hl
     ld a, c
     or a, a
@@ -104,7 +106,7 @@ Func_081_4001::
     ldh [hFFCA], a
     ld a, [wD2B4]
     ldh [hFFCB], a
-    call Func_081_40E2
+    call CallFunc4001InBank81KeepRegs_Sub01_Sub01
     ld a, c
     or a, a
     jr nz, Jump_081_40D8
@@ -120,10 +122,12 @@ Jump_081_40D8::
     ld [wSpeciesIdHi], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_081_4001)
+; only called from CallFunc4001InBank81KeepRegs_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. CallFunc4001InBank81KeepRegs_Sub01)
 ; reads: hFFC6, hFFC7, hFFCB, hFFC8, hFFC9, wD2B3, wD2AD, wD2AE
 ; points at: hFFCB
-Func_081_40E2::
+CallFunc4001InBank81KeepRegs_Sub01_Sub01::
+Func_081_40E2:: ; address name
     ld a, [hl+]
     ld d, [hl]
     inc hl
@@ -133,7 +137,7 @@ Func_081_40E2::
     jr z, Jump_081_4116
     cp a, $01
     jp z, Jump_081_414C
-    jr Func_081_40E2
+    jr CallFunc4001InBank81KeepRegs_Sub01_Sub01
 
 Jump_081_40F4::
     ldh a, [hFFC6]
@@ -172,7 +176,7 @@ Jump_081_411F::
     inc hl
     dec d
     jr nz, Jump_081_411F
-    jr Func_081_40E2
+    jr CallFunc4001InBank81KeepRegs_Sub01_Sub01
 
 Jump_081_4126::
     ld c, [hl]
@@ -200,7 +204,7 @@ Jump_081_4136::
 Jump_081_4146::
     dec d
     jr nz, Jump_081_4126
-    jp Func_081_40E2
+    jp CallFunc4001InBank81KeepRegs_Sub01_Sub01
 
 Jump_081_414C::
     ld c, [hl]
@@ -221,7 +225,7 @@ Jump_081_415D::
     inc hl
     dec d
     jr nz, Jump_081_415D
-    jp Func_081_40E2
+    jp CallFunc4001InBank81KeepRegs_Sub01_Sub01
 
 Jump_081_4165::
     jr Jump_081_4126
@@ -1575,10 +1579,12 @@ Data_081_5449:: ; heuristic: target of a monotone pointer table; C0
 Data_081_5451:: ; heuristic: target of a monotone pointer table; C0
     db $FF, $0A
 
+; copies three bytes of table $555D entry ($5486[wD0A6] * $129 + 3 * (wD0E8 - 1)) to wD0EA (E-0121)
 ; 1 call site from 1 routine (e.g. Func_037_5BC6)
 ; reads: wD0A6, wD0E8
 ; points at: wD0EA
-Func_081_5453::
+LoadTable555DEntryForWD0A6ToWD0EA::
+Func_081_5453:: ; address name
     ld a, [wD0A6]
     ld l, a
     ld h, $00

@@ -2,7 +2,7 @@ SECTION "Bank 35", ROMX[$4000], BANK[$35]
     db $35
 
 ; copies the whole 47-byte species record of monster id wSpeciesIdLo/Hi to wSpeciesRecord; byte 0 is the family (E-0069)
-; 37 call sites from 36 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_6C48, Func_003_4BE8, Func_003_4D57, ...)
+; 37 call sites from 36 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_6C48, WithSRAMDraw4ACEAnd4BE8_Sub01, ShowRecordSpeciesAndSkillNames, ...)
 ; points at: wSpeciesRecord
 LoadSpeciesRecord::
 Func_035_4001:: ; address name

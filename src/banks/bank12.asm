@@ -764,7 +764,7 @@ Jump_012_4437::
     inc [hl]
 
 Jump_012_4440::
-    farcall Func_00C_703D
+    farcall IncWD588AndCopyWD7FCToWD78C
     farcall ScriptCommand96_Run_Shared01
     ret
 
@@ -793,7 +793,7 @@ Jump_012_4464::
     inc [hl]
 
 Jump_012_446D::
-    farcall Func_00C_703D
+    farcall IncWD588AndCopyWD7FCToWD78C
     farcall ScriptCommand96_Run_Shared01
     ret
 
@@ -894,7 +894,7 @@ Func_012_44DB:: ; address name
 ; writes: wC917, wC916, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, hFFB9, wScriptCommandType, wScriptInDataBank
 ScriptCommand96_Run_Case19::
 Jump_012_4515:: ; address name
-    farcall Func_002_604B
+    farcall RestartMapMusic
     ld a, $01
     ld [wC917], a
     ld a, $65
@@ -998,12 +998,12 @@ Jump_012_459F:: ; address name
     ld a, [wC82C]
     or a, a
     jr nz, Jump_012_45BF
-    farcall Func_00C_704B
+    farcall SetupWD78EFromWD7FF
     farcall ScriptCommand95_Run_Shared01
     ret
 
 Jump_012_45BF::
-    farcall Func_00C_704B
+    farcall SetupWD78EFromWD7FF
     farcall ScriptCommand95_Run_Shared02
     ret
 
@@ -1202,12 +1202,12 @@ Jump_012_46D8:: ; address name
     ld a, [wC82C]
     or a, a
     jr nz, Jump_012_46F8
-    farcall Func_00C_704B
+    farcall SetupWD78EFromWD7FF
     farcall ScriptCommand95_Run_Shared01
     ret
 
 Jump_012_46F8::
-    farcall Func_00C_704B
+    farcall SetupWD78EFromWD7FF
     farcall ScriptCommand95_Run_Shared02
     ret
 
@@ -2300,11 +2300,13 @@ Jump_012_4DDC:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
+; copies wCB86, the player position and facing, wFollowerRecords and wC8F0-wC8FB fields into wC937-wC943, then advances wScriptStep (E-0121)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wC8F0, wC8F1, wC8F4, ...
 ; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
 ; points at: wScriptStep
-Func_012_4DFB:: ; heuristic: follows a terminator; C0
+SavePlayerPositionStateAndStep:: ; heuristic: follows a terminator; C0
+Func_012_4DFB:: ; address name
     ld a, [wCB86]
     ld [wC937], a
     ldh a, [hPlayerX]
@@ -2572,7 +2574,7 @@ Jump_012_4F5C:: ; address name
 ScriptCommand92_Run_Case03::
 Jump_012_4F77:: ; address name
     farcall UpdatePlayerMovement
-    farcall Func_002_5BD7
+    farcall RunWC468ActionIfBit7
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -2602,7 +2604,7 @@ Jump_012_4F8E:: ; address name
     ld a, h
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
-    farcall Func_002_5BD7
+    farcall RunWC468ActionIfBit7
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4282,7 +4284,7 @@ Jump_012_5BC6::
     ld [wScriptParam1], a
 
 Jump_012_5BCB::
-    call Func_012_5BD9
+    call DrawScriptMetaSpriteAtScrollOffset
     ld b, $1E
     call StepWC921Counter_Bank12
     ret nc
@@ -4290,10 +4292,12 @@ Jump_012_5BCB::
     inc [hl]
     ret
 
+; draws metasprite set $23 + ($10 >> 4) - 1, sub-index wScriptParam1, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10), used here as coordinates (E-0121)
 ; 1 call site from 1 routine (e.g. Func_012_5B9A)
 ; reads: wC195, wScriptParam1, hScrollX, hScrollXHi, wMessageIndex, hScrollY, hScrollYHi, wMessageGroup
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
-Func_012_5BD9::
+DrawScriptMetaSpriteAtScrollOffset::
+Func_012_5BD9:: ; address name
     ld a, [wC195]
     ld a, $10
     swap a
@@ -4568,7 +4572,7 @@ Jump_012_5D41::
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    farcall Func_002_6050
+    farcall PlayMapMusic
     ret
 
 Jump_012_5D91::
@@ -4612,9 +4616,9 @@ Func_012_5DB6:: ; address name
     ld [wJoypadPressed], a
     ld a, [wScriptStep]
     rst $00
-    dw Func_012_61EF
-    dw Func_012_61EF
-    dw Func_012_61EF
+    dw ScriptStepMoveFollowersToLeader
+    dw ScriptStepMoveFollowersToLeader
+    dw ScriptStepMoveFollowersToLeader
     dw Func_012_5DB6_Case03
     dw Func_012_5DB6_Case04
     dw Func_012_5DB6_Case05
@@ -4819,9 +4823,9 @@ Func_012_5EE7:: ; address name
     ld [wJoypadPressed], a
     ld a, [wScriptStep]
     rst $00
-    dw Func_012_61EF
-    dw Func_012_61EF
-    dw Func_012_61EF
+    dw ScriptStepMoveFollowersToLeader
+    dw ScriptStepMoveFollowersToLeader
+    dw ScriptStepMoveFollowersToLeader
     dw Func_012_5EE7_Case03
     dw Func_012_5DB6_Case04
     dw Func_012_5DB6_Case05
@@ -5313,10 +5317,12 @@ Jump_012_61D7::
     inc [hl]
     ret
 
+; script step: first frame sets the follower targets from the leader; later frames step the followers until the wC921 counter reaches $11, then advances wScriptStep (E-0122)
 ; 7 call sites from 7 routines (e.g. ScriptCommand43_Run_Case04, ScriptCommand38_Run_Case00, ScriptCommand61_Run_Case00, ScriptCommand64_Run_Case00, ...)
 ; reads: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
-Func_012_61EF::
+ScriptStepMoveFollowersToLeader::
+Func_012_61EF:: ; address name
     ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_012_6200
@@ -5840,7 +5846,7 @@ Jump_012_64EA::
     add_a_to_hl
     ret
 
-; 10 call sites from 9 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, Func_002_4745_Case02, GameMode5_Init_Case06, ...)
+; 10 call sites from 9 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, RunWC8C7Phase_Case02, GameMode5_Init_Case06, ...)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE
@@ -6083,7 +6089,7 @@ Jump_012_6623:: ; address name
     pop af
     or a, a
     jr nz, Jump_012_662D
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
 
 Jump_012_662D::
     ld a, [wMessageGroup]
@@ -6200,9 +6206,11 @@ Jump_012_66D4::
     ld [wMessageState], a
     ret
 
+; unless wMessageState is $FF (idle), runs the message box step for wMessageState (jump table) (E-0122)
 ; 1 call site from 1 routine (e.g. Func_012_684A)
 ; reads: wMessageState
-Func_012_66DA::
+RunMessageBoxStateIfActive_Bank12::
+Func_012_66DA:: ; address name
     push af
     ld a, [wMessageState]
     cp a, $FF
@@ -6212,22 +6220,22 @@ Func_012_66DA::
 
 Jump_012_66E4::
     rst $00
-    dw Func_012_66DA_Case00
-    dw Func_012_66DA_Case01
-    dw Func_012_66DA_Case02
+    dw RunMessageBoxStateIfActive_Bank12_Case00
+    dw RunMessageBoxStateIfActive_Bank12_Case01
+    dw RunMessageBoxStateIfActive_Bank12_Case02
     dw RunMessageBox_Bank12_Case03
 
-; entry 0 of the `rst $00` table in Func_012_66DA
+; entry 0 of the `rst $00` table in RunMessageBoxStateIfActive_Bank12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, hPlayerY
 ; writes: wC8CB, wC8CC, hFFB9
 ; points at: wMessageState
-Func_012_66DA_Case00::
+RunMessageBoxStateIfActive_Bank12_Case00::
 Jump_012_66ED:: ; address name
     pop af
     or a, a
     jr nz, Jump_012_66F7
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
 
 Jump_012_66F7::
     ld a, [wMessageIndex]
@@ -6258,12 +6266,12 @@ Jump_012_672C::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_012_66DA
+; entry 1 of the `rst $00` table in RunMessageBoxStateIfActive_Bank12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB, wMessageIndex
 ; writes: wStringIndex, wStringCategory
 ; points at: wMessageState
-Func_012_66DA_Case01::
+RunMessageBoxStateIfActive_Bank12_Case01::
 Jump_012_6731:: ; address name
     pop af
     ld a, [wC8CB]
@@ -6279,12 +6287,12 @@ Jump_012_6731:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_012_66DA
+; entry 2 of the `rst $00` table in RunMessageBoxStateIfActive_Bank12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wMessageIndex, hPlayerY
 ; writes: wMessageState, wC8CB, wC8CC, hFFB9
 ; points at: wMessageState
-Func_012_66DA_Case02::
+RunMessageBoxStateIfActive_Bank12_Case02::
 Jump_012_6750:: ; address name
     pop af
     ld a, [wC52B]
@@ -6346,7 +6354,7 @@ Jump_012_679A:: ; address name
     pop af
     or a, a
     jr nz, Jump_012_67A4
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
 
 Jump_012_67A4::
     ld hl, vTiles1
@@ -6482,7 +6490,7 @@ Jump_012_6848::
 ; 4 call sites from 4 routines (e.g. ScriptCommand96_Run_Case01, ScriptCommand96_Run_Case03, ScriptCommand95_Run_Case02, ScriptCommand95_Run_Case01)
 ; reads: wMessageState
 Func_012_684A::
-    call Func_012_66DA
+    call RunMessageBoxStateIfActive_Bank12
     jr Jump_012_683F
 
 ; only called from ScriptCommand85_Run_Case05 (E-0047)
@@ -6532,13 +6540,15 @@ Func_012_6854:: ; address name
     ld [wC913], a
     ret
 
-; 6 call sites from 6 routines (e.g. Func_002_4AE0_Case00, Func_002_4AE0_Case01, Func_002_4AE0_Case02, Func_002_4AE0_Case03, ...)
-Func_012_6893::
+; runs Func_012_722A and Func_012_6EB7; shared by the field mode states (E-0122)
+; 6 call sites from 6 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case03, ...)
+RunFunc722AAnd6EB7::
+Func_012_6893:: ; address name
     call Func_012_722A
-    call Func_012_6EB7
+    call RunFunc722AAnd6EB7_Sub01
     ret
 
-; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, Msg01F0_Case65, ...)
+; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, DispatchTalkEvent_Case01_Case65, ...)
 ; reads: hFFC6, hFFC8, hFFC7, hFFD0, wC966, wCD03, wCD04, wC836
 ; writes: wC966, hFFC6, hFFC7, hFFD0, wC836
 ; points at: wC70A, wC787
@@ -6751,7 +6761,7 @@ Jump_012_69AC::
     ldh [hFFC6], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_003_6B5E_Case10, Func_01B_53CE_Table3_Case21)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_Case10, RunWD780StateWhenNotFading_1B_Case01_Case21)
 ; reads: hFFC6, wC833
 ; writes: rRAMB, rRAMG
 ; points at: wC783, wC787, wC833
@@ -6894,7 +6904,7 @@ Jump_012_6A5D::
     dec [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7_Case02)
+; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
 ; writes: hFFC6, wCBD3, wCBD4, wCBCF
 Func_012_6A6A::
@@ -7068,7 +7078,7 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
-; 51 call sites from 49 routines (e.g. Func_012_6A6A, Func_002_4628, Func_002_4A7A, Func_004_5698, ...)
+; 51 call sites from 49 routines (e.g. Func_012_6A6A, Func_002_4628, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
 ; reads: hFFC6
 Func_012_6B98::
     ldh a, [hFFC6]
@@ -7686,11 +7696,13 @@ Jump_012_6EB4::
     ld a, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_6893)
+; only called from RunFunc722AAnd6EB7 (E-0047)
+; 1 call site from 1 routine (e.g. RunFunc722AAnd6EB7)
 ; reads: wC468, hScrollX, hScrollXHi, hScrollY, hScrollYHi
 ; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex
 ; points at: wCBCF
-Func_012_6EB7::
+RunFunc722AAnd6EB7_Sub01::
+Func_012_6EB7:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -7701,7 +7713,7 @@ Func_012_6EB7::
     jr Jump_012_6ED3
 
 ; unless the map is loading or wCBCF bit 7 is clear: reads the sprite entries starting at wCBCF (tile offset, set index with bit 7 selecting a sub index, attribute, position bytes), sets the hSprite inputs and 16-bit positions from them plus the scroll, and draws each with DrawMetaSprite
-; 9 call sites from 9 routines (e.g. Func_002_4AE0_Case00, Func_002_4AE0_Case01, Func_002_4AE0_Case02, Func_002_4AE0_Case03, ...)
+; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case03, ...)
 ; reads: wC468, hScrollX, hScrollXHi, hScrollY, hScrollYHi
 ; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex
 ; points at: wCBCF
@@ -7939,7 +7951,7 @@ Data_012_7026:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B04C, $58
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7_Case02)
+; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC47, wC8FE, wIsCGB
 ; writes: wC8FE, wC900, wC8FF, wC527
 ; points at: wCC48, wOBJPaletteBuffer
@@ -8011,7 +8023,7 @@ Jump_012_7101::
     ld [wC900], a
     jr Jump_012_715E
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7_Case02)
+; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, wCCE9, hMapScreenX, hMapScreenY, wC8FE, wIsCGB
 ; writes: wCCE9, wC900, wC8FF, wC8FE, wC527
 ; points at: wCCEB, wOBJPaletteBuffer
@@ -8148,7 +8160,7 @@ Data_012_71BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B1E8, $42
 
-; 2 call sites from 2 routines (e.g. Func_012_6893, Func_002_4AE0_Case07)
+; 2 call sites from 2 routines (e.g. RunFunc722AAnd6EB7, FieldModeStateDispatch_Case07)
 ; reads: wC468, wC8FE, wC956, wCCE9, wCC44, hScrollX, hScrollXHi, wC8FF, ...
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 Func_012_722A::
@@ -8300,10 +8312,12 @@ Data_012_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $20, $10, $70, $20, $10, $20, $40, $20, $60, $30, $30, $40, $50, $40, $70
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
 
-; 2 call sites from 2 routines (e.g. Func_002_4AE0_Case00, Func_002_4AE0_Case05)
+; only called from routines of FieldModeStateDispatch (E-0098)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
 ; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wC8FE, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
-Func_012_7333::
+FieldModeStateDispatch_Shared02::
+Func_012_7333:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
@@ -8368,13 +8382,13 @@ Jump_012_7377::
     ld a, [wC8CD]
     bit 7, a
     ret z
-    farcall Func_002_5B9E
+    farcall RedrawScreenBufferIfWC8CDBit7
     ret
 
 Jump_012_73A0::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_4AE0_Case07, UpdatePlayerMovement_Sub01)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01)
 ; reads: wC951, wC8BF, wC8FE, hPlayerX, hPlayerY, wScriptRunning, wC917, wC916
 ; writes: wD091, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_012_73A1::
@@ -8423,11 +8437,13 @@ Jump_012_73DC::
 Jump_012_73F2::
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0_Case05)
+; only called from FieldModeStateDispatch_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case05)
 ; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wCC44, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wScriptParam0, wScriptParam1, wC916, wC917, wJoypadHeld, wJoypadPressed
 ; points at: wCDB0, wCE8B
-Func_012_73F3::
+FieldModeStateDispatch_Case05_Sub02::
+Func_012_73F3:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
@@ -8621,7 +8637,7 @@ Jump_012_7508::
 Data_012_752E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
-; 2 call sites from 2 routines (e.g. Func_012_7333, Func_012_73A1)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Shared02, Func_012_73A1)
 ; reads: wCC44, wC8FF
 Func_012_7536::
     push bc
@@ -8681,7 +8697,7 @@ Data_012_7581:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. Func_012_7BCC, Func_012_73F3)
+; 2 call sites from 2 routines (e.g. Func_012_7BCC, FieldModeStateDispatch_Case05_Sub02)
 ; writes: wC910, wC911, wC912, wC913
 ReadTileBuffer2x2AtPixel_Bank12::
 Func_012_75A1:: ; address name
@@ -8719,7 +8735,7 @@ Func_012_75A1:: ; address name
     ld [wC913], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_012_7BCC, UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
+; 3 call sites from 3 routines (e.g. Func_012_7BCC, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wScriptRunning, wC935, wCC44, hMapId, wC832
 ; writes: wC832
 Func_012_75E0::
@@ -9724,7 +9740,7 @@ Jump_012_7B92::
     ret
 
 ; when wC935 has bit 7 set and bit 6 clear: wC935 = 0 and wC832 = 0 (E-0117)
-; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, Func_011_4130, Func_011_4340, Func_011_43FA, ...)
+; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, Func_011_4130, ScriptWarpToMapFromBytesAtDE, Func_011_43FA, ...)
 ; reads: wC935
 ; writes: wC935, wC832
 ClearWC935IfBit7AndNot6::
@@ -9739,11 +9755,13 @@ Func_012_7B9F:: ; address name
     ld [wC832], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7_Case02)
+; returns unless Func_012_7D5E is 0, wC8FE is $FF and no script runs; then, unless bit 7 of wCC44 is set, wC935 = 0 (E-0122)
+; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
 ; reads: wC8FE, wScriptRunning, wCC44, wC935, wC5E8, wCB83, wCB84, wC634
 ; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wSpriteSlots, wCB80, wCB82, ...
-Func_012_7BB0::
-    call Func_012_7D5E
+ClearWC935WhenFieldIdle::
+Func_012_7BB0:: ; address name
+    call ClearWC935WhenFieldIdle_Sub01
     or a, a
     ret nz
     ld a, [wC8FE]
@@ -9981,10 +9999,12 @@ Data_012_7D46:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_7D56:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $20, $70, $60, $20, $60, $70, $20
 
-; 1 call site from 1 routine (e.g. Func_012_7BB0)
+; only called from ClearWC935WhenFieldIdle (E-0047)
+; 1 call site from 1 routine (e.g. ClearWC935WhenFieldIdle)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
 ; writes: wC935
-Func_012_7D5E::
+ClearWC935WhenFieldIdle_Sub01::
+Func_012_7D5E:: ; address name
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_012_7D93
@@ -10012,7 +10032,7 @@ Jump_012_7D93::
     xor a, a
     ret
 
-; 7 call sites from 7 routines (e.g. Msg01F0_Case07_Sub01, Msg01F0_Case27, Msg01F0_Case7F, Func_05F_6D3F, ...)
+; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case07_Sub01, DispatchTalkEvent_Case01_Case27, DispatchTalkEvent_Case01_Case7F, LoadListedRecordNameTilesForHFFC6, ...)
 ; reads: hFFC6, hFFC7, wC6FD
 ; writes: rRAMG, hFFC6
 ; points at: wC6FE
@@ -10202,7 +10222,7 @@ Jump_012_7E77::
     db $AF, $E0, $C7, $C9
 
 ; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
-; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Table4_Case02, Func_073_44A5_Case02, Func_073_4C5D_Case02, Func_073_4C5D_Table2_Case05, ...)
+; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Case0A_Case02, ScriptCommand82_Run_Case08_Case02, ScriptCommand82_Run_Case03_Case02, ScriptCommand82_Run_Case02_Case05, ...)
 ; reads: hFFC6, hFFC7, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
 SubtractGoldFloorZero::
@@ -10307,7 +10327,7 @@ Func_012_7F05:: ; address name
     ret
 
 ; takes gold: all of it when below 150, 150 when below 1,500 ($05DC), otherwise one tenth (Divide24ByA, rounded down) (E-0075)
-; 1 call site from 1 routine (e.g. Func_073_4C5D)
+; 1 call site from 1 routine (e.g. DeductGoldPenaltyAndFormatLoss)
 ; reads: wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
 DeductGoldPenalty::

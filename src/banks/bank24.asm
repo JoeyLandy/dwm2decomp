@@ -44,7 +44,7 @@ Jump_024_4022::
     ld [wC8C4], a
 
 Jump_024_403F::
-    farcall Func_002_7333
+    farcall RunSaveGameSteps
     ld a, [wC8C3]
     bit 7, a
     jr z, Jump_024_403F
@@ -143,7 +143,7 @@ Jump_024_40EA::
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 6
-; 2 call sites from 2 routines (e.g. RunGameModeUpdate_Case06, Func_0F0_56C2_Case21)
+; 2 call sites from 2 routines (e.g. RunGameModeUpdate_Case06, Func_0F0_4CA0_Case0A_Case21)
 ; reads: wFadeState, wC52B, wD780, wD781, wD782
 GameMode6_Update::
 Func_024_4117:: ; address name
@@ -204,15 +204,15 @@ GameMode6_Update_Case00::
 Jump_024_4170:: ; address name
     ld a, [wD781]
     rst $00
-    dw GameMode6_Update_Table2_Case00
-    dw GameMode6_Update_Table2_Case01
+    dw GameMode6_Update_Case00_Case00
+    dw GameMode6_Update_Case00_Case01
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wD781
 ; writes: wD781, wC13A, wStringCategory, wStringIndex
 ; points at: wC37A, wC987, wC130
-GameMode6_Update_Table2_Case00::
+GameMode6_Update_Case00_Case00::
 Jump_024_4178:: ; address name
     ld a, [wD092]
     cp a, $08
@@ -232,7 +232,7 @@ Jump_024_418D::
     ld hl, wC37A
     ld bc, $1102
     call CopyRectTo20ByteRowsJp_Bank24
-    call GameMode6_Update_Table2_Case00_Sub01
+    call GameMode6_Update_Case00_Case00_Sub01
     call BGMapAddressAtScroll_Bank24
     ld bc, $1406
     ld de, $01CC
@@ -274,11 +274,11 @@ Jump_024_41C0::
     farcall BeginStringDisplay_Bank07
     ret
 
-; entry 1 of the `rst $00` table in GameMode6_Update
+; entry 1 of the `rst $00` table in GameMode6_Update_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD04C, wD092, wC986, wD780, wCA2B
 ; writes: wD781, wD780
-GameMode6_Update_Table2_Case01::
+GameMode6_Update_Case00_Case01::
 Jump_024_41F5:: ; address name
     ld a, [wD04C]
     and a, a
@@ -344,28 +344,28 @@ GameMode6_Update_Case02::
 Jump_024_424D:: ; address name
     ld a, [wD781]
     rst $00
-    dw GameMode6_Update_Table3_Case00
-    dw GameMode6_Update_Table3_Case01
-    dw GameMode6_Update_Table3_Case02
-    dw GameMode6_Update_Table3_Case03
-    dw GameMode6_Update_Table3_Case04
-    dw GameMode6_Update_Table3_Case05
-    dw GameMode6_Update_Table3_Case06
-    dw GameMode6_Update_Table3_Case07
-    dw GameMode6_Update_Table3_Case08
-    dw GameMode6_Update_Table3_Case09
-    dw GameMode6_Update_Table3_Case0A
-    dw GameMode6_Update_Table3_Case0B
-    dw GameMode6_Update_Table3_Case0C
-    dw GameMode6_Update_Table3_Case0D
-    dw GameMode6_Update_Table3_Case0E
-    dw GameMode6_Update_Table3_Case0F
+    dw GameMode6_Update_Case02_Case00
+    dw GameMode6_Update_Case02_Case01
+    dw GameMode6_Update_Case02_Case02
+    dw GameMode6_Update_Case02_Case03
+    dw GameMode6_Update_Case02_Case04
+    dw GameMode6_Update_Case02_Case05
+    dw GameMode6_Update_Case02_Case06
+    dw GameMode6_Update_Case02_Case07
+    dw GameMode6_Update_Case02_Case08
+    dw GameMode6_Update_Case02_Case09
+    dw GameMode6_Update_Case02_Case0A
+    dw GameMode6_Update_Case02_Case0B
+    dw GameMode6_Update_Case02_Case0C
+    dw GameMode6_Update_Case02_Case0D
+    dw GameMode6_Update_Case02_Case0E
+    dw GameMode6_Update_Case02_Case0F
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wD782, wD7FF, wD7AA, wD781
 ; writes: wD781, wD782
-GameMode6_Update_Table3_Case00::
+GameMode6_Update_Case02_Case00::
 Jump_024_4271:: ; address name
     ld a, [wD092]
     cp a, $08
@@ -400,12 +400,12 @@ Jump_024_42A4::
     ret
     db $0A, $14, $1E
 
-; entry 1 of the `rst $00` table in GameMode6_Update
+; entry 1 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCA36, wCA37, wD781
 ; writes: rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wC8C3, wC8C4, wD781
 ; points at: sA000, wCA2B
-GameMode6_Update_Table3_Case01::
+GameMode6_Update_Case02_Case01::
 Jump_024_42B3:: ; address name
     farcall LoadWD7FFFromWC7C7Table
     ld a, $0A
@@ -450,23 +450,23 @@ Jump_024_42DB::
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update
+; entry 2 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8C3
-GameMode6_Update_Table3_Case02::
+GameMode6_Update_Case02_Case02::
 Jump_024_4309:: ; address name
-    farcall Func_002_7333
+    farcall RunSaveGameSteps
     ld a, [wC8C3]
     bit 7, a
     ret z
     call GameMode6_Update_Shared04
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update
+; entry 3 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
-GameMode6_Update_Table3_Case03::
+GameMode6_Update_Case02_Case03::
 Jump_024_4319:: ; address name
     ld a, $05
     call ShowStringAInDefaultWindow_Bank24
@@ -475,12 +475,12 @@ Jump_024_4319:: ; address name
     ld [wD781], a
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update
+; entry 4 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wTwoChoiceCursor, wD781
 ; points at: wC412
-GameMode6_Update_Table3_Case04::
+GameMode6_Update_Case02_Case04::
 Jump_024_4326:: ; address name
     ld a, $6C
     call QueueSoundEffect
@@ -501,11 +501,11 @@ Jump_024_4326:: ; address name
     ld [wD781], a
     ret
 
-; entry 5 of the `rst $00` table in GameMode6_Update
+; entry 5 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wD781
 ; writes: wD781
-GameMode6_Update_Table3_Case05::
+GameMode6_Update_Case02_Case05::
 Jump_024_4355:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -538,19 +538,19 @@ Jump_024_437D::
     ld [wD781], a
     ret
 
-; entry 6 of the `rst $00` table in GameMode6_Update
+; entry 6 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Table3_Case06::
+GameMode6_Update_Case02_Case06::
 Jump_024_4390:: ; address name
     call GameMode6_Update_Shared04
     ret
 
-; entry 7 of the `rst $00` table in GameMode6_Update
+; entry 7 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wTwoChoiceCursor, wD781
 ; points at: wC40E
-GameMode6_Update_Table3_Case07::
+GameMode6_Update_Case02_Case07::
 Jump_024_4394:: ; address name
     ld a, $6C
     call QueueSoundEffect
@@ -571,14 +571,14 @@ Jump_024_4394:: ; address name
     ld [wD781], a
     ret
 
-; entry 8 of the `rst $00` table in GameMode6_Update
+; entry 8 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wD781
 ; writes: wD781, wTwoChoiceCursor
 ; points at: wC412
-GameMode6_Update_Table3_Case08::
+GameMode6_Update_Case02_Case08::
 Jump_024_43C3:: ; address name
-    call GameMode6_Update_Table3_Case08_Sub01
+    call GameMode6_Update_Case02_Case08_Sub01
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -632,20 +632,20 @@ Jump_024_43F1::
     ld [wD781], a
     ret
 
-; entry 9 of the `rst $00` table in GameMode6_Update
+; entry 9 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD781
-GameMode6_Update_Table3_Case09::
+GameMode6_Update_Case02_Case09::
 Jump_024_4432:: ; address name
     ld a, $05
     ld [wD781], a
     ret
 
-; entry 10 of the `rst $00` table in GameMode6_Update
+; entry 10 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7A9, wD781, wTwoChoiceCursor
 ; writes: wD781
-GameMode6_Update_Table3_Case0A::
+GameMode6_Update_Case02_Case0A::
 Jump_024_4438:: ; address name
     ld a, [wD7A9]
     and a, a
@@ -667,12 +667,12 @@ Jump_024_444C::
     ld [wD781], a
     ret
 
-; entry 11 of the `rst $00` table in GameMode6_Update
+; entry 11 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wD781
 ; writes: wD781
 ; points at: wC3F7, wC300
-GameMode6_Update_Table3_Case0B::
+GameMode6_Update_Case02_Case0B::
 Jump_024_445F:: ; address name
     ld a, [wD092]
     cp a, $08
@@ -707,12 +707,12 @@ Jump_024_4477::
     ld [wD781], a
     ret
 
-; entry 12 of the `rst $00` table in GameMode6_Update
+; entry 12 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTwoChoiceCursor, wD780
 ; writes: wD781, wD780
 ; points at: wC300
-GameMode6_Update_Table3_Case0C::
+GameMode6_Update_Case02_Case0C::
 Jump_024_44AA:: ; address name
     ld b, $46
     ld de, Data_046_4001
@@ -755,11 +755,11 @@ Jump_024_44BA::
 Data_024_44FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
-; entry 13 of the `rst $00` table in GameMode6_Update
+; entry 13 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
-GameMode6_Update_Table3_Case0D::
+GameMode6_Update_Case02_Case0D::
 Jump_024_450E:: ; address name
     call GameMode6_Update_Shared07
     ld a, [wD781]
@@ -767,18 +767,18 @@ Jump_024_450E:: ; address name
     ld [wD781], a
     ret
 
-; entry 14 of the `rst $00` table in GameMode6_Update
+; entry 14 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Table3_Case0E::
+GameMode6_Update_Case02_Case0E::
 Jump_024_4519:: ; address name
     call GameMode6_Update_Shared06
-    call GameMode6_Update_Table3_Case0E_Sub01
+    call GameMode6_Update_Case02_Case0E_Sub01
     ret
 
-; entry 15 of the `rst $00` table in GameMode6_Update
+; entry 15 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD781, wD782
-GameMode6_Update_Table3_Case0F::
+GameMode6_Update_Case02_Case0F::
 Jump_024_4520:: ; address name
     xor a, a
     ld [wD781], a
@@ -793,16 +793,16 @@ GameMode6_Update_Case03::
 Jump_024_452A:: ; address name
     ld a, [wD781]
     rst $00
-    dw GameMode6_Update_Table4_Case00
-    dw GameMode6_Update_Table4_Case01
-    dw GameMode6_Update_Table4_Case02
-    dw GameMode6_Update_Table4_Case03
+    dw GameMode6_Update_Case03_Case00
+    dw GameMode6_Update_Case03_Case01
+    dw GameMode6_Update_Case03_Case02
+    dw GameMode6_Update_Case03_Case03
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
-GameMode6_Update_Table4_Case00::
+GameMode6_Update_Case03_Case00::
 Jump_024_4536:: ; address name
     call GameMode6_Update_Shared07
     ld a, [wD781]
@@ -810,19 +810,19 @@ Jump_024_4536:: ; address name
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode6_Update
+; entry 1 of the `rst $00` table in GameMode6_Update_Case03
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Table4_Case01::
+GameMode6_Update_Case03_Case01::
 Jump_024_4541:: ; address name
     call GameMode6_Update_Shared06
-    call GameMode6_Update_Table4_Case01_Sub01
+    call GameMode6_Update_Case03_Case01_Sub01
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update
+; entry 2 of the `rst $00` table in GameMode6_Update_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC8C3, wC8C4, wD781
-GameMode6_Update_Table4_Case02::
+GameMode6_Update_Case03_Case02::
 Jump_024_4548:: ; address name
     xor a, a
     ld [wC8C3], a
@@ -832,12 +832,12 @@ Jump_024_4548:: ; address name
     ld [wD781], a
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update
+; entry 3 of the `rst $00` table in GameMode6_Update_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8C3
-GameMode6_Update_Table4_Case03::
+GameMode6_Update_Case03_Case03::
 Jump_024_4557:: ; address name
-    farcall Func_002_7333
+    farcall RunSaveGameSteps
     ld a, [wC8C3]
     bit 7, a
     ret z
@@ -851,51 +851,51 @@ GameMode6_Update_Case04::
 Jump_024_4567:: ; address name
     ld a, [wD781]
     rst $00
-    dw GameMode6_Update_Table5_Case00
-    dw GameMode6_Update_Table5_Case00
-    dw GameMode6_Update_Table5_Case00
-    dw GameMode6_Update_Table5_Case00
-    dw GameMode6_Update_Table5_Case04
-    dw GameMode6_Update_Table5_Case04
-    dw GameMode6_Update_Table5_Case06
-    dw GameMode6_Update_Table5_Case07
-    dw GameMode6_Update_Table5_Case08
-    dw GameMode6_Update_Table5_Case04
-    dw GameMode6_Update_Table5_Case0A
-    dw GameMode6_Update_Table5_Case0B
-    dw GameMode6_Update_Table5_Case0C
-    dw GameMode6_Update_Table5_Case0D
+    dw GameMode6_Update_Case04_Case00
+    dw GameMode6_Update_Case04_Case00
+    dw GameMode6_Update_Case04_Case00
+    dw GameMode6_Update_Case04_Case00
+    dw GameMode6_Update_Case04_Case04
+    dw GameMode6_Update_Case04_Case04
+    dw GameMode6_Update_Case04_Case06
+    dw GameMode6_Update_Case04_Case07
+    dw GameMode6_Update_Case04_Case08
+    dw GameMode6_Update_Case04_Case04
+    dw GameMode6_Update_Case04_Case0A
+    dw GameMode6_Update_Case04_Case0B
+    dw GameMode6_Update_Case04_Case0C
+    dw GameMode6_Update_Case04_Case0D
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Table5_Case00::
+GameMode6_Update_Case04_Case00::
 Jump_024_4587:: ; address name
     farcall ScriptCommandED_Run
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update
+; entry 4 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Table5_Case04::
+GameMode6_Update_Case04_Case04::
 Jump_024_458E:: ; address name
     farcall ScriptCommandEF_Run_Bank1B
     ret
 
-; entry 6 of the `rst $00` table in GameMode6_Update
+; entry 6 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
-GameMode6_Update_Table5_Case06::
+GameMode6_Update_Case04_Case06::
 Jump_024_4595:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
     ret
 
-; entry 7 of the `rst $00` table in GameMode6_Update
+; entry 7 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD781
 ; writes: wD781
-GameMode6_Update_Table5_Case07::
+GameMode6_Update_Case04_Case07::
 Jump_024_459D:: ; address name
     ld a, [wD7AB]
     ld b, $BB
@@ -914,22 +914,22 @@ Jump_024_459D:: ; address name
     ld [wD781], a
     ret
 
-; entry 8 of the `rst $00` table in GameMode6_Update
+; entry 8 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782
-GameMode6_Update_Table5_Case08::
+GameMode6_Update_Case04_Case08::
 Jump_024_45C7:: ; address name
     ld a, [wD782]
     rst $00
-    dw GameMode6_Update_Table6_Case00
-    dw GameMode6_Update_Table6_Case01
-    dw GameMode6_Update_Table6_Case02
+    dw GameMode6_Update_Case04_Case08_Case00
+    dw GameMode6_Update_Case04_Case08_Case01
+    dw GameMode6_Update_Case04_Case08_Case02
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case04_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wD7AB, wD781, wD782
 ; writes: wMenuInputResult, wD782, wD781
-GameMode6_Update_Table6_Case00::
+GameMode6_Update_Case04_Case08_Case00::
 Jump_024_45D1:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -968,7 +968,7 @@ Jump_024_4607::
     ret
 
 Jump_024_460F::
-    call GameMode6_Update_Table6_Case00_Sub01
+    call GameMode6_Update_Case04_Case08_Case00_Sub01
     cp a, $FF
     jr nz, Jump_024_4621
     ld a, $02
@@ -988,12 +988,12 @@ Jump_024_4621::
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode6_Update
+; entry 1 of the `rst $00` table in GameMode6_Update_Case04_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTwoChoiceCursor, wD092, wD7EB
 ; writes: wD782, wD7AF, wD7AB, wD780, wD781
 ; points at: wC364, wC3F7, wC40E, wC37A
-GameMode6_Update_Table6_Case01::
+GameMode6_Update_Case04_Case08_Case01::
 Jump_024_463A:: ; address name
     ld de, Data_024_5814
     ld hl, wC364
@@ -1046,20 +1046,20 @@ Jump_024_4678::
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update
+; entry 2 of the `rst $00` table in GameMode6_Update_Case04_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD782
-GameMode6_Update_Table6_Case02::
+GameMode6_Update_Case04_Case08_Case02::
 Jump_024_46B5:: ; address name
     xor a, a
     ld [wD782], a
     ret
 
-; entry 10 of the `rst $00` table in GameMode6_Update
+; entry 10 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7AD, wD780, wD781, wC6FD, wD7AF, wD7AB
 ; writes: wD7F5, wD7B2, wD7B3, wD781, wD782, wD780
-GameMode6_Update_Table5_Case0A::
+GameMode6_Update_Case04_Case0A::
 Jump_024_46BA:: ; address name
     xor a, a
     ld [wD7F5], a
@@ -1109,7 +1109,7 @@ Jump_024_46F9::
     jr Jump_024_46D2
 
 Jump_024_4713::
-    call GameMode6_Update_Table5_Case0A_Sub01
+    call GameMode6_Update_Case04_Case0A_Sub01
     ld a, $0A
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wD781]
@@ -1117,12 +1117,12 @@ Jump_024_4713::
     ld [wD781], a
     ret
 
-; entry 11 of the `rst $00` table in GameMode6_Update
+; entry 11 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD781
 ; writes: wD781
 ; points at: wC410
-GameMode6_Update_Table5_Case0B::
+GameMode6_Update_Case04_Case0B::
 Jump_024_4724:: ; address name
     ld de, Data_024_5A28
     ld hl, wC410
@@ -1146,12 +1146,12 @@ Jump_024_4724:: ; address name
     ld [wD781], a
     ret
 
-; entry 12 of the `rst $00` table in GameMode6_Update
+; entry 12 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F6, wCA36, wCA37, wD781
 ; writes: wD7F1, wD7F2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wC8C3, wC8C4, ...
 ; points at: sA000, wCA2B
-GameMode6_Update_Table5_Case0C::
+GameMode6_Update_Case04_Case0C::
 Jump_024_475C:: ; address name
     farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
@@ -1196,12 +1196,12 @@ Jump_024_4792::
     ld [wD781], a
     ret
 
-; entry 13 of the `rst $00` table in GameMode6_Update
+; entry 13 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8C3
-GameMode6_Update_Table5_Case0D::
+GameMode6_Update_Case04_Case0D::
 Jump_024_47BF:: ; address name
-    farcall Func_002_7333
+    farcall RunSaveGameSteps
     ld a, [wC8C3]
     bit 7, a
     ret z
@@ -1215,24 +1215,24 @@ GameMode6_Update_Case05::
 Jump_024_47CF:: ; address name
     ld a, [wD781]
     rst $00
-    dw GameMode6_Update_Table7_Case00
-    dw GameMode6_Update_Table7_Case01
-    dw GameMode6_Update_Table7_Case02
-    dw GameMode6_Update_Table7_Case03
-    dw GameMode6_Update_Table7_Case04
-    dw GameMode6_Update_Table7_Case05
-    dw GameMode6_Update_Table7_Case06
-    dw GameMode6_Update_Table7_Case07
-    dw GameMode6_Update_Table7_Case08
-    dw GameMode6_Update_Table7_Case09
-    dw GameMode6_Update_Table7_Case0A
-    dw GameMode6_Update_Table7_Case0B
+    dw GameMode6_Update_Case05_Case00
+    dw GameMode6_Update_Case05_Case01
+    dw GameMode6_Update_Case05_Case02
+    dw GameMode6_Update_Case05_Case03
+    dw GameMode6_Update_Case05_Case04
+    dw GameMode6_Update_Case05_Case05
+    dw GameMode6_Update_Case05_Case06
+    dw GameMode6_Update_Case05_Case07
+    dw GameMode6_Update_Case05_Case08
+    dw GameMode6_Update_Case05_Case09
+    dw GameMode6_Update_Case05_Case0A
+    dw GameMode6_Update_Case05_Case0B
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
-GameMode6_Update_Table7_Case00::
+GameMode6_Update_Case05_Case00::
 Jump_024_47EB:: ; address name
     call GameMode6_Update_Shared05
     ld a, [wD781]
@@ -1240,12 +1240,12 @@ Jump_024_47EB:: ; address name
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode6_Update
+; entry 1 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC364
-GameMode6_Update_Table7_Case01::
+GameMode6_Update_Case05_Case01::
 Jump_024_47F6:: ; address name
     ld de, Data_024_5B10
     ld hl, wC364
@@ -1256,12 +1256,12 @@ Jump_024_47F6:: ; address name
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update
+; entry 2 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC40B, wC40C
-GameMode6_Update_Table7_Case02::
+GameMode6_Update_Case05_Case02::
 Jump_024_480A:: ; address name
     farcall Func_01E_71E1
     ld a, [wD7B0]
@@ -1286,11 +1286,11 @@ Jump_024_482E::
     ld [wD781], a
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update
+; entry 3 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD7F5, wD781
-GameMode6_Update_Table7_Case03::
+GameMode6_Update_Case05_Case03::
 Jump_024_4842:: ; address name
     xor a, a
     ld [wD7F5], a
@@ -1300,11 +1300,11 @@ Jump_024_4842:: ; address name
     ld [wD781], a
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update
+; entry 4 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD7F1, wD7F2, wD781
-GameMode6_Update_Table7_Case04::
+GameMode6_Update_Case05_Case04::
 Jump_024_4854:: ; address name
     ld de, Data_01F_4990
     ld hl, vTiles1 + $4E0
@@ -1321,11 +1321,11 @@ Jump_024_4854:: ; address name
     ld [wD781], a
     ret
 
-; entry 5 of the `rst $00` table in GameMode6_Update
+; entry 5 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wD7AB, wD781
 ; writes: wMenuInputResult, wD781
-GameMode6_Update_Table7_Case05::
+GameMode6_Update_Case05_Case05::
 Jump_024_4878:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -1371,11 +1371,11 @@ Jump_024_48AE::
     ld [wD781], a
     ret
 
-; entry 6 of the `rst $00` table in GameMode6_Update
+; entry 6 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTwoChoiceCursor
 ; writes: wD780, wD781, wD782, wD7AF, wD7AB
-GameMode6_Update_Table7_Case06::
+GameMode6_Update_Case05_Case06::
 Jump_024_48C8:: ; address name
     ld a, [wTwoChoiceCursor]
     ld b, $C3
@@ -1392,12 +1392,12 @@ Jump_024_48C8:: ; address name
     ld [wD7AB], a
     ret
 
-; entry 7 of the `rst $00` table in GameMode6_Update
+; entry 7 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7AD, wD781
 ; points at: wC410
-GameMode6_Update_Table7_Case07::
+GameMode6_Update_Case05_Case07::
 Jump_024_48EA:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
@@ -1441,11 +1441,11 @@ Jump_024_48EA:: ; address name
     ld [wD781], a
     ret
 
-; entry 8 of the `rst $00` table in GameMode6_Update
+; entry 8 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7AD, wD780, wD781, wD7F6
 ; writes: wD7F5, wD7B2, wD7B3, wD781, wD782, wD780
-GameMode6_Update_Table7_Case08::
+GameMode6_Update_Case05_Case08::
 Jump_024_494E:: ; address name
     xor a, a
     ld [wD7F5], a
@@ -1486,7 +1486,7 @@ Jump_024_498D::
     ld h, a
     ld a, [wD7F6]
     ld l, a
-    call GameMode6_Update_Table7_Case08_Sub01
+    call GameMode6_Update_Case05_Case08_Sub01
     call CopyMonsterNameToBuffer_B24
     ld a, $0A
     call ShowStringAInDefaultWindow_Bank24
@@ -1495,12 +1495,12 @@ Jump_024_498D::
     ld [wD781], a
     ret
 
-; entry 9 of the `rst $00` table in GameMode6_Update
+; entry 9 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD781
 ; writes: wD781
 ; points at: wC410
-GameMode6_Update_Table7_Case09::
+GameMode6_Update_Case05_Case09::
 Jump_024_49AF:: ; address name
     ld de, Data_024_5A82
     ld hl, wC410
@@ -1524,12 +1524,12 @@ Jump_024_49AF:: ; address name
     ld [wD781], a
     ret
 
-; entry 10 of the `rst $00` table in GameMode6_Update
+; entry 10 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F6, wCA36, wCA37, wD781
 ; writes: wD7F1, wD7F2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wC8C3, wC8C4, ...
 ; points at: sA000, wCA2B
-GameMode6_Update_Table7_Case0A::
+GameMode6_Update_Case05_Case0A::
 Jump_024_49E8:: ; address name
     farcall SetWD7F5ToWD789Cell4
     ld a, [wD7F5]
@@ -1575,12 +1575,12 @@ Jump_024_4A1E::
     ld [wD781], a
     ret
 
-; entry 11 of the `rst $00` table in GameMode6_Update
+; entry 11 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8C3
-GameMode6_Update_Table7_Case0B::
+GameMode6_Update_Case05_Case0B::
 Jump_024_4A4C:: ; address name
-    farcall Func_002_7333
+    farcall RunSaveGameSteps
     ld a, [wC8C3]
     bit 7, a
     ret z
@@ -1636,19 +1636,19 @@ GameMode6_Update_Case0E::
 Jump_024_4A94:: ; address name
     ld a, [wD781]
     rst $00
-    dw GameMode6_Update_Table8_Case00
-    dw GameMode6_Update_Table8_Case01
-    dw GameMode6_Update_Table8_Case02
-    dw GameMode6_Update_Table8_Case03
-    dw GameMode6_Update_Table8_Case04
-    dw GameMode6_Update_Table8_Case05
+    dw GameMode6_Update_Case0E_Case00
+    dw GameMode6_Update_Case0E_Case01
+    dw GameMode6_Update_Case0E_Case02
+    dw GameMode6_Update_Case0E_Case03
+    dw GameMode6_Update_Case0E_Case04
+    dw GameMode6_Update_Case0E_Case05
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wD7AB, wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD781
 ; points at: wC3F7, wC364
-GameMode6_Update_Table8_Case00::
+GameMode6_Update_Case0E_Case00::
 Jump_024_4AA4:: ; address name
     ld b, $46
     ld de, Data_046_4001
@@ -1696,12 +1696,12 @@ Jump_024_4AEF::
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode6_Update
+; entry 1 of the `rst $00` table in GameMode6_Update_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC40B, wC40C
-GameMode6_Update_Table8_Case01::
+GameMode6_Update_Case0E_Case01::
 Jump_024_4B0E:: ; address name
     farcall ListRecordsInUseWithByte6ESet
     farcall Func_01E_71E1
@@ -1723,11 +1723,11 @@ Jump_024_4B38::
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update
+; entry 2 of the `rst $00` table in GameMode6_Update_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD7F5, wD781
-GameMode6_Update_Table8_Case02::
+GameMode6_Update_Case0E_Case02::
 Jump_024_4B40:: ; address name
     xor a, a
     ld [wD7F5], a
@@ -1737,11 +1737,11 @@ Jump_024_4B40:: ; address name
     ld [wD781], a
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update
+; entry 3 of the `rst $00` table in GameMode6_Update_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD7F1, wD7F2, wD781
-GameMode6_Update_Table8_Case03::
+GameMode6_Update_Case0E_Case03::
 Jump_024_4B52:: ; address name
     ld de, Data_01F_4990
     ld hl, vTiles1 + $4E0
@@ -1758,12 +1758,12 @@ Jump_024_4B52:: ; address name
     ld [wD781], a
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update
+; entry 4 of the `rst $00` table in GameMode6_Update_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD781
 ; points at: wC410
-GameMode6_Update_Table8_Case04::
+GameMode6_Update_Case0E_Case04::
 Jump_024_4B77:: ; address name
     ld de, Data_024_5B85
     ld hl, wC410
@@ -1789,11 +1789,11 @@ Jump_024_4B77:: ; address name
     ld [wD781], a
     ret
 
-; entry 5 of the `rst $00` table in GameMode6_Update
+; entry 5 of the `rst $00` table in GameMode6_Update_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD7B2, wD7B3, wGameMode, wC581
 ; writes: hFFBA, wD782, wD780, wD781, wC52D, wC52E, wC52F, wC530
-GameMode6_Update_Table8_Case05::
+GameMode6_Update_Case0E_Case05::
 Jump_024_4BB0:: ; address name
     ld a, [wD7AB]
     ld b, $BC
@@ -1846,21 +1846,21 @@ GameMode6_Update_Case0F::
 Jump_024_4C18:: ; address name
     ld a, [wD781]
     rst $00
-    dw GameMode6_Update_Table9_Case00
-    dw GameMode6_Update_Table9_Case01
-    dw GameMode6_Update_Table9_Case02
-    dw GameMode6_Update_Table9_Case03
-    dw GameMode6_Update_Table9_Case03
-    dw GameMode6_Update_Table9_Case05
-    dw GameMode6_Update_Table9_Case03
-    dw GameMode6_Update_Table9_Case07
+    dw GameMode6_Update_Case0F_Case00
+    dw GameMode6_Update_Case0F_Case01
+    dw GameMode6_Update_Case0F_Case02
+    dw GameMode6_Update_Case0F_Case03
+    dw GameMode6_Update_Case0F_Case03
+    dw GameMode6_Update_Case0F_Case05
+    dw GameMode6_Update_Case0F_Case03
+    dw GameMode6_Update_Case0F_Case07
 
-; entry 0 of the `rst $00` table in GameMode6_Update
+; entry 0 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wD7AB, wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD781
 ; points at: wC364, wC3F7
-GameMode6_Update_Table9_Case00::
+GameMode6_Update_Case0F_Case00::
 Jump_024_4C2C:: ; address name
     ld b, $46
     ld de, Data_046_4001
@@ -1881,7 +1881,7 @@ Jump_024_4C2C:: ; address name
     ld a, $0D
     ld [wStringIndex], a
     farcall ShowString_Bank33_7045
-    call GameMode6_Update_Table9_Case00_Sub01
+    call GameMode6_Update_Case0F_Case00_Sub01
     ld a, [wD092]
     cp a, $08
     jr z, Jump_024_4C69
@@ -1891,7 +1891,7 @@ Jump_024_4C69::
     ld a, [wD092]
     cp a, $08
     jr z, Jump_024_4C75
-    call GameMode6_Update_Table9_Case00_Sub02
+    call GameMode6_Update_Case0F_Case00_Sub02
     jr Jump_024_4C81
 
 Jump_024_4C75::
@@ -1914,12 +1914,12 @@ Jump_024_4C81::
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode6_Update
+; entry 1 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC42E, wC42F
-GameMode6_Update_Table9_Case01::
+GameMode6_Update_Case0F_Case01::
 Jump_024_4CA0:: ; address name
     farcall ListRecordsInUseWithByte6EClear
     farcall Func_01E_7163
@@ -1941,10 +1941,10 @@ Jump_024_4CCA::
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update
+; entry 2 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7F1
-GameMode6_Update_Table9_Case02::
+GameMode6_Update_Case0F_Case02::
 Jump_024_4CD2:: ; address name
     farcall Func_01F_5C15
     xor a, a
@@ -1952,28 +1952,28 @@ Jump_024_4CD2:: ; address name
     farcall Func_01D_6AA5
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update
+; entry 3 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Table9_Case03::
+GameMode6_Update_Case0F_Case03::
 Jump_024_4CE3:: ; address name
     farcall ScriptCommandEF_Run_Bank1B
     ret
 
-; entry 5 of the `rst $00` table in GameMode6_Update
+; entry 5 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
-GameMode6_Update_Table9_Case05::
+GameMode6_Update_Case0F_Case05::
 Jump_024_4CEA:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
     ret
 
-; entry 7 of the `rst $00` table in GameMode6_Update
+; entry 7 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
-GameMode6_Update_Table9_Case07::
+GameMode6_Update_Case0F_Case07::
 Jump_024_4CF2:: ; address name
     ld hl, vTiles1
     ld a, l
@@ -1995,7 +1995,7 @@ Jump_024_4CF2:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Table3_Case0B, GameMode6_Update_Table8_Case00, GameMode6_Update_Table9_Case00)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_Case0B, GameMode6_Update_Case0E_Case00, GameMode6_Update_Case0F_Case00)
 ; reads: wD7EB
 ; points at: wC37A
 GameMode6_Update_Shared01::
@@ -2010,11 +2010,11 @@ Func_024_4D21:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     ret
 
-; only called from GameMode6_Update_Table2_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table2_Case00)
+; only called from GameMode6_Update_Case00_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case00_Case00)
 ; reads: wIsCGB
 ; points at: wD1E3
-GameMode6_Update_Table2_Case00_Sub01::
+GameMode6_Update_Case00_Case00_Sub01::
 Func_024_4D36:: ; address name
     ld a, [wIsCGB]
     and a, a
@@ -2050,7 +2050,7 @@ Jump_024_4D5E::
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Table3_Case08, GameMode6_Update_Table3_Case05, GameMode6_Update_Table3_Case04)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_Case08, GameMode6_Update_Case02_Case05, GameMode6_Update_Case02_Case04)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC52B, wC52C
 GameMode6_Update_Shared02::
 Func_024_4D65:: ; address name
@@ -2085,7 +2085,7 @@ Func_024_4D65:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Table3_Case07, GameMode6_Update_Table5_Case0B, GameMode6_Update_Table7_Case09)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_Case07, GameMode6_Update_Case04_Case0B, GameMode6_Update_Case05_Case09)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC52B, wC52C
 GameMode6_Update_Shared03::
 Func_024_4DA8:: ; address name
@@ -2120,7 +2120,7 @@ Func_024_4DA8:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 6 call sites from 6 routines (e.g. GameMode6_Update_Table2_Case01, GameMode6_Update_Table3_Case06, GameMode6_Update_Table3_Case02, GameMode6_Update_Table4_Case03, ...)
+; 6 call sites from 6 routines (e.g. GameMode6_Update_Case00_Case01, GameMode6_Update_Case02_Case06, GameMode6_Update_Case02_Case02, GameMode6_Update_Case03_Case03, ...)
 ; reads: wD092
 ; writes: wC94B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wD780
@@ -2150,7 +2150,7 @@ Jump_024_4DF1::
     ret
 
 ; the same steps as CopyRectTo20ByteRows (copy a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fill the same rectangle at HL + $0E68 with rSVBK = 2) but encoded with jp instead of jr, so its bytes differ (E-0066)
-; 22 call sites from 16 routines (e.g. GameMode6_Update_Case01, GameMode6_Update_Table2_Case00, GameMode6_Update_Table3_Case0C, GameMode6_Update_Table3_Case0B, ...)
+; 22 call sites from 16 routines (e.g. GameMode6_Update_Case01, GameMode6_Update_Case00_Case00, GameMode6_Update_Case02_Case0C, GameMode6_Update_Case02_Case0B, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRowsJp_Bank24::
@@ -2215,7 +2215,7 @@ Jump_024_4E3F::
     ldh [rSVBK], a
     ret
 
-; 18 call sites from 15 routines (e.g. GameMode6_Init, GameMode6_Update_Case01, GameMode6_Update_Table2_Case00, GameMode6_Update_Table3_Case0C, ...)
+; 18 call sites from 15 routines (e.g. GameMode6_Init, GameMode6_Update_Case01, GameMode6_Update_Case00_Case00, GameMode6_Update_Case02_Case0C, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -2334,7 +2334,7 @@ Jump_024_4ED9::
     ret
 
 ; wStringIndex = A, wStringCategory = 0, string window = vTiles1 with size word $1202 (as SetDefaultStringWindow), then far-calls BeginStringDisplay_Bank33_7037 (E-0072)
-; 15 call sites from 12 routines (e.g. GameMode6_Update_Table2_Case00, GameMode6_Update_Table3_Case0C, GameMode6_Update_Table3_Case0A, GameMode6_Update_Table3_Case08, ...)
+; 15 call sites from 12 routines (e.g. GameMode6_Update_Case00_Case00, GameMode6_Update_Case02_Case0C, GameMode6_Update_Case02_Case0A, GameMode6_Update_Case02_Case08, ...)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ShowStringAInDefaultWindow_Bank24::
 Func_024_4EE8:: ; address name
@@ -2354,7 +2354,7 @@ Func_024_4EE8:: ; address name
     farcall BeginStringDisplay_Bank33_7037
     ret
 
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Table3_Case05, Func_024_5553_Case08)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case05, Func_024_5553_Case08)
 ; points at: wCA2C, wC130
 Func_024_4F0C::
     ld hl, wCA2C
@@ -2384,10 +2384,10 @@ Jump_024_4F25::
     ld [de], a
     ret
 
-; only called from GameMode6_Update_Table6_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table6_Case00)
+; only called from GameMode6_Update_Case04_Case08_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case04_Case08_Case00)
 ; reads: wC6FD, wD7AB, wD7AF
-GameMode6_Update_Table6_Case00_Sub01::
+GameMode6_Update_Case04_Case08_Case00_Sub01::
 Func_024_4F29:: ; address name
     ld a, [wC6FD]
     cp a, $02
@@ -2405,11 +2405,11 @@ Jump_024_4F3F::
     xor a, a
     ret
 
-; only called from GameMode6_Update_Table7_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table7_Case08)
+; only called from GameMode6_Update_Case05_Case08 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case05_Case08)
 ; writes: rRAMG, rRAMB
 ; points at: sA000
-GameMode6_Update_Table7_Case08_Sub01::
+GameMode6_Update_Case05_Case08_Sub01::
 Func_024_4F41:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -2433,7 +2433,7 @@ Func_024_4F41:: ; address name
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table7_Case08)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case05_Case08)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC130
@@ -2473,12 +2473,12 @@ Func_024_4F68:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; only called from GameMode6_Update_Table5_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table5_Case0A)
+; only called from GameMode6_Update_Case04_Case0A (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case04_Case0A)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG, rRAMB, wC8D9
 ; points at: wC8CF, wC130
-GameMode6_Update_Table5_Case0A_Sub01::
+GameMode6_Update_Case04_Case0A_Sub01::
 Func_024_4FA3:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -2511,10 +2511,10 @@ Jump_024_4FD5::
     ld [de], a
     ret
 
-; only called from GameMode6_Update_Table9_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table9_Case00)
+; only called from GameMode6_Update_Case0F_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_Case00)
 ; writes: wC52D, wC52E, wC52F, wC530
-GameMode6_Update_Table9_Case00_Sub01::
+GameMode6_Update_Case0F_Case00_Sub01::
 Func_024_4FD9:: ; address name
     ld hl, vTiles1 + $500
     ld a, l
@@ -2777,7 +2777,7 @@ Data_024_519D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E1, $00, $E7, $00, $ED, $00
 
 ; a bare ret (E-0115)
-; 6 call sites from 6 routines (e.g. GameMode6_Init_Sub01_Sub01, GameMode6_Update_Table3_Case0C, GameMode6_Update_Table3_Case0B, GameMode6_Update_Table3_Case08, ...)
+; 6 call sites from 6 routines (e.g. GameMode6_Init_Sub01_Sub01, GameMode6_Update_Case02_Case0C, GameMode6_Update_Case02_Case0B, GameMode6_Update_Case02_Case08, ...)
 ReturnStub_51A3::
 Func_024_51A3:: ; address name
     ret
@@ -2913,12 +2913,12 @@ Jump_024_526D::
     ld [wD7BD], a
     ret
 
-; only called from GameMode6_Update_Table9_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table9_Case00)
+; only called from GameMode6_Update_Case0F_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_Case00)
 ; reads: wD7AF, wD7AB, hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB
 ; points at: wD789
-GameMode6_Update_Table9_Case00_Sub02::
+GameMode6_Update_Case0F_Case00_Sub02::
 Func_024_527E:: ; address name
     ld a, [wD7AF]
     ld b, a
@@ -2953,7 +2953,7 @@ Func_024_527E:: ; address name
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table3_Case0C)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case0C)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank24_52BA::
 Func_024_52BA:: ; address name
@@ -2978,7 +2978,7 @@ Jump_024_52BD::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 17 call sites from 12 routines (e.g. GameMode6_Update_Table3_Case0A, GameMode6_Update_Table3_Case08, GameMode6_Update_Table5_Case0B, GameMode6_Update_Table5_Case07, ...)
+; 17 call sites from 12 routines (e.g. GameMode6_Update_Case02_Case0A, GameMode6_Update_Case02_Case08, GameMode6_Update_Case04_Case0B, GameMode6_Update_Case04_Case07, ...)
 StoreBAtWordTableEntry_Bank24_52CE::
 Func_024_52CE:: ; address name
     push bc
@@ -2993,9 +2993,11 @@ Func_024_52CE:: ; address name
     ld [de], a
     ret
 
+; copies the $A5 bytes at Data_024_52ED to wCA2B (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wCA2B
-Func_024_52DE:: ; heuristic: follows a terminator; C0
+CopyDefaultRecordToWCA2B:: ; heuristic: follows a terminator; C0
+Func_024_52DE:: ; address name
     ld hl, Data_024_52ED
     ld de, wCA2B
     ld b, $A5
@@ -3017,7 +3019,7 @@ Data_024_52ED:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $091343, $4F
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Table7_Case02, GameMode6_Update_Table8_Case01, GameMode6_Update_Table9_Case01)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_Case05_Case02, GameMode6_Update_Case0E_Case01, GameMode6_Update_Case0F_Case01)
 StoreC5BEC6AtHLStride2_Bank24::
 Func_024_5392:: ; address name
     ld a, $C5
@@ -3033,7 +3035,7 @@ Func_024_5392:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Table7_Case00, GameMode6_Update_Table8_Case00)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case05_Case00, GameMode6_Update_Case0E_Case00)
 ; writes: wC52D, wC52E, wC52F, wC530
 GameMode6_Update_Shared05::
 Func_024_53A0:: ; address name
@@ -3104,10 +3106,10 @@ Func_024_53A0:: ; address name
     ld [wC530], a
     ret
 
-; only called from GameMode6_Update_Table4_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table4_Case01)
+; only called from GameMode6_Update_Case03_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case03_Case01)
 ; reads: wD782
-GameMode6_Update_Table4_Case01_Sub01::
+GameMode6_Update_Case03_Case01_Sub01::
 Func_024_5434:: ; address name
     ld a, [wD782]
     rst $00
@@ -3319,10 +3321,10 @@ Jump_024_5531:: ; address name
     ld [wD781], a
     ret
 
-; only called from GameMode6_Update_Table3_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table3_Case0E)
+; only called from GameMode6_Update_Case02_Case0E (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case0E)
 ; reads: wD782
-GameMode6_Update_Table3_Case0E_Sub01::
+GameMode6_Update_Case02_Case0E_Sub01::
 Func_024_5553:: ; address name
     ld a, [wD782]
     rst $00
@@ -3539,7 +3541,7 @@ Jump_024_5653:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 4 call sites from 3 routines (e.g. GameMode6_Update, GameMode6_Update_Table3_Case0E, GameMode6_Update_Table4_Case01)
+; 4 call sites from 3 routines (e.g. GameMode6_Update, GameMode6_Update_Case02_Case0E, GameMode6_Update_Case03_Case01)
 ; reads: wCA99
 GameMode6_Update_Shared06::
 Func_024_567C:: ; address name
@@ -3551,7 +3553,7 @@ Func_024_567C:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Table3_Case0D, GameMode6_Update_Table4_Case00)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case0D, GameMode6_Update_Case03_Case00)
 ; reads: wCA99, wD092, wCA36, wCA37, wIsCGB, wC991, wC992
 ; writes: hFFC6, hFFC7, wCBA1, wCBA2, wSpriteSlotCount, wC527, wCBCF, wCBD3, ...
 ; points at: wSpriteSlots, wCB8F, hFFC6, wCB9F
@@ -3803,11 +3805,11 @@ Data_024_5C19:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5C29:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $B0, $40, $02, $03, $20, $00, $00, $B0, $40, $04, $00, $00
 
-; only called from GameMode6_Update_Table3_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table3_Case08)
+; only called from GameMode6_Update_Case02_Case08 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wD783
-GameMode6_Update_Table3_Case08_Sub01::
+GameMode6_Update_Case02_Case08_Sub01::
 Func_024_5C39:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -3819,13 +3821,13 @@ Func_024_5C39:: ; address name
     jr nz, Jump_024_5C93
     bit 1, a
     jr nz, Jump_024_5CA1
-    call GameMode6_Update_Table3_Case08_Sub01_Sub01
+    call GameMode6_Update_Case02_Case08_Sub01_Sub01
     xor a, a
     ld [wMenuInputResult], a
     ret
 
 Jump_024_5C57::
-    call GameMode6_Update_Table3_Case08_Sub01_Sub03
+    call GameMode6_Update_Case02_Case08_Sub01_Sub03
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_024_5C67
@@ -3839,7 +3841,7 @@ Jump_024_5C67::
     jr Jump_024_5C81
 
 Jump_024_5C6D::
-    call GameMode6_Update_Table3_Case08_Sub01_Sub03
+    call GameMode6_Update_Case02_Case08_Sub01_Sub03
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr c, Jump_024_5C7D
@@ -3854,7 +3856,7 @@ Jump_024_5C7D::
 Jump_024_5C81::
     xor a, a
     ld [wD783], a
-    call GameMode6_Update_Table3_Case08_Sub01_Sub02
+    call GameMode6_Update_Case02_Case08_Sub01_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -3862,7 +3864,7 @@ Jump_024_5C81::
     ret
 
 Jump_024_5C93::
-    call GameMode6_Update_Table3_Case08_Sub01_Sub04
+    call GameMode6_Update_Case02_Case08_Sub01_Sub04
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
@@ -3874,45 +3876,45 @@ Jump_024_5CA1::
     ld [wMenuInputResult], a
     ret
 
-; only called from GameMode6_Update_Table3_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table3_Case08_Sub01)
+; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
 ; reads: wJoypadRepeatTimer, wD783, wTwoChoiceCursor
 ; writes: wD783
-GameMode6_Update_Table3_Case08_Sub01_Sub01::
+GameMode6_Update_Case02_Case08_Sub01_Sub01::
 Func_024_5CA7:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, GameMode6_Update_Table3_Case08_Sub01_Sub02
+    jr c, GameMode6_Update_Case02_Case08_Sub01_Sub02
     ld a, [wD783]
     inc a
     ld [wD783], a
     cp a, $10
-    jr c, GameMode6_Update_Table3_Case08_Sub01_Sub02
+    jr c, GameMode6_Update_Case02_Case08_Sub01_Sub02
     cp a, $18
-    jr c, GameMode6_Update_Table3_Case08_Sub01_Sub03
+    jr c, GameMode6_Update_Case02_Case08_Sub01_Sub03
     xor a, a
     ld [wD783], a
 
-; only called from GameMode6_Update_Table3_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table3_Case08_Sub01)
+; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
 ; reads: wTwoChoiceCursor
-GameMode6_Update_Table3_Case08_Sub01_Sub02::
+GameMode6_Update_Case02_Case08_Sub01_Sub02::
 Func_024_5CC1:: ; address name
     ld b, $BB
     jr Jump_024_5CCB
 
-; only called from GameMode6_Update_Table3_Case08_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode6_Update_Table3_Case08_Sub01)
+; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
 ; reads: wTwoChoiceCursor
-GameMode6_Update_Table3_Case08_Sub01_Sub03::
+GameMode6_Update_Case02_Case08_Sub01_Sub03::
 Func_024_5CC5:: ; address name
     ld b, $C3
     jr Jump_024_5CCB
 
-; only called from GameMode6_Update_Table3_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table3_Case08_Sub01)
+; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
 ; reads: wTwoChoiceCursor
-GameMode6_Update_Table3_Case08_Sub01_Sub04::
+GameMode6_Update_Case02_Case08_Sub01_Sub04::
 Func_024_5CC9:: ; address name
     ld b, $BC
 
@@ -3937,7 +3939,7 @@ Jump_024_5CCB::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Table3_Case08_Sub01_Sub04)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01_Sub04)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank24_5CEB::
 Func_024_5CEB:: ; address name
@@ -3962,7 +3964,7 @@ Data_024_5D0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $01, $6B, $01
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank24, GameMode0_Update_Table2_Case1B)
+; 2 call sites from 2 routines (e.g. ShowString_Bank24, DebugMessageTest_Update_Case1B)
 BeginStringDisplay_Bank24::
 Func_024_5D10:: ; address name
     ld de, Data_024_5D25
@@ -3971,7 +3973,7 @@ Func_024_5D10:: ; address name
     db $11, $25, $5D, $CD, $FE, $25, $C9
 
 ; Func_024_5D10 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table2_Case00)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case01_Case00)
 ShowString_Bank24::
 Func_024_5D1E:: ; address name
     call BeginStringDisplay_Bank24
@@ -4174,16 +4176,16 @@ ScriptCommandF8_Run_Case01::
 Jump_024_60F1:: ; address name
     ld a, [wD781]
     rst $00
-    dw ScriptCommandF8_Run_Table2_Case00
-    dw ScriptCommandF8_Run_Table2_Case01
-    dw ScriptCommandF8_Run_Table2_Case02
+    dw ScriptCommandF8_Run_Case01_Case00
+    dw ScriptCommandF8_Run_Case01_Case01
+    dw ScriptCommandF8_Run_Case01_Case02
 
-; entry 0 of the `rst $00` table in ScriptCommandF8_Run
+; entry 0 of the `rst $00` table in ScriptCommandF8_Run_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wStringCategory, wStringIndex, wD781
 ; points at: wC52D
-ScriptCommandF8_Run_Table2_Case00::
+ScriptCommandF8_Run_Case01_Case00::
 Jump_024_60FB:: ; address name
     ld hl, wC52D
     xor a, a
@@ -4211,12 +4213,12 @@ Jump_024_60FB:: ; address name
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF8_Run
+; entry 1 of the `rst $00` table in ScriptCommandF8_Run_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC364
-ScriptCommandF8_Run_Table2_Case01::
+ScriptCommandF8_Run_Case01_Case01::
 Jump_024_612C:: ; address name
     ld de, Data_024_6B8B
     ld hl, wC364
@@ -4228,11 +4230,11 @@ Jump_024_612C:: ; address name
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandF8_Run
+; entry 2 of the `rst $00` table in ScriptCommandF8_Run_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780
 ; writes: wD781, wD780
-ScriptCommandF8_Run_Table2_Case02::
+ScriptCommandF8_Run_Case01_Case02::
 Jump_024_6143:: ; address name
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140B
@@ -4252,30 +4254,30 @@ ScriptCommandF8_Run_Case02::
 Jump_024_615B:: ; address name
     ld a, [wD781]
     rst $00
-    dw ScriptCommandF8_Run_Table3_Case00
-    dw ScriptCommandF8_Run_Table3_Case01
-    dw ScriptCommandF8_Run_Table3_Case02
-    dw ScriptCommandF8_Run_Table3_Case03
-    dw ScriptCommandF8_Run_Table3_Case04
-    dw ScriptCommandF8_Run_Table3_Case05
-    dw ScriptCommandF8_Run_Table3_Case06
-    dw ScriptCommandF8_Run_Table3_Case07
-    dw ScriptCommandF8_Run_Table3_Case08
-    dw ScriptCommandF8_Run_Table3_Case09
-    dw ScriptCommandF8_Run_Table3_Case0A
-    dw ScriptCommandF8_Run_Table3_Case0B
-    dw ScriptCommandF8_Run_Table3_Case0C
-    dw ScriptCommandF8_Run_Table3_Case0D
-    dw ScriptCommandF8_Run_Table3_Case0C
-    dw ScriptCommandF8_Run_Table3_Case0F
-    dw ScriptCommandF8_Run_Table3_Case10
-    dw ScriptCommandF8_Run_Table3_Case11
+    dw ScriptCommandF8_Run_Case02_Case00
+    dw ScriptCommandF8_Run_Case02_Case01
+    dw ScriptCommandF8_Run_Case02_Case02
+    dw ScriptCommandF8_Run_Case02_Case03
+    dw ScriptCommandF8_Run_Case02_Case04
+    dw ScriptCommandF8_Run_Case02_Case05
+    dw ScriptCommandF8_Run_Case02_Case06
+    dw ScriptCommandF8_Run_Case02_Case07
+    dw ScriptCommandF8_Run_Case02_Case08
+    dw ScriptCommandF8_Run_Case02_Case09
+    dw ScriptCommandF8_Run_Case02_Case0A
+    dw ScriptCommandF8_Run_Case02_Case0B
+    dw ScriptCommandF8_Run_Case02_Case0C
+    dw ScriptCommandF8_Run_Case02_Case0D
+    dw ScriptCommandF8_Run_Case02_Case0C
+    dw ScriptCommandF8_Run_Case02_Case0F
+    dw ScriptCommandF8_Run_Case02_Case10
+    dw ScriptCommandF8_Run_Case02_Case11
 
-; entry 0 of the `rst $00` table in ScriptCommandF8_Run
+; entry 0 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wD7AB, wD781
 ; writes: wMenuInputResult, wD7A9, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD781, wD7AD
-ScriptCommandF8_Run_Table3_Case00::
+ScriptCommandF8_Run_Case02_Case00::
 Jump_024_6183:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -4354,11 +4356,11 @@ Jump_024_61E6::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF8_Run
+; entry 1 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD781
 ; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
-ScriptCommandF8_Run_Table3_Case01::
+ScriptCommandF8_Run_Case02_Case01::
 Jump_024_620A:: ; address name
     ld a, [wD7AB]
     ld [wTwoChoiceCursor], a
@@ -4388,18 +4390,18 @@ Data_024_6249:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_6259:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $60, $FF, $60, $FF, $60, $FF, $1F, $FF, $3F, $FF, $70, $FF, $60, $FF, $60
 
-; entry 2 of the `rst $00` table in ScriptCommandF8_Run
+; entry 2 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC3DC
-ScriptCommandF8_Run_Table3_Case02::
+ScriptCommandF8_Run_Case02_Case02::
 Jump_024_6269:: ; address name
     ld de, Data_024_6C49
     ld hl, wC3DC
     ld bc, $0B07
     call CopyRectTo20ByteRows_Bank24
-    call ScriptCommandF8_Run_Table3_Case02_Sub01
+    call ScriptCommandF8_Run_Case02_Case02_Sub01
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
     ld de, $01CC
@@ -4409,13 +4411,13 @@ Jump_024_6269:: ; address name
     ld [wD781], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandF8_Run
+; entry 3 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wD781
 ; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-ScriptCommandF8_Run_Table3_Case03::
+ScriptCommandF8_Run_Case02_Case03::
 Jump_024_628C:: ; address name
-    call ScriptCommandF8_Run_Table3_Case03_Sub01
+    call ScriptCommandF8_Run_Case02_Case03_Sub01
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -4449,12 +4451,12 @@ Jump_024_62B3::
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandF8_Run
+; entry 4 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB
 ; writes: wD7F1, wD7F2, wD781, wScriptCommandType, wScriptStartRequest
 ; points at: wC364
-ScriptCommandF8_Run_Table3_Case04::
+ScriptCommandF8_Run_Case02_Case04::
 Jump_024_62C9:: ; address name
     ld b, $00
     ld c, $07
@@ -4464,7 +4466,7 @@ Jump_024_62C9:: ; address name
     ld [wD7F1], a
     ld a, $0B
     ld [wD7F2], a
-    call ScriptCommandF8_Run_Table3_Case04_Sub01
+    call ScriptCommandF8_Run_Case02_Case04_Sub01
     ld de, Data_024_6B8B
     ld hl, wC364
     ld bc, $0A09
@@ -4490,12 +4492,12 @@ Jump_024_62C9:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandF8_Run
+; entry 5 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD7AD, hFFC6, wD781
 ; writes: rRAMG, rRAMB, wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wC6FE
-ScriptCommandF8_Run_Table3_Case05::
+ScriptCommandF8_Run_Case02_Case05::
 Jump_024_631E:: ; address name
     ld a, [wD7AB]
     and a, a
@@ -4552,12 +4554,12 @@ Jump_024_636E::
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommandF8_Run
+; entry 6 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD781, wD7AD, hFFC6
 ; writes: wD789, wD78A, wD78B, wC130, wC131, wC132, wD781, wScriptCommandType, ...
 ; points at: wC6FE, wD7F4, wC130
-ScriptCommandF8_Run_Table3_Case06::
+ScriptCommandF8_Run_Case02_Case06::
 Jump_024_637B:: ; address name
     ld a, [wD7AB]
     and a, a
@@ -4659,12 +4661,12 @@ Jump_024_642B::
     ld [wScriptStartRequest], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandF8_Run
+; entry 7 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AD, wD781
 ; writes: wD781, wTwoChoiceCursor
 ; points at: wC412
-ScriptCommandF8_Run_Table3_Case07::
+ScriptCommandF8_Run_Case02_Case07::
 Jump_024_6445:: ; address name
     ld a, $6C
     call QueueSoundEffect
@@ -4691,11 +4693,11 @@ Data_024_6479:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
     db $C3, $B7, $B6, $C3, $A5, $F5, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
 
-; entry 8 of the `rst $00` table in ScriptCommandF8_Run
+; entry 8 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wD78B, wD78A, wD789, wD7F1, wD781
 ; writes: wD7F3, wD7F2, wD7F1, wTwoChoiceCursor, wD781, wD782, wScriptCommandType, wScriptStartRequest
-ScriptCommandF8_Run_Table3_Case08::
+ScriptCommandF8_Run_Case02_Case08::
 Jump_024_6497:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -4758,11 +4760,11 @@ Jump_024_650A::
     ld a, $01
     jr Jump_024_64B4
 
-; entry 9 of the `rst $00` table in ScriptCommandF8_Run
+; entry 9 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782
 ; writes: wD781, wScriptCommandType, wScriptStartRequest, wD782
-ScriptCommandF8_Run_Table3_Case09::
+ScriptCommandF8_Run_Case02_Case09::
 Jump_024_6513:: ; address name
     call ScriptCommandF8_Run_Shared02
     ld a, [wD782]
@@ -4783,11 +4785,11 @@ Jump_024_652B::
     ld [wD782], a
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommandF8_Run
+; entry 10 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wD781, wD7AB, wD78A, wD789
 ; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD782, wD7F3, wD7F2, wD7F1
-ScriptCommandF8_Run_Table3_Case0A::
+ScriptCommandF8_Run_Case02_Case0A::
 Jump_024_6535:: ; address name
     ld a, [wD782]
     and a, a
@@ -4850,12 +4852,12 @@ Jump_024_659A::
     ld [wScriptStartRequest], a
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommandF8_Run
+; entry 11 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wIsCGB, wD781, wD783, wD784
 ; writes: hFFB9, wD782, wD781, wD783, wD784
 ; points at: wC364, wScreenTileBuffer, wC300, wC29C, wD1CC, wD000, wD168, wD104
-ScriptCommandF8_Run_Table3_Case0B::
+ScriptCommandF8_Run_Case02_Case0B::
 Jump_024_65B1:: ; address name
     ld a, [wD782]
     and a, a
@@ -4934,12 +4936,12 @@ Jump_024_662A::
     ld [wD781], a
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommandF8_Run
+; entry 15 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: hFFB9, wD781
 ; points at: wC52D, wC300
-ScriptCommandF8_Run_Table3_Case0F::
+ScriptCommandF8_Run_Case02_Case0F::
 Jump_024_6655:: ; address name
     ld hl, wC52D
     xor a, a
@@ -4967,12 +4969,12 @@ Jump_024_6655:: ; address name
     ld [wD781], a
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommandF8_Run
+; entry 12 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD783, wD781
 ; writes: wD783, wD781
 ; points at: wD783
-ScriptCommandF8_Run_Table3_Case0C::
+ScriptCommandF8_Run_Case02_Case0C::
 Jump_024_668D:: ; address name
     ld hl, wD783
     inc [hl]
@@ -4986,22 +4988,22 @@ Jump_024_668D:: ; address name
     ld [wD781], a
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommandF8_Run
+; entry 13 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782
-ScriptCommandF8_Run_Table3_Case0D::
+ScriptCommandF8_Run_Case02_Case0D::
 Jump_024_66A3:: ; address name
     ld a, [wD782]
     rst $00
-    dw ScriptCommandF8_Run_Table4_Case00
-    dw ScriptCommandF8_Run_Table4_Case01
+    dw ScriptCommandF8_Run_Case02_Case0D_Case00
+    dw ScriptCommandF8_Run_Case02_Case0D_Case01
 
-; entry 0 of the `rst $00` table in ScriptCommandF8_Run
+; entry 0 of the `rst $00` table in ScriptCommandF8_Run_Case02_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD782
 ; writes: wD782
 ; points at: wBGPaletteBuffer, wC0F0
-ScriptCommandF8_Run_Table4_Case00::
+ScriptCommandF8_Run_Case02_Case0D_Case00::
 Jump_024_66AB:: ; address name
     ld a, [wIsCGB]
     or a, a
@@ -5017,12 +5019,12 @@ Jump_024_66BD::
     ld [wD782], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF8_Run
+; entry 1 of the `rst $00` table in ScriptCommandF8_Run_Case02_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD783, wIsCGB, wD781, wD7AB
 ; writes: wC526, wD783, wD782, wD781
 ; points at: wC5E9, wC0F0, wBGPaletteBuffer
-ScriptCommandF8_Run_Table4_Case01::
+ScriptCommandF8_Run_Case02_Case0D_Case01::
 Jump_024_66C5:: ; address name
     ld a, [wD783]
     sra a
@@ -5088,15 +5090,15 @@ Jump_024_6717::
     ld a, [wD7AB]
     and a, a
     ret nz
-    farcall Func_002_604B
+    farcall RestartMapMusic
     ret
 
-; entry 16 of the `rst $00` table in ScriptCommandF8_Run
+; entry 16 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AD, wD7AB, wD781
 ; writes: rRAMG, rRAMB, wD781, wC527, wScriptCommandType, wScriptStartRequest
 ; points at: wC6FE
-ScriptCommandF8_Run_Table3_Case10::
+ScriptCommandF8_Run_Case02_Case10::
 Jump_024_673C:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5173,10 +5175,10 @@ Jump_024_6797::
 Data_024_67BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FB, $FE
 
-; entry 17 of the `rst $00` table in ScriptCommandF8_Run
+; entry 17 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wD781
-ScriptCommandF8_Run_Table3_Case11::
+ScriptCommandF8_Run_Case02_Case11::
 Jump_024_67C0:: ; address name
     ld b, $80
     call ScriptCommandF8_Run_Shared01
@@ -5210,7 +5212,7 @@ Jump_024_67EA::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 6 call sites from 6 routines (e.g. ScriptCommandF8_Run_Table2_Case01, DrawGoldPanel_Bank24, ScriptCommandF8_Run_Table3_Case0F, ScriptCommandF8_Run_Table3_Case07, ...)
+; 6 call sites from 6 routines (e.g. ScriptCommandF8_Run_Case01_Case01, DrawGoldPanel_Bank24, ScriptCommandF8_Run_Case02_Case0F, ScriptCommandF8_Run_Case02_Case07, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank24::
@@ -5268,7 +5270,7 @@ Jump_024_6825::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 are not written (E-0062)
-; 9 call sites from 8 routines (e.g. ScriptCommandF8_Run_Table2_Case02, ScriptCommandF8_Run_Table3_Case0F, ScriptCommandF8_Run_Table3_Case0B, ScriptCommandF8_Run_Table3_Case0A, ...)
+; 9 call sites from 8 routines (e.g. ScriptCommandF8_Run_Case01_Case02, ScriptCommandF8_Run_Case02_Case0F, ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Case02_Case0A, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -5307,7 +5309,7 @@ Func_024_6837:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 10 call sites from 9 routines (e.g. ScriptCommandF8_Run_Table2_Case02, ScriptCommandF8_Run_Table3_Case0F, ScriptCommandF8_Run_Table3_Case0B, ScriptCommandF8_Run_Table3_Case0A, ...)
+; 10 call sites from 9 routines (e.g. ScriptCommandF8_Run_Case01_Case02, ScriptCommandF8_Run_Case02_Case0F, ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Case02_Case0A, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank24_6866::
 Func_024_6866:: ; address name
@@ -5329,7 +5331,7 @@ Func_024_6866:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 4 call sites from 3 routines (e.g. ScriptCommandF8_Run_Table3_Case0B, ScriptCommandF8_Run_Shared02_Sub01, ScriptCommandF8_Run_Table3_Case04_Sub01)
+; 4 call sites from 3 routines (e.g. ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Shared02_Sub01, ScriptCommandF8_Run_Case02_Case04_Sub01)
 CopyBytesDEToHL_Bank24::
 Func_024_6887:: ; address name
     ld a, [de]
@@ -5342,7 +5344,7 @@ Func_024_6887:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 2 routines (e.g. ScriptCommandF8_Run_Table3_Case0B, ScriptCommandF8_Run_Table3_Case04_Sub01)
+; 3 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Case02_Case04_Sub01)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank24::
 Func_024_6890:: ; address name
@@ -5363,7 +5365,7 @@ Jump_024_6894::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 4 call sites from 3 routines (e.g. ScriptCommandF8_Run_Table3_Case07, ScriptCommandF8_Run_Table3_Case04, ScriptCommandF8_Run_Table3_Case00)
+; 4 call sites from 3 routines (e.g. ScriptCommandF8_Run_Case02_Case07, ScriptCommandF8_Run_Case02_Case04, ScriptCommandF8_Run_Case02_Case00)
 StoreBAtWordTableEntry_Bank24::
 Func_024_68A2:: ; address name
     push bc
@@ -5378,7 +5380,7 @@ Func_024_68A2:: ; address name
     ret
 
 ; copies an 8 x 3 frame (Data_024_68EB) into the screen buffer at wC370, converts wGold to packed BCD (Number24ToPackedBCD) and Func_015_6676, then writes the digits as tiles $E0 + d at wC386 (E-0074)
-; 3 call sites from 3 routines (e.g. ScriptCommandF8_Run_Table2_Case01, ScriptCommandF8_Run_Table3_Case0A, ScriptCommandF8_Run_Table3_Case04)
+; 3 call sites from 3 routines (e.g. ScriptCommandF8_Run_Case01_Case01, ScriptCommandF8_Run_Case02_Case0A, ScriptCommandF8_Run_Case02_Case04)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC370, wC386, wD7F3
@@ -5416,7 +5418,7 @@ Data_024_68EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; only called from routines of ScriptCommandF8_Run (E-0098)
-; 6 call sites from 2 routines (e.g. ScriptCommandF8_Run_Table3_Case11, ScriptCommandF8_Run_Table3_Case00)
+; 6 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case11, ScriptCommandF8_Run_Case02_Case00)
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, rRAMB
 ; points at: wC6FE
@@ -5467,12 +5469,12 @@ Jump_024_6937::
     ld a, $FF
     ret
 
-; only called from ScriptCommandF8_Run_Table3_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case02)
+; only called from ScriptCommandF8_Run_Case02_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02)
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, rRAMB
 ; points at: wC6FE
-ScriptCommandF8_Run_Table3_Case02_Sub01::
+ScriptCommandF8_Run_Case02_Case02_Sub01::
 Func_024_6944:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5494,13 +5496,13 @@ Jump_024_6956::
     push de
     ldh a, [hFFC6]
     bit 0, a
-    call nz, ScriptCommandF8_Run_Table3_Case02_Sub01_Sub01
+    call nz, ScriptCommandF8_Run_Case02_Case02_Sub01_Sub01
     ldh a, [hFFC6]
     bit 2, a
-    call nz, ScriptCommandF8_Run_Table3_Case02_Sub01_Sub02
+    call nz, ScriptCommandF8_Run_Case02_Case02_Sub01_Sub02
     ldh a, [hFFC6]
     bit 7, a
-    call nz, ScriptCommandF8_Run_Table3_Case02_Sub01_Sub03
+    call nz, ScriptCommandF8_Run_Case02_Case02_Sub01_Sub03
     pop de
     pop bc
     pop hl
@@ -5514,9 +5516,9 @@ Jump_024_6956::
     ld [rRAMB], a
     ret
 
-; only called from ScriptCommandF8_Run_Table3_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case02_Sub01)
-ScriptCommandF8_Run_Table3_Case02_Sub01_Sub01::
+; only called from ScriptCommandF8_Run_Case02_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02_Sub01)
+ScriptCommandF8_Run_Case02_Case02_Sub01_Sub01::
 Func_024_6987:: ; address name
     push de
     ld a, e
@@ -5531,9 +5533,9 @@ Func_024_6987:: ; address name
     pop de
     ret
 
-; only called from ScriptCommandF8_Run_Table3_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case02_Sub01)
-ScriptCommandF8_Run_Table3_Case02_Sub01_Sub02::
+; only called from ScriptCommandF8_Run_Case02_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02_Sub01)
+ScriptCommandF8_Run_Case02_Case02_Sub01_Sub02::
 Func_024_699A:: ; address name
     push de
     ld a, e
@@ -5548,9 +5550,9 @@ Func_024_699A:: ; address name
     pop de
     ret
 
-; only called from ScriptCommandF8_Run_Table3_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case02_Sub01)
-ScriptCommandF8_Run_Table3_Case02_Sub01_Sub03::
+; only called from ScriptCommandF8_Run_Case02_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02_Sub01)
+ScriptCommandF8_Run_Case02_Case02_Sub01_Sub03::
 Func_024_69AD:: ; address name
     push de
     ld a, e
@@ -5574,11 +5576,11 @@ Data_024_69C6:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_69CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F9, $C3, $21, $C4, $49, $C4
 
-; only called from ScriptCommandF8_Run_Table3_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case03)
+; only called from ScriptCommandF8_Run_Case02_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wC6FD, wD7AD
 ; writes: wMenuInputResult, wD7AD, wD7AE
-ScriptCommandF8_Run_Table3_Case03_Sub01::
+ScriptCommandF8_Run_Case02_Case03_Sub01::
 Func_024_69D2:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5590,13 +5592,13 @@ Func_024_69D2:: ; address name
     jr nz, Jump_024_6A32
     bit 1, a
     jr nz, Jump_024_6A40
-    call ScriptCommandF8_Run_Table3_Case03_Sub01_Sub01
+    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub01
     xor a, a
     ld [wMenuInputResult], a
     ret
 
 Jump_024_69F0::
-    call ScriptCommandF8_Run_Table3_Case03_Sub01_Sub03
+    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03
     ld a, [wD7AD]
     and a, a
     jr nz, Jump_024_6A02
@@ -5611,7 +5613,7 @@ Jump_024_6A02::
     jr Jump_024_6A20
 
 Jump_024_6A08::
-    call ScriptCommandF8_Run_Table3_Case03_Sub01_Sub03
+    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03
     ld a, [wC6FD]
     dec a
     ld b, a
@@ -5629,7 +5631,7 @@ Jump_024_6A1C::
 Jump_024_6A20::
     xor a, a
     ld [wD7AE], a
-    call ScriptCommandF8_Run_Table3_Case03_Sub01_Sub02
+    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -5639,7 +5641,7 @@ Jump_024_6A20::
 Jump_024_6A32::
     ld a, $69
     call QueueSoundEffect
-    call ScriptCommandF8_Run_Table3_Case03_Sub01_Sub04
+    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub04
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5649,45 +5651,45 @@ Jump_024_6A40::
     ld [wMenuInputResult], a
     ret
 
-; only called from ScriptCommandF8_Run_Table3_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case03_Sub01)
+; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
 ; reads: wJoypadRepeatTimer, wD7AE, wD7AD
 ; writes: wD7AE
-ScriptCommandF8_Run_Table3_Case03_Sub01_Sub01::
+ScriptCommandF8_Run_Case02_Case03_Sub01_Sub01::
 Func_024_6A46:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ScriptCommandF8_Run_Table3_Case03_Sub01_Sub02
+    jr c, ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02
     ld a, [wD7AE]
     inc a
     ld [wD7AE], a
     cp a, $10
-    jr c, ScriptCommandF8_Run_Table3_Case03_Sub01_Sub02
+    jr c, ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02
     cp a, $18
-    jr c, ScriptCommandF8_Run_Table3_Case03_Sub01_Sub03
+    jr c, ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03
     xor a, a
     ld [wD7AE], a
 
-; only called from ScriptCommandF8_Run_Table3_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case03_Sub01)
+; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
 ; reads: wD7AD
-ScriptCommandF8_Run_Table3_Case03_Sub01_Sub02::
+ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02::
 Func_024_6A60:: ; address name
     ld b, $BB
     jr Jump_024_6A6A
 
-; only called from ScriptCommandF8_Run_Table3_Case03_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case03_Sub01)
+; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
 ; reads: wD7AD
-ScriptCommandF8_Run_Table3_Case03_Sub01_Sub03::
+ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03::
 Func_024_6A64:: ; address name
     ld b, $C3
     jr Jump_024_6A6A
 
-; only called from ScriptCommandF8_Run_Table3_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case03_Sub01)
+; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
 ; reads: wD7AD
-ScriptCommandF8_Run_Table3_Case03_Sub01_Sub04::
+ScriptCommandF8_Run_Case02_Case03_Sub01_Sub04::
 Func_024_6A68:: ; address name
     ld b, $BC
 
@@ -5714,11 +5716,11 @@ Jump_024_6A6A::
 Data_024_6A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E1, $00, $21, $01, $61, $01
 
-; only called from ScriptCommandF8_Run_Table3_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case04)
+; only called from ScriptCommandF8_Run_Case02_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case04)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-ScriptCommandF8_Run_Table3_Case04_Sub01::
+ScriptCommandF8_Run_Case02_Case04_Sub01::
 Func_024_6A90:: ; address name
     push bc
     push hl
@@ -5775,11 +5777,11 @@ Jump_024_6AD1::
 
 Jump_024_6AE0::
     dec c
-    jr nz, ScriptCommandF8_Run_Table3_Case04_Sub01
+    jr nz, ScriptCommandF8_Run_Case02_Case04_Sub01
     ret
 
 ; only called from routines of ScriptCommandF8_Run (E-0098)
-; 3 call sites from 2 routines (e.g. ScriptCommandF8_Run_Table3_Case09, ScriptCommandF8_Run_Table3_Case08)
+; 3 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case09, ScriptCommandF8_Run_Case02_Case08)
 ; reads: wIsCGB, rSVBK
 ; writes: rSVBK
 ; points at: wC412, wC246, wD27A, wD0AE
@@ -5838,7 +5840,7 @@ Jump_024_6B33::
     ret
 
 ; only called from routines of ScriptCommandF8_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF8_Run_Table3_Case10, ScriptCommandF8_Run_Table3_Case0A)
+; 2 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case10, ScriptCommandF8_Run_Case02_Case0A)
 ; reads: wD7AD
 ; writes: rRAMG, rRAMB, wC8D9
 ; points at: wC6FE, wC8CF, wC130
@@ -5881,7 +5883,7 @@ Jump_024_6B76::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 3 call sites from 1 routine (e.g. ScriptCommandF8_Run_Table3_Case01)
+; 3 call sites from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case01)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank24::
 Func_024_6B7A:: ; address name

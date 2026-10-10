@@ -1,15 +1,15 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0E
 
-; only called from GameMode0_Update_Table2_Case1C (E-0047)
-; 1 call site from 1 routine (e.g. GameMode0_Update_Table2_Case1C)
+; only called from DebugMessageTest_Update_Case1C (E-0047)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case1C)
 ; reads: wStringIndex
-GameMode0_Update_Table2_Case1C_Sub01::
+DebugMessageTest_Update_Case1C_Sub01::
 Func_00E_4001:: ; address name
     ld a, [wStringIndex]
     cp a, $88
     jr c, Jump_00E_400F
-    farcall GameMode0_Update_Table2_Case1C_Sub01_Sub01
+    farcall DebugMessageTest_Update_Case1C_Sub01_Sub01
     ret
 
 Jump_00E_400F::
@@ -794,7 +794,7 @@ Data_00E_5350:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank0E, GameMode0_Update_Table2_Case1D, ShowStringIndexA_Bank37, BeginString_Bank0E_Cat0)
+; 4 call sites from 4 routines (e.g. ShowString_Bank0E, DebugMessageTest_Update_Case1D, ShowStringIndexA_Bank37, BeginString_Bank0E_Cat0)
 BeginStringDisplay_Bank0E::
 Func_00E_5370:: ; address name
     ld de, Data_00E_5385
@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. Func_037_4AFD_Table3_Case16, Func_037_542C_Case08, Func_0F1_4AD0_Table3_Case16, DrawShortStringWCA2CAtTiles1500_Case08, ...)
+; 6 call sites from 6 routines (e.g. Func_037_4AFD_Case04_Case16, Func_037_4AFD_Case0E_Case08, Func_0F1_4AD0_Case04_Case16, Func_0F1_4AD0_Case0E_Case08, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -965,7 +965,7 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
     db "be in the Vault.", $F7
     db $F0
 
-; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_007_7DE5, ScriptCommandF4_Run_Table2_Case14, Func_015_4182_Case1C, ...)
+; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
 ; reads: wD7F6, wD7F7, wD7F5, wC616, wD7F1, wD00E, wCFA8
 ; writes: wD7F6, wD7F7, wSpeciesIdLo, wSpeciesIdHi, wCFA8, wD7F5
 ; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...
@@ -1338,7 +1338,7 @@ Jump_00E_5862::
     ld hl, wCB3E
     ld [hl], a
     call Func_00E_5E94
-    call Func_00E_5E85
+    call CopyPlayerNameToWCADF
     call Func_00E_5E2D
     ld hl, wC986
     ld de, wCA2B
@@ -1731,9 +1731,9 @@ Jump_00E_5AA9::
     pop hl
     call StoreBCAAtHL
     ld de, wC9BA
-    call Func_00E_5C00
+    call CopyEightBytesDEToHL
     ld de, wCA5F
-    call Func_00E_5C00
+    call CopyEightBytesDEToHL
     call Func_00E_5AEA
     call Func_00E_5BCC
     call Func_00E_5BB3
@@ -1846,8 +1846,10 @@ Jump_00E_5BF8::
     jr c, Jump_00E_5BD1
     ret
 
+; copies 8 bytes from DE to HL (E-0122)
 ; 2 call sites from 1 routine (e.g. Func_00E_5AA4)
-Func_00E_5C00::
+CopyEightBytesDEToHL::
+Func_00E_5C00:: ; address name
     ld c, $08
 
 Jump_00E_5C02::
@@ -1890,7 +1892,7 @@ Func_00E_5C11:: ; address name
     ret
 
 ; monster id = wD7F1/wD7F2: LoadSpeciesRecord, then copies species bytes 8-10 to wD7F5-wD7F7 (E-0117)
-; 1 call site from 1 routine (e.g. Func_00C_45DA_Case04)
+; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case04)
 ; reads: wD7F1, wD7F2, wD010, wD011, wD012
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F5, wD7F6, wD7F7
 LoadSpeciesBytes8To10ToWD7F5::
@@ -2227,7 +2229,7 @@ Data_00E_5E02:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $09, $0A, $0B, $15, $16, $17, $18, $19, $1A, $0C, $0D
 
 ; wD7F5 = the byte at wD01A + wD7F4 (E-0114)
-; 3 call sites from 3 routines (e.g. Func_00E_5CB2, Func_00E_5C50, Func_001_57C7)
+; 3 call sites from 3 routines (e.g. Func_00E_5CB2, Func_00E_5C50, CopyWD01ABytesFromIndexCToDE)
 ; reads: wD7F4
 ; writes: wD7F5
 ; points at: wD01A
@@ -2293,9 +2295,11 @@ Data_00E_5E6D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_5E79:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EA, $CA, $EB, $CA, $EC, $CA, $ED, $CA, $68, $CB, $73, $CB
 
+; copies the 10-byte player name wC60C to wCADF (E-0122)
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; points at: wC60C, wCADF
-Func_00E_5E85::
+CopyPlayerNameToWCADF::
+Func_00E_5E85:: ; address name
     ld hl, wC60C
     ld de, wCADF
     ld c, $0A
@@ -2501,15 +2505,15 @@ Jump_00E_5F7C::
 Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
-; 2 call sites from 2 routines (e.g. Func_00E_5EE8, Func_0F1_4AD0_Table3_Case16)
+; 2 call sites from 2 routines (e.g. Func_00E_5EE8, Func_0F1_4AD0_Case04_Case16)
 ; writes: wD7F5
 ; points at: wC986, wCA2B
 Func_00E_5F91::
     ld hl, wC986
-    call Func_00E_5FF9
+    call CombinedPersonalityLevelIndexOfRecord
     push af
     ld hl, wCA2B
-    call Func_00E_5FF9
+    call CombinedPersonalityLevelIndexOfRecord
     ld b, a
     ld l, a
     ld h, $00
@@ -2577,9 +2581,11 @@ Jump_00E_5FF4::
     pop af
     ret
 
+; for the record at HL returns 9 * grade(field $6F) + 3 * grade(field $72) + grade(field $70) (GradeHFFC6_Bank0E); compare CombinedPersonalityLevelIndex (E-0121)
 ; 2 call sites from 1 routine (e.g. Func_00E_5F91)
 ; writes: hFFC6
-Func_00E_5FF9::
+CombinedPersonalityLevelIndexOfRecord::
+Func_00E_5FF9:: ; address name
     push hl
     ld a, $6F
     add_a_to_hl
@@ -2612,7 +2618,7 @@ Func_00E_5FF9::
     ret
 
 ; the same 13 bytes as GradeHFFC6 (00:23BD)
-; 3 call sites from 1 routine (e.g. Func_00E_5FF9)
+; 3 call sites from 1 routine (e.g. CombinedPersonalityLevelIndexOfRecord)
 ; reads: hFFC6
 GradeHFFC6_Bank0E::
 Func_00E_6032:: ; address name
@@ -2674,10 +2680,10 @@ Func_00E_6138::
     ld [wD09D], a
     ld a, [wD7F4]
     ld [wD09E], a
-    farcall Func_016_7A48
+    farcall LoadFamilyPaletteForWD09D
     ret
 
-; 5 call sites from 4 routines (e.g. Func_00E_5688, Func_00E_6138, Func_001_57E1, Func_00C_4E75)
+; 5 call sites from 4 routines (e.g. Func_00E_5688, Func_00E_6138, Func_001_57E1, ScriptCommandF6_Run_Case10_Case06_Sub02)
 ; reads: wD7F6, wD7F7
 ; writes: wD7F5
 Func_00E_615A::
@@ -2761,7 +2767,7 @@ Jump_00E_61BD::
     ld [wD7F5], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_00E_5688, Func_00D_6B55)
+; 2 call sites from 2 routines (e.g. Func_00E_5688, ScriptCommandF3_Run_Case05_Case0E_Sub01)
 ; reads: wCADB, wCADC, wD009
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wCADE

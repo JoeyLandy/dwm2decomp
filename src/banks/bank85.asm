@@ -125,7 +125,7 @@ Jump_085_4093:: ; address name
     farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a
     ldh [hFFB9], a
-    farcall Func_002_6050
+    farcall PlayMapMusic
     ld de, $0078
     call SetFlagBit
     ld a, $80
@@ -200,7 +200,7 @@ Jump_085_412F:: ; address name
 
 Jump_085_4145::
     push af
-    call Func_085_45CB
+    call CopyRecordFields5DTo5BAnd61To5FAndMark
     pop af
     ld hl, wC92E
     inc [hl]
@@ -222,7 +222,7 @@ Jump_085_4159:: ; address name
     ld [wC92D], a
     ld [wC92E], a
     call Func_085_4505
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -237,7 +237,7 @@ Jump_085_4174:: ; address name
     ld a, [wC552]
     or a, a
     jr nz, Jump_085_41C1
-    farcall Func_05F_6D78
+    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_4192
@@ -397,7 +397,7 @@ Jump_085_426B:: ; address name
     farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a
     ldh [hFFB9], a
-    farcall Func_002_6050
+    farcall PlayMapMusic
     ld de, $005C
     call SetFlagBit
     ld a, $80
@@ -476,7 +476,7 @@ Jump_085_4307:: ; address name
 
 Jump_085_4325::
     push af
-    call Func_085_45CB
+    call CopyRecordFields5DTo5BAnd61To5FAndMark
     pop af
     ld hl, wC92E
     inc [hl]
@@ -548,7 +548,7 @@ Jump_085_437D:: ; address name
     ret
 
 Jump_085_4389::
-    farcall Func_012_61EF
+    farcall ScriptStepMoveFollowersToLeader
     ret
 
 ; entry 9 of the `rst $00` table in ScriptCommand2A_Run
@@ -585,7 +585,7 @@ Jump_085_43AF:: ; address name
     ld [wC92D], a
     ld [wC92E], a
     call Func_085_4505
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -611,7 +611,7 @@ Jump_085_43D5:: ; address name
     ld a, [wC552]
     or a, a
     jr nz, Jump_085_4422
-    farcall Func_05F_6D78
+    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_43F3
@@ -874,11 +874,13 @@ Jump_085_457D::
     ret
     INCBIN "dwm2-cobi-us.gbc", $214583, $48
 
+; for record wC6FE[A]: field $5B = word field $5D, field $5F = word field $61, field $55 = 0, field 0 = 1 (E-0121)
 ; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case0D, ScriptCommand2A_Run_Case0D)
 ; reads: hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE
-Func_085_45CB::
+CopyRecordFields5DTo5BAnd61To5FAndMark::
+Func_085_45CB:: ; address name
     ld hl, wC6FE
     add_a_to_hl
     ld a, $0A
@@ -1877,7 +1879,7 @@ ScriptCommand6E_Run_Case09::
 Jump_085_4BBD:: ; address name
     ld de, wCBAB
     ld hl, $0BA6
-    call Func_085_57A2
+    call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand6E_Run
@@ -1919,7 +1921,7 @@ Jump_085_4BEC::
 ; points at: wScriptStep
 ScriptCommand6E_Run_Case00::
 Jump_085_4C00:: ; address name
-    farcall Func_05F_6D78
+    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_4C18
@@ -2029,7 +2031,7 @@ ScriptCommand6D_Run_Case09::
 Jump_085_4CBC:: ; address name
     ld de, wCBAB
     ld hl, $0B2B
-    call Func_085_57A2
+    call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommand6E_Run
@@ -2092,7 +2094,7 @@ Jump_085_4D03::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand6E_Run_Case05::
 Jump_085_4D29:: ; address name
-    farcall Func_012_61EF
+    farcall ScriptStepMoveFollowersToLeader
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand6D_Run
@@ -2134,7 +2136,7 @@ Jump_085_4D55::
 ; points at: wScriptStep
 ScriptCommand6D_Run_Case00::
 Jump_085_4D69:: ; address name
-    farcall Func_05F_6D78
+    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_085_4D81
@@ -2516,7 +2518,7 @@ Jump_085_4FBE::
     ld [wCBAB], a
     cp a, $40
     ret nz
-    farcall Func_05F_6E09
+    farcall RedrawColumnsBesideScreen
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -3924,11 +3926,13 @@ Jump_085_579C::
     scf
     ret
 
+; stores DE in wC928/9 and far-calls AddStepDeltaToPointedByte each frame; after 32 frames starts message HL, clears wScriptParam0 and advances wScriptStep (E-0121)
 ; 2 call sites from 2 routines (e.g. ScriptCommand6E_Run_Case09, ScriptCommand6D_Run_Case09)
 ; reads: wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
 ; points at: wScriptStep
-Func_085_57A2::
+ScriptStepAdjust32TimesThenMessage_Bank85::
+Func_085_57A2:: ; address name
     push hl
     ld a, e
     ld [wC928], a
@@ -4056,12 +4060,12 @@ Jump_085_5837::
     ldh [hFFC6], a
     ret
 
-; only called from DispatchTalkEvent_Table2_Case0F (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Table2_Case0F)
+; only called from DispatchTalkEvent_Case05_Case0F (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_Case0F)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG, hFFC6
 ; points at: wC6FE
-DispatchTalkEvent_Table2_Case0F_Sub01::
+DispatchTalkEvent_Case05_Case0F_Sub01::
 Func_085_5840:: ; address name
     ld a, [wC6FD]
     or a, a
@@ -4110,12 +4114,12 @@ Jump_085_5875::
     ldh [hFFC6], a
     ret
 
-; only called from DispatchTalkEvent_Table2_Case29 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Table2_Case29)
+; only called from DispatchTalkEvent_Case05_Case29 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_Case29)
 ; reads: hFF93, hFF94, hFF95, wC6FD, hFFC6, hFFC7
 ; writes: hFFC6, rRAMG
 ; points at: wC6FE
-DispatchTalkEvent_Table2_Case29_Sub01::
+DispatchTalkEvent_Case05_Case29_Sub01::
 Func_085_5882:: ; address name
     ldh a, [hFF93]
     bit 7, a
@@ -4240,11 +4244,11 @@ Jump_085_5909::
     db $19, $01, $1B, $01, $1F, $01, $20, $01, $24, $01, $26, $01, $27, $01, $29, $01
     db $2A, $01, $2F, $01, $30, $01, $35, $01, $37, $01, $00, $00
 
-; only called from DispatchTalkEvent_Table2_Case47 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Table2_Case47)
+; only called from DispatchTalkEvent_Case05_Case47 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_Case47)
 ; reads: hFF93, hFF94, hFF95
 ; writes: hFFC6
-DispatchTalkEvent_Table2_Case47_Sub01::
+DispatchTalkEvent_Case05_Case47_Sub01::
 Func_085_594E:: ; address name
     ld de, $0000
     call TestFlagBit
@@ -4321,10 +4325,10 @@ Data_085_5A00:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $215A00, $75
 
 ; only called from routines of DispatchTalkEvent (E-0098)
-; 3 call sites from 3 routines (e.g. DispatchTalkEvent_Table2_Case4C, DispatchTalkEvent_Table2_Case6E, DispatchTalkEvent_Table2_Case6F)
+; 3 call sites from 3 routines (e.g. DispatchTalkEvent_Case05_Case4C, DispatchTalkEvent_Case05_Case6E, DispatchTalkEvent_Case05_Case6F)
 ; reads: hFF93, hFF95, hFF94
 ; writes: hFFC6, hFFC7
-DispatchTalkEvent_Shared01::
+DispatchTalkEvent_Shared02::
 Func_085_5A75:: ; address name
     ldh a, [hFF93]
     bit 7, a
@@ -4440,10 +4444,12 @@ Jump_085_5AEE::
 Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
     db $74, $01, $00, $00
 
-; 13 call sites from 8 routines (e.g. Msg01F0_Case07, Msg01F0_Case19, TalkMsg0A3C_KingIfYouSee, TalkMsg0512_KamehaYo0Thanks, ...)
+; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wD09D into hFFC6/hFFC7 (E-0122)
+; 13 call sites from 8 routines (e.g. DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hFFC6, hFFC7
 ; points at: wD09D
-Func_085_5B04::
+TotalSpeciesFlaggedOrListed::
+Func_085_5B04:: ; address name
     farcall CountSpeciesPerFamilyFlaggedOrListed
     ld hl, $0000
     ld de, wD09D

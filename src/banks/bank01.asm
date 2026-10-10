@@ -541,7 +541,7 @@ Jump_001_46B4:: ; address name
     ld [wC5F8], a
     ld a, [wC833]
     push af
-    call Func_001_5E6C
+    call LoadKeyEntryFieldsToWC5FD
     pop af
     or a, $80
     ld [wC5F9], a
@@ -877,275 +877,275 @@ Jump_001_4AF0:: ; address name
     ld [wC52E], a
     ld a, [wC0A0]
     rst $00
-    dw GameMode0_Update_Table2_Case00
-    dw GameMode0_Update_Table2_Case01
-    dw GameMode0_Update_Table2_Case02
-    dw GameMode0_Update_Table2_Case03
-    dw GameMode0_Update_Table2_Case04
-    dw GameMode0_Update_Table2_Case05
-    dw GameMode0_Update_Table2_Case06
-    dw GameMode0_Update_Table2_Case07
-    dw GameMode0_Update_Table2_Case08
-    dw GameMode0_Update_Table2_Case09
-    dw GameMode0_Update_Table2_Case0A
-    dw GameMode0_Update_Table2_Case0B
-    dw GameMode0_Update_Table2_Case0C
-    dw GameMode0_Update_Table2_Case0D
-    dw GameMode0_Update_Table2_Case0E
-    dw GameMode0_Update_Table2_Case0F
-    dw GameMode0_Update_Table2_Case10
-    dw GameMode0_Update_Table2_Case11
-    dw GameMode0_Update_Table2_Case12
-    dw GameMode0_Update_Table2_Case13
-    dw GameMode0_Update_Table2_Case14
-    dw GameMode0_Update_Table2_Case15
-    dw GameMode0_Update_Table2_Case16
-    dw GameMode0_Update_Table2_Case17
-    dw GameMode0_Update_Table2_Case18
-    dw GameMode0_Update_Table2_Case19
-    dw GameMode0_Update_Table2_Case1A
-    dw GameMode0_Update_Table2_Case1B
-    dw GameMode0_Update_Table2_Case1C
-    dw GameMode0_Update_Table2_Case1D
-    dw GameMode0_Update_Table2_Case1E
-    dw GameMode0_Update_Table2_Case1F
-    dw GameMode0_Update_Table2_Case20
-    dw GameMode0_Update_Table2_Case21
+    dw DebugMessageTest_Update_Case00
+    dw DebugMessageTest_Update_Case01
+    dw DebugMessageTest_Update_Case02
+    dw DebugMessageTest_Update_Case03
+    dw DebugMessageTest_Update_Case04
+    dw DebugMessageTest_Update_Case05
+    dw DebugMessageTest_Update_Case06
+    dw DebugMessageTest_Update_Case07
+    dw DebugMessageTest_Update_Case08
+    dw DebugMessageTest_Update_Case09
+    dw DebugMessageTest_Update_Case0A
+    dw DebugMessageTest_Update_Case0B
+    dw DebugMessageTest_Update_Case0C
+    dw DebugMessageTest_Update_Case0D
+    dw DebugMessageTest_Update_Case0E
+    dw DebugMessageTest_Update_Case0F
+    dw DebugMessageTest_Update_Case10
+    dw DebugMessageTest_Update_Case11
+    dw DebugMessageTest_Update_Case12
+    dw DebugMessageTest_Update_Case13
+    dw DebugMessageTest_Update_Case14
+    dw DebugMessageTest_Update_Case15
+    dw DebugMessageTest_Update_Case16
+    dw DebugMessageTest_Update_Case17
+    dw DebugMessageTest_Update_Case18
+    dw DebugMessageTest_Update_Case19
+    dw DebugMessageTest_Update_Case1A
+    dw DebugMessageTest_Update_Case1B
+    dw DebugMessageTest_Update_Case1C
+    dw DebugMessageTest_Update_Case1D
+    dw DebugMessageTest_Update_Case1E
+    dw DebugMessageTest_Update_Case1F
+    dw DebugMessageTest_Update_Case20
+    dw DebugMessageTest_Update_Case21
 
-; entry 0 of the `rst $00` table in GameMode0_Update
+; entry 0 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case00::
+DebugMessageTest_Update_Case00::
 Jump_001_4B68:: ; address name
     farcall BeginStringDisplay_Bank08
     ret
 
-; entry 1 of the `rst $00` table in GameMode0_Update
+; entry 1 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case01::
+DebugMessageTest_Update_Case01::
 Jump_001_4B6F:: ; address name
     farcall BeginStringDisplay_Bank09
     ret
 
-; entry 2 of the `rst $00` table in GameMode0_Update
+; entry 2 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case02::
+DebugMessageTest_Update_Case02::
 Jump_001_4B76:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
-; entry 3 of the `rst $00` table in GameMode0_Update
+; entry 3 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case03::
+DebugMessageTest_Update_Case03::
 Jump_001_4B7D:: ; address name
     farcall BeginStringDisplay_Bank29
     ret
 
-; entry 4 of the `rst $00` table in GameMode0_Update
+; entry 4 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case04::
+DebugMessageTest_Update_Case04::
 Jump_001_4B84:: ; address name
     farcall BeginStringDisplay_Bank2A
     ret
 
-; entry 5 of the `rst $00` table in GameMode0_Update
+; entry 5 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case05::
+DebugMessageTest_Update_Case05::
 Jump_001_4B8B:: ; address name
     farcall BeginStringDisplay_Bank2B
     ret
 
-; entry 6 of the `rst $00` table in GameMode0_Update
+; entry 6 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case06::
+DebugMessageTest_Update_Case06::
 Jump_001_4B92:: ; address name
     farcall BeginStringDisplay_Bank2C
     ret
 
-; entry 7 of the `rst $00` table in GameMode0_Update
+; entry 7 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case07::
+DebugMessageTest_Update_Case07::
 Jump_001_4B99:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
-; entry 8 of the `rst $00` table in GameMode0_Update
+; entry 8 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case08::
+DebugMessageTest_Update_Case08::
 Jump_001_4BA0:: ; address name
     farcall BeginStringDisplay_Bank2E
     ret
 
-; entry 9 of the `rst $00` table in GameMode0_Update
+; entry 9 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case09::
+DebugMessageTest_Update_Case09::
 Jump_001_4BA7:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
-; entry 10 of the `rst $00` table in GameMode0_Update
+; entry 10 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case0A::
+DebugMessageTest_Update_Case0A::
 Jump_001_4BAE:: ; address name
     farcall BeginStringDisplay_Bank80
     ret
 
-; entry 11 of the `rst $00` table in GameMode0_Update
+; entry 11 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case0B::
+DebugMessageTest_Update_Case0B::
 Jump_001_4BB5:: ; address name
     farcall BeginStringDisplay_Bank82
     ret
 
-; entry 12 of the `rst $00` table in GameMode0_Update
+; entry 12 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case0C::
+DebugMessageTest_Update_Case0C::
 Jump_001_4BBC:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
-; entry 13 of the `rst $00` table in GameMode0_Update
+; entry 13 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case0D::
+DebugMessageTest_Update_Case0D::
 Jump_001_4BC3:: ; address name
     farcall BeginStringDisplay_Bank89
     ret
 
-; entry 14 of the `rst $00` table in GameMode0_Update
+; entry 14 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case0E::
+DebugMessageTest_Update_Case0E::
 Jump_001_4BCA:: ; address name
     farcall BeginStringDisplay_Bank07
     ret
 
-; entry 15 of the `rst $00` table in GameMode0_Update
+; entry 15 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case0F::
+DebugMessageTest_Update_Case0F::
 Jump_001_4BD1:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
-; entry 16 of the `rst $00` table in GameMode0_Update
+; entry 16 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case10::
+DebugMessageTest_Update_Case10::
 Jump_001_4BD8:: ; address name
     farcall BeginStringDisplay_Bank37
     ret
 
-; entry 17 of the `rst $00` table in GameMode0_Update
+; entry 17 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case11::
+DebugMessageTest_Update_Case11::
 Jump_001_4BDF:: ; address name
     farcall BeginStringDisplay_Bank88
     ret
 
-; entry 18 of the `rst $00` table in GameMode0_Update
+; entry 18 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case12::
+DebugMessageTest_Update_Case12::
 Jump_001_4BE6:: ; address name
     farcall BeginStringDisplay_Bank83
     ret
 
-; entry 19 of the `rst $00` table in GameMode0_Update
+; entry 19 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case13::
+DebugMessageTest_Update_Case13::
 Jump_001_4BED:: ; address name
     farcall BeginStringDisplay_Bank1D
     ret
 
-; entry 20 of the `rst $00` table in GameMode0_Update
+; entry 20 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case14::
+DebugMessageTest_Update_Case14::
 Jump_001_4BF4:: ; address name
     farcall BeginStringDisplay_Bank8A
     ret
 
-; entry 21 of the `rst $00` table in GameMode0_Update
+; entry 21 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case15::
+DebugMessageTest_Update_Case15::
 Jump_001_4BFB:: ; address name
     farcall BeginStringDisplay_BankF0_4001
     ret
 
-; entry 22 of the `rst $00` table in GameMode0_Update
+; entry 22 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case16::
+DebugMessageTest_Update_Case16::
 Jump_001_4C02:: ; address name
     farcall BeginStringDisplay_Bank1B_4C86
     ret
 
-; entry 23 of the `rst $00` table in GameMode0_Update
+; entry 23 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case17::
+DebugMessageTest_Update_Case17::
 Jump_001_4C09:: ; address name
     farcall BeginStringDisplay_Bank1F
     ret
 
-; entry 24 of the `rst $00` table in GameMode0_Update
+; entry 24 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case18::
+DebugMessageTest_Update_Case18::
 Jump_001_4C10:: ; address name
     farcall BeginStringDisplay_BankF0_48A0
     ret
 
-; entry 25 of the `rst $00` table in GameMode0_Update
+; entry 25 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case19::
+DebugMessageTest_Update_Case19::
 Jump_001_4C17:: ; address name
     farcall BeginStringDisplay_Bank0D
     ret
 
-; entry 26 of the `rst $00` table in GameMode0_Update
+; entry 26 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case1A::
+DebugMessageTest_Update_Case1A::
 Jump_001_4C1E:: ; address name
     farcall BeginStringDisplay_Bank33_6490
     ret
 
-; entry 27 of the `rst $00` table in GameMode0_Update
+; entry 27 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case1B::
+DebugMessageTest_Update_Case1B::
 Jump_001_4C25:: ; address name
     farcall BeginStringDisplay_Bank24
     ret
 
-; entry 28 of the `rst $00` table in GameMode0_Update
+; entry 28 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case1C::
+DebugMessageTest_Update_Case1C::
 Jump_001_4C2C:: ; address name
-    farcall GameMode0_Update_Table2_Case1C_Sub01
+    farcall DebugMessageTest_Update_Case1C_Sub01
     ret
 
-; entry 29 of the `rst $00` table in GameMode0_Update
+; entry 29 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case1D::
+DebugMessageTest_Update_Case1D::
 Jump_001_4C33:: ; address name
     farcall BeginStringDisplay_Bank0E
     ret
 
-; entry 30 of the `rst $00` table in GameMode0_Update
+; entry 30 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case1E::
+DebugMessageTest_Update_Case1E::
 Jump_001_4C3A:: ; address name
     farcall BeginStringDisplay_BankF2
     ret
 
-; entry 31 of the `rst $00` table in GameMode0_Update
+; entry 31 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case1F::
+DebugMessageTest_Update_Case1F::
 Jump_001_4C41:: ; address name
     farcall BeginStringDisplay_Bank33_7037
     ret
 
-; entry 32 of the `rst $00` table in GameMode0_Update
+; entry 32 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case20::
+DebugMessageTest_Update_Case20::
 Jump_001_4C48:: ; address name
     farcall BeginStringDisplay_Bank0B
     ret
 
-; entry 33 of the `rst $00` table in GameMode0_Update
+; entry 33 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode0_Update_Table2_Case21::
+DebugMessageTest_Update_Case21::
 Jump_001_4C4F:: ; address name
     farcall BeginStringDisplay_Bank1B_480C
     ret
@@ -1156,13 +1156,13 @@ Jump_001_4C56::
     jr z, Jump_001_4C86
     ld a, [wC46B]
     cp a, $00
-    call z, GameMode0_Update_Table2_Case21_Sub01
+    call z, DebugMessageTest_Update_Case21_Sub01
     ld a, [wC46B]
     cp a, $01
-    call z, GameMode0_Update_Table2_Case21_Sub02
+    call z, DebugMessageTest_Update_Case21_Sub02
     ld a, [wC46B]
     cp a, $02
-    call z, GameMode0_Update_Table2_Case21_Sub03
+    call z, DebugMessageTest_Update_Case21_Sub03
     ld a, [wC46B]
     sub a, $01
     jr nc, Jump_001_4C7E
@@ -1179,13 +1179,13 @@ Jump_001_4C86::
     jr z, Jump_001_4CB8
     ld a, [wC46B]
     cp a, $00
-    call z, GameMode0_Update_Table2_Case21_Sub01
+    call z, DebugMessageTest_Update_Case21_Sub01
     ld a, [wC46B]
     cp a, $01
-    call z, GameMode0_Update_Table2_Case21_Sub02
+    call z, DebugMessageTest_Update_Case21_Sub02
     ld a, [wC46B]
     cp a, $02
-    call z, GameMode0_Update_Table2_Case21_Sub03
+    call z, DebugMessageTest_Update_Case21_Sub03
     ld a, [wC46B]
     add a, $01
     cp a, $03
@@ -1207,7 +1207,7 @@ Jump_001_4CB8::
     and a, $10
     jr z, Jump_001_4CCF
     inc [hl]
-    call GameMode0_Update_Table2_Case21_Sub05
+    call DebugMessageTest_Update_Case21_Sub05
     jr Jump_001_4CE5
 
 Jump_001_4CCF::
@@ -1215,7 +1215,7 @@ Jump_001_4CCF::
     and a, $20
     jr z, Jump_001_4CDC
     dec [hl]
-    call GameMode0_Update_Table2_Case21_Sub05
+    call DebugMessageTest_Update_Case21_Sub05
     jr Jump_001_4CE5
 
 Jump_001_4CDC::
@@ -1231,7 +1231,7 @@ Jump_001_4CE5::
     ld a, [wC46B]
     ld b, $21
     cp a, $00
-    call z, GameMode0_Update_Table2_Case21_Sub04
+    call z, DebugMessageTest_Update_Case21_Sub04
     ld a, [wC0A0]
     add a, a
     ld hl, Data_001_4E54
@@ -1251,7 +1251,7 @@ Jump_001_4D0C::
     ld b, a
     ld a, [wC46B]
     cp a, $01
-    call z, GameMode0_Update_Table2_Case21_Sub04
+    call z, DebugMessageTest_Update_Case21_Sub04
     ld a, [wC0A0]
     add a, a
     ld hl, Data_001_4E54
@@ -1280,7 +1280,7 @@ Jump_001_4D3B::
     ld b, a
     ld a, [wC46B]
     cp a, $02
-    call z, GameMode0_Update_Table2_Case21_Sub04
+    call z, DebugMessageTest_Update_Case21_Sub04
 
 Jump_001_4D44::
     ld a, [wJoypadPressed]
@@ -1298,17 +1298,17 @@ Jump_001_4D54::
     jr nz, Jump_001_4D79
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, GameMode0_Update_Table2_Case21_Sub01
+    jr nz, DebugMessageTest_Update_Case21_Sub01
     xor a, a
     ld hl, vBGMap0 + $6D
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_4DBC
 
-; only called from GameMode0_Update_Table2_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
+; only called from DebugMessageTest_Update_Case21 (E-0047)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
 ; reads: wC0A0, wC46B, wC0A1, wMenuRowCount
-GameMode0_Update_Table2_Case21_Sub01::
+DebugMessageTest_Update_Case21_Sub01::
 Func_001_4D6E:: ; address name
     ld a, [wC0A0]
     ld de, vBGMap0 + $6D
@@ -1321,17 +1321,17 @@ Jump_001_4D79::
     jr nz, Jump_001_4D9E
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, GameMode0_Update_Table2_Case21_Sub02
+    jr nz, DebugMessageTest_Update_Case21_Sub02
     xor a, a
     ld hl, vBGMap0 + $AD
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_4DBC
 
-; only called from GameMode0_Update_Table2_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
+; only called from DebugMessageTest_Update_Case21 (E-0047)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
 ; reads: wC0A1, wC46B, wC0A0, wMenuRowCount
-GameMode0_Update_Table2_Case21_Sub02::
+DebugMessageTest_Update_Case21_Sub02::
 Func_001_4D93:: ; address name
     ld a, [wC0A1]
     ld de, vBGMap0 + $AD
@@ -1341,17 +1341,17 @@ Func_001_4D93:: ; address name
 Jump_001_4D9E::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, GameMode0_Update_Table2_Case21_Sub03
+    jr nz, DebugMessageTest_Update_Case21_Sub03
     xor a, a
     ld hl, vBGMap0 + $ED
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_4DBC
 
-; only called from GameMode0_Update_Table2_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
+; only called from DebugMessageTest_Update_Case21 (E-0047)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
 ; reads: wMenuRowCount, wC46B, wC0A0, wC0A1
-GameMode0_Update_Table2_Case21_Sub03::
+DebugMessageTest_Update_Case21_Sub03::
 Func_001_4DB1:: ; address name
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ED
@@ -1385,11 +1385,11 @@ Jump_001_4DDC::
 Jump_001_4DEC::
     ret
 
-; only called from GameMode0_Update_Table2_Case21 (E-0047)
-; 3 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
+; only called from DebugMessageTest_Update_Case21 (E-0047)
+; 3 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
 ; reads: wC46B, wC0A0, wC0A1, wMenuRowCount
 ; points at: wC0A0
-GameMode0_Update_Table2_Case21_Sub04::
+DebugMessageTest_Update_Case21_Sub04::
 Func_001_4DED:: ; address name
     push af
     ld a, [wC46B]
@@ -1438,11 +1438,11 @@ Jump_001_4E30::
     pop af
     ret
 
-; only called from GameMode0_Update_Table2_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
+; only called from DebugMessageTest_Update_Case21 (E-0047)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
 ; reads: wC46B
 ; writes: wC0A1, wMenuRowCount
-GameMode0_Update_Table2_Case21_Sub05::
+DebugMessageTest_Update_Case21_Sub05::
 Func_001_4E3B:: ; address name
     ld a, [wC46B]
     cp a, $00
@@ -1583,7 +1583,7 @@ Func_001_4F80:: ; address name
     ld a, [wMonsterId]
     ld hl, vBGMap0 + $24
     ld bc, $0100
-    call Func_001_5420
+    call WriteHexByteTilesAtHL
     ld a, [wCFE7]
     ld hl, vBGMap0 + $24
     call DebugShowMonsterRecord_Sub02
@@ -1625,23 +1625,23 @@ Func_001_4F80:: ; address name
     ld a, [wRecordBuffer]
     ld hl, vBGMap0 + $4F
     ld bc, $0100
-    call Func_001_5420
+    call WriteHexByteTilesAtHL
     ld a, [wCFED]
     ld hl, vBGMap0 + $4F
     call DebugShowMonsterRecord_Sub02
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $66
     ld bc, $0100
-    call Func_001_5420
+    call WriteHexByteTilesAtHL
     ld a, [wCFEF]
     inc hl
-    call Func_001_5420
+    call WriteHexByteTilesAtHL
     ld a, [wCFF0]
     inc hl
-    call Func_001_5420
+    call WriteHexByteTilesAtHL
     ld a, [wCFF1]
     inc hl
-    call Func_001_5420
+    call WriteHexByteTilesAtHL
     ld a, [wCFF2]
     ld e, a
     ld a, [wCFF3]
@@ -1768,7 +1768,7 @@ Jump_001_512D::
     ret z
     ld hl, vBGMap0 + $46
     ld bc, $0100
-    call Func_001_5420
+    call WriteHexByteTilesAtHL
     ld a, [wC5F8]
     ld [wRecordBuffer], a
     xor a, a
@@ -2168,13 +2168,13 @@ Func_001_53DC::
 
 Jump_001_53EE::
     ld e, $64
-    call Func_001_5405
+    call DivModAByE_Bank01
     call WriteTileDPlusBAtHL
     inc hl
 
 Jump_001_53F7::
     ld e, $0A
-    call Func_001_5405
+    call DivModAByE_Bank01
     call WriteTileDPlusBAtHL
     inc hl
 
@@ -2183,8 +2183,10 @@ Jump_001_5400::
     call WriteTileDPlusBAtHL
     ret
 
+; D = A / E and A = A mod E by repeated subtraction (E-0122)
 ; 2 call sites from 1 routine (e.g. Func_001_53DC)
-Func_001_5405::
+DivModAByE_Bank01::
+Func_001_5405:: ; address name
     ld d, $FF
 
 Jump_001_5407::
@@ -2195,7 +2197,7 @@ Jump_001_5407::
     ret
 
 ; writes tile D + B at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
-; 5 call sites from 3 routines (e.g. Func_001_53DC, DebugShowMonsterRecord_Sub02, Func_001_5420)
+; 5 call sites from 3 routines (e.g. Func_001_53DC, DebugShowMonsterRecord_Sub02, WriteHexByteTilesAtHL)
 WriteTileDPlusBAtHL::
 Func_001_540D:: ; address name
     push af
@@ -2219,8 +2221,10 @@ Func_001_5417:: ; address name
     pop af
     ret
 
+; HL += 1, writes the high nibble of A as a tile (WriteTileDPlusBAtHL), then falls into the low-nibble write (E-0122)
 ; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, DebugSkillViewer_Update)
-Func_001_5420::
+WriteHexByteTilesAtHL::
+Func_001_5420:: ; address name
     inc hl
     push af
     swap a
@@ -2533,7 +2537,7 @@ Jump_001_55D8::
     call CopyGlyphTilesToVRAM
     ld bc, $0000
     ld de, vBGMap0 + $6A
-    call Func_001_6A98
+    call WriteThreeHexDigitsAtDE
     xor a, a
     ld [wD780], a
     ld [wCFA8], a
@@ -2561,13 +2565,13 @@ Jump_001_5638::
     call FillTilesFromRequest
     ld de, wD7F6
     ld hl, vTiles2 + $200
-    call Func_001_5B98
+    call DrawMonsterNameForWordAtDE_Bank01
     ld a, [wD7F6]
     ld c, a
     ld a, [wD7F7]
     ld b, a
     ld de, vBGMap0 + $6A
-    call Func_001_6A98
+    call WriteThreeHexDigitsAtDE
     ld hl, wCADE
     ld a, [hl]
     and a, $01
@@ -2694,7 +2698,7 @@ Jump_001_5720::
     farcall LoadSpeciesRecord
     ld c, $00
     ld de, wD787
-    call Func_001_57C7
+    call CopyWD01ABytesFromIndexCToDE
     ld a, [wC5FC]
     ld [wD7F2], a
     ld a, [wC5FD]
@@ -2706,7 +2710,7 @@ Jump_001_5720::
     farcall LoadSpeciesRecord
     ld c, $00
     ld de, wD7A2
-    call Func_001_57C7
+    call CopyWD01ABytesFromIndexCToDE
     ld hl, wD787
     ld de, vBGMap0 + $186
     ld c, $00
@@ -2771,10 +2775,12 @@ Jump_001_57B6::
     jr c, Jump_001_57B6
     ret
 
+; for C up to $1A, loads byte C of wD01A (LoadWD01AByteWD7F4) and stores it at DE (E-0122)
 ; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01)
 ; reads: wD7F5
 ; writes: wD7F4
-Func_001_57C7::
+CopyWD01ABytesFromIndexCToDE::
+Func_001_57C7:: ; address name
     push bc
     push de
     ld a, c
@@ -2788,7 +2794,7 @@ Func_001_57C7::
     inc c
     ld a, c
     cp a, $1B
-    jr c, Func_001_57C7
+    jr c, CopyWD01ABytesFromIndexCToDE
     ret
 
 ; 1 call site from 1 routine (e.g. Func_001_57E1)
@@ -2945,7 +2951,7 @@ Jump_001_58A8::
     call FillTilesFromRequest
     pop hl
     pop de
-    call Func_001_5B98
+    call DrawMonsterNameForWordAtDE_Bank01
     ret
 
 Jump_001_58C6::
@@ -3300,7 +3306,7 @@ Jump_001_5ACD::
     inc hl
     ld a, [hl]
     ld d, a
-    call Func_001_6A98
+    call WriteThreeHexDigitsAtDE
     ret
 
 Jump_001_5AF8::
@@ -3391,9 +3397,11 @@ Data_001_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $A2, $99, $C2, $99, $E2, $99
     db $02, $9A, $22, $9A
 
+; reads a monster id word at DE, copies its name and draws its glyphs at HL (E-0122)
 ; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_57E1)
 ; writes: wC8D9
-Func_001_5B98::
+DrawMonsterNameForWordAtDE_Bank01::
+Func_001_5B98:: ; address name
     push hl
     ld a, [de]
     ld l, a
@@ -3410,7 +3418,7 @@ Func_001_5B98::
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. Func_001_5B98)
+; 1 call site from 1 routine (e.g. DrawMonsterNameForWordAtDE_Bank01)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC8CF
@@ -3618,7 +3626,7 @@ Jump_001_5CF4::
     or a, $80
     ld [wC5F9], a
     and a, $7F
-    call Func_001_5E6C
+    call LoadKeyEntryFieldsToWC5FD
     jr Jump_001_5D3C
 
 Jump_001_5D00::
@@ -3775,7 +3783,7 @@ Jump_001_5DF3::
     ld [hl], a
     ld [wCD05], a
     farcall DebugAutomap_Update_Sub01_Sub01
-    farcall Func_060_6C96
+    farcall SaveWCD07RecordToSRAMSlotWCC42
     ld a, [wCD0D]
     ld [wMapWidthScreens], a
     ld a, [wCD0E]
@@ -3815,9 +3823,11 @@ Jump_001_5DF3::
     inc [hl]
     ret
 
+; A = key slot: wC5FD = byte 0 and wC5FE = byte 3 of its wKeyList entry, wC5FA = byte 3 | $80 (E-0120)
 ; 2 call sites from 2 routines (e.g. DebugAutomap_Update, DebugAutomap_Init)
 ; writes: wC5FD, wC5FE, wC5FA
-Func_001_5E6C::
+LoadKeyEntryFieldsToWC5FD::
+Func_001_5E6C:: ; address name
     ld l, a
     ld h, $00
     add hl, hl
@@ -4588,7 +4598,7 @@ Jump_001_6415::
     ld a, [wC5FA]
     ld b, a
     ld de, vBGMap0 + $AB
-    call Func_001_6A98
+    call WriteThreeHexDigitsAtDE
 
 Jump_001_6423::
     ld a, [wC5F8]
@@ -4610,7 +4620,7 @@ Jump_001_643F::
     ld a, [wC5FC]
     ld b, a
     ld de, vBGMap0 + $CB
-    call Func_001_6A98
+    call WriteThreeHexDigitsAtDE
 
 Jump_001_644D::
     ld a, $00
@@ -5005,7 +5015,7 @@ Jump_001_6734::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_001_674E
-    call Func_001_6809
+    call DrawDebugValueHexForWC46B
     ld a, [wC46B]
     dec a
     cp a, $FF
@@ -5019,7 +5029,7 @@ Jump_001_6748::
 Jump_001_674E::
     bit 7, a
     jr z, Jump_001_6764
-    call Func_001_6809
+    call DrawDebugValueHexForWC46B
     ld a, [wC46B]
     inc a
     cp a, $0C
@@ -5071,7 +5081,7 @@ Jump_001_679B::
     call Func_001_682B
 
 Jump_001_679F::
-    call Func_001_6809
+    call DrawDebugValueHexForWC46B
     jr Jump_001_6801
 
 Jump_001_67A4::
@@ -5102,7 +5112,7 @@ Jump_001_67C0::
     call Func_001_682B
 
 Jump_001_67C4::
-    call Func_001_6809
+    call DrawDebugValueHexForWC46B
     jr Jump_001_6801
 
 Jump_001_67C9::
@@ -5130,7 +5140,7 @@ Jump_001_67EB::
     inc hl
     ld b, [hl]
     pop de
-    call Func_001_6A98
+    call WriteThreeHexDigitsAtDE
     jr Jump_001_6808
 
 Jump_001_6801::
@@ -5141,10 +5151,12 @@ Jump_001_6801::
 Jump_001_6808::
     ret
 
+; writes the word wD09D[wC46B] as three hex digits at the address Data_001_68D3[wC46B] (E-0122)
 ; 4 call sites from 1 routine (e.g. Func_001_66AD)
 ; reads: wC46B
 ; points at: wD09D
-Func_001_6809::
+DrawDebugValueHexForWC46B::
+Func_001_6809:: ; address name
     ld a, [wC46B]
     ld hl, Data_001_68D3
     add a, a
@@ -5159,7 +5171,7 @@ Func_001_6809::
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    call Func_001_6A98
+    call WriteThreeHexDigitsAtDE
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_001_66AD)
@@ -5497,7 +5509,7 @@ Data_001_6A78:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6B, $99, $AB, $99, $EB, $99
 
 ; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble), each after WaitForVRAMAccess; DE ends on the second tile (E-0071)
-; 20 call sites from 11 routines (e.g. GameMode0_Update_Table2_Case21_Sub03, GameMode0_Update_Table2_Case21_Sub04, GameMode0_Update_Table2_Case21_Sub02, GameMode0_Update_Table2_Case21_Sub01, ...)
+; 20 call sites from 11 routines (e.g. DebugMessageTest_Update_Case21_Sub03, DebugMessageTest_Update_Case21_Sub04, DebugMessageTest_Update_Case21_Sub02, DebugMessageTest_Update_Case21_Sub01, ...)
 WriteHexByteTilesAtDE::
 Func_001_6A7E:: ; address name
     push af
@@ -5518,8 +5530,10 @@ Func_001_6A7E:: ; address name
     ld [de], a
     ret
 
-; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0, Func_001_6809, Func_001_66AD, ...)
-Func_001_6A98::
+; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess each); DE ends on the last tile (E-0120)
+; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0, DrawDebugValueHexForWC46B, Func_001_66AD, ...)
+WriteThreeHexDigitsAtDE::
+Func_001_6A98:: ; address name
     ld a, b
     and a, $0F
     add a, $10
@@ -5792,8 +5806,8 @@ Jump_001_6C8D::
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    call Func_001_6E31
-    call Func_001_6E31
+    call WriteUnknownNamePlaceholder_Bank01
+    call WriteUnknownNamePlaceholder_Bank01
     ld a, [wRecordBufferData]
     ld [hl+], a
     ld a, [wCFEF]
@@ -5944,8 +5958,8 @@ Jump_001_6D33::
     ld de, wD01A
     ld b, $1B
     call CopyBBytesDEToHL_Bank01
-    call Func_001_6E31
-    call Func_001_6E31
+    call WriteUnknownNamePlaceholder_Bank01
+    call WriteUnknownNamePlaceholder_Bank01
     ld [hl], $00
     ld a, [wD869]
     cp a, $FF
@@ -5993,7 +6007,7 @@ Jump_001_6DF4::
     ld [wC991], a
     ld a, h
     ld [wC992], a
-    farcall Func_019_73A2
+    farcall LoadTable4E60EntryForWC991ToWC9DE
     ld a, [wD868]
     ld c, $58
     call SRAMRecordAddress
@@ -6026,8 +6040,10 @@ Func_001_6E2C:: ; address name
     jr nz, FillBBytesAtHL_Bank01
     ret
 
+; writes '???' ($98 x 3), seven $F0 bytes and a 0 at HL (E-0122)
 ; 4 call sites from 1 routine (e.g. Func_001_6C48)
-Func_001_6E31::
+WriteUnknownNamePlaceholder_Bank01::
+Func_001_6E31:: ; address name
     ld a, $98
     ld [hl+], a
     ld a, $98
@@ -6045,7 +6061,7 @@ Jump_001_6E3E::
     ld [hl+], a
     ret
 
-; 10 call sites from 10 routines (e.g. Msg01F0_Case33, Msg01F0_Case42, Func_073_5F55, ScriptCommand2A_Run_Case10, ...)
+; 10 call sites from 10 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, AddRecordWD7F5AsFollower, ScriptCommand2A_Run_Case10, ...)
 ; reads: hFFC7, hFFC8, wD868
 ; writes: rRAMG, rRAMB, wD869, wD86A
 Func_001_6E46::

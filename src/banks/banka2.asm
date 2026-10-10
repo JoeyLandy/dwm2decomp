@@ -1,9 +1,11 @@
 SECTION "Bank A2", ROMX[$4000], BANK[$A2]
     db $A2
 
+; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hFFC6 bytes from HL to DE (E-0121)
 ; 1 call site from 1 routine (e.g. Func_034_4008)
 ; reads: wMonsterId, wCFE7, hFFC6
-Func_0A2_4001::
+CopyMonsterTableBytesFrom4056::
+Func_0A2_4001:: ; address name
     push de
     push bc
     ld a, [wMonsterId]
@@ -63,7 +65,7 @@ Func_0A2_402D:: ; address name
     ld b, $1A
 
 ; the same 7 bytes as CopyBytesDEFromHL (34:406E)
-; 1 call site from 1 routine (e.g. Func_0A2_4001)
+; 1 call site from 1 routine (e.g. CopyMonsterTableBytesFrom4056)
 CopyBytesDEFromHL_BankA2::
 Func_0A2_404F:: ; address name
     ld a, [hl+]

@@ -204,7 +204,7 @@ Jump_011_4105::
     ld c, $01
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4AE0_Case07, UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
+; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wCC44, hMapId, hFF8C, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8C9
 ; writes: hFF8C, wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
 ; points at: wC5E0
@@ -212,7 +212,7 @@ Func_011_4130::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_011_413E
-    farcall Func_061_596F
+    farcall RunWCC44Type_596F
     ret
 
 Jump_011_413E::
@@ -407,7 +407,7 @@ Jump_011_4235::
     ld c, $01
     ret
 
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, Func_061_5794)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, CallF4268OnScreenY1)
 ; reads: wCC44, hMapId, wC88E, wC891, wCC42, wC88F, wC890, wCD09, ...
 ; writes: hMapId, wC8C8, wC8C9, hMapScreenX, hMapScreenY
 ; points at: wC88F
@@ -457,7 +457,7 @@ Jump_011_4292::
     ld de, wC88F
 
 Jump_011_42A6::
-    call Func_011_4340
+    call ScriptWarpToMapFromBytesAtDE
     ld c, $01
     ret
 
@@ -521,11 +521,13 @@ Jump_011_431E::
     ld c, $01
     ret
 
+; script command: plays sound $60 and reads a warp destination at DE (wC8C8/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wC5E0 += 1, wModeState = 4, updates hFF8C and returns C = 1 (E-0121)
 ; 1 call site from 1 routine (e.g. Func_011_4268)
 ; reads: hFF8C
 ; writes: wCCEA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C6, wModeState, wC8C5, ...
 ; points at: wC5E0
-Func_011_4340::
+ScriptWarpToMapFromBytesAtDE::
+Func_011_4340:: ; address name
     ld a, $01
     ld [wCCEA], a
     ld a, $60

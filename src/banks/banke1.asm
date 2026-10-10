@@ -109,20 +109,24 @@ Data_0E1_5A67:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_5AA7:: ; heuristic: argument of a bank-switching copy helper; C0
     db $20, $7C, $FF, $7F, $A8, $14, $00, $00, $20, $7C, $FF, $7F, $35, $04, $00, $00
 
+; runs Func_0E1_5AC0 with DE = Data_0E1_5ABE (E-0122)
 ; 1 call site from 1 routine (e.g. Func_007_5FE8)
-Func_0E1_5AB7::
+RunE15AC0For5ABE::
+Func_0E1_5AB7:: ; address name
     ld de, Data_0E1_5ABE
-    call Func_0E1_5AC0
+    call RunE15AC0For5ABE_Sub01
     ret
 
 Data_0E1_5ABE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $5D
 
-; 1 call site from 1 routine (e.g. Func_0E1_5AB7)
+; only called from RunE15AC0For5ABE (E-0047)
+; 1 call site from 1 routine (e.g. RunE15AC0For5ABE)
 ; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
-Func_0E1_5AC0::
+RunE15AC0For5ABE_Sub01::
+Func_0E1_5AC0:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
@@ -586,7 +590,7 @@ Jump_0E1_5CE6::
     ret
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-; 2 call sites from 1 routine (e.g. Func_0E1_5AC0)
+; 2 call sites from 1 routine (e.g. RunE15AC0For5ABE_Sub01)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
 BGTileUnderPointIsHFFBA_BankE1::
 Func_0E1_5D06:: ; address name

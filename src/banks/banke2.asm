@@ -133,7 +133,7 @@ Jump_0E2_40E8::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_40F8::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4108
@@ -141,7 +141,7 @@ Jump_0E2_40F8::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4108::
-    call Func_0E2_6822
+    call AIAddScoresFor55BEAnd5731
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -194,7 +194,7 @@ Jump_0E2_4159::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4169::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4179
@@ -202,7 +202,7 @@ Jump_0E2_4169::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4179::
-    call Func_0E2_6822
+    call AIAddScoresFor55BEAnd5731
     farcall Func_005_5758
     ld a, c
     and a, a
@@ -241,8 +241,10 @@ Jump_0E2_41B0::
 Jump_0E2_41C4::
     ret
 
+; table-B AI score: AIScore_Beat, then adds a penalty word when the follow-up check fails (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0E2_41C5:: ; heuristic: follows a terminator; C0
+AIScoreB_Beat:: ; heuristic: follows a terminator; C0
+Func_0E2_41C5:: ; address name
     call AIScore_Beat
     ld a, c
     and a, a
@@ -260,7 +262,7 @@ Jump_0E2_41DF::
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 19 Beat, 20 Defeat. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
-; 1 call site from 1 routine (e.g. Func_0E2_41C5)
+; 1 call site from 1 routine (e.g. AIScoreB_Beat)
 AIScore_Beat::
 Func_0E2_41E0:: ; address name
     farcall AIScore_Beat_Sub01
@@ -287,7 +289,7 @@ Jump_0E2_41FD::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4213::
-    call Func_0E2_6822
+    call AIAddScoresFor55BEAnd5731
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -467,7 +469,7 @@ Jump_0E2_434D::
 Jump_0E2_435D::
     ld a, [wBattleActor]
     call AIScore_HealUs_Sub01_Sub01
-    farcall Func_005_5397
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_4373
@@ -535,7 +537,7 @@ Func_0E2_43C8:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67D5
+    call AIAddPenaltyFor5758And5CF1
     farcall Func_005_667F
     ld a, c
     cp a, $01
@@ -556,7 +558,7 @@ Func_0E2_43E9:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67D5
+    call AIAddPenaltyFor5758And5CF1
     farcall SetCToZero
     ld a, c
     and a, a
@@ -847,8 +849,10 @@ Jump_0E2_45E9::
 Jump_0E2_45FD::
     ret
 
+; table-B AI score: AIScore_TwinHits, then adds a penalty word when the follow-up check fails (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0E2_45FE:: ; heuristic: follows a terminator; C0
+AIScoreB_TwinHits:: ; heuristic: follows a terminator; C0
+Func_0E2_45FE:: ; address name
     call AIScore_TwinHits
     ld a, c
     and a, a
@@ -866,7 +870,7 @@ Jump_0E2_4618::
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 45 TwinHits. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
-; 1 call site from 1 routine (e.g. Func_0E2_45FE)
+; 1 call site from 1 routine (e.g. AIScoreB_TwinHits)
 AIScore_TwinHits::
 Func_0E2_4619:: ; address name
     farcall AIScore_TwinHits_Sub03
@@ -1231,7 +1235,7 @@ Func_0E2_48AE:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     farcall SetCToZero
     ld a, c
@@ -1318,7 +1322,7 @@ Jump_0E2_493E::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Transform:: ; heuristic: follows a terminator; C0
 Func_0E2_493F:: ; address name
-    farcall Func_005_7482
+    farcall AIUsableAndActorLacksStatus4Bits67
     ld a, c
     and a, a
     ret z
@@ -1357,7 +1361,7 @@ Jump_0E2_4980::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BeDragon:: ; heuristic: follows a terminator; C0
 Func_0E2_4984:: ; address name
-    farcall Func_005_7482
+    farcall AIUsableAndActorLacksStatus4Bits67
     ld a, c
     and a, a
     ret z
@@ -1398,7 +1402,7 @@ Func_0E2_49B5:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_49CE::
-    farcall Func_005_5397
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_49DE
@@ -1551,7 +1555,7 @@ Jump_0E2_4ADF::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4AEF::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4AFF
@@ -1670,7 +1674,7 @@ Jump_0E2_4BC4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BD4::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4BE4
@@ -1760,7 +1764,7 @@ Jump_0E2_4C69::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4C79::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4C89
@@ -1824,7 +1828,7 @@ Jump_0E2_4CE5::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_RockThrow:: ; heuristic: follows a terminator; C0
 Func_0E2_4CE6:: ; address name
-    farcall Func_005_7512
+    farcall AIFunc74D1AndFoeLacksStatus3And4
     ld a, c
     and a, a
     ret z
@@ -1852,7 +1856,7 @@ Jump_0E2_4D0F::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4D1F::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4D2F
@@ -1903,7 +1907,7 @@ Jump_0E2_4D7A::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Watershot:: ; heuristic: follows a terminator; C0
 Func_0E2_4D7B:: ; address name
-    farcall Func_005_7512
+    farcall AIFunc74D1AndFoeLacksStatus3And4
     ld a, c
     and a, a
     ret z
@@ -1931,7 +1935,7 @@ Jump_0E2_4DA4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4DB4::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4DC4
@@ -1964,7 +1968,7 @@ Jump_0E2_4DEB::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Tidalwave:: ; heuristic: follows a terminator; C0
 Func_0E2_4DEC:: ; address name
-    farcall Func_005_7512
+    farcall AIFunc74D1AndFoeLacksStatus3And4
     ld a, c
     and a, a
     ret z
@@ -1992,7 +1996,7 @@ Jump_0E2_4E15::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4E25::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E35
@@ -2035,7 +2039,7 @@ Jump_0E2_4E70::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_CallHelp:: ; heuristic: follows a terminator; C0
 Func_0E2_4E71:: ; address name
-    farcall Func_005_7512
+    farcall AIFunc74D1AndFoeLacksStatus3And4
     ld a, c
     and a, a
     ret z
@@ -2081,7 +2085,7 @@ Jump_0E2_4EBA::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4ED0::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4EE0
@@ -2134,7 +2138,7 @@ Jump_0E2_4F2F::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_FireSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_4F30:: ; address name
-    farcall Func_005_7512
+    farcall AIFunc74D1AndFoeLacksStatus3And4
     ld a, c
     and a, a
     ret z
@@ -2180,7 +2184,7 @@ Jump_0E2_4F7D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F8D::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_4F9D
@@ -2521,8 +2525,10 @@ Func_0E2_51C9:: ; address name
     call AccumulateBank6WordToDA6E
     jp Jump_0E2_512B
 
+; table-B AI score: AIScore_SquallHit, then adds a penalty word when the follow-up check fails (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0E2_51DB:: ; heuristic: follows a terminator; C0
+AIScoreB_SquallHit:: ; heuristic: follows a terminator; C0
+Func_0E2_51DB:: ; address name
     call AIScore_SquallHit
     ld a, c
     and a, a
@@ -2540,7 +2546,7 @@ Jump_0E2_51F5::
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 98 SquallHit. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
-; 1 call site from 1 routine (e.g. Func_0E2_51DB)
+; 1 call site from 1 routine (e.g. AIScoreB_SquallHit)
 AIScore_SquallHit::
 Func_0E2_51F6:: ; address name
     farcall AIScore_SquallHit_Sub01
@@ -2793,7 +2799,7 @@ Jump_0E2_53C2::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_53D2::
-    farcall Func_005_557E
+    farcall InvertedResultOfFunc4E48
     ld a, c
     and a, a
     jr nz, Jump_0E2_53E2
@@ -2826,7 +2832,7 @@ Jump_0E2_5409::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_GigaSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_540A:: ; address name
-    farcall Func_005_7512
+    farcall AIFunc74D1AndFoeLacksStatus3And4
     ld a, c
     and a, a
     ret z
@@ -3155,7 +3161,7 @@ Jump_0E2_5658::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_566C::
-    farcall Func_005_5397
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_567C
@@ -3254,7 +3260,7 @@ Jump_0E2_5717::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_572B::
-    farcall Func_005_5397
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_573B
@@ -3322,7 +3328,7 @@ Jump_0E2_57A8::
 ; reads: wBattleActor
 AIScore_Ramming:: ; heuristic: follows a terminator; C0
 Func_0E2_57A9:: ; address name
-    farcall Func_005_77C7
+    farcall AIFunc779FAnd43F2AndActorHPNotOne
     ld a, c
     and a, a
     ret z
@@ -3709,8 +3715,10 @@ Jump_0E2_5A53::
 Jump_0E2_5A67::
     ret
 
+; table-B AI score: AIScore_LureDance, then Func_0E2_67F9 when usable (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0E2_5A68:: ; heuristic: follows a terminator; C0
+AIScoreB_LureDance:: ; heuristic: follows a terminator; C0
+Func_0E2_5A68:: ; address name
     call AIScore_LureDance
     ld a, c
     and a, a
@@ -3719,7 +3727,7 @@ Func_0E2_5A68:: ; heuristic: follows a terminator; C0
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 122 LureDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
-; 1 call site from 1 routine (e.g. Func_0E2_5A68)
+; 1 call site from 1 routine (e.g. AIScoreB_LureDance)
 AIScore_LureDance::
 Func_0E2_5A72:: ; address name
     farcall AIScore_LureDance_Sub01
@@ -3836,7 +3844,7 @@ Func_0E2_5B3D:: ; address name
     and a, a
     ret z
     ld a, [wBattleActor]
-    call Func_0E2_66C5
+    call ForEachPresentSlotOfSideRun66DC
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
@@ -3861,7 +3869,7 @@ Jump_0E2_5B6C::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5B7C::
-    farcall Func_005_5397
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B8C
@@ -4318,8 +4326,10 @@ Jump_0E2_5EB2::
     call WeighWD044RuleBit5
     ret
 
+; table-B AI score: AIScore_LushLicks, then Func_0E2_67F9 when usable (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0E2_5EB6:: ; heuristic: follows a terminator; C0
+AIScoreB_LushLicks:: ; heuristic: follows a terminator; C0
+Func_0E2_5EB6:: ; address name
     call AIScore_LushLicks
     ld a, c
     and a, a
@@ -4328,7 +4338,7 @@ Func_0E2_5EB6:: ; heuristic: follows a terminator; C0
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 139 LushLicks. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
-; 1 call site from 1 routine (e.g. Func_0E2_5EB6)
+; 1 call site from 1 routine (e.g. AIScoreB_LushLicks)
 AIScore_LushLicks::
 Func_0E2_5EC0:: ; address name
     farcall Func_005_7AD8
@@ -4436,8 +4446,10 @@ Jump_0E2_5F86::
     call Func_0E2_67F9
     ret
 
+; table-B AI score: AIScore_LegSweep, then Func_0E2_67F9 when usable (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0E2_5F8A:: ; heuristic: follows a terminator; C0
+AIScoreB_LegSweep:: ; heuristic: follows a terminator; C0
+Func_0E2_5F8A:: ; address name
     call AIScore_LegSweep
     ld a, c
     and a, a
@@ -4446,7 +4458,7 @@ Func_0E2_5F8A:: ; heuristic: follows a terminator; C0
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 141 LegSweep, 142 BigTrip. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
-; 1 call site from 1 routine (e.g. Func_0E2_5F8A)
+; 1 call site from 1 routine (e.g. AIScoreB_LegSweep)
 AIScore_LegSweep::
 Func_0E2_5F94:: ; address name
     farcall AIScore_LegSweep_Sub01
@@ -4486,8 +4498,10 @@ Jump_0E2_5FD8::
     ld c, $01
     ret
 
+; table-B AI score: AIScore_Ahhh, then Func_0E2_67F9 when usable (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0E2_5FDE:: ; heuristic: follows a terminator; C0
+AIScoreB_Ahhh:: ; heuristic: follows a terminator; C0
+Func_0E2_5FDE:: ; address name
     call AIScore_Ahhh
     ld a, c
     and a, a
@@ -4496,7 +4510,7 @@ Func_0E2_5FDE:: ; heuristic: follows a terminator; C0
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 143 Ahhh, 144 WarCry. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
-; 1 call site from 1 routine (e.g. Func_0E2_5FDE)
+; 1 call site from 1 routine (e.g. AIScoreB_Ahhh)
 AIScore_Ahhh::
 Func_0E2_5FE8:: ; address name
     farcall Func_005_7AD8
@@ -4638,7 +4652,7 @@ Func_0E2_60D7:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     ld a, [wBattleActor]
     call AIScore_StrongD_Sub02
@@ -4671,7 +4685,7 @@ Func_0E2_6112:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     farcall SetCToZero
     ld a, c
@@ -4694,7 +4708,7 @@ Func_0E2_6139:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     farcall SetCToZero
     ld a, c
@@ -4718,7 +4732,7 @@ Func_0E2_6160:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     ld a, [wBattleActor]
     call AIScore_Cover_Sub02
@@ -4858,7 +4872,7 @@ Func_0E2_6249:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
@@ -4907,7 +4921,7 @@ Func_0E2_62A4:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
@@ -4961,7 +4975,7 @@ Func_0E2_6303:: ; address name
     ret z
     ld a, [wBattleActor]
     call AIScore_Meditate_Sub02
-    farcall Func_005_5397
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_6322
@@ -5041,8 +5055,8 @@ Func_0E2_6387:: ; address name
 
 Jump_0E2_63A0::
     ld a, [wBattleActor]
-    call Func_0E2_66C5
-    farcall Func_005_5397
+    call ForEachPresentSlotOfSideRun66DC
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_63B6
@@ -5087,7 +5101,7 @@ Jump_0E2_63F9::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Whistle:: ; heuristic: follows a terminator; C0
 Func_0E2_63FA:: ; address name
-    farcall Func_005_7DDC
+    farcall AINeverUsableResetWDA6E
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 170 Ahhh. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5113,7 +5127,7 @@ Jump_0E2_641A::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ZoneOut:: ; heuristic: follows a terminator; C0
 Func_0E2_641E:: ; address name
-    farcall Func_005_7DDC
+    farcall AINeverUsableResetWDA6E
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 172 Guard. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5142,7 +5156,7 @@ Jump_0E2_6442::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_6452::
-    farcall Func_005_5397
+    farcall ActorHPIsNotOne
     ld a, c
     and a, a
     jr nz, Jump_0E2_6462
@@ -5186,7 +5200,7 @@ Func_0E2_648D:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_67CF
+    call AIScoreGuardSkill_67CF
     ret z
     farcall SetCToZero
     ld a, c
@@ -5210,7 +5224,7 @@ Jump_0E2_64BE::
     db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65, $C9, $C9
 
 ; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70
-; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, Func_0E2_6822, ...)
+; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wDA6E, wDA70
 AccumulateBank6WordToDA6E::
 Func_0E2_64CE:: ; address name
@@ -5244,7 +5258,7 @@ Jump_0E2_64F4::
     ret
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E
-; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, Func_0E2_6822, ...)
+; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wDA70, wDA6E
 AccumulateBank6WordToDA70::
 Func_0E2_64F5:: ; address name
@@ -5564,9 +5578,11 @@ Data_0E2_66B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0E2_66BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AB, $AC, $AD, $AE, $AF, $AF
 
+; for the three slots of the side in A (bit 2), runs Func_0E2_66DC with hFFC6 = slot for each occupied one (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Hustle, AIScore_LoveRain)
 ; writes: hFFC6
-Func_0E2_66C5::
+ForEachPresentSlotOfSideRun66DC::
+Func_0E2_66C5:: ; address name
     and a, $04
     ld c, a
     ld b, $03
@@ -5577,7 +5593,7 @@ Jump_0E2_66CA::
     jr c, Jump_0E2_66D7
     ldh [hFFC6], a
     push bc
-    call Func_0E2_66DC
+    call ForEachPresentSlotOfSideRun66DC_Sub01
     pop bc
 
 Jump_0E2_66D7::
@@ -5586,9 +5602,11 @@ Jump_0E2_66D7::
     jr nz, Jump_0E2_66CA
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_66C5)
+; only called from ForEachPresentSlotOfSideRun66DC (E-0047)
+; 1 call site from 1 routine (e.g. ForEachPresentSlotOfSideRun66DC)
 ; reads: wBattleActor
-Func_0E2_66DC::
+ForEachPresentSlotOfSideRun66DC_Sub01::
+Func_0E2_66DC:: ; address name
     push bc
     farcall HPBandOfSlotHFFC6
     ld a, c
@@ -5729,7 +5747,7 @@ Jump_0E2_67A4::
     ret
 
 ; C = (wD2CC & 1) ^ 1 and returns when non-zero; when bit 0 is set: wDA6E = 0, wDA70/wDA71 = $FFFF, C = 0 (E-0118)
-; 4 call sites from 4 routines (e.g. Func_0E2_67CF, AIScore_SquallHit, AIScore_Berserker, AIScore_Guard)
+; 4 call sites from 4 routines (e.g. AIScoreGuardSkill_67CF, AIScore_SquallHit, AIScore_Berserker, AIScore_Guard)
 ; reads: wD2CC
 ; writes: wDA6E, wDA6F, wDA70, wDA71
 MaxNegativeScoreWhenWD2CCBit0:: ; heuristic: follows a terminator; C0
@@ -5763,15 +5781,19 @@ Func_0E2_67C0:: ; address name
     ld c, $FF
     ret
 
+; returns when MaxNegativeScoreWhenWD2CCBit0 applies; otherwise continues with AIScore_TailWind_Sub02 (E-0122)
 ; 8 call sites from 8 routines (e.g. AIScore_Ironize, AIScore_StrongD, AIScore_Dodge, AIScore_BladeD, ...)
 ; reads: wD891
-Func_0E2_67CF::
+AIScoreGuardSkill_67CF::
+Func_0E2_67CF:: ; address name
     call MaxNegativeScoreWhenWD2CCBit0
     ret z
     jr AIScore_TailWind_Sub02
 
+; WeighWD044RuleBit4, then adds score word $29 to wDA6E when Func_005_5758 fails and again when Func_005_5CF1 fails (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Vivify, AIScore_Farewell)
-Func_0E2_67D5::
+AIAddPenaltyFor5758And5CF1::
+Func_0E2_67D5:: ; address name
     call WeighWD044RuleBit4
     farcall Func_005_5758
     ld a, c
@@ -5791,7 +5813,7 @@ Jump_0E2_67E8::
 Jump_0E2_67F8::
     ret
 
-; 9 call sites from 9 routines (e.g. Func_0E2_5A68, AIScore_LureDance, Func_0E2_5EB6, AIScore_LushLicks, ...)
+; 9 call sites from 9 routines (e.g. AIScoreB_LureDance, AIScore_LureDance, AIScoreB_LushLicks, AIScore_LushLicks, ...)
 Func_0E2_67F9:: ; heuristic: follows a terminator; C0
     farcall Func_005_5ECE
     ld a, c
@@ -5815,8 +5837,10 @@ Jump_0E2_680D::
 Jump_0E2_6821::
     ret
 
+; adds score word $0E to wDA70 when Func_005_55BE fails and $0F to wDA6E when Func_005_5731 fails (E-0122)
 ; 3 call sites from 3 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_Beat)
-Func_0E2_6822::
+AIAddScoresFor55BEAnd5731::
+Func_0E2_6822:: ; address name
     farcall Func_005_55BE
     ld a, c
     and a, a
@@ -5864,7 +5888,7 @@ Jump_0E2_6864::
     ret
 
 ; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-; 12 call sites from 12 routines (e.g. AIScore_HealUs_Sub01, Func_0E2_67D5, AIScore_Antidote, AIScore_DeChaos, ...)
+; 12 call sites from 12 routines (e.g. AIScore_HealUs_Sub01, AIAddPenaltyFor5758And5CF1, AIScore_Antidote, AIScore_DeChaos, ...)
 WeighWD044RuleBit4:: ; heuristic: follows a terminator; C0
 Func_0E2_6865:: ; address name
     farcall CheckWD044RuleBit4

@@ -2,7 +2,7 @@ SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
     db $1A
 
 ; wCFEC/wCFED (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE
-; 17 call sites from 15 routines (e.g. Func_003_65E3, AddSkillBaseWeightAndLoadSkill, Func_031_6331, Func_031_63ED, ...)
+; 17 call sites from 15 routines (e.g. PauseMenu_Skills_Shared02, AddSkillBaseWeightAndLoadSkill, RunBattleSetup_Shared07, LoadSelectedSkillRecord_Bank31, ...)
 ; reads: wRecordBuffer, wCFED
 ; points at: wRecordBufferData
 LoadSkillRecord::
@@ -1081,7 +1081,7 @@ Jump_01A_60E8::
     inc b
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_6885_Table2_Case01)
+; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case01)
 ; reads: wD868, hFFCC
 ; writes: hFFCC, hFFC9, hFFCA, hFFCB
 Func_01A_60F1::
@@ -1098,7 +1098,7 @@ Jump_01A_6100::
     push hl
     push bc
     push de
-    call Func_01A_623D
+    call FindCInWD09D38
     pop de
     jp z, Jump_01A_61E4
     ld a, [de]
@@ -1339,9 +1339,11 @@ Jump_01A_6234::
     inc b
     ret
 
+; searches the $38 bytes at wD09D for C: Z when found, else B = 1 and NZ (E-0122)
 ; 1 call site from 1 routine (e.g. Func_01A_60F1)
 ; points at: wD09D
-Func_01A_623D::
+FindCInWD09D38::
+Func_01A_623D:: ; address name
     ld de, wD09D
     ld b, $38
 
@@ -1534,7 +1536,7 @@ Jump_01A_6318::
     ret
 
 ; hFFC6 = 0 and A = 0 (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_6C2F_Case01)
+; 1 call site from 1 routine (e.g. Func_031_67AA_Case09_Case01)
 ; writes: hFFC6
 ClearHFFC6AndA::
 Func_01A_631A:: ; address name
@@ -1560,13 +1562,13 @@ Jump_01A_632C::
     cp a, $FF
     jr z, Jump_01A_633A
     push hl
-    call Func_01A_6348
+    call AIsCOrInWD09D8
     pop hl
     jr c, Jump_01A_632C
     jr Jump_01A_633F
 
 Jump_01A_633A::
-    call Func_01A_635B
+    call FindCInWD09D8
     jr c, Jump_01A_6344
 
 Jump_01A_633F::
@@ -1580,9 +1582,11 @@ Jump_01A_6344::
 Jump_01A_6347::
     ret
 
+; A = 0 and NC if A equals C or one of the 8 bytes at wD09D; otherwise carry (E-0122)
 ; 1 call site from 1 routine (e.g. Func_01A_631F)
 ; points at: wD09D
-Func_01A_6348::
+AIsCOrInWD09D8::
+Func_01A_6348:: ; address name
     cp a, c
     jr z, Jump_01A_6359
     ld b, $08
@@ -1601,9 +1605,11 @@ Jump_01A_6359::
     xor a, a
     ret
 
+; A = 0 and NC if C is one of the 8 bytes at wD09D; otherwise carry (E-0122)
 ; 1 call site from 1 routine (e.g. Func_01A_631F)
 ; points at: wD09D
-Func_01A_635B::
+FindCInWD09D8::
+Func_01A_635B:: ; address name
     ld a, c
     ld b, $08
     ld hl, wD09D
@@ -1727,7 +1733,7 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $02, $02, $03, $03, $03, $03, $04, $05, $05, $06, $07, $03, $04, $05
     db $06, $07, $08, $04, $05, $06, $07, $07, $08, $0B, $0C, $0D, $0C, $0C, $0E, $10
 
-; 2 call sites from 2 routines (e.g. Func_031_6885_Case01, Func_031_67AA_Case07)
+; 2 call sites from 2 routines (e.g. Func_031_67AA_Case02_Case01, Func_031_67AA_Case07)
 ; reads: wD869, wD014, wD015, wD016, wD017, wD018, wD019
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD095, wD096, wD097, wD098, wD099, wD09A
 ; points at: wD095
@@ -1830,34 +1836,34 @@ Jump_01A_64C0::
     ld a, h
     adc a, $FF
     ld h, a
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     ld a, l
     add a, $07
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     inc hl
     inc hl
     inc hl
     inc hl
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     inc hl
     inc hl
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     inc hl
     inc hl
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     inc hl
     inc hl
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     inc hl
     inc hl
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     inc hl
     inc hl
-    call Func_01A_6551
+    call CountBit0MatchOfEAndHL
     ld a, l
     add a, $96
     ld l, a
@@ -1919,8 +1925,10 @@ Jump_01A_654C::
     pop de
     ret
 
+; if bit 0 of E is set, C += 1 when bit 0 of [HL] is set; otherwise B += 1 when bit 0 of [HL] is clear (E-0122)
 ; 8 call sites from 1 routine (e.g. Func_01A_64A2)
-Func_01A_6551::
+CountBit0MatchOfEAndHL::
+Func_01A_6551:: ; address name
     bit 0, e
     jr z, Jump_01A_655C
     bit 0, [hl]
@@ -2070,7 +2078,7 @@ Jump_01A_6613::
     INCBIN "dwm2-cobi-us.gbc", $06A616, $C60
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7345 (E-0079)
-; 9 call sites from 9 routines (e.g. Func_016_733F, Func_031_6E67_Case00, Func_031_6E67_Case03, ClearWindowAndCopyRect7345Far, ...)
+; 9 call sites from 9 routines (e.g. BuildBattleMenuScreen_733F, RunBattleSubStep_6E67_Case00, RunBattleSubStep_6E67_Case03, ClearWindowAndCopyRect7345Far, ...)
 CopyRectRecord7345ToScreenBuffer::
 Func_01A_7276:: ; address name
     ld hl, Data_01A_7345
@@ -2078,7 +2086,7 @@ Func_01A_7276:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_73AD (E-0114)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_Shared01, RunBattleSetup_BankA0_Table2_Case00, RunBattleSetup_BankA0_Table2_Case07)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_Shared04, RunBattleSetup_BankA0_Case00_Case00, RunBattleSetup_BankA0_Case00_Case07)
 CopyRectRecord73ADToScreenBuffer::
 Func_01A_727D:: ; address name
     ld hl, Data_01A_73AD
@@ -2094,7 +2102,7 @@ Func_01A_7284:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_747F (E-0114)
-; 1 call site from 1 routine (e.g. Func_0A0_5F2E_Case00)
+; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Case01_Case00)
 CopyRectRecord747FToScreenBuffer::
 Func_01A_728B:: ; address name
     ld hl, Data_01A_747F
@@ -2110,7 +2118,7 @@ Func_01A_7292:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_75AB (E-0114)
-; 1 call site from 1 routine (e.g. Func_0A0_5F2E_Case04)
+; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Case01_Case04)
 CopyRectRecord75ABToScreenBuffer::
 Func_01A_7299:: ; address name
     ld hl, Data_01A_75AB
@@ -2142,7 +2150,7 @@ Func_01A_72AE:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with Data_01A_7600, then with Data_01A_7734 (E-0114)
-; 2 call sites from 2 routines (e.g. CopyRectRecords7600And7734ToScreenBufferFar, Func_0A0_5F2E_Case0C)
+; 2 call sites from 2 routines (e.g. CopyRectRecords7600And7734ToScreenBufferFar, RunBattleSetup_BankA0_Case01_Case0C)
 CopyRectRecords7600And7734ToScreenBuffer::
 Func_01A_72B5:: ; address name
     ld hl, Data_01A_7600
@@ -2160,7 +2168,7 @@ Func_01A_72C2:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with Data_01A_77B6 and Data_01A_79CB, then QueueSoundEffect $6C (E-0115)
-; 1 call site from 1 routine (e.g. Func_031_6E67_Case01)
+; 1 call site from 1 routine (e.g. RunBattleSubStep_6E67_Case01)
 CopyRectRecords77B6And79CBAndPlaySound6C::
 Func_01A_72C9:: ; address name
     ld hl, Data_01A_77B6
@@ -2171,8 +2179,10 @@ Func_01A_72C9:: ; address name
     call QueueSoundEffect
     ret
 
+; copies a tile from bank $1F to vTiles1 + $6D0, copies rectangle Data_01A_7826 to the screen buffer and plays sound $6C (E-0122)
 ; 7 call sites from 7 routines (e.g. Func_016_5D13_Case03, Func_016_6C16_Case00, Func_016_6C16_Case0C, Func_016_6C16_Case10, ...)
-Func_01A_72DB::
+LoadCursorTileAndRect7826::
+Func_01A_72DB:: ; address name
     ld de, Data_01F_4330
     ld hl, vTiles1 + $6D0
     ld b, $1F
@@ -2211,7 +2221,7 @@ Func_01A_7307:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7923 (E-0115)
-; 1 call site from 1 routine (e.g. Func_016_7078)
+; 1 call site from 1 routine (e.g. CopyRect7923AndDrawWD868Values)
 CopyRectRecord7923ToScreenBuffer::
 Func_01A_730E:: ; address name
     ld hl, Data_01A_7923

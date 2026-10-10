@@ -1,11 +1,13 @@
 SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
     db $0A
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0_Case07)
+; only called from FieldModeStateDispatch_Case07 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07)
 ; reads: wC46B, wC46C, wC915, wCC44
 ; writes: wC46B, rRAMG, wC916, wC917, wModeState
-Func_00A_4001::
-    call Func_00A_4196
+FieldModeStateDispatch_Case07_Sub01::
+Func_00A_4001:: ; address name
+    call FieldModeStateDispatch_Case07_Sub01_Sub04
     ld a, [wC46B]
     inc a
     ld [wC46B], a
@@ -16,13 +18,13 @@ Func_00A_4001::
     ld a, [wC46C]
     or a, a
     jr nz, Jump_00A_4021
-    call Func_00A_4110
-    call Func_00A_4055
+    call FieldModeStateDispatch_Case07_Sub01_Sub03
+    call FieldModeStateDispatch_Case07_Sub01_Sub01
     jr Jump_00A_4027
 
 Jump_00A_4021::
-    call Func_00A_40A4
-    call Func_00A_4055
+    call FieldModeStateDispatch_Case07_Sub01_Sub02
+    call FieldModeStateDispatch_Case07_Sub01_Sub01
 
 Jump_00A_4027::
     xor a, a
@@ -50,10 +52,12 @@ Jump_00A_404F::
     ld [wModeState], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_00A_4001)
+; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
 ; reads: wC88C, wC6FD, hFFC6, hFFC7
 ; points at: wC6FE
-Func_00A_4055::
+FieldModeStateDispatch_Case07_Sub01_Sub01::
+Func_00A_4055:: ; address name
     ld a, [wC88C]
     and a, $01
     ret z
@@ -104,7 +108,7 @@ Jump_00A_4095::
     ret
 
 ; sets bit 7 of wC8BF (E-0114)
-; 2 call sites from 2 routines (e.g. Func_00A_4110, Func_00A_40A4)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case07_Sub01_Sub03, FieldModeStateDispatch_Case07_Sub01_Sub02)
 ; reads: wC8BF
 ; writes: wC8BF
 SetWC8BFBit7::
@@ -114,11 +118,13 @@ Func_00A_409B:: ; address name
     ld [wC8BF], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00A_4001)
+; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
 ; reads: wC6FD, hFFC6, hFFC7, wC915
 ; writes: wC915
 ; points at: wC6FE
-Func_00A_40A4::
+FieldModeStateDispatch_Case07_Sub01_Sub02::
+Func_00A_40A4:: ; address name
     ld a, [wC6FD]
     ld b, a
     ld hl, wC6FE
@@ -196,11 +202,13 @@ Jump_00A_410A::
     jr nz, Jump_00A_40AB
     ret
 
-; 1 call site from 1 routine (e.g. Func_00A_4001)
+; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
 ; reads: wC6FD, hFFC6, hFFC7, wC915, wCC44, hMapId
 ; writes: wC8BF, wC915
 ; points at: wC6FE
-Func_00A_4110::
+FieldModeStateDispatch_Case07_Sub01_Sub03::
+Func_00A_4110:: ; address name
     ld a, [wC6FD]
     ld b, a
     ld hl, wC6FE
@@ -294,11 +302,13 @@ Jump_00A_4190::
     jr nz, Jump_00A_4117
     ret
 
-; 1 call site from 1 routine (e.g. Func_00A_4001)
+; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
 ; reads: wC46B, wIsCGB
 ; writes: wC526
 ; points at: wC5E9, wBGPaletteBuffer, wC0F0
-Func_00A_4196::
+FieldModeStateDispatch_Case07_Sub01_Sub04::
+Func_00A_4196:: ; address name
     ld a, [wC46B]
     or a, a
     jr nz, Jump_00A_41C1
@@ -372,31 +382,33 @@ Jump_00A_420E::
 Jump_00A_4213::
     ret
 
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
+; runs the movement routine for wC194 (jump table of eight) (E-0122)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wC194
-Func_00A_4214::
+RunPlayerMoveTypeWC194::
+Func_00A_4214:: ; address name
     ld a, [wC194]
     rst $00
-    dw Func_00A_4214_Case00
-    dw Func_00A_4214_Case01
-    dw Func_00A_4214_Case02
-    dw Func_00A_4214_Case03
-    dw Func_00A_4214_Case04
-    dw Func_00A_4214_Case05
-    dw Func_00A_4214_Case06
-    dw Func_00A_4214_Case07
+    dw RunPlayerMoveTypeWC194_Case00
+    dw RunPlayerMoveTypeWC194_Case01
+    dw RunPlayerMoveTypeWC194_Case02
+    dw RunPlayerMoveTypeWC194_Case03
+    dw RunPlayerMoveTypeWC194_Case04
+    dw RunPlayerMoveTypeWC194_Case05
+    dw RunPlayerMoveTypeWC194_Case06
+    dw RunPlayerMoveTypeWC194_Case07
 
-; entry 0 of the `rst $00` table in Func_00A_4214
+; entry 0 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-Func_00A_4214_Case00::
+RunPlayerMoveTypeWC194_Case00::
 Jump_00A_4228:: ; address name
     ret
 
-; entry 6 of the `rst $00` table in Func_00A_4214
+; entry 6 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hFFC7, wC910, wC911, ...
 ; writes: hFFC7, wC915, wC8BF, wModeState, wC46B, wC46C
-Func_00A_4214_Case06::
+RunPlayerMoveTypeWC194_Case06::
 Jump_00A_4229:: ; address name
     ld a, $50
     ldh [hFFC7], a
@@ -406,11 +418,11 @@ Jump_00A_4229:: ; address name
     ld [wC8BF], a
     jr Jump_00A_427B
 
-; entry 7 of the `rst $00` table in Func_00A_4214
+; entry 7 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hFFC7, wC910, wC911, ...
 ; writes: hFFC7, wC915, wModeState, wC46B, wC46C
-Func_00A_4214_Case07::
+RunPlayerMoveTypeWC194_Case07::
 Jump_00A_4239:: ; address name
     ld a, $52
     ldh [hFFC7], a
@@ -418,11 +430,11 @@ Jump_00A_4239:: ; address name
     ld [wC915], a
     jr Jump_00A_427B
 
-; entry 1 of the `rst $00` table in Func_00A_4214
+; entry 1 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hFFC7, wC910, wC911, ...
 ; writes: hFFC7, wC915, wModeState, wC46B, wC46C
-Func_00A_4214_Case01::
+RunPlayerMoveTypeWC194_Case01::
 Jump_00A_4243:: ; address name
     ld a, $44
     ldh [hFFC7], a
@@ -430,11 +442,11 @@ Jump_00A_4243:: ; address name
     ld [wC915], a
     jr Jump_00A_427B
 
-; entry 2 of the `rst $00` table in Func_00A_4214
+; entry 2 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hFFC7, wC910, wC911, ...
 ; writes: hFFC7, wC915, wModeState, wC46B, wC46C
-Func_00A_4214_Case02::
+RunPlayerMoveTypeWC194_Case02::
 Jump_00A_424D:: ; address name
     ld a, $56
     ldh [hFFC7], a
@@ -442,11 +454,11 @@ Jump_00A_424D:: ; address name
     ld [wC915], a
     jr Jump_00A_427B
 
-; entry 3 of the `rst $00` table in Func_00A_4214
+; entry 3 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hFFC7, wC910, wC911, ...
 ; writes: hFFC7, wC915, wModeState, wC46B, wC46C
-Func_00A_4214_Case03::
+RunPlayerMoveTypeWC194_Case03::
 Jump_00A_4257:: ; address name
     ld a, $44
     ldh [hFFC7], a
@@ -454,11 +466,11 @@ Jump_00A_4257:: ; address name
     ld [wC915], a
     jr Jump_00A_427B
 
-; entry 4 of the `rst $00` table in Func_00A_4214
+; entry 4 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hFFC7, wC910, wC911, ...
 ; writes: hFFC7, wC915, wC8BF, wModeState, wC46B, wC46C
-Func_00A_4214_Case04::
+RunPlayerMoveTypeWC194_Case04::
 Jump_00A_4261:: ; address name
     ld a, $44
     ldh [hFFC7], a
@@ -468,11 +480,11 @@ Jump_00A_4261:: ; address name
     ld [wC8BF], a
     jr Jump_00A_427B
 
-; entry 5 of the `rst $00` table in Func_00A_4214
+; entry 5 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hFFC7, wC910, wC911, ...
 ; writes: hFFC7, wC915, wModeState, wC46B, wC46C
-Func_00A_4214_Case05::
+RunPlayerMoveTypeWC194_Case05::
 Jump_00A_4271:: ; address name
     ld a, $44
     ldh [hFFC7], a
@@ -519,7 +531,7 @@ Jump_00A_42AF::
     ld [wC46C], a
     ret
 
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: hFF8C, wModeState, wCC44, hMapId, wC6FD, wC88C
 ; writes: rRAMG, wC88C, wC902, wModeState, wC46B, wC46C, wC915
 ; points at: wC6FE
@@ -663,7 +675,7 @@ Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $89, $92, $9D, $A4, $A9, $AB, $AF, $B2, $B1, $B6, $B9, $BA, $BC, $C5, $D0, $D9
     db $E2, $FF
 
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wFadeState, wScriptRunning, wC901, wD069
 ; writes: wD069, wC916, wC917
 Func_00A_43B5::
@@ -698,7 +710,7 @@ Jump_00A_43DC::
     farcall DispatchTalkEvent
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4AE0_Case07, UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
+; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wFadeState, wScriptRunning, hFF8C, wModeState, wC901, wD091, wC902, wCC44, ...
 ; writes: wC901, wD091, wC916, wC917, wC902, wC903, wModeState, wC904, ...
 Func_00A_43EC::
@@ -849,7 +861,7 @@ Jump_00A_44C3::
     ld [wC903], a
 
 Jump_00A_44D3::
-    farcall Func_002_5B9E
+    farcall RedrawScreenBufferIfWC8CDBit7
     ld a, $03
     ld [wModeState], a
     xor a, a
@@ -862,12 +874,12 @@ Jump_00A_44D3::
     ld a, $02
     ld [wC8C7], a
     farcall SaveScreenBufferToBGMap1
-    call Func_00A_476E
+    call PickRandomWC902FromTable478F
     ret
     INCBIN "dwm2-cobi-us.gbc", $0284FE, $120
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. Func_00A_43EC, Func_00A_4214_Case05)
+; 2 call sites from 2 routines (e.g. Func_00A_43EC, RunPlayerMoveTypeWC194_Case05)
 ; writes: wC910, wC911, wC912, wC913
 ReadTileBuffer2x2AtPixel_Bank0A::
 Func_00A_461E:: ; address name
@@ -905,30 +917,32 @@ Func_00A_461E:: ; address name
     ld [wC913], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00A_51FD_Case02)
+; clears wC96C and runs the routine for wC903 & 7 (jump table of eight) (E-0122)
+; 1 call site from 1 routine (e.g. RunWC904Step_Case02)
 ; reads: wC903
 ; writes: wC96C
-Func_00A_465D::
+RunWC903Case::
+Func_00A_465D:: ; address name
     xor a, a
     ld [wC96C], a
     ld a, [wC903]
     and a, $07
     rst $00
-    dw Func_00A_465D_Case00
-    dw Func_00A_465D_Case01
-    dw Func_00A_465D_Case02
-    dw Func_00A_465D_Case03
-    dw Func_00A_465D_Case04
-    dw Func_00A_465D_Case05
-    dw Func_00A_465D_Case06
-    dw Func_00A_465D_Case07
+    dw RunWC903Case_Case00
+    dw RunWC903Case_Case01
+    dw RunWC903Case_Case02
+    dw RunWC903Case_Case03
+    dw RunWC903Case_Case04
+    dw RunWC903Case_Case05
+    dw RunWC903Case_Case06
+    dw RunWC903Case_Case07
 
-; entry 6 of the `rst $00` table in Func_00A_465D
+; entry 6 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC935, wCD05, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7, wCFDC, wCFC5
 ; points at: wCFDD
-Func_00A_465D_Case06::
+RunWC903Case_Case06::
 Jump_00A_4677:: ; address name
     ld a, [wC935]
     and a, $0F
@@ -1024,11 +1038,11 @@ Data_00A_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $02, $0C, $02, $0D, $02, $0E, $02, $0F, $02, $0E, $02, $10, $02, $11, $02
     db $12, $02, $13, $02, $14, $02, $15, $02
 
-; entry 5 of the `rst $00` table in Func_00A_465D
+; entry 5 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD05
 ; writes: wCFDD, wCFDE, wCFDC, wCFC5
-Func_00A_465D_Case05::
+RunWC903Case_Case05::
 Jump_00A_472E:: ; address name
     farcall Func_061_4001
     ld c, $76
@@ -1066,15 +1080,17 @@ Jump_00A_475C::
     ld [wCFC5], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_00A_43EC, Func_007_6213_Table2_Case02, Func_00A_47A4, SetModeState3AndSaveScreen, ...)
+; draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122)
+; 5 call sites from 5 routines (e.g. Func_00A_43EC, RunWD06BSubState_60E9_Case02_Case00_Case02, Func_00A_47A4, SetModeState3AndSaveScreen, ...)
 ; reads: wCD04
 ; writes: wC902
-Func_00A_476E::
+PickRandomWC902FromTable478F::
+Func_00A_476E:: ; address name
     call NextRandomSeed
     ld a, [wCD04]
     and a, $3F
     cp a, $64
-    jr nc, Func_00A_476E
+    jr nc, PickRandomWC902FromTable478F
     ld b, a
     ld a, $05
     call DivideBByA
@@ -1153,15 +1169,15 @@ Jump_00A_47FB::
     ld a, $02
     ld [wC8C7], a
     farcall SaveScreenBufferToBGMap1
-    farcall Func_00A_476E
+    farcall PickRandomWC902FromTable478F
     pop hl
     ret
     INCBIN "dwm2-cobi-us.gbc", $02881C, $198
 
-; entry 0 of the `rst $00` table in Func_00A_465D
+; entry 0 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, hFF8C
-Func_00A_465D_Case00::
+RunWC903Case_Case00::
 Jump_00A_49B4:: ; address name
     ldh a, [hMapId]
     cp a, $20
@@ -1281,7 +1297,7 @@ Jump_00A_49B4:: ; address name
 Jump_00A_4ACF::
     ld de, Data_00A_5773
     ld a, $08
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4AD8::
@@ -1290,12 +1306,12 @@ Jump_00A_4AD8::
     jr nz, Jump_00A_4AE7
     ld de, Data_00A_5856
     ld a, $04
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4AE7::
     ld de, Data_00A_588E
-    call Func_00A_4CD4
+    call RunWC903Case_Case00_Sub01
     ret
 
 Jump_00A_4AEE::
@@ -1304,66 +1320,66 @@ Jump_00A_4AEE::
     jr nz, Jump_00A_4AFD
     ld de, Data_00A_589B
     ld a, $08
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4AFD::
     ld de, Data_00A_5A3B
-    call Func_00A_4CD4
+    call RunWC903Case_Case00_Sub01
     ret
 
 Jump_00A_4B04::
     ld de, Data_00A_5A4C
     ld a, $04
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B0D::
     ld de, Data_00A_5A8A
     ld a, $04
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B16::
     ld de, Data_00A_5AB7
     ld a, $04
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B1F::
     ld de, Data_00A_5ADE
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B28::
     ld de, Data_00A_5AFF
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B31::
     ld de, Data_00A_5B14
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B3A::
     ld de, Data_00A_5B29
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B43::
     ld de, Data_00A_5B45
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B4C::
     ld de, Data_00A_5B58
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B55::
@@ -1372,197 +1388,197 @@ Jump_00A_4B55::
     jr nz, Jump_00A_4B64
     ld de, Data_00A_5B6B
     ld a, $0C
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B64::
     ld de, Data_00A_5D4E
-    call Func_00A_4CD4
+    call RunWC903Case_Case00_Sub01
     ret
 
 Jump_00A_4B6B::
     ld de, Data_00A_5D5D
     ld a, $04
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B74::
     ld de, Data_00A_5D8C
-    call Func_00A_4CD4
+    call RunWC903Case_Case00_Sub01
     ret
 
 Jump_00A_4B7B::
     ld de, Data_00A_5D9B
     ld a, $04
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B84::
     ld de, Data_00A_5DCA
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B8D::
     ld de, Data_00A_5DE7
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B96::
     ld de, Data_00A_5DEF
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4B9F::
     ld de, Data_00A_5DF7
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BA8::
     ld de, Data_00A_5E0C
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BB1::
     ld de, Data_00A_5E14
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BBA::
     ld de, Data_00A_5E2B
     ld a, $0C
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BC3::
     ld de, Data_00A_6028
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BCC::
     ld de, Data_00A_603D
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BD5::
     ld de, Data_00A_6052
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BDE::
     ld de, Data_00A_606B
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BE7::
     ld de, Data_00A_6084
     ld a, $01
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BF0::
     ld de, Data_00A_6097
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4BF9::
     ld de, Data_00A_60BA
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C02::
     ld de, Data_00A_60DD
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C0B::
     ld de, Data_00A_60F2
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C14::
     ld de, Data_00A_6107
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C1D::
     ld de, Data_00A_6120
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C26::
     ld de, Data_00A_6139
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C2F::
     ld de, Data_00A_6160
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C38::
     ld de, Data_00A_6181
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C41::
     ld de, Data_00A_61A2
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C4A::
     ld de, Data_00A_61BD
     ld a, $04
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C53::
     ld de, Data_00A_61FB
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C5C::
     ld de, Data_00A_6220
     ld a, $06
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C65::
     ld de, Data_00A_62AB
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C6E::
     ld de, Data_00A_62D2
     ld a, $03
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C77::
     ld de, Data_00A_62EB
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C80::
@@ -1571,43 +1587,45 @@ Jump_00A_4C80::
     jr nz, Jump_00A_4C8F
     ld de, Data_00A_6300
     ld a, $05
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C8F::
     ld de, Data_00A_6375
-    call Func_00A_4CD4
+    call RunWC903Case_Case00_Sub01
     ret
 
 Jump_00A_4C96::
     ld de, Data_00A_6382
     ld a, $01
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4C9F::
     ld de, Data_00A_6393
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4CA8::
     ld de, Data_00A_63AA
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
 Jump_00A_4CB1::
     ld de, Data_00A_63BF
     ld a, $02
-    call Func_00A_4CBA
+    call ReadMapCellWordForScreenXY
     ret
 
-; 48 call sites from 1 routine (e.g. Func_00A_465D_Case00)
+; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
+; 48 call sites from 1 routine (e.g. RunWC903Case_Case00)
 ; reads: hMapScreenY, hMapScreenX, wC5E7, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, ...
 ; writes: wCFDC, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wCFC5
 ; points at: wCFDD
-Func_00A_4CBA::
+ReadMapCellWordForScreenXY::
+Func_00A_4CBA:: ; address name
     sla a
     ld c, a
     ldh a, [hMapScreenY]
@@ -1623,11 +1641,13 @@ Func_00A_4CBA::
     ld a, [hl]
     ld d, a
 
-; 5 call sites from 1 routine (e.g. Func_00A_465D_Case00)
+; only called from RunWC903Case_Case00 (E-0047)
+; 5 call sites from 1 routine (e.g. RunWC903Case_Case00)
 ; reads: wC5E7, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wCFDC
 ; writes: wCFDC, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wCFC5
 ; points at: wCFDD
-Func_00A_4CD4::
+RunWC903Case_Case00_Sub01::
+Func_00A_4CD4:: ; address name
     ld a, [de]
     inc de
     dec a
@@ -1848,7 +1868,7 @@ Func_00A_4D5E::
 Jump_00A_4E79::
     ld de, Data_00A_5773
     ld a, $08
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4E82::
@@ -1857,7 +1877,7 @@ Jump_00A_4E82::
     jr nz, Jump_00A_4E91
     ld de, Data_00A_5856
     ld a, $04
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4E91::
@@ -1871,7 +1891,7 @@ Jump_00A_4E98::
     jr nz, Jump_00A_4EA7
     ld de, Data_00A_589B
     ld a, $08
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EA7::
@@ -1882,55 +1902,55 @@ Jump_00A_4EA7::
 Jump_00A_4EAE::
     ld de, Data_00A_5A4C
     ld a, $04
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EB7::
     ld de, Data_00A_5A8A
     ld a, $04
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EC0::
     ld de, Data_00A_5AB7
     ld a, $04
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EC9::
     ld de, Data_00A_5ADE
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4ED2::
     ld de, Data_00A_5AFF
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EDB::
     ld de, Data_00A_5B14
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EE4::
     ld de, Data_00A_5B29
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EED::
     ld de, Data_00A_5B45
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EF6::
     ld de, Data_00A_5B58
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4EFF::
@@ -1939,7 +1959,7 @@ Jump_00A_4EFF::
     jr nz, Jump_00A_4F0E
     ld de, Data_00A_5B6B
     ld a, $0C
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F0E::
@@ -1950,7 +1970,7 @@ Jump_00A_4F0E::
 Jump_00A_4F15::
     ld de, Data_00A_5D5D
     ld a, $04
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F1E::
@@ -1961,212 +1981,214 @@ Jump_00A_4F1E::
 Jump_00A_4F25::
     ld de, Data_00A_5D9B
     ld a, $04
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F2E::
     ld de, Data_00A_5DCA
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F37::
     ld de, Data_00A_5DE7
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F40::
     ld de, Data_00A_5DEF
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F49::
     ld de, Data_00A_5DF7
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F52::
     ld de, Data_00A_5E0C
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F5B::
     ld de, Data_00A_5E14
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F64::
     ld de, Data_00A_5E2B
     ld a, $0C
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F6D::
     ld de, Data_00A_6028
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F76::
     ld de, Data_00A_603D
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F7F::
     ld de, Data_00A_6052
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F88::
     ld de, Data_00A_606B
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F91::
     ld de, Data_00A_6084
     ld a, $01
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4F9A::
     ld de, Data_00A_6097
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FA3::
     ld de, Data_00A_60BA
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FAC::
     ld de, Data_00A_60DD
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FB5::
     ld de, Data_00A_60F2
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FBE::
     ld de, Data_00A_6107
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FC7::
     ld de, Data_00A_6120
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FD0::
     ld de, Data_00A_6139
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FD9::
     ld de, Data_00A_6160
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FE2::
     ld de, Data_00A_6181
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FEB::
     ld de, Data_00A_61A2
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FF4::
     ld de, Data_00A_61BD
     ld a, $04
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_4FFD::
     ld de, Data_00A_61FB
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_5006::
     ld de, Data_00A_6220
     ld a, $06
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_500F::
     ld de, Data_00A_62AB
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_5018::
     ld de, Data_00A_62D2
     ld a, $03
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_5021::
     ld de, Data_00A_62EB
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_502A::
     ld de, Data_00A_6300
     ld a, $05
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_5033::
     ld de, Data_00A_6382
     ld a, $01
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_503C::
     ld de, Data_00A_6393
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_5045::
     ld de, Data_00A_63AA
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
 Jump_00A_504E::
     ld de, Data_00A_63BF
     ld a, $02
-    call Func_00A_5057
+    call ReadMapCellWordForScreenXY_5057
     ret
 
+; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
 ; 48 call sites from 1 routine (e.g. Func_00A_4D5E)
 ; reads: hMapScreenY, hMapScreenX, wD09D, hFFC6, hFFC7
 ; writes: wD09D, wD09E, wMonsterId, wCFE7, hFFC6
 ; points at: wD09F, hFFC6
-Func_00A_5057::
+ReadMapCellWordForScreenXY_5057::
+Func_00A_5057:: ; address name
     sla a
     ld c, a
     ldh a, [hMapScreenY]
@@ -2253,21 +2275,21 @@ Jump_00A_50A6::
     jr nz, Jump_00A_50A6
     ret
 
-; entry 2 of the `rst $00` table in Func_00A_465D
+; entry 2 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCFC5
-Func_00A_465D_Case02::
+RunWC903Case_Case02::
 Jump_00A_50CB:: ; address name
     ld a, $02
     ld [wCFC5], a
     ret
 
-; entry 1 of the `rst $00` table in Func_00A_465D
+; entry 1 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wCC44, hMapScreenY, hMapScreenX, wCC45
 ; writes: wCFDC, wCFC5
 ; points at: wCD70, wCD88
-Func_00A_465D_Case01::
+RunWC903Case_Case01::
 Jump_00A_50D1:: ; address name
     call NextTableByte
     ld a, [wC5E7]
@@ -2300,7 +2322,7 @@ Jump_00A_50F1::
     add a, a
     add a, c
     ld c, a
-    call Func_00A_5154
+    call RunWC903Case_Case01_Sub01
     ld a, $01
     ld [wCFC5], a
     ret
@@ -2330,7 +2352,7 @@ Jump_00A_5116::
     add a, a
     add a, a
     ld c, a
-    call Func_00A_5154
+    call RunWC903Case_Case01_Sub01
     ld a, $01
     ld [wCFC5], a
     ret
@@ -2341,10 +2363,12 @@ Data_00A_514C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00A_5150:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $01
 
-; 2 call sites from 1 routine (e.g. Func_00A_465D_Case01)
+; only called from RunWC903Case_Case01 (E-0047)
+; 2 call sites from 1 routine (e.g. RunWC903Case_Case01)
 ; reads: hFF8C, wCD03
 ; points at: wCFDD, wCD10
-Func_00A_5154::
+RunWC903Case_Case01_Sub01::
+Func_00A_5154:: ; address name
     ldh a, [hFF8C]
     bit 3, a
     jr nz, Jump_00A_519F
@@ -2440,11 +2464,11 @@ Jump_00A_51A4::
     jr nz, Jump_00A_51A4
     ret
 
-; entry 3 of the `rst $00` table in Func_00A_465D
+; entry 3 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44
 ; writes: wC96C, wCFC5
-Func_00A_465D_Case03::
+RunWC903Case_Case03::
 Jump_00A_51DF:: ; address name
     ld a, [wCC44]
     cp a, $82
@@ -2457,39 +2481,41 @@ Jump_00A_51EB::
     ld [wCFC5], a
     ret
 
-; entry 4 of the `rst $00` table in Func_00A_465D
+; entry 4 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCFC5
-Func_00A_465D_Case04::
+RunWC903Case_Case04::
 Jump_00A_51F1:: ; address name
     ld a, $04
     ld [wCFC5], a
     ret
 
-; entry 7 of the `rst $00` table in Func_00A_465D
+; entry 7 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCFC5
-Func_00A_465D_Case07::
+RunWC903Case_Case07::
 Jump_00A_51F7:: ; address name
     ld a, $05
     ld [wCFC5], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0_Case03)
+; runs the routine for wC904 (jump table of three); field mode state 3 (E-0122)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case03)
 ; reads: wC904
-Func_00A_51FD::
+RunWC904Step::
+Func_00A_51FD:: ; address name
     ld a, [wC904]
     rst $00
-    dw Func_00A_51FD_Case00
-    dw Func_00A_51FD_Case01
-    dw Func_00A_51FD_Case02
+    dw RunWC904Step_Case00
+    dw RunWC904Step_Case01
+    dw RunWC904Step_Case02
 
-; entry 0 of the `rst $00` table in Func_00A_51FD
+; entry 0 of the `rst $00` table in RunWC904Step
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC608, wC905, hScrollY, hScrollX
 ; writes: wD2CD, hFFB9, wC909, wC90A, wC906, wC907, wC908
 ; points at: wC904
-Func_00A_51FD_Case00::
+RunWC904Step_Case00::
 Jump_00A_5207:: ; address name
     ld a, [wC608]
     ld [wD2CD], a
@@ -2539,12 +2565,12 @@ Jump_00A_5245::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_00A_51FD
+; entry 2 of the `rst $00` table in RunWC904Step
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots
 ; writes: wGameMode, wModeState, wC5DD, wC5DE
 ; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0, wModeChangeRequest, wD066
-Func_00A_51FD_Case02::
+RunWC904Step_Case02::
 Jump_00A_525C:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wDC01
@@ -2571,7 +2597,7 @@ Jump_00A_525C:: ; address name
     and a, [hl]
     cp a, $FF
     ret nz
-    call Func_00A_465D
+    call RunWC903Case
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -2586,32 +2612,32 @@ Jump_00A_525C:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_00A_51FD
+; entry 1 of the `rst $00` table in RunWC904Step
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC905
-Func_00A_51FD_Case01::
+RunWC904Step_Case01::
 Jump_00A_52A4:: ; address name
     ld a, [wC905]
     rst $00
-    dw Func_00A_51FD_Table2_Case00
-    dw Func_00A_51FD_Table2_Case01
-    dw Func_00A_51FD_Table2_Case02
+    dw RunWC904Step_Case01_Case00
+    dw RunWC904Step_Case01_Case01
+    dw RunWC904Step_Case01_Case02
 
-; entry 0 of the `rst $00` table in Func_00A_51FD
+; entry 0 of the `rst $00` table in RunWC904Step_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC906
-Func_00A_51FD_Table2_Case00::
+RunWC904Step_Case01_Case00::
 Jump_00A_52AE:: ; address name
     ld a, [wC906]
     rst $00
-    dw Func_00A_51FD_Table3_Case00
-    dw Func_00A_51FD_Table3_Case01
+    dw RunWC904Step_Case01_Case00_Case00
+    dw RunWC904Step_Case01_Case00_Case01
 
-; entry 0 of the `rst $00` table in Func_00A_51FD
+; entry 0 of the `rst $00` table in RunWC904Step_Case01_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC907
 ; points at: wC906, wC907
-Func_00A_51FD_Table3_Case00::
+RunWC904Step_Case01_Case00_Case00::
 Jump_00A_52B6:: ; address name
     ld a, [wC907]
     cp a, $14
@@ -2629,7 +2655,7 @@ Jump_00A_52C2::
 Jump_00A_52CF::
     push hl
     push bc
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop bc
     pop hl
     ld a, l
@@ -2651,7 +2677,7 @@ Jump_00A_52CF::
 Jump_00A_52F2::
     push hl
     push bc
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop bc
     pop hl
     ld a, l
@@ -2666,20 +2692,22 @@ Jump_00A_52F2::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_00A_51FD
+; entry 1 of the `rst $00` table in RunWC904Step_Case01_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC904
-Func_00A_51FD_Table3_Case01::
+RunWC904Step_Case01_Case00_Case01::
 Jump_00A_5309:: ; address name
     ld hl, wC904
     inc [hl]
     ret
 
-; 10 call sites from 3 routines (e.g. Func_00A_51FD_Table3_Case00, AddHLToWC909InBGMap_Case01, AddHLToWC909InBGMap_Table2_Case00)
+; writes tile $C4 at the BG map address from Func_00A_5328 and, on CGB, attribute 0 in VRAM bank 1 (E-0122)
+; 10 call sites from 3 routines (e.g. RunWC904Step_Case01_Case00_Case00, AddHLToWC909InBGMap_Case01, RunWC904Step_Case01_Case02_Case00)
 ; reads: wIsCGB
 ; writes: rVBK
-Func_00A_530E::
-    call Func_00A_5328
+WriteTileC4AtWC909AndClearAttr::
+Func_00A_530E:: ; address name
+    call WriteTileC4AtWC909AndClearAttr_Sub01
     ld a, $C4
     call WriteVRAMByte
     ld a, [wIsCGB]
@@ -2693,8 +2721,10 @@ Func_00A_530E::
     ldh [rVBK], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00A_530E)
-Func_00A_5328::
+; only called from WriteTileC4AtWC909AndClearAttr (E-0047)
+; 1 call site from 1 routine (e.g. WriteTileC4AtWC909AndClearAttr)
+WriteTileC4AtWC909AndClearAttr_Sub01::
+Func_00A_5328:: ; address name
     push bc
     ld b, l
     ld a, l
@@ -2716,7 +2746,7 @@ Jump_00A_533D::
     ret
 
 ; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF (the same 15 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_00A_5328)
+; 1 call site from 1 routine (e.g. WriteTileC4AtWC909AndClearAttr_Sub01)
 NextBGMapColumn_Bank0A::
 Func_00A_533F:: ; address name
     push af
@@ -2734,7 +2764,7 @@ Func_00A_533F:: ; address name
     ret
 
 ; HL = wC909/wC90A + HL, the high byte's low 2 bits wrapped and its upper 6 bits kept from wC90A (stays inside one 1 KB BG map) (E-0117)
-; 1 call site from 1 routine (e.g. Func_00A_5328)
+; 1 call site from 1 routine (e.g. WriteTileC4AtWC909AndClearAttr_Sub01)
 ; reads: wC909, wC90A
 AddHLToWC909InBGMap::
 Func_00A_534E:: ; address name
@@ -2751,10 +2781,10 @@ Func_00A_534E:: ; address name
     ld h, a
     ret
 
-; entry 1 of the `rst $00` table in Func_00A_51FD
+; entry 1 of the `rst $00` table in RunWC904Step_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC906
-Func_00A_51FD_Table2_Case01::
+RunWC904Step_Case01_Case01::
 Jump_00A_5362:: ; address name
     ld b, $06
 
@@ -2870,7 +2900,7 @@ Jump_00A_5421::
     ld a, [wC90C]
     ld h, a
     push hl
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop hl
     ld a, l
     sub a, $20
@@ -2895,7 +2925,7 @@ Jump_00A_5446::
     ld a, [wC90C]
     ld h, a
     push hl
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop hl
     ld a, l
     sub a, $01
@@ -2911,7 +2941,7 @@ Jump_00A_545D::
     ld a, [wC90C]
     ld h, a
     push hl
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop hl
     ld a, l
     add a, $20
@@ -2927,7 +2957,7 @@ Jump_00A_5474::
     ld a, [wC90C]
     ld h, a
     push hl
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop hl
     ld a, l
     add a, $01
@@ -2966,23 +2996,23 @@ Jump_00A_54AA:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_00A_51FD
+; entry 2 of the `rst $00` table in RunWC904Step_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC906
-Func_00A_51FD_Table2_Case02::
+RunWC904Step_Case01_Case02::
 Jump_00A_54AF:: ; address name
     ld a, [wC906]
     rst $00
-    dw AddHLToWC909InBGMap_Table2_Case00
-    dw AddHLToWC909InBGMap_Table2_Case01
-    dw AddHLToWC909InBGMap_Table2_Case02
+    dw RunWC904Step_Case01_Case02_Case00
+    dw RunWC904Step_Case01_Case02_Case01
+    dw RunWC904Step_Case01_Case02_Case02
 
-; entry 0 of the `rst $00` table in AddHLToWC909InBGMap
+; entry 0 of the `rst $00` table in RunWC904Step_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC907, wC90B, wC90C
 ; writes: wC90B, wC90C
 ; points at: wC907, wC906
-AddHLToWC909InBGMap_Table2_Case00::
+RunWC904Step_Case01_Case02_Case00::
 Jump_00A_54B9:: ; address name
     ld a, [wC907]
     or a, a
@@ -3011,7 +3041,7 @@ Jump_00A_54CA::
 Jump_00A_54ED::
     push hl
     push bc
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop bc
     pop hl
     inc hl
@@ -3029,7 +3059,7 @@ Jump_00A_54ED::
 Jump_00A_550C::
     push hl
     push bc
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop bc
     pop hl
     inc hl
@@ -3046,7 +3076,7 @@ Jump_00A_550C::
 Jump_00A_5526::
     push hl
     push bc
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop bc
     pop hl
     ld a, l
@@ -3069,7 +3099,7 @@ Jump_00A_5526::
 Jump_00A_554C::
     push hl
     push bc
-    call Func_00A_530E
+    call WriteTileC4AtWC909AndClearAttr
     pop bc
     pop hl
     ld a, l
@@ -3105,26 +3135,26 @@ Jump_00A_554C::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in AddHLToWC909InBGMap
+; entry 1 of the `rst $00` table in RunWC904Step_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC906
-AddHLToWC909InBGMap_Table2_Case01::
+RunWC904Step_Case01_Case02_Case01::
 Jump_00A_5589:: ; address name
     ld hl, wC906
     dec [hl]
     ret
 
-; entry 2 of the `rst $00` table in AddHLToWC909InBGMap
+; entry 2 of the `rst $00` table in RunWC904Step_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC904
-AddHLToWC909InBGMap_Table2_Case02::
+RunWC904Step_Case01_Case02_Case02::
 Jump_00A_558E:: ; address name
     ld hl, wC904
     inc [hl]
     ret
 
 ; HL = the word at HL, then jp hl (E-0114)
-; 1 call site from 1 routine (e.g. AddHLToWC909InBGMap_Table2_Case00)
+; 1 call site from 1 routine (e.g. RunWC904Step_Case01_Case02_Case00)
 JumpToWordAtHL_Bank0A::
 Func_00A_5593:: ; address name
     deref_hl
@@ -3141,7 +3171,7 @@ Data_00A_560C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $97, $55, $A2, $55, $AD, $55, $B8, $55, $C3, $55, $CE, $55, $D9, $55, $E4, $55
     db $EF, $55
 
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wScriptRunning, wC901, wC7C9, wC7CA, hFFC6
 ; writes: hFFC6, wC7C9, wC7CA, rRAMG
 ; points at: sA000

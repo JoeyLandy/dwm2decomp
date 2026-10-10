@@ -70,7 +70,7 @@ Jump_0A1_406F::
     INCBIN "dwm2-cobi-us.gbc", $284075, $CA
 
 ; the same instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. Func_0A0_5278_Case02)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case01_Case02)
 ; reads: wC52B, wBattleSubPhase
 RunBattleCommandEntry_BankA1::
 Func_0A1_413F:: ; address name
@@ -174,7 +174,7 @@ Jump_0A1_41C2::
 ; no direct call (reached through a table, a jump or a vector)
 RunBattleCommandEntry_BankA1_Case02::
 Jump_0A1_41C3:: ; address name
-    farcall Func_030_43C4
+    farcall RunBattleResolveStep_43C4
     ret
 
 ; entry 3 of the `rst $00` table in RunBattleCommandEntry_BankA1
@@ -565,7 +565,7 @@ Jump_0A1_4433::
     pop de
     ret
 
-; 6 call sites from 3 routines (e.g. Func_0A1_44C9, Func_002_5BD7_Case01, Func_002_6C40_Case05)
+; 6 call sites from 3 routines (e.g. Func_0A1_44C9, RunWC468ActionIfBit7_Case01, RunWC46BMenuState_Case05)
 ; reads: wCC44, hMapScreenY, hMapScreenX
 ; points at: wCE93
 Func_0A1_4435::
@@ -610,10 +610,12 @@ Jump_0A1_4470::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_6C40_Case05)
+; only called from RunWC46BMenuState_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case05)
 ; reads: wCC45
 ; points at: wCD78, wCE93
-Func_0A1_4474::
+RunWC46BMenuState_Case05_Sub02::
+Func_0A1_4474:: ; address name
     ld hl, wCD78
     ld a, [wCC45]
     bit 7, a
@@ -729,26 +731,28 @@ Jump_0A1_4503::
     ldh [hMapScreenY], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0_Case08)
+; runs the routine for wC5DD & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case08)
 ; reads: wC5DD
-Func_0A1_4519::
+RunWC5DDState::
+Func_0A1_4519:: ; address name
     ld a, [wC5DD]
     and a, $07
     rst $00
-    dw Func_0A1_4519_Case00
-    dw Func_0A1_4519_Case01
-    dw Func_0A1_4519_Case02
-    dw Func_0A1_4519_Case00
-    dw Func_0A1_4519_Case04
-    dw Func_0A1_4519_Case05
-    dw Func_0A1_4519_Case06
+    dw RunWC5DDState_Case00
+    dw RunWC5DDState_Case01
+    dw RunWC5DDState_Case02
+    dw RunWC5DDState_Case00
+    dw RunWC5DDState_Case04
+    dw RunWC5DDState_Case05
+    dw RunWC5DDState_Case06
 
-; entry 4 of the `rst $00` table in Func_0A1_4519
+; entry 4 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, wIsCGB
 ; writes: hScrollX, hScrollY, wC527, wC526
 ; points at: wC5E9, wOBJPaletteBuffer, wC4E7, wBGPaletteBuffer, wC5DD
-Func_0A1_4519_Case04::
+RunWC5DDState_Case04::
 Jump_0A1_452D:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -770,16 +774,16 @@ Jump_0A1_452D:: ; address name
     ld b, $5D
     ld hl, vTiles2
     call DecompressToVRAM
-    call Func_0A1_578E
-    call Func_0A1_579F
+    call FillBGMap0With57
+    call RunWC5DDState_Case04_Sub03
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_0A1_4573
-    call Func_0A1_47D8
+    call RunWC5DDState_Case04_Sub02
     jr Jump_0A1_4576
 
 Jump_0A1_4573::
-    call Func_0A1_45C5
+    call RunWC5DDState_Case04_Sub01
 
 Jump_0A1_4576::
     ld hl, wC5E9
@@ -824,11 +828,13 @@ Jump_0A1_45C0::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case04)
+; only called from RunWC5DDState_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
 ; reads: hFFCB, hFFCD, hFFD0, hFFC9, hFFCE, hFFCA, hFFCF, hFFCC
 ; writes: hFFCF, hFFD0, hFFCE, hFFCC
-Func_0A1_45C5::
-    call Func_0A1_46DF
+RunWC5DDState_Case04_Sub01::
+Func_0A1_45C5:: ; address name
+    call RunWC5DDState_Case04_Sub01_Sub02
     call StoreHFFCBValuesToWC945
     ld hl, vBGMap0
     ld c, $12
@@ -874,7 +880,7 @@ Jump_0A1_45DB::
     pop de
     or a, a
     jr z, Jump_0A1_4610
-    call Func_0A1_4640
+    call RunWC5DDState_Case04_Sub01_Sub01
 
 Jump_0A1_4610::
     ldh a, [hFFCF]
@@ -911,10 +917,12 @@ Jump_0A1_4632::
     jr nz, Jump_0A1_45D0
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_45C5)
+; only called from RunWC5DDState_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub01)
 ; reads: hFFCE, hFFD0, hFFCC, hFFCF
 ; writes: hFFC6, hFFC7
-Func_0A1_4640::
+RunWC5DDState_Case04_Sub01_Sub01::
+Func_0A1_4640:: ; address name
     push hl
     ldh a, [hFFCE]
     and a, $FC
@@ -1011,11 +1019,13 @@ Func_0A1_4640::
     call WriteVRAMByte
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_45C5)
+; only called from RunWC5DDState_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub01)
 ; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wCD0D, wCD0E
 ; writes: hFFC9, hFFCA, hFFCD, hFFCE, hFFCB, hFFCC, hPlayerY, hMapScreenY, ...
 ; points at: hFFCD, hFFCE
-Func_0A1_46DF::
+RunWC5DDState_Case04_Sub01_Sub02::
+Func_0A1_46DF:: ; address name
     ldh a, [hPlayerX]
     ld l, a
     ldh a, [hMapScreenX]
@@ -1026,7 +1036,7 @@ Func_0A1_46DF::
     ldh a, [hMapScreenY]
     ld h, a
     push hl
-    call Func_0A1_4744
+    call RunWCC44Type_A1_4744
     ld a, [wCD0D]
     ldh [hFFC9], a
     ld a, [wCD0E]
@@ -1082,33 +1092,35 @@ Jump_0A1_4733::
     ldh [hMapScreenX], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_46DF)
+; runs the routine for wCC44 & 7 (jump table) (E-0122)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub01_Sub02)
 ; reads: wCC44
-Func_0A1_4744::
+RunWCC44Type_A1_4744::
+Func_0A1_4744:: ; address name
     ld a, [wCC44]
     and a, $07
     rst $00
-    dw Func_0A1_4744_Case00
-    dw Func_0A1_4744_Case01
-    dw Func_0A1_4744_Case01
-    dw Func_0A1_4744_Case03
-    dw Func_0A1_4744_Case03
-    dw Func_0A1_4744_Case03
-    dw Func_0A1_4744_Case03
-    dw Func_0A1_4744_Case07
+    dw RunWCC44Type_A1_4744_Case00
+    dw RunWCC44Type_A1_4744_Case01
+    dw RunWCC44Type_A1_4744_Case01
+    dw RunWCC44Type_A1_4744_Case03
+    dw RunWCC44Type_A1_4744_Case03
+    dw RunWCC44Type_A1_4744_Case03
+    dw RunWCC44Type_A1_4744_Case03
+    dw RunWCC44Type_A1_4744_Case07
 
-; entry 0 of the `rst $00` table in Func_0A1_4744
+; entry 0 of the `rst $00` table in RunWCC44Type_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
-Func_0A1_4744_Case00::
+RunWCC44Type_A1_4744_Case00::
 Jump_0A1_475A:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in Func_0A1_4744
+; entry 1 of the `rst $00` table in RunWCC44Type_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; points at: wCD78
-Func_0A1_4744_Case01::
+RunWCC44Type_A1_4744_Case01::
 Jump_0A1_475B:: ; address name
     ld a, [wCC45]
     and a, $07
@@ -1125,12 +1137,12 @@ Jump_0A1_4772::
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 3 of the `rst $00` table in Func_0A1_4744
+; entry 3 of the `rst $00` table in RunWCC44Type_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; points at: wCD88
-Func_0A1_4744_Case03::
+RunWCC44Type_A1_4744_Case03::
 Jump_0A1_4775:: ; address name
     ld a, [wCC45]
     and a, $07
@@ -1141,11 +1153,11 @@ Jump_0A1_4775:: ; address name
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 7 of the `rst $00` table in Func_0A1_4744
+; entry 7 of the `rst $00` table in RunWCC44Type_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC88E, wC891, wCC42, wC890, wC88F, wCD08, wCD09, wCD0A
 ; writes: hPlayerX, hPlayerY
-Func_0A1_4744_Case07::
+RunWCC44Type_A1_4744_Case07::
 Jump_0A1_4787:: ; address name
     ld a, [wC88E]
     or a, a
@@ -1179,7 +1191,7 @@ Jump_0A1_47B4::
     ret
 
 ; hMapScreenX = A >> 4, hMapScreenY = A & $0F, hPlayerX = hPlayerY = $40 (E-0118)
-; 2 call sites from 1 routine (e.g. Func_0A1_4744_Case07)
+; 2 call sites from 1 routine (e.g. RunWCC44Type_A1_4744_Case07)
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 SetMapScreenFromAAndCenterPlayer::
 Func_0A1_47C5:: ; address name
@@ -1195,11 +1207,13 @@ Func_0A1_47C5:: ; address name
     ldh [hPlayerY], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case04)
+; only called from RunWC5DDState_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
 ; reads: hFFC6, hFFC7, hFFCB, hFFCD, hFFD0, hFFC9, hFFCE, hFFCA, ...
 ; writes: hFFCF, hFFD0, hFFCE, hFFCC
-Func_0A1_47D8::
-    call Func_0A1_4874
+RunWC5DDState_Case04_Sub02::
+Func_0A1_47D8:: ; address name
+    call RunWC5DDState_Case04_Sub02_Sub01
     call StoreHFFCBValuesToWC945
     ldh a, [hFFC6]
     ld e, a
@@ -1309,11 +1323,13 @@ Jump_0A1_4865::
     jp nz, Jump_0A1_47E9
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_47D8)
+; only called from RunWC5DDState_Case04_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub02)
 ; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wC944, hMapId, hFFC6, hFFC7, ...
 ; writes: hFFC9, hFFCA, hFFC6, hFFC7, hFFC8, hFFCD, hFFCE, hFFCB, ...
 ; points at: hFFCD, hFFCE
-Func_0A1_4874::
+RunWC5DDState_Case04_Sub02_Sub01::
+Func_0A1_4874:: ; address name
     ldh a, [hPlayerX]
     ld l, a
     ldh a, [hMapScreenX]
@@ -1324,7 +1340,7 @@ Func_0A1_4874::
     ldh a, [hMapScreenY]
     ld h, a
     push hl
-    call Func_0A1_49A8
+    call RunWC5DDState_Case04_Sub02_Sub01_Sub01
     ld a, [wC944]
     add a, a
     add a, a
@@ -1504,10 +1520,12 @@ Jump_0A1_4954::
     db $21, $60
     dw Data_0A1_5D76
 
-; 1 call site from 1 routine (e.g. Func_0A1_4874)
+; only called from RunWC5DDState_Case04_Sub02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub02_Sub01)
 ; reads: hMapId, wC88B, wC944, wC88E, wC891, wC890, wC88F
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-Func_0A1_49A8::
+RunWC5DDState_Case04_Sub02_Sub01_Sub01::
+Func_0A1_49A8:: ; address name
     ldh a, [hMapId]
     ld c, $01
     cp a, $29
@@ -1630,7 +1648,7 @@ Jump_0A1_4A67::
     ret
 
 ; hMapScreenX/Y = the nibbles of [HL]; hPlayerX = [HL + 1] & $F0, hPlayerY = ([HL + 1] & $0F) << 4 (E-0118)
-; 2 call sites from 1 routine (e.g. Func_0A1_49A8)
+; 2 call sites from 1 routine (e.g. RunWC5DDState_Case04_Sub02_Sub01_Sub01)
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 LoadMapPositionFromHL::
 Func_0A1_4A77:: ; address name
@@ -1652,7 +1670,7 @@ Func_0A1_4A77:: ; address name
     ret
 
 ; wC945 = hFFCB, wC946 = hFFCD, wC947 = hFFCC, wC948 = hFFCE (E-0118)
-; 2 call sites from 2 routines (e.g. Func_0A1_47D8, Func_0A1_45C5)
+; 2 call sites from 2 routines (e.g. RunWC5DDState_Case04_Sub02, RunWC5DDState_Case04_Sub01)
 ; reads: hFFCB, hFFCD, hFFCC, hFFCE
 ; writes: wC945, wC946, wC947, wC948
 StoreHFFCBValuesToWC945::
@@ -1667,24 +1685,26 @@ Func_0A1_4A91:: ; address name
     ld [wC948], a
     ret
 
-; entry 5 of the `rst $00` table in Func_0A1_4519
+; entry 5 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wIsCGB
 ; writes: wC526, wC527
 ; points at: wC5E9, wBGPaletteBuffer, wC5DD
-Func_0A1_4519_Case05::
+RunWC5DDState_Case05::
 Jump_0A1_4AA6:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
-    jr nz, Func_0A1_4AB1
+    jr nz, RunWC5DDState_Case02_Sub01
     bit 2, a
     jr z, Jump_0A1_4ADC
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case02)
+; only called from RunWC5DDState_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wIsCGB
 ; writes: wC526, wC527
 ; points at: wC5E9, wBGPaletteBuffer, wC5DD
-Func_0A1_4AB1::
+RunWC5DDState_Case02_Sub01::
+Func_0A1_4AB1:: ; address name
     ld hl, wC5E9
     ld a, $00
     ld [hl+], a
@@ -1709,17 +1729,19 @@ Jump_0A1_4AD7::
     ret
 
 Jump_0A1_4ADC::
-    call Func_0A1_4F8B
-    call Func_0A1_4DA4
-    call Func_0A1_4EE7
-    call Func_0A1_4C2E
-    call Func_0A1_4AEC
+    call DrawBlinkingMetaSprite8
+    call RunWC5DDState_Case02_Sub01_Sub03
+    call RunWC5DDState_Case02_Sub01_Sub04
+    call RunWC5DDState_Case02_Sub01_Sub02
+    call RunWC5DDState_Case02_Sub01_Sub01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4AB1)
+; only called from RunWC5DDState_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
 ; reads: wCC44, hMapId, wC88E, wC891, wC890, wC88F, wCC42, wCD08, ...
 ; writes: hFFC7, hFFC8
-Func_0A1_4AEC::
+RunWC5DDState_Case02_Sub01_Sub01::
+Func_0A1_4AEC:: ; address name
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_4B64
@@ -1767,7 +1789,7 @@ Jump_0A1_4B34::
     ldh [hFFC7], a
     ld a, [wC88F]
     ldh [hFFC8], a
-    call Func_0A1_4BA1
+    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
     ret
 
 Jump_0A1_4B4E::
@@ -1781,7 +1803,7 @@ Jump_0A1_4B4E::
     ldh [hFFC7], a
     ld a, [hl]
     ldh [hFFC8], a
-    call Func_0A1_4BA1
+    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
     ret
 
 Jump_0A1_4B64::
@@ -1800,7 +1822,7 @@ Jump_0A1_4B64::
     ldh [hFFC7], a
     ld a, [wC88F]
     ldh [hFFC8], a
-    call Func_0A1_4BA1
+    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
     ret
 
 Jump_0A1_4B88::
@@ -1814,13 +1836,15 @@ Jump_0A1_4B88::
     swap a
     or a, c
     ldh [hFFC8], a
-    call Func_0A1_4BA1
+    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
     ret
 
-; 4 call sites from 1 routine (e.g. Func_0A1_4AEC)
+; only called from RunWC5DDState_Case02_Sub01_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub01_Sub01)
 ; reads: wC946, hFFC7, wC948, wC945, hFFC8, hSpriteOriginX, wC947, hSpriteOriginY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_4BA1::
+RunWC5DDState_Case02_Sub01_Sub01_Sub01::
+Func_0A1_4BA1:: ; address name
     ld a, [wC946]
     ld c, a
     ldh a, [hFFC7]
@@ -1897,11 +1921,13 @@ Func_0A1_4BA1::
 Jump_0A1_4C2D::
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4AB1)
+; only called from RunWC5DDState_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
 ; reads: wC950, wCC44, wCC47, wC946, wC948, wC945, hSpriteOriginX, wC947, ...
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 ; points at: wCC48
-Func_0A1_4C2E::
+RunWC5DDState_Case02_Sub01_Sub02::
+Func_0A1_4C2E:: ; address name
     ld a, [wC950]
     or a, a
     ret z
@@ -2125,11 +2151,13 @@ Jump_0A1_4D8E::
     ret
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
-; 1 call site from 1 routine (e.g. Func_0A1_4AB1)
+; only called from RunWC5DDState_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
 ; reads: wCC44, wC944, wC946, wC948, wC945, hSpriteOriginX, wC947, hSpriteOriginY, ...
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 ; points at: wCD8B
-Func_0A1_4DA4::
+RunWC5DDState_Case02_Sub01_Sub03::
+Func_0A1_4DA4:: ; address name
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_4E4D
@@ -2341,10 +2369,12 @@ Jump_0A1_4EDF::
     inc de
     jp Jump_0A1_4E50
 
-; 1 call site from 1 routine (e.g. Func_0A1_4AB1)
+; only called from RunWC5DDState_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
 ; reads: wCC44
 ; points at: wCD7B
-Func_0A1_4EE7::
+RunWC5DDState_Case02_Sub01_Sub04::
+Func_0A1_4EE7:: ; address name
     ld a, [wCC44]
     bit 7, a
     ret z
@@ -2362,9 +2392,9 @@ Jump_0A1_4EF8::
     dec de
     dec de
     dec de
-    call Func_0A1_4F0A
+    call RunWC5DDState_Case02_Sub01_Sub04_Sub01
     inc de
-    call Func_0A1_4F0A
+    call RunWC5DDState_Case02_Sub01_Sub04_Sub01
     pop de
     inc de
     inc de
@@ -2372,10 +2402,12 @@ Jump_0A1_4EF8::
     inc de
     jp Jump_0A1_4EF0
 
-; 2 call sites from 1 routine (e.g. Func_0A1_4EE7)
+; only called from RunWC5DDState_Case02_Sub01_Sub04 (E-0047)
+; 2 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub01_Sub04)
 ; reads: wC946, wC948, wC950, wC945, hSpriteOriginX, wC947, hSpriteOriginY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_4F0A::
+RunWC5DDState_Case02_Sub01_Sub04_Sub01::
+Func_0A1_4F0A:: ; address name
     ld a, [wC946]
     ld c, a
     ld a, [de]
@@ -2460,10 +2492,12 @@ Jump_0A1_4F48::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4AB1)
+; while bit 5 of wFrameCounterLo is set, draws metasprite set 8 at ($4E, $46) (E-0121)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
 ; reads: wFrameCounterLo
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_4F8B::
+DrawBlinkingMetaSprite8::
+Func_0A1_4F8B:: ; address name
     ld a, [wFrameCounterLo]
     bit 5, a
     ret z
@@ -2489,12 +2523,12 @@ Func_0A1_4F8B::
     farcall DrawMetaSprite
     ret
 
-; entry 0 of the `rst $00` table in Func_0A1_4519
+; entry 0 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wSpriteSlotCount, wC526
 ; points at: wC5E9, wBGPaletteBuffer, wC5DD
-Func_0A1_4519_Case00::
+RunWC5DDState_Case00::
 Jump_0A1_4FB8:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a
@@ -2519,12 +2553,12 @@ Jump_0A1_4FDD::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_0A1_4519
+; entry 1 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, wIsCGB
 ; writes: hScrollX, hScrollY, wC527, wC526
 ; points at: wC5E9, wOBJPaletteBuffer, wC4E7, wBGPaletteBuffer, wC4A7, wC5DD
-Func_0A1_4519_Case01::
+RunWC5DDState_Case01::
 Jump_0A1_4FE2:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -2552,15 +2586,15 @@ Jump_0A1_4FE2:: ; address name
     ld hl, vBGMap0
     call CopyRectFromBankToVRAM
     call DrawRect12x12FromBankA1
-    call Func_0A1_57BE
+    call RunWC5DDState_Case01_Sub03
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_0A1_5036
-    call Func_0A1_52D4
+    call RunWC5DDState_Case01_Sub02
     jr Jump_0A1_5039
 
 Jump_0A1_5036::
-    call Func_0A1_50BF
+    call RunWC5DDState_Case01_Sub01
 
 Jump_0A1_5039::
     ld hl, wC5E9
@@ -2610,17 +2644,17 @@ Jump_0A1_5090::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_0A1_4519
+; entry 2 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wC5DD
 ; points at: wC5DD
-Func_0A1_4519_Case02::
+RunWC5DDState_Case02::
 Jump_0A1_5095:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0A1_50A5
-    call Func_0A1_4AB1
+    call RunWC5DDState_Case02_Sub01
     ld a, $06
     ld [wC5DD], a
     ret
@@ -2633,29 +2667,31 @@ Jump_0A1_50A5::
     ret
 
 Jump_0A1_50AE::
-    call Func_0A1_5479
-    call Func_0A1_5654
-    call Func_0A1_56F7
-    call Func_0A1_5394
+    call RunWC5DDState_Case02_Sub03
+    call RunWC5DDState_Case02_Sub04
+    call RunWC5DDState_Case02_Sub05
+    call RunWC5DDState_Case02_Sub02
     ret
 
-; entry 6 of the `rst $00` table in Func_0A1_4519
+; entry 6 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
-Func_0A1_4519_Case06::
+RunWC5DDState_Case06::
 Jump_0A1_50BB:: ; address name
     call EnterGameMode1WithDefaultPalettes
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case01)
+; only called from RunWC5DDState_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
 ; reads: wCD0E, wCD0D, hFFCA, hFFCB, hFFC6, hFFC7, hFFC8, hFFC9, ...
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD
 ; points at: wCE93, wCD60, wC8CF
-Func_0A1_50BF::
+RunWC5DDState_Case01_Sub01::
+Func_0A1_50BF:: ; address name
     ld a, [wCD0E]
     ld c, a
     ld a, [wCD0D]
     ld b, a
-    call Func_0A1_5764
+    call CenteredBGMapOriginForSizeBC
     ld a, l
     ldh [hFFC6], a
     ld a, h
@@ -2707,10 +2743,10 @@ Jump_0A1_50FA::
     ldh a, [hFFCB]
     ld d, a
     ld a, [de]
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
     push af
     ldh a, [hFFC6]
     ld e, a
@@ -2728,10 +2764,10 @@ Jump_0A1_512C::
     ld a, d
     ldh [hFFC7], a
     pop af
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -2757,10 +2793,10 @@ Jump_0A1_514C::
     ld a, d
     ldh [hFFCB], a
     ld a, [de]
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
     push af
     ldh a, [hFFC6]
     ld e, a
@@ -2778,10 +2814,10 @@ Jump_0A1_517A::
     ld a, d
     ldh [hFFC7], a
     pop af
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
-    call Func_0A1_5242
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunWC5DDState_Case01_Sub01_Sub01
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -2883,7 +2919,7 @@ Jump_0A1_5214::
     ld de, wC8CF
     ld a, [wC833]
     call WriteKeyNameToDE
-    call Func_0A1_528B
+    call RunWC5DDState_Shared01
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80
@@ -2898,10 +2934,12 @@ Jump_0A1_5239::
     jr nz, Jump_0A1_5239
     ret
 
-; 16 call sites from 1 routine (e.g. Func_0A1_50BF)
+; only called from RunWC5DDState_Case01_Sub01 (E-0047)
+; 16 call sites from 1 routine (e.g. RunWC5DDState_Case01_Sub01)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC6
-Func_0A1_5242::
+RunWC5DDState_Case01_Sub01_Sub01::
+Func_0A1_5242:: ; address name
     sra a
     push af
     jr c, Jump_0A1_5255
@@ -2950,9 +2988,11 @@ Jump_0A1_5255::
     pop af
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0A1_52D4, Func_0A1_50BF)
+; only called from routines of RunWC5DDState (E-0098)
+; 2 call sites from 2 routines (e.g. RunWC5DDState_Case01_Sub02, RunWC5DDState_Case01_Sub01)
 ; points at: wC8CF
-Func_0A1_528B::
+RunWC5DDState_Shared01::
+Func_0A1_528B:: ; address name
     push hl
     push de
     ld hl, wC8CF
@@ -3011,11 +3051,13 @@ Jump_0A1_52D1::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case01)
+; only called from RunWC5DDState_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
 ; reads: wC944, hMapId
 ; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wC8CF
-Func_0A1_52D4::
+RunWC5DDState_Case01_Sub02::
+Func_0A1_52D4:: ; address name
     ld a, [wC944]
     add a, a
     add a, a
@@ -3032,7 +3074,7 @@ Func_0A1_52D4::
     ld b, a
     push hl
     push de
-    call Func_0A1_5764
+    call CenteredBGMapOriginForSizeBC
     pop de
     ld a, $5D
     call CopyRectFromBankToVRAM
@@ -3058,7 +3100,7 @@ Jump_0A1_52FB::
     ld a, d
     ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank08
-    call Func_0A1_528B
+    call RunWC5DDState_Shared01
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80
@@ -3074,10 +3116,12 @@ Jump_0A1_5333::
     ret
     INCBIN "dwm2-cobi-us.gbc", $28533C, $58
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case02)
+; only called from RunWC5DDState_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wCC44, hMapId, wC88E, wC891, wC890, wCC42, wCD08
 ; writes: hFFC7
-Func_0A1_5394::
+RunWC5DDState_Case02_Sub02::
+Func_0A1_5394:: ; address name
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_0A1_5406
@@ -3123,7 +3167,7 @@ Jump_0A1_53DC::
     jr nz, Jump_0A1_53F1
     ld a, [wC890]
     ldh [hFFC7], a
-    call Func_0A1_542E
+    call DrawCursorSpriteAtHFFC7Cell
     ret
 
 Jump_0A1_53F1::
@@ -3135,7 +3179,7 @@ Jump_0A1_53F1::
     add_a_to_hl
     ld a, [hl]
     ldh [hFFC7], a
-    call Func_0A1_542E
+    call DrawCursorSpriteAtHFFC7Cell
     ret
 
 Jump_0A1_5406::
@@ -3152,19 +3196,21 @@ Jump_0A1_5406::
     jr nz, Jump_0A1_5425
     ld a, [wC890]
     ldh [hFFC7], a
-    call Func_0A1_542E
+    call DrawCursorSpriteAtHFFC7Cell
     ret
 
 Jump_0A1_5425::
     ld a, [wCD08]
     ldh [hFFC7], a
-    call Func_0A1_542E
+    call DrawCursorSpriteAtHFFC7Cell
     ret
 
-; 4 call sites from 1 routine (e.g. Func_0A1_5394)
+; draws metasprite set $26 at X = 8 * (wC945 + 8 * high nibble of hFFC7), Y = 8 * (wC946 + 8 * low nibble) (E-0121)
+; 4 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub02)
 ; reads: hFFC7, wC945, wC946
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_542E::
+DrawCursorSpriteAtHFFC7Cell::
+Func_0A1_542E:: ; address name
     ldh a, [hFFC7]
     and a, $F0
     swap a
@@ -3204,9 +3250,11 @@ Func_0A1_542E::
     farcall DrawMetaSprite
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case02)
+; only called from RunWC5DDState_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wFrameCounterLo, wCC44, hMapId, wC88B, hMapScreenX, hMapScreenY, wC88E, wC891, ...
-Func_0A1_5479::
+RunWC5DDState_Case02_Sub03::
+Func_0A1_5479:: ; address name
     ld a, [wFrameCounterLo]
     bit 5, a
     ret z
@@ -3294,7 +3342,7 @@ Jump_0A1_550D::
 Jump_0A1_5516::
     inc hl
     ld a, [hl+]
-    call Func_0A1_5581
+    call SetSpriteXFromWC945
     ld a, [hl]
     call Func_0A1_5591
     call DrawMetaSpriteSet08
@@ -3309,7 +3357,7 @@ Jump_0A1_5523:: ; address name
     sla a
     sla a
     sla a
-    call Func_0A1_5581
+    call SetSpriteXFromWC945
     ldh a, [hMapScreenY]
     sla a
     sla a
@@ -3331,7 +3379,7 @@ Jump_0A1_553D::
     add a, a
     add a, a
     add a, a
-    call Func_0A1_5581
+    call SetSpriteXFromWC945
     ld a, [wC890]
     and a, $0F
     add a, a
@@ -3348,7 +3396,7 @@ Jump_0A1_5565::
     add a, a
     add a, a
     add a, a
-    call Func_0A1_5581
+    call SetSpriteXFromWC945
     ld a, [wCD08]
     and a, $0F
     add a, a
@@ -3358,10 +3406,12 @@ Jump_0A1_5565::
     call DrawMetaSpriteSet08
     ret
 
-; 4 call sites from 2 routines (e.g. Func_0A1_5479, Func_0A1_5591_Case00)
+; hSpriteOriginX = 8 * wC945 + A + 6 (E-0122)
+; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, Func_0A1_5591_Case00)
 ; reads: wC945
 ; writes: hSpriteOriginX
-Func_0A1_5581::
+SetSpriteXFromWC945::
+Func_0A1_5581:: ; address name
     ld c, a
     ld a, [wC945]
     sla a
@@ -3372,7 +3422,7 @@ Func_0A1_5581::
     ldh [hSpriteOriginX], a
     ret
 
-; 4 call sites from 2 routines (e.g. Func_0A1_5479, Func_0A1_5591_Case00)
+; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, Func_0A1_5591_Case00)
 ; reads: wC946
 ; writes: hSpriteOriginY
 Func_0A1_5591::
@@ -3492,7 +3542,7 @@ Func_0A1_560D::
     ldh [hSpriteOriginY], a
 
 ; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0) (E-0118)
-; 4 call sites from 2 routines (e.g. Func_0A1_5479, Func_0A1_5591_Case00)
+; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, Func_0A1_5591_Case00)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawMetaSpriteSet08::
 Func_0A1_5639:: ; address name
@@ -3510,11 +3560,13 @@ Func_0A1_5639:: ; address name
     farcall DrawMetaSprite
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case02)
+; only called from RunWC5DDState_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wCC44, wC944, wC945, wC946, wC950
 ; writes: hSpriteOriginX, hSpriteOriginY
 ; points at: wCD8B
-Func_0A1_5654::
+RunWC5DDState_Case02_Sub04::
+Func_0A1_5654:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_0A1_5694
@@ -3621,7 +3673,7 @@ Jump_0A1_56DA::
     jr Jump_0A1_5697
 
 ; DrawMetaSprite with set $26, sub-index 0, tile offset $10, attribute XOR $01 (origin high bytes 0) (E-0118)
-; 2 call sites from 1 routine (e.g. Func_0A1_5654)
+; 2 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub04)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawMetaSpriteSet26::
 Func_0A1_56DC:: ; address name
@@ -3639,10 +3691,12 @@ Func_0A1_56DC:: ; address name
     farcall DrawMetaSprite
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case02)
+; only called from RunWC5DDState_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wCC44
 ; points at: wCD7B
-Func_0A1_56F7::
+RunWC5DDState_Case02_Sub05::
+Func_0A1_56F7:: ; address name
     ld a, [wCC44]
     bit 7, a
     ret z
@@ -3656,9 +3710,9 @@ Jump_0A1_5700::
     dec de
     dec de
     dec de
-    call Func_0A1_5719
+    call RunWC5DDState_Case02_Sub05_Sub01
     inc de
-    call Func_0A1_5719
+    call RunWC5DDState_Case02_Sub05_Sub01
     pop de
     ld a, $04
     add a, e
@@ -3669,10 +3723,12 @@ Jump_0A1_5700::
 Jump_0A1_5717::
     jr Jump_0A1_5700
 
-; 2 call sites from 1 routine (e.g. Func_0A1_56F7)
+; only called from RunWC5DDState_Case02_Sub05 (E-0047)
+; 2 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub05)
 ; reads: wC950, wC945, wC946
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-Func_0A1_5719::
+RunWC5DDState_Case02_Sub05_Sub01::
+Func_0A1_5719:: ; address name
     ld a, [wC950]
     or a, a
     jr nz, Jump_0A1_5725
@@ -3723,9 +3779,11 @@ Jump_0A1_5725::
     pop de
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0A1_52D4, Func_0A1_50BF)
+; row = 9 - C/2 (wC946), column = 10 - B/2 (wC945); HL = vBGMap0 + 32 * row + column (E-0121)
+; 2 call sites from 2 routines (e.g. RunWC5DDState_Case01_Sub02, RunWC5DDState_Case01_Sub01)
 ; writes: wC946, wC945
-Func_0A1_5764::
+CenteredBGMapOriginForSizeBC::
+Func_0A1_5764:: ; address name
     ld a, c
     srl a
     ld l, a
@@ -3754,8 +3812,10 @@ Func_0A1_5764::
     add_a_to_hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case04)
-Func_0A1_578E::
+; fills the $400 bytes of vBGMap0 with tile $57 (E-0122)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
+FillBGMap0With57::
+Func_0A1_578E:: ; address name
     ld hl, vBGMap0
     ld bc, $0400
 
@@ -3768,9 +3828,11 @@ Jump_0A1_5794::
     jr nz, Jump_0A1_5794
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case04)
+; only called from RunWC5DDState_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
 ; reads: wIsCGB
-Func_0A1_579F::
+RunWC5DDState_Case04_Sub03::
+Func_0A1_579F:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -3792,9 +3854,11 @@ Jump_0A1_57AF::
     ldh [c], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case01)
+; only called from RunWC5DDState_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
 ; reads: wIsCGB
-Func_0A1_57BE::
+RunWC5DDState_Case01_Sub03::
+Func_0A1_57BE:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -3835,7 +3899,7 @@ Jump_0A1_57E0::
     ret
 
 ; copies a 12 x 12 tile rectangle from A1:$5808 to vBGMap0 + $64 (CopyRectFromBankToVRAM) (E-0116)
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case01)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
 DrawRect12x12FromBankA1::
 Func_0A1_57F9:: ; address name
     ld de, $5808
@@ -3847,7 +3911,7 @@ Func_0A1_57F9:: ; address name
     ds $90, $34
 
 ; wC5E0 = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
-; 1 call site from 1 routine (e.g. Func_0A1_4519_Case06)
+; 1 call site from 1 routine (e.g. RunWC5DDState_Case06)
 ; writes: wC5E0, wDataBankSave, wGameMode
 ; points at: wC5E9
 EnterGameMode1WithDefaultPalettes::
@@ -3868,7 +3932,7 @@ Func_0A1_5898:: ; address name
     ld [wGameMode], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_0A1_4F0A, Func_0A1_4DA4, Func_0A1_45C5, Func_0A1_5719, ...)
+; 5 call sites from 5 routines (e.g. RunWC5DDState_Case02_Sub01_Sub04_Sub01, RunWC5DDState_Case02_Sub01_Sub03, RunWC5DDState_Case04_Sub01, RunWC5DDState_Case02_Sub05_Sub01, ...)
 ; reads: hFFC6
 ; writes: hFFC6
 ; points at: wCE93
@@ -3924,10 +3988,12 @@ Jump_0A1_58FE::
     pop bc
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_4AE0_Case00, Func_002_4AE0_Case05)
+; only called from routines of FieldModeStateDispatch (E-0098)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
 ; reads: wFadeState, wC8CB, wC468, hFF8C, wCC44, hMapId
 ; writes: hFFC6, wC944, wC8C7, wModeState, wC5DD
-Func_0A1_5903::
+FieldModeStateDispatch_Shared04::
+Func_0A1_5903:: ; address name
     xor a, a
     ldh [hFFC6], a
     ld a, [wFadeState]

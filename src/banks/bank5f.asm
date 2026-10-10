@@ -60,7 +60,7 @@ Jump_05F_6947:: ; address name
     ld a, [wC928]
     or a, a
     jr nz, Jump_05F_6953
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
 
 Jump_05F_6953::
     ld a, [wMessageGroup]
@@ -669,7 +669,7 @@ Func_05F_6C71:: ; address name
     ld a, $02
     ld [wC8C7], a
     farcall SaveScreenBufferToBGMap1
-    farcall Func_00A_476E
+    farcall PickRandomWC902FromTable478F
     ret
 
 ; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
@@ -700,7 +700,7 @@ Jump_05F_6C9B::
     ld [wC836], a
     ret
 
-; 5 call sites from 4 routines (e.g. Func_004_58C2_Case13, Func_004_612B_Case18, Func_013_49D5_Case6F, Func_073_4FD2)
+; 5 call sites from 4 routines (e.g. Func_004_58C2_Case13, Func_004_612B_Case18, DispatchTalkEvent_Case04_Case6F, ScriptCommand82_Run_Shared05)
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, wStepArrived
 ; points at: wC6FE
@@ -738,11 +738,13 @@ Jump_05F_6CD1::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_073_4FD2)
+; only called from ScriptCommand82_Run_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, wStepArrived
 ; points at: wC6FE
-Func_05F_6CDB::
+ScriptCommand82_Run_Shared05_Sub01::
+Func_05F_6CDB:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -776,11 +778,13 @@ Jump_05F_6D03::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_073_4FD2)
+; only called from ScriptCommand82_Run_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, wStepArrived
 ; points at: wC6FE
-Func_05F_6D0D::
+ScriptCommand82_Run_Shared05_Sub02::
+Func_05F_6D0D:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -814,11 +818,13 @@ Jump_05F_6D35::
     ld [rRAMG], a
     ret
 
+; with hFF8D bits 1-3 set: wD7F1 = wC6FE[hFFC6] (bank 0 record), far-calls Func_014_7E96, LoadRecordListNameTiles and Func_004_4AA8, wC527 = $7F, then clears hFF8D bits 1-3 (E-0121)
 ; 3 call sites from 3 routines (e.g. ScriptCommand3D_Run_Case03, ScriptCommand3C_Run_Case0D, ScriptCommand3A_Run_Case0A)
 ; reads: hFF8D, hFFC6
 ; writes: hFF8D, wD7F1, wD7F2, wC527
 ; points at: wC6FE
-Func_05F_6D3F::
+LoadListedRecordNameTilesForHFFC6::
+Func_05F_6D3F:: ; address name
     farcall Func_012_7D95
     ldh a, [hFF8D]
     or a, $0E
@@ -840,10 +846,12 @@ Func_05F_6D3F::
     ldh [hFF8D], a
     ret
 
-; 7 call sites from 7 routines (e.g. Msg01F0_Case33, Msg01F0_Case42, Talk08D1_TheEvaluatorSaidI, ScriptCommand2A_Run_Case02, ...)
+; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
+; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, ScriptCommand2A_Run_Case02, ...)
 ; reads: wD7F5, wC7C7
 ; writes: wD7F1, wD7F2, wD7F5
-Func_05F_6D78::
+ClearWD7F5IfAtOrAboveLimitForWC7C7::
+Func_05F_6D78:: ; address name
     ld a, $FF
     ld [wD7F1], a
     ld a, $01
@@ -952,9 +960,11 @@ Jump_05F_6E03::
     call DrawFullScreenBufferToBGMap
     ret
 
+; DE = the BG map row at hScrollY (& $F8); calls Func_05F_6E35 for the columns at hScrollX - 8 and hScrollX + $A0, just off the left and right edges (E-0121)
 ; 9 call sites from 9 routines (e.g. ScriptCommand5E_Run_Case0D, ScriptCommand58_Run_Case00, ScriptCommand41_Run_Case00, ScriptCommand43_Run_Case00, ...)
 ; reads: hScrollY, hScrollX
-Func_05F_6E09::
+RedrawColumnsBesideScreen::
+Func_05F_6E09:: ; address name
     ldh a, [hScrollY]
     and a, $F8
     ld e, a
@@ -975,15 +985,17 @@ Func_05F_6E09::
     push de
     ldh a, [hScrollX]
     sub a, $08
-    call Func_05F_6E35
+    call RedrawColumnsBesideScreen_Sub01
     pop de
     ldh a, [hScrollX]
     add a, $A0
-    call Func_05F_6E35
+    call RedrawColumnsBesideScreen_Sub01
     ret
 
-; 2 call sites from 1 routine (e.g. Func_05F_6E09)
-Func_05F_6E35::
+; only called from RedrawColumnsBesideScreen (E-0047)
+; 2 call sites from 1 routine (e.g. RedrawColumnsBesideScreen)
+RedrawColumnsBesideScreen_Sub01::
+Func_05F_6E35:: ; address name
     srl a
     srl a
     srl a
@@ -1402,26 +1414,28 @@ Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $00, $01, $00, $02, $01, $01, $01, $01, $01, $01, $02, $00, $01, $00, $02
     db $00, $02, $00, $01, $FF, $02, $FF, $01, $FF, $01, $FE, $01, $FF, $00, $FE, $00
 
+; runs the routine for wC92D (jump table of eight) (E-0122)
 ; 2 call sites from 2 routines (e.g. ScriptCommand46_Run_Case0F, ScriptCommand1F_Run_Case07)
 ; reads: wC92D
-Func_05F_70D2::
+RunWC92DStep::
+Func_05F_70D2:: ; address name
     ld a, [wC92D]
     rst $00
-    dw Func_05F_70D2_Case00
-    dw Func_05F_70D2_Case01
-    dw Func_05F_70D2_Case02
-    dw Func_05F_70D2_Case03
-    dw Func_05F_70D2_Case04
-    dw Func_05F_70D2_Case05
-    dw Func_05F_70D2_Case06
-    dw Func_05F_70D2_Case07
+    dw RunWC92DStep_Case00
+    dw RunWC92DStep_Case01
+    dw RunWC92DStep_Case02
+    dw RunWC92DStep_Case03
+    dw RunWC92DStep_Case04
+    dw RunWC92DStep_Case05
+    dw RunWC92DStep_Case06
+    dw RunWC92DStep_Case07
 
-; entry 7 of the `rst $00` table in Func_05F_70D2
+; entry 7 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8F0, wScriptParam0, wC8F6, wC8FA, hPlayerX, hFF8C
 ; writes: wFollowerRecords, wC8F0, wC8F4, wC8F6, wC8F9, wC8FA, hPlayerFacing, hFF8C, ...
 ; points at: wScriptParam0, wScriptStep
-Func_05F_70D2_Case07::
+RunWC92DStep_Case07::
 Jump_05F_70E6:: ; address name
     ld a, $01
     ld [wFollowerRecords], a
@@ -1464,12 +1478,12 @@ Jump_05F_7105::
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_05F_70D2
+; entry 6 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCBD4, wScriptParam0, hFF8C
 ; writes: wC928, wC929, wCBD4, wScriptParam0, wCBCF, hFF8C, hPlayerFacing
 ; points at: wCBD4, wC92D
-Func_05F_70D2_Case06::
+RunWC92DStep_Case06::
 Jump_05F_7138:: ; address name
     ld de, wCBD4
     ld a, e
@@ -1499,12 +1513,12 @@ Jump_05F_7138:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_05F_70D2
+; entry 5 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFF8C, wScriptParam0
 ; writes: hFF8C, wFollowerRecords, wC8F4, wC8F9, wScriptParam0
 ; points at: wC92D
-Func_05F_70D2_Case05::
+RunWC92DStep_Case05::
 Jump_05F_7172:: ; address name
     ldh a, [hFF8C]
     or a, $02
@@ -1524,12 +1538,12 @@ Jump_05F_7172:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_05F_70D2
+; entry 4 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC931, wC932, hPlayerY, wFrameCounterLo, hPlayerX
 ; writes: wC931, wC932, wScriptParam0
 ; points at: wC92D, wFollowerRecords, wC92E
-Func_05F_70D2_Case04::
+RunWC92DStep_Case04::
 Jump_05F_7195:: ; address name
     ld a, [wC931]
     ld l, a
@@ -1666,12 +1680,12 @@ Data_05F_7240:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $11, $10, $10, $10, $0F, $0F, $0E, $0E, $0D, $0C, $0A, $08, $05, $01
     ds $11, $00
 
-; entry 3 of the `rst $00` table in Func_05F_70D2
+; entry 3 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hFF8C
 ; writes: wScriptParam0, hFF8C, wC92E, wC92F, wC930, wC931, wC932
 ; points at: wC92D
-Func_05F_70D2_Case03::
+RunWC92DStep_Case03::
 Jump_05F_7280:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -1698,12 +1712,12 @@ Jump_05F_7280:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_05F_70D2
+; entry 2 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCBD4, wScriptParam0
 ; writes: wCBCF, wC928, wC929, wCBD4, wScriptParam0
 ; points at: wCBD4, wC92D
-Func_05F_70D2_Case02::
+RunWC92DStep_Case02::
 Jump_05F_72B3:: ; address name
     ld a, $80
     ld [wCBCF], a
@@ -1728,12 +1742,12 @@ Jump_05F_72B3:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_05F_70D2
+; entry 1 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8F0, wScriptParam0, wC8F6, wC8FA, hPlayerX, hFF8C
 ; writes: wFollowerRecords, wC8F0, wC8F4, wC8F6, wC8F9, wC8FA, hPlayerFacing, hFFC6, ...
 ; points at: wScriptParam0, wC92D
-Func_05F_70D2_Case01::
+RunWC92DStep_Case01::
 Jump_05F_72E4:: ; address name
     ld a, $03
     ld [wFollowerRecords], a
@@ -1782,12 +1796,12 @@ Jump_05F_7303::
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Func_05F_70D2
+; entry 0 of the `rst $00` table in RunWC92DStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFF8C, hPlayerX, wScriptParam0
 ; writes: hFF8C, wScriptParam0
 ; points at: wC92D
-Func_05F_70D2_Case00::
+RunWC92DStep_Case00::
 Jump_05F_7345:: ; address name
     ldh a, [hFF8C]
     or a, $04
@@ -2893,7 +2907,7 @@ Jump_05F_7A02:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_05F_7A3D
-    farcall Func_004_4470
+    farcall SetBit1OfPlayerAndObjectFlags
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest

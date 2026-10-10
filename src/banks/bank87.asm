@@ -1,10 +1,12 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
-; 1 call site from 1 routine (e.g. Func_002_4AE0_Case00)
+; only called from FieldModeStateDispatch_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case00)
 ; reads: wC8CB, wC468, hFF8C, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
 ; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
-Func_087_4001::
+FieldModeStateDispatch_Case00_Sub02::
+Func_087_4001:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
@@ -142,10 +144,12 @@ Jump_087_4096::
     db $05, $5F, $00, $00, $1A, $5F
     ds $A6, $00
 
-; 2 call sites from 2 routines (e.g. Func_002_4AE0_Case00, Func_002_4AE0_Case05)
+; only called from routines of FieldModeStateDispatch (E-0098)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
 ; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
-Func_087_42A0::
+FieldModeStateDispatch_Shared03::
+Func_087_42A0:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
@@ -191,7 +195,7 @@ Jump_087_42DE::
     dec c
 
 Jump_087_42DF::
-    call Func_087_4709
+    call FieldModeStateDispatch_Shared03_Sub02
     or a, a
     jp z, Jump_087_43FC
     dec a
@@ -355,14 +359,14 @@ Jump_087_43DC::
     ld a, [wC8CD]
     bit 7, a
     ret z
-    farcall Func_002_5B9E
+    farcall RedrawScreenBufferIfWC8CDBit7
     ret
 
 Jump_087_43FC::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_087_440A
-    call Func_087_4507
+    call FieldModeStateDispatch_Shared03_Sub01
     or a, a
     jr nz, Jump_087_4420
     ret
@@ -535,7 +539,7 @@ Jump_087_44D1::
     ld a, [wC8CD]
     bit 7, a
     jr z, Jump_087_44FA
-    farcall Func_002_5B9E
+    farcall RedrawScreenBufferIfWC8CDBit7
 
 Jump_087_44FA::
     pop hl
@@ -547,10 +551,12 @@ Jump_087_44FC::
     add_a_to_hl
     jp Jump_087_4420
 
-; 1 call site from 1 routine (e.g. Func_087_42A0)
+; only called from FieldModeStateDispatch_Shared03 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared03)
 ; reads: wCC45
 ; points at: wCD89
-Func_087_4507::
+FieldModeStateDispatch_Shared03_Sub01::
+Func_087_4507:: ; address name
     cp a, $84
     jr nz, Jump_087_4511
     ld hl, Data_087_5D28
@@ -626,11 +632,13 @@ Jump_087_4537::
     ds $12, $00
     INCBIN "dwm2-cobi-us.gbc", $21C61B, $EE
 
-; 1 call site from 1 routine (e.g. Func_087_42A0)
+; only called from FieldModeStateDispatch_Shared03 (E-0047)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared03)
 ; reads: wSpriteSlotCount, hFFC7, hFFC6
 ; writes: hFFC6, hFFC7
 ; points at: wCB8A
-Func_087_4709::
+FieldModeStateDispatch_Shared03_Sub02::
+Func_087_4709:: ; address name
     ld a, [wSpriteSlotCount]
     or a, a
     ret z

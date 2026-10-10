@@ -20,7 +20,7 @@ Func_000_000B:: ; address name
     deref_hl
 
 ; jp hl; the call target used by CallInBank
-; 5 call sites from 5 routines (e.g. CallInBank, Func_030_4595, Func_030_5440, Func_030_4946, ...)
+; 5 call sites from 5 routines (e.g. CallInBank, Func_030_4595, AIChooseActionForActor, Func_030_4946, ...)
 JumpToHL::
 Func_000_000E:: ; address name
     jp hl
@@ -99,9 +99,11 @@ Jump_000_0087::
     jr nz, Jump_000_0087
     ret
 
+; the OAM DMA routine copied to HRAM: starts DMA from $C000 (ld a, $C0; ldh [rDMA], a) and waits $28 loop iterations; never called in place (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rDMA
-Func_000_008E:: ; heuristic: follows a terminator; C0
+OamDmaRoutineTemplate:: ; heuristic: follows a terminator; C0
+Func_000_008E:: ; address name
     ld a, $C0
     ldh [rDMA], a
     ld a, $28
@@ -139,7 +141,7 @@ Jump_000_0157::
 Jump_000_015A::
     di
     ld sp, wDFFF
-    call Func_000_078D
+    call DisableVBlankTimerSerialJoypadInterrupts
     call Func_000_08D0
     call InstallOamDmaRoutine
     ld hl, vTiles0
@@ -283,10 +285,10 @@ Jump_000_02D1::
     ei
 
 Jump_000_02D2::
-    call Func_000_0930
-    call Func_000_0BA7
+    call ClearBGMapOrFillWithC3
+    call ClearShadowOAM
     call SetDefaultDMGPaletteBytes
-    call Func_000_0B9B
+    call ClearScrollPositions
     call ResetFadeFromWC5E9
     xor a, a
     ld [wC586], a
@@ -334,7 +336,7 @@ Jump_000_0324::
 
 Jump_000_033D::
     di
-    call Func_000_078D
+    call DisableVBlankTimerSerialJoypadInterrupts
     call SpinDelay
     ld a, $00
     ld [wSGBPacketIndex], a
@@ -484,7 +486,7 @@ Jump_000_03EA::
     call GameFrameUpdate
     ld a, [wC52B]
     or a, a
-    call nz, Func_000_2620
+    call nz, StepStringDisplayUntilDone
     call StepFade
     ld a, [wFrameCounterLo]
     add a, $01
@@ -709,7 +711,7 @@ Jump_000_0530::
     ret
     db $CD, $CC, $0B, $C9
 
-; 8 call sites from 8 routines (e.g. GameMode5_Update_Case04, GameMode5_Update_Case03, GameMode5_Update_Case02, Func_007_7C5F_Case04, ...)
+; 8 call sites from 8 routines (e.g. GameMode5_Update_Case04, GameMode5_Update_Case03, GameMode5_Update_Case02, RunWD06AState_6C12_Case08_Case04, ...)
 ; reads: wC58A, wC58D, wC58E, wC57F, wC581, wC5ED, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wC58D, wC58E, wC56A, wC56B, wC582, wC595, wC596, rVBK, ...
 ; points at: wC592, wGameMode, wC604
@@ -963,7 +965,7 @@ Func_000_06A8:: ; address name
     ret z
     push bc
     call TurnOffLCD
-    call Func_000_0B9B
+    call ClearScrollPositions
     xor a, a
     ldh [rSCX], a
     ldh [rSCY], a
@@ -1018,7 +1020,7 @@ Func_000_0705:: ; address name
     push hl
     push bc
     call TurnOffLCD
-    call Func_000_0B9B
+    call ClearScrollPositions
     xor a, a
     ldh [rSCX], a
     ldh [rSCY], a
@@ -1104,11 +1106,13 @@ Jump_000_0784::
     ei
     ret
 
+; clears rIF and masks rIE with $E2 (keeps LCD STAT and the unused high bits); falls through (E-0122)
 ; 2 call sites from 1 routine (e.g. Func_000_0150)
 ; reads: rIE, rLY
 ; writes: rIF, rIE
 ; points at: wC5EC
-Func_000_078D::
+DisableVBlankTimerSerialJoypadInterrupts::
+Func_000_078D:: ; address name
     xor a, a
     ldh [rIF], a
     ldh a, [rIE]
@@ -1178,7 +1182,7 @@ Func_000_07D8:: ; address name
     ret
 
 ; rSCX = hScrollX, rSCY = hScrollY
-; 3 call sites from 3 routines (e.g. VBlankHandler, Func_0A1_4519_Case04, Func_0A1_4519_Case01)
+; 3 call sites from 3 routines (e.g. VBlankHandler, RunWC5DDState_Case04, RunWC5DDState_Case01)
 ; reads: hScrollX, hScrollY, hFF9F, hFFA0
 ; writes: rSCX, rSCY, rWX, rWY
 CopyScrollToHardware::
@@ -1374,7 +1378,7 @@ Func_000_08A6:: ; address name
     ret
 
 ; with interrupts off, LoadSerialByte, then sets rSC bits 0 (internal clock) and 7 (start transfer) (E-0073)
-; 3 call sites from 3 routines (e.g. ClearSGBPacketBuffer_Sub02_Sub02, ClearSGBPacketBuffer_Sub02_Sub01, Func_007_600E_Case00)
+; 3 call sites from 3 routines (e.g. ClearSGBPacketBuffer_Sub02_Sub02, ClearSGBPacketBuffer_Sub02_Sub01, GameMode5_Update_Case01_Case00)
 StartSerialTransferInternalClock::
 Func_000_08AD:: ; address name
     di
@@ -1386,7 +1390,7 @@ Func_000_08AD:: ; address name
     ret
 
 ; A is stored in rSB and rSC becomes $80 (transfer start, external clock); interrupts are off during the write
-; 32 call sites from 23 routines (e.g. ClearSGBPacketBuffer_Sub02, ClearSGBPacketBuffer_Sub02_Sub02, ClearSGBPacketBuffer_Sub02_Sub01, Func_007_600E_Case08, ...)
+; 32 call sites from 23 routines (e.g. ClearSGBPacketBuffer_Sub02, ClearSGBPacketBuffer_Sub02_Sub02, ClearSGBPacketBuffer_Sub02_Sub01, GameMode5_Update_Case01_Case08, ...)
 SerialSendByte::
 Func_000_08BA:: ; address name
     di
@@ -1459,10 +1463,12 @@ Jump_000_08EC::
     ld [rRAMG], a
     ret
 
+; fills vBGMap0 with $800 zero bytes; if wD066 is set, clears it and fills only $400 bytes with $C3 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_000_0150)
 ; reads: wD066
 ; writes: wD066
-Func_000_0930::
+ClearBGMapOrFillWithC3::
+Func_000_0930:: ; address name
     ld hl, vBGMap0
     ld bc, $0800
     ld a, [wD066]
@@ -1478,7 +1484,7 @@ Jump_000_0945::
     ret
 
 ; A = value, HL = destination, BC = count; HL ends past the last byte (memset)
-; 152 call sites from 89 routines (e.g. Func_000_0150, Func_000_0930, SGBTransferCompressed, Func_000_08D0, ...)
+; 152 call sites from 89 routines (e.g. Func_000_0150, ClearBGMapOrFillWithC3, SGBTransferCompressed, Func_000_08D0, ...)
 FillBytes::
 Func_000_0949:: ; address name
     ld d, a
@@ -1525,7 +1531,7 @@ Func_000_095B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $000973, $80
 
 ; 16-bit seed in wCD03/wCD04 becomes seed * 5 + 11
-; 81 call sites from 51 routines (e.g. VBlankHandler, Func_00A_476E, Func_00A_43EC, Func_00A_465D_Case06, ...)
+; 81 call sites from 51 routines (e.g. VBlankHandler, PickRandomWC902FromTable478F, Func_00A_43EC, RunWC903Case_Case06, ...)
 ; reads: wCD03, wCD04
 ; writes: wCD03, wCD04
 NextRandomSeed::
@@ -1725,7 +1731,7 @@ Jump_000_0B0C::
     ret
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 5 call sites from 4 routines (e.g. Func_007_5B14_Case07, Func_007_5B14_Case01, Func_0E0_5AD3_Table7_Case00, Func_0E0_572D)
+; 5 call sites from 4 routines (e.g. RunWD06BSubState_5B14_Case07, RunWD06BSubState_5B14_Case01, Func_0E0_5AD3_Table2_Case00, RunWC5FDState_E0_Case0D_Case02_Sub01)
 ReadWordTableEntry_Bank00::
 Func_000_0B0D:: ; address name
     add a, a
@@ -1758,7 +1764,7 @@ Jump_000_0B20::
     ret
 
 ; C2 static reading (E-0014): like Func_000_0B18, but before each byte waits for STAT ($FF41) bit 1 to clear with interrupts disabled, so HL can be VRAM.
-; 232 call sites from 116 routines (e.g. Func_000_2D4A, CopyMonsterNameToBuffer_B01, DebugMessageTest_Init, DebugResultsDisplay_Init, ...)
+; 232 call sites from 116 routines (e.g. AcknowledgeTextPrompt_Sub01, CopyMonsterNameToBuffer_B01, DebugMessageTest_Init, DebugResultsDisplay_Init, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 CopyFromBankWaitVRAM::
@@ -1786,7 +1792,7 @@ Jump_000_0B34::
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.
-; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, Func_00D_5ED6, CopyBytesDEFromHL_Bank14_Case04, Func_015_78C5, ...)
+; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, Func_00D_5ED6, RunWCFA8StateWhenNotFading_Case01_Case04, ScriptCommandEB_Run_Case05_Case03_Sub01_Sub01, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 OrFromBankWaitVRAM::
@@ -1863,15 +1869,17 @@ Func_000_0B7F:: ; address name
     ld [hl], a
     ret
 
+; writes 0 to the four bytes at hScrollX (StoreAFourTimesAtHL); falls through (E-0122)
 ; 3 call sites from 3 routines (e.g. Func_000_0150, SGBTransferCompressed, SGBTransferRaw)
 ; points at: hScrollX
-Func_000_0B9B::
+ClearScrollPositions::
+Func_000_0B9B:: ; address name
     xor a, a
     ld hl, hScrollX
     call StoreAFourTimesAtHL
 
 ; stores A at HL, HL+1, HL+2, HL+3; HL += 4 (E-0114)
-; 1 call site from 1 routine (e.g. Func_000_0B9B)
+; 1 call site from 1 routine (e.g. ClearScrollPositions)
 StoreAFourTimesAtHL::
 Func_000_0BA2:: ; address name
     ld [hl+], a
@@ -1880,10 +1888,12 @@ Func_000_0BA2:: ; address name
     ld [hl+], a
     ret
 
+; hOamNextEntry = 0 and clears the $A0 bytes of shadow OAM at wC000 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_000_0150)
 ; writes: hOamNextEntry
 ; points at: wC000
-Func_000_0BA7::
+ClearShadowOAM::
+Func_000_0BA7:: ; address name
     xor a, a
     ldh [hOamNextEntry], a
     ld hl, wC000
@@ -2392,7 +2402,7 @@ Jump_000_0DDB::
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
-; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, Func_002_5F9B, Func_002_4745_Case00, ...)
+; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, Func_002_5F9B, RunWC8C7Phase_Case00, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wFadeLevel, wFadeDelay, wFadeDelayCounter
 ; points at: wC4FF, wOBJPaletteBuffer, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
@@ -2572,8 +2582,10 @@ Jump_000_0F20::
 Jump_000_0F3D::
     ret
 
+; copies the 8 bytes at vTiles1 + 8 * HL to DE (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-Func_000_0F3E:: ; heuristic: follows a terminator; C0
+CopyEightBytesFromTiles1Entry:: ; heuristic: follows a terminator; C0
+Func_000_0F3E:: ; address name
     add hl, hl
     add hl, hl
     add hl, hl
@@ -3074,7 +3086,7 @@ Func_000_120A:: ; address name
     jr WaitForVRAMAccess
 
 ; A = value, HL = address; disables interrupts, waits until VRAM is accessible, stores A at [HL]; clobbers hFFD1
-; 171 call sites from 117 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D4A, Func_000_2950_Case0F, ...)
+; 171 call sites from 117 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, AcknowledgeTextPrompt_Sub01, Func_000_2950_Case0F, ...)
 ; reads: rSTAT, hFFD1
 ; writes: hFFD1
 WriteVRAMByte::
@@ -3167,7 +3179,7 @@ Jump_000_1276::
     ret
 
 ; wSoundEffectRequest = A; ProcessSoundQueue starts it on the next frame
-; 405 call sites from 292 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D33, Func_000_2950_Case09, ...)
+; 405 call sites from 292 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, AcknowledgeTextPrompt, Func_000_2950_Case09, ...)
 ; writes: wSoundEffectRequest
 QueueSoundEffect::
 Func_000_1278:: ; address name
@@ -3751,7 +3763,7 @@ Jump_000_1606::
     ret
 
 ; A = ROM bank, DE = source in that bank, B = width, C = rows, HL = BG map address: switches to the bank and copies the rectangle with WriteVRAMByteInc (interrupts off per byte), wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B); restores the bank (E-0090)
-; 8 call sites from 4 routines (e.g. Func_002_6841, Func_002_6B19, Func_033_60FC, Func_037_5B3F)
+; 8 call sites from 4 routines (e.g. Func_002_6841, CopyScreenRectToBGMapSetWC554, Func_033_60FC, Func_037_5B3F)
 ; writes: rROMB0
 CopyRectFromBankToBGMapWrapped::
 Func_000_160B:: ; address name
@@ -4044,7 +4056,7 @@ Jump_000_171A::
     ret
 
 ; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
-; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, Func_002_665A, Func_003_4BE8, ...)
+; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, Func_002_665A, WithSRAMDraw4ACEAnd4BE8_Sub01, ...)
 ; reads: hFFC8, hFFC7, wC8C0
 ; writes: hFFC9, hFFC8, hFFC7, hFFC6, wC8C0
 ; points at: wC8C0
@@ -4228,7 +4240,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 863 call sites from 411 routines (e.g. LoadMapScreen_Sub02, Func_000_1CA1, Func_002_470B, Func_002_6050_Case05, ...)
+; 863 call sites from 411 routines (e.g. LoadMapScreen_Sub02, SetWC90DTo0BOnMap19IfFlagD1, Func_002_470B, PlayMapMusic_Case05, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -4267,7 +4279,7 @@ Jump_000_1843::
     ret
 
 ; DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300
-; 158 call sites from 119 routines (e.g. Func_002_4745_Case01, Func_002_6C40_Case05, PauseMenu_State4, Func_004_6A35_Case12, ...)
+; 158 call sites from 119 routines (e.g. RunWC8C7Phase_Case01, RunWC46BMenuState_Case05, PauseMenu_State4, Func_004_6A35_Case12, ...)
 SetFlagBit::
 Func_000_1845:: ; address name
     ld a, d
@@ -4322,7 +4334,7 @@ Func_000_1872:: ; address name
     ret
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
-; 103 call sites from 44 routines (e.g. EndScriptCommandAndIncWD782_Case02, ScriptCommandEC_Run_Case02, Func_014_43CC_Case3C, Func_014_43CC_Case05, ...)
+; 103 call sites from 44 routines (e.g. ScriptCommandEF_Run_Case0F_Case02, ScriptCommandEC_Run_Case02, ScriptCommandEB_Run_Case05_Case3C, ScriptCommandEB_Run_Case05_Case05, ...)
 ; reads: rSTAT, wC52D
 ; writes: wC52D
 FillTilesBxC::
@@ -4408,7 +4420,7 @@ Jump_000_18D5::
     ret
 
 ; with ROM bank B mapped, reads three bytes at DE: HL = the word, B = the third byte (a far pointer: address then bank); DE += 3; restores the bank (E-0090)
-; 10 call sites from 8 routines (e.g. ScriptCommandF7_Run_Case27_Sub02_Sub01, Func_01C_500C, Func_01C_5EEC, ReadF2FarPointerForWD7FB, ...)
+; 10 call sites from 8 routines (e.g. ScriptCommandF7_Run_Case27_Sub02_Sub01, ScriptCommandE2_Run_Case03_Case09_Sub02, ScriptCommandE2_Run_Shared02, ReadF2FarPointerForWD7FB, ...)
 ; writes: rROMB0
 ReadFarPointerAtDEInBankB::
 Func_000_18D6:: ; address name
@@ -4547,7 +4559,7 @@ Jump_000_19A4::
     ret
 
 ; loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set
-; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7_Case00, ScriptCommand77_Run_Case01, Func_015_54C0_Case02)
+; 4 call sites from 4 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hFFC6, hFFC7, hFFC8, ...
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -4884,7 +4896,7 @@ Jump_000_1B95::
     ret
 
 ; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
-; 4 call sites from 4 routines (e.g. Func_061_420D_Case07, Func_061_420D_Case06, Func_061_420D_Case03, Func_061_420D_Case02)
+; 4 call sites from 4 routines (e.g. RunWCC44Type_420D_Case07, RunWCC44Type_420D_Case06, RunWCC44Type_420D_Case03, RunWCC44Type_420D_Case02)
 ; reads: hFFC6
 ; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, wC901, wC194, ...
 LoadSpecialMapHeader::
@@ -4948,14 +4960,14 @@ Func_000_1BAD:: ; address name
     ld [rROMB0], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4628, ScriptCommandF6_Run_Case06, Func_015_54C0_Case02)
+; 3 call sites from 3 routines (e.g. Func_002_4628, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, hMapId
 ; writes: rROMB0, wC46B, wC46C, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, ...
 Func_000_1C0C::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_000_1C1A
-    farcall Func_061_420D
+    farcall RunWCC44Type_420D
     ret
 
 Jump_000_1C1A::
@@ -5033,15 +5045,17 @@ Jump_000_1C8F::
 Jump_000_1C93::
     call Func_000_1D47
     call Func_000_1CB7
-    call Func_000_1CA1
+    call SetWC90DTo0BOnMap19IfFlagD1
     pop af
     ld [rROMB0], a
     ret
 
+; on map $19, if story flag $D1 is set, wC90D = $0B (the wCC37 check never returns, since the flags still hold the map comparison) (E-0122)
 ; 1 call site from 1 routine (e.g. Func_000_1C0C)
 ; reads: hMapId, wCC37
 ; writes: wC90D
-Func_000_1CA1::
+SetWC90DTo0BOnMap19IfFlagD1::
+Func_000_1CA1:: ; address name
     ldh a, [hMapId]
     cp a, $19
     ret nz
@@ -5281,7 +5295,7 @@ Jump_000_1E23::
     ret
 
 ; HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF; on CGB then draws the attribute bytes at wD000 (rSVBK = 2), masked to the palette bits (& $07), into VRAM bank 1; HL kept (E-0071)
-; 16 call sites from 16 routines (e.g. Func_002_4628, Func_002_5B9E, Func_002_64B3, InitWD06ABlock_Table2_Case01, ...)
+; 16 call sites from 16 routines (e.g. Func_002_4628, RedrawScreenBufferIfWC8CDBit7, FieldModeStateDispatch_Case02_Sub01_Sub02, GameMode5_Update_Case01_Case06_Case01, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -5379,7 +5393,7 @@ Jump_000_1E9C::
     ldh [rVBK], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_2637, Func_085_4555)
+; 2 call sites from 2 routines (e.g. StepStringDisplayUntilDone_Sub01, Func_085_4555)
 ; reads: wC8CB, rSTAT, wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer
@@ -5511,7 +5525,7 @@ Jump_000_1F40::
     ret
 
 ; A is first passed through MapIndexViaWC6FE; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress
-; 138 call sites from 100 routines (e.g. Func_000_1F5E, Func_000_1F6F, DebugBattleSetup_Update_Sub01_Sub01, Func_003_67B0, ...)
+; 138 call sites from 100 routines (e.g. StoreHFFC6ToSRAMRecordBytes, LoadSRAMRecordBytesToHFFC6, DebugBattleSetup_Update_Sub01_Sub01, Func_003_67B0, ...)
 ; points at: sA000
 SRAMRecordAddressMapped::
 Func_000_1F49:: ; address name
@@ -5526,9 +5540,11 @@ Func_000_1F49:: ; address name
     add_a_to_hl
     ret
 
+; copies B bytes from hFFC6 to field C of SRAM record A (SRAMRecordAddressMapped); HL and DE preserved (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: hFFC6
-Func_000_1F5E:: ; heuristic: follows a terminator; C0
+StoreHFFC6ToSRAMRecordBytes:: ; heuristic: follows a terminator; C0
+Func_000_1F5E:: ; address name
     push hl
     push de
     call SRAMRecordAddressMapped
@@ -5544,9 +5560,11 @@ Jump_000_1F66::
     pop hl
     ret
 
+; copies B bytes of field C of SRAM record A to hFFC6; HL and DE preserved (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: hFFC6
-Func_000_1F6F:: ; heuristic: follows a terminator; C0
+LoadSRAMRecordBytesToHFFC6:: ; heuristic: follows a terminator; C0
+Func_000_1F6F:: ; address name
     push hl
     push de
     call SRAMRecordAddressMapped
@@ -5589,7 +5607,7 @@ Func_000_1F89:: ; address name
     ret
 
 ; A = record, C = field offset (SRAMRecordAddress): copies three bytes from the record to hFFC6-hFFC8; HL kept (E-0108)
-; 3 call sites from 2 routines (e.g. Func_012_77AC, Func_01E_6F17)
+; 3 call sites from 2 routines (e.g. Func_012_77AC, ScriptCommandE8_Run_Case09_Case13_Sub01)
 ; writes: hFFC6, hFFC7, hFFC8
 LoadRecordThreeBytesToHFFC6::
 Func_000_1F95:: ; address name
@@ -5605,7 +5623,7 @@ Func_000_1F95:: ; address name
     ret
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
-; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, Func_004_58C2_Case13, ScriptCommand87_Run_Case01, Func_014_56B0, ...)
+; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, Func_004_58C2_Case13, ScriptCommand87_Run_Case01, ScriptCommandEB_Run_Case05_Case32_Sub01, ...)
 ; points at: wC8CF
 CopyRecordNameToWC8CF::
 Func_000_1FA4:: ; address name
@@ -5662,7 +5680,7 @@ Func_000_1FD1:: ; address name
     ret
 
 ; DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wC49F
-; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, Func_003_4A36, Func_003_4FBB_Case01, Func_00C_45DA_Case02, ...)
+; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, Func_003_4A36, Func_003_4FBB_Case01, ScriptCommandF6_Run_Case10_Case02, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wBGPaletteBuffer
@@ -5792,7 +5810,7 @@ Jump_000_2087::
     ret
 
 ; DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)
-; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, Func_00C_45DA_Case02, Func_01E_6074_Table6_Case06, Func_01E_5A4D_Case05, ...)
+; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF6_Run_Case10_Case02, ScriptCommandE8_Run_Case0D_Case06, ScriptCommandE8_Run_Case09_Case05, ...)
 ; reads: hFFC6
 ; writes: rROMB0, rVBK
 LoadMonsterPictureAttributes::
@@ -5869,7 +5887,7 @@ Jump_000_20DF::
     ds $24, $00
 
 ; DE = destination: writes wC8C1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wC8C2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
-; 7 call sites from 7 routines (e.g. Func_002_6788, Func_003_50DD, MenuCursorAddressWC46E_Shared02, WriteByteAAsTwoDigitTiles, ...)
+; 7 call sites from 7 routines (e.g. Func_002_6788, Func_003_50DD, PauseMenu_State3_Shared02, WriteByteAAsTwoDigitTiles, ...)
 ; points at: wC8C1
 WriteTwoDigitTilesFromWC8C1::
 Func_000_210D:: ; address name
@@ -5894,7 +5912,7 @@ Jump_000_211B::
     ret
 
 ; DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
-; 36 call sites from 19 routines (e.g. Func_002_6788, Func_003_50DD, MenuCursorAddressWC46E_Shared02, Func_003_7335_Case00, ...)
+; 36 call sites from 19 routines (e.g. Func_002_6788, Func_003_50DD, PauseMenu_State3_Shared02, PauseMenu_State3_Case05_Case00, ...)
 ; points at: wC8C0
 WriteDecimalDigitTiles::
 Func_000_2123:: ; address name
@@ -5937,9 +5955,11 @@ Jump_000_2147::
     pop hl
     ret
 
-; 2 call sites from 1 routine (e.g. Func_003_4BE8)
+; only called from WithSRAMDraw4ACEAnd4BE8_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01)
 ; points at: hFFC9
-Func_000_214F::
+WithSRAMDraw4ACEAnd4BE8_Sub01_Sub01::
+Func_000_214F:: ; address name
     push hl
     ld c, $00
     ld hl, hFFC9
@@ -6010,7 +6030,7 @@ Jump_000_219A::
     ret
 
 ; DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile
-; 68 call sites from 31 routines (e.g. LoadRecordListNameTiles, DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5B98, DebugAutomap_Update_Sub03, ...)
+; 68 call sites from 31 routines (e.g. LoadRecordListNameTiles, DebugResultsDisplay_Update_Sub02_Sub01, DrawMonsterNameForWordAtDE_Bank01, DebugAutomap_Update_Sub03, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 ; points at: wC8CF
@@ -6131,7 +6151,7 @@ Jump_000_2221::
     ret
 
 ; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToWC8CF, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
-; 22 call sites from 22 routines (e.g. Func_002_4628, Func_002_4745_Case02, Func_003_6A60_Table2_Case00, Func_003_432F, ...)
+; 22 call sites from 22 routines (e.g. Func_002_4628, RunWC8C7Phase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
 ; reads: wC6FD
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, rRAMG, wC8D9
 ; points at: wC6FE
@@ -6364,7 +6384,7 @@ Jump_000_2378::
     ret
 
 ; A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeHFFC6 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)
-; 4 call sites from 4 routines (e.g. Func_003_5AA7, ScriptCommand62_Run_Case00, Func_01E_6D42, Func_0F1_442F)
+; 4 call sites from 4 routines (e.g. Func_003_5AA7, ScriptCommand62_Run_Case00, ShowRecordPersonalityName, BuildItemScreenForWItemId_BankF1_Sub01)
 ; reads: hFFCC
 ; writes: hFFCC
 PersonalityIndexOfRecord::
@@ -6408,7 +6428,7 @@ Func_000_23BD:: ; address name
     inc c
     ret
 
-; 9 call sites from 7 routines (e.g. ScriptCommand84_Run_Case06, ScriptCommand80_Run_Case00, Func_073_4C5D_Table3_Case00, Func_073_4C5D_Case00, ...)
+; 9 call sites from 7 routines (e.g. ScriptCommand84_Run_Case06, ScriptCommand80_Run_Case00, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case03_Case00, ...)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC8
 Func_000_23CA::
@@ -6533,7 +6553,7 @@ Jump_000_244C::
     ret
 
 ; A = key slot, or $FE: writes 'Magic Key' to DE; otherwise writes the name of key A in wKeyList (4-byte entries from $C708): the word numbered byte 0 + 1, then the word numbered byte 1 + $11 (CopyKeyNameWordToDE), then $F0 (E-0090)
-; 7 call sites from 7 routines (e.g. DebugAutomap_Update_Sub03, Func_003_779A, Func_003_6B5E_Case03, Func_003_78CB, ...)
+; 7 call sites from 7 routines (e.g. DebugAutomap_Update_Sub03, PauseMenu_State3_Shared07, PauseMenu_State3_Case01_Case03, PauseMenu_State3_Shared08, ...)
 WriteKeyNameToDE::
 Func_000_2458:: ; address name
     cp a, $FE
@@ -6623,7 +6643,7 @@ Jump_000_24B9::
     ret
 
 ; returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case
-; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, Func_003_5AA7, MapIndexViaWC6FEKeepHL, Func_0F1_442F)
+; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, Func_003_5AA7, MapIndexViaWC6FEKeepHL, BuildItemScreenForWItemId_BankF1_Sub01)
 ; reads: wC58A, wGameMode
 ; points at: wC6FE
 MapIndexViaWC6FE::
@@ -6667,7 +6687,7 @@ Func_000_24E5:: ; address name
     ret
 
 ; HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)
-; 73 call sites from 57 routines (e.g. ScriptCommandF7_Run_Case12_Sub03, ScriptCommandF7_Run_Case02_Sub03, Func_015_6742, Func_015_54C0, ...)
+; 73 call sites from 57 routines (e.g. ScriptCommandF7_Run_Case12_Sub03, ScriptCommandF7_Run_Case02_Sub03, DrawC5BEC6AtScrollOffsetDE_Bank15, ScriptCommandED_Run_Case04_Case0E_Sub01, ...)
 ; reads: hScrollX
 StepBGMapAddressBackOnScrollWrap::
 Func_000_24F8:: ; address name
@@ -6714,7 +6734,7 @@ Jump_000_2528::
     ret
 
 ; hFFD2/hFFD3 = -(hScrollX - 9) - 1 and hFFD4/hFFD5 = -(hScrollY - $11) - 1 as 16-bit values; returns early in game mode 1 when wC5DC & $0F = 6
-; 11 call sites from 3 routines (e.g. GameFrameUpdate, Func_002_5BD7_Case01, ScriptCommand77_Run_Case03)
+; 11 call sites from 3 routines (e.g. GameFrameUpdate, RunWC468ActionIfBit7_Case01, ScriptCommand77_Run_Case03)
 ; reads: wGameMode, wModeState
 ; writes: hSpriteScrollXLo, hSpriteScrollXHi, hSpriteScrollYLo, hSpriteScrollYHi
 ; points at: hScrollX, hScrollY
@@ -6903,35 +6923,39 @@ Func_000_2611:: ; address name
     set 1, [hl]
 
 Jump_000_2616::
-    call Func_000_2620
+    call StepStringDisplayUntilDone
     ld a, [wC52B]
     or a, a
     jr nz, Jump_000_2616
     ret
 
+; runs the string display step (Func_000_2637) repeatedly while bit 7 of wC52C stays set, setting bit 1 of wC52B each time (E-0122)
 ; 3 call sites from 3 routines (e.g. VBlankHandler, RunStringDisplayToEnd, RunFrameTickFadeAndCounter_Bank1B)
 ; reads: wC52C, wStringBank, wC52B, wFrameCounterLo, wC550, wJoypadPressedRepeat, wC567, wC552, ...
 ; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
 ; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
-Func_000_2620::
+StepStringDisplayUntilDone::
+Func_000_2620:: ; address name
     ld a, [wC52C]
     bit 7, a
-    jr z, Func_000_2637
+    jr z, StepStringDisplayUntilDone_Sub01
 
 Jump_000_2627::
     ld hl, wC52B
     set 1, [hl]
-    call Func_000_2637
+    call StepStringDisplayUntilDone_Sub01
     ld a, [wC52C]
     bit 7, a
     jr nz, Jump_000_2627
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_2620)
+; only called from StepStringDisplayUntilDone (E-0047)
+; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone)
 ; reads: wStringBank, wC52C, wC52B, wFrameCounterLo, wC550, wJoypadPressedRepeat, wC567, wC552, ...
 ; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
 ; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
-Func_000_2637::
+StepStringDisplayUntilDone_Sub01::
+Func_000_2637:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, [wStringBank]
@@ -7085,7 +7109,7 @@ Jump_000_274A::
     ld hl, wC52B
     res 2, [hl]
     res 1, [hl]
-    call Func_000_2BFA
+    call ShowTextContinueMark
     jp Jump_000_2875
 
 Jump_000_2764::
@@ -7106,7 +7130,7 @@ Jump_000_2764::
 Jump_000_2780::
     ld hl, wC52B
     res 6, [hl]
-    call Func_000_2BFA
+    call ShowTextContinueMark
     jp Jump_000_2875
 
 Jump_000_278B::
@@ -7168,7 +7192,7 @@ Jump_000_27E5::
     ld a, [hl]
     cp a, $E0
     jr nc, Jump_000_282C
-    call Func_000_287E
+    call StepStringDisplayUntilDone_Sub01_Sub01
     ld a, [wC52C]
     bit 0, a
     jr z, Jump_000_2875
@@ -7191,7 +7215,7 @@ Jump_000_2816::
     adc a, $00
     ld [wC534], a
     ld a, [hl]
-    call Func_000_28AB
+    call CallFunc28BDInBank1F
     jr Jump_000_2875
 
 Jump_000_282C::
@@ -7202,7 +7226,7 @@ Jump_000_282C::
     adc a, $00
     ld [wC534], a
     ld a, [hl]
-    call Func_000_2950
+    call StepStringDisplayUntilDone_Sub01_Sub02
     ld hl, wC52C
     res 1, [hl]
     jr Jump_000_2875
@@ -7243,16 +7267,18 @@ Jump_000_2875::
     ld [rROMB0], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_2637)
+; only called from StepStringDisplayUntilDone_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_Sub01)
 ; reads: rSTAT
 ; writes: rROMB0, wC531, wC532
-Func_000_287E::
+StepStringDisplayUntilDone_Sub01_Sub01::
+Func_000_287E:: ; address name
     ld l, a
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $1F
     ld [rROMB0], a
-    call Func_000_28F4
+    call GlyphTileSourceForL
     ld c, $08
 
 Jump_000_288D::
@@ -7279,24 +7305,28 @@ Jump_000_288E::
     ld [rROMB0], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_2637)
+; L = A; switches to ROM bank $1F, calls Func_000_28BD and restores the bank (E-0122)
+; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_Sub01)
 ; writes: rROMB0
-Func_000_28AB::
+CallFunc28BDInBank1F::
+Func_000_28AB:: ; address name
     ld l, a
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $1F
     ld [rROMB0], a
-    call Func_000_28BD
+    call CallFunc28BDInBank1F_Sub01
     pop af
     ld [rROMB0], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_28AB)
+; only called from CallFunc28BDInBank1F (E-0047)
+; 1 call site from 1 routine (e.g. CallFunc28BDInBank1F)
 ; reads: rSTAT
 ; writes: wC531, wC532
-Func_000_28BD::
-    call Func_000_28F4
+CallFunc28BDInBank1F_Sub01::
+Func_000_28BD:: ; address name
+    call GlyphTileSourceForL
     ld a, l
     sub a, $10
     ld l, a
@@ -7340,9 +7370,11 @@ Jump_000_28E6::
     ld [wC532], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_287E, Func_000_28BD)
+; DE = $4010 + 16 * L (the 16-byte tile of glyph L in the font bank); HL = the word at wC531/wC532 (E-0120)
+; 2 call sites from 2 routines (e.g. StepStringDisplayUntilDone_Sub01_Sub01, CallFunc28BDInBank1F_Sub01)
 ; reads: wC531, wC532
-Func_000_28F4::
+GlyphTileSourceForL::
+Func_000_28F4:: ; address name
     ld de, $4010
     ld a, l
     swap a
@@ -7408,9 +7440,11 @@ Jump_000_292B::
     ret
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
-; 1 call site from 1 routine (e.g. Func_000_2637)
+; only called from StepStringDisplayUntilDone_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_Sub01)
 ; writes: wC550
-Func_000_2950::
+StepStringDisplayUntilDone_Sub01_Sub02::
+Func_000_2950:: ; address name
     ld [wC550], a
     sub a, $E0
     rst $00
@@ -7445,7 +7479,7 @@ Func_000_2950::
     dw Func_000_2950_Case1C
     dw Func_000_2950_Case1D
     dw Func_000_2950_Case1E
-    dw Func_000_2D33
+    dw AcknowledgeTextPrompt
 
 ; entry 0 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
@@ -7481,14 +7515,14 @@ Jump_000_29A8:: ; address name
 ; points at: wC52C, wC52B
 Func_000_2950_Case06::
 Jump_000_29BA:: ; address name
-    jp Func_000_2D33
+    jp AcknowledgeTextPrompt
 
 ; entry 7 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC552, wC550
 Func_000_2950_Case07::
 Jump_000_29BD:: ; address name
-    call Func_000_2D33
+    call AcknowledgeTextPrompt
     ld a, $01
     ld [wC552], a
     ld a, $FF
@@ -7552,7 +7586,7 @@ Jump_000_2A16::
     ret
 
 Jump_000_2A1A::
-    farcall Func_002_604B
+    farcall RestartMapMusic
     ret
     db $CD, $78, $12, $C9
 
@@ -7847,7 +7881,7 @@ Jump_000_2BCD:: ; address name
     ld a, [wC52B]
     res 4, a
     ld [wC52B], a
-    call Func_000_2BFA
+    call ShowTextContinueMark
     ld a, [wC537]
     ld l, a
     ld a, [wC538]
@@ -7865,10 +7899,12 @@ Jump_000_2BF1::
     ld [wC52C], a
     ret
 
-; 4 call sites from 3 routines (e.g. Func_000_2637, Func_000_2950_Case12, Func_000_2950_Case10)
+; when wC52B bit 5 is set: clears it, moves to the text cursor + $60 and 9 columns right, and writes tile $B4 there (probably the continue mark); plays sound $69 unless wGameMode is 4 (E-0120)
+; 4 call sites from 3 routines (e.g. StepStringDisplayUntilDone_Sub01, Func_000_2950_Case12, Func_000_2950_Case10)
 ; reads: wC52B, wGameMode
 ; writes: wC52B
-Func_000_2BFA::
+ShowTextContinueMark::
+Func_000_2BFA:: ; address name
     ld a, [wC52B]
     bit 5, a
     ret z
@@ -7922,7 +7958,7 @@ Jump_000_2C21:: ; address name
 ; writes: wC531, wC532, wC535, wC536
 Func_000_2950_Case12::
 Jump_000_2C48:: ; address name
-    call Func_000_2BFA
+    call ShowTextContinueMark
     call ClearStringDisplayFlags
     call FillTilesFromRequest
 
@@ -8119,25 +8155,29 @@ Jump_000_2D2D:: ; address name
     res 0, [hl]
     ret
 
+; clears bit 7 of wC52C, plays sound $6C, runs Func_000_2D4A, sets bit 2 of wC52B and clears wC552 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_000_2950_Case07)
 ; writes: wC552
 ; points at: wC52C, wC52B
-Func_000_2D33::
+AcknowledgeTextPrompt::
+Func_000_2D33:: ; address name
     ld hl, wC52C
     res 7, [hl]
     ld a, $6C
     call QueueSoundEffect
-    call Func_000_2D4A
+    call AcknowledgeTextPrompt_Sub01
     ld hl, wC52B
     set 2, [hl]
     xor a, a
     ld [wC552], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_2D33)
+; only called from AcknowledgeTextPrompt (E-0047)
+; 1 call site from 1 routine (e.g. AcknowledgeTextPrompt)
 ; reads: wIsCGB
 ; writes: rVBK
-Func_000_2D4A::
+AcknowledgeTextPrompt_Sub01::
+Func_000_2D4A:: ; address name
     call UploadTwoTilesFromWC89E
     ld de, Data_01F_4180
     ld hl, vTiles1 + $6E0
@@ -8233,7 +8273,7 @@ Jump_000_2DCE::
     ret
 
 ; copies the 16-byte tiles at wC89E and wC8AE to vTiles1 + $6E0 and + $6F0 (CopyCBytesToVRAMWaitSTAT) (E-0117)
-; 1 call site from 1 routine (e.g. Func_000_2D4A)
+; 1 call site from 1 routine (e.g. AcknowledgeTextPrompt_Sub01)
 ; points at: wC89E, wC8AE
 UploadTwoTilesFromWC89E::
 Func_000_2DD6:: ; address name
@@ -8290,7 +8330,7 @@ Func_000_2E40:: ; address name
     ret
 
 ; HL = the word at wC533/wC534, then that word += 1 (E-0090)
-; 10 call sites from 9 routines (e.g. Func_000_2637, Func_000_2950_Case1C, Func_000_2950_Case1B, Func_000_2950_Case18, ...)
+; 10 call sites from 9 routines (e.g. StepStringDisplayUntilDone_Sub01, Func_000_2950_Case1C, Func_000_2950_Case1B, Func_000_2950_Case18, ...)
 ; reads: wC533, wC534
 ; writes: wC533, wC534
 IncrementWC533Word::
@@ -8320,7 +8360,7 @@ Func_000_2E72:: ; address name
     ret
 
 ; H = string category, L = string index, DE = destination: stores them in wStringDestLo/Hi, wStringCategory and wStringIndex and far-calls CopyStringToBuffer_Bank08, which copies the string with its $F0 terminator to DE (categories 9 and above go to Func_095_465F) (E-0059)
-; 23 call sites from 22 routines (e.g. Func_003_5E68_Table5_Case09, Func_003_5E68_Table5_Case00, Func_003_5253_Table2_Case01, Func_016_53E6_Case11, ...)
+; 23 call sites from 22 routines (e.g. PauseMenu_Skills_Case03_Case09, PauseMenu_Skills_Case03_Case00, PauseMenu_Items_Case00_Case01, Func_016_53E6_Case11, ...)
 ; writes: wStringDestLo, wStringDestHi, wStringCategory, wStringIndex
 CopyStringHLToDE::
 Func_000_2E81:: ; address name
@@ -8352,7 +8392,7 @@ Func_000_2E98:: ; address name
     ret
 
 ; HL = destination: writes A (0-255) as 1-3 decimal digit glyphs (charmap '0' = $00) without leading zeros, then $F0; HL ends on the terminator; clobbers A, D, E (E-0074)
-; 10 call sites from 4 routines (e.g. ShowRaiseAmountOrRefuse, Func_031_6D96, Func_0A0_5491_Case07, Func_0A0_5491_Case06)
+; 10 call sites from 4 routines (e.g. ShowRaiseAmountOrRefuse, WriteRecordField4BAndStatsDecimal, RunBattlePhaseWhenTextIdle_A0_Case03_Case07, RunBattlePhaseWhenTextIdle_A0_Case03_Case06)
 WriteDecimalByteString::
 Func_000_2EAC:: ; address name
     cp a, $64
@@ -8390,7 +8430,7 @@ Jump_000_2EC7::
     inc hl
     ret
 
-; 2 call sites from 2 routines (e.g. Func_031_67AA_Case00, Func_0A0_5491_Case08)
+; 2 call sites from 2 routines (e.g. Func_031_67AA_Case00, RunBattlePhaseWhenTextIdle_A0_Case03_Case08)
 ; reads: hFFC6, hFFC7
 ; writes: hFFCC
 Func_000_2ECF::
@@ -8419,7 +8459,7 @@ Func_000_2ECF::
     ld c, a
     ldh a, [hFFC7]
     ld b, a
-    jp SlotPresentWithStatus0Bit6_Case04_Sub01
+    jp RunBattleActions_Case09_Case04_Sub01
 
 Jump_000_2F03::
     ld a, $0F
@@ -8509,9 +8549,9 @@ Jump_000_2F60::
     pop hl
     ret
 
-; only called from SlotPresentWithStatus0Bit6_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case04)
-SlotPresentWithStatus0Bit6_Case04_Sub01::
+; only called from RunBattleActions_Case09_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case09_Case04)
+RunBattleActions_Case09_Case04_Sub01::
 Func_000_2F84:: ; address name
     ld de, $03E8
     push bc
@@ -8554,7 +8594,7 @@ Jump_000_2FC2::
     ret
 
 ; A = BC / DE by repeated subtraction (the quotient must fit in 8 bits), BC = the remainder; HL kept (E-0078)
-; 6 call sites from 1 routine (e.g. SlotPresentWithStatus0Bit6_Case04_Sub01)
+; 6 call sites from 1 routine (e.g. RunBattleActions_Case09_Case04_Sub01)
 DivideBCByDE::
 Func_000_2FC7:: ; address name
     push hl
@@ -8580,7 +8620,7 @@ Jump_000_2FCA::
     ret
 
 ; [HL] = A, HL += 1, [HL] = $F0 (string terminator) (E-0077)
-; 7 call sites from 2 routines (e.g. SlotPresentWithStatus0Bit6_Case04_Sub01, Func_000_2ECF)
+; 7 call sites from 2 routines (e.g. RunBattleActions_Case09_Case04_Sub01, Func_000_2ECF)
 StoreAThenTerminator::
 Func_000_2FDC:: ; address name
     ld [hl+], a
@@ -8589,7 +8629,7 @@ Func_000_2FDC:: ; address name
     ret
 
 ; copies from DE to HL until 5 glyphs other than $8D and $8E have been copied ($8D/$8E, which have no charmap entry, are copied without counting); a $8D or $8E right after the fifth glyph is copied too; then writes $F0. Clobbers A, B; DE and HL advance (E-0072)
-; 14 call sites from 14 routines (e.g. Func_003_5E68_Table4_Case02, Func_003_5E68_Table5_Case00, Func_003_5253_Table2_Case01, Func_003_5253_Table4_Case05, ...)
+; 14 call sites from 14 routines (e.g. PauseMenu_Skills_Case02_Case02, PauseMenu_Skills_Case03_Case00, PauseMenu_Items_Case00_Case01, PauseMenu_Items_Case02_Case05, ...)
 CopyFiveGlyphsPlusMarks::
 Func_000_2FE1:: ; address name
     ld b, $05
@@ -8664,7 +8704,7 @@ Jump_000_3032::
     ret
 
 ; moves HL B entries to the right inside its 32-entry BG map row, wrapping at the row end (NextBGMapColumn B times); B = 0 (E-0078)
-; 5 call sites from 3 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D4A)
+; 5 call sites from 3 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, AcknowledgeTextPrompt_Sub01)
 AdvanceBGMapColumnsByB::
 Func_000_3048:: ; address name
     call NextBGMapColumn_Bank00
@@ -8673,7 +8713,7 @@ Func_000_3048:: ; address name
     ret
 
 ; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF (the same 15 bytes appear in 2 banks)
-; 8 call sites from 6 routines (e.g. AdvanceBGMapColumnsByB, Func_000_2D4A, Func_000_2950_Case0F, BlankBGMapEntriesRight, ...)
+; 8 call sites from 6 routines (e.g. AdvanceBGMapColumnsByB, AcknowledgeTextPrompt_Sub01, Func_000_2950_Case0F, BlankBGMapEntriesRight, ...)
 NextBGMapColumn_Bank00::
 Func_000_304F:: ; address name
     push af
@@ -8691,7 +8731,7 @@ Func_000_304F:: ; address name
     ret
 
 ; HL = wC554/wC555 + HL, with the high byte's low 2 bits wrapped and its upper 6 bits kept from wC555 (stays inside one 1 KB BG map) (E-0090)
-; 7 call sites from 5 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2950_Case0F, Func_000_2950_Case0E, ...)
+; 7 call sites from 5 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, Func_000_2950_Case0F, Func_000_2950_Case0E, ...)
 ; reads: wC554, wC555
 AddHLToTextCursorWC554::
 Func_000_305E:: ; address name
@@ -8709,7 +8749,7 @@ Func_000_305E:: ; address name
     ret
 
 ; HL = offset in a 32 x 32 BG map: returns HL = $9800 + ((HL + (hScrollY & $F8) * 4 + hScrollX / 8) & $3FF), the entry that offset points at from the scroll origin, wrapping inside the map (E-0090)
-; 3 call sites from 2 routines (e.g. Func_000_2637, Func_000_2D4A)
+; 3 call sites from 2 routines (e.g. StepStringDisplayUntilDone_Sub01, AcknowledgeTextPrompt_Sub01)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScrollPlusHL::
 Func_000_3072:: ; address name
@@ -8932,20 +8972,24 @@ Jump_000_3332::
     ld [wDD14], a
     ret
 
+; runs RunSoundTable3E24ForA three times and falls into it once more (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
-Func_000_3337:: ; heuristic: follows a terminator; C0
-    call Func_000_3340
-    call Func_000_3340
-    call Func_000_3340
+RunSoundTable3E24FourTimes:: ; heuristic: follows a terminator; C0
+Func_000_3337:: ; address name
+    call RunSoundTable3E24ForA
+    call RunSoundTable3E24ForA
+    call RunSoundTable3E24ForA
 
-; 3 call sites from 1 routine (e.g. Func_000_3337)
+; wSoundId = A, then runs the sound entry from table $3E24 (registers saved) (E-0122)
+; 3 call sites from 1 routine (e.g. RunSoundTable3E24FourTimes)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
-Func_000_3340::
+RunSoundTable3E24ForA::
+Func_000_3340:: ; address name
     push bc
     push de
     push hl
@@ -10729,7 +10773,7 @@ Jump_000_3E8F::
     ret
 
 ; HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)
-; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, Func_030_480E, Func_036_4930, ResolveStepComputeDamage_Sub01, ...)
+; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, Func_030_480E, RandomWithin5PercentOfHL, ResolveStepComputeDamage_Sub01, ...)
 ; reads: wC5E7, wC5E8
 RandomInRange::
 Func_000_3E98:: ; address name
@@ -10823,7 +10867,7 @@ Func_000_3EDE:: ; address name
     ret
 
 ; HL = HL / BC (quotient), BC = HL mod BC; clobbers A, DE
-; 8 call sites from 8 routines (e.g. RandomInRange, DivideHLBy3, Func_036_4930, ChooseTarget_Heal, ...)
+; 8 call sites from 8 routines (e.g. RandomInRange, DivideHLBy3, RandomWithin5PercentOfHL, ChooseTarget_Heal, ...)
 DivideHLByBC::
 Func_000_3F04:: ; address name
     ld de, $0000
@@ -10892,7 +10936,7 @@ Jump_000_3F37::
     ret
 
 ; Z set when A equals the queued action (wQueuedActionId, wDAAC) or is its partner in one of the pairs $34-$AD, $35-$AE, $6A-$CC, $A1-$CF, $8F-$AA (the pairs are symmetric); Z clear otherwise. A and BC are kept (E-0049)
-; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, ClearActorStatus3Bits0To5_Case03)
+; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, Func_032_4ADC_Case01_Case03)
 ; reads: wQueuedActionId
 QueuedActionMatches::
 Func_000_3F47:: ; address name

@@ -212,7 +212,7 @@ Func_019_419B:: ; address name
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForWD88F_Bank31
     farcall LayoutTileBlocksForWD890Count
-    farcall Func_031_7389
+    farcall DrawPartySlotStatusPanels
     farcall Func_031_7321
     ld hl, vBGMap0
     call GameMode4_Init_Sub01_Sub02_Sub01
@@ -498,7 +498,7 @@ Jump_019_433F::
     pop bc
     ret
 
-; 4 call sites from 4 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_0A0_4410, Func_0A0_456F)
+; 4 call sites from 4 routines (e.g. Func_019_4CF8, Func_019_4BA8, RunA04410Or456FBySlotC_Sub01, RunA04410Or456FBySlotC_Sub02)
 ; reads: wD868, wD86A, wD86B
 ; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
@@ -1192,7 +1192,7 @@ Jump_019_46C1::
     pop de
     push af
     push de
-    call Func_019_470F
+    call LoadMonsterAndSpeciesForListEntryC
     pop de
     ld a, e
     add a, $0D
@@ -1223,7 +1223,7 @@ Func_019_46DD:: ; address name
 
 Jump_019_46F3::
     push bc
-    call Func_019_470F
+    call LoadMonsterAndSpeciesForListEntryC
     pop bc
     inc c
     dec b
@@ -1245,11 +1245,13 @@ Jump_019_46FD::
     jr nz, Jump_019_46FD
     ret
 
+; loads monster wCFDD[C] (LoadMonsterRecord), runs Func_019_4A9A, loads the species named in wRecordBuffer, then runs Func_019_4B37 (E-0121)
 ; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07, BattleEnd_Step3_Sub06_Sub01_Sub01)
 ; reads: wRecordBuffer, wCFED
 ; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wCFDD
-Func_019_470F::
+LoadMonsterAndSpeciesForListEntryC::
+Func_019_470F:: ; address name
     push bc
     ld a, c
     ld hl, wCFDD
@@ -1265,7 +1267,7 @@ Func_019_470F::
     pop de
     pop bc
     push de
-    call Func_019_4A9A
+    call LoadMonsterAndSpeciesForListEntryC_Sub01
     pop de
     ld a, [wRecordBuffer]
     ld l, a
@@ -1280,7 +1282,7 @@ Func_019_470F::
     farcall LoadSpeciesRecord
     pop de
     pop bc
-    call Func_019_4B37
+    call LoadMonsterAndSpeciesForListEntryC_Sub02
     pop bc
     ret
 
@@ -1566,7 +1568,7 @@ Func_019_4931:: ; heuristic: follows a terminator; C0
     ld a, $0C
 
 Jump_019_493C::
-    call Func_019_4A74
+    call Multiply24By8
     ld a, d
     or a, e
     jr z, Jump_019_494B
@@ -1708,7 +1710,7 @@ Jump_019_49D6::
     ld h, a
     ld e, $00
     ld a, c
-    call Func_019_4A74
+    call Multiply24By8
     ld a, [wCFC5]
     cp a, $03
     jr z, Jump_019_49F5
@@ -1806,8 +1808,10 @@ Jump_019_4A68::
     pop de
     ret
 
+; DEHL = A * EHL (a 24-bit by 8-bit multiply from three Multiply8 calls) (E-0121)
 ; 2 call sites from 2 routines (e.g. Func_019_49B1, Func_019_4931)
-Func_019_4A74::
+Multiply24By8::
+Func_019_4A74:: ; address name
     push af
     push hl
     ld c, e
@@ -1839,10 +1843,12 @@ Func_019_4A74::
     ld d, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_470F)
+; only called from LoadMonsterAndSpeciesForListEntryC (E-0047)
+; 1 call site from 1 routine (e.g. LoadMonsterAndSpeciesForListEntryC)
 ; reads: wRecordBuffer, wCFED, wCFF5, wCFF2, wCFF3, wD002, wD003, wD005, ...
 ; points at: wRecordBufferData, wCFF6
-Func_019_4A9A::
+LoadMonsterAndSpeciesForListEntryC_Sub01::
+Func_019_4A9A:: ; address name
     push bc
     ld b, $0A
     ld a, $FF
@@ -1971,10 +1977,12 @@ Jump_019_4B31::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_470F)
+; only called from LoadMonsterAndSpeciesForListEntryC (E-0047)
+; 1 call site from 1 routine (e.g. LoadMonsterAndSpeciesForListEntryC)
 ; reads: wSpeciesRecord, wD009, wC5E7, wD068
 ; points at: wD01A
-Func_019_4B37::
+LoadMonsterAndSpeciesForListEntryC_Sub02::
+Func_019_4B37:: ; address name
     ld a, $0C
     add a, e
     ld e, a
@@ -2563,10 +2571,12 @@ Jump_019_4E5A::
     ret
     INCBIN "dwm2-cobi-us.gbc", $064E60, $2520
 
-; 4 call sites from 4 routines (e.g. Func_003_4BE8, Func_01E_6F17, Func_031_6D28, Func_0F2_4B05)
+; copies the 3 bytes at $4E60 + $129 * hFFC6 + 3 * hFFC7 into hFFC8-hFFCA (E-0120)
+; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, Func_031_6D28, Func_0F2_4B05)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9, hFFCA
-Func_019_7380::
+LoadTable4E60EntryToHFFC8::
+Func_019_7380:: ; address name
     ld bc, $0129
     ldh a, [hFFC6]
     call Multiply8By16
@@ -2590,11 +2600,13 @@ Func_019_7380::
     ldh [hFFCA], a
     ret
 
+; loads species record [wC991] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wC9DC] - 1)) to wC9DE (E-0121)
 ; 2 call sites from 2 routines (e.g. Func_001_6C48, BattleEnd_Step3)
 ; reads: wC991, wC992, wD00F, wC9DC
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wC9DE
-Func_019_73A2::
+LoadTable4E60EntryForWC991ToWC9DE::
+Func_019_73A2:: ; address name
     ld a, [wC991]
     ld l, a
     ld a, [wC992]
@@ -2631,11 +2643,13 @@ Func_019_73A2::
     ld [de], a
     ret
 
+; loads species record [wCA36] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wCA81] - 1)) to wCA83 (E-0121)
 ; 1 call site from 1 routine (e.g. Func_037_5C4E)
 ; reads: wCA36, wCA37, wD00F, wCA81
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wCA83
-Func_019_73DF::
+LoadTable4E60EntryForWCA36ToWCA83::
+Func_019_73DF:: ; address name
     ld a, [wCA36]
     ld l, a
     ld a, [wCA37]

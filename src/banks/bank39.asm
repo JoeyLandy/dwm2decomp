@@ -2,7 +2,7 @@ SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
 ; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wDA53[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wC58A is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
-; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, ClearActorStatus3Bits0To5_Case02, Func_032_5820_Case00, ...)
+; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4ADC_Case01_Case02, Func_032_5820_Case00, ...)
 ; reads: wBattleActor, wC58A
 ; writes: wBattleActionId
 ; points at: wBattleActionChoice, wDA53
@@ -1409,12 +1409,12 @@ Jump_039_540D::
 
 Jump_039_5415::
     pop bc
-    call Func_039_6E61
+    call MultiplyDamageBy50IfWD8A7Bit0
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_039_6DF4
+    call StoreHLToWD874SlotC
     inc c
     dec b
     jr nz, Jump_039_53DD
@@ -1549,12 +1549,12 @@ Jump_039_54E5::
 
 Jump_039_54ED::
     pop bc
-    call Func_039_6E61
+    call MultiplyDamageBy50IfWD8A7Bit0
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_039_6DF4
+    call StoreHLToWD874SlotC
     inc c
     dec b
     jr nz, Jump_039_54AF
@@ -6005,7 +6005,7 @@ Jump_039_6DBC::
 Func_039_6DC8::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
-    jr c, Func_039_6DF1
+    jr c, StoreFFFFToWD874SlotC
     call GetBattleHP_Bank39
     push hl
     ld a, c
@@ -6027,16 +6027,20 @@ Func_039_6DC8::
 Jump_039_6DED::
     pop de
     add hl, de
-    jr Func_039_6DF4
+    jr StoreHLToWD874SlotC
 
+; HL = $FFFF, then falls into StoreHLToWD874SlotC (E-0122)
 ; 1 call site from 1 routine (e.g. Func_039_6E8B)
 ; points at: wD874
-Func_039_6DF1::
+StoreFFFFToWD874SlotC::
+Func_039_6DF1:: ; address name
     ld hl, $FFFF
 
+; stores HL in the word wD874[C & 3] (E-0122)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; points at: wD874
-Func_039_6DF4::
+StoreHLToWD874SlotC::
+Func_039_6DF4:: ; address name
     ld a, c
     and a, $03
     add a, a
@@ -6120,11 +6124,13 @@ Jump_039_6E5F::
     pop bc
     ret
 
+; if bit 0 of wD8A7[C] is set, the damage word (wBattleDamageLo, wD873) = damage * 50 (Multiply8By16); registers preserved (E-0121)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ; points at: wD8A7
-Func_039_6E61::
+MultiplyDamageBy50IfWD8A7Bit0::
+Func_039_6E61:: ; address name
     ld a, c
     ld hl, wD8A7
     add_a_to_hl
@@ -6175,7 +6181,7 @@ Jump_039_6E95::
     jr Jump_039_6EAE
 
 Jump_039_6EAB::
-    call Func_039_6DF1
+    call StoreFFFFToWD874SlotC
 
 Jump_039_6EAE::
     inc c
