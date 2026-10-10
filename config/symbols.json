@@ -427,6 +427,9 @@
     "evidence": "reading + execution (E-0038)"
   },
   "C7CC": {"name": "wSpeciesFlags", "note": "one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070)", "evidence": "reading (E-0070)"},
+  "C617": {"name": "wGoldLo", "note": "low byte of the 24-bit gold amount: the new-game setup sets 100 (InitGoldAndClearInventory), AddGoldCapped caps it at 99,999 and DrawGoldPanel_Bank24 shows it in decimal (E-0074)", "evidence": "reading (E-0074)"},
+  "C618": {"name": "wGoldMid", "note": "middle byte of the gold amount (E-0074)", "evidence": "reading (E-0074)"},
+  "C619": {"name": "wGoldHi", "note": "high byte of the gold amount (E-0074)", "evidence": "reading (E-0074)"},
   "C920": {
     "name": "wScriptCommandType",
     "note": "the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1)",

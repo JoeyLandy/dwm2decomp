@@ -4037,7 +4037,7 @@ Jump_012_5A53:: ; address name
     ldh [hFFC6], a
     xor a, a
     ldh [hFFC7], a
-    call Func_012_7EC2
+    call AddGoldCapped
     jr Jump_012_5A70
 
 Jump_012_5A64::
@@ -5679,7 +5679,7 @@ Jump_012_63F2:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     pop hl
     dec hl
     ld a, [hl]
@@ -6709,10 +6709,12 @@ Jump_012_6973::
     ld [hl], a
     ret
 
+; counts the 4-byte entries at wC707 before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
 ; 11 call sites from 9 routines (e.g. Func_004_581C, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, Func_013_7598, ...)
 ; writes: hFFC6
 ; points at: wC707
-Func_012_6990::
+CountWC707EntriesOrFull::
+Func_012_6990:: ; address name
     ld b, $00
     ld hl, wC707
 
@@ -8780,7 +8782,7 @@ Jump_012_7624::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC619, wC618, wC617
+; reads: wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
 Func_012_7662::
     ld de, $0192
@@ -8789,17 +8791,17 @@ Func_012_7662::
     ld de, $0193
     call TestFlagBit
     jr c, Jump_012_7691
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_768A
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $27
     jr z, Jump_012_7683
     jr nc, Jump_012_768A
     jr Jump_012_7691
 
 Jump_012_7683::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $10
     jr c, Jump_012_7691
 
@@ -9002,21 +9004,21 @@ Jump_012_77AA::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC619, wC618, wC6FD, hFFC6, hFFC7, hFFC8, wC617
+; reads: wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, hFFC8, wGoldLo
 ; writes: rRAMG, wC8C0, wC8C1, wC8C2, wC935
 ; points at: wC6FE
 Func_012_77AC::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_77C4
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $03
     jr z, Jump_012_77BD
     jr nc, Jump_012_77C4
     jr Jump_012_7818
 
 Jump_012_77BD::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $E8
     jr c, Jump_012_7818
 
@@ -9082,21 +9084,21 @@ Jump_012_7818::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC619, wC618, wC6FD, hFFC6, hFFC7, hFFC9, hFFC8, wC617
+; reads: wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, hFFC9, hFFC8, wGoldLo
 ; writes: rRAMG, hFFC8, hFFC9, wC935
 ; points at: wC6FE
 Func_012_781E::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7836
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $03
     jr z, Jump_012_782F
     jr nc, Jump_012_7836
     jr Jump_012_7898
 
 Jump_012_782F::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $E8
     jr c, Jump_012_7898
 
@@ -9172,7 +9174,7 @@ Jump_012_7898::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC627, wC619, wC618, wC6FD, hFFC6, hFFC7, wC617
+; reads: wC627, wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, wGoldLo
 ; writes: rRAMG, wC935
 ; points at: wC6FE
 Func_012_789E::
@@ -9183,17 +9185,17 @@ Func_012_789E::
     jp nz, Jump_012_7932
 
 Jump_012_78A9::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_78C1
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $03
     jr z, Jump_012_78BA
     jr nc, Jump_012_78C1
     jr Jump_012_7932
 
 Jump_012_78BA::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $E8
     jr c, Jump_012_7932
 
@@ -9276,7 +9278,7 @@ Jump_012_7932::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC627, wC619, wC618, wC617
+; reads: wC627, wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
 ; points at: wInventory
 Func_012_7934::
@@ -9287,17 +9289,17 @@ Func_012_7934::
     jr nz, Jump_012_797A
 
 Jump_012_793E::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7956
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $03
     jr z, Jump_012_794F
     jr nc, Jump_012_7956
     jr Jump_012_797A
 
 Jump_012_794F::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $E8
     jr c, Jump_012_797A
 
@@ -9331,7 +9333,7 @@ Jump_012_797A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC627, wC619, wC618, wC617
+; reads: wC627, wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
 Func_012_797C::
     ld a, [wC627]
@@ -9341,17 +9343,17 @@ Func_012_797C::
     jr nz, Jump_012_79A5
 
 Jump_012_7986::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_799E
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $13
     jr z, Jump_012_7997
     jr nc, Jump_012_799E
     jr Jump_012_79A5
 
 Jump_012_7997::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $88
     jr c, Jump_012_79A5
 
@@ -9366,20 +9368,20 @@ Jump_012_79A5::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC619, wC618, wC634, wC5E8, wC617
+; reads: wGoldHi, wGoldMid, wC634, wC5E8, wGoldLo
 ; writes: wC935
 Func_012_79A7::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_79BF
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $03
     jr z, Jump_012_79B8
     jr nc, Jump_012_79BF
     jr Jump_012_79CB
 
 Jump_012_79B8::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $E8
     jr c, Jump_012_79CB
 
@@ -9407,20 +9409,20 @@ Jump_012_79CD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC619, wC618, wC634, wC617, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wGoldHi, wGoldMid, wC634, wGoldLo, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: wC8C0, wC8C1, wC8C2, wC935
 Func_012_79DC::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_79F4
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $13
     jr z, Jump_012_79ED
     jr nc, Jump_012_79F4
     jr Jump_012_7A44
 
 Jump_012_79ED::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $88
     jr c, Jump_012_7A44
 
@@ -9432,11 +9434,11 @@ Jump_012_79F4::
     ret nz
 
 Jump_012_79FD::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     ldh a, [hFFC6]
@@ -9482,20 +9484,20 @@ Jump_012_7A46::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC619, wC618, wC6FD, wC6FE, hFFC6, hFFC7, wC8C2, wC6FF, ...
+; reads: wGoldHi, wGoldMid, wC6FD, wC6FE, hFFC6, hFFC7, wC8C2, wC6FF, ...
 ; writes: rRAMG, wC935
 Func_012_7A4D::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7A66
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $03
     jr z, Jump_012_7A5F
     jr nc, Jump_012_7A66
     jp Jump_012_7ACE
 
 Jump_012_7A5F::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $E8
     jr c, Jump_012_7ACE
 
@@ -9563,7 +9565,7 @@ Jump_012_7ACE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
-; reads: wC634, wC619, wC618, wC617, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wC634, wGoldHi, wGoldMid, wGoldLo, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: wC8C0, wC8C1, wC8C2, wC935
 Func_012_7AD0::
     ld a, [wC634]
@@ -9573,26 +9575,26 @@ Func_012_7AD0::
     jr nz, Jump_012_7B3C
 
 Jump_012_7ADA::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7AF3
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $03
     jr z, Jump_012_7AEC
     jr nc, Jump_012_7AF3
     jp Jump_012_7B3C
 
 Jump_012_7AEC::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $E8
     jr c, Jump_012_7B3C
 
 Jump_012_7AF3::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     ldh a, [hFFC6]
@@ -9876,7 +9878,7 @@ Jump_012_7CA1::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_7BCC)
-; reads: wC195, wC196, wCD04, hFFC6, wC634, wC619, wC618, wC617, ...
+; reads: wC195, wC196, wCD04, hFFC6, wC634, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: hFFC6, wC935
 ; points at: wC910
 Func_012_7CD9::
@@ -9910,12 +9912,12 @@ Jump_012_7CE6::
     jr nz, Jump_012_7D2F
 
 Jump_012_7D0F::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld c, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     or a, c
     jr nz, Jump_012_7D20
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $64
     jr c, Jump_012_7D2F
 
@@ -10178,117 +10180,119 @@ Jump_012_7E77::
     db $AF, $E0, $C7, $C9
 
 ; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Table4_Case02, Func_073_44A5_Case02, Func_073_4C5D_Case02, Func_073_4C5D_Table2_Case05, ...)
-; reads: hFFC6, hFFC7, wC619, wC618, wC617
-; writes: wC617, wC618, wC619
+; reads: hFFC6, hFFC7, wGoldHi, wGoldMid, wGoldLo
+; writes: wGoldLo, wGoldMid, wGoldHi
 Func_012_7E84::
     ldh a, [hFFC6]
     ld l, a
     ldh a, [hFFC7]
     ld h, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr z, Jump_012_7EA0
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, h
     jr c, Jump_012_7EB7
     jr z, Jump_012_7E9A
     jr Jump_012_7EA0
 
 Jump_012_7E9A::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, l
     jr c, Jump_012_7EB7
 
 Jump_012_7EA0::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, l
-    ld [wC617], a
-    ld a, [wC618]
+    ld [wGoldLo], a
+    ld a, [wGoldMid]
     sbc a, h
-    ld [wC618], a
-    ld a, [wC619]
+    ld [wGoldMid], a
+    ld a, [wGoldHi]
     sbc a, $00
-    ld [wC619], a
+    ld [wGoldHi], a
     ret
 
 Jump_012_7EB7::
     xor a, a
-    ld [wC617], a
-    ld [wC618], a
-    ld [wC619], a
+    ld [wGoldLo], a
+    ld [wGoldMid], a
+    ld [wGoldHi], a
     ret
 
+; adds the word hFFC6/hFFC7 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999) (E-0074)
 ; 12 call sites from 5 routines (e.g. ScriptCommand84_Run_Case08, ScriptFetch0E, ScriptCommand80_Run_Case02, Func_013_70D9, ...)
-; reads: hFFC6, hFFC7, wC617, wC618, wC619
-; writes: wC617, wC618, wC619
-Func_012_7EC2::
+; reads: hFFC6, hFFC7, wGoldLo, wGoldMid, wGoldHi
+; writes: wGoldLo, wGoldMid, wGoldHi
+AddGoldCapped::
+Func_012_7EC2:: ; address name
     ldh a, [hFFC6]
     ld l, a
     ldh a, [hFFC7]
     ld h, a
-    ld a, [wC617]
+    ld a, [wGoldLo]
     add a, l
-    ld [wC617], a
-    ld a, [wC618]
+    ld [wGoldLo], a
+    ld a, [wGoldMid]
     adc a, h
-    ld [wC618], a
-    ld a, [wC619]
+    ld [wGoldMid], a
+    ld a, [wGoldHi]
     adc a, $00
-    ld [wC619], a
+    ld [wGoldHi], a
     cp a, $01
     ret c
     jr z, Jump_012_7EE5
     jr Jump_012_7EF5
 
 Jump_012_7EE5::
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $86
     ret c
     jr z, Jump_012_7EEF
     jr Jump_012_7EF5
 
 Jump_012_7EEF::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $9F
     ret c
 
 Jump_012_7EF5::
     ld a, $9F
-    ld [wC617], a
+    ld [wGoldLo], a
     ld a, $86
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, $01
-    ld [wC619], a
+    ld [wGoldHi], a
     ret
 
 ; only called from ScriptCommand88_Run_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand88_Run_Case00)
-; reads: wC619, wC618, wC617
-; writes: wC619, wC618, wC617
+; reads: wGoldHi, wGoldMid, wGoldLo
+; writes: wGoldHi, wGoldMid, wGoldLo
 ScriptCommand88_Run_Case00_Sub01::
 Func_012_7F05:: ; address name
-    ld a, [wC619]
+    ld a, [wGoldHi]
     srl a
-    ld [wC619], a
-    ld a, [wC618]
+    ld [wGoldHi], a
+    ld a, [wGoldMid]
     rra
-    ld [wC618], a
-    ld a, [wC617]
+    ld [wGoldMid], a
+    ld a, [wGoldLo]
     rra
-    ld [wC617], a
+    ld [wGoldLo], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_4C5D)
-; reads: wC619, wC618, wC617
-; writes: wC617, wC618, wC619
+; reads: wGoldHi, wGoldMid, wGoldLo
+; writes: wGoldLo, wGoldMid, wGoldHi
 Func_012_7F1C::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7F49
-    ld a, [wC618]
+    ld a, [wGoldMid]
     or a, a
     jr nz, Jump_012_7F34
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $96
     jr nc, Jump_012_7F34
     ld l, a
@@ -10296,11 +10300,11 @@ Func_012_7F1C::
     jr Jump_012_7F5A
 
 Jump_012_7F34::
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $05
     jr c, Jump_012_7F44
     jr nz, Jump_012_7F49
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $DC
     jr nc, Jump_012_7F49
 
@@ -10309,24 +10313,24 @@ Jump_012_7F44::
     jr Jump_012_7F5A
 
 Jump_012_7F49::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld l, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld h, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld e, a
     ld a, $0A
     call Divide24ByA
 
 Jump_012_7F5A::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, l
-    ld [wC617], a
-    ld a, [wC618]
+    ld [wGoldLo], a
+    ld a, [wGoldMid]
     sbc a, h
-    ld [wC618], a
-    ld a, [wC619]
+    ld [wGoldMid], a
+    ld a, [wGoldHi]
     sbc a, $00
-    ld [wC619], a
+    ld [wGoldHi], a
     ret
     ds $8F, $00

@@ -204,7 +204,7 @@ Data_01D_460B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $A4, $EB, $AD
 
 ; 1 call site from 1 routine (e.g. Func_01C_7196_Case03)
-; reads: wD781, wD7ED, wC61C, wC61B, wC61A, wC619, wC618, wC617, ...
+; reads: wD781, wD7ED, wC61C, wC61B, wC61A, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_01D_460F::
     call Func_01D_47AF
@@ -293,15 +293,15 @@ Jump_01D_4689::
     jp Jump_01D_4642
 
 Jump_01D_46AA::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     cp a, $01
     jr c, Jump_01D_46D4
     jr nz, Jump_01D_46C5
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, $86
     jr c, Jump_01D_46D4
     jr nz, Jump_01D_46C5
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $3B
     jr c, Jump_01D_46D4
     jr z, Jump_01D_46D4
@@ -322,7 +322,7 @@ Jump_01D_46D4::
     jp Jump_01D_4642
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case03)
-; reads: wD781, wD7ED, wC619, wC618, wC617, wC61C, wC61B, wC61A, ...
+; reads: wD781, wD7ED, wGoldHi, wGoldMid, wGoldLo, wC61C, wC61B, wC61A, ...
 ; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_01D_46E1::
     call Func_01D_47AF
@@ -393,13 +393,13 @@ Jump_01D_4749::
     jp Jump_01D_4714
 
 Jump_01D_4758::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     and a, a
     jr nz, Jump_01D_477A
-    ld a, [wC618]
+    ld a, [wGoldMid]
     and a, a
     jr nz, Jump_01D_477A
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $64
     jr nc, Jump_01D_477A
     ld a, $02
@@ -2172,7 +2172,7 @@ Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case14)
 ; reads: wD7CE, wD7CF, wD7D0, wD780, hFFC8, hFFC7, wD781, wC61C, ...
 ; writes: wD78A, wD78B, wD78C, wC8C0, wC8C1, wC8C2, wD7D3, wD7D4, ...
-; points at: wD788, wC617, wC61A
+; points at: wD788, wGoldLo, wC61A
 Func_01D_53BD::
     ld hl, wD788
     ld de, Data_01D_548D
@@ -2204,7 +2204,7 @@ Jump_01D_53C5::
     ld a, [wD780]
     cp a, $03
     jp nz, Jump_01D_5438
-    ld hl, wC617
+    ld hl, wGoldLo
     ld a, [hl+]
     ld [wC8C0], a
     ld a, [hl+]
@@ -2279,8 +2279,8 @@ Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $BF, $C3, $C3, $C3, $E0, $E0, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; 1 call site from 1 routine (e.g. Func_01C_6F00_Case15)
-; reads: wD781, wD7CE, wD7CF, wD7D0, wC61A, wC61B, wC61C, wC617, ...
-; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wC61C, wC61B, wC61A, wC619, ...
+; reads: wD781, wD7CE, wD7CF, wD7D0, wC61A, wC61B, wC61C, wGoldLo, ...
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wC61C, wC61B, wC61A, wGoldHi, ...
 Func_01D_549D::
     call Func_01D_564B
     and a, a
@@ -2392,19 +2392,19 @@ Jump_01D_5536::
     ld [wC61A], a
     pop hl
     pop de
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, l
     ld l, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     sbc a, h
     ld h, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     sbc a, e
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, h
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, l
-    ld [wC617], a
+    ld [wGoldLo], a
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD781]
@@ -2418,8 +2418,8 @@ Jump_01D_5536::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01C_7196_Case15)
-; reads: wD781, wD7CE, wD7CF, wD7D0, wC617, wC618, wC619, wC61A, ...
-; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wC619, wC618, wC617, wC61C, ...
+; reads: wD781, wD7CE, wD7CF, wD7D0, wGoldLo, wGoldMid, wGoldHi, wC61A, ...
+; writes: wD781, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wGoldHi, wGoldMid, wGoldLo, wC61C, ...
 Func_01D_5573::
     call Func_01D_564B
     and a, a
@@ -2490,13 +2490,13 @@ Jump_01D_55B5::
 Jump_01D_55D7::
     push de
     push hl
-    ld a, [wC617]
+    ld a, [wGoldLo]
     add a, l
     ld l, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     adc a, h
     ld h, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     adc a, e
     ld e, a
     ld a, e
@@ -2525,11 +2525,11 @@ Jump_01D_55FD::
 
 Jump_01D_560E::
     ld a, e
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, h
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, l
-    ld [wC617], a
+    ld [wGoldLo], a
     pop hl
     pop de
     ld a, [wC61A]

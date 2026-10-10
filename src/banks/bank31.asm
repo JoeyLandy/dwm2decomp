@@ -5208,11 +5208,11 @@ Func_031_5F02::
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_031_5F1A
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [hl]
     xor a, $01
     ld [hl], a
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     ld a, $69
     call QueueSoundEffect
     jr Jump_031_5F45
@@ -5221,11 +5221,11 @@ Jump_031_5F1A::
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_031_5F32
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [hl]
     xor a, $02
     ld [hl], a
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     ld a, $69
     call QueueSoundEffect
     jr Jump_031_5F45
@@ -5236,11 +5236,11 @@ Jump_031_5F32::
     jr nz, Jump_031_5F4D
     bit 6, [hl]
     jr z, Jump_031_5F42
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_5F45
 
 Jump_031_5F42::
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
 
 Jump_031_5F45::
     ld a, [wFrameCounterLo]
@@ -5257,7 +5257,7 @@ Func_031_5F4E::
     ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_031_5F64
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [hl]
     and a, $03
     dec a
@@ -5270,7 +5270,7 @@ Jump_031_5F64::
     ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_031_5F82
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [hl]
     and a, $03
     inc a
@@ -5280,7 +5280,7 @@ Jump_031_5F64::
 
 Jump_031_5F77::
     ld [hl], a
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     ld a, $69
     call QueueSoundEffect
     jr Jump_031_5F95
@@ -5291,11 +5291,11 @@ Jump_031_5F82::
     jr nz, Jump_031_5F9D
     bit 6, [hl]
     jr z, Jump_031_5F92
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_5F95
 
 Jump_031_5F92::
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
 
 Jump_031_5F95::
     ld a, [wFrameCounterLo]
@@ -5320,7 +5320,7 @@ Func_031_5F9E::
     ld a, [wCFD6]
     or a, a
     jp z, Jump_031_60A4
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [hl]
     and a, $0F
     dec a
@@ -5330,7 +5330,7 @@ Func_031_5F9E::
     jr Jump_031_5FD4
 
 Jump_031_5FC6::
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [hl]
     and a, $0F
     dec a
@@ -5340,7 +5340,7 @@ Jump_031_5FC6::
 
 Jump_031_5FD4::
     ld [hl], a
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     set 7, [hl]
     ld a, $69
     call QueueSoundEffect
@@ -5359,7 +5359,7 @@ Jump_031_5FE2::
     or a, a
     jp z, Jump_031_60A4
     ld b, a
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     inc b
     ld a, [hl]
     and a, $0F
@@ -5370,7 +5370,7 @@ Jump_031_5FE2::
     jr Jump_031_601A
 
 Jump_031_600A::
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [wCFD3]
     inc a
     ld b, a
@@ -5383,7 +5383,7 @@ Jump_031_600A::
 
 Jump_031_601A::
     ld [hl], a
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     set 7, [hl]
     ld a, $69
     call QueueSoundEffect
@@ -5439,15 +5439,15 @@ Jump_031_6068::
     jr nz, Jump_031_60AC
     bit 6, [hl]
     jr z, Jump_031_6078
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_60A4
 
 Jump_031_6078::
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     jr Jump_031_60A4
 
 Jump_031_607D::
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     ld a, [wCFD7]
     ld b, a
     ld a, [wCFD5]
@@ -5484,8 +5484,10 @@ Jump_031_60A4::
 Jump_031_60AC::
     ret
 
+; HL = entry byte, DE = table of BG map offsets: sets bit 6 of [HL] and writes tile $C3 at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
 ; 15 call sites from 4 routines (e.g. Func_031_5F02, Func_031_6518, Func_031_5F9E, Func_031_5F4E)
-Func_031_60AD::
+SetBit6AndBlankEntryTile_Bank31::
+Func_031_60AD:: ; address name
     set 6, [hl]
     ld a, [hl]
     and a, $3F
@@ -5508,8 +5510,10 @@ Func_031_60AD::
     pop hl
     ret
 
+; HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
 ; 13 call sites from 6 routines (e.g. Func_031_5F02, Func_031_6518, Func_031_61A4, Func_031_5F9E, ...)
-Func_031_60CC::
+ClearBit6AndCursorEntryTile_Bank31::
+Func_031_60CC:: ; address name
     res 6, [hl]
     ld a, [hl]
     and a, $3F
@@ -5671,7 +5675,7 @@ Func_031_61A4::
     res 7, a
     ld [wCFD5], a
     ld hl, wC46E
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     call Func_031_6153
     ld hl, wC46E
     set 7, [hl]
@@ -5826,7 +5830,7 @@ Func_031_6288::
     res 7, a
     ld [wCFD5], a
     ld hl, wC471
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     call Func_031_624F
     ld hl, wC471
     set 7, [hl]
@@ -6260,26 +6264,26 @@ Func_031_6518::
     ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_031_6530
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     push de
     ld e, $FF
     ld a, $01
     call Func_031_64D8
     pop de
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_655B
 
 Jump_031_6530::
     ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_031_6548
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
     push de
     ld e, $01
     ld a, $01
     call Func_031_64D8
     pop de
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_655B
 
 Jump_031_6548::
@@ -6288,11 +6292,11 @@ Jump_031_6548::
     jr nz, Jump_031_6563
     bit 6, [hl]
     jr z, Jump_031_6558
-    call Func_031_60CC
+    call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_655B
 
 Jump_031_6558::
-    call Func_031_60AD
+    call SetBit6AndBlankEntryTile_Bank31
 
 Jump_031_655B::
     ld a, [wFrameCounterLo]
@@ -7838,25 +7842,25 @@ Func_031_6D96::
     ld a, [hl]
     inc a
     ld hl, wC140
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ld a, [wD095]
     ld hl, wC150
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ld a, [wD096]
     ld hl, wC154
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ld a, [wD097]
     ld hl, wC158
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ld a, [wD098]
     ld hl, wC15C
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ld a, [wD099]
     ld hl, wC160
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ld a, [wD09A]
     ld hl, wC164
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_031_67AA_Case00, Func_031_6885_Case01, Func_031_6885_Table2_Case01, Func_031_6E67_Case05, ...)

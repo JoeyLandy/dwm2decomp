@@ -8118,7 +8118,7 @@ Jump_013_7160::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ld hl, $5913
     call SetRequestPtrC91A_B13
     ret
@@ -8160,7 +8160,7 @@ Jump_013_71B4::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ld hl, $592D
     call SetRequestPtrC91A_B13
     ret
@@ -8202,7 +8202,7 @@ Jump_013_7208::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ld hl, $5947
     call SetRequestPtrC91A_B13
     ret
@@ -8244,7 +8244,7 @@ Jump_013_725D::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ld hl, $5961
     call SetRequestPtrC91A_B13
     ret
@@ -8663,7 +8663,7 @@ Jump_013_75E5::
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_7624
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_013_7607
@@ -8727,7 +8727,7 @@ Jump_013_7665::
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_76A4
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_013_7687

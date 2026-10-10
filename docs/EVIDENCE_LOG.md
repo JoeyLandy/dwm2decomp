@@ -741,6 +741,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Serial start.** It uses the documented SM83/Game Boy serial-control bits: rSC bit 7 starts a transfer, bit 0 selects the internal clock.
 - Binary verification: pending; see the commit.
 
+### E-0074 — Gold, decimal output, cursor helpers (batch 10)
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Gold.** The 24-bit value at wC617-wC619 is named wGoldLo/Mid/Hi. Evidence:
+  - `InitGoldAndClearInventory` (`07:695A`) sets it to 100 in the same routine that empties the 24 wInventory slots. wInventory is already known to be empty at a new game.
+  - `AddGoldCapped` (`12:7EC2`) caps it at 99,999.
+  - A debug or test setup (`Func_007_6975`) sets it to 99,999.
+  - `DrawGoldPanel_Bank24` converts it to BCD and draws the digits.
+  - `IsAmountInWD7F1AboveGold` (renamed from E-0073) compares a 24-bit amount with it. That fits a price check, but the callers are not read.
+- **Other routines:**
+  - Decimal output: WriteDecimalByteString and WriteDecimalDigitForE. Digit glyphs are 0-9 = $00-$09 per the charmap.
+  - SRAM and lists: StoreHFFC6BytesToSRAMRecord, CountWC707EntriesOrFull.
+  - Screen: BlankWordTableTargets, the four-row cursor helpers DrawWD7B5Cursor, EraseWD7B5Cursor and DrawWD7B5CursorConfirmed, and two entry-tile families.
+  - TestBitInFieldAtWD7F3 (MSB-first bit order).
+  - ShowStringCategory5Immediate_Bank16 and SetWC5E9PatternAndIncWD804.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -527,9 +527,9 @@ DEF wC613 EQU $C613
 DEF wC614 EQU $C614
 DEF wC615 EQU $C615
 DEF wC616 EQU $C616
-DEF wC617 EQU $C617
-DEF wC618 EQU $C618
-DEF wC619 EQU $C619
+DEF wGoldLo EQU $C617 ; low byte of the 24-bit gold amount: the new-game setup sets 100 (InitGoldAndClearInventory), AddGoldCapped caps it at 99,999 and DrawGoldPanel_Bank24 shows it in decimal (E-0074) (reading (E-0074))
+DEF wGoldMid EQU $C618 ; middle byte of the gold amount (E-0074) (reading (E-0074))
+DEF wGoldHi EQU $C619 ; high byte of the gold amount (E-0074) (reading (E-0074))
 DEF wC61A EQU $C61A
 DEF wC61B EQU $C61B
 DEF wC61C EQU $C61C

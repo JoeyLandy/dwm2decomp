@@ -1400,7 +1400,7 @@ Jump_085_48C2:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_4912
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_085_48F5
@@ -1513,7 +1513,7 @@ Jump_085_496F:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_49BF
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_085_49A2

@@ -929,11 +929,11 @@ Jump_03A_4E35:: ; address name
     ld a, [wD804]
     rst $00
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case06
 
 ; entry 0 of the `rst $00` table in Func_03A_4E0D
@@ -951,9 +951,11 @@ Jump_03A_4E47:: ; address name
     inc [hl]
     ret
 
+; wC5E9-wC5EB = $D2, $D2, $E2; wD804 += 1 (E-0074)
 ; 1 call site from 1 routine (e.g. Func_03A_4E0D_Case06)
 ; points at: wC5E9, wD804
-Func_03A_4E57::
+SetWC5E9PatternAndIncWD804::
+Func_03A_4E57:: ; address name
     ld hl, wC5E9
     ld [hl], $D2
     inc hl
@@ -969,7 +971,7 @@ Func_03A_4E57::
 ; writes: wD802, wD804
 Func_03A_4E0D_Case06::
 Jump_03A_4E67:: ; address name
-    call Func_03A_4E57
+    call SetWC5E9PatternAndIncWD804
     ld a, $FF
     ld [wD802], a
     xor a, a
@@ -983,17 +985,17 @@ Func_03A_4C26_Case05::
 Jump_03A_4E74:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4E57_Case00
-    dw Func_03A_4E57_Case01
-    dw Func_03A_4E57_Case02
-    dw Func_03A_4E57_Case03
+    dw SetWC5E9PatternAndIncWD804_Case00
+    dw SetWC5E9PatternAndIncWD804_Case01
+    dw SetWC5E9PatternAndIncWD804_Case02
+    dw SetWC5E9PatternAndIncWD804_Case03
 
-; entry 0 of the `rst $00` table in Func_03A_4E57
+; entry 0 of the `rst $00` table in SetWC5E9PatternAndIncWD804
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD807
 ; writes: wD806, wD807
 ; points at: wD804
-Func_03A_4E57_Case00::
+SetWC5E9PatternAndIncWD804_Case00::
 Jump_03A_4E80:: ; address name
     call Func_03A_4EC3
     ld a, [wD807]
@@ -1007,12 +1009,12 @@ Jump_03A_4E80:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_4E57
+; entry 1 of the `rst $00` table in SetWC5E9PatternAndIncWD804
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD805
 ; writes: wD805
 ; points at: wD805, wD804
-Func_03A_4E57_Case01::
+SetWC5E9PatternAndIncWD804_Case01::
 Jump_03A_4E96:: ; address name
     ld hl, wD805
     inc [hl]
@@ -1025,10 +1027,10 @@ Jump_03A_4E96:: ; address name
     ld [wD805], a
     ret
 
-; entry 2 of the `rst $00` table in Func_03A_4E57
+; entry 2 of the `rst $00` table in SetWC5E9PatternAndIncWD804
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC5E9, wD804
-Func_03A_4E57_Case02::
+SetWC5E9PatternAndIncWD804_Case02::
 Jump_03A_4EA9:: ; address name
     ld hl, wC5E9
     ld [hl], $D2
@@ -1040,10 +1042,10 @@ Jump_03A_4EA9:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_03A_4E57
+; entry 3 of the `rst $00` table in SetWC5E9PatternAndIncWD804
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, wD804
-Func_03A_4E57_Case03::
+SetWC5E9PatternAndIncWD804_Case03::
 Jump_03A_4EB9:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -1051,7 +1053,7 @@ Jump_03A_4EB9:: ; address name
     ld [wD804], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_03A_4E57_Case00, Func_03A_4EC3_Table2_Case00)
+; 2 call sites from 2 routines (e.g. SetWC5E9PatternAndIncWD804_Case00, Func_03A_4EC3_Table2_Case00)
 ; points at: wD807, wC5E9
 Func_03A_4EC3::
     ld hl, wD807
@@ -1558,21 +1560,21 @@ Jump_03A_5114:: ; address name
     ld a, [wD804]
     rst $00
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case00
-    dw Func_03A_4E57
+    dw SetWC5E9PatternAndIncWD804
     dw Func_03A_4E0D_Case06
 
 ; entry 12 of the `rst $00` table in Func_03A_4C26

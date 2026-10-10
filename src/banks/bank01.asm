@@ -2482,7 +2482,7 @@ Jump_001_5590::
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    farcall Func_015_68FA
+    farcall TestBitInFieldAtWD7F3
     ld a, [wD7F5]
     cp a, $FF
     jr z, Jump_001_561F
@@ -5592,11 +5592,11 @@ Func_001_6ABE::
     ld a, $F0
     ld [wC615], a
     ld a, $9F
-    ld [wC617], a
+    ld [wGoldLo], a
     ld a, $86
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, $01
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, $03
     ld [wC6FD], a
     ld a, $00

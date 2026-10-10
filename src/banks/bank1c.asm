@@ -216,7 +216,7 @@ Jump_01C_4170:: ; address name
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    call IsWD7F1Above24BitWC617
+    call IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jr z, Jump_01C_41B4
@@ -590,20 +590,20 @@ Jump_01C_4393::
     ret
 
 ; 7 call sites from 7 routines (e.g. ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, Func_01C_6A22, Func_01C_4867_Case0E, ...)
-; reads: wC617, wC618, wC619
+; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFFC8
 Func_01C_4395::
     push hl
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld l, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld h, a
     ld a, l
     ld [wC8C0], a
     ld a, h
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     pop hl
@@ -676,13 +676,13 @@ Jump_01C_440B::
     jr nz, Jump_01C_43BA
     ret
 
-; compares the 24-bit value wD7F3:wD7F2:wD7F1 (wD7F3 most significant) with wC619:wC618:wC617: wD7F1 = $FF when it is greater, 0 when it is less or equal (the low byte is overwritten with the result) (E-0073)
+; compares the 24-bit value wD7F3:wD7F2:wD7F1 (wD7F3 most significant) with wGoldHi:wGoldMid:wGoldLo: wD7F1 = $FF when it is greater, 0 when it is less or equal (the low byte is overwritten with the result) (E-0073)
 ; 10 call sites from 9 routines (e.g. ScriptCommandE0_Run_Case02, Func_01C_4867_Case0C, ScriptCommandF7_Run_Case04, ScriptCommandF7_Run_Case17, ...)
-; reads: wC619, wD7F3, wC618, wD7F2, wC617, wD7F1
+; reads: wGoldHi, wD7F3, wGoldMid, wD7F2, wGoldLo, wD7F1
 ; writes: wD7F1
-IsWD7F1Above24BitWC617::
+IsAmountInWD7F1AboveGold::
 Func_01C_440F:: ; address name
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld b, a
     ld a, [wD7F3]
     cp a, b
@@ -691,7 +691,7 @@ Func_01C_440F:: ; address name
     jr Jump_01C_4437
 
 Jump_01C_441D::
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld b, a
     ld a, [wD7F2]
     cp a, b
@@ -700,7 +700,7 @@ Jump_01C_441D::
     jr Jump_01C_4437
 
 Jump_01C_442B::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld b, a
     ld a, [wD7F1]
     cp a, b
@@ -853,8 +853,8 @@ Func_01C_449F::
 
 ; only called from ScriptCommandE0_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE0_Run_Case02)
-; reads: wD7F7, wD7F8, wMenuInputResult, wC619, wC618, wC617
-; writes: wC619, wC618, wC617
+; reads: wD7F7, wD7F8, wMenuInputResult, wGoldHi, wGoldMid, wGoldLo
+; writes: wGoldHi, wGoldMid, wGoldLo
 ScriptCommandE0_Run_Case02_Sub01::
 Func_01C_44F3:: ; address name
     ld a, [wD7F7]
@@ -863,11 +863,11 @@ Func_01C_44F3:: ; address name
     ld h, a
     ld a, [wMenuInputResult]
     ld l, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld d, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld b, a
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, l
     ld c, a
     ld a, b
@@ -875,11 +875,11 @@ Func_01C_44F3:: ; address name
     ld b, a
     ld a, d
     sbc a, e
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, b
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, c
-    ld [wC617], a
+    ld [wGoldLo], a
     ret
 
 ; only called from ScriptCommandE0_Run_Case02 (E-0047)
@@ -956,14 +956,14 @@ Data_01C_4598:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; 2 call sites from 2 routines (e.g. Func_01C_52E8_Case0D, Func_00C_75BC)
-; reads: wC617, wC618, wC619, wD7F1, wD7F2, wD7F3
-; writes: wC619, wC618, wC617
+; reads: wGoldLo, wGoldMid, wGoldHi, wD7F1, wD7F2, wD7F3
+; writes: wGoldHi, wGoldMid, wGoldLo
 Func_01C_45B0::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld e, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld d, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld h, a
     ld a, [wD7F1]
     add a, e
@@ -993,20 +993,20 @@ Func_01C_45B0::
 
 Jump_01C_45E8::
     ld a, h
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, b
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, c
-    ld [wC617], a
+    ld [wGoldLo], a
     ret
 
 Jump_01C_45F5::
     ld a, $01
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, $86
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, $9F
-    ld [wC617], a
+    ld [wGoldLo], a
     ret
 
 ; implements script command type E3; reached through ScriptCommandE3 in bank $10 (E-0038)
@@ -1590,7 +1590,7 @@ Jump_01C_494C::
     jr z, Jump_01C_496D
     push bc
     push hl
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     pop hl
     pop bc
     ld a, b
@@ -1988,7 +1988,7 @@ Jump_01C_4BE4::
     ld a, [wD7BA]
     cp a, $02
     jr c, Jump_01C_4C05
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     call ResetWD7C2Counters
     ld a, [wD7BA]
     ld b, a
@@ -2006,7 +2006,7 @@ Jump_01C_4BFD::
 Jump_01C_4C05::
     xor a, a
     ld [wD7B4], a
-    call Func_01C_4C9A
+    call DrawWD7B5Cursor
     ld a, $69
     call QueueSoundEffect
     ret
@@ -2015,7 +2015,7 @@ Jump_01C_4C12::
     ld a, [wD7BA]
     cp a, $02
     jr c, Jump_01C_4C05
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     call ResetWD7C2Counters
     ld a, [wD7B6]
     and a, a
@@ -2033,7 +2033,7 @@ Jump_01C_4C30::
     and a, a
     jr z, Jump_01C_4C4B
     call ResetWD7C2Counters
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     ld a, [wD7B5]
     and a, a
     jr nz, Jump_01C_4C47
@@ -2049,7 +2049,7 @@ Jump_01C_4C48::
 Jump_01C_4C4B::
     xor a, a
     ld [wD7B4], a
-    call Func_01C_4C9A
+    call DrawWD7B5Cursor
     ld a, $69
     call QueueSoundEffect
     ret
@@ -2059,7 +2059,7 @@ Jump_01C_4C58::
     and a, a
     jr z, Jump_01C_4C4B
     call ResetWD7C2Counters
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     ld a, [wD7B7]
     ld b, a
     ld a, [wD7B5]
@@ -2073,7 +2073,7 @@ Jump_01C_4C71::
     jr Jump_01C_4C48
 
 Jump_01C_4C74::
-    call Func_01C_4CA2
+    call DrawWD7B5CursorConfirmed
     ld a, $69
     call QueueSoundEffect
     call ResetWD7C2Counters
@@ -2090,27 +2090,33 @@ Func_01C_4C87::
     inc a
     ld [wD7B4], a
     cp a, $10
-    jr c, Func_01C_4C9A
+    jr c, DrawWD7B5Cursor
     cp a, $18
-    jr c, Func_01C_4C9E
+    jr c, EraseWD7B5Cursor
     xor a, a
     ld [wD7B4], a
 
+; writes the cursor tile $BB at the position for wD7B5 (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
 ; 4 call sites from 2 routines (e.g. Func_01C_4867_Case06, Func_01C_52E8_Case05)
 ; reads: wD7B5
-Func_01C_4C9A::
+DrawWD7B5Cursor::
+Func_01C_4C9A:: ; address name
     ld b, $BB
     jr Jump_01C_4CA4
 
+; writes the blank tile $C3 at the position for wD7B5 (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
 ; 8 call sites from 4 routines (e.g. Func_01C_4867_Case06, Func_01C_4867_Case02, Func_01C_52E8_Case05, Func_01C_52E8_Case02)
 ; reads: wD7B5
-Func_01C_4C9E::
+EraseWD7B5Cursor::
+Func_01C_4C9E:: ; address name
     ld b, $C3
     jr Jump_01C_4CA4
 
+; writes the confirmed-cursor tile $BC at the position for wD7B5 (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
 ; 2 call sites from 2 routines (e.g. Func_01C_4867_Case06, Func_01C_52E8_Case05)
 ; reads: wD7B5
-Func_01C_4CA2::
+DrawWD7B5CursorConfirmed::
+Func_01C_4CA2:: ; address name
     ld b, $BC
 
 Jump_01C_4CA4::
@@ -2977,7 +2983,7 @@ Jump_01C_51ED::
     ld [wD7F2], a
     ld a, [wD7CE]
     ld [wD7F1], a
-    call IsWD7F1Above24BitWC617
+    call IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jp z, Jump_01C_525D
@@ -3467,7 +3473,7 @@ Jump_01C_54F5::
     jr z, Jump_01C_5516
     push bc
     push hl
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     pop hl
     pop bc
     ld a, b
@@ -3889,7 +3895,7 @@ Jump_01C_57C0::
 Jump_01C_57C8::
     xor a, a
     ld [wD7B4], a
-    call Func_01C_4C9A
+    call DrawWD7B5Cursor
     ld a, $69
     call QueueSoundEffect
     ret
@@ -3917,7 +3923,7 @@ Jump_01C_57F0::
     and a, a
     jr z, Jump_01C_580F
     call ResetWD7C2Counters
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     ld a, [wD7B5]
     and a, a
     jr nz, Jump_01C_580B
@@ -3933,7 +3939,7 @@ Jump_01C_580C::
 Jump_01C_580F::
     xor a, a
     ld [wD7B4], a
-    call Func_01C_4C9A
+    call DrawWD7B5Cursor
     ld a, $69
     call QueueSoundEffect
     ret
@@ -3945,7 +3951,7 @@ Jump_01C_581C::
     and a, a
     jr z, Jump_01C_580F
     call ResetWD7C2Counters
-    call Func_01C_4C9E
+    call EraseWD7B5Cursor
     ld a, [wD7B7]
     ld b, a
     ld a, [wD7B5]
@@ -3961,7 +3967,7 @@ Jump_01C_5839::
 Jump_01C_583C::
     ld a, $69
     call QueueSoundEffect
-    call Func_01C_4CA2
+    call DrawWD7B5CursorConfirmed
     call ResetWD7C2Counters
     xor a, a
     ld [wD7C7], a

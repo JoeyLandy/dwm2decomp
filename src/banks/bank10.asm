@@ -729,7 +729,7 @@ Func_010_4445:: ; address name
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     jp Jump_010_401D
 
 ; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers)

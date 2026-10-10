@@ -255,7 +255,7 @@ Func_00D_463F::
 
 ; entry 1 of the `rst $00` table in ScriptCommandEF_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC617, wC618, wC619, wD781
+; reads: wGoldLo, wGoldMid, wGoldHi, wD781
 ; writes: wC8C0, wC8C1, wC8C2, wD781
 ; points at: wC370, wC386, wD7F3
 ScriptCommandEF_Run_Table2_Case01::
@@ -264,11 +264,11 @@ Jump_00D_4650:: ; address name
     ld hl, wC370
     ld bc, $0803
     call CopyRectTo20ByteRows_Bank0D
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     farcall Func_015_6676
@@ -607,7 +607,7 @@ Jump_00D_4869:: ; address name
     xor a, a
     ld [wD7F2], a
     ld [wD7F3], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     and a, a
     jr nz, Jump_00D_48AF
@@ -626,7 +626,7 @@ Jump_00D_4894::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     and a, a
     jr z, Jump_00D_48C5
@@ -2648,7 +2648,7 @@ Jump_00D_5633:: ; address name
     dw ScriptCommandF2_Run_Table2_Case01
 
 ; 1 call site from 1 routine (e.g. Func_00D_5702_Case10)
-; reads: wC617, wC618, wC619, wD781
+; reads: wGoldLo, wGoldMid, wGoldHi, wD781
 ; writes: wC8C0, wC8C1, wC8C2, wD781
 ; points at: wC370, wC386, wD7F3
 Func_00D_563B::
@@ -2656,11 +2656,11 @@ Func_00D_563B::
     ld hl, wC370
     ld bc, $0803
     call CopyRectTo20ByteRows_Bank0D
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     farcall Func_015_6676
@@ -3159,7 +3159,7 @@ Jump_00D_599F::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_00D_59D2
@@ -7071,7 +7071,7 @@ Func_00D_76D0:: ; address name
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    farcall Func_015_68FA
+    farcall TestBitInFieldAtWD7F3
     ld a, [wD7F5]
     cp a, $FF
     jr z, Jump_00D_7737
@@ -7084,7 +7084,7 @@ Func_00D_76D0:: ; address name
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    farcall Func_015_68FA
+    farcall TestBitInFieldAtWD7F3
     cp a, $FF
     jr z, Jump_00D_7737
     ld a, [wD7F6]

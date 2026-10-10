@@ -8269,8 +8269,10 @@ Func_000_2E98:: ; address name
     call FillTilesFromRequest
     ret
 
+; HL = destination: writes A (0-255) as 1-3 decimal digit glyphs (charmap '0' = $00) without leading zeros, then $F0; HL ends on the terminator; clobbers A, D, E (E-0074)
 ; 10 call sites from 4 routines (e.g. Func_016_466A, Func_031_6D96, Func_0A0_5491_Case07, Func_0A0_5491_Case06)
-Func_000_2EAC::
+WriteDecimalByteString::
+Func_000_2EAC:: ; address name
     cp a, $64
     jr nc, Jump_000_2EB6
     cp a, $0A
@@ -8279,11 +8281,11 @@ Func_000_2EAC::
 
 Jump_000_2EB6::
     ld e, $64
-    call Func_000_2EC5
+    call WriteDecimalDigitForE
 
 Jump_000_2EBB::
     ld e, $0A
-    call Func_000_2EC5
+    call WriteDecimalDigitForE
 
 Jump_000_2EC0::
     ld [hl+], a
@@ -8291,8 +8293,10 @@ Jump_000_2EC0::
     ld [hl], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_2EAC)
-Func_000_2EC5::
+; D = A / E by repeated subtraction, stored at HL; HL += 1; A = the remainder (E-0074)
+; 2 call sites from 1 routine (e.g. WriteDecimalByteString)
+WriteDecimalDigitForE::
+Func_000_2EC5:: ; address name
     ld d, $FF
 
 Jump_000_2EC7::

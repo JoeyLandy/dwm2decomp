@@ -202,7 +202,7 @@ Jump_00C_4114::
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    farcall Func_015_68FA
+    farcall TestBitInFieldAtWD7F3
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_00C_4141
@@ -2888,7 +2888,7 @@ Func_00C_530A::
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    farcall Func_015_68FA
+    farcall TestBitInFieldAtWD7F3
     ld a, [wD7F5]
     cp a, $FF
     jr nz, Jump_00C_532F
@@ -3821,7 +3821,7 @@ Jump_00C_698B::
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_00C_69BF
@@ -4434,7 +4434,7 @@ Jump_00C_6D76::
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_00C_6DAF
@@ -4726,7 +4726,7 @@ Jump_00C_6F5E:: ; address name
     jr nz, Jump_00C_6F8B
     ld de, $0188
     call SetFlagBit
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ld a, $03
     ldh [hFFC7], a
     farcall Func_012_6955
@@ -4901,7 +4901,7 @@ Jump_00C_708B::
     ret
 
 ; 5 call sites from 5 routines (e.g. ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case11, ScriptCommandF7_Run_Case10, ScriptCommandF7_Run_Case0B, ...)
-; reads: wC617, wC618, wC619
+; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC370, wC386, wD7F3
 Func_00C_7098::
@@ -4909,11 +4909,11 @@ Func_00C_7098::
     ld hl, wC370
     ld bc, $0803
     call CopyRectTo20ByteRows_Bank0C
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     farcall Func_01E_768E

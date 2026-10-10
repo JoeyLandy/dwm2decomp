@@ -1220,7 +1220,7 @@ Func_016_466A::
 
 Jump_016_4681::
     ld hl, wC160
-    call Func_000_2EAC
+    call WriteDecimalByteString
     ret
 
 Jump_016_4688::
@@ -2823,20 +2823,20 @@ Jump_016_5359:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC619, wC618, wC617, wC634
+; reads: wGoldHi, wGoldMid, wGoldLo, wC634
 ; writes: wItemId, wD08D
 Func_016_52C9_Case11::
 Jump_016_5360:: ; address name
     call Func_016_4447
     call Func_016_53DA
     ret z
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr nz, Jump_016_5385
-    ld a, [wC618]
+    ld a, [wGoldMid]
     or a, a
     jr nz, Jump_016_5385
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, $64
     jr nc, Jump_016_5385
     ld a, $FF
@@ -3287,7 +3287,7 @@ Jump_016_55C5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, wC935, wC5E7, wC5E8
 ; writes: wSpriteSlotCount, wCB7E, wC935, wItemId, wD08D, wC634
-; points at: wC617, wC160
+; points at: wGoldLo, wC160
 Func_016_53E6_Case11::
 Jump_016_55CB:: ; address name
     ld a, [wCC44]
@@ -3302,7 +3302,7 @@ Jump_016_55CB:: ; address name
     ld [wC935], a
 
 Jump_016_55E3::
-    ld hl, wC617
+    ld hl, wGoldLo
     ld a, [hl]
     sub a, $64
     ld [hl+], a
@@ -4102,7 +4102,7 @@ Jump_016_5AE6::
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    farcall Func_015_68FA
+    farcall TestBitInFieldAtWD7F3
     pop de
     ld a, [wD7F5]
     cp a, $FF
@@ -4747,7 +4747,7 @@ Jump_016_5EEC:: ; address name
     call WriteVRAMByte
     ld a, $11
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -5141,7 +5141,7 @@ Jump_016_61D2:: ; address name
     call QueueSoundEffect
     ld a, $16
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     call Func_016_6493
     call Func_016_65B1
     ld a, [wC0A1]
@@ -6262,9 +6262,11 @@ Func_016_6955:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
+; wStringCategory = 5 (wStringIndex set by the caller), then far-calls ShowString_Bank2F (E-0074)
 ; 9 call sites from 9 routines (e.g. Func_016_6C16_Case13, Func_016_6C16_Case11, Func_016_6C16_Case10, Func_016_6C16_Case08, ...)
 ; writes: wStringCategory
-Func_016_6961::
+ShowStringCategory5Immediate_Bank16::
+Func_016_6961:: ; address name
     ld a, $05
     ld [wStringCategory], a
     farcall ShowString_Bank2F
@@ -6307,7 +6309,7 @@ Jump_016_6995::
     ld [rRAMG], a
     ld a, $12
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18)
@@ -6338,7 +6340,7 @@ Func_016_69AB::
     call CopyStringHLToDE
     ld a, $17
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_016_6C16_Case0F, Func_016_6C16_Case0B)
@@ -6776,7 +6778,7 @@ Jump_016_6C7A::
     farcall Func_01A_72DB
     ld a, $19
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     xor a, a
@@ -6961,7 +6963,7 @@ Jump_016_6D8D:: ; address name
     call Func_016_7078
     ld a, $1C
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     xor a, a
     ld [wC46C], a
     ld hl, wC2C7
@@ -7275,7 +7277,7 @@ Jump_016_6FA4:: ; address name
     call CopyRect32StrideToVRAM_Bank16
     ld a, $19
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     ld a, $01
     ld [wBattleSubStep], a
     ret
@@ -7293,7 +7295,7 @@ Jump_016_6FEE:: ; address name
     ld [wC46D], a
     ld a, $1C
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     ld a, $09
     ld [wBattleSubStep], a
     ret
@@ -7356,7 +7358,7 @@ Jump_016_7051:: ; address name
     farcall Func_01A_72DB
     ld a, $19
     ld [wStringIndex], a
-    call Func_016_6961
+    call ShowStringCategory5Immediate_Bank16
     ld a, $01
     ld [wBattleSubStep], a
     xor a, a

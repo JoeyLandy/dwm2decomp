@@ -246,13 +246,13 @@ Func_015_4171::
 ; 6 call sites from 6 routines (e.g. Func_015_4182_Case3A, Func_015_4182_Case33, Func_015_4182_Case1F, Func_015_4F4C_Case08, ...)
 ; reads: wD781
 ; writes: wD781
-; points at: wC370, wC617, wC8C0, wC386, wD7F3
+; points at: wC370, wGoldLo, wC8C0, wC386, wD7F3
 Func_015_4182::
     ld de, Data_015_7291
     ld hl, wC370
     ld bc, $0803
     call CopyRectTo20ByteRows_Bank15
-    ld hl, wC617
+    ld hl, wGoldLo
     ld de, wC8C0
     ld a, [hl+]
     ld [de], a
@@ -836,7 +836,7 @@ Func_015_4182_Case10::
 Jump_015_45B9:: ; address name
     ld c, $05
     ld hl, Data_015_73A1
-    call Func_015_67E5
+    call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -1007,7 +1007,7 @@ Jump_015_46D3:: ; address name
     call CopyRectTo20ByteRows_Bank15
     ld c, $05
     ld hl, Data_015_73A1
-    call Func_015_67E5
+    call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -1186,7 +1186,7 @@ Jump_015_47FF::
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    call Func_015_68FA
+    call TestBitInFieldAtWD7F3
     ld a, [wD7F5]
     cp a, $FF
     jr z, Jump_015_487A
@@ -1199,7 +1199,7 @@ Jump_015_47FF::
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    call Func_015_68FA
+    call TestBitInFieldAtWD7F3
     cp a, $FF
     jr z, Jump_015_487A
     ld a, [wD7F6]
@@ -1461,7 +1461,7 @@ Func_015_4182_Case25::
 Jump_015_4A2A:: ; address name
     ld c, $05
     ld hl, Data_015_73A1
-    call Func_015_67E5
+    call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -1590,7 +1590,7 @@ Jump_015_4B02:: ; address name
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    call Func_015_68FA
+    call TestBitInFieldAtWD7F3
     cp a, $FF
     jr nz, Jump_015_4B21
     jr Jump_015_4B55
@@ -1618,7 +1618,7 @@ Jump_015_4B38::
     ld [wD7F3], a
     ld a, h
     ld [wD7F4], a
-    call Func_015_68FA
+    call TestBitInFieldAtWD7F3
     cp a, $FF
     jr nz, Jump_015_4BA7
 
@@ -1705,7 +1705,7 @@ Jump_015_4BBE:: ; address name
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    call Func_015_68FA
+    call TestBitInFieldAtWD7F3
     cp a, $FF
     jr z, Jump_015_4BF7
     ld hl, wCADB
@@ -2352,7 +2352,7 @@ Jump_015_4FC4::
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_015_5003
@@ -2845,7 +2845,7 @@ Func_015_4182_Case0B::
 Jump_015_5358:: ; address name
     ld c, $03
     ld hl, Data_015_732D
-    call Func_015_67E5
+    call BlankWordTableTargets
     xor a, a
     ld [wD781], a
     ld [wD782], a
@@ -3131,7 +3131,7 @@ Jump_015_5504:: ; address name
     ld [wD7F2], a
     ld a, l
     ld [wD7F1], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jr nz, Jump_015_5555
@@ -3719,7 +3719,7 @@ Func_015_54C0_Case09::
 Jump_015_5920:: ; address name
     ld c, $03
     ld hl, Data_015_732D
-    call Func_015_67E5
+    call BlankWordTableTargets
     xor a, a
     ld [wD781], a
     ld [wD782], a
@@ -4232,7 +4232,7 @@ Jump_015_5C7D:: ; address name
     call StoreBAtWordTableEntry_Bank15
     ld c, $04
     ld hl, Data_015_73A1
-    call Func_015_67E5
+    call BlankWordTableTargets
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5061,7 +5061,7 @@ Func_015_60BF_Case08::
 Jump_015_6235:: ; address name
     ld c, $04
     ld hl, Data_015_73A1
-    call Func_015_67E5
+    call BlankWordTableTargets
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_73A1
@@ -5204,7 +5204,7 @@ Jump_015_62F7::
 Jump_015_631B::
     ld c, $05
     ld hl, Data_015_73A1
-    call Func_015_67E5
+    call BlankWordTableTargets
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_73A1
@@ -5486,7 +5486,7 @@ Jump_015_64DC::
     call Func_015_6546
     ld c, $03
     ld hl, Data_015_732D
-    call Func_015_67E5
+    call BlankWordTableTargets
     ld a, [wD786]
     cp a, $02
     jr z, Jump_015_6511
@@ -5850,7 +5850,7 @@ Jump_015_66BC::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 19 call sites from 17 routines (e.g. Func_015_67E5, Func_015_4182_Case34, Func_015_4182_Case1E, Func_015_4182_Case0A, ...)
+; 19 call sites from 17 routines (e.g. BlankWordTableTargets, Func_015_4182_Case34, Func_015_4182_Case1E, Func_015_4182_Case0A, ...)
 StoreBAtWordTableEntry_Bank15::
 Func_015_66CA:: ; address name
     push bc
@@ -6073,8 +6073,10 @@ Jump_015_67E1::
     jr nz, Func_015_6791
     ret
 
+; HL = table of addresses, C = count: stores tile $C3 at the address in each of the first C entries (StoreBAtWordTableEntry_Bank15) (E-0074)
 ; 9 call sites from 9 routines (e.g. Func_015_6478, Func_015_4182_Case25, Func_015_4182_Case12, Func_015_4182_Case10, ...)
-Func_015_67E5::
+BlankWordTableTargets::
+Func_015_67E5:: ; address name
     ld a, c
     ld b, a
     ld c, $00
@@ -6147,8 +6149,8 @@ Jump_015_6831::
     ret
 
 ; 9 call sites from 9 routines (e.g. Func_015_4182_Case41, Func_015_4F4C_Case10, ScriptCommandF7_Run_Case07, ScriptCommandF7_Run_Case19, ...)
-; reads: wD7F3, wD7F2, wD7F1, wC619, wC618, wC617
-; writes: wC619, wC618, wC617
+; reads: wD7F3, wD7F2, wD7F1, wGoldHi, wGoldMid, wGoldLo
+; writes: wGoldHi, wGoldMid, wGoldLo
 Func_015_683C::
     ld a, [wD7F3]
     ld e, a
@@ -6156,11 +6158,11 @@ Func_015_683C::
     ld h, a
     ld a, [wD7F1]
     ld l, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld d, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld b, a
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, l
     ld c, a
     ld a, b
@@ -6168,11 +6170,11 @@ Func_015_683C::
     ld b, a
     ld a, d
     sbc a, e
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, b
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, c
-    ld [wC617], a
+    ld [wGoldLo], a
     ret
 
 ; 5 call sites from 4 routines (e.g. Func_015_4771, Func_015_54C0_Case0F, Func_015_4182_Case04, Func_015_60BF_Table2_Case09)
@@ -6266,16 +6268,18 @@ Jump_015_68F2::
 
 ; 5 call sites from 5 routines (e.g. Func_015_4182_Case36, Func_007_7DE5, ScriptCommandF4_Run_Table2_Case17, Func_037_5172, ...)
 Func_015_68F3::
-    call Func_015_68FA
+    call TestBitInFieldAtWD7F3
     ld a, [hl]
     or a, b
     ld [hl], a
     ret
 
+; index = the word wD7F1/wD7F2, field = the address in wD7F3/wD7F4: wD7F5 = $FF when bit index of the field is set (bit order $80 first within each byte), else 0 (E-0074)
 ; 12 call sites from 9 routines (e.g. Func_015_68F3, Func_015_4182_Case28, Func_015_4182_Case27, Func_015_4182_Case1C, ...)
 ; reads: wD7F1, wD7F2, wD7F3, wD7F4
 ; writes: wD7F5
-Func_015_68FA::
+TestBitInFieldAtWD7F3::
+Func_015_68FA:: ; address name
     ld a, [wD7F1]
     ld e, a
     ld a, [wD7F2]

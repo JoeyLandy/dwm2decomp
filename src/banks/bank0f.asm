@@ -2906,7 +2906,7 @@ Jump_00F_5460:: ; address name
     ld a, [wCC37]
     set 4, a
     ld [wCC37], a
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ld a, $06
     ldh [hFFC7], a
     farcall Func_012_6955

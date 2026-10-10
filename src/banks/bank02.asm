@@ -5730,20 +5730,20 @@ Data_002_6642:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; 1 call site from 1 routine (e.g. Func_002_64E5)
-; reads: wC617, wC618, wC619
+; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFFC8
 Func_002_665A::
     push hl
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld l, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld h, a
     ld a, l
     ld [wC8C0], a
     ld a, h
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     pop hl

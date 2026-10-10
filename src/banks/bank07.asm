@@ -4331,7 +4331,7 @@ Jump_007_6919:: ; address name
     ld [wC6FD], a
     ld a, $00
     ld [wC6FE], a
-    call Func_007_695A
+    call InitGoldAndClearInventory
     call Func_007_6975
     ld hl, wC707
     ld bc, $0080
@@ -4343,16 +4343,18 @@ Jump_007_6919:: ; address name
     ld [wD06A], a
     ret
 
+; wGold = 100 and the 24 wInventory slots = 0 (the new-game setup path, Func_007_65F1) (E-0074)
 ; 1 call site from 1 routine (e.g. Func_007_65F1_Table2_Case06)
-; writes: wC617, wC618, wC619
+; writes: wGoldLo, wGoldMid, wGoldHi
 ; points at: wInventory
-Func_007_695A::
+InitGoldAndClearInventory::
+Func_007_695A:: ; address name
     ld a, $64
-    ld [wC617], a
+    ld [wGoldLo], a
     ld a, $00
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, $00
-    ld [wC619], a
+    ld [wGoldHi], a
     ld hl, wInventory
     ld bc, $0018
     ld a, $00

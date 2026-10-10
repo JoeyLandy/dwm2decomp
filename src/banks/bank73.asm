@@ -322,7 +322,7 @@ Jump_073_41D8::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ret
 
 Jump_073_41F1::
@@ -335,7 +335,7 @@ Jump_073_41F1::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ret
 
 Jump_073_420A::
@@ -346,7 +346,7 @@ Jump_073_420A::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ret
 
 Jump_073_4220::
@@ -375,7 +375,7 @@ Jump_073_4236::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ret
 
 Jump_073_4250::
@@ -388,7 +388,7 @@ Jump_073_4250::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7EC2
+    farcall AddGoldCapped
     ret
 
 ; entry 7 of the `rst $00` table in ScriptCommand82_Run
@@ -940,8 +940,8 @@ Jump_073_4647:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_073_44A5
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD03, wC46B, wC46C, wScriptParam1, wC8C0, wC617, wC8C1, wC618, ...
-; writes: wC46C, wC8C0, wC8C1, wC8C2, wC617, wC618, wC619, wScriptParam1, ...
+; reads: wCD03, wC46B, wC46C, wScriptParam1, wC8C0, wGoldLo, wC8C1, wGoldMid, ...
+; writes: wC46C, wC8C0, wC8C1, wC8C2, wGoldLo, wGoldMid, wGoldHi, wScriptParam1, ...
 ; points at: wC17E, wC181, wScriptStep, wC152, wC016
 Func_073_44A5_Table2_Case04::
 Jump_073_46B3:: ; address name
@@ -1059,17 +1059,17 @@ Jump_073_4797::
     ld [wC8C2], a
     ld a, [wC8C0]
     ld c, a
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, c
-    ld [wC617], a
+    ld [wGoldLo], a
     ld a, [wC8C1]
     ld c, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     sbc a, c
-    ld [wC618], a
-    ld a, [wC619]
+    ld [wGoldMid], a
+    ld a, [wGoldHi]
     sbc a, $00
-    ld [wC619], a
+    ld [wGoldHi], a
     call Number24ToPackedBCD
     ld de, wC181
     call Func_000_23CA
@@ -1831,28 +1831,28 @@ Jump_073_4C53::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_073_4A0F_Table2_Case07, Func_073_4A0F_Table2_Case05, Func_073_4A0F_Case07, Func_073_44A5_Table3_Case07, ...)
-; reads: wC617, wC618, wC619, wC8C0, wC8C1, wC8C2
+; reads: wGoldLo, wGoldMid, wGoldHi, wC8C0, wC8C1, wC8C2
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC17E
 Func_073_4C5D::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     farcall Func_012_7F1C
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld c, a
     ld a, [wC8C0]
     sub a, c
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld c, a
     ld a, [wC8C1]
     sbc a, c
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld c, a
     ld a, [wC8C2]
     sbc a, c
@@ -2705,7 +2705,7 @@ Jump_073_5166::
     ret
 
 ; 10 call sites from 1 routine (e.g. Func_073_4FD2)
-; reads: wC935, wC619, wC618, wC617
+; reads: wC935, wGoldHi, wGoldMid, wGoldLo
 Func_073_516B::
     call Func_073_4FB7
     ld a, [wC935]
@@ -2719,7 +2719,7 @@ Func_073_516B::
     add hl, de
 
 Jump_073_517B::
-    ld a, [wC619]
+    ld a, [wGoldHi]
     or a, a
     jr z, Jump_073_5184
 
@@ -2728,11 +2728,11 @@ Jump_073_5181::
     ret
 
 Jump_073_5184::
-    ld a, [wC618]
+    ld a, [wGoldMid]
     cp a, h
     jr c, Jump_073_5192
     jr nz, Jump_073_5181
-    ld a, [wC617]
+    ld a, [wGoldLo]
     cp a, l
     jr nc, Jump_073_5181
 
@@ -4029,7 +4029,7 @@ Func_073_5987:: ; address name
 ; writes: hFFC7, wC836, wScriptStartRequest
 ScriptCommand59_Run_Case02::
 Jump_073_5991:: ; address name
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ld a, $05
     ldh [hFFC7], a
     farcall Func_012_6955
@@ -5451,7 +5451,7 @@ Jump_073_61E0::
     ret
 
 Jump_073_61EC::
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ld a, $04
     ldh [hFFC7], a
     farcall Func_012_6955
@@ -5719,7 +5719,7 @@ Jump_073_635C::
     ret
 
 Jump_073_6368::
-    farcall Func_012_6990
+    farcall CountWC707EntriesOrFull
     ld a, $04
     ldh [hFFC7], a
     farcall Func_012_6955

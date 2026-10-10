@@ -4202,7 +4202,7 @@ Jump_024_612C:: ; address name
     ld hl, wC364
     ld bc, $0A09
     call CopyRectTo20ByteRows_Bank24
-    call Func_024_68B0
+    call DrawGoldPanel_Bank24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4449,7 +4449,7 @@ Jump_024_62C9:: ; address name
     ld hl, wC364
     ld bc, $0A09
     call CopyRectTo20ByteRows_Bank24
-    call Func_024_68B0
+    call DrawGoldPanel_Bank24
     ld a, [wD7AB]
     ld b, $BB
     ld hl, Data_024_6C96
@@ -4714,7 +4714,7 @@ Jump_024_64C8::
     ld [wD7F2], a
     ld a, [wD789]
     ld [wD7F1], a
-    farcall IsWD7F1Above24BitWC617
+    farcall IsAmountInWD7F1AboveGold
     ld a, [wD7F1]
     cp a, $FF
     jr z, Jump_024_650A
@@ -4784,7 +4784,7 @@ Jump_024_6541::
     ld a, [wD789]
     ld [wD7F1], a
     farcall Func_015_683C
-    call Func_024_68B0
+    call DrawGoldPanel_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
     ld de, $01CC
@@ -5190,7 +5190,7 @@ Jump_024_67EA::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 6 call sites from 6 routines (e.g. ScriptCommandF8_Run_Table2_Case01, Func_024_68B0, ScriptCommandF8_Run_Table3_Case0F, ScriptCommandF8_Run_Table3_Case07, ...)
+; 6 call sites from 6 routines (e.g. ScriptCommandF8_Run_Table2_Case01, DrawGoldPanel_Bank24, ScriptCommandF8_Run_Table3_Case0F, ScriptCommandF8_Run_Table3_Case07, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank24::
@@ -5357,20 +5357,22 @@ Func_024_68A2:: ; address name
     ld [de], a
     ret
 
+; copies an 8 x 3 frame (Data_024_68EB) into the screen buffer at wC370, converts wGold to packed BCD (Number24ToPackedBCD) and Func_015_6676, then writes the digits as tiles $E0 + d at wC386 (E-0074)
 ; 3 call sites from 3 routines (e.g. ScriptCommandF8_Run_Table2_Case01, ScriptCommandF8_Run_Table3_Case0A, ScriptCommandF8_Run_Table3_Case04)
-; reads: wC617, wC618, wC619
+; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC370, wC386, wD7F3
-Func_024_68B0::
+DrawGoldPanel_Bank24::
+Func_024_68B0:: ; address name
     ld de, Data_024_68EB
     ld hl, wC370
     ld bc, $0803
     call CopyRectTo20ByteRows_Bank24
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wC8C0], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     farcall Func_015_6676

@@ -556,8 +556,8 @@ Jump_033_52A8:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wC52B, wC552, wC617, wC618, wC619, wD06B
-; writes: wC594, wD06A, wD780, wD06B, wC619, wC618, wC617
+; reads: wC58F, wC52B, wC552, wGoldLo, wGoldMid, wGoldHi, wD06B
+; writes: wC594, wD06A, wD780, wD06B, wGoldHi, wGoldMid, wGoldLo
 ; points at: wD06B
 Func_033_5215_Case03::
 Jump_033_52BB:: ; address name
@@ -592,13 +592,13 @@ Jump_033_52D7::
     ret
 
 Jump_033_52F8::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, $E8
     ld c, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     sbc a, $03
     ld b, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     sbc a, $00
     jr nc, Jump_033_531E
     ld a, $00
@@ -611,11 +611,11 @@ Jump_033_52F8::
     ret
 
 Jump_033_531E::
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, b
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, c
-    ld [wC617], a
+    ld [wGoldLo], a
     ld a, $0C
     call BeginString_Bank07_Cat5
     ld hl, wD06B
@@ -751,8 +751,8 @@ Jump_033_53C2:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC552, wC617, wC618, wC619
-; writes: wC594, wC619, wC618, wC617
+; reads: wC52B, wC552, wGoldLo, wGoldMid, wGoldHi
+; writes: wC594, wGoldHi, wGoldMid, wGoldLo
 ; points at: wD06B
 Func_033_5215_Case07::
 Jump_033_53D4:: ; address name
@@ -773,13 +773,13 @@ Jump_033_53D4:: ; address name
     ret
 
 Jump_033_53F3::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     sub a, $E8
     ld c, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     sbc a, $03
     ld b, a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     sbc a, $00
     jr nc, Jump_033_5419
     ld a, $04
@@ -793,11 +793,11 @@ Jump_033_53F3::
     ret
 
 Jump_033_5419::
-    ld [wC619], a
+    ld [wGoldHi], a
     ld a, b
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, c
-    ld [wC617], a
+    ld [wGoldLo], a
     ld a, $02
     call BeginString_Bank07_Cat5
     ld a, $20
@@ -1963,8 +1963,8 @@ Jump_033_5AEB::
 
 ; entry 12 of the `rst $00` table in Func_033_562A
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC617, wC618, wC619, wD09D, wD09E, wD09F
-; writes: wD09D, wD09E, wD09F, wC617, wC618, wC619, wC594
+; reads: wC52B, wGoldLo, wGoldMid, wGoldHi, wD09D, wD09E, wD09F
+; writes: wD09D, wD09E, wD09F, wGoldLo, wGoldMid, wGoldHi, wC594
 ; points at: wD781
 Func_033_562A_Case0C::
 Jump_033_5AF9:: ; address name
@@ -1973,19 +1973,19 @@ Jump_033_5AF9:: ; address name
     ret nz
     ld hl, wD781
     inc [hl]
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld [wD09D], a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld [wD09E], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wD09F], a
     farcall Func_002_760B
     ld a, [wD09D]
-    ld [wC617], a
+    ld [wGoldLo], a
     ld a, [wD09E]
-    ld [wC618], a
+    ld [wGoldMid], a
     ld a, [wD09F]
-    ld [wC619], a
+    ld [wGoldHi], a
     farcall Func_002_7688
     ld a, $05
     ld [wC594], a
@@ -3020,19 +3020,19 @@ Jump_033_617F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_033_5215_Case01)
-; reads: wC617, wC618, wC619, hFFC8, hFFC7, hFFC6
+; reads: wGoldLo, wGoldMid, wGoldHi, hFFC8, hFFC7, hFFC6
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC1BA
 Func_033_6197::
-    ld a, [wC617]
+    ld a, [wGoldLo]
     ld l, a
-    ld a, [wC618]
+    ld a, [wGoldMid]
     ld h, a
     ld a, l
     ld [wC8C0], a
     ld a, h
     ld [wC8C1], a
-    ld a, [wC619]
+    ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
     ld c, $00

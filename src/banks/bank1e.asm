@@ -1124,13 +1124,13 @@ Jump_01E_473B:: ; address name
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     xor a, a
     ldh [hFFC6], a
     ld a, [hl]
     ld c, $55
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     xor a, a
     ld [rRAMG2], a
     ld a, [wC6FD]
@@ -1778,13 +1778,13 @@ Jump_01E_4BE1:: ; address name
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     xor a, a
     ldh [hFFC6], a
     ld a, [hl]
     ld c, $55
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     call Func_01E_76EB
     push hl
     ld a, $02
@@ -1792,7 +1792,7 @@ Jump_01E_4BE1:: ; address name
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     xor a, a
     ld [rRAMG2], a
     pop hl
@@ -1985,7 +1985,7 @@ Jump_01E_4D5B:: ; address name
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     ld a, [wC6FD]
     ld hl, wC6FE
     add_a_to_hl
@@ -2378,19 +2378,19 @@ Jump_01E_4FF7:: ; address name
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     ld a, $01
     ldh [hFFC6], a
     ld a, [wD7B4]
     ld c, $00
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     xor a, a
     ldh [hFFC6], a
     ld a, [wD7B4]
     ld c, $55
     ld b, $01
-    call Func_01E_76DA
+    call StoreHFFC6BytesToSRAMRecord
     ld a, [wD7B5]
     ld hl, wC6FE
     add_a_to_hl
@@ -8235,9 +8235,11 @@ Jump_01E_76CC::
     jr nz, Jump_01E_76CC
     ret
 
+; A = record, C = field offset (SRAMRecordAddress), B = count: copies B bytes from hFFC6 onward into the SRAM record (SRAM must be enabled); DE and HL kept (E-0074)
 ; 9 call sites from 4 routines (e.g. Func_01E_4201_Case29, Func_01E_4201_Case0F, Func_01E_4A32_Case48, Func_01E_4A32_Case16)
 ; points at: hFFC6
-Func_01E_76DA::
+StoreHFFC6BytesToSRAMRecord::
+Func_01E_76DA:: ; address name
     push hl
     push de
     call SRAMRecordAddress
