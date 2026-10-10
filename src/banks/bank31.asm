@@ -80,7 +80,7 @@ Jump_031_404B::
     ld a, $0B
     jp Jump_000_077A
 
-; per-frame routine for wGameMode = 4, the battle: in link mode (wC58A) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wCFC8 = phase, wCFC9 = step)
+; per-frame routine for wGameMode = 4, the battle: in link mode (wC58A) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wCFC8 = phase (1 fight, 2 after), wCFC9 = step)
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case04)
 ; reads: wC58A, wD802, wD800, wBattlePhase
 GameMode4_Update::

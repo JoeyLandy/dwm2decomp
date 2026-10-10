@@ -1084,10 +1084,10 @@ DEF wCFC2 EQU $CFC2
 DEF wCFC3 EQU $CFC3
 DEF wCFC4 EQU $CFC4
 DEF wCFC5 EQU $CFC5
-DEF wBattlePhase EQU $CFC8 ; battle phase, a 3-entry dispatch in Func_031_40CC (2 during the fight) (execution (E-0042))
-DEF wBattleStep EQU $CFC9 ; step within the battle phase (1, 2, 4, 5 during the first turn) (execution (E-0042))
-DEF wBattleSubPhase EQU $CFCA ; state variable of Func_031_47DD in the battle bank (1 and 2 alternate while waiting for the command menu) (reading (E-0043))
-DEF wBattleResolveStep EQU $CFCB ; step of RunBattleResolveStep (16 cases); ApplyDamageToTarget advances or rewinds it (reading (E-0043))
+DEF wBattlePhase EQU $CFC8 ; battle phase, a 3-entry dispatch in Func_031_40CC: 1 = the fight, 2 = after the fight (victory message, rewards, recruiting); 0 at start (E-0044) (execution (E-0042))
+DEF wBattleStep EQU $CFC9 ; step within the battle phase: in phase 1, 1 = set-up, 2 = command entry (a loop over the party), 3 = executing the chosen actions; in phase 2, 0-5 = the end-of-battle sequence (E-0044) (execution (E-0042))
+DEF wBattleSubPhase EQU $CFCA ; index within the battle step: during step 3 of phase 1 it counts the actions being executed (0, 1, 2, ...); during command entry it alternates 1 and 2 (E-0044) (reading (E-0043))
+DEF wBattleResolveStep EQU $CFCB ; step of RunBattleResolveStep (16 cases, 0-15) for the action wBattleSubPhase is executing; ApplyDamageToTarget advances or rewinds it (E-0044) (reading (E-0043))
 DEF wBattleSubStep EQU $CFCC ; nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget (reading (E-0043))
 DEF wBattleSubStep2 EQU $CFCD ; nested step used by Func_032_5A3A (3 cases) (reading (E-0043))
 DEF wCFCE EQU $CFCE

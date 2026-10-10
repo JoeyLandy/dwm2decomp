@@ -1,113 +1,553 @@
 {
   "_comment": "RAM addresses whose names are supported by evidence. Key: hex address. Each entry: name, note (what the evidence shows), evidence (id in docs/EVIDENCE_LOG.md). Addresses not listed get address names (wXXXX, hXXXX, sXXXX) with no meaning claimed.",
-  "C525": {"name": "wIsCGB", "note": "1 when the boot code found A = $11 (CGB), else 0; set at $0150", "evidence": "E-0020"},
-  "D7FE": {"name": "wDataBank", "note": "ROM bank used by Func_000_0B6C when reading a word through HL", "evidence": "E-0014"},
-  "D067": {"name": "wDataBankSave", "note": "spare slot some code copies wDataBank to and restores it from", "evidence": "E-0014"},
-  "DD10": {"name": "wSoundId", "note": "sound id passed to the start-sound routine", "evidence": "E-0018"},
-  "DC00": {"name": "wSoundChannelSlots", "note": "channel-state slots; the record's first byte is added to this address", "evidence": "E-0018"},
-  "DCC0": {"name": "wSoundLabelSlots", "note": "per-channel label slots: 3 bytes each, 16 per channel", "evidence": "E-0019"},
-  "DD0F": {"name": "wSoundChannelIndex", "note": "slot number of the channel the sound engine is processing", "evidence": "E-0019"},
-  "DD0A": {"name": "wSoundHwChannel", "note": "hardware channel of the current slot: 2 selects the wave channel, 3 noise", "evidence": "E-0019"},
-  "FFDD": {"name": "hSoundBank", "note": "ROM bank the sound engine reads tracks from", "evidence": "E-0018"},
-  "FFD8": {"name": "hTrackPosLo", "note": "low byte of the current track position, counted in 2-byte events", "evidence": "E-0019"},
-  "FFD9": {"name": "hTrackPosHi", "note": "high byte of the current track position", "evidence": "E-0019"},
-  "FFDB": {"name": "hTrackBaseLo", "note": "low byte of the current track's start address", "evidence": "E-0019"},
-  "FFDC": {"name": "hTrackBaseHi", "note": "high byte of the current track's start address", "evidence": "E-0019"},
-  "FFD6": {"name": "hDecompressLock", "note": "non-zero while the decompressor is running", "evidence": "E-0016"},
-  "FFBB": {"name": "hDecompressMarker", "note": "marker byte from the stream header", "evidence": "E-0016"},
-  "FFBC": {"name": "hDecompressDestLo", "note": "destination start, low byte", "evidence": "E-0016"},
-  "FFBD": {"name": "hDecompressDestHi", "note": "destination start, high byte", "evidence": "E-0016"},
-  "FFA1": {"name": "hScrollX", "note": "copied to rSCX by Func_000_07E0 and by the LCD handler", "evidence": "reading"},
-  "FFA5": {"name": "hScrollY", "note": "copied to rSCY by Func_000_07E0 and by the LCD handler", "evidence": "reading"},
-  "FFB1": {"name": "hOamNextEntry", "note": "index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28", "evidence": "reading"},
-  "C528": {"name": "wStringCategory", "note": "category index LookupString uses in the table of tables", "evidence": "reading"},
-  "C529": {"name": "wStringIndex", "note": "index within the category table that LookupString uses", "evidence": "reading"},
-  "C52A": {"name": "wStringBank", "note": "ROM bank number LookupString stores; the string printer maps it into the ROM bank window", "evidence": "reading"},
-  "FFA9": {"name": "hSpriteOriginX", "note": "added to each entry's X (+8) by BuildOamFromSpriteTable", "evidence": "reading"},
-  "FFAB": {"name": "hSpriteOriginY", "note": "added to each entry's Y (+$10) by BuildOamFromSpriteTable", "evidence": "reading"},
-  "FFAD": {"name": "hSpriteSetIndex", "note": "first-level index into the table BuildOamFromSpriteTable reads", "evidence": "reading"},
-  "FFAE": {"name": "hSpriteSubIndex", "note": "second-level index into the table BuildOamFromSpriteTable reads", "evidence": "reading"},
-  "FFAF": {"name": "hSpriteTileOffset", "note": "added to each entry's tile number by BuildOamFromSpriteTable", "evidence": "reading"},
-  "FFB0": {"name": "hSpriteAttrXor", "note": "XORed into each entry's attribute byte by BuildOamFromSpriteTable", "evidence": "reading"},
-  "CB7D": {"name": "wSpriteSlotCount", "note": "number of 8-byte slots DrawSpriteSlots draws", "evidence": "reading"},
-  "CB7F": {"name": "wSpriteSlots", "note": "start of an array of objects: 8-byte slots in the bank $E0 intro (DrawSpriteSlots), 16-byte entries in field mode (the script commands, ScriptStepObject)", "evidence": "reading"},
-  "C198": {"name": "wScreenTileBuffer", "note": "screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030)", "evidence": "reading"},
-  "C524": {"name": "wSGBActive", "note": "set to 1 at boot, cleared on CGB and when DetectSGB finds no Super Game Boy; SendSGBPacketSet, DelayBCWhenSGB and SpinDelay return at once when it is 0", "evidence": "reading"},
-  "C47C": {"name": "wSGBPacketIndex", "note": "packet set number for SendSGBPacketSet; $FF selects wSGBPacketBuffer", "evidence": "reading"},
-  "C47F": {"name": "wSGBPacketBuffer", "note": "packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF", "evidence": "reading"},
-  "C5DB": {"name": "wGameMode", "note": "index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot", "evidence": "reading"},
-  "C5DF": {"name": "wModeChangeRequest", "note": "non-zero makes the main loop leave its wait and run RunGameModeInit again", "evidence": "reading"},
-  "C56C": {"name": "wFadeState", "note": "palette fade state set by StartPaletteFade; GameFrameUpdate and the VBlank handler skip normal work while it is non-zero (bit 7 clear)", "evidence": "reading"},
-  "C55E": {"name": "wJoypadHeld", "note": "buttons held at the latest PollJoypad (layout of ReadJoypadDirect)", "evidence": "reading"},
-  "C55F": {"name": "wJoypadHeldPrev", "note": "wJoypadHeld from the previous poll", "evidence": "reading"},
-  "C562": {"name": "wJoypadPressed", "note": "buttons newly held since the previous poll", "evidence": "reading"},
-  "C563": {"name": "wJoypadPressedRepeat", "note": "newly held buttons plus auto-repeat (UpdateJoypadPresses)", "evidence": "reading"},
-  "C564": {"name": "wJoypadRepeatTimer", "note": "auto-repeat countdown: $14 after a new press, then 6", "evidence": "reading"},
-  "C5F0": {"name": "wFrameCounterLo", "note": "low byte of the 16-bit frame counter the VBlank handler increments", "evidence": "reading"},
-  "C5F1": {"name": "wFrameCounterHi", "note": "high byte of the 16-bit frame counter", "evidence": "reading"},
-  "C60A": {"name": "wMusicRequest", "note": "music id waiting for ProcessSoundQueue; $FF = none", "evidence": "reading"},
-  "C60B": {"name": "wSoundEffectRequest", "note": "sound effect id waiting for ProcessSoundQueue; $FF = none", "evidence": "reading"},
-  "C5DC": {"name": "wModeState", "note": "per-mode sub-state; low nibble indexes the jump table in GameMode1_Update (E-0030)", "evidence": "reading"},
-  "FFA2": {"name": "hScrollXHi", "note": "high byte of the 16-bit horizontal scroll that starts at hScrollX", "evidence": "reading"},
-  "FFA6": {"name": "hScrollYHi", "note": "high byte of the 16-bit vertical scroll that starts at hScrollY", "evidence": "reading"},
-  "FFAA": {"name": "hSpriteOriginXHi", "note": "high byte of the 16-bit sprite X position (hSpriteOriginX is the low byte)", "evidence": "reading"},
-  "FFAC": {"name": "hSpriteOriginYHi", "note": "high byte of the 16-bit sprite Y position (hSpriteOriginY is the low byte)", "evidence": "reading"},
-  "FFD2": {"name": "hSpriteScrollXLo", "note": "low byte of -(scroll X - 9) - 1, computed each frame by ComputeSpriteScrollOffsets", "evidence": "reading"},
-  "FFD3": {"name": "hSpriteScrollXHi", "note": "high byte of that value", "evidence": "reading"},
-  "FFD4": {"name": "hSpriteScrollYLo", "note": "low byte of -(scroll Y - $11) - 1", "evidence": "reading"},
-  "FFD5": {"name": "hSpriteScrollYHi", "note": "high byte of that value", "evidence": "reading"},
-  "FF98": {"name": "hPlayerFacing", "note": "0, 1, 2, 3: CheckInteractionInFront adds +16 to hFF91, +16 to hFF8E, -16 to hFF91, -16 to hFF8E for these values", "evidence": "reading"},
-  "FF8E": {"name": "hPlayerX", "note": "position along the axis that facings 1 and 3 change in CheckInteractionInFront", "evidence": "reading"},
-  "FF91": {"name": "hPlayerY", "note": "position along the axis that facings 0 and 2 change in CheckInteractionInFront", "evidence": "reading"},
-  "C82D": {"name": "wPlayFrames", "note": "frame count 0-59 of the play-time counter", "evidence": "reading"},
-  "C82E": {"name": "wPlaySeconds", "note": "seconds 0-59 of the play-time counter", "evidence": "reading"},
-  "C82F": {"name": "wPlayMinutes", "note": "minutes 0-59 of the play-time counter", "evidence": "reading"},
-  "C830": {"name": "wPlayHoursLo", "note": "low byte of the 16-bit play-time hours", "evidence": "reading"},
-  "C831": {"name": "wPlayHoursHi", "note": "high byte of the 16-bit play-time hours", "evidence": "reading"},
-  "D968": {"name": "wSlotPersonalityHi", "note": "first of three byte arrays (8 slots each) graded into the personality index with weight 9 by PersonalityIndexOfSlot", "evidence": "reading"},
-  "D970": {"name": "wSlotPersonalityMid", "note": "second array, weight 3", "evidence": "reading"},
-  "D978": {"name": "wSlotPersonalityLo", "note": "third array, weight 1", "evidence": "reading"},
-  "D2C7": {"name": "wPersonalityIndex", "note": "column index (0-26) into the bank-6 table; set from PersonalityIndexOfSlot in banks $30 and $E0 before ReadBank6TableWord", "evidence": "reading"},
-  "CFEC": {"name": "wRecordBuffer", "note": "scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here", "evidence": "reading"},
-  "CFEE": {"name": "wRecordBufferData", "note": "where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer)", "evidence": "reading"},
-  "CFE6": {"name": "wMonsterId", "note": "16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads", "evidence": "reading"},
-  "D081": {"name": "wItemId", "note": "item id used by LoadItemRecord and RunItemEffect; $FF = none", "evidence": "reading"},
-  "D084": {"name": "wItemRecord", "note": "13-byte copy of an ItemTable record", "evidence": "reading"},
-  "C61D": {"name": "wInventory", "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)", "evidence": "reading"},
-  "FF90": {"name": "hMapId", "note": "map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39)", "evidence": "reading + execution (E-0036)"},
-  "FF8F": {"name": "hMapScreenX", "note": "column of the current screen in the map: LoadMapScreen indexes the map's array of screen streams with hMapScreenY * width + hMapScreenX (1 on the opening ship deck, a map 2 screens wide)", "evidence": "reading + execution (E-0037)"},
-  "FF92": {"name": "hMapScreenY", "note": "row of the current screen in the map (0 on the opening ship deck)", "evidence": "reading + execution (E-0037)"},
-  "C190": {"name": "wMapWidthScreens", "note": "map width in screens, from the map record (2 for the ship deck, 4 for map 56)", "evidence": "reading + execution (E-0037)"},
-  "C191": {"name": "wMapHeightScreens", "note": "map height in screens, from the map record", "evidence": "reading + execution (E-0037)"},
-  "C192": {"name": "wMaxBlockingTile", "note": "highest tile id that blocks the player (TileBlockedAtPixel compares tile ids with it); from the map record (55 for the ship deck)", "evidence": "reading + execution (E-0037)"},
-  "C919": {"name": "wScriptStartRequest", "note": "bit 7 set asks FetchScriptCommand to begin running the script at wScriptPointer", "evidence": "reading + execution (E-0038)"},
-  "C91A": {"name": "wScriptPointerLo", "note": "low byte of the address of the next script byte (wC91B is the high byte; the bytes are in the current bank, or in wDataBank when wScriptInDataBank is set)", "evidence": "reading + execution (E-0038)"},
-  "C91B": {"name": "wScriptPointerHi", "note": "high byte of the script pointer", "evidence": "reading + execution (E-0038)"},
-  "C91F": {"name": "wScriptRunning", "note": "non-zero while a script runs", "evidence": "reading + execution (E-0038)"},
-  "C920": {"name": "wScriptCommandType", "note": "the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1)", "evidence": "reading + execution (E-0038)"},
-  "C921": {"name": "wScriptParam0", "note": "first parameter of the current script command", "evidence": "reading + execution (E-0038)"},
-  "C922": {"name": "wScriptParam1", "note": "second parameter of the current script command", "evidence": "reading + execution (E-0038)"},
-  "C923": {"name": "wScriptStep", "note": "step counter of the current script command", "evidence": "reading + execution (E-0038)"},
-  "D7FD": {"name": "wScriptInDataBank", "note": "non-zero when the script bytes are read from the bank in wDataBank", "evidence": "reading + execution (E-0038)"},
-  "D8BF": {"name": "wBattleHP", "note": "current HP of the 8 battle slots as 16-bit words (party in slots 0-2, a foe in slot 4); the first value of the party panels; a defeated foe's word fell from 20 to 0 on the emulator", "evidence": "execution (E-0042)"},
-  "D8CF": {"name": "wBattleMaxHP", "note": "maximum HP of the 8 battle slots (the foe's word stayed 25 when its current HP fell to 0)", "evidence": "execution (E-0042)"},
-  "D8DF": {"name": "wBattleMP", "note": "current MP of the 8 battle slots (the values the party panels show as M)", "evidence": "execution (E-0042)"},
-  "D8EF": {"name": "wBattleMaxMP", "note": "maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP", "evidence": "execution (E-0042)"},
-  "CFC8": {"name": "wBattlePhase", "note": "battle phase, a 3-entry dispatch in Func_031_40CC (2 during the fight)", "evidence": "execution (E-0042)"},
-  "CFC9": {"name": "wBattleStep", "note": "step within the battle phase (1, 2, 4, 5 during the first turn)", "evidence": "execution (E-0042)"},
-  "D8A4": {"name": "wBattleActor", "note": "slot number of the battler whose turn it is: indexes MP arrays and status records in the battle code", "evidence": "reading (E-0043)"},
-  "D8A5": {"name": "wBattleTarget", "note": "slot number of the battler an action is applied to (ApplyDamageToTarget, DefeatTarget)", "evidence": "reading (E-0043)"},
-  "DA63": {"name": "wBattleSlotOut", "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)", "evidence": "reading (E-0043)"},
-  "D80C": {"name": "wBattleStatus", "note": "9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated", "evidence": "reading (E-0043)"},
-  "DAC4": {"name": "wBattleStatResultLo", "note": "low byte of the 16-bit result of the GetBase* routines (wDAC5 is the high byte)", "evidence": "reading (E-0043)"},
-  "D872": {"name": "wBattleDamageLo", "note": "low byte of the damage ApplyDamageToTarget subtracts (wD873 is the high byte)", "evidence": "reading (E-0043)"},
-  "DAC5": {"name": "wBattleStatResultHi", "note": "high byte of the 16-bit result of the GetBase* routines", "evidence": "reading (E-0043)"},
-  "CFCA": {"name": "wBattleSubPhase", "note": "state variable of Func_031_47DD in the battle bank (1 and 2 alternate while waiting for the command menu)", "evidence": "reading (E-0043)"},
-  "CFCB": {"name": "wBattleResolveStep", "note": "step of RunBattleResolveStep (16 cases); ApplyDamageToTarget advances or rewinds it", "evidence": "reading (E-0043)"},
-  "CFCC": {"name": "wBattleSubStep", "note": "nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget", "evidence": "reading (E-0043)"},
-  "CFCD": {"name": "wBattleSubStep2", "note": "nested step used by Func_032_5A3A (3 cases)", "evidence": "reading (E-0043)"},
-  "D8FF": {"name": "wBattleATK", "note": "attack of the 8 battle slots: ComputeBasicDamage reads the actor's word from it and the defence array for the target; 8 words, party in slots 0-2", "evidence": "reading (E-0043)"},
-  "D90F": {"name": "wBattleDEF", "note": "defence of the 8 battle slots; RecomputeBattler (Func_032_5BE8) fills it from GetBaseDEF", "evidence": "reading (E-0043)"},
-  "D91F": {"name": "wBattleAGL", "note": "agility of the 8 battle slots; Func_032_5BE8 fills it from GetBaseAGL", "evidence": "reading (E-0043)"},
-  "D92F": {"name": "wBattleINT", "note": "intelligence of the 8 battle slots, the array after wBattleAGL (assumed)", "evidence": "reading (E-0043)"}
+  "C525": {
+    "name": "wIsCGB",
+    "note": "1 when the boot code found A = $11 (CGB), else 0; set at $0150",
+    "evidence": "E-0020"
+  },
+  "D7FE": {
+    "name": "wDataBank",
+    "note": "ROM bank used by Func_000_0B6C when reading a word through HL",
+    "evidence": "E-0014"
+  },
+  "D067": {
+    "name": "wDataBankSave",
+    "note": "spare slot some code copies wDataBank to and restores it from",
+    "evidence": "E-0014"
+  },
+  "DD10": {
+    "name": "wSoundId",
+    "note": "sound id passed to the start-sound routine",
+    "evidence": "E-0018"
+  },
+  "DC00": {
+    "name": "wSoundChannelSlots",
+    "note": "channel-state slots; the record's first byte is added to this address",
+    "evidence": "E-0018"
+  },
+  "DCC0": {
+    "name": "wSoundLabelSlots",
+    "note": "per-channel label slots: 3 bytes each, 16 per channel",
+    "evidence": "E-0019"
+  },
+  "DD0F": {
+    "name": "wSoundChannelIndex",
+    "note": "slot number of the channel the sound engine is processing",
+    "evidence": "E-0019"
+  },
+  "DD0A": {
+    "name": "wSoundHwChannel",
+    "note": "hardware channel of the current slot: 2 selects the wave channel, 3 noise",
+    "evidence": "E-0019"
+  },
+  "FFDD": {
+    "name": "hSoundBank",
+    "note": "ROM bank the sound engine reads tracks from",
+    "evidence": "E-0018"
+  },
+  "FFD8": {
+    "name": "hTrackPosLo",
+    "note": "low byte of the current track position, counted in 2-byte events",
+    "evidence": "E-0019"
+  },
+  "FFD9": {
+    "name": "hTrackPosHi",
+    "note": "high byte of the current track position",
+    "evidence": "E-0019"
+  },
+  "FFDB": {
+    "name": "hTrackBaseLo",
+    "note": "low byte of the current track's start address",
+    "evidence": "E-0019"
+  },
+  "FFDC": {
+    "name": "hTrackBaseHi",
+    "note": "high byte of the current track's start address",
+    "evidence": "E-0019"
+  },
+  "FFD6": {
+    "name": "hDecompressLock",
+    "note": "non-zero while the decompressor is running",
+    "evidence": "E-0016"
+  },
+  "FFBB": {
+    "name": "hDecompressMarker",
+    "note": "marker byte from the stream header",
+    "evidence": "E-0016"
+  },
+  "FFBC": {
+    "name": "hDecompressDestLo",
+    "note": "destination start, low byte",
+    "evidence": "E-0016"
+  },
+  "FFBD": {
+    "name": "hDecompressDestHi",
+    "note": "destination start, high byte",
+    "evidence": "E-0016"
+  },
+  "FFA1": {
+    "name": "hScrollX",
+    "note": "copied to rSCX by Func_000_07E0 and by the LCD handler",
+    "evidence": "reading"
+  },
+  "FFA5": {
+    "name": "hScrollY",
+    "note": "copied to rSCY by Func_000_07E0 and by the LCD handler",
+    "evidence": "reading"
+  },
+  "FFB1": {
+    "name": "hOamNextEntry",
+    "note": "index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28",
+    "evidence": "reading"
+  },
+  "C528": {
+    "name": "wStringCategory",
+    "note": "category index LookupString uses in the table of tables",
+    "evidence": "reading"
+  },
+  "C529": {
+    "name": "wStringIndex",
+    "note": "index within the category table that LookupString uses",
+    "evidence": "reading"
+  },
+  "C52A": {
+    "name": "wStringBank",
+    "note": "ROM bank number LookupString stores; the string printer maps it into the ROM bank window",
+    "evidence": "reading"
+  },
+  "FFA9": {
+    "name": "hSpriteOriginX",
+    "note": "added to each entry's X (+8) by BuildOamFromSpriteTable",
+    "evidence": "reading"
+  },
+  "FFAB": {
+    "name": "hSpriteOriginY",
+    "note": "added to each entry's Y (+$10) by BuildOamFromSpriteTable",
+    "evidence": "reading"
+  },
+  "FFAD": {
+    "name": "hSpriteSetIndex",
+    "note": "first-level index into the table BuildOamFromSpriteTable reads",
+    "evidence": "reading"
+  },
+  "FFAE": {
+    "name": "hSpriteSubIndex",
+    "note": "second-level index into the table BuildOamFromSpriteTable reads",
+    "evidence": "reading"
+  },
+  "FFAF": {
+    "name": "hSpriteTileOffset",
+    "note": "added to each entry's tile number by BuildOamFromSpriteTable",
+    "evidence": "reading"
+  },
+  "FFB0": {
+    "name": "hSpriteAttrXor",
+    "note": "XORed into each entry's attribute byte by BuildOamFromSpriteTable",
+    "evidence": "reading"
+  },
+  "CB7D": {
+    "name": "wSpriteSlotCount",
+    "note": "number of 8-byte slots DrawSpriteSlots draws",
+    "evidence": "reading"
+  },
+  "CB7F": {
+    "name": "wSpriteSlots",
+    "note": "start of an array of objects: 8-byte slots in the bank $E0 intro (DrawSpriteSlots), 16-byte entries in field mode (the script commands, ScriptStepObject)",
+    "evidence": "reading"
+  },
+  "C198": {
+    "name": "wScreenTileBuffer",
+    "note": "screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030)",
+    "evidence": "reading"
+  },
+  "C524": {
+    "name": "wSGBActive",
+    "note": "set to 1 at boot, cleared on CGB and when DetectSGB finds no Super Game Boy; SendSGBPacketSet, DelayBCWhenSGB and SpinDelay return at once when it is 0",
+    "evidence": "reading"
+  },
+  "C47C": {
+    "name": "wSGBPacketIndex",
+    "note": "packet set number for SendSGBPacketSet; $FF selects wSGBPacketBuffer",
+    "evidence": "reading"
+  },
+  "C47F": {
+    "name": "wSGBPacketBuffer",
+    "note": "packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF",
+    "evidence": "reading"
+  },
+  "C5DB": {
+    "name": "wGameMode",
+    "note": "index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot",
+    "evidence": "reading"
+  },
+  "C5DF": {
+    "name": "wModeChangeRequest",
+    "note": "non-zero makes the main loop leave its wait and run RunGameModeInit again",
+    "evidence": "reading"
+  },
+  "C56C": {
+    "name": "wFadeState",
+    "note": "palette fade state set by StartPaletteFade; GameFrameUpdate and the VBlank handler skip normal work while it is non-zero (bit 7 clear)",
+    "evidence": "reading"
+  },
+  "C55E": {
+    "name": "wJoypadHeld",
+    "note": "buttons held at the latest PollJoypad (layout of ReadJoypadDirect)",
+    "evidence": "reading"
+  },
+  "C55F": {
+    "name": "wJoypadHeldPrev",
+    "note": "wJoypadHeld from the previous poll",
+    "evidence": "reading"
+  },
+  "C562": {
+    "name": "wJoypadPressed",
+    "note": "buttons newly held since the previous poll",
+    "evidence": "reading"
+  },
+  "C563": {
+    "name": "wJoypadPressedRepeat",
+    "note": "newly held buttons plus auto-repeat (UpdateJoypadPresses)",
+    "evidence": "reading"
+  },
+  "C564": {
+    "name": "wJoypadRepeatTimer",
+    "note": "auto-repeat countdown: $14 after a new press, then 6",
+    "evidence": "reading"
+  },
+  "C5F0": {
+    "name": "wFrameCounterLo",
+    "note": "low byte of the 16-bit frame counter the VBlank handler increments",
+    "evidence": "reading"
+  },
+  "C5F1": {
+    "name": "wFrameCounterHi",
+    "note": "high byte of the 16-bit frame counter",
+    "evidence": "reading"
+  },
+  "C60A": {
+    "name": "wMusicRequest",
+    "note": "music id waiting for ProcessSoundQueue; $FF = none",
+    "evidence": "reading"
+  },
+  "C60B": {
+    "name": "wSoundEffectRequest",
+    "note": "sound effect id waiting for ProcessSoundQueue; $FF = none",
+    "evidence": "reading"
+  },
+  "C5DC": {
+    "name": "wModeState",
+    "note": "per-mode sub-state; low nibble indexes the jump table in GameMode1_Update (E-0030)",
+    "evidence": "reading"
+  },
+  "FFA2": {
+    "name": "hScrollXHi",
+    "note": "high byte of the 16-bit horizontal scroll that starts at hScrollX",
+    "evidence": "reading"
+  },
+  "FFA6": {
+    "name": "hScrollYHi",
+    "note": "high byte of the 16-bit vertical scroll that starts at hScrollY",
+    "evidence": "reading"
+  },
+  "FFAA": {
+    "name": "hSpriteOriginXHi",
+    "note": "high byte of the 16-bit sprite X position (hSpriteOriginX is the low byte)",
+    "evidence": "reading"
+  },
+  "FFAC": {
+    "name": "hSpriteOriginYHi",
+    "note": "high byte of the 16-bit sprite Y position (hSpriteOriginY is the low byte)",
+    "evidence": "reading"
+  },
+  "FFD2": {
+    "name": "hSpriteScrollXLo",
+    "note": "low byte of -(scroll X - 9) - 1, computed each frame by ComputeSpriteScrollOffsets",
+    "evidence": "reading"
+  },
+  "FFD3": {
+    "name": "hSpriteScrollXHi",
+    "note": "high byte of that value",
+    "evidence": "reading"
+  },
+  "FFD4": {
+    "name": "hSpriteScrollYLo",
+    "note": "low byte of -(scroll Y - $11) - 1",
+    "evidence": "reading"
+  },
+  "FFD5": {
+    "name": "hSpriteScrollYHi",
+    "note": "high byte of that value",
+    "evidence": "reading"
+  },
+  "FF98": {
+    "name": "hPlayerFacing",
+    "note": "0, 1, 2, 3: CheckInteractionInFront adds +16 to hFF91, +16 to hFF8E, -16 to hFF91, -16 to hFF8E for these values",
+    "evidence": "reading"
+  },
+  "FF8E": {
+    "name": "hPlayerX",
+    "note": "position along the axis that facings 1 and 3 change in CheckInteractionInFront",
+    "evidence": "reading"
+  },
+  "FF91": {
+    "name": "hPlayerY",
+    "note": "position along the axis that facings 0 and 2 change in CheckInteractionInFront",
+    "evidence": "reading"
+  },
+  "C82D": {
+    "name": "wPlayFrames",
+    "note": "frame count 0-59 of the play-time counter",
+    "evidence": "reading"
+  },
+  "C82E": {
+    "name": "wPlaySeconds",
+    "note": "seconds 0-59 of the play-time counter",
+    "evidence": "reading"
+  },
+  "C82F": {
+    "name": "wPlayMinutes",
+    "note": "minutes 0-59 of the play-time counter",
+    "evidence": "reading"
+  },
+  "C830": {
+    "name": "wPlayHoursLo",
+    "note": "low byte of the 16-bit play-time hours",
+    "evidence": "reading"
+  },
+  "C831": {
+    "name": "wPlayHoursHi",
+    "note": "high byte of the 16-bit play-time hours",
+    "evidence": "reading"
+  },
+  "D968": {
+    "name": "wSlotPersonalityHi",
+    "note": "first of three byte arrays (8 slots each) graded into the personality index with weight 9 by PersonalityIndexOfSlot",
+    "evidence": "reading"
+  },
+  "D970": {
+    "name": "wSlotPersonalityMid",
+    "note": "second array, weight 3",
+    "evidence": "reading"
+  },
+  "D978": {
+    "name": "wSlotPersonalityLo",
+    "note": "third array, weight 1",
+    "evidence": "reading"
+  },
+  "D2C7": {
+    "name": "wPersonalityIndex",
+    "note": "column index (0-26) into the bank-6 table; set from PersonalityIndexOfSlot in banks $30 and $E0 before ReadBank6TableWord",
+    "evidence": "reading"
+  },
+  "CFEC": {
+    "name": "wRecordBuffer",
+    "note": "scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here",
+    "evidence": "reading"
+  },
+  "CFEE": {
+    "name": "wRecordBufferData",
+    "note": "where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer)",
+    "evidence": "reading"
+  },
+  "CFE6": {
+    "name": "wMonsterId",
+    "note": "16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads",
+    "evidence": "reading"
+  },
+  "D081": {
+    "name": "wItemId",
+    "note": "item id used by LoadItemRecord and RunItemEffect; $FF = none",
+    "evidence": "reading"
+  },
+  "D084": {
+    "name": "wItemRecord",
+    "note": "13-byte copy of an ItemTable record",
+    "evidence": "reading"
+  },
+  "C61D": {
+    "name": "wInventory",
+    "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)",
+    "evidence": "reading"
+  },
+  "FF90": {
+    "name": "hMapId",
+    "note": "map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39)",
+    "evidence": "reading + execution (E-0036)"
+  },
+  "FF8F": {
+    "name": "hMapScreenX",
+    "note": "column of the current screen in the map: LoadMapScreen indexes the map's array of screen streams with hMapScreenY * width + hMapScreenX (1 on the opening ship deck, a map 2 screens wide)",
+    "evidence": "reading + execution (E-0037)"
+  },
+  "FF92": {
+    "name": "hMapScreenY",
+    "note": "row of the current screen in the map (0 on the opening ship deck)",
+    "evidence": "reading + execution (E-0037)"
+  },
+  "C190": {
+    "name": "wMapWidthScreens",
+    "note": "map width in screens, from the map record (2 for the ship deck, 4 for map 56)",
+    "evidence": "reading + execution (E-0037)"
+  },
+  "C191": {
+    "name": "wMapHeightScreens",
+    "note": "map height in screens, from the map record",
+    "evidence": "reading + execution (E-0037)"
+  },
+  "C192": {
+    "name": "wMaxBlockingTile",
+    "note": "highest tile id that blocks the player (TileBlockedAtPixel compares tile ids with it); from the map record (55 for the ship deck)",
+    "evidence": "reading + execution (E-0037)"
+  },
+  "C919": {
+    "name": "wScriptStartRequest",
+    "note": "bit 7 set asks FetchScriptCommand to begin running the script at wScriptPointer",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "C91A": {
+    "name": "wScriptPointerLo",
+    "note": "low byte of the address of the next script byte (wC91B is the high byte; the bytes are in the current bank, or in wDataBank when wScriptInDataBank is set)",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "C91B": {
+    "name": "wScriptPointerHi",
+    "note": "high byte of the script pointer",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "C91F": {
+    "name": "wScriptRunning",
+    "note": "non-zero while a script runs",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "C920": {
+    "name": "wScriptCommandType",
+    "note": "the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1)",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "C921": {
+    "name": "wScriptParam0",
+    "note": "first parameter of the current script command",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "C922": {
+    "name": "wScriptParam1",
+    "note": "second parameter of the current script command",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "C923": {
+    "name": "wScriptStep",
+    "note": "step counter of the current script command",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "D7FD": {
+    "name": "wScriptInDataBank",
+    "note": "non-zero when the script bytes are read from the bank in wDataBank",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "D8BF": {
+    "name": "wBattleHP",
+    "note": "current HP of the 8 battle slots as 16-bit words (party in slots 0-2, a foe in slot 4); the first value of the party panels; a defeated foe's word fell from 20 to 0 on the emulator",
+    "evidence": "execution (E-0042)"
+  },
+  "D8CF": {
+    "name": "wBattleMaxHP",
+    "note": "maximum HP of the 8 battle slots (the foe's word stayed 25 when its current HP fell to 0)",
+    "evidence": "execution (E-0042)"
+  },
+  "D8DF": {
+    "name": "wBattleMP",
+    "note": "current MP of the 8 battle slots (the values the party panels show as M)",
+    "evidence": "execution (E-0042)"
+  },
+  "D8EF": {
+    "name": "wBattleMaxMP",
+    "note": "maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP",
+    "evidence": "execution (E-0042)"
+  },
+  "CFC8": {
+    "name": "wBattlePhase",
+    "note": "battle phase, a 3-entry dispatch in Func_031_40CC: 1 = the fight, 2 = after the fight (victory message, rewards, recruiting); 0 at start (E-0044)",
+    "evidence": "execution (E-0042)"
+  },
+  "CFC9": {
+    "name": "wBattleStep",
+    "note": "step within the battle phase: in phase 1, 1 = set-up, 2 = command entry (a loop over the party), 3 = executing the chosen actions; in phase 2, 0-5 = the end-of-battle sequence (E-0044)",
+    "evidence": "execution (E-0042)"
+  },
+  "D8A4": {
+    "name": "wBattleActor",
+    "note": "slot number of the battler whose turn it is: indexes MP arrays and status records in the battle code",
+    "evidence": "reading (E-0043)"
+  },
+  "D8A5": {
+    "name": "wBattleTarget",
+    "note": "slot number of the battler an action is applied to (ApplyDamageToTarget, DefeatTarget)",
+    "evidence": "reading (E-0043)"
+  },
+  "DA63": {
+    "name": "wBattleSlotOut",
+    "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)",
+    "evidence": "reading (E-0043)"
+  },
+  "D80C": {
+    "name": "wBattleStatus",
+    "note": "9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated",
+    "evidence": "reading (E-0043)"
+  },
+  "DAC4": {
+    "name": "wBattleStatResultLo",
+    "note": "low byte of the 16-bit result of the GetBase* routines (wDAC5 is the high byte)",
+    "evidence": "reading (E-0043)"
+  },
+  "D872": {
+    "name": "wBattleDamageLo",
+    "note": "low byte of the damage ApplyDamageToTarget subtracts (wD873 is the high byte)",
+    "evidence": "reading (E-0043)"
+  },
+  "DAC5": {
+    "name": "wBattleStatResultHi",
+    "note": "high byte of the 16-bit result of the GetBase* routines",
+    "evidence": "reading (E-0043)"
+  },
+  "CFCA": {
+    "name": "wBattleSubPhase",
+    "note": "index within the battle step: during step 3 of phase 1 it counts the actions being executed (0, 1, 2, ...); during command entry it alternates 1 and 2 (E-0044)",
+    "evidence": "reading (E-0043)"
+  },
+  "CFCB": {
+    "name": "wBattleResolveStep",
+    "note": "step of RunBattleResolveStep (16 cases, 0-15) for the action wBattleSubPhase is executing; ApplyDamageToTarget advances or rewinds it (E-0044)",
+    "evidence": "reading (E-0043)"
+  },
+  "CFCC": {
+    "name": "wBattleSubStep",
+    "note": "nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget",
+    "evidence": "reading (E-0043)"
+  },
+  "CFCD": {
+    "name": "wBattleSubStep2",
+    "note": "nested step used by Func_032_5A3A (3 cases)",
+    "evidence": "reading (E-0043)"
+  },
+  "D8FF": {
+    "name": "wBattleATK",
+    "note": "attack of the 8 battle slots: ComputeBasicDamage reads the actor's word from it and the defence array for the target; 8 words, party in slots 0-2",
+    "evidence": "reading (E-0043)"
+  },
+  "D90F": {
+    "name": "wBattleDEF",
+    "note": "defence of the 8 battle slots; RecomputeBattler (Func_032_5BE8) fills it from GetBaseDEF",
+    "evidence": "reading (E-0043)"
+  },
+  "D91F": {
+    "name": "wBattleAGL",
+    "note": "agility of the 8 battle slots; Func_032_5BE8 fills it from GetBaseAGL",
+    "evidence": "reading (E-0043)"
+  },
+  "D92F": {
+    "name": "wBattleINT",
+    "note": "intelligence of the 8 battle slots, the array after wBattleAGL (assumed)",
+    "evidence": "reading (E-0043)"
+  }
 }

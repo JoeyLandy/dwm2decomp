@@ -924,7 +924,7 @@
   },
   "31:40A5": {
     "name": "GameMode4_Update",
-    "note": "per-frame routine for wGameMode = 4, the battle: in link mode (wC58A) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wCFC8 = phase, wCFC9 = step)",
+    "note": "per-frame routine for wGameMode = 4, the battle: in link mode (wC58A) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wCFC8 = phase (1 fight, 2 after), wCFC9 = step)",
     "evidence": "reading + execution (E-0029)"
   },
   "07:486E": {
