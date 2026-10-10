@@ -140,27 +140,27 @@
         {
           "type": "db",
           "size": 1,
-          "name": "first number the debug skill viewer shows (2, 4, 10 for the three Blaze skills)"
+          "name": "first number the debug skill viewer shows; rises across a spell family (2, 4, 10 for Blaze, Blazemore, Blazemost)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "string index, category $12: a short family name such as 'Infer'"
+          "name": "skill family: string index in category $12 (1 = Blaze, 2 = Firebal, 3 = Bang, ...)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "string index, category $13: shown as 'Type'"
+          "name": "skill type: string index in category $13 ('Type A' ... 'Type G')"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "low 2 bits: string index, category $14 ('Batt'); high nibble: string index, category $10 ('Charge')"
+          "name": "low 2 bits: when usable, string index in category $14 (0 None, 1 Battle, 2 Field, 3 Anytime); high nibble: string index in category $10 ('Charge', 'Mixed', 'Cautious', ...)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "string index, category $11 (after Func_001_5311): the target ('1 enemy', 'All enem')"
+          "name": "target: string index in category $11 after Func_001_5311 ('1 enemy', 'All enemies', ...)"
         },
         {
           "type": "db",

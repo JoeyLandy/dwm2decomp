@@ -1061,5 +1061,77 @@
     "name": "DebugShowMonsterRecord",
     "note": "HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen",
     "evidence": "reading (E-0033)"
+  },
+  "95:468D": {
+    "name": "StringTable95_Cat09_SkillDescriptions",
+    "data": true,
+    "note": "string table of category $09 (the string database extension in bank $95, selected when wStringCategory is 9 or more): skill descriptions, for example 'Attacks an enemy with a fireball' (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:47ED": {
+    "name": "StringTable95_Cat0A",
+    "data": true,
+    "note": "string table of category $0A (the string database extension in bank $95, selected when wStringCategory is 9 or more): two-line names such as 'VIT Belt', 'Draco Belt', 'Stone Fang' (the table at $47EF is the same list one entry later) (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:47EF": {
+    "name": "StringTable95_Cat0B",
+    "data": true,
+    "note": "string table of category $0B (the string database extension in bank $95, selected when wStringCategory is 9 or more): the same names as category $0A without the blank first entry (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:4837": {
+    "name": "StringTable95_Cat0C_FieldActions",
+    "data": true,
+    "note": "string table of category $0C (the string database extension in bank $95, selected when wStringCategory is 9 or more): short two-line phrases such as 'Call ship', 'Call cloud', 'Smash rock', 'Burn', 'Cut', 'Open door' (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:4839": {
+    "name": "StringTable95_Cat0D",
+    "data": true,
+    "note": "string table of category $0D (the string database extension in bank $95, selected when wStringCategory is 9 or more): the same phrases as category $0C without the blank first entry (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:4847": {
+    "name": "StringTable95_Cat0E_Tactics",
+    "data": true,
+    "note": "string table of category $0E (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Attack', 'Charge', 'Mixed', 'Cautious', 'Command' (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:4853": {
+    "name": "StringTable95_Cat0F",
+    "data": true,
+    "note": "string table of category $0F (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Charge', 'Mixed', 'Cautious', 'ZoneOut' (overlaps category $0E) (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:4857": {
+    "name": "StringTable95_Cat10",
+    "data": true,
+    "note": "string table of category $10 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Charge', 'Mixed', 'Cautious', 'ZoneOut', 'Chance', 'Confusion', shown for the high nibble of a skill record's byte 3 (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:4869": {
+    "name": "StringTable95_Cat11_Targets",
+    "data": true,
+    "note": "string table of category $11 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'No area', '1 enemy', 'All enemies', 'Foes multi-hit', '1 friend', 'All friends', 'Choose 1' (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:487F": {
+    "name": "StringTable95_Cat12_SkillFamilies",
+    "data": true,
+    "note": "string table of category $12 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'None', 'Blaze', 'Firebal', 'Bang', 'Infernos', 'Bolt', 'IceBolt' (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:48B7": {
+    "name": "StringTable95_Cat13_SkillTypes",
+    "data": true,
+    "note": "string table of category $13 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Type A' ... 'Type G' (E-0033)",
+    "evidence": "reading + execution (E-0033)"
+  },
+  "95:48C7": {
+    "name": "StringTable95_Cat14_Usable",
+    "data": true,
+    "note": "string table of category $14 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'None', 'Battle', 'Field', 'Anytime' (E-0033)",
+    "evidence": "reading + execution (E-0033)"
   }
 }

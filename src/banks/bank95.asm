@@ -25,20 +25,22 @@ Func_095_465F::
     db $CD, $50, $46, $CD, $11, $26, $C9
 
 Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_095_468D
-    dw Data_095_47ED
-    dw Data_095_47EF
-    dw Data_095_4837
-    dw Data_095_4839
-    dw Data_095_4847
-    dw Data_095_4853
-    dw Data_095_4857
-    dw Data_095_4869
-    dw Data_095_487F
-    dw Data_095_48B7
-    dw Data_095_48C7
+    dw StringTable95_Cat09_SkillDescriptions
+    dw StringTable95_Cat0A
+    dw StringTable95_Cat0B
+    dw StringTable95_Cat0C_FieldActions
+    dw StringTable95_Cat0D
+    dw StringTable95_Cat0E_Tactics
+    dw StringTable95_Cat0F
+    dw StringTable95_Cat10
+    dw StringTable95_Cat11_Targets
+    dw StringTable95_Cat12_SkillFamilies
+    dw StringTable95_Cat13_SkillTypes
+    dw StringTable95_Cat14_Usable
 
-Data_095_468D:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $09 (the string database extension in bank $95, selected when wStringCategory is 9 or more): skill descriptions, for example 'Attacks an enemy with a fireball' (E-0033)
+StringTable95_Cat09_SkillDescriptions:: ; heuristic: target of a monotone pointer table; C0
+Data_095_468D:: ; address name
     dw Data_095_48CF
     dw Data_095_48CF
     dw Data_095_48F2
@@ -216,10 +218,14 @@ Data_095_468D:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_62E3
     dw Data_095_62E3
 
-Data_095_47ED:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $0A (the string database extension in bank $95, selected when wStringCategory is 9 or more): two-line names such as 'VIT Belt', 'Draco Belt', 'Stone Fang' (the table at $47EF is the same list one entry later) (E-0033)
+StringTable95_Cat0A:: ; heuristic: target of a monotone pointer table; C0
+Data_095_47ED:: ; address name
     dw Data_095_62E4
 
-Data_095_47EF:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $0B (the string database extension in bank $95, selected when wStringCategory is 9 or more): the same names as category $0A without the blank first entry (E-0033)
+StringTable95_Cat0B:: ; heuristic: target of a monotone pointer table; C0
+Data_095_47EF:: ; address name
     dw Data_095_62E5
     dw Data_095_62EB
     dw Data_095_62F4
@@ -257,10 +263,14 @@ Data_095_47EF:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_640D
     dw Data_095_6419
 
-Data_095_4837:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $0C (the string database extension in bank $95, selected when wStringCategory is 9 or more): short two-line phrases such as 'Call ship', 'Call cloud', 'Smash rock', 'Burn', 'Cut', 'Open door' (E-0033)
+StringTable95_Cat0C_FieldActions:: ; heuristic: target of a monotone pointer table; C0
+Data_095_4837:: ; address name
     dw Data_095_641B
 
-Data_095_4839:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $0D (the string database extension in bank $95, selected when wStringCategory is 9 or more): the same phrases as category $0C without the blank first entry (E-0033)
+StringTable95_Cat0D:: ; heuristic: target of a monotone pointer table; C0
+Data_095_4839:: ; address name
     dw Data_095_641C
     dw Data_095_6422
     dw Data_095_642C
@@ -269,7 +279,9 @@ Data_095_4839:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_6448
     dw Data_095_644D
 
-Data_095_4847:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $0E (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Attack', 'Charge', 'Mixed', 'Cautious', 'Command' (E-0033)
+StringTable95_Cat0E_Tactics:: ; heuristic: target of a monotone pointer table; C0
+Data_095_4847:: ; address name
     dw Data_095_6457
     dw Data_095_6457
     dw Data_095_645E
@@ -277,11 +289,15 @@ Data_095_4847:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_646B
     dw Data_095_6474
 
-Data_095_4853:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $0F (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Charge', 'Mixed', 'Cautious', 'ZoneOut' (overlaps category $0E) (E-0033)
+StringTable95_Cat0F:: ; heuristic: target of a monotone pointer table; C0
+Data_095_4853:: ; address name
     dw Data_095_647C
     dw Data_095_647C
 
-Data_095_4857:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $10 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Charge', 'Mixed', 'Cautious', 'ZoneOut', 'Chance', 'Confusion', shown for the high nibble of a skill record's byte 3 (E-0033)
+StringTable95_Cat10:: ; heuristic: target of a monotone pointer table; C0
+Data_095_4857:: ; address name
     dw Data_095_647C
     dw Data_095_647D
     dw Data_095_6484
@@ -292,7 +308,9 @@ Data_095_4857:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_64AC
     dw Data_095_64B1
 
-Data_095_4869:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $11 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'No area', '1 enemy', 'All enemies', 'Foes multi-hit', '1 friend', 'All friends', 'Choose 1' (E-0033)
+StringTable95_Cat11_Targets:: ; heuristic: target of a monotone pointer table; C0
+Data_095_4869:: ; address name
     dw Data_095_64B6
     dw Data_095_64BE
     dw Data_095_64C6
@@ -305,7 +323,9 @@ Data_095_4869:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_650F
     dw Data_095_6513
 
-Data_095_487F:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $12 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'None', 'Blaze', 'Firebal', 'Bang', 'Infernos', 'Bolt', 'IceBolt' (E-0033)
+StringTable95_Cat12_SkillFamilies:: ; heuristic: target of a monotone pointer table; C0
+Data_095_487F:: ; address name
     dw Data_095_651A
     dw Data_095_651F
     dw Data_095_6525
@@ -335,7 +355,9 @@ Data_095_487F:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_65D6
     dw Data_095_65DB
 
-Data_095_48B7:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $13 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'Type A' ... 'Type G' (E-0033)
+StringTable95_Cat13_SkillTypes:: ; heuristic: target of a monotone pointer table; C0
+Data_095_48B7:: ; address name
     dw Data_095_65E1
     dw Data_095_65E8
     dw Data_095_65EF
@@ -345,7 +367,9 @@ Data_095_48B7:: ; heuristic: target of a monotone pointer table; C0
     dw Data_095_660B
     dw Data_095_6612
 
-Data_095_48C7:: ; heuristic: target of a monotone pointer table; C0
+; string table of category $14 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'None', 'Battle', 'Field', 'Anytime' (E-0033)
+StringTable95_Cat14_Usable:: ; heuristic: target of a monotone pointer table; C0
+Data_095_48C7:: ; address name
     dw Data_095_6619
     dw Data_095_661E
     dw Data_095_6625
