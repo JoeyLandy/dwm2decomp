@@ -1552,7 +1552,7 @@ Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wDA6B, wDA6C
 ; points at: wD988, wD2AD
 Func_030_4AC6:: ; heuristic: target of a pointer table; C0
-    ld hl, Data_030_59E0
+    ld hl, AIScoreRoutineTableB
     ld a, l
     ld [wDA6B], a
     ld a, h
@@ -1564,7 +1564,7 @@ Func_030_4AC6:: ; heuristic: target of a pointer table; C0
 ; writes: wDA6B, wDA6C
 ; points at: wD988, wD2AD
 Func_030_4AD3:: ; heuristic: target of a pointer table; C0
-    ld hl, Data_030_5785
+    ld hl, AIScoreRoutineTableA
     ld a, l
     ld [wDA6B], a
     ld a, h
@@ -1624,7 +1624,7 @@ Jump_030_4B1B::
     jr nz, Jump_030_4B1B
     ld a, $00
     push de
-    call Func_030_4BA0
+    call ScoreSkillForAI
     pop de
     ld a, [wDA3F]
     cp a, $01
@@ -1633,7 +1633,7 @@ Jump_030_4B1B::
     inc de
     ld a, $AC
     push de
-    call Func_030_4BA0
+    call ScoreSkillForAI
     pop de
     ld a, [wBattleActor]
     and a, $03
@@ -1711,14 +1711,16 @@ Jump_030_4B9D::
 Func_030_4B9F::
     ld a, [hl]
 
+; A = skill number ($FF skips): AddSkillBaseWeightAndLoadSkill; when wCFF1 bit 0 (in the skill record) is set, clears wDA6E-wDA71 and far-calls the skill's AI scoring routine from the table in wDA6B/wDA6C (AIScoreRoutineTableA or B), then folds the accumulated weights into the word at DE (the rest is not fully read) (E-0083)
 ; 2 call sites from 1 routine (e.g. Func_030_4AD3)
 ; reads: wCFF1, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
 ; writes: wDA6E, wDA6F, wDA70, wDA71
-Func_030_4BA0::
+ScoreSkillForAI::
+Func_030_4BA0:: ; address name
     push de
     cp a, $FF
     jr z, Jump_030_4BFA
-    call Func_030_4CAB
+    call AddSkillBaseWeightAndLoadSkill
     ld e, a
     ld d, $00
     ld a, [wCFF1]
@@ -1904,9 +1906,11 @@ Jump_030_4C96::
     jr nz, Jump_030_4C75
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4BA0)
+; A = skill number: when the word at $55F3 + 2 * A (a per-skill weight table in this bank) is non-zero it is added to the word at DE and Func_030_4CDB adds a random adjustment; then the skill record is loaded (wRecordBuffer = A, wCFED = 0, LoadSkillRecord); A and DE kept (E-0083)
+; 1 call site from 1 routine (e.g. ScoreSkillForAI)
 ; writes: wRecordBuffer, wCFED
-Func_030_4CAB::
+AddSkillBaseWeightAndLoadSkill::
+Func_030_4CAB:: ; address name
     push de
     push af
     ld l, a
@@ -1930,7 +1934,7 @@ Func_030_4CAB::
     ld a, [de]
     adc a, [hl]
     ld [de], a
-    call Func_030_4CDB
+    call AddSkillBaseWeightAndLoadSkill_Sub01
 
 Jump_030_4CC9::
     pop af
@@ -1943,9 +1947,11 @@ Jump_030_4CC9::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4CAB)
+; only called from AddSkillBaseWeightAndLoadSkill (E-0047)
+; 1 call site from 1 routine (e.g. AddSkillBaseWeightAndLoadSkill)
 ; reads: wC5E7
-Func_030_4CDB::
+AddSkillBaseWeightAndLoadSkill_Sub01::
+Func_030_4CDB:: ; address name
     push af
     dec de
     call AdvanceRandom
@@ -3035,7 +3041,9 @@ Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $33, $00
     db $64, $00
 
-Data_030_5785:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; 201 three-byte far pointers (address, bank $E2) indexed by skill number: the AI scoring routine for each skill, called by Func_030_4BA0 with wDA6E-wDA71 cleared (E-0083)
+AIScoreRoutineTableA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_5785:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C1785, $189
     dw Data_030_5D83
     db $E2
@@ -3156,7 +3164,9 @@ Data_030_5785:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_030_64C1
     db $E2
 
-Data_030_59E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; a second copy of AIScoreRoutineTableA (all 201 entries equal), selected by Func_030_4AC6 instead of Func_030_4AD3 (E-0083)
+AIScoreRoutineTableB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_59E0:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C19E0, $189
     dw Data_030_5D83
     db $E2

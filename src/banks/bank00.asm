@@ -3847,7 +3847,7 @@ Jump_000_16A5::
     ret
 
 ; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
-; 62 call sites from 52 routines (e.g. Func_005_5029, Func_005_4B97, Func_005_676E, Func_005_67B2, ...)
+; 62 call sites from 52 routines (e.g. Func_005_5029, Func_005_4B97, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
 Multiply8By16::
 Func_000_16AA:: ; address name
     push af
@@ -3892,7 +3892,7 @@ Jump_000_16CD::
     ret
 
 ; HL = HL / A (quotient in HL), A = remainder; clobbers D, E
-; 87 call sites from 63 routines (e.g. DivideHLByBC, Func_005_6985, Func_005_64DF, Func_005_5317, ...)
+; 87 call sites from 63 routines (e.g. DivideHLByBC, AIScore_BiAttack_Sub02_Sub01, AIScore_Meditate_Sub01_Sub01, Func_005_5317, ...)
 DivideHLByA::
 Func_000_16D1:: ; address name
     ld d, $10
@@ -3916,7 +3916,7 @@ Jump_000_16DE::
     ret
 
 ; E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D
-; 36 call sites from 30 routines (e.g. Func_005_5029, Func_005_4B97, Func_005_667F, Func_005_676E, ...)
+; 36 call sites from 30 routines (e.g. Func_005_5029, Func_005_4B97, Func_005_667F, AIScore_BiAttack_Sub01, ...)
 Divide24ByA::
 Func_000_16E2:: ; address name
     ld d, $18
@@ -10515,7 +10515,7 @@ Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessWDA63SlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 33 call sites from 30 routines (e.g. Func_005_59BD, Func_005_5A33, Func_005_5A73, Func_005_689C, ...)
+; 33 call sites from 30 routines (e.g. Func_005_59BD, Func_005_5A33, Func_005_5A73, AIScore_Kamikaze_Sub01, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name

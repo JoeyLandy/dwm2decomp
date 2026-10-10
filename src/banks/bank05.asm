@@ -2,7 +2,7 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-; 12 call sites from 11 routines (e.g. Func_005_6985, Func_005_544F, Func_005_50E3, Func_005_65C1, ...)
+; 12 call sites from 11 routines (e.g. AIScore_BiAttack_Sub02_Sub01, AIScore_Transform_Sub01, Func_005_50E3, AIScore_Sap_Sub02_Sub01, ...)
 ; points at: wBattleATK
 GetBattleATK_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_4001:: ; address name
@@ -10,7 +10,7 @@ Func_005_4001:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
-; 18 call sites from 15 routines (e.g. Func_005_443B, Func_005_6B20, Func_005_6985, Func_005_6CC2, ...)
+; 18 call sites from 15 routines (e.g. Func_005_443B, AIScore_Upper_Sub01_Sub01_Sub01, AIScore_BiAttack_Sub02_Sub01, Func_005_6CC2, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank05::
 Func_005_4006:: ; address name
@@ -18,7 +18,7 @@ Func_005_4006:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 19 call sites from 14 routines (e.g. Func_005_64DF, Func_005_5317, Func_005_6B9E, Func_005_6556, ...)
+; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, Func_005_5317, Func_005_6B9E, Func_005_6556, ...)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank05::
 Func_005_400B:: ; address name
@@ -26,7 +26,7 @@ Func_005_400B:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 12 call sites from 7 routines (e.g. Func_005_558B, Func_005_544F, Func_005_6FFD, Func_005_6741, ...)
+; 12 call sites from 7 routines (e.g. Func_005_558B, AIScore_Transform_Sub01, Func_005_6FFD, Func_005_6741, ...)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank05::
 Func_005_4010:: ; address name
@@ -34,7 +34,7 @@ Func_005_4010:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 25 call sites from 21 routines (e.g. Func_005_6494, Func_005_4C5D, Func_005_64DF, Func_005_5317, ...)
+; 25 call sites from 21 routines (e.g. Func_005_6494, Func_005_4C5D, AIScore_Meditate_Sub01_Sub01, Func_005_5317, ...)
 ; points at: wBattleHP
 GetBattleHP_Bank05::
 Func_005_4015:: ; address name
@@ -42,7 +42,7 @@ Func_005_4015:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
-; 9 call sites from 9 routines (e.g. Func_005_5500, Func_005_558B, Func_005_6FFD, Func_005_62E1, ...)
+; 9 call sites from 9 routines (e.g. Func_005_5500, Func_005_558B, Func_005_6FFD, AIScore_MPass_Sub01_Sub01, ...)
 ; points at: wBattleMP
 GetBattleMP_Bank05::
 Func_005_401A:: ; address name
@@ -50,7 +50,7 @@ Func_005_401A:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
-; 10 call sites from 8 routines (e.g. Func_005_4461, Func_005_6B5F, Func_005_6DFF, Func_005_4B97, ...)
+; 10 call sites from 8 routines (e.g. AIScore_SquallHit_Sub01_Sub01, AIScore_Speed_Sub01_Sub01_Sub01, Func_005_6DFF, Func_005_4B97, ...)
 ; points at: wBattleAGL
 GetBattleAGL_Bank05::
 Func_005_401F:: ; address name
@@ -58,7 +58,7 @@ Func_005_401F:: ; address name
     jr Jump_005_402E
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 6 call sites from 5 routines (e.g. Func_005_6556, Func_005_667F, Func_005_67B2, Func_005_6820, ...)
+; 6 call sites from 5 routines (e.g. Func_005_6556, Func_005_667F, AIScore_Berserker_Sub01, AIScore_Ramming_Sub01, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank05_4024:: ; heuristic: follows a terminator; C0
 Func_005_4024:: ; address name
@@ -125,7 +125,7 @@ Jump_005_406F::
     INCBIN "dwm2-cobi-us.gbc", $014075, $CA
 
 ; cost = wRecordBufferData (byte 0 of the skill record): C = $FF (can pay) when the cost is 0, when the cost is $FF and the actor's MP (wBattleMP word) is non-zero, or when MP >= cost; C = 0 otherwise. Agrees with CheckSkillMPCost that equal MP and cost is enough (E-0063)
-; 35 call sites from 35 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; 35 call sites from 35 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_715F, ...)
 ; reads: wBattleActor, wRecordBufferData
 ; points at: wBattleMP
 ActorCanPayMPCost_Bank05::
@@ -161,7 +161,7 @@ Jump_005_4166::
     ret
 
 ; C = 0 when bit 6 of wCFF3 (skill record buffer) is set and the actor's status byte 1 (wD80D) bit 0 is set, else $FF (compare refusal code 3 of CheckSkillMPCost) (E-0071)
-; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; 5 call sites from 5 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_715F, ...)
 ; reads: wCFF3, wBattleActor
 ; points at: wD80D
 SkillPassesStatus1Bit0Check::
@@ -181,7 +181,7 @@ Jump_005_4180::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_74F9, Func_005_7812, Func_005_7879, Func_005_7AA4)
+; 4 call sites from 4 routines (e.g. AIScore_FireAir_Sub02, Func_005_7812, AIScore_Curse_Sub01, AIScore_SuckAir_Sub01)
 ; reads: wCFF3, wBattleActor
 ; points at: wD80D
 Func_005_4183:: ; heuristic: follows a terminator; C0
@@ -200,7 +200,7 @@ Jump_005_419B::
     ld c, $FF
     ret
 
-; 5 call sites from 5 routines (e.g. Func_005_78EC, Func_005_7946, Func_005_7975, Func_005_7996, ...)
+; 5 call sites from 5 routines (e.g. Func_005_78EC, AIScore_LifeDance_Sub01, AIScore_Hustle_Sub01, AIScore_SideStep_Sub01, ...)
 ; reads: wCFF3, wBattleActor
 ; points at: wD80D
 Func_005_419E:: ; heuristic: follows a terminator; C0
@@ -220,7 +220,7 @@ Jump_005_41B6::
     ret
 
 ; when bit 3 is set in wD80A or wD80B (either side), C = 0 if the skill wRecordBuffer is $84 or wCFF3 bit 6 is set; otherwise C = $FF (compare refusal code 4 of CheckSkillMPCost, which tests only the actor's side) (E-0071)
-; 6 call sites from 6 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; 6 call sites from 6 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_715F, ...)
 ; reads: wRecordBuffer, wCFF3
 ; points at: wD80A
 SkillPassesSideFlagBit3Check::
@@ -246,7 +246,7 @@ Jump_005_41D3::
     ret
 
 ; when bit 7 of wCFF6 (in the skill record buffer) is set and the skill wRecordBuffer is the queued action (QueuedActionMatches), C = 0; otherwise C = $FF (E-0071)
-; 20 call sites from 20 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
+; 20 call sites from 20 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_715F, ...)
 ; reads: wCFF6, wRecordBuffer
 SkillPassesRepeatCheck::
 Func_005_41D6:: ; address name
@@ -263,7 +263,7 @@ Jump_005_41E8::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_7261)
+; 4 call sites from 4 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_7261)
 ; reads: wBattleActor
 ; points at: wD80E
 Func_005_41EB::
@@ -277,7 +277,7 @@ Func_005_41EB::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $C0 clear (AnySlotLacksStatusMask), else 0 (E-0071)
-; 23 call sites from 23 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_74D1, ...)
+; 23 call sites from 23 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_74D1, ...)
 ; reads: wBattleActor
 ; points at: wD811
 AnyFoeLacksStatus5Bits67::
@@ -307,7 +307,7 @@ Func_005_420F:: ; address name
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wD80F) & $C0 and byte 4 (wD810) & $0C both clear, else 0 (E-0071)
-; 11 call sites from 11 routines (e.g. Func_005_7080, Func_005_7512, CheckSkillUsableElseResetWDA6E, Func_005_774F, ...)
+; 11 call sites from 11 routines (e.g. AIScore_Skill00_Sub01, Func_005_7512, CheckSkillUsableElseResetWDA6E, AIScore_PsycheUp_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wD80F, wD810
 AnyFoeLacksStatus3And4Bits::
@@ -354,7 +354,7 @@ Jump_005_4256::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_7322, Func_005_78A8, Func_005_7A6C, Func_005_7CF3)
+; 4 call sites from 4 routines (e.g. AIScore_RobMagic_Sub01, AIScore_OddDance_Sub01, AIScore_ThickFog_Sub01, AIScore_SuckAll_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleMP
 Func_005_4259:: ; heuristic: follows a terminator; C0
@@ -390,11 +390,13 @@ Jump_005_4283::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_72F7)
+; only called from AIScore_TakeMagic_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TakeMagic_Sub01)
 ; reads: wBattleActor, wRecordBuffer, wCFED, hFFC6
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wD988, hFFC6
-Func_005_4286:: ; heuristic: follows a terminator; C0
+AIScore_TakeMagic_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4286:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -489,7 +491,7 @@ Jump_005_4319::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 (wBattleStatus) bit 6 clear (AnySlotLacksStatusMask), else 0 (E-0071)
-; 16 call sites from 16 routines (e.g. Func_005_7109, Func_005_71BE, Func_005_72F7, Func_005_7345, ...)
+; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Farewell_Sub01, AIScore_TakeMagic_Sub01, AIScore_StopSpell_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
 AnyFoeLacksStatus0Bit6:: ; heuristic: follows a terminator; C0
@@ -503,7 +505,7 @@ Func_005_431C:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_7345, Func_005_73D7, Func_005_7449, Func_005_7A6C)
+; 4 call sites from 4 routines (e.g. AIScore_StopSpell_Sub01, AIScore_MagicBack_Sub01, AIScore_MagicWall_Sub01, AIScore_ThickFog_Sub01)
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD80D
@@ -552,7 +554,7 @@ Jump_005_4370::
     ld c, $01
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_7410, Func_005_7CF3)
+; 2 call sites from 2 routines (e.g. AIScore_Barrier_Sub01, AIScore_SuckAll_Sub01)
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 Func_005_4373:: ; heuristic: follows a terminator; C0
@@ -595,11 +597,13 @@ Jump_005_43AA::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7B84)
+; only called from AIScore_DanceShut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DanceShut_Sub01)
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD80D
-Func_005_43AD:: ; heuristic: follows a terminator; C0
+AIScore_DanceShut_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_43AD:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -644,7 +648,7 @@ Jump_005_43EF::
     ld c, $01
     ret
 
-; 11 call sites from 11 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_74D1, ...)
+; 11 call sites from 11 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_74D1, ...)
 ; reads: wCFEF, wBattleActor
 ; points at: wDA72
 Func_005_43F2::
@@ -699,7 +703,7 @@ Jump_005_4438::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7786, Func_0E2_4001, Func_0E2_5F0A)
+; 3 call sites from 3 routines (e.g. AIScore_TwinSlash_Sub01, AIScore_Skill00, AIScore_SickLick)
 ; reads: wBattleActor
 Func_005_443B::
     ld a, [wBattleActor]
@@ -731,9 +735,11 @@ Jump_005_445E::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_76A3)
+; only called from AIScore_SquallHit_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SquallHit_Sub01)
 ; reads: wBattleActor
-Func_005_4461:: ; heuristic: follows a terminator; C0
+AIScore_SquallHit_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4461:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -763,10 +769,12 @@ Jump_005_4484::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_74F9)
+; only called from AIScore_FireAir_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_FireAir_Sub02)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_4487:: ; heuristic: follows a terminator; C0
+AIScore_FireAir_Sub02_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4487:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -776,7 +784,7 @@ Func_005_4487:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7370, Func_005_78CC, Func_005_7CF3)
+; 3 call sites from 3 routines (e.g. Func_005_7370, AIScore_PaniDance_Sub01, AIScore_SuckAll_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
 Func_005_4499:: ; heuristic: follows a terminator; C0
@@ -789,10 +797,12 @@ Func_005_4499:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7860)
+; only called from AIScore_PoisonAir_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_PoisonAir_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_44AB:: ; heuristic: follows a terminator; C0
+AIScore_PoisonAir_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_44AB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -802,7 +812,7 @@ Func_005_44AB:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_763E, Func_005_7847)
+; 2 call sites from 2 routines (e.g. AIScore_PoisonHit_Sub01, AIScore_PoisonGas_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
 Func_005_44BD:: ; heuristic: follows a terminator; C0
@@ -816,7 +826,7 @@ Func_005_44BD:: ; heuristic: follows a terminator; C0
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 (wBattleStatus) & $CC clear (AnySlotLacksStatusMask), else 0 (E-0077)
-; 7 call sites from 7 routines (e.g. Func_005_7686, Func_005_72DE, Func_005_77F9, Func_005_7D5B, ...)
+; 7 call sites from 7 routines (e.g. Func_005_7686, AIScore_Sleep_Sub01, AIScore_SleepAir_Sub01, AIScore_Imitate_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
 AnyFoeLacksStatus0MaskCC::
@@ -830,11 +840,13 @@ Func_005_44CF:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7CC2)
+; only called from AIScore_AquaWall_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_AquaWall_Sub01)
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD80D
-Func_005_44E1:: ; heuristic: follows a terminator; C0
+AIScore_AquaWall_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_44E1:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -969,7 +981,7 @@ Jump_005_459A::
     ld c, $FF
     ret
 
-; 6 call sites from 6 routines (e.g. Func_005_72BE, Func_005_79C5, Func_005_79E5, Func_005_7C12, ...)
+; 6 call sites from 6 routines (e.g. AIScore_Surround_Sub01, AIScore_SandStorm_Sub01, AIScore_Radiant_Sub01, AIScore_Dodge_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wD811, wD80D
 Func_005_459D:: ; heuristic: follows a terminator; C0
@@ -1007,7 +1019,7 @@ Jump_005_45CC::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_7345, Func_005_7449)
+; 2 call sites from 2 routines (e.g. AIScore_StopSpell_Sub01, AIScore_MagicWall_Sub01)
 ; reads: wBattleActor
 ; points at: wD80D
 Func_005_45CF:: ; heuristic: follows a terminator; C0
@@ -1020,7 +1032,7 @@ Func_005_45CF:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7410, Func_005_7BBE, Func_005_7CF3)
+; 3 call sites from 3 routines (e.g. AIScore_Barrier_Sub01, AIScore_MouthShut_Sub01, AIScore_SuckAll_Sub01)
 ; reads: wBattleActor
 ; points at: wD80D
 Func_005_45E1:: ; heuristic: follows a terminator; C0
@@ -1033,10 +1045,12 @@ Func_005_45E1:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7B84)
+; only called from AIScore_DanceShut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DanceShut_Sub01)
 ; reads: wBattleActor
 ; points at: wD80D
-Func_005_45F3:: ; heuristic: follows a terminator; C0
+AIScore_DanceShut_Sub01_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_45F3:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1047,7 +1061,7 @@ Func_005_45F3:: ; heuristic: follows a terminator; C0
     ret
 
 ; C = $FF when at least one of the actor's three opposite slots passes CheckSlotStatusBlock (present and none of its blocking status bits set); C = 0 when all three are absent or blocked (E-0066)
-; 22 call sites from 22 routines (e.g. Func_005_7686, Func_005_7236, Func_005_727A, Func_005_7293, ...)
+; 22 call sites from 22 routines (e.g. Func_005_7686, AIScore_Upper_Sub01, AIScore_Speed_Sub01, AIScore_Slow_Sub01, ...)
 ; reads: wBattleActor
 AnyFoeNotBlocked::
 Func_005_4605:: ; address name
@@ -1071,10 +1085,12 @@ Jump_005_461C::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7B40)
+; only called from AIScore_LegSweep_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_LegSweep_Sub01)
 ; reads: wBattleActor
 ; points at: wD8A7, wD80F
-Func_005_461F:: ; heuristic: follows a terminator; C0
+AIScore_LegSweep_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_461F:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1124,7 +1140,7 @@ Jump_005_4661::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wD80F) entirely clear (AnySlotLacksStatusMask with mask $FF), else 0 (E-0078)
-; 6 call sites from 6 routines (e.g. Func_005_7AD8, Func_005_7B11, Func_005_7B5C, Func_0E2_432D, ...)
+; 6 call sites from 6 routines (e.g. Func_005_7AD8, Func_005_7B11, AIScore_Geyser_Sub01, AIScore_HealUs_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wD80F
 AnyFoeHasClearStatus3::
@@ -1138,7 +1154,7 @@ Func_005_4664:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; 7 call sites from 7 routines (e.g. Func_005_7109, Func_0E2_411C, Func_0E2_41E0, Func_0E2_4567, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Firebal, AIScore_Beat, AIScore_Slow, ...)
 ; reads: wBattleActor
 ; points at: wD80E
 Func_005_4676::
@@ -1185,10 +1201,12 @@ Jump_005_46B1::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4B6B)
+; only called from AIScore_FireAir (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_FireAir)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_46B4:: ; heuristic: follows a terminator; C0
+AIScore_FireAir_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_46B4:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -1251,7 +1269,7 @@ Jump_005_4704::
     ret
 
 ; C = 0 when the actor's status byte 4 (wD810 + 9 * actor) & $C0 is set, else C = $FF (E-0071)
-; 17 call sites from 17 routines (e.g. Func_005_7187, Func_005_74B5, Func_005_772B, Func_005_774F, ...)
+; 17 call sites from 17 routines (e.g. AIScore_MPass_Sub01, AIScore_MegaMagic_Sub04, AIScore_ChargeUp_Sub01, AIScore_PsycheUp_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wD810
 ActorLacksStatus4Bits67::
@@ -1301,10 +1319,12 @@ Jump_005_473E::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_72F7)
+; only called from AIScore_TakeMagic_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TakeMagic_Sub01)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_4741:: ; heuristic: follows a terminator; C0
+AIScore_TakeMagic_Sub01_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_4741:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
@@ -1317,10 +1337,12 @@ Jump_005_4751::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7C82)
+; only called from AIScore_TailWind_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TailWind_Sub01)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_4754:: ; heuristic: follows a terminator; C0
+AIScore_TailWind_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4754:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
@@ -1333,7 +1355,7 @@ Jump_005_4764::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_7CA2, Func_005_7CF3)
+; 2 call sites from 2 routines (e.g. AIScore_StormWind_Sub01, AIScore_SuckAll_Sub01)
 ; reads: wBattleActor
 ; points at: wD80E
 Func_005_4767:: ; heuristic: follows a terminator; C0
@@ -1345,7 +1367,7 @@ Func_005_4767:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 11 call sites from 11 routines (e.g. Func_005_7187, Func_005_7786, Func_005_77E0, Func_0E2_4279, ...)
+; 11 call sites from 11 routines (e.g. AIScore_MPass_Sub01, AIScore_TwinSlash_Sub01, AIScore_Kamikaze_Sub02, AIScore_Sacrifice, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
 Func_005_4777::
@@ -1383,10 +1405,12 @@ Jump_005_47A2::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_71DE)
+; only called from AIScore_Antidote_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Antidote_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_47A5:: ; heuristic: follows a terminator; C0
+AIScore_Antidote_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_47A5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld b, $03
@@ -1395,10 +1419,12 @@ Func_005_47A5:: ; heuristic: follows a terminator; C0
     call Func_005_6FBD
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_720A)
+; only called from AIScore_NumbOff_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_NumbOff_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_47B5:: ; heuristic: follows a terminator; C0
+AIScore_NumbOff_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_47B5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld b, $03
@@ -1407,10 +1433,12 @@ Func_005_47B5:: ; heuristic: follows a terminator; C0
     call Func_005_6FBD
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_71F4)
+; only called from AIScore_DeChaos_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DeChaos_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_47C5:: ; heuristic: follows a terminator; C0
+AIScore_DeChaos_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_47C5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld b, $03
@@ -1419,10 +1447,12 @@ Func_005_47C5:: ; heuristic: follows a terminator; C0
     call Func_005_6FBD
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7220)
+; only called from AIScore_CurseOff_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_CurseOff_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_47D5:: ; heuristic: follows a terminator; C0
+AIScore_CurseOff_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_47D5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld b, $03
@@ -1470,79 +1500,103 @@ Jump_005_480F::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7AA4)
+; only called from AIScore_SuckAir_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SuckAir_Sub01)
 ; reads: wBattleActor
 ; points at: wDA76
-Func_005_4812:: ; heuristic: follows a terminator; C0
+AIScore_SuckAir_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4812:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     jp Jump_005_47EA
 
-; 1 call site from 1 routine (e.g. Func_005_7524)
-Func_005_481C::
+; only called from AIScore_SlimeBlow_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SlimeBlow_Sub01)
+AIScore_SlimeBlow_Sub01_Sub01::
+Func_005_481C:: ; address name
     ld e, $00
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_753A)
-Func_005_4822::
+; only called from AIScore_DrakSlash_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DrakSlash_Sub01)
+AIScore_DrakSlash_Sub01_Sub01::
+Func_005_4822:: ; address name
     ld e, $01
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7550)
-Func_005_4828::
+; only called from AIScore_BeastCut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BeastCut_Sub01)
+AIScore_BeastCut_Sub01_Sub01::
+Func_005_4828:: ; address name
     ld e, $02
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7566)
-Func_005_482E::
+; only called from AIScore_BirdBlow_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BirdBlow_Sub01)
+AIScore_BirdBlow_Sub01_Sub01::
+Func_005_482E:: ; address name
     ld e, $03
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_757C)
-Func_005_4834::
+; only called from AIScore_BugBlow_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BugBlow_Sub01)
+AIScore_BugBlow_Sub01_Sub01::
+Func_005_4834:: ; address name
     ld e, $05
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7592)
-Func_005_483A::
+; only called from AIScore_Shears_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Shears_Sub01)
+AIScore_Shears_Sub01_Sub01::
+Func_005_483A:: ; address name
     ld e, $04
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_75A8)
-Func_005_4840::
+; only called from AIScore_DevilCut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DevilCut_Sub01)
+AIScore_DevilCut_Sub01_Sub01::
+Func_005_4840:: ; address name
     ld e, $06
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_75BE)
-Func_005_4846::
+; only called from AIScore_ZombieCut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_ZombieCut_Sub01)
+AIScore_ZombieCut_Sub01_Sub01::
+Func_005_4846:: ; address name
     ld e, $07
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_75D4)
-Func_005_484C::
+; only called from AIScore_CleanCut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_CleanCut_Sub01)
+AIScore_CleanCut_Sub01_Sub01::
+Func_005_484C:: ; address name
     ld e, $08
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_75EA)
-Func_005_4852::
+; only called from AIScore_AquaCut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_AquaCut_Sub01)
+AIScore_AquaCut_Sub01_Sub01::
+Func_005_4852:: ; address name
     ld e, $09
     call Func_005_6FD9
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7600)
+; only called from AIScore_MetalCut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MetalCut_Sub01)
 ; reads: wBattleActor
 ; points at: wD8A7
-Func_005_4858:: ; heuristic: follows a terminator; C0
+AIScore_MetalCut_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4858:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1572,10 +1626,12 @@ Jump_005_487D::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7A3E)
+; only called from AIScore_UltraDown_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_UltraDown_Sub01)
 ; reads: wBattleActor
 ; points at: wDA74, wD80D
-Func_005_4880:: ; heuristic: follows a terminator; C0
+AIScore_UltraDown_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4880:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1622,7 +1678,7 @@ Jump_005_48C6::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_72BE, Func_005_79C5, Func_005_79E5)
+; 3 call sites from 3 routines (e.g. AIScore_Surround_Sub01, AIScore_SandStorm_Sub01, AIScore_Radiant_Sub01)
 ; reads: wBattleActor
 ; points at: wD80D, wDA73
 Func_005_48C9::
@@ -1666,11 +1722,13 @@ Jump_005_4901::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7345)
+; only called from AIScore_StopSpell_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_StopSpell_Sub01)
 ; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wD80D, wDA74
-Func_005_4904:: ; heuristic: follows a terminator; C0
+AIScore_StopSpell_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4904:: ; address name
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -1713,7 +1771,7 @@ Jump_005_4942::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_7322, Func_005_78A8)
+; 2 call sites from 2 routines (e.g. AIScore_RobMagic_Sub01, AIScore_OddDance_Sub01)
 ; reads: wBattleActor
 ; points at: wDA74
 Func_005_4949:: ; heuristic: follows a terminator; C0
@@ -1749,10 +1807,12 @@ Jump_005_4974::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_724F)
+; only called from AIScore_Sap_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Sap_Sub01)
 ; reads: wBattleActor
 ; points at: wDA75
-Func_005_4977::
+AIScore_Sap_Sub01_Sub01::
+Func_005_4977:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1790,10 +1850,12 @@ Jump_005_49A7::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7293)
+; only called from AIScore_Slow_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Slow_Sub01)
 ; reads: wBattleActor
 ; points at: wDA75
-Func_005_49AA:: ; heuristic: follows a terminator; C0
+AIScore_Slow_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_49AA:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1831,7 +1893,7 @@ Jump_005_49DA::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_763E, Func_005_7847, Func_005_7860)
+; 3 call sites from 3 routines (e.g. AIScore_PoisonHit_Sub01, AIScore_PoisonGas_Sub01, AIScore_PoisonAir_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus, wDA76
 Func_005_49DD::
@@ -1869,7 +1931,7 @@ Jump_005_4A0D::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_765B, Func_005_7824)
+; 2 call sites from 2 routines (e.g. AIScore_Paralyze_Sub01, AIScore_PalsyAir_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus, wDA77
 Func_005_4A10:: ; heuristic: follows a terminator; C0
@@ -1907,10 +1969,12 @@ Jump_005_4A40::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7879)
+; only called from AIScore_Curse_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Curse_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus, wDA77
-Func_005_4A43:: ; heuristic: follows a terminator; C0
+AIScore_Curse_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4A43:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1945,11 +2009,13 @@ Jump_005_4A73::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7B84)
+; only called from AIScore_DanceShut_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DanceShut_Sub01)
 ; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wD80D, wDA77
-Func_005_4A76:: ; heuristic: follows a terminator; C0
+AIScore_DanceShut_Sub01_Sub03:: ; heuristic: follows a terminator; C0
+Func_005_4A76:: ; address name
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -2088,7 +2154,7 @@ Jump_005_4B3A::
     ld c, $FF
     ret
 
-; 5 call sites from 5 routines (e.g. Func_005_76E2, Func_0E2_4001, Func_0E2_4279, Func_0E2_4B6B, ...)
+; 5 call sites from 5 routines (e.g. AIScore_RainSlash_Sub01, AIScore_Skill00, AIScore_Sacrifice, AIScore_FireAir, ...)
 ; reads: wBattleActor
 Func_005_4B3D::
     ld a, [wBattleActor]
@@ -2118,10 +2184,12 @@ Jump_005_4B5C::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7A91)
+; only called from AIScore_TatsuCall_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TatsuCall_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleSlotOut
-Func_005_4B5F:: ; heuristic: follows a terminator; C0
+AIScore_TatsuCall_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4B5F:: ; address name
     ld a, [wBattleActor]
     and a, $04
     or a, $03
@@ -2140,7 +2208,7 @@ Jump_005_4B77::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_71AC, Func_005_71BE, Func_005_7946, Func_005_7DA8)
+; 4 call sites from 4 routines (e.g. AIScore_Vivify_Sub01, AIScore_Farewell_Sub01, AIScore_LifeDance_Sub01, AIScore_LifeSong_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleSlotOut
 Func_005_4B7A:: ; heuristic: follows a terminator; C0
@@ -2163,7 +2231,7 @@ Jump_005_4B94::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_76A3, Func_0E2_4536, Func_0E2_4567, Func_0E2_545D)
+; 4 call sites from 4 routines (e.g. AIScore_SquallHit_Sub01, AIScore_Speed, AIScore_Slow, AIScore_PsycheUp)
 ; reads: wBattleActor
 Func_005_4B97:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -2218,7 +2286,7 @@ Jump_005_4BDE::
     ld c, $FF
     ret
 
-; 5 call sites from 5 routines (e.g. Func_0E2_4279, Func_0E2_432D, Func_0E2_5B3D, Func_0E2_6249, ...)
+; 5 call sites from 5 routines (e.g. AIScore_Sacrifice, AIScore_HealUs_Sub01, AIScore_Hustle, AIScore_SuckAll, ...)
 ; reads: wBattleActor
 Func_005_4BE1:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -2274,9 +2342,11 @@ Jump_005_4C20::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7236)
+; only called from AIScore_Upper_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Upper_Sub01)
 ; reads: wBattleActor
-Func_005_4C23:: ; heuristic: follows a terminator; C0
+AIScore_Upper_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4C23:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -2286,7 +2356,7 @@ Jump_005_4C2B::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4C36
-    call Func_005_6B20
+    call AIScore_Upper_Sub01_Sub01_Sub01
     jr c, Jump_005_4C3D
 
 Jump_005_4C36::
@@ -2300,9 +2370,11 @@ Jump_005_4C3D::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_727A)
+; only called from AIScore_Speed_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Speed_Sub01)
 ; reads: wBattleActor
-Func_005_4C40:: ; heuristic: follows a terminator; C0
+AIScore_Speed_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4C40:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -2312,7 +2384,7 @@ Jump_005_4C48::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4C53
-    call Func_005_6B5F
+    call AIScore_Speed_Sub01_Sub01_Sub01
     jr c, Jump_005_4C5A
 
 Jump_005_4C53::
@@ -2326,7 +2398,7 @@ Jump_005_4C5A::
     ld c, $FF
     ret
 
-; 32 call sites from 32 routines (e.g. Func_005_772B, Func_005_7397, Func_005_7BEE, Func_0E2_4001, ...)
+; 32 call sites from 32 routines (e.g. AIScore_ChargeUp_Sub01, Func_005_7397, AIScore_Dodge_Sub01_Sub01, AIScore_Skill00, ...)
 ; reads: wBattleActor
 ; points at: wD2C1
 Func_005_4C5D::
@@ -2423,7 +2495,7 @@ Jump_005_4CE2::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1)
+; 3 call sites from 3 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow)
 ; reads: wBattleActor
 ; points at: wD812
 Func_005_4CE5::
@@ -2466,7 +2538,7 @@ Jump_005_4D17::
     ld c, $01
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_72AC, Func_0E2_4A08)
+; 2 call sites from 2 routines (e.g. AIScore_TwinHits_Sub03, AIScore_MegaMagic)
 ; reads: wBattleActor
 ; points at: wD80D
 Func_005_4D1A:: ; heuristic: follows a terminator; C0
@@ -2503,10 +2575,12 @@ Jump_005_4D43::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7449)
+; only called from AIScore_MagicWall_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MagicWall_Sub01)
 ; reads: wBattleActor
 ; points at: wD814
-Func_005_4D46:: ; heuristic: follows a terminator; C0
+AIScore_MagicWall_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4D46:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld b, $03
@@ -2515,10 +2589,12 @@ Func_005_4D46:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7996)
+; only called from AIScore_SideStep_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SideStep_Sub01)
 ; reads: wBattleActor
 ; points at: wD811
-Func_005_4D56:: ; heuristic: follows a terminator; C0
+AIScore_SideStep_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4D56:: ; address name
     ld a, [wBattleActor]
     ld hl, wD811
     call AddAx9ToHL
@@ -2532,10 +2608,12 @@ Jump_005_4D67::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7A27)
+; only called from AIScore_Surge_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Surge_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_4D6A:: ; heuristic: follows a terminator; C0
+AIScore_Surge_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4D6A:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -2579,10 +2657,12 @@ Jump_005_4DA2::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7A55)
+; only called from AIScore_DeMagic_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DeMagic_Sub01)
 ; reads: wBattleActor
 ; points at: wD80D, wBattleSlotOut
-Func_005_4DA5:: ; heuristic: follows a terminator; C0
+AIScore_DeMagic_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4DA5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2634,7 +2714,7 @@ Jump_005_4DF2::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_7109, Func_005_71BE, Func_005_7946, Func_005_7DA8)
+; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Farewell_Sub01, AIScore_LifeDance_Sub01, AIScore_LifeSong_Sub01)
 ; reads: wBattleActor
 ; points at: wC984
 Func_005_4DF5::
@@ -2671,9 +2751,11 @@ Jump_005_4E1D::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_61E0)
+; only called from AIScore_SealPray (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SealPray)
 ; reads: wQueuedActionId
-Func_005_4E20:: ; heuristic: follows a terminator; C0
+AIScore_SealPray_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_4E20:: ; address name
     ld a, [wQueuedActionId]
     and a, a
     jr z, Jump_005_4E45
@@ -2700,7 +2782,7 @@ Jump_005_4E45::
     ld c, $FF
     ret
 
-; 12 call sites from 12 routines (e.g. Func_005_557E, Func_0E2_40BF, Func_0E2_411C, Func_0E2_4AB6, ...)
+; 12 call sites from 12 routines (e.g. Func_005_557E, AIScore_Blaze, AIScore_Firebal, AIScore_BigBang, ...)
 ; reads: wBattleActor
 ; points at: wD2C1
 Func_005_4E48::
@@ -3043,7 +3125,7 @@ Func_005_5034:: ; address name
     cp a, $09
     ret
 
-; 14 call sites from 14 routines (e.g. Func_0E2_40BF, Func_0E2_411C, Func_0E2_47AB, Func_0E2_4A08, ...)
+; 14 call sites from 14 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_RobMagic, AIScore_MegaMagic, ...)
 ; reads: wCFEF, wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
@@ -3115,7 +3197,7 @@ Jump_005_50B4::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_0E2_4536, Func_0E2_4567, Func_0E2_4721, Func_0E2_545D)
+; 4 call sites from 4 routines (e.g. AIScore_Speed, AIScore_Slow, AIScore_Sleep, AIScore_PsycheUp)
 ; reads: wBattleActor
 Func_005_50B7:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -3144,7 +3226,7 @@ Jump_005_50E0::
     ld c, $01
     ret
 
-; 7 call sites from 7 routines (e.g. Func_0E2_449C, Func_0E2_5426, Func_0E2_54C4, Func_0E2_5529, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Sap, AIScore_ChargeUp, AIScore_HighJump, AIScore_EvilSlash, ...)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: hFFC6, hFFC9
@@ -3247,7 +3329,7 @@ Jump_005_517A::
     ld c, $01
     ret
 
-; 7 call sites from 7 routines (e.g. Func_0E2_449C, Func_0E2_493F, Func_0E2_54C4, Func_0E2_5529, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Sap, AIScore_Transform, AIScore_HighJump, AIScore_EvilSlash, ...)
 ; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_005_517D:: ; heuristic: follows a terminator; C0
@@ -3332,9 +3414,11 @@ Jump_005_51E7::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4619)
+; only called from AIScore_TwinHits (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TwinHits)
 ; reads: wBattleActor, hFFC6, hFFC7
-Func_005_51EA:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_51EA:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -3374,9 +3458,11 @@ Jump_005_5225::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4619)
+; only called from AIScore_TwinHits (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TwinHits)
 ; reads: wBattleActor, hFFC6, hFFC7
-Func_005_5228:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_5228:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -3429,7 +3515,7 @@ Jump_005_5272::
     ld c, $01
     ret
 
-; 3 call sites from 3 routines (e.g. Func_0E2_4674, Func_0E2_5BC4, Func_0E2_5C25)
+; 3 call sites from 3 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: hFFC6, hFFC9
@@ -3536,7 +3622,7 @@ Jump_005_5314::
     ld c, $01
     ret
 
-; 8 call sites from 8 routines (e.g. Func_0E2_656D, Func_0E2_65B8, Func_0E2_661A, Func_0E2_6634, ...)
+; 8 call sites from 8 routines (e.g. AIScore_StrongD_Sub02, AIScore_AquaWall_Sub02, AIScore_SuckAll_Sub02_Sub01, AIScore_Meditate_Sub02, ...)
 ; reads: hFFC6
 Func_005_5317::
     ldh a, [hFFC6]
@@ -3625,7 +3711,7 @@ Jump_005_5393::
     ld c, $05
     ret
 
-; 11 call sites from 11 routines (e.g. Func_005_77C7, Func_005_7C69, Func_005_7CF3, Func_0E2_432D, ...)
+; 11 call sites from 11 routines (e.g. Func_005_77C7, AIScore_Cover_Sub01, AIScore_SuckAll_Sub01, AIScore_HealUs_Sub01, ...)
 ; reads: wBattleActor
 Func_005_5397:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -3638,7 +3724,7 @@ Jump_005_53A2::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_0E2_438D, Func_0E2_5B3D, Func_0E2_6387)
+; 3 call sites from 3 routines (e.g. AIScore_HealUs, AIScore_Hustle, AIScore_LoveRain)
 ; reads: wBattleActor
 Func_005_53A5:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -3670,7 +3756,7 @@ Jump_005_53C7::
     ret
 
 ; C = 0 when the actor's status byte 1 (wD80D) & $0C or byte 4 & $03 is set, else C = $FF (E-0072)
-; 14 call sites from 14 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4E71, Func_0E2_4F30, ...)
+; 14 call sites from 14 routines (e.g. AIScore_ChargeUp_Sub01, AIScore_Skill00, AIScore_CallHelp, AIScore_FireSlash, ...)
 ; reads: wBattleActor
 ; points at: wD80D
 ActorLacksStatus1Bits23And4Bits01::
@@ -3696,7 +3782,7 @@ Jump_005_53E3::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7AA4, Func_005_7CF3, Func_0E2_4B6B)
+; 3 call sites from 3 routines (e.g. AIScore_SuckAir_Sub01, AIScore_SuckAll_Sub01, AIScore_FireAir)
 ; reads: wBattleActor
 ; points at: wD810
 Func_005_53E6:: ; heuristic: follows a terminator; C0
@@ -3713,7 +3799,7 @@ Jump_005_53F7::
     ld c, $FF
     ret
 
-; 7 call sites from 7 routines (e.g. Func_0E2_48FD, Func_0E2_4984, Func_0E2_60A6, Func_0E2_618D, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Barrier, AIScore_BeDragon, AIScore_MouthShut, AIScore_TailWind, ...)
 ; reads: wBattleActor
 ; points at: wD80D, wD989
 Func_005_53FA:: ; heuristic: follows a terminator; C0
@@ -3773,11 +3859,13 @@ Jump_005_544C::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_493F)
+; only called from AIScore_Transform (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Transform)
 ; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
 ; points at: hFFCE
-Func_005_544F:: ; heuristic: follows a terminator; C0
+AIScore_Transform_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_544F:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -3888,13 +3976,13 @@ Jump_005_54FA::
     ret
 
 ; C = 0
-; 73 call sites from 73 routines (e.g. Func_005_7187, Func_005_7DDC, Func_0E2_4001, Func_0E2_40BF, ...)
+; 73 call sites from 73 routines (e.g. AIScore_MPass_Sub01, Func_005_7DDC, AIScore_Skill00, AIScore_Blaze, ...)
 SetCToZero::
 Func_005_54FD:: ; address name
     ld c, $00
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_60D7, Func_0E2_61E0)
+; 2 call sites from 2 routines (e.g. AIScore_StrongD, AIScore_SealPray)
 ; reads: wBattleActor
 ; points at: wD989, wBattleMP, wD8B7, wBattleHP
 Func_005_5500:: ; heuristic: follows a terminator; C0
@@ -3982,7 +4070,7 @@ Jump_005_557B::
     ld c, $01
     ret
 
-; 11 call sites from 11 routines (e.g. Func_0E2_40BF, Func_0E2_411C, Func_0E2_4AB6, Func_0E2_4B6B, ...)
+; 11 call sites from 11 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_BigBang, AIScore_FireAir, ...)
 Func_005_557E::
     call Func_005_4E48
     ld a, c
@@ -3995,7 +4083,7 @@ Jump_005_5588::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_78A8, Func_005_7322, Func_0E2_478E)
+; 3 call sites from 3 routines (e.g. AIScore_OddDance_Sub01, AIScore_RobMagic_Sub01, AIScore_TakeMagic)
 ; reads: wBattleActor
 Func_005_558B:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -4019,10 +4107,12 @@ Jump_005_55A7::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_73D7)
+; only called from AIScore_MagicBack_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MagicBack_Sub01)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_55AA:: ; heuristic: follows a terminator; C0
+AIScore_MagicBack_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_55AA:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
@@ -4036,7 +4126,7 @@ Jump_005_55BB::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_6822, Func_0E2_6843)
+; 2 call sites from 2 routines (e.g. Func_0E2_6822, AIScore_Sacrifice_Sub03)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_55BE::
@@ -4070,7 +4160,7 @@ Jump_005_55F0::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_73D7, Func_0E2_6854)
+; 2 call sites from 2 routines (e.g. AIScore_MagicBack_Sub01, Func_0E2_6854)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_55F3:: ; heuristic: follows a terminator; C0
@@ -4240,10 +4330,12 @@ Jump_005_56F9::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4A08)
+; only called from AIScore_MegaMagic (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
-Func_005_56FC:: ; heuristic: follows a terminator; C0
+AIScore_MegaMagic_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_56FC:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_005_572E
@@ -4274,7 +4366,7 @@ Jump_005_572E::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_0E2_4A08, Func_0E2_4AB6, Func_0E2_6822)
+; 3 call sites from 3 routines (e.g. AIScore_MegaMagic, AIScore_BigBang, Func_0E2_6822)
 ; reads: wC58A, wD891
 ; points at: wD04B
 Func_005_5731::
@@ -4304,7 +4396,7 @@ Jump_005_5755::
     ld c, $FF
     ret
 
-; 8 call sites from 8 routines (e.g. Func_0E2_411C, Func_0E2_49B5, Func_0E2_4A08, Func_0E2_4AB6, ...)
+; 8 call sites from 8 routines (e.g. AIScore_Firebal, AIScore_Chance, AIScore_MegaMagic, AIScore_BigBang, ...)
 ; reads: wBattleActor
 Func_005_5758:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -4340,7 +4432,7 @@ Jump_005_577C::
     ret
 
 ; counts the present slots among the actor's three opposite slots: C = $FF when fewer than two are present, C = 0 for two or three; E = the count (E-0066)
-; 21 call sites from 21 routines (e.g. Func_005_5758, Func_0E2_40BF, Func_0E2_411C, Func_0E2_41E0, ...)
+; 21 call sites from 21 routines (e.g. Func_005_5758, AIScore_Blaze, AIScore_Firebal, AIScore_Beat, ...)
 ; reads: wBattleActor
 FewerThanTwoFoesPresent::
 Func_005_577F:: ; address name
@@ -4371,7 +4463,7 @@ Jump_005_579E::
     ld c, $FF
     ret
 
-; 7 call sites from 7 routines (e.g. Func_0E2_47CE, Func_0E2_48CF, Func_0E2_491E, Func_0E2_5DBC, ...)
+; 7 call sites from 7 routines (e.g. AIScore_StopSpell, AIScore_MagicBack, AIScore_MagicWall, AIScore_ThickFog, ...)
 ; reads: wBattleActor
 Func_005_57A1:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -4409,7 +4501,7 @@ Jump_005_57CC::
     ld c, $01
     ret
 
-; 11 call sites from 11 routines (e.g. Func_0E2_411C, Func_0E2_4AB6, Func_0E2_4B6B, Func_0E2_4CA1, ...)
+; 11 call sites from 11 routines (e.g. AIScore_Firebal, AIScore_BigBang, AIScore_FireAir, AIScore_Vacuum, ...)
 ; reads: wBattleActor
 ; points at: wD812
 Func_005_57CF::
@@ -4451,10 +4543,12 @@ Jump_005_5800::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4279)
+; only called from AIScore_Sacrifice (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Sacrifice)
 ; reads: wBattleActor
 ; points at: wDA75
-Func_005_5803:: ; heuristic: follows a terminator; C0
+AIScore_Sacrifice_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_5803:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, $0A
@@ -4517,7 +4611,7 @@ Jump_005_585A::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_0E2_4674, Func_0E2_5BC4, Func_0E2_5C25, Func_0E2_6773)
+; 4 call sites from 4 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm, AIScore_Upper_Sub02)
 ; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_005_585D:: ; heuristic: follows a terminator; C0
@@ -5135,10 +5229,12 @@ Jump_005_5BB9::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4984)
+; only called from AIScore_BeDragon (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BeDragon)
 ; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
-Func_005_5BBC::
+AIScore_BeDragon_Sub01::
+Func_005_5BBC:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, l
@@ -5276,7 +5372,7 @@ Jump_005_5C89::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_51F6, Func_0E2_526D)
+; 2 call sites from 2 routines (e.g. AIScore_SquallHit, AIScore_BiAttack)
 ; reads: wBattleActor
 ; points at: wD2C1
 Func_005_5C8C:: ; heuristic: follows a terminator; C0
@@ -5328,7 +5424,7 @@ Jump_005_5CCB::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_7109, Func_005_70C9, Func_005_7824, Func_0E2_4AB6)
+; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Beat_Sub01, AIScore_PalsyAir_Sub01, AIScore_BigBang)
 ; reads: wCFC5
 Func_005_5CCE::
     ld a, [wCFC5]
@@ -5346,9 +5442,11 @@ Jump_005_5CDE::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4A08)
+; only called from AIScore_MegaMagic (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
 ; reads: wC58A
-Func_005_5CE1:: ; heuristic: follows a terminator; C0
+AIScore_MegaMagic_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_5CE1:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_005_5CEE
@@ -5361,7 +5459,7 @@ Jump_005_5CEE::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_5AE6, Func_0E2_67D5)
+; 2 call sites from 2 routines (e.g. AIScore_LifeDance, Func_0E2_67D5)
 ; reads: wBattleActor, wC984, wC985
 Func_005_5CF1:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -5400,7 +5498,7 @@ Jump_005_5D1D::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_7410, Func_0E2_6249)
+; 2 call sites from 2 routines (e.g. AIScore_Barrier_Sub01, AIScore_SuckAll)
 ; reads: wBattleActor
 ; points at: wD80E
 Func_005_5D20:: ; heuristic: follows a terminator; C0
@@ -5413,7 +5511,7 @@ Func_005_5D20:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_4B6B, Func_0E2_5E46)
+; 2 call sites from 2 routines (e.g. AIScore_FireAir, AIScore_SuckAir)
 ; reads: wBattleActor
 ; points at: wD80E
 Func_005_5D31:: ; heuristic: follows a terminator; C0
@@ -5427,7 +5525,7 @@ Func_005_5D31:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_4C49, Func_0E2_4E71)
+; 2 call sites from 2 routines (e.g. AIScore_Vacuum_Sub01, AIScore_CallHelp)
 ; reads: wBattleActor
 Func_005_5D44:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -5497,7 +5595,7 @@ Jump_005_5D98::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7671, Func_005_72DE, Func_005_77F9)
+; 3 call sites from 3 routines (e.g. AIScore_NapAttack_Sub01, AIScore_Sleep_Sub01, AIScore_SleepAir_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus, wDA74
 Func_005_5D9B:: ; heuristic: follows a terminator; C0
@@ -5534,7 +5632,7 @@ Jump_005_5DCA::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_791F, Func_005_7AD8, Func_005_7B11)
+; 3 call sites from 3 routines (e.g. AIScore_LureDance_Sub01, Func_005_7AD8, Func_005_7B11)
 ; reads: wBattleActor
 ; points at: wD80F, wDA77
 Func_005_5DCD:: ; heuristic: follows a terminator; C0
@@ -5572,10 +5670,12 @@ Jump_005_5DFC::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7A0D)
+; only called from AIScore_EerieLite_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_EerieLite_Sub01)
 ; reads: wBattleActor
 ; points at: wDA74, wD814
-Func_005_5DFF:: ; heuristic: follows a terminator; C0
+AIScore_EerieLite_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_5DFF:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -5622,7 +5722,7 @@ Jump_005_5E3C::
     ld c, $FF
     ret
 
-; 5 call sites from 5 routines (e.g. Func_005_76A3, Func_005_7BEE, Func_005_7C45, Func_005_7D5B, ...)
+; 5 call sites from 5 routines (e.g. AIScore_SquallHit_Sub01, AIScore_Dodge_Sub01_Sub01, Func_005_7C45, AIScore_Imitate_Sub01, ...)
 ; reads: wD891
 Func_005_5E3F:: ; heuristic: follows a terminator; C0
     ld a, [wD891]
@@ -5695,10 +5795,12 @@ Jump_005_5E9E::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5529)
+; only called from AIScore_EvilSlash (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_EvilSlash)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_5EA1:: ; heuristic: follows a terminator; C0
+AIScore_EvilSlash_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_5EA1:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -5820,7 +5922,7 @@ Func_005_5F2A:: ; address name
     cp a, $0C
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_45FE, Func_0E2_4619)
+; 2 call sites from 2 routines (e.g. Func_0E2_45FE, AIScore_TwinHits)
 ; reads: wBattleActor, wD2CC
 ; points at: wD80D, wDA5B
 Func_005_5F3D:: ; heuristic: follows a terminator; C0
@@ -6025,7 +6127,7 @@ Func_005_6039:: ; address name
     cp a, $0C
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_51DB, Func_0E2_51F6)
+; 2 call sites from 2 routines (e.g. Func_0E2_51DB, AIScore_SquallHit)
 ; reads: wBattleActor
 ; points at: wBattleHP, wBattleMaxHP, wSlotPersonalityLo
 Func_005_604C:: ; heuristic: follows a terminator; C0
@@ -6213,7 +6315,7 @@ Func_005_6141::
 Data_005_614B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $05, $07, $12, $24, $01, $0C, $1C
 
-; 3 call sites from 3 routines (e.g. Func_0E2_41C5, Func_0E2_41E0, Func_0E2_59E5)
+; 3 call sites from 3 routines (e.g. Func_0E2_41C5, AIScore_Beat, AIScore_KODance)
 ; reads: wBattleActor
 ; points at: wD80E, wDA74
 Func_005_6153::
@@ -6263,7 +6365,7 @@ Jump_005_6195::
     ld c, $01
     ret
 
-; 7 call sites from 7 routines (e.g. Func_005_76A3, Func_005_7397, Func_005_7BEE, Func_005_7C45, ...)
+; 7 call sites from 7 routines (e.g. AIScore_SquallHit_Sub01, Func_005_7397, AIScore_Dodge_Sub01_Sub01, Func_005_7C45, ...)
 ; reads: wBattleActor, wD2CC
 Func_005_6198:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -6284,10 +6386,12 @@ Jump_005_61AE::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7CC2)
+; only called from AIScore_AquaWall_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_AquaWall_Sub01)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_61B1:: ; heuristic: follows a terminator; C0
+AIScore_AquaWall_Sub01_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_61B1:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
@@ -6301,10 +6405,12 @@ Jump_005_61C1::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0161C4, $65
 
-; 1 call site from 1 routine (e.g. Func_005_7879)
+; only called from AIScore_Curse_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Curse_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_6229::
+AIScore_Curse_Sub01_Sub02::
+Func_005_6229:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -6314,11 +6420,13 @@ Func_005_6229::
     call AnySlotLacksStatusMask
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7AA4)
+; only called from AIScore_SuckAir_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SuckAir_Sub01)
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD988
-Func_005_623B:: ; heuristic: follows a terminator; C0
+AIScore_SuckAir_Sub01_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_623B:: ; address name
     ld a, [wBattleActor]
     swap a
     ld hl, wD988
@@ -6347,7 +6455,7 @@ Jump_005_6264::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_715F, Func_005_7975, Func_005_7DC2)
+; 3 call sites from 3 routines (e.g. Func_005_715F, AIScore_Hustle_Sub01, AIScore_LoveRain_Sub01)
 ; reads: wBattleActor
 Func_005_626B::
     ld a, [wBattleActor]
@@ -6442,9 +6550,11 @@ Jump_005_62D9::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7187)
+; only called from AIScore_MPass_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MPass_Sub01)
 ; reads: wBattleActor
-Func_005_62E1:: ; heuristic: follows a terminator; C0
+AIScore_MPass_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_62E1:: ; address name
     ld a, [wBattleActor]
     ld e, a
     and a, $04
@@ -6574,9 +6684,11 @@ Jump_005_638E::
     ld c, $05
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4A08)
+; only called from AIScore_MegaMagic (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
 ; reads: wBattleActor
-Func_005_6392:: ; heuristic: follows a terminator; C0
+AIScore_MegaMagic_Sub03:: ; heuristic: follows a terminator; C0
+Func_005_6392:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
@@ -6625,7 +6737,7 @@ Jump_005_63CF::
     ld c, $01
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7BBE, Func_005_7C82, Func_005_7CA2)
+; 3 call sites from 3 routines (e.g. AIScore_MouthShut_Sub01, AIScore_TailWind_Sub01, AIScore_StormWind_Sub01)
 ; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wD80D
@@ -6716,7 +6828,7 @@ Jump_005_644F::
     pop bc
     ret
 
-; 10 call sites from 10 routines (e.g. Func_005_7397, Func_005_791F, Func_005_7BE6, Func_005_7C69, ...)
+; 10 call sites from 10 routines (e.g. Func_005_7397, AIScore_LureDance_Sub01, AIScore_StrongD_Sub01, AIScore_Cover_Sub01, ...)
 ; reads: wBattleActor, wC984, wC985
 Func_005_6452:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -6757,7 +6869,7 @@ Jump_005_647E::
     ld c, $FF
     ret
 
-; 5 call sites from 5 routines (e.g. Func_005_74B5, Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, ...)
+; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_Sub04, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wC58A, wCFC5
 Func_005_6481::
     ld a, [wC58A]
@@ -6773,7 +6885,7 @@ Jump_005_6491::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, Func_0E2_511C)
+; 4 call sites from 4 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit)
 ; reads: wBattleActor
 ; points at: wD2C1
 Func_005_6494::
@@ -6816,7 +6928,7 @@ Jump_005_64C9::
     ld c, $FF
     ret
 
-; 3 call sites from 3 routines (e.g. Func_0E2_4001, Func_0E2_4CE6, Func_0E2_511C)
+; 3 call sites from 3 routines (e.g. AIScore_Skill00, AIScore_RockThrow, AIScore_PoisonHit)
 ; reads: wC58A, wBattleActor
 Func_005_64CC::
     ld a, [wC58A]
@@ -6832,9 +6944,11 @@ Jump_005_64DC::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_7D95)
+; only called from AIScore_Meditate_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Meditate_Sub01)
 ; reads: wBattleActor
-Func_005_64DF:: ; heuristic: follows a terminator; C0
+AIScore_Meditate_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_64DF:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, $03
@@ -6853,7 +6967,7 @@ Jump_005_64FB::
     ld c, $FF
     ret
 
-; 21 call sites from 21 routines (e.g. Func_0E2_411C, Func_0E2_41E0, Func_0E2_4279, Func_0E2_449C, ...)
+; 21 call sites from 21 routines (e.g. AIScore_Firebal, AIScore_Beat, AIScore_Sacrifice, AIScore_Sap, ...)
 ; reads: wBattleActor, wCFEF, hFFC6
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
@@ -6916,7 +7030,7 @@ Jump_005_6553::
     ld c, $01
     ret
 
-; 5 call sites from 5 routines (e.g. Func_0E2_4310, Func_0E2_438D, Func_0E2_5B3D, Func_0E2_6303, ...)
+; 5 call sites from 5 routines (e.g. AIScore_Heal, AIScore_HealUs, AIScore_Hustle, AIScore_Meditate, ...)
 ; reads: wBattleActor
 ; points at: wD988
 Func_005_6556:: ; heuristic: follows a terminator; C0
@@ -6991,10 +7105,12 @@ Func_005_65AC::
     or a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_678C)
+; only called from AIScore_Sap_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Sap_Sub02)
 ; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_005_65C1:: ; heuristic: follows a terminator; C0
+AIScore_Sap_Sub02_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_65C1:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -7123,7 +7239,7 @@ Jump_005_667C::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_0E2_43C8, Func_0E2_43E9, Func_0E2_5AE6, Func_0E2_6350)
+; 4 call sites from 4 routines (e.g. AIScore_Vivify, AIScore_Farewell, AIScore_LifeDance, AIScore_LifeSong)
 ; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wD988
@@ -7291,10 +7407,12 @@ Func_005_6741::
     inc d
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_526D)
+; only called from AIScore_BiAttack (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BiAttack)
 ; reads: wBattleActor
 ; points at: wD2C1
-Func_005_676E:: ; heuristic: follows a terminator; C0
+AIScore_BiAttack_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_676E:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -7342,10 +7460,12 @@ Jump_005_67AF::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_56C6)
+; only called from AIScore_Berserker (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Berserker)
 ; reads: wBattleActor
 ; points at: wD2C1
-Func_005_67B2:: ; heuristic: follows a terminator; C0
+AIScore_Berserker_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_67B2:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $02
@@ -7415,10 +7535,12 @@ Jump_005_681D::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_57A9)
+; only called from AIScore_Ramming (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Ramming)
 ; reads: wBattleActor, wCFEF
 ; points at: wDA72
-Func_005_6820:: ; heuristic: follows a terminator; C0
+AIScore_Ramming_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_6820:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $02
@@ -7495,10 +7617,12 @@ Jump_005_6899::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5856)
+; only called from AIScore_Kamikaze (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Kamikaze)
 ; reads: wBattleActor, wC58A, wCFC5, wD2CC, wCFEF
 ; points at: wDA5B, wDA72
-Func_005_689C:: ; heuristic: follows a terminator; C0
+AIScore_Kamikaze_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_689C:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $03
@@ -7530,7 +7654,7 @@ Jump_005_68C6::
     cp a, $03
     jr c, Jump_005_68F5
     push de
-    call Func_005_7058
+    call AIScore_Kamikaze_Sub01_Sub01
     pop de
     jr nz, Jump_005_68F5
     ld a, c
@@ -7631,7 +7755,7 @@ Jump_005_696F::
     ret
 
 ; apparently meant to test the actor's status byte 4 (wD810 + 9 * actor) & $03 like the neighbouring checks, but it never loads the byte: it tests A & 3 where A is the low byte of that address left by AddAx9ToHL. So C = $FF for slots 0 and 4 and C = 0 for slots 1, 2, 5 and 6 whatever the status (a likely bug; executed, test Status4CheckReadsAddress) (E-0075)
-; 8 call sites from 8 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, ...)
+; 8 call sites from 8 routines (e.g. AIScore_ChargeUp_Sub01, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wBattleActor
 ; points at: wD810
 ActorStatus4CheckReadsAddress::
@@ -7648,11 +7772,13 @@ Jump_005_6982::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_76CE)
+; only called from AIScore_BiAttack_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BiAttack_Sub02)
 ; reads: wBattleActor, hFFCA, hFFCB, hFFC9
 ; writes: hFFC9, hFFCA, hFFCB
 ; points at: hFFC9
-Func_005_6985:: ; heuristic: follows a terminator; C0
+AIScore_BiAttack_Sub02_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_6985:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -7708,7 +7834,7 @@ Jump_005_69D7::
     ret
 
 ; C = 0 when the actor's status byte 2 (wD80E) bit 1 or byte 4 & $03 is set, else C = $FF (E-0072)
-; 14 call sites from 14 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, Func_0E2_511C, ...)
+; 14 call sites from 14 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit, ...)
 ; reads: wBattleActor
 ; points at: wD80E
 ActorLacksStatus2Bit1And4Bits01::
@@ -7733,7 +7859,7 @@ Jump_005_69F2::
     ld c, $FF
     ret
 
-; 20 call sites from 20 routines (e.g. Func_0E2_41E0, Func_0E2_449C, Func_0E2_4567, Func_0E2_4674, ...)
+; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
 ; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
@@ -7817,7 +7943,7 @@ Jump_005_6A68::
     ld c, $01
     ret
 
-; 20 call sites from 20 routines (e.g. Func_0E2_41E0, Func_0E2_449C, Func_0E2_4567, Func_0E2_4674, ...)
+; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
 ; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
@@ -7903,7 +8029,7 @@ Jump_005_6AE5::
     ret
 
 ; wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF
-; 108 call sites from 108 routines (e.g. Func_005_7080, Func_005_708C, Func_005_70C9, Func_005_7109, ...)
+; 108 call sites from 108 routines (e.g. AIScore_Skill00_Sub01, Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, ...)
 ; writes: wDA6E, wDA6F, wDA70, wDA71
 ResetWDA6E::
 Func_005_6AE8:: ; address name
@@ -7949,9 +8075,11 @@ Func_005_6B16:: ; address name
     ld a, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_4C23)
+; only called from AIScore_Upper_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Upper_Sub01_Sub01)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A
-Func_005_6B20:: ; heuristic: follows a terminator; C0
+AIScore_Upper_Sub01_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_6B20:: ; address name
     call GetBattleDEF_Bank05
     ld a, l
     sub a, $E7
@@ -8000,9 +8128,11 @@ Jump_005_6B5D::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_4C40)
+; only called from AIScore_Speed_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Speed_Sub01_Sub01)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A
-Func_005_6B5F:: ; heuristic: follows a terminator; C0
+AIScore_Speed_Sub01_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_6B5F:: ; address name
     call GetBattleAGL_Bank05
     ld a, l
     sub a, $E7
@@ -8135,7 +8265,7 @@ Func_005_6BF8::
     cp a, $01
     ret
 
-; 8 call sites from 8 routines (e.g. Func_005_432E, Func_005_4373, Func_005_44E1, Func_005_43AD, ...)
+; 8 call sites from 8 routines (e.g. Func_005_432E, Func_005_4373, AIScore_AquaWall_Sub01_Sub01, AIScore_DanceShut_Sub01_Sub01, ...)
 ; reads: hFFC6
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer
 ; points at: hFFC6, wD989
@@ -8276,7 +8406,7 @@ Func_005_6CA5:: ; address name
     ld a, [wSpeciesRecord]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_51EA, Func_005_5228)
+; 2 call sites from 2 routines (e.g. AIScore_TwinHits_Sub01, AIScore_TwinHits_Sub02)
 ; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_005_6CC2:: ; heuristic: follows a terminator; C0
@@ -8756,7 +8886,7 @@ Jump_005_6F58::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
-; 16 call sites from 16 routines (e.g. Func_005_5803, Func_005_5D9B, Func_005_47E5, Func_005_5DCD, ...)
+; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub01, Func_005_5D9B, Func_005_47E5, Func_005_5DCD, ...)
 ReadByteAtHLPlus4APlus3C_Bank05::
 Func_005_6F60:: ; address name
     add a, a
@@ -8774,7 +8904,7 @@ Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $02, $06, $01, $00, $03
 
 ; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when some present slot in the range has (HL + 9 * slot) & E clear; C = 0 when every slot is absent or has a masked bit set (E-0071)
-; 21 call sites from 20 routines (e.g. AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, Func_005_41EB, Func_005_4D46, ...)
+; 21 call sites from 20 routines (e.g. AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, Func_005_41EB, AIScore_MagicWall_Sub01_Sub01, ...)
 AnySlotLacksStatusMask::
 Func_005_6FA1:: ; address name
     ld c, a
@@ -8803,7 +8933,7 @@ Jump_005_6FBA::
     ld c, $FF
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_47A5, Func_005_47B5, Func_005_47C5, Func_005_47D5)
+; 4 call sites from 4 routines (e.g. AIScore_Antidote_Sub01_Sub01, AIScore_NumbOff_Sub01_Sub01, AIScore_DeChaos_Sub01_Sub01, AIScore_CurseOff_Sub01_Sub01)
 Func_005_6FBD:: ; heuristic: follows a terminator; C0
     ld c, a
 
@@ -8831,7 +8961,7 @@ Jump_005_6FD6::
     ld c, $FF
     ret
 
-; 10 call sites from 10 routines (e.g. Func_005_481C, Func_005_4822, Func_005_4828, Func_005_482E, ...)
+; 10 call sites from 10 routines (e.g. AIScore_SlimeBlow_Sub01_Sub01, AIScore_DrakSlash_Sub01_Sub01, AIScore_BeastCut_Sub01_Sub01, AIScore_BirdBlow_Sub01_Sub01, ...)
 ; reads: wBattleActor
 Func_005_6FD9:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
@@ -8901,7 +9031,7 @@ Func_005_701B:: ; heuristic: follows a terminator; C0
     pop de
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_4676, Func_005_46B4)
+; 2 call sites from 2 routines (e.g. Func_005_4676, AIScore_FireAir_Sub01)
 ; reads: wCFEF
 Func_005_702D::
     ld a, [wCFEF]
@@ -8934,9 +9064,11 @@ Func_005_7032:: ; heuristic: follows a terminator; C0
     ld a, e
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_689C)
+; only called from AIScore_Kamikaze_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Kamikaze_Sub01)
 ; points at: wD989
-Func_005_7058:: ; heuristic: follows a terminator; C0
+AIScore_Kamikaze_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7058:: ; address name
     ld e, $00
     ld d, c
     ld hl, wD989
@@ -8970,8 +9102,10 @@ Jump_005_707E::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4001)
-Func_005_7080::
+; only called from AIScore_Skill00 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Skill00)
+AIScore_Skill00_Sub01::
+Func_005_7080:: ; address name
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
@@ -8982,7 +9116,7 @@ Jump_005_7088::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_40BF, Func_0E2_411C)
+; 2 call sites from 2 routines (e.g. AIScore_Blaze, AIScore_Firebal)
 Func_005_708C:: ; heuristic: follows a terminator; C0
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9022,8 +9156,10 @@ Jump_005_70C5::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_41E0)
-Func_005_70C9:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Beat (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Beat)
+AIScore_Beat_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_70C9:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -9062,8 +9198,10 @@ Jump_005_7105::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4279)
-Func_005_7109:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Sacrifice (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Sacrifice)
+AIScore_Sacrifice_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_7109:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -9118,7 +9256,7 @@ Jump_005_715B::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_4310, Func_0E2_438D)
+; 2 call sites from 2 routines (e.g. AIScore_Heal, AIScore_HealUs)
 Func_005_715F:: ; heuristic: follows a terminator; C0
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9146,8 +9284,10 @@ Jump_005_7183::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_43BE)
-Func_005_7187:: ; heuristic: follows a terminator; C0
+; only called from AIScore_MPass (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MPass)
+AIScore_MPass_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7187:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_71A8
@@ -9163,7 +9303,7 @@ Func_005_7187:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_71A8
-    call Func_005_62E1
+    call AIScore_MPass_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_71A8
@@ -9173,8 +9313,10 @@ Jump_005_71A8::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_43C8)
-Func_005_71AC:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Vivify (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Vivify)
+AIScore_Vivify_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_71AC:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9189,8 +9331,10 @@ Jump_005_71BA::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_43E9)
-Func_005_71BE:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Farewell (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Farewell)
+AIScore_Farewell_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_71BE:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9213,13 +9357,15 @@ Jump_005_71DA::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4420)
-Func_005_71DE:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Antidote (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Antidote)
+AIScore_Antidote_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_71DE:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_47A5
+    call AIScore_Antidote_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_71EE
@@ -9231,13 +9377,15 @@ Jump_005_71EE::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4433)
-Func_005_71F4:: ; heuristic: follows a terminator; C0
+; only called from AIScore_DeChaos (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DeChaos)
+AIScore_DeChaos_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_71F4:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_47C5
+    call AIScore_DeChaos_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7204
@@ -9249,13 +9397,15 @@ Jump_005_7204::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4446)
-Func_005_720A:: ; heuristic: follows a terminator; C0
+; only called from AIScore_NumbOff (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_NumbOff)
+AIScore_NumbOff_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_720A:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_47B5
+    call AIScore_NumbOff_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_721A
@@ -9267,13 +9417,15 @@ Jump_005_721A::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4459)
-Func_005_7220:: ; heuristic: follows a terminator; C0
+; only called from AIScore_CurseOff (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_CurseOff)
+AIScore_CurseOff_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7220:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_47D5
+    call AIScore_CurseOff_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7230
@@ -9285,8 +9437,10 @@ Jump_005_7230::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_446C)
-Func_005_7236:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Upper (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Upper)
+AIScore_Upper_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7236:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9295,7 +9449,7 @@ Func_005_7236:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_724B
-    call Func_005_4C23
+    call AIScore_Upper_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_724B
@@ -9305,13 +9459,15 @@ Jump_005_724B::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_449C)
-Func_005_724F:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Sap (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Sap)
+AIScore_Sap_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_724F:: ; address name
     call Func_005_7261
     ld a, c
     and a, a
     ret z
-    call Func_005_4977
+    call AIScore_Sap_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_725D
@@ -9321,7 +9477,7 @@ Jump_005_725D::
     call ResetWDA6E
     ret
 
-; 6 call sites from 6 routines (e.g. Func_005_724F, Func_005_7293, Func_005_72BE, Func_005_72DE, ...)
+; 6 call sites from 6 routines (e.g. AIScore_Sap_Sub01, AIScore_Slow_Sub01, AIScore_Surround_Sub01, AIScore_Sleep_Sub01, ...)
 Func_005_7261::
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
@@ -9341,8 +9497,10 @@ Jump_005_7276::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4536)
-Func_005_727A:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Speed (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Speed)
+AIScore_Speed_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_727A:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9351,7 +9509,7 @@ Func_005_727A:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_728F
-    call Func_005_4C40
+    call AIScore_Speed_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_728F
@@ -9361,8 +9519,10 @@ Jump_005_728F::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4567)
-Func_005_7293:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Slow (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Slow)
+AIScore_Slow_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7293:: ; address name
     call Func_005_7261
     ld a, c
     and a, a
@@ -9371,7 +9531,7 @@ Func_005_7293:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_72A8
-    call Func_005_49AA
+    call AIScore_Slow_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_72A8
@@ -9381,8 +9541,10 @@ Jump_005_72A8::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4619)
-Func_005_72AC:: ; heuristic: follows a terminator; C0
+; only called from AIScore_TwinHits (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TwinHits)
+AIScore_TwinHits_Sub03:: ; heuristic: follows a terminator; C0
+Func_005_72AC:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9397,8 +9559,10 @@ Jump_005_72BA::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4674)
-Func_005_72BE:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Surround (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Surround)
+AIScore_Surround_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_72BE:: ; address name
     call Func_005_7261
     ld a, c
     and a, a
@@ -9421,8 +9585,10 @@ Jump_005_72DA::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4721)
-Func_005_72DE:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Sleep (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Sleep)
+AIScore_Sleep_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_72DE:: ; address name
     call Func_005_7261
     ld a, c
     and a, a
@@ -9441,13 +9607,15 @@ Jump_005_72F3::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_478E)
-Func_005_72F7:: ; heuristic: follows a terminator; C0
+; only called from AIScore_TakeMagic (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TakeMagic)
+AIScore_TakeMagic_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_72F7:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4286
+    call AIScore_TakeMagic_Sub01_Sub01
     ld a, c
     cp a, $01
     jr z, Jump_005_7308
@@ -9463,7 +9631,7 @@ Jump_005_7308::
     ld a, c
     and a, a
     jr z, Jump_005_731E
-    call Func_005_4741
+    call AIScore_TakeMagic_Sub01_Sub02
     ld a, c
     and a, a
     jr z, Jump_005_731E
@@ -9473,8 +9641,10 @@ Jump_005_731E::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_47AB)
-Func_005_7322:: ; heuristic: follows a terminator; C0
+; only called from AIScore_RobMagic (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_RobMagic)
+AIScore_RobMagic_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7322:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9497,8 +9667,10 @@ Jump_005_7341::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_47CE)
-Func_005_7345:: ; heuristic: follows a terminator; C0
+; only called from AIScore_StopSpell (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_StopSpell)
+AIScore_StopSpell_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7345:: ; address name
     call Func_005_7261
     ld a, c
     and a, a
@@ -9519,7 +9691,7 @@ Jump_005_735D::
     ld a, c
     and a, a
     jr z, Jump_005_736C
-    call Func_005_4904
+    call AIScore_StopSpell_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_736C
@@ -9529,7 +9701,7 @@ Jump_005_736C::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_4855, Func_0E2_6473)
+; 2 call sites from 2 routines (e.g. AIScore_PanicAll, AIScore_PanicAll_6473)
 Func_005_7370:: ; heuristic: follows a terminator; C0
     call Func_005_7261
     ld a, c
@@ -9557,7 +9729,7 @@ Jump_005_7393::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_48AE, Func_0E2_648D)
+; 2 call sites from 2 routines (e.g. AIScore_Ironize, AIScore_Ironize_648D)
 Func_005_7397:: ; heuristic: follows a terminator; C0
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
@@ -9601,8 +9773,10 @@ Jump_005_73D3::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_48CF)
-Func_005_73D7:: ; heuristic: follows a terminator; C0
+; only called from AIScore_MagicBack (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MagicBack)
+AIScore_MagicBack_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_73D7:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9627,7 +9801,7 @@ Jump_005_73EF::
     ld a, c
     and a, a
     jr z, Jump_005_740C
-    call Func_005_55AA
+    call AIScore_MagicBack_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_740C
@@ -9641,8 +9815,10 @@ Jump_005_740C::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_48FD)
-Func_005_7410:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Barrier (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Barrier)
+AIScore_Barrier_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7410:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9681,8 +9857,10 @@ Jump_005_7445::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_491E)
-Func_005_7449:: ; heuristic: follows a terminator; C0
+; only called from AIScore_MagicWall (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MagicWall)
+AIScore_MagicWall_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7449:: ; address name
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
     and a, a
@@ -9711,7 +9889,7 @@ Jump_005_7461::
     ld a, c
     and a, a
     jr z, Jump_005_747E
-    call Func_005_4D46
+    call AIScore_MagicWall_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_747E
@@ -9721,7 +9899,7 @@ Jump_005_747E::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_493F, Func_0E2_4984)
+; 2 call sites from 2 routines (e.g. AIScore_Transform, AIScore_BeDragon)
 Func_005_7482:: ; heuristic: follows a terminator; C0
     call CheckSkillUsableStatusElseResetWDA6E
     ld a, c
@@ -9738,7 +9916,7 @@ Jump_005_7490::
     ret
 
 ; runs ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit0Check, SkillPassesSideFlagBit3Check and SkillPassesRepeatCheck in turn; at the first that returns C = 0 it calls ResetWDA6E (E-0071)
-; 18 call sites from 18 routines (e.g. Func_005_71AC, Func_005_71BE, Func_005_71DE, Func_005_71F4, ...)
+; 18 call sites from 18 routines (e.g. AIScore_Vivify_Sub01, AIScore_Farewell_Sub01, AIScore_Antidote_Sub01, AIScore_DeChaos_Sub01, ...)
 CheckSkillUsableStatusElseResetWDA6E::
 Func_005_7494:: ; address name
     call ActorCanPayMPCost_Bank05
@@ -9763,8 +9941,10 @@ Jump_005_74B1::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4A08)
-Func_005_74B5:: ; heuristic: follows a terminator; C0
+; only called from AIScore_MegaMagic (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
+AIScore_MegaMagic_Sub04:: ; heuristic: follows a terminator; C0
+Func_005_74B5:: ; address name
     call Func_005_74D1
     ld a, c
     and a, a
@@ -9783,7 +9963,7 @@ Jump_005_74CD::
     call ResetWDA6E
     ret
 
-; 6 call sites from 6 routines (e.g. Func_005_74B5, Func_005_74F9, Func_005_7512, Func_0E2_4AB6, ...)
+; 6 call sites from 6 routines (e.g. AIScore_MegaMagic_Sub04, AIScore_FireAir_Sub02, Func_005_7512, AIScore_BigBang, ...)
 Func_005_74D1::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9811,8 +9991,10 @@ Jump_005_74F5::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4B6B)
-Func_005_74F9:: ; heuristic: follows a terminator; C0
+; only called from AIScore_FireAir (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_FireAir)
+AIScore_FireAir_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_74F9:: ; address name
     call Func_005_74D1
     ld a, c
     and a, a
@@ -9821,7 +10003,7 @@ Func_005_74F9:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_750E
-    call Func_005_4487
+    call AIScore_FireAir_Sub02_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_750E
@@ -9831,7 +10013,7 @@ Jump_005_750E::
     call ResetWDA6E
     ret
 
-; 6 call sites from 6 routines (e.g. Func_0E2_4CE6, Func_0E2_4D7B, Func_0E2_4DEC, Func_0E2_4E71, ...)
+; 6 call sites from 6 routines (e.g. AIScore_RockThrow, AIScore_Watershot, AIScore_Tidalwave, AIScore_CallHelp, ...)
 Func_005_7512:: ; heuristic: follows a terminator; C0
     call Func_005_74D1
     ld a, c
@@ -9847,13 +10029,15 @@ Jump_005_7520::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_4FE1)
-Func_005_7524:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SlimeBlow (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SlimeBlow)
+AIScore_SlimeBlow_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7524:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_481C
+    call AIScore_SlimeBlow_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_7534
@@ -9865,13 +10049,15 @@ Jump_005_7534::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5068)
-Func_005_753A:: ; heuristic: follows a terminator; C0
+; only called from AIScore_DrakSlash (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DrakSlash)
+AIScore_DrakSlash_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_753A:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4822
+    call AIScore_DrakSlash_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_754A
@@ -9883,13 +10069,15 @@ Jump_005_754A::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_507A)
-Func_005_7550:: ; heuristic: follows a terminator; C0
+; only called from AIScore_BeastCut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BeastCut)
+AIScore_BeastCut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7550:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4828
+    call AIScore_BeastCut_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_7560
@@ -9901,13 +10089,15 @@ Jump_005_7560::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_508C)
-Func_005_7566:: ; heuristic: follows a terminator; C0
+; only called from AIScore_BirdBlow (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BirdBlow)
+AIScore_BirdBlow_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7566:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_482E
+    call AIScore_BirdBlow_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_7576
@@ -9919,13 +10109,15 @@ Jump_005_7576::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_509E)
-Func_005_757C:: ; heuristic: follows a terminator; C0
+; only called from AIScore_BugBlow (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BugBlow)
+AIScore_BugBlow_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_757C:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4834
+    call AIScore_BugBlow_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_758C
@@ -9937,13 +10129,15 @@ Jump_005_758C::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_50B0)
-Func_005_7592:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Shears (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Shears)
+AIScore_Shears_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7592:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_483A
+    call AIScore_Shears_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_75A2
@@ -9955,13 +10149,15 @@ Jump_005_75A2::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_50C2)
-Func_005_75A8:: ; heuristic: follows a terminator; C0
+; only called from AIScore_DevilCut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DevilCut)
+AIScore_DevilCut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_75A8:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4840
+    call AIScore_DevilCut_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_75B8
@@ -9973,13 +10169,15 @@ Jump_005_75B8::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_50D4)
-Func_005_75BE:: ; heuristic: follows a terminator; C0
+; only called from AIScore_ZombieCut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_ZombieCut)
+AIScore_ZombieCut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_75BE:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4846
+    call AIScore_ZombieCut_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_75CE
@@ -9991,13 +10189,15 @@ Jump_005_75CE::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_50E6)
-Func_005_75D4:: ; heuristic: follows a terminator; C0
+; only called from AIScore_CleanCut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_CleanCut)
+AIScore_CleanCut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_75D4:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_484C
+    call AIScore_CleanCut_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_75E4
@@ -10009,13 +10209,15 @@ Jump_005_75E4::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_50F8)
-Func_005_75EA:: ; heuristic: follows a terminator; C0
+; only called from AIScore_AquaCut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_AquaCut)
+AIScore_AquaCut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_75EA:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4852
+    call AIScore_AquaCut_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_75FA
@@ -10027,13 +10229,15 @@ Jump_005_75FA::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_510A)
-Func_005_7600:: ; heuristic: follows a terminator; C0
+; only called from AIScore_MetalCut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MetalCut)
+AIScore_MetalCut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7600:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4858
+    call AIScore_MetalCut_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_005_7610
@@ -10046,7 +10250,7 @@ Jump_005_7610::
     ret
 
 ; runs ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Bit3 and AnyFoeLacksStatus3And4Bits in turn; at the first that returns C = 0 it calls ResetWDA6E; returns with nothing changed when all pass (E-0071)
-; 19 call sites from 19 routines (e.g. Func_005_7524, Func_005_763E, Func_005_753A, Func_005_7686, ...)
+; 19 call sites from 19 routines (e.g. AIScore_SlimeBlow_Sub01, AIScore_PoisonHit_Sub01, AIScore_DrakSlash_Sub01, Func_005_7686, ...)
 CheckSkillUsableElseResetWDA6E::
 Func_005_7616:: ; address name
     call ActorCanPayMPCost_Bank05
@@ -10075,8 +10279,10 @@ Jump_005_763A::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_511C)
-Func_005_763E:: ; heuristic: follows a terminator; C0
+; only called from AIScore_PoisonHit (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_PoisonHit)
+AIScore_PoisonHit_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_763E:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
@@ -10097,8 +10303,10 @@ Jump_005_7655::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_51B7)
-Func_005_765B:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Paralyze (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Paralyze)
+AIScore_Paralyze_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_765B:: ; address name
     call Func_005_7686
     ld a, c
     and a, a
@@ -10115,8 +10323,10 @@ Jump_005_766B::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_51C9)
-Func_005_7671:: ; heuristic: follows a terminator; C0
+; only called from AIScore_NapAttack (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_NapAttack)
+AIScore_NapAttack_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7671:: ; address name
     call Func_005_7686
     ld a, c
     and a, a
@@ -10132,7 +10342,7 @@ Jump_005_7680::
     ld c, $00
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_765B, Func_005_7671)
+; 2 call sites from 2 routines (e.g. AIScore_Paralyze_Sub01, AIScore_NapAttack_Sub01)
 Func_005_7686::
     call CheckSkillUsableElseResetWDA6E
     ld a, c
@@ -10154,13 +10364,15 @@ Jump_005_769D::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_51F6)
-Func_005_76A3:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SquallHit (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SquallHit)
+AIScore_SquallHit_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_76A3:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_4461
+    call AIScore_SquallHit_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_76CA
@@ -10186,13 +10398,15 @@ Jump_005_76CA::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_526D)
-Func_005_76CE:: ; heuristic: follows a terminator; C0
+; only called from AIScore_BiAttack (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_BiAttack)
+AIScore_BiAttack_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_76CE:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
     ret z
-    call Func_005_6985
+    call AIScore_BiAttack_Sub02_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_76DC
@@ -10203,8 +10417,10 @@ Jump_005_76DC::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_530E)
-Func_005_76E2:: ; heuristic: follows a terminator; C0
+; only called from AIScore_RainSlash (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_RainSlash)
+AIScore_RainSlash_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_76E2:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
@@ -10221,8 +10437,10 @@ Jump_005_76F2::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5385)
-Func_005_76F8:: ; heuristic: follows a terminator; C0
+; only called from AIScore_MultiCut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MultiCut)
+AIScore_MultiCut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_76F8:: ; address name
     call Func_005_770A
     ld a, c
     and a, a
@@ -10237,7 +10455,7 @@ Jump_005_7706::
     call ResetWDA6E
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_76F8, Func_005_7777, Func_005_7812)
+; 3 call sites from 3 routines (e.g. AIScore_MultiCut_Sub01, AIScore_HighJump_Sub01, Func_005_7812)
 Func_005_770A::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10261,8 +10479,10 @@ Jump_005_7727::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5426)
-Func_005_772B:: ; heuristic: follows a terminator; C0
+; only called from AIScore_ChargeUp (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_ChargeUp)
+AIScore_ChargeUp_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_772B:: ; address name
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
@@ -10285,8 +10505,10 @@ Jump_005_774B::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_545D)
-Func_005_774F:: ; heuristic: follows a terminator; C0
+; only called from AIScore_PsycheUp (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_PsycheUp)
+AIScore_PsycheUp_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_774F:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10313,8 +10535,10 @@ Jump_005_7773::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_54C4)
-Func_005_7777:: ; heuristic: follows a terminator; C0
+; only called from AIScore_HighJump (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_HighJump)
+AIScore_HighJump_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7777:: ; address name
     call Func_005_770A
     call ActorLacksStatus4Bits67
     ld a, c
@@ -10326,8 +10550,10 @@ Jump_005_7782::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_561B)
-Func_005_7786:: ; heuristic: follows a terminator; C0
+; only called from AIScore_TwinSlash (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TwinSlash)
+AIScore_TwinSlash_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7786:: ; address name
     call Func_005_779F
     ld a, c
     and a, a
@@ -10346,7 +10572,7 @@ Jump_005_779B::
     call ResetWDA6E
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7786, Func_005_77C7, Func_0E2_56C6)
+; 3 call sites from 3 routines (e.g. AIScore_TwinSlash_Sub01, Func_005_77C7, AIScore_Berserker)
 Func_005_779F::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10374,7 +10600,7 @@ Jump_005_77C3::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_77E0, Func_0E2_57A9)
+; 2 call sites from 2 routines (e.g. AIScore_Kamikaze_Sub02, AIScore_Ramming)
 Func_005_77C7:: ; heuristic: follows a terminator; C0
     call Func_005_779F
     ld a, c
@@ -10394,8 +10620,10 @@ Jump_005_77DC::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5856)
-Func_005_77E0:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Kamikaze (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Kamikaze)
+AIScore_Kamikaze_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_77E0:: ; address name
     call Func_005_77C7
     ld a, c
     and a, a
@@ -10414,8 +10642,10 @@ Jump_005_77F5::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5876)
-Func_005_77F9:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SleepAir (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SleepAir)
+AIScore_SleepAir_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_77F9:: ; address name
     call Func_005_7812
     ld a, c
     and a, a
@@ -10434,7 +10664,7 @@ Jump_005_780E::
     call ResetWDA6E
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_77F9, Func_005_7824, Func_005_7847, Func_005_7860)
+; 4 call sites from 4 routines (e.g. AIScore_SleepAir_Sub01, AIScore_PalsyAir_Sub01, AIScore_PoisonGas_Sub01, AIScore_PoisonAir_Sub01)
 Func_005_7812::
     call Func_005_770A
     ld a, c
@@ -10450,8 +10680,10 @@ Jump_005_7820::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_58DF)
-Func_005_7824:: ; heuristic: follows a terminator; C0
+; only called from AIScore_PalsyAir (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_PalsyAir)
+AIScore_PalsyAir_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7824:: ; address name
     call Func_005_7812
     ld a, c
     and a, a
@@ -10474,8 +10706,10 @@ Jump_005_7843::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_58EA)
-Func_005_7847:: ; heuristic: follows a terminator; C0
+; only called from AIScore_PoisonGas (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_PoisonGas)
+AIScore_PoisonGas_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7847:: ; address name
     call Func_005_7812
     ld a, c
     and a, a
@@ -10494,13 +10728,15 @@ Jump_005_785C::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_58F5)
-Func_005_7860:: ; heuristic: follows a terminator; C0
+; only called from AIScore_PoisonAir (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_PoisonAir)
+AIScore_PoisonAir_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7860:: ; address name
     call Func_005_7812
     ld a, c
     and a, a
     ret z
-    call Func_005_44AB
+    call AIScore_PoisonAir_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7875
@@ -10514,8 +10750,10 @@ Jump_005_7875::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5900)
-Func_005_7879:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Curse (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Curse)
+AIScore_Curse_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7879:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10532,11 +10770,11 @@ Func_005_7879:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_78A4
-    call Func_005_4A43
+    call AIScore_Curse_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_78A4
-    call Func_005_6229
+    call AIScore_Curse_Sub01_Sub02
     ld a, c
     and a, a
     jr z, Jump_005_78A4
@@ -10546,8 +10784,10 @@ Jump_005_78A4::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_591F)
-Func_005_78A8:: ; heuristic: follows a terminator; C0
+; only called from AIScore_OddDance (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_OddDance)
+AIScore_OddDance_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_78A8:: ; address name
     call Func_005_78EC
     ld a, c
     and a, a
@@ -10572,8 +10812,10 @@ Jump_005_78C6::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5970)
-Func_005_78CC:: ; heuristic: follows a terminator; C0
+; only called from AIScore_PaniDance (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_PaniDance)
+AIScore_PaniDance_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_78CC:: ; address name
     call Func_005_78EC
     ld a, c
     and a, a
@@ -10596,7 +10838,7 @@ Jump_005_78E8::
     call ResetWDA6E
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_78A8, Func_005_790D, Func_005_78CC, Func_005_791F)
+; 4 call sites from 4 routines (e.g. AIScore_OddDance_Sub01, AIScore_KODance_Sub01, AIScore_PaniDance_Sub01, AIScore_LureDance_Sub01)
 Func_005_78EC::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10620,8 +10862,10 @@ Jump_005_7909::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_59E5)
-Func_005_790D:: ; heuristic: follows a terminator; C0
+; only called from AIScore_KODance (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_KODance)
+AIScore_KODance_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_790D:: ; address name
     call Func_005_78EC
     ld a, c
     and a, a
@@ -10636,8 +10880,10 @@ Jump_005_791B::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5A72)
-Func_005_791F:: ; heuristic: follows a terminator; C0
+; only called from AIScore_LureDance (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_LureDance)
+AIScore_LureDance_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_791F:: ; address name
     call Func_005_78EC
     ld a, c
     and a, a
@@ -10664,8 +10910,10 @@ Jump_005_7942::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5AE6)
-Func_005_7946:: ; heuristic: follows a terminator; C0
+; only called from AIScore_LifeDance (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_LifeDance)
+AIScore_LifeDance_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7946:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10696,8 +10944,10 @@ Jump_005_7971::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5B3D)
-Func_005_7975:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Hustle (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Hustle)
+AIScore_Hustle_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7975:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10720,8 +10970,10 @@ Jump_005_7992::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5BC4)
-Func_005_7996:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SideStep (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SideStep)
+AIScore_SideStep_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7996:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10742,7 +10994,7 @@ Func_005_7996:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_79C1
-    call Func_005_4D56
+    call AIScore_SideStep_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_79C1
@@ -10752,8 +11004,10 @@ Jump_005_79C1::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5C25)
-Func_005_79C5:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SandStorm (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SandStorm)
+AIScore_SandStorm_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_79C5:: ; address name
     call CheckSkillUsableElseResetWDA6E
     ld a, c
     and a, a
@@ -10776,8 +11030,10 @@ Jump_005_79E1::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5CC2)
-Func_005_79E5:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Radiant (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Radiant)
+AIScore_Radiant_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_79E5:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10804,8 +11060,10 @@ Jump_005_7A09::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5CCE)
-Func_005_7A0D:: ; heuristic: follows a terminator; C0
+; only called from AIScore_EerieLite (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_EerieLite)
+AIScore_EerieLite_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7A0D:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10814,7 +11072,7 @@ Func_005_7A0D:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7A23
-    call Func_005_5DFF
+    call AIScore_EerieLite_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7A23
@@ -10824,13 +11082,15 @@ Jump_005_7A23::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5D3D)
-Func_005_7A27:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Surge (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Surge)
+AIScore_Surge_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7A27:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A38
-    call Func_005_4D6A
+    call AIScore_Surge_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7A38
@@ -10842,13 +11102,15 @@ Jump_005_7A38::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5D60)
-Func_005_7A3E:: ; heuristic: follows a terminator; C0
+; only called from AIScore_UltraDown (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_UltraDown)
+AIScore_UltraDown_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7A3E:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A4F
-    call Func_005_4880
+    call AIScore_UltraDown_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7A4F
@@ -10860,13 +11122,15 @@ Jump_005_7A4F::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5D83)
-Func_005_7A55:: ; heuristic: follows a terminator; C0
+; only called from AIScore_DeMagic (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DeMagic)
+AIScore_DeMagic_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7A55:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A66
-    call Func_005_4DA5
+    call AIScore_DeMagic_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7A66
@@ -10878,8 +11142,10 @@ Jump_005_7A66::
     ld c, $00
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5DBC)
-Func_005_7A6C:: ; heuristic: follows a terminator; C0
+; only called from AIScore_ThickFog (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_ThickFog)
+AIScore_ThickFog_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7A6C:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -10906,13 +11172,15 @@ Jump_005_7A8D::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5DED)
-Func_005_7A91:: ; heuristic: follows a terminator; C0
+; only called from AIScore_TatsuCall (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TatsuCall)
+AIScore_TatsuCall_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7A91:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7AA0
-    call Func_005_4B5F
+    call AIScore_TatsuCall_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7AA0
@@ -10922,8 +11190,10 @@ Jump_005_7AA0::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5E46)
-Func_005_7AA4:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SuckAir (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SuckAir)
+AIScore_SuckAir_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7AA4:: ; address name
     call Func_005_4183
     ld a, c
     and a, a
@@ -10932,7 +11202,7 @@ Func_005_7AA4:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
-    call Func_005_4812
+    call AIScore_SuckAir_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
@@ -10940,7 +11210,7 @@ Func_005_7AA4:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
-    call Func_005_623B
+    call AIScore_SuckAir_Sub01_Sub02
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
@@ -10950,8 +11220,10 @@ Jump_005_7AC8::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5E83)
-Func_005_7ACC:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Focus (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Focus)
+AIScore_Focus_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7ACC:: ; address name
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
@@ -10962,7 +11234,7 @@ Jump_005_7AD4::
     call ResetWDA6E
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_7B40, Func_0E2_5EC0, Func_0E2_5FE8)
+; 3 call sites from 3 routines (e.g. AIScore_LegSweep_Sub01, AIScore_LushLicks, AIScore_Ahhh)
 Func_005_7AD8:: ; heuristic: follows a terminator; C0
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10998,7 +11270,7 @@ Jump_005_7B0D::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_5F0A, Func_0E2_6401)
+; 2 call sites from 2 routines (e.g. AIScore_SickLick, AIScore_Ahhh_6401)
 Func_005_7B11:: ; heuristic: follows a terminator; C0
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -11030,13 +11302,15 @@ Jump_005_7B3C::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_5F94)
-Func_005_7B40:: ; heuristic: follows a terminator; C0
+; only called from AIScore_LegSweep (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_LegSweep)
+AIScore_LegSweep_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7B40:: ; address name
     call Func_005_7AD8
     ld a, c
     and a, a
     ret z
-    call Func_005_461F
+    call AIScore_LegSweep_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7B58
@@ -11050,8 +11324,10 @@ Jump_005_7B58::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6044)
-Func_005_7B5C:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Geyser (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Geyser)
+AIScore_Geyser_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7B5C:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11078,8 +11354,10 @@ Jump_005_7B80::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6089)
-Func_005_7B84:: ; heuristic: follows a terminator; C0
+; only called from AIScore_DanceShut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_DanceShut)
+AIScore_DanceShut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7B84:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11096,7 +11374,7 @@ Func_005_7B84:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
-    call Func_005_43AD
+    call AIScore_DanceShut_Sub01_Sub01
     ld a, c
     cp a, $01
     jr z, Jump_005_7BAB
@@ -11104,11 +11382,11 @@ Func_005_7B84:: ; heuristic: follows a terminator; C0
     jr z, Jump_005_7BBA
 
 Jump_005_7BAB::
-    call Func_005_45F3
+    call AIScore_DanceShut_Sub01_Sub02
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
-    call Func_005_4A76
+    call AIScore_DanceShut_Sub01_Sub03
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
@@ -11118,8 +11396,10 @@ Jump_005_7BBA::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_60A6)
-Func_005_7BBE:: ; heuristic: follows a terminator; C0
+; only called from AIScore_MouthShut (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_MouthShut)
+AIScore_MouthShut_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7BBE:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11146,16 +11426,20 @@ Jump_005_7BE2::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_60D7)
+; only called from AIScore_StrongD (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_StrongD)
 ; writes: wDA6E, wDA6F, wDA70, wDA71
-Func_005_7BE6:: ; heuristic: follows a terminator; C0
+AIScore_StrongD_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7BE6:: ; address name
     call Func_005_6452
     ld a, c
     and a, a
     jp z, ResetWDA6E
 
-; 1 call site from 1 routine (e.g. Func_005_7C12)
-Func_005_7BEE::
+; only called from AIScore_Dodge_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Dodge_Sub01)
+AIScore_Dodge_Sub01_Sub01::
+Func_005_7BEE:: ; address name
     call Func_005_7C24
     ld a, c
     and a, a
@@ -11182,9 +11466,11 @@ Jump_005_7C0E::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6112)
-Func_005_7C12:: ; heuristic: follows a terminator; C0
-    call Func_005_7BEE
+; only called from AIScore_Dodge (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Dodge)
+AIScore_Dodge_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7C12:: ; address name
+    call AIScore_Dodge_Sub01_Sub01
     ld a, c
     and a, a
     ret z
@@ -11198,7 +11484,7 @@ Jump_005_7C20::
     call ResetWDA6E
     ret
 
-; 4 call sites from 4 routines (e.g. Func_005_7BEE, Func_005_7C45, Func_005_7C82, Func_005_7CA2)
+; 4 call sites from 4 routines (e.g. AIScore_Dodge_Sub01_Sub01, Func_005_7C45, AIScore_TailWind_Sub01, AIScore_StormWind_Sub01)
 Func_005_7C24::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -11222,7 +11508,7 @@ Jump_005_7C41::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_7C69, Func_0E2_6139)
+; 2 call sites from 2 routines (e.g. AIScore_Cover_Sub01, AIScore_BladeD)
 Func_005_7C45:: ; heuristic: follows a terminator; C0
     call Func_005_7C24
     ld a, c
@@ -11250,8 +11536,10 @@ Jump_005_7C65::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6160)
-Func_005_7C69:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Cover (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Cover)
+AIScore_Cover_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7C69:: ; address name
     call Func_005_7C45
     ld a, c
     and a, a
@@ -11270,8 +11558,10 @@ Jump_005_7C7E::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_618D)
-Func_005_7C82:: ; heuristic: follows a terminator; C0
+; only called from AIScore_TailWind (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_TailWind)
+AIScore_TailWind_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7C82:: ; address name
     call Func_005_7C24
     ld a, c
     and a, a
@@ -11280,7 +11570,7 @@ Func_005_7C82:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7C9E
-    call Func_005_4754
+    call AIScore_TailWind_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7C9E
@@ -11294,8 +11584,10 @@ Jump_005_7C9E::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_61C2)
-Func_005_7CA2:: ; heuristic: follows a terminator; C0
+; only called from AIScore_StormWind (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_StormWind)
+AIScore_StormWind_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7CA2:: ; address name
     call Func_005_7C24
     ld a, c
     and a, a
@@ -11318,8 +11610,10 @@ Jump_005_7CBE::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_61CD)
-Func_005_7CC2:: ; heuristic: follows a terminator; C0
+; only called from AIScore_AquaWall (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_AquaWall)
+AIScore_AquaWall_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7CC2:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11328,7 +11622,7 @@ Func_005_7CC2:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7CE3
-    call Func_005_44E1
+    call AIScore_AquaWall_Sub01_Sub01
     ld a, c
     cp a, $01
     jr z, Jump_005_7CDB
@@ -11336,7 +11630,7 @@ Func_005_7CC2:: ; heuristic: follows a terminator; C0
     jr z, Jump_005_7CE3
 
 Jump_005_7CDB::
-    call Func_005_61B1
+    call AIScore_AquaWall_Sub01_Sub02
     ld a, c
     and a, a
     jr z, Jump_005_7CE3
@@ -11346,8 +11640,10 @@ Jump_005_7CE3::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_61E0)
-Func_005_7CE7:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SealPray (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SealPray)
+AIScore_SealPray_Sub02:: ; heuristic: follows a terminator; C0
+Func_005_7CE7:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11358,8 +11654,10 @@ Jump_005_7CEF::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6249)
-Func_005_7CF3:: ; heuristic: follows a terminator; C0
+; only called from AIScore_SuckAll (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SuckAll)
+AIScore_SuckAll_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7CF3:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11426,8 +11724,10 @@ Jump_005_7D57::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_62A4)
-Func_005_7D5B:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Imitate (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Imitate)
+AIScore_Imitate_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7D5B:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11466,13 +11766,15 @@ Jump_005_7D91::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6303)
-Func_005_7D95:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Meditate (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Meditate)
+AIScore_Meditate_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7D95:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7DA4
-    call Func_005_64DF
+    call AIScore_Meditate_Sub01_Sub01
     ld a, c
     and a, a
     jr z, Jump_005_7DA4
@@ -11482,8 +11784,10 @@ Jump_005_7DA4::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6350)
-Func_005_7DA8:: ; heuristic: follows a terminator; C0
+; only called from AIScore_LifeSong (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_LifeSong)
+AIScore_LifeSong_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7DA8:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11502,8 +11806,10 @@ Jump_005_7DBE::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6387)
-Func_005_7DC2:: ; heuristic: follows a terminator; C0
+; only called from AIScore_LoveRain (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_LoveRain)
+AIScore_LoveRain_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7DC2:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
@@ -11522,7 +11828,7 @@ Jump_005_7DD8::
     call ResetWDA6E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E2_63FA, Func_0E2_641E)
+; 2 call sites from 2 routines (e.g. AIScore_Whistle, AIScore_ZoneOut)
 Func_005_7DDC:: ; heuristic: follows a terminator; C0
     call SetCToZero
     ld a, c
@@ -11534,8 +11840,10 @@ Jump_005_7DE4::
     call ResetWDA6E
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6425)
-Func_005_7DE8:: ; heuristic: follows a terminator; C0
+; only called from AIScore_Guard (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Guard)
+AIScore_Guard_Sub01:: ; heuristic: follows a terminator; C0
+Func_005_7DE8:: ; address name
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a

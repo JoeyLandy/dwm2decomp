@@ -868,6 +868,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Unknowns:** the meaning of each story flag, and the wD7F0 override path.
 - Binary verification: pending; see the commit.
 
+### E-0083 — Per-skill AI scoring routines (bank $E2)
+
+- Kind: OBSERVATION (reading of the dispatch plus a scan of the table data; C1).
+- **The dispatch.** `ScoreSkillForAI` (`30:4BA0`) takes a skill number in A.
+  - It calls AddSkillBaseWeightAndLoadSkill, which returns A unchanged after adding a per-skill base weight and loading the skill record.
+  - It then uses A to index a table of 3-byte far pointers (address low, high, bank) held in wDA6B/wDA6C. With wDA6E-wDA71 cleared, it calls the entry through `rst $10`.
+  - The two tables, `Data_030_5785` and `Data_030_59E0`, are named AIScoreRoutineTableA/B. They are equal in all 201 entries, and every entry is in bank $E2.
+- **Mapping skills to routines.** Entry i was paired with skill name i of StringTable_SkillNames (bank-$08 database, category 4).
+  - Entries that share a routine are skill families: Blaze/Blazemore/Blazemost; Heal/HealMore/HealAll; MPass/MPassmore/MPassmost; Firebal…Explodet.
+  - That supports the index being the skill number.
+  - From 175 on, the name table repeats "HighJump" and the entries point at `$64C0`/`$64C1`, so only indices below 175 are used for names.
+- **Names.** 118 bank-$E2 routines are named `AIScore_<first skill>`, with the full skill list in each note. The checks inside each routine (calls into the bank-$05 predicates of E-0071/E-0072 and AccumulateBank6WordToDA6E/DA70 weights) are not interpreted.
+- **Unknowns.**
+  - How the scores are compared to pick a skill.
+  - When table B is used instead of A.
+  - Skill 0 (no name), which has its own routine, AIScore_Skill00.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
