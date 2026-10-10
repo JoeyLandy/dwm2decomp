@@ -1014,6 +1014,29 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - So most of these predicates are probably leftover code that the game never calls (inference; a computed call cannot be fully excluded).
 - Binary verification: pending; see the commit.
 
+### E-0095 — Level-based chance rolls and damage scaling (bank $36)
+
+- Kind: OBSERVATION (full reading of every routine named; C1).
+- **Chance rolls.** Four routines take a level 0-3 in A and return carry for success. Each draws AdvanceRandom and compares wC5E7 with thresholds:
+  - $D8/$7F;
+  - always/$BF;
+  - $BF/$66;
+  - a side-dependent set: $7F/$4C/$26 against slots 0-3, otherwise $BF/$7F/$3F.
+  - Level 3 always fails and level 0 always succeeds, except in the side-dependent set.
+- **Damage scaling.** Four routines scale the damage word by level:
+  - 1/0.85/0.5/0;
+  - 1/0.75/0.4/0;
+  - 21/16, 37/32, 3/4, 0.3;
+  - 3/4, 1/2, 1/4, 0.
+  - They are built from the scale helpers named here; the factors follow from the shift and multiply/divide sequences.
+- **Selectors.** Three selectors pick a table by bits 6/7 of [HL]: RollChanceByFlagsAtHL, RollChanceByFlagsAtHLSided and ScaleDamageByFlagsAtHL.
+- **Also named:**
+  - RollSkillDamageFromRecord: base and spread from skill-record fields chosen by the actor's side.
+  - RollDamageBaseToBasePlusWD86A.
+  - Seven GetTargetWDA72ByteK getters for a 7-byte per-slot record at wDA72.
+- **Inference, not checked.** The level is most likely a resistance level. The AI reads 2-bit fields out of the same wDA72 records (Get2BitFieldEOfHL, E-0092), and levels 0-3 map to "normal … immune" in the tables.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -10747,7 +10747,7 @@ Func_000_3EDE:: ; address name
     ret
 
 ; HL = HL / BC (quotient), BC = HL mod BC; clobbers A, DE
-; 8 call sites from 8 routines (e.g. RandomInRange, Func_036_64DB, Func_036_4930, ChooseTarget_Heal, ...)
+; 8 call sites from 8 routines (e.g. RandomInRange, DivideHLBy3, Func_036_4930, ChooseTarget_Heal, ...)
 DivideHLByBC::
 Func_000_3F04:: ; address name
     ld de, $0000
