@@ -1,0 +1,6 @@
+{
+  "_comment": "Byte ranges [start, end) proven to be data. tools/disasm_all.py never starts a heuristic code entry, a speculative fall-through or a pointer-table run inside them, so their bytes stay data. Each region cites its evidence in docs/EVIDENCE_LOG.md.",
+  "regions": [
+    {"bank": "E0", "start": "76FC", "end": "79C9", "reason": "the string database BeginStringDisplay_BankE0 passes in DE ($76FC): one category pointer, 33 string pointers ($76FE-$773F) and their $F0-terminated strings up to $79C8 (E-0087)"}
+  ]
+}

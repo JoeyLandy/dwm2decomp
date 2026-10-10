@@ -7156,11 +7156,7 @@ Func_0E0_76E0:: ; address name
     ld a, [wStringCategory]
     cp a, $01
     jr c, Jump_0E0_76EE
-    ld hl, BeginStringDisplay_BankE0_Sub01
-    ld b, $A2
-
-Jump_0E0_76EC::
-    rst $10
+    farcall BeginStringDisplay_BankE0_Sub01
     ret
 
 Jump_0E0_76EE::
@@ -7175,685 +7171,190 @@ Func_0E0_76F5:: ; address name
     call BeginStringDisplay_BankE0
     call RunStringDisplayToEnd
     ret
-    db $FE, $76
-    dw Func_0E0_7740
-    dw Func_0E0_7753
-    dw Func_0E0_7776
-    dw Func_0E0_7795
-    dw Func_0E0_77A6
-    dw Func_0E0_77C6
-    dw Func_0E0_77D9
-    dw Func_0E0_77F9
-    dw Func_0E0_780B
-    dw Func_0E0_7828
-    db $39, $78, $49, $78
-    dw Func_0E0_7861
-    dw Func_0E0_787B
-    dw Func_0E0_788B
-    dw Func_0E0_789A
-    dw Func_0E0_78AC
-    dw Func_0E0_78BA
-    dw Func_0E0_78CD
-    dw Func_0E0_78E0
-    dw Func_0E0_78F0
-    dw Func_0E0_7900
-    dw Func_0E0_7910
-    dw Func_0E0_7920
-    dw Func_0E0_7930
-    dw Func_0E0_7940
-    dw Func_0E0_7950
-    dw Func_0E0_7960
-    dw Func_0E0_797E
-    dw Func_0E0_798C
-    dw Func_0E0_79AA
-    dw $79B9
-    dw Func_0E0_79BA
+    dw Data_0E0_76FE
 
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7740:: ; heuristic: target of a pointer table; C0
-    ld c, $21
-    ld c, $0C
-    ld e, $1D
-    ld [de], a
-    rra
-    ld c, $90
-    dec c
-    ld [de], a
-    dec de
-    ld c, $0C
-    dec e
-    jr Jump_0E0_776D
+Data_0E0_76FE:: ; heuristic: target of a monotone pointer table; C0
+    dw Data_0E0_7740
+    dw Data_0E0_7753
+    dw Data_0E0_7776
+    dw Data_0E0_7795
+    dw Data_0E0_77A6
+    dw Data_0E0_77C6
+    dw Data_0E0_77D9
+    dw Data_0E0_77F9
+    dw Data_0E0_780B
+    dw Data_0E0_7828
+    dw Data_0E0_7839
+    dw Data_0E0_7849
+    dw Data_0E0_7861
+    dw Data_0E0_787B
+    dw Data_0E0_788B
+    dw Data_0E0_789A
+    dw Data_0E0_78AC
+    dw Data_0E0_78BA
+    dw Data_0E0_78CD
+    dw Data_0E0_78E0
+    dw Data_0E0_78F0
+    dw Data_0E0_7900
+    dw Data_0E0_7910
+    dw Data_0E0_7920
+    dw Data_0E0_7930
+    dw Data_0E0_7940
+    dw Data_0E0_7950
+    dw Data_0E0_7960
+    dw Data_0E0_797E
+    dw Data_0E0_798C
+    dw Data_0E0_79AA
+    dw Data_0E0_79B9
+    dw Data_0E0_79BA
+
+Data_0E0_7740:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EXECUTIVE DIRECTOR", $F0
+
+Data_0E0_7753:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SCENARIO "
+    db $B6
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " GAME", $F1
+    db "         DESIGNERS", $F0
+
+Data_0E0_7776:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CHARACTER "
+    db $B6
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F1
+    db "  MONSTER DESIGNER", $F0
+
+Data_0E0_7795:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "  MUSIC COMPOSER", $F0
+
+Data_0E0_77A6:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LOCALIZATION", $F1
+    db "       SPECIALISTS", $F0
+
+Data_0E0_77C6:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " ENIX AMERICA INC.", $F0
+
+Data_0E0_77D9:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LOCALIZATION", $F1
+    db "           MANAGER", $F0
+
+Data_0E0_77F9:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "  PRODUCT MANAGER", $F0
+
+Data_0E0_780B:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ASSISTANT", $F1
+    db "   PRODUCT MANAGER", $F0
+
+Data_0E0_7828:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   QA TRANSLATOR", $F0
+
+Data_0E0_7839:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7849:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SALES"
+    db $9E, $16, $0A, $1B, $14, $0E, $1D, $12, $17, $10, $F1, $16, $0A, $17, $0A, $10
+    db $0E, $1B, $F0
+
+Data_0E0_7861:: ; heuristic: target of a monotone pointer table; C0
+    db $0A, $0C, $0C, $18, $1E, $17, $1D, $12, $17, $10, $9E, $0C, $1B, $0E, $0D, $12
+    db $1D, $F1, $16, $0A, $17, $0A, $10, $0E, $1B, $F0
+
+Data_0E0_787B:: ; heuristic: target of a monotone pointer table; C0
+    db $90, $90, $90, $90, $0A, $9E
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "R ANALYST", $F0
+
+Data_0E0_788B:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "     PRESIDENT", $F0
+
+Data_0E0_789A:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " ENIX CORPORATION", $F0
+
+Data_0E0_78AC:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "      ARTWORK", $F0
+
+Data_0E0_78BA:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " TECHNICAL SUPPORT", $F0
+
+Data_0E0_78CD:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " TECHNICAL SUPPORT", $F0
+
+Data_0E0_78E0:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_78F0:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7900:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7910:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7920:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7930:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7940:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7950:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "   PLAY TESTERS", $F0
+
+Data_0E0_7960:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "    ASSISTANT", $F1
+    db "      PRODUCERS", $F0
+
+Data_0E0_797E:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "     PRODUCER", $F0
+
+Data_0E0_798C:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "    EXECUTIVE", $F1
+    db "      PRODUCERS", $F0
+
+Data_0E0_79AA:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "     PRESIDENT", $F0
+
+Data_0E0_79B9:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7753:: ; heuristic: target of a pointer table; C0
-    inc e
-    inc c
-    ld c, $17
-    ld a, [bc]
-    dec de
-    ld [de], a
-    jr Jump_0E0_76EC
-    db $B6, $90, $10, $0A, $16, $0E, $F1, $90, $90, $90, $90, $90, $90, $90, $90, $90
-    db $0D
-
-Jump_0E0_776D::
-    ld c, $1C
-    ld [de], a
-    db $10, $17 ; stop
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7776:: ; heuristic: target of a pointer table; C0
-    inc c
-    ld de, $1B0A
-    ld a, [bc]
-    inc c
-    dec e
-    ld c, $1B
-    sub a, b
-    or a, [hl]
-    pop af
-    sub a, b
-    sub a, b
-    ld d, $18
-    rla
-    inc e
-    dec e
-    ld c, $1B
-    sub a, b
-    dec c
-    ld c, $1C
-    ld [de], a
-    db $10, $17 ; stop
-    ld c, $1B
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7795:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    ld d, $1E
-    inc e
-    ld [de], a
-    inc c
-    sub a, b
-    inc c
-    jr Jump_0E0_77B6
-    db $19, $18, $1C, $0E, $1B, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_77A6:: ; heuristic: target of a pointer table; C0
-    dec d
-    jr Jump_0E0_77B5
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_77A9:: ; heuristic: follows a terminator; C0
-    ld a, [bc]
-    dec d
-    ld [de], a
-    inc hl
-    ld a, [bc]
-    dec e
-    ld [de], a
-    jr Jump_0E0_77C9
-    db $F1, $90, $90
-
-Jump_0E0_77B5::
-    sub a, b
-
-Jump_0E0_77B6::
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    inc e
-    add hl, de
-    ld c, $0C
-    ld [de], a
-    ld a, [bc]
-    dec d
-    ld [de], a
-    inc e
-    dec e
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_77C6:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    ld c, $17
-
-Jump_0E0_77C9::
-    ld [de], a
-    ld hl, $0A90
-    ld d, $0E
-    dec de
-    ld [de], a
-    inc c
-    ld a, [bc]
-    sub a, b
-    ld [de], a
-    rla
-    inc c
-    or a, l
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_77D9:: ; heuristic: target of a pointer table; C0
-    dec d
-    jr Jump_0E0_77E8
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_77DC:: ; heuristic: follows a terminator; C0
-    ld a, [bc]
-    dec d
-    ld [de], a
-    inc hl
-    ld a, [bc]
-    dec e
-    ld [de], a
-    jr Jump_0E0_77FC
-    db $F1, $90, $90
-
-Jump_0E0_77E8::
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    ld d, $0A
-    rla
-    ld a, [bc]
-    db $10, $0E ; stop
-    dec de
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_77F9:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    add hl, de
-
-Jump_0E0_77FC::
-    dec de
-    jr Jump_0E0_780C
-    db $1E, $0C, $1D, $90, $16, $0A, $17, $0A, $10, $0E, $1B, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_780B:: ; heuristic: target of a pointer table; C0
-    ld a, [bc]
-
-Jump_0E0_780C::
-    inc e
-    inc e
-    ld [de], a
-    inc e
-    dec e
-    ld a, [bc]
-    rla
-    dec e
-    pop af
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec de
-    jr Jump_0E0_7829
-    db $1E, $0C, $1D, $90, $16, $0A, $17, $0A, $10, $0E, $1B, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7828:: ; heuristic: target of a pointer table; C0
-    sub a, b
-
-Jump_0E0_7829::
-    sub a, b
-    sub a, b
-    ld a, [de]
-    ld a, [bc]
-    sub a, b
-    dec e
-    dec de
-    ld a, [bc]
-    rla
-    inc e
-    dec d
-    ld a, [bc]
-    dec e
-    jr Jump_0E0_7853
-    db $F0, $90, $90, $90, $19, $15, $0A, $22, $90, $1D, $0E, $1C, $1D, $0E, $1B, $1C
-    db $F0, $1C, $0A, $15, $0E, $1C, $9E, $16, $0A, $1B, $14
-
-Jump_0E0_7853::
-    ld c, $1D
-    ld [de], a
-    rla
-    db $10, $F1 ; stop
-    ld d, $0A
-    rla
-    ld a, [bc]
-    db $10, $0E ; stop
-    dec de
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7861:: ; heuristic: target of a pointer table; C0
-    ld a, [bc]
-    inc c
-    inc c
-    jr Jump_0E0_7884
-    db $17, $1D, $12, $17, $10, $9E, $0C, $1B, $0E, $0D, $12, $1D, $F1, $16, $0A, $17
-    db $0A, $10, $0E, $1B, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_787B:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    ld a, [bc]
-    sbc a, [hl]
-    dec de
-    sub a, b
-    ld a, [bc]
-
-Jump_0E0_7884::
-    rla
-    ld a, [bc]
-    dec d
-    ld [hl+], a
-    inc e
-    dec e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_788B:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec de
-    ld c, $1C
-    ld [de], a
-    dec c
-    ld c, $17
-    dec e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_789A:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    ld c, $17
-    ld [de], a
-    ld hl, $0C90
-    jr Jump_0E0_78BE
-    db $19, $18, $1B, $0A, $1D, $12, $18, $17, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_78AC:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    ld a, [bc]
-    dec de
-    dec e
-    jr nz, Jump_0E0_78CF
-    dec de
-    inc d
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_78BA:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    dec e
-    ld c, $0C
-
-Jump_0E0_78BE::
-    ld de, $1217
-    inc c
-    ld a, [bc]
-    dec d
-    sub a, b
-    inc e
-    ld e, $19
-    add hl, de
-    jr Jump_0E0_78E6
-    db $1D, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_78CD:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    dec e
-
-Jump_0E0_78CF::
-    ld c, $0C
-    ld de, $1217
-    inc c
-    ld a, [bc]
-    dec d
-    sub a, b
-    inc e
-    ld e, $19
-    add hl, de
-    jr Jump_0E0_78F9
-    db $1D, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_78E0:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-
-Jump_0E0_78E6::
-    ld [hl+], a
-    sub a, b
-    dec e
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_78F0:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-    ld [hl+], a
-    sub a, b
-    dec e
-
-Jump_0E0_78F9::
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7900:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-    ld [hl+], a
-    sub a, b
-    dec e
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7910:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-    ld [hl+], a
-    sub a, b
-    dec e
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7920:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-    ld [hl+], a
-    sub a, b
-    dec e
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7930:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-    ld [hl+], a
-    sub a, b
-    dec e
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7940:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-    ld [hl+], a
-    sub a, b
-    dec e
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_7950:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec d
-    ld a, [bc]
-    ld [hl+], a
-    sub a, b
-    dec e
-    ld c, $1C
-    dec e
-    ld c, $1B
-    inc e
-    db $F0
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFFF0
-Func_0E0_7960:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    ld a, [bc]
-    inc e
-    inc e
-    ld [de], a
-    inc e
-    dec e
-    ld a, [bc]
-    rla
-    dec e
-    pop af
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec de
-    jr Jump_0E0_7985
-    db $1E, $0C, $0E, $1B, $1C, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFFF0
-Func_0E0_797E:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec de
-
-Jump_0E0_7985::
-    jr Jump_0E0_7994
-    db $1E, $0C, $0E, $1B, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFFF0
-Func_0E0_798C:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    ld c, $21
-    ld c, $0C
-
-Jump_0E0_7994::
-    ld e, $1D
-    ld [de], a
-    rra
-    ld c, $F1
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec de
-    jr Jump_0E0_79B1
-    db $1E, $0C, $0E, $1B, $1C, $F0
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFFF0
-Func_0E0_79AA:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    add hl, de
-    dec de
-
-Jump_0E0_79B1::
-    ld c, $1C
-    ld [de], a
-    dec c
-    ld c, $17
-    dec e
-    ldh a, [hFFF0]
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_79BA:: ; heuristic: target of a pointer table; C0
-    sub a, b
-    sub a, b
-    sub a, b
-    sub a, b
-    cp a, b
-    ld [bc], a
-    nop
-    nop
-    ld bc, $0E90
-    rla
-    ld [de], a
-    ld hl, $21F0
-    rst $38
-    ret c
-    jr Jump_0E0_79F6
-    db $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E, $21, $EF, $D8, $18, $19, $21
-    db $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53
-    db $DA, $85, $6F, $30, $01, $24, $7E, $C9
-
-Jump_0E0_79F6::
-    add a, a
-    add_a_to_hl
-    deref_hl
-    ret
-
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
-; no direct call (reached through a table, a jump or a vector)
-AddDoubleAToHL_BankE0:: ; heuristic: follows a terminator; C0
-Func_0E0_7A00:: ; address name
-    add a, a
-    add_a_to_hl
-    ret
-
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleActor
-ActorOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
-Func_0E0_7A07:: ; address name
-    ld a, [wC58A]
-    cp a, $01
-    jr nz, Jump_0E0_7A1C
-    ld a, [wC57F]
-    bit 1, a
-    jr z, Jump_0E0_7A1C
-    ld a, [wBattleActor]
-    cp a, $04
-    ccf
-    ret
-
-Jump_0E0_7A1C::
-    ld a, [wBattleActor]
-    cp a, $04
-    ret
-
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleTarget
-TargetOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
-Func_0E0_7A22:: ; address name
-    ld a, [wC58A]
-    cp a, $01
-    jr nz, Jump_0E0_7A37
-    ld a, [wC57F]
-    bit 1, a
-    jr z, Jump_0E0_7A37
-    ld a, [wBattleTarget]
-    cp a, $04
-    ccf
-    ret
-
-Jump_0E0_7A37::
-    ld a, [wBattleTarget]
-    cp a, $04
-    ret
-    INCBIN "dwm2-cobi-us.gbc", $383A3D, $43
+Data_0E0_79BA:: ; heuristic: target of a monotone pointer table; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "    "
+    INCBIN "dwm2-cobi-us.gbc", $3839BE, $C2
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
 ; 2 call sites from 2 routines (e.g. Func_0E0_572D, Func_0E0_4C7E_Case01)

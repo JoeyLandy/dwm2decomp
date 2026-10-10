@@ -6201,7 +6201,7 @@ Jump_03A_7C89::
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
 ; 4 call sites from 4 routines (e.g. Func_03A_6533, Func_03A_69AA_Case06, Func_03A_69AA_Case04, Func_03A_69AA_Case00)
 AddDoubleAToHL_Bank3A::
 Func_03A_7C93:: ; address name
@@ -6209,7 +6209,7 @@ Func_03A_7C93:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
 ; 2 call sites from 2 routines (e.g. SelectEffectByWDAD3Flags, SelectEffectByWDAD2Flags)
 ; reads: wC58A, wC57F, wBattleActor
 ActorOnLocalSide_Bank3A::
@@ -6230,7 +6230,7 @@ Jump_03A_7CAF::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
 ; 4 call sites from 3 routines (e.g. Func_03A_6C93_Case01, Func_03A_6C93_Case00, SelectEffectByWDAD2Flags)
 ; reads: wC58A, wC57F, wBattleTarget
 TargetOnLocalSide_Bank3A::

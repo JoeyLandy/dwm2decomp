@@ -143,6 +143,7 @@ class Rom:
         self.dalias: dict[tuple[int, int], str] = {}  # the same for data labels
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
         self.symbols: dict[int, dict] = {}  # config/symbols.json: evidence-named RAM addresses
+        self.data_regions: dict[int, list[tuple[int, int]]] = {}  # config/data_regions.json: proven data
         self.ram_used: dict[int, str] = {}  # RAM address -> symbol name used in the source
         self.schemas: list[dict] = []  # config/tables.json
         self.table_at: dict[tuple[int, int], dict] = {}  # (bank, addr) -> prepared schema
@@ -164,9 +165,15 @@ class Rom:
             return cur, addr
         return None
 
+    def in_data_region(self, bank: int, addr: int) -> bool:
+        """True when config/data_regions.json proves the byte at bank:addr is data, not code."""
+        return any(lo <= addr < hi for lo, hi in self.data_regions.get(bank, ()))
+
     def add_entry(self, bank: int, addr: int, name: str, why: str | None = None) -> None:
         if bank in self.zero or not (0 <= bank < self.nbanks):
             return
+        if why and why.startswith("heuristic") and self.in_data_region(bank, addr):
+            return  # a guess that lands in proven data
         lo = self.base(bank)
         if not (lo <= addr < lo + BANK):
             return
@@ -461,6 +468,8 @@ class Rom:
         return bool(pd & interior)
 
     def accept(self, bank: int, start: int) -> bool:
+        if self.in_data_region(bank, start):
+            return False
         base = self.base(bank)
         tr = self.spec_trace(bank, start)
         fb = self.data[bank * BANK + start - base:bank * BANK + start - base + 16]
@@ -513,7 +522,8 @@ class Rom:
             while p + 2 <= base + BANK:
                 run = []
                 q = p
-                while q + 2 <= base + BANK and q not in cov and q + 1 not in cov:
+                while q + 2 <= base + BANK and q not in cov and q + 1 not in cov \
+                        and not self.in_data_region(bank, q):
                     w = rb[q - base] | (rb[q - base + 1] << 8)
                     r = self.resolve(bank, w)
                     if w < 0x0100 or not r or r[0] in self.zero:
@@ -1693,6 +1703,11 @@ def main() -> int:
             if not key.startswith("_"):
                 rom.symbols[int(key, 16)] = info
         log(f"loaded {len(rom.symbols)} evidence-named RAM symbols")
+    regions_path = ROOT / "config/data_regions.json"
+    if regions_path.exists():
+        for r in json.loads(regions_path.read_text(encoding="utf-8"))["regions"]:
+            rom.data_regions.setdefault(int(r["bank"], 16), []).append((int(r["start"], 16), int(r["end"], 16)))
+        log(f"loaded {sum(len(v) for v in rom.data_regions.values())} proven data regions")
     tables_path = ROOT / "config/tables.json"
     if tables_path.exists():
         for t in json.loads(tables_path.read_text(encoding="utf-8"))["tables"]:

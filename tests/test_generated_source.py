@@ -6,6 +6,7 @@ equal the `ld b` value; a label from the caller's bank would assemble identicall
 the wrong routine. Each `rst $10` is anchored and its own arguments are found by looking
 backwards, stopping at the previous function's terminator.
 """
+import json
 import re
 import unittest
 from pathlib import Path
@@ -282,3 +283,15 @@ class CompressedAssetNotes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DataRegions(unittest.TestCase):
+    """No code label is generated inside a range config/data_regions.json proves to be data (E-0087)."""
+
+    def test_no_code_labels_in_data_regions(self):
+        regions = json.loads((BANKS.parents[1] / "config/data_regions.json").read_text(encoding="utf-8"))["regions"]
+        for r in regions:
+            bank, lo, hi = int(r["bank"], 16), int(r["start"], 16), int(r["end"], 16)
+            text = (BANKS / f"bank{bank:02x}.asm").read_text(encoding="utf-8")
+            for m in re.finditer(r"^(?:Func|Jump)_[0-9A-F]{3}_([0-9A-F]{4})::", text, re.M):
+                self.assertFalse(lo <= int(m.group(1), 16) < hi, f"code label {m.group(0)} inside data region {r['bank']}:{r['start']}")

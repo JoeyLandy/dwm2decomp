@@ -917,6 +917,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The selection rules inside are not read.
 - Binary verification: pending; see the commit.
 
+### E-0087 — Proven data regions: bank-$E0 strings were decoded as code
+
+- Kind: OBSERVATION (reading of the string loader plus the table bytes; C2 for the region boundaries).
+- **The problem.** BeginStringDisplay_BankE0 passes DE = `$76FC` to BeginStringDisplay. That address holds one category pointer (`$76FE`); `$76FE-$773F` holds 33 string pointers, the first being `$7740`; the strings run to the $F0 at `$79C8`. The pointer-table heuristic had read the string pointers as a code table and traced 32 "routines" (`Func_0E0_7740`…`Func_0E0_79BA`) through the text. None had a caller outside the table.
+- **The fix.**
+  - New `config/data_regions.json` lists ranges proven to be data. `tools/disasm_all.py` now refuses heuristic entries, speculative fall-through starts and pointer-table runs inside them.
+  - The bank-$E0 range now emits as `dw Data_…` string pointers and string data, and the 32 false routine labels are gone. Binary identity is unchanged.
+  - Test `DataRegions` in `tests/test_generated_source.py` fails if a code label is generated inside a declared region.
+- **A candidate rejected.** A similar scan proposed a bank-$1F range, but it would have covered `1F:5C15`, which eight banks far-call. The scan's string-end walk was wrong there, so that region is not declared.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
