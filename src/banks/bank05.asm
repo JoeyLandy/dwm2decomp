@@ -10,7 +10,7 @@ Func_005_4001:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
-; 18 call sites from 15 routines (e.g. Func_005_443B, AIScore_Upper_Sub01_Sub01_Sub01, AIScore_BiAttack_Sub02_Sub01, Func_005_6CC2, ...)
+; 18 call sites from 15 routines (e.g. Func_005_443B, AIScore_Upper_Sub01_Sub01_Sub01, AIScore_BiAttack_Sub02_Sub01, AIScore_TwinHits_Shared01, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank05::
 Func_005_4006:: ; address name
@@ -3443,7 +3443,7 @@ Func_005_51EA:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_5225
-    call Func_005_6CC2
+    call AIScore_TwinHits_Shared01
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
     ldh a, [hFFC6]
@@ -3487,7 +3487,7 @@ Func_005_5228:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_5272
-    call Func_005_6CC2
+    call AIScore_TwinHits_Shared01
     ld a, [wBattleActor]
     and a, $04
     ld e, a
@@ -8456,10 +8456,12 @@ Func_005_6CA5:: ; address name
     ld a, [wSpeciesRecord]
     ret
 
+; only called from routines of AIScore_TwinHits (E-0098)
 ; 2 call sites from 2 routines (e.g. AIScore_TwinHits_Sub01, AIScore_TwinHits_Sub02)
 ; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_005_6CC2:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_Shared01:: ; heuristic: follows a terminator; C0
+Func_005_6CC2:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04

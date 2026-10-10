@@ -245,7 +245,7 @@ Jump_036_4189::
     jp Jump_036_4317
 
 Jump_036_4191::
-    call Func_036_42D3
+    call RunBattleResolveStep_Shared01
     jp nc, Jump_036_4317
     ld a, [wBattleActionId]
     cp a, $4E
@@ -325,7 +325,7 @@ Jump_036_421B::
 ; points at: wD80E
 RunBattleResolveStep_Table2_Case00_Sub02::
 Func_036_421D:: ; address name
-    call Func_036_42D3
+    call RunBattleResolveStep_Shared01
     jp nc, Jump_036_4317
     ld a, [wBattleTarget]
     ld hl, wD80E
@@ -343,7 +343,7 @@ Func_036_421D:: ; address name
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_036_4255
     ld d, $01
-    call Func_036_4EB1
+    call RunBattleResolveStep_Shared02
     scf
     ret
 
@@ -363,7 +363,7 @@ Jump_036_4255::
 ; points at: wD80E
 RunBattleResolveStep_Table2_Case00_Sub03::
 Func_036_425A:: ; address name
-    call Func_036_42D3
+    call RunBattleResolveStep_Shared01
     jp nc, Jump_036_4317
     ld a, [wBattleTarget]
     ld hl, wD80E
@@ -394,7 +394,7 @@ Jump_036_4289::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_036_42A5
     ld d, $04
-    call Func_036_4EB1
+    call RunBattleResolveStep_Shared02
     scf
     ret
 
@@ -427,16 +427,18 @@ Func_036_42AA:: ; address name
     ret
 
 Jump_036_42CB::
-    call Func_036_42D3
+    call RunBattleResolveStep_Shared01
     jp nc, Jump_036_4317
     xor a, a
     ret
 
+; only called from routines of RunBattleResolveStep (E-0098)
 ; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub04, RunBattleResolveStep_Table2_Case00_Sub03, RunBattleResolveStep_Table2_Case00_Sub02, RunBattleResolveStep_Table2_Case00_Sub01)
 ; reads: wBattleTarget, wCFF4, wBattleActor
 ; writes: wDAD1, wBattleTarget, wC981
 ; points at: wD812, wBattleTargetChoice, wDABF
-Func_036_42D3::
+RunBattleResolveStep_Shared01::
+Func_036_42D3:: ; address name
     ld a, [wBattleTarget]
     ld hl, wD812
     call AddAx9ToHL
@@ -1250,7 +1252,7 @@ Jump_036_4844::
     farcall ShowBattleText
 
 Jump_036_484E::
-    call Func_036_4961
+    call ResolveStepDamageMessage_Shared01
     ld a, [wDAC0]
     bit 4, a
     jr nz, Jump_036_4859
@@ -1458,11 +1460,13 @@ Func_036_494E:: ; address name
     call RandomInRange
     ret
 
+; only called from routines of ResolveStepDamageMessage (E-0098)
 ; 2 call sites from 2 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage)
 ; reads: wDAC0, wDABD, wDABF, wDAD1, wBattleActor
 ; writes: wBattleTarget, wDAD1
 ; points at: wBattleTargetChoice
-Func_036_4961::
+ResolveStepDamageMessage_Shared01::
+Func_036_4961:: ; address name
     ld a, [wDAC0]
     bit 4, a
     ret nz
@@ -1707,7 +1711,7 @@ Jump_036_4A9D::
     farcall ShowBattleText
 
 Jump_036_4AE1::
-    call Func_036_4961
+    call ResolveStepDamageMessage_Shared01
     ret
 
 Jump_036_4AE5::
@@ -2225,11 +2229,13 @@ Jump_036_4E9F::
 Jump_036_4EB0::
     ret
 
+; only called from routines of RunBattleResolveStep (E-0098)
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub03, RunBattleResolveStep_Table2_Case00_Sub02)
 ; reads: wBattleActor, wBattleTarget, wDABA, wDABD
 ; writes: wBattleActor, wBattleTarget, wDABD
 ; points at: wDAC9, wBattleActionChoice
-Func_036_4EB1::
+RunBattleResolveStep_Shared02::
+Func_036_4EB1:: ; address name
     push de
     ld hl, wDAC9
     ld a, [wBattleActor]
@@ -2463,7 +2469,7 @@ Jump_036_4FF3::
     jr Jump_036_4FE9
 
 ; sets wBattleSubPhase to 3 and clears wBattleResolveStep (E-0055)
-; 2 call sites from 2 routines (e.g. Func_036_4961, ResolveStepEffectChecks)
+; 2 call sites from 2 routines (e.g. ResolveStepDamageMessage_Shared01, ResolveStepEffectChecks)
 ; writes: wBattleSubPhase, wBattleResolveStep
 SetSubPhase3AndRestartResolve::
 Func_036_5009:: ; address name
@@ -10210,7 +10216,7 @@ Func_036_7E5B:: ; address name
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
-; 56 call sites from 31 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, ResolveStepComputeDamage, ResolveStepChanceRoll, Func_036_42D3, ...)
+; 56 call sites from 31 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, ResolveStepComputeDamage, ResolveStepChanceRoll, RunBattleResolveStep_Shared01, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
     add a, a
@@ -10357,7 +10363,7 @@ Jump_036_7F37::
     ret
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
-; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, ResolveStepBegin, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
+; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, ResolveStepBegin, RunBattleResolveStep_Table2_Case00, RunBattleResolveStep_Shared01, ...)
 ; points at: wD80F
 CheckSlotStatusBlockWide_Bank36::
 Func_036_7F3C:: ; address name

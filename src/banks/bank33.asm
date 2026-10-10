@@ -1077,7 +1077,7 @@ Jump_033_558F:: ; address name
     and a, a
     ret nz
     ld a, $0C
-    call Func_033_6039
+    call BeginString_Bank07_Cat5_Shared02
     ld hl, wD781
     inc [hl]
     ret
@@ -1313,7 +1313,7 @@ Jump_033_56CA::
     ret
 
 Jump_033_56E1::
-    call Func_033_6060
+    call BeginString_Bank07_Cat5_Shared03
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_033_63EF
@@ -1322,7 +1322,7 @@ Jump_033_56E1::
     ld hl, wD781
     inc [hl]
     ld a, $02
-    call Func_033_6039
+    call BeginString_Bank07_Cat5_Shared02
     ret
 
 ; entry 9 of the `rst $00` table in BeginString_Bank07_Cat5
@@ -1422,7 +1422,7 @@ Jump_033_578A::
     ret
 
 Jump_033_57A9::
-    call Func_033_6060
+    call BeginString_Bank07_Cat5_Shared03
     ld hl, wD781
     inc [hl]
     inc [hl]
@@ -1440,7 +1440,7 @@ Jump_033_57B2:: ; address name
     ld c, $05
     ld hl, Data_033_63EF
     call BeginString_Bank07_Cat5_Table2_Case0B_Sub01
-    call Func_033_5F83
+    call BeginString_Bank07_Cat5_Shared01
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -1457,7 +1457,7 @@ Jump_033_57B2:: ; address name
 ; points at: wD7DC
 BeginString_Bank07_Cat5_Table2_Case0C::
 Jump_033_57DC:: ; address name
-    call Func_033_5F83
+    call BeginString_Bank07_Cat5_Shared01
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -1465,7 +1465,7 @@ Jump_033_57DC:: ; address name
     ld hl, wD7DC
     inc [hl]
     ld a, $0C
-    call Func_033_6039
+    call BeginString_Bank07_Cat5_Shared02
     call BeginString_Bank07_Cat5_Table2_Case0C_Sub01
     ret
 
@@ -2613,9 +2613,11 @@ Func_033_5F6B:: ; heuristic: follows a terminator; C0
     ld [rRAMB], a
     ret
 
+; only called from routines of BeginString_Bank07_Cat5 (E-0098)
 ; 2 call sites from 2 routines (e.g. BeginString_Bank07_Cat5_Table2_Case0C, BeginString_Bank07_Cat5_Table2_Case0B)
 ; points at: wC410, wC895, wC3B1
-Func_033_5F83::
+BeginString_Bank07_Cat5_Shared01::
+Func_033_5F83:: ; address name
     ld de, Data_033_639F
     ld hl, wC410
     ld bc, $0805
@@ -2746,9 +2748,11 @@ Jump_033_6024::
     farcall Func_01D_5F9C
     ret
 
+; only called from routines of BeginString_Bank07_Cat5 (E-0098)
 ; 3 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Case01, BeginString_Bank07_Cat5_Table2_Case0C, BeginString_Bank07_Cat5_Table2_Case08)
 ; writes: wStringIndex, wStringCategory
-Func_033_6039::
+BeginString_Bank07_Cat5_Shared02::
+Func_033_6039:: ; address name
     add a, $10
     ld [wStringIndex], a
     xor a, a
@@ -2773,10 +2777,12 @@ Func_033_6049:: ; address name
     ld [wC530], a
     ret
 
+; only called from routines of BeginString_Bank07_Cat5 (E-0098)
 ; 2 call sites from 2 routines (e.g. BeginString_Bank07_Cat5_Table2_Case0A, BeginString_Bank07_Cat5_Table2_Case08)
 ; reads: wD7F5, wD7F6
 ; points at: wD7DD
-Func_033_6060::
+BeginString_Bank07_Cat5_Shared03::
+Func_033_6060:: ; address name
     farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
@@ -2954,7 +2960,7 @@ Func_033_60FC::
     ret
 
 ; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (E-0072)
-; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, Func_033_5F83, BeginString_Bank07_Cat5_Table2_Case09, Func_033_562A, ...)
+; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, BeginString_Bank07_Cat5_Shared01, BeginString_Bank07_Cat5_Table2_Case09, Func_033_562A, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRowsJp_Bank33::
@@ -3092,7 +3098,7 @@ Jump_033_61F2::
     ld [hl], a
     ret
 
-; 7 call sites from 6 routines (e.g. Func_033_5215_Case01, Func_033_5F83, BeginString_Bank07_Cat5_Table2_Case07, Func_033_562A_Case04, ...)
+; 7 call sites from 6 routines (e.g. Func_033_5215_Case01, BeginString_Bank07_Cat5_Shared01, BeginString_Bank07_Cat5_Table2_Case07, Func_033_562A_Case04, ...)
 ; reads: wC8C1, wC8C2
 Func_033_61FB::
     call Func_033_6204

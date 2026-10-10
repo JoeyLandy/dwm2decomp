@@ -1360,7 +1360,7 @@ Jump_013_474A:: ; address name
 ; reads: hFFC6
 DispatchTalkEvent_Table2_Case4C::
 Jump_013_475B:: ; address name
-    farcall Func_085_5A75
+    farcall DispatchTalkEvent_Shared01
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_476D
@@ -1795,7 +1795,7 @@ Jump_013_4995:: ; address name
 ; reads: hFFC6
 DispatchTalkEvent_Table2_Case6E::
 Jump_013_499C:: ; address name
-    farcall Func_085_5A75
+    farcall DispatchTalkEvent_Shared01
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_49AE
@@ -1813,7 +1813,7 @@ Jump_013_49AE::
 ; reads: hFFC6
 DispatchTalkEvent_Table2_Case6F::
 Jump_013_49B5:: ; address name
-    farcall Func_085_5A75
+    farcall DispatchTalkEvent_Shared01
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_49C7

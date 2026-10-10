@@ -590,7 +590,7 @@ Func_004_4470::
     ret
 
 ; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
-; 15 call sites from 15 routines (e.g. Func_002_6391, Func_007_6213_Table2_Case02, ScriptCommandF7_Run_Case1A_Sub01, Func_00C_741F, ...)
+; 15 call sites from 15 routines (e.g. Func_002_6391, Func_007_6213_Table2_Case02, ScriptCommandF7_Run_Case1A_Sub01, ScriptCommandF7_Run_Shared03, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ClearBit1OfPlayerAndObjectFlags::
@@ -615,7 +615,7 @@ Func_004_449F:: ; address name
     ld [wCBCC], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_004_4001, Func_014_6804, Func_024_567C, GameMode5_Update_Case07_Sub01_Sub03, ...)
+; 5 call sites from 5 routines (e.g. Func_004_4001, Func_014_6804, GameMode6_Update_Shared06, GameMode5_Update_Case07_Sub01_Sub03, ...)
 ; reads: wC468, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hFFC6
 ; writes: hFFC6, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
 ; points at: wSpriteSlots

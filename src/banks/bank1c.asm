@@ -955,7 +955,7 @@ Data_01C_4598:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; 2 call sites from 2 routines (e.g. Func_01C_52E8_Case0D, Func_00C_75BC)
+; 2 call sites from 2 routines (e.g. Func_01C_52E8_Case0D, ScriptCommandF7_Run_Shared06)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wD7F1, wD7F2, wD7F3
 ; writes: wGoldHi, wGoldMid, wGoldLo
 Func_01C_45B0::

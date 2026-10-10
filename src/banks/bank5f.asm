@@ -340,7 +340,7 @@ Jump_05F_6AB3::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 1; calls Func_05F_6B43 with the coordinate; then hPlayerX += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 7 call sites from 6 routines (e.g. ScriptCommand5E_Run_Case23, ScriptCommand49_Run_Case03, ScriptCommand39_Run_Case21, Func_00F_7E1E, ...)
+; 7 call sites from 6 routines (e.g. ScriptCommand5E_Run_Case23, ScriptCommand49_Run_Case03, ScriptCommand39_Run_Case21, ScriptCommand6A_Run_Shared01, ...)
 ; reads: hFF8C, hPlayerX, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerX, wStepArrived
 StepPlayerRightTowardWC928::
@@ -640,7 +640,7 @@ Jump_05F_6C43::
     ret
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
-; 51 call sites from 48 routines (e.g. Func_00F_4FA1, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ScriptCommand4B_Run_Case11, ...)
+; 51 call sites from 48 routines (e.g. ScriptCommand5E_Run_Shared01, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ScriptCommand4B_Run_Case11, ...)
 ; writes: wModeState, wC8C5, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::

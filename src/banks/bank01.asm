@@ -4902,7 +4902,7 @@ Jump_001_667A::
     jr Jump_001_6696
 
 Jump_001_6693::
-    call Func_001_6ABE
+    call DebugBattleSetup_Update_Shared01
 
 Jump_001_6696::
     ld a, $04
@@ -5277,7 +5277,7 @@ Jump_001_68B4::
     ret
 
 Jump_001_68C6::
-    call Func_001_6ABE
+    call DebugBattleSetup_Update_Shared01
     ret
 
 ; only called from DebugBattleSetup_Update_Sub01 (E-0047)
@@ -5540,9 +5540,11 @@ Func_001_6A98::
     ld [de], a
     ret
 
+; only called from routines of DebugBattleSetup_Update (E-0098)
 ; 2 call sites from 2 routines (e.g. DebugBattleSetup_Update_Sub01, DebugBattleSetup_Update)
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wFollowerRecords, wC8F0, wC8F1, ...
-Func_001_6ABE::
+DebugBattleSetup_Update_Shared01::
+Func_001_6ABE:: ; address name
     ld a, $00
     ldh [hMapId], a
     ld a, $02
@@ -5657,14 +5659,16 @@ Func_001_6ABE::
     ld [wC838], a
     xor a, a
     ld [wC839], a
-    call Func_001_6E98
-    call Func_001_6BDC
+    call DebugBattleSetup_Update_Shared01_Sub02
+    call DebugBattleSetup_Update_Shared01_Sub01
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_6ABE)
+; only called from DebugBattleSetup_Update_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01)
 ; writes: wD868, rRAMG, rRAMB
 ; points at: wD868, sA000
-Func_001_6BDC::
+DebugBattleSetup_Update_Shared01_Sub01::
+Func_001_6BDC:: ; address name
     ld b, $1E
     xor a, a
     ld [wD868], a
@@ -5705,7 +5709,7 @@ Jump_001_6C14::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_6BDC)
+; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01_Sub01)
 ; reads: wC5E7, wC5E8
 Func_001_6C1F::
     call NextTableByte
@@ -6090,9 +6094,11 @@ Func_001_6E91::
     call Func_001_6C48
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_6ABE)
+; only called from DebugBattleSetup_Update_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01)
 ; points at: wKeyList
-Func_001_6E98::
+DebugBattleSetup_Update_Shared01_Sub02::
+Func_001_6E98:: ; address name
     ld de, Data_001_6EB0
     ld hl, wKeyList
     ld b, $20

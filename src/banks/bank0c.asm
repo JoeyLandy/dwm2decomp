@@ -2596,7 +2596,7 @@ Data_00C_51AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 23 call sites from 13 routines (e.g. Func_00C_7098, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case11, ScriptCommandF7_Run_Case10, ...)
+; 23 call sites from 13 routines (e.g. ScriptCommandF7_Run_Shared02, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case11, ScriptCommandF7_Run_Case10, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank0C::
@@ -3333,7 +3333,7 @@ Jump_00C_663F::
     jr Jump_00C_6663
 
 Jump_00C_664E::
-    call Func_00C_75BC
+    call ScriptCommandF7_Run_Shared06
     ld a, $03
     jr Jump_00C_6663
 
@@ -3343,7 +3343,7 @@ Jump_00C_6655::
     jp Jump_00C_6663
 
 Jump_00C_665E::
-    call Func_00C_75BC
+    call ScriptCommandF7_Run_Shared06
     ld a, $03
 
 Jump_00C_6663::
@@ -3561,7 +3561,7 @@ Jump_00C_67E5:: ; address name
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0C
     call ScriptCommandF7_Run_Case01_Sub01
-    call Func_00C_7098
+    call ScriptCommandF7_Run_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -3785,7 +3785,7 @@ Jump_00C_694B:: ; address name
     ret
 
 Jump_00C_695F::
-    call Func_00C_69D5
+    call ScriptCommandF7_Run_Shared01
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -3849,10 +3849,12 @@ Jump_00C_69BF::
     ld [wScriptStartRequest], a
     ret
 
+; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case0C, ScriptCommandF7_Run_Case05, ScriptCommandF7_Run_Case04)
 ; writes: wD7F1, wD7F2
 ; points at: wC412
-Func_00C_69D5::
+ScriptCommandF7_Run_Shared01::
+Func_00C_69D5:: ; address name
     ld b, $00
     ld c, $05
     ld hl, $027A
@@ -3877,7 +3879,7 @@ Func_00C_69D5::
 ; writes: wD780
 ScriptCommandF7_Run_Case05::
 Jump_00C_6A04:: ; address name
-    call Func_00C_69D5
+    call ScriptCommandF7_Run_Shared01
     ld c, $04
     ld hl, Data_00C_784F
     call ScriptCommandF7_Run_Case05_Sub01
@@ -3906,7 +3908,7 @@ Jump_00C_6A21:: ; address name
 ; writes: wD7F3, wD7F2, wD7F1, wD780, wD7FB, wD7FF, wD7FC
 ScriptCommandF7_Run_Case07::
 Jump_00C_6A29:: ; address name
-    call Func_00C_7478
+    call ScriptCommandF7_Run_Shared04
     ld a, [wD786]
     sla a
     ld de, Data_00C_7871
@@ -3997,14 +3999,14 @@ Jump_00C_6AAF::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF7_Run_Case0A::
 Jump_00C_6AC4:: ; address name
-    call Func_00C_7478
+    call ScriptCommandF7_Run_Shared04
     ret
 
 ; entry 11 of the `rst $00` table in ScriptCommandF7_Run
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF7_Run_Case0B::
 Jump_00C_6AC8:: ; address name
-    call Func_00C_7098
+    call ScriptCommandF7_Run_Shared02
     call Func_00C_6922
     ret
 
@@ -4037,7 +4039,7 @@ Jump_00C_6AF2::
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_00C_6AE3
-    call Func_00C_69D5
+    call ScriptCommandF7_Run_Shared01
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD780]
@@ -4126,7 +4128,7 @@ Jump_00C_6B78:: ; address name
     ld hl, wC3B4
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0C
-    call Func_00C_7098
+    call ScriptCommandF7_Run_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -4135,7 +4137,7 @@ Jump_00C_6B78:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
-    call Func_00C_74DB
+    call ScriptCommandF7_Run_Shared05
     ld a, [wD780]
     inc a
     inc a
@@ -4157,7 +4159,7 @@ Jump_00C_6BB4:: ; address name
     ld hl, wC3B4
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0C
-    call Func_00C_7098
+    call ScriptCommandF7_Run_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -4485,7 +4487,7 @@ Jump_00C_6DC5:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
-    call Func_00C_74DB
+    call ScriptCommandF7_Run_Shared05
     ld a, $11
     ld [wD780], a
     xor a, a
@@ -4510,7 +4512,7 @@ Jump_00C_6E0C:: ; address name
     ld a, [wD586]
     ld [wD7F1], a
     farcall Func_015_683C
-    call Func_00C_7098
+    call ScriptCommandF7_Run_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -4604,7 +4606,7 @@ Jump_00C_6EB0:: ; address name
 ; writes: wD780, wD7FB, wD7FF, wD7FC
 ScriptCommandF7_Run_Case1E::
 Jump_00C_6EB4:: ; address name
-    call Func_00C_741F
+    call ScriptCommandF7_Run_Shared03
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -4622,7 +4624,7 @@ Jump_00C_6EB4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF7_Run_Case21::
 Jump_00C_6ED3:: ; address name
-    call Func_00C_741F
+    call ScriptCommandF7_Run_Shared03
     ret
 
 ; entry 34 of the `rst $00` table in ScriptCommandF7_Run
@@ -4900,11 +4902,13 @@ Jump_00C_708B::
     ld [hl], a
     ret
 
+; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 5 call sites from 5 routines (e.g. ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case11, ScriptCommandF7_Run_Case10, ScriptCommandF7_Run_Case0B, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC370, wC386, wD7F3
-Func_00C_7098::
+ScriptCommandF7_Run_Shared02::
+Func_00C_7098:: ; address name
     ld de, Data_00C_777E
     ld hl, wC370
     ld bc, $0803
@@ -4932,10 +4936,12 @@ Jump_00C_70C7::
     jr c, Jump_00C_70C7
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_74DB)
+; only called from ScriptCommandF7_Run_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Shared05)
 ; reads: wC6FD
 ; points at: wD580
-Func_00C_70D3::
+ScriptCommandF7_Run_Shared05_Sub01::
+Func_00C_70D3:: ; address name
     ld hl, $0000
     ld de, wD580
     ld c, $00
@@ -4967,11 +4973,13 @@ Jump_00C_70DB::
     ld l, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_74DB)
+; only called from ScriptCommandF7_Run_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Shared05)
 ; reads: hFFC6, wC6FD
 ; writes: wD580, wD581, wD582, rRAMG2, rRAMB
 ; points at: wC6FE, wD580
-Func_00C_70FE::
+ScriptCommandF7_Run_Shared05_Sub02::
+Func_00C_70FE:: ; address name
     xor a, a
     ld [wD580], a
     ld [wD581], a
@@ -5189,7 +5197,7 @@ Jump_00C_7231::
     ret
 
 ; HL += the word in hFFC6/hFFC7; clobbers A (E-0073)
-; 12 call sites from 1 routine (e.g. Func_00C_70FE)
+; 12 call sites from 1 routine (e.g. ScriptCommandF7_Run_Shared05_Sub02)
 ; reads: hFFC6, hFFC7
 AddHFFC6WordToHL::
 Func_00C_7246:: ; address name
@@ -5375,10 +5383,12 @@ Jump_00C_7320::
     jr c, Func_00C_72CC
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_73F5)
+; only called from ScriptCommand96_Run_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommand96_Run_Shared01)
 ; reads: wD588, wD7FC
 ; points at: wD589, wD5B1
-Func_00C_7326::
+ScriptCommand96_Run_Shared01_Sub01::
+Func_00C_7326:: ; address name
     ld hl, wD589
     ld b, $28
 
@@ -5481,7 +5491,7 @@ Jump_00C_737E::
     jp c, Jump_00C_7336
     ret
 
-; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case27_Sub01, Func_00C_7326)
+; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case27_Sub01, ScriptCommand96_Run_Shared01_Sub01)
 ; reads: wC5E7
 Func_00C_73B3::
     push bc
@@ -5526,16 +5536,18 @@ Func_00C_73C7:: ; address name
     ldh [hFFB9], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
+; only called from routines of ScriptCommand96_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
 ; reads: wD588
 ; writes: wC903, wCFDC
 ; points at: wD5B1, wCFDD
-Func_00C_73F5::
+ScriptCommand96_Run_Shared01::
+Func_00C_73F5:: ; address name
     ld a, $04
     ld [wC903], a
     ld a, $02
     ld [wCFDC], a
-    call Func_00C_7326
+    call ScriptCommand96_Run_Shared01_Sub01
 
 ; only called from ScriptCommandF7_Run_Case1C (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case1C)
@@ -5561,11 +5573,13 @@ Jump_00C_7418::
     jr nz, Jump_00C_7418
     ret
 
+; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case21, ScriptCommandF7_Run_Case1E)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD78E
 ; writes: wC91C, wC91D, wC91E, wC917, wC916, wScriptInDataBank, hFFB9, wC903, ...
 ; points at: wCFDD
-Func_00C_741F::
+ScriptCommandF7_Run_Shared03::
+Func_00C_741F:: ; address name
     ld a, [wScriptStartRequest]
     ld [wC91C], a
     ld a, [wScriptPointerLo]
@@ -5583,11 +5597,13 @@ Func_00C_741F::
     ldh [hFFB9], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
+; only called from routines of ScriptCommand95_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD78E
 ; writes: wC903, wCFDC
 ; points at: wCFDD
-Func_00C_744D::
+ScriptCommand95_Run_Shared01::
+Func_00C_744D:: ; address name
     ld a, $04
     ld [wC903], a
     ld a, $02
@@ -5620,11 +5636,13 @@ Jump_00C_7471::
     jr nz, Jump_00C_7471
     ret
 
+; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case0A, ScriptCommandF7_Run_Case07)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD786, wD78E
 ; writes: wC91C, wC91D, wC91E, wC917, wC916, wScriptInDataBank, hFFB9, wC903, ...
 ; points at: wCFDD
-Func_00C_7478::
+ScriptCommandF7_Run_Shared04::
+Func_00C_7478:: ; address name
     ld a, [wScriptStartRequest]
     ld [wC91C], a
     ld a, [wScriptPointerLo]
@@ -5642,11 +5660,13 @@ Func_00C_7478::
     ldh [hFFB9], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
+; only called from routines of ScriptCommand95_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD786, wD78E
 ; writes: wC903, wCFDC
 ; points at: wCFDD
-Func_00C_74A6::
+ScriptCommand95_Run_Shared02::
+Func_00C_74A6:: ; address name
     ld a, $04
     ld [wC903], a
     ld a, $02
@@ -5682,11 +5702,13 @@ Jump_00C_74D4::
     jr nz, Jump_00C_74D4
     ret
 
+; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case10)
 ; writes: wTwoChoiceCursor
-Func_00C_74DB::
-    call Func_00C_70FE
-    call Func_00C_70D3
+ScriptCommandF7_Run_Shared05::
+Func_00C_74DB:: ; address name
+    call ScriptCommandF7_Run_Shared05_Sub02
+    call ScriptCommandF7_Run_Shared05_Sub01
     ld a, l
     cp a, $50
     jr nc, Jump_00C_74FA
@@ -5785,7 +5807,7 @@ Jump_00C_7561::
     jr nz, Jump_00C_7561
     ld a, [wD7F1]
     push af
-    call Func_00C_75BC
+    call ScriptCommandF7_Run_Shared06
     pop af
     ld [wD7F1], a
     call ScriptCommandF7_Run_Case27_Sub02_Sub01
@@ -5841,9 +5863,11 @@ Jump_00C_75B8::
     ld [hl+], a
     ret
 
+; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 3 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case27_Sub02, ScriptCommandF7_Run_Case27)
 ; writes: wD7F1, wD7F2, wD7F3
-Func_00C_75BC::
+ScriptCommandF7_Run_Shared06::
+Func_00C_75BC:: ; address name
     ld hl, $1770
     ld a, l
     ld [wD7F1], a

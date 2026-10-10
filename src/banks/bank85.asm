@@ -4320,10 +4320,12 @@ Jump_085_598C::
 Data_085_5A00:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $215A00, $75
 
+; only called from routines of DispatchTalkEvent (E-0098)
 ; 3 call sites from 3 routines (e.g. DispatchTalkEvent_Table2_Case4C, DispatchTalkEvent_Table2_Case6E, DispatchTalkEvent_Table2_Case6F)
 ; reads: hFF93, hFF95, hFF94
 ; writes: hFFC6, hFFC7
-Func_085_5A75::
+DispatchTalkEvent_Shared01::
+Func_085_5A75:: ; address name
     ldh a, [hFF93]
     bit 7, a
     jr z, Jump_085_5A7F

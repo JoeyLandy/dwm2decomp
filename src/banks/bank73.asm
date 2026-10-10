@@ -397,7 +397,7 @@ Jump_073_4250::
 ; points at: wC46B, wScriptStep, wC46C, wC46D
 ScriptCommand82_Run_Table4_Case07::
 Jump_073_4269:: ; address name
-    call Func_073_43BE
+    call ScriptCommand82_Run_Shared01
     ld a, [wFrameCounterLo]
     and a, $01
     jr z, Jump_073_42A7
@@ -432,7 +432,7 @@ Jump_073_429A::
     inc [hl]
 
 Jump_073_42A7::
-    call Func_073_441D
+    call ScriptCommand82_Run_Shared02
     ret
 
 ; only called from ScriptCommand82_Run_Table4_Case07 (E-0047)
@@ -475,8 +475,8 @@ Jump_073_42C2:: ; address name
     inc [hl]
 
 Jump_073_42D1::
-    call Func_073_43BE
-    call Func_073_441D
+    call ScriptCommand82_Run_Shared01
+    call ScriptCommand82_Run_Shared02
     ret
 
 ; entry 5 of the `rst $00` table in ScriptCommand82_Run
@@ -486,8 +486,8 @@ Jump_073_42D1::
 ; points at: wScriptStep
 ScriptCommand82_Run_Table4_Case05::
 Jump_073_42D8:: ; address name
-    call Func_073_43BE
-    call Func_073_441D
+    call ScriptCommand82_Run_Shared01
+    call ScriptCommand82_Run_Shared02
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -524,7 +524,7 @@ Jump_073_42F1:: ; address name
     ld [wC46D], a
     xor a, a
     ld [wC46E], a
-    call Func_073_441D
+    call ScriptCommand82_Run_Shared02
     ld de, $4378
     ld hl, wScreenTileBuffer
     ld b, $03
@@ -626,10 +626,12 @@ Jump_073_43B3:: ; address name
     call StartMessageHL_B73
     ret
 
+; only called from routines of ScriptCommand82_Run (E-0098)
 ; 3 call sites from 3 routines (e.g. ScriptCommand82_Run_Table4_Case07, ScriptCommand82_Run_Table4_Case06, ScriptCommand82_Run_Table4_Case05)
 ; reads: wFrameCounterLo, wC46E, wC46B, wC46C, wC46D
 ; writes: wC46B, wC46C, wC46D
-Func_073_43BE::
+ScriptCommand82_Run_Shared01::
+Func_073_43BE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $01
     ret z
@@ -679,10 +681,12 @@ Jump_073_4404::
 Jump_073_441C::
     ret
 
+; only called from routines of ScriptCommand82_Run (E-0098)
 ; 4 call sites from 4 routines (e.g. ScriptCommand82_Run_Table4_Case07, ScriptCommand82_Run_Table4_Case06, ScriptCommand82_Run_Table4_Case05, ScriptCommand82_Run_Table4_Case04)
 ; reads: wC46B, wC46C, wC46D
 ; writes: hFFC6, hFFC7
-Func_073_441D::
+ScriptCommand82_Run_Shared02::
+Func_073_441D:: ; address name
     ld hl, vTiles1 + $240
     ld a, [wC46B]
     and a, $F0
@@ -714,7 +718,7 @@ Jump_073_4443::
     ld a, [de]
     ldh [hFFC7], a
     ld a, [wC46B]
-    call Func_073_44A5
+    call ScriptCommand82_Run_Shared02_Sub01
     ld a, [wC46C]
     and a, $F0
     swap a
@@ -745,7 +749,7 @@ Jump_073_446F::
     ld a, [de]
     ldh [hFFC7], a
     ld a, [wC46C]
-    call Func_073_44A5
+    call ScriptCommand82_Run_Shared02_Sub01
     ld a, [wC46D]
     and a, $F0
     swap a
@@ -776,13 +780,15 @@ Jump_073_449B::
     ld a, [de]
     ldh [hFFC7], a
     ld a, [wC46D]
-    call Func_073_44A5
+    call ScriptCommand82_Run_Shared02_Sub01
     ret
 
-; 3 call sites from 1 routine (e.g. Func_073_441D)
+; only called from ScriptCommand82_Run_Shared02 (E-0047)
+; 3 call sites from 1 routine (e.g. ScriptCommand82_Run_Shared02)
 ; reads: hFFC7, hFFC8, hFFC6
 ; writes: hFFC8
-Func_073_44A5::
+ScriptCommand82_Run_Shared02_Sub01::
+Func_073_44A5:: ; address name
     and a, $0E
     ldh [hFFC8], a
     or a, a
@@ -2902,7 +2908,7 @@ Jump_073_52AC::
 ScriptCommandCB_Run_Case03::
 Jump_073_52B2:: ; address name
     ld de, $5342
-    call Func_073_52F5
+    call ScriptCommandCB_Run_Shared01
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommandCB_Run
@@ -2935,13 +2941,15 @@ Jump_073_52C5::
 ScriptCommandCB_Run_Case00::
 Jump_073_52EE:: ; address name
     ld de, $530C
-    call Func_073_52F5
+    call ScriptCommandCB_Run_Shared01
     ret
 
+; only called from routines of ScriptCommandCB_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandCB_Run_Case03, ScriptCommandCB_Run_Case00)
 ; reads: hMapId
 ; points at: wScriptStep
-Func_073_52F5::
+ScriptCommandCB_Run_Shared01::
+Func_073_52F5:: ; address name
     ldh a, [hMapId]
     sub a, $C8
     add a, a
@@ -4797,7 +4805,7 @@ Jump_073_5E11:: ; address name
 Jump_073_5E20::
     ld hl, wScriptParam0
     inc [hl]
-    call Func_073_5E73
+    call ScriptCommand51_Run_Shared01
     add a, $10
     ldh [hPlayerY], a
     ld [wC8F1], a
@@ -4835,7 +4843,7 @@ Jump_073_5E51:: ; address name
 Jump_073_5E60::
     ld hl, wScriptParam0
     inc [hl]
-    call Func_073_5E73
+    call ScriptCommand51_Run_Shared01
     cp a, $70
     ret nz
     xor a, a
@@ -4844,10 +4852,12 @@ Jump_073_5E60::
     inc [hl]
     ret
 
+; only called from routines of ScriptCommand51_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand51_Run_Case02, ScriptCommand51_Run_Case01)
 ; reads: wMessageIndex, wMessageGroup, wCB8B
 ; writes: wMessageIndex, wMessageGroup, wCB8B
-Func_073_5E73::
+ScriptCommand51_Run_Shared01::
+Func_073_5E73:: ; address name
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -4911,7 +4921,7 @@ Jump_073_5EBD:: ; address name
     dec [hl]
     ld hl, wScriptParam0
     inc [hl]
-    call Func_073_5EF9
+    call ScriptCommand50_Run_Shared01
     add a, $10
     ld [wCB9B], a
     ld a, [wCB8A]
@@ -4934,7 +4944,7 @@ Jump_073_5EDF:: ; address name
     dec [hl]
     ld hl, wScriptParam0
     inc [hl]
-    call Func_073_5EF9
+    call ScriptCommand50_Run_Shared01
     ld a, [wCB8A]
     cp a, $40
     ret nz
@@ -4944,10 +4954,12 @@ Jump_073_5EDF:: ; address name
     inc [hl]
     ret
 
+; only called from routines of ScriptCommand50_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand50_Run_Case02, ScriptCommand50_Run_Case01)
 ; reads: wMessageIndex, wMessageGroup, wCB8B
 ; writes: wMessageIndex, wMessageGroup, wCB8B
-Func_073_5EF9::
+ScriptCommand50_Run_Shared01::
+Func_073_5EF9:: ; address name
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5880,7 +5892,7 @@ Jump_073_6441:: ; address name
     ret
 
 Jump_073_6459::
-    call Func_073_65A4
+    call ScriptCommand3C_Run_Shared03
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommand3C_Run
@@ -5906,7 +5918,7 @@ Jump_073_645D:: ; address name
     ret
 
 Jump_073_6476::
-    call Func_073_659D
+    call ScriptCommand3C_Run_Shared02
     ret
 
 ; entry 6 of the `rst $00` table in ScriptCommand3C_Run
@@ -5932,11 +5944,11 @@ Jump_073_647A:: ; address name
 
 Jump_073_6494::
     jr nc, Jump_073_649A
-    call Func_073_6596
+    call ScriptCommand3C_Run_Shared01
     ret
 
 Jump_073_649A::
-    call Func_073_659D
+    call ScriptCommand3C_Run_Shared02
     ret
 
 ; entry 5 of the `rst $00` table in ScriptCommand3C_Run
@@ -5961,7 +5973,7 @@ Jump_073_649E:: ; address name
     ret
 
 Jump_073_64B6::
-    call Func_073_65AA
+    call ScriptCommand3C_Run_Shared04
     ret
 
 ; entry 4 of the `rst $00` table in ScriptCommand3C_Run
@@ -5989,11 +6001,11 @@ Jump_073_64CE::
     cp a, $40
     jr z, Jump_073_64C9
     jr nc, Jump_073_64D8
-    call Func_073_6596
+    call ScriptCommand3C_Run_Shared01
     ret
 
 Jump_073_64D8::
-    call Func_073_659D
+    call ScriptCommand3C_Run_Shared02
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand3C_Run
@@ -6018,11 +6030,11 @@ Jump_073_64DC:: ; address name
 
 Jump_073_64F5::
     jr nc, Jump_073_64FB
-    call Func_073_65AA
+    call ScriptCommand3C_Run_Shared04
     ret
 
 Jump_073_64FB::
-    call Func_073_65A4
+    call ScriptCommand3C_Run_Shared03
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommand3C_Run
@@ -6048,7 +6060,7 @@ Jump_073_64FF:: ; address name
     ret
 
 Jump_073_6518::
-    call Func_073_6596
+    call ScriptCommand3C_Run_Shared01
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand3C_Run
@@ -6075,11 +6087,11 @@ Jump_073_652F::
     cp a, $50
     jr z, Jump_073_652A
     jr nc, Jump_073_6539
-    call Func_073_65AA
+    call ScriptCommand3C_Run_Shared04
     ret
 
 Jump_073_6539::
-    call Func_073_65A4
+    call ScriptCommand3C_Run_Shared03
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand3C_Run
@@ -6140,8 +6152,10 @@ Jump_073_6590::
     ld [wScriptStep], a
     ret
 
+; only called from routines of ScriptCommand3C_Run (E-0098)
 ; 3 call sites from 3 routines (e.g. ScriptCommand3C_Run_Case06, ScriptCommand3C_Run_Case04, ScriptCommand3C_Run_Case02)
-Func_073_6596::
+ScriptCommand3C_Run_Shared01::
+Func_073_6596:: ; address name
     inc a
     ld [hl], a
     dec hl
@@ -6149,8 +6163,10 @@ Func_073_6596::
     ld [hl], $00
     ret
 
+; only called from routines of ScriptCommand3C_Run (E-0098)
 ; 3 call sites from 3 routines (e.g. ScriptCommand3C_Run_Case08, ScriptCommand3C_Run_Case06, ScriptCommand3C_Run_Case04)
-Func_073_659D::
+ScriptCommand3C_Run_Shared02::
+Func_073_659D:: ; address name
     dec a
     ld [hl], a
     dec hl
@@ -6158,16 +6174,20 @@ Func_073_659D::
     ld [hl], $02
     ret
 
+; only called from routines of ScriptCommand3C_Run (E-0098)
 ; 3 call sites from 3 routines (e.g. ScriptCommand3C_Run_Case0B, ScriptCommand3C_Run_Case03, ScriptCommand3C_Run_Case01)
-Func_073_65A4::
+ScriptCommand3C_Run_Shared03::
+Func_073_65A4:: ; address name
     dec a
     ld [hl], a
     dec hl
     ld [hl], $03
     ret
 
+; only called from routines of ScriptCommand3C_Run (E-0098)
 ; 3 call sites from 3 routines (e.g. ScriptCommand3C_Run_Case05, ScriptCommand3C_Run_Case03, ScriptCommand3C_Run_Case01)
-Func_073_65AA::
+ScriptCommand3C_Run_Shared04::
+Func_073_65AA:: ; address name
     inc a
     ld [hl], a
     dec hl
@@ -6658,7 +6678,7 @@ Jump_073_680F::
     jr z, Jump_073_6826
     ld de, $77D0
     ld b, $56
-    call Func_073_6882
+    call ScriptCommand35_Run_Shared01
     ld de, $5ADB
     ld b, $56
     jp ScriptCommand35_Run_Case03_Sub01
@@ -6666,7 +6686,7 @@ Jump_073_680F::
 Jump_073_6826::
     ld de, $7827
     ld b, $56
-    call Func_073_6882
+    call ScriptCommand35_Run_Shared01
     ld de, $5B8F
     ld b, $56
     jr ScriptCommand35_Run_Case03_Sub01
@@ -6706,7 +6726,7 @@ Jump_073_6852::
     jr z, Jump_073_6868
     ld de, $7ABA
     ld b, $56
-    call Func_073_6882
+    call ScriptCommand35_Run_Shared01
     ld de, $61F0
     ld b, $56
     jr ScriptCommand35_Run_Case03_Sub01
@@ -6714,7 +6734,7 @@ Jump_073_6852::
 Jump_073_6868::
     ld de, $6D99
     ld b, $56
-    call Func_073_6882
+    call ScriptCommand35_Run_Shared01
     ld de, Data_056_4301
     ld b, $56
 
@@ -6728,11 +6748,13 @@ Func_073_6875:: ; address name
     farcall DrawFullScreenBufferAtScroll
     ret
 
+; only called from routines of ScriptCommand35_Run (E-0098)
 ; 5 call sites from 3 routines (e.g. ScriptCommand35_Run_Case11, ScriptCommand35_Run_Case0A, ScriptCommand35_Run_Case03)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wD000
-Func_073_6882::
+ScriptCommand35_Run_Shared01::
+Func_073_6882:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -6795,7 +6817,7 @@ Jump_073_68B8:: ; address name
     ld a, [hl+]
     ld d, a
     ld b, $58
-    call Func_073_6882
+    call ScriptCommand35_Run_Shared01
     farcall DrawFullScreenBufferAtScroll
     ld a, [wScriptParam0]
     inc a
@@ -9150,7 +9172,7 @@ Func_073_77CC:: ; address name
 ; writes: wScriptStartRequest
 ScriptCommand12_Run_Case05::
 Jump_073_77DC:: ; address name
-    call Func_073_79CE
+    call ScriptCommand12_Run_Shared03
     ld a, [wScriptParam1]
     or a, a
     ret nz
@@ -9165,7 +9187,7 @@ Jump_073_77DC:: ; address name
 ; points at: wScriptStep
 ScriptCommand12_Run_Case04::
 Jump_073_77EA:: ; address name
-    call Func_073_79CE
+    call ScriptCommand12_Run_Shared03
     ld a, [wCB9B]
     cp a, $30
     jr z, Jump_073_7800
@@ -9239,7 +9261,7 @@ Jump_073_7858::
 ; points at: wScriptStep
 ScriptCommand12_Run_Case03::
 Jump_073_787B:: ; address name
-    call Func_073_79CE
+    call ScriptCommand12_Run_Shared03
     ld a, $02
     ld [wC929], a
     ld a, $83
@@ -9267,8 +9289,8 @@ Jump_073_787B:: ; address name
 ; points at: wScriptStep
 ScriptCommand12_Run_Case02::
 Jump_073_78B2:: ; address name
-    call Func_073_78F5
-    call Func_073_79B8
+    call ScriptCommand12_Run_Shared01
+    call ScriptCommand12_Run_Shared02
     ld b, $A0
     call StepWC921Counter_Bank73
     ret nc
@@ -9286,8 +9308,8 @@ Jump_073_78B2:: ; address name
 ; points at: wScriptStep
 ScriptCommand12_Run_Case01::
 Jump_073_78CC:: ; address name
-    call Func_073_78F5
-    call Func_073_79B8
+    call ScriptCommand12_Run_Shared01
+    call ScriptCommand12_Run_Shared02
     ld b, $80
     call StepWC921Counter_Bank73
     ret nc
@@ -9313,10 +9335,12 @@ Jump_073_78E7:: ; address name
     inc [hl]
     ret
 
+; only called from routines of ScriptCommand12_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand12_Run_Case02, ScriptCommand12_Run_Case01)
 ; reads: wMessageIndex, wStepArrived, wMessageGroup
 ; writes: wC92A, wC928, wC929, wMessageIndex, wMessageGroup
-Func_073_78F5::
+ScriptCommand12_Run_Shared01::
+Func_073_78F5:: ; address name
     ld b, $00
     ld a, [wMessageIndex]
     bit 7, a
@@ -9431,10 +9455,12 @@ Jump_073_799D::
 Jump_073_79B7::
     ret
 
+; only called from routines of ScriptCommand12_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand12_Run_Case02, ScriptCommand12_Run_Case01)
 ; reads: wMessageGroup
 ; writes: wCB86
-Func_073_79B8::
+ScriptCommand12_Run_Shared02::
+Func_073_79B8:: ; address name
     ld a, [wMessageGroup]
     and a, $03
     ld hl, $79CA
@@ -9444,11 +9470,13 @@ Func_073_79B8::
     ret
     db $01, $00, $03, $02
 
+; only called from routines of ScriptCommand12_Run (E-0098)
 ; 3 call sites from 3 routines (e.g. ScriptCommand12_Run_Case05, ScriptCommand12_Run_Case04, ScriptCommand12_Run_Case03)
 ; reads: wFrameCounterLo, wScriptParam1, wScriptParam0
 ; writes: wScriptParam0, wCB86
 ; points at: wScriptParam1
-Func_073_79CE::
+ScriptCommand12_Run_Shared03::
+Func_073_79CE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $08
     jr nz, Jump_073_79D9
@@ -9638,7 +9666,7 @@ Func_073_7A7F::
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 25 call sites from 22 routines (e.g. Func_073_52F5, ScriptCommandC5_Run_Case08, ScriptCommandC5_Run_Case05, ScriptCommandC5_Run_Case02, ...)
+; 25 call sites from 22 routines (e.g. ScriptCommandCB_Run_Shared01, ScriptCommandC5_Run_Case08, ScriptCommandC5_Run_Case05, ScriptCommandC5_Run_Case02, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B73b::
 Func_073_7AA5:: ; address name

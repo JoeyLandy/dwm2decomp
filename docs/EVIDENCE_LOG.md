@@ -1061,6 +1061,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The flag branching inside each handler is not interpreted.
 - Binary verification: pending; see the commit.
 
+### E-0098 — Helpers shared inside one named routine: Root_SharedNN
+
+- Kind: DECISION (naming rule) on call-graph facts (C0/C1: the name says where a routine is used, not what it does).
+- **The rule.** `name_single_caller_helpers` in `tools/disasm_all.py` now also names a routine with several calling routines, provided all of them belong to one named routine: its `_SubNN`, `_CaseNN`, `_TableN_CaseNN` or `_SharedNN` helpers, or the routine itself. The new name is `Root_SharedNN`.
+  - The same exclusions apply: no table targets, no unnamed roots, and no self-calls.
+  - It runs in the same three rounds, so the helpers of shared helpers are named too.
+- **Effect.** 52 routines were named this way, and the count of address-only routines fell from 2,280 to 2,220. Binary identity is unchanged.
+- **Examples:** ScriptCommandF7_Run_Shared01-04 and AIScore_TwinHits_Shared01.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

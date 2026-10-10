@@ -1191,7 +1191,7 @@ Jump_00F_4846:: ; address name
     ld [wCBD3], a
     ld a, $30
     ld [wCBD4], a
-    call Func_00F_4FA1
+    call ScriptCommand5E_Run_Shared01
     ret
 
 ; entry 121 of the `rst $00` table in ScriptCommand5E_Run
@@ -1393,7 +1393,7 @@ Jump_00F_4985:: ; address name
     ld [wCBD3], a
     ld a, $30
     ld [wCBD4], a
-    call Func_00F_4FA1
+    call ScriptCommand5E_Run_Shared01
     ret
 
 ; entry 104 of the `rst $00` table in ScriptCommand5E_Run
@@ -1658,7 +1658,7 @@ Jump_00F_4B38:: ; address name
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call Func_00F_4FA1
+    call ScriptCommand5E_Run_Shared01
     ret
 
 ; entry 86 of the `rst $00` table in ScriptCommand5E_Run
@@ -1824,7 +1824,7 @@ Jump_00F_4C3D:: ; address name
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call Func_00F_4FA1
+    call ScriptCommand5E_Run_Shared01
     ret
 
 ; entry 75 of the `rst $00` table in ScriptCommand5E_Run
@@ -2085,7 +2085,7 @@ Jump_00F_4E08:: ; address name
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call Func_00F_4FA1
+    call ScriptCommand5E_Run_Shared01
     ret
 
 ; entry 60 of the `rst $00` table in ScriptCommand5E_Run
@@ -2257,7 +2257,7 @@ Jump_00F_4EF7:: ; address name
     ldh [hMapScreenX], a
     xor a, a
     ldh [hMapScreenY], a
-    call Func_00F_4FA1
+    call ScriptCommand5E_Run_Shared01
     ret
 
 ; entry 49 of the `rst $00` table in ScriptCommand5E_Run
@@ -2375,10 +2375,12 @@ Jump_00F_4F93:: ; address name
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
 
+; only called from routines of ScriptCommand5E_Run (E-0098)
 ; 6 call sites from 6 routines (e.g. ScriptCommand5E_Run_Case7E, ScriptCommand5E_Run_Case6D, ScriptCommand5E_Run_Case5B, ScriptCommand5E_Run_Case50, ...)
 ; reads: hPlayerY
 ; writes: wC8C8, wC8C9, wC8C6, wCBCF
-Func_00F_4FA1::
+ScriptCommand5E_Run_Shared01::
+Func_00F_4FA1:: ; address name
     ld a, $E0
     ld [wC8C8], a
     ldh a, [hPlayerY]
@@ -7059,14 +7061,16 @@ Func_00F_6D2B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand38_Run_Case0C::
 Jump_00F_6D49:: ; address name
-    call Func_00F_6D4D
+    call ScriptCommand38_Run_Shared01
     ret
 
+; only called from routines of ScriptCommand38_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand38_Run_Case0C, ScriptCommand38_Run_Case0B)
 ; reads: wScriptParam0, wCBD3
 ; writes: wScriptParam0, wCBD4, wScriptStartRequest
 ; points at: wCBD3
-Func_00F_6D4D::
+ScriptCommand38_Run_Shared01::
+Func_00F_6D4D:: ; address name
     ld hl, wCBD3
     inc [hl]
     ld a, [wScriptParam0]
@@ -7094,7 +7098,7 @@ Func_00F_6D4D::
 ; points at: wScriptStep
 ScriptCommand38_Run_Case0B::
 Jump_00F_6D80:: ; address name
-    call Func_00F_6D4D
+    call ScriptCommand38_Run_Shared01
     ld a, $00
     ld [wC929], a
     ld a, $81
@@ -9792,7 +9796,7 @@ Func_00F_7D97:: ; address name
 ; points at: wCB8B, hFF8C
 ScriptCommand6A_Run_Case03::
 Jump_00F_7DA3:: ; address name
-    call Func_00F_7E1E
+    call ScriptCommand6A_Run_Shared01
     ld de, wCB8B
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -9809,7 +9813,7 @@ Jump_00F_7DA3:: ; address name
 ; points at: wScriptStep
 ScriptCommand6A_Run_Case02::
 Jump_00F_7DB9:: ; address name
-    call Func_00F_7E1E
+    call ScriptCommand6A_Run_Shared01
     ld a, [wMessageIndex]
     inc a
     ld [wMessageIndex], a
@@ -9828,7 +9832,7 @@ Jump_00F_7DB9:: ; address name
 ; points at: wScriptStep
 ScriptCommand6A_Run_Case01::
 Jump_00F_7DCF:: ; address name
-    call Func_00F_7E1E
+    call ScriptCommand6A_Run_Shared01
     ld a, $00
     ld [wC92A], a
     ld a, $00
@@ -9852,7 +9856,7 @@ Jump_00F_7DCF:: ; address name
 ; points at: wScriptStep
 ScriptCommand6A_Run_Case00::
 Jump_00F_7DF6:: ; address name
-    call Func_00F_7E1E
+    call ScriptCommand6A_Run_Shared01
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -9875,10 +9879,12 @@ Jump_00F_7DF6:: ; address name
     inc [hl]
     ret
 
+; only called from routines of ScriptCommand6A_Run (E-0098)
 ; 4 call sites from 4 routines (e.g. ScriptCommand6A_Run_Case03, ScriptCommand6A_Run_Case02, ScriptCommand6A_Run_Case01, ScriptCommand6A_Run_Case00)
 ; reads: wScriptParam1, wStepArrived
 ; writes: wC928, wScriptParam1
-Func_00F_7E1E::
+ScriptCommand6A_Run_Shared01::
+Func_00F_7E1E:: ; address name
     ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_00F_7E37

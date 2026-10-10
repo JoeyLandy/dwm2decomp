@@ -763,7 +763,7 @@ Jump_012_4437::
 
 Jump_012_4440::
     farcall Func_00C_703D
-    farcall Func_00C_73F5
+    farcall ScriptCommand96_Run_Shared01
     ret
 
 ; entry 5 of the `rst $00` table in ScriptCommand96_Run
@@ -792,7 +792,7 @@ Jump_012_4464::
 
 Jump_012_446D::
     farcall Func_00C_703D
-    farcall Func_00C_73F5
+    farcall ScriptCommand96_Run_Shared01
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand96_Run
@@ -997,12 +997,12 @@ Jump_012_459F:: ; address name
     or a, a
     jr nz, Jump_012_45BF
     farcall Func_00C_704B
-    farcall Func_00C_744D
+    farcall ScriptCommand95_Run_Shared01
     ret
 
 Jump_012_45BF::
     farcall Func_00C_704B
-    farcall Func_00C_74A6
+    farcall ScriptCommand95_Run_Shared02
     ret
 
 ; entry 10 of the `rst $00` table in ScriptCommand96_Run
@@ -1201,12 +1201,12 @@ Jump_012_46D8:: ; address name
     or a, a
     jr nz, Jump_012_46F8
     farcall Func_00C_704B
-    farcall Func_00C_744D
+    farcall ScriptCommand95_Run_Shared01
     ret
 
 Jump_012_46F8::
     farcall Func_00C_704B
-    farcall Func_00C_74A6
+    farcall ScriptCommand95_Run_Shared02
     ret
 
 ; entry 4 of the `rst $00` table in ScriptCommand96_Run
@@ -5630,7 +5630,7 @@ Jump_012_63B7:: ; address name
     ld a, $01
     ld [wC905], a
     farcall SetModeState3AndSaveScreen
-    call Func_012_64D5
+    call ScriptCommand80_Run_Shared01
     ld a, [hl]
     or a, $80
     ld [hl], a
@@ -5643,7 +5643,7 @@ Jump_012_63B7:: ; address name
 ; writes: wC928, wC8FE, wScriptStartRequest
 ScriptCommand80_Run_Case03::
 Jump_012_63D4:: ; address name
-    call Func_012_64D5
+    call ScriptCommand80_Run_Shared01
     inc hl
     ld a, [hl]
     ld [wC928], a
@@ -5663,7 +5663,7 @@ Jump_012_63D4:: ; address name
 ; writes: hFFC6, hFFC7, wC8FE, wScriptStartRequest
 ScriptCommand80_Run_Case02::
 Jump_012_63F2:: ; address name
-    call Func_012_64D5
+    call ScriptCommand80_Run_Shared01
     inc hl
     ld a, [hl]
     push hl
@@ -5713,7 +5713,7 @@ ScriptCommand80_Run_Case00::
 Jump_012_642B:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    call Func_012_64D5
+    call ScriptCommand80_Run_Shared01
     ld a, [hl]
     or a, a
     jr nz, Jump_012_6467
@@ -5811,10 +5811,12 @@ Jump_012_64CA::
     ld [wScriptParam0], a
     ret
 
+; only called from routines of ScriptCommand80_Run (E-0098)
 ; 4 call sites from 4 routines (e.g. ScriptCommand80_Run_Case04, ScriptCommand80_Run_Case03, ScriptCommand80_Run_Case02, ScriptCommand80_Run_Case00)
 ; reads: wCCE9, wC900
 ; points at: wCC48, wCCEB
-Func_012_64D5::
+ScriptCommand80_Run_Shared01::
+Func_012_64D5:: ; address name
     ld a, [wCCE9]
     or a, a
     jr nz, Jump_012_64EA

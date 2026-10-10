@@ -1421,7 +1421,7 @@ Func_01A_62A0:: ; address name
     cp a, $C8
     jr z, Jump_01A_62CA
     ld c, a
-    call Func_01A_6306
+    call BattleEnd_Step3_Shared01
     jr nz, Jump_01A_62CD
     push bc
     ld b, $00
@@ -1436,7 +1436,7 @@ Jump_01A_62B8::
     cp a, $FF
     jr z, Jump_01A_62C6
     push hl
-    call Func_01A_6306
+    call BattleEnd_Step3_Shared01
     pop hl
     jr nz, Jump_01A_62CD
     jr Jump_01A_62B8
@@ -1500,15 +1500,17 @@ Jump_01A_62F7::
 Jump_01A_62FB::
     ld e, a
     ld a, c
-    call Func_01A_6306
+    call BattleEnd_Step3_Shared01
     ld a, e
     jr z, Jump_01A_62EE
     pop hl
     jr Jump_01A_62F7
 
+; only called from routines of BattleEnd_Step3 (E-0098)
 ; 3 call sites from 2 routines (e.g. BattleEnd_Step3_Sub02_Sub02, BattleEnd_Step3_Sub02_Sub01)
 ; points at: wC9BA
-Func_01A_6306::
+BattleEnd_Step3_Shared01::
+Func_01A_6306:: ; address name
     push bc
     ld hl, wC9BA
     ld b, $08
@@ -2069,7 +2071,7 @@ Func_01A_7276:: ; address name
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; 3 call sites from 3 routines (e.g. Func_031_7486, Func_0A0_5E07_Table2_Case00, Func_0A0_5E07_Table2_Case07)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_Shared01, Func_0A0_5E07_Table2_Case00, Func_0A0_5E07_Table2_Case07)
 Func_01A_727D::
     ld hl, Data_01A_73AD
     call CopyRecordRectToScreenBuffer_Bank1A

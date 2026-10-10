@@ -8175,7 +8175,7 @@ Jump_01E_7684::
     jr nz, Jump_01E_7648
     ret
 
-; 6 call sites from 4 routines (e.g. Func_01E_6F17, Func_00C_7098, Func_01C_4867_Case05, Func_0F2_4B05)
+; 6 call sites from 4 routines (e.g. Func_01E_6F17, ScriptCommandF7_Run_Shared02, Func_01C_4867_Case05, Func_0F2_4B05)
 ; points at: hFFC9, wD7F1
 Func_01E_768E::
     ld de, hFFC9

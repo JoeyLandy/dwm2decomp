@@ -4367,7 +4367,7 @@ Jump_00D_6369::
 ; points at: wInventory
 ScriptCommandF3_Run_Case01::
 Jump_00D_6384:: ; address name
-    call Func_00D_6DD0
+    call ScriptCommandF3_Run_Shared01
     push af
     ld a, [wC838]
     ld l, a
@@ -4543,7 +4543,7 @@ Jump_00D_6465::
     ld a, $70
     ldh [hFFBA], a
     xor a, a
-    call Func_00D_6DD0
+    call ScriptCommandF3_Run_Shared01
     cp a, $FF
     jr z, Jump_00D_6488
     xor a, a
@@ -6022,9 +6022,11 @@ Func_00D_6DA7::
 Data_00D_6DC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A4, $00, $E4, $00, $24, $01, $64, $01
 
+; only called from routines of ScriptCommandF3_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF3_Run_Case01, ScriptCommandF3_Run_Case00)
 ; points at: wInventory
-Func_00D_6DD0::
+ScriptCommandF3_Run_Shared01::
+Func_00D_6DD0:: ; address name
     ld hl, wInventory
     ld c, $00
     ld b, $00
@@ -6519,7 +6521,7 @@ Jump_00D_72D0:: ; address name
     ld a, [wD782]
     and a, a
     jr nz, Jump_00D_72E0
-    call Func_00D_7839
+    call ScriptCommandF4_Run_Shared01
     farcall Func_015_6EA5
     ret
 
@@ -6540,7 +6542,7 @@ Jump_00D_72E0::
 ; points at: wCA2B, wC994, wCA39
 ScriptCommandF4_Run_Table2_Case13::
 Jump_00D_72F4:: ; address name
-    call Func_00D_7839
+    call ScriptCommandF4_Run_Shared01
     ld a, [wD7FB]
     sla a
     ld de, Data_00D_78D6
@@ -7252,11 +7254,13 @@ Func_00D_7812:: ; address name
     ld [rRAMG2], a
     ret
 
+; only called from routines of ScriptCommandF4_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF4_Run_Table2_Case13, ScriptCommandF4_Run_Table2_Case12)
 ; reads: wD7B4
 ; writes: rRAMG2, rRAMB
 ; points at: sA000, wC986
-Func_00D_7839::
+ScriptCommandF4_Run_Shared01::
+Func_00D_7839:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

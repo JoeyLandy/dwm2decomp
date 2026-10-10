@@ -4277,7 +4277,7 @@ Jump_014_5F57:: ; address name
 ; writes: wCFBF, wCFC0, wD7F5, wCFA9
 CopyBytesDEFromHL_Bank14_Case00::
 Jump_014_5F72:: ; address name
-    call Func_014_6992
+    call CopyBytesDEFromHL_Bank14_Shared01
     ld b, $55
     call WriteTileBAtScrollOffset47PlusWCFC2
     ld a, [wJoypadPressedRepeat]
@@ -5040,7 +5040,7 @@ Jump_014_646A::
 CopyBytesDEFromHL_Bank14_Case03::
 Jump_014_6476:: ; address name
     call CopyBytesDEFromHL_Bank14_Case03_Sub01
-    call Func_014_6992
+    call CopyBytesDEFromHL_Bank14_Shared01
     ld a, [wCFA8]
     inc a
     ld [wCFA8], a
@@ -5901,10 +5901,12 @@ Jump_014_6984::
     jr nz, Jump_014_6983
     ret
 
+; only called from routines of CopyBytesDEFromHL_Bank14 (E-0098)
 ; 2 call sites from 2 routines (e.g. CopyBytesDEFromHL_Bank14_Case03, CopyBytesDEFromHL_Bank14_Case00)
 ; writes: wCFBC
 ; points at: wCFAD
-Func_014_6992::
+CopyBytesDEFromHL_Bank14_Shared01::
+Func_014_6992:: ; address name
     ld hl, wCFAD
     ld bc, $0000
 

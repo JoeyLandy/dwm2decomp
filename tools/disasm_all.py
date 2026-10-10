@@ -47,6 +47,7 @@ def log(msg: str) -> None:
 ROOT = Path(__file__).resolve().parents[1]
 REF = ROOT / "local/roms/dwm2-cobi-us.gbc"
 BANK = 0x4000
+SUFFIX_RE = re.compile(r"(_(?:Sub|Case|Shared|Table\d*_Case)[0-9A-F]{2})+$")  # helper-name suffixes of a routine name
 ROM_NAME = "dwm2-cobi-us.gbc"
 VECTORS = [0x00, 0x10, 0x30, 0x38, 0x40, 0x48, 0x58, 0x80, 0x100, 0x150]
 LD_HL = re.compile(r"ld hl, \$([0-9A-F]{4})$")
@@ -921,6 +922,7 @@ class Rom:
         total = 0
         for _round in range(3):
             plan: dict[tuple[int, int], list[tuple[int, int]]] = {}
+            shared: dict[str, list[tuple[int, int]]] = {}
             for (b, a), sites in self.callers.items():
                 label = self.labels[b].get(a, "")
                 if not label.startswith("Func_") or (b, a) in self.names or a not in self.insn[b]                         or (b, a) in table_targets:
@@ -930,13 +932,38 @@ class Rom:
                     ents = self.entries[cb]
                     k = bisect.bisect_right(ents, ca) - 1
                     parents.add((cb, ents[k]) if k >= 0 else None)
-                if len(parents) != 1 or None in parents:
+                if None in parents:
+                    continue
+                if len(parents) > 1:
+                    # several callers that all belong to one named routine (its _SubNN, _CaseNN or
+                    # _SharedNN helpers, or the routine itself): Root_SharedNN (E-0098)
+                    roots = {SUFFIX_RE.sub("", self.labels[pb][pa]) for pb, pa in parents}
+                    if len(roots) == 1:
+                        (root,) = roots
+                        if not root.startswith(("Func_", "Jump_")) and (b, a) not in parents:
+                            shared.setdefault(root, []).append((b, a))
                     continue
                 (parent,) = parents
                 if parent == (b, a) or self.labels[parent[0]][parent[1]].startswith("Func_"):
                     continue
                 plan.setdefault(parent, []).append((b, a))
-            if not plan:
+            for root, helpers in shared.items():
+                if len(root) > 48:
+                    continue
+                n = 0
+                for b, a in sorted(helpers):
+                    while True:
+                        n += 1
+                        name = f"{root}_Shared{n:02X}"
+                        if name not in used:
+                            break
+                    used.add(name)
+                    self.alias[(b, a)] = self.labels[b][a]
+                    self.labels[b][a] = name
+                    self.names[(b, a)] = {"name": name, "note": f"only called from routines of {root} (E-0098)",
+                                          "evidence": "call graph"}
+                    total += 1
+            if not plan and not shared:
                 break
             for (pb, pa), subs in plan.items():
                 stem = self.labels[pb][pa]

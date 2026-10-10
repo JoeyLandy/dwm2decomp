@@ -2037,7 +2037,7 @@ Jump_031_4B8F:: ; address name
     ld a, $00
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call Func_031_7486
+    call RunBattleSetup_Shared01
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -2048,7 +2048,7 @@ Jump_031_4B8F:: ; address name
 ; points at: wBattleResolveStep
 RunBattleSetup_Table2_Case02::
 Jump_031_4BCC:: ; address name
-    call Func_031_748C
+    call RunBattleSetup_Shared02
     ld hl, Data_031_639F
     ld a, [wC46B]
     and a, $03
@@ -2096,7 +2096,7 @@ Jump_031_4C18::
 ; points at: wBattleResolveStep
 RunBattleSetup_Table2_Case04::
 Jump_031_4C19:: ; address name
-    call Func_031_748C
+    call RunBattleSetup_Shared02
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -2316,7 +2316,7 @@ Jump_031_4D4E:: ; address name
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForWD890Count
     call DrawWC338RowsToBGMapRow13
-    call Func_031_7486
+    call RunBattleSetup_Shared01
     ld a, $02
     ld [wBattleResolveStep], a
     ret
@@ -8966,14 +8966,18 @@ Func_031_7479:: ; address name
     call CopyRect32StrideToVRAM
     ret
 
+; only called from routines of RunBattleSetup (E-0098)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_Table2_Case07, RunBattleSetup_Table2_Case01)
 ; points at: wC338
-Func_031_7486::
+RunBattleSetup_Shared01::
+Func_031_7486:: ; address name
     farcall Func_01A_727D
 
+; only called from routines of RunBattleSetup (E-0098)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_Table2_Case04, RunBattleSetup_Table2_Case02)
 ; points at: wC338
-Func_031_748C::
+RunBattleSetup_Shared02::
+Func_031_748C:: ; address name
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $0E05
