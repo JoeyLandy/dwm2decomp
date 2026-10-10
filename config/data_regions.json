@@ -12,6 +12,12 @@
       "start": "49F8",
       "end": "4FE7",
       "reason": "the string database BeginStringDisplay_BankE0_Sub01 passes in DE ($49F8): two category pointers, a 33-entry table at $49FC and a 1-entry table at $4A3E, and their $F0-terminated strings $4A40-$4FE6; none of the 86 labels the heuristics had placed in it is referenced from outside (E-0088)"
+    },
+    {
+      "bank": "03",
+      "start": "460B",
+      "end": "461F",
+      "reason": "ten BG map addresses ($9861, $98A1, $98E1, $9921, $9961, $99A1, $9829, $9869, $98A9, $98E9) that eleven bank-$03 menu routines load into HL or DE as a cursor-position table (WriteBCTileToScreenBufferAtTableEntry and others); it had been decoded as code (E-0101)"
     }
   ]
 }

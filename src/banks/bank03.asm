@@ -310,7 +310,7 @@ Jump_003_4235:: ; address name
 ; writes: wMenuPageCount, wMenuPage, wC0A7, wC46D, wC46E, wC46F
 Func_003_4208_Case02::
 Jump_003_423F:: ; address name
-    call Func_003_641E
+    call LoadScreenBlocks1CAnd0C
     call Func_003_6595
     xor a, a
     ld [wMenuPageCount], a
@@ -348,12 +348,12 @@ Jump_003_4277::
     ret
 
 Jump_003_427D::
-    call Func_003_7692
+    call LoadScreenBlock21
     call Func_003_7AE8
     ret
 
 ; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
-; 14 call sites from 14 routines (e.g. Func_003_7692, Func_003_641E, Func_003_581E, Func_003_499B, ...)
+; 14 call sites from 14 routines (e.g. LoadScreenBlock21, LoadScreenBlocks1CAnd0C, Func_003_581E, Func_003_499B, ...)
 ; points at: wScreenTileBuffer
 ClearScreenTileBuffer_Bank03::
 Func_003_4284:: ; address name
@@ -625,7 +625,7 @@ Func_003_43D6::
     ld de, $0501
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
-; 11 call sites from 8 routines (e.g. Func_003_5900, Func_003_7281, Func_003_65E3, Func_003_5AA7, ...)
+; 11 call sites from 8 routines (e.g. ShowSelectedItemDescription, Func_003_7281, Func_003_65E3, Func_003_5AA7, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
 ShowStringBank08AtTilesHL_Bank03::
@@ -661,9 +661,11 @@ Func_003_43D9:: ; address name
     ld [wC52E], a
     ret
 
+; copies 10 bytes from HL to wC130 and writes $F0 after them; HL advances; BC kept (E-0101)
 ; 4 call sites from 4 routines (e.g. Func_003_7335_Case00, Func_003_4BE8, Func_003_4F0D, Func_003_4EFD)
 ; points at: wC130
-Func_003_4414::
+CopyTenBytesToWC130::
+Func_003_4414:: ; address name
     ld de, wC130
     push bc
     ld b, $0A
@@ -865,12 +867,14 @@ Jump_003_450C::
     ei
     ret
 
+; writes the cursor tile $BB into wScreenTileBuffer at the position of MenuCursorPositions_Bank03[wC46D & 3] (BG map address + $2998) (E-0101)
 ; 4 call sites from 4 routines (e.g. Func_003_499B, Func_003_49C2, Func_003_49E9, Func_003_4A08)
 ; reads: wC46D
-Func_003_451C::
+DrawMenuCursorTileInBuffer::
+Func_003_451C:: ; address name
     ld a, [wC46D]
     and a, $03
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     add a, a
     add_a_to_hl
     deref_hl
@@ -884,7 +888,7 @@ Func_003_451C::
     ret
 
 ; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC there (E-0072) (the same 20 bytes appear in 2 banks)
-; 15 call sites from 14 routines (e.g. Func_003_769E, Func_003_7707, Func_003_76D5, Func_003_705B_Case03, ...)
+; 15 call sites from 14 routines (e.g. LoadScreenBlock21WithCursor, Func_003_7707, Func_003_76D5, Func_003_705B_Case03, ...)
 WriteBCTileToScreenBufferAtTableEntry_Bank03::
 Func_003_4538:: ; address name
     add a, a
@@ -1004,26 +1008,13 @@ Jump_003_45E5::
     ld [hl], c
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_003_460B:: ; heuristic: follows a terminator; C0
-    ld h, c
-    sbc a, b
-    and a, c
-    sbc a, b
-    pop hl
-    sbc a, b
-    ld hl, $6199
-    sbc a, c
-    and a, c
-    sbc a, c
-    add hl, hl
-    sbc a, b
-    ld l, c
-    sbc a, b
-    xor a, c
-    sbc a, b
-    jp hl
-    db $98
+; ten BG map addresses: rows 3, 5, 7, 9, 11 and 13 of column 1 ($9861 ... $99A1) and rows 1, 3, 5 and 7 of column 9 ($9829 ... $98E9), indexed by the cursor slot (wC46D & 3 or & 7) by the bank-$03 menu cursor routines (E-0101)
+MenuCursorPositions_Bank03:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_460B:: ; address name
+    db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
+
+Data_003_4617:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $29, $98, $69, $98, $A9, $98, $E9, $98
 
 Data_003_461F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98
@@ -1196,7 +1187,7 @@ Jump_003_46CD::
 ; points at: wC46D, wC0A0
 Func_003_4659_Table3_Case02::
 Jump_003_46F1:: ; address name
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     ld hl, wC46D
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -1295,7 +1286,7 @@ Jump_003_4759::
 Func_003_4659_Table4_Case02::
 Jump_003_4770:: ; address name
     farcall Func_01D_6A3D
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     ld hl, wC46D
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -1396,7 +1387,7 @@ Jump_003_47E6::
 ; points at: wC46D, wC0A0
 Func_003_4659_Table5_Case02::
 Jump_003_47FA:: ; address name
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     ld hl, wC46D
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -1498,7 +1489,7 @@ Jump_003_486A::
 ; points at: wC46D, wC000, wC0A0
 Func_003_4659_Table6_Case02::
 Jump_003_4881:: ; address name
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     ld hl, wC46D
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -1648,7 +1639,7 @@ Func_003_499B::
     farcall Func_033_402B
     ld e, $03
     farcall Func_033_402B
-    call Func_003_451C
+    call DrawMenuCursorTileInBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table4_Case00)
@@ -1662,7 +1653,7 @@ Func_003_49C2::
     farcall Func_033_402B
     ld e, $06
     farcall Func_033_402B
-    call Func_003_451C
+    call DrawMenuCursorTileInBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table5_Case00)
@@ -1674,7 +1665,7 @@ Func_003_49E9::
     farcall Func_033_402B
     ld e, $08
     farcall Func_033_402B
-    call Func_003_451C
+    call DrawMenuCursorTileInBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table6_Case00)
@@ -1686,7 +1677,7 @@ Func_003_4A08::
     farcall Func_033_402B
     ld e, $0A
     farcall Func_033_402B
-    call Func_003_451C
+    call DrawMenuCursorTileInBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4208_Case00)
@@ -2101,7 +2092,7 @@ Jump_003_4CB8::
     ld a, [wC46D]
     and a, $0F
     call SRAMRecordAddressMapped
-    call Func_003_4414
+    call CopyTenBytesToWC130
     ld hl, vTiles2 + $470
     call Func_003_43CC
     ld c, $58
@@ -2400,7 +2391,7 @@ Func_003_4EB6::
 
 ; 2 call sites from 1 routine (e.g. Func_003_4E02)
 Func_003_4EFD::
-    call Func_003_4414
+    call CopyTenBytesToWC130
     inc hl
     push hl
     push bc
@@ -2414,7 +2405,7 @@ Func_003_4EFD::
 ; 2 call sites from 1 routine (e.g. Func_003_4E02)
 ; reads: wC8C1, wC8C2
 Func_003_4F0D::
-    call Func_003_4414
+    call CopyTenBytesToWC130
     push hl
     push bc
     ld a, b
@@ -2985,7 +2976,7 @@ Jump_003_5288:: ; address name
     call SetupInventoryMenuPages_Bank03
     call Func_003_581E
     call SetMenuRowsForPage_Bank03_59DB
-    call Func_003_5900
+    call ShowSelectedItemDescription
     call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
@@ -3005,7 +2996,7 @@ Jump_003_52A3:: ; address name
     jr Jump_003_5328
 
 Jump_003_52AE::
-    ld de, $4617
+    ld de, Data_003_4617
     ld hl, wC46E
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -3014,7 +3005,7 @@ Jump_003_52AE::
     ld a, [wMenuRowCount]
     cp a, $01
     ret z
-    call Func_003_5900
+    call ShowSelectedItemDescription
     ret
 
 Jump_003_52C8::
@@ -3023,7 +3014,7 @@ Jump_003_52C8::
     jr z, Jump_003_52DE
     res 7, [hl]
     call SetMenuRowsForPage_Bank03_59DB
-    call Func_003_5900
+    call ShowSelectedItemDescription
     call Func_003_592E
     call DrawMenuPageNumber_Bank03
     ret
@@ -3071,7 +3062,7 @@ Jump_003_5330::
     bit 2, a
     ret z
     farcall Func_016_590C
-    call Func_003_5900
+    call ShowSelectedItemDescription
     call Func_003_592E
     ret
 
@@ -3278,7 +3269,7 @@ Jump_003_542F:: ; address name
 ; points at: wC46D, wC2D9, wC140, wC0A1
 Func_003_5253_Table4_Case05::
 Jump_003_5449:: ; address name
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     ld hl, wC46D
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -3958,7 +3949,7 @@ Func_003_585D::
     farcall CopyBlockToTileBuffer
     ld a, [wC46E]
     and a, $07
-    ld hl, $4617
+    ld hl, Data_003_4617
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
@@ -3991,7 +3982,7 @@ Func_003_58A6::
     farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $03
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
@@ -4028,11 +4019,13 @@ Func_003_58E6::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
+; inventory slot = (wMenuPage & $0F) * 4 + (wC46E & $0F): shows that item's string of category 6 (the item descriptions of the bank-$08 database; item $1F uses string $6F) at vTiles2 + $230 with size $1203 (ShowStringBank08AtTilesHL_Bank03) (E-0101)
 ; 5 call sites from 3 routines (e.g. Func_003_5A07, Func_003_5253_Table2_Case01, Func_003_5253_Table2_Case00)
 ; reads: wMenuPage, wC46E
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
-Func_003_5900::
+ShowSelectedItemDescription::
+Func_003_5900:: ; address name
     ld a, [wMenuPage]
     and a, $0F
     add a, a
@@ -4242,7 +4235,7 @@ Func_003_5A07::
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    call Func_003_5900
+    call ShowSelectedItemDescription
     call Func_003_592E
     ret
 
@@ -4729,7 +4722,7 @@ Jump_003_5EA3:: ; address name
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    call Func_003_641E
+    call LoadScreenBlocks1CAnd0C
     call Func_003_67B0
     ld a, $00
     ld [rRAMG], a
@@ -4760,7 +4753,7 @@ Jump_003_5EC8::
 ; points at: wC46D
 Func_003_5E68_Table2_Case01::
 Jump_003_5EF0:: ; address name
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     ld hl, wC46D
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -4944,7 +4937,7 @@ Jump_003_5FFB::
 ; points at: wC46E, wC39E, wC0A1
 Func_003_5E68_Table3_Case01::
 Jump_003_601D:: ; address name
-    ld de, $4617
+    ld de, Data_003_4617
     ld hl, wC46E
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -5135,7 +5128,7 @@ Jump_003_6120:: ; address name
 ; points at: wC46F, wC2D9, wC140, wC0A0
 Func_003_5E68_Table4_Case02::
 Jump_003_6149:: ; address name
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     ld hl, wC46F
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -5574,8 +5567,10 @@ Jump_003_640F::
     ld [wC46E], a
     ret
 
+; clears the screen tile buffer and copies blocks $1C and $0C into it (CopyBlockToTileBuffer) (E-0101)
 ; 4 call sites from 4 routines (e.g. Func_003_4208_Case02, Func_003_657B, Func_003_5E68_Table2_Case00, Func_003_646F)
-Func_003_641E::
+LoadScreenBlocks1CAnd0C::
+Func_003_641E:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $1C
     farcall CopyBlockToTileBuffer
@@ -5626,7 +5621,7 @@ Jump_003_6450::
 ; reads: wC46D
 ; points at: wC3A2
 Func_003_646F::
-    call Func_003_641E
+    call LoadScreenBlocks1CAnd0C
     ld e, $1D
     farcall CopyBlockToTileBuffer
     ld a, [wC46D]
@@ -5639,7 +5634,7 @@ Func_003_646F::
     call WriteDecimalDigitTiles
     ld a, [wC46D]
     and a, $03
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
@@ -5674,7 +5669,7 @@ Jump_003_64DA::
     call WriteDecimalDigitTiles
     ld a, [wC46E]
     and a, $07
-    ld hl, $4617
+    ld hl, Data_003_4617
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wRecordBuffer]
     ld l, a
@@ -5701,7 +5696,7 @@ Func_003_650C::
     call Func_003_646F
     ld a, [wC46E]
     and a, $07
-    ld hl, $4617
+    ld hl, Data_003_4617
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $10
     farcall CopyBlockToTileBuffer
@@ -5718,11 +5713,11 @@ Func_003_6526::
     farcall CopyBlockToTileBuffer
     ld a, [wC46E]
     and a, $07
-    ld hl, $4617
+    ld hl, Data_003_4617
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wC46F]
     and a, $03
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wRecordBuffer]
     ld l, a
@@ -5748,10 +5743,10 @@ Func_003_6526::
 ; reads: wC46D
 Func_003_657B::
     call FillTilesFromRequest
-    call Func_003_641E
+    call LoadScreenBlocks1CAnd0C
     ld a, [wC46D]
     and a, $03
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $10
     farcall CopyBlockToTileBuffer
@@ -6301,7 +6296,7 @@ Jump_003_6AAF:: ; address name
 ; points at: wC0A1
 Func_003_6A60_Table2_Case00::
 Jump_003_6ABB:: ; address name
-    call Func_003_7692
+    call LoadScreenBlock21
     call CopyTileBufferToBGMap
     call LoadRecordListNameTiles
     farcall Func_016_7A64
@@ -6322,7 +6317,7 @@ Jump_003_6ABB:: ; address name
 Func_003_6A60_Table2_Case01::
 Jump_003_6ADC:: ; address name
     ld hl, wC46D
-    ld de, Func_003_460B
+    ld de, MenuCursorPositions_Bank03
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -6331,7 +6326,7 @@ Jump_003_6ADC:: ; address name
     call QueueSoundEffect
     ld a, [wC46D]
     and a, $07
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileAtWordTableEntry_Bank03
     ld a, [wC46D]
     and a, $07
@@ -7420,10 +7415,10 @@ Func_003_7145::
 ; points at: wC2C0, wC0A1
 Func_003_705B_Case03::
 Jump_003_716F:: ; address name
-    call Func_003_7692
+    call LoadScreenBlock21
     ld a, [wC46D]
     and a, $07
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     call Func_003_7202
     ld de, wC2C0
@@ -7777,7 +7772,7 @@ Jump_003_73A0:: ; address name
     ld [wD09E], a
     farcall Func_016_7A5B
     ld hl, wC60C
-    call Func_003_4414
+    call CopyTenBytesToWC130
     ld hl, vTiles2 + $300
     call Func_003_43CC
     ld a, [wPlayHoursLo]
@@ -7788,7 +7783,7 @@ Jump_003_73A0:: ; address name
     ld de, wC200
     call Func_003_74DA
     ld a, [wPlayMinutes]
-    call Func_003_74CA
+    call ByteAToDecimalDigits
     ld de, wC204
     call Func_003_74E2
     call Func_003_7B25
@@ -7871,7 +7866,7 @@ Jump_003_7487:: ; address name
     or a, a
     ret nz
     ld a, [wPlayMinutes]
-    call Func_003_74CA
+    call ByteAToDecimalDigits
     ld de, wC204
     call Func_003_74E2
     ld a, [wPlayHoursLo]
@@ -7893,8 +7888,10 @@ Jump_003_74C2::
     ld [wC0A1], a
     ret
 
+; HL = A (zero-extended), then HLToDecimalDigits (E-0101)
 ; 3 call sites from 3 routines (e.g. Func_003_7335_Case01, Func_003_7335_Case00, Func_003_74D1)
-Func_003_74CA::
+ByteAToDecimalDigits::
+Func_003_74CA:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
@@ -7903,7 +7900,7 @@ Func_003_74CA::
 ; 14 call sites from 1 routine (e.g. Func_003_7335_Case00)
 Func_003_74D1::
     push de
-    call Func_003_74CA
+    call ByteAToDecimalDigits
     pop de
     call WriteTwoDigitTilesFromWC8C1
     ret
@@ -8190,26 +8187,30 @@ Jump_003_7689::
     ld [rRAMG], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_003_4208_Case03, Func_003_6A60_Table2_Case00, Func_003_769E, Func_003_705B_Case03)
-Func_003_7692::
+; clears the screen tile buffer (ClearScreenTileBuffer_Bank03) and copies block $21 into it (CopyBlockToTileBuffer, E = $21) (E-0101)
+; 4 call sites from 4 routines (e.g. Func_003_4208_Case03, Func_003_6A60_Table2_Case00, LoadScreenBlock21WithCursor, Func_003_705B_Case03)
+LoadScreenBlock21::
+Func_003_7692:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $21
     farcall CopyBlockToTileBuffer
     ret
 
+; LoadScreenBlock21, then writes tile $BC at MenuCursorPositions_Bank03[wC46D & 7] in the buffer (WriteBCTileToScreenBufferAtTableEntry_Bank03) (E-0101)
 ; 4 call sites from 4 routines (e.g. Func_003_76AD, Func_003_7726, Func_003_7743, Func_003_774F)
 ; reads: wC46D
-Func_003_769E::
-    call Func_003_7692
+LoadScreenBlock21WithCursor::
+Func_003_769E:: ; address name
+    call LoadScreenBlock21
     ld a, [wC46D]
     and a, $07
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_76C9, Func_003_6B5E_Case00)
 Func_003_76AD::
-    call Func_003_769E
+    call LoadScreenBlock21WithCursor
     ld e, $23
     farcall CopyBlockToTileBuffer
     call Func_003_7978
@@ -8266,7 +8267,7 @@ Func_003_7707::
 
 ; 1 call site from 1 routine (e.g. Func_003_6EBF_Case00)
 Func_003_7726::
-    call Func_003_769E
+    call LoadScreenBlock21WithCursor
     ld hl, Data_003_7B9F
     ld de, Data_003_7BAF
     call Func_003_7BBF
@@ -8278,14 +8279,14 @@ Func_003_7726::
 
 ; 1 call site from 1 routine (e.g. Func_003_6EBF_Table2_Case00)
 Func_003_7743::
-    call Func_003_769E
+    call LoadScreenBlock21WithCursor
     ld e, $2C
     farcall CopyBlockToTileBuffer
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_705B_Case05, Func_003_705B_Case00)
 Func_003_774F::
-    call Func_003_769E
+    call LoadScreenBlock21WithCursor
     ld e, $29
     farcall CopyBlockToTileBuffer
 
@@ -8308,7 +8309,7 @@ Func_003_776C::
     farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $07
-    ld hl, Func_003_460B
+    ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     call FillTilesFromRequest
     ld e, $10

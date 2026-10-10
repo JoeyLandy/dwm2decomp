@@ -1097,6 +1097,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **A possible slip.** `05:5D31` computes the side with `and a, $04` twice. Every opposite-side predicate uses `and a, $04 / xor a, $04`, so it tests the actor's own side exactly like `05:5D20`. It is named AnyAllyLacksStatus2Bit2_5D31, and the note says it probably meant the foes. Not executed.
 - Binary verification: pending; see the commit.
 
+### E-0101 — A bank-$03 cursor table decoded as code; menu helpers
+
+- Kind: OBSERVATION (reading plus table bytes; C2 for the table extent).
+- **The table.** `03:460B` (flagged as probably data in E-0071) is loaded into HL or DE by eleven bank-$03 menu routines and indexed as a word table. Its bytes are ten BG-map addresses ($9861 … $98E9) running up to `Data_003_461F`.
+  - It is declared in `config/data_regions.json` and named MenuCursorPositions_Bank03.
+  - Rows 3-13 of column 1 and rows 1-7 of column 9 match the two-column menus that use it.
+- **Helpers named:**
+  - ShowSelectedItemDescription (category 6 of the bank-$08 database: item descriptions, confirmed by `tools/string_bank.py 08 4032 6`);
+  - DrawMenuCursorTileInBuffer;
+  - the screen-block loaders LoadScreenBlock21, LoadScreenBlock21WithCursor and LoadScreenBlocks1CAnd0C;
+  - ByteAToDecimalDigits and CopyTenBytesToWC130.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
