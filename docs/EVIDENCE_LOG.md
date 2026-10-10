@@ -937,6 +937,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also flagged, not acted on.** The same scan flagged `60:690E` (8 text-like bytes); it is not checked.
 - Binary verification: pending; see the commit.
 
+### E-0089 — Item usability checks versus item effects
+
+- Kind: OBSERVATION (reading of four handlers per table plus the item-name mapping; C1).
+- **Correction to E-0085.** The table behind `16:4025` holds usability checks, not effects.
+  - Its Herb entry returns non-zero unless current and maximum HP are equal.
+  - Its Antidote entry sets wItemId = $FF (refuse) unless record byte $55 bit 2 is set.
+  - Its seed entries compare a stat with 999.
+  - So `16:4025` is renamed CheckItemUsable and its handlers ItemUsable_<item>. Record byte $55 bit 2 being poison is an inference from the Antidote check.
+- **The effects.** `16:468E` (ApplyItemEffect, a 95-entry table, called from other menu cases) holds the effects.
+  - Its Herb entry adds (random / 11) + wD08F to the selected record's HP through Func_016_57D1, then runs ConsumeSelectedItemByChance.
+  - Its handlers are named ItemApply_<item>: 64 new names. Item numbers above the named items get ItemApply_ItemNN.
+- **Limits.** Bodies other than the ones quoted here are not read.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

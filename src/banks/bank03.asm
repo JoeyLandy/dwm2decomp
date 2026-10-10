@@ -3373,7 +3373,7 @@ Jump_003_54D4:: ; address name
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    farcall RunItemEffect
+    farcall CheckItemUsable
     xor a, a
     ld [rRAMG], a
     ld hl, wC0A1
@@ -3452,7 +3452,7 @@ Jump_003_5550:: ; address name
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    farcall Func_016_468E
+    farcall ApplyItemEffect
     xor a, a
     ld [rRAMG], a
     ld a, [wD08E]
@@ -3493,7 +3493,7 @@ Jump_003_5591:: ; address name
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    farcall RunItemEffect
+    farcall CheckItemUsable
     xor a, a
     ld [rRAMG], a
     ld hl, wC0A1
@@ -3554,7 +3554,7 @@ Jump_003_55EB:: ; address name
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    farcall Func_016_468E
+    farcall ApplyItemEffect
     xor a, a
     ld [rRAMG], a
     ld a, [wD08E]
@@ -3588,7 +3588,7 @@ Jump_003_5619:: ; address name
 ; points at: wC0A1
 Func_003_5253_Table4_Case1B::
 Jump_003_5622:: ; address name
-    farcall RunItemEffect
+    farcall CheckItemUsable
     ld hl, wC0A1
     inc [hl]
     ld a, [wItemId]
@@ -3668,7 +3668,7 @@ Jump_003_56AA::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    farcall Func_016_468E
+    farcall ApplyItemEffect
     xor a, a
     ld [rRAMG], a
     xor a, a

@@ -29,127 +29,127 @@ Jump_016_401E::
     jr nz, Jump_016_401E
     ret
 
-; returns when wItemId is $FF; otherwise jumps through a table with one handler per item id (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
+; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
 ; 3 call sites from 3 routines (e.g. Func_003_5253_Table4_Case08, Func_003_5253_Table4_Case16, Func_003_5253_Table4_Case1B)
 ; reads: wItemId
-RunItemEffect::
+CheckItemUsable::
 Func_016_4025:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret z
     ld a, [wItemId]
     rst $00
-    dw ItemEffect_Item00
-    dw ItemEffect_Herb
-    dw ItemEffect_Herb
-    dw ItemEffect_WorldDew
-    dw ItemEffect_Potion
-    dw ItemEffect_Potion
-    dw ItemEffect_Antidote
-    dw ItemEffect_MoonHerb
-    dw ItemEffect_Laurel
-    dw ItemEffect_AwakeSand
-    dw ItemEffect_SkyBell
-    dw ItemEffect_WorldDew
-    dw ItemEffect_WorldLeaf
-    dw ItemEffect_ATKseed
-    dw ItemEffect_DEFseed
-    dw ItemEffect_AGLseed
-    dw ItemEffect_INTseed
-    dw ItemEffect_LifeAcorn
-    dw ItemEffect_MysticNut
-    dw ItemEffect_Quest
-    dw ItemEffect_Horror
-    dw ItemEffect_BeNice
-    dw ItemEffect_Cheater
-    dw ItemEffect_Smart
-    dw ItemEffect_Comedy
-    dw ItemEffect_BeefJerky
-    dw ItemEffect_BeefJerky
-    dw ItemEffect_BeefJerky
-    dw ItemEffect_BeefJerky
-    dw ItemEffect_BeefJerky
-    dw ItemEffect_BeefJerky
-    dw ItemEffect_BeastTail
-    dw ItemEffect_Repellent
-    dw ItemEffect_Repellent
-    dw ItemEffect_Mist
-    dw ItemEffect_Mist
-    dw ItemEffect_Mist
-    dw ItemEffect_Mist
-    dw ItemEffect_Mist
-    dw ItemEffect_Mist
-    dw ItemEffect_Warp
-    dw ItemEffect_WarpWing
-    dw ItemEffect_ExitBell
-    dw ItemEffect_Mist
-    dw ItemEffect_TinyMedal
-    dw ItemEffect_TinyMedal
-    dw ItemEffect_LogTwig
-    dw ItemEffect_Item2F
-    dw ItemEffect_WaterCall
-    dw ItemEffect_MoonRock
-    dw ItemEffect_Crest
-    dw ItemEffect_YunaSoul
-    dw ItemEffect_SleepHerb
-    dw ItemEffect_Change
-    dw ItemEffect_WarpWing
-    dw ItemEffect_HarMirror
-    dw ItemEffect_HarMirror
-    dw ItemEffect_Heaven
-    dw ItemEffect_Heaven
-    dw ItemEffect_Heaven
-    dw ItemEffect_Heaven
-    dw ItemEffect_Heaven
-    dw ItemEffect_Accessory
-    dw ItemEffect_Accessory
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
-    dw ItemEffect_VITbelt
+    dw ItemUsable_Item00
+    dw ItemUsable_Herb
+    dw ItemUsable_Herb
+    dw ItemUsable_WorldDew
+    dw ItemUsable_Potion
+    dw ItemUsable_Potion
+    dw ItemUsable_Antidote
+    dw ItemUsable_MoonHerb
+    dw ItemUsable_Laurel
+    dw ItemUsable_AwakeSand
+    dw ItemUsable_SkyBell
+    dw ItemUsable_WorldDew
+    dw ItemUsable_WorldLeaf
+    dw ItemUsable_ATKseed
+    dw ItemUsable_DEFseed
+    dw ItemUsable_AGLseed
+    dw ItemUsable_INTseed
+    dw ItemUsable_LifeAcorn
+    dw ItemUsable_MysticNut
+    dw ItemUsable_Quest
+    dw ItemUsable_Horror
+    dw ItemUsable_BeNice
+    dw ItemUsable_Cheater
+    dw ItemUsable_Smart
+    dw ItemUsable_Comedy
+    dw ItemUsable_BeefJerky
+    dw ItemUsable_BeefJerky
+    dw ItemUsable_BeefJerky
+    dw ItemUsable_BeefJerky
+    dw ItemUsable_BeefJerky
+    dw ItemUsable_BeefJerky
+    dw ItemUsable_BeastTail
+    dw ItemUsable_Repellent
+    dw ItemUsable_Repellent
+    dw ItemUsable_Mist
+    dw ItemUsable_Mist
+    dw ItemUsable_Mist
+    dw ItemUsable_Mist
+    dw ItemUsable_Mist
+    dw ItemUsable_Mist
+    dw ItemUsable_Warp
+    dw ItemUsable_WarpWing
+    dw ItemUsable_ExitBell
+    dw ItemUsable_Mist
+    dw ItemUsable_TinyMedal
+    dw ItemUsable_TinyMedal
+    dw ItemUsable_LogTwig
+    dw ItemUsable_Item2F
+    dw ItemUsable_WaterCall
+    dw ItemUsable_MoonRock
+    dw ItemUsable_Crest
+    dw ItemUsable_YunaSoul
+    dw ItemUsable_SleepHerb
+    dw ItemUsable_Change
+    dw ItemUsable_WarpWing
+    dw ItemUsable_HarMirror
+    dw ItemUsable_HarMirror
+    dw ItemUsable_Heaven
+    dw ItemUsable_Heaven
+    dw ItemUsable_Heaven
+    dw ItemUsable_Heaven
+    dw ItemUsable_Heaven
+    dw ItemUsable_Accessory
+    dw ItemUsable_Accessory
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
+    dw ItemUsable_VITbelt
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 0 (no name); item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 0 (no name); item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_Item00::
+ItemUsable_Item00::
 Jump_016_40F5:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 1 Herb, 2 LoveWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case00)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Herb::
+ItemUsable_Herb::
 Func_016_40F6:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -174,11 +174,11 @@ Func_016_40F6:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 3 WorldDew, 11 SageRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 3 WorldDew, 11 SageRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case03)
 ; reads: wC6FD
 ; writes: wItemId, wD08E
-ItemEffect_WorldDew::
+ItemUsable_WorldDew::
 Func_016_4118:: ; address name
     ld a, [wC6FD]
     or a, a
@@ -268,22 +268,22 @@ Jump_016_4195::
 Jump_016_419B::
     ld d, $00
     ld a, $00
-    call ItemEffect_WorldDew_Sub01
+    call ItemUsable_WorldDew_Sub01
     ld a, $01
-    call ItemEffect_WorldDew_Sub01
+    call ItemUsable_WorldDew_Sub01
     ld a, $02
-    call ItemEffect_WorldDew_Sub01
+    call ItemUsable_WorldDew_Sub01
     ld a, $27
     add a, d
     ld [wD08E], a
     ret
 
-; only called from ItemEffect_WorldDew (E-0047)
-; 3 call sites from 1 routine (e.g. ItemEffect_WorldDew)
+; only called from ItemUsable_WorldDew (E-0047)
+; 3 call sites from 1 routine (e.g. ItemUsable_WorldDew)
 ; reads: wD083
 ; writes: wD083
 ; points at: wC6FD, wC160
-ItemEffect_WorldDew_Sub01::
+ItemUsable_WorldDew_Sub01::
 Func_016_41B3:: ; address name
     ld [wD083], a
     ld hl, wC6FD
@@ -331,11 +331,11 @@ Func_016_41B3:: ; address name
     inc d
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 4 Potion, 5 ElfWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 4 Potion, 5 ElfWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case05)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Potion::
+ItemUsable_Potion::
 Func_016_41FD:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -360,11 +360,11 @@ Func_016_41FD:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 6 Antidote; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0A)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Antidote::
+ItemUsable_Antidote::
 Func_016_421F:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -377,11 +377,11 @@ Func_016_421F:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 7 MoonHerb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 7 MoonHerb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_MoonHerb::
+ItemUsable_MoonHerb::
 Jump_016_4234:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -394,11 +394,11 @@ Jump_016_4234:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 8 Laurel; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 8 Laurel; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Laurel::
+ItemUsable_Laurel::
 Jump_016_4249:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -510,11 +510,11 @@ Func_016_42C4::
     inc d
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 9 AwakeSand; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 9 AwakeSand; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_AwakeSand::
+ItemUsable_AwakeSand::
 Jump_016_4301:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -527,11 +527,11 @@ Jump_016_4301:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 10 SkyBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 10 SkyBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_SkyBell::
+ItemUsable_SkyBell::
 Jump_016_4316:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -544,11 +544,11 @@ Jump_016_4316:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case08)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_WorldLeaf::
+ItemUsable_WorldLeaf::
 Func_016_432B:: ; address name
     ld a, [wD083]
     ld c, $55
@@ -559,10 +559,10 @@ Func_016_432B:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 13 ATKseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 13 ATKseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-ItemEffect_ATKseed::
+ItemUsable_ATKseed::
 Jump_016_433C:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -576,10 +576,10 @@ Jump_016_433C:: ; address name
     call Func_016_466A
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 14 DEFseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 14 DEFseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-ItemEffect_DEFseed::
+ItemUsable_DEFseed::
 Jump_016_4352:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -593,10 +593,10 @@ Jump_016_4352:: ; address name
     call Func_016_466A
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 15 AGLseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 15 AGLseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-ItemEffect_AGLseed::
+ItemUsable_AGLseed::
 Jump_016_4368:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -610,10 +610,10 @@ Jump_016_4368:: ; address name
     call Func_016_466A
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 16 INTseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 16 INTseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-ItemEffect_INTseed::
+ItemUsable_INTseed::
 Jump_016_437E:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -627,10 +627,10 @@ Jump_016_437E:: ; address name
     call Func_016_466A
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-ItemEffect_LifeAcorn::
+ItemUsable_LifeAcorn::
 Jump_016_4394:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -644,10 +644,10 @@ Jump_016_4394:: ; address name
     call Func_016_466A
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 18 MysticNut; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 18 MysticNut; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-ItemEffect_MysticNut::
+ItemUsable_MysticNut::
 Jump_016_43AA:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -661,11 +661,11 @@ Jump_016_43AA:: ; address name
     call Func_016_466A
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 19 Quest?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 19 Quest?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Quest::
+ItemUsable_Quest::
 Jump_016_43C0:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -679,11 +679,11 @@ Jump_016_43C0:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 20 Horror?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 20 Horror?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Horror::
+ItemUsable_Horror::
 Jump_016_43D6:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -697,11 +697,11 @@ Jump_016_43D6:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 21 BeNice?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 21 BeNice?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_BeNice::
+ItemUsable_BeNice::
 Jump_016_43EB:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -715,11 +715,11 @@ Jump_016_43EB:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 22 Cheater?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 22 Cheater?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Cheater::
+ItemUsable_Cheater::
 Jump_016_4401:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -733,11 +733,11 @@ Jump_016_4401:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 23 Smart?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 23 Smart?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Smart::
+ItemUsable_Smart::
 Jump_016_4416:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -751,11 +751,11 @@ Jump_016_4416:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 24 Comedy?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 24 Comedy?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wItemId
-ItemEffect_Comedy::
+ItemUsable_Comedy::
 Jump_016_442C:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
@@ -769,25 +769,25 @@ Jump_016_442C:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin, 29 BadMeat, 30 MeteOrb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin, 29 BadMeat, 30 MeteOrb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_BeefJerky::
+ItemUsable_BeefJerky::
 Jump_016_4441:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 31 BeastTail; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 31 BeastTail; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_BeastTail::
+ItemUsable_BeastTail::
 Jump_016_4446:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 2 call sites from 2 routines (e.g. Func_016_52C9_Case11, Func_016_52C9_Case0C)
 ; reads: wC901
 ; writes: wItemId
-ItemEffect_Repellent::
+ItemUsable_Repellent::
 Func_016_4447:: ; address name
     ld a, [wC901]
     and a, $7F
@@ -796,24 +796,24 @@ Func_016_4447:: ; address name
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 34 Mist?, 35 Friend?, 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?, 43 Bookmark; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 34 Mist?, 35 Friend?, 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?, 43 Bookmark; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_Mist::
+ItemUsable_Mist::
 Jump_016_4453:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 40 Warp?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 40 Warp?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case12)
-ItemEffect_Warp::
+ItemUsable_Warp::
 Func_016_4454:: ; address name
-    call ItemEffect_WarpWing
+    call ItemUsable_WarpWing
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 46 LogTwig; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, hFFD0, hMapId
 ; writes: wItemId
-ItemEffect_LogTwig::
+ItemUsable_LogTwig::
 Jump_016_4458:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -853,7 +853,7 @@ Jump_016_4469::
     ret
 
 Jump_016_449D::
-    farcall ItemEffect_LogTwig_Sub01
+    farcall ItemUsable_LogTwig_Sub01
     ldh a, [hFFD0]
     or a, a
     ret nz
@@ -861,11 +861,11 @@ Jump_016_449D::
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 41 WarpWing, 54 TidalBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 2 call sites from 2 routines (e.g. Func_016_52C9_Case13, ItemEffect_Warp)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 41 WarpWing, 54 TidalBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; 2 call sites from 2 routines (e.g. Func_016_52C9_Case13, ItemUsable_Warp)
 ; reads: wCC44, hMapId
 ; writes: wItemId
-ItemEffect_WarpWing::
+ItemUsable_WarpWing::
 Func_016_44AD:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -886,11 +886,11 @@ Jump_016_44BD::
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 42 ExitBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0F)
 ; reads: wCC44, hMapId
 ; writes: wItemId
-ItemEffect_ExitBell::
+ItemUsable_ExitBell::
 Func_016_44D0:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -915,23 +915,23 @@ Jump_016_44E6::
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 44 TinyMedal, 45 GoldPass; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 44 TinyMedal, 45 GoldPass; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_TinyMedal::
+ItemUsable_TinyMedal::
 Jump_016_44F9:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 47 (no name); item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 47 (no name); item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_Item2F::
+ItemUsable_Item2F::
 Jump_016_44FA:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 48 WaterCall; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 48 WaterCall; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wItemId
-ItemEffect_WaterCall::
+ItemUsable_WaterCall::
 Jump_016_44FB:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -979,11 +979,11 @@ Jump_016_4542::
 Jump_016_4547::
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerY, hPlayerFacing, hPlayerX
 ; writes: wItemId
-ItemEffect_MoonRock::
+ItemUsable_MoonRock::
 Jump_016_4548:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -1019,11 +1019,11 @@ Jump_016_457D::
 Jump_016_4582::
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 50 Crest; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 50 Crest; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wItemId
-ItemEffect_Crest::
+ItemUsable_Crest::
 Jump_016_4583:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -1060,17 +1060,17 @@ Jump_016_45BC::
 Jump_016_45C1::
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 51 YunaSoul; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 51 YunaSoul; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_YunaSoul::
+ItemUsable_YunaSoul::
 Jump_016_45C2:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 52 SleepHerb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wItemId
-ItemEffect_SleepHerb::
+ItemUsable_SleepHerb::
 Jump_016_45C3:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -1104,11 +1104,11 @@ Jump_016_45F4::
 Jump_016_45F9::
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, hMapId, hMapScreenY, wCB7E
 ; writes: wItemId
-ItemEffect_Change::
+ItemUsable_Change::
 Jump_016_45FA:: ; address name
     ld a, [wCC44]
     bit 7, a
@@ -1140,33 +1140,33 @@ Jump_016_4626::
     ld [wItemId], a
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 55 HarMirror, 56 Sky?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 55 HarMirror, 56 Sky?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_HarMirror::
+ItemUsable_HarMirror::
 Jump_016_462C:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_Heaven::
+ItemUsable_Heaven::
 Jump_016_462D:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 62 Accessory, 63 Accessory; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 62 Accessory, 63 Accessory; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_Accessory::
+ItemUsable_Accessory::
 Jump_016_462E:: ; address name
     ret
 
-; item-use handler reached through RunItemEffect (indexed by wItemId) for item(s) 64 VITbelt, 65 DracoBelt, 66 MagicBelt, 67 OddBelt, 68 StoneFang, 69 SteelFang, 70 MermScale, 71 DrakScale, 72 AGL?, 73 Starry? ...; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 64 VITbelt, 65 DracoBelt, 66 MagicBelt, 67 OddBelt, 68 StoneFang, 69 SteelFang, 70 MermScale, 71 DrakScale, 72 AGL?, 73 Starry? ...; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-ItemEffect_VITbelt::
+ItemUsable_VITbelt::
 Jump_016_462F:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret
 
 ; A = wD083, then CheckRecordFlag55Bit7 (E-0066)
-; 22 call sites from 22 routines (e.g. Func_016_4790, ItemEffect_VITbelt, ItemEffect_BeefJerky, ItemEffect_Comedy, ...)
+; 22 call sites from 22 routines (e.g. ItemApply_WorldDew_Sub01, ItemUsable_VITbelt, ItemUsable_BeefJerky, ItemUsable_Comedy, ...)
 ; reads: wD083
 ; writes: wItemId
 CheckWD083RecordFlag55Bit7::
@@ -1215,7 +1215,7 @@ Jump_016_4667::
 Jump_016_4669::
     ret
 
-; 6 call sites from 6 routines (e.g. ItemEffect_MysticNut, ItemEffect_LifeAcorn, ItemEffect_INTseed, ItemEffect_AGLseed, ...)
+; 6 call sites from 6 routines (e.g. ItemUsable_MysticNut, ItemUsable_LifeAcorn, ItemUsable_INTseed, ItemUsable_AGLseed, ...)
 ; reads: wD08F
 ; writes: wItemId
 ; points at: wC160
@@ -1248,124 +1248,126 @@ Jump_016_4688::
     ld [wItemId], a
     ret
 
+; returns when wItemId is $FF; otherwise jumps through a 95-entry table with one effect per item id. The Herb entry adds (wC5E7 after NextTableByte) / 11 + wD08F to record wD083 (Func_016_57D1) and then runs ConsumeSelectedItemByChance; CheckItemUsable is the matching usability check (E-0089)
 ; 3 call sites from 3 routines (e.g. Func_003_5253_Table4_Case0B, Func_003_5253_Table4_Case19, Func_003_5253_Table4_Case1D)
 ; reads: wItemId
-Func_016_468E::
+ApplyItemEffect::
+Func_016_468E:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret z
     ld a, [wItemId]
     rst $00
-    dw Func_016_468E_Case00
-    dw Func_016_468E_Case01
-    dw Func_016_468E_Case01
-    dw Func_016_468E_Case03
-    dw Func_016_468E_Case04
-    dw Func_016_468E_Case05
-    dw Func_016_468E_Case06
-    dw Func_016_468E_Case07
-    dw Func_016_468E_Case08
-    dw Func_016_468E_Case09
-    dw Func_016_468E_Case0A
-    dw Func_016_468E_Case0B
-    dw Func_016_468E_Case0C
-    dw Func_016_468E_Case0D
-    dw Func_016_468E_Case0E
-    dw Func_016_468E_Case0F
-    dw Func_016_468E_Case10
-    dw Func_016_468E_Case11
-    dw Func_016_468E_Case12
-    dw Func_016_468E_Case13
-    dw Func_016_468E_Case14
-    dw Func_016_468E_Case15
-    dw Func_016_468E_Case16
-    dw Func_016_468E_Case17
-    dw Func_016_468E_Case18
-    dw Func_016_468E_Case19
-    dw Func_016_468E_Case19
-    dw Func_016_468E_Case19
-    dw Func_016_468E_Case19
-    dw Func_016_468E_Case1D
-    dw Func_016_468E_Case1E
-    dw Func_016_468E_Case1F
-    dw Func_016_468E_Case20
-    dw Func_016_468E_Case21
-    dw Func_016_468E_Case22
-    dw Func_016_468E_Case22
-    dw Func_016_468E_Case22
-    dw Func_016_468E_Case22
-    dw Func_016_468E_Case22
-    dw Func_016_468E_Case22
-    dw Func_016_468E_Case28
-    dw Func_016_468E_Case29
-    dw Func_016_468E_Case2A
-    dw Func_016_468E_Case2B
-    dw Func_016_468E_Case2C
-    dw Func_016_468E_Case2C
-    dw Func_016_468E_Case2E
-    dw Func_016_468E_Case2F
-    dw Func_016_468E_Case30
-    dw Func_016_468E_Case31
-    dw Func_016_468E_Case32
-    dw Func_016_468E_Case33
-    dw Func_016_468E_Case34
-    dw Func_016_468E_Case35
-    dw Func_016_468E_Case36
-    dw Func_016_468E_Case37
-    dw Func_016_468E_Case37
-    dw Func_016_468E_Case37
-    dw Func_016_468E_Case37
-    dw Func_016_468E_Case37
-    dw Func_016_468E_Case37
-    dw Func_016_468E_Case37
-    dw Func_016_468E_Case3E
-    dw Func_016_468E_Case3E
-    dw Func_016_468E_Case40
-    dw Func_016_468E_Case41
-    dw Func_016_468E_Case42
-    dw Func_016_468E_Case43
-    dw Func_016_468E_Case44
-    dw Func_016_468E_Case45
-    dw Func_016_468E_Case46
-    dw Func_016_468E_Case47
-    dw Func_016_468E_Case48
-    dw Func_016_468E_Case49
-    dw Func_016_468E_Case4A
-    dw Func_016_468E_Case4B
-    dw Func_016_468E_Case4C
-    dw Func_016_468E_Case4C
-    dw Func_016_468E_Case4C
-    dw Func_016_468E_Case4C
-    dw Func_016_468E_Case4C
-    dw Func_016_468E_Case4C
-    dw Func_016_468E_Case4C
-    dw Func_016_468E_Case53
-    dw Func_016_468E_Case54
-    dw Func_016_468E_Case54
-    dw Func_016_468E_Case54
-    dw Func_016_468E_Case54
-    dw Func_016_468E_Case54
-    dw Func_016_468E_Case54
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case5A
-    dw Func_016_468E_Case62
+    dw ItemApply_Item00
+    dw ItemApply_Herb
+    dw ItemApply_Herb
+    dw ItemApply_WorldDew
+    dw ItemApply_Potion
+    dw ItemApply_ElfWater
+    dw ItemApply_Antidote
+    dw ItemApply_MoonHerb
+    dw ItemApply_Laurel
+    dw ItemApply_AwakeSand
+    dw ItemApply_SkyBell
+    dw ItemApply_SageRock
+    dw ItemApply_WorldLeaf
+    dw ItemApply_ATKseed
+    dw ItemApply_DEFseed
+    dw ItemApply_AGLseed
+    dw ItemApply_INTseed
+    dw ItemApply_LifeAcorn
+    dw ItemApply_MysticNut
+    dw ItemApply_Quest
+    dw ItemApply_Horror
+    dw ItemApply_BeNice
+    dw ItemApply_Cheater
+    dw ItemApply_Smart
+    dw ItemApply_Comedy
+    dw ItemApply_BeefJerky
+    dw ItemApply_BeefJerky
+    dw ItemApply_BeefJerky
+    dw ItemApply_BeefJerky
+    dw ItemApply_BadMeat
+    dw ItemApply_MeteOrb
+    dw ItemApply_BeastTail
+    dw ItemApply_Repellent
+    dw ItemApply_ShinyHarp
+    dw ItemApply_Mist
+    dw ItemApply_Mist
+    dw ItemApply_Mist
+    dw ItemApply_Mist
+    dw ItemApply_Mist
+    dw ItemApply_Mist
+    dw ItemApply_Warp
+    dw ItemApply_WarpWing
+    dw ItemApply_ExitBell
+    dw ItemApply_Bookmark
+    dw ItemApply_TinyMedal
+    dw ItemApply_TinyMedal
+    dw ItemApply_LogTwig
+    dw ItemApply_Item2F
+    dw ItemApply_WaterCall
+    dw ItemApply_MoonRock
+    dw ItemApply_Crest
+    dw ItemApply_YunaSoul
+    dw ItemApply_SleepHerb
+    dw ItemApply_Change
+    dw ItemApply_TidalBell
+    dw ItemApply_HarMirror
+    dw ItemApply_HarMirror
+    dw ItemApply_HarMirror
+    dw ItemApply_HarMirror
+    dw ItemApply_HarMirror
+    dw ItemApply_HarMirror
+    dw ItemApply_HarMirror
+    dw ItemApply_Accessory
+    dw ItemApply_Accessory
+    dw ItemApply_VITbelt
+    dw ItemApply_DracoBelt
+    dw ItemApply_MagicBelt
+    dw ItemApply_OddBelt
+    dw ItemApply_StoneFang
+    dw ItemApply_SteelFang
+    dw ItemApply_MermScale
+    dw ItemApply_DrakScale
+    dw ItemApply_AGL
+    dw ItemApply_Starry
+    dw ItemApply_Smart_4A1D
+    dw ItemApply_Wise
+    dw ItemApply_MagicCape
+    dw ItemApply_MagicCape
+    dw ItemApply_MagicCape
+    dw ItemApply_MagicCape
+    dw ItemApply_MagicCape
+    dw ItemApply_MagicCape
+    dw ItemApply_MagicCape
+    dw ItemApply_DScale
+    dw ItemApply_None
+    dw ItemApply_None
+    dw ItemApply_None
+    dw ItemApply_None
+    dw ItemApply_None
+    dw ItemApply_None
+    dw ItemApply_Life
+    dw ItemApply_Life
+    dw ItemApply_Life
+    dw ItemApply_Life
+    dw ItemApply_Life
+    dw ItemApply_Life
+    dw ItemApply_Life
+    dw ItemApply_Life
+    dw ItemApply_Item62
 
-; entry 0 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 0 (no name); the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case00::
+ItemApply_Item00::
 Jump_016_475E:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wD08F, wD083
-Func_016_468E_Case01::
+ItemApply_Herb::
 Jump_016_475F:: ; address name
     call NextTableByte
     ld a, [wC5E7]
@@ -1382,24 +1384,26 @@ Jump_016_475F:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 3 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case03::
+ItemApply_WorldDew::
 Jump_016_477D:: ; address name
     ld a, $00
-    call Func_016_4790
+    call ItemApply_WorldDew_Sub01
     ld a, $01
-    call Func_016_4790
+    call ItemApply_WorldDew_Sub01
     ld a, $02
-    call Func_016_4790
+    call ItemApply_WorldDew_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; 3 call sites from 1 routine (e.g. Func_016_468E_Case03)
+; only called from ItemApply_WorldDew (E-0047)
+; 3 call sites from 1 routine (e.g. ItemApply_WorldDew)
 ; reads: wD083
 ; writes: wD083
 ; points at: wC6FD
-Func_016_4790::
+ItemApply_WorldDew_Sub01::
+Func_016_4790:: ; address name
     ld hl, wC6FD
     cp a, [hl]
     ret nc
@@ -1415,10 +1419,10 @@ Func_016_4790::
     call Func_016_58FD
     ret
 
-; entry 4 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wD08F, wD083
-Func_016_468E_Case04::
+ItemApply_Potion::
 Jump_016_47B0:: ; address name
     call NextTableByte
     ld a, [wC5E7]
@@ -1435,10 +1439,10 @@ Jump_016_47B0:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 5 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 5 ElfWater; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-Func_016_468E_Case05::
+ItemApply_ElfWater::
 Jump_016_47CE:: ; address name
     ld a, [wD083]
     ld c, $61
@@ -1450,10 +1454,10 @@ Jump_016_47CE:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 6 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 6 Antidote; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-Func_016_468E_Case06::
+ItemApply_Antidote::
 Jump_016_47E5:: ; address name
     ld a, [wD083]
     ld c, $55
@@ -1462,10 +1466,10 @@ Jump_016_47E5:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 7 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 7 MoonHerb; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-Func_016_468E_Case07::
+ItemApply_MoonHerb::
 Jump_016_47F3:: ; address name
     ld a, [wD083]
     ld c, $55
@@ -1474,10 +1478,10 @@ Jump_016_47F3:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 8 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 8 Laurel; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-Func_016_468E_Case08::
+ItemApply_Laurel::
 Jump_016_4801:: ; address name
     ld a, [wD083]
     ld c, $55
@@ -1486,10 +1490,10 @@ Jump_016_4801:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 9 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 9 AwakeSand; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-Func_016_468E_Case09::
+ItemApply_AwakeSand::
 Jump_016_480F:: ; address name
     ld a, [wD083]
     ld c, $55
@@ -1498,10 +1502,10 @@ Jump_016_480F:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 10 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 10 SkyBell; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
-Func_016_468E_Case0A::
+ItemApply_SkyBell::
 Jump_016_481D:: ; address name
     ld a, [wD083]
     ld c, $55
@@ -1510,17 +1514,17 @@ Jump_016_481D:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 11 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 11 SageRock; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case0B::
+ItemApply_SageRock::
 Jump_016_482B:: ; address name
     ret
 
-; entry 12 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 12 WorldLeaf; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD083
 ; writes: wD095
-Func_016_468E_Case0C::
+ItemApply_WorldLeaf::
 Jump_016_482C:: ; address name
     ld a, [wD083]
     ld c, $55
@@ -1538,166 +1542,166 @@ Jump_016_482C:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 13 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 13 ATKseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case0D::
+ItemApply_ATKseed::
 Jump_016_4852:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_57FF
+    call ItemApply_ATKseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 14 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 14 DEFseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case0E::
+ItemApply_DEFseed::
 Jump_016_4862:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_580B
+    call ItemApply_DEFseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 15 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 15 AGLseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case0F::
+ItemApply_AGLseed::
 Jump_016_4872:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5817
+    call ItemApply_AGLseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 16 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 16 INTseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case10::
+ItemApply_INTseed::
 Jump_016_4882:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5823
+    call ItemApply_INTseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 17 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case11::
+ItemApply_LifeAcorn::
 Jump_016_4892:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_582F
+    call ItemApply_LifeAcorn_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 18 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 18 MysticNut; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case12::
+ItemApply_MysticNut::
 Jump_016_48A2:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_583B
+    call ItemApply_MysticNut_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 19 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 19 Quest?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case13::
+ItemApply_Quest::
 Jump_016_48B2:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5847
+    call ItemApply_Quest_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 20 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 20 Horror?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case14::
+ItemApply_Horror::
 Jump_016_48C2:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5852
+    call ItemApply_Horror_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 21 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 21 BeNice?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case15::
+ItemApply_BeNice::
 Jump_016_48D2:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_585D
+    call ItemApply_BeNice_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 22 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 22 Cheater?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case16::
+ItemApply_Cheater::
 Jump_016_48E2:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5868
+    call ItemApply_Cheater_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 23 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 23 Smart?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case17::
+ItemApply_Smart::
 Jump_016_48F2:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_5873
+    call ItemApply_Smart_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 24 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 24 Comedy?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case18::
+ItemApply_Comedy::
 Jump_016_4902:: ; address name
     ld a, [wD08F]
     ld l, a
     ld h, $00
     ld a, [wD083]
-    call Func_016_587E
+    call ItemApply_Comedy_Sub01
     call ConsumeSelectedItemByChance
     ret
 
-; entry 25 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case19::
+ItemApply_BeefJerky::
 Jump_016_4912:: ; address name
     ld a, [wD08F]
     ld l, a
@@ -1707,10 +1711,10 @@ Jump_016_4912:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 29 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 29 BadMeat; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08F, wD083
-Func_016_468E_Case1D::
+ItemApply_BadMeat::
 Jump_016_4922:: ; address name
     ld a, [wD08F]
     ld l, a
@@ -1724,159 +1728,159 @@ Jump_016_4922:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 30 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 30 MeteOrb; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case1E::
+ItemApply_MeteOrb::
 Jump_016_493C:: ; address name
     ret
 
-; entry 31 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 31 BeastTail; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case1F::
+ItemApply_BeastTail::
 Jump_016_493D:: ; address name
     ret
 
-; entry 32 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 32 Repellent; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD091
-Func_016_468E_Case20::
+ItemApply_Repellent::
 Jump_016_493E:: ; address name
     ld a, $C8
     ld [wD091], a
     call ConsumeSelectedItemByChance
     ret
 
-; entry 33 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 33 ShinyHarp; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case21::
+ItemApply_ShinyHarp::
 Jump_016_4947:: ; address name
     ld a, $01
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; entry 34 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 34 Mist?, 35 Friend?, 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case22::
+ItemApply_Mist::
 Jump_016_4950:: ; address name
     ret
 
-; entry 40 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 40 Warp?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case28::
+ItemApply_Warp::
 Jump_016_4951:: ; address name
     ld a, $02
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; entry 41 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 41 WarpWing; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case29::
+ItemApply_WarpWing::
 Jump_016_495A:: ; address name
     ld a, $03
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; entry 42 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 42 ExitBell; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case2A::
+ItemApply_ExitBell::
 Jump_016_4963:: ; address name
     ld a, $04
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; entry 43 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 43 Bookmark; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case2B::
+ItemApply_Bookmark::
 Jump_016_496C:: ; address name
     call ConsumeSelectedItemByChance
     ret
 
-; entry 44 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 44 TinyMedal, 45 GoldPass; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case2C::
+ItemApply_TinyMedal::
 Jump_016_4970:: ; address name
     ret
 
-; entry 46 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 46 LogTwig; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case2E::
+ItemApply_LogTwig::
 Jump_016_4971:: ; address name
     ld a, $09
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; entry 47 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 47 (no name); the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case2F::
+ItemApply_Item2F::
 Jump_016_497A:: ; address name
     ret
 
-; entry 48 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 48 WaterCall; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case30::
+ItemApply_WaterCall::
 Jump_016_497B:: ; address name
     ld a, $05
     ld [wDataBankSave], a
     ret
 
-; entry 49 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 49 MoonRock; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case31::
+ItemApply_MoonRock::
 Jump_016_4981:: ; address name
     ld a, $06
     ld [wDataBankSave], a
     ret
 
-; entry 50 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 50 Crest; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case32::
+ItemApply_Crest::
 Jump_016_4987:: ; address name
     ld a, $07
     ld [wDataBankSave], a
     ret
 
-; entry 51 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 51 YunaSoul; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case33::
+ItemApply_YunaSoul::
 Jump_016_498D:: ; address name
     ret
 
-; entry 52 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 52 SleepHerb; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case34::
+ItemApply_SleepHerb::
 Jump_016_498E:: ; address name
     ld a, $08
     ld [wDataBankSave], a
     ret
 
-; entry 53 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 53 Change?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave
-Func_016_468E_Case35::
+ItemApply_Change::
 Jump_016_4994:: ; address name
     ld a, $0A
     ld [wDataBankSave], a
     ret
 
-; entry 54 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 54 TidalBell; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC832
 ; writes: wC832
-Func_016_468E_Case36::
+ItemApply_TidalBell::
 Jump_016_499A:: ; address name
     ld a, [wC832]
     add a, $32
@@ -1892,21 +1896,21 @@ Jump_016_49A9::
     ld [wC832], a
     ret
 
-; entry 55 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 55 HarMirror, 56 Sky?, 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case37::
+ItemApply_HarMirror::
 Jump_016_49AD:: ; address name
     ret
 
-; entry 62 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 62 Accessory, 63 Accessory; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case3E::
+ItemApply_Accessory::
 Jump_016_49AE:: ; address name
     ret
 
-; entry 64 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 64 VITbelt; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case40::
+ItemApply_VITbelt::
 Jump_016_49AF:: ; address name
     ld a, $1E
     ld c, $5D
@@ -1914,9 +1918,9 @@ Jump_016_49AF:: ; address name
     call Func_016_4A48
     ret
 
-; entry 65 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 65 DracoBelt; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case41::
+ItemApply_DracoBelt::
 Jump_016_49BA:: ; address name
     ld a, $50
     ld c, $5D
@@ -1924,9 +1928,9 @@ Jump_016_49BA:: ; address name
     call Func_016_4A48
     ret
 
-; entry 66 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 66 MagicBelt; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case42::
+ItemApply_MagicBelt::
 Jump_016_49C5:: ; address name
     ld a, $1E
     ld c, $61
@@ -1934,9 +1938,9 @@ Jump_016_49C5:: ; address name
     call Func_016_4A48
     ret
 
-; entry 67 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 67 OddBelt; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case43::
+ItemApply_OddBelt::
 Jump_016_49D0:: ; address name
     ld a, $50
     ld c, $61
@@ -1944,9 +1948,9 @@ Jump_016_49D0:: ; address name
     call Func_016_4A48
     ret
 
-; entry 68 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 68 StoneFang; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case44::
+ItemApply_StoneFang::
 Jump_016_49DB:: ; address name
     ld a, $0A
     ld c, $63
@@ -1954,9 +1958,9 @@ Jump_016_49DB:: ; address name
     call Func_016_4A48
     ret
 
-; entry 69 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 69 SteelFang; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case45::
+ItemApply_SteelFang::
 Jump_016_49E6:: ; address name
     ld a, $32
     ld c, $63
@@ -1964,9 +1968,9 @@ Jump_016_49E6:: ; address name
     call Func_016_4A48
     ret
 
-; entry 70 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 70 MermScale; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case46::
+ItemApply_MermScale::
 Jump_016_49F1:: ; address name
     ld a, $0A
     ld c, $65
@@ -1974,9 +1978,9 @@ Jump_016_49F1:: ; address name
     call Func_016_4A48
     ret
 
-; entry 71 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 71 DrakScale; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case47::
+ItemApply_DrakScale::
 Jump_016_49FC:: ; address name
     ld a, $32
     ld c, $65
@@ -1984,9 +1988,9 @@ Jump_016_49FC:: ; address name
     call Func_016_4A48
     ret
 
-; entry 72 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 72 AGL?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case48::
+ItemApply_AGL::
 Jump_016_4A07:: ; address name
     ld a, $0A
     ld c, $67
@@ -1994,9 +1998,9 @@ Jump_016_4A07:: ; address name
     call Func_016_4A48
     ret
 
-; entry 73 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 73 Starry?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case49::
+ItemApply_Starry::
 Jump_016_4A12:: ; address name
     ld a, $32
     ld c, $67
@@ -2004,9 +2008,9 @@ Jump_016_4A12:: ; address name
     call Func_016_4A48
     ret
 
-; entry 74 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 74 Smart?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case4A::
+ItemApply_Smart_4A1D::
 Jump_016_4A1D:: ; address name
     ld a, $32
     ld c, $69
@@ -2014,9 +2018,9 @@ Jump_016_4A1D:: ; address name
     call Func_016_4A48
     ret
 
-; entry 75 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 75 Wise?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case4B::
+ItemApply_Wise::
 Jump_016_4A28:: ; address name
     ld a, $64
     ld c, $69
@@ -2024,16 +2028,16 @@ Jump_016_4A28:: ; address name
     call Func_016_4A48
     ret
 
-; entry 76 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 76 MagicCape, 77 DracoCape, 78 SilvrCape, 79 GoldCape, 80 PltnmCape, 81 OrcaCape, 82 BraveCape; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case4C::
+ItemApply_MagicCape::
 Jump_016_4A33:: ; address name
     call Func_016_4A48
     ret
 
-; entry 83 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 83 D-Scale; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case53::
+ItemApply_DScale::
 Jump_016_4A37:: ; address name
     ld a, $05
     ld c, $65
@@ -2041,26 +2045,26 @@ Jump_016_4A37:: ; address name
     call Func_016_4A48
     ret
 
-; entry 84 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 84 None, 85 None, 86 None, 87 None, 88 None, 89 None; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case54::
+ItemApply_None::
 Jump_016_4A42:: ; address name
     ret
 
-; entry 90 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 90 Life?, 91 Divine?, 92 War?, 93 Mage?, 94 Fight?, 95 Sailor?, 96 Thief?, 97 Cleric?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case5A::
+ItemApply_Life::
 Jump_016_4A43:: ; address name
     call Func_016_4A48
     ret
 
-; entry 98 of the `rst $00` table in Func_016_468E
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 98 (no name); the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_468E_Case62::
+ItemApply_Item62::
 Jump_016_4A47:: ; address name
     ret
 
-; 15 call sites from 15 routines (e.g. Func_016_468E_Case5A, Func_016_468E_Case53, Func_016_468E_Case4C, Func_016_468E_Case4B, ...)
+; 15 call sites from 15 routines (e.g. ItemApply_Life, ItemApply_DScale, ItemApply_MagicCape, ItemApply_Wise, ...)
 ; reads: wD083, wItemId, wD082
 ; writes: hFFC6, wItemId
 ; points at: wInventory, wC160
@@ -2292,7 +2296,7 @@ Func_016_4A98_Case22::
 Jump_016_4B4C:: ; address name
     ret
 
-; 9 call sites from 9 routines (e.g. Func_016_468E_Case53, Func_016_468E_Case4B, Func_016_468E_Case4A, Func_016_468E_Case49, ...)
+; 9 call sites from 9 routines (e.g. ItemApply_DScale, ItemApply_Wise, ItemApply_Smart_4A1D, ItemApply_Starry, ...)
 ; reads: wD083, hFFC6
 ; writes: hFFC6
 Func_016_4B4D::
@@ -2317,7 +2321,7 @@ Jump_016_4B60::
     ld [hl], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_016_468E_Case43, Func_016_468E_Case42, Func_016_468E_Case41, Func_016_468E_Case40)
+; 4 call sites from 4 routines (e.g. ItemApply_OddBelt, ItemApply_MagicBelt, ItemApply_DracoBelt, ItemApply_VITbelt)
 ; reads: wD083, hFFC6
 ; writes: hFFC6
 Func_016_4B68::
@@ -2481,7 +2485,7 @@ Jump_016_4C18::
     ret
 
 ; advances the random table (NextTableByte), takes A = (wC5E8:wC5E7) mod 100 and, when A < wD087, sets wItemId = $FF, clears wInventory[wD082] to $FF and runs CompactInventory; otherwise returns with carry clear and nothing changed (E-0063)
-; 33 call sites from 33 routines (e.g. Func_016_4A48, Func_016_468E_Case2E, Func_016_468E_Case2B, Func_016_468E_Case2A, ...)
+; 33 call sites from 33 routines (e.g. Func_016_4A48, ItemApply_LogTwig, ItemApply_Bookmark, ItemApply_ExitBell, ...)
 ; reads: wC5E7, wC5E8, wD082
 ; writes: wItemId
 ; points at: wD087, wInventory
@@ -2750,7 +2754,7 @@ Jump_016_52D6::
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_52C9_Case00::
 Jump_016_52FF:: ; address name
-    call ItemEffect_Herb
+    call ItemUsable_Herb
     call Func_016_53CE
     ret
 
@@ -2758,7 +2762,7 @@ Jump_016_52FF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_52C9_Case03::
 Jump_016_5306:: ; address name
-    call ItemEffect_WorldDew
+    call ItemUsable_WorldDew
     call Func_016_53CE
     ret
 
@@ -2778,7 +2782,7 @@ Jump_016_530D:: ; address name
     jr Jump_016_5321
 
 Jump_016_531E::
-    call ItemEffect_Potion
+    call ItemUsable_Potion
 
 Jump_016_5321::
     call Func_016_53CE
@@ -2788,7 +2792,7 @@ Jump_016_5321::
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_52C9_Case08::
 Jump_016_5325:: ; address name
-    call ItemEffect_WorldLeaf
+    call ItemUsable_WorldLeaf
     call Func_016_53CE
     ret
 
@@ -2796,7 +2800,7 @@ Jump_016_5325:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_52C9_Case0A::
 Jump_016_532C:: ; address name
-    call ItemEffect_Antidote
+    call ItemUsable_Antidote
     call Func_016_53CE
     ret
 
@@ -2814,7 +2818,7 @@ Jump_016_5333:: ; address name
 ; writes: wD08D
 Func_016_52C9_Case0C::
 Jump_016_533A:: ; address name
-    call ItemEffect_Repellent
+    call ItemUsable_Repellent
     ld a, [wD082]
     cp a, $10
     jr z, Jump_016_5348
@@ -2837,7 +2841,7 @@ Jump_016_5355::
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_52C9_Case0F::
 Jump_016_5359:: ; address name
-    call ItemEffect_ExitBell
+    call ItemUsable_ExitBell
     call Func_016_53DA
     ret
 
@@ -2847,7 +2851,7 @@ Jump_016_5359:: ; address name
 ; writes: wItemId, wD08D
 Func_016_52C9_Case11::
 Jump_016_5360:: ; address name
-    call ItemEffect_Repellent
+    call ItemUsable_Repellent
     call Func_016_53DA
     ret z
     ld a, [wGoldHi]
@@ -2884,7 +2888,7 @@ Jump_016_5385::
 ; points at: wCC48
 Func_016_52C9_Case12::
 Jump_016_5398:: ; address name
-    call ItemEffect_Warp
+    call ItemUsable_Warp
     call Func_016_53DA
     ret z
     ld a, [wCC47]
@@ -2920,7 +2924,7 @@ Jump_016_53C6::
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_52C9_Case13::
 Jump_016_53C7:: ; address name
-    call ItemEffect_WarpWing
+    call ItemUsable_WarpWing
     call Func_016_53DA
     ret
 
@@ -3648,7 +3652,7 @@ Jump_016_57C6::
     add_a_to_hl
     ret
 
-; 2 call sites from 2 routines (e.g. Func_016_56AF, Func_016_468E_Case01)
+; 2 call sites from 2 routines (e.g. Func_016_56AF, ItemApply_Herb)
 Func_016_57D1::
     push af
     push hl
@@ -3666,7 +3670,7 @@ Func_016_57D1::
     call Func_016_58CC
     ret
 
-; 2 call sites from 2 routines (e.g. Func_016_56CC, Func_016_468E_Case04)
+; 2 call sites from 2 routines (e.g. Func_016_56CC, ItemApply_Potion)
 Func_016_57E8::
     push af
     push hl
@@ -3684,103 +3688,127 @@ Func_016_57E8::
     call Func_016_58CC
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case0D)
-Func_016_57FF::
+; only called from ItemApply_ATKseed (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_ATKseed)
+ItemApply_ATKseed_Sub01::
+Func_016_57FF:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $63
     ld de, $03E7
     call Func_016_58AD
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case0E)
-Func_016_580B::
+; only called from ItemApply_DEFseed (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_DEFseed)
+ItemApply_DEFseed_Sub01::
+Func_016_580B:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $65
     ld de, $03E7
     call Func_016_58AD
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case0F)
-Func_016_5817::
+; only called from ItemApply_AGLseed (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_AGLseed)
+ItemApply_AGLseed_Sub01::
+Func_016_5817:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $67
     ld de, $03E7
     call Func_016_58AD
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case10)
-Func_016_5823::
+; only called from ItemApply_INTseed (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_INTseed)
+ItemApply_INTseed_Sub01::
+Func_016_5823:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $69
     ld de, $03E7
     call Func_016_58AD
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case11)
-Func_016_582F::
+; only called from ItemApply_LifeAcorn (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_LifeAcorn)
+ItemApply_LifeAcorn_Sub01::
+Func_016_582F:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $5D
     ld de, $03E7
     call Func_016_58AD
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case12)
-Func_016_583B::
+; only called from ItemApply_MysticNut (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_MysticNut)
+ItemApply_MysticNut_Sub01::
+Func_016_583B:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $61
     ld de, $03E7
     call Func_016_58AD
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case13)
-Func_016_5847::
+; only called from ItemApply_Quest (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_Quest)
+ItemApply_Quest_Sub01::
+Func_016_5847:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $6F
     ld e, $FF
     call Func_016_5897
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case14)
-Func_016_5852::
+; only called from ItemApply_Horror (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_Horror)
+ItemApply_Horror_Sub01::
+Func_016_5852:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $6F
     ld e, $00
     call Func_016_58A2
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case15)
-Func_016_585D::
+; only called from ItemApply_BeNice (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_BeNice)
+ItemApply_BeNice_Sub01::
+Func_016_585D:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $70
     ld e, $FF
     call Func_016_5897
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case16)
-Func_016_5868::
+; only called from ItemApply_Cheater (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_Cheater)
+ItemApply_Cheater_Sub01::
+Func_016_5868:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $70
     ld e, $00
     call Func_016_58A2
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case17)
-Func_016_5873::
+; only called from ItemApply_Smart (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_Smart)
+ItemApply_Smart_Sub01::
+Func_016_5873:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $72
     ld e, $FF
     call Func_016_5897
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_468E_Case18)
-Func_016_587E::
+; only called from ItemApply_Comedy (E-0047)
+; 1 call site from 1 routine (e.g. ItemApply_Comedy)
+ItemApply_Comedy_Sub01::
+Func_016_587E:: ; address name
     call MapIndexViaWC6FEKeepHL
     ld c, $72
     ld e, $00
     call Func_016_58A2
     ret
 
-; 2 call sites from 2 routines (e.g. Func_016_468E_Case1D, Func_016_468E_Case19)
+; 2 call sites from 2 routines (e.g. ItemApply_BadMeat, ItemApply_BeefJerky)
 Func_016_5889::
     call MapIndexViaWC6FEKeepHL
     push hl
@@ -3790,7 +3818,7 @@ Func_016_5889::
     call Func_016_58E0
     ret
 
-; 3 call sites from 3 routines (e.g. Func_016_5873, Func_016_585D, Func_016_5847)
+; 3 call sites from 3 routines (e.g. ItemApply_Smart_Sub01, ItemApply_BeNice_Sub01, ItemApply_Quest_Sub01)
 Func_016_5897::
     push hl
     push de
@@ -3800,7 +3828,7 @@ Func_016_5897::
     call Func_016_58B8
     ret
 
-; 3 call sites from 3 routines (e.g. Func_016_587E, Func_016_5868, Func_016_5852)
+; 3 call sites from 3 routines (e.g. ItemApply_Comedy_Sub01, ItemApply_Cheater_Sub01, ItemApply_Horror_Sub01)
 Func_016_58A2::
     push hl
     push de
@@ -3810,7 +3838,7 @@ Func_016_58A2::
     call Func_016_58C2
     ret
 
-; 6 call sites from 6 routines (e.g. Func_016_583B, Func_016_582F, Func_016_5823, Func_016_5817, ...)
+; 6 call sites from 6 routines (e.g. ItemApply_MysticNut_Sub01, ItemApply_LifeAcorn_Sub01, ItemApply_INTseed_Sub01, ItemApply_AGLseed_Sub01, ...)
 Func_016_58AD::
     push hl
     push de
@@ -3903,7 +3931,7 @@ Func_016_58F6:: ; heuristic: follows a terminator; C0
     ld [hl], c
     ret
 
-; 5 call sites from 5 routines (e.g. Func_016_54AD, Func_016_543E, Func_016_468E_Case0C, Func_016_468E_Case05, ...)
+; 5 call sites from 5 routines (e.g. Func_016_54AD, Func_016_543E, ItemApply_WorldLeaf, ItemApply_ElfWater, ...)
 Func_016_58FD::
     push hl
     call SRAMRecordAddressMapped
@@ -3914,7 +3942,7 @@ Func_016_58FD::
     ret
 
 ; MapIndexViaWC6FE with HL preserved (E-0072)
-; 13 call sites from 13 routines (e.g. Func_016_5889, Func_016_587E, Func_016_5873, Func_016_5868, ...)
+; 13 call sites from 13 routines (e.g. Func_016_5889, ItemApply_Comedy_Sub01, ItemApply_Smart_Sub01, ItemApply_Cheater_Sub01, ...)
 MapIndexViaWC6FEKeepHL::
 Func_016_5906:: ; address name
     push hl
