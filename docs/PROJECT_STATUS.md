@@ -55,6 +55,23 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code; the cartridge header (`$0104-$014F`) is an INCBIN slice, not annotated.
 
+## Readability state (2026-10-09, after E-0027)
+
+Binary identity still passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, repeated clean builds); 102 tests pass. Readability measures from the generated `src/`, none of them a claim about game meaning:
+
+| Measure | State |
+| --- | --- |
+| Call sites that reach a named routine | 38% of 21,739 (evidence-named; about 5,000 routines remain address-named) |
+| Hardware, VRAM and RAM operands with names | 54,500; only 29 RAM names carry evidence, the rest are address names (`wC52B`) |
+| Far calls as `farcall` macros | 3,775 |
+| Idiom macros | `add_a_to_hl` 1,744, `deref_hl` 219 (E-0027) |
+| Library routine families named across banks | 29 families (`config/name_families.json`) |
+| Text rendered as strings | 2,531 runs, 331,955 bytes (E-0024); `--no-text` keeps it as `INCBIN` |
+| String display entry points | named, including 38 per-bank stubs (E-0026, E-0027) |
+| Sound tracks decoded | 214 tracks; the engine's tick routine is not decoded |
+
+Not done: most game logic (battle, menus, map, monster data) is unnamed; roughly 1.2 MB of `INCBIN` data (much of it probably compressed graphics) is unidentified; banks `$4A`-`$4D` hold 20x18 grids of unknown meaning. No external RAM map for this game was found (a web search turned up only a few addresses from a Japanese-version speedrun note), so names come from reading the code.
+
 ## Inventory and verification (historical, session 1)
 
 
