@@ -870,22 +870,27 @@ class Rom:
         return out
 
     def routine_extent(self, bank: int, addr: int) -> int | None:
-        """Length in bytes of the self-contained leaf routine at `addr`, or None.
+        """Length in bytes of the self-contained routine at `addr`, or None.
 
-        The routine ends at the first `ret` that no forward `jr` in it jumps past. It must contain
-        no call, jump or restart (so the same bytes behave the same in any bank) and no branch out
-        of its own bytes."""
+        The routine ends at the first `ret` or `jp` that no forward branch in it jumps past. Its
+        bytes mean the same in every bank when every branch stays inside them, and every call or
+        jump that leaves them lands in bank 0 (fixed in every bank) or is a restart. A call or
+        jump into the switchable window would reach different code in another bank."""
         ins, pc, far, start = self.insn[bank], addr, addr, addr
-        while pc in ins and not isinstance(ins[pc][0], str) and pc - start < 256:
+        while pc in ins and not isinstance(ins[pc][0], str) and pc - start < 400:
             n, _text, kind, tgt = ins[pc]
-            if kind in ("call", "callc", "jp", "jpc", "jphl", "rst", "bad"):
+            if kind in ("jphl", "bad"):
                 return None
+            if kind in ("call", "callc", "jp", "jpc") and tgt >= 0x4000:
+                if kind in ("call", "callc") or not start <= tgt < start + 400:
+                    return None
+                far = max(far, tgt)
             if kind in ("jr", "jrc"):
                 if tgt < start:
                     return None
                 far = max(far, tgt)
             pc += n
-            if kind == "ret" and pc > far:
+            if kind in ("ret", "jp") and pc > far:
                 return pc - start
         return None
 

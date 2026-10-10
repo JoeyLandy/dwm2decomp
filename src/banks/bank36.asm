@@ -2860,7 +2860,7 @@ Jump_036_53C4::
 ; reads: wD8A6
 ; writes: wD86A
 Func_036_53C6::
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B5
     swap a
     and a, $03
@@ -3026,7 +3026,7 @@ Jump_036_54A5::
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_54A7:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B5
     rrca
     rrca
@@ -3118,7 +3118,7 @@ Jump_036_5520::
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5522:: ; heuristic: follows a terminator; C0
     call Func_036_5013
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61A6
     swap a
     and a, $03
@@ -3128,7 +3128,7 @@ Func_036_5522:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5533:: ; heuristic: follows a terminator; C0
     call Func_036_5013
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     rlca
     rlca
@@ -3139,7 +3139,7 @@ Func_036_5533:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5544:: ; heuristic: follows a terminator; C0
     call Func_036_5013
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     swap a
     and a, $03
@@ -3149,7 +3149,7 @@ Func_036_5544:: ; heuristic: follows a terminator; C0
 ; no direct call (reached through a table, a jump or a vector)
 Func_036_5555:: ; heuristic: follows a terminator; C0
     call Func_036_5013
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     rrca
     rrca
@@ -3288,7 +3288,7 @@ Func_036_55FB::
     ld a, [wD8A6]
     cp a, $82
     jr z, Jump_036_5611
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     and a, $03
     call Func_036_65B6
@@ -3316,7 +3316,7 @@ Jump_036_5622::
 ; 1 call site from 1 routine (e.g. Func_036_6EFC)
 ; writes: wD86A
 Func_036_5626:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B0
     rrca
     rrca
@@ -3437,7 +3437,7 @@ Jump_036_56C3::
 
 ; 1 call site from 1 routine (e.g. Func_036_6F96)
 Func_036_56CB:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B0
     and a, $03
     call Func_036_65B6
@@ -3453,7 +3453,7 @@ Jump_036_56DC::
 ; 1 call site from 1 routine (e.g. Func_036_6FC1)
 ; reads: wD8A6
 Func_036_56E0:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B5
     rlca
     rlca
@@ -3741,7 +3741,7 @@ Jump_036_58F9::
     ld [wD872], a
     ld a, h
     ld [wD873], a
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_51FC
     ret
 
@@ -3803,7 +3803,7 @@ Jump_036_595E::
     ld [wD872], a
     ld a, h
     ld [wD873], a
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_51FC
     ret
 
@@ -3878,7 +3878,7 @@ Jump_036_59D3::
     ld [wD872], a
     ld a, h
     ld [wD873], a
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_520A
     ret
 
@@ -3928,7 +3928,7 @@ Jump_036_5A3E::
     ld [wD873], a
 
 Jump_036_5A5E::
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61AB
     rlca
     rlca
@@ -3958,7 +3958,7 @@ Func_036_5A7A:: ; heuristic: follows a terminator; C0
     ld [wD872], a
     ld a, h
     ld [wD873], a
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B5
     and a, $03
     call Func_036_621C
@@ -3968,7 +3968,7 @@ Func_036_5A7A:: ; heuristic: follows a terminator; C0
 ; reads: wD8A4, wC58A, wCFC5, wD8A5, wD872, wD873
 ; writes: wD872, wD873
 Func_036_5A98:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B5
     and a, $03
     call Func_036_61D6
@@ -4036,7 +4036,7 @@ Jump_036_5AF5::
 
 ; 1 call site from 1 routine (e.g. Func_036_7434)
 Func_036_5B02:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61BF
     swap a
     and a, $03
@@ -4056,7 +4056,7 @@ Jump_036_5B15::
 Func_036_5B19:: ; heuristic: follows a terminator; C0
     call Func_036_6141
     jp z, Jump_036_613D
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B0
     swap a
     and a, $03
@@ -4094,7 +4094,7 @@ Jump_036_5B56::
 ; 5 call sites from 5 routines (e.g. Func_036_5D91, Func_036_76F4, Func_036_76CD, Func_036_7645, ...)
 ; reads: wD8A6
 Func_036_5B5D:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61BF
     rrca
     rrca
@@ -4409,7 +4409,7 @@ Func_036_5D91:: ; heuristic: follows a terminator; C0
 
 ; 1 call site from 1 routine (e.g. Func_036_77B5)
 Func_036_5DA3:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61BF
     and a, $03
     call Func_036_65B6
@@ -4424,7 +4424,7 @@ Jump_036_5DB4::
 
 ; 1 call site from 1 routine (e.g. Func_036_77DE)
 Func_036_5DB8:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61C4
     rlca
     rlca
@@ -4470,7 +4470,7 @@ Jump_036_5DF5::
     ld [wD872], a
     ld a, h
     ld [wD873], a
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61C4
     swap a
     and a, $03
@@ -4483,7 +4483,7 @@ Jump_036_5DF5::
 Func_036_5ED8::
     call Func_036_6141
     jp z, Jump_036_613D
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B5
     and a, $03
     call Func_036_65B6
@@ -4776,7 +4776,7 @@ Jump_036_60CD::
 
 ; 3 call sites from 3 routines (e.g. Func_036_73EC, Func_032_5EAB, Func_03B_4D1C)
 Func_036_60D1::
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61BA
     and a, $03
     call Func_036_65B6
@@ -4796,7 +4796,7 @@ Jump_036_60E2::
 Func_036_60EB::
     call Func_036_6141
     jp z, Jump_036_613D
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61BF
     rlca
     rlca
@@ -4824,7 +4824,7 @@ Func_036_610D::
 
 ; 1 call site from 1 routine (e.g. Func_036_771B)
 Func_036_6116:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61A6
     swap a
     rrca
@@ -4835,7 +4835,7 @@ Func_036_6116:: ; heuristic: follows a terminator; C0
 
 ; 1 call site from 1 routine (e.g. Func_036_753C)
 Func_036_6126:: ; heuristic: follows a terminator; C0
-    call Func_036_6185
+    call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B0
     swap a
     and a, $03
@@ -4904,10 +4904,12 @@ Jump_036_617F::
     ld [wD86A], a
     call Func_036_618F
 
+; HL = wD814 + 9 * [wD8A5] (AddAx9ToHL); A = [wD8A5] (the same 10 bytes appear in 2 banks)
 ; 27 call sites from 27 routines (e.g. Func_036_55FB, Func_036_60D1, Func_036_60EB, Func_036_6116, ...)
 ; reads: wD8A5
 ; points at: wD814
-Func_036_6185::
+HLToWD814EntryOfWD8A5_Bank36::
+Func_036_6185:: ; address name
     ld a, [wD8A5]
     ld hl, wD814
     call AddAx9ToHL

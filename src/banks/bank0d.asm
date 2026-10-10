@@ -429,7 +429,7 @@ Jump_00D_4650::
     ld de, Data_00D_4FBD
     ld hl, wC370
     ld bc, $0803
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     ld a, [wC617]
     ld [wC8C0], a
     ld a, [wC618]
@@ -460,7 +460,7 @@ Jump_00D_4692::
     ld de, Data_00D_4FD5
     ld hl, wC364
     ld bc, $0B07
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140B
     ld de, $01CC
@@ -832,7 +832,7 @@ Func_00D_491A:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_5022
     ld hl, wC3BB
     ld bc, $0D09
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     farcall Func_01E_71E1
     ld a, [wD7B0]
     cp a, $02
@@ -1326,7 +1326,7 @@ Func_00D_4C17:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_50BD
     ld hl, wC410
     ld bc, $0805
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1592,10 +1592,12 @@ Func_00D_4DC7:: ; heuristic: follows a terminator; C0
     dec l
     ld bc, $016D
 
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
 ; 20 call sites from 15 routines (e.g. Func_00D_7352, Func_00D_71BD, Func_00D_6509, Func_00D_69B3, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_00D_4DCB::
+CopyRectTo20ByteRows_Bank0D::
+Func_00D_4DCB:: ; address name
     push hl
     push bc
 
@@ -2101,7 +2103,7 @@ Jump_00D_51B6::
     ld de, Data_00D_550A
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -2162,7 +2164,7 @@ Jump_00D_522B::
     ld de, Data_00D_552E
     ld hl, wC364
     ld bc, $0809
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     ld c, $05
     ld hl, $027A
     ld de, $00AE
@@ -2205,7 +2207,7 @@ Jump_00D_5280::
     ld de, Data_00D_5576
     ld hl, wC364
     ld bc, $0809
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -2650,7 +2652,7 @@ Jump_00D_563B::
     ld de, Data_00D_4FBD
     ld hl, wC370
     ld bc, $0803
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     ld a, [wC617]
     ld [wC8C0], a
     ld a, [wC618]
@@ -2681,7 +2683,7 @@ Jump_00D_567D::
     ld de, Data_00D_6189
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -2816,7 +2818,7 @@ Jump_00D_5766::
     ld de, Data_00D_61A7
     ld hl, wC3B8
     ld bc, $1009
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call Func_00D_60C3
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
@@ -3165,7 +3167,7 @@ Func_00D_5A05::
     ld de, Data_00D_6292
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_5A2F
@@ -3263,7 +3265,7 @@ Func_00D_5AB4:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_6189
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -4546,7 +4548,7 @@ Func_00D_6509::
     ld de, Data_00D_6EB7
     ld hl, wC36D
     ld bc, $0B03
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     ld a, [wC838]
     ld l, a
     ld a, [wC839]
@@ -4575,7 +4577,7 @@ Jump_00D_6541::
     ld de, Data_00D_6189
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -4662,7 +4664,7 @@ Jump_00D_65F2::
     ld de, Data_00D_6ED8
     ld hl, wC3B7
     ld bc, $1109
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call Func_00D_6DF2
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
@@ -4736,7 +4738,7 @@ Jump_00D_6678::
 Jump_00D_6681::
     ld hl, wC3CC
     ld bc, $0F07
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     ld a, $01
     ld [wD7F5], a
     call Func_00D_5C87
@@ -5104,7 +5106,7 @@ Func_00D_68FD:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_6189
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -5220,7 +5222,7 @@ Jump_00D_69C3::
 Jump_00D_69CC::
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call Func_00D_6D3E
     call Func_00D_6E88
     call BGMapAddressAtScroll_Bank0D
@@ -6220,7 +6222,7 @@ Func_00D_71BD:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_785E
     ld hl, wC36C
     ld bc, $0C05
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     pop af
     ld [wD7F1], a
     ld hl, wC386
@@ -6476,7 +6478,7 @@ Func_00D_7352:: ; heuristic: target of a pointer table; C0
     ld de, Data_00D_78B8
     ld hl, wC412
     ld bc, $0605
-    call Func_00D_4DCB
+    call CopyRectTo20ByteRows_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC

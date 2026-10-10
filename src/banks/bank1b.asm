@@ -1874,7 +1874,7 @@ Jump_01B_54CB::
     ld de, Data_01B_6483
     ld hl, wC3B4
     ld bc, $0F09
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     farcall Func_00D_60C3
     ld a, $0E
     ld [wStringIndex], a
@@ -1955,7 +1955,7 @@ Jump_01B_5588::
     ld de, Data_01B_650A
     ld hl, wC3C9
     ld bc, $0D07
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     ld a, $02
     ld [wD7F5], a
     farcall Func_00D_5C87
@@ -2194,7 +2194,7 @@ Jump_01B_574E::
     ld de, Data_01B_65E9
     ld hl, wC412
     ld bc, $0605
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -2852,15 +2852,15 @@ Jump_01B_5B3E::
     ld de, Data_01B_6483
     ld hl, wC364
     ld bc, $0F01
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     ld de, Data_01B_65CE
     ld hl, wC378
     ld bc, $0F01
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     ld de, Data_01B_64FB
     ld hl, wC38C
     ld bc, $0F01
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -2881,7 +2881,7 @@ Jump_01B_5B7E::
     ld de, Data_01B_65A6
     ld hl, wC410
     ld bc, $0805
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -2977,7 +2977,7 @@ Func_01B_5C3B:: ; heuristic: follows a terminator; C0
     ld de, Data_01B_65E9
     ld hl, wC412
     ld bc, $0605
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -3056,7 +3056,7 @@ Jump_01B_5CD3::
     ld de, Data_01B_65A6
     ld hl, wC410
     ld bc, $0805
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -3834,17 +3834,19 @@ Func_01B_6203::
     ld de, Data_01B_6565
     ld hl, wC412
     ld bc, $0105
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
     call Func_01B_6277
     ret
 
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0
 ; 24 call sites from 9 routines (e.g. Func_01B_5C3B, Func_01B_5A41, Func_01B_6203, Func_01B_53CE, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_01B_6232::
+CopyRectTo20ByteRows::
+Func_01B_6232:: ; address name
     push hl
     push bc
 
@@ -4608,11 +4610,11 @@ Func_01B_67A5::
     ld de, Data_01B_7738
     ld hl, wC434
     ld bc, $0501
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     ld de, Data_01B_773D
     ld hl, wC440
     ld bc, $0D02
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     pop af
     ld [wD7F1], a
     ld hl, wC443
@@ -4658,14 +4660,14 @@ Func_01B_6814::
     ld de, Data_01B_7757
     ld hl, wC36E
     ld bc, $0A07
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     jr Jump_01B_6835
 
 Jump_01B_6829::
     ld de, Data_01B_779D
     ld hl, wC36E
     ld bc, $0A09
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
 
 Jump_01B_6835::
     ld a, [wD781]
@@ -4834,7 +4836,7 @@ Jump_01B_6940::
     ld de, Data_01B_7847
     ld hl, wC410
     ld bc, $0805
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -5051,7 +5053,7 @@ Jump_01B_6B0B::
     ld de, Data_01B_78CB
     ld hl, wC412
     ld bc, $0605
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -5434,7 +5436,7 @@ Jump_01B_6DB3::
     ld de, Data_01B_78E9
     ld hl, wC3E7
     ld bc, $0907
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -5706,7 +5708,7 @@ Jump_01B_6FD8::
     ld de, Data_01B_78E9
     ld hl, wC3E7
     ld bc, $0907
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     call Func_01B_7449
     ld a, $01
     ld [wD7FA], a
@@ -5732,7 +5734,7 @@ Jump_01B_702D::
     ld de, Data_01B_7928
     ld hl, wC364
     ld bc, $080B
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_01B_786F
@@ -5826,7 +5828,7 @@ Jump_01B_70EA::
     ld de, Data_01B_7847
     ld hl, wC410
     ld bc, $0805
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     xor a, a
     ld [wD7AD], a
     ld a, [wD781]
@@ -6208,14 +6210,14 @@ Func_01B_7349::
     ld de, Data_01B_788F
     ld hl, wC412
     ld bc, $0605
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     jr Jump_01B_736A
 
 Jump_01B_735E::
     ld de, Data_01B_78AD
     ld hl, wC412
     ld bc, $0605
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
 
 Jump_01B_736A::
     call BGMapAddressAtScroll_Bank1B
@@ -6234,14 +6236,14 @@ Func_01B_7377::
     ld de, Data_01B_77F7
     ld hl, wC410
     ld bc, $0805
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
     jr Jump_01B_7398
 
 Jump_01B_738C::
     ld de, Data_01B_781F
     ld hl, wC410
     ld bc, $0805
-    call Func_01B_6232
+    call CopyRectTo20ByteRows
 
 Jump_01B_7398::
     ret

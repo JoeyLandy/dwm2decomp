@@ -290,7 +290,7 @@ Func_014_415D:: ; heuristic: target of a pointer table; C0
 Func_014_4160:: ; heuristic: target of a pointer table; C0
     ld hl, wC364
     ld bc, $0A09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     call Func_014_5910
     call BGMapAddressAtScroll_Bank14
     ld bc, $140B
@@ -1293,7 +1293,7 @@ Func_014_4794:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_47C0
     ld hl, wC410
     ld bc, $0805
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     call BGMapAddressAtScroll_Bank14
     ld bc, $140D
     ld de, $01CC
@@ -1530,7 +1530,7 @@ Func_014_4932:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_4965
     ld hl, wC410
     ld bc, $0801
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     ld c, $04
     ld hl, $028C
     ld de, $00C0
@@ -1571,7 +1571,7 @@ Func_014_497D:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_49AE
     ld hl, wC412
     ld bc, $0605
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     ld a, [wD786]
     ld b, $BC
 
@@ -1713,11 +1713,11 @@ Jump_014_4A75::
     ld de, Data_014_4AA8
     ld hl, wC364
     ld bc, $0A09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     ld de, Data_014_4B02
     ld hl, wC364
     ld bc, $080B
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     call BGMapAddressAtScroll_Bank14
     ld bc, $140D
     ld de, $01CC
@@ -1756,7 +1756,7 @@ Func_014_4B5A:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5B36
     ld hl, wC364
     ld bc, $080B
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1825,7 +1825,7 @@ Func_014_4BEA:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5B8E
     ld hl, wC36C
     ld bc, $0C09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     pop af
     ld [wD7F1], a
     farcall Func_01D_5B4D
@@ -1949,7 +1949,7 @@ Func_014_4CD0:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5AC4
     ld hl, wC364
     ld bc, $0A09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     call Func_014_5910
     ld a, [wD786]
     ld b, $C3
@@ -1992,7 +1992,7 @@ Func_014_4D2B:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5AC4
     ld hl, wC364
     ld bc, $0A09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     call Func_014_5910
     call BGMapAddressAtScroll_Bank14
     ld bc, $140B
@@ -2118,7 +2118,7 @@ Func_014_4E0E:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5B8E
     ld hl, wC36C
     ld bc, $0C09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     pop af
     ld [wD7F1], a
     farcall Func_015_7976
@@ -2286,7 +2286,7 @@ Func_014_4F51:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_4FAE
     ld hl, wC412
     ld bc, $0605
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     ld de, Data_01F_4230
     ld hl, vTiles2 + $700
     ld b, $1F
@@ -2668,7 +2668,7 @@ Func_014_525C:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5AC4
     ld hl, wC364
     ld bc, $0A09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     call Func_014_5910
     ld a, [wD786]
     ld b, $C3
@@ -2992,7 +2992,7 @@ Func_014_54B8:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5B8E
     ld hl, wC36C
     ld bc, $0C09
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     xor a, a
     ld [wD7F1], a
     farcall Func_01D_6AA5
@@ -3085,7 +3085,7 @@ Func_014_557D:: ; heuristic: target of a pointer table; C0
     ld de, Data_014_5595
     ld hl, wC40D
     ld bc, $0B01
-    call Func_014_5821
+    call CopyRectTo20ByteRows_Bank14
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3508,10 +3508,12 @@ Func_014_5800:: ; address name
     add_a_to_hl
     ret
 
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
 ; 15 call sites from 14 routines (e.g. Func_014_557D, Func_014_497D, Func_014_4160, Func_014_54B8, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_014_5821::
+CopyRectTo20ByteRows_Bank14::
+Func_014_5821:: ; address name
     push hl
     push bc
 

@@ -3708,7 +3708,7 @@ Jump_024_612C::
     ld de, Data_024_6B8B
     ld hl, wC364
     ld bc, $0A09
-    call Func_024_67FD
+    call CopyRectTo20ByteRows_Bank24
     call Func_024_68B0
     ld a, [wD781]
     inc a
@@ -3870,7 +3870,7 @@ Func_024_6269:: ; heuristic: target of a pointer table; C0
     ld de, Data_024_6C49
     ld hl, wC3DC
     ld bc, $0B07
-    call Func_024_67FD
+    call CopyRectTo20ByteRows_Bank24
     call Func_024_6944
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
@@ -3936,7 +3936,7 @@ Func_024_62C9:: ; heuristic: target of a pointer table; C0
     ld de, Data_024_6B8B
     ld hl, wC364
     ld bc, $0A09
-    call Func_024_67FD
+    call CopyRectTo20ByteRows_Bank24
     call Func_024_68B0
     ld a, [wD7AB]
     ld b, $BB
@@ -4133,7 +4133,7 @@ Func_024_6445:: ; heuristic: target of a pointer table; C0
     ld de, Data_024_6479
     ld hl, wC412
     ld bc, $0605
-    call Func_024_67FD
+    call CopyRectTo20ByteRows_Bank24
     ld a, [wD7AD]
     ld b, $BC
     ld hl, Data_024_6C9E
@@ -4405,7 +4405,7 @@ Func_024_6655:: ; heuristic: target of a pointer table; C0
     ld de, Data_024_6BE5
     ld hl, wC300
     ld bc, $1405
-    call Func_024_67FD
+    call CopyRectTo20ByteRows_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld de, $01A0
     add hl, de
@@ -4551,10 +4551,12 @@ Jump_024_67EA::
     ld [wC919], a
     ret
 
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
 ; 6 call sites from 6 routines (e.g. Func_024_6655, Func_024_68B0, Func_024_6445, Func_024_62C9, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_024_67FD::
+CopyRectTo20ByteRows_Bank24::
+Func_024_67FD:: ; address name
     push hl
     push bc
 
@@ -4721,7 +4723,7 @@ Func_024_68B0::
     ld de, Data_024_68EB
     ld hl, wC370
     ld bc, $0803
-    call Func_024_67FD
+    call CopyRectTo20ByteRows_Bank24
     ld a, [wC617]
     ld [wC8C0], a
     ld a, [wC618]

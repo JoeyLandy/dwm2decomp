@@ -703,7 +703,7 @@ Jump_0F0_4DF0::
     ld de, Data_0F0_663F
     ld hl, wC412
     ld bc, $0605
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
     ld de, $01CC
@@ -801,7 +801,7 @@ Jump_0F0_4EA4::
     ld de, Data_0F0_665D
     ld hl, wC410
     ld bc, $0805
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_0F0_6526
@@ -842,7 +842,7 @@ Jump_0F0_4EFE::
     ld de, Data_0F0_6617
     ld hl, wC410
     ld bc, $0805
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
     ld de, $01CC
@@ -898,7 +898,7 @@ Jump_0F0_4F64::
     ld de, Data_0F0_6685
     ld hl, wC410
     ld bc, $0805
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_0F0_6526
@@ -938,7 +938,7 @@ Jump_0F0_4FBB::
     ld de, Data_0F0_65FB
     ld hl, wC425
     ld bc, $0704
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     ld a, [wD7B7]
     ld b, $BC
     ld hl, Data_0F0_6522
@@ -1119,7 +1119,7 @@ Jump_0F0_50D7::
     ld de, Data_0F0_66AD
     ld hl, wC410
     ld bc, $0805
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
     ld de, $01CC
@@ -1157,7 +1157,7 @@ Jump_0F0_5155::
     ld de, Data_0F0_663F
     ld hl, wC412
     ld bc, $0605
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
     ld de, $01CC
@@ -2015,7 +2015,7 @@ Jump_0F0_5752::
     ld de, Data_0F0_68E6
     ld hl, wC364
     ld bc, $140D
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2575,7 +2575,7 @@ Jump_0F0_5B6F::
     ld de, Data_0F0_5BA0
     ld hl, wC36B
     ld bc, $0D09
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     ld a, [wD7B7]
     ld b, $BC
     ld hl, Data_0F0_6522
@@ -2626,7 +2626,7 @@ Jump_0F0_5C57::
     ld de, Data_0F0_6530
     ld hl, wC36B
     ld bc, $0D09
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     farcall Func_01E_71E1
     ld a, [wD7B0]
     cp a, $02
@@ -2738,7 +2738,7 @@ Jump_0F0_5D29::
     ld de, Data_0F0_5D51
     ld hl, wC411
     ld bc, $0701
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3228,7 +3228,7 @@ Jump_0F0_6129::
     ld de, Data_0F0_6530
     ld hl, wC36B
     ld bc, $0D09
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     farcall Func_01E_71E1
     jr Jump_0F0_6160
 
@@ -3259,7 +3259,7 @@ Jump_0F0_6160::
     ld de, Data_0F0_616E
     ld hl, wC410
     ld bc, $0801
-    call Func_0F0_62B8
+    call CopyRectTo20ByteRows_BankF0
     jr Jump_0F0_6158
 
 Data_0F0_616E:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3457,10 +3457,12 @@ Jump_0F0_62B0::
     ld [wD784], a
     ret
 
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
 ; 13 call sites from 5 routines (e.g. Func_0F0_4CA0, Func_0F0_5B50, Func_0F0_5E2C, Func_0F0_613D, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_0F0_62B8::
+CopyRectTo20ByteRows_BankF0::
+Func_0F0_62B8:: ; address name
     push hl
     push bc
 

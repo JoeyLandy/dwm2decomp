@@ -27,6 +27,9 @@
     {"canonical": "00:304F", "name": "NextBGMapColumn", "note": "L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF", "evidence": "reading"},
     {"canonical": "F1:57BA", "name": "CopyShortStringToWC8CF", "note": "Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator", "evidence": "reading"},
     {"canonical": "3B:50E2", "name": "BuildOamFromSpriteTable", "note": "DE = two-level table; entries are chosen by hFFAD and hFFAE; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hFFAB + b + $10, X = hFFA9 + b + 8, tile += hFFAF, flags ^= hFFB0) until a $80 byte or hOamNextEntry reaches $28 (40 entries)", "evidence": "reading"},
-    {"canonical": "A0:486D", "name": "AddWordAtHLToDE", "note": "DE += the word at [HL]; HL += 1 (ends on the high byte); clobbers A", "evidence": "reading"}
+    {"canonical": "A0:486D", "name": "AddWordAtHLToDE", "note": "DE += the word at [HL]; HL += 1 (ends on the high byte); clobbers A", "evidence": "reading"},
+    {"canonical": "0C:51BB", "name": "CopyRectTo20ByteRows", "note": "Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0", "evidence": "reading"},
+    {"canonical": "1B:6232", "name": "CopyRectTo20ByteRows", "note": "Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0", "evidence": "reading"},
+    {"canonical": "36:6185", "name": "HLToWD814EntryOfWD8A5", "note": "HL = wD814 + 9 * [wD8A5] (AddAx9ToHL); A = [wD8A5]", "evidence": "reading"}
   ]
 }

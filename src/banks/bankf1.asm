@@ -1740,7 +1740,7 @@ Jump_0F1_4D07::
     ld de, Data_0F1_5A36
     ld hl, wC36C
     ld bc, $0C05
-    call Func_0F1_5990
+    call CopyRectTo20ByteRows_BankF1
     pop af
     ld [wD7F1], a
     ld hl, wC386
@@ -2070,7 +2070,7 @@ Jump_0F1_4F6F::
     ld de, Data_0F1_5A90
     ld hl, wC3E7
     ld bc, $0907
-    call Func_0F1_5990
+    call CopyRectTo20ByteRows_BankF1
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
     ld de, $01CC
@@ -2209,7 +2209,7 @@ Jump_0F1_5067::
     ld de, Data_0F1_5A72
     ld hl, wC412
     ld bc, $0605
-    call Func_0F1_5990
+    call CopyRectTo20ByteRows_BankF1
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
     ld de, $01CC
@@ -3029,7 +3029,7 @@ Jump_0F1_56DC::
     ld de, Data_0F1_5A90
     ld hl, wC3E7
     ld bc, $0907
-    call Func_0F1_5990
+    call CopyRectTo20ByteRows_BankF1
     ld a, $0F
     ld [wStringIndex], a
     xor a, a
@@ -3440,10 +3440,12 @@ Func_0F1_5969::
     ld [rRAMG2], a
     ret
 
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
 ; 4 call sites from 3 routines (e.g. Func_0F1_4D4E, Func_0F1_5344, Func_0F1_4AD0)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_0F1_5990::
+CopyRectTo20ByteRows_BankF1::
+Func_0F1_5990:: ; address name
     push hl
     push bc
 

@@ -1643,7 +1643,7 @@ Func_03B_4A24:: ; heuristic: follows a terminator; C0
 
 ; 1 call site from 1 routine (e.g. Func_03B_4E1B)
 Func_03B_4A34::
-    call Func_03B_4A4C
+    call HLToWD814EntryOfWD8A5_Bank3B
     call Func_03B_4A60
     and a, $03
     call Func_03B_4A86
@@ -1659,10 +1659,12 @@ Func_03B_4A40::
     ld [wD873], a
     ret
 
+; HL = wD814 + 9 * [wD8A5] (AddAx9ToHL); A = [wD8A5] (the same 10 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_4A34)
 ; reads: wD8A5
 ; points at: wD814
-Func_03B_4A4C:: ; heuristic: follows a terminator; C0
+HLToWD814EntryOfWD8A5_Bank3B:: ; heuristic: follows a terminator; C0
+Func_03B_4A4C:: ; address name
     ld a, [wD8A5]
     ld hl, wD814
     call AddAx9ToHL
