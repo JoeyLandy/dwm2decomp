@@ -25,7 +25,7 @@ Func_0A1_4038:: ; address name
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A4
+; reads: wC58A, wC57F, wBattleActor
 Func_0A1_403F:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -33,18 +33,18 @@ Func_0A1_403F:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_0A1_4054
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
 Jump_0A1_4054::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A5
+; reads: wC58A, wC57F, wBattleTarget
 Func_0A1_405A:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -52,24 +52,24 @@ Func_0A1_405A:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_0A1_406F
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
 Jump_0A1_406F::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ret
     INCBIN "dwm2-cobi-us.gbc", $284075, $CA
 
 ; 1 call site from 1 routine (e.g. Func_0A0_5278_Case02)
-; reads: wC52B, wCFCA
+; reads: wC52B, wBattleSubPhase
 Func_0A1_413F::
     ld a, [wC52B]
     or a, a
     ret nz
-    ld a, [wCFCA]
+    ld a, [wBattleSubPhase]
     rst $00
     dw Func_0A1_413F_Case00
     dw Func_0A1_413F_Case01
@@ -81,14 +81,14 @@ Func_0A1_413F::
 
 ; entry 0 of the `rst $00` table in Func_0A1_413F
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594, wD8A4
-; points at: wDA5F, wCFCA
+; writes: wC594, wBattleActor
+; points at: wDA5F, wBattleSubPhase
 Func_0A1_413F_Case00::
 Jump_0A1_4156:: ; address name
     xor a, a
     ld [wC594], a
     xor a, a
-    ld [wD8A4], a
+    ld [wBattleActor], a
     ld bc, $0304
     ld hl, wDA5F
 
@@ -114,19 +114,19 @@ Jump_0A1_417F::
     inc c
     dec b
     jr nz, Jump_0A1_4164
-    ld hl, wCFCA
+    ld hl, wBattleSubPhase
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in Func_0A1_413F
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
-; writes: wD8A4, wCFCB
-; points at: wDA5B, wCFCA
+; reads: wBattleActor
+; writes: wBattleActor, wBattleResolveStep
+; points at: wDA5B, wBattleSubPhase
 Func_0A1_413F_Case01::
 Jump_0A1_418A:: ; address name
     call Func_000_3EDE
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $08
     jr z, Jump_0A1_41BC
     ld e, a
@@ -139,22 +139,22 @@ Jump_0A1_418A:: ; address name
 Jump_0A1_41A2::
     inc e
     ld a, e
-    ld [wD8A4], a
+    ld [wBattleActor], a
     jr Jump_0A1_41C2
 
 Jump_0A1_41A9::
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0A1_41A2
-    ld [wD8A4], a
-    ld hl, wCFCA
+    ld [wBattleActor], a
+    ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     jr Jump_0A1_41C2
 
 Jump_0A1_41BC::
-    ld hl, wCFCA
+    ld hl, wBattleSubPhase
     inc [hl]
     inc [hl]
     inc [hl]
@@ -171,24 +171,24 @@ Jump_0A1_41C3:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_0A1_413F
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
-; writes: wCFCA
-; points at: wDA1D, wDA5B, wD8A4
+; reads: wBattleActor
+; writes: wBattleSubPhase
+; points at: wDA1D, wDA5B, wBattleActor
 Func_0A1_413F_Case03::
 Jump_0A1_41CA:: ; address name
     farcall Func_039_4001
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
     add_a_to_hl
     ld d, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $02
     ld a, $01
-    ld [wCFCA], a
-    ld hl, wD8A4
+    ld [wBattleSubPhase], a
+    ld hl, wBattleActor
     inc [hl]
     ret
 
@@ -196,7 +196,7 @@ Jump_0A1_41CA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD871
 ; writes: wD89E, wD871, wD87A, wD87B
-; points at: wD895, wD868, wD87D, wDA5B, wD87A, wD871, wCFCA
+; points at: wD895, wD868, wD87D, wDA5B, wD87A, wD871, wBattleSubPhase
 Func_0A1_413F_Case04::
 Jump_0A1_41F4:: ; address name
     ld hl, wD895
@@ -254,15 +254,15 @@ Jump_0A1_4266::
     inc e
     dec d
     jp nz, Jump_0A1_422A
-    ld hl, wCFCA
+    ld hl, wBattleSubPhase
     inc [hl]
     ret
 
 ; entry 5 of the `rst $00` table in Func_0A1_413F
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD87A, wD87B, wD872, wD873, wD874, wD875, wD89E
-; writes: wD87A, wD87B, wD872, wD873, wD874, wD875, wD89E
-; points at: wD87D, wD87F, wD868, wD87A, wD895, wCFCA
+; reads: wD87A, wD87B, wBattleDamageLo, wD873, wD874, wD875, wD89E
+; writes: wD87A, wD87B, wBattleDamageLo, wD873, wD874, wD875, wD89E
+; points at: wD87D, wD87F, wD868, wD87A, wD895, wBattleSubPhase
 Func_0A1_413F_Case05::
 Jump_0A1_4270:: ; address name
     ld d, $08
@@ -284,7 +284,7 @@ Jump_0A1_4288::
     call CompareHLToBC
     jr c, Jump_0A1_42C2
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ld a, c
@@ -295,7 +295,7 @@ Jump_0A1_4288::
     ld l, a
     ld a, [wD87B]
     ld h, a
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld [hl+], a
     ld a, [wD873]
     ld [hl+], a
@@ -355,14 +355,14 @@ Jump_0A1_42F1::
 Jump_0A1_42FB::
     ld a, $00
     ld [wD89E], a
-    ld hl, wCFCA
+    ld hl, wBattleSubPhase
     inc [hl]
     ret
 
 ; entry 6 of the `rst $00` table in Func_0A1_413F
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD2C8, wD2C9, wD2CA, wD2CB, wCFCA
-; points at: wBattleHP, wBattleMaxHP, wBattleStep, wCFCB
+; writes: wD2C8, wD2C9, wD2CA, wD2CB, wBattleSubPhase
+; points at: wBattleHP, wBattleMaxHP, wBattleStep, wBattleResolveStep
 Func_0A1_413F_Case06::
 Jump_0A1_4305:: ; address name
     ld hl, wBattleHP
@@ -386,9 +386,9 @@ Jump_0A1_4305:: ; address name
     ld hl, wBattleStep
     inc [hl]
     xor a, a
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     ld bc, $0005
     call FillBytes
     farcall Func_0A3_4187

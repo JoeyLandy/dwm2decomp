@@ -409,7 +409,7 @@ Jump_0E2_430F::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_4310:: ; heuristic: follows a terminator; C0
     farcall Func_005_715F
     ld a, c
@@ -425,7 +425,7 @@ Func_0E2_4310:: ; heuristic: follows a terminator; C0
     call AccumulateBank6WordToDA70
 
 ; 1 call site from 1 routine (e.g. Func_0E2_438D)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_432D::
     farcall Func_005_44CF
     ld a, c
@@ -451,7 +451,7 @@ Jump_0E2_434D::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_435D::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_667F
     farcall Func_005_5397
     ld a, c
@@ -3178,7 +3178,7 @@ Jump_0E2_57A8::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_57A9:: ; heuristic: follows a terminator; C0
     farcall Func_005_77C7
     ld a, c
@@ -3226,7 +3226,7 @@ Jump_0E2_57F6::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5806::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_670B
     farcall Func_005_53CA
     ld a, c
@@ -3266,7 +3266,7 @@ Jump_0E2_5855::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_5856:: ; heuristic: follows a terminator; C0
     farcall Func_005_77E0
     ld a, c
@@ -3663,13 +3663,13 @@ Jump_0E2_5B3C::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     farcall Func_005_7975
     ld a, c
     and a, a
     ret z
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_66C5
     farcall Func_005_44CF
     ld a, c
@@ -4428,7 +4428,7 @@ Jump_0E2_60D3::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_60D7:: ; heuristic: follows a terminator; C0
     farcall Func_005_7BE6
     ld a, c
@@ -4436,7 +4436,7 @@ Func_0E2_60D7:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_656D
     farcall SetCToZero
     ld a, c
@@ -4502,7 +4502,7 @@ Jump_0E2_615C::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_6160:: ; heuristic: follows a terminator; C0
     farcall Func_005_7C69
     ld a, c
@@ -4510,7 +4510,7 @@ Func_0E2_6160:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67CF
     ret z
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_672D
     farcall SetCToZero
     ld a, c
@@ -4565,13 +4565,13 @@ Func_0E2_61C2:: ; heuristic: follows a terminator; C0
     jr Jump_0E2_619A
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_61CD:: ; heuristic: follows a terminator; C0
     farcall Func_005_7CC2
     ld a, c
     and a, a
     ret z
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_65B8
     call Func_0E2_6854
     ret
@@ -4632,7 +4632,7 @@ Jump_0E2_6248::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_6249:: ; heuristic: follows a terminator; C0
     farcall Func_005_7CF3
     ld a, c
@@ -4656,7 +4656,7 @@ Jump_0E2_6266::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_6276::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_6603
     farcall Func_005_53FA
     ld a, c
@@ -4729,13 +4729,13 @@ Jump_0E2_6302::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_6303:: ; heuristic: follows a terminator; C0
     farcall Func_005_7D95
     ld a, c
     and a, a
     ret z
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_6634
     farcall Func_005_5397
     ld a, c
@@ -4798,7 +4798,7 @@ Jump_0E2_6386::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_6387:: ; heuristic: follows a terminator; C0
     farcall Func_005_7DC2
     ld a, c
@@ -4812,7 +4812,7 @@ Func_0E2_6387:: ; heuristic: follows a terminator; C0
     call AccumulateBank6WordToDA70
 
 Jump_0E2_63A0::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_0E2_66C5
     farcall Func_005_5397
     ld a, c
@@ -5283,14 +5283,14 @@ Jump_0E2_6691::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_667F)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_6696::
     push bc
     farcall Func_005_5317
     ld a, c
     pop bc
     ld b, a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, c
     ld hl, Data_0E2_66B9
     jr z, Jump_0E2_66AC
@@ -5333,14 +5333,14 @@ Jump_0E2_66D7::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_66C5)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_66DC::
     push bc
     farcall Func_005_5317
     ld a, c
     pop bc
     ld b, a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, c
     ld hl, Data_0E2_66FF
     jr z, Jump_0E2_66F2
@@ -5378,7 +5378,7 @@ Func_0E2_670B::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; writes: hFFC6
 Func_0E2_6727:: ; heuristic: follows a terminator; C0
     dec e
@@ -5409,7 +5409,7 @@ Jump_0E2_673F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_672D)
-; reads: wD8A4
+; reads: wBattleActor
 Func_0E2_6744::
     push bc
     farcall Func_005_5317
@@ -5418,7 +5418,7 @@ Func_0E2_6744::
 
 Jump_0E2_674D::
     ld b, a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, c
     ld hl, Data_0E2_6767
     jr z, Jump_0E2_675A
@@ -5671,7 +5671,7 @@ Func_0E2_68E0:: ; address name
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A4
+; reads: wC58A, wC57F, wBattleActor
 Func_0E2_68E7:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -5679,18 +5679,18 @@ Func_0E2_68E7:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_0E2_68FC
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
 Jump_0E2_68FC::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A5
+; reads: wC58A, wC57F, wBattleTarget
 Func_0E2_6902:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -5698,13 +5698,13 @@ Func_0E2_6902:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_0E2_6917
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
 Jump_0E2_6917::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ret
     INCBIN "dwm2-cobi-us.gbc", $38A91D, $CA

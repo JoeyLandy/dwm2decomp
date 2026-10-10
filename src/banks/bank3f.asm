@@ -2,7 +2,7 @@ SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
     db $3F
 
 ; 1 call site from 1 routine (e.g. Func_03A_5383)
-; reads: wD801, wDAD2, wD88F, wD8A5, wD804, wDAB7
+; reads: wD801, wDAD2, wD88F, wBattleTarget, wD804, wDAB7
 ; writes: wD871, wD868
 ; points at: wD871, wD868, hSpriteOriginX
 Func_03F_4001::
@@ -14,7 +14,7 @@ Func_03F_4001::
     jr z, Func_03F_405B
     ld a, [wD88F]
     ld [wD871], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     ld [wD868], a
     call CarryUnlessWDA63SlotEmpty

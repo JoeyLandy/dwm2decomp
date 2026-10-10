@@ -1,49 +1,51 @@
 SECTION "Bank 36", ROMX[$4000], BANK[$36]
     db $36
 
+; jumps through a 16-entry table indexed by wBattleResolveStep (wCFCB): one step of resolving a battle action; the steps advance wBattleResolveStep and use wBattleSubStep (wCFCC) and wBattleSubStep2 (wCFCD) for nested state
 ; 2 call sites from 2 routines (e.g. Func_03A_6157_Case01, Func_03A_68C9_Case01)
-; reads: wCFCB
-Func_036_4001::
-    ld a, [wCFCB]
+; reads: wBattleResolveStep
+RunBattleResolveStep::
+Func_036_4001:: ; address name
+    ld a, [wBattleResolveStep]
     rst $00
-    dw Func_036_4001_Case00
-    dw Func_036_4001_Case01
-    dw Func_036_4001_Case02
-    dw Func_036_4001_Case03
-    dw Func_036_4001_Case04
-    dw Func_036_4001_Case05
-    dw Func_036_4001_Case06
-    dw Func_036_4001_Case07
-    dw Func_036_4001_Case08
-    dw Func_036_4001_Case09
-    dw Func_036_4001_Case0A
-    dw Func_036_4001_Case0B
-    dw Func_036_4001_Case0C
-    dw Func_036_4001_Case0D
-    dw Func_036_4001_Case0E
-    dw Func_036_4001_Case0F
+    dw RunBattleResolveStep_Case00
+    dw RunBattleResolveStep_Case01
+    dw RunBattleResolveStep_Case02
+    dw RunBattleResolveStep_Case03
+    dw RunBattleResolveStep_Case04
+    dw RunBattleResolveStep_Case05
+    dw RunBattleResolveStep_Case06
+    dw RunBattleResolveStep_Case07
+    dw RunBattleResolveStep_Case08
+    dw RunBattleResolveStep_Case09
+    dw RunBattleResolveStep_Case0A
+    dw RunBattleResolveStep_Case0B
+    dw ResolveStepApplyDamage
+    dw RunBattleResolveStep_Case0D
+    dw RunBattleResolveStep_Case0E
+    dw RunBattleResolveStep_Case0F
 
-; entry 0 of the `rst $00` table in Func_036_4001
+; entry 0 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDABD, wCFF3, wD8A5, wCFCC
-; writes: wCFCC, wC971
-; points at: wCFCB, wD854
-Func_036_4001_Case00::
+; reads: wDABD, wCFF3, wBattleTarget, wBattleSubStep
+; writes: wBattleSubStep, wC971
+; points at: wBattleResolveStep, wD854
+RunBattleResolveStep_Case00::
 Jump_036_4025:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     xor a, a
-    ld [wCFCC], a
+    ld [wBattleSubStep], a
     ld a, [wDABD]
     or a, a
     jr nz, Jump_036_4069
     ld a, [wCFF3]
     bit 7, a
     jr z, Jump_036_4069
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7F3C
     jr c, Jump_036_4069
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD854
     add a, a
     add_a_to_hl
@@ -59,28 +61,28 @@ Jump_036_4025:: ; address name
     ret
 
 Jump_036_4069::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD854
     add a, a
     add_a_to_hl
     res 5, [hl]
 
-; entry 1 of the `rst $00` table in Func_036_4001
+; entry 1 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFCC
-Func_036_4001_Case01::
+; reads: wBattleSubStep
+RunBattleResolveStep_Case01::
 Jump_036_4077:: ; address name
-    ld a, [wCFCC]
+    ld a, [wBattleSubStep]
     rst $00
-    dw Func_036_4001_Table2_Case00
-    dw Func_036_4001_Table2_Case01
+    dw RunBattleResolveStep_Table2_Case00
+    dw RunBattleResolveStep_Table2_Case01
 
-; entry 0 of the `rst $00` table in Func_036_4001
+; entry 0 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDABD, wCFF2, wCFF3, wD8A5, wD8A4, wDAC0
-; writes: wC981, wDAB2, wD8A5, wCFCC, wDABE, wDAC0
-; points at: wD80A, wDA1D, wCFCC, wCFCB, wD80E
-Func_036_4001_Table2_Case00::
+; reads: wDABD, wCFF2, wCFF3, wBattleTarget, wBattleActor, wDAC0
+; writes: wC981, wDAB2, wBattleTarget, wBattleSubStep, wDABE, wDAC0
+; points at: wD80A, wDA1D, wBattleSubStep, wBattleResolveStep, wD80E
+RunBattleResolveStep_Table2_Case00::
 Jump_036_407F:: ; address name
     xor a, a
     ld [wC981], a
@@ -89,14 +91,14 @@ Jump_036_407F:: ; address name
     jp nz, Jump_036_411F
     ld a, [wCFF2]
     cp a, $40
-    jp z, Func_036_4001_Table2_Case01
+    jp z, RunBattleResolveStep_Table2_Case01
     and a, $F0
     cp a, $20
-    jp z, Func_036_4001_Table2_Case01
+    jp z, RunBattleResolveStep_Table2_Case01
     ld a, [wCFF3]
     bit 4, a
     jr z, Jump_036_40ED
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     ld c, a
     rrca
@@ -122,21 +124,21 @@ Jump_036_407F:: ; address name
     jr c, Jump_036_40ED
     ld a, $01
     ld [wDAB2], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
     add_a_to_hl
     ld [hl], c
     ld a, c
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     ld d, $CB
     farcall Func_03A_7193
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
     ret
 
 Jump_036_40ED::
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
     ld a, [wCFF3]
     bit 7, a
@@ -167,29 +169,29 @@ Jump_036_4117::
     jr c, Jump_036_411E
 
 Jump_036_411C::
-    jr Func_036_4001_Table2_Case01
+    jr RunBattleResolveStep_Table2_Case01
 
 Jump_036_411E::
     ret
 
 Jump_036_411F::
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
 
-; entry 1 of the `rst $00` table in Func_036_4001
+; entry 1 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wCFF3, wDAC0
-; writes: wCFCC, wDABE, wDAC0
-; points at: wCFCB, wD80E
-Func_036_4001_Table2_Case01::
+; reads: wBattleTarget, wCFF3, wDAC0
+; writes: wBattleSubStep, wDABE, wDAC0
+; points at: wBattleResolveStep, wD80E
+RunBattleResolveStep_Table2_Case01::
 Jump_036_4127:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     xor a, a
-    ld [wCFCC], a
-    ld a, [wD8A5]
+    ld [wBattleSubStep], a
+    ld a, [wBattleTarget]
     ld hl, wD80E
     call AddAx9ToHL
     bit 3, [hl]
@@ -213,12 +215,12 @@ Jump_036_414B::
     call Func_036_4FD1
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
-; reads: wD8A5, wCFF5, wD8A6, wD8A4
-; writes: wDAD1, wD8A5
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
+; reads: wBattleTarget, wCFF5, wD8A6, wBattleActor
+; writes: wDAD1, wBattleTarget
 ; points at: wD812, wD854, wD810, wDA1D, wDABF
 Func_036_4162::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7F5B
     jr z, Jump_036_4191
     ld a, [wCFF5]
@@ -250,22 +252,22 @@ Jump_036_4191::
     jr nz, Jump_036_41AF
 
 Jump_036_41A2::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD812
     call AddAx9ToHL
     bit 0, [hl]
     jr z, Jump_036_421B
 
 Jump_036_41AF::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7F3C
     jr c, Jump_036_421B
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD854
     call AddDoubleAToHL_Bank36
     bit 5, [hl]
     jr nz, Jump_036_41D1
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD812
     call AddAx9ToHL
     bit 5, [hl]
@@ -278,7 +280,7 @@ Jump_036_41D1::
     ld a, [wD8A6]
     cp a, $CC
     jr nz, Jump_036_41EB
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -290,12 +292,12 @@ Jump_036_41EB::
     push af
     ld d, $C8
     farcall Func_03A_7193
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld [wDAD1], a
     pop af
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     ld b, a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1D
     call AddDoubleAToHL_Bank36
     ld [hl], b
@@ -314,14 +316,14 @@ Jump_036_421B::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
-; reads: wD8A5, wD8A4
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
+; reads: wBattleTarget, wBattleActor
 ; writes: wDABE, wC981
 ; points at: wD80E
 Func_036_421D::
     call Func_036_42D3
     jp nc, Jump_036_4317
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80E
     call AddAx9ToHL
     bit 6, [hl]
@@ -333,7 +335,7 @@ Func_036_421D::
     farcall Func_03A_7193
     ld a, $01
     ld [wC981], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_036_4255
     ld d, $01
@@ -350,14 +352,14 @@ Jump_036_4255::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
-; reads: wD8A5, wCFF5, wD8A4
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
+; reads: wBattleTarget, wCFF5, wBattleActor
 ; writes: wDABE, wC981
 ; points at: wD80E
 Func_036_425A::
     call Func_036_42D3
     jp nc, Jump_036_4317
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80E
     call AddAx9ToHL
     ld a, [hl]
@@ -382,7 +384,7 @@ Jump_036_4289::
     farcall Func_03A_7193
     ld a, $01
     ld [wC981], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_036_42A5
     ld d, $04
@@ -399,10 +401,10 @@ Jump_036_42A5::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Table2_Case00)
-; reads: wD8A5, wCFF5
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
+; reads: wBattleTarget, wCFF5
 Func_036_42AA::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7F5B
     jr z, Jump_036_42CB
     ld a, [wCFF5]
@@ -423,11 +425,11 @@ Jump_036_42CB::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_036_42AA, Func_036_425A, Func_036_421D, Func_036_4162)
-; reads: wD8A5, wCFF4, wD8A4
-; writes: wDAD1, wD8A5, wC981
+; reads: wBattleTarget, wCFF4, wBattleActor
+; writes: wDAD1, wBattleTarget, wC981
 ; points at: wD812, wDA1D, wDABF
 Func_036_42D3::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD812
     call AddAx9ToHL
     bit 4, [hl]
@@ -442,14 +444,14 @@ Func_036_42D3::
     ld c, a
     call Func_036_7F3C
     jr c, Jump_036_4315
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld [wDAD1], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1D
     call AddDoubleAToHL_Bank36
     ld [hl], c
     ld a, c
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     ld a, $01
     ld [wC981], a
     ld hl, wDABF
@@ -467,21 +469,21 @@ Jump_036_4317::
     scf
     ret
 
-; entry 2 of the `rst $00` table in Func_036_4001
+; entry 2 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDABD, wDAB2, wD8A5, wCFF4, wD8A6, wD8A4, wDAC0, wCFF3, ...
+; reads: wDABD, wDAB2, wBattleTarget, wCFF4, wD8A6, wBattleActor, wDAC0, wCFF3, ...
 ; writes: wDAD2, wDAC0
-; points at: wCFCB, wD854, wD810, wD811, wD80F, wD80D, wD80C, wD91F
-Func_036_4001_Case02::
+; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wD91F
+RunBattleResolveStep_Case02::
 Jump_036_431F:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wDABD]
     or a, a
-    jr z, Func_036_4001_Case03
+    jr z, RunBattleResolveStep_Case03
     ld a, [wDAB2]
     or a, a
-    jr nz, Func_036_4001_Case03
+    jr nz, RunBattleResolveStep_Case03
     call Func_036_433F
     ret z
     ld a, $82
@@ -489,8 +491,8 @@ Jump_036_431F:: ; address name
     farcall Func_03A_4001
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case02)
-; reads: wD8A6, wD8A4
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case02)
+; reads: wD8A6, wBattleActor
 ; points at: wD80F
 Func_036_433F::
     ld a, [wD8A6]
@@ -499,7 +501,7 @@ Func_036_433F::
     ret
 
 Jump_036_4347::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl]
@@ -507,27 +509,27 @@ Jump_036_4347::
     xor a, $40
     ret
 
-; entry 3 of the `rst $00` table in Func_036_4001
+; entry 3 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wCFF4, wD8A6, wD8A4, wDAC0, wCFF3, wC5E7
+; reads: wBattleTarget, wCFF4, wD8A6, wBattleActor, wDAC0, wCFF3, wC5E7
 ; writes: wDAC0
-; points at: wCFCB, wD854, wD810, wD811, wD80F, wD80D, wD80C, wD91F
-Func_036_4001_Case03::
+; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wD91F
+RunBattleResolveStep_Case03::
 Jump_036_4356:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7F3C
-    jr c, Func_036_4001_Case04
+    jr c, RunBattleResolveStep_Case04
     ld a, [wCFF4]
     bit 6, a
-    jr z, Func_036_4001_Case04
-    ld a, [wD8A5]
+    jr z, RunBattleResolveStep_Case04
+    ld a, [wBattleTarget]
     ld hl, wD854
     add a, a
     add_a_to_hl
     bit 7, [hl]
-    jr z, Func_036_4001_Case04
+    jr z, RunBattleResolveStep_Case04
     ld d, $35
     farcall Func_03A_6EE5
     call Func_036_4FD1
@@ -535,23 +537,23 @@ Jump_036_4356:: ; address name
     call QueueSoundEffect
     ret
 
-; entry 4 of the `rst $00` table in Func_036_4001
+; entry 4 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wCFF4, wD8A6, wD8A4, wDAC0, wCFF3, wC5E7
+; reads: wBattleTarget, wCFF4, wD8A6, wBattleActor, wDAC0, wCFF3, wC5E7
 ; writes: wDAC0
-; points at: wCFCB, wD810, wD811, wD80F, wD80D, wD854, wD80C, wD91F
-Func_036_4001_Case04::
+; points at: wBattleResolveStep, wD810, wD811, wD80F, wD80D, wD854, wBattleStatus, wD91F
+RunBattleResolveStep_Case04::
 Jump_036_438A:: ; address name
     call Func_036_454F
     jr z, Jump_036_439B
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_036_439B
     call Func_036_5009
     ret
 
 Jump_036_439B::
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     call Func_036_4582
     ret z
@@ -561,7 +563,7 @@ Jump_036_439B::
     ld a, [wD8A6]
     cp a, $CC
     jr nz, Jump_036_43BF
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -569,7 +571,7 @@ Jump_036_439B::
     jr z, Jump_036_43D8
 
 Jump_036_43BF::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
@@ -583,7 +585,7 @@ Jump_036_43D8::
     ld a, [wCFF3]
     bit 7, a
     jr z, Jump_036_4431
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -594,7 +596,7 @@ Jump_036_43D8::
     ld a, [wD8A6]
     cp a, $CC
     jr nz, Jump_036_4406
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -609,7 +611,7 @@ Jump_036_4406::
     jp Jump_036_4543
 
 Jump_036_4416::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl]
@@ -626,7 +628,7 @@ Jump_036_4431::
     ld a, [wCFF3]
     bit 0, a
     jr z, Jump_036_447F
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 1, [hl]
@@ -638,7 +640,7 @@ Jump_036_4431::
     jr Jump_036_4469
 
 Jump_036_4451::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
@@ -650,7 +652,7 @@ Jump_036_4451::
     jr nc, Jump_036_447F
 
 Jump_036_4469::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD854
     add a, a
     add_a_to_hl
@@ -663,8 +665,8 @@ Jump_036_447F::
     ld a, [wCFF4]
     bit 6, a
     jp z, Jump_036_4542
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $D0
@@ -685,7 +687,7 @@ Jump_036_447F::
     and a, $03
     jp nz, Jump_036_4542
     call Func_000_3ED4
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
@@ -696,14 +698,14 @@ Jump_036_447F::
     jr z, Jump_036_4533
 
 Jump_036_44C8::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD91F
     add a, a
     add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD91F
     call Func_036_7E5B
     ld a, l
@@ -778,7 +780,7 @@ Jump_036_4543::
     call Func_036_4FD1
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
 ; reads: wD8A6
 Func_036_454F::
     ld a, [wD8A6]
@@ -815,7 +817,7 @@ Func_036_454F::
     cp a, $CE
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
 ; reads: wD8A6
 Func_036_4582::
     ld a, [wD8A6]
@@ -826,35 +828,35 @@ Func_036_4582::
     cp a, $A1
     ret
 
-; entry 5 of the `rst $00` table in Func_036_4001
+; entry 5 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFF4, wD8A4
-; points at: wCFCB, wD80D, wD854, wD80E
-Func_036_4001_Case05::
+; reads: wCFF4, wBattleActor
+; points at: wBattleResolveStep, wD80D, wD854, wD80E
+RunBattleResolveStep_Case05::
 Jump_036_458E:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wCFF4]
     and a, $18
-    jr z, Func_036_4001_Case06
+    jr z, RunBattleResolveStep_Case06
     bit 4, a
     jr z, Jump_036_45AA
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 2, [hl]
-    jr nz, Func_036_4001_Case06
+    jr nz, RunBattleResolveStep_Case06
 
 Jump_036_45AA::
     ld a, [wCFF4]
     bit 3, a
     jr z, Jump_036_45F7
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD854
     call AddDoubleAToHL_Bank36
     bit 0, [hl]
     jr nz, Jump_036_45D3
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 3, [hl]
@@ -864,7 +866,7 @@ Jump_036_45AA::
     jr nc, Jump_036_45F7
 
 Jump_036_45D3::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     set 7, [hl]
@@ -877,35 +879,35 @@ Jump_036_45E7::
     farcall Func_03A_7193
     ld a, $83
     call QueueSoundEffect
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ret
 
 Jump_036_45F7::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     res 7, [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_036_4001
+; entry 6 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wCFCB
-Func_036_4001_Case06::
+; points at: wBattleResolveStep
+RunBattleResolveStep_Case06::
 Jump_036_4603:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     call Func_036_6717
     ret
 
-; entry 7 of the `rst $00` table in Func_036_4001
+; entry 7 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wSoundChannelSlots, wCFF4, wD872, wD873, wD8A5, wCFF3, wD8A6
-; writes: wD872, wD873
-; points at: wD80E, wDC20, wCFCB, wD80D, wD854, wD813, wD812, wD810
-Func_036_4001_Case07::
+; reads: wBattleActor, wSoundChannelSlots, wCFF4, wBattleDamageLo, wD873, wBattleTarget, wCFF3, wD8A6
+; writes: wBattleDamageLo, wD873
+; points at: wD80E, wDC20, wBattleResolveStep, wD80D, wD854, wD813, wD812, wD810
+RunBattleResolveStep_Case07::
 Jump_036_460B:: ; address name
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     bit 7, [hl]
@@ -917,23 +919,23 @@ Jump_036_460B:: ; address name
     ret nz
 
 Jump_036_4622::
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wCFF4]
     bit 4, a
     jr z, Jump_036_464D
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 2, [hl]
     jr z, Jump_036_464D
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     add hl, hl
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     jr Jump_036_46C7
@@ -942,18 +944,18 @@ Jump_036_464D::
     ld a, [wCFF4]
     bit 3, a
     jr z, Jump_036_4679
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     bit 7, [hl]
     jr z, Jump_036_4679
     res 7, [hl]
     call Func_036_7C85
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E2E
     call Func_036_4930
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
     jr Jump_036_46EB
@@ -962,18 +964,18 @@ Jump_036_4679::
     ld a, [wCFF4]
     bit 5, a
     jr z, Jump_036_46A0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     bit 0, [hl]
     jr z, Jump_036_46A0
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     add hl, hl
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     jr Jump_036_46C7
@@ -982,28 +984,28 @@ Jump_036_46A0::
     ld a, [wCFF3]
     bit 1, a
     jr z, Jump_036_46C7
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     bit 4, [hl]
     jr z, Jump_036_46C7
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_494E
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
 
 Jump_036_46C7::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD854
     call AddDoubleAToHL_Bank36
     bit 6, [hl]
     jr z, Jump_036_46EB
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
@@ -1013,12 +1015,12 @@ Jump_036_46C7::
     rr c
     add hl, bc
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
 
 Jump_036_46EB::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD813
     call AddAx9ToHL
     ld a, [hl]
@@ -1026,7 +1028,7 @@ Jump_036_46EB::
     jr z, Jump_036_4742
     and a, $03
     ld c, a
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
@@ -1050,7 +1052,7 @@ Jump_036_4713::
     call DivideHLByA
 
 Jump_036_4723::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld de, wD854
     add a, a
     add a, e
@@ -1067,13 +1069,13 @@ Jump_036_472F::
 
 Jump_036_4738::
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     jr Jump_036_4742
 
 Jump_036_4742::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD812
     call AddAx9ToHL
     bit 2, [hl]
@@ -1086,26 +1088,26 @@ Jump_036_4742::
     jr z, Jump_036_4775
     cp a, $70
     jr z, Jump_036_4775
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     sla l
     rl h
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
 
 Jump_036_4775::
     ret
 
-; entry 8 of the `rst $00` table in Func_036_4001
+; entry 8 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wSoundChannelSlots, wDAC0, wD872, wD873, wDABA
+; reads: wD8A6, wSoundChannelSlots, wDAC0, wBattleDamageLo, wD873, wDABA
 ; writes: wDAC0, wDAD2, wDAD3
-; points at: wDC20, wCFCB
-Func_036_4001_Case08::
+; points at: wDC20, wBattleResolveStep
+RunBattleResolveStep_Case08::
 Jump_036_4776:: ; address name
     ld a, [wD8A6]
     cp a, $CD
@@ -1117,15 +1119,15 @@ Jump_036_4776:: ; address name
     ret nz
 
 Jump_036_4787::
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wDAC0]
     ld b, a
     bit 5, a
     jr z, Jump_036_47B1
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
@@ -1151,7 +1153,7 @@ Jump_036_47B1::
     ld a, [wDAC0]
     bit 4, a
     ret z
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     dec [hl]
     ld a, [wDABA]
     or a, a
@@ -1177,13 +1179,13 @@ Jump_036_47D6::
     farcall Func_03A_5762
     ret
 
-; entry 9 of the `rst $00` table in Func_036_4001
+; entry 9 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAD2
-; points at: wCFCB
-Func_036_4001_Case09::
+; points at: wBattleResolveStep
+RunBattleResolveStep_Case09::
 Jump_036_47F1:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ld a, $13
     ld [wDAD2], a
@@ -1192,14 +1194,14 @@ Jump_036_47F1:: ; address name
     call QueueSoundEffect
     ret
 
-; entry 10 of the `rst $00` table in Func_036_4001
+; entry 10 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAC0, wDAC2, wD8A6, wC0A0, hFFC6, wD8A4, wD8A5, wDAC3, ...
-; writes: wC0A0, wD8A4
-; points at: wCFCB, wC0A0, wD958
-Func_036_4001_Case0A::
+; reads: wDAC0, wDAC2, wD8A6, wC0A0, hFFC6, wBattleActor, wBattleTarget, wDAC3, ...
+; writes: wC0A0, wBattleActor
+; points at: wBattleResolveStep, wC0A0, wD958
+RunBattleResolveStep_Case0A::
 Jump_036_4806:: ; address name
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wDAC0]
     bit 7, a
@@ -1259,7 +1261,7 @@ Jump_036_4859::
     ret
 
 Jump_036_4879::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     add a, a
     ld de, wD958
     add a, e
@@ -1268,7 +1270,7 @@ Jump_036_4879::
     inc d
 
 Jump_036_4885::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld b, a
     call Func_036_4E26
     call Func_036_70F4
@@ -1282,7 +1284,7 @@ Jump_036_4890::
     ld a, $01
     ld [de], a
     dec de
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld b, a
     call Func_036_4E26
     ret
@@ -1293,22 +1295,22 @@ Jump_036_48A3::
     call SetBit1OfWD095Indexed_Bank36
 
 Jump_036_48AE::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call SetBit1OfWD095Indexed_Bank36
     ret
 
 Jump_036_48B5::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     push af
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    ld [wD8A4], a
+    ld [wBattleActor], a
     call Func_036_48CB
     pop af
-    ld [wD8A4], a
+    ld [wBattleActor], a
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
-; reads: wD8A4
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0A)
+; reads: wBattleActor
 ; points at: wC0A0
 Func_036_48CB::
     ld de, wC0A0
@@ -1318,17 +1320,17 @@ Func_036_48CB::
     ld a, $01
     ld [de], a
     dec de
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld b, a
     call Func_036_4E26
     ret
 
-; entry 11 of the `rst $00` table in Func_036_4001
+; entry 11 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wCFCC, wSoundChannelSlots, wCFCA, wDAC0, wDAC3, wDAC2
-; writes: wCFCB, wCFCC
-; points at: wCFCB, wDC20, wCFCA
-Func_036_4001_Case0B::
+; reads: wD8A6, wBattleSubStep, wSoundChannelSlots, wBattleSubPhase, wDAC0, wDAC3, wDAC2
+; writes: wBattleResolveStep, wBattleSubStep
+; points at: wBattleResolveStep, wDC20, wBattleSubPhase
+RunBattleResolveStep_Case0B::
 Jump_036_48DE:: ; address name
     ld a, [wD8A6]
     cp a, $82
@@ -1339,44 +1341,44 @@ Jump_036_48DE:: ; address name
     jp z, Jump_036_4B16
     cp a, $B3
     jp z, Jump_036_4B16
-    ld hl, wCFCB
+    ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in Func_036_4001
+; resolve step $0C: farcalls ApplyDamageToTarget
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_4001_Case0C::
+ResolveStepApplyDamage::
 Jump_036_48FA:: ; address name
-    farcall Func_032_59DF
+    farcall ApplyDamageToTarget
     ret
 
-; entry 13 of the `rst $00` table in Func_036_4001
+; entry 13 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_4001_Case0D::
+RunBattleResolveStep_Case0D::
 Jump_036_4901:: ; address name
     farcall Func_032_5A3A
     ret
 
-; entry 14 of the `rst $00` table in Func_036_4001
+; entry 14 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_4001_Case0E::
+RunBattleResolveStep_Case0E::
 Jump_036_4908:: ; address name
     farcall Func_032_5EAB
     ret
 
-; entry 15 of the `rst $00` table in Func_036_4001
+; entry 15 of the `rst $00` table in RunBattleResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFCB
-; points at: wCFCA
-Func_036_4001_Case0F::
+; writes: wBattleResolveStep
+; points at: wBattleSubPhase
+RunBattleResolveStep_Case0F::
 Jump_036_490F:: ; address name
-    ld hl, wCFCA
+    ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case05)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case05)
 ; reads: hFFC6, wC5E7
 Func_036_4918::
     push bc
@@ -1395,7 +1397,7 @@ Jump_036_492B::
     cp a, b
     ret
 
-; 3 call sites from 3 routines (e.g. Func_036_4001_Case07, Func_036_7353, Func_036_7314)
+; 3 call sites from 3 routines (e.g. RunBattleResolveStep_Case07, Func_036_7353, Func_036_7314)
 Func_036_4930::
     push hl
     ld bc, $0014
@@ -1420,7 +1422,7 @@ Func_036_4930::
     call Func_000_3E98
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case07)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case07)
 Func_036_494E::
     ld c, l
     ld b, h
@@ -1436,9 +1438,9 @@ Func_036_494E::
     call Func_000_3E98
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_4A38, Func_036_4001_Case0A)
-; reads: wDAC0, wDABD, wDABF, wDAD1, wD8A4
-; writes: wD8A5, wDAD1
+; 2 call sites from 2 routines (e.g. Func_036_4A38, RunBattleResolveStep_Case0A)
+; reads: wDAC0, wDABD, wDABF, wDAD1, wBattleActor
+; writes: wBattleTarget, wDAD1
 ; points at: wDA1D
 Func_036_4961::
     ld a, [wDAC0]
@@ -1454,9 +1456,9 @@ Func_036_4961::
     ld a, [wDAD1]
     cp a, $FF
     ret z
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     ld b, a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
     add_a_to_hl
@@ -1465,10 +1467,10 @@ Func_036_4961::
     ld [wDAD1], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0A)
 ; reads: wD8A6, wDABF, wDAC2
 ; writes: wC0A0
-; points at: wC0A0, wD872
+; points at: wC0A0, wBattleDamageLo
 Func_036_4991::
     ld a, [wD8A6]
     cp a, $6C
@@ -1551,7 +1553,7 @@ Jump_036_4A0D::
     ret
 
 Jump_036_4A13::
-    ld hl, wD872
+    ld hl, wBattleDamageLo
     ld a, [hl+]
     sub a, $E8
     ld a, [hl]
@@ -1577,7 +1579,7 @@ Jump_036_4A32::
     ld [wC0A0], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0A)
 ; reads: wD8A6
 ; writes: wC0A0
 ; points at: wC0A0
@@ -1654,17 +1656,17 @@ Jump_036_4A9D::
     and a, [hl]
     cp a, $FF
     ret nz
-    ld a, [wCFCC]
+    ld a, [wBattleSubStep]
     or a, a
     jr z, Jump_036_4AE5
-    ld hl, wCFCA
+    ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     xor a, a
-    ld [wCFCC], a
+    ld [wBattleSubStep], a
     call Func_036_6E75
-    ld a, [wCFCA]
+    ld a, [wBattleSubPhase]
     cp a, $05
     ret z
     ld a, [wDAC0]
@@ -1707,11 +1709,11 @@ Jump_036_4B06::
 Jump_036_4B0A::
     farcall Func_03A_7193
     ld a, $01
-    ld [wCFCC], a
+    ld [wBattleSubStep], a
     ret
 
 Jump_036_4B16::
-    ld a, [wCFCC]
+    ld a, [wBattleSubStep]
     rst $00
     dw Func_036_4A38_Case00
     dw Func_036_4A38_Case01
@@ -1722,13 +1724,13 @@ Jump_036_4B16::
 
 ; entry 0 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; points at: wCFCC, wD80E
+; reads: wBattleTarget
+; points at: wBattleSubStep, wD80E
 Func_036_4A38_Case00::
 Jump_036_4B26:: ; address name
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80E
     call AddAx9ToHL
     bit 6, [hl]
@@ -1740,16 +1742,16 @@ Jump_036_4B26:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAC4, wDAC5
+; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; writes: wD868
-; points at: wCFCC, wD80D, wDAD8, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wD8FF, ...
+; points at: wBattleSubStep, wD80D, wDAD8, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wD8FF, ...
 Func_036_4A38_Case01::
 Jump_036_4B41:: ; address name
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     ld a, [hl]
@@ -1758,13 +1760,13 @@ Jump_036_4B41:: ; address name
     ld a, [hl]
     and a, $CF
     ld [hl], a
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     dec [hl]
     ld d, $5F
     farcall Func_03A_7193
     push hl
     farcall Func_0A3_4A02
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wDAD8
     add_a_to_hl
     ld a, [hl]
@@ -1773,30 +1775,30 @@ Jump_036_4B41:: ; address name
     pop hl
     ld a, $01
     ld [wD868], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     farcall Func_019_434D
     call Func_036_4D0C
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4001
-    ld a, [wDAC4]
+    farcall GetBaseHP
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E42
     call CompareHLToBC
     jr c, Jump_036_4BCC
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call SetBit0OfWD095Indexed_Bank36
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     ld [hl], c
@@ -1804,26 +1806,26 @@ Jump_036_4B41:: ; address name
     ld [hl], b
 
 Jump_036_4BCC::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4045
-    ld a, [wDAC4]
+    farcall GetBaseMP
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E47
     call CompareHLToBC
     jr c, Jump_036_4C07
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call SetBit1OfWD095Indexed_Bank36
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     ld [hl], c
@@ -1831,103 +1833,103 @@ Jump_036_4BCC::
     ld [hl], b
 
 Jump_036_4C07::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4089
-    ld a, [wDAC4]
+    farcall GetBaseATK
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD8FF
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4155
-    ld a, [wDAC4]
+    farcall GetBaseINT
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD92F
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     farcall Func_019_4298
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     farcall Func_03B_4199
-    ld a, [wDAC4]
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD8B7
     add_a_to_hl
     ld [hl], c
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     farcall Func_03B_41D3
-    ld a, [wDAC4]
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wSlotPersonalityHi
     add_a_to_hl
     ld [hl], c
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     farcall Func_03B_420D
-    ld a, [wDAC4]
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld [hl], c
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     farcall Func_03B_4247
-    ld a, [wDAC4]
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld [hl], c
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     farcall Func_03B_4281
-    ld a, [wDAC4]
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD980
     add_a_to_hl
     ld [hl], c
 
 Jump_036_4CCF::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_4111
-    ld a, [wDAC4]
+    farcall GetBaseAGL
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD91F
     call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
-    farcall Func_03B_40CD
-    ld a, [wDAC4]
+    farcall GetBaseDEF
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD90F
     call AddDoubleAToHL_Bank36
     ld [hl], c
@@ -1936,11 +1938,11 @@ Jump_036_4CCF::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
-; reads: wD8A5
+; reads: wBattleTarget
 ; writes: wD868, wD869, wD86A, wD86B
 ; points at: wDA72
 Func_036_4D0C::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld b, a
     and a, $03
     cp a, $03
@@ -1952,7 +1954,7 @@ Func_036_4D0C::
     ld [wD868], a
     ld a, h
     ld [wD869], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld de, wDA72
     ld b, a
     add a, a
@@ -1974,13 +1976,13 @@ Jump_036_4D33::
 
 ; entry 2 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wC58A
-; points at: wCFCC, wD958, wDA5B, wDAD4
+; reads: wBattleTarget, wC58A
+; points at: wBattleSubStep, wD958, wDA5B, wDAD4
 Func_036_4A38_Case02::
 Jump_036_4D42:: ; address name
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld b, a
     add a, a
     ld de, wD958
@@ -1991,14 +1993,14 @@ Jump_036_4D42:: ; address name
 
 Jump_036_4D53::
     call Func_036_4E26
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $03
     ld a, [wC58A]
     cp a, $01
     ret z
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ret c
     and a, $03
@@ -2011,31 +2013,31 @@ Jump_036_4D53::
 
 ; entry 3 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; points at: wCFCC, wDA63, wDA5B, wD80C, wD80A
+; reads: wBattleTarget
+; points at: wBattleSubStep, wBattleSlotOut, wDA5B, wBattleStatus, wD80A
 Func_036_4A38_Case03::
 Jump_036_4D7F:: ; address name
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $03
     cp a, $03
     ret nz
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     ret c
     ld d, $7F
     farcall Func_03A_7193
-    ld a, [wD8A5]
-    ld hl, wDA63
+    ld a, [wBattleTarget]
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld [hl], $FF
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $FF
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     xor a, a
     ld [hl+], a
@@ -2047,7 +2049,7 @@ Jump_036_4D7F:: ; address name
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     rrca
     rrca
@@ -2058,14 +2060,14 @@ Jump_036_4D7F:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
+; reads: wBattleTarget
 ; writes: wDAAC, wDAAD
-; points at: wCFCC, wD814
+; points at: wBattleSubStep, wD814
 Func_036_4A38_Case04::
 Jump_036_4DD6:: ; address name
-    ld hl, wCFCC
+    ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD814
     call AddAx9ToHL
     bit 4, [hl]
@@ -2080,16 +2082,16 @@ Jump_036_4DD6:: ; address name
 ; entry 5 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD80A, wD80B, wD8A6
-; writes: wCFCB, wCFCC, wD80A, wD80B
-; points at: wCFCA
+; writes: wBattleResolveStep, wBattleSubStep, wD80A, wD80B
+; points at: wBattleSubPhase
 Func_036_4A38_Case05::
 Jump_036_4DF3:: ; address name
-    ld hl, wCFCA
+    ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     xor a, a
-    ld [wCFCC], a
+    ld [wBattleSubStep], a
     ld a, [wD80A]
     and a, $93
     ld [wD80A], a
@@ -2107,7 +2109,7 @@ Jump_036_4DF3:: ; address name
     ld [wD80B], a
     ret
 
-; 5 call sites from 4 routines (e.g. Func_036_48CB, Func_036_4001_Case0A, Func_036_4A38_Case02, Func_036_6C9A)
+; 5 call sites from 4 routines (e.g. Func_036_48CB, RunBattleResolveStep_Case0A, Func_036_4A38_Case02, Func_036_6C9A)
 ; reads: wC58A, wC57F, wIsCGB, wD890, wC985, wC984
 ; writes: wC526, hFFC6
 Func_036_4E26::
@@ -2200,19 +2202,19 @@ Jump_036_4EB0::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_425A, Func_036_421D)
-; reads: wD8A4, wD8A5, wDABA, wDABD
-; writes: wD8A4, wD8A5, wDABD
+; reads: wBattleActor, wBattleTarget, wDABA, wDABD
+; writes: wBattleActor, wBattleTarget, wDABD
 ; points at: wDAC9, wDA1C
 Func_036_4EB1::
     push de
     ld hl, wDAC9
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld [hl+], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld [hl+], a
     ld a, [wDABA]
     ld [hl+], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld de, wDA1C
     add a, a
     add a, e
@@ -2226,7 +2228,7 @@ Jump_036_4ECD::
     inc de
     ld a, [de]
     ld [hl+], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld bc, wDA1C
     add a, a
     add a, c
@@ -2240,20 +2242,20 @@ Jump_036_4EDE::
     inc bc
     ld a, [bc]
     ld [hl+], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld [bc], a
     dec bc
     dec de
     ld a, [de]
     ld [bc], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld l, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld h, a
     ld a, h
-    ld [wD8A4], a
+    ld [wBattleActor], a
     ld a, l
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     pop de
     bit 0, d
     jr nz, Jump_036_4F06
@@ -2268,19 +2270,19 @@ Jump_036_4F06::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFCA, wCFCB
+; writes: wBattleSubPhase, wBattleResolveStep
 Func_036_4F0E:: ; heuristic: follows a terminator; C0
     ld a, $03
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_4162)
-; reads: wD8A5, wC971, wC5E7
+; reads: wBattleTarget, wC971, wC5E7
 ; points at: wD854, wD86D
 Func_036_4F18::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD854
     add a, a
     add_a_to_hl
@@ -2302,7 +2304,7 @@ Jump_036_4F2E::
     ld hl, wD86D
     ld bc, $0003
     call FillBytes
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     xor a, $04
     ld c, a
@@ -2345,9 +2347,9 @@ Jump_036_4F80::
     ld hl, wD86D
     ld bc, $0003
     call FillBytes
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld d, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld b, $03
@@ -2380,7 +2382,7 @@ Jump_036_4FBA::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
 Func_036_4FBC::
     ld a, $84
     call QueueSoundEffect
@@ -2393,9 +2395,9 @@ Jump_036_4FCA::
     farcall Func_03A_7193
     ret
 
-; 8 call sites from 7 routines (e.g. Func_036_4001_Case04, Func_036_4001_Case03, Func_036_4001_Table2_Case01, Func_036_42AA, ...)
-; reads: wD8A6, wD8A4
-; writes: wCFCA, wCFCB
+; 8 call sites from 7 routines (e.g. RunBattleResolveStep_Case04, RunBattleResolveStep_Case03, RunBattleResolveStep_Table2_Case01, Func_036_42AA, ...)
+; reads: wD8A6, wBattleActor
+; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wD810
 Func_036_4FD1::
     ld a, [wD8A6]
@@ -2410,13 +2412,13 @@ Func_036_4FD1::
 
 Jump_036_4FE9::
     ld a, $02
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
 Jump_036_4FF3::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -2428,22 +2430,22 @@ Jump_036_4FF3::
     ld [hl], a
     jr Jump_036_4FE9
 
-; 2 call sites from 2 routines (e.g. Func_036_4961, Func_036_4001_Case04)
-; writes: wCFCA, wCFCB
+; 2 call sites from 2 routines (e.g. Func_036_4961, RunBattleResolveStep_Case04)
+; writes: wBattleSubPhase, wBattleResolveStep
 Func_036_5009::
     ld a, $03
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
 ; 14 call sites from 13 routines (e.g. Func_036_5522, Func_036_6098, Func_036_5533, Func_036_5544, ...)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_5013::
     call Func_000_3ED4
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD90F
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
@@ -2452,10 +2454,10 @@ Func_036_5013::
     call Func_036_650B
 
 ; 2 call sites from 1 routine (e.g. Func_036_50DC)
-; reads: wD8A4
-; writes: wD872, wD873
+; reads: wBattleActor
+; writes: wBattleDamageLo, wD873
 Func_036_5025::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E2E
     call CompareHLToBC
     jr z, Jump_036_504E
@@ -2523,7 +2525,7 @@ Jump_036_5066::
 
 Jump_036_508B::
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
     ret
@@ -2581,67 +2583,67 @@ Jump_036_50D8::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6957)
-; reads: wD8A4, wD872, wD873, hFFC6
-; writes: wD8A4, wD872, wD873
+; reads: wBattleActor, wBattleDamageLo, wD873, hFFC6
+; writes: wBattleActor, wBattleDamageLo, wD873
 Func_036_50DC:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     push af
     call Func_000_3ED4
     ld bc, $0000
     call Func_036_5025
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wD873]
     ld d, a
     push de
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    ld [wD8A4], a
+    ld [wBattleActor], a
     call Func_000_3ED4
     ld bc, $0000
     call Func_036_5025
     pop de
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     add hl, de
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     pop af
-    ld [wD8A4], a
+    ld [wBattleActor], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6963)
-; reads: wD8A4, wD872, wD873, hFFC6
-; writes: wD8A4, wD872, wD873
+; reads: wBattleActor, wBattleDamageLo, wD873, hFFC6
+; writes: wBattleActor, wBattleDamageLo, wD873
 Func_036_511D:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     push af
     call Func_036_5013
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wD873]
     ld d, a
     push de
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    ld [wD8A4], a
+    ld [wBattleActor], a
     call Func_036_5013
     pop de
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     add hl, de
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     pop af
-    ld [wD8A4], a
+    ld [wBattleActor], a
     ret
     INCBIN "dwm2-cobi-us.gbc", $0D9152, $7F
 
@@ -2708,8 +2710,8 @@ Func_036_5215::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_697B, Func_036_6C24)
-; reads: wD8A6, wD872, wD873, wD8A5, wD8A4, wC58A
-; writes: wD872, wD873
+; reads: wD8A6, wBattleDamageLo, wD873, wBattleTarget, wBattleActor, wC58A
+; writes: wBattleDamageLo, wD873
 ; points at: wBattleHP, wBattleMaxHP, wDAFA
 Func_036_5223::
     ld a, [wD8A6]
@@ -2730,26 +2732,26 @@ Func_036_5223::
 
 Jump_036_5244::
     call Func_036_6159
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wD873]
     ld d, a
     jr Jump_036_5265
 
 Jump_036_5251::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld d, [hl]
     ld e, a
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
 
 Jump_036_5265::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     push hl
@@ -2760,7 +2762,7 @@ Jump_036_5265::
     ld a, h
     adc a, d
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E38
     call CompareHLToBC
     jr nc, Jump_036_5285
@@ -2776,17 +2778,17 @@ Jump_036_5285::
     ret
 
 Jump_036_528B::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld d, [hl]
     ld e, a
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDAFA
     add_a_to_hl
     ld a, [hl]
@@ -2794,7 +2796,7 @@ Jump_036_528B::
     jr z, Jump_036_5265
     push af
     call Func_036_640D
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wD873]
     ld d, a
@@ -2804,7 +2806,7 @@ Jump_036_528B::
     sra d
     rr e
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
     jr Jump_036_5265
@@ -2813,14 +2815,14 @@ Jump_036_52CC::
     ld a, [wC58A]
     cp a, $01
     jp z, Jump_036_5251
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     bit 2, a
     jp z, Jump_036_5251
     jp Jump_036_5244
 
 ; 1 call site from 1 routine (e.g. Func_036_6C5E)
-; reads: wD8A6, wD8A5
-; writes: wD872, wD873
+; reads: wD8A6, wBattleTarget
+; writes: wBattleDamageLo, wD873
 ; points at: wBattleMP
 Func_036_52DF::
     ld a, [wD8A6]
@@ -2840,10 +2842,10 @@ Jump_036_52F4::
 
 Jump_036_52F7::
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     push hl
@@ -2854,7 +2856,7 @@ Jump_036_52F7::
     ld a, h
     adc a, d
     ld b, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E3D
     call CompareHLToBC
     jr nc, Jump_036_531F
@@ -2908,15 +2910,15 @@ Func_036_5352::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_6A82, Func_036_6DCB)
-; reads: wD8A5, wD8A6, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleTarget, wD8A6, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_5360::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6521
     jr nc, Jump_036_53C4
     jr z, Jump_036_53C4
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6634
     ld a, [wD8A6]
     cp a, $25
@@ -2933,10 +2935,10 @@ Jump_036_5380::
 
 Jump_036_5383::
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD90F
     call AddDoubleAToHL_Bank36
     ld a, [hl]
@@ -2945,7 +2947,7 @@ Jump_036_5383::
     ld a, [hl]
     adc a, b
     ld [hl], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     push hl
     call Func_036_6521
     pop hl
@@ -2962,14 +2964,14 @@ Jump_036_5383::
     ld a, d
     sbc a, b
     ld d, a
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     sub a, e
     ld e, a
     ld a, [wD873]
     sbc a, d
     ld d, a
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
 
@@ -3011,11 +3013,11 @@ Jump_036_53EB::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6DF8)
-; reads: wD8A5, wD8A6
-; writes: wD872, wD873
+; reads: wBattleTarget, wD8A6
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_53EF::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E33
     ld b, h
     ld c, l
@@ -3026,7 +3028,7 @@ Func_036_53EF::
     ret
 
 Jump_036_5401::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6634
     ld a, [wD8A6]
     cp a, $27
@@ -3042,7 +3044,7 @@ Jump_036_5417::
     call Func_036_650B
 
 Jump_036_541A::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD90F
     call AddDoubleAToHL_Bank36
     push hl
@@ -3052,7 +3054,7 @@ Jump_036_541A::
     pop hl
     jr z, Jump_036_543F
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
     ld a, [hl]
@@ -3075,14 +3077,14 @@ Jump_036_543F::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_6A82, Func_036_6E13)
-; reads: wD8A5, wD8A6, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleTarget, wD8A6, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 ; points at: wD91F
 Func_036_5441::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6558
     jr nc, Jump_036_54A5
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6646
     ld a, [wD8A6]
     cp a, $29
@@ -3099,10 +3101,10 @@ Jump_036_545F::
 
 Jump_036_5462::
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD91F
     call AddDoubleAToHL_Bank36
     ld a, [hl]
@@ -3111,7 +3113,7 @@ Jump_036_5462::
     ld a, [hl]
     adc a, b
     ld [hl], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     push hl
     call Func_036_6558
     pop hl
@@ -3126,7 +3128,7 @@ Jump_036_5462::
     ld a, b
     ld [hl-], a
     ld [hl], c
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld c, a
     ld a, [wD873]
     ld b, a
@@ -3137,7 +3139,7 @@ Jump_036_5462::
     sbc a, d
     ld d, a
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
 
@@ -3167,11 +3169,11 @@ Jump_036_54BA::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6E40)
-; reads: wD8A5, wD8A6
-; writes: wD872, wD873
+; reads: wBattleTarget, wD8A6
+; writes: wBattleDamageLo, wD873
 ; points at: wD91F
 Func_036_54BE::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6646
     ld a, [wD8A6]
     cp a, $2B
@@ -3187,7 +3189,7 @@ Jump_036_54D4::
     call Func_036_650B
 
 Jump_036_54D7::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD91F
     call AddDoubleAToHL_Bank36
     push hl
@@ -3211,7 +3213,7 @@ Jump_036_54ED::
     sbc a, $00
     ld b, a
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
     ld a, [hl]
@@ -3228,7 +3230,7 @@ Jump_036_54ED::
     ld [hl], $01
     dec de
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
 
@@ -3283,8 +3285,8 @@ Func_036_5555:: ; heuristic: follows a terminator; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_5566:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3293,8 +3295,8 @@ Func_036_5566:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_5571:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3303,8 +3305,8 @@ Func_036_5571:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_557C:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3313,8 +3315,8 @@ Func_036_557C:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_5587:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3323,8 +3325,8 @@ Func_036_5587:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_5592:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3333,8 +3335,8 @@ Func_036_5592:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_559D:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3343,8 +3345,8 @@ Func_036_559D:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_55A8:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3353,8 +3355,8 @@ Func_036_55A8:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_55B3:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3363,8 +3365,8 @@ Func_036_55B3:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_55BE:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3373,8 +3375,8 @@ Func_036_55BE:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_55C9:: ; heuristic: follows a terminator; C0
     call Func_036_6594
@@ -3383,24 +3385,24 @@ Func_036_55C9:: ; heuristic: follows a terminator; C0
     jp Func_036_66E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 ; points at: wD8A7
 Func_036_55D4:: ; heuristic: follows a terminator; C0
     call Func_036_5013
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD8A7
     add_a_to_hl
     bit 0, [hl]
     jr z, Jump_036_55FA
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_6465
     inc hl
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
 
@@ -3458,11 +3460,11 @@ Jump_036_563C::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_036_6EFC)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wBattleMP, wD8F0
 Func_036_5640:: ; heuristic: follows a terminator; C0
     call Func_036_5671
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     push hl
@@ -3474,10 +3476,10 @@ Func_036_5640:: ; heuristic: follows a terminator; C0
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_65D6
     jr nc, Jump_036_5670
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld bc, wD8F0
     add a, a
     add a, c
@@ -3496,11 +3498,11 @@ Jump_036_5670::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_5640, Func_036_746B)
-; reads: wD8A5, wD8A6, wC982, wC983, wD8A4
-; writes: wD872, wD873
+; reads: wBattleTarget, wD8A6, wC982, wC983, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wBattleMP, wD8B7
 Func_036_5671::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     push hl
@@ -3517,7 +3519,7 @@ Jump_036_568C::
     deref_hl
     or a, h
     jr z, Jump_036_56B8
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld de, wD8B7
     add a, e
     ld e, a
@@ -3538,7 +3540,7 @@ Jump_036_569D::
 
 Jump_036_56AE::
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
     jr Jump_036_56C3
@@ -3546,7 +3548,7 @@ Jump_036_56AE::
 Jump_036_56B8::
     ld bc, $0000
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
 
@@ -3604,19 +3606,19 @@ Jump_036_56FF::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_70CC)
-; reads: wD8A5, wD8A4, wC58A, wCFF1
+; reads: wBattleTarget, wBattleActor, wC58A, wCFF1
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer, wCFED
 ; points at: wD8A7, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wD8FF, wD90F, wD91F, ...
 Func_036_5703:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_66D6
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8A7
     add_a_to_hl
     ld [hl], c
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_65E8
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     push hl
@@ -3627,19 +3629,19 @@ Func_036_5703:: ; heuristic: follows a terminator; C0
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call SetBit0OfWD095Indexed_Bank36
 
 Jump_036_5737::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6605
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     push hl
@@ -3650,43 +3652,43 @@ Jump_036_5737::
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call SetBit1OfWD095Indexed_Bank36
 
 Jump_036_5765::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank36
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8FF
     call AddDoubleAToHL_Bank36
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6622
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD90F
     call AddDoubleAToHL_Bank36
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6634
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD91F
     call AddDoubleAToHL_Bank36
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6646
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_6658
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld de, wDA72
     ld b, a
     add a, a
@@ -3708,9 +3710,9 @@ Jump_036_57BD::
     ld a, d
     ld [wD86B], a
     farcall Func_019_44B9
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_669E
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld de, wD988
     swap a
     add a, e
@@ -3731,7 +3733,7 @@ Jump_036_57E8::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_5822
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     jr nc, Jump_036_5811
     pop af
@@ -3807,11 +3809,11 @@ Jump_036_585B::
     INCBIN "dwm2-cobi-us.gbc", $0D985C, $69
 
 ; 1 call site from 1 routine (e.g. Func_036_71C1)
-; reads: wD8A4, wC58A, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleActor, wC58A, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 ; points at: wD8B7
 Func_036_58C5::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -3821,7 +3823,7 @@ Func_036_58C5::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_58E8
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_036_58E8
     call Func_036_650B
@@ -3841,7 +3843,7 @@ Jump_036_58ED::
 
 Jump_036_58F9::
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call Func_036_64D4
@@ -3857,13 +3859,13 @@ Jump_036_58F9::
     adc a, $00
     ld h, a
     call Func_000_3E98
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     add hl, de
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call HLToWD814EntryOfWD8A5_Bank36
@@ -3871,11 +3873,11 @@ Jump_036_58F9::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_71C7)
-; reads: wD8A4, wC58A, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleActor, wC58A, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 ; points at: wD8B7
 Func_036_592E::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -3903,7 +3905,7 @@ Jump_036_5952::
 
 Jump_036_595E::
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call Func_036_64CD
@@ -3919,13 +3921,13 @@ Jump_036_595E::
     adc a, $00
     ld h, a
     call Func_000_3E98
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     add hl, de
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call HLToWD814EntryOfWD8A5_Bank36
@@ -3933,11 +3935,11 @@ Jump_036_595E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_71CD)
-; reads: wD8A4, wC58A, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleActor, wC58A, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 ; points at: wD8B7
 Func_036_5993::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -3945,7 +3947,7 @@ Func_036_5993::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_59B6
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_036_59B6
     ld b, h
@@ -3978,7 +3980,7 @@ Jump_036_59CB::
 
 Jump_036_59D3::
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call Func_036_64CD
@@ -3994,13 +3996,13 @@ Jump_036_59D3::
     adc a, $00
     ld h, a
     call Func_000_3E98
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     add hl, de
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call HLToWD814EntryOfWD8A5_Bank36
@@ -4008,8 +4010,8 @@ Jump_036_59D3::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wC58A, wD8A4, wCFFB, wCFFC, wCFFD, wD872, wD873, ...
-; writes: wRecordBuffer, wCFED, wD86A, wD872, wD873
+; reads: wD8A6, wC58A, wBattleActor, wCFFB, wCFFC, wCFFD, wBattleDamageLo, wD873, ...
+; writes: wRecordBuffer, wCFED, wD86A, wBattleDamageLo, wD873
 Func_036_5A08:: ; heuristic: follows a terminator; C0
     ld a, [wD8A6]
     ld [wRecordBuffer], a
@@ -4019,7 +4021,7 @@ Func_036_5A08:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_5A33
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_036_5A33
     ld a, [wCFFB]
@@ -4042,13 +4044,13 @@ Jump_036_5A3E::
     call Func_036_6594
     cp a, $07
     jr nz, Jump_036_5A5E
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_646C
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
 
@@ -4072,15 +4074,15 @@ Func_036_5A6C::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873
 Func_036_5A7A:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E42
     call Func_036_64A3
     inc hl
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call HLToWD814EntryOfWD8A5_Bank36
@@ -4090,18 +4092,18 @@ Func_036_5A7A:: ; heuristic: follows a terminator; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wC58A, wCFC5, wD8A5, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleActor, wC58A, wCFC5, wBattleTarget, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_5A98:: ; heuristic: follows a terminator; C0
     call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61B5
     and a, $03
     call Func_036_61D6
     jr nc, Jump_036_5AF5
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E42
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     deref_hl
@@ -4123,13 +4125,13 @@ Jump_036_5ABF::
     jr nz, Jump_036_5AD8
 
 Jump_036_5ACF::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E42
     dec hl
     jr Jump_036_5AE4
 
 Jump_036_5AD8::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
@@ -4145,7 +4147,7 @@ Jump_036_5AE4::
 Jump_036_5AEB::
     scf
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
@@ -4153,7 +4155,7 @@ Jump_036_5AEB::
 Jump_036_5AF5::
     ld hl, $0000
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     xor a, a
@@ -4251,10 +4253,10 @@ Jump_036_5B8A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_757F)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wD90F, wD91F, wD80D
 Func_036_5B8B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD90F
     add a, a
     add_a_to_hl
@@ -4265,7 +4267,7 @@ Func_036_5B8B:: ; heuristic: follows a terminator; C0
     ld a, b
     or a, c
     jr nz, Jump_036_5BC2
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD91F
     add a, a
     add_a_to_hl
@@ -4276,7 +4278,7 @@ Func_036_5B8B:: ; heuristic: follows a terminator; C0
     ld a, b
     or a, c
     jr nz, Jump_036_5BC2
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     bit 1, [hl]
@@ -4291,10 +4293,10 @@ Jump_036_5BC2::
 ; 1 call site from 1 routine (e.g. Func_036_75AB)
 ; reads: wD871, wRecordBuffer, wCFED, wCFF5, wCFF6, wCFF7, wCFF8, wCFF9, ...
 ; writes: wMonsterId, wCFE7, wD006, wD007, wD868, wD869, wD86A, wD86B
-; points at: wD80C, wDA63, wDAAE, wD958, wD8B7, wBattleHP, wBattleMaxHP, wBattleMP, ...
+; points at: wBattleStatus, wBattleSlotOut, wDAAE, wD958, wD8B7, wBattleHP, wBattleMaxHP, wBattleMP, ...
 Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld a, [wD871]
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     xor a, a
     ld [hl+], a
@@ -4307,7 +4309,7 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld [hl+], a
     ld [hl], a
     ld a, [wD871]
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld [hl], $00
     ld a, [wD871]
@@ -4521,10 +4523,10 @@ Func_036_5D84::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_7697)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wD8A7
 Func_036_5D91:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD8A7
     add_a_to_hl
     bit 4, [hl]
@@ -4565,11 +4567,11 @@ Jump_036_5DCB::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_71DF)
-; reads: wD8A4, wC58A
-; writes: wD872, wD873
+; reads: wBattleActor, wC58A
+; writes: wBattleDamageLo, wD873
 ; points at: wD8B7
 Func_036_5DCF:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -4577,7 +4579,7 @@ Func_036_5DCF:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_5DF4
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_036_5DF4
     push hl
@@ -4592,7 +4594,7 @@ Jump_036_5DF4::
 
 Jump_036_5DF5::
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     call HLToWD814EntryOfWD8A5_Bank36
@@ -4655,7 +4657,7 @@ Jump_036_5F17::
     jp Func_036_620F
 
 ; 1 call site from 1 routine (e.g. Func_036_710F)
-; reads: wD8A6, wCFF6, wCFF7, wD8A4, wCFF8, wCFF9, wCFFA, wCFFB, ...
+; reads: wD8A6, wCFF6, wCFF7, wBattleActor, wCFF8, wCFF9, wCFFA, wCFFB, ...
 ; writes: wMonsterId, wCFE7, wD006, wD007, wD868, wD869, wD86A, wD86B
 ; points at: wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wD8FF, wD90F, wD91F, wD92F, ...
 Func_036_5F25:: ; heuristic: follows a terminator; C0
@@ -4677,7 +4679,7 @@ Jump_036_5F32::
     ld b, a
     ld hl, wBattleMaxHP
     call Func_036_608B
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleHP
     call Func_036_6701
     ld a, [wCFF8]
@@ -4686,7 +4688,7 @@ Jump_036_5F32::
     ld b, a
     ld hl, wBattleMaxMP
     call Func_036_608B
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleMP
     call Func_036_6701
     ld a, [wCFFA]
@@ -4722,7 +4724,7 @@ Jump_036_5F32::
     ld a, h
     ld [wD007], a
     farcall Func_035_4001
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld c, a
     farcall Func_019_4298
     ld hl, wD01A
@@ -4730,7 +4732,7 @@ Jump_036_5F32::
     ld [wD868], a
     ld a, h
     ld [wD869], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld c, a
     add a, a
     add a, c
@@ -4753,24 +4755,24 @@ Jump_036_5FE1::
     ld bc, $0004
     call CopyBytes
     call Func_036_6018
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8A7
     add_a_to_hl
     ld [hl], $00
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call SetBit0OfWD095Indexed_Bank36
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call SetBit1OfWD095Indexed_Bank36
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_5F25)
-; reads: wD8A4, wCFF1
+; reads: wBattleActor, wCFF1
 ; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
 ; points at: wC0A0, wD989, wCFF1
 Func_036_6018::
     ld hl, wC0A0
     ld b, $04
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld de, wD989
     swap a
     add a, e
@@ -4837,17 +4839,17 @@ Func_036_6077::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_036_6081:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     add_a_to_hl
     ld [hl], c
     ret
 
 ; 6 call sites from 1 routine (e.g. Func_036_5F25)
-; reads: wD8A4
+; reads: wBattleActor
 Func_036_608B::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     add a, a
     add_a_to_hl
     ld [hl], c
@@ -4856,10 +4858,10 @@ Func_036_608B::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD8FF
 Func_036_6098:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8FF
     call AddDoubleAToHL_Bank36
     push hl
@@ -4980,7 +4982,7 @@ Jump_036_613D::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_036_60EB, Func_036_5B19, Func_036_5ED8)
-; reads: wCFC5, wD8A4
+; reads: wCFC5, wBattleActor
 Func_036_6141::
     ld a, [wCFC5]
     cp a, $02
@@ -4989,7 +4991,7 @@ Func_036_6141::
     jr nz, Jump_036_6155
 
 Jump_036_614C::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_036_6155
     xor a, a
@@ -5001,14 +5003,14 @@ Jump_036_6155::
     ret
 
 ; 15 call sites from 15 routines (e.g. Func_036_5F01, Func_036_5094, Func_036_60B4, Func_036_5A6C, ...)
-; reads: wC58A, wD8A4, wCFFB, wCFFC, wCFFD, wD8A5, wCFF7, wCFF8, ...
+; reads: wC58A, wBattleActor, wCFFB, wCFFC, wCFFD, wBattleTarget, wCFF7, wCFF8, ...
 ; writes: wD86A
 ; points at: wD814
 Func_036_6159::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_6174
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     bit 2, a
     jr z, Jump_036_6174
     ld a, [wCFFB]
@@ -5031,18 +5033,18 @@ Jump_036_617F::
 
 ; HL = wD814 + 9 * [wD8A5] (AddAx9ToHL); A = [wD8A5] (the same 10 bytes appear in 2 banks)
 ; 27 call sites from 27 routines (e.g. Func_036_55FB, Func_036_60D1, Func_036_60EB, Func_036_6116, ...)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wD814
 HLToWD814EntryOfWD8A5_Bank36::
 Func_036_6185:: ; address name
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD814
     call AddAx9ToHL
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_6159, Func_036_5A08)
 ; reads: wD86A
-; writes: wD872, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_618F::
     push hl
     ld a, [wD86A]
@@ -5054,61 +5056,61 @@ Func_036_618F::
     pop hl
     call Func_000_3E98
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_036_6116, Func_036_5522, Func_036_60B4, Func_036_5328, ...)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA72
 Func_036_61A6::
     ld de, wDA72
     jr Jump_036_61C7
 
 ; 8 call sites from 8 routines (e.g. Func_036_55FB, Func_036_5533, Func_036_5544, Func_036_5555, ...)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA73
 Func_036_61AB::
     ld de, wDA73
     jr Jump_036_61C7
 
 ; 5 call sites from 5 routines (e.g. Func_036_5F01, Func_036_5626, Func_036_6126, Func_036_56CB, ...)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA74
 Func_036_61B0::
     ld de, wDA74
     jr Jump_036_61C7
 
 ; 6 call sites from 6 routines (e.g. Func_036_5A7A, Func_036_56E0, Func_036_5A98, Func_036_53C6, ...)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA75
 Func_036_61B5::
     ld de, wDA75
     jr Jump_036_61C7
 
 ; 3 call sites from 3 routines (e.g. Func_036_60D1, Func_036_5344, Func_036_5336)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA76
 Func_036_61BA::
     ld de, wDA76
     jr Jump_036_61C7
 
 ; 4 call sites from 4 routines (e.g. Func_036_60EB, Func_036_5B02, Func_036_5B5D, Func_036_5DA3)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA77
 Func_036_61BF::
     ld de, wDA77
     jr Jump_036_61C7
 
 ; 4 call sites from 4 routines (e.g. Func_036_5A6C, Func_036_5DB8, Func_036_5DCF, Func_036_5352)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA78
 Func_036_61C4::
     ld de, wDA78
 
 Jump_036_61C7::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld b, a
     add a, a
     add a, b
@@ -5333,13 +5335,13 @@ Jump_036_62AE::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_61F9, Func_036_620F)
-; reads: wC58A, wD8A5, wC5E7
+; reads: wC58A, wBattleTarget, wC5E7
 Func_036_62B1::
     push af
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_62C4
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     jr nc, Jump_036_62C4
     pop af
@@ -5367,8 +5369,8 @@ Jump_036_62D9::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_036_621C, Func_036_6248, Func_036_6255)
-; reads: wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_62DC:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
@@ -5385,8 +5387,8 @@ Jump_036_62EC::
     jp Jump_036_6449
 
 ; 2 call sites from 2 routines (e.g. Func_036_621C, Func_036_6232)
-; reads: wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_62EF::
     and a, a
     ret z
@@ -5403,8 +5405,8 @@ Jump_036_62FF::
     jp Jump_036_6449
 
 ; 3 call sites from 3 routines (e.g. Func_036_621C, Func_036_6248, Func_036_6232)
-; reads: wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_6302::
     and a, a
     jr nz, Jump_036_6308
@@ -5424,8 +5426,8 @@ Jump_036_6316::
     jp Jump_036_6421
 
 ; 2 call sites from 2 routines (e.g. Func_036_6255, Func_036_6232)
-; reads: wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_6319:: ; heuristic: follows a terminator; C0
     and a, a
     jr nz, Jump_036_631F
@@ -5542,121 +5544,121 @@ Jump_036_63A0::
     ret
 
 Jump_036_63A9::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_646C
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 Jump_036_63BD::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_6477
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 Jump_036_63D1::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_6494
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 Jump_036_63E5::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_64B2
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 Jump_036_63F9::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_651C
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_5223)
-; reads: wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_640D::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_64CD
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 Jump_036_6421::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_64D4
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 Jump_036_6435::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_6518
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 Jump_036_6449::
     xor a, a
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld [wD873], a
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_036_509D, Func_036_50B2, Func_036_50C7)
-; reads: wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 Func_036_6451::
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_6465
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
@@ -5916,17 +5918,17 @@ Func_036_6594::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6594)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wD958
 Func_036_65A9::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     add a, a
     ld hl, wD958
     add_a_to_hl
     ret
 
 ; 16 call sites from 16 routines (e.g. Func_036_55FB, Func_036_60D1, Func_036_60EB, Func_036_5F01, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD854
 Func_036_65B6::
     cp a, $03
@@ -5934,7 +5936,7 @@ Func_036_65B6::
     push bc
     push hl
     ld b, a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD854
     add a, a
     add_a_to_hl
@@ -5968,14 +5970,14 @@ Func_036_65D6:: ; heuristic: follows a terminator; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_5703)
-; reads: wDAC4, wDAC5
+; reads: wBattleStatResultLo, wBattleStatResultHi
 Func_036_65E8:: ; heuristic: follows a terminator; C0
     push hl
     ld c, a
-    farcall Func_03B_4001
-    ld a, [wDAC4]
+    farcall GetBaseHP
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
     ld hl, $03E7
     call CompareHLToBC
@@ -5987,14 +5989,14 @@ Jump_036_6603::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_5703)
-; reads: wDAC4, wDAC5
+; reads: wBattleStatResultLo, wBattleStatResultHi
 Func_036_6605:: ; heuristic: follows a terminator; C0
     push hl
     ld c, a
-    farcall Func_03B_4045
-    ld a, [wDAC4]
+    farcall GetBaseMP
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
     ld hl, $03E7
     call CompareHLToBC
@@ -6006,40 +6008,40 @@ Jump_036_6620::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_5703)
-; reads: wDAC4, wDAC5
+; reads: wBattleStatResultLo, wBattleStatResultHi
 Func_036_6622::
     push hl
     ld c, a
-    farcall Func_03B_4089
-    ld a, [wDAC4]
+    farcall GetBaseATK
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
     pop hl
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_036_6521, Func_036_5703, Func_036_5360, Func_036_53EF)
-; reads: wDAC4, wDAC5
+; reads: wBattleStatResultLo, wBattleStatResultHi
 Func_036_6634::
     push hl
     ld c, a
-    farcall Func_03B_40CD
-    ld a, [wDAC4]
+    farcall GetBaseDEF
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
     pop hl
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_036_54BE, Func_036_6558, Func_036_5703, Func_036_5441)
-; reads: wDAC4, wDAC5
+; reads: wBattleStatResultLo, wBattleStatResultHi
 Func_036_6646::
     push hl
     ld c, a
-    farcall Func_03B_4111
-    ld a, [wDAC4]
+    farcall GetBaseAGL
+    ld a, [wBattleStatResultLo]
     ld c, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld b, a
     pop hl
     ret
@@ -6125,10 +6127,10 @@ Func_036_66D6:: ; heuristic: follows a terminator; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wD90F
 Func_036_66E0:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     add a, a
     ld hl, wD90F
     add_a_to_hl
@@ -6168,7 +6170,7 @@ Jump_036_6712::
     ld [hl], b
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case06)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case06)
 ; reads: wD8A6
 Func_036_6717::
     ld a, [wD8A6]
@@ -6426,8 +6428,8 @@ Func_036_6942:: ; heuristic: target of a pointer table; C0
     jp Func_036_7C85
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wD8A5
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wC5E7, wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: sB535, wBattleHP, sB58F
 Func_036_694E:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
@@ -6451,7 +6453,7 @@ Func_036_6963:: ; heuristic: target of a pointer table; C0
     db $CD, $52, $51, $21, $3F, $41, $06, $A3, $D7, $C3, $85, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, hFFC6
+; reads: wBattleTarget, hFFC6
 ; writes: hFFC6, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP
 Func_036_697B:: ; heuristic: target of a pointer table; C0
@@ -6466,13 +6468,13 @@ Func_036_697B:: ; heuristic: target of a pointer table; C0
     ldh [hFFC6], a
 
 Jump_036_6990::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
     deref_hl
@@ -6483,7 +6485,7 @@ Jump_036_6990::
     ldh [hFFC6], a
 
 Jump_036_69B4::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
@@ -6492,7 +6494,7 @@ Jump_036_69B4::
     dec hl
     ld e, l
     ld d, h
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank36
     deref_hl
@@ -6576,8 +6578,8 @@ Jump_036_6A4B::
     jp Jump_036_7CA3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wC5E7, wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 Func_036_6A59:: ; heuristic: follows a terminator; C0
     ld [bc], a
     cpl
@@ -6588,27 +6590,27 @@ Func_036_6A59:: ; heuristic: follows a terminator; C0
     db $00, $40, $2F, $76, $00, $10, $34, $42, $00
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, hFFC6, wD8A6
-; writes: wD8A4, wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wBattleActor, hFFC6, wD8A6
+; writes: wBattleActor, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ; points at: wDAD8, wD80D
 Func_036_6A69:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     push af
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    ld [wD8A4], a
+    ld [wBattleActor], a
     call Func_036_710F
     pop af
-    ld [wD8A4], a
+    ld [wBattleActor], a
     jp Func_036_710F
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wC5E7
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wBattleTarget, wC5E7
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ; points at: wD80D
 Func_036_6A82:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     set 2, [hl]
@@ -6629,13 +6631,13 @@ Jump_036_6A93::
     ld [hl], a
     call Func_036_5360
     jr nc, Jump_036_6AB7
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7D45
 
 Jump_036_6AB7::
     call Func_036_5441
     jr nc, Jump_036_6AC2
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7D45
 
 Jump_036_6AC2::
@@ -6644,12 +6646,12 @@ Jump_036_6AC2::
     jp Func_036_7C9C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ; points at: wD80D
 Func_036_6ACA:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     set 0, [hl]
@@ -6660,44 +6662,44 @@ Func_036_6ACA:: ; heuristic: target of a pointer table; C0
     jp Func_036_7C9C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A6, wD8A4, hFFC6, wC982, wC983, wDAD1, wDABD
-; writes: wC982, wC983, wD8A4, wD872, wD873, wDAC2, wDAC0, wDAC1, ...
+; reads: wBattleTarget, wD8A6, wBattleActor, hFFC6, wC982, wC983, wDAD1, wDABD
+; writes: wC982, wC983, wBattleActor, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, ...
 ; points at: wBattleMP, wBattleMaxMP, wDA1D
 Func_036_6AE7:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     jp Func_036_6EFC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, hFFC6, wD8A6, wDAD1, wDABD
-; writes: wD8A4, wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, hFFC6, wD8A6, wDAD1, wDABD
+; writes: wBattleActor, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD813, wDA1D
 Func_036_6AF0:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     push af
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    ld [wD8A4], a
+    ld [wBattleActor], a
     call Func_036_7809
     pop af
-    ld [wD8A4], a
+    ld [wBattleActor], a
     jp Func_036_7809
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
-; points at: wD80C
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; points at: wBattleStatus
 Func_036_6B0F:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     jp Func_036_6FC1
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, hFFC6, wDAD1, wDABD
-; writes: hFFC6, wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, hFFC6, wDAD1, wDABD
+; writes: hFFC6, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD813, hFFC6, wDA1D
 Func_036_6B18:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ldh [hFFC6], a
     ld b, $04
@@ -6720,12 +6722,12 @@ Jump_036_6B38::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, hFFC6, wDAD1, wDABD
-; writes: hFFC6, wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, hFFC6, wDAD1, wDABD
+; writes: hFFC6, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD80D, hFFC6, wDA1D
 Func_036_6B42:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ldh [hFFC6], a
     ld b, $03
@@ -6803,13 +6805,13 @@ Func_036_6B99:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7C7D
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wBattleHP, sB58E
 Func_036_6B9F:: ; heuristic: target of a pointer table; C0
     call Func_036_5B19
     jr nc, Jump_036_6BC4
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     xor a, a
@@ -6817,7 +6819,7 @@ Func_036_6B9F:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld hl, $03E8
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ld hl, sB58E
@@ -6828,8 +6830,8 @@ Jump_036_6BC4::
     jp Jump_036_7CB7
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wD8A5
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wC5E7, wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: sB535, wBattleHP, sB58F
 Func_036_6BC7:: ; heuristic: target of a pointer table; C0
     call Func_036_5ED8
@@ -6838,7 +6840,7 @@ Func_036_6BC7:: ; heuristic: target of a pointer table; C0
     ld a, [wC5E7]
     and a, $01
     jr z, Jump_036_6C01
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7E42
     push hl
     ld a, $64
@@ -6862,13 +6864,13 @@ Jump_036_6BE9::
 
 Jump_036_6BF6::
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
     jp Jump_036_7C7D
 
 Jump_036_6C01::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     xor a, a
@@ -6876,7 +6878,7 @@ Jump_036_6C01::
     ld [hl], a
     ld hl, $03E8
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ld hl, sB58F
@@ -6887,24 +6889,24 @@ Jump_036_6C21::
     jp Jump_036_7CB7
 
 ; 2 call sites from 2 routines (e.g. Func_036_799B, Func_036_6D20)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wDAC3, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, wCFCB, wDAC2
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wDAC3, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC2
 ; points at: wDA1D, wBattleHP, wBattleMaxHP
 Func_036_6C24:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_036_6C30
     jr z, Jump_036_6C5B
     jr Jump_036_6C58
 
 Jump_036_6C30::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
     deref_hl
@@ -6922,24 +6924,24 @@ Jump_036_6C5B::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wDAC3, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, wCFCB, wDAC2
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wDAC3, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC2
 ; points at: wDA1D, wBattleMP, wBattleMaxMP
 Func_036_6C5E:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_036_6C6A
     jr z, Jump_036_6C97
     jr Jump_036_6C94
 
 Jump_036_6C6A::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank36
     deref_hl
@@ -6958,11 +6960,11 @@ Jump_036_6C97::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wC5E7, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wC5E7, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wBattleMaxHP, wBattleHP, wD958, wDA1D
 Func_036_6C9A:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jp nc, Jump_036_6D1A
     jp z, Jump_036_6D1D
@@ -6970,7 +6972,7 @@ Func_036_6C9A:: ; heuristic: target of a pointer table; C0
     ld a, [wC5E7]
     and a, $01
     jr z, Jump_036_6CED
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld b, a
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
@@ -6989,7 +6991,7 @@ Jump_036_6CC1::
     ld [hl], d
     call Func_036_7E87
     jr c, Jump_036_6CE2
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld b, a
     add a, a
     ld de, wD958
@@ -7014,25 +7016,25 @@ Jump_036_6CED::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, ...
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
 ; points at: wBattleMaxHP, wBattleHP, wD958, wDA1D
 Func_036_6CF5:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $03
     cp a, $03
     jr z, Jump_036_6D1D
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jp nc, Jump_036_6D1A
     jp z, Jump_036_6D1D
 
 ; 3 call sites from 3 routines (e.g. Func_036_7931, Func_036_6D20, Func_03B_4C7D)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ; points at: wBattleMaxHP, wBattleHP, wD958
 Func_036_6D0A::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld b, a
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
@@ -7048,19 +7050,19 @@ Jump_036_6D1D::
     jp Jump_036_7CD3
 
 ; 1 call site from 1 routine (e.g. Func_036_74A0)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
-; points at: wD8A4, wDAC0, wDA1D
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
+; points at: wBattleActor, wDAC0, wDA1D
 Func_036_6D20:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
-    ld hl, wD8A4
+    ld a, [wBattleTarget]
+    ld hl, wBattleActor
     cp a, [hl]
     jr z, Jump_036_6D1D
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $03
     cp a, $03
     jr z, Jump_036_6D1D
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_036_6D45
     jr z, Jump_036_6D1D
@@ -7076,7 +7078,7 @@ Jump_036_6D45::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6D4E:: ; heuristic: target of a pointer table; C0
     call Func_036_7D33
     and a, $03
@@ -7092,8 +7094,8 @@ Jump_036_6D61::
     jp Jump_036_7CB0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
 Func_036_6D64:: ; heuristic: target of a pointer table; C0
     call Func_036_7D33
@@ -7102,7 +7104,7 @@ Func_036_6D64:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     and a, $EF
     ld [hl], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $03
@@ -7114,7 +7116,7 @@ Jump_036_6D84::
     jp Jump_036_7CB0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
+; reads: wBattleTarget
 ; writes: wDAC3, wDAC0, wDAC1
 ; points at: wDA5B
 Func_036_6D87:: ; heuristic: target of a pointer table; C0
@@ -7137,7 +7139,7 @@ Jump_036_6D99::
     ld a, [hl]
     and a, $33
     ld [hl], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $03
@@ -7147,7 +7149,7 @@ Jump_036_6DB2::
     jp Jump_036_7CB0
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6DB5:: ; heuristic: target of a pointer table; C0
     call Func_036_7D33
     and a, $20
@@ -7163,14 +7165,14 @@ Jump_036_6DC8::
     jp Jump_036_7CB0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD872, wD873
+; reads: wBattleTarget, wBattleDamageLo, wD873
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6DCB:: ; heuristic: target of a pointer table; C0
     call Func_036_5360
     jr nc, Jump_036_6DEA
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7D45
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
@@ -7187,19 +7189,19 @@ Jump_036_6DEA::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
+; reads: wBattleTarget
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6DF2:: ; heuristic: target of a pointer table; C0
     call Func_036_53C6
     jp nc, Jump_036_7CB7
 
 ; 1 call site from 1 routine (e.g. Func_036_757F)
-; reads: wD8A5
+; reads: wBattleTarget
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6DF8::
     call Func_036_53EF
     jr nc, Jump_036_6E0B
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7D50
     ld l, $39
     ld bc, $0098
@@ -7211,14 +7213,14 @@ Jump_036_6E0B::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD872, wD873
+; reads: wBattleTarget, wBattleDamageLo, wD873
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6E13:: ; heuristic: follows a terminator; C0
     call Func_036_5441
     jr nc, Jump_036_6E32
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7D45
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
@@ -7236,12 +7238,12 @@ Jump_036_6E32::
     db $CD, $A7, $54, $D2, $B7, $7C
 
 ; 1 call site from 1 routine (e.g. Func_036_4A38)
-; reads: wD8A5
+; reads: wBattleTarget
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6E40::
     call Func_036_54BE
     jr nc, Jump_036_6E53
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7D50
     ld l, $48
     ld bc, $0098
@@ -7253,11 +7255,11 @@ Jump_036_6E53::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, ...
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
 ; points at: wD80D, wDA1D
 Func_036_6E5B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     bit 2, [hl]
@@ -7271,18 +7273,18 @@ Jump_036_6E72::
     jp Jump_036_7CD3
 
 ; 1 call site from 1 routine (e.g. Func_036_4A38)
-; reads: wD8A5, wDAC0, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wDAC0, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD80D, wDA1D
 Func_036_6E75::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     bit 1, [hl]
     jr nz, Jump_036_6E9A
     call Func_036_55FB
     jr nc, Jump_036_6EA5
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     set 1, [hl]
@@ -7300,12 +7302,12 @@ Jump_036_6EA5::
     jp Jump_036_7CB7
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A6
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
-; points at: wD80C
+; reads: wBattleTarget, wD8A6
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; points at: wBattleStatus
 Func_036_6EA8:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $8C
@@ -7338,11 +7340,11 @@ Jump_036_6EDA::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, ...
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
 ; points at: wD80E, wDA1D
 Func_036_6EE2:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     bit 0, [hl]
@@ -7356,11 +7358,11 @@ Jump_036_6EF9::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A6, wD8A4, hFFC6, wC982, wC983, wDAD1, wDABD
-; writes: wC982, wC983, wD8A4, wD872, wD873, wDAC2, wDAC0, wDAC1, ...
+; reads: wBattleTarget, wD8A6, wBattleActor, hFFC6, wC982, wC983, wDAD1, wDABD
+; writes: wC982, wC983, wBattleActor, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, ...
 ; points at: wBattleMP, wBattleMaxMP, wDA1D
 Func_036_6EFC:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
@@ -7369,9 +7371,9 @@ Func_036_6EFC:: ; heuristic: follows a terminator; C0
     ld a, [wD8A6]
     cp a, $DF
     jr z, Jump_036_6F2D
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E47
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld de, wBattleMaxMP
     add a, a
     add a, e
@@ -7391,7 +7393,7 @@ Jump_036_6F23::
 Jump_036_6F2D::
     call Func_036_5626
     jr nc, Jump_036_6F93
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
@@ -7409,14 +7411,14 @@ Jump_036_6F2D::
     cp a, $DF
     jr nz, Jump_036_6F8B
     farcall Func_0A3_414F
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     push af
     ldh a, [hFFC6]
-    ld [wD8A4], a
+    ld [wBattleActor], a
     call Func_036_5640
     pop af
-    ld [wD8A4], a
-    ld a, [wD8A5]
+    ld [wBattleActor], a
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     xor a, a
@@ -7429,7 +7431,7 @@ Jump_036_6F2D::
     sla c
     rl b
     ld a, c
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
 
@@ -7442,18 +7444,18 @@ Jump_036_6F93::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD80D, wDA1D
 Func_036_6F96:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_036_6FBB
     call Func_036_56CB
     jr nc, Jump_036_6FBE
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     set 0, [hl]
@@ -7468,19 +7470,19 @@ Jump_036_6FBE::
     jp Jump_036_7CB7
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
-; points at: wD80C
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; points at: wBattleStatus
 Func_036_6FC1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     bit 4, [hl]
     jr nz, Jump_036_6FE6
     call Func_036_56E0
     jr nc, Jump_036_6FEE
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     set 4, [hl]
     ld l, $42
@@ -7496,26 +7498,26 @@ Jump_036_6FEE::
     jp Jump_036_7CB7
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wC58A, wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ; points at: wD811
 Func_036_6FF1:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_036_700D
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     jr c, Jump_036_700D
     ld hl, wD811
     call AddAx9ToHL
     ld b, $01
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     jr Jump_036_701B
 
 Jump_036_700D::
     ld b, $04
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld hl, wD811
@@ -7541,11 +7543,11 @@ Jump_036_7025::
     jp Func_036_7C9C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wD8A6
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; reads: wBattleActor, wD8A6
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wD80E
 Func_036_703D:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     ld a, [wD8A6]
@@ -7578,11 +7580,11 @@ Jump_036_7071::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, ...
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
 ; points at: wD80E, wDA1D
 Func_036_7079:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld b, $04
@@ -7619,11 +7621,11 @@ Jump_036_70AB::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD814, wDA1D
 Func_036_70AE:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -7644,61 +7646,61 @@ Jump_036_70C5::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDAD8, wD80D
 Func_036_70CC:: ; heuristic: follows a terminator; C0
     ld l, $52
     ld bc, $4090
     call Func_036_7C9C
     call Func_036_5703
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDAD8
     add_a_to_hl
     ld a, [hl]
     and a, $F8
     ld [hl], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     set 5, [hl]
     res 4, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case0A)
-; reads: wC58A, wD8A4, wD8A5
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0A)
+; reads: wC58A, wBattleActor, wBattleTarget
 ; points at: wDAD4
 Func_036_70F4::
     ld a, [wC58A]
     cp a, $01
     ret z
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ret c
     and a, $03
     ld hl, wDAD4
     add_a_to_hl
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld [hl], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6A69)
-; reads: wD8A4, wD8A6
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wBattleActor, wD8A6
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ; points at: wDAD8, wD80D
 Func_036_710F:: ; heuristic: follows a terminator; C0
     call Func_036_5F25
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDAD8
     add_a_to_hl
     ld a, [hl]
     and a, $F8
     ld [hl], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     set 4, [hl]
     res 5, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld c, a
     farcall Func_032_5E1E
     ld a, [wD8A6]
@@ -7714,12 +7716,12 @@ Jump_036_7147::
     jp Func_036_7C9C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
-; writes: wD8A6, wRecordBuffer, wCFED, wD8A5, wCFCA, wCFCB
+; reads: wBattleActor
+; writes: wD8A6, wRecordBuffer, wCFED, wBattleTarget, wBattleSubPhase, wBattleResolveStep
 ; points at: wDA1C, wDA1D
 Func_036_714F:: ; heuristic: follows a terminator; C0
     farcall Func_0A3_4AAF
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1C
     add a, a
     add_a_to_hl
@@ -7730,18 +7732,18 @@ Func_036_714F:: ; heuristic: follows a terminator; C0
     ld a, $00
     ld [wCFED], a
     farcall LoadSkillRecord
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
     add_a_to_hl
     ld [hl], $FF
     farcall Func_030_4102
     ld a, d
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     xor a, a
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     ld a, $03
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
     db $FA, $66, $D8, $6F, $FA, $67, $D8, $67, $7D, $B4, $CA, $B7, $7C, $CD, $5C, $58
     db $C3, $7D, $7C
@@ -7805,11 +7807,11 @@ Func_036_71D9:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7C7D
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wC5E7
-; writes: wCFCA, wCFCB, wDAC3, wDAC0, wDAC1, wDAC2
+; reads: wBattleActor, wC5E7
+; writes: wBattleSubPhase, wBattleResolveStep, wDAC3, wDAC0, wDAC1, wDAC2
 ; points at: wD812, wD035
 Func_036_71DF:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD812
     call AddAx9ToHL
     bit 0, [hl]
@@ -7824,9 +7826,9 @@ Func_036_71DF:: ; heuristic: target of a pointer table; C0
     ld d, $53
     farcall Func_03A_7193
     ld a, $03
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
 Jump_036_720C::
@@ -7881,28 +7883,28 @@ Data_036_7268:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0DB268, $78
 
 ; 1 call site from 1 routine (e.g. Func_036_7378)
-; reads: wD872, wD873
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
 Func_036_72E0::
     call Func_036_5013
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_6465
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     jp Func_036_7C85
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD, wD872, wD873
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1, wD872, wD873, ...
+; reads: wBattleActor, wDAD1, wDABD, wBattleDamageLo, wD873
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1, wBattleDamageLo, wD873, ...
 ; points at: wD810, wDA1D, wD035
 Func_036_72F9:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -7920,11 +7922,11 @@ Jump_036_730E::
     jr Func_036_72E0
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wC5E7, wD8A4
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wBattleTarget, wC5E7, wBattleActor
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD80E, wD235
 Func_036_7314:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_000_3E25
     jr c, Jump_036_7326
     call Func_000_3ED4
@@ -7933,15 +7935,15 @@ Func_036_7314:: ; heuristic: target of a pointer table; C0
     jr c, Jump_036_734B
 
 Jump_036_7326::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     res 7, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E2E
     call Func_036_4930
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
     ld hl, wD235
@@ -7954,19 +7956,19 @@ Jump_036_734B::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wBattleActor
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD80E, sB535
 Func_036_7353:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     res 7, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E2E
     call Func_036_4930
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
     ld hl, sB535
@@ -7974,10 +7976,10 @@ Func_036_7353:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7C8B
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_036_7378:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     res 7, [hl]
@@ -7985,39 +7987,39 @@ Func_036_7378:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wD872, wD873
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wBattleActor, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD812, wD80E, wD035
 Func_036_7387:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD812
     call AddAx9ToHL
     set 2, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     res 7, [hl]
     call Func_036_5013
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     sla l
     rl h
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     jp Func_036_7C85
     db $CD, $7A, $5A, $C3, $85, $7C, $CD, $98, $5A, $C3, $7D, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wDAC3, wDAC0, wDAC1, wD872, wD873, wDAC2, wD8A5, wDAD1, ...
-; points at: wD80C, wDA1D
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wDAC3, wDAC0, wDAC1, wBattleDamageLo, wD873, wDAC2, wBattleTarget, wDAD1, ...
+; points at: wBattleStatus, wDA1D
 Func_036_73C3:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_036_73E9
@@ -8039,12 +8041,12 @@ Jump_036_73E9::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A6, wDAD1, wD8A4, wDABD
-; writes: wDAC3, wDAC0, wDAC1, wD872, wD873, wDAC2, wD8A5, wDAD1, ...
-; points at: wD80C, wDA1D
+; reads: wBattleTarget, wD8A6, wDAD1, wBattleActor, wDABD
+; writes: wDAC3, wDAC0, wDAC1, wBattleDamageLo, wD873, wDAC2, wBattleTarget, wDAD1, ...
+; points at: wBattleStatus, wDA1D
 Func_036_73EC:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [wD8A6]
     cp a, $74
@@ -8089,12 +8091,12 @@ Jump_036_7431::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wDAC3, wDAC0, wDAC1, wD872, wD873, wDAC2, wD8A5, wDAD1, ...
-; points at: wD80C, wDA1D
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wDAC3, wDAC0, wDAC1, wBattleDamageLo, wD873, wDAC2, wBattleTarget, wDAD1, ...
+; points at: wBattleStatus, wDA1D
 Func_036_7434:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     bit 5, [hl]
     jr nz, Jump_036_745A
@@ -8116,11 +8118,11 @@ Jump_036_745A::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wBattleMP, wDA1D
 Func_036_745D:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
@@ -8142,8 +8144,8 @@ Jump_036_747B::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wDA1D
 Func_036_747E:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
@@ -8166,7 +8168,7 @@ Jump_036_749D::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABA, wC5E7
-; writes: wCFCA, wCFCB, wCFCC
+; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wCFCF
 Func_036_74A0:: ; heuristic: target of a pointer table; C0
     ld a, [wDABA]
@@ -8179,11 +8181,11 @@ Func_036_74A0:: ; heuristic: target of a pointer table; C0
     ld d, $CC
     farcall Func_03A_7193
     ld a, $01
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     ld a, $0E
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ld a, $00
-    ld [wCFCC], a
+    ld [wBattleSubStep], a
     ld hl, wCFCF
     set 0, [hl]
     ret
@@ -8193,12 +8195,12 @@ Jump_036_74CD::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wC5E7, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wC5E7, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD811, wDA1D
 Func_036_74D1:: ; heuristic: target of a pointer table; C0
     call Func_000_3ED4
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
@@ -8217,28 +8219,28 @@ Jump_036_74EF::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A6, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wD8A6, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD811, wD80D, wDA1D
 Func_036_74F2:: ; heuristic: target of a pointer table; C0
     ld d, $02
     jr Jump_036_74F8
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A6, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wD8A6, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD811, wD80D, wDA1D
 Func_036_74F6:: ; heuristic: target of a pointer table; C0
     ld d, $01
 
 Jump_036_74F8::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
     and a, d
     jr nz, Jump_036_7539
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     bit 1, [hl]
@@ -8247,7 +8249,7 @@ Jump_036_74F8::
     call Func_036_55FB
     pop de
     jr nc, Jump_036_7531
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
@@ -8268,18 +8270,18 @@ Jump_036_7539::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wD814
 Func_036_753C:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD814
     call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_036_7569
     call Func_036_6126
     jr nc, Jump_036_7561
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD814
     call AddAx9ToHL
     set 7, [hl]
@@ -8298,7 +8300,7 @@ Jump_036_7569::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 Func_036_7571:: ; heuristic: target of a pointer table; C0
     farcall Func_032_6581
     ld l, $60
@@ -8306,7 +8308,7 @@ Func_036_7571:: ; heuristic: target of a pointer table; C0
     jp Func_036_7C9C
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFCC, wDAC3, wDAC0, wDAC1
+; writes: wBattleSubStep, wDAC3, wDAC0, wDAC1
 Func_036_757F:: ; heuristic: target of a pointer table; C0
     call Func_036_5B19
     jr nc, Jump_036_7591
@@ -8314,7 +8316,7 @@ Func_036_757F:: ; heuristic: target of a pointer table; C0
     jr nc, Jump_036_7591
     call Func_036_6DF8
     xor a, a
-    ld [wCFCC], a
+    ld [wBattleSubStep], a
     ret
 
 Jump_036_7591::
@@ -8323,21 +8325,21 @@ Jump_036_7591::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFCC, wD872, wD873, wDAC2, wDAC0, wDAC1
+; writes: wBattleSubStep, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 Func_036_7599:: ; heuristic: target of a pointer table; C0
     farcall Func_032_6622
     xor a, a
-    ld [wCFCC], a
+    ld [wBattleSubStep], a
     ld l, $5E
     ld bc, $0090
     jp Func_036_7C9C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wC5E7, wD8A6, wD871
-; writes: wD871, wD8A5, wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; reads: wBattleActor, wC5E7, wD8A6, wD871
+; writes: wD871, wBattleTarget, wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wD80A, wD854, wDAAE
 Func_036_75AB:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     rrca
     rrca
     and a, $01
@@ -8346,7 +8348,7 @@ Func_036_75AB:: ; heuristic: target of a pointer table; C0
     bit 2, [hl]
     jr nz, Jump_036_761F
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD854
     add a, a
     add_a_to_hl
@@ -8363,7 +8365,7 @@ Func_036_75AB:: ; heuristic: target of a pointer table; C0
 
 Jump_036_75DD::
     set 2, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     or a, $03
     ld [wD871], a
@@ -8383,7 +8385,7 @@ Jump_036_75DD::
     ld [hl], b
     call Func_036_5BC4
     ld a, [wD871]
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     ld l, $61
     ld bc, $0090
     jp Func_036_7C9C
@@ -8399,11 +8401,11 @@ Jump_036_761F::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD810, wDA1D
 Func_036_7627:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -8412,19 +8414,19 @@ Func_036_7627:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD810, wDA1D
 Func_036_7637:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     set 7, [hl]
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wD8A6, wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD90F, wDA1D
 Func_036_7645:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
@@ -8447,13 +8449,13 @@ Jump_036_765B::
     ld a, [wD8A6]
     cp a, $8B
     jr z, Jump_036_7680
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD90F
     call AddDoubleAToHL_Bank36
     ld a, $01
     ld [hl+], a
     ld [hl], $00
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call Func_036_7D50
 
 Jump_036_7680::
@@ -8472,8 +8474,8 @@ Jump_036_7694::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD8A7, wDA1D
 Func_036_7697:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
@@ -8489,7 +8491,7 @@ Func_036_7697:: ; heuristic: target of a pointer table; C0
     jp Func_036_7C9C
 
 Jump_036_76B4::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD8A7
     add_a_to_hl
     bit 4, [hl]
@@ -8502,8 +8504,8 @@ Jump_036_76C7::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wDA1D
 Func_036_76CD:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
@@ -8527,8 +8529,8 @@ Jump_036_76F1::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wDA1D
 Func_036_76F4:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
@@ -8552,11 +8554,11 @@ Jump_036_7718::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wD8A5, wC5E7
-; writes: wCFCA, wCFCB, wDAC3, wDAC0, wDAC1, wD8A5, wD872, wD873, ...
-; points at: wD80F, wD854, wD80C, wD0AD
+; reads: wBattleActor, wBattleTarget, wC5E7
+; writes: wBattleSubPhase, wBattleResolveStep, wDAC3, wDAC0, wDAC1, wBattleTarget, wBattleDamageLo, wD873, ...
+; points at: wD80F, wD854, wBattleStatus, wD0AD
 Func_036_771B:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl]
@@ -8565,13 +8567,13 @@ Func_036_771B:: ; heuristic: target of a pointer table; C0
     jr z, Jump_036_775E
     call Func_036_6116
     jr nc, Jump_036_7756
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl]
     ld a, $40
     ld [hl], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     add a, a
     ld hl, wD854
     add_a_to_hl
@@ -8589,9 +8591,9 @@ Jump_036_775E::
     ld a, [hl]
     and a, $3F
     ld [hl], a
-    ld a, [wD8A4]
-    ld [wD8A5], a
-    ld hl, wD80C
+    ld a, [wBattleActor]
+    ld [wBattleTarget], a
+    ld hl, wBattleStatus
     call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_036_7780
@@ -8603,7 +8605,7 @@ Jump_036_775E::
     jr z, Jump_036_77AD
 
 Jump_036_7780::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E38
     push hl
     call Func_036_64E2
@@ -8621,7 +8623,7 @@ Jump_036_7780::
 
 Jump_036_779C::
     ld a, e
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
     ld hl, wD0AD
@@ -8634,18 +8636,18 @@ Jump_036_77AD::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD80D, wDA1D
 Func_036_77B5:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     bit 6, [hl]
     jp nz, Jump_036_7CD3
     call Func_036_5DA3
     jr nc, Jump_036_77DB
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     set 6, [hl]
@@ -8657,18 +8659,18 @@ Jump_036_77DB::
     jp Jump_036_7CB7
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wD8A5, wDAD1, ...
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD80D, wDA1D
 Func_036_77DE:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_036_7806
     call Func_036_5DB8
     jr nc, Jump_036_7803
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
     set 7, [hl]
@@ -8683,11 +8685,11 @@ Jump_036_7806::
     jp Jump_036_7CD3
 
 ; 1 call site from 1 routine (e.g. Func_036_6AF0)
-; reads: wD8A4, wD8A6, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wD8A6, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD813, wDA1D
 Func_036_7809:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD813
     call AddAx9ToHL
     ld a, [wD8A6]
@@ -8718,22 +8720,22 @@ Jump_036_7833::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD812, wDA1D
 Func_036_7836:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD812
     call AddAx9ToHL
     set 5, [hl]
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wD8A6, wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
-; points at: wD80A, wD8A4, wD812, wDA1D
+; reads: wBattleTarget, wD8A6, wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
+; points at: wD80A, wBattleActor, wD812, wDA1D
 Func_036_7844:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     rrca
     rrca
     and a, $01
@@ -8742,9 +8744,9 @@ Func_036_7844:: ; heuristic: target of a pointer table; C0
     ld l, a
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wD8A5, wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
-; points at: wD8A4, wD812, wDA1D
+; reads: wD8A6, wBattleTarget, wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
+; points at: wBattleActor, wD812, wDA1D
 Func_036_7850:: ; heuristic: target of a pointer table; C0
     jr nc, Jump_036_7853
     inc h
@@ -8755,14 +8757,14 @@ Jump_036_7853::
     ld a, [wD8A6]
     cp a, $98
     jr z, Jump_036_7867
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld c, a
     ld b, $01
     jr Jump_036_7871
 
 Jump_036_7867::
     set 4, [hl]
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld b, $03
@@ -8771,14 +8773,14 @@ Jump_036_7871::
     ld a, c
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
-; points at: wD8A4, wD812, wDA1D
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
+; points at: wBattleActor, wD812, wDA1D
 Func_036_7872:: ; heuristic: target of a pointer table; C0
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_036_7894
     ld a, c
-    ld hl, wD8A4
+    ld hl, wBattleActor
     cp a, [hl]
     jr z, Jump_036_7894
     ld hl, wD812
@@ -8787,7 +8789,7 @@ Func_036_7872:: ; heuristic: target of a pointer table; C0
     jr nz, Jump_036_7894
     set 4, [hl]
     inc hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $0F
     swap a
     or a, [hl]
@@ -8800,21 +8802,21 @@ Jump_036_7894::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A6, wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wD8A6, wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD80E, wDA1D, wD80A
 Func_036_789B:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A6]
     cp a, $9A
     jr z, Jump_036_78AF
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80E
     call AddAx9ToHL
     set 6, [hl]
     jr Jump_036_78DB
 
 Jump_036_78AF::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld b, $03
@@ -8832,7 +8834,7 @@ Jump_036_78C6::
     inc c
     dec b
     jr nz, Jump_036_78B7
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     rra
     rra
     and a, $01
@@ -8844,33 +8846,33 @@ Jump_036_78DB::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD80E, wDA1D
 Func_036_78DE:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     set 3, [hl]
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD814, wDA1D
 Func_036_78EC:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD814
     call AddAx9ToHL
     set 4, [hl]
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD80A, wD864, wD812, wDA1D
 Func_036_78FA:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     rrca
     rrca
     and a, $01
@@ -8883,24 +8885,24 @@ Func_036_78FA:: ; heuristic: target of a pointer table; C0
     ld a, b
     ld hl, wD864
     add_a_to_hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $03
     rla
     rla
     or a, [hl]
     ld [hl], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD812
     call AddAx9ToHL
     set 1, [hl]
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD812, wDA1D
 Func_036_7931:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD812
     call AddAx9ToHL
     set 3, [hl]
@@ -8922,11 +8924,11 @@ Jump_036_7966::
     jp Func_036_7D03
 
 Jump_036_7981::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_036_7998
     jr z, Jump_036_7998
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $03
     cp a, $03
     jr z, Jump_036_7998
@@ -8937,11 +8939,11 @@ Jump_036_7998::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wC5E7, wC96F
-; writes: wCFCA, wCFCB
+; reads: wBattleActor, wC5E7, wC96F
+; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wD814, wDAFA
 Func_036_799B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD814
     call AddAx9ToHL
     ld a, [hl]
@@ -8955,7 +8957,7 @@ Func_036_799B:: ; heuristic: follows a terminator; C0
     add_a_to_hl
     ld a, [hl]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDAFA
     add_a_to_hl
     pop af
@@ -8979,30 +8981,30 @@ Jump_036_79D9::
     db $CD, $25, $3F, $7E, $E6, $F0, $F6, $01, $77, $C3, $D3, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wD8A4, wD8A5, wD8A6, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
-; points at: wBattleHP, wDA63, wD94F, wDA1D
+; reads: wC58A, wBattleActor, wBattleTarget, wD8A6, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
+; points at: wBattleHP, wBattleSlotOut, wD94F, wDA1D
 Func_036_7A18:: ; heuristic: target of a pointer table; C0
     ld a, [wC58A]
     or a, a
     jp nz, Jump_036_7CD3
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jp nc, Jump_036_7CD3
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     jr c, Jump_036_7A7A
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     xor a, a
     ld [hl+], a
     ld [hl], a
-    ld a, [wD8A5]
-    ld hl, wDA63
+    ld a, [wBattleTarget]
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld [hl], $FF
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $03
     ld hl, wD94F
     ld b, a
@@ -9036,11 +9038,11 @@ Jump_036_7A85::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD80D, wDA1D
 Func_036_7A8E:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -9061,12 +9063,12 @@ Jump_036_7AA5::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1, wDAC3
-; points at: wD80C
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
+; points at: wBattleStatus
 Func_036_7AAC:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $8C
@@ -9089,11 +9091,11 @@ Jump_036_7ACD::
     jp Jump_036_7CBC
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wDAC2, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, wCFCB
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleMP, wDA1D
 Func_036_7AD5:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
@@ -9108,8 +9110,8 @@ Func_036_7AD5:: ; heuristic: target of a pointer table; C0
     db $CD, $98, $60, $C3, $85, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAD1, wD8A4, wDABD
-; writes: wDAC2, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, wCFCB
+; reads: wDAD1, wBattleActor, wDABD
+; writes: wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep
 ; points at: wDA1D
 Func_036_7AF4:: ; heuristic: target of a pointer table; C0
     call Func_036_7D5B
@@ -9122,18 +9124,18 @@ Func_036_7AF4:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7CA3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wDAC2, wDAC0, wDAC1, wD8A5, wDAD1, wCFCA, wCFCB
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleMP, wBattleMaxMP, wDA1D
 Func_036_7B09:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
     push hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank36
     deref_hl
@@ -9150,11 +9152,11 @@ Func_036_7B09:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7CA3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 ; points at: wBattleHP
 Func_036_7B36:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
     ld c, l
@@ -9167,7 +9169,7 @@ Func_036_7B36:: ; heuristic: target of a pointer table; C0
     jr nz, Jump_036_7B5C
     ld hl, $0001
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ld l, $35
@@ -9229,23 +9231,23 @@ Func_036_7BA1:: ; heuristic: target of a pointer table; C0
     db $C3, $D3, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wDAD1, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
+; reads: wBattleActor, wDAD1, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD80F, wDA1D
 Func_036_7BA8:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
     set 2, [hl]
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; writes: wDAC2, wDAC0, wDAC1
-; points at: wD80C
+; points at: wBattleStatus
 Func_036_7BB6:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
-    ld hl, wD80C
+    ld a, [wBattleActor]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     set 6, [hl]
     ld l, $76
@@ -9253,17 +9255,17 @@ Func_036_7BB6:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7CA3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A5, wDAD1, wD8A4, wDABD
-; writes: wD8A5, wDAD1, wCFCA, wCFCB, wDAC0, wDAC1
-; points at: wDA63, wD94F, wDA1D
+; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
+; points at: wBattleSlotOut, wD94F, wDA1D
 Func_036_7BC9:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A5]
-    ld hl, wDA63
+    ld a, [wBattleTarget]
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld [hl], $FF
     call Func_036_7E87
     jr c, Jump_036_7BF5
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     and a, $03
     ld hl, wD94F
     ld b, a
@@ -9280,11 +9282,11 @@ Jump_036_7BF5::
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wBattleActor
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD80F, sAF36
 Func_036_7BF8:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl]
@@ -9293,7 +9295,7 @@ Func_036_7BF8:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     and a, $F3
     ld [hl], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_036_7E42
     ld a, $0A
     call DivideHLByA
@@ -9304,7 +9306,7 @@ Func_036_7BF8:: ; heuristic: target of a pointer table; C0
 
 Jump_036_7C1B::
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ld hl, sAF36
@@ -9312,11 +9314,11 @@ Jump_036_7C1B::
     jp Jump_036_7C8B
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD80F, wD80C, sAFAF, sAF36
+; reads: wBattleActor
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; points at: wD80F, wBattleStatus, sAFAF, sAF36
 Func_036_7C2C:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl]
@@ -9325,15 +9327,15 @@ Func_036_7C2C:: ; heuristic: target of a pointer table; C0
     ld a, [hl]
     and a, $F3
     ld [hl], a
-    ld a, [wD8A4]
-    ld hl, wD80C
+    ld a, [wBattleActor]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
     jr nz, Func_036_7BF8
     ld hl, $0000
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ld hl, sAFAF
@@ -9341,35 +9343,35 @@ Func_036_7C2C:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7C8B
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wD872, wD873
-; writes: wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; reads: wBattleActor, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD810, wD035
 Func_036_7C5F:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     jp Jump_036_730E
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4, wC5E7
-; writes: wD8A5, wD872, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD80F, wD80C, wD0AD
+; reads: wBattleActor, wC5E7
+; writes: wBattleTarget, wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
+; points at: wD80F, wBattleStatus, wD0AD
 Func_036_7C6B:: ; heuristic: target of a pointer table; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
     jp Jump_036_775E
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDABA, wC5E7, wD8A5, wDAD1, wD8A4, wDABD
-; writes: wCFCA, wCFCB, wD8A5, wDAD1, wDAC0, wDAC1
+; reads: wDABA, wC5E7, wBattleTarget, wDAD1, wBattleActor, wDABD
+; writes: wBattleSubPhase, wBattleResolveStep, wBattleTarget, wDAD1, wDAC0, wDAC1
 ; points at: wDA1D
 Func_036_7C77:: ; heuristic: target of a pointer table; C0
     jp Jump_036_7966
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC96F
-; writes: wCFCA, wCFCB
+; writes: wBattleSubPhase, wBattleResolveStep
 Func_036_7C7A:: ; heuristic: target of a pointer table; C0
     jp Jump_036_79CF
 
@@ -9378,7 +9380,7 @@ Jump_036_7C7D::
     ld bc, vTiles0 + $A8
     jr Jump_036_7C8B
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case07)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case07)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
 Func_036_7C85::
@@ -9397,10 +9399,10 @@ Jump_036_7C8B::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_70CC, Func_036_6D87)
-; writes: wD872, wD873, wDAC2, wDAC0, wDAC1
+; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
 Func_036_7C9C::
     xor a, a
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld [wD873], a
 
 Jump_036_7CA3::
@@ -9433,12 +9435,12 @@ Jump_036_7CC0::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFCA, wCFCB
+; writes: wBattleSubPhase, wBattleResolveStep
 Func_036_7CC9:: ; heuristic: follows a terminator; C0
     ld a, $02
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
 Jump_036_7CD3::
@@ -9446,9 +9448,9 @@ Jump_036_7CD3::
     cp a, $FF
     jr z, Jump_036_7CF3
     push hl
-    ld [wD8A5], a
+    ld [wBattleTarget], a
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
     add_a_to_hl
@@ -9463,18 +9465,18 @@ Jump_036_7CF3::
     or a, a
     jr nz, Jump_036_7D0D
     ld a, $03
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFCA, wCFCB
+; writes: wBattleSubPhase, wBattleResolveStep
 Func_036_7D03:: ; heuristic: follows a terminator; C0
     ld a, $07
-    ld [wCFCA], a
+    ld [wBattleSubPhase], a
     xor a, a
-    ld [wCFCB], a
+    ld [wBattleResolveStep], a
     ret
 
 Jump_036_7D0D::
@@ -9482,36 +9484,36 @@ Jump_036_7D0D::
     jp Jump_036_7CC0
 
 ; 2 call sites from 2 routines (e.g. Func_036_71B8, Func_036_71AF)
-; reads: wD8A5, wD872, wD873
-; writes: wD872, wD873
+; reads: wBattleTarget, wBattleDamageLo, wD873
+; writes: wBattleDamageLo, wD873
 ; points at: wD80E
 Func_036_7D13:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80E
     call AddAx9ToHL
     bit 2, [hl]
     ret z
-    ld a, [wD872]
+    ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
     ld h, a
     call Func_036_651C
     ld a, l
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_036_69ED, Func_036_697B, Func_036_6DB5, Func_036_6D87, ...)
-; reads: wD8A5
-; writes: wD872, wD873
-; points at: wD80C
+; reads: wBattleTarget
+; writes: wBattleDamageLo, wD873
+; points at: wBattleStatus
 Func_036_7D33:: ; heuristic: follows a terminator; C0
     xor a, a
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld [wD873], a
-    ld a, [wD8A5]
-    ld hl, wD80C
+    ld a, [wBattleTarget]
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     ret
@@ -9537,19 +9539,19 @@ Func_036_7D50::
     ret
 
 ; 11 call sites from 6 routines (e.g. Func_036_7AF4, Func_036_76F4, Func_036_76CD, Func_036_7697, ...)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wD80F
 Func_036_7D5B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD80F
     call AddAx9ToHL
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_036_7AF4, Func_036_76F4, Func_036_76CD, Func_036_7697, ...)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wD811
 Func_036_7D65:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
@@ -9563,16 +9565,16 @@ Func_036_7D65:: ; heuristic: follows a terminator; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6C9A)
-; reads: wD8A5
-; points at: wDA63, wD80C, wDA5B
+; reads: wBattleTarget
+; points at: wBattleSlotOut, wBattleStatus, wDA5B
 Func_036_7D79:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld b, a
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld [hl], $00
     ld a, b
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     xor a, a
     ld [hl+], a
@@ -9584,7 +9586,7 @@ Func_036_7D79:: ; heuristic: follows a terminator; C0
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $03
@@ -9647,7 +9649,7 @@ Jump_036_7DD1::
     db $72, $0B, $5E, $0B, $5E, $13, $50, $13, $50, $6C, $5A, $13, $50, $E0, $72, $13
     db $50, $13, $50, $13, $50, $E0, $72, $13, $50
 
-; 4 call sites from 4 routines (e.g. Func_036_4001_Case07, Func_036_5025, Func_036_7353, Func_036_7314)
+; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Case07, Func_036_5025, Func_036_7353, Func_036_7314)
 ; points at: wD8FF
 Func_036_7E2E::
     ld hl, wD8FF
@@ -9684,7 +9686,7 @@ Func_036_7E47::
     jr Func_036_7E5B
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case04)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
 Func_036_7E5B::
     add a, a
     add_a_to_hl
@@ -9692,15 +9694,15 @@ Func_036_7E5B::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
-; 56 call sites from 31 routines (e.g. Func_036_54BE, Func_036_4001_Case07, Func_036_4001_Case05, Func_036_42D3, ...)
+; 56 call sites from 31 routines (e.g. Func_036_54BE, RunBattleResolveStep_Case07, RunBattleResolveStep_Case05, Func_036_42D3, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
     add a, a
     add_a_to_hl
     ret
 
-; 5 call sites from 4 routines (e.g. Func_036_4A38, Func_036_4991, Func_036_4001_Case05, Func_036_4FBC)
-; reads: wC58A, wC57F, wD8A4
+; 5 call sites from 4 routines (e.g. Func_036_4A38, Func_036_4991, RunBattleResolveStep_Case05, Func_036_4FBC)
+; reads: wC58A, wC57F, wBattleActor
 Func_036_7E6C::
     ld a, [wC58A]
     cp a, $01
@@ -9708,18 +9710,18 @@ Func_036_7E6C::
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_036_7E81
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
 Jump_036_7E81::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ret
 
-; 6 call sites from 6 routines (e.g. Func_036_4991, Func_036_4001_Table2_Case01, Func_036_425A, Func_036_6C9A, ...)
-; reads: wC58A, wC57F, wD8A5
+; 6 call sites from 6 routines (e.g. Func_036_4991, RunBattleResolveStep_Table2_Case01, Func_036_425A, Func_036_6C9A, ...)
+; reads: wC58A, wC57F, wBattleTarget
 Func_036_7E87::
     ld a, [wC58A]
     cp a, $01
@@ -9727,13 +9729,13 @@ Func_036_7E87::
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_036_7E9C
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
 Jump_036_7E9C::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ret
     db $7A, $21, $B7, $7E, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
@@ -9752,7 +9754,7 @@ Func_036_7EBE:: ; address name
     ret
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 5 call sites from 4 routines (e.g. Func_036_4001_Case0A, Func_036_4A38_Case01, Func_036_5F25, Func_036_5703)
+; 5 call sites from 4 routines (e.g. RunBattleResolveStep_Case0A, Func_036_4A38_Case01, Func_036_5F25, Func_036_5703)
 ; points at: wD095
 SetBit1OfWD095Indexed_Bank36::
 Func_036_7ECB:: ; address name
@@ -9834,7 +9836,7 @@ Jump_036_7F37::
     pop hl
     ret
 
-; 5 call sites from 5 routines (e.g. Func_036_4001_Case03, Func_036_4001_Case00, Func_036_4001_Table2_Case00, Func_036_42D3, ...)
+; 5 call sites from 5 routines (e.g. RunBattleResolveStep_Case03, RunBattleResolveStep_Case00, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
 ; points at: wD80F
 Func_036_7F3C::
     call Func_000_3E25

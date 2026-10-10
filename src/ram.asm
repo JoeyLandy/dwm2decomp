@@ -1086,10 +1086,10 @@ DEF wCFC4 EQU $CFC4
 DEF wCFC5 EQU $CFC5
 DEF wBattlePhase EQU $CFC8 ; battle phase, a 3-entry dispatch in Func_031_40CC (2 during the fight) (execution (E-0042))
 DEF wBattleStep EQU $CFC9 ; step within the battle phase (1, 2, 4, 5 during the first turn) (execution (E-0042))
-DEF wCFCA EQU $CFCA
-DEF wCFCB EQU $CFCB
-DEF wCFCC EQU $CFCC
-DEF wCFCD EQU $CFCD
+DEF wBattleSubPhase EQU $CFCA ; state variable of Func_031_47DD in the battle bank (1 and 2 alternate while waiting for the command menu) (reading (E-0043))
+DEF wBattleResolveStep EQU $CFCB ; step of RunBattleResolveStep (16 cases); ApplyDamageToTarget advances or rewinds it (reading (E-0043))
+DEF wBattleSubStep EQU $CFCC ; nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget (reading (E-0043))
+DEF wBattleSubStep2 EQU $CFCD ; nested step used by Func_032_5A3A (3 cases) (reading (E-0043))
 DEF wCFCE EQU $CFCE
 DEF wCFCF EQU $CFCF
 DEF wCFD0 EQU $CFD0
@@ -1444,7 +1444,7 @@ DEF wD807 EQU $D807
 DEF wD808 EQU $D808
 DEF wD80A EQU $D80A
 DEF wD80B EQU $D80B
-DEF wD80C EQU $D80C
+DEF wBattleStatus EQU $D80C ; 9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated (reading (E-0043))
 DEF wD80D EQU $D80D
 DEF wD80E EQU $D80E
 DEF wD80F EQU $D80F
@@ -1468,7 +1468,7 @@ DEF wD86D EQU $D86D
 DEF wD86E EQU $D86E
 DEF wD86F EQU $D86F
 DEF wD871 EQU $D871
-DEF wD872 EQU $D872
+DEF wBattleDamageLo EQU $D872 ; low byte of the damage ApplyDamageToTarget subtracts (wD873 is the high byte) (reading (E-0043))
 DEF wD873 EQU $D873
 DEF wD874 EQU $D874
 DEF wD875 EQU $D875
@@ -1497,8 +1497,8 @@ DEF wD8A0 EQU $D8A0
 DEF wD8A1 EQU $D8A1
 DEF wD8A2 EQU $D8A2
 DEF wD8A3 EQU $D8A3
-DEF wD8A4 EQU $D8A4
-DEF wD8A5 EQU $D8A5
+DEF wBattleActor EQU $D8A4 ; slot number of the battler whose turn it is: indexes MP arrays and status records in the battle code (reading (E-0043))
+DEF wBattleTarget EQU $D8A5 ; slot number of the battler an action is applied to (ApplyDamageToTarget, DefeatTarget) (reading (E-0043))
 DEF wD8A6 EQU $D8A6
 DEF wD8A7 EQU $D8A7
 DEF wD8AF EQU $D8AF
@@ -1559,7 +1559,7 @@ DEF wDA4F EQU $DA4F
 DEF wDA53 EQU $DA53
 DEF wDA5B EQU $DA5B
 DEF wDA5F EQU $DA5F
-DEF wDA63 EQU $DA63
+DEF wBattleSlotOut EQU $DA63 ; one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it) (reading (E-0043))
 DEF wDA64 EQU $DA64
 DEF wDA65 EQU $DA65
 DEF wDA67 EQU $DA67
@@ -1602,8 +1602,8 @@ DEF wDAC0 EQU $DAC0
 DEF wDAC1 EQU $DAC1
 DEF wDAC2 EQU $DAC2
 DEF wDAC3 EQU $DAC3
-DEF wDAC4 EQU $DAC4
-DEF wDAC5 EQU $DAC5
+DEF wBattleStatResultLo EQU $DAC4 ; low byte of the 16-bit result of the GetBase* routines (wDAC5 is the high byte) (reading (E-0043))
+DEF wBattleStatResultHi EQU $DAC5 ; high byte of the 16-bit result of the GetBase* routines (reading (E-0043))
 DEF wDAC9 EQU $DAC9
 DEF wDAD1 EQU $DAD1
 DEF wDAD2 EQU $DAD2

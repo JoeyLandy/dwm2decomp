@@ -94,5 +94,16 @@
   "D8DF": {"name": "wBattleMP", "note": "current MP of the 8 battle slots (the values the party panels show as M)", "evidence": "execution (E-0042)"},
   "D8EF": {"name": "wBattleMaxMP", "note": "maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP", "evidence": "execution (E-0042)"},
   "CFC8": {"name": "wBattlePhase", "note": "battle phase, a 3-entry dispatch in Func_031_40CC (2 during the fight)", "evidence": "execution (E-0042)"},
-  "CFC9": {"name": "wBattleStep", "note": "step within the battle phase (1, 2, 4, 5 during the first turn)", "evidence": "execution (E-0042)"}
+  "CFC9": {"name": "wBattleStep", "note": "step within the battle phase (1, 2, 4, 5 during the first turn)", "evidence": "execution (E-0042)"},
+  "D8A4": {"name": "wBattleActor", "note": "slot number of the battler whose turn it is: indexes MP arrays and status records in the battle code", "evidence": "reading (E-0043)"},
+  "D8A5": {"name": "wBattleTarget", "note": "slot number of the battler an action is applied to (ApplyDamageToTarget, DefeatTarget)", "evidence": "reading (E-0043)"},
+  "DA63": {"name": "wBattleSlotOut", "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)", "evidence": "reading (E-0043)"},
+  "D80C": {"name": "wBattleStatus", "note": "9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated", "evidence": "reading (E-0043)"},
+  "DAC4": {"name": "wBattleStatResultLo", "note": "low byte of the 16-bit result of the GetBase* routines (wDAC5 is the high byte)", "evidence": "reading (E-0043)"},
+  "D872": {"name": "wBattleDamageLo", "note": "low byte of the damage ApplyDamageToTarget subtracts (wD873 is the high byte)", "evidence": "reading (E-0043)"},
+  "DAC5": {"name": "wBattleStatResultHi", "note": "high byte of the 16-bit result of the GetBase* routines", "evidence": "reading (E-0043)"},
+  "CFCA": {"name": "wBattleSubPhase", "note": "state variable of Func_031_47DD in the battle bank (1 and 2 alternate while waiting for the command menu)", "evidence": "reading (E-0043)"},
+  "CFCB": {"name": "wBattleResolveStep", "note": "step of RunBattleResolveStep (16 cases); ApplyDamageToTarget advances or rewinds it", "evidence": "reading (E-0043)"},
+  "CFCC": {"name": "wBattleSubStep", "note": "nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget", "evidence": "reading (E-0043)"},
+  "CFCD": {"name": "wBattleSubStep2", "note": "nested step used by Func_032_5A3A (3 cases)", "evidence": "reading (E-0043)"}
 }

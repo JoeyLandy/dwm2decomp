@@ -10427,7 +10427,7 @@ Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $FF, $FF
 
 ; 33 call sites from 30 routines (e.g. Func_005_59BD, Func_005_5A33, Func_005_5A73, Func_005_689C, ...)
-; points at: wD80C
+; points at: wBattleStatus
 Func_000_3E25::
     push hl
     push bc
@@ -10435,7 +10435,7 @@ Func_000_3E25::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_000_3E50
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $D0
@@ -10467,7 +10467,7 @@ Jump_000_3E50::
 
 ; A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved
 ; 288 call sites from 242 routines (e.g. Func_000_3E25, Func_005_6494, Func_005_4CE5, Func_005_4C5D, ...)
-; points at: wDA63
+; points at: wBattleSlotOut
 CarryUnlessWDA63SlotEmpty::
 Func_000_3E54:: ; address name
     push hl
@@ -10475,7 +10475,7 @@ Func_000_3E54:: ; address name
     ld c, a
     cp a, $08
     jr nc, Jump_000_3E6E
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
     and a, a
@@ -10675,7 +10675,7 @@ Func_000_3F25:: ; address name
     add_a_to_hl
     ret
 
-; 17 call sites from 17 routines (e.g. Func_032_5C3F, Func_036_4D0C, Func_036_6658, Func_036_669E, ...)
+; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, Func_036_6658, Func_036_669E, ...)
 ; points at: wD0D5
 Func_000_3F32::
     cp a, $03

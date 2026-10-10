@@ -25,7 +25,7 @@ Func_0A3_4038:: ; address name
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A4
+; reads: wC58A, wC57F, wBattleActor
 Func_0A3_403F:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -33,18 +33,18 @@ Func_0A3_403F:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_0A3_4054
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
 Jump_0A3_4054::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A5
+; reads: wC58A, wC57F, wBattleTarget
 Func_0A3_405A:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -52,13 +52,13 @@ Func_0A3_405A:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_0A3_406F
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
 Jump_0A3_406F::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ret
     INCBIN "dwm2-cobi-us.gbc", $28C075, $CA
@@ -75,15 +75,15 @@ Func_0A3_413F::
     ret
 
 ; 16 call sites from 13 routines (e.g. Func_0A3_413F, Func_032_4F0A, Func_032_514C, Func_032_5397, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wC953
 Func_0A3_414F::
     push bc
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $03
     ld c, a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld b, a
     sra a
@@ -157,10 +157,10 @@ Jump_0A3_41B5::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0A3_4187)
-; reads: wD8A4, hFFC6, wC58A
+; reads: wBattleActor, hFFC6, wC58A
 ; writes: hFFC6
 Func_0A3_41CF::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ldh [hFFC6], a
     ld b, $00
@@ -522,11 +522,11 @@ Jump_0A3_494E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_032_4EE4_Case00)
-; reads: wD8A4
+; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wDA1C
 Func_0A3_4960::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     add a, a
     ld hl, wDA1C
     add_a_to_hl
@@ -604,7 +604,7 @@ Jump_0A3_49D0::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_4918)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; writes: hFFC6
 ; points at: wD958
 Func_0A3_49D5::
@@ -615,7 +615,7 @@ Func_0A3_49D5::
     jr nz, Jump_0A3_49EB
 
 Jump_0A3_49DF::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_0A3_49EB
     ld de, Data_0A3_4CD7
@@ -625,7 +625,7 @@ Jump_0A3_49EB::
     ld de, Data_0A3_4B57
 
 Jump_0A3_49EE::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     add a, a
     ld hl, wD958
     add_a_to_hl
@@ -636,10 +636,10 @@ Jump_0A3_49EE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
-; reads: wD8A5
+; reads: wBattleTarget
 ; points at: wDA1C, wDA5B
 Func_0A3_4A02::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     add a, a
     ld hl, wDA1C
     add_a_to_hl
@@ -664,7 +664,7 @@ Func_0A3_4A02::
     ret
 
 Jump_0A3_4A2B::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $03
@@ -706,8 +706,8 @@ Jump_0A3_4A59::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4001_Case00)
-; reads: wD8A5
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case00)
+; reads: wBattleTarget
 ; points at: wD86D
 Func_0A3_4A5F::
     call Func_000_3ED4
@@ -715,7 +715,7 @@ Func_0A3_4A5F::
     ld hl, wD86D
     ld bc, $0003
     call FillBytes
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     ld d, a
     and a, $04
     xor a, $04
@@ -759,7 +759,7 @@ Jump_0A3_4A99::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_714F)
-; reads: wC5E7, wC58A, wCFC5, wD8A4
+; reads: wC5E7, wC58A, wCFC5, wBattleActor
 Func_0A3_4AAF:: ; heuristic: follows a terminator; C0
     call Func_000_3ED4
     ld a, [wC5E7]
@@ -780,7 +780,7 @@ Func_0A3_4AAF:: ; heuristic: follows a terminator; C0
     jr z, Jump_0A3_4AE2
     cp a, $05
     jr z, Jump_0A3_4AE2
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     bit 2, a
     ret z
     jr Jump_0A3_4AF3

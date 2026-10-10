@@ -68,7 +68,7 @@ Func_005_4038:: ; address name
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A4
+; reads: wC58A, wC57F, wBattleActor
 Func_005_403F:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -76,18 +76,18 @@ Func_005_403F:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_005_4054
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
 Jump_005_4054::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wD8A5
+; reads: wC58A, wC57F, wBattleTarget
 Func_005_405A:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
@@ -95,22 +95,22 @@ Func_005_405A:: ; heuristic: follows a terminator; C0
     ld a, [wC57F]
     bit 1, a
     jr z, Jump_005_406F
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
 Jump_005_406F::
-    ld a, [wD8A5]
+    ld a, [wBattleTarget]
     cp a, $04
     ret
     INCBIN "dwm2-cobi-us.gbc", $014075, $CA
 
 ; 35 call sites from 35 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
-; reads: wD8A4, wRecordBufferData
+; reads: wBattleActor, wRecordBufferData
 ; points at: wBattleMP
 Func_005_413F::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wBattleMP
     add a, a
     add_a_to_hl
@@ -141,13 +141,13 @@ Jump_005_4166::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
-; reads: wCFF3, wD8A4
+; reads: wCFF3, wBattleActor
 ; points at: wD80D
 Func_005_4169::
     ld a, [wCFF3]
     bit 6, a
     jr z, Jump_005_4180
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 0, [hl]
@@ -160,13 +160,13 @@ Jump_005_4180::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_74F9, Func_005_7812, Func_005_7879, Func_005_7AA4)
-; reads: wCFF3, wD8A4
+; reads: wCFF3, wBattleActor
 ; points at: wD80D
 Func_005_4183:: ; heuristic: follows a terminator; C0
     ld a, [wCFF3]
     bit 4, a
     jr z, Jump_005_419B
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 7, [hl]
@@ -179,13 +179,13 @@ Jump_005_419B::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_005_78EC, Func_005_7946, Func_005_7975, Func_005_7996, ...)
-; reads: wCFF3, wD8A4
+; reads: wCFF3, wBattleActor
 ; points at: wD80D
 Func_005_419E:: ; heuristic: follows a terminator; C0
     ld a, [wCFF3]
     bit 5, a
     jr z, Jump_005_41B6
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 6, [hl]
@@ -238,10 +238,10 @@ Jump_005_41E8::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_7261)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_41EB::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
@@ -251,10 +251,10 @@ Func_005_41EB::
     ret
 
 ; 23 call sites from 23 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_74D1, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD811
 Func_005_41FD::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
@@ -264,11 +264,11 @@ Func_005_41FD::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_005_708C, Func_005_74D1, Func_005_7616, Func_005_770A, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_420F::
     ld hl, wD80E
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
@@ -277,10 +277,10 @@ Func_005_420F::
     ret
 
 ; 11 call sites from 11 routines (e.g. Func_005_7080, Func_005_7512, Func_005_7616, Func_005_774F, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80F, wD810
 Func_005_4221::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -323,10 +323,10 @@ Jump_005_4256::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_7322, Func_005_78A8, Func_005_7A6C, Func_005_7CF3)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wBattleMP
 Func_005_4259:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -359,11 +359,11 @@ Jump_005_4283::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_72F7)
-; reads: wD8A4, wRecordBuffer, wCFED, hFFC6
+; reads: wBattleActor, wRecordBuffer, wCFED, hFFC6
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wD988, hFFC6
 Func_005_4286:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_4319
@@ -373,7 +373,7 @@ Func_005_4286:: ; heuristic: follows a terminator; C0
     ld h, a
     push hl
     ld b, $03
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld e, a
@@ -457,11 +457,11 @@ Jump_005_4319::
     ret
 
 ; 16 call sites from 16 routines (e.g. Func_005_7109, Func_005_71BE, Func_005_72F7, Func_005_7345, ...)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_431C:: ; heuristic: follows a terminator; C0
-    ld hl, wD80C
-    ld a, [wD8A4]
+    ld hl, wBattleStatus
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
@@ -470,17 +470,17 @@ Func_005_431C:: ; heuristic: follows a terminator; C0
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_7345, Func_005_73D7, Func_005_7449, Func_005_7A6C)
-; reads: wD8A4, wRecordBuffer
+; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD80D
 Func_005_432E:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_4370
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -519,16 +519,16 @@ Jump_005_4370::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_7410, Func_005_7CF3)
-; reads: wD8A4, wRecordBuffer
+; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 Func_005_4373:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_43AA
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -562,17 +562,17 @@ Jump_005_43AA::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7B84)
-; reads: wD8A4, wRecordBuffer
+; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD80D
 Func_005_43AD:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_43EF
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -611,7 +611,7 @@ Jump_005_43EF::
     ret
 
 ; 11 call sites from 11 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_74D1, ...)
-; reads: wCFEF, wD8A4
+; reads: wCFEF, wBattleActor
 ; points at: wDA72
 Func_005_43F2::
     ld a, [wCFEF]
@@ -624,7 +624,7 @@ Func_005_43F2::
     ld d, [hl]
     inc hl
     ld e, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -666,9 +666,9 @@ Jump_005_4438::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7786, Func_0E2_4001, Func_0E2_5F0A)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_443B::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -698,9 +698,9 @@ Jump_005_445E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_76A3)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4461:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -730,10 +730,10 @@ Jump_005_4484::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_74F9)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_4487:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld hl, wD80E
@@ -743,69 +743,69 @@ Func_005_4487:: ; heuristic: follows a terminator; C0
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7370, Func_005_78CC, Func_005_7CF3)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_4499:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $10
     call Func_005_6FA1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7860)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_44AB:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $02
     ld b, $03
     call Func_005_6FA1
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_763E, Func_005_7847)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_44BD:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $03
     call Func_005_6FA1
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_005_7686, Func_005_72DE, Func_005_77F9, Func_005_7D5B, ...)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_44CF::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
     ld e, $CC
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call Func_005_6FA1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7CC2)
-; reads: wD8A4, wRecordBuffer
+; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD80D
 Func_005_44E1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_4524
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -845,10 +845,10 @@ Jump_005_4524::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD811
 Func_005_4527:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
@@ -858,10 +858,10 @@ Func_005_4527:: ; heuristic: follows a terminator; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD811, wD80D
 Func_005_4539:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -896,10 +896,10 @@ Jump_005_4568::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD811, wD80D
 Func_005_456B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -934,10 +934,10 @@ Jump_005_459A::
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_005_72BE, Func_005_79C5, Func_005_79E5, Func_005_7C12, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD811, wD80D
 Func_005_459D:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -972,10 +972,10 @@ Jump_005_45CC::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_7345, Func_005_7449)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_45CF:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld hl, wD80D
@@ -985,10 +985,10 @@ Func_005_45CF:: ; heuristic: follows a terminator; C0
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7410, Func_005_7BBE, Func_005_7CF3)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_45E1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld hl, wD80D
@@ -998,10 +998,10 @@ Func_005_45E1:: ; heuristic: follows a terminator; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7B84)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_45F3:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld hl, wD80D
@@ -1011,9 +1011,9 @@ Func_005_45F3:: ; heuristic: follows a terminator; C0
     ret
 
 ; 22 call sites from 22 routines (e.g. Func_005_7686, Func_005_7236, Func_005_727A, Func_005_7293, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4605::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1034,10 +1034,10 @@ Jump_005_461C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7B40)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD8A7, wD80F
 Func_005_461F:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1086,10 +1086,10 @@ Jump_005_4661::
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_005_7AD8, Func_005_7B11, Func_005_7B5C, Func_0E2_432D, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80F
 Func_005_4664::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld b, $03
@@ -1099,10 +1099,10 @@ Func_005_4664::
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_005_7109, Func_0E2_411C, Func_0E2_41E0, Func_0E2_4567, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_4676::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_46B1
@@ -1110,7 +1110,7 @@ Func_005_4676::
     jr z, Jump_005_46AE
     cp a, $03
     jr nz, Jump_005_46AE
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1146,10 +1146,10 @@ Jump_005_46B1::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4B6B)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_46B4:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_46F0
@@ -1157,7 +1157,7 @@ Func_005_46B4:: ; heuristic: follows a terminator; C0
     jr z, Jump_005_46ED
     cp a, $03
     jr nz, Jump_005_46ED
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1194,10 +1194,10 @@ Jump_005_46F0::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD810
 Func_005_46F3:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -1211,10 +1211,10 @@ Jump_005_4704::
     ret
 
 ; 17 call sites from 17 routines (e.g. Func_005_7187, Func_005_74B5, Func_005_772B, Func_005_774F, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD810
 Func_005_4707::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -1228,10 +1228,10 @@ Jump_005_4718::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_471B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 2, [hl]
@@ -1244,10 +1244,10 @@ Jump_005_472B::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_472E:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 3, [hl]
@@ -1260,10 +1260,10 @@ Jump_005_473E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_72F7)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_4741:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     bit 0, [hl]
@@ -1276,10 +1276,10 @@ Jump_005_4751::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7C82)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_4754:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     bit 6, [hl]
@@ -1292,10 +1292,10 @@ Jump_005_4764::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_7CA2, Func_005_7CF3)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_4767:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld b, $03
     ld e, $40
@@ -1304,10 +1304,10 @@ Func_005_4767:: ; heuristic: follows a terminator; C0
     ret
 
 ; 11 call sites from 11 routines (e.g. Func_005_7187, Func_005_7786, Func_005_77E0, Func_0E2_4279, ...)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_4777::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -1322,7 +1322,7 @@ Jump_005_4782::
     jr c, Jump_005_4797
     inc d
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     bit 6, [hl]
     jr z, Jump_005_47A2
@@ -1342,58 +1342,58 @@ Jump_005_47A2::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_71DE)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_47A5:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld b, $03
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $03
     call Func_005_6FBD
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_720A)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_47B5:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld b, $03
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $CC
     call Func_005_6FBD
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_71F4)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_47C5:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld b, $03
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $10
     call Func_005_6FBD
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7220)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_47D5:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld b, $03
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $20
     call Func_005_6FBD
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA76
 Func_005_47E5:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
 
 Jump_005_47EA::
@@ -1429,10 +1429,10 @@ Jump_005_480F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7AA4)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA76
 Func_005_4812:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     jp Jump_005_47EA
@@ -1498,10 +1498,10 @@ Func_005_4852::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7600)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD8A7
 Func_005_4858:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1531,10 +1531,10 @@ Jump_005_487D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7A3E)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA74, wD80D
 Func_005_4880:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1581,10 +1581,10 @@ Jump_005_48C6::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_72BE, Func_005_79C5, Func_005_79E5)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D, wDA73
 Func_005_48C9::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1625,13 +1625,13 @@ Jump_005_4901::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7345)
-; reads: wRecordBuffer, wD8A4
+; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wD80D, wDA74
 Func_005_4904:: ; heuristic: follows a terminator; C0
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1672,10 +1672,10 @@ Jump_005_4942::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_7322, Func_005_78A8)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA74
 Func_005_4949:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1708,10 +1708,10 @@ Jump_005_4974::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_724F)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA75
 Func_005_4977::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1749,10 +1749,10 @@ Jump_005_49A7::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7293)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA75
 Func_005_49AA:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1790,10 +1790,10 @@ Jump_005_49DA::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_763E, Func_005_7847, Func_005_7860)
-; reads: wD8A4
-; points at: wD80C, wDA76
+; reads: wBattleActor
+; points at: wBattleStatus, wDA76
 Func_005_49DD::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1804,7 +1804,7 @@ Jump_005_49E7::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4A06
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
@@ -1828,10 +1828,10 @@ Jump_005_4A0D::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_765B, Func_005_7824)
-; reads: wD8A4
-; points at: wD80C, wDA77
+; reads: wBattleActor
+; points at: wBattleStatus, wDA77
 Func_005_4A10:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1842,7 +1842,7 @@ Jump_005_4A1A::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4A39
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $40
@@ -1866,10 +1866,10 @@ Jump_005_4A40::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7879)
-; reads: wD8A4
-; points at: wD80C, wDA77
+; reads: wBattleActor
+; points at: wBattleStatus, wDA77
 Func_005_4A43:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1880,7 +1880,7 @@ Jump_005_4A4D::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4A6C
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $20
@@ -1904,13 +1904,13 @@ Jump_005_4A73::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7B84)
-; reads: wRecordBuffer, wD8A4
+; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wD80D, wDA77
 Func_005_4A76:: ; heuristic: follows a terminator; C0
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1951,13 +1951,13 @@ Jump_005_4AB4::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wRecordBuffer, wD8A4
+; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wD80D, wDA78
 Func_005_4ABB:: ; heuristic: follows a terminator; C0
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -1998,13 +1998,13 @@ Jump_005_4AF9::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
-; points at: wDA63
+; reads: wBattleActor
+; points at: wBattleSlotOut
 Func_005_4B00:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld b, $03
 
@@ -2047,9 +2047,9 @@ Jump_005_4B3A::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_005_76E2, Func_0E2_4001, Func_0E2_4279, Func_0E2_4B6B, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4B3D::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -2077,13 +2077,13 @@ Jump_005_4B5C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7A91)
-; reads: wD8A4
-; points at: wDA63
+; reads: wBattleActor
+; points at: wBattleSlotOut
 Func_005_4B5F:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     or a, $03
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
     or a, a
@@ -2099,12 +2099,12 @@ Jump_005_4B77::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_71AC, Func_005_71BE, Func_005_7946, Func_005_7DA8)
-; reads: wD8A4
-; points at: wDA63
+; reads: wBattleActor
+; points at: wBattleSlotOut
 Func_005_4B7A:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld b, $03
 
@@ -2122,9 +2122,9 @@ Jump_005_4B94::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_76A3, Func_0E2_4536, Func_0E2_4567, Func_0E2_545D)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4B97:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_401F
     ld b, h
     ld c, l
@@ -2133,7 +2133,7 @@ Func_005_4B97:: ; heuristic: follows a terminator; C0
     ld a, $64
     call Divide24ByA
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -2177,9 +2177,9 @@ Jump_005_4BDE::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_0E2_4279, Func_0E2_432D, Func_0E2_5B3D, Func_0E2_6249, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4BE1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -2205,9 +2205,9 @@ Jump_005_4BFF::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4C02:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -2233,9 +2233,9 @@ Jump_005_4C20::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7236)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4C23:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -2259,9 +2259,9 @@ Jump_005_4C3D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_727A)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_4C40:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -2285,10 +2285,10 @@ Jump_005_4C5A::
     ret
 
 ; 32 call sites from 32 routines (e.g. Func_005_772B, Func_005_7397, Func_005_7BEE, Func_0E2_4001, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD2C1
 Func_005_4C5D::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -2332,14 +2332,14 @@ Jump_005_4C99::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wD8A4, hFFC6
+; reads: wC58A, wBattleActor, hFFC6
 ; writes: hFFC6, wD006, wD007
 ; points at: wD958, hFFC6
 Func_005_4C9C:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     or a, a
     jr nz, Jump_005_4CE2
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -2382,14 +2382,14 @@ Jump_005_4CE2::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD812
 Func_005_4CE5::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_4D17
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -2425,10 +2425,10 @@ Jump_005_4D17::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_72AC, Func_0E2_4A08)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_4D1A:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -2462,10 +2462,10 @@ Jump_005_4D43::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7449)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD814
 Func_005_4D46:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld b, $03
     ld e, $40
@@ -2474,10 +2474,10 @@ Func_005_4D46:: ; heuristic: follows a terminator; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7996)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD811
 Func_005_4D56:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD811
     call AddAx9ToHL
     ld a, [hl]
@@ -2491,10 +2491,10 @@ Jump_005_4D67::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7A27)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_4D6A:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -2504,7 +2504,7 @@ Jump_005_4D72::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4D9B
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     or a, a
@@ -2538,10 +2538,10 @@ Jump_005_4DA2::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7A55)
-; reads: wD8A4
-; points at: wD80D, wDA63
+; reads: wBattleActor
+; points at: wD80D, wBattleSlotOut
 Func_005_4DA5:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -2577,10 +2577,10 @@ Jump_005_4DD8::
     inc c
     dec b
     jr nz, Jump_005_4DAF
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     or a, $03
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
     or a, a
@@ -2593,10 +2593,10 @@ Jump_005_4DF2::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_7109, Func_005_71BE, Func_005_7946, Func_005_7DA8)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wC984
 Func_005_4DF5::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     rrca
     rrca
     and a, $01
@@ -2659,10 +2659,10 @@ Jump_005_4E45::
     ret
 
 ; 12 call sites from 12 routines (e.g. Func_005_557E, Func_0E2_40BF, Func_0E2_411C, Func_0E2_4AB6, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD2C1
 Func_005_4E48::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -2705,7 +2705,7 @@ Jump_005_4E79::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_4E48)
-; reads: wRecordBuffer, wCFF7, wCFF9, wCFF8, wCFFA, wD8A4, wC58A
+; reads: wRecordBuffer, wCFF7, wCFF9, wCFF8, wCFFA, wBattleActor, wC58A
 ; points at: wD8B7
 Func_005_4E7C::
     ld a, [wRecordBuffer]
@@ -2740,7 +2740,7 @@ Func_005_4E7C::
     ret
 
 Jump_005_4EBD::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -2748,7 +2748,7 @@ Jump_005_4EBD::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_4ED9
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_4EE4
 
@@ -2782,7 +2782,7 @@ Jump_005_4EFB::
     jp Jump_005_4FF9
 
 Jump_005_4F01::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -2790,7 +2790,7 @@ Jump_005_4F01::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_4F1D
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_4F27
 
@@ -2823,7 +2823,7 @@ Jump_005_4F3E::
     jp Jump_005_4FF9
 
 Jump_005_4F44::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -2831,7 +2831,7 @@ Jump_005_4F44::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_4F60
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_4F6A
 
@@ -2882,7 +2882,7 @@ Jump_005_4F97::
     jr Jump_005_4FF9
 
 Jump_005_4F9C::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -2890,7 +2890,7 @@ Jump_005_4F9C::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_4FB8
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_4FC0
 
@@ -2912,7 +2912,7 @@ Jump_005_4FC8::
     jr Jump_005_4FF9
 
 Jump_005_4FCB::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD8B7
     add_a_to_hl
     ld l, [hl]
@@ -2920,7 +2920,7 @@ Jump_005_4FCB::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_4FE7
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_4FEF
 
@@ -3000,7 +3000,7 @@ Func_005_5034::
     ret
 
 ; 14 call sites from 14 routines (e.g. Func_0E2_40BF, Func_0E2_411C, Func_0E2_47AB, Func_0E2_4A08, ...)
-; reads: wCFEF, wD8A4, hFFC6, hFFC7
+; reads: wCFEF, wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
 Func_005_5052::
@@ -3014,7 +3014,7 @@ Func_005_5052::
     ld d, [hl]
     inc hl
     ld e, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -3072,18 +3072,18 @@ Jump_005_50B4::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_0E2_4536, Func_0E2_4567, Func_0E2_4721, Func_0E2_545D)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_50B7:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_50E0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     call Func_005_6DFF
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     call Func_005_6DFF
     pop bc
@@ -3101,15 +3101,15 @@ Jump_005_50E0::
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_0E2_449C, Func_0E2_5426, Func_0E2_54C4, Func_0E2_5529, ...)
-; reads: wD8A4, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
+; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: hFFC6, hFFC9
 Func_005_50E3:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_517A
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -3148,7 +3148,7 @@ Jump_005_5117::
     ldh [hFFC7], a
     ld a, h
     ldh [hFFC8], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -3204,18 +3204,18 @@ Jump_005_517A::
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_0E2_449C, Func_0E2_493F, Func_0E2_54C4, Func_0E2_5529, ...)
-; reads: wD8A4, hFFC6, hFFC7
+; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_005_517D:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_51E7
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4001
     add hl, hl
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -3289,14 +3289,14 @@ Jump_005_51E7::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4619)
-; reads: wD8A4, hFFC6, hFFC7
+; reads: wBattleActor, hFFC6, hFFC7
 Func_005_51EA:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_5225
     call Func_005_6CC2
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4001
     ldh a, [hFFC6]
     ld c, a
@@ -3331,14 +3331,14 @@ Jump_005_5225::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4619)
-; reads: wD8A4, hFFC6, hFFC7
+; reads: wBattleActor, hFFC6, hFFC7
 Func_005_5228:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_5272
     call Func_005_6CC2
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld e, a
     ld d, $03
@@ -3386,15 +3386,15 @@ Jump_005_5272::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0E2_4674, Func_0E2_5BC4, Func_0E2_5C25)
-; reads: wD8A4, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
+; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: hFFC6, hFFC9
 Func_005_5275:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_5314
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -3437,7 +3437,7 @@ Jump_005_52AE::
     ldh [hFFC7], a
     ld a, h
     ldh [hFFC8], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -3582,9 +3582,9 @@ Jump_005_5393::
     ret
 
 ; 11 call sites from 11 routines (e.g. Func_005_77C7, Func_005_7C69, Func_005_7CF3, Func_0E2_432D, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_5397:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_6BF8
     jr nz, Jump_005_53A2
     ld c, $00
@@ -3595,9 +3595,9 @@ Jump_005_53A2::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0E2_438D, Func_0E2_5B3D, Func_0E2_6387)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_53A5:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -3626,10 +3626,10 @@ Jump_005_53C7::
     ret
 
 ; 14 call sites from 14 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4E71, Func_0E2_4F30, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_53CA::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     ld a, [hl]
@@ -3651,10 +3651,10 @@ Jump_005_53E3::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7AA4, Func_005_7CF3, Func_0E2_4B6B)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD810
 Func_005_53E6:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     ld a, [hl]
@@ -3668,14 +3668,14 @@ Jump_005_53F7::
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_0E2_48FD, Func_0E2_4984, Func_0E2_60A6, Func_0E2_618D, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D, wD989
 Func_005_53FA:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_544C
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -3728,39 +3728,39 @@ Jump_005_544C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_493F)
-; reads: wD8A4, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
+; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
 ; points at: hFFCE
 Func_005_544F:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_54FA
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_400B
     ld a, l
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4010
     ld a, l
     ldh [hFFC8], a
     ld a, h
     ldh [hFFC9], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4001
     ld a, l
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4006
     ld a, l
     ldh [hFFCC], a
     ld a, h
     ldh [hFFCD], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld e, a
@@ -3849,14 +3849,14 @@ Func_005_54FD:: ; address name
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_60D7, Func_0E2_61E0)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD989, wBattleMP, wD8B7, wBattleHP
 Func_005_5500:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_557B
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -3904,7 +3904,7 @@ Jump_005_5530::
     add hl, de
     push bc
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     sla a
     ld hl, wBattleHP
     add_a_to_hl
@@ -3950,16 +3950,16 @@ Jump_005_5588::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_78A8, Func_005_7322, Func_0E2_478E)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_558B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4010
     ld b, h
     ld c, l
     add hl, hl
     add hl, bc
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_401A
     add hl, hl
     add hl, hl
@@ -3974,10 +3974,10 @@ Jump_005_55A7::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_73D7)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_55AA:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     ld a, [hl]
@@ -3991,7 +3991,7 @@ Jump_005_55BB::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_6822, Func_0E2_6843)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_55BE::
     ld a, [wC58A]
@@ -4007,7 +4007,7 @@ Func_005_55BE::
     inc hl
     bit 6, [hl]
     jr z, Jump_005_55ED
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD057
     and a, $04
     srl a
@@ -4025,7 +4025,7 @@ Jump_005_55F0::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_73D7, Func_0E2_6854)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_55F3:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
@@ -4041,7 +4041,7 @@ Func_005_55F3:: ; heuristic: follows a terminator; C0
     inc hl
     bit 5, [hl]
     jr z, Jump_005_5622
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD057
     and a, $04
     srl a
@@ -4059,7 +4059,7 @@ Jump_005_5625::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6865)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_5628:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
@@ -4075,7 +4075,7 @@ Func_005_5628:: ; heuristic: follows a terminator; C0
     inc hl
     bit 4, [hl]
     jr z, Jump_005_5657
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD057
     and a, $04
     srl a
@@ -4093,7 +4093,7 @@ Jump_005_565A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6876)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_565D:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
@@ -4109,7 +4109,7 @@ Func_005_565D:: ; heuristic: follows a terminator; C0
     inc hl
     bit 3, [hl]
     jr z, Jump_005_568C
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD057
     and a, $04
     srl a
@@ -4127,7 +4127,7 @@ Jump_005_568F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6887)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_5692:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
@@ -4143,7 +4143,7 @@ Func_005_5692:: ; heuristic: follows a terminator; C0
     inc hl
     bit 2, [hl]
     jr z, Jump_005_56C1
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD057
     and a, $04
     srl a
@@ -4161,7 +4161,7 @@ Jump_005_56C4::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6898)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_56C7:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
@@ -4177,7 +4177,7 @@ Func_005_56C7:: ; heuristic: follows a terminator; C0
     inc hl
     bit 1, [hl]
     jr z, Jump_005_56F6
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD057
     and a, $04
     srl a
@@ -4195,7 +4195,7 @@ Jump_005_56F9::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4A08)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
 Func_005_56FC:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
@@ -4211,7 +4211,7 @@ Func_005_56FC:: ; heuristic: follows a terminator; C0
     inc hl
     bit 0, [hl]
     jr z, Jump_005_572B
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD057
     and a, $04
     srl a
@@ -4259,9 +4259,9 @@ Jump_005_5755::
     ret
 
 ; 8 call sites from 8 routines (e.g. Func_0E2_411C, Func_0E2_49B5, Func_0E2_4A08, Func_0E2_4AB6, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_5758:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -4294,9 +4294,9 @@ Jump_005_577C::
     ret
 
 ; 21 call sites from 21 routines (e.g. Func_005_5758, Func_0E2_40BF, Func_0E2_411C, Func_0E2_41E0, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_577F::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -4324,13 +4324,13 @@ Jump_005_579E::
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_0E2_47CE, Func_0E2_48CF, Func_0E2_491E, Func_0E2_5DBC, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_57A1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_57CC
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -4362,14 +4362,14 @@ Jump_005_57CC::
     ret
 
 ; 11 call sites from 11 routines (e.g. Func_0E2_411C, Func_0E2_4AB6, Func_0E2_4B6B, Func_0E2_4CA1, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD812
 Func_005_57CF::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5800
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -4404,15 +4404,15 @@ Jump_005_5800::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4279)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA75
 Func_005_5803:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_400B
     ld a, $0A
     call DivideHLByA
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4015
     pop bc
     call CompareHLToBC
@@ -4420,7 +4420,7 @@ Func_005_5803:: ; heuristic: follows a terminator; C0
     jr Jump_005_585A
 
 Jump_005_581D::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -4441,7 +4441,7 @@ Jump_005_5830::
     jr Jump_005_585A
 
 Jump_005_5836::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -4470,10 +4470,10 @@ Jump_005_585A::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_0E2_4674, Func_0E2_5BC4, Func_0E2_5C25, Func_0E2_6773)
-; reads: wD8A4, hFFC6, hFFC7
+; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_005_585D:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -4508,7 +4508,7 @@ Jump_005_5882::
     call DivideHLByA
     add hl, hl
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -4553,7 +4553,7 @@ Jump_005_58B5::
     sbc a, b
     ld h, a
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -4601,14 +4601,14 @@ Jump_005_5916::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD989, wD80D
 Func_005_5919:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jp c, Jump_005_59BA
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -4629,7 +4629,7 @@ Jump_005_592F::
     ld a, d
     cp a, $01
     jr nz, Jump_005_59B7
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -4714,14 +4714,14 @@ Jump_005_59BA::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D, wD989
 Func_005_59BD:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5A30
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -4795,7 +4795,7 @@ Jump_005_5A30::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D
 Func_005_5A33:: ; heuristic: follows a terminator; C0
     ld [bc], a
@@ -4803,11 +4803,11 @@ Func_005_5A33:: ; heuristic: follows a terminator; C0
     rlca
     ld [de], a
     inc h
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5A70
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -4846,20 +4846,20 @@ Jump_005_5A70::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD989
 Func_005_5A73:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5AF5
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
 
 Jump_005_5A85::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     ld a, c
     cp a, e
@@ -4948,18 +4948,18 @@ Jump_005_5AF5::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D, wD989
 Func_005_5AF8:: ; heuristic: follows a terminator; C0
     rrca
     ld bc, $191E
     inc d
     inc d
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5B54
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -5017,14 +5017,14 @@ Jump_005_5B54::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80D, wD989
 Func_005_5B57:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5BB9
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -5088,34 +5088,34 @@ Jump_005_5BB9::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4984)
-; reads: wD8A4, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
+; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
 Func_005_5BBC::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_400B
     ld a, l
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4010
     ld a, l
     ldh [hFFC8], a
     ld a, h
     ldh [hFFC9], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4001
     ld a, l
     ldh [hFFCA], a
     ld a, h
     ldh [hFFCB], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4006
     ld a, l
     ldh [hFFCC], a
     ld a, h
     ldh [hFFCD], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_401F
     ld a, l
     ldh [hFFCE], a
@@ -5183,10 +5183,10 @@ Jump_005_5C4D::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD989
 Func_005_5C50:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     swap a
     ld hl, wD989
     add_a_to_hl
@@ -5199,7 +5199,7 @@ Jump_005_5C5F::
     inc hl
     dec b
     jr nz, Jump_005_5C5F
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     and a, $04
     ld c, a
@@ -5229,10 +5229,10 @@ Jump_005_5C89::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_51F6, Func_0E2_526D)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD2C1
 Func_005_5C8C:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5314,9 +5314,9 @@ Jump_005_5CEE::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_5AE6, Func_0E2_67D5)
-; reads: wD8A4, wC984, wC985
+; reads: wBattleActor, wC984, wC985
 Func_005_5CF1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_5CFD
     ld a, [wC984]
@@ -5328,7 +5328,7 @@ Jump_005_5CFD::
 Jump_005_5D00::
     cp a, $01
     jr z, Jump_005_5D1D
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -5353,10 +5353,10 @@ Jump_005_5D1D::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_7410, Func_0E2_6249)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_5D20:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -5366,10 +5366,10 @@ Func_005_5D20:: ; heuristic: follows a terminator; C0
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_4B6B, Func_0E2_5E46)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_5D31:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     and a, $04
     ld c, a
@@ -5380,13 +5380,13 @@ Func_005_5D31:: ; heuristic: follows a terminator; C0
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_4C49, Func_0E2_4E71)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_5D44:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5D86
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4015
     ld c, l
     ld b, h
@@ -5395,7 +5395,7 @@ Func_005_5D44:: ; heuristic: follows a terminator; C0
     add hl, bc
     ld d, h
     ld e, l
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5450,10 +5450,10 @@ Jump_005_5D98::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7671, Func_005_72DE, Func_005_77F9)
-; reads: wD8A4
-; points at: wD80C, wDA74
+; reads: wBattleActor
+; points at: wBattleStatus, wDA74
 Func_005_5D9B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5464,7 +5464,7 @@ Jump_005_5DA5::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5DC3
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_005_5DC3
@@ -5487,10 +5487,10 @@ Jump_005_5DCA::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_791F, Func_005_7AD8, Func_005_7B11)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80F, wDA77
 Func_005_5DCD:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5525,10 +5525,10 @@ Jump_005_5DFC::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7A0D)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA74, wD814
 Func_005_5DFF:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5588,10 +5588,10 @@ Jump_005_5E48::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD810, wD80F
 Func_005_5E4B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5601,7 +5601,7 @@ Func_005_5E4B:: ; heuristic: follows a terminator; C0
     ld a, c
     or a, a
     ret z
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5611,10 +5611,10 @@ Func_005_5E4B:: ; heuristic: follows a terminator; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7370)
-; reads: wD8A4
-; points at: wD80C, wDA75
+; reads: wBattleActor
+; points at: wBattleStatus, wDA75
 Func_005_5E6F:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5625,7 +5625,7 @@ Jump_005_5E79::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5E97
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     bit 4, [hl]
     jr nz, Jump_005_5E97
@@ -5648,10 +5648,10 @@ Jump_005_5E9E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5529)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_5EA1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -5662,7 +5662,7 @@ Jump_005_5EAB::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5EC4
     ld a, c
-    ld hl, wD80C
+    ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
@@ -5685,17 +5685,17 @@ Jump_005_5ECB::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_67F9)
-; reads: wD8A4, wD2CC
+; reads: wBattleActor, wD2CC
 ; points at: wDA5B
 Func_005_5ECE::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_5F10
     ld a, [wD2CC]
     or a, a
     jr z, Jump_005_5F0A
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld de, wDA5B
@@ -5771,17 +5771,17 @@ Func_005_5F2A::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_45FE, Func_0E2_4619)
-; reads: wD8A4, wD2CC
+; reads: wBattleActor, wD2CC
 ; points at: wD80D, wDA5B
 Func_005_5F3D:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_5F8A
     ld a, [wD2CC]
     or a, a
     jr z, Jump_005_5F84
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld d, a
     and a, $04
     ld c, a
@@ -5876,17 +5876,17 @@ Jump_005_5FB3::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_67F9)
-; reads: wD8A4, wD2CC
+; reads: wBattleActor, wD2CC
 ; points at: wDA5B
 Func_005_5FC7::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_600B
     ld a, [wD2CC]
     or a, a
     jr z, Jump_005_6005
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld d, a
     and a, $04
     ld c, a
@@ -5974,14 +5974,14 @@ Func_005_6039::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_51DB, Func_0E2_51F6)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wBattleHP, wBattleMaxHP, wSlotPersonalityLo
 Func_005_604C:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_60B7
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -6162,14 +6162,14 @@ Data_005_614B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $05, $07, $12, $24, $01, $0C, $1C
 
 ; 3 call sites from 3 routines (e.g. Func_0E2_41C5, Func_0E2_41E0, Func_0E2_59E5)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E, wDA74
 Func_005_6153::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_6195
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -6212,9 +6212,9 @@ Jump_005_6195::
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_005_76A3, Func_005_7397, Func_005_7BEE, Func_005_7C45, ...)
-; reads: wD8A4, wD2CC
+; reads: wBattleActor, wD2CC
 Func_005_6198:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_61AE
@@ -6233,10 +6233,10 @@ Jump_005_61AE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7CC2)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_61B1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     bit 3, [hl]
@@ -6250,24 +6250,24 @@ Jump_005_61C1::
     INCBIN "dwm2-cobi-us.gbc", $0161C4, $65
 
 ; 1 call site from 1 routine (e.g. Func_005_7879)
-; reads: wD8A4
-; points at: wD80C
+; reads: wBattleActor
+; points at: wBattleStatus
 Func_005_6229::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ld hl, wD80C
+    ld hl, wBattleStatus
     ld e, $20
     ld b, $03
     call Func_005_6FA1
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7AA4)
-; reads: wD8A4, wRecordBuffer
+; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wD988
 Func_005_623B:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     swap a
     ld hl, wD988
     add_a_to_hl
@@ -6296,9 +6296,9 @@ Jump_005_6264::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_715F, Func_005_7975, Func_005_7DC2)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_626B::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -6391,9 +6391,9 @@ Jump_005_62D9::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7187)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_62E1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -6523,13 +6523,13 @@ Jump_005_638E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4A08)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_6392:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_63CF
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -6574,13 +6574,13 @@ Jump_005_63CF::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7BBE, Func_005_7C82, Func_005_7CA2)
-; reads: wRecordBuffer, wD8A4
+; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wD80D
 Func_005_63D2:: ; heuristic: follows a terminator; C0
     ld a, [wRecordBuffer]
     push af
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -6665,9 +6665,9 @@ Jump_005_644F::
     ret
 
 ; 10 call sites from 10 routines (e.g. Func_005_7397, Func_005_791F, Func_005_7BE6, Func_005_7C69, ...)
-; reads: wD8A4, wC984, wC985
+; reads: wBattleActor, wC984, wC985
 Func_005_6452:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_645E
     ld a, [wC984]
@@ -6679,7 +6679,7 @@ Jump_005_645E::
 Jump_005_6461::
     cp a, $01
     jr z, Jump_005_647B
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -6722,10 +6722,10 @@ Jump_005_6491::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, Func_0E2_511C)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD2C1
 Func_005_6494::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -6765,12 +6765,12 @@ Jump_005_64C9::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0E2_4001, Func_0E2_4CE6, Func_0E2_511C)
-; reads: wC58A, wD8A4
+; reads: wC58A, wBattleActor
 Func_005_64CC::
     ld a, [wC58A]
     or a, a
     jr nz, Jump_005_64DC
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_005_64DC
     ld c, $00
@@ -6781,15 +6781,15 @@ Jump_005_64DC::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7D95)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_64DF:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_400B
     ld a, $03
     call DivideHLByA
     add hl, hl
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4015
     pop bc
     call CompareHLToBC
@@ -6802,11 +6802,11 @@ Jump_005_64FB::
     ret
 
 ; 21 call sites from 21 routines (e.g. Func_0E2_411C, Func_0E2_41E0, Func_0E2_4279, Func_0E2_449C, ...)
-; reads: wD8A4, wCFEF, hFFC6
+; reads: wBattleActor, wCFEF, hFFC6
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
 Func_005_64FE:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_6553
@@ -6820,7 +6820,7 @@ Func_005_64FE:: ; heuristic: follows a terminator; C0
     ld d, [hl]
     inc hl
     ld e, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -6865,21 +6865,21 @@ Jump_005_6553::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_0E2_4310, Func_0E2_438D, Func_0E2_5B3D, Func_0E2_6303, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD988
 Func_005_6556:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $03
     jr c, Jump_005_65A9
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD988
     swap a
     add_a_to_hl
     ld b, $08
     call Func_005_65AC
     jr nz, Jump_005_65A9
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -6940,10 +6940,10 @@ Func_005_65AC::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_678C)
-; reads: wD8A4, hFFC6, hFFC7
+; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_005_65C1:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -6977,7 +6977,7 @@ Jump_005_65E4::
     call DivideHLByA
     add hl, hl
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7023,7 +7023,7 @@ Jump_005_6619::
     sbc a, b
     ld h, a
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7072,22 +7072,22 @@ Jump_005_667C::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_0E2_43C8, Func_0E2_43E9, Func_0E2_5AE6, Func_0E2_6350)
-; reads: wD8A4, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wD988
 Func_005_667F:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $04
     jp c, Jump_005_671D
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD988
     swap a
     add_a_to_hl
     ld b, $08
     call Func_005_6720
     jr nz, Jump_005_671D
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -7125,7 +7125,7 @@ Jump_005_66BB::
     ldh [hFFC9], a
     ld a, h
     ldh [hFFCA], a
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
@@ -7240,10 +7240,10 @@ Func_005_6741::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_526D)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD2C1
 Func_005_676E:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7291,14 +7291,14 @@ Jump_005_67AF::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_56C6)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD2C1
 Func_005_67B2:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $02
     jr c, Jump_005_681D
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7320,7 +7320,7 @@ Jump_005_67D2::
     ld a, d
     cp a, $02
     jr c, Jump_005_681A
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_401F
     ld a, e
     push de
@@ -7364,14 +7364,14 @@ Jump_005_681D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_57A9)
-; reads: wD8A4, wCFEF
+; reads: wBattleActor, wCFEF
 ; points at: wDA72
 Func_005_6820:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $02
     jr c, Jump_005_6899
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7421,7 +7421,7 @@ Jump_005_6840::
     ld a, e
     call Func_005_4015
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4015
     ld a, $3C
     ld b, h
@@ -7444,10 +7444,10 @@ Jump_005_6899::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5856)
-; reads: wD8A4, wC58A, wCFC5, wD2CC, wCFEF
+; reads: wBattleActor, wC58A, wCFC5, wD2CC, wCFEF
 ; points at: wDA5B, wDA72
 Func_005_689C:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $03
     jp c, Jump_005_696F
@@ -7460,7 +7460,7 @@ Func_005_689C:: ; heuristic: follows a terminator; C0
     ld a, [wD2CC]
     or a, a
     jp z, Jump_005_696C
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
@@ -7500,19 +7500,19 @@ Jump_005_68F5::
     jr Jump_005_696C
 
 Jump_005_68FB::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4015
     srl h
     rr l
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4015
     pop bc
     call CompareHLToBC
     jr nc, Jump_005_696C
     ld de, $0064
     add hl, de
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7579,10 +7579,10 @@ Jump_005_696F::
     ret
 
 ; 8 call sites from 8 routines (e.g. Func_005_772B, Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD810
 Func_005_6972::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
     and a, $03
@@ -7595,11 +7595,11 @@ Jump_005_6982::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_76CE)
-; reads: wD8A4, hFFCA, hFFCB, hFFC9
+; reads: wBattleActor, hFFCA, hFFCB, hFFC9
 ; writes: hFFC9, hFFCA, hFFCB
 ; points at: hFFC9
 Func_005_6985:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7634,7 +7634,7 @@ Jump_005_69AD::
     ldh a, [hFFC9]
     call DivideHLByA
     push hl
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     call Func_005_4001
     ld d, h
     ld e, l
@@ -7654,10 +7654,10 @@ Jump_005_69D7::
     ret
 
 ; 14 call sites from 14 routines (e.g. Func_0E2_4001, Func_0E2_4F30, Func_0E2_4FE1, Func_0E2_511C, ...)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wD80E
 Func_005_69DA::
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wD80E
     call AddAx9ToHL
     ld a, [hl+]
@@ -7678,14 +7678,14 @@ Jump_005_69F2::
     ret
 
 ; 20 call sites from 20 routines (e.g. Func_0E2_41E0, Func_0E2_449C, Func_0E2_4567, Func_0E2_4674, ...)
-; reads: wC58A, wD8A4, wCFEF, hFFC6, hFFC7
+; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
 Func_005_69F5:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_6A03
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_6A68
 
@@ -7700,7 +7700,7 @@ Jump_005_6A03::
     ld d, [hl]
     inc hl
     ld e, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7762,14 +7762,14 @@ Jump_005_6A68::
     ret
 
 ; 20 call sites from 20 routines (e.g. Func_0E2_41E0, Func_0E2_449C, Func_0E2_4567, Func_0E2_4674, ...)
-; reads: wC58A, wD8A4, wCFEF, hFFC6, hFFC7
+; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
 Func_005_6A6B:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_6AE5
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_005_6AE5
     call ReadWDA53Indexed_Bank05
@@ -7785,7 +7785,7 @@ Func_005_6A6B:: ; heuristic: follows a terminator; C0
     ld d, [hl]
     inc hl
     ld e, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -7894,7 +7894,7 @@ Func_005_6B16:: ; address name
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_4C23)
-; reads: wDAC4, wDAC5, wC58A
+; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A
 Func_005_6B20:: ; heuristic: follows a terminator; C0
     call Func_005_4006
     ld a, l
@@ -7904,13 +7904,13 @@ Func_005_6B20:: ; heuristic: follows a terminator; C0
     jr nc, Jump_005_6B5B
     push hl
     push bc
-    farcall Func_03B_40CD
+    farcall GetBaseDEF
     pop bc
     pop hl
     inc hl
-    ld a, [wDAC4]
+    ld a, [wBattleStatResultLo]
     ld e, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld d, a
     sla e
     rl d
@@ -7945,7 +7945,7 @@ Jump_005_6B5D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_4C40)
-; reads: wDAC4, wDAC5, wC58A
+; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A
 Func_005_6B5F:: ; heuristic: follows a terminator; C0
     call Func_005_401F
     ld a, l
@@ -7955,13 +7955,13 @@ Func_005_6B5F:: ; heuristic: follows a terminator; C0
     jr nc, Jump_005_6B9A
     push hl
     push bc
-    farcall Func_03B_4111
+    farcall GetBaseAGL
     pop bc
     pop hl
     inc hl
-    ld a, [wDAC4]
+    ld a, [wBattleStatResultLo]
     ld e, a
-    ld a, [wDAC5]
+    ld a, [wBattleStatResultHi]
     ld d, a
     sla e
     rl d
@@ -8219,10 +8219,10 @@ Func_005_6CA5:: ; heuristic: follows a terminator; C0
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_51EA, Func_005_5228)
-; reads: wD8A4, hFFC6, hFFC7
+; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_005_6CC2:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -8770,9 +8770,9 @@ Jump_005_6FD6::
     ret
 
 ; 10 call sites from 10 routines (e.g. Func_005_481C, Func_005_4822, Func_005_4828, Func_005_482E, ...)
-; reads: wD8A4
+; reads: wBattleActor
 Func_005_6FD9:: ; heuristic: follows a terminator; C0
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
@@ -8847,7 +8847,7 @@ Func_005_702D::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD8A4
+; reads: wBattleActor
 ; points at: wDA72
 Func_005_7032:: ; heuristic: follows a terminator; C0
     dec a
@@ -8857,7 +8857,7 @@ Func_005_7032:: ; heuristic: follows a terminator; C0
     ld d, [hl]
     inc hl
     ld e, [hl]
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     ld hl, wDA72
     add a, a
     add a, c

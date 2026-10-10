@@ -2243,5 +2243,60 @@
     "name": "DebugMessageTest_Init",
     "note": "init for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)",
     "evidence": "execution (E-0041)"
+  },
+  "3B:4001": {
+    "name": "GetBaseHP",
+    "note": "C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's HP word (wCFF6) is returned; otherwise the word at offset $1D of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is the game's usual order, assumed from the six consecutive accessors",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "3B:4045": {
+    "name": "GetBaseMP",
+    "note": "C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's MP word (wCFF8) is returned; otherwise the word at offset $21 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is the game's usual order, assumed from the six consecutive accessors",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "3B:4089": {
+    "name": "GetBaseATK",
+    "note": "C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's ATK word (wCFFA) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is the game's usual order, assumed from the six consecutive accessors",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "3B:40CD": {
+    "name": "GetBaseDEF",
+    "note": "C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's DEF word (wCFFC) is returned; otherwise the word at offset $25 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is the game's usual order, assumed from the six consecutive accessors",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "3B:4111": {
+    "name": "GetBaseAGL",
+    "note": "C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's AGL word (wCFFE) is returned; otherwise the word at offset $27 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is the game's usual order, assumed from the six consecutive accessors",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "3B:4155": {
+    "name": "GetBaseINT",
+    "note": "C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's INT word (wD000) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is the game's usual order, assumed from the six consecutive accessors",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "32:59DF": {
+    "name": "ApplyDamageToTarget",
+    "note": "target slot wBattleTarget (wD8A5): when wDAC1's top two bits are not 00 and not 01, wBattleHP[target] -= the 16-bit damage in wD872/wD873 and is clamped at 0 (a result below zero also decrements wCFCB and clears wCFCD); then sets bits 0, 1 and 2 of the target's wD095 flags",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "32:5B12": {
+    "name": "DefeatTarget",
+    "note": "target slot wBattleTarget: re-derives its stats (Func_032_5C3F, Func_032_5B94, Func_032_5BE8 clear 'buff' bits), sets wBattleSlotOut[target] = 1, wBattleHP[target] = 0 and clears the target's 9-byte status record (wD80C + 9 * slot)",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "32:5C3F": {
+    "name": "RecomputeTargetMaxHPAndMP",
+    "note": "when bits 4-5 of the target's status byte (wD80D + 9 * slot) are set: stores GetBaseHP and GetBaseMP of the target in wBattleMaxHP and wBattleMaxMP and lowers the current values to the new maximum",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "36:4001": {
+    "name": "RunBattleResolveStep",
+    "note": "jumps through a 16-entry table indexed by wBattleResolveStep (wCFCB): one step of resolving a battle action; the steps advance wBattleResolveStep and use wBattleSubStep (wCFCC) and wBattleSubStep2 (wCFCD) for nested state",
+    "evidence": "reading + execution (E-0043)"
+  },
+  "36:48FA": {
+    "name": "ResolveStepApplyDamage",
+    "note": "resolve step $0C: farcalls ApplyDamageToTarget",
+    "evidence": "reading + execution (E-0043)"
   }
 }

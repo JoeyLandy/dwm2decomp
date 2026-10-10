@@ -59,7 +59,7 @@ Jump_019_4069::
 ; 1 call site from 1 routine (e.g. Func_019_4001)
 ; reads: wCFC5, wC58A, wC6FD, wCFDC, wC835, wC834, wC57F
 ; writes: wDAD7, wD802, wDAAC, wDAAD, wD892, wC5FC, wC5FD, wC5FE, ...
-; points at: wC46B, wDA5B, wDAD8, wDA63, wD958, wDA08, wDAD4, wD895, ...
+; points at: wC46B, wDA5B, wDAD8, wBattleSlotOut, wD958, wDA08, wDAD4, wD895, ...
 Func_019_4079::
     ld a, [wCFC5]
     cp a, $04
@@ -97,7 +97,7 @@ Jump_019_408D::
     ld bc, $0008
     ld a, $80
     call FillBytes
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     ld bc, $0008
     ld a, $FF
     call FillBytes
@@ -271,7 +271,7 @@ Func_019_4219::
 ; 1 call site from 1 routine (e.g. Func_019_4001)
 ; reads: wD88F, wC57F, wD890, wD00B, wD00A
 ; writes: wD006, wD007
-; points at: wD8A7, wDA63, wD958
+; points at: wD8A7, wBattleSlotOut, wD958
 Func_019_4224::
     ld a, [wD88F]
     ld b, a
@@ -308,7 +308,7 @@ Jump_019_424D::
 Jump_019_425D::
     push bc
     ld a, c
-    ld hl, wDA63
+    ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
@@ -339,7 +339,7 @@ Jump_019_4291::
     jr nz, Jump_019_425D
     ret
 
-; 8 call sites from 8 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_032_5C3F, Func_036_4A38_Case01, ...)
+; 8 call sites from 8 routines (e.g. Func_019_4CF8, Func_019_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
 ; points at: wDA53, wD92F
 Func_019_4298::
     push bc
@@ -490,7 +490,7 @@ Func_019_4349::
     ld a, [wD868]
     ld c, a
 
-; 6 call sites from 6 routines (e.g. Func_019_4CF8, Func_019_4BA8, Func_032_5C3F, Func_036_4A38_Case01, ...)
+; 6 call sites from 6 routines (e.g. Func_019_4CF8, Func_019_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
 ; reads: wD868, wD86A, wD86B
 ; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
@@ -710,11 +710,11 @@ Func_019_4465::
 
 ; 2 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
 ; reads: wCFC5
-; points at: wDA63, wD80C
+; points at: wBattleSlotOut, wBattleStatus
 Func_019_4468::
     push hl
     ld a, c
-    ld de, wDA63
+    ld de, wBattleSlotOut
     add a, e
     ld e, a
     jr nc, Jump_019_4472
@@ -734,7 +734,7 @@ Jump_019_447B::
     cp a, $04
     jr z, Jump_019_44A1
     ld a, c
-    ld de, wD80C
+    ld de, wBattleStatus
     add a, a
     add a, a
     add a, a
@@ -795,7 +795,7 @@ Jump_019_44B3::
     ld [de], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_032_5C3F, Func_036_4D0C, Func_036_5703, Func_036_5BC4, ...)
+; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, Func_036_5703, Func_036_5BC4, ...)
 ; reads: wD868, wD869, wD86A, wD86B
 Func_019_44B9::
     ld a, [wD868]

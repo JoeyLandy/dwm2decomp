@@ -86,8 +86,8 @@ Jump_01A_4063::
     db $C9, $C1, $0E, $00, $C9
 
 ; 1 call site from 1 routine (e.g. Func_039_6E27)
-; reads: wD8A6, wC58A, wD8A4
-; writes: wD872, wD873
+; reads: wD8A6, wC58A, wBattleActor
+; writes: wBattleDamageLo, wD873
 ; points at: wDA53
 Func_01A_408F::
     ld a, [wD8A6]
@@ -105,14 +105,14 @@ Func_01A_408F::
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_01A_40B6
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_01A_40B6
     ld bc, $000D
 
 Jump_01A_40B6::
     add hl, bc
-    ld a, [wD8A4]
+    ld a, [wBattleActor]
     push hl
     ld hl, wDA53
     add_a_to_hl
@@ -125,7 +125,7 @@ Jump_01A_40B6::
 
 Jump_01A_40CB::
     ld a, [hl+]
-    ld [wD872], a
+    ld [wBattleDamageLo], a
     ld a, [hl]
     ld [wD873], a
     ret
