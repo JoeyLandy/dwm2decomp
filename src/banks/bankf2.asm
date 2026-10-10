@@ -261,12 +261,7 @@ Func_0F2_41CC:: ; address name
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_41E0
-    inc h
-
-Jump_0F2_41E0::
+    add_a_to_hl
     call ReadWordFromDataBank
     ld e, b
     ld b, c
@@ -463,12 +458,7 @@ Func_0F2_434E::
     srl a
     srl a
     srl a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_436E
-    inc h
-
-Jump_0F2_436E::
+    add_a_to_hl
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F2_4001)
@@ -1204,12 +1194,7 @@ Jump_0F2_4C7E::
     inc de
     push de
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_4C8A
-    inc h
-
-Jump_0F2_4C8A::
+    add_a_to_hl
     call Func_0F2_4E50
     ld de, vTiles2 + $200
     call Func_000_21A1
@@ -1230,12 +1215,7 @@ Jump_0F2_4CA8::
     inc de
     push de
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_4CB3
-    inc h
-
-Jump_0F2_4CB3::
+    add_a_to_hl
     call Func_0F2_4E50
     ld de, vTiles2 + $2F0
     call Func_000_21A1
@@ -1274,12 +1254,7 @@ Jump_0F2_4CEE::
     inc de
     push de
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_4CFA
-    inc h
-
-Jump_0F2_4CFA::
+    add_a_to_hl
     call Func_0F2_4E50
     ld de, vTiles2 + $340
     call Func_000_21A1
@@ -1298,12 +1273,7 @@ Jump_0F2_4CFA::
 Jump_0F2_4D18::
     ld a, [de]
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_4D21
-    inc h
-
-Jump_0F2_4D21::
+    add_a_to_hl
     call Func_0F2_4E50
     ld de, vTiles2 + $430
     call Func_000_21A1
@@ -1316,12 +1286,7 @@ Jump_0F2_4D21::
 Func_0F2_4D2B::
     ld a, [wD7F3]
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_4D36
-    inc h
-
-Jump_0F2_4D36::
+    add_a_to_hl
     ld a, [hl+]
     ld [wC529], a
     ld a, [hl]
@@ -1571,12 +1536,7 @@ Jump_0F2_4E88::
 Jump_0F2_4E90::
     ld a, [de]
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_4E99
-    inc h
-
-Jump_0F2_4E99::
+    add_a_to_hl
     ld a, [hl+]
     ldh [hFFC6], a
     ld a, [hl]
@@ -1852,20 +1812,10 @@ Jump_0F2_500E::
     push bc
     ld a, c
     ld hl, Data_0F2_5050
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_5018
-    inc h
-
-Jump_0F2_5018::
+    add_a_to_hl
     ld a, [hl]
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_5021
-    inc h
-
-Jump_0F2_5021::
+    add_a_to_hl
     ld a, [hl+]
     ld b, a
     ld a, [hl]
@@ -1877,12 +1827,7 @@ Jump_0F2_5021::
     ld a, c
     add a, a
     ld hl, Data_0F2_5054
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_503A
-    inc h
-
-Jump_0F2_503A::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1926,12 +1871,7 @@ Jump_0F2_5068::
 Jump_0F2_5073::
     ld a, [de]
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_507C
-    inc h
-
-Jump_0F2_507C::
+    add_a_to_hl
     ld a, [hl+]
     ld b, a
     ld a, [hl]
@@ -1944,12 +1884,7 @@ Jump_0F2_507C::
     call Func_0F2_50A4
     pop hl
     ld a, $40
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_5097
-    inc h
-
-Jump_0F2_5097::
+    add_a_to_hl
     pop bc
     inc c
     ld a, c
@@ -1991,12 +1926,7 @@ Func_0F2_50C6::
     push bc
     ld hl, wCA2B
     ld a, [wD7F5]
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_50D2
-    inc h
-
-Jump_0F2_50D2::
+    add_a_to_hl
     ld a, [hl+]
     ldh [hFFC6], a
     ld a, [hl]
@@ -2022,12 +1952,7 @@ Func_0F2_50E2::
 Jump_0F2_50F8::
     ld a, [wD7F1]
     ld hl, wCA2B
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_5103
-    inc h
-
-Jump_0F2_5103::
+    add_a_to_hl
     ld a, [hl]
     and a, a
     jr nz, Jump_0F2_5108
@@ -2090,12 +2015,7 @@ Func_0F2_514D::
     srl a
     srl a
     srl a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_516D
-    inc h
-
-Jump_0F2_516D::
+    add_a_to_hl
     ret
 
 ; 7 call sites from 2 routines (e.g. Func_0F2_4A61, Func_0F2_4D72)
@@ -2148,12 +2068,7 @@ Jump_0F2_519F::
     push hl
     ld a, b
     ld hl, wD7F5
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_51A9
-    inc h
-
-Jump_0F2_51A9::
+    add_a_to_hl
     ld a, [hl]
     pop hl
     ld [de], a
@@ -2485,12 +2400,7 @@ Jump_0F2_63B0::
     ld a, b
     add a, a
     ld hl, wC787
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_63C9
-    inc h
-
-Jump_0F2_63C9::
+    add_a_to_hl
     ld a, [wD15E]
     add a, a
     ld de, wD11E
@@ -2515,12 +2425,7 @@ Jump_0F2_63E2::
 
 Jump_0F2_63E3::
     ld a, $04
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_63EA
-    inc h
-
-Jump_0F2_63EA::
+    add_a_to_hl
     inc b
     dec c
     jr nz, Jump_0F2_6397
@@ -2569,12 +2474,7 @@ Jump_0F2_63F3::
     ld a, b
     add a, a
     ld hl, wC787
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_6423
-    inc h
-
-Jump_0F2_6423::
+    add_a_to_hl
     ld a, [wD15E]
     add a, a
     ld de, wD11E
@@ -2597,12 +2497,7 @@ Jump_0F2_642F::
 Jump_0F2_643C::
     pop hl
     ld a, $04
-    add a, l
-    ld l, a
-    jr nc, Jump_0F2_6444
-    inc h
-
-Jump_0F2_6444::
+    add_a_to_hl
     inc b
     dec c
     jr nz, Jump_0F2_63F3

@@ -297,12 +297,7 @@ Jump_01E_4203::
     ld a, [wD786]
     add a, a
     ld hl, $4223
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_420F
-    inc h
-
-Jump_01E_420F::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -412,12 +407,7 @@ Jump_01E_42D1::
     push bc
     ld hl, wC6FE
     ld a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_42DB
-    inc h
-
-Jump_01E_42DB::
+    add_a_to_hl
     ld a, [hl]
     ld b, a
     ld c, $01
@@ -429,12 +419,7 @@ Jump_01E_42DB::
     ld a, b
     add a, a
     ld hl, $436B
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_42F3
-    inc h
-
-Jump_01E_42F3::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -474,12 +459,7 @@ Jump_01E_430D::
 Jump_01E_4371::
     ld a, [wD7AB]
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_437C
-    inc h
-
-Jump_01E_437C::
+    add_a_to_hl
     ld a, [hl]
     ld b, a
     push af
@@ -519,12 +499,7 @@ Jump_01E_439E::
 Jump_01E_43C2::
     ld a, [wD7AB]
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_43CD
-    inc h
-
-Jump_01E_43CD::
+    add_a_to_hl
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
@@ -935,12 +910,7 @@ Jump_01E_46C1::
     ld a, [wD7AD]
     add a, a
     ld hl, $46E1
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_46CD
-    inc h
-
-Jump_01E_46CD::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1000,12 +970,7 @@ Jump_01E_4720::
 Jump_01E_473B::
     ld a, [wD7AB]
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_4746
-    inc h
-
-Jump_01E_4746::
+    add_a_to_hl
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -1076,12 +1041,7 @@ Jump_01E_47C7::
 
 Jump_01E_47CC::
     ld a, $A5
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_47D3
-    inc h
-
-Jump_01E_47D3::
+    add_a_to_hl
     inc c
     ld a, c
     cp a, d
@@ -1091,12 +1051,7 @@ Jump_01E_47D3::
 Jump_01E_47DA::
     push hl
     ld a, $6E
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_47E2
-    inc h
-
-Jump_01E_47E2::
+    add_a_to_hl
     ld a, [hl]
     and a, a
     jr z, Jump_01E_47E9
@@ -1781,12 +1736,7 @@ Jump_01E_4D5B::
     call Func_01E_76DA
     ld a, [wC6FD]
     ld hl, wC6FE
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_4D7E
-    inc h
-
-Jump_01E_4D7E::
+    add_a_to_hl
     push hl
     call Func_01E_76EB
     ld a, [hl]
@@ -1906,12 +1856,7 @@ Jump_01E_4E66::
     ld a, [wD7AB]
     ld [wD7B5], a
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_4E87
-    inc h
-
-Jump_01E_4E87::
+    add_a_to_hl
     ld a, [hl]
     ld [wD7B4], a
     xor a, a
@@ -2121,12 +2066,7 @@ Jump_01E_4FF7::
     call Func_01E_76DA
     ld a, [wD7B5]
     ld hl, wC6FE
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_5035
-    inc h
-
-Jump_01E_5035::
+    add_a_to_hl
     push hl
     call Func_01E_76EB
     ld a, [hl]
@@ -6425,12 +6365,7 @@ Func_01E_71B5::
     ld a, [wD7AB]
     add a, a
     ld hl, $71D7
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_71C3
-    inc h
-
-Jump_01E_71C3::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -6514,12 +6449,7 @@ Func_01E_7233::
     ld a, [wD7AB]
     add a, a
     ld hl, $7255
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_7241
-    inc h
-
-Jump_01E_7241::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -6777,12 +6707,7 @@ Jump_01E_739B::
     push bc
     ld a, c
     ld hl, $73FA
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_73A8
-    inc h
-
-Jump_01E_73A8::
+    add_a_to_hl
     ld a, [hl]
     ld c, a
     ld a, b
@@ -6797,12 +6722,7 @@ Jump_01E_73A8::
     ld a, c
     add a, a
     ld hl, $73FE
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_73C5
-    inc h
-
-Jump_01E_73C5::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -6861,12 +6781,7 @@ Jump_01E_740A::
 Func_01E_741A::
     push bc
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_7421
-    inc h
-
-Jump_01E_7421::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -6936,12 +6851,7 @@ Jump_01E_7456::
     push de
     ld a, b
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_7460
-    inc h
-
-Jump_01E_7460::
+    add_a_to_hl
     ld a, [hl+]
     cp a, $FF
     jr z, Jump_01E_7486
@@ -6956,12 +6866,7 @@ Jump_01E_7460::
     ld h, d
     ld a, b
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_7475
-    inc h
-
-Jump_01E_7475::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -7109,12 +7014,7 @@ Func_01E_750F::
     srl a
     srl a
     srl a
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_752F
-    inc h
-
-Jump_01E_752F::
+    add_a_to_hl
     ret
 
 ; 4 call sites from 3 routines (e.g. Func_01E_49F8, Func_01E_4A32, Func_01E_5A4D)
@@ -7310,12 +7210,7 @@ Func_01E_75F2::
 Jump_01E_7633::
     pop bc
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_763B
-    inc h
-
-Jump_01E_763B::
+    add_a_to_hl
     ld a, $14
     add a, e
     ld e, a
@@ -7343,12 +7238,7 @@ Jump_01E_7648::
     ld [rRAMB], a
     ld hl, wD789
     ld a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_765C
-    inc h
-
-Jump_01E_765C::
+    add_a_to_hl
     ld a, [hl]
     ld c, $00
     ld b, $01
@@ -7372,12 +7262,7 @@ Jump_01E_7672::
     ld [hl], a
     ei
     ld a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_7683
-    inc h
-
-Jump_01E_7683::
+    add_a_to_hl
     push hl
 
 Jump_01E_7684::
@@ -7505,12 +7390,7 @@ Jump_01E_770E::
     ld [hl], a
     ei
     ld a, $40
-    add a, l
-    ld l, a
-    jr nc, Jump_01E_771D
-    inc h
-
-Jump_01E_771D::
+    add_a_to_hl
     dec c
     jr nz, Jump_01E_770E
     ld a, $B6

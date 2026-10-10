@@ -151,9 +151,7 @@ Func_016_40F6::
     ld b, [hl]
     ld c, a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     sub a, c
     ld l, a
@@ -186,9 +184,7 @@ Func_016_4118::
     ld b, [hl]
     ld c, a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     sub a, c
     ld l, a
@@ -215,9 +211,7 @@ Jump_016_4141::
     ld b, [hl]
     ld c, a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     sub a, c
     ld l, a
@@ -244,9 +238,7 @@ Jump_016_416B::
     ld b, [hl]
     ld c, a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     sub a, c
     ld l, a
@@ -298,9 +290,7 @@ Func_016_41B3::
     ld b, [hl]
     ld c, a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     pop de
     ld a, l
     sub a, c
@@ -315,12 +305,7 @@ Func_016_41B3::
     ld a, d
     swap a
     ld hl, wC160
-    add a, l
-    ld l, a
-    jr nc, Jump_016_41EB
-    inc h
-
-Jump_016_41EB::
+    add_a_to_hl
     push hl
     ld a, [wD083]
     ld c, $01
@@ -346,9 +331,7 @@ Func_016_41FD::
     ld b, [hl]
     ld c, a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     sub a, c
     ld l, a
@@ -487,12 +470,7 @@ Func_016_42C4::
     ld a, d
     swap a
     ld hl, wC160
-    add a, l
-    ld l, a
-    jr nc, Jump_016_42EF
-    inc h
-
-Jump_016_42EF::
+    add_a_to_hl
     push hl
     ld a, [wD083]
     ld c, $01
@@ -788,12 +766,7 @@ Func_016_44AD::
 Jump_016_44BD::
     ldh a, [hFF90]
     ld hl, Data_016_51C9
-    add a, l
-    ld l, a
-    jr nc, Jump_016_44C7
-    inc h
-
-Jump_016_44C7::
+    add_a_to_hl
     bit 6, [hl]
     ret nz
     ld a, $FF
@@ -820,12 +793,7 @@ Func_016_44D0::
 Jump_016_44E6::
     ldh a, [hFF90]
     ld hl, Data_016_51C9
-    add a, l
-    ld l, a
-    jr nc, Jump_016_44F0
-    inc h
-
-Jump_016_44F0::
+    add_a_to_hl
     bit 5, [hl]
     ret nz
     ld a, $FF
@@ -1068,12 +1036,7 @@ Func_016_4645::
 Jump_016_4655::
     ldh a, [hFF90]
     ld hl, Data_016_51C9
-    add a, l
-    ld l, a
-    jr nc, Jump_016_465F
-    inc h
-
-Jump_016_465F::
+    add_a_to_hl
     bit 4, [hl]
     jr z, Jump_016_4667
 
@@ -1271,9 +1234,7 @@ Func_016_4790::
     ld a, [wD083]
     ld c, $5D
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, [wD083]
     ld c, $5B
     call Func_016_58FD
@@ -1299,9 +1260,7 @@ Jump_016_47CE::
     ld a, [wD083]
     ld c, $61
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, [wD083]
     ld c, $5F
     call Func_016_58FD
@@ -1359,9 +1318,7 @@ Jump_016_482C::
     ld a, [wD083]
     ld c, $5D
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, [wD083]
     ld c, $5B
     call Func_016_58FD
@@ -1737,12 +1694,7 @@ Jump_016_4A61::
     ld [wD081], a
     ld a, [wD082]
     ld hl, wC61D
-    add a, l
-    ld l, a
-    jr nc, Jump_016_4A78
-    inc h
-
-Jump_016_4A78::
+    add_a_to_hl
     pop af
     add a, $3F
     ld [hl], a
@@ -2102,12 +2054,7 @@ Func_016_4C1D::
     ld [wD081], a
     ld a, [wD082]
     ld hl, wC61D
-    add a, l
-    ld l, a
-    jr nc, Jump_016_4C42
-    inc h
-
-Jump_016_4C42::
+    add_a_to_hl
     ld [hl], $FF
     call Func_016_4C48
     ret
@@ -2463,9 +2410,7 @@ Func_016_543E::
     ld a, [wD083]
     ld c, $5D
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, [wD083]
     ld c, $5B
     call Func_016_58FD
@@ -2504,9 +2449,7 @@ Func_016_5473::
     ld b, [hl]
     ld c, a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     sub a, c
     ld l, a
@@ -2542,9 +2485,7 @@ Func_016_54AD::
     ld a, [wD083]
     ld c, $5D
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, [wD083]
     ld c, $5B
     call Func_016_58FD
@@ -2982,12 +2923,7 @@ Jump_016_5778::
     srl a
     add a, c
     ld hl, wCD70
-    add a, l
-    ld l, a
-    jr nc, Jump_016_578E
-    inc h
-
-Jump_016_578E::
+    add_a_to_hl
     ld a, [hl]
     add a, a
     add a, a
@@ -3000,12 +2936,7 @@ Jump_016_5795::
     add a, a
     add a, a
     ld hl, wCD88
-    add a, l
-    ld l, a
-    jr nc, Jump_016_57A2
-    inc h
-
-Jump_016_57A2::
+    add_a_to_hl
     ld a, [hl]
     push af
     and a, $0F
@@ -3019,12 +2950,7 @@ Jump_016_57A2::
     srl a
     add a, c
     ld hl, wCD70
-    add a, l
-    ld l, a
-    jr nc, Jump_016_57BD
-    inc h
-
-Jump_016_57BD::
+    add_a_to_hl
     ld a, [hl]
     add a, a
     add a, a
@@ -3039,12 +2965,7 @@ Jump_016_57C6::
     ld a, c
     add a, a
     ld hl, wCD10
-    add a, l
-    ld l, a
-    jr nc, Jump_016_57D0
-    inc h
-
-Jump_016_57D0::
+    add_a_to_hl
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_016_56AF, Func_016_468E)
@@ -3252,9 +3173,7 @@ Jump_016_58CA::
 ; 3 call sites from 3 routines (e.g. Func_016_57E8, Func_016_57D1, Func_016_58AD)
 Func_016_58CC::
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     add hl, de
     jr c, Jump_016_58D9
     ld a, l
@@ -3277,9 +3196,7 @@ Jump_016_58DB::
 ; 1 call site from 1 routine (e.g. Func_016_5889)
 Func_016_58E0::
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     sub a, e
     ld l, a
@@ -3419,12 +3336,7 @@ Func_016_598C::
     push hl
     ld hl, wC61D
     ld a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5996
-    inc h
-
-Jump_016_5996::
+    add_a_to_hl
     ld a, [hl+]
     push af
     ld a, [hl-]
@@ -3451,12 +3363,7 @@ Func_016_5A7E::
     ld a, c
     and a, $07
     ld hl, Data_016_5AA7
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5A91
-    inc h
-
-Jump_016_5A91::
+    add_a_to_hl
     ld a, [hl]
     srl b
     rr c
@@ -3638,24 +3545,14 @@ Func_016_5B7E::
     jp nc, Jump_016_5CF5
     and a, $03
     ld hl, wD8A1
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5BBD
-    inc h
-
-Jump_016_5BBD::
+    add_a_to_hl
     ld a, [hl]
     cp a, $07
     jp z, Jump_016_5CF5
     ld a, [wDAAB]
     ld hl, wD958
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5BCF
-    inc h
-
-Jump_016_5BCF::
+    add_a_to_hl
     ld a, [hl+]
     ld [wD006], a
     ld a, [hl]
@@ -3676,12 +3573,7 @@ Jump_016_5BCF::
     cp a, $07
     jp z, Jump_016_5CF5
     ld hl, Func_016_5CFB
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5C06
-    inc h
-
-Jump_016_5C06::
+    add_a_to_hl
     ld a, [hl]
     cp a, b
     jp nc, Jump_016_5CFA
@@ -3698,12 +3590,7 @@ Jump_016_5C15::
     ld a, [wDAAB]
     and a, $03
     ld hl, wD8A1
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5C2A
-    inc h
-
-Jump_016_5C2A::
+    add_a_to_hl
     ld a, [hl]
     add a, e
     ld e, a
@@ -4000,12 +3887,7 @@ Jump_016_5E0B::
     call WriteVRAMByte
     ld a, [wC7C7]
     ld hl, Data_016_75EB
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5E1E
-    inc h
-
-Jump_016_5E1E::
+    add_a_to_hl
     ld a, [wC0A0]
     ld b, a
     ld a, [wC0A1]
@@ -4171,15 +4053,8 @@ Jump_016_5F5C::
     ld a, [wC46B]
     ld hl, Data_016_66F7
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_5F68
-    inc h
-
-Jump_016_5F68::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BC
     call WriteVRAMByte
     farcall Func_01A_72FB
@@ -4283,15 +4158,8 @@ Jump_016_6058::
     ld [wC46B], a
     ld hl, Data_016_66DD
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_606D
-    inc h
-
-Jump_016_606D::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld [hl], $BC
     ld a, [wD7AF]
     ld [wC470], a
@@ -4331,12 +4199,7 @@ Jump_016_60B5::
     ld a, [wC46B]
     add a, b
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_60D1
-    inc h
-
-Jump_016_60D1::
+    add_a_to_hl
     ld b, [hl]
     ld a, [wC6FD]
     cp a, $01
@@ -4433,12 +4296,7 @@ Jump_016_615E::
     ld a, [wC46B]
     add a, b
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6177
-    inc h
-
-Jump_016_6177::
+    add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -4599,15 +4457,8 @@ Jump_016_62D3::
     ld a, [wCFD6]
     ld hl, Data_016_66EF
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_62E2
-    inc h
-
-Jump_016_62E2::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     add a, $98
     ld l, a
@@ -4657,12 +4508,7 @@ Jump_016_631B::
     ld a, [wCFD6]
     add a, b
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_634C
-    inc h
-
-Jump_016_634C::
+    add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -4670,9 +4516,7 @@ Jump_016_634C::
     ld a, [hl]
     ld c, $0B
     call SRAMRecordAddress
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, h
     add a, $02
     ld h, a
@@ -4721,15 +4565,8 @@ Jump_016_63B9::
     ld [wCFD6], a
     ld hl, Data_016_66EF
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_63D1
-    inc h
-
-Jump_016_63D1::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     add a, $98
     ld l, a
@@ -4787,12 +4624,7 @@ Jump_016_643D::
     ld a, [wCFD6]
     add a, b
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6454
-    inc h
-
-Jump_016_6454::
+    add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -4839,12 +4671,7 @@ Func_016_6493::
     ld [rRAMB], a
     ld a, [wC7C7]
     ld hl, Data_016_75EB
-    add a, l
-    ld l, a
-    jr nc, Jump_016_64A7
-    inc h
-
-Jump_016_64A7::
+    add_a_to_hl
     ld b, [hl]
     ld hl, sA000
     ld de, $0000
@@ -4914,12 +4741,7 @@ Jump_016_64F3::
     jr nz, Jump_016_64F3
     ld a, [wC7C7]
     ld hl, Data_016_75EB
-    add a, l
-    ld l, a
-    jr nc, Jump_016_650B
-    inc h
-
-Jump_016_650B::
+    add_a_to_hl
     ld b, [hl]
     ld hl, sA000
     ld c, $00
@@ -5034,12 +4856,7 @@ Func_016_65B1::
     ld [rRAMB], a
     ld a, [wC7C7]
     ld hl, Data_016_75EB
-    add a, l
-    ld l, a
-    jr nc, Jump_016_65D0
-    inc h
-
-Jump_016_65D0::
+    add_a_to_hl
     ld b, [hl]
     ld hl, sA000
     ld de, wD789
@@ -5205,15 +5022,8 @@ Func_016_66B9::
     ld a, [de]
     push hl
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_66C1
-    inc h
-
-Jump_016_66C1::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $C3
     call WriteVRAMByte
     pop hl
@@ -5224,15 +5034,8 @@ Func_016_66CB::
     ld a, [de]
     push hl
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_66D3
-    inc h
-
-Jump_016_66D3::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BB
     call WriteVRAMByte
     pop hl
@@ -5283,12 +5086,7 @@ Func_016_6705::
     add a, b
     ld b, a
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6732
-    inc h
-
-Jump_016_6732::
+    add_a_to_hl
     ld b, $05
     ld de, vTiles2 + $3B0
     call Func_016_67E0
@@ -5459,12 +5257,7 @@ Func_016_682F::
     add a, a
     add a, a
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6850
-    inc h
-
-Jump_016_6850::
+    add_a_to_hl
     ld a, $00
     ld [wD868], a
     call Func_016_6891
@@ -5530,15 +5323,8 @@ Jump_016_68B8::
     ld a, [wD868]
     ld hl, Data_016_690F
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_68C5
-    inc h
-
-Jump_016_68C5::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld [hl], c
     pop hl
     ret
@@ -5550,15 +5336,8 @@ Jump_016_68CB::
     ld a, [wD868]
     ld hl, Data_016_690F
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_68DE
-    inc h
-
-Jump_016_68DE::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld [hl], $C3
     pop hl
     ret
@@ -5677,12 +5456,7 @@ Func_016_696D::
     ld a, [wC46B]
     add a, b
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6981
-    inc h
-
-Jump_016_6981::
+    add_a_to_hl
     ld a, [hl]
     ld c, $01
     call SRAMRecordAddress
@@ -5720,12 +5494,7 @@ Func_016_69AB::
     ld a, [wCFD6]
     add a, b
     ld hl, wD789
-    add a, l
-    ld l, a
-    jr nc, Jump_016_69BD
-    inc h
-
-Jump_016_69BD::
+    add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -5733,9 +5502,7 @@ Jump_016_69BD::
     ld a, [hl]
     ld c, $0B
     call SRAMRecordAddress
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, h
     add a, $02
     ld h, a
@@ -5757,12 +5524,7 @@ Func_016_69E2::
     ld [rRAMB], a
     ld a, [wC46C]
     ld hl, wD868
-    add a, l
-    ld l, a
-    jr nc, Jump_016_69F6
-    inc h
-
-Jump_016_69F6::
+    add_a_to_hl
     ld a, [hl]
     ld c, $01
     call SRAMRecordAddress
@@ -5788,12 +5550,7 @@ Func_016_6A10::
     call Func_016_6A36
     ld a, [wDAAB]
     ld hl, wD8AF
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6A1F
-    inc h
-
-Jump_016_6A1F::
+    add_a_to_hl
     ld a, [hl]
     and a, $01
     add a, $A7
@@ -5821,12 +5578,7 @@ Func_016_6A36::
     ld a, [wDAAB]
     ld hl, wD958
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6A42
-    inc h
-
-Jump_016_6A42::
+    add_a_to_hl
     ld a, [hl+]
     push af
     ld a, [hl]
@@ -5870,12 +5622,7 @@ Jump_016_6A6F::
     ld [wD7F1], a
     ld a, [wDAAB]
     ld hl, wD8AF
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6A8E
-    inc h
-
-Jump_016_6A8E::
+    add_a_to_hl
     ld a, [hl]
     ld [wD7F2], a
     ld a, [wDAAB]
@@ -5924,12 +5671,7 @@ Jump_016_6AE3::
     ld [wD7F1], a
     ld a, [wDAAB]
     ld hl, wD8AF
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6AF3
-    inc h
-
-Jump_016_6AF3::
+    add_a_to_hl
     ld a, [hl]
     ld [wD7F2], a
     ld a, [wDAAB]
@@ -5992,12 +5734,7 @@ Jump_016_6B57::
     ld [rRAMB], a
     ld a, [wC7C7]
     ld hl, Data_016_75EB
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6B6B
-    inc h
-
-Jump_016_6B6B::
+    add_a_to_hl
     ld b, [hl]
     ld hl, sA000
     ld c, $00
@@ -6076,12 +5813,7 @@ Func_016_6BE0::
     ld d, [hl]
     ld a, c
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6BEE
-    inc h
-
-Jump_016_6BEE::
+    add_a_to_hl
     ld [hl], $00
     ld a, c
     ld hl, wD80C
@@ -6106,12 +5838,7 @@ Func_016_6C07::
 Jump_016_6C0A::
     ld a, c
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6C13
-    inc h
-
-Jump_016_6C13::
+    add_a_to_hl
     ld [hl], $01
     ret
 
@@ -6294,12 +6021,7 @@ Jump_016_6D47::
     ret nz
     ld a, [wC6FD]
     ld hl, wD868
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6D57
-    inc h
-
-Jump_016_6D57::
+    add_a_to_hl
     ld b, [hl]
     ld hl, wC6FD
     inc [hl]
@@ -6307,12 +6029,7 @@ Jump_016_6D57::
     ld [wD88F], a
     dec a
     ld hl, wC6FE
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6D69
-    inc h
-
-Jump_016_6D69::
+    add_a_to_hl
     ld [hl], b
     call Func_016_70C5
     call Func_000_222B
@@ -6363,15 +6080,8 @@ Jump_016_6DA6::
     ld a, [wC46C]
     ld hl, Data_016_66F7
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6DD7
-    inc h
-
-Jump_016_6DD7::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BB
     call WriteVRAMByte
     ld hl, wCFCC
@@ -6387,12 +6097,7 @@ Jump_016_6DE4::
     jr z, Jump_016_6E22
     ld a, [wD88F]
     ld hl, wD868
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6DFF
-    inc h
-
-Jump_016_6DFF::
+    add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -6444,15 +6149,8 @@ Jump_016_6E38::
     ld hl, Data_016_66F7
     ld a, [wC46C]
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6E68
-    inc h
-
-Jump_016_6E68::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BC
     call WriteVRAMByte
     ld hl, vBGMap0 + $12D
@@ -6486,12 +6184,7 @@ Jump_016_6EA1::
     ld [rRAMB], a
     ld a, [wC46C]
     ld hl, wD868
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6EB5
-    inc h
-
-Jump_016_6EB5::
+    add_a_to_hl
     ld a, [hl]
     ld c, $01
     call SRAMRecordAddress
@@ -6589,15 +6282,8 @@ Jump_016_6F6F::
     ld [wC46C], a
     ld hl, Data_016_66DD
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_6F84
-    inc h
-
-Jump_016_6F84::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld [hl], $BC
     farcall Func_01A_72FB
     ld hl, vBGMap0
@@ -6654,12 +6340,7 @@ Jump_016_6FEE::
 Jump_016_7008::
     ld a, [wC46C]
     ld hl, wD868
-    add a, l
-    ld l, a
-    jr nc, Jump_016_7013
-    inc h
-
-Jump_016_7013::
+    add_a_to_hl
     ld a, [hl]
     call Func_016_7082
     ld [hl], $FF
@@ -6934,12 +6615,7 @@ Func_016_7188::
     ld a, [wDAAB]
     ld hl, wD958
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_7194
-    inc h
-
-Jump_016_7194::
+    add_a_to_hl
     ld a, [hl+]
     push af
     ld a, [hl]
@@ -7299,12 +6975,7 @@ Jump_016_752B::
     cp a, $03
     ret z
     ld a, $08
-    add a, l
-    ld l, a
-    jr nc, Jump_016_756E
-    inc h
-
-Jump_016_756E::
+    add_a_to_hl
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7445,12 +7116,7 @@ Jump_016_767E::
     ld hl, sBC0A
     add a, a
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_769D
-    inc h
-
-Jump_016_769D::
+    add_a_to_hl
     ld a, [hl+]
     ld [wD10D], a
     ld a, [hl+]
@@ -7868,12 +7534,7 @@ Func_016_78F9::
 
 Jump_016_7912::
     pop af
-    add a, l
-    ld l, a
-    jr nc, Jump_016_7918
-    inc h
-
-Jump_016_7918::
+    add_a_to_hl
     ld a, [hl]
     ld [wD09E], a
     push hl
@@ -7919,12 +7580,7 @@ Jump_016_7918::
 Jump_016_795B::
     pop af
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_7962
-    inc h
-
-Jump_016_7962::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -7942,15 +7598,8 @@ Jump_016_7969::
 Jump_016_7977::
     pop af
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_016_797E
-    inc h
-
-Jump_016_797E::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld de, $FFF7
     add hl, de
     push bc

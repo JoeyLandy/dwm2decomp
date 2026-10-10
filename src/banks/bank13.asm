@@ -88,12 +88,7 @@ Func_013_405C::
     add a, a
     add a, a
     ld hl, wCD89
-    add a, l
-    ld l, a
-    jr nc, Jump_013_4099
-    inc h
-
-Jump_013_4099::
+    add_a_to_hl
     ld a, [hl]
     cp a, $06
     jr z, Jump_013_40E9
@@ -106,12 +101,7 @@ Jump_013_409E::
     ld a, [wCC45]
     swap a
     ld hl, wCDAE
-    add a, l
-    ld l, a
-    jr nc, Jump_013_40B5
-    inc h
-
-Jump_013_40B5::
+    add_a_to_hl
     ld a, [wC916]
     cp a, $FD
     jr nz, Jump_013_40C8
@@ -124,12 +114,7 @@ Jump_013_40B5::
 Jump_013_40C8::
     push af
     pop af
-    add a, l
-    ld l, a
-    jr nc, Jump_013_40CF
-    inc h
-
-Jump_013_40CF::
+    add_a_to_hl
     ld a, [hl]
     ld [wC921], a
     xor a, a

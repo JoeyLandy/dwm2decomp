@@ -309,24 +309,14 @@ Jump_019_425D::
     push bc
     ld a, c
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_019_4267
-    inc h
-
-Jump_019_4267::
+    add_a_to_hl
     ld a, [hl]
     cp a, $FF
     jr z, Jump_019_4291
     ld a, c
     add a, a
     ld hl, wD958
-    add a, l
-    ld l, a
-    jr nc, Jump_019_4276
-    inc h
-
-Jump_019_4276::
+    add_a_to_hl
     ld a, [hl+]
     ld [wD006], a
     ld a, [hl]
@@ -355,25 +345,13 @@ Func_019_4298::
     push bc
     ld a, c
     ld hl, wDA53
-    add a, l
-    ld l, a
-    jr nc, Jump_019_42A2
-    inc h
-
-Jump_019_42A2::
+    add_a_to_hl
     push hl
     ld a, c
     ld hl, wD92F
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_019_42AD
-    inc h
-
-Jump_019_42AD::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     sub a, $1E
     ld l, a
@@ -520,12 +498,7 @@ Func_019_434D::
     ld hl, wD988
     ld a, c
     swap a
-    add a, l
-    ld l, a
-    jr nc, Jump_019_4358
-    inc h
-
-Jump_019_4358::
+    add_a_to_hl
     ld b, $08
 
 Jump_019_435A::
@@ -690,12 +663,7 @@ Jump_019_4430::
     ld a, c
     swap a
     ld hl, wD989
-    add a, l
-    ld l, a
-    jr nc, Jump_019_443C
-    inc h
-
-Jump_019_443C::
+    add_a_to_hl
     dec b
     jr nz, Jump_019_440E
     ret
@@ -707,12 +675,7 @@ Func_019_4440::
     ld a, c
     ld hl, wD989
     swap a
-    add a, l
-    ld l, a
-    jr nc, Jump_019_444C
-    inc h
-
-Jump_019_444C::
+    add_a_to_hl
     ld d, $08
 
 Jump_019_444E::
@@ -844,12 +807,7 @@ Func_019_44B9::
 Func_019_44C9::
     push hl
     ld a, $1A
-    add a, l
-    ld l, a
-    jr nc, Jump_019_44D1
-    inc h
-
-Jump_019_44D1::
+    add_a_to_hl
     ld a, [hl]
     and a, $03
     rrc a
@@ -1256,15 +1214,8 @@ Func_019_470F::
     ld a, c
     ld hl, wCFDD
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_019_471A
-    inc h
-
-Jump_019_471A::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     ld [wCFE6], a
     ld a, h
@@ -1306,12 +1257,7 @@ Func_019_4752::
     ld a, c
     ld [wD869], a
     ld hl, wCFE3
-    add a, l
-    ld l, a
-    jr nc, Jump_019_4767
-    inc h
-
-Jump_019_4767::
+    add_a_to_hl
     ld a, [hl]
     ldh [hFFC7], a
     or a, a
@@ -1323,15 +1269,8 @@ Jump_019_4771::
     ld a, c
     add a, a
     ld hl, wCFDD
-    add a, l
-    ld l, a
-    jr nc, Jump_019_477B
-    inc h
-
-Jump_019_477B::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     ld [wD006], a
     ld a, h
@@ -1702,9 +1641,7 @@ Func_019_49B1::
     ldh [hFFCB], a
     ldh [hFFCC], a
     ldh [hFFCF], a
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     ldh [hFFCD], a
     ld a, h
@@ -2278,12 +2215,7 @@ Jump_019_4C89::
     add a, a
     add a, l
     ld hl, wD80D
-    add a, l
-    ld l, a
-    jr nc, Jump_019_4CBE
-    inc h
-
-Jump_019_4CBE::
+    add_a_to_hl
     ld a, [hl]
     and a, $30
     pop hl
@@ -2456,12 +2388,7 @@ Jump_019_4D96::
     add a, a
     add a, l
     ld hl, wD80D
-    add a, l
-    ld l, a
-    jr nc, Jump_019_4DCB
-    inc h
-
-Jump_019_4DCB::
+    add_a_to_hl
     ld a, [hl]
     and a, $30
     pop hl

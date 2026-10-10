@@ -47,12 +47,7 @@ Func_01A_4022::
     adc a, $40
     ld h, a
     ld a, [wD868]
-    add a, l
-    ld l, a
-    jr nc, Jump_01A_4044
-    inc h
-
-Jump_01A_4044::
+    add_a_to_hl
     ld a, [wD869]
     ld b, a
     ld a, [wD86A]
@@ -116,12 +111,7 @@ Jump_01A_40B6::
     ld a, [wD8A4]
     push hl
     ld hl, wDA53
-    add a, l
-    ld l, a
-    jr nc, Jump_01A_40C3
-    inc h
-
-Jump_01A_40C3::
+    add_a_to_hl
     ld a, [hl]
     pop hl
     cp a, $04
@@ -1248,9 +1238,7 @@ Func_01A_62A0::
     add hl, bc
     add hl, bc
     pop bc
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
 
 Jump_01A_62B8::
     ld a, [hl+]
@@ -1366,9 +1354,7 @@ Func_01A_631F:: ; heuristic: follows a terminator; C0
     ld hl, Data_01A_5BEC
     add hl, bc
     add hl, bc
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
 
 Jump_01A_632C::
     ld a, [hl+]
@@ -1724,12 +1710,7 @@ Jump_01A_6539::
     push hl
     ld a, [wD09B]
     ld hl, wD095
-    add a, l
-    ld l, a
-    jr nc, Jump_01A_6549
-    inc h
-
-Jump_01A_6549::
+    add_a_to_hl
     ld a, [hl]
     pop hl
     add a, b
@@ -1769,12 +1750,7 @@ Func_01A_6562::
     ld h, a
     pop de
     ld a, d
-    add a, l
-    ld l, a
-    jr nc, Jump_01A_6577
-    inc h
-
-Jump_01A_6577::
+    add_a_to_hl
     ld c, [hl]
     ret
 

@@ -2277,12 +2277,7 @@ Jump_037_5A35::
     ld a, [wD7FA]
     sla a
     ld hl, Data_037_5A57
-    add a, l
-    ld l, a
-    jr nc, Jump_037_5A42
-    inc h
-
-Jump_037_5A42::
+    add_a_to_hl
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -2356,12 +2351,7 @@ Func_037_5A5D::
 Jump_037_5AA2::
     pop bc
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_037_5AAA
-    inc h
-
-Jump_037_5AAA::
+    add_a_to_hl
     ld a, $14
     add a, e
     ld e, a
@@ -2571,24 +2561,14 @@ Func_037_5B95::
     srl a
     srl a
     srl a
-    add a, l
-    ld l, a
-    jr nc, Jump_037_5BB5
-    inc h
-
-Jump_037_5BB5::
+    add_a_to_hl
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_4DC7)
 Func_037_5BB6::
     push bc
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_037_5BBE
-    inc h
-
-Jump_037_5BBE::
+    add_a_to_hl
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -3027,12 +3007,7 @@ Jump_037_5DEE::
     jr z, Jump_037_5DFF
     push hl
     ld hl, Data_037_63D3
-    add a, l
-    ld l, a
-    jr nc, Jump_037_5DFD
-    inc h
-
-Jump_037_5DFD::
+    add_a_to_hl
     ld a, [hl]
     pop hl
 
@@ -3262,12 +3237,7 @@ Jump_037_5EFA::
     jr z, Jump_037_5F0B
     push hl
     ld hl, Data_037_62F5
-    add a, l
-    ld l, a
-    jr nc, Jump_037_5F09
-    inc h
-
-Jump_037_5F09::
+    add_a_to_hl
     ld a, [hl]
     pop hl
 

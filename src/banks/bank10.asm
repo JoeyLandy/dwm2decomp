@@ -496,12 +496,7 @@ Jump_010_43A6::
     or a, a
     jr nz, Jump_010_43BD
     ld a, [hl+]
-    add a, l
-    ld l, a
-    jr nc, Jump_010_43B2
-    inc h
-
-Jump_010_43B2::
+    add_a_to_hl
     ld a, l
     ld [wC91A], a
     ld a, h

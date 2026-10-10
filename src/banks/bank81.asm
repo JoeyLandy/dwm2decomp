@@ -57,9 +57,7 @@ Func_081_4001::
     ld a, h
     adc a, $41
     ld h, a
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     push hl
     ld a, [wD2AF]
     ld e, a

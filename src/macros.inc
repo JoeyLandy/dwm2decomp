@@ -14,3 +14,19 @@ MACRO farcall_b
     ld hl, \1
     rst $10
 ENDM
+
+; HL += A, the way the ROM spells it: add into L, carry into H.
+MACRO add_a_to_hl
+    add a, l
+    ld l, a
+    jr nc, .skip\@
+    inc h
+.skip\@:
+ENDM
+
+; HL = the word at [HL]: low byte first, then the high byte.
+MACRO deref_hl
+    ld a, [hl+]
+    ld h, [hl]
+    ld l, a
+ENDM

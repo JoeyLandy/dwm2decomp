@@ -700,12 +700,7 @@ Jump_011_442B::
     ld a, [de]
     dec a
     ld hl, Data_011_44AD
-    add a, l
-    ld l, a
-    jr nc, Jump_011_4440
-    inc h
-
-Jump_011_4440::
+    add_a_to_hl
     ld a, [hl]
     ldh [hFF90], a
     xor a, a

@@ -388,12 +388,7 @@ Jump_061_422B::
     sla a
     push af
     ld hl, wCD89
-    add a, l
-    ld l, a
-    jr nc, Jump_061_423B
-    inc h
-
-Jump_061_423B::
+    add_a_to_hl
     ld a, [hl]
     dec a
     dec a
@@ -405,12 +400,7 @@ Jump_061_423B::
     ld hl, wCDAF
     ld a, [wCC45]
     swap a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4252
-    inc h
-
-Jump_061_4252::
+    add_a_to_hl
     ld a, [hl]
     and a, $01
     add a, a
@@ -425,12 +415,7 @@ Jump_061_4261::
     ld a, [wCC45]
     swap a
     ld hl, wCDAE
-    add a, l
-    ld l, a
-    jr nc, Jump_061_426E
-    inc h
-
-Jump_061_426E::
+    add_a_to_hl
     ld a, [hl]
     push af
     ld c, a
@@ -438,12 +423,7 @@ Jump_061_426E::
     add a, c
     sla a
     ld hl, Data_061_42DD
-    add a, l
-    ld l, a
-    jr nc, Jump_061_427E
-    inc h
-
-Jump_061_427E::
+    add_a_to_hl
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -576,12 +556,7 @@ Jump_061_4348::
     ld a, [wCC45]
     sla a
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4366
-    inc h
-
-Jump_061_4366::
+    add_a_to_hl
     ld a, [hl]
     and a, $0F
     dec a
@@ -642,12 +617,7 @@ Jump_061_43B9::
     ld hl, wCDAC
     ld a, [wCC45]
     swap a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_43C6
-    inc h
-
-Jump_061_43C6::
+    add_a_to_hl
     ld a, [hl]
     and a, $7F
     ldh [hFFC6], a
@@ -729,12 +699,7 @@ Jump_061_443C::
     ld [wC197], a
     ld a, [wCD0B]
     ld hl, Data_061_4468
-    add a, l
-    ld l, a
-    jr nc, Jump_061_444E
-    inc h
-
-Jump_061_444E::
+    add_a_to_hl
     ld a, [hl]
     ld [wC195], a
     and a, $0F
@@ -782,12 +747,7 @@ Jump_061_4490::
     sla a
     push af
     ld hl, wCD89
-    add a, l
-    ld l, a
-    jr nc, Jump_061_44A0
-    inc h
-
-Jump_061_44A0::
+    add_a_to_hl
     ld a, [hl]
     dec a
     dec a
@@ -799,12 +759,7 @@ Jump_061_44A0::
     ld hl, wCDAF
     ld a, [wCC45]
     swap a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_44B7
-    inc h
-
-Jump_061_44B7::
+    add_a_to_hl
     ld a, [hl]
     push hl
     cp a, $FF
@@ -859,12 +814,7 @@ Jump_061_44F1::
     inc a
     ld [hl-], a
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4500
-    inc h
-
-Jump_061_4500::
+    add_a_to_hl
     ld a, $1E
     ld [hl+], a
     inc a
@@ -891,12 +841,7 @@ Jump_061_4500::
     ld [hl+], a
     ld [hl-], a
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_061_452A
-    inc h
-
-Jump_061_452A::
+    add_a_to_hl
     ld a, $05
     ld [hl+], a
     ld [hl], a
@@ -908,12 +853,7 @@ Jump_061_4533::
     ld a, [wCC45]
     swap a
     ld hl, wCDAD
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4540
-    inc h
-
-Jump_061_4540::
+    add_a_to_hl
     ld a, [hl]
     add a, a
     ld e, a
@@ -959,22 +899,12 @@ Jump_061_454E::
     add a, c
     sla a
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4585
-    inc h
-
-Jump_061_4585::
+    add_a_to_hl
     ldh a, [hFF8F]
     ld c, a
     sla a
     add a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4590
-    inc h
-
-Jump_061_4590::
+    add_a_to_hl
     push hl
     push bc
     ld e, l
@@ -1041,12 +971,7 @@ Func_061_45E8::
     ld a, [wCC45]
     swap a
     ld hl, wCDB0
-    add a, l
-    ld l, a
-    jr nc, Jump_061_45F5
-    inc h
-
-Jump_061_45F5::
+    add_a_to_hl
     push hl
     ld a, [hl]
     ld b, a
@@ -1108,12 +1033,7 @@ Jump_061_462B::
 Func_061_462F::
     ld a, b
     ld hl, Data_061_4810
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4638
-    inc h
-
-Jump_061_4638::
+    add_a_to_hl
     ld a, [hl]
     ld e, a
     ldh a, [hFF8F]
@@ -1201,12 +1121,7 @@ Jump_061_468E::
     dec de
     ld a, [de]
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_46AD
-    inc h
-
-Jump_061_46AD::
+    add_a_to_hl
     ld a, l
     add a, $98
     ld l, a
@@ -1220,12 +1135,7 @@ Jump_061_46AD::
     ld [hl-], a
     push af
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_061_46C2
-    inc h
-
-Jump_061_46C2::
+    add_a_to_hl
     pop af
     add a, $0F
     ld [hl+], a
@@ -1258,12 +1168,7 @@ Jump_061_46C2::
     or a, $06
     ld [hl-], a
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_061_46F5
-    inc h
-
-Jump_061_46F5::
+    add_a_to_hl
     ld a, [hl]
     and a, $F8
     or a, $06
@@ -1285,24 +1190,14 @@ Func_061_4706::
     ld a, [wCC45]
     swap a
     ld hl, wCDAD
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4714
-    inc h
-
-Jump_061_4714::
+    add_a_to_hl
     ld a, [hl]
     add a, a
     ld l, a
     ld h, $00
     ld a, [wCC43]
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4722
-    inc h
-
-Jump_061_4722::
+    add_a_to_hl
     ld a, l
     add a, $2C
     ld l, a
@@ -1318,12 +1213,7 @@ Jump_061_4722::
     add hl, hl
     ldh a, [hFFC6]
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_473A
-    inc h
-
-Jump_061_473A::
+    add_a_to_hl
     ld a, l
     add a, $18
     ld l, a
@@ -1349,41 +1239,21 @@ Func_061_474C::
     add a, a
     push af
     ld hl, wCD89
-    add a, l
-    ld l, a
-    jr nc, Jump_061_475A
-    inc h
-
-Jump_061_475A::
+    add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
     pop af
     add a, a
     add a, a
     ld hl, wCDAD
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4768
-    inc h
-
-Jump_061_4768::
+    add_a_to_hl
     ld a, [hl]
     add a, a
     ld hl, wCE2D
-    add a, l
-    ld l, a
-    jr nc, Jump_061_4772
-    inc h
-
-Jump_061_4772::
+    add_a_to_hl
     ld a, [wCC43]
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_477B
-    inc h
-
-Jump_061_477B::
+    add_a_to_hl
     ldh a, [hFF8F]
     and a, $0F
     swap a
@@ -1476,12 +1346,7 @@ Jump_061_47C5::
     or a, $04
     ld [hl-], a
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_061_47F9
-    inc h
-
-Jump_061_47F9::
+    add_a_to_hl
     ld a, [hl]
     and a, $F8
     or a, $04
@@ -1577,12 +1442,7 @@ Jump_061_542D::
     ld hl, wCDAC
     ld a, [wCC45]
     swap a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_543A
-    inc h
-
-Jump_061_543A::
+    add_a_to_hl
     ld a, [hl]
     and a, $7F
     ldh [hFFC6], a
@@ -1597,12 +1457,7 @@ Jump_061_5443::
     ld h, $00
     ldh a, [hFF8F]
     and a, $FC
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5454
-    inc h
-
-Jump_061_5454::
+    add_a_to_hl
     ld a, l
     add a, $60
     ld l, a
@@ -1628,23 +1483,13 @@ Jump_061_5454::
     add a, c
     sla a
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_061_547C
-    inc h
-
-Jump_061_547C::
+    add_a_to_hl
     ldh a, [hFF8F]
     and a, $03
     ld c, a
     sla a
     add a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5489
-    inc h
-
-Jump_061_5489::
+    add_a_to_hl
     push hl
     ld e, l
     ld d, h
@@ -2240,12 +2085,7 @@ Jump_061_57AD::
     sla a
     sla a
     ld hl, wCD89
-    add a, l
-    ld l, a
-    jr nc, Jump_061_57BC
-    inc h
-
-Jump_061_57BC::
+    add_a_to_hl
     ld a, [hl]
     cp a, $05
     jr nz, Jump_061_57AA
@@ -2309,12 +2149,7 @@ Jump_061_5810::
     ld a, [wCC45]
     swap a
     ld hl, wCDAD
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5832
-    inc h
-
-Jump_061_5832::
+    add_a_to_hl
     ld a, [hl-]
     ld [hl], a
     ld a, $60
@@ -2352,12 +2187,7 @@ Jump_061_5863::
     sla a
     sla a
     ld hl, wCD78
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5874
-    inc h
-
-Jump_061_5874::
+    add_a_to_hl
     ld a, [wCC45]
     bit 7, a
     jr z, Jump_061_587C
@@ -2403,12 +2233,7 @@ Func_061_58BC::
     ld a, [wCC45]
     swap a
     ld hl, wCDAC
-    add a, l
-    ld l, a
-    jr nc, Jump_061_58C9
-    inc h
-
-Jump_061_58C9::
+    add_a_to_hl
     ld a, [hl]
     and a, $7F
     ld l, a
@@ -2485,12 +2310,7 @@ Jump_061_5916::
     sla a
     sla a
     ld hl, wCD88
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5936
-    inc h
-
-Jump_061_5936::
+    add_a_to_hl
     ld a, [hl]
     swap a
     and a, $0F
@@ -2595,12 +2415,7 @@ Jump_061_59B3::
     ld a, [wCC45]
     swap a
     ld hl, wCDAD
-    add a, l
-    ld l, a
-    jr nc, Jump_061_59C6
-    inc h
-
-Jump_061_59C6::
+    add_a_to_hl
     ld a, [hl]
     add a, a
     ld de, wCE2D
@@ -2624,12 +2439,7 @@ Jump_061_59DD::
     swap a
     and a, $0F
     ld hl, Data_061_5A2D
-    add a, l
-    ld l, a
-    jr nc, Jump_061_59EA
-    inc h
-
-Jump_061_59EA::
+    add_a_to_hl
     ld a, [hl]
     swap a
     and a, $0F
@@ -2690,24 +2500,14 @@ Jump_061_5A42::
     add a, a
     push af
     ld hl, wCD89
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5A56
-    inc h
-
-Jump_061_5A56::
+    add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
     pop af
     add a, a
     add a, a
     ld hl, wCDAC
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5A64
-    inc h
-
-Jump_061_5A64::
+    add_a_to_hl
     ld a, [hl+]
     ldh [hFFC7], a
     ld a, [hl]
@@ -2740,12 +2540,7 @@ Jump_061_5A7A::
     cp a, $0F
     jp z, Jump_061_5A9B
     ld hl, Data_061_5BB5
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5A97
-    inc h
-
-Jump_061_5A97::
+    add_a_to_hl
     ld a, [hl]
     cp a, b
     jr z, Jump_061_5AB5
@@ -2755,12 +2550,7 @@ Jump_061_5A9B::
     swap a
     and a, $0F
     ld hl, Data_061_5BB5
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5AA8
-    inc h
-
-Jump_061_5AA8::
+    add_a_to_hl
     ld a, [hl]
     cp a, b
     jr z, Jump_061_5B18
@@ -2781,12 +2571,7 @@ Jump_061_5AB5::
     add a, a
     add a, a
     ld hl, wCD88
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5ACE
-    inc h
-
-Jump_061_5ACE::
+    add_a_to_hl
     ld a, [hl]
     swap a
     and a, $0F
@@ -2873,12 +2658,7 @@ Jump_061_5B66::
 
 Jump_061_5B6B::
     ld hl, Data_061_5BB5
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5B73
-    inc h
-
-Jump_061_5B73::
+    add_a_to_hl
     ld a, [hl]
     swap a
     and a, $0F
@@ -2966,12 +2746,7 @@ Func_061_5C07::
     ld a, [wCC45]
     swap a
     ld hl, wCDAC
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5C14
-    inc h
-
-Jump_061_5C14::
+    add_a_to_hl
     ld a, [hl]
     and a, $7F
     ld l, a
@@ -3069,12 +2844,7 @@ Jump_061_5C7E::
     ld a, [wCC45]
     swap a
     ld hl, wCDAC
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5C9F
-    inc h
-
-Jump_061_5C9F::
+    add_a_to_hl
     ld a, [hl+]
     ld [hl-], a
     ld a, $63
@@ -3202,12 +2972,7 @@ Jump_061_5D25::
     ldh a, [hFFC7]
     swap a
     ld hl, wCDAC
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5D64
-    inc h
-
-Jump_061_5D64::
+    add_a_to_hl
     ld a, [hl]
     and a, $7F
     ld e, a
@@ -3227,12 +2992,7 @@ Jump_061_5D64::
     call ReadByteInBank
     ld h, c
     ld a, $0C
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5D88
-    inc h
-
-Jump_061_5D88::
+    add_a_to_hl
     ldh a, [hFF8E]
     cp a, $40
     jr z, Jump_061_5D92
@@ -3304,30 +3064,15 @@ Jump_061_5E02::
     ldh a, [hFFC7]
     swap a
     ld hl, wCDAD
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5E12
-    inc h
-
-Jump_061_5E12::
+    add_a_to_hl
     ld a, [hl]
     add a, a
     ld hl, wCE2D
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5E1C
-    inc h
-
-Jump_061_5E1C::
+    add_a_to_hl
     ld a, [hl]
     and a, $0F
     ld hl, Data_061_5E87
-    add a, l
-    ld l, a
-    jr nc, Jump_061_5E27
-    inc h
-
-Jump_061_5E27::
+    add_a_to_hl
     ld a, [hl]
     swap a
     and a, $0F
@@ -3734,24 +3479,14 @@ Jump_061_60AC::
 
 Jump_061_60BB::
     ld hl, wCD74
-    add a, l
-    ld l, a
-    jr nc, Jump_061_60C3
-    inc h
-
-Jump_061_60C3::
+    add_a_to_hl
     ld a, [hl]
     and a, $F0
     swap a
     add a, a
     add a, a
     ld hl, wCE7E
-    add a, l
-    ld l, a
-    jr nc, Jump_061_60D2
-    inc h
-
-Jump_061_60D2::
+    add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
     pop de

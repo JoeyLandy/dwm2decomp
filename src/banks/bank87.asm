@@ -115,12 +115,7 @@ Jump_087_4094::
 Jump_087_4096::
     pop hl
     ld a, $0A
-    add a, l
-    ld l, a
-    jr nc, Jump_087_409E
-    inc h
-
-Jump_087_409E::
+    add_a_to_hl
     jr Jump_087_4031
     db $33, $5D, $48, $5D, $71, $5D, $00, $00, $86, $5D, $9B, $5D, $00, $00, $00, $00
     db $00, $00, $00, $00, $00, $00, $00, $00, $BA, $5D
@@ -216,12 +211,7 @@ Jump_087_42DF::
     cp a, $02
     jr nz, Jump_087_430E
     ld a, $0A
-    add a, l
-    ld l, a
-    jr nc, Jump_087_4305
-    inc h
-
-Jump_087_4305::
+    add_a_to_hl
     ld a, [hl]
     bit 7, a
     jr z, Jump_087_430E
@@ -232,12 +222,7 @@ Jump_087_430E::
     pop hl
     push hl
     ld a, $0B
-    add a, l
-    ld l, a
-    jr nc, Jump_087_4317
-    inc h
-
-Jump_087_4317::
+    add_a_to_hl
     ld a, [hl]
     and a, $0F
     jr z, Jump_087_4320
@@ -257,12 +242,7 @@ Jump_087_432A::
 
 Jump_087_432B::
     ld a, $09
-    add a, l
-    ld l, a
-    jr nc, Jump_087_4332
-    inc h
-
-Jump_087_4332::
+    add_a_to_hl
     xor a, a
     ld [hl], a
     dec hl
@@ -272,12 +252,7 @@ Jump_087_4332::
     and a, $03
     ld [hl], a
     ld a, $08
-    add a, l
-    ld l, a
-    jr nc, Jump_087_4344
-    inc h
-
-Jump_087_4344::
+    add_a_to_hl
     ld a, [hl]
     cp a, $FF
     jr nz, Jump_087_4351
@@ -569,12 +544,7 @@ Jump_087_44FA::
 Jump_087_44FC::
     pop hl
     ld a, $0A
-    add a, l
-    ld l, a
-    jr nc, Jump_087_4504
-    inc h
-
-Jump_087_4504::
+    add_a_to_hl
     jp Jump_087_4420
 
 ; 1 call site from 1 routine (e.g. Func_087_42A0)
@@ -594,12 +564,7 @@ Jump_087_4511::
     add a, a
     add a, a
     ld hl, wCD89
-    add a, l
-    ld l, a
-    jr nc, Jump_087_4522
-    inc h
-
-Jump_087_4522::
+    add_a_to_hl
     ld a, [hl]
     cp a, $02
     jr nz, Jump_087_452D
@@ -706,12 +671,7 @@ Jump_087_473E::
     inc c
     pop hl
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_087_4748
-    inc h
-
-Jump_087_4748::
+    add_a_to_hl
     dec b
     jr nz, Jump_087_4725
     xor a, a

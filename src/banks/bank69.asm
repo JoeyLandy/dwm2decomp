@@ -61,12 +61,7 @@ Jump_069_404C::
     call Multiply8
     ldh a, [hFF8F]
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_069_4072
-    inc h
-
-Jump_069_4072::
+    add_a_to_hl
     add hl, de
     ld a, [hl+]
     ld e, a
@@ -117,12 +112,7 @@ Jump_069_40A6::
     jr nc, Jump_069_40B8
     ld a, [hl+]
     inc hl
-    add a, l
-    ld l, a
-    jr nc, Jump_069_40B6
-    inc h
-
-Jump_069_40B6::
+    add_a_to_hl
     jr Jump_069_4080
 
 Jump_069_40B8::
@@ -144,12 +134,7 @@ Jump_069_40BC::
 Jump_069_40C9::
     ld a, [hl+]
     inc hl
-    add a, l
-    ld l, a
-    jr nc, Jump_069_40D0
-    inc h
-
-Jump_069_40D0::
+    add_a_to_hl
     jr Jump_069_4080
 
 Jump_069_40D2::

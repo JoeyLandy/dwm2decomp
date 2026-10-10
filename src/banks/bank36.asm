@@ -40,12 +40,7 @@ Jump_036_4025::
     ld a, [wD8A5]
     ld hl, wD854
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_404E
-    inc h
-
-Jump_036_404E::
+    add_a_to_hl
     bit 5, [hl]
     jr z, Jump_036_4069
     farcall Func_0A3_4A5F
@@ -61,12 +56,7 @@ Jump_036_4069::
     ld a, [wD8A5]
     ld hl, wD854
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4075
-    inc h
-
-Jump_036_4075::
+    add_a_to_hl
     res 5, [hl]
 
 Jump_036_4077::
@@ -97,12 +87,7 @@ Jump_036_407F::
     rrca
     and a, $01
     ld hl, wD80A
-    add a, l
-    ld l, a
-    jr nc, Jump_036_40B2
-    inc h
-
-Jump_036_40B2::
+    add_a_to_hl
     bit 6, [hl]
     jr z, Jump_036_40ED
     ld a, l
@@ -124,12 +109,7 @@ Jump_036_40B2::
     ld a, [wD8A4]
     ld hl, wDA1D
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_40DB
-    inc h
-
-Jump_036_40DB::
+    add_a_to_hl
     ld [hl], c
     ld a, c
     ld [wD8A5], a
@@ -511,12 +491,7 @@ Jump_036_4356::
     ld a, [wD8A5]
     ld hl, wD854
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4375
-    inc h
-
-Jump_036_4375::
+    add_a_to_hl
     bit 7, [hl]
     jr z, Jump_036_438A
     ld d, $35
@@ -638,12 +613,7 @@ Jump_036_4469::
     ld a, [wD8A4]
     ld hl, wD854
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4475
-    inc h
-
-Jump_036_4475::
+    add_a_to_hl
     bit 2, [hl]
     jr nz, Jump_036_447F
     call Func_036_4FBC
@@ -689,12 +659,7 @@ Jump_036_44C8::
     ld a, [wD8A4]
     ld hl, wD91F
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_44D4
-    inc h
-
-Jump_036_44D4::
+    add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -1402,12 +1367,7 @@ Func_036_4961::
     ld a, [wD8A4]
     ld hl, wDA1D
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_498A
-    inc h
-
-Jump_036_498A::
+    add_a_to_hl
     ld [hl], b
     ld a, $FF
     ld [wDAD1], a
@@ -1703,12 +1663,7 @@ Jump_036_4B41::
     farcall Func_0A3_4A02
     ld a, [wD8A5]
     ld hl, wDAD8
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4B7A
-    inc h
-
-Jump_036_4B7A::
+    add_a_to_hl
     ld a, [hl]
     and a, $F8
     ld [hl], a
@@ -1809,12 +1764,7 @@ Jump_036_4C07::
     ld c, a
     ld a, [wD8A5]
     ld hl, wD8B7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4C66
-    inc h
-
-Jump_036_4C66::
+    add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
     ld c, a
@@ -1823,12 +1773,7 @@ Jump_036_4C66::
     ld c, a
     ld a, [wD8A5]
     ld hl, wD968
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4C80
-    inc h
-
-Jump_036_4C80::
+    add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
     ld c, a
@@ -1837,12 +1782,7 @@ Jump_036_4C80::
     ld c, a
     ld a, [wD8A5]
     ld hl, wD970
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4C9A
-    inc h
-
-Jump_036_4C9A::
+    add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
     ld c, a
@@ -1851,12 +1791,7 @@ Jump_036_4C9A::
     ld c, a
     ld a, [wD8A5]
     ld hl, wD978
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4CB4
-    inc h
-
-Jump_036_4CB4::
+    add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
     ld c, a
@@ -1865,12 +1800,7 @@ Jump_036_4CB4::
     ld c, a
     ld a, [wD8A5]
     ld hl, wD980
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4CCE
-    inc h
-
-Jump_036_4CCE::
+    add_a_to_hl
     ld [hl], c
 
 Jump_036_4CCF::
@@ -1955,12 +1885,7 @@ Jump_036_4D53::
     call Func_036_4E26
     ld a, [wD8A5]
     ld hl, wDA5B
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4D61
-    inc h
-
-Jump_036_4D61::
+    add_a_to_hl
     ld [hl], $03
     ld a, [wC58A]
     cp a, $01
@@ -1972,12 +1897,7 @@ Jump_036_4D61::
     cp a, $03
     ret z
     ld hl, wDAD4
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4D7C
-    inc h
-
-Jump_036_4D7C::
+    add_a_to_hl
     ld [hl], $FF
     ret
 
@@ -1995,21 +1915,11 @@ Jump_036_4D7F::
     farcall Func_03A_7193
     ld a, [wD8A5]
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4DA5
-    inc h
-
-Jump_036_4DA5::
+    add_a_to_hl
     ld [hl], $FF
     ld a, [wD8A5]
     ld hl, wDA5B
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4DB2
-    inc h
-
-Jump_036_4DB2::
+    add_a_to_hl
     ld [hl], $FF
     ld a, [wD8A5]
     ld hl, wD80C
@@ -2158,12 +2068,7 @@ Jump_036_4E9F::
     add a, a
     add a, b
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4EAD
-    inc h
-
-Jump_036_4EAD::
+    add_a_to_hl
     call Func_000_2090
 
 Jump_036_4EB0::
@@ -2253,12 +2158,7 @@ Func_036_4F18::
     ld a, [wD8A5]
     ld hl, wD854
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4F24
-    inc h
-
-Jump_036_4F24::
+    add_a_to_hl
     bit 5, [hl]
     jr z, Jump_036_4F2E
     ld a, [wC971]
@@ -2290,12 +2190,7 @@ Jump_036_4F54::
     jr c, Jump_036_4F65
     ld a, e
     ld hl, wD86D
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4F63
-    inc h
-
-Jump_036_4F63::
+    add_a_to_hl
     ld [hl], c
     inc e
 
@@ -2314,12 +2209,7 @@ Func_036_4F69::
     call Func_000_3E98
     ld a, e
     ld hl, wD86D
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4F7C
-    inc h
-
-Jump_036_4F7C::
+    add_a_to_hl
     ld a, [hl]
     scf
     ccf
@@ -2347,12 +2237,7 @@ Jump_036_4F99::
     jr c, Jump_036_4FAE
     ld a, e
     ld hl, wD86D
-    add a, l
-    ld l, a
-    jr nc, Jump_036_4FAC
-    inc h
-
-Jump_036_4FAC::
+    add_a_to_hl
     ld [hl], c
     inc e
 
@@ -2743,9 +2628,7 @@ Jump_036_5265::
     ld hl, wD8BF
     call Func_036_7E65
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     add a, e
     ld c, a
@@ -2780,12 +2663,7 @@ Jump_036_528B::
     ld [wD873], a
     ld a, [wD8A4]
     ld hl, wDAFA
-    add a, l
-    ld l, a
-    jr nc, Jump_036_52AA
-    inc h
-
-Jump_036_52AA::
+    add_a_to_hl
     ld a, [hl]
     or a, a
     jr z, Jump_036_5265
@@ -2844,9 +2722,7 @@ Jump_036_52F7::
     ld hl, wD8DF
     call Func_036_7E65
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     add a, e
     ld c, a
@@ -3191,9 +3067,7 @@ Jump_036_54D7::
     call Func_036_7E65
     push hl
     ld d, $00
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     jr nz, Jump_036_54ED
     ld d, $01
@@ -3391,12 +3265,7 @@ Func_036_55D4:: ; heuristic: follows a terminator; C0
     call Func_036_5013
     ld a, [wD8A5]
     ld hl, wD8A7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_55E2
-    inc h
-
-Jump_036_55E2::
+    add_a_to_hl
     bit 0, [hl]
     jr z, Jump_036_55FA
     ld a, [wD872]
@@ -3472,9 +3341,7 @@ Func_036_5640:: ; heuristic: follows a terminator; C0
     ld hl, wD8DF
     call Func_036_7E65
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     add hl, bc
     ld b, h
     ld c, l
@@ -3522,9 +3389,7 @@ Func_036_5671::
     jr Jump_036_56AE
 
 Jump_036_568C::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     or a, h
     jr z, Jump_036_56B8
     ld a, [wD8A4]
@@ -3622,12 +3487,7 @@ Func_036_5703:: ; heuristic: follows a terminator; C0
     call Func_036_66D6
     ld a, [wD8A4]
     ld hl, wD8A7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5714
-    inc h
-
-Jump_036_5714::
+    add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
     call Func_036_65E8
@@ -3635,9 +3495,7 @@ Jump_036_5714::
     ld hl, wD8BF
     call Func_036_7E65
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     pop hl
     jr c, Jump_036_5737
@@ -3660,9 +3518,7 @@ Jump_036_5737::
     ld hl, wD8DF
     call Func_036_7E65
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     pop hl
     jr c, Jump_036_5765
@@ -3832,12 +3688,7 @@ Jump_036_585B::
 Func_036_58C5::
     ld a, [wD8A4]
     ld hl, wD8B7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_58D0
-    inc h
-
-Jump_036_58D0::
+    add_a_to_hl
     ld l, [hl]
     ld h, $00
     ld b, h
@@ -3901,12 +3752,7 @@ Jump_036_58F9::
 Func_036_592E::
     ld a, [wD8A4]
     ld hl, wD8B7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5939
-    inc h
-
-Jump_036_5939::
+    add_a_to_hl
     ld l, [hl]
     ld h, $00
     ld a, [wC58A]
@@ -3968,12 +3814,7 @@ Jump_036_595E::
 Func_036_5993::
     ld a, [wD8A4]
     ld hl, wD8B7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_599E
-    inc h
-
-Jump_036_599E::
+    add_a_to_hl
     ld l, [hl]
     ld h, $00
     ld a, [wC58A]
@@ -4138,9 +3979,7 @@ Func_036_5A98:: ; heuristic: follows a terminator; C0
     ld [wD872], a
     ld a, h
     ld [wD873], a
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, h
     or a, a
     jr nz, Jump_036_5ABF
@@ -4293,12 +4132,7 @@ Func_036_5B8B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld hl, wD90F
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5B97
-    inc h
-
-Jump_036_5B97::
+    add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -4309,12 +4143,7 @@ Jump_036_5B97::
     ld a, [wD8A5]
     ld hl, wD91F
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5BAB
-    inc h
-
-Jump_036_5BAB::
+    add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -4354,12 +4183,7 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld [hl], a
     ld a, [wD871]
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5BE2
-    inc h
-
-Jump_036_5BE2::
+    add_a_to_hl
     ld [hl], $00
     ld a, [wD871]
     srl a
@@ -4367,15 +4191,8 @@ Jump_036_5BE2::
     and a, $01
     ld hl, wDAAE
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5BF6
-    inc h
-
-Jump_036_5BF6::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     ld [wCFE6], a
     ld a, h
@@ -4563,12 +4380,7 @@ Jump_036_5D3B::
 ; reads: wD871
 Func_036_5D7A::
     ld a, [wD871]
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5D82
-    inc h
-
-Jump_036_5D82::
+    add_a_to_hl
     ld [hl], c
     ret
 
@@ -4577,12 +4389,7 @@ Jump_036_5D82::
 Func_036_5D84::
     ld a, [wD871]
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5D8D
-    inc h
-
-Jump_036_5D8D::
+    add_a_to_hl
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4594,12 +4401,7 @@ Jump_036_5D8D::
 Func_036_5D91:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld hl, wD8A7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5D9C
-    inc h
-
-Jump_036_5D9C::
+    add_a_to_hl
     bit 4, [hl]
     ret nz
     call Func_036_5B5D
@@ -4644,12 +4446,7 @@ Jump_036_5DCB::
 Func_036_5DCF:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD8B7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_5DDA
-    inc h
-
-Jump_036_5DDA::
+    add_a_to_hl
     ld l, [hl]
     ld h, $00
     ld a, [wC58A]
@@ -4833,12 +4630,7 @@ Jump_036_5FE1::
     call Func_036_6018
     ld a, [wD8A4]
     ld hl, wD8A7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6009
-    inc h
-
-Jump_036_6009::
+    add_a_to_hl
     ld [hl], $00
     ld a, [wD8A4]
     call Func_036_7EBE
@@ -4923,12 +4715,7 @@ Func_036_6077::
 ; reads: wD8A4
 Func_036_6081:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6089
-    inc h
-
-Jump_036_6089::
+    add_a_to_hl
     ld [hl], c
     ret
 
@@ -4937,12 +4724,7 @@ Jump_036_6089::
 Func_036_608B::
     ld a, [wD8A4]
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6094
-    inc h
-
-Jump_036_6094::
+    add_a_to_hl
     ld [hl], c
     inc hl
     ld [hl], b
@@ -5877,9 +5659,7 @@ Func_036_64EC:: ; heuristic: follows a terminator; C0
 ; 1 call site from 1 routine (e.g. Func_036_6558)
 Func_036_64FC:: ; heuristic: follows a terminator; C0
     call Func_036_7E65
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_6477)
@@ -6015,12 +5795,7 @@ Func_036_65A9::
     ld a, [wD8A5]
     add a, a
     ld hl, wD958
-    add a, l
-    ld l, a
-    jr nc, Jump_036_65B5
-    inc h
-
-Jump_036_65B5::
+    add_a_to_hl
     ret
 
 ; 16 call sites from 16 routines (e.g. Func_036_55FB, Func_036_60D1, Func_036_60EB, Func_036_5F01, ...)
@@ -6035,12 +5810,7 @@ Func_036_65B6::
     ld a, [wD8A4]
     ld hl, wD854
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_65C8
-    inc h
-
-Jump_036_65C8::
+    add_a_to_hl
     ld a, [hl]
     and a, $04
     jr nz, Jump_036_65D1
@@ -6168,15 +5938,8 @@ Jump_036_6667::
     and a, $01
     ld hl, wDAAE
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6677
-    inc h
-
-Jump_036_6677::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     ld [wCFE6], a
     ld a, h
@@ -6213,15 +5976,8 @@ Jump_036_66AF::
     and a, $01
     ld hl, wDAAE
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_66BF
-    inc h
-
-Jump_036_66BF::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     ld [wCFE6], a
     ld a, h
@@ -6248,12 +6004,7 @@ Func_036_66E0:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     add a, a
     ld hl, wD90F
-    add a, l
-    ld l, a
-    jr nc, Jump_036_66EC
-    inc h
-
-Jump_036_66EC::
+    add_a_to_hl
     push hl
     ld a, [hl+]
     ld c, a
@@ -6275,16 +6026,9 @@ Jump_036_66EC::
 ; 2 call sites from 1 routine (e.g. Func_036_5F25)
 Func_036_6701::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6707
-    inc h
-
-Jump_036_6707::
+    add_a_to_hl
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     jr nc, Jump_036_6712
     ld b, h
@@ -6604,9 +6348,7 @@ Jump_036_6990::
     ld a, [wD8A5]
     ld hl, wD8CF
     call Func_036_7E65
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     jr z, Jump_036_69B4
     call Func_036_5223
@@ -6626,9 +6368,7 @@ Jump_036_69B4::
     ld a, [wD8A5]
     ld hl, wD8EF
     call Func_036_7E65
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     jr z, Jump_036_69DD
     ld a, l
@@ -6751,12 +6491,7 @@ Jump_036_6A93::
     call Func_000_3ED4
     pop hl
     ld a, $04
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6A9F
-    inc h
-
-Jump_036_6A9F::
+    add_a_to_hl
     ld a, [wC5E7]
     and a, $04
     add a, $04
@@ -7045,9 +6780,7 @@ Jump_036_6C30::
     ld a, [wD8A5]
     ld hl, wD8CF
     call Func_036_7E65
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     jr z, Jump_036_6C58
     call Func_036_5223
@@ -7082,9 +6815,7 @@ Jump_036_6C6A::
     ld a, [wD8A5]
     ld hl, wD8EF
     call Func_036_7E65
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     jr z, Jump_036_6C94
     call Func_036_52DF
@@ -7246,12 +6977,7 @@ Func_036_6D64:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld a, [wD8A5]
     ld hl, wDA5B
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6D7A
-    inc h
-
-Jump_036_6D7A::
+    add_a_to_hl
     ld [hl], $03
     ld l, $83
     ld bc, $4090
@@ -7286,12 +7012,7 @@ Jump_036_6D99::
     ld [hl], a
     ld a, [wD8A5]
     ld hl, wDA5B
-    add a, l
-    ld l, a
-    jr nc, Jump_036_6DAF
-    inc h
-
-Jump_036_6DAF::
+    add_a_to_hl
     ld [hl], $03
     ret
 
@@ -7683,12 +7404,7 @@ Jump_036_701B::
 
 Jump_036_7025::
     ld a, $09
-    add a, l
-    ld l, a
-    jr nc, Jump_036_702C
-    inc h
-
-Jump_036_702C::
+    add_a_to_hl
     inc c
     dec b
     jr nz, Jump_036_701B
@@ -7810,12 +7526,7 @@ Func_036_70CC:: ; heuristic: follows a terminator; C0
     call Func_036_5703
     ld a, [wD8A4]
     ld hl, wDAD8
-    add a, l
-    ld l, a
-    jr nc, Jump_036_70E2
-    inc h
-
-Jump_036_70E2::
+    add_a_to_hl
     ld a, [hl]
     and a, $F8
     ld [hl], a
@@ -7838,12 +7549,7 @@ Func_036_70F4::
     ret c
     and a, $03
     ld hl, wDAD4
-    add a, l
-    ld l, a
-    jr nc, Jump_036_710A
-    inc h
-
-Jump_036_710A::
+    add_a_to_hl
     ld a, [wD8A5]
     ld [hl], a
     ret
@@ -7856,12 +7562,7 @@ Func_036_710F:: ; heuristic: follows a terminator; C0
     call Func_036_5F25
     ld a, [wD8A4]
     ld hl, wDAD8
-    add a, l
-    ld l, a
-    jr nc, Jump_036_711D
-    inc h
-
-Jump_036_711D::
+    add_a_to_hl
     ld a, [hl]
     and a, $F8
     ld [hl], a
@@ -7894,12 +7595,7 @@ Func_036_714F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wDA1C
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7161
-    inc h
-
-Jump_036_7161::
+    add_a_to_hl
     ld a, c
     ld [hl], a
     ld [wD8A6], a
@@ -7910,12 +7606,7 @@ Jump_036_7161::
     ld a, [wD8A4]
     ld hl, wDA1D
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7180
-    inc h
-
-Jump_036_7180::
+    add_a_to_hl
     ld [hl], $FF
     farcall Func_030_4102
     ld a, d
@@ -8524,24 +8215,14 @@ Func_036_75AB:: ; heuristic: target of a pointer table; C0
     rrca
     and a, $01
     ld hl, wD80A
-    add a, l
-    ld l, a
-    jr nc, Jump_036_75BA
-    inc h
-
-Jump_036_75BA::
+    add_a_to_hl
     bit 2, [hl]
     jr nz, Jump_036_761F
     push hl
     ld a, [wD8A4]
     ld hl, wD854
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_75CB
-    inc h
-
-Jump_036_75CB::
+    add_a_to_hl
     ld a, [hl]
     pop hl
     and a, $04
@@ -8569,12 +8250,7 @@ Jump_036_75DD::
     and a, $01
     add a, a
     ld hl, wDAAE
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7603
-    inc h
-
-Jump_036_7603::
+    add_a_to_hl
     ld [hl], c
     inc hl
     ld [hl], b
@@ -8688,12 +8364,7 @@ Func_036_7697:: ; heuristic: target of a pointer table; C0
 Jump_036_76B4::
     ld a, [wD8A5]
     ld hl, wD8A7
-    add a, l
-    ld l, a
-    jr nc, Jump_036_76BF
-    inc h
-
-Jump_036_76BF::
+    add_a_to_hl
     bit 4, [hl]
     ld h, $70
     jr z, Jump_036_76C7
@@ -8776,12 +8447,7 @@ Func_036_771B:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     add a, a
     ld hl, wD854
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7749
-    inc h
-
-Jump_036_7749::
+    add_a_to_hl
     ld [hl], $00
     ld d, $DD
     farcall Func_03A_7193
@@ -9044,12 +8710,7 @@ Jump_036_78C6::
     rra
     and a, $01
     ld hl, wD80A
-    add a, l
-    ld l, a
-    jr nc, Jump_036_78D9
-    inc h
-
-Jump_036_78D9::
+    add_a_to_hl
     set 5, [hl]
 
 Jump_036_78DB::
@@ -9088,23 +8749,13 @@ Func_036_78FA:: ; heuristic: target of a pointer table; C0
     and a, $01
     ld b, a
     ld hl, wD80A
-    add a, l
-    ld l, a
-    jr nc, Jump_036_790A
-    inc h
-
-Jump_036_790A::
+    add_a_to_hl
     bit 6, [hl]
     jp nz, Jump_036_7CD3
     set 6, [hl]
     ld a, b
     ld hl, wD864
-    add a, l
-    ld l, a
-    jr nc, Jump_036_791A
-    inc h
-
-Jump_036_791A::
+    add_a_to_hl
     ld a, [wD8A4]
     and a, $03
     rla
@@ -9174,22 +8825,12 @@ Func_036_799B:: ; heuristic: follows a terminator; C0
     ld a, [wC5E7]
     and a, $0F
     ld hl, $79DC
-    add a, l
-    ld l, a
-    jr nc, Jump_036_79BA
-    inc h
-
-Jump_036_79BA::
+    add_a_to_hl
     ld a, [hl]
     push af
     ld a, [wD8A4]
     ld hl, wDAFA
-    add a, l
-    ld l, a
-    jr nc, Jump_036_79C7
-    inc h
-
-Jump_036_79C7::
+    add_a_to_hl
     pop af
     ld [hl], a
     pop hl
@@ -9232,12 +8873,7 @@ Func_036_7A18:: ; heuristic: target of a pointer table; C0
     ld [hl], a
     ld a, [wD8A5]
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7A45
-    inc h
-
-Jump_036_7A45::
+    add_a_to_hl
     ld [hl], $FF
     ld a, [wD8A5]
     and a, $03
@@ -9245,12 +8881,7 @@ Jump_036_7A45::
     ld b, a
     add a, a
     add a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7A57
-    inc h
-
-Jump_036_7A57::
+    add_a_to_hl
     xor a, a
     ld [hl+], a
     ld [hl+], a
@@ -9378,9 +9009,7 @@ Func_036_7B09:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld hl, wD8EF
     call Func_036_7E65
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call CompareHLToBC
     pop bc
     jp z, Jump_036_7CD3
@@ -9503,12 +9132,7 @@ Func_036_7BB6:: ; heuristic: target of a pointer table; C0
 Func_036_7BC9:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7BD4
-    inc h
-
-Jump_036_7BD4::
+    add_a_to_hl
     ld [hl], $FF
     call Func_036_7E87
     jr c, Jump_036_7BF5
@@ -9518,12 +9142,7 @@ Jump_036_7BD4::
     ld b, a
     add a, a
     add a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7BEB
-    inc h
-
-Jump_036_7BEB::
+    add_a_to_hl
     xor a, a
     ld [hl+], a
     ld [hl+], a
@@ -9705,12 +9324,7 @@ Jump_036_7CD3::
     ld a, [wD8A4]
     ld hl, wDA1D
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7CEB
-    inc h
-
-Jump_036_7CEB::
+    add_a_to_hl
     pop af
     ld [hl], a
     ld a, $FF
@@ -9828,12 +9442,7 @@ Func_036_7D79:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld b, a
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7D85
-    inc h
-
-Jump_036_7D85::
+    add_a_to_hl
     ld [hl], $00
     ld a, b
     ld hl, wD80C
@@ -9850,12 +9459,7 @@ Jump_036_7D85::
     ld [hl], a
     ld a, [wD8A5]
     ld hl, wDA5B
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7DA3
-    inc h
-
-Jump_036_7DA3::
+    add_a_to_hl
     ld [hl], $03
     ret
 
@@ -9903,12 +9507,7 @@ Func_036_7DC9:: ; heuristic: follows a terminator; C0
 Jump_036_7DD1::
     ld hl, $7DDE
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7DDA
-    inc h
-
-Jump_036_7DDA::
+    add_a_to_hl
     call Func_000_000B
     ret
     db $13, $50, $C5, $58, $2E, $59, $93, $59, $52, $53, $B4, $60, $B4, $60, $CF, $5D
@@ -9961,26 +9560,14 @@ Func_036_7E47::
 ; 1 call site from 1 routine (e.g. Func_036_433F)
 Func_036_7E5B::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7E61
-    inc h
-
-Jump_036_7E61::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ret
 
 ; 56 call sites from 30 routines (e.g. Func_036_54BE, Func_036_4582, Func_036_42D3, Func_036_4162, ...)
 Func_036_7E65::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7E6B
-    inc h
-
-Jump_036_7E6B::
+    add_a_to_hl
     ret
 
 ; 5 call sites from 4 routines (e.g. Func_036_4A38, Func_036_4991, Func_036_4582, Func_036_4FBC)
@@ -10028,12 +9615,7 @@ Jump_036_7E9C::
 Func_036_7EBE::
     push hl
     ld hl, wD095
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7EC7
-    inc h
-
-Jump_036_7EC7::
+    add_a_to_hl
     set 0, [hl]
     pop hl
     ret
@@ -10043,12 +9625,7 @@ Jump_036_7EC7::
 Func_036_7ECB::
     push hl
     ld hl, wD095
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7ED4
-    inc h
-
-Jump_036_7ED4::
+    add_a_to_hl
     set 1, [hl]
     pop hl
     ret
@@ -10058,12 +9635,7 @@ Jump_036_7ED4::
 Func_036_7ED8:: ; heuristic: follows a terminator; C0
     push hl
     ld hl, wD095
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7EE1
-    inc h
-
-Jump_036_7EE1::
+    add_a_to_hl
     set 2, [hl]
     pop hl
     ret
@@ -10076,12 +9648,7 @@ Func_036_7EE5:: ; heuristic: follows a terminator; C0
     ld c, a
     ld b, $00
     ld hl, wD968
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7EF2
-    inc h
-
-Jump_036_7EF2::
+    add_a_to_hl
     ld a, [hl]
     ld l, $00
     cp a, $C0
@@ -10097,12 +9664,7 @@ Jump_036_7F01::
     ld b, a
     ld a, c
     ld hl, wD970
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7F0D
-    inc h
-
-Jump_036_7F0D::
+    add_a_to_hl
     ld a, [hl]
     ld l, $00
     cp a, $C0
@@ -10118,12 +9680,7 @@ Jump_036_7F1C::
     ld b, a
     ld a, c
     ld hl, wD978
-    add a, l
-    ld l, a
-    jr nc, Jump_036_7F28
-    inc h
-
-Jump_036_7F28::
+    add_a_to_hl
     ld a, [hl]
     ld l, $00
     cp a, $C0

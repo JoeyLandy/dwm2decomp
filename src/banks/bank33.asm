@@ -8,9 +8,7 @@ Func_033_4001::
     ld hl, Data_033_405F
     add hl, de
     add hl, de
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -49,9 +47,7 @@ Func_033_402B::
     ld hl, Data_033_405F
     add hl, de
     add hl, de
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -2451,12 +2447,7 @@ Func_033_60A7::
 Func_033_60C3::
     push bc
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_033_60CB
-    inc h
-
-Jump_033_60CB::
+    add_a_to_hl
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -2749,12 +2740,7 @@ Jump_033_622B::
     push hl
     push bc
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_033_6238
-    inc h
-
-Jump_033_6238::
+    add_a_to_hl
     ld a, [hl+]
     ld e, a
     ld a, [hl]

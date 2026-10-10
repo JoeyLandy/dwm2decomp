@@ -693,15 +693,8 @@ Jump_007_4A68::
     jr z, Jump_007_4A9B
     ld hl, $5149
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_007_4A87
-    inc h
-
-Jump_007_4A87::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     call Func_007_4AFE
     call Func_007_4B1E
     ld a, [wD06A]
@@ -1521,9 +1514,7 @@ Func_007_5046::
     ld a, $00
     adc a, d
     ld h, a
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, $BB
     push af
 
@@ -1557,9 +1548,7 @@ Func_007_5067::
     ld a, $00
     adc a, d
     ld h, a
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, $C3
     push af
 
@@ -1581,15 +1570,8 @@ Jump_007_507C::
 ; 10 call sites from 3 routines (e.g. Func_007_60E9, Func_007_7270, Func_007_6DE3)
 Func_007_50FE::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_007_5104
-    inc h
-
-Jump_007_5104::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BC
     call WriteVRAMByte
     ret
@@ -5011,23 +4993,13 @@ Jump_007_7021::
     ld a, [wC46C]
     and a, $07
     ld hl, wD09D
-    add a, l
-    ld l, a
-    jr nc, Jump_007_7049
-    inc h
-
-Jump_007_7049::
+    add_a_to_hl
     ld a, [hl]
     ld [wC46D], a
     ld a, [wC46C]
     and a, $07
     ld hl, $7063
-    add a, l
-    ld l, a
-    jr nc, Jump_007_705A
-    inc h
-
-Jump_007_705A::
+    add_a_to_hl
     ld a, [hl]
     ld [wD06B], a
     xor a, a
@@ -5342,12 +5314,7 @@ Func_007_7270::
     push bc
     push hl
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_007_7278
-    inc h
-
-Jump_007_7278::
+    add_a_to_hl
     ld a, $BC
     call WriteVRAMByte
     pop hl
@@ -5916,21 +5883,11 @@ Func_007_766B::
     ld a, [wC46E]
     ld hl, $774D
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_007_7677
-    inc h
-
-Jump_007_7677::
+    add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
     ld hl, wD049
-    add a, l
-    ld l, a
-    jr nc, Jump_007_7681
-    inc h
-
-Jump_007_7681::
+    add_a_to_hl
     ld a, d
     cpl
     ld e, a
@@ -6053,30 +6010,15 @@ Func_007_7724::
     ld c, a
     ld hl, $774D
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_007_772E
-    inc h
-
-Jump_007_772E::
+    add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
     ld hl, wD049
-    add a, l
-    ld l, a
-    jr nc, Jump_007_7738
-    inc h
-
-Jump_007_7738::
+    add_a_to_hl
     ld e, [hl]
     ld a, c
     ld hl, vBGMap0 + $E4
-    add a, l
-    ld l, a
-    jr nc, Jump_007_7742
-    inc h
-
-Jump_007_7742::
+    add_a_to_hl
     ld a, e
     and a, d
     ld a, $C3

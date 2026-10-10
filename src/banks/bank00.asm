@@ -15,9 +15,7 @@ Func_000_0000:: ; address name
 
 ; 7 call sites from 7 routines (e.g. Func_030_4F3B, Func_036_6717, Func_036_7DC9, Func_039_4001, ...)
 Func_000_000B::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
 
 ; jp hl; the call target used by CallInBank
 ; 5 call sites from 5 routines (e.g. CallInBank, Func_030_4595, Func_030_5440, Func_030_4946, ...)
@@ -1395,12 +1393,7 @@ Func_000_095B:: ; address name
     and a, $7F
     ld [wC5E8], a
     ld hl, $0973
-    add a, l
-    ld l, a
-    jr nc, Jump_000_096D
-    inc h
-
-Jump_000_096D::
+    add_a_to_hl
     ld a, [hl]
     ld [wC5E7], a
     pop hl
@@ -1607,9 +1600,7 @@ Func_000_0B0D::
     ld a, $00
     adc a, h
     ld h, a
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.
@@ -2617,12 +2608,7 @@ Func_000_1049::
 Func_000_1051::
     ld hl, wC4FF
     ld a, [wC576]
-    add a, l
-    ld l, a
-    jr nc, Jump_000_105C
-    inc h
-
-Jump_000_105C::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -4288,12 +4274,7 @@ Func_000_1906::
     ld c, a
     add a, a
     add a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1951
-    inc h
-
-Jump_000_1951::
+    add_a_to_hl
     ld a, l
     ldh [hFFC8], a
     ld a, h
@@ -4375,12 +4356,7 @@ Jump_000_19B7::
     ld [rROMB0], a
     call Func_000_1D7F
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_000_19CA
-    inc h
-
-Jump_000_19CA::
+    add_a_to_hl
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -4430,12 +4406,7 @@ Jump_000_19E6::
     ld c, a
     add a, a
     add a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1A0E
-    inc h
-
-Jump_000_1A0E::
+    add_a_to_hl
     ld a, l
     ldh [hFFC8], a
     ld a, h
@@ -4586,12 +4557,7 @@ Func_000_1AD6::
     rl h
     ld a, [de]
     and a, $0F
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1AFB
-    inc h
-
-Jump_000_1AFB::
+    add_a_to_hl
     sla l
     rl h
     sla l
@@ -4602,12 +4568,7 @@ Jump_000_1AFB::
     swap a
     and a, $0F
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1B13
-    inc h
-
-Jump_000_1B13::
+    add_a_to_hl
     push hl
     ld a, l
     add a, $98
@@ -4620,12 +4581,7 @@ Jump_000_1B13::
     inc a
     ld [hl-], a
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1B28
-    inc h
-
-Jump_000_1B28::
+    add_a_to_hl
     ld a, $56
     ld [hl+], a
     inc a
@@ -4662,12 +4618,7 @@ Jump_000_1B5C::
     ld [hl+], a
     ld [hl], a
     ld a, $13
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1B66
-    inc h
-
-Jump_000_1B66::
+    add_a_to_hl
     ld a, c
     ld [hl+], a
     ld [hl], a
@@ -4696,12 +4647,7 @@ Func_000_1B6F::
     inc hl
     ld [hl], $45
     ld a, $13
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1B8F
-    inc h
-
-Jump_000_1B8F::
+    add_a_to_hl
     ld [hl], $46
     inc hl
     ld [hl], $47
@@ -4715,12 +4661,7 @@ Jump_000_1B95::
     inc hl
     ld [hl], $79
     ld a, $13
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1BA7
-    inc h
-
-Jump_000_1BA7::
+    add_a_to_hl
     ld [hl], $7A
     inc hl
     ld [hl], $7B
@@ -5030,12 +4971,7 @@ Func_000_1D90::
     ld l, e
     ld h, d
     ld a, $06
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1DB4
-    inc h
-
-Jump_000_1DB4::
+    add_a_to_hl
     ld a, [wC5FA]
     ld c, a
     ld a, [hl+]
@@ -5058,12 +4994,7 @@ Jump_000_1DC7::
     jr z, Jump_000_1DC0
     jr c, Jump_000_1DC0
     ld a, $08
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1DD8
-    inc h
-
-Jump_000_1DD8::
+    add_a_to_hl
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -5107,12 +5038,7 @@ Jump_000_1DF4::
     ld c, a
     sla a
     add a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1E15
-    inc h
-
-Jump_000_1E15::
+    add_a_to_hl
     add hl, de
     ld a, [hl+]
     ld c, a
@@ -5167,12 +5093,7 @@ Jump_000_1E45::
     dec c
     jr z, Jump_000_1E5B
     ld a, $20
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1E55
-    inc h
-
-Jump_000_1E55::
+    add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
@@ -5219,12 +5140,7 @@ Jump_000_1E86::
     dec c
     jr z, Jump_000_1E9C
     ld a, $20
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1E96
-    inc h
-
-Jump_000_1E96::
+    add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
@@ -5254,12 +5170,7 @@ Func_000_1EA5::
 
 Jump_000_1EB6::
     ld a, $A0
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1EBD
-    inc h
-
-Jump_000_1EBD::
+    add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
@@ -5302,12 +5213,7 @@ Jump_000_1EDF::
     dec c
     jr z, Jump_000_1EF5
     ld a, $20
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1EEF
-    inc h
-
-Jump_000_1EEF::
+    add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
@@ -5365,12 +5271,7 @@ Jump_000_1F2A::
     dec c
     jr z, Jump_000_1F40
     ld a, $20
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1F3A
-    inc h
-
-Jump_000_1F3A::
+    add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
@@ -5394,12 +5295,7 @@ Func_000_1F49::
     add hl, bc
     pop bc
     ld a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1F5D
-    inc h
-
-Jump_000_1F5D::
+    add_a_to_hl
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5530,12 +5426,7 @@ Func_000_1FD1:: ; address name
     add hl, bc
     pop bc
     ld a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_000_1FE2
-    inc h
-
-Jump_000_1FE2::
+    add_a_to_hl
     ret
 
 ; 19 call sites from 14 routines (e.g. Func_001_5EAF, Func_003_4A36, Func_003_4FBB, Func_00C_4948, ...)
@@ -5588,12 +5479,7 @@ Func_000_1FE3::
     sla a
     sla a
     ld hl, wC49F
-    add a, l
-    ld l, a
-    jr nc, Jump_000_2032
-    inc h
-
-Jump_000_2032::
+    add_a_to_hl
     ld c, $10
     call CopyFromBank
     ret
@@ -6126,12 +6012,7 @@ Jump_000_22A5::
     add a, a
     add a, a
     ld hl, wC4DF
-    add a, l
-    ld l, a
-    jr nc, Jump_000_22F1
-    inc h
-
-Jump_000_22F1::
+    add_a_to_hl
     ld a, $C8
     ld de, Data_07E_4BBD
     add a, e
@@ -6201,12 +6082,7 @@ Jump_000_2304::
     add a, a
     add a, a
     ld hl, wC4DF
-    add a, l
-    ld l, a
-    jr nc, Jump_000_235C
-    inc h
-
-Jump_000_235C::
+    add_a_to_hl
     push hl
     ldh a, [hFFC6]
     ld l, a
@@ -6473,12 +6349,7 @@ Jump_000_249E::
 Func_000_24A2::
     add a, a
     ld hl, $4078
-    add a, l
-    ld l, a
-    jr nc, Jump_000_24AB
-    inc h
-
-Jump_000_24AB::
+    add_a_to_hl
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $09
@@ -6520,12 +6391,7 @@ Jump_000_24D7::
     pop bc
     ld hl, wC6FE
     and a, $7F
-    add a, l
-    ld l, a
-    jr nc, Jump_000_24E3
-    inc h
-
-Jump_000_24E3::
+    add_a_to_hl
     ld a, [hl]
     ret
 
@@ -6666,12 +6532,7 @@ Jump_000_2589::
 Jump_000_258B::
     ldh a, [rLY]
     ld hl, wC0F0
-    add a, l
-    ld l, a
-    jr nc, Jump_000_2595
-    inc h
-
-Jump_000_2595::
+    add_a_to_hl
     ld a, [hl]
     ldh [rSCX], a
     ldh a, [rLYC]
@@ -6689,12 +6550,7 @@ Jump_000_25A6::
 Jump_000_25AA::
     ldh a, [rLY]
     ld hl, wC0F0
-    add a, l
-    ld l, a
-    jr nc, Jump_000_25B4
-    inc h
-
-Jump_000_25B4::
+    add_a_to_hl
     ld a, [hl]
     ldh [rSCY], a
     ldh a, [rLYC]
@@ -6928,12 +6784,7 @@ Jump_000_271B::
     srl a
     srl a
     srl a
-    add a, l
-    ld l, a
-    jr nc, Jump_000_2743
-    inc h
-
-Jump_000_2743::
+    add_a_to_hl
     pop de
     call Func_000_1EA5
     jp Jump_000_2875
@@ -7415,12 +7266,7 @@ Jump_000_2A3B::
     cp a, $07
     jr z, Jump_000_2A59
     ld hl, $2A66
-    add a, l
-    ld l, a
-    jr nc, Jump_000_2A4F
-    inc h
-
-Jump_000_2A4F::
+    add_a_to_hl
     ld a, [hl]
     ld [wC53C], a
     ld hl, wC52B
@@ -9109,9 +8955,7 @@ Jump_000_35A8::
     ld e, a
     ld d, $00
     add hl, de
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     pop de
     add hl, de
     ld c, $30
@@ -9340,9 +9184,7 @@ Jump_000_36E5::
     ld e, a
     ld d, $00
     add hl, de
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     pop de
     add hl, de
     ld c, $30
@@ -9563,9 +9405,7 @@ Jump_000_3836::
     sbc a, $00
     ldh [hFFF6], a
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     srl h
     rr l
     ld a, l
@@ -9703,9 +9543,7 @@ Jump_000_3918::
     ld d, $00
     ld hl, $3B5C
     add hl, de
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, b
     swap a
     and a, $0F
@@ -10170,9 +10008,7 @@ Func_000_3D8D::
     ld e, a
     ld d, $00
     add hl, de
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     pop de
     add hl, de
     ld de, rWAVE
@@ -10337,12 +10173,7 @@ Func_000_3E54:: ; address name
     cp a, $08
     jr nc, Jump_000_3E6E
     ld hl, wDA63
-    add a, l
-    ld l, a
-    jr nc, Jump_000_3E63
-    inc h
-
-Jump_000_3E63::
+    add_a_to_hl
     ld a, [hl]
     and a, a
     jr z, Jump_000_3E72
@@ -10538,12 +10369,7 @@ Func_000_3F25:: ; address name
     add a, a
     add a, d
     pop de
-    add a, l
-    ld l, a
-    jr nc, Jump_000_3F31
-    inc h
-
-Jump_000_3F31::
+    add_a_to_hl
     ret
 
 ; 17 call sites from 17 routines (e.g. Func_032_5C3F, Func_036_4D0C, Func_036_6658, Func_036_669E, ...)
@@ -10559,12 +10385,7 @@ Jump_000_3F37::
     ld bc, wD0D5
     add hl, bc
     ld a, e
-    add a, l
-    ld l, a
-    jr nc, Jump_000_3F46
-    inc h
-
-Jump_000_3F46::
+    add_a_to_hl
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_41D6, Func_032_51F9, Func_032_4F0A)

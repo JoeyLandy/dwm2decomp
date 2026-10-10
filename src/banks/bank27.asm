@@ -200,9 +200,7 @@ Func_027_419C::
     ld h, $00
     add hl, hl
     add hl, de
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ldh a, [hFFB1]
     add a, a
     add a, a

@@ -91,12 +91,7 @@ Jump_0F1_4092::
     add a, c
     ld [wD082], a
     ld hl, wC61D
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_40B3
-    inc h
-
-Jump_0F1_40B3::
+    add_a_to_hl
     ld a, [hl]
     ld [wD081], a
     ld l, a
@@ -231,12 +226,7 @@ Jump_0F1_4187::
     call StoreWC60B
     ld a, [wD082]
     ld hl, wC61D
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_41A5
-    inc h
-
-Jump_0F1_41A5::
+    add_a_to_hl
     ld [hl], $00
     farcall Func_016_4C48
     ld a, $40
@@ -332,24 +322,12 @@ Func_0F1_4244:: ; heuristic: follows a terminator; C0
     farcall Func_033_4001
     ld a, [wD081]
     ld hl, Data_0F1_4613
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_4262
-    inc h
-
-Jump_0F1_4262::
+    add_a_to_hl
     ld a, [hl]
     ld hl, Data_0F1_4676
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_426C
-    inc h
-
-Jump_0F1_426C::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     call Func_0F1_49ED
     call Func_0F1_442F
     ret
@@ -651,12 +629,7 @@ Func_0F1_442F:: ; heuristic: follows a terminator; C0
     ld c, a
     ld a, [wD081]
     ld hl, Data_0F1_4613
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_443E
-    inc h
-
-Jump_0F1_443E::
+    add_a_to_hl
     ld a, [hl]
     push af
     ld a, $0A
@@ -732,9 +705,7 @@ Jump_0F1_44A0::
     call Func_000_1F49
 
 Jump_0F1_44A3::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC31D
     call Func_000_2123
@@ -815,12 +786,7 @@ Jump_0F1_451A::
     pop af
     ld hl, Data_0F1_45CB
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_4535
-    inc h
-
-Jump_0F1_4535::
+    add_a_to_hl
     ld b, [hl]
     ld a, l
     ldh [hFFC6], a
@@ -1267,15 +1233,8 @@ Jump_0F1_4957::
 ; 4 call sites from 4 routines (e.g. Func_0F1_422D, Func_0F1_42B6, Func_0F1_4276, Func_0F1_429C)
 Func_0F1_4983::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_4989
-    inc h
-
-Jump_0F1_4989::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     add a, $98
     ld l, a
@@ -1288,15 +1247,8 @@ Jump_0F1_4989::
 ; no direct call (reached through a table, a jump or a vector)
 Func_0F1_4997:: ; heuristic: follows a terminator; C0
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_499D
-    inc h
-
-Jump_0F1_499D::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BC
     call WriteVRAMByte
     ret
@@ -1353,15 +1305,8 @@ Jump_0F1_49FD::
 ; writes: wC528, wC529, wC52D, wC52E, wC52F, wC530
 Func_0F1_4A0D:: ; heuristic: follows a terminator; C0
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_4A13
-    inc h
-
-Jump_0F1_4A13::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $08
     ld [wC528], a
     ld a, $05
@@ -3359,12 +3304,7 @@ Jump_0F1_58D4::
     ld a, [wD7FA]
     add a, a
     ld hl, Data_0F1_58F4
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_58E0
-    inc h
-
-Jump_0F1_58E0::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -3433,12 +3373,7 @@ Func_0F1_58FA::
 Jump_0F1_593B::
     pop bc
     ld a, $14
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_5943
-    inc h
-
-Jump_0F1_5943::
+    add_a_to_hl
     ld a, $14
     add a, e
     ld e, a
@@ -3619,24 +3554,14 @@ Func_0F1_5A07::
     srl a
     srl a
     srl a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_5A27
-    inc h
-
-Jump_0F1_5A27::
+    add_a_to_hl
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4D4E)
 Func_0F1_5A28::
     push bc
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0F1_5A2F
-    inc h
-
-Jump_0F1_5A2F::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]

@@ -544,42 +544,22 @@ Func_003_4389::
     and a, $FD
     ld [hl], a
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_003_439D
-    inc h
-
-Jump_003_439D::
+    add_a_to_hl
     ld a, [hl]
     and a, $FD
     ld [hl], a
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_003_43A8
-    inc h
-
-Jump_003_43A8::
+    add_a_to_hl
     ld a, [hl]
     and a, $FD
     ld [hl], a
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_003_43B3
-    inc h
-
-Jump_003_43B3::
+    add_a_to_hl
     ld a, [hl]
     and a, $FD
     ld [hl], a
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_003_43BE
-    inc h
-
-Jump_003_43BE::
+    add_a_to_hl
     ld a, [hl]
     and a, $FD
     ld [hl], a
@@ -590,15 +570,8 @@ Jump_003_43BE::
 ; writes: wC528, wC529, wC52D, wC52E, wC52F, wC530
 Func_003_43C3::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_43C9
-    inc h
-
-Jump_003_43C9::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
 
 ; 3 call sites from 3 routines (e.g. Func_003_7335, Func_003_4BE8, Func_003_4E02)
 ; reads: wC52D, wC52E, wC52F, wC530
@@ -855,15 +828,8 @@ Func_003_451C::
     and a, $03
     ld hl, Func_003_460B
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_452A
-    inc h
-
-Jump_003_452A::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     add a, $98
     ld l, a
@@ -876,15 +842,8 @@ Jump_003_452A::
 ; 15 call sites from 14 routines (e.g. Func_003_769E, Func_003_7707, Func_003_76D5, Func_003_7145, ...)
 Func_003_4538::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_453E
-    inc h
-
-Jump_003_453E::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     add a, $98
     ld l, a
@@ -897,15 +856,8 @@ Jump_003_453E::
 ; 4 call sites from 3 routines (e.g. Func_003_6A60, Func_003_6B5E, Func_003_74E2)
 Func_003_454C::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_4552
-    inc h
-
-Jump_003_4552::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BC
     call WriteVRAMByte
     ret
@@ -1818,9 +1770,7 @@ Func_003_4B52::
     pop hl
     inc hl
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC308
     call Func_000_2123
@@ -1858,9 +1808,7 @@ Func_003_4B52::
     call Func_000_2123
     pop hl
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC3A8
     call Func_000_2123
@@ -2143,15 +2091,8 @@ Jump_003_4DDD::
     ld a, b
     ld hl, Data_003_4DF2
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_4DE7
-    inc h
-
-Jump_003_4DE7::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld de, $0901
     call Func_003_43D9
     pop hl
@@ -2278,15 +2219,8 @@ Func_003_4EB6::
     ld hl, Data_003_4F5D
     ld a, b
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_4ED2
-    inc h
-
-Jump_003_4ED2::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld de, $0901
     call Func_003_43D9
     farcall Func_035_4001
@@ -2295,12 +2229,7 @@ Jump_003_4ED2::
     pop bc
     ld a, b
     ld hl, Data_003_4F61
-    add a, l
-    ld l, a
-    jr nc, Jump_003_4EF1
-    inc h
-
-Jump_003_4EF1::
+    add_a_to_hl
     ld a, [hl]
     ld [wD09E], a
     farcall Func_016_7A48
@@ -2335,15 +2264,8 @@ Func_003_4F0D::
     ld a, b
     ld hl, Data_003_4F6B
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_4F26
-    inc h
-
-Jump_003_4F26::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $C3
     ld [hl+], a
     ld [hl+], a
@@ -2361,15 +2283,8 @@ Jump_003_4F26::
     ld a, b
     ld hl, Data_003_4F6B
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_4F46
-    inc h
-
-Jump_003_4F46::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $FC
     ld [hl+], a
     ld a, [wC8C1]
@@ -2451,12 +2366,7 @@ Func_003_4FBB::
     ld [rRAMB], a
     ld a, [wC46D]
     ld hl, wC6FE
-    add a, l
-    ld l, a
-    jr nc, Jump_003_4FCF
-    inc h
-
-Jump_003_4FCF::
+    add_a_to_hl
     ld a, l
     ld [wD7F1], a
     ld a, h
@@ -2552,25 +2462,13 @@ Jump_003_5057::
     pop bc
     ld hl, Data_003_518F
     ld a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_003_506C
-    inc h
-
-Jump_003_506C::
+    add_a_to_hl
     ld a, c
     ld c, [hl]
     ld hl, Data_003_5192
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_5077
-    inc h
-
-Jump_003_5077::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     push de
     call Func_000_1FE3
     pop de
@@ -2581,26 +2479,14 @@ Jump_003_5077::
     push bc
     ld a, c
     ld hl, Data_003_518F
-    add a, l
-    ld l, a
-    jr nc, Jump_003_5090
-    inc h
-
-Jump_003_5090::
+    add_a_to_hl
     ld a, [hl]
     ldh [hFFC6], a
     ld a, c
     ld hl, Data_003_5198
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_509D
-    inc h
-
-Jump_003_509D::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     add a, $00
     ld l, a
@@ -2641,12 +2527,7 @@ Func_003_50DD::
     ld a, c
     ld hl, Data_003_519E
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_50E8
-    inc h
-
-Jump_003_50E8::
+    add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -2674,9 +2555,7 @@ Jump_003_50E8::
     inc hl
     inc hl
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     push de
     call HLToDecimalDigits
     pop de
@@ -2712,15 +2591,8 @@ Func_003_5137::
     ld a, c
     ld hl, Data_003_51A4
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_5142
-    inc h
-
-Jump_003_5142::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld de, $0901
     ld a, l
     ld [wC52D], a
@@ -2749,15 +2621,8 @@ Func_003_5171::
     ld a, c
     ld hl, Data_003_51AA
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_517C
-    inc h
-
-Jump_003_517C::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     push hl
     ld a, c
     ld c, $0E
@@ -2968,12 +2833,7 @@ Jump_003_52DE::
     add a, c
     ld [wD082], a
     ld hl, wC61D
-    add a, l
-    ld l, a
-    jr nc, Jump_003_52FF
-    inc h
-
-Jump_003_52FF::
+    add_a_to_hl
     ld a, [hl]
     ld [wD081], a
     ld l, a
@@ -3264,12 +3124,7 @@ Jump_003_550C::
 Jump_003_5512::
     ld a, [wD082]
     ld hl, wC61D
-    add a, l
-    ld l, a
-    jr nc, Jump_003_551D
-    inc h
-
-Jump_003_551D::
+    add_a_to_hl
     ld a, [hl]
     cp a, $40
     jr c, Jump_003_5532
@@ -3605,15 +3460,8 @@ Jump_003_5782::
     and a, $01
     ld hl, Data_003_4623
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_57A5
-    inc h
-
-Jump_003_57A5::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, $BC
     call WriteVRAMByte
     ld a, [wC470]
@@ -3648,12 +3496,7 @@ Jump_003_57C6::
 Jump_003_57E2::
     ld a, [wD082]
     ld hl, wC61D
-    add a, l
-    ld l, a
-    jr nc, Jump_003_57ED
-    inc h
-
-Jump_003_57ED::
+    add_a_to_hl
     ld [hl], $00
     ld a, $08
     ld [wC528], a
@@ -3734,24 +3577,12 @@ Func_003_5874::
     farcall Func_033_4001
     ld a, [wD081]
     ld hl, Data_003_5C8B
-    add a, l
-    ld l, a
-    jr nc, Jump_003_5892
-    inc h
-
-Jump_003_5892::
+    add_a_to_hl
     ld a, [hl]
     ld hl, Data_003_5CEE
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_589C
-    inc h
-
-Jump_003_589C::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     call Func_003_4290
     call Func_003_5AA7
     ret
@@ -4093,12 +3924,7 @@ Func_003_5AA7::
     ld c, a
     ld a, [wD081]
     ld hl, Data_003_5C8B
-    add a, l
-    ld l, a
-    jr nc, Jump_003_5AB6
-    inc h
-
-Jump_003_5AB6::
+    add_a_to_hl
     ld a, [hl]
     push af
     ld a, $0A
@@ -4174,9 +4000,7 @@ Jump_003_5B18::
     call Func_000_1F49
 
 Jump_003_5B1B::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC31D
     call Func_000_2123
@@ -4257,12 +4081,7 @@ Jump_003_5B92::
     pop af
     ld hl, Data_003_5C43
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_5BAD
-    inc h
-
-Jump_003_5BAD::
+    add_a_to_hl
     ld b, [hl]
     ld a, l
     ldh [hFFC6], a
@@ -4936,23 +4755,13 @@ Jump_003_61EA::
 Jump_003_6223::
     ld a, [wD082]
     ld hl, Data_003_6987
-    add a, l
-    ld l, a
-    jr nc, Jump_003_622E
-    inc h
-
-Jump_003_622E::
+    add_a_to_hl
     ld a, [hl]
     cp a, $FF
     call nz, StoreWC60B
     ld a, [wD082]
     ld hl, Data_003_69AF
-    add a, l
-    ld l, a
-    jr nc, Jump_003_623F
-    inc h
-
-Jump_003_623F::
+    add_a_to_hl
     ld a, [hl]
     ld [wC529], a
     ld a, $01
@@ -5021,9 +4830,7 @@ Jump_003_62B2::
     ld a, [wC46D]
     ld c, $5F
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     ld a, l
     ld [wD08F], a
     ld a, h
@@ -5066,12 +4873,7 @@ Jump_003_62DB::
 Jump_003_630E::
     ld a, [wD082]
     ld hl, Data_003_699B
-    add a, l
-    ld l, a
-    jr nc, Jump_003_6319
-    inc h
-
-Jump_003_6319::
+    add_a_to_hl
     ld a, [hl]
     cp a, $FF
     call nz, StoreWC60B
@@ -5142,15 +4944,8 @@ Jump_003_6387::
     ld a, [wD09E]
     ld hl, wD09F
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_639F
-    inc h
-
-Jump_003_639F::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, h
     add a, $02
     ld h, a
@@ -5281,9 +5076,7 @@ Func_003_646F::
     and a, $03
     ld c, $5F
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
     call Func_000_2123
@@ -5308,9 +5101,7 @@ Func_003_649C::
     and a, $03
     ld c, $5F
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC3A2
     call Func_000_2123
@@ -5341,15 +5132,8 @@ Jump_003_64DA::
     ld a, [hl]
     ld hl, Data_003_6921
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_6505
-    inc h
-
-Jump_003_6505::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     call Func_003_4290
     ret
 
@@ -5396,15 +5180,8 @@ Func_003_6526::
     ld a, [hl]
     ld hl, Data_003_6921
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_656C
-    inc h
-
-Jump_003_656C::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     call Func_003_4290
     ld e, $10
     farcall Func_033_4001
@@ -5482,12 +5259,7 @@ Func_003_65E3::
     add a, a
     add a, a
     add a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_003_6600
-    inc h
-
-Jump_003_6600::
+    add_a_to_hl
     ld a, [hl]
     cp a, $FF
     jr nz, Jump_003_6606
@@ -5512,9 +5284,7 @@ Jump_003_6625::
     and a, $03
     ld c, $5F
     call Func_000_1F49
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
 
 Jump_003_6632::
     call HLToDecimalDigits
@@ -5564,9 +5334,7 @@ Jump_003_6664::
     call Func_000_2123
     pop hl
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC31D
     call Func_000_2123
@@ -5650,12 +5418,7 @@ Jump_003_66E5::
 Func_003_66EE::
     ld a, [wCFEC]
     ld hl, Data_003_6700
-    add a, l
-    ld l, a
-    jr nc, Jump_003_66F9
-    inc h
-
-Jump_003_66F9::
+    add_a_to_hl
     ld a, [hl]
     ld [wD082], a
     cp a, $FF
@@ -6532,12 +6295,7 @@ Func_003_6EBF::
     and a, $07
     add a, b
     ld hl, wD0A7
-    add a, l
-    ld l, a
-    jr nc, Jump_003_6ED4
-    inc h
-
-Jump_003_6ED4::
+    add_a_to_hl
     ld a, [hl]
     bit 7, a
     ret
@@ -6567,12 +6325,7 @@ Jump_003_6EE2::
 Jump_003_6F00::
     ld a, [wC0A8]
     ld hl, Data_003_6FBB
-    add a, l
-    ld l, a
-    jr nc, Jump_003_6F0B
-    inc h
-
-Jump_003_6F0B::
+    add_a_to_hl
     ld a, [hl]
     ld hl, wC286
     ld [hl+], a
@@ -6778,15 +6531,8 @@ Func_003_705B::
     ld a, [wC46E]
     ld hl, Data_003_4649
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7067
-    inc h
-
-Jump_003_7067::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ret
 
 Jump_003_706B::
@@ -6873,22 +6619,12 @@ Jump_003_70ED::
     ld a, [wC46E]
     and a, $03
     ld hl, wD0A0
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7106
-    inc h
-
-Jump_003_7106::
+    add_a_to_hl
     ld c, [hl]
     ld [hl], $FF
     ld a, [wC0A8]
     ld hl, wD0A3
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7114
-    inc h
-
-Jump_003_7114::
+    add_a_to_hl
     ld [hl], c
     call Func_003_7335
     ld hl, wD09F
@@ -6931,22 +6667,12 @@ Func_003_7145::
     dec a
     ld [wC0A8], a
     ld hl, wD0A3
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7158
-    inc h
-
-Jump_003_7158::
+    add_a_to_hl
     ld c, [hl]
     ld [hl], $FF
     ld a, [wD09F]
     ld hl, wD0A0
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7166
-    inc h
-
-Jump_003_7166::
+    add_a_to_hl
     ld [hl], c
     call Func_003_7335
     ld hl, wC0A1
@@ -7007,34 +6733,19 @@ Jump_003_71AE::
 Func_003_71CA::
     ld a, [wD0A3]
     ld hl, wC6FE
-    add a, l
-    ld l, a
-    jr nc, Jump_003_71D5
-    inc h
-
-Jump_003_71D5::
+    add_a_to_hl
     ld c, [hl]
     ld a, [wD0A4]
     cp a, $FF
     jr z, Jump_003_71FD
     ld hl, wC6FE
-    add a, l
-    ld l, a
-    jr nc, Jump_003_71E5
-    inc h
-
-Jump_003_71E5::
+    add_a_to_hl
     ld b, [hl]
     ld a, [wD0A5]
     cp a, $FF
     jr z, Jump_003_71F9
     ld hl, wC6FE
-    add a, l
-    ld l, a
-    jr nc, Jump_003_71F5
-    inc h
-
-Jump_003_71F5::
+    add_a_to_hl
     ld a, [hl]
     ld [wC700], a
 
@@ -7090,12 +6801,7 @@ Jump_003_7255::
 ; 1 call site from 1 routine (e.g. Func_003_7281)
 Func_003_7257::
     ld hl, Data_003_7395
-    add a, l
-    ld l, a
-    jr nc, Jump_003_725F
-    inc h
-
-Jump_003_725F::
+    add_a_to_hl
     ld a, [hl]
     ld [de], a
     inc a
@@ -7144,12 +6850,7 @@ Func_003_7281::
     ld a, [wC46E]
     and a, $03
     ld hl, wD0A0
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7298
-    inc h
-
-Jump_003_7298::
+    add_a_to_hl
     ld a, [hl]
     push af
     ld c, $0B
@@ -7216,9 +6917,7 @@ Jump_003_7298::
     call Func_000_2123
     pop hl
     inc hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     call HLToDecimalDigits
     ld de, wC3A8
     call Func_000_2123
@@ -7383,12 +7082,7 @@ Jump_003_73A0::
 Jump_003_746C::
     ld a, [de]
     inc de
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7473
-    inc h
-
-Jump_003_7473::
+    add_a_to_hl
     dec b
     jr nz, Jump_003_746C
     call HLToDecimalDigits
@@ -7865,15 +7559,8 @@ Jump_003_77E0::
     ld a, c
     ld hl, Data_003_78B9
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_77EC
-    inc h
-
-Jump_003_77EC::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ld a, l
     ld [wC52D], a
     ld a, h
@@ -7982,15 +7669,8 @@ Jump_003_7899::
     ld a, c
     ld hl, Data_003_78C3
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_78A4
-    inc h
-
-Jump_003_78A4::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     pop af
     jr z, Jump_003_78B2
     bit 6, a
@@ -8036,20 +7716,10 @@ Func_003_78CB::
     add a, a
     ld b, a
     ld hl, wD0A7
-    add a, l
-    ld l, a
-    jr nc, Jump_003_78F5
-    inc h
-
-Jump_003_78F5::
+    add_a_to_hl
     ld a, [wC46E]
     and a, $07
-    add a, l
-    ld l, a
-    jr nc, Jump_003_78FF
-    inc h
-
-Jump_003_78FF::
+    add_a_to_hl
     ld a, [hl]
     and a, $3F
     ld l, a
@@ -8517,12 +8187,7 @@ Jump_003_7BC1::
     push de
     ld a, b
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7BCB
-    inc h
-
-Jump_003_7BCB::
+    add_a_to_hl
     ld a, [hl+]
     cp a, $FF
     jr z, Jump_003_7BF1
@@ -8537,12 +8202,7 @@ Jump_003_7BCB::
     ld h, d
     ld a, b
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_003_7BE0
-    inc h
-
-Jump_003_7BE0::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]

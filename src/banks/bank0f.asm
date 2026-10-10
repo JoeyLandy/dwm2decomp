@@ -99,12 +99,7 @@ Jump_00F_40A2::
     ld [rRAMG], a
     ld hl, wC6FE
     ld a, [wC922]
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_40B2
-    inc h
-
-Jump_00F_40B2::
+    add_a_to_hl
     push hl
     ld a, [hl]
     ld c, $0D
@@ -112,12 +107,7 @@ Jump_00F_40B2::
     ldh a, [hFFC6]
     and a, $0F
     ld hl, $40DE
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_40C5
-    inc h
-
-Jump_00F_40C5::
+    add_a_to_hl
     ld a, [hl]
     ld e, a
     pop hl
@@ -404,12 +394,7 @@ Jump_00F_42CA::
 Jump_00F_42D5::
     ld a, [wC921]
     ld hl, $431F
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_42E0
-    inc h
-
-Jump_00F_42E0::
+    add_a_to_hl
     ld a, [hl]
     xor a, $FF
     inc a
@@ -421,12 +406,7 @@ Jump_00F_42E7::
     ld [wCBA6], a
     ld a, [wC921]
     ld hl, $431F
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_42F7
-    inc h
-
-Jump_00F_42F7::
+    add_a_to_hl
     ld a, [hl]
     ld c, a
 
@@ -5716,12 +5696,7 @@ Func_00F_6D4D::
     and a, $07
     ld [wC921], a
     ld hl, $6D78
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_6D62
-    inc h
-
-Jump_00F_6D62::
+    add_a_to_hl
     ld a, [hl]
     ld [wCBD4], a
     ld a, [wCBD3]
@@ -5859,12 +5834,7 @@ Jump_00F_6E64::
 Jump_00F_6E6F::
     pop hl
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_6E77
-    inc h
-
-Jump_00F_6E77::
+    add_a_to_hl
     dec b
     jr nz, Jump_00F_6E59
     ld a, [wCB8A]
@@ -6083,12 +6053,7 @@ Jump_00F_7019::
     inc a
     ld [hl], a
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_7024
-    inc h
-
-Jump_00F_7024::
+    add_a_to_hl
     dec b
     jr nz, Jump_00F_7019
     ld a, [wCB8A]
@@ -6141,12 +6106,7 @@ Jump_00F_7071::
 
 Jump_00F_7079::
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_7080
-    inc h
-
-Jump_00F_7080::
+    add_a_to_hl
     dec b
     jr nz, Jump_00F_7071
     ld a, [wCBAB]
@@ -6384,12 +6344,7 @@ Jump_00F_723C::
     inc a
     ld [hl], a
     ld a, $10
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_7246
-    inc h
-
-Jump_00F_7246::
+    add_a_to_hl
     dec b
     jr nz, Jump_00F_723C
     ld a, [wCB8B]
@@ -7632,12 +7587,7 @@ Jump_00F_7B7E::
     ld h, $00
     add hl, hl
     add hl, hl
-    add a, l
-    ld l, a
-    jr nc, Jump_00F_7B95
-    inc h
-
-Jump_00F_7B95::
+    add_a_to_hl
     add hl, hl
     add hl, hl
     ld a, l

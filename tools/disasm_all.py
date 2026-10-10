@@ -21,6 +21,7 @@ interrupted run leaves the previous generated tree untouched.
 from __future__ import annotations
 
 import bisect
+import collections
 import json
 import re
 import sys
@@ -71,7 +72,50 @@ MACRO farcall_b
     ld hl, \\1
     rst $10
 ENDM
+
+; HL += A, the way the ROM spells it: add into L, carry into H.
+MACRO add_a_to_hl
+    add a, l
+    ld l, a
+    jr nc, .skip\\@
+    inc h
+.skip\\@:
+ENDM
+
+; HL = the word at [HL]: low byte first, then the high byte.
+MACRO deref_hl
+    ld a, [hl+]
+    ld h, [hl]
+    ld l, a
+ENDM
 """
+
+ADD_A_TO_HL = re.compile(r"    add a, l\n    ld l, a\n    jr nc, (\w+)\n    inc h\n\n\1::\n")
+DEREF_HL = "    ld a, [hl+]\n    ld h, [hl]\n    ld l, a\n"
+LABEL_TOKEN = re.compile(r"\b(?:Jump|Jr|Label)_\w+")
+
+
+def fold_idioms(texts: list[str]) -> tuple[list[str], dict[str, int]]:
+    """Replace the two commonest multi-instruction idioms by their macros (macros.inc).
+
+    `add_a_to_hl` folds the five-line add/carry sequence only when the branch label that ends it
+    is referenced nowhere else, so no other code can jump into the middle of the idiom. Both
+    macros expand to the removed instructions, so the bytes are unchanged."""
+    uses = collections.Counter(t for text in texts for t in LABEL_TOKEN.findall(text))
+    counts = {"add_a_to_hl": 0, "deref_hl": 0}
+
+    def fold_add(m):
+        if uses[m.group(1)] != 2:
+            return m.group(0)
+        counts["add_a_to_hl"] += 1
+        return "    add_a_to_hl\n"
+
+    out = []
+    for text in texts:
+        text = ADD_A_TO_HL.sub(fold_add, text)
+        counts["deref_hl"] += text.count(DEREF_HL)
+        out.append(text.replace(DEREF_HL, "    deref_hl\n"))
+    return out, counts
 
 
 class Rom:
@@ -1373,6 +1417,8 @@ def main() -> int:
         log(f"exported {len(rom.streams)} streams to {dest}")
     log("rendering all banks in memory (no files written yet)")
     texts = [rom.emit_bank(b) for b in range(rom.nbanks)]
+    texts, folded = fold_idioms(texts)
+    log(f"folded idioms: {folded}")
     out = ROOT / "src/banks"
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files and src/main.asm")

@@ -195,7 +195,7 @@ class BankSwitchingCallSites(unittest.TestCase):
         call = re.compile(r"\s+call (" + "|".join(helper_names) + r")$")
         ld_ptr = re.compile(r"\s+ld (?:hl|de|bc), Data_([0-9A-F]{3})_[0-9A-F]{4}$")
         ld_b = re.compile(r"\s+ld b, \$([0-9A-F]{2})$")
-        barrier = re.compile(r"(\S+::|\s+(?:call|ret|reti|jp|jr|farcall|farcall_b|rst)\b)")
+        barrier = re.compile(r"(\S+::|\s+(?:call|ret|reti|jp|jr|farcall|farcall_b|rst|add_a_to_hl)\b)")  # add_a_to_hl hides a jr
         checked, wrong = 0, []
         for f in sorted(BANKS.glob("bank*.asm")):
             lines = f.read_text(encoding="utf-8").splitlines()

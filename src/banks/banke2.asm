@@ -5036,9 +5036,7 @@ Jump_0E2_651B::
 ; 4 call sites from 2 routines (e.g. Func_0E2_64F5, Func_0E2_64CE)
 Func_0E2_651C::
     push hl
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    deref_hl
     add hl, bc
     ld b, h
     ld c, l
@@ -5065,12 +5063,7 @@ Func_0E2_654B::
     ld h, a
     ld a, [wD2C7]
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0E2_6561
-    inc h
-
-Jump_0E2_6561::
+    add_a_to_hl
     ld a, $06
     ld [wDataBank], a
     call ReadWordFromDataBank
@@ -5297,12 +5290,7 @@ Func_0E2_6696::
 
 Jump_0E2_66AC::
     ld a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_0E2_66B2
-    inc h
-
-Jump_0E2_66B2::
+    add_a_to_hl
     ld c, [hl]
     ld b, $00
     call Func_0E2_64CE
@@ -5352,12 +5340,7 @@ Func_0E2_66DC::
 
 Jump_0E2_66F2::
     ld a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_0E2_66F8
-    inc h
-
-Jump_0E2_66F8::
+    add_a_to_hl
     ld c, [hl]
     ld b, $00
     call Func_0E2_64CE
@@ -5380,12 +5363,7 @@ Func_0E2_670B::
     ld b, a
     ld hl, Func_0E2_6727
     ld a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_0E2_6720
-    inc h
-
-Jump_0E2_6720::
+    add_a_to_hl
     ld c, [hl]
     ld b, $00
     call Func_0E2_64CE
@@ -5440,12 +5418,7 @@ Jump_0E2_674D::
 
 Jump_0E2_675A::
     ld a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_0E2_6760
-    inc h
-
-Jump_0E2_6760::
+    add_a_to_hl
     ld c, [hl]
     ld b, $00
     call Func_0E2_64CE
@@ -5677,26 +5650,14 @@ Func_0E2_68A9:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_68D6::
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0E2_68DC
-    inc h
-
-Jump_0E2_68DC::
-    ld a, [hl+]
-    ld h, [hl]
-    ld l, a
+    add_a_to_hl
+    deref_hl
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_0E2_68E0:: ; heuristic: follows a terminator; C0
     add a, a
-    add a, l
-    ld l, a
-    jr nc, Jump_0E2_68E6
-    inc h
-
-Jump_0E2_68E6::
+    add_a_to_hl
     ret
 
 ; no direct call (reached through a table, a jump or a vector)

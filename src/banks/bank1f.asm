@@ -641,12 +641,7 @@ Func_01F_5C15::
     add a, a
     add a, a
     add a, b
-    add a, l
-    ld l, a
-    jr nc, Jump_01F_5C2D
-    inc h
-
-Jump_01F_5C2D::
+    add_a_to_hl
     ld c, $00
 
 Jump_01F_5C2F::
@@ -697,12 +692,7 @@ Jump_01F_5C71::
     ld a, c
     add a, a
     ld hl, Data_01F_5C9C
-    add a, l
-    ld l, a
-    jr nc, Jump_01F_5C7B
-    inc h
-
-Jump_01F_5C7B::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -744,12 +734,7 @@ Func_01F_5CA6::
 Jump_01F_5CB0::
     ld a, [wD784]
     push hl
-    add a, l
-    ld l, a
-    jr nc, Jump_01F_5CB9
-    inc h
-
-Jump_01F_5CB9::
+    add_a_to_hl
     ld a, [hl]
     cp a, $F0
     jp z, Jump_01F_5CEF
@@ -805,12 +790,7 @@ Func_01F_5CF8::
     ld hl, Data_01F_5D20
     ld a, [wD785]
     sla a
-    add a, l
-    ld l, a
-    jr nc, Jump_01F_5D16
-    inc h
-
-Jump_01F_5D16::
+    add_a_to_hl
     ld e, [hl]
     inc hl
     ld h, [hl]
@@ -913,12 +893,7 @@ Jump_01F_5D89::
     pop bc
     pop hl
     ld a, $20
-    add a, l
-    ld l, a
-    jr nc, Jump_01F_5D92
-    inc h
-
-Jump_01F_5D92::
+    add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
@@ -1013,12 +988,7 @@ Jump_01F_5DFF::
     pop bc
     pop hl
     ld a, $20
-    add a, l
-    ld l, a
-    jr nc, Jump_01F_5E08
-    inc h
-
-Jump_01F_5E08::
+    add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
@@ -1503,12 +1473,7 @@ Jump_01F_7655::
     ld [wC530], a
     ld hl, wCA2B
     ld a, c
-    add a, l
-    ld l, a
-    jr nc, Jump_01F_7673
-    inc h
-
-Jump_01F_7673::
+    add_a_to_hl
     ld a, [hl]
     and a, a
     jr z, Jump_01F_767D
