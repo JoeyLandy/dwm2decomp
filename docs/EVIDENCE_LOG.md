@@ -897,6 +897,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The effect bodies are not read. Each name says which actions reach the routine, not what it does.
 - Binary verification: pending; see the commit.
 
+### E-0085 — Item-use handlers named after their items
+
+- Kind: OBSERVATION (table plus item-name mapping; C1).
+- **The table.** RunItemEffect (`16:4025`) dispatches on wItemId through an inline `rst $00` table of 99 entries.
+- **Mapping.** Entry i was paired with string i of StringTable_ItemNames (bank-$08 database, category 5).
+  - The shared entries fit item kinds: Herb and LoveWater share the handler that refuses when the monster's current and maximum HP are equal (already noted at RunItemEffect); Potion and ElfWater share one; WorldDew and SageRock share one.
+- **Names.** 42 distinct handlers are named `ItemEffect_<first item>`. Hand names replace the generated RunItemEffect_CaseNN names.
+- **Limits.** The handler bodies are not read; each name says which items reach the routine.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

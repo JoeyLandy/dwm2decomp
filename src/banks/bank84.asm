@@ -726,12 +726,12 @@ Jump_084_4457::
 Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $210461, $361
 
-; only called from RunItemEffect_Case2E (E-0047)
-; 1 call site from 1 routine (e.g. RunItemEffect_Case2E)
+; only called from ItemEffect_LogTwig (E-0047)
+; 1 call site from 1 routine (e.g. ItemEffect_LogTwig)
 ; reads: hFF8C, wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC88E, ...
 ; writes: hFFD0, wC83B, wC83C, wC83D, wC83E, wC88E, wC88F, wC890, ...
 ; points at: wCD7B, wCD8B
-RunItemEffect_Case2E_Sub01::
+ItemEffect_LogTwig_Sub01::
 Func_084_47C2:: ; address name
     xor a, a
     ldh [hFFD0], a
@@ -745,7 +745,7 @@ Func_084_47C2:: ; address name
     cp a, $20
     ret c
     push af
-    call RunItemEffect_Case2E_Sub01_Sub01
+    call ItemEffect_LogTwig_Sub01_Sub01
     or a, a
     jr z, Jump_084_47E0
     pop af
@@ -876,7 +876,7 @@ Data_084_4887:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Jump_084_48A9::
     cp a, $80
     ret nz
-    call RunItemEffect_Case2E_Sub01_Sub01
+    call ItemEffect_LogTwig_Sub01_Sub01
     or a, a
     ret nz
     ldh a, [hMapScreenX]
@@ -1038,10 +1038,10 @@ Jump_084_499F::
 Data_084_49A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2109A1, $C9
 
-; only called from RunItemEffect_Case2E_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunItemEffect_Case2E_Sub01)
+; only called from ItemEffect_LogTwig_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ItemEffect_LogTwig_Sub01)
 ; reads: wC8FE, hPlayerX, hPlayerY, wC8FF
-RunItemEffect_Case2E_Sub01_Sub01::
+ItemEffect_LogTwig_Sub01_Sub01::
 Func_084_4A6A:: ; address name
     ld a, [wC8FE]
     cp a, $FF
