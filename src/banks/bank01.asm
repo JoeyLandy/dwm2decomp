@@ -5269,11 +5269,11 @@ Jump_001_68A3::
     ret
 
 Jump_001_68B4::
-    farcall Func_002_706E
+    farcall CheckSaveData
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_001_68C6
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ret
 
 Jump_001_68C6::

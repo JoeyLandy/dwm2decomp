@@ -21,7 +21,7 @@ Jump_0F2_4007::
     ld [wC8C4], a
 
 Jump_0F2_4013::
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ld a, [wC8C3]
     bit 7, a
     jr z, Jump_0F2_4013

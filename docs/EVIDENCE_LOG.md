@@ -1182,6 +1182,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Not named.** `00:3340` sets wSoundId and searches a table at `$3E24`, which is the $FF terminator of SoundBankTable followed by code. Its callers have no references, so it may be unused or broken; it is left unnamed.
 - Binary verification: pending; see the commit.
 
+### E-0109 — Save-data check and save steps (bank $02)
+
+- Kind: OBSERVATION (reading, several routines partly; C1).
+- **The check.** CheckSaveData (`02:706E`) tests the signature byte $55 at SRAM bank 1 `$BB00`, then two checksum routines over SRAM banks 1 and 3. It reports 1 = no save, 2 = damaged, 0 = valid in hFFC6.
+- **The save steps.** CopySaveBlocksToSRAM walks a list of (WRAM address, length) blocks at Data_002_75F7 into SRAM bank 1 from `$BB01`. RunSaveSteps sequences the save over two calls through wC8C3, setting bit 7 when done. SnapshotSpritesForSave stores sprite state first.
+- **Partly read.** The checksum comparisons, the sum accumulation in CopySaveBlocksToSRAMWithSum, and the other step routines (`7333` and `7347` follow the same pattern). Their notes say so.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

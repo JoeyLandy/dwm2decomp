@@ -325,7 +325,7 @@ Jump_01B_426F::
     ld a, $01
     ld [wC58A], a
     di
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_01B_4292

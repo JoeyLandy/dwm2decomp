@@ -704,7 +704,7 @@ Jump_007_4A68::
     ld d, $C3
     call Func_007_4AE4
     call DrawScreenBufferToBGMap0_Bank07
-    farcall Func_002_706E
+    farcall CheckSaveData
     ldh a, [hFFC6]
     ld [wD06A], a
     or a, a
@@ -891,7 +891,7 @@ Jump_007_4B6F::
     farcall Func_001_4AA4
 
 Jump_007_4B7B::
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ld a, [wC8C3]
     bit 7, a
     jr z, Jump_007_4B7B
@@ -998,7 +998,7 @@ Jump_007_4C4E::
     farcall Func_001_4AA4
 
 Jump_007_4C5A::
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ld a, [wC8C3]
     bit 7, a
     jr z, Jump_007_4C5A
@@ -1094,7 +1094,7 @@ Jump_007_4D1F::
     farcall Func_001_4AA4
 
 Jump_007_4D2B::
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ld a, [wC8C3]
     bit 7, a
     jr z, Jump_007_4D2B
@@ -1274,7 +1274,7 @@ Jump_007_4E5F::
     farcall Func_001_4AA4
 
 Jump_007_4E6B::
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ld a, [wC8C3]
     bit 7, a
     jr z, Jump_007_4E6B
@@ -3390,7 +3390,7 @@ Jump_007_62E9::
 Func_007_6213_Table2_Case02::
 Jump_007_62ED:: ; address name
     call Func_007_635A
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ld a, [wC8C3]
     bit 7, a
     ret z
@@ -4805,7 +4805,7 @@ Jump_007_6C32:: ; address name
     or a, a
     ret nz
     di
-    farcall Func_002_717D
+    farcall RunSaveSteps
     ei
     call Func_007_6C59
     farcall Func_012_64F8

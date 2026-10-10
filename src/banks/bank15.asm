@@ -6599,7 +6599,7 @@ Func_015_6B00::
     ld a, $02
     ld [hl+], a
     ld [hl], $12
-    farcall Func_002_706E
+    farcall CheckSaveData
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_015_6B6B

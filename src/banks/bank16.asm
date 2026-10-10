@@ -8083,7 +8083,7 @@ Func_016_75EE::
     ld bc, $003C
     xor a, a
     call FillBytes
-    farcall Func_002_706E
+    farcall CheckSaveData
     ldh a, [hFFC6]
     or a, a
     jr z, Jump_016_760B

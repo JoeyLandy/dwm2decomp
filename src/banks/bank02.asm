@@ -7125,10 +7125,12 @@ Jump_002_6FDE::
 Data_002_7006:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $00B006, $68
 
+; with SRAM bank 1 selected: hFFC6 = 1 when sBB00 is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
 ; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, Func_015_6B00, Func_016_75EE)
 ; reads: sBB00
 ; writes: rRAMG, rRAMB, hFFC6
-Func_002_706E::
+CheckSaveData::
+Func_002_706E:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, $01
@@ -7140,14 +7142,14 @@ Func_002_706E::
     jr Jump_002_7098
 
 Jump_002_7083::
-    call Func_002_70A2
+    call VerifySaveBank1Checksum
     or a, a
     jr z, Jump_002_708D
     ld a, $02
     jr Jump_002_7098
 
 Jump_002_708D::
-    call Func_002_7111
+    call VerifySaveBank3Checksum
     or a, a
     jr z, Jump_002_7097
     ld a, $02
@@ -7163,10 +7165,12 @@ Jump_002_7098::
     ld [rRAMB], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_706E)
+; sums the SRAM bank-1 bytes from sA06F into the word DE (the loop adds several bytes per pass; the comparison at the end is not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
+; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
 ; points at: sA06F, sBA73
-Func_002_70A2::
+VerifySaveBank1Checksum::
+Func_002_70A2:: ; address name
     ld a, $01
     ld [rRAMB], a
     ld hl, sA06F
@@ -7274,10 +7278,12 @@ Jump_002_710E::
     ld a, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_706E)
+; sums the SRAM bank-3 bytes from sA000 into the word DE (comparison not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
+; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
 ; points at: sA000
-Func_002_7111::
+VerifySaveBank3Checksum::
+Func_002_7111:: ; address name
     ld a, $03
     ld [rRAMB], a
     ld hl, sA000
@@ -7384,10 +7390,12 @@ Jump_002_717A::
     ld a, $01
     ret
 
+; with SRAM enabled, steps by wC8C3: on the first call (0) sets it to 1 and runs CopySaveBlocksToSRAM and three more save routines; on the second runs Func_002_71B2; afterwards sets bit 7 of wC8C3 (finished); disables SRAM each time (E-0109)
 ; 9 call sites from 9 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case04, ...)
 ; reads: wC8C3
 ; writes: rRAMG, wC8C3, rRAMB
-Func_002_717D::
+RunSaveSteps::
+Func_002_717D:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC8C3]
@@ -7395,10 +7403,10 @@ Func_002_717D::
     jr nz, Jump_002_719A
     inc a
     ld [wC8C3], a
-    call Func_002_72B0
-    call Func_002_7247
+    call CopySaveBlocksToSRAM
+    call RunSaveSteps_Sub01
     call Func_002_71ED
-    call Func_002_72E9
+    call RunSaveSteps_Sub02
     jr Jump_002_71AA
 
 Jump_002_719A::
@@ -7418,7 +7426,7 @@ Jump_002_71AA::
     ld [rRAMB], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_717D, Func_002_76F2)
+; 2 call sites from 2 routines (e.g. RunSaveSteps, Func_002_76F2)
 ; reads: wC8C4, wD7F5
 ; writes: wD7F1, wD7F3, wD7F4, wD7F2, wC8C4
 ; points at: wC8C3
@@ -7452,7 +7460,7 @@ Func_002_71B2::
     inc [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_717D, Func_002_76F2)
+; 2 call sites from 2 routines (e.g. RunSaveSteps, Func_002_76F2)
 ; writes: rRAMB
 ; points at: sAD71, sB356, sA000
 Func_002_71ED::
@@ -7522,10 +7530,12 @@ Jump_002_7240::
     jr nz, Jump_002_7240
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_717D)
+; only called from RunSaveSteps (E-0047)
+; 1 call site from 1 routine (e.g. RunSaveSteps)
 ; writes: rRAMB
 ; points at: sA000
-Func_002_7247::
+RunSaveSteps_Sub01::
+Func_002_7247:: ; address name
     ld hl, sA000
     ld bc, $0333
 
@@ -7598,11 +7608,13 @@ Jump_002_724D::
     jp nz, Jump_002_724D
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_717D)
+; with SRAM bank 1 selected, walks the list at Data_002_75F7 (word address, word length; a zero address ends it) and copies each WRAM block to SRAM from sBB01 onward (the copy loop is not read to its end) (E-0109)
+; 1 call site from 1 routine (e.g. RunSaveSteps)
 ; reads: hFFC6, hFFC7
 ; writes: rRAMB, hFFC6, hFFC7, wC88D
 ; points at: sBB01
-Func_002_72B0::
+CopySaveBlocksToSRAM::
+Func_002_72B0:: ; address name
     ld a, $01
     ld [rRAMB], a
     ld hl, Data_002_75F7
@@ -7643,11 +7655,13 @@ Jump_002_72D7::
     add_a_to_hl
     jr Jump_002_72BB
 
-; 1 call site from 1 routine (e.g. Func_002_717D)
+; only called from RunSaveSteps (E-0047)
+; 1 call site from 1 routine (e.g. RunSaveSteps)
 ; reads: sBEF3
 ; writes: rSVBK, rRAMB
 ; points at: sBEC0, wCE9B
-Func_002_72E9::
+RunSaveSteps_Sub02::
+Func_002_72E9:: ; address name
     xor a, a
     ldh [rSVBK], a
     ld a, $01
@@ -7714,7 +7728,7 @@ Func_002_7333::
     jr nz, Jump_002_7364
     inc a
     ld [wC8C3], a
-    call Func_002_7598
+    call CopySaveBlocksToSRAMWithSum
     jr Jump_002_7359
 
 ; 3 call sites from 3 routines (e.g. Func_003_4659_Case02, Func_00D_5702_Case0E, Func_015_4182_Case36)
@@ -7728,7 +7742,7 @@ Func_002_7347::
     jr nz, Jump_002_7364
     inc a
     ld [wC8C3], a
-    call Func_002_755E
+    call SnapshotSpritesForSave
 
 Jump_002_7359::
     call Func_002_7491
@@ -8143,11 +8157,13 @@ Jump_002_7542::
     ld [hl], a
     ret
 
+; wC83A = wCB7E and the $50 bytes of wSpriteSlots go to wC83B; then clears bit 1 of five object flag bytes at wC848, wC858, wC868, wC878 and wC888 (E-0109)
 ; 1 call site from 1 routine (e.g. Func_002_7347)
 ; reads: wCB7E, wC848, wC858, wC868, wC878, wC888, hFFC6, hFFC7, ...
 ; writes: wC83A, wC848, wC858, wC868, wC878, wC888, rRAMB, hFFC8, ...
 ; points at: wSpriteSlots, wC83B, sBB01
-Func_002_755E::
+SnapshotSpritesForSave::
+Func_002_755E:: ; address name
     ld a, [wCB7E]
     ld [wC83A], a
     ld hl, wSpriteSlots
@@ -8170,11 +8186,13 @@ Func_002_755E::
     and a, $FD
     ld [wC888], a
 
+; the same walk of Data_002_75F7 into SRAM from sBB01, also clearing the running sum in hFFC8/hFFC9 (accumulation not read to its end) (E-0109)
 ; 1 call site from 1 routine (e.g. Func_002_7333)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: rRAMB, hFFC8, hFFC9, hFFC6, hFFC7, sBB00, sBF98, sBF99
 ; points at: sBB01
-Func_002_7598::
+CopySaveBlocksToSRAMWithSum::
+Func_002_7598:: ; address name
     ld a, $01
     ld [rRAMB], a
     ld hl, Data_002_75F7
