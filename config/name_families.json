@@ -92,6 +92,7 @@
     {"canonical": "03:5C16", "name": "SetWC2DFTileC2", "note": "wC2DF = $C2 (E-0114)", "evidence": "reading (E-0114)"},
     {"canonical": "03:5C1C", "name": "SetWC2DFTileC1", "note": "wC2DF = $C1 (E-0114)", "evidence": "reading (E-0114)"},
     {"canonical": "03:5C22", "name": "SetWC2DETileC0", "note": "wC2DE = $C0 (E-0114)", "evidence": "reading (E-0114)"},
-    {"canonical": "03:74E2", "name": "WriteTwoDigitTilesWC8C1NoBlank", "note": "writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117)", "evidence": "reading (E-0117)"}
+    {"canonical": "03:74E2", "name": "WriteTwoDigitTilesWC8C1NoBlank", "note": "writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117)", "evidence": "reading (E-0117)"},
+    {"canonical": "31:63ED", "name": "LoadSelectedSkillRecord", "note": "wRecordBuffer = the skill at wD989 + 16 * wCFD4 + 2 * (4 * (wCFD5 & 1) + (wC46E & 3)), wCFED = 0, then far-calls LoadSkillRecord (E-0120)", "evidence": "reading (E-0120)"}
   ]
 }

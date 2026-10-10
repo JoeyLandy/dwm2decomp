@@ -1320,6 +1320,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Possibly data.** `36:6A59`, `3D:4E56`, `3E:7615` and `92:580E` decode as implausible runs (`halt`, `rst $20`, `ld sp, hl`) and remain unnamed.
 - Binary verification: pending; see the commit.
 
+### E-0120 — Routines of 17-26 instructions, first half
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** 50 routines of 17-26 instructions and one family are named by what they do. These include:
+  - more copies of the "x of y" bracket draw (DrawC5BEC6AtScrollOffsetDE_Bank0D/14/1B/1E);
+  - the six name-entry loaders of a record (LoadRecordNameEntry0-5), which unpack bytes $21-$26 into 2-bit fields;
+  - inventory-page item names and the page indicator in bank $31;
+  - HP and MP checks against three quarters of the maximum used by the AI;
+  - the AI action chooser for one actor (AIChooseActionForActor) and its personality weight;
+  - small damage helpers: a random spread of +/- 5 percent and an attack computed with ATK fixed at 200.
+- Unknown meanings stay mechanical (for example InitWD043PresetA/B and LoadTable4E60EntryToHFFC8).
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
