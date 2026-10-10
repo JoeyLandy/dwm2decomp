@@ -3708,7 +3708,7 @@ Jump_03A_66C5::
     bit 0, [hl]
     jr z, Jump_03A_66E3
     push hl
-    farcall Func_031_7806
+    farcall DrawSlotHPDigits
     farcall Func_031_7914
     pop hl
     res 0, [hl]
@@ -3717,7 +3717,7 @@ Jump_03A_66E3::
     bit 1, [hl]
     jr z, Jump_03A_66F7
     push hl
-    farcall Func_031_785F
+    farcall DrawSlotMPDigits
     farcall Func_031_7965
     pop hl
     res 1, [hl]
@@ -3726,8 +3726,8 @@ Jump_03A_66F7::
     bit 2, [hl]
     jr z, Jump_03A_670B
     push hl
-    farcall Func_031_76AE
-    farcall Func_031_77B9
+    farcall DrawSlotStatusMarks
+    farcall CopySlotPanelRowToVRAM
     pop hl
     res 2, [hl]
 

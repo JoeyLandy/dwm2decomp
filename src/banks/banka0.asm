@@ -2055,9 +2055,9 @@ Func_0A0_4C52:: ; address name
 
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub02_Sub03)
 Func_0A0_4C59::
-    call Func_0A0_6B46
-    call Func_0A0_6B79
-    call Func_0A0_6A45
+    call DrawSlotHPDigits_BankA0
+    call DrawSlotMPDigits_BankA0
+    call DrawSlotStatusMarks_BankA0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2070,7 +2070,7 @@ Func_0A0_4C63:: ; heuristic: follows a terminator; C0
 Func_0A0_4C6A::
     call Func_0A0_6BF0
     call Func_0A0_6C22
-    call Func_0A0_6B1E
+    call CopySlotPanelRowToVRAM_BankA0
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM_BankA0, as DrawWC338RowsToBGMapRow13 does in bank $31 (E-0076)
@@ -2104,9 +2104,11 @@ Func_0A0_4C8E::
     call CopyRect32StrideToVRAM_BankA0
     ret
 
+; copies an 11 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9) with CopyRect32StrideToVRAM_BankA0 (E-0111)
 ; 4 call sites from 4 routines (e.g. Func_0A0_5F2E_Case0C, Func_0A0_5F2E_Case08, Func_0A0_5F2E_Case07, Func_0A0_5F2E_Case05)
 ; points at: wC2B8
-Func_0A0_4C9B::
+DrawWC2B8Rect11x9ToBGMapRow9_BankA0::
+Func_0A0_4C9B:: ; address name
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0B09
@@ -2166,7 +2168,7 @@ Func_0A0_4CED:: ; heuristic: follows a terminator; C0
     ret
 
 ; the same 28 bytes as CopyRect32StrideToVRAM (31:753F)
-; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, RunBattleSetup_BankA0_Shared01, Func_0A0_4CD4, Func_0A0_4C9B, ...)
+; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, RunBattleSetup_BankA0_Shared01, Func_0A0_4CD4, DrawWC2B8Rect11x9ToBGMapRow9_BankA0, ...)
 CopyRect32StrideToVRAM_BankA0::
 Func_0A0_4CFA:: ; address name
     push bc
@@ -3092,22 +3094,22 @@ Jump_0A0_5391:: ; address name
     ld [wD78E], a
     farcall Func_032_5E3B
     ld c, $00
-    farcall Func_031_76AE
-    farcall Func_031_77B9
+    farcall DrawSlotStatusMarks
+    farcall CopySlotPanelRowToVRAM
     ld c, $00
-    farcall Func_031_7806
+    farcall DrawSlotHPDigits
     farcall Func_031_7914
     ld c, $00
-    farcall Func_031_785F
+    farcall DrawSlotMPDigits
     farcall Func_031_7965
     ld c, $01
-    farcall Func_031_76AE
-    farcall Func_031_77B9
+    farcall DrawSlotStatusMarks
+    farcall CopySlotPanelRowToVRAM
     ld c, $01
-    farcall Func_031_7806
+    farcall DrawSlotHPDigits
     farcall Func_031_7914
     ld c, $01
-    farcall Func_031_785F
+    farcall DrawSlotMPDigits
     farcall Func_031_7965
     ld a, $05
     ld [wStringCategory], a
@@ -3788,11 +3790,11 @@ Jump_0A0_57C8:: ; address name
     ld [wCA47], a
     ld [wCA48], a
     ld hl, wCA49
-    call Func_0A0_591A
+    call WriteUnknownNamePlaceholder
     ld a, $FF
     ld [wCA53], a
     ld hl, wCA54
-    call Func_0A0_591A
+    call WriteUnknownNamePlaceholder
     ld a, $FF
     ld [wCA5E], a
     call Func_0A0_5939
@@ -3874,11 +3876,11 @@ Jump_0A0_57C8:: ; address name
     ld a, $01
     ld [wCA99], a
     ld hl, wCAB9
-    call Func_0A0_591A
+    call WriteUnknownNamePlaceholder
     xor a, a
     ld [wCAC3], a
     ld hl, wCAC4
-    call Func_0A0_591A
+    call WriteUnknownNamePlaceholder
     xor a, a
     ld [wCACE], a
     xor a, a
@@ -3924,8 +3926,10 @@ Func_0A0_590B::
     ld hl, $0001
     ret
 
+; writes '???' ($98 three times, the charmap '?') followed by seven $F0 bytes at HL: a 10-byte name field holding a placeholder (E-0111)
 ; 4 call sites from 1 routine (e.g. Func_0A0_56A7_Case01)
-Func_0A0_591A::
+WriteUnknownNamePlaceholder::
+Func_0A0_591A:: ; address name
     ld a, $98
     ld [hl+], a
     ld a, $98
@@ -5154,7 +5158,7 @@ Jump_0A0_60AC:: ; address name
 ; points at: wBattleResolveStep
 Func_0A0_5F2E_Case05::
 Jump_0A0_60F3:: ; address name
-    call Func_0A0_4C9B
+    call DrawWC2B8Rect11x9ToBGMapRow9_BankA0
     ld hl, Data_0A0_6987
     ld a, [wC46D]
     and a, $03
@@ -5281,7 +5285,7 @@ Jump_0A0_61D9::
 ; writes: wBattleResolveStep
 Func_0A0_5F2E_Case07::
 Jump_0A0_61DA:: ; address name
-    call Func_0A0_4C9B
+    call DrawWC2B8Rect11x9ToBGMapRow9_BankA0
     ld a, [wD869]
     or a, a
     jr z, Jump_0A0_61E5
@@ -5296,7 +5300,7 @@ Jump_0A0_61E5::
 ; points at: wBattleResolveStep
 Func_0A0_5F2E_Case08::
 Jump_0A0_61E9:: ; address name
-    call Func_0A0_4C9B
+    call DrawWC2B8Rect11x9ToBGMapRow9_BankA0
     call FillTilesFromRequest
     farcall CopyRectRecord7345ToScreenBuffer
     ld hl, wBattleResolveStep
@@ -5368,7 +5372,7 @@ Func_0A0_5F2E_Case0C::
 Jump_0A0_6243:: ; address name
     ld a, [wD869]
     or a, a
-    call z, Func_0A0_4C9B
+    call z, DrawWC2B8Rect11x9ToBGMapRow9_BankA0
     xor a, a
     ld [wD869], a
     ld a, [wCFD4]
@@ -6392,26 +6396,28 @@ Func_0A0_6822::
     ld a, [hl+]
     inc hl
     cp a, $FF
-    call z, Func_0A0_6871
+    call z, ReturnZero_6871
     call Func_0A0_68CF
     ld a, [hl+]
     inc hl
     cp a, $FF
-    call z, Func_0A0_6871
+    call z, ReturnZero_6871
     call Func_0A0_68DE
     ld a, [hl+]
     inc hl
     cp a, $FF
-    call z, Func_0A0_6871
+    call z, ReturnZero_6871
     call Func_0A0_68ED
     ld a, [hl]
     cp a, $FF
-    call z, Func_0A0_6871
+    call z, ReturnZero_6871
     call Func_0A0_68FC
     ret
 
+; A = 0 (xor a); a two-byte handler stub (E-0111)
 ; 4 call sites from 1 routine (e.g. Func_0A0_6822)
-Func_0A0_6871::
+ReturnZero_6871::
+Func_0A0_6871:: ; address name
     xor a, a
     ret
 
@@ -6706,9 +6712,11 @@ Jump_0A0_6A33::
     jr nz, Jump_0A0_6A32
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0A0_4C59, Func_031_76AE)
+; C = slot 0-2: when the slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1, 4, 5, 6 and 7 that is set (the zero-status path is not read) (E-0111)
+; 2 call sites from 2 routines (e.g. Func_0A0_4C59, DrawSlotStatusMarks)
 ; points at: wBattleStatus
-Func_0A0_6A45::
+DrawSlotStatusMarks_BankA0::
+Func_0A0_6A45:: ; address name
     push bc
     ld a, c
     cp a, $03
@@ -6722,23 +6730,23 @@ Func_0A0_6A45::
     ld a, [hl]
     or a, a
     jr z, Jump_0A0_6A7F
-    call Func_0A0_6AAB
+    call DrawSlotStatusMarks_BankA0_Sub01
     bit 0, [hl]
-    call nz, Func_0A0_6AC6
+    call nz, DrawSlotStatusMarks_BankA0_Sub03
     bit 1, [hl]
-    call nz, Func_0A0_6AD1
+    call nz, DrawSlotStatusMarks_BankA0_Sub04
     bit 4, [hl]
-    call nz, Func_0A0_6AE7
+    call nz, DrawSlotStatusMarks_BankA0_Sub06
     bit 5, [hl]
-    call nz, Func_0A0_6ABB
+    call nz, DrawSlotStatusMarks_BankA0_Sub02
     bit 6, [hl]
-    call nz, Func_0A0_6AF2
+    call nz, DrawSlotStatusMarks_BankA0_Sub07
     bit 7, [hl]
-    call nz, Func_0A0_6ADC
+    call nz, DrawSlotStatusMarks_BankA0_Sub05
     jr Jump_0A0_6AA9
 
 Jump_0A0_6A7F::
-    call Func_0A0_6BB3
+    call DrawSlotLevel_BankA0
     ld a, c
     and a, $03
     ld hl, Data_0A0_6B1A
@@ -6749,7 +6757,7 @@ Jump_0A0_6A7F::
     jr Jump_0A0_6AA9
 
 Jump_0A0_6A95::
-    call Func_0A0_6BB3
+    call DrawSlotLevel_BankA0
     ld a, c
     and a, $03
     ld hl, Data_0A0_6B1A
@@ -6762,8 +6770,10 @@ Jump_0A0_6AA9::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6AAB::
+; only called from DrawSlotStatusMarks_BankA0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
+DrawSlotStatusMarks_BankA0_Sub01::
+Func_0A0_6AAB:: ; address name
     push hl
     ld hl, Data_0A0_6B0A
     call ReadWordTableEntryForSlotC_BankA0
@@ -6776,8 +6786,10 @@ Func_0A0_6AAB::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6ABB::
+; only called from DrawSlotStatusMarks_BankA0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
+DrawSlotStatusMarks_BankA0_Sub02::
+Func_0A0_6ABB:: ; address name
     push hl
     ld hl, Data_0A0_6B0A
     call ReadWordTableEntryForSlotC_BankA0
@@ -6785,8 +6797,10 @@ Func_0A0_6ABB::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6AC6::
+; only called from DrawSlotStatusMarks_BankA0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
+DrawSlotStatusMarks_BankA0_Sub03::
+Func_0A0_6AC6:: ; address name
     push hl
     ld hl, Data_0A0_6B12
     call ReadWordTableEntryForSlotC_BankA0
@@ -6794,8 +6808,10 @@ Func_0A0_6AC6::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6AD1::
+; only called from DrawSlotStatusMarks_BankA0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
+DrawSlotStatusMarks_BankA0_Sub04::
+Func_0A0_6AD1:: ; address name
     push hl
     ld hl, Data_0A0_6B12
     call ReadWordTableEntryForSlotC_BankA0
@@ -6803,8 +6819,10 @@ Func_0A0_6AD1::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6ADC::
+; only called from DrawSlotStatusMarks_BankA0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
+DrawSlotStatusMarks_BankA0_Sub05::
+Func_0A0_6ADC:: ; address name
     push hl
     ld hl, Data_0A0_6B16
     call ReadWordTableEntryForSlotC_BankA0
@@ -6812,8 +6830,10 @@ Func_0A0_6ADC::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6AE7::
+; only called from DrawSlotStatusMarks_BankA0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
+DrawSlotStatusMarks_BankA0_Sub06::
+Func_0A0_6AE7:: ; address name
     push hl
     ld hl, Data_0A0_6B0E
     call ReadWordTableEntryForSlotC_BankA0
@@ -6821,8 +6841,10 @@ Func_0A0_6AE7::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_6A45)
-Func_0A0_6AF2::
+; only called from DrawSlotStatusMarks_BankA0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
+DrawSlotStatusMarks_BankA0_Sub07::
+Func_0A0_6AF2:: ; address name
     push hl
     ld hl, Data_0A0_6B1A
     call ReadWordTableEntryForSlotC_BankA0
@@ -6831,7 +6853,7 @@ Func_0A0_6AF2::
     ret
 
 ; the same 13 bytes as ReadWordTableEntryForSlotC (31:778E)
-; 7 call sites from 7 routines (e.g. Func_0A0_6ADC, Func_0A0_6AF2, Func_0A0_6ABB, Func_0A0_6AE7, ...)
+; 7 call sites from 7 routines (e.g. DrawSlotStatusMarks_BankA0_Sub05, DrawSlotStatusMarks_BankA0_Sub07, DrawSlotStatusMarks_BankA0_Sub02, DrawSlotStatusMarks_BankA0_Sub06, ...)
 ReadWordTableEntryForSlotC_BankA0::
 Func_0A0_6AFD:: ; address name
     ld a, c
@@ -6843,7 +6865,7 @@ Func_0A0_6AFD:: ; address name
     inc h
 
 ; the same 4 bytes as DerefHL_Bank31 (31:7797)
-; 2 call sites from 1 routine (e.g. Func_0A0_6A45)
+; 2 call sites from 1 routine (e.g. DrawSlotStatusMarks_BankA0)
 DerefHL_BankA0::
 Func_0A0_6B06:: ; address name
     deref_hl
@@ -6864,9 +6886,11 @@ Data_0A0_6B16:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0A0_6B1A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $4A, $C2
 
-; 2 call sites from 2 routines (e.g. Func_0A0_4C6A, Func_031_77B9)
+; C = slot 0-2: copies the 5-tile panel row at Data_0A0_6D53's offset from wScreenTileBuffer to vBGMap0 (the wC58A = 2 form of CopySlotPanelRowToVRAM) (E-0111)
+; 2 call sites from 2 routines (e.g. Func_0A0_4C6A, CopySlotPanelRowToVRAM)
 ; points at: wScreenTileBuffer
-Func_0A0_6B1E::
+CopySlotPanelRowToVRAM_BankA0::
+Func_0A0_6B1E:: ; address name
     ld a, c
     cp a, $03
     jr nc, Jump_0A0_6B45
@@ -6894,9 +6918,11 @@ Jump_0A0_6B3D::
 Jump_0A0_6B45::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0A0_4C59, Func_031_7806)
+; C = slot 0-2: writes the slot's HP as decimal digit tiles into wScreenTileBuffer at the position from Data_0A0_6D47 (the wC58A = 2 form of DrawSlotHPDigits) (E-0111)
+; 2 call sites from 2 routines (e.g. Func_0A0_4C59, DrawSlotHPDigits)
 ; points at: wBattleHP, wScreenTileBuffer
-Func_0A0_6B46::
+DrawSlotHPDigits_BankA0::
+Func_0A0_6B46:: ; address name
     push bc
     ld a, c
     cp a, $03
@@ -6926,9 +6952,11 @@ Jump_0A0_6B77::
     pop bc
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0A0_4C59, Func_031_785F)
+; C = slot 0-2: writes the slot's MP as decimal digit tiles into wScreenTileBuffer at the position from Data_0A0_6D4B (the wC58A = 2 form of DrawSlotMPDigits) (E-0111)
+; 2 call sites from 2 routines (e.g. Func_0A0_4C59, DrawSlotMPDigits)
 ; points at: wBattleMP, wScreenTileBuffer
-Func_0A0_6B79::
+DrawSlotMPDigits_BankA0::
+Func_0A0_6B79:: ; address name
     push bc
     ld a, c
     cp a, $04
@@ -6962,9 +6990,11 @@ Jump_0A0_6BB1::
     pop bc
     ret
 
-; 3 call sites from 2 routines (e.g. Func_0A0_6A45, Func_031_78B8)
+; C = slot 0-2: writes tiles $EA, $AF (not in the charmap; probably a level mark) into wScreenTileBuffer at the position from Data_0A0_6D4F, then the value wD8B7[slot] as digits (probably the level; the digit part is not read to its end) (E-0111)
+; 3 call sites from 2 routines (e.g. DrawSlotStatusMarks_BankA0, DrawSlotStatusMarks_Sub08)
 ; points at: wScreenTileBuffer, wD8B7
-Func_0A0_6BB3::
+DrawSlotLevel_BankA0::
+Func_0A0_6BB3:: ; address name
     push bc
     ld a, c
     cp a, $04

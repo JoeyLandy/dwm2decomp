@@ -1203,6 +1203,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Left unnamed.** The per-slot routines that branch on wC58A/wC57F (`77B9`, `76AE`, `785F`, `7806`) hand mode 2 to bank $A0. They are not named yet.
 - Binary verification: pending; see the commit.
 
+### E-0111 — Battle status panel: HP, MP, name row and status marks per slot
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **Bank $31.** DrawSlotHPDigits, DrawSlotMPDigits, CopySlotPanelRowToVRAM and DrawSlotStatusMarks draw one slot's panel entries.
+  - Only the displayed side is drawn: slots 0-2 normally, or 4-6 when wC58A = 1 with wC57F bit 1.
+  - With wC58A = 2 they far-call the bank-$A0 forms, named with `_BankA0`. Those take slots 0-2 and their own position tables (Data_0A0_6D47/4B/53).
+- **Bank $A0, also named:**
+  - WriteUnknownNamePlaceholder ("???" by the charmap);
+  - DrawSlotLevel_BankA0 (tiles $EA $AF, then wD8B7[slot]; that this is a level is an inference);
+  - DrawWC2B8Rect11x9ToBGMapRow9_BankA0 and ReturnZero_6871.
+- **Unknowns.** What wC58A = 1/2 and wC57F bit 1 select. Link-battle roles would fit the side swap; not checked.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
