@@ -1178,7 +1178,7 @@ Func_00C_4778:: ; heuristic: target of a pointer table; C0
     farcall Func_0F1_5C05
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
 
 Jump_00C_47E9::
     ld de, Data_00C_48AB
@@ -1349,7 +1349,7 @@ Jump_00C_4957::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $04
     ldh [hFFC6], a
     call BGMapAddressAtScroll_Bank0C
@@ -1908,7 +1908,7 @@ Jump_00C_4D12::
     call FillTilesFromRequest
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, [wD781]
     inc a
     ld [wD781], a

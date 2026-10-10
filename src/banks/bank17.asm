@@ -2,16 +2,16 @@ SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
 ; 1 call site from 1 routine (e.g. Func_017_41CF)
-; reads: wC524, wC47C
-; points at: wC47F
+; reads: wSGBActive, wSGBPacketIndex
+; points at: wSGBPacketBuffer
 Func_017_4001::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     ret z
-    ld a, [wC47C]
+    ld a, [wSGBPacketIndex]
     cp a, $FF
     jr nz, Jump_017_4012
-    ld hl, wC47F
+    ld hl, wSGBPacketBuffer
     jr Jump_017_401F
 
 Jump_017_4012::
@@ -154,16 +154,16 @@ Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 9 call sites from 7 routines (e.g. Func_000_0150, Func_002_45C6, Func_007_486E, Func_007_4B27, ...)
-; reads: wC524, wC51F, wC0A0, wC520
-; writes: wC47F, wC0A0, wC47C
+; reads: wSGBActive, wC51F, wC0A0, wC520
+; writes: wSGBPacketBuffer, wC0A0, wSGBPacketIndex
 ; points at: wC480, wC577
 Func_017_41CF::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     ret z
     call Func_000_076B
     ld a, $51
-    ld [wC47F], a
+    ld [wSGBPacketBuffer], a
     ld a, [wC51F]
     ld l, a
     ld h, $00
@@ -192,16 +192,16 @@ Jump_017_41F4::
     ld [de], a
     call Func_017_421A
     ld a, $FF
-    ld [wC47C], a
+    ld [wSGBPacketIndex], a
     farcall_b Func_017_4001
     call SpinDelay
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_017_41CF, Func_002_5F9B, Func_007_486E, Func_007_600E, ...)
-; reads: wC524, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
+; reads: wSGBActive, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
 ; points at: wC4DF, wC4E7, wC4EF, wC4F7
 Func_017_421A::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     ret z
     ld a, [wC577]

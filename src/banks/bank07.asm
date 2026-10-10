@@ -488,7 +488,7 @@ Func_007_486E::
     dw Jump_007_4E20
 
 Jump_007_48B2::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_48C8
     ld hl, wC51F
@@ -570,7 +570,7 @@ Jump_007_48F3::
     jp Jump_000_077A
 
 Jump_007_4952::
-    call Func_000_3290
+    call InitSoundHardware
     xor a, a
     ld hl, wD09D
     ld bc, $0210
@@ -579,7 +579,7 @@ Jump_007_4952::
     ld hl, wC57F
     ld bc, $0058
     call FillBytes
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4985
     ld a, $02
@@ -848,7 +848,7 @@ Jump_007_4B4B::
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4B6F
     ld hl, wC51F
@@ -949,7 +949,7 @@ Jump_007_4C2A::
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4C4E
     ld hl, wC51F
@@ -1039,7 +1039,7 @@ Jump_007_4CFF::
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4D1F
     ld hl, wC51F
@@ -1205,7 +1205,7 @@ Jump_007_4E3D::
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4E5F
     ld hl, wC51F
@@ -2751,7 +2751,7 @@ Func_007_5FE8:: ; heuristic: follows a terminator; C0
     ret
 
 ; 7 call sites from 5 routines (e.g. Func_007_5149, Func_007_5999, Func_007_5A3F, Func_007_5B14, ...)
-; reads: wC5E9, wC5EA, wC5EB, wC524, wC51F, wC520
+; reads: wC5E9, wC5EA, wC5EB, wSGBActive, wC51F, wC520
 ; writes: rBGP, rOBP0, rOBP1, wC577, wC578, wC579, wC57A, wC57B, ...
 ; points at: wC5E9, wD040, wC4FF
 Func_007_600E::
@@ -2770,7 +2770,7 @@ Func_007_600E::
     ld a, [wC5EB]
     ld [hl], a
     call Func_000_0DCA
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_608F
     xor a, a
@@ -2802,12 +2802,12 @@ Func_007_600E::
     ld a, h
     ld [wC57E], a
     ld a, $B1
-    ld [wC47F], a
+    ld [wSGBPacketBuffer], a
     ld a, [wC520]
     ld [wC480], a
     ld a, $FF
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     farcall Func_017_421A
     ld hl, $58FA
@@ -2961,7 +2961,7 @@ Jump_007_6187::
     ld a, [wC562]
     bit 0, a
     jr z, Jump_007_61F8
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_61CE
     ld a, [wC46B]
@@ -3847,7 +3847,7 @@ Jump_007_6856::
 Jump_007_687D::
     ld hl, vBGMap0
     call Func_000_1E29
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_6897
     ld hl, wC4DF

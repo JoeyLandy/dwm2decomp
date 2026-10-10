@@ -741,5 +741,45 @@
     "name": "BeginBank0EString",
     "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E",
     "evidence": "reading"
+  },
+  "1F:5040": {
+    "name": "SendSGBPacketSet",
+    "note": "returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse, 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit",
+    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
+  },
+  "00:05E2": {
+    "name": "DetectSGB",
+    "note": "sends packet set $0B, reads rP1 with two different line selections and returns carry set when the joypad lines change as a Super Game Boy makes them; sends packet set $0A afterwards in both outcomes",
+    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
+  },
+  "00:0692": {
+    "name": "DelayBCWhenSGB",
+    "note": "returns at once when wSGBActive is 0; otherwise busy-waits BC times about $06D6 loop passes",
+    "evidence": "reading"
+  },
+  "00:0796": {
+    "name": "TurnOffLCD",
+    "note": "if rLCDC bit 7 is set, waits for rLY = $91, then clears rLCDC bit 7 and bit 7 of wC5EC",
+    "evidence": "reading"
+  },
+  "00:06A8": {
+    "name": "SGBTransferCompressed",
+    "note": "A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read",
+    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
+  },
+  "00:0705": {
+    "name": "SGBTransferRaw",
+    "note": "A = packet set index; H = ROM bank, DE = source, BC = byte count: the same as SGBTransferCompressed, but copies the bytes to vTiles1 instead of decompressing",
+    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
+  },
+  "00:0829": {
+    "name": "UploadBGPalettes",
+    "note": "when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access",
+    "evidence": "reading"
+  },
+  "00:3290": {
+    "name": "InitSoundHardware",
+    "note": "rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0",
+    "evidence": "reading"
   }
 }

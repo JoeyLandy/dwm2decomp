@@ -347,8 +347,8 @@ DEF wC471 EQU $C471
 DEF wC472 EQU $C472
 DEF wC474 EQU $C474
 DEF wC476 EQU $C476
-DEF wC47C EQU $C47C
-DEF wC47F EQU $C47F
+DEF wSGBPacketIndex EQU $C47C ; packet set number for SendSGBPacketSet; $FF selects wSGBPacketBuffer (reading)
+DEF wSGBPacketBuffer EQU $C47F ; packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF (reading)
 DEF wC480 EQU $C480
 DEF wC48A EQU $C48A
 DEF wC49F EQU $C49F
@@ -366,7 +366,7 @@ DEF wC50F EQU $C50F
 DEF wC51F EQU $C51F
 DEF wC520 EQU $C520
 DEF wC523 EQU $C523
-DEF wC524 EQU $C524
+DEF wSGBActive EQU $C524 ; set to 1 at boot, cleared on CGB and when DetectSGB finds no Super Game Boy; SendSGBPacketSet, DelayBCWhenSGB and SpinDelay return at once when it is 0 (reading)
 DEF wIsCGB EQU $C525 ; 1 when the boot code found A = $11 (CGB), else 0; set at $0150 (E-0020)
 DEF wC526 EQU $C526
 DEF wC527 EQU $C527

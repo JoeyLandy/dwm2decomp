@@ -270,7 +270,7 @@ Jump_00F_41D4::
     ldh [rSVBK], a
 
 Jump_00F_41F1::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_00F_423E
     xor a, a

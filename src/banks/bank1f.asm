@@ -156,17 +156,19 @@ Data_01F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
-; 25 call sites from 10 routines (e.g. Func_000_0150, Func_000_05E2, Func_000_06A8, Func_000_0705, ...)
-; reads: wC524, wC47C
-; points at: wC47F
-Func_01F_5040::
-    ld a, [wC524]
+; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse, 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit
+; 25 call sites from 10 routines (e.g. Func_000_0150, DetectSGB, SGBTransferCompressed, SGBTransferRaw, ...)
+; reads: wSGBActive, wSGBPacketIndex
+; points at: wSGBPacketBuffer
+SendSGBPacketSet::
+Func_01F_5040:: ; address name
+    ld a, [wSGBActive]
     or a, a
     ret z
-    ld a, [wC47C]
+    ld a, [wSGBPacketIndex]
     cp a, $FF
     jr nz, Jump_01F_5051
-    ld hl, wC47F
+    ld hl, wSGBPacketBuffer
     jr Jump_01F_505E
 
 Jump_01F_5051::
@@ -1202,7 +1204,7 @@ Jump_01F_7436::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $01
     ldh [hFFC6], a
     call BGMapAddressAtScroll_Bank1F

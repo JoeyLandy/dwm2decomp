@@ -381,10 +381,10 @@ Func_01C_4295:: ; heuristic: follows a terminator; C0
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_01C_4258, Func_015_5A67, Func_0F1_5AD5)
-; reads: wC524, wC51F, wC520
+; reads: wSGBActive, wC51F, wC520
 ; writes: wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, wC57E, ...
 Func_01C_42B3::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     and a, a
     ret z
     ld a, [wC51F]
@@ -412,12 +412,12 @@ Func_01C_42B3::
     ld a, h
     ld [wC57E], a
     ld a, $B1
-    ld [wC47F], a
+    ld [wSGBPacketBuffer], a
     ld a, [wC520]
     ld [wC480], a
     ld a, $FF
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     farcall Func_017_421A
     ret

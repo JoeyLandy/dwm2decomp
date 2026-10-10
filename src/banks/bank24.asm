@@ -2243,7 +2243,7 @@ Func_024_5064::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $01
     ldh [hFFC6], a
     call BGMapAddressAtScroll_Bank24
@@ -2264,7 +2264,7 @@ Func_024_5064::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $03
     ldh [hFFC6], a
     call BGMapAddressAtScroll_Bank24
@@ -2285,7 +2285,7 @@ Func_024_5064::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $05
     ldh [hFFC6], a
     call BGMapAddressAtScroll_Bank24

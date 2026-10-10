@@ -1673,7 +1673,7 @@ Jump_0F0_54B9::
     ld a, [wD781]
     inc a
     ld [wD781], a
-    ld a, [wC524]
+    ld a, [wSGBActive]
     and a, a
     jr z, Jump_0F0_54F9
     ld a, $02
@@ -3079,7 +3079,7 @@ Jump_0F0_5FDD::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $01
     ldh [hFFC6], a
     call BGMapAddressAtScroll_BankF0

@@ -5885,7 +5885,7 @@ Jump_0E0_7240::
 Jump_0E0_7259::
     ld hl, wD09E
     inc [hl]
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     ld hl, $01A4
     jr z, Jump_0E0_7269
@@ -6068,7 +6068,7 @@ Jump_0E0_73A2::
     ld de, $0040
     ld bc, $0E02
     call Func_0E0_740E
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     ld hl, $0168
     jr z, Jump_0E0_73C7
@@ -6475,7 +6475,7 @@ Jump_0E0_758D::
     ret
 
 ; 7 call sites from 1 routine (e.g. Func_0E0_5AD3)
-; reads: wC5E9, wC5EA, wC5EB, wC524, wC51F, wC520
+; reads: wC5E9, wC5EA, wC5EB, wSGBActive, wC51F, wC520
 ; writes: rBGP, rOBP0, rOBP1, wC577, wC578, wC579, wC57A, wC57B, ...
 ; points at: wC5E9, wD040, wC4FF
 Func_0E0_75BF::
@@ -6494,7 +6494,7 @@ Func_0E0_75BF::
     ld a, [wC5EB]
     ld [hl], a
     call Func_000_0DCA
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_0E0_7640
     xor a, a
@@ -6526,12 +6526,12 @@ Func_0E0_75BF::
     ld a, h
     ld [wC57E], a
     ld a, $B1
-    ld [wC47F], a
+    ld [wSGBPacketBuffer], a
     ld a, [wC520]
     ld [wC480], a
     ld a, $FF
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     farcall Func_017_421A
     ld hl, $7641

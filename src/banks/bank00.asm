@@ -102,7 +102,7 @@ Jump_000_0094::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC58A, wC5DF, wC56C
-; writes: wIsCGB, rVBK, wC5DB, rRAMB, rRAMG, rROMB0, rROMB1, wC524, ...
+; writes: wIsCGB, rVBK, wC5DB, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
 ; points at: wC5DB, wC604
 Func_000_0100::
     nop
@@ -111,7 +111,7 @@ Func_000_0100::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC58A, wC5DF, wC56C
-; writes: wIsCGB, rVBK, wC5DB, rRAMB, rRAMG, rROMB0, rROMB1, wC524, ...
+; writes: wIsCGB, rVBK, wC5DB, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
 ; points at: wC5DB, wC604
 Func_000_0150::
     cp a, $11
@@ -162,11 +162,11 @@ Jump_000_0189::
     ld a, $00
     ld [rROMB1], a
     ld a, $01
-    ld [wC524], a
+    ld [wSGBActive], a
     ld a, $FF
     ld [wC60A], a
     ld [wC60B], a
-    call Func_000_3290
+    call InitSoundHardware
     xor a, a
     ld [wC58C], a
     ld a, [wIsCGB]
@@ -180,84 +180,84 @@ Jump_000_0189::
     jr Jump_000_01D8
 
 Jump_000_01D3::
-    call Func_000_05E2
+    call DetectSGB
     jr c, Jump_000_01DF
 
 Jump_000_01D8::
     xor a, a
-    ld [wC524], a
+    ld [wSGBActive], a
     jp Jump_000_02D1
 
 Jump_000_01DF::
     ld bc, $000C
-    call Func_000_0692
+    call DelayBCWhenSGB
     ld a, $14
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $02
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $03
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $04
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $05
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $06
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $07
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $08
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $09
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $0C
     ld bc, $0800
     ld e, $6C
     ld d, $44
     ld h, $17
-    call Func_000_0705
+    call SGBTransferRaw
     call SpinDelay
     ld a, $0D
     ld e, $8C
     ld d, $44
     ld b, $17
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $12
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $0A
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $13
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $0E
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ld a, $01
-    ld [wC524], a
+    ld [wSGBActive], a
     ld a, $FF
     ld [wC523], a
     xor a, a
@@ -323,8 +323,8 @@ Jump_000_033D::
     call Func_000_078D
     call SpinDelay
     ld a, $00
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     jp Jump_000_02D2
 
@@ -408,7 +408,7 @@ Jump_000_03A4::
     jr z, Jump_000_03EA
     ld a, [wC526]
     or a, a
-    call nz, Func_000_0829
+    call nz, UploadBGPalettes
     xor a, a
     ld [wC526], a
     ld a, [wC527]
@@ -713,11 +713,11 @@ Jump_000_05C7::
     jp Func_000_08AD
 
 ; returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step
-; 44 call sites from 15 routines (e.g. Func_000_0150, Func_000_05E2, Func_000_0FC1, Func_000_13E5, ...)
-; reads: wC524
+; 44 call sites from 15 routines (e.g. Func_000_0150, DetectSGB, Func_000_0FC1, Func_000_13E5, ...)
+; reads: wSGBActive
 SpinDelay::
 Func_000_05D1:: ; address name
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     ret z
     ld de, $1B58
@@ -732,13 +732,15 @@ Jump_000_05D9::
     jr nz, Jump_000_05D9
     ret
 
+; sends packet set $0B, reads rP1 with two different line selections and returns carry set when the joypad lines change as a Super Game Boy makes them; sends packet set $0A afterwards in both outcomes
 ; 1 call site from 1 routine (e.g. Func_000_0150)
 ; reads: rP1
-; writes: wC47C, rP1
-Func_000_05E2::
+; writes: wSGBPacketIndex, rP1
+DetectSGB::
+Func_000_05E2:: ; address name
     ld a, $0B
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ldh a, [rP1]
     and a, $03
@@ -768,16 +770,16 @@ Func_000_05E2::
     cp a, $03
     jr nz, Jump_000_0636
     ld a, $0A
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     sub a, a
     ret
 
 Jump_000_0636::
     ld a, $0A
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     scf
     ret
@@ -839,10 +841,12 @@ Jump_000_0651::
     jr nz, Jump_000_064D
     ret
 
-; 5 call sites from 3 routines (e.g. Func_000_0150, Func_000_06A8, Func_000_0705)
-; reads: wC524
-Func_000_0692::
-    ld a, [wC524]
+; returns at once when wSGBActive is 0; otherwise busy-waits BC times about $06D6 loop passes
+; 5 call sites from 3 routines (e.g. Func_000_0150, SGBTransferCompressed, SGBTransferRaw)
+; reads: wSGBActive
+DelayBCWhenSGB::
+Func_000_0692:: ; address name
+    ld a, [wSGBActive]
     or a, a
     ret z
 
@@ -863,16 +867,18 @@ Jump_000_069A::
     jr nz, Jump_000_0697
     ret
 
+; A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read
 ; 16 call sites from 2 routines (e.g. Func_000_0150, Func_000_13E5)
-; reads: wC524
-; writes: wC47C, rSCX, rSCY, rBGP, rLCDC, wC5EC
-Func_000_06A8::
-    ld [wC47C], a
-    ld a, [wC524]
+; reads: wSGBActive
+; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rLCDC, wC5EC
+SGBTransferCompressed::
+Func_000_06A8:: ; address name
+    ld [wSGBPacketIndex], a
+    ld a, [wSGBActive]
     or a, a
     ret z
     push bc
-    call Func_000_0796
+    call TurnOffLCD
     call Func_000_0B9B
     xor a, a
     ldh [rSCX], a
@@ -908,24 +914,26 @@ Jump_000_06DF::
     ldh [rLCDC], a
     ld [wC5EC], a
     ld bc, $0005
-    call Func_000_0692
-    farcall Func_01F_5040
+    call DelayBCWhenSGB
+    farcall SendSGBPacketSet
     ld bc, $0006
-    call Func_000_0692
-    call Func_000_0796
+    call DelayBCWhenSGB
+    call TurnOffLCD
     ret
 
+; A = packet set index; H = ROM bank, DE = source, BC = byte count: the same as SGBTransferCompressed, but copies the bytes to vTiles1 instead of decompressing
 ; 1 call site from 1 routine (e.g. Func_000_0150)
-; reads: wC524
-; writes: wC47C, rSCX, rSCY, rBGP, rROMB0, rLCDC, wC5EC
-Func_000_0705::
-    ld [wC47C], a
-    ld a, [wC524]
+; reads: wSGBActive
+; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rROMB0, rLCDC, wC5EC
+SGBTransferRaw::
+Func_000_0705:: ; address name
+    ld [wSGBPacketIndex], a
+    ld a, [wSGBActive]
     or a, a
     ret z
     push hl
     push bc
-    call Func_000_0796
+    call TurnOffLCD
     call Func_000_0B9B
     xor a, a
     ldh [rSCX], a
@@ -970,22 +978,22 @@ Jump_000_0741::
     ldh [rLCDC], a
     ld [wC5EC], a
     ld bc, $0005
-    call Func_000_0692
-    farcall Func_01F_5040
+    call DelayBCWhenSGB
+    farcall SendSGBPacketSet
     ld bc, $0006
-    call Func_000_0692
-    call Func_000_0796
+    call DelayBCWhenSGB
+    call TurnOffLCD
     pop af
     ld [rROMB0], a
     ret
 
 ; 5 call sites from 3 routines (e.g. Func_000_0FC1, StartPaletteFade, Func_017_41CF)
-; points at: wC47F
+; points at: wSGBPacketBuffer
 Func_000_076B::
     push hl
     push bc
     xor a, a
-    ld hl, wC47F
+    ld hl, wSGBPacketBuffer
     ld c, $10
 
 Jump_000_0773::
@@ -1021,10 +1029,12 @@ Func_000_078D::
     and a, $E2
     ldh [rIE], a
 
-; 4 call sites from 2 routines (e.g. Func_000_06A8, Func_000_0705)
+; if rLCDC bit 7 is set, waits for rLY = $91, then clears rLCDC bit 7 and bit 7 of wC5EC
+; 4 call sites from 2 routines (e.g. SGBTransferCompressed, SGBTransferRaw)
 ; reads: rLY
 ; points at: wC5EC
-Func_000_0796::
+TurnOffLCD::
+Func_000_0796:: ; address name
     ld hl, rLCDC
     bit 7, [hl]
     ret z
@@ -1039,20 +1049,20 @@ Jump_000_079C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_076B)
-; reads: wC524
-; writes: rLCDC, wC47C
+; reads: wSGBActive
+; writes: rLCDC, wSGBPacketIndex
 ; points at: wC5EC
 Func_000_07AA::
     ld hl, wC5EC
     set 7, [hl]
     ld a, [hl]
     ldh [rLCDC], a
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     ret z
     ld a, $01
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     ret
     db $C9, $AF, $E0, $0F, $F0, $FF, $E6, $F7, $E0, $FF, $C9
@@ -1139,11 +1149,13 @@ Jump_000_0819::
     ld [rROMB0], a
     ret
 
+; when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access
 ; 18 call sites from 15 routines (e.g. Func_000_0355, Func_003_4015, Func_003_4A36, Func_003_4339, ...)
 ; reads: wC526
 ; writes: rBGPI
 ; points at: wC49F
-Func_000_0829::
+UploadBGPalettes::
+Func_000_0829:: ; address name
     ld a, [wC526]
     bit 7, a
     jr z, Jump_000_0841
@@ -1229,7 +1241,7 @@ Jump_000_088B::
     jr nz, Jump_000_0887
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_085C, Func_000_0829)
+; 2 call sites from 2 routines (e.g. Func_000_085C, UploadBGPalettes)
 Func_000_0897::
     res 7, a
     and a, $38
@@ -1358,7 +1370,7 @@ Jump_000_0945::
     ret
 
 ; A = value, HL = destination, BC = count; HL ends past the last byte (memset)
-; 152 call sites from 77 routines (e.g. Func_000_0150, Func_000_0930, Func_000_06A8, Func_000_08D0, ...)
+; 152 call sites from 77 routines (e.g. Func_000_0150, Func_000_0930, SGBTransferCompressed, Func_000_08D0, ...)
 FillBytes::
 Func_000_0949:: ; address name
     ld d, a
@@ -1434,10 +1446,10 @@ Func_000_09F3:: ; address name
     ret
 
 ; 6 call sites from 4 routines (e.g. Func_000_0355, Func_000_0535, Func_01B_468A, Func_01B_45A1)
-; reads: wC524, wC55E, wC474, wC560, wC476
+; reads: wSGBActive, wC55E, wC474, wC560, wC476
 ; writes: wC55F, wC55E, wC561, wC560, wC55D, rP1
 Func_000_0A17::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_000_0A39
     call Func_000_0646
@@ -1731,7 +1743,7 @@ Func_000_0B7F::
     ld [hl], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_000_0150, Func_000_06A8, Func_000_0705)
+; 3 call sites from 3 routines (e.g. Func_000_0150, SGBTransferCompressed, SGBTransferRaw)
 ; points at: hScrollX
 Func_000_0B9B::
     xor a, a
@@ -1899,7 +1911,7 @@ Jump_000_0C4E::
     ret
 
 ; C2 static reading (E-0016): takes the lock byte $FFD6 (spins while it is non-zero), calls Func_000_0C69, then clears the lock.
-; 33 call sites from 13 routines (e.g. Func_000_06A8, Func_007_4E11, Func_007_4B27, Func_007_486E, ...)
+; 33 call sites from 13 routines (e.g. SGBTransferCompressed, Func_007_4E11, Func_007_4B27, Func_007_486E, ...)
 ; reads: hDecompressLock
 ; writes: hDecompressLock
 DecompressToRAMLocked::
@@ -2253,16 +2265,16 @@ Jump_000_0DDB::
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
 ; 91 call sites from 50 routines (e.g. Func_001_4001, Func_001_65A0, Func_002_5F9B, Func_002_4745, ...)
-; reads: wIsCGB, wC524, wC56C, wC56D, wC56E, wC5E9, wC5EA, wC5EB
+; reads: wIsCGB, wSGBActive, wC56C, wC56D, wC56E, wC5E9, wC5EA, wC5EB
 ; writes: wC56C, wC572, wC573, wC574
-; points at: wC4FF, wC4DF, wC47F, wC4EF, wC56F, wC5E9
+; points at: wC4FF, wC4DF, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
 StartPaletteFade::
 Func_000_0DF2:: ; address name
     ld b, a
     ld a, [wIsCGB]
     or a, a
     jp nz, Jump_000_0E9B
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jp z, Jump_000_0EA8
     bit 7, b
@@ -2328,7 +2340,7 @@ Jump_000_0E63::
     jr nz, Jump_000_0E63
     call Func_000_076B
     ld hl, wC4DF
-    ld de, wC47F
+    ld de, wSGBPacketBuffer
     ld a, $01
     ld [de], a
     inc de
@@ -2339,7 +2351,7 @@ Jump_000_0E63::
     jp z, Jump_000_0F3D
     call Func_000_076B
     ld hl, wC4EF
-    ld de, wC47F
+    ld de, wSGBPacketBuffer
     ld a, $09
     ld [de], a
     inc de
@@ -2450,7 +2462,7 @@ Jump_000_0F47::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_000_0355, Func_01B_47CA)
-; reads: wC56C, wIsCGB, wC524, wC574, wC572, wC573, wC56D
+; reads: wC56C, wIsCGB, wSGBActive, wC574, wC572, wC573, wC56D
 ; writes: wC574, wC572, wC56C
 Func_000_0F4E::
     ld a, [wC56C]
@@ -2461,7 +2473,7 @@ Func_000_0F4E::
     ld a, [wIsCGB]
     or a, a
     jp nz, Jump_000_10C7
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jp z, Jump_000_10CE
     ld a, [wC56C]
@@ -2518,8 +2530,8 @@ Jump_000_0FAD::
 
 ; 2 call sites from 1 routine (e.g. Func_000_0F4E)
 ; reads: wC56E
-; writes: wC576, wC47C
-; points at: wC4DF, wC47F, wC4EF
+; writes: wC576, wSGBPacketIndex
+; points at: wC4DF, wSGBPacketBuffer, wC4EF
 Func_000_0FC1::
     ld a, [wC56E]
     bit 0, a
@@ -2548,7 +2560,7 @@ Func_000_0FC1::
 Jump_000_0FFC::
     call Func_000_076B
     ld hl, wC4DF
-    ld de, wC47F
+    ld de, wSGBPacketBuffer
     ld a, $01
     ld [de], a
     inc de
@@ -2559,13 +2571,13 @@ Jump_000_0FFC::
     call SpinDelay
     call Func_000_076B
     ld hl, wC4EF
-    ld de, wC47F
+    ld de, wSGBPacketBuffer
     ld a, $09
     ld [de], a
     inc de
 
 ; 3 call sites from 2 routines (e.g. Func_000_0FC1, StartPaletteFade)
-; writes: wC47C
+; writes: wSGBPacketIndex
 Func_000_1022::
     ld c, $08
 
@@ -2586,8 +2598,8 @@ Jump_000_102E::
     dec c
     jr nz, Jump_000_102E
     ld a, $FF
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_000_0FC1)
@@ -2900,7 +2912,7 @@ Jump_000_1205::
     ret
 
 ; loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set
-; 252 call sites from 142 routines (e.g. Func_000_085C, Func_000_0829, Func_000_2950, Func_000_1CF9, ...)
+; 252 call sites from 142 routines (e.g. Func_000_085C, UploadBGPalettes, Func_000_2950, Func_000_1CF9, ...)
 ; reads: rSTAT
 WaitForVRAMAccess::
 Func_000_120A:: ; address name
@@ -2957,7 +2969,7 @@ Func_000_122D::
 Func_000_1231::
     ld [wC608], a
     di
-    call Func_000_3290
+    call InitSoundHardware
     ld a, [wC608]
     or a, a
     jr z, Jump_000_1276
@@ -3255,19 +3267,19 @@ Func_000_13E5::
     ld e, $93
     ld d, $44
     ld b, $17
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $11
     ld e, $5A
     ld d, $50
     ld b, $17
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
     ld e, $03
     ld d, $5B
     ld b, $17
-    call Func_000_06A8
+    call SGBTransferCompressed
     jp Jump_000_14CF
 
 Jump_000_1419::
@@ -3277,19 +3289,19 @@ Jump_000_1419::
     ld e, $01
     ld d, $40
     ld b, $18
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $11
     ld e, $0B
     ld d, $49
     ld b, $18
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
     ld e, $E0
     ld d, $5E
     ld b, $17
-    call Func_000_06A8
+    call SGBTransferCompressed
     jp Jump_000_14CF
 
 Jump_000_1447::
@@ -3299,19 +3311,19 @@ Jump_000_1447::
     ld e, $C1
     ld d, $49
     ld b, $18
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $11
     ld e, $6F
     ld d, $55
     ld b, $18
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
     ld e, $A6
     ld d, $61
     ld b, $17
-    call Func_000_06A8
+    call SGBTransferCompressed
     jr Jump_000_14CF
 
 Jump_000_1474::
@@ -3321,19 +3333,19 @@ Jump_000_1474::
     ld e, $2D
     ld d, $60
     ld b, $18
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $11
     ld e, $F4
     ld d, $6B
     ld b, $18
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
     ld e, $5B
     ld d, $65
     ld b, $17
-    call Func_000_06A8
+    call SGBTransferCompressed
     jr Jump_000_14CF
 
 Jump_000_14A1::
@@ -3343,19 +3355,19 @@ Jump_000_14A1::
     ld e, $AA
     ld d, $5D
     ld b, $E1
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $11
     ld e, $90
     ld d, $69
     ld b, $E1
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
     ld e, $E2
     ld d, $76
     ld b, $E1
-    call Func_000_06A8
+    call SGBTransferCompressed
     call SpinDelay
 
 Jump_000_14CF::
@@ -8374,10 +8386,12 @@ Jump_000_30BE::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0030CC, $1C4
 
+; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0
 ; 9 call sites from 7 routines (e.g. Func_000_0150, Func_000_1231, Func_001_5EAF, Func_002_45C6, ...)
 ; writes: rNR52, rNR51, wDD09, rNR50, wDD15, wDD19
 ; points at: wSoundChannelSlots, wSoundLabelSlots
-Func_000_3290::
+InitSoundHardware::
+Func_000_3290:: ; address name
     ld bc, $0000
     call Func_000_32DB
     ld a, $80
@@ -8430,7 +8444,7 @@ Func_000_32D1:: ; heuristic: follows a terminator; C0
     ld [wDD09], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_3290)
+; 1 call site from 1 routine (e.g. InitSoundHardware)
 ; writes: wDD12, wDD13, wDD14
 Func_000_32DB::
     ld a, b

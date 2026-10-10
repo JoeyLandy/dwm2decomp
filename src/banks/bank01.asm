@@ -4429,7 +4429,7 @@ Jump_001_64C0::
     ld a, [wC46B]
     or a, a
     jr nz, Jump_001_64E0
-    call Func_000_3290
+    call InitSoundHardware
     ld a, [wC0A0]
     ld hl, Data_001_65DE
     add_a_to_hl

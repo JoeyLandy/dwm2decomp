@@ -994,12 +994,12 @@ Func_002_45C6::
     ld c, a
     ldh a, [hFF92]
     or a, c
-    call z, Func_000_3290
+    call z, InitSoundHardware
 
 Jump_002_45DB::
     ld a, [wC88D]
     or a, a
-    call nz, Func_000_3290
+    call nz, InitSoundHardware
     call Func_002_4AB5
     call Func_000_13E5
     ld b, $46
@@ -1019,7 +1019,7 @@ Jump_002_45DB::
     ld a, [wC5E0]
     or a, a
     jr nz, Jump_002_461A
-    call Func_000_3290
+    call InitSoundHardware
     call Func_002_604B
 
 Jump_002_461A::
@@ -1202,7 +1202,7 @@ Jump_002_4779::
     ld [wC5DC], a
 
 Jump_002_4786::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_002_4792
     ld a, [wC5E0]
@@ -1651,7 +1651,7 @@ Data_002_4AD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00
 
 ; 1 call site from 1 routine (e.g. Func_000_048A)
-; reads: wC5E0, wC5DC, wC5E9, wC5EA, wC5EB, wC524
+; reads: wC5E0, wC5DC, wC5E9, wC5EA, wC5EB, wSGBActive
 ; writes: wC55E, wC55F, wC562, wC563, wC564, wC565, wC5E0
 ; points at: wC5E9, wD040, wC4DF, wC4FF
 Func_002_4AD8::
@@ -4749,10 +4749,10 @@ Jump_002_5F75::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4628, Func_024_4001, Func_0F2_4001)
-; reads: wC524, wC51F, wC520, wC5E0
+; reads: wSGBActive, wC51F, wC520, wC5E0
 ; writes: wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, wC57E, ...
 Func_002_5F9B::
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_002_5FEB
     ld a, [wC51F]
@@ -4780,12 +4780,12 @@ Func_002_5F9B::
     ld a, h
     ld [wC57E], a
     ld a, $B1
-    ld [wC47F], a
+    ld [wSGBPacketBuffer], a
     ld a, [wC520]
     ld [wC480], a
     ld a, $FF
-    ld [wC47C], a
-    farcall_b Func_01F_5040
+    ld [wSGBPacketIndex], a
+    farcall_b SendSGBPacketSet
     call SpinDelay
     farcall Func_017_421A
 
@@ -4825,7 +4825,7 @@ Jump_002_5FF7::
     ld a, [wC5EB]
     ld [hl], a
     call Func_000_0DCA
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_002_6045
     ld hl, wC4DF
@@ -6332,7 +6332,7 @@ Jump_002_6C5E::
 Jump_002_6C5F::
     ld a, $02
     call Func_000_122D
-    call Func_000_3290
+    call InitSoundHardware
     ld hl, wC46B
     inc [hl]
     ld a, [wC914]
@@ -6589,7 +6589,7 @@ Data_002_6E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D2, $81, $40, $00, $00
 
 Jump_002_6E25::
-    call Func_000_3290
+    call InitSoundHardware
     farcall Func_002_604B
     xor a, a
     ld [wD780], a

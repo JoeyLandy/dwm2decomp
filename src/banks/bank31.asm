@@ -2,13 +2,13 @@ SECTION "Bank 31", ROMX[$4000], BANK[$31]
     db $31
 
 ; 1 call site from 1 routine (e.g. Func_000_0355)
-; reads: wC524, wIsCGB
+; reads: wSGBActive, wIsCGB
 ; writes: wC51F, wC520, hScrollX, hFFA2, hScrollY, hFFA6, rVBK, wC554, ...
 Func_031_4001::
     call Func_000_08A6
     ld a, $02
     call Func_000_122D
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_031_401F
     ld a, $00
@@ -1209,7 +1209,7 @@ Func_031_47DD::
     call Func_000_1FE3
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     call Func_000_222B
     ld hl, vTiles1 + $6D0
     ld a, l

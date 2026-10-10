@@ -51,7 +51,7 @@ Jump_003_4036::
     call FillBytes
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $01
     ldh [rVBK], a
     ld hl, vBGMap0
@@ -179,7 +179,7 @@ Jump_003_413E::
     jr nz, Jump_003_413E
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
 
 Jump_003_414C::
     ld a, $80
@@ -520,7 +520,7 @@ Func_003_4339::
     call FillBytes
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
 
 Jump_003_4367::
     ld hl, wBGMapShadow
@@ -1567,7 +1567,7 @@ Func_003_4A36::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     pop de
     ld a, $01
     ldh [hFFC6], a

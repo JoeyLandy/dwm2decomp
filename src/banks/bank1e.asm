@@ -4449,7 +4449,7 @@ Jump_01E_63D3::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $01
     ldh [hFFC6], a
     call BGMapAddressAtScroll_Bank1E
@@ -4847,7 +4847,7 @@ Jump_01E_66EF::
     push de
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
     ld a, $01
     ldh [hFFC6], a
     call BGMapAddressAtScroll_Bank1E

@@ -2197,13 +2197,13 @@ Data_0A0_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $280DC7, $108
 
 ; 1 call site from 1 routine (e.g. Func_000_0355)
-; reads: wC524, wIsCGB
+; reads: wSGBActive, wIsCGB
 ; writes: wC51F, wC520, hScrollX, hFFA2, hScrollY, hFFA6, rVBK, wC554, ...
 Func_0A0_4ECF::
     call Func_000_08A6
     ld a, $02
     call Func_000_122D
-    ld a, [wC524]
+    ld a, [wSGBActive]
     or a, a
     jr z, Jump_0A0_4EED
     ld a, $00

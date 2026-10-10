@@ -40,6 +40,8 @@ class GameBoy:
         self.io[0x4D] = 0x00
         self.io[0x70] = 0x01
         self.hdma = None
+        self.bgpal = bytearray(64)  # CGB palette RAM written through rBGPD / rOBPD
+        self.objpal = bytearray(64)
         # observation hooks: callable(pc, kind, addr, value)
         self.on_write = None
         self.cur_pc = 0
@@ -104,6 +106,10 @@ class GameBoy:
             return self.io[0x4D] | 0x7E
         if r == 0x55:
             return 0xFF if self.hdma is None else (self.hdma[2] & 0x7F)
+        if r == 0x69:
+            return self.bgpal[self.io[0x68] & 0x3F]
+        if r == 0x6B:
+            return self.objpal[self.io[0x6A] & 0x3F]
         return self.io[r]
 
     def wb(self, a: int, v: int) -> None:
@@ -171,6 +177,13 @@ class GameBoy:
             return
         elif r == 0x4D:
             self.io[r] = v & 1 | (self.io[r] & 0x80)
+            return
+        elif r in (0x69, 0x6B):
+            idx_reg, ram = (0x68, self.bgpal) if r == 0x69 else (0x6A, self.objpal)
+            idx = self.io[idx_reg]
+            ram[idx & 0x3F] = v
+            if idx & 0x80:  # auto-increment
+                self.io[idx_reg] = 0x80 | ((idx + 1) & 0x3F)
             return
         elif r == 0x0F:
             self.io[r] = v & 0x1F

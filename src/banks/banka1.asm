@@ -1612,7 +1612,7 @@ Func_0A1_4AB1::
     ld [wC526], a
     ld a, $7F
     ld [wC527], a
-    call Func_000_0829
+    call UploadBGPalettes
 
 Jump_0A1_4AD7::
     ld hl, wC5DD
@@ -2417,7 +2417,7 @@ Jump_0A1_4FB8::
     call FillBytes
     ld a, $7F
     ld [wC526], a
-    call Func_000_0829
+    call UploadBGPalettes
 
 Jump_0A1_4FDD::
     ld hl, wC5DD
