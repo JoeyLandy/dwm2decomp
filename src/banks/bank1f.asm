@@ -689,7 +689,7 @@ Jump_01F_5C4A::
     ld a, c
     cp a, $04
     jr nz, Jump_01F_5C71
-    call Func_01F_5CA6
+    call DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1F
     jr Jump_01F_5C81
 
 Jump_01F_5C71::
@@ -725,11 +725,13 @@ Jump_01F_5C90::
 Data_01F_5C9C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
+; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
 ; 1 call site from 1 routine (e.g. Func_01F_5C15)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
 ; points at: wC8CF
-Func_01F_5CA6::
+DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1F::
+Func_01F_5CA6:: ; address name
     xor a, a
     ld [wD784], a
     ld [wD785], a
@@ -777,7 +779,7 @@ Jump_01F_5CEF::
     ret
 
 ; DE = Data_01F_4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_01F_5D20 + 2 * wD785, B = $1F (bank), C = 16 (bytes) (E-0120)
-; 2 call sites from 1 routine (e.g. Func_01F_5CA6)
+; 2 call sites from 1 routine (e.g. DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1F)
 ; reads: wD785
 GlyphCopyArgsForA::
 Func_01F_5CF8:: ; address name

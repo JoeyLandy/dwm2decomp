@@ -1238,7 +1238,7 @@ Jump_01D_4D0A::
     ld a, [wD780]
     cp a, $04
     jr z, Jump_01D_4D2D
-    farcall Func_01C_6999
+    farcall CountItemInInventoryToDigits
     jr Jump_01D_4D30
 
 Jump_01D_4D2D::
@@ -3261,7 +3261,7 @@ Func_01D_59F0:: ; address name
     push bc
     push hl
     xor a, a
-    call Func_01D_5A4F
+    call CopyRectToBGMapWrapped_Bank1D
     pop hl
     push hl
     ld a, l
@@ -3291,7 +3291,7 @@ Func_01D_59F0:: ; address name
     ld a, $02
     ldh [rSVBK], a
     xor a, a
-    call Func_01D_5A4F
+    call CopyRectToBGMapWrapped_Bank1D
     call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a
@@ -3309,7 +3309,7 @@ Func_01D_5A32:: ; address name
     push bc
     push hl
     xor a, a
-    call Func_01D_5A4F
+    call CopyRectToBGMapWrapped_Bank1D
     pop hl
     push hl
     ld a, l
@@ -3327,8 +3327,10 @@ Func_01D_5A32:: ; address name
     pop de
     ret
 
+; copies a B x C rectangle from DE to the BG map at HL, wrapping at the row and map edges (E-0125)
 ; 3 call sites from 2 routines (e.g. ClearRectSetWC554Plus21_Bank1D, ClearRectBothBanksSetWC554Plus1C1_Bank1D)
-Func_01D_5A4F::
+CopyRectToBGMapWrapped_Bank1D::
+Func_01D_5A4F:: ; address name
     push hl
     push bc
 
@@ -3365,7 +3367,7 @@ Jump_01D_5A68::
     ld a, h
     and a, $9B
     ld h, a
-    jr Func_01D_5A4F
+    jr CopyRectToBGMapWrapped_Bank1D
 
 Jump_01D_5A7F::
     ret
@@ -3600,10 +3602,12 @@ Data_01D_5BE6:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
+; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, ScriptCommandE8_Run_Case09_Case20_Case00, ...)
 ; writes: wD7F1, wD7F2
 ; points at: wRecordBuffer, wD7F1, hFFC6
-Func_01D_5BF2::
+CallFunc6899PreservingWD7F1AndHFFC6::
+Func_01D_5BF2:: ; address name
     ld hl, wRecordBuffer
     ld de, wD7F1
     ld b, $09
@@ -3873,7 +3877,7 @@ Data_01D_5D7E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $48, $46, $52, $47
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB
-; 67 call sites from 58 routines (e.g. Func_01D_5BF2, Func_01D_5C35, ShowCategory11StringOfWD789Cell5Record, ShowSpeciesCategory13StringOfWD789Cell5Record, ...)
+; 67 call sites from 58 routines (e.g. CallFunc6899PreservingWD7F1AndHFFC6, Func_01D_5C35, ShowCategory11StringOfWD789Cell5Record, ShowSpeciesCategory13StringOfWD789Cell5Record, ...)
 ; reads: wD7AF, wD7AB
 ; writes: wD7F5, wD7F6
 ; points at: wD789
@@ -4516,7 +4520,7 @@ Jump_01D_60BB::
     ld [wC8DE], a
     pop bc
     push bc
-    call Func_01D_6129
+    call DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D
     pop bc
     pop hl
     inc hl
@@ -4533,11 +4537,13 @@ Jump_01D_6124::
     ld [rRAMG2], a
     ret
 
+; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
 ; 4 call sites from 3 routines (e.g. Func_01D_6088, ScriptCommandED_Run_Case04_Case1C, DrawRecordNameAndSpeciesName)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
 ; points at: wC8CF
-Func_01D_6129::
+DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D::
+Func_01D_6129:: ; address name
     xor a, a
     ld [wD784], a
     ld [wD785], a
@@ -4555,7 +4561,7 @@ Jump_01D_6133::
     cp a, $8E
     jr z, Jump_01D_6154
     push bc
-    call Func_01D_617F
+    call DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D_Sub01
     call CopyFromBankWaitVRAM
     pop bc
     jr Jump_01D_6165
@@ -4567,7 +4573,7 @@ Jump_01D_6154::
     ld [wD785], a
     pop af
     push bc
-    call Func_01D_617F
+    call DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D_Sub01
     call OrFromBankWaitVRAM
     pop bc
 
@@ -4588,9 +4594,11 @@ Jump_01D_6176::
     ld [wD784], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_01D_6129)
+; only called from DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D (E-0047)
+; 2 call sites from 1 routine (e.g. DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D)
 ; reads: wD7F5, wD785
-Func_01D_617F::
+DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D_Sub01::
+Func_01D_617F:: ; address name
     swap a
     ld d, a
     and a, $F0
@@ -5711,7 +5719,7 @@ Jump_01D_6885::
 Data_01D_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
-; 5 call sites from 5 routines (e.g. Func_01D_5BF2, PauseMenu_Main_Case03_Case02, ScriptCommandE8_Run_Case0D_Case07, ScriptCommandE8_Run_Case08_Case20, ...)
+; 5 call sites from 5 routines (e.g. CallFunc6899PreservingWD7F1AndHFFC6, PauseMenu_Main_Case03_Case02, ScriptCommandE8_Run_Case0D_Case07, ScriptCommandE8_Run_Case08_Case20, ...)
 ; reads: wD7F1, wD7F2, hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2
 Func_01D_6899::
@@ -6523,10 +6531,12 @@ Data_01D_6DE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A, $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0
     db $8C, $B0, $8C, $FF, $FF
 
+; wD7F5 = the number of SRAM records (29 in bank 0 from sB356 plus one in bank 1) with bit 7 of byte 0 set (E-0125)
 ; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case05_Case00, ScriptCommandEB_Run_Case03, Func_014_43CC)
 ; writes: rRAMG2, rRAMB, wD7F5
 ; points at: sB356, sA000
-Func_01D_6DF8::
+CountFlaggedSRAMRecords::
+Func_01D_6DF8:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

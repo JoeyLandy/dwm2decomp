@@ -1337,9 +1337,9 @@ Jump_00E_5862::
     ld [hl], a
     ld hl, wCB3E
     ld [hl], a
-    call Func_00E_5E94
+    call CopyFourNamesByWCADDBit4Table
     call CopyPlayerNameToWCADF
-    call Func_00E_5E2D
+    call CopySixBytesByWCADDBit4Table
     ld hl, wC986
     ld de, wCA2B
     ld c, $00
@@ -2012,7 +2012,7 @@ Jump_00E_5CCD::
     ld a, b
     cp a, $FF
     jr z, Jump_00E_5D01
-    call Func_00E_5D16
+    call RollWCB3DForCaseB_5D16
     jr Jump_00E_5D01
 
 Jump_00E_5CF4::
@@ -2021,7 +2021,7 @@ Jump_00E_5CF4::
     ld a, b
     cp a, $FF
     jr z, Jump_00E_5D01
-    call Func_00E_5D77
+    call RollWCB3DForCaseB_5D77
 
 Jump_00E_5D01::
     pop bc
@@ -2041,11 +2041,13 @@ Jump_00E_5D0B::
     jr nz, Jump_00E_5CCD
     ret
 
+; when wCB3D is set rolls RollWCB3DChanceOrIncWD7F5 with factor 1, 3 or 10 (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125)
 ; 1 call site from 1 routine (e.g. Func_00E_5CB2)
 ; reads: wD7F5
 ; writes: wD7F5
 ; points at: wCB3D
-Func_00E_5D16::
+RollWCB3DForCaseB_5D16::
+Func_00E_5D16:: ; address name
     push bc
     ld hl, wCB3D
     ld a, [hl]
@@ -2090,7 +2092,7 @@ Jump_00E_5D43::
     jr Jump_00E_5D3F
 
 ; chance = A * wCB3D; if below 100 and a random value is below it, A = $FF; otherwise wD7F5 += 1 and A = 0 (E-0124)
-; 3 call sites from 2 routines (e.g. Func_00E_5D16, Func_00E_5D77)
+; 3 call sites from 2 routines (e.g. RollWCB3DForCaseB_5D16, RollWCB3DForCaseB_5D77)
 ; reads: wD7F5
 ; writes: wD7F5
 ; points at: wCB3D
@@ -2124,11 +2126,13 @@ Jump_00E_5D6E::
     xor a, a
     ret
 
+; when wCB3D is set: B = 5 rolls a random value against wCB3D (A = $FF on success), other values roll factor 2 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_00E_5CB2)
 ; reads: wD7F5
 ; writes: wD7F5
 ; points at: wCB3D
-Func_00E_5D77::
+RollWCB3DForCaseB_5D77::
+Func_00E_5D77:: ; address name
     push bc
     ld hl, wCB3D
     ld a, [hl]
@@ -2256,9 +2260,11 @@ Func_00E_5E1D:: ; address name
     ld [wD7F5], a
     ret
 
+; copies six bytes from the addresses in Data_00E_5E61 (or 5E6D when bit 4 of wCADD is set) to the addresses in Data_00E_5E79 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; points at: wCADD
-Func_00E_5E2D::
+CopySixBytesByWCADDBit4Table::
+Func_00E_5E2D:: ; address name
     ld hl, wCADD
     ld a, [hl]
     and a, $10
@@ -2326,9 +2332,11 @@ Jump_00E_5E8D::
     jr nz, Jump_00E_5E8D
     ret
 
+; copies four 10-byte names from the addresses in Data_00E_5ED0 (or 5ED8 with bit 4 of wCADD) to the addresses in Data_00E_5EE0 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; points at: wCADD
-Func_00E_5E94::
+CopyFourNamesByWCADDBit4Table::
+Func_00E_5E94:: ; address name
     ld hl, wCADD
     ld a, [hl]
     and a, $10
@@ -2653,7 +2661,7 @@ Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $30, $0C, $03
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0117)
-; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncWD7F5, Func_00E_5D77, RollWCADEFromSpeciesFlag)
+; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncWD7F5, RollWCB3DForCaseB_5D77, RollWCADEFromSpeciesFlag)
 ; reads: wC5E7
 RandomModulo29::
 Func_00E_611B:: ; address name

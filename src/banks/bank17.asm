@@ -1,10 +1,12 @@
 SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
-; 1 call site from 1 routine (e.g. Func_017_41CF)
+; only called from SendSGBPaletteSetPacket (E-0047)
+; 1 call site from 1 routine (e.g. SendSGBPaletteSetPacket)
 ; reads: wSGBActive, wSGBPacketIndex
 ; points at: wSGBPacketBuffer
-Func_017_4001::
+SendSGBPaletteSetPacket_Sub01::
+Func_017_4001:: ; address name
     ld a, [wSGBActive]
     or a, a
     ret z
@@ -153,11 +155,13 @@ Data_017_41AF:: ; heuristic: target of a monotone pointer table; C0
 Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; when the Super Game Boy is active, builds a PAL_SET ($51) packet from Data_017_426C[wC51F] (also kept in wC577), attribute file wC520 | $80, loads the object palettes and sends it (E-0125)
 ; 9 call sites from 9 routines (e.g. Func_000_0150, GameMode1_Init, GameMode5_Init_Case01, GameMode5_Init_Case02, ...)
 ; reads: wSGBActive, wC51F, wC0A0, wC520
 ; writes: wSGBPacketBuffer, wC0A0, wSGBPacketIndex
 ; points at: wC480, wC577
-Func_017_41CF::
+SendSGBPaletteSetPacket::
+Func_017_41CF:: ; address name
     ld a, [wSGBActive]
     or a, a
     ret z
@@ -193,12 +197,12 @@ Jump_017_41F4::
     call LoadSGBObjectPalettesFromPointers
     ld a, $FF
     ld [wSGBPacketIndex], a
-    farcall_b Func_017_4001
+    farcall_b SendSGBPaletteSetPacket_Sub01
     call SpinDelay
     ret
 
 ; when the Super Game Boy is active, converts the four palettes pointed to by wC577-wC57E into wOBJPaletteBuffer, wC4E7, wC4EF and wC4F7 (Func_017_4258) (E-0121)
-; 7 call sites from 7 routines (e.g. Func_017_41CF, Func_002_5F9B, GameMode5_Init_Case00, Func_007_600E, ...)
+; 7 call sites from 7 routines (e.g. SendSGBPaletteSetPacket, Func_002_5F9B, GameMode5_Init_Case00, Func_007_600E, ...)
 ; reads: wSGBActive, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
 ; points at: wOBJPaletteBuffer, wC4E7, wC4EF, wC4F7
 LoadSGBObjectPalettesFromPointers::

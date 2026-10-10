@@ -1384,6 +1384,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Correction.** E-0122 named 16:7A48 `LoadFamilyPaletteForWD09D`. Its helper 16:7AAF writes the bytes to VRAM tile wD09E ($8000 + 16 * index, indices below $80 in the $9000 area), not to a palette. The family data at Data_016_7ACD is 16 bytes per family, one tile each. Renamed `LoadFamilyIconTileForWD09D`, `LoadAllFamilyIconTiles` and `LoadFamilyIconTileForRecordB_*`.
 - Binary verification: build/run82 PASS, 0 differing bytes.
 
+### E-0125 — Routines of 31-45 instructions
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** About 135 routines of 31-45 instructions are named; the unnamed count goes from 542 to 391. These include:
+  - experience gain capped at 9,999,999 (31:6885, 31:6B2E: record field $58 is a 3-byte EXP total);
+  - a full party heal (12:64F8) and item equipping into record field $A4 (16:4A48);
+  - the AI damage estimate (ATK - DEF/2)/2 per foe (30:4C63) and the weakest-target pick (39:6D89);
+  - map links and visited-screen bitmaps (11:4268, A1:4435, A1:58BA);
+  - gold-gated events (12:7934, 12:79A7);
+  - key generation (12:6955, 60:6916);
+  - the 1bpp glyph expansion (00:30A1);
+  - the boot-time RAM clear (00:08D0). It also clears SRAM banks 0 and 2; when it runs relative to the save check is not yet traced.
+- **Likely slip.** 05:6494 (FailIfFoeHPBelowFourTimesWD2C1) loops three times with `dec b` but never `inc c`, so it tests the first foe slot three times. Not tested.
+- **Data.** 3D:4E56, 3E:7615 and 92:5827 are pointer tables decoded as code; left unnamed.
+- Binary verification: build/run83 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -827,7 +827,7 @@ Jump_05F_6D35::
 ; points at: wC6FE
 LoadListedRecordNameTilesForHFFC6::
 Func_05F_6D3F:: ; address name
-    farcall Func_012_7D95
+    farcall FindPartyIndexOfSpeciesHFFC6
     ldh a, [hFF8D]
     or a, $0E
     ldh [hFF8D], a
@@ -878,10 +878,12 @@ Func_05F_6D78:: ; address name
 Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
+; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
 ; 10 call sites from 8 routines (e.g. Talk075F_KiralFetchMeMy, ScriptCommand58_Run_Case2B, ScriptCommand4B_Run_Case16, ScriptCommand39_Run_Case31, ...)
 ; reads: hFFC6
 ; points at: wKeyList
-Func_05F_6DAC::
+MarkKeyEntryKindHFFC6Bit6::
+Func_05F_6DAC:: ; address name
     ldh a, [hFFC6]
     ld c, a
     ld hl, wKeyList
@@ -1362,14 +1364,16 @@ Jump_05F_7032::
 
 Jump_05F_703D::
     ld hl, Data_05F_7092
-    call Func_05F_7044
+    call ScriptStepMoveTwoObjectsByTable
     ret
 
+; every fourth step moves wC8F5/wC8F6 and wC8FA/wC8FB in opposite directions by the table at HL; after 32 steps advances wC92D (E-0125)
 ; 1 call site from 1 routine (e.g. Func_05F_6EC3_Case02)
 ; reads: wScriptParam0, wC8F5, wC8FA, wC8F6, wC8FB
 ; writes: wC8F5, wC8FA, wC8F6, wC8FB, wScriptParam0
 ; points at: wC92D, wScriptParam0
-Func_05F_7044::
+ScriptStepMoveTwoObjectsByTable::
+Func_05F_7044:: ; address name
     ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_05F_708D
@@ -1930,7 +1934,7 @@ Jump_05F_73E6::
     farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ret
 
 Jump_05F_7402::
@@ -1979,7 +1983,7 @@ Jump_05F_743D:: ; address name
     farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld de, wCB8B
     ld a, e
     ld [wC928], a
@@ -2007,7 +2011,7 @@ Jump_05F_746F:: ; address name
     farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld a, [wScriptParam1]
     add a, $01
     ld [wScriptParam1], a
@@ -2060,7 +2064,7 @@ Jump_05F_74CD:: ; address name
     farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld de, wCBD4
     ld a, e
     ld [wC928], a
@@ -2146,7 +2150,7 @@ Jump_05F_7554:: ; address name
     farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld de, wCBD4
     ld a, e
     ld [wC928], a
@@ -2181,7 +2185,7 @@ Jump_05F_7593:: ; address name
     farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld de, wCB8B
     ld a, e
     ld [wC928], a
@@ -2289,7 +2293,7 @@ Jump_05F_7631:: ; address name
     ld [wScriptParam0], a
     ld a, $0E
     ldh [hFF8D], a
-    farcall Func_012_64F8
+    farcall FullyHealParty
     ret
 
 Jump_05F_7646::
@@ -2413,7 +2417,7 @@ RunWC92DStep_7363_Case00::
 Jump_05F_7700:: ; address name
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_012_6AD9
+    farcall LoadSpriteGraphics7E5595ToTiles0
     ld de, $0021
     call TestFlagBit
     jr c, Jump_05F_771D
@@ -3002,7 +3006,7 @@ Jump_05F_7A8C:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
-    farcall Func_084_43B8
+    farcall ApplyMapScreenFlagEvents
     farcall DrawFullScreenBufferAtScroll
     farcall ClearBit1OfPlayerAndObjectFlags
     xor a, a

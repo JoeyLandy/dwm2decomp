@@ -453,7 +453,7 @@ Jump_014_429B::
     ld a, [wD7A9]
     and a, a
     jr z, Jump_014_42F1
-    farcall Func_01D_6DF8
+    farcall CountFlaggedSRAMRecords
     farcall LoadWD7FFFromWC7C7Table
     ld a, [wD7F5]
     cp a, c
@@ -498,7 +498,7 @@ Jump_014_42F1::
     ret
 
 Jump_014_4309::
-    farcall Func_01D_6DF8
+    farcall CountFlaggedSRAMRecords
     ld a, [wD7F5]
     and a, a
     jp z, Jump_014_43B1
@@ -627,7 +627,7 @@ Jump_014_43F3::
     ret
 
 Jump_014_4409::
-    farcall Func_01D_6DF8
+    farcall CountFlaggedSRAMRecords
     ld a, [wD7F5]
     and a, a
     jr nz, Jump_014_4430

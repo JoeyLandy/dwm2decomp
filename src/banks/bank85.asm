@@ -190,7 +190,7 @@ Jump_085_40C3:: ; address name
 ScriptCommand2A_Run_Case0D::
 Jump_085_412F:: ; address name
     farcall RestoreScreenBufferFromBGMap1
-    call Func_085_4555
+    call DrawScreenBufferAtScrollOrigin
     ld a, [wC92E]
     cp a, $03
     jr nz, Jump_085_4145
@@ -221,7 +221,7 @@ Jump_085_4159:: ; address name
     xor a, a
     ld [wC92D], a
     ld [wC92E], a
-    call Func_085_4505
+    call ShowBoxFromTable4583
     farcall SetBit1OfPlayerAndObjectFlags
     ld hl, wScriptStep
     inc [hl]
@@ -352,7 +352,7 @@ Jump_085_4231:: ; address name
 ScriptCommand2A_Run_Case11::
 Jump_085_423C:: ; address name
     ld hl, wCB96
-    call Func_085_4339
+    call StepObjectCoordByDirection16Frames
     or a, a
     ret z
     ld hl, wScriptStep
@@ -462,11 +462,11 @@ Jump_085_429B:: ; address name
 ScriptCommand4D_Run_Case0D::
 Jump_085_4307:: ; address name
     ld hl, wCB96
-    call Func_085_4339
+    call StepObjectCoordByDirection16Frames
     or a, a
     ret z
     farcall RestoreScreenBufferFromBGMap1
-    call Func_085_4555
+    call DrawScreenBufferAtScrollOrigin
     ld a, [wC92E]
     cp a, $03
     jr nz, Jump_085_4325
@@ -486,10 +486,12 @@ Jump_085_4325::
     inc [hl]
     jp ScriptCommand4D_Run_Case0E
 
+; moves the object at HL one unit in direction [HL] (bytes 4/5); A = 1 after 16 steps, else 0 (E-0125)
 ; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case0D, ScriptCommand2A_Run_Case11)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
-Func_085_4339::
+StepObjectCoordByDirection16Frames::
+Func_085_4339:: ; address name
     ld a, [hl]
     or a, a
     jr nz, Jump_085_4347
@@ -558,7 +560,7 @@ Jump_085_4389::
 ScriptCommand2A_Run_Case09::
 Jump_085_4390:: ; address name
     farcall RestoreScreenBufferFromBGMap1
-    call Func_085_4555
+    call DrawScreenBufferAtScrollOrigin
     ld hl, wCD56
     call StartMessageHL_B85
     farcall ClearBit1OfPlayerAndObjectFlags
@@ -584,7 +586,7 @@ Jump_085_43AF:: ; address name
     xor a, a
     ld [wC92D], a
     ld [wC92E], a
-    call Func_085_4505
+    call ShowBoxFromTable4583
     farcall SetBit1OfPlayerAndObjectFlags
     ld hl, wScriptStep
     inc [hl]
@@ -782,11 +784,13 @@ Func_085_44D2:: ; address name
     add_a_to_hl
     ret
 
+; saves the screen buffer to vBGMap1, copies the 8 x 9 box $4583 to wScreenTileBuffer (clearing CGB attributes), draws it and plays sound $6C (E-0125)
 ; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case07, ScriptCommand2A_Run_Case07)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_085_4505::
+ShowBoxFromTable4583::
+Func_085_4505:: ; address name
     farcall SaveScreenBufferToBGMap1
     ld hl, wScreenTileBuffer
     ld de, $4583
@@ -833,14 +837,16 @@ Jump_085_4539::
     ldh [rSVBK], a
 
 Jump_085_454C::
-    call Func_085_4555
+    call DrawScreenBufferAtScrollOrigin
     ld a, $6C
     call QueueSoundEffect
     ret
 
-; 4 call sites from 4 routines (e.g. ScriptCommand4D_Run_Case0D, Func_085_4505, ScriptCommand2A_Run_Case0D, ScriptCommand2A_Run_Case09)
+; draws the screen buffer at the BG map address of the scroll position (Func_000_1EA5) (E-0125)
+; 4 call sites from 4 routines (e.g. ScriptCommand4D_Run_Case0D, ShowBoxFromTable4583, ScriptCommand2A_Run_Case0D, ScriptCommand2A_Run_Case09)
 ; reads: hScrollY, hScrollX
-Func_085_4555::
+DrawScreenBufferAtScrollOrigin::
+Func_085_4555:: ; address name
     ldh a, [hScrollY]
     and a, $F8
     ld e, a
@@ -1346,7 +1352,7 @@ Jump_085_487E::
 
 Jump_085_4887::
     call SetFlagBit
-    farcall Func_084_43B8
+    farcall ApplyMapScreenFlagEvents
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -1398,7 +1404,7 @@ Jump_085_48C2:: ; address name
     call SetFlagBit
     ld a, $09
     ldh [hFFC6], a
-    farcall Func_085_5B23
+    farcall KeyListHasKindHFFC6
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_4912
@@ -1424,7 +1430,7 @@ Jump_085_48F5::
     ldh [hFFC7], a
 
 Jump_085_4905::
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, $01
     ld [wScriptParam0], a
     jr Jump_085_4921
@@ -1511,7 +1517,7 @@ Jump_085_496F:: ; address name
     call SetFlagBit
     ld a, $07
     ldh [hFFC6], a
-    farcall Func_085_5B23
+    farcall KeyListHasKindHFFC6
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_49BF
@@ -1537,7 +1543,7 @@ Jump_085_49A2::
     ldh [hFFC7], a
 
 Jump_085_49B2::
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, $01
     ld [wScriptParam0], a
     jr Jump_085_49CE
@@ -4007,11 +4013,13 @@ Jump_085_57F3:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; hFFC6 = 1 when a party record has field $6F >= $C0 and bit 7 of field $55 clear, else 0 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD, hFFC6
 ; writes: hFFC6, rRAMG
 ; points at: wC6FE
-Func_085_57FE:: ; heuristic: follows a terminator; C0
+PartyHasField6FAtLeastC0Without55Bit7:: ; heuristic: follows a terminator; C0
+Func_085_57FE:: ; address name
     ld a, [wC6FD]
     or a, a
     jr nz, Jump_085_5808
@@ -4467,11 +4475,13 @@ Jump_085_5B12::
     ldh [hFFC7], a
     ret
 
+; hFFC6 = 1 when a used key entry has kind hFFC6, else 0 (E-0125)
 ; 4 call sites from 3 routines (e.g. TalkMsg0512_KamehaYo0Thanks, ScriptCommand72_Run_Case01, ScriptCommand71_Run_Case01)
 ; reads: hFFC6
 ; writes: hFFC6
 ; points at: wKeyList
-Func_085_5B23::
+KeyListHasKindHFFC6::
+Func_085_5B23:: ; address name
     ldh a, [hFFC6]
     ld c, a
     ld hl, wKeyList
@@ -4626,7 +4636,7 @@ Jump_085_5C08::
     ldh [hFFC6], a
     ld de, hFFC6
     ld c, $00
-    farcall Func_034_4008
+    farcall CopyMonsterTableBytesFrom4075
     pop bc
     push bc
     ld a, b

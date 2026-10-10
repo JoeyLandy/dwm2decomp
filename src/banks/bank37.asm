@@ -3177,7 +3177,7 @@ Jump_037_5C95::
     call Func_037_5EF7
     ld b, $12
     call CopyBBytesHLToDE_Bank37
-    call Func_037_5F4A
+    call ScaleStatWordsForDisplay_5F4A
     ld b, $06
     call CopyBBytesHLToDE_Bank37
     call Copy26BytesThenWD034
@@ -3773,8 +3773,10 @@ Jump_037_5F42::
     pop de
     ret
 
+; reads a word at DE: $01FF becomes 999, otherwise word * $C3 / 100 rounded up; stores it at HL and continues with the next word (ScaleStatWordsForDisplay_5F78) (E-0125)
 ; 1 call site from 1 routine (e.g. Func_037_5C4E)
-Func_037_5F4A::
+ScaleStatWordsForDisplay_5F4A::
+Func_037_5F4A:: ; address name
     push hl
     ld a, [de]
     ld c, a
@@ -3809,10 +3811,12 @@ Jump_037_5F70::
     inc hl
     ld [hl], b
     inc hl
-    call Func_037_5F78
+    call ScaleStatWordsForDisplay_5F78
 
-; 1 call site from 1 routine (e.g. Func_037_5F4A)
-Func_037_5F78::
+; reads a word at DE: $00FF becomes 999, otherwise word * $5B / 100 rounded up plus 3 * word; stores it at HL (E-0125)
+; 1 call site from 1 routine (e.g. ScaleStatWordsForDisplay_5F4A)
+ScaleStatWordsForDisplay_5F78::
+Func_037_5F78:: ; address name
     push hl
     ld a, [de]
     ld c, a

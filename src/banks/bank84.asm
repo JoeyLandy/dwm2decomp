@@ -596,10 +596,12 @@ Func_084_43AC:: ; address name
     jr nc, RandomBelowC
     ret
 
+; for each 8-byte entry of Data_084_4461 matching hMapId and the screen position, with its story flag set, runs Func_084_43F2 (hFFC6 = its value) (E-0125)
 ; 3 call sites from 3 routines (e.g. LoadMapScreen, ScriptCommand0A_Run_Case04, ScriptCommand74_Run)
 ; reads: hMapId, hMapScreenX, hMapScreenY
 ; writes: hFFC6
-Func_084_43B8::
+ApplyMapScreenFlagEvents::
+Func_084_43B8:: ; address name
     ld hl, Data_084_4461
 
 Jump_084_43BB::
@@ -635,7 +637,7 @@ Jump_084_43C3::
     jr nc, Jump_084_43E8
     pop hl
     push hl
-    call Func_084_43F2
+    call ApplyMapScreenFlagEvents_Sub01
 
 Jump_084_43E8::
     pop hl
@@ -643,10 +645,12 @@ Jump_084_43E8::
     add_a_to_hl
     jr Jump_084_43BB
 
-; 1 call site from 1 routine (e.g. Func_084_43B8)
+; only called from ApplyMapScreenFlagEvents (E-0047)
+; 1 call site from 1 routine (e.g. ApplyMapScreenFlagEvents)
 ; reads: hFFC6, wIsCGB
 ; writes: rSVBK
-Func_084_43F2::
+ApplyMapScreenFlagEvents_Sub01::
+Func_084_43F2:: ; address name
     ldh a, [hFFC6]
     cp a, $FF
     jr z, Jump_084_4412

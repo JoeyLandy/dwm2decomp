@@ -732,7 +732,7 @@ Func_012_43DA:: ; address name
 ScriptCommand96_Run_Case15::
 Jump_012_4412:: ; address name
     ld a, $07
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
@@ -752,14 +752,14 @@ Jump_012_4420:: ; address name
     cp a, $02
     jr nz, Jump_012_4437
     ld a, $07
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld a, $16
     ld [wScriptStep], a
     jr Jump_012_4440
 
 Jump_012_4437::
     ld a, $05
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
 
@@ -781,14 +781,14 @@ Jump_012_444D:: ; address name
     cp a, $02
     jr nz, Jump_012_4464
     ld a, $07
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld a, $16
     ld [wScriptStep], a
     jr Jump_012_446D
 
 Jump_012_4464::
     ld a, $03
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
 
@@ -918,7 +918,7 @@ Jump_012_4515:: ; address name
 ; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
 ScriptCommand96_Run_Case18::
 Jump_012_4546:: ; address name
-    call Func_012_64F8
+    call FullyHealParty
     ld a, $04
     ldh [hMapId], a
     ld a, $01
@@ -965,7 +965,7 @@ Jump_012_457B::
 ScriptCommand95_Run_Case16::
 Jump_012_4587:: ; address name
     ld a, $07
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
@@ -978,7 +978,7 @@ Jump_012_4587:: ; address name
 ScriptCommand96_Run_Case12::
 Jump_012_4595:: ; address name
     ld a, $06
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -990,7 +990,7 @@ Jump_012_4595:: ; address name
 ScriptCommand95_Run_Case0E::
 Jump_012_459F:: ; address name
     ld a, $05
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
@@ -1013,7 +1013,7 @@ Jump_012_45BF::
 ScriptCommand96_Run_Case0A::
 Jump_012_45CC:: ; address name
     ld a, $04
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1194,7 +1194,7 @@ Jump_012_469E:: ; address name
 ScriptCommand95_Run_Case06::
 Jump_012_46D8:: ; address name
     ld a, $03
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
@@ -1370,7 +1370,7 @@ Jump_012_47D8::
     ld [wC8F4], a
     ld [wC8F9], a
     ld a, $02
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld a, [wScriptParam1]
     ld [wC90D], a
     ld a, $00
@@ -1427,7 +1427,7 @@ Jump_012_4850:: ; address name
     call Func_012_684A
     ret nc
     ld a, $01
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     ld a, $0E
     ldh [hFF8D], a
     ld hl, wScriptStep
@@ -1452,14 +1452,16 @@ Jump_012_4863:: ; address name
     ld [wC8C6], a
     farcall ScriptStartFadeAndAdvanceStep
     ld a, $00
-    call Func_012_488B
+    call StartMessageFromTable48B9ByWC82C
     xor a, a
     ld [wC94A], a
     ret
 
+; starts the message at Data_012_48B9 + 2 * A + 16 * wC82C (16 * 5 when bit 7 of wC94A is set) (E-0125)
 ; 13 call sites from 11 routines (e.g. ScriptCommand96_Run_Case15, ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05, ScriptCommand95_Run_Case16, ...)
 ; reads: wC94A, wC82C
-Func_012_488B::
+StartMessageFromTable48B9ByWC82C::
+Func_012_488B:: ; address name
     ld de, Data_012_48B9
     sla a
     add a, e
@@ -3375,7 +3377,7 @@ Jump_012_56A8::
 Jump_012_56AD::
     xor a, a
     ld [rRAMG], a
-    call Func_012_64F8
+    call FullyHealParty
     ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_012_56DB
@@ -4021,7 +4023,7 @@ Jump_012_5A3D::
     rst $00
     dw Func_012_5C31
     dw PlaySound83AndAdvanceScriptStep
-    dw Func_012_5B9A
+    dw ScriptStepAnimateSpriteBySteps
     dw ScriptCommand84_Run_Case03
     dw ScriptCommand84_Run_Case04
     dw ScriptCommand84_Run_Case05
@@ -4247,11 +4249,13 @@ Jump_012_5B8C::
     inc [hl]
     ret
 
+; wScriptParam1 = wScriptParam0 / 6 (capped at 4), draws the script sprite, and advances wScriptStep after $1E frames (E-0125)
 ; 1 call site from 1 routine (e.g. ScriptCommand3E_Run_Case02)
 ; reads: wScriptParam0
 ; writes: wScriptParam1
 ; points at: wScriptStep
-Func_012_5B9A::
+ScriptStepAnimateSpriteBySteps::
+Func_012_5B9A:: ; address name
     ld a, [wScriptParam0]
     cp a, $06
     jr nc, Jump_012_5BA7
@@ -4293,7 +4297,7 @@ Jump_012_5BCB::
     ret
 
 ; draws metasprite set $23 + ($10 >> 4) - 1, sub-index wScriptParam1, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10), used here as coordinates (E-0121)
-; 1 call site from 1 routine (e.g. Func_012_5B9A)
+; 1 call site from 1 routine (e.g. ScriptStepAnimateSpriteBySteps)
 ; reads: wC195, wScriptParam1, hScrollX, hScrollXHi, wMessageIndex, hScrollY, hScrollYHi, wMessageGroup
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 DrawScriptMetaSpriteAtScrollOffset::
@@ -4666,7 +4670,7 @@ Jump_012_5DEF::
     ret
 
 Jump_012_5E14::
-    call Func_012_6114
+    call DrawScriptMetaSprite21AtScrollOffset
     ld a, [wScriptParam0]
     and a, $01
     ret z
@@ -4702,7 +4706,7 @@ Jump_012_5E37::
 ; points at: wScriptStep
 Func_012_5DB6_Case07::
 Jump_012_5E3C:: ; address name
-    call Func_012_6114
+    call DrawScriptMetaSprite21AtScrollOffset
     ld hl, wScriptStep
     inc [hl]
     ld a, [wCC44]
@@ -5110,7 +5114,7 @@ Jump_012_6093::
     ret
 
 Jump_012_60B3::
-    call Func_012_6114
+    call DrawScriptMetaSprite21AtScrollOffset
     ld a, [wScriptParam0]
     and a, $01
     ret z
@@ -5167,7 +5171,7 @@ Jump_012_60F2::
     jr Jump_012_60FD
 
 Jump_012_60F8::
-    call Func_012_6114
+    call DrawScriptMetaSprite21AtScrollOffset
     jr Jump_012_60FD
 
 Jump_012_60FD::
@@ -5184,11 +5188,13 @@ Jump_012_60FD::
     ldh [hFF8D], a
     ret
 
+; draws metasprite set $21 (or $22 unless wC195 & $0F = 1), flipped by the player facing, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10) (E-0125)
 ; 4 call sites from 4 routines (e.g. Func_012_5EE7_Case07, Func_012_5DB6_Case08, Func_012_5DB6_Case07, Func_012_5DB6_Case06)
 ; reads: wC195, hPlayerFacing, hScrollX, hScrollXHi, wMessageIndex, hScrollY, hScrollYHi, wMessageGroup
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 ; points at: hSpriteSetIndex
-Func_012_6114::
+DrawScriptMetaSprite21AtScrollOffset::
+Func_012_6114:: ; address name
     ld a, $21
     ldh [hSpriteSetIndex], a
     ld a, [wC195]
@@ -5846,11 +5852,13 @@ Jump_012_64EA::
     add_a_to_hl
     ret
 
+; with SRAM enabled sets every party record's HP to max HP, MP to max MP and field $55 to 0 (E-0125)
 ; 10 call sites from 9 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, RunWC8C7Phase_Case02, GameMode5_Init_Case06, ...)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE
-Func_012_64F8::
+FullyHealParty::
+Func_012_64F8:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -6442,7 +6450,7 @@ Func_012_6813:: ; address name
     ret
 
 ; wMessageIndex = A, wMessageState = 0: the next RunMessageBox call opens the window and shows that string of the group already in wMessageGroup (E-0063, E-0079)
-; 35 call sites from 15 routines (e.g. ScriptCommandA1_Run_Case00, ScriptCommand9D_Run_Case00, ScriptCommand9C_Run_Case00, Func_012_488B, ...)
+; 35 call sites from 15 routines (e.g. ScriptCommandA1_Run_Case00, ScriptCommand9D_Run_Case00, ScriptCommand9C_Run_Case00, StartMessageFromTable48B9ByWC82C, ...)
 ; writes: wMessageIndex, wMessageState
 StartMessageA::
 Func_012_6820:: ; address name
@@ -6557,7 +6565,7 @@ Func_012_689A::
     ld [wC966], a
 
 Jump_012_689E::
-    call Func_012_691F
+    call FindFreeKeySlotToHFFC6
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_012_68AB
@@ -6569,7 +6577,7 @@ Jump_012_68AB::
     push af
     ld a, $FE
     ldh [hFFC7], a
-    call Func_012_6955
+    call WriteKeyEntryHFFC6
     pop af
     or a, a
     jr z, Jump_012_68FF
@@ -6647,10 +6655,12 @@ Jump_012_68FF::
     ld [wC836], a
     ret
 
+; hFFC6 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack bit 7 of byte 3 (E-0125)
 ; 3 call sites from 3 routines (e.g. Func_012_689A, Func_00D_6A80, Func_00D_6B45)
 ; writes: hFFC6
 ; points at: wKeyList
-Func_012_691F::
+FindFreeKeySlotToHFFC6::
+Func_012_691F:: ; address name
     ld b, $00
     ld d, $00
     ld hl, wKeyList
@@ -6691,10 +6701,12 @@ Jump_012_6948::
     ldh [hFFC6], a
     ret
 
+; writes key entry hFFC6: byte 0 = hFFC7 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hFFC7-hFFC9 (E-0125)
 ; 12 call sites from 10 routines (e.g. Func_012_689A, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
 ; reads: hFFC6, hFFC7, wCD05, hFFC8, hFFC9
 ; writes: hFFC6
-Func_012_6955::
+WriteKeyEntryHFFC6::
+Func_012_6955:: ; address name
     ldh a, [hFFC6]
     ld l, a
     ld h, $00
@@ -6722,7 +6734,7 @@ Jump_012_6973::
     farcall Func_061_40B4
     ld a, [wCD05]
     ldh [hFFC6], a
-    farcall Func_060_6916
+    farcall RollKeyContentsForLevelHFFC6
     pop hl
     inc hl
     ldh a, [hFFC7]
@@ -6967,11 +6979,13 @@ Jump_012_6ABC::
     ld [wCBCF], a
     ret
 
+; decompresses Data_07E_5595 to vTiles0 + $300 (or + $700 when hFFC6 is set), wC949 = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
 ; 2 call sites from 2 routines (e.g. RunWC92DStep_7363_Case00, ScriptCommand16_Run_Case0F)
 ; reads: hFFC6, wIsCGB
 ; writes: wC949, wC527
 ; points at: wOBJPaletteBuffer
-Func_012_6AD9::
+LoadSpriteGraphics7E5595ToTiles0::
+Func_012_6AD9:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_012_6AE3
@@ -7033,10 +7047,12 @@ Func_012_6B22:: ; address name
     ld [wC949], a
     ret
 
+; draws metasprite set $1B with a frame from Data_012_6B7A chosen by the frame counter / 30, at ($48, wC949 + $10) (E-0125)
 ; 11 call sites from 11 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case0C, RunWC92DStep_7363_Case0B, ...)
 ; reads: hFFC6, wFrameCounterLo, wFrameCounterHi, wC949
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
-Func_012_6B33::
+DrawAnimatedMetaSprite1B::
+Func_012_6B33:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_012_6B42
@@ -8394,10 +8410,12 @@ Jump_012_7377::
 Jump_012_73A0::
     ret
 
+; when the player stands on a trigger (Func_012_7536) and nothing blocks it, sets wC916 = $0F and far-calls DispatchTalkEvent, clearing the joypad state (E-0125)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01)
 ; reads: wC951, wC8BF, wC8FE, hPlayerX, hPlayerY, wScriptRunning, wC917, wC916
 ; writes: wD091, wC916, wC917, wJoypadHeld, wJoypadPressed
-Func_012_73A1::
+CheckStepTriggerAndDispatchTalk::
+Func_012_73A1:: ; address name
     ld a, [wC951]
     dec a
     ret z
@@ -8643,7 +8661,7 @@ Jump_012_7508::
 Data_012_752E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Shared02, Func_012_73A1)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Shared02, CheckStepTriggerAndDispatchTalk)
 ; reads: wCC44, wC8FF
 Func_012_7536::
     push bc
@@ -8808,13 +8826,13 @@ Jump_012_7624::
     ret c
     call Func_012_781E
     ret c
-    call Func_012_7934
+    call TriggerEventC7IfGold1000AndNoItems19To1C
     ret c
     call Func_012_789E
     ret c
     call Func_012_77AC
     ret c
-    call Func_012_79A7
+    call TriggerEventC4OrC5IfGold1000
     ret c
     sub a, a
     ret
@@ -9317,11 +9335,13 @@ Jump_012_7932::
     sub a, a
     ret
 
+; when wC627 is $FF or 0, the gold is at least 1000 and no inventory slot before the first empty one holds items $19-$1C: wC935 = $C7 and carry (E-0125)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wC627, wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
 ; points at: wInventory
-Func_012_7934::
+TriggerEventC7IfGold1000AndNoItems19To1C::
+Func_012_7934:: ; address name
     ld a, [wC627]
     cp a, $FF
     jr z, Jump_012_793E
@@ -9409,10 +9429,12 @@ Jump_012_79A5::
     sub a, a
     ret
 
+; when the gold is at least 1000 and wC634 is $FF or 0: wC935 = $C4 or $C5 at random and carry (E-0125)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wGoldHi, wGoldMid, wC634, wC5E8, wGoldLo
 ; writes: wC935
-Func_012_79A7::
+TriggerEventC4OrC5IfGold1000::
+Func_012_79A7:: ; address name
     ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_79BF
@@ -9748,7 +9770,7 @@ Jump_012_7B92::
     ret
 
 ; when wC935 has bit 7 set and bit 6 clear: wC935 = 0 and wC832 = 0 (E-0117)
-; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, Func_011_4130, ScriptWarpToMapFromBytesAtDE, Func_011_43FA, ...)
+; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, Func_011_4130, ScriptWarpToMapFromBytesAtDE, CheckMapExitTable4480_Sub01, ...)
 ; reads: wC935
 ; writes: wC935, wC832
 ClearWC935IfBit7AndNot6::
@@ -10040,11 +10062,13 @@ Jump_012_7D93::
     xor a, a
     ret
 
+; hFFC6 = the party index whose record species (field $0B) equals the word hFFC6/7, or $80 when none (E-0125)
 ; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case07_Sub01, DispatchTalkEvent_Case01_Case27, DispatchTalkEvent_Case01_Case7F, LoadListedRecordNameTilesForHFFC6, ...)
 ; reads: hFFC6, hFFC7, wC6FD
 ; writes: rRAMG, hFFC6
 ; points at: wC6FE
-Func_012_7D95::
+FindPartyIndexOfSpeciesHFFC6::
+Func_012_7D95:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ldh a, [hFFC6]

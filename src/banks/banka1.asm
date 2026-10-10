@@ -399,7 +399,7 @@ Jump_0A1_4305:: ; address name
     ld hl, wBattleResolveStep
     ld bc, $0005
     call FillBytes
-    farcall Func_0A3_4187
+    farcall SaveActionChoicesAndPickFormations
     call RunBattleCommandEntry_BankA1_Case06_Sub01
     ret
 
@@ -565,10 +565,12 @@ Jump_0A1_4433::
     pop de
     ret
 
+; on map type $80 sets the bit for the current map screen in the visited-screen bitmap wCE93 (E-0125)
 ; 6 call sites from 3 routines (e.g. Func_0A1_44C9, RunWC468ActionIfBit7_Case01, RunWC46BMenuState_Case05)
 ; reads: wCC44, hMapScreenY, hMapScreenX
 ; points at: wCE93
-Func_0A1_4435::
+MarkVisitedMapScreenInWCE93::
+Func_0A1_4435:: ; address name
     ld a, [wCC44]
     bit 7, a
     ret z
@@ -708,7 +710,7 @@ Jump_0A1_44DD::
     cp a, d
     jr nc, Jump_0A1_44FC
     push bc
-    call Func_0A1_4435
+    call MarkVisitedMapScreenInWCE93
     pop bc
 
 Jump_0A1_44FC::
@@ -876,7 +878,7 @@ Jump_0A1_45DB::
     or a, c
     pop bc
     push de
-    call Func_0A1_58BA
+    call IsMapScreenAVisited
     pop de
     or a, a
     jr z, Jump_0A1_4610
@@ -2315,7 +2317,7 @@ Jump_0A1_4E58::
     or a, a
     jr nz, Jump_0A1_4E9F
     ld a, [de]
-    call Func_0A1_58BA
+    call IsMapScreenAVisited
     or a, a
     jr z, Jump_0A1_4EDF
 
@@ -2443,7 +2445,7 @@ Func_0A1_4F0A:: ; address name
     or a, a
     jr nz, Jump_0A1_4F48
     ld a, [de]
-    call Func_0A1_58BA
+    call IsMapScreenAVisited
     or a, a
     ret z
 
@@ -3633,7 +3635,7 @@ Jump_0A1_5697::
     or a, a
     jr nz, Jump_0A1_56AD
     ld a, [de]
-    call Func_0A1_58BA
+    call IsMapScreenAVisited
     or a, a
     jr z, Jump_0A1_56D2
 
@@ -3737,7 +3739,7 @@ Func_0A1_5719:: ; address name
     or a, a
     jr nz, Jump_0A1_5725
     ld a, [de]
-    call Func_0A1_58BA
+    call IsMapScreenAVisited
     or a, a
     ret z
 
@@ -3936,11 +3938,13 @@ Func_0A1_5898:: ; address name
     ld [wGameMode], a
     ret
 
+; A = 1 when the bit for screen A (high nibble x, low nibble y) is set in wCE93, else 0 (E-0125)
 ; 5 call sites from 5 routines (e.g. RunWC5DDState_Case02_Sub01_Sub04_Sub01, RunWC5DDState_Case02_Sub01_Sub03, RunWC5DDState_Case04_Sub01, RunWC5DDState_Case02_Sub05_Sub01, ...)
 ; reads: hFFC6
 ; writes: hFFC6
 ; points at: wCE93
-Func_0A1_58BA::
+IsMapScreenAVisited::
+Func_0A1_58BA:: ; address name
     push bc
     push hl
     ldh [hFFC6], a

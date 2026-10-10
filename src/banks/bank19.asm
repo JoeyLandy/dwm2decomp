@@ -213,7 +213,7 @@ Func_019_419B:: ; address name
     farcall CopyRectRecordForWD88F_Bank31
     farcall LayoutTileBlocksForWD890Count
     farcall DrawPartySlotStatusPanels
-    farcall Func_031_7321
+    farcall LoadBattleMonsterPictureAttributes
     ld hl, vBGMap0
     call CopyScreenTileBufferToVRAM_A0_Bank19
     ld a, $7F
@@ -730,10 +730,12 @@ Func_019_4465:: ; address name
     ld [hl], $AE
     ret
 
+; slot C: wBattleSlotOut = 1 when bit 7 of [HL] is set; otherwise 0 and, unless wCFC5 = 4, the status byte gets $20 for bit 0 and bit 0 for bit 2 (E-0125)
 ; 2 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
 ; reads: wCFC5
 ; points at: wBattleSlotOut, wBattleStatus
-Func_019_4468::
+InitSlotOutAndStatusFromRecordFlags::
+Func_019_4468:: ; address name
     push hl
     ld a, c
     ld de, wBattleSlotOut
@@ -1102,16 +1104,18 @@ Jump_019_45EC::
     ld h, a
     ld a, [hl]
     ld [de], a
-    call Func_019_4605
+    call ApplyTable4641IncrementsForA0DTo13
     inc de
     ld a, $FF
     ld [de], a
     inc de
     ret
 
+; for A in $0D-$13 increments (capped at 3) each byte listed in Data_019_4641 row A - $0D, relative to DE (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06_Sub01)
 ; writes: hFFC6, hFFC7
-Func_019_4605::
+ApplyTable4641IncrementsForA0DTo13::
+Func_019_4605:: ; address name
     or a, a
     ret z
     cp a, $0D
@@ -1148,7 +1152,7 @@ Jump_019_4629::
     jr Jump_019_4622
 
 ; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (E-0118)
-; 1 call site from 1 routine (e.g. Func_019_4605)
+; 1 call site from 1 routine (e.g. ApplyTable4641IncrementsForA0DTo13)
 ; reads: hFFC6, hFFC7
 IncrementTableByteCappedAt3::
 Func_019_4632:: ; address name
@@ -1361,7 +1365,7 @@ Jump_019_4771::
     push hl
     ld a, [wD014]
     ldh [hFFC6], a
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     ld a, $01
     ld [wD868], a
@@ -1370,7 +1374,7 @@ Jump_019_4771::
     ld a, [wD015]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     ld a, $00
     ld [wD868], a
@@ -1381,7 +1385,7 @@ Jump_019_4771::
     ld a, [wD016]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     call Func_019_48B1
     ld a, $03
@@ -1389,7 +1393,7 @@ Jump_019_4771::
     ld a, [wD017]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     call Func_019_48B1
     ld a, $00
@@ -1397,13 +1401,13 @@ Jump_019_4771::
     ld a, [wD018]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     call Func_019_48B1
     ld a, [wD019]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     call Func_019_48B1
     ld a, $E7
@@ -1431,7 +1435,7 @@ Jump_019_4771::
     ld a, [hl]
     pop hl
     ld [hl+], a
-    call Func_019_496F
+    call RollRecordField0DState
     call Func_019_49B1
     farcall Func_01A_5FA7
     ld a, [wD86A]
@@ -1624,9 +1628,11 @@ Jump_019_4968::
     jr nz, Jump_019_4968
     ret
 
+; field $0D of record wD86A: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0; with wD068 set bit 4 is cleared (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wD86A, wD86B, wC5E7, wD068
-Func_019_496F::
+RollRecordField0DState::
+Func_019_496F:: ; address name
     ld a, [wD86A]
     add a, $0D
     ld l, a
@@ -2225,7 +2231,7 @@ Jump_019_4C3E::
     ld h, a
     ld a, [wD871]
     or a, a
-    call z, Func_019_4468
+    call z, InitSlotOutAndStatusFromRecordFlags
     inc hl
     ld de, wD8B7
     call StoreByteAtDEPlusC_Bank19
@@ -2387,7 +2393,7 @@ Jump_019_4D3C::
     ld h, a
     ld a, [wD871]
     or a, a
-    call z, Func_019_4468
+    call z, InitSlotOutAndStatusFromRecordFlags
     inc hl
     ld de, wD8B7
     call StoreByteAtDEPlusC_Bank19

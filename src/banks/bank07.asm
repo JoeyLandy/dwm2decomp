@@ -603,7 +603,7 @@ Jump_007_4952:: ; address name
     ld [hl], $00
     inc hl
     ld [hl], $00
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
 
 Jump_007_4985::
     ld a, $FC
@@ -883,7 +883,7 @@ Jump_007_4B4B::
     ld [hl], $00
     inc hl
     ld [hl], $00
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
     jr Jump_007_4B7B
 
 Jump_007_4B6F::
@@ -990,7 +990,7 @@ Jump_007_4C2A::
     ld [hl], $00
     inc hl
     ld [hl], $00
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
     jr Jump_007_4C5A
 
 Jump_007_4C4E::
@@ -1086,7 +1086,7 @@ Jump_007_4CFF:: ; address name
     ld [hl], $00
     inc hl
     ld [hl], $00
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
     jr Jump_007_4D2B
 
 Jump_007_4D1F::
@@ -1268,7 +1268,7 @@ Jump_007_4E3D::
     ld [hl], $00
     inc hl
     ld [hl], $00
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
     jr Jump_007_4E6B
 
 Jump_007_4E5F::
@@ -1308,7 +1308,7 @@ Jump_007_4E8D::
     dec c
     jr nz, Jump_007_4E8B
     call GameMode5_Init_Case06_Sub01
-    farcall Func_012_64F8
+    farcall FullyHealParty
     ld a, $FC
     call StartPaletteFade
     ld b, $46
@@ -4731,7 +4731,7 @@ Jump_007_6B8E::
     ret
 
 Jump_007_6B95::
-    farcall Func_01D_5BF2
+    farcall CallFunc6899PreservingWD7F1AndHFFC6
     ret
 
 Jump_007_6B9C::
@@ -4800,7 +4800,7 @@ Jump_007_6BEA::
     ret
 
 Jump_007_6BF1::
-    farcall Func_01D_5BF2
+    farcall CallFunc6899PreservingWD7F1AndHFFC6
     ret
 
 Jump_007_6BF8::
@@ -4860,7 +4860,7 @@ Jump_007_6C32:: ; address name
     farcall RunSaveSteps
     ei
     call RunWD06AState_6C12_Case00_Case00_Sub01
-    farcall Func_012_64F8
+    farcall FullyHealParty
     ld a, $04
     ld [wC46F], a
     xor a, a
@@ -7837,7 +7837,7 @@ Jump_007_7DBC::
     ret
 
 Jump_007_7DC3::
-    farcall Func_01D_5BF2
+    farcall CallFunc6899PreservingWD7F1AndHFFC6
     ret
 
 Jump_007_7DCA::

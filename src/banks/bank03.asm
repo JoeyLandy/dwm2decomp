@@ -399,9 +399,11 @@ Jump_003_42A0::
     jr nz, Jump_003_429E
     ret
 
+; copies a rectangle record (offset, width, height, tiles) to the screen buffer, replacing tiles $15-$A3 with blank $C3 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenTileBuffer
-Func_003_42B0:: ; heuristic: follows a terminator; C0
+CopyRectRecordBlankingText_Bank03:: ; heuristic: follows a terminator; C0
+Func_003_42B0:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -441,7 +443,7 @@ Jump_003_42CB::
     ret
 
 ; copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC = $1412)
-; 36 call sites from 33 routines (e.g. PauseMenu_State4, Func_003_4FBB_Case02, Func_003_4339, PauseMenu_State3_Case00_Case00, ...)
+; 36 call sites from 33 routines (e.g. PauseMenu_State4, Func_003_4FBB_Case02, ExitPauseMenuToField, PauseMenu_State3_Case00_Case00, ...)
 ; points at: wScreenTileBuffer
 CopyTileBufferToBGMap::
 Func_003_42DA:: ; address name
@@ -495,7 +497,7 @@ Jump_003_42F9::
     ret
 
 ; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle); B kept, C = 0 (E-0067) (the same 28 bytes appear in 2 banks)
-; 4 call sites from 2 routines (e.g. Func_003_4A36, Func_003_4FBB_Case02)
+; 4 call sites from 2 routines (e.g. DrawRecordMonsterPictureForWC46D, Func_003_4FBB_Case02)
 CopyRectToVRAMSourceStrideBPlus14_Bank03::
 Func_003_4313:: ; address name
     push bc
@@ -529,11 +531,13 @@ Func_003_432F:: ; address name
     call LoadRecordListNameTiles
     ret
 
+; clears the object flag bits, saves the player position to wC8C8/9, whitens the CGB palettes, blanks the screen and returns to game mode 1 through Func_002_4628 (E-0125)
 ; 12 call sites from 12 routines (e.g. PauseMenu_Main_Case04, PauseMenu_State3_Case00_Case01, PauseMenu_State3_Case01_Case06, PauseMenu_State3_Case01_Case01, ...)
 ; reads: hPlayerX, hPlayerY, wIsCGB
 ; writes: wC8C8, wC8C9, wC8CA, rRAMG, wC526, wC5E0, wGameMode
 ; points at: wBGPaletteBuffer, wScreenTileBuffer, wC5E0
-Func_003_4339::
+ExitPauseMenuToField::
+Func_003_4339:: ; address name
     call ClearBit1OfPlayerAndObjectFlags_Bank03
     ldh a, [hPlayerX]
     ld [wC8C8], a
@@ -570,7 +574,7 @@ Jump_003_4367::
     ret
 
 ; clears bit 1 of hFF8C and of the flags byte of the five objects at wCB8C, wCB9C ... (stride $10) (E-0121)
-; 1 call site from 1 routine (e.g. Func_003_4339)
+; 1 call site from 1 routine (e.g. ExitPauseMenuToField)
 ; reads: hFF8C
 ; writes: hFF8C
 ; points at: wCB8C
@@ -1180,7 +1184,7 @@ Jump_003_46CD::
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    call Func_003_4A36
+    call DrawRecordMonsterPictureForWC46D
     xor a, a
     ld [rRAMG], a
     call WithSRAMDraw4ACEAnd4B52
@@ -1225,7 +1229,7 @@ Jump_003_4706::
 Jump_003_471E::
     bit 1, a
     jr z, Jump_003_4726
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 Jump_003_4726::
@@ -1562,7 +1566,7 @@ Jump_003_48EA::
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_Main_Case04::
 Jump_003_48EB:: ; address name
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 ; clears the screen tile buffer, copies blocks $00-$03 into it, then wC0A4 += 1 (E-0117)
@@ -1718,14 +1722,16 @@ Func_003_4A27:: ; address name
     ld de, Data_016_7B7D
     ld hl, vTiles1 + $6E0
     call DecompressToVRAM
-    call Func_003_4A36
+    call DrawRecordMonsterPictureForWC46D
     ret
 
+; loads the picture of the species of record wC46D & $0F at vTiles2 + $5C0; on CGB also uploads palettes and copies its 6 x 6 attribute block to vBGMap0 + $161 (E-0125)
 ; 2 call sites from 2 routines (e.g. DecompressMenuTilesTo16E0, PauseMenu_Main_Case00_Case01)
 ; reads: wC46D, wIsCGB
 ; writes: wC526, hFFC6, rVBK, rSVBK
 ; points at: wD000
-Func_003_4A36::
+DrawRecordMonsterPictureForWC46D::
+Func_003_4A36:: ; address name
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
@@ -3129,7 +3135,7 @@ Jump_003_52DE::
 Jump_003_5328::
     bit 1, a
     jr z, Jump_003_5330
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 Jump_003_5330::
@@ -3643,7 +3649,7 @@ Jump_003_5619:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 ; entry 27 of the `rst $00` table in PauseMenu_Items_Case02
@@ -4918,7 +4924,7 @@ Jump_003_5F6F::
 Jump_003_5F75::
     bit 1, a
     ret z
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 ; entry 2 of the `rst $00` table in PauseMenu_Skills_Case00
@@ -5652,7 +5658,7 @@ Jump_003_63F9:: ; address name
     ld a, [wDataBankSave]
     or a, a
     jr z, Jump_003_640F
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 Jump_003_640F::
@@ -6488,7 +6494,7 @@ Jump_003_6B1F::
 Jump_003_6B2C::
     bit 1, a
     ret z
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 ; entry 2 of the `rst $00` table in PauseMenu_State3_Case00
@@ -6676,7 +6682,7 @@ Jump_003_6C52::
     ret z
     ld a, $40
     ld [wDataBankSave], a
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 ; entry 2 of the `rst $00` table in PauseMenu_State3_Case01
@@ -6890,7 +6896,7 @@ Jump_003_6D90:: ; address name
     ld a, [wModeState]
     bit 3, a
     ret z
-    call Func_003_4339
+    call ExitPauseMenuToField
     ret
 
 ; entry 7 of the `rst $00` table in PauseMenu_State3_Case01
@@ -7951,7 +7957,7 @@ Jump_003_73A0:: ; address name
     ld a, [wD09E]
     ld de, wC249
     call WriteByteAAsTwoDigitTiles
-    farcall Func_01D_6DF8
+    farcall CountFlaggedSRAMRecords
     ld a, [wD7F5]
     ld de, wC283
     call WriteByteAAsTwoDigitTiles

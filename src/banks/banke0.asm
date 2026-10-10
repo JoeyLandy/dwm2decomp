@@ -6361,7 +6361,7 @@ Jump_0E0_70EB::
     ld a, $00
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_0E0_758B
+    call FillBGMapRectWithAWrapped
     ld a, $00
     ldh [rVBK], a
 
@@ -6369,7 +6369,7 @@ Jump_0E0_710C::
     ld a, $7F
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_0E0_758B
+    call FillBGMapRectWithAWrapped
     ld bc, vBGMap0 + $41
     ld a, c
     ld [wD0AB], a
@@ -6503,7 +6503,7 @@ Jump_0E0_71E7::
     ld a, $00
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_0E0_758B
+    call FillBGMapRectWithAWrapped
     ld a, $00
     ldh [rVBK], a
 
@@ -6511,7 +6511,7 @@ Jump_0E0_7208::
     ld a, $7F
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_0E0_758B
+    call FillBGMapRectWithAWrapped
     ld hl, wD0A8
     ld a, [hl-]
     add a, a
@@ -6745,7 +6745,7 @@ Jump_0E0_735E:: ; address name
     ld a, $00
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_0E0_758B
+    call FillBGMapRectWithAWrapped
     ld a, $00
     ldh [rVBK], a
 
@@ -6753,7 +6753,7 @@ Jump_0E0_73A2::
     ld a, $7F
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_0E0_758B
+    call FillBGMapRectWithAWrapped
     ld a, $80
     ld hl, vBGMap0 + $E3
     ld de, $0040
@@ -7132,8 +7132,10 @@ Func_0E0_757C:: ; address name
     ld [wD0A2], a
     ret
 
+; writes A over a B x C rectangle of the BG map at HL, wrapping columns and rows (E-0125)
 ; 6 call sites from 2 routines (e.g. Func_0E0_5AD3_Table3_Case00, Func_0E0_5AD3_Table2_Case00)
-Func_0E0_758B::
+FillBGMapRectWithAWrapped::
+Func_0E0_758B:: ; address name
     push bc
     push hl
 
@@ -7176,7 +7178,7 @@ Jump_0E0_758D::
     pop af
     pop bc
     dec c
-    jr nz, Func_0E0_758B
+    jr nz, FillBGMapRectWithAWrapped
     ret
 
 ; 7 call sites from 7 routines (e.g. Func_0E0_5AD3_Table3_Case00, Func_0E0_5AD3_Table2_Case00, Func_0E0_5AD3_Case00_Case00, Func_0E0_5AD3_Case01_Case00, ...)

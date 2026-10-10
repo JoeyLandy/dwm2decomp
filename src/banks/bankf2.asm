@@ -1902,13 +1902,15 @@ Func_0F2_4FF9:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, RunWD780StateWhenNotFading_F1_Case0D_Case04)
 Func_0F2_5002::
     call Func_0F2_4F47
-    call Func_0F2_505C
-    call Func_0F2_500C
+    call DrawFiveWCA2BStatsColumn
+    call DrawFourWCA2BStatsDigits
     ret
 
+; writes four stat words from wCA2B (offsets Data_0F2_5050) as three digits at the scroll offsets Data_0F2_5054 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_0F2_5002)
 ; points at: wCA2B
-Func_0F2_500C::
+DrawFourWCA2BStatsDigits::
+Func_0F2_500C:: ; address name
     ld c, $00
 
 Jump_0F2_500E::
@@ -1952,9 +1954,11 @@ Data_0F2_5050:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_5054:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CC, $01, $D0, $01, $0C, $02, $10, $02
 
+; writes five stat words from wCA2B (offsets Data_0F2_509F) as three digits down a column at scroll + $70 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_0F2_5002)
 ; points at: wCA2B
-Func_0F2_505C::
+DrawFiveWCA2BStatsColumn::
+Func_0F2_505C:: ; address name
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $0070
     add hl, de
@@ -1999,7 +2003,7 @@ Data_0F2_509F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $63, $65, $67, $69, $6B
 
 ; writes wC8C0, wC8C1, wC8C2 as digit tiles ($E0 + n) at HL (E-0121)
-; 2 call sites from 2 routines (e.g. Func_0F2_500C, Func_0F2_505C)
+; 2 call sites from 2 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn)
 ; reads: wC8C0, wC8C1, wC8C2
 WriteThreeDigitsWC8C0AtHL::
 Func_0F2_50A4:: ; address name
@@ -2104,7 +2108,7 @@ Jump_0F2_5141::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 8 call sites from 6 routines (e.g. Func_0F2_500C, Func_0F2_505C, Func_0F2_4B05, Func_0F2_50E2, ...)
+; 8 call sites from 6 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn, Func_0F2_4B05, Func_0F2_50E2, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF2_514D::
 Func_0F2_514D:: ; address name

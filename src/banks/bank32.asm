@@ -2420,7 +2420,7 @@ Jump_032_4CD4::
     jr Jump_032_4D2A
 
 Jump_032_4CF7::
-    call Func_032_4D5A
+    call ActorLosesSixthOfMaxMP
     ld a, b
     or a, c
     jr z, Jump_032_4CB7
@@ -2485,11 +2485,13 @@ Func_032_4D2C:: ; address name
     ld [de], a
     ret
 
+; damage = the actor's max MP / 6 (0 when max MP is 0), subtracted from its MP and floored at 0 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_032_4C9C)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleMP
-Func_032_4D5A::
+ActorLosesSixthOfMaxMP::
+Func_032_4D5A:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxMP_Bank32
     ld a, h
@@ -6811,7 +6813,7 @@ Jump_032_67E2::
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. Func_032_4D5A)
+; 1 call site from 1 routine (e.g. ActorLosesSixthOfMaxMP)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank32::
 Func_032_67FE:: ; address name

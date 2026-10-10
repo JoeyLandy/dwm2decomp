@@ -1042,7 +1042,7 @@ Func_00F_4595:: ; address name
     dw ScriptCommand5E_Run_Case7F
     db $6A, $51
     dw ScriptStepMoveObjects2And3To0340
-    dw Func_00F_47BC
+    dw ScriptStepFlickerObjectCB9B
     dw ScriptStepDeltaWCBABThenCopy
     dw ScriptStepMoveObjects2And3To81B0
     INCBIN "dwm2-cobi-us.gbc", $03C6A3, $D1
@@ -1093,11 +1093,13 @@ Func_00F_47A8:: ; address name
     inc [hl]
     ret
 
+; alternates wCB9B between $E0 and $40 at a rate that slows with wScriptParam0; after $78 frames sets $40 and advances wScriptStep (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wCB9B
 ; points at: wScriptStep
-Func_00F_47BC:: ; heuristic: target of a pointer table; C0
+ScriptStepFlickerObjectCB9B:: ; heuristic: target of a pointer table; C0
+Func_00F_47BC:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_47C9
@@ -2596,7 +2598,7 @@ Jump_00F_50A9:: ; address name
 ScriptCommand5E_Run_Case0F::
 Jump_00F_50B8:: ; address name
     ld b, $0F
-    call Func_00F_72A0
+    call ScriptStepShakeScreen
     ret
 
 ; entry 13 of the `rst $00` table in ScriptCommand5E_Run
@@ -2910,14 +2912,14 @@ Jump_00F_5460:: ; address name
     ret nc
     ld a, $05
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld a, [wCC37]
     set 4, a
     ld [wCC37], a
     farcall CountKeysOrFull
     ld a, $06
     ldh [hFFC7], a
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, [wC836]
     set 7, a
     ld [wC836], a
@@ -2980,7 +2982,7 @@ Jump_00F_54D5:: ; address name
 ; points at: wScriptStep
 ScriptCommand58_Run_Case22::
 Jump_00F_54E0:: ; address name
-    farcall Func_012_64F8
+    farcall FullyHealParty
     farcall Func_002_5E85
     farcall Func_002_5E85
     call LoadRecordListNameTiles
@@ -3334,7 +3336,7 @@ Jump_00F_56B1:: ; address name
 ScriptCommand58_Run_Case01::
 Jump_00F_56BC:: ; address name
     ld b, $78
-    call Func_00F_72A0
+    call ScriptStepShakeScreen
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand58_Run
@@ -3564,7 +3566,7 @@ Jump_00F_581C:: ; address name
     call SetFlagBit
     ld a, $04
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld a, [wCC37]
     set 3, a
     ld [wCC37], a
@@ -5109,7 +5111,7 @@ Jump_00F_60FE:: ; address name
 ScriptCommand41_Run_Case08::
 Jump_00F_613A:: ; address name
     ld b, $0F
-    call Func_00F_72A0
+    call ScriptStepShakeScreen
     ret
 
 ; entry 7 of the `rst $00` table in ScriptCommand41_Run
@@ -5201,7 +5203,7 @@ Jump_00F_61A8:: ; address name
 ScriptCommand41_Run_Case02::
 Jump_00F_61BC:: ; address name
     ld b, $3C
-    call Func_00F_72A0
+    call ScriptStepShakeScreen
     ld hl, hPlayerY
     inc [hl]
     ld de, hPlayerY
@@ -5493,7 +5495,7 @@ Jump_00F_6383:: ; address name
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
     ld b, $3C
-    call Func_00F_72A0
+    call ScriptStepShakeScreen
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -6224,7 +6226,7 @@ Jump_00F_6822:: ; address name
     call SetFlagBit
     ld a, $03
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld a, [wCC37]
     set 2, a
     ld [wCC37], a
@@ -6629,7 +6631,7 @@ Jump_00F_6A77:: ; address name
 ScriptCommand39_Run_Case15::
 Jump_00F_6A9B:: ; address name
     ld b, $0F
-    call Func_00F_72A0
+    call ScriptStepShakeScreen
     ret
 
 ; entry 20 of the `rst $00` table in ScriptCommand39_Run
@@ -7918,7 +7920,7 @@ Jump_00F_727B:: ; address name
 ScriptCommand28_Run_Case01::
 Jump_00F_728B:: ; address name
     ld b, $78
-    call Func_00F_72A0
+    call ScriptStepShakeScreen
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommand28_Run
@@ -7942,11 +7944,13 @@ Func_00F_729C:: ; address name
     ld a, [wC928]
     ld b, a
 
+; shakes hScrollX left and right with the frame counter until the wC921 counter expires, then resets the scroll and advances wScriptStep (E-0125)
 ; 7 call sites from 7 routines (e.g. ScriptCommand5E_Run_Case0F, ScriptCommand58_Run_Case01, ScriptCommand43_Run_Case0A, ScriptCommand41_Run_Case08, ...)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi
 ; writes: hScrollX, hScrollXHi
 ; points at: wScriptStep
-Func_00F_72A0::
+ScriptStepShakeScreen::
+Func_00F_72A0:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
@@ -8039,7 +8043,7 @@ Jump_00F_7325:: ; address name
     call SetFlagBit
     ld a, $02
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld a, [wCC37]
     set 1, a
     ld [wCC37], a

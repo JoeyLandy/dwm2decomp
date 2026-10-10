@@ -123,7 +123,7 @@ Jump_061_40B0::
     ld [wCD05], a
     ret
 
-; 2 call sites from 2 routines (e.g. RunWC903Case_Case06, Func_012_6955)
+; 2 call sites from 2 routines (e.g. RunWC903Case_Case06, WriteKeyEntryHFFC6)
 ; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
 ; writes: wCD05, hFFCA, hFFCB, hFFCC, hFFCD, rRAMG, hFFC8, hFFC9
 ; points at: wC6FE
@@ -1764,7 +1764,7 @@ Jump_061_5585::
     ld a, $02
     ldh [rSVBK], a
     ld a, $05
-    call Func_061_5718
+    call Write2x2SameTileAtDE
     ld a, $00
     ldh [rSVBK], a
     ret
@@ -1838,7 +1838,7 @@ Jump_061_55F6::
     ld a, $02
     ldh [rSVBK], a
     ld a, $05
-    call Func_061_5718
+    call Write2x2SameTileAtDE
     ld a, $00
     ldh [rSVBK], a
     jr Jump_061_562E
@@ -1972,14 +1972,14 @@ Jump_061_56A6::
     bit 0, c
     jr nz, Jump_061_56C2
     ld a, $05
-    call Func_061_5718
+    call Write2x2SameTileAtDE
     ld a, $00
     ldh [rSVBK], a
     jr Jump_061_56E2
 
 Jump_061_56C2::
     ld a, $06
-    call Func_061_5718
+    call Write2x2SameTileAtDE
     ld a, e
     sub a, $13
     ld e, a
@@ -1987,7 +1987,7 @@ Jump_061_56C2::
     sbc a, $00
     ld d, a
     ld a, $06
-    call Func_061_5718
+    call Write2x2SameTileAtDE
     ld a, $00
     ldh [rSVBK], a
     jr Jump_061_56E2
@@ -2061,8 +2061,10 @@ Func_061_56F8:: ; address name
     ld [de], a
     ret
 
+; writes tile A to two cells at DE and two cells one 20-tile row below (E-0125)
 ; 5 call sites from 3 routines (e.g. Func_061_54EC, Func_061_562F, Func_061_55AF)
-Func_061_5718::
+Write2x2SameTileAtDE::
+Func_061_5718:: ; address name
     ld [de], a
     inc de
     ld [de], a
@@ -2147,7 +2149,7 @@ Jump_061_5784:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_061_5764_Case04::
 Jump_061_5788:: ; address name
-    call Func_061_5807
+    call WarpToScreen01Event83
     ret
 
 ; entry 5 of the `rst $00` table in Func_061_5764
@@ -2176,7 +2178,7 @@ Func_061_5794:: ; address name
     ret
 
 Jump_061_579D::
-    farcall Func_011_4268
+    farcall WarpToLinkedMapForCurrentMap
     ret
 
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case05)
@@ -2236,11 +2238,13 @@ Jump_061_57AD::
     ld c, $01
     ret
 
+; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wCDAD entry, plays sound $60, wCC44 = $83 and starts the transition; C = 1 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case04)
 ; reads: hMapScreenY, wCC45, hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wModeState, wC8C5, ...
 ; points at: wCDAD
-Func_061_5807::
+WarpToScreen01Event83::
+Func_061_5807:: ; address name
     ldh a, [hMapScreenY]
     cp a, $01
     jr z, Jump_061_5810

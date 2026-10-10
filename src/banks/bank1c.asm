@@ -593,7 +593,7 @@ Jump_01C_4393::
     xor a, a
     ret
 
-; 7 call sites from 7 routines (e.g. ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, Func_01C_6A22, ScriptCommandE2_Run_Case03_Case0E, ...)
+; 7 call sites from 7 routines (e.g. ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, InitItemListWD788AndCount, ScriptCommandE2_Run_Case03_Case0E, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFFC8
@@ -1205,7 +1205,7 @@ Jump_01C_4706:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE2_Run_Case01_Case02::
 Jump_01C_4710:: ; address name
-    call Func_01C_6A22
+    call InitItemListWD788AndCount
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommandE2_Run_Case01
@@ -4188,7 +4188,7 @@ Jump_01C_595D::
     ld a, [wD7CB]
     add a, $E0
     ld [wD791], a
-    call Func_01C_6999
+    call CountItemInInventoryToDigits
     ld a, [wD7D3]
     and a, a
     jr nz, Jump_01C_5985
@@ -6069,11 +6069,13 @@ Jump_01C_698F::
     jr c, Jump_01C_698F
     ret
 
+; counts the inventory slots holding the item at wD7D5[4 * wD7B6 + wD7B5]; wD7D3 = count / 10, wD7D4 = count mod 10 (E-0125)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE2_Run_Case04_Case07, ScriptCommandE5_Run_Case03_Case0B_Sub01)
 ; reads: wD7B6, wD7B5
 ; writes: wD7D4, wD7D3
 ; points at: wD7D5, wInventory
-Func_01C_6999::
+CountItemInInventoryToDigits::
+Func_01C_6999:: ; address name
     ld hl, wD7D5
     ld a, [wD7B6]
     ld e, a
@@ -6170,11 +6172,13 @@ Jump_01C_6A14::
     inc [hl]
     ret
 
+; copies $28 bytes from Data_01C_5F5E to wD788, runs Func_01C_4395, counts the inventory items into wD7B0 and its digits into wD7A5/6, wD781 += 1 (E-0125)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE2_Run_Case01_Case02, ScriptCommandE5_Run_Case01_Case04)
 ; reads: wC8C1, wC8C2
 ; writes: wD7B0, wD7A5, wD7A6
 ; points at: wD788, wD792, wInventory, wD781
-Func_01C_6A22::
+InitItemListWD788AndCount::
+Func_01C_6A22:: ; address name
     ld hl, wD788
     ld de, Data_01C_5F5E
     ld bc, $0028
@@ -6686,7 +6690,7 @@ Jump_01C_6D8B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE5_Run_Case01_Case04::
 Jump_01C_6DC7:: ; address name
-    call Func_01C_6A22
+    call InitItemListWD788AndCount
     ret
 
 ; entry 5 of the `rst $00` table in ScriptCommandE5_Run_Case01

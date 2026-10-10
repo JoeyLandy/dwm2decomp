@@ -1082,7 +1082,7 @@ Jump_002_45DB::
     ld hl, Data_002_4AD7
     ld a, [hl]
     ld [wC520], a
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
     call Func_002_4628
     xor a, a
     ld [wC8C5], a
@@ -1100,7 +1100,7 @@ Jump_002_461A::
     ld a, $03
     jp Jump_000_077A
 
-; 4 call sites from 4 routines (e.g. GameMode1_Init, FieldModeStateDispatch_Case04, Func_003_4339, EnterGameMode1WithDefaultPalettes)
+; 4 call sites from 4 routines (e.g. GameMode1_Init, FieldModeStateDispatch_Case04, ExitPauseMenuToField, EnterGameMode1WithDefaultPalettes)
 ; reads: wCC44, hMapId, wC8C7, wC927, wC5E0, wIsCGB
 ; writes: hFF8D, hScrollY, hScrollX, hFFA0, hFF9F, rLYC, wFrameCounterLo, wFrameCounterHi, ...
 Func_002_4628::
@@ -1382,7 +1382,7 @@ Jump_002_4824::
     jp Func_002_4628
 
 Jump_002_4846::
-    farcall Func_012_64F8
+    farcall FullyHealParty
     xor a, a
     ld [wC8C7], a
     ld a, $04
@@ -1425,7 +1425,7 @@ Jump_002_4846::
     jp Func_002_4628
 
 Jump_002_48AE::
-    farcall Func_012_64F8
+    farcall FullyHealParty
     call Func_002_5E82
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
@@ -2114,7 +2114,7 @@ Jump_002_4D99:: ; address name
     xor a, a
     ld [wScriptRunning], a
     farcall Func_00A_43EC
-    farcall Func_012_73A1
+    farcall CheckStepTriggerAndDispatchTalk
     farcall Func_011_4130
     xor a, a
     ld [wC8BF], a
@@ -3497,7 +3497,7 @@ Jump_002_55EA::
     farcall CheckWarpAtPlayer
     bit 0, c
     jp nz, Jump_002_557C
-    farcall Func_011_4268
+    farcall WarpToLinkedMapForCurrentMap
     bit 0, c
     jp nz, Jump_002_557C
     ld a, [wMapHeightScreens]
@@ -3902,7 +3902,7 @@ Jump_002_58BF::
     farcall Func_012_75E0
     farcall UpdatePlayerMovement_Sub01_Sub03
     farcall Func_00A_43EC
-    farcall Func_012_73A1
+    farcall CheckStepTriggerAndDispatchTalk
     farcall Func_011_4130
     farcall RunPlayerMoveTypeWC194
     farcall Func_00A_42BC
@@ -4562,7 +4562,7 @@ Jump_002_5CB8::
     ldh a, [hScrollX]
     and a, $F8
     ldh [hScrollX], a
-    farcall Func_0A1_4435
+    farcall MarkVisitedMapScreenInWCE93
     ld hl, wC468
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -4601,7 +4601,7 @@ Jump_002_5D01::
     ldh a, [hScrollX]
     and a, $F8
     ldh [hScrollX], a
-    farcall Func_0A1_4435
+    farcall MarkVisitedMapScreenInWCE93
     ld hl, wC468
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -4649,7 +4649,7 @@ Jump_002_5D54::
     ldh a, [hScrollY]
     and a, $F8
     ldh [hScrollY], a
-    farcall Func_0A1_4435
+    farcall MarkVisitedMapScreenInWCE93
     ld hl, wC468
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -4708,7 +4708,7 @@ Jump_002_5DB4::
     ldh a, [hScrollY]
     and a, $F8
     ldh [hScrollY], a
-    farcall Func_0A1_4435
+    farcall MarkVisitedMapScreenInWCE93
     ld hl, wC468
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -6445,7 +6445,7 @@ Jump_002_6A75:: ; address name
     ld hl, wC328
     ld de, Data_002_6B8C
     ld b, $01
-    call Func_002_6B5D
+    call CopyRowsToScreenBufferAndClearAttributes
     pop de
     ld l, e
     ld h, d
@@ -6458,7 +6458,7 @@ Jump_002_6A92::
     ld hl, wC314
     ld de, Data_002_6BA0
     ld b, $03
-    call Func_002_6B5D
+    call CopyRowsToScreenBufferAndClearAttributes
     pop de
     ld l, e
     ld h, d
@@ -6479,7 +6479,7 @@ Jump_002_6AA8:: ; address name
     ld hl, wC314
     ld de, Data_002_6BA0
     ld b, $03
-    call Func_002_6B5D
+    call CopyRowsToScreenBufferAndClearAttributes
     pop de
     ld l, e
     ld h, d
@@ -6492,7 +6492,7 @@ Jump_002_6AC5::
     ld hl, wC328
     ld de, Data_002_6B8C
     ld b, $01
-    call Func_002_6B5D
+    call CopyRowsToScreenBufferAndClearAttributes
     pop de
     ld l, e
     ld h, d
@@ -6514,7 +6514,7 @@ Jump_002_6ADB:: ; address name
     ld hl, wC300
     ld de, Data_002_6BDC
     ld b, $05
-    call Func_002_6B5D
+    call CopyRowsToScreenBufferAndClearAttributes
     pop de
     ld l, e
     ld h, d
@@ -6586,10 +6586,12 @@ Func_002_6B19:: ; address name
     ldh [rSVBK], a
     ret
 
+; copies B rows of 20 bytes from DE to HL; on CGB also clears the matching attribute rows in WRAM bank 2 (HL + $E68) (E-0125)
 ; 5 call sites from 3 routines (e.g. Func_002_69D0_Case02, Func_002_69D0_Case01, Func_002_69D0_Case00)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_002_6B5D::
+CopyRowsToScreenBufferAndClearAttributes::
+Func_002_6B5D:: ; address name
     push hl
     push bc
 
@@ -7180,7 +7182,7 @@ Jump_002_6F7E::
     ld [wC950], a
     ld a, $80
     ld [wCC44], a
-    farcall Func_0A1_4435
+    farcall MarkVisitedMapScreenInWCE93
     ld a, $87
     ld [wCC44], a
     ld a, $01

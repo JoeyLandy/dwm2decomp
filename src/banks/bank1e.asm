@@ -4452,7 +4452,7 @@ Jump_01E_5F4D::
     ld a, [wGameMode]
     cp a, $05
     ret z
-    farcall Func_01D_5BF2
+    farcall CallFunc6899PreservingWD7F1AndHFFC6
     ret
 
 Jump_01E_5F5A::

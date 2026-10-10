@@ -38,11 +38,11 @@ Jump_073_4027:: ; address name
     dw ScriptCommand82_Run_Case0C_Case02
     dw ScriptCommand82_Run_Case0C_Case03
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case0C_Case07
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case0C
 ; no direct call (reached through a table, a jump or a vector)
@@ -118,11 +118,11 @@ Jump_073_4098:: ; address name
     dw ScriptCommand82_Run_Case0B_Case07
     dw ScriptCommand82_Run_Case0B_Case08
     dw ScriptCommand82_Run_Case0B_Case09
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case0C_Case07
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case0B
 ; no direct call (reached through a table, a jump or a vector)
@@ -219,7 +219,7 @@ Jump_073_411F:: ; address name
     dw ScriptCommand82_Run_Case0A_Case07
     dw ScriptCommand82_Run_Case0A_Case08
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 8 of the `rst $00` table in ScriptCommand82_Run_Case0A
 ; no direct call (reached through a table, a jump or a vector)
@@ -859,7 +859,7 @@ Jump_073_45D0:: ; address name
     dw ScriptCommand82_Run_Case08_Case04
     dw ScriptCommand82_Run_Case08_Case05
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case08
 ; no direct call (reached through a table, a jump or a vector)
@@ -941,7 +941,7 @@ Jump_073_4647:: ; address name
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case06_Case04
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
     INCBIN "dwm2-cobi-us.gbc", $1CC659, $5A
 
 ; entry 4 of the `rst $00` table in ScriptCommand82_Run_Case06
@@ -1152,7 +1152,7 @@ Jump_073_4840:: ; address name
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case09_Case0B
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case09
 ; no direct call (reached through a table, a jump or a vector)
@@ -1526,7 +1526,7 @@ Jump_073_4A82:: ; address name
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case07_Case07
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case07_Case0B
 
@@ -1677,7 +1677,7 @@ Jump_073_4B68:: ; address name
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case05_Case07
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case05
 ; no direct call (reached through a table, a jump or a vector)
@@ -1750,7 +1750,7 @@ Jump_073_4BC3:: ; address name
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case05_Case07
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -1891,7 +1891,7 @@ Jump_073_4CA0:: ; address name
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case03_Case02
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case03
 ; no direct call (reached through a table, a jump or a vector)
@@ -1977,7 +1977,7 @@ Jump_073_4D20:: ; address name
     dw ScriptCommand82_Run_Case02_Case05
     dw ScriptCommand82_Run_Case0B_Case09
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)
@@ -2030,7 +2030,7 @@ Jump_073_4D5B:: ; address name
     ld a, h
     ldh [hFFC7], a
     farcall SubtractGoldFloorZero
-    farcall Func_012_64F8
+    farcall FullyHealParty
     ld hl, $0006
     call StartMessageHL_B73
     ret
@@ -2053,7 +2053,7 @@ Jump_073_4D8D:: ; address name
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptCommand82_Run_Case01_Case02
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case01
 ; no direct call (reached through a table, a jump or a vector)
@@ -2127,7 +2127,7 @@ Jump_073_4E03:: ; address name
     dw ScriptCommand82_Run_Case0B_Case08
     dw ScriptCommand82_Run_Case0B_Case09
     dw ScriptCommand82_Run_Case0C_Case01
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case00
 ; no direct call (reached through a table, a jump or a vector)
@@ -2177,7 +2177,7 @@ Jump_073_4E41:: ; address name
 ; points at: wScriptStep
 ScriptCommand82_Run_Case0B_Case08::
 Jump_073_4E48:: ; address name
-    farcall Func_012_64F8
+    farcall FullyHealParty
     ld hl, $0001
     call StartMessageHL_B73
     xor a, a
@@ -2229,10 +2229,12 @@ Jump_073_4E76::
     inc [hl]
     ret
 
+; toggles wSpriteSlotCount between 0 and 1 at a slowing rate for $78 frames, then requests script $80 and clears wC935 (E-0125)
 ; 1 call site from 1 routine (e.g. ScriptCommand47_Run_Case01)
 ; reads: wScriptParam0
 ; writes: wSpriteSlotCount, wScriptParam0, wScriptStartRequest, wC935
-Func_073_4E9C::
+ScriptStepBlinkSpritesThenEnd::
+Func_073_4E9C:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_073_4EA9
@@ -2904,7 +2906,7 @@ Jump_073_5265:: ; address name
 Jump_073_5278::
     ld a, $0A
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld de, $0206
     call SetFlagBit
     jr Jump_073_52AC
@@ -2912,7 +2914,7 @@ Jump_073_5278::
 Jump_073_528A::
     ld a, $0B
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld de, $0207
     call SetFlagBit
     jr Jump_073_52AC
@@ -2920,7 +2922,7 @@ Jump_073_528A::
 Jump_073_529C::
     ld a, $0C
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld de, $0208
     call SetFlagBit
 
@@ -3012,7 +3014,7 @@ Func_073_5378:: ; address name
     ret z
     ld a, $09
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld a, [wCC3F]
     set 1, a
     ld [wCC3F], a
@@ -3413,7 +3415,7 @@ Func_073_55A4:: ; address name
     ret z
     ld a, $07
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -4066,7 +4068,7 @@ Jump_073_5991:: ; address name
     farcall CountKeysOrFull
     ld a, $05
     ldh [hFFC7], a
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, [wC836]
     set 7, a
     ld [wC836], a
@@ -4301,7 +4303,7 @@ Func_073_5AE4:: ; address name
     rst $00
     dw ScriptCommand54_Run_Case00
     dw ScriptCommand54_Run_Case01
-    dw Func_073_5B66
+    dw ScriptStepMoveObjectCB8AByDirection
     dw ScriptCommand54_Run_Case03
     dw ScriptCommand54_Run_Case04
 
@@ -4373,11 +4375,13 @@ Jump_073_5B47:: ; address name
     inc [hl]
     ret
 
+; moves wCB8A/wCB8B one pixel in direction wScriptParam1 for 16 frames; at ($80, $30) advances wScriptStep, otherwise repeats the step (E-0125)
 ; 1 call site from 1 routine (e.g. ScriptCommand54_Run_Case01)
 ; reads: wScriptParam1, wScriptParam0, wCB8B, wCB8A
 ; writes: wScriptParam0
 ; points at: wCB8B, wScriptStep, wCB8A
-Func_073_5B66::
+ScriptStepMoveObjectCB8AByDirection::
+Func_073_5B66:: ; address name
     ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_073_5B72
@@ -4492,7 +4496,7 @@ Jump_073_5BFD::
 Jump_073_5C08::
     dec b
     jr nz, Jump_073_5BFD
-    call Func_073_5B66
+    call ScriptStepMoveObjectCB8AByDirection
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -5199,7 +5203,7 @@ Jump_073_6040:: ; address name
     inc [hl]
 
 Jump_073_604B::
-    call Func_073_4E9C
+    call ScriptStepBlinkSpritesThenEnd
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand47_Run
@@ -5413,7 +5417,7 @@ Jump_073_6132:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3E_Run_Case02::
 Jump_073_6181:: ; address name
-    farcall Func_012_5B9A
+    farcall ScriptStepAnimateSpriteBySteps
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand3E_Run
@@ -5494,7 +5498,7 @@ Jump_073_61EC::
     farcall CountKeysOrFull
     ld a, $04
     ldh [hFFC7], a
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, [wC836]
     set 7, a
     ld [wC836], a
@@ -5679,7 +5683,7 @@ Jump_073_62D7:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7D95
+    farcall FindPartyIndexOfSpeciesHFFC6
     ldh a, [hFFC6]
     ld c, a
     sla a
@@ -5762,7 +5766,7 @@ Jump_073_6368::
     farcall CountKeysOrFull
     ld a, $04
     ldh [hFFC7], a
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, [wC836]
     set 7, a
     ld [wC836], a
@@ -6134,7 +6138,7 @@ Jump_073_653D:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7D95
+    farcall FindPartyIndexOfSpeciesHFFC6
     ldh a, [hFFC6]
     ld c, a
     sla a
@@ -6551,7 +6555,7 @@ Jump_073_6729:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7D95
+    farcall FindPartyIndexOfSpeciesHFFC6
     ldh a, [hFFC6]
     ld c, a
     sla a
@@ -6943,7 +6947,7 @@ Func_073_6969:: ; address name
     dw ScriptCommand33_Run_Case05
     dw ScriptCommand33_Run_Case06
     dw ScriptCommand33_Run_Case07
-    dw Func_073_4E9C
+    dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 7 of the `rst $00` table in ScriptCommand33_Run
 ; no direct call (reached through a table, a jump or a vector)
@@ -8183,7 +8187,7 @@ Jump_073_711D::
     farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ret
 
 Jump_073_7138::
@@ -8212,7 +8216,7 @@ Jump_073_715A:: ; address name
     farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld de, wCB86
     call RotateDirectionAtDEEvery32_Bank73
     ld b, $78
@@ -8234,7 +8238,7 @@ Jump_073_7180:: ; address name
     farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld de, wCB86
     call RotateDirectionAtDEEvery32_Bank73
     ld hl, wScriptParam0
@@ -8264,7 +8268,7 @@ Jump_073_71BC:: ; address name
     farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld de, wCB86
     call RotateDirectionAtDEEvery32_Bank73
     ld de, wCB9B
@@ -8308,7 +8312,7 @@ Jump_073_71F6:: ; address name
     farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
-    farcall Func_012_6B33
+    farcall DrawAnimatedMetaSprite1B
     ld a, $80
     ld [wCBCF], a
     ld de, wCB8B
@@ -8380,7 +8384,7 @@ Jump_073_728D::
     ret nz
     xor a, a
     ldh [hFFC6], a
-    farcall Func_012_6AD9
+    farcall LoadSpriteGraphics7E5595ToTiles0
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep

@@ -2566,7 +2566,7 @@ Jump_00C_5148::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 40 call sites from 31 routines (e.g. ScriptCommandF7_Run_Case26, Func_00C_6FCB, ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case18, ...)
+; 40 call sites from 31 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case18, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank0C::
 Func_00C_5156:: ; address name
@@ -2676,7 +2676,7 @@ Jump_00C_51E3::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (row 14, column 1 of the drawn area) when wStringIndex is $18 or $12, otherwise $99C1 (E-0062)
-; 29 call sites from 22 routines (e.g. ScriptCommandF7_Run_Case26, Func_00C_6FCB, ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case18, ...)
+; 29 call sites from 22 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case18, ...)
 ; reads: wStringIndex, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -2836,7 +2836,7 @@ Func_00C_529D:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 4 call sites from 4 routines (e.g. Func_00C_72CC, Func_00C_6FCB, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
+; 4 call sites from 4 routines (e.g. Func_00C_72CC, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
 CopyBytesDEToHL_Bank0C::
 Func_00C_52D0:: ; address name
     ld a, [de]
@@ -2849,7 +2849,7 @@ Func_00C_52D0:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
-; 4 call sites from 4 routines (e.g. Func_00C_72CC, Func_00C_6FCB, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
+; 4 call sites from 4 routines (e.g. Func_00C_72CC, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank0C::
 Func_00C_52D9:: ; address name
@@ -3978,7 +3978,7 @@ Jump_00C_6A39::
     ld [wD7FF], a
     ld a, [wD786]
     ld [wD7FC], a
-    call Func_00C_6FCB
+    call RedrawFullScreenBoxes_0C
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommandF7_Run
@@ -4579,7 +4579,7 @@ Jump_00C_6E42:: ; address name
     inc a
     ld [wD780], a
     ld [wD7FB], a
-    call Func_00C_6FCB
+    call RedrawFullScreenBoxes_0C
     ret
 
 ; entry 27 of the `rst $00` table in ScriptCommandF7_Run
@@ -4657,7 +4657,7 @@ Jump_00C_6EB4:: ; address name
     ld a, [wD786]
     xor a, a
     ld [wD7FC], a
-    call Func_00C_6FCB
+    call RedrawFullScreenBoxes_0C
     ret
 
 ; entry 33 of the `rst $00` table in ScriptCommandF7_Run
@@ -4771,7 +4771,7 @@ Jump_00C_6F5E:: ; address name
     farcall CountKeysOrFull
     ld a, $03
     ldh [hFFC7], a
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, [wC836]
     set 7, a
     ld [wC836], a
@@ -4820,11 +4820,13 @@ Jump_00C_6FBC::
     ld [wScriptStartRequest], a
     ret
 
+; runs Func_00C_72CC for the bottom box, copies $64 bytes of tiles (and CGB attributes) and draws the two screen-buffer rectangles at scroll + $1CC and + $1A0 (E-0125)
 ; 4 call sites from 4 routines (e.g. ScriptCommandF7_Run_Case1E, ScriptCommandF7_Run_Case1A, ScriptCommandF7_Run_Case07, ScriptCommandF4_Run_Case04_Case18)
 ; reads: wIsCGB
 ; writes: wD7F1, wD7F2
 ; points at: wC300, wC29C, wD168, wD104
-Func_00C_6FCB::
+RedrawFullScreenBoxes_0C::
+Func_00C_6FCB:: ; address name
     ld b, $00
     ld c, $0D
     ld hl, $01CC
@@ -5346,7 +5348,7 @@ Jump_00C_72BA::
 Data_00C_72C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $90, $01, $58, $02, $20, $03, $B0, $04, $78, $05, $78, $05
 
-; 7 call sites from 6 routines (e.g. ScriptCommandF7_Run_Case26, Func_00C_6FCB, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case13, ...)
+; 7 call sites from 6 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case13, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
 Func_00C_72CC::

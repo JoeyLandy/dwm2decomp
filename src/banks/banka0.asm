@@ -617,7 +617,7 @@ Func_0A0_4301:: ; address name
     ld a, [hl]
     ld [de], a
     inc de
-    call Func_0A0_434B
+    call ApplyTable4387IncrementsForA0DTo13
     ld a, $FF
     ld [de], a
     inc de
@@ -634,9 +634,11 @@ Func_0A0_4344:: ; address name
     jr nz, CopyBytesDEFromHL_BankA0
     ret
 
+; for A in $0D-$13 increments (capped at 3) each byte listed in Data_0A0_4387 row A - $0D, relative to DE (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub05_Sub01)
 ; writes: hFFC6, hFFC7
-Func_0A0_434B::
+ApplyTable4387IncrementsForA0DTo13::
+Func_0A0_434B:: ; address name
     or a, a
     ret z
     cp a, $0D
@@ -673,7 +675,7 @@ Jump_0A0_436F::
     jr Jump_0A0_4368
 
 ; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (the bank-$A0 copy of IncrementTableByteCappedAt3) (E-0118)
-; 1 call site from 1 routine (e.g. Func_0A0_434B)
+; 1 call site from 1 routine (e.g. ApplyTable4387IncrementsForA0DTo13)
 ; reads: hFFC6, hFFC7
 IncrementTableByteCappedAt3_BankA0::
 Func_0A0_4378:: ; address name
@@ -1179,7 +1181,7 @@ Func_0A0_46C3:: ; address name
     push bc
     call Func_0A0_46CC
     pop bc
-    call Func_0A0_4919
+    call ApplyLevelScaledStatsToSlots
     ret
 
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub04)
@@ -1578,10 +1580,12 @@ Func_0A0_4900:: ; address name
     call CopyBytes
     ret
 
+; hFFC7 = min(4 * wCFE3 / 5 + 5, 99); runs Func_0A0_494F for B slots from C with wD86A = Data_0A0_4B0A[slot] (E-0125)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub04)
 ; reads: wCFE3
 ; writes: hFFC7, wD86A, wD86B
-Func_0A0_4919::
+ApplyLevelScaledStatsToSlots::
+Func_0A0_4919:: ; address name
     push de
     ld a, [wCFE3]
     ld l, a
@@ -1610,18 +1614,20 @@ Jump_0A0_4933::
     ld [wD86A], a
     ld a, [hl]
     ld [wD86B], a
-    call Func_0A0_494F
+    call ApplyLevelScaledStatsToSlots_Sub01
     pop bc
     inc c
     dec b
     jr nz, Jump_0A0_4933
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_4919)
+; only called from ApplyLevelScaledStatsToSlots (E-0047)
+; 1 call site from 1 routine (e.g. ApplyLevelScaledStatsToSlots)
 ; reads: wD86A, wD86B, wSpeciesIdLo, wSpeciesIdHi, wSpeciesRecord, wD009, wD010, wD011, ...
 ; writes: wD869, wSpeciesIdLo, wSpeciesIdHi, hFFC6, wD868
 ; points at: wCFDD
-Func_0A0_494F::
+ApplyLevelScaledStatsToSlots_Sub01::
+Func_0A0_494F:: ; address name
     push bc
     ld a, c
     ld [wD869], a
@@ -1671,45 +1677,45 @@ Func_0A0_494F::
     push hl
     ld a, [wD014]
     ldh [hFFC6], a
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     ld a, $01
     ld [wD868], a
-    call Func_0A0_4A55
+    call ScaleStatByWCFE3Capped999
     call StoreHFFC8WordAtHL_BankA0
     ld a, [wD015]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
     ld a, $00
     ld [wD868], a
-    call Func_0A0_4A55
+    call ScaleStatByWCFE3Capped999
     call StoreHFFC8WordAtHL_BankA0
     ld a, [wD016]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_0A0_4A55
+    call ScaleStatByWCFE3Capped999
     ld a, [wD017]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_0A0_4A55
+    call ScaleStatByWCFE3Capped999
     ld a, [wD018]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_0A0_4A55
+    call ScaleStatByWCFE3Capped999
     ld a, [wD019]
     ldh [hFFC6], a
     push hl
-    farcall Func_01A_63A7
+    farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_0A0_4A55
+    call ScaleStatByWCFE3Capped999
     ld a, $E7
     ld [hl+], a
     ld a, $03
@@ -1723,7 +1729,7 @@ Func_0A0_494F::
     ld [hl+], a
     ld a, $07
     ld [hl+], a
-    call Func_0A0_4AAA
+    call RollRecordField0DState_A0
     farcall Func_01A_5FA7
     ld a, [wD86A]
     ld e, a
@@ -1733,7 +1739,7 @@ Func_0A0_494F::
     ret
 
 ; advances the random table (NextTableByte) and stores the new wC5E7 at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
-; 4 call sites from 1 routine (e.g. Func_0A0_494F)
+; 4 call sites from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: wC5E7
 StoreRandomByteAtHL_BankA0::
 Func_0A0_4A45:: ; address name
@@ -1750,10 +1756,12 @@ Func_0A0_4A45:: ; address name
     ld [hl+], a
     ret
 
-; 6 call sites from 1 routine (e.g. Func_0A0_494F)
+; the word hFFC8 = hFFC8 * (wCFE3 / 4 + 100) / 100, capped at 999, stored at [HL+] (E-0125)
+; 6 call sites from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: hFFC8, hFFC9, wCFE3
 ; writes: hFFC8, hFFC9
-Func_0A0_4A55::
+ScaleStatByWCFE3Capped999::
+Func_0A0_4A55:: ; address name
     push af
     push bc
     push de
@@ -1803,7 +1811,7 @@ Jump_0A0_4A86::
     ret
 
 ; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
-; 2 call sites from 1 routine (e.g. Func_0A0_494F)
+; 2 call sites from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: hFFC8, hFFC9
 StoreHFFC8WordAtHL_BankA0::
 Func_0A0_4A97:: ; address name
@@ -1814,7 +1822,7 @@ Func_0A0_4A97:: ; address name
     ret
 
 ; copies the 27 ($1B) bytes at wD01A to HL; HL ends past the copy; clobbers A, B, DE (E-0065) (the same 12 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_0A0_494F)
+; 1 call site from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
 ; points at: wD01A
 CopyWD01ARecordToHL_BankA0::
 Func_0A0_4A9E:: ; address name
@@ -1829,9 +1837,11 @@ Jump_0A0_4AA3::
     jr nz, Jump_0A0_4AA3
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_494F)
+; field $0D of record wD86A: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0 (E-0125)
+; 1 call site from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: wD86A, wD86B, wC5E7
-Func_0A0_4AAA::
+RollRecordField0DState_A0::
+Func_0A0_4AAA:: ; address name
     ld a, [wD86A]
     add a, $0D
     ld l, a
@@ -2306,7 +2316,7 @@ Func_0A0_4ECF:: ; address name
     ld [wC51F], a
     ld a, $00
     ld [wC520], a
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
 
 Jump_0A0_4EED::
     xor a, a
@@ -3150,19 +3160,19 @@ Jump_0A0_5391:: ; address name
     farcall CopySlotPanelRowToVRAM
     ld c, $00
     farcall DrawSlotHPDigits
-    farcall Func_031_7914
+    farcall CopySlotPanelPart7AC8ToVRAM
     ld c, $00
     farcall DrawSlotMPDigits
-    farcall Func_031_7965
+    farcall CopySlotPanelPart7ACEToVRAM
     ld c, $01
     farcall DrawSlotStatusMarks
     farcall CopySlotPanelRowToVRAM
     ld c, $01
     farcall DrawSlotHPDigits
-    farcall Func_031_7914
+    farcall CopySlotPanelPart7AC8ToVRAM
     ld c, $01
     farcall DrawSlotMPDigits
-    farcall Func_031_7965
+    farcall CopySlotPanelPart7ACEToVRAM
     ld a, $05
     ld [wStringCategory], a
     ld a, $0C
@@ -7145,7 +7155,7 @@ Jump_0A0_6BEE::
     ret
 
 ; for slots 0-2: copies three tiles at offset Data_0A0_6D47[slot] from the screen buffer to vBGMap0 (E-0124)
-; 2 call sites from 2 routines (e.g. BuildAndCopySlotPanel_A0, Func_031_7914)
+; 2 call sites from 2 routines (e.g. BuildAndCopySlotPanel_A0, CopySlotPanelPart7AC8ToVRAM)
 ; points at: wScreenTileBuffer
 CopySlotPanelPart6D47ToVRAM::
 Func_0A0_6BF0:: ; address name
@@ -7180,7 +7190,7 @@ Jump_0A0_6C21::
     ret
 
 ; for slots 0-2: copies three tiles at offset Data_0A0_6D4B[slot] from the screen buffer to vBGMap0 (E-0124)
-; 2 call sites from 2 routines (e.g. BuildAndCopySlotPanel_A0, Func_031_7965)
+; 2 call sites from 2 routines (e.g. BuildAndCopySlotPanel_A0, CopySlotPanelPart7ACEToVRAM)
 ; points at: wScreenTileBuffer
 CopySlotPanelPart6D4BToVRAM::
 Func_0A0_6C22:: ; address name
@@ -7215,7 +7225,7 @@ Jump_0A0_6C53::
     ret
 
 ; for slots 0-2: copies two tiles at offset Data_0A0_6D4F[slot] from the screen buffer to vBGMap0 (E-0124)
-; 1 call site from 1 routine (e.g. Func_031_79B6)
+; 1 call site from 1 routine (e.g. CopySlotPanelPart7AD4ToVRAM)
 ; points at: wScreenTileBuffer
 CopySlotPanelPart6D4FToVRAM:: ; heuristic: follows a terminator; C0
 Func_0A0_6C54:: ; address name

@@ -133,7 +133,7 @@ Jump_0F1_40DC::
     jr z, Jump_0F1_40EC
     ld a, $40
     ld [wDataBankSave], a
-    farcall Func_003_4339
+    farcall ExitPauseMenuToField
     ret
 
 Jump_0F1_40EC::
@@ -274,7 +274,7 @@ Jump_0F1_4187::
     farcall CompactInventory
     ld a, $40
     ld [wDataBankSave], a
-    farcall Func_003_4339
+    farcall ExitPauseMenuToField
     ret
 
 Jump_0F1_41B9::
@@ -2420,7 +2420,7 @@ Jump_0F1_5037:: ; address name
     jr Jump_0F1_5067
 
 Jump_0F1_5048::
-    farcall Func_015_6EA5
+    farcall PrepareWCF8BCountersAndRequestScript
     ld a, [wTwoChoiceCursor]
     and a, a
     jr z, Jump_0F1_5059
@@ -2594,7 +2594,7 @@ Jump_0F1_518C::
     ld [hl+], a
     dec b
     jr nz, Jump_0F1_518C
-    farcall Func_015_6E64
+    farcall IncrementTwoCountersCappedAt99
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -4220,7 +4220,7 @@ Jump_0F1_5B56::
 Jump_0F1_5B5D::
     ld a, $01
     ldh [hFFB9], a
-    farcall Func_01D_5BF2
+    farcall CallFunc6899PreservingWD7F1AndHFFC6
     ret
 
 Jump_0F1_5B68::

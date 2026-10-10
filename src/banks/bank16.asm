@@ -1921,7 +1921,7 @@ Jump_016_49AF:: ; address name
     ld a, $1E
     ld c, $5D
     call AddAToRecordWordPairCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 65 DracoBelt; the body is not interpreted beyond the Herb case (E-0089)
@@ -1931,7 +1931,7 @@ Jump_016_49BA:: ; address name
     ld a, $50
     ld c, $5D
     call AddAToRecordWordPairCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 66 MagicBelt; the body is not interpreted beyond the Herb case (E-0089)
@@ -1941,7 +1941,7 @@ Jump_016_49C5:: ; address name
     ld a, $1E
     ld c, $61
     call AddAToRecordWordPairCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 67 OddBelt; the body is not interpreted beyond the Herb case (E-0089)
@@ -1951,7 +1951,7 @@ Jump_016_49D0:: ; address name
     ld a, $50
     ld c, $61
     call AddAToRecordWordPairCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 68 StoneFang; the body is not interpreted beyond the Herb case (E-0089)
@@ -1961,7 +1961,7 @@ Jump_016_49DB:: ; address name
     ld a, $0A
     ld c, $63
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 69 SteelFang; the body is not interpreted beyond the Herb case (E-0089)
@@ -1971,7 +1971,7 @@ Jump_016_49E6:: ; address name
     ld a, $32
     ld c, $63
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 70 MermScale; the body is not interpreted beyond the Herb case (E-0089)
@@ -1981,7 +1981,7 @@ Jump_016_49F1:: ; address name
     ld a, $0A
     ld c, $65
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 71 DrakScale; the body is not interpreted beyond the Herb case (E-0089)
@@ -1991,7 +1991,7 @@ Jump_016_49FC:: ; address name
     ld a, $32
     ld c, $65
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 72 AGL?; the body is not interpreted beyond the Herb case (E-0089)
@@ -2001,7 +2001,7 @@ Jump_016_4A07:: ; address name
     ld a, $0A
     ld c, $67
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 73 Starry?; the body is not interpreted beyond the Herb case (E-0089)
@@ -2011,7 +2011,7 @@ Jump_016_4A12:: ; address name
     ld a, $32
     ld c, $67
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 74 Smart?; the body is not interpreted beyond the Herb case (E-0089)
@@ -2021,7 +2021,7 @@ Jump_016_4A1D:: ; address name
     ld a, $32
     ld c, $69
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 75 Wise?; the body is not interpreted beyond the Herb case (E-0089)
@@ -2031,14 +2031,14 @@ Jump_016_4A28:: ; address name
     ld a, $64
     ld c, $69
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 76 MagicCape, 77 DracoCape, 78 SilvrCape, 79 GoldCape, 80 PltnmCape, 81 OrcaCape, 82 BraveCape; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
 ItemApply_MagicCape::
 Jump_016_4A33:: ; address name
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 83 D-Scale; the body is not interpreted beyond the Herb case (E-0089)
@@ -2048,7 +2048,7 @@ Jump_016_4A37:: ; address name
     ld a, $05
     ld c, $65
     call AddAToRecordWordCapped
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 84 None, 85 None, 86 None, 87 None, 88 None, 89 None; the body is not interpreted beyond the Herb case (E-0089)
@@ -2061,7 +2061,7 @@ Jump_016_4A42:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ItemApply_Life::
 Jump_016_4A43:: ; address name
-    call Func_016_4A48
+    call EquipItemOnRecordWD083
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 98 (no name); the body is not interpreted beyond the Herb case (E-0089)
@@ -2070,11 +2070,13 @@ ItemApply_Item62::
 Jump_016_4A47:: ; address name
     ret
 
+; stores item wItemId - $3F in field $A4 of record wD083: an empty field consumes the item (hFFC6 = 0); otherwise the old item goes back to the inventory and its name to wC160 (hFFC6 = 1) (E-0125)
 ; 15 call sites from 15 routines (e.g. ItemApply_Life, ItemApply_DScale, ItemApply_MagicCape, ItemApply_Wise, ...)
 ; reads: wD083, wItemId, wD082
 ; writes: hFFC6, wItemId
 ; points at: wInventory, wC160
-Func_016_4A48::
+EquipItemOnRecordWD083::
+Func_016_4A48:: ; address name
     ld a, [wD083]
     ld c, $A4
     call SRAMRecordAddressMapped
@@ -2115,7 +2117,7 @@ Jump_016_4A61::
     ret
 
 ; calls Func_016_4A98 preserving A (E-0122)
-; 1 call site from 1 routine (e.g. Func_016_4A48)
+; 1 call site from 1 routine (e.g. EquipItemOnRecordWD083)
 CallFunc4A98KeepA::
 Func_016_4A92:: ; address name
     push af
@@ -2505,7 +2507,7 @@ Jump_016_4C18::
     ret
 
 ; advances the random table (NextTableByte), takes A = (wC5E8:wC5E7) mod 100 and, when A < wD087, sets wItemId = $FF, clears wInventory[wD082] to $FF and runs CompactInventory; otherwise returns with carry clear and nothing changed (E-0063)
-; 33 call sites from 33 routines (e.g. Func_016_4A48, ItemApply_LogTwig, ItemApply_Bookmark, ItemApply_ExitBell, ...)
+; 33 call sites from 33 routines (e.g. EquipItemOnRecordWD083, ItemApply_LogTwig, ItemApply_Bookmark, ItemApply_ExitBell, ...)
 ; reads: wC5E7, wC5E8, wD082
 ; writes: wItemId
 ; points at: wD087, wInventory
@@ -2531,7 +2533,7 @@ Func_016_4C1D:: ; address name
     ret
 
 ; copies the 24 wInventory bytes to wD09D, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
-; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, Func_016_4A48, RemoveWItemIdFromInventory, PauseMenu_Items_Case03_Case04, ...)
+; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, EquipItemOnRecordWD083, RemoveWItemIdFromInventory, PauseMenu_Items_Case03_Case04, ...)
 ; points at: wD09D, wInventory
 CompactInventory::
 Func_016_4C48:: ; address name
@@ -4597,7 +4599,7 @@ Jump_016_5D71::
     ret
 
 Jump_016_5D7A::
-    call Func_016_6493
+    call CountRecordsByField6E
     xor a, a
     ld [wC470], a
     ld [wC471], a
@@ -4813,7 +4815,7 @@ Jump_016_5E96:: ; address name
     ld a, e
     or a, a
     ret z
-    call Func_016_6493
+    call CountRecordsByField6E
     ld a, [wC0A1]
     or a, a
     jr nz, Jump_016_5ED1
@@ -4888,7 +4890,7 @@ Jump_016_5F38::
     jr z, Jump_016_5F4D
     ld a, [wCFD1]
     ld [wC470], a
-    call Func_016_696D
+    call ShowRecordNameString12
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -5050,7 +5052,7 @@ Jump_016_6058:: ; address name
     ld hl, vBGMap0
     ld bc, $1412
     call CopyRect32StrideToVRAM_Bank16
-    call Func_016_696D
+    call ShowRecordNameString12
     ld a, $02
     ld [wCFD0], a
     ld a, $00
@@ -5256,7 +5258,7 @@ Jump_016_61D2:: ; address name
     ld a, $16
     ld [wStringIndex], a
     call ShowStringCategory5Immediate_Bank16
-    call Func_016_6493
+    call CountRecordsByField6E
     call Func_016_65B1
     ld a, [wC0A1]
     ld [wD7A9], a
@@ -5602,11 +5604,13 @@ Func_016_6480:: ; address name
     ld [de], a
     ret
 
+; counts the first Data_016_75EB[wC7C7] SRAM records: wC0A1 = those with field $6E set, wC0A0 = the others (E-0125)
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case16, Func_016_5D13_Case0B, Func_016_5D13_Case00)
 ; reads: wC7C7
 ; writes: rRAMG, rRAMB, wC0A0, wC0A1
 ; points at: sA000
-Func_016_6493::
+CountRecordsByField6E::
+Func_016_6493:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -6406,11 +6410,13 @@ Func_016_6961:: ; address name
     farcall ShowString_Bank2F
     ret
 
+; copies the name of record wD789[5 * wC470 + wC46B] to wC140 and shows string $12 of category 5 (E-0125)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0D)
 ; reads: wC470, wC46B
 ; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wD789, wC140
-Func_016_696D::
+ShowRecordNameString12::
+Func_016_696D:: ; address name
     ld a, [wC470]
     ld b, a
     add a, a
@@ -7814,7 +7820,7 @@ Func_016_733F:: ; address name
     farcall CopyRectRecordForWD88F_Bank31
     farcall DrawPartySlotStatusPanels
     farcall LayoutTileBlocksForWD890Count
-    farcall Func_031_7321
+    farcall LoadBattleMonsterPictureAttributes
     farcall CopyRectRecord7345ToScreenBuffer
     ret
 

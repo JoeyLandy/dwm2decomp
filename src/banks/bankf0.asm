@@ -1698,7 +1698,7 @@ Jump_0F0_5398:: ; address name
     ld [wC598], a
     ld a, [wC5A3]
     ld b, a
-    call Func_0F0_7245
+    call MarkBitBInWCE9FAndCount
     call RollWCEC0Chance
     ld [wC599], a
     ld a, [wD781]
@@ -2546,10 +2546,12 @@ Jump_0F0_5862:: ; address name
     ld [wD782], a
     ret
 
+; while wCB98 & 3 is set: wCB9A -= 1; at $60 runs field command $0E and sets wCBD3/4; at $58 sets bit 1 of wCB9C and wD782 += 1 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCB98, wCB9A, wCB9C, wD782
 ; writes: wCB9A, hFFC6, wCBD3, wCBD4, wD783, wCB9C, wD782
-Func_0F0_5888:: ; heuristic: follows a terminator; C0
+StepObjectCB9AAndTriggerAt60:: ; heuristic: follows a terminator; C0
+Func_0F0_5888:: ; address name
     ld a, [wCB98]
     and a, $03
     and a, a
@@ -2665,7 +2667,7 @@ Jump_0F0_593A:: ; address name
     call RunTextUntilWC8CBDone_BankF0
     ld hl, wC5A8
     ld de, wC140
-    call Func_0F0_7C96
+    call CopyNameStringFromBank08Database
     ld a, $0C
     call BeginString_BankF0_Cat0
     xor a, a
@@ -2888,7 +2890,7 @@ Jump_0F0_5AA3:: ; address name
     call CopyStringMaxBToDE
     ld hl, wC5C8
     ld de, wC140
-    call Func_0F0_7C96
+    call CopyNameStringFromBank08Database
     ld a, $0D
     call BeginString_BankF0_Cat0
     xor a, a
@@ -4176,7 +4178,7 @@ Func_0F0_62F2:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 23 call sites from 20 routines (e.g. Func_0F0_678F, Func_0F0_4CA0_Table2_Case06, RunWD781Step_F0_5B50_Case08, RunWD781Step_F0_5B50_Case03, ...)
+; 23 call sites from 20 routines (e.g. DrawArrowTileBCAtWD7F2Entry_F0, Func_0F0_4CA0_Table2_Case06, RunWD781Step_F0_5B50_Case08, RunWD781Step_F0_5B50_Case03, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF0::
 Func_0F0_632F:: ; address name
@@ -4532,13 +4534,13 @@ Func_0F0_6709::
 Jump_0F0_6727::
     ld a, $69
     call QueueSoundEffect
-    call Func_0F0_678F
+    call DrawArrowTileBCAtWD7F2Entry_F0
     ld a, $FF
     ld [wMenuInputResult], a
     ret
 
 Jump_0F0_6735::
-    call Func_0F0_678F
+    call DrawArrowTileBCAtWD7F2Entry_F0
     ld a, $FE
     ld [wMenuInputResult], a
     ret
@@ -4610,9 +4612,11 @@ Func_0F0_678B:: ; address name
     ld b, $C3
     jr Jump_0F0_6791
 
+; B = $BC, then writes B at the scroll position + the offset from Data_0F0_67C0[wD7F2] entry wD7B7 (E-0125)
 ; 2 call sites from 1 routine (e.g. Func_0F0_6709)
 ; reads: wD7F2, wD7B7
-Func_0F0_678F::
+DrawArrowTileBCAtWD7F2Entry_F0::
+Func_0F0_678F:: ; address name
     ld b, $BC
 
 Jump_0F0_6791::
@@ -5665,11 +5669,13 @@ Jump_0F0_70C2::
     ret
     INCBIN "dwm2-cobi-us.gbc", $3C30C5, $180
 
+; wCEC0 counts changes of B (wCEBF); if bit B of the wCE9F array is new, sets it, wCE9E += 1 and C = 0; otherwise C = $FF (E-0125)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case00)
 ; reads: wCEBF, wCEC0, wCE9E
 ; writes: wCEC0, wCEBF, wCE9E
 ; points at: wCE9F
-Func_0F0_7245::
+MarkBitBInWCE9FAndCount::
+Func_0F0_7245:: ; address name
     ld a, [wCEBF]
     cp a, b
     jr z, Jump_0F0_7256
@@ -7404,8 +7410,10 @@ Jump_0F0_7C93::
     ld c, $01
     ret
 
+; copies the $F0-terminated string [HL] of the category chosen by [HL + 1] (Data_0F0_4036 or Data_008_4038) from bank 8 to HL (E-0125)
 ; 2 call sites from 2 routines (e.g. Func_0F0_4CA0_Case0A_Case1E, Func_0F0_4CA0_Case0B_Case1E)
-Func_0F0_7C96::
+CopyNameStringFromBank08Database::
+Func_0F0_7C96:: ; address name
     push de
     inc hl
     ld a, [hl-]
@@ -7456,7 +7464,7 @@ Jump_0F0_7CD0::
     ret
 
 ; A = $FF when bit DE of the bit array at HL is set (mask Data_0F0_7CFB), else 0; HL is left at the byte (E-0124)
-; 2 call sites from 2 routines (e.g. Func_0F0_7245, OrDIntoFunc7CD4Byte)
+; 2 call sites from 2 routines (e.g. MarkBitBInWCE9FAndCount, OrDIntoFunc7CD4Byte)
 TestBitDEOfBitArrayHL::
 Func_0F0_7CD4:: ; address name
     push de
@@ -7490,7 +7498,7 @@ Data_0F0_7CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; [HL from Func_0F0_7CD4] |= D (E-0122)
-; 1 call site from 1 routine (e.g. Func_0F0_7245)
+; 1 call site from 1 routine (e.g. MarkBitBInWCE9FAndCount)
 OrDIntoFunc7CD4Byte::
 Func_0F0_7D03:: ; address name
     call TestBitDEOfBitArrayHL

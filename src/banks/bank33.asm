@@ -434,7 +434,7 @@ Jump_033_51ED::
     ret
 
 Jump_033_51F4::
-    farcall Func_01D_5BF2
+    farcall CallFunc6899PreservingWD7F1AndHFFC6
     ret
 
 Jump_033_51FB::

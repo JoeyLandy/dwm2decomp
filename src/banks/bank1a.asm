@@ -31,7 +31,7 @@ Jump_01A_401B::
     ret
 
 ; like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead
-; 17 call sites from 16 routines (e.g. DebugSkillViewer_Update, AIScore_TakeMagic_Sub01_Sub01, Func_005_640A, SlotHasSkillWithFlagD, ...)
+; 17 call sites from 16 routines (e.g. DebugSkillViewer_Update, AIScore_TakeMagic_Sub01_Sub01, SlotCSkillFlagMatchD, SlotHasSkillWithFlagD, ...)
 ; reads: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 LoadSkillRecordPart::
 Func_01A_4022:: ; address name
@@ -815,7 +815,7 @@ Data_01A_5F89:: ; heuristic: target of a monotone pointer table; C0
 Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
     db $86, $85, $FF, $8B, $FF, $8D, $FF, $97, $FF, $99, $FF
 
-; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, Func_0A0_494F)
+; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: wD86A, wD86B
 ; writes: wD86C
 ; points at: wD09D
@@ -1689,10 +1689,12 @@ Jump_01A_63A4::
     xor a, a
     ret
 
-; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, Func_0A0_494F)
+; hFFC8/9 = Data_01A_63F8[hFFC6] + the sum of the first hFFC7 bytes of row hFFC6 of the $63-byte table $6616 (E-0125)
+; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9
-Func_01A_63A7::
+SumTable6616RowForHFFC6::
+Func_01A_63A7:: ; address name
     ldh a, [hFFC6]
     ld c, $63
     call Multiply8

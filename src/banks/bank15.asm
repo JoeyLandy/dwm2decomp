@@ -51,7 +51,7 @@ ScriptCommandEE_Run_Case01::
 Jump_015_403F:: ; address name
     ld hl, Data_015_72A9
     ld de, Data_015_72FF
-    call Func_015_6374
+    call CopyGlyphTileListFromBank1F_Bank15
     xor a, a
     ld [wD784], a
     ld [wD785], a
@@ -228,7 +228,7 @@ Jump_015_4167:: ; address name
     ld a, [wD781]
     rst $00
     dw DrawPair72A9And72C5AndStep
-    dw Func_015_4182
+    dw DrawGoldBoxAndStep_Bank15
     dw ScriptCommandED_Run_Case01_Case02
 
 ; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wD781 += 1 (E-0122)
@@ -239,17 +239,19 @@ DrawPair72A9And72C5AndStep::
 Func_015_4171:: ; address name
     ld hl, Data_015_72A9
     ld de, Data_015_72C5
-    call Func_015_6374
+    call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
     ret
 
+; copies box Data_015_7291 to wC370 and writes the gold as five digit tiles at wC386, then wD781 += 1 (E-0125)
 ; 6 call sites from 6 routines (e.g. ScriptCommandED_Run_Case04_Case3A, ScriptCommandED_Run_Case04_Case33, ScriptCommandED_Run_Case04_Case1F, ScriptCommandED_Run_Case05_Case08, ...)
 ; reads: wD781
 ; writes: wD781
 ; points at: wC370, wGoldLo, wC8C0, wC386, wD7F3
-Func_015_4182::
+DrawGoldBoxAndStep_Bank15::
+Func_015_4182:: ; address name
     ld de, Data_015_7291
     ld hl, wC370
     ld bc, $0803
@@ -800,7 +802,7 @@ Jump_015_4570:: ; address name
     call QueueSoundEffect
     ld hl, Data_015_72E1
     ld de, Data_015_72F1
-    call Func_015_6374
+    call CopyGlyphTileListFromBank1F_Bank15
     ld de, Data_015_7351
     ld hl, wC410
     ld bc, $0805
@@ -1257,7 +1259,7 @@ Jump_015_4899::
     ld c, $00
     ld a, $04
     ld [wD7F5], a
-    farcall Func_01D_6129
+    farcall DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1347,7 +1349,7 @@ Jump_015_491A:: ; address name
     ld a, $B7
     ld [wC393], a
     ld [wC3A7], a
-    call Func_015_4182
+    call DrawGoldBoxAndStep_Bank15
     ld de, Data_015_74D5
     ld hl, wC3BC
     ld bc, $0C01
@@ -1840,7 +1842,7 @@ Jump_015_4C80:: ; address name
     ld a, [wD782]
     and a, a
     jr nz, Jump_015_4C8A
-    call Func_015_6EA5
+    call PrepareWCF8BCountersAndRequestScript
     ret
 
 Jump_015_4C8A::
@@ -1995,7 +1997,7 @@ Jump_015_4D6E:: ; address name
 ScriptCommandED_Run_Case04_Case33::
 Jump_015_4D96:: ; address name
     call DrawPair72A9And72C5AndStep
-    call Func_015_4182
+    call DrawGoldBoxAndStep_Bank15
     ld de, Data_015_6F6B
     ld hl, wC364
     ld bc, $0807
@@ -2044,7 +2046,7 @@ Jump_015_4DB0:: ; address name
 ScriptCommandED_Run_Case04_Case3A::
 Jump_015_4DE5:: ; address name
     call DrawPair72A9And72C5AndStep
-    call Func_015_4182
+    call DrawGoldBoxAndStep_Bank15
     ld a, [wD781]
     dec a
     ld [wD781], a
@@ -2243,7 +2245,7 @@ Jump_015_4F36::
     dec b
     jr nz, Jump_015_4F36
     farcall SetSpeciesFlag
-    call Func_015_6E64
+    call IncrementTwoCountersCappedAt99
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2812,7 +2814,7 @@ Jump_015_52FF:: ; address name
     ld a, [wD782]
     and a, a
     jr nz, Jump_015_5323
-    call Func_015_4182
+    call DrawGoldBoxAndStep_Bank15
     ld a, [wD781]
     dec a
     ld [wD781], a
@@ -2877,7 +2879,7 @@ ScriptCommandED_Run_Case05_Case0A::
 Jump_015_5376:: ; address name
     ld hl, Data_015_72E1
     ld de, Data_015_72F1
-    call Func_015_6374
+    call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3372,7 +3374,7 @@ Jump_015_56B0:: ; address name
     dw ScriptCommandED_Run_Case07_Case04
     dw ScriptCommandED_Run_Case04_Case3E
     dw ScriptCommandED_Run_Case07_Case06
-    dw Func_015_4182
+    dw DrawGoldBoxAndStep_Bank15
     dw ScriptCommandED_Run_Case07_Case08
     dw ScriptCommandED_Run_Case07_Case09
     dw ScriptCommandED_Run_Case07_Case0A
@@ -3423,7 +3425,7 @@ DrawPair72A9And72C5AndStep_570C::
 Func_015_570C:: ; address name
     ld hl, Data_015_72A9
     ld de, Data_015_72C5
-    call Func_015_6374
+    call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4414,7 +4416,7 @@ Jump_015_5DCE:: ; address name
     ld hl, wC364
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
-    call Func_015_4182
+    call DrawGoldBoxAndStep_Bank15
     ret
 
 ; entry 31 of the `rst $00` table in ScriptCommandED_Run_Case07
@@ -4560,7 +4562,7 @@ Jump_015_5EF6:: ; address name
 ; reads: wIsCGB
 ScriptCommandED_Run_Case0B_Case05::
 Jump_015_5F0A:: ; address name
-    call Func_015_4182
+    call DrawGoldBoxAndStep_Bank15
     ld a, [wIsCGB]
     and a, a
     jr nz, Jump_015_5F1E
@@ -4779,7 +4781,7 @@ ScriptCommandED_Run_Case0F_Case01::
 Jump_015_6063:: ; address name
     ld hl, Data_015_72E1
     ld de, Data_015_72F1
-    call Func_015_6374
+    call CopyGlyphTileListFromBank1F_Bank15
     call DrawPair72A9And72C5AndStep
     ret
 
@@ -5250,10 +5252,12 @@ Func_015_6360:: ; address name
     ld [wD781], a
     ret
 
+; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
 ; 6 call sites from 6 routines (e.g. ScriptCommandEE_Run_Case01, ScriptCommandED_Run_Case04_Case0D, DrawPair72A9And72C5AndStep_570C, ScriptCommandED_Run_Case0F_Case01, ...)
 ; reads: wD785
 ; writes: wD785, wD784
-Func_015_6374::
+CopyGlyphTileListFromBank1F_Bank15::
+Func_015_6374:: ; address name
     push hl
     push de
     ld a, [wD785]
@@ -5292,7 +5296,7 @@ Jump_015_6395::
     ld a, [wD785]
     inc a
     ld [wD785], a
-    jr Func_015_6374
+    jr CopyGlyphTileListFromBank1F_Bank15
 
 Jump_015_63AE::
     pop de
@@ -5783,7 +5787,7 @@ Func_015_6655:: ; address name
     ret
 
 ; wD7F1 = hFFC9, then the high and low digits of hFFC8, hFFC7 and hFFC6 go to wD7F2-wD7F7 (seven digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read (E-0106)
-; 9 call sites from 9 routines (e.g. TenTimesHFFC6PlusTenToDigits, Func_015_4182, ScriptCommandEF_Run_Case01_Case01, ScriptCommandEF_Run_Case05_Case06, ...)
+; 9 call sites from 9 routines (e.g. TenTimesHFFC6PlusTenToDigits, DrawGoldBoxAndStep_Bank15, ScriptCommandEF_Run_Case01_Case01, ScriptCommandEF_Run_Case05_Case06, ...)
 ; points at: hFFC9, wD7F1
 UnpackBCDToDigitsWD7F1::
 Func_015_6676:: ; address name
@@ -6552,7 +6556,7 @@ Func_015_6A36:: ; address name
     ld c, a
     ld a, $02
     ld [wD7F5], a
-    farcall Func_01D_6129
+    farcall DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D
     pop bc
     push bc
     ld a, b
@@ -6568,7 +6572,7 @@ Func_015_6A36:: ; address name
     ld c, a
     ld a, $03
     ld [wD7F5], a
-    farcall Func_01D_6129
+    farcall DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D
     pop bc
     xor a, a
     ld [rRAMG2], a
@@ -7130,10 +7134,12 @@ Func_015_6E14:: ; address name
     ld [wC936], a
     ret
 
+; for each of the pointers wCF8B and wCF8E (when set): increments the byte it points to, up to 99, and stores wCF8D / wCF90 in the byte before (E-0125)
 ; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case36, ScriptCommandF4_Run_Case04_Case17, RunWD780StateWhenNotFading_F1_Case04_Case1E)
 ; reads: wCF8C, wCF8B, wCF8D, wCF8F, wCF8E, wCF90
 ; points at: wCF8B, wCF8E
-Func_015_6E64::
+IncrementTwoCountersCappedAt99::
+Func_015_6E64:: ; address name
     ld a, [wCF8C]
     cp a, $FF
     jr z, Jump_015_6E86
@@ -7179,11 +7185,13 @@ Jump_015_6E86::
     ld [hl], a
     ret
 
+; clears wCF8B-wCF90, fills them through Func_015_6EFD for wCA2A and (outside link battles) wCACF, wTwoChoiceCursor = wD7F1, wD782 += 1 and requests script $80 (E-0125)
 ; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case29, ScriptCommandF4_Run_Case04_Case12, RunWD780StateWhenNotFading_F1_Case04_Case19)
 ; reads: wCA2A, wC58A, wCACF, wD7F1, wD782
 ; writes: wCF8B, wCF8C, wCF8D, wCF8E, wCF8F, wCF90, rRAMG, rRAMB, ...
 ; points at: wCF8B, wCF8E
-Func_015_6EA5::
+PrepareWCF8BCountersAndRequestScript::
+Func_015_6EA5:: ; address name
     xor a, a
     ld [wCF8B], a
     ld [wCF8C], a
@@ -7200,14 +7208,14 @@ Func_015_6EA5::
     ld de, wCF8B
     ld a, [wCA2A]
     and a, a
-    call nz, Func_015_6EFD
+    call nz, PrepareWCF8BCountersAndRequestScript_Sub01
     ld a, [wC58A]
     and a, a
     jr nz, Jump_015_6EDF
     ld de, wCF8E
     ld a, [wCACF]
     and a, a
-    call nz, Func_015_6EFD
+    call nz, PrepareWCF8BCountersAndRequestScript_Sub01
 
 Jump_015_6EDF::
     xor a, a
@@ -7224,11 +7232,13 @@ Jump_015_6EDF::
     ld [wScriptStartRequest], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_015_6EA5)
+; only called from PrepareWCF8BCountersAndRequestScript (E-0047)
+; 2 call sites from 1 routine (e.g. PrepareWCF8BCountersAndRequestScript)
 ; reads: wD7F1, hFFC6, wCF8D, wCF8B, wCF8C
 ; writes: hFFC6, wD7F1
 ; points at: wC635, wCF8B
-Func_015_6EFD::
+PrepareWCF8BCountersAndRequestScript_Sub01::
+Func_015_6EFD:: ; address name
     add a, $3F
     ldh [hFFC6], a
     ld c, a

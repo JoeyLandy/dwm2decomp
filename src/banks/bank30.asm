@@ -179,7 +179,7 @@ Jump_030_40E3:: ; address name
 ; points at: wDA5B, wBattleActor
 RunBattleCommandEntry_Case03::
 Jump_030_40E7:: ; address name
-    call Func_030_4102
+    call ChooseTargetForActor
     ld a, [wBattleActor]
     ld hl, wDA5B
     add_a_to_hl
@@ -191,10 +191,12 @@ Jump_030_40E7:: ; address name
     inc [hl]
     ret
 
+; uses the preset target when the side is player-controlled, bit 7 of its wDAD8 byte is clear and wBattleTargetChoice is set; otherwise ChooseActionTarget; stores the result (E-0125)
 ; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, ActionEffect_Chance, RunBattleActions_Case06, Func_03A_6846)
 ; reads: wC58A, wC46B, wBattleActor
 ; points at: wDAD8, wBattleTargetChoice, wDAE9
-Func_030_4102::
+ChooseTargetForActor::
+Func_030_4102:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_030_4112
@@ -585,7 +587,7 @@ Jump_030_434C:: ; address name
     ld hl, wBattleResolveStep
     ld bc, $0005
     call FillBytes
-    farcall Func_0A3_4187
+    farcall SaveActionChoicesAndPickFormations
     call RunBattleCommandEntry_Case06_Sub01
     ret
 
@@ -994,7 +996,7 @@ Func_030_45DA:: ; address name
     call Func_030_4617
     call AddActorPersonalityTensToWDA3C
     call Func_030_46BA
-    call Func_030_47B9
+    call AddRandomPersonalityWeights
     call Func_030_483F
     ld a, $00
     ld [wD871], a
@@ -1256,10 +1258,12 @@ Jump_030_47B4::
     or a, a
     ret
 
+; for player-controlled slots adds random 0-15 to wDA3C-wDA3E; for AI slots adds weights by personality band (AddRandomWeightByValueBand) (E-0125)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wC58A, wBattleActor, wC5E7
 ; points at: wDA3C, wSlotPersonalityHi, wSlotPersonalityMid, wDA3D, wSlotPersonalityLo, wDA3E
-Func_030_47B9::
+AddRandomPersonalityWeights::
+Func_030_47B9:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_030_47E6
@@ -1304,7 +1308,7 @@ Jump_030_47E6::
     ld de, wDA3E
 
 ; adds RandomInRange(0, 30/25/20/15/10) to [DE] (Func_030_5428), the bound chosen by [HL + A] (< 50, 100, 150, 200, or more) (E-0124)
-; 2 call sites from 1 routine (e.g. Func_030_47B9)
+; 2 call sites from 1 routine (e.g. AddRandomPersonalityWeights)
 AddRandomWeightByValueBand::
 Func_030_480E:: ; address name
     push de
@@ -1411,15 +1415,17 @@ Jump_030_48A7::
     ld a, [wDA3F]
     ld d, a
     ld e, $32
-    call Func_030_48B6
+    call AddWeightsForSkillD
     ld a, [wDA40]
     ld d, a
     ld e, $19
 
+; for each of the actor's skills equal to D adds weight through Func_030_48F3 to wD2AD[index]; for D other than 2 also to wD2BD[D - 1] (E-0125)
 ; 1 call site from 1 routine (e.g. Func_030_483F)
 ; reads: wBattleActor
 ; points at: wD988, wD2AD, wD2BD
-Func_030_48B6::
+AddWeightsForSkillD::
+Func_030_48B6:: ; address name
     ld bc, $0800
     ld hl, wD988
     ld a, [wBattleActor]
@@ -1439,7 +1445,7 @@ Jump_030_48C6::
     ld hl, wD2AD
     add a, a
     add_a_to_hl
-    call Func_030_48F3
+    call AddWeightsForSkillD_Sub01
     pop hl
 
 Jump_030_48DA::
@@ -1455,15 +1461,17 @@ Jump_030_48DA::
     dec a
     ld hl, wD2BD
     add_a_to_hl
-    call Func_030_48F3
+    call AddWeightsForSkillD_Sub01
 
 Jump_030_48F2::
     ret
 
-; 2 call sites from 1 routine (e.g. Func_030_48B6)
+; only called from AddWeightsForSkillD (E-0047)
+; 2 call sites from 1 routine (e.g. AddWeightsForSkillD)
 ; reads: wC58A, wBattleActor, wC46B, wDAE9
 ; points at: wDAE9
-Func_030_48F3::
+AddWeightsForSkillD_Sub01::
+Func_030_48F3:: ; address name
     push de
     push hl
     ld a, [wC58A]
@@ -1520,10 +1528,12 @@ Jump_030_493C::
     pop de
     ret
 
+; for player-controlled actors in manual mode chooses action 0; otherwise runs the AI routine for the next wDA3C entry (Data_030_4998) and advances wDA42 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC58A, wDA42, wD871
 ; points at: wDA3C, wDA42
-Func_030_4946:: ; heuristic: follows a terminator; C0
+AIRunNextChoice:: ; heuristic: follows a terminator; C0
+Func_030_4946:: ; address name
     ld a, [wBattleActor]
     and a, $03
     cp a, $03
@@ -1568,7 +1578,7 @@ Jump_030_496E::
     ret z
     ld hl, wDA42
     inc [hl]
-    jr Func_030_4946
+    jr AIRunNextChoice
 
 Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C0998, $12E
@@ -1624,7 +1634,7 @@ Jump_030_4AF8::
     ret
 
 Jump_030_4B06::
-    call Func_030_4C63
+    call EstimateDamageVsEachFoeToWD2C1
     ld a, [wBattleActor]
     ld hl, wD988
     swap a
@@ -1884,10 +1894,12 @@ Jump_030_4C5E::
     ld [hl], b
     ret
 
+; for each foe stores (actor ATK - foe DEF / 2) / 2, floored at 0, in wD2C1[foe & 3] (0 for empty slots) (E-0125)
 ; 1 call site from 1 routine (e.g. Func_030_4AD3)
 ; reads: wBattleActor
 ; points at: wD2C1
-Func_030_4C63::
+EstimateDamageVsEachFoeToWD2C1::
+Func_030_4C63:: ; address name
     ld a, [wBattleActor]
     call ReadBattleATKOfSlot_Bank30
     ld d, h
@@ -2141,7 +2153,7 @@ Data_030_4F46:: ; address name
     dw RollPersonalityLoHighFlag10
     dw RollPersonalityLoLowFlag20
     dw RollWD980HighFlag40
-    dw Func_030_4FBE
+    dw RollWD980LowFlag80
     db $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F
 
 ; AI trait roll with mask DE = $01: when the actor's value is at least $80 rolls a chance that grows with its distance from $80 (E-0122)
@@ -2214,10 +2226,12 @@ Func_030_4FB6:: ; address name
     ld de, $0040
     jr Jump_030_4FC8
 
+; AI trait roll with mask DE = $80: when the actor's wD980 value is below $80 rolls a chance that grows with its distance from $80 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wBattleActor
 ; points at: wD980, wD854
-Func_030_4FBE:: ; heuristic: target of a pointer table; C0
+RollWD980LowFlag80:: ; heuristic: target of a pointer table; C0
+Func_030_4FBE:: ; address name
     ld hl, wD980
     ld de, $0080
     jr Jump_030_4FE9
@@ -2876,7 +2890,7 @@ Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
 ; A = wDA43[wBattleActor] & 3 (E-0072)
-; 13 call sites from 12 routines (e.g. Func_030_48F3, Func_030_47B9, Func_030_46BA, Func_030_4617, ...)
+; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, Func_030_46BA, Func_030_4617, ...)
 ; reads: wBattleActor
 ; points at: wDA43
 GetActorWDA43Low2::
@@ -2901,7 +2915,7 @@ Func_030_541B:: ; address name
     ret
 
 ; [HL] += E as a signed value, clamped to 0-$FF (E-0124)
-; 9 call sites from 6 routines (e.g. Func_030_47B9, AddRandomWeightByValueBand, Func_030_46BA, AddActorPersonalityTensForIndexA, ...)
+; 9 call sites from 6 routines (e.g. AddRandomPersonalityWeights, AddRandomWeightByValueBand, Func_030_46BA, AddActorPersonalityTensForIndexA, ...)
 AddSignedEToByteAtHLClamped::
 Func_030_5428:: ; address name
     bit 7, e
@@ -2980,7 +2994,7 @@ Func_030_5472:: ; address name
     call AddActorPersonalityTensToWDA3C
     call Func_030_46BA
     call AIChooseActionForActor_Sub01_Sub02
-    call Func_030_47B9
+    call AddRandomPersonalityWeights
     call Func_030_483F
     ld a, $00
     ld [wD871], a
@@ -3407,7 +3421,7 @@ Data_030_59E0:: ; address name
     db $E2
 
 ; HL = wBattleATK, then ReadBattleWordFromArray_Bank30 (E-0122)
-; 1 call site from 1 routine (e.g. Func_030_4C63)
+; 1 call site from 1 routine (e.g. EstimateDamageVsEachFoeToWD2C1)
 ; points at: wBattleATK
 ReadBattleATKOfSlot_Bank30::
 Func_030_5C3B:: ; address name
@@ -3415,7 +3429,7 @@ Func_030_5C3B:: ; address name
     jr ReadBattleWordFromArray_Bank30
 
 ; HL = wBattleDEF, then ReadBattleWordFromArray_Bank30 (E-0122)
-; 1 call site from 1 routine (e.g. Func_030_4C63)
+; 1 call site from 1 routine (e.g. EstimateDamageVsEachFoeToWD2C1)
 ; points at: wBattleDEF
 ReadBattleDEFOfSlot_Bank30::
 Func_030_5C40:: ; address name

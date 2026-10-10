@@ -20,7 +20,7 @@ Func_060_4001:: ; address name
     adc a, $C7
     ld h, a
     push hl
-    call Func_060_6C61
+    call FindSRAMSlotMarkerIndex
     pop hl
     ldh a, [hFFC6]
     cp a, $FF
@@ -80,7 +80,7 @@ Func_060_4076:: ; address name
     call LoadWC969TripleForWCD05
     call Func_060_436B
     call Func_060_408F
-    call Func_060_4233
+    call FillWCD11LevelsForWCD05
     call Func_060_4274
     call Func_060_42F2
     call Func_060_4698
@@ -208,10 +208,12 @@ Data_060_4123:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $21, $00
     INCBIN "dwm2-cobi-us.gbc", $180144, $EF
 
+; for 32 entries from wCD11 ORs 2 * min(wC969 + (32 - n) * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0125)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wC969, wCD05
 ; points at: wCD11
-Func_060_4233::
+FillWCD11LevelsForWCD05::
+Func_060_4233:: ; address name
     ld b, $20
     ld de, wCD11
     ld a, [wC969]
@@ -416,10 +418,12 @@ Jump_060_432B::
     jr nz, Jump_060_4302
     ret
 
+; for 8 entries from wCD51 ORs 2 * min(wCD05 + 3 * (wCD05 / 10), 99) into every other byte (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD05
 ; points at: wCD11
-Func_060_4338:: ; heuristic: follows a terminator; C0
+FillWCD51LevelsForWCD05:: ; heuristic: follows a terminator; C0
+Func_060_4338:: ; address name
     ld a, [wCD05]
     ld b, a
     ld a, $0A
@@ -543,7 +547,7 @@ Jump_060_459D::
     dec b
     jr nz, Jump_060_459D
     ld a, [wCD05]
-    call Func_060_4773
+    call BandForA_4773
     dec a
     dec a
     bit 7, a
@@ -627,7 +631,7 @@ Jump_060_460D::
     dec b
     jr nz, Jump_060_460D
     ld a, [wCD05]
-    call Func_060_4773
+    call BandForA_4773
     dec a
     dec a
     bit 7, a
@@ -725,7 +729,7 @@ Jump_060_4678::
 ; writes: hFFC6, wCE72, wCE73, wCE75, wCE76, wCE78, wCE79, wCE74, ...
 Func_060_4698::
     ld a, [wCD05]
-    call Func_060_4773
+    call BandForA_4773
     ldh [hFFC6], a
 
 Jump_060_46A0::
@@ -886,8 +890,10 @@ Jump_060_476C::
     scf
     ret
 
+; A = 2-7 by thresholds 20, 40, 60, 70, 80, 90, 95 (E-0125)
 ; 3 call sites from 3 routines (e.g. Func_060_4597, Func_060_4698, Func_060_4607)
-Func_060_4773::
+BandForA_4773::
+Func_060_4773:: ; address name
     cp a, $14
     jr nc, Jump_060_477A
     ld a, $02
@@ -2500,7 +2506,7 @@ Jump_060_54AB::
     ld a, $01
     ret
 
-; 3 call sites from 3 routines (e.g. Func_060_62F9, Func_060_6488, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 3 call sites from 3 routines (e.g. Func_060_62F9, RemoveWCC48EntryMatching, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; reads: wCD0F, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_060_54BB::
@@ -3739,10 +3745,10 @@ Jump_060_63E0::
     ld a, $00
     ld [wCD0F], a
     ld hl, Data_060_6705
-    call Func_060_6488
+    call RemoveWCC48EntryMatching
     ld a, $01
     ldh [hFFC6], a
-    call Func_060_64C2
+    call MarkWCC48EntryForWC890
     ret
 
 Jump_060_63F8::
@@ -3751,10 +3757,10 @@ Jump_060_63F8::
     ld a, $03
     ld [wCD0F], a
     ld hl, $6905
-    call Func_060_6488
+    call RemoveWCC48EntryMatching
     ld a, $02
     ldh [hFFC6], a
-    call Func_060_64C2
+    call MarkWCC48EntryForWC890
     ret
 
 Jump_060_6410::
@@ -3763,10 +3769,10 @@ Jump_060_6410::
     ld a, $06
     ld [wCD0F], a
     ld hl, Data_060_6B05
-    call Func_060_6488
+    call RemoveWCC48EntryMatching
     ld a, $03
     ldh [hFFC6], a
-    call Func_060_64C2
+    call MarkWCC48EntryForWC890
     ret
 
 Jump_060_6428::
@@ -3775,10 +3781,10 @@ Jump_060_6428::
     ld a, $09
     ld [wCD0F], a
     ld hl, Data_060_6F85
-    call Func_060_6488
+    call RemoveWCC48EntryMatching
     ld a, $04
     ldh [hFFC6], a
-    call Func_060_64C2
+    call MarkWCC48EntryForWC890
     ret
 
 Jump_060_6440::
@@ -3787,10 +3793,10 @@ Jump_060_6440::
     ld a, $0B
     ld [wCD0F], a
     ld hl, Data_060_7405
-    call Func_060_6488
+    call RemoveWCC48EntryMatching
     ld a, $05
     ldh [hFFC6], a
-    call Func_060_64C2
+    call MarkWCC48EntryForWC890
     ret
 
 Jump_060_6458::
@@ -3799,10 +3805,10 @@ Jump_060_6458::
     ld a, $0B
     ld [wCD0F], a
     ld hl, Data_060_7525
-    call Func_060_6488
+    call RemoveWCC48EntryMatching
     ld a, $06
     ldh [hFFC6], a
-    call Func_060_64C2
+    call MarkWCC48EntryForWC890
     ret
 
 Jump_060_6470::
@@ -3811,17 +3817,19 @@ Jump_060_6470::
     ld a, $0D
     ld [wCD0F], a
     ld hl, Data_060_7555
-    call Func_060_6488
+    call RemoveWCC48EntryMatching
     ld a, $07
     ldh [hFFC6], a
-    call Func_060_64C2
+    call MarkWCC48EntryForWC890
     ret
 
+; clears bit 7 of wC893; walks the wCC47 8-byte entries at wCC48 and drops the count at the first entry for which Func_060_64F3 returns 0 (E-0125)
 ; 7 call sites from 1 routine (e.g. Func_060_639D)
 ; reads: wC893, wCC47
 ; writes: hFFCC, hFFCD, wC893, hFFC6, wCC47
 ; points at: wCC48
-Func_060_6488::
+RemoveWCC48EntryMatching::
+Func_060_6488:: ; address name
     ld a, l
     ldh [hFFCC], a
     ld a, h
@@ -3839,7 +3847,7 @@ Jump_060_649D::
     ld a, b
     ldh [hFFC6], a
     call Func_060_54BB
-    call Func_060_64F3
+    call RemoveWCC48EntryMatching_Sub01
     or a, a
     jr z, Jump_060_64B8
     pop bc
@@ -3863,10 +3871,12 @@ Jump_060_64B8::
     ld [wCC47], a
     ret
 
+; when wC88E is set and wC891 equals hFFC6, sets bit 7 of the entry whose byte 4 equals wC890 (E-0125)
 ; 7 call sites from 1 routine (e.g. Func_060_639D)
 ; reads: wC88E, wC891, hFFC6, wC890, wCC47
 ; points at: wCC4C
-Func_060_64C2::
+MarkWCC48EntryForWC890::
+Func_060_64C2:: ; address name
     ld a, [wC88E]
     or a, a
     ret z
@@ -3901,11 +3911,13 @@ Jump_060_64E8::
     jr nz, Jump_060_64DD
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_6488)
+; only called from RemoveWCC48EntryMatching (E-0047)
+; 1 call site from 1 routine (e.g. RemoveWCC48EntryMatching)
 ; reads: wMapWidthScreens, wCD04, wMapHeightScreens, hFFC9, hFFCA, hFFC6, wCC47, hFFD0, ...
 ; writes: hFFD0, hFFC9, hFFCA, hFFCB
 ; points at: wCC4C
-Func_060_64F3::
+RemoveWCC48EntryMatching_Sub01::
+Func_060_64F3:: ; address name
     push de
     xor a, a
     ldh [hFFD0], a
@@ -4466,10 +4478,12 @@ Func_060_68EB:: ; address name
 Data_060_690E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
-; 2 call sites from 2 routines (e.g. DebugAutomap_Update_Sub01, Func_012_6955)
+; hFFC9 = hFFC6; picks hFFC7 from the chance row Data_060_6969[level / 10] and hFFC8 from row Data_060_6A09 + $3C * (level / 10) (E-0125)
+; 2 call sites from 2 routines (e.g. DebugAutomap_Update_Sub01, WriteKeyEntryHFFC6)
 ; reads: hFFC6
 ; writes: hFFC9, hFFC7, hFFC8
-Func_060_6916::
+RollKeyContentsForLevelHFFC6::
+Func_060_6916:: ; address name
     ldh a, [hFFC6]
     ldh [hFFC9], a
     ld l, a
@@ -4521,7 +4535,7 @@ Jump_060_6958::
     ret
 
 ; repeats NextRandomSeed until wCD04 & $7F is below 100; returns A = that value (E-0116)
-; 2 call sites from 1 routine (e.g. Func_060_6916)
+; 2 call sites from 1 routine (e.g. RollKeyContentsForLevelHFFC6)
 ; reads: wCD04
 RandomBelow100::
 Func_060_695C:: ; address name
@@ -4541,11 +4555,13 @@ Data_060_6A09:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182B05, $15C
 
+; hFFC6 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50 + index, or $FF when all match (E-0125)
 ; 3 call sites from 3 routines (e.g. RunWC46BMenuState_Case05_Sub01, DebugAutomap_Update_Sub01, RunWD780StateWhenNotFading_1B_Case01_Case21)
 ; reads: hFFC6
 ; writes: rRAMB, rRAMG, hFFC6
 ; points at: sA000
-Func_060_6C61::
+FindSRAMSlotMarkerIndex::
+Func_060_6C61:: ; address name
     ld a, $02
     ld [rRAMB], a
     ld a, $0A

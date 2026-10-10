@@ -249,7 +249,7 @@ DrawPair4F81And4F9FAndStep::
 Func_00D_463F:: ; address name
     ld hl, Data_00D_4F81
     ld de, Data_00D_4F9F
-    call Func_00D_4F3D
+    call CopyGlyphTileListFromBank1F
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1152,7 +1152,7 @@ ScriptCommandEF_Run_Case0F_Case01::
 Jump_00D_4B98:: ; address name
     ld hl, Data_00D_509F
     ld de, Data_00D_50AF
-    call Func_00D_4F3D
+    call CopyGlyphTileListFromBank1F
     call DrawPair4F81And4F9FAndStep
     ret
 
@@ -1837,10 +1837,12 @@ Jump_00D_4F2D::
     jr c, Jump_00D_4F2D
     ret
 
+; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
 ; 3 call sites from 3 routines (e.g. DrawPair4F81And4F9FAndStep, ScriptCommandEF_Run_Case0F_Case01, ScriptCommandF4_Run_Case11_Case01)
 ; reads: wD785
 ; writes: wD785, wD784
-Func_00D_4F3D::
+CopyGlyphTileListFromBank1F::
+Func_00D_4F3D:: ; address name
     push hl
     push de
     ld a, [wD785]
@@ -1879,7 +1881,7 @@ Jump_00D_4F5E::
     ld a, [wD785]
     inc a
     ld [wD785], a
-    jr Func_00D_4F3D
+    jr CopyGlyphTileListFromBank1F
 
 Jump_00D_4F77::
     pop de
@@ -2875,7 +2877,7 @@ Jump_00D_5766:: ; address name
     ld hl, wC3B8
     ld bc, $1009
     call CopyRectTo20ByteRows_Bank0D
-    call Func_00D_60C3
+    call BuildKeyListIndexWD789
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -3659,7 +3661,7 @@ Jump_00D_5CB7::
     jr z, Jump_00D_5CD8
     push bc
     push hl
-    call Func_00D_5CD9
+    call EraseCursorForWD7F5Layout
     pop hl
     pop bc
     ld a, b
@@ -3674,9 +3676,11 @@ Jump_00D_5CD2::
 Jump_00D_5CD8::
     ret
 
+; writes blank $C3 at the scroll position + the cursor offset for wD7AB from table Data_00D_5D0E, 5D16 or 5D1E (by wD7F5) (E-0125)
 ; 1 call site from 1 routine (e.g. Func_00D_5C87)
 ; reads: wD7F5, wD7AB
-Func_00D_5CD9::
+EraseCursorForWD7F5Layout::
+Func_00D_5CD9:: ; address name
     ld b, $C3
     ld a, [wD7F5]
     and a, a
@@ -4002,7 +4006,7 @@ Jump_00D_5EB2::
 Jump_00D_5EC0::
     pop bc
     push bc
-    call Func_00D_5ED6
+    call DrawWC8CFGlyphsOverlaying8DAnd8E
     pop bc
     pop hl
     inc hl
@@ -4017,11 +4021,13 @@ Jump_00D_5EC0::
 Jump_00D_5ED5::
     ret
 
+; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile instead of taking a new one (E-0125)
 ; 2 call sites from 2 routines (e.g. Func_00D_5DED, ScriptCommandF3_Run_Case05_Case03_Sub01)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
 ; points at: wC8CF
-Func_00D_5ED6::
+DrawWC8CFGlyphsOverlaying8DAnd8E::
+Func_00D_5ED6:: ; address name
     xor a, a
     ld [wD784], a
     ld [wD785], a
@@ -4039,7 +4045,7 @@ Jump_00D_5EE0::
     cp a, $8E
     jr z, Jump_00D_5F01
     push bc
-    call Func_00D_5F2C
+    call DrawWC8CFGlyphsOverlaying8DAnd8E_Sub01
     call CopyFromBankWaitVRAM
     pop bc
     jr Jump_00D_5F12
@@ -4051,7 +4057,7 @@ Jump_00D_5F01::
     ld [wD785], a
     pop af
     push bc
-    call Func_00D_5F2C
+    call DrawWC8CFGlyphsOverlaying8DAnd8E_Sub01
     call OrFromBankWaitVRAM
     pop bc
 
@@ -4072,9 +4078,11 @@ Jump_00D_5F23::
     ld [wD784], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_00D_5ED6)
+; only called from DrawWC8CFGlyphsOverlaying8DAnd8E (E-0047)
+; 2 call sites from 1 routine (e.g. DrawWC8CFGlyphsOverlaying8DAnd8E)
 ; reads: wD7F5, wD785
-Func_00D_5F2C::
+DrawWC8CFGlyphsOverlaying8DAnd8E_Sub01::
+Func_00D_5F2C:: ; address name
     ld e, a
     ld d, $00
     sla e
@@ -4152,10 +4160,12 @@ Data_00D_60A9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AB, $60, $00, $96, $10, $96, $20, $96, $30, $96, $40, $96, $50, $96, $60, $96
     db $70, $96, $80, $96, $90, $96, $A0, $96, $B0, $96
 
+; clears wD789 ($20 bytes), then lists the indexes of the used wKeyList entries there and stores their count in wD7A9 (E-0125)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF2_Run_Case03_Case00, RunWD780StateWhenNotFading_1B_Case01_Case00)
 ; writes: wD7A9
 ; points at: wD789, wKeyList
-Func_00D_60C3::
+BuildKeyListIndexWD789::
+Func_00D_60C3:: ; address name
     ld hl, wD789
     ld b, $20
 
@@ -5496,7 +5506,7 @@ Jump_00D_6A63::
 ; reads: hFFC6, wD781
 ; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_00D_6A80:: ; heuristic: follows a terminator; C0
-    farcall Func_012_691F
+    farcall FindFreeKeySlotToHFFC6
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_00D_6A4E
@@ -5625,7 +5635,7 @@ Jump_00D_6B3A::
 ; reads: hFFC6, wD781
 ; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
 Func_00D_6B45:: ; heuristic: follows a terminator; C0
-    farcall Func_012_691F
+    farcall FindFreeKeySlotToHFFC6
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_00D_6B24
@@ -6222,7 +6232,7 @@ Jump_00D_6E6F::
     ld [hl], a
     pop bc
     push bc
-    call Func_00D_5ED6
+    call DrawWC8CFGlyphsOverlaying8DAnd8E
     pop bc
     pop hl
     inc hl
@@ -6590,7 +6600,7 @@ Jump_00D_72D0:: ; address name
     and a, a
     jr nz, Jump_00D_72E0
     call ScriptCommandF4_Run_Shared01
-    farcall Func_015_6EA5
+    farcall PrepareWCF8BCountersAndRequestScript
     ret
 
 Jump_00D_72E0::
@@ -6836,7 +6846,7 @@ Jump_00D_7472::
     ld a, [hl]
     ld d, a
     call SetFlagBit
-    farcall Func_015_6E64
+    farcall IncrementTwoCountersCappedAt99
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -6852,7 +6862,7 @@ Data_00D_7499:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wD781
 ScriptCommandF4_Run_Case04_Case18::
 Jump_00D_74AD:: ; address name
-    farcall Func_00C_6FCB
+    farcall RedrawFullScreenBoxes_0C
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -7045,7 +7055,7 @@ ScriptCommandF4_Run_Case11_Case01::
 Jump_00D_7637:: ; address name
     ld hl, Data_00D_789A
     ld de, Data_00D_78AA
-    call Func_00D_4F3D
+    call CopyGlyphTileListFromBank1F
     ld de, Data_01F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F

@@ -17,7 +17,7 @@ Func_031_4001:: ; address name
     ld [wC51F], a
     ld a, $00
     ld [wC520], a
-    farcall Func_017_41CF
+    farcall SendSGBPaletteSetPacket
 
 Jump_031_401F::
     xor a, a
@@ -1264,7 +1264,7 @@ Jump_031_4724:: ; address name
     call CopyRect32StrideToVRAM
     call LoadBattleMonsterPictureAndTitle
     call LayoutTileBlocksForWD890Count
-    call Func_031_7321
+    call LoadBattleMonsterPictureAttributes
     ld de, wC27F
     ld hl, vBGMap0 + $E7
     ld bc, $0606
@@ -1360,7 +1360,7 @@ Func_031_47C7:: ; address name
     call CopyRectRecordForWD88F_Bank31
     call DrawPartySlotStatusPanels
     call LayoutTileBlocksForWD890Count
-    call Func_031_7321
+    call LoadBattleMonsterPictureAttributes
     call ClearWindowAndCopyRect7345Far
     ret
 
@@ -1501,7 +1501,7 @@ Jump_031_4893::
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    farcall Func_003_4339
+    farcall ExitPauseMenuToField
     ld a, $02
     ld [wC5E0], a
     ld hl, wD066
@@ -2085,7 +2085,7 @@ RunBattleSetup_Case00_Case03::
 Jump_031_4BEE:: ; address name
     ld de, Data_031_639F
     ld hl, wC46B
-    call Func_031_5F02
+    call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_031_4C18
@@ -2665,7 +2665,7 @@ RunBattleSetup_Case00_Case0D::
 Jump_031_4F50:: ; address name
     ld de, Data_031_63C5
     ld hl, wC46C
-    call Func_031_5F02
+    call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -4333,7 +4333,7 @@ RunBattleSetup_Case02_Case06::
 Jump_031_5A0C:: ; address name
     ld de, Data_031_63B5
     ld hl, wC46F
-    call Func_031_5F02
+    call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_031_5A78
@@ -5213,10 +5213,12 @@ Jump_031_5EF6:: ; address name
     ld [wBattleSubPhase], a
     ret
 
+; up/down toggles bit 0 and left/right bit 1 of [HL] (sound $69); otherwise blinks the entry every 16 frames through bit 6 (E-0125)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_Case00_Case0D, RunBattleSetup_Case00_Case03, RunBattleSetup_Case02_Case06, RunBattleSubStep_6E67_Case05)
 ; reads: wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wFrameCounterLo
-Func_031_5F02::
+ToggleEntryBitsByJoypadAndBlink::
+Func_031_5F02:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_031_5F1A
@@ -5499,7 +5501,7 @@ Jump_031_60AC::
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: sets bit 6 of [HL] and writes tile $C3 at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 15 call sites from 4 routines (e.g. Func_031_5F02, RunBattleSetup_Shared03, Func_031_5F9E, RunBattleSetup_Case01_Case06_Sub01)
+; 15 call sites from 4 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, Func_031_5F9E, RunBattleSetup_Case01_Case06_Sub01)
 SetBit6AndBlankEntryTile_Bank31::
 Func_031_60AD:: ; address name
     set 6, [hl]
@@ -5525,7 +5527,7 @@ Func_031_60AD:: ; address name
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 13 call sites from 6 routines (e.g. Func_031_5F02, RunBattleSetup_Shared03, RunBattleSetup_Shared01, Func_031_5F9E, ...)
+; 13 call sites from 6 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, RunBattleSetup_Shared01, Func_031_5F9E, ...)
 ClearBit6AndCursorEntryTile_Bank31::
 Func_031_60CC:: ; address name
     res 6, [hl]
@@ -6949,7 +6951,7 @@ Jump_031_6862::
     add_a_to_hl
     ld a, [hl]
     or a, a
-    call z, Func_031_6885
+    call z, AddExpToRecordCCapped
     inc c
     dec b
     jr nz, Jump_031_6862
@@ -6963,9 +6965,11 @@ Jump_031_6862::
     ld [wD868], a
     ret
 
+; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of record C, capped at 9,999,999 ($98967F) (E-0125)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case01)
 ; reads: wDA6B, wDA6C, wDA6D
-Func_031_6885::
+AddExpToRecordCCapped::
+Func_031_6885:: ; address name
     push bc
     ld a, c
     ld c, $58
@@ -7384,7 +7388,7 @@ Jump_031_6AD5::
     ld a, [hl]
     and a, a
     pop hl
-    call z, Func_031_6B2E
+    call z, AddExpToRecordHLCapped
 
 Jump_031_6AE9::
     ld a, l
@@ -7439,9 +7443,11 @@ Jump_031_6B1E::
     ld [wDA6D], a
     ret
 
+; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of the record at HL, capped at 9,999,999 ($98967F) (E-0125)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case05)
 ; reads: wDA6B, wDA6C, wDA6D
-Func_031_6B2E::
+AddExpToRecordHLCapped::
+Func_031_6B2E:: ; address name
     push bc
     push hl
     ld a, l
@@ -8309,7 +8315,7 @@ RunBattleSubStep_6E67_Case05::
 Jump_031_700F:: ; address name
     ld de, Data_031_63C5
     ld hl, wC46C
-    call Func_031_5F02
+    call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_031_704E
@@ -8826,10 +8832,12 @@ Data_031_7317:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $C2, $7F, $C2
 
+; on CGB loads the picture attribute blocks for one, two or three battle monsters (wD960, or wBattleMonsterId when bit 1 of wC57F is set) at vBGMap0 + $E1-$ED (E-0125)
 ; 4 call sites from 4 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case01_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_Sub02)
 ; reads: wIsCGB, wC57F, wD890
 ; points at: wD960, wBattleMonsterId
-Func_031_7321::
+LoadBattleMonsterPictureAttributes::
+Func_031_7321:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -8881,7 +8889,7 @@ Jump_031_735C::
     ret
 
 ; hFFC6 = C (palette number), DE = the monster id word stored at [DE], then LoadMonsterPictureAttributes (HL = BG map address from the caller); DE kept (E-0110)
-; 6 call sites from 1 routine (e.g. Func_031_7321)
+; 6 call sites from 1 routine (e.g. LoadBattleMonsterPictureAttributes)
 ; writes: hFFC6
 LoadMonsterPictureAttributesFromDE::
 Func_031_7379:: ; address name
@@ -9014,8 +9022,8 @@ Func_031_7412:: ; address name
     ld c, $04
 
 Jump_031_7427::
-    call Func_031_7914
-    call Func_031_7965
+    call CopySlotPanelPart7AC8ToVRAM
+    call CopySlotPanelPart7ACEToVRAM
     call CopySlotPanelRowToVRAM
     ret
 
@@ -9036,8 +9044,8 @@ Func_031_7431:: ; address name
     ld c, $05
 
 Jump_031_7446::
-    call Func_031_7914
-    call Func_031_7965
+    call CopySlotPanelPart7AC8ToVRAM
+    call CopySlotPanelPart7ACEToVRAM
     call CopySlotPanelRowToVRAM
     ret
 
@@ -9058,8 +9066,8 @@ Func_031_7450:: ; address name
     ld c, $06
 
 Jump_031_7465::
-    call Func_031_7914
-    call Func_031_7965
+    call CopySlotPanelPart7AC8ToVRAM
+    call CopySlotPanelPart7ACEToVRAM
     call CopySlotPanelRowToVRAM
     ret
 
@@ -9756,10 +9764,12 @@ Jump_031_7912::
     pop bc
     ret
 
+; copies three tiles at offset Data_031_7AC8[slot] from the screen buffer to vBGMap0 for the shown side (CopySlotPanelPart6D47ToVRAM in mode 2) (E-0125)
 ; 6 call sites from 5 routines (e.g. CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
 ; points at: wScreenTileBuffer
-Func_031_7914::
+CopySlotPanelPart7AC8ToVRAM::
+Func_031_7914:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_031_7933
@@ -9810,10 +9820,12 @@ Jump_031_7938::
 Jump_031_7964::
     ret
 
+; copies three tiles at offset Data_031_7ACE[slot] from the screen buffer to vBGMap0 for the shown side (CopySlotPanelPart6D4BToVRAM in mode 2) (E-0125)
 ; 6 call sites from 5 routines (e.g. CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
 ; points at: wScreenTileBuffer
-Func_031_7965::
+CopySlotPanelPart7ACEToVRAM::
+Func_031_7965:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_031_7984
@@ -9864,10 +9876,12 @@ Jump_031_7989::
 Jump_031_79B5::
     ret
 
+; copies two tiles at offset Data_031_7AD4[slot] from the screen buffer to vBGMap0 for the shown side (CopySlotPanelPart6D4FToVRAM in mode 2) (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F
 ; points at: wScreenTileBuffer
-Func_031_79B6:: ; heuristic: follows a terminator; C0
+CopySlotPanelPart7AD4ToVRAM:: ; heuristic: follows a terminator; C0
+Func_031_79B6:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_031_79D5

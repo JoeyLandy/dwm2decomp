@@ -2266,7 +2266,7 @@ Jump_00A_50A6::
     ldh [hFFC6], a
     ld de, hFFC6
     ld c, $00
-    farcall Func_034_4008
+    farcall CopyMonsterTableBytesFrom4075
     pop hl
     ldh a, [hFFC6]
     ld [hl+], a

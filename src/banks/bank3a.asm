@@ -3059,7 +3059,7 @@ Jump_03A_62C5::
     ld [wBattleSubStep], a
     xor a, a
     ld [wDABA], a
-    farcall Func_030_4102
+    farcall ChooseTargetForActor
     ld a, d
     ld [wBattleTarget], a
     ret
@@ -3757,7 +3757,7 @@ Jump_03A_66C5::
     jr z, Jump_03A_66E3
     push hl
     farcall DrawSlotHPDigits
-    farcall Func_031_7914
+    farcall CopySlotPanelPart7AC8ToVRAM
     pop hl
     res 0, [hl]
 
@@ -3766,7 +3766,7 @@ Jump_03A_66E3::
     jr z, Jump_03A_66F7
     push hl
     farcall DrawSlotMPDigits
-    farcall Func_031_7965
+    farcall CopySlotPanelPart7ACEToVRAM
     pop hl
     res 1, [hl]
 
@@ -4043,7 +4043,7 @@ Jump_03A_6877::
     jr nc, Jump_03A_6899
 
 Jump_03A_688F::
-    farcall Func_030_4102
+    farcall ChooseTargetForActor
     ld a, d
     ld [wBattleTarget], a
 
@@ -4068,7 +4068,7 @@ Jump_03A_68A9::
     push af
     or a, $80
     ld [hl], a
-    farcall Func_030_4102
+    farcall ChooseTargetForActor
     ld a, d
     ld [wBattleTarget], a
     pop af

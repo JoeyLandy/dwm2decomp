@@ -63,7 +63,7 @@ Jump_01B_402A:: ; address name
     jp Jump_01B_4163
 
 Jump_01B_4060::
-    call Func_01B_4394
+    call LinkCheckWD783State
     cp a, $FF
     jp z, Jump_01B_4357
     ld a, [wC46B]
@@ -83,7 +83,7 @@ Jump_01B_407D::
     jp Jump_01B_42A4
 
 Jump_01B_408A::
-    call Func_01B_4394
+    call LinkCheckWD783State
     cp a, $FF
     jp z, Jump_01B_4357
     ld a, [wC46B]
@@ -103,7 +103,7 @@ Jump_01B_40A7::
     jp Jump_01B_42C3
 
 Jump_01B_40B4::
-    call Func_01B_4394
+    call LinkCheckWD783State
     cp a, $FF
     jp z, Jump_01B_4357
     ld a, [wC46B]
@@ -123,7 +123,7 @@ Jump_01B_40D1::
     jp Jump_01B_4301
 
 Jump_01B_40DE::
-    call Func_01B_4394
+    call LinkCheckWD783State
     cp a, $FF
     jp z, Jump_01B_4357
     ld a, [wC46B]
@@ -143,7 +143,7 @@ Jump_01B_40FB::
     jp Jump_01B_4320
 
 Jump_01B_4108::
-    call Func_01B_4394
+    call LinkCheckWD783State
     cp a, $FF
     jp z, Jump_01B_4357
     ld a, [wC46B]
@@ -163,7 +163,7 @@ Jump_01B_4125::
     jp Jump_01B_42E2
 
 Jump_01B_4132::
-    call Func_01B_4394
+    call LinkCheckWD783State
     cp a, $FF
     jp z, Jump_01B_4357
     ld a, [wC46B]
@@ -476,10 +476,12 @@ Jump_01B_438C::
     pop bc
     ret
 
+; A = 0 when the link state allows continuing (wD06B = 1 in mode 5 state 1 with wD06A and wD06C clear), else $FF; wD783 = A on entry (E-0125)
 ; 6 call sites from 1 routine (e.g. Func_01B_4001_Case00)
 ; reads: wC588, wD06B, wGameMode, wModeState, wD06A, wD06C
 ; writes: wD783
-Func_01B_4394::
+LinkCheckWD783State::
+Func_01B_4394:: ; address name
     ld [wD783], a
     ld c, a
     ld a, [wC588]
@@ -929,11 +931,13 @@ Jump_01B_4587:: ; address name
     res 1, [hl]
     ret
 
+; link: sends $F9 when not connected; otherwise reads the received byte into wC560, polls the joypad and starts sending wJoypadHeld; with bit 1 of wC5ED sends $F3 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wC5ED, rSB, wC560, wC586, wJoypadHeld
 ; writes: wC582, wC586, wC561, wC560
 ; points at: wC5ED
-Func_01B_45A1:: ; heuristic: follows a terminator; C0
+LinkExchangeJoypadByte:: ; heuristic: follows a terminator; C0
+Func_01B_45A1:: ; address name
     ld a, [wC57F]
     bit 1, a
     jr nz, Jump_01B_45B2
@@ -2044,7 +2048,7 @@ Jump_01B_54CB:: ; address name
     ld hl, wC3B4
     ld bc, $0F09
     call CopyRectTo20ByteRows
-    farcall Func_00D_60C3
+    farcall BuildKeyListIndexWD789
     ld a, $0E
     ld [wStringIndex], a
     xor a, a
@@ -3779,7 +3783,7 @@ Jump_01B_5EEC::
     jr z, Jump_01B_5F7D
     push bc
     call ClearWD201Bit7AndFourSlots
-    farcall Func_060_6C61
+    farcall FindSRAMSlotMarkerIndex
     ldh a, [hFFC6]
     and a, $7F
     ld c, a

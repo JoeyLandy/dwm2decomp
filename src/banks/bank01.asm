@@ -2589,19 +2589,19 @@ Jump_001_5638::
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $2
-    call Func_001_5B2D
+    call PackTwoDigitsOfCAsBCD
     call DebugResultsDisplay_Update_Sub02_Sub01_Sub01
     ld hl, wCB26
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $22
-    call Func_001_5B2D
+    call PackTwoDigitsOfCAsBCD
     call DebugResultsDisplay_Update_Sub02_Sub01_Sub01
     ld hl, wCB27
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $42
-    call Func_001_5B2D
+    call PackTwoDigitsOfCAsBCD
     call DebugResultsDisplay_Update_Sub02_Sub01_Sub01
     ld hl, wCB43
     ld de, vBGMap0 + $6
@@ -3339,13 +3339,15 @@ Jump_001_5B14::
     inc hl
     ld a, [hl]
     ld d, a
-    call Func_001_5B2D
+    call PackTwoDigitsOfCAsBCD
     call WriteHexByteTilesAtDE
     ret
 
+; C = the last two decimal digits of C packed as BCD (E-0125)
 ; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0)
 ; reads: wC8C1, wC8C2
-Func_001_5B2D::
+PackTwoDigitsOfCAsBCD::
+Func_001_5B2D:: ; address name
     push de
     ld l, c
     ld h, $00
@@ -3745,7 +3747,7 @@ DebugAutomap_Update_Sub01::
 Func_001_5DBA:: ; address name
     ld a, [wC5FA]
     ldh [hFFC6], a
-    farcall Func_060_6916
+    farcall RollKeyContentsForLevelHFFC6
     ld a, [wC5F9]
     ld [wC833], a
     ld l, a
@@ -3762,7 +3764,7 @@ Func_001_5DBA:: ; address name
     cp a, $FF
     jr nz, Jump_001_5DEF
     push hl
-    farcall Func_060_6C61
+    farcall FindSRAMSlotMarkerIndex
     pop hl
     ldh a, [hFFC6]
     cp a, $FF
@@ -5080,7 +5082,7 @@ Jump_001_6764::
 
 Jump_001_679B::
     inc de
-    call Func_001_682B
+    call SubtractDEFromDebugLimit
 
 Jump_001_679F::
     call DrawDebugValueHexForWC46B
@@ -5111,7 +5113,7 @@ Jump_001_67A4::
 
 Jump_001_67C0::
     dec de
-    call Func_001_682B
+    call SubtractDEFromDebugLimit
 
 Jump_001_67C4::
     call DrawDebugValueHexForWC46B
@@ -5176,9 +5178,11 @@ Func_001_6809:: ; address name
     call WriteThreeHexDigitsAtDE
     ret
 
+; stores Data_001_68EB[wC46B] - DE at HL (floored at 0; DE = $FFFF stores the limit) (E-0125)
 ; 2 call sites from 1 routine (e.g. Func_001_66AD)
 ; reads: wC46B
-Func_001_682B::
+SubtractDEFromDebugLimit::
+Func_001_682B:: ; address name
     push hl
     ld a, [wC46B]
     ld hl, Data_001_68EB

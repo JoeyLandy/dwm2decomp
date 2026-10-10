@@ -67,7 +67,7 @@ Jump_0E2_406E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_407E::
-    farcall Func_005_6494
+    farcall FailIfFoeHPBelowFourTimesWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_408E
@@ -105,11 +105,11 @@ Jump_0E2_40BE::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Blaze:: ; heuristic: follows a terminator; C0
 Func_0E2_40BF:: ; address name
-    farcall Func_005_708C
+    farcall AIFireSkillUsable
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_40D8
@@ -156,11 +156,11 @@ Jump_0E2_411B::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Firebal:: ; heuristic: follows a terminator; C0
 Func_0E2_411C:: ; address name
-    farcall Func_005_708C
+    farcall AIFireSkillUsable
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4676
+    farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4139
@@ -170,7 +170,7 @@ Func_0E2_411C:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4139::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4149
@@ -249,7 +249,7 @@ Func_0E2_41C5:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_6153
+    farcall AIGateFoeWDA74Bits45
     ld a, c
     cp a, $01
     jr z, Jump_0E2_41DF
@@ -269,7 +269,7 @@ Func_0E2_41E0:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4676
+    farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
     jr z, Jump_0E2_41FD
@@ -298,7 +298,7 @@ Jump_0E2_4213::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4226::
-    farcall Func_005_6153
+    farcall AIGateFoeWDA74Bits45
     ld a, c
     cp a, $01
     jr z, Jump_0E2_423A
@@ -778,7 +778,7 @@ Func_0E2_4567:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4676
+    farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4584
@@ -927,7 +927,7 @@ Func_0E2_4674:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4676
+    farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4691
@@ -1016,7 +1016,7 @@ Func_0E2_4721:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4676
+    farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
     jr z, Jump_0E2_473E
@@ -1115,7 +1115,7 @@ Func_0E2_47CE:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4676
+    farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
     jr z, Jump_0E2_47EB
@@ -1231,7 +1231,7 @@ Jump_0E2_48AD::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Ironize:: ; heuristic: follows a terminator; C0
 Func_0E2_48AE:: ; address name
-    farcall Func_005_7397
+    farcall AIIronizeUsable
     ld a, c
     and a, a
     ret z
@@ -1539,7 +1539,7 @@ Func_0E2_4AB6:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4ACF::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4ADF
@@ -1642,7 +1642,7 @@ Jump_0E2_4B84::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4B94::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4BA4
@@ -1748,7 +1748,7 @@ Func_0E2_4C49:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4C59::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4C69
@@ -1773,7 +1773,7 @@ Jump_0E2_4C79::
 
 Jump_0E2_4C89::
     call WeighWD044RuleBit1
-    farcall Func_005_5D44
+    farcall FailIfFoeHPAtLeast150PercentOfActor
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4CA0
@@ -1840,7 +1840,7 @@ Func_0E2_4CE6:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4CFF::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4D0F
@@ -1919,7 +1919,7 @@ Func_0E2_4D7B:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4D94::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4DA4
@@ -1980,7 +1980,7 @@ Func_0E2_4DEC:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4E05::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E15
@@ -2051,7 +2051,7 @@ Func_0E2_4E71:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4E8A::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E9A
@@ -2112,7 +2112,7 @@ Jump_0E2_4EF3::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4F07::
-    farcall Func_005_5D44
+    farcall FailIfFoeHPAtLeast150PercentOfActor
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4F1B
@@ -2160,7 +2160,7 @@ Jump_0E2_4F49::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4F5D::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4F6D
@@ -2201,7 +2201,7 @@ Jump_0E2_4F9D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FB0::
-    farcall Func_005_6494
+    farcall FailIfFoeHPBelowFourTimesWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4FC0
@@ -2274,7 +2274,7 @@ Jump_0E2_5024::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5037::
-    farcall Func_005_6494
+    farcall FailIfFoeHPBelowFourTimesWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5067
@@ -2447,7 +2447,7 @@ Jump_0E2_513B::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_514E::
-    farcall Func_005_6494
+    farcall FailIfFoeHPBelowFourTimesWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_515E
@@ -2572,7 +2572,7 @@ Jump_0E2_5213::
 
 Jump_0E2_5223::
     call WeighWD044RuleBit1
-    farcall Func_005_5C8C
+    farcall FailIfFoeHPAtMostFourFifthsWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5236
@@ -2660,7 +2660,7 @@ Jump_0E2_52B9::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_52CD::
-    farcall Func_005_5C8C
+    farcall FailIfFoeHPAtMostFourFifthsWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_52DD
@@ -2783,7 +2783,7 @@ Jump_0E2_53A2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_53B2::
-    farcall Func_005_4E48
+    farcall FailIfFoeWD2C1AtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_53C2
@@ -3188,7 +3188,7 @@ Jump_0E2_568C::
 
 Jump_0E2_56A2::
     call WeighWD044RuleBit1
-    farcall Func_005_6452
+    farcall AllyCheckWC984AndOtherSlots
     ld a, c
     and a, a
     jr nz, Jump_0E2_56B5
@@ -3295,7 +3295,7 @@ Jump_0E2_5761::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5774::
-    farcall Func_005_6452
+    farcall AllyCheckWC984AndOtherSlots
     ld a, c
     and a, a
     jr nz, Jump_0E2_5784
@@ -3395,7 +3395,7 @@ Jump_0E2_581C::
 
 Jump_0E2_5832::
     call WeighWD044RuleBit1
-    farcall Func_005_6452
+    farcall AllyCheckWC984AndOtherSlots
     ld a, c
     and a, a
     jr nz, Jump_0E2_5845
@@ -3673,7 +3673,7 @@ Jump_0E2_5A04::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A17::
-    farcall Func_005_6153
+    farcall AIGateFoeWDA74Bits45
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5A2B
@@ -4341,7 +4341,7 @@ Func_0E2_5EB6:: ; address name
 ; 1 call site from 1 routine (e.g. AIScoreB_LushLicks)
 AIScore_LushLicks::
 Func_0E2_5EC0:: ; address name
-    farcall Func_005_7AD8
+    farcall AILickSkillUsable_7AD8
     ld a, c
     and a, a
     ret z
@@ -4513,7 +4513,7 @@ Func_0E2_5FDE:: ; address name
 ; 1 call site from 1 routine (e.g. AIScoreB_Ahhh)
 AIScore_Ahhh::
 Func_0E2_5FE8:: ; address name
-    farcall Func_005_7AD8
+    farcall AILickSkillUsable_7AD8
     ld a, c
     and a, a
     ret z
@@ -5196,7 +5196,7 @@ Jump_0E2_648C::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Ironize_648D:: ; heuristic: follows a terminator; C0
 Func_0E2_648D:: ; address name
-    farcall Func_005_7397
+    farcall AIIronizeUsable
     ld a, c
     and a, a
     ret z

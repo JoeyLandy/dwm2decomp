@@ -107,7 +107,7 @@ Jump_004_4093::
     ld a, [wC967]
     or a, a
     ret z
-    call Func_004_42CD
+    call PlaceObjectCB86ForWCD0B
     ret
 
 Jump_004_40A9::
@@ -399,10 +399,12 @@ Jump_004_420B::
     ret
     INCBIN "dwm2-cobi-us.gbc", $01023D, $90
 
+; on map screen (0, 0) or (1, 0) sets wCB8A/wCB8B and wCB86 for wCD0B values 1, 7, 8 or 9 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_004_4025)
 ; reads: hMapScreenY, hMapScreenX, wCD0B
 ; writes: wCB8B, wCB8A, wCB86
-Func_004_42CD::
+PlaceObjectCB86ForWCD0B::
+Func_004_42CD:: ; address name
     ldh a, [hMapScreenY]
     or a, a
     ret nz
@@ -3394,11 +3396,11 @@ Func_004_581C:: ; address name
     farcall CountKeysOrFull
     ld a, $01
     ldh [hFFC7], a
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     farcall CountKeysOrFull
     ld a, $02
     ldh [hFFC7], a
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld a, [wC836]
     set 7, a
     ld [wC836], a
@@ -7643,7 +7645,7 @@ Jump_004_6FF7::
     call StartScriptAtHL_B04
     ld a, $08
     ldh [hFFC6], a
-    farcall Func_05F_6DAC
+    farcall MarkKeyEntryKindHFFC6Bit6
     ret
 
 Jump_004_702B::

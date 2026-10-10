@@ -216,7 +216,7 @@ Func_011_4130::
     ret
 
 Jump_011_413E::
-    call Func_011_43BB
+    call CheckMapExitTable4480
     bit 0, c
     ret nz
     ldh a, [hMapId]
@@ -407,11 +407,13 @@ Jump_011_4235::
     ld c, $01
     ret
 
+; unless bit 7 of wCC44 is set, looks hMapId up in Data_011_42AC; when listed, sets the linked map from Data_011_42B8 and warps (using wC88F when wC891 selects it), C = 1; otherwise C = 0 (E-0125)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, CallF4268OnScreenY1)
 ; reads: wCC44, hMapId, wC88E, wC891, wCC42, wC88F, wC890, wCD09, ...
 ; writes: hMapId, wC8C8, wC8C9, hMapScreenX, hMapScreenY
 ; points at: wC88F
-Func_011_4268::
+WarpToLinkedMapForCurrentMap::
+Func_011_4268:: ; address name
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_011_42D9
@@ -522,7 +524,7 @@ Jump_011_431E::
     ret
 
 ; script command: plays sound $60 and reads a warp destination at DE (wC8C8/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wC5E0 += 1, wModeState = 4, updates hFF8C and returns C = 1 (E-0121)
-; 1 call site from 1 routine (e.g. Func_011_4268)
+; 1 call site from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
 ; reads: hFF8C
 ; writes: wCCEA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C6, wModeState, wC8C5, ...
 ; points at: wC5E0
@@ -568,7 +570,7 @@ Func_011_4340:: ; address name
     ret
 
 ; wC8CA = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wC8C5, updates hFF8C and sets wC8C6 = 1 (E-0124)
-; 2 call sites from 1 routine (e.g. Func_011_4268)
+; 2 call sites from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
 ; reads: hFF8C
 ; writes: wC8CA, wModeState, wC8C5, hFF8C, wC8C6
 StartWarpTransition::
@@ -594,11 +596,13 @@ Func_011_438F:: ; address name
     ld [wC8C6], a
     ret
 
+; for maps from $20 looks hMapId up in the 4-byte table Data_011_4480 and runs Func_011_43FA with its entry (or wC88F); unlisted maps clear bit 5 of hFF8C and return C = 0 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_011_4130)
 ; reads: hMapId, hFF8C, wC88E, wC891
 ; writes: hFF8C
 ; points at: wC88F
-Func_011_43BB::
+CheckMapExitTable4480::
+Func_011_43BB:: ; address name
     ldh a, [hMapId]
     cp a, $20
     jr c, Jump_011_43CC
@@ -637,21 +641,23 @@ Jump_011_43DF::
     cp a, b
     jr nz, Jump_011_43F3
     ld de, wC88F
-    call Func_011_43FA
+    call CheckMapExitTable4480_Sub01
     ret
 
 Jump_011_43F3::
     ld e, l
     ld d, h
     inc de
-    call Func_011_43FA
+    call CheckMapExitTable4480_Sub01
     ret
 
-; 2 call sites from 1 routine (e.g. Func_011_43BB)
+; only called from CheckMapExitTable4480 (E-0047)
+; 2 call sites from 1 routine (e.g. CheckMapExitTable4480)
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hFF8C
 ; writes: wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC88B, wC8C6, ...
 ; points at: wC5E0
-Func_011_43FA::
+CheckMapExitTable4480_Sub01::
+Func_011_43FA:: ; address name
     ldh a, [hPlayerX]
     and a, $F0
     ld c, a

@@ -122,11 +122,13 @@ Jump_0A3_417D::
 Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $02, $01, $02
 
+; copies 16 bytes of wBattleActionChoice to wDA2C, clears wC953/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
 ; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, RunBattleCommandEntry_BankA1_Case06)
 ; reads: wC58A
 ; writes: wC953, wC954
 ; points at: wBattleActionChoice, wDA2C, wDA24
-Func_0A3_4187::
+SaveActionChoicesAndPickFormations::
+Func_0A3_4187:: ; address name
     ld b, $10
     ld hl, wBattleActionChoice
     ld de, wDA2C
@@ -144,11 +146,11 @@ Jump_0A3_418F::
     cp a, $01
     ret z
     ld de, wBattleActionChoice
-    call Func_0A3_41CF
+    call SaveActionChoicesAndPickFormations_Sub01
     or a, a
     jr z, Jump_0A3_41B5
     ld de, wBattleActionChoice
-    call Func_0A3_4917
+    call SaveActionChoicesAndPickFormations_Sub02
     ld [wC953], a
 
 Jump_0A3_41B5::
@@ -158,18 +160,20 @@ Jump_0A3_41B5::
     cp a, $02
     ret z
     ld de, wDA24
-    call Func_0A3_41CF
+    call SaveActionChoicesAndPickFormations_Sub01
     or a, a
     ret z
     ld de, wDA24
-    call Func_0A3_4917
+    call SaveActionChoicesAndPickFormations_Sub02
     ld [wC954], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0A3_4187)
+; only called from SaveActionChoicesAndPickFormations (E-0047)
+; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
 ; reads: wBattleActor, hFFC6, wC58A
 ; writes: hFFC6
-Func_0A3_41CF::
+SaveActionChoicesAndPickFormations_Sub01::
+Func_0A3_41CF:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ldh [hFFC6], a
@@ -257,7 +261,7 @@ Jump_0A3_4239::
     inc hl
     push bc
     push hl
-    call Func_0A3_44C4
+    call SaveActionChoicesAndPickFormations_Sub01_Sub01
     pop hl
     pop bc
     or a, a
@@ -279,7 +283,7 @@ Jump_0A3_4264::
     inc hl
     push bc
     push hl
-    call Func_0A3_44C4
+    call SaveActionChoicesAndPickFormations_Sub01_Sub01
     pop hl
     pop bc
     or a, a
@@ -293,7 +297,7 @@ Jump_0A3_4274::
     ret
 
 ; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
-; 3 call sites from 1 routine (e.g. Func_0A3_41CF)
+; 3 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
 ; points at: wD80F
 SlotHasStatus3Or4Bits_BankA3::
 Func_0A3_4278:: ; address name
@@ -313,10 +317,12 @@ Jump_0A3_4287::
 Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28C289, $23B
 
-; 2 call sites from 1 routine (e.g. Func_0A3_41CF)
+; only called from SaveActionChoicesAndPickFormations_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
 ; reads: wD981, wD982, hFFC6, wC5E7, wD980
 ; writes: hFFC6
-Func_0A3_44C4::
+SaveActionChoicesAndPickFormations_Sub01_Sub01::
+Func_0A3_44C4:: ; address name
     push hl
     ld a, $03
     call DivideBByA
@@ -465,9 +471,11 @@ Jump_0A3_45A0::
 Data_0A3_45A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28C5A3, $374
 
-; 2 call sites from 1 routine (e.g. Func_0A3_4187)
+; only called from SaveActionChoicesAndPickFormations (E-0047)
+; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
 ; reads: hFFC6
-Func_0A3_4917::
+SaveActionChoicesAndPickFormations_Sub02::
+Func_0A3_4917:: ; address name
     push bc
     push de
     ld a, $03
@@ -557,7 +565,7 @@ Jump_0A3_497A::
     ret
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
-; 6 call sites from 1 routine (e.g. Func_0A3_44C4)
+; 6 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01_Sub01)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankA3::
 Func_0A3_497E:: ; address name

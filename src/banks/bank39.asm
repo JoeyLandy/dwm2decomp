@@ -2,7 +2,7 @@ SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
 ; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wDA53[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wC58A is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
-; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4ADC_Case01_Case02, Func_032_5820_Case00, ...)
+; 8 call sites from 7 routines (e.g. ChooseTargetForActor, Func_032_4D99, Func_032_4ADC_Case01_Case02, Func_032_5820_Case00, ...)
 ; reads: wBattleActor, wC58A
 ; writes: wBattleActionId
 ; points at: wBattleActionChoice, wDA53
@@ -1418,7 +1418,7 @@ Jump_039_5415::
     inc c
     dec b
     jr nz, Jump_039_53DD
-    call Func_039_6D89
+    call PickWeakestEstimatedTarget
 
 Jump_039_542B::
     ld a, [wBattleActor]
@@ -1558,7 +1558,7 @@ Jump_039_54ED::
     inc c
     dec b
     jr nz, Jump_039_54AF
-    call Func_039_6D89
+    call PickWeakestEstimatedTarget
 
 Jump_039_5503::
     ld a, [wBattleActor]
@@ -5953,11 +5953,13 @@ Jump_039_6D82::
     dec b
     jr nz, Jump_039_6D82
 
+; picks the smallest of the three wD874 estimates (ties broken randomly) and adds its index to wBattleTarget (E-0125)
 ; 3 call sites from 3 routines (e.g. EstimateThreeTargets, ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wD874, wD875, hFFC6, wC5E7
 ; writes: hFFC6
 ; points at: wD874, wBattleTarget
-Func_039_6D89::
+PickWeakestEstimatedTarget::
+Func_039_6D89:: ; address name
     xor a, a
     ldh [hFFC6], a
     ld a, [wD874]
@@ -6193,7 +6195,7 @@ Jump_039_6EAE::
     inc c
     dec b
     jr nz, Jump_039_6E95
-    call Func_039_6D89
+    call PickWeakestEstimatedTarget
     ret
 
 ; only called from ChooseTarget_Heal (E-0047)

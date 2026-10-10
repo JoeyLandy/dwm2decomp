@@ -10,9 +10,11 @@ Func_034_4001:: ; address name
     call LoadMonsterRecordTo
     ret
 
+; copies hFFC6 bytes of the 26-byte entry of monster wMonsterId/wCFE7 plus C from $4075 to DE; ids from $250 use CopyMonsterTableBytesFrom4056 in bank $A2 (E-0125)
 ; 2 call sites from 2 routines (e.g. Func_00A_5071, Func_085_5B53)
 ; reads: wCFE7, wMonsterId, hFFC6
-Func_034_4008::
+CopyMonsterTableBytesFrom4075::
+Func_034_4008:: ; address name
     ld a, [wCFE7]
     cp a, $02
     jr c, Jump_034_401D
@@ -78,7 +80,7 @@ Jump_034_4055::
     ld b, $1A
 
 ; B bytes from [HL] to [DE]; HL and DE advance
-; 1 call site from 1 routine (e.g. Func_034_4008)
+; 1 call site from 1 routine (e.g. CopyMonsterTableBytesFrom4075)
 CopyBytesDEFromHL::
 Func_034_406E:: ; address name
     ld a, [hl+]

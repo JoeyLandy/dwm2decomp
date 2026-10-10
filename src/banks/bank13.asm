@@ -1834,10 +1834,12 @@ Jump_013_49CE:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
+; when wC955 is set: clears it and warps between map $7F and $92 (position $40, $40 or $40, $10) through mode state 6 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC955, hMapId
 ; writes: wC955, hMapId, wC8C8, wC8C9, wJoypadHeld, wJoypadPressed, wC8CA, wC914, ...
-Func_013_49D5:: ; heuristic: follows a terminator; C0
+ToggleMapBetween7FAnd92:: ; heuristic: follows a terminator; C0
+Func_013_49D5:: ; address name
     ld a, [wC955]
     or a, a
     ret z
@@ -5189,7 +5191,7 @@ Jump_013_5F0C::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7D95
+    farcall FindPartyIndexOfSpeciesHFFC6
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_013_5F28
@@ -6645,7 +6647,7 @@ Jump_013_68E2:: ; address name
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7D95
+    farcall FindPartyIndexOfSpeciesHFFC6
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_013_691C
@@ -8007,7 +8009,7 @@ Jump_013_704D::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    farcall Func_012_7D95
+    farcall FindPartyIndexOfSpeciesHFFC6
     ldh a, [hFFC6]
     bit 7, a
     jr nz, Jump_013_7046
@@ -8719,7 +8721,7 @@ Jump_013_75DE::
 Jump_013_75E5::
     ld a, $07
     ldh [hFFC6], a
-    farcall Func_085_5B23
+    farcall KeyListHasKindHFFC6
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_7624
@@ -8743,7 +8745,7 @@ Jump_013_7607::
     ldh [hFFC7], a
 
 Jump_013_7617::
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld hl, $58C3
     call StartScriptAtHL_B13
     ret
@@ -8783,7 +8785,7 @@ Jump_013_765E::
 Jump_013_7665::
     ld a, $09
     ldh [hFFC6], a
-    farcall Func_085_5B23
+    farcall KeyListHasKindHFFC6
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_76A4
@@ -8807,7 +8809,7 @@ Jump_013_7687::
     ldh [hFFC7], a
 
 Jump_013_7697::
-    farcall Func_012_6955
+    farcall WriteKeyEntryHFFC6
     ld hl, $58EF
     call StartScriptAtHL_B13
     ret
