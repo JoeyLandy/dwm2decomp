@@ -58,7 +58,7 @@ Jump_0F2_4013::
     ldh [hFFB9], a
 
 Jump_0F2_4075::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_0F2_4075
@@ -349,7 +349,7 @@ Func_0F2_4202:: ; address name
     ldh [hFFB9], a
 
 Jump_0F2_4219::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_0F2_4219

@@ -831,7 +831,7 @@ Jump_0A0_4489::
     ld a, [wD868]
     or a, a
     jr nz, Jump_0A0_4499
-    farcall Func_019_434D
+    farcall LoadSlotSkillsFromBattlerRecord
     jr Jump_0A0_449F
 
 Jump_0A0_4499::
@@ -1004,7 +1004,7 @@ Jump_0A0_45A0::
     ld a, [wD868]
     or a, a
     jr nz, Jump_0A0_45B3
-    farcall Func_019_434D
+    farcall LoadSlotSkillsFromBattlerRecord
     jr Jump_0A0_45B9
 
 Jump_0A0_45B3::
@@ -2394,7 +2394,7 @@ Func_0A0_4F70:: ; address name
     ld a, [wD802]
     cp a, $FF
     ret z
-    farcall Func_03A_4ADB
+    farcall RunBattleEffectAnimation
     ld a, [wD800]
     cp a, $02
     ret nz

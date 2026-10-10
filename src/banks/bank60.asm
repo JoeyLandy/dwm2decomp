@@ -79,7 +79,7 @@ DebugAutomap_Update_Sub01_Sub01_Sub01::
 Func_060_4076:: ; address name
     call LoadWC969TripleForWCD05
     call LoadKeyWorldParamsForWC833
-    call Func_060_408F
+    call RollKeyWorldMonsterTableWCD10
     call FillWCD11LevelsForWCD05
     call RollKeyWorldMonsterTableWCD50
     call FillWCD51LevelsSlope
@@ -87,11 +87,13 @@ Func_060_4076:: ; address name
     call RollKeyWorldEncounterTable
     ret
 
+; fills 32 two-byte entries from wCD10 with random monster ids from the wCCF7 band lists (rows from Data_060_4123 by wCD02) (E-0130)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD02, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wCD10, wCCF7
-Func_060_408F::
+RollKeyWorldMonsterTableWCD10::
+Func_060_408F:: ; address name
     ld b, $20
     ld de, wCD10
     ld a, e
@@ -2326,8 +2328,8 @@ Jump_060_538C::
     push bc
     ld a, b
     ldh [hFFC6], a
-    call Func_060_54BB
-    call Func_060_53E5
+    call RollKeyWorldObjectKind
+    call PlaceKeyWorldObjectAtRandomCell
     or a, a
     jr nz, Jump_060_53A7
     pop bc
@@ -2385,11 +2387,13 @@ Jump_060_53DF::
     ld [wCD0F], a
     ret
 
+; picks a random open cell within wCD0D x wCD0E not used by another object and stores it for object hFFC6 (E-0130)
 ; 2 call sites from 2 routines (e.g. RefreshKeyWorldObjectsOnEntry, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; reads: wCD0D, wCD04, wCD0E, hFFC9, hFFCA, hFFC6, wCC47, hFFCB, ...
 ; writes: wC94F, hFFC9, hFFCA, hFFCB
 ; points at: wCC4C
-Func_060_53E5::
+PlaceKeyWorldObjectAtRandomCell::
+Func_060_53E5:: ; address name
     xor a, a
     ld [wC94F], a
     push de
@@ -2524,10 +2528,12 @@ Jump_060_54AB::
     ld a, $01
     ret
 
+; picks an object kind for the key level band wCD0F from the chance rows at $556F and its contents ([DE + 1]) (E-0130)
 ; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, RemoveWCC48EntryMatching, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; reads: wCD0F, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_060_54BB::
+RollKeyWorldObjectKind::
+Func_060_54BB:: ; address name
     ld a, [wCD0F]
     ld l, a
     ld h, $00
@@ -3657,8 +3663,8 @@ Jump_060_6333::
     push bc
     ld a, b
     ldh [hFFC6], a
-    call Func_060_54BB
-    call Func_060_53E5
+    call RollKeyWorldObjectKind
+    call PlaceKeyWorldObjectAtRandomCell
     or a, a
     jr nz, Jump_060_634E
     pop bc
@@ -3719,10 +3725,12 @@ Jump_060_6382::
 Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
+; on town maps with bit 7 of wC893 set: sets the object count and band for the map, drops listed objects and marks the wC890 one (E-0130)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
 ; reads: wCC44, wC893, hMapId
 ; writes: wCC47, wCD0F, hFFC6
-Func_060_639D::
+SetupTownObjectsForMap::
+Func_060_639D:: ; address name
     ld a, [wCC44]
     bit 7, a
     ret nz
@@ -3844,7 +3852,7 @@ Jump_060_6470::
     ret
 
 ; clears bit 7 of wC893; walks the wCC47 8-byte entries at wCC48 and drops the count at the first entry for which Func_060_64F3 returns 0 (E-0125)
-; 7 call sites from 1 routine (e.g. Func_060_639D)
+; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
 ; reads: wC893, wCC47
 ; writes: hFFCC, hFFCD, wC893, hFFC6, wCC47
 ; points at: wCC48
@@ -3866,7 +3874,7 @@ Jump_060_649D::
     push bc
     ld a, b
     ldh [hFFC6], a
-    call Func_060_54BB
+    call RollKeyWorldObjectKind
     call RemoveWCC48EntryMatching_Sub01
     or a, a
     jr z, Jump_060_64B8
@@ -3892,7 +3900,7 @@ Jump_060_64B8::
     ret
 
 ; when wC88E is set and wC891 equals hFFC6, sets bit 7 of the entry whose byte 4 equals wC890 (E-0125)
-; 7 call sites from 1 routine (e.g. Func_060_639D)
+; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
 ; reads: wC88E, wC891, hFFC6, wC890, wCC47
 ; points at: wCC4C
 MarkWCC48EntryForWC890::

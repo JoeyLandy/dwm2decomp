@@ -92,7 +92,7 @@ Func_031_40A5:: ; address name
     ld a, [wD802]
     cp a, $FF
     ret z
-    farcall Func_03A_4ADB
+    farcall RunBattleEffectAnimation
     ld a, [wD800]
     cp a, $02
     ret nz

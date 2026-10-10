@@ -2191,10 +2191,10 @@ RunWD780StateWhenNotFading_1B_Case01_Case03::
 Jump_01B_55F3:: ; address name
     ld a, $02
     ld [wD7F5], a
-    farcall Func_00D_5DED
+    farcall DrawKeyListPageNames
     ld a, $01
     ld [wD7F5], a
-    farcall Func_00D_5D26
+    farcall DrawKeyListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3700,7 +3700,7 @@ Jump_01B_5E77::
     ld l, a
     ld a, [hl]
     ldh [hFFC6], a
-    farcall Func_012_69B0
+    farcall DeleteKeyEntryHFFC6
 
 Jump_01B_5E96::
     ld hl, wKeyList
@@ -4869,7 +4869,7 @@ Jump_01B_6613::
     ldh [hFFB9], a
 
 Jump_01B_6650::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_01B_6650
@@ -5098,7 +5098,7 @@ Jump_01B_6753:: ; address name
 ; points at: wC42E, wC42F
 DrawRecordListPageIndicators_1B::
 Func_01B_675F:: ; address name
-    call Func_01B_7399
+    call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
@@ -5611,7 +5611,7 @@ Jump_01B_6AE5:: ; address name
     ld a, [wD7DC]
     cp a, $03
     jr z, Jump_01B_6B02
-    call Func_01B_7399
+    call ListAvailableRecordsForSelection
     ld a, [wD7A9]
     and a, a
     jr z, Jump_01B_6B02
@@ -6487,7 +6487,7 @@ Jump_01B_702D:: ; address name
 ; points at: wC42E, wC42F
 ScriptCommandEF_Run_Bank1B_Case0E_Case01::
 Jump_01B_704F:: ; address name
-    call Func_01B_7399
+    call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
@@ -7032,11 +7032,13 @@ Jump_01B_738C::
 Jump_01B_7398::
     ret
 
+; lists in wD789 the stored records (state 1, or 2 unless wD7DC is 3) whose field $6E is clear and that are not already chosen in wD7DD; count in wD7A9 (E-0130)
 ; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, ScriptCommandEF_Run_Bank1B_Case0E_Case01, Func_01B_6A5E_Case00)
 ; reads: wD7DC, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wD7DD
-Func_01B_7399::
+ListAvailableRecordsForSelection::
+Func_01B_7399:: ; address name
     ld hl, wD789
     ld b, $1E
 

@@ -11,7 +11,7 @@ Func_034_4001:: ; address name
     ret
 
 ; copies hFFC6 bytes of the 26-byte entry of monster wMonsterId/wCFE7 plus C from $4075 to DE; ids from $250 use CopyMonsterTableBytesFrom4056 in bank $A2 (E-0125)
-; 2 call sites from 2 routines (e.g. LoadEncounterMonsterIdsToWD09D, Func_085_5B53)
+; 2 call sites from 2 routines (e.g. LoadEncounterMonsterIdsToWD09D, SetupMap0BMonsterObjects)
 ; reads: wCFE7, wMonsterId, hFFC6
 CopyMonsterTableBytesFrom4075::
 Func_034_4008:: ; address name

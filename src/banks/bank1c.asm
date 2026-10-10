@@ -390,7 +390,7 @@ Jump_01C_4258:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_01C_428E
-    farcall Func_060_639D
+    farcall SetupTownObjectsForMap
     ret
 
 Jump_01C_428E::

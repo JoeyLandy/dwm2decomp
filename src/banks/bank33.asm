@@ -2495,7 +2495,7 @@ Jump_033_5E93:: ; address name
 ; points at: wC42E, wC42F
 Func_033_5215_Table2_Case0F_Case01::
 Jump_033_5E97:: ; address name
-    call Func_033_5F99
+    call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
@@ -2641,11 +2641,13 @@ Func_033_5F83:: ; address name
     call RunFunc6204FourTimes
     ret
 
+; lists in wD789 the stored records (state 1, or 2 unless wD7DC is 3) whose field $6E is clear and that are not already chosen in wD7DD; count in wD7A9 (E-0130)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case0F_Case01)
 ; reads: wD7DC, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wD7DD
-Func_033_5F99::
+ListAvailableRecordsForSelection_Bank33::
+Func_033_5F99:: ; address name
     ld hl, wD789
     ld b, $1E
 

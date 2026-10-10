@@ -29,11 +29,13 @@ Func_004_4008:: ; address name
     call CopyBytes
     ret
 
+; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wCD89/wCDAC entries (E-0130)
 ; 1 call site from 1 routine (e.g. Func_069_4001)
 ; reads: wCC44, wCC45, wCD06, wCD07, wCD0B, wC967
 ; writes: wC967, hFFCF, wSpriteSlotCount
 ; points at: wCE7E, wCDAF, wCD89, wCDAC
-Func_004_4025::
+SetupKeyWorldObjectsForMapType::
+Func_004_4025:: ; address name
     xor a, a
     ld [wC967], a
     ld a, [wCC44]
@@ -103,7 +105,7 @@ Jump_004_4093::
     add a, a
     ld hl, $5327
     add_a_to_hl
-    call Func_004_4129
+    call SetupKeyWorldObjectsForMapType_Sub01
     ld a, [wC967]
     or a, a
     ret z
@@ -123,7 +125,7 @@ Jump_004_40B7::
     ld a, c
     ld hl, $5327
     add_a_to_hl
-    call Func_004_4129
+    call SetupKeyWorldObjectsForMapType_Sub01
     ret
 
 Jump_004_40C4::
@@ -151,7 +153,7 @@ Jump_004_40DF::
     ld a, $08
     ld hl, $5327
     add_a_to_hl
-    call Func_004_4129
+    call SetupKeyWorldObjectsForMapType_Sub01
     ret
 
 Jump_004_40F8::
@@ -180,14 +182,16 @@ Jump_004_4117::
     ld a, $0C
     ld hl, $5327
     add_a_to_hl
-    call Func_004_4129
+    call SetupKeyWorldObjectsForMapType_Sub01
     ret
 
-; 4 call sites from 1 routine (e.g. Func_004_4025)
+; only called from SetupKeyWorldObjectsForMapType (E-0047)
+; 4 call sites from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
 ; reads: wMapWidthScreens, hMapScreenY, hMapScreenX, hFFCF, hFFC8, hFFC6, wCD0B, hFFD0, ...
 ; writes: wSpriteSlotCount, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, hFFC9, ...
 ; points at: wSpriteSlots, wCE7B
-Func_004_4129::
+SetupKeyWorldObjectsForMapType_Sub01::
+Func_004_4129:: ; address name
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -400,7 +404,7 @@ Jump_004_420B::
     INCBIN "dwm2-cobi-us.gbc", $01023D, $90
 
 ; on map screen (0, 0) or (1, 0) sets wCB8A/wCB8B and wCB86 for wCD0B values 1, 7, 8 or 9 (E-0125)
-; 1 call site from 1 routine (e.g. Func_004_4025)
+; 1 call site from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
 ; reads: hMapScreenY, hMapScreenX, wCD0B
 ; writes: wCB8B, wCB8A, wCB86
 PlaceObjectCB86ForWCD0B::
@@ -453,7 +457,7 @@ Jump_004_4309::
     ret
 
 ; hFFC6/hFFC7 = graphics number, hFFCA/hFFCB = VRAM destination: with hFFC8 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
-; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, Func_004_4129, ScriptCommand41_Run_Case09, ...)
+; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, SetupKeyWorldObjectsForMapType_Sub01, ScriptCommand41_Run_Case09, ...)
 ; reads: hFFC8, hFFC6, hFFC7, hFFCA, hFFCB, wIsCGB, hFFC9
 ; points at: wOBJPaletteBuffer
 DecompressGraphicsHFFC6ToHFFCA::
@@ -572,7 +576,7 @@ Jump_004_4396::
     db $D6, $48, $BD, $49, $D7, $4A
 
 ; sets bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a message) (E-0120)
-; 11 call sites from 11 routines (e.g. Func_002_64E5, ScriptCommand09_Case00, RunMessageBox_Bank12_Case00, RunMessageBoxStateIfActive_Bank12_Case00, ...)
+; 11 call sites from 11 routines (e.g. OpenFieldMenuOnA, ScriptCommand09_Case00, RunMessageBox_Bank12_Case00, RunMessageBoxStateIfActive_Bank12_Case00, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 SetBit1OfPlayerAndObjectFlags::

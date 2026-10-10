@@ -4743,10 +4743,12 @@ Jump_005_585A::
     ld c, $FF
     ret
 
+; compares twice the occupied foes' average ATK with the allies' average DEF; returns $00 or $FF in C (E-0130)
 ; 4 call sites from 4 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm, AIScore_Upper_Sub02)
 ; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_005_585D:: ; heuristic: follows a terminator; C0
+CompareFoeAverageATKWithAllyDEF:: ; heuristic: follows a terminator; C0
+Func_005_585D:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04

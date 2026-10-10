@@ -4271,7 +4271,7 @@ Jump_01D_5F8D::
     ld [rRAMG2], a
 
 ; moves the party records found in the record list wD789 to its front and pads the list to $1E entries with $FF (E-0129)
-; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Shared05, Func_01B_7399, Func_033_5F99)
+; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Shared05, ListAvailableRecordsForSelection, ListAvailableRecordsForSelection_Bank33)
 ; reads: wD7A9, wC6FD
 ; points at: wD789, wC6FE, wD7BE
 MovePartyRecordsToFrontOfList::
@@ -4752,7 +4752,7 @@ Data_01D_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 6 call sites from 6 routines (e.g. Func_01D_6320, MarkPartyMembersInRecordListPage, UpdatePagedListCursor_Sub04, DrawTwoChoiceCursorConfirmed, ...)
+; 6 call sites from 6 routines (e.g. DrawRecordListPageMarks, MarkPartyMembersInRecordListPage, UpdatePagedListCursor_Sub04, DrawTwoChoiceCursorConfirmed, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1D_62FF::
 Func_01D_62FF:: ; address name
@@ -4773,11 +4773,13 @@ Func_01D_62FF:: ; address name
     add_a_to_hl
     ret
 
+; for the visible entries of page wD7AF draws each record's mark ($CC/$CD from field $0E, or $CE for state 2) beside it (E-0130)
 ; 10 call sites from 10 routines (e.g. ScriptCommandEF_Run_Case05_Case11, ScriptCommandEF_Run_Case0F_Case05, ScriptCommandED_Run_Case05_Case05, LoadTile4990AndRun6320, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hFFC6, wD7F2, wD7F1, wD7B0
 ; writes: rRAMG2, rRAMB
 ; points at: wD789
-Func_01D_6320::
+DrawRecordListPageMarks::
+Func_01D_6320:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

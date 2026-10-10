@@ -11,7 +11,7 @@ Func_069_4001::
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_069_401E
-    farcall Func_004_4025
+    farcall SetupKeyWorldObjectsForMapType
     farcall RestoreSpriteSnapshot
     ld a, $7F
     ld [wC527], a

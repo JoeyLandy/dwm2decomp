@@ -3048,7 +3048,7 @@ Jump_01E_557C:: ; address name
     xor a, a
     ld [wD7F1], a
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5061,7 +5061,7 @@ Jump_01E_6325:: ; address name
     ld a, [hl]
     ld b, a
     call Func_01E_6D70
-    call Func_01E_6FEB
+    call DrawRecordFamilyEntries_6FEB
     ld a, $F0
     ldh [hFFBA], a
     call BGMapAddressAtScroll_Bank1E
@@ -5397,7 +5397,7 @@ Jump_01E_656F:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD786]
     ld b, $BC
     ld hl, $7880
@@ -5554,7 +5554,7 @@ Func_01E_667C:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_725D
+    call DrawRecordLevelAndStatusRow_1E
     call DrawWD789Cell5RecordDetails_Sub01
     call DrawWD789Cell5RecordDetails_Sub02
     xor a, a
@@ -6110,7 +6110,7 @@ Jump_01E_6A57:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call Func_01E_725D
+    call DrawRecordLevelAndStatusRow_1E
     xor a, a
     ld [rRAMG2], a
     ld a, $0F
@@ -6372,7 +6372,7 @@ Jump_01E_6C1F:: ; address name
     ld a, [hl]
     ld b, a
     push bc
-    call Func_01E_725D
+    call DrawRecordLevelAndStatusRow_1E
     xor a, a
     ld [rRAMG2], a
     ld hl, vTiles1 + $270
@@ -6433,7 +6433,7 @@ ScriptCommandE8_Run_Case09_Case1F::
 Jump_01E_6C97:: ; address name
     ld b, [hl]
     call Func_01E_6D70
-    call Func_01E_6FEB
+    call DrawRecordFamilyEntries_6FEB
     ld a, $F0
     ldh [hFFBA], a
     ld a, [wD781]
@@ -6947,13 +6947,15 @@ RunWD781Step_F0_5DE8_Case05_Sub01::
 Func_01E_6FE3:: ; address name
     ld b, e
     call Func_01E_6D70
-    call Func_01E_6FEB
+    call DrawRecordFamilyEntries_6FEB
     ret
 
+; for record B draws the species names and marks named by the field lists $70D7 or $70DD (by bit 4 of field $0D), or a blank tile for missing entries (E-0130)
 ; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunWD781Step_F0_5DE8_Case05_Sub01)
 ; reads: hFFC6, hFFC7, rSTAT
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F5, wD7F2, wD7F3, wD7F4
-Func_01E_6FEB::
+DrawRecordFamilyEntries_6FEB::
+Func_01E_6FEB:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -7101,7 +7103,7 @@ Jump_01E_70C3::
     ret
 
 ; BC = wCCCD when the byte at DE is $98 (the '???' placeholder), else wCDCC (E-0122)
-; 2 call sites from 1 routine (e.g. Func_01E_6FEB)
+; 2 call sites from 1 routine (e.g. DrawRecordFamilyEntries_6FEB)
 ; points at: wCDCC, wCCCD
 PickNameBufferForFirstByte::
 Func_01E_70C9:: ; address name
@@ -7119,7 +7121,7 @@ Jump_01E_70D6::
     db $1A, $98, $1A, $1C, $A3, $1C, $1C, $A3, $1C, $1A, $98, $1A
 
 ; far-calls LoadRecordWordFieldWD7F5AndShowIcon for record B and continues at Jump_01E_710A (E-0126)
-; 2 call sites from 1 routine (e.g. Func_01E_6FEB)
+; 2 call sites from 1 routine (e.g. DrawRecordFamilyEntries_6FEB)
 ; reads: wD7F1, hFFC6, wD7F2, wD7F3, rSTAT, wC8C1, wC8C2
 LoadRecordWordFieldAndContinue710A::
 Func_01E_70E3:: ; address name
@@ -7385,9 +7387,11 @@ Func_01E_7233:: ; address name
     ret
     db $28, $00, $68, $00, $A8, $00, $E8, $00
 
+; writes the record's level (field $56, marked $6F at the cap in field $57) and its status marks into the BG map at scroll + $29 (E-0130)
 ; 3 call sites from 3 routines (e.g. DrawWD789Cell5RecordDetails, ScriptCommandE8_Run_Case09_Case1D, ScriptCommandE8_Run_Case09_Case16)
 ; reads: hFFC7, hFFC6, wC8C1, wC8C2
-Func_01E_725D::
+DrawRecordLevelAndStatusRow_1E::
+Func_01E_725D:: ; address name
     push hl
     ld a, [hl]
     ld c, $56
@@ -7499,7 +7503,7 @@ Jump_01E_728A::
     ret
 
 ; writes tile $C3 to the 3 VRAM bytes from HL (WaitForVRAMAccess, interrupts off per byte); HL kept; clobbers C, E (E-0067) (the same 17 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_01E_725D)
+; 1 call site from 1 routine (e.g. DrawRecordLevelAndStatusRow_1E)
 WriteThreeC3TilesAtHL_Bank1E::
 Func_01E_7306:: ; address name
     push hl
@@ -7518,7 +7522,7 @@ Jump_01E_730B::
     ret
 
 ; writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_01E_725D)
+; 1 call site from 1 routine (e.g. DrawRecordLevelAndStatusRow_1E)
 WriteTileC0AtHL_Bank1E::
 Func_01E_7317:: ; address name
     di
@@ -7529,7 +7533,7 @@ Func_01E_7317:: ; address name
     ret
 
 ; writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_01E_725D)
+; 1 call site from 1 routine (e.g. DrawRecordLevelAndStatusRow_1E)
 WriteTileC1AtHL_Bank1E::
 Func_01E_7320:: ; address name
     di
@@ -7540,7 +7544,7 @@ Func_01E_7320:: ; address name
     ret
 
 ; writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_01E_725D)
+; 1 call site from 1 routine (e.g. DrawRecordLevelAndStatusRow_1E)
 WriteTileC2AtHL_Bank1E::
 Func_01E_7329:: ; address name
     di
@@ -7760,7 +7764,7 @@ Jump_01E_7435::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 7 call sites from 2 routines (e.g. Func_01E_6FEB, DrawRecordName0FAtTiles2290)
+; 7 call sites from 2 routines (e.g. DrawRecordFamilyEntries_6FEB, DrawRecordName0FAtTiles2290)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1E::
 Func_01E_7443:: ; address name

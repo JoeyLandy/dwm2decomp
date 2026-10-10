@@ -1164,7 +1164,7 @@ Jump_012_4692::
 ; points at: wCB8C, wCB9C, wCBAC, wCBBC, wScriptStep
 ScriptCommand96_Run_Case07::
 Jump_012_469E:: ; address name
-    farcall Func_085_5B53
+    farcall SetupMap0BMonsterObjects
     ld a, $7F
     ld [wC527], a
     ld a, $01
@@ -6587,7 +6587,7 @@ Func_012_6854:: ; address name
 ; 6 call sites from 6 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case03, ...)
 RunFunc722AAnd6EB7::
 Func_012_6893:: ; address name
-    call Func_012_722A
+    call DrawTriggerMarkerSprite
     call RunFunc722AAnd6EB7_Sub01
     ret
 
@@ -6810,11 +6810,13 @@ Jump_012_69AC::
     ldh [hFFC6], a
     ret
 
+; removes key entry hFFC6: clears the matching wC88E link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_Case10, RunWD780StateWhenNotFading_1B_Case01_Case21)
 ; reads: hFFC6, wC833
 ; writes: rRAMB, rRAMG
 ; points at: wC783, wC787, wC833
-Func_012_69B0::
+DeleteKeyEntryHFFC6::
+Func_012_69B0:: ; address name
     ldh a, [hFFC6]
     ld l, a
     ld h, $00
@@ -8225,10 +8227,12 @@ Data_012_71BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B1E8, $42
 
+; unless bit 7 of wC468 is set or no trigger is active (wC8FE = $FF), draws the trigger marker sprite (Data_012_7308) at the trigger cell wC8FF (E-0130)
 ; 2 call sites from 2 routines (e.g. RunFunc722AAnd6EB7, FieldModeStateDispatch_Case07)
 ; reads: wC468, wC8FE, wC956, wCCE9, wCC44, hScrollX, hScrollXHi, wC8FF, ...
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
-Func_012_722A::
+DrawTriggerMarkerSprite::
+Func_012_722A:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -8766,7 +8770,7 @@ Data_012_7581:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. Func_012_7BCC, FieldModeStateDispatch_Case05_Sub02)
+; 2 call sites from 2 routines (e.g. RunPendingFieldEventWC935, FieldModeStateDispatch_Case05_Sub02)
 ; writes: wC910, wC911, wC912, wC913
 ReadTileBuffer2x2AtPixel_Bank12::
 Func_012_75A1:: ; address name
@@ -8805,7 +8809,7 @@ Func_012_75A1:: ; address name
     ret
 
 ; on town maps, every 100 calls (wC832), tries the gold, party-stat and digit events in turn until one sets wC935 (E-0128)
-; 3 call sites from 3 routines (e.g. Func_012_7BCC, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
+; 3 call sites from 3 routines (e.g. RunPendingFieldEventWC935, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wScriptRunning, wC935, wCC44, hMapId, wC832
 ; writes: wC832
 RunPeriodicFieldEventChecks::
@@ -9874,10 +9878,12 @@ Func_012_7BB0:: ; address name
     ld [wC935], a
     ret
 
+; on town maps runs the pending event in wC935 (bits 7 and 6 select the stage; some kinds need wC634); otherwise clears it (E-0130)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC935, hMapId, wC5E8, wCB83, wCB84, wC634
 ; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wSpriteSlots, wCB80, wCB82, ...
-Func_012_7BCC:: ; heuristic: follows a terminator; C0
+RunPendingFieldEventWC935:: ; heuristic: follows a terminator; C0
+Func_012_7BCC:: ; address name
     ld a, [wC935]
     and a, $0F
     cp a, $08
@@ -10013,7 +10019,7 @@ Jump_012_7CA1::
     ret
 
 ; on map type 1, standing on tiles at or above wC196, a 1-in-8 roll sets event $0A in wC935 unless item $2C is owned or the gold is below 100; then A = 1 when any tile under the player is blocking (E-0128)
-; 1 call site from 1 routine (e.g. Func_012_7BCC)
+; 1 call site from 1 routine (e.g. RunPendingFieldEventWC935)
 ; reads: wC195, wC196, wCD04, hFFC6, wC634, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: hFFC6, wC935
 ; points at: wC910

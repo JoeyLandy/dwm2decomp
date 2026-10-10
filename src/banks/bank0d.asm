@@ -733,7 +733,7 @@ Jump_00D_4952:: ; address name
     ld a, $01
     ld [wD7F1], a
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -1224,7 +1224,7 @@ Jump_00D_4BF4:: ; address name
     ld a, $01
     ld [wD7F1], a
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3002,10 +3002,10 @@ ScriptCommandF2_Run_Case03_Case03::
 Jump_00D_585C:: ; address name
     xor a, a
     ld [wD7F5], a
-    call Func_00D_5DED
+    call DrawKeyListPageNames
     xor a, a
     ld [wD7F5], a
-    call Func_00D_5D26
+    call DrawKeyListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3731,10 +3731,12 @@ Data_00D_5D16:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_5D1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $00, $C2, $00, $E2, $00, $02, $01
 
+; blanks the four mark positions and draws marks for the keys on the current page of wD789 (E-0130)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF2_Run_Case03_Case03, RunWD780StateWhenNotFading_1B_Case01_Case03)
 ; reads: wD7F5, wD7AF, wD7B1, wD7A9, wD7B0
 ; points at: wD789, wKeyList
-Func_00D_5D26::
+DrawKeyListPageMarks::
+Func_00D_5D26:: ; address name
     ld a, [wD7F5]
     and a, a
     jr nz, Jump_00D_5D31
@@ -3872,11 +3874,13 @@ Data_00D_5DDD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_5DE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
 
+; for the keys on the current page writes their names to wC8CF and draws them; generated keys (kind $FE) are shown as "Magic Key" (E-0130)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF2_Run_Case03_Case03, RunWD780StateWhenNotFading_1B_Case01_Case03)
 ; reads: wD7AF, wD7B1, wD7A9, wDataBank, wD7B0
 ; writes: wDataBank, wC8DC
 ; points at: wD789, wKeyList, wC8CF
-Func_00D_5DED::
+DrawKeyListPageNames::
+Func_00D_5DED:: ; address name
     ld hl, wD789
     ld a, [wD7AF]
     sla a
@@ -4028,7 +4032,7 @@ Jump_00D_5ED5::
     ret
 
 ; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile instead of taking a new one (E-0125)
-; 2 call sites from 2 routines (e.g. Func_00D_5DED, ScriptCommandF3_Run_Case05_Case03_Sub01)
+; 2 call sites from 2 routines (e.g. DrawKeyListPageNames, ScriptCommandF3_Run_Case05_Case03_Sub01)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
 ; points at: wC8CF

@@ -124,7 +124,7 @@ Jump_024_40D3::
     ldh [hFFB9], a
 
 Jump_024_40EA::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_024_40EA
@@ -1315,7 +1315,7 @@ Jump_024_4854:: ; address name
     ld [wD7F1], a
     ld a, $02
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1752,7 +1752,7 @@ Jump_024_4B52:: ; address name
     ld [wD7F1], a
     ld a, $02
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a

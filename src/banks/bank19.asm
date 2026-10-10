@@ -512,11 +512,13 @@ Func_019_4349:: ; address name
     ld a, [wD868]
     ld c, a
 
+; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads each skill record (with wD868 = 3) (E-0130)
 ; 6 call sites from 6 routines (e.g. Func_019_4CF8, Func_019_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
 ; reads: wD868, wD86A, wD86B
 ; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
-Func_019_434D::
+LoadSlotSkillsFromBattlerRecord::
+Func_019_434D:: ; address name
     ld hl, wD988
     ld a, c
     swap a
@@ -629,7 +631,7 @@ Jump_019_43E4::
     ret
 
 ; replaces skill $8F by $AA for slots without wD8AF set; outside link battles marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
-; 2 call sites from 2 routines (e.g. Func_019_434D, GameMode4_Init_Sub01_Sub04)
+; 2 call sites from 2 routines (e.g. LoadSlotSkillsFromBattlerRecord, GameMode4_Init_Sub01_Sub04)
 ; reads: wC58A
 ; points at: wD8AF, wD9C9, wD989
 AdjustSkillsForBattleStart::
@@ -1448,7 +1450,7 @@ Jump_019_4771::
     pop hl
     ld [hl+], a
     call RollRecordField0DState
-    call Func_019_49B1
+    call AccumulateGrowthForLevelsHFFC7
     farcall Func_01A_5FA7
     ld a, [wD86A]
     ld e, a
@@ -1700,10 +1702,12 @@ Jump_019_49A7::
     ld [hl], a
     ret
 
+; sums the stat word at record + $18 times each level 1..hFFC7 (with a /20 rounding term outside battle kind 3) into the 24-bit hFFCA-hFFCC (E-0130)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wD86A, wD86B, hFFC7, hFFCD, hFFCE, wCFC5, hFFCF, hFFCA, ...
 ; writes: hFFCA, hFFCB, hFFCC, hFFCF, hFFCD, hFFCE
-Func_019_49B1::
+AccumulateGrowthForLevelsHFFC7::
+Func_019_49B1:: ; address name
     ld a, [wD86A]
     add a, $18
     ld l, a
@@ -1833,7 +1837,7 @@ Jump_019_4A68::
     ret
 
 ; DEHL = A * EHL (a 24-bit by 8-bit multiply from three Multiply8 calls) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_019_49B1, ScaleWordBy6Or12Capped10000)
+; 2 call sites from 2 routines (e.g. AccumulateGrowthForLevelsHFFC7, ScaleWordBy6Or12Capped10000)
 Multiply24By8::
 Func_019_4A74:: ; address name
     push af
@@ -2230,7 +2234,7 @@ Jump_019_4C2E::
     ld a, [wD868]
     or a, a
     jr nz, Jump_019_4C3B
-    call Func_019_434D
+    call LoadSlotSkillsFromBattlerRecord
     jr Jump_019_4C3E
 
 Jump_019_4C3B::
@@ -2392,7 +2396,7 @@ Jump_019_4D29::
     ld a, [wD868]
     or a, a
     jr nz, Jump_019_4D39
-    call Func_019_434D
+    call LoadSlotSkillsFromBattlerRecord
     jr Jump_019_4D3C
 
 Jump_019_4D39::

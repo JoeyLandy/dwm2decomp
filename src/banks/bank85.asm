@@ -876,7 +876,7 @@ Func_085_4555:: ; address name
 Jump_085_457D::
     ld l, e
     ld h, d
-    call Func_000_1EA5
+    call DrawScreenBufferToBGMapWithAttrs
     ret
     INCBIN "dwm2-cobi-us.gbc", $214583, $48
 
@@ -4525,11 +4525,13 @@ Jump_085_5B4E::
     ldh [hFFC6], a
     ret
 
+; on map $0B places four monster objects and picks the monster for the wC82C / wD7FF entry (table $5C5E) or a random one (E-0130)
 ; 3 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommand96_Run_Case07)
 ; reads: hMapId, wC94A, wD7FF, wC82C, hFFC6, hFFC7, wCD04
 ; writes: wCB8A, wCB9A, wCBAA, wCBBA, wCB8B, wCB9B, wCBAB, wCBBB, ...
 ; points at: wCFDD, hFFC6, wCB91
-Func_085_5B53::
+SetupMap0BMonsterObjects::
+Func_085_5B53:: ; address name
     ldh a, [hMapId]
     cp a, $0B
     ret nz
@@ -4718,7 +4720,7 @@ Jump_085_5CBE::
     jr Jump_085_5D41
 
 Jump_085_5CD8::
-    farcall Func_061_4001
+    farcall ComputePartyStrengthLevelWCD05
     call NextRandomSeed
     ld a, [wCD04]
     and a, $1F

@@ -7097,7 +7097,7 @@ Jump_003_6E9D:: ; address name
 
 Jump_003_6EAF::
     ldh [hFFC6], a
-    farcall Func_012_69B0
+    farcall DeleteKeyEntryHFFC6
     xor a, a
     ld [wMenuPage], a
     ld [wC46E], a

@@ -1048,7 +1048,7 @@ Data_00A_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wCFDD, wCFDE, wCFDC, wCFC5
 RunWC903Case_Case05::
 Jump_00A_472E:: ; address name
-    farcall Func_061_4001
+    farcall ComputePartyStrengthLevelWCD05
     ld c, $76
     ld a, [wCD05]
     cp a, $05
@@ -3181,11 +3181,13 @@ Data_00A_560C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $97, $55, $A2, $55, $AD, $55, $B8, $55, $C3, $55, $CE, $55, $D9, $55, $E4, $55
     db $EF, $55
 
+; counts steps in wC7C9 (wrapping at 1000); every 100 steps and at 1000 updates the stored SRAM records by their state byte and field $6E (E-0130)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wScriptRunning, wC901, wC7C9, wC7CA, hFFC6
 ; writes: hFFC6, wC7C9, wC7CA, rRAMG
 ; points at: sA000
-Func_00A_561E::
+AdvanceStepCounterAndUpdateStoredRecords::
+Func_00A_561E:: ; address name
     ld a, [wScriptRunning]
     or a, a
     ret nz

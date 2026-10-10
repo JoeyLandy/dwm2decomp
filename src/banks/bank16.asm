@@ -4860,7 +4860,7 @@ Jump_016_5EEC:: ; address name
     ld a, $FF
     call FillBytes
     farcall CopyRectRecord796FToScreenBufferAndPlaySound6C
-    call Func_016_64DC
+    call ListPartyAndStoredRecordsForPage
     call DrawRecordListPageWithNumbers
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -4885,7 +4885,7 @@ Func_016_5D13_Case0D::
 Jump_016_5F24:: ; address name
     ld de, wC46B
     ld hl, Data_016_66F7
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_016_5F38
@@ -4956,7 +4956,7 @@ Func_016_5D13_Case0F::
 Jump_016_5FA4:: ; address name
     ld de, wC46C
     ld hl, Data_016_66EB
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_016_5FC7
@@ -5054,7 +5054,7 @@ Jump_016_6058:: ; address name
     farcall CopyRectRecord787EAndPlaySound6C
     ld a, $BB
     ld [wC2C5], a
-    call Func_016_64DC
+    call ListPartyAndStoredRecordsForPage
     call DrawRecordListPageWithNumbers
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -5318,7 +5318,7 @@ Func_016_5D13_Case17::
 Jump_016_6250:: ; address name
     ld de, wC46B
     ld hl, Data_016_66EF
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_016_6279
@@ -5420,7 +5420,7 @@ Func_016_5D13_Case19::
 Jump_016_631B:: ; address name
     ld hl, Data_016_66EB
     ld de, wC46D
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_016_6375
@@ -5601,7 +5601,7 @@ Jump_016_643D:: ; address name
 ; reads: wJoypadPressed
 SetDEFlagOnBButton::
 Func_016_6480:: ; address name
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressed]
     and a, $01
     ret nz
@@ -5668,11 +5668,13 @@ Jump_016_64C4::
     ld [rRAMG], a
     ret
 
+; lists the party records and then the stored records (state 1, field $6E clear) in wD789 and sets the page counts wCFD0-wCFD3 (E-0130)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0C)
 ; reads: wC6FD, wC0A0, wC7C7, wC470, wCFD2
 ; writes: rRAMG, rRAMB, wC0A0, wCFD3, wCFD2, wCFD0, wC1B8, wC1F8, ...
 ; points at: wD789, wC6FE, sA000
-Func_016_64DC::
+ListPartyAndStoredRecordsForPage::
+Func_016_64DC:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -5851,10 +5853,12 @@ Jump_016_65EE::
     ld [rRAMG], a
     ret
 
+; up/down/left/right move the cursor at [DE] and the page wCFD1 within the page sizes wCFD0/wCFD3 and page count wCFD2 (E-0130)
 ; 8 call sites from 8 routines (e.g. Func_016_6C16_Case0C, Func_016_6C16_Case0A, Func_016_6C16_Case02, Func_016_5D13_Case19, ...)
 ; reads: wJoypadPressedRepeat, wCFD2, wCFD1, wCFD3, wCFD0, wFrameCounterLo
 ; writes: wFrameCounterLo, wCFD1
-Func_016_65FF::
+MovePagedListCursor::
+Func_016_65FF:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_016_662B
@@ -5974,7 +5978,7 @@ Jump_016_66B1::
     ret
 
 ; HL = table of VRAM addresses, [DE] = index: writes tile $C3 at that entry's address (WriteVRAMByte); HL kept (E-0103)
-; 4 call sites from 1 routine (e.g. Func_016_65FF)
+; 4 call sites from 1 routine (e.g. MovePagedListCursor)
 BlankTileAtTableEntryDE::
 Func_016_66B9:: ; address name
     ld a, [de]
@@ -5988,7 +5992,7 @@ Func_016_66B9:: ; address name
     ret
 
 ; HL = table of VRAM addresses, [DE] = index: writes the cursor tile $BB at that entry's address (WriteVRAMByte); HL kept (E-0118)
-; 2 call sites from 1 routine (e.g. Func_016_65FF)
+; 2 call sites from 1 routine (e.g. MovePagedListCursor)
 DrawCursorTileAtTableEntryDE::
 Func_016_66CB:: ; address name
     ld a, [de]
@@ -6990,7 +6994,7 @@ Func_016_6C16_Case02::
 Jump_016_6CC8:: ; address name
     ld hl, Data_016_66E7
     ld de, wC46B
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_016_6CEA
@@ -7184,7 +7188,7 @@ Func_016_6C16_Case0A::
 Jump_016_6DE4:: ; address name
     ld hl, Data_016_66F7
     ld de, wC46C
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_016_6E22
@@ -7269,7 +7273,7 @@ Func_016_6C16_Case0C::
 Jump_016_6E80:: ; address name
     ld hl, Data_016_66EB
     ld de, wC46D
-    call Func_016_65FF
+    call MovePagedListCursor
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_016_6ED4
@@ -8941,7 +8945,7 @@ Func_016_7A5B:: ; address name
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
-; 6 call sites from 6 routines (e.g. Func_002_66CC, Func_003_4208_Case00, PauseMenu_State3_Case00_Case00, ScriptCommandF6_Run_Case08, ...)
+; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, Func_003_4208_Case00, PauseMenu_State3_Case00_Case00, ScriptCommandF6_Run_Case08, ...)
 ; reads: wC6FD
 ; writes: rRAMG, rRAMB
 LoadTilesForPartyRecords::

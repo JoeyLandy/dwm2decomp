@@ -956,7 +956,7 @@ Jump_000_069A::
     ret
 
 ; A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read
-; 16 call sites from 2 routines (e.g. Func_000_0150, Func_000_13E5)
+; 16 call sites from 2 routines (e.g. Func_000_0150, LoadSGBBorderForSetA)
 ; reads: wSGBActive
 ; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rLCDC, wC5EC
 SGBTransferCompressed::
@@ -1836,7 +1836,7 @@ Jump_000_0B5A::
     ret
 
 ; C2 static reading (E-0014): switches to the ROM bank held in $D7FE, reads the word at [HL] into B (low address) and C (next address), leaves HL unchanged, restores the caller's bank. $D7FE is therefore the data-bank variable for reads through HL; 30 call sites.
-; 31 call sites from 19 routines (e.g. CopyMonsterNameToBuffer_B01, Func_00D_5DED, CopyMonsterNameToBuffer_B0D, ScriptFetchF5, ...)
+; 31 call sites from 19 routines (e.g. CopyMonsterNameToBuffer_B01, DrawKeyListPageNames, CopyMonsterNameToBuffer_B0D, ScriptFetchF5, ...)
 ; reads: wDataBank
 ; writes: rROMB0
 ReadWordFromDataBank::
@@ -3395,9 +3395,11 @@ Jump_000_13E0::
     ld [wC5E2], a
     ret
 
+; when A differs from wC523: sends the Super Game Boy border tiles, map and palettes of set A through three compressed transfers (SGBTransferCompressed) (E-0130)
 ; 2 call sites from 2 routines (e.g. GameMode1_Init, GameMode5_Init_Case01)
 ; points at: wC523
-Func_000_13E5::
+LoadSGBBorderForSetA::
+Func_000_13E5:: ; address name
     ld hl, wC523
     cp a, [hl]
     ret z
@@ -3980,7 +3982,7 @@ Jump_000_16F1::
     ret
 
 ; HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones
-; 116 call sites from 78 routines (e.g. DebugResultsDisplay_Update_Sub02, PackTwoDigitsOfCAsBCD, Func_002_6788, DrawRecordHPMPAndLevelForRowC, ...)
+; 116 call sites from 78 routines (e.g. DebugResultsDisplay_Update_Sub02, PackTwoDigitsOfCAsBCD, BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFF9C, hFFF6
@@ -4411,11 +4413,13 @@ Func_000_18D6:: ; address name
     db $FA, $00, $40, $F5, $3E, $61, $EA, $00, $21, $F0, $C6, $6F, $26, $00, $29, $7D
     db $C6, $05, $6F, $7C, $CE, $67, $67, $3E, $02, $18, $19
 
+; for the current map screen decompresses its tile block (chunk table in bank $61, indexed by hFFC6 and the screen position) into wScreenTileBuffer, and on CGB its attributes (E-0130)
 ; 4 call sites from 4 routines (e.g. Func_061_4472_Case07, Func_061_4472_Case06, Func_061_4472_Case03, Func_061_4472_Case02)
 ; reads: hFFC6, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hFFC7, hFFC8, hFFC9
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_000_1906::
+LoadMapScreenFromChunk::
+Func_000_1906:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $61
@@ -5368,11 +5372,13 @@ Jump_000_1E9C::
     ldh [rVBK], a
     ret
 
+; copies the 20 x 13 screen-buffer area (offset by bit 7 of wC8CB) to the BG map at HL, wrapping, and on CGB its attributes from WRAM bank 2 (E-0130)
 ; 2 call sites from 2 routines (e.g. StepStringDisplayUntilDone_Sub01, DrawScreenBufferAtScrollOrigin)
 ; reads: wC8CB, rSTAT, wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer
-Func_000_1EA5::
+DrawScreenBufferToBGMapWithAttrs::
+Func_000_1EA5:: ; address name
     ld de, wScreenTileBuffer
     ld a, [wC8CB]
     bit 7, a
@@ -5556,7 +5562,7 @@ Jump_000_1F77::
     ret
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
-; 102 call sites from 78 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, Func_002_6788, ...)
+; 102 call sites from 78 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, BuildPartyStatusWindowRows, ...)
 ; writes: hFFC6
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
@@ -5568,7 +5574,7 @@ Func_000_1F80:: ; address name
     ret
 
 ; like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)
-; 98 call sites from 54 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, Func_002_6788, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
+; 98 call sites from 54 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, BuildPartyStatusWindowRows, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
 ; writes: hFFC6, hFFC7
 LoadSRAMRecordWord::
 Func_000_1F89:: ; address name
@@ -5864,7 +5870,7 @@ Jump_000_20DF::
     ds $24, $00
 
 ; DE = destination: writes wC8C1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wC8C2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
-; 7 call sites from 7 routines (e.g. Func_002_6788, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, WriteByteAAsTwoDigitTiles, ...)
+; 7 call sites from 7 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, WriteByteAAsTwoDigitTiles, ...)
 ; points at: wC8C1
 WriteTwoDigitTilesFromWC8C1::
 Func_000_210D:: ; address name
@@ -5889,7 +5895,7 @@ Jump_000_211B::
     ret
 
 ; DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
-; 36 call sites from 19 routines (e.g. Func_002_6788, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, PauseMenu_State3_Case05_Case00, ...)
+; 36 call sites from 19 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, PauseMenu_State3_Case05_Case00, ...)
 ; points at: wC8C0
 WriteDecimalDigitTiles::
 Func_000_2123:: ; address name
@@ -7079,7 +7085,7 @@ Jump_000_271B::
     srl a
     add_a_to_hl
     pop de
-    call Func_000_1EA5
+    call DrawScreenBufferToBGMapWithAttrs
     jp Jump_000_2875
 
 Jump_000_274A::

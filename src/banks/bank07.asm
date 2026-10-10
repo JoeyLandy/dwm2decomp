@@ -597,7 +597,7 @@ Jump_007_4952:: ; address name
     or a, a
     jr z, Jump_007_4985
     ld a, $02
-    call Func_000_13E5
+    call LoadSGBBorderForSetA
     call SpinDelay
     ld hl, wC51F
     ld [hl], $00
@@ -922,7 +922,7 @@ Jump_007_4B95::
     ldh [hFFB9], a
 
 Jump_007_4BC4::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_007_4BC4
@@ -1029,7 +1029,7 @@ Jump_007_4C74::
     ldh [hFFB9], a
 
 Jump_007_4CA3::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_007_4CA3
@@ -1327,7 +1327,7 @@ Jump_007_4E8D::
     ldh [hFFB9], a
 
 Jump_007_4ED6::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_007_4ED6
@@ -1705,34 +1705,7 @@ Func_007_513A:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank07
     ret
-
-; no direct call (reached through a table, a jump or a vector)
-Func_007_5149:: ; heuristic: follows a terminator; C0
-    ld c, a
-    ld d, c
-    rst $10
-    ld d, d
-    rst $38
-    ld d, d
-    nop
-    nop
-    inc c
-    rrca
-    or a, b
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, d
-    or a, [hl]
-    jp ROMEntryPoint
-    INCBIN "dwm2-cobi-us.gbc", $01D163, $1A1
+    INCBIN "dwm2-cobi-us.gbc", $01D149, $1BB
     ds $12, $B1
     db $B2, $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D
     db $8E, $8F, $90, $91, $B7, $B6

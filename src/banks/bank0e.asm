@@ -1385,7 +1385,7 @@ Jump_00E_58DF::
     ld d, b
     pop bc
     push bc
-    call Func_00E_59E1
+    call AdjustStatForWCA2AAndWCACF
     add hl, de
     srl h
     rr l
@@ -1540,7 +1540,7 @@ Jump_00E_59C4::
     ld hl, wCB27
     ld [hl], a
     call RollWCADEFromSpeciesFlag
-    call Func_00E_5EE8
+    call ApplyBreedingBonusToChildStats
     call RollChildResistancesToWCB43
     call BuildWCB0CCandidateList
     ld a, [wCFA8]
@@ -1550,9 +1550,11 @@ Jump_00E_59C4::
     ld [wD7F5], a
     ret
 
+; when wCA2A or wCACF is set and listed for stat C (Data_00E_5A6B), subtracts Data_00E_5A8E[value] from DE (unless it is at 999) (E-0130)
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; reads: wCA2A, wCACF
-Func_00E_59E1::
+AdjustStatForWCA2AAndWCACF::
+Func_00E_59E1:: ; address name
     ld a, [wCA2A]
     and a, a
     jr z, Jump_00E_5A25
@@ -2399,10 +2401,12 @@ Data_00E_5ED8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5E, $CB, $69, $CB, $EE, $CA, $F9, $CA
 
+; computes a bonus from personality compatibility, matching parent fields and wD7F1, and adds it to the child stats at wCAD0 (offsets Data_00E_5F89) (E-0130)
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; reads: wD7F5, wD7F1
 ; points at: wC9DD, wCA82, wC9F3, wCA98, wCAD0
-Func_00E_5EE8::
+ApplyBreedingBonusToChildStats::
+Func_00E_5EE8:: ; address name
     call PersonalityPairValueToWD7F5
     ld c, $00
     ld a, [wD7F5]
@@ -2532,7 +2536,7 @@ Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
 ; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
-; 2 call sites from 2 routines (e.g. Func_00E_5EE8, RunWD780StateWhenNotFading_F1_Case04_Case16)
+; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunWD780StateWhenNotFading_F1_Case04_Case16)
 ; writes: wD7F5
 ; points at: wC986, wCA2B
 PersonalityPairValueToWD7F5::

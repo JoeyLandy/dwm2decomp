@@ -1073,7 +1073,7 @@ Jump_002_45DB::
     or a, a
     call nz, InitSoundHardware
     call GameMode1_Init_Sub01
-    call Func_000_13E5
+    call LoadSGBBorderForSetA
     ld b, $46
     ld de, Data_046_4001
     ld hl, vTiles1
@@ -1135,7 +1135,7 @@ Func_002_4628:: ; address name
     ei
     call MoveIncapacitatedPartyMembersBack
     call MoveIncapacitatedPartyMembersBack
-    farcall Func_060_639D
+    farcall SetupTownObjectsForMap
     farcall RefreshKeyWorldObjectsOnEntry
     call WritePlayerNameWithFlag0SuffixToWC130
     ld a, [wCC44]
@@ -1159,13 +1159,13 @@ Jump_002_4680::
     jr nz, Jump_002_46B3
     call LoadMapScreen
     farcall Func_069_4001
-    farcall Func_085_5B53
+    farcall SetupMap0BMonsterObjects
     farcall ClearWC935WhenFieldIdle
     jr Jump_002_46BC
 
 Jump_002_46B3::
     call RestoreScreenBufferFromBGMap1
-    farcall Func_085_5B53
+    farcall SetupMap0BMonsterObjects
 
 Jump_002_46BC::
     ld hl, vBGMap0
@@ -1461,7 +1461,7 @@ Jump_002_48D9::
     ld [wJoypadPressed], a
     ld a, $01
     ldh [hFFCE], a
-    farcall Func_002_64E5
+    farcall OpenFieldMenuOnA
     ret
 
 Jump_002_48EF::
@@ -1812,7 +1812,7 @@ Jump_002_4B13::
     call FieldModeStateDispatch_Shared01
     xor a, a
     ldh [hFFCE], a
-    farcall Func_002_64E5
+    farcall OpenFieldMenuOnA
 
 Jump_002_4B44::
     farcall DrawFieldSprites
@@ -1828,7 +1828,7 @@ Jump_002_4B44::
 FieldModeStateDispatch_Case01::
 Jump_002_4B5D:: ; address name
     farcall RunEventScriptFrame
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wScriptCommandType]
     cp a, $05
     jr z, Jump_002_4B76
@@ -2079,7 +2079,7 @@ Jump_002_4D3F::
     call FieldModeStateDispatch_Shared01
     xor a, a
     ldh [hFFCE], a
-    farcall Func_002_64E5
+    farcall OpenFieldMenuOnA
 
 Jump_002_4D6D::
     farcall DrawFieldSprites
@@ -2111,7 +2111,7 @@ FieldModeStateDispatch_Case07::
 Jump_002_4D99:: ; address name
     farcall FieldModeStateDispatch_Case07_Sub01
     farcall FieldStateCommonUpdate
-    farcall Func_012_722A
+    farcall DrawTriggerMarkerSprite
     ld a, [wModeState]
     cp a, $07
     ret z
@@ -3902,7 +3902,7 @@ Jump_002_58B1::
 
 Jump_002_58BF::
     farcall UpdatePlayerMovement_Sub01_Sub02
-    farcall Func_00A_561E
+    farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
     farcall UpdatePlayerMovement_Sub01_Sub03
     farcall Func_00A_43EC
@@ -4464,7 +4464,7 @@ RunWC468ActionIfBit7_Case03::
 Jump_002_5BF4:: ; address name
     xor a, a
     ld [wC918], a
-    farcall Func_00A_561E
+    farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
     farcall Func_00A_43EC
     farcall Func_011_4130
@@ -4912,7 +4912,7 @@ Jump_002_5EE9::
     ret
 
 ; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
-; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, Func_002_64E5, Func_00A_43EC, ...)
+; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, Func_00A_43EC, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wCB7E
 ; points at: wScreenTileBuffer, wD000, wD2D0
@@ -5653,11 +5653,13 @@ Jump_002_64D7::
     ld [wC8CE], a
     ret
 
+; in the field, when A is pressed and nothing blocks it: saves the screen, sets the object flags and draws the field menu windows (Data_002_6606, 6642) (E-0130)
 ; 3 call sites from 3 routines (e.g. RunWC8C7Phase_Case01, FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
 ; reads: wFadeState, wC8CB, wC468, hFF8C, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hFFB9, wC8C7, rSVBK, wC8CE, wModeState, wC46B
 ; points at: wC300, wScreenTileBuffer, wD168, wD000, wC30C
-Func_002_64E5::
+OpenFieldMenuOnA::
+Func_002_64E5:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
@@ -5751,7 +5753,7 @@ Jump_002_6585::
     call CopyScreenRectToBGMapSetWC554
     ld a, $B3
     ld [wC8CE], a
-    call Func_002_66CC
+    call ShowIdlePartyStatusWindow
     pop hl
     ld a, $2E
     add_a_to_hl
@@ -5780,7 +5782,7 @@ Jump_002_65AD::
     ret
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
-; 2 call sites from 1 routine (e.g. Func_002_64E5)
+; 2 call sites from 1 routine (e.g. OpenFieldMenuOnA)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectToScreenBufferAndClearAttributes_65C3::
@@ -5856,7 +5858,7 @@ Data_002_6642:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; writes the gold as up to five decimal digit tiles without leading zeros at HL in VRAM, wrapping at the row end (E-0128)
-; 1 call site from 1 routine (e.g. Func_002_64E5)
+; 1 call site from 1 routine (e.g. OpenFieldMenuOnA)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFFC8
@@ -5944,11 +5946,13 @@ Jump_002_66C8::
     jr nz, Jump_002_667E
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_64E5)
+; in the field, after $B4 idle frames: saves the bottom of the screen and shows the party status window (level, HP, MP) (E-0130)
+; 1 call site from 1 routine (e.g. OpenFieldMenuOnA)
 ; reads: wC8CB, wC468, wC6FD, hFF8C, wC8CD, wC8CE, wIsCGB
 ; writes: wC8CE, wC8CD, hFFB9, rSVBK
 ; points at: wC364, wScreenTileBuffer, wD1CC
-Func_002_66CC::
+ShowIdlePartyStatusWindow::
+Func_002_66CC:: ; address name
     ld de, $0002
     call TestFlagBit
     ret nc
@@ -6053,16 +6057,18 @@ Jump_002_676F::
     call CopyRectToScreenBufferAndClearAttributes_68A3
 
 Jump_002_677B::
-    call Func_002_6788
+    call BuildPartyStatusWindowRows
     call DrawBottomWindowWC364AtScroll
     farcall LoadTilesForPartyRecords
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_66CC)
+; for each party member writes level (field $56), HP (field $5B) and MP (field $5F) into the status window at wC364 (offsets Data_002_6835) (E-0130)
+; 1 call site from 1 routine (e.g. ShowIdlePartyStatusWindow)
 ; reads: wC8CD, hFFC6, hFFCB, hFFC7
 ; writes: rRAMG, hFFCB
 ; points at: wC6FE, wC364
-Func_002_6788::
+BuildPartyStatusWindowRows::
+Func_002_6788:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC8CD]
@@ -6183,7 +6189,7 @@ Data_002_6835:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $54, $2B, $3F, $51, $5A, $31, $45, $57, $60, $37, $4B, $5D
 
 ; draws the 20 x 6 window wC364 at the scroll position + $180 (and its CGB attributes from wD1CC) (E-0127)
-; 1 call site from 1 routine (e.g. Func_002_66CC)
+; 1 call site from 1 routine (e.g. ShowIdlePartyStatusWindow)
 ; reads: hScrollY, hScrollX, wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wC364, wD1CC
@@ -6251,7 +6257,7 @@ Jump_002_6869::
     ret
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
-; 3 call sites from 1 routine (e.g. Func_002_66CC)
+; 3 call sites from 1 routine (e.g. ShowIdlePartyStatusWindow)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectToScreenBufferAndClearAttributes_68A3::
@@ -6331,11 +6337,13 @@ Data_002_695E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $11, $B4
     db $B5
 
+; while wC8CB & 3 is set: copies the text window rows to or from wC300 (with CGB attributes) and redraws them at the scroll position (E-0130)
 ; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case01, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, ...)
 ; reads: wC8CB, wIsCGB, hScrollY, hScrollX, wC8CC
 ; writes: rSVBK
 ; points at: wC300, wScreenTileBuffer, wC8CC
-Func_002_69D0::
+StepTextWindowOpenClose::
+Func_002_69D0:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret z
@@ -6445,16 +6453,16 @@ Jump_002_6A5A::
     srl a
     and a, $03
     rst $00
-    dw Func_002_69D0_Case00
-    dw Func_002_69D0_Case01
-    dw Func_002_69D0_Case02
-    dw Func_002_69D0_Case02
+    dw StepTextWindowOpenClose_Case00
+    dw StepTextWindowOpenClose_Case01
+    dw StepTextWindowOpenClose_Case02
+    dw StepTextWindowOpenClose_Case02
 
-; entry 0 of the `rst $00` table in Func_002_69D0
+; entry 0 of the `rst $00` table in StepTextWindowOpenClose
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB
 ; points at: wC328, wC314
-Func_002_69D0_Case00::
+StepTextWindowOpenClose_Case00::
 Jump_002_6A75:: ; address name
     ld a, [wC8CB]
     bit 0, a
@@ -6484,11 +6492,11 @@ Jump_002_6A92::
     call CopyScreenRectToBGMapSetWC554
     ret
 
-; entry 1 of the `rst $00` table in Func_002_69D0
+; entry 1 of the `rst $00` table in StepTextWindowOpenClose
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB
 ; points at: wC314, wC328
-Func_002_69D0_Case01::
+StepTextWindowOpenClose_Case01::
 Jump_002_6AA8:: ; address name
     ld a, [wC8CB]
     bit 0, a
@@ -6518,12 +6526,12 @@ Jump_002_6AC5::
     call CopyScreenRectToBGMapSetWC554
     ret
 
-; entry 2 of the `rst $00` table in Func_002_69D0
+; entry 2 of the `rst $00` table in StepTextWindowOpenClose
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB
 ; writes: wC8CB, wC8CC
 ; points at: wC300
-Func_002_69D0_Case02::
+StepTextWindowOpenClose_Case02::
 Jump_002_6ADB:: ; address name
     ld a, [wC8CB]
     bit 0, a
@@ -6558,7 +6566,7 @@ Jump_002_6B04::
     ret
 
 ; copies a rectangle of the screen buffer wC300 to the BG map (CopyRectFromBankToBGMapWrapped) and sets wC554 = HL + $21 (wrapped in the map); on CGB also copies the attributes from wD168 in VRAM bank 1 (E-0121)
-; 7 call sites from 4 routines (e.g. Func_002_64E5, Func_002_69D0_Case02, Func_002_69D0_Case01, Func_002_69D0_Case00)
+; 7 call sites from 4 routines (e.g. OpenFieldMenuOnA, StepTextWindowOpenClose_Case02, StepTextWindowOpenClose_Case01, StepTextWindowOpenClose_Case00)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wC300, wD168
@@ -6605,7 +6613,7 @@ Func_002_6B19:: ; address name
     ret
 
 ; copies B rows of 20 bytes from DE to HL; on CGB also clears the matching attribute rows in WRAM bank 2 (HL + $E68) (E-0125)
-; 5 call sites from 3 routines (e.g. Func_002_69D0_Case02, Func_002_69D0_Case01, Func_002_69D0_Case00)
+; 5 call sites from 3 routines (e.g. StepTextWindowOpenClose_Case02, StepTextWindowOpenClose_Case01, StepTextWindowOpenClose_Case00)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRowsToScreenBufferAndClearAttributes::

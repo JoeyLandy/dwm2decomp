@@ -1,11 +1,13 @@
 SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
+; wCD05 = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
 ; 2 call sites from 2 routines (e.g. RunWC903Case_Case05, ScriptCommand84_Run_Case04_Sub01)
 ; reads: wC6FD, hFFC6, hFFC7, hFFCA, hFFCB
 ; writes: wCD05, hFFCA, hFFCB, rRAMG
 ; points at: wC6FE
-Func_061_4001::
+ComputePartyStrengthLevelWCD05::
+Func_061_4001:: ; address name
     ld a, [wC6FD]
     or a, a
     jr nz, Jump_061_400C
@@ -786,7 +788,7 @@ Func_061_4472_Case07::
 Jump_061_4488:: ; address name
     ld a, $66
     ldh [hFFC6], a
-    call Func_000_1906
+    call LoadMapScreenFromChunk
     ret
 
 ; entry 6 of the `rst $00` table in Func_061_4472
@@ -828,7 +830,7 @@ Jump_061_44BF::
     ldh a, [hFFC6]
     add a, $50
     ldh [hFFC6], a
-    call Func_000_1906
+    call LoadMapScreenFromChunk
     pop hl
     ld a, [hl]
     cp a, $FF
@@ -1021,7 +1023,7 @@ Jump_061_454E::
     ldh [rSVBK], a
 
 Jump_061_45E1::
-    call Func_061_474C
+    call DrawKeyWorldExitTile
     call CheckTwoWCDB0EntriesForWCC43
     ret
 
@@ -1297,11 +1299,13 @@ Func_061_4706:: ; address name
     pop hl
     ret
 
+; draws the exit or stairs tile block for the current screen when it matches the area entry in wCE2D (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case05)
 ; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, hFFC6, wIsCGB
 ; writes: hFFC6, rSVBK
 ; points at: wCD89, wCDAD, wCE2D, wC240, wD0A8
-Func_061_474C::
+DrawKeyWorldExitTile::
+Func_061_474C:: ; address name
     ld a, [wCC45]
     add a, a
     add a, a
@@ -1512,7 +1516,7 @@ Jump_061_541A:: ; address name
     inc [hl]
 
 Jump_061_5429::
-    call Func_000_1906
+    call LoadMapScreenFromChunk
     ret
 
 ; entry 3 of the `rst $00` table in Func_061_4472
@@ -1529,7 +1533,7 @@ Jump_061_542D:: ; address name
     ld a, [hl]
     and a, $7F
     ldh [hFFC6], a
-    call Func_000_1906
+    call LoadMapScreenFromChunk
     ret
 
 ; entry 0 of the `rst $00` table in Func_061_4472
@@ -1642,14 +1646,16 @@ Jump_061_5443:: ; address name
 
 Jump_061_54E2::
     call DrawWCD7BEntryTilesForScreen
-    call Func_061_562F
-    call Func_061_54EC
+    call DrawWCD8BObjectTilesForScreen
+    call DrawKeyWorldGoalAtScreen
     ret
 
+; on key-world maps draws the goal object for the current screen (from wC88F when the wC891 key matches, else from wCD0A) (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: wCC44, wC88E, wC891, wCC42, hMapScreenX, hMapScreenY, wC890, wC88F, ...
 ; writes: rSVBK
-Func_061_54EC::
+DrawKeyWorldGoalAtScreen::
+Func_061_54EC:: ; address name
     ld a, [wCC44]
     cp a, $80
     ret nz
@@ -1880,11 +1886,13 @@ Jump_061_5627::
 Jump_061_562E::
     ret
 
+; for the wCD8B object on the current screen draws its 4 x 2 or 2 x 2 tile blocks by kind (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCD8B, wC240, wD0A8
-Func_061_562F::
+DrawWCD8BObjectTilesForScreen::
+Func_061_562F:: ; address name
     ld hl, wCD8B
 
 Jump_061_5632::
@@ -2012,7 +2020,7 @@ Jump_061_56E2::
     ret
 
 ; writes tiles A, A+1 at DE and A+$10, A+$11 one 20-tile row below (E-0121)
-; 6 call sites from 3 routines (e.g. Func_061_54EC, Func_061_562F, DrawWCD7BEntryTilesForScreen)
+; 6 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawWCD7BEntryTilesForScreen)
 Write2x2TileBlockAtDE::
 Func_061_56E3:: ; address name
     ld [de], a
@@ -2035,7 +2043,7 @@ Func_061_56E3:: ; address name
     ret
 
 ; writes tiles A..A+3 at DE and the next four one 20-tile row below (E-0121)
-; 2 call sites from 1 routine (e.g. Func_061_562F)
+; 2 call sites from 1 routine (e.g. DrawWCD8BObjectTilesForScreen)
 Write4x2TileBlockAtDE::
 Func_061_56F8:: ; address name
     ld [de], a
@@ -2070,7 +2078,7 @@ Func_061_56F8:: ; address name
     ret
 
 ; writes tile A to two cells at DE and two cells one 20-tile row below (E-0125)
-; 5 call sites from 3 routines (e.g. Func_061_54EC, Func_061_562F, DrawWCD7BEntryTilesForScreen)
+; 5 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawWCD7BEntryTilesForScreen)
 Write2x2SameTileAtDE::
 Func_061_5718:: ; address name
     ld [de], a
@@ -2150,7 +2158,7 @@ Jump_061_5780:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_061_5764_Case03::
 Jump_061_5784:: ; address name
-    call Func_061_58BC
+    call CheckKeyWorldWarpTable
     ret
 
 ; entry 4 of the `rst $00` table in Func_061_5764
@@ -2353,11 +2361,13 @@ Jump_061_587C::
     ld c, $01
     ret
 
+; checks the warp list Data_061_6566[wCDAC entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case03)
 ; reads: wCC45, hMapScreenX, hMapScreenY, hFF8C
 ; writes: wC8CA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wModeState, wC8C5, hFF8C, ...
 ; points at: wCDAC, wCD88
-Func_061_58BC::
+CheckKeyWorldWarpTable::
+Func_061_58BC:: ; address name
     ld a, [wCC45]
     swap a
     ld hl, wCDAC

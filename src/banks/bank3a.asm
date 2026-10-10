@@ -359,7 +359,7 @@ Jump_03A_4A33::
     ret
 
 ; sets wD804 (and the wD805 list for all targets) to the screen X of the target from Data_03A_4AD5 by wDAB9 and the side count wD890 (E-0129)
-; 9 call sites from 5 routines (e.g. SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01, DrawEffectSpriteForWD801Range_Sub01, ...)
+; 9 call sites from 5 routines (e.g. SelectEffectByWDAD2Flags, RunBattleEffectAnimation, DrawHexByteAtBGMap8A_Sub01, DrawEffectSpriteForWD801Range_Sub01, ...)
 ; reads: wDAB9, wD890, wC58A, wC57F, wD868, wD805
 ; writes: wD804
 ; points at: wD805
@@ -467,11 +467,13 @@ Jump_03A_4ACA::
 Data_03A_4AD5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $50, $80, $38, $68, $50
 
+; runs the battle effect animation state wD800: loads the effect graphics, steps the effect sprite and its X positions, and ends the effect (E-0130)
 ; 4 call sites from 4 routines (e.g. GameMode4_Update, RunBattleActions, RunBattleStep4, GameMode7_Update)
 ; reads: wD802, wD800, wD801, wDAD2, wC58A, wDAB3, wDAAA, wDAB9, ...
 ; writes: wD800, wDAD3, wD804, wD806, wDAAA, wDAF1, wD807, wD802, ...
 ; points at: wD805, wDAB3, wDAF1
-Func_03A_4ADB::
+RunBattleEffectAnimation::
+Func_03A_4ADB:: ; address name
     ld a, [wD802]
     cp a, $00
     jp z, Jump_03A_4C14
@@ -631,7 +633,7 @@ Jump_03A_4C14::
     ret
 
 ; every fifth frame (wDAF1) runs the effect routine for wD803 (jump table of fourteen) (E-0124)
-; 1 call site from 1 routine (e.g. Func_03A_4ADB)
+; 1 call site from 1 routine (e.g. RunBattleEffectAnimation)
 ; reads: wDAF1, wD803
 ; writes: wDAF1
 RunWD803EffectEvery5Frames::
@@ -1899,7 +1901,7 @@ Jump_03A_52A3::
     ret
 
 ; A = entry: decompresses the stream named by the 3-byte far pointer at Data_03A_52B9 + 3 * A to vTiles0 (DecompressToVRAM) (E-0118)
-; 2 call sites from 2 routines (e.g. Func_03A_4ADB, RunWC5FDState_E0_Case0A_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleEffectAnimation, RunWC5FDState_E0_Case0A_Sub01)
 DecompressGraphicsAToTiles0::
 Func_03A_52A4:: ; address name
     ld c, a
@@ -1921,7 +1923,7 @@ Data_03A_52B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0E92B9, $B4
 
 ; when wDAB9 is 3: wD804 += 4, and once it reaches $D0 wDAAA = 0 (E-0119)
-; 2 call sites from 2 routines (e.g. Func_03A_4ADB, RunWC5FDState_E0_Case0A_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleEffectAnimation, RunWC5FDState_E0_Case0A_Sub01)
 ; reads: wDAB9, wD804
 ; writes: wD804, wDAAA
 AdvanceWD804By4InMode3::
@@ -1939,7 +1941,7 @@ Func_03A_536D:: ; address name
     ret
 
 ; draws the effect sprite from bank $3E, $3F, $3D, $3B or $92 by wD801 (< $0E, $20, $2D, $33, or more) (E-0124)
-; 2 call sites from 2 routines (e.g. Func_03A_4ADB, RunWC5FDState_E0_Case0A_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleEffectAnimation, RunWC5FDState_E0_Case0A_Sub01)
 ; reads: wD801
 DrawEffectSpriteForWD801Range::
 Func_03A_5383:: ; address name
@@ -2190,7 +2192,7 @@ Jump_03A_5509::
     ret
 
 ; on CGB copies palette C (8 bytes) from Data_03A_7D9A to wOBJPaletteBuffer and sets wC527 = $80 (E-0124)
-; 3 call sites from 3 routines (e.g. SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01)
+; 3 call sites from 3 routines (e.g. SelectEffectByWDAD2Flags, RunBattleEffectAnimation, DrawHexByteAtBGMap8A_Sub01)
 ; reads: wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
@@ -2220,7 +2222,7 @@ Jump_03A_552A::
     ret
 
 ; on CGB, when wC5E9 changed, writes the eight background palettes through Func_03A_55BB (rBGPI $80-$B8) (E-0128)
-; 1 call site from 1 routine (e.g. Func_03A_4ADB)
+; 1 call site from 1 routine (e.g. RunBattleEffectAnimation)
 ; reads: wIsCGB, wC5E9, rSTAT, wC5EA
 ; writes: rBGPI, wD040, rOBPI, wD041
 ; points at: wD040, wBGPaletteBuffer, wD041, wOBJPaletteBuffer
@@ -2623,7 +2625,7 @@ Data_03A_575E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $04, $00, $06
 
 ; reads the effect flags in wDAD3 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set wBattleActor to wBattleTarget and select a table (Data_03A_60B7 or Data_03A_6107) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)
-; 15 call sites from 12 routines (e.g. Func_03A_4ADB, Func_032_4ADC_Case03, Func_032_5820_Case02, ResolveStep0EEffect_Case00, ...)
+; 15 call sites from 12 routines (e.g. RunBattleEffectAnimation, Func_032_4ADC_Case03, Func_032_5820_Case02, ResolveStep0EEffect_Case00, ...)
 ; reads: wDAD3, wBattleTarget, wBattleActionId
 ; writes: wBattleActor
 SelectEffectByWDAD3Flags::
@@ -2829,7 +2831,7 @@ Func_03A_6157:: ; address name
     ld a, [wC58A]
     or a, a
     ret nz
-    farcall Func_03A_4ADB
+    farcall RunBattleEffectAnimation
     ret
 
 Jump_03A_6172::
@@ -4107,7 +4109,7 @@ Func_03A_68C9:: ; address name
     ld a, [wC58A]
     or a, a
     ret nz
-    farcall Func_03A_4ADB
+    farcall RunBattleEffectAnimation
     ret
 
 Jump_03A_68E4::

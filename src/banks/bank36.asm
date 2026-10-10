@@ -1807,7 +1807,7 @@ Jump_036_4B41:: ; address name
     ld [wD868], a
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_019_434D
+    farcall LoadSlotSkillsFromBattlerRecord
     call RecomputeTargetStatsFromRecord
     ld a, [wBattleTarget]
     ld c, a
@@ -5087,7 +5087,7 @@ Jump_036_5EEF::
 
 Jump_036_5EFC::
     pop af
-    call Func_036_6346
+    call RollChanceForLevelA_6346
     ret
 
 ; rolls skill damage, then by bits 6-7 of the target's wDA72 byte 2 (wD86A): carry at level 4, else the chance (unsided for action $2F) (E-0124)
@@ -5784,7 +5784,7 @@ Func_036_6262:: ; address name
 Jump_036_626B::
     bit 7, [hl]
     jr z, Jump_036_6274
-    call Func_036_6346
+    call RollChanceForLevelA_6346
     jr Jump_036_6277
 
 Jump_036_6274::
@@ -6006,9 +6006,11 @@ Jump_036_633C::
 Jump_036_6343::
     jp Jump_036_6397
 
+; level A: 0 and 1 return, 2 and 3 take chance rolls; the following entries roll random values against $D8, $BF, $7F, $66, $4C, $3F and $26 (E-0130)
 ; 2 call sites from 2 routines (e.g. ActionEffect_Sacrifice_Sub01, RollChanceByHLBits6And7_6262)
 ; reads: wC5E7
-Func_036_6346::
+RollChanceForLevelA_6346::
+Func_036_6346:: ; address name
     cp a, $02
     jr nc, Jump_036_634B
     ret
@@ -6217,7 +6219,7 @@ Func_036_6465:: ; address name
     ret
 
 ; HL += HL / 4 + HL / 16 (each shift rounds down); BC = HL / 16 (E-0095)
-; 2 call sites from 2 routines (e.g. Func_036_6346, ActionEffect_MultiCut_Sub01)
+; 2 call sites from 2 routines (e.g. RollChanceForLevelA_6346, ActionEffect_MultiCut_Sub01)
 ScaleHLBy21Over16::
 Func_036_646C:: ; address name
     ld b, h
@@ -6229,7 +6231,7 @@ Func_036_646C:: ; address name
     ret
 
 ; HL += HL / 8 + HL / 32 (each shift rounds down) (E-0095)
-; 1 call site from 1 routine (e.g. Func_036_6346)
+; 1 call site from 1 routine (e.g. RollChanceForLevelA_6346)
 ScaleHLBy37Over32::
 Func_036_6477:: ; address name
     ld b, h
@@ -6256,7 +6258,7 @@ Func_036_6482:: ; address name
     ret
 
 ; HL = HL * 85 / 100 (24-bit intermediate); DE kept (E-0095)
-; 1 call site from 1 routine (e.g. Func_036_6346)
+; 1 call site from 1 routine (e.g. RollChanceForLevelA_6346)
 ScaleHLTo85Percent::
 Func_036_6494:: ; address name
     push de
@@ -6284,7 +6286,7 @@ Func_036_64A3:: ; address name
     ret
 
 ; HL = HL / 2 + HL / 4; BC kept (E-0095)
-; 2 call sites from 2 routines (e.g. Func_036_6346, ActionEffect_BiAttack_Sub01)
+; 2 call sites from 2 routines (e.g. RollChanceForLevelA_6346, ActionEffect_BiAttack_Sub01)
 ScaleHLTo75Percent::
 Func_036_64B2:: ; address name
     push bc
@@ -6401,7 +6403,7 @@ Func_036_6518:: ; address name
     rr l
 
 ; HL >>= 1 (unsigned) (E-0064)
-; 17 call sites from 13 routines (e.g. ScaleHLTo75Percent, ScaleHLTo40Percent, ScaleHLTo30Percent, Func_036_6346, ...)
+; 17 call sites from 13 routines (e.g. ScaleHLTo75Percent, ScaleHLTo40Percent, ScaleHLTo30Percent, RollChanceForLevelA_6346, ...)
 ShiftHLRight1::
 Func_036_651C:: ; address name
     srl h

@@ -1385,7 +1385,7 @@ Data_084_4C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $03, $02, $02
 
 ; when wC88E is set and key entry hFFC6 matches wC891, clears wC88E (E-0127)
-; 1 call site from 1 routine (e.g. Func_012_69B0)
+; 1 call site from 1 routine (e.g. DeleteKeyEntryHFFC6)
 ; reads: wC88E, hFFC6, wC891
 ; writes: wC88E
 ClearWC88EForMatchingKeyEntry::

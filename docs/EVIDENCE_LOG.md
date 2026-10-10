@@ -1460,6 +1460,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **85:5D7C to 5DB9.** This range is data. Its false code entry covered $5DB9, which Talk00FC_YouHaveToEat far-calls (`ld hl, $5DB9 / ld b, $85 / rst $10`). With a new data region in `config/data_regions.json`, $5DB9 decodes as AddHundredToPartyINTCapped999: INT + 100, capped at 999, after the "eat your vegetables" talk.
 - Binary verification: build/run91 PASS, 0 differing bytes; tests OK.
 
+### E-0130 — Routines of 101-140 instructions; two more data artifacts
+
+- Kind: OBSERVATION (full reading; C1) + DECISION (data regions).
+- **What is named.** 40 routines of 101-140 instructions are named. These include:
+  - the field menu and idle party window (02:64E5, 02:66CC);
+  - map screen chunk loading (00:1906);
+  - Super Game Boy border sets (00:13E5);
+  - the step counter that updates stored records every 100 steps (0A:561E);
+  - key-world object placement (60:53E5, 60:54BB, 61:58BC);
+  - the battle effect animation (3A:4ADB).
+- **Data regions.**
+  - 07:5149-5163 is the head of tile-map data; it had been decoded as code ending in `jp ROMEntryPoint`.
+  - 32:5078-50B7 is a byte list of action ids. Its consecutive ids $40-$4A had been read as five code pointers, giving the false entries 32:4140, 4342, 4544, 4746 and 4A49, all inside the animation data named by Data_032_40A6.
+- Unnamed routines: 72 to 25.
+- Binary verification: build/run92 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

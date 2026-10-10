@@ -995,7 +995,7 @@ Func_030_45DA:: ; address name
     ld [wDA42], a
     call AddCommandWeightToWDA3C
     call AddActorPersonalityTensToWDA3C
-    call Func_030_46BA
+    call AddStatusAndHPWeightsToAI
     call AddRandomPersonalityWeights
     call SortThreeAIWeightsRandomTies
     ld a, $00
@@ -1099,10 +1099,12 @@ Func_030_469D:: ; address name
     call AddSignedEToByteAtHLClamped
     ret
 
+; adds AI weights for the actor's status (wD80D bits) and command mode, and for allies below a sixth of max HP in AI modes 3 and 4 (E-0130)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wBattleActor, wC58A, wC46B, wDAE9, wD891
 ; points at: wD80D, wDA3C, wDA53, wDA3E, wD989, wDAE9
-Func_030_46BA::
+AddStatusAndHPWeightsToAI::
+Func_030_46BA:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
@@ -1222,7 +1224,7 @@ Jump_030_478A::
     ret
 
 ; A = 1 and NZ when an occupied ally has HP below a sixth of its max; otherwise returns with the last comparison flags (E-0124)
-; 1 call site from 1 routine (e.g. Func_030_46BA)
+; 1 call site from 1 routine (e.g. AddStatusAndHPWeightsToAI)
 ; reads: wBattleActor
 AnyAllyHPBelowSixthOfMax::
 Func_030_478B:: ; address name
@@ -2895,7 +2897,7 @@ Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
 ; A = wDA43[wBattleActor] & 3 (E-0072)
-; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, Func_030_46BA, AddCommandWeightToWDA3C, ...)
+; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, AddStatusAndHPWeightsToAI, AddCommandWeightToWDA3C, ...)
 ; reads: wBattleActor
 ; points at: wDA43
 GetActorWDA43Low2::
@@ -2920,7 +2922,7 @@ Func_030_541B:: ; address name
     ret
 
 ; [HL] += E as a signed value, clamped to 0-$FF (E-0124)
-; 9 call sites from 6 routines (e.g. AddRandomPersonalityWeights, AddRandomWeightByValueBand, Func_030_46BA, AddActorPersonalityTensForIndexA, ...)
+; 9 call sites from 6 routines (e.g. AddRandomPersonalityWeights, AddRandomWeightByValueBand, AddStatusAndHPWeightsToAI, AddActorPersonalityTensForIndexA, ...)
 AddSignedEToByteAtHLClamped::
 Func_030_5428:: ; address name
     bit 7, e
@@ -2997,7 +2999,7 @@ Func_030_5472:: ; address name
     call AIChooseActionForActor_Sub01_Sub01
     call AddCommandWeightToWDA3C
     call AddActorPersonalityTensToWDA3C
-    call Func_030_46BA
+    call AddStatusAndHPWeightsToAI
     call AIChooseActionForActor_Sub01_Sub02
     call AddRandomPersonalityWeights
     call SortThreeAIWeightsRandomTies

@@ -1599,7 +1599,7 @@ Jump_0F0_52F9::
     ld a, [wC599]
     and a, a
     jp z, Jump_0F0_5323
-    call Func_0F0_6BE0
+    call RankWCEC3ScoresIntoWCF7E
     call LoadWCED9SpeciesStatsToWCF0A
     ld a, [wCE9E]
     ld c, a
@@ -3174,7 +3174,7 @@ Jump_0F0_5CBE:: ; address name
     xor a, a
     ld [wD7F1], a
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3886,7 +3886,7 @@ Jump_0F0_6188:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_0F0_6526
@@ -3986,7 +3986,7 @@ Func_0F0_622A:: ; address name
     ldh [hFFB9], a
 
 Jump_0F0_6241::
-    farcall Func_002_69D0
+    farcall StepTextWindowOpenClose
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_0F0_6241
@@ -5015,11 +5015,13 @@ Jump_0F0_6BCD::
     ld [wCF2D], a
     ret
 
+; ranks the 11 scores at wCEC3 in descending order (ties at random) into wCF7E, then wCF8A = BandOfWCE9E (E-0130)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case11)
 ; reads: wCF89, wCF8A
 ; writes: wCF89, wCF8A, wCED9, wCEDA, wCEDB
 ; points at: wCEC3, wCF73, wCF7E
-Func_0F0_6BE0::
+RankWCEC3ScoresIntoWCF7E::
+Func_0F0_6BE0:: ; address name
     xor a, a
     ld [wCF89], a
 
@@ -5635,7 +5637,7 @@ Data_0F0_7085:: ; heuristic: target of a monotone pointer table; C0
     db $FE, $FE
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0118)
-; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, Func_0F0_6BE0, RollWCEC0Chance, RollWCEC2ChanceAndRun72C8)
+; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, RankWCEC3ScoresIntoWCF7E, RollWCEC0Chance, RollWCEC2ChanceAndRun72C8)
 ; reads: wC5E7
 RandomModulo29_BankF0::
 Func_0F0_7097:: ; address name
@@ -5652,7 +5654,7 @@ Func_0F0_7097:: ; address name
     ret
 
 ; A = 4, 5, 6 or 7 for wCE9E < 4, < 6, < $0A, or more (E-0124)
-; 1 call site from 1 routine (e.g. Func_0F0_6BE0)
+; 1 call site from 1 routine (e.g. RankWCEC3ScoresIntoWCF7E)
 ; reads: wCE9E
 BandOfWCE9E::
 Func_0F0_70AA:: ; address name

@@ -150,6 +150,18 @@
       "start": "5D7C",
       "end": "5DB9",
       "reason": "a 61-byte table read through `ld hl, $5D7C` / `ld hl, $5D8C` by the routine before it; the follows-a-terminator guess decoded it as code and swallowed the start of AddHundredToPartyINTCapped999 at $5DB9, which Talk00FC_YouHaveToEat far-calls (E-0129)"
+    },
+    {
+      "bank": "07",
+      "start": "5149",
+      "end": "5163",
+      "reason": "the head of the tile-map data that runs to $5902 (frame tiles $B0-$B7 and $C3 fill); the follows-a-terminator guess decoded it as `ld c, a / rst $10 / or a, r` runs ending in a `jp` built from tile bytes (E-0130)"
+    },
+    {
+      "bank": "32",
+      "start": "5078",
+      "end": "50B7",
+      "reason": "a $FF-terminated byte list of action ids ($04-$90); its run of consecutive ids $40-$4A was read as five code pointers (32:4140, 4342, 4544, 4746, 4A49), all inside the animation data named by Data_032_40A6 (E-0130)"
     }
   ]
 }

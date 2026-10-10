@@ -2671,7 +2671,7 @@ Jump_015_51E9:: ; address name
     ld [wD7F1], a
     ld a, $01
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4852,7 +4852,7 @@ Func_015_60BF:: ; address name
     ld a, $01
     ld [wD7F1], a
     ld [wD7F2], a
-    farcall Func_01D_6320
+    farcall DrawRecordListPageMarks
     ld a, [wD781]
     inc a
     ld [wD781], a

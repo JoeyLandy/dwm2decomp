@@ -2,7 +2,7 @@ SECTION "Bank 32", ROMX[$4000], BANK[$32]
     db $32
 
 ; for the sequence at wCB75: runs the frame timer (Func_032_401C) when started, otherwise marks it started, clears byte 4 and loads the first frame (Func_032_403F) (E-0124)
-; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01, ...)
+; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByWDAD2Flags, RunBattleEffectAnimation, DrawHexByteAtBGMap8A_Sub01, ...)
 ; reads: wCB75, wCB76
 TickWCB75Sequence::
 Func_032_4001:: ; address name
@@ -133,1914 +133,390 @@ Func_032_4083:: ; address name
     ret
 
 Data_032_40A6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C80A6, $9A
+    dw Data_032_411E
+    dw Data_032_4132
+    dw Data_032_415E
+    dw Data_032_4190
+    dw Data_032_41B0
+    dw Data_032_41D0
+    dw Data_032_4212
+    dw Data_032_4228
+    dw Data_032_424C
+    dw Data_032_4292
+    dw Data_032_42B0
+    dw Data_032_42CE
+    dw Data_032_4310
+    dw Data_032_433A
+    dw Data_032_4358
+    dw Data_032_4396
+    dw Data_032_43B6
+    dw Data_032_43E4
+    dw Data_032_4424
+    dw Data_032_443E
+    dw Data_032_4452
+    dw Data_032_446C
+    dw Data_032_4484
+    dw Data_032_449A
+    dw Data_032_44AA
+    dw Data_032_44BA
+    dw Data_032_44D6
+    dw Data_032_4502
+    dw Data_032_4516
+    dw Data_032_4556
+    dw Data_032_4566
+    dw Data_032_459C
+    dw Data_032_45D6
+    dw Data_032_4610
+    dw Data_032_4646
+    dw Data_032_4656
+    dw Data_032_4668
+    dw Data_032_4696
+    dw Data_032_46C6
+    dw Data_032_4704
+    dw Data_032_4742
+    dw Data_032_4766
+    dw Data_032_47A4
+    dw Data_032_47E4
+    dw Data_032_4802
+    dw Data_032_481A
+    dw Data_032_4836
+    dw Data_032_4870
+    dw Data_032_48AC
+    dw Data_032_48D2
+    dw Data_032_48FA
+    dw Data_032_490E
+    dw Data_032_4952
+    dw Data_032_4994
+    dw Data_032_49C6
+    dw Data_032_4A06
+    dw Data_032_4A2A
+    dw Data_032_4A6A
+    dw Data_032_4A8C
+    dw Data_032_4AC4
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: rRAMG
-Func_032_4140:: ; heuristic: target of a pointer table; C0
-    rlca
-    ld [bc], a
-    rra
-    ld [$0308], sp
-    add hl, bc
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    add hl, bc
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    ld [$0902], sp
-    dec b
-    ld a, [bc]
-    dec b
-    dec bc
-    dec b
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    rra
-    ld [rRAMG], sp
-    ld bc, $0201
-    ld bc, $0103
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [bc], a
-    ld [bc], a
-    nop
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0203
-    ld [bc], a
-    inc bc
-    inc b
-    inc b
-    dec b
-    dec b
-    inc bc
-    ld b, $04
-    rlca
-    inc bc
-    ld [$0404], sp
-    inc bc
-    dec b
-    inc b
-    ld b, $03
-    rlca
-    inc b
-    ld [$0403], sp
-    inc b
-    dec b
-    inc bc
-    ld b, $04
-    rlca
-    inc bc
-    ld [$0404], sp
-    inc bc
-    dec b
-    inc b
-    ld b, $03
-    rlca
-    inc b
-    ld [$0403], sp
-    inc bc
-    dec b
-    inc b
-    ld b, $03
-    rlca
-    inc b
-    ld [$0903], sp
-    inc b
-    ld a, [bc]
-    dec b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0202
-    inc b
-    inc bc
-    inc b
-    inc b
-    ld [bc], a
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    ld bc, $1F02
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    rra
-    db $10, $03 ; stop
-    inc b
-    inc b
-    ld [bc], a
-    dec b
-    inc b
-    ld b, $02
-    rlca
-    inc b
-    ld [$0302], sp
-    inc bc
-    inc b
-    ld [bc], a
-    dec b
-    inc bc
-    ld b, $02
-    rlca
-    inc b
-    ld [$1F02], sp
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    rra
-    db $10, $04 ; stop
-    dec b
-    dec b
-    dec b
-    ld b, $05
-    rlca
-    ld [bc], a
-    ld [$0E02], sp
-    ld [bc], a
-    add hl, bc
-    ld [bc], a
-    rrca
-    ld [bc], a
-    ld c, $02
-    db $10, $02 ; stop
-    dec bc
-    ld [bc], a
-    ld de, $0C02
-    ld [bc], a
-    db $10, $02 ; stop
-    dec bc
-    ld [bc], a
-    ld de, $0C02
-    ld [bc], a
-    ld [de], a
-    ld [bc], a
-    dec c
-    ld [bc], a
-    inc de
-    ld [bc], a
-    ld [$0E02], sp
-    ld [bc], a
-    add hl, bc
-    ld [bc], a
-    rrca
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    db $10, $02 ; stop
-    dec bc
-    ld [bc], a
-    ld b, $02
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc b
-    inc bc
-    inc b
-    inc b
-    dec b
-    dec b
-    inc b
-    ld b, $05
-    rlca
-    inc b
-    ld [$0905], sp
-    inc b
-    ld a, [bc]
-    dec b
-    dec bc
-    inc b
-    inc c
-    dec b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    rrca
-    inc bc
-    db $10, $03 ; stop
-    ld de, $1203
-    inc bc
-    inc de
-    inc bc
-    inc d
-    inc bc
-    dec d
-    inc bc
-    ld d, $03
-    rla
-    inc bc
-    jr Jump_032_430B
-    db $19, $03, $1A
+; LZSS-compressed asset: 1104 bytes expand to 1280 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_411E:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $05, $01, $05, $02, $05, $03, $05, $04, $02, $05, $02, $06, $02, $07, $02
+    db $1F, $02, $FF, $FF
 
-Jump_032_430B::
-    inc bc
-    rra
-    inc bc
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    rrca
-    inc bc
-    db $10, $03 ; stop
-    ld de, $1203
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    dec b
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
+Data_032_4132:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $04, $02, $04, $03, $04, $04, $02, $05, $02, $06, $02, $07, $02
+    db $1F, $08, $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $09, $03, $0A, $03
+    db $0B, $02, $0C, $02, $0D, $02, $0E, $02, $1F, $02, $FF, $FF
 
-; no direct call (reached through a table, a jump or a vector)
-Func_032_4342:: ; heuristic: target of a pointer table; C0
-    inc b
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    rrca
-    rra
-    inc bc
-    inc b
-    inc bc
-    rra
-    inc bc
-    inc b
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld bc, $010B
-    inc c
-    ld bc, $081F
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    dec b
-    ld bc, $021F
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $1F03
-    ld [$0502], sp
-    inc bc
-    inc b
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $02
-    rlca
-    ld [bc], a
-    inc b
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [bc], a
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0203
-    ld [bc], a
-    rra
-    ld [$0503], sp
-    inc b
-    inc b
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    inc b
-    ld bc, $021F
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    ld [bc], a
-    inc bc
-    inc bc
-    ld [bc], a
-    ld bc, $020F
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld bc, $010B
-    inc c
-    ld bc, $010D
-    ld b, $03
-    rlca
-    ld [bc], a
-    ld a, [bc]
-    ld bc, $010B
-    inc c
-    ld bc, $010D
-    ld [$0903], sp
-    ld [bc], a
-    ld a, [bc]
-    ld bc, $010B
-    inc c
-    ld bc, $010D
-    ld c, $01
-    inc b
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0204
-    inc b
-    inc bc
-    inc b
-    inc b
-    inc b
-    dec b
-    inc b
-    ld b, $04
-    rlca
-    inc b
-    ld [$0904], sp
-    inc b
-    ld a, [bc]
-    inc b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0203
-    inc b
-    inc bc
-    inc bc
-    inc b
-    ld [bc], a
-    dec b
-    ld bc, $0106
-    rlca
-    ld bc, $011F
-    rst $38
-    rst $38
-    nop
-    ld a, [bc]
-    ld bc, $0208
-    rlca
-    inc bc
-    ld b, $04
-    dec b
-    dec b
-    dec b
-    ld b, $05
-    rlca
-    dec b
-    ld [$0904], sp
-    inc b
-    ld a, [bc]
-    inc b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [$0601], sp
-    ld [bc], a
-    ld [$0603], sp
-    inc b
-    ld [$0805], sp
-    ld b, $08
-    rlca
-    ld [$0408], sp
-    add hl, bc
-    inc b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld b, $01
-    ld b, $02
-    ld b, $03
-    ld b, $04
-    ld [$0805], sp
-    ld b, $04
-    ld [$0804], sp
-    inc b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld b, $01
-    ld b, $02
-    ld b, $03
-    ld b, $04
-    ld b, $05
-    ld b, $1F
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld a, [bc]
-    ld bc, $0206
-    ld b, $03
-    ld b, $04
-    ld b, $05
-    ld b, $1F
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    rra
-    inc b
-    nop
-    inc b
-    rra
-    inc b
-    nop
-    inc b
-    rra
-    inc b
-    nop
-    inc b
-    rra
-    inc b
-    nop
-    inc b
-    rra
-    inc b
-    nop
-    inc b
-    rra
-    rrca
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    rra
-    ld [$0203], sp
-    inc b
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    db $10, $02 ; stop
-    ld de, $1202
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0204
-    inc b
-    inc bc
-    inc b
-    inc b
-    dec b
-    dec b
-    inc b
-    ld b, $04
-    rlca
-    inc b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    dec bc
-    inc bc
-    inc c
-    dec b
-    dec c
-    inc b
-    ld c, $03
-    rrca
-    inc bc
-    ld c, $04
-    dec c
-    inc b
-    ld c, $03
-    dec bc
-    inc bc
-    inc de
-    inc b
-    dec bc
-    inc b
-    inc c
-    dec b
+; LZSS-compressed asset: 423 bytes expand to 520 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_415E:: ; heuristic: target of a monotone pointer table; C0
+    db $08, $02, $09, $05, $0A, $05, $0B, $05, $0C, $02, $0D, $02, $0E, $02, $0F, $02
+    db $1F, $08, $00, $01, $01, $01, $02, $01, $03, $01, $04, $03, $05, $03, $06, $03
+    db $07, $03, $04, $03, $05, $03, $06, $03, $07, $03, $02, $02, $00, $02, $1F, $02
+    db $FF, $FF
 
-; no direct call (reached through a table, a jump or a vector)
-Func_032_4544:: ; heuristic: target of a pointer table; C0
-    dec c
-    inc b
-    ld c, $03
-    rrca
-    inc b
-    ld c, $03
-    db $10, $04 ; stop
-    ld de, $1204
-    inc b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    inc b
-    dec b
-    dec b
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    inc b
-    dec b
-    dec b
-    inc bc
-    ld b, $03
-    rra
-    ld [$0307], sp
-    ld [$0902], sp
-    inc b
-    ld a, [bc]
-    inc b
-    dec bc
-    inc b
-    inc c
-    inc b
-    dec c
-    inc b
-    ld c, $03
-    rrca
-    inc bc
-    db $10, $03 ; stop
-    ld de, $1203
-    inc bc
-    inc de
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    inc b
-    dec b
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc b
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    rrca
-    ld [bc], a
-    db $10, $02 ; stop
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    db $10, $02 ; stop
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    db $10, $02 ; stop
-    ld a, [bc]
-    ld bc, $021F
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    inc b
-    dec b
-    dec b
-    inc bc
-    ld b, $03
-    rra
-    ld [$0207], sp
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    db $10, $02 ; stop
-    ld de, $1202
-    ld [bc], a
-    inc de
-    ld [bc], a
-    inc d
-    ld [bc], a
-    dec d
-    ld [bc], a
-    ld d, $02
-    rla
-    ld [bc], a
-    jr Jump_032_460C
-    db $19, $02
+Data_032_4190:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
+    db $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $1F, $02, $FF, $FF
 
-Jump_032_460C::
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    inc b
-    dec b
-    dec b
-    inc bc
-    ld b, $03
-    rra
-    ld [$0507], sp
-    ld [$0904], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    ld a, [bc]
-    inc b
-    dec bc
-    ld [$031F], sp
-    dec bc
-    ld [bc], a
-    rra
-    ld [bc], a
-    dec bc
-    ld bc, $011F
-    dec bc
-    ld bc, $011F
-    dec bc
-    ld bc, $011F
-    dec bc
-    ld bc, $021F
-    rst $38
-    rst $38
-    nop
-    ld b, $01
-    dec b
-    ld [bc], a
-    dec b
-    inc bc
-    inc bc
-    inc b
-    inc b
-    dec b
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    inc b
-    dec b
-    dec b
-    inc bc
-    ld b, $02
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld b, $01
-    dec b
-    ld [bc], a
-    dec b
-    inc bc
-    dec b
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $08
-    rlca
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld b, $03
-    rlca
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld bc, $0106
-    rlca
-    ld bc, $0106
-    rlca
-    ld bc, $0106
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    dec b
-    ld bc, $0204
-    inc b
-    inc bc
-    inc b
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    dec b
-    ld [bc], a
-    rlca
-    ld [bc], a
-    ld [$0702], sp
-    ld [bc], a
-    rra
-    ld [bc], a
-    ld [$1F02], sp
-    ld [bc], a
-    rlca
-    ld bc, $011F
-    ld [$1F01], sp
-    ld bc, $0107
-    rra
-    ld bc, $0108
-    rra
-    ld bc, $021F
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0205
-    dec b
-    inc bc
-    inc b
-    inc b
-    inc b
-    dec b
-    ld b, $06
-    inc b
-    rlca
-    inc b
-    ld [$0703], sp
-    ld [bc], a
-    ld [$0602], sp
-    ld [bc], a
-    ld [$0903], sp
-    inc bc
-    ld [$0902], sp
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    ld a, [bc]
-    ld bc, $010B
-    ld a, [bc]
-    ld bc, $011F
-    dec bc
-    ld bc, $011F
-    ld a, [bc]
-    ld bc, $011F
-    dec bc
-    ld bc, $021F
-    rst $38
-    rst $38
-    nop
-    ld bc, $0101
-    ld [bc], a
-    ld bc, $0203
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    rra
-    db $01
+Data_032_41B0:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
+    db $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $1F, $02, $FF, $FF
 
-; no direct call (reached through a table, a jump or a vector)
-Func_032_4746:: ; heuristic: target of a pointer table; C0
-    ld bc, $1F03
-    ld bc, $0302
-    rra
-    ld bc, $0303
-    rra
-    ld bc, $0304
-    dec b
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0004
-    inc bc
-    ld bc, $0203
-    inc b
-    ld bc, $0204
-    inc bc
-    ld bc, $0303
-    inc b
-    ld [bc], a
-    inc b
-    inc bc
-    inc bc
-    ld [bc], a
-    inc bc
-    inc b
-    inc b
-    inc bc
-    inc b
-    inc b
-    inc bc
-    inc bc
-    inc bc
-    dec b
-    inc b
-    inc b
-    inc bc
-    ld b, $03
-    dec b
-    inc b
-    rlca
-    inc b
-    db $10, $04 ; stop
-    dec bc
-    inc b
-    ld de, $0C04
-    inc b
-    ld [de], a
-    inc b
-    dec c
-    inc b
-    inc de
-    inc b
-    rlca
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0205
-    inc b
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$1F03], sp
-    ld [$0209], sp
-    ld a, [bc]
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    db $10, $02 ; stop
-    ld de, $1202
-    ld [bc], a
-    inc de
-    ld [bc], a
-    inc d
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    inc c
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld c, $02
-    rrca
-    ld [bc], a
-    dec d
-    ld [bc], a
-    ld d, $02
-    rla
-    ld [bc], a
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0204
-    inc b
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0502], sp
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$1F02], sp
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0203
-    ld b, $03
-    ld b, $04
-    ld b, $05
-    ld b, $06
-    ld b, $07
-    ld b, $08
-    ld b, $09
-    ld b, $1F
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    inc b
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc b
-    ld b, $04
-    rlca
-    inc bc
-    ld [$0703], sp
-    inc bc
-    add hl, bc
-    inc b
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    dec b
-    inc bc
-    dec b
-    inc b
-    dec b
-    dec b
-    inc b
-    ld b, $03
-    ld [de], a
-    inc bc
-    rlca
-    ld [bc], a
-    inc de
-    ld [bc], a
-    ld [$1402], sp
-    ld [bc], a
-    add hl, bc
-    ld [bc], a
-    dec d
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    ld d, $02
-    dec bc
-    ld [bc], a
-    rla
-    ld [bc], a
-    inc c
-    ld [bc], a
-    jr Jump_032_4860
-    db $0D, $02
+Data_032_41D0:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0C81D0, $42
 
-Jump_032_4860::
-    add hl, de
-    ld [bc], a
-    ld c, $02
-    ld a, [de]
-    ld [bc], a
-    rrca
-    ld [bc], a
-    dec de
-    ld [bc], a
-    db $10, $02 ; stop
-    ld de, rSC
-    rst $38
-    nop
-    inc b
-    ld bc, $0205
-    dec b
-    inc bc
-    inc b
-    inc b
-    ld b, $05
-    inc b
-    ld b, $04
-    rra
-    ld a, [bc]
-    rlca
-    inc bc
-    ld [$0902], sp
-    dec b
-    ld a, [bc]
-    dec b
-    dec bc
-    dec b
-    inc c
-    ld b, $0D
-    ld b, $0E
-    dec b
-    rrca
-    inc b
-    inc c
-    inc b
-    dec c
-    inc b
-    ld c, $04
-    rrca
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    db $10, $02 ; stop
-    rrca
-    ld [bc], a
-    ld de, $1002
-    ld [bc], a
-    ld de, rSC
-    rst $38
-    nop
-    inc bc
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    dec b
-    inc b
-    dec b
-    dec b
-    ld b, $06
-    ld b, $07
-    dec b
-    ld [$0905], sp
-    dec b
-    rlca
-    inc b
-    ld [$0904], sp
-    inc b
-    rlca
-    inc b
-    ld [$0904], sp
-    inc b
-    ld a, [bc]
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0201
-    inc b
-    inc bc
-    ld bc, $0404
-    dec b
-    ld bc, $0406
-    rlca
-    ld bc, $0408
-    add hl, bc
-    ld bc, $040A
-    dec bc
-    ld bc, $040C
-    dec c
-    ld bc, $040E
-    rrca
-    inc bc
-    ld c, $04
-    rrca
-    inc bc
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    dec b
-    ld bc, $0205
-    dec b
-    inc bc
-    dec b
-    inc b
-    dec b
-    dec b
-    dec b
-    ld b, $05
-    rlca
-    dec b
-    rra
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    inc bc
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    rrca
-    inc bc
-    inc de
-    inc bc
-    db $10, $03 ; stop
-    inc d
-    inc bc
-    ld de, $1503
-    inc bc
-    ld [de], a
-    inc bc
-    rrca
-    inc bc
-    inc de
-    ld [bc], a
-    db $10, $02 ; stop
-    inc d
-    ld [bc], a
-    ld de, $1502
-    ld [bc], a
-    ld [de], a
-    ld [bc], a
-    inc de
-    ld [bc], a
-    rrca
-    ld [bc], a
-    ld c, $03
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0204
-    inc b
-    inc bc
-    inc b
-    inc b
-    inc b
-    dec b
-    inc b
-    ld b, $04
-    rlca
-    inc b
-    ld [$0904], sp
-    inc b
-    ld a, [bc]
-    inc b
-    dec bc
-    inc b
-    inc c
-    inc bc
-    dec c
-    inc bc
-    inc c
-    inc bc
-    ld c, $04
-    rrca
-    inc bc
-    db $10, $02 ; stop
-    ld de, $1204
-    inc b
-    inc de
-    inc b
-    inc d
-    dec e
-    rra
-    inc bc
-    inc d
-    inc bc
-    rra
-    inc bc
-    inc d
-    inc bc
-    rra
-    ld [bc], a
-    inc d
-    ld [bc], a
-    rra
-    ld bc, $0114
-    rra
-    ld bc, $0114
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0204
-    dec b
-    inc bc
-    inc b
-    inc b
-    inc bc
-    dec b
-    inc b
-    ld b, $05
-    rlca
-    inc b
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc b
-    dec bc
-    dec b
-    inc c
-    ld b, $0D
-    inc bc
-    ld c, $04
-    rrca
-    inc b
-    db $10, $04 ; stop
-    ld de, $1204
-    inc b
-    inc de
-    inc b
-    inc d
-    inc b
-    dec d
-    inc b
-    ld d, $04
-    rla
-    inc bc
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    inc b
-    ld [bc], a
-    dec b
-    inc bc
-    ld b, $04
-    rra
-    ld [$0407], sp
-    ld [$0904], sp
-    inc b
-    ld a, [bc]
-    inc b
-    dec bc
-    inc b
-    inc c
-    inc b
-    dec c
-    inc b
-    ld c, $04
-    rrca
-    inc b
-    db $10, $04 ; stop
-    ld de, $1204
-    inc bc
-    inc de
-    inc bc
-    ld [de], a
-    inc bc
-    inc de
-    inc bc
-    ld [de], a
-    inc bc
-    inc de
-    inc bc
-    ld de, $0F02
-    ld [bc], a
-    ld c, $02
-    inc c
-    ld [bc], a
-    dec bc
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    rst $38
-    rst $38
-    nop
-    ld b, $01
-    dec b
-    ld [bc], a
-    dec b
-    inc bc
-    inc b
-    inc b
-    ld [bc], a
-    dec b
-    inc bc
-    inc b
-    inc bc
-    ld b, $04
-    rlca
-    ld b, $08
-    dec b
-    add hl, bc
-    inc b
-    ld a, [bc]
-    inc b
-    dec bc
-    inc b
-    inc c
-    inc b
-    dec c
-    inc b
-    ld c, $04
-    rrca
-    inc b
-    rst $38
-    rst $38
-    nop
-    inc b
-    ld bc, $0204
-    inc bc
-    inc bc
-    inc b
-    inc b
-    inc b
-    dec b
-    inc bc
-    ld b, $03
-    rlca
-    ld [bc], a
-    ld [$0702], sp
-    inc bc
-    ld [$0903], sp
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
+Data_032_4212:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $02, $02, $04, $03, $04, $04, $02, $00, $02, $01, $02, $02, $02
+    db $01, $02, $1F, $02, $FF, $FF
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleResolveStep
-Func_032_4A49:: ; heuristic: target of a pointer table; C0
-    inc bc
-    db $10, $03 ; stop
-    ld de, $0E03
-    inc bc
-    rrca
-    inc bc
-    db $10, $03 ; stop
-    ld de, $0C03
-    ld [bc], a
-    dec c
-    ld [bc], a
-    ld [de], a
-    ld bc, $011F
-    inc de
-    ld bc, $011F
-    inc d
-    ld bc, $011F
-    dec d
-    ld bc, $FFFF
-    nop
-    dec b
-    ld bc, $0206
-    dec b
-    inc bc
-    inc b
-    inc b
-    inc b
-    dec b
-    inc b
-    ld b, $04
-    rlca
-    inc b
-    ld [$1F04], sp
-    ld a, [bc]
-    add hl, bc
-    inc bc
-    ld a, [bc]
-    inc bc
-    dec bc
-    inc bc
-    inc c
-    inc bc
-    dec c
-    inc bc
-    ld c, $03
-    rst $38
-    rst $38
-    nop
-    inc bc
-    ld bc, $0203
-    inc bc
-    inc bc
-    inc bc
-    db $10, $03 ; stop
-    inc b
-    inc bc
-    ld de, $0503
-    inc bc
-    ld [de], a
-    inc bc
-    ld b, $03
-    inc de
-    inc bc
-    rlca
-    inc bc
-    inc d
-    inc bc
-    ld [$1503], sp
-    inc bc
-    add hl, bc
-    inc bc
-    ld d, $03
-    ld a, [bc]
-    inc bc
-    rla
-    inc bc
-    dec bc
-    inc bc
-    jr Jump_032_4AB9
-    db $0C, $03, $19
+; LZSS-compressed asset: 442 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4228:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $02, $01, $02, $02, $02, $1F, $10, $03, $04, $04, $02, $05, $04, $06, $02
+    db $07, $04, $08, $02, $03, $03, $04, $02, $05, $03, $06, $02, $07, $04, $08, $02
+    db $1F, $02, $FF, $FF
 
-Jump_032_4AB9::
-    inc bc
-    dec c
-    inc bc
-    ld a, [de]
-    inc bc
-    ld c, $03
-    rrca
-    inc bc
-    rst $38
-    rst $38
-    nop
-    ld [bc], a
-    ld bc, $0202
-    ld [bc], a
-    inc bc
-    ld [bc], a
-    inc b
-    ld [bc], a
-    dec b
-    ld [bc], a
-    ld b, $02
-    rlca
-    ld [bc], a
-    ld [$0902], sp
-    ld [bc], a
-    ld a, [bc]
-    ld [bc], a
-    rst $38
-    rst $38
+; LZSS-compressed asset: 436 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_424C:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0C824C, $46
+
+; LZSS-compressed asset: 421 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4292:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $02, $01, $02, $02, $02, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
+    db $08, $02, $09, $02, $0A, $02, $0B, $02, $0C, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 649 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_42B0:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $04, $03, $04, $04, $05, $05, $04, $06, $05, $07, $04
+    db $08, $05, $09, $04, $0A, $05, $0B, $04, $0C, $05, $1F, $02, $FF, $FF
+
+Data_032_42CE:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0C82CE, $42
+
+Data_032_4310:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
+    db $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $0E, $03, $0F, $03
+    db $10, $03, $11, $03, $12, $03, $1F, $02, $FF, $FF
+
+Data_032_433A:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $05, $01, $04, $02, $04, $03, $03, $04, $02, $03, $02, $04, $03, $03, $03
+    db $04, $0F, $1F, $03, $04, $03, $1F, $03, $04, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 619 bytes expand to 774 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4358:: ; heuristic: target of a monotone pointer table; C0
+    db $06, $03, $07, $03, $08, $02, $09, $02, $0A, $01, $0B, $01, $0C, $01, $1F, $08
+    db $01, $02, $02, $02, $03, $02, $04, $02, $01, $02, $02, $02, $03, $02, $04, $02
+    db $01, $02, $02, $02, $03, $02, $04, $02, $01, $02, $02, $02, $03, $02, $04, $02
+    db $01, $02, $02, $02, $03, $02, $04, $02, $05, $01, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 891 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4396:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $03, $1F, $08, $02, $05, $03, $04, $04, $03, $05, $03, $06, $02
+    db $07, $02, $04, $02, $05, $02, $06, $02, $07, $02, $02, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 894 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_43B6:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $03, $02, $02, $1F, $08, $03, $05, $04, $04, $05, $03, $06, $03
+    db $07, $02, $08, $02, $09, $02, $05, $02, $06, $02, $07, $02, $08, $02, $09, $02
+    db $06, $02, $07, $02, $08, $02, $09, $02, $04, $01, $1F, $02, $FF, $FF
+
+Data_032_43E4:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $02, $03, $03, $02, $01, $0F, $02, $04, $03, $05, $03
+    db $06, $03, $07, $02, $08, $02, $09, $02, $0A, $01, $0B, $01, $0C, $01, $0D, $01
+    db $06, $03, $07, $02, $0A, $01, $0B, $01, $0C, $01, $0D, $01, $08, $03, $09, $02
+    db $0A, $01, $0B, $01, $0C, $01, $0D, $01, $0E, $01, $04, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 894 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4424:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $04, $02, $04, $03, $04, $04, $04, $05, $04, $06, $04, $07, $04
+    db $08, $04, $09, $04, $0A, $04, $1F, $02, $FF, $FF
+
+Data_032_443E:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $03, $02, $04, $03, $03, $04, $02, $05, $01, $06, $01, $07, $01
+    db $1F, $01, $FF, $FF
+
+; LZSS-compressed asset: 2305 bytes expand to 2560 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4452:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $0A, $01, $08, $02, $07, $03, $06, $04, $05, $05, $05, $06, $05, $07, $05
+    db $08, $04, $09, $04, $0A, $04, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 1807 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_446C:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $08, $01, $06, $02, $08, $03, $06, $04, $08, $05, $08, $06, $08, $07, $08
+    db $08, $04, $09, $04, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 1351 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4484:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $06, $01, $06, $02, $06, $03, $06, $04, $08, $05, $08, $06, $04, $08, $04
+    db $08, $04, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 1352 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_449A:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $06, $01, $06, $02, $06, $03, $06, $04, $06, $05, $06, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 2316 bytes expand to 2560 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_44AA:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $0A, $01, $06, $02, $06, $03, $06, $04, $06, $05, $06, $1F, $02, $FF, $FF
+
+Data_032_44BA:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $1F, $04, $00, $04, $1F, $04, $00, $04, $1F, $04, $00, $04, $1F, $04
+    db $00, $04, $1F, $04, $00, $04, $1F, $0F, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 669 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_44D6:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $03, $1F, $08, $03, $02, $04, $02, $05, $02, $06, $02
+    db $07, $02, $08, $02, $09, $02, $0A, $02, $0B, $02, $0C, $02, $0D, $02, $0E, $02
+    db $0F, $02, $10, $02, $11, $02, $12, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 904 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4502:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $04, $02, $04, $03, $04, $04, $05, $05, $04, $06, $04, $07, $04
+    db $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 456 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4516:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $02, $01, $02, $02, $02, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
+    db $08, $02, $09, $02, $0A, $02, $0B, $03, $0C, $05, $0D, $04, $0E, $03, $0F, $03
+    db $0E, $04, $0D, $04, $0E, $03, $0B, $03, $13, $04, $0B, $04, $0C, $05, $0D, $04
+    db $0E, $03, $0F, $04, $0E, $03, $10, $04, $11, $04, $12, $04, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 666 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4556:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 669 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4566:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $04, $03, $03, $00, $03, $01, $04, $02, $04, $03, $03
+    db $04, $05, $05, $03, $06, $03, $1F, $08, $07, $03, $08, $02, $09, $04, $0A, $04
+    db $0B, $04, $0C, $04, $0D, $04, $0E, $03, $0F, $03, $10, $03, $11, $03, $12, $03
+    db $13, $03, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 671 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_459C:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $02, $06, $02, $07, $02
+    db $08, $02, $09, $02, $0A, $03, $0B, $04, $0C, $03, $0D, $03, $0E, $03, $0F, $02
+    db $10, $02, $0C, $02, $0D, $02, $0E, $02, $0F, $02, $10, $02, $0D, $02, $0E, $02
+    db $0F, $02, $10, $02, $0A, $01, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 671 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_45D6:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $06, $03, $1F, $08
+    db $07, $02, $08, $02, $09, $02, $0A, $02, $0B, $02, $0C, $02, $0D, $02, $0E, $02
+    db $0F, $02, $10, $02, $11, $02, $12, $02, $13, $02, $14, $02, $15, $02, $16, $02
+    db $17, $02, $18, $02, $19, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 673 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4610:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $06, $03, $1F, $08
+    db $07, $05, $08, $04, $09, $03, $0A, $03, $0B, $03, $0A, $04, $0B, $08, $1F, $03
+    db $0B, $02, $1F, $02, $0B, $01, $1F, $01, $0B, $01, $1F, $01, $0B, $01, $1F, $01
+    db $0B, $01, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 1346 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4646:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $06, $01, $05, $02, $05, $03, $03, $04, $04, $05, $03, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 662 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4656:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $06, $02, $1F, $02
+    db $FF, $FF
+
+; LZSS-compressed asset: 1350 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4668:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $06, $01, $05, $02, $05, $03, $05, $04, $03, $05, $03, $06, $08, $07, $03
+    db $06, $03, $07, $03, $06, $03, $07, $02, $06, $02, $07, $02, $06, $02, $07, $01
+    db $06, $01, $07, $01, $06, $01, $07, $01, $06, $01, $1F, $02, $FF, $FF
+
+Data_032_4696:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $05, $01, $04, $02, $04, $03, $04, $04, $03, $05, $03, $06, $03, $05, $02
+    db $07, $02, $08, $02, $07, $02, $1F, $02, $08, $02, $1F, $02, $07, $01, $1F, $01
+    db $08, $01, $1F, $01, $07, $01, $1F, $01, $08, $01, $1F, $01, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 905 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_46C6:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $05, $02, $05, $03, $04, $04, $04, $05, $06, $06, $04, $07, $04
+    db $08, $03, $07, $02, $08, $02, $06, $02, $08, $03, $09, $03, $08, $02, $09, $02
+    db $08, $02, $09, $02, $0A, $02, $0B, $02, $0A, $01, $0B, $01, $0A, $01, $1F, $01
+    db $0B, $01, $1F, $01, $0A, $01, $1F, $01, $0B, $01, $1F, $02, $FF, $FF
+
+Data_032_4704:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $01, $01, $01, $02, $01, $03, $02, $04, $03, $05, $03, $06, $03, $07, $03
+    db $08, $03, $09, $03, $0A, $03, $0B, $02, $0C, $02, $0D, $02, $0B, $02, $0C, $02
+    db $0D, $02, $0B, $02, $0C, $02, $0D, $02, $0B, $02, $0C, $02, $0D, $02, $0B, $02
+    db $0C, $02, $0D, $02, $0B, $02, $0C, $02, $0D, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 162 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4742:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $1F, $01, $01, $03, $1F, $01, $02, $03, $1F, $01, $03, $03, $1F, $01
+    db $04, $03, $05, $03, $04, $03, $05, $03, $04, $03, $05, $03, $04, $03, $05, $03
+    db $1F, $02, $FF, $FF
+
+Data_032_4766:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $04, $00, $03, $01, $03, $02, $04, $01, $04, $02, $03, $01, $03
+    db $03, $04, $02, $04, $03, $03, $02, $03, $04, $04, $03, $04, $04, $03, $03, $03
+    db $05, $04, $04, $03, $06, $03, $05, $04, $07, $04, $10, $04, $0B, $04, $11, $04
+    db $0C, $04, $12, $04, $0D, $04, $13, $04, $07, $03, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 921 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_47A4:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $05, $02, $04, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
+    db $08, $03, $1F, $08, $09, $02, $0A, $02, $0B, $02, $0C, $02, $0D, $02, $0E, $02
+    db $0F, $02, $10, $02, $11, $02, $12, $02, $13, $02, $14, $02, $0B, $02, $0C, $02
+    db $0D, $02, $0E, $02, $0F, $02, $15, $02, $16, $02, $17, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 909 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_47E4:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $04, $02, $04, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
+    db $08, $02, $05, $02, $06, $02, $07, $02, $08, $02, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 910 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4802:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $03, $02, $06, $03, $06, $04, $06, $05, $06, $06, $06, $07, $06
+    db $08, $06, $09, $06, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 677 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_481A:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $03, $05, $04, $06, $04, $07, $03
+    db $08, $03, $07, $03, $09, $04, $0A, $03, $0B, $03, $FF, $FF
+
+; LZSS-compressed asset: 677 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4836:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $05, $03, $05, $04, $05, $05, $04, $06, $03, $12, $03
+    db $07, $02, $13, $02, $08, $02, $14, $02, $09, $02, $15, $02, $0A, $02, $16, $02
+    db $0B, $02, $17, $02, $0C, $02, $18, $02, $0D, $02, $19, $02, $0E, $02, $1A, $02
+    db $0F, $02, $1B, $02, $10, $02, $11, $02, $FF, $FF
+
+; LZSS-compressed asset: 917 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4870:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $05, $02, $05, $03, $04, $04, $06, $05, $04, $06, $04, $1F, $0A
+    db $07, $03, $08, $02, $09, $05, $0A, $05, $0B, $05, $0C, $06, $0D, $06, $0E, $05
+    db $0F, $04, $0C, $04, $0D, $04, $0E, $04, $0F, $03, $0C, $03, $0D, $03, $0E, $03
+    db $10, $02, $0F, $02, $11, $02, $10, $02, $11, $02, $FF, $FF
+
+; LZSS-compressed asset: 679 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_48AC:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $02, $02, $02, $03, $05, $04, $05, $05, $06, $06, $06, $07, $05
+    db $08, $05, $09, $05, $07, $04, $08, $04, $09, $04, $07, $04, $08, $04, $09, $04
+    db $0A, $03, $1F, $02, $FF, $FF
+
+Data_032_48D2:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $01, $02, $04, $03, $01, $04, $04, $05, $01, $06, $04, $07, $01
+    db $08, $04, $09, $01, $0A, $04, $0B, $01, $0C, $04, $0D, $01, $0E, $04, $0F, $03
+    db $0E, $04, $0F, $03, $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 1204 bytes expand to 1280 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_48FA:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $05, $01, $05, $02, $05, $03, $05, $04, $05, $05, $05, $06, $05, $07, $05
+    db $1F, $02, $FF, $FF
+
+; LZSS-compressed asset: 703 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_490E:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0C890E, $44
+
+; LZSS-compressed asset: 961 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4952:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0C8952, $42
+
+; LZSS-compressed asset: 713 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4994:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $04, $02, $05, $03, $04, $04, $03, $05, $04, $06, $05, $07, $04
+    db $08, $03, $09, $03, $0A, $04, $0B, $05, $0C, $06, $0D, $03, $0E, $04, $0F, $04
+    db $10, $04, $11, $04, $12, $04, $13, $04, $14, $04, $15, $04, $16, $04, $17, $03
+    db $FF, $FF
+
+; LZSS-compressed asset: 715 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_49C6:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $02, $05, $03, $06, $04, $1F, $08
+    db $07, $04, $08, $04, $09, $04, $0A, $04, $0B, $04, $0C, $04, $0D, $04, $0E, $04
+    db $0F, $04, $10, $04, $11, $04, $12, $03, $13, $03, $12, $03, $13, $03, $12, $03
+    db $13, $03, $11, $02, $0F, $02, $0E, $02, $0C, $02, $0B, $02, $0A, $02, $FF, $FF
+
+; LZSS-compressed asset: 1425 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4A06:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $06, $01, $05, $02, $05, $03, $04, $04, $02, $05, $03, $04, $03, $06, $04
+    db $07, $06, $08, $05, $09, $04, $0A, $04, $0B, $04, $0C, $04, $0D, $04, $0E, $04
+    db $0F, $04, $FF, $FF
+
+; LZSS-compressed asset: 957 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4A2A:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $04, $01, $04, $02, $03, $03, $04, $04, $04, $05, $03, $06, $03, $07, $02
+    db $08, $02, $07, $03, $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03
+    db $10, $03, $11, $03, $0E, $03, $0F, $03, $10, $03, $11, $03, $0C, $02, $0D, $02
+    db $12, $01, $1F, $01, $13, $01, $1F, $01, $14, $01, $1F, $01, $15, $01, $FF, $FF
+
+; LZSS-compressed asset: 1214 bytes expand to 1280 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4A6A:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $05, $01, $06, $02, $05, $03, $04, $04, $04, $05, $04, $06, $04, $07, $04
+    db $08, $04, $1F, $0A, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $0E, $03
+    db $FF, $FF
+
+; LZSS-compressed asset: 741 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4A8C:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $03, $01, $03, $02, $03, $03, $03, $10, $03, $04, $03, $11, $03, $05, $03
+    db $12, $03, $06, $03, $13, $03, $07, $03, $14, $03, $08, $03, $15, $03, $09, $03
+    db $16, $03, $0A, $03, $17, $03, $0B, $03, $18, $03, $0C, $03, $19, $03, $0D, $03
+    db $1A, $03, $0E, $03, $0F, $03, $FF, $FF
+
+; LZSS-compressed asset: 495 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_032_4AC4:: ; heuristic: target of a monotone pointer table; C0
+    db $00, $02, $01, $02, $02, $02, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
+    db $08, $02, $09, $02, $0A, $02, $FF, $FF
 
 ; only called from RunBattleActions_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleActions_Case00)
@@ -3008,14 +1484,9 @@ Jump_032_5073::
 
 Data_032_5078:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13
-    db $14, $15, $19, $1A, $26, $28, $2A, $2C, $2E, $2F, $30, $33, $3D, $3E, $3F
-    dw Func_032_4140
-    dw Func_032_4342
-    dw Func_032_4544
-    dw Func_032_4746
-    dw Func_032_4A49
-    db $4B, $4D, $4E, $4F, $64, $65, $66, $67, $6B, $6C, $6D, $6F, $70, $71, $72, $73
-    db $74, $79, $7A, $8E, $90, $FF
+    db $14, $15, $19, $1A, $26, $28, $2A, $2C, $2E, $2F, $30, $33, $3D, $3E, $3F, $40
+    db $41, $42, $43, $44, $45, $46, $47, $49, $4A, $4B, $4D, $4E, $4F, $64, $65, $66
+    db $67, $6B, $6C, $6D, $6F, $70, $71, $72, $73, $74, $79, $7A, $8E, $90, $FF
 
 ; entry 2 of the `rst $00` table in Func_032_4ADC_Case01
 ; no direct call (reached through a table, a jump or a vector)
@@ -4937,7 +3408,7 @@ Func_032_5C3F:: ; address name
     ld [wD868], a
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_019_434D
+    farcall LoadSlotSkillsFromBattlerRecord
     ld a, [wBattleTarget]
     ld c, a
     farcall GetBaseHP

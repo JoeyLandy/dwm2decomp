@@ -968,7 +968,7 @@ Jump_0E2_46B5::
 
 Jump_0E2_46D1::
     call WeighWD044RuleBit5
-    farcall Func_005_585D
+    farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
     jr nz, Jump_0E2_46E4
@@ -3949,7 +3949,7 @@ Jump_0E2_5C01::
 
 Jump_0E2_5C11::
     call WeighWD044RuleBit2
-    farcall Func_005_585D
+    farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
     jr nz, Jump_0E2_5C24
@@ -4004,7 +4004,7 @@ Jump_0E2_5C62::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C75::
-    farcall Func_005_585D
+    farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
     jr nz, Jump_0E2_5C85
@@ -5712,7 +5712,7 @@ Data_0E2_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. AIScore_Upper)
 AIScore_Upper_Sub02::
 Func_0E2_6773:: ; address name
-    farcall Func_005_585D
+    farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
     jr nz, Jump_0E2_6785
