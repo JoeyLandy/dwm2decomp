@@ -546,10 +546,10 @@ Jump_030_4342::
 ; entry 6 of the `rst $00` table in Func_030_4001
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD2C8, wD2C9, wD2CA, wD2CB, wCFCA
-; points at: wD8BF, wD8CF, wCFC9, wCFCB
+; points at: wBattleHP, wBattleMaxHP, wBattleStep, wCFCB
 Func_030_4001_Case06::
 Jump_030_434C:: ; address name
-    ld hl, wD8BF
+    ld hl, wBattleHP
     ld bc, $0000
     call AddWordAtHLToBC_Bank30
     call AddWordAtHLToBC_Bank30
@@ -558,7 +558,7 @@ Jump_030_434C:: ; address name
     ld [wD2C8], a
     ld a, b
     ld [wD2C9], a
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     ld bc, $0000
     call AddWordAtHLToBC_Bank30
     call AddWordAtHLToBC_Bank30
@@ -567,7 +567,7 @@ Jump_030_434C:: ; address name
     ld [wD2CA], a
     ld a, b
     ld [wD2CB], a
-    ld hl, wCFC9
+    ld hl, wBattleStep
     inc [hl]
     xor a, a
     ld [wCFCA], a
@@ -2365,10 +2365,10 @@ Jump_030_5123::
 ; 1 call site from 1 routine (e.g. Func_030_502D)
 ; reads: wD8A4, wRecordBufferData
 ; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wD8DF, wC0A0, wRecordBufferData, wC0A8
+; points at: wBattleMP, wC0A0, wRecordBufferData, wC0A8
 Func_030_5129::
     ld a, [wD8A4]
-    ld hl, wD8DF
+    ld hl, wBattleMP
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -2900,7 +2900,7 @@ Jump_030_54D9::
 ; 1 call site from 1 routine (e.g. Func_030_5472)
 ; reads: wD8A4, wDA3E, wDA3C
 ; writes: wDA3E, wDA3C
-; points at: wD2C8, wD8BF
+; points at: wD2C8, wBattleHP
 Func_030_54DA::
     ld a, [wD8A4]
     rrca
@@ -2920,7 +2920,7 @@ Func_030_54DA::
     ld a, [wD8A4]
     rlca
     and a, $08
-    ld hl, wD8BF
+    ld hl, wBattleHP
     add_a_to_hl
     ld bc, $0000
     ld a, [hl+]
@@ -2956,7 +2956,7 @@ Jump_030_5534::
     rlca
     and a, $08
     xor a, $08
-    ld hl, wD8BF
+    ld hl, wBattleHP
     add_a_to_hl
     ld bc, $0000
     ld a, [hl+]
@@ -3272,16 +3272,16 @@ Func_030_5C40::
     jr Func_030_5C68
 
 ; 1 call site from 1 routine (e.g. Func_030_478B)
-; points at: wD8CF
+; points at: wBattleMaxHP
 Func_030_5C45::
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     jr Func_030_5C68
     db $21, $EF, $D8, $18, $19
 
 ; 1 call site from 1 routine (e.g. Func_030_478B)
-; points at: wD8BF
+; points at: wBattleHP
 Func_030_5C4F::
-    ld hl, wD8BF
+    ld hl, wBattleHP
     jr Func_030_5C68
     db $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30
     db $01, $24, $7E, $C9

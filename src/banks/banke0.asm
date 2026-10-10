@@ -567,7 +567,7 @@ Jump_0E0_449A::
 
 ; 3 call sites from 1 routine (e.g. Func_0E0_443B_Case01)
 ; writes: hFFC6, hFFC7
-; points at: wDA63, wD8BF, wD8CF, wD8DF, wD8EF, wD8B7, wD8FF, wD90F, ...
+; points at: wDA63, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wD8B7, wD8FF, wD90F, ...
 Func_0E0_44B3::
     ld a, c
     and a, $03
@@ -586,13 +586,13 @@ Jump_0E0_44CB::
     ld a, [de]
     cp a, $FF
     jr z, Jump_0E0_452D
-    ld de, wD8BF
+    ld de, wBattleHP
     call Func_0E0_4593
-    ld de, wD8CF
+    ld de, wBattleMaxHP
     call Func_0E0_4593
-    ld de, wD8DF
+    ld de, wBattleMP
     call Func_0E0_4593
-    ld de, wD8EF
+    ld de, wBattleMaxMP
     call Func_0E0_4593
     inc hl
     ld de, wD8B7

@@ -2443,10 +2443,10 @@ Jump_032_4D2A::
 ; 1 call site from 1 routine (e.g. Func_032_4C9C)
 ; reads: wD8A4
 ; writes: wD872, wD873
-; points at: wD8BF
+; points at: wBattleHP
 Func_032_4D2C::
     ld a, [wD8A4]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     add a, a
     add_a_to_hl
     push hl
@@ -2476,7 +2476,7 @@ Func_032_4D2C::
 ; 1 call site from 1 routine (e.g. Func_032_4C9C)
 ; reads: wD8A4
 ; writes: wD872, wD873
-; points at: wD8DF
+; points at: wBattleMP
 Func_032_4D5A::
     ld a, [wD8A4]
     call Func_032_67FE
@@ -2491,7 +2491,7 @@ Jump_032_4D69::
     call DivideHLByA
     push hl
     ld a, [wD8A4]
-    ld hl, wD8DF
+    ld hl, wBattleMP
     add a, a
     call Func_032_57FD
     pop bc
@@ -3468,7 +3468,7 @@ Jump_032_5384::
 ; 8 call sites from 8 routines (e.g. Func_032_5820_Case07, Func_032_5820_Case01, Func_032_4ADC_Case08, Func_032_4EE4_Case04, ...)
 ; reads: wD8A6, wD8A4, hFFC6, wRecordBufferData
 ; writes: wRecordBuffer, wCFED, wD8A4, wRecordBufferData, wD866, wD867
-; points at: wDA2C, wD8DF
+; points at: wDA2C, wBattleMP
 Func_032_5386::
     ld a, [wD8A6]
     cp a, $D0
@@ -3484,10 +3484,10 @@ Jump_032_5393::
 ; 4 call sites from 1 routine (e.g. Func_032_5397)
 ; reads: wD8A4, wRecordBufferData
 ; writes: wD866, wD867
-; points at: wD8DF
+; points at: wBattleMP
 Func_032_5397::
     ld a, [wD8A4]
-    ld hl, wD8DF
+    ld hl, wBattleMP
     add a, a
     add_a_to_hl
     ld a, [wRecordBufferData]
@@ -3873,7 +3873,7 @@ Jump_032_55E7:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_032_5820_Case06)
 ; reads: wC58A, wD043, wDABA, wD044, wD8A6, wD045, wD8A4, wC57F, ...
-; writes: wD092, wStringIndex, wStringCategory, wCFC8, wCFC9, wCFCA, wCFCB, wDataBank, ...
+; writes: wD092, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wCFCA, wCFCB, wDataBank, ...
 ; points at: wCFCB, wD057, wD058
 Func_032_55EE::
     ld hl, wCFCB
@@ -3949,9 +3949,9 @@ Jump_032_565F::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
     ld a, $02
-    ld [wCFC8], a
+    ld [wBattlePhase], a
     ld a, $09
-    ld [wCFC9], a
+    ld [wBattleStep], a
     xor a, a
     ld [wCFCA], a
     ld [wCFCB], a
@@ -4033,8 +4033,8 @@ Jump_032_57AF::
 ; entry 1 of the `rst $00` table in Func_032_55EE
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wCFC9, wCFCC, wCFCB
-; points at: wCFC8
+; writes: wBattleStep, wCFCC, wCFCB
+; points at: wBattlePhase
 Func_032_55EE_Case01::
 Jump_032_57BA:: ; address name
     ld a, [wC52B]
@@ -4051,10 +4051,10 @@ Jump_032_57C7::
     inc c
     dec b
     jr nz, Jump_032_57C7
-    ld hl, wCFC8
+    ld hl, wBattlePhase
     inc [hl]
     xor a, a
-    ld [wCFC9], a
+    ld [wBattleStep], a
     jr Jump_032_57E3
 
 Jump_032_57DA::
@@ -4435,7 +4435,7 @@ Jump_032_59CF:: ; address name
 ; 1 call site from 1 routine (e.g. Func_036_4001_Case0C)
 ; reads: wDAC1, wD8A5, wD872, wD873
 ; writes: wCFCC, wCFCD
-; points at: wCFCB, wD8BF
+; points at: wCFCB, wBattleHP
 Func_032_59DF::
     ld hl, wCFCB
     inc [hl]
@@ -4450,7 +4450,7 @@ Func_032_59DF::
     cp a, $40
     jr z, Jump_032_5A26
     ld a, [wD8A5]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     ld a, [hl+]
     ld d, [hl]
@@ -4662,7 +4662,7 @@ Jump_032_5AFE::
 ; 9 call sites from 9 routines (e.g. Func_032_6764_Case00, Func_032_55EE_Case00, Func_032_5A3A_Case00, Func_032_66F1_Case00, ...)
 ; reads: wD8A5, wC58A
 ; writes: wDAAB, wDABE
-; points at: wD812, wDA63, wD8BF, wD80C, wD80A
+; points at: wD812, wDA63, wBattleHP, wD80C, wD80A
 Func_032_5B12::
     call Func_032_5C3F
     ld a, [wD8A5]
@@ -4683,7 +4683,7 @@ Jump_032_5B2A::
     add_a_to_hl
     ld [hl], $01
     ld a, [wD8A5]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     add a, a
     add_a_to_hl
     xor a, a
@@ -4843,7 +4843,7 @@ Func_032_5BE8::
 ; 2 call sites from 2 routines (e.g. Func_032_5E3B, Func_032_5B12)
 ; reads: wD8A5, wDAC4, wDAC5
 ; writes: wD868, wD869, wD86A, wD86B
-; points at: wD80D, wD8CF, wD8BF, wD8EF, wD8DF, wD8FF, wD92F, wD8B7, ...
+; points at: wD80D, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wD8FF, wD92F, wD8B7, ...
 Func_032_5C3F::
     ld a, [wD8A5]
     ld hl, wD80D
@@ -4866,7 +4866,7 @@ Func_032_5C3F::
     ld a, [wDAC5]
     ld b, a
     ld a, [wD8A5]
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -4876,7 +4876,7 @@ Func_032_5C3F::
     call CompareHLToBC
     jr c, Jump_032_5C95
     ld a, [wD8A5]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -4891,7 +4891,7 @@ Jump_032_5C95::
     ld a, [wDAC5]
     ld b, a
     ld a, [wD8A5]
-    ld hl, wD8EF
+    ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -4901,7 +4901,7 @@ Jump_032_5C95::
     call CompareHLToBC
     jr c, Jump_032_5CCA
     ld a, [wD8A5]
-    ld hl, wD8DF
+    ld hl, wBattleMP
     call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
@@ -5469,7 +5469,7 @@ Jump_032_60C0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A4, wD8A5, wD872, wD873, wD876, wD877, wC0A0, wD871
 ; writes: wD876, wD877, wCFCE, wC0A0, wD871, wD8A5, wD872, wD873
-; points at: wCFCD, wD8BF, wC0A0
+; points at: wCFCD, wBattleHP, wC0A0
 Func_032_604A_Case01::
 Jump_032_60DF:: ; address name
     ld hl, wCFCD
@@ -5477,7 +5477,7 @@ Jump_032_60DF:: ; address name
     ld hl, wCFCD
     inc [hl]
     ld a, [wD8A4]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     push hl
     deref_hl
@@ -5673,7 +5673,7 @@ Jump_032_61EF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A4, wD8A5, wD871
 ; writes: wCFCE, wD871, wD8A5
-; points at: wCFCD, wD8BF
+; points at: wCFCD, wBattleHP
 Func_032_61D9_Case01::
 Jump_032_620E:: ; address name
     ld hl, wCFCD
@@ -5681,7 +5681,7 @@ Jump_032_620E:: ; address name
     ld hl, wCFCD
     inc [hl]
     ld a, [wD8A4]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     push hl
     deref_hl
@@ -5853,7 +5853,7 @@ Jump_032_62FD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A4, wC5E7, wD872, wD873, wD8A5, wD871
 ; writes: wD872, wD873, wCFCE, wD871, wD8A5
-; points at: wCFCD, wD8BF
+; points at: wCFCD, wBattleHP
 Func_032_627C_Table2_Case01::
 Jump_032_630B:: ; address name
     ld hl, wCFCD
@@ -5905,7 +5905,7 @@ Jump_032_6342::
 
 Jump_032_6366::
     ld a, [wD8A4]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     xor a, a
     ld [hl+], a
@@ -5918,7 +5918,7 @@ Jump_032_6366::
 
 Jump_032_637D::
     ld a, [wD8A4]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     ld a, [hl+]
     ld d, [hl]
@@ -6098,7 +6098,7 @@ Jump_032_6449:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A4, wD872, wD873, wD8A5, wD876, wD877, wC0A0, wD871
 ; writes: wD876, wD877, wCFCE, wC0A0, wD871, wD8A5, wD872, wD873
-; points at: wCFCD, wD8BF, wC0A0
+; points at: wCFCD, wBattleHP, wC0A0
 Func_032_63C2_Table2_Case01::
 Jump_032_6468:: ; address name
     ld hl, wCFCD
@@ -6106,7 +6106,7 @@ Jump_032_6468:: ; address name
     ld hl, wCFCD
     inc [hl]
     ld a, [wD8A4]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     push hl
     deref_hl
@@ -6442,11 +6442,11 @@ Jump_032_666C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A5, wD872, wD873, wD8A4
 ; writes: wCFCD, wD8A5, wD8A4, wCFCC
-; points at: wD8BF, wCFCC, wCFCB
+; points at: wBattleHP, wCFCC, wCFCB
 Func_032_6662_Case01::
 Jump_032_667D:: ; address name
     ld a, [wD8A5]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
     ld a, [hl+]
     ld d, [hl]
@@ -6717,21 +6717,21 @@ Jump_032_67E2::
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E
 
 ; 1 call site from 1 routine (e.g. Func_032_4D5A)
-; points at: wD8EF
+; points at: wBattleMaxMP
 Func_032_67FE::
-    ld hl, wD8EF
+    ld hl, wBattleMaxMP
     jr Jump_032_681C
 
 ; 4 call sites from 4 routines (e.g. Func_032_5C3F, Func_032_4ADC_Table2_Case02, Func_032_4C9C, Func_032_627C_Table2_Case01)
-; points at: wD8BF
+; points at: wBattleHP
 Func_032_6803::
-    ld hl, wD8BF
+    ld hl, wBattleHP
     jr Jump_032_681C
 
 ; 2 call sites from 2 routines (e.g. Func_032_5C3F, Func_032_51F9)
-; points at: wD8DF
+; points at: wBattleMP
 Func_032_6808::
-    ld hl, wD8DF
+    ld hl, wBattleMP
     jr Jump_032_681C
     db $21, $1F, $D9, $18, $0A
 

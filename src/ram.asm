@@ -1084,8 +1084,8 @@ DEF wCFC2 EQU $CFC2
 DEF wCFC3 EQU $CFC3
 DEF wCFC4 EQU $CFC4
 DEF wCFC5 EQU $CFC5
-DEF wCFC8 EQU $CFC8
-DEF wCFC9 EQU $CFC9
+DEF wBattlePhase EQU $CFC8 ; battle phase, a 3-entry dispatch in Func_031_40CC (2 during the fight) (execution (E-0042))
+DEF wBattleStep EQU $CFC9 ; step within the battle phase (1, 2, 4, 5 during the first turn) (execution (E-0042))
 DEF wCFCA EQU $CFCA
 DEF wCFCB EQU $CFCB
 DEF wCFCC EQU $CFCC
@@ -1504,10 +1504,10 @@ DEF wD8A7 EQU $D8A7
 DEF wD8AF EQU $D8AF
 DEF wD8B7 EQU $D8B7
 DEF wD8BB EQU $D8BB
-DEF wD8BF EQU $D8BF
-DEF wD8CF EQU $D8CF
-DEF wD8DF EQU $D8DF
-DEF wD8EF EQU $D8EF
+DEF wBattleHP EQU $D8BF ; current HP of the 8 battle slots as 16-bit words (party in slots 0-2, a foe in slot 4); the first value of the party panels; a defeated foe's word fell from 20 to 0 on the emulator (execution (E-0042))
+DEF wBattleMaxHP EQU $D8CF ; maximum HP of the 8 battle slots (the foe's word stayed 25 when its current HP fell to 0) (execution (E-0042))
+DEF wBattleMP EQU $D8DF ; current MP of the 8 battle slots (the values the party panels show as M) (execution (E-0042))
+DEF wBattleMaxMP EQU $D8EF ; maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP (execution (E-0042))
 DEF wD8F0 EQU $D8F0
 DEF wD8FF EQU $D8FF
 DEF wD90F EQU $D90F

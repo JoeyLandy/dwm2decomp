@@ -4478,13 +4478,13 @@ Jump_016_5D7A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
 ; writes: wCFCA, wCFCB, wCFCC
-; points at: wCFC9
+; points at: wBattleStep
 Func_016_5D13_Case01::
 Jump_016_5D8C:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    ld hl, wCFC9
+    ld hl, wBattleStep
     inc [hl]
     xor a, a
     ld [wCFCA], a
@@ -6842,10 +6842,10 @@ Jump_016_6D08::
 ; entry 4 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCFCA, wCFCC
-; points at: wCFC9
+; points at: wBattleStep
 Func_016_6C16_Case04::
 Jump_016_6D11:: ; address name
-    ld hl, wCFC9
+    ld hl, wBattleStep
     inc [hl]
     xor a, a
     ld [wCFCA], a
@@ -7447,7 +7447,7 @@ Jump_016_710A::
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_70DB)
-; points at: wD8B7, wD8BF, wD8DF, wDA63, wD80C
+; points at: wD8B7, wBattleHP, wBattleMP, wDA63, wD80C
 Func_016_710F::
     push bc
     ld c, $56
@@ -7470,7 +7470,7 @@ Jump_016_711F::
     adc a, $00
     ld h, a
     ld a, c
-    ld de, wD8BF
+    ld de, wBattleHP
     add a, a
     add a, e
     ld e, a
@@ -7486,7 +7486,7 @@ Jump_016_7133::
     inc hl
     inc hl
     ld a, c
-    ld de, wD8DF
+    ld de, wBattleMP
     add a, a
     add a, e
     ld e, a

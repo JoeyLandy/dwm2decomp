@@ -88,5 +88,11 @@
   "C921": {"name": "wScriptParam0", "note": "first parameter of the current script command", "evidence": "reading + execution (E-0038)"},
   "C922": {"name": "wScriptParam1", "note": "second parameter of the current script command", "evidence": "reading + execution (E-0038)"},
   "C923": {"name": "wScriptStep", "note": "step counter of the current script command", "evidence": "reading + execution (E-0038)"},
-  "D7FD": {"name": "wScriptInDataBank", "note": "non-zero when the script bytes are read from the bank in wDataBank", "evidence": "reading + execution (E-0038)"}
+  "D7FD": {"name": "wScriptInDataBank", "note": "non-zero when the script bytes are read from the bank in wDataBank", "evidence": "reading + execution (E-0038)"},
+  "D8BF": {"name": "wBattleHP", "note": "current HP of the 8 battle slots as 16-bit words (party in slots 0-2, a foe in slot 4); the first value of the party panels; a defeated foe's word fell from 20 to 0 on the emulator", "evidence": "execution (E-0042)"},
+  "D8CF": {"name": "wBattleMaxHP", "note": "maximum HP of the 8 battle slots (the foe's word stayed 25 when its current HP fell to 0)", "evidence": "execution (E-0042)"},
+  "D8DF": {"name": "wBattleMP", "note": "current MP of the 8 battle slots (the values the party panels show as M)", "evidence": "execution (E-0042)"},
+  "D8EF": {"name": "wBattleMaxMP", "note": "maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP", "evidence": "execution (E-0042)"},
+  "CFC8": {"name": "wBattlePhase", "note": "battle phase, a 3-entry dispatch in Func_031_40CC (2 during the fight)", "evidence": "execution (E-0042)"},
+  "CFC9": {"name": "wBattleStep", "note": "step within the battle phase (1, 2, 4, 5 during the first turn)", "evidence": "execution (E-0042)"}
 }

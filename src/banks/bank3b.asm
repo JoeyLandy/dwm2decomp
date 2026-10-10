@@ -861,7 +861,7 @@ Jump_03B_4547:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAC1, wD8A5, wD872, wD873
 ; writes: wCFCD
-; points at: wCFCB, wD8BF
+; points at: wCFCB, wBattleHP
 Func_03B_42F4_Case08::
 Jump_03B_4548:: ; address name
     ld hl, wCFCB
@@ -875,7 +875,7 @@ Jump_03B_4548:: ; address name
     cp a, $40
     jr z, Jump_03B_458B
     ld a, [wD8A5]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld d, [hl]
@@ -1362,7 +1362,7 @@ Jump_03B_4834::
 ; 1 call site from 1 routine (e.g. Func_03B_4B92)
 ; reads: wD8A6, wD8A5
 ; writes: wD872, wD873
-; points at: wD8BF, wD8CF
+; points at: wBattleHP, wBattleMaxHP
 Func_03B_483A::
     ld a, [wD8A6]
     cp a, $03
@@ -1384,7 +1384,7 @@ Jump_03B_4854::
 
 Jump_03B_485F::
     ld a, [wD8A5]
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld d, [hl]
@@ -1396,7 +1396,7 @@ Jump_03B_485F::
 
 Jump_03B_4873::
     ld a, [wD8A5]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
     push hl
     deref_hl
@@ -1424,7 +1424,7 @@ Jump_03B_4896::
 ; 1 call site from 1 routine (e.g. Func_03B_4BBD)
 ; reads: wD8A6, wD8A5
 ; writes: wD872, wD873
-; points at: wD8DF, wD8EF
+; points at: wBattleMP, wBattleMaxMP
 Func_03B_489B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A6]
     cp a, $05
@@ -1436,7 +1436,7 @@ Func_03B_489B:: ; heuristic: follows a terminator; C0
 
 Jump_03B_48AD::
     ld a, [wD8A5]
-    ld hl, wD8EF
+    ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld d, [hl]
@@ -1448,7 +1448,7 @@ Jump_03B_48AD::
 
 Jump_03B_48C1::
     ld a, [wD8A5]
-    ld hl, wD8DF
+    ld hl, wBattleMP
     call AddDoubleAToHL_Bank3B
     push hl
     deref_hl
@@ -1924,16 +1924,16 @@ Func_03B_4B02::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A5
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
-; points at: wD8BF, wD8CF
+; points at: wBattleHP, wBattleMaxHP
 Func_03B_4B92:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
-    ld hl, wD8BF
+    ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
@@ -1949,16 +1949,16 @@ Jump_03B_4BBA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A5
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
-; points at: wD8DF, wD8EF
+; points at: wBattleMP, wBattleMaxMP
 Func_03B_4BBD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
-    ld hl, wD8DF
+    ld hl, wBattleMP
     call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
-    ld hl, wD8EF
+    ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
@@ -2394,15 +2394,15 @@ Jump_03B_4F15::
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23
 
 ; 1 call site from 1 routine (e.g. Func_03B_483A)
-; points at: wD8CF
+; points at: wBattleMaxHP
 Func_03B_4F25::
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     jr Jump_03B_4F48
 
 ; 1 call site from 1 routine (e.g. Func_03B_489B)
-; points at: wD8EF
+; points at: wBattleMaxMP
 Func_03B_4F2A::
-    ld hl, wD8EF
+    ld hl, wBattleMaxMP
     jr Jump_03B_4F48
     db $21, $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21
     db $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9

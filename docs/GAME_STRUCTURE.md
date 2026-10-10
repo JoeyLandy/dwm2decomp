@@ -28,7 +28,7 @@ Forcing a mode at the title screen showed:
 | 1 | `$02` | the field: a map with the player sprite (the opening ship deck in a normal game) |
 | 2 | `$03` | a monster panel (incomplete state) |
 | 3 | none | black |
-| 4 | `$31` | sparkles on black |
+| 4 | `$31` | **the battle** (reached by Start in the debug battle setup: party panels with HP, MP and level, FIGHT / ITEM / PLAN / FLEE, "Monster was defeated!", "Allow Slime to join you?") |
 | 5 | `$07` | title screen and its intro; the boot mode |
 | 6 | `$24` | a victory screen ("YOU WIN!") |
 | 7 | `$A0` | two monster panels |

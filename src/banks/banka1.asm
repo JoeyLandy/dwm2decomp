@@ -362,10 +362,10 @@ Jump_0A1_42FB::
 ; entry 6 of the `rst $00` table in Func_0A1_413F
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD2C8, wD2C9, wD2CA, wD2CB, wCFCA
-; points at: wD8BF, wD8CF, wCFC9, wCFCB
+; points at: wBattleHP, wBattleMaxHP, wBattleStep, wCFCB
 Func_0A1_413F_Case06::
 Jump_0A1_4305:: ; address name
-    ld hl, wD8BF
+    ld hl, wBattleHP
     ld bc, $0000
     call AddWordAtHLToBC_BankA1
     call AddWordAtHLToBC_BankA1
@@ -374,7 +374,7 @@ Jump_0A1_4305:: ; address name
     ld [wD2C8], a
     ld a, b
     ld [wD2C9], a
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     ld bc, $0000
     call AddWordAtHLToBC_BankA1
     call AddWordAtHLToBC_BankA1
@@ -383,7 +383,7 @@ Jump_0A1_4305:: ; address name
     ld [wD2CA], a
     ld a, b
     ld [wD2CB], a
-    ld hl, wCFC9
+    ld hl, wBattleStep
     inc [hl]
     xor a, a
     ld [wCFCA], a

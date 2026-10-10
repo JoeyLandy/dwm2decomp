@@ -14,27 +14,27 @@ Func_005_4006::
     jr Jump_005_402E
 
 ; 19 call sites from 14 routines (e.g. Func_005_64DF, Func_005_5317, Func_005_6B9E, Func_005_6556, ...)
-; points at: wD8CF
+; points at: wBattleMaxHP
 Func_005_400B::
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     jr Jump_005_402E
 
 ; 12 call sites from 7 routines (e.g. Func_005_558B, Func_005_544F, Func_005_6FFD, Func_005_6741, ...)
-; points at: wD8EF
+; points at: wBattleMaxMP
 Func_005_4010::
-    ld hl, wD8EF
+    ld hl, wBattleMaxMP
     jr Jump_005_402E
 
 ; 25 call sites from 21 routines (e.g. Func_005_6494, Func_005_4C5D, Func_005_64DF, Func_005_5317, ...)
-; points at: wD8BF
+; points at: wBattleHP
 Func_005_4015::
-    ld hl, wD8BF
+    ld hl, wBattleHP
     jr Jump_005_402E
 
 ; 9 call sites from 9 routines (e.g. Func_005_5500, Func_005_558B, Func_005_6FFD, Func_005_62E1, ...)
-; points at: wD8DF
+; points at: wBattleMP
 Func_005_401A::
-    ld hl, wD8DF
+    ld hl, wBattleMP
     jr Jump_005_402E
 
 ; 10 call sites from 8 routines (e.g. Func_005_4461, Func_005_6B5F, Func_005_6DFF, Func_005_4B97, ...)
@@ -108,10 +108,10 @@ Jump_005_406F::
 
 ; 35 call sites from 35 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
 ; reads: wD8A4, wRecordBufferData
-; points at: wD8DF
+; points at: wBattleMP
 Func_005_413F::
     ld a, [wD8A4]
-    ld hl, wD8DF
+    ld hl, wBattleMP
     add a, a
     add_a_to_hl
     ld a, [wRecordBufferData]
@@ -324,7 +324,7 @@ Jump_005_4256::
 
 ; 4 call sites from 4 routines (e.g. Func_005_7322, Func_005_78A8, Func_005_7A6C, Func_005_7CF3)
 ; reads: wD8A4
-; points at: wD8DF
+; points at: wBattleMP
 Func_005_4259:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     and a, $04
@@ -336,7 +336,7 @@ Jump_005_4263::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_427C
-    ld hl, wD8DF
+    ld hl, wBattleMP
     ld a, c
     swap a
     add_a_to_hl
@@ -3850,7 +3850,7 @@ Func_005_54FD:: ; address name
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_60D7, Func_0E2_61E0)
 ; reads: wD8A4
-; points at: wD989, wD8DF, wD8B7, wD8BF
+; points at: wD989, wBattleMP, wD8B7, wBattleHP
 Func_005_5500:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
@@ -3888,7 +3888,7 @@ Jump_005_552A::
 
 Jump_005_5530::
     ld a, c
-    ld hl, wD8DF
+    ld hl, wBattleMP
     call Func_005_401A
     add hl, hl
     push hl
@@ -3906,7 +3906,7 @@ Jump_005_5530::
     push hl
     ld a, [wD8A4]
     sla a
-    ld hl, wD8BF
+    ld hl, wBattleHP
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -5828,7 +5828,7 @@ Jump_005_5F8A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_5F3D)
-; points at: wD989, wD8DF
+; points at: wD989, wBattleMP
 Func_005_5F8D::
     ld a, c
     ld hl, wD989
@@ -5864,7 +5864,7 @@ Jump_005_5FB1::
 Jump_005_5FB3::
     push hl
     ld a, c
-    ld hl, wD8DF
+    ld hl, wBattleMP
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -5927,10 +5927,10 @@ Jump_005_600B::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_5FC7)
-; points at: wD8DF, wD989
+; points at: wBattleMP, wD989
 Func_005_600E::
     ld a, c
-    ld hl, wD8DF
+    ld hl, wBattleMP
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -5975,7 +5975,7 @@ Func_005_6039::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_51DB, Func_0E2_51F6)
 ; reads: wD8A4
-; points at: wD8BF, wD8CF, wSlotPersonalityLo
+; points at: wBattleHP, wBattleMaxHP, wSlotPersonalityLo
 Func_005_604C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
@@ -5992,7 +5992,7 @@ Jump_005_6060::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6087
     ld a, c
-    ld hl, wD8BF
+    ld hl, wBattleHP
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -6001,7 +6001,7 @@ Jump_005_6060::
     sla e
     rl d
     ld a, c
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -6055,7 +6055,7 @@ Jump_005_60B7::
 
 ; 1 call site from 1 routine (e.g. Func_005_604C)
 ; reads: wDAAC
-; points at: wDA1D, wD8DF
+; points at: wDA1D, wBattleMP
 Func_005_60BA::
     ld a, c
     ld hl, wDA1D
@@ -6121,7 +6121,7 @@ Jump_005_6102::
     add_a_to_hl
     ld d, [hl]
     ld a, c
-    ld hl, wD8DF
+    ld hl, wBattleMP
     add a, a
     add_a_to_hl
     ld a, [hl+]

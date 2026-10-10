@@ -1550,7 +1550,7 @@ Jump_039_5503::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A4, wD86B, wD86C
 ; writes: wD86B, wD86C
-; points at: wD87D, wD874, wD8BF
+; points at: wD87D, wD874, wBattleHP
 Func_039_5514:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -1571,7 +1571,7 @@ Jump_039_551C::
 
 Jump_039_5532::
     ld a, e
-    ld hl, wD8BF
+    ld hl, wBattleHP
     add a, a
     add_a_to_hl
     ld c, [hl]
@@ -1628,7 +1628,7 @@ Jump_039_5553::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD8A4, hFFC6, hFFC7, hFFC8, wD86B, wD86C, wD868, wD87D, ...
 ; writes: wD868, wD86B, wD86C, hFFC6, hFFC7, hFFC8, wD87D, wD87E, ...
-; points at: hFFC6, wD868, wD8A7, wD8CF, wDA1D, wD87D, wD874, wD8BF
+; points at: hFFC6, wD868, wD8A7, wBattleMaxHP, wDA1D, wD87D, wD874, wBattleHP
 Func_039_5593:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A4]
     and a, $04
@@ -1723,7 +1723,7 @@ Jump_039_561A::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_566D
     ld a, e
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     add a, a
     add_a_to_hl
     ld c, [hl]
@@ -6514,27 +6514,27 @@ Func_039_71EA::
     jr Jump_039_7212
 
 ; 7 call sites from 7 routines (e.g. Func_039_68B0, Func_039_5593, Func_039_5514, Func_039_67AD, ...)
-; points at: wD8CF
+; points at: wBattleMaxHP
 Func_039_71EF::
-    ld hl, wD8CF
+    ld hl, wBattleMaxHP
     jr Jump_039_7212
 
 ; 2 call sites from 2 routines (e.g. Func_039_5DBB, Func_039_6CE9)
-; points at: wD8EF
+; points at: wBattleMaxMP
 Func_039_71F4::
-    ld hl, wD8EF
+    ld hl, wBattleMaxMP
     jr Jump_039_7212
 
 ; 28 call sites from 24 routines (e.g. Func_039_6A25, Func_039_68B0, Func_039_66C5, Func_039_5593, ...)
-; points at: wD8BF
+; points at: wBattleHP
 Func_039_71F9::
-    ld hl, wD8BF
+    ld hl, wBattleHP
     jr Jump_039_7212
 
 ; 4 call sites from 4 routines (e.g. Func_039_7180, Func_039_6CE9, Func_039_5BF9, Func_039_614B)
-; points at: wD8DF
+; points at: wBattleMP
 Func_039_71FE::
-    ld hl, wD8DF
+    ld hl, wBattleMP
     jr Jump_039_7212
 
 ; 4 call sites from 4 routines (e.g. Func_039_6B5D, Func_039_5911, Func_039_596B, Func_039_59CB)

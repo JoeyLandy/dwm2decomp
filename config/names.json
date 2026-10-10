@@ -919,12 +919,12 @@
   },
   "31:4001": {
     "name": "GameMode4_Init",
-    "note": "start-up for wGameMode = 4; forcing this mode on the emulator shows: sparkles on black (incomplete when forced) (E-0029)",
+    "note": "start-up for wGameMode = 4, the battle: starts music 2, clears the BG map and builds the battle screen; reached from the debug battle setup (Start) and from encounters (E-0042)",
     "evidence": "reading + execution (E-0029)"
   },
   "31:40A5": {
     "name": "GameMode4_Update",
-    "note": "per-frame routine for wGameMode = 4",
+    "note": "per-frame routine for wGameMode = 4, the battle: in link mode (wC58A) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wCFC8 = phase, wCFC9 = step)",
     "evidence": "reading + execution (E-0029)"
   },
   "07:486E": {

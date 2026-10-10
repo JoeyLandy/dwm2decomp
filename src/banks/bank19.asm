@@ -4,7 +4,7 @@ SECTION "Bank 19", ROMX[$4000], BANK[$19]
 ; 1 call site from 1 routine (e.g. GameMode4_Init)
 ; reads: wCFC5, wDataBank, wC58A, wD20C, wD25A, wD2A8
 ; writes: wDataBankSave, wCFC5, rRAMG, rRAMB, wD8A1, wD8A2, wD8A3
-; points at: wD800, wCFC8, wCFD0, wD09D
+; points at: wD800, wBattlePhase, wCFD0, wD09D
 Func_019_4001::
     ld a, [wCFC5]
     push af
@@ -14,7 +14,7 @@ Func_019_4001::
     call FillBytes
     ld a, [wDataBank]
     ld [wDataBankSave], a
-    ld hl, wCFC8
+    ld hl, wBattlePhase
     ld bc, $0008
     xor a, a
     call FillBytes
@@ -2007,7 +2007,7 @@ Jump_019_4B87::
 
 ; 2 call sites from 1 routine (e.g. Func_019_4224)
 ; reads: wC58A, wD868, wD871
-; points at: wD958, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wD8CF, wD8EF, ...
+; points at: wD958, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
 Func_019_4B91::
     ld a, [wC58A]
     or a, a
@@ -2027,7 +2027,7 @@ Jump_019_4BA4::
 
 ; 1 call site from 1 routine (e.g. Func_019_4B91)
 ; reads: wC58A, wD868, wD871
-; points at: wD958, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wD8CF, wD8EF, ...
+; points at: wD958, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
 Func_019_4BA8::
     ld a, c
     push bc
@@ -2179,22 +2179,22 @@ Jump_019_4C3E::
     jr z, Jump_019_4C71
     inc hl
     inc hl
-    ld de, wD8CF
+    ld de, wBattleMaxHP
     call StoreWordAtDEPlus2C_Bank19
     inc hl
     inc hl
-    ld de, wD8EF
+    ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
     jr Jump_019_4C89
 
 Jump_019_4C71::
-    ld de, wD8BF
+    ld de, wBattleHP
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD8CF
+    ld de, wBattleMaxHP
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD8DF
+    ld de, wBattleMP
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD8EF
+    ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
 
 Jump_019_4C89::
@@ -2261,7 +2261,7 @@ Jump_019_4CEF::
 
 ; 1 call site from 1 routine (e.g. Func_019_4B91)
 ; reads: wD868, wD871
-; points at: wD958, wD8AF, wDA43, wD8B7, wD8CF, wD8EF, wD8FF, wD90F, ...
+; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wD8FF, wD90F, ...
 Func_019_4CF8::
     push bc
     call Func_019_4E05
@@ -2341,16 +2341,16 @@ Jump_019_4D3C::
     jr z, Jump_019_4D6F
     inc hl
     inc hl
-    ld de, wD8CF
+    ld de, wBattleMaxHP
     call StoreWordAtDEPlus2C_Bank19
     inc hl
     inc hl
-    ld de, wD8EF
+    ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
     jr Jump_019_4D96
 
 Jump_019_4D6F::
-    ld de, wD8BF
+    ld de, wBattleHP
     call StoreWordAtDEPlus2C_Bank19
     push de
     push hl
@@ -2363,11 +2363,11 @@ Jump_019_4D6F::
     call Func_019_42FD
     pop hl
     pop de
-    ld de, wD8CF
+    ld de, wBattleMaxHP
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD8DF
+    ld de, wBattleMP
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wD8EF
+    ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
 
 Jump_019_4D96::
