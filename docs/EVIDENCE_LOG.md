@@ -1216,6 +1216,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Unknowns.** What wC58A = 1/2 and wC57F bit 1 select. Link-battle roles would fit the side swap; not checked.
 - Binary verification: pending; see the commit.
 
+### E-0112 — Bank-$E0 value display helpers
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **Digit and hex helpers:**
+  - four DrawBitsNN routines that write one 2-bit field of [DE] as a digit tile;
+  - DrawPacked2BitFieldsInRows;
+  - WriteHexDigitTile (10-15 as n - 2), DrawFourBytesAsHexRows, DrawEightBytesAsHexColumns and DrawHexByteAtBGMap8A.
+- **Others named:** DrawSlotHPMPStats_BankE0, ShowSkillNumberAndName_BankE0 and ChooseTargetIfUnset.
+- **Where they are used.** The hex and 2-bit displays look like a debug or battle-setup viewer (the same bank holds the debug battle code), but the screen is not identified.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

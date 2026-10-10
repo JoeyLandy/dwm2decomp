@@ -1,7 +1,7 @@
 SECTION "Bank 32", ROMX[$4000], BANK[$32]
     db $32
 
-; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByWDAD2Flags, Func_03A_4ADB, Func_03A_548F, ...)
+; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01, ...)
 ; reads: wCB75, wCB76
 Func_032_4001::
     ld a, [wCB75]

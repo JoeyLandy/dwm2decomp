@@ -358,7 +358,7 @@ Jump_03A_4A33::
     ld [wD868], a
     ret
 
-; 9 call sites from 5 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, Func_03A_548F, Func_03D_4001, ...)
+; 9 call sites from 5 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, DrawHexByteAtBGMap8A_Sub01, Func_03D_4001, ...)
 ; reads: wDAB9, wD890, wC58A, wC57F, wD868, wD805
 ; writes: wD804
 ; points at: wD805
@@ -2085,11 +2085,13 @@ Jump_03A_5480::
 Jump_03A_548E::
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E0_4ABB)
+; only called from DrawHexByteAtBGMap8A (E-0047)
+; 1 call site from 1 routine (e.g. DrawHexByteAtBGMap8A)
 ; reads: wC5FE, wD801
 ; writes: wD801, wDAB5, wDAB9, wD804, wD802, wD800, wDAAA, wDAB3, ...
 ; points at: wD805, wDAB3
-Func_03A_548F::
+DrawHexByteAtBGMap8A_Sub01::
+Func_03A_548F:: ; address name
     ld a, [wC5FE]
     ld [wD801], a
     ld [wDAB5], a
@@ -2155,7 +2157,7 @@ Jump_03A_5509::
     ld [wD802], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, Func_03A_548F)
+; 3 call sites from 3 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, DrawHexByteAtBGMap8A_Sub01)
 ; reads: wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer

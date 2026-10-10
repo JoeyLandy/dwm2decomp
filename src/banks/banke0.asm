@@ -55,7 +55,7 @@ Jump_0E0_4045::
     dec c
     jr nz, Jump_0E0_4043
     call Func_0E0_41C7
-    call Func_0E0_41E9
+    call ShowSkillNumberAndName_BankE0
     call Func_0E0_421F
     call Func_0E0_425A
     ld hl, wC5FE
@@ -131,7 +131,7 @@ Jump_0E0_40C4::
     jr z, Jump_0E0_40D3
     xor a, a
     ld [wC5F9], a
-    call Func_0E0_41E9
+    call ShowSkillNumberAndName_BankE0
     ret
 
 Jump_0E0_40D3::
@@ -175,7 +175,7 @@ Jump_0E0_410B::
     ld [wC5F9], a
 
 Jump_0E0_410E::
-    call Func_0E0_41E9
+    call ShowSkillNumberAndName_BankE0
     ret
 
 Jump_0E0_4112::
@@ -324,11 +324,13 @@ Jump_0E0_41D6::
     ret
     db $BB, $C3, $BB
 
+; writes the two nibbles of wC5F9, each plus 1, as tiles at vBGMap0 + $CA; copies string wC5F9 of category 4 (skill names) to wC130 (CopyStringHLToDE) and shows string 5 of category 8 (ShowString_Bank08) (E-0112)
 ; 3 call sites from 2 routines (e.g. Func_0E0_4001_Case02, Func_0E0_4001_Case00)
 ; reads: wC5F9
 ; writes: wStringCategory, wStringIndex
 ; points at: wC130
-Func_0E0_41E9::
+ShowSkillNumberAndName_BankE0::
+Func_0E0_41E9:: ; address name
     ld a, [wC5F9]
     swap a
     and a, $0F
@@ -555,11 +557,11 @@ Jump_0E0_4498::
     ld c, $04
 
 Jump_0E0_449A::
-    call Func_0E0_44B3
+    call DrawSlotHPMPStats_BankE0
     inc c
-    call Func_0E0_44B3
+    call DrawSlotHPMPStats_BankE0
     inc c
-    call Func_0E0_44B3
+    call DrawSlotHPMPStats_BankE0
     ld hl, vBGMap0 + $20B
     ld de, wD89F
     call Func_0E0_459A
@@ -567,10 +569,12 @@ Jump_0E0_449A::
     inc [hl]
     ret
 
+; C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words (Func_0E0_4593 for each) at the position from the table at $4652 (C & 3); the rest is not read (E-0112)
 ; 3 call sites from 1 routine (e.g. Func_0E0_443B_Case01)
 ; writes: hFFC6, hFFC7
 ; points at: wBattleSlotOut, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wD8B7, wBattleATK, wBattleDEF, ...
-Func_0E0_44B3::
+DrawSlotHPMPStats_BankE0::
+Func_0E0_44B3:: ; address name
     ld a, c
     and a, $03
     ld hl, $4652
@@ -589,63 +593,65 @@ Jump_0E0_44CB::
     cp a, $FF
     jr z, Jump_0E0_452D
     ld de, wBattleHP
-    call Func_0E0_4593
+    call DrawSlotHPMPStats_BankE0_Sub04
     ld de, wBattleMaxHP
-    call Func_0E0_4593
+    call DrawSlotHPMPStats_BankE0_Sub04
     ld de, wBattleMP
-    call Func_0E0_4593
+    call DrawSlotHPMPStats_BankE0_Sub04
     ld de, wBattleMaxMP
-    call Func_0E0_4593
+    call DrawSlotHPMPStats_BankE0_Sub04
     inc hl
     ld de, wD8B7
-    call Func_0E0_456B
+    call DrawSlotHPMPStats_BankE0_Sub02
     ld de, wBattleATK
-    call Func_0E0_455F
+    call DrawSlotHPMPStats_BankE0_Sub01
     ld de, wBattleDEF
-    call Func_0E0_455F
+    call DrawSlotHPMPStats_BankE0_Sub01
     ld de, wBattleAGL
-    call Func_0E0_455F
+    call DrawSlotHPMPStats_BankE0_Sub01
     ld de, wBattleINT
-    call Func_0E0_455F
+    call DrawSlotHPMPStats_BankE0_Sub01
     ld de, wSlotPersonalityHi
-    call Func_0E0_456B
+    call DrawSlotHPMPStats_BankE0_Sub02
     ld de, wSlotPersonalityMid
-    call Func_0E0_456B
+    call DrawSlotHPMPStats_BankE0_Sub02
     ld de, wSlotPersonalityLo
-    call Func_0E0_456B
+    call DrawSlotHPMPStats_BankE0_Sub02
     ld de, wD980
-    call Func_0E0_456B
+    call DrawSlotHPMPStats_BankE0_Sub02
     dec hl
     ld de, wD93F
-    call Func_0E0_4593
-    call Func_0E0_4603
-    call Func_0E0_462B
+    call DrawSlotHPMPStats_BankE0_Sub04
+    call DrawSlotHPMPStats_BankE0_Sub06
+    call DrawSlotHPMPStats_BankE0_Sub07
     ret
 
 Jump_0E0_452D::
     xor a, a
     ldh [hFFC6], a
     ldh [hFFC7], a
-    call Func_0E0_459D
-    call Func_0E0_459D
-    call Func_0E0_459D
-    call Func_0E0_459D
+    call DrawSlotHPMPStats_BankE0_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05
     inc hl
-    call Func_0E0_4583
-    call Func_0E0_4583
-    call Func_0E0_4583
-    call Func_0E0_4583
-    call Func_0E0_4583
-    call Func_0E0_4583
-    call Func_0E0_4583
-    call Func_0E0_4583
-    call Func_0E0_4583
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
     dec hl
-    call Func_0E0_459D
+    call DrawSlotHPMPStats_BankE0_Sub05
     ret
 
-; 4 call sites from 1 routine (e.g. Func_0E0_44B3)
-Func_0E0_455F::
+; only called from DrawSlotHPMPStats_BankE0 (E-0047)
+; 4 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
+DrawSlotHPMPStats_BankE0_Sub01::
+Func_0E0_455F:: ; address name
     ld a, c
     add a, a
     add a, e
@@ -655,11 +661,13 @@ Func_0E0_455F::
 
 Jump_0E0_4566::
     call Func_0E0_45EE
-    jr Func_0E0_4583
+    jr DrawSlotHPMPStats_BankE0_Sub03
 
-; 5 call sites from 1 routine (e.g. Func_0E0_44B3)
+; only called from DrawSlotHPMPStats_BankE0 (E-0047)
+; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
 ; writes: wC8C0, wC8C1, wC8C2
-Func_0E0_456B::
+DrawSlotHPMPStats_BankE0_Sub02::
+Func_0E0_456B:: ; address name
     ld a, c
     add a, e
     ld e, a
@@ -678,11 +686,13 @@ Jump_0E0_4571::
     pop bc
     pop hl
 
-; 9 call sites from 1 routine (e.g. Func_0E0_44B3)
-Func_0E0_4583::
+; only called from DrawSlotHPMPStats_BankE0 (E-0047)
+; 9 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
+DrawSlotHPMPStats_BankE0_Sub03::
+Func_0E0_4583:: ; address name
     ld b, $00
     push hl
-    call Func_0E0_45BE
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01
     pop hl
     ld a, l
     add a, $20
@@ -692,8 +702,10 @@ Func_0E0_4583::
     ld h, a
     ret
 
-; 5 call sites from 1 routine (e.g. Func_0E0_44B3)
-Func_0E0_4593::
+; only called from DrawSlotHPMPStats_BankE0 (E-0047)
+; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
+DrawSlotHPMPStats_BankE0_Sub04::
+Func_0E0_4593:: ; address name
     ld a, c
     add a, a
     add a, e
@@ -705,10 +717,12 @@ Func_0E0_4593::
 Func_0E0_459A::
     call Func_0E0_45EE
 
-; 5 call sites from 1 routine (e.g. Func_0E0_44B3)
-Func_0E0_459D::
+; only called from DrawSlotHPMPStats_BankE0 (E-0047)
+; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
+DrawSlotHPMPStats_BankE0_Sub05::
+Func_0E0_459D:: ; address name
     push hl
-    call Func_0E0_45AB
+    call DrawSlotHPMPStats_BankE0_Sub05_Sub01
     pop hl
     ld a, l
     add a, $20
@@ -718,9 +732,11 @@ Func_0E0_459D::
     ld h, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E0_459D)
+; only called from DrawSlotHPMPStats_BankE0_Sub05 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub05)
 ; reads: hFFC7, hFFC6
-Func_0E0_45AB::
+DrawSlotHPMPStats_BankE0_Sub05_Sub01::
+Func_0E0_45AB:: ; address name
     ld b, $00
     ldh a, [hFFC7]
     swap a
@@ -734,9 +750,11 @@ Func_0E0_45AB::
 Jump_0E0_45BD::
     inc hl
 
-; 1 call site from 1 routine (e.g. Func_0E0_4583)
+; only called from DrawSlotHPMPStats_BankE0_Sub03 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03)
 ; reads: hFFC7, hFFC6
-Func_0E0_45BE::
+DrawSlotHPMPStats_BankE0_Sub03_Sub01::
+Func_0E0_45BE:: ; address name
     ldh a, [hFFC7]
     and a, $0F
     or a, a
@@ -771,7 +789,7 @@ Jump_0E0_45E3::
     call WriteVRAMByte
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E0_459A, Func_0E0_455F)
+; 2 call sites from 2 routines (e.g. Func_0E0_459A, DrawSlotHPMPStats_BankE0_Sub01)
 ; writes: wC8C0, wC8C1, wC8C2
 Func_0E0_45EE::
     push hl
@@ -788,9 +806,11 @@ Func_0E0_45EE::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E0_44B3)
+; only called from DrawSlotHPMPStats_BankE0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
 ; points at: wDA53
-Func_0E0_4603::
+DrawSlotHPMPStats_BankE0_Sub06::
+Func_0E0_4603:: ; address name
     ld a, c
     ld hl, wDA53
     add_a_to_hl
@@ -809,9 +829,11 @@ Func_0E0_4603::
     call WriteVRAMByte
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E0_44B3)
+; only called from DrawSlotHPMPStats_BankE0 (E-0047)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
 ; points at: wD8AF
-Func_0E0_462B::
+DrawSlotHPMPStats_BankE0_Sub07::
+Func_0E0_462B:: ; address name
     ld a, c
     ld de, wD8AF
     add a, e
@@ -865,7 +887,7 @@ Jump_0E0_4663:: ; address name
     call Func_0E0_4FCE
     xor a, a
     ld [wC5FE], a
-    call Func_0E0_4ABB
+    call DrawHexByteAtBGMap8A
     ld a, $FF
     ld [wD802], a
     ret
@@ -975,114 +997,124 @@ Func_0E0_443B_Case05::
 Jump_0E0_4728:: ; address name
     ld hl, vBGMap0 + $61
     ld de, wDA72
-    call Func_0E0_4763
+    call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $67
     ld de, wDA79
-    call Func_0E0_4763
+    call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $6D
     ld de, wDA80
-    call Func_0E0_4763
+    call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $141
     ld de, wDA8E
-    call Func_0E0_4763
+    call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $147
     ld de, wDA95
-    call Func_0E0_4763
+    call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $14D
     ld de, wDA9C
-    call Func_0E0_4763
+    call DrawPacked2BitFieldsInRows
     ld hl, wC5FD
     inc [hl]
     ret
 
+; writes a run of 2-bit fields from [DE] onward as digit tiles with the four DrawBitsNN routines, five per row, moving HL to the next BG map row (+$1B) after each five; the end is not read (E-0112)
 ; 6 call sites from 1 routine (e.g. Func_0E0_443B_Case05)
-Func_0E0_4763::
+DrawPacked2BitFieldsInRows::
+Func_0E0_4763:: ; address name
     ld a, [de]
     ld c, a
-    call Func_0E0_47E6
-    call Func_0E0_47EB
-    call Func_0E0_47F0
-    call Func_0E0_47E0
-    call Func_0E0_47E6
+    call DrawBits54OfDEAsDigit
+    call DrawBits32OfDEAsDigit
+    call DrawBits10OfDEAsDigit
+    call DrawBits76OfNextDEAsDigit
+    call DrawBits54OfDEAsDigit
     ld a, l
     add a, $1B
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    call Func_0E0_47EB
-    call Func_0E0_47F0
-    call Func_0E0_47E0
-    call Func_0E0_47E6
-    call Func_0E0_47EB
+    call DrawBits32OfDEAsDigit
+    call DrawBits10OfDEAsDigit
+    call DrawBits76OfNextDEAsDigit
+    call DrawBits54OfDEAsDigit
+    call DrawBits32OfDEAsDigit
     ld a, l
     add a, $1B
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    call Func_0E0_47F0
-    call Func_0E0_47E0
-    call Func_0E0_47E6
-    call Func_0E0_47EB
-    call Func_0E0_47F0
+    call DrawBits10OfDEAsDigit
+    call DrawBits76OfNextDEAsDigit
+    call DrawBits54OfDEAsDigit
+    call DrawBits32OfDEAsDigit
+    call DrawBits10OfDEAsDigit
     ld a, l
     add a, $1B
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    call Func_0E0_47E0
-    call Func_0E0_47E6
-    call Func_0E0_47EB
-    call Func_0E0_47F0
-    call Func_0E0_47E0
+    call DrawBits76OfNextDEAsDigit
+    call DrawBits54OfDEAsDigit
+    call DrawBits32OfDEAsDigit
+    call DrawBits10OfDEAsDigit
+    call DrawBits76OfNextDEAsDigit
     ld a, l
     add a, $1B
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    call Func_0E0_47E6
-    call Func_0E0_47EB
-    call Func_0E0_47F0
-    call Func_0E0_47E0
-    call Func_0E0_47E6
+    call DrawBits54OfDEAsDigit
+    call DrawBits32OfDEAsDigit
+    call DrawBits10OfDEAsDigit
+    call DrawBits76OfNextDEAsDigit
+    call DrawBits54OfDEAsDigit
     ld a, l
     add a, $1B
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    call Func_0E0_47EB
+    call DrawBits32OfDEAsDigit
     ld a, c
     rlca
     rlca
     jr Jump_0E0_47F1
 
-; 6 call sites from 1 routine (e.g. Func_0E0_4763)
-Func_0E0_47E0::
+; DE += 1, then writes bits 7-6 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
+; 6 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
+DrawBits76OfNextDEAsDigit::
+Func_0E0_47E0:: ; address name
     inc de
     ld a, [de]
     rlca
     rlca
     jr Jump_0E0_47F1
 
-; 7 call sites from 1 routine (e.g. Func_0E0_4763)
-Func_0E0_47E6::
+; writes bits 5-4 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
+; 7 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
+DrawBits54OfDEAsDigit::
+Func_0E0_47E6:: ; address name
     ld a, [de]
     swap a
     jr Jump_0E0_47F1
 
-; 7 call sites from 1 routine (e.g. Func_0E0_4763)
-Func_0E0_47EB::
+; writes bits 3-2 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
+; 7 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
+DrawBits32OfDEAsDigit::
+Func_0E0_47EB:: ; address name
     ld a, [de]
     rrca
     rrca
     jr Jump_0E0_47F1
 
-; 6 call sites from 1 routine (e.g. Func_0E0_4763)
-Func_0E0_47F0::
+; writes bits 1-0 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
+; 6 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
+DrawBits10OfDEAsDigit::
+Func_0E0_47F0:: ; address name
     ld a, [de]
 
 Jump_0E0_47F1::
@@ -1138,31 +1170,33 @@ Func_0E0_443B_Case08::
 Jump_0E0_4825:: ; address name
     ld de, wD989
     ld hl, vBGMap0 + $62
-    call Func_0E0_4863
+    call DrawEightBytesAsHexColumns
     ld de, wD999
     ld hl, vBGMap0 + $68
-    call Func_0E0_4863
+    call DrawEightBytesAsHexColumns
     ld de, wD9A9
     ld hl, vBGMap0 + $6E
-    call Func_0E0_4863
+    call DrawEightBytesAsHexColumns
     ld de, wD9C9
     ld hl, vBGMap0 + $142
-    call Func_0E0_4863
+    call DrawEightBytesAsHexColumns
     ld de, wD9D9
     ld hl, vBGMap0 + $148
-    call Func_0E0_4863
+    call DrawEightBytesAsHexColumns
     ld de, wD9E9
     ld hl, vBGMap0 + $14E
-    call Func_0E0_4863
+    call DrawEightBytesAsHexColumns
     call Func_0E0_489C
     ld hl, wC5FD
     inc [hl]
     ret
 
+; DrawFourBytesAsHexRows at HL, then the next four bytes in a second column three entries to the right (E-0112)
 ; 6 call sites from 1 routine (e.g. Func_0E0_443B_Case08)
-Func_0E0_4863::
+DrawEightBytesAsHexColumns::
+Func_0E0_4863:: ; address name
     push hl
-    call Func_0E0_4870
+    call DrawFourBytesAsHexRows
     pop hl
     ld a, l
     add a, $03
@@ -1171,18 +1205,20 @@ Func_0E0_4863::
     adc a, $00
     ld h, a
 
-; 1 call site from 1 routine (e.g. Func_0E0_4863)
-Func_0E0_4870::
+; writes four bytes from DE as two hex digits each (WriteHexDigitTile), one byte per BG map row (HL += $1E after each) (E-0112)
+; 1 call site from 1 routine (e.g. DrawEightBytesAsHexColumns)
+DrawFourBytesAsHexRows::
+Func_0E0_4870:: ; address name
     ld b, $04
 
 Jump_0E0_4872::
     ld a, [de]
     swap a
     and a, $0F
-    call Func_0E0_488E
+    call WriteHexDigitTile
     ld a, [de]
     and a, $0F
-    call Func_0E0_488E
+    call WriteHexDigitTile
     ld a, l
     add a, $1E
     ld l, a
@@ -1195,8 +1231,10 @@ Jump_0E0_4872::
     jr nz, Jump_0E0_4872
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0E0_4870)
-Func_0E0_488E::
+; A = 0-15: writes tile $E0 + A for 0-9, or A - 2 for 10-15, at HL (WriteVRAMByteInc) (E-0112)
+; 2 call sites from 1 routine (e.g. DrawFourBytesAsHexRows)
+WriteHexDigitTile::
+Func_0E0_488E:: ; address name
     cp a, $0A
     jr nc, Jump_0E0_4896
     add a, $E0
@@ -1380,10 +1418,10 @@ Jump_0E0_4A94::
     inc [hl]
     ld a, [hl]
     cp a, $3C
-    jr nz, Func_0E0_4ABB
+    jr nz, DrawHexByteAtBGMap8A
     xor a, a
     ld [hl], a
-    jr Func_0E0_4ABB
+    jr DrawHexByteAtBGMap8A
 
 Jump_0E0_4AA8::
     ld a, [wJoypadPressed]
@@ -1393,12 +1431,14 @@ Jump_0E0_4AA8::
     dec [hl]
     ld a, [hl]
     cp a, $FF
-    jr nz, Func_0E0_4ABB
+    jr nz, DrawHexByteAtBGMap8A
     ld a, $3B
     ld [hl], a
 
+; writes A as two hex-digit tiles (0-9 as $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write is not read to its end) (E-0112)
 ; 1 call site from 1 routine (e.g. Func_0E0_443B_Case02)
-Func_0E0_4ABB::
+DrawHexByteAtBGMap8A::
+Func_0E0_4ABB:: ; address name
     push af
     and a, $0F
     cp a, $0A
@@ -1433,8 +1473,8 @@ Jump_0E0_4AE7::
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_0E0_4AF8
-    farcall Func_03A_548F
-    call Func_0E0_558E
+    farcall DrawHexByteAtBGMap8A_Sub01
+    call DrawHexByteAtBGMap8A_Sub03
     ret
 
 Jump_0E0_4AF8::
@@ -1456,7 +1496,7 @@ Jump_0E0_4AF8::
     ld [wC5FD], a
     xor a, a
     ld [wC5FE], a
-    call Func_0E0_510C
+    call DrawHexByteAtBGMap8A_Sub02
     call Func_0E0_4F28
     xor a, a
     ld [wC5FF], a
@@ -1885,7 +1925,7 @@ Jump_0E0_4D89:: ; address name
     ds $12, $B4
     db $B5
 
-; 3 call sites from 2 routines (e.g. Func_0E0_443B_Case0B, Func_0E0_4ABB)
+; 3 call sites from 2 routines (e.g. Func_0E0_443B_Case0B, DrawHexByteAtBGMap8A)
 ; reads: wC5FF
 ; writes: wC0A0, wC0A1, wMenuRowCount
 Func_0E0_4EFD::
@@ -1916,7 +1956,7 @@ Func_0E0_4EFD::
     ld [wMenuRowCount], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0E0_443B_Case0B, Func_0E0_4ABB)
+; 2 call sites from 2 routines (e.g. Func_0E0_443B_Case0B, DrawHexByteAtBGMap8A)
 ; reads: wC5FE, wD868, wD869
 ; writes: wD868, wD869
 ; points at: wBattleStatus
@@ -2024,7 +2064,7 @@ Data_0E0_4FC6:: ; heuristic: target of a monotone pointer table; C0
 Data_0E0_4FCA:: ; heuristic: target of a monotone pointer table; C0
     db $F8, $F9, $E3, $C3
 
-; 2 call sites from 2 routines (e.g. Func_0E0_4ABB, Func_0E0_443B_Case02)
+; 2 call sites from 2 routines (e.g. DrawHexByteAtBGMap8A, Func_0E0_443B_Case02)
 Func_0E0_4FCE::
     call Func_0E0_4FDB
     call Func_0E0_502B
@@ -2169,8 +2209,10 @@ Func_0E0_50FD::
     call CopyRectFromBankToVRAM
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E0_4ABB)
-Func_0E0_510C::
+; only called from DrawHexByteAtBGMap8A (E-0047)
+; 1 call site from 1 routine (e.g. DrawHexByteAtBGMap8A)
+DrawHexByteAtBGMap8A_Sub02::
+Func_0E0_510C:: ; address name
     ld hl, vBGMap0
     ld de, $53EB
     ld bc, $1412
@@ -2259,9 +2301,11 @@ Func_0E0_5553:: ; address name
     ld [wC530], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E0_4ABB)
+; only called from DrawHexByteAtBGMap8A (E-0047)
+; 1 call site from 1 routine (e.g. DrawHexByteAtBGMap8A)
 ; reads: wC5FE
-Func_0E0_558E::
+DrawHexByteAtBGMap8A_Sub03::
+Func_0E0_558E:: ; address name
     ld a, [wC5FE]
     ld hl, $55BF
     add_a_to_hl
@@ -2325,7 +2369,7 @@ Func_0E0_56C7::
     ld h, a
     push hl
     farcall Func_030_4595
-    call Func_0E0_5715
+    call ChooseTargetIfUnset
     pop hl
     ld a, l
     ld [wC5E7], a
@@ -2340,13 +2384,15 @@ Func_0E0_56C7::
 
 Jump_0E0_570B::
     farcall Func_030_4595
-    call Func_0E0_5715
+    call ChooseTargetIfUnset
     ret
 
+; when the actor's wBattleTargetChoice entry is $FF (no target yet), far-calls ChooseActionTarget (E-0112)
 ; 2 call sites from 1 routine (e.g. Func_0E0_56C7)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
-Func_0E0_5715::
+ChooseTargetIfUnset::
+Func_0E0_5715:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
