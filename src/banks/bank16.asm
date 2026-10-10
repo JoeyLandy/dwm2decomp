@@ -7624,7 +7624,7 @@ Func_016_733F::
     farcall Func_01A_7276
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wCFC5, wC9DC, wC991, wC992, wD00E, wC9E3, wC9E4, wC9E7, ...
 ; writes: wC9DC, wD006, wD007, wC9DD, wC9E3, wC9E4, wC9E1, wC9E2, ...
 ; points at: wD09D

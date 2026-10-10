@@ -109,28 +109,28 @@ Jump_031_40C9::
 Func_031_40CC::
     ld a, [wBattlePhase]
     rst $00
-    dw Func_031_40CC_Case00
-    dw Func_031_40CC_Case01
-    dw Func_031_40CC_Case02
+    dw BattlePhase0
+    dw BattlePhaseFight
+    dw BattlePhaseEnd
 
-; entry 0 of the `rst $00` table in Func_031_40CC
+; wBattlePhase = 0: the start of the battle (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleStep
-Func_031_40CC_Case00::
+BattlePhase0::
 Jump_031_40D6:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw Func_031_40CC_Table2_Case00
-    dw Func_031_40CC_Table2_Case01
-    dw Func_031_40CC_Table2_Case02
-    dw Func_031_40CC_Table2_Case03
-    dw Func_031_40CC_Table2_Case04
+    dw BattlePhase0_Step0
+    dw BattlePhase0_Step1
+    dw BattlePhase0_Step2
+    dw BattlePhase0_Step3
+    dw BattlePhase0_Step4
 
-; entry 0 of the `rst $00` table in Func_031_40CC
+; wBattlePhase 0, wBattleStep 0 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; points at: wBattleStep
-Func_031_40CC_Table2_Case00::
+BattlePhase0_Step0::
 Jump_031_40E4:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -139,12 +139,12 @@ Jump_031_40E4:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_031_40CC
+; wBattlePhase 0, wBattleStep 1 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A
 ; writes: wD868, wD7F1
 ; points at: wBattleStep
-Func_031_40CC_Table2_Case01::
+BattlePhase0_Step1::
 Jump_031_40EE:: ; address name
     call Func_031_746F
     call Func_031_7536
@@ -159,12 +159,12 @@ Jump_031_40EE:: ; address name
     ld [wD7F1], a
     ret
 
-; entry 2 of the `rst $00` table in Func_031_40CC
+; wBattlePhase 0, wBattleStep 2 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wD7F1, wD960, wD961, wD962, wD963, wD890, wD964, ...
 ; writes: wStringIndex, wStringCategory
 ; points at: wC130, wC140, wC150, wBattleStep
-Func_031_40CC_Table2_Case02::
+BattlePhase0_Step2::
 Jump_031_4106:: ; address name
     ld a, [wC58A]
     or a, a
@@ -363,12 +363,12 @@ Func_031_423B::
     call Func_000_2E81
     ret
 
-; entry 3 of the `rst $00` table in Func_031_40CC
+; wBattlePhase 0, wBattleStep 3 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wC58A, wCFC5, wC5E7, wC5E8
 ; writes: wBattleStep, wBattleSubPhase, wStringIndex, wD868, wStringCategory, wD891
 ; points at: wBattlePhase, wDA5B
-Func_031_40CC_Table2_Case03::
+BattlePhase0_Step3::
 Jump_031_4243:: ; address name
     ld a, [wC52B]
     or a, a
@@ -448,7 +448,7 @@ Jump_031_42CF::
 Jump_031_42D4::
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_40CC_Table2_Case03)
+; 1 call site from 1 routine (e.g. BattlePhase0_Step3)
 ; reads: wD960, wD961, wD890, wD962, wD963, wD964, wD965, wStringIndex
 ; points at: wC130
 Func_031_42D5::
@@ -581,12 +581,12 @@ Data_031_438E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_4397:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $16, $32, $31, $36, $37, $28, $35, $36, $F0
 
-; entry 4 of the `rst $00` table in Func_031_40CC
+; wBattlePhase 0, wBattleStep 4 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wD868
 ; writes: wBattleStep
 ; points at: wBattlePhase
-Func_031_40CC_Table2_Case04::
+BattlePhase0_Step4::
 Jump_031_43A0:: ; address name
     ld a, [wC52B]
     or a, a
@@ -599,24 +599,24 @@ Jump_031_43A0:: ; address name
     or a, a
     ret
 
-; entry 1 of the `rst $00` table in Func_031_40CC
+; wBattlePhase = 1: the fight; steps: 1 set-up, 2 command entry, 3 executing the actions (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleStep
-Func_031_40CC_Case01::
+BattlePhaseFight::
 Jump_031_43B2:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw Func_031_4365_Case00
-    dw Func_031_4365_Case01
-    dw Func_031_4365_Case02
-    dw Func_031_4365_Case03
-    dw Func_031_4365_Case04
+    dw BattleFight_Step0
+    dw BattleFight_Step1
+    dw BattleFight_Step2
+    dw BattleFight_Step3
+    dw BattleFight_Step4
 
-; entry 0 of the `rst $00` table in Func_031_4365
+; wBattlePhase 1, wBattleStep 0 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
 ; points at: wBattleStep
-Func_031_4365_Case00::
+BattleFight_Step0::
 Jump_031_43C0:: ; address name
     ld a, [wC52B]
     or a, a
@@ -626,56 +626,56 @@ Jump_031_43C0:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_031_4365
+; wBattlePhase 1, wBattleStep 1 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
-Func_031_4365_Case01::
+BattleFight_Step1::
 Jump_031_43CD:: ; address name
     call Func_031_4B10
     ret
 
-; entry 2 of the `rst $00` table in Func_031_4365
+; wBattlePhase 1, wBattleStep 2 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
-Func_031_4365_Case02::
+BattleFight_Step2::
 Jump_031_43D1:: ; address name
     farcall Func_030_4001
     ret
 
-; entry 3 of the `rst $00` table in Func_031_4365
+; wBattlePhase 1, wBattleStep 3 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
-Func_031_4365_Case03::
+BattleFight_Step3::
 Jump_031_43D8:: ; address name
     farcall Func_03A_6157
     ret
 
-; entry 4 of the `rst $00` table in Func_031_4365
+; wBattlePhase 1, wBattleStep 4 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
-Func_031_4365_Case04::
+BattleFight_Step4::
 Jump_031_43DF:: ; address name
     farcall Func_03A_68C9
     ret
 
-; entry 2 of the `rst $00` table in Func_031_40CC
+; wBattlePhase = 2: after the fight; steps 0-9 (result message, rewards, recruiting) (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleStep
-Func_031_40CC_Case02::
+BattlePhaseEnd::
 Jump_031_43E6:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw Func_031_4365_Table2_Case00
-    dw Func_031_4365_Table2_Case01
-    dw Func_031_4365_Table2_Case02
-    dw Func_031_4365_Table2_Case03
-    dw Func_031_4365_Table2_Case04
-    dw Func_031_4365_Table2_Case05
-    dw Func_031_4365_Table2_Case06
-    dw Func_031_4365_Table2_Case07
-    dw Func_031_4365_Table2_Case07
-    dw Func_031_4365_Table2_Case09
+    dw BattleEnd_Step0
+    dw BattleEnd_Step1
+    dw BattleEnd_Step2
+    dw BattleEnd_Step3
+    dw BattleEnd_Step4
+    dw BattleEnd_Step5
+    dw BattleEnd_Step6
+    dw BattleEnd_Step7
+    dw BattleEnd_Step7
+    dw BattleEnd_Step9
 
-; entry 0 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 0 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStep
-Func_031_4365_Table2_Case00::
+BattleEnd_Step0::
 Jump_031_43FE:: ; address name
     ld a, $02
     call QueueMusic
@@ -685,12 +685,12 @@ Jump_031_43FE:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 1 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wC58A, wD868
 ; writes: wC964, wStringIndex, wStringCategory
 ; points at: wBattleStep
-Func_031_4365_Table2_Case01::
+BattleEnd_Step1::
 Jump_031_440E:: ; address name
     ld a, $01
     ld [wC964], a
@@ -733,12 +733,12 @@ Jump_031_4448::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 2 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots, wC52B
 ; writes: wBattleSubPhase
 ; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0, wBattleStep
-Func_031_4365_Table2_Case02::
+BattleEnd_Step2::
 Jump_031_445B:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wDC01
@@ -774,7 +774,7 @@ Jump_031_445B:: ; address name
     ld [wBattleSubPhase], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step2)
 ; reads: wD2CE
 ; writes: wD2CE
 Func_031_4493::
@@ -784,12 +784,12 @@ Func_031_4493::
     ret nz
     ret
 
-; entry 3 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 3 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wD092, wDAAB
 ; writes: wBattleSubPhase
 ; points at: wBattleStep, wC986, wC60C
-Func_031_4365_Table2_Case03::
+BattleEnd_Step3::
 Jump_031_449C:: ; address name
     call Func_031_663D
     ld hl, wBattleStep
@@ -906,7 +906,7 @@ Jump_031_452D::
     farcall Func_019_73A2
     ret
 
-; 4 call sites from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 4 call sites from 1 routine (e.g. BattleEnd_Step3)
 Func_031_4566::
     ld a, [de]
     inc de
@@ -915,7 +915,7 @@ Func_031_4566::
     jr nz, Func_031_4566
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 Func_031_456D::
     push hl
     ld a, $FF
@@ -949,7 +949,7 @@ Jump_031_4581::
     ld h, a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 4 call sites from 1 routine (e.g. BattleEnd_Step3)
 Func_031_458E::
     ld a, $98
     ld [hl+], a
@@ -968,7 +968,7 @@ Jump_031_459E::
     jr nz, Jump_031_459E
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wD890, wDA6B, wDA6C, wDA6D
 ; writes: wDA6B, wDA6C, wDA6D
 ; points at: wBattleSlotOut
@@ -1015,7 +1015,7 @@ Jump_031_45E7::
 Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D7, $D1, $25, $D2, $73, $D2
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wCFC5, wD890, wCFDF, wCFE0, wCFDD, wCFDE
 ; writes: hFFC6, hFFC7, wDAAB, wCB7E
 ; points at: wCFDF, wCFDD
@@ -1122,11 +1122,11 @@ Func_031_4681::
     farcall Func_019_46B1
     ret
 
-; entry 4 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 4 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots
 ; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0
-Func_031_4365_Table2_Case04::
+BattleEnd_Step4::
 Jump_031_4693:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wDC01
@@ -1156,7 +1156,7 @@ Jump_031_4693:: ; address name
     call Func_031_67AA
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4)
 ; reads: wD2CE
 ; writes: wD2CE
 Func_031_46C1::
@@ -1166,10 +1166,10 @@ Func_031_46C1::
     ret nz
     ret
 
-; entry 5 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 5 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubPhase
-Func_031_4365_Table2_Case05::
+BattleEnd_Step5::
 Jump_031_46CA:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
@@ -1384,10 +1384,10 @@ Func_031_47DD::
     ld [wC530], a
     ret
 
-; entry 6 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 6 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubPhase
-Func_031_4365_Table2_Case06::
+BattleEnd_Step6::
 Jump_031_4840:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
@@ -1496,10 +1496,10 @@ Func_031_48C3::
     ld [wC8FB], a
     ret
 
-; entry 7 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 7 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubPhase
-Func_031_4365_Table2_Case07::
+BattleEnd_Step7::
 Jump_031_48E5:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
@@ -1597,11 +1597,11 @@ Jump_031_4931:: ; address name
     ld [wC58B], a
     ret
 
-; entry 9 of the `rst $00` table in Func_031_4365
+; wBattlePhase 2, wBattleStep 9 (E-0044)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092
 ; writes: wBattleStep
-Func_031_4365_Table2_Case09::
+BattleEnd_Step9::
 Jump_031_4975:: ; address name
     ld a, [wD092]
     cp a, $04
@@ -1619,7 +1619,7 @@ Jump_031_4988::
     ld [wBattleStep], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step1)
 ; reads: wC58A, wD890
 ; writes: wD868
 ; points at: wD960, wC130, wC958
@@ -1784,7 +1784,7 @@ Jump_031_4A3F::
     ld [hl], c
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Case00)
+; 1 call site from 1 routine (e.g. BattleFight_Step0)
 ; reads: wC984, wC58A, wC57F, wC985
 ; writes: wD892, wD893, wC46B
 ; points at: wDAD8, wD854, wD895, wDA1C, wDA5B, wBattleStep, wD80F
@@ -1890,7 +1890,7 @@ Jump_031_4B01::
     jr nz, Jump_031_4AD2
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Case01)
+; 1 call site from 1 routine (e.g. BattleFight_Step1)
 ; reads: wBattleSubPhase
 Func_031_4B10::
     ld a, [wBattleSubPhase]
@@ -6261,7 +6261,7 @@ Func_031_6564:: ; heuristic: follows a terminator; C0
     farcall Func_0E0_443B
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step1)
 ; reads: wDataBankSave, wCFC5, wD092, wC57F
 ; writes: wDataBank, wDataBankSave, wD092
 Func_031_656B::
@@ -6400,7 +6400,7 @@ Jump_031_6635::
     cp a, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wC58A, wD88F
 ; writes: rRAMG, rRAMB
 Func_031_663D::
@@ -6704,7 +6704,7 @@ Jump_031_67A7::
 Jump_031_67A9::
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4)
 ; reads: wBattleSubPhase
 Func_031_67AA::
     ld a, [wBattleSubPhase]
@@ -8859,7 +8859,7 @@ Jump_031_7465::
     call Func_031_77B9
     ret
 
-; 13 call sites from 13 routines (e.g. Func_031_40CC_Table2_Case01, Func_031_4365_Table2_Case00, Func_031_47C7, Func_031_46C1_Case00, ...)
+; 13 call sites from 13 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, Func_031_47C7, Func_031_46C1_Case00, ...)
 Func_031_746F::
     call FillTilesFromRequest
     farcall Func_01A_7276
@@ -8993,7 +8993,7 @@ Func_031_7529::
     call Func_031_753F
     ret
 
-; 8 call sites from 8 routines (e.g. Func_031_40CC_Table2_Case01, Func_031_4365_Table2_Case00, Func_031_4B10_Case03, Func_031_4B10_Table2_Case01, ...)
+; 8 call sites from 8 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, Func_031_4B10_Case03, Func_031_4B10_Table2_Case01, ...)
 ; points at: wC278
 Func_031_7536::
     ld de, wC278

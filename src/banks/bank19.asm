@@ -2538,7 +2538,7 @@ Func_019_7380::
     ldh [hFFCA], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_001_6C48, Func_031_4365_Table2_Case03)
+; 2 call sites from 2 routines (e.g. Func_001_6C48, BattleEnd_Step3)
 ; reads: wC991, wC992, wD00F, wC9DC
 ; writes: wD006, wD007
 ; points at: wC9DE

@@ -1,7 +1,7 @@
 SECTION "Bank 30", ROMX[$4000], BANK[$30]
     db $30
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Case02)
+; 1 call site from 1 routine (e.g. BattleFight_Step2)
 ; reads: wC52B, wBattleSubPhase
 Func_030_4001::
     ld a, [wC52B]

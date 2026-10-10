@@ -2756,7 +2756,7 @@ Data_03A_6107:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $85, $FF, $85, $FF, $85, $FF, $85, $FF, $88, $88, $85, $FF, $FF, $FF, $FF, $FF
     db $FF, $FF, $FF, $FF, $FF, $FF, $93, $FF, $97, $FF, $96, $FF, $96, $FF
 
-; 2 call sites from 2 routines (e.g. Func_031_4365_Case03, Func_0A0_5278_Case03)
+; 2 call sites from 2 routines (e.g. BattleFight_Step3, Func_0A0_5278_Case03)
 ; reads: wC52B, wD802, wC58A, wBattleSubPhase
 Func_03A_6157::
     ld a, [wC52B]
@@ -4002,7 +4002,7 @@ Jump_03A_68A9::
     ld [hl], a
     jr Jump_03A_6899
 
-; 2 call sites from 2 routines (e.g. Func_031_4365_Case04, Func_0A0_5278_Case04)
+; 2 call sites from 2 routines (e.g. BattleFight_Step4, Func_0A0_5278_Case04)
 ; reads: wC52B, wD802, wC58A, wBattleSubPhase
 Func_03A_68C9::
     ld a, [wC52B]

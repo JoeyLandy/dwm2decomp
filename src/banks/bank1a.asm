@@ -1349,7 +1349,7 @@ Jump_01A_6242::
     inc b
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_4365_Table2_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wC991, wC992
 ; writes: wD006, wD007
 ; points at: wD09D, wD010, wC9C2

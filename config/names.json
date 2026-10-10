@@ -2353,5 +2353,115 @@
     "name": "ReadBattleWordFromArray",
     "note": "HL = array base, A = slot: HL = the 16-bit word at HL + 2 * A",
     "evidence": "reading (E-0043)"
+  },
+  "31:40D6": {
+    "name": "BattlePhase0",
+    "note": "wBattlePhase = 0: the start of the battle (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43B2": {
+    "name": "BattlePhaseFight",
+    "note": "wBattlePhase = 1: the fight; steps: 1 set-up, 2 command entry, 3 executing the actions (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43E6": {
+    "name": "BattlePhaseEnd",
+    "note": "wBattlePhase = 2: after the fight; steps 0-9 (result message, rewards, recruiting) (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:40E4": {
+    "name": "BattlePhase0_Step0",
+    "note": "wBattlePhase 0, wBattleStep 0 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:40EE": {
+    "name": "BattlePhase0_Step1",
+    "note": "wBattlePhase 0, wBattleStep 1 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:4106": {
+    "name": "BattlePhase0_Step2",
+    "note": "wBattlePhase 0, wBattleStep 2 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:4243": {
+    "name": "BattlePhase0_Step3",
+    "note": "wBattlePhase 0, wBattleStep 3 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43A0": {
+    "name": "BattlePhase0_Step4",
+    "note": "wBattlePhase 0, wBattleStep 4 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43FE": {
+    "name": "BattleEnd_Step0",
+    "note": "wBattlePhase 2, wBattleStep 0 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:440E": {
+    "name": "BattleEnd_Step1",
+    "note": "wBattlePhase 2, wBattleStep 1 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:445B": {
+    "name": "BattleEnd_Step2",
+    "note": "wBattlePhase 2, wBattleStep 2 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:449C": {
+    "name": "BattleEnd_Step3",
+    "note": "wBattlePhase 2, wBattleStep 3 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:4693": {
+    "name": "BattleEnd_Step4",
+    "note": "wBattlePhase 2, wBattleStep 4 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:46CA": {
+    "name": "BattleEnd_Step5",
+    "note": "wBattlePhase 2, wBattleStep 5 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:4840": {
+    "name": "BattleEnd_Step6",
+    "note": "wBattlePhase 2, wBattleStep 6 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:48E5": {
+    "name": "BattleEnd_Step7",
+    "note": "wBattlePhase 2, wBattleStep 7 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:4975": {
+    "name": "BattleEnd_Step9",
+    "note": "wBattlePhase 2, wBattleStep 9 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43C0": {
+    "name": "BattleFight_Step0",
+    "note": "wBattlePhase 1, wBattleStep 0 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43CD": {
+    "name": "BattleFight_Step1",
+    "note": "wBattlePhase 1, wBattleStep 1 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43D1": {
+    "name": "BattleFight_Step2",
+    "note": "wBattlePhase 1, wBattleStep 2 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43D8": {
+    "name": "BattleFight_Step3",
+    "note": "wBattlePhase 1, wBattleStep 3 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
+  },
+  "31:43DF": {
+    "name": "BattleFight_Step4",
+    "note": "wBattlePhase 1, wBattleStep 4 (E-0044)",
+    "evidence": "execution and structure (E-0044)"
   }
 }
