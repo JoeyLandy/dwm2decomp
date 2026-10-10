@@ -1348,6 +1348,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - 32:4D2C subtracts the damage from HP without a floor check; callers may guarantee HP > max HP / 6. Not tested.
 - Binary verification: pending; see the commit.
 
+### E-0122 — Short routines that fall through or branch, and jump-table dispatchers
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** About 430 routines of 16 or fewer instructions are named; the earlier length lists missed them because they branch to internal labels or fall into the next routine. Naming dispatchers (`ld a, [state]; rst $00`) also renames their generated `_CaseNN` entries, so the unnamed count fell from 1500 to 943. These include:
+  - field mode: FieldModeStateDispatch (02:4AE0), PlayMapMusic and RestartMapMusic (02:6050, 02:604B) with their story-flag music cases, and RunBattlePhase (31:40CC);
+  - record fields from the code: $5B HP, $5D max HP, $5F MP, $61 max MP (85:45CB, 16:57D1, 16:57E8); $0D low nibble = family; $34 = the eight skills; $56 = level;
+  - LoadFamilyPaletteForWD09D (16:7A48, 19 callers) and its per-bank wrappers;
+  - status cures (3B:4BE8-4C5A) and AI trait rolls (30:4F86-4FB6);
+  - blinking-cursor helpers in many banks (cursor tile $BB, blank $C3).
+- 00:1CA1 has a check that never fires: `ld a, [wCC37]; ret nz` tests flags left by the earlier comparison. Not tested.
+- Data mis-decoded as code, left unnamed: 12:55F8, 36:6A59, 36:746B, 3D:4E3D, 7A:4001, 92:5805, 92:580E, E0:55BF.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
