@@ -61,8 +61,8 @@ Binary identity still passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, re
 
 | Measure | State |
 | --- | --- |
-| Call sites that reach a named routine | 47.6% of 21,739 (evidence-named; about 5,000 routines remain address-named) |
-| Hardware, VRAM and RAM operands with names | 54,500; only 29 RAM names carry evidence, the rest are address names (`wC52B`) |
+| Call sites that reach a named routine | 49% of 21,739 (evidence-named; about 5,000 routines remain address-named) |
+| Hardware, VRAM and RAM operands with names | 54,500; only 64 RAM names carry evidence, the rest are address names (`wC52B`) |
 | Far calls as `farcall` macros | 3,775 |
 | Idiom macros | `add_a_to_hl` 1,744, `deref_hl` 219 (E-0027) |
 | Library routine families named across banks | 29 families (`config/name_families.json`) |
@@ -71,6 +71,8 @@ Binary identity still passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, re
 | Sound tracks decoded | 214 tracks; the engine's tick routine is not decoded |
 
 Not done: most game logic (battle, menus, map, monster data) is unnamed; roughly 1.2 MB of `INCBIN` data (much of it probably compressed graphics) is unidentified; banks `$4A`-`$4D` hold 20x18 grids of unknown meaning. No external RAM map for this game was found (a web search turned up only a few addresses from a Japanese-version speedrun note), so names come from reading the code.
+
+Dynamic analysis (E-0029, E-0030): `tools/explore.py` boots the reference ROM on our emulator with scripted input, draws frames (`tools/render_frame.py`) and lists the functions that run. It reached the title screen, name entry and the field (mode 1). [GAME_STRUCTURE.md](GAME_STRUCTURE.md) summarises the frame loop, the nine game modes and the named systems.
 
 ## Inventory and verification (historical, session 1)
 
