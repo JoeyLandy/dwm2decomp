@@ -193,22 +193,22 @@
     "evidence": "reading"
   },
   "0F:7F68": {
-    "name": "StoreHLInWC924_B0F",
+    "name": "StartMessageHL_B0F",
     "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
     "evidence": "reading"
   },
   "73:4ED8": {
-    "name": "StoreHLInWC924_B73",
+    "name": "StartMessageHL_B73",
     "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
     "evidence": "reading"
   },
   "85:57C8": {
-    "name": "StoreHLInWC924_B85",
+    "name": "StartMessageHL_B85",
     "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
     "evidence": "reading"
   },
   "73:7AA5": {
-    "name": "StoreHLInWC924_B73b",
+    "name": "StartMessageHL_B73b",
     "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
     "evidence": "reading"
   },
@@ -3432,6 +3432,7 @@
   "13:7E9F": {"name": "Talk0B6D_BreedingFireAndIce", "note": "talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $0B6D, whose string begins 'Breeding fire and ice together makes'; the branching is not interpreted (E-0097)", "evidence": "reading + data (E-0097)"},
   "13:7F02": {"name": "Talk0D90_HumphImTerryTerry", "note": "talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0D90, whose string begins 'Humph I'm Terry. Terry I'm a'; the branching is not interpreted (E-0097)", "evidence": "reading + data (E-0097)"},
   "13:405C": {"name": "DispatchTalkEvent", "note": "unless wCC44 says otherwise (several special values), starts an event: when wC916 is not $FD it runs script command $09 with a parameter from wCDAE; otherwise (and for the other paths) it jumps through an 11-entry table by wC917 (the handler group: cases far-call bank-$04 dispatchers or, for group 4, dispatch on wC916 through a 257-entry table of talk handlers such as TalkMsg0DD7_OurHeartsAreLike). Group/entry meaning beyond talk handlers is not read (E-0097)", "evidence": "reading (E-0097)"},
+  "73:6C77": {"name": "Talk0886_NsDancingLuredA", "note": "starts 1 constant message(s); the first in the code is $0886, whose string begins 'N's dancing lured a mermaid to' (the leading N is a name substitution); the surrounding logic is not interpreted (E-0097)", "evidence": "reading + data (E-0097)"},
   "32:51F9": {
     "name": "CheckSkillMPCost",
     "note": "for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)",

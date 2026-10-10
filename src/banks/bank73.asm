@@ -56,7 +56,7 @@ Jump_073_403F:: ; address name
     add a, $3A
     ld l, a
     ld h, $00
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -72,7 +72,7 @@ Jump_073_4053:: ; address name
     or a, a
     jr nz, Jump_073_407B
     ld hl, $003E
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, [wC935]
     and a, $0F
     sub a, $0C
@@ -95,7 +95,7 @@ Jump_073_407B::
     add a, $3F
     ld l, a
     ld h, $00
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $06
     ld [wScriptStep], a
     ret
@@ -130,7 +130,7 @@ Jump_073_4098:: ; address name
 ScriptCommand82_Run_Table3_Case00::
 Jump_073_40BA:: ; address name
     ld hl, $4037
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -146,14 +146,14 @@ Jump_073_40C5:: ; address name
     or a, a
     jr nz, Jump_073_40D6
     ld hl, vTiles0 + $49
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_073_40D6::
     ld hl, vTiles0 + $48
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $0D
     ld [wScriptStep], a
     ret
@@ -169,7 +169,7 @@ Jump_073_40E2:: ; address name
     or a, a
     jr nz, Jump_073_4105
     ld hl, $0038
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_4100
@@ -185,7 +185,7 @@ Jump_073_4100::
 
 Jump_073_4105::
     ld hl, $0039
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $0B
     ld [wScriptStep], a
     ret
@@ -196,7 +196,7 @@ Jump_073_4105::
 ScriptCommand82_Run_Table2_Case07::
 Jump_073_4111:: ; address name
     ld hl, $000F
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     call Func_073_4C5D
     ld hl, wScriptStep
     inc [hl]
@@ -296,7 +296,7 @@ Jump_073_41AD::
     or a, a
     jr nz, Jump_073_41C3
     ld hl, $0032
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $1E
     ld [wC928], a
     farcall AppendItemWC928ToInventory
@@ -306,7 +306,7 @@ Jump_073_41C3::
     dec a
     jr nz, Jump_073_41D8
     ld hl, $0030
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $2C
     ld [wC928], a
     farcall AppendItemWC928ToInventory
@@ -316,7 +316,7 @@ Jump_073_41D8::
     dec a
     jr nz, Jump_073_41F1
     ld hl, $0031
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, $03E8
     ld a, l
     ldh [hFFC6], a
@@ -329,7 +329,7 @@ Jump_073_41F1::
     dec a
     jr nz, Jump_073_420A
     ld hl, $0044
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, $01F4
     ld a, l
     ldh [hFFC6], a
@@ -340,7 +340,7 @@ Jump_073_41F1::
 
 Jump_073_420A::
     ld hl, $0045
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, $00C8
     ld a, l
     ldh [hFFC6], a
@@ -351,7 +351,7 @@ Jump_073_420A::
 
 Jump_073_4220::
     ld hl, $0035
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4227::
@@ -369,7 +369,7 @@ Jump_073_4236::
     or a, a
     jr nz, Jump_073_4250
     ld hl, $0046
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, $0064
     ld a, l
     ldh [hFFC6], a
@@ -382,7 +382,7 @@ Jump_073_4250::
     dec a
     jr nz, Jump_073_4220
     ld hl, $0047
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, $0032
     ld a, l
     ldh [hFFC6], a
@@ -597,7 +597,7 @@ Jump_073_4387:: ; address name
     or a, a
     jr nz, Jump_073_43A7
     ld hl, $002F
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, $0064
     ld a, l
     ldh [hFFC6], a
@@ -610,7 +610,7 @@ Jump_073_4387:: ; address name
 
 Jump_073_43A7::
     ld hl, $0036
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $09
     ld [wScriptStep], a
     ret
@@ -623,7 +623,7 @@ Jump_073_43B3:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $002E
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; 3 call sites from 3 routines (e.g. ScriptCommand82_Run_Table4_Case07, ScriptCommand82_Run_Table4_Case06, ScriptCommand82_Run_Table4_Case05)
@@ -863,7 +863,7 @@ Jump_073_45E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4021
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 2 of the `rst $00` table in Func_073_44A5
@@ -877,7 +877,7 @@ Jump_073_45EF:: ; address name
     or a, a
     jr nz, Jump_073_4629
     ld hl, vTiles0 + $23
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $FF
     ld [wCE93], a
     ld [wCE94], a
@@ -899,7 +899,7 @@ Jump_073_45EF:: ; address name
 
 Jump_073_4629::
     ld hl, vTiles0 + $22
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $06
     ld [wScriptStep], a
     ret
@@ -917,7 +917,7 @@ Jump_073_4635:: ; address name
 Func_073_44A5_Case05::
 Jump_073_463C:: ; address name
     ld hl, $0052
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -966,7 +966,7 @@ Jump_073_46B3:: ; address name
     cp a, c
     jr nz, Jump_073_46EA
     ld hl, vTiles0 + $18
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     jp Jump_073_4797
 
 Jump_073_46EA::
@@ -998,7 +998,7 @@ Jump_073_470A::
     cp a, $05
     jr nz, Jump_073_473F
     ld hl, vTiles0 + $1C
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, [wC46D]
     ld de, wC152
     call CopyItemNameToDE
@@ -1037,14 +1037,14 @@ Jump_073_473F::
     ld de, wC181
     call Func_000_23CA
     ld hl, wC016
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
 Jump_073_4791::
     ld hl, vTiles0 + $17
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
 
 Jump_073_4797::
     ld a, [wScriptParam1]
@@ -1092,12 +1092,12 @@ Jump_073_47DB:: ; address name
     ld a, $06
     ld [wC46B], a
     ld hl, wC014
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_47F1::
     ld hl, vTiles0 + $15
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $10
     ld [wScriptStep], a
     ret
@@ -1119,7 +1119,7 @@ Jump_073_47FD:: ; address name
     ld de, wC152
     call CopyItemNameToDE
     ld hl, $4013
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1156,7 +1156,7 @@ Jump_073_4860:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4024
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 2 of the `rst $00` table in Func_073_44A5
@@ -1170,14 +1170,14 @@ Jump_073_486B:: ; address name
     or a, a
     jr nz, Jump_073_487C
     ld hl, vTiles0 + $51
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_073_487C::
     ld hl, vTiles0 + $50
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $0C
     ld [wScriptStep], a
     ret
@@ -1194,12 +1194,12 @@ Jump_073_4888:: ; address name
     or a, a
     jr nz, Jump_073_4899
     ld hl, $0025
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4899::
     ld hl, $0053
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 7 of the `rst $00` table in Func_073_44A5
@@ -1226,7 +1226,7 @@ Jump_073_48A0:: ; address name
 
 Jump_073_48BF::
     ld hl, $0026
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $0C
     ld [wScriptStep], a
     ret
@@ -1243,12 +1243,12 @@ Jump_073_48CB::
     bit 7, a
     jr nz, Jump_073_48BF
     ld hl, $4026
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_48E9::
     ld hl, $000F
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     call Func_073_4C5D
     ld a, $0C
     ld [wScriptStep], a
@@ -1276,7 +1276,7 @@ Jump_073_48F8:: ; address name
 
 Jump_073_4912::
     ld hl, vTiles0 + $26
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $0C
     ld [wScriptStep], a
     ret
@@ -1293,7 +1293,7 @@ Jump_073_491E::
     bit 7, a
     jr nz, Jump_073_4912
     ld hl, wC026
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 11 of the `rst $00` table in Func_073_44A5
@@ -1304,7 +1304,7 @@ Jump_073_493C:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, vTiles0 + $26
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $02
     call Func_073_4956
     ld a, $02
@@ -1522,7 +1522,7 @@ Jump_073_4A9E:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $401D
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 2 of the `rst $00` table in Func_073_4A0F
@@ -1536,14 +1536,14 @@ Jump_073_4AA9:: ; address name
     or a, a
     jr nz, Jump_073_4ABA
     ld hl, vTiles0 + $4B
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_073_4ABA::
     ld hl, vTiles0 + $4A
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
@@ -1560,12 +1560,12 @@ Jump_073_4AC6:: ; address name
     or a, a
     jr nz, Jump_073_4AD7
     ld hl, $001E
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4AD7::
     ld hl, $001F
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 7 of the `rst $00` table in Func_073_4A0F
@@ -1595,19 +1595,19 @@ Jump_073_4ADE:: ; address name
     cp a, $FF
     jr z, Jump_073_4B15
     ld hl, $001B
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4B15::
     ld hl, $401B
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $0A
     ld [wScriptStep], a
     ret
 
 Jump_073_4B21::
     ld hl, $000F
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     call Func_073_4C5D
     ret
 
@@ -1633,14 +1633,14 @@ Jump_073_4B2B:: ; address name
     cp a, $FF
     jr z, Jump_073_4B5D
     ld hl, vTiles0 + $1B
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
 Jump_073_4B5D::
     ld hl, wC01B
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     dec [hl]
     ret
@@ -1671,7 +1671,7 @@ Jump_073_4B80:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4010
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 2 of the `rst $00` table in Func_073_4A0F
@@ -1685,14 +1685,14 @@ Jump_073_4B8B:: ; address name
     or a, a
     jr nz, Jump_073_4B9C
     ld hl, vTiles0 + $4F
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_073_4B9C::
     ld hl, vTiles0 + $4E
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
@@ -1709,12 +1709,12 @@ Jump_073_4BA8:: ; address name
     or a, a
     jr nz, Jump_073_4BB9
     ld hl, $0011
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4BB9::
     ld hl, $0012
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     call Func_073_4C5D
     ret
 
@@ -1744,7 +1744,7 @@ Jump_073_4BDB:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $400B
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 2 of the `rst $00` table in Func_073_4A0F
@@ -1758,14 +1758,14 @@ Jump_073_4BE6:: ; address name
     or a, a
     jr nz, Jump_073_4BF7
     ld hl, vTiles0 + $4D
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_073_4BF7::
     ld hl, vTiles0 + $4C
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
@@ -1782,12 +1782,12 @@ Jump_073_4C03:: ; address name
     or a, a
     jr nz, Jump_073_4C14
     ld hl, $000C
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4C14::
     ld hl, $000E
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 7 of the `rst $00` table in Func_073_4A0F
@@ -1809,7 +1809,7 @@ Jump_073_4C1B:: ; address name
 
 Jump_073_4C2F::
     ld hl, $000D
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld a, $29
     ld [wC928], a
     farcall AppendItemWC928ToInventory
@@ -1821,12 +1821,12 @@ Jump_073_4C41::
     or a, a
     jr z, Jump_073_4C2F
     ld hl, $0043
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4C53::
     ld hl, $000F
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     call Func_073_4C5D
     ret
 
@@ -1885,7 +1885,7 @@ Jump_073_4CAE:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4008
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     call Func_073_4FD2
     ld a, [wScriptParam0]
     ld de, wC152
@@ -1936,12 +1936,12 @@ Jump_073_4CE5:: ; address name
     ldh [hFFC7], a
     farcall SubtractGoldFloorZero
     ld hl, vTiles0 + $9
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4D19::
     ld hl, vTiles0 + $A
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommand82_Run
@@ -1969,7 +1969,7 @@ Jump_073_4D36:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4005
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 2 of the `rst $00` table in Func_073_4C5D
@@ -1984,7 +1984,7 @@ Jump_073_4D41:: ; address name
     or a, a
     jr nz, Jump_073_4D52
     ld hl, vTiles0 + $27
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4D52::
@@ -2014,12 +2014,12 @@ Jump_073_4D5B:: ; address name
     farcall SubtractGoldFloorZero
     farcall Func_012_64F8
     ld hl, $0006
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4D82::
     ld hl, vTiles0 + $7
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2047,7 +2047,7 @@ Jump_073_4D9B:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4002
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     call Func_073_4FD2
     ld a, [wScriptParam0]
     ld de, wC152
@@ -2088,12 +2088,12 @@ Jump_073_4DCD:: ; address name
     ldh [hFFC7], a
     farcall SubtractGoldFloorZero
     ld hl, vTiles0 + $3
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 Jump_073_4DFC::
     ld hl, vTiles0 + $4
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run
@@ -2117,7 +2117,7 @@ Jump_073_4E03:: ; address name
 Func_073_4C5D_Table4_Case00::
 Jump_073_4E15:: ; address name
     ld hl, $0000
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2161,7 +2161,7 @@ ScriptCommand82_Run_Table3_Case08::
 Jump_073_4E48:: ; address name
     farcall Func_012_64F8
     ld hl, $0001
-    call StoreHLInWC924_B73
+    call StartMessageHL_B73
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -2258,7 +2258,7 @@ Jump_073_4EC4::
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
 ; 77 call sites from 42 routines (e.g. Func_073_4C5D_Table4_Case00, Func_073_4C5D_Table3_Case02, Func_073_4C5D_Table3_Case00, Func_073_4C5D_Table2_Case05, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
-StoreHLInWC924_B73::
+StartMessageHL_B73::
 Func_073_4ED8:: ; address name
     ld a, l
     ld [wMessageIndex], a
@@ -2956,7 +2956,7 @@ Jump_073_52FF::
     inc de
     ld a, [de]
     ld h, a
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3130,7 +3130,7 @@ Func_073_5449:: ; address name
 ScriptCommandC5_Run_Case08::
 Jump_073_5461:: ; address name
     ld hl, $0782
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3180,7 +3180,7 @@ Jump_073_5488::
 ScriptCommandC5_Run_Case05::
 Jump_073_54AF:: ; address name
     ld hl, $0781
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3200,7 +3200,7 @@ Jump_073_54BA:: ; address name
 ScriptCommandC5_Run_Case02::
 Jump_073_54BF:: ; address name
     ld hl, $0780
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3502,7 +3502,7 @@ Jump_073_5670::
     xor a, a
     ld [wCB96], a
     ld hl, $0725
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4137,7 +4137,7 @@ Jump_073_5A22:: ; address name
 ScriptCommand57_Run_Case01::
 Jump_073_5A3D:: ; address name
     ld hl, $0480
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4758,7 +4758,7 @@ Func_073_5DDD:: ; address name
 ScriptCommand51_Run_Case04::
 Jump_073_5DED:: ; address name
     ld hl, $0433
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -5478,7 +5478,7 @@ Jump_073_6218::
     ld hl, $0D4B
 
 Jump_073_621B::
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld a, $00
     ld [wCB96], a
     ld a, $02
@@ -5510,7 +5510,7 @@ Jump_073_622D:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $0D3E
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 ; entry 4 of the `rst $00` table in ScriptCommand3D_Run
@@ -5747,7 +5747,7 @@ Jump_073_6394::
     ld hl, $0D16
 
 Jump_073_6397::
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ld a, [wCB9A]
@@ -5808,7 +5808,7 @@ Jump_073_63DA:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $0D15
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 ; entry 14 of the `rst $00` table in ScriptCommand3C_Run
@@ -7183,7 +7183,7 @@ Func_073_6AFF:: ; address name
     dw ScriptCommand2D_Run_Case01
     dw ScriptCommand2D_Run_Case04
     dw ScriptCommand2D_Run_Case05
-    dw Func_073_6C77
+    dw Talk0886_NsDancingLuredA
     dw ScriptCommand2D_Run_Case07
     dw ScriptCommandCB_Run_Case01
     dw Func_073_6B1F
@@ -7232,7 +7232,7 @@ Jump_073_6B46:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $0849
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 ; implements script command type 2C; reached through ScriptCommand2C in bank $10 (E-0038)
@@ -7266,7 +7266,7 @@ Jump_073_6B71:: ; address name
 ; writes: wCB9A
 ScriptCommand2C_Run_Case07::
 Jump_073_6B77:: ; address name
-    call Func_073_6C77
+    call Talk0886_NsDancingLuredA
     ld a, $E0
     ld [wCB9A], a
     ret
@@ -7304,7 +7304,7 @@ Func_073_6B98:: ; address name
     dw ScriptCommand2D_Run_Case01
     dw ScriptCommand2D_Run_Case04
     dw ScriptCommand2D_Run_Case05
-    dw Func_073_6C77
+    dw Talk0886_NsDancingLuredA
     dw ScriptCommand2B_Run_Case07
     dw ScriptCommand2B_Run_Case08
     dw ScriptCommand2B_Run_Case09
@@ -7356,7 +7356,7 @@ Jump_073_6BC6:: ; address name
     ld de, $006E
     call SetFlagBit
     ld hl, $0813
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     xor a, a
     ldh [hFF8D], a
     ld hl, wScriptStep
@@ -7417,7 +7417,7 @@ Jump_073_6C3E:: ; address name
     call TestFlagBit
     jr nc, Jump_073_6C5B
     ld hl, $0815
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 Jump_073_6C5B::
@@ -7427,21 +7427,23 @@ Jump_073_6C5B::
     or a, a
     jr z, Jump_073_6C6C
     ld hl, $0814
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 Jump_073_6C6C::
     ld hl, $0812
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
 
+; starts 1 constant message(s); the first in the code is $0886, whose string begins 'N's dancing lured a mermaid to' (the leading N is a name substitution); the surrounding logic is not interpreted (E-0097)
 ; 1 call site from 1 routine (e.g. ScriptCommand2C_Run_Case07)
 ; reads: hPlayerX
 ; writes: wFollowerRecords, wC8F4, wC8F9, hPlayerFacing, hPlayerX, wScriptParam0, wCB9A
 ; points at: hFF8C, wC8F0, wC8F6, wC8FB, wScriptStep
-Func_073_6C77::
+Talk0886_NsDancingLuredA::
+Func_073_6C77:: ; address name
     ld hl, hFF8C
     call SetBit2AtHL_B73
     ld a, $03
@@ -7477,7 +7479,7 @@ Func_073_6C77::
     ld a, $30
     ld [wCB9A], a
     ld hl, $0886
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 ; entry 5 of the `rst $00` table in ScriptCommand2D_Run
@@ -8070,7 +8072,7 @@ Jump_073_70C2:: ; address name
     call StepWC921Counter_Bank73
     ret nc
     ld hl, $005C
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -8165,7 +8167,7 @@ Jump_073_715A:: ; address name
     call StepWC921Counter_Bank73
     ret nc
     ld hl, $005B
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -8385,12 +8387,12 @@ Jump_073_72D6:: ; address name
     call TestFlagBit
     jr c, Jump_073_72F9
     ld hl, $0058
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 Jump_073_72F9::
     ld hl, $005E
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ret
 
 ; entry 11 of the `rst $00` table in ScriptCommand16_Run
@@ -8421,7 +8423,7 @@ Jump_073_7317:: ; address name
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0055
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -8435,7 +8437,7 @@ Jump_073_7329:: ; address name
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0054
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -8449,7 +8451,7 @@ Jump_073_733B:: ; address name
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0053
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -9628,7 +9630,7 @@ Func_073_7A7F::
     pop hl
     cp a, $20
     ret nz
-    call StoreHLInWC924_B73b
+    call StartMessageHL_B73b
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -9638,7 +9640,7 @@ Func_073_7A7F::
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
 ; 25 call sites from 22 routines (e.g. Func_073_52F5, ScriptCommandC5_Run_Case08, ScriptCommandC5_Run_Case05, ScriptCommandC5_Run_Case02, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
-StoreHLInWC924_B73b::
+StartMessageHL_B73b::
 Func_073_7AA5:: ; address name
     ld a, l
     ld [wMessageIndex], a
