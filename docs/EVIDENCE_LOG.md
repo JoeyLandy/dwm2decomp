@@ -1086,6 +1086,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Pinned by the test `FoeMPCheckOffset`.
 - Binary verification: pending; see the commit.
 
+### E-0100 — More AI-scorer predicates
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Twelve named:**
+  - status checks: AnyFoeLacksStatus5Bits01And1Bit1, AnyAllyLacksStatus2Bit2 (and its twin, below), ActorLacksStatus4Bits45, AnySlotHasStatusMask (the opposite test to AnySlotLacksStatusMask);
+  - level-field checks: AnyFoeWithMPOpenToWDA74Field1, AnyFoeOpenToWDA74Field3;
+  - counts and amounts: AtLeastTwoFoesPresent, ActorMPBelowThreeQuarters;
+  - battle-state checks: CheckWCFC5Not2Or3, CheckWCFC5AtLeast2OrWC58ASet, CheckActorSlot0To3OrWC58ASet.
+- **A possible slip.** `05:5D31` computes the side with `and a, $04` twice. Every opposite-side predicate uses `and a, $04 / xor a, $04`, so it tests the actor's own side exactly like `05:5D20`. It is named AnyAllyLacksStatus2Bit2_5D31, and the note says it probably meant the foes. Not executed.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -26,7 +26,7 @@ Func_005_400B:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 12 call sites from 7 routines (e.g. Func_005_558B, AIScore_Transform_Sub01, Func_005_6FFD, Func_005_6741, ...)
+; 12 call sites from 7 routines (e.g. ActorMPBelowThreeQuarters, AIScore_Transform_Sub01, Func_005_6FFD, Func_005_6741, ...)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank05::
 Func_005_4010:: ; address name
@@ -42,7 +42,7 @@ Func_005_4015:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
-; 9 call sites from 9 routines (e.g. Func_005_5500, Func_005_558B, Func_005_6FFD, AIScore_MPass_Sub01_Sub01, ...)
+; 9 call sites from 9 routines (e.g. Func_005_5500, ActorMPBelowThreeQuarters, Func_005_6FFD, AIScore_MPass_Sub01_Sub01, ...)
 ; points at: wBattleMP
 GetBattleMP_Bank05::
 Func_005_401A:: ; address name
@@ -997,10 +997,12 @@ Jump_005_459A::
     ld c, $FF
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $03 clear and status byte 1 (wD80D) bit 1 clear, else 0 (E-0100)
 ; 6 call sites from 6 routines (e.g. AIScore_Surround_Sub01, AIScore_SandStorm_Sub01, AIScore_Radiant_Sub01, AIScore_Dodge_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wD811, wD80D
-Func_005_459D:: ; heuristic: follows a terminator; C0
+AnyFoeLacksStatus5Bits01And1Bit1:: ; heuristic: follows a terminator; C0
+Func_005_459D:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1446,7 +1448,7 @@ Func_005_47A5:: ; address name
     ld b, $03
     ld hl, wBattleStatus
     ld e, $03
-    call Func_005_6FBD
+    call AnySlotHasStatusMask
     ret
 
 ; only called from AIScore_NumbOff_Sub01 (E-0047)
@@ -1460,7 +1462,7 @@ Func_005_47B5:: ; address name
     ld b, $03
     ld hl, wBattleStatus
     ld e, $CC
-    call Func_005_6FBD
+    call AnySlotHasStatusMask
     ret
 
 ; only called from AIScore_DeChaos_Sub01 (E-0047)
@@ -1474,7 +1476,7 @@ Func_005_47C5:: ; address name
     ld b, $03
     ld hl, wBattleStatus
     ld e, $10
-    call Func_005_6FBD
+    call AnySlotHasStatusMask
     ret
 
 ; only called from AIScore_CurseOff_Sub01 (E-0047)
@@ -1488,7 +1490,7 @@ Func_005_47D5:: ; address name
     ld b, $03
     ld hl, wBattleStatus
     ld e, $20
-    call Func_005_6FBD
+    call AnySlotHasStatusMask
     ret
 
 ; walks the actor's own three slots through their 7-byte wDA76 entries: C = $FF when a present slot's entry & $3C is not $3C, else 0 (E-0094)
@@ -1805,10 +1807,12 @@ Jump_005_4942::
     ld c, $FF
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with non-zero MP (GetBattleMP_Bank05) and bits 3-2 of its wDA74 entry not both set, else 0 (E-0100)
 ; 2 call sites from 2 routines (e.g. AIScore_RobMagic_Sub01, AIScore_OddDance_Sub01)
 ; reads: wBattleActor
 ; points at: wDA74
-Func_005_4949:: ; heuristic: follows a terminator; C0
+AnyFoeWithMPOpenToWDA74Field1:: ; heuristic: follows a terminator; C0
+Func_005_4949:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2192,9 +2196,11 @@ Jump_005_4B3A::
     ld c, $FF
     ret
 
+; C = $FF when at least two of the actor's three opposite slots are present, else 0 (the opposite of FewerThanTwoFoesPresent) (E-0100)
 ; 5 call sites from 5 routines (e.g. AIScore_RainSlash_Sub01, AIScore_Skill00, AIScore_Sacrifice, AIScore_FireAir, ...)
 ; reads: wBattleActor
-Func_005_4B3D::
+AtLeastTwoFoesPresent::
+Func_005_4B3D:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3834,10 +3840,12 @@ Jump_005_53E3::
     ld c, $FF
     ret
 
+; C = 0 when the actor's status byte 4 (wD810) & $30 is set, else C = $FF (E-0100)
 ; 3 call sites from 3 routines (e.g. AIScore_SuckAir_Sub01, AIScore_SuckAll_Sub01, AIScore_FireAir)
 ; reads: wBattleActor
 ; points at: wD810
-Func_005_53E6:: ; heuristic: follows a terminator; C0
+ActorLacksStatus4Bits45:: ; heuristic: follows a terminator; C0
+Func_005_53E6:: ; address name
     ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
@@ -4135,9 +4143,11 @@ Jump_005_5588::
     ld c, $FF
     ret
 
+; C = $FF when 4 x the actor's MP is below 3 x its max MP (MP under three quarters of max), else 0 (E-0100)
 ; 3 call sites from 3 routines (e.g. AIScore_OddDance_Sub01, AIScore_RobMagic_Sub01, AIScore_TakeMagic)
 ; reads: wBattleActor
-Func_005_558B:: ; heuristic: follows a terminator; C0
+ActorMPBelowThreeQuarters:: ; heuristic: follows a terminator; C0
+Func_005_558B:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxMP_Bank05
     ld b, h
@@ -5488,9 +5498,11 @@ Jump_005_5CCB::
     ld c, $FF
     ret
 
+; C = 0 when wCFC5 is 2 or 3, else C = $FF (E-0100)
 ; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Beat_Sub01, AIScore_PalsyAir_Sub01, AIScore_BigBang)
 ; reads: wCFC5
-Func_005_5CCE::
+CheckWCFC5Not2Or3::
+Func_005_5CCE:: ; address name
     ld a, [wCFC5]
     cp a, $02
     jr z, Jump_005_5CDB
@@ -5562,10 +5574,12 @@ Jump_005_5D1D::
     ld c, $FF
     ret
 
+; C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2 (wD80E) bit 2 clear (AnySlotLacksStatusMask), else 0 (E-0100)
 ; 2 call sites from 2 routines (e.g. AIScore_Barrier_Sub01, AIScore_SuckAll)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_5D20:: ; heuristic: follows a terminator; C0
+AnyAllyLacksStatus2Bit2:: ; heuristic: follows a terminator; C0
+Func_005_5D20:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -5575,10 +5589,12 @@ Func_005_5D20:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
+; the same test as AnyAllyLacksStatus2Bit2: C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2 bit 2 clear. It computes the side with `and a, $04` twice where the opposite-side predicates use `and a, $04 / xor a, $04`, so it probably meant the foes (a possible slip; not executed) (E-0100)
 ; 2 call sites from 2 routines (e.g. AIScore_FireAir, AIScore_SuckAir)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_5D31:: ; heuristic: follows a terminator; C0
+AnyAllyLacksStatus2Bit2_5D31:: ; heuristic: follows a terminator; C0
+Func_005_5D31:: ; address name
     ld a, [wBattleActor]
     and a, $04
     and a, $04
@@ -5659,10 +5675,12 @@ Jump_005_5D98::
     ld c, $FF
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 7 clear and bits 7-6 of its wDA74 entry not both set, else 0 (E-0100)
 ; 3 call sites from 3 routines (e.g. AIScore_NapAttack_Sub01, AIScore_Sleep_Sub01, AIScore_SleepAir_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus, wDA74
-Func_005_5D9B:: ; heuristic: follows a terminator; C0
+AnyFoeOpenToWDA74Field3:: ; heuristic: follows a terminator; C0
+Func_005_5D9B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -6935,9 +6953,11 @@ Jump_005_647E::
     ld c, $FF
     ret
 
+; C = 0 when wC58A is 0 and wCFC5 is below 2, else C = $FF (E-0100)
 ; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_Sub04, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wC58A, wCFC5
-Func_005_6481::
+CheckWCFC5AtLeast2OrWC58ASet::
+Func_005_6481:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_005_6491
@@ -6994,9 +7014,11 @@ Jump_005_64C9::
     ld c, $FF
     ret
 
+; C = 0 when wC58A is 0 and the actor is in slots 4-7, else C = $FF (E-0100)
 ; 3 call sites from 3 routines (e.g. AIScore_Skill00, AIScore_RockThrow, AIScore_PoisonHit)
 ; reads: wC58A, wBattleActor
-Func_005_64CC::
+CheckActorSlot0To3OrWC58ASet::
+Func_005_64CC:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_005_64DC
@@ -8970,7 +8992,7 @@ Jump_005_6F58::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
-; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub01, Func_005_5D9B, AnyAllyWDA76Bits2To5NotAllSet, Func_005_5DCD, ...)
+; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub01, AnyFoeOpenToWDA74Field3, AnyAllyWDA76Bits2To5NotAllSet, Func_005_5DCD, ...)
 ReadByteAtHLPlus4APlus3C_Bank05::
 Func_005_6F60:: ; address name
     add a, a
@@ -9017,8 +9039,10 @@ Jump_005_6FBA::
     ld c, $FF
     ret
 
+; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when some present slot in the range has (HL + 9 * slot) & E non-zero, else C = 0 (the opposite test to AnySlotLacksStatusMask) (E-0100)
 ; 4 call sites from 4 routines (e.g. AIScore_Antidote_Sub01_Sub01, AIScore_NumbOff_Sub01_Sub01, AIScore_DeChaos_Sub01_Sub01, AIScore_CurseOff_Sub01_Sub01)
-Func_005_6FBD:: ; heuristic: follows a terminator; C0
+AnySlotHasStatusMask:: ; heuristic: follows a terminator; C0
+Func_005_6FBD:: ; address name
     ld c, a
 
 Jump_005_6FBE::
@@ -9274,7 +9298,7 @@ Func_005_70C9:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7105
-    farcall Func_005_5CCE
+    farcall CheckWCFC5Not2Or3
     ld a, c
     and a, a
     jr z, Jump_005_7105
@@ -9332,7 +9356,7 @@ Jump_005_714C::
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_5CCE
+    call CheckWCFC5Not2Or3
     ld a, c
     and a, a
     jr z, Jump_005_715B
@@ -9653,7 +9677,7 @@ Func_005_72BE:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_459D
+    call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
     jr z, Jump_005_72DA
@@ -9683,7 +9707,7 @@ Func_005_72DE:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_72F3
-    call Func_005_5D9B
+    call AnyFoeOpenToWDA74Field3
     ld a, c
     and a, a
     jr z, Jump_005_72F3
@@ -9739,11 +9763,11 @@ Func_005_7322:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7341
-    call Func_005_4949
+    call AnyFoeWithMPOpenToWDA74Field1
     ld a, c
     and a, a
     jr z, Jump_005_7341
-    farcall Func_005_558B
+    farcall ActorMPBelowThreeQuarters
     ld a, c
     and a, a
     jr z, Jump_005_7341
@@ -9933,7 +9957,7 @@ Jump_005_7428::
     ld a, c
     and a, a
     jr z, Jump_005_7445
-    call Func_005_5D20
+    call AnyAllyLacksStatus2Bit2
     ld a, c
     and a, a
     jr z, Jump_005_7445
@@ -10039,7 +10063,7 @@ Func_005_74B5:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_74CD
-    farcall Func_005_6481
+    farcall CheckWCFC5AtLeast2OrWC58ASet
     ld a, c
     and a, a
     jr z, Jump_005_74CD
@@ -10417,7 +10441,7 @@ Func_005_7671:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_5D9B
+    call AnyFoeOpenToWDA74Field3
     ld a, c
     jr z, Jump_005_7680
     ld c, $FF
@@ -10511,7 +10535,7 @@ Func_005_76E2:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_4B3D
+    call AtLeastTwoFoesPresent
     ld a, c
     and a, a
     jr z, Jump_005_76F2
@@ -10740,7 +10764,7 @@ Func_005_77F9:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_780E
-    call Func_005_5D9B
+    call AnyFoeOpenToWDA74Field3
     ld a, c
     and a, a
     jr z, Jump_005_780E
@@ -10782,7 +10806,7 @@ Func_005_7824:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7843
-    farcall Func_005_5CCE
+    farcall CheckWCFC5Not2Or3
     ld a, c
     and a, a
     jr z, Jump_005_7843
@@ -10882,11 +10906,11 @@ Func_005_78A8:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_78C6
-    call Func_005_4949
+    call AnyFoeWithMPOpenToWDA74Field1
     ld a, c
     and a, a
     jr z, Jump_005_78C6
-    call Func_005_558B
+    call ActorMPBelowThreeQuarters
     ld a, c
     and a, a
     jr z, Jump_005_78C6
@@ -11098,7 +11122,7 @@ Func_005_79C5:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_459D
+    call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
     jr z, Jump_005_79E1
@@ -11128,7 +11152,7 @@ Func_005_79E5:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7A09
-    call Func_005_459D
+    call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
     jr z, Jump_005_7A09
@@ -11292,7 +11316,7 @@ Func_005_7AA4:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
-    call Func_005_53E6
+    call ActorLacksStatus4Bits45
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
@@ -11560,7 +11584,7 @@ Func_005_7C12:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_459D
+    call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
     jr z, Jump_005_7C20
@@ -11796,7 +11820,7 @@ Jump_005_7D21::
     jr z, Jump_005_7D57
 
 Jump_005_7D48::
-    call Func_005_53E6
+    call ActorLacksStatus4Bits45
     ld a, c
     and a, a
     jr z, Jump_005_7D57

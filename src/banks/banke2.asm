@@ -17,7 +17,7 @@ Func_0E2_4001:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_401A::
-    farcall Func_005_4B3D
+    farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_402A
@@ -59,7 +59,7 @@ Jump_0E2_405E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_406E::
-    farcall Func_005_6481
+    farcall CheckWCFC5AtLeast2OrWC58ASet
     ld a, c
     and a, a
     jr nz, Jump_0E2_407E
@@ -75,7 +75,7 @@ Jump_0E2_407E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_408E::
-    farcall Func_005_64CC
+    farcall CheckActorSlot0To3OrWC58ASet
     ld a, c
     and a, a
     jr nz, Jump_0E2_409E
@@ -363,7 +363,7 @@ Jump_0E2_4292::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_42A2::
-    farcall Func_005_4B3D
+    farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_42B2
@@ -1071,7 +1071,7 @@ Func_0E2_478E:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_558B
+    farcall ActorMPBelowThreeQuarters
     ld a, c
     and a, a
     jr nz, Jump_0E2_47A7
@@ -1594,7 +1594,7 @@ Jump_0E2_4B32::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4B46::
-    farcall Func_005_5CCE
+    farcall CheckWCFC5Not2Or3
     ld a, c
     and a, a
     jr nz, Jump_0E2_4B56
@@ -1630,7 +1630,7 @@ Func_0E2_4B6B:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4B84::
-    farcall Func_005_4B3D
+    farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4B94
@@ -1654,7 +1654,7 @@ Jump_0E2_4BA4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BB4::
-    farcall Func_005_53E6
+    farcall ActorLacksStatus4Bits45
     ld a, c
     and a, a
     jr nz, Jump_0E2_4BC4
@@ -1697,7 +1697,7 @@ Jump_0E2_4BF7::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4C0B::
-    farcall Func_005_5D31
+    farcall AnyAllyLacksStatus2Bit2_5D31
     ld a, c
     and a, a
     jr nz, Jump_0E2_4C1B
@@ -1879,7 +1879,7 @@ Jump_0E2_4D42::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4D56::
-    farcall Func_005_64CC
+    farcall CheckActorSlot0To3OrWC58ASet
     ld a, c
     and a, a
     jr nz, Jump_0E2_4D66
@@ -2189,7 +2189,7 @@ Jump_0E2_4F8D::
 
 Jump_0E2_4F9D::
     call WeighWD044RuleBit1
-    farcall Func_005_6481
+    farcall CheckWCFC5AtLeast2OrWC58ASet
     ld a, c
     and a, a
     jr nz, Jump_0E2_4FB0
@@ -2262,7 +2262,7 @@ Jump_0E2_5014::
 
 Jump_0E2_5024::
     call WeighWD044RuleBit1
-    farcall Func_005_6481
+    farcall CheckWCFC5AtLeast2OrWC58ASet
     ld a, c
     and a, a
     jr nz, Jump_0E2_5037
@@ -2435,7 +2435,7 @@ Jump_0E2_512B::
 
 Jump_0E2_513B::
     call WeighWD044RuleBit1
-    farcall Func_005_6481
+    farcall CheckWCFC5AtLeast2OrWC58ASet
     ld a, c
     and a, a
     jr nz, Jump_0E2_514E
@@ -2451,7 +2451,7 @@ Jump_0E2_514E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_515E::
-    farcall Func_005_64CC
+    farcall CheckActorSlot0To3OrWC58ASet
     ld a, c
     and a, a
     jr nz, Jump_0E2_516E
@@ -3076,7 +3076,7 @@ Func_0E2_55CE:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4B3D
+    farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_55E7
@@ -3906,7 +3906,7 @@ Func_0E2_5BC4:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_459D
+    farcall AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5BDD
@@ -4279,7 +4279,7 @@ Jump_0E2_5E5F::
 
 Jump_0E2_5E6F::
     call WeighWD044RuleBit3
-    farcall Func_005_5D31
+    farcall AnyAllyLacksStatus2Bit2_5D31
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E82
@@ -4889,7 +4889,7 @@ Jump_0E2_6276::
 
 Jump_0E2_6290::
     call WeighWD044RuleBit3
-    farcall Func_005_5D20
+    farcall AnyAllyLacksStatus2Bit2
     ld a, c
     and a, a
     jr nz, Jump_0E2_62A3
@@ -5126,7 +5126,7 @@ Func_0E2_6425:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_459D
+    farcall AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
     jr nz, Jump_0E2_6442
