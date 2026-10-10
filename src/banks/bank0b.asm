@@ -11,7 +11,7 @@ Func_00B_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_00B_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 5 routines (e.g. Func_00C_49DA, Func_00C_4AA6, Func_00C_4B5C, Func_00C_4E16, ...)
+; 6 call sites from 3 routines (e.g. Func_00C_45DA, Func_00C_4E16, Func_00C_4EC7)
 ShowString_Bank0B::
 Func_00B_400F:: ; address name
     call BeginStringDisplay_Bank0B

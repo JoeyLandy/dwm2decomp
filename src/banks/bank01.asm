@@ -3288,7 +3288,7 @@ Jump_001_5C18::
     xor a, a
     ld [wCC44], a
     xor a, a
-    ld [wC91F], a
+    ld [wScriptRunning], a
     ld a, $01
     ld [wGameMode], a
     xor a, a
@@ -3305,7 +3305,7 @@ Jump_001_5C5B::
     ld a, $80
     ld [wCC44], a
     xor a, a
-    ld [wC91F], a
+    ld [wScriptRunning], a
     ld a, [wCD0D]
     ld [wMapWidthScreens], a
     ld a, [wCD0E]
@@ -5761,7 +5761,7 @@ Jump_001_6E3E::
     ld [hl+], a
     ret
 
-; 10 call sites from 8 routines (e.g. Func_013_5EF4, Func_073_5F55, Func_085_4047, Func_085_4249, ...)
+; 10 call sites from 7 routines (e.g. Func_013_5EF4, Func_073_5F55, Func_085_4047, Func_085_4207, ...)
 ; reads: hFFC7, hFFC8, wD868
 ; writes: rRAMG, rRAMB, wD869, wD86A
 Func_001_6E46::

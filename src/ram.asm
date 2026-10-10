@@ -691,17 +691,17 @@ DEF wC915 EQU $C915
 DEF wC916 EQU $C916
 DEF wC917 EQU $C917
 DEF wC918 EQU $C918
-DEF wC919 EQU $C919
-DEF wC91A EQU $C91A
-DEF wC91B EQU $C91B
+DEF wScriptStartRequest EQU $C919 ; bit 7 set asks FetchScriptCommand to begin running the script at wScriptPointer (reading + execution (E-0038))
+DEF wScriptPointerLo EQU $C91A ; low byte of the address of the next script byte (wC91B is the high byte; the bytes are in the current bank, or in wDataBank when wScriptInDataBank is set) (reading + execution (E-0038))
+DEF wScriptPointerHi EQU $C91B ; high byte of the script pointer (reading + execution (E-0038))
 DEF wC91C EQU $C91C
 DEF wC91D EQU $C91D
 DEF wC91E EQU $C91E
-DEF wC91F EQU $C91F
-DEF wC920 EQU $C920
-DEF wC921 EQU $C921
-DEF wC922 EQU $C922
-DEF wC923 EQU $C923
+DEF wScriptRunning EQU $C91F ; non-zero while a script runs (reading + execution (E-0038))
+DEF wScriptCommandType EQU $C920 ; the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1) (reading + execution (E-0038))
+DEF wScriptParam0 EQU $C921 ; first parameter of the current script command (reading + execution (E-0038))
+DEF wScriptParam1 EQU $C922 ; second parameter of the current script command (reading + execution (E-0038))
+DEF wScriptStep EQU $C923 ; step counter of the current script command (reading + execution (E-0038))
 DEF wC924 EQU $C924
 DEF wC925 EQU $C925
 DEF wC926 EQU $C926
@@ -963,7 +963,6 @@ DEF wCCEE EQU $CCEE
 DEF wCCF1 EQU $CCF1
 DEF wCCF2 EQU $CCF2
 DEF wCCF7 EQU $CCF7
-DEF wCD00 EQU $CD00
 DEF wCD02 EQU $CD02
 DEF wCD03 EQU $CD03
 DEF wCD04 EQU $CD04
@@ -1012,6 +1011,13 @@ DEF wCE7B EQU $CE7B
 DEF wCE7E EQU $CE7E
 DEF wCE8B EQU $CE8B
 DEF wCE93 EQU $CE93
+DEF wCE94 EQU $CE94
+DEF wCE95 EQU $CE95
+DEF wCE96 EQU $CE96
+DEF wCE97 EQU $CE97
+DEF wCE98 EQU $CE98
+DEF wCE99 EQU $CE99
+DEF wCE9A EQU $CE9A
 DEF wCE9B EQU $CE9B
 DEF wCE9C EQU $CE9C
 DEF wCE9D EQU $CE9D
@@ -1424,7 +1430,7 @@ DEF wD7F9 EQU $D7F9
 DEF wD7FA EQU $D7FA
 DEF wD7FB EQU $D7FB
 DEF wD7FC EQU $D7FC
-DEF wD7FD EQU $D7FD
+DEF wScriptInDataBank EQU $D7FD ; non-zero when the script bytes are read from the bank in wDataBank (reading + execution (E-0038))
 DEF wDataBank EQU $D7FE ; ROM bank used by Func_000_0B6C when reading a word through HL (E-0014)
 DEF wD7FF EQU $D7FF
 DEF wD800 EQU $D800
@@ -1754,6 +1760,5 @@ DEF hFFF6 EQU $FFF6
 DEF hFFF7 EQU $FFF7
 DEF hFFF8 EQU $FFF8
 DEF hFFF9 EQU $FFF9
-DEF hFFFA EQU $FFFA
 DEF hFFFC EQU $FFFC
 

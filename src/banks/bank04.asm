@@ -563,7 +563,7 @@ Jump_004_4396::
     db $E3, $45, $99, $46, $D8, $46, $FF, $46, $34, $47, $73, $47, $32, $48, $5F, $48
     db $D6, $48, $BD, $49, $D7, $4A
 
-; 11 call sites from 11 routines (e.g. Func_002_64E5, Func_010_49EE, Func_012_6610, Func_012_66DA, ...)
+; 11 call sites from 11 routines (e.g. Func_002_64E5, Func_010_4A1B, Func_012_6610, Func_012_66DA, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 Func_004_4470::
@@ -587,7 +587,7 @@ Func_004_4470::
     ld [wCBCC], a
     ret
 
-; 14 call sites from 14 routines (e.g. Func_002_6391, Func_007_6213, Func_00C_73C7, Func_00C_741F, ...)
+; 15 call sites from 15 routines (e.g. Func_002_6391, Func_007_6213, Func_00C_73C7, Func_00C_741F, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 Func_004_449F::
@@ -901,7 +901,7 @@ Jump_004_4645::
     jp Jump_004_46F8
 
 Jump_004_465C::
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jp nz, Jump_004_46F8
     dec hl
@@ -1118,7 +1118,7 @@ Jump_004_476F::
     jp Jump_004_4846
 
 Jump_004_4784::
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jp nz, Jump_004_4846
     dec hl
@@ -1617,7 +1617,7 @@ Jump_004_4A43::
     ret
     INCBIN "dwm2-cobi-us.gbc", $010A46, $62
 
-; 32 call sites from 29 routines (e.g. Func_002_4628, Func_002_4745, Func_002_4A53, Func_00C_433D, ...)
+; 32 call sites from 29 routines (e.g. Func_002_4628, Func_002_4745, Func_002_4A53, Func_00C_4312, ...)
 ; reads: hFF8C, hFF8B
 ; writes: hFF8B, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 Func_004_4AA8::
@@ -1702,7 +1702,7 @@ Jump_004_4B23::
     call Func_004_4B7E
     ret
 
-; 5 call sites from 3 routines (e.g. Func_004_4AA8, Func_012_5007, Func_012_50B3)
+; 5 call sites from 3 routines (e.g. Func_004_4AA8, Func_012_4FEA, Func_012_50B3)
 ; reads: hFF93, hFF94, hFF95
 ; writes: hFFC6, hFF8A, hFFC7, hFFC9, hFFC8, hFFCA, hFFCB
 Func_004_4B2D::
@@ -2262,29 +2262,29 @@ Data_004_4EAA:: ; heuristic: argument of a bank-switching copy helper; C0
 
 ; HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
 ; 316 call sites from 44 routines (e.g. Func_004_7BAB, Func_004_6A35, Func_004_5D14, Func_004_58C2, ...)
-; writes: wC921, wC922, wC919, wModeState, wC920, wC91F, wC923
+; writes: wScriptParam0, wScriptParam1, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 SetRequestPtrC921_B04::
 Func_004_55BB:: ; address name
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, $01
     ld [wModeState], a
     ld a, $09
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $01
-    ld [wC91F], a
+    ld [wScriptRunning], a
     xor a, a
-    ld [wC919], a
-    ld [wC923], a
+    ld [wScriptStartRequest], a
+    ld [wScriptStep], a
     ret
 
 ; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
 ; 99 call sites from 58 routines (e.g. Func_004_6A35, Func_004_5D14, Func_004_58C2, Func_004_612B, ...)
-; writes: wC924, wC925, wC919, wModeState, wC920, wC91F, wC923
+; writes: wC924, wC925, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 SetRequestPtrC924FromDE_B04::
 Func_004_55DF:: ; address name
     ld a, e
@@ -2292,29 +2292,29 @@ Func_004_55DF:: ; address name
     ld a, d
     ld [wC925], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, $01
     ld [wModeState], a
     ld a, $0A
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $01
-    ld [wC91F], a
+    ld [wScriptRunning], a
     xor a, a
-    ld [wC919], a
-    ld [wC923], a
+    ld [wScriptStartRequest], a
+    ld [wScriptStep], a
     ret
 
 ; HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1
 ; 177 call sites from 32 routines (e.g. Func_004_5616, Func_004_7BAB, Func_004_7B29, Func_004_6A35, ...)
-; writes: wC91A, wC91B, wC919, wModeState
+; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
 SetRequestPtrC91A_B04::
 Func_004_5603:: ; address name
     ld a, l
-    ld [wC91A], a
+    ld [wScriptPointerLo], a
     ld a, h
-    ld [wC91B], a
+    ld [wScriptPointerHi], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, $01
     ld [wModeState], a
     ret
@@ -2835,18 +2835,18 @@ Jump_004_5A3C::
 
 Jump_004_5A43::
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0061
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5A54::
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $28
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0062
     call SetRequestPtrC924FromDE_B04
     ret
@@ -3123,9 +3123,9 @@ Jump_004_5C25::
 
 Jump_004_5C2C::
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0063
     call SetRequestPtrC924FromDE_B04
     ret
@@ -3317,54 +3317,54 @@ Jump_004_5D68::
 
 Jump_004_5D6F::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $1B
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0067
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5D80::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0068
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5D91::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0069
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5DA2::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $006A
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5DB3::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $46
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $006B
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5DC4::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $28
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $006C
     call SetRequestPtrC924FromDE_B04
     ret
@@ -3569,9 +3569,9 @@ Jump_004_5F1F::
 
 Jump_004_5F24::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2E
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0079
     call SetRequestPtrC924FromDE_B04
     ret
@@ -3629,45 +3629,45 @@ Jump_004_5F8A::
 
 Jump_004_5F91::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $20
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E0
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5FA2::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $28
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E1
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5FB3::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E2
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5FC4::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $11
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E3
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5FD5::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0E
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E4
     call SetRequestPtrC924FromDE_B04
     ret
@@ -3679,45 +3679,45 @@ Jump_004_5FE6::
 
 Jump_004_5FED::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $03
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E5
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_5FFE::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $5C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E6
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_600F::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $06
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E7
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_6020::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E8
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_6031::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $28
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00F2
     call SetRequestPtrC924FromDE_B04
     ret
@@ -3729,72 +3729,72 @@ Jump_004_6042::
 
 Jump_004_6049::
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $1D
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00E9
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_605A::
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $1A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00EA
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_606B::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $51
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00EB
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_607C::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $20
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00EC
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_608D::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00ED
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_609E::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0F
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00EE
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_60AF::
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $04
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00EF
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_60C0::
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $10
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00F0
     call SetRequestPtrC924FromDE_B04
     ret
@@ -4005,9 +4005,9 @@ Jump_004_6237::
 
 Jump_004_623E::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0046
     call SetRequestPtrC924FromDE_B04
     ret
@@ -4297,9 +4297,9 @@ Jump_004_643E::
 
 Jump_004_6445::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $06
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0047
     call SetRequestPtrC924FromDE_B04
     ret
@@ -4595,72 +4595,72 @@ Jump_004_6637::
 
 Jump_004_664B::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $004B
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_665C::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $1A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $004C
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_666D::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $004D
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_667E::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2B
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $004E
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_668F::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $004F
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_66A0::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $24
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0050
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_66B1::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $29
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0051
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_66C2::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $48
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0052
     call SetRequestPtrC924FromDE_B04
     ret
@@ -4804,9 +4804,9 @@ Jump_004_67D4::
 
 Jump_004_67DB::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $19
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $005B
     call SetRequestPtrC924FromDE_B04
     ret
@@ -5034,7 +5034,7 @@ Jump_004_6953::
     and a, $03
     ld [wC8EF], a
     xor a, a
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld hl, $57E1
     call SetRequestPtrC91A_B04
     ret
@@ -5052,7 +5052,7 @@ Jump_004_696C::
     and a, $03
     ld [wC8F4], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld hl, $57E1
     call SetRequestPtrC91A_B04
     ret
@@ -5072,7 +5072,7 @@ Jump_004_698B::
     and a, $03
     ld [wC8F9], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld hl, $57E1
     call SetRequestPtrC91A_B04
     ret
@@ -5794,27 +5794,27 @@ Jump_004_6F0B::
 
 Jump_004_6F1F::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0153
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_6F30::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $10
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0154
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_6F41::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $04
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0155
     call SetRequestPtrC924FromDE_B04
     ret
@@ -5831,27 +5831,27 @@ Jump_004_6F59::
 
 Jump_004_6F60::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $03
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0156
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_6F71::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0157
     call SetRequestPtrC924FromDE_B04
     ret
 
 Jump_004_6F82::
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $12
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0158
     call SetRequestPtrC924FromDE_B04
     ret
@@ -6824,23 +6824,23 @@ Jump_004_7666::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_766D:: ; heuristic: target of a pointer table; C0
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0E
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01C8
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_767E:: ; heuristic: target of a pointer table; C0
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01C9
     call SetRequestPtrC924FromDE_B04
     ret
@@ -6849,12 +6849,12 @@ Func_004_767E:: ; heuristic: target of a pointer table; C0
     db $CA, $01, $CD, $DF, $55, $C9, $21, $FD, $0C, $CD, $BB, $55, $C9
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_76BC:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $08
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01CB
     call SetRequestPtrC924FromDE_B04
     ret
@@ -6874,34 +6874,34 @@ Jump_004_76DC::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_76E3:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01CC
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_76F4:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01CD
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7705:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $23
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01CE
     call SetRequestPtrC924FromDE_B04
     ret
@@ -6925,177 +6925,177 @@ Jump_004_775D::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7764:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01D5
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7775:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $48
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01D6
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7786:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01D8
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7797:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01DA
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_77A8:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $51
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01DB
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_77B9:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01DC
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_77CA:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01DE
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_77DB:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $44
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01DF
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_77EC:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0169
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_77FD:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $016B
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_780E:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $5F
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $016C
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_781F:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $4E
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $016D
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7830:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $4C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $016F
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7841:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $4D
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0170
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7852:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0171
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7863:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0172
     call SetRequestPtrC924FromDE_B04
     ret
@@ -7119,177 +7119,177 @@ Jump_004_78BB::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_78C2:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0175
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_78D3:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $4A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0176
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_78E4:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0177
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_78F5:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $0179
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7906:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $09
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $017A
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7917:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $61
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $017B
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7928:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $017D
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7939:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $52
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $017E
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_794A:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $07
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $017F
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_795B:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $46
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00D6
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_796C:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00D7
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_797D:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $60
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00D8
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_798E:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00DA
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_799F:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $4F
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00DB
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_79B0:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $5D
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00DC
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_79C1:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $06
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00DD
     call SetRequestPtrC924FromDE_B04
     ret
@@ -7313,177 +7313,177 @@ Jump_004_7A12::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A19:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00F5
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A2A:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $5C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00F6
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A3B:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $03
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00F7
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A4C:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2C
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00F9
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A5D:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $45
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00FA
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A6E:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $47
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00FB
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A7F:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $5A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00FD
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7A90:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $5B
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00FE
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7AA1:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $00FF
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7AB2:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $50
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01F3
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7AC3:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $4B
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01F4
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7AD4:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $2A
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01F5
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7AE5:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01F7
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7AF6:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $5E
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01F8
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7B07:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $49
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01F9
     call SetRequestPtrC924FromDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC921, wC922
+; writes: wScriptParam0, wScriptParam1
 Func_004_7B18:: ; heuristic: target of a pointer table; C0
     ld a, $00
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld de, $01FA
     call SetRequestPtrC924FromDE_B04
     ret

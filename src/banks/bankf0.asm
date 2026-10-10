@@ -4981,7 +4981,7 @@ Data_0F0_7085:: ; heuristic: target of a monotone pointer table; C0
     db $61, $01, $64, $01, $67, $01, $69, $01, $70, $01, $71, $01, $72, $01, $73, $01
     db $FE, $FE
 
-; 14 call sites from 4 routines (e.g. Func_0F0_6BE0, Func_0F0_7E69, Func_0F0_7284, Func_0F0_7D0A)
+; 14 call sites from 4 routines (e.g. Func_0F0_7D0A, Func_0F0_6BE0, Func_0F0_7E69, Func_0F0_7284)
 ; reads: wC5E7
 Func_0F0_7097::
     push bc
@@ -6473,10 +6473,10 @@ Func_0F0_7D03::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_621F)
+; 1 call site from 1 routine (e.g. Func_012_6211)
 ; reads: wC616
 ; points at: wCE9B, wCECE, wC60C, wCEE7
-Func_0F0_7D0A:: ; heuristic: follows a terminator; C0
+Func_0F0_7D0A::
     ld hl, wCE9B
     ld bc, $00D8
 

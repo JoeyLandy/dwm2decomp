@@ -18,7 +18,7 @@ Jump_008_400F::
     ret
 
 ; if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F
-; 3 call sites from 3 routines (e.g. Func_000_2E81, Func_012_4B19, Func_0A1_52D4)
+; 3 call sites from 3 routines (e.g. Func_000_2E81, Func_012_4A9A, Func_0A1_52D4)
 ; reads: wStringCategory
 CopyStringToBuffer_Bank08::
 Func_008_4016:: ; address name
@@ -34,7 +34,7 @@ Jump_008_4024::
     ret
 
 ; Func_008_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 67 call sites from 40 routines (e.g. Func_001_4045, DebugShowMonsterRecord, Func_001_5EAF, Func_001_6903, ...)
+; 67 call sites from 39 routines (e.g. Func_001_4045, DebugShowMonsterRecord, Func_001_5EAF, Func_001_6903, ...)
 ShowString_Bank08::
 Func_008_402B:: ; address name
     call BeginStringDisplay_Bank08

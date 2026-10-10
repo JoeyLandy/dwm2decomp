@@ -1,7 +1,7 @@
 SECTION "Bank 69", ROMX[$4000], BANK[$69]
     db $69
 
-; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00C_433D, Func_015_570C)
+; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00C_4312, Func_015_570C)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC38, hFFD0, wMapWidthScreens
 ; writes: wSpriteSlotCount, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
 ; points at: wSpriteSlots

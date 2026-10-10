@@ -2871,7 +2871,7 @@ Func_033_6490:: ; address name
     db $11, $A5, $64, $CD, $FE, $25, $C9
 
 ; Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 1 routine (e.g. Func_00C_6701)
+; 3 call sites from 1 routine (e.g. Func_00C_659F)
 ShowString_Bank33_649E::
 Func_033_649E:: ; address name
     call BeginStringDisplay_Bank33_6490

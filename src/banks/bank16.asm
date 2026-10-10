@@ -7820,7 +7820,7 @@ Data_016_7A3C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $C2, $A2, $C2, $E2, $C2
 
-; 19 call sites from 19 routines (e.g. Func_016_78F9, Func_003_4EB6, Func_00C_49DA, Func_00C_4E75, ...)
+; 19 call sites from 19 routines (e.g. Func_016_78F9, Func_003_4EB6, Func_00C_45DA, Func_00C_4E75, ...)
 ; reads: wD09D
 Func_016_7A48::
     ld a, [wD09D]
@@ -7843,7 +7843,7 @@ Func_016_7A5B::
     call Func_016_7AAF
     ret
 
-; 6 call sites from 6 routines (e.g. Func_002_66CC, Func_003_4208, Func_003_6A60, Func_00C_43CE, ...)
+; 6 call sites from 6 routines (e.g. Func_002_66CC, Func_003_4208, Func_003_6A60, Func_00C_4312, ...)
 ; reads: wC6FD
 ; writes: rRAMG, rRAMB
 Func_016_7A64::
@@ -7891,7 +7891,7 @@ Jump_016_7AAA::
     pop af
     jr Jump_016_7AB2
 
-; 2 call sites from 2 routines (e.g. Func_016_7A5B, Func_016_7A48)
+; 2 call sites from 2 routines (e.g. Func_016_7A48, Func_016_7A5B)
 ; reads: wD09E
 Func_016_7AAF::
     ld a, [wD09E]

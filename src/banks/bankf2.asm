@@ -545,7 +545,7 @@ Func_0F2_43D0:: ; address name
     db $11, $E5, $43, $CD, $FE, $25, $C9
 
 ; Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. Func_00D_4C36, Func_00D_53A4)
+; 2 call sites from 2 routines (e.g. Func_00D_4B30, Func_00D_525F)
 ShowString_BankF2::
 Func_0F2_43DE:: ; address name
     call BeginStringDisplay_BankF2
@@ -2054,11 +2054,11 @@ Jump_0F2_5172::
     jr nz, Jump_0F2_5170
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_4A49)
+; 1 call site from 1 routine (e.g. Func_00C_45DA)
 ; reads: wD7F1, wD7F2, wD7F3
 ; writes: wD7F5, wD7F6, wD7F7
 ; points at: wD7F1, wD7F5
-Func_0F2_5181:: ; heuristic: follows a terminator; C0
+Func_0F2_5181::
     ld a, [wD7F1]
     ld c, a
     ld a, [wD7F2]
@@ -2300,23 +2300,18 @@ Data_0F2_616B:: ; heuristic: target of a monotone pointer table; C0
 ; 1 call site from 1 routine (e.g. Func_01B_53CE)
 Func_0F2_6333::
     ret
+    db $CD, $55, $63, $CD, $46, $63, $C9
 
-; no direct call (reached through a table, a jump or a vector)
-Func_0F2_6334:: ; heuristic: follows a terminator; C0
-    call Func_0F2_6355
-    call Func_0F2_6346
-    ret
-
-; 1 call site from 1 routine (e.g. Func_00D_5891)
+; 1 call site from 1 routine (e.g. Func_00D_5702)
 ; writes: wD781
-Func_0F2_633B:: ; heuristic: follows a terminator; C0
+Func_0F2_633B::
     call Func_0F2_6355
     call Func_0F2_6346
     xor a, a
     ld [wD781], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0F2_6334, Func_0F2_633B)
+; 1 call site from 1 routine (e.g. Func_0F2_633B)
 ; points at: wD09E, wC707
 Func_0F2_6346::
     ld hl, wD09E
@@ -2331,7 +2326,7 @@ Jump_0F2_634E::
     jr nz, Jump_0F2_634E
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0F2_6334, Func_0F2_633B)
+; 1 call site from 1 routine (e.g. Func_0F2_633B)
 ; reads: wD09D
 ; writes: wD15E, wD09D
 ; points at: wD09E, wC707
@@ -2521,17 +2516,17 @@ Jump_0F2_643C::
 ; reads: wD780, wCF8B
 ; writes: wCF8B
 ; points at: wD09D, wInventory, wD7D5
-Func_0F2_6449:: ; heuristic: follows a terminator; C0
+Func_0F2_6449::
     ld a, [wD780]
     cp a, $03
     jr z, Jump_0F2_6470
     call Func_0F2_64C7
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_710A)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wCF8B
 ; points at: wD09D
-Func_0F2_6454:: ; heuristic: follows a terminator; C0
+Func_0F2_6454::
     ld hl, wD09D
     ld b, $18
 

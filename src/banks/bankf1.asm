@@ -3788,9 +3788,9 @@ Jump_0F1_5BF8::
     ld [wD7EE], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_4778)
+; 1 call site from 1 routine (e.g. Func_00C_45DA)
 ; points at: wC49F
-Func_0F1_5C05:: ; heuristic: follows a terminator; C0
+Func_0F1_5C05::
     ld hl, Data_0F1_5E04
     ld de, wC49F
     ld c, $40

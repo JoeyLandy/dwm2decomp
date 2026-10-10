@@ -1017,6 +1017,11 @@ class Rom:
             stride = sum(sizes)
             end = addr + stride * count
             cov, dt, dl = self.covered[bank], self.dtab[bank], self.dlabels[bank]
+            ins = self.insn[bank]
+            for a in [a for a in ins if addr <= a < end and ins[a][0] == "dw"]:
+                del ins[a]  # an inline `dw` the tracer found at the start of this table
+                cov.discard(a)
+                cov.discard(a + 1)
             if any(a in cov for a in range(addr, end)):
                 raise AssertionError(f"table {t['label']} overlaps decoded code")
             bounds = set()
@@ -1159,9 +1164,29 @@ class Rom:
         banks = sum(1 for ins in self.insn.values() if ins)
         return f"{code} code bytes in {banks} banks, {len(self.reason)} heuristic entries"
 
+    def seed_table_code(self) -> None:
+        """Add the targets of pointer fields marked "code" in config/tables.json as code entries."""
+        n = 0
+        for t in self.schemas:
+            fields = t["fields"]
+            sizes = [2 if f["type"] == "ptr" else f.get("size", 1) for f in fields]
+            stride = sum(sizes)
+            for i in range(t["count"]):
+                q = t["addr"] + i * stride
+                for f, sz in zip(fields, sizes):
+                    if f["type"] == "ptr" and f.get("code"):
+                        tgt = self._u16(t["bank"], q)
+                        if tgt:
+                            self.add_entry(t["bank"], tgt, "Func", f"code pointer of the table {t['label']}")
+                            n += 1
+                    q += sz
+        if n:
+            log(f"code entries from structured tables: {n}")
+
     def run(self) -> None:
         for v in VECTORS:
             self.add_entry(0, v, "Func")
+        self.seed_table_code()
         rnd = 0
         while True:
             rnd += 1

@@ -786,7 +786,7 @@ Jump_061_44D7::
     call Func_061_44DB
     ret
 
-; 3 call sites from 3 routines (e.g. Func_061_4472, Func_012_621F, Func_012_6247)
+; 3 call sites from 2 routines (e.g. Func_061_4472, Func_012_6211)
 ; reads: wCC45, wIsCGB
 ; writes: rSVBK
 ; points at: wCDAF, wC244

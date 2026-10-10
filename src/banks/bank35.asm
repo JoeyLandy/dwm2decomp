@@ -25,7 +25,7 @@ Func_035_4013::
     call Func_035_401C
     ret
 
-; 3 call sites from 3 routines (e.g. Func_035_4013, Func_035_4001, Func_035_400A)
+; 3 call sites from 3 routines (e.g. Func_035_4001, Func_035_4013, Func_035_400A)
 ; reads: wD006, wD007
 Func_035_401C::
     push bc

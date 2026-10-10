@@ -117,7 +117,7 @@ Data_01D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0, $EB, $EB
     INCBIN "dwm2-cobi-us.gbc", $074337, $183
 
-; 1 call site from 1 routine (e.g. Func_01C_6F5D)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD780, wD781
 ; writes: wD781
 Func_01D_44BA::
@@ -157,7 +157,7 @@ Data_01D_44E3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01D_4547:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $074547, $64
 
-; 1 call site from 1 routine (e.g. Func_01C_6F78)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 Func_01D_45AB::
     ld hl, vTiles2 + $7A0
     ld de, Data_01F_4130
@@ -174,19 +174,19 @@ Func_01D_45AB::
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0062
     add hl, de
     ld bc, $0401
     ld de, Data_01D_4603
     call Func_01D_5A32
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $00A2
     add hl, de
     ld bc, $0401
     ld de, Data_01D_4607
     call Func_01D_5A32
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $00E2
     add hl, de
     ld bc, $0401
@@ -203,9 +203,9 @@ Data_01D_4607:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01D_460B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $A4, $EB, $AD
 
-; 1 call site from 1 routine (e.g. Func_01C_7244)
+; 1 call site from 1 routine (e.g. Func_01C_7196)
 ; reads: wD781, wD7ED, wC61C, wC61B, wC61A, wC619, wC618, wC617, ...
-; writes: wD7FA, wD781, wC920, wC919
+; writes: wD7FA, wD781, wScriptCommandType, wScriptStartRequest
 Func_01D_460F::
     call Func_01D_47AF
     and a, a
@@ -238,9 +238,9 @@ Jump_01D_462C::
 
 Jump_01D_4642::
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_464C::
@@ -321,9 +321,9 @@ Jump_01D_46D4::
     ld [wD781], a
     jp Jump_01D_4642
 
-; 1 call site from 1 routine (e.g. Func_01C_6F93)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD781, wD7ED, wC619, wC618, wC617, wC61C, wC61B, wC61A, ...
-; writes: wD7FA, wD781, wC920, wC919
+; writes: wD7FA, wD781, wScriptCommandType, wScriptStartRequest
 Func_01D_46E1::
     call Func_01D_47AF
     and a, a
@@ -356,9 +356,9 @@ Jump_01D_46FE::
 
 Jump_01D_4714::
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_471E::
@@ -437,7 +437,7 @@ Jump_01D_47A2::
     ld [wD781], a
     jp Jump_01D_4714
 
-; 2 call sites from 2 routines (e.g. Func_01D_46E1, Func_01D_460F)
+; 2 call sites from 2 routines (e.g. Func_01D_460F, Func_01D_46E1)
 ; reads: wJoypadPressedRepeat, wD7ED
 ; writes: wD7ED
 Func_01D_47AF::
@@ -539,7 +539,7 @@ Jump_01D_4825::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     pop de
     add hl, de
     di
@@ -552,7 +552,7 @@ Jump_01D_4825::
 Data_01D_4842:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $00, $A1, $00, $E1, $00
 
-; 1 call site from 1 routine (e.g. Func_01C_6FB5)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD781
 ; writes: wD781
 Func_01D_4848::
@@ -565,7 +565,7 @@ Func_01D_4848::
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_6FCB)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD780, wD781
 ; writes: wD781
 Func_01D_485C::
@@ -585,7 +585,7 @@ Jump_01D_487B::
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_70B8)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD7BB, wIsCGB, wD781
 ; writes: wD7F1, wD781
 Func_01D_4883::
@@ -595,7 +595,7 @@ Func_01D_4883::
     ld a, [wD7BB]
     cp a, $02
     jr c, Jump_01D_48A5
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0088
     add hl, de
     ld bc, $0C09
@@ -605,7 +605,7 @@ Func_01D_4883::
     jr Jump_01D_48B6
 
 Jump_01D_48A5::
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0088
     add hl, de
     ld bc, $0C09
@@ -672,7 +672,7 @@ Data_01D_48FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01D_4968:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $074968, $6C
 
-; 1 call site from 1 routine (e.g. Func_01C_70BF)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wC8C1, wD7BB, wC8C2, wD7B6, wD781
 ; writes: wD7F1, wC8C1, wD781, wD783, wD784
 Func_01D_49D4::
@@ -690,7 +690,7 @@ Jump_01D_49E9::
     ld a, [wD7BB]
     cp a, $02
     jr c, Jump_01D_4A3F
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0190
     add hl, de
     di
@@ -717,7 +717,7 @@ Jump_01D_49E9::
     ld [wC8C1], a
 
 Jump_01D_4A22::
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $018D
     add hl, de
     di
@@ -763,7 +763,7 @@ Jump_01D_4A5A::
     jr c, Jump_01D_4A55
     ret
 
-; 5 call sites from 4 routines (e.g. Func_01D_5ADF, Func_01D_508B, Func_01D_460F, Func_01C_6D7D)
+; 5 call sites from 4 routines (e.g. Func_01D_460F, Func_01D_5ADF, Func_01D_508B, Func_01C_6CEF)
 ; writes: wD7BC, wD7B0
 ; points at: wC635, wInventory
 Func_01D_4A62::
@@ -844,7 +844,7 @@ Jump_01D_4AB7::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     pop de
     add hl, de
     di
@@ -857,7 +857,7 @@ Jump_01D_4AB7::
 Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
-; 1 call site from 1 routine (e.g. Func_01C_70C6)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD780, wD7B6, wD7B5, wC8C1, wC8C2, wIsCGB, wD781
 ; writes: wC8C1, wD793, wD794, wD781
 ; points at: wD788, wC635, wD7D5, wInventory
@@ -966,7 +966,7 @@ Jump_01D_4B78::
     ld a, [wC8C2]
     add a, $E0
     ld [wD794], a
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0140
     add hl, de
     ld bc, $0703
@@ -981,7 +981,7 @@ Jump_01D_4B78::
     ret
 
 Jump_01D_4BA6::
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0140
     add hl, de
     ld bc, $0000
@@ -1030,9 +1030,9 @@ Data_01D_4BE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $BE, $C3, $C3, $B7, $B3, $B4
     db $B4, $B4, $B4, $B4, $B5
 
-; 1 call site from 1 routine (e.g. Func_01C_70CD)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wJoypadPressedRepeat, wD781, wD780, wD7B7, wD7B5, wD7BB, wD7B6
-; writes: wD781, wD7B5, wD7B6, wD7FA, wC920, wC919, wD7CA, wD7CB, ...
+; writes: wD781, wD7B5, wD7B6, wD7FA, wScriptCommandType, wScriptStartRequest, wD7CA, wD7CB, ...
 Func_01D_4BF9::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -1060,9 +1060,9 @@ Func_01D_4BF9::
     ld a, $02
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_4C3D::
@@ -1173,18 +1173,18 @@ Jump_01D_4CD3::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_4CFB::
     ld a, $03
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_4D0A::
@@ -1211,9 +1211,9 @@ Jump_01D_4D30::
     xor a, a
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_01D_4BF9)
@@ -1259,7 +1259,7 @@ Jump_01D_4D65::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     pop de
     add hl, de
     di
@@ -1318,9 +1318,9 @@ Jump_01D_4DC5::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_7103)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wJoypadPressedRepeat, wD7CA, wD7CB, wD780, wD781, wD7CC, wD7D4, wD7D3
-; writes: wD7FA, wC920, wC919, wD781, wD7CA, wD7CB, wD7CC
+; writes: wD7FA, wScriptCommandType, wScriptStartRequest, wD781, wD7CA, wD7CB, wD7CC
 Func_01D_4DC7::
     ld a, [wJoypadPressedRepeat]
     bit 1, a
@@ -1343,7 +1343,7 @@ Jump_01D_4DE9::
     ld [wD7FA], a
     ld a, $0B
     ld [wD781], a
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0161
     add hl, de
     di
@@ -1353,9 +1353,9 @@ Jump_01D_4DE9::
     ld [hl], a
     ei
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_4E0D::
@@ -1400,11 +1400,6 @@ Jump_01D_4E37::
     cp a, b
     jr c, Jump_01D_4E72
     ld a, b
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7D3, wD7D4
-; writes: wD7CA, wD7CB
-Func_01D_4E4D:: ; heuristic: target of a pointer table; C0
     ld [wD7CA], a
     ld a, [wD7D3]
     ld [wD7CA], a
@@ -1593,9 +1588,9 @@ Jump_01D_4F75::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_4F84::
@@ -1605,12 +1600,12 @@ Jump_01D_4F84::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; 10 call sites from 2 routines (e.g. Func_01D_4DC7, Func_01D_4E4D)
+; 10 call sites from 1 routine (e.g. Func_01D_4DC7)
 ; reads: wJoypadRepeatTimer, wD7CD, wD7CC, wD7CA, wD7CB
 ; writes: wD7CD
 Func_01D_4F99::
@@ -1627,7 +1622,7 @@ Func_01D_4F99::
     xor a, a
     ld [wD7CD], a
 
-; 3 call sites from 2 routines (e.g. Func_01D_4E4D, Func_01D_4DC7)
+; 3 call sites from 1 routine (e.g. Func_01D_4DC7)
 ; reads: wD7CC, wD7CA, wD7CB
 Func_01D_4FB3::
     ld a, [wD7CC]
@@ -1656,7 +1651,7 @@ Jump_01D_4FC8::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     pop de
     add hl, de
     di
@@ -1669,10 +1664,10 @@ Jump_01D_4FC8::
 Data_01D_4FE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $01, $62, $01
 
-; 6 call sites from 2 routines (e.g. Func_01D_4BF9, Func_01D_4E4D)
+; 6 call sites from 2 routines (e.g. Func_01D_4BF9, Func_01D_4DC7)
 ; reads: wD7CA, wD7CB
 Func_01D_4FE9::
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0161
     add hl, de
     ld a, [wD7CA]
@@ -1683,7 +1678,7 @@ Func_01D_4FE9::
     ld a, b
     ld [hl], a
     ei
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0162
     add hl, de
     ld a, [wD7CB]
@@ -1696,7 +1691,7 @@ Func_01D_4FE9::
     ei
     ret
 
-; 1 call site from 1 routine (e.g. Func_01D_4E4D)
+; 1 call site from 1 routine (e.g. Func_01D_4DC7)
 ; reads: wD7B0
 Func_01D_5012::
     call Func_01D_5A80
@@ -1712,7 +1707,7 @@ Jump_01D_5022::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01D_4E4D)
+; 1 call site from 1 routine (e.g. Func_01D_4DC7)
 ; reads: wD7B6, wD7B5, wD7C3
 ; writes: wD7C3, wD7C5
 ; points at: wD7D5, wC635
@@ -1740,12 +1735,6 @@ Jump_01D_5048::
     jr z, Jump_01D_506B
     and a, a
     jr z, Jump_01D_5056
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7C3
-; writes: wD7C3, wD7C5
-; points at: wC635
-Func_01D_504F:: ; heuristic: target of a pointer table; C0
     ld a, [wD7C3]
     inc a
     ld [wD7C3], a
@@ -1788,7 +1777,7 @@ Jump_01D_5083::
     ld a, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_710A)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD7B6, wD7B5, wD7B0, wCF8B, wD781, wD7BC
 ; writes: wD7FA, wD7C3, wD7C5, wCF8B, wD781
 ; points at: wC635, wInventory
@@ -1873,7 +1862,7 @@ Jump_01D_50F9::
     ld [wD7FA], a
     jp Jump_01D_5168
 
-; 1 call site from 1 routine (e.g. Func_01C_710A)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wCF8B, wD781, wD7C5
 ; writes: wD7FA, wD7C3, wD7C5, wCF8B, wD781
 ; points at: wInventory, wC635
@@ -1970,77 +1959,11 @@ Jump_01D_5168::
     inc a
     ld [wD781], a
     ret
+    INCBIN "dwm2-cobi-us.gbc", $075186, $D3
 
-; no direct call (reached through a table, a jump or a vector)
-Func_01D_5186:: ; heuristic: follows a terminator; C0
-    ld hl, $2928
-    ld a, [hl+]
-    ld l, $1F
-    jr nz, Jump_01D_51B9
-    ld bc, $0302
-    inc b
-    dec b
-    ld b, $07
-    ld [$0A09], sp
-    dec bc
-    inc c
-    add hl, de
-    ld a, [de]
-    dec de
-    inc e
-    dec e
-    ld e, $13
-    inc d
-    dec d
-    ld d, $17
-    jr Jump_01D_51B4
-    db $0E, $0F, $10, $11, $12, $2C, $2D, $40, $41, $42, $43, $44, $45
-
-Jump_01D_51B4::
-    ld b, [hl]
-    ld b, a
-    ld c, b
-    ld c, c
-    ld c, d
-
-Jump_01D_51B9::
-    ld c, e
-    ld c, h
-    dw Func_01D_4E4D
-    dw Func_01D_504F
-    dw Func_01D_5251
-    dw Func_01D_5453
-    dw $5655
-    dw Func_01D_5857
-    INCBIN "dwm2-cobi-us.gbc", $0751C7, $52
-    dw Func_01D_4E4D
-    dw Func_01D_504F
-    dw Func_01D_5251
-    dw Func_01D_5453
-    dw $5655
-    dw Func_01D_5857
-    db $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $21, $28, $29, $2A, $2E, $1F
-    db $20, $2B, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D
-    db $FF, $21, $00, $97, $01, $80, $00
-
-Jump_01D_524C::
-    di
-    call WaitForVRAMAccess
-    xor a, a
-
-; no direct call (reached through a table, a jump or a vector)
-Func_01D_5251:: ; heuristic: target of a pointer table; C0
-    ld [hl+], a
-    ei
-    dec bc
-    ld a, b
-    or a, c
-    jr nz, Jump_01D_524C
-    ret
-
-; 1 call site from 1 routine (e.g. Func_01C_7128)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD7FA, wD781
-; writes: wD781, wC920, wC919, wD7B5, wD7B6
+; writes: wD781, wScriptCommandType, wScriptStartRequest, wD7B5, wD7B6
 Func_01D_5259::
     ld a, [wD7FA]
     cp a, $02
@@ -2049,15 +1972,15 @@ Func_01D_5259::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_5271::
     ld a, $07
     ld [wD781], a
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $0161
     add hl, de
     di
@@ -2070,12 +1993,12 @@ Jump_01D_5271::
     ld [wD7B5], a
     ld [wD7B6], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_715C)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD781
 ; writes: wD781, wD7CD, wD7CE, wD7CF, wD7D0, wD7CC
 Func_01D_5297::
@@ -2095,7 +2018,7 @@ Func_01D_5297::
     ld [wD7CC], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_01C_7163, Func_01C_71C6)
+; 2 call sites from 2 routines (e.g. Func_01C_6F00, Func_01C_7196)
 ; reads: hFFC8, hFFC7, hFFC6, wIsCGB, wD781
 ; writes: wC8C0, wC8C1, wC8C2, wD7BD, wD7BE, wD7BF, wD7C0, wD7C1, ...
 ; points at: wD788, wC61A, wD7BD, wD793
@@ -2182,7 +2105,7 @@ Jump_01D_5323::
     ld a, [hl]
     add a, $E0
     ld [de], a
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $014B
     add hl, de
     ld de, wD788
@@ -2197,7 +2120,7 @@ Jump_01D_5323::
     ret
 
 Jump_01D_5364::
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $014B
     add hl, de
     ld bc, $0000
@@ -2246,7 +2169,7 @@ Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3
     db $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; 1 call site from 1 routine (e.g. Func_01C_7188)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD7CE, wD7CF, wD7D0, wD780, hFFC8, hFFC7, wD781, wC61C, ...
 ; writes: wD78A, wD78B, wD78C, wC8C0, wC8C1, wC8C2, wD7D3, wD7D4, ...
 ; points at: wD788, wC617, wC61A
@@ -2272,7 +2195,7 @@ Jump_01D_53C5::
     ld a, [wD7D0]
     add a, $E0
     ld [wD78C], a
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $006C
     add hl, de
     ld de, wD788
@@ -2305,29 +2228,26 @@ Jump_01D_5427::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_5438::
     ld a, [wC61C]
     cp a, $01
     jr c, Jump_01D_5461
-    jr nz, Func_01D_5453
+    jr nz, Jump_01D_5453
     ld a, [wC61B]
     cp a, $86
     jr c, Jump_01D_5461
-    jr nz, Func_01D_5453
+    jr nz, Jump_01D_5453
     ld a, [wC61A]
     cp a, $3C
     jr c, Jump_01D_5461
     jr z, Jump_01D_5461
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD7D3, wD7D4, wD7D5, wD781, wC920, wC919
-Func_01D_5453:: ; heuristic: target of a pointer table; C0
+Jump_01D_5453::
     ld a, $09
     ld [wD7D3], a
     ld [wD7D4], a
@@ -2358,9 +2278,9 @@ Jump_01D_5461::
 Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $BF, $C3, $C3, $C3, $E0, $E0, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; 1 call site from 1 routine (e.g. Func_01C_718F)
+; 1 call site from 1 routine (e.g. Func_01C_6F00)
 ; reads: wD781, wD7CE, wD7CF, wD7D0, wC61A, wC61B, wC61C, wC617, ...
-; writes: wD781, wD7FA, wC920, wC919, wC61C, wC61B, wC61A, wC619, ...
+; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wC61C, wC61B, wC61A, wC619, ...
 Func_01D_549D::
     call Func_01D_564B
     and a, a
@@ -2458,9 +2378,9 @@ Jump_01D_5525::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_5536::
@@ -2492,14 +2412,14 @@ Jump_01D_5536::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01C_724B)
+; 1 call site from 1 routine (e.g. Func_01C_7196)
 ; reads: wD781, wD7CE, wD7CF, wD7D0, wC617, wC618, wC619, wC61A, ...
-; writes: wD781, wD7FA, wC920, wC919, wC619, wC618, wC617, wC61C, ...
+; writes: wD781, wD7FA, wScriptCommandType, wScriptStartRequest, wC619, wC618, wC617, wC61C, ...
 Func_01D_5573::
     call Func_01D_564B
     and a, a
@@ -2598,9 +2518,9 @@ Jump_01D_55FD::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_560E::
@@ -2632,12 +2552,12 @@ Jump_01D_560E::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_01D_549D, Func_01D_5573)
+; 2 call sites from 2 routines (e.g. Func_01D_5573, Func_01D_549D)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wD7CC, wD7D3, wD7CE, wD7D4, wD7CF, wD7D5, ...
 ; writes: wD7CC, wD7CE, wD7CF, wD7D0, wD7D4
 Func_01D_564B::
@@ -2943,11 +2863,6 @@ Jump_01D_5843::
     ld a, [wD7CF]
     cp a, b
     jr c, Jump_01D_5873
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7D5, wD7D0, wD7D3, wD7D4
-; writes: wD7CE, wD7CF, wD7D0
-Func_01D_5857:: ; heuristic: target of a pointer table; C0
     ld a, [wD7D5]
     ld b, a
     ld a, [wD7D0]
@@ -3004,7 +2919,7 @@ Jump_01D_58A5::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     pop de
     add hl, de
     di
@@ -3017,10 +2932,10 @@ Jump_01D_58A5::
 Data_01D_58C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6E, $00, $6F, $00, $70, $00
 
-; 8 call sites from 5 routines (e.g. Func_01D_549D, Func_01D_5857, Func_01D_564B, Func_01D_5AA3, ...)
+; 8 call sites from 4 routines (e.g. Func_01D_5573, Func_01D_564B, Func_01D_5AA3, Func_01D_549D)
 ; points at: wD7CE
 Func_01D_58C8::
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld de, $006E
     add hl, de
     ld de, wD7CE
@@ -3078,7 +2993,7 @@ Func_01D_5917::
     push bc
     push de
     push hl
-    call BGMapAddressAtScroll_Bank1D_59CF
+    call BGMapAddressAtScroll_Bank1D
     ld e, l
     ld d, h
     pop hl
@@ -3229,7 +3144,7 @@ Jump_01D_59CD::
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 ; 23 call sites from 16 routines (e.g. Func_01D_45AB, Func_01D_4823, Func_01D_5917, Func_01D_4883, ...)
 ; reads: hScrollY, hScrollX
-BGMapAddressAtScroll_Bank1D_59CF::
+BGMapAddressAtScroll_Bank1D::
 Func_01D_59CF:: ; address name
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3363,7 +3278,7 @@ Jump_01D_5A68::
 Jump_01D_5A7F::
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01D_5012, Func_01D_504F, Func_01D_508B)
+; 3 call sites from 3 routines (e.g. Func_01D_5012, Func_01D_5024, Func_01D_508B)
 ; reads: wD7CA, wD7CB
 Func_01D_5A80::
     ld a, [wD7CA]
@@ -3498,7 +3413,7 @@ Jump_01D_5B46::
 Jump_01D_5B4C::
     ret
 
-; 4 call sites from 4 routines (e.g. Func_014_4BEA, Func_014_54B8, Func_015_5A67, Func_01E_75EB)
+; 4 call sites from 4 routines (e.g. Func_014_4BA0, Func_014_4F30, Func_015_5A67, Func_01E_75EB)
 ; reads: wD7F1, hFFC6, wC8C1, wC8C2, hFFC7, wC8C0
 ; writes: rRAMG2, rRAMB, wC386, wC389, wC38A
 Func_01D_5B4D::
@@ -3715,7 +3630,17 @@ Func_01D_5C94:: ; heuristic: follows a terminator; C0
     ld [rRAMB], a
     ld a, [hl]
     jr Jump_01D_5CAF
-    db $3E, $0A, $EA, $FF, $1F, $AF, $EA, $00, $41, $FA, $B4, $D7
+
+; 1 call site from 1 routine (e.g. Func_014_43CC)
+; reads: wD7B4
+; writes: rRAMG2, rRAMB, wC8D9
+; points at: wC8CF, wC130
+Func_01D_5CA3::
+    ld a, $0A
+    ld [rRAMG2], a
+    xor a, a
+    ld [rRAMB], a
+    ld a, [wD7B4]
 
 Jump_01D_5CAF::
     ld c, $01
@@ -3745,7 +3670,7 @@ Jump_01D_5CD3::
     ld [de], a
     ret
 
-; 10 call sites from 9 routines (e.g. Func_014_4C1C, Func_015_4182, Func_015_5A67, Func_015_60BF, ...)
+; 11 call sites from 10 routines (e.g. Func_00D_720E, Func_014_4BA0, Func_015_4182, Func_015_5A67, ...)
 ; reads: wD7F1, hFFC6, hFFC7, wDataBank
 ; writes: rRAMG2, rRAMB, wC8D9, wDataBank
 ; points at: wC8CF
@@ -3846,7 +3771,7 @@ Data_01D_5D7E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $48, $46, $52, $47
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB
-; 66 call sites from 53 routines (e.g. Func_01D_5BF2, Func_01D_5C35, Func_01D_5DBC, Func_01D_5DF9, ...)
+; 67 call sites from 43 routines (e.g. Func_01D_5BF2, Func_01D_5C35, Func_01D_5DBC, Func_01D_5DF9, ...)
 ; reads: wD7AF, wD7AB
 ; writes: wD7F5, wD7F6
 ; points at: wD789
@@ -3869,7 +3794,7 @@ Func_01D_5D84:: ; address name
     ret
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
-; 28 call sites from 25 routines (e.g. Func_00D_4869, Func_00D_4ACF, Func_00D_4B18, Func_00D_4CF4, ...)
+; 28 call sites from 21 routines (e.g. Func_00D_463F, Func_00D_491A, Func_00D_4B18, Func_00D_4CF4, ...)
 ; reads: wD7AF, wD7AB
 ; writes: wD7F5, wD7F6
 ; points at: wD789
@@ -3958,7 +3883,7 @@ Func_01D_5DF9::
     farcall ShowString_Bank08
     ret
 
-; 13 call sites from 9 routines (e.g. Func_014_4160, Func_014_4CD0, Func_014_4D2B, Func_014_525C, ...)
+; 13 call sites from 8 routines (e.g. Func_014_40CC, Func_014_4BA0, Func_014_4F30, Func_01E_4069, ...)
 ; reads: wD7AA
 ; writes: wD7AA, rRAMG2, rRAMB
 ; points at: sA000
@@ -3999,7 +3924,7 @@ Jump_01D_5E69::
     ld [rRAMG2], a
     ret
 
-; 18 call sites from 11 routines (e.g. Func_01D_6B32, Func_014_46A1, Func_014_4CBC, Func_014_511F, ...)
+; 19 call sites from 10 routines (e.g. Func_01D_6B32, Func_014_40CC, Func_014_43CC, Func_014_4BA0, ...)
 ; reads: wD7A9, wC6FD
 ; writes: wD7A9, rRAMG2, rRAMB
 ; points at: wD789, wC6FE, sA000
@@ -4060,7 +3985,7 @@ Jump_01D_5EC2::
     ld [rRAMG2], a
     ret
 
-; 10 call sites from 10 routines (e.g. Func_014_4270, Func_014_42E0, Func_014_4510, Func_014_4B92, ...)
+; 12 call sites from 9 routines (e.g. Func_014_4261, Func_014_43CC, Func_014_4B5A, Func_014_4F30, ...)
 ; reads: wD7FF, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, sA000
@@ -4132,7 +4057,7 @@ Jump_01D_5F1B::
     ld [rRAMG2], a
     ret
 
-; 13 call sites from 8 routines (e.g. Func_014_42E0, Func_015_4182, Func_015_60BF, Func_016_5D13, ...)
+; 13 call sites from 8 routines (e.g. Func_014_4261, Func_015_4182, Func_015_60BF, Func_016_5D13, ...)
 ; reads: wD7FF, wD7A9, wC6FD, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wC6FE
@@ -4395,7 +4320,7 @@ Jump_01D_6075::
     ld [rRAMG2], a
     ret
 
-; 8 call sites from 7 routines (e.g. Func_00D_4BE1, Func_015_512C, Func_015_5A67, Func_01E_4A32, ...)
+; 8 call sites from 7 routines (e.g. Func_00D_4B30, Func_015_512C, Func_015_5A67, Func_01E_4A32, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hFFC6, hFFC7, wDataBank, wD7B0
 ; writes: rRAMG2, rRAMB, wDataBank, wC8DE
 ; points at: wD789, wC8CF
@@ -4635,7 +4560,7 @@ Data_01D_6299:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $9B, $62, $C0, $97, $D0, $97, $E0, $97, $F0, $97, $00, $8C, $10, $8C, $20, $8C
     db $A0, $8C, $B0, $8C
 
-; 5 call sites from 5 routines (e.g. Func_00C_43CE, Func_014_4CBC, Func_015_4001, Func_01C_4645, ...)
+; 6 call sites from 6 routines (e.g. Func_00C_4312, Func_014_4001, Func_014_4BA0, Func_015_4001, ...)
 ; reads: wC6FD
 ; writes: rRAMG2, rRAMB, wC8D9
 ; points at: wC6FE, wC52D
@@ -4687,9 +4612,9 @@ Data_01D_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 6 call sites from 6 routines (e.g. Func_01D_6AA5, Func_01D_6320, Func_01D_67BF, Func_01D_65D0, ...)
+; 6 call sites from 6 routines (e.g. Func_01D_6320, Func_01D_6AA5, Func_01D_67BF, Func_01D_65D0, ...)
 ; reads: hScrollY, hScrollX
-BGMapAddressAtScroll_Bank1D::
+BGMapAddressAtScroll_Bank1D_62FF::
 Func_01D_62FF:: ; address name
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -4708,7 +4633,7 @@ Func_01D_62FF:: ; address name
     add_a_to_hl
     ret
 
-; 10 call sites from 9 routines (e.g. Func_00D_4952, Func_00D_4BF4, Func_015_512C, Func_015_60BF, ...)
+; 10 call sites from 9 routines (e.g. Func_00D_491A, Func_00D_4B30, Func_015_512C, Func_015_60BF, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hFFC6, wD7F2, wD7F1, wD7B0
 ; writes: rRAMG2, rRAMB
 ; points at: wD789
@@ -4777,7 +4702,7 @@ Jump_01D_6381::
     pop bc
     push bc
     push de
-    call BGMapAddressAtScroll_Bank1D
+    call BGMapAddressAtScroll_Bank1D_62FF
     push hl
     ld a, [wD7F2]
     and a, a
@@ -4992,7 +4917,7 @@ Jump_01D_64B2::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D
+    call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
     call Func_000_24F8
@@ -5080,7 +5005,7 @@ Jump_01D_6532::
     ld [wD7F9], a
     ret
 
-; 25 call sites from 24 routines (e.g. Func_00C_6674, Func_00C_694B, Func_00C_6ACF, Func_00C_6D4C, ...)
+; 27 call sites from 25 routines (e.g. Func_00C_659F, Func_00C_6922, Func_00C_69D5, Func_00C_6CA1, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7FA
 ; writes: wD7F9, wD7FA, wD783
 Func_01D_6540::
@@ -5192,7 +5117,7 @@ Jump_01D_65D2::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D
+    call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
     call Func_000_24F8
@@ -5322,7 +5247,7 @@ Jump_01D_668E::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D
+    call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
     call Func_000_24F8
@@ -5336,7 +5261,7 @@ Jump_01D_668E::
 Data_01D_66AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00
 
-; 34 call sites from 21 routines (e.g. Func_00D_4741, Func_00D_5891, Func_00D_67F7, Func_014_4C3C, ...)
+; 34 call sites from 19 routines (e.g. Func_00D_463F, Func_00D_5702, Func_00D_6509, Func_014_4BA0, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7B1, wD7AB, wD7AF, wD7B0
 ; writes: wD7F9, wD7AB, wD7AC, wD7AF
 Func_01D_66B6::
@@ -5528,7 +5453,7 @@ Jump_01D_67C1::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D
+    call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
     call Func_000_24F8
@@ -5782,7 +5707,7 @@ Jump_01D_695F::
     ld [wC527], a
     ret
 
-; 8 call sites from 8 routines (e.g. Func_003_4F6F, Func_00C_49B5, Func_014_5CA8, Func_015_63B8, ...)
+; 8 call sites from 8 routines (e.g. Func_003_4F6F, Func_00C_45DA, Func_014_5CA8, Func_015_63B8, ...)
 ; reads: wD7F1, wD7F2, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
 ; writes: wC527
 ; points at: wC4DF
@@ -5911,7 +5836,7 @@ Jump_01D_6A2F::
     farcall Func_027_4001
     ret
 
-; 2 call sites from 2 routines (e.g. Func_00C_4FC2, Func_00C_5002)
+; 3 call sites from 1 routine (e.g. Func_00C_4FC2)
 ; reads: wD7F6, wD7F3, wD7F4, hScrollX, hScrollXHi, wD7F5, hScrollY, hScrollYHi, ...
 ; writes: hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSetIndex
 Func_01D_6A36::
@@ -5985,7 +5910,7 @@ Jump_01D_6A9E::
     farcall Func_027_4001
     ret
 
-; 14 call sites from 7 routines (e.g. Func_014_54B8, Func_015_4182, Func_01B_6A5E, Func_01E_4A32, ...)
+; 14 call sites from 7 routines (e.g. Func_014_4F30, Func_015_4182, Func_01B_6A5E, Func_01E_4A32, ...)
 ; reads: wD7AF, wD7B1, wC6FD, wD7F1
 ; writes: rRAMG2, rRAMB
 ; points at: wC6FE, wD789
@@ -6044,7 +5969,7 @@ Jump_01D_6AE3::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D
+    call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
     call Func_000_24F8
@@ -6080,7 +6005,7 @@ Data_01D_6B28:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_01E_4201)
 ; reads: wD786, wD780, wD7A9, wC6FD
-; writes: wD780, wD781, wD7FA, wD7AF, wC920, wC919, wD782
+; writes: wD780, wD781, wD7FA, wD7AF, wScriptCommandType, wScriptStartRequest, wD782
 ; points at: wC52D
 Func_01D_6B32::
     ld hl, wC52D
@@ -6116,9 +6041,9 @@ Jump_01D_6B54::
     xor a, a
     ld [wD7AF], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_6B7C::
@@ -6129,9 +6054,9 @@ Jump_01D_6B7C::
     xor a, a
     ld [wD7AF], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_6B93::
@@ -6147,9 +6072,9 @@ Jump_01D_6B93::
     ld a, $01
     ld [wD780], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_6BBA::
@@ -6164,9 +6089,9 @@ Jump_01D_6BBA::
     ld a, $1E
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_6BDD::
@@ -6175,9 +6100,9 @@ Jump_01D_6BDD::
     xor a, a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_6BF0::
@@ -6185,9 +6110,9 @@ Jump_01D_6BF0::
     add a, $03
     ld [wD780], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01D_6C02::
@@ -6195,12 +6120,12 @@ Jump_01D_6C02::
     add a, $04
     ld [wD780], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_014_4050, Func_015_47A7, Func_015_4C0C, Func_015_512C, ...)
+; 7 call sites from 7 routines (e.g. Func_014_4001, Func_015_47A7, Func_015_4C0C, Func_015_512C, ...)
 ; reads: wD7F3, wD7F4, wD785, wD7F1, wD7F2, wD784
 ; writes: wD784, wD785, wD7F5
 Func_01D_6C14::
@@ -6272,7 +6197,7 @@ Jump_01D_6C6A::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 7 call sites from 3 routines (e.g. Func_01D_6D07, Func_01D_6C9F, Func_01D_6C14)
+; 7 call sites from 3 routines (e.g. Func_01D_6C14, Func_01D_6C9F, Func_01D_6D07)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1D::
 Func_01D_6C79:: ; address name
@@ -6293,7 +6218,7 @@ Jump_01D_6C7C::
     jr nz, Jump_01D_6C7B
     ret
 
-; 2 call sites from 2 routines (e.g. Func_014_4137, Func_01E_4069)
+; 2 call sites from 2 routines (e.g. Func_014_40CC, Func_01E_4069)
 ; reads: wD785, wD7F1, wD7F2, wD784
 ; writes: wD7F1, wD7F2, wD784, wD785
 ; points at: wD781
@@ -6391,7 +6316,7 @@ Func_01D_6D07::
 Data_01D_6D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $076D20, $50
 
-; 10 call sites from 9 routines (e.g. Func_01D_5E3F, Func_01D_6026, Func_01D_5F2D, Func_01D_5E79, ...)
+; 10 call sites from 8 routines (e.g. Func_01D_6026, Func_01D_5ECE, Func_01D_5F2D, Func_01D_5E79, ...)
 ; reads: wC7C7
 ; writes: wD7FF
 Func_01D_6D70::
@@ -6428,7 +6353,7 @@ Data_01D_6DE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A, $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0
     db $8C, $B0, $8C, $FF, $FF
 
-; 3 call sites from 3 routines (e.g. Func_003_7335, Func_014_42E0, Func_014_4400)
+; 4 call sites from 3 routines (e.g. Func_003_7335, Func_014_4261, Func_014_43CC)
 ; writes: rRAMG2, rRAMB, wD7F5
 ; points at: sB356, sA000
 Func_01D_6DF8::
@@ -6471,7 +6396,7 @@ Jump_01D_6E2D::
     ld [rRAMB], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_002_73E6, Func_014_4600, Func_014_5171, Func_014_538C)
+; 4 call sites from 3 routines (e.g. Func_002_73E6, Func_014_43CC, Func_014_4F30)
 ; reads: wD7F2, wD7E1, wD7E6
 ; writes: rRAMB, rRAMG2, wD7E1, wD7E2, wD7E3, wD7E4, wD7E5, wD7E0, ...
 ; points at: wD7E0, wD7E2
@@ -7505,7 +7430,7 @@ Jump_01D_7470::
     ld [wD7F5], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_002_71B2, Func_014_4660, Func_014_5095, Func_014_538C)
+; 4 call sites from 3 routines (e.g. Func_002_71B2, Func_014_43CC, Func_014_4F30)
 ; reads: wD7F2, wD7F5, wD7F6, wD7F7, wD7F8
 ; writes: rRAMB, rRAMG2, wD7E0, wD7F5
 ; points at: wC8CF

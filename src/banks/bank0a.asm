@@ -444,7 +444,7 @@ Jump_00A_427B::
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ld a, [wD069]
@@ -622,13 +622,13 @@ Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E2, $FF
 
 ; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7)
-; reads: wFadeState, wC91F, wC901, wD069
+; reads: wFadeState, wScriptRunning, wC901, wD069
 ; writes: wD069, wC916, wC917
 Func_00A_43B5::
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ld a, [wC901]
@@ -641,7 +641,7 @@ Func_00A_43B5::
     ld [wD069], a
     or a, a
     ret nz
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jr z, Jump_00A_43DC
     ld a, $01
@@ -657,13 +657,13 @@ Jump_00A_43DC::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_56DC, Func_002_5BD7)
-; reads: wFadeState, wC91F, hFF8C, wModeState, wC901, wD091, wC902, wCC44, ...
+; reads: wFadeState, wScriptRunning, hFF8C, wModeState, wC901, wD091, wC902, wCC44, ...
 ; writes: wC901, wD091, wC916, wC917, wC902, wC903, wModeState, wC904, ...
 Func_00A_43EC::
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ldh a, [hFF8C]
@@ -2989,11 +2989,11 @@ Data_00A_560C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EF, $55
 
 ; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7)
-; reads: wC91F, wC901, wC7C9, wC7CA, hFFC6
+; reads: wScriptRunning, wC901, wC7C9, wC7CA, hFFC6
 ; writes: hFFC6, wC7C9, wC7CA, rRAMG
 ; points at: sA000
 Func_00A_561E::
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ld a, [wC901]
@@ -3126,14 +3126,14 @@ Jump_00A_56B8::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_56DC)
-; reads: wC901, wC91F, wC6FD, hFFC6, hFFC7
+; reads: wC901, wScriptRunning, wC6FD, hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE
 Func_00A_56D0::
     ld a, [wC901]
     and a, $7F
     ret z
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ld de, $0002
@@ -3214,13 +3214,13 @@ Jump_00A_573E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_56DC)
-; reads: hFF93, wC91F, hFF96, hFF97
+; reads: hFF93, wScriptRunning, hFF96, hFF97
 ; writes: hFF96, hFF97, wC916, wC917
 Func_00A_5748::
     ldh a, [hFF93]
     bit 7, a
     ret z
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ldh a, [hFF96]

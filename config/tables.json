@@ -402,6 +402,21 @@
         }
       ],
       "note": "E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table)."
+    },
+    {
+      "bank": "10",
+      "addr": "46F5",
+      "label": "ScriptCommandHandlers",
+      "count": 248,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "handler that runs one frame of script command type (index + 1)",
+          "reason": "script command handler"
+        }
+      ],
+      "note": "E-0038 (C1: ExecuteScriptCommand indexes it with wScriptCommandType - 1; command types are set by the fetch handlers of FetchScriptCommand; a zero word is an unused type; all 248 words are code pointers inside the bank and the table ends where the next bytes stop being pointers)."
     }
   ]
 }

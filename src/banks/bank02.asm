@@ -1133,7 +1133,7 @@ Jump_002_46F7::
     ld [wC527], a
     ret
 
-; 10 call sites from 10 routines (e.g. Func_002_4628, Func_00C_4402, Func_00C_6F26, Func_00C_701C, ...)
+; 10 call sites from 10 routines (e.g. Func_002_4628, Func_00C_4312, Func_00C_6CA1, Func_00C_701C, ...)
 ; writes: wC13A, wC13C, wC13D, wC13E
 ; points at: wC60C, wC130
 Func_002_470B::
@@ -1189,7 +1189,7 @@ Jump_002_4753::
 Jump_002_4768::
     xor a, a
     ld [wModeState], a
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jr z, Jump_002_4779
     ld a, $01
@@ -1296,7 +1296,7 @@ Jump_002_4824::
     ld a, $05
     ld [wC916], a
     farcall Func_013_405C
-    farcall Func_010_4008
+    farcall FetchScriptCommand
     jp Func_002_4628
 
 Jump_002_4846::
@@ -1329,17 +1329,17 @@ Jump_002_4846::
     ld a, $65
     ld [wC916], a
     ld a, [wC91C]
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, [wC91D]
-    ld [wC91A], a
+    ld [wScriptPointerLo], a
     ld a, [wC91E]
-    ld [wC91B], a
+    ld [wScriptPointerHi], a
     ld a, $02
     ldh [hFFB9], a
     ld a, $F7
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $01
-    ld [wD7FD], a
+    ld [wScriptInDataBank], a
     jp Func_002_4628
 
 Jump_002_48AE::
@@ -1717,9 +1717,9 @@ Jump_002_4B44::
     ret
 
 Jump_002_4B5D::
-    farcall Func_010_4001
+    farcall RunEventScriptFrame
     farcall Func_002_69D0
-    ld a, [wC920]
+    ld a, [wScriptCommandType]
     cp a, $05
     jr z, Jump_002_4B76
     cp a, $83
@@ -1978,7 +1978,7 @@ Jump_002_4D99::
     cp a, $07
     ret z
     xor a, a
-    ld [wC91F], a
+    ld [wScriptRunning], a
     farcall Func_00A_43EC
     farcall Func_012_73A1
     farcall Func_011_4130
@@ -2794,11 +2794,11 @@ Jump_002_52BA::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_5074)
-; reads: wC920, wC936, wC46C, wC46B
+; reads: wScriptCommandType, wC936, wC46C, wC46B
 ; writes: wC46C, wC46B, hFFC6, wC526
 ; points at: wC49F, wC0F0, wC0F8, wC4A7, wC100, wC4AF, wC108, wC4B7, ...
 Func_002_52D8::
-    ld a, [wC920]
+    ld a, [wScriptCommandType]
     cp a, $ED
     ret z
     ld a, [wC936]
@@ -2989,8 +2989,8 @@ Jump_002_5408::
     ret
 
 ; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
-; 12 call sites from 7 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
-; reads: wFadeState, hFF9A, hFF8C, wC468, wJoypadPressed, hPlayerFacing, hPlayerX, wC91F, ...
+; 12 call sites from 6 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
+; reads: wFadeState, hFF9A, hFF8C, wC468, wJoypadPressed, hPlayerFacing, hPlayerX, wScriptRunning, ...
 ; writes: hFF9A, hPlayerFacing, hFF8C, hFF9B, hFF9C, hMapScreenX, wC468, wC46A, ...
 ; points at: hFFF0, hMapScreenX, hMapScreenY, hFF80, hFFF8
 UpdatePlayerMovement::
@@ -3042,7 +3042,7 @@ Jump_002_5460::
     ldh a, [hPlayerX]
     or a, a
     jr z, Jump_002_54A0
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jr nz, Jump_002_548A
     ldh a, [hPlayerX]
@@ -3129,7 +3129,7 @@ Jump_002_54F7::
     ldh a, [hPlayerX]
     cp a, $90
     jr z, Jump_002_5538
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jr nz, Jump_002_5522
     ldh a, [hPlayerX]
@@ -3223,7 +3223,7 @@ Jump_002_5590::
     ldh a, [hFF8C]
     bit 6, a
     jr nz, Jump_002_55CB
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jr nz, Jump_002_55CB
     ldh a, [hPlayerX]
@@ -3325,7 +3325,7 @@ Jump_002_564B::
     ldh a, [hFF8C]
     bit 6, a
     jr nz, Jump_002_5685
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jr nz, Jump_002_5685
     ldh a, [hPlayerX]
@@ -3833,7 +3833,7 @@ Jump_002_59C9::
     ret
 
 ; B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)
-; 6 call sites from 3 routines (e.g. Func_002_4DED, UpdatePlayerMovement, CheckInteractionInFront)
+; 6 call sites from 3 routines (e.g. Func_002_4DED, CheckInteractionInFront, UpdatePlayerMovement)
 ; reads: hFF8C, wMaxBlockingTile, wC196
 ; writes: wC910, wC911, wC912, wC913
 ; points at: wC910
@@ -4150,7 +4150,7 @@ Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1A, $10, $70, $70
     db $85, $10, $50, $60, $FF
 
-; 15 call sites from 9 routines (e.g. UpdatePlayerMovement, Func_002_56DC, CheckInteractionInFront, Func_002_4F4C, ...)
+; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, Func_002_56DC, Func_002_4F4C, ...)
 ; reads: wC8CD, hScrollY, hScrollX
 ; writes: wC8CE, wC8CD
 Func_002_5B9E::
@@ -4183,7 +4183,7 @@ Func_002_5B9E::
     ld [wC8CE], a
     ret
 
-; 12 call sites from 7 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
+; 12 call sites from 6 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
 ; reads: wC468
 Func_002_5BD7::
     ld a, [wC468]
@@ -4570,13 +4570,13 @@ Jump_002_5E6C::
     jr nz, Jump_002_5E6C
     ret
 
-; 4 call sites from 4 routines (e.g. Func_002_4745, Func_003_432F, Func_024_673C, Func_0F1_4866)
+; 4 call sites from 4 routines (e.g. Func_002_4745, Func_003_432F, Func_024_60DB, Func_0F1_4866)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
 Func_002_5E82::
     call Func_002_5E85
 
-; 19 call sites from 10 routines (e.g. Func_002_4628, Func_002_5E82, Func_00F_5404, Func_012_5668, ...)
+; 19 call sites from 10 routines (e.g. Func_002_4628, Func_002_5E82, Func_00F_5404, Func_012_55F8, ...)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
 Func_002_5E85::
@@ -4668,7 +4668,7 @@ Jump_002_5F1B::
     ld [wCB7E], a
     ret
 
-; 7 call sites from 6 routines (e.g. Func_002_4628, Func_073_4139, Func_085_4047, Func_085_426B, ...)
+; 7 call sites from 5 routines (e.g. Func_002_4628, Func_073_4001, Func_085_4047, Func_085_4207, ...)
 ; reads: wIsCGB, wCB7E
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wD2D0, wD000
@@ -4858,7 +4858,7 @@ Jump_002_6045::
     call StartPaletteFade
     ret
 
-; 8 call sites from 7 routines (e.g. GameMode1_Init, Func_002_4628, Func_000_2950, Func_002_6CD4, ...)
+; 10 call sites from 9 routines (e.g. GameMode1_Init, Func_002_4628, Func_000_2950, Func_002_6CD4, ...)
 ; reads: wCC44, wCC45, hFF8C, wC608, hMapId
 ; writes: wC608
 ; points at: wCD89
@@ -6750,7 +6750,7 @@ Jump_002_6F3B::
     xor a, a
     ld [wC917], a
     farcall Func_013_405C
-    farcall Func_010_4008
+    farcall FetchScriptCommand
     jp Jump_002_6FDE
 
 Jump_002_6F59::
@@ -7426,7 +7426,7 @@ Func_002_7333::
     call Func_002_7598
     jr Jump_002_7359
 
-; 3 call sites from 3 routines (e.g. Func_003_4659, Func_00D_5B4A, Func_015_4C0C)
+; 3 call sites from 3 routines (e.g. Func_003_4659, Func_00D_5A05, Func_015_4C0C)
 ; reads: wC8C3
 ; writes: rRAMG, wC8C3, rRAMB
 Func_002_7347::

@@ -2,9 +2,9 @@ SECTION "Bank 12", ROMX[$4000], BANK[$12]
     db $12
 
 ; 1 call site from 1 routine (e.g. Func_010_48EC)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4001::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_012_4009
     dw Jump_012_401B
@@ -12,14 +12,14 @@ Func_012_4001::
 Jump_012_4009::
     ld a, $10
     call Func_012_6820
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_48F3)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4013::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_012_4026
     dw Jump_012_401B
@@ -29,26 +29,26 @@ Jump_012_401B::
     call Func_012_683C
     ret nc
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_012_4026::
     ld a, $0F
     call Func_012_6820
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4901)
-; reads: wC923, wCC44, wCD03
-; writes: wC919, wC903, wC905
-; points at: wC923
+; reads: wScriptStep, wCC44, wCD03
+; writes: wScriptStartRequest, wC903, wC905
+; points at: wScriptStep
 Func_012_4030::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     or a, a
     jr z, Jump_012_403C
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_012_403C::
@@ -67,33 +67,29 @@ Jump_012_404C::
     sla a
     ld [wC905], a
     farcall Func_05F_6C71
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4908)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4064::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_41ED
-    dw Func_012_41CC
-    dw Func_012_41AA
-    dw Func_012_4177
-    dw Func_012_413C
-    dw Func_012_4115
-    dw Func_012_40FC
-    dw Func_012_40E1
-    dw Func_012_40B8
-    dw Func_012_4092
-    dw Func_012_4080
-    dw Func_012_422C
+    dw Jump_012_41ED
+    dw Jump_012_41CC
+    dw Jump_012_41AA
+    dw Jump_012_4177
+    dw Jump_012_413C
+    dw Jump_012_4115
+    dw Jump_012_40FC
+    dw Jump_012_40E1
+    dw Jump_012_40B8
+    dw Jump_012_4092
+    dw Jump_012_4080
+    dw Jump_012_422C
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8FB
-; writes: wC8F9, wC8FB
-; points at: wC8FB
-Func_012_4080:: ; heuristic: target of a pointer table; C0
+Jump_012_4080::
     xor a, a
     ld [wC8F9], a
     ld a, [wC8FB]
@@ -103,11 +99,7 @@ Func_012_4080:: ; heuristic: target of a pointer table; C0
     call Func_012_42B5
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8F6, wC921, wC6FD
-; writes: wC8F4, wC8F6, wC923
-; points at: wC8F6, wC8FB
-Func_012_4092:: ; heuristic: target of a pointer table; C0
+Jump_012_4092::
     xor a, a
     ld [wC8F4], a
     ld de, wC8F6
@@ -117,7 +109,7 @@ Func_012_4092:: ; heuristic: target of a pointer table; C0
     ld [wC8F6], a
     ld hl, wC8FB
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     ret nz
     ld a, [wC6FD]
@@ -125,14 +117,10 @@ Func_012_4092:: ; heuristic: target of a pointer table; C0
     dec a
     ret nz
     ld a, $0B
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8F1, wC921, wC6FD
-; writes: wC8EF, wC8F1, wC923
-; points at: wC8F1, wC8F6, wC8FB
-Func_012_40B8:: ; heuristic: target of a pointer table; C0
+Jump_012_40B8::
     xor a, a
     ld [wC8EF], a
     ld de, wC8F1
@@ -144,21 +132,17 @@ Func_012_40B8:: ; heuristic: target of a pointer table; C0
     inc [hl]
     ld hl, wC8FB
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     ret nz
     ld a, [wC6FD]
     dec a
     ret nz
     ld a, $0B
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY
-; writes: hPlayerFacing, hPlayerY
-; points at: hPlayerY, wC8F1, wC8F6, wC8FB
-Func_012_40E1:: ; heuristic: target of a pointer table; C0
+Jump_012_40E1::
     xor a, a
     ldh [hPlayerFacing], a
     ld de, hPlayerY
@@ -174,19 +158,9 @@ Func_012_40E1:: ; heuristic: target of a pointer table; C0
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY
-; writes: hPlayerY
-; points at: wC8FB, wC8F6, wC8F1, wC923
-Func_012_40FC:: ; heuristic: target of a pointer table; C0
+Jump_012_40FC::
     ld hl, wC8FB
     inc [hl]
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY
-; writes: hPlayerY
-; points at: wC8F6, wC8F1, wC923
-Func_012_4100:: ; heuristic: target of a pointer table; C0
     ld hl, wC8F6
     inc [hl]
     ld hl, wC8F1
@@ -196,14 +170,11 @@ Func_012_4100:: ; heuristic: target of a pointer table; C0
     ldh [hPlayerY], a
     cp a, $20
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hPlayerFacing, wC8EF, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
-; points at: hFF8C, wC923
-Func_012_4115:: ; heuristic: target of a pointer table; C0
+Jump_012_4115::
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wC8EF], a
@@ -217,15 +188,11 @@ Func_012_4115:: ; heuristic: target of a pointer table; C0
     ld [wC8FB], a
     ld hl, hFF8C
     call SetBit2AtHL_B12
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8FB
-; writes: wC8F9, wC8FB, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
-; points at: hPlayerY, wC8F1, wC8F6
-Func_012_413C:: ; heuristic: target of a pointer table; C0
+Jump_012_413C::
     ld a, $02
     ld [wC8F9], a
     ld hl, hPlayerY
@@ -254,11 +221,7 @@ Func_012_413C:: ; heuristic: target of a pointer table; C0
     farcall Func_05F_6C5A
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wC8F9, wC8EF, wC8F4, wC928, wC929, wC921
-; points at: hPlayerY, wC8F1, wC8F6, wC8FA, wC8FB, wC923
-Func_012_4177:: ; heuristic: target of a pointer table; C0
+Jump_012_4177::
     ld a, $01
     ld [wC8F9], a
     ld hl, hPlayerY
@@ -281,11 +244,7 @@ Func_012_4177:: ; heuristic: target of a pointer table; C0
     farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wC921
-; writes: wC8EF, wC928, wC929, wC921
-; points at: hPlayerY, wC8F6, wC923
-Func_012_41AA:: ; heuristic: target of a pointer table; C0
+Jump_012_41AA::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ld a, $02
@@ -300,11 +259,7 @@ Func_012_41AA:: ; heuristic: target of a pointer table; C0
     farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wC921
-; writes: hPlayerFacing, wC928, wC929, wC921
-; points at: hPlayerY, wC8F1, wC923
-Func_012_41CC:: ; heuristic: target of a pointer table; C0
+Jump_012_41CC::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ld a, $02
@@ -319,11 +274,7 @@ Func_012_41CC:: ; heuristic: target of a pointer table; C0
     farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerX, wC921
-; writes: wC928, wC929, wC921
-; points at: hFF8C, hPlayerY, hPlayerX, wC923
-Func_012_41ED:: ; heuristic: target of a pointer table; C0
+Jump_012_41ED::
     ld hl, hFF8C
     call SetBit2AtHL_B12
     ldh a, [hPlayerX]
@@ -339,38 +290,31 @@ Func_012_41ED:: ; heuristic: target of a pointer table; C0
     jp Jump_012_43C6
 
 ; 1 call site from 1 routine (e.g. Func_010_490F)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4210::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_43A6
-    dw Func_012_438A
-    dw Func_012_436E
-    dw Func_012_4346
-    dw Func_012_4310
-    dw Func_012_42E9
-    dw Func_012_42D7
-    dw Func_012_4299
-    dw Func_012_426F
-    dw Func_012_424B
-    dw Func_012_4238
-    dw Func_012_422C
+    dw Jump_012_43A6
+    dw Jump_012_438A
+    dw Jump_012_436E
+    dw Jump_012_4346
+    dw Jump_012_4310
+    dw Jump_012_42E9
+    dw Jump_012_42D7
+    dw Jump_012_4299
+    dw Jump_012_426F
+    dw Jump_012_424B
+    dw Jump_012_4238
+    dw Jump_012_422C
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC919
-; points at: hFF8C
-Func_012_422C:: ; heuristic: target of a pointer table; C0
+Jump_012_422C::
     ld hl, hFF8C
     call ClearBit2AtHL_Bank12
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8FA
-; writes: wC8F9, wC8FA
-; points at: wC8FB
-Func_012_4238:: ; heuristic: target of a pointer table; C0
+Jump_012_4238::
     ld a, $03
     ld [wC8F9], a
     ld a, [wC8FA]
@@ -380,11 +324,7 @@ Func_012_4238:: ; heuristic: target of a pointer table; C0
     call Func_012_42B5
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, wC6FD
-; writes: wC8F4, wC923
-; points at: wC8F6, wC8F5, wC8FB
-Func_012_424B:: ; heuristic: target of a pointer table; C0
+Jump_012_424B::
     ld a, $03
     ld [wC8F4], a
     ld de, wC8F6
@@ -393,7 +333,7 @@ Func_012_424B:: ; heuristic: target of a pointer table; C0
     dec [hl]
     ld hl, wC8FB
     dec [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     ret nz
     ld a, [wC6FD]
@@ -401,14 +341,10 @@ Func_012_424B:: ; heuristic: target of a pointer table; C0
     dec a
     ret nz
     ld a, $0B
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8F0, wC921, wC6FD
-; writes: wC8EF, wC8F0, wC923
-; points at: wC8F1, wC8F6, wC8FB
-Func_012_426F:: ; heuristic: target of a pointer table; C0
+Jump_012_426F::
     ld a, $03
     ld [wC8EF], a
     ld de, wC8F1
@@ -420,21 +356,17 @@ Func_012_426F:: ; heuristic: target of a pointer table; C0
     dec [hl]
     ld hl, wC8FB
     dec [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     ret nz
     ld a, [wC6FD]
     dec a
     ret nz
     ld a, $0B
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerX
-; writes: hPlayerFacing, hPlayerX
-; points at: hPlayerY, wC8F1, wC8F6, wC8FB
-Func_012_4299:: ; heuristic: target of a pointer table; C0
+Jump_012_4299::
     ld a, $03
     ldh [hPlayerFacing], a
     ld de, hPlayerY
@@ -450,33 +382,29 @@ Func_012_4299:: ; heuristic: target of a pointer table; C0
     dec [hl]
     ret
 
-; 8 call sites from 8 routines (e.g. Func_012_4238, Func_012_424B, Func_012_426F, Func_012_4299, ...)
-; reads: wC921
-; writes: wC928, wC929, wC921
-; points at: wC923
+; 8 call sites from 2 routines (e.g. Func_012_4064, Func_012_4210)
+; reads: wScriptParam0
+; writes: wC928, wC929, wScriptParam0
+; points at: wScriptStep
 Func_012_42B5::
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY
-; writes: hPlayerY
-; points at: wC923
-Func_012_42D7:: ; heuristic: target of a pointer table; C0
+Jump_012_42D7::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ldh a, [hPlayerY]
@@ -484,14 +412,11 @@ Func_012_42D7:: ; heuristic: target of a pointer table; C0
     ldh [hPlayerY], a
     cp a, $50
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hPlayerFacing, wC8EF, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
-; points at: hFF8C, wC923
-Func_012_42E9:: ; heuristic: target of a pointer table; C0
+Jump_012_42E9::
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wC8EF], a
@@ -505,15 +430,11 @@ Func_012_42E9:: ; heuristic: target of a pointer table; C0
     ld [wC8FB], a
     ld hl, hFF8C
     call SetBit2AtHL_B12
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8FB
-; writes: wC8FB, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
-; points at: hPlayerY, wC8F1, wC8F6
-Func_012_4310:: ; heuristic: target of a pointer table; C0
+Jump_012_4310::
     ld hl, hPlayerY
     dec [hl]
     ld hl, wC8F1
@@ -540,11 +461,7 @@ Func_012_4310:: ; heuristic: target of a pointer table; C0
     farcall Func_05F_6C5A
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wC8F9, wC928, wC929, wC921
-; points at: hPlayerY, wC8F1, wC8F6, wC8FB, wC923
-Func_012_4346:: ; heuristic: target of a pointer table; C0
+Jump_012_4346::
     ld a, $02
     ld [wC8F9], a
     ld hl, hPlayerY
@@ -563,11 +480,7 @@ Func_012_4346:: ; heuristic: target of a pointer table; C0
     farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wC921
-; writes: wC928, wC929, wC921
-; points at: hPlayerY, wC8F6, wC923
-Func_012_436E:: ; heuristic: target of a pointer table; C0
+Jump_012_436E::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ld hl, hPlayerY
@@ -580,11 +493,7 @@ Func_012_436E:: ; heuristic: target of a pointer table; C0
     farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wC921
-; writes: wC928, wC929, wC921
-; points at: hPlayerY, wC8F1, wC923
-Func_012_438A:: ; heuristic: target of a pointer table; C0
+Jump_012_438A::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ld hl, hPlayerY
@@ -597,11 +506,7 @@ Func_012_438A:: ; heuristic: target of a pointer table; C0
     farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wC921
-; writes: wC928, wC929, wC921
-; points at: hFF8C, hPlayerY, wC923
-Func_012_43A6:: ; heuristic: target of a pointer table; C0
+Jump_012_43A6::
     ld hl, hFF8C
     call SetBit2AtHL_B12
     ldh a, [hPlayerY]
@@ -616,66 +521,60 @@ Func_012_43A6:: ; heuristic: target of a pointer table; C0
     dec [hl]
 
 Jump_012_43C6::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_491D)
-; reads: wC923
+; reads: wScriptStep
 Func_012_43DA::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_44AF
-    dw Func_012_447A
-    dw Func_012_474A
-    dw Func_012_473C
-    dw Func_012_4705
-    dw Func_012_444D
-    dw Func_012_473C
-    dw Func_012_469E
-    dw Func_012_461A
-    dw Func_012_45D6
-    dw Func_012_45CC
-    dw Func_012_473C
-    dw Func_012_4705
-    dw Func_012_4420
-    dw Func_012_473C
-    dw Func_012_469E
-    dw Func_012_461A
-    dw Func_012_45D6
-    dw Func_012_4595
-    dw Func_012_473C
-    dw Func_012_4705
-    dw Func_012_4412
-    dw Func_012_473C
-    dw Func_012_456A
-    dw Func_012_4546
-    dw $4515
+    dw Jump_012_44AF
+    dw Jump_012_447A
+    dw Jump_012_474A
+    dw Jump_012_473C
+    dw Jump_012_4705
+    dw Jump_012_444D
+    dw Jump_012_473C
+    dw Jump_012_469E
+    dw Jump_012_461A
+    dw Jump_012_45D6
+    dw Jump_012_45CC
+    dw Jump_012_473C
+    dw Jump_012_4705
+    dw Jump_012_4420
+    dw Jump_012_473C
+    dw Jump_012_469E
+    dw Jump_012_461A
+    dw Jump_012_45D6
+    dw Jump_012_4595
+    dw Jump_012_473C
+    dw Jump_012_4705
+    dw Jump_012_4412
+    dw Jump_012_473C
+    dw Jump_012_456A
+    dw Jump_012_4546
+    dw Jump_012_4515
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923, wD7FF
-Func_012_4412:: ; heuristic: target of a pointer table; C0
+Jump_012_4412::
     ld a, $07
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
     dec [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FF
-; writes: wC923
-; points at: wD7FF, wC923
-Func_012_4420:: ; heuristic: target of a pointer table; C0
+Jump_012_4420::
     ld hl, wD7FF
     dec [hl]
     ld a, [wD7FF]
@@ -684,13 +583,13 @@ Func_012_4420:: ; heuristic: target of a pointer table; C0
     ld a, $07
     call Func_012_488B
     ld a, $16
-    ld [wC923], a
+    ld [wScriptStep], a
     jr Jump_012_4440
 
 Jump_012_4437::
     ld a, $05
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
 
 Jump_012_4440::
@@ -698,30 +597,22 @@ Jump_012_4440::
     farcall Func_00C_73F5
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FF
-; writes: wC923
-; points at: wD7FF, wC923
-Func_012_444D:: ; heuristic: target of a pointer table; C0
+Jump_012_444D::
     ld hl, wD7FF
     dec [hl]
     ld a, [wD7FF]
     cp a, $02
     jr nz, Jump_012_4464
     ld a, $07
-
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC923
-Func_012_445A:: ; heuristic: target of a pointer table; C0
     call Func_012_488B
     ld a, $16
-    ld [wC923], a
+    ld [wScriptStep], a
     jr Jump_012_446D
 
 Jump_012_4464::
     ld a, $03
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
 
 Jump_012_446D::
@@ -729,10 +620,7 @@ Jump_012_446D::
     farcall Func_00C_73F5
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hFF8D, hPlayerFacing, wC8F1, wC8F4, wC8F9, hPlayerX, wC8F0, wC8F5, ...
-; points at: hFF8C, wC94A, wC923
-Func_012_447A:: ; heuristic: target of a pointer table; C0
+Jump_012_447A::
     ld a, $0E
     ldh [hFF8D], a
     xor a, a
@@ -754,14 +642,11 @@ Func_012_447A:: ; heuristic: target of a pointer table; C0
     inc [hl]
     xor a, a
     ld [wC924], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FC
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, wC94A
-Func_012_44AF:: ; heuristic: target of a pointer table; C0
+Jump_012_44AF::
     ld a, $0B
     ldh [hMapId], a
     xor a, a
@@ -782,70 +667,59 @@ Func_012_44AF:: ; heuristic: target of a pointer table; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4916)
-; reads: wC923
+; reads: wScriptStep
 Func_012_44DB::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4863
-    dw Func_012_4850
-    dw Func_012_4814
-    dw Func_012_474A
-    dw Func_012_473C
-    dw Func_012_4705
-    dw Func_012_46D8
-    dw Func_012_473C
-    dw Func_012_469E
-    dw Func_012_461A
-    dw Func_012_45D6
-    dw Func_012_45CC
-    dw Func_012_473C
-    dw Func_012_4705
-    dw Func_012_459F
-    dw Func_012_473C
-    dw Func_012_469E
-    dw Func_012_461A
-    dw Func_012_45D6
-    dw Func_012_4595
-    dw Func_012_473C
-    dw Func_012_4705
-    dw Func_012_4587
-    dw Func_012_473C
-    dw Func_012_456A
-    dw Func_012_4546
-    dw $4515
+    dw Jump_012_4863
+    dw Jump_012_4850
+    dw Jump_012_4814
+    dw Jump_012_474A
+    dw Jump_012_473C
+    dw Jump_012_4705
+    dw Jump_012_46D8
+    dw Jump_012_473C
+    dw Jump_012_469E
+    dw Jump_012_461A
+    dw Jump_012_45D6
+    dw Jump_012_45CC
+    dw Jump_012_473C
+    dw Jump_012_4705
+    dw Jump_012_459F
+    dw Jump_012_473C
+    dw Jump_012_469E
+    dw Jump_012_461A
+    dw Jump_012_45D6
+    dw Jump_012_4595
+    dw Jump_012_473C
+    dw Jump_012_4705
+    dw Jump_012_4587
+    dw Jump_012_473C
+    dw Jump_012_456A
+    dw Jump_012_4546
+    dw Jump_012_4515
 
-; no direct call (reached through a table, a jump or a vector)
-Func_012_4515:: ; heuristic: target of a pointer table; C0
-    dw $4B21
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC91C, wC91D, wC91E
-; writes: wC917, wC916, wC919, wC91A, wC91B, hFFB9, wC920, wD7FD
-Func_012_4517:: ; heuristic: follows a terminator; C0
-    ld h, b
-    ld b, $02
-    rst $10
+Jump_012_4515::
+    farcall Func_002_604B
     ld a, $01
     ld [wC917], a
     ld a, $65
     ld [wC916], a
     ld a, [wC91C]
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, [wC91D]
-    ld [wC91A], a
+    ld [wScriptPointerLo], a
     ld a, [wC91E]
-    ld [wC91B], a
+    ld [wScriptPointerHi], a
     ld a, $02
     ldh [hFFB9], a
     ld a, $F7
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $01
-    ld [wD7FD], a
+    ld [wScriptInDataBank], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
-Func_012_4546:: ; heuristic: target of a pointer table; C0
+Jump_012_4546::
     call Func_012_64F8
     ld a, $04
     ldh [hMapId], a
@@ -862,14 +736,10 @@ Func_012_4546:: ; heuristic: target of a pointer table; C0
     farcall Func_05F_6C5A
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wC921
-; points at: wC923
-Func_012_456A:: ; heuristic: target of a pointer table; C0
-    ld a, [wC921]
+Jump_012_456A::
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $01
     jr nz, Jump_012_457B
     ld a, $6D
@@ -880,38 +750,31 @@ Jump_012_457B::
     cp a, $3C
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923, wD7FF
-Func_012_4587:: ; heuristic: target of a pointer table; C0
+Jump_012_4587::
     ld a, $07
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
     dec [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_4595:: ; heuristic: target of a pointer table; C0
+Jump_012_4595::
     ld a, $06
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC82C
-; points at: wC923, wD7FF
-Func_012_459F:: ; heuristic: target of a pointer table; C0
+Jump_012_459F::
     ld a, $05
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
     dec [hl]
@@ -927,19 +790,14 @@ Jump_012_45BF::
     farcall Func_00C_74A6
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_45CC:: ; heuristic: target of a pointer table; C0
+Jump_012_45CC::
     ld a, $04
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCB8B
-; writes: wCB86, wCB8B, wC90D, wCB96, wCBA6, wCBB6
-Func_012_45D6:: ; heuristic: target of a pointer table; C0
+Jump_012_45D6::
     ld a, $02
     ld [wCB86], a
     ld a, [wCB8B]
@@ -954,33 +812,21 @@ Func_012_45D6:: ; heuristic: target of a pointer table; C0
     ld [wCB96], a
     ld [wCBA6], a
     ld [wCBB6], a
-    db $21, $8C
-
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_45FA:: ; heuristic: target of a pointer table; C0
-    set 1, l
-    ld a, [$2165]
-    sbc a, h
-    set 1, l
-    ld a, [$2165]
-    xor a, h
-    set 1, l
-    ld a, [$2165]
-    cp a, h
-    set 1, l
-    ld a, [$3E65]
-    nop
+    ld hl, wCB8C
+    call ClearBit2AtHL_Bank12
+    ld hl, wCB9C
+    call ClearBit2AtHL_Bank12
+    ld hl, wCBAC
+    call ClearBit2AtHL_Bank12
+    ld hl, wCBBC
+    call ClearBit2AtHL_Bank12
+    ld a, $00
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC924
-; writes: wC924, wSpriteSlotCount
-; points at: wCB8B, wC923
-Func_012_461A:: ; heuristic: target of a pointer table; C0
+Jump_012_461A::
     ld a, [wC924]
     cp a, $60
     jr z, Jump_012_4644
@@ -1068,7 +914,7 @@ Jump_012_467E::
     pop af
     cp a, $70
     jr nz, Jump_012_4692
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
 
 Jump_012_4692::
@@ -1079,10 +925,7 @@ Jump_012_4692::
     jr nz, Jump_012_4649
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC527, wSpriteSlotCount, wC90D, wC924
-; points at: wCB8C, wCB9C, wCBAC, wCBBC, wC923
-Func_012_469E:: ; heuristic: target of a pointer table; C0
+Jump_012_469E::
     farcall Func_085_5B53
     ld a, $7F
     ld [wC527], a
@@ -1102,17 +945,14 @@ Func_012_469E:: ; heuristic: target of a pointer table; C0
     call QueueSoundEffect
     xor a, a
     ld [wC924], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC82C
-; points at: wC923, wD7FF
-Func_012_46D8:: ; heuristic: target of a pointer table; C0
+Jump_012_46D8::
     ld a, $03
     call Func_012_488B
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
     dec [hl]
@@ -1128,10 +968,7 @@ Jump_012_46F8::
     farcall Func_00C_74A6
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC903, wC905
-; points at: wC8F0, wC8F5, wC8FA, wCB9A, wCBAA, wCBBA, wC923, wD7FF
-Func_012_4705:: ; heuristic: target of a pointer table; C0
+Jump_012_4705::
     ld hl, wC8F0
     inc [hl]
     ld hl, wC8F5
@@ -1147,7 +984,7 @@ Func_012_4705:: ; heuristic: target of a pointer table; C0
     ld b, $10
     call StepWC921Counter_Bank12
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld hl, wD7FF
     inc [hl]
@@ -1158,24 +995,17 @@ Func_012_4705:: ; heuristic: target of a pointer table; C0
     farcall Func_05F_6C71
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC924
-; points at: wC923
-Func_012_473C:: ; heuristic: target of a pointer table; C0
+Jump_012_473C::
     xor a, a
     call Func_012_684A
     ret nc
     xor a, a
     ld [wC924], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC924, wC921, hPlayerY, hPlayerX, wC922
-; writes: wC924, hFF8D, hPlayerY, hPlayerFacing, hPlayerX, wC8EF, wC8F4, wC8F9, ...
-; points at: hFF8C, wC921, wC923
-Func_012_474A:: ; heuristic: target of a pointer table; C0
+Jump_012_474A::
     ld hl, hFF8C
     call SetBit2AtHL_B12
     ld a, [wC924]
@@ -1203,7 +1033,7 @@ Jump_012_476F::
     ldh [hFF8D], a
 
 Jump_012_4776::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_012_478E
     ldh a, [hPlayerY]
@@ -1213,7 +1043,7 @@ Jump_012_4776::
     ldh [hPlayerY], a
     cp a, $20
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1229,7 +1059,7 @@ Jump_012_478E::
     ldh [hPlayerX], a
     cp a, $30
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1245,7 +1075,7 @@ Jump_012_47A7::
     ldh [hPlayerY], a
     cp a, $40
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1261,7 +1091,7 @@ Jump_012_47BF::
     ldh [hPlayerX], a
     cp a, $20
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1282,23 +1112,19 @@ Jump_012_47D8::
     ld [wC8F9], a
     ld a, $02
     call Func_012_488B
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld [wC90D], a
     ld a, $00
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     xor a, a
-    ld [wC922], a
-    ld hl, wC923
+    ld [wScriptParam1], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC90D
-; writes: hPlayerFacing, wC8F1, wC8F4, wC8F9, hPlayerX, wC8F0, wC8F5, wC8FA, ...
-; points at: hFF8C, wC923
-Func_012_4814:: ; heuristic: target of a pointer table; C0
+Jump_012_4814::
     xor a, a
     call Func_012_684A
     ret nc
@@ -1317,36 +1143,28 @@ Func_012_4814:: ; heuristic: target of a pointer table; C0
     ld a, $6D
     call QueueSoundEffect
     ld a, [wC90D]
-    ld [wC922], a
+    ld [wScriptParam1], a
     xor a, a
     ld [wC90D], a
     xor a, a
     ld [wC924], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_012_4850:: ; heuristic: target of a pointer table; C0
+Jump_012_4850::
     xor a, a
     call Func_012_684A
     ret nc
     ld a, $01
     call Func_012_488B
     ld a, $0E
-    db $E0
-
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_485D:: ; heuristic: target of a pointer table; C0
-    adc a, l
-    ld hl, wC923
+    ldh [hFF8D], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, wC94A
-Func_012_4863:: ; heuristic: target of a pointer table; C0
+Jump_012_4863::
     ld a, $0B
     ldh [hMapId], a
     xor a, a
@@ -1365,7 +1183,7 @@ Func_012_4863:: ; heuristic: target of a pointer table; C0
     ld [wC94A], a
     ret
 
-; 13 call sites from 11 routines (e.g. Func_012_445A, Func_012_4587, Func_012_459F, Func_012_46D8, ...)
+; 13 call sites from 2 routines (e.g. Func_012_43DA, Func_012_44DB)
 ; reads: wC94A, wC82C
 Func_012_488B::
     ld de, Data_012_48B9
@@ -1408,38 +1226,35 @@ Data_012_48B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0488B9, $60
 
 ; 1 call site from 1 routine (e.g. Func_010_4963)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4919::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4D6B
-    dw Func_012_4D56
-    dw Func_012_4D46
-    dw Func_012_4D3B
-    dw Func_012_4D15
-    dw Func_012_4D05
-    dw Func_012_4D3B
-    dw Func_012_4CDF
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CB4
-    dw Func_012_4CAA
-    dw Func_012_4CA0
-    dw Func_012_4D56
-    dw Func_012_4D3B
-    dw Func_012_4C97
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_494B
+    dw Jump_012_4D6B
+    dw Jump_012_4D56
+    dw Jump_012_4D46
+    dw Jump_012_4D3B
+    dw Jump_012_4D15
+    dw Jump_012_4D05
+    dw Jump_012_4D3B
+    dw Jump_012_4CDF
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CB4
+    dw Jump_012_4CAA
+    dw Jump_012_4CA0
+    dw Jump_012_4D56
+    dw Jump_012_4D3B
+    dw Jump_012_4C97
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_494B
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC965
-; writes: wC88D, wGameMode, wModeState, wModeChangeRequest, wC91F
-Func_012_494B:: ; heuristic: target of a pointer table; C0
+Jump_012_494B::
     ld a, [wC965]
     ld [wC88D], a
     ld a, $08
@@ -1449,44 +1264,41 @@ Func_012_494B:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wModeChangeRequest], a
     xor a, a
-    ld [wC91F], a
+    ld [wScriptRunning], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_495C)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4965::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4DDC
-    dw Func_012_4D6B
-    dw Func_012_4D56
-    dw Func_012_4D46
-    dw Func_012_4D3B
-    dw Func_012_4D15
-    dw Func_012_4D05
-    dw Func_012_4D3B
-    dw Func_012_4CDF
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CB4
-    dw Func_012_4CAA
-    dw Func_012_4CA0
-    dw Func_012_4D56
-    dw Func_012_4D3B
-    dw Func_012_4C97
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_49C8
-    dw Func_012_499B
+    dw Jump_012_4DDC
+    dw Jump_012_4D6B
+    dw Jump_012_4D56
+    dw Jump_012_4D46
+    dw Jump_012_4D3B
+    dw Jump_012_4D15
+    dw Jump_012_4D05
+    dw Jump_012_4D3B
+    dw Jump_012_4CDF
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CB4
+    dw Jump_012_4CAA
+    dw Jump_012_4CA0
+    dw Jump_012_4D56
+    dw Jump_012_4D3B
+    dw Jump_012_4C97
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_49C8
+    dw Jump_012_499B
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC937, wC91C, wC91D, wC91E
-; writes: wCB86, wC917, wC916, wC919, wC91A, wC91B, wC920, wD7FD
-Func_012_499B:: ; heuristic: target of a pointer table; C0
+Jump_012_499B::
     ld a, [wC937]
     ld [wCB86], a
     ld a, $01
@@ -1494,21 +1306,18 @@ Func_012_499B:: ; heuristic: target of a pointer table; C0
     ld a, $89
     ld [wC916], a
     ld a, [wC91C]
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, [wC91D]
-    ld [wC91A], a
+    ld [wScriptPointerLo], a
     ld a, [wC91E]
-    ld [wC91B], a
+    ld [wScriptPointerHi], a
     ld a, $F4
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $01
-    ld [wD7FD], a
+    ld [wScriptInDataBank], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FB
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFF8D, wC8C6, wC936
-Func_012_49C8:: ; heuristic: target of a pointer table; C0
+Jump_012_49C8::
     ld a, [wD7FB]
     ld hl, Data_012_4A14
     add_a_to_hl
@@ -1549,43 +1358,40 @@ Data_012_4A14:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $17, $04, $17, $04, $17, $17, $17, $04, $04
 
 ; 1 call site from 1 routine (e.g. Func_010_4947)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4A1E::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4DDC
-    dw Func_012_4D6B
-    dw Func_012_4D56
-    dw Func_012_4D46
-    dw Func_012_4D3B
-    dw Func_012_4D15
-    dw Func_012_4D05
-    dw Func_012_4D3B
-    dw Func_012_4CDF
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CB4
-    dw Func_012_4CAA
-    dw Func_012_4CA0
-    dw Func_012_4A5A
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4B9B
-    dw Func_012_4B77
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4B19
-    dw Func_012_4B0A
-    dw Func_012_4AC0
+    dw Jump_012_4DDC
+    dw Jump_012_4D6B
+    dw Jump_012_4D56
+    dw Jump_012_4D46
+    dw Jump_012_4D3B
+    dw Jump_012_4D15
+    dw Jump_012_4D05
+    dw Jump_012_4D3B
+    dw Jump_012_4CDF
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CB4
+    dw Jump_012_4CAA
+    dw Jump_012_4CA0
+    dw Jump_012_4A5A
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4B9B
+    dw Jump_012_4B77
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4B19
+    dw Jump_012_4B0A
+    dw Jump_012_4AC0
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wCB91, hFFC6, wCB92, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, ...
-; points at: wCAD0, wC923
-Func_012_4A5A:: ; heuristic: target of a pointer table; C0
+Jump_012_4A5A::
     ld a, $0B
     ld hl, wCAD0
     add_a_to_hl
@@ -1610,37 +1416,34 @@ Func_012_4A5A:: ; heuristic: target of a pointer table; C0
     farcall Func_012_6B98
     ld a, $7F
     ld [wC527], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_494E)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4A9A::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4DDC
-    dw Func_012_4BB4
-    dw Func_012_4D56
-    dw Func_012_4D3B
-    dw Func_012_4BAA
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4B9B
-    dw Func_012_4B77
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4B19
-    dw Func_012_4B0A
-    dw Func_012_4AC0
+    dw Jump_012_4DDC
+    dw Jump_012_4BB4
+    dw Jump_012_4D56
+    dw Jump_012_4D3B
+    dw Jump_012_4BAA
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4B9B
+    dw Jump_012_4B77
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4B19
+    dw Jump_012_4B0A
+    dw Jump_012_4AC0
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC91C, wC91D, wC91E
-; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wCBCF, wSpriteSlotCount, wC90D, ...
-Func_012_4AC0:: ; heuristic: target of a pointer table; C0
+Jump_012_4AC0::
     ld a, $0D
     ldh [hMapId], a
     ld a, $01
@@ -1662,39 +1465,31 @@ Func_012_4AC0:: ; heuristic: target of a pointer table; C0
     ld a, $6A
     ld [wC916], a
     ld a, [wC91C]
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, [wC91D]
-    ld [wC91A], a
+    ld [wScriptPointerLo], a
     ld a, [wC91E]
-    ld [wC91B], a
+    ld [wScriptPointerHi], a
     ld a, $02
     ldh [hFFB9], a
     ld a, $ED
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $01
-    ld [wD7FD], a
+    ld [wScriptInDataBank], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: hFFB9
-; points at: wC923
-Func_012_4B0A:: ; heuristic: target of a pointer table; C0
+Jump_012_4B0A::
     xor a, a
     call Func_012_683C
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ldh [hFFB9], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFFB9
-; writes: wStringIndex, wStringCategory, wC53D, wC53E, wC921, hFFB9
-; points at: wC923, wCAD0, wC151, wC17E
-Func_012_4B19:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_4B19::
+    ld hl, wScriptStep
     inc [hl]
     ld hl, wCAD0
     ld a, $0B
@@ -1739,17 +1534,13 @@ Jump_012_4B65::
     ld a, $18
     call Func_012_6820
     ldh a, [hFFB9]
-    ld [wC921], a
+    ld [wScriptParam0], a
     xor a, a
     ldh [hFFB9], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wCBCF, wCB96, wCB9B
-; points at: wC923
-Func_012_4B77:: ; heuristic: target of a pointer table; C0
-    ld a, [wC921]
+Jump_012_4B77::
+    ld a, [wScriptParam0]
     cp a, $C2
     jr nz, Jump_012_4B83
     ld a, $74
@@ -1765,36 +1556,26 @@ Jump_012_4B83::
     ld [wCB96], a
     ld a, $3C
     ld [wCB9B], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hFFC6
-; points at: wC923
-Func_012_4B9B:: ; heuristic: target of a pointer table; C0
+Jump_012_4B9B::
     ld a, $0E
     ldh [hFFC6], a
     farcall Func_012_6B98
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wCBCF
-; points at: wC923
-Func_012_4BAA:: ; heuristic: target of a pointer table; C0
+Jump_012_4BAA::
     ld a, $80
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8D
-; writes: hFFB9, hFF8D, wCB91, hFFC6, wCB92, hFFC7, hFFC8, hFFC9, ...
-; points at: wCAD0, wCB8C, wC923
-Func_012_4BB4:: ; heuristic: target of a pointer table; C0
+Jump_012_4BB4::
     xor a, a
     ldh [hFFB9], a
     ldh a, [hFF8D]
@@ -1828,45 +1609,42 @@ Func_012_4BB4:: ; heuristic: target of a pointer table; C0
     ld [wC527], a
     ld hl, wCB8C
     call SetBit2AtHL_B12
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4955)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4C07::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4DDC
-    dw Func_012_4D6B
-    dw Func_012_4D56
-    dw Func_012_4D46
-    dw Func_012_4D3B
-    dw Func_012_4D15
-    dw Func_012_4D05
-    dw Func_012_4D3B
-    dw Func_012_4CDF
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_4D3B
-    dw Func_012_4CB4
-    dw Func_012_4CAA
-    dw Func_012_4CA0
-    dw Func_012_4D56
-    dw Func_012_4D3B
-    dw Func_012_4C97
-    dw Func_012_4D3B
-    dw Func_012_4CBC
-    dw Func_012_4D3B
-    dw Func_012_4C69
-    dw Func_012_4C3D
+    dw Jump_012_4DDC
+    dw Jump_012_4D6B
+    dw Jump_012_4D56
+    dw Jump_012_4D46
+    dw Jump_012_4D3B
+    dw Jump_012_4D15
+    dw Jump_012_4D05
+    dw Jump_012_4D3B
+    dw Jump_012_4CDF
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_4D3B
+    dw Jump_012_4CB4
+    dw Jump_012_4CAA
+    dw Jump_012_4CA0
+    dw Jump_012_4D56
+    dw Jump_012_4D3B
+    dw Jump_012_4C97
+    dw Jump_012_4D3B
+    dw Jump_012_4CBC
+    dw Jump_012_4D3B
+    dw Jump_012_4C69
+    dw Jump_012_4C3D
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wC91C, wC91D, wC91E
-; writes: wC917, wC916, wC919, wC91A, wC91B, wC920, wD7FD
-Func_012_4C3D:: ; heuristic: target of a pointer table; C0
+Jump_012_4C3D::
     ld a, [wFadeState]
     or a, a
     ret nz
@@ -1875,21 +1653,18 @@ Func_012_4C3D:: ; heuristic: target of a pointer table; C0
     ld a, $6A
     ld [wC916], a
     ld a, [wC91C]
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, [wC91D]
-    ld [wC91A], a
+    ld [wScriptPointerLo], a
     ld a, [wC91E]
-    ld [wC91B], a
+    ld [wScriptPointerHi], a
     ld a, $ED
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $01
-    ld [wD7FD], a
+    ld [wScriptInDataBank], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFF8D, wC8C6, wC936
-; points at: wC923
-Func_012_4C69:: ; heuristic: target of a pointer table; C0
+Jump_012_4C69::
     ld a, $0D
     ldh [hMapId], a
     ld a, $01
@@ -1909,51 +1684,38 @@ Func_012_4C69:: ; heuristic: target of a pointer table; C0
     call StartPaletteFade
     ld a, $01
     ld [wC936], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wCBCF
-; points at: wC923
-Func_012_4C97:: ; heuristic: target of a pointer table; C0
+Jump_012_4C97::
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_4CA0:: ; heuristic: target of a pointer table; C0
+Jump_012_4CA0::
     xor a, a
     call Func_012_683C
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_4CAA:: ; heuristic: target of a pointer table; C0
+Jump_012_4CAA::
     ld a, $0E
     call Func_012_6820
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC927, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
-Func_012_4CB4:: ; heuristic: target of a pointer table; C0
+Jump_012_4CB4::
     ld a, $8D
     ld [wC927], a
-    jp Func_012_4DDC
+    jp Jump_012_4DDC
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCB8B
-; writes: wCB86, wCB8B, wCB96, wCBA6
-; points at: wCB8C, wC923
-Func_012_4CBC:: ; heuristic: target of a pointer table; C0
+Jump_012_4CBC::
     xor a, a
     ld [wCB86], a
     ld hl, wCB8C
@@ -1967,20 +1729,16 @@ Func_012_4CBC:: ; heuristic: target of a pointer table; C0
     ld [wCB96], a
     ld a, $03
     ld [wCBA6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, wCBAA
-; writes: wCBA6, wC921, wCBAA
-; points at: wC923
-Func_012_4CDF:: ; heuristic: target of a pointer table; C0
+Jump_012_4CDF::
     ld a, $01
     ld [wCBA6], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ld a, [wCBAA]
@@ -1991,34 +1749,27 @@ Func_012_4CDF:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wCBA6], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wCBAB
-; points at: wC923
-Func_012_4D05:: ; heuristic: target of a pointer table; C0
+Jump_012_4D05::
     ld b, $3C
     call StepWC921Counter_Bank12
     ret nc
     ld a, $40
     ld [wCBAB], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, wCB9A
-; writes: wCB96, wC921, wCB9A
-; points at: wC923
-Func_012_4D15:: ; heuristic: target of a pointer table; C0
+Jump_012_4D15::
     ld a, $03
     ld [wCB96], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ld a, [wCB9A]
@@ -2029,39 +1780,30 @@ Func_012_4D15:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wCB96], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_4D3B:: ; heuristic: target of a pointer table; C0
+Jump_012_4D3B::
     ld b, $1E
     call StepWC921Counter_Bank12
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wCB9B
-; points at: wC923
-Func_012_4D46:: ; heuristic: target of a pointer table; C0
+Jump_012_4D46::
     ld b, $3C
     call StepWC921Counter_Bank12
     ret nc
     ld a, $40
     ld [wCB9B], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCB8B
-; writes: wCB8B
-; points at: wCB8C, wC923
-Func_012_4D56:: ; heuristic: target of a pointer table; C0
+Jump_012_4D56::
     ld a, [wCB8B]
     dec a
     ld [wCB8B], a
@@ -2069,15 +1811,11 @@ Func_012_4D56:: ; heuristic: target of a pointer table; C0
     ret nz
     ld hl, wCB8C
     call ClearBit2AtHL_Bank12
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8D
-; writes: hFFB9, hFF8D, wCB91, hFFC6, wCB92, hFFC7, hFFC8, hFFC9, ...
-; points at: wC986, wCA2B, wCB8C, wC923
-Func_012_4D6B:: ; heuristic: target of a pointer table; C0
+Jump_012_4D6B::
     xor a, a
     ldh [hFFB9], a
     ldh a, [hFF8D]
@@ -2125,13 +1863,11 @@ Func_012_4D6B:: ; heuristic: target of a pointer table; C0
     ld [wC527], a
     ld hl, wCB8C
     call SetBit2AtHL_B12
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
-Func_012_4DDC:: ; heuristic: target of a pointer table; C0
+Jump_012_4DDC::
     ld a, $14
     ldh [hMapId], a
     xor a, a
@@ -2149,7 +1885,7 @@ Func_012_4DDC:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, ...
 ; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
-; points at: wC923
+; points at: wScriptStep
 Func_012_4DFB:: ; heuristic: follows a terminator; C0
     ld a, [wCB86]
     ld [wC937], a
@@ -2177,35 +1913,31 @@ Func_012_4DFB:: ; heuristic: follows a terminator; C0
     ld [wC942], a
     ld a, [wC8FB]
     ld [wC943], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4940)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4E4B::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4FD7
-    dw Func_012_4FBC
-    dw Func_012_4F2E
+    dw Jump_012_4FD7
+    dw Jump_012_4FBC
+    dw Jump_012_4F2E
 
 ; 1 call site from 1 routine (e.g. Func_010_4939)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4E55::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4FD7
-    dw Func_012_4FBC
-    dw Func_012_4EAD
-    dw Func_012_4E63
-    dw Func_012_4F2E
+    dw Jump_012_4FD7
+    dw Jump_012_4FBC
+    dw Jump_012_4EAD
+    dw Jump_012_4E63
+    dw Jump_012_4F2E
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC8F6, wC8FB, wC8F1, hPlayerY
-; writes: wC8EF, wC8F4, wC8F9, wC8FB, wC8F6, wC8F1, hPlayerY
-; points at: hFF8C, wC923
-Func_012_4E63:: ; heuristic: target of a pointer table; C0
+Jump_012_4E63::
     ld hl, hFF8C
     call SetBit1AtHL_Bank12
     xor a, a
@@ -2245,14 +1977,11 @@ Jump_012_4E9F::
     ldh [hPlayerY], a
     cp a, $50
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerX
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6
-Func_012_4EAD:: ; heuristic: target of a pointer table; C0
+Jump_012_4EAD::
     ld a, $01
     ldh [hMapId], a
     ld a, $01
@@ -2269,22 +1998,18 @@ Func_012_4EAD:: ; heuristic: target of a pointer table; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4932)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4ECE::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4FD7
-    dw Func_012_4FBC
-    dw Func_012_4F8E
-    dw Func_012_4F77
-    dw Func_012_4EDE
-    dw Func_012_4F2E
+    dw Jump_012_4FD7
+    dw Jump_012_4FBC
+    dw Jump_012_4F8E
+    dw Jump_012_4F77
+    dw Jump_012_4EDE
+    dw Jump_012_4F2E
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY
-; writes: hPlayerY
-; points at: hPlayerY, wC923
-Func_012_4EDE:: ; heuristic: target of a pointer table; C0
+Jump_012_4EDE::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ld hl, hPlayerY
@@ -2296,18 +2021,18 @@ Func_012_4EDE:: ; heuristic: target of a pointer table; C0
     ldh [hPlayerY], a
     cp a, $20
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_492B)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4EF9::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4FD7
+    dw Jump_012_4FD7
     dw Jump_012_4F03
-    dw Func_012_4F2E
+    dw Jump_012_4F2E
 
 Jump_012_4F03::
     ldh a, [hPlayerY]
@@ -2321,27 +2046,23 @@ Jump_012_4F03::
     ldh [hPlayerY], a
     cp a, $60
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4924)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4F1E::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_4FD7
-    dw Func_012_4FBC
-    dw Func_012_4F8E
-    dw Func_012_4F77
-    dw Func_012_4F5C
-    dw Func_012_4F2E
+    dw Jump_012_4FD7
+    dw Jump_012_4FBC
+    dw Jump_012_4F8E
+    dw Jump_012_4F77
+    dw Jump_012_4F5C
+    dw Jump_012_4F2E
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wC6FD
-; writes: wC919
-; points at: wC8F1, hFF8C
-Func_012_4F2E:: ; heuristic: target of a pointer table; C0
+Jump_012_4F2E::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ldh a, [hPlayerY]
@@ -2362,14 +2083,10 @@ Func_012_4F2E:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
     call ClearBit1AtHL_Bank12
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY
-; writes: hPlayerY
-; points at: hPlayerY, wC923
-Func_012_4F5C:: ; heuristic: target of a pointer table; C0
+Jump_012_4F5C::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ld hl, hPlayerY
@@ -2381,28 +2098,21 @@ Func_012_4F5C:: ; heuristic: target of a pointer table; C0
     ldh [hPlayerY], a
     cp a, $50
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC468
-; points at: wC923
-Func_012_4F77:: ; heuristic: target of a pointer table; C0
+Jump_012_4F77::
     farcall UpdatePlayerMovement
     farcall Func_002_5BD7
     ld a, [wC468]
     bit 7, a
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8C
-; writes: wC468, wC46A, hFF8C, hFF9D, hFF9E
-; points at: hMapScreenY, hFF80, wC923
-Func_012_4F8E:: ; heuristic: target of a pointer table; C0
+Jump_012_4F8E::
     ld a, $80
     ld [wC468], a
     ld a, $08
@@ -2419,15 +2129,11 @@ Func_012_4F8E:: ; heuristic: target of a pointer table; C0
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
     farcall Func_002_5BD7
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY
-; writes: hPlayerY
-; points at: hPlayerY, wC923
-Func_012_4FBC:: ; heuristic: target of a pointer table; C0
+Jump_012_4FBC::
     ldh a, [hPlayerY]
     call Func_012_65FF
     ld hl, hPlayerY
@@ -2439,55 +2145,46 @@ Func_012_4FBC:: ; heuristic: target of a pointer table; C0
     ldh [hPlayerY], a
     cp a, $80
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hPlayerFacing
-; points at: hFF8C, wC923
-Func_012_4FD7:: ; heuristic: target of a pointer table; C0
+Jump_012_4FD7::
     xor a, a
     ldh [hPlayerFacing], a
     ld hl, hFF8C
     call SetBit1AtHL_Bank12
     ld a, $65
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_496A)
-; reads: wC923
+; reads: wScriptStep
 Func_012_4FEA::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_5097
-    dw Func_012_5090
-    dw Func_012_5038
-    dw Func_012_501E
-    dw Func_012_5007
-    dw Func_012_501E
-    dw Func_012_501E
-    dw Func_012_4FFE
+    dw Jump_012_5097
+    dw Jump_012_5090
+    dw Jump_012_5038
+    dw Jump_012_501E
+    dw Jump_012_5007
+    dw Jump_012_501E
+    dw Jump_012_501E
+    dw Jump_012_4FFE
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hFFB9, wC919
-Func_012_4FFE:: ; heuristic: target of a pointer table; C0
+Jump_012_4FFE::
     xor a, a
     ldh [hFFB9], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, hFF93, hPlayerFacing
-; writes: hFF93, wC527, wC921, hPlayerFacing
-; points at: wC923
-Func_012_5007:: ; heuristic: target of a pointer table; C0
-    ld a, [wC921]
+Jump_012_5007::
+    ld a, [wScriptParam0]
     or a, a
-    jr nz, Func_012_501E
+    jr nz, Jump_012_501E
     ldh a, [hFF93]
     or a, $80
     ldh [hFF93], a
@@ -2495,14 +2192,10 @@ Func_012_5007:: ; heuristic: target of a pointer table; C0
     ld a, $7F
     ld [wC527], a
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, hPlayerFacing
-; writes: wC921, hPlayerFacing
-; points at: wC923
-Func_012_501E:: ; heuristic: target of a pointer table; C0
-    ld a, [wC921]
+Jump_012_501E::
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $03
     ret nz
     ldh a, [hPlayerFacing]
@@ -2510,16 +2203,12 @@ Func_012_501E:: ; heuristic: target of a pointer table; C0
     and a, $03
     ldh [hPlayerFacing], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wSpriteSlotCount, wCD04, hFF93, hFF94, hFF95
-; writes: hPlayerFacing, hFF93, hFF94, hFF95, hFF96, hFF97, wC921
-; points at: wCB8A, wC923
-Func_012_5038:: ; heuristic: target of a pointer table; C0
+Jump_012_5038::
     xor a, a
     ldh [hPlayerFacing], a
     ld a, [wSpriteSlotCount]
@@ -2568,20 +2257,16 @@ Jump_012_5080::
     xor a, a
     ldh [hFF97], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_012_5090:: ; heuristic: target of a pointer table; C0
+Jump_012_5090::
     farcall Func_012_653F
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB
-; points at: wC49F, wC0F0, wC923
-Func_012_5097:: ; heuristic: target of a pointer table; C0
+Jump_012_5097::
     ld a, $7A
     call QueueSoundEffect
     ld a, [wIsCGB]
@@ -2593,14 +2278,14 @@ Func_012_5097:: ; heuristic: target of a pointer table; C0
     call CopyBytes
 
 Jump_012_50AE::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4971)
-; reads: wC923
+; reads: wScriptStep
 Func_012_50B3::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_012_50DB
     dw Jump_012_50D1
@@ -2613,35 +2298,35 @@ Jump_012_50BD::
     ld a, $7F
     ld [wC527], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_012_50D1::
     xor a, a
     call Func_012_683C
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_012_50DB::
     ld a, $12
     call Func_012_6820
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4978)
-; reads: wC923
+; reads: wScriptStep
 Func_012_50E5::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_557C
+    dw Jump_012_557C
     dw Jump_012_50ED
 
 Jump_012_50ED::
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_012_5181
@@ -2764,16 +2449,16 @@ Func_012_51C0::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_497F)
-; reads: wC923
+; reads: wScriptStep
 Func_012_51F4::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_557C
+    dw Jump_012_557C
     dw Jump_012_51FC
 
 Jump_012_51FC::
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ldh a, [hFF8C]
     or a, $80
     and a, $DF
@@ -2801,13 +2486,7 @@ Jump_012_51FC::
     ldh [hMapScreenY], a
     ld a, $40
     ld [wC8C8], a
-    db $EA, $C9
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCD0D, wCD0E
-; writes: wC8CA, wMapWidthScreens, wMapHeightScreens, wCC44
-Func_012_5241:: ; heuristic: target of a pointer table; C0
-    ret z
+    ld [wC8C9], a
     xor a, a
     ld [wC8CA], a
     ld a, [wCD0D]
@@ -2876,28 +2555,23 @@ Jump_012_52A6::
     ret
 
 Data_012_52AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0492AD, $5E
-    dw Func_012_5241
-    dw Func_012_4100
-    dw Func_012_485D
-    dw Func_012_445A
-    INCBIN "dwm2-cobi-us.gbc", $049313, $1FB
+    INCBIN "dwm2-cobi-us.gbc", $0492AD, $261
 
 ; 1 call site from 1 routine (e.g. Func_010_48FA)
-; reads: wC923
+; reads: wScriptStep
 Func_012_550E::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_012_5520
-    dw Func_012_5548
-    dw Func_012_5668
+    dw Jump_012_5548
+    dw Jump_012_5668
     dw Func_012_653F
     dw Jump_012_5689
     dw Jump_012_56E8
     dw Jump_012_571D
 
 Jump_012_5520::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, $03
     ldh [hPlayerFacing], a
@@ -2909,21 +2583,21 @@ Jump_012_5520::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49C5)
-; reads: wC923
+; reads: wScriptStep
 Func_012_5534::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_557C
-    dw Func_012_5573
-    dw Func_012_5548
-    dw Func_012_5668
-    db $3F, $65, $89, $56, $E8, $56, $1D, $57
+    dw Jump_012_557C
+    dw Jump_012_5573
+    dw Jump_012_5548
+    dw Jump_012_5668
+    dw Func_012_653F
+    dw Jump_012_5689
+    dw Jump_012_56E8
+    dw Jump_012_571D
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wCB86, wCB96
-; points at: wC923
-Func_012_5548:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_5548::
+    ld hl, wScriptStep
     inc [hl]
     ld de, $002B
     call TestFlagBit
@@ -2949,31 +2623,25 @@ Jump_012_556E::
     ld [wCB96], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC8C5
-Func_012_5573:: ; heuristic: target of a pointer table; C0
+Jump_012_5573::
     call Func_012_55F8
     ld a, $80
     ld [wC8C5], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wC921, wC8F1, hPlayerFacing, wC8F6, wC8FB, hFF8C
-; writes: hPlayerY, hPlayerFacing, wC8F1, wC8EF, wC8F6, wC8F4, wC8FB, wC8F9, ...
-; points at: wC923
-Func_012_557C:: ; heuristic: target of a pointer table; C0
+Jump_012_557C::
     ldh a, [hPlayerY]
     cp a, $E0
     jr z, Jump_012_558F
     sub a, $04
     ldh [hPlayerY], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     and a, $03
     ldh [hPlayerFacing], a
 
 Jump_012_558F::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $08
     jr c, Jump_012_55A7
     ld a, [wC8F1]
@@ -2985,7 +2653,7 @@ Jump_012_558F::
     ld [wC8EF], a
 
 Jump_012_55A7::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $10
     jr c, Jump_012_55BF
     ld a, [wC8F6]
@@ -2997,7 +2665,7 @@ Jump_012_55A7::
     ld [wC8F4], a
 
 Jump_012_55BF::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $18
     jr c, Jump_012_55D7
     ld a, [wC8FB]
@@ -3015,57 +2683,32 @@ Jump_012_55D7::
     ldh a, [hFF8C]
     and a, $B7
     ldh [hFF8C], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49BE)
-; reads: wC923
+; reads: wScriptStep
 Func_012_55E8::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_012_5633
-    dw Func_012_5668
+    dw Jump_012_5668
     dw Func_012_653F
     dw Jump_012_5689
     dw Jump_012_56E8
     dw Jump_012_571D
 
-; 2 call sites from 2 routines (e.g. Func_012_574E, Func_012_5573)
-; reads: wCC44
-; writes: wC8C8, wC8C9, wC8CA, wC8C6, wC957
+; 2 call sites from 2 routines (e.g. Func_012_5534, Func_012_5728)
 Func_012_55F8::
-    ld a, [wCC44]
-    bit 7, a
-    jr z, Jump_012_5605
-    farcall Func_060_6C96
-
-Jump_012_5605::
-    ld a, $50
-    ld [wC8C8], a
-    ld a, $30
-    ld [wC8C9], a
-    xor a, a
-    ld [wC8CA], a
-    ld de, $0025
-    call TestFlagBit
-    jr c, Jump_012_5622
-    ld a, $04
-    ld [wC8C6], a
-    jr Jump_012_5627
-
-Jump_012_5622::
-    ld a, $03
-    ld [wC8C6], a
-
-Jump_012_5627::
-    ld a, $01
-    ld [wC957], a
-    farcall Func_05F_6C5A
-    ret
+    dw $44FA
+    db $CC, $CB, $7F, $28, $06, $21, $96, $6C, $06, $60, $D7, $3E, $50, $EA, $C8, $C8
+    db $3E, $30, $EA, $C9, $C8, $AF, $EA, $CA, $C8, $11, $25, $00, $CD, $1B, $18, $38
+    db $07, $3E, $04, $EA, $C6, $C8, $18, $05, $3E, $03, $EA, $C6, $C8, $3E, $01, $EA
+    db $57, $C9, $21, $5A, $6C, $06, $5F, $D7, $C9
 
 Jump_012_5633::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     farcall Func_012_7F05
     ld de, $0025
@@ -3092,10 +2735,7 @@ Jump_012_5662::
     call Func_012_6820
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB
-; points at: wC49F, wC0F0, wC923
-Func_012_5668:: ; heuristic: target of a pointer table; C0
+Jump_012_5668::
     xor a, a
     call Func_012_683C
     ret nc
@@ -3108,7 +2748,7 @@ Func_012_5668:: ; heuristic: target of a pointer table; C0
     call CopyBytes
 
 Jump_012_567F::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, $7A
     call QueueSoundEffect
@@ -3130,18 +2770,18 @@ Jump_012_5695::
     dec b
     jr nz, Jump_012_5695
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     jr Jump_012_56AD
 
 Jump_012_56A8::
     ld a, $01
-    ld [wC921], a
+    ld [wScriptParam0], a
 
 Jump_012_56AD::
     xor a, a
     ld [rRAMG], a
     call Func_012_64F8
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_012_56DB
     ld de, $002B
@@ -3157,19 +2797,19 @@ Jump_012_56C9::
 
 Jump_012_56CE::
     xor a, a
-    ld [wC921], a
-    ld a, [wC923]
+    ld [wScriptParam0], a
+    ld a, [wScriptStep]
     inc a
     inc a
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_012_56DB::
     ld a, $0E
     ldh [hFF8D], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3177,19 +2817,12 @@ Jump_012_56E8::
     farcall Func_002_5E85
     farcall Func_002_5E85
     call Func_000_222B
-    ld hl, Func_004_4AA8
-
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC527, hFF8D
-; points at: wC923
-Func_012_56FA:: ; heuristic: target of a pointer table; C0
-    ld b, $04
-    rst $10
+    farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
     xor a, a
     ldh [hFF8D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld de, $002B
     call TestFlagBit
@@ -3208,27 +2841,25 @@ Jump_012_571D::
     call Func_012_683C
     ret nc
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49B7)
-; reads: wC923
+; reads: wScriptStep
 Func_012_5728::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_5834
-    dw Func_012_57C7
-    dw Func_012_57AD
-    dw Func_012_5797
-    db $B6, $65
-    dw Func_012_5766
-    dw Func_012_575B
-    dw Func_012_574E
-    dw Func_012_573E
+    dw Jump_012_5834
+    dw Jump_012_57C7
+    dw Jump_012_57AD
+    dw Jump_012_5797
+    dw Jump_012_65B6
+    dw Jump_012_5766
+    dw Jump_012_575B
+    dw Jump_012_574E
+    dw Jump_012_573E
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC916, wC917
-Func_012_573E:: ; heuristic: target of a pointer table; C0
+Jump_012_573E::
     ld a, $05
     ld [wC916], a
     xor a, a
@@ -3236,9 +2867,7 @@ Func_012_573E:: ; heuristic: target of a pointer table; C0
     farcall Func_013_405C
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC8C7, wC8C5
-Func_012_574E:: ; heuristic: target of a pointer table; C0
+Jump_012_574E::
     call Func_012_55F8
     xor a, a
     ld [wC8C7], a
@@ -3246,21 +2875,15 @@ Func_012_574E:: ; heuristic: target of a pointer table; C0
     ld [wC8C5], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_575B:: ; heuristic: target of a pointer table; C0
+Jump_012_575B::
     ld b, $B4
     call StepWC921Counter_Bank12
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD
-; writes: rRAMG, wC919
-; points at: wC6FE, wC923
-Func_012_5766:: ; heuristic: target of a pointer table; C0
+Jump_012_5766::
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -3279,7 +2902,7 @@ Jump_012_5772::
     ld [rRAMG], a
     ld a, $42
     call QueueMusic
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3287,58 +2910,46 @@ Jump_012_578D::
     xor a, a
     ld [rRAMG], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, wC922, wC6FE, wC6FF, wC700
-; writes: wC921, wC924, wC925, wC926, wC922, rRAMG
-; points at: wC923, wC00B, wC8CF, wC147
-Func_012_5797:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_5797::
+    ld hl, wScriptStep
     dec [hl]
     ld de, wC00B
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     dec a
-    ld [wC921], a
+    ld [wScriptParam0], a
     or a, a
     jr nz, Jump_012_57DB
     ld de, vTiles0 + $B
     jr Jump_012_57DB
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wC921, wC923
-; points at: wC923
-Func_012_57AD:: ; heuristic: target of a pointer table; C0
+Jump_012_57AD::
     xor a, a
     call Func_012_683C
     ret nc
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_012_57C2
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $04
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_012_57C2::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, wC922, wC6FE, wC6FF, wC700
-; writes: wC921, wC924, wC925, wC926, wC922, rRAMG
-; points at: wC923, wC8CF, wC147
-Func_012_57C7:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_57C7::
+    ld hl, wScriptStep
     inc [hl]
     ld de, $400A
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     dec a
-    ld [wC921], a
+    ld [wScriptParam0], a
     or a, a
     jr nz, Jump_012_57DB
     ld de, $000A
@@ -3350,28 +2961,28 @@ Jump_012_57DB::
     ld [wC925], a
     xor a, a
     ld [wC926], a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     sra a
     jr nc, Jump_012_57FB
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     and a, $FE
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, [wC6FE]
     jr Jump_012_5817
 
 Jump_012_57FB::
     sra a
     jr nc, Jump_012_580C
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     and a, $FC
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, [wC6FF]
     jr Jump_012_5817
 
 Jump_012_580C::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     and a, $F7
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, [wC700]
 
 Jump_012_5817::
@@ -3389,11 +3000,7 @@ Jump_012_5817::
     call CopyBytes
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, wC915
-; writes: wC921, wC922
-; points at: wC923
-Func_012_5834:: ; heuristic: target of a pointer table; C0
+Jump_012_5834::
     ld a, [wC6FD]
     ld b, a
     ld c, $00
@@ -3408,32 +3015,28 @@ Jump_012_5842::
     dec b
     jr nz, Jump_012_583D
     ld a, c
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, [wC915]
-    ld [wC922], a
-    ld hl, wC923
+    ld [wScriptParam1], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49B0)
-; reads: wC923
+; reads: wScriptStep
 Func_012_5854::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_5994
-    dw Func_012_590D
-    dw Func_012_58F6
-    dw Func_012_58EF
-    dw Func_012_58E4
-    dw Func_012_58D6
-    dw Func_012_589B
-    dw Func_012_5868
+    dw Jump_012_5994
+    dw Jump_012_590D
+    dw Jump_012_58F6
+    dw Jump_012_58EF
+    dw Jump_012_58E4
+    dw Jump_012_58D6
+    dw Jump_012_589B
+    dw Jump_012_5868
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCD07, wC833
-; writes: wCD07, wC919
-; points at: wCE7E
-Func_012_5868:: ; heuristic: target of a pointer table; C0
+Jump_012_5868::
     ld a, [wCD07]
     or a, $80
     ld [wCD07], a
@@ -3461,15 +3064,11 @@ Jump_012_5875::
     set 6, a
     ld [hl], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wSpriteSlotCount, wC921
-; points at: wC923
-Func_012_589B:: ; heuristic: target of a pointer table; C0
-    ld a, [wC921]
+Jump_012_589B::
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_012_58A8
     bit 3, a
@@ -3498,48 +3097,39 @@ Jump_012_58BF::
     ld [wSpriteSlotCount], a
 
 Jump_012_58C3::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $78
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC921
-; points at: wC923
-Func_012_58D6:: ; heuristic: target of a pointer table; C0
+Jump_012_58D6::
     xor a, a
     call Func_012_684F
     ret nc
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_58E4:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_58E4::
+    ld hl, wScriptStep
     inc [hl]
     ld hl, $0129
     call Func_012_6813
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_012_58EF:: ; heuristic: target of a pointer table; C0
+Jump_012_58EF::
     farcall Func_012_653F
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB
-; points at: wC49F, wC0F0, wC923
-Func_012_58F6:: ; heuristic: target of a pointer table; C0
+Jump_012_58F6::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_012_5908
@@ -3549,19 +3139,15 @@ Func_012_58F6:: ; heuristic: target of a pointer table; C0
     call CopyBytes
 
 Jump_012_5908::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCE75, wCE76, wCE72, wCE73, wCE74, wCE77, wCE78, wCE79, ...
-; writes: wC903, wCFDD, wCFDE, wCFE3, wCFDC, wC905, wCFDF, wCFE0, ...
-; points at: wC923
-Func_012_590D:: ; heuristic: target of a pointer table; C0
+Jump_012_590D::
     xor a, a
     call Func_012_6828
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, $03
     ld [wC903], a
@@ -3624,56 +3210,53 @@ Jump_012_5988::
     farcall Func_05F_6C71
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCD04
-; points at: wC923
-Func_012_5994:: ; heuristic: target of a pointer table; C0
+Jump_012_5994::
     call NextRandomSeed
     ld a, [wCD04]
     and a, $0F
     ld hl, $00D0
     add_a_to_hl
     call Func_012_6813
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_48E5)
-; reads: wC923
+; reads: wScriptStep
 Func_012_59AC::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_5A17
-    dw Func_012_59DE
-    dw Func_012_59D3
-    dw Func_012_58D6
-    dw Func_012_589B
-    dw $59BC
+    dw Jump_012_5A17
+    dw Jump_012_59DE
+    dw Jump_012_59D3
+    dw Jump_012_58D6
+    dw Jump_012_589B
+    dw Jump_012_59BC
 
-; no direct call (reached through a table, a jump or a vector)
-Func_012_59BC:: ; heuristic: target of a pointer table; C0
-    dw Func_012_45FA
-    db $CC, $E6, $7F, $87, $87, $21, $7E, $CE, $85, $6F, $30, $01, $24, $36, $01, $3E
-    db $80, $EA, $19, $C9, $C9
+Jump_012_59BC::
+    ld a, [wCC45]
+    and a, $7F
+    add a, a
+    add a, a
+    ld hl, wCE7E
+    add_a_to_hl
+    ld [hl], $01
+    ld a, $80
+    ld [wScriptStartRequest], a
+    ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_59D3:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_59D3::
+    ld hl, wScriptStep
     inc [hl]
     ld hl, $012A
     call Func_012_6813
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45
-; writes: wC903, wCFDD, wCFDE, wCFE3, wCFDC, wC905
-; points at: wC923, wCE7B
-Func_012_59DE:: ; heuristic: target of a pointer table; C0
+Jump_012_59DE::
     xor a, a
     call Func_012_6828
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, $03
     ld [wC903], a
@@ -3696,25 +3279,22 @@ Func_012_59DE:: ; heuristic: target of a pointer table; C0
     farcall Func_05F_6C71
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCD04
-; points at: wC923
-Func_012_5A17:: ; heuristic: target of a pointer table; C0
+Jump_012_5A17::
     call NextRandomSeed
     ld a, [wCD04]
     and a, $0F
     ld hl, $00E0
     add_a_to_hl
     call Func_012_6813
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49A9)
-; reads: wC923
+; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
 Func_012_5A2F::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     cp a, $07
     jr z, Jump_012_5A3D
     xor a, a
@@ -3722,44 +3302,52 @@ Func_012_5A2F::
     ld [wJoypadPressed], a
 
 Jump_012_5A3D::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Func_012_5C31
     dw Func_012_5C27
     dw Func_012_5B9A
-    dw Func_012_5AF0
-    dw Func_012_5AE9
-    dw Func_012_5AC4
-    dw Func_012_5A89
-    dw Func_012_5A7A
-    dw $5A53
+    dw Jump_012_5AF0
+    dw Jump_012_5AE9
+    dw Jump_012_5AC4
+    dw Jump_012_5A89
+    dw Jump_012_5A7A
+    dw Jump_012_5A53
 
-; no direct call (reached through a table, a jump or a vector)
-Func_012_5A53:: ; heuristic: target of a pointer table; C0
-    dw Func_012_56FA
-    db $C9, $E6, $7F, $28, $0A, $E0, $C6, $AF, $E0, $C7, $CD, $C2, $7E, $18, $0C, $FA
-    db $22, $C9, $EA, $28, $C9, $21, $8C, $6C, $06, $5F, $D7, $AF, $EA, $56, $C9, $3E
-    db $80, $EA, $19, $C9, $C9
+Jump_012_5A53::
+    ld a, [wC956]
+    and a, $7F
+    jr z, Jump_012_5A64
+    ldh [hFFC6], a
+    xor a, a
+    ldh [hFFC7], a
+    call Func_012_7EC2
+    jr Jump_012_5A70
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC8FE
-; points at: wC923
-Func_012_5A7A:: ; heuristic: target of a pointer table; C0
+Jump_012_5A64::
+    ld a, [wScriptParam1]
+    ld [wC928], a
+    farcall Func_05F_6C8C
+
+Jump_012_5A70::
+    xor a, a
+    ld [wC956], a
+    ld a, $80
+    ld [wScriptStartRequest], a
+    ret
+
+Jump_012_5A7A::
     xor a, a
     call Func_012_683C
     ret nc
     ld a, $FF
     ld [wC8FE], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC956, wC922
-; writes: wC8C0, wC8C1, wC8C2, wC925
-; points at: wC923, wC17E, wC152
-Func_012_5A89:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_5A89::
+    ld hl, wScriptStep
     inc [hl]
     ld a, [wC956]
     and a, $7F
@@ -3778,7 +3366,7 @@ Func_012_5A89:: ; heuristic: target of a pointer table; C0
     ret
 
 Jump_012_5AB1::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld de, wC152
     call Func_000_2431
     ld a, $06
@@ -3787,39 +3375,30 @@ Jump_012_5AB1::
     ld [wC925], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wC928, wC929, wC921
-; points at: wC900, wC923
-Func_012_5AC4:: ; heuristic: target of a pointer table; C0
+Jump_012_5AC4::
     ld de, wC900
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_012_5AE9:: ; heuristic: target of a pointer table; C0
+Jump_012_5AE9::
     farcall Func_085_5C92
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC925, wC924, wIsCGB, wCC44, hMapId
-; writes: rSVBK, hFF8D
-; points at: wC923
-Func_012_5AF0:: ; heuristic: target of a pointer table; C0
+Jump_012_5AF0::
     ld a, [wC925]
     swap a
     and a, $0F
@@ -3918,57 +3497,57 @@ Jump_012_5B8C::
     farcall Func_05F_6DDB
     xor a, a
     ldh [hFF8D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6126)
-; reads: wC921
-; writes: wC922
-; points at: wC923
+; reads: wScriptParam0
+; writes: wScriptParam1
+; points at: wScriptStep
 Func_012_5B9A::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $06
     jr nc, Jump_012_5BA7
     xor a, a
-    ld [wC922], a
+    ld [wScriptParam1], a
     jr Jump_012_5BCB
 
 Jump_012_5BA7::
     cp a, $0C
     jr nc, Jump_012_5BB2
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     jr Jump_012_5BCB
 
 Jump_012_5BB2::
     cp a, $12
     jr nc, Jump_012_5BBB
     ld a, $02
-    ld [wC922], a
+    ld [wScriptParam1], a
 
 Jump_012_5BBB::
     cp a, $18
     jr nc, Jump_012_5BC6
     ld a, $03
-    ld [wC922], a
+    ld [wScriptParam1], a
     jr Jump_012_5BCB
 
 Jump_012_5BC6::
     ld a, $04
-    ld [wC922], a
+    ld [wScriptParam1], a
 
 Jump_012_5BCB::
     call Func_012_5BD9
     ld b, $1E
     call StepWC921Counter_Bank12
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_5B9A)
-; reads: wC195, wC922, hScrollX, hScrollXHi, wC924, hScrollY, hScrollYHi, wC925
+; reads: wC195, wScriptParam1, hScrollX, hScrollXHi, wC924, hScrollY, hScrollYHi, wC925
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 Func_012_5BD9::
     ld a, [wC195]
@@ -3978,7 +3557,7 @@ Func_012_5BD9::
     dec a
     add a, $23
     ldh [hSpriteSetIndex], a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ldh [hSpriteSubIndex], a
     ld a, $07
     ldh [hSpriteAttrXor], a
@@ -4010,30 +3589,30 @@ Func_012_5BD9::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6126)
-; points at: wC923
+; points at: wScriptStep
 Func_012_5C27::
     ld a, $83
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6126)
 ; reads: wC195, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
-; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wC921
-; points at: wC4DF, wC923
+; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wScriptParam0
+; points at: wC4DF, wScriptStep
 Func_012_5C31::
     ld a, [wC195]
     swap a
     and a, $0F
-    ld de, Func_012_5994
+    ld de, Jump_012_5994
     ld b, $7E
     jr Jump_012_5C4E
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC195, hPlayerX, hPlayerY, hPlayerFacing
-; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wC921
-; points at: wC4DF, wC923
+; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wScriptParam0
+; points at: wC4DF, wScriptStep
 Func_012_5C3F:: ; heuristic: follows a terminator; C0
     dec a
     jr nz, Jump_012_5C49
@@ -4127,15 +3706,15 @@ Jump_012_5CD1::
     ld [wC8F4], a
     ld [wC8F9], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49A2)
-; reads: wC922
-Func_012_5CE5:: ; heuristic: follows a terminator; C0
-    ld a, [wC922]
+; reads: wScriptParam1
+Func_012_5CE5::
+    ld a, [wScriptParam1]
     dec a
     jr nz, Jump_012_5CEF
     call Func_012_5DB6
@@ -4152,13 +3731,13 @@ Jump_012_5CF6::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_5CE5)
-; reads: wC923
+; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
 Func_012_5CFA::
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_012_5D09
     dw Jump_012_5D25
@@ -4175,8 +3754,8 @@ Jump_012_5D09::
     sub a, $08
     ldh [hPlayerY], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4187,16 +3766,16 @@ Jump_012_5D25::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_012_5D41
     ld hl, hPlayerY
     inc [hl]
 
 Jump_012_5D41::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     jr nz, Jump_012_5D91
     ldh a, [hPlayerX]
@@ -4214,7 +3793,7 @@ Jump_012_5D41::
     xor a, a
     ldh [hFF8D], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ldh a, [hFF8C]
     or a, $01
     ldh [hFF8C], a
@@ -4231,7 +3810,7 @@ Jump_012_5D41::
     ret
 
 Jump_012_5D91::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     ret z
     ldh a, [hPlayerFacing]
@@ -4261,13 +3840,13 @@ Jump_012_5DB1::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_5CE5)
-; reads: wC923
+; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
 Func_012_5DB6::
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Func_012_61EF
     dw Func_012_61EF
@@ -4286,16 +3865,16 @@ Jump_012_5DD3::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_012_5DEF
     ld hl, hPlayerY
     dec [hl]
 
 Jump_012_5DEF::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     jr nz, Jump_012_5E14
     ldh a, [hPlayerY]
@@ -4309,12 +3888,12 @@ Jump_012_5DEF::
     ld a, $02
     ldh [hFF8B], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_012_5E14::
     call Func_012_6114
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     ret z
     ldh a, [hPlayerFacing]
@@ -4345,7 +3924,7 @@ Jump_012_5E37::
 
 Jump_012_5E3C::
     call Func_012_6114
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, [wCC44]
     bit 7, a
@@ -4443,19 +4022,19 @@ Jump_012_5ECF::
     ld [wC8F4], a
     ld [wC8F9], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_5CE5)
-; reads: wC923
+; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
 Func_012_5EE7::
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Func_012_61EF
     dw Func_012_61EF
@@ -4472,7 +4051,7 @@ Jump_012_5F06::
     ld b, $1E
     call StepWC921Counter_Bank12
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4483,7 +4062,7 @@ Jump_012_5F11::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     jr nz, Jump_012_5F30
     ldh a, [hPlayerFacing]
@@ -4492,9 +4071,9 @@ Jump_012_5F11::
     ldh [hPlayerFacing], a
 
 Jump_012_5F30::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld a, [wC8EF]
@@ -4502,8 +4081,8 @@ Jump_012_5F30::
     ld a, $7A
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4519,16 +4098,16 @@ Jump_012_5F4D::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_012_5F74
     ld hl, hPlayerY
     inc [hl]
 
 Jump_012_5F74::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     jr nz, Jump_012_5FC8
     ldh a, [hFF8C]
@@ -4549,7 +4128,7 @@ Jump_012_5F74::
     xor a, a
     ldh [hFF8D], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ldh a, [hFF8C]
     or a, $01
     ldh [hFF8C], a
@@ -4664,8 +4243,8 @@ Jump_012_6049::
     sub a, $08
     ldh [hPlayerY], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4691,16 +4270,16 @@ Jump_012_6077::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_012_6093
     ld hl, hPlayerY
     dec [hl]
 
 Jump_012_6093::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     jr nz, Jump_012_60B3
     ldh a, [hPlayerY]
@@ -4710,14 +4289,14 @@ Jump_012_6093::
     ld a, $02
     ldh [hFF8B], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_012_60B3::
     call Func_012_6114
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     ret z
     ldh a, [hPlayerFacing]
@@ -4747,7 +4326,7 @@ Jump_012_60D6::
     ret
 
 Jump_012_60DB::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_012_60E8
     bit 1, a
@@ -4771,14 +4350,14 @@ Jump_012_60F8::
     jr Jump_012_60FD
 
 Jump_012_60FD::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $78
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ld a, $0E
     ldh [hFF8D], a
@@ -4906,20 +4485,20 @@ Jump_012_61D7::
     ld [wC8F4], a
     ld [wC8F9], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; 7 call sites from 7 routines (e.g. Func_00F_67BA, Func_00F_6D4D, Func_073_5761, Func_073_619B, ...)
-; reads: wC921
-; points at: wC921, wC923
+; 7 call sites from 7 routines (e.g. Func_00F_67BA, Func_00F_6D4D, Func_073_5761, Func_073_6126, ...)
+; reads: wScriptParam0
+; points at: wScriptParam0, wScriptStep
 Func_012_61EF::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_012_6200
     farcall Func_002_5923
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -4928,26 +4507,22 @@ Jump_012_6200::
     ld b, $11
     call StepWC921Counter_Bank12
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4994)
-; reads: wC923
+; reads: wScriptStep
 Func_012_6211::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_6295
-    dw Func_012_628B
-    dw Func_012_6247
-    dw Func_012_628B
-    dw Func_012_621F
+    dw Jump_012_6295
+    dw Jump_012_628B
+    dw Jump_012_6247
+    dw Jump_012_628B
+    dw Jump_012_621F
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45
-; writes: wC919
-; points at: wCDAF
-Func_012_621F:: ; heuristic: target of a pointer table; C0
+Jump_012_621F::
     farcall Func_0F0_7D0A
     ld a, [wCC45]
     swap a
@@ -4958,21 +4533,17 @@ Func_012_621F:: ; heuristic: target of a pointer table; C0
     farcall Func_061_44DB
     farcall Func_05F_6DDB
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, wC922, wCC45
-; writes: wC919, wC928
-; points at: wCDAF
-Func_012_6247:: ; heuristic: target of a pointer table; C0
-    ld a, [wC921]
+Jump_012_6247::
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, l
     jr nz, Jump_012_6257
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_012_6257::
@@ -4995,29 +4566,23 @@ Jump_012_6279::
     farcall Func_061_44DB
     farcall Func_05F_6DDB
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wC923
-Func_012_628B:: ; heuristic: target of a pointer table; C0
+Jump_012_628B::
     xor a, a
     call Func_012_683C
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, wC922, wC634, wCECE, hFFC6
-; writes: wC921, wC922, wC923
-; points at: wC923, wC152
-Func_012_6295:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_6295::
+    ld hl, wScriptStep
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, l
     jr nz, Jump_012_62A9
     ld a, $00
@@ -5048,9 +4613,9 @@ Jump_012_62C9::
     call Func_012_6820
     ld hl, $0000
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_012_62DA::
@@ -5067,9 +4632,9 @@ Jump_012_62EB::
     call Func_012_6820
     ld hl, $0000
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_012_62FC::
@@ -5079,32 +4644,32 @@ Jump_012_62FC::
     ld a, $19
     call Func_012_6820
     ld a, $03
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_498D)
-; reads: wC923
+; reads: wScriptStep
 Func_012_630E::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_012_635B
     dw Jump_012_6351
     dw Jump_012_6318
 
 Jump_012_6318::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, l
     jr nz, Jump_012_6328
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_012_6328::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld h, a
     inc hl
     ld a, [hl]
@@ -5116,23 +4681,23 @@ Jump_012_6328::
     farcall Func_061_45E8
     farcall Func_05F_6DDB
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_012_6351::
     xor a, a
     call Func_012_683C
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_012_635B::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld h, a
     inc hl
     inc hl
@@ -5167,34 +4732,29 @@ Jump_012_6390::
     call Func_012_6820
     ld hl, $0000
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4986)
-; reads: wC923
+; reads: wScriptStep
 Func_012_63A1::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
-    dw Func_012_642B
-    dw Func_012_641F
-    dw Func_012_63F2
-    dw Func_012_63D4
-    dw Func_012_63B7
+    dw Jump_012_642B
+    dw Jump_012_641F
+    dw Jump_012_63F2
+    dw Jump_012_63D4
+    dw Jump_012_63B7
+    dw Jump_012_63B1
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC919
-Func_012_63AF:: ; heuristic: follows a terminator; C0
-    or a, c
-    ld h, e
+Jump_012_63B1::
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC903, wC905, wC919
-Func_012_63B7:: ; heuristic: target of a pointer table; C0
+Jump_012_63B7::
     ld a, $05
     ld [wC903], a
     ld a, $01
@@ -5205,12 +4765,10 @@ Func_012_63B7:: ; heuristic: target of a pointer table; C0
     or a, $80
     ld [hl], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: wC928, wC8FE, wC919
-Func_012_63D4:: ; heuristic: target of a pointer table; C0
+Jump_012_63D4::
     call Func_012_64D5
     inc hl
     ld a, [hl]
@@ -5223,12 +4781,10 @@ Func_012_63D4:: ; heuristic: target of a pointer table; C0
     ld [wC8FE], a
     farcall Func_05F_6C8C
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hFFC6, hFFC7, wC8FE, wC919
-Func_012_63F2:: ; heuristic: target of a pointer table; C0
+Jump_012_63F2::
     call Func_012_64D5
     inc hl
     ld a, [hl]
@@ -5254,26 +4810,19 @@ Func_012_63F2:: ; heuristic: target of a pointer table; C0
     ld a, $FF
     ld [wC8FE], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wC923
-Func_012_641F:: ; heuristic: target of a pointer table; C0
+Jump_012_641F::
     xor a, a
     call Func_012_683C
     ret nc
-    ld a, [wC921]
-    ld [wC923], a
+    ld a, [wScriptParam0]
+    ld [wScriptStep], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC634
-; writes: wC921, wC8C0, wC8C1, wC8C2
-; points at: wC923, wC152, wC17E
-Func_012_642B:: ; heuristic: target of a pointer table; C0
-    ld hl, wC923
+Jump_012_642B::
+    ld hl, wScriptStep
     inc [hl]
     call Func_012_64D5
     ld a, [hl]
@@ -5293,7 +4842,7 @@ Jump_012_6441::
     ld a, $06
     call Func_012_6820
     ld a, $03
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
 Jump_012_6454::
@@ -5304,7 +4853,7 @@ Jump_012_6454::
     ld a, $07
     call Func_012_6820
     ld a, $05
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
 Jump_012_6467::
@@ -5332,7 +4881,7 @@ Jump_012_6467::
     ld a, $05
     call Func_012_6820
     ld a, $02
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
 Jump_012_6496::
@@ -5352,7 +4901,7 @@ Jump_012_64A4::
     ld a, $02
     call Func_012_6820
     ld a, $03
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
 Jump_012_64B7::
@@ -5363,17 +4912,17 @@ Jump_012_64B7::
     ld a, $03
     call Func_012_6820
     ld a, $05
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
 Jump_012_64CA::
     ld a, $04
     call Func_012_6820
     ld a, $04
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_012_63B7, Func_012_63D4, Func_012_63F2, Func_012_642B)
+; 4 call sites from 1 routine (e.g. Func_012_63A1)
 ; reads: wCCE9, wC900
 ; points at: wCC48, wCCEB
 Func_012_64D5::
@@ -5396,7 +4945,7 @@ Jump_012_64EA::
     add_a_to_hl
     ret
 
-; 10 call sites from 9 routines (e.g. Func_012_4546, Func_012_5668, Func_002_4745, Func_007_4E11, ...)
+; 10 call sites from 8 routines (e.g. Func_012_44DB, Func_012_55F8, Func_002_4745, Func_007_4E11, ...)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE
@@ -5446,12 +4995,12 @@ Jump_012_6504::
     ld [rRAMG], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_00F_5404, Func_00F_59E6, Func_00F_60E6, Func_012_5090, ...)
-; reads: wC921, wIsCGB
-; writes: wC526, wC921
-; points at: wC5E9, wC0F0, wC49F, wC923
-Func_012_653F:: ; heuristic: follows a terminator; C0
-    ld a, [wC921]
+; 7 call sites from 7 routines (e.g. Func_00F_5404, Func_00F_59E6, Func_00F_60E6, Func_012_4FEA, ...)
+; reads: wScriptParam0, wIsCGB
+; writes: wC526, wScriptParam0
+; points at: wC5E9, wC0F0, wC49F, wScriptStep
+Func_012_653F::
+    ld a, [wScriptParam0]
     srl a
     srl a
     and a, $01
@@ -5500,26 +5049,26 @@ Jump_012_658C::
     ld [wC526], a
 
 Jump_012_6591::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $1E
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
-; 10 call sites from 10 routines (e.g. Func_012_61EF, Func_012_5B9A, Func_012_5EE7, Func_012_575B, ...)
-; reads: wC921
-; writes: wC921
-StepWC921Counter_Bank12:: ; heuristic: follows a terminator; C0
+; 10 call sites from 8 routines (e.g. Func_012_44DB, Func_012_4A9A, Func_012_4C07, Func_012_5534, ...)
+; reads: wScriptParam0
+; writes: wScriptParam0
+StepWC921Counter_Bank12::
 Func_012_65A4:: ; address name
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, b
     jr z, Jump_012_65B0
     sub a, a
@@ -5527,20 +5076,16 @@ Func_012_65A4:: ; address name
 
 Jump_012_65B0::
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     scf
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
-; writes: wC921, hFF8D, wC527
-; points at: wC923
-Func_012_65B6:: ; heuristic: follows a terminator; C0
-    ld a, [wC921]
+Jump_012_65B6::
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_012_65C5
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0E
     ldh [hFF8D], a
     ret
@@ -5555,14 +5100,14 @@ Jump_012_65C5::
     xor a, a
     ldh [hFF8D], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. Func_012_4E63, Func_012_4FD7)
-SetBit1AtHL_Bank12:: ; heuristic: follows a terminator; C0
+; 2 call sites from 2 routines (e.g. Func_012_4E55, Func_012_4F1E)
+SetBit1AtHL_Bank12::
 Func_012_65EB:: ; address name
     ld a, [hl]
     or a, $02
@@ -5570,8 +5115,8 @@ Func_012_65EB:: ; address name
     ret
 
 ; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
-; 1 call site from 1 routine (e.g. Func_012_4F2E)
-ClearBit1AtHL_Bank12:: ; heuristic: follows a terminator; C0
+; 1 call site from 1 routine (e.g. Func_012_4F1E)
+ClearBit1AtHL_Bank12::
 Func_012_65F0:: ; address name
     ld a, [hl]
     and a, $FD
@@ -5579,8 +5124,8 @@ Func_012_65F0:: ; address name
     ret
 
 ; sets bit 2 of the byte at [HL]; only A is clobbered
-; 14 call sites from 11 routines (e.g. Func_012_4BB4, Func_012_4CBC, Func_012_4D6B, Func_012_4814, ...)
-SetBit2AtHL_B12:: ; heuristic: follows a terminator; C0
+; 14 call sites from 6 routines (e.g. Func_012_4064, Func_012_42B5, Func_012_43DA, Func_012_44DB, ...)
+SetBit2AtHL_B12::
 Func_012_65F5:: ; address name
     ld a, [hl]
     or a, $04
@@ -5588,16 +5133,16 @@ Func_012_65F5:: ; address name
     ret
 
 ; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
-; 3 call sites from 3 routines (e.g. Func_012_4D56, Func_012_474A, Func_012_422C)
-ClearBit2AtHL_Bank12:: ; heuristic: follows a terminator; C0
+; 7 call sites from 3 routines (e.g. Func_012_4210, Func_012_44DB, Func_012_4C07)
+ClearBit2AtHL_Bank12::
 Func_012_65FA:: ; address name
     ld a, [hl]
     and a, $FB
     ld [hl], a
     ret
 
-; 21 call sites from 13 routines (e.g. Func_012_4F5C, Func_012_4EDE, Func_012_4F2E, Func_012_4FBC, ...)
-Func_012_65FF:: ; heuristic: follows a terminator; C0
+; 21 call sites from 6 routines (e.g. Func_012_4064, Func_012_42B5, Func_012_44DB, Func_012_4ECE, ...)
+Func_012_65FF::
     and a, $0F
     jr nz, Jump_012_6609
     farcall Func_002_5923
@@ -5608,7 +5153,7 @@ Jump_012_6609::
 
 ; 1 call site from 1 routine (e.g. Func_012_683C)
 ; reads: wC926
-Func_012_6610:: ; heuristic: follows a terminator; C0
+Func_012_6610::
     push af
     ld a, [wC926]
     cp a, $FF
@@ -5729,7 +5274,7 @@ Jump_012_66D4::
 
 ; 1 call site from 1 routine (e.g. Func_012_684A)
 ; reads: wC926
-Func_012_66DA:: ; heuristic: follows a terminator; C0
+Func_012_66DA::
     push af
     ld a, [wC926]
     cp a, $FF
@@ -5828,7 +5373,7 @@ Jump_012_6782::
 
 ; 1 call site from 1 routine (e.g. Func_012_684F)
 ; reads: wC926
-Func_012_6787:: ; heuristic: follows a terminator; C0
+Func_012_6787::
     push af
     ld a, [wC926]
     cp a, $FF
@@ -5909,7 +5454,7 @@ Jump_012_680E::
     inc [hl]
     ret
 
-; 4 call sites from 4 routines (e.g. Func_012_59D3, Func_012_5A17, Func_012_58E4, Func_012_5994)
+; 4 call sites from 2 routines (e.g. Func_012_59AC, Func_012_5854)
 ; writes: wC924, wC925, wC926
 Func_012_6813::
     ld a, l
@@ -5920,7 +5465,7 @@ Func_012_6813::
     ld [wC926], a
     ret
 
-; 35 call sites from 15 routines (e.g. Func_012_642B, Func_012_6295, Func_012_56FA, Func_012_5A89, ...)
+; 35 call sites from 13 routines (e.g. Func_012_50B3, Func_012_4001, Func_012_4013, Func_012_488B, ...)
 ; writes: wC924, wC926
 Func_012_6820::
     ld [wC924], a
@@ -5928,7 +5473,7 @@ Func_012_6820::
     ld [wC926], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_012_59DE, Func_012_590D)
+; 2 call sites from 2 routines (e.g. Func_012_59AC, Func_012_5854)
 ; reads: wC926
 ; writes: wC928
 Func_012_6828::
@@ -5944,7 +5489,7 @@ Jump_012_683A::
     scf
     ret
 
-; 11 call sites from 11 routines (e.g. Func_012_641F, Func_012_628B, Func_012_5A7A, Func_012_57AD, ...)
+; 11 call sites from 10 routines (e.g. Func_012_50B3, Func_012_4013, Func_012_4A9A, Func_012_4C07, ...)
 ; reads: wC926
 Func_012_683C::
     call Func_012_6610
@@ -5960,13 +5505,13 @@ Jump_012_6848::
     scf
     ret
 
-; 4 call sites from 4 routines (e.g. Func_012_4814, Func_012_4850, Func_012_473C, Func_012_447A)
+; 4 call sites from 2 routines (e.g. Func_012_43DA, Func_012_44DB)
 ; reads: wC926
 Func_012_684A::
     call Func_012_66DA
     jr Jump_012_683F
 
-; 1 call site from 1 routine (e.g. Func_012_58D6)
+; 1 call site from 1 routine (e.g. Func_012_5854)
 ; reads: wC926
 Func_012_684F::
     call Func_012_6787
@@ -6015,7 +5560,7 @@ Func_012_6893::
     call Func_012_6EB7
     ret
 
-; 10 call sites from 9 routines (e.g. Func_00C_6601, Func_00C_6F5E, Func_012_6295, Func_013_5EF4, ...)
+; 11 call sites from 10 routines (e.g. Func_00C_659F, Func_00C_6CA1, Func_012_6211, Func_013_5EF4, ...)
 ; reads: hFFC6, hFFC8, hFFC7, hFFD0, wC966, wCD03, wCD04, wC836
 ; writes: wC966, hFFC6, hFFC7, hFFD0, wC836
 ; points at: wC70A, wC787
@@ -6158,7 +5703,7 @@ Jump_012_6948::
     ldh [hFFC6], a
     ret
 
-; 12 call sites from 10 routines (e.g. Func_012_689A, Func_004_581C, Func_00C_6F5E, Func_00F_5404, ...)
+; 12 call sites from 10 routines (e.g. Func_012_689A, Func_004_581C, Func_00C_6CA1, Func_00F_5404, ...)
 ; reads: hFFC6, hFFC7, wCD05, hFFC8, hFFC9
 ; writes: hFFC6
 Func_012_6955::
@@ -6200,10 +5745,10 @@ Jump_012_6973::
     ld [hl], a
     ret
 
-; 11 call sites from 9 routines (e.g. Func_004_581C, Func_00C_6F5E, Func_00F_5404, Func_013_7598, ...)
+; 11 call sites from 9 routines (e.g. Func_004_581C, Func_00C_6CA1, Func_00F_5404, Func_013_7598, ...)
 ; writes: hFFC6
 ; points at: wC707
-Func_012_6990:: ; heuristic: follows a terminator; C0
+Func_012_6990::
     ld b, $00
     ld hl, wC707
 
@@ -6436,7 +5981,7 @@ Jump_012_6ABC::
 ; reads: hFFC6, wIsCGB
 ; writes: wC949, wC527
 ; points at: wC4DF
-Func_012_6AD9:: ; heuristic: follows a terminator; C0
+Func_012_6AD9::
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_012_6AE3
@@ -6485,7 +6030,7 @@ Jump_012_6B15::
 ; 11 call sites from 2 routines (e.g. Func_05F_73A8, Func_073_7024)
 ; reads: wC949
 ; writes: wC949
-Func_012_6B22:: ; heuristic: follows a terminator; C0
+Func_012_6B22::
     ld a, [wC949]
     dec a
     dec a
@@ -6499,7 +6044,7 @@ Func_012_6B22:: ; heuristic: follows a terminator; C0
 ; 11 call sites from 2 routines (e.g. Func_05F_73A8, Func_073_7024)
 ; reads: hFFC6, wFrameCounterLo, wFrameCounterHi, wC949
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
-Func_012_6B33:: ; heuristic: follows a terminator; C0
+Func_012_6B33::
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_012_6B42
@@ -6541,7 +6086,7 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
-; 51 call sites from 38 routines (e.g. Func_012_6A6A, Func_002_4628, Func_002_4A7A, Func_004_5698, ...)
+; 51 call sites from 37 routines (e.g. Func_012_6A6A, Func_002_4628, Func_002_4A7A, Func_004_5698, ...)
 ; reads: hFFC6
 Func_012_6B98::
     ldh a, [hFFC6]
@@ -7739,7 +7284,7 @@ Jump_012_73A0::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_4C4E, Func_002_56DC)
-; reads: wC951, wC8BF, wC8FE, hPlayerX, hPlayerY, wC91F, wC917, wC916
+; reads: wC951, wC8BF, wC8FE, hPlayerX, hPlayerY, wScriptRunning, wC917, wC916
 ; writes: wD091, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_012_73A1::
     ld a, [wC951]
@@ -7762,7 +7307,7 @@ Func_012_73A1::
     call Func_012_7536
     or a, a
     jr z, Jump_012_73F2
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     jr z, Jump_012_73DC
     ld a, [wC917]
@@ -7789,7 +7334,7 @@ Jump_012_73F2::
 
 ; 1 call site from 1 routine (e.g. Func_002_4C4E)
 ; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wCC44, hPlayerX, hPlayerY, hPlayerFacing, ...
-; writes: wC921, wC922, wC916, wC917, wJoypadHeld, wJoypadPressed
+; writes: wScriptParam0, wScriptParam1, wC916, wC917, wJoypadHeld, wJoypadPressed
 ; points at: wCDB0, wCE8B
 Func_012_73F3::
     ld a, [wC8CB]
@@ -7862,9 +7407,9 @@ Jump_012_7440::
 Jump_012_7457::
     ld hl, $0000
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, $0E
     ld [wC916], a
     xor a, a
@@ -7907,9 +7452,9 @@ Jump_012_74A2::
     dec hl
     dec hl
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, $0E
     ld [wC916], a
     xor a, a
@@ -7943,9 +7488,9 @@ Jump_012_74D6::
     dec hl
     dec hl
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, $0E
     ld [wC916], a
     xor a, a
@@ -7971,7 +7516,7 @@ Jump_012_7508::
     ld hl, wCE8B
     add_a_to_hl
     ld a, [hl]
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0D
     ld [wC916], a
     xor a, a
@@ -8082,10 +7627,10 @@ Func_012_75A1::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_012_7BCC, Func_002_56DC, Func_002_5BD7)
-; reads: wC91F, wC935, wCC44, hMapId, wC832
+; reads: wScriptRunning, wC935, wCC44, hMapId, wC832
 ; writes: wC832
 Func_012_75E0::
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ld a, [wC935]
@@ -9098,7 +8643,7 @@ Func_012_7B9F::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7)
-; reads: wC8FE, wC91F, wCC44, wC935, wC5E8, wCB83, wCB84, wC634
+; reads: wC8FE, wScriptRunning, wCC44, wC935, wC5E8, wCB83, wCB84, wC634
 ; writes: wC935, wCB83, wCB8A, wCB84, wCB8B, wSpriteSlots, wCB80, wCB82, ...
 Func_012_7BB0::
     call Func_012_7D5E
@@ -9107,7 +8652,7 @@ Func_012_7BB0::
     ld a, [wC8FE]
     cp a, $FF
     ret nz
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     or a, a
     ret nz
     ld a, [wCC44]
@@ -9557,7 +9102,7 @@ Jump_012_7E77::
     ret
     db $AF, $E0, $C7, $C9
 
-; 5 call sites from 3 routines (e.g. Func_073_42F1, Func_073_45FF, Func_073_4CCB)
+; 5 call sites from 3 routines (e.g. Func_073_42AB, Func_073_44A5, Func_073_4C5D)
 ; reads: hFFC6, hFFC7, wC619, wC618, wC617
 ; writes: wC617, wC618, wC619
 Func_012_7E84::
@@ -9598,7 +9143,7 @@ Jump_012_7EB7::
     ld [wC619], a
     ret
 
-; 11 call sites from 4 routines (e.g. Func_010_4445, Func_012_63F2, Func_013_70D9, Func_073_4139)
+; 12 call sites from 5 routines (e.g. Func_012_5A2F, Func_010_4445, Func_012_63A1, Func_013_70D9, ...)
 ; reads: hFFC6, hFFC7, wC617, wC618, wC619
 ; writes: wC617, wC618, wC619
 Func_012_7EC2::

@@ -729,7 +729,7 @@ Jump_000_05C7::
     jp Func_000_08AD
 
 ; returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step
-; 44 call sites from 15 routines (e.g. Func_000_0150, DetectSGB, Func_000_0FC1, Func_000_13E5, ...)
+; 44 call sites from 15 routines (e.g. Func_000_0150, DetectSGB, Func_000_0FC1, StartPaletteFade, ...)
 ; reads: wSGBActive
 SpinDelay::
 Func_000_05D1:: ; address name
@@ -1172,7 +1172,7 @@ Jump_000_0819::
     ret
 
 ; when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access
-; 18 call sites from 15 routines (e.g. VBlankHandler, GameMode2_Update, Func_003_4A36, Func_003_4339, ...)
+; 18 call sites from 13 routines (e.g. VBlankHandler, GameMode2_Update, Func_003_4A36, Func_003_4339, ...)
 ; reads: wC526
 ; writes: rBGPI
 ; points at: wC49F
@@ -1407,7 +1407,7 @@ Jump_000_094A::
     ret
 
 ; HL = source, DE = destination, BC = count (memcpy)
-; 45 call sites from 34 routines (e.g. Func_002_5F22, Func_002_470B, Func_002_5EEE, Func_002_52D8, ...)
+; 47 call sites from 35 routines (e.g. Func_002_5F22, Func_002_5EEE, Func_002_470B, Func_002_52D8, ...)
 CopyBytes::
 Func_000_0952:: ; address name
     ld a, [hl+]
@@ -1420,7 +1420,7 @@ Func_000_0952:: ; address name
     ret
 
 ; wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8
-; 47 call sites from 40 routines (e.g. Func_000_0150, Func_000_3ED4, Func_000_3EDE, Func_001_6C1F, ...)
+; 47 call sites from 40 routines (e.g. Func_000_0150, Func_000_3ED4, Func_000_3EDE, Func_001_6C48, ...)
 ; reads: wC5E8
 ; writes: wC5E8, wC5E7
 NextTableByte::
@@ -1439,7 +1439,7 @@ Func_000_095B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $000973, $80
 
 ; 16-bit seed in wCD03/wCD04 becomes seed * 5 + 11
-; 81 call sites from 43 routines (e.g. VBlankHandler, Func_00A_43EC, Func_00A_476E, Func_00A_465D, ...)
+; 81 call sites from 42 routines (e.g. VBlankHandler, Func_00A_476E, Func_00A_43EC, Func_00A_465D, ...)
 ; reads: wCD03, wCD04
 ; writes: wCD03, wCD04
 NextRandomSeed::
@@ -1668,7 +1668,7 @@ Jump_000_0B20::
     ret
 
 ; C2 static reading (E-0014): like Func_000_0B18, but before each byte waits for STAT ($FF41) bit 1 to clear with interrupts disabled, so HL can be VRAM.
-; 232 call sites from 95 routines (e.g. Func_000_2D4A, CopyMonsterNameToBuffer_B01, Func_001_4045, Func_003_6B5E, ...)
+; 232 call sites from 88 routines (e.g. Func_000_2D4A, CopyMonsterNameToBuffer_B01, Func_001_4045, Func_003_6B5E, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 CopyFromBankWaitVRAM::
@@ -1734,7 +1734,7 @@ Jump_000_0B5A::
     ret
 
 ; C2 static reading (E-0014): switches to the ROM bank held in $D7FE, reads the word at [HL] into B (low address) and C (next address), leaves HL unchanged, restores the caller's bank. $D7FE is therefore the data-bank variable for reads through HL; 30 call sites.
-; 30 call sites from 17 routines (e.g. CopyMonsterNameToBuffer_B01, Func_00D_5DED, CopyMonsterNameToBuffer_B0D, Func_010_4008, ...)
+; 30 call sites from 17 routines (e.g. CopyMonsterNameToBuffer_B01, Func_00D_5DED, CopyMonsterNameToBuffer_B0D, FetchScriptCommand, ...)
 ; reads: wDataBank
 ; writes: rROMB0
 ReadWordFromDataBank::
@@ -2084,7 +2084,7 @@ Jump_000_0CF0::
     ret
 
 ; C2 (E-0016): the same expansion as Func_000_0C69 but for VRAM destinations: each store waits for STAT ($FF41) bit 1 to clear with interrupts disabled, back-references read the already-written VRAM, and the lock byte $FFD6 is taken on entry and cleared on exit.
-; 126 call sites from 61 routines (e.g. Func_000_1FE3, Func_000_228A, LoadMapScreen, Func_000_1C0C, ...)
+; 126 call sites from 60 routines (e.g. Func_000_1FE3, Func_000_228A, LoadMapScreen, Func_000_1C0C, ...)
 ; reads: hDecompressLock, rSTAT, hFFC5, hFFBF, hFFC0, hDecompressDestLo, hDecompressDestHi, hFFC2, ...
 ; writes: hDecompressLock, hFFC5, rROMB0, hFFC0, hFFBF
 ; points at: hDecompressMarker
@@ -2296,7 +2296,7 @@ Jump_000_0DDB::
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
-; 91 call sites from 50 routines (e.g. GameMode0_Init, Func_001_65A0, Func_002_5F9B, Func_002_4745, ...)
+; 91 call sites from 49 routines (e.g. GameMode0_Init, Func_001_65A0, Func_002_5F9B, Func_002_4745, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wC572, wC573, wC574
 ; points at: wC4FF, wC4DF, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
@@ -2894,10 +2894,6 @@ Func_000_11B4::
     inc hl
     call nz, Func_000_11DA
     ld a, [wC56D]
-
-; 1 call site from 1 routine (e.g. Func_014_4020)
-; reads: wC571, wC572
-Func_000_11D1::
     bit 2, a
     ld a, [wC571]
     inc hl
@@ -2946,7 +2942,7 @@ Jump_000_1205::
     ret
 
 ; loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set
-; 252 call sites from 142 routines (e.g. Func_000_085C, UploadBGPalettes, Func_000_2950, Func_000_1CF9, ...)
+; 251 call sites from 135 routines (e.g. Func_000_085C, UploadBGPalettes, Func_000_2950, Func_000_1CF9, ...)
 ; reads: rSTAT
 WaitForVRAMAccess::
 Func_000_120A:: ; address name
@@ -3049,7 +3045,7 @@ Jump_000_1276::
     ret
 
 ; wSoundEffectRequest = A; ProcessSoundQueue starts it on the next frame
-; 403 call sites from 211 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D33, Func_000_2950, ...)
+; 405 call sites from 198 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D33, Func_000_2950, ...)
 ; writes: wSoundEffectRequest
 QueueSoundEffect::
 Func_000_1278:: ; address name
@@ -3730,7 +3726,7 @@ Func_000_1679::
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 115 call sites from 96 routines (e.g. Func_000_2950, Multiply8By16, SRAMRecordAddress, LoadMapScreen, ...)
+; 115 call sites from 93 routines (e.g. Func_000_2950, Multiply8By16, SRAMRecordAddressMapped, LoadMapScreen, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -3865,7 +3861,7 @@ Jump_000_16F1::
     ret
 
 ; HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones
-; 116 call sites from 73 routines (e.g. Func_001_54FB, Func_001_5B2D, Func_002_6788, Func_003_50DD, ...)
+; 116 call sites from 71 routines (e.g. Func_001_54FB, Func_001_5B2D, Func_002_6788, Func_003_50DD, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFF9C, hFFF6
@@ -3910,7 +3906,7 @@ Jump_000_171A::
     ret
 
 ; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
-; 45 call sites from 39 routines (e.g. Func_001_536C, Func_001_52AF, Func_002_665A, Func_003_4BE8, ...)
+; 45 call sites from 35 routines (e.g. Func_001_536C, Func_001_52AF, Func_002_665A, Func_003_4BE8, ...)
 ; reads: hFFC8, hFFC7, wC8C0
 ; writes: hFFC9, hFFC8, hFFC7, hFFC6, wC8C0
 ; points at: wC8C0
@@ -4094,7 +4090,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 864 call sites from 176 routines (e.g. Func_000_1B6F, Func_000_1CA1, Func_002_470B, Func_002_64E5, ...)
+; 863 call sites from 174 routines (e.g. Func_000_1B6F, Func_000_1CA1, Func_002_470B, Func_002_64E5, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -4173,7 +4169,7 @@ Jump_000_1870::
     jr Jump_000_1870
 
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
-; 73 call sites from 21 routines (e.g. Func_001_5EAF, Func_00C_7587, Func_01D_6915, Func_01D_6973, ...)
+; 73 call sites from 21 routines (e.g. Func_001_5EAF, Func_00C_7587, Func_01D_6973, Func_01D_6915, ...)
 ; writes: rROMB0
 ReadByteInBank::
 Func_000_1872:: ; address name
@@ -4188,7 +4184,7 @@ Func_000_1872:: ; address name
     ret
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
-; 103 call sites from 29 routines (e.g. Func_00D_4BA5, Func_014_4510, Func_014_4700, Func_014_46F4, ...)
+; 103 call sites from 27 routines (e.g. Func_00D_4B30, Func_014_4001, Func_014_43CC, Func_014_4B5A, ...)
 ; reads: rSTAT, wC52D
 ; writes: wC52D
 FillTilesBxC::
@@ -4271,7 +4267,7 @@ Jump_000_18BE::
 Jump_000_18D5::
     ret
 
-; 10 call sites from 8 routines (e.g. Func_00C_7587, Func_01C_4AC4, Func_01C_5EEC, Func_01C_5F26, ...)
+; 10 call sites from 8 routines (e.g. Func_00C_7587, Func_01C_500C, Func_01C_5EEC, Func_01C_5F26, ...)
 ; writes: rROMB0
 Func_000_18D6::
     ld a, [BANK_NUMBER_BYTE]
@@ -4804,7 +4800,7 @@ Func_000_1BAD:: ; address name
     ld [rROMB0], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4628, Func_00C_433D, Func_015_570C)
+; 3 call sites from 3 routines (e.g. Func_002_4628, Func_00C_4312, Func_015_570C)
 ; reads: wCC44, hMapId
 ; writes: rROMB0, wC46B, wC46C, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, ...
 Func_000_1C0C::
@@ -5413,7 +5409,7 @@ Jump_000_1F77::
     ret
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
-; 102 call sites from 75 routines (e.g. Func_000_228A, PersonalityIndexOfRecord, Func_002_5E85, Func_002_6788, ...)
+; 102 call sites from 72 routines (e.g. Func_000_228A, PersonalityIndexOfRecord, Func_002_5E85, Func_002_6788, ...)
 ; writes: hFFC6
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
@@ -5453,7 +5449,7 @@ Func_000_1F95::
     ret
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
-; 29 call sites from 23 routines (e.g. Func_000_222B, Func_004_58C2, Func_012_57C7, Func_014_56B0, ...)
+; 29 call sites from 23 routines (e.g. Func_000_222B, Func_004_58C2, Func_012_5728, Func_014_56B0, ...)
 ; points at: wC8CF
 CopyRecordNameToWC8CF::
 Func_000_1FA4:: ; address name
@@ -5495,7 +5491,7 @@ Jump_000_1FBD::
     ret
 
 ; A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)
-; 90 call sites from 57 routines (e.g. LoadSRAMRecordWord, Func_000_1F95, LoadSRAMRecordByte, CopyRecordNameToWC8CF, ...)
+; 90 call sites from 55 routines (e.g. CopyRecordNameToWC8CF, LoadSRAMRecordWord, Func_000_1F95, LoadSRAMRecordByte, ...)
 ; points at: sA000
 SRAMRecordAddress::
 Func_000_1FD1:: ; address name
@@ -5509,7 +5505,7 @@ Func_000_1FD1:: ; address name
     add_a_to_hl
     ret
 
-; 19 call sites from 14 routines (e.g. Func_001_5EAF, Func_003_4A36, Func_003_4FBB, Func_00C_4948, ...)
+; 19 call sites from 14 routines (e.g. Func_001_5EAF, Func_003_4A36, Func_003_4FBB, Func_00C_45DA, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wC49F
@@ -5637,7 +5633,7 @@ Jump_000_2087::
     ld [rROMB0], a
     ret
 
-; 15 call sites from 10 routines (e.g. Func_001_5EAF, Func_00C_4948, Func_01E_6074, Func_01E_667C, ...)
+; 15 call sites from 10 routines (e.g. Func_001_5EAF, Func_00C_45DA, Func_01E_6074, Func_01E_667C, ...)
 ; reads: hFFC6
 ; writes: rROMB0, rVBK
 Func_000_2090::
@@ -5731,8 +5727,6 @@ Jump_000_211B::
     inc de
     ld a, [hl]
     add a, $E0
-
-Jump_000_2120::
     ld [de], a
     pop hl
     ret
@@ -5974,7 +5968,7 @@ Jump_000_2221::
     ld [rROMB0], a
     ret
 
-; 22 call sites from 21 routines (e.g. Func_002_4628, Func_002_4745, Func_003_6A60, Func_003_432F, ...)
+; 22 call sites from 20 routines (e.g. Func_002_4628, Func_002_4745, Func_003_6A60, Func_003_432F, ...)
 ; reads: wC6FD
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, rRAMG, wC8D9
 ; points at: wC6FE
@@ -6250,10 +6244,10 @@ Func_000_23BD:: ; address name
     inc c
     ret
 
-; 9 call sites from 7 routines (e.g. Func_012_642B, Func_012_5A89, Func_073_4706, Func_073_4CCB, ...)
+; 9 call sites from 5 routines (e.g. Func_012_5A2F, Func_012_63A1, Func_073_4C5D, Func_073_44A5, ...)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC8
-Func_000_23CA:: ; heuristic: follows a terminator; C0
+Func_000_23CA::
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_000_23E4
@@ -6338,7 +6332,7 @@ Func_000_241A::
     ld [rROMB0], a
     jr Jump_000_2447
 
-; 15 call sites from 9 routines (e.g. Func_012_642B, Func_012_6295, Func_012_5A89, Func_012_630E, ...)
+; 15 call sites from 8 routines (e.g. Func_012_6211, Func_012_5A2F, Func_012_630E, Func_012_63A1, ...)
 ; writes: rROMB0
 Func_000_2431::
     sla a
@@ -6500,7 +6494,7 @@ Func_000_24E5::
     ld [wC526], a
     ret
 
-; 73 call sites from 57 routines (e.g. Func_00C_6901, Func_00C_6CA1, Func_015_6742, Func_015_54C0, ...)
+; 73 call sites from 51 routines (e.g. Func_00C_6CA1, Func_00C_68F3, Func_015_6742, Func_015_54C0, ...)
 ; reads: hScrollX
 Func_000_24F8::
     push bc
@@ -7174,7 +7168,7 @@ Func_000_28F4::
     ret
 
 ; fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero
-; 108 call sites from 66 routines (e.g. Func_000_2BFA, FillTilesRequest, BeginStringDisplay, Func_001_5535, ...)
+; 110 call sites from 64 routines (e.g. Func_000_2BFA, BeginStringDisplay, FillTilesRequest, Func_001_5535, ...)
 ; reads: wC52D, wC52E, wC530, wC52F, rSTAT
 ; points at: wC52F
 FillTilesFromRequest::

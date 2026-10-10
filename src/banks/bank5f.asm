@@ -246,7 +246,7 @@ Jump_05F_6A85::
 ; 11 call sites from 7 routines (e.g. Func_00F_4FA1, Func_00F_6681, Func_00F_67BA, Func_00F_7625, ...)
 ; reads: hFF8C, hPlayerY, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerY, wC92C
-Func_05F_6A94:: ; heuristic: follows a terminator; C0
+Func_05F_6A94::
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -276,7 +276,7 @@ Jump_05F_6AB3::
 ; 7 call sites from 6 routines (e.g. Func_00F_4FA1, Func_00F_5C3B, Func_00F_67BA, Func_00F_7E1E, ...)
 ; reads: hFF8C, hPlayerX, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerX, wC92C
-Func_05F_6ABF:: ; heuristic: follows a terminator; C0
+Func_05F_6ABF::
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -306,7 +306,7 @@ Jump_05F_6ADF::
 ; 15 call sites from 8 routines (e.g. Func_00F_4FA1, Func_00F_5C3B, Func_00F_5F06, Func_00F_6681, ...)
 ; reads: hFF8C, hPlayerY, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerY, wC92C
-Func_05F_6AEB:: ; heuristic: follows a terminator; C0
+Func_05F_6AEB::
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -336,7 +336,7 @@ Jump_05F_6B0B::
 ; 16 call sites from 8 routines (e.g. Func_00F_40E9, Func_00F_4FA1, Func_00F_5C3B, Func_00F_67BA, ...)
 ; reads: hFF8C, hPlayerX, wC928
 ; writes: hFF8C, hPlayerFacing, hPlayerX, wC92C
-Func_05F_6B17:: ; heuristic: follows a terminator; C0
+Func_05F_6B17::
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -363,7 +363,7 @@ Jump_05F_6B37::
     ld [wC92C], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_05F_6A94, Func_05F_6ABF, Func_05F_6AEB, Func_05F_6B17, ...)
+; 5 call sites from 5 routines (e.g. Func_05F_6B17, Func_05F_6ABF, Func_05F_6A94, Func_05F_6AEB, ...)
 Func_05F_6B43::
     and a, $0F
     jr nz, Jump_05F_6B4D
@@ -377,7 +377,7 @@ Jump_05F_6B4D::
 ; reads: wC929, wC92A, wC928
 ; writes: wC92C
 ; points at: wCB8C
-Func_05F_6B54:: ; heuristic: follows a terminator; C0
+Func_05F_6B54::
     ld a, [wC929]
     swap a
     ld hl, wCB8C
@@ -479,17 +479,17 @@ Jump_05F_6BC2::
     ret
 
 ; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
-; 66 call sites from 42 routines (e.g. Func_05F_73A8, Func_00F_40E9, Func_00F_47F5, Func_00F_5D9D, ...)
-; reads: wC928, wC929, wC921
+; 66 call sites from 35 routines (e.g. Func_05F_73A8, Func_00F_40E9, Func_00F_47F5, Func_00F_5D9D, ...)
+; reads: wC928, wC929, wScriptParam0
 AddStepDeltaToPointedByte::
 Func_05F_6BCD:: ; address name
     ld a, [wC928]
     ld e, a
     ld a, [wC929]
     ld d, a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
-    ld hl, Func_05F_6BE8
+    ld hl, Data_05F_6BE8
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -498,29 +498,15 @@ Func_05F_6BCD:: ; address name
     ld [de], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, hFFC6, hFFC7
-; writes: wC921, hFFC6
-; points at: wCB8B
-Func_05F_6BE8:: ; heuristic: follows a terminator; C0
-    cp a, $FF
-    rst $38
-    nop
-    rst $38
-    nop
-    rst $38
-    nop
-    nop
-    ld bc, $0100
-    nop
-    ld bc, $0201
+Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
 ; 20 call sites from 19 routines (e.g. Func_00F_4FA1, Func_00F_56CD, Func_00F_59E6, Func_00F_5AF3, ...)
-; reads: wC921, hFFC6, hFFC7
-; writes: wC921, hFFC6
+; reads: wScriptParam0, hFFC6, hFFC7
+; writes: wScriptParam0, hFFC6
 ; points at: wCB8B
 Func_05F_6BF8::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_05F_6C05
     bit 3, a
@@ -556,9 +542,9 @@ Jump_05F_6C26::
     ld [hl], $E0
 
 Jump_05F_6C34::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $78
     jr z, Jump_05F_6C43
     xor a, a
@@ -572,15 +558,15 @@ Jump_05F_6C43::
     add_a_to_hl
     ld [hl], $E0
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $01
     ldh [hFFC6], a
     ret
 
-; 52 call sites from 41 routines (e.g. Func_00F_4FA1, Func_00F_5404, Func_00F_57EA, Func_00F_64F3, ...)
-; writes: wModeState, wC8C5, wC921
-; points at: wC923
-Func_05F_6C5A:: ; heuristic: follows a terminator; C0
+; 51 call sites from 39 routines (e.g. Func_00F_4FA1, Func_00F_5404, Func_00F_57EA, Func_00F_64F3, ...)
+; writes: wModeState, wC8C5, wScriptParam0
+; points at: wScriptStep
+Func_05F_6C5A::
     ld a, $0F
     call StartPaletteFade
     ld a, $04
@@ -588,14 +574,14 @@ Func_05F_6C5A:: ; heuristic: follows a terminator; C0
     xor a, a
     ld [wC8C5], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; 5 call sites from 5 routines (e.g. Func_012_4030, Func_012_4705, Func_012_590D, Func_012_59DE, ...)
+; 5 call sites from 5 routines (e.g. Func_012_4030, Func_012_44DB, Func_012_5854, Func_012_59AC, ...)
 ; writes: wModeState, wC904, wC8C7
-Func_05F_6C71:: ; heuristic: follows a terminator; C0
+Func_05F_6C71::
     ld a, $03
     ld [wModeState], a
     xor a, a
@@ -606,7 +592,7 @@ Func_05F_6C71:: ; heuristic: follows a terminator; C0
     farcall Func_00A_476E
     ret
 
-; 16 call sites from 13 routines (e.g. Func_00F_7093, Func_012_6247, Func_012_630E, Func_012_63D4, ...)
+; 17 call sites from 13 routines (e.g. Func_00F_7093, Func_012_5A2F, Func_012_6211, Func_012_630E, ...)
 ; reads: wC928, wC836
 ; writes: wC836
 ; points at: wInventory
@@ -674,7 +660,7 @@ Jump_05F_6CD1::
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, wC92C
 ; points at: wC6FE
-Func_05F_6CDB:: ; heuristic: follows a terminator; C0
+Func_05F_6CDB::
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -712,7 +698,7 @@ Jump_05F_6D03::
 ; reads: wC6FD, hFFC6
 ; writes: rRAMG, wC92C
 ; points at: wC6FE
-Func_05F_6D0D:: ; heuristic: follows a terminator; C0
+Func_05F_6D0D::
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -750,7 +736,7 @@ Jump_05F_6D35::
 ; reads: hFF8D, hFFC6
 ; writes: hFF8D, wD7F1, wD7F2, wC527
 ; points at: wC6FE
-Func_05F_6D3F:: ; heuristic: follows a terminator; C0
+Func_05F_6D3F::
     farcall Func_012_7D95
     ldh a, [hFF8D]
     or a, $0E
@@ -772,7 +758,7 @@ Func_05F_6D3F:: ; heuristic: follows a terminator; C0
     ldh [hFF8D], a
     ret
 
-; 7 call sites from 6 routines (e.g. Func_013_5EF4, Func_013_78DE, Func_085_4047, Func_085_43D5, ...)
+; 7 call sites from 6 routines (e.g. Func_013_5EF4, Func_013_78DE, Func_085_4047, Func_085_4339, ...)
 ; reads: wD7F5, wC7C7
 ; writes: wD7F1, wD7F2, wD7F5
 Func_05F_6D78::
@@ -786,7 +772,7 @@ Func_05F_6D78::
     ret z
     ld a, [wC7C7]
     and a, $03
-    ld hl, Func_05F_6DA8
+    ld hl, Data_05F_6DA8
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -797,13 +783,8 @@ Func_05F_6D78::
     ld [wD7F5], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; points at: wC707
-Func_05F_6DA8:: ; heuristic: follows a terminator; C0
-    ld a, [bc]
-    inc d
-    ld e, $1E
+Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $0A, $14, $1E, $1E
 
 ; 10 call sites from 8 routines (e.g. Func_004_6F9A, Func_00F_5404, Func_00F_57EA, Func_00F_67BA, ...)
 ; reads: hFFC6
@@ -852,7 +833,7 @@ Jump_05F_6DD6::
     pop hl
     ret
 
-; 23 call sites from 23 routines (e.g. Func_00F_40E9, Func_00F_4FA1, Func_00F_631F, Func_00F_64F3, ...)
+; 23 call sites from 22 routines (e.g. Func_00F_40E9, Func_00F_4FA1, Func_00F_631F, Func_00F_64F3, ...)
 ; reads: hScrollY, hScrollX
 Func_05F_6DDB::
     ldh a, [hScrollY]
@@ -996,16 +977,16 @@ Jump_05F_6E99::
     ldh a, [hFF8C]
     and a, $FD
     ldh [hFF8C], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $40
     ret nz
     ldh a, [hFF8C]
     or a, $02
     ldh [hFF8C], a
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1034,7 +1015,7 @@ Jump_05F_6EE3::
     ldh a, [hFF8C]
     and a, $FD
     ldh [hFF8C], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1063,22 +1044,22 @@ Jump_05F_6EEE::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
 Jump_05F_6F46::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ldh a, [hPlayerFacing]
@@ -1091,13 +1072,13 @@ Jump_05F_6F46::
     or a, a
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
 Jump_05F_6F6B::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $07
     jr nz, Jump_05F_6F8C
     ldh a, [hPlayerFacing]
@@ -1118,10 +1099,10 @@ Jump_05F_6F81::
     inc [hl]
 
 Jump_05F_6F8C::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_05F_6FDC
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     srl a
     ld c, a
@@ -1146,13 +1127,13 @@ Jump_05F_6F8C::
     ld a, [wC8F6]
     sub a, c
     ld [wC8F6], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     srl a
     cp a, $1F
     jr nz, Jump_05F_6FDC
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1161,7 +1142,7 @@ Jump_05F_6FDC::
     ldh a, [hFF8C]
     or a, $02
     ldh [hFF8C], a
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1180,19 +1161,19 @@ Jump_05F_6FE7::
     farcall AddStepDeltaToPointedByte
 
 Jump_05F_7009::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
 Jump_05F_701C::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $07
     jr nz, Jump_05F_703D
     ldh a, [hPlayerFacing]
@@ -1218,14 +1199,14 @@ Jump_05F_703D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_05F_6EC3)
-; reads: wC921, wC8F5, wC8FA, wC8F6, wC8FB
-; writes: wC8F5, wC8FA, wC8F6, wC8FB, wC921
-; points at: wC92D, wC921
+; reads: wScriptParam0, wC8F5, wC8FA, wC8F6, wC8FB
+; writes: wC8F5, wC8FA, wC8F6, wC8FB, wScriptParam0
+; points at: wC92D, wScriptParam0
 Func_05F_7044::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_05F_708D
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     srl a
     sla a
@@ -1246,19 +1227,19 @@ Func_05F_7044::
     ld a, [wC8FB]
     sub a, c
     ld [wC8FB], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     srl a
     cp a, $1F
     jr nz, Jump_05F_708D
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
 Jump_05F_708D::
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1288,7 +1269,7 @@ Jump_05F_70E6::
     ld a, [wC8F0]
     inc a
     ld [wC8F0], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     jr nz, Jump_05F_7105
     ld a, $02
@@ -1298,7 +1279,7 @@ Jump_05F_70E6::
     ld [wC8F6], a
 
 Jump_05F_7105::
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ld a, $03
     ld [wC8F9], a
@@ -1319,8 +1300,8 @@ Jump_05F_7105::
     and a, $FB
     ldh [hFF8C], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1334,10 +1315,10 @@ Jump_05F_7138::
     ld a, [wCBD4]
     inc a
     ld [wCBD4], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
@@ -1348,7 +1329,7 @@ Jump_05F_7138::
     ld a, $02
     ldh [hPlayerFacing], a
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1361,13 +1342,13 @@ Jump_05F_7172::
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $3C
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1386,7 +1367,7 @@ Jump_05F_7195::
     or a, h
     jr nz, Jump_05F_71B2
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
 
@@ -1509,13 +1490,13 @@ Data_05F_7240:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $11, $00
 
 Jump_05F_7280::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $78
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ldh a, [hFF8C]
     or a, $04
     ldh [hFF8C], a
@@ -1546,14 +1527,14 @@ Jump_05F_72B3::
     ld a, [wCBD4]
     dec a
     ld [wCBD4], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1564,7 +1545,7 @@ Jump_05F_72E4::
     ld a, [wC8F0]
     dec a
     ld [wC8F0], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     jr nz, Jump_05F_7303
     ld a, $00
@@ -1574,7 +1555,7 @@ Jump_05F_72E4::
     ld [wC8F6], a
 
 Jump_05F_7303::
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ld a, $01
     ld [wC8F9], a
@@ -1601,7 +1582,7 @@ Jump_05F_7303::
     or a, $02
     ldh [hFF8C], a
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1612,13 +1593,13 @@ Jump_05F_7345::
     ldh [hFF8C], a
     ldh a, [hPlayerX]
     call Func_05F_6B43
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $3C
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1648,7 +1629,7 @@ Func_05F_7363::
     dw Jump_05F_738B
 
 Jump_05F_738B::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1683,7 +1664,7 @@ Func_05F_73A8:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_05F_73B2::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_05F_73BD
     ld a, $65
@@ -1696,14 +1677,14 @@ Jump_05F_73BD::
     ld a, d
     ld [wC929], a
     call AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     jr nz, Jump_05F_73D6
     ld hl, wCB8A
     inc [hl]
 
 Jump_05F_73D6::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     jr nz, Jump_05F_73E6
     ld a, [wCB86]
@@ -1712,9 +1693,9 @@ Jump_05F_73D6::
     ld [wCB86], a
 
 Jump_05F_73E6::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     jr z, Jump_05F_7402
     farcall Func_012_6B22
@@ -1739,7 +1720,7 @@ Jump_05F_7402::
     ld a, [wC933]
     ld [wC6FD], a
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1749,7 +1730,7 @@ Jump_05F_742F::
     call Func_05F_77C7
     ret nc
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1765,9 +1746,9 @@ Jump_05F_743D::
     ld a, d
     ld [wC929], a
     call AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld a, $03
@@ -1781,21 +1762,21 @@ Jump_05F_746F::
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B33
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     add a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     sra a
     sra a
     sra a
     sra a
     ld c, a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     add a, c
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $18
     jr c, Jump_05F_74A5
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     xor a, a
     ld [wCBCF], a
     jr Jump_05F_74AA
@@ -1805,7 +1786,7 @@ Jump_05F_74A5::
     ld [wCBCF], a
 
 Jump_05F_74AA::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     sra a
     sra a
     sra a
@@ -1817,8 +1798,8 @@ Jump_05F_74AA::
     ld a, $30
     ld [wCBD4], a
     xor a, a
-    ld [wC921], a
-    ld [wC922], a
+    ld [wScriptParam0], a
+    ld [wScriptParam1], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1834,21 +1815,21 @@ Jump_05F_74CD::
     ld a, d
     ld [wC929], a
     call AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     bit 0, a
     jr nz, Jump_05F_74F6
     ld hl, wCBD4
     inc [hl]
 
 Jump_05F_74F6::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
-    ld [wC922], a
+    ld [wScriptParam0], a
+    ld [wScriptParam1], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1862,9 +1843,9 @@ Jump_05F_750C::
     dec a
     add a, $40
     ld [wCBD3], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $B4
     ret nz
     ld a, $40
@@ -1872,7 +1853,7 @@ Jump_05F_750C::
     ld a, $72
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1882,7 +1863,7 @@ Jump_05F_753A::
     call Func_05F_77C7
     ret nc
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ld de, $00D1
@@ -1907,16 +1888,16 @@ Jump_05F_7554::
     dec [hl]
     ld hl, wCBD4
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld a, $02
     call Func_05F_7761
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1932,9 +1913,9 @@ Jump_05F_7593::
     ld a, d
     ld [wC929], a
     call AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $01
     jr nz, Jump_05F_75C3
     ld a, [wCB8A]
@@ -1942,11 +1923,11 @@ Jump_05F_7593::
     ld [wCB8A], a
 
 Jump_05F_75C3::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $20
     ret nz
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -1974,16 +1955,16 @@ Jump_05F_75EC::
     call AddStepDeltaToPointedByte
     ld hl, wCBD4
     dec [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld a, $01
     call Func_05F_7761
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -2003,11 +1984,11 @@ Jump_05F_7617::
     ret
 
 Jump_05F_7631::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_05F_7646
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $0E
     ldh [hFF8D], a
     farcall Func_012_64F8
@@ -2023,13 +2004,13 @@ Jump_05F_7646::
     xor a, a
     ldh [hFF8D], a
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
 
 Jump_05F_766C::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     srl a
     and a, $01
@@ -2078,15 +2059,15 @@ Jump_05F_76B9::
     ld [wC526], a
 
 Jump_05F_76BE::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $1E
     ret nz
     ld a, $00
     call Func_05F_7761
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -2218,12 +2199,12 @@ Jump_05F_77D6::
     scf
     ret
 
-; 2 call sites from 1 routine (e.g. Func_010_49C5)
-; reads: wC921, wC923, wC922
-; writes: wC923, wC922, wC920, wC919
+; 2 call sites from 2 routines (e.g. Func_010_49E1, Func_010_49E7)
+; reads: wScriptParam0, wScriptStep, wScriptParam1
+; writes: wScriptStep, wScriptParam1, wScriptCommandType, wScriptStartRequest
 Func_05F_77D8::
     ld c, $10
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $0F
     call Multiply8
     ld a, l
@@ -2240,7 +2221,7 @@ Func_05F_77D8::
     ld [hl], a
     dec hl
     dec hl
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     swap a
     and a, $0F
     jr z, Jump_05F_7809
@@ -2280,23 +2261,23 @@ Jump_05F_781F::
     pop hl
     ld a, $07
     add_a_to_hl
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     swap a
     and a, $0F
     ld [hl], a
-    ld a, [wC923]
+    ld a, [wScriptStep]
     inc a
     cp a, $10
     jr z, Jump_05F_783B
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_05F_783B::
     xor a, a
-    ld [wC923], a
-    ld a, [wC922]
+    ld [wScriptStep], a
+    ld a, [wScriptParam1]
     dec a
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret nz
     ld a, $06
     add_a_to_hl
@@ -2304,38 +2285,38 @@ Jump_05F_783B::
     and a, $FB
     ld [hl], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_49C5)
-; reads: wC921, wC922
-; writes: wC921, wC922, wC920, wC919
+; 1 call site from 1 routine (e.g. Func_010_49DA)
+; reads: wScriptParam0, wScriptParam1
+; writes: wScriptParam0, wScriptParam1, wScriptCommandType, wScriptStartRequest
 Func_05F_785C::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld h, a
     dec hl
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, l
     or a, a
     ret nz
     cp a, h
     ret nz
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_49C5)
-; reads: wC468, hFF8C, wC922, wC921, wJoypadHeld
-; writes: wJoypadHeld, wJoypadPressed, wC919, wC922
+; 1 call site from 1 routine (e.g. Func_010_49D3)
+; reads: wC468, hFF8C, wScriptParam1, wScriptParam0, wJoypadHeld
+; writes: wJoypadHeld, wJoypadPressed, wScriptStartRequest, wScriptParam1
 Func_05F_787C::
     xor a, a
     ld [wJoypadHeld], a
@@ -2346,17 +2327,17 @@ Func_05F_787C::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_05F_789A
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_05F_789A::
     dec a
-    ld [wC922], a
-    ld a, [wC921]
+    ld [wScriptParam1], a
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_05F_78AD
     ld a, [wJoypadHeld]
@@ -2386,12 +2367,12 @@ Jump_05F_78C5::
     ld [wJoypadHeld], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_49C5)
-; reads: wC921, wC922
-; writes: wC919
+; 1 call site from 1 routine (e.g. Func_010_49CC)
+; reads: wScriptParam0, wScriptParam1
+; writes: wScriptStartRequest
 ; points at: hPlayerFacing, wC8EF
 Func_05F_78CE::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     bit 7, a
     jr nz, Jump_05F_78EE
     or a, a
@@ -2421,18 +2402,18 @@ Jump_05F_78EE::
     ld h, a
 
 Jump_05F_78FD::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld [hl], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4BCD)
-; reads: wC922, wC921
-; writes: wC921, wC920, wC919
+; reads: wScriptParam1, wScriptParam0
+; writes: wScriptParam0, wScriptCommandType, wScriptStartRequest
 ; points at: hPlayerY, wC8F1, wCB8B
-Func_05F_7907:: ; heuristic: follows a terminator; C0
-    ld a, [wC922]
+Func_05F_7907::
+    ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_05F_7927
     or a, a
@@ -2465,7 +2446,7 @@ Jump_05F_7927::
     inc d
 
 Jump_05F_7933::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     ld hl, Data_05F_7959
     add_a_to_hl
@@ -2474,24 +2455,24 @@ Jump_05F_7933::
     ld a, [de]
     add a, c
     ld [de], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Data_05F_7959:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
 ; 1 call site from 1 routine (e.g. Func_010_49EE)
-; reads: wC923
+; reads: wScriptStep
 Func_05F_7969::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_05F_7977
     dw Jump_05F_7A02
@@ -2500,23 +2481,23 @@ Func_05F_7969::
     dw Jump_05F_7A8C
 
 Jump_05F_7977::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $03
     jr z, Jump_05F_7987
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld de, wC152
     call Func_000_2431
 
 Jump_05F_7987::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     push af
     ld c, a
     add a, a
     add a, c
     add a, $A0
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, [wC924]
     ld e, a
     ld a, [wC925]
@@ -2524,10 +2505,10 @@ Jump_05F_7987::
     call TestFlagBit
     jr nc, Jump_05F_79AE
     pop af
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     xor a, a
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_05F_79AE::
@@ -2553,7 +2534,7 @@ Jump_05F_79C1::
     jr Jump_05F_79C1
 
 Jump_05F_79CC::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld [hl], a
     ld a, [wC836]
     set 6, a
@@ -2566,16 +2547,16 @@ Jump_05F_79D8::
     ld d, a
     call SetFlagBit
     xor a, a
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_05F_79E8::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     xor a, a
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_05F_79F5::
@@ -2586,7 +2567,7 @@ Jump_05F_79F5::
     jr Jump_05F_79D8
 
 Jump_05F_7A02::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_05F_7A3D
     farcall Func_004_4470
@@ -2611,12 +2592,12 @@ Jump_05F_7A02::
     ldh [hFFB9], a
 
 Jump_05F_7A3D::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_05F_7A42::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_05F_7A4F
     ld a, [wC8CB]
@@ -2624,11 +2605,11 @@ Jump_05F_7A42::
     ret nz
 
 Jump_05F_7A4F::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
     ld h, $00
     call Func_05F_69FB
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2636,7 +2617,7 @@ Jump_05F_7A5D::
     ld a, [wC52B]
     bit 0, a
     ret nz
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     bit 6, a
     jr nz, Jump_05F_7A87
     ld a, $69
@@ -2654,7 +2635,7 @@ Jump_05F_7A5D::
     ld [wC8CB], a
 
 Jump_05F_7A87::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2666,34 +2647,34 @@ Jump_05F_7A8C::
     farcall Func_05F_6DDB
     farcall Func_004_449F
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     xor a, a
-    ld [wC91F], a
+    ld [wScriptRunning], a
     ld a, $00
     ld [wModeState], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4BD4)
-; reads: wC923, wC921
-; writes: hFFC6, wC920, wC919
-; points at: wC923
-Func_05F_7AB2:: ; heuristic: follows a terminator; C0
-    ld a, [wC923]
+; reads: wScriptStep, wScriptParam0
+; writes: hFFC6, wScriptCommandType, wScriptStartRequest
+; points at: wScriptStep
+Func_05F_7AB2::
+    ld a, [wScriptStep]
     or a, a
     jr nz, Jump_05F_7AC8
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ldh [hFFC6], a
     farcall Func_00A_47A4
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_05F_7AC8::
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
-    ld a, [wC921]
+    ld [wScriptStartRequest], a
+    ld a, [wScriptParam0]
     rst $00
     dw Jump_05F_7B40
     dw Jump_05F_7B40

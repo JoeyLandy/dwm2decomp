@@ -3645,7 +3645,7 @@ Jump_007_66A2::
     ld hl, wGameMode
     ld a, $01
     ld [hl+], a
-    ld a, [wC91F]
+    ld a, [wScriptRunning]
     bit 0, a
     ld a, $01
     jr nz, Jump_007_66D2
@@ -4260,7 +4260,7 @@ Jump_007_6B23::
     ld a, $21
     ld [wC916], a
     farcall Func_013_405C
-    farcall Func_010_4008
+    farcall FetchScriptCommand
     ld a, $E0
     ldh [hPlayerX], a
     ld a, $00
@@ -4281,7 +4281,7 @@ Jump_007_6B23::
     xor a, a
     ld [wC58A], a
     ld [wC94B], a
-    ld [wD7FD], a
+    ld [wScriptInDataBank], a
     ld [wD7F0], a
     ret
 
@@ -6961,7 +6961,7 @@ Jump_007_7D43::
     ld a, $21
     ld [wC916], a
     farcall Func_013_405C
-    farcall Func_010_4008
+    farcall FetchScriptCommand
     ld a, $E0
     ldh [hPlayerX], a
     ld a, $00
@@ -6982,7 +6982,7 @@ Jump_007_7D43::
     xor a, a
     ld [wC58A], a
     ld [wC94B], a
-    ld [wD7FD], a
+    ld [wScriptInDataBank], a
     ld [wD7F0], a
     ret
 

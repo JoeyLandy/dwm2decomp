@@ -1163,5 +1163,25 @@
     "name": "LoadSpecialMapHeader",
     "note": "hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196",
     "evidence": "reading (E-0037)"
+  },
+  "10:4001": {
+    "name": "RunEventScriptFrame",
+    "note": "one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "10:4008": {
+    "name": "FetchScriptCommand",
+    "note": "does nothing during a fade or unless wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning); reads the opcode at wScriptPointer (through ReadWordFromDataBank when wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when wCC44 bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance wScriptPointer",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "10:46E9": {
+    "name": "ExecuteScriptCommand",
+    "note": "does nothing during a fade or while wScriptCommandType is 0; otherwise jumps through ScriptCommandHandlers[wScriptCommandType - 1] to run one frame of the current command",
+    "evidence": "reading + execution (E-0038)"
+  },
+  "10:46CD": {
+    "name": "StartEventScript",
+    "note": "HL = script address: clears wC921-wC926 (parameters and step) and stores HL in wScriptPointer; the script is run by RunEventScriptFrame (28 call sites)",
+    "evidence": "reading + execution (E-0038)"
   }
 }

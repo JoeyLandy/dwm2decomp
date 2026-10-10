@@ -2,9 +2,9 @@ SECTION "Bank 0F", ROMX[$4000], BANK[$0F]
     db $0F
 
 ; 1 call site from 1 routine (e.g. Func_010_4F15)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_4001::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_4077
     dw Jump_00F_404D
@@ -16,16 +16,16 @@ Jump_00F_400D::
     call Func_00F_7ED8
     ldh a, [hPlayerY]
     call Func_00F_7ED8
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $1E
     ret nz
     ldh a, [hFF8C]
     and a, $FD
     ldh [hFF8C], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_402D::
@@ -42,8 +42,8 @@ Jump_00F_402D::
     cp a, $80
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -63,14 +63,14 @@ Jump_00F_404D::
     ldh [hFF8C], a
     ld a, $63
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4077::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $01
     ret z
     ld a, [wCB9B]
@@ -81,15 +81,15 @@ Jump_00F_4077::
     ld hl, wCB9C
     call SetBit2AtHL_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E12)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_409A::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_40A2
     dw Jump_00F_7F93
@@ -98,7 +98,7 @@ Jump_00F_40A2::
     ld a, $0A
     ld [rRAMG], a
     ld hl, wC6FE
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     add_a_to_hl
     push hl
     ld a, [hl]
@@ -121,15 +121,15 @@ Jump_00F_40A2::
     call StoreHLInWC924_B0F
     xor a, a
     ld [rRAMG], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
     db $94, $AF, $CA, $AF, $94, $CA, $AF, $94, $CA, $CA, $E5
 
 ; 1 call site from 1 routine (e.g. Func_010_4DFD)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_40E9::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_456A
     dw Jump_00F_4532
@@ -179,7 +179,7 @@ Func_00F_40E9::
 
 Jump_00F_4147::
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_414D::
@@ -198,26 +198,26 @@ Jump_00F_414D::
     ld [wC0A0], a
     xor a, a
     ld [wC0A1], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4171::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld h, a
     dec hl
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, l
     or a, h
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -314,12 +314,12 @@ Jump_00F_423E::
     call StartPaletteFade
     ld hl, $0258
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, $01
     ld [wC837], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
     db $DE, $67, $1F, $33, $3C, $12, $00, $00
@@ -328,14 +328,14 @@ Jump_00F_4266::
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4270::
     ld a, $3F
     call StartPaletteFade
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -353,8 +353,8 @@ Jump_00F_427A::
     ld a, $E0
     ld [wCB8A], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -367,7 +367,7 @@ Jump_00F_429F::
     ld l, a
     ld h, $0D
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -380,19 +380,19 @@ Jump_00F_42B5::
     ret nz
     ld a, $02
     ld [wC8EF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_42CA::
     ld hl, $0DB8
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_42D5::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld hl, $431F
     add_a_to_hl
     ld a, [hl]
@@ -404,7 +404,7 @@ Jump_00F_42D5::
 Jump_00F_42E7::
     ld a, $01
     ld [wCBA6], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld hl, $431F
     add_a_to_hl
     ld a, [hl]
@@ -420,14 +420,14 @@ Jump_00F_42F9::
     ld a, [wCBD3]
     add a, c
     ld [wCBD3], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $40
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
     db $01, $00, $01, $00, $01, $01, $00, $FF, $01, $00, $00, $FF, $00, $FF, $FF, $00
@@ -436,7 +436,7 @@ Jump_00F_42F9::
     db $FF, $00, $00, $01, $FF, $FF, $FF, $00, $00, $00, $FF, $00, $00, $FF, $FF, $00
 
 Jump_00F_435F::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_4376
     ld a, $02
@@ -446,7 +446,7 @@ Jump_00F_435F::
     ldh [hPlayerY], a
     cp a, $30
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -459,8 +459,8 @@ Jump_00F_4376::
     cp a, $78
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -470,14 +470,14 @@ Jump_00F_438B::
     ret nc
     ld hl, $0DB7
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_439D::
     ld a, $01
     ld [wC929], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_43C2
     ld a, $80
@@ -488,7 +488,7 @@ Jump_00F_439D::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -508,8 +508,8 @@ Jump_00F_43C2::
     ld hl, $0DB6
     call StoreHLInWC924_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -528,7 +528,7 @@ Jump_00F_43EF::
     ret nc
     ld a, $03
     ld [wCB96], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -548,7 +548,7 @@ Jump_00F_4419::
     ld l, a
     ld h, $0D
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -558,7 +558,7 @@ Jump_00F_4444::
     ret nc
     ld hl, $0DB3
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -568,7 +568,7 @@ Jump_00F_4456::
     ret nc
     ld hl, $0DB2
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -578,7 +578,7 @@ Jump_00F_4468::
     ret nc
     ld hl, $0DB1
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -588,7 +588,7 @@ Jump_00F_447A::
     ret nc
     ld hl, $0DB0
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -606,7 +606,7 @@ Jump_00F_4493::
     ld [wCBD4], a
     ld a, $80
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -619,7 +619,7 @@ Jump_00F_44B1::
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -629,7 +629,7 @@ Jump_00F_44C9::
     ld b, $78
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -643,7 +643,7 @@ Jump_00F_44D8::
     ret nc
     ld hl, $0549
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -662,30 +662,30 @@ Jump_00F_44F3::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld hl, $0548
     call StoreHLInWC924_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4532::
     ld de, $0018
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     ld l, a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld h, a
     add hl, de
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld c, h
     ld a, [wCBBB]
     add a, c
@@ -699,9 +699,9 @@ Jump_00F_4532::
     ld a, $40
     ld [wCBBB], a
     xor a, a
-    ld [wC921], a
-    ld [wC922], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld [wScriptParam1], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -714,21 +714,21 @@ Jump_00F_456A::
     ld [wCBD4], a
     ld hl, $FE80
     ld a, l
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, h
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, $65
     call QueueSoundEffect
     ld a, $0E
     ldh [hFF8D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4DF6)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_4595::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_5175
     dw Jump_00F_516A
@@ -868,7 +868,7 @@ Func_00F_4595::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC92C
 ; writes: wC929, wC928, wC92A
-; points at: wC923
+; points at: wScriptStep
 Func_00F_4774:: ; heuristic: target of a pointer table; C0
     ld a, $02
     ld [wC929], a
@@ -887,14 +887,14 @@ Func_00F_4774:: ; heuristic: target of a pointer table; C0
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCBAB
 ; writes: wCBBB
-; points at: wCBAB, wC923
+; points at: wCBAB, wScriptStep
 Func_00F_47A8:: ; heuristic: target of a pointer table; C0
     ld de, wCBAB
     call Func_00F_7EE9
@@ -903,16 +903,16 @@ Func_00F_47A8:: ; heuristic: target of a pointer table; C0
     ld [wCBBB], a
     pop af
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
+; reads: wScriptParam0
 ; writes: wCB9B
-; points at: wC923
+; points at: wScriptStep
 Func_00F_47BC:: ; heuristic: target of a pointer table; C0
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_47C9
     bit 1, a
@@ -946,14 +946,14 @@ Jump_00F_47E5::
     ret nc
     ld a, $40
     ld [wCB9B], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC92C
 ; writes: wC929, wC928, wC92A
-; points at: wC923
+; points at: wScriptStep
 Func_00F_47F5:: ; heuristic: target of a pointer table; C0
     ld a, $02
     ld [wC929], a
@@ -972,7 +972,7 @@ Func_00F_47F5:: ; heuristic: target of a pointer table; C0
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -986,7 +986,7 @@ Jump_00F_4829::
     ld [wCBD4], a
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1014,7 +1014,7 @@ Jump_00F_485D::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1039,7 +1039,7 @@ Jump_00F_487C::
     xor a, a
     ld [wCB96], a
     ld [wCBA6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1057,7 +1057,7 @@ Jump_00F_48B7::
     ld a, $02
     ld [wCB96], a
     ld [wCBA6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1083,7 +1083,7 @@ Jump_00F_48F4::
     ret z
     ld a, $02
     ld [wCBC6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1108,7 +1108,7 @@ Jump_00F_490E::
     xor a, a
     ld [wCB96], a
     ld [wCBA6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1123,7 +1123,7 @@ Jump_00F_4949::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1137,7 +1137,7 @@ Jump_00F_4968::
     ld [wCBD4], a
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1155,7 +1155,7 @@ Jump_00F_4985::
     ret
 
 Jump_00F_499C::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_49A9
     bit 1, a
@@ -1189,7 +1189,7 @@ Jump_00F_49C5::
     ret nc
     ld a, $30
     ld [wCB8B], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1211,12 +1211,12 @@ Jump_00F_49D5::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4A09::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_4A42
     ld a, $02
@@ -1237,7 +1237,7 @@ Jump_00F_4A09::
     ld [wCBB6], a
     ld a, $03
     ld [wCBC6], a
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1259,20 +1259,20 @@ Jump_00F_4A42::
     ld [wCBB6], a
     ld [wCBC6], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4A74::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_00F_4A7F
     ld hl, wCB9B
     dec [hl]
 
 Jump_00F_4A7F::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     jr nz, Jump_00F_4A8A
     ld hl, wCB9A
@@ -1285,16 +1285,16 @@ Jump_00F_4A8A::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld a, $03
     ld [wCB96], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1311,7 +1311,7 @@ Jump_00F_4AB3::
     ret z
     ld a, $01
     ld [wCB96], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1319,7 +1319,7 @@ Jump_00F_4AD7::
     ld de, wCB9B
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1343,7 +1343,7 @@ Jump_00F_4AE3::
     ret z
     xor a, a
     ld [wCB96], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1357,7 +1357,7 @@ Jump_00F_4B1B::
     ld [wCBD4], a
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1371,7 +1371,7 @@ Jump_00F_4B38::
     ret
 
 Jump_00F_4B45::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_00F_4B64
     ld a, [wCB86]
@@ -1402,14 +1402,14 @@ Jump_00F_4B64::
     ld [wCBB6], a
     xor a, a
     ld [wCB86], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4B8F::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ld a, [wCB9A]
@@ -1422,13 +1422,13 @@ Jump_00F_4B8F::
     cp a, $60
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4BB6::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_00F_4BCC
     ld a, [wCB96]
@@ -1451,7 +1451,7 @@ Jump_00F_4BCC::
     ld [wCB96], a
     ld [wCBA6], a
     ld [wCBB6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1460,9 +1460,9 @@ Jump_00F_4BEE::
     ld [wCB96], a
     ld [wCBA6], a
     ld [wCBB6], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ld a, [wCB9A]
@@ -1475,8 +1475,8 @@ Jump_00F_4BEE::
     cp a, $50
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1490,7 +1490,7 @@ Jump_00F_4C20::
     ld [wCBD4], a
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1507,12 +1507,12 @@ Jump_00F_4C4A::
     ld de, wCBBB
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4C56::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_4C90
     ld a, $60
@@ -1532,7 +1532,7 @@ Jump_00F_4C56::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1568,7 +1568,7 @@ Jump_00F_4CB0::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1595,15 +1595,15 @@ Jump_00F_4CDA::
     ld a, $02
     ld [wCBA6], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4D1B::
     ld a, $01
     ld [wC929], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_4D40
     ld a, $60
@@ -1614,7 +1614,7 @@ Jump_00F_4D1B::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1629,7 +1629,7 @@ Jump_00F_4D40::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1643,8 +1643,8 @@ Jump_00F_4D5D::
     or a, a
     ret z
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1652,14 +1652,14 @@ Jump_00F_4D7B::
     ld de, wCB9B
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4D87::
     ld a, $01
     ld [wC929], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_4DAC
     ld a, $60
@@ -1670,7 +1670,7 @@ Jump_00F_4D87::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1685,7 +1685,7 @@ Jump_00F_4DAC::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -1699,8 +1699,8 @@ Jump_00F_4DC9::
     or a, a
     ret z
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1715,8 +1715,8 @@ Jump_00F_4DE7::
     xor a, a
     ld [wCBCF], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1740,7 +1740,7 @@ Jump_00F_4E15::
     ret nc
     xor a, a
     ld [wCBA6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1770,7 +1770,7 @@ Jump_00F_4E3D::
     ld [wCB96], a
     ld a, $30
     ld [wCBAB], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1796,7 +1796,7 @@ Jump_00F_4E91::
     ret nc
     ld a, $30
     ld [wCB9B], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1815,7 +1815,7 @@ Jump_00F_4EB0::
     ret z
     ld a, $03
     ld [wCB86], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1825,7 +1825,7 @@ Jump_00F_4ECA::
     ret nc
     ld a, $30
     ld [wCB8B], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1839,7 +1839,7 @@ Jump_00F_4EDA::
     ld [wCBD4], a
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1856,28 +1856,28 @@ Jump_00F_4EF7::
 Jump_00F_4F06::
     ld a, $80
     ld [wCBCF], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $01
     jr z, Jump_00F_4F1A
     ld hl, wCBD4
     dec [hl]
 
 Jump_00F_4F1A::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $40
     ret nz
     xor a, a
     ld [wCBCF], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4F2D::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $07
     jr nz, Jump_00F_4F40
     ld a, [wCBB6]
@@ -1893,12 +1893,12 @@ Jump_00F_4F40::
     ld a, $02
     ld [wCBB6], a
     ld [wCBC6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_4F54::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $03
     jr nz, Jump_00F_4F67
     ld a, [wCBB6]
@@ -1911,7 +1911,7 @@ Jump_00F_4F67::
     ld b, $96
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1926,8 +1926,8 @@ Jump_00F_4F72::
     xor a, a
     ld [wCBCF], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1962,7 +1962,7 @@ Jump_00F_4FBB::
     call StoreHLInWC924_B0F
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -1978,7 +1978,7 @@ Jump_00F_4FCF::
     ld [wCBCF], a
     xor a, a
     ld [wC92D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2002,7 +2002,7 @@ Jump_00F_5007::
     ret z
     ld a, $03
     ldh [hPlayerFacing], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2017,7 +2017,7 @@ Jump_00F_5020::
     ld [wC6FD], a
     xor a, a
     ldh [hFF8D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2032,7 +2032,7 @@ Jump_00F_503E::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2047,7 +2047,7 @@ Jump_00F_505D::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2063,7 +2063,7 @@ Jump_00F_5087::
     ld [wC90F], a
     ld hl, $0537
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2076,7 +2076,7 @@ Jump_00F_5097::
 Jump_00F_50A0::
     xor a, a
     ld [wC90F], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2085,7 +2085,7 @@ Jump_00F_50A9::
     ld [wC90F], a
     ld hl, $0DF7
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2100,7 +2100,7 @@ Jump_00F_50BE::
     xor a, a
     ld [wCBCF], a
     farcall Func_05F_6E09
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2133,14 +2133,14 @@ Jump_00F_50D9::
 Jump_00F_5108::
     ld hl, $055B
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5113::
     ld hl, $055A
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2152,7 +2152,7 @@ Jump_00F_5122::
     ld de, wCB8B
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2179,7 +2179,7 @@ Jump_00F_5140::
     ld a, $55
     ld [wC1C9], a
     farcall Func_05F_6DDB
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2187,7 +2187,7 @@ Jump_00F_516A::
     ld b, $3C
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2207,7 +2207,7 @@ Jump_00F_5175::
     ld a, [wCC3C]
     set 0, a
     ld [wCC3C], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
     INCBIN "dwm2-cobi-us.gbc", $03D19F, $78
@@ -2217,7 +2217,7 @@ Jump_00F_5217::
     ld [wC90F], a
     ld a, $80
     ld [wCBCF], a
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     and a, $0F
     rst $00
     dw Jump_00F_522A
@@ -2241,7 +2241,7 @@ Jump_00F_5236::
 
 Jump_00F_5240::
     push de
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     and a, $70
     swap a
     ld c, $30
@@ -2260,31 +2260,31 @@ Jump_00F_5240::
     ret nz
     xor a, a
     ld [wC92D], a
-    ld hl, wC922
+    ld hl, wScriptParam1
     inc [hl]
     ret
 
 Jump_00F_526C::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     add a, $10
     and a, $F0
     cp a, $80
     jr nz, Jump_00F_5280
     xor a, a
     ld [wC92D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     xor a, a
 
 Jump_00F_5280::
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
     INCBIN "dwm2-cobi-us.gbc", $03D284, $180
 
 ; 1 call site from 1 routine (e.g. Func_010_4DCC)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_5404::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_56C2
     dw Jump_00F_56BC
@@ -2349,7 +2349,7 @@ Jump_00F_5460::
     set 7, a
     ld [wC836], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_5495::
@@ -2376,14 +2376,14 @@ Jump_00F_549F::
     ld [wSpriteSlotCount], a
     ld hl, $0A7D
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_54D5::
     ld hl, $0A7C
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2397,7 +2397,7 @@ Jump_00F_54E0::
     ld [wC527], a
     ld hl, $0A7B
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2424,14 +2424,14 @@ Jump_00F_550B::
 Jump_00F_5538::
     ld hl, $0491
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5543::
     ld hl, $0490
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2442,7 +2442,7 @@ Jump_00F_554E::
     ret
 
 Jump_00F_5558::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     swap a
     srl a
     srl a
@@ -2455,7 +2455,7 @@ Jump_00F_5558::
     ret nc
     xor a, a
     ld [wCB86], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2477,7 +2477,7 @@ Jump_00F_5577::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2503,21 +2503,21 @@ Jump_00F_55B8::
     call CopyBytes
 
 Jump_00F_55CA::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_55CF::
     ld hl, $048E
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_55DA::
     ld hl, $048D
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2545,7 +2545,7 @@ Jump_00F_55F7::
     ld [wCBCF], a
     ld hl, $048C
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2555,7 +2555,7 @@ Jump_00F_5612::
     jr z, Jump_00F_5623
     ld hl, wC48A
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     dec [hl]
     ret
 
@@ -2569,14 +2569,14 @@ Jump_00F_5623::
     ld [wCBD3], a
     ld a, $E0
     ld [wCBD4], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5642::
     ld hl, $4487
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2589,12 +2589,12 @@ Jump_00F_564D::
 Jump_00F_5657::
     ld hl, $0485
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5662::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_566D
     ld a, $1F
@@ -2603,7 +2603,7 @@ Jump_00F_5662::
 Jump_00F_566D::
     ld a, $18
     ld [wCBBB], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_567F
     bit 1, a
@@ -2639,14 +2639,14 @@ Jump_00F_569B::
     ld [wCB86], a
     ld hl, $0484
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_56B1::
     ld hl, $0483
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2657,14 +2657,14 @@ Jump_00F_56BC::
 
 Jump_00F_56C2::
     farcall Func_05F_6E09
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D86)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_56CD::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_5717
     dw Jump_00F_7F89
@@ -2682,11 +2682,11 @@ Jump_00F_56DB::
     or a, a
     ret z
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_56F3::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, [wC552]
     or a, a
@@ -2707,7 +2707,7 @@ Jump_00F_570A::
 Jump_00F_5717::
     ld a, $40
     ld [wCB9B], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_5729
     bit 1, a
@@ -2742,7 +2742,7 @@ Jump_00F_5745::
     ld a, $02
     ld [wSpriteSlotCount], a
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld de, $00C2
     call TestFlagBit
     jp c, Jump_00F_57DE
@@ -2764,14 +2764,14 @@ Jump_00F_5745::
     ld hl, $040C
     call StoreHLInWC924_B0F
     ld a, $03
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_5791::
     ld hl, $040D
     call StoreHLInWC924_B0F
     ld a, $03
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_579D::
@@ -2780,21 +2780,21 @@ Jump_00F_579D::
     jr c, Jump_00F_57B0
     ld hl, $4415
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_57B0::
     ld hl, $4418
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_57BB::
     ld hl, $4419
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2802,27 +2802,27 @@ Jump_00F_57C6::
     ld hl, $0416
     call StoreHLInWC924_B0F
     ld a, $03
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_57D2::
     ld hl, $0452
     call StoreHLInWC924_B0F
     ld a, $03
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_57DE::
     ld hl, $0493
     call StoreHLInWC924_B0F
     ld a, $03
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D71)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_57EA::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_59C8
     dw Jump_00F_59B8
@@ -2858,7 +2858,7 @@ Jump_00F_581C::
     set 3, a
     ld [wCC37], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_583A::
@@ -2875,7 +2875,7 @@ Jump_00F_583A::
     call StoreHLInWC924_B0F
     ld de, $001E
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2897,7 +2897,7 @@ Jump_00F_585B::
     ld [wCBCF], a
     ld a, $85
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2935,7 +2935,7 @@ Jump_00F_58C5::
     ret nc
     ld hl, $0A0A
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2945,7 +2945,7 @@ Jump_00F_58D5::
     ret nc
     ld hl, $0A09
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -2961,14 +2961,14 @@ Jump_00F_58E5::
     call StoreHLInWC924_B0F
     ld de, $01E5
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5906::
     ld a, $18
     ld [wCBAB], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_5918
     bit 1, a
@@ -3004,7 +3004,7 @@ Jump_00F_5934::
     ld [wSpriteSlotCount], a
     ld hl, $0A07
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3053,7 +3053,7 @@ Jump_00F_5993::
     ld [wCBCF], a
     ld hl, $0DCA
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3061,7 +3061,7 @@ Jump_00F_59AD::
     ld b, $3C
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3071,7 +3071,7 @@ Jump_00F_59B8::
     ld de, wCBD4
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3085,14 +3085,14 @@ Jump_00F_59C8::
     ld [wCBD4], a
     ld a, $80
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D6A)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_59E6::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_5AB9
     dw Jump_00F_5AB2
@@ -3112,12 +3112,12 @@ Jump_00F_5A02::
     call StoreHLInWC924_B0F
     ld de, $01E4
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5A13::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ldh [hFFC7], a
     ld a, $01
     ldh [hFFC6], a
@@ -3127,7 +3127,7 @@ Jump_00F_5A13::
     ret z
     ld hl, $0DDF
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3135,8 +3135,8 @@ Jump_00F_5A31::
     ld hl, $0A04
     call StoreHLInWC924_B0F
     ld a, [wCB9B]
-    ld [wC922], a
-    ld hl, wC923
+    ld [wScriptParam1], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3147,7 +3147,7 @@ Jump_00F_5A42::
     ld a, $19
     ldh [hFFC6], a
     farcall Func_00A_47A4
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3157,7 +3157,7 @@ Jump_00F_5A56::
     jr nz, Jump_00F_5A67
     ld hl, vTiles1 + $5D0
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3165,11 +3165,11 @@ Jump_00F_5A67::
     ld hl, vTiles1 + $5D1
     call StoreHLInWC924_B0F
     ld a, $0B
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_5A73::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_5A80
     bit 1, a
@@ -3205,7 +3205,7 @@ Jump_00F_5A9C::
     ld [wCB9B], a
     ld hl, $4A02
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3220,9 +3220,9 @@ Jump_00F_5AB9::
     ld hl, $0A03
     call StoreHLInWC924_B0F
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld a, $05
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_5AD2::
@@ -3238,15 +3238,15 @@ Jump_00F_5AE4::
     ld de, $01E3
     call SetFlagBit
     xor a, a
-    ld [wC922], a
-    ld hl, wC923
+    ld [wScriptParam1], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E2E)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_5AF3::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_5C06
     dw Jump_00F_7F89
@@ -3272,7 +3272,7 @@ Jump_00F_5B17::
     call StoreHLInWC924_B0F
     ld de, $01E2
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3297,7 +3297,7 @@ Jump_00F_5B3B::
     ld [wCB86], a
     ld hl, $0AF3
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3316,14 +3316,14 @@ Jump_00F_5B5F::
     ld [wCB96], a
     ld hl, $0AF2
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5B86::
     ld hl, $0AF0
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3334,7 +3334,7 @@ Jump_00F_5B91::
     ld a, $04
     ldh [hFFC6], a
     farcall Func_00A_47A4
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3344,7 +3344,7 @@ Jump_00F_5BA5::
     jr nz, Jump_00F_5BB6
     ld hl, vTiles1 + $5CE
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3352,13 +3352,13 @@ Jump_00F_5BB6::
     ld hl, vTiles1 + $5CF
     call StoreHLInWC924_B0F
     ld a, $0F
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_5BC2::
     ld a, $20
     ld [wCBAB], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_5BD4
     bit 1, a
@@ -3394,7 +3394,7 @@ Jump_00F_5BF0::
     ld [wSpriteSlotCount], a
     ld hl, $4AEE
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3410,7 +3410,7 @@ Jump_00F_5C06::
     farcall Func_012_7DF1
     ld de, $01E1
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3418,13 +3418,13 @@ Jump_00F_5C2F::
     ld hl, $0AEF
     call StoreHLInWC924_B0F
     ld a, $05
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D63)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_5C3B::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_5D1A
     dw Jump_00F_5D03
@@ -3473,7 +3473,7 @@ Jump_00F_5C8C::
     ldh [hPlayerFacing], a
     ld [wCB96], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_5CA9::
@@ -3514,7 +3514,7 @@ Jump_00F_5CEE::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3524,7 +3524,7 @@ Jump_00F_5D03::
     ld a, [wC468]
     bit 7, a
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3582,14 +3582,14 @@ Jump_00F_5D5F::
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
     farcall Func_002_5BD7
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D5C)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_5D9D::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_5EE8
     dw Jump_00F_5E70
@@ -3610,7 +3610,7 @@ Jump_00F_5DBB::
     call StoreHLInWC924_B0F
     ld de, $009D
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3627,14 +3627,14 @@ Jump_00F_5DCC::
     dec [hl]
     ld hl, $0AD0
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5DED::
     ld hl, $0AD4
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3642,7 +3642,7 @@ Jump_00F_5DF8::
     ld a, $18
     ldh [hFFC6], a
     farcall Func_00A_47A4
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3661,7 +3661,7 @@ Jump_00F_5E1D::
     jr nz, Jump_00F_5E2E
     ld hl, vTiles1 + $5CC
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3669,11 +3669,11 @@ Jump_00F_5E2E::
     ld hl, vTiles1 + $5CD
     call StoreHLInWC924_B0F
     ld a, $0C
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_5E3A::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_00F_5E46
     ld hl, wCB8B
@@ -3688,7 +3688,7 @@ Jump_00F_5E4A::
     ld de, wCB8B
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld de, $009C
     call TestFlagBit
@@ -3701,7 +3701,7 @@ Jump_00F_5E4A::
 
 Jump_00F_5E6A::
     ld a, $06
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_5E70::
@@ -3715,9 +3715,9 @@ Jump_00F_5E70::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     jr nz, Jump_00F_5E9D
     ld a, [wCB96]
@@ -3726,7 +3726,7 @@ Jump_00F_5E70::
     ld [wCB96], a
 
 Jump_00F_5E9D::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $20
     ret nz
     ld a, [wCB86]
@@ -3741,11 +3741,11 @@ Jump_00F_5E9D::
     ld a, $63
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     xor a, a
-    ld [wC922], a
+    ld [wScriptParam1], a
     ldh a, [hPlayerY]
     cp a, $20
     jr z, Jump_00F_5EE2
@@ -3760,7 +3760,7 @@ Jump_00F_5E9D::
 
 Jump_00F_5EE2::
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_00F_5EE8::
@@ -3772,19 +3772,19 @@ Jump_00F_5EE8::
     jr nz, Jump_00F_5F00
     ld a, $65
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_5F00::
     ld a, $06
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D4E)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_5F06::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_6066
     dw Jump_00F_6019
@@ -3808,7 +3808,7 @@ Jump_00F_5F2C::
     ld a, $02
     ldh [hPlayerFacing], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_5F36::
@@ -3819,8 +3819,8 @@ Jump_00F_5F3D::
     xor a, a
     ld [wC92D], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3833,7 +3833,7 @@ Jump_00F_5F4A::
     ret z
     ld hl, $03A1
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3841,7 +3841,7 @@ Jump_00F_5F65::
     ldh a, [hPlayerX]
     cp a, $40
     jr nz, Jump_00F_5F70
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3878,7 +3878,7 @@ Jump_00F_5F8E::
     ld hl, hFF8C
     call SetBit2AtHL_B0F
     farcall Func_002_6050
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3894,7 +3894,7 @@ Jump_00F_5FC0::
     call ClearBit2AtHL_Bank0F
     ld hl, $03A0
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3906,7 +3906,7 @@ Jump_00F_5FD6::
     ld [wCBA6], a
     ld hl, wCBAC
     call ClearBit1AtHL_Bank0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3918,7 +3918,7 @@ Jump_00F_5FEC::
     ret nc
     ld hl, wCBAC
     call SetBit1AtHL_Bank0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3930,7 +3930,7 @@ Jump_00F_6003::
     ld [wCBA6], a
     ld hl, wCBAC
     call ClearBit1AtHL_Bank0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -3949,16 +3949,16 @@ Jump_00F_6019::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $01
     jr nz, Jump_00F_6049
     ld hl, wCBAA
     inc [hl]
 
 Jump_00F_6049::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     xor a, a
@@ -3966,13 +3966,13 @@ Jump_00F_6049::
     ld hl, wCBAC
     call SetBit1AtHL_Bank0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_6066::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_608E
     ld a, $02
@@ -3986,7 +3986,7 @@ Jump_00F_6066::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -4004,7 +4004,7 @@ Jump_00F_608E::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -4021,8 +4021,8 @@ Jump_00F_60B3::
     or a, a
     ret z
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4038,9 +4038,9 @@ Func_00F_60D9::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D2B)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_60E6::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_6252
     dw Jump_00F_622E
@@ -4080,7 +4080,7 @@ Jump_00F_60FE::
     ld a, $7F
     ld [wC527], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_613A::
@@ -4097,9 +4097,9 @@ Jump_00F_6140::
 Jump_00F_614C::
     ld hl, hFF8C
     call SetBit2AtHL_B0F
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ldh a, [hPlayerY]
@@ -4127,15 +4127,15 @@ Jump_00F_6189::
     ld hl, hFF8C
     call ClearBit2AtHL_Bank0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_619D::
     ld hl, $0348
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4146,7 +4146,7 @@ Jump_00F_61A8::
     ld a, $03
     ldh [hFFC6], a
     farcall Func_00A_47A4
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4185,16 +4185,16 @@ Jump_00F_61BC::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld hl, $0346
     call StoreHLInWC924_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4211,7 +4211,7 @@ Jump_00F_622E::
     ret z
     ld a, $66
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4222,7 +4222,7 @@ Jump_00F_6252::
     farcall Func_05F_6E09
     ld de, $0085
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4230,13 +4230,13 @@ Jump_00F_626B::
     ld hl, $0347
     call StoreHLInWC924_B0F
     ld a, $03
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D47)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_6277::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_62C0
     dw Jump_00F_62AF
@@ -4255,14 +4255,14 @@ Jump_00F_6283::
     ld a, $E0
     ld [wCB8B], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_62A0::
     ld a, $0C
     ldh [hFFC6], a
     farcall Func_00A_47A4
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4272,7 +4272,7 @@ Jump_00F_62AF::
     ret nc
     ld de, $0093
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4280,16 +4280,16 @@ Jump_00F_62C0::
     ld de, $0093
     call TestFlagBit
     jr nc, Jump_00F_62D1
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_62D1::
     ld a, [wCBA6]
     ld [wCB86], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_00F_62E4
     bit 1, a
@@ -4329,14 +4329,14 @@ Jump_00F_630A::
     ld [wCB8B], a
     ld a, $E0
     ld [wCBAB], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D39)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_631F::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_64D4
     dw Jump_00F_64BA
@@ -4384,7 +4384,7 @@ Jump_00F_6372::
     ld hl, wCB9C
     call ClearBit2AtHL_Bank0F
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_6383::
@@ -4398,19 +4398,19 @@ Jump_00F_6383::
     farcall AddStepDeltaToPointedByte
     ld b, $3C
     call Func_00F_72A0
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     cp a, $30
     jr z, Jump_00F_63BD
     ld hl, $0362
     call StoreHLInWC924_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4428,7 +4428,7 @@ Jump_00F_63BD::
     ld [wC1B3], a
     farcall Func_05F_6DDB
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_63E5::
@@ -4442,9 +4442,9 @@ Jump_00F_63E5::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     cp a, $30
     jr z, Jump_00F_6410
     ld a, $63
@@ -4457,9 +4457,9 @@ Jump_00F_6410::
     ret
 
 Jump_00F_6416::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $07
     ret nz
     ld a, [wCB9B]
@@ -4468,15 +4468,15 @@ Jump_00F_6416::
     cp a, $30
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_6433::
     ld hl, wCB9C
     call SetBit2AtHL_B0F
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     ld c, a
     ld a, [wCB9A]
     cp a, c
@@ -4501,7 +4501,7 @@ Jump_00F_644E::
     ret z
     ld hl, wCB9C
     call ClearBit2AtHL_Bank0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4510,7 +4510,7 @@ Jump_00F_6473::
     call SetBit2AtHL_B0F
     ldh a, [hPlayerX]
     call Func_00F_7ED8
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     cp a, $40
     jr nc, Jump_00F_6490
     ldh a, [hPlayerX]
@@ -4528,14 +4528,14 @@ Jump_00F_6490::
     ldh [hPlayerFacing], a
 
 Jump_00F_6499::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $10
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ldh a, [hPlayerFacing]
     inc a
@@ -4552,10 +4552,10 @@ Jump_00F_64BA::
     ret nc
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ldh a, [hPlayerX]
-    ld [wC922], a
+    ld [wScriptParam1], a
     ld hl, $0361
     call StoreHLInWC924_B0F
     ret
@@ -4569,14 +4569,14 @@ Jump_00F_64D4::
     ld [wCBD3], a
     ld a, $40
     ld [wCBD4], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D32)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_64F3::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_6767
     dw Jump_00F_6750
@@ -4598,13 +4598,13 @@ Func_00F_64F3::
     dw Jump_00F_651B
 
 Jump_00F_651B::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_00F_652D
     ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_00F_654D
-    ld hl, wC922
+    ld hl, wScriptParam1
     inc [hl]
     jr Jump_00F_654D
 
@@ -4620,7 +4620,7 @@ Jump_00F_652D::
     ld de, wCB9B
     call Func_00F_7EE9
     jr nc, Jump_00F_654D
-    ld hl, wC922
+    ld hl, wScriptParam1
     inc [hl]
 
 Jump_00F_654D::
@@ -4657,7 +4657,7 @@ Jump_00F_656F::
     ld hl, hFF8C
     call ClearBit1AtHL_Bank0F
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_6586::
@@ -4671,7 +4671,7 @@ Jump_00F_6586::
     ld [wC8FB], a
     ld a, $65
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4701,12 +4701,12 @@ Jump_00F_65A5::
 Jump_00F_65D6::
     ld a, $0F
     ldh [hFF8D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_65DF::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, $07
     ldh [hFF8D], a
@@ -4715,11 +4715,11 @@ Jump_00F_65DF::
     dec a
     ret nz
     ld a, $0F
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_65F3::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, $03
     ldh [hFF8D], a
@@ -4727,7 +4727,7 @@ Jump_00F_65F3::
     dec a
     ret nz
     ld a, $0F
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_6606::
@@ -4741,7 +4741,7 @@ Jump_00F_6606::
     ldh [hFF8D], a
     ld a, $65
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4771,7 +4771,7 @@ Jump_00F_6645::
     ret z
     ld hl, $035B
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4785,14 +4785,14 @@ Jump_00F_666A::
 Jump_00F_6676::
     ld hl, $035A
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D24)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_6681::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_6767
     dw Jump_00F_6750
@@ -4808,7 +4808,7 @@ Func_00F_6681::
 
 Jump_00F_669B::
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_66A1::
@@ -4818,7 +4818,7 @@ Jump_00F_66A1::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4845,7 +4845,7 @@ Jump_00F_66B6::
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
     farcall Func_002_5BD7
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4888,7 +4888,7 @@ Jump_00F_6735::
     ret z
     ld hl, $0322
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4898,7 +4898,7 @@ Jump_00F_6750::
     ld a, [wC468]
     bit 7, a
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -4932,14 +4932,14 @@ Jump_00F_6767::
     ldh [hFF9E], a
     farcall UpdatePlayerMovement
     farcall Func_002_5BD7
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_010_4CF3, Func_010_4D01)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_67BA::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_6D07
     dw Jump_00F_6D00
@@ -5004,7 +5004,7 @@ Jump_00F_6822::
     ld a, $02
     ld [wC7C7], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_6845::
@@ -5021,7 +5021,7 @@ Jump_00F_6845::
     call StoreHLInWC924_B0F
     ld de, $001F
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5043,7 +5043,7 @@ Jump_00F_6866::
     ld [wCBCF], a
     ld a, $85
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5085,7 +5085,7 @@ Jump_00F_689B::
 Jump_00F_68E0::
     ld hl, $0873
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5099,7 +5099,7 @@ Jump_00F_68EB::
     ld [wCBCF], a
     ld hl, $0872
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5107,7 +5107,7 @@ Jump_00F_6905::
     ld b, $1E
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5119,7 +5119,7 @@ Jump_00F_6910::
     ld de, wCBD4
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5132,12 +5132,12 @@ Jump_00F_6924::
     ret z
     ld de, $005F
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_693F::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_6951
     ld a, $83
@@ -5177,22 +5177,22 @@ Jump_00F_6979::
     ld a, [wC92C]
     or a, a
     ret z
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $04
     ret nz
     xor a, a
     ld [wSpriteSlotCount], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     farcall Func_002_6050
     ret
 
 Jump_00F_69A6::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     srl a
     srl a
@@ -5209,12 +5209,12 @@ Jump_00F_69A6::
     ld [wCB81], a
     ld hl, $0871
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_69D5::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_69F0
     ld a, $10
@@ -5223,7 +5223,7 @@ Jump_00F_69D5::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -5236,7 +5236,7 @@ Jump_00F_69F0::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -5248,8 +5248,8 @@ Jump_00F_6A08::
     or a, a
     ret z
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5265,14 +5265,14 @@ Jump_00F_6A21::
     call QueueSoundEffect
     ld a, $01
     ld [wSpriteSlotCount], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_6A3F::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     push af
     bit 4, a
     jr z, Jump_00F_6A4F
@@ -5298,8 +5298,8 @@ Jump_00F_6A51::
     ld a, $E0
     ld [wCB9A], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5329,7 +5329,7 @@ Jump_00F_6AA1::
     ret nc
     ld a, $63
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5348,7 +5348,7 @@ Jump_00F_6ABC::
     ret nc
     xor a, a
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5395,7 +5395,7 @@ Jump_00F_6ADD::
     farcall Func_004_431F
     ld a, $7F
     ld [wC527], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5409,7 +5409,7 @@ Jump_00F_6B31::
     ret nc
     ld hl, $086E
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5441,7 +5441,7 @@ Jump_00F_6B4B::
     ld [wCBD4], a
     ld a, $80
     ld [wCBCF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5463,17 +5463,17 @@ Jump_00F_6BAF::
     ld b, $3C
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_6BBA::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_00F_6BDA
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ld a, [wCB9A]
@@ -5482,7 +5482,7 @@ Jump_00F_6BBA::
     cp a, $30
     ret nz
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_00F_6BDA::
@@ -5495,16 +5495,16 @@ Jump_00F_6BDA::
     ld a, $63
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
-    ld [wC922], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld [wScriptParam1], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_6BF6::
     ld hl, wCB9C
     call SetBit2AtHL_B0F
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_6C17
     ld a, $03
@@ -5515,7 +5515,7 @@ Jump_00F_6BF6::
     ld [wCB9A], a
     cp a, $40
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -5530,7 +5530,7 @@ Jump_00F_6C17::
     ld [wCB9B], a
     cp a, $50
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -5545,7 +5545,7 @@ Jump_00F_6C2F::
     ld [wCB9A], a
     cp a, $60
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -5560,7 +5560,7 @@ Jump_00F_6C47::
     ld [wCB9B], a
     cp a, $30
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -5575,7 +5575,7 @@ Jump_00F_6C5F::
     ld [wCB9A], a
     cp a, $40
     ret nz
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -5599,8 +5599,8 @@ Jump_00F_6C77::
     ld a, $45
     ld [wCBA1], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5632,7 +5632,7 @@ Jump_00F_6CAB::
     farcall Func_05F_6E09
     ld hl, $086C
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5645,7 +5645,7 @@ Jump_00F_6D07::
     cp a, $40
     jr nz, Jump_00F_6D13
     ld a, $04
-    ld [wC923], a
+    ld [wScriptStep], a
     ret
 
 Jump_00F_6D13::
@@ -5657,14 +5657,14 @@ Jump_00F_6D13::
     ret z
     xor a, a
     ldh [hPlayerFacing], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4CEC)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_6D2B::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_6F4C
     dw Jump_00F_6F4C
@@ -5685,16 +5685,16 @@ Jump_00F_6D49::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_00F_6D2B, Func_00F_6D4D)
-; reads: wC921, wCBD3
-; writes: wC921, wCBD4, wC919
+; reads: wScriptParam0, wCBD3
+; writes: wScriptParam0, wCBD4, wScriptStartRequest
 ; points at: wCBD3
 Func_00F_6D4D::
     ld hl, wCBD3
     inc [hl]
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     and a, $07
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld hl, $6D78
     add_a_to_hl
     ld a, [hl]
@@ -5705,7 +5705,7 @@ Func_00F_6D4D::
     ld de, $007E
     call SetFlagBit
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
     db $40, $3F, $40, $3F, $40, $3E, $40, $41
 
@@ -5737,7 +5737,7 @@ Jump_00F_6D80::
     ret nz
     xor a, a
     ld [wSpriteSlotCount], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5781,7 +5781,7 @@ Jump_00F_6E16::
     ldh [hScrollX], a
     ld a, $7D
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     xor a, a
     ldh [hFF8D], a
@@ -5798,8 +5798,8 @@ Jump_00F_6E31::
     ld a, $66
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ld a, $0E
     ldh [hFF8D], a
@@ -5855,7 +5855,7 @@ Jump_00F_6E6F::
     ld [wCBCF], a
     ld a, $65
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5869,7 +5869,7 @@ Jump_00F_6EB0::
     call SetBit2AtHL_B0F
     ld hl, wCBAC
     call SetBit2AtHL_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5878,16 +5878,16 @@ Jump_00F_6ECD::
     call Func_00F_7ED8
     ldh a, [hPlayerY]
     call Func_00F_7ED8
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $1E
     ret nz
     ld hl, hFF8C
     call ClearBit1AtHL_Bank0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5904,7 +5904,7 @@ Jump_00F_6EF0::
     ldh [hPlayerY], a
     cp a, $30
     ret nz
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5935,7 +5935,7 @@ Jump_00F_6F0C::
     call SetBit1AtHL_Bank0F
     ld a, $63
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -5950,9 +5950,9 @@ Jump_00F_6F4C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4CE5)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_6F65::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7002
     dw Jump_00F_6FB5
@@ -5960,9 +5960,9 @@ Func_00F_6F65::
     dw Jump_00F_6F71
 
 Jump_00F_6F71::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     push af
     bit 4, a
     jr z, Jump_00F_6F81
@@ -5983,7 +5983,7 @@ Jump_00F_6F83::
     cp a, $78
     ret nz
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_6F9A::
@@ -5994,8 +5994,8 @@ Jump_00F_6F9A::
     ld hl, wCBAC
     call SetBit2AtHL_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6067,14 +6067,14 @@ Jump_00F_7019::
     call ClearBit2AtHL_Bank0F
     ld a, $7D
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4CDE)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7049::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7051
     dw Jump_00F_706C
@@ -6087,8 +6087,8 @@ Jump_00F_7051::
     ld hl, wCBAC
     call SetBit2AtHL_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6115,13 +6115,13 @@ Jump_00F_7079::
     xor a, a
     ld [wSpriteSlotCount], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4CC2)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7093::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7099
 
@@ -6140,7 +6140,7 @@ Jump_00F_7099::
     xor a, a
     ld [wSpriteSlotCount], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_70BD::
@@ -6163,13 +6163,13 @@ Jump_00F_70E2::
     xor a, a
     ld [wSpriteSlotCount], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C83)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_70EC::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7225
     dw Jump_00F_7210
@@ -6187,9 +6187,9 @@ Jump_00F_7104::
     call Func_00F_7ED8
     ldh a, [hPlayerX]
     call Func_00F_7ED8
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $1E
     ret nz
     ldh a, [hFF8C]
@@ -6198,7 +6198,7 @@ Jump_00F_7104::
     ld de, $0064
     call SetFlagBit
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_712A::
@@ -6215,18 +6215,18 @@ Jump_00F_712A::
     cp a, $70
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_714A::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_00F_716A
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ld a, [wCB8A]
@@ -6235,7 +6235,7 @@ Jump_00F_714A::
     cp a, $20
     ret nz
     ld a, $01
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 Jump_00F_716A::
@@ -6255,8 +6255,8 @@ Jump_00F_716A::
     ld a, $63
     call QueueSoundEffect
     xor a, a
-    ld [wC922], a
-    ld hl, wC923
+    ld [wScriptParam1], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6288,7 +6288,7 @@ Jump_00F_71B5::
     ld [wCB86], a
     ld a, $03
     ldh [hPlayerFacing], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6308,7 +6308,7 @@ Jump_00F_71DD::
     ret z
     ld hl, $0833
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6325,7 +6325,7 @@ Jump_00F_7210::
     ld [wCB96], a
     ld hl, $0832
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6360,14 +6360,14 @@ Jump_00F_723C::
     ld [wCBA6], a
     ld hl, $0831
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C7C)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7271::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_727B
     dw Jump_00F_728B
@@ -6377,7 +6377,7 @@ Jump_00F_727B::
     farcall Func_05F_6E09
     ld a, $7D
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6390,21 +6390,21 @@ Jump_00F_7291::
     ld a, $00
     call QueueSoundEffect
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6882)
 ; reads: wC928, wFrameCounterLo, hScrollX, hScrollXHi
 ; writes: hScrollX, hScrollXHi
-; points at: wC923
+; points at: wScriptStep
 Func_00F_729C::
     ld a, [wC928]
     ld b, a
 
-; 7 call sites from 6 routines (e.g. Func_00F_7271, Func_00F_67BA, Func_00F_60E6, Func_00F_631F, ...)
+; 7 call sites from 6 routines (e.g. Func_00F_4FA1, Func_00F_5404, Func_00F_631F, Func_00F_60E6, ...)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi
 ; writes: hScrollX, hScrollXHi
-; points at: wC923
+; points at: wScriptStep
 Func_00F_72A0::
     ld a, [wFrameCounterLo]
     and a, $03
@@ -6440,14 +6440,14 @@ Jump_00F_72CB::
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollXHi], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C75)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_72D9::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7601
     dw Jump_00F_75C3
@@ -6498,7 +6498,7 @@ Jump_00F_7325::
     ld a, $01
     ld [wC7C7], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_7348::
@@ -6515,7 +6515,7 @@ Jump_00F_7348::
     call StoreHLInWC924_B0F
     ld de, $001D
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6537,7 +6537,7 @@ Jump_00F_7369::
     ld [wCBCF], a
     ld a, $85
     call QueueSoundEffect
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6570,7 +6570,7 @@ Jump_00F_739E::
 Jump_00F_73CD::
     ld hl, $01A2
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6589,14 +6589,14 @@ Jump_00F_73D8::
     ld [wSpriteSlotCount], a
     ld hl, $01A1
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_7401::
     ld hl, $01A0
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6618,7 +6618,7 @@ Jump_00F_740C::
     ld [wCBD3], a
     ld a, $30
     ld [wCBD4], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6630,7 +6630,7 @@ Jump_00F_743A::
     ret nc
     ld hl, $019E
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6649,7 +6649,7 @@ Jump_00F_7450::
     ld [wC6FD], a
 
 Jump_00F_746E::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6668,7 +6668,7 @@ Jump_00F_7473::
     call StoreHLInWC924_B0F
     ld a, $03
     ld [wCB86], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6702,7 +6702,7 @@ Jump_00F_749D::
     ld [wCB81], a
     ld a, $E0
     ld [wCB8B], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6727,26 +6727,26 @@ Jump_00F_74F7::
     call DecompressToVRAM
     ld a, $27
     ld [wCB91], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_7530::
     ld hl, $019C
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_753B::
     ld hl, $019B
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_7546::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_7553
     ld a, $7C
@@ -6760,14 +6760,14 @@ Jump_00F_7553::
     call QueueSoundEffect
 
 Jump_00F_755C::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $78
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6790,7 +6790,7 @@ Jump_00F_756F::
     ret z
     ld hl, $019A
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6803,7 +6803,7 @@ Jump_00F_75AA::
     ret z
     ld a, $01
     ldh [hPlayerFacing], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6828,7 +6828,7 @@ Jump_00F_75C3::
     ldh [hPlayerFacing], a
     ld hl, $0199
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6846,14 +6846,14 @@ Jump_00F_7601::
     ld [wCC38], a
     ld de, $005A
     call SetFlagBit
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C59)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7625::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7707
     dw Jump_00F_76E3
@@ -6863,7 +6863,7 @@ Func_00F_7625::
 
 Jump_00F_7633::
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_7639::
@@ -6890,7 +6890,7 @@ Jump_00F_7639::
     ret
 
 Jump_00F_766D::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $0F
     jr nz, Jump_00F_768B
     ld a, $60
@@ -6899,7 +6899,7 @@ Jump_00F_766D::
     ld a, [wC92C]
     or a, a
     jr z, Jump_00F_7696
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     jr Jump_00F_7696
 
@@ -6911,7 +6911,7 @@ Jump_00F_768B::
 Jump_00F_7696::
     ld a, $00
     ld [wC929], a
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $F0
     jr nz, Jump_00F_76C0
     ld a, $00
@@ -6922,9 +6922,9 @@ Jump_00F_7696::
     ld a, [wC92C]
     or a, a
     ret z
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, $10
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
 Jump_00F_76C0::
@@ -6939,8 +6939,8 @@ Jump_00F_76C0::
     ld a, $E0
     ld [wCB8A], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -6977,14 +6977,14 @@ Jump_00F_7719::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C3D)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_772E::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7746
     dw Jump_00F_776B
@@ -7021,8 +7021,8 @@ Jump_00F_776B::
     ld a, $6D
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7033,7 +7033,7 @@ Jump_00F_777E::
     farcall Func_002_604B
     ld hl, $0152
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7074,8 +7074,8 @@ Jump_00F_77C9::
     ld a, $6D
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7086,7 +7086,7 @@ Jump_00F_77F1::
     farcall Func_002_604B
     xor a, a
     ld [wC92D], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7095,11 +7095,11 @@ Jump_00F_7806::
     ret
 
 Jump_00F_780D::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_781C
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ld a, $6D
     call QueueSoundEffect
 
@@ -7128,7 +7128,7 @@ Jump_00F_781C::
     ld a, $60
     call QueueSoundEffect
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ret
 
 Jump_00F_785B::
@@ -7137,13 +7137,13 @@ Jump_00F_785B::
     or a, $01
     ld [wCC38], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C2F)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_786F::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7F89
     dw Jump_00F_79EC
@@ -7164,7 +7164,7 @@ Jump_00F_788D::
     set 0, a
     ld [wCC37], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_789B::
@@ -7185,8 +7185,8 @@ Jump_00F_78B7::
     call Func_00F_7F75
     ret nc
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ld hl, $0093
     call StoreHLInWC924_B0F
@@ -7204,7 +7204,7 @@ Jump_00F_78CB::
     ldh [hPlayerFacing], a
     ld a, $03
     ld [wC8EF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7213,8 +7213,8 @@ Jump_00F_78E7::
     call Func_00F_7F75
     ret nc
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ld de, $0000
     call TestFlagBit
@@ -7242,8 +7242,8 @@ Jump_00F_790A::
     xor a, a
     ld [wCB86], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ld hl, $0091
     call StoreHLInWC924_B0F
@@ -7256,9 +7256,9 @@ Jump_00F_7937::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     ret nz
     ld a, $02
@@ -7267,13 +7267,13 @@ Jump_00F_7937::
     ld hl, $0090
     call StoreHLInWC924_B0F
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_7968::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_00F_798D
     ld a, $00
@@ -7286,7 +7286,7 @@ Jump_00F_7968::
     ld a, [wC92C]
     or a, a
     ret z
-    ld hl, wC921
+    ld hl, wScriptParam0
     inc [hl]
     ret
 
@@ -7317,8 +7317,8 @@ Jump_00F_79AA::
     xor a, a
     ld [wCB86], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7335,7 +7335,7 @@ Jump_00F_79D1::
     ld [wC924], a
     ld a, h
     ld [wC925], a
-    ld hl, wC923
+    ld hl, wScriptStep
     dec [hl]
     ret
 
@@ -7355,9 +7355,9 @@ Jump_00F_79EC::
     ld a, h
     ld [wC925], a
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7373,14 +7373,14 @@ Jump_00F_7A12::
     ld a, h
     ld [wC925], a
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C28)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7A2D::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7AA2
     dw Jump_00F_7A70
@@ -7389,7 +7389,7 @@ Func_00F_7A2D::
     dw Jump_00F_7F93
 
 Jump_00F_7A3B::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld a, [wC552]
     or a, a
@@ -7436,7 +7436,7 @@ Jump_00F_7A70::
     ldh [hPlayerFacing], a
     ld a, $03
     ld [wC8EF], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld de, $0000
     call TestFlagBit
@@ -7469,9 +7469,9 @@ Jump_00F_7AA2::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4EA5)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7AC6::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7C84
     dw Jump_00F_7C72
@@ -7525,14 +7525,14 @@ Jump_00F_7B2A::
     ret nc
     ld hl, $0014
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_7B3B::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ldh a, [hScrollY]
@@ -7612,8 +7612,8 @@ Jump_00F_7BB4::
     and a, $F8
     ldh [hScrollY], a
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7678,17 +7678,17 @@ Jump_00F_7C03::
 Jump_00F_7C19::
     xor a, a
     ld [wC469], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_7C22::
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     srl a
     srl a
     cp a, $10
@@ -7700,20 +7700,20 @@ Jump_00F_7C22::
 
 Jump_00F_7C3F::
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     ldh [hScrollY], a
     ldh [hScrollYHi], a
     call ComputeSpriteScrollOffsets
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_00F_7C4F::
     ld hl, wCB8C
     call SetBit2AtHL_B0F
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     and a, $03
     ret nz
     ld a, [wCB8B]
@@ -7722,8 +7722,8 @@ Jump_00F_7C4F::
     cp a, $50
     ret nz
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7734,7 +7734,7 @@ Jump_00F_7C72::
     ld hl, hMapScreenY
     dec [hl]
     call LoadMapScreen
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7755,9 +7755,9 @@ Jump_00F_7C84::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E9E)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7CA5::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7CD6
     dw Jump_00F_7CD6
@@ -7778,7 +7778,7 @@ Jump_00F_7CB1::
     ld a, $E0
     ld [wCBBB], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_7CD6::
@@ -7786,8 +7786,8 @@ Jump_00F_7CD6::
     call Func_00F_7EE9
     ret nc
     xor a, a
-    ld [wC921], a
-    ld hl, wC923
+    ld [wScriptParam0], a
+    ld hl, wScriptStep
     inc [hl]
     ld de, $0001
     call TestFlagBit
@@ -7802,9 +7802,9 @@ Jump_00F_7CF4::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E97)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7CFB::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7D3C
     dw Jump_00F_7D31
@@ -7820,7 +7820,7 @@ Jump_00F_7D07::
     call Func_00F_7EE9
     ret nc
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_7D1C::
@@ -7832,7 +7832,7 @@ Jump_00F_7D1C::
     ret nz
     ld a, $03
     ld [wCBB6], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7840,7 +7840,7 @@ Jump_00F_7D31::
     ld b, $5A
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7863,16 +7863,16 @@ Jump_00F_7D3C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E51)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7D62::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7D86
     dw Jump_00F_7D6C
     dw Jump_00F_7F93
 
 Jump_00F_7D6C::
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ld de, $0000
     call TestFlagBit
@@ -7892,14 +7892,14 @@ Jump_00F_7D86::
     ld de, wC8F1
     call Func_00F_7EE9
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E4A)
-; reads: wC923
+; reads: wScriptStep
 Func_00F_7D97::
-    ld a, [wC923]
+    ld a, [wScriptStep]
     rst $00
     dw Jump_00F_7DF6
     dw Jump_00F_7DCF
@@ -7914,7 +7914,7 @@ Jump_00F_7DA3::
     ld hl, hFF8C
     call ClearBit2AtHL_Bank0F
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_00F_7DB9::
@@ -7926,7 +7926,7 @@ Jump_00F_7DB9::
     ret nz
     xor a, a
     ld [wC924], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7944,7 +7944,7 @@ Jump_00F_7DCF::
     ret z
     ld a, $01
     ld [wCB86], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -7968,15 +7968,15 @@ Jump_00F_7DF6::
     xor a, a
     ld [wC924], a
     ld [wC925], a
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_00F_7D97)
-; reads: wC922, wC92C
-; writes: wC928, wC922
+; reads: wScriptParam1, wC92C
+; writes: wC928, wScriptParam1
 Func_00F_7E1E::
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     or a, a
     jr nz, Jump_00F_7E37
     ld a, $40
@@ -8031,25 +8031,25 @@ Jump_00F_7EA0::
     ld a, [wC92C]
     or a, a
     ret z
-    ld a, [wC922]
+    ld a, [wScriptParam1]
     inc a
     cp a, $06
     jr nz, Jump_00F_7EAE
     xor a, a
 
 Jump_00F_7EAE::
-    ld [wC922], a
+    ld [wScriptParam1], a
     ret
 
 ; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
-; 34 call sites from 23 routines (e.g. Func_00F_7F0B, Func_00F_7F24, Func_00F_772E, Func_00F_7F42, ...)
-; reads: wC921
-; writes: wC921
+; 34 call sites from 23 routines (e.g. Func_00F_7AC6, Func_00F_7BC3, Func_00F_7CFB, Func_00F_7F24, ...)
+; reads: wScriptParam0
+; writes: wScriptParam0
 StepWC921Counter_Bank0F::
 Func_00F_7EB2:: ; address name
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, b
     jr z, Jump_00F_7EBE
     sub a, a
@@ -8057,13 +8057,13 @@ Func_00F_7EB2:: ; address name
 
 Jump_00F_7EBE::
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     scf
     ret
 
 ; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
-; 5 call sites from 4 routines (e.g. Func_00F_6D4D, Func_00F_64F3, Func_00F_5F06, Func_00F_40E9)
-SetBit1AtHL_Bank0F:: ; heuristic: follows a terminator; C0
+; 5 call sites from 4 routines (e.g. Func_00F_40E9, Func_00F_5F06, Func_00F_64F3, Func_00F_6D4D)
+SetBit1AtHL_Bank0F::
 Func_00F_7EC4:: ; address name
     ld a, [hl]
     or a, $02
@@ -8071,8 +8071,8 @@ Func_00F_7EC4:: ; address name
     ret
 
 ; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
-; 4 call sites from 3 routines (e.g. Func_00F_6D4D, Func_00F_64F3, Func_00F_5F06)
-ClearBit1AtHL_Bank0F:: ; heuristic: follows a terminator; C0
+; 4 call sites from 3 routines (e.g. Func_00F_5F06, Func_00F_64F3, Func_00F_6D4D)
+ClearBit1AtHL_Bank0F::
 Func_00F_7EC9:: ; address name
     ld a, [hl]
     and a, $FD
@@ -8080,8 +8080,8 @@ Func_00F_7EC9:: ; address name
     ret
 
 ; sets bit 2 of the byte at [HL]; only A is clobbered
-; 28 call sites from 10 routines (e.g. Func_00F_6D4D, Func_00F_70EC, Func_00F_7049, Func_00F_6F65, ...)
-SetBit2AtHL_B0F:: ; heuristic: follows a terminator; C0
+; 28 call sites from 10 routines (e.g. Func_00F_4001, Func_00F_7BC3, Func_00F_5F06, Func_00F_631F, ...)
+SetBit2AtHL_B0F::
 Func_00F_7ECE:: ; address name
     ld a, [hl]
     or a, $04
@@ -8089,7 +8089,7 @@ Func_00F_7ECE:: ; address name
     ret
 
 ; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
-; 24 call sites from 11 routines (e.g. Func_00F_772E, Func_00F_70EC, Func_00F_6F65, Func_00F_6D4D, ...)
+; 24 call sites from 11 routines (e.g. Func_00F_7D97, Func_00F_40E9, Func_00F_57EA, Func_00F_5F06, ...)
 ClearBit2AtHL_Bank0F::
 Func_00F_7ED3:: ; address name
     ld a, [hl]
@@ -8097,8 +8097,8 @@ Func_00F_7ED3:: ; address name
     ld [hl], a
     ret
 
-; 15 call sites from 5 routines (e.g. Func_00F_70EC, Func_00F_6D4D, Func_00F_631F, Func_00F_5F06, ...)
-Func_00F_7ED8:: ; heuristic: follows a terminator; C0
+; 15 call sites from 5 routines (e.g. Func_00F_4001, Func_00F_5F06, Func_00F_631F, Func_00F_6D4D, ...)
+Func_00F_7ED8::
     and a, $0F
     jr nz, Jump_00F_7EE2
     farcall Func_002_5923
@@ -8107,19 +8107,19 @@ Jump_00F_7EE2::
     farcall Func_002_5946
     ret
 
-; 38 call sites from 14 routines (e.g. Func_00F_786F, Func_00F_72D9, Func_00F_67BA, Func_00F_64F3, ...)
-; reads: wC921
-; writes: wC928, wC929, wC921
+; 38 call sites from 14 routines (e.g. Func_00F_7CA5, Func_00F_7CFB, Func_00F_7D62, Func_00F_7D97, ...)
+; reads: wScriptParam0
+; writes: wC928, wC929, wScriptParam0
 Func_00F_7EE9::
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     inc a
     inc a
-    ld [wC921], a
+    ld [wScriptParam0], a
     cp a, $20
     jr z, Jump_00F_7F05
     sub a, a
@@ -8127,14 +8127,14 @@ Func_00F_7EE9::
 
 Jump_00F_7F05::
     xor a, a
-    ld [wC921], a
+    ld [wScriptParam0], a
     scf
     ret
 
-; 4 call sites from 4 routines (e.g. Func_00F_70EC, Func_00F_64F3, Func_00F_5F06, Func_00F_4FA1)
+; 4 call sites from 4 routines (e.g. Func_00F_4FA1, Func_00F_5F06, Func_00F_64F3, Func_00F_70EC)
 ; writes: wC928, wC929
-; points at: wC923
-Func_00F_7F0B:: ; heuristic: follows a terminator; C0
+; points at: wScriptStep
+Func_00F_7F0B::
     ld a, e
     ld [wC928], a
     ld a, d
@@ -8143,14 +8143,14 @@ Func_00F_7F0B:: ; heuristic: follows a terminator; C0
     ld b, $20
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
-; 7 call sites from 3 routines (e.g. Func_00F_67BA, Func_00F_5404, Func_00F_5AF3)
+; 7 call sites from 3 routines (e.g. Func_00F_5AF3, Func_00F_5404, Func_00F_67BA)
 ; writes: wC928, wC929
-; points at: wC923
-Func_00F_7F24:: ; heuristic: follows a terminator; C0
+; points at: wScriptStep
+Func_00F_7F24::
     push hl
     ld a, e
     ld [wC928], a
@@ -8162,12 +8162,12 @@ Func_00F_7F24:: ; heuristic: follows a terminator; C0
     pop hl
     ret nc
     call StoreHLInWC924_B0F
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC928, wC929, wC919
+; writes: wC928, wC929, wScriptStartRequest
 Func_00F_7F42:: ; heuristic: follows a terminator; C0
     ld a, e
     ld [wC928], a
@@ -8178,13 +8178,13 @@ Func_00F_7F42:: ; heuristic: follows a terminator; C0
     call StepWC921Counter_Bank0F
     ret nc
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC921
+; reads: wScriptParam0
 Func_00F_7F5C:: ; heuristic: follows a terminator; C0
-    ld a, [wC921]
+    ld a, [wScriptParam0]
     and a, $1F
     ret nz
     ld a, [de]
@@ -8194,7 +8194,7 @@ Func_00F_7F5C:: ; heuristic: follows a terminator; C0
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 125 call sites from 24 routines (e.g. Func_00F_7A2D, Func_00F_786F, Func_00F_7F24, Func_00F_772E, ...)
+; 125 call sites from 24 routines (e.g. Func_00F_7AC6, Func_00F_7CA5, Func_00F_7D62, Func_00F_5AF3, ...)
 ; writes: wC924, wC925, wC926
 StoreHLInWC924_B0F::
 Func_00F_7F68:: ; address name
@@ -8206,7 +8206,7 @@ Func_00F_7F68:: ; address name
     ld [wC926], a
     ret
 
-; 15 call sites from 10 routines (e.g. Func_00F_7F75, Func_00F_7A2D, Func_00F_786F, Func_00F_772E, ...)
+; 15 call sites from 10 routines (e.g. Func_00F_5AF3, Func_00F_5404, Func_00F_57EA, Func_00F_59E6, ...)
 ; reads: wC926
 ; writes: wC928
 Func_00F_7F75::
@@ -8226,7 +8226,7 @@ Jump_00F_7F89::
     xor a, a
     call Func_00F_7F75
     ret nc
-    ld hl, wC923
+    ld hl, wScriptStep
     inc [hl]
     ret
 
@@ -8235,6 +8235,6 @@ Jump_00F_7F93::
     call Func_00F_7F75
     ret nc
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
     ds $62, $00

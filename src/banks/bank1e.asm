@@ -55,7 +55,7 @@ Jump_01E_4062::
     farcall Func_015_4001
     ret
 
-; 18 call sites from 16 routines (e.g. Func_00D_4B41, Func_00D_711C, Func_00D_74FC, Func_010_65E9, ...)
+; 18 call sites from 16 routines (e.g. Func_00D_4B30, Func_00D_711C, Func_00D_720E, Func_010_65E9, ...)
 ; reads: wD780
 Func_01E_4069::
     ld a, [wD780]
@@ -109,9 +109,9 @@ Jump_01E_40B6::
     ld hl, wD780
     inc [hl]
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_40D1::
@@ -245,18 +245,18 @@ Jump_01E_4198::
     ld [wD7AD], a
     ld [wD7AF], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_41D0::
     ld a, $04
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_01E_4069)
@@ -554,9 +554,9 @@ Jump_01E_442C::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4442::
@@ -570,9 +570,9 @@ Jump_01E_4442::
     add a, $05
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4463::
@@ -613,9 +613,9 @@ Jump_01E_44A1::
     ld a, $01
     ld [wD780], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_44B5::
@@ -776,9 +776,9 @@ Jump_01E_45D2::
     ld [wD7FA], a
     call Func_01E_7745
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_45EC::
@@ -829,9 +829,9 @@ Jump_01E_460F::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4655::
@@ -855,9 +855,9 @@ Jump_01E_4670::
     add a, $03
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4687::
@@ -867,9 +867,9 @@ Jump_01E_4687::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01E_44EF)
@@ -962,9 +962,9 @@ Jump_01E_4720::
     ld a, $05
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_473B::
@@ -1019,9 +1019,9 @@ Jump_01E_4782::
     ld [wD7AC], a
     ld [wD7AE], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_47B2::
@@ -1078,9 +1078,9 @@ Jump_01E_47EC::
     ld hl, $7880
     call StoreBAtWordTableEntry_Bank1E
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4817::
@@ -1092,9 +1092,9 @@ Jump_01E_4817::
     xor a, a
     ld [rRAMG2], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4831::
@@ -1148,9 +1148,9 @@ Jump_01E_48A4::
     xor a, a
     ld [wD782], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_48C4::
@@ -1164,9 +1164,9 @@ Jump_01E_48C4::
     xor a, a
     ld [wD782], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_01E_46E5)
@@ -1390,9 +1390,9 @@ Jump_01E_4AA9::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4AD7::
@@ -1437,9 +1437,9 @@ Jump_01E_4B05::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4B42::
@@ -1450,9 +1450,9 @@ Jump_01E_4B42::
     ld a, $1B
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4B5D::
@@ -1535,9 +1535,9 @@ Jump_01E_4BBE::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4BE1::
@@ -1601,9 +1601,9 @@ Jump_01E_4C42::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4C78::
@@ -1698,9 +1698,9 @@ Jump_01E_4D1C::
     ld a, $08
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4D37::
@@ -1717,9 +1717,9 @@ Jump_01E_4D37::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4D5B::
@@ -1787,9 +1787,9 @@ Jump_01E_4DD7::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4DED::
@@ -1803,9 +1803,9 @@ Jump_01E_4DED::
     add a, $05
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4E0E::
@@ -1827,9 +1827,9 @@ Jump_01E_4E0E::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4E4B::
@@ -1840,9 +1840,9 @@ Jump_01E_4E4B::
     ld a, $25
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4E66::
@@ -1864,9 +1864,9 @@ Jump_01E_4E66::
     ld [wD7AF], a
     farcall Func_01D_5ECE
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
     db $C9
 
@@ -1930,9 +1930,9 @@ Jump_01E_4EFE::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4F31::
@@ -1985,9 +1985,9 @@ Jump_01E_4F66::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4F94::
@@ -2020,9 +2020,9 @@ Jump_01E_4FBB::
     ld a, $39
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_4FD6::
@@ -2203,9 +2203,9 @@ Jump_01E_5145::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5162::
@@ -2231,9 +2231,9 @@ Jump_01E_5162::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5199::
@@ -2243,9 +2243,9 @@ Jump_01E_5199::
     ld a, $02
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_51AE::
@@ -2262,18 +2262,18 @@ Jump_01E_51AE::
     ld a, $15
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_51D7::
     ld a, $22
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_51E6::
@@ -2318,9 +2318,9 @@ Jump_01E_51E6::
     ld a, $02
     ld [wD780], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_525F::
@@ -2397,9 +2397,9 @@ Jump_01E_52C9::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_52F7::
@@ -2501,9 +2501,9 @@ Jump_01E_536A::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_540F::
@@ -2741,9 +2741,9 @@ Jump_01E_5654::
     ld a, $02
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_568E::
@@ -2833,9 +2833,9 @@ Jump_01E_5720::
     ld a, $04
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5743::
@@ -2858,9 +2858,9 @@ Jump_01E_5743::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5774::
@@ -2923,9 +2923,9 @@ Jump_01E_57EB::
     ld a, $0C
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_581C::
@@ -2972,9 +2972,9 @@ Jump_01E_5849::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_586E::
@@ -3067,9 +3067,9 @@ Jump_01E_58FD::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_592B::
@@ -3157,9 +3157,9 @@ Jump_01E_59D4::
     ld a, $28
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5A05::
@@ -3167,9 +3167,9 @@ Jump_01E_5A05::
     inc a
     ld [wD781], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5A16::
@@ -3303,9 +3303,9 @@ Jump_01E_5B32::
     ld a, $01
     ld [wD7FA], a
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5B50::
@@ -3503,7 +3503,7 @@ Jump_01E_5CB3::
     ld a, [wD7B2]
     cp a, $06
     jr z, Jump_01E_5CD5
-    ld a, [wC920]
+    ld a, [wScriptCommandType]
     cp a, $E8
     jr z, Jump_01E_5CCA
     jr Jump_01E_5CD5
@@ -3543,9 +3543,9 @@ Jump_01E_5CD5::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_5D1F::
@@ -4587,9 +4587,9 @@ Jump_01E_64BE::
     cp a, $07
     ret nz
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_6519::
@@ -5062,9 +5062,9 @@ Jump_01E_6870::
     ld [hl+], a
     ld [hl], $12
     xor a, a
-    ld [wC920], a
+    ld [wScriptCommandType], a
     ld a, $80
-    ld [wC919], a
+    ld [wScriptStartRequest], a
     ret
 
 Jump_01E_68D3::
@@ -6792,7 +6792,7 @@ Func_01E_741A:: ; address name
     ld [de], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_01E_4069, Func_01E_4918, Func_01E_75F2, Func_01E_4001)
+; 4 call sites from 4 routines (e.g. Func_01E_4001, Func_01E_4069, Func_01E_4918, Func_01E_75F2)
 Func_01E_7428::
     ld a, [de]
     inc de
@@ -6804,7 +6804,7 @@ Func_01E_7428::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 3 routines (e.g. Func_01E_4069, Func_01E_75F2, Func_01E_4001)
+; 3 call sites from 3 routines (e.g. Func_01E_4001, Func_01E_4069, Func_01E_75F2)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank1E::
 Func_01E_7431:: ; address name
@@ -6952,7 +6952,7 @@ Jump_01E_74B6::
     ldh [rSVBK], a
     ret
 
-; 38 call sites from 11 routines (e.g. Func_01E_4069, Func_01E_4A32, Func_01E_46E5, Func_01E_42C6, ...)
+; 38 call sites from 11 routines (e.g. Func_01E_4001, Func_01E_4069, Func_01E_4A32, Func_01E_46E5, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -7006,7 +7006,7 @@ Jump_01E_74EE::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 86 call sites from 27 routines (e.g. Func_01E_7564, Func_01E_4201, Func_01E_71B5, Func_01E_7233, ...)
+; 86 call sites from 27 routines (e.g. Func_01E_4001, Func_01E_4201, Func_01E_7233, Func_01E_7564, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1E::
 Func_01E_750F:: ; address name
@@ -7071,7 +7071,7 @@ Func_01E_7556:: ; address name
     ld [hl], a
     ret
 
-; 11 call sites from 10 routines (e.g. Func_01E_49F8, Func_01E_4A32, Func_01E_5A4D, Func_00D_5800, ...)
+; 11 call sites from 10 routines (e.g. Func_01E_49F8, Func_01E_4A32, Func_01E_5A4D, Func_00D_5702, ...)
 ; reads: wD7F1, wD7F2, wD7AF, wD7B0
 Func_01E_7564::
     ld a, [wD7F1]
@@ -7286,7 +7286,7 @@ Jump_01E_7684::
     jr nz, Jump_01E_7648
     ret
 
-; 6 call sites from 4 routines (e.g. Func_01E_6F17, Func_00C_7098, Func_01C_4AC4, Func_0F2_4B05)
+; 6 call sites from 4 routines (e.g. Func_01E_6F17, Func_00C_7098, Func_01C_4867, Func_0F2_4B05)
 ; points at: hFFC9, wD7F1
 Func_01E_768E::
     ld de, hFFC9
@@ -7427,7 +7427,7 @@ Func_01E_7732::
     ld [wD7AF], a
     ret
 
-; 10 call sites from 8 routines (e.g. Func_01E_4A32, Func_01E_44EF, Func_00D_47F7, Func_014_4880, ...)
+; 10 call sites from 8 routines (e.g. Func_01E_4A32, Func_01E_44EF, Func_00D_463F, Func_014_43CC, ...)
 ; reads: hFFB9, hFF8D, wSpriteSlotCount
 ; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wSpriteSlotCount
 Func_01E_7745::
@@ -7446,7 +7446,7 @@ Func_01E_7745::
     ld [wSpriteSlotCount], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_01E_6810, Func_01E_6074, Func_01E_5C63, Func_00D_4C9C, ...)
+; 5 call sites from 5 routines (e.g. Func_01E_6810, Func_01E_6074, Func_01E_5C63, Func_00D_4B30, ...)
 ; reads: wD7BC, wD7BA, wD7BB
 ; writes: hFFB9, hFFBA, hFF8D, wSpriteSlotCount
 Func_01E_7763::

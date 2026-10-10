@@ -630,7 +630,7 @@ Data_01F_5B76:: ; heuristic: bank from RAM variable $D7FE; C0
 Data_01F_5BA8:: ; heuristic: bank from RAM variable $D7FE; C0
     INCBIN "dwm2-cobi-us.gbc", $07DBA8, $6D
 
-; 8 call sites from 8 routines (e.g. Func_014_4BE3, Func_015_4182, Func_015_5A67, Func_015_60BF, ...)
+; 8 call sites from 8 routines (e.g. Func_014_4BA0, Func_015_4182, Func_015_5A67, Func_015_60BF, ...)
 ; reads: wD7AF, wD7B1, wD7A9, wD781, wD7B0
 ; writes: rRAMG2, rRAMB, wC8D9, wD781
 ; points at: wD789
@@ -807,7 +807,7 @@ Func_01F_5CF8::
 Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
-; 25 call sites from 15 routines (e.g. Func_01F_73EC, Func_01F_74E3, Func_01F_753A, Func_01F_7591, ...)
+; 25 call sites from 14 routines (e.g. Func_01F_73EC, Func_01F_74E3, Func_01F_753A, Func_01F_7591, ...)
 ; reads: wD7F6, rSTAT, wIsCGB, wD7F7
 ; writes: rVBK
 ; points at: wD7F1

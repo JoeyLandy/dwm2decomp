@@ -959,7 +959,7 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
     db "be in the Vault.", $F7
     db $F0
 
-; 6 call sites from 6 routines (e.g. Func_001_5535, Func_007_7DE5, Func_00D_7329, Func_015_47A7, ...)
+; 6 call sites from 6 routines (e.g. Func_001_5535, Func_007_7DE5, Func_00D_720E, Func_015_47A7, ...)
 ; reads: wD7F6, wD7F7, wD7F5, wC616, wD7F1, wD00E, wCFA8
 ; writes: wD7F6, wD7F7, wD006, wD007, wCFA8, wD7F5
 ; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...
@@ -1879,10 +1879,10 @@ Func_00E_5C11::
     ld a, [wD012]
     ret
 
-; 1 call site from 1 routine (e.g. Func_00C_4A49)
+; 1 call site from 1 routine (e.g. Func_00C_45DA)
 ; reads: wD7F1, wD7F2, wD010, wD011, wD012
 ; writes: wD006, wD007, wD7F5, wD7F6, wD7F7
-Func_00E_5C2B:: ; heuristic: follows a terminator; C0
+Func_00E_5C2B::
     ld a, [wD7F1]
     ld [wD006], a
     ld a, [wD7F2]
