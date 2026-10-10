@@ -5453,7 +5453,7 @@ Func_00D_6B45:: ; heuristic: follows a terminator; C0
     jr Jump_00D_6B25
 
 ; 1 call site from 1 routine (e.g. Func_00D_6AEC)
-; reads: wD7F5, wD7F6, wCFEC, wCFED, wD008, wCADE, wD010, wD011, ...
+; reads: wD7F5, wD7F6, wSkillId, wCFED, wD008, wCADE, wD010, wD011, ...
 ; writes: wCFE6, wCFE7, wD006, wD007, wCADB, wCADC, rRAMG2, rRAMB
 ; points at: wC986, wC60C, wD01A
 Func_00D_6B55::
@@ -5481,7 +5481,7 @@ Jump_00D_6B5B::
     ld a, h
     ld [wCFE7], a
     farcall Func_034_4001
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld [wD006], a
     ld a, [wCFED]
     ld [wD007], a
@@ -5491,7 +5491,7 @@ Jump_00D_6B5B::
     ld a, $01
     ld [hl+], a
     call Func_00D_6CBA
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld [hl+], a
     ld [wCADB], a
     ld a, [wCFED]

@@ -1910,25 +1910,25 @@ Func_0E0_4FCE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E0_4FCE)
-; reads: wC5F9, wCFEE, wC8C0, wC8C1, wC8C2
-; writes: wD868, wCFEC, wCFED, wD869, wD86A, wD86B
-; points at: wCFEE
+; reads: wC5F9, wSkillRecord, wC8C0, wC8C1, wC8C2
+; writes: wD868, wSkillId, wCFED, wD869, wD86A, wD86B
+; points at: wSkillRecord
 Func_0E0_4FDB::
     ld a, $00
     ld [wD868], a
     ld a, [wC5F9]
-    ld [wCFEC], a
+    ld [wSkillId], a
     xor a, a
     ld [wCFED], a
     ld a, $01
     ld [wD869], a
-    ld hl, wCFEE
+    ld hl, wSkillRecord
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
-    farcall Func_01A_4022
-    ld a, [wCFEE]
+    farcall LoadSkillRecordPart
+    ld a, [wSkillRecord]
     ld l, a
     ld h, $00
     call HLToDecimalDigits
@@ -1948,13 +1948,13 @@ Func_0E0_4FDB::
 
 ; 1 call site from 1 routine (e.g. Func_0E0_4FCE)
 ; reads: wC5F9, wCFF7, wCFF8, wC8C0, wC8C1, wC8C2, wCFF9, wCFFB, ...
-; writes: wCFEC, wCFED
+; writes: wSkillId, wCFED
 Func_0E0_502B::
     ld a, [wC5F9]
-    ld [wCFEC], a
+    ld [wSkillId], a
     xor a, a
     ld [wCFED], a
-    farcall Func_01A_4001
+    farcall LoadSkillRecord
     ld a, [wCFF7]
     ld l, a
     ld a, [wCFF8]

@@ -1385,7 +1385,7 @@ Jump_001_4F6D::
     ld hl, $0000
 
 ; 1 call site from 1 routine (e.g. Func_001_4045)
-; reads: wCFE6, wCFE7, wC52D, wC52E, wC52F, wC530, wCFEC, wCFED, ...
+; reads: wCFE6, wCFE7, wC52D, wC52E, wC52F, wC530, wSkillId, wCFED, ...
 ; writes: wC5F8, wC5F9, wCFE6, wCFE7, wStringCategory, wStringIndex, wC52D, wC52E, ...
 Func_001_4F80::
     ld a, l
@@ -1439,14 +1439,14 @@ Func_001_4F80::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld hl, vBGMap0 + $4F
     ld bc, $0100
     call Func_001_5420
     ld a, [wCFED]
     ld hl, vBGMap0 + $4F
     call Func_001_542C
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     ld hl, vBGMap0 + $66
     ld bc, $0100
     call Func_001_5420
@@ -1581,26 +1581,26 @@ Jump_001_512D::
     ld bc, $0100
     call Func_001_5420
     ld a, [wC5F8]
-    ld [wCFEC], a
+    ld [wSkillId], a
     xor a, a
     ld [wCFED], a
     xor a, a
     ld [wD868], a
     ld a, $11
     ld [wD869], a
-    ld hl, wCFEE
+    ld hl, wSkillRecord
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
-    farcall Func_01A_4022
-    ld a, [wCFEE]
+    farcall LoadSkillRecordPart
+    ld a, [wSkillRecord]
     ld hl, vBGMap0 + $90
     ld bc, $0100
     call Func_001_53DC
     ld a, $04
     ld [wStringCategory], a
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     or a, a
     jr nz, Jump_001_517F
     ld a, $0E
@@ -5459,7 +5459,7 @@ Func_001_6C1F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_001_6E91)
-; reads: hFFC9, wD868, wCFEC, wCFED, wD869, wC5E8, wCFEE, wCFEF, ...
+; reads: hFFC9, wD868, wSkillId, wCFED, wD869, wC5E8, wSkillRecord, wCFEF, ...
 ; writes: wCFE6, wCFE7, wC9DC, wD006, wD007, wD09D, wD09E, wD09F, ...
 ; points at: wC60C, wD01A
 Func_001_6C48::
@@ -5481,7 +5481,7 @@ Func_001_6C48::
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld [hl+], a
     ld a, [wCFED]
     ld [hl+], a
@@ -5512,7 +5512,7 @@ Jump_001_6C8D::
     ld [hl+], a
     call Func_001_6E31
     call Func_001_6E31
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     ld [hl+], a
     ld a, [wCFEF]
     ld [hl+], a
@@ -5614,7 +5614,7 @@ Jump_001_6D33::
     ld [hl+], a
     ld a, [wD005]
     ld [hl+], a
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld l, a
     ld a, [wCFED]
     ld h, a

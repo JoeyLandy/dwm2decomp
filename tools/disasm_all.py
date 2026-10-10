@@ -1072,10 +1072,11 @@ class Rom:
         out.append(f"{t['label']}::")
         for i in range(t["count"]):
             p = t["addr"] + i * stride
-            vals, q = [], p
+            vals, raws, q = [], [], p
             for f in fields:
                 o = bank * BANK + (q - self.base(bank))
                 vals.append(self._u16(bank, q) if f["type"] == "ptr" else self.data[o])
+                raws.append(list(self.data[o:o + f.get("size", 1)]))  # every byte of a db field
                 q += 2 if f["type"] == "ptr" else f.get("size", 1)
             tag = f" ; id {t['id_base'] + i}" if "id_base" in t else f" ; entry {i}"
             run: list[int] = []
@@ -1106,7 +1107,7 @@ class Rom:
                     out.append(f"    dw {nm or f'${tgt:04X}'}" + ("" if tagged else tag))
                     tagged = True
                 else:
-                    run.append(vals[fi])
+                    run.extend(raws[fi])
                 q += sz
             flush()
 

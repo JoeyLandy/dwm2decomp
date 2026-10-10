@@ -179,6 +179,27 @@ class PersonalityIndex(unittest.TestCase):
         self.assertEqual(seen, set(range(27)))
 
 
+class SkillTableSource(unittest.TestCase):
+    """Audit of the committed src/: the skill table keeps every byte of its 17-byte records."""
+
+    def test_175_records_of_17_bytes(self):
+        import re
+        text = (ROOT / "src/banks/bank1a.asm").read_text(encoding="utf-8")
+        rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
+        self.assertEqual([int(i) for _, i in rows], list(range(175)))
+        self.assertTrue(all(len(v.split(", ")) == 17 for v, _ in rows))
+
+    @unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+    def test_rows_equal_the_rom_bytes(self):
+        import re
+        text = (ROOT / "src/banks/bank1a.asm").read_text(encoding="utf-8")
+        rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
+        rom = ROM.read_bytes()
+        for values, ident in rows[:175]:
+            at = 0x1A * 0x4000 + 0x40D4 - 0x4000 + 17 * int(ident)
+            self.assertEqual(bytes(int(v[1:], 16) for v in values.split(", ")), rom[at:at + 17], ident)
+
+
 class FamilyNamesAreApplied(unittest.TestCase):
     """Audit of the committed src/: each family in config/name_families.json names its copies."""
 

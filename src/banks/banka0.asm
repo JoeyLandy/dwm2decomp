@@ -5003,7 +5003,7 @@ Jump_0A0_62CD::
     add a, a
     add_a_to_hl
     deref_hl
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     ld c, a
     cp a, $FF
     jr nz, Jump_0A0_6312
@@ -5040,7 +5040,7 @@ Jump_0A0_6312::
     ld hl, wDA1C
     add a, a
     add_a_to_hl
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld [hl], a
     ld hl, wCFCB
     inc [hl]
@@ -5957,8 +5957,8 @@ Func_0A0_68FC::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_6873, Func_0A0_5F2E)
-; reads: wCFEE, wCFD4
-; writes: wStringIndex, wCFEC, wCFED
+; reads: wSkillRecord, wCFD4
+; writes: wStringIndex, wSkillId, wCFED
 ; points at: wD8DF, wC388
 Func_0A0_6909::
     push af
@@ -5967,11 +5967,11 @@ Func_0A0_6909::
     ld de, $0603
     call Func_0A0_6CBC
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     xor a, a
     ld [wCFED], a
-    farcall Func_01A_4001
-    ld a, [wCFEE]
+    farcall LoadSkillRecord
+    ld a, [wSkillRecord]
     cp a, $FF
     jr nz, Jump_0A0_693C
     ld a, [wCFD4]
@@ -6048,7 +6048,7 @@ Func_0A0_69A1::
 
 ; 1 call site from 1 routine (e.g. Func_0A0_5F2E)
 ; reads: wC46E, wCFD5, wCFD4
-; writes: wCFEC, wCFED
+; writes: wSkillId, wCFED
 ; points at: wD989
 Func_0A0_69C1::
     ld a, [wC46E]
@@ -6066,10 +6066,10 @@ Func_0A0_69C1::
     swap a
     add_a_to_hl
     ld a, [hl]
-    ld [wCFEC], a
+    ld [wSkillId], a
     xor a, a
     ld [wCFED], a
-    farcall Func_01A_4001
+    farcall LoadSkillRecord
     ret
 
 ; no direct call (reached through a table, a jump or a vector)

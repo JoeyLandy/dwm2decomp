@@ -1110,9 +1110,9 @@ DEF wCFE4 EQU $CFE4
 DEF wCFE5 EQU $CFE5
 DEF wCFE6 EQU $CFE6
 DEF wCFE7 EQU $CFE7
-DEF wCFEC EQU $CFEC
+DEF wSkillId EQU $CFEC ; low byte of the 16-bit skill record number LoadSkillRecord reads (wCFED is the high byte) (reading)
 DEF wCFED EQU $CFED
-DEF wCFEE EQU $CFEE
+DEF wSkillRecord EQU $CFEE ; first byte of the 17-byte copy of a SkillTable record (reading)
 DEF wCFEF EQU $CFEF
 DEF wCFF0 EQU $CFF0
 DEF wCFF1 EQU $CFF1

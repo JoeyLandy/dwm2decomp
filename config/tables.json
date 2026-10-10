@@ -129,6 +129,81 @@
       ],
       "note": "E-0018. Sound ids 168-222: the array ends at $40DD and track streams follow; the bank table nominally covers ids up to 254, but no records exist for 223-254.",
       "tracks": true
+    },
+    {
+      "bank": "1A",
+      "addr": "40D4",
+      "label": "SkillTable",
+      "count": 175,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "first number the debug skill viewer shows (2, 4, 10 for the three Blaze skills)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "string index, category $12: a short family name such as 'Infer'"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "string index, category $13: shown as 'Type'"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "low 2 bits: string index, category $14 ('Batt'); high nibble: string index, category $10 ('Charge')"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "string index, category $11 (after Func_001_5311): the target ('1 enemy', 'All enem')"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "number shown by the debug skill viewer"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "number shown by the debug skill viewer"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "number shown by the debug skill viewer"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "number shown by the debug skill viewer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "16-bit number shown by the debug skill viewer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "16-bit value read by the viewer (wCFF9)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "16-bit value"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "16-bit value"
+        }
+      ],
+      "note": "E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10)."
     }
   ]
 }

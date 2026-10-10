@@ -107,14 +107,14 @@ Jump_005_406F::
     INCBIN "dwm2-cobi-us.gbc", $014075, $CA
 
 ; 35 call sites from 35 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
-; reads: wD8A4, wCFEE
+; reads: wD8A4, wSkillRecord
 ; points at: wD8DF
 Func_005_413F::
     ld a, [wD8A4]
     ld hl, wD8DF
     add a, a
     add_a_to_hl
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     or a, a
     jr z, Jump_005_4166
     cp a, $FF
@@ -198,7 +198,7 @@ Jump_005_41B6::
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
-; reads: wCFEC, wCFF3
+; reads: wSkillId, wCFF3
 ; points at: wD80A
 Func_005_41B9::
     ld hl, wD80A
@@ -206,7 +206,7 @@ Func_005_41B9::
     or a, [hl]
     and a, $08
     jr z, Jump_005_41D3
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     cp a, $84
     jr z, Jump_005_41D0
     ld a, [wCFF3]
@@ -222,12 +222,12 @@ Jump_005_41D3::
     ret
 
 ; 20 call sites from 20 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
-; reads: wCFF6, wCFEC
+; reads: wCFF6, wSkillId
 Func_005_41D6::
     ld a, [wCFF6]
     bit 7, a
     jr z, Jump_005_41E8
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     call Func_000_3F47
     jr nz, Jump_005_41E8
     ld c, $00
@@ -359,15 +359,15 @@ Jump_005_4283::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_72F7)
-; reads: wD8A4, wCFEC, wCFED, hFFC6
-; writes: wCFEC, wCFED, wD868, wD869, wD86A, wD86B
+; reads: wD8A4, wSkillId, wCFED, hFFC6
+; writes: wSkillId, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wD988, hFFC6
 Func_005_4286:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_4319
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld l, a
     ld a, [wCFED]
     ld h, a
@@ -392,7 +392,7 @@ Jump_005_42B7::
     ld a, [hl]
     cp a, $FF
     jr z, Jump_005_42F4
-    ld [wCFEC], a
+    ld [wSkillId], a
     xor a, a
     ld [wCFED], a
     ld a, $07
@@ -407,7 +407,7 @@ Jump_005_42B7::
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
-    farcall Func_01A_4022
+    farcall LoadSkillRecordPart
     pop de
     pop bc
     pop hl
@@ -437,7 +437,7 @@ Jump_005_42FD::
     jr nz, Jump_005_42A4
     pop hl
     ld a, l
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld a, h
     ld [wCFED], a
     ld c, $00
@@ -446,7 +446,7 @@ Jump_005_42FD::
 Jump_005_430D::
     pop hl
     ld a, l
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld a, h
     ld [wCFED], a
     ld c, $FF
@@ -470,15 +470,15 @@ Func_005_431C:: ; heuristic: follows a terminator; C0
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_005_7345, Func_005_73D7, Func_005_7449, Func_005_7A6C)
-; reads: wD8A4, wCFEC
-; writes: wCFEC
+; reads: wD8A4, wSkillId
+; writes: wSkillId
 ; points at: wD80D
 Func_005_432E:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_4370
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -504,13 +504,13 @@ Jump_005_435E::
     dec b
     jr nz, Jump_005_4348
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_4369::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
@@ -519,14 +519,14 @@ Jump_005_4370::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_7410, Func_005_7CF3)
-; reads: wD8A4, wCFEC
-; writes: wCFEC
+; reads: wD8A4, wSkillId
+; writes: wSkillId
 Func_005_4373:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_43AA
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -547,13 +547,13 @@ Jump_005_4398::
     dec b
     jr nz, Jump_005_438D
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_43A3::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
@@ -562,15 +562,15 @@ Jump_005_43AA::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7B84)
-; reads: wD8A4, wCFEC
-; writes: wCFEC
+; reads: wD8A4, wSkillId
+; writes: wSkillId
 ; points at: wD80D
 Func_005_43AD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_43EF
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -596,13 +596,13 @@ Jump_005_43DD::
     dec b
     jr nz, Jump_005_43C7
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_43E8::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
@@ -795,15 +795,15 @@ Func_005_44CF::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7CC2)
-; reads: wD8A4, wCFEC
-; writes: wCFEC
+; reads: wD8A4, wSkillId
+; writes: wSkillId
 ; points at: wD80D
 Func_005_44E1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_4524
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -830,13 +830,13 @@ Jump_005_4512::
     dec b
     jr nz, Jump_005_44FB
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_451D::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
@@ -1625,11 +1625,11 @@ Jump_005_4901::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7345)
-; reads: wCFEC, wD8A4
-; writes: wCFEC
+; reads: wSkillId, wD8A4
+; writes: wSkillId
 ; points at: wD80D, wDA74
 Func_005_4904:: ; heuristic: follows a terminator; C0
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -1661,13 +1661,13 @@ Jump_005_4937::
     dec b
     jr nz, Jump_005_4914
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_4942::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
@@ -1904,11 +1904,11 @@ Jump_005_4A73::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7B84)
-; reads: wCFEC, wD8A4
-; writes: wCFEC
+; reads: wSkillId, wD8A4
+; writes: wSkillId
 ; points at: wD80D, wDA77
 Func_005_4A76:: ; heuristic: follows a terminator; C0
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -1940,22 +1940,22 @@ Jump_005_4AA9::
     dec b
     jr nz, Jump_005_4A86
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_4AB4::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFEC, wD8A4
-; writes: wCFEC
+; reads: wSkillId, wD8A4
+; writes: wSkillId
 ; points at: wD80D, wDA78
 Func_005_4ABB:: ; heuristic: follows a terminator; C0
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -1987,13 +1987,13 @@ Jump_005_4AEE::
     dec b
     jr nz, Jump_005_4ACB
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_4AF9::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
@@ -2705,10 +2705,10 @@ Jump_005_4E79::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_4E48)
-; reads: wCFEC, wCFF7, wCFF9, wCFF8, wCFFA, wD8A4, wC58A
+; reads: wSkillId, wCFF7, wCFF9, wCFF8, wCFFA, wD8A4, wC58A
 ; points at: wD8B7
 Func_005_4E7C::
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     cp a, $48
     jr z, Jump_005_4EBD
     cp a, $49
@@ -6263,8 +6263,8 @@ Func_005_6229::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_7AA4)
-; reads: wD8A4, wCFEC
-; writes: wCFEC
+; reads: wD8A4, wSkillId
+; writes: wSkillId
 ; points at: wD988
 Func_005_623B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
@@ -6272,26 +6272,26 @@ Func_005_623B:: ; heuristic: follows a terminator; C0
     ld hl, wD988
     add_a_to_hl
     ld b, $08
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld d, $02
 
 Jump_005_6250::
     inc hl
     ld a, [hl+]
-    ld [wCFEC], a
+    ld [wSkillId], a
     call Func_005_6C02
     jr nz, Jump_005_6264
     dec b
     jr nz, Jump_005_6250
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_6264::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
@@ -6336,11 +6336,11 @@ Jump_005_6295::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_626B)
-; reads: wCFEC
+; reads: wSkillId
 Func_005_6298::
     push bc
     call Func_005_400B
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     cp a, $16
     jr z, Jump_005_62BB
     cp a, $17
@@ -6574,11 +6574,11 @@ Jump_005_63CF::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_005_7BBE, Func_005_7C82, Func_005_7CA2)
-; reads: wCFEC, wD8A4
-; writes: wCFEC
+; reads: wSkillId, wD8A4
+; writes: wSkillId
 ; points at: wD80D
 Func_005_63D2:: ; heuristic: follows a terminator; C0
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     push af
     ld a, [wD8A4]
     and a, $04
@@ -6604,19 +6604,19 @@ Jump_005_63F8::
     dec b
     jr nz, Jump_005_63E2
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $00
     ret
 
 Jump_005_6403::
     pop af
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld c, $FF
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_63D2)
 ; reads: hFFC6
-; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; writes: wD868, wD869, wD86A, wD86B, wSkillId
 ; points at: hFFC6, wD989
 Func_005_640A::
     push bc
@@ -6644,8 +6644,8 @@ Jump_005_642E::
     jr z, Jump_005_6449
     push bc
     push hl
-    ld [wCFEC], a
-    farcall Func_01A_4022
+    ld [wSkillId], a
+    farcall LoadSkillRecordPart
     pop hl
     pop bc
     ldh a, [hFFC6]
@@ -8081,7 +8081,7 @@ Func_005_6BF8::
 
 ; 8 call sites from 8 routines (e.g. Func_005_432E, Func_005_4373, Func_005_44E1, Func_005_43AD, ...)
 ; reads: hFFC6
-; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; writes: wD868, wD869, wD86A, wD86B, wSkillId
 ; points at: hFFC6, wD989
 Func_005_6C02:: ; heuristic: follows a terminator; C0
     push bc
@@ -8105,8 +8105,8 @@ Jump_005_6C26::
     push bc
     push hl
     ld a, [hl]
-    ld [wCFEC], a
-    farcall Func_01A_4022
+    ld [wSkillId], a
+    farcall LoadSkillRecordPart
     pop hl
     pop bc
     ldh a, [hFFC6]
@@ -8125,7 +8125,7 @@ Jump_005_6C3F::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6
-; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; writes: wD868, wD869, wD86A, wD86B, wSkillId
 ; points at: hFFC6, wD989
 Func_005_6C42:: ; heuristic: follows a terminator; C0
     push bc
@@ -8150,8 +8150,8 @@ Jump_005_6C66::
     jr z, Jump_005_6C7E
     push bc
     push hl
-    ld [wCFEC], a
-    farcall Func_01A_4022
+    ld [wSkillId], a
+    farcall LoadSkillRecordPart
     pop hl
     pop bc
     ldh a, [hFFC6]
@@ -8545,7 +8545,7 @@ Func_005_6E89::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC8
-; writes: wD868, wD869, wD86A, wD86B, wCFEC
+; writes: wD868, wD869, wD86A, wD86B, wSkillId
 ; points at: wD989
 Func_005_6E8B:: ; heuristic: follows a terminator; C0
     push bc
@@ -8566,12 +8566,12 @@ Func_005_6E8B:: ; heuristic: follows a terminator; C0
 Jump_005_6EAF::
     push bc
     ld a, [hl+]
-    ld [wCFEC], a
+    ld [wSkillId], a
     cp a, $FF
     jr z, Jump_005_6ECA
     push de
     push hl
-    farcall Func_01A_4022
+    farcall LoadSkillRecordPart
     pop hl
     pop de
     inc d

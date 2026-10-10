@@ -2,9 +2,9 @@ SECTION "Bank 34", ROMX[$4000], BANK[$34]
     db $34
 
 ; 20 call sites from 20 routines (e.g. Func_001_4F80, Func_001_6C48, Func_007_6975, Func_00D_6B55, ...)
-; points at: wCFEC
+; points at: wSkillId
 Func_034_4001::
-    ld de, wCFEC
+    ld de, wSkillId
     call Func_034_4040
     ret
 

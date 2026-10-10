@@ -4751,7 +4751,7 @@ Jump_003_61EA::
     ld d, h
     ld hl, wC130
     call Func_000_2FE1
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld l, a
     ld h, $04
     ld de, wC150
@@ -4834,7 +4834,7 @@ Jump_003_62B2::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     cp a, $FF
     jr nz, Jump_003_62D8
     ld a, [wC46D]
@@ -5097,7 +5097,7 @@ Func_003_646F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
-; reads: wC46D, wCFEE, wC46E, wCFEC, wCFED
+; reads: wC46D, wSkillRecord, wC46E, wSkillId, wCFED
 ; points at: wC3A2, wC39E
 Func_003_649C::
     call ClearScreenTileBuffer_Bank03
@@ -5115,7 +5115,7 @@ Func_003_649C::
     call HLToDecimalDigits
     ld de, wC3A2
     call WriteDecimalDigitTiles
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     cp a, $FF
     jr z, Jump_003_64DA
     ld l, a
@@ -5129,7 +5129,7 @@ Jump_003_64DA::
     and a, $07
     ld hl, $4617
     call Func_003_4538
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld l, a
     ld a, [wCFED]
     ld h, a
@@ -5161,7 +5161,7 @@ Func_003_650C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
-; reads: wC46E, wC46F, wCFEC, wCFED
+; reads: wC46E, wC46F, wSkillId, wCFED
 Func_003_6526::
     call FillTilesFromRequest
     call ClearScreenTileBuffer_Bank03
@@ -5177,7 +5177,7 @@ Func_003_6526::
     and a, $03
     ld hl, Func_003_460B
     call Func_003_4538
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld l, a
     ld a, [wCFED]
     ld h, a
@@ -5253,8 +5253,8 @@ Func_003_6595::
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_003_5E68)
-; reads: wC46D, wC46E, wC0A6, wCFEE
-; writes: wStringIndex, wCFEC, wD081, wCFED, wStringCategory
+; reads: wC46D, wC46E, wC0A6, wSkillRecord
+; writes: wStringIndex, wSkillId, wD081, wCFED, wStringCategory
 ; points at: wC39E
 Func_003_65E3::
     ld a, [wC46D]
@@ -5277,12 +5277,12 @@ Func_003_65E3::
 
 Jump_003_6606::
     ld [wStringIndex], a
-    ld [wCFEC], a
+    ld [wSkillId], a
     ld [wD081], a
     xor a, a
     ld [wCFED], a
-    farcall Func_01A_4001
-    ld a, [wCFEE]
+    farcall LoadSkillRecord
+    ld a, [wSkillRecord]
     cp a, $FF
     jr z, Jump_003_6625
     ld l, a
@@ -5308,11 +5308,11 @@ Jump_003_6632::
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_003_5E68)
-; reads: wCFEC, wCFED, wC46F
+; reads: wSkillId, wCFED, wC46F
 ; writes: wC2DE, wC2DF
 ; points at: wC319, wC31D
 Func_003_664A::
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld l, a
     ld a, [wCFED]
     ld h, a
@@ -5385,7 +5385,7 @@ Func_003_66B5::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
-; reads: wC46D, wCFEE
+; reads: wC46D, wSkillRecord
 ; writes: rRAMG, rRAMB
 Func_003_66BB::
     ld a, $0A
@@ -5401,7 +5401,7 @@ Func_003_66BB::
     ld e, a
     ld a, $00
     ld [rRAMG], a
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     cp a, $FF
     jr nz, Jump_003_66E2
     ld h, d
@@ -5423,10 +5423,10 @@ Jump_003_66E5::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
-; reads: wCFEC
+; reads: wSkillId
 ; writes: wD082
 Func_003_66EE::
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld hl, Data_003_6700
     add_a_to_hl
     ld a, [hl]

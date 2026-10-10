@@ -3991,7 +3991,7 @@ Func_007_695A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_007_65F1)
-; reads: wCFEC, wCFED, wCFEE, wCFEF, wCFF0, wCFF1, wCFF5, wCFF6, ...
+; reads: wSkillId, wCFED, wSkillRecord, wCFEF, wCFF0, wCFF1, wCFF5, wCFF6, ...
 ; writes: rRAMG, rRAMB, wCFE6, wCFE7, wD006, wD007
 ; points at: sA000, wC60C, sA00D, wD01A, sA08E, sA099, sA01E, sA029
 Func_007_6975::
@@ -4025,7 +4025,7 @@ Func_007_6975::
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld [hl+], a
     ld a, [wCFED]
     ld [hl+], a
@@ -4046,7 +4046,7 @@ Func_007_6975::
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wCFEE]
+    ld a, [wSkillRecord]
     ld [hl+], a
     ld a, [wCFEF]
     ld [hl+], a
@@ -4120,7 +4120,7 @@ Func_007_6975::
     ld [hl+], a
     ld a, [wD005]
     ld [hl+], a
-    ld a, [wCFEC]
+    ld a, [wSkillId]
     ld l, a
     ld a, [wCFED]
     ld h, a
