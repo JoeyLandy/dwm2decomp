@@ -10747,7 +10747,7 @@ Jump_000_3F37::
     add_a_to_hl
     ret
 
-; 3 call sites from 3 routines (e.g. Func_005_41D6, Func_032_51F9, Func_032_4EE4_Case03)
+; 3 call sites from 3 routines (e.g. Func_005_41D6, CheckSkillMPCost, Func_032_4EE4_Case03)
 ; reads: wDAAC
 Func_000_3F47::
     push bc

@@ -2822,7 +2822,7 @@ Jump_032_4F53:: ; address name
     call Func_032_5804
     call Func_032_535F
     jp nc, Jump_032_4FFB
-    call Func_032_51F9
+    call CheckSkillMPCost
     jr c, Jump_032_4F9C
     ld a, [wBattleActor]
     ld hl, wDAD8
@@ -2884,7 +2884,7 @@ Jump_032_4FC8::
     ld [wBattleActionId], a
     inc hl
     ld [hl], $FF
-    call Func_032_51F9
+    call CheckSkillMPCost
     jr nc, Jump_032_4F85
 
 Jump_032_4FFB::
@@ -3063,7 +3063,7 @@ Jump_032_510E:: ; address name
 ; points at: wBattleSubStep
 Func_032_4EE4_Case04::
 Jump_032_5130:: ; address name
-    call Func_032_51F9
+    call CheckSkillMPCost
     jr c, Jump_032_5143
     ld a, d
     cp a, $07
@@ -3104,7 +3104,7 @@ Func_032_514C:: ; heuristic: follows a terminator; C0
     jr Jump_032_517D
 
 Jump_032_5178::
-    call Func_032_51F9
+    call CheckSkillMPCost
     jr c, Jump_032_5181
 
 Jump_032_517D::
@@ -3142,7 +3142,7 @@ Jump_032_51C3::
     jr Jump_032_51CC
 
 Jump_032_51C7::
-    call Func_032_51F9
+    call CheckSkillMPCost
     jr c, Jump_032_51D2
 
 Jump_032_51CC::
@@ -3185,11 +3185,13 @@ Jump_032_51F3::
     scf
     ret
 
+; for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)
 ; 6 call sites from 4 routines (e.g. Func_032_5820_Case01, Func_032_4EE4_Case04, Func_032_4EE4_Case00, Func_032_514C)
 ; reads: wBattleActionId, wBattleActor, hFFC8, wCFF3, wRecordBufferData
 ; writes: hFFC8
 ; points at: wD80E
-Func_032_51F9::
+CheckSkillMPCost::
+Func_032_51F9:: ; address name
     ld a, [wBattleActionId]
     cp a, $D0
     jr c, Jump_032_5206
@@ -3230,21 +3232,21 @@ Jump_032_522D::
     ld a, [wCFF3]
     bit 6, a
     jr z, Jump_032_5243
-    call Func_032_529E
+    call CheckSkillMPCost_Sub01
     jr nc, Jump_032_529C
     jr Jump_032_5259
 
 Jump_032_5243::
     bit 4, a
     jr z, Jump_032_524E
-    call Func_032_5303
+    call CheckSkillMPCost_Sub02
     jr nc, Jump_032_529C
     jr Jump_032_5259
 
 Jump_032_524E::
     bit 5, a
     jr z, Jump_032_5259
-    call Func_032_534A
+    call CheckSkillMPCost_Sub03
     jr nc, Jump_032_529C
     jr Jump_032_5259
 
@@ -3299,10 +3301,12 @@ Jump_032_529C::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_51F9)
+; only called from CheckSkillMPCost (E-0047)
+; 1 call site from 1 routine (e.g. CheckSkillMPCost)
 ; reads: wBattleActor, wCFF2
 ; points at: wD80D, wD80A, wD80B, wD80E
-Func_032_529E::
+CheckSkillMPCost_Sub01::
+Func_032_529E:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
@@ -3368,10 +3372,12 @@ Jump_032_5301::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_51F9)
+; only called from CheckSkillMPCost (E-0047)
+; 1 call site from 1 routine (e.g. CheckSkillMPCost)
 ; reads: wBattleActor
 ; points at: wD80D, wD80E
-Func_032_5303::
+CheckSkillMPCost_Sub02::
+Func_032_5303:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
@@ -3420,10 +3426,12 @@ Jump_032_5348::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_51F9)
+; only called from CheckSkillMPCost (E-0047)
+; 1 call site from 1 routine (e.g. CheckSkillMPCost)
 ; reads: wBattleActor
 ; points at: wD80D
-Func_032_534A::
+CheckSkillMPCost_Sub03::
+Func_032_534A:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
@@ -4213,7 +4221,7 @@ Func_032_5820_Case01::
 Jump_032_58B3:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    call Func_032_51F9
+    call CheckSkillMPCost
     jr c, Jump_032_58D9
     ld a, d
     and a, $07
@@ -6750,7 +6758,7 @@ Func_032_6803::
     ld hl, wBattleHP
     jr Jump_032_681C
 
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_032_51F9)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, CheckSkillMPCost)
 ; points at: wBattleMP
 Func_032_6808::
     ld hl, wBattleMP
@@ -6758,7 +6766,7 @@ Func_032_6808::
     db $21, $1F, $D9, $18, $0A
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 6 call sites from 5 routines (e.g. Func_032_51F9, Func_032_529E, Func_032_5303, Func_032_4EE4_Case02, ...)
+; 6 call sites from 5 routines (e.g. CheckSkillMPCost, CheckSkillMPCost_Sub01, CheckSkillMPCost_Sub02, Func_032_4EE4_Case02, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank32::
 Func_032_6812:: ; address name

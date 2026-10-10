@@ -278,5 +278,37 @@ class FamilyNamesAreApplied(unittest.TestCase):
         self.assertEqual(len(copies), len(set(copies)))
 
 
+def skill_cost(rom: bytes, number: int) -> int:
+    """Byte 0 of the 17-byte record at SkillTable ($40D4, bank $1A) + 17 * number."""
+    return rom[0x1A * 0x4000 + 0xD4 + 17 * number]
+
+
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class BattleSkillCost(unittest.TestCase):
+    """Byte 0 of a skill record is read as a cost against the actor's MP (E-0048; C2 on our emulator)."""
+
+    def test_affordable_list_keeps_skills_costing_less_than_mp(self):
+        rom = ROM.read_bytes()
+        numbers = list(range(1, 9))
+        for mp in (0, 1, 2, 3, 5, 10, 40):
+            mem = {0xD8A4: 0, 0xD8DF: mp, 0xD8E0: 0}
+            for slot, number in enumerate(numbers):
+                mem[0xC0A0 + slot] = number
+            gb = call(0x30, 0x5129, mem=mem)
+            kept = [gb.rb(0xC0A0 + slot) for slot in range(8)]
+            expected = [n if skill_cost(rom, n) < mp else 0xFF for n in numbers]
+            self.assertEqual(kept, expected, f"MP {mp}")
+
+    def test_mp_check_refuses_only_when_cost_exceeds_mp(self):
+        cases = [(2, 10, True), (10, 10, True), (6, 4, False), (11, 10, False)]
+        for cost, mp, allowed in cases:
+            mem = {0xD8A4: 0, 0xD8A6: 0x10, 0xFFC8: cost, 0xCFEE: cost,
+                   0xD8DF: mp, 0xD8E0: 0, 0xDAAC: 0xFF, 0xCFF3: 0}
+            gb = call(0x32, 0x51F9, mem=mem)
+            self.assertEqual(gb.d == 1, not allowed, (cost, mp))
+            self.assertEqual(bool(gb.f & 0x10), allowed, (cost, mp))
+            self.assertEqual(gb.rb(0xD8DF), mp, "routine must not write the MP")
+
+
 if __name__ == "__main__":
     unittest.main()

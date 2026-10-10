@@ -2259,7 +2259,7 @@ Func_030_502D::
     jr z, Jump_030_50A6
 
 Jump_030_507E::
-    call Func_030_5129
+    call FilterSkillListByMP
     ld a, [wC0A8]
     cp a, $FF
     jr z, Jump_030_50A6
@@ -2374,11 +2374,13 @@ Jump_030_5123::
     jr nz, Jump_030_50E3
     ret
 
+; wBattleActor selects the actor; its MP word is at wD8DF + 2 * actor. For each of the 8 skill numbers in wC0A0 it loads the record (LoadSkillRecordPart) and keeps the number only when byte 0 of the record is below that MP word; otherwise it writes $FF to that slot. The comparison is strict: a skill whose cost equals the MP is dropped. Executed on the emulator for MP 0-40 against the ROM's costs (E-0048)
 ; 1 call site from 1 routine (e.g. Func_030_502D)
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
 ; points at: wBattleMP, wC0A0, wRecordBufferData, wC0A8
-Func_030_5129::
+FilterSkillListByMP::
+Func_030_5129:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleMP
     add a, a

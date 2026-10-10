@@ -2274,6 +2274,16 @@
     "note": "C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's INT word (wD000) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wD0D5 area, Func_000_3F32). The stat order is confirmed by the pause menu's INFO panel (E-0046)",
     "evidence": "reading + execution (E-0043)"
   },
+  "30:5129": {
+    "name": "FilterSkillListByMP",
+    "note": "wBattleActor selects the actor; its MP word is at wD8DF + 2 * actor. For each of the 8 skill numbers in wC0A0 it loads the record (LoadSkillRecordPart) and keeps the number only when byte 0 of the record is below that MP word; otherwise it writes $FF to that slot. The comparison is strict: a skill whose cost equals the MP is dropped. Executed on the emulator for MP 0-40 against the ROM's costs (E-0048)",
+    "evidence": "reading + execution (E-0048)"
+  },
+  "32:51F9": {
+    "name": "CheckSkillMPCost",
+    "note": "for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)",
+    "evidence": "reading + execution (E-0048)"
+  },
   "32:59DF": {
     "name": "ApplyDamageToTarget",
     "note": "target slot wBattleTarget (wD8A5): when wDAC1's top two bits are not 00 and not 01, wBattleHP[target] -= the 16-bit damage in wD872/wD873 and is clamped at 0 (a result below zero also decrements wCFCB and clears wCFCD); then sets bits 0, 1 and 2 of the target's wD095 flags",
