@@ -4,7 +4,7 @@ SECTION "Bank 02", ROMX[$4000], BANK[$02]
 ; only called from StartPaletteFade (E-0047)
 ; 1 call site from 1 routine (e.g. StartPaletteFade)
 ; reads: wFadeState, wC56D
-; writes: wC572, wC573, wC574, rBGPI, rBGPD, rOBPI, rOBPD
+; writes: wFadeLevel, wC573, wC574, rBGPI, rBGPD, rOBPI, rOBPD
 StartPaletteFade_Sub01::
 Func_002_4001:: ; address name
     ld a, [wFadeState]
@@ -12,7 +12,7 @@ Func_002_4001:: ; address name
     bit 7, b
     jr nz, Jump_002_401C
     ld a, $00
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wFadeState]
     srl a
     srl a
@@ -22,7 +22,7 @@ Func_002_4001:: ; address name
 
 Jump_002_401C::
     ld a, $20
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wC56D]
     bit 7, a
     jr nz, Jump_002_402D
@@ -76,8 +76,8 @@ Jump_002_4062::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_10AB)
-; reads: wFadeState, wC574, wC572, wC573
-; writes: wC574, wC572, wFadeState
+; reads: wFadeState, wC574, wFadeLevel, wC573
+; writes: wC574, wFadeLevel, wFadeState
 Func_002_4071::
     ld a, [wFadeState]
     bit 7, a
@@ -90,18 +90,18 @@ Func_002_4071::
     ret
 
 Jump_002_4083::
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     add a, $05
     cp a, $1F
     jr c, Jump_002_408E
     ld a, $1F
 
 Jump_002_408E::
-    ld [wC572], a
-    call Func_002_40CF
+    ld [wFadeLevel], a
+    call WriteAllFadedPalettesFloor
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     cp a, $1F
     jr z, Jump_002_40CA
     ret
@@ -115,18 +115,18 @@ Jump_002_40A2::
     ret
 
 Jump_002_40AD::
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     sub a, $05
     bit 7, a
     jr z, Jump_002_40B7
     xor a, a
 
 Jump_002_40B7::
-    ld [wC572], a
-    call Func_002_41C6
+    ld [wFadeLevel], a
+    call WriteAllFadedPalettesAdd
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     or a, a
     jr z, Jump_002_40CA
     ret
@@ -136,62 +136,68 @@ Jump_002_40CA::
     ld [wFadeState], a
     ret
 
+; rBGPI = $80 (palette 0, auto-increment), the 8 BG palettes from wC49F through WriteFadedPaletteFloorToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wC4DF through WriteFadedPaletteFloorToOBPD (E-0076)
 ; 1 call site from 1 routine (e.g. Func_002_4071)
 ; writes: rBGPI, rOBPI
-; points at: wC49F, wC4DF
-Func_002_40CF::
+; points at: wBGPaletteBuffer, wOBJPaletteBuffer
+WriteAllFadedPalettesFloor::
+Func_002_40CF:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $80
     ldh [rBGPI], a
     ei
-    ld hl, wC49F
-    call Func_002_4149
-    call Func_002_4149
-    call Func_002_4149
-    call Func_002_4149
-    call Func_002_4149
-    call Func_002_4149
-    call Func_002_4149
-    call Func_002_4149
+    ld hl, wBGPaletteBuffer
+    call WriteFadedPaletteFloorToBGPD
+    call WriteFadedPaletteFloorToBGPD
+    call WriteFadedPaletteFloorToBGPD
+    call WriteFadedPaletteFloorToBGPD
+    call WriteFadedPaletteFloorToBGPD
+    call WriteFadedPaletteFloorToBGPD
+    call WriteFadedPaletteFloorToBGPD
+    call WriteFadedPaletteFloorToBGPD
     di
     call WaitForVRAMAccess
     ld a, $80
     ldh [rOBPI], a
     ei
-    ld hl, wC4DF
-    call Func_002_4118
-    call Func_002_4118
-    call Func_002_4118
-    call Func_002_4118
-    call Func_002_4118
-    call Func_002_4118
-    call Func_002_4118
-    call Func_002_4118
+    ld hl, wOBJPaletteBuffer
+    call WriteFadedPaletteFloorToOBPD
+    call WriteFadedPaletteFloorToOBPD
+    call WriteFadedPaletteFloorToOBPD
+    call WriteFadedPaletteFloorToOBPD
+    call WriteFadedPaletteFloorToOBPD
+    call WriteFadedPaletteFloorToOBPD
+    call WriteFadedPaletteFloorToOBPD
+    call WriteFadedPaletteFloorToOBPD
     ret
 
-; 8 call sites from 1 routine (e.g. Func_002_40CF)
-; reads: wC572
+; four colours (one palette) from HL through WriteFadedColorFloorToOBPD (E-0076)
+; 8 call sites from 1 routine (e.g. WriteAllFadedPalettesFloor)
+; reads: wFadeLevel
 ; writes: rOBPD
-Func_002_4118::
-    call Func_002_4121
-    call Func_002_4121
-    call Func_002_4121
+WriteFadedPaletteFloorToOBPD::
+Func_002_4118:: ; address name
+    call WriteFadedColorFloorToOBPD
+    call WriteFadedColorFloorToOBPD
+    call WriteFadedColorFloorToOBPD
 
-; 3 call sites from 1 routine (e.g. Func_002_4118)
-; reads: wC572
+; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentFloor and writes the result to rOBPD (low byte first, after WaitForVRAMAccess); its load of wC572 into D is overwritten at once (E-0076)
+; 3 call sites from 1 routine (e.g. WriteFadedPaletteFloorToOBPD)
+; reads: wFadeLevel
 ; writes: rOBPD
-Func_002_4121::
-    ld a, [wC572]
+WriteFadedColorFloorToOBPD::
+Func_002_4121:: ; address name
+    ld a, [wFadeLevel]
     ld d, a
     ld c, [hl]
     inc hl
     ld b, [hl]
     inc hl
     ld de, $0000
-    call Func_002_4176
-    call Func_002_4176
-    call Func_002_4176
+    call FadeColorComponentFloor
+    call FadeColorComponentFloor
+    call FadeColorComponentFloor
     rr b
     rr c
     rr d
@@ -205,24 +211,28 @@ Func_002_4121::
     ei
     ret
 
-; 8 call sites from 1 routine (e.g. Func_002_40CF)
+; four colours (one palette) from HL through WriteFadedColorFloorToBGPD (E-0076)
+; 8 call sites from 1 routine (e.g. WriteAllFadedPalettesFloor)
 ; writes: rBGPD
-Func_002_4149::
-    call Func_002_4152
-    call Func_002_4152
-    call Func_002_4152
+WriteFadedPaletteFloorToBGPD::
+Func_002_4149:: ; address name
+    call WriteFadedColorFloorToBGPD
+    call WriteFadedColorFloorToBGPD
+    call WriteFadedColorFloorToBGPD
 
-; 3 call sites from 1 routine (e.g. Func_002_4149)
+; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentFloor and writes the result to rBGPD (low byte first, after WaitForVRAMAccess) (E-0076)
+; 3 call sites from 1 routine (e.g. WriteFadedPaletteFloorToBGPD)
 ; writes: rBGPD
-Func_002_4152::
+WriteFadedColorFloorToBGPD::
+Func_002_4152:: ; address name
     ld c, [hl]
     inc hl
     ld b, [hl]
     inc hl
     ld de, $0000
-    call Func_002_4176
-    call Func_002_4176
-    call Func_002_4176
+    call FadeColorComponentFloor
+    call FadeColorComponentFloor
+    call FadeColorComponentFloor
     rr b
     rr c
     rr d
@@ -236,9 +246,11 @@ Func_002_4152::
     ei
     ret
 
-; 6 call sites from 2 routines (e.g. Func_002_4121, Func_002_4152)
-; reads: wC56D, wC572
-Func_002_4176::
+; the 5-bit component in C's low bits becomes max(component, wC572) when wC56D bit 7 is clear (lighten toward the level) or max(component - wC572, 0) when it is set (darken); then B:C:D:E is rotated right 5 bits so the next component comes down and the result collects in D:E (E-0076)
+; 6 call sites from 2 routines (e.g. WriteFadedColorFloorToOBPD, WriteFadedColorFloorToBGPD)
+; reads: wC56D, wFadeLevel
+FadeColorComponentFloor::
+Func_002_4176:: ; address name
     push de
     ld a, [wC56D]
     bit 7, a
@@ -246,14 +258,14 @@ Func_002_4176::
     ld a, c
     and a, $1F
     ld d, a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     cp a, d
     jr nc, Jump_002_4196
     ld a, d
     jr Jump_002_4196
 
 Jump_002_418B::
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     ld d, a
     ld a, c
     and a, $1F
@@ -290,62 +302,68 @@ Jump_002_4196::
     rr e
     ret
 
+; rBGPI = $80, the 8 BG palettes from wC49F through WriteFadedPaletteAddToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wC4DF through WriteFadedPaletteAddToOBPD (E-0076)
 ; 1 call site from 1 routine (e.g. Func_002_4071)
 ; writes: rBGPI, rOBPI
-; points at: wC49F, wC4DF
-Func_002_41C6::
+; points at: wBGPaletteBuffer, wOBJPaletteBuffer
+WriteAllFadedPalettesAdd::
+Func_002_41C6:: ; address name
     di
     call WaitForVRAMAccess
     ld a, $80
     ldh [rBGPI], a
     ei
-    ld hl, wC49F
-    call Func_002_4240
-    call Func_002_4240
-    call Func_002_4240
-    call Func_002_4240
-    call Func_002_4240
-    call Func_002_4240
-    call Func_002_4240
-    call Func_002_4240
+    ld hl, wBGPaletteBuffer
+    call WriteFadedPaletteAddToBGPD
+    call WriteFadedPaletteAddToBGPD
+    call WriteFadedPaletteAddToBGPD
+    call WriteFadedPaletteAddToBGPD
+    call WriteFadedPaletteAddToBGPD
+    call WriteFadedPaletteAddToBGPD
+    call WriteFadedPaletteAddToBGPD
+    call WriteFadedPaletteAddToBGPD
     di
     call WaitForVRAMAccess
     ld a, $80
     ldh [rOBPI], a
     ei
-    ld hl, wC4DF
-    call Func_002_420F
-    call Func_002_420F
-    call Func_002_420F
-    call Func_002_420F
-    call Func_002_420F
-    call Func_002_420F
-    call Func_002_420F
-    call Func_002_420F
+    ld hl, wOBJPaletteBuffer
+    call WriteFadedPaletteAddToOBPD
+    call WriteFadedPaletteAddToOBPD
+    call WriteFadedPaletteAddToOBPD
+    call WriteFadedPaletteAddToOBPD
+    call WriteFadedPaletteAddToOBPD
+    call WriteFadedPaletteAddToOBPD
+    call WriteFadedPaletteAddToOBPD
+    call WriteFadedPaletteAddToOBPD
     ret
 
-; 8 call sites from 1 routine (e.g. Func_002_41C6)
-; reads: wC572
+; four colours (one palette) from HL through WriteFadedColorAddToOBPD (E-0076)
+; 8 call sites from 1 routine (e.g. WriteAllFadedPalettesAdd)
+; reads: wFadeLevel
 ; writes: rOBPD
-Func_002_420F::
-    call Func_002_4218
-    call Func_002_4218
-    call Func_002_4218
+WriteFadedPaletteAddToOBPD::
+Func_002_420F:: ; address name
+    call WriteFadedColorAddToOBPD
+    call WriteFadedColorAddToOBPD
+    call WriteFadedColorAddToOBPD
 
-; 3 call sites from 1 routine (e.g. Func_002_420F)
-; reads: wC572
+; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentAdd and writes the result to rOBPD (low byte first, after WaitForVRAMAccess); its load of wC572 into D is overwritten at once (E-0076)
+; 3 call sites from 1 routine (e.g. WriteFadedPaletteAddToOBPD)
+; reads: wFadeLevel
 ; writes: rOBPD
-Func_002_4218::
-    ld a, [wC572]
+WriteFadedColorAddToOBPD::
+Func_002_4218:: ; address name
+    ld a, [wFadeLevel]
     ld d, a
     ld c, [hl]
     inc hl
     ld b, [hl]
     inc hl
     ld de, $0000
-    call Func_002_426D
-    call Func_002_426D
-    call Func_002_426D
+    call FadeColorComponentAdd
+    call FadeColorComponentAdd
+    call FadeColorComponentAdd
     rr b
     rr c
     rr d
@@ -359,24 +377,28 @@ Func_002_4218::
     ei
     ret
 
-; 8 call sites from 1 routine (e.g. Func_002_41C6)
+; four colours (one palette) from HL through WriteFadedColorAddToBGPD (E-0076)
+; 8 call sites from 1 routine (e.g. WriteAllFadedPalettesAdd)
 ; writes: rBGPD
-Func_002_4240::
-    call Func_002_4249
-    call Func_002_4249
-    call Func_002_4249
+WriteFadedPaletteAddToBGPD::
+Func_002_4240:: ; address name
+    call WriteFadedColorAddToBGPD
+    call WriteFadedColorAddToBGPD
+    call WriteFadedColorAddToBGPD
 
-; 3 call sites from 1 routine (e.g. Func_002_4240)
+; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentAdd and writes the result to rBGPD (low byte first, after WaitForVRAMAccess) (E-0076)
+; 3 call sites from 1 routine (e.g. WriteFadedPaletteAddToBGPD)
 ; writes: rBGPD
-Func_002_4249::
+WriteFadedColorAddToBGPD::
+Func_002_4249:: ; address name
     ld c, [hl]
     inc hl
     ld b, [hl]
     inc hl
     ld de, $0000
-    call Func_002_426D
-    call Func_002_426D
-    call Func_002_426D
+    call FadeColorComponentAdd
+    call FadeColorComponentAdd
+    call FadeColorComponentAdd
     rr b
     rr c
     rr d
@@ -390,9 +412,11 @@ Func_002_4249::
     ei
     ret
 
-; 6 call sites from 2 routines (e.g. Func_002_4218, Func_002_4249)
-; reads: wC56D, wC572
-Func_002_426D::
+; the 5-bit component in C's low bits becomes min(component + wC572, $1F) when wC56D bit 7 is clear (lighten) or max(component - wC572, 0) when it is set (darken); then B:C:D:E is rotated right 5 bits so the next component comes down and the result collects in D:E (E-0076)
+; 6 call sites from 2 routines (e.g. WriteFadedColorAddToOBPD, WriteFadedColorAddToBGPD)
+; reads: wC56D, wFadeLevel
+FadeColorComponentAdd::
+Func_002_426D:: ; address name
     push de
     ld a, [wC56D]
     bit 7, a
@@ -400,7 +424,7 @@ Func_002_426D::
     ld a, c
     and a, $1F
     ld d, a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     add a, d
     cp a, $1F
     jr c, Jump_002_4290
@@ -408,7 +432,7 @@ Func_002_426D::
     jr Jump_002_4290
 
 Jump_002_4285::
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     ld d, a
     ld a, c
     and a, $1F
@@ -447,7 +471,7 @@ Jump_002_4290::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_002_42C0:: ; heuristic: follows a terminator; C0
     ld a, [wIsCGB]
     or a, a
@@ -461,7 +485,7 @@ Func_002_42C0:: ; heuristic: follows a terminator; C0
     add a, a
     add a, a
     add a, a
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
     add a, e
     ld e, a
     jr nc, Jump_002_42D6
@@ -477,7 +501,7 @@ Jump_002_42D6::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_002_42DD:: ; heuristic: follows a terminator; C0
     ld a, [wIsCGB]
     or a, a
@@ -491,7 +515,7 @@ Func_002_42DD:: ; heuristic: follows a terminator; C0
     add a, a
     add a, a
     add a, a
-    ld de, wC4DF
+    ld de, wOBJPaletteBuffer
     add a, e
     ld e, a
     jr nc, Jump_002_42F3
@@ -508,18 +532,18 @@ Jump_002_42F3::
 ; 1 call site from 1 routine (e.g. Func_000_0150)
 ; reads: wIsCGB
 ; writes: wC526, wC527
-; points at: wC49F, wC4DF
+; points at: wBGPaletteBuffer, wOBJPaletteBuffer
 Func_002_42FA::
     ld a, [wIsCGB]
     or a, a
     ret z
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, Data_002_4322
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wC526], a
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld de, Data_002_4322
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
@@ -778,9 +802,9 @@ Jump_002_445B::
 ; 1 call site from 1 routine (e.g. Func_002_6C40_Case01)
 ; reads: wD783
 ; writes: wD783
-; points at: wC49F, wD09D
+; points at: wBGPaletteBuffer, wD09D
 Func_002_4463::
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wD09D
     ld c, $04
 
@@ -804,7 +828,7 @@ Jump_002_447B::
     dec c
     jr nz, Jump_002_446B
     ld c, $04
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld a, [wD783]
     inc a
     ld [wD783], a
@@ -1699,7 +1723,7 @@ Data_002_4AD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case01)
 ; reads: wC5E0, wModeState, wC5E9, wC5EA, wC5EB, wSGBActive
 ; writes: wJoypadHeld, wJoypadHeldPrev, wJoypadPressed, wJoypadPressedRepeat, wJoypadRepeatTimer, wC565, wC5E0
-; points at: wC5E9, wD040, wC4DF, wC4FF
+; points at: wC5E9, wD040, wOBJPaletteBuffer, wC4FF
 GameMode1_Update::
 Func_002_4AD8:: ; address name
     ld a, [wC5E0]
@@ -2944,7 +2968,7 @@ Jump_002_52BA::
 ; 1 call site from 1 routine (e.g. Func_002_5074_Case08)
 ; reads: wScriptCommandType, wC936, wC46C, wC46B
 ; writes: wC46C, wC46B, hFFC6, wC526
-; points at: wC49F, wC0F0, wC0F8, wC4A7, wC100, wC4AF, wC108, wC4B7, ...
+; points at: wBGPaletteBuffer, wC0F0, wC0F8, wC4A7, wC100, wC4AF, wC108, wC4B7, ...
 Func_002_52D8::
     ld a, [wScriptCommandType]
     cp a, $ED
@@ -2957,7 +2981,7 @@ Func_002_52D8::
     jr nz, Jump_002_52FC
     ld a, $80
     ld [wC46C], a
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -5021,7 +5045,7 @@ Jump_002_5FF7::
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_002_6045
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld de, wC4FF
     ld b, $20
 

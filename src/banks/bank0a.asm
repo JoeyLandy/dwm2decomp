@@ -295,7 +295,7 @@ Jump_00A_4190::
 ; 1 call site from 1 routine (e.g. Func_00A_4001)
 ; reads: wC46B, wIsCGB
 ; writes: wC526
-; points at: wC5E9, wC49F, wC0F0
+; points at: wC5E9, wBGPaletteBuffer, wC0F0
 Func_00A_4196::
     ld a, [wC46B]
     or a, a
@@ -312,7 +312,7 @@ Func_00A_4196::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_00A_4213
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -335,7 +335,7 @@ Jump_00A_41C1::
     or a, a
     jr z, Jump_00A_4213
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
     ld bc, $0040
     call CopyBytes
     jr Jump_00A_420E
@@ -353,7 +353,7 @@ Jump_00A_41EC::
     jr z, Jump_00A_4213
     ld b, $40
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
 
 Jump_00A_4206::
     ld a, [hl+]

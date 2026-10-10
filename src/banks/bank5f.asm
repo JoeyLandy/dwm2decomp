@@ -2283,7 +2283,7 @@ Jump_05F_7646::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wC526, wScriptParam0
-; points at: wC5E9, wC0F0, wC49F, wC92D
+; points at: wC5E9, wC0F0, wBGPaletteBuffer, wC92D
 Func_05F_7363_Case02::
 Jump_05F_766C:: ; address name
     ld a, [wScriptParam0]
@@ -2302,7 +2302,7 @@ Jump_05F_766C:: ; address name
     or a, a
     jr z, Jump_05F_76BE
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
     ld bc, $0040
     call CopyBytes
     jr Jump_05F_76B9
@@ -2320,7 +2320,7 @@ Jump_05F_7697::
     jr z, Jump_05F_76BE
     ld b, $40
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
 
 Jump_05F_76B1::
     ld a, [hl+]
@@ -2352,7 +2352,7 @@ Jump_05F_76BE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: hPlayerFacing, wCB86
-; points at: wC49F, wC0F0, wC92D
+; points at: wBGPaletteBuffer, wC0F0, wC92D
 Func_05F_7363_Case01::
 Jump_05F_76D6:: ; address name
     ld a, $03
@@ -2365,7 +2365,7 @@ Jump_05F_76D6:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_05F_76F6
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes

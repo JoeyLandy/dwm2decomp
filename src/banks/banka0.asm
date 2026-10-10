@@ -2073,9 +2073,11 @@ Func_0A0_4C6A::
     call Func_0A0_6B1E
     ret
 
+; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM_BankA0, as DrawWC338RowsToBGMapRow13 does in bank $31 (E-0076)
 ; 7 call sites from 7 routines (e.g. Func_0A0_5E07_Table2_Case07, Func_0A0_5E07_Table2_Case05, Func_0A0_5F2E_Case16, Func_0A0_5F2E_Case13, ...)
 ; points at: wC338
-Func_0A0_4C74::
+DrawWC338RowsToBGMapRow13_BankA0::
+Func_0A0_4C74:: ; address name
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $1405
@@ -2162,7 +2164,7 @@ Func_0A0_4CED:: ; heuristic: follows a terminator; C0
     ret
 
 ; the same 28 bytes as CopyRect32StrideToVRAM (31:753F)
-; 10 call sites from 9 routines (e.g. Func_0A0_4C74, Func_0A0_4C81, Func_0A0_4CD4, Func_0A0_4C9B, ...)
+; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, Func_0A0_4C81, Func_0A0_4CD4, Func_0A0_4C9B, ...)
 CopyRect32StrideToVRAM_BankA0::
 Func_0A0_4CFA:: ; address name
     push bc
@@ -4901,7 +4903,7 @@ Func_0A0_5E07_Table2_Case05::
 Jump_0A0_5F40:: ; address name
     call Func_0A0_6A2C
     farcall Func_01A_7276
-    call Func_0A0_4C74
+    call DrawWC338RowsToBGMapRow13_BankA0
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4926,7 +4928,7 @@ Jump_0A0_5F5C:: ; address name
     or a, a
     ret nz
     farcall ClearAndLayoutTileBlocksForWD890Count
-    call Func_0A0_4C74
+    call DrawWC338RowsToBGMapRow13_BankA0
     farcall Func_01A_727D
     ld a, $01
     ld [wBattleResolveStep], a
@@ -5301,7 +5303,7 @@ Jump_0A0_61E9:: ; address name
 ; points at: wBattleResolveStep
 Func_0A0_5F2E_Case09::
 Jump_0A0_61FA:: ; address name
-    call Func_0A0_4C74
+    call DrawWC338RowsToBGMapRow13_BankA0
     ld a, $00
     ld [wStringCategory], a
     ld a, $29
@@ -5317,7 +5319,7 @@ Jump_0A0_61FA:: ; address name
 ; points at: wBattleResolveStep
 Func_0A0_5F2E_Case16::
 Jump_0A0_6212:: ; address name
-    call Func_0A0_4C74
+    call DrawWC338RowsToBGMapRow13_BankA0
     ld a, $00
     ld [wStringCategory], a
     ld a, $7F
@@ -5346,7 +5348,7 @@ Jump_0A0_622A:: ; address name
 ; writes: wBattleResolveStep
 Func_0A0_5F2E_Case0B::
 Jump_0A0_623A:: ; address name
-    call Func_0A0_4C74
+    call DrawWC338RowsToBGMapRow13_BankA0
     ld a, $04
     ld [wBattleResolveStep], a
     ret
@@ -5569,7 +5571,7 @@ Jump_0A0_63A9:: ; address name
 ; points at: wBattleResolveStep
 Func_0A0_5F2E_Case11::
 Jump_0A0_63BD:: ; address name
-    call Func_0A0_4C74
+    call DrawWC338RowsToBGMapRow13_BankA0
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -5596,7 +5598,7 @@ Jump_0A0_63CF:: ; address name
 ; writes: wBattleResolveStep
 Func_0A0_5F2E_Case13::
 Jump_0A0_63DF:: ; address name
-    call Func_0A0_4C74
+    call DrawWC338RowsToBGMapRow13_BankA0
     ld a, $0C
     ld [wBattleResolveStep], a
     ret

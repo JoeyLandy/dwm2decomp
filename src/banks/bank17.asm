@@ -199,7 +199,7 @@ Jump_017_41F4::
 
 ; 7 call sites from 7 routines (e.g. Func_017_41CF, Func_002_5F9B, GameMode5_Init_Case00, Func_007_600E, ...)
 ; reads: wSGBActive, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
-; points at: wC4DF, wC4E7, wC4EF, wC4F7
+; points at: wOBJPaletteBuffer, wC4E7, wC4EF, wC4F7
 Func_017_421A::
     ld a, [wSGBActive]
     or a, a
@@ -208,7 +208,7 @@ Func_017_421A::
     ld l, a
     ld a, [wC578]
     ld h, a
-    ld de, wC4DF
+    ld de, wOBJPaletteBuffer
     call Func_017_4258
     ld de, wC4E7
     ld a, [wC579]

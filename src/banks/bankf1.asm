@@ -4269,10 +4269,10 @@ Jump_0F1_5BF8::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_00C_45DA_Case01)
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_0F1_5C05::
     ld hl, Data_0F1_5E04
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
     ld c, $40
 
 Jump_0F1_5C0D::

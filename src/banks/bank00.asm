@@ -1233,7 +1233,7 @@ Jump_000_0819::
 ; 18 call sites from 15 routines (e.g. VBlankHandler, PauseMenu_State4, Func_003_4A36, Func_003_4339, ...)
 ; reads: wC526
 ; writes: rBGPI
-; points at: wC49F
+; points at: wBGPaletteBuffer
 UploadBGPalettes::
 Func_000_0829:: ; address name
     ld a, [wC526]
@@ -1257,7 +1257,7 @@ Jump_000_0841::
     ldh [rBGPI], a
     ei
     ld b, $40
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
 
 Jump_000_084F::
     ld c, $69
@@ -1276,7 +1276,7 @@ Jump_000_0851::
 ; 1 call site from 1 routine (e.g. VBlankHandler)
 ; reads: wC527, rSTAT
 ; writes: rOBPI
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 VBlankHandler_Sub01::
 Func_000_085C:: ; address name
     ld a, [wC527]
@@ -1302,7 +1302,7 @@ Jump_000_0876::
     ldh [rOBPI], a
     ei
     ld b, $40
-    ld de, wC4DF
+    ld de, wOBJPaletteBuffer
 
 Jump_000_0884::
     ld hl, rOBPD
@@ -2333,7 +2333,7 @@ Func_000_0DA8:: ; address name
 ; 4 call sites from 4 routines (e.g. Func_000_0150, Func_002_5F9B, Func_007_600E, Func_0E0_75BF)
 ; reads: wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wC56D, wC56E
-; points at: wC56F, wC572
+; points at: wC56F, wFadeLevel
 Func_000_0DCA::
     ld hl, wC56F
     ld a, [wC5E9]
@@ -2346,7 +2346,7 @@ Func_000_0DCA::
 
 Jump_000_0DDB::
     xor a, a
-    ld hl, wC572
+    ld hl, wFadeLevel
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
@@ -2362,8 +2362,8 @@ Jump_000_0DDB::
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
 ; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, Func_002_5F9B, Func_002_4745_Case00, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
-; writes: wFadeState, wC572, wC573, wC574
-; points at: wC4FF, wC4DF, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
+; writes: wFadeState, wFadeLevel, wC573, wC574
+; points at: wC4FF, wOBJPaletteBuffer, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
 StartPaletteFade::
 Func_000_0DF2:: ; address name
     ld b, a
@@ -2378,7 +2378,7 @@ Func_000_0DF2:: ; address name
     ld a, b
     ld [wFadeState], a
     ld hl, wC4FF
-    ld de, wC4DF
+    ld de, wOBJPaletteBuffer
     ld c, $20
 
 Jump_000_0E11::
@@ -2388,7 +2388,7 @@ Jump_000_0E11::
     dec c
     jr nz, Jump_000_0E11
     ld a, $00
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wFadeState]
     srl a
     srl a
@@ -2400,7 +2400,7 @@ Jump_000_0E2C::
     ld a, b
     ld [wFadeState], a
     ld a, $20
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wFadeState]
     cpl
     srl a
@@ -2408,7 +2408,7 @@ Jump_000_0E2C::
     ld [wC573], a
     ld [wC574], a
     ld hl, wC4FF
-    ld de, wC4DF
+    ld de, wOBJPaletteBuffer
     ld c, $20
 
 Jump_000_0E4B::
@@ -2424,7 +2424,7 @@ Jump_000_0E4B::
     ld de, $0000
 
 Jump_000_0E5E::
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld c, $10
 
 Jump_000_0E63::
@@ -2435,7 +2435,7 @@ Jump_000_0E63::
     dec c
     jr nz, Jump_000_0E63
     call Func_000_076B
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld de, wSGBPacketBuffer
     ld a, $01
     ld [de], a
@@ -2477,7 +2477,7 @@ Jump_000_0EA8::
     ld a, [wC5EB]
     ld [hl], a
     ld a, $00
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wFadeState]
     add a, $02
     ld [wC573], a
@@ -2488,7 +2488,7 @@ Jump_000_0ED8::
     ld a, b
     ld [wFadeState], a
     ld a, $04
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wFadeState]
     cpl
     add a, $02
@@ -2514,7 +2514,7 @@ Jump_000_0EF7::
     ld a, [wC5EB]
     ld [hl], a
     ld a, $00
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wFadeState]
     add a, $02
     ld [wC573], a
@@ -2525,7 +2525,7 @@ Jump_000_0F20::
     ld a, b
     ld [wFadeState], a
     ld a, $04
-    ld [wC572], a
+    ld [wFadeLevel], a
     ld a, [wFadeState]
     cpl
     add a, $02
@@ -2559,8 +2559,8 @@ Jump_000_0F47::
 
 ; does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)
 ; 2 call sites from 2 routines (e.g. VBlankHandler, RunFrameTickFadeAndCounter_Bank1B)
-; reads: wFadeState, wIsCGB, wSGBActive, wC574, wC572, wC573, wC56D
-; writes: wC574, wC572, wFadeState
+; reads: wFadeState, wIsCGB, wSGBActive, wC574, wFadeLevel, wC573, wC56D
+; writes: wC574, wFadeLevel, wFadeState
 StepFade::
 Func_000_0F4E:: ; address name
     ld a, [wFadeState]
@@ -2585,18 +2585,18 @@ Func_000_0F4E:: ; address name
     ret
 
 Jump_000_0F78::
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     add a, $05
     cp a, $1F
     jr c, Jump_000_0F83
     ld a, $1F
 
 Jump_000_0F83::
-    ld [wC572], a
+    ld [wFadeLevel], a
     call StepFade_Sub01
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     cp a, $1F
     jp z, Jump_000_1205
     ret
@@ -2610,18 +2610,18 @@ Jump_000_0F98::
     ret
 
 Jump_000_0FA3::
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     sub a, $05
     bit 7, a
     jr z, Jump_000_0FAD
     xor a, a
 
 Jump_000_0FAD::
-    ld [wC572], a
+    ld [wFadeLevel], a
     call StepFade_Sub01
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     or a, a
     jp z, Jump_000_1205
     ret
@@ -2630,7 +2630,7 @@ Jump_000_0FAD::
 ; 2 call sites from 1 routine (e.g. StepFade)
 ; reads: wC56E
 ; writes: wC576, wSGBPacketIndex
-; points at: wC4DF, wSGBPacketBuffer, wC4EF
+; points at: wOBJPaletteBuffer, wSGBPacketBuffer, wC4EF
 StepFade_Sub01::
 Func_000_0FC1:: ; address name
     ld a, [wC56E]
@@ -2659,7 +2659,7 @@ Func_000_0FC1:: ; address name
 
 Jump_000_0FFC::
     call Func_000_076B
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld de, wSGBPacketBuffer
     ld a, $01
     ld [de], a
@@ -2704,9 +2704,9 @@ Jump_000_102E::
 
 ; only called from StepFade_Sub01 (E-0047)
 ; 4 call sites from 1 routine (e.g. StepFade_Sub01)
-; reads: wC576, wC572
+; reads: wC576, wFadeLevel
 ; writes: wC576
-; points at: wC4FF, wC4DF
+; points at: wC4FF, wOBJPaletteBuffer
 StepFade_Sub01_Sub01::
 Func_000_1040:: ; address name
     call StepFade_Sub01_Sub01_Sub02
@@ -2715,9 +2715,9 @@ Func_000_1040:: ; address name
 
 ; only called from StepFade_Sub01_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. StepFade_Sub01_Sub01)
-; reads: wC576, wC572
+; reads: wC576, wFadeLevel
 ; writes: wC576
-; points at: wC4FF, wC4DF
+; points at: wC4FF, wOBJPaletteBuffer
 StepFade_Sub01_Sub01_Sub01::
 Func_000_1049:: ; address name
     ld a, [wC576]
@@ -2726,8 +2726,8 @@ Func_000_1049:: ; address name
 
 ; only called from StepFade_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. StepFade_Sub01_Sub01)
-; reads: wC576, wC572
-; points at: wC4FF, wC4DF
+; reads: wC576, wFadeLevel
+; points at: wC4FF, wOBJPaletteBuffer
 StepFade_Sub01_Sub01_Sub02::
 Func_000_1051:: ; address name
     ld hl, wC4FF
@@ -2738,7 +2738,7 @@ Func_000_1051:: ; address name
     ld d, [hl]
     push de
     ld hl, $0000
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     ld b, a
     ld a, e
     call Func_000_10AB
@@ -2771,7 +2771,7 @@ Func_000_1051:: ; address name
     ld h, a
     push hl
     pop de
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld b, $00
     ld a, [wC576]
     ld c, a
@@ -2828,9 +2828,9 @@ Jump_000_10E8::
     call Func_000_111F
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     inc a
-    ld [wC572], a
+    ld [wFadeLevel], a
     cp a, $04
     jp z, Jump_000_1205
     ret
@@ -2847,15 +2847,15 @@ Jump_000_1109::
     call Func_000_111F
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     dec a
-    ld [wC572], a
+    ld [wFadeLevel], a
     cp a, $FF
     jp z, Jump_000_1205
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_000_10AB)
-; reads: wC56D, wC56F, wC570, wC571, wC572
+; reads: wC56D, wC56F, wC570, wC571, wFadeLevel
 ; points at: wC5E9
 Func_000_111F::
     ld a, [wC56D]
@@ -2876,10 +2876,10 @@ Func_000_111F::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_000_111F)
-; reads: wC572
+; reads: wFadeLevel
 Func_000_1145::
     ld d, a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     ld b, a
     ld c, $00
     ld a, d
@@ -2925,9 +2925,9 @@ Jump_000_117F::
     call Func_000_11B4
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     inc a
-    ld [wC572], a
+    ld [wFadeLevel], a
     cp a, $04
     jr z, Jump_000_1205
     ret
@@ -2944,15 +2944,15 @@ Jump_000_119F::
     call Func_000_11B4
     ld a, [wC573]
     ld [wC574], a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     dec a
-    ld [wC572], a
+    ld [wFadeLevel], a
     cp a, $FF
     jr z, Jump_000_1205
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_000_1160)
-; reads: wC56D, wC56F, wC570, wC571, wC572
+; reads: wC56D, wC56F, wC570, wC571, wFadeLevel
 ; points at: wC5E9
 Func_000_11B4::
     ld a, [wC56D]
@@ -2973,10 +2973,10 @@ Func_000_11B4::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_000_11B4)
-; reads: wC572
+; reads: wFadeLevel
 Func_000_11DA::
     ld d, a
-    ld a, [wC572]
+    ld a, [wFadeLevel]
     ld b, a
     ld c, $00
     ld a, d
@@ -5601,7 +5601,7 @@ Func_000_1FD1:: ; address name
 ; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, Func_003_4A36, Func_003_4FBB_Case01, Func_00C_45DA_Case02, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
-; points at: wC49F
+; points at: wBGPaletteBuffer
 LoadMonsterPicture::
 Func_000_1FE3:: ; address name
     push bc
@@ -5648,7 +5648,7 @@ Func_000_1FE3:: ; address name
     sla a
     sla a
     sla a
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     add_a_to_hl
     ld c, $10
     call CopyFromBank
@@ -6126,7 +6126,7 @@ Jump_000_227F::
 ; 2 call sites from 1 routine (e.g. Func_004_4AA8)
 ; reads: wC6FD, hFFC6, hFFCA, hFFCB, hFFC8, hFFC9, wIsCGB, hFFC7
 ; writes: hFFCA, hFFCB, hFFC8, hFFC9, rRAMG, rROMB0
-; points at: wC701, wC6FE, wC4DF
+; points at: wC701, wC6FE, wOBJPaletteBuffer
 Func_000_228A::
     ld a, [wC6FD]
     or a, a
@@ -6187,7 +6187,7 @@ Jump_000_22A5::
     add a, a
     add a, a
     add a, a
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $C8
     ld de, Data_07E_4BBD
@@ -6257,7 +6257,7 @@ Jump_000_2304::
     add a, a
     add a, a
     add a, a
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     push hl
     ldh a, [hFFC6]
@@ -6582,12 +6582,12 @@ Jump_000_24D7::
 ; 2 call sites from 2 routines (e.g. Func_000_1C0C, LoadSpecialMapHeader)
 ; reads: wIsCGB
 ; writes: wC526
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_000_24E5::
     ld a, [wIsCGB]
     or a, a
     ret z
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
     ld a, $7F

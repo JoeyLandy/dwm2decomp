@@ -8287,7 +8287,7 @@ Func_016_777B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC527, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
-; points at: wC4DF, wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, ...
+; points at: wOBJPaletteBuffer, wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, ...
 Func_016_7783:: ; heuristic: follows a terminator; C0
     ld b, $7E
     ld de, Data_07E_5B63
@@ -8298,7 +8298,7 @@ Func_016_7783:: ; heuristic: follows a terminator; C0
     jr z, Jump_016_77A6
     ld de, Data_07E_5BB8
     ld b, $7E
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld a, $7F

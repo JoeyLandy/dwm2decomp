@@ -965,15 +965,15 @@ Func_0F2_4A0B::
 Func_0F2_4A61::
     ld hl, $2940
     ld de, vTiles2 + $290
-    call Func_0F2_516E
+    call CopyTileBytesToVRAMCounted_BankF2
     ld hl, $2940
-    call Func_0F2_516E
+    call CopyTileBytesToVRAMCounted_BankF2
     ld hl, $2940
-    call Func_0F2_516E
+    call CopyTileBytesToVRAMCounted_BankF2
     ld hl, $2940
-    call Func_0F2_516E
+    call CopyTileBytesToVRAMCounted_BankF2
     ld hl, $2940
-    call Func_0F2_516E
+    call CopyTileBytesToVRAMCounted_BankF2
     ld hl, wCA3A
     call CopyShortStringToWC8CF_BankF2
     ld de, vTiles2 + $290
@@ -1404,7 +1404,7 @@ Jump_0F2_4D82::
     push de
     ld hl, vTiles1 + $430
     ld de, vTiles2 + $6C0
-    call Func_0F2_516E
+    call CopyTileBytesToVRAMCounted_BankF2
     pop de
     inc de
     inc de
@@ -1454,7 +1454,7 @@ Jump_0F2_4DD4::
     push de
     ld hl, vTiles1 + $430
     ld de, vTiles2 + $6D0
-    call Func_0F2_516E
+    call CopyTileBytesToVRAMCounted_BankF2
     pop de
     inc de
     inc de
@@ -2097,9 +2097,11 @@ Func_0F2_514D:: ; address name
     add_a_to_hl
     ret
 
+; copies 16 bytes from HL to DE, each written with interrupts off after rSTAT bit 1 clears (the same effect as CopyTileBytesToVRAM, with a counter kept on the stack); HL and DE advance (E-0076)
 ; 7 call sites from 2 routines (e.g. Func_0F2_4A61, Func_0F2_4D72)
 ; reads: rSTAT
-Func_0F2_516E::
+CopyTileBytesToVRAMCounted_BankF2::
+Func_0F2_516E:: ; address name
     ld a, $10
 
 Jump_0F2_5170::

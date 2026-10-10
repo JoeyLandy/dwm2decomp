@@ -3735,7 +3735,7 @@ Func_01D_5CD7::
 
 ; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case08)
 ; reads: wD7FC
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_01D_5D47::
     ld a, [wD7FC]
     ld c, a
@@ -3759,7 +3759,7 @@ Func_01D_5D47::
     ld d, [hl]
     inc hl
     ld b, [hl]
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ret
@@ -5662,7 +5662,7 @@ Data_01D_6909:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. Func_01D_682A)
 ; reads: hFFC6, hFFC7, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
 ; writes: wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_01D_6915::
     ldh a, [hFFC6]
     ld l, a
@@ -5702,7 +5702,7 @@ Func_01D_6915::
     ld e, l
     ld d, h
     ld b, $27
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld a, [wD7F3]
     add_a_to_hl
     ld c, $08
@@ -5730,7 +5730,7 @@ Jump_01D_695F::
 ; 8 call sites from 8 routines (e.g. Func_003_4F6F, Func_00C_45DA_Case03, Func_014_5CA8_Table2_Case03, Func_015_63B8, ...)
 ; reads: wD7F1, wD7F2, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
 ; writes: wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_01D_6973::
     ld a, [wD7F1]
     ld l, a
@@ -5772,7 +5772,7 @@ Func_01D_6973::
     ld e, l
     ld d, h
     ld b, $27
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld a, [wD7F3]
     add_a_to_hl
     ld c, $08

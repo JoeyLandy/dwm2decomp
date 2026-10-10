@@ -1810,13 +1810,13 @@ Data_01B_5190:: ; heuristic: target of a monotone pointer table; C0
 ; 2 call sites from 2 routines (e.g. GameMode6_Init, GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wC526
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_01B_53AF::
     ld a, [wIsCGB]
     or a, a
     ret z
     ld de, Data_01B_53C6
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F

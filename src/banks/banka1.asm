@@ -739,7 +739,7 @@ Func_0A1_4519::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, wIsCGB
 ; writes: hScrollX, hScrollY, wC527, wC526
-; points at: wC5E9, wC4DF, wC4E7, wC49F, wC5DD
+; points at: wC5E9, wOBJPaletteBuffer, wC4E7, wBGPaletteBuffer, wC5DD
 Func_0A1_4519_Case04::
 Jump_0A1_452D:: ; address name
     xor a, a
@@ -793,7 +793,7 @@ Jump_0A1_4576::
 
 Jump_0A1_4592::
     ld b, $7E
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld de, Data_07E_5AF6
@@ -805,7 +805,7 @@ Jump_0A1_4592::
     ld [wC527], a
     ld de, Data_05D_4565
     ld b, $5D
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
     ld a, $7F
@@ -1657,7 +1657,7 @@ Func_0A1_4A91::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wIsCGB
 ; writes: wC526, wC527
-; points at: wC5E9, wC49F, wC5DD
+; points at: wC5E9, wBGPaletteBuffer, wC5DD
 Func_0A1_4519_Case05::
 Jump_0A1_4AA6:: ; address name
     ld a, [wJoypadPressed]
@@ -1669,7 +1669,7 @@ Jump_0A1_4AA6:: ; address name
 ; 1 call site from 1 routine (e.g. Func_0A1_4519_Case02)
 ; reads: wIsCGB
 ; writes: wC526, wC527
-; points at: wC5E9, wC49F, wC5DD
+; points at: wC5E9, wBGPaletteBuffer, wC5DD
 Func_0A1_4AB1::
     ld hl, wC5E9
     ld a, $00
@@ -1679,7 +1679,7 @@ Func_0A1_4AB1::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_0A1_4AD7
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0050
     ld a, $FF
     call FillBytes
@@ -2479,7 +2479,7 @@ Func_0A1_4F8B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wSpriteSlotCount, wC526
-; points at: wC5E9, wC49F, wC5DD
+; points at: wC5E9, wBGPaletteBuffer, wC5DD
 Func_0A1_4519_Case00::
 Jump_0A1_4FB8:: ; address name
     xor a, a
@@ -2492,7 +2492,7 @@ Jump_0A1_4FB8:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_0A1_4FDD
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0040
     ld a, $FF
     call FillBytes
@@ -2509,7 +2509,7 @@ Jump_0A1_4FDD::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, wIsCGB
 ; writes: hScrollX, hScrollY, wC527, wC526
-; points at: wC5E9, wC4DF, wC4E7, wC49F, wC4A7, wC5DD
+; points at: wC5E9, wOBJPaletteBuffer, wC4E7, wBGPaletteBuffer, wC4A7, wC5DD
 Func_0A1_4519_Case01::
 Jump_0A1_4FE2:: ; address name
     xor a, a
@@ -2568,7 +2568,7 @@ Jump_0A1_5039::
 
 Jump_0A1_5055::
     ld b, $7E
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld de, Data_07E_5AF6
@@ -2580,7 +2580,7 @@ Jump_0A1_5055::
     ld [wC527], a
     ld de, Data_05D_4139
     ld b, $5D
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld de, Data_05E_422F

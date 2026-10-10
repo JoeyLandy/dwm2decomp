@@ -4763,14 +4763,14 @@ Jump_015_6028:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC526, wD781
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_015_5A67_Table2_Case00::
 Jump_015_603E:: ; address name
     ld hl, vTiles2
     ld de, Data_047_629A
     ld b, $47
     call DecompressToVRAM
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, Data_047_67E2
     ld b, $47
     ld c, $40

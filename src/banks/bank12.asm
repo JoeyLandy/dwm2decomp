@@ -2779,7 +2779,7 @@ Jump_012_5090:: ; address name
 ; entry 0 of the `rst $00` table in ScriptCommandA0_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC49F, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wC0F0, wScriptStep
 ScriptCommandA0_Run_Case00::
 Jump_012_5097:: ; address name
     ld a, $7A
@@ -2787,7 +2787,7 @@ Jump_012_5097:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_012_50AE
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -3318,7 +3318,7 @@ Jump_012_5662::
 ; entry 2 of the `rst $00` table in ScriptCommand9B_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC49F, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wC0F0, wScriptStep
 ScriptCommand9B_Run_Case02::
 Jump_012_5668:: ; address name
     xor a, a
@@ -3327,7 +3327,7 @@ Jump_012_5668:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_012_567F
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -3802,13 +3802,13 @@ Jump_012_58EF:: ; address name
 ; entry 2 of the `rst $00` table in ScriptCommand85_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC49F, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wC0F0, wScriptStep
 ScriptCommand85_Run_Case02::
 Jump_012_58F6:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_012_5908
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -4342,7 +4342,7 @@ Func_012_5C27::
 ; 1 call site from 1 routine (e.g. ScriptCommand3E_Run_Case00)
 ; reads: wC195, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wScriptParam0
-; points at: wC4DF, wScriptStep
+; points at: wOBJPaletteBuffer, wScriptStep
 Func_012_5C31::
     ld a, [wC195]
     swap a
@@ -4354,7 +4354,7 @@ Func_012_5C31::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC195, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wScriptParam0
-; points at: wC4DF, wScriptStep
+; points at: wOBJPaletteBuffer, wScriptStep
 Func_012_5C3F:: ; heuristic: follows a terminator; C0
     dec a
     jr nz, Jump_012_5C49
@@ -4393,7 +4393,7 @@ Jump_012_5C4E::
     ld d, a
     ld b, $7E
     ld a, $38
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank
@@ -4728,7 +4728,7 @@ Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wC924, wC925, hFF8D, wC8EF, wC8F4, wC8F9, wScriptParam0
-; points at: wC4DF, wScriptStep
+; points at: wOBJPaletteBuffer, wScriptStep
 Func_012_5DB6_Case03::
 Jump_012_5E64:: ; address name
     ld de, Data_07E_58FF
@@ -4744,7 +4744,7 @@ Jump_012_5E64:: ; address name
     ld d, a
     ld b, $7E
     ld a, $38
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank
@@ -5233,7 +5233,7 @@ Jump_012_6132::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wC924, wC925, hFF8D, wC8EF, wC8F4, wC8F9, wScriptParam0
-; points at: wC4DF, wScriptStep
+; points at: wOBJPaletteBuffer, wScriptStep
 Func_012_5EE7_Case03::
 Jump_012_616C:: ; address name
     ld de, Data_07E_594A
@@ -5249,7 +5249,7 @@ Jump_012_616C:: ; address name
     ld d, a
     ld b, $7E
     ld a, $38
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank
@@ -5887,7 +5887,7 @@ Jump_012_6504::
 ; 7 call sites from 7 routines (e.g. ScriptCommand58_Run_Case21, ScriptCommand4A_Run_Case01, ScriptCommand41_Run_Case07, ScriptCommandA0_Run_Case01, ...)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wC526, wScriptParam0
-; points at: wC5E9, wC0F0, wC49F, wScriptStep
+; points at: wC5E9, wC0F0, wBGPaletteBuffer, wScriptStep
 Func_012_653F::
     ld a, [wScriptParam0]
     srl a
@@ -5905,7 +5905,7 @@ Func_012_653F::
     or a, a
     jr z, Jump_012_6591
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
     ld bc, $0040
     call CopyBytes
     jr Jump_012_658C
@@ -5923,7 +5923,7 @@ Jump_012_656A::
     jr z, Jump_012_6591
     ld b, $40
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
 
 Jump_012_6584::
     ld a, [hl+]
@@ -6946,7 +6946,7 @@ Jump_012_6ABC::
 ; 2 call sites from 2 routines (e.g. Func_05F_7363_Case00, ScriptCommand16_Run_Case0F)
 ; reads: hFFC6, wIsCGB
 ; writes: wC949, wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_012_6AD9::
     ldh a, [hFFC6]
     or a, a
@@ -6976,7 +6976,7 @@ Jump_012_6B01::
     ld a, $38
 
 Jump_012_6B03::
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $D8
     ld de, Data_07E_4BBD
@@ -7565,7 +7565,7 @@ Jump_012_6DF0:: ; address name
 ; 18 call sites from 18 routines (e.g. Func_012_6B98_Case14, Func_012_6B98_Case12, Func_012_6B98_Case11, Func_012_6B98_Case10, ...)
 ; reads: hFFC6, wIsCGB
 ; writes: wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_012_6E0B::
     ldh a, [hFFC6]
     and a, $7F
@@ -7604,7 +7604,7 @@ Func_012_6E0B::
     ld d, a
     ld b, $7E
     ld a, $20
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank
@@ -7619,7 +7619,7 @@ Jump_012_6E5E::
 ; 2 call sites from 2 routines (e.g. Func_012_6B98_Case13, Func_012_6B98_Case0D)
 ; reads: hFFC6, wIsCGB
 ; writes: wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_012_6E61::
     ldh a, [hFFC6]
     and a, $7F
@@ -7658,7 +7658,7 @@ Func_012_6E61::
     ld d, a
     ld b, $7E
     ld a, $18
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank
@@ -7926,7 +7926,7 @@ Data_012_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC47, wC8FE, wIsCGB
 ; writes: wC8FE, wC900, wC8FF, wC527
-; points at: wCC48, wC4DF
+; points at: wCC48, wOBJPaletteBuffer
 Func_012_70A4::
     ld a, $FF
     ld [wC8FE], a
@@ -7998,7 +7998,7 @@ Jump_012_7101::
 ; 2 call sites from 2 routines (e.g. Func_002_4628, Func_002_5BD7_Case02)
 ; reads: wCC44, hMapId, wCCE9, hMapScreenX, hMapScreenY, wC8FE, wIsCGB
 ; writes: wCCE9, wC900, wC8FF, wC8FE, wC527
-; points at: wCCEB, wC4DF
+; points at: wCCEB, wOBJPaletteBuffer
 Func_012_710A::
     ld a, [wCC44]
     bit 7, a
@@ -8083,7 +8083,7 @@ Jump_012_7174::
 ; 1 call site from 1 routine (e.g. ScriptCommand84_Run_Case04_Sub01)
 ; reads: wC8FE, wIsCGB
 ; writes: wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 ScriptCommand84_Run_Case04_Sub01_Sub01::
 Func_012_7179:: ; address name
     ld a, [wC8FE]
@@ -8116,7 +8116,7 @@ Func_012_7179:: ; address name
 Jump_012_71A4::
     ld b, $7E
     ld a, $20
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank

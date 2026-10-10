@@ -773,6 +773,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also named:** DrawWC278RowsToBGMapRow7, GetWD789Cell4Address and GetWD789Cell5Address.
 - Binary verification: pending; see the commit.
 
+### E-0076 — CGB palette fade writers (bank $02)
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Twelve routines** write faded copies of the palette buffers wBGPaletteBuffer (`$C49F`) and wOBJPaletteBuffer (`$C4DF`) to the CGB palette data registers:
+  - two component rules, FadeColorComponentFloor and FadeColorComponentAdd;
+  - per-colour writers for BG and OBJ under each rule;
+  - per-palette wrappers (four colours) for each;
+  - two whole-set routines, WriteAllFadedPalettesFloor and WriteAllFadedPalettesAdd, each covering 8 + 8 palettes after setting rBGPI/rOBPI to $80, the auto-increment bit.
+- **The level and direction.** wC572 (wFadeLevel) is the per-component amount. wC56D bit 7 selects darkening (subtract, floor 0); clear selects lightening (floor rule: raise to at least the level; add rule: add, cap $1F).
+- **Dead store.** The OBJ per-colour writers load wC572 into D and immediately overwrite DE.
+- **Unknowns.** Which caller uses which rule. StartPaletteFade/StepFade (named earlier) are the likely drivers; not traced.
+- **Also named:** ShowSkillNameAtSlotB (category 4 = StringTable_SkillNames), CopyTileBytesToVRAMCounted_BankF2, DrawWC338RowsToBGMapRow13_BankA0.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

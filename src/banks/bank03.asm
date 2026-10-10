@@ -20,7 +20,7 @@ Func_003_4001:: ; address name
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case02)
 ; reads: wC5DD, wModeState, wIsCGB, hScrollY, hScrollX, wC933, wCC37, wSpriteSlotCount
 ; writes: wSpriteSlotCount, wC526, rVBK, hScrollX, hScrollY, wC46D, wC46E, wC46F, ...
-; points at: wC49F, wScreenTileBuffer, wC5DD, wC0A0, wD09D
+; points at: wBGPaletteBuffer, wScreenTileBuffer, wC5DD, wC0A0, wD09D
 GameMode2_Update::
 Func_003_4015:: ; address name
     ld a, [wC5DD]
@@ -52,7 +52,7 @@ Jump_003_4036::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_003_4073
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0040
     ld a, $FF
     call FillBytes
@@ -158,7 +158,7 @@ Jump_003_40BE::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_003_414C
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld a, $39
     ld [hl+], a
     ld a, $01
@@ -530,7 +530,7 @@ Func_003_432F::
 ; 12 call sites from 12 routines (e.g. Func_003_4659_Table2_Case04, Func_003_6A60_Table2_Case01, Func_003_6B5E_Case06, Func_003_6B5E_Case01, ...)
 ; reads: hPlayerX, hPlayerY, wIsCGB
 ; writes: wC8C8, wC8C9, wC8CA, rRAMG, wC526, wC5E0, wGameMode
-; points at: wC49F, wScreenTileBuffer, wC5E0
+; points at: wBGPaletteBuffer, wScreenTileBuffer, wC5E0
 Func_003_4339::
     call Func_003_4389
     ldh a, [hPlayerX]
@@ -544,7 +544,7 @@ Func_003_4339::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_003_4367
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0040
     ld a, $FF
     call FillBytes
@@ -2201,32 +2201,32 @@ Func_003_4D57::
     call Func_003_4DBE
     ld a, [hl+]
     ld b, $01
-    call Func_003_4DCF
+    call ShowSkillNameAtSlotB
     ld a, [hl+]
     ld b, $02
-    call Func_003_4DCF
+    call ShowSkillNameAtSlotB
     ld a, [hl+]
     ld b, $03
-    call Func_003_4DCF
+    call ShowSkillNameAtSlotB
     ld a, [hl+]
     ld b, $04
-    call Func_003_4DCF
+    call ShowSkillNameAtSlotB
     ld a, [hl+]
     ld b, $05
-    call Func_003_4DCF
+    call ShowSkillNameAtSlotB
     ld a, [hl+]
     ld b, $06
-    call Func_003_4DCF
+    call ShowSkillNameAtSlotB
     ld a, [hl]
     ld b, $07
-    call Func_003_4DCF
+    call ShowSkillNameAtSlotB
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4D57)
 ; writes: wStringCategory, wStringIndex
 Func_003_4DBE::
     cp a, $FF
-    jr nz, Func_003_4DCF
+    jr nz, ShowSkillNameAtSlotB
     push hl
     ld a, $08
     ld [wStringCategory], a
@@ -2234,9 +2234,11 @@ Func_003_4DBE::
     ld [wStringIndex], a
     jr Jump_003_4DDD
 
+; A = skill number ($FF shows entry 0), B = slot: wStringIndex = A, wStringCategory = 4 (StringTable_SkillNames in the bank-$08 database), then ShowStringBank08AtTilesHL with the tile address from Data_003_4DF2[B] and size $0901; HL kept (E-0076)
 ; 7 call sites from 1 routine (e.g. Func_003_4D57)
 ; writes: wStringIndex, wStringCategory
-Func_003_4DCF::
+ShowSkillNameAtSlotB::
+Func_003_4DCF:: ; address name
     push hl
     cp a, $FF
     jr nz, Jump_003_4DD5

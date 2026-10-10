@@ -162,7 +162,7 @@ Jump_073_40D6::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wIsCGB
 ; writes: wScriptStep
-; points at: wC49F, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wC0F0, wScriptStep
 ScriptCommand82_Run_Table3_Case05::
 Jump_073_40E2:: ; address name
     ld a, [wD092]
@@ -173,7 +173,7 @@ Jump_073_40E2:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_4100
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -2125,7 +2125,7 @@ Jump_073_4E15:: ; address name
 ; entry 3 of the `rst $00` table in Func_073_44A5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC49F, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wC0F0, wScriptStep
 Func_073_44A5_Case03::
 Jump_073_4E20:: ; address name
     xor a, a
@@ -2134,7 +2134,7 @@ Jump_073_4E20:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_4E37
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -7611,7 +7611,7 @@ Jump_073_6E29:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: hFFB9
-; points at: wC49F, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wC0F0, wScriptStep
 ScriptCommand26_Run_Case00::
 Jump_073_6E40:: ; address name
     xor a, a
@@ -7619,7 +7619,7 @@ Jump_073_6E40:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_073_6E55
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes

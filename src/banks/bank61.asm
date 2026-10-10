@@ -425,7 +425,7 @@ Jump_061_422B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45, wIsCGB
 ; writes: wC526, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC90D, wC195, wC197, wC196, ...
-; points at: wCDAE, wC49F
+; points at: wCDAE, wBGPaletteBuffer
 Func_061_420D_Case05::
 Jump_061_4261:: ; address name
     ld a, [wCC45]
@@ -459,7 +459,7 @@ Jump_061_4261:: ; address name
     ld d, a
     ld a, [hl+]
     ld b, a
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
     ld a, $7F
@@ -549,7 +549,7 @@ Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wCC45
 ; writes: wC526, wMaxBlockingTile, wC90D, wC195, wC196, wMapWidthScreens, wMapHeightScreens, wC901, ...
-; points at: wC49F, wCD7B
+; points at: wBGPaletteBuffer, wCD7B
 Func_061_420D_Case01::
 Jump_061_4325:: ; address name
     ld de, Data_06E_74E4
@@ -561,7 +561,7 @@ Jump_061_4325:: ; address name
     jr z, Jump_061_4348
     ld de, Data_06E_77E0
     ld b, $6E
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
     ld a, $7F
@@ -662,7 +662,7 @@ Jump_061_43B9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD0B, wIsCGB, wC195
 ; writes: wC526, wMaxBlockingTile, wC90D, wC901, wC194, wC196, wC197, wC195
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_061_420D_Case00::
 Jump_061_43CF:: ; address name
     ld a, [wCD0B]
@@ -697,7 +697,7 @@ Jump_061_43CF:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_061_440A
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
     ld a, $7F

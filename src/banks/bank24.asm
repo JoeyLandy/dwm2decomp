@@ -4980,13 +4980,13 @@ Jump_024_66A3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD782
 ; writes: wD782
-; points at: wC49F, wC0F0
+; points at: wBGPaletteBuffer, wC0F0
 ScriptCommandF8_Run_Table4_Case00::
 Jump_024_66AB:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_024_66BD
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, wC0F0
     ld bc, $0040
     call CopyBytes
@@ -5001,7 +5001,7 @@ Jump_024_66BD::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD783, wIsCGB, wD781, wD7AB
 ; writes: wC526, wD783, wD782, wD781
-; points at: wC5E9, wC0F0, wC49F
+; points at: wC5E9, wC0F0, wBGPaletteBuffer
 ScriptCommandF8_Run_Table4_Case01::
 Jump_024_66C5:: ; address name
     ld a, [wD783]
@@ -5020,7 +5020,7 @@ Jump_024_66C5:: ; address name
     or a, a
     jr z, Jump_024_6717
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
     ld bc, $0040
     call CopyBytes
     jr Jump_024_6712
@@ -5038,7 +5038,7 @@ Jump_024_66F0::
     jr z, Jump_024_6717
     ld b, $40
     ld hl, wC0F0
-    ld de, wC49F
+    ld de, wBGPaletteBuffer
 
 Jump_024_670A::
     ld a, [hl+]

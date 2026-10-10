@@ -2158,7 +2158,7 @@ Jump_03A_5509::
 ; 3 call sites from 3 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, Func_03A_548F)
 ; reads: wIsCGB
 ; writes: wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_03A_5516::
     ld a, [wIsCGB]
     or a, a
@@ -2171,7 +2171,7 @@ Func_03A_5516::
     ld bc, Data_03A_7D9A
     add hl, bc
     ld b, $08
-    ld de, wC4DF
+    ld de, wOBJPaletteBuffer
 
 Jump_03A_552A::
     ld a, [hl+]
@@ -2186,7 +2186,7 @@ Jump_03A_552A::
 ; 1 call site from 1 routine (e.g. Func_03A_4ADB)
 ; reads: wIsCGB, wC5E9, rSTAT, wC5EA
 ; writes: rBGPI, wD040, rOBPI, wD041
-; points at: wD040, wC49F, wD041, wC4DF
+; points at: wD040, wBGPaletteBuffer, wD041, wOBJPaletteBuffer
 Func_03A_5536::
     ld a, [wIsCGB]
     or a, a
@@ -2203,7 +2203,7 @@ Jump_03A_5547::
     jr nz, Jump_03A_5547
     ld a, $80
     ldh [rBGPI], a
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     call Func_03A_55BB
 
 Jump_03A_5557::
@@ -2395,7 +2395,7 @@ Jump_03A_5658::
     jr nz, Jump_03A_5658
     ld a, $80
     ldh [rOBPI], a
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     call Func_03A_56CC
 
 Jump_03A_5668::

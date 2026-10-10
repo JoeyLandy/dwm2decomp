@@ -493,7 +493,7 @@ Func_007_486E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSGBActive, wIsCGB
 ; writes: rBGP, rOBP0, rOBP1, hFF9F, hFFA0, hScrollX, hScrollY, wFrameCounterLo, ...
-; points at: wC51F, wC5E9, wC49F
+; points at: wC51F, wC5E9, wBGPaletteBuffer
 GameMode5_Init_Case00::
 Jump_007_48B2:: ; address name
     ld a, [wSGBActive]
@@ -511,7 +511,7 @@ Jump_007_48C8::
     or a, a
     jr z, Jump_007_48F3
     ld b, $40
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
 
 Jump_007_48D3::
     ld a, $FF
@@ -1838,7 +1838,7 @@ Jump_007_5910:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B, wIsCGB
 ; writes: rSVBK, wD09D, wD09E
-; points at: wScreenTileBuffer, wD000, wC49F, wD06B
+; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
 Func_007_5149_Table2_Case00::
 Jump_007_591A:: ; address name
     ld a, [wD06B]
@@ -1865,7 +1865,7 @@ Jump_007_591A:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_410E
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
 
@@ -1946,7 +1946,7 @@ Jump_007_59B6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B, wIsCGB
 ; writes: rSVBK, wD09D, wD09E
-; points at: wScreenTileBuffer, wD000, wC49F, wD06B
+; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
 Func_007_5999_Case00::
 Jump_007_59C0:: ; address name
     ld a, [wD06B]
@@ -1973,7 +1973,7 @@ Jump_007_59C0:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_460F
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
 
@@ -2054,7 +2054,7 @@ Jump_007_5A5C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B, wIsCGB
 ; writes: rSVBK, wD09D, wD09E
-; points at: wScreenTileBuffer, wD000, wC49F, wD06B
+; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
 Func_007_5A3F_Case00::
 Jump_007_5A66:: ; address name
     ld a, [wD06B]
@@ -2081,7 +2081,7 @@ Jump_007_5A66:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_49D2
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
 
@@ -2175,7 +2175,7 @@ Func_007_5B14::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB
 ; writes: rVBK, wD09D, wD09E, wD0E7
-; points at: wC49F, wC4DF, wC4E7, wD09D, wD09F, wD06B
+; points at: wBGPaletteBuffer, wOBJPaletteBuffer, wC4E7, wD09D, wD09F, wD06B
 Func_007_5B14_Case00::
 Jump_007_5B2A:: ; address name
     ld a, [wFadeState]
@@ -2231,12 +2231,12 @@ Jump_007_5B76::
     ld a, $00
     ldh [rVBK], a
     xor a, a
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0040
     call FillBytes
     ld b, $7E
     ld de, Data_07E_4BBD
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
@@ -2357,7 +2357,7 @@ Jump_007_5C40:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD0E7, wFadeState, wIsCGB, wD09E, wD06B
 ; writes: rSVBK, wD09D
-; points at: wD09F, wScreenTileBuffer, wD000, wC49F, wD06B
+; points at: wD09F, wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
 Func_007_5B14_Case04::
 Jump_007_5C5F:: ; address name
     ld a, [wD0E7]
@@ -2387,7 +2387,7 @@ Jump_007_5C5F:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_5A67
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
 
@@ -2427,7 +2427,7 @@ Jump_007_5CC1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB
 ; writes: rVBK, wD0E7, wD09D, wD09E, rSCY
-; points at: wC49F, wD09D, wD09F, wD06B
+; points at: wBGPaletteBuffer, wD09D, wD09F, wD06B
 Func_007_5B14_Case06::
 Jump_007_5CD8:: ; address name
     ld a, [wFadeState]
@@ -2458,7 +2458,7 @@ Jump_007_5CD8:: ; address name
     ldh [rVBK], a
     ld b, $E1
     ld de, Data_0E1_5A27
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
 
@@ -2802,7 +2802,7 @@ Jump_007_5EFF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB
 ; writes: rSVBK, wD09D, wD09E, hScrollY
-; points at: wScreenTileBuffer, wD000, wC49F, wC4DF, wD06B
+; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wOBJPaletteBuffer, wD06B
 Func_007_5EA2_Case00::
 Jump_007_5F09:: ; address name
     ld a, [wFadeState]
@@ -2837,12 +2837,12 @@ Jump_007_5F09:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_5A27
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $E1
     ld de, Data_0E1_5AA7
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld c, $10
     call CopyFromBankWaitVRAM
 
@@ -4170,7 +4170,7 @@ Jump_007_684C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB, wSGBActive
 ; writes: rSVBK, wC52D, wC52E, wC52F, wC530
-; points at: wScreenTileBuffer, wD000, wC4DF, wC4FF, wD06B
+; points at: wScreenTileBuffer, wD000, wOBJPaletteBuffer, wC4FF, wD06B
 Func_007_65F1_Table2_Case01::
 Jump_007_6856:: ; address name
     ld a, [wFadeState]
@@ -4198,7 +4198,7 @@ Jump_007_687D::
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_6897
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld de, wC4FF
     ld b, $20
 

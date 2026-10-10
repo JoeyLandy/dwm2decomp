@@ -448,7 +448,7 @@ Jump_004_4309::
 
 ; 25 call sites from 15 routines (e.g. Func_004_4B2D, Func_004_4AA8, Func_004_4129, ScriptCommand41_Run_Case09, ...)
 ; reads: hFFC8, hFFC6, hFFC7, hFFCA, hFFCB, wIsCGB, hFFC9
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_004_431F::
     ldh a, [hFFC8]
     or a, a
@@ -548,7 +548,7 @@ Jump_004_4396::
     sla a
     sla a
     sla a
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank
@@ -1786,7 +1786,7 @@ Jump_004_4B5E::
 ; 1 call site from 1 routine (e.g. Func_004_4AA8)
 ; reads: hFF8C
 ; writes: wC527
-; points at: wC4DF
+; points at: wOBJPaletteBuffer
 Func_004_4B7E::
     ldh a, [hFF8C]
     bit 3, a
@@ -1804,7 +1804,7 @@ Func_004_4B7E::
     ld d, a
     ld b, $7E
     ld a, $38
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank

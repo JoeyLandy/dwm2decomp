@@ -351,12 +351,12 @@ DEF wSGBPacketIndex EQU $C47C ; packet set number for SendSGBPacketSet; $FF sele
 DEF wSGBPacketBuffer EQU $C47F ; packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF (reading)
 DEF wC480 EQU $C480
 DEF wC48A EQU $C48A
-DEF wC49F EQU $C49F
+DEF wBGPaletteBuffer EQU $C49F ; 8 CGB background palettes (4 RGB555 colours each, 64 bytes) that the fade routines read and write to rBGPD (WriteAllFadedPalettesFloor/Add) (E-0076) (reading (E-0076))
 DEF wC4A7 EQU $C4A7
 DEF wC4AF EQU $C4AF
 DEF wC4B7 EQU $C4B7
 DEF wC4BF EQU $C4BF
-DEF wC4DF EQU $C4DF
+DEF wOBJPaletteBuffer EQU $C4DF ; 8 CGB object palettes (64 bytes) that the fade routines write to rOBPD (E-0076) (reading (E-0076))
 DEF wC4E7 EQU $C4E7
 DEF wC4EF EQU $C4EF
 DEF wC4F7 EQU $C4F7
@@ -419,7 +419,7 @@ DEF wC56E EQU $C56E
 DEF wC56F EQU $C56F
 DEF wC570 EQU $C570
 DEF wC571 EQU $C571
-DEF wC572 EQU $C572
+DEF wFadeLevel EQU $C572 ; the 5-bit level the fade routines apply to each colour component (E-0076) (reading (E-0076))
 DEF wC573 EQU $C573
 DEF wC574 EQU $C574
 DEF wC576 EQU $C576

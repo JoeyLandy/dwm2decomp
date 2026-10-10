@@ -1119,14 +1119,14 @@ Jump_00D_4B5D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC526, wD781
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_00D_4B30_Case00::
 Jump_00D_4B73:: ; address name
     ld hl, vTiles2
     ld de, Data_049_4418
     ld b, $49
     call DecompressToVRAM
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, Data_049_46DC
     ld b, $49
     ld c, $40
@@ -2250,14 +2250,14 @@ Jump_00D_530F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC526, wD781
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_00D_525F_Case00::
 Jump_00D_531D:: ; address name
     ld hl, vTiles2
     ld de, Data_049_4832
     ld b, $49
     call DecompressToVRAM
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld de, Data_049_4AC5
     ld b, $49
     ld c, $40
@@ -6920,7 +6920,7 @@ Jump_00D_7590:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7FB, wD781
 ; writes: wC526, wD781
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_00D_720E_Case00::
 Jump_00D_7597:: ; address name
     ld a, [wD7FB]
@@ -6947,7 +6947,7 @@ Jump_00D_7597:: ; address name
     ld d, a
     ld a, [hl]
     ld b, a
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld a, $7F

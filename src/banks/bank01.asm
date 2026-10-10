@@ -804,19 +804,19 @@ Jump_001_4A77::
 ; 7 call sites from 7 routines (e.g. DebugMessageTest_Init, DebugResultsDisplay_Init, DebugMainMenu_Init, GameMode5_Init_Case02, ...)
 ; reads: wIsCGB
 ; writes: wC526, wC527
-; points at: wC49F
+; points at: wBGPaletteBuffer
 Func_001_4AA4::
     ld a, [wIsCGB]
     or a, a
     ret z
     ld de, Data_001_4ACC
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wC526], a
     ld de, Data_001_4ACC
-    ld hl, wC49F
+    ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
@@ -4339,7 +4339,7 @@ Jump_001_627C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC5FD, wC5F8, wJoypadPressedRepeat, wC5FA, wC5F9, wIsCGB, wC5FC, ...
 ; writes: wC5FD, wC5F8, wC5F9, wC5FA, hFFC6, wC526, wC5FC, wC527, ...
-; points at: wC5F9, wC4DF, wC5FE, wModeChangeRequest
+; points at: wC5F9, wOBJPaletteBuffer, wC5FE, wModeChangeRequest
 DebugMonsterPictureViewer_Update::
 Jump_001_6294:: ; address name
     ld a, [wJoypadPressed]
@@ -4545,7 +4545,7 @@ Jump_001_6387::
     ld e, l
     ld d, h
     ld b, $27
-    ld hl, wC4DF
+    ld hl, wOBJPaletteBuffer
     ld c, $08
 
 Jump_001_63E5::
