@@ -4430,7 +4430,7 @@ Jump_085_5AEE::
 Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
     db $74, $01, $00, $00
 
-; 13 call sites from 8 routines (e.g. Msg01F0_Case07, Msg01F0_Case19, Func_013_70D9, Func_013_7598, ...)
+; 13 call sites from 8 routines (e.g. Msg01F0_Case07, Msg01F0_Case19, TalkMsg0A3C_KingIfYouSee, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hFFC6, hFFC7
 ; points at: wD09D
 Func_085_5B04::
@@ -4451,7 +4451,7 @@ Jump_085_5B12::
     ldh [hFFC7], a
     ret
 
-; 4 call sites from 3 routines (e.g. Func_013_7598, ScriptCommand72_Run_Case01, ScriptCommand71_Run_Case01)
+; 4 call sites from 3 routines (e.g. TalkMsg0512_KamehaYo0Thanks, ScriptCommand72_Run_Case01, ScriptCommand71_Run_Case01)
 ; reads: hFFC6
 ; writes: hFFC6
 ; points at: wC707

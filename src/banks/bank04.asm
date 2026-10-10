@@ -3066,10 +3066,10 @@ Data_004_4EAA:: ; heuristic: argument of a bank-switching copy helper; C0
     db $8C
     INCBIN "dwm2-cobi-us.gbc", $01132A, $291
 
-; HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
+; starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
 ; 316 call sites from 163 routines (e.g. Func_004_7B29_Case06, Func_004_7B29_Case05, Func_004_7B29_Case04, Func_004_6A35_Case1B, ...)
 ; writes: wScriptParam0, wScriptParam1, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
-SetRequestPtrC921_B04::
+StartMessageCommand09HL_B04::
 Func_004_55BB:: ; address name
     ld a, l
     ld [wScriptParam0], a
@@ -3110,10 +3110,10 @@ Func_004_55DF:: ; address name
     ld [wScriptStep], a
     ret
 
-; HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1
+; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)
 ; 177 call sites from 122 routines (e.g. Func_004_5616_Case02, Func_004_5616_Case01, Func_004_5616_Case00, Func_004_7B29_Case08, ...)
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
-SetRequestPtrC91A_B04::
+StartScriptAtHL_B04::
 Func_004_5603:: ; address name
     ld a, l
     ld [wScriptPointerLo], a
@@ -3157,14 +3157,14 @@ Func_004_5616::
     dw Data_004_580E
     dw Data_004_5815
     dw Func_004_581C
-    dw Func_004_5852
-    dw Func_004_5860
-    dw Func_004_586E
-    dw Func_004_587C
-    dw Func_004_588A
-    dw Func_004_5898
-    dw Func_004_58A6
-    dw Func_004_58B4
+    dw IfFlag00D1Msg0D33_YouSavedUsAll
+    dw IfFlag00D1Msg0D34_PleaseEatUpEat
+    dw IfFlag00D1Msg0D35_HmISawYour
+    dw IfFlag00D1Msg0D36_TheKingdomIsRejoicing
+    dw IfFlag00D1Msg0D37_InsteadOfStandingAround
+    dw IfFlag00D1Msg0D38_JustImagineIfYou
+    dw IfFlag00D1Msg0D39_AhGreatLogsMightyHero
+    dw IfFlag00D1Msg0D3A_ToBeHonestI
 
 ; entry 0 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
@@ -3174,12 +3174,12 @@ Jump_004_5660:: ; address name
     call TestFlagBit
     jr nc, Jump_004_566F
     ld hl, $5063
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_566F::
     ld hl, $509F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 1 of the `rst $00` table in Func_004_5616
@@ -3187,7 +3187,7 @@ Jump_004_566F::
 Func_004_5616_Case01::
 Jump_004_5676:: ; address name
     ld hl, $4F54
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 2 of the `rst $00` table in Func_004_5616
@@ -3195,14 +3195,14 @@ Jump_004_5676:: ; address name
 Func_004_5616_Case02::
 Jump_004_567D:: ; address name
     ld hl, $5111
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
     db $21, $44, $00, $CD, $BB, $55, $C9
 
 ; no direct call (reached through a table, a jump or a vector)
 Func_004_568B:: ; heuristic: target of a pointer table; C0
     ld hl, $4F73
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0005
     call SetFlagBit
     ret
@@ -3211,7 +3211,7 @@ Func_004_568B:: ; heuristic: target of a pointer table; C0
 ; writes: hFFC6
 Func_004_5698:: ; heuristic: target of a pointer table; C0
     ld hl, $4F7C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $00
     ldh [hFFC6], a
     farcall Func_012_6B98
@@ -3225,7 +3225,7 @@ Func_004_56AF:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     ret nc
     ld hl, $4F9D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3247,19 +3247,19 @@ Func_004_56BD:: ; heuristic: target of a pointer table; C0
     ldh [hFFC6], a
     farcall Func_012_6B98
     ld hl, $4F88
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0007
     call SetFlagBit
     ret
 
 Jump_004_56F4::
     ld hl, $0046
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_56FB::
     ld hl, $0079
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5702::
@@ -3269,12 +3269,12 @@ Jump_004_5702::
     call TestFlagBit
     jr c, Jump_004_5716
     ld hl, Data_010_5353
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5716::
     ld hl, $535D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_571D::
@@ -3284,7 +3284,7 @@ Jump_004_571D::
     call TestFlagBit
     jr c, Jump_004_5716
     ld hl, Data_010_5364
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Data_004_5731:: ; heuristic: target of a monotone pointer table; C0
@@ -3361,79 +3361,95 @@ Func_004_581C:: ; heuristic: target of a pointer table; C0
     set 7, a
     ld [wC836], a
     ld hl, $5039
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D33 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'You saved us all by yourself.' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5852:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D33_YouSavedUsAll:: ; heuristic: target of a pointer table; C0
+Func_004_5852:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D33
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D34 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Please, eat up, eat up! Don't' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5860:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D34_PleaseEatUpEat:: ; heuristic: target of a pointer table; C0
+Func_004_5860:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D34
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D35 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Hm? I saw your family. They' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_586E:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D35_HmISawYour:: ; heuristic: target of a pointer table; C0
+Func_004_586E:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D35
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D36 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'The Kingdom is rejoicing!' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_587C:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D36_TheKingdomIsRejoicing:: ; heuristic: target of a pointer table; C0
+Func_004_587C:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D36
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D37 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Instead of standing around, you should' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_588A:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D37_InsteadOfStandingAround:: ; heuristic: target of a pointer table; C0
+Func_004_588A:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D37
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D38 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Just imagine if you weren't here.' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5898:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D38_JustImagineIfYou:: ; heuristic: target of a pointer table; C0
+Func_004_5898:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D38
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D39 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Ah, GreatLog's mighty hero! I hope' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58A6:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D39_AhGreatLogsMightyHero:: ; heuristic: target of a pointer table; C0
+Func_004_58A6:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D39
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; when story flag $00D1 is set (TestFlagBit), starts message $0D3A through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'To be honest, I was getting' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58B4:: ; heuristic: target of a pointer table; C0
+IfFlag00D1Msg0D3A_ToBeHonestI:: ; heuristic: target of a pointer table; C0
+Func_004_58B4:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld hl, $0D3A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; 1 call site from 1 routine (e.g. Func_013_405C_Case03)
@@ -3557,7 +3573,7 @@ Func_004_58C2::
 Func_004_58C2_Case00::
 Jump_004_59A2:: ; address name
     ld hl, $0800
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 1 of the `rst $00` table in Func_004_58C2
@@ -3565,7 +3581,7 @@ Jump_004_59A2:: ; address name
 Func_004_58C2_Case01::
 Jump_004_59A9:: ; address name
     ld hl, $0801
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 2 of the `rst $00` table in Func_004_58C2
@@ -3573,7 +3589,7 @@ Jump_004_59A9:: ; address name
 Func_004_58C2_Case02::
 Jump_004_59B0:: ; address name
     ld hl, $0802
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 3 of the `rst $00` table in Func_004_58C2
@@ -3584,12 +3600,12 @@ Jump_004_59B7:: ; address name
     call TestFlagBit
     jr c, Jump_004_59C6
     ld hl, $0803
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_59C6::
     ld hl, $0874
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 4 of the `rst $00` table in Func_004_58C2
@@ -3600,12 +3616,12 @@ Jump_004_59CD:: ; address name
     call TestFlagBit
     jr c, Jump_004_59DC
     ld hl, $0804
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_59DC::
     ld hl, $0875
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 5 of the `rst $00` table in Func_004_58C2
@@ -3616,12 +3632,12 @@ Jump_004_59E3:: ; address name
     call TestFlagBit
     jr c, Jump_004_59F2
     ld hl, $0805
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_59F2::
     ld hl, $0876
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 6 of the `rst $00` table in Func_004_58C2
@@ -3635,19 +3651,19 @@ Jump_004_59F9:: ; address name
     call TestFlagBit
     jr c, Jump_004_5A16
     ld hl, $5B84
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0060
     call SetFlagBit
     ret
 
 Jump_004_5A16::
     ld hl, $0808
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5A1D::
     ld hl, $0877
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 7 of the `rst $00` table in Func_004_58C2
@@ -3660,7 +3676,7 @@ Jump_004_5A24:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5B8C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 8 of the `rst $00` table in Func_004_58C2
@@ -3668,7 +3684,7 @@ Jump_004_5A24:: ; address name
 Func_004_58C2_Case08::
 Jump_004_5A35:: ; address name
     ld hl, $080A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 9 of the `rst $00` table in Func_004_58C2
@@ -3676,7 +3692,7 @@ Jump_004_5A35:: ; address name
 Func_004_58C2_Case09::
 Jump_004_5A3C:: ; address name
     ld hl, $080B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 10 of the `rst $00` table in Func_004_58C2
@@ -3710,7 +3726,7 @@ Jump_004_5A54:: ; address name
 Func_004_58C2_Case0C::
 Jump_004_5A65:: ; address name
     ld hl, $088A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 13 of the `rst $00` table in Func_004_58C2
@@ -3718,7 +3734,7 @@ Jump_004_5A65:: ; address name
 Func_004_58C2_Case0D::
 Jump_004_5A6C:: ; address name
     ld hl, $0889
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 14 of the `rst $00` table in Func_004_58C2
@@ -3726,7 +3742,7 @@ Jump_004_5A6C:: ; address name
 Func_004_58C2_Case0E::
 Jump_004_5A73:: ; address name
     ld hl, $0037
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 15 of the `rst $00` table in Func_004_58C2
@@ -3734,7 +3750,7 @@ Jump_004_5A73:: ; address name
 Func_004_58C2_Case0F::
 Jump_004_5A7A:: ; address name
     ld hl, $080C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 16 of the `rst $00` table in Func_004_58C2
@@ -3745,12 +3761,12 @@ Jump_004_5A81:: ; address name
     call TestFlagBit
     jr c, Jump_004_5A90
     ld hl, $080D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5A90::
     ld hl, $0878
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 17 of the `rst $00` table in Func_004_58C2
@@ -3758,7 +3774,7 @@ Jump_004_5A90::
 Func_004_58C2_Case11::
 Jump_004_5A97:: ; address name
     ld hl, $080E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 18 of the `rst $00` table in Func_004_58C2
@@ -3766,7 +3782,7 @@ Jump_004_5A97:: ; address name
 Func_004_58C2_Case12::
 Jump_004_5A9E:: ; address name
     ld hl, $080F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 19 of the `rst $00` table in Func_004_58C2
@@ -3784,7 +3800,7 @@ Jump_004_5AA5:: ; address name
     bit 7, a
     jr z, Jump_004_5AC0
     ld hl, $5C2F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5AC0::
@@ -3793,7 +3809,7 @@ Jump_004_5AC0::
     or a, a
     jr z, Jump_004_5AD3
     ld hl, $5C5C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5AD3::
@@ -3818,17 +3834,17 @@ Jump_004_5AD3::
     call TestFlagBit
     jr c, Jump_004_5B0F
     ld hl, $5C40
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5B0F::
     ld hl, $5C4E
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5B16::
     ld hl, $084A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 20 of the `rst $00` table in Func_004_58C2
@@ -3837,7 +3853,7 @@ Jump_004_5B16::
 Func_004_58C2_Case14::
 Jump_004_5B1D:: ; address name
     ld hl, $5B94
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
@@ -3847,7 +3863,7 @@ Jump_004_5B1D:: ; address name
 Func_004_58C2_Case15::
 Jump_004_5B29:: ; address name
     ld hl, $5B9B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 22 of the `rst $00` table in Func_004_58C2
@@ -3855,7 +3871,7 @@ Jump_004_5B29:: ; address name
 Func_004_58C2_Case16::
 Jump_004_5B30:: ; address name
     ld hl, $081B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 23 of the `rst $00` table in Func_004_58C2
@@ -3866,12 +3882,12 @@ Jump_004_5B37:: ; address name
     call TestFlagBit
     jr c, Jump_004_5B46
     ld hl, $081C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5B46::
     ld hl, $0879
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 24 of the `rst $00` table in Func_004_58C2
@@ -3879,7 +3895,7 @@ Jump_004_5B46::
 Func_004_58C2_Case18::
 Jump_004_5B4D:: ; address name
     ld hl, $088B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 25 of the `rst $00` table in Func_004_58C2
@@ -3887,7 +3903,7 @@ Jump_004_5B4D:: ; address name
 Func_004_58C2_Case19::
 Jump_004_5B54:: ; address name
     ld hl, $0889
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 26 of the `rst $00` table in Func_004_58C2
@@ -3895,7 +3911,7 @@ Jump_004_5B54:: ; address name
 Func_004_58C2_Case1A::
 Jump_004_5B5B:: ; address name
     ld hl, $081D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 27 of the `rst $00` table in Func_004_58C2
@@ -3906,12 +3922,12 @@ Jump_004_5B62:: ; address name
     call TestFlagBit
     jr c, Jump_004_5B71
     ld hl, $081E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5B71::
     ld hl, $087A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 28 of the `rst $00` table in Func_004_58C2
@@ -3919,7 +3935,7 @@ Jump_004_5B71::
 Func_004_58C2_Case1C::
 Jump_004_5B78:: ; address name
     ld hl, $081F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 29 of the `rst $00` table in Func_004_58C2
@@ -3930,7 +3946,7 @@ Jump_004_5B7F:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_5BA8
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 30 of the `rst $00` table in Func_004_58C2
@@ -3938,7 +3954,7 @@ Jump_004_5B7F:: ; address name
 Func_004_58C2_Case1E::
 Jump_004_5B8B:: ; address name
     ld hl, $0821
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 31 of the `rst $00` table in Func_004_58C2
@@ -3946,7 +3962,7 @@ Jump_004_5B8B:: ; address name
 Func_004_58C2_Case1F::
 Jump_004_5B92:: ; address name
     ld hl, $0822
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 32 of the `rst $00` table in Func_004_58C2
@@ -3959,7 +3975,7 @@ Jump_004_5B99:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5BAF
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 33 of the `rst $00` table in Func_004_58C2
@@ -3970,12 +3986,12 @@ Jump_004_5BAA:: ; address name
     call TestFlagBit
     jr c, Jump_004_5BB9
     ld hl, $0824
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5BB9::
     ld hl, $0D13
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 34 of the `rst $00` table in Func_004_58C2
@@ -3983,7 +3999,7 @@ Jump_004_5BB9::
 Func_004_58C2_Case22::
 Jump_004_5BC0:: ; address name
     ld hl, $0825
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 35 of the `rst $00` table in Func_004_58C2
@@ -3991,7 +4007,7 @@ Jump_004_5BC0:: ; address name
 Func_004_58C2_Case23::
 Jump_004_5BC7:: ; address name
     ld hl, $0826
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 36 of the `rst $00` table in Func_004_58C2
@@ -4002,12 +4018,12 @@ Jump_004_5BCE:: ; address name
     call TestFlagBit
     jr c, Jump_004_5BDD
     ld hl, $0827
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5BDD::
     ld hl, $087B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 37 of the `rst $00` table in Func_004_58C2
@@ -4018,12 +4034,12 @@ Jump_004_5BE4:: ; address name
     call TestFlagBit
     jr c, Jump_004_5BF3
     ld hl, $0829
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5BF3::
     ld hl, $087C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 38 of the `rst $00` table in Func_004_58C2
@@ -4034,12 +4050,12 @@ Jump_004_5BFA:: ; address name
     call TestFlagBit
     jr c, Jump_004_5C09
     ld hl, $082A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5C09::
     ld hl, $087D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 39 of the `rst $00` table in Func_004_58C2
@@ -4047,7 +4063,7 @@ Jump_004_5C09::
 Func_004_58C2_Case27::
 Jump_004_5C10:: ; address name
     ld hl, $082B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 40 of the `rst $00` table in Func_004_58C2
@@ -4055,7 +4071,7 @@ Jump_004_5C10:: ; address name
 Func_004_58C2_Case28::
 Jump_004_5C17:: ; address name
     ld hl, $088D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 41 of the `rst $00` table in Func_004_58C2
@@ -4063,7 +4079,7 @@ Jump_004_5C17:: ; address name
 Func_004_58C2_Case29::
 Jump_004_5C1E:: ; address name
     ld hl, $5BB6
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 42 of the `rst $00` table in Func_004_58C2
@@ -4071,7 +4087,7 @@ Jump_004_5C1E:: ; address name
 Func_004_58C2_Case2A::
 Jump_004_5C25:: ; address name
     ld hl, $082E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 43 of the `rst $00` table in Func_004_58C2
@@ -4093,7 +4109,7 @@ Jump_004_5C2C:: ; address name
 Func_004_58C2_Case2C::
 Jump_004_5C3D:: ; address name
     ld hl, $5BBD
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
@@ -4106,12 +4122,12 @@ Jump_004_5C49:: ; address name
     call TestFlagBit
     jr c, Jump_004_5C58
     ld hl, $082F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5C58::
     ld hl, $087E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 46 of the `rst $00` table in Func_004_58C2
@@ -4119,7 +4135,7 @@ Jump_004_5C58::
 Func_004_58C2_Case2E::
 Jump_004_5C5F:: ; address name
     ld hl, $0830
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 47 of the `rst $00` table in Func_004_58C2
@@ -4127,7 +4143,7 @@ Jump_004_5C5F:: ; address name
 Func_004_58C2_Case2F::
 Jump_004_5C66:: ; address name
     ld hl, $5BC4
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 48 of the `rst $00` table in Func_004_58C2
@@ -4141,17 +4157,17 @@ Jump_004_5C6D:: ; address name
     call TestFlagBit
     jr c, Jump_004_5C84
     ld hl, $0834
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5C84::
     ld hl, $0842
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5C8B::
     ld hl, $0D14
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 49 of the `rst $00` table in Func_004_58C2
@@ -4165,17 +4181,17 @@ Jump_004_5C92:: ; address name
     call TestFlagBit
     jr c, Jump_004_5CA9
     ld hl, $0835
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5CA9::
     ld hl, $0DC3
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5CB0::
     ld hl, $087F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 50 of the `rst $00` table in Func_004_58C2
@@ -4183,7 +4199,7 @@ Jump_004_5CB0::
 Func_004_58C2_Case32::
 Jump_004_5CB7:: ; address name
     ld hl, $0836
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 51 of the `rst $00` table in Func_004_58C2
@@ -4205,17 +4221,17 @@ Jump_004_5CBE:: ; address name
     ld a, $01
     ld [wCBB6], a
     ld hl, $0837
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5CE7::
     ld hl, $5BFE
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5CEE::
     ld hl, $5C19
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5CF5::
@@ -4224,17 +4240,17 @@ Jump_004_5CF5::
     ld a, $01
     ld [wCBB6], a
     ld hl, $0837
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5D06::
     ld hl, $5C26
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5D0D::
     ld hl, $0880
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_004_58C2_Case33)
@@ -4286,19 +4302,19 @@ Jump_004_5D44:: ; address name
     call TestFlagBit
     jr c, Jump_004_5D61
     ld hl, $5BE8
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0065
     call SetFlagBit
     ret
 
 Jump_004_5D61::
     ld hl, $5BF2
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5D68::
     ld hl, $5BFC
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 53 of the `rst $00` table in Func_004_58C2
@@ -4384,7 +4400,7 @@ Jump_004_5DC4:: ; address name
 Func_004_58C2_Case3B::
 Jump_004_5DD5:: ; address name
     ld hl, $0843
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 60 of the `rst $00` table in Func_004_58C2
@@ -4392,7 +4408,7 @@ Jump_004_5DD5:: ; address name
 Func_004_58C2_Case3C::
 Jump_004_5DDC:: ; address name
     ld hl, $0844
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 61 of the `rst $00` table in Func_004_58C2
@@ -4403,7 +4419,7 @@ Jump_004_5DE3:: ; address name
     call TestFlagBit
     ret nc
     ld hl, $5C69
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 62 of the `rst $00` table in Func_004_58C2
@@ -4414,14 +4430,14 @@ Jump_004_5DF1:: ; address name
     call TestFlagBit
     jr c, Jump_004_5E06
     ld hl, $084E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $00F1
     call SetFlagBit
     ret
 
 Jump_004_5E06::
     ld hl, $5D36
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 63 of the `rst $00` table in Func_004_58C2
@@ -4432,12 +4448,12 @@ Jump_004_5E0D:: ; address name
     call TestFlagBit
     jr c, Jump_004_5E1C
     ld hl, $084F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5E1C::
     ld hl, $0881
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 64 of the `rst $00` table in Func_004_58C2
@@ -4448,12 +4464,12 @@ Jump_004_5E23:: ; address name
     call TestFlagBit
     jr c, Jump_004_5E32
     ld hl, $0850
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5E32::
     ld hl, $0882
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 65 of the `rst $00` table in Func_004_58C2
@@ -4461,7 +4477,7 @@ Jump_004_5E32::
 Func_004_58C2_Case41::
 Jump_004_5E39:: ; address name
     ld hl, $0851
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 66 of the `rst $00` table in Func_004_58C2
@@ -4469,7 +4485,7 @@ Jump_004_5E39:: ; address name
 Func_004_58C2_Case42::
 Jump_004_5E40:: ; address name
     ld hl, $0852
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 67 of the `rst $00` table in Func_004_58C2
@@ -4480,12 +4496,12 @@ Jump_004_5E47:: ; address name
     call TestFlagBit
     jr c, Jump_004_5E56
     ld hl, $0853
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5E56::
     ld hl, $0883
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 68 of the `rst $00` table in Func_004_58C2
@@ -4496,12 +4512,12 @@ Jump_004_5E5D:: ; address name
     call TestFlagBit
     jr c, Jump_004_5E6C
     ld hl, $0854
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5E6C::
     ld hl, $0884
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 69 of the `rst $00` table in Func_004_58C2
@@ -4520,19 +4536,19 @@ Jump_004_5E73:: ; address name
     call TestFlagBit
     jr c, Jump_004_5E92
     ld hl, $5C77
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5E92::
     ld hl, $0858
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5E99::
     call Func_004_7C37
     jr c, Jump_004_5EA5
     ld hl, $0DC7
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5EA5::
@@ -4541,12 +4557,12 @@ Jump_004_5EA5::
     set 6, a
     ld [wC836], a
     ld hl, $5C7E
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_5EB6::
     ld hl, $0885
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 70 of the `rst $00` table in Func_004_58C2
@@ -4554,7 +4570,7 @@ Jump_004_5EB6::
 Func_004_58C2_Case46::
 Jump_004_5EBD:: ; address name
     ld hl, $5C88
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 71 of the `rst $00` table in Func_004_58C2
@@ -4562,7 +4578,7 @@ Jump_004_5EBD:: ; address name
 Func_004_58C2_Case47::
 Jump_004_5EC4:: ; address name
     ld hl, $5C8A
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 72 of the `rst $00` table in Func_004_58C2
@@ -4570,7 +4586,7 @@ Jump_004_5EC4:: ; address name
 Func_004_58C2_Case48::
 Jump_004_5ECB:: ; address name
     ld hl, $5C94
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 73 of the `rst $00` table in Func_004_58C2
@@ -4578,7 +4594,7 @@ Jump_004_5ECB:: ; address name
 Func_004_58C2_Case49::
 Jump_004_5ED2:: ; address name
     ld hl, $5C9E
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 74 of the `rst $00` table in Func_004_58C2
@@ -4589,14 +4605,14 @@ Jump_004_5ED9:: ; address name
     call TestFlagBit
     jr c, Jump_004_5EEE
     ld hl, $5CA8
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0074
     call SetFlagBit
     ret
 
 Jump_004_5EEE::
     ld hl, $5CB5
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 75 of the `rst $00` table in Func_004_58C2
@@ -4608,7 +4624,7 @@ Jump_004_5EF5:: ; address name
     call Func_004_7C37
     jr c, Jump_004_5F01
     ld hl, $0888
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5F01::
@@ -4617,7 +4633,7 @@ Jump_004_5F01::
     set 6, a
     ld [wC836], a
     ld hl, $5CC2
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 76 of the `rst $00` table in Func_004_58C2
@@ -4625,7 +4641,7 @@ Jump_004_5F01::
 Func_004_58C2_Case4C::
 Jump_004_5F12:: ; address name
     ld hl, $5CCA
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0077
     call SetFlagBit
     ret
@@ -4668,12 +4684,12 @@ Jump_004_5F35:: ; address name
     bit 7, a
     ret z
     ld hl, $0865
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_5F53::
     ld hl, $0867
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 80 of the `rst $00` table in Func_004_58C2
@@ -4688,7 +4704,7 @@ Jump_004_5F5A:: ; address name
     ld de, $007B
     call SetFlagBit
     ld hl, $5CD1
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ldh a, [hPlayerX]
     cp a, $50
     ret nz
@@ -4703,7 +4719,7 @@ Jump_004_5F5A:: ; address name
 Func_004_58C2_Case51::
 Jump_004_5F7C:: ; address name
     ld hl, $5CDD
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 82 of the `rst $00` table in Func_004_58C2
@@ -4711,7 +4727,7 @@ Jump_004_5F7C:: ; address name
 Func_004_58C2_Case52::
 Jump_004_5F83:: ; address name
     ld hl, $5D1C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 83 of the `rst $00` table in Func_004_58C2
@@ -4719,7 +4735,7 @@ Jump_004_5F83:: ; address name
 Func_004_58C2_Case53::
 Jump_004_5F8A:: ; address name
     ld hl, $5D2F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 84 of the `rst $00` table in Func_004_58C2
@@ -4792,7 +4808,7 @@ Jump_004_5FD5:: ; address name
 Func_004_58C2_Case59::
 Jump_004_5FE6:: ; address name
     ld hl, $088C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 90 of the `rst $00` table in Func_004_58C2
@@ -4865,7 +4881,7 @@ Jump_004_6031:: ; address name
 Func_004_58C2_Case5F::
 Jump_004_6042:: ; address name
     ld hl, $0861
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 96 of the `rst $00` table in Func_004_58C2
@@ -4977,7 +4993,7 @@ Jump_004_60C0:: ; address name
 Func_004_58C2_Case68::
 Jump_004_60D1:: ; address name
     ld hl, $0862
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 105 of the `rst $00` table in Func_004_58C2
@@ -4985,7 +5001,7 @@ Jump_004_60D1:: ; address name
 Func_004_58C2_Case69::
 Jump_004_60D8:: ; address name
     ld hl, $0864
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 106 of the `rst $00` table in Func_004_58C2
@@ -4994,7 +5010,7 @@ Jump_004_60D8:: ; address name
 Func_004_58C2_Case6A::
 Jump_004_60DF:: ; address name
     ld hl, $5CCF
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $31
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
@@ -5008,7 +5024,7 @@ Jump_004_60DF:: ; address name
 Func_004_58C2_Case6B::
 Jump_004_60FC:: ; address name
     ld hl, $00FF
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 108 of the `rst $00` table in Func_004_58C2
@@ -5016,7 +5032,7 @@ Jump_004_60FC:: ; address name
 Func_004_58C2_Case6C::
 Jump_004_6103:: ; address name
     ld hl, $5D44
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 109 of the `rst $00` table in Func_004_58C2
@@ -5030,14 +5046,14 @@ Jump_004_610A:: ; address name
     call TestFlagBit
     jr c, Jump_004_6124
     ld hl, $5D4D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0202
     call SetFlagBit
     ret
 
 Jump_004_6124::
     ld hl, $5D54
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; 1 call site from 1 routine (e.g. Func_013_405C_Case02)
@@ -5121,7 +5137,7 @@ Func_004_612B::
 Func_004_612B_Case00::
 Jump_004_61BB:: ; address name
     ld hl, $0130
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 1 of the `rst $00` table in Func_004_612B
@@ -5132,12 +5148,12 @@ Jump_004_61C2:: ; address name
     call TestFlagBit
     jr c, Jump_004_61D1
     ld hl, $0131
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_61D1::
     ld hl, $01A3
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 2 of the `rst $00` table in Func_004_612B
@@ -5148,12 +5164,12 @@ Jump_004_61D8:: ; address name
     call TestFlagBit
     jr c, Jump_004_61E7
     ld hl, $0132
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_61E7::
     ld hl, $01A4
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 3 of the `rst $00` table in Func_004_612B
@@ -5161,7 +5177,7 @@ Jump_004_61E7::
 Func_004_612B_Case03::
 Jump_004_61EE:: ; address name
     ld hl, $0133
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 4 of the `rst $00` table in Func_004_612B
@@ -5172,12 +5188,12 @@ Jump_004_61F5:: ; address name
     call TestFlagBit
     jr c, Jump_004_6204
     ld hl, $0134
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6204::
     ld hl, $01A5
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 5 of the `rst $00` table in Func_004_612B
@@ -5188,12 +5204,12 @@ Jump_004_620B:: ; address name
     call TestFlagBit
     jr c, Jump_004_621A
     ld hl, $0135
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_621A::
     ld hl, $5B64
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 6 of the `rst $00` table in Func_004_612B
@@ -5204,12 +5220,12 @@ Jump_004_6221:: ; address name
     call TestFlagBit
     jr c, Jump_004_6230
     ld hl, $0136
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6230::
     ld hl, $0D07
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 7 of the `rst $00` table in Func_004_612B
@@ -5217,7 +5233,7 @@ Jump_004_6230::
 Func_004_612B_Case07::
 Jump_004_6237:: ; address name
     ld hl, $0137
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 8 of the `rst $00` table in Func_004_612B
@@ -5247,22 +5263,22 @@ Jump_004_624F:: ; address name
     call TestFlagBit
     jr c, Jump_004_626E
     ld hl, $0138
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_626E::
     ld hl, $0173
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6275::
     ld hl, $017A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_627C::
     ld hl, $0D08
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 10 of the `rst $00` table in Func_004_612B
@@ -5283,7 +5299,7 @@ Jump_004_628E::
 Jump_004_6290::
     ld [wCB86], a
     ld hl, $59BA
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
@@ -5296,12 +5312,12 @@ Jump_004_629F:: ; address name
     call TestFlagBit
     jr c, Jump_004_62AE
     ld hl, $0139
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_62AE::
     ld hl, $01A6
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 12 of the `rst $00` table in Func_004_612B
@@ -5309,7 +5325,7 @@ Jump_004_62AE::
 Func_004_612B_Case0C::
 Jump_004_62B5:: ; address name
     ld hl, $013A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 13 of the `rst $00` table in Func_004_612B
@@ -5320,12 +5336,12 @@ Jump_004_62BC:: ; address name
     call TestFlagBit
     jr c, Jump_004_62CB
     ld hl, $013B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_62CB::
     ld hl, $0D0B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 14 of the `rst $00` table in Func_004_612B
@@ -5336,12 +5352,12 @@ Jump_004_62D2:: ; address name
     call TestFlagBit
     jr c, Jump_004_62E1
     ld hl, $013C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_62E1::
     ld hl, $0D0A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 15 of the `rst $00` table in Func_004_612B
@@ -5361,29 +5377,29 @@ Jump_004_62E8:: ; address name
     call TestFlagBit
     jr c, Jump_004_630F
     ld hl, $013D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_630F::
     ld hl, $0168
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0048
     call SetFlagBit
     ret
 
 Jump_004_631C::
     ld hl, $0168
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6323::
     ld hl, $017B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_632A::
     ld hl, $0D09
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 16 of the `rst $00` table in Func_004_612B
@@ -5391,7 +5407,7 @@ Jump_004_632A::
 Func_004_612B_Case10::
 Jump_004_6331:: ; address name
     ld hl, $013E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 17 of the `rst $00` table in Func_004_612B
@@ -5402,12 +5418,12 @@ Jump_004_6338:: ; address name
     call TestFlagBit
     jr c, Jump_004_6347
     ld hl, $013F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6347::
     ld hl, $01A7
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 18 of the `rst $00` table in Func_004_612B
@@ -5423,14 +5439,14 @@ Jump_004_634E:: ; address name
     call TestFlagBit
     jr c, Jump_004_636D
     ld hl, Data_010_59C1
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0040
     call SetFlagBit
     ret
 
 Jump_004_636D::
     ld hl, $59C8
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 19 of the `rst $00` table in Func_004_612B
@@ -5441,12 +5457,12 @@ Jump_004_6374:: ; address name
     call TestFlagBit
     jr c, Jump_004_6383
     ld hl, $0140
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6383::
     ld hl, $016A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 20 of the `rst $00` table in Func_004_612B
@@ -5460,17 +5476,17 @@ Jump_004_638A:: ; address name
     call TestFlagBit
     jr c, Jump_004_63A1
     ld hl, $0141
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_63A1::
     ld hl, $016B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_63A8::
     ld hl, $017C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 21 of the `rst $00` table in Func_004_612B
@@ -5481,12 +5497,12 @@ Jump_004_63AF:: ; address name
     call TestFlagBit
     jr c, Jump_004_63BE
     ld hl, $0142
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_63BE::
     ld hl, $017D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 22 of the `rst $00` table in Func_004_612B
@@ -5494,7 +5510,7 @@ Jump_004_63BE::
 Func_004_612B_Case16::
 Jump_004_63C5:: ; address name
     ld hl, $0143
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 23 of the `rst $00` table in Func_004_612B
@@ -5508,14 +5524,14 @@ Jump_004_63CC:: ; address name
     call TestFlagBit
     jr c, Jump_004_63E6
     ld hl, Data_01F_59CF
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0041
     call SetFlagBit
     ret
 
 Jump_004_63E6::
     ld hl, $59D6
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 24 of the `rst $00` table in Func_004_612B
@@ -5534,17 +5550,17 @@ Jump_004_63ED:: ; address name
     or a, a
     jr nz, Jump_004_6416
     ld hl, $59DD
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_640F::
     ld hl, $59F7
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6416::
     ld hl, $5A07
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_641D::
@@ -5556,12 +5572,12 @@ Jump_004_641D::
     or a, a
     jr nz, Jump_004_6437
     ld hl, $5A17
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6437::
     ld hl, $014E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 25 of the `rst $00` table in Func_004_612B
@@ -5569,7 +5585,7 @@ Jump_004_6437::
 Func_004_612B_Case19::
 Jump_004_643E:: ; address name
     ld hl, $014F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 26 of the `rst $00` table in Func_004_612B
@@ -5590,7 +5606,7 @@ Jump_004_6445:: ; address name
 Func_004_612B_Case1B::
 Jump_004_6456:: ; address name
     ld hl, $0137
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 28 of the `rst $00` table in Func_004_612B
@@ -5601,7 +5617,7 @@ Jump_004_645D:: ; address name
     call TestFlagBit
     ret nc
     ld hl, $018F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 29 of the `rst $00` table in Func_004_612B
@@ -5609,7 +5625,7 @@ Jump_004_645D:: ; address name
 Func_004_612B_Case1D::
 Jump_004_646B:: ; address name
     ld hl, $01BE
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 30 of the `rst $00` table in Func_004_612B
@@ -5617,7 +5633,7 @@ Jump_004_646B:: ; address name
 Func_004_612B_Case1E::
 Jump_004_6472:: ; address name
     ld hl, $0037
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 31 of the `rst $00` table in Func_004_612B
@@ -5626,7 +5642,7 @@ Jump_004_6472:: ; address name
 Func_004_612B_Case1F::
 Jump_004_6479:: ; address name
     ld hl, $5A25
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
@@ -5639,12 +5655,12 @@ Jump_004_6485:: ; address name
     call TestFlagBit
     jr c, Jump_004_6494
     ld hl, $0150
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6494::
     ld hl, $01A8
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 33 of the `rst $00` table in Func_004_612B
@@ -5655,12 +5671,12 @@ Jump_004_649B:: ; address name
     call TestFlagBit
     jr c, Jump_004_64AA
     ld hl, $0154
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_64AA::
     ld hl, $01A9
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 34 of the `rst $00` table in Func_004_612B
@@ -5671,12 +5687,12 @@ Jump_004_64B1:: ; address name
     call TestFlagBit
     jr c, Jump_004_64C0
     ld hl, $0155
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_64C0::
     ld hl, $01AA
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 35 of the `rst $00` table in Func_004_612B
@@ -5687,12 +5703,12 @@ Jump_004_64C7:: ; address name
     call TestFlagBit
     jr c, Jump_004_64D6
     ld hl, $0156
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_64D6::
     ld hl, $01AB
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 36 of the `rst $00` table in Func_004_612B
@@ -5700,7 +5716,7 @@ Jump_004_64D6::
 Func_004_612B_Case24::
 Jump_004_64DD:: ; address name
     ld hl, $0157
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 37 of the `rst $00` table in Func_004_612B
@@ -5714,17 +5730,17 @@ Jump_004_64E4:: ; address name
     call TestFlagBit
     jr c, Jump_004_64FB
     ld hl, $0158
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_64FB::
     ld hl, $0192
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6502::
     ld hl, $01AC
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 38 of the `rst $00` table in Func_004_612B
@@ -5741,22 +5757,22 @@ Jump_004_6509:: ; address name
     call TestFlagBit
     jr c, Jump_004_6528
     ld hl, $0159
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6528::
     ld hl, $017E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_652F::
     ld hl, $0191
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6536::
     ld hl, $01AD
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 39 of the `rst $00` table in Func_004_612B
@@ -5770,17 +5786,17 @@ Jump_004_653D:: ; address name
     call TestFlagBit
     jr c, Jump_004_6554
     ld hl, $5B57
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6554::
     ld hl, $017F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_655B::
     ld hl, $01AE
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 40 of the `rst $00` table in Func_004_612B
@@ -5794,17 +5810,17 @@ Jump_004_6562:: ; address name
     call TestFlagBit
     jr c, Jump_004_6579
     ld hl, $015A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6579::
     ld hl, $0170
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6580::
     ld hl, $0180
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 41 of the `rst $00` table in Func_004_612B
@@ -5816,7 +5832,7 @@ Jump_004_6587:: ; address name
     bit 3, a
     ret nz
     ld hl, $5B71
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 42 of the `rst $00` table in Func_004_612B
@@ -5824,7 +5840,7 @@ Jump_004_6587:: ; address name
 Func_004_612B_Case2A::
 Jump_004_6594:: ; address name
     ld hl, $015F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 43 of the `rst $00` table in Func_004_612B
@@ -5853,42 +5869,42 @@ Jump_004_659B:: ; address name
     call TestFlagBit
     jr c, Jump_004_65DA
     ld hl, $5A2C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_65DA::
     ld hl, $5A4C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_65E1::
     ld hl, $0164
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_65E8::
     ld hl, $5A5C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_65EF::
     ld hl, $0174
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_65F6::
     ld hl, $5AD6
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_65FD::
     ld hl, $0190
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6604::
     ld hl, $01B0
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 44 of the `rst $00` table in Func_004_612B
@@ -5899,12 +5915,12 @@ Jump_004_660B:: ; address name
     call TestFlagBit
     jr c, Jump_004_661A
     ld hl, $0166
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_661A::
     ld hl, $01B1
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 45 of the `rst $00` table in Func_004_612B
@@ -5915,12 +5931,12 @@ Jump_004_6621:: ; address name
     call TestFlagBit
     jr c, Jump_004_6630
     ld hl, $0167
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6630::
     ld hl, $0193
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 46 of the `rst $00` table in Func_004_612B
@@ -5931,7 +5947,7 @@ Jump_004_6637:: ; address name
     call TestFlagBit
     ret nc
     ld hl, $5A95
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $004A
     call SetFlagBit
     ret
@@ -6048,12 +6064,12 @@ Jump_004_66D3:: ; address name
     call TestFlagBit
     jr c, Jump_004_66E2
     ld hl, $5AAB
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_66E2::
     ld hl, $5AD2
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 56 of the `rst $00` table in Func_004_612B
@@ -6093,17 +6109,17 @@ Jump_004_66E9:: ; address name
     bit 7, a
     jr z, Jump_004_673F
     ld hl, $5B0D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_673F::
     ld hl, $5B1D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6746::
     ld hl, $018E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 57 of the `rst $00` table in Func_004_612B
@@ -6116,7 +6132,7 @@ Jump_004_674D:: ; address name
     set 4, a
     ld [wCC38], a
     ld hl, $5B37
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $30
     ldh [hFFC6], a
     farcall FindHFFC6InWC61DList
@@ -6131,12 +6147,12 @@ Jump_004_676C:: ; address name
     call TestFlagBit
     jr c, Jump_004_677B
     ld hl, $0194
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_677B::
     ld hl, $01B2
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 59 of the `rst $00` table in Func_004_612B
@@ -6147,12 +6163,12 @@ Jump_004_6782:: ; address name
     call TestFlagBit
     jr c, Jump_004_6791
     ld hl, $0195
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6791::
     ld hl, $01B4
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 60 of the `rst $00` table in Func_004_612B
@@ -6167,12 +6183,12 @@ Jump_004_6798:: ; address name
     call TestFlagBit
     jr c, Jump_004_67B1
     ld hl, $5B3C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_67B1::
     ld hl, $5B49
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 61 of the `rst $00` table in Func_004_612B
@@ -6180,7 +6196,7 @@ Jump_004_67B1::
 Func_004_612B_Case3D::
 Jump_004_67B8:: ; address name
     ld hl, $01B5
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 62 of the `rst $00` table in Func_004_612B
@@ -6188,7 +6204,7 @@ Jump_004_67B8:: ; address name
 Func_004_612B_Case3E::
 Jump_004_67BF:: ; address name
     ld hl, $01BC
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 63 of the `rst $00` table in Func_004_612B
@@ -6196,7 +6212,7 @@ Jump_004_67BF:: ; address name
 Func_004_612B_Case3F::
 Jump_004_67C6:: ; address name
     ld hl, $01BD
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 64 of the `rst $00` table in Func_004_612B
@@ -6204,7 +6220,7 @@ Jump_004_67C6:: ; address name
 Func_004_612B_Case40::
 Jump_004_67CD:: ; address name
     ld hl, $01C0
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 65 of the `rst $00` table in Func_004_612B
@@ -6212,7 +6228,7 @@ Jump_004_67CD:: ; address name
 Func_004_612B_Case41::
 Jump_004_67D4:: ; address name
     ld hl, $01BF
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 66 of the `rst $00` table in Func_004_612B
@@ -6236,7 +6252,7 @@ Jump_004_67EC:: ; address name
     call TestFlagBit
     ret nc
     ld hl, $5B53
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 68 of the `rst $00` table in Func_004_612B
@@ -6263,14 +6279,14 @@ Jump_004_6806:: ; address name
     call TestFlagBit
     jr c, Jump_004_6820
     ld hl, Data_01F_5B76
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $005D
     call SetFlagBit
     ret
 
 Jump_004_6820::
     ld hl, $5B7D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; 1 call site from 1 routine (e.g. Func_013_405C_Case06)
@@ -6309,17 +6325,17 @@ Jump_004_682F:: ; address name
     bit 7, a
     jr nz, Jump_004_686E
     ld hl, $61AA
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_686E::
     ld hl, $619D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6875::
     ld hl, $61DC
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 1 of the `rst $00` table in Func_004_6827
@@ -6330,12 +6346,12 @@ Jump_004_687C:: ; address name
     call TestFlagBit
     jr c, Jump_004_688B
     ld hl, $61E9
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_688B::
     ld hl, $61F6
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; 1 call site from 1 routine (e.g. Func_013_405C_Case00)
@@ -6389,7 +6405,7 @@ Func_004_6892::
 Func_004_6892_Case1E::
 Jump_004_68E6:: ; address name
     ld hl, $5173
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 29 of the `rst $00` table in Func_004_6892
@@ -6397,7 +6413,7 @@ Jump_004_68E6:: ; address name
 Func_004_6892_Case1D::
 Jump_004_68ED:: ; address name
     ld hl, $5171
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 28 of the `rst $00` table in Func_004_6892
@@ -6411,7 +6427,7 @@ Jump_004_68F4:: ; address name
 
 Jump_004_68FD::
     ld hl, $516F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 27 of the `rst $00` table in Func_004_6892
@@ -6425,7 +6441,7 @@ Jump_004_6904:: ; address name
 
 Jump_004_690D::
     ld hl, $516D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 26 of the `rst $00` table in Func_004_6892
@@ -6433,7 +6449,7 @@ Jump_004_690D::
 Func_004_6892_Case1A::
 Jump_004_6914:: ; address name
     ld hl, $516B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 25 of the `rst $00` table in Func_004_6892
@@ -6441,7 +6457,7 @@ Jump_004_6914:: ; address name
 Func_004_6892_Case19::
 Jump_004_691B:: ; address name
     ld hl, $5169
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 24 of the `rst $00` table in Func_004_6892
@@ -6449,7 +6465,7 @@ Jump_004_691B:: ; address name
 Func_004_6892_Case18::
 Jump_004_6922:: ; address name
     ld hl, $515F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 31 of the `rst $00` table in Func_004_6892
@@ -6457,7 +6473,7 @@ Jump_004_6922:: ; address name
 Func_004_6892_Case1F::
 Jump_004_6929:: ; address name
     ld hl, $5164
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 21 of the `rst $00` table in Func_004_6892
@@ -6465,7 +6481,7 @@ Jump_004_6929:: ; address name
 Func_004_6892_Case15::
 Jump_004_6930:: ; address name
     ld hl, $5155
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 22 of the `rst $00` table in Func_004_6892
@@ -6473,7 +6489,7 @@ Jump_004_6930:: ; address name
 Func_004_6892_Case16::
 Jump_004_6937:: ; address name
     ld hl, $5157
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 23 of the `rst $00` table in Func_004_6892
@@ -6481,7 +6497,7 @@ Jump_004_6937:: ; address name
 Func_004_6892_Case17::
 Jump_004_693E:: ; address name
     ld hl, $5159
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 32 of the `rst $00` table in Func_004_6892
@@ -6489,7 +6505,7 @@ Jump_004_693E:: ; address name
 Func_004_6892_Case20::
 Jump_004_6945:: ; address name
     ld hl, $515B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 33 of the `rst $00` table in Func_004_6892
@@ -6497,7 +6513,7 @@ Jump_004_6945:: ; address name
 Func_004_6892_Case21::
 Jump_004_694C:: ; address name
     ld hl, $515D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 34 of the `rst $00` table in Func_004_6892
@@ -6517,7 +6533,7 @@ Jump_004_6953:: ; address name
     xor a, a
     ld [wScriptParam1], a
     ld hl, $57E1
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 35 of the `rst $00` table in Func_004_6892
@@ -6540,7 +6556,7 @@ Jump_004_696C:: ; address name
     ld a, $01
     ld [wScriptParam1], a
     ld hl, $57E1
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 36 of the `rst $00` table in Func_004_6892
@@ -6565,7 +6581,7 @@ Jump_004_698B:: ; address name
     ld a, $02
     ld [wScriptParam1], a
     ld hl, $57E1
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 37 of the `rst $00` table in Func_004_6892
@@ -6577,7 +6593,7 @@ Jump_004_69AC:: ; address name
     or a, a
     ret nz
     ld hl, $57DC
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 38 of the `rst $00` table in Func_004_6892
@@ -6594,7 +6610,7 @@ Jump_004_69B8:: ; address name
 Func_004_6892_Case10::
 Jump_004_69BD:: ; address name
     ld hl, $514B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 17 of the `rst $00` table in Func_004_6892
@@ -6602,7 +6618,7 @@ Jump_004_69BD:: ; address name
 Func_004_6892_Case11::
 Jump_004_69C4:: ; address name
     ld hl, $514D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 18 of the `rst $00` table in Func_004_6892
@@ -6610,7 +6626,7 @@ Jump_004_69C4:: ; address name
 Func_004_6892_Case12::
 Jump_004_69CB:: ; address name
     ld hl, $514F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 19 of the `rst $00` table in Func_004_6892
@@ -6618,7 +6634,7 @@ Jump_004_69CB:: ; address name
 Func_004_6892_Case13::
 Jump_004_69D2:: ; address name
     ld hl, $5151
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 20 of the `rst $00` table in Func_004_6892
@@ -6626,7 +6642,7 @@ Jump_004_69D2:: ; address name
 Func_004_6892_Case14::
 Jump_004_69D9:: ; address name
     ld hl, $5153
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 0 of the `rst $00` table in Func_004_6892
@@ -6640,7 +6656,7 @@ Jump_004_69E0:: ; address name
 Func_004_6892_Case01::
 Jump_004_69E1:: ; address name
     ld hl, $512F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 2 of the `rst $00` table in Func_004_6892
@@ -6648,7 +6664,7 @@ Jump_004_69E1:: ; address name
 Func_004_6892_Case02::
 Jump_004_69E8:: ; address name
     ld hl, $5131
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 4 of the `rst $00` table in Func_004_6892
@@ -6656,7 +6672,7 @@ Jump_004_69E8:: ; address name
 Func_004_6892_Case04::
 Jump_004_69EF:: ; address name
     ld hl, $5137
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 5 of the `rst $00` table in Func_004_6892
@@ -6664,7 +6680,7 @@ Jump_004_69EF:: ; address name
 Func_004_6892_Case05::
 Jump_004_69F6:: ; address name
     ld hl, $5139
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 6 of the `rst $00` table in Func_004_6892
@@ -6672,7 +6688,7 @@ Jump_004_69F6:: ; address name
 Func_004_6892_Case06::
 Jump_004_69FD:: ; address name
     ld hl, $513B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 7 of the `rst $00` table in Func_004_6892
@@ -6680,7 +6696,7 @@ Jump_004_69FD:: ; address name
 Func_004_6892_Case07::
 Jump_004_6A04:: ; address name
     ld hl, $513D
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 8 of the `rst $00` table in Func_004_6892
@@ -6688,7 +6704,7 @@ Jump_004_6A04:: ; address name
 Func_004_6892_Case08::
 Jump_004_6A0B:: ; address name
     ld hl, $513F
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 9 of the `rst $00` table in Func_004_6892
@@ -6696,7 +6712,7 @@ Jump_004_6A0B:: ; address name
 Func_004_6892_Case09::
 Jump_004_6A12:: ; address name
     ld hl, $5141
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 10 of the `rst $00` table in Func_004_6892
@@ -6704,7 +6720,7 @@ Jump_004_6A12:: ; address name
 Func_004_6892_Case0A::
 Jump_004_6A19:: ; address name
     ld hl, $5143
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 11 of the `rst $00` table in Func_004_6892
@@ -6712,7 +6728,7 @@ Jump_004_6A19:: ; address name
 Func_004_6892_Case0B::
 Jump_004_6A20:: ; address name
     ld hl, $5145
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 14 of the `rst $00` table in Func_004_6892
@@ -6720,7 +6736,7 @@ Jump_004_6A20:: ; address name
 Func_004_6892_Case0E::
 Jump_004_6A27:: ; address name
     ld hl, $5147
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 15 of the `rst $00` table in Func_004_6892
@@ -6728,7 +6744,7 @@ Jump_004_6A27:: ; address name
 Func_004_6892_Case0F::
 Jump_004_6A2E:: ; address name
     ld hl, $5149
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; 1 call site from 1 routine (e.g. Func_013_405C_Case07)
@@ -6779,28 +6795,28 @@ Func_004_6A35::
     dw Func_004_7112
     dw Func_004_7164
     db $A5, $71
-    dw Func_004_71AC
-    dw Func_004_71C2
-    dw Func_004_71E7
-    dw Func_004_71FD
-    dw Func_004_7213
-    dw Func_004_7238
+    dw TalkMsg078F_ThisIsTheTown
+    dw TalkMsg0790_AreYouFriendsWith
+    dw TalkMsg0791_WowYouHaveMonsters
+    dw TalkMsg0792_AreYourMonstersGood
+    dw TalkMsg0793_MonstersCanBeGood
+    dw TalkMsg0794_YouAppearToHave
     dw Func_004_724E
     dw Func_004_72BC
-    dw Func_004_7315
-    dw Func_004_7349
-    dw Func_004_737D
-    dw Func_004_73A2
+    dw TalkMsg0799_MonstersRaidedThisHouse
+    dw TalkMsg079A_TheOldPeopleAcross
+    dw TalkMsg079B_MonstersHaveTakenTo
+    dw TalkMsg079C_GrrrrImSoAngry
     dw Func_004_73C7
     dw Func_004_73D8
-    dw Func_004_73F3
+    dw TalkMsg079F_IfYouTravelWest
     dw Func_004_7418
     db $97, $74
-    dw Func_004_749E
+    dw TalkMsg07AA_ThatDealerHowExpensive
     dw Func_004_74D2
-    dw Func_004_7506
+    dw TalkMsg07AE_ThatDealersWaresCould
     dw Func_004_753A
-    dw Func_004_760E
+    dw TalkMsg07B8_WhoAreYouYou
     dw Func_004_7624
     dw Func_004_763A
     dw Func_004_7657
@@ -6808,7 +6824,7 @@ Func_004_6A35::
     dw Msg01C9_ThisIsAGreat
     db $8F, $76, $96, $76, $9D, $76, $A4, $76, $B5, $76
     dw Msg01CB_ThisIsAGreat
-    dw Func_004_76CD
+    dw TalkMsg0CFE
     dw Msg01CC_ThisIsAGreat
     dw Msg01CD_ThisIsAGreat
     dw Msg01CE_ThisIsAGreat
@@ -6880,7 +6896,7 @@ Jump_004_6BB9:: ; address name
     call TestFlagBit
     jr c, Jump_004_6BC8
     ld hl, $6200
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6BC8::
@@ -6891,7 +6907,7 @@ Jump_004_6BC8::
     call TestFlagBit
     ret nc
     ld hl, $624B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 1 of the `rst $00` table in Func_004_6A35
@@ -6917,7 +6933,7 @@ Jump_004_6BDD:: ; address name
     call TestFlagBit
     jr c, Jump_004_6C1A
     ld hl, $0701
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0141
     call SetFlagBit
     ret
@@ -6927,39 +6943,39 @@ Jump_004_6C1A::
     call TestFlagBit
     jr c, Jump_004_6C29
     ld hl, $0702
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6C29::
     ld hl, $620C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6C30::
     ld hl, $0706
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0145
     call SetFlagBit
     ret
 
 Jump_004_6C3D::
     ld hl, $0715
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6C44::
     ld hl, $62AD
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6C4B::
     ld hl, $0738
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6C52::
     ld hl, $0746
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 2 of the `rst $00` table in Func_004_6A35
@@ -6979,31 +6995,31 @@ Jump_004_6C59:: ; address name
     call TestFlagBit
     jr c, Jump_004_6C80
     ld hl, $6382
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6C80::
     ld hl, $0707
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0145
     call SetFlagBit
     ret
 
 Jump_004_6C8D::
     ld hl, $6240
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6C94::
     ld hl, $0747
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0152
     call SetFlagBit
     ret
 
 Jump_004_6CA1::
     ld hl, $0748
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 3 of the `rst $00` table in Func_004_6A35
@@ -7020,22 +7036,22 @@ Jump_004_6CA8:: ; address name
     call TestFlagBit
     jr c, Jump_004_6CC7
     ld hl, $0708
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6CC7::
     ld hl, $0717
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6CCE::
     ld hl, $0755
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6CD5::
     ld hl, $0749
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 4 of the `rst $00` table in Func_004_6A35
@@ -7049,17 +7065,17 @@ Jump_004_6CDC:: ; address name
     call TestFlagBit
     jr c, Jump_004_6CF3
     ld hl, $0709
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6CF3::
     ld hl, $0718
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6CFA::
     ld hl, $074A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 5 of the `rst $00` table in Func_004_6A35
@@ -7070,12 +7086,12 @@ Jump_004_6D01:: ; address name
     call TestFlagBit
     jr c, Jump_004_6D10
     ld hl, $070A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D10::
     ld hl, $074B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 6 of the `rst $00` table in Func_004_6A35
@@ -7092,22 +7108,22 @@ Jump_004_6D17:: ; address name
     call TestFlagBit
     jr c, Jump_004_6D36
     ld hl, $070B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D36::
     ld hl, $071A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D3D::
     ld hl, $072C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D44::
     ld hl, $074C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 7 of the `rst $00` table in Func_004_6A35
@@ -7118,12 +7134,12 @@ Jump_004_6D4B:: ; address name
     call TestFlagBit
     jr c, Jump_004_6D5A
     ld hl, $070C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D5A::
     ld hl, $074D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 8 of the `rst $00` table in Func_004_6A35
@@ -7140,22 +7156,22 @@ Jump_004_6D61:: ; address name
     call TestFlagBit
     jr c, Jump_004_6D80
     ld hl, $070D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D80::
     ld hl, $071B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D87::
     ld hl, $072D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6D8E::
     ld hl, $074E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 9 of the `rst $00` table in Func_004_6A35
@@ -7172,22 +7188,22 @@ Jump_004_6D95:: ; address name
     call TestFlagBit
     jr c, Jump_004_6DB4
     ld hl, $0752
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6DB4::
     ld hl, $071C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6DBB::
     ld hl, $072E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6DC2::
     ld hl, $074F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 10 of the `rst $00` table in Func_004_6A35
@@ -7200,7 +7216,7 @@ Jump_004_6DC9:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_637B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 11 of the `rst $00` table in Func_004_6A35
@@ -7226,14 +7242,14 @@ Jump_004_6DDA:: ; address name
     call TestFlagBit
     jr c, Jump_004_6E17
     ld hl, $070F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0144
     call SetFlagBit
     ret
 
 Jump_004_6E17::
     ld hl, $6218
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6E1E::
@@ -7241,34 +7257,34 @@ Jump_004_6E1E::
     call TestFlagBit
     jr c, Jump_004_6E2D
     ld hl, $0753
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6E2D::
     ld hl, $622C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6E34::
     ld hl, $0714
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6E3B::
     ld hl, $072A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $014D
     call SetFlagBit
     ret
 
 Jump_004_6E48::
     ld hl, $072B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6E4F::
     ld hl, $0744
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 12 of the `rst $00` table in Func_004_6A35
@@ -7279,7 +7295,7 @@ Jump_004_6E56:: ; address name
     call TestFlagBit
     ret nc
     ld hl, $626A
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 13 of the `rst $00` table in Func_004_6A35
@@ -7290,12 +7306,12 @@ Jump_004_6E64:: ; address name
     call TestFlagBit
     jr c, Jump_004_6E73
     ld hl, $0723
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6E73::
     ld hl, $0726
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 14 of the `rst $00` table in Func_004_6A35
@@ -7306,12 +7322,12 @@ Jump_004_6E7A:: ; address name
     call TestFlagBit
     jr c, Jump_004_6E89
     ld hl, $6290
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6E89::
     ld hl, $62A0
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 15 of the `rst $00` table in Func_004_6A35
@@ -7328,24 +7344,24 @@ Jump_004_6E90:: ; address name
     call TestFlagBit
     jr c, Jump_004_6EAF
     ld hl, $072F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6EAF::
     ld hl, $0731
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $014E
     call SetFlagBit
     ret
 
 Jump_004_6EBC::
     ld hl, $0732
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6EC3::
     ld hl, $0750
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 16 of the `rst $00` table in Func_004_6A35
@@ -7359,17 +7375,17 @@ Jump_004_6ECA:: ; address name
     call TestFlagBit
     jr c, Jump_004_6EE1
     ld hl, $0730
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6EE1::
     ld hl, $0733
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6EE8::
     ld hl, $0751
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 17 of the `rst $00` table in Func_004_6A35
@@ -7380,14 +7396,14 @@ Jump_004_6EEF:: ; address name
     call TestFlagBit
     jr c, Jump_004_6F04
     ld hl, $62BD
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0150
     call SetFlagBit
     ret
 
 Jump_004_6F04::
     ld hl, $6313
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 18 of the `rst $00` table in Func_004_6A35
@@ -7398,7 +7414,7 @@ Jump_004_6F0B:: ; address name
     call TestFlagBit
     ret nc
     ld hl, $6369
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld de, $0149
     call SetFlagBit
     ret
@@ -7447,7 +7463,7 @@ Jump_004_6F41:: ; address name
 Func_004_6A35_Case16::
 Jump_004_6F52:: ; address name
     ld hl, $0756
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 23 of the `rst $00` table in Func_004_6A35
@@ -7455,7 +7471,7 @@ Jump_004_6F52:: ; address name
 Func_004_6A35_Case17::
 Jump_004_6F59:: ; address name
     ld hl, $0758
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 24 of the `rst $00` table in Func_004_6A35
@@ -7502,7 +7518,7 @@ Jump_004_6F82:: ; address name
 Func_004_6A35_Case1B::
 Jump_004_6F93:: ; address name
     ld hl, $0757
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7531,27 +7547,27 @@ Func_004_6F9A:: ; heuristic: follows a terminator; C0
     call TestFlagBit
     jr c, Jump_004_6FDB
     ld hl, $6398
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6FDB::
     ld hl, $63BC
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6FE2::
     ld hl, $075F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6FE9::
     ld hl, $6409
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_6FF0::
     ld hl, $0778
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_6FF7::
@@ -7568,7 +7584,7 @@ Jump_004_6FF7::
     set 6, a
     ld [wC836], a
     ld hl, $641B
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $08
     ldh [hFFC6], a
     farcall Func_05F_6DAC
@@ -7576,7 +7592,7 @@ Jump_004_6FF7::
 
 Jump_004_702B::
     ld hl, $077D
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7032::
@@ -7584,14 +7600,14 @@ Jump_004_7032::
     call TestFlagBit
     jr c, Jump_004_7047
     ld hl, $0786
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0166
     call SetFlagBit
     ret
 
 Jump_004_7047::
     ld hl, $0787
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_704E::
@@ -7599,14 +7615,14 @@ Jump_004_704E::
     call TestFlagBit
     jr c, Jump_004_7063
     ld hl, $0789
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0168
     call SetFlagBit
     ret
 
 Jump_004_7063::
     ld hl, $078A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7621,17 +7637,17 @@ Func_004_706A:: ; heuristic: follows a terminator; C0
     xor a, a
     ld [wCB96], a
     ld hl, $075A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7085::
     ld hl, $0788
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_708C::
     ld hl, $078B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Data_004_7093:: ; heuristic: target of a monotone pointer table; C0
@@ -7669,12 +7685,12 @@ Func_004_70E6:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_70F5
     ld hl, $63DB
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_70F5::
     ld hl, $0768
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7683,12 +7699,12 @@ Func_004_70FC:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_710B
     ld hl, $63E4
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_710B::
     ld hl, $0768
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7709,32 +7725,32 @@ Func_004_7112:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7141
     ld hl, $63ED
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7141::
     ld hl, $63F4
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7148::
     ld hl, $63FB
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_714F::
     ld hl, $6402
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7156::
     ld hl, $078E
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_715D::
     ld hl, $078C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7748,14 +7764,14 @@ Func_004_7164:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_717B
     ld hl, $6416
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_717B::
     call Func_004_7C37
     jr c, Jump_004_7187
     ld hl, $077B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7187::
@@ -7764,33 +7780,37 @@ Jump_004_7187::
     set 6, a
     ld [wC836], a
     ld hl, $077A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $0164
     call SetFlagBit
     ret
 
 Jump_004_719E::
     ld hl, $077C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
     db $21, $B7, $07, $CD, $BB, $55, $C9
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_71BB); when none of them branches, starts message $078F through StartMessageCommand09HL_B04 (script command $09); that string begins 'This is the town of Miagen.' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_71AC:: ; heuristic: target of a pointer table; C0
+TalkMsg078F_ThisIsTheTown:: ; heuristic: target of a pointer table; C0
+Func_004_71AC:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_71BB
     ld hl, $078F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_71BB::
     ld hl, $0CE2
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_71E0; flag $01BC set: jr to Jump_004_71D9); when none of them branches, starts message $0790 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Are you friends with monsters? You're' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_71C2:: ; heuristic: target of a pointer table; C0
+TalkMsg0790_AreYouFriendsWith:: ; heuristic: target of a pointer table; C0
+Func_004_71C2:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_71E0
@@ -7798,49 +7818,55 @@ Func_004_71C2:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_71D9
     ld hl, $0790
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_71D9::
     ld hl, $07C6
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_71E0::
     ld hl, $0CE3
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_71F6); when none of them branches, starts message $0791 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Wow! You have monsters! Neat! Are' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_71E7:: ; heuristic: target of a pointer table; C0
+TalkMsg0791_WowYouHaveMonsters:: ; heuristic: target of a pointer table; C0
+Func_004_71E7:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_71F6
     ld hl, $0791
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_71F6::
     ld hl, $0CE4
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_720C); when none of them branches, starts message $0792 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Are your monsters good? I don't' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_71FD:: ; heuristic: target of a pointer table; C0
+TalkMsg0792_AreYourMonstersGood:: ; heuristic: target of a pointer table; C0
+Func_004_71FD:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_720C
     ld hl, $0792
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_720C::
     ld hl, $0CE5
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_7231; flag $01BC set: jr to Jump_004_722A); when none of them branches, starts message $0793 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Monsters can be good or bad.' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7213:: ; heuristic: target of a pointer table; C0
+TalkMsg0793_MonstersCanBeGood:: ; heuristic: target of a pointer table; C0
+Func_004_7213:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_7231
@@ -7848,31 +7874,33 @@ Func_004_7213:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_722A
     ld hl, $0793
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_722A::
     ld hl, $07C7
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7231::
     ld hl, $0CE6
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_7247); when none of them branches, starts message $0794 through StartMessageCommand09HL_B04 (script command $09); that string begins 'You appear to have the power' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7238:: ; heuristic: target of a pointer table; C0
+TalkMsg0794_YouAppearToHave:: ; heuristic: target of a pointer table; C0
+Func_004_7238:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_7247
     ld hl, $0794
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7247::
     ld hl, $0CE7
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7892,7 +7920,7 @@ Func_004_724E:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7275
     ld hl, $6430
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7275::
@@ -7900,14 +7928,14 @@ Jump_004_7275::
     call TestFlagBit
     jr c, Jump_004_728A
     ld hl, $07A4
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $01B2
     call SetFlagBit
     ret
 
 Jump_004_728A::
     ld hl, $07A5
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7291::
@@ -7919,17 +7947,17 @@ Jump_004_7291::
     jr nz, Jump_004_728A
     farcall Func_012_7DF1
     ld hl, $64CA
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_72AE::
     ld hl, $07CE
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_72B5::
     ld hl, $0CE8
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -7949,19 +7977,19 @@ Func_004_72BC:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_72E3
     ld hl, $6437
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_72E3::
     ld hl, $07A6
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_72EA::
     call Func_004_7C37
     jr c, Jump_004_72F6
     ld hl, $64DC
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_72F6::
@@ -7970,21 +7998,23 @@ Jump_004_72F6::
     set 6, a
     ld [wC836], a
     ld hl, $64E3
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7307::
     ld hl, $07D3
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_730E::
     ld hl, $0CE9
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_7342; flag $01BE set: jr to Jump_004_733B; flag $01B1 set: jr to Jump_004_7334); when none of them branches, starts message $0799 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Monsters raided this house within the' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7315:: ; heuristic: target of a pointer table; C0
+TalkMsg0799_MonstersRaidedThisHouse:: ; heuristic: target of a pointer table; C0
+Func_004_7315:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_7342
@@ -7995,26 +8025,28 @@ Func_004_7315:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7334
     ld hl, $0799
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7334::
     ld hl, $07A7
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_733B::
     ld hl, $07D4
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7342::
     ld hl, $0CEA
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_7376; flag $01BE set: jr to Jump_004_736F; flag $01B1 set: jr to Jump_004_7368); when none of them branches, starts message $079A through StartMessageCommand09HL_B04 (script command $09); that string begins 'The old people across the way' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7349:: ; heuristic: target of a pointer table; C0
+TalkMsg079A_TheOldPeopleAcross:: ; heuristic: target of a pointer table; C0
+Func_004_7349:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_7376
@@ -8025,26 +8057,28 @@ Func_004_7349:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7368
     ld hl, $079A
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7368::
     ld hl, $07A8
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_736F::
     ld hl, $07D5
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7376::
     ld hl, $0CEB
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_739B; flag $01BC set: jr to Jump_004_7394); when none of them branches, starts message $079B through StartMessageCommand09HL_B04 (script command $09); that string begins 'Monsters have taken to attacking the' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_737D:: ; heuristic: target of a pointer table; C0
+TalkMsg079B_MonstersHaveTakenTo:: ; heuristic: target of a pointer table; C0
+Func_004_737D:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_739B
@@ -8052,21 +8086,23 @@ Func_004_737D:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7394
     ld hl, $079B
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7394::
     ld hl, $07C8
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_739B::
     ld hl, $0CEC
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_73C0; flag $01BC set: jr to Jump_004_73B9); when none of them branches, starts message $079C through StartMessageCommand09HL_B04 (script command $09); that string begins 'Grrrr! I'm so angry! Monsters stole' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_73A2:: ; heuristic: target of a pointer table; C0
+TalkMsg079C_GrrrrImSoAngry:: ; heuristic: target of a pointer table; C0
+Func_004_73A2:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_73C0
@@ -8074,17 +8110,17 @@ Func_004_73A2:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_73B9
     ld hl, $079C
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_73B9::
     ld hl, $07C9
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_73C0::
     ld hl, $0CED
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8095,7 +8131,7 @@ Func_004_73C7:: ; heuristic: target of a pointer table; C0
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_643E
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8112,13 +8148,15 @@ Func_004_73D8:: ; heuristic: target of a pointer table; C0
 
 Jump_004_73E7::
     ld hl, $6445
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_7411; flag $01BE set: jr to Jump_004_740A); when none of them branches, starts message $079F through StartMessageCommand09HL_B04 (script command $09); that string begins 'If you travel west along the' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_73F3:: ; heuristic: target of a pointer table; C0
+TalkMsg079F_IfYouTravelWest:: ; heuristic: target of a pointer table; C0
+Func_004_73F3:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_7411
@@ -8126,17 +8164,17 @@ Func_004_73F3:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_740A
     ld hl, $079F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_740A::
     ld hl, $07D6
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7411::
     ld hl, $0CEE
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8163,37 +8201,37 @@ Func_004_7418:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7457
     ld hl, $644C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7457::
     ld hl, $6469
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_745E::
     ld hl, $07D7
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7465::
     ld hl, $6501
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_746C::
     ld hl, $07DD
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7473::
     ld hl, $654C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_747A::
     ld hl, $0CF1
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7481::
@@ -8201,17 +8239,19 @@ Jump_004_7481::
     call TestFlagBit
     jr c, Jump_004_7490
     ld hl, $6558
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7490::
     ld hl, $6578
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
     db $21, $A9, $07, $CD, $BB, $55, $C9
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_74CB; flag $01BE set: jr to Jump_004_74C4; flag $01BB set: jr to Jump_004_74BD); when none of them branches, starts message $07AA through StartMessageCommand09HL_B04 (script command $09); that string begins 'That dealer, how expensive! Nobody can' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_749E:: ; heuristic: target of a pointer table; C0
+TalkMsg07AA_ThatDealerHowExpensive:: ; heuristic: target of a pointer table; C0
+Func_004_749E:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_74CB
@@ -8222,22 +8262,22 @@ Func_004_749E:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_74BD
     ld hl, $07AA
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_74BD::
     ld hl, $07C0
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_74C4::
     ld hl, $07D8
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_74CB::
     ld hl, $0CF2
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8252,26 +8292,28 @@ Func_004_74D2:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_74F1
     ld hl, $6481
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_74F1::
     ld hl, $07C1
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_74F8::
     ld hl, $07D9
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_74FF::
     ld hl, $0CF3
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_7533; flag $01C0 set: jr to Jump_004_752C; flag $01BB set: jr to Jump_004_7525); when none of them branches, starts message $07AE through StartMessageCommand09HL_B04 (script command $09); that string begins 'That dealer's wares Could he sell' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7506:: ; heuristic: target of a pointer table; C0
+TalkMsg07AE_ThatDealersWaresCould:: ; heuristic: target of a pointer table; C0
+Func_004_7506:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_7533
@@ -8282,22 +8324,22 @@ Func_004_7506:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7525
     ld hl, $07AE
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7525::
     ld hl, $07C2
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_752C::
     ld hl, $07DB
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7533::
     ld hl, $0CF4
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8320,7 +8362,7 @@ Func_004_753A:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7572
     ld hl, $07AF
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $01B3
     call SetFlagBit
     ret
@@ -8330,7 +8372,7 @@ Jump_004_7572::
     call TestFlagBit
     jr c, Jump_004_7587
     ld hl, $07B0
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $01B4
     call SetFlagBit
     ret
@@ -8340,14 +8382,14 @@ Jump_004_7587::
     call TestFlagBit
     jr c, Jump_004_759C
     ld hl, $07B1
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $01B5
     call SetFlagBit
     ret
 
 Jump_004_759C::
     ld hl, $07B2
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_75A3::
@@ -8355,7 +8397,7 @@ Jump_004_75A3::
     call TestFlagBit
     jr c, Jump_004_75B8
     ld hl, $07B3
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $01B6
     call SetFlagBit
     ret
@@ -8365,7 +8407,7 @@ Jump_004_75B8::
     call TestFlagBit
     jr c, Jump_004_75CD
     ld hl, $07B4
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $01B7
     call SetFlagBit
     ret
@@ -8375,7 +8417,7 @@ Jump_004_75CD::
     call TestFlagBit
     jr c, Jump_004_75E2
     ld hl, $07B5
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ld de, $01B8
     call SetFlagBit
     ret
@@ -8385,39 +8427,41 @@ Jump_004_75E2::
     call TestFlagBit
     jr c, Jump_004_759C
     ld hl, $648E
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_75F1::
     ld hl, $64BE
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_75F8::
     ld hl, $07C5
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_75FF::
     ld hl, $64ED
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ld a, [wCC3F]
     set 0, a
     ld [wCC3F], a
     ret
 
+; tests story flags in turn (flag $01BA set: jr to Jump_004_761D); when none of them branches, starts message $07B8 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Who are you? You shouldn't be' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_760E:: ; heuristic: target of a pointer table; C0
+TalkMsg07B8_WhoAreYouYou:: ; heuristic: target of a pointer table; C0
+Func_004_760E:: ; address name
     ld de, $01BA
     call TestFlagBit
     jr c, Jump_004_761D
     ld hl, $07B8
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_761D::
     ld hl, $07BA
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8426,12 +8470,12 @@ Func_004_7624:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7633
     ld hl, $6496
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7633::
     ld hl, $64A6
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8441,7 +8485,7 @@ Func_004_763A:: ; heuristic: target of a pointer table; C0
     call Func_004_7C37
     jr c, Jump_004_7646
     ld hl, $07BF
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_7646::
@@ -8450,7 +8494,7 @@ Jump_004_7646::
     set 6, a
     ld [wC836], a
     ld hl, $64B3
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8459,12 +8503,12 @@ Func_004_7657:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7666
     ld hl, $6509
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7666::
     ld hl, $652C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; wScriptParam0 = 01, wScriptParam1 = 0E, then StartMessageScriptDE_B04 with DE = $01C8: starts message group 1, string $C8; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
@@ -8509,18 +8553,20 @@ Func_004_76BC:: ; address name
     call StartMessageScriptDE_B04
     ret
 
+; tests story flags in turn (flag $01C3 set: jr to Jump_004_76DC); when none of them branches, starts message $0CFE through StartMessageCommand09HL_B04 (script command $09); that string is empty (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_76CD:: ; heuristic: target of a pointer table; C0
+TalkMsg0CFE:: ; heuristic: target of a pointer table; C0
+Func_004_76CD:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_76DC
     ld hl, $0CFE
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 Jump_004_76DC::
     ld hl, $00A1
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $01CC: starts message group 1, string $CC; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
@@ -8572,12 +8618,12 @@ Func_004_774E:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_775D
     ld hl, $659C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_775D::
     ld hl, $0C17
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $01D5: starts message group 1, string $D5; on the normal ShowMessageHL path the string is empty (E-0081)
@@ -8798,12 +8844,12 @@ Func_004_78AC:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_78BB
     ld hl, $659C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_78BB::
     ld hl, $0C2F
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; wScriptParam0 = 00, wScriptParam1 = 0A, then StartMessageScriptDE_B04 with DE = $0175: starts message group 1, string $75; on the normal ShowMessageHL path the string begins 'I'm making a new home for' (E-0081)
@@ -9024,12 +9070,12 @@ Func_004_7A03:: ; heuristic: target of a pointer table; C0
     call TestFlagBit
     jr c, Jump_004_7A12
     ld hl, $659C
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7A12::
     ld hl, $0C47
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $00F5: starts message group 0, string $F5; on the normal ShowMessageHL path the string begins 'It is an item with a' (E-0081)
@@ -9260,7 +9306,7 @@ Func_004_7B29::
 Func_004_7B29_Case00::
 Jump_004_7B3F:: ; address name
     ld hl, $5133
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 1 of the `rst $00` table in Func_004_7B29
@@ -9285,7 +9331,7 @@ Jump_004_7B46:: ; address name
     ld a, $0F
     ld [wD7FB], a
     ld hl, $65A3
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 Jump_004_7B6B::
@@ -9300,7 +9346,7 @@ Jump_004_7B6B::
 Jump_004_7B78::
     ld [wD7FB], a
     ld hl, $65A3
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 2 of the `rst $00` table in Func_004_7B29
@@ -9313,7 +9359,7 @@ Jump_004_7B82:: ; address name
     cp a, $84
     jr nz, Jump_004_7B91
     ld hl, $65AA
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     jr Jump_004_7B9C
 
 Jump_004_7B91::
@@ -9321,7 +9367,7 @@ Jump_004_7B91::
     or a, a
     ret z
     ld hl, $65B1
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
 
 Jump_004_7B9C::
     ldh a, [hPlayerFacing]
@@ -9393,7 +9439,7 @@ Jump_004_7BF5::
 Func_004_7B29_Case03::
 Jump_004_7BF7:: ; address name
     ld hl, $5135
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 4 of the `rst $00` table in Func_004_7B29
@@ -9401,7 +9447,7 @@ Jump_004_7BF7:: ; address name
 Func_004_7B29_Case04::
 Jump_004_7BFE:: ; address name
     ld hl, $0120
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 5 of the `rst $00` table in Func_004_7B29
@@ -9409,7 +9455,7 @@ Jump_004_7BFE:: ; address name
 Func_004_7B29_Case05::
 Jump_004_7C05:: ; address name
     ld hl, $0122
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 6 of the `rst $00` table in Func_004_7B29
@@ -9425,7 +9471,7 @@ Jump_004_7C0C:: ; address name
     cp a, $08
     ret z
     ld hl, $0121
-    call SetRequestPtrC921_B04
+    call StartMessageCommand09HL_B04
     ret
 
 ; entry 7 of the `rst $00` table in Func_004_7B29
@@ -9436,7 +9482,7 @@ Jump_004_7C1F:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_65AA
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; entry 8 of the `rst $00` table in Func_004_7B29
@@ -9447,7 +9493,7 @@ Jump_004_7C2B:: ; address name
     ld a, $1F
     ld [wDataBank], a
     ld hl, Data_01F_65B8
-    call SetRequestPtrC91A_B04
+    call StartScriptAtHL_B04
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_004_58C2_Case4B, Func_004_58C2_Case45, Func_004_6F9A, Func_004_763A, ...)

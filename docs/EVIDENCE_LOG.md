@@ -854,6 +854,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - wScriptParam0/1 are not interpreted.
 - Binary verification: pending; see the commit.
 
+### E-0082 — Flag-gated talk routines named from their text
+
+- Kind: OBSERVATION (pattern match plus ROM text decoding; C1).
+- **Script command $09.** It is a message runner like RunMessageBox, with the message word in wScriptParam0/1. Its show step (`10:4AD0`) uses the same 14-way group dispatch as ShowMessageHL when wD7F0 = 0. A non-zero wD7F0 selects an override table (`Data_010_4AFF`), which is not read.
+- **Helper renames.**
+  - The helper that stores HL in wScriptParam0/1 and starts command $09 is renamed StartMessageCommand09HL_B04/_B13 (was SetRequestPtrC921). Its earlier note named the old addresses wC921/wC922, which are wScriptParam0/1.
+  - The script-pointer helper becomes StartScriptAtHL_B04/_B13 (was SetRequestPtrC91A).
+- **46 routines** have the shape: zero or more `ld de, FLAG / call TestFlagBit / (jr|jp) c or ret nc`, then `ld hl, W / call StartMessageCommand09HL / ret`.
+  - The 8 with a single `ret nc` are named IfFlagFFFFMsgWWWW_Words: they show the message only when the flag is set (TestFlagBit returns carry when the bit is 1).
+  - The others are named TalkMsgWWWW_Words. Their notes list the flag branches; the default message is the one named.
+- **Text.** Decoded as in E-0081. Duplicate message words get the routine address appended.
+- **Unknowns:** the meaning of each story flag, and the wD7F0 override path.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

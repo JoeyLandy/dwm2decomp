@@ -6716,7 +6716,7 @@ Jump_012_6973::
     ret
 
 ; counts the 4-byte entries at wC707 before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
-; 11 call sites from 9 routines (e.g. Func_004_581C, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, Func_013_7598, ...)
+; 11 call sites from 9 routines (e.g. Func_004_581C, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hFFC6
 ; points at: wC707
 CountWC707EntriesOrFull::
@@ -10231,7 +10231,7 @@ Jump_012_7EB7::
     ret
 
 ; adds the word hFFC6/hFFC7 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999) (E-0074)
-; 12 call sites from 5 routines (e.g. ScriptCommand84_Run_Case08, ScriptFetch0E, ScriptCommand80_Run_Case02, Func_013_70D9, ...)
+; 12 call sites from 5 routines (e.g. ScriptCommand84_Run_Case08, ScriptFetch0E, ScriptCommand80_Run_Case02, TalkMsg0A3C_KingIfYouSee, ...)
 ; reads: hFFC6, hFFC7, wGoldLo, wGoldMid, wGoldHi
 ; writes: wGoldLo, wGoldMid, wGoldHi
 AddGoldCapped::
