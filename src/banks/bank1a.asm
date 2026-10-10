@@ -2071,7 +2071,7 @@ Func_01A_7276:: ; address name
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; 3 call sites from 3 routines (e.g. RunBattleSetup_Shared01, Func_0A0_5E07_Table2_Case00, Func_0A0_5E07_Table2_Case07)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_Shared01, RunBattleSetup_BankA0_Table2_Case00, RunBattleSetup_BankA0_Table2_Case07)
 Func_01A_727D::
     ld hl, Data_01A_73AD
     call CopyRecordRectToScreenBuffer_Bank1A

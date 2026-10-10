@@ -1161,6 +1161,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - DrawPageOfPagesAtScrollOffset, the scroll-relative form of DrawPageOfPagesAtWD7F1.
 - Binary verification: pending; see the commit.
 
+### E-0107 — Structural twins of named routines
+
+- Kind: OBSERVATION (structural comparison; C1 for the shape, the behaviour follows the twin's own evidence).
+- **Method.** A script (`build/twin_all.py`, not committed) compared every routine body after replacing all label operands with one placeholder.
+  - It found 41 address-only routines whose body matches exactly one named routine elsewhere.
+  - Only matches whose twin carries a hand name are used, because generated `_Sub`/`_Case`/`_Shared` names do not describe behaviour.
+- **Named (nine):** UpdateMenuCursor_BankF1, ShowSelectedItemDescription_BankF1, HPBandOfSlotHFFC6_6312, ScriptCommandEF_Run_Bank1B, DrawPageOfPagesAtScrollOffset_BankF0, RunBattleCommandEntry_BankA1, RunBattleSetup_BankA0, RollChanceByLevel_100_100_75_0_Bank3B and DrawMetaSpriteAt_40CC.
+- **Limits.**
+  - Because labels are erased, the called routines and tables are each bank's own and may differ in content. For the dispatchers (ScriptCommandEF_Run_Bank1B, RunBattleSetup_BankA0, RunBattleCommandEntry_BankA1) the case code is the copy's own.
+  - Banks $31 and $A0 are not copies of each other (30 unique twins).
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

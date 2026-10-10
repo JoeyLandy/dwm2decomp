@@ -3114,7 +3114,7 @@ Jump_0F0_5C57:: ; address name
     ld [wD7F1], a
     ld a, e
     ld [wD7F2], a
-    call Func_0F0_6384
+    call DrawPageOfPagesAtScrollOffset_BankF0
     ld hl, wC413
     ld a, h
     ld [wD7F1], a
@@ -4219,9 +4219,11 @@ Func_0F0_6376:: ; address name
     ld [hl], a
     ret
 
+; the same instruction sequence as DrawPageOfPagesAtScrollOffset (bank $1E) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 1 call site from 1 routine (e.g. Func_0F0_5B50_Case03)
 ; reads: wD7F1, wD7F2, wD7AF, wD7B0
-Func_0F0_6384::
+DrawPageOfPagesAtScrollOffset_BankF0::
+Func_0F0_6384:: ; address name
     ld a, [wD7F1]
     ld d, a
     ld a, [wD7F2]

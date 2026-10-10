@@ -7241,7 +7241,7 @@ Jump_007_7AC2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_007_6C12_Case07::
 Jump_007_7ACD:: ; address name
-    farcall Func_01B_665E
+    farcall ScriptCommandEF_Run_Bank1B
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_007_6DE3_Table2_Case00, Func_007_7807_Case07, Func_007_7C5F_Case00)

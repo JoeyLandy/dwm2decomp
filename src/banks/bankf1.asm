@@ -35,7 +35,7 @@ Jump_0F1_4013:: ; address name
     call SetupInventoryMenuPages_BankF1
     call Func_0F1_41EE
     call SetMenuRowsForPage_BankF1
-    call Func_0F1_42D9
+    call ShowSelectedItemDescription_BankF1
     call CopyTileBufferToBGMap_BankF1
     ld hl, vTiles1 + $720
     ld a, l
@@ -74,14 +74,14 @@ Jump_0F1_4057:: ; address name
 Jump_0F1_4062::
     ld de, Data_0F1_4A6A
     ld hl, wC46E
-    call Func_0F1_4870
+    call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_0F1_407C
     ld a, [wMenuRowCount]
     cp a, $01
     ret z
-    call Func_0F1_42D9
+    call ShowSelectedItemDescription_BankF1
     ret
 
 Jump_0F1_407C::
@@ -90,7 +90,7 @@ Jump_0F1_407C::
     jr z, Jump_0F1_4092
     res 7, [hl]
     call SetMenuRowsForPage_BankF1
-    call Func_0F1_42D9
+    call ShowSelectedItemDescription_BankF1
     call Func_0F1_4307
     call DrawMenuPageNumber_BankF1
     ret
@@ -140,7 +140,7 @@ Jump_0F1_40EC::
     bit 2, a
     ret z
     farcall Func_016_590C
-    call Func_0F1_42D9
+    call ShowSelectedItemDescription_BankF1
     call Func_0F1_4307
     ret
 
@@ -179,7 +179,7 @@ Func_0F1_4001_Table3_Case01::
 Jump_0F1_4119:: ; address name
     ld de, Data_0F1_4A72
     ld hl, wC46F
-    call Func_0F1_4870
+    call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_0F1_4142
@@ -438,11 +438,13 @@ Func_0F1_42B6::
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
+; the same instruction sequence as ShowSelectedItemDescription (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 4 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case01, Func_0F1_4001_Table2_Case00)
 ; reads: wMenuPage, wC46E
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
-Func_0F1_42D9::
+ShowSelectedItemDescription_BankF1::
+Func_0F1_42D9:: ; address name
     ld a, [wMenuPage]
     and a, $0F
     add a, a
@@ -1115,10 +1117,12 @@ Func_0F1_4866::
     call LoadRecordListNameTiles
     ret
 
+; the same instruction sequence as UpdateMenuCursor (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case01, Func_0F1_4001_Table3_Case01)
 ; reads: wJoypadPressedRepeat, wMenuRowCount, wMenuPageCount, wMenuPage, wMenuLastPageRows, wFrameCounterLo
 ; writes: wFrameCounterLo, wMenuPage
-Func_0F1_4870::
+UpdateMenuCursor_BankF1::
+Func_0F1_4870:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_0F1_4885
@@ -1182,7 +1186,7 @@ Jump_0F1_48C9::
     cp a, b
     jr z, Jump_0F1_48DC
     push de
-    call Func_0F1_493B
+    call UpdateMenuCursor_BankF1_Sub01
     pop de
     ld a, $69
     call QueueSoundEffect
@@ -1190,7 +1194,7 @@ Jump_0F1_48C9::
 Jump_0F1_48DC::
     ld [hl], b
     ld a, b
-    call Func_0F1_4951
+    call UpdateMenuCursor_BankF1_Sub02
     xor a, a
     ld [wFrameCounterLo], a
     jr Jump_0F1_493A
@@ -1212,11 +1216,11 @@ Jump_0F1_48E7::
     push de
     ld a, [hl]
     and a, $0F
-    call Func_0F1_493B
+    call UpdateMenuCursor_BankF1_Sub01
     pop de
     pop af
     ld [hl], a
-    call Func_0F1_4951
+    call UpdateMenuCursor_BankF1_Sub02
 
 Jump_0F1_4909::
     set 7, [hl]
@@ -1235,13 +1239,13 @@ Jump_0F1_4916::
     jr z, Jump_0F1_492C
     ld a, [hl]
     and a, $0F
-    call Func_0F1_4951
+    call UpdateMenuCursor_BankF1_Sub02
     jr Jump_0F1_493A
 
 Jump_0F1_492C::
     ld a, [hl]
     and a, $0F
-    call Func_0F1_493B
+    call UpdateMenuCursor_BankF1_Sub01
     ld a, [wFrameCounterLo]
     set 3, a
     ld [wFrameCounterLo], a
@@ -1249,8 +1253,10 @@ Jump_0F1_492C::
 Jump_0F1_493A::
     ret
 
-; 3 call sites from 1 routine (e.g. Func_0F1_4870)
-Func_0F1_493B::
+; only called from UpdateMenuCursor_BankF1 (E-0047)
+; 3 call sites from 1 routine (e.g. UpdateMenuCursor_BankF1)
+UpdateMenuCursor_BankF1_Sub01::
+Func_0F1_493B:: ; address name
     add a, a
     add a, e
     ld e, a
@@ -1272,8 +1278,10 @@ Jump_0F1_4941::
     ei
     ret
 
-; 3 call sites from 1 routine (e.g. Func_0F1_4870)
-Func_0F1_4951::
+; only called from UpdateMenuCursor_BankF1 (E-0047)
+; 3 call sites from 1 routine (e.g. UpdateMenuCursor_BankF1)
+UpdateMenuCursor_BankF1_Sub02::
+Func_0F1_4951:: ; address name
     add a, a
     add a, e
     ld e, a
@@ -1389,7 +1397,7 @@ Func_0F1_4A0D:: ; heuristic: follows a terminator; C0
     ld de, $0501
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
-; 3 call sites from 2 routines (e.g. Func_0F1_42D9, Func_0F1_442F)
+; 3 call sites from 2 routines (e.g. ShowSelectedItemDescription_BankF1, Func_0F1_442F)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
 ShowStringBank08AtTilesHL_BankF1::
@@ -1473,7 +1481,7 @@ Jump_0F1_4AC5::
     ldh [rSVBK], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01B_4431_Case01, Func_01B_665E_Case0D, Func_033_5215_Table2_Case0D)
+; 3 call sites from 3 routines (e.g. Func_01B_4431_Case01, ScriptCommandEF_Run_Bank1B_Case0D, Func_033_5215_Table2_Case0D)
 ; reads: wFadeState, wD780
 Func_0F1_4AD0::
     ld a, [wFadeState]

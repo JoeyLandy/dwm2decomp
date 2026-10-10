@@ -118,7 +118,7 @@ Jump_0A3_417D::
 Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $02, $01, $02
 
-; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, Func_0A1_413F_Case06)
+; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, RunBattleCommandEntry_BankA1_Case06)
 ; reads: wC58A
 ; writes: wC953, wC954
 ; points at: wBattleActionChoice, wDA2C, wDA24

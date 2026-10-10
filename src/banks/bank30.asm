@@ -631,7 +631,7 @@ Jump_030_43BF::
     jr nz, Jump_030_43A1
     ret
 
-; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case02, Func_0A1_413F_Case02)
+; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case02, RunBattleCommandEntry_BankA1_Case02)
 ; reads: wBattleResolveStep
 Func_030_43C4::
     ld a, [wBattleResolveStep]

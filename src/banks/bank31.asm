@@ -8660,7 +8660,7 @@ Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7C, $75, $B8, $75, $1E, $76
 
 ; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForWD890Count (E-0071)
-; 16 call sites from 10 routines (e.g. Func_0A0_5E07_Table2_Case00, Func_0A0_5E07_Table2_Case02, Func_0A0_5E07_Table2_Case07, Func_0A0_5F2E_Case02, ...)
+; 16 call sites from 10 routines (e.g. RunBattleSetup_BankA0_Table2_Case00, RunBattleSetup_BankA0_Table2_Case02, RunBattleSetup_BankA0_Table2_Case07, Func_0A0_5F2E_Case02, ...)
 ; reads: wD890
 ; points at: wC285
 ClearAndLayoutTileBlocksForWD890Count::

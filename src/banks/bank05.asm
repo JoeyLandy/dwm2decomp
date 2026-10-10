@@ -6389,9 +6389,11 @@ Jump_005_630F::
     ld c, $FF
     ret
 
+; the same instruction sequence as HPBandOfSlotHFFC6 (bank $05) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6
-Func_005_6312:: ; heuristic: follows a terminator; C0
+HPBandOfSlotHFFC6_6312:: ; heuristic: follows a terminator; C0
+Func_005_6312:: ; address name
     ldh a, [hFFC6]
     call GetBattleMaxMP_Bank05
     add hl, hl

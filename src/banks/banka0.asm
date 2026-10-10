@@ -2074,7 +2074,7 @@ Func_0A0_4C6A::
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM_BankA0, as DrawWC338RowsToBGMapRow13 does in bank $31 (E-0076)
-; 7 call sites from 7 routines (e.g. Func_0A0_5E07_Table2_Case07, Func_0A0_5E07_Table2_Case05, Func_0A0_5F2E_Case16, Func_0A0_5F2E_Case13, ...)
+; 7 call sites from 7 routines (e.g. RunBattleSetup_BankA0_Table2_Case07, RunBattleSetup_BankA0_Table2_Case05, Func_0A0_5F2E_Case16, Func_0A0_5F2E_Case13, ...)
 ; points at: wC338
 DrawWC338RowsToBGMapRow13_BankA0::
 Func_0A0_4C74:: ; address name
@@ -2084,9 +2084,11 @@ Func_0A0_4C74:: ; address name
     call CopyRect32StrideToVRAM_BankA0
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0A0_5E07_Table2_Case03, Func_0A0_5E07_Table2_Case01)
+; only called from routines of RunBattleSetup_BankA0 (E-0098)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_BankA0_Table2_Case03, RunBattleSetup_BankA0_Table2_Case01)
 ; points at: wC338
-Func_0A0_4C81::
+RunBattleSetup_BankA0_Shared01::
+Func_0A0_4C81:: ; address name
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $0E05
@@ -2164,7 +2166,7 @@ Func_0A0_4CED:: ; heuristic: follows a terminator; C0
     ret
 
 ; the same 28 bytes as CopyRect32StrideToVRAM (31:753F)
-; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, Func_0A0_4C81, Func_0A0_4CD4, Func_0A0_4C9B, ...)
+; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, RunBattleSetup_BankA0_Shared01, Func_0A0_4CD4, Func_0A0_4C9B, ...)
 CopyRect32StrideToVRAM_BankA0::
 Func_0A0_4CFA:: ; address name
     push bc
@@ -2903,14 +2905,14 @@ Jump_0A0_529F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A0_5278_Case01::
 Jump_0A0_52A7:: ; address name
-    call Func_0A0_5E07
+    call RunBattleSetup_BankA0
     ret
 
 ; entry 2 of the `rst $00` table in Func_0A0_5278
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A0_5278_Case02::
 Jump_0A0_52AB:: ; address name
-    farcall Func_0A1_413F
+    farcall RunBattleCommandEntry_BankA1
     ret
 
 ; entry 3 of the `rst $00` table in Func_0A0_5278
@@ -4692,46 +4694,48 @@ Jump_0A0_5DF8::
     jr nz, Jump_0A0_5DC9
     ret
 
+; the same instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 1 call site from 1 routine (e.g. Func_0A0_5278_Case01)
 ; reads: wBattleSubPhase
-Func_0A0_5E07::
+RunBattleSetup_BankA0::
+Func_0A0_5E07:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw Func_0A0_5E07_Case00
-    dw Func_0A0_5E07_Case01
-    dw Func_0A0_5E07_Case02
-    dw Func_0A0_5E07_Case03
-    dw Func_0A0_5E07_Case04
-    dw Func_0A0_5E07_Case05
-    dw Func_0A0_5E07_Case06
-    dw Func_0A0_5E07_Case07
-    dw Func_0A0_5E07_Case08
-    dw Func_0A0_5E07_Case09
-    dw Func_0A0_5E07_Case0A
-    dw Func_0A0_5E07_Case0B
-    dw Func_0A0_5E07_Case0C
+    dw RunBattleSetup_BankA0_Case00
+    dw RunBattleSetup_BankA0_Case01
+    dw RunBattleSetup_BankA0_Case02
+    dw RunBattleSetup_BankA0_Case03
+    dw RunBattleSetup_BankA0_Case04
+    dw RunBattleSetup_BankA0_Case05
+    dw RunBattleSetup_BankA0_Case06
+    dw RunBattleSetup_BankA0_Case07
+    dw RunBattleSetup_BankA0_Case08
+    dw RunBattleSetup_BankA0_Case09
+    dw RunBattleSetup_BankA0_Case0A
+    dw RunBattleSetup_BankA0_Case0B
+    dw RunBattleSetup_BankA0_Case0C
 
-; entry 0 of the `rst $00` table in Func_0A0_5E07
+; entry 0 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-Func_0A0_5E07_Case00::
+RunBattleSetup_BankA0_Case00::
 Jump_0A0_5E25:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw Func_0A0_5E07_Table2_Case00
-    dw Func_0A0_5E07_Table2_Case01
-    dw Func_0A0_5E07_Table2_Case02
-    dw Func_0A0_5E07_Table2_Case03
-    dw Func_0A0_5E07_Table2_Case04
-    dw Func_0A0_5E07_Table2_Case05
-    dw Func_0A0_5E07_Table2_Case06
-    dw Func_0A0_5E07_Table2_Case07
+    dw RunBattleSetup_BankA0_Table2_Case00
+    dw RunBattleSetup_BankA0_Table2_Case01
+    dw RunBattleSetup_BankA0_Table2_Case02
+    dw RunBattleSetup_BankA0_Table2_Case03
+    dw RunBattleSetup_BankA0_Table2_Case04
+    dw RunBattleSetup_BankA0_Table2_Case05
+    dw RunBattleSetup_BankA0_Table2_Case06
+    dw RunBattleSetup_BankA0_Table2_Case07
 
-; entry 0 of the `rst $00` table in Func_0A0_5E07
+; entry 0 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wDAD8, wBattleResolveStep
-Func_0A0_5E07_Table2_Case00::
+RunBattleSetup_BankA0_Table2_Case00::
 Jump_0A0_5E39:: ; address name
     ld hl, wDAD8
     set 7, [hl]
@@ -4755,13 +4759,13 @@ Jump_0A0_5E39:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_0A0_5E07
+; entry 1 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC46B
 ; points at: wBattleResolveStep
-Func_0A0_5E07_Table2_Case01::
+RunBattleSetup_BankA0_Table2_Case01::
 Jump_0A0_5E71:: ; address name
-    call Func_0A0_4C81
+    call RunBattleSetup_BankA0_Shared01
     ld hl, Data_0A0_6977
     ld a, [wC46B]
     and a, $03
@@ -4778,15 +4782,15 @@ Jump_0A0_5E71:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_0A0_5E07
+; entry 2 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; points at: wC46B, wC46C, wBattleResolveStep
-Func_0A0_5E07_Table2_Case02::
+RunBattleSetup_BankA0_Table2_Case02::
 Jump_0A0_5E93:: ; address name
     ld de, Data_0A0_6977
     ld hl, wC46B
-    call Func_0A0_65CF
+    call RunBattleSetup_BankA0_Table2_Case02_Sub01
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_0A0_5EBD
@@ -4803,22 +4807,22 @@ Jump_0A0_5E93:: ; address name
 Jump_0A0_5EBD::
     ret
 
-; entry 3 of the `rst $00` table in Func_0A0_5E07
+; entry 3 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-Func_0A0_5E07_Table2_Case03::
+RunBattleSetup_BankA0_Table2_Case03::
 Jump_0A0_5EBE:: ; address name
-    call Func_0A0_4C81
+    call RunBattleSetup_BankA0_Shared01
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_0A0_5E07
+; entry 4 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC46B, wC57F
 ; writes: wCFDB, wStringIndex, wStringCategory, wCFD4, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep, wDA5B
-Func_0A0_5E07_Table2_Case04::
+RunBattleSetup_BankA0_Table2_Case04::
 Jump_0A0_5EC6:: ; address name
     ld a, [wC46B]
     and a, $03
@@ -4832,7 +4836,7 @@ Jump_0A0_5EC6:: ; address name
     jr Jump_0A0_5F20
 
 Jump_0A0_5EDB::
-    call Func_0A0_5F2E
+    call RunBattleSetup_BankA0_Table2_Case04_Sub01
     ld a, $03
     ld [wBattleSubPhase], a
     xor a, a
@@ -4883,10 +4887,12 @@ Jump_0A0_5F22::
 Jump_0A0_5F2D::
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_5E07_Table2_Case04)
+; only called from RunBattleSetup_BankA0_Table2_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Table2_Case04)
 ; reads: wC57F
 ; points at: wBattleActionChoice
-Func_0A0_5F2E::
+RunBattleSetup_BankA0_Table2_Case04_Sub01::
+Func_0A0_5F2E:: ; address name
     ld a, [wC57F]
     and a, $02
     ld hl, wBattleActionChoice
@@ -4896,33 +4902,33 @@ Func_0A0_5F2E::
     ld [hl+], a
     ret
 
-; entry 5 of the `rst $00` table in Func_0A0_5E07
+; entry 5 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-Func_0A0_5E07_Table2_Case05::
+RunBattleSetup_BankA0_Table2_Case05::
 Jump_0A0_5F40:: ; address name
-    call Func_0A0_6A2C
+    call RunBattleSetup_BankA0_Shared02
     farcall CopyRectRecord7345ToScreenBuffer
     call DrawWC338RowsToBGMapRow13_BankA0
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_0A0_5E07
+; entry 6 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-Func_0A0_5E07_Table2_Case06::
+RunBattleSetup_BankA0_Table2_Case06::
 Jump_0A0_5F51:: ; address name
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in Func_0A0_5E07
+; entry 7 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
 ; writes: wBattleResolveStep
-Func_0A0_5E07_Table2_Case07::
+RunBattleSetup_BankA0_Table2_Case07::
 Jump_0A0_5F5C:: ; address name
     ld a, [wC52B]
     or a, a
@@ -4934,10 +4940,10 @@ Jump_0A0_5F5C:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_0A0_5E07
+; entry 1 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-Func_0A0_5E07_Case01::
+RunBattleSetup_BankA0_Case01::
 Jump_0A0_5F76:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
@@ -5614,17 +5620,17 @@ Jump_0A0_63E8:: ; address name
     ld [wBattleSubPhase], a
     ret
 
-; entry 2 of the `rst $00` table in Func_0A0_5E07
+; entry 2 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
-Func_0A0_5E07_Case02::
+RunBattleSetup_BankA0_Case02::
 Jump_0A0_63F2:: ; address name
     ret
 
-; entry 3 of the `rst $00` table in Func_0A0_5E07
+; entry 3 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wC594
 ; points at: wDA5B, wBattleSubPhase
-Func_0A0_5E07_Case03::
+RunBattleSetup_BankA0_Case03::
 Jump_0A0_63F3:: ; address name
     ld b, $08
     ld hl, wDA5B
@@ -5642,7 +5648,7 @@ Jump_0A0_63FE::
     xor a, a
     ld [wBattleActor], a
     farcall ClearAndLayoutTileBlocksForWD890Count
-    call Func_0A0_6A2C
+    call RunBattleSetup_BankA0_Shared02
     farcall CopyRectRecord7345ToScreenBuffer
     farcall DrawWC278RowsToBGMapRow7
     ld hl, wBattleSubPhase
@@ -5651,11 +5657,11 @@ Jump_0A0_63FE::
     ld [wC594], a
     ret
 
-; entry 4 of the `rst $00` table in Func_0A0_5E07
+; entry 4 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wD05A, wC130, wBattleSubPhase
-Func_0A0_5E07_Case04::
+RunBattleSetup_BankA0_Case04::
 Jump_0A0_6424:: ; address name
     ld de, wD05A
     ld hl, wC130
@@ -5669,12 +5675,12 @@ Jump_0A0_6424:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_0A0_5E07
+; entry 5 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wC5E8, wC57F, wC46B, wC46C, wDAD8, wDAD9, wBattleActionChoice, ...
 ; writes: wC594
 ; points at: wDA43, wC597, wBattleSubPhase
-Func_0A0_5E07_Case05::
+RunBattleSetup_BankA0_Case05::
 Jump_0A0_6442:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]
@@ -5718,12 +5724,12 @@ Jump_0A0_6442:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_0A0_5E07
+; entry 6 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58F
 ; writes: wC593, wC592, wC595, wC596, wC590, wC591
 ; points at: wBattleSubPhase, wC597, wC5B7
-Func_0A0_5E07_Case06::
+RunBattleSetup_BankA0_Case06::
 Jump_0A0_6497:: ; address name
     ld a, [wC58F]
     cp a, $01
@@ -5746,11 +5752,11 @@ Jump_0A0_6497:: ; address name
     ld [wC591], a
     ret
 
-; entry 7 of the `rst $00` table in Func_0A0_5E07
+; entry 7 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC594, wC58C
 ; points at: wBattleSubPhase
-Func_0A0_5E07_Case07::
+RunBattleSetup_BankA0_Case07::
 Jump_0A0_64C1:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -5760,12 +5766,12 @@ Jump_0A0_64C1:: ; address name
     ld [wC58C], a
     ret
 
-; entry 8 of the `rst $00` table in Func_0A0_5E07
+; entry 8 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58F, wC57F, wC59A, wC59B
 ; writes: wC594, wC58C, wDAE9, wDAEA, wDA44, wDAD9, wDA1E, wDA1F, ...
 ; points at: wC5B7, wDA44, wDA4C, wBattleSubPhase, wC46B, wDA43, wDA4B
-Func_0A0_5E07_Case08::
+RunBattleSetup_BankA0_Case08::
 Jump_0A0_64D0:: ; address name
     ld a, [wC58F]
     cp a, $F0
@@ -5839,12 +5845,12 @@ Jump_0A0_654E::
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in Func_0A0_5E07
+; entry 9 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wC5BA, wC5E8, wC5BB
 ; writes: wC594, wCF8B
 ; points at: wC59A, wBattleSubPhase
-Func_0A0_5E07_Case09::
+RunBattleSetup_BankA0_Case09::
 Jump_0A0_6553:: ; address name
     ld hl, wC59A
     ld a, [hl+]
@@ -5876,12 +5882,12 @@ Jump_0A0_6580::
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in Func_0A0_5E07
+; entry 10 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58F
 ; writes: wCF8C, wC594
 ; points at: wBattleSubPhase
-Func_0A0_5E07_Case0A::
+RunBattleSetup_BankA0_Case0A::
 Jump_0A0_6585:: ; address name
     ld a, [wC58F]
     cp a, $22
@@ -5898,12 +5904,12 @@ Jump_0A0_6591::
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in Func_0A0_5E07
+; entry 11 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCF8B, wCF8C
 ; writes: wC594, wBattleSubPhase
 ; points at: wBattleSubPhase
-Func_0A0_5E07_Case0B::
+RunBattleSetup_BankA0_Case0B::
 Jump_0A0_659D:: ; address name
     ld a, [wCF8B]
     cp a, $22
@@ -5925,12 +5931,12 @@ Jump_0A0_65B3::
     ld [wC594], a
     ret
 
-; entry 12 of the `rst $00` table in Func_0A0_5E07
+; entry 12 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58F
 ; writes: wBattleSubPhase
 ; points at: wBattleStep
-Func_0A0_5E07_Case0C::
+RunBattleSetup_BankA0_Case0C::
 Jump_0A0_65BD:: ; address name
     ld a, [wC58F]
     cp a, $02
@@ -5942,10 +5948,12 @@ Jump_0A0_65BD:: ; address name
     ld [wBattleSubPhase], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0A0_5E07_Table2_Case02)
+; only called from RunBattleSetup_BankA0_Table2_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Table2_Case02)
 ; reads: wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wFrameCounterLo
-Func_0A0_65CF::
+RunBattleSetup_BankA0_Table2_Case02_Sub01::
+Func_0A0_65CF:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_0A0_65E7
@@ -6226,7 +6234,7 @@ Jump_0A0_6779::
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: sets bit 6 of [HL] and writes tile $C3 at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 12 call sites from 3 routines (e.g. Func_0A0_65CF, Func_0A0_666B, Func_0A0_661B)
+; 12 call sites from 3 routines (e.g. RunBattleSetup_BankA0_Table2_Case02_Sub01, Func_0A0_666B, Func_0A0_661B)
 SetBit6AndBlankEntryTile_BankA0::
 Func_0A0_677A:: ; address name
     set 6, [hl]
@@ -6252,7 +6260,7 @@ Func_0A0_677A:: ; address name
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 9 call sites from 4 routines (e.g. Func_0A0_65CF, Func_0A0_6873, Func_0A0_666B, Func_0A0_661B)
+; 9 call sites from 4 routines (e.g. RunBattleSetup_BankA0_Table2_Case02_Sub01, Func_0A0_6873, Func_0A0_666B, Func_0A0_661B)
 ClearBit6AndCursorEntryTile_BankA0::
 Func_0A0_6799:: ; address name
     res 6, [hl]
@@ -6672,9 +6680,11 @@ Func_0A0_6A25:: ; heuristic: follows a terminator; C0
     farcall Func_0E0_443B
     ret
 
-; 2 call sites from 2 routines (e.g. Func_0A0_5E07_Case03, Func_0A0_5E07_Table2_Case05)
+; only called from routines of RunBattleSetup_BankA0 (E-0098)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_BankA0_Case03, RunBattleSetup_BankA0_Table2_Case05)
 ; reads: rSTAT
-Func_0A0_6A2C::
+RunBattleSetup_BankA0_Shared02::
+Func_0A0_6A2C:: ; address name
     ld hl, vTiles1
     ld bc, $0120
 
@@ -7083,7 +7093,7 @@ Jump_0A0_6C80::
     ret
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
-; 4 call sites from 3 routines (e.g. Func_0A0_5E07_Table2_Case00, Func_0A0_5F2E_Case04, Func_0A0_5F2E_Case00)
+; 4 call sites from 3 routines (e.g. RunBattleSetup_BankA0_Table2_Case00, Func_0A0_5F2E_Case04, Func_0A0_5F2E_Case00)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
 ShowStringBank09AtTilesHL_BankA0::

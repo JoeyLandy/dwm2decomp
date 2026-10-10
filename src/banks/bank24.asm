@@ -877,7 +877,7 @@ Jump_024_4587:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_Table5_Case04::
 Jump_024_458E:: ; address name
-    farcall Func_01B_665E
+    farcall ScriptCommandEF_Run_Bank1B
     ret
 
 ; entry 6 of the `rst $00` table in GameMode6_Update
@@ -1956,7 +1956,7 @@ Jump_024_4CD2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_Table9_Case03::
 Jump_024_4CE3:: ; address name
-    farcall Func_01B_665E
+    farcall ScriptCommandEF_Run_Bank1B
     ret
 
 ; entry 5 of the `rst $00` table in GameMode6_Update
@@ -1991,7 +1991,7 @@ Jump_024_4CF2:: ; address name
     xor a, a
     ld [wStringCategory], a
     farcall ShowString_Bank33_7045
-    farcall Func_01B_665E
+    farcall ScriptCommandEF_Run_Bank1B
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)

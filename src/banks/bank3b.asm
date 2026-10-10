@@ -1792,7 +1792,7 @@ Func_03B_4A86:: ; heuristic: follows a terminator; C0
 Jump_03B_4A8F::
     bit 7, [hl]
     jr z, Jump_03B_4A98
-    call Func_03B_4AB2
+    call RollChanceByLevel_100_100_75_0_Bank3B
     jr Jump_03B_4A9B
 
 Jump_03B_4A98::
@@ -1824,9 +1824,11 @@ Jump_03B_4AAF::
     ccf
     ret
 
+; the same instruction sequence as RollChanceByLevel_100_100_75_0 (bank $36) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 1 call site from 1 routine (e.g. Func_03B_4A86)
 ; reads: wC5E7
-Func_03B_4AB2::
+RollChanceByLevel_100_100_75_0_Bank3B::
+Func_03B_4AB2:: ; address name
     cp a, $02
     jr nc, Jump_03B_4AB7
     ret

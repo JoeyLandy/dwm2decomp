@@ -1382,7 +1382,7 @@ Func_00D_4CF4::
     add_a_to_hl
     ret
 
-; 5 call sites from 5 routines (e.g. Func_00D_463F_Case0C, Func_01B_665E_Table3_Case0A, GameMode6_Update_Table5_Case0A, GameMode6_Update_Table7_Case08, ...)
+; 5 call sites from 5 routines (e.g. Func_00D_463F_Case0C, ScriptCommandEF_Run_Bank1B_Table3_Case0A, GameMode6_Update_Table5_Case0A, GameMode6_Update_Table7_Case08, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7AD
 ; writes: wD7F5, wD7AD
 Func_00D_4D24::

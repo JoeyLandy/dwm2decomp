@@ -4,7 +4,7 @@ SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
 ; 3 call sites from 3 routines (e.g. Func_004_44CE, Func_004_4C25, Func_004_4C96)
 Func_07F_4001::
     ld de, Data_07F_4008
-    call Func_07F_40CC
+    call DrawMetaSpriteAt_40CC
     ret
 
 Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -103,11 +103,13 @@ Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_6EB4
     db $74, $62, $74, $62, $26, $6F, $74, $62, $98, $6F
 
+; the same instruction sequence as DrawMetaSpriteAt (bank $7F) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 1 call site from 1 routine (e.g. Func_07F_4001)
 ; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
-Func_07F_40CC::
+DrawMetaSpriteAt_40CC::
+Func_07F_40CC:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
@@ -571,7 +573,7 @@ Jump_07F_42F2::
     ret
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-; 2 call sites from 1 routine (e.g. Func_07F_40CC)
+; 2 call sites from 1 routine (e.g. DrawMetaSpriteAt_40CC)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
 BGTileUnderPointIsHFFBA_Bank7F_4312::
 Func_07F_4312:: ; address name
