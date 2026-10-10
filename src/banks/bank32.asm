@@ -5174,30 +5174,30 @@ Jump_032_5E79::
     ld [hl], a
     ret
 
-; only called from RunBattleResolveStep_Case0E (E-0047)
+; resolve step $0E runs this through wBattleSubStep (wCFCC): ten cases, 0-9. Case 0 branches on wBattleActionId: $15 and $20 to Func_032_5F20, $3B to Func_032_5F3B, $5F to Func_032_5F63, $60 to Func_032_5FAE, $61 to Func_032_5FF8, $6D to Func_032_5F35; the other actions and cases 1-9 are not yet read (E-0051)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0E)
 ; reads: wBattleSubStep
-RunBattleResolveStep_Case0E_Sub01::
+ResolveStep0EEffect::
 Func_032_5EAB:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw Func_032_5EAB_Case00
-    dw Func_032_5EAB_Case01
-    dw Func_032_5EAB_Case02
-    dw Func_032_5EAB_Case03
-    dw Func_032_5EAB_Case04
-    dw Func_032_5EAB_Case05
-    dw Func_032_5EAB_Case06
-    dw Func_032_5EAB_Case06
-    dw Func_032_5EAB_Case06
-    dw Func_032_5EAB_Case09
+    dw ResolveStep0EEffect_Case00
+    dw ResolveStep0EEffect_Case01
+    dw ResolveStep0EEffect_Case02
+    dw ResolveStep0EEffect_Case03
+    dw ResolveStep0EEffect_Case04
+    dw ResolveStep0EEffect_Case05
+    dw ResolveStep0EEffect_Case06
+    dw ResolveStep0EEffect_Case06
+    dw ResolveStep0EEffect_Case06
+    dw ResolveStep0EEffect_Case09
 
-; entry 0 of the `rst $00` table in Func_032_5EAB
+; entry 0 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleActor, hFFC6, wCFCF, wBattleTarget
 ; writes: wBattleSubStep2, wCFCE, wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wC982, wC983, ...
 ; points at: wBattleSubStep, wBattleStatus
-Func_032_5EAB_Case00::
+ResolveStep0EEffect_Case00::
 Jump_032_5EC3:: ; address name
     xor a, a
     ld [wBattleSubStep2], a
@@ -5269,7 +5269,7 @@ Jump_032_5F35::
     ret
 
 Jump_032_5F3B::
-    call Func_032_604A
+    call ResolveStep0EEffect_Case00_Sub01
     xor a, a
     ld [wBattleSubPhase], a
     xor a, a
@@ -5284,7 +5284,7 @@ Jump_032_5F4B::
     farcall Func_0A3_414F
     ldh a, [hFFC6]
     ld [wBattleActor], a
-    call Func_032_604A
+    call ResolveStep0EEffect_Case00_Sub01
     pop af
     ld [wBattleActor], a
     jr Jump_032_5F3B
@@ -5356,7 +5356,7 @@ Jump_032_5FF8::
     bit 7, [hl]
     jp nz, Func_032_61D9
     push hl
-    farcall Func_036_610D
+    farcall ResolveStep0EEffect_Case00_Sub02
     pop hl
     ld a, e
     or a, a
@@ -5381,10 +5381,12 @@ Jump_032_6044::
     ld [wCFCE], a
     jp Func_032_61D9
 
-; 2 call sites from 1 routine (e.g. Func_032_5EAB_Case00)
+; only called from ResolveStep0EEffect_Case00 (E-0047)
+; 2 call sites from 1 routine (e.g. ResolveStep0EEffect_Case00)
 ; reads: wBattleActor, wC5E7
 ; points at: wDA1C
-Func_032_604A::
+ResolveStep0EEffect_Case00_Sub01::
+Func_032_604A:: ; address name
     call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wDA1C
@@ -5435,27 +5437,27 @@ Jump_032_6090::
 Data_032_6094:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00
 
-; entry 1 of the `rst $00` table in Func_032_5EAB
+; entry 1 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCFCE
 ; writes: wBattleSubStep
 ; points at: wBattleSubStep, wBattleResolveStep
-Func_032_5EAB_Case01::
+ResolveStep0EEffect_Case01::
 Jump_032_6099:: ; address name
     ld a, [wCFCE]
     or a, a
-    jr z, Func_032_5EAB_Case02
+    jr z, ResolveStep0EEffect_Case02
     ld d, a
     farcall Func_03A_7193
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_032_5EAB
+; entry 2 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep
 ; points at: wBattleResolveStep
-Func_032_5EAB_Case02::
+ResolveStep0EEffect_Case02::
 Jump_032_60AB:: ; address name
     xor a, a
     ld [wBattleSubStep], a
@@ -5463,10 +5465,10 @@ Jump_032_60AB:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_032_5EAB
+; entry 3 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep2
-Func_032_5EAB_Case03::
+ResolveStep0EEffect_Case03::
 Jump_032_60B4:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
@@ -5667,10 +5669,10 @@ Func_032_61D9::
     ld [wBattleSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in Func_032_5EAB
+; entry 4 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep2
-Func_032_5EAB_Case04::
+ResolveStep0EEffect_Case04::
 Jump_032_61E3:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
@@ -5835,11 +5837,11 @@ Jump_032_62CB:: ; address name
     call Func_032_61D9
     ret
 
-; entry 5 of the `rst $00` table in Func_032_5EAB
+; entry 5 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wC983, hFFC6, wBattleSubStep2
 ; writes: wC983, wBattleActor
-Func_032_5EAB_Case05::
+ResolveStep0EEffect_Case05::
 Jump_032_62CF:: ; address name
     ld a, [wBattleActionId]
     cp a, $D6
@@ -6086,16 +6088,16 @@ Jump_032_642E::
     ld [wBattleSubStep2], a
     ret
 
-; entry 6 of the `rst $00` table in Func_032_5EAB
+; entry 6 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
-Func_032_5EAB_Case06::
+ResolveStep0EEffect_Case06::
 Jump_032_643C:: ; address name
     ret
 
-; entry 9 of the `rst $00` table in Func_032_5EAB
+; entry 9 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep2
-Func_032_5EAB_Case09::
+ResolveStep0EEffect_Case09::
 Jump_032_643D:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
@@ -6808,7 +6810,7 @@ Jump_032_6842::
     cp a, $04
     ret
 
-; 3 call sites from 3 routines (e.g. Func_032_6764_Case02, Func_032_5EAB_Case00, RunDefeatSequence_Case02)
+; 3 call sites from 3 routines (e.g. Func_032_6764_Case02, ResolveStep0EEffect_Case00, RunDefeatSequence_Case02)
 ; reads: wC58A, wC57F, wBattleTarget
 Func_032_6848::
     ld a, [wC58A]

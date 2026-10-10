@@ -1379,7 +1379,7 @@ Jump_036_4901:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunBattleResolveStep_Case0E::
 Jump_036_4908:: ; address name
-    farcall RunBattleResolveStep_Case0E_Sub01
+    farcall ResolveStep0EEffect
     ret
 
 ; resolve step $0F: increments wBattleSubPhase and sets wBattleResolveStep to 0 (E-0050)
@@ -4665,7 +4665,7 @@ Jump_036_5EFC::
     call Func_036_6346
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_610D, Func_036_6EA8)
+; 2 call sites from 2 routines (e.g. ResolveStep0EEffect_Case00_Sub02, Func_036_6EA8)
 ; reads: wBattleActionId, wD86A
 ; writes: wD86A
 Func_036_5F01::
@@ -4933,7 +4933,7 @@ Jump_036_60CD::
     call Func_036_621C
     ret
 
-; 3 call sites from 3 routines (e.g. Func_036_73EC, Func_032_5EAB_Case00, Func_03B_4D1C)
+; 3 call sites from 3 routines (e.g. Func_036_73EC, ResolveStep0EEffect_Case00, Func_03B_4D1C)
 Func_036_60D1::
     call HLToWD814EntryOfWD8A5_Bank36
     call Func_036_61BA
@@ -4951,7 +4951,7 @@ Jump_036_60E2::
     ld e, $01
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_73C3, Func_032_5EAB_Case00)
+; 2 call sites from 2 routines (e.g. Func_036_73C3, ResolveStep0EEffect_Case00)
 Func_036_60EB::
     call Func_036_6141
     jp z, Jump_036_613D
@@ -4973,8 +4973,10 @@ Jump_036_6104::
     ld e, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_5EAB_Case00)
-Func_036_610D::
+; only called from ResolveStep0EEffect_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case00)
+ResolveStep0EEffect_Case00_Sub02::
+Func_036_610D:: ; address name
     call Func_036_5F01
     ld e, $00
     ret c

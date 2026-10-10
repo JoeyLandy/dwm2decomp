@@ -1,7 +1,7 @@
 SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
     db $3A
 
-; 15 call sites from 13 routines (e.g. Func_032_4ADC_Case05, Func_032_5820_Case03, Func_032_5EAB_Case00, Func_032_604A_Case00, ...)
+; 15 call sites from 13 routines (e.g. Func_032_4ADC_Case05, Func_032_5820_Case03, ResolveStep0EEffect_Case00, Func_032_604A_Case00, ...)
 ; reads: wBattleTarget, wBattleActionId, wDAD2, wDABF, wCFF2, wBattleActor, wD868, wD801
 ; writes: wBattleActor, wD803, wD802, wDAF1, wC952, wD868, wD801, wDAB5, ...
 ; points at: wD804, wD805, wDAB3, wDAD2
@@ -2568,7 +2568,7 @@ Jump_03A_575D::
 Data_03A_575E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $04, $00, $06
 
-; 15 call sites from 12 routines (e.g. Func_03A_4ADB, Func_032_4ADC_Case03, Func_032_5820_Case02, Func_032_5EAB_Case00, ...)
+; 15 call sites from 12 routines (e.g. Func_03A_4ADB, Func_032_4ADC_Case03, Func_032_5820_Case02, ResolveStep0EEffect_Case00, ...)
 ; reads: wDAD3, wBattleTarget, wBattleActionId
 ; writes: wBattleActor
 Func_03A_5762::

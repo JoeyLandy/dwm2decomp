@@ -487,6 +487,12 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Method: `tests/test_routine_behaviour.py`, class `ResolveStepHelpers`.
 - Binary verification: PASS, identical SHA-256; see the commit for the test count.
 
+### E-0051 — Resolve step $0E dispatches to an action-specific effect routine
+
+- Kind: OBSERVATION (reading only). `RunBattleResolveStep_Case0E` farcalls `32:5EAB`, which dispatches on wBattleSubStep (wCFCC) to ten cases. Case 0 branches on the action id: $15 and $20 to `32:5F20`, $3B to `32:5F3B`, $5F to `32:5F63`, $60 to `32:5FAE`, $61 to `32:5FF8`, $6D to `32:5F35`. Named `ResolveStep0EEffect`.
+- Not yet read: the other action ids in case 0, cases 1-9, and the routines the branches reach. Step $0E is therefore only partly named.
+- Binary verification: PASS, identical SHA-256; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
