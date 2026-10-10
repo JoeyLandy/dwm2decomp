@@ -69,6 +69,12 @@ Forcing skips set-up, so the screens are partial. The routines are `GameMode0_In
     `PersonalityIndexOfRecord` and `PersonalityIndexOfSlot` compute the column (0-26, the 27 personality names).
   - Strings: bank `$08` holds categories 0-8; categories `$09`-`$14` (skill descriptions, tactics, targets, skill families,
     types, usability) live in bank `$95`; monster names are in bank `$88` (category = id high byte).
+- **Battle (mode 4, E-0042 to E-0044):** `GameMode4_Update` runs `Func_031_40CC`, which dispatches on `wBattlePhase` (0 intro,
+  1 the fight, 2 the end) and then on `wBattleStep`. In the fight, step 1 is `RunBattleSetup`, step 2 `RunBattleCommandEntry`,
+  step 3 `RunBattleActions`, which executes each action through `RunBattleResolveStep` (16 resolve cases keyed by
+  `wBattleResolveStep`). HP, MP, attack, defence and agility live in 8-slot word arrays (`wBattleHP` ... `wBattleAGL`; party in
+  slots 0-2, foes from 4); `ComputeBasicDamage` applies the damage formula (`RandomInRange` for the spread) and
+  `ApplyDamageToTarget` and `DefeatTarget` change HP.
 - **Debug mode (mode 0):** a developer menu reachable by forcing the mode: program launcher, message test, skill viewer,
   monster viewer, sound test, automap. It is the quickest route to the tables above.
 

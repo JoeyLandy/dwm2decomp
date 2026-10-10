@@ -2463,5 +2463,25 @@
     "name": "BattleFight_Step4",
     "note": "wBattlePhase 1, wBattleStep 4 (E-0044)",
     "evidence": "execution and structure (E-0044)"
+  },
+  "31:4B10": {
+    "name": "RunBattleSetup",
+    "note": "battle fight step 1: one sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle screen and loads the combatants",
+    "evidence": "execution and reading (E-0044)"
+  },
+  "30:4001": {
+    "name": "RunBattleCommandEntry",
+    "note": "battle fight step 2: returns while a message is being drawn (wC52B); otherwise one of 7 sub-steps by wBattleSubPhase; case 0 loads the slots' personality bytes (wSlotPersonality*), the command menu loop follows",
+    "evidence": "execution and reading (E-0044)"
+  },
+  "3A:6157": {
+    "name": "RunBattleActions",
+    "note": "battle fight step 3: returns while a message is being drawn; in link mode calls Func_03A_4ADB; otherwise one of 6 sub-steps by wBattleSubPhase, which execute the chosen actions through RunBattleResolveStep",
+    "evidence": "execution and reading (E-0044)"
+  },
+  "3A:68C9": {
+    "name": "RunBattleStep4",
+    "note": "battle fight step 4: the same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle)",
+    "evidence": "execution and reading (E-0044)"
   }
 }

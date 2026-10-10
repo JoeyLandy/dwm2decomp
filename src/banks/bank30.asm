@@ -1,28 +1,30 @@
 SECTION "Bank 30", ROMX[$4000], BANK[$30]
     db $30
 
+; battle fight step 2: returns while a message is being drawn (wC52B); otherwise one of 7 sub-steps by wBattleSubPhase; case 0 loads the slots' personality bytes (wSlotPersonality*), the command menu loop follows
 ; 1 call site from 1 routine (e.g. BattleFight_Step2)
 ; reads: wC52B, wBattleSubPhase
-Func_030_4001::
+RunBattleCommandEntry::
+Func_030_4001:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
     ld a, [wBattleSubPhase]
     rst $00
-    dw Func_030_4001_Case00
-    dw Func_030_4001_Case01
-    dw Func_030_4001_Case02
-    dw Func_030_4001_Case03
-    dw Func_030_4001_Case04
-    dw Func_030_4001_Case05
-    dw Func_030_4001_Case06
+    dw RunBattleCommandEntry_Case00
+    dw RunBattleCommandEntry_Case01
+    dw RunBattleCommandEntry_Case02
+    dw RunBattleCommandEntry_Case03
+    dw RunBattleCommandEntry_Case04
+    dw RunBattleCommandEntry_Case05
+    dw RunBattleCommandEntry_Case06
 
-; entry 0 of the `rst $00` table in Func_030_4001
+; entry 0 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wD88F
 ; writes: wDAE8
 ; points at: wBattleSubPhase, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wD980
-Func_030_4001_Case00::
+RunBattleCommandEntry_Case00::
 Jump_030_4018:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -94,7 +96,7 @@ Jump_030_4070::
 Jump_030_408C::
     ret
 
-; 4 call sites from 1 routine (e.g. Func_030_4001_Case00)
+; 4 call sites from 1 routine (e.g. RunBattleCommandEntry_Case00)
 Func_030_408D::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
@@ -113,12 +115,12 @@ Jump_030_409A::
     jr nz, Func_030_408D
     ret
 
-; entry 1 of the `rst $00` table in Func_030_4001
+; entry 1 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wBattleActor
 ; writes: wBattleActor, wBattleResolveStep
 ; points at: wDA5B, wBattleSubPhase
-Func_030_4001_Case01::
+RunBattleCommandEntry_Case01::
 Jump_030_40A0:: ; address name
     ld a, [wC58A]
     or a, a
@@ -161,19 +163,19 @@ Jump_030_40D6::
 Jump_030_40E2::
     ret
 
-; entry 2 of the `rst $00` table in Func_030_4001
+; entry 2 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
-Func_030_4001_Case02::
+RunBattleCommandEntry_Case02::
 Jump_030_40E3:: ; address name
     call Func_030_43C4
     ret
 
-; entry 3 of the `rst $00` table in Func_030_4001
+; entry 3 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wBattleSubPhase
 ; points at: wDA5B, wBattleActor
-Func_030_4001_Case03::
+RunBattleCommandEntry_Case03::
 Jump_030_40E7:: ; address name
     call Func_030_4102
     ld a, [wBattleActor]
@@ -187,7 +189,7 @@ Jump_030_40E7:: ; address name
     inc [hl]
     ret
 
-; 5 call sites from 4 routines (e.g. Func_030_4001_Case03, Func_036_714F, Func_03A_6157_Case06, Func_03A_6846)
+; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, Func_036_714F, RunBattleActions_Case06, Func_03A_6846)
 ; reads: wC58A, wC46B, wBattleActor
 ; points at: wDAD8, wDA1D, wDAE9
 Func_030_4102::
@@ -240,12 +242,12 @@ Jump_030_4152::
     ld d, [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_030_4001
+; entry 4 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD871
 ; writes: wD89E, wD871, wD87A, wD87B
 ; points at: wD895, wD868, wD87D, wDA5B, wD87A, wD871, wBattleSubPhase
-Func_030_4001_Case04::
+RunBattleCommandEntry_Case04::
 Jump_030_4160:: ; address name
     ld hl, wD895
     ld bc, $0009
@@ -307,7 +309,7 @@ Jump_030_41D2::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4001_Case04)
+; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
 ; points at: wBattleAGL
 Func_030_41DF::
     push de
@@ -331,7 +333,7 @@ Func_030_41DF::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4001_Case04)
+; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
 ; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wDA1C, wCFF3
@@ -423,7 +425,7 @@ Jump_030_4295::
     pop de
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4001_Case04)
+; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
 ; reads: wD892, wD871
 ; points at: wD87A, wD868
 Func_030_4297::
@@ -442,12 +444,12 @@ Func_030_4297::
     ld [hl], $10
     ret
 
-; entry 5 of the `rst $00` table in Func_030_4001
+; entry 5 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD87A, wD87B, wBattleDamageLo, wD873, wD874, wD875, wD89E
 ; writes: wD87A, wD87B, wBattleDamageLo, wD873, wD874, wD875, wD89E
 ; points at: wD87D, wD87F, wD868, wD87A, wD895, wBattleSubPhase
-Func_030_4001_Case05::
+RunBattleCommandEntry_Case05::
 Jump_030_42B7:: ; address name
     ld d, $08
 
@@ -543,11 +545,11 @@ Jump_030_4342::
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_030_4001
+; entry 6 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD2C8, wD2C9, wD2CA, wD2CB, wBattleSubPhase
 ; points at: wBattleHP, wBattleMaxHP, wBattleStep, wBattleResolveStep
-Func_030_4001_Case06::
+RunBattleCommandEntry_Case06::
 Jump_030_434C:: ; address name
     ld hl, wBattleHP
     ld bc, $0000
@@ -580,7 +582,7 @@ Jump_030_434C:: ; address name
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
-; 6 call sites from 1 routine (e.g. Func_030_4001_Case06)
+; 6 call sites from 1 routine (e.g. RunBattleCommandEntry_Case06)
 AddWordAtHLToBC_Bank30::
 Func_030_4396:: ; address name
     ld a, [hl+]
@@ -591,7 +593,7 @@ Func_030_4396:: ; address name
     ld b, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_030_4001_Case06)
+; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case06)
 ; points at: wDA1C, wD812
 Func_030_439D::
     ld c, $00
@@ -619,7 +621,7 @@ Jump_030_43BF::
     jr nz, Jump_030_43A1
     ret
 
-; 2 call sites from 2 routines (e.g. Func_030_4001_Case02, Func_0A1_413F_Case02)
+; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case02, Func_0A1_413F_Case02)
 ; reads: wBattleResolveStep
 Func_030_43C4::
     ld a, [wBattleResolveStep]

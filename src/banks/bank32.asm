@@ -2034,7 +2034,7 @@ Jump_032_4AB9::
     rst $38
     rst $38
 
-; 1 call site from 1 routine (e.g. Func_03A_6157_Case00)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case00)
 ; reads: wBattleResolveStep
 Func_032_4ADC::
     ld a, [wBattleResolveStep]
@@ -4111,7 +4111,7 @@ Func_032_5804::
     farcall LoadSkillRecord
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_68C9_Case00)
+; 1 call site from 1 routine (e.g. RunBattleStep4_Case00)
 ; reads: wBattleResolveStep
 Func_032_5820::
     ld a, [wBattleResolveStep]

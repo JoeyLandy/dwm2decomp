@@ -490,7 +490,7 @@ Func_03B_42F0::
     ld c, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_6157_Case08)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case08)
 ; reads: wBattleResolveStep
 Func_03B_42F4::
     ld a, [wBattleResolveStep]

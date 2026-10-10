@@ -2877,14 +2877,14 @@ Jump_0A0_52AB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A0_5278_Case03::
 Jump_0A0_52B2:: ; address name
-    farcall Func_03A_6157
+    farcall RunBattleActions
     ret
 
 ; entry 4 of the `rst $00` table in Func_0A0_5278
 ; no direct call (reached through a table, a jump or a vector)
 Func_0A0_5278_Case04::
 Jump_0A0_52B9:: ; address name
-    farcall Func_03A_68C9
+    farcall RunBattleStep4
     ret
 
 ; entry 2 of the `rst $00` table in Func_0A0_4F8E

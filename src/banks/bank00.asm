@@ -10605,7 +10605,7 @@ Func_000_3ED4:: ; address name
     call NextTableByte
     ret
 
-; 4 call sites from 4 routines (e.g. Func_030_4001_Case01, Func_0A1_43A1, Func_0A1_437D, Func_0A1_413F_Case01)
+; 4 call sites from 4 routines (e.g. RunBattleCommandEntry_Case01, Func_0A1_43A1, Func_0A1_437D, Func_0A1_413F_Case01)
 ; reads: wC5BA, wC5BB, wC5E7, wC5E8
 ; writes: wC5E7, wC5E8, wC5BA, wC5BB
 Func_000_3EDE::
