@@ -1357,7 +1357,7 @@ Jump_002_4824::
     ld [wC917], a
     ld a, $05
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     farcall FetchScriptCommand
     jp Func_002_4628
 
@@ -1503,7 +1503,7 @@ Jump_002_4945::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_495E::
@@ -1518,7 +1518,7 @@ Jump_002_495E::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_497E::
@@ -1533,7 +1533,7 @@ Jump_002_497E::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_499E::
@@ -1548,7 +1548,7 @@ Jump_002_499E::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_49BE::
@@ -1558,7 +1558,7 @@ Jump_002_49BE::
     ld [wC916], a
     ld a, $02
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_49D2::
@@ -1568,7 +1568,7 @@ Jump_002_49D2::
     ld [wC916], a
     ld a, $03
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_49E6::
@@ -1578,7 +1578,7 @@ Jump_002_49E6::
     ld [wC916], a
     ld a, $04
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_49FA::
@@ -1588,7 +1588,7 @@ Jump_002_49FA::
     ld [wC916], a
     ld a, $04
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_002_4A0E::
@@ -1604,7 +1604,7 @@ Jump_002_4A1C::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_002_4745_Case01)
@@ -2265,7 +2265,7 @@ Jump_002_4EA6::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -2308,7 +2308,7 @@ Jump_002_4EF0::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -2344,7 +2344,7 @@ Jump_002_4F29::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4314,7 +4314,7 @@ Jump_002_5B53::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -7040,7 +7040,7 @@ Jump_002_6F3B::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     farcall FetchScriptCommand
     jp Jump_002_6FDE
 

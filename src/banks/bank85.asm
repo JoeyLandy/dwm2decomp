@@ -4056,11 +4056,13 @@ Jump_085_5837::
     ldh [hFFC6], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Table2_Case0F)
+; only called from DispatchTalkEvent_Table2_Case0F (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Table2_Case0F)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG, hFFC6
 ; points at: wC6FE
-Func_085_5840::
+DispatchTalkEvent_Table2_Case0F_Sub01::
+Func_085_5840:: ; address name
     ld a, [wC6FD]
     or a, a
     jr nz, Jump_085_584E
@@ -4108,11 +4110,13 @@ Jump_085_5875::
     ldh [hFFC6], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Table2_Case29)
+; only called from DispatchTalkEvent_Table2_Case29 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Table2_Case29)
 ; reads: hFF93, hFF94, hFF95, wC6FD, hFFC6, hFFC7
 ; writes: hFFC6, rRAMG
 ; points at: wC6FE
-Func_085_5882::
+DispatchTalkEvent_Table2_Case29_Sub01::
+Func_085_5882:: ; address name
     ldh a, [hFF93]
     bit 7, a
     jr z, Jump_085_58B3
@@ -4236,10 +4240,12 @@ Jump_085_5909::
     db $19, $01, $1B, $01, $1F, $01, $20, $01, $24, $01, $26, $01, $27, $01, $29, $01
     db $2A, $01, $2F, $01, $30, $01, $35, $01, $37, $01, $00, $00
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Table2_Case47)
+; only called from DispatchTalkEvent_Table2_Case47 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Table2_Case47)
 ; reads: hFF93, hFF94, hFF95
 ; writes: hFFC6
-Func_085_594E::
+DispatchTalkEvent_Table2_Case47_Sub01::
+Func_085_594E:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, Jump_085_598C
@@ -4314,7 +4320,7 @@ Jump_085_598C::
 Data_085_5A00:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $215A00, $75
 
-; 3 call sites from 3 routines (e.g. Func_013_405C_Table2_Case4C, Func_013_405C_Table2_Case6E, Func_013_405C_Table2_Case6F)
+; 3 call sites from 3 routines (e.g. DispatchTalkEvent_Table2_Case4C, DispatchTalkEvent_Table2_Case6E, DispatchTalkEvent_Table2_Case6F)
 ; reads: hFF93, hFF95, hFF94
 ; writes: hFFC6, hFFC7
 Func_085_5A75::
@@ -4349,11 +4355,13 @@ Jump_085_5A98::
     ldh [hFFC7], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_746A)
+; only called from Talk04CB_ThatKeyIUsed (E-0047)
+; 1 call site from 1 routine (e.g. Talk04CB_ThatKeyIUsed)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG, hFFC6
 ; points at: wC6FE
-Func_085_5A9D:: ; heuristic: follows a terminator; C0
+Talk04CB_ThatKeyIUsed_Sub01:: ; heuristic: follows a terminator; C0
+Func_085_5A9D:: ; address name
     ld a, [wC6FD]
     or a, a
     ret z

@@ -3470,7 +3470,7 @@ Jump_012_573E:: ; address name
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 ; entry 7 of the `rst $00` table in ScriptCommand87_Run
@@ -8353,7 +8353,7 @@ Jump_012_7377::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -8407,7 +8407,7 @@ Jump_012_73DC::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -8497,7 +8497,7 @@ Jump_012_7457::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -8542,7 +8542,7 @@ Jump_012_74A2::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -8578,7 +8578,7 @@ Jump_012_74D6::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -8604,7 +8604,7 @@ Jump_012_7508::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -10081,7 +10081,7 @@ Jump_012_7DED::
     ldh [hFFC6], a
     ret
 
-; 17 call sites from 10 routines (e.g. Func_004_58C2_Case6A, Func_004_612B_Case39, Func_004_6F9A, Func_004_724E, ...)
+; 17 call sites from 10 routines (e.g. Func_004_58C2_Case6A, Func_004_612B_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
 ; reads: hFFC6
 ; writes: wC634
 ; points at: wInventory

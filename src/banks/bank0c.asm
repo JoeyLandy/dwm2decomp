@@ -5519,7 +5519,7 @@ Func_00C_73C7:: ; address name
     ld [wC917], a
     ld a, $1F
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
     xor a, a
@@ -5576,7 +5576,7 @@ Func_00C_741F::
     ld [wC917], a
     ld a, $18
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
     xor a, a
@@ -5635,7 +5635,7 @@ Func_00C_7478::
     ld [wC917], a
     ld a, $18
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
     xor a, a

@@ -4463,7 +4463,7 @@ Jump_015_5E30:: ; address name
     ld [wC917], a
     ld a, $17
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
     ld a, $06
@@ -4514,7 +4514,7 @@ Jump_015_5E62:: ; address name
     ld [wC917], a
     ld a, $16
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
     ld a, $06
@@ -4541,7 +4541,7 @@ Jump_015_5ECC:: ; address name
     ld [wC917], a
     ld a, $15
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
     ld hl, wD780

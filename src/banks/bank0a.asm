@@ -34,7 +34,7 @@ Jump_00A_4027::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_00A_4042::
@@ -691,7 +691,7 @@ Jump_00A_43DC::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4AE0_Case07, UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
@@ -744,7 +744,7 @@ Jump_00A_4432::
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Jump_00A_4442::
@@ -3388,7 +3388,7 @@ Func_00A_5748:: ; address name
     ld [wC916], a
     xor a, a
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 Data_00A_5773:: ; heuristic: pointer load in the same bank (bank assumed); C0

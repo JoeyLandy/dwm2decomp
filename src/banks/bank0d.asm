@@ -6804,7 +6804,7 @@ Jump_00D_74BB:: ; address name
     ld [wC917], a
     ld a, $20
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
     xor a, a

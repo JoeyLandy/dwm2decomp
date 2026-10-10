@@ -9287,7 +9287,7 @@ Jump_00F_7AE8:: ; address name
     ld [wC917], a
     ld a, $02
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ret
 
 ; entry 13 of the `rst $00` table in ScriptCommand77_Run

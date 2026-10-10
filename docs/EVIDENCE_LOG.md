@@ -1050,6 +1050,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - the four-choice SetActorTargetFromHRAMChoice4.
 - Binary verification: pending; see the commit.
 
+### E-0097 — The talk-event dispatcher and talk handlers named from their first message
+
+- Kind: OBSERVATION (reading of the dispatcher plus ROM text decoding; C1).
+- **The dispatcher.** `13:405C` (39 references) either starts script command $09 or jumps through an 11-entry table by wC917.
+  - Group 4 dispatches on wC916 through a 257-entry table whose entries include the TalkMsg routines of E-0082.
+  - It is named DispatchTalkEvent. That wC917/wC916 are a talk group and entry is an inference from those targets.
+- **Talk handlers.** 36 unnamed bank-$04/$13 routines contain at least one constant message start: `ld hl, W` / StartMessageCommand09HL, or `ld de, W` / StartMessageScriptDE. They are named `TalkWWWW_Words` after the first such message in the code, with the message count in the note. Examples: Talk0A41_ThisIsGreatLogCastle, Talk0DD8_QueenHelenIsWracked, Talk0D90_HumphImTerryTerry.
+- **The player name.** A leading "0" in decoded text is where the player's name is substituted (as in "<F9>0 received an Herb"), so names write it as "Hero". Earlier Msg/TalkMsg/IfFlag names with that token are renamed the same way.
+- **Limits.** The flag branching inside each handler is not interpreted.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

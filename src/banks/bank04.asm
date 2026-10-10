@@ -3127,9 +3127,11 @@ Func_004_5603:: ; address name
     ld [wModeState], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Case0A)
+; only called from DispatchTalkEvent_Case0A (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case0A)
 ; reads: wC916
-Func_004_5616::
+DispatchTalkEvent_Case0A_Sub01::
+Func_004_5616:: ; address name
     ld a, [wC916]
     rst $00
     dw Func_004_5616_Case00
@@ -3139,7 +3141,7 @@ Func_004_5616::
     dw Func_004_568B
     dw Func_004_5698
     dw Func_004_56AF
-    dw Func_004_56BD
+    dw Talk0046_ThanksForComingBy
     dw Data_004_5731
     dw Data_004_5738
     dw Data_004_573F
@@ -3230,9 +3232,11 @@ Func_004_56AF:: ; heuristic: target of a pointer table; C0
     call StartScriptAtHL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0046, whose string begins 'Thanks for coming by. I'll always'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hFFC6, wDataBank
-Func_004_56BD:: ; heuristic: target of a pointer table; C0
+Talk0046_ThanksForComingBy:: ; heuristic: target of a pointer table; C0
+Func_004_56BD:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_004_571D
@@ -3454,9 +3458,11 @@ Func_004_58B4:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Case03)
+; only called from DispatchTalkEvent_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case03)
 ; reads: wC916
-Func_004_58C2::
+DispatchTalkEvent_Case03_Sub01::
+Func_004_58C2:: ; address name
     ld a, [wC916]
     rst $00
     dw Func_004_58C2_Case00
@@ -5058,9 +5064,11 @@ Jump_004_6124::
     call StartScriptAtHL_B04
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Case02)
+; only called from DispatchTalkEvent_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case02)
 ; reads: wC916
-Func_004_612B::
+DispatchTalkEvent_Case02_Sub01::
+Func_004_612B:: ; address name
     ld a, [wC916]
     rst $00
     dw Func_004_612B_Case00
@@ -6291,9 +6299,11 @@ Jump_004_6820::
     call StartScriptAtHL_B04
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Case06)
+; only called from DispatchTalkEvent_Case06 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case06)
 ; reads: wC916
-Func_004_6827::
+DispatchTalkEvent_Case06_Sub01::
+Func_004_6827:: ; address name
     ld a, [wC916]
     rst $00
     dw Func_004_6827_Case00
@@ -6356,9 +6366,11 @@ Jump_004_688B::
     call StartScriptAtHL_B04
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Case00)
+; only called from DispatchTalkEvent_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case00)
 ; reads: wC916
-Func_004_6892::
+DispatchTalkEvent_Case00_Sub01::
+Func_004_6892:: ; address name
     ld a, [wC916]
     rst $00
     dw Func_004_6892_Case00
@@ -6749,9 +6761,11 @@ Jump_004_6A2E:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Case07)
+; only called from DispatchTalkEvent_Case07 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case07)
 ; reads: wC916
-Func_004_6A35::
+DispatchTalkEvent_Case07_Sub01::
+Func_004_6A35:: ; address name
     ld a, [wC916]
     rst $00
     dw Func_004_6A35_Case00
@@ -6792,10 +6806,10 @@ Func_004_6A35::
     dw Data_004_70C7
     dw Data_004_70CE
     dw Data_004_70DF
-    dw Func_004_70E6
-    dw Func_004_70FC
-    dw Func_004_7112
-    dw Func_004_7164
+    dw Talk0768_HeroPeeredIntoThe
+    dw Talk0768_HeroPeeredIntoThe_70FC
+    dw Talk078E_RobosterStoppedMovingEntirely
+    dw Talk077B_HeroPeeredIntoThe
     db $A5, $71
     dw TalkMsg078F_ThisIsTheTown
     dw TalkMsg0790_AreYouFriendsWith
@@ -6803,8 +6817,8 @@ Func_004_6A35::
     dw TalkMsg0792_AreYourMonstersGood
     dw TalkMsg0793_MonstersCanBeGood
     dw TalkMsg0794_YouAppearToHave
-    dw Func_004_724E
-    dw Func_004_72BC
+    dw Talk07A4_CouldYouHumorThis
+    dw Talk07A6_OurDaughtersOnlyMemento
     dw TalkMsg0799_MonstersRaidedThisHouse
     dw TalkMsg079A_TheOldPeopleAcross
     dw TalkMsg079B_MonstersHaveTakenTo
@@ -6812,15 +6826,15 @@ Func_004_6A35::
     dw Func_004_73C7
     dw Func_004_73D8
     dw TalkMsg079F_IfYouTravelWest
-    dw Func_004_7418
+    dw Talk07D7_MilayouIEBeen
     db $97, $74
     dw TalkMsg07AA_ThatDealerHowExpensive
-    dw Func_004_74D2
+    dw Talk07C1_WhatMonstersAttackedYou
     dw TalkMsg07AE_ThatDealersWaresCould
-    dw Func_004_753A
+    dw Talk07AF_HowDoesThisOrnament
     dw TalkMsg07B8_WhoAreYouYou
     dw Func_004_7624
-    dw Func_004_763A
+    dw Talk07BF_HeroFoundThePretty
     dw Func_004_7657
     dw Msg01C8_ThisIsAGreat
     dw Msg01C9_ThisIsAGreat
@@ -6833,7 +6847,7 @@ Func_004_6A35::
     db $16, $77
     ds $14, $00
     db $1D, $77, $24, $77, $2B, $77, $47, $77, $47, $77, $47, $77, $47, $77
-    dw Func_004_774E
+    dw Talk0C17
     dw Msg01D5
     dw Msg01D6
     dw Msg01D8
@@ -6852,7 +6866,7 @@ Func_004_6A35::
     dw Msg0172_KingArrghIKnow
     db $74, $78, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $7B, $78, $82, $78, $89, $78, $A5, $78, $A5, $78, $A5, $78, $A5, $78
-    dw Func_004_78AC
+    dw Talk0C2F
     dw Msg0175_ImMakingANew
     dw Msg0176_GaahYoureTooStrong
     dw Msg0177_KingWhatSoThats
@@ -6871,7 +6885,7 @@ Func_004_6A35::
     dw Msg00DD_LetMeShowYou
     ds $10, $00
     db $D2, $79, $D9, $79, $E0, $79, $FC, $79, $FC, $79, $FC, $79, $FC, $79
-    dw Func_004_7A03
+    dw Talk0C47
     dw Msg00F5_ItIsAnItem
     dw Msg00F6_HelloWhatCanI
     dw Msg00F7_HelloWhatCanI
@@ -7523,10 +7537,12 @@ Jump_004_6F93:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 7 constant message(s) depending on story flags and state; the first one in the code is $075F, whose string begins 'Kiral Fetch me my treasure from'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wC836
 ; writes: hFFC6, wC836
-Func_004_6F9A:: ; heuristic: follows a terminator; C0
+Talk075F_KiralFetchMeMy:: ; heuristic: follows a terminator; C0
+Func_004_6F9A:: ; address name
     ld de, $0167
     call TestFlagBit
     jp c, Jump_004_704E
@@ -7627,9 +7643,11 @@ Jump_004_7063::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $075A, whose string begins 'Pii Ggzz Piiiiii'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wCB96
-Func_004_706A:: ; heuristic: follows a terminator; C0
+Talk075A_PiiGgzzPiiiiii:: ; heuristic: follows a terminator; C0
+Func_004_706A:: ; address name
     ld de, $0167
     call TestFlagBit
     jr c, Jump_004_708C
@@ -7681,8 +7699,10 @@ Data_004_70CE:: ; heuristic: target of a monotone pointer table; C0
 Data_004_70DF:: ; heuristic: target of a monotone pointer table; C0
     db $21, $66, $07, $CD, $BB, $55, $C9
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0768, whose string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_70E6:: ; heuristic: target of a pointer table; C0
+Talk0768_HeroPeeredIntoThe:: ; heuristic: target of a pointer table; C0
+Func_004_70E6:: ; address name
     ld de, $015D
     call TestFlagBit
     jr c, Jump_004_70F5
@@ -7695,8 +7715,10 @@ Jump_004_70F5::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0768, whose string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_70FC:: ; heuristic: target of a pointer table; C0
+Talk0768_HeroPeeredIntoThe_70FC:: ; heuristic: target of a pointer table; C0
+Func_004_70FC:: ; address name
     ld de, $015E
     call TestFlagBit
     jr c, Jump_004_710B
@@ -7709,8 +7731,10 @@ Jump_004_710B::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $078E, whose string begins 'Roboster stopped moving entirely'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7112:: ; heuristic: target of a pointer table; C0
+Talk078E_RobosterStoppedMovingEntirely:: ; heuristic: target of a pointer table; C0
+Func_004_7112:: ; address name
     ld de, $0167
     call TestFlagBit
     jr c, Jump_004_715D
@@ -7755,10 +7779,12 @@ Jump_004_715D::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $077B, whose string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC836
 ; writes: wC836
-Func_004_7164:: ; heuristic: target of a pointer table; C0
+Talk077B_HeroPeeredIntoThe:: ; heuristic: target of a pointer table; C0
+Func_004_7164:: ; address name
     ld de, $0164
     call TestFlagBit
     jr c, Jump_004_719E
@@ -7905,10 +7931,12 @@ Jump_004_7247::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4 constant message(s) depending on story flags and state; the first one in the code is $07A4, whose string begins 'Could you humor this old man'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6
 ; writes: hFFC6
-Func_004_724E:: ; heuristic: target of a pointer table; C0
+Talk07A4_CouldYouHumorThis:: ; heuristic: target of a pointer table; C0
+Func_004_724E:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_72B5
@@ -7962,10 +7990,12 @@ Jump_004_72B5::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07A6, whose string begins 'Our daughter's only memento was taken'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC836
 ; writes: wC836
-Func_004_72BC:: ; heuristic: target of a pointer table; C0
+Talk07A6_OurDaughtersOnlyMemento:: ; heuristic: target of a pointer table; C0
+Func_004_72BC:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_730E
@@ -8179,8 +8209,10 @@ Jump_004_7411::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07D7, whose string begins 'Milayou I e been checking around,'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7418:: ; heuristic: target of a pointer table; C0
+Talk07D7_MilayouIEBeen:: ; heuristic: target of a pointer table; C0
+Func_004_7418:: ; address name
     ld de, $01C5
     call TestFlagBit
     jr c, Jump_004_7481
@@ -8282,8 +8314,10 @@ Jump_004_74CB::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07C1, whose string begins 'What? Monsters attacked you in the'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_74D2:: ; heuristic: target of a pointer table; C0
+Talk07C1_WhatMonstersAttackedYou:: ; heuristic: target of a pointer table; C0
+Func_004_74D2:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, Jump_004_74FF
@@ -8344,10 +8378,12 @@ Jump_004_7533::
     call StartMessageCommand09HL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 8 constant message(s) depending on story flags and state; the first one in the code is $07AF, whose string begins 'How does this ornament look? Take'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC3F
 ; writes: wCC3F
-Func_004_753A:: ; heuristic: target of a pointer table; C0
+Talk07AF_HowDoesThisOrnament:: ; heuristic: target of a pointer table; C0
+Func_004_753A:: ; address name
     ld de, $01BE
     call TestFlagBit
     jp c, Jump_004_75FF
@@ -8480,10 +8516,12 @@ Jump_004_7633::
     call StartScriptAtHL_B04
     ret
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $07BF, whose string begins '0 found the Pretty Ring. But'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC836
 ; writes: wC836
-Func_004_763A:: ; heuristic: target of a pointer table; C0
+Talk07BF_HeroFoundThePretty:: ; heuristic: target of a pointer table; C0
+Func_004_763A:: ; address name
     call Func_004_7C37
     jr c, Jump_004_7646
     ld hl, $07BF
@@ -8614,8 +8652,10 @@ Func_004_7705:: ; address name
     db $CD, $BB, $55, $11, $D3, $01, $CD, $45, $18, $C9, $21, $01, $0C, $CD, $BB, $55
     db $C9, $21, $9C, $65, $CD, $03, $56, $C9
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0C17, an empty string on the normal path; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_774E:: ; heuristic: target of a pointer table; C0
+Talk0C17:: ; heuristic: target of a pointer table; C0
+Func_004_774E:: ; address name
     ld de, $016E
     call TestFlagBit
     jr c, Jump_004_775D
@@ -8840,8 +8880,10 @@ Func_004_7863:: ; address name
     db $CD, $BB, $55, $11, $73, $01, $CD, $45, $18, $C9, $21, $19, $0C, $CD, $BB, $55
     db $C9, $21, $9C, $65, $CD, $03, $56, $C9
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0C2F, an empty string on the normal path; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_78AC:: ; heuristic: target of a pointer table; C0
+Talk0C2F:: ; heuristic: target of a pointer table; C0
+Func_004_78AC:: ; address name
     ld de, $00D9
     call TestFlagBit
     jr c, Jump_004_78BB
@@ -9066,8 +9108,10 @@ Func_004_79C1:: ; address name
     db $45, $18, $C9, $21, $31, $0C, $CD, $BB, $55, $C9, $21, $9C, $65, $CD, $03, $56
     db $C9
 
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0C47, an empty string on the normal path; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7A03:: ; heuristic: target of a pointer table; C0
+Talk0C47:: ; heuristic: target of a pointer table; C0
+Func_004_7A03:: ; address name
     ld de, $01F6
     call TestFlagBit
     jr c, Jump_004_7A12
@@ -9288,9 +9332,11 @@ Func_004_7B18:: ; address name
     call StartMessageScriptDE_B04
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_405C_Case09)
+; only called from DispatchTalkEvent_Case09 (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case09)
 ; reads: wC916
-Func_004_7B29::
+DispatchTalkEvent_Case09_Sub01::
+Func_004_7B29:: ; address name
     ld a, [wC916]
     rst $00
     dw Func_004_7B29_Case00
@@ -9498,7 +9544,7 @@ Jump_004_7C2B:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; 6 call sites from 6 routines (e.g. Func_004_58C2_Case4B, Func_004_58C2_Case45, Func_004_6F9A, Func_004_763A, ...)
+; 6 call sites from 6 routines (e.g. Func_004_58C2_Case4B, Func_004_58C2_Case45, Talk075F_KiralFetchMeMy, Talk07BF_HeroFoundThePretty, ...)
 ; reads: wC634
 ; points at: wInventory
 Func_004_7C37::

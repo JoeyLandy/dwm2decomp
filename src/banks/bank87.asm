@@ -100,7 +100,7 @@ Jump_087_4078::
     ld [wC916], a
     ld a, [hl]
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
     jr nz, Jump_087_4094
@@ -345,7 +345,7 @@ Jump_087_43D7::
     ld [wC917], a
 
 Jump_087_43DC::
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
     ret nz
@@ -525,7 +525,7 @@ Jump_087_44D1::
     ld [wC916], a
     ld a, [hl]
     ld [wC917], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
     jr nz, Jump_087_44FC

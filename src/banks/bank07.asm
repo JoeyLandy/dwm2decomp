@@ -4639,7 +4639,7 @@ Jump_007_6B23::
     ld [wC917], a
     ld a, $21
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     farcall FetchScriptCommand
     ld a, $E0
     ldh [hPlayerX], a
@@ -7707,7 +7707,7 @@ Jump_007_7D43::
     ld [wC917], a
     ld a, $21
     ld [wC916], a
-    farcall Func_013_405C
+    farcall DispatchTalkEvent
     farcall FetchScriptCommand
     ld a, $E0
     ldh [hPlayerX], a
