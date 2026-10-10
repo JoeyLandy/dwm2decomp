@@ -2370,18 +2370,7 @@ Func_0E0_559E:: ; address name
     ld [wDAD3], a
     farcall SelectEffectByWDAD3Flags
     ret
-
-; no direct call (reached through a table, a jump or a vector)
-Func_0E0_55BF:: ; heuristic: follows a terminator; C0
-    adc a, c
-    adc a, e
-    adc a, e
-    adc a, l
-    adc a, l
-    adc a, a
-    sub a, b
-    reti
-    INCBIN "dwm2-cobi-us.gbc", $3815C7, $100
+    INCBIN "dwm2-cobi-us.gbc", $3815BF, $108
 
 ; only called from RunWC5FDState_E0_Case0D_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case01)

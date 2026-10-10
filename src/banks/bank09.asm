@@ -18,7 +18,7 @@ Func_009_4008:: ; address name
     ret
 
 ; Func_009_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 15 call sites from 12 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, ShowString1Bank09AtTiles16E0ThenDetails, PauseMenu_State3_Shared07, PauseMenu_State3_Shared08, ...)
+; 15 call sites from 12 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, ShowString1Bank09AtTiles16E0ThenDetails, PauseMenu_State3_Shared06, PauseMenu_State3_Shared07, ...)
 ShowString_Bank09::
 Func_009_400F:: ; address name
     call BeginStringDisplay_Bank09

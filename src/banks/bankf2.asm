@@ -1223,17 +1223,21 @@ Func_0F2_4BFC:: ; address name
     farcall ShowString_Bank08
     ret
 
+; runs Func_0F2_4C3D and Func_0F2_4D72 (E-0126)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1F, RunWD780StateWhenNotFading_F1_Case0D_Case1F)
-Func_0F2_4C36::
-    call Func_0F2_4C3D
-    call Func_0F2_4D72
+RunF24C3DAnd4D72::
+Func_0F2_4C36:: ; address name
+    call RunF24C3DAnd4D72_Sub01
+    call RunF24C3DAnd4D72_Sub02
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_4C36)
+; only called from RunF24C3DAnd4D72 (E-0047)
+; 1 call site from 1 routine (e.g. RunF24C3DAnd4D72)
 ; reads: wCA38, hFFC7
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wD7F1, wD7F2, wD7F3
 ; points at: wCA2B
-Func_0F2_4C3D::
+RunF24C3DAnd4D72_Sub01::
+Func_0F2_4C3D:: ; address name
     ld a, [wCA38]
     and a, $10
     and a, a
@@ -1365,7 +1369,7 @@ Jump_0F2_4D18::
     ret
 
 ; shows string wCA2B[wD7F3] of category wCA2C[wD7F3] + 2 at the address in wD7F1/2 with size $0109 (E-0121)
-; 2 call sites from 1 routine (e.g. Func_0F2_4C3D)
+; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub01)
 ; reads: wD7F3, wD7F1, wD7F2
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 ; points at: wCA2B
@@ -1401,10 +1405,12 @@ Data_0F2_4D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_4D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $99, $1C, $29, $1A, $8E, $1A, $1E
 
-; 1 call site from 1 routine (e.g. Func_0F2_4C36)
+; only called from RunF24C3DAnd4D72 (E-0047)
+; 1 call site from 1 routine (e.g. RunF24C3DAnd4D72)
 ; reads: wCA38, hFFC7
 ; writes: wD7F1, wD7F5, wD7F2, wD7F3, wD7F4
-Func_0F2_4D72::
+RunF24C3DAnd4D72_Sub02::
+Func_0F2_4D72:: ; address name
     ld a, [wCA38]
     and a, $10
     and a, a
@@ -1448,7 +1454,7 @@ Jump_0F2_4D9E::
     ld [wD7F3], a
     ld a, $6C
     ld [wD7F4], a
-    call Func_0F2_50C6
+    call DrawSpeciesIconForWCA2BEntry
     pop de
     call PickNameBufferForFirstByte_BankF2
     inc de
@@ -1498,7 +1504,7 @@ Jump_0F2_4DF0::
     ld [wD7F3], a
     ld a, $6D
     ld [wD7F4], a
-    call Func_0F2_50C6
+    call DrawSpeciesIconForWCA2BEntry
     pop de
     call PickNameBufferForFirstByte_BankF2
     push de
@@ -1517,7 +1523,7 @@ Jump_0F2_4E25::
     ret
 
 ; BC = wCCCD when the byte at DE is $98 (the ??? placeholder), else wCDCC (E-0122)
-; 2 call sites from 1 routine (e.g. Func_0F2_4D72)
+; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub02)
 ; points at: wCDCC, wCCCD
 PickNameBufferForFirstByte_BankF2::
 Func_0F2_4E26:: ; address name
@@ -1540,7 +1546,7 @@ Data_0F2_4E3A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $A3, $1C, $1A, $98, $1A
 
 ; A = byte offset: hFFC6/hFFC7 = the word at wCA2B + A (E-0079)
-; 5 call sites from 3 routines (e.g. Func_0F2_4EDD, Func_0F2_4D72, Func_0F2_4C3D)
+; 5 call sites from 3 routines (e.g. Func_0F2_4EDD, RunF24C3DAnd4D72_Sub02, RunF24C3DAnd4D72_Sub01)
 ; writes: hFFC6, hFFC7
 ; points at: wCA2B
 LoadHFFC6WordFromWCA2B::
@@ -1560,7 +1566,7 @@ Jump_0F2_4E48::
     ret
 
 ; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
-; 5 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, Func_0F2_4C3D)
+; 5 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_Sub01)
 ; points at: wC8CF
 CopyShortStringToWC8CF_BankF2::
 Func_0F2_4E50:: ; address name
@@ -1756,7 +1762,7 @@ Data_0F2_4F41:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
-; 5 call sites from 5 routines (e.g. Func_0F2_5002, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case16, ...)
+; 5 call sites from 5 routines (e.g. DrawWCA2BStatsScreen, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case16, ...)
 ; reads: hFFC7, hFFC6, wC8C1, wC8C2, wCA80, wCA39
 ; writes: hFFC6, hFFC7
 ; points at: wCA81
@@ -1899,15 +1905,17 @@ Func_0F2_4FF9:: ; address name
     ei
     ret
 
+; runs Func_0F2_4F47, DrawFiveWCA2BStatsColumn and DrawFourWCA2BStatsDigits (E-0126)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, RunWD780StateWhenNotFading_F1_Case0D_Case04)
-Func_0F2_5002::
+DrawWCA2BStatsScreen::
+Func_0F2_5002:: ; address name
     call Func_0F2_4F47
     call DrawFiveWCA2BStatsColumn
     call DrawFourWCA2BStatsDigits
     ret
 
 ; writes four stat words from wCA2B (offsets Data_0F2_5050) as three digits at the scroll offsets Data_0F2_5054 (E-0125)
-; 1 call site from 1 routine (e.g. Func_0F2_5002)
+; 1 call site from 1 routine (e.g. DrawWCA2BStatsScreen)
 ; points at: wCA2B
 DrawFourWCA2BStatsDigits::
 Func_0F2_500C:: ; address name
@@ -1955,7 +1963,7 @@ Data_0F2_5054:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CC, $01, $D0, $01, $0C, $02, $10, $02
 
 ; writes five stat words from wCA2B (offsets Data_0F2_509F) as three digits down a column at scroll + $70 (E-0125)
-; 1 call site from 1 routine (e.g. Func_0F2_5002)
+; 1 call site from 1 routine (e.g. DrawWCA2BStatsScreen)
 ; points at: wCA2B
 DrawFiveWCA2BStatsColumn::
 Func_0F2_505C:: ; address name
@@ -2027,11 +2035,13 @@ Func_0F2_50A4:: ; address name
     ei
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0F2_4D72)
+; hFFC6/7 = the word wCA2B[wD7F5], far-calls DrawSpeciesAndFamilyIconForHFFC6 and continues at Jump_0F2_50F8 (E-0126)
+; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub02)
 ; reads: wD7F5, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2
 ; writes: hFFC6, hFFC7
 ; points at: wCA2B
-Func_0F2_50C6::
+DrawSpeciesIconForWCA2BEntry::
+Func_0F2_50C6:: ; address name
     push bc
     ld hl, wCA2B
     ld a, [wD7F5]
@@ -2040,7 +2050,7 @@ Func_0F2_50C6::
     ldh [hFFC6], a
     ld a, [hl]
     ldh [hFFC7], a
-    farcall Func_00E_6138
+    farcall DrawSpeciesAndFamilyIconForHFFC6
     pop bc
     jp Jump_0F2_50F8
 
@@ -2130,7 +2140,7 @@ Func_0F2_514D:: ; address name
     ret
 
 ; copies 16 bytes from HL to DE, each written with interrupts off after rSTAT bit 1 clears (the same effect as CopyTileBytesToVRAM, with a counter kept on the stack); HL and DE advance (E-0076)
-; 7 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, Func_0F2_4D72)
+; 7 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_Sub02)
 ; reads: rSTAT
 CopyTileBytesToVRAMCounted_BankF2::
 Func_0F2_516E:: ; address name
@@ -2625,15 +2635,17 @@ Jump_0F2_643C::
     jr nz, Jump_0F2_63F3
     ret
 
+; in state 3 continues at Jump_0F2_6470; otherwise runs Func_0F2_64C7 (E-0126)
 ; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, ScriptCommandE5_Run_Case03_Case0B_Sub01, ScriptCommandE5_Run_Case03_Case0E_Sub02)
 ; reads: wD780, wCF8B
 ; writes: wCF8B
 ; points at: wD09D, wInventory, wD7D5
-Func_0F2_6449::
+Run64C7UnlessWD780Is3::
+Func_0F2_6449:: ; address name
     ld a, [wD780]
     cp a, $03
     jr z, Jump_0F2_6470
-    call Func_0F2_64C7
+    call Run64C7UnlessWD780Is3_Sub01
     ret
 
 ; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
@@ -2742,11 +2754,13 @@ Jump_0F2_64C0::
     jr nz, Jump_0F2_64C0
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_6449)
+; only called from Run64C7UnlessWD780Is3 (E-0047)
+; 1 call site from 1 routine (e.g. Run64C7UnlessWD780Is3)
 ; reads: wCF8B
 ; writes: wCF8B
 ; points at: wD09D, wC635
-Func_0F2_64C7::
+Run64C7UnlessWD780Is3_Sub01::
+Func_0F2_64C7:: ; address name
     ld hl, wD09D
     ld b, $C8
 

@@ -1345,7 +1345,7 @@ Jump_039_53B2::
     inc c
     dec b
     jr nz, Jump_039_53A7
-    call Func_039_6D74
+    call EstimateAndPickWeakestTarget
     jp Jump_039_542B
 
 Jump_039_53BC::
@@ -1458,7 +1458,7 @@ Jump_039_545E::
     inc c
     dec b
     jr nz, Jump_039_5453
-    call Func_039_6D74
+    call EstimateAndPickWeakestTarget
     jp Jump_039_5503
 
 Jump_039_5468::
@@ -4178,7 +4178,7 @@ Jump_039_6440::
     inc c
     dec b
     jr nz, Jump_039_6435
-    call Func_039_6D74
+    call EstimateAndPickWeakestTarget
     jp Jump_039_64CA
 
 Jump_039_644A::
@@ -5934,11 +5934,13 @@ Func_039_6D6A:: ; address name
     and a, $0C
     ret
 
+; wD87F = 0, hFFC7 = 0, stores HP + DEF of three slots from the target in wD874 and falls into PickWeakestEstimatedTarget (E-0126)
 ; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; reads: wBattleTarget, wD874, wD875, hFFC6, wC5E7
 ; writes: wD87F, hFFC7, hFFC6
 ; points at: wD874, wBattleTarget
-Func_039_6D74::
+EstimateAndPickWeakestTarget::
+Func_039_6D74:: ; address name
     ld a, $00
     ld [wD87F], a
     xor a, a
@@ -6002,7 +6004,7 @@ Jump_039_6DBC::
     ret
 
 ; slot C: stores HP + DEF (DEF halved when hFFC7 is set and bit 2 of its wD812 byte is set) in wD874[C & 3], or $FFFF when empty (E-0124)
-; 2 call sites from 2 routines (e.g. Func_039_6D74, EstimateThreeTargets)
+; 2 call sites from 2 routines (e.g. EstimateAndPickWeakestTarget, EstimateThreeTargets)
 ; reads: hFFC7
 ; points at: wD812, wD874
 StoreSlotHPPlusDEFToWD874::

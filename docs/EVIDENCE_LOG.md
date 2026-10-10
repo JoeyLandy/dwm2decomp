@@ -1400,6 +1400,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Data.** 3D:4E56, 3E:7615 and 92:5827 are pointer tables decoded as code; left unnamed.
 - Binary verification: build/run83 PASS, 0 differing bytes.
 
+### E-0126 — Misdecoded tables fixed; leftover entry points named
+
+- Kind: DECISION (generator rules and data layouts) + OBSERVATION (reading; C1).
+- **Structured code tables.** `config/tables.json` now describes two bank-$36 pointer tables, so they decode at word alignment:
+  - `EffectHandlerTable` (36:7DDE, 40 entries, read by RunEffectHandlerForActionId);
+  - `ActionEffectTable` (36:6726, 240 entries, read by DispatchActionEffectTable).
+- **What the misalignment had caused.** False entries at 00:1350/1355/1362 and 36:7850/7872. It had also hidden 35 effect routines, which are now named `ActionEffect_<skill>` from the skill string database, as in E-0084.
+- **Table trimming.** A new `trim_tables` pass cuts an inline `rst $00` table at the first word that is also a routine entry found later, then traces that address as code. Example: 12:55F8, which two routines call, was emitted as `dw $44FA` plus `db` bytes; it now decodes as `ld a, [wCC44] …` (StartReturnWarpByFlag25). Test: `tests/test_generated_source.py::InlineTableTrim`.
+- **Data regions.** Ten ranges are now proven data:
+  - sprite frame records (3D:4E3D, 3E:7615, 3E:675A, 92:5805);
+  - bytes before compressed streams (7A:4001);
+  - byte tables (E0:55BF, 36:6A59);
+  - tile map bytes (1E:44EF);
+  - the personality weight table at 30:5587;
+  - map words in bank $0A (0A:61FB).
+  The pointer-table scan or the follows-a-terminator guess had made code entries from them.
+- **Names.** About 55 fall-through and mid-routine entry points are named (StartThreeSoundTracks and StartTwoSoundTracks, which rely on StartSound returning A + 1; TryAddSkillIfPrerequisitesKnown …). Unnamed routines: 391 to 316.
+- Binary verification: build/run88 PASS, 0 differing bytes; 142 tests OK (3 skipped).
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

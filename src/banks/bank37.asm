@@ -1821,7 +1821,7 @@ Jump_037_5452:: ; address name
 ; writes: wD781
 Func_037_4AFD_Case0D_Case04::
 Jump_037_5471:: ; address name
-    farcall Func_0F2_5002
+    farcall DrawWCA2BStatsScreen
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2300,7 +2300,7 @@ Jump_037_5760:: ; address name
 ; writes: hFFBA, wD781
 Func_037_4AFD_Case0D_Case1F::
 Jump_037_5789:: ; address name
-    farcall Func_0F2_4C36
+    farcall RunF24C3DAnd4D72
     ld a, $F0
     ldh [hFFBA], a
     ld a, [wD781]
@@ -3067,7 +3067,7 @@ Func_037_5BC6::
     ld [wD043], a
     cp a, $FF
     jr nz, Jump_037_5BF5
-    call Func_037_5CBC
+    call WriteFFPairAndUnknownName
     jr Jump_037_5C07
 
 Jump_037_5BF5::
@@ -3113,7 +3113,7 @@ Jump_037_5C07::
     ld a, [wD043]
     cp a, $FF
     jr nz, Jump_037_5C3C
-    call Func_037_5CC8
+    call WriteUnknownNameEntry_5CC8
     jr Jump_037_5C47
 
 Jump_037_5C3C::
@@ -3157,7 +3157,7 @@ Func_037_5C4E::
     ld [wD043], a
     cp a, $FF
     jr nz, Jump_037_5C80
-    call Func_037_5CE6
+    call WriteFFQuadAndBlankName
     jr Jump_037_5C95
 
 Jump_037_5C80::
@@ -3192,8 +3192,10 @@ Jump_037_5C95::
     farcall LoadTable4E60EntryForWCA36ToWCA83
     ret
 
+; DE += 4, writes two $FF bytes and falls into the '???' name entry (E-0126)
 ; 1 call site from 1 routine (e.g. Func_037_5BC6)
-Func_037_5CBC::
+WriteFFPairAndUnknownName::
+Func_037_5CBC:: ; address name
     ld a, e
     add a, $04
     ld e, a
@@ -3204,12 +3206,14 @@ Func_037_5CBC::
     ld [hl+], a
     ld [hl+], a
 
+; calls WriteUnknownNamePlaceholder_Bank37 and falls into it again (E-0126)
 ; 1 call site from 1 routine (e.g. Func_037_5BC6)
-Func_037_5CC8::
+WriteUnknownNameEntry_5CC8::
+Func_037_5CC8:: ; address name
     call WriteUnknownNamePlaceholder_Bank37
 
 ; DE += $0B; writes '???' ($98 x 3), five $F0 bytes and a 0 at HL (E-0120)
-; 1 call site from 1 routine (e.g. Func_037_5CC8)
+; 1 call site from 1 routine (e.g. WriteUnknownNameEntry_5CC8)
 WriteUnknownNamePlaceholder_Bank37::
 Func_037_5CCB:: ; address name
     ld a, e
@@ -3234,8 +3238,10 @@ Func_037_5CCB:: ; address name
     ld [hl+], a
     ret
 
+; DE += 2, writes four $FF bytes, then WriteBlankName10_Bank37 (and falls into it) (E-0126)
 ; 1 call site from 1 routine (e.g. Func_037_5C4E)
-Func_037_5CE6::
+WriteFFQuadAndBlankName::
+Func_037_5CE6:: ; address name
     inc de
     inc de
     ld a, $FF
@@ -3246,7 +3252,7 @@ Func_037_5CE6::
     call WriteBlankName10_Bank37
 
 ; DE += 9; writes ten $F0 (blank) bytes and a terminating 0 at HL (E-0121)
-; 1 call site from 1 routine (e.g. Func_037_5CE6)
+; 1 call site from 1 routine (e.g. WriteFFQuadAndBlankName)
 WriteBlankName10_Bank37::
 Func_037_5CF1:: ; address name
     ld a, e

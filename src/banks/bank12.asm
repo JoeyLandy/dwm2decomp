@@ -806,7 +806,7 @@ Jump_012_447A:: ; address name
     ld a, $0E
     ldh [hFF8D], a
     xor a, a
-    call Func_012_684A
+    call RunMessageBoxThenContinue_684A
     ret nc
     ld hl, hFF8C
     call SetBit2AtHL_B12
@@ -1250,7 +1250,7 @@ Jump_012_4705:: ; address name
 ScriptCommand96_Run_Case03::
 Jump_012_473C:: ; address name
     xor a, a
-    call Func_012_684A
+    call RunMessageBoxThenContinue_684A
     ret nc
     xor a, a
     ld [wMessageIndex], a
@@ -1391,7 +1391,7 @@ Jump_012_47D8::
 ScriptCommand95_Run_Case02::
 Jump_012_4814:: ; address name
     xor a, a
-    call Func_012_684A
+    call RunMessageBoxThenContinue_684A
     ret nc
     ld hl, hFF8C
     call SetBit2AtHL_B12
@@ -1424,7 +1424,7 @@ Jump_012_4814:: ; address name
 ScriptCommand95_Run_Case01::
 Jump_012_4850:: ; address name
     xor a, a
-    call Func_012_684A
+    call RunMessageBoxThenContinue_684A
     ret nc
     ld a, $01
     call StartMessageFromTable48B9ByWC82C
@@ -3197,7 +3197,7 @@ Jump_012_556E::
 ; writes: wC8C5
 ScriptCommand89_Run_Case01::
 Jump_012_5573:: ; address name
-    call Func_012_55F8
+    call StartReturnWarpByFlag25
     ld a, $80
     ld [wC8C5], a
     ret
@@ -3280,13 +3280,40 @@ Func_012_55E8:: ; address name
     dw ScriptCommand9B_Run_Case05
     dw ScriptCommand9B_Run_Case06
 
+; with bit 7 of wCC44 saves the wCD07 record; sets the position ($50, $30), wC8C6 = 3 (story flag $25) or 4, wC957 = 1 and starts the fade (E-0126)
 ; 2 call sites from 2 routines (e.g. ScriptCommand89_Run_Case01, ScriptCommand87_Run_Case07)
-Func_012_55F8::
-    dw $44FA
-    db $CC, $CB, $7F, $28, $06, $21, $96, $6C, $06, $60, $D7, $3E, $50, $EA, $C8, $C8
-    db $3E, $30, $EA, $C9, $C8, $AF, $EA, $CA, $C8, $11, $25, $00, $CD, $1B, $18, $38
-    db $07, $3E, $04, $EA, $C6, $C8, $18, $05, $3E, $03, $EA, $C6, $C8, $3E, $01, $EA
-    db $57, $C9, $21, $5A, $6C, $06, $5F, $D7, $C9
+; reads: wCC44
+; writes: wC8C8, wC8C9, wC8CA, wC8C6, wC957
+StartReturnWarpByFlag25::
+Func_012_55F8:: ; address name
+    ld a, [wCC44]
+    bit 7, a
+    jr z, Jump_012_5605
+    farcall SaveWCD07RecordToSRAMSlotWCC42
+
+Jump_012_5605::
+    ld a, $50
+    ld [wC8C8], a
+    ld a, $30
+    ld [wC8C9], a
+    xor a, a
+    ld [wC8CA], a
+    ld de, $0025
+    call TestFlagBit
+    jr c, Jump_012_5622
+    ld a, $04
+    ld [wC8C6], a
+    jr Jump_012_5627
+
+Jump_012_5622::
+    ld a, $03
+    ld [wC8C6], a
+
+Jump_012_5627::
+    ld a, $01
+    ld [wC957], a
+    farcall ScriptStartFadeAndAdvanceStep
+    ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand88_Run
 ; no direct call (reached through a table, a jump or a vector)
@@ -3484,7 +3511,7 @@ Jump_012_573E:: ; address name
 ; writes: wC8C7, wC8C5
 ScriptCommand87_Run_Case07::
 Jump_012_574E:: ; address name
-    call Func_012_55F8
+    call StartReturnWarpByFlag25
     xor a, a
     ld [wC8C7], a
     ld a, $80
@@ -4021,7 +4048,7 @@ Func_012_5A2F:: ; address name
 Jump_012_5A3D::
     ld a, [wScriptStep]
     rst $00
-    dw Func_012_5C31
+    dw SetupScriptSpriteFromWC195
     dw PlaySound83AndAdvanceScriptStep
     dw ScriptStepAnimateSpriteBySteps
     dw ScriptCommand84_Run_Case03
@@ -4351,11 +4378,13 @@ Func_012_5C27:: ; address name
     inc [hl]
     ret
 
+; A = wC195 >> 4, DE = ScriptCommand85_Run_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)
 ; 1 call site from 1 routine (e.g. ScriptCommand3E_Run_Case00)
 ; reads: wC195, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wMessageIndex, wMessageGroup, wFollowerRecords, wC8F4, wC8F9, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
-Func_012_5C31::
+SetupScriptSpriteFromWC195::
+Func_012_5C31:: ; address name
     ld a, [wC195]
     swap a
     and a, $0F
@@ -6215,7 +6244,7 @@ Jump_012_66D4::
     ret
 
 ; unless wMessageState is $FF (idle), runs the message box step for wMessageState (jump table) (E-0122)
-; 1 call site from 1 routine (e.g. Func_012_684A)
+; 1 call site from 1 routine (e.g. RunMessageBoxThenContinue_684A)
 ; reads: wMessageState
 RunMessageBoxStateIfActive_Bank12::
 Func_012_66DA:: ; address name
@@ -6495,9 +6524,11 @@ Jump_012_6848::
     scf
     ret
 
+; runs RunMessageBoxStateIfActive_Bank12, then continues at Jump_012_683F (E-0126)
 ; 4 call sites from 4 routines (e.g. ScriptCommand96_Run_Case01, ScriptCommand96_Run_Case03, ScriptCommand95_Run_Case02, ScriptCommand95_Run_Case01)
 ; reads: wMessageState
-Func_012_684A::
+RunMessageBoxThenContinue_684A::
+Func_012_684A:: ; address name
     call RunMessageBoxStateIfActive_Bank12
     jr Jump_012_683F
 
@@ -6656,7 +6687,7 @@ Jump_012_68FF::
     ret
 
 ; hFFC6 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack bit 7 of byte 3 (E-0125)
-; 3 call sites from 3 routines (e.g. Func_012_689A, Func_00D_6A80, Func_00D_6B45)
+; 3 call sites from 3 routines (e.g. Func_012_689A, ScriptStepCheckKeyListFull_6A80, ScriptStepCheckKeyListFull_6B45)
 ; writes: hFFC6
 ; points at: wKeyList
 FindFreeKeySlotToHFFC6::

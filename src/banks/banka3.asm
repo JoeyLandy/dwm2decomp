@@ -70,7 +70,7 @@ Jump_0A3_406F::
     INCBIN "dwm2-cobi-us.gbc", $28C075, $CA
 
 ; runs Func_0A3_414F, then wDA5B[hFFC6] = 3 (E-0122)
-; 21 call sites from 20 routines (e.g. Func_032_4F0A, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
+; 22 call sites from 21 routines (e.g. ApplyActionResultAndMarkFormation, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
 ; reads: hFFC6
 ; points at: wDA5B
 RunA3414FAndMarkWDA5B3::
@@ -83,7 +83,7 @@ Func_0A3_413F:: ; address name
     ret
 
 ; hFFC6 = the slot for the actor through its side's wC953 formation (Data_0A3_4181), $FF when none (E-0124)
-; 16 call sites from 13 routines (e.g. RunA3414FAndMarkWDA5B3, Func_032_4F0A, Func_032_514C, Func_032_5397, ...)
+; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, Func_032_514C, Func_032_5397, ...)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wC953
@@ -541,11 +541,13 @@ Jump_0A3_494E::
     ld a, $02
     ret
 
+; hFFC6 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case01_Case00)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wBattleActionChoice
-Func_0A3_4960::
+ActorActionIsD0ToE3::
+Func_0A3_4960:: ; address name
     ld a, [wBattleActor]
     add a, a
     ld hl, wBattleActionChoice
@@ -789,7 +791,7 @@ Jump_0A3_4A99::
 ; only called from ActionEffect_Chance (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Chance)
 ; reads: wC5E7, wC58A, wCFC5, wBattleActor
-ActionEffect_Chance_Sub01:: ; heuristic: follows a terminator; C0
+ActionEffect_Chance_Sub01::
 Func_0A3_4AAF:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]

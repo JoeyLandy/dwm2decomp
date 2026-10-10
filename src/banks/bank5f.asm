@@ -640,7 +640,7 @@ Jump_05F_6C43::
     ret
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
-; 51 call sites from 48 routines (e.g. ScriptCommand5E_Run_Shared01, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ScriptCommand4B_Run_Case11, ...)
+; 52 call sites from 49 routines (e.g. ScriptCommand5E_Run_Shared01, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ScriptCommand4B_Run_Case11, ...)
 ; writes: wModeState, wC8C5, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::
@@ -1860,10 +1860,12 @@ Jump_05F_738B:: ; address name
     inc [hl]
     ret
 
+; starts message 6 and advances wC92D when wC552 is 0, otherwise message 7 and steps wC92D back (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC552
 ; points at: wC92D
-Func_05F_7390:: ; heuristic: follows a terminator; C0
+StartChoiceMessageByWC552:: ; heuristic: follows a terminator; C0
+Func_05F_7390:: ; address name
     ld a, [wC552]
     or a, a
     jr nz, Jump_05F_739E
@@ -1881,9 +1883,11 @@ Jump_05F_73A4::
     call StartMessageFromTable7787
     ret
 
+; starts message 5 from Data_05F_7787 and advances wC92D (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC92D
-Func_05F_73A8:: ; heuristic: follows a terminator; C0
+StartMessage5AndAdvanceWC92D:: ; heuristic: follows a terminator; C0
+Func_05F_73A8:: ; address name
     ld a, $05
     call StartMessageFromTable7787
     ld hl, wC92D

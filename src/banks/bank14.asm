@@ -207,7 +207,7 @@ Jump_014_412B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandEB_Run_Case01_Case00::
 Jump_014_4137:: ; address name
-    farcall Func_01D_6C8A
+    farcall SetupTileMap6D84AtBGMap1
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommandEB_Run_Case01

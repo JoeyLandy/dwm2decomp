@@ -358,7 +358,7 @@ Jump_03A_4A33::
     ld [wD868], a
     ret
 
-; 9 call sites from 5 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, DrawHexByteAtBGMap8A_Sub01, DrawEffectSpriteForWD801Range_Sub01, ...)
+; 9 call sites from 5 routines (e.g. SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01, DrawEffectSpriteForWD801Range_Sub01, ...)
 ; reads: wDAB9, wD890, wC58A, wC57F, wD868, wD805
 ; writes: wD804
 ; points at: wD805
@@ -2188,7 +2188,7 @@ Jump_03A_5509::
     ret
 
 ; on CGB copies palette C (8 bytes) from Data_03A_7D9A to wOBJPaletteBuffer and sets wC527 = $80 (E-0124)
-; 3 call sites from 3 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, DrawHexByteAtBGMap8A_Sub01)
+; 3 call sites from 3 routines (e.g. SelectEffectByWDAD2Flags, Func_03A_4ADB, DrawHexByteAtBGMap8A_Sub01)
 ; reads: wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
@@ -2911,7 +2911,7 @@ Jump_03A_61D7::
     ret
 
 Jump_03A_61F0::
-    call Func_03A_6814
+    call RollRepeatCountForAction
     ret
 
 Jump_03A_61F4::
@@ -3968,11 +3968,13 @@ Jump_03A_6811::
     inc c
     jr Jump_03A_67E5
 
+; unless bit 7 of wDABA is set, rolls 1-4 (1-3 for foes outside link battles; doubled for action other than $4E) into wDABA with bit 7 set (E-0126)
 ; 2 call sites from 2 routines (e.g. RunBattleStep4_Case03, RunBattleActions_Case03)
 ; reads: wDABA, wC58A, wBattleActor, wBattleActionId, wBattleTarget
 ; writes: wDABA, wBattleTarget, wBattleSubPhase, wBattleResolveStep
 ; points at: wDABA, wDAD8, wBattleSubPhase
-Func_03A_6814::
+RollRepeatCountForAction::
+Func_03A_6814:: ; address name
     ld a, [wDABA]
     bit 7, a
     jp nz, Jump_03A_6877
@@ -4162,7 +4164,7 @@ Jump_03A_6923::
     ret
 
 Jump_03A_693C::
-    call Func_03A_6814
+    call RollRepeatCountForAction
     ret
 
 Jump_03A_6940::
@@ -5089,7 +5091,7 @@ Data_03A_74F7:: ; heuristic: target of a monotone pointer table; C0
     db $CD, $EE, $78, $CD, $08, $79, $C9, $CD, $41, $79, $CD, $EE, $78, $CD, $08, $79
     db $C9
 
-; 4 call sites from 4 routines (e.g. Func_032_4F0A, Func_032_4ADC_Case01_Case00, Func_032_4ADC_Case01_Case03, Func_032_5820_Case01)
+; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, Func_032_4ADC_Case01_Case00, Func_032_4ADC_Case01_Case03, Func_032_5820_Case01)
 ; reads: wBattleActionId, wBattleActor, wC982
 ; writes: wC982, wD86C, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wC150
@@ -5234,7 +5236,7 @@ Data_03A_76FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $4E, $57, $53, $FF, $FF, $FF
 
 ; CopyActorNameToWC130 and CopyMappedSlotNameToWC140, then shows string Data_03A_7738[wBattleActionId - $D0] of category 0 (BeginStringDisplay_Bank2F); used for the $D0+ special actions (E-0118)
-; 1 call site from 1 routine (e.g. Func_032_4F0A)
+; 1 call site from 1 routine (e.g. ApplyActionResultAndMarkFormation)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 ShowSpecialActionMessage::
@@ -6011,7 +6013,7 @@ Jump_03A_7ADD::
     ld [hl], a
     ret
 
-; 6 call sites from 5 routines (e.g. CopyBattlerNameToHL_Sub02, ActionEffect_Ironize_Sub01, Func_03B_4711, Func_03B_4C95, ...)
+; 6 call sites from 5 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, Func_03B_4711, Func_03B_4C95, ...)
 ; reads: wC58A, wC57F
 ; points at: wC0A0, wBattleMonsterId, wC0A8
 Func_03A_7AE3::
@@ -6110,7 +6112,7 @@ Jump_03A_7B60::
 ; only called from ActionEffect_Ironize (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Ironize)
 ; reads: wC58A, wBattleTarget
-ActionEffect_Ironize_Sub01:: ; heuristic: follows a terminator; C0
+ActionEffect_Ironize_Sub01::
 Func_03A_7B66:: ; address name
     ld a, [wC58A]
     cp a, $01
@@ -6335,7 +6337,7 @@ Jump_03A_7CAF::
     ret
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
-; 4 call sites from 3 routines (e.g. RunWDABEMinus1Step_Case01, RunWDABEMinus1Step_Case00, SelectEffectByWDAD2Flags)
+; 4 call sites from 3 routines (e.g. SelectEffectByWDAD2Flags, RunWDABEMinus1Step_Case01, RunWDABEMinus1Step_Case00)
 ; reads: wC58A, wC57F, wBattleTarget
 TargetOnLocalSide_Bank3A::
 Func_03A_7CB5:: ; address name

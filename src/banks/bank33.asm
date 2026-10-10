@@ -1323,7 +1323,7 @@ Jump_033_56CA::
     ret
 
 Jump_033_56E1::
-    call Func_033_6060
+    call StoreWD789Cell5RecordInWD7DD
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_033_63EF
@@ -1432,7 +1432,7 @@ Jump_033_578A::
     ret
 
 Jump_033_57A9::
-    call Func_033_6060
+    call StoreWD789Cell5RecordInWD7DD
     ld hl, wD781
     inc [hl]
     inc [hl]
@@ -1450,7 +1450,7 @@ Jump_033_57B2:: ; address name
     ld c, $05
     ld hl, Data_033_63EF
     call WriteC3AtWordTableEntries_Bank33
-    call Func_033_5F83
+    call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -1467,7 +1467,7 @@ Jump_033_57B2:: ; address name
 ; points at: wD7DC
 Func_033_5215_Table2_Case04_Case0C::
 Jump_033_57DC:: ; address name
-    call Func_033_5F83
+    call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
@@ -1476,7 +1476,7 @@ Jump_033_57DC:: ; address name
     inc [hl]
     ld a, $0C
     call ShowStringA10_Bank33
-    call Func_033_60A7
+    call FinishWD7DDEntryAndStep_33
     ret
 
 ; entry 13 of the `rst $00` table in Func_033_5215_Table2_Case04
@@ -2627,9 +2627,11 @@ Func_033_5F6B:: ; address name
     ld [rRAMB], a
     ret
 
+; copies box Data_033_639F to wC410 and runs RunFunc6204FourTimes for wC895 at wC3B1 (E-0126)
 ; 2 call sites from 2 routines (e.g. Func_033_5215_Table2_Case04_Case0C, Func_033_5215_Table2_Case04_Case0B)
 ; points at: wC410, wC895, wC3B1
-Func_033_5F83::
+DrawBox639FAndKeyRows::
+Func_033_5F83:: ; address name
     ld de, Data_033_639F
     ld hl, wC410
     ld bc, $0805
@@ -2789,10 +2791,12 @@ Func_033_6049:: ; address name
     ld [wC530], a
     ret
 
+; wD7DD = the record index at WD789 cell 5 (E-0126)
 ; 2 call sites from 2 routines (e.g. Func_033_5215_Table2_Case04_Case0A, Func_033_5215_Table2_Case04_Case08)
 ; reads: wD7F5, wD7F6
 ; points at: wD7DD
-Func_033_6060::
+StoreWD789Cell5RecordInWD7DD::
+Func_033_6060:: ; address name
     farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
@@ -2837,10 +2841,12 @@ Jump_033_6099::
     ld [rRAMG], a
     ret
 
+; wD7B4 = wD7DC, wD7E0 = $FF, wD7DC = 4, wD782 = 0 and wD781 += 1 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case04_Case0C)
 ; reads: wD7DC, wD781
 ; writes: wD7B4, wD7E0, wD7DC, wD782, wD781
-Func_033_60A7::
+FinishWD7DDEntryAndStep_33::
+Func_033_60A7:: ; address name
     ld a, [wD7DC]
     ld [wD7B4], a
     ld a, $FF
@@ -2970,7 +2976,7 @@ Func_033_60FC::
     ret
 
 ; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (E-0072)
-; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, Func_033_5F83, Func_033_5215_Table2_Case04_Case09, CopyRect62C3ToWC36EAndIncWD781, ...)
+; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, DrawBox639FAndKeyRows, Func_033_5215_Table2_Case04_Case09, CopyRect62C3ToWC36EAndIncWD781, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRowsJp_Bank33::
@@ -3109,7 +3115,7 @@ Jump_033_61F2::
     ret
 
 ; calls Func_033_6204 three times and falls into it once more (E-0122)
-; 7 call sites from 6 routines (e.g. Func_033_5215_Case01, Func_033_5F83, Func_033_5215_Table2_Case04_Case07, Func_033_5215_Table2_Case05_Case04, ...)
+; 7 call sites from 6 routines (e.g. Func_033_5215_Case01, DrawBox639FAndKeyRows, Func_033_5215_Table2_Case04_Case07, Func_033_5215_Table2_Case05_Case04, ...)
 ; reads: wC8C1, wC8C2
 RunFunc6204FourTimes::
 Func_033_61FB:: ; address name

@@ -517,11 +517,16 @@ Data_092_56BE:: ; heuristic: target of a monotone pointer table; C0
     db $80
 
 Data_092_56BF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $56, $08, $57, $19, $57, $56, $57, $AB, $57, $E4, $57
-    dw Func_092_5805
-    dw Func_092_580E
-    dw Func_092_5827
-    dw Func_092_5860
+    dw Data_092_56FF
+    dw Data_092_5708
+    dw Data_092_5719
+    dw Data_092_5756
+    dw Data_092_57AB
+    dw Data_092_57E4
+    dw Data_092_5805
+    dw Data_092_580E
+    dw Data_092_5827
+    dw Data_092_5860
     dw Data_092_58A9
     dw Data_092_58C2
     dw Data_092_5903
@@ -544,136 +549,49 @@ Data_092_56BF:: ; heuristic: target of a monotone pointer table; C0
     dw Data_092_5BEB
     dw Data_092_5BEB
     dw Data_092_5BEB
-    INCBIN "dwm2-cobi-us.gbc", $2496FF, $106
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: rNR30
-; writes: hFFF9, rP1
-Func_092_5805:: ; heuristic: target of a pointer table; C0
-    ret nc
-    add sp, 26
-    nop
-    ret c
-    ldh a, [rNR30]
-    nop
-    add a, b
+Data_092_56FF:: ; heuristic: target of a monotone pointer table; C0
+    db $F8, $10, $00, $00, $F8, $18, $01, $00, $80
 
-; no direct call (reached through a table, a jump or a vector)
-; writes: hFFF9, rP1
-Func_092_580E:: ; heuristic: target of a pointer table; C0
-    ldh [hFFF9], a
-    ld e, $00
-    rst $20
-    ld sp, hl
-    ld e, $40
-    ldh [rP1], a
-    ld e, $20
-    rst $20
-    nop
-    ld e, $60
-    jp hl
-    db $02, $1A, $00, $DE, $F7, $1A, $00, $80
+Data_092_5708:: ; heuristic: target of a monotone pointer table; C0
+    db $F8, $08, $02, $00, $F8, $10, $03, $00, $F0, $08, $00, $00, $F0, $10, $01, $00
+    db $80
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: rP1, hFFF8, rNR30, rSB, rNR11, rNR23, rNR22, rNR24
-; writes: hFFF0, rP1, hFFF9
-Func_092_5827:: ; heuristic: target of a pointer table; C0
-    ldh [hFFF0], a
-    ld de, $E000
-    ld hl, sp + 18
-    nop
-    ret c
-    ld hl, sp + 15
-    nop
-    ret c
-    nop
-    db $10, $00 ; stop
-    add sp, -16
-    inc d
-    nop
-    add sp, 8
-    ld de, $E860
-    nop
-    ld [de], a
-    ld h, b
-    add sp, -8
-    inc de
-    ld h, b
-    ldh a, [rP1]
-    rrca
-    ld h, b
-    ldh a, [hFFF8]
-    db $10, $60 ; stop
-    ldh [$FF08], a
-    inc d
-    ld h, b
-    ldh [rP1], a
-    dec d
-    ld h, b
-    ldh a, [$FF08]
-    ld a, [de]
-    nop
-    ret c
-    ldh a, [rNR30]
-    nop
-    add a, b
+Data_092_5719:: ; heuristic: target of a monotone pointer table; C0
+    db $F0, $00, $02, $00, $F0, $08, $03, $00, $E8, $00, $00, $00, $E8, $08, $01, $00
+    db $E0, $F0, $11, $00, $E0, $F8, $12, $00, $E0, $00, $13, $00, $D8, $F8, $0F, $00
+    db $D8, $00, $10, $00, $E8, $F0, $14, $00, $E8, $F8, $15, $00, $F8, $10, $18, $00
+    db $F8, $18, $19, $00, $F0, $10, $19, $00, $F8, $08, $19, $60, $80
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: rSB, rNR11, rNR23, rNR22, rNR24
-; writes: hFFF9, rP1
-Func_092_5860:: ; heuristic: target of a pointer table; C0
-    ldh [hFFF9], a
-    ld e, $00
-    rst $20
-    ld sp, hl
-    ld e, $40
-    ldh [rP1], a
-    ld e, $20
-    rst $20
-    nop
-    ld e, $60
-    ldh a, [$FF09]
-    jr Jump_092_5874
+Data_092_5756:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $249756, $55
 
-Jump_092_5874::
-    add sp, 1
-    ld d, $00
-    add sp, 9
-    rla
-    nop
-    ldh a, [rSB]
-    rla
-    ld h, b
-    ldh a, [rNR11]
-    add hl, de
-    nop
-    ld hl, sp + 9
-    add hl, de
-    ld h, b
-    ld hl, sp + 17
-    ld a, [de]
-    nop
-    rst $10
-    ldh a, [rNR23]
-    ld h, b
-    rst $18
-    ld hl, sp + 22
-    ld h, b
-    rst $18
-    ldh a, [rNR22]
-    ld h, b
-    rst $10
-    ld hl, sp + 23
-    nop
-    rst $10
-    add sp, 25
-    ld h, b
-    rst $08
-    ldh a, [rNR24]
-    nop
-    ret nc
-    jp hl
-    db $1A, $60, $80
+Data_092_57AB:: ; heuristic: target of a monotone pointer table; C0
+    db $E8, $F8, $19, $60, $D0, $E0, $08, $00, $D0, $E8, $09, $00, $D0, $F0, $0A, $00
+    db $D8, $E0, $0B, $00, $D8, $E8, $0C, $00, $E0, $E0, $0E, $00, $E0, $F8, $18, $00
+    db $E0, $00, $19, $00, $E0, $F0, $19, $60, $D8, $F8, $19, $00, $D8, $F0, $0D, $00
+    db $E8, $00, $1A, $00, $F0, $08, $1A, $00, $80
+
+Data_092_57E4:: ; heuristic: target of a monotone pointer table; C0
+    db $D0, $D8, $0B, $00, $D0, $E0, $0C, $00, $D8, $D8, $0E, $00, $D0, $E8, $18, $00
+    db $D0, $F0, $19, $00, $D8, $E8, $19, $60, $D8, $F0, $1A, $00, $E0, $F8, $1A, $00
+    db $80
+
+Data_092_5805:: ; heuristic: target of a monotone pointer table; C0
+    db $D0, $E8, $1A, $00, $D8, $F0, $1A, $00, $80
+
+Data_092_580E:: ; heuristic: target of a monotone pointer table; C0
+    db $E0, $F9, $1E, $00, $E7, $F9, $1E, $40, $E0, $00, $1E, $20, $E7, $00, $1E, $60
+    db $E9, $02, $1A, $00, $DE, $F7, $1A, $00, $80
+
+Data_092_5827:: ; heuristic: target of a monotone pointer table; C0
+    db $E0, $F0, $11, $00, $E0, $F8, $12, $00, $D8, $F8, $0F, $00, $D8, $00, $10, $00
+    db $E8, $F0, $14, $00, $E8, $08, $11, $60, $E8, $00, $12, $60, $E8, $F8, $13, $60
+    db $F0, $00, $0F, $60, $F0, $F8, $10, $60, $E0, $08, $14, $60, $E0, $00, $15, $60
+    db $F0, $08, $1A, $00, $D8, $F0, $1A, $00, $80
+
+Data_092_5860:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $249860, $49
 
 Data_092_58A9:: ; heuristic: target of a monotone pointer table; C0
     db $F0, $08, $1A, $00, $F8, $10, $1A, $00, $E8, $00, $1A, $00, $E0, $F8, $1A, $00

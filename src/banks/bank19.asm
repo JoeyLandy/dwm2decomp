@@ -498,11 +498,13 @@ Jump_019_433F::
     pop bc
     ret
 
+; C = wD868, then falls into Func_019_434D (E-0126)
 ; 4 call sites from 4 routines (e.g. Func_019_4CF8, Func_019_4BA8, RunA04410Or456FBySlotC_Sub01, RunA04410Or456FBySlotC_Sub02)
 ; reads: wD868, wD86A, wD86B
 ; writes: wCFED, wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, wD989
-Func_019_4349::
+SetCFromWD868ThenRun434D::
+Func_019_4349:: ; address name
     ld a, [wD868]
     ld c, a
 
@@ -819,9 +821,11 @@ Jump_019_44B3::
     ld [de], a
     ret
 
+; HL = the word wD868, DE = the word wD86A, then falls into Func_019_44C9 (E-0126)
 ; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01, ActionEffect_TatsuCall_Sub01, ...)
 ; reads: wD868, wD869, wD86A, wD86B
-Func_019_44B9::
+LoadWD868PointersThenRun44C9::
+Func_019_44B9:: ; address name
     ld a, [wD868]
     ld l, a
     ld a, [wD869]
@@ -2218,7 +2222,7 @@ Jump_019_4C2E::
     jr Jump_019_4C3E
 
 Jump_019_4C3B::
-    call Func_019_4349
+    call SetCFromWD868ThenRun434D
 
 Jump_019_4C3E::
     pop bc
@@ -2380,7 +2384,7 @@ Jump_019_4D29::
     jr Jump_019_4D3C
 
 Jump_019_4D39::
-    call Func_019_4349
+    call SetCFromWD868ThenRun434D
 
 Jump_019_4D3C::
     pop bc

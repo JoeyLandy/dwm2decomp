@@ -2387,7 +2387,7 @@ Jump_032_4CB9::
     inc [hl]
     call ClearActorStatus3
     ld d, $0F
-    call Func_032_4D23
+    call ShowBattleTextCategory0Entry
     xor a, a
     ld [wBattleSubStep], a
     jr Jump_032_4D2A
@@ -2411,7 +2411,7 @@ Jump_032_4CD4::
     ld a, [wBattleActor]
     call SetBit0OfWD095Indexed_Bank32
     ld d, $10
-    call Func_032_4D23
+    call ShowBattleTextCategory0Entry
     ld a, [wBattleActor]
     call GetBattleHP_Bank32
     ld a, h
@@ -2427,7 +2427,7 @@ Jump_032_4CF7::
     ld a, [wBattleActor]
     call SetBit1OfWD095Indexed_Bank32
     ld d, $11
-    call Func_032_4D23
+    call ShowBattleTextCategory0Entry
     jr Jump_032_4D2A
 
 Jump_032_4D0B::
@@ -2438,11 +2438,13 @@ Jump_032_4D0B::
     ld a, [wBattleActor]
     call SetBit2OfWD095Indexed_Bank32
     ld d, $12
-    call Func_032_4D23
+    call ShowBattleTextCategory0Entry
     jr Jump_032_4D2A
 
+; far-calls ShowBattleTextCategory0 and returns; the next entry returns carry (E-0126)
 ; 4 call sites from 1 routine (e.g. Func_032_4C9C)
-Func_032_4D23::
+ShowBattleTextCategory0Entry::
+Func_032_4D23:: ; address name
     farcall ShowBattleTextCategory0
     ret
 
@@ -2796,9 +2798,11 @@ Jump_032_4F00::
     dw $07FE
     dw Func_032_4ADC_Case01_Case09
 
+; for C & 7 non-zero runs Func_03A_7508 (and Func_032_5386 unless the result is 1), else shows the special action message; then sets sub-phase 7 and marks the formation slot unless it has status 3/4 bits (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6
-Func_032_4F0A:: ; heuristic: follows a terminator; C0
+ApplyActionResultAndMarkFormation:: ; heuristic: follows a terminator; C0
+Func_032_4F0A:: ; address name
     ld c, a
     and a, $07
     jr z, Jump_032_4F32
@@ -2806,7 +2810,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
     farcall Func_03A_7508
     pop af
     cp a, $01
-    call nz, Func_032_5386
+    call nz, CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
@@ -2833,7 +2837,7 @@ Jump_032_4F32::
 ; points at: wDAD8, wBattleSubStep, wBattleStatus, wBattleActionChoice, wDAE0
 Func_032_4ADC_Case01_Case00::
 Jump_032_4F53:: ; address name
-    farcall Func_0A3_4960
+    farcall ActorActionIsD0ToE3
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_032_4F00
@@ -2860,7 +2864,7 @@ Jump_032_4F85::
     farcall Func_03A_7508
     pop af
     cp a, $01
-    call nz, Func_032_5386
+    call nz, CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     ret
 
@@ -3072,7 +3076,7 @@ Jump_032_510E:: ; address name
     farcall Func_03A_7508
     ld a, [wRecordBufferData]
     or a, a
-    call nz, Func_032_5386
+    call nz, CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     ret
 
@@ -3087,7 +3091,7 @@ Jump_032_5130:: ; address name
     cp a, $07
     jr z, Jump_032_5143
     cp a, $01
-    call nz, Func_032_5386
+    call nz, CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     ret
 
@@ -3467,7 +3471,7 @@ Jump_032_535D::
     ret
 
 ; A = 0 for action $BF or $C9-$CF, otherwise carry (E-0124)
-; 3 call sites from 3 routines (e.g. Func_032_5386, Func_032_55EE, Func_032_4ADC_Case01_Case00)
+; 3 call sites from 3 routines (e.g. CheckActionD0ToE3OrSpecial, Func_032_55EE, Func_032_4ADC_Case01_Case00)
 ; reads: wBattleActionId
 ActionIsSpecialBFOrC9ToCF::
 Func_032_535F:: ; address name
@@ -3495,11 +3499,13 @@ Jump_032_5384::
     xor a, a
     ret
 
+; actions $D0-$E3 continue at Jump_032_53C8; otherwise returns unless ActionIsSpecialBFOrC9ToCF (E-0126)
 ; 8 call sites from 8 routines (e.g. Func_032_5820_Case07, Func_032_5820_Case01, Func_032_4ADC_Case08, Func_032_4ADC_Case01_Case04, ...)
 ; reads: wBattleActionId, wBattleActor, hFFC6, wRecordBufferData
 ; writes: wRecordBuffer, wCFED, wBattleActor, wRecordBufferData, wD866, wD867
 ; points at: wDA2C, wBattleMP
-Func_032_5386::
+CheckActionD0ToE3OrSpecial::
+Func_032_5386:: ; address name
     ld a, [wBattleActionId]
     cp a, $D0
     jr c, Jump_032_5393
@@ -3901,7 +3907,7 @@ Jump_032_55CF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_032_4ADC_Case06_Case03::
 Jump_032_55E7:: ; address name
-    call Func_032_5386
+    call CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     ret
 
@@ -4019,7 +4025,7 @@ Jump_032_5770:: ; address name
     ld hl, wD854
     call AddDoubleAToHL_Bank32
     bit 4, [hl]
-    call z, Func_032_5386
+    call z, CheckActionD0ToE3OrSpecial
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
@@ -4265,7 +4271,7 @@ Jump_032_58B3:: ; address name
     pop af
     cp a, $01
     jr z, Jump_032_58D4
-    call Func_032_5386
+    call CheckActionD0ToE3OrSpecial
 
 Jump_032_58D4::
     ld a, $05
@@ -4467,7 +4473,7 @@ Jump_032_59CB:: ; address name
 ; points at: wBattleSubPhase
 Func_032_5820_Case07::
 Jump_032_59CF:: ; address name
-    call Func_032_5386
+    call CheckActionD0ToE3OrSpecial
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
@@ -5102,7 +5108,7 @@ Jump_032_5E0B::
     ld [wD86A], a
     ld a, d
     ld [wD86B], a
-    farcall Func_019_44B9
+    farcall LoadWD868PointersThenRun44C9
     ret
 
 ; only called from RecomputeTargetMaxHPAndMP (E-0047)
@@ -6364,7 +6370,7 @@ Jump_032_657D:: ; address name
 ; 1 call site from 1 routine (e.g. ActionEffect_Surge)
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; points at: wBattleStatus, wBattleAGL, wBattleDEF
-ActionEffect_Surge_Sub01:: ; heuristic: follows a terminator; C0
+ActionEffect_Surge_Sub01::
 Func_032_6581:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -6930,7 +6936,7 @@ Func_032_688C:: ; address name
     ret
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 16 call sites from 14 routines (e.g. DefeatTarget, RunBattleSubStep2_6764_Case02, Func_032_4C9C, Func_032_4E51, ...)
+; 16 call sites from 14 routines (e.g. ActionEffect_Surge_Sub01, ActionEffect_DeMagic_Sub01, DefeatTarget, RunBattleSubStep2_6764_Case02, ...)
 ; points at: wD095
 SetBit2OfWD095Indexed_Bank32::
 Func_032_6899:: ; address name
@@ -7031,7 +7037,7 @@ Jump_032_6918::
     ret
 
 ; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
-; 2 call sites from 1 routine (e.g. Func_032_4F0A)
+; 2 call sites from 1 routine (e.g. ApplyActionResultAndMarkFormation)
 ; points at: wD80F
 SlotHasStatus3Or4Bits_Bank32::
 Func_032_691C:: ; address name

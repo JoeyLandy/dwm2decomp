@@ -157,7 +157,7 @@ Jump_01E_40D1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE8_Run_Case01_Case00::
 Jump_01E_40DD:: ; address name
-    farcall Func_01D_6C8A
+    farcall SetupTileMap6D84AtBGMap1
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommandE8_Run_Case01
@@ -775,23 +775,9 @@ Jump_01E_44C3:: ; address name
     inc a
     ld [wD781], a
     ret
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7AF, wD7AB
-; writes: wD7B0, wD7AF, wD7B1, wD7AB
-Func_01E_44EF:: ; heuristic: follows a terminator; C0
-    or a, b
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, d
-    or a, [hl]
-    jp Jump_01E_7170
-    db $72, $73, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $74, $75
-    db $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $70, $71, $72, $73, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $74, $75, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; entry 12 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -7025,7 +7011,7 @@ Jump_01E_702A::
     ld [wD7F3], a
     ld a, $6C
     ld [wD7F4], a
-    call Func_01E_70E3
+    call LoadRecordWordFieldAndContinue710A
     pop de
     pop bc
     push bc
@@ -7087,7 +7073,7 @@ Jump_01E_7087::
     ld [wD7F3], a
     ld a, $6D
     ld [wD7F4], a
-    call Func_01E_70E3
+    call LoadRecordWordFieldAndContinue710A
     pop de
     pop bc
     push bc
@@ -7132,12 +7118,14 @@ Jump_01E_70D6::
     ret
     db $1A, $98, $1A, $1C, $A3, $1C, $1C, $A3, $1C, $1A, $98, $1A
 
+; far-calls LoadRecordWordFieldWD7F5AndShowIcon for record B and continues at Jump_01E_710A (E-0126)
 ; 2 call sites from 1 routine (e.g. Func_01E_6FEB)
 ; reads: wD7F1, hFFC6, wD7F2, wD7F3, rSTAT, wC8C1, wC8C2
-Func_01E_70E3::
+LoadRecordWordFieldAndContinue710A::
+Func_01E_70E3:: ; address name
     push bc
     ld c, b
-    farcall Func_00E_612E
+    farcall LoadRecordWordFieldWD7F5AndShowIcon
     pop bc
     jp Jump_01E_710A
 
@@ -7232,8 +7220,6 @@ Func_01E_7163::
     call DivideHLByA
     push af
     and a, a
-
-Jump_01E_7170::
     jr z, Jump_01E_7173
     inc l
 

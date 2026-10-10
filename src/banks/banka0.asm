@@ -833,7 +833,7 @@ Jump_0A0_4489::
     jr Jump_0A0_449F
 
 Jump_0A0_4499::
-    farcall Func_019_4349
+    farcall SetCFromWD868ThenRun434D
 
 Jump_0A0_449F::
     pop bc
@@ -941,7 +941,7 @@ Jump_0A0_4550::
     ld [wD86A], a
     ld a, d
     ld [wD86B], a
-    farcall Func_019_44B9
+    farcall LoadWD868PointersThenRun44C9
     pop bc
     farcall Func_019_4298
     ret
@@ -1006,7 +1006,7 @@ Jump_0A0_45A0::
     jr Jump_0A0_45B9
 
 Jump_0A0_45B3::
-    farcall Func_019_4349
+    farcall SetCFromWD868ThenRun434D
 
 Jump_0A0_45B9::
     pop bc
@@ -1115,7 +1115,7 @@ Jump_0A0_466B::
     ld [wD86A], a
     ld a, d
     ld [wD86B], a
-    farcall Func_019_44B9
+    farcall LoadWD868PointersThenRun44C9
     pop bc
     farcall Func_019_4298
     ret
@@ -2104,14 +2104,16 @@ Func_0A0_4C59:: ; address name
     call DrawSlotStatusMarks_BankA0
     ret
 
+; runs BuildAndCopySlotPanel_A0 for slot 0 and falls into it for slot 1 (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0A0_4C63:: ; heuristic: follows a terminator; C0
+BuildAndCopySlotPanels0And1_A0:: ; heuristic: follows a terminator; C0
+Func_0A0_4C63:: ; address name
     ld c, $00
     call BuildAndCopySlotPanel_A0
     ld c, $01
 
 ; runs Func_0A0_6BF0 and 6C22 for slot C and copies its panel row to VRAM (E-0122)
-; 1 call site from 1 routine (e.g. Func_0A0_4C63)
+; 1 call site from 1 routine (e.g. BuildAndCopySlotPanels0And1_A0)
 BuildAndCopySlotPanel_A0::
 Func_0A0_4C6A:: ; address name
     call CopySlotPanelPart6D47ToVRAM

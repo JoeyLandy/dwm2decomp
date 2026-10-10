@@ -1137,7 +1137,7 @@ Jump_0F1_484C::
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Case00_Case00)
 RefreshRecordListAndNameTiles_BankF1::
 Func_0F1_4866:: ; address name
-    farcall Func_002_5E82
+    farcall RunFunc5E85Twice
     call LoadRecordListNameTiles
     ret
 
@@ -2964,7 +2964,7 @@ Jump_0F1_535A:: ; address name
 ; writes: wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case04::
 Jump_0F1_5379:: ; address name
-    farcall Func_0F2_5002
+    farcall DrawWCA2BStatsScreen
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3408,7 +3408,7 @@ Jump_0F1_561B:: ; address name
 ; writes: hFFBA, wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case1F::
 Jump_0F1_5644:: ; address name
-    farcall Func_0F2_4C36
+    farcall RunF24C3DAnd4D72
     ld a, $F0
     ldh [hFFBA], a
     ld a, [wD781]

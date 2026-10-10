@@ -1426,7 +1426,7 @@ Jump_002_4846::
 
 Jump_002_48AE::
     farcall FullyHealParty
-    call Func_002_5E82
+    call RunFunc5E85Twice
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
     jp RunWC8C7Phase_Case00
@@ -4839,13 +4839,15 @@ Jump_002_5E6C::
     jr nz, Jump_002_5E6C
     ret
 
+; calls Func_002_5E85 and falls into it, running it twice (E-0126)
 ; 4 call sites from 4 routines (e.g. RunWC8C7Phase_Case02, RefreshRecordListAndNameTiles, ScriptCommandF8_Run_Case02_Case10, RefreshRecordListAndNameTiles_BankF1)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
-Func_002_5E82::
+RunFunc5E85Twice::
+Func_002_5E82:: ; address name
     call Func_002_5E85
 
-; 19 call sites from 10 routines (e.g. Func_002_4628, Func_002_5E82, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
+; 19 call sites from 10 routines (e.g. Func_002_4628, RunFunc5E85Twice, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
 Func_002_5E85::

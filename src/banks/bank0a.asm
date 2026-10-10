@@ -3789,19 +3789,9 @@ Data_00A_61BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0E, $04, $07, $0B, $0E, $00, $70, $00, $71, $00, $72, $00, $AE, $01
 
 Data_00A_61FB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $13
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    dw Func_000_1362
-    db $62, $03, $0A, $04, $08, $0A, $00, $00, $70, $00, $71, $00, $65, $02
+    db $13, $62, $13, $62, $13, $62, $13, $62, $13, $62, $13, $62, $13, $62, $13, $62
+    db $13, $62, $13, $62, $13, $62, $13, $62, $03, $0A, $04, $08, $0A, $00, $00, $70
+    db $00, $71, $00, $65, $02
 
 Data_00A_6220:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $02A220, $8B

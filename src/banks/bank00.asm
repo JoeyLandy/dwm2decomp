@@ -3166,7 +3166,7 @@ Func_000_1231:: ; address name
     jr z, Jump_000_1273
     cp a, $58
     jr z, Jump_000_126E
-    call Func_000_334E
+    call StartThreeSoundTracks
     ei
     ret
 
@@ -3176,7 +3176,7 @@ Jump_000_126E::
     ret
 
 Jump_000_1273::
-    call Func_000_3351
+    call StartTwoSoundTracks
 
 Jump_000_1276::
     ei
@@ -3271,7 +3271,7 @@ Func_000_127C:: ; address name
 
 Jump_000_1306::
     di
-    call Func_000_3351
+    call StartTwoSoundTracks
     ei
     pop hl
     pop de
@@ -3281,7 +3281,7 @@ Jump_000_1306::
 
 Jump_000_1310::
     di
-    call Func_000_334E
+    call StartThreeSoundTracks
     ei
     pop hl
     pop de
@@ -3312,48 +3312,7 @@ Jump_000_1329::
 
 Jump_000_1338::
     ret
-    db $C9, $47, $FA, $E0, $C5, $B7, $20, $37, $78, $CB, $7F, $20, $32, $B7, $28, $2F
-    db $EA, $E2, $C5, $FA, $24, $C5, $B7
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E2, rNR50
-; writes: wC5E2, wC5E3, wC5E4, wC5E5
-Func_000_1350:: ; heuristic: target of a pointer table; C0
-    jr nz, Jump_000_135A
-    ld a, [wC5E2]
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: rNR50, wC5E2
-; writes: wC5E2, wC5E3, wC5E4, wC5E5
-Func_000_1355:: ; heuristic: target of a pointer table; C0
-    sra a
-    ld [wC5E2], a
-
-Jump_000_135A::
-    ldh a, [rNR50]
-    bit 7, a
-    jr nz, Jump_000_1378
-    bit 3, a
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E2, rNR50
-; writes: wC5E3, wC5E4, wC5E5, wC5E2
-Func_000_1362:: ; heuristic: target of a pointer table; C0
-    jr nz, Jump_000_1378
-    or a, a
-    jr z, Jump_000_1378
-    ld a, [wC5E2]
-    ld [wC5E3], a
-    ld a, $08
-    ld [wC5E4], a
-    ldh a, [rNR50]
-    ld [wC5E5], a
-    ret
-
-Jump_000_1378::
-    xor a, a
-    ld [wC5E2], a
-    ret
+    INCBIN "dwm2-cobi-us.gbc", $001339, $44
 
 ; only called from StepFade (E-0047)
 ; 1 call site from 1 routine (e.g. StepFade)
@@ -3880,7 +3839,7 @@ Func_000_1679:: ; address name
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 115 call sites from 98 routines (e.g. Func_000_2950_Case08, Multiply8By16, SRAMRecordAddressMapped, LoadMapScreen, ...)
+; 115 call sites from 98 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -3923,7 +3882,7 @@ Jump_000_16A5::
     ret
 
 ; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
-; 62 call sites from 52 routines (e.g. MultiplyHLByAPercent, Func_005_4B97, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
+; 64 call sites from 53 routines (e.g. MultiplyHLByAPercent, Func_005_4B97, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
 Multiply8By16::
 Func_000_16AA:: ; address name
     push af
@@ -3968,7 +3927,7 @@ Jump_000_16CD::
     ret
 
 ; HL = HL / A (quotient in HL), A = remainder; clobbers D, E
-; 87 call sites from 63 routines (e.g. DivideHLByBC, AIScore_BiAttack_Sub02_Sub01, AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, ...)
+; 88 call sites from 64 routines (e.g. DivideHLByBC, AIScore_BiAttack_Sub02_Sub01, AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, ...)
 DivideHLByA::
 Func_000_16D1:: ; address name
     ld d, $10
@@ -4246,7 +4205,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 863 call sites from 411 routines (e.g. LoadMapScreen_Sub02, SetWC90DTo0BOnMap19IfFlagD1, WritePlayerNameWithFlag0SuffixToWC130, PlayMapMusic_Case05, ...)
+; 864 call sites from 412 routines (e.g. LoadMapScreen_Sub02, SetWC90DTo0BOnMap19IfFlagD1, WritePlayerNameWithFlag0SuffixToWC130, PlayMapMusic_Case05, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -6508,9 +6467,11 @@ Jump_000_2412::
     ld [de], a
     ret
 
+; HL = $4558 + 2 * A, switches to ROM bank 8 and continues with the shared read at Jump_000_2447 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_004_58C2_Case13)
 ; writes: rROMB0
-Func_000_241A::
+ReadBank08Table4558WordForA::
+Func_000_241A:: ; address name
     ld l, a
     ld h, $00
     add hl, hl
@@ -6563,7 +6524,7 @@ Jump_000_244C::
     ret
 
 ; A = key slot, or $FE: writes 'Magic Key' to DE; otherwise writes the name of key A in wKeyList (4-byte entries from $C708): the word numbered byte 0 + 1, then the word numbered byte 1 + $11 (CopyKeyNameWordToDE), then $F0 (E-0090)
-; 7 call sites from 7 routines (e.g. DebugAutomap_Update_Sub03, PauseMenu_State3_Shared07, PauseMenu_State3_Case01_Case03, PauseMenu_State3_Shared08, ...)
+; 7 call sites from 7 routines (e.g. DebugAutomap_Update_Sub03, PauseMenu_State3_Shared06, PauseMenu_State3_Case01_Case03, PauseMenu_State3_Shared07, ...)
 WriteKeyNameToDE::
 Func_000_2458:: ; address name
     cp a, $FE
@@ -9020,22 +8981,26 @@ StartMusic_Sub01::
 Func_000_334B:: ; address name
     call StartSound
 
+; calls StartSound (which returns A + 1) and falls into StartTwoSoundTracks, so sound ids A, A + 1 and A + 2 start (E-0126)
 ; 2 call sites from 2 routines (e.g. StartSoundEffect, StartMusic)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
-Func_000_334E::
+StartThreeSoundTracks::
+Func_000_334E:: ; address name
     call StartSound
 
+; calls StartSound and falls into it once more, so sound ids A and A + 1 start (E-0126)
 ; 2 call sites from 2 routines (e.g. StartSoundEffect, StartMusic)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
-Func_000_3351::
+StartTwoSoundTracks::
+Func_000_3351:: ; address name
     call StartSound
 
 ; C2 static reading, and 495 emulated sound starts agree (E-0018): starts sound id A (kept in $DD10). Finds A's range in SoundBankTable, switches to that bank, takes the 4-byte record at (array + 4*(A - first id)), and copies it into the channel-state slot at $DC00 + record byte 0 (record byte 1 to slot +2, the track pointer to +3/+4, this bank to +5). Returns A + 1.
-; 4 call sites from 4 routines (e.g. StartSoundEffect, Func_000_334E, Func_000_3351, StartMusic_Sub01)
+; 4 call sites from 4 routines (e.g. StartSoundEffect, StartThreeSoundTracks, StartTwoSoundTracks, StartMusic_Sub01)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
@@ -10751,7 +10716,7 @@ Jump_000_3E76::
     ret
 
 ; Z set when HL == BC; A is clobbered
-; 177 call sites from 116 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, FailIfFoeHPBelowFourTimesWD2C1, ...)
+; 179 call sites from 117 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, FailIfFoeHPBelowFourTimesWD2C1, ...)
 CompareHLToBC::
 Func_000_3E7A:: ; address name
     ld a, h
@@ -10791,7 +10756,7 @@ Jump_000_3E8F::
     ret
 
 ; HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)
-; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, AddRandomWeightByValueBand, RandomWithin5PercentOfHL, ResolveStepComputeDamage_Sub01, ...)
+; 19 call sites from 16 routines (e.g. RunBattleCommandEntry_Case04_Sub01, AddRandomWeightByValueBand, RollDamageBaseToBasePlusWD86A, ComputeBasicDamage, ...)
 ; reads: wC5E7, wC5E8
 RandomInRange::
 Func_000_3E98:: ; address name
@@ -10922,7 +10887,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 292 call sites from 237 routines (e.g. CheckSlotStatusBlock, ActorLacksStatus2Bit1And4Bits01, ActorStatus4CheckReadsAddress, ActorLacksStatus1Bits23And4Bits01, ...)
+; 295 call sites from 240 routines (e.g. CheckSlotStatusBlock, ActorLacksStatus2Bit1And4Bits01, ActorStatus4CheckReadsAddress, ActorLacksStatus1Bits23And4Bits01, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de
@@ -10936,7 +10901,7 @@ Func_000_3F25:: ; address name
     ret
 
 ; A = battle slot, E = field offset: HL = wBattlerRecords + $4E * A' + E, where A' = A - 1 for A >= 3, so slots 0-2 and 4-6 map to records 0-5 (slots 3 and 7 have no record here; GetBaseHP handles them separately); clobbers A, BC (E-0059, E-0062)
-; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01_Sub03, ActionEffect_Transform_Sub01_Sub04, ...)
+; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_Sub04, ActionEffect_Transform_Sub01_Sub03, RecomputeTargetStatsFromRecord, ...)
 ; points at: wBattlerRecords
 BattlerRecordFieldAddress::
 Func_000_3F32:: ; address name

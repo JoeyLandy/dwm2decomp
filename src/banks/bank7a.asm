@@ -1,23 +1,9 @@
 SECTION "Bank 7A", ROMX[$4000], BANK[$7A]
     db $7A
 
-; no direct call (reached through a table, a jump or a vector)
-Func_07A_4001:: ; heuristic: follows a terminator; C0
-    ld b, b
-    ld [bc], a
-    ld [bc], a
-    rst $38
-    ld [bc], a
-    rst $38
-    rst $38
-    ld c, l
-
-Jump_07A_4009::
-    ld [bc], a
-    dec hl
-    rrca
-    jr Jump_07A_4009
-    INCBIN "dwm2-cobi-us.gbc", $1E800E, $131
+; LZSS-compressed asset: 318 bytes expand to 576 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_07A_4001:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $1E8001, $13E
 
 ; LZSS-compressed asset: 487 bytes expand to 576 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07A_413F:: ; heuristic: stream in a run of back-to-back compressed streams; C0

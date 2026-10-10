@@ -2685,7 +2685,7 @@ Jump_001_56F1::
     jp nz, Jump_001_5800
     bit 2, a
     jp nz, Jump_001_5720
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_5720::
@@ -2830,7 +2830,7 @@ Jump_001_5800::
     cp a, $07
     jr z, Jump_001_5812
     call Func_001_57E1
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_5812::
@@ -2850,7 +2850,7 @@ Jump_001_5822::
     ret z
     dec a
     ld [wC5F8], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_5832::
@@ -2860,7 +2860,7 @@ Jump_001_5832::
     ret z
     inc a
     ld [wC5F8], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_5843::
@@ -2896,7 +2896,7 @@ Jump_001_5868::
     pop hl
     ld a, c
     ld [hl], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_5871::
@@ -2926,7 +2926,7 @@ Jump_001_588A::
     ld [hl+], a
     ld a, b
     ld [hl], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ld a, [wC5F8]
     cp a, $02
     jr z, Jump_001_58A2
@@ -2986,7 +2986,7 @@ Jump_001_58EB::
     dec a
     pop hl
     ld [hl], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_58F2::
@@ -3016,7 +3016,7 @@ Jump_001_5909::
     ld [hl+], a
     ld a, b
     ld [hl], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ld a, [wC5F8]
     cp a, $02
     jp z, Jump_001_58A2
@@ -3057,7 +3057,7 @@ Jump_001_594C::
     inc a
     pop hl
     ld [hl], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_5953::
@@ -3113,7 +3113,7 @@ Jump_001_5997::
     dec a
     pop hl
     ld [hl], a
-    call Func_001_5AAC
+    call StepDebugCursorWC5FF
     ret
 
 Jump_001_599E::
@@ -3258,10 +3258,12 @@ Jump_001_5A99::
     ld [wCFA8], a
     ret
 
+; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at Jump_001_5B45, then wraps to 0 (E-0126)
 ; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_57E1)
 ; reads: wC5FF, wC5F8
 ; writes: wC5FF
-Func_001_5AAC::
+StepDebugCursorWC5FF::
+Func_001_5AAC:: ; address name
     ld a, [wC5FF]
     inc a
     ld [wC5FF], a

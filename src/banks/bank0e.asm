@@ -2677,10 +2677,12 @@ Func_00E_611B:: ; address name
     call DivideHLByA
     ret
 
-; 1 call site from 1 routine (e.g. Func_01E_70E3)
+; loads word field wD7F5 of record A (LoadSRAMRecordWord) and falls into DrawSpeciesAndFamilyIconForHFFC6 (E-0126)
+; 1 call site from 1 routine (e.g. LoadRecordWordFieldAndContinue710A)
 ; reads: wD7F5, hFFC6, hFFC7, wD7F4
 ; writes: wD7F6, wD7F7, wD09D, wD09E
-Func_00E_612E::
+LoadRecordWordFieldWD7F5AndShowIcon::
+Func_00E_612E:: ; address name
     ld a, c
     push af
     ld a, [wD7F5]
@@ -2688,10 +2690,12 @@ Func_00E_612E::
     pop af
     call LoadSRAMRecordWord
 
-; 1 call site from 1 routine (e.g. Func_0F2_50C6)
+; wD7F6/7 = hFFC6/7, runs Func_00E_615A, then loads the family icon tile for wD7F5 & $0F into tile wD7F4 (E-0126)
+; 1 call site from 1 routine (e.g. DrawSpeciesIconForWCA2BEntry)
 ; reads: hFFC6, hFFC7, wD7F5, wD7F4
 ; writes: wD7F6, wD7F7, wD09D, wD09E
-Func_00E_6138::
+DrawSpeciesAndFamilyIconForHFFC6::
+Func_00E_6138:: ; address name
     ldh a, [hFFC6]
     ld [wD7F6], a
     ldh a, [hFFC7]
@@ -2705,7 +2709,7 @@ Func_00E_6138::
     farcall LoadFamilyIconTileForWD09D
     ret
 
-; 5 call sites from 4 routines (e.g. Func_00E_5688, Func_00E_6138, Func_001_57E1, ScriptCommandF6_Run_Case10_Case06_Sub02)
+; 5 call sites from 4 routines (e.g. Func_00E_5688, DrawSpeciesAndFamilyIconForHFFC6, Func_001_57E1, ScriptCommandF6_Run_Case10_Case06_Sub02)
 ; reads: wD7F6, wD7F7
 ; writes: wD7F5
 Func_00E_615A::

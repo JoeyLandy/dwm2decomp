@@ -4598,7 +4598,7 @@ Jump_060_6C8E::
     ret
 
 ; when wCC42 < 20, writes wCC42 + $50 and the $194 bytes at wCD07 to SRAM bank 2 at $A000 + $195 * wCC42 (E-0121)
-; 6 call sites from 5 routines (e.g. DebugAutomap_Update_Sub01, RunWC8C7Phase_Case02, Func_002_4F4C_Case07, RunWC46BMenuState_Case05, ...)
+; 7 call sites from 6 routines (e.g. DebugAutomap_Update_Sub01, RunWC8C7Phase_Case02, Func_002_4F4C_Case07, RunWC46BMenuState_Case05, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07

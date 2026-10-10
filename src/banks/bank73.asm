@@ -5434,7 +5434,7 @@ ScriptCommand3E_Run_Case00::
 Jump_073_618F:: ; address name
     ld a, $10
     ld [wC195], a
-    farcall Func_012_5C31
+    farcall SetupScriptSpriteFromWC195
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand64_Run

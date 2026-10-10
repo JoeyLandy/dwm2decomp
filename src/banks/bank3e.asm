@@ -28,8 +28,20 @@ Func_03E_4001:: ; address name
     ret
 
 Data_03E_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $91, $40, $9E, $41, $C2, $44, $5F, $48, $1E, $4B, $CD, $4E, $CD, $52, $A7, $53
-    db $19, $56, $26, $60, $FC, $61, $1A, $67, $16, $76, $3A, $7A
+    dw Data_03E_4091
+    dw Data_03E_419E
+    dw Data_03E_44C2
+    dw Data_03E_485F
+    dw Data_03E_4B1E
+    dw Data_03E_4ECD
+    dw Data_03E_52CD
+    dw Data_03E_53A7
+    dw Data_03E_5619
+    dw Data_03E_6026
+    dw Data_03E_61FC
+    dw Data_03E_671A
+    dw Data_03E_7616
+    dw Data_03E_7A3A
 
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
 ; 1 call site from 1 routine (e.g. DrawEffectSpriteAtWD804_Bank3E)
@@ -99,6 +111,8 @@ Jump_03E_4063::
 
 Jump_03E_4090::
     ret
+
+Data_03E_4091:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_40D1
     dw Data_03E_40DA
     dw Data_03E_40F3
@@ -183,6 +197,8 @@ Data_03E_418C:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_419D:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_419E:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_41DE
     dw Data_03E_41E7
     dw Data_03E_41FC
@@ -283,6 +299,8 @@ Data_03E_4494:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_44C1:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_44C2:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_4502
     dw Data_03E_452B
     dw Data_03E_4564
@@ -379,6 +397,8 @@ Data_03E_4859:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_485E:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_485F:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_489F
     dw Data_03E_48AC
     dw Data_03E_48BD
@@ -475,6 +495,8 @@ Data_03E_4B0C:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_4B1D:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_4B1E:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_4B5E
     dw Data_03E_4B6B
     dw Data_03E_4B8C
@@ -565,6 +587,8 @@ Data_03E_4EBB:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_4ECC:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_4ECD:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_4F0D
     dw Data_03E_4F16
     dw Data_03E_4F3F
@@ -640,6 +664,8 @@ Data_03E_52AB:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_52CC:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_52CD:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_530D
     dw Data_03E_531E
     dw Data_03E_532F
@@ -699,6 +725,8 @@ Data_03E_5381:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_53A6:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_53A7:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_53E7
     dw Data_03E_5448
     dw Data_03E_5489
@@ -770,6 +798,8 @@ Data_03E_55B7:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_5618:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_5619:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_5659
     dw Data_03E_56FA
     dw Data_03E_577B
@@ -896,6 +926,8 @@ Data_03E_600F:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_6025:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_6026:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_6066
     dw Data_03E_606F
     dw Data_03E_6080
@@ -990,6 +1022,8 @@ Data_03E_61E6:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_61FB:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_61FC:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_623C
     dw Data_03E_625D
     dw Data_03E_6282
@@ -1069,7 +1103,10 @@ Data_03E_66F0:: ; heuristic: target of a monotone pointer table; C0
     db $F8, $38, $1F, $20, $F8, $40, $1D, $20, $80
 
 Data_03E_6719:: ; heuristic: target of a monotone pointer table; C0
-    db $80, $5A, $67
+    db $80
+
+Data_03E_671A:: ; heuristic: target of a monotone pointer table; C0
+    dw Data_03E_675A
     dw Data_03E_678F
     dw Data_03E_67C8
     dw Data_03E_6851
@@ -1096,41 +1133,17 @@ Data_03E_6719:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_752A
     dw Data_03E_75CB
     dw Data_03E_7604
-    dw Func_03E_7615
-    dw Func_03E_7615
-    dw Func_03E_7615
-    dw Func_03E_7615
-    dw Func_03E_7615
+    dw Data_03E_7615
+    dw Data_03E_7615
+    dw Data_03E_7615
+    dw Data_03E_7615
+    dw Data_03E_7615
 
-; no direct call (reached through a table, a jump or a vector)
-Func_03E_675A:: ; heuristic: follows a terminator; C0
-    ld hl, sp + -80
-    inc b
-    nop
-    ld hl, sp + -72
-    dec b
-    nop
-    ld hl, sp + -64
-    ld b, $00
-    ld hl, sp + -56
-    rlca
-    nop
-    ld hl, sp + -48
-    ld [$F800], sp
-    ret c
-    add hl, bc
-    nop
-    ldh a, [c]
-    ret nc
-    dec b
-    nop
-    ldh a, [c]
-    ret c
-    ld b, $00
-    ldh a, [c]
-    ret
-    db $04, $00, $F0, $B0, $08, $00, $F0, $B8, $09, $00, $F8, $E0, $20, $00, $F8, $E8
-    db $1C, $40, $80
+Data_03E_675A:: ; heuristic: target of a monotone pointer table; C0
+    db $F8, $B0, $04, $00, $F8, $B8, $05, $00, $F8, $C0, $06, $00, $F8, $C8, $07, $00
+    db $F8, $D0, $08, $00, $F8, $D8, $09, $00, $F2, $D0, $05, $00, $F2, $D8, $06, $00
+    db $F2, $C9, $04, $00, $F0, $B0, $08, $00, $F0, $B8, $09, $00, $F8, $E0, $20, $00
+    db $F8, $E8, $1C, $40, $80
 
 Data_03E_678F:: ; heuristic: target of a monotone pointer table; C0
     db $F8, $C0, $0A, $00, $F8, $C8, $0B, $00, $F8, $D0, $0C, $00, $F8, $D8, $0D, $00
@@ -1217,24 +1230,18 @@ Data_03E_7604:: ; heuristic: target of a monotone pointer table; C0
     db $D0, $20, $1D, $00, $D8, $38, $1F, $00, $F8, $48, $1C, $00, $D0, $48, $1E, $00
     db $80
 
-; no direct call (reached through a table, a jump or a vector)
-Func_03E_7615:: ; heuristic: target of a pointer table; C0
-    add a, b
-    ld d, [hl]
-    halt
-    ld h, a
-    halt
-    sub a, b
-    halt
-    cp a, l
-    halt
-    cp a, $76
-    ccf
-    ld [hl], a
-    add a, h
-    ld [hl], a
-    ret
-    db $77
+Data_03E_7615:: ; heuristic: target of a monotone pointer table; C0
+    db $80
+
+Data_03E_7616:: ; heuristic: target of a monotone pointer table; C0
+    dw Data_03E_7656
+    dw Data_03E_7667
+    dw Data_03E_7690
+    dw Data_03E_76BD
+    dw Data_03E_76FE
+    dw Data_03E_773F
+    dw Data_03E_7784
+    dw Data_03E_77C9
     dw Data_03E_7816
     dw Data_03E_785F
     dw Data_03E_78A8
@@ -1259,7 +1266,35 @@ Func_03E_7615:: ; heuristic: target of a pointer table; C0
     dw Data_03E_7A39
     dw Data_03E_7A39
     dw Data_03E_7A39
-    INCBIN "dwm2-cobi-us.gbc", $0FB656, $1C0
+
+Data_03E_7656:: ; heuristic: target of a monotone pointer table; C0
+    db $F8, $B0, $04, $00, $F8, $B8, $05, $00, $F0, $B0, $01, $00, $F0, $B8, $02, $00
+    db $80
+
+Data_03E_7667:: ; heuristic: target of a monotone pointer table; C0
+    db $F8, $C4, $13, $20, $F8, $BC, $14, $20, $F8, $B4, $15, $20, $F0, $C4, $10, $20
+    db $F0, $BC, $11, $20, $F0, $B4, $12, $20, $E8, $C4, $0E, $20, $E8, $BC, $0F, $20
+    db $F0, $AC, $1C, $00, $F8, $AC, $1D, $00, $80
+
+Data_03E_7690:: ; heuristic: target of a monotone pointer table; C0
+    db $F8, $C0, $14, $00, $F8, $C8, $15, $00, $F0, $B8, $10, $00, $F0, $C0, $11, $00
+    db $F0, $C8, $12, $00, $E8, $B8, $0E, $00, $E8, $C0, $0F, $00, $F0, $B0, $01, $20
+    db $F8, $B0, $04, $20, $F8, $D0, $18, $00, $F8, $B8, $16, $20, $80
+
+Data_03E_76BD:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0FB6BD, $41
+
+Data_03E_76FE:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0FB6FE, $41
+
+Data_03E_773F:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0FB73F, $45
+
+Data_03E_7784:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0FB784, $45
+
+Data_03E_77C9:: ; heuristic: target of a monotone pointer table; C0
+    INCBIN "dwm2-cobi-us.gbc", $0FB7C9, $4D
 
 Data_03E_7816:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0FB816, $49
@@ -1304,6 +1339,8 @@ Data_03E_7A34:: ; heuristic: target of a monotone pointer table; C0
 
 Data_03E_7A39:: ; heuristic: target of a monotone pointer table; C0
     db $80
+
+Data_03E_7A3A:: ; heuristic: target of a monotone pointer table; C0
     dw Data_03E_7A7A
     dw Data_03E_7A8B
     dw Data_03E_7AA8

@@ -527,7 +527,7 @@ Jump_003_4315::
 ; 2 call sites from 2 routines (e.g. PauseMenu_Skills_Case00_Case00, PauseMenu_Items_Case00_Case00)
 RefreshRecordListAndNameTiles::
 Func_003_432F:: ; address name
-    farcall Func_002_5E82
+    farcall RunFunc5E85Twice
     call LoadRecordListNameTiles
     ret
 
@@ -902,7 +902,7 @@ Func_003_451C:: ; address name
     ret
 
 ; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC there (E-0072) (the same 20 bytes appear in 2 banks)
-; 15 call sites from 14 routines (e.g. LoadScreenBlock21WithCursor, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_Shared05, PauseMenu_State3_Case04_Case03, ...)
+; 15 call sites from 14 routines (e.g. LoadScreenBlock21WithCursor, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_Shared04, PauseMenu_State3_Case04_Case03, ...)
 WriteBCTileToScreenBufferAtTableEntry_Bank03::
 Func_003_4538:: ; address name
     add a, a
@@ -6595,8 +6595,8 @@ Jump_003_6B8D:: ; address name
     ld [hl+], a
     call FillTilesFromRequest
     call CopyTileBufferToBGMap
+    call PauseMenu_State3_Shared06
     call PauseMenu_State3_Shared07
-    call PauseMenu_State3_Shared08
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6635,7 +6635,7 @@ Jump_003_6C05::
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_6C10
-    call PauseMenu_State3_Shared08
+    call PauseMenu_State3_Shared07
     ret
 
 Jump_003_6C10::
@@ -6645,8 +6645,8 @@ Jump_003_6C10::
     ld a, [wMenuPageCount]
     cp a, $02
     ret c
+    call PauseMenu_State3_Shared06
     call PauseMenu_State3_Shared07
-    call PauseMenu_State3_Shared08
     ld a, [wMenuPageCount]
     cp a, $02
     ret c
@@ -6818,7 +6818,7 @@ Jump_003_6D29::
 ; points at: wC0A1
 PauseMenu_State3_Case01_Case04::
 Jump_003_6D31:: ; address name
-    call PauseMenu_State3_Shared05
+    call PauseMenu_State3_Shared04
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6904,7 +6904,7 @@ Jump_003_6D90:: ; address name
 ; points at: wC0A1
 PauseMenu_State3_Case01_Case07::
 Jump_003_6DA3:: ; address name
-    call PauseMenu_State3_Shared05
+    call PauseMenu_State3_Shared04
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6943,7 +6943,7 @@ Jump_003_6DC0:: ; address name
 ; points at: wC0A1
 PauseMenu_State3_Case01_Case0A::
 Jump_003_6DCA:: ; address name
-    call PauseMenu_State3_Shared05
+    call PauseMenu_State3_Shared04
     ld a, $02
     ld [wMenuRowCount], a
     ld a, $01
@@ -7045,7 +7045,7 @@ Jump_003_6E56::
     ld de, wC338
     ld bc, $1405
     call CopyRectToBGMap
-    call PauseMenu_State3_Shared07
+    call PauseMenu_State3_Shared06
     ld a, $02
     ld [wMenuRowCount], a
     ld a, $01
@@ -7452,7 +7452,7 @@ Jump_003_70A4::
     xor a, a
     ld [wMenuPage], a
     ld [wC0A8], a
-    call PauseMenu_State3_Shared06
+    call PauseMenu_State3_Shared05
     call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
@@ -7504,7 +7504,7 @@ Jump_003_70ED::
     ld hl, wD0A3
     add_a_to_hl
     ld [hl], c
-    call PauseMenu_State3_Shared09
+    call PauseMenu_State3_Shared08
     ld hl, wD09F
     dec [hl]
     ld a, [wC6FD]
@@ -7554,7 +7554,7 @@ Func_003_7145:: ; address name
     ld hl, wD0A0
     add_a_to_hl
     ld [hl], c
-    call PauseMenu_State3_Shared09
+    call PauseMenu_State3_Shared08
     ld hl, wC0A1
     dec [hl]
     ret
@@ -7609,7 +7609,7 @@ Jump_003_71A3::
 ; points at: wC0A1
 PauseMenu_State3_Case04_Case05::
 Jump_003_71AE:: ; address name
-    call PauseMenu_State3_Shared06
+    call PauseMenu_State3_Shared05
     call PauseMenu_State3_Case04_Case05_Sub01
     call PauseMenu_State3_Shared01
     xor a, a
@@ -7848,7 +7848,7 @@ Func_003_7281:: ; address name
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case04_Case05_Sub01, PauseMenu_State3_Case04_Case02)
 ; reads: wD0A0, wD0A1, wD0A2
 ; writes: wD0A2, wD0A1, wD0A0
-PauseMenu_State3_Shared09::
+PauseMenu_State3_Shared08::
 Func_003_7335:: ; address name
     ld a, [wD0A0]
     ld c, a
@@ -7945,7 +7945,7 @@ Jump_003_73A0:: ; address name
     ld h, a
     call HLToDecimalDigits
     ld de, wC200
-    call PauseMenu_State3_Shared03
+    call WriteThreeDigitTilesWC8C0_Bank03
     ld a, [wPlayMinutes]
     call ByteAToDecimalDigits
     ld de, wC204
@@ -8039,7 +8039,7 @@ Jump_003_7487:: ; address name
     ld h, a
     call HLToDecimalDigits
     ld de, wC200
-    call PauseMenu_State3_Shared03
+    call WriteThreeDigitTilesWC8C0_Bank03
     ld de, wC200
     ld hl, vBGMap0 + $68
     ld bc, $0601
@@ -8071,10 +8071,10 @@ Func_003_74D1:: ; address name
     call WriteTwoDigitTilesFromWC8C1
     ret
 
-; only called from routines of PauseMenu_State3 (E-0098)
+; writes wC8C0 as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank03 (E-0126)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_Case01, PauseMenu_State3_Case05_Case00)
 ; points at: wC8C0, wC8C1
-PauseMenu_State3_Shared03::
+WriteThreeDigitTilesWC8C0_Bank03::
 Func_003_74DA:: ; address name
     ld hl, wC8C0
     ld a, [hl]
@@ -8165,7 +8165,7 @@ Jump_003_7501:: ; address name
     ld a, $25
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank37
-    call PauseMenu_State3_Shared04
+    call PauseMenu_State3_Shared03
     ld hl, wC0A1
     inc [hl]
     ret
@@ -8177,7 +8177,7 @@ Jump_003_7501:: ; address name
 ; points at: wC0A1
 PauseMenu_State3_Case06_Case01::
 Jump_003_7571:: ; address name
-    call PauseMenu_State3_Shared04
+    call PauseMenu_State3_Shared03
     ld a, [wC52B]
     or a, a
     ret nz
@@ -8222,7 +8222,7 @@ Jump_003_75A4:: ; address name
     ld a, [wC46F]
     and a, $01
     jr nz, Jump_003_75D7
-    call PauseMenu_State3_Shared04
+    call PauseMenu_State3_Shared03
     xor a, a
     ld [wC0A4], a
     ld hl, wC0A1
@@ -8241,7 +8241,7 @@ Jump_003_75D7::
 Jump_003_75E6::
     bit 1, a
     jr nz, Jump_003_75D7
-    call PauseMenu_State3_Shared04
+    call PauseMenu_State3_Shared03
     ret
 
 ; entry 3 of the `rst $00` table in PauseMenu_State3_Case06
@@ -8250,7 +8250,7 @@ Jump_003_75E6::
 ; points at: wC0A1
 PauseMenu_State3_Case06_Case03::
 Jump_003_75EE:: ; address name
-    call PauseMenu_State3_Shared04
+    call PauseMenu_State3_Shared03
     call RunWC0A4Screen
     ld a, [wC0A4]
     cp a, $04
@@ -8265,7 +8265,7 @@ Jump_003_75EE:: ; address name
 ; points at: wC0A1
 PauseMenu_State3_Case06_Case04::
 Jump_003_75FF:: ; address name
-    call PauseMenu_State3_Shared04
+    call PauseMenu_State3_Shared03
     ld a, $00
     ld [wStringCategory], a
     ld a, $26
@@ -8285,7 +8285,7 @@ Jump_003_7617:: ; address name
     ld a, [wC52B]
     or a, a
     jr z, Jump_003_7621
-    call PauseMenu_State3_Shared04
+    call PauseMenu_State3_Shared03
     ret
 
 Jump_003_7621::
@@ -8317,7 +8317,7 @@ Jump_003_7633::
 ; 7 call sites from 6 routines (e.g. PauseMenu_State3_Case06_Case05, PauseMenu_State3_Case06_Case04, PauseMenu_State3_Case06_Case03, PauseMenu_State3_Case06_Case02, ...)
 ; reads: wBattlerRecords, wD10A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
-PauseMenu_State3_Shared04::
+PauseMenu_State3_Shared03::
 Func_003_7647:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -8369,7 +8369,7 @@ Func_003_7692:: ; address name
     ret
 
 ; LoadScreenBlock21, then writes tile $BC at MenuCursorPositions_Bank03[wC46D & 7] in the buffer (WriteBCTileToScreenBufferAtTableEntry_Bank03) (E-0101)
-; 4 call sites from 4 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_Case02_Case00_Sub01, LoadScreenBlock21CursorAnd2C, PauseMenu_State3_Shared06)
+; 4 call sites from 4 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_Case02_Case00_Sub01, LoadScreenBlock21CursorAnd2C, PauseMenu_State3_Shared05)
 ; reads: wC46D
 LoadScreenBlock21WithCursor::
 Func_003_769E:: ; address name
@@ -8397,7 +8397,7 @@ Jump_003_76C5::
     ret
 
 ; builds blocks $21-$23 and copies block $24 (E-0122)
-; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case01_Case0E, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_Shared05, PauseMenu_State3_Case01_Case02)
+; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case01_Case0E, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_Shared04, PauseMenu_State3_Case01_Case02)
 BuildScreenBlocks21To24::
 Func_003_76C9:: ; address name
     call BuildScreenBlocks21To23
@@ -8409,7 +8409,7 @@ Func_003_76C9:: ; address name
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_Case0A, PauseMenu_State3_Case01_Case07, PauseMenu_State3_Case01_Case04)
 ; reads: wC46F
 ; points at: wC218, wC338
-PauseMenu_State3_Shared05::
+PauseMenu_State3_Shared04::
 Func_003_76D5:: ; address name
     call BuildScreenBlocks21To24
     call FillTilesFromRequest
@@ -8470,7 +8470,7 @@ Func_003_7743:: ; address name
 
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case04_Case05, PauseMenu_State3_Case04_Case00)
-PauseMenu_State3_Shared06::
+PauseMenu_State3_Shared05::
 Func_003_774F:: ; address name
     call LoadScreenBlock21WithCursor
     ld e, $29
@@ -8522,7 +8522,7 @@ Func_003_7791:: ; address name
 ; reads: wMenuPage, wD0C7
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wD0A7, wD0A8, wC130
-PauseMenu_State3_Shared07::
+PauseMenu_State3_Shared06::
 Func_003_779A:: ; address name
     ld hl, $0C01
     ld a, l
@@ -8571,7 +8571,7 @@ Jump_003_77E0::
     ld a, h
     ld [wC52E], a
     ld a, [de]
-    call PauseMenu_State3_Shared07_Sub01
+    call PauseMenu_State3_Shared06_Sub01
     cp a, $FF
     jr z, Jump_003_7851
     and a, $3F
@@ -8649,9 +8649,9 @@ Jump_003_7861::
     ld [wC530], a
     ret
 
-; only called from PauseMenu_State3_Shared07 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_State3_Shared07)
-PauseMenu_State3_Shared07_Sub01::
+; only called from PauseMenu_State3_Shared06 (E-0047)
+; 1 call site from 1 routine (e.g. PauseMenu_State3_Shared06)
+PauseMenu_State3_Shared06_Sub01::
 Func_003_7880:: ; address name
     push af
     cp a, $FF
@@ -8704,7 +8704,7 @@ Data_003_78C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wD0C7, wMenuPage, wC46E
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wD0A7, wC130
-PauseMenu_State3_Shared08::
+PauseMenu_State3_Shared07::
 Func_003_78CB:: ; address name
     ld a, [wD0C7]
     or a, a

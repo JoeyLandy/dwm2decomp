@@ -288,7 +288,7 @@ Data_038_40F1:: ; heuristic: label inside a table; C0
     db $74
     dw Data_074_4001 ; id 140
     db $74
-    dw Func_07A_4001 ; id 141
+    dw Data_07A_4001 ; id 141
     db $7A
     dw Data_076_60DE ; id 142
     db $76

@@ -1225,12 +1225,12 @@ Jump_01A_6189::
     cp a, $3D
     jr nz, Jump_01A_61AF
     ld a, [hl]
-    call Func_01A_622B
+    call FindByteThenContinue61FE
     jr nz, Jump_01A_61E4
     jr Jump_01A_61B6
 
 Jump_01A_61AF::
-    call Func_01A_622B
+    call FindByteThenContinue61FE
     jr nz, Jump_01A_61E4
     jr Jump_01A_620F
 
@@ -1239,25 +1239,25 @@ Jump_01A_61B6::
     ld a, [hl]
     cp a, $FF
     jr z, Jump_01A_61E4
-    call Func_01A_622B
+    call FindByteThenContinue61FE
     jr nz, Jump_01A_61E4
     inc hl
     ld a, [hl]
     cp a, $FF
     jr z, Jump_01A_621F
-    call Func_01A_622B
+    call FindByteThenContinue61FE
     jr nz, Jump_01A_61E4
     inc hl
     ld a, [hl]
     cp a, $FF
     jr z, Jump_01A_621F
-    call Func_01A_622B
+    call FindByteThenContinue61FE
     jr nz, Jump_01A_61E4
     inc hl
     ld a, [hl]
     cp a, $FF
     jr z, Jump_01A_621F
-    call Func_01A_622B
+    call FindByteThenContinue61FE
     jr nz, Jump_01A_61E4
     jr Jump_01A_621F
 
@@ -1318,15 +1318,17 @@ Jump_01A_621F::
     ldh [hFFCA], a
     jr Jump_01A_61FE
 
+; runs FindByteAtHLInEightAtDE_Bank1A_6232 (DE preserved) and continues at Jump_01A_61FE (E-0126)
 ; 6 call sites from 1 routine (e.g. Func_01A_60F1)
-Func_01A_622B::
+FindByteThenContinue61FE::
+Func_01A_622B:: ; address name
     push de
     call FindByteAtHLInEightAtDE_Bank1A_6232
     pop de
     jr Jump_01A_61FE
 
 ; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_01A_622B)
+; 1 call site from 1 routine (e.g. FindByteThenContinue61FE)
 FindByteAtHLInEightAtDE_Bank1A_6232::
 Func_01A_6232:: ; address name
     ld b, $08
@@ -1547,10 +1549,12 @@ Func_01A_631A:: ; address name
     xor a, a
     ret
 
+; skill hFFC6: when every skill in its $FF-terminated list Data_01A_5BEC[hFFC6] is already among the eight at wD09D (or equal to C), adds it (Func_01A_636C); otherwise hFFC6 = 0 (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6
 ; writes: hFFC6
-Func_01A_631F:: ; heuristic: follows a terminator; C0
+TryAddSkillIfPrerequisitesKnown:: ; heuristic: follows a terminator; C0
+Func_01A_631F:: ; address name
     ldh a, [hFFC6]
     ld c, a
     ld b, $00
@@ -1579,13 +1583,13 @@ Jump_01A_633F::
     jr Jump_01A_6347
 
 Jump_01A_6344::
-    call Func_01A_636C
+    call AddSkillCToFreeSlotUnlessExcluded
 
 Jump_01A_6347::
     ret
 
 ; A = 0 and NC if A equals C or one of the 8 bytes at wD09D; otherwise carry (E-0122)
-; 1 call site from 1 routine (e.g. Func_01A_631F)
+; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
 ; points at: wD09D
 AIsCOrInWD09D8::
 Func_01A_6348:: ; address name
@@ -1608,7 +1612,7 @@ Jump_01A_6359::
     ret
 
 ; A = 0 and NC if C is one of the 8 bytes at wD09D; otherwise carry (E-0122)
-; 1 call site from 1 routine (e.g. Func_01A_631F)
+; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
 ; points at: wD09D
 FindCInWD09D8::
 Func_01A_635B:: ; address name
@@ -1629,10 +1633,12 @@ Jump_01A_636A::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_01A_631F)
+; stores C in the first empty slot of the eight at wD09D, skipping slots whose skill is not in the exclusion list Data_01A_5D8B[C]; hFFC6 = 0 when none (E-0126)
+; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
 ; writes: hFFC7, hFFC6
 ; points at: wD09D
-Func_01A_636C::
+AddSkillCToFreeSlotUnlessExcluded::
+Func_01A_636C:: ; address name
     ld b, $00
     ld hl, Data_01A_5D8B
     add hl, bc
@@ -1665,7 +1671,7 @@ Jump_01A_6393::
     ret
 
 ; carry when [HL] is not in the $FF-terminated list at DE, A = 0 and NC when it is (E-0124)
-; 1 call site from 1 routine (e.g. Func_01A_636C)
+; 1 call site from 1 routine (e.g. AddSkillCToFreeSlotUnlessExcluded)
 IsHLByteInFFListAtDE::
 Func_01A_6395:: ; address name
     push de
@@ -1996,7 +2002,7 @@ Func_01A_6587::
     call SRAMRecordAddress
     ld a, [wD095]
     ld c, a
-    call Func_01A_65F4
+    call ClampDeltaTo999
     ld [wD095], a
     ld a, l
     add a, $04
@@ -2006,7 +2012,7 @@ Func_01A_6587::
     ld h, a
     ld a, [wD096]
     ld c, a
-    call Func_01A_65F4
+    call ClampDeltaTo999
     ld [wD096], a
     ld a, l
     add a, $02
@@ -2016,7 +2022,7 @@ Func_01A_6587::
     ld h, a
     ld a, [wD097]
     ld c, a
-    call Func_01A_65F4
+    call ClampDeltaTo999
     ld [wD097], a
     ld a, l
     add a, $02
@@ -2026,7 +2032,7 @@ Func_01A_6587::
     ld h, a
     ld a, [wD098]
     ld c, a
-    call Func_01A_65F4
+    call ClampDeltaTo999
     ld [wD098], a
     ld a, l
     add a, $02
@@ -2036,7 +2042,7 @@ Func_01A_6587::
     ld h, a
     ld a, [wD099]
     ld c, a
-    call Func_01A_65F4
+    call ClampDeltaTo999
     ld [wD099], a
     ld a, l
     add a, $02
@@ -2046,12 +2052,14 @@ Func_01A_6587::
     ld h, a
     ld a, [wD09A]
     ld c, a
-    call Func_01A_65F4
+    call ClampDeltaTo999
     ld [wD09A], a
     ret
 
+; C = the amount that still fits under 999 for the word at HL plus C (0 when the word is already 999) (E-0126)
 ; 6 call sites from 1 routine (e.g. Func_01A_6587)
-Func_01A_65F4::
+ClampDeltaTo999::
+Func_01A_65F4:: ; address name
     push hl
     ld b, $00
     ld a, [hl+]

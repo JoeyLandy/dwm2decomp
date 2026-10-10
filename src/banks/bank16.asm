@@ -7088,7 +7088,7 @@ Jump_016_6D47:: ; address name
     ld hl, wC6FE
     add_a_to_hl
     ld [hl], b
-    call Func_016_70C5
+    call SetRecordState2ForB
     call LoadRecordListNameTiles
     call RunFunc710FForPartyMembers
     call BuildBattleMenuScreen_733F
@@ -7582,9 +7582,11 @@ Func_016_7082::
     pop hl
     ret
 
+; A = B, then falls into SetRecordState2 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_016_6C16_Case06)
 ; writes: rRAMG, rRAMB
-Func_016_70C5::
+SetRecordState2ForB::
+Func_016_70C5:: ; address name
     ld a, b
 
 ; A = record: sets its byte 0 (state) to 2 in SRAM bank 0 (SRAMRecordAddress with C = 0) (E-0118)
@@ -8586,7 +8588,7 @@ Jump_016_7857::
     ld de, wC225
 
 Jump_016_7872::
-    call Func_016_78C7
+    call WriteThreeDigitTilesWC8C0_Bank16
     ld a, [wD0E2]
     ld l, a
     ld h, $00
@@ -8624,9 +8626,11 @@ Jump_016_788B::
     ld [wC530], a
     ret
 
+; writes wC8C0 as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank16 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_016_7783)
 ; points at: wC8C0, wC8C1
-Func_016_78C7::
+WriteThreeDigitTilesWC8C0_Bank16::
+Func_016_78C7:: ; address name
     ld hl, wC8C0
     ld a, [hl]
     add a, $E0

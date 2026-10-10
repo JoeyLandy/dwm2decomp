@@ -84,6 +84,66 @@
       "start": "4A5E",
       "end": "4A72",
       "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "3D",
+      "start": "4E3D",
+      "end": "4EEA",
+      "reason": "sprite frame records and a pointer list after the frame pointer table at Data_03D_4E03; decoded as code only because table words pointed here; the bytes do not form plausible code (E-0126)"
+    },
+    {
+      "bank": "3E",
+      "start": "7615",
+      "end": "7816",
+      "reason": "sprite frame records and a pointer list named by the frame pointer table before $7615 (E-0126)"
+    },
+    {
+      "bank": "3E",
+      "start": "675A",
+      "end": "678F",
+      "reason": "OAM-style 4-byte sprite entries (Y, X, tile, attribute) that the follows-a-terminator guess decoded as `ld hl, sp + n` runs (E-0126)"
+    },
+    {
+      "bank": "92",
+      "start": "5805",
+      "end": "5860",
+      "reason": "sprite frame records named by the monotone pointer table Data_092_56BF (E-0126)"
+    },
+    {
+      "bank": "7A",
+      "start": "4001",
+      "end": "413F",
+      "reason": "bytes before the back-to-back compressed streams of bank $7A (Data_07A_413F onward); the follows-a-terminator guess decoded them as code (E-0126)"
+    },
+    {
+      "bank": "E0",
+      "start": "55BF",
+      "end": "56C7",
+      "reason": "a byte table ($100 bytes after 8 lead bytes) decoded as `adc` runs by the follows-a-terminator guess (E-0126)"
+    },
+    {
+      "bank": "36",
+      "start": "6A59",
+      "end": "6A69",
+      "reason": "16 bytes between effect routines that decode as implausible code (`cpl`, `reti`, `ld [bc], a`) (E-0119, E-0126)"
+    },
+    {
+      "bank": "1E",
+      "start": "44EF",
+      "end": "4517",
+      "reason": "tile map bytes ($B0-$B7, $C3 runs) ahead of ScriptCommandE8_Run_Case04_Case0C; decoded as `or a, r` runs and a `jp` made of tile bytes (E-0126)"
+    },
+    {
+      "bank": "30",
+      "start": "5587",
+      "end": "5785",
+      "reason": "the personality weight table read by AddPersonalityWeightToWD868 (Data_030_5587 + 4 * wPersonalityIndex + side) and the data up to AIScoreRoutineTableA; the pointer-table scan read its bytes as code pointers (E-0126)"
+    },
+    {
+      "bank": "0A",
+      "start": "61FB",
+      "end": "6220",
+      "reason": "map bytes in bank $0A whose words ($1362) the pointer-table scan read as bank-0 code pointers (E-0126)"
     }
   ]
 }

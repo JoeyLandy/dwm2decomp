@@ -3265,8 +3265,10 @@ Func_010_6636:: ; address name
     farcall ScriptCommandF4_Run
     ret
 
+; far-calls ScriptCommandE9_RunFar (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_663D:: ; heuristic: follows a terminator; C0
+CallScriptCommandE9Far:: ; heuristic: follows a terminator; C0
+Func_010_663D:: ; address name
     farcall ScriptCommandE9_RunFar
     ret
 

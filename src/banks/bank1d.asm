@@ -599,7 +599,7 @@ Func_01D_485C:: ; address name
     cp a, $03
     jr nz, Jump_01D_487B
     farcall Func_01C_689A
-    farcall Func_0F2_6449
+    farcall Run64C7UnlessWD780Is3
 
 Jump_01D_487B::
     ld a, [wD781]
@@ -1104,7 +1104,7 @@ Func_01D_4BF9:: ; address name
     ret
 
 Jump_01D_4C3D::
-    farcall Func_0F2_6449
+    farcall Run64C7UnlessWD780Is3
     ld a, [wD781]
     sub a, $04
     ld [wD781], a
@@ -2018,7 +2018,7 @@ Jump_01D_5168::
     inc a
     and a, $01
     ld [wCF8B], a
-    farcall Func_0F2_6449
+    farcall Run64C7UnlessWD780Is3
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3721,10 +3721,12 @@ Jump_01D_5C8D::
     jr nz, Jump_01D_5C8D
     ret
 
+; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at Jump_01D_5CAF (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB, wC8D9
 ; points at: wC8CF, wC130
-Func_01D_5C94:: ; heuristic: follows a terminator; C0
+LoadWD789Cell5RecordAndContinue5CAF:: ; heuristic: follows a terminator; C0
+Func_01D_5C94:: ; address name
     call SetWD7F5ToWD789Cell5
     ld a, $0A
     ld [rRAMG2], a
@@ -6392,11 +6394,13 @@ Jump_01D_6C7C::
     jr nz, Jump_01D_6C7B
     ret
 
+; HL = Data_01D_6D84, wD7F1/2 = $9C/0, DE = vBGMap1, wD784 = 0, then continues at Jump_01D_6CB2 (E-0126)
 ; 2 call sites from 2 routines (e.g. ScriptCommandEB_Run_Case01_Case00, ScriptCommandE8_Run_Case01_Case00)
 ; reads: wD785, wD7F1, wD7F2, wD784
 ; writes: wD7F1, wD7F2, wD784, wD785
 ; points at: wD781
-Func_01D_6C8A::
+SetupTileMap6D84AtBGMap1::
+Func_01D_6C8A:: ; address name
     ld hl, Data_01D_6D84
     ld a, $9C
     ld [wD7F1], a

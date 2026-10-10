@@ -496,7 +496,7 @@ Func_03B_42E6:: ; address name
     ret
 
 ; C = [HL], B = [HL + 1]; HL ends on the high byte (E-0077)
-; 6 call sites from 6 routines (e.g. GetBaseINT, GetBaseATK, GetBaseMP, GetBaseHP, ...)
+; 6 call sites from 6 routines (e.g. GetBaseHP, GetBaseMP, GetBaseATK, GetBaseDEF, ...)
 LoadBCFromHL::
 Func_03B_42F0:: ; address name
     ld a, [hl+]
@@ -1679,7 +1679,7 @@ Jump_03B_499F::
     ld a, [wBattleActionId]
     cp a, $24
     jr nz, Jump_03B_49BD
-    call Func_03B_4A5B
+    call TargetWDA72Byte1_Bank3B
     rlca
     rlca
     and a, $03
@@ -1688,7 +1688,7 @@ Jump_03B_499F::
 Jump_03B_49BD::
     cp a, $25
     jr nz, Jump_03B_49CA
-    call Func_03B_4A5B
+    call TargetWDA72Byte1_Bank3B
     swap a
     and a, $03
     jr Jump_03B_49DE
@@ -1696,14 +1696,14 @@ Jump_03B_49BD::
 Jump_03B_49CA::
     cp a, $26
     jr nz, Jump_03B_49D7
-    call Func_03B_4A5B
+    call TargetWDA72Byte1_Bank3B
     rrca
     rrca
     and a, $03
     jr Jump_03B_49DE
 
 Jump_03B_49D7::
-    call Func_03B_4A56
+    call TargetWDA72Byte0_Bank3B
     swap a
     and a, $03
 
@@ -1787,17 +1787,21 @@ Func_03B_4A4C:: ; address name
     call AddAx9ToHL
     ret
 
+; A = byte 0 of the target's 7-byte wDA72 record (E-0126)
 ; 1 call site from 1 routine (e.g. Func_03B_4990)
 ; reads: wBattleTarget
 ; points at: wDA72
-Func_03B_4A56::
+TargetWDA72Byte0_Bank3B::
+Func_03B_4A56:: ; address name
     ld de, wDA72
     jr Jump_03B_4A77
 
+; A = byte 1 of the target's 7-byte wDA72 record (E-0126)
 ; 3 call sites from 1 routine (e.g. Func_03B_4990)
 ; reads: wBattleTarget
 ; points at: wDA73
-Func_03B_4A5B::
+TargetWDA72Byte1_Bank3B::
+Func_03B_4A5B:: ; address name
     ld de, wDA73
     jr Jump_03B_4A77
 
@@ -1980,7 +1984,7 @@ Func_03B_4B02:: ; address name
     dw Func_03B_4C95
     dw Func_03B_4D1C
     dw SetWD894AndMessage98
-    dw Func_03B_4E18
+    dw JumpToEffectFailurePath4F15
     INCBIN "dwm2-cobi-us.gbc", $0ECB51, $41
 
 ; if the target's HP is below its max, runs Func_03B_483A and shows message $37; otherwise the no-effect path (E-0124)
@@ -2360,9 +2364,11 @@ Func_03B_4E0A:: ; address name
     jp ClearDamageAndStoreWDAC0_Bank3B
     db $C9
 
+; effect table entry that goes straight to the failure path Jump_03B_4F15 (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-Func_03B_4E18:: ; heuristic: target of a pointer table; C0
+JumpToEffectFailurePath4F15:: ; heuristic: target of a pointer table; C0
+Func_03B_4E18:: ; address name
     jp Jump_03B_4F15
 
 ; unless already set, rolls the chance (Func_03B_4A34) and sets bit 0 of the target's wD80D status (message $3B); otherwise one of two failure paths (E-0124)

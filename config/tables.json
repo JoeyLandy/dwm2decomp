@@ -2,6 +2,34 @@
   "_comment": "Understood table layouts, emitted field by field by tools/disasm_all.py. Each table: bank, addr (hex CPU address), label (an alias; Data_BBB_AAAA labels are kept), count, id_base (optional; record index + id_base is shown in comments), fields (db N bytes | ptr = 16-bit pointer into the same bank), and note. Every layout cites its evidence in docs/EVIDENCE_LOG.md. Field names state only what the evidence supports.",
   "tables": [
     {
+      "bank": "36",
+      "addr": "6726",
+      "label": "ActionEffectTable",
+      "count": 240,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "effect routine"
+        }
+      ],
+      "note": "E-0126 (C1: DispatchActionEffectTable (36:6717) jumps through the word at $6726 + 2 * wBattleActionId; E-0053 and E-0084 counted 240 entries ending at $6906, where the first effect routine starts)."
+    },
+    {
+      "bank": "36",
+      "addr": "7DDE",
+      "label": "EffectHandlerTable",
+      "count": 40,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "handler"
+        }
+      ],
+      "note": "E-0126 (C1: RunEffectHandlerForActionId (36:7DC9) indexes it with 2 * (action id - $47), or 0 for action 0, and jumps through JumpToWordAtHL; all 40 words point into the bank, and GetBattleATK follows at $7E2E)."
+    },
+    {
       "bank": "00",
       "addr": "3E13",
       "label": "SoundBankTable",

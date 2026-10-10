@@ -306,3 +306,14 @@ class NestedDispatchCases(unittest.TestCase):
         body = text[start:text.index("\n\n", start)]
         self.assertIn("rst $00", body)
         self.assertIn("dw Func_037_4AFD_Case0D_Case04", body)
+
+
+class InlineTableTrim(unittest.TestCase):
+    """An inline `rst $00` table stops where a called routine starts (E-0126)."""
+
+    def test_called_routine_after_a_table_is_code(self):
+        text = (BANKS / "bank12.asm").read_text(encoding="utf-8")
+        start = text.index("Func_012_55F8::")
+        body = text[start:start + 200]
+        self.assertIn("ld a, [wCC44]", body)
+        self.assertNotIn("dw $44FA", text)

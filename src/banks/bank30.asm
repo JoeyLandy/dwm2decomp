@@ -1647,7 +1647,7 @@ Jump_030_4B1B::
     push hl
     push de
     inc hl
-    call Func_030_4B9F
+    call ScoreSkillAtHLForAI
     pop de
     pop hl
     ld a, [wDA3F]
@@ -1747,10 +1747,12 @@ Jump_030_4B9D::
     pop de
     ret
 
+; A = [HL], then falls into ScoreSkillForAI (E-0126)
 ; 1 call site from 1 routine (e.g. Func_030_4AD3)
 ; reads: wCFF1, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
 ; writes: wDA6E, wDA6F, wDA70, wDA71
-Func_030_4B9F::
+ScoreSkillAtHLForAI::
+Func_030_4B9F:: ; address name
     ld a, [hl]
 
 ; A = skill number ($FF skips): AddSkillBaseWeightAndLoadSkill; when wCFF1 bit 0 (in the skill record) is set, clears wDA6E-wDA71 and far-calls the skill's AI scoring routine from the table in wDA6B/wDA6C (AIScoreRoutineTableA or B), then folds the accumulated weights into the word at DE (the rest is not fully read) (E-0083)
@@ -2265,11 +2267,6 @@ Jump_030_4FE9::
     ret nc
     cp a, $60
     jr nc, Jump_030_500C
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; points at: wD854
-Func_030_5000:: ; heuristic: target of a pointer table; C0
     cp a, $3F
     jr nc, Jump_030_5010
     cp a, $1E
@@ -3153,22 +3150,7 @@ Jump_030_5586::
     ret
 
 Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C1587, $13B
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    INCBIN "dwm2-cobi-us.gbc", $0C16D4, $56
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    dw Func_030_5000
-    db $00, $46, $00, $50
+    INCBIN "dwm2-cobi-us.gbc", $0C1587, $1AF
     ds $11, $00
     db $50, $00, $00, $00, $50, $00, $5A, $00, $3C
     ds $33, $00

@@ -5158,7 +5158,7 @@ Jump_024_6762::
     ld a, e
     ld [hl+], a
     ld [hl], d
-    farcall Func_002_5E82
+    farcall RunFunc5E85Twice
     call LoadRecordListNameTiles
 
 Jump_024_6797::

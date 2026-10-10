@@ -3875,7 +3875,7 @@ Jump_004_5AD3::
     call CopyBytes
     ldh a, [hFFC8]
     ld de, wC152
-    call Func_000_241A
+    call ReadBank08Table4558WordForA
     ld de, $006D
     call TestFlagBit
     jr c, Jump_004_5B0F

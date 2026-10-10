@@ -131,6 +131,7 @@ class Rom:
         self.labels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.pending: dict[int, list[int]] = {b: [] for b in range(self.nbanks)}
         self.tables: list[tuple[int, int]] = []  # (bank, address of first word)
+        self.table_words: dict[tuple[int, int], list[int]] = {}  # inline table -> word addresses
         self.reason: dict[tuple[int, int], str] = {}  # heuristic provenance of entries
         self._spec: dict[tuple[int, int], object] = {}  # speculative-trace cache
         self.dtab: dict[int, dict[int, int]] = {b: {} for b in range(self.nbanks)}  # data pointer words
@@ -264,10 +265,35 @@ class Rom:
             did = True
             if (bank, start) in self.dispatch:
                 self.dispatch[(bank, start)] = [(tb, ta) for _p, _w, (tb, ta) in words]
+            self.table_words[(bank, start)] = [p for p, _w, _r in words]
             for p, w, (tb, ta) in words:
                 self.insn[bank][p] = ("dw", w)
                 cov.update((p, p + 1))
                 self.add_entry(tb, ta, "Jump")
+        return did
+
+    def trim_tables(self) -> bool:
+        """Cut an inline table at the first word that is also a routine entry (E-0126).
+
+        A table's length is a guess (words that look like pointers); a `call` found later can
+        prove that the bytes after the real end are code. Those words are uncovered and the
+        entry is traced as code."""
+        did = False
+        for (bank, start), poss in self.table_words.items():
+            for i, p in enumerate(poss):
+                if p > start and self.labels[bank].get(p, "").startswith("Func_"):
+                    for q in poss[i:]:
+                        if self.insn[bank].get(q, (None,))[0] == "dw":
+                            del self.insn[bank][q]
+                        self.covered[bank].discard(q)
+                        self.covered[bank].discard(q + 1)
+                    self.table_words[(bank, start)] = poss[:i]
+                    if (bank, start) in self.dispatch:
+                        self.dispatch[(bank, start)] = self.dispatch[(bank, start)][:i]
+                    if p not in self.pending[bank]:
+                        self.pending[bank].append(p)
+                    did = True
+                    break
         return did
 
     # ---- heuristic discovery (C0: plausibility, not proof) ---------------
@@ -1385,6 +1411,7 @@ class Rom:
                 passes += 1
                 a = self.trace_pending()
                 b = self.parse_tables()
+                b = self.trim_tables() or b
                 if not (a or b) and not any(self.pending.values()):
                     break
             log(f"round {rnd}: trace fixpoint after {passes} passes: {self.summary()}")

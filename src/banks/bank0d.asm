@@ -1753,7 +1753,7 @@ Func_00D_4EC7:: ; address name
     ld [hl], a
     ret
 
-; 4 call sites from 4 routines (e.g. ScriptCommandF3_Run_Case04, ScriptCommandF0_Run_Case03_Case00, ScriptCommandF2_Run_Case03_Case10, Func_00D_720E)
+; 4 call sites from 4 routines (e.g. ScriptCommandF3_Run_Case04, ScriptCommandF0_Run_Case03_Case00, ScriptCommandF2_Run_Case03_Case10, RunFunc4ED5At0278AndStep_0D)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
 Func_00D_4ED5::
@@ -5502,10 +5502,12 @@ Jump_00D_6A63::
     ld [wScriptStartRequest], a
     ret
 
+; if the key list is full (FindFreeKeySlotToHFFC6 returns bit 7), wTwoChoiceCursor = 2, steps wD781 back and requests script $80; otherwise continues at Jump_00D_6A4E (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wD781
 ; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
-Func_00D_6A80:: ; heuristic: follows a terminator; C0
+ScriptStepCheckKeyListFull_6A80:: ; heuristic: follows a terminator; C0
+Func_00D_6A80:: ; address name
     farcall FindFreeKeySlotToHFFC6
     ldh a, [hFFC6]
     bit 7, a
@@ -5631,10 +5633,12 @@ Jump_00D_6B3A::
     ld a, $01
     jr Jump_00D_6B25
 
+; if the key list is full, continues with A = 2 at Jump_00D_6B25; otherwise at Jump_00D_6B24 (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wD781
 ; writes: wTwoChoiceCursor, wD781, wScriptCommandType, wScriptStartRequest
-Func_00D_6B45:: ; heuristic: follows a terminator; C0
+ScriptStepCheckKeyListFull_6B45:: ; heuristic: follows a terminator; C0
+Func_00D_6B45:: ; address name
     farcall FindFreeKeySlotToHFFC6
     ldh a, [hFFC6]
     bit 7, a
@@ -6325,7 +6329,7 @@ Data_00D_710E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $03, $04, $04, $05, $05, $0A
 
 ; far-calls ScriptCommandE9_Run (E-0119)
-; 1 call site from 1 routine (e.g. Func_010_663D)
+; 1 call site from 1 routine (e.g. CallScriptCommandE9Far)
 ScriptCommandE9_RunFar::
 Func_00D_7115:: ; address name
     farcall ScriptCommandE9_Run
@@ -6399,7 +6403,7 @@ Jump_00D_7159:: ; address name
     dw ScriptCommandF4_Run_Case04_Case0C
     dw ScriptCommandF4_Run_Case04_Case00
     dw ScriptCommandF4_Run_Case04_Case00
-    dw Func_00D_720E
+    dw RunFunc4ED5At0278AndStep_0D
     dw ScriptCommandF4_Run_Case04_Case00
     dw ScriptCommandF4_Run_Case04_Case11
     dw ScriptCommandF4_Run_Case04_Case12
@@ -6485,10 +6489,12 @@ Jump_00D_71FF:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; runs Func_00D_4ED5 (C = 5, HL = $0278, DE = $00AC, wD7F1/2 = 0/8), then wD781 += 1 (E-0126)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Case04_Case12)
 ; reads: wD781
 ; writes: wD7F1, wD7F2, wD781
-Func_00D_720E::
+RunFunc4ED5At0278AndStep_0D::
+Func_00D_720E:: ; address name
     ld c, $05
     ld hl, $0278
     ld de, $00AC
@@ -6606,7 +6612,7 @@ Jump_00D_72D0:: ; address name
 Jump_00D_72E0::
     xor a, a
     ld [wD782], a
-    call Func_00D_720E
+    call RunFunc4ED5At0278AndStep_0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC

@@ -2229,8 +2229,8 @@ Jump_0F0_5684:: ; address name
     ld a, [wCB9C]
     res 1, a
     ld [wCB9C], a
-    call Func_0F0_56C2
-    call Func_0F0_56A5
+    call StepObjectCB9AUpToE0
+    call StepObjectCB8ADownToE0
     cp a, $FF
     ret nz
     ld a, [wD782]
@@ -2238,10 +2238,12 @@ Jump_0F0_5684:: ; address name
     ld [wD782], a
     ret
 
+; wCB86 = 3; while wCB88 & 3 is set, wCB8A -= 1 and A = $FF once it reaches $E0; otherwise A = 0 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Case09_Case0E)
 ; reads: wCB88, wCB8A
 ; writes: wCB86, wCB8A
-Func_0F0_56A5::
+StepObjectCB8ADownToE0::
+Func_0F0_56A5:: ; address name
     ld a, $03
     ld [wCB86], a
     ld a, [wCB88]
@@ -2260,10 +2262,12 @@ Jump_0F0_56C0::
     xor a, a
     ret
 
+; wCB96 = 1; while wCB98 & 3 is set, wCB9A += 1 up to $E0 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Case09_Case0E)
 ; reads: wCB98, wCB9A
 ; writes: wCB96, wCB9A
-Func_0F0_56C2::
+StepObjectCB9AUpToE0::
+Func_0F0_56C2:: ; address name
     ld a, $01
     ld [wCB96], a
     ld a, [wCB98]

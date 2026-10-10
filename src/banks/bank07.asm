@@ -1465,7 +1465,7 @@ Func_007_4F9D::
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Jump_007_4FB0
-    call Func_007_5066
+    call EraseCursorAtEntryHL_Bank07
     jr Jump_007_4FB3
 
 Jump_007_4FB0::
@@ -1527,7 +1527,7 @@ Func_007_4FF5:: ; address name
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Jump_007_5008
-    call Func_007_5066
+    call EraseCursorAtEntryHL_Bank07
     jr Jump_007_500B
 
 Jump_007_5008::
@@ -1606,9 +1606,11 @@ Jump_007_505C::
     pop hl
     ret
 
+; C = [HL], then falls into WriteC3TileAtWordTableEntryC_Bank07 (E-0126)
 ; 5 call sites from 5 routines (e.g. GameMode5_Update_Case01_Case08, Func_007_4F9D, RunWD06BSubState_60E9_Case01, RunWD06AState_6C12_Shared01, ...)
 ; reads: rSTAT
-Func_007_5066::
+EraseCursorAtEntryHL_Bank07::
+Func_007_5066:: ; address name
     ld c, [hl]
 
 ; writes the blank tile $C3 at the VRAM address in entry C of the word table at DE, waiting for VRAM access (E-0124)
@@ -3272,7 +3274,7 @@ Jump_007_61F8::
     ld hl, wC46B
     ld a, [wC471]
     cp a, [hl]
-    call nz, Func_007_5066
+    call nz, EraseCursorAtEntryHL_Bank07
     ld a, [wC471]
     ld [hl], a
     call Func_007_4F9D
@@ -4089,7 +4091,7 @@ Jump_007_6759:: ; address name
     call SerialSendByte
     ld a, $01
     ld [wD781], a
-    call Func_007_5066
+    call EraseCursorAtEntryHL_Bank07
     ld a, [wC471]
     ld [wC46B], a
     ld hl, vTiles1
@@ -6613,7 +6615,7 @@ Func_007_7690:: ; address name
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Jump_007_76A9
-    call Func_007_5066
+    call EraseCursorAtEntryHL_Bank07
     jr Jump_007_76AC
 
 Jump_007_76A9::
