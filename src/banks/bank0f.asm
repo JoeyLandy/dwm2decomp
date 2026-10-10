@@ -186,8 +186,8 @@ Jump_00F_414D::
     ld a, $06
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $02
     ld [wGameMode], a
     ld a, $0B
@@ -994,8 +994,8 @@ Jump_00F_4846::
     ld a, $71
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -1145,8 +1145,8 @@ Jump_00F_4985::
     ld a, $60
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $40
     ld [wCBD3], a
     ld a, $30
@@ -1365,8 +1365,8 @@ Jump_00F_4B38::
     ld a, $49
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     call Func_00F_4FA1
     ret
 
@@ -1498,8 +1498,8 @@ Jump_00F_4C3D::
     ld a, $41
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     call Func_00F_4FA1
     ret
 
@@ -1724,8 +1724,8 @@ Jump_00F_4E08::
     ld a, $33
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     call Func_00F_4FA1
     ret
 
@@ -1847,9 +1847,9 @@ Jump_00F_4EF7::
     ld a, $2F
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     call Func_00F_4FA1
     ret
 
@@ -1937,8 +1937,8 @@ Jump_00F_4F93::
     ld a, $26
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
 
 ; 6 call sites from 1 routine (e.g. Func_00F_47F5)
 ; reads: hPlayerY
@@ -2112,9 +2112,9 @@ Jump_00F_50D9::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $30
@@ -2405,9 +2405,9 @@ Jump_00F_550B::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $30
@@ -2909,9 +2909,9 @@ Jump_00F_5890::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $30
@@ -3012,9 +3012,9 @@ Jump_00F_594A::
     ld a, $49
     ldh [hMapId], a
     ld a, $00
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $00
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $40
     ld [wC8C9], a
     farcall Func_05F_6C5A
@@ -3031,9 +3031,9 @@ Jump_00F_5971::
     ld a, $48
     ldh [hMapId], a
     ld a, $07
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $05
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ldh a, [hPlayerX]
     ld [wC8C8], a
     ld a, $E0
@@ -3570,7 +3570,7 @@ Jump_00F_5D5F::
     ld [wC468], a
     ld a, $04
     ld [wC46A], a
-    ld hl, hFF92
+    ld hl, hMapScreenY
     dec [hl]
     ldh a, [hFF8C]
     or a, $01
@@ -4686,9 +4686,9 @@ Jump_00F_65A5::
     ld a, $4D
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $01
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $40
     ld [wC8C8], a
     ld a, $E0
@@ -4833,7 +4833,7 @@ Jump_00F_66B6::
     ld [wC468], a
     ld a, $08
     ld [wC46A], a
-    ld hl, hFF92
+    ld hl, hMapScreenY
     inc [hl]
     ldh a, [hFF8C]
     or a, $01
@@ -4920,7 +4920,7 @@ Jump_00F_6767::
     ld [wC468], a
     ld a, $04
     ld [wC46A], a
-    ld hl, hFF92
+    ld hl, hMapScreenY
     dec [hl]
     ldh a, [hFF8C]
     or a, $01
@@ -5055,9 +5055,9 @@ Jump_00F_689B::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $30
@@ -6549,9 +6549,9 @@ Jump_00F_739E::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $30
@@ -6876,8 +6876,8 @@ Jump_00F_7639::
     ld a, $2E
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $20
     ld [wC8C8], a
     ld a, $60
@@ -6948,8 +6948,8 @@ Jump_00F_76E3::
     ld a, $25
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $40
     ld [wC8C8], a
     ld a, $08
@@ -7001,8 +7001,8 @@ Jump_00F_7746::
     ld a, $25
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $30
@@ -7047,8 +7047,8 @@ Jump_00F_7795::
     ld a, $26
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $80
@@ -7113,9 +7113,9 @@ Jump_00F_781C::
     ld a, $25
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $30
     ld [wC8C8], a
     ld a, $40
@@ -7457,8 +7457,8 @@ Jump_00F_7AA2::
     ld a, $06
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $70
     ld [wC8C8], a
     ld a, $50
@@ -7501,9 +7501,9 @@ Jump_00F_7AF9::
     ld a, $00
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $02
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld [wC8C9], a
@@ -7731,9 +7731,9 @@ Jump_00F_7C72::
     ld b, $3C
     call StepWC921Counter_Bank0F
     ret nc
-    ld hl, hFF92
+    ld hl, hMapScreenY
     dec [hl]
-    call Func_000_19A9
+    call LoadMapScreen
     ld hl, wC923
     inc [hl]
     ret
@@ -7742,9 +7742,9 @@ Jump_00F_7C84::
     ld a, $1C
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $01
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $E0
     ld [wC8C8], a
     ld a, $00
@@ -7848,9 +7848,9 @@ Jump_00F_7D3C::
     ld a, $1D
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $00
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $50
     ld [wC8C8], a
     ld a, $40

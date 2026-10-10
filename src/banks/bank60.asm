@@ -952,7 +952,7 @@ Func_060_47A7::
 
 ; 1 call site from 1 routine (e.g. Func_060_4035)
 ; reads: wCD05, wCD04, wCD0D, wCD0E, hFFCE, hFFCF
-; writes: wCD07, wCD0D, wC190, wCD0E, wC191, hFFCE, hFFCF, wCD0C
+; writes: wCD07, wCD0D, wMapWidthScreens, wCD0E, wMapHeightScreens, hFFCE, hFFCF, wCD0C
 ; points at: wCE93, wCD63, wCD70
 Func_060_4AE5::
     xor a, a
@@ -999,7 +999,7 @@ Jump_060_4B0C::
 
 Jump_060_4B2E::
     ld [wCD0D], a
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [hl]
     and a, $0F
     jr nz, Jump_060_4B3B
@@ -1007,7 +1007,7 @@ Jump_060_4B2E::
 
 Jump_060_4B3B::
     ld [wCD0E], a
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     ld a, [wCD0D]
     srl a
     srl a
@@ -3836,7 +3836,7 @@ Jump_060_64E8::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_060_6488)
-; reads: wC190, wCD04, wC191, hFFC9, hFFCA, hFFC6, wCC47, hFFD0, ...
+; reads: wMapWidthScreens, wCD04, wMapHeightScreens, hFFC9, hFFCA, hFFC6, wCC47, hFFD0, ...
 ; writes: hFFD0, hFFC9, hFFCA, hFFCB
 ; points at: wCC4C
 Func_060_64F3::
@@ -3845,7 +3845,7 @@ Func_060_64F3::
     ldh [hFFD0], a
 
 Jump_060_64F7::
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     ld c, a
 
 Jump_060_64FB::
@@ -3855,7 +3855,7 @@ Jump_060_64FB::
     cp a, c
     jr nc, Jump_060_64FB
     ldh [hFFC9], a
-    ld a, [wC191]
+    ld a, [wMapHeightScreens]
     ld c, a
 
 Jump_060_650C::
@@ -3900,7 +3900,7 @@ Jump_060_6541::
     jr nz, Jump_060_6531
 
 Jump_060_654B::
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     add a, a
     add a, a
     add a, a
@@ -3967,7 +3967,7 @@ Jump_060_6590::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wCC44, hMapId, hFF8F, hFF92, wCCEA, wCD04
+; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCCEA, wCD04
 ; writes: wCCE9, wCCEA, wCD0F, hFFC8, hFFC9
 ; points at: wCCEB, hFFC9
 Func_060_65AA::
@@ -3981,10 +3981,10 @@ Jump_060_65B5::
     ldh a, [hMapId]
     cp a, $39
     jr nz, Jump_060_65C6
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $01
     jr nz, Jump_060_65C6
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $01
     ret z
 
@@ -3992,10 +3992,10 @@ Jump_060_65C6::
     ldh a, [hMapId]
     cp a, $2B
     jr nz, Jump_060_65D7
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $01
     jr nz, Jump_060_65D7
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $02
     ret z
 

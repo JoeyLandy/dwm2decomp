@@ -2,7 +2,7 @@ SECTION "Bank 69", ROMX[$4000], BANK[$69]
     db $69
 
 ; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00C_433D, Func_015_570C)
-; reads: wCC44, hMapId, hFF8F, hFF92, wCC38, hFFD0, wC190
+; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC38, hFFD0, wMapWidthScreens
 ; writes: wSpriteSlotCount, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
 ; points at: wSpriteSlots
 Func_069_4001::
@@ -21,10 +21,10 @@ Jump_069_401E::
     ldh a, [hMapId]
     cp a, $2F
     jr nz, Jump_069_404C
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_069_404C
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $01
     jr nz, Jump_069_404C
     ld de, $0056
@@ -54,12 +54,12 @@ Jump_069_404C::
     ld e, a
     ld a, [hl]
     ld d, a
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     sla a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     call Multiply8
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     sla a
     add_a_to_hl
     add hl, de

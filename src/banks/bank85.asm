@@ -978,13 +978,13 @@ Jump_085_4725::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4ECF)
-; reads: hFF92, hFF8F
+; reads: hMapScreenY, hMapScreenX
 ; writes: wC919
 ; points at: wCB86
 Func_085_4755:: ; heuristic: follows a terminator; C0
     ld a, $80
     ld [wC919], a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $02
     ret z
     ld de, $4783
@@ -993,7 +993,7 @@ Func_085_4755:: ; heuristic: follows a terminator; C0
     ld de, $478F
 
 Jump_085_4768::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     add a, a
     add a, a
     add a, e
@@ -1044,9 +1044,9 @@ Jump_085_47B1::
     ld a, $48
     ldh [hMapId], a
     ld a, $08
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $07
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $40
     ld [wC8C8], a
     ld a, $40
@@ -1447,7 +1447,7 @@ Jump_085_4A58::
 
 ; 1 call site from 1 routine (e.g. Func_010_4E74)
 ; reads: wC923, hPlayerX
-; writes: wC919, hFF8F, hFF92, wC8C9, wC8C6, hMapId, wC8C8
+; writes: wC919, hMapScreenX, hMapScreenY, wC8C9, wC8C6, hMapId, wC8C8
 Func_085_4A6D::
     ld a, [wC923]
     or a, a
@@ -1458,8 +1458,8 @@ Func_085_4A6D::
 
 Jump_085_4A79::
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $80
     ld [wC8C9], a
     ld a, $03
@@ -2697,7 +2697,7 @@ Func_085_5329:: ; heuristic: follows a terminator; C0
     dw Func_085_533C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hMapId, hFF8F
+; reads: hMapId, hMapScreenX
 ; writes: wSpriteSlotCount, wC919
 Func_085_533C:: ; heuristic: target of a pointer table; C0
     xor a, a
@@ -2710,7 +2710,7 @@ Func_085_533C:: ; heuristic: target of a pointer table; C0
 
 Jump_085_534B::
     ld de, $00B9
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr z, Jump_085_5358
     inc de
@@ -3084,8 +3084,8 @@ Jump_085_55D0::
     ld a, $26
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $60
     ld [wC8C8], a
     ld a, $20

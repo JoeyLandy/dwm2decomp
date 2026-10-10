@@ -74,5 +74,10 @@
   "D081": {"name": "wItemId", "note": "item id used by LoadItemRecord and RunItemEffect; $FF = none", "evidence": "reading"},
   "D084": {"name": "wItemRecord", "note": "13-byte copy of an ItemTable record", "evidence": "reading"},
   "C61D": {"name": "wInventory", "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)", "evidence": "reading"},
-  "FF90": {"name": "hMapId", "note": "map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39)", "evidence": "reading + execution (E-0036)"}
+  "FF90": {"name": "hMapId", "note": "map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39)", "evidence": "reading + execution (E-0036)"},
+  "FF8F": {"name": "hMapScreenX", "note": "column of the current screen in the map: LoadMapScreen indexes the map's array of screen streams with hMapScreenY * width + hMapScreenX (1 on the opening ship deck, a map 2 screens wide)", "evidence": "reading + execution (E-0037)"},
+  "FF92": {"name": "hMapScreenY", "note": "row of the current screen in the map (0 on the opening ship deck)", "evidence": "reading + execution (E-0037)"},
+  "C190": {"name": "wMapWidthScreens", "note": "map width in screens, from the map record (2 for the ship deck, 4 for map 56)", "evidence": "reading + execution (E-0037)"},
+  "C191": {"name": "wMapHeightScreens", "note": "map height in screens, from the map record", "evidence": "reading + execution (E-0037)"},
+  "C192": {"name": "wMaxBlockingTile", "note": "highest tile id that blocks the player (TileBlockedAtPixel compares tile ids with it); from the map record (55 for the ship deck)", "evidence": "reading + execution (E-0037)"}
 }

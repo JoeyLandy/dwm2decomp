@@ -180,7 +180,7 @@ Jump_004_4117::
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_004_4025)
-; reads: wC190, hFF92, hFF8F, hFFCF, hFFC8, hFFC6, wCD0B, hFFD0, ...
+; reads: wMapWidthScreens, hMapScreenY, hMapScreenX, hFFCF, hFFC8, hFFC6, wCD0B, hFFD0, ...
 ; writes: wSpriteSlotCount, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, hFFC9, ...
 ; points at: wSpriteSlots, wCE7B
 Func_004_4129::
@@ -188,12 +188,12 @@ Func_004_4129::
     ld e, a
     ld a, [hl]
     ld d, a
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     add a, a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     call Multiply8
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     add a, a
     add_a_to_hl
     add hl, de
@@ -396,13 +396,13 @@ Jump_004_420B::
     INCBIN "dwm2-cobi-us.gbc", $01023D, $90
 
 ; 1 call site from 1 routine (e.g. Func_004_4025)
-; reads: hFF92, hFF8F, wCD0B
+; reads: hMapScreenY, hMapScreenX, wCD0B
 ; writes: wCB8B, wCB8A, wCB86
 Func_004_42CD::
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, a
     ret nz
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_004_4309
     ld a, $20
@@ -1372,7 +1372,7 @@ Jump_004_48CD::
     db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
 
 ; 3 call sites from 2 routines (e.g. Func_004_4852, Func_004_456D)
-; reads: wC192
+; reads: wMaxBlockingTile
 ; points at: wScreenTileBuffer, wC910
 Func_004_4904::
     push bc
@@ -1418,7 +1418,7 @@ Jump_004_4943::
     ld a, [de]
     inc de
     ld c, a
-    ld a, [wC192]
+    ld a, [wMaxBlockingTile]
     cp a, c
     jr c, Jump_004_494E
     jr Jump_004_4955
@@ -2173,7 +2173,7 @@ Jump_004_4DF3::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_004_4C96, Func_004_4C25, Func_004_4D43)
-; reads: wFadeState, hMapId, hFF8F, hFF92, hPlayerY
+; reads: wFadeState, hMapId, hMapScreenX, hMapScreenY, hPlayerY
 Func_004_4E0F::
     ld a, [wFadeState]
     or a, a
@@ -2181,10 +2181,10 @@ Func_004_4E0F::
     ldh a, [hMapId]
     cp a, $5A
     jr nz, Jump_004_4E2E
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_004_4E2E
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, a
     jr nz, Jump_004_4E2E
     ldh a, [hPlayerY]
@@ -2219,12 +2219,12 @@ Jump_004_4E40::
     ld a, [hl+]
     cp a, e
     jr nz, Jump_004_4E69
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld e, a
     ld a, [hl+]
     cp a, e
     jr nz, Jump_004_4E69
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     ld e, a
     ld a, [hl+]
     cp a, e
@@ -7568,12 +7568,12 @@ Jump_004_7B9C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_7B29)
-; reads: wCD0B, hFF8F, hPlayerX
+; reads: wCD0B, hMapScreenX, hPlayerX
 Func_004_7BAB::
     ld a, [wCD0B]
     cp a, $01
     jr nz, Jump_004_7BC3
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_004_7BF5
     ldh a, [hPlayerX]
@@ -7586,7 +7586,7 @@ Func_004_7BAB::
 Jump_004_7BC3::
     cp a, $07
     jr nz, Jump_004_7BD4
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_004_7BF5
     ldh a, [hPlayerX]
@@ -7597,7 +7597,7 @@ Jump_004_7BC3::
 Jump_004_7BD4::
     cp a, $08
     jr nz, Jump_004_7BE9
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_004_7BF5
     ldh a, [hPlayerX]
@@ -7610,7 +7610,7 @@ Jump_004_7BD4::
 Jump_004_7BE9::
     cp a, $09
     jr nz, Jump_004_7BF5
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr z, Jump_004_7BF5
 

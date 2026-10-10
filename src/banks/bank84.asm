@@ -556,8 +556,8 @@ Func_084_43AC::
     jr nc, Func_084_43AC
     ret
 
-; 3 call sites from 3 routines (e.g. Func_000_19A9, Func_05F_7969, Func_085_4858)
-; reads: hMapId, hFF8F, hFF92
+; 3 call sites from 3 routines (e.g. LoadMapScreen, Func_05F_7969, Func_085_4858)
+; reads: hMapId, hMapScreenX, hMapScreenY
 ; writes: hFFC6
 Func_084_43B8::
     ld hl, Data_084_4461
@@ -577,12 +577,12 @@ Jump_084_43C3::
     jr nz, Jump_084_43E8
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jr nz, Jump_084_43E8
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jr nz, Jump_084_43E8
     ld a, [hl+]
@@ -695,7 +695,7 @@ Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $210461, $361
 
 ; 1 call site from 1 routine (e.g. Func_016_4454)
-; reads: hFF8C, wCC44, hMapId, hFF8F, hFF92, hPlayerX, hPlayerY, wC88E, ...
+; reads: hFF8C, wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC88E, ...
 ; writes: hFFD0, wC83B, wC83C, wC83D, wC83E, wC88E, wC88F, wC890, ...
 ; points at: wCD7B, wCD8B
 Func_084_47C2::
@@ -721,10 +721,10 @@ Jump_084_47E0::
     pop af
     ld e, a
     ld hl, Data_084_49A1
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     swap a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, c
     ld c, a
     ldh a, [hPlayerX]
@@ -845,10 +845,10 @@ Jump_084_48A9::
     call Func_084_4A6A
     or a, a
     ret nz
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     swap a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, c
     ld c, a
     ldh a, [hPlayerX]
@@ -1029,7 +1029,7 @@ Jump_084_4A87::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4745)
-; reads: wCC44, hMapId, hFF8F, hFF92, wC83B, wC83E, wC83D, wC83C, ...
+; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wC83B, wC83E, wC83D, wC83C, ...
 ; writes: hFFB9, hFFC6, rSVBK
 Func_084_4A89::
     xor a, a
@@ -1055,10 +1055,10 @@ Jump_084_4A9B::
 Jump_084_4AA5::
     ld a, b
     ldh [hFFC6], a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     swap a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, c
     ld c, a
     ld a, [wC83B]
@@ -1094,10 +1094,10 @@ Data_084_4ADC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FF
 
 Jump_084_4AFE::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     swap a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, c
     ld c, a
     ld a, [wC83B]

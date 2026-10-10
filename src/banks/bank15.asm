@@ -3004,7 +3004,7 @@ Jump_015_571D::
     ld a, $0D
     ldh [hMapId], a
     call Func_000_1C0C
-    call Func_000_19A9
+    call LoadMapScreen
     farcall Func_004_4AA8
     farcall Func_069_4001
     call Func_015_6E14

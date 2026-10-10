@@ -515,7 +515,7 @@ Jump_0A1_4433::
     ret
 
 ; 6 call sites from 3 routines (e.g. Func_0A1_44C9, Func_002_5BD7, Func_002_6CD4)
-; reads: wCC44, hFF92, hFF8F
+; reads: wCC44, hMapScreenY, hMapScreenX
 ; points at: wCE93
 Func_0A1_4435::
     ld a, [wCC44]
@@ -523,15 +523,15 @@ Func_0A1_4435::
     ret z
     cp a, $80
     ret nz
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     and a, $FC
     ld hl, wCE93
     add_a_to_hl
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     srl a
     and a, $FE
     add_a_to_hl
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     bit 1, a
     jr z, Jump_0A1_445C
     inc hl
@@ -543,7 +543,7 @@ Jump_0A1_445C::
     ld c, $10
 
 Jump_0A1_4464::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     and a, $03
     jr z, Jump_0A1_4470
     ld b, a
@@ -620,20 +620,20 @@ Jump_0A1_44C5::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_555C)
-; reads: hFF8F, hFF92, wCD0E, wCD0D, hFFC6, hFFC7
-; writes: hFFC6, hFF8F, hFFC7, hFF92
-; points at: hFF8F, hFF92
+; reads: hMapScreenX, hMapScreenY, wCD0E, wCD0D, hFFC6, hFFC7
+; writes: hFFC6, hMapScreenX, hFFC7, hMapScreenY
+; points at: hMapScreenX, hMapScreenY
 Func_0A1_44C9::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ldh [hFFC6], a
     dec a
     dec a
-    ldh [hFF8F], a
-    ldh a, [hFF92]
+    ldh [hMapScreenX], a
+    ldh a, [hMapScreenY]
     ldh [hFFC7], a
     dec a
     dec a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld c, $05
 
 Jump_0A1_44DB::
@@ -642,14 +642,14 @@ Jump_0A1_44DB::
 Jump_0A1_44DD::
     ld a, [wCD0E]
     ld d, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     bit 7, a
     jr nz, Jump_0A1_4503
     cp a, d
     jr nc, Jump_0A1_4503
     ld a, [wCD0D]
     ld d, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     bit 7, a
     jr nz, Jump_0A1_44FC
     cp a, d
@@ -659,7 +659,7 @@ Jump_0A1_44DD::
     pop bc
 
 Jump_0A1_44FC::
-    ld hl, hFF8F
+    ld hl, hMapScreenX
     inc [hl]
     dec b
     jr nz, Jump_0A1_44DD
@@ -667,15 +667,15 @@ Jump_0A1_44FC::
 Jump_0A1_4503::
     ldh a, [hFFC6]
     sub a, $02
-    ldh [hFF8F], a
-    ld hl, hFF92
+    ldh [hMapScreenX], a
+    ld hl, hMapScreenY
     inc [hl]
     dec c
     jr nz, Jump_0A1_44DB
     ldh a, [hFFC6]
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ldh a, [hFFC7]
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4C4E)
@@ -955,18 +955,18 @@ Func_0A1_4640::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_45C5)
-; reads: hPlayerX, hFF8F, hPlayerY, hFF92, wCD0D, wCD0E
-; writes: hFFC9, hFFCA, hFFCD, hFFCE, hFFCB, hFFCC, hPlayerY, hFF92, ...
+; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wCD0D, wCD0E
+; writes: hFFC9, hFFCA, hFFCD, hFFCE, hFFCB, hFFCC, hPlayerY, hMapScreenY, ...
 ; points at: hFFCD, hFFCE
 Func_0A1_46DF::
     ldh a, [hPlayerX]
     ld l, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld h, a
     push hl
     ldh a, [hPlayerY]
     ld l, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     ld h, a
     push hl
     call Func_0A1_4744
@@ -974,11 +974,11 @@ Func_0A1_46DF::
     ldh [hFFC9], a
     ld a, [wCD0E]
     ldh [hFFCA], a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     dec a
     dec a
     ldh [hFFCD], a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     dec a
     dec a
     ldh [hFFCE], a
@@ -1017,12 +1017,12 @@ Jump_0A1_4733::
     ld a, l
     ldh [hPlayerY], a
     ld a, h
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     pop hl
     ld a, l
     ldh [hPlayerX], a
     ld a, h
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_46DF)
@@ -1102,15 +1102,15 @@ Jump_0A1_47B4::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0A1_4744)
-; writes: hFF8F, hFF92, hPlayerX, hPlayerY
+; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 Func_0A1_47C5::
     push af
     swap a
     and a, $0F
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     pop af
     and a, $0F
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $40
     ldh [hPlayerX], a
     ldh [hPlayerY], a
@@ -1231,18 +1231,18 @@ Jump_0A1_4865::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_47D8)
-; reads: hPlayerX, hFF8F, hPlayerY, hFF92, wC944, hMapId, hFFC6, hFFC7, ...
+; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wC944, hMapId, hFFC6, hFFC7, ...
 ; writes: hFFC9, hFFCA, hFFC6, hFFC7, hFFC8, hFFCD, hFFCE, hFFCB, ...
 ; points at: hFFCD, hFFCE
 Func_0A1_4874::
     ldh a, [hPlayerX]
     ld l, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld h, a
     push hl
     ldh a, [hPlayerY]
     ld l, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     ld h, a
     push hl
     call Func_0A1_49A8
@@ -1264,7 +1264,7 @@ Func_0A1_4874::
     ldh [hFFC7], a
     ld a, [hl]
     ldh [hFFC8], a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld c, a
     ldh a, [hMapId]
     ld b, a
@@ -1284,7 +1284,7 @@ Func_0A1_4874::
     ldh [hFFC6], a
     ld a, h
     ldh [hFFC7], a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     ld c, a
     ldh a, [hFF93]
     ld b, a
@@ -1395,12 +1395,12 @@ Jump_0A1_4954::
     ld a, l
     ldh [hPlayerY], a
     ld a, h
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     pop hl
     ld a, l
     ldh [hPlayerX], a
     ld a, h
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ret
     db $88, $A5
     dw Data_0A1_5D45
@@ -1427,7 +1427,7 @@ Jump_0A1_4954::
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4874)
 ; reads: hMapId, wC88B, wC944, wC88E, wC891, wC890, wC88F
-; writes: hFF8F, hFF92, hPlayerX, hPlayerY
+; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 Func_0A1_49A8::
     ldh a, [hMapId]
     ld c, $01
@@ -1527,10 +1527,10 @@ Jump_0A1_4A31::
     ld a, [wC890]
     swap a
     and a, $0F
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [wC890]
     and a, $0F
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [wC88F]
     and a, $F0
     ldh [hPlayerX], a
@@ -1551,15 +1551,15 @@ Jump_0A1_4A67::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0A1_49A8)
-; writes: hFF8F, hFF92, hPlayerX, hPlayerY
+; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 Func_0A1_4A77::
     ld a, [hl]
     swap a
     and a, $0F
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [hl]
     and a, $0F
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     inc hl
     ld a, [hl]
     and a, $F0
@@ -3095,7 +3095,7 @@ Func_0A1_542E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4F8B)
-; reads: wFrameCounterLo, wCC44, hMapId, wC88B, hFF8F, hFF92, wC88E, wC891, ...
+; reads: wFrameCounterLo, wCC44, hMapId, wC88B, hMapScreenX, hMapScreenY, wC88E, wC891, ...
 Func_0A1_5479::
     ld a, [wFrameCounterLo]
     bit 5, a
@@ -3191,12 +3191,12 @@ Jump_0A1_5516::
     ret
 
 Jump_0A1_5523::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     sla a
     sla a
     sla a
     call Func_0A1_5581
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     sla a
     sla a
     sla a

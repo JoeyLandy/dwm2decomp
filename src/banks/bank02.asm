@@ -982,7 +982,7 @@ Data_002_45C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; start-up for wGameMode = 1; forcing this mode on the emulator shows: water map with the player sprite (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit)
-; reads: hMapId, hFF8F, hFF92, wC88D, wC5E0
+; reads: hMapId, hMapScreenX, hMapScreenY, wC88D, wC5E0
 ; writes: rIF, wC51F, wC520, wC8C5, wC5E0, wC5EC
 GameMode1_Init::
 Func_002_45C6:: ; address name
@@ -992,9 +992,9 @@ Func_002_45C6:: ; address name
     ldh a, [hMapId]
     cp a, $38
     jr nz, Jump_002_45DB
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, c
     call z, InitSoundHardware
 
@@ -1085,7 +1085,7 @@ Jump_002_4680::
     ld a, [wC8C7]
     or a, a
     jr nz, Jump_002_46B3
-    call Func_000_19A9
+    call LoadMapScreen
     farcall Func_069_4001
     farcall Func_085_5B53
     farcall Func_012_7BB0
@@ -1250,9 +1250,9 @@ Jump_002_47CB::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld c, $03
     push bc
     ld de, $0025
@@ -1306,9 +1306,9 @@ Jump_002_4846::
     ld a, $04
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $02
     ldh [hPlayerFacing], a
     ldh [hPlayerFacing], a
@@ -1583,7 +1583,7 @@ Func_002_4A53::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4745)
-; reads: wCC44, hMapId, hFF8F, hFF92, wCECE, wCF8B
+; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCECE, wCF8B
 ; writes: wCBCF, wCF8B, hFFC6
 Func_002_4A7A::
     ld a, [wCC44]
@@ -1592,10 +1592,10 @@ Func_002_4A7A::
     ldh a, [hMapId]
     cp a, $00
     ret nz
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     ret nz
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $03
     ret nz
     ld a, [wCECE]
@@ -1619,7 +1619,7 @@ Jump_002_4AA1::
     ret
 
 ; 1 call site from 1 routine (e.g. GameMode1_Init)
-; reads: wCC44, hMapId, hFF8F, hFF92
+; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
 Func_002_4AB5::
     ld a, [wCC44]
     bit 7, a
@@ -1635,10 +1635,10 @@ Jump_002_4AC2::
 Jump_002_4AC5::
     cp a, $38
     jr nz, Jump_002_4AD3
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_002_4AD3
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, a
     jr z, Jump_002_4AC2
 
@@ -1776,9 +1776,9 @@ Jump_002_4BCD::
     ld a, $80
     ld [wCC44], a
     ld a, [wCD0D]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [wCD0E]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     pop af
 
 Jump_002_4C14::
@@ -1818,7 +1818,7 @@ Jump_002_4C3F::
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
 ; reads: wC8C6, wC957, hFF8C, wC936, wC8C8, wC8C9, hPlayerFacing, hPlayerX, ...
-; writes: hPlayerFacing, wC957, wCC44, hFF8C, hMapId, hFF8F, hFF92, hPlayerX, ...
+; writes: hPlayerFacing, wC957, wCC44, hFF8C, hMapId, hMapScreenX, hMapScreenY, hPlayerX, ...
 ; points at: wC8C5
 Func_002_4C4E::
     ld a, [wC8C6]
@@ -1848,9 +1848,9 @@ Jump_002_4C6D::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
 
 Jump_002_4C82::
     ld a, [wC936]
@@ -2172,7 +2172,7 @@ Jump_002_4ED3::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4DED)
-; reads: hFF8C, wC196, wC8CD, wC192
+; reads: hFF8C, wC196, wC8CD, wMaxBlockingTile
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 ; points at: wC910
 Func_002_4ED6::
@@ -2219,7 +2219,7 @@ Jump_002_4F18::
     ld a, [de]
     inc de
     ld c, a
-    ld a, [wC192]
+    ld a, [wMaxBlockingTile]
     cp a, c
     jr c, Jump_002_4F23
     jr Jump_002_4F28
@@ -2294,7 +2294,7 @@ Jump_002_4F7F::
     ldh a, [hPlayerFacing]
     cp a, $02
     ret nz
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $01
     ret nz
     ldh a, [hPlayerX]
@@ -2601,7 +2601,7 @@ Jump_002_5155::
     jr Jump_002_5176
 
 Jump_002_5163::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $01
     ret z
     ld a, [wFrameCounterLo]
@@ -2742,7 +2742,7 @@ Data_002_5254:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $96, $60, $96, $30, $96, $70, $96, $A0, $96, $E0, $96, $B0, $96, $F0, $96
 
 Jump_002_5284::
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, a
     ret nz
     ld a, [wFrameCounterLo]
@@ -2991,8 +2991,8 @@ Jump_002_5408::
 ; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
 ; 12 call sites from 7 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
 ; reads: wFadeState, hFF9A, hFF8C, wC468, wJoypadPressed, hPlayerFacing, hPlayerX, wC91F, ...
-; writes: hFF9A, hPlayerFacing, hFF8C, hFF9B, hFF9C, hFF8F, wC468, wC46A, ...
-; points at: hFFF0, hFF8F, hFF92, hFF80, hFFF8
+; writes: hFF9A, hPlayerFacing, hFF8C, hFF9B, hFF9C, hMapScreenX, wC468, wC46A, ...
+; points at: hFFF0, hMapScreenX, hMapScreenY, hFF80, hFFF8
 UpdatePlayerMovement::
 Func_002_541B:: ; address name
     ld a, [wFadeState]
@@ -3077,17 +3077,17 @@ Jump_002_54A0::
     ldh a, [hFF8C]
     or a, $05
     ldh [hFF8C], a
-    ld hl, hFF8F
+    ld hl, hMapScreenX
     dec [hl]
     farcall CheckWarpAtPlayer
     bit 0, c
     jr nz, Jump_002_544D
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $FF
     jr nz, Jump_002_54C0
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     dec a
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
 
 Jump_002_54C0::
     ld a, $80
@@ -3164,18 +3164,18 @@ Jump_002_5538::
     ldh a, [hFF8C]
     or a, $05
     ldh [hFF8C], a
-    ld hl, hFF8F
+    ld hl, hMapScreenX
     inc [hl]
     farcall CheckWarpAtPlayer
     bit 0, c
     jr nz, Jump_002_54E4
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jr nz, Jump_002_5558
     xor a, a
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
 
 Jump_002_5558::
     ld a, $80
@@ -3264,7 +3264,7 @@ Jump_002_55EA::
     ldh a, [hFF8C]
     or a, $05
     ldh [hFF8C], a
-    ld hl, hFF92
+    ld hl, hMapScreenY
     inc [hl]
     farcall CheckWarpAtPlayer
     bit 0, c
@@ -3272,13 +3272,13 @@ Jump_002_55EA::
     farcall Func_011_4268
     bit 0, c
     jp nz, Jump_002_557C
-    ld a, [wC191]
+    ld a, [wMapHeightScreens]
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jr nz, Jump_002_5616
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
 
 Jump_002_5616::
     ld a, $80
@@ -3366,17 +3366,17 @@ Jump_002_56A4::
     ldh a, [hFF8C]
     or a, $05
     ldh [hFF8C], a
-    ld hl, hFF92
+    ld hl, hMapScreenY
     dec [hl]
     farcall CheckWarpAtPlayer
     bit 0, c
     jp nz, Jump_002_5639
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $FF
     jr nz, Jump_002_56C5
-    ld a, [wC191]
+    ld a, [wMapHeightScreens]
     dec a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
 
 Jump_002_56C5::
     ld a, $80
@@ -3834,7 +3834,7 @@ Jump_002_59C9::
 
 ; B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)
 ; 6 call sites from 3 routines (e.g. Func_002_4DED, UpdatePlayerMovement, CheckInteractionInFront)
-; reads: hFF8C, wC192, wC196
+; reads: hFF8C, wMaxBlockingTile, wC196
 ; writes: wC910, wC911, wC912, wC913
 ; points at: wC910
 TileBlockedAtPixel::
@@ -3888,7 +3888,7 @@ Jump_002_5A1E::
     ld a, [de]
     inc de
     ld c, a
-    ld a, [wC192]
+    ld a, [wMaxBlockingTile]
     cp a, c
     jr c, Jump_002_5A29
     jr Jump_002_5A30
@@ -4078,7 +4078,7 @@ Data_002_5B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wFadeState, hFF8C, wJoypadHeld, hFF8F, hFF92, hMapId, hPlayerX, hPlayerY
+; reads: wFadeState, hFF8C, wJoypadHeld, hMapScreenX, hMapScreenY, hMapId, hPlayerX, hPlayerY
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_002_5B2A::
     ld a, [wFadeState]
@@ -4090,10 +4090,10 @@ Func_002_5B2A::
     ld a, [wJoypadHeld]
     bit 7, a
     ret z
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     swap a
     ld d, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, d
     ld d, a
     ldh a, [hMapId]
@@ -4197,7 +4197,7 @@ Func_002_5BD7::
     dw Jump_002_5BF4
 
 Jump_002_5BE8::
-    call Func_000_19A9
+    call LoadMapScreen
     xor a, a
     ld [wC469], a
     ld hl, wC468
@@ -4979,10 +4979,10 @@ Jump_002_6268::
     jp Jump_002_6089
 
 Jump_002_626D::
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $02
     jr nz, Jump_002_6268
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr z, Jump_002_627C
     cp a, $02
@@ -4999,7 +4999,7 @@ Jump_002_627C::
     jp Jump_002_6089
 
 Jump_002_6291::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     jr nz, Jump_002_6268
     ld de, $000A
@@ -5054,9 +5054,9 @@ Func_002_62E0:: ; heuristic: target of a pointer table; C0
     jp Jump_002_6089
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF92, wC608
+; reads: hMapScreenY, wC608
 Func_002_62ED:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, a
     jr z, Func_002_62E0
     ld de, $0087
@@ -6619,9 +6619,9 @@ Jump_002_6E25::
     ld a, $80
     ld [wCC44], a
     ld a, [wCD0D]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [wCD0E]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     pop af
 
 Jump_002_6E59::
@@ -6713,9 +6713,9 @@ Jump_002_6EC7::
     ld a, [hl+]
     ldh [hMapId], a
     ld a, [hl+]
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [hl+]
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [hl+]
     ldh [hPlayerX], a
     ld a, [hl]
@@ -6781,16 +6781,16 @@ Jump_002_6F7E::
     ld hl, wModeChangeRequest
     inc [hl]
     ld a, [wCD0D]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [wCD0E]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     ld a, [wCD08]
     swap a
     and a, $0F
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [wCD08]
     and a, $0F
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [wCD09]
     ldh [hPlayerX], a
     ld a, [wCD0A]
@@ -6803,11 +6803,11 @@ Jump_002_6F7E::
     ld a, $87
     ld [wCC44], a
     ld a, $01
-    ld [wC190], a
-    ld [wC191], a
+    ld [wMapWidthScreens], a
+    ld [wMapHeightScreens], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $40
     ldh [hPlayerX], a
     ldh [hPlayerY], a

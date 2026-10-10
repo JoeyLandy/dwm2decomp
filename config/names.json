@@ -1148,5 +1148,20 @@
     "name": "CheckWarpAtPlayer",
     "note": "unless a special mode is set (wCC44 bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wCCEA = 1, sound effect $60 is queued, and the entry's new hMapId, hFF8F, hFF92 and position (wC8C8/wC8C9) are stored",
     "evidence": "reading (E-0036)"
+  },
+  "00:19A9": {
+    "name": "LoadMapScreen",
+    "note": "loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set",
+    "evidence": "reading + execution (E-0037)"
+  },
+  "00:1D7F": {
+    "name": "MapRecordPointer",
+    "note": "HL = the word at MapTable + 2 * hMapId (bank $11)",
+    "evidence": "reading + execution (E-0037)"
+  },
+  "00:1BAD": {
+    "name": "LoadSpecialMapHeader",
+    "note": "hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196",
+    "evidence": "reading (E-0037)"
   }
 }

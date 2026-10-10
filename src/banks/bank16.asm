@@ -817,10 +817,10 @@ Jump_016_44FB::
     ldh a, [hMapId]
     cp a, $2F
     jr nz, Jump_016_4542
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $00
     jr nz, Jump_016_4542
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $01
     jr nz, Jump_016_4542
     ldh a, [hPlayerX]
@@ -864,9 +864,9 @@ Jump_016_4548::
     ldh a, [hMapId]
     cp a, $40
     jr nz, Jump_016_457D
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld b, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, b
     jr nz, Jump_016_457D
     ldh a, [hPlayerY]
@@ -899,9 +899,9 @@ Jump_016_4583::
     ldh a, [hMapId]
     cp a, $49
     jr nz, Jump_016_45BC
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld b, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, b
     jr nz, Jump_016_45BC
     ldh a, [hPlayerX]
@@ -938,9 +938,9 @@ Jump_016_45C3::
     ldh a, [hMapId]
     cp a, $61
     jr nz, Jump_016_45F4
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld b, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, b
     jr nz, Jump_016_45F4
     ldh a, [hPlayerX]
@@ -981,7 +981,7 @@ Jump_016_45FA::
     jr z, Jump_016_4626
     cp a, $7A
     jr nz, Jump_016_4621
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $01
     jr z, Jump_016_4626
 
@@ -3005,7 +3005,7 @@ Jump_016_5759::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_56E4)
-; reads: hFF8C, wCC44, hFF92, hFF8F, wCC45
+; reads: hFF8C, wCC44, hMapScreenY, hMapScreenX, wCC45
 ; points at: wCD70, wCD10, wCD88
 Func_016_5766::
     ldh a, [hFF8C]
@@ -3019,11 +3019,11 @@ Func_016_5766::
     jr nz, Jump_016_5795
 
 Jump_016_5778::
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     srl a
     and a, $FE
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     srl a
     srl a
     add a, c

@@ -3,8 +3,8 @@ SECTION "Bank 11", ROMX[$4000], BANK[$11]
 
 ; unless a special mode is set (wCC44 bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wCCEA = 1, sound effect $60 is queued, and the entry's new hMapId, hFF8F, hFF92 and position (wC8C8/wC8C9) are stored
 ; 6 call sites from 1 routine (e.g. UpdatePlayerMovement)
-; reads: wCC44, hMapId, hPlayerFacing, hFF8F, hFF92, hPlayerX, hPlayerY, wC8CA, ...
-; writes: wC8CA, wCCEA, hMapId, hFF8F, hFF92, wC8C8, wC8C9, hFF8C, ...
+; reads: wCC44, hMapId, hPlayerFacing, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8CA, ...
+; writes: wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFF8C, ...
 ; points at: wC5E0
 CheckWarpAtPlayer::
 Func_011_4002:: ; address name
@@ -54,13 +54,13 @@ Jump_011_4029::
     swap a
     and a, $0F
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jr nz, Jump_011_407C
     pop af
     and a, $0F
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jr nz, Jump_011_407D
     ld a, [de]
@@ -83,13 +83,13 @@ Jump_011_4066::
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jr nz, Jump_011_407D
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jr nz, Jump_011_407D
     jr Jump_011_4088
@@ -118,11 +118,11 @@ Jump_011_4088::
     ld a, [de]
     inc de
     and a, $0F
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [de]
     and a, $0F
     inc de
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [wC8CA]
     cp a, $FF
     jr z, Jump_011_40D2
@@ -205,8 +205,8 @@ Jump_011_4105::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_56DC, Func_002_5BD7)
-; reads: wCC44, hMapId, hFF8C, hFF8F, hFF92, hPlayerX, hPlayerY, wC8C9
-; writes: hFF8C, wC8CA, wCCEA, hMapId, hFF8F, hFF92, wC8C8, wC8C9, ...
+; reads: wCC44, hMapId, hFF8C, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8C9
+; writes: hFF8C, wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
 ; points at: wC5E0
 Func_011_4130::
     ld a, [wCC44]
@@ -243,10 +243,10 @@ Jump_011_4152::
     ldh a, [hMapId]
     cp a, $30
     jr nz, Jump_011_4190
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $05
     jr nz, Jump_011_4190
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, $05
     jr nz, Jump_011_4190
     ldh a, [hPlayerX]
@@ -285,13 +285,13 @@ Jump_011_419F::
     swap a
     and a, $0F
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jr nz, Jump_011_41D9
     pop af
     and a, $0F
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jr nz, Jump_011_41DA
     ld a, [de]
@@ -345,11 +345,11 @@ Jump_011_41E6::
     ld a, [de]
     and a, $0F
     inc de
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [de]
     and a, $0F
     inc de
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [de]
     inc de
     swap a
@@ -409,7 +409,7 @@ Jump_011_4235::
 
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, Func_061_5794)
 ; reads: wCC44, hMapId, wC88E, wC891, wCC42, wC88F, wC890, wCD09, ...
-; writes: hMapId, wC8C8, wC8C9, hFF8F, hFF92
+; writes: hMapId, wC8C8, wC8C9, hMapScreenX, hMapScreenY
 ; points at: wC88F
 Func_011_4268::
     ld a, [wCC44]
@@ -508,10 +508,10 @@ Jump_011_42E0::
     ld a, [wC890]
     and a, $F0
     swap a
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [wC890]
     and a, $0F
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     call Func_011_438F
     ld c, $01
     ret
@@ -524,17 +524,17 @@ Jump_011_431E::
     ld a, [wCD08]
     and a, $F0
     swap a
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [wCD08]
     and a, $0F
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     call Func_011_438F
     ld c, $01
     ret
 
 ; 1 call site from 1 routine (e.g. Func_011_4268)
 ; reads: hFF8C
-; writes: wCCEA, wC8C8, wC8C9, hFF8F, hFF92, wC8C6, wModeState, wC8C5, ...
+; writes: wCCEA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C6, wModeState, wC8C5, ...
 ; points at: wC5E0
 Func_011_4340::
     ld a, $01
@@ -552,11 +552,11 @@ Func_011_4340::
     ld a, [de]
     swap a
     and a, $0F
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [de]
     and a, $0F
     inc de
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $01
     ld [wC8C6], a
     ld a, $04
@@ -655,8 +655,8 @@ Jump_011_43F3::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_011_43BB)
-; reads: hPlayerX, hPlayerY, hFF8F, hFF92, hFF8C
-; writes: wCCEA, hMapId, hFF8F, hFF92, wC8C8, wC8C9, wC88B, wC8C6, ...
+; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hFF8C
+; writes: wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC88B, wC8C6, ...
 ; points at: wC5E0
 Func_011_43FA::
     ldh a, [hPlayerX]
@@ -670,10 +670,10 @@ Func_011_43FA::
     ld a, [de]
     cp a, c
     jr nz, Jump_011_4422
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     swap a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, c
     ld c, a
     inc de
@@ -706,8 +706,8 @@ Jump_011_442B::
     ld a, [hl]
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $40
     ld [wC8C8], a
     ld a, $80

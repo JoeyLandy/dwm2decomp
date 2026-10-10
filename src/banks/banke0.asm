@@ -5974,9 +5974,9 @@ Jump_0E0_72DB::
     ld a, $05
     ldh [hMapId], a
     ld a, $01
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     xor a, a
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $B0
     ldh [hPlayerX], a
     ld [wC8F0], a

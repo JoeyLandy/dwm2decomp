@@ -101,9 +101,9 @@ DEF wC160 EQU $C160
 DEF wC164 EQU $C164
 DEF wC17E EQU $C17E
 DEF wC181 EQU $C181
-DEF wC190 EQU $C190
-DEF wC191 EQU $C191
-DEF wC192 EQU $C192
+DEF wMapWidthScreens EQU $C190 ; map width in screens, from the map record (2 for the ship deck, 4 for map 56) (reading + execution (E-0037))
+DEF wMapHeightScreens EQU $C191 ; map height in screens, from the map record (reading + execution (E-0037))
+DEF wMaxBlockingTile EQU $C192 ; highest tile id that blocks the player (TileBlockedAtPixel compares tile ids with it); from the map record (55 for the ship deck) (reading + execution (E-0037))
 DEF wC193 EQU $C193
 DEF wC194 EQU $C194
 DEF wC195 EQU $C195
@@ -1654,10 +1654,10 @@ DEF hFF8B EQU $FF8B
 DEF hFF8C EQU $FF8C
 DEF hFF8D EQU $FF8D
 DEF hPlayerX EQU $FF8E ; position along the axis that facings 1 and 3 change in CheckInteractionInFront (reading)
-DEF hFF8F EQU $FF8F
+DEF hMapScreenX EQU $FF8F ; column of the current screen in the map: LoadMapScreen indexes the map's array of screen streams with hMapScreenY * width + hMapScreenX (1 on the opening ship deck, a map 2 screens wide) (reading + execution (E-0037))
 DEF hMapId EQU $FF90 ; map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39) (reading + execution (E-0036))
 DEF hPlayerY EQU $FF91 ; position along the axis that facings 0 and 2 change in CheckInteractionInFront (reading)
-DEF hFF92 EQU $FF92
+DEF hMapScreenY EQU $FF92 ; row of the current screen in the map (0 on the opening ship deck) (reading + execution (E-0037))
 DEF hFF93 EQU $FF93
 DEF hFF94 EQU $FF94
 DEF hFF95 EQU $FF95

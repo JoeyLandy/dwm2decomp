@@ -1545,16 +1545,16 @@ Jump_00A_4CB1::
     ret
 
 ; 48 call sites from 1 routine (e.g. Func_00A_47A4)
-; reads: hFF92, hFF8F, wC5E7, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, ...
+; reads: hMapScreenY, hMapScreenX, wC5E7, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, ...
 ; writes: wCFDC, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wCFC5
 ; points at: wCFDD
 Func_00A_4CBA::
     sla a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     and a, $0F
     call Multiply8
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     and a, $0F
     sla a
     add_a_to_hl
@@ -2104,16 +2104,16 @@ Jump_00A_504E::
     ret
 
 ; 48 call sites from 1 routine (e.g. Func_00A_4D5E)
-; reads: hFF92, hFF8F, wD09D, hFFC6, hFFC7
+; reads: hMapScreenY, hMapScreenX, wD09D, hFFC6, hFFC7
 ; writes: wD09D, wD09E, wMonsterId, wCFE7, hFFC6
 ; points at: wD09F, hFFC6
 Func_00A_5057::
     sla a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     and a, $0F
     call Multiply8
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     and a, $0F
     sla a
     add_a_to_hl
@@ -2215,11 +2215,11 @@ Jump_00A_50D1::
     jr nz, Jump_00A_5116
 
 Jump_00A_50F1::
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     srl a
     and a, $FE
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     srl a
     srl a
     add a, c

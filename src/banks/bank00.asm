@@ -2084,7 +2084,7 @@ Jump_000_0CF0::
     ret
 
 ; C2 (E-0016): the same expansion as Func_000_0C69 but for VRAM destinations: each store waits for STAT ($FF41) bit 1 to clear with interrupts disabled, back-references read the already-written VRAM, and the lock byte $FFD6 is taken on entry and cleared on exit.
-; 126 call sites from 61 routines (e.g. Func_000_1FE3, Func_000_228A, Func_000_19A9, Func_000_1C0C, ...)
+; 126 call sites from 61 routines (e.g. Func_000_1FE3, Func_000_228A, LoadMapScreen, Func_000_1C0C, ...)
 ; reads: hDecompressLock, rSTAT, hFFC5, hFFBF, hFFC0, hDecompressDestLo, hDecompressDestHi, hFFC2, ...
 ; writes: hDecompressLock, hFFC5, rROMB0, hFFC0, hFFBF
 ; points at: hDecompressMarker
@@ -3730,7 +3730,7 @@ Func_000_1679::
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 115 call sites from 96 routines (e.g. Func_000_2950, Multiply8By16, SRAMRecordAddress, Func_000_19A9, ...)
+; 115 call sites from 96 routines (e.g. Func_000_2950, Multiply8By16, SRAMRecordAddress, LoadMapScreen, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -4293,7 +4293,7 @@ Func_000_18D6::
     db $C6, $05, $6F, $7C, $CE, $67, $67, $3E, $02, $18, $19
 
 ; 4 call sites from 2 routines (e.g. Func_061_4472, Func_061_474C)
-; reads: hFFC6, wC190, hFF92, hFF8F, wIsCGB, hFFC7, hFFC8, hFFC9
+; reads: hFFC6, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hFFC7, hFFC8, hFFC9
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
 ; points at: wScreenTileBuffer, wD000
 Func_000_1906::
@@ -4333,14 +4333,14 @@ Func_000_1906::
     push af
     ld a, [hl]
     ld [rROMB0], a
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     ld c, a
     add a, a
     add a, c
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     call Multiply8
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld c, a
     add a, a
     add a, c
@@ -4408,11 +4408,13 @@ Jump_000_19A4::
     ld [rROMB0], a
     ret
 
+; loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set
 ; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00F_7BC3, Func_015_570C)
-; reads: wCC44, wC190, hFF92, hFF8F, wIsCGB, hFFC6, hFFC7, hFFC8, ...
+; reads: wCC44, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hFFC6, hFFC7, hFFC8, ...
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_000_19A9::
+LoadMapScreen::
+Func_000_19A9:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_000_19B7
@@ -4424,7 +4426,7 @@ Jump_000_19B7::
     push af
     ld a, $11
     ld [rROMB0], a
-    call Func_000_1D7F
+    call MapRecordPointer
     ld a, $10
     add_a_to_hl
     ld a, [hl+]
@@ -4465,14 +4467,14 @@ Jump_000_19E6::
     push af
     ld a, [hl]
     ld [rROMB0], a
-    ld a, [wC190]
+    ld a, [wMapWidthScreens]
     ld c, a
     add a, a
     add a, c
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     call Multiply8
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld c, a
     add a, a
     add a, c
@@ -4544,7 +4546,7 @@ Jump_000_1A62::
     call Func_000_1A73
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_19A9)
+; 1 call site from 1 routine (e.g. LoadMapScreen)
 ; reads: wCC44, hMapId, wC88E, wC891
 ; writes: hFFC6
 ; points at: wC88F
@@ -4602,13 +4604,13 @@ Jump_000_1AB3::
     db $00, $FF
 
 ; 2 call sites from 1 routine (e.g. Func_000_1A73)
-; reads: hFF8F, hFF92, wIsCGB, hFFC6
+; reads: hMapScreenX, hMapScreenY, wIsCGB, hFFC6
 ; writes: rSVBK
 Func_000_1AD6::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     swap a
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     or a, c
     ld c, a
     inc de
@@ -4699,14 +4701,14 @@ Jump_000_1B6D::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_19A9)
-; reads: hFF8F, hMapId
+; 1 call site from 1 routine (e.g. LoadMapScreen)
+; reads: hMapScreenX, hMapId
 ; points at: wC2E2, wC1CA
 Func_000_1B6F::
     ld de, $012B
     call TestFlagBit
     ret nc
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     or a, a
     ret nz
     ldh a, [hMapId]
@@ -4737,10 +4739,12 @@ Jump_000_1B95::
     ld [hl], $7B
     ret
 
+; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
 ; 4 call sites from 1 routine (e.g. Func_061_420D)
 ; reads: hFFC6
-; writes: rROMB0, wC190, wC191, wC192, wC193, wC90D, wC901, wC194, ...
-Func_000_1BAD::
+; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, wC901, wC194, ...
+LoadSpecialMapHeader::
+Func_000_1BAD:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $61
@@ -4782,11 +4786,11 @@ Func_000_1BAD::
     call Func_000_24E5
     pop hl
     ld a, [hl+]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [hl+]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     ld a, [hl+]
-    ld [wC192], a
+    ld [wMaxBlockingTile], a
     ld a, [hl+]
     ld [wC193], a
     ld a, [hl+]
@@ -4802,7 +4806,7 @@ Func_000_1BAD::
 
 ; 3 call sites from 3 routines (e.g. Func_002_4628, Func_00C_433D, Func_015_570C)
 ; reads: wCC44, hMapId
-; writes: rROMB0, wC46B, wC46C, wC190, wC191, wC192, wC193, wC90D, ...
+; writes: rROMB0, wC46B, wC46C, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, ...
 Func_000_1C0C::
     ld a, [wCC44]
     bit 7, a
@@ -4815,7 +4819,7 @@ Jump_000_1C1A::
     push af
     ld a, $11
     ld [rROMB0], a
-    call Func_000_1D7F
+    call MapRecordPointer
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -4854,11 +4858,11 @@ Jump_000_1C55::
     call Func_000_24E5
     pop hl
     ld a, [hl+]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [hl+]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     ld a, [hl+]
-    ld [wC192], a
+    ld [wMaxBlockingTile], a
     ld a, [hl+]
     ld [wC193], a
     ld a, [hl+]
@@ -4999,9 +5003,11 @@ Jump_000_1D6F::
 Jump_000_1D7E::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_19A9, Func_000_1C0C)
+; HL = the word at MapTable + 2 * hMapId (bank $11)
+; 2 call sites from 2 routines (e.g. LoadMapScreen, Func_000_1C0C)
 ; reads: hMapId
-Func_000_1D7F::
+MapRecordPointer::
+Func_000_1D7F:: ; address name
     ldh a, [hMapId]
     ld l, a
     ld h, $00
@@ -6479,7 +6485,7 @@ Jump_000_24D7::
     ld a, [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_1C0C, Func_000_1BAD)
+; 2 call sites from 2 routines (e.g. Func_000_1C0C, LoadSpecialMapHeader)
 ; reads: wIsCGB
 ; writes: wC526
 ; points at: wC49F

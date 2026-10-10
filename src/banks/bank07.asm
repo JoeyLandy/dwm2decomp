@@ -3159,9 +3159,9 @@ Jump_007_62ED::
     cp a, $80
     jr nz, Jump_007_6319
     ld a, [wCD0D]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [wCD0E]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
 
 Jump_007_6319::
     xor a, a
@@ -3947,8 +3947,8 @@ Jump_007_6919::
     ld a, $38
     ldh [hMapId], a
     xor a, a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $E0
     ldh [hPlayerX], a
     ld [wC8F0], a
@@ -4265,8 +4265,8 @@ Jump_007_6B23::
     ldh [hPlayerX], a
     ld a, $00
     ldh [hPlayerY], a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $14
     ldh [hMapId], a
     xor a, a
@@ -6966,8 +6966,8 @@ Jump_007_7D43::
     ldh [hPlayerX], a
     ld a, $00
     ldh [hPlayerY], a
-    ldh [hFF8F], a
-    ldh [hFF92], a
+    ldh [hMapScreenX], a
+    ldh [hMapScreenY], a
     ld a, $14
     ldh [hMapId], a
     xor a, a

@@ -443,11 +443,11 @@ Jump_001_461E::
     ld [wC5F8], a
     ldh a, [hMapId]
     ld [wC5F9], a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld [wC5FA], a
     ldh a, [hPlayerX]
     ld [wC5FB], a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     ld [wC5FC], a
     ldh a, [hPlayerY]
     ld [wC5FD], a
@@ -506,9 +506,9 @@ Jump_001_46B4::
     pop af
     or a, $80
     ld [wC5F9], a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     ld [wC5FB], a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     ld [wC5FC], a
     ret
 
@@ -3273,9 +3273,9 @@ Jump_001_5C18::
     ld a, [wC5F9]
     ld [wC833], a
     ld a, [wC5FB]
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [wC5FC]
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [wC5FE]
     bit 7, a
     jr z, Jump_001_5C5B
@@ -3307,9 +3307,9 @@ Jump_001_5C5B::
     xor a, a
     ld [wC91F], a
     ld a, [wCD0D]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [wCD0E]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     ld a, $01
     ld [wGameMode], a
     ld a, $05
@@ -3500,7 +3500,7 @@ Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_001_5BE8)
 ; reads: wC5FA, wC5F9, wC5FD, hFFC6, hFFC7, hFFC8, hFFC9, wCD0D, ...
-; writes: hFFC6, wC833, wCC42, wCD05, wC190, wC191, hPlayerFacing, hFF8F, ...
+; writes: hFFC6, wC833, wCC42, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
 ; points at: wModeChangeRequest
 Func_001_5DBA::
     ld a, [wC5FA]
@@ -3547,18 +3547,18 @@ Jump_001_5DF3::
     farcall Func_060_4035
     farcall Func_060_6C96
     ld a, [wCD0D]
-    ld [wC190], a
+    ld [wMapWidthScreens], a
     ld a, [wCD0E]
-    ld [wC191], a
+    ld [wMapHeightScreens], a
     xor a, a
     ldh [hPlayerFacing], a
     ld a, [wCD08]
     swap a
     and a, $0F
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [wCD08]
     and a, $0F
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [wCD09]
     ldh [hPlayerX], a
     ld a, [wCD0A]
@@ -3737,11 +3737,11 @@ Jump_001_601F::
     ld a, [wC5F9]
     ldh [hMapId], a
     ld a, [wC5FA]
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, [wC5FB]
     ldh [hPlayerX], a
     ld a, [wC5FC]
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, [wC5FD]
     ldh [hPlayerY], a
     xor a, a
@@ -5271,14 +5271,14 @@ Func_001_6A98::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_001_6880, Func_001_65A0)
-; writes: hMapId, hFF8F, hFF92, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
+; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
 Func_001_6ABE::
     ld a, $00
     ldh [hMapId], a
     ld a, $02
-    ldh [hFF8F], a
+    ldh [hMapScreenX], a
     ld a, $00
-    ldh [hFF92], a
+    ldh [hMapScreenY], a
     ld a, $40
     ldh [hPlayerX], a
     ld a, $40

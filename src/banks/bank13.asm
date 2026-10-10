@@ -5000,7 +5000,7 @@ Jump_013_641C::
     ld de, $0008
     call TestFlagBit
     jr c, Jump_013_6438
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $02
     jr z, Jump_013_6431
 
@@ -5015,7 +5015,7 @@ Jump_013_6431::
     ret
 
 Jump_013_6438::
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, $02
     jr nz, Jump_013_642A
     ld hl, $4F8D

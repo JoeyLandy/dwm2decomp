@@ -2,7 +2,7 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wC8CB, wC468, hFF8C, wC918, hMapId, hFF8F, hFF92, wModeState, ...
+; reads: wC8CB, wC468, hFF8C, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
 ; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_4001::
     ld a, [wC8CB]
@@ -53,12 +53,12 @@ Jump_087_4031::
     jr nz, Jump_087_4096
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
@@ -410,12 +410,12 @@ Jump_087_443D::
     inc hl
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
@@ -484,12 +484,12 @@ Jump_087_449F::
     inc hl
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF8F]
+    ldh a, [hMapScreenX]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF92]
+    ldh a, [hMapScreenY]
     cp a, c
     jr nz, Jump_087_44FC
     ld a, [hl+]
