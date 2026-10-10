@@ -3976,7 +3976,7 @@ Jump_007_6919::
 
 ; 1 call site from 1 routine (e.g. Func_007_65F1)
 ; writes: wC617, wC618, wC619
-; points at: wC61D
+; points at: wInventory
 Func_007_695A::
     ld a, $64
     ld [wC617], a
@@ -3984,7 +3984,7 @@ Func_007_695A::
     ld [wC618], a
     ld a, $00
     ld [wC619], a
-    ld hl, wC61D
+    ld hl, wInventory
     ld bc, $0018
     ld a, $00
     call FillBytes

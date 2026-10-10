@@ -2576,7 +2576,7 @@ Func_085_5248::
     dw Jump_085_526C
 
 Jump_085_526C::
-    ld hl, wC61D
+    ld hl, wInventory
 
 Jump_085_526F::
     ld a, [hl]

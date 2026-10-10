@@ -5860,9 +5860,9 @@ Data_00C_7538:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 1 routine (e.g. Func_00C_6601)
 ; reads: wD7F1
 ; writes: wD7F1
-; points at: wC61D
+; points at: wInventory
 Func_00C_755C::
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $18
 
 Jump_00C_7561::

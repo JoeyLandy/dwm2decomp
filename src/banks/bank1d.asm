@@ -765,7 +765,7 @@ Jump_01D_4A5A::
 
 ; 5 call sites from 4 routines (e.g. Func_01D_5ADF, Func_01D_508B, Func_01D_460F, Func_01C_6D7D)
 ; writes: wD7BC, wD7B0
-; points at: wC635, wC61D
+; points at: wC635, wInventory
 Func_01D_4A62::
     ld hl, wC635
     ld c, $00
@@ -788,7 +788,7 @@ Jump_01D_4A72::
     jr c, Jump_01D_4A69
     ld a, c
     ld [wD7BC], a
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
     ld b, $00
 
@@ -860,7 +860,7 @@ Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. Func_01C_70C6)
 ; reads: wD780, wD7B6, wD7B5, wC8C1, wC8C2, wIsCGB, wD781
 ; writes: wC8C1, wD793, wD794, wD781
-; points at: wD788, wC635, wD7D5, wC61D
+; points at: wD788, wC635, wD7D5, wInventory
 Func_01D_4ADC::
     ld hl, Data_01D_4BE4
     ld de, wD788
@@ -928,7 +928,7 @@ Jump_01D_4B32::
     ld a, [wD7B5]
     add_a_to_hl
     ld e, [hl]
-    ld hl, wC61D
+    ld hl, wInventory
     ld bc, $0000
 
 Jump_01D_4B53::
@@ -1791,7 +1791,7 @@ Jump_01D_5083::
 ; 1 call site from 1 routine (e.g. Func_01C_710A)
 ; reads: wD7B6, wD7B5, wD7B0, wCF8B, wD781, wD7BC
 ; writes: wD7FA, wD7C3, wD7C5, wCF8B, wD781
-; points at: wC635, wC61D
+; points at: wC635, wInventory
 Func_01D_508B::
     ld hl, wC635
     ld a, [wD7B6]
@@ -1825,7 +1825,7 @@ Func_01D_508B::
     ld [hl], a
 
 Jump_01D_50BD::
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
 
 Jump_01D_50C2::
@@ -1876,9 +1876,9 @@ Jump_01D_50F9::
 ; 1 call site from 1 routine (e.g. Func_01C_710A)
 ; reads: wCF8B, wD781, wD7C5
 ; writes: wD7FA, wD7C3, wD7C5, wCF8B, wD781
-; points at: wC61D, wC635
+; points at: wInventory, wC635
 Func_01D_5101::
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
 
 Jump_01D_5106::
@@ -3137,10 +3137,10 @@ Jump_01D_594A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01D_46E1)
-; points at: wC635, wC61D
+; points at: wC635, wInventory
 Func_01D_5965::
     ld hl, wC635
-    ld de, wC61D
+    ld de, wInventory
     ld bc, $0000
 
 Jump_01D_596E::

@@ -8426,7 +8426,7 @@ Func_013_7F86:: ; heuristic: target of a pointer table; C0
 
 ; 5 call sites from 4 routines (e.g. Func_013_5EF4, Func_013_5C0B, Func_013_5922, Func_013_405C)
 ; reads: wC634
-; points at: wC61D
+; points at: wInventory
 Func_013_7F94::
     ld a, [wC634]
     cp a, $FF
@@ -8437,7 +8437,7 @@ Func_013_7F94::
     ret
 
 Jump_013_7FA0::
-    ld hl, wC61D
+    ld hl, wInventory
 
 Jump_013_7FA3::
     ld a, [hl]

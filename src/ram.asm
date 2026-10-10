@@ -533,7 +533,7 @@ DEF wC619 EQU $C619
 DEF wC61A EQU $C61A
 DEF wC61B EQU $C61B
 DEF wC61C EQU $C61C
-DEF wC61D EQU $C61D
+DEF wInventory EQU $C61D ; 24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game) (reading)
 DEF wC61E EQU $C61E
 DEF wC61F EQU $C61F
 DEF wC620 EQU $C620
@@ -1186,10 +1186,10 @@ DEF wD06A EQU $D06A
 DEF wD06B EQU $D06B
 DEF wD06C EQU $D06C
 DEF wD080 EQU $D080
-DEF wD081 EQU $D081
+DEF wItemId EQU $D081 ; item id used by LoadItemRecord and RunItemEffect; $FF = none (reading)
 DEF wD082 EQU $D082
 DEF wD083 EQU $D083
-DEF wD084 EQU $D084
+DEF wItemRecord EQU $D084 ; 13-byte copy of an ItemTable record (reading)
 DEF wD087 EQU $D087
 DEF wD088 EQU $D088
 DEF wD08A EQU $D08A

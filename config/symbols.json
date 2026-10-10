@@ -70,5 +70,8 @@
   "D2C7": {"name": "wPersonalityIndex", "note": "column index (0-26) into the bank-6 table; set from PersonalityIndexOfSlot in banks $30 and $E0 before ReadBank6TableWord", "evidence": "reading"},
   "CFEC": {"name": "wRecordBuffer", "note": "scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here", "evidence": "reading"},
   "CFEE": {"name": "wRecordBufferData", "note": "where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer)", "evidence": "reading"},
-  "CFE6": {"name": "wMonsterId", "note": "16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads", "evidence": "reading"}
+  "CFE6": {"name": "wMonsterId", "note": "16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads", "evidence": "reading"},
+  "D081": {"name": "wItemId", "note": "item id used by LoadItemRecord and RunItemEffect; $FF = none", "evidence": "reading"},
+  "D084": {"name": "wItemRecord", "note": "13-byte copy of an ItemTable record", "evidence": "reading"},
+  "C61D": {"name": "wInventory", "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)", "evidence": "reading"}
 }

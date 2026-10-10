@@ -1133,5 +1133,15 @@
     "data": true,
     "note": "string table of category $14 (the string database extension in bank $95, selected when wStringCategory is 9 or more): 'None', 'Battle', 'Field', 'Anytime' (E-0033)",
     "evidence": "reading + execution (E-0033)"
+  },
+  "16:4007": {
+    "name": "LoadItemRecord",
+    "note": "wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)",
+    "evidence": "reading (E-0034)"
+  },
+  "16:4025": {
+    "name": "RunItemEffect",
+    "note": "returns when wItemId is $FF; otherwise jumps through a table with one handler per item id (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)",
+    "evidence": "reading (E-0034)"
   }
 }

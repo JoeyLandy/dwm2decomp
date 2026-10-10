@@ -1048,7 +1048,7 @@ Jump_03B_469E::
 
 Jump_03B_46AE::
     ld a, [wD893]
-    ld [wD081], a
+    ld [wItemId], a
     ld a, [wCFD5]
     and a, $0F
     add a, a
@@ -1058,9 +1058,9 @@ Jump_03B_46AE::
     and a, $03
     add a, b
     ld [wD082], a
-    farcall Func_016_4007
+    farcall LoadItemRecord
     farcall Func_016_4C1D
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret nz
     ld a, [wD087]

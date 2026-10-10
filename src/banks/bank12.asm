@@ -8658,7 +8658,7 @@ Jump_012_7932::
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wC627, wC619, wC618, wC617
 ; writes: wC935
-; points at: wC61D
+; points at: wInventory
 Func_012_7934::
     ld a, [wC627]
     cp a, $FF
@@ -8682,7 +8682,7 @@ Jump_012_794F::
     jr c, Jump_012_797A
 
 Jump_012_7956::
-    ld hl, wC61D
+    ld hl, wInventory
 
 Jump_012_7959::
     ld a, [hl+]
@@ -9417,13 +9417,13 @@ Jump_012_7DC3::
 ; 47 call sites from 15 routines (e.g. Func_012_7CD9, Func_004_5D14, Func_004_612B, Func_004_6827, ...)
 ; reads: hFFC6
 ; writes: hFFC6
-; points at: wC61D
+; points at: wInventory
 FindHFFC6InWC61DList::
 Func_012_7DCE:: ; address name
     ldh a, [hFFC6]
     ld c, a
     ld b, $00
-    ld hl, wC61D
+    ld hl, wInventory
 
 Jump_012_7DD6::
     ld a, [hl]
@@ -9452,13 +9452,13 @@ Jump_012_7DED::
 ; 17 call sites from 10 routines (e.g. Func_004_5D14, Func_004_612B, Func_004_6F9A, Func_004_724E, ...)
 ; reads: hFFC6
 ; writes: wC634
-; points at: wC61D
+; points at: wInventory
 Func_012_7DF1::
     ldh a, [hFFC6]
     cp a, $17
     jr z, Jump_012_7E09
     ld b, a
-    ld hl, wC61D
+    ld hl, wInventory
     add a, l
     ld l, a
     jr nc, Jump_012_7E00

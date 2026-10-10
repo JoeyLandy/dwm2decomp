@@ -3089,7 +3089,7 @@ Jump_01C_534A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7D0, wD7CF, wD7CE, wD7CA, wD7CB, wD7B6, wD7B5, wD7B0, ...
 ; writes: wD7F3, wD7F2, wD7F1, wD7B8, wD780, wD781, wD7B5, wD7B6, ...
-; points at: wC61D, wD788, wD792
+; points at: wInventory, wD788, wD792
 Func_01C_5355:: ; heuristic: target of a pointer table; C0
     ld a, [wD7D0]
     ld [wD7F3], a
@@ -3141,7 +3141,7 @@ Jump_01C_5393::
     push de
     ld a, e
     ld c, a
-    ld hl, wC61D
+    ld hl, wInventory
     ld b, $00
 
 Jump_01C_53BB::
@@ -3210,7 +3210,7 @@ Jump_01C_5415::
     jr nz, Jump_01C_5415
     ld hl, wD792
     call Func_01C_4395
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
     ld b, $00
 
@@ -3276,9 +3276,9 @@ Jump_01C_5476::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B6, wD7BB, wC8C1, wC8C2, wD781, wD7B5
 ; writes: wD7B0, wD7BB, wD7B6, wD7B7, wC8C1, wD781, wD783, wD784, ...
-; points at: wC61D, wD7D5
+; points at: wInventory, wD7D5
 Func_01C_5496:: ; heuristic: target of a pointer table; C0
-    ld hl, wC61D
+    ld hl, wInventory
     ld b, $00
     ld c, $00
 
@@ -4780,7 +4780,7 @@ Func_01C_5DEC:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7D0, wD7CF, wD7CE, wD781, wC8C1, wC8C2
 ; writes: wD7F3, wD7F2, wD7F1, wD7B0, wD780, wD781, wD7FA, wD7B5, ...
-; points at: wC61D, wD788, wD792
+; points at: wInventory, wD788, wD792
 Func_01C_5E1B:: ; heuristic: target of a pointer table; C0
     ld a, [wD7D0]
     ld [wD7F3], a
@@ -4790,7 +4790,7 @@ Func_01C_5E1B:: ; heuristic: target of a pointer table; C0
     ld [wD7F1], a
     call Func_01C_45B0
     call Func_01C_6919
-    ld hl, wC61D
+    ld hl, wInventory
     ld b, $00
     ld c, $00
 
@@ -4846,7 +4846,7 @@ Jump_01C_5E84::
     jr nz, Jump_01C_5E84
     ld hl, wD792
     call Func_01C_4395
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
     ld b, $00
 
@@ -4895,10 +4895,10 @@ Jump_01C_5EC0::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_01C_4AC4, Func_01C_500C)
-; points at: wC61D, wD7F1
+; points at: wInventory, wD7F1
 Func_01C_5EEC::
     push hl
-    ld hl, wC61D
+    ld hl, wInventory
     ld b, $18
 
 Jump_01C_5EF2::
@@ -5857,7 +5857,7 @@ Jump_01C_6899::
 ; 2 call sites from 2 routines (e.g. Func_01C_5496, Func_01D_485C)
 ; reads: wD785
 ; writes: wD785, wD786
-; points at: wD7D5, wC61D
+; points at: wD7D5, wInventory
 Func_01C_689A::
     push af
     push bc
@@ -5877,7 +5877,7 @@ Jump_01C_68A3::
     ld b, $01
 
 Jump_01C_68B1::
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $18
 
 Jump_01C_68B6::
@@ -5958,7 +5958,7 @@ Func_01C_68FA::
 ; 2 call sites from 2 routines (e.g. Func_01C_710A, Func_01C_5E1B)
 ; reads: wD7CA, wD7CB, wD7B6, wD7B5, wD7B8, wD7B9
 ; writes: wD7B9, wD7B8
-; points at: wD7D5, wC61D
+; points at: wD7D5, wInventory
 Func_01C_6919::
     ld a, [wD7CA]
     ld e, a
@@ -6000,8 +6000,8 @@ Jump_01C_693F::
     add_a_to_hl
     ld a, [hl]
     ld [wD7B8], a
-    ld de, wC61D
-    ld hl, wC61D
+    ld de, wInventory
+    ld hl, wInventory
     ld b, $00
     ld c, $00
 
@@ -6045,7 +6045,7 @@ Jump_01C_698F::
 ; 2 call sites from 2 routines (e.g. Func_01C_58C0, Func_01D_4BF9)
 ; reads: wD7B6, wD7B5
 ; writes: wD7D4, wD7D3
-; points at: wD7D5, wC61D
+; points at: wD7D5, wInventory
 Func_01C_6999::
     ld hl, wD7D5
     ld a, [wD7B6]
@@ -6060,7 +6060,7 @@ Func_01C_6999::
     add_a_to_hl
     ld a, [hl]
     ld b, a
-    ld hl, wC61D
+    ld hl, wInventory
     ld d, $18
     ld c, $00
 
@@ -6146,7 +6146,7 @@ Jump_01C_6A14::
 ; 2 call sites from 2 routines (e.g. Func_01C_6DC7, Func_01C_4710)
 ; reads: wC8C1, wC8C2
 ; writes: wD7B0, wD7A5, wD7A6
-; points at: wD788, wD792, wC61D, wD781
+; points at: wD788, wD792, wInventory, wD781
 Func_01C_6A22::
     ld hl, wD788
     ld de, Data_01C_5F5E
@@ -6162,7 +6162,7 @@ Jump_01C_6A2B::
     jr nz, Jump_01C_6A2B
     ld hl, wD792
     call Func_01C_4395
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $18
     ld b, $00
 
@@ -7270,7 +7270,7 @@ Func_01C_724B:: ; heuristic: target of a pointer table; C0
 ; 2 call sites from 2 routines (e.g. Func_01C_7196, Func_01C_7128)
 ; reads: wC8C1, wC8C2
 ; writes: wD7B0, wD7A5, wD7A6
-; points at: wD788, wD792, wC61D
+; points at: wD788, wD792, wInventory
 Func_01C_7252::
     ld hl, wD788
     ld de, Data_01C_5F5E
@@ -7286,7 +7286,7 @@ Jump_01C_725B::
     jr nz, Jump_01C_725B
     ld hl, wD792
     call Func_01C_4395
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
     ld b, $00
 

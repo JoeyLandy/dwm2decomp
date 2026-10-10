@@ -5336,7 +5336,7 @@ Func_001_6ABE::
     ld a, $02
     ld [wC700], a
     ld a, $01
-    ld [wC61D], a
+    ld [wInventory], a
     ld a, $02
     ld [wC61E], a
     ld a, $03

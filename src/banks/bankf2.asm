@@ -2520,7 +2520,7 @@ Jump_0F2_643C::
 ; 3 call sites from 3 routines (e.g. Func_01D_485C, Func_01D_4BF9, Func_01D_5101)
 ; reads: wD780, wCF8B
 ; writes: wCF8B
-; points at: wD09D, wC61D, wD7D5
+; points at: wD09D, wInventory, wD7D5
 Func_0F2_6449:: ; heuristic: follows a terminator; C0
     ld a, [wD780]
     cp a, $03
@@ -2577,7 +2577,7 @@ Jump_0F2_648B::
     ld [wCF8B], a
 
 ; 1 call site from 1 routine (e.g. Func_0F2_6454)
-; points at: wC61D, wD09D, wD7D5
+; points at: wInventory, wD09D, wD7D5
 Func_0F2_648E::
     ld b, $00
 
@@ -2587,7 +2587,7 @@ Jump_0F2_6490::
     jr z, Jump_0F2_64B8
     ld c, a
     push de
-    ld hl, wC61D
+    ld hl, wInventory
     ld d, $18
 
 Jump_0F2_649C::

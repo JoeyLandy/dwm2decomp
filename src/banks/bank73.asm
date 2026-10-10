@@ -6560,7 +6560,7 @@ Jump_073_6E55::
 ; 1 call site from 1 routine (e.g. Func_010_4C36)
 ; reads: hFFC6, wC836
 ; writes: hFFC6, wC836, wC919
-; points at: wC61D
+; points at: wInventory
 Func_073_6E5F::
     ld a, $19
     ldh [hFFC6], a
@@ -6589,7 +6589,7 @@ Func_073_6E5F::
     ret
 
 Jump_073_6EA0::
-    ld hl, wC61D
+    ld hl, wInventory
     ldh a, [hFFC6]
     add_a_to_hl
     ld [hl], $30

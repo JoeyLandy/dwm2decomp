@@ -3557,7 +3557,7 @@ Jump_031_5855::
     call Func_031_74C1
     ld a, $06
     ld [wStringCategory], a
-    ld hl, wC61D
+    ld hl, wInventory
     ld a, [wCFD5]
     and a, $0F
     add a, a
@@ -3616,7 +3616,7 @@ Jump_031_58CF::
     ld a, $00
     ld [wD869], a
     call Func_031_62D3
-    ld a, [wD081]
+    ld a, [wItemId]
     ld [wD893], a
     ld a, [wD088]
     bit 0, a
@@ -3778,7 +3778,7 @@ Jump_031_5A0C::
     ld a, [wD08A]
     and a, $01
     jr nz, Jump_031_5A5B
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $19
     jr c, Jump_031_5A71
     cp a, $1F
@@ -3870,7 +3870,7 @@ Jump_031_5AA6::
 
 Jump_031_5AC1::
     call Func_031_74E1
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $0C
     jr z, Jump_031_5ACC
     xor a, a
@@ -3971,7 +3971,7 @@ Jump_031_5B76::
 
 Jump_031_5B7B::
     call Func_031_7522
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $0C
     jr z, Jump_031_5B86
     xor a, a
@@ -3987,7 +3987,7 @@ Jump_031_5B86::
 
 Jump_031_5B98::
     call Func_031_7529
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $0C
     jr z, Jump_031_5BA3
     xor a, a
@@ -5035,9 +5035,9 @@ Jump_031_61BE::
 
 ; 1 call site from 1 routine (e.g. Func_031_4B10)
 ; writes: wCFD7, wCFD6, wCFD5
-; points at: wC61D
+; points at: wInventory
 Func_031_6200::
-    ld hl, wC61D
+    ld hl, wInventory
     ld bc, $1800
     ld e, $00
 
@@ -5100,11 +5100,11 @@ Func_031_6245::
 ; 2 call sites from 2 routines (e.g. Func_031_6288, Func_031_4EB9)
 ; reads: wCFD5
 ; writes: wStringCategory
-; points at: wC61D
+; points at: wInventory
 Func_031_624F::
     ld a, $05
     ld [wStringCategory], a
-    ld hl, wC61D
+    ld hl, wInventory
     ld a, [wCFD5]
     add a, a
     add a, a
@@ -5135,7 +5135,7 @@ Func_031_6286::
 ; 2 call sites from 1 routine (e.g. Func_031_4EB9)
 ; reads: wCFD5, wC471
 ; writes: wCFD5, wC471, wStringCategory, wStringIndex
-; points at: wC471, wC61D
+; points at: wC471, wInventory
 Func_031_6288::
     ld a, [wCFD5]
     bit 7, a
@@ -5158,7 +5158,7 @@ Jump_031_62A2::
     push af
     ld a, $06
     ld [wStringCategory], a
-    ld hl, wC61D
+    ld hl, wInventory
     ld a, [wCFD5]
     add a, a
     add a, a
@@ -5175,21 +5175,21 @@ Jump_031_62A2::
 
 ; 4 call sites from 1 routine (e.g. Func_031_4EB9)
 ; reads: wCFD5, wC471
-; writes: wD081
-; points at: wC61D
+; writes: wItemId
+; points at: wInventory
 Func_031_62D3::
     ld a, [wCFD5]
     and a, $0F
     add a, a
     add a, a
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     ld a, [wC471]
     and a, $03
     add_a_to_hl
     ld a, [hl]
-    ld [wD081], a
-    farcall Func_016_4007
+    ld [wItemId], a
+    farcall LoadItemRecord
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
@@ -5416,10 +5416,10 @@ Func_031_6451::
     jr Jump_031_6486
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9)
-; reads: wD081, wC57F, wD86D, wD86E, wD86F
+; reads: wItemId, wC57F, wD86D, wD86E, wD86F
 ; points at: wDA63, wD86D, wC31A
 Func_031_645E::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $0C
     jr nz, Jump_031_6486
 

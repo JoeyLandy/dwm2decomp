@@ -7665,7 +7665,7 @@ Jump_004_7C2B::
 
 ; 6 call sites from 5 routines (e.g. Func_004_5D14, Func_004_6F9A, Func_004_763A, Func_004_72BC, ...)
 ; reads: wC634
-; points at: wC61D
+; points at: wInventory
 Func_004_7C37::
     ld a, [wC634]
     cp a, $FF
@@ -7676,7 +7676,7 @@ Func_004_7C37::
     ret
 
 Jump_004_7C43::
-    ld hl, wC61D
+    ld hl, wInventory
 
 Jump_004_7C46::
     ld a, [hl]

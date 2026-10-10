@@ -1,13 +1,15 @@
 SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $F0, $C6, $CD, $92, $4A, $C9
 
+; wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)
 ; 4 call sites from 4 routines (e.g. Func_003_5253, Func_031_62D3, Func_03B_4673, Func_0F1_4001)
-; reads: wD081
-; points at: wD084
-Func_016_4007::
-    ld de, wD084
+; reads: wItemId
+; points at: wItemRecord
+LoadItemRecord::
+Func_016_4007:: ; address name
+    ld de, wItemRecord
     push de
-    ld a, [wD081]
+    ld a, [wItemId]
     ld c, $0D
     call Multiply8
     ld a, l
@@ -27,13 +29,15 @@ Jump_016_401E::
     jr nz, Jump_016_401E
     ret
 
+; returns when wItemId is $FF; otherwise jumps through a table with one handler per item id (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
 ; 3 call sites from 1 routine (e.g. Func_003_5253)
-; reads: wD081
-Func_016_4025::
-    ld a, [wD081]
+; reads: wItemId
+RunItemEffect::
+Func_016_4025:: ; address name
+    ld a, [wItemId]
     cp a, $FF
     ret z
-    ld a, [wD081]
+    ld a, [wItemId]
     rst $00
     dw Jump_016_40F5
     dw Func_016_40F6
@@ -140,7 +144,7 @@ Jump_016_40F5::
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
 ; reads: wD083
-; writes: wD081
+; writes: wItemId
 Func_016_40F6::
     call Func_016_4633
     ret nz
@@ -162,12 +166,12 @@ Func_016_40F6::
     or a, l
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
 ; reads: wC6FD
-; writes: wD081, wD08E
+; writes: wItemId, wD08E
 Func_016_4118::
     ld a, [wC6FD]
     or a, a
@@ -251,7 +255,7 @@ Jump_016_416B::
 
 Jump_016_4195::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_419B::
@@ -320,7 +324,7 @@ Func_016_41B3::
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
 ; reads: wD083
-; writes: wD081
+; writes: wItemId
 Func_016_41FD::
     call Func_016_4633
     ret nz
@@ -342,12 +346,12 @@ Func_016_41FD::
     or a, l
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
 ; reads: wD083
-; writes: wD081
+; writes: wItemId
 Func_016_421F::
     call Func_016_4633
     ret nz
@@ -357,7 +361,7 @@ Func_016_421F::
     bit 2, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4234::
@@ -369,7 +373,7 @@ Jump_016_4234::
     bit 3, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4249::
@@ -381,12 +385,12 @@ Jump_016_4249::
     bit 0, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
 ; reads: wC6FD
-; writes: wD081, wD08E
+; writes: wItemId, wD08E
 Func_016_425E::
     ld a, [wC6FD]
     and a, a
@@ -428,7 +432,7 @@ Jump_016_428D::
 
 Jump_016_42A6::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_42AC::
@@ -492,7 +496,7 @@ Jump_016_4301::
     bit 1, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4316::
@@ -504,12 +508,12 @@ Jump_016_4316::
     bit 4, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
 ; reads: wD083
-; writes: wD081
+; writes: wItemId
 Func_016_432B::
     ld a, [wD083]
     ld c, $55
@@ -517,7 +521,7 @@ Func_016_432B::
     bit 7, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_433C::
@@ -608,7 +612,7 @@ Jump_016_43C0::
     cp a, $FF
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_43D6::
@@ -621,7 +625,7 @@ Jump_016_43D6::
     or a, a
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_43EB::
@@ -634,7 +638,7 @@ Jump_016_43EB::
     cp a, $FF
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4401::
@@ -647,7 +651,7 @@ Jump_016_4401::
     or a, a
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4416::
@@ -660,7 +664,7 @@ Jump_016_4416::
     cp a, $FF
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_442C::
@@ -673,7 +677,7 @@ Jump_016_442C::
     or a, a
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4441::
@@ -686,13 +690,13 @@ Jump_016_4446::
 
 ; 2 call sites from 1 routine (e.g. Func_016_52C9)
 ; reads: wC901
-; writes: wD081
+; writes: wItemId
 Func_016_4447::
     ld a, [wC901]
     and a, $7F
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4453::
@@ -710,7 +714,7 @@ Jump_016_4458::
     cp a, $80
     jr z, Jump_016_449D
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4469::
@@ -738,7 +742,7 @@ Jump_016_4469::
     cp a, $DA
     jr z, Jump_016_449D
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_449D::
@@ -747,12 +751,12 @@ Jump_016_449D::
     or a, a
     ret nz
     ld a, $FE
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_016_52C9, Func_016_4454)
 ; reads: wCC44, hFF90
-; writes: wD081
+; writes: wItemId
 Func_016_44AD::
     ld a, [wCC44]
     bit 7, a
@@ -760,7 +764,7 @@ Func_016_44AD::
     cp a, $80
     ret z
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_44BD::
@@ -770,12 +774,12 @@ Jump_016_44BD::
     bit 6, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_52C9)
 ; reads: wCC44, hFF90
-; writes: wD081
+; writes: wItemId
 Func_016_44D0::
     ld a, [wCC44]
     bit 7, a
@@ -787,7 +791,7 @@ Func_016_44D0::
     cp a, $86
     ret z
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_44E6::
@@ -797,7 +801,7 @@ Jump_016_44E6::
     bit 5, [hl]
     ret nz
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_44F9::
@@ -848,7 +852,7 @@ Jump_016_4538::
 
 Jump_016_4542::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
 
 Jump_016_4547::
     ret
@@ -883,7 +887,7 @@ Jump_016_4548::
 
 Jump_016_457D::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
 
 Jump_016_4582::
     ret
@@ -919,7 +923,7 @@ Jump_016_4583::
 
 Jump_016_45BC::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
 
 Jump_016_45C1::
     ret
@@ -955,7 +959,7 @@ Jump_016_45C3::
 
 Jump_016_45F4::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
 
 Jump_016_45F9::
     ret
@@ -988,7 +992,7 @@ Jump_016_4621::
 
 Jump_016_4626::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_462C::
@@ -1006,19 +1010,19 @@ Jump_016_462F::
 
 ; 22 call sites from 7 routines (e.g. Func_016_4790, Func_016_44D0, Func_016_432B, Func_016_42C4, ...)
 ; reads: wD083
-; writes: wD081
+; writes: wItemId
 Func_016_4633::
     ld a, [wD083]
 
 ; 3 call sites from 1 routine (e.g. Func_016_425E)
-; writes: wD081
+; writes: wItemId
 Func_016_4636::
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
     ret z
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     or a, a
     ret
 
@@ -1052,7 +1056,7 @@ Jump_016_4669::
 
 ; 6 call sites from 1 routine (e.g. Func_016_432B)
 ; reads: wD08F
-; writes: wD081
+; writes: wItemId
 ; points at: wC160
 Func_016_466A::
     ld a, l
@@ -1080,16 +1084,16 @@ Jump_016_4681::
 
 Jump_016_4688::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_003_5253)
-; reads: wD081
+; reads: wItemId
 Func_016_468E::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret z
-    ld a, [wD081]
+    ld a, [wItemId]
     rst $00
     dw Jump_016_475E
     dw Jump_016_475F
@@ -1667,9 +1671,9 @@ Jump_016_4A47::
     ret
 
 ; 15 call sites from 1 routine (e.g. Func_016_4790)
-; reads: wD083, wD081, wD082
-; writes: hFFC6, wD081
-; points at: wC61D, wC160
+; reads: wD083, wItemId, wD082
+; writes: hFFC6, wItemId
+; points at: wInventory, wC160
 Func_016_4A48::
     ld a, [wD083]
     ld c, $A4
@@ -1677,7 +1681,7 @@ Func_016_4A48::
     ld a, [hl]
     or a, a
     jr nz, Jump_016_4A61
-    ld a, [wD081]
+    ld a, [wItemId]
     sub a, $3F
     ld [hl], a
     call Func_016_4C1D
@@ -1687,13 +1691,13 @@ Func_016_4A48::
 
 Jump_016_4A61::
     push af
-    ld a, [wD081]
+    ld a, [wItemId]
     sub a, $3F
     ld [hl], a
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ld a, [wD082]
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     pop af
     add a, $3F
@@ -2037,8 +2041,8 @@ Jump_016_4C18::
 
 ; 33 call sites from 4 routines (e.g. Func_016_4A48, Func_016_4790, Func_016_468E, Func_03B_4673)
 ; reads: wC5E7, wC5E8, wD082
-; writes: wD081
-; points at: wD087, wC61D
+; writes: wItemId
+; points at: wD087, wInventory
 Func_016_4C1D::
     call NextTableByte
     ld a, [wC5E7]
@@ -2051,19 +2055,19 @@ Func_016_4C1D::
     cp a, [hl]
     ret nc
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ld a, [wD082]
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     ld [hl], $FF
     call Func_016_4C48
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_016_4C1D, Func_016_4A48, Func_016_4C9E, Func_003_5253, ...)
-; points at: wD09D, wC61D
+; points at: wD09D, wInventory
 Func_016_4C48::
     ld hl, wD09D
-    ld de, wC61D
+    ld de, wInventory
     ld b, $18
 
 Jump_016_4C50::
@@ -2072,12 +2076,12 @@ Jump_016_4C50::
     inc de
     dec b
     jr nz, Jump_016_4C50
-    ld hl, wC61D
+    ld hl, wInventory
     ld bc, $0018
     ld a, $FF
     call FillBytes
     ld hl, wD09D
-    ld de, wC61D
+    ld de, wInventory
     ld b, $18
 
 Jump_016_4C69::
@@ -2095,16 +2099,16 @@ Jump_016_4C74::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD081
-; writes: wD081
-; points at: wC61D
+; reads: wItemId
+; writes: wItemId
+; points at: wInventory
 Func_016_4C78:: ; heuristic: follows a terminator; C0
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $00
     ret z
     cp a, $FF
     ret z
-    ld hl, wC61D
+    ld hl, wInventory
     ld b, $18
 
 Jump_016_4C86::
@@ -2117,45 +2121,145 @@ Jump_016_4C86::
     dec b
     jr nz, Jump_016_4C86
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4C99::
-    ld a, [wD081]
+    ld a, [wItemId]
     ld [hl], a
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD081
-; writes: wD081
-; points at: wC61D
+; reads: wItemId
+; writes: wItemId
+; points at: wInventory
 Func_016_4C9E:: ; heuristic: follows a terminator; C0
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $00
     ret z
     cp a, $FF
     ret z
-    ld hl, wC61D
+    ld hl, wInventory
     ld b, $18
 
 Jump_016_4CAC::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, [hl]
     jr z, Jump_016_4CBC
     inc hl
     dec b
     jr nz, Jump_016_4CAC
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_4CBC::
     ld [hl], $FF
     call Func_016_4C48
     ret
-    INCBIN "dwm2-cobi-us.gbc", $058CC2, $324
-    ds $1C, $00
-    INCBIN "dwm2-cobi-us.gbc", $059002, $1C7
+
+; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wD081) to wD084; RunItemEffect dispatches on the same id; wC61D is a 24-slot bag of such ids, empty at the start of a new game, matching the item menu's 'No items'; the herb handler compares the words at save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a different table. The meaning of the fields is not established beyond the first amount being 10, 50, 500, 200 and 2000 for ids 1-5.
+; record: byte 0 (0, 1, 2 or 6); 16-bit amount (10, 50, 500, 200, 2000 for the first five items); byte 3 (usually $64); byte 4; byte 5; byte 6; byte 7; byte 8; byte 9; byte 10; byte 11; byte 12
+ItemTable::
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $00, $0A, $00, $64, $00, $00, $04, $02, $00, $03, $04, $1E, $28 ; id 1
+    db $00, $32, $00, $64, $00, $00, $04, $03, $00, $03, $04, $3C, $46 ; id 2
+    db $00, $F4, $01, $64, $00, $00, $05, $03, $00, $06, $04, $FF, $FF ; id 3
+    db $00, $C8, $00, $64, $00, $00, $04, $03, $00, $03, $07, $14, $1E ; id 4
+    db $00, $D0, $07, $64, $00, $00, $04, $03, $00, $03, $07, $FF, $FF ; id 5
+    db $01, $04, $00, $64, $00, $00, $04, $02, $00, $03, $08, $00, $00 ; id 6
+    db $01, $14, $00, $64, $00, $00, $04, $02, $00, $03, $09, $00, $00 ; id 7
+    db $01, $14, $00, $64, $00, $00, $04, $02, $00, $03, $0B, $00, $00 ; id 8
+    db $01, $14, $00, $64, $00, $00, $04, $03, $00, $03, $0C, $00, $00 ; id 9
+    db $01, $14, $00, $64, $00, $00, $04, $04, $00, $03, $0A, $00, $00 ; id 10
+    db $00, $E8, $03, $14, $02, $00, $05, $00, $00, $05, $04, $2D, $37 ; id 11
+    db $01, $E8, $03, $64, $00, $00, $04, $02, $00, $03, $0D, $00, $00 ; id 12
+    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $10, $03, $00 ; id 13
+    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $11, $03, $00 ; id 14
+    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $12, $03, $00 ; id 15
+    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $13, $03, $00 ; id 16
+    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $0E, $05, $00 ; id 17
+    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $0F, $05, $00 ; id 18
+    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1A, $1B, $32, $32 ; id 19
+    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1A, $1C, $32, $32 ; id 20
+    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1A, $1D, $32, $32 ; id 21
+    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1A, $1E, $32, $32 ; id 22
+    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1A, $1F, $32, $32 ; id 23
+    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1A, $20, $32, $32 ; id 24
+    db $03, $0A, $00, $64, $00, $01, $04, $06, $00, $14, $15, $05, $0A ; id 25
+    db $03, $28, $00, $64, $00, $01, $04, $06, $00, $14, $15, $0A, $1E ; id 26
+    db $03, $C8, $00, $64, $00, $01, $04, $06, $00, $14, $15, $14, $64 ; id 27
+    db $03, $E8, $03, $64, $00, $01, $04, $06, $00, $14, $15, $64, $FF ; id 28
+    db $06, $14, $00, $64, $00, $01, $04, $06, $04, $14, $16, $05, $05 ; id 29
+    db $03, $88, $13, $64, $02, $01, $03, $00, $00, $21, $22, $00, $FF ; id 30
+    db $06, $20, $03, $00, $02, $01, $07, $00, $00, $2B, $2C, $00, $00 ; id 31
+    db $06, $64, $00, $64, $01, $00, $07, $03, $00, $06, $23, $00, $00 ; id 32
+    db $06, $B0, $04, $00, $01, $00, $07, $00, $01, $24, $FF, $00, $00 ; id 33
+    db $04, $BC, $02, $14, $02, $00, $03, $07, $00, $00, $00, $00, $00 ; id 34
+    db $04, $20, $03, $3C, $02, $00, $00, $07, $00, $00, $00, $00, $00 ; id 35
+    db $04, $DC, $05, $0A, $02, $00, $03, $07, $00, $00, $00, $08, $18 ; id 36
+    db $04, $B8, $0B, $14, $02, $00, $03, $07, $00, $00, $00, $23, $32 ; id 37
+    db $04, $A0, $0F, $14, $02, $00, $03, $07, $00, $00, $00, $78, $8C ; id 38
+    db $04, $88, $13, $14, $02, $00, $02, $07, $00, $00, $00, $B4, $C8 ; id 39
+    db $05, $32, $00, $64, $01, $00, $07, $07, $00, $17, $FF, $00, $00 ; id 40
+    db $05, $19, $00, $64, $01, $00, $07, $08, $00, $18, $FF, $00, $00 ; id 41
+    db $05, $32, $00, $64, $01, $00, $07, $04, $00, $19, $FF, $00, $00 ; id 42
+    db $06, $32, $00, $64, $01, $00, $07, $00, $00, $25, $25, $00, $00 ; id 43
+    db $06, $01, $00, $64, $03, $00, $07, $09, $05, $19, $00, $00, $00 ; id 44
+    db $06, $01, $00, $00, $03, $00, $07, $00, $05, $00, $00, $00, $00 ; id 45
+    db $06, $32, $00, $64, $01, $00, $07, $00, $00, $19, $FF, $00, $00 ; id 46
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 47
+    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $FF, $00, $00 ; id 48
+    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $FF, $00, $00 ; id 49
+    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $FF, $00, $00 ; id 50
+    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $19, $00, $00, $00 ; id 51
+    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $FF, $00, $00 ; id 52
+    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $FF, $00, $00 ; id 53
+    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $2F, $00, $00 ; id 54
+    db $06, $00, $00, $00, $02, $00, $03, $00, $07, $19, $FF, $00, $00 ; id 55
+    db $06, $00, $00, $00, $02, $00, $01, $00, $07, $21, $FF, $00, $00 ; id 56
+    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $00, $00, $00, $00 ; id 57
+    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $00, $00, $00, $00 ; id 58
+    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $00, $00, $00, $00 ; id 59
+    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $19, $FF, $00, $00 ; id 60
+    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $19, $FF, $00, $00 ; id 61
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 62
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 63
+    db $06, $C8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 64
+    db $06, $F4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 65
+    db $06, $C8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 66
+    db $06, $F4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 67
+    db $06, $C8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 68
+    db $06, $F4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 69
+    db $06, $C8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 70
+    db $06, $F4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 71
+    db $06, $C8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 72
+    db $06, $F4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 73
+    db $06, $C8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 74
+    db $06, $F4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 75
+    db $06, $E8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 76
+    db $06, $E8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 77
+    db $06, $E8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 78
+    db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 79
+    db $06, $88, $13, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 80
+    db $06, $E8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 81
+    db $06, $E8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 82
+    db $06, $14, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 83
+    db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 84
+    db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 85
+    db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 86
+    db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 87
+    db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 88
+    db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 89
+    db $06, $E8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 90
+    db $06, $E8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 91
+    db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 92
+    db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 93
+    db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 94
+    db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 95
+    db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 96
+    db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 97
+    db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 98
 
 Data_016_51C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $20, $10
@@ -2164,13 +2268,13 @@ Data_016_51C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
 ; reads: wD082
-; writes: wD081
+; writes: wItemId
 Func_016_52C9::
     ld a, [wD082]
     cp a, $14
     jr c, Jump_016_52D6
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_52D6::
@@ -2213,7 +2317,7 @@ Jump_016_530D::
     cp a, c
     jr nz, Jump_016_531E
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     jr Jump_016_5321
 
 Jump_016_531E::
@@ -2247,7 +2351,7 @@ Jump_016_533A::
     ret
 
 Jump_016_5348::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     jr nz, Jump_016_5355
     ld a, $15
@@ -2277,7 +2381,7 @@ Jump_016_5360::
     cp a, $64
     jr nc, Jump_016_5385
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ld a, $17
     ld [wD08D], a
     ret
@@ -2289,7 +2393,7 @@ Jump_016_5385::
     cp a, $FF
     ret z
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ld a, $16
     ld [wD08D], a
     ret
@@ -2319,7 +2423,7 @@ Jump_016_53AC::
 
 Jump_016_53BB::
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ld a, $18
     ld [wD08D], a
     ret
@@ -2333,10 +2437,10 @@ Jump_016_53C7::
     ret
 
 ; 6 call sites from 1 routine (e.g. Func_016_52C9)
-; reads: wD081
+; reads: wItemId
 ; writes: wD08D
 Func_016_53CE::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret nz
     ld a, $12
@@ -2344,10 +2448,10 @@ Func_016_53CE::
     ret
 
 ; 5 call sites from 1 routine (e.g. Func_016_52C9)
-; reads: wD081
+; reads: wItemId
 ; writes: wD08D
 Func_016_53DA::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret nz
     ld a, $14
@@ -2355,9 +2459,9 @@ Func_016_53DA::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
-; reads: wD081, wD082
+; reads: wItemId, wD082
 Func_016_53E6::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret z
     ld a, [wD082]
@@ -2594,7 +2698,7 @@ Jump_016_5573::
     ld a, $FF
     ld [wD08D], a
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_5583::
@@ -2611,7 +2715,7 @@ Jump_016_5583::
     ld a, $FF
     ld [wD08D], a
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_55A5::
@@ -2620,7 +2724,7 @@ Jump_016_55A5::
     ld a, $FF
     ld [wD08D], a
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_55B5::
@@ -2629,7 +2733,7 @@ Jump_016_55B5::
     ld a, $FF
     ld [wD08D], a
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_55C5::
@@ -2722,7 +2826,7 @@ Jump_016_55E3::
     sub a, $01
     jr c, Jump_016_5675
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     jr Jump_016_5688
 
 Jump_016_5675::
@@ -2745,7 +2849,7 @@ Jump_016_568E::
     ld a, $11
     ld [wD08D], a
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_016_569E::
@@ -2753,7 +2857,7 @@ Jump_016_569E::
     ld a, $1C
     ld [wD08D], a
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 ; 3 call sites from 2 routines (e.g. Func_016_5473, Func_016_53E6)
@@ -3243,7 +3347,7 @@ Func_016_5906::
 ; 3 call sites from 3 routines (e.g. Func_003_5253, Func_031_4EB9, Func_0F1_4001)
 ; reads: wC836, wD09D, wD09E
 ; writes: wD09D, wD09E, wC836
-; points at: wD09F, wC61D, wD0A0
+; points at: wD09F, wInventory, wD0A0
 Func_016_590C::
     ld hl, wD09F
     ld a, l
@@ -3267,7 +3371,7 @@ Jump_016_5928::
     ld de, Data_016_5A0E
 
 Jump_016_5937::
-    ld hl, wC61D
+    ld hl, wInventory
     ld b, $18
 
 Jump_016_593C::
@@ -3331,10 +3435,10 @@ Jump_016_597C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_590C)
-; points at: wC61D
+; points at: wInventory
 Func_016_598C::
     push hl
-    ld hl, wC61D
+    ld hl, wInventory
     ld a, c
     add_a_to_hl
     ld a, [hl+]

@@ -47,7 +47,7 @@ Jump_0F1_4013::
     ret
 
 Jump_0F1_4057::
-    ld a, [wC61D]
+    ld a, [wInventory]
     or a, a
     jr nz, Jump_0F1_4062
     ld a, [wJoypadPressed]
@@ -90,10 +90,10 @@ Jump_0F1_4092::
     ld a, [wC46E]
     add a, c
     ld [wD082], a
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     ld a, [hl]
-    ld [wD081], a
+    ld [wItemId], a
     ld l, a
     ld h, $05
     ld de, wC150
@@ -101,7 +101,7 @@ Jump_0F1_4092::
     ld de, wC60C
     ld hl, wC130
     call Func_000_2FE1
-    farcall Func_016_4007
+    farcall LoadItemRecord
     ld hl, wC0A0
     inc [hl]
     xor a, a
@@ -185,7 +185,7 @@ Jump_0F1_414E::
     dw Jump_0F1_41E0
 
 Jump_0F1_415A::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $1F
     jr z, Jump_0F1_4183
     cp a, $21
@@ -225,7 +225,7 @@ Jump_0F1_4187::
     ld a, $69
     call QueueSoundEffect
     ld a, [wD082]
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     ld [hl], $00
     farcall Func_016_4C48
@@ -268,7 +268,7 @@ Jump_0F1_41E0::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001, Func_0F1_422D)
-; reads: wC61D, wC0A7, wC0A6
+; reads: wInventory, wC0A7, wC0A6
 ; points at: wC2A6
 Func_0F1_41EE::
     call ClearScreenTileBuffer_BankF1
@@ -276,7 +276,7 @@ Func_0F1_41EE::
     farcall CopyBlockToTileBuffer
     ld e, $0C
     farcall CopyBlockToTileBuffer
-    ld a, [wC61D]
+    ld a, [wInventory]
     or a, a
     ret z
     ld e, $0D
@@ -313,14 +313,14 @@ Func_0F1_422D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4276)
-; reads: wD081
+; reads: wItemId
 Func_0F1_4244:: ; heuristic: follows a terminator; C0
     call Func_0F1_422D
     ld e, $11
     farcall CopyBlockToTileBuffer
     ld e, $1B
     farcall CopyBlockToTileBuffer
-    ld a, [wD081]
+    ld a, [wItemId]
     ld hl, Data_0F1_4613
     add_a_to_hl
     ld a, [hl]
@@ -384,7 +384,7 @@ Func_0F1_42B6::
 ; 4 call sites from 1 routine (e.g. Func_0F1_4001)
 ; reads: wC0A6, wC46E
 ; writes: wStringIndex, wStringCategory
-; points at: wC61D
+; points at: wInventory
 Func_0F1_42D9::
     ld a, [wC0A6]
     and a, $0F
@@ -396,7 +396,7 @@ Func_0F1_42D9::
     add a, c
     ld c, a
     ld b, $00
-    ld hl, wC61D
+    ld hl, wInventory
     add hl, bc
     ld a, [hl]
     cp a, $1F
@@ -413,9 +413,9 @@ Jump_0F1_42F5::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0F1_4001)
-; reads: wC52D, wC52E, wC52F, wC530, wC61D, wC0A6
+; reads: wC52D, wC52E, wC52F, wC530, wInventory, wC0A6
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
-; points at: wC61E, wC61D
+; points at: wC61E, wInventory
 Func_0F1_4307::
     ld a, [wC52D]
     ld l, a
@@ -432,7 +432,7 @@ Func_0F1_4307::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    ld a, [wC61D]
+    ld a, [wInventory]
     or a, a
     jr nz, Jump_0F1_434F
     ld a, $08
@@ -455,7 +455,7 @@ Jump_0F1_434F::
     and a, $0F
     add a, a
     add a, a
-    ld de, wC61D
+    ld de, wInventory
     add a, e
     ld e, a
     jr nc, Jump_0F1_435E
@@ -555,9 +555,9 @@ Jump_0F1_43DA::
 ; 1 call site from 1 routine (e.g. Func_0F1_4001)
 ; reads: wC0A6, wC0A5
 ; writes: wC0A3, wC0A7, wC0A5, wC0A2
-; points at: wC61D
+; points at: wInventory
 Func_0F1_43E0::
-    ld hl, wC61D
+    ld hl, wInventory
     ld bc, $1800
 
 Jump_0F1_43E6::
@@ -621,13 +621,13 @@ Jump_0F1_442B::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4244)
-; reads: wC46D, wD081, hFFC6, hFFC7
+; reads: wC46D, wItemId, hFFC6, hFFC7
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hFFC6, hFFC7, wC2DE, wC2DF, ...
 ; points at: wC2D9, wC319, wC31D
 Func_0F1_442F:: ; heuristic: follows a terminator; C0
     ld a, [wC46D]
     ld c, a
-    ld a, [wD081]
+    ld a, [wItemId]
     ld hl, Data_0F1_4613
     add_a_to_hl
     ld a, [hl]

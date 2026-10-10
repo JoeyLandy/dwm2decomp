@@ -2799,7 +2799,7 @@ Jump_003_5288::
     ret
 
 Jump_003_52A3::
-    ld a, [wC61D]
+    ld a, [wInventory]
     or a, a
     jr nz, Jump_003_52AE
     ld a, [wJoypadPressed]
@@ -2842,10 +2842,10 @@ Jump_003_52DE::
     ld a, [wC46E]
     add a, c
     ld [wD082], a
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     ld a, [hl]
-    ld [wD081], a
+    ld [wItemId], a
     ld l, a
     ld h, $05
     ld de, wC150
@@ -2853,7 +2853,7 @@ Jump_003_52DE::
     ld de, wC60C
     ld hl, wC130
     call Func_000_2FE1
-    farcall Func_016_4007
+    farcall LoadItemRecord
     ld hl, wC0A0
     inc [hl]
     xor a, a
@@ -3107,12 +3107,12 @@ Jump_003_54D4::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    farcall Func_016_4025
+    farcall RunItemEffect
     xor a, a
     ld [rRAMG], a
     ld hl, wC0A1
     inc [hl]
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret z
     ld a, [wD08A]
@@ -3133,7 +3133,7 @@ Jump_003_550C::
 
 Jump_003_5512::
     ld a, [wD082]
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     ld a, [hl]
     cp a, $40
@@ -3205,12 +3205,12 @@ Jump_003_5591::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    farcall Func_016_4025
+    farcall RunItemEffect
     xor a, a
     ld [rRAMG], a
     ld hl, wC0A1
     inc [hl]
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret z
     cp a, $FE
@@ -3274,10 +3274,10 @@ Jump_003_5619::
     ret
 
 Jump_003_5622::
-    farcall Func_016_4025
+    farcall RunItemEffect
     ld hl, wC0A1
     inc [hl]
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     jr nz, Jump_003_5643
     ld a, $01
@@ -3505,7 +3505,7 @@ Jump_003_57C6::
 
 Jump_003_57E2::
     ld a, [wD082]
-    ld hl, wC61D
+    ld hl, wInventory
     add_a_to_hl
     ld [hl], $00
     ld a, $08
@@ -3533,7 +3533,7 @@ Jump_003_581A::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_003_4208, Func_003_5253, Func_003_585D)
-; reads: wC61D, wC0A7, wC0A6
+; reads: wInventory, wC0A7, wC0A6
 ; points at: wC2A6
 Func_003_581E::
     call ClearScreenTileBuffer_Bank03
@@ -3541,7 +3541,7 @@ Func_003_581E::
     farcall CopyBlockToTileBuffer
     ld e, $0C
     farcall CopyBlockToTileBuffer
-    ld a, [wC61D]
+    ld a, [wInventory]
     or a, a
     ret z
     ld e, $0D
@@ -3578,14 +3578,14 @@ Func_003_585D::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_58A6, Func_003_5253)
-; reads: wD081
+; reads: wItemId
 Func_003_5874::
     call Func_003_585D
     ld e, $11
     farcall CopyBlockToTileBuffer
     ld e, $1B
     farcall CopyBlockToTileBuffer
-    ld a, [wD081]
+    ld a, [wItemId]
     ld hl, Data_003_5C8B
     add_a_to_hl
     ld a, [hl]
@@ -3646,7 +3646,7 @@ Func_003_58E6::
 ; 5 call sites from 2 routines (e.g. Func_003_5A07, Func_003_5253)
 ; reads: wC0A6, wC46E
 ; writes: wStringIndex, wStringCategory
-; points at: wC61D
+; points at: wInventory
 Func_003_5900::
     ld a, [wC0A6]
     and a, $0F
@@ -3658,7 +3658,7 @@ Func_003_5900::
     add a, c
     ld c, a
     ld b, $00
-    ld hl, wC61D
+    ld hl, wInventory
     add hl, bc
     ld a, [hl]
     cp a, $1F
@@ -3675,9 +3675,9 @@ Jump_003_591C::
     ret
 
 ; 4 call sites from 3 routines (e.g. Func_003_5A07, Func_003_5E68, Func_003_5253)
-; reads: wC52D, wC52E, wC52F, wC530, wC61D, wC0A6
+; reads: wC52D, wC52E, wC52F, wC530, wInventory, wC0A6
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
-; points at: wC61E, wC61D
+; points at: wC61E, wInventory
 Func_003_592E::
     ld a, [wC52D]
     ld l, a
@@ -3694,7 +3694,7 @@ Func_003_592E::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    ld a, [wC61D]
+    ld a, [wInventory]
     or a, a
     jr nz, Jump_003_5976
     ld a, $08
@@ -3717,7 +3717,7 @@ Jump_003_5976::
     and a, $0F
     add a, a
     add a, a
-    ld de, wC61D
+    ld de, wInventory
     add a, e
     ld e, a
     jr nc, Jump_003_5985
@@ -3860,9 +3860,9 @@ Func_003_5A07::
 ; 2 call sites from 2 routines (e.g. Func_003_5E68, Func_003_5253)
 ; reads: wC0A6, wC0A5
 ; writes: wC0A3, wC0A7, wC0A5, wC0A2
-; points at: wC61D
+; points at: wInventory
 Func_003_5A58::
-    ld hl, wC61D
+    ld hl, wInventory
     ld bc, $1800
 
 Jump_003_5A5E::
@@ -3926,13 +3926,13 @@ Jump_003_5AA3::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5874, Func_003_5253)
-; reads: wC46D, wD081, hFFC6, hFFC7
+; reads: wC46D, wItemId, hFFC6, hFFC7
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hFFC6, hFFC7, wC2DE, wC2DF, ...
 ; points at: wC2D9, wC319, wC31D
 Func_003_5AA7::
     ld a, [wC46D]
     ld c, a
-    ld a, [wD081]
+    ld a, [wItemId]
     ld hl, Data_003_5C8B
     add_a_to_hl
     ld a, [hl]
@@ -4796,7 +4796,7 @@ Jump_003_6253::
     ld [rRAMG], a
     ld hl, wC0A1
     inc [hl]
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret z
     ld hl, wC0A1
@@ -4867,7 +4867,7 @@ Jump_003_62DB::
     inc [hl]
     ld a, $00
     ld [rRAMG], a
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $1E
     ret nz
     call NextTableByte
@@ -4899,7 +4899,7 @@ Jump_003_6324::
     farcall Func_016_53E6
     ld a, $00
     ld [rRAMG], a
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $19
     jr z, Jump_003_634F
     cp a, $1A
@@ -4948,7 +4948,7 @@ Jump_003_6387::
     ld a, [wC52B]
     or a, a
     ret nz
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     jr z, Jump_003_63CA
     ld a, [wD09E]
@@ -4973,7 +4973,7 @@ Jump_003_6387::
     cp a, [hl]
     ret c
     ld a, $FF
-    ld [wD081], a
+    ld [wItemId], a
     ret
 
 Jump_003_63CA::
@@ -4985,7 +4985,7 @@ Jump_003_63D0::
     ld a, [wC52B]
     or a, a
     ret nz
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     jr z, Jump_003_63E3
     ld a, $0F
@@ -5018,7 +5018,7 @@ Jump_003_63F9::
     ret
 
 Jump_003_640F::
-    ld a, [wD081]
+    ld a, [wItemId]
     cp a, $FF
     ret z
     xor a, a
@@ -5254,7 +5254,7 @@ Func_003_6595::
 
 ; 3 call sites from 1 routine (e.g. Func_003_5E68)
 ; reads: wC46D, wC46E, wC0A6, wRecordBufferData
-; writes: wStringIndex, wRecordBuffer, wD081, wCFED, wStringCategory
+; writes: wStringIndex, wRecordBuffer, wItemId, wCFED, wStringCategory
 ; points at: wC39E
 Func_003_65E3::
     ld a, [wC46D]
@@ -5278,7 +5278,7 @@ Func_003_65E3::
 Jump_003_6606::
     ld [wStringIndex], a
     ld [wRecordBuffer], a
-    ld [wD081], a
+    ld [wItemId], a
     xor a, a
     ld [wCFED], a
     farcall LoadSkillRecord

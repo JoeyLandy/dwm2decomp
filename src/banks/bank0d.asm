@@ -4336,7 +4336,7 @@ Jump_00D_63A9::
     ld b, a
     and a, a
     jr z, Jump_00D_63C1
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
     call Func_00D_63F6
 
@@ -4357,7 +4357,7 @@ Jump_00D_63CF::
     ld [wC838], a
     ld a, h
     ld [wC839], a
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
     call Func_00D_63F6
     xor a, a
@@ -4374,7 +4374,7 @@ Jump_00D_63E2::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_00D_6310)
-; points at: wC61D, wC61E
+; points at: wInventory, wC61E
 Func_00D_63F6::
     push hl
     push bc
@@ -4406,7 +4406,7 @@ Jump_00D_640D::
     jr c, Func_00D_63F6
 
 Jump_00D_6416::
-    ld hl, wC61D
+    ld hl, wInventory
     ld de, wC61E
     ld b, $17
 
@@ -5735,9 +5735,9 @@ Data_00D_6D06:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E
 
 ; 3 call sites from 2 routines (e.g. Func_00D_6AEC, Func_00D_6A1F)
-; points at: wC61D
+; points at: wInventory
 Func_00D_6D09::
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
 
 Jump_00D_6D0E::
@@ -5887,9 +5887,9 @@ Data_00D_6DC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A4, $00, $E4, $00, $24, $01, $64, $01
 
 ; 2 call sites from 2 routines (e.g. Func_00D_6310, Func_00D_63F6)
-; points at: wC61D
+; points at: wInventory
 Func_00D_6DD0::
-    ld hl, wC61D
+    ld hl, wInventory
     ld c, $00
     ld b, $00
 

@@ -577,10 +577,10 @@ Func_05F_6C71:: ; heuristic: follows a terminator; C0
 ; 16 call sites from 13 routines (e.g. Func_00F_7093, Func_012_6247, Func_012_630E, Func_012_63D4, ...)
 ; reads: wC928, wC836
 ; writes: wC836
-; points at: wC61D
+; points at: wInventory
 Func_05F_6C8C::
     push hl
-    ld hl, wC61D
+    ld hl, wInventory
 
 Jump_05F_6C90::
     ld a, [hl]
@@ -2509,7 +2509,7 @@ Jump_05F_79AE::
     jr nz, Jump_05F_79E8
 
 Jump_05F_79BE::
-    ld hl, wC61D
+    ld hl, wInventory
 
 Jump_05F_79C1::
     ld a, [hl]
