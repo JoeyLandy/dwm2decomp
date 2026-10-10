@@ -5175,7 +5175,7 @@ Jump_032_5E79::
     ret
 
 ; resolve step $0E runs this through wBattleSubStep (wCFCC): ten cases, 0-9. Case 0 branches on wBattleActionId: $15 and $20 to Func_032_5F20, $3B to Func_032_5F3B, $5F to Func_032_5F63, $60 to Func_032_5FAE, $61 to Func_032_5FF8, $6D to Func_032_5F35; the other actions and cases 1-9 are not yet read (E-0051)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0E)
+; 1 call site from 1 routine (e.g. ResolveStep0ECallEffect)
 ; reads: wBattleSubStep
 ResolveStep0EEffect::
 Func_032_5EAB:: ; address name

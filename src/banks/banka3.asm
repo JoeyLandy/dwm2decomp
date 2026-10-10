@@ -708,11 +708,11 @@ Jump_0A3_4A59::
     pop de
     ret
 
-; only called from RunBattleResolveStep_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case00)
+; only called from ResolveStepBegin (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepBegin)
 ; reads: wBattleTarget
 ; points at: wD86D
-RunBattleResolveStep_Case00_Sub01::
+ResolveStepBegin_Sub01::
 Func_0A3_4A5F:: ; address name
     call AdvanceRandom
     ld a, $FF

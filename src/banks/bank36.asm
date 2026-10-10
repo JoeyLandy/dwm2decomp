@@ -8,29 +8,29 @@ RunBattleResolveStep::
 Func_036_4001:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleResolveStep_Case00
-    dw RunBattleResolveStep_Case01
+    dw ResolveStepBegin
+    dw ResolveStepTargetAndSubEffects
     dw ResolveStepCallEffect82
     dw ResolveStepFlagBit7Effect
     dw RunBattleResolveStep_Case04
     dw ResolveStepChanceRoll
-    dw RunBattleResolveStep_Case06
+    dw ResolveStepActionEffect
     dw RunBattleResolveStep_Case07
-    dw RunBattleResolveStep_Case08
-    dw RunBattleResolveStep_Case09
+    dw ResolveStepSoundWaitAndMessage
+    dw ResolveStepMessage13AndSound
     dw ResolveStepDamageMessage
     dw ResolveStepBranchOnAction
     dw ResolveStepApplyDamage
     dw ResolveStepDefeat
-    dw RunBattleResolveStep_Case0E
+    dw ResolveStep0ECallEffect
     dw ResolveStepAdvanceSubPhase
 
-; entry 0 of the `rst $00` table in RunBattleResolveStep
+; resolve step $00: advances wBattleResolveStep and clears wBattleSubStep. When wDABD is zero, wCFF3 bit 7 is set, the target is present and bit 5 of the target's wD854 byte is set, it farcalls RunBattleResolveStep_Case00_Sub01 (not read), stores the result in wC971 when it is not $FF, shows message $33 and returns; otherwise it clears that bit and continues into ResolveStepTargetAndSubEffects (E-0053)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABD, wCFF3, wBattleTarget, wBattleSubStep
 ; writes: wBattleSubStep, wC971
 ; points at: wBattleResolveStep, wD854
-RunBattleResolveStep_Case00::
+ResolveStepBegin::
 Jump_036_4025:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -51,7 +51,7 @@ Jump_036_4025:: ; address name
     add_a_to_hl
     bit 5, [hl]
     jr z, Jump_036_4069
-    farcall RunBattleResolveStep_Case00_Sub01
+    farcall ResolveStepBegin_Sub01
     ld a, c
     cp a, $FF
     jr z, Jump_036_4069
@@ -67,10 +67,10 @@ Jump_036_4069::
     add_a_to_hl
     res 5, [hl]
 
-; entry 1 of the `rst $00` table in RunBattleResolveStep
+; resolve step $01: dispatches on wBattleSubStep to two cases. Case 0 (RunBattleResolveStep_Table2_Case00) may redirect wBattleTarget and shows message $CB, then selects one of four sub-effects by wCFF3 bits 7, 4 and 6 (RunBattleResolveStep_Table2_Case00_Sub01-Sub04, not read); case 1 (36:4127) follows (E-0053)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep
-RunBattleResolveStep_Case01::
+ResolveStepTargetAndSubEffects::
 Jump_036_4077:: ; address name
     ld a, [wBattleSubStep]
     rst $00
@@ -852,14 +852,14 @@ Jump_036_458E:: ; address name
     inc [hl]
     ld a, [wCFF4]
     and a, $18
-    jr z, RunBattleResolveStep_Case06
+    jr z, ResolveStepActionEffect
     bit 4, a
     jr z, Jump_036_45AA
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
     bit 2, [hl]
-    jr nz, RunBattleResolveStep_Case06
+    jr nz, ResolveStepActionEffect
 
 Jump_036_45AA::
     ld a, [wCFF4]
@@ -904,14 +904,14 @@ Jump_036_45F7::
     res 7, [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunBattleResolveStep
+; resolve step $06: advances wBattleResolveStep, then calls DispatchActionEffectTable for wBattleActionId (E-0053)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleResolveStep_Case06::
+ResolveStepActionEffect::
 Jump_036_4603:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    call RunBattleResolveStep_Case06_Sub01
+    call DispatchActionEffectTable
     ret
 
 ; entry 7 of the `rst $00` table in RunBattleResolveStep
@@ -1116,12 +1116,12 @@ Jump_036_4742::
 Jump_036_4775::
     ret
 
-; entry 8 of the `rst $00` table in RunBattleResolveStep
+; resolve step $08: for action $CD it returns while the sound channels in wDC20 are busy (wSoundChannelSlots and wDC20 not both $FF). Otherwise it advances the step twice, updates bit 4 or 6 of wDAC0 from wBattleDamageLo/Hi and wD873 when wDAC0 bit 5 is set, and for action $CF rewinds the step while wDAC0 bit 4 is set and wDABA is zero. It then stores $40 or $41 in wDAD2, farcalls 3A:4001 and 3A:5762 (E-0053)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wSoundChannelSlots, wDAC0, wBattleDamageLo, wD873, wDABA
 ; writes: wDAC0, wDAD2, wDAD3
 ; points at: wDC20, wBattleResolveStep
-RunBattleResolveStep_Case08::
+ResolveStepSoundWaitAndMessage::
 Jump_036_4776:: ; address name
     ld a, [wBattleActionId]
     cp a, $CD
@@ -1193,11 +1193,11 @@ Jump_036_47D6::
     farcall Func_03A_5762
     ret
 
-; entry 9 of the `rst $00` table in RunBattleResolveStep
+; resolve step $09: advances wBattleResolveStep, stores $13 in wDAD2, farcalls 3A:4001 and queues sound effect $85 (E-0053)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAD2
 ; points at: wBattleResolveStep
-RunBattleResolveStep_Case09::
+ResolveStepMessage13AndSound::
 Jump_036_47F1:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1375,9 +1375,9 @@ Jump_036_4901:: ; address name
     farcall RunDefeatSequence
     ret
 
-; entry 14 of the `rst $00` table in RunBattleResolveStep
+; resolve step $0E: farcalls ResolveStep0EEffect in bank $32 (E-0053)
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleResolveStep_Case0E::
+ResolveStep0ECallEffect::
 Jump_036_4908:: ; address name
     farcall ResolveStep0EEffect
     ret
@@ -6206,10 +6206,10 @@ Jump_036_6712::
     ld [hl], b
     ret
 
-; only called from RunBattleResolveStep_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case06)
+; jumps to the routine whose 16-bit address is at 36:6726 + 2 * wBattleActionId (the same JumpToHL idiom as CallInBank). The first 40 entries are listed in the source; the entries for the other action ids and the routines they name are not read (E-0053)
+; 1 call site from 1 routine (e.g. ResolveStepActionEffect)
 ; reads: wBattleActionId
-RunBattleResolveStep_Case06_Sub01::
+DispatchActionEffectTable::
 Func_036_6717:: ; address name
     ld a, [wBattleActionId]
     ld c, a
@@ -9896,7 +9896,7 @@ Jump_036_7F37::
     pop hl
     ret
 
-; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, RunBattleResolveStep_Case00, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
+; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, ResolveStepBegin, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
 ; points at: wD80F
 Func_036_7F3C::
     call Func_000_3E25

@@ -13,7 +13,7 @@ Func_000_0000:: ; address name
     add hl, de
     pop de
 
-; 7 call sites from 7 routines (e.g. Func_030_4F3B, RunBattleResolveStep_Case06_Sub01, Func_036_7DC9, Func_039_4001, ...)
+; 7 call sites from 7 routines (e.g. Func_030_4F3B, DispatchActionEffectTable, Func_036_7DC9, Func_039_4001, ...)
 Func_000_000B::
     deref_hl
 
