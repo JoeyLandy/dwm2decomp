@@ -500,7 +500,7 @@ Jump_025_4342::
 Jump_025_4349::
     ld a, c
     ld [de], a
-    call Func_025_43E4
+    call BGTileUnderPointIsHFFBA_Bank25
     jr nc, Jump_025_4342
     inc e
     ldh a, [hSpriteTileOffset]
@@ -602,7 +602,7 @@ Jump_025_43BD::
 Jump_025_43C4::
     ld a, c
     ld [de], a
-    call Func_025_43E4
+    call BGTileUnderPointIsHFFBA_Bank25
     jr nc, Jump_025_43BD
     inc e
     ldh a, [hSpriteTileOffset]
@@ -624,9 +624,11 @@ Jump_025_43C4::
     jr nz, Jump_025_4369
     ret
 
+; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. Func_025_419E)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
-Func_025_43E4::
+BGTileUnderPointIsHFFBA_Bank25::
+Func_025_43E4:: ; address name
     push hl
     push bc
     ldh a, [hScrollY]

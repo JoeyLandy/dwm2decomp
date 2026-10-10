@@ -1642,7 +1642,7 @@ Func_0A0_494F::
     ld a, $01
     ld [wD868], a
     call Func_0A0_4A55
-    call Func_0A0_4A97
+    call StoreHFFC8WordAtHL_BankA0
     ld a, [wD015]
     ldh [hFFC6], a
     push hl
@@ -1651,7 +1651,7 @@ Func_0A0_494F::
     ld a, $00
     ld [wD868], a
     call Func_0A0_4A55
-    call Func_0A0_4A97
+    call StoreHFFC8WordAtHL_BankA0
     ld a, [wD016]
     ldh [hFFC6], a
     push hl
@@ -1684,7 +1684,7 @@ Func_0A0_494F::
     call Func_0A0_4A45
     call Func_0A0_4A45
     call Func_0A0_4A45
-    call Func_0A0_4A9E
+    call CopyWD01ARecordToHL_BankA0
     ld a, $00
     ld [hl+], a
     ld a, $07
@@ -1766,18 +1766,22 @@ Jump_0A0_4A86::
     ld [hl+], a
     ret
 
+; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. Func_0A0_494F)
 ; reads: hFFC8, hFFC9
-Func_0A0_4A97::
+StoreHFFC8WordAtHL_BankA0::
+Func_0A0_4A97:: ; address name
     ldh a, [hFFC8]
     ld [hl+], a
     ldh a, [hFFC9]
     ld [hl+], a
     ret
 
+; copies the 27 ($1B) bytes at wD01A to HL; HL ends past the copy; clobbers A, B, DE (E-0065) (the same 12 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0A0_494F)
 ; points at: wD01A
-Func_0A0_4A9E::
+CopyWD01ARecordToHL_BankA0::
+Func_0A0_4A9E:: ; address name
     ld de, wD01A
     ld b, $1B
 
@@ -2010,8 +2014,8 @@ Jump_0A0_4C23::
 GameMode7_Init_Sub01_Sub02_Sub02::
 Func_0A0_4C2C:: ; address name
     ld hl, Data_0A0_4D37
-    call Func_0A0_4D16
-    call Func_0A0_4D25
+    call ReadScreenBufferRectHeader_BankA0
+    call CopyRectToStride32_BankA0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_5491_Case04)
@@ -2019,8 +2023,8 @@ Func_0A0_4C2C:: ; address name
 ; points at: wC1C3
 Func_0A0_4C36::
     ld hl, Data_0A0_4DC7
-    call Func_0A0_4D16
-    call Func_0A0_4D25
+    call ReadScreenBufferRectHeader_BankA0
+    call CopyRectToStride32_BankA0
     ld a, [wC57F]
     bit 1, a
     ret nz
@@ -2180,9 +2184,11 @@ Jump_0A0_4D12::
     jr nz, CopyRect32StrideToVRAM_BankA0
     ret
 
+; reads a 4-byte header at HL (word offset, width, rows): returns HL = wScreenTileBuffer + offset, B = width, C = rows, DE = the byte after the header (E-0065) (the same 15 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_Sub02_Sub02, Func_0A0_4C36)
 ; points at: wScreenTileBuffer
-Func_0A0_4D16::
+ReadScreenBufferRectHeader_BankA0::
+Func_0A0_4D16:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -2197,8 +2203,10 @@ Func_0A0_4D16::
     pop de
     ret
 
+; DE = source (rows packed), HL = destination with rows 32 bytes apart, B = width, C = rows: copies a B x C rectangle; DE ends past the source, HL at the start of the row below; B kept, C = 0 (E-0065) (the same 18 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_Sub02_Sub02, Func_0A0_4C36)
-Func_0A0_4D25::
+CopyRectToStride32_BankA0::
+Func_0A0_4D25:: ; address name
     push bc
     push hl
 
@@ -2213,7 +2221,7 @@ Jump_0A0_4D27::
     add hl, bc
     pop bc
     dec c
-    jr nz, Func_0A0_4D25
+    jr nz, CopyRectToStride32_BankA0
     ret
 
 Data_0A0_4D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3533,8 +3541,10 @@ Jump_0A0_568B::
     ld [hl], a
     ret
 
+; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065) (the same 11 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0A0_5693:: ; heuristic: follows a terminator; C0
+CountTableBytesAtOrBelowA_BankA0_5693:: ; heuristic: follows a terminator; C0
+Func_0A0_5693:: ; address name
     ld c, $00
 
 Jump_0A0_5695::
@@ -4102,7 +4112,7 @@ Jump_0A0_5A7F::
     ld [hl], a
     ld a, [wD04B]
     ld hl, Data_0A0_5B25
-    call Func_0A0_5B1A
+    call CountTableBytesAtOrBelowA_BankA0
     ld hl, Data_0A0_5B2C
     add_a_to_hl
     push hl
@@ -4132,7 +4142,7 @@ Jump_0A0_5A7F::
     ld [wD09D], a
     ld [wCFE4], a
     ld hl, Data_0A0_5B33
-    call Func_0A0_5B1A
+    call CountTableBytesAtOrBelowA_BankA0
     ld hl, Data_0A0_5B39
     add_a_to_hl
     ld a, [wCFE3]
@@ -4188,13 +4198,15 @@ Jump_0A0_5B04::
 Jump_0A0_5B0C::
     ld a, e
     ld hl, Data_0A0_5B3F
-    call Func_0A0_5B1A
+    call CountTableBytesAtOrBelowA_BankA0
     ld [wD09E], a
     ld [wCFE5], a
     ret
 
+; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065) (the same 11 bytes appear in 2 banks)
 ; 3 call sites from 1 routine (e.g. Func_0A0_5A6C)
-Func_0A0_5B1A::
+CountTableBytesAtOrBelowA_BankA0::
+Func_0A0_5B1A:: ; address name
     ld c, $00
 
 Jump_0A0_5B1C::

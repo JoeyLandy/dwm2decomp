@@ -363,9 +363,11 @@ Func_003_4284:: ; address name
     call FillBytes
     ret
 
+; HL = header (word offset, width, rows) followed by the tile bytes: copies the rectangle into wScreenTileBuffer + offset with rows 32 bytes apart (the same steps as ReadScreenBufferRectHeader then CopyRectToStride32) (E-0065) (the same 32 bytes appear in 2 banks)
 ; 3 call sites from 3 routines (e.g. Func_003_6526, Func_003_649C, Func_003_5874)
 ; points at: wScreenTileBuffer
-Func_003_4290::
+CopyRecordRectToScreenBuffer_Bank03::
+Func_003_4290:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -3966,7 +3968,7 @@ Func_003_5874::
     add a, a
     add_a_to_hl
     deref_hl
-    call Func_003_4290
+    call CopyRecordRectToScreenBuffer_Bank03
     call Func_003_5AA7
     ret
 
@@ -5675,7 +5677,7 @@ Jump_003_64DA::
     add a, a
     add_a_to_hl
     deref_hl
-    call Func_003_4290
+    call CopyRecordRectToScreenBuffer_Bank03
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5E68_Table3_Case02, Func_003_5E68_Table4_Case00)
@@ -5723,7 +5725,7 @@ Func_003_6526::
     add a, a
     add_a_to_hl
     deref_hl
-    call Func_003_4290
+    call CopyRecordRectToScreenBuffer_Bank03
     ld e, $10
     farcall CopyBlockToTileBuffer
     ret

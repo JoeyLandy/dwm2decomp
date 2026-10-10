@@ -446,7 +446,7 @@ Jump_07F_4270::
 Jump_07F_4277::
     ld a, c
     ld [de], a
-    call Func_07F_4312
+    call BGTileUnderPointIsHFFBA_Bank7F_4312
     jr nc, Jump_07F_4270
     inc e
     ldh a, [hSpriteTileOffset]
@@ -548,7 +548,7 @@ Jump_07F_42EB::
 Jump_07F_42F2::
     ld a, c
     ld [de], a
-    call Func_07F_4312
+    call BGTileUnderPointIsHFFBA_Bank7F_4312
     jr nc, Jump_07F_42EB
     inc e
     ldh a, [hSpriteTileOffset]
@@ -570,9 +570,11 @@ Jump_07F_42F2::
     jr nz, Jump_07F_4297
     ret
 
+; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. Func_07F_40CC)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
-Func_07F_4312::
+BGTileUnderPointIsHFFBA_Bank7F_4312::
+Func_07F_4312:: ; address name
     push hl
     push bc
     ldh a, [hScrollY]
@@ -1324,7 +1326,7 @@ Jump_07F_7209::
 Jump_07F_7210::
     ld a, c
     ld [de], a
-    call DrawMetaSpriteAt_Sub01
+    call BGTileUnderPointIsHFFBA_Bank7F
     jr nc, Jump_07F_7209
     inc e
     ldh a, [hSpriteTileOffset]
@@ -1426,7 +1428,7 @@ Jump_07F_7284::
 Jump_07F_728B::
     ld a, c
     ld [de], a
-    call DrawMetaSpriteAt_Sub01
+    call BGTileUnderPointIsHFFBA_Bank7F
     jr nc, Jump_07F_7284
     inc e
     ldh a, [hSpriteTileOffset]
@@ -1448,10 +1450,10 @@ Jump_07F_728B::
     jr nz, Jump_07F_7230
     ret
 
-; only called from DrawMetaSpriteAt (E-0047)
+; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. DrawMetaSpriteAt)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
-DrawMetaSpriteAt_Sub01::
+BGTileUnderPointIsHFFBA_Bank7F::
 Func_07F_72AB:: ; address name
     push hl
     push bc

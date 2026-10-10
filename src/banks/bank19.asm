@@ -1352,7 +1352,7 @@ Jump_019_4771::
     ld a, $01
     ld [wD868], a
     call Func_019_48B1
-    call Func_019_495C
+    call StoreHFFC8WordAtHL_Bank19
     ld a, [wD015]
     ldh [hFFC6], a
     push hl
@@ -1361,7 +1361,7 @@ Jump_019_4771::
     ld a, $00
     ld [wD868], a
     call Func_019_48B1
-    call Func_019_495C
+    call StoreHFFC8WordAtHL_Bank19
     ld a, $02
     ld [wD868], a
     ld a, [wD016]
@@ -1400,7 +1400,7 @@ Jump_019_4771::
     call Func_019_488D
     call Func_019_488D
     call Func_019_488D
-    call Func_019_4963
+    call CopyWD01ARecordToHL_Bank19
     ld a, $00
     ld [hl+], a
     push hl
@@ -1579,18 +1579,22 @@ Jump_019_494B::
     ld [hl+], a
     ret
 
+; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: hFFC8, hFFC9
-Func_019_495C::
+StoreHFFC8WordAtHL_Bank19::
+Func_019_495C:: ; address name
     ldh a, [hFFC8]
     ld [hl+], a
     ldh a, [hFFC9]
     ld [hl+], a
     ret
 
+; copies the 27 ($1B) bytes at wD01A to HL; HL ends past the copy; clobbers A, B, DE (E-0065) (the same 12 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; points at: wD01A
-Func_019_4963::
+CopyWD01ARecordToHL_Bank19::
+Func_019_4963:: ; address name
     ld de, wD01A
     ld b, $1B
 

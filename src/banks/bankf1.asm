@@ -385,7 +385,7 @@ Func_0F1_4244:: ; heuristic: follows a terminator; C0
     add a, a
     add_a_to_hl
     deref_hl
-    call Func_0F1_49ED
+    call CopyRecordRectToScreenBuffer_BankF1
     call Func_0F1_442F
     ret
 
@@ -1329,9 +1329,11 @@ Func_0F1_49E1:: ; address name
     call FillBytes
     ret
 
+; HL = header (word offset, width, rows) followed by the tile bytes: copies the rectangle into wScreenTileBuffer + offset with rows 32 bytes apart (the same steps as ReadScreenBufferRectHeader then CopyRectToStride32) (E-0065) (the same 32 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_4244)
 ; points at: wScreenTileBuffer
-Func_0F1_49ED:: ; heuristic: follows a terminator; C0
+CopyRecordRectToScreenBuffer_BankF1:: ; heuristic: follows a terminator; C0
+Func_0F1_49ED:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]

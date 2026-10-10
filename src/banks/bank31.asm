@@ -7194,7 +7194,7 @@ Func_031_6A2D::
     adc a, $00
     ld h, a
     ld a, [wD095]
-    call Func_031_6A8B
+    call AddAToWordAtHL_Bank31_6A8B
     ld a, l
     add a, $03
     ld l, a
@@ -7202,7 +7202,7 @@ Func_031_6A2D::
     adc a, $00
     ld h, a
     ld a, [wD096]
-    call Func_031_6A8B
+    call AddAToWordAtHL_Bank31_6A8B
     ld a, l
     add a, $01
     ld l, a
@@ -7210,7 +7210,7 @@ Func_031_6A2D::
     adc a, $00
     ld h, a
     ld a, [wD097]
-    call Func_031_6A8B
+    call AddAToWordAtHL_Bank31_6A8B
     ld a, l
     add a, $01
     ld l, a
@@ -7218,7 +7218,7 @@ Func_031_6A2D::
     adc a, $00
     ld h, a
     ld a, [wD098]
-    call Func_031_6A8B
+    call AddAToWordAtHL_Bank31_6A8B
     ld a, l
     add a, $01
     ld l, a
@@ -7226,7 +7226,7 @@ Func_031_6A2D::
     adc a, $00
     ld h, a
     ld a, [wD099]
-    call Func_031_6A8B
+    call AddAToWordAtHL_Bank31_6A8B
     ld a, l
     add a, $01
     ld l, a
@@ -7234,11 +7234,13 @@ Func_031_6A2D::
     adc a, $00
     ld h, a
     ld a, [wD09A]
-    call Func_031_6A8B
+    call AddAToWordAtHL_Bank31_6A8B
     ret
 
+; the word at HL += A (unsigned); HL ends on the high byte; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 6 call sites from 1 routine (e.g. Func_031_6A2D)
-Func_031_6A8B::
+AddAToWordAtHL_Bank31_6A8B::
+Func_031_6A8B:: ; address name
     add a, [hl]
     ld [hl+], a
     ld a, $00
@@ -7496,7 +7498,7 @@ Func_031_6BCA::
     adc a, $00
     ld h, a
     ld a, [wD095]
-    call Func_031_6C28
+    call AddAToWordAtHL_Bank31
     ld a, l
     add a, $03
     ld l, a
@@ -7504,7 +7506,7 @@ Func_031_6BCA::
     adc a, $00
     ld h, a
     ld a, [wD096]
-    call Func_031_6C28
+    call AddAToWordAtHL_Bank31
     ld a, l
     add a, $01
     ld l, a
@@ -7512,7 +7514,7 @@ Func_031_6BCA::
     adc a, $00
     ld h, a
     ld a, [wD097]
-    call Func_031_6C28
+    call AddAToWordAtHL_Bank31
     ld a, l
     add a, $01
     ld l, a
@@ -7520,7 +7522,7 @@ Func_031_6BCA::
     adc a, $00
     ld h, a
     ld a, [wD098]
-    call Func_031_6C28
+    call AddAToWordAtHL_Bank31
     ld a, l
     add a, $01
     ld l, a
@@ -7528,7 +7530,7 @@ Func_031_6BCA::
     adc a, $00
     ld h, a
     ld a, [wD099]
-    call Func_031_6C28
+    call AddAToWordAtHL_Bank31
     ld a, l
     add a, $01
     ld l, a
@@ -7536,11 +7538,13 @@ Func_031_6BCA::
     adc a, $00
     ld h, a
     ld a, [wD09A]
-    call Func_031_6C28
+    call AddAToWordAtHL_Bank31
     ret
 
+; the word at HL += A (unsigned); HL ends on the high byte; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 6 call sites from 1 routine (e.g. Func_031_6BCA)
-Func_031_6C28::
+AddAToWordAtHL_Bank31::
+Func_031_6C28:: ; address name
     add a, [hl]
     ld [hl+], a
     ld a, $00
@@ -8638,8 +8642,8 @@ Func_031_72AC::
     add a, a
     add_a_to_hl
     deref_hl
-    call Func_031_755B
-    call Func_031_756A
+    call ReadScreenBufferRectHeader_Bank31
+    call CopyRectToStride32_Bank31
     ret
 
 Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -9103,9 +9107,11 @@ Jump_031_7557::
     jr nz, CopyRect32StrideToVRAM
     ret
 
+; reads a 4-byte header at HL (word offset, width, rows): returns HL = wScreenTileBuffer + offset, B = width, C = rows, DE = the byte after the header (E-0065) (the same 15 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_031_72AC)
 ; points at: wScreenTileBuffer
-Func_031_755B::
+ReadScreenBufferRectHeader_Bank31::
+Func_031_755B:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -9120,8 +9126,10 @@ Func_031_755B::
     pop de
     ret
 
+; DE = source (rows packed), HL = destination with rows 32 bytes apart, B = width, C = rows: copies a B x C rectangle; DE ends past the source, HL at the start of the row below; B kept, C = 0 (E-0065) (the same 18 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_031_72AC)
-Func_031_756A::
+CopyRectToStride32_Bank31::
+Func_031_756A:: ; address name
     push bc
     push hl
 
@@ -9136,7 +9144,7 @@ Jump_031_756C::
     add hl, bc
     pop bc
     dec c
-    jr nz, Func_031_756A
+    jr nz, CopyRectToStride32_Bank31
     ret
     INCBIN "dwm2-cobi-us.gbc", $0C757C, $A7
     ds $12, $B1

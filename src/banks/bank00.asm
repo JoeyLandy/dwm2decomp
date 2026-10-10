@@ -1696,8 +1696,10 @@ Jump_000_0B0B::
 Jump_000_0B0C::
     ret
 
+; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
 ; 5 call sites from 4 routines (e.g. Func_007_5B14_Case07, Func_007_5B14_Case01, Func_0E0_5AD3_Table7_Case00, Func_0E0_572D)
-Func_000_0B0D::
+ReadWordTableEntry_Bank00::
+Func_000_0B0D:: ; address name
     add a, a
     add a, l
     ld l, a

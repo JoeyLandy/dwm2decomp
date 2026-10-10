@@ -8226,16 +8226,16 @@ Func_002_760B::
     ld hl, sBB01
     ld de, hFF8A
     ld bc, $000E
-    call Func_002_7674
+    call CopyBytesWithChecksum_Bank02_7674
     ld de, wC60C
     ld bc, $0291
-    call Func_002_7674
+    call CopyBytesWithChecksum_Bank02_7674
     ld de, wCBD7
     ld bc, $006B
-    call Func_002_7674
+    call CopyBytesWithChecksum_Bank02_7674
     ld de, wCC42
     ld bc, $00B5
-    call Func_002_7674
+    call CopyBytesWithChecksum_Bank02_7674
     ldh a, [hFFC8]
     ld l, a
     ldh a, [hFFC9]
@@ -8269,10 +8269,12 @@ Jump_002_766D::
     ld c, $FF
     ret
 
+; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hFFC8/hFFC9; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
 ; 4 call sites from 1 routine (e.g. Func_002_760B)
 ; reads: hFFC8, hFFC9
 ; writes: hFFC8, hFFC9
-Func_002_7674::
+CopyBytesWithChecksum_Bank02_7674::
+Func_002_7674:: ; address name
     ldh a, [hFFC8]
     add a, [hl]
     ldh [hFFC8], a
@@ -8285,7 +8287,7 @@ Func_002_7674::
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_002_7674
+    jr nz, CopyBytesWithChecksum_Bank02_7674
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_033_562A_Case0C, Func_0A0_5491_Case01)
@@ -8303,16 +8305,16 @@ Func_002_7688::
     ld de, sBB01
     ld hl, hFF8A
     ld bc, $000E
-    call Func_002_76DE
+    call CopyBytesWithChecksum_Bank02
     ld hl, wC60C
     ld bc, $0291
-    call Func_002_76DE
+    call CopyBytesWithChecksum_Bank02
     ld hl, wCBD7
     ld bc, $006B
-    call Func_002_76DE
+    call CopyBytesWithChecksum_Bank02
     ld hl, wCC42
     ld bc, $00B5
-    call Func_002_76DE
+    call CopyBytesWithChecksum_Bank02
     ldh a, [hFFC8]
     ld l, a
     ldh a, [hFFC9]
@@ -8333,10 +8335,12 @@ Func_002_7688::
     ld [rRAMG], a
     ret
 
+; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hFFC8/hFFC9; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
 ; 4 call sites from 1 routine (e.g. Func_002_7688)
 ; reads: hFFC8, hFFC9
 ; writes: hFFC8, hFFC9
-Func_002_76DE::
+CopyBytesWithChecksum_Bank02::
+Func_002_76DE:: ; address name
     ldh a, [hFFC8]
     add a, [hl]
     ldh [hFFC8], a
@@ -8349,7 +8353,7 @@ Func_002_76DE::
     dec bc
     ld a, b
     or a, c
-    jr nz, Func_002_76DE
+    jr nz, CopyBytesWithChecksum_Bank02
     ret
 
 ; no direct call (reached through a table, a jump or a vector)

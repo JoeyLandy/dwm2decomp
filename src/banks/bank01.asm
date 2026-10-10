@@ -5912,7 +5912,7 @@ Jump_001_6D33::
     ld [hl+], a
     ld b, $16
     ld a, $FF
-    call Func_001_6E2C
+    call FillBBytesAtHL_Bank01
     ld a, l
     add a, $02
     ld l, a
@@ -6003,11 +6003,13 @@ Func_001_6E25:: ; address name
     jr nz, CopyBBytesDEToHL_Bank01
     ret
 
+; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_001_6C48)
-Func_001_6E2C::
+FillBBytesAtHL_Bank01::
+Func_001_6E2C:: ; address name
     ld [hl+], a
     dec b
-    jr nz, Func_001_6E2C
+    jr nz, FillBBytesAtHL_Bank01
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_001_6C48)

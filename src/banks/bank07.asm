@@ -2281,7 +2281,7 @@ Jump_007_5BDC:: ; address name
     ret nz
     ld a, [wD0E7]
     ld hl, $5EE3
-    call Func_000_0B0D
+    call ReadWordTableEntry_Bank00
     call Func_007_5EA2
     ld a, [wD0E7]
     inc a
@@ -2501,7 +2501,7 @@ Jump_007_5D56:: ; address name
     jr nz, Jump_007_5D8B
     ld a, [wD0E7]
     ld hl, $5EE3
-    call Func_000_0B0D
+    call ReadWordTableEntry_Bank00
     call Func_007_5EA2
     ld a, [wD0E7]
     inc a
@@ -4507,7 +4507,7 @@ Func_007_6975::
     ld [hl+], a
     ld b, $16
     ld a, $FF
-    call Func_007_6AD0
+    call FillBBytesAtHL_Bank07
     ld a, l
     add a, $02
     ld l, a
@@ -4547,11 +4547,13 @@ Func_007_6975::
     farcall Func_016_5AAF
     ret
 
+; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_007_6975)
-Func_007_6AD0::
+FillBBytesAtHL_Bank07::
+Func_007_6AD0:: ; address name
     ld [hl+], a
     dec b
-    jr nz, Func_007_6AD0
+    jr nz, FillBBytesAtHL_Bank07
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)

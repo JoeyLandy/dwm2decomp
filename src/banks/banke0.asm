@@ -2362,7 +2362,7 @@ Jump_0E0_572C::
 Func_0E0_572D::
     call Func_0E0_5992
     ld hl, $5A05
-    call Func_000_0B0D
+    call ReadWordTableEntry_Bank00
     ld d, h
     ld e, l
     ld hl, vBGMap0 + $23
@@ -2654,7 +2654,7 @@ Jump_0E0_5905::
     ei
     call Func_0E0_59A4
     ld hl, $5A05
-    call Func_000_0B0D
+    call ReadWordTableEntry_Bank00
     ld d, h
     ld e, l
     ld hl, vBGMap0 + $20F
@@ -6130,7 +6130,7 @@ Jump_0E0_7011:: ; address name
     ld a, [wD09F]
     dec a
     ld hl, $7649
-    call Func_000_0B0D
+    call ReadWordTableEntry_Bank00
     ld a, [hl+]
     ld [wD0A1], a
     ld a, l

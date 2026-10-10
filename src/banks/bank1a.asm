@@ -1058,13 +1058,15 @@ Jump_01A_60DE::
 ; 1 call site from 1 routine (e.g. Func_01A_5FA7)
 Func_01A_60DF::
     push de
-    call Func_01A_60E6
+    call FindByteAtHLInEightAtDE_Bank1A
     pop de
     inc hl
     ret
 
+; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_01A_60DF)
-Func_01A_60E6::
+FindByteAtHLInEightAtDE_Bank1A::
+Func_01A_60E6:: ; address name
     ld b, $08
 
 Jump_01A_60E8::
@@ -1315,12 +1317,14 @@ Jump_01A_621F::
 ; 6 call sites from 1 routine (e.g. Func_01A_60F1)
 Func_01A_622B::
     push de
-    call Func_01A_6232
+    call FindByteAtHLInEightAtDE_Bank1A_6232
     pop de
     jr Jump_01A_61FE
 
+; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_01A_622B)
-Func_01A_6232::
+FindByteAtHLInEightAtDE_Bank1A_6232::
+Func_01A_6232:: ; address name
     ld b, $08
 
 Jump_01A_6234::

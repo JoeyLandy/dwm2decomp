@@ -715,14 +715,14 @@ Jump_03A_4C9C:: ; address name
     ld [wD805], a
     call Func_03A_4CF9
     ld hl, Data_03A_4D52
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
     ld e, l
     ld d, h
     ld a, $03
     ld hl, Data_03A_4D5C
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld c, $06
     call Func_03A_4D2B
     ld hl, wD804
@@ -740,7 +740,7 @@ Jump_03A_4CC2:: ; address name
     ld [wD805], a
     call Func_03A_4CF9
     ld hl, Data_03A_4D52
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
     ld e, l
@@ -748,7 +748,7 @@ Jump_03A_4CC2:: ; address name
     ld a, [wBattleTarget]
     and a, $03
     ld hl, Data_03A_4D5C
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld c, $06
     call Func_03A_4D2B
     ld hl, wD804
@@ -834,8 +834,10 @@ Jump_03A_4D30::
 Jump_03A_4D45::
     jr Func_03A_4D2B
 
+; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
 ; 8 call sites from 4 routines (e.g. Func_03A_4C26_Table2_Case01, Func_03A_4C26_Table2_Case00, Func_03A_50D9_Table3_Case01, Func_03A_50D9_Table3_Case00)
-Func_03A_4D47::
+ReadWordTableEntry_Bank3A::
+Func_03A_4D47:: ; address name
     add a, a
     add a, l
     ld l, a
@@ -859,16 +861,16 @@ Func_03A_4C26_Case03::
 Jump_03A_4DF4:: ; address name
     ld a, [wD804]
     rst $00
-    dw Func_03A_4D47_Case00
-    dw Func_03A_4D47_Case01
-    dw Func_03A_4D47_Case00
-    dw Func_03A_4D47_Case03
+    dw ReadWordTableEntry_Bank3A_Case00
+    dw ReadWordTableEntry_Bank3A_Case01
+    dw ReadWordTableEntry_Bank3A_Case00
+    dw ReadWordTableEntry_Bank3A_Case03
 
-; entry 0 of the `rst $00` table in Func_03A_4D47
+; entry 0 of the `rst $00` table in ReadWordTableEntry_Bank3A
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wD804
-Func_03A_4D47_Case00::
+ReadWordTableEntry_Bank3A_Case00::
 Jump_03A_4E00:: ; address name
     ld a, $02
     ldh [hScrollY], a
@@ -890,11 +892,11 @@ Func_03A_4E0D:: ; heuristic: follows a terminator; C0
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_4D47
+; entry 1 of the `rst $00` table in ReadWordTableEntry_Bank3A
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wD804
-Func_03A_4D47_Case01::
+ReadWordTableEntry_Bank3A_Case01::
 Jump_03A_4E1A:: ; address name
     xor a, a
     ldh [hScrollY], a
@@ -904,10 +906,10 @@ Jump_03A_4E1A:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_03A_4D47
+; entry 3 of the `rst $00` table in ReadWordTableEntry_Bank3A
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD802, hScrollY, hScrollX, wD804
-Func_03A_4D47_Case03::
+ReadWordTableEntry_Bank3A_Case03::
 Jump_03A_4E25:: ; address name
     ld a, $FF
     ld [wD802], a
@@ -1783,14 +1785,14 @@ Jump_03A_5215:: ; address name
     ld [wD805], a
     call Func_03A_5272
     ld hl, Data_03A_4D52
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
     ld e, l
     ld d, h
     ld a, $03
     ld hl, Data_03A_4D5C
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld c, $06
     call Func_03A_4D2B
     ld hl, wD804
@@ -1808,7 +1810,7 @@ Jump_03A_523B:: ; address name
     ld [wD805], a
     call Func_03A_5272
     ld hl, Data_03A_4D52
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
     ld e, l
@@ -1816,7 +1818,7 @@ Jump_03A_523B:: ; address name
     ld a, [wBattleActor]
     and a, $03
     ld hl, Data_03A_4D5C
-    call Func_03A_4D47
+    call ReadWordTableEntry_Bank3A
     ld c, $06
     call Func_03A_4D2B
     ld hl, wD804

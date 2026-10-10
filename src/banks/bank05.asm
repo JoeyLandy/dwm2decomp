@@ -5737,7 +5737,7 @@ Jump_005_5EF0::
     jr nz, Jump_005_5F05
     call Func_005_5F13
     jr nz, Jump_005_5F05
-    call Func_005_5F2A
+    call WDA77EntryHasBits2And3_Bank05_5F2A
     jr nz, Jump_005_5F0D
 
 Jump_005_5F05::
@@ -5775,9 +5775,11 @@ Func_005_5F13::
     cp a, $93
     ret
 
+; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_005_5ECE)
 ; points at: wDA77
-Func_005_5F2A::
+WDA77EntryHasBits2And3_Bank05_5F2A::
+Func_005_5F2A:: ; address name
     ld a, c
     ld hl, wDA77
     add a, a
@@ -5926,7 +5928,7 @@ Jump_005_5FE0::
     jr nc, Jump_005_6001
     call Func_005_600E
     jr c, Jump_005_6001
-    call Func_005_6039
+    call WDA77EntryHasBits2And3_Bank05
     jr nz, Jump_005_6008
 
 Jump_005_6001::
@@ -5978,9 +5980,11 @@ Jump_005_6037::
     xor a, a
     ret
 
+; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_005_5FC7)
 ; points at: wDA77
-Func_005_6039::
+WDA77EntryHasBits2And3_Bank05::
+Func_005_6039:: ; address name
     ld a, c
     ld hl, wDA77
     add a, a
