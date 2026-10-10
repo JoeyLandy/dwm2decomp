@@ -928,6 +928,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **A candidate rejected.** A similar scan proposed a bank-$1F range, but it would have covered `1F:5C15`, which eight banks far-call. The scan's string-end walk was wrong there, so that region is not declared.
 - Binary verification: pending; see the commit.
 
+### E-0088 — The bank-$A2 half of the bank-$E0 string database
+
+- Kind: OBSERVATION (reading plus table bytes and a reference check; C2 for the boundaries).
+- **How it was found.** A scan for heuristic routine entries whose bytes are at least 90% charmap text ending in $F0 found 18 in bank $A2. They lie inside the database that BeginStringDisplay_BankE0_Sub01 (`A2:49E2`, used for string categories ≥ 1 of bank $E0) passes in DE.
+- **The region.** The database at `$49F8` has two category pointers ($49FC and $4A3E): a 33-entry table and a 1-entry table, the latter pointing at $4FCB. The strings run from `$4A40` to the $F0 at `$4FE6`.
+- **Declared as data.** All 86 code labels the heuristics had placed in `$49F8-$4FE7` are referenced only from inside the range, so it is declared in `config/data_regions.json`. Binary identity is unchanged.
+- **Also flagged, not acted on.** The same scan flagged `60:690E` (8 text-like bytes); it is not checked.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
