@@ -61,7 +61,7 @@ Binary identity still passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, re
 
 | Measure | State |
 | --- | --- |
-| Call sites that reach a named routine | 38% of 21,739 (evidence-named; about 5,000 routines remain address-named) |
+| Call sites that reach a named routine | 47.6% of 21,739 (evidence-named; about 5,000 routines remain address-named) |
 | Hardware, VRAM and RAM operands with names | 54,500; only 29 RAM names carry evidence, the rest are address names (`wC52B`) |
 | Far calls as `farcall` macros | 3,775 |
 | Idiom macros | `add_a_to_hl` 1,744, `deref_hl` 219 (E-0027) |
