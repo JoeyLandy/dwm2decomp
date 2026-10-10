@@ -563,7 +563,7 @@ Jump_004_4396::
     db $E3, $45, $99, $46, $D8, $46, $FF, $46, $34, $47, $73, $47, $32, $48, $5F, $48
     db $D6, $48, $BD, $49, $D7, $4A
 
-; 11 call sites from 11 routines (e.g. Func_002_64E5, ScriptCommand09_Case00, Func_012_6610_Case00, Func_012_66DA_Case00, ...)
+; 11 call sites from 11 routines (e.g. Func_002_64E5, ScriptCommand09_Case00, RunMessageBox_Bank12_Case00, Func_012_66DA_Case00, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 Func_004_4470::
@@ -3090,13 +3090,13 @@ Func_004_55BB:: ; address name
 
 ; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
 ; 99 call sites from 99 routines (e.g. Func_004_6A35_Case1A, Func_004_6A35_Case19, Func_004_6A35_Case18, Func_004_6A35_Case15, ...)
-; writes: wC924, wC925, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
+; writes: wMessageIndex, wMessageGroup, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 SetRequestPtrC924FromDE_B04::
 Func_004_55DF:: ; address name
     ld a, e
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, d
-    ld [wC925], a
+    ld [wMessageGroup], a
     ld a, $80
     ld [wScriptStartRequest], a
     ld a, $01

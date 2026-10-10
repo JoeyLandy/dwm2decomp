@@ -333,7 +333,7 @@ Func_010_4248:: ; address name
 
 ; fetch handler for script opcode 81 (entry 129 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptCommandType, wScriptStep, wC924, wC925, wC926, wScriptPointerLo, wScriptPointerHi
+; writes: wScriptCommandType, wScriptStep, wMessageIndex, wMessageGroup, wMessageState, wScriptPointerLo, wScriptPointerHi
 ScriptFetch81:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4252:: ; address name
     pop hl
@@ -341,9 +341,9 @@ Func_010_4252:: ; address name
     ld [wScriptCommandType], a
     xor a, a
     ld [wScriptStep], a
-    ld [wC924], a
-    ld [wC925], a
-    ld [wC926], a
+    ld [wMessageIndex], a
+    ld [wMessageGroup], a
+    ld [wMessageState], a
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
@@ -383,7 +383,7 @@ Jump_010_4291::
 
 ; fetch handler for script opcode 86 (entry 134 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptCommandType, wScriptStep, wC924, wC925, wC926, wScriptPointerLo, wScriptPointerHi
+; writes: wScriptCommandType, wScriptStep, wMessageIndex, wMessageGroup, wMessageState, wScriptPointerLo, wScriptPointerHi
 ScriptFetch86:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4297:: ; address name
     pop hl
@@ -391,9 +391,9 @@ Func_010_4297:: ; address name
     ld [wScriptCommandType], a
     xor a, a
     ld [wScriptStep], a
-    ld [wC924], a
-    ld [wC925], a
-    ld [wC926], a
+    ld [wMessageIndex], a
+    ld [wMessageGroup], a
+    ld [wMessageState], a
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
@@ -776,7 +776,7 @@ Func_010_4486:: ; address name
 ; fetch handler for script opcode 1C (entry 28 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerFacing
-; writes: wC8EF, wScriptCommandType, wC924, wC925, wC926
+; writes: wC8EF, wScriptCommandType, wMessageIndex, wMessageGroup, wMessageState
 ScriptFetch1C:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4490:: ; address name
     pop hl
@@ -793,26 +793,26 @@ Func_010_4490:: ; address name
     jr c, Jump_010_44BA
     ld hl, $0088
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     xor a, a
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
 Jump_010_44BA::
     ld hl, $0087
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     xor a, a
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
 ; fetch handler for script opcode 1D (entry 29 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptCommandType, wC924, wC925, wC926
+; writes: wScriptCommandType, wMessageIndex, wMessageGroup, wMessageState
 ScriptFetch1D:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_44CA:: ; address name
     pop hl
@@ -824,21 +824,21 @@ Func_010_44CA:: ; address name
     jr c, Jump_010_44EB
     ld hl, $4097
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     xor a, a
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
 Jump_010_44EB::
     ld hl, $408D
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     xor a, a
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
 ; fetch handler for script opcode 23 (entry 35 of ScriptOpcodeHandlers)
@@ -1264,16 +1264,16 @@ Jump_010_46BC::
 
 ; HL = script address: clears wC921-wC926 (parameters and step) and stores HL in wScriptPointer; the script is run by RunEventScriptFrame (28 call sites)
 ; 28 call sites from 28 routines (e.g. ScriptFetchF8, ScriptFetchF7, ScriptFetchF6, ScriptFetchF4, ...)
-; writes: wScriptParam0, wScriptParam1, wScriptStep, wC924, wC925, wC926, wScriptPointerLo, wScriptPointerHi
+; writes: wScriptParam0, wScriptParam1, wScriptStep, wMessageIndex, wMessageGroup, wMessageState, wScriptPointerLo, wScriptPointerHi
 StartEventScript::
 Func_010_46CD:: ; address name
     xor a, a
     ld [wScriptParam0], a
     ld [wScriptParam1], a
     ld [wScriptStep], a
-    ld [wC924], a
-    ld [wC925], a
-    ld [wC926], a
+    ld [wMessageIndex], a
+    ld [wMessageGroup], a
+    ld [wMessageState], a
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h

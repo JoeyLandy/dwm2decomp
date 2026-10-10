@@ -212,7 +212,7 @@ Func_0A0_415D:: ; address name
     call GameMode7_Init_Sub01_Sub02_Sub02
     call GameMode7_Init_Sub01_Sub02_Sub03
     call FillTilesFromRequest
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     ld hl, vBGMap0
     call Func_0A0_42B2
     ld a, $7F
@@ -4902,7 +4902,7 @@ Func_0A0_5F2E::
 Func_0A0_5E07_Table2_Case05::
 Jump_0A0_5F40:: ; address name
     call Func_0A0_6A2C
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     call DrawWC338RowsToBGMapRow13_BankA0
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5292,7 +5292,7 @@ Func_0A0_5F2E_Case08::
 Jump_0A0_61E9:: ; address name
     call Func_0A0_4C9B
     call FillTilesFromRequest
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5560,7 +5560,7 @@ Func_0A0_5F2E_Case10::
 Jump_0A0_63A9:: ; address name
     farcall ClearAndLayoutTileBlocksForWD890Count
     call Func_0A0_4CD4
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5643,7 +5643,7 @@ Jump_0A0_63FE::
     ld [wBattleActor], a
     farcall ClearAndLayoutTileBlocksForWD890Count
     call Func_0A0_6A2C
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     farcall DrawWC278RowsToBGMapRow7
     ld hl, wBattleSubPhase
     inc [hl]

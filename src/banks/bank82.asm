@@ -1,7 +1,7 @@
 SECTION "Bank 82", ROMX[$4000], BANK[$82]
     db $82
 
-; 3 call sites from 3 routines (e.g. GameMode0_Update_Table2_Case0B, Func_010_4AD0_Case0B, Func_05F_69FB_Case0B)
+; 3 call sites from 3 routines (e.g. GameMode0_Update_Table2_Case0B, Func_010_4AD0_Case0B, ShowMessageHL_Case0B)
 ; reads: wStringIndex
 Func_082_4001::
     ld a, [wStringIndex]

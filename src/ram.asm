@@ -702,9 +702,9 @@ DEF wScriptCommandType EQU $C920 ; the script command being run, 0 = none; index
 DEF wScriptParam0 EQU $C921 ; first parameter of the current script command (reading + execution (E-0038))
 DEF wScriptParam1 EQU $C922 ; second parameter of the current script command (reading + execution (E-0038))
 DEF wScriptStep EQU $C923 ; step counter of the current script command (reading + execution (E-0038))
-DEF wC924 EQU $C924
-DEF wC925 EQU $C925
-DEF wC926 EQU $C926
+DEF wMessageIndex EQU $C924 ; string index of the message RunMessageBox shows (low byte of the message word) (E-0079) (reading (E-0079))
+DEF wMessageGroup EQU $C925 ; message word high byte: bits 0-5 select the message group (ShowMessageHL), bit 7 skips opening the window, bit 6 skips closing it (E-0079) (reading (E-0079))
+DEF wMessageState EQU $C926 ; RunMessageBox state: 0-3 while a message runs, $FF when idle; StartMessageA sets 0 (E-0079) (reading (E-0079))
 DEF wC927 EQU $C927
 DEF wC928 EQU $C928
 DEF wC929 EQU $C929

@@ -811,6 +811,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Identical copies.** `31:74B4` and `31:74E1` are byte-identical routines at two addresses; both are named.
 - Binary verification: pending; see the commit.
 
+### E-0079 — The message-box runner
+
+- Kind: OBSERVATION (full reading of states 0-3; C1).
+- **What it is.** `RunMessageBox` (`5F:6936`) is a 4-state machine driven by wC926 (wMessageState, $FF = idle). Each state does its step and advances the state byte.
+  - State 0 requests a text window at vTiles1 with size $1202 (the same values as SetDefaultStringWindow), plays sound $69, and sets the window position. It uses the top when hPlayerY ≥ $48, so the box avoids the player.
+  - State 1 starts the text through ShowMessageFromWC924.
+  - State 2 waits for wC52B bit 0, then requests the window close.
+  - State 3 waits for it.
+- **The message word.** `ShowMessageHL` (`5F:69FB`, already reached as ScriptCommand0A_Run_Case02_Sub01) takes L as wStringIndex with category 0, and H & $3F as a 12-entry message-group dispatch. So wC924 is the string index (wMessageIndex), and wC925 holds the group plus two flags: bit 7 skips the window open, bit 6 skips the close (wMessageGroup).
+- **Renames and new names.**
+  - The routine named SetWC924ClearWC926 in E-0063 sets the string index and resets the state to 0, so it is renamed StartMessageA.
+  - Wrappers named: RunMessageBoxFar (family, far call), RunMessageBoxCarryWhenIdle_Bank5F, RunMessageBox_Bank12 (a bank-$12 variant taking the freeze flag on the stack) and RunMessageBoxCarryWhenIdle_Bank12.
+- **Unknowns.**
+  - What Func_004_4470 does. It is called in state 0 when the freeze flag wC928/A is 0, and state 3 then calls ClearBit1OfPlayerAndObjectFlags, which suggests freezing and releasing movement.
+  - Everything after state 3.
+  - The 12 message groups.
+- **Also named in this batch:** WriteTileBAtScrollOffset47PlusWCFC2, WriteBCTileAtHLOrHLPlusBC, LoadHFFC6WordFromWCA2B, CopyRecordRectToScreenBuffer_Bank1A and two wrappers of it.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

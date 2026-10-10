@@ -33,27 +33,29 @@ Data_05F_684E:: ; heuristic: stream in a run of back-to-back compressed streams;
 Data_05F_68C8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $17E8C8, $6E
 
-; 6 call sites from 6 routines (e.g. Func_05F_77C7, Func_00F_7F75, Func_012_6828, ScriptCommand16_Run_Case17, ...)
-; reads: wC926
-Func_05F_6936::
-    ld a, [wC926]
+; wMessageState ($FF = idle) steps a message: 0 opens the message window (unless wMessageGroup bit 7) at the bottom, or at the top when hPlayerY >= $48, with sound $69; 1 waits for the window, then ShowMessageFromWC924 starts the text; 2 waits until wC52B bit 0 clears (text done), then closes the window (unless wMessageGroup bit 6); 3 waits for the close. When wC928 is 0, state 0 also calls Func_004_4470 and state 3 ClearBit1OfPlayerAndObjectFlags (probably freezing and releasing the player and objects). The steps after state 3 are not read (E-0079)
+; 6 call sites from 6 routines (e.g. RunMessageBoxCarryWhenIdle_Bank5F, RunMessageBoxFar_Bank0F, RunMessageBoxFar_Bank12, ScriptCommand16_Run_Case17, ...)
+; reads: wMessageState
+RunMessageBox::
+Func_05F_6936:: ; address name
+    ld a, [wMessageState]
     cp a, $FF
     jr nz, Jump_05F_693E
     ret
 
 Jump_05F_693E::
     rst $00
-    dw Func_05F_6936_Case00
-    dw Func_05F_6936_Case01
-    dw Func_05F_6936_Case02
-    dw Func_05F_6936_Case03
+    dw RunMessageBox_Case00
+    dw RunMessageBox_Case01
+    dw RunMessageBox_Case02
+    dw RunMessageBox_Case03
 
-; entry 0 of the `rst $00` table in Func_05F_6936
+; entry 0 of the `rst $00` table in RunMessageBox
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC928, wC925, hPlayerY
+; reads: wC928, wMessageGroup, hPlayerY
 ; writes: wC8CB, wC8CC, hFFB9
-; points at: wC926
-Func_05F_6936_Case00::
+; points at: wMessageState
+RunMessageBox_Case00::
 Jump_05F_6947:: ; address name
     ld a, [wC928]
     or a, a
@@ -61,7 +63,7 @@ Jump_05F_6947:: ; address name
     farcall Func_004_4470
 
 Jump_05F_6953::
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     bit 7, a
     jr nz, Jump_05F_6988
     ld hl, vTiles1
@@ -85,17 +87,17 @@ Jump_05F_6953::
     ldh [hFFB9], a
 
 Jump_05F_6988::
-    ld hl, wC926
+    ld hl, wMessageState
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_05F_6936
+; entry 1 of the `rst $00` table in RunMessageBox
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC925, wC8CB
-; points at: wC926
-Func_05F_6936_Case01::
+; reads: wMessageGroup, wC8CB
+; points at: wMessageState
+RunMessageBox_Case01::
 Jump_05F_698D:: ; address name
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     bit 7, a
     jr nz, Jump_05F_699A
     ld a, [wC8CB]
@@ -103,22 +105,22 @@ Jump_05F_698D:: ; address name
     ret nz
 
 Jump_05F_699A::
-    call Func_05F_69F3
-    ld hl, wC926
+    call ShowMessageFromWC924
+    ld hl, wMessageState
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_05F_6936
+; entry 2 of the `rst $00` table in RunMessageBox
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC925, hPlayerY
+; reads: wC52B, wMessageGroup, hPlayerY
 ; writes: wC8CB, wC8CC, hFFB9
-; points at: wC926
-Func_05F_6936_Case02::
+; points at: wMessageState
+RunMessageBox_Case02::
 Jump_05F_69A2:: ; address name
     ld a, [wC52B]
     bit 0, a
     ret nz
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     bit 6, a
     jr nz, Jump_05F_69CD
     ld a, $69
@@ -136,17 +138,17 @@ Jump_05F_69A2:: ; address name
     ld [wC8CB], a
 
 Jump_05F_69CD::
-    ld hl, wC926
+    ld hl, wMessageState
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_05F_6936
+; entry 3 of the `rst $00` table in RunMessageBox
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC925, wC8CB, wC928
-; writes: wC926
-Func_05F_6936_Case03::
+; reads: wMessageGroup, wC8CB, wC928
+; writes: wMessageState
+RunMessageBox_Case03::
 Jump_05F_69D2:: ; address name
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     bit 6, a
     jr nz, Jump_05F_69E1
     ld a, [wC8CB]
@@ -162,23 +164,25 @@ Jump_05F_69E1::
 
 Jump_05F_69ED::
     ld a, $FF
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_05F_6936_Case01)
-; reads: wC924, wC925, wCC44
+; HL = wMessageIndex/wMessageGroup, then ShowMessageHL (E-0079)
+; 1 call site from 1 routine (e.g. RunMessageBox_Case01)
+; reads: wMessageIndex, wMessageGroup, wCC44
 ; writes: wStringIndex, wStringCategory
-Func_05F_69F3::
-    ld a, [wC924]
+ShowMessageFromWC924::
+Func_05F_69F3:: ; address name
+    ld a, [wMessageIndex]
     ld l, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld h, a
 
-; only called from ScriptCommand0A_Run_Case02 (E-0047)
+; L = string index (wStringIndex, category 0), H & $3F = message group, which selects one of 12 table entries (rst $00); when wCC44 has bit 7 set and is not $80 another path is taken (not read) (E-0079)
 ; 1 call site from 1 routine (e.g. ScriptCommand0A_Run_Case02)
 ; reads: wCC44
 ; writes: wStringIndex, wStringCategory
-ScriptCommand0A_Run_Case02_Sub01::
+ShowMessageHL::
 Func_05F_69FB:: ; address name
     ld a, [wCC44]
     cp a, $80
@@ -196,101 +200,101 @@ Jump_05F_6A07::
     ld [wStringCategory], a
     ld a, h
     rst $00
-    dw Func_05F_69FB_Case00
-    dw Func_05F_69FB_Case01
-    dw Func_05F_69FB_Case02
-    dw Func_05F_69FB_Case03
-    dw Func_05F_69FB_Case04
-    dw Func_05F_69FB_Case05
-    dw Func_05F_69FB_Case06
-    dw Func_05F_69FB_Case06
-    dw Func_05F_69FB_Case08
-    dw Func_05F_69FB_Case09
-    dw Func_05F_69FB_Case09
-    dw Func_05F_69FB_Case0B
-    dw Func_05F_69FB_Case0C
-    dw Func_05F_69FB_Case0D
+    dw ShowMessageHL_Case00
+    dw ShowMessageHL_Case01
+    dw ShowMessageHL_Case02
+    dw ShowMessageHL_Case03
+    dw ShowMessageHL_Case04
+    dw ShowMessageHL_Case05
+    dw ShowMessageHL_Case06
+    dw ShowMessageHL_Case06
+    dw ShowMessageHL_Case08
+    dw ShowMessageHL_Case09
+    dw ShowMessageHL_Case09
+    dw ShowMessageHL_Case0B
+    dw ShowMessageHL_Case0C
+    dw ShowMessageHL_Case0D
 
-; entry 0 of the `rst $00` table in Func_05F_69FB
+; entry 0 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case00::
+ShowMessageHL_Case00::
 Jump_05F_6A31:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
-; entry 1 of the `rst $00` table in Func_05F_69FB
+; entry 1 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case01::
+ShowMessageHL_Case01::
 Jump_05F_6A38:: ; address name
     farcall Func_029_4001
     ret
 
-; entry 2 of the `rst $00` table in Func_05F_69FB
+; entry 2 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case02::
+ShowMessageHL_Case02::
 Jump_05F_6A3F:: ; address name
     farcall Func_02A_4001
     ret
 
-; entry 3 of the `rst $00` table in Func_05F_69FB
+; entry 3 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case03::
+ShowMessageHL_Case03::
 Jump_05F_6A46:: ; address name
     farcall Func_02B_4001
     ret
 
-; entry 4 of the `rst $00` table in Func_05F_69FB
+; entry 4 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case04::
+ShowMessageHL_Case04::
 Jump_05F_6A4D:: ; address name
     farcall Func_02C_4001
     ret
 
-; entry 5 of the `rst $00` table in Func_05F_69FB
+; entry 5 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case05::
+ShowMessageHL_Case05::
 Jump_05F_6A54:: ; address name
     farcall Func_02D_4001
     ret
 
-; entry 6 of the `rst $00` table in Func_05F_69FB
+; entry 6 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case06::
+ShowMessageHL_Case06::
 Jump_05F_6A5B:: ; address name
     farcall Func_02E_4001
     ret
 
-; entry 8 of the `rst $00` table in Func_05F_69FB
+; entry 8 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case08::
+ShowMessageHL_Case08::
 Jump_05F_6A62:: ; address name
     farcall Func_07C_4001
     ret
 
-; entry 9 of the `rst $00` table in Func_05F_69FB
+; entry 9 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case09::
+ShowMessageHL_Case09::
 Jump_05F_6A69:: ; address name
     farcall Func_080_4001
     ret
 
-; entry 11 of the `rst $00` table in Func_05F_69FB
+; entry 11 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case0B::
+ShowMessageHL_Case0B::
 Jump_05F_6A70:: ; address name
     farcall Func_082_4001
     ret
 
-; entry 12 of the `rst $00` table in Func_05F_69FB
+; entry 12 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case0C::
+ShowMessageHL_Case0C::
 Jump_05F_6A77:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
-; entry 13 of the `rst $00` table in Func_05F_69FB
+; entry 13 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-Func_05F_69FB_Case0D::
+ShowMessageHL_Case0D::
 Jump_05F_6A7E:: ; address name
     farcall Func_089_4001
     ret
@@ -1935,7 +1939,7 @@ Jump_05F_7402::
 Func_05F_7363_Case0E::
 Jump_05F_742F:: ; address name
     xor a, a
-    call Func_05F_77C7
+    call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
     xor a, a
     ld [wScriptParam0], a
@@ -2097,7 +2101,7 @@ Jump_05F_750C:: ; address name
 Func_05F_7363_Case09::
 Jump_05F_753A:: ; address name
     xor a, a
-    call Func_05F_77C7
+    call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
     xor a, a
     ld [wScriptParam0], a
@@ -2188,7 +2192,7 @@ Jump_05F_75C3::
 Func_05F_7363_Case06::
 Jump_05F_75D2:: ; address name
     xor a, a
-    call Func_05F_77C7
+    call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
     ld de, Data_07D_41E1
     ld b, $7D
@@ -2237,7 +2241,7 @@ Jump_05F_75EC:: ; address name
 Func_05F_7363_Case04::
 Jump_05F_7617:: ; address name
     xor a, a
-    call Func_05F_77C7
+    call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
     ld a, $80
     ld [wCBCF], a
@@ -2362,7 +2366,7 @@ Jump_05F_76D6:: ; address name
     ld a, $01
     ld [wCB86], a
     xor a, a
-    call Func_05F_77C7
+    call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
     ld a, [wIsCGB]
     or a, a
@@ -2435,7 +2439,7 @@ Jump_05F_774C::
 
 ; 7 call sites from 7 routines (e.g. Func_05F_7363_Case0F, Func_05F_7363_Case0D, Func_05F_7363_Case08, Func_05F_7363_Case05, ...)
 ; reads: wC92E
-; writes: wC924, wC925, wC926
+; writes: wMessageIndex, wMessageGroup, wMessageState
 Func_05F_7761::
     sla a
     ld de, Data_05F_7787
@@ -2459,11 +2463,11 @@ Jump_05F_7775::
     ld a, [de]
     ld h, a
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     xor a, a
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
 Data_05F_7787:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2472,13 +2476,15 @@ Data_05F_7787:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A8, $02, $E9, $02, $AA, $02, $AB, $02, $EC, $02, $00, $00, $00, $00, $00, $00
     db $34, $05, $35, $05, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; wC928 = A, RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079)
 ; 5 call sites from 5 routines (e.g. Func_05F_7363_Case0E, Func_05F_7363_Case09, Func_05F_7363_Case06, Func_05F_7363_Case04, ...)
-; reads: wC926
+; reads: wMessageState
 ; writes: wC928
-Func_05F_77C7::
+RunMessageBoxCarryWhenIdle_Bank5F::
+Func_05F_77C7:: ; address name
     ld [wC928], a
-    call Func_05F_6936
-    ld a, [wC926]
+    call RunMessageBox
+    ld a, [wMessageState]
     cp a, $FF
     jr z, Jump_05F_77D6
     sub a, a
@@ -2783,7 +2789,7 @@ Func_05F_7969:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand0A_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wScriptParam1, wC924, wC925, wC634, wC836, hFFC6
+; reads: wScriptParam0, wScriptParam1, wMessageIndex, wMessageGroup, wC634, wC836, hFFC6
 ; writes: wScriptParam0, wScriptParam1, wC836
 ; points at: wC152, wScriptStep, wScriptParam0, wInventory
 ScriptCommand0A_Run_Case00::
@@ -2805,9 +2811,9 @@ Jump_05F_7987::
     add a, c
     add a, $A0
     ld [wScriptParam0], a
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld e, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld d, a
     call TestFlagBit
     jr nc, Jump_05F_79AE
@@ -2848,9 +2854,9 @@ Jump_05F_79CC::
     ld [wC836], a
 
 Jump_05F_79D8::
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld e, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld d, a
     call SetFlagBit
     xor a, a
@@ -2926,7 +2932,7 @@ Jump_05F_7A4F::
     ld a, [wScriptParam0]
     ld l, a
     ld h, $00
-    call ScriptCommand0A_Run_Case02_Sub01
+    call ShowMessageHL
     ld hl, wScriptStep
     inc [hl]
     ret

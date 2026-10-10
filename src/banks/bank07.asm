@@ -7251,35 +7251,37 @@ Func_007_7AD4::
     ld a, [wD09D]
     ld hl, wC200
     ld bc, $0006
-    call Func_007_7B29
+    call WriteBCTileAtHLOrHLPlusBC
     ld a, [wD09E]
     ld hl, wC266
     ld bc, $0003
-    call Func_007_7B29
+    call WriteBCTileAtHLOrHLPlusBC
     ld a, [wD09F]
     ld hl, wC2A6
     ld bc, $0003
-    call Func_007_7B29
+    call WriteBCTileAtHLOrHLPlusBC
     ld a, [wD0A0]
     ld hl, wC2E6
     ld bc, $0003
-    call Func_007_7B29
+    call WriteBCTileAtHLOrHLPlusBC
     ld a, [wD0A1]
     ld hl, wC326
     ld bc, $0003
-    call Func_007_7B29
+    call WriteBCTileAtHLOrHLPlusBC
     ld a, [wD0A2]
     ld hl, wC366
     ld bc, $0003
-    call Func_007_7B29
+    call WriteBCTileAtHLOrHLPlusBC
     call Func_007_7B30
     call Func_007_7B9D
     call Func_007_7C07
     call Func_007_7C5F
     ret
 
+; writes tile $BC at HL when A = 0, else at HL + BC (E-0079)
 ; 6 call sites from 1 routine (e.g. Func_007_7AD4)
-Func_007_7B29::
+WriteBCTileAtHLOrHLPlusBC::
+Func_007_7B29:: ; address name
     or a, a
     jr z, Jump_007_7B2D
     add hl, bc

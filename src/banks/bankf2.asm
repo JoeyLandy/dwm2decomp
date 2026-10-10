@@ -1227,7 +1227,7 @@ Jump_0F2_4C4A::
 Jump_0F2_4C4D::
     ld a, [de]
     push de
-    call Func_0F2_4E40
+    call LoadHFFC6WordFromWCA2B
     pop de
     ldh a, [hFFC7]
     cp a, $FF
@@ -1287,7 +1287,7 @@ Jump_0F2_4CA8::
     pop de
     ld a, [de]
     push de
-    call Func_0F2_4E40
+    call LoadHFFC6WordFromWCA2B
     pop de
     ldh a, [hFFC7]
     cp a, $FF
@@ -1396,7 +1396,7 @@ Jump_0F2_4D7F::
 Jump_0F2_4D82::
     ld a, [de]
     push de
-    call Func_0F2_4E40
+    call LoadHFFC6WordFromWCA2B
     pop de
     ldh a, [hFFC7]
     cp a, $FF
@@ -1446,7 +1446,7 @@ Jump_0F2_4D9E::
 Jump_0F2_4DD4::
     ld a, [de]
     push de
-    call Func_0F2_4E40
+    call LoadHFFC6WordFromWCA2B
     pop de
     ldh a, [hFFC7]
     cp a, $FF
@@ -1515,10 +1515,12 @@ Data_0F2_4E34:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_4E3A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $A3, $1C, $1A, $98, $1A
 
+; A = byte offset: hFFC6/hFFC7 = the word at wCA2B + A (E-0079)
 ; 5 call sites from 3 routines (e.g. Func_0F2_4EDD, Func_0F2_4D72, Func_0F2_4C3D)
 ; writes: hFFC6, hFFC7
 ; points at: wCA2B
-Func_0F2_4E40::
+LoadHFFC6WordFromWCA2B::
+Func_0F2_4E40:: ; address name
     ld de, wCA2B
     add a, e
     ld e, a
@@ -1681,7 +1683,7 @@ Jump_0F2_4EF1::
 
 Jump_0F2_4EF9::
     ld a, [de]
-    call Func_0F2_4E40
+    call LoadHFFC6WordFromWCA2B
     ldh a, [hFFC7]
     cp a, $FF
     jr z, Jump_0F2_4F2D

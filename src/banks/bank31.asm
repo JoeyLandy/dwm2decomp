@@ -8011,7 +8011,7 @@ Jump_031_6E79:: ; address name
     farcall CopyRectRecordForWD88F_Bank31
     farcall Func_031_7389
     call FillTilesFromRequest
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     ld hl, vBGMap0
     ld bc, $1412
     ld de, wScreenTileBuffer
@@ -8182,7 +8182,7 @@ Jump_031_6FB1:: ; address name
     adc a, $98
     ld h, a
     ld [hl], $BC
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
@@ -8952,7 +8952,7 @@ Jump_031_7465::
 ; 13 call sites from 13 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, Func_031_47C7, Func_031_46C1_Case00, ...)
 Func_031_746F::
     call FillTilesFromRequest
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)

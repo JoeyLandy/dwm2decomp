@@ -2898,7 +2898,7 @@ Func_00F_5404:: ; address name
 ScriptCommand58_Run_Case2B::
 Jump_00F_5460:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $05
     ldh [hFFC6], a
@@ -3658,7 +3658,7 @@ Jump_00F_5890:: ; address name
 ScriptCommand4B_Run_Case0F::
 Jump_00F_58C5:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld hl, $0A0A
     call StoreHLInWC924_B0F
@@ -3672,7 +3672,7 @@ Jump_00F_58C5:: ; address name
 ScriptCommand4B_Run_Case0E::
 Jump_00F_58D5:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld hl, $0A09
     call StoreHLInWC924_B0F
@@ -3940,7 +3940,7 @@ Jump_00F_5A31:: ; address name
 ScriptCommand4A_Run_Case05::
 Jump_00F_5A42:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $19
     ldh [hFFC6], a
@@ -4180,7 +4180,7 @@ Jump_00F_5B86:: ; address name
 ScriptCommand66_Run_Case05::
 Jump_00F_5B91:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $04
     ldh [hFFC6], a
@@ -5176,7 +5176,7 @@ Jump_00F_619D:: ; address name
 ScriptCommand41_Run_Case03::
 Jump_00F_61A8:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $03
     ldh [hFFC6], a
@@ -7829,7 +7829,7 @@ Jump_00F_7209:: ; address name
 ScriptCommand29_Run_Case01::
 Jump_00F_7210:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $01
     ld [wCB96], a
@@ -8696,7 +8696,7 @@ Jump_00F_7746:: ; address name
 ScriptCommand1F_Run_Case01::
 Jump_00F_776B:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $6D
     call QueueSoundEffect
@@ -8893,7 +8893,7 @@ Jump_00F_788D:: ; address name
 ScriptCommand1D_Run_Case0B::
 Jump_00F_789B:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $01
     ld [wC8C6], a
@@ -8911,7 +8911,7 @@ Jump_00F_789B:: ; address name
 ScriptCommand1D_Run_Case0A::
 Jump_00F_78B7:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     xor a, a
     ld [wScriptParam0], a
@@ -8950,7 +8950,7 @@ Jump_00F_78CB:: ; address name
 ScriptCommand1D_Run_Case08::
 Jump_00F_78E7:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     xor a, a
     ld [wScriptParam0], a
@@ -9082,48 +9082,48 @@ Jump_00F_79AA::
 
 ; entry 2 of the `rst $00` table in ScriptCommand1D_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC924, wC925
-; writes: wC924, wC925
+; reads: wMessageIndex, wMessageGroup
+; writes: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
 ScriptCommand1D_Run_Case02::
 Jump_00F_79D1:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld l, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld h, a
     dec hl
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     ld hl, wScriptStep
     dec [hl]
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand1D_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC552, wC924, wC925
-; writes: wC924, wC925
+; reads: wC552, wMessageIndex, wMessageGroup
+; writes: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
 ScriptCommand1D_Run_Case01::
 Jump_00F_79EC:: ; address name
     ld a, [wC552]
     or a, a
     jr nz, Jump_00F_7A12
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld l, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld h, a
     ld h, $80
     inc hl
     inc hl
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     call StoreHLInWC924_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -9132,16 +9132,16 @@ Jump_00F_79EC:: ; address name
     ret
 
 Jump_00F_7A12::
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld l, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld h, a
     ld h, $C0
     inc hl
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     call StoreHLInWC924_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -9162,7 +9162,7 @@ Func_00F_7A2D:: ; address name
 
 ; entry 3 of the `rst $00` table in ScriptCommand1C_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC552, wC924, wC925
+; reads: wC552, wMessageIndex, wMessageGroup
 ; points at: wScriptStep
 ScriptCommand1C_Run_Case03::
 Jump_00F_7A3B:: ; address name
@@ -9171,9 +9171,9 @@ Jump_00F_7A3B:: ; address name
     ld a, [wC552]
     or a, a
     jr nz, Jump_00F_7A5A
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld l, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld h, a
     ld a, l
     add a, $00
@@ -9186,9 +9186,9 @@ Jump_00F_7A3B:: ; address name
     ret
 
 Jump_00F_7A5A::
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld l, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld h, a
     ld a, l
     add a, $00
@@ -9239,7 +9239,7 @@ Jump_00F_7A9B::
 ScriptCommand1C_Run_Case00::
 Jump_00F_7AA2:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $06
     ldh [hMapId], a
@@ -9292,7 +9292,7 @@ Jump_00F_7AE8:: ; address name
 
 ; entry 13 of the `rst $00` table in ScriptCommand77_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, hFF8B, wC924, ...
+; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, hFF8B, wMessageIndex, ...
 ScriptCommand77_Run_Case0D::
 Jump_00F_7AF9:: ; address name
     ld a, $00
@@ -9312,8 +9312,8 @@ Jump_00F_7AF9:: ; address name
     ld a, $01
     ldh [hFF8B], a
     xor a, a
-    ld [wC924], a
-    ld [wC925], a
+    ld [wMessageIndex], a
+    ld [wMessageGroup], a
     ret
 
 ; entry 11 of the `rst $00` table in ScriptCommand77_Run
@@ -9804,19 +9804,19 @@ Jump_00F_7DA3:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommand6A_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC924
-; writes: wC924
+; reads: wMessageIndex
+; writes: wMessageIndex
 ; points at: wScriptStep
 ScriptCommand6A_Run_Case02::
 Jump_00F_7DB9:: ; address name
     call Func_00F_7E1E
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     inc a
-    ld [wC924], a
+    ld [wMessageIndex], a
     cp a, $20
     ret nz
     xor a, a
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -9847,21 +9847,21 @@ Jump_00F_7DCF:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand6A_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC924, wC925
-; writes: wC924, wC925
+; reads: wMessageIndex, wMessageGroup
+; writes: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
 ScriptCommand6A_Run_Case00::
 Jump_00F_7DF6:: ; address name
     call Func_00F_7E1E
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld l, a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld h, a
     inc hl
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     ld a, h
     cp a, $01
     ret nz
@@ -9869,8 +9869,8 @@ Jump_00F_7DF6:: ; address name
     cp a, $40
     ret nz
     xor a, a
-    ld [wC924], a
-    ld [wC925], a
+    ld [wMessageIndex], a
+    ld [wMessageGroup], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -10102,24 +10102,26 @@ Func_00F_7F5C:: ; address name
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
 ; 125 call sites from 106 routines (e.g. ScriptCommand77_Run_Case0B, ScriptCommand76_Run_Case00, ScriptCommand6B_Run_Case01, ScriptCommand66_Run_Case0E, ...)
-; writes: wC924, wC925, wC926
+; writes: wMessageIndex, wMessageGroup, wMessageState
 StoreHLInWC924_B0F::
 Func_00F_7F68:: ; address name
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     xor a, a
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
+; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 ; 15 call sites from 15 routines (e.g. ScriptCommand66_Run_Case05, ScriptCommand58_Run_Case2B, ScriptCommand4B_Run_Case0F, ScriptCommand4B_Run_Case0E, ...)
-; reads: wC926
+; reads: wMessageState
 ; writes: wC928
-Func_00F_7F75::
+RunMessageBoxFar_Bank0F::
+Func_00F_7F75:: ; address name
     ld [wC928], a
-    farcall Func_05F_6936
-    ld a, [wC926]
+    farcall RunMessageBox
+    ld a, [wMessageState]
     cp a, $FF
     jr z, Jump_00F_7F87
     sub a, a
@@ -10135,7 +10137,7 @@ Jump_00F_7F87::
 ScriptCommand5F_Run_Case03::
 Jump_00F_7F89:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -10147,7 +10149,7 @@ Jump_00F_7F89:: ; address name
 ScriptCommand62_Run_Case01::
 Jump_00F_7F93:: ; address name
     xor a, a
-    call Func_00F_7F75
+    call RunMessageBoxFar_Bank0F
     ret nc
     ld a, $80
     ld [wScriptStartRequest], a

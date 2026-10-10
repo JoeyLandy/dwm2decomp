@@ -4279,7 +4279,7 @@ CopyBytesDEFromHL_Bank14_Case00::
 Jump_014_5F72:: ; address name
     call Func_014_6992
     ld b, $55
-    call Func_014_6A0D
+    call WriteTileBAtScrollOffset47PlusWCFC2
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jp nz, Jump_014_5FA7
@@ -4689,7 +4689,7 @@ Data_014_61E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 CopyBytesDEFromHL_Bank14_Case01::
 Jump_014_628C:: ; address name
     ld b, $55
-    call Func_014_6A0D
+    call WriteTileBAtScrollOffset47PlusWCFC2
     ld a, [wCFC2]
     and a, a
     jr nz, Jump_014_62A6
@@ -4703,7 +4703,7 @@ Jump_014_628C:: ; address name
 
 Jump_014_62A6::
     ld b, $C3
-    call Func_014_6A0D
+    call WriteTileBAtScrollOffset47PlusWCFC2
     ld hl, wCFAD
 
 Jump_014_62AE::
@@ -4930,7 +4930,7 @@ Jump_014_63C7::
 
 Jump_014_63CE::
     ld b, $C3
-    call Func_014_6A0D
+    call WriteTileBAtScrollOffset47PlusWCFC2
     ld a, [wCFC2]
     cp a, $04
     jr nc, Jump_014_63E3
@@ -5951,9 +5951,11 @@ Jump_014_69CA::
     db $C5, $D1, $CD, $40, $2E, $7B, $EA, $33, $C5, $EA, $37, $C5, $7A, $EA, $34, $C5
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
+; writes B at the BG map entry BGMapAddressAtScroll + $47 (row 2, column 7 of the view) + wCFC2, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
 ; 6 call sites from 4 routines (e.g. Func_014_631C, CopyBytesDEFromHL_Bank14_Case03_Sub01_Sub01, CopyBytesDEFromHL_Bank14_Case01, CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC2, rSTAT
-Func_014_6A0D::
+WriteTileBAtScrollOffset47PlusWCFC2::
+Func_014_6A0D:: ; address name
     push bc
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $0047
@@ -6531,7 +6533,7 @@ Func_014_6CEA:: ; address name
 
 Jump_014_6CF4::
     ld b, $C3
-    call Func_014_6A0D
+    call WriteTileBAtScrollOffset47PlusWCFC2
     ld hl, wCFAD
     ld c, $00
 
@@ -6564,7 +6566,7 @@ Jump_014_6D18::
 Jump_014_6D1F::
     ld [wCFC2], a
     ld b, $55
-    call Func_014_6A0D
+    call WriteTileBAtScrollOffset47PlusWCFC2
     ret
 
 Jump_014_6D28::

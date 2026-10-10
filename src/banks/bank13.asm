@@ -25,13 +25,13 @@ Func_013_4001:: ; address name
 
 ; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
 ; 33 call sites from 33 routines (e.g. Func_013_5922_Case79, Func_013_5922_Case63, Func_013_49D5_Case5C, Func_013_49D5_Case47, ...)
-; writes: wC924, wC925, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
+; writes: wMessageIndex, wMessageGroup, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 SetRequestPtrC924FromDE_B13::
 Func_013_4025:: ; address name
     ld a, e
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, d
-    ld [wC925], a
+    ld [wMessageGroup], a
     ld a, $80
     ld [wScriptStartRequest], a
     ld a, $01

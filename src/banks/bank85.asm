@@ -116,7 +116,7 @@ Jump_085_4071:: ; address name
 ScriptCommand2A_Run_Case0F::
 Jump_085_4093:: ; address name
     xor a, a
-    call Func_085_57D5
+    call RunMessageBoxFar_Bank85
     ret nc
     farcall RestoreScreenBufferFromBGMap1
     ld hl, wSpriteSlotCount
@@ -340,7 +340,7 @@ Func_085_4207:: ; address name
 ScriptCommand2A_Run_Case12::
 Jump_085_4231:: ; address name
     xor a, a
-    call Func_085_57D5
+    call RunMessageBoxFar_Bank85
     ret nc
     ld a, $0E
     ld [wScriptStep], a
@@ -388,7 +388,7 @@ Jump_085_4249:: ; address name
 ScriptCommand4D_Run_Case0F::
 Jump_085_426B:: ; address name
     xor a, a
-    call Func_085_57D5
+    call RunMessageBoxFar_Bank85
     ret nc
     farcall RestoreScreenBufferFromBGMap1
     ld hl, wSpriteSlotCount
@@ -3950,24 +3950,26 @@ Func_085_57A2::
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
 ; 56 call sites from 37 routines (e.g. ScriptCommandCD_Run_Case00, ScriptCommandC4_Run_Case08, ScriptCommandC4_Run_Case04, ScriptCommandC4_Run_Case01, ...)
-; writes: wC924, wC925, wC926
+; writes: wMessageIndex, wMessageGroup, wMessageState
 StoreHLInWC924_B85::
 Func_085_57C8:: ; address name
     ld a, l
-    ld [wC924], a
+    ld [wMessageIndex], a
     ld a, h
-    ld [wC925], a
+    ld [wMessageGroup], a
     xor a, a
-    ld [wC926], a
+    ld [wMessageState], a
     ret
 
+; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 ; 5 call sites from 5 routines (e.g. ScriptCommand4D_Run_Case0F, ScriptCommand2A_Run_Case12, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case03, ...)
-; reads: wC926
+; reads: wMessageState
 ; writes: wC928
-Func_085_57D5::
+RunMessageBoxFar_Bank85::
+Func_085_57D5:: ; address name
     ld [wC928], a
-    farcall Func_05F_6936
-    ld a, [wC926]
+    farcall RunMessageBox
+    ld a, [wMessageState]
     cp a, $FF
     jr z, Jump_085_57E7
     sub a, a
@@ -3983,7 +3985,7 @@ Jump_085_57E7::
 ScriptCommand2A_Run_Case01::
 Jump_085_57E9:: ; address name
     xor a, a
-    call Func_085_57D5
+    call RunMessageBoxFar_Bank85
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -3995,7 +3997,7 @@ Jump_085_57E9:: ; address name
 ScriptCommand2A_Run_Case03::
 Jump_085_57F3:: ; address name
     xor a, a
-    call Func_085_57D5
+    call RunMessageBoxFar_Bank85
     ret nc
     ld a, $80
     ld [wScriptStartRequest], a
@@ -4645,7 +4647,7 @@ Jump_085_5C08::
 
 ; only called from ScriptCommand84_Run_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand84_Run_Case04)
-; reads: wC8FE, wC935, wC634, wC5E7, wC195, wC924, wC925, wCD04, ...
+; reads: wC8FE, wC935, wC634, wC5E7, wC195, wMessageIndex, wMessageGroup, wCD04, ...
 ; writes: wC956, wScriptStartRequest, wScriptParam1, wC8FE, wC8FF, wC900, wScriptParam0
 ; points at: wScriptStep
 ScriptCommand84_Run_Case04_Sub01::
@@ -4767,9 +4769,9 @@ Jump_085_5D41::
     jp z, Jump_085_5CB4
     ld [wC8FE], a
     farcall ScriptCommand84_Run_Case04_Sub01_Sub01
-    ld a, [wC924]
+    ld a, [wMessageIndex]
     ld [wC8FF], a
-    ld a, [wC925]
+    ld a, [wMessageGroup]
     ld [wC900], a
     xor a, a
     ld [wScriptParam0], a

@@ -4802,7 +4802,7 @@ Jump_016_5F5C:: ; address name
     deref_hl
     ld a, $BC
     call WriteVRAMByte
-    farcall Func_01A_72FB
+    farcall CopyRectRecord787EAndPlaySound6C
     ld a, $BB
     ld [wC2C5], a
     ld de, wC2A4
@@ -4927,7 +4927,7 @@ Jump_016_6058:: ; address name
     ld a, [wD7AF]
     ld [wC470], a
     ld [wCFD1], a
-    farcall Func_01A_72FB
+    farcall CopyRectRecord787EAndPlaySound6C
     ld a, $BB
     ld [wC2C5], a
     call Func_016_64DC
@@ -5241,7 +5241,7 @@ Func_016_5D13_Case18::
 Jump_016_62A9:: ; address name
     call Func_016_733F
     farcall Func_01A_7307
-    farcall Func_01A_72FB
+    farcall CopyRectRecord787EAndPlaySound6C
     ld a, [wCFD2]
     cp a, $02
     jr c, Jump_016_62D3
@@ -5397,7 +5397,7 @@ Jump_016_63B9:: ; address name
     ld a, [wD7AF]
     ld [wC471], a
     ld [wCFD1], a
-    farcall Func_01A_72FB
+    farcall CopyRectRecord787EAndPlaySound6C
     ld a, $BB
     ld [wC2C5], a
     ld a, [wCFD7]
@@ -7049,7 +7049,7 @@ Jump_016_6E22::
     ret z
     ld a, $69
     call QueueSoundEffect
-    farcall Func_01A_72FB
+    farcall CopyRectRecord787EAndPlaySound6C
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -7238,7 +7238,7 @@ Jump_016_6F6F:: ; address name
     add_a_to_hl
     deref_hl
     ld [hl], $BC
-    farcall Func_01A_72FB
+    farcall CopyRectRecord787EAndPlaySound6C
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $1412
@@ -7649,7 +7649,7 @@ Func_016_733F::
     farcall Func_031_7389
     farcall LayoutTileBlocksForWD890Count
     farcall Func_031_7321
-    farcall Func_01A_7276
+    farcall CopyRectRecord7345ToScreenBuffer
     ret
 
 ; only called from BattleEnd_Step3 (E-0047)
