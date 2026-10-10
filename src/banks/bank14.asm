@@ -3847,7 +3847,7 @@ Data_014_5C8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5C9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $41, $20, $43, $A0, $42, $30, $43, $90, $41, $50, $41, $FF, $FF
 
-; 5 call sites from 5 routines (e.g. Func_007_65F1_Table2_Case05, ScriptCommandF0_Run_Case05, ScriptCommandED_Run_Case06, Func_016_6A4E_Case02, ...)
+; 5 call sites from 5 routines (e.g. InitWD06ABlock_Table2_Case05, ScriptCommandF0_Run_Case05, ScriptCommandED_Run_Case06, Func_016_6A4E_Case02, ...)
 ; reads: wFadeState, wCFA8
 Func_014_5CA8::
     ld a, [wFadeState]

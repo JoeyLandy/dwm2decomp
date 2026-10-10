@@ -926,34 +926,40 @@ Jump_0F1_4582::
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
-    call nz, Func_0F1_459E
+    call nz, SetWC2DFTileC2_BankF1
     bit 2, [hl]
-    call nz, Func_0F1_45A4
+    call nz, SetWC2DFTileC1_BankF1
     bit 0, [hl]
-    call nz, Func_0F1_45AA
+    call nz, SetWC2DETileC0_BankF1
 
 Jump_0F1_4599::
     xor a, a
     ld [rRAMG], a
     ret
 
+; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_442F)
 ; writes: wC2DF
-Func_0F1_459E::
+SetWC2DFTileC2_BankF1::
+Func_0F1_459E:: ; address name
     ld a, $C2
     ld [wC2DF], a
     ret
 
+; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_442F)
 ; writes: wC2DF
-Func_0F1_45A4::
+SetWC2DFTileC1_BankF1::
+Func_0F1_45A4:: ; address name
     ld a, $C1
     ld [wC2DF], a
     ret
 
+; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_442F)
 ; writes: wC2DE
-Func_0F1_45AA::
+SetWC2DETileC0_BankF1::
+Func_0F1_45AA:: ; address name
     ld a, $C0
     ld [wC2DE], a
     ret
@@ -2555,7 +2561,7 @@ Jump_0F1_515A::
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    farcall Func_015_68F3
+    farcall SetBitInFieldAtWD7F3
     ld hl, wD7E0
     ld b, $07
 

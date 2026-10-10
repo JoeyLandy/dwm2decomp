@@ -263,10 +263,12 @@ Jump_005_41E8::
     ld c, $FF
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 2 (wD80E) & $22 clear (AnySlotLacksStatusMask), else 0 (E-0114)
 ; 4 call sites from 4 routines (e.g. Func_005_708C, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, Func_005_7261)
 ; reads: wBattleActor
 ; points at: wD80E
-Func_005_41EB::
+AnyFoeLacksStatus2Mask22::
+Func_005_41EB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -792,10 +794,12 @@ Func_005_4487:: ; address name
     call AnySlotLacksStatusMask
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 4 clear (AnySlotLacksStatusMask), else 0 (E-0114)
 ; 3 call sites from 3 routines (e.g. Func_005_7370, AIScore_PaniDance_Sub01, AIScore_SuckAll_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_005_4499:: ; heuristic: follows a terminator; C0
+AnyFoeLacksStatus0Bit4:: ; heuristic: follows a terminator; C0
+Func_005_4499:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1184,7 +1188,7 @@ Func_005_4676::
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_46B1
-    call Func_005_702D
+    call TestWCFEF
     jr z, Jump_005_46AE
     cp a, $03
     jr nz, Jump_005_46AE
@@ -1233,7 +1237,7 @@ Func_005_46B4:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_46F0
-    call Func_005_702D
+    call TestWCFEF
     jr z, Jump_005_46ED
     cp a, $03
     jr nz, Jump_005_46ED
@@ -2949,7 +2953,7 @@ Jump_005_4EE4::
 
 Jump_005_4EEC::
     ld a, $73
-    call Func_005_5029
+    call MultiplyHLByAPercent
     ld a, h
     or a, a
     jr nz, Jump_005_4EFB
@@ -2990,7 +2994,7 @@ Jump_005_4F27::
 
 Jump_005_4F2F::
     ld a, $6E
-    call Func_005_5029
+    call MultiplyHLByAPercent
     ld a, h
     or a, a
     jr nz, Jump_005_4F3E
@@ -3032,7 +3036,7 @@ Jump_005_4F6A::
 Jump_005_4F72::
     ld a, $6E
     push bc
-    call Func_005_5029
+    call MultiplyHLByAPercent
     pop bc
     push hl
     call SlotFamilyBelowWater
@@ -3152,8 +3156,10 @@ Jump_005_5010::
 Jump_005_5028::
     ld a, c
 
+; HL = HL * A / 100 (24-bit intermediate: Multiply8By16 then Divide24ByA), A = the remainder (E-0114)
 ; 3 call sites from 1 routine (e.g. Func_005_4E7C)
-Func_005_5029::
+MultiplyHLByAPercent::
+Func_005_5029:: ; address name
     ld b, h
     ld c, l
     call Multiply8By16
@@ -3773,7 +3779,7 @@ Jump_005_5393::
 ; reads: wBattleActor
 Func_005_5397:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
-    call Func_005_6BF8
+    call CompareSlotHPWith1
     jr nz, Jump_005_53A2
     ld c, $00
     ret
@@ -3795,7 +3801,7 @@ Jump_005_53AF::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_53BB
-    call Func_005_6BF8
+    call CompareSlotHPWith1
     jr nz, Jump_005_53BB
     inc d
 
@@ -6049,7 +6055,7 @@ Jump_005_60EF::
 
 Jump_005_60FA::
     push hl
-    call Func_005_6141
+    call TestSlotStatus1Bit6
     pop hl
     jr nz, Jump_005_60E9
 
@@ -6095,9 +6101,11 @@ Func_005_6127::
     bit 3, [hl]
     ret
 
+; C = slot: Z clear when bit 6 of its status byte 1 (wD80D) is set; HL points at the byte (E-0114)
 ; 1 call site from 1 routine (e.g. Func_005_60BA)
 ; points at: wD80D
-Func_005_6141::
+TestSlotStatus1Bit6::
+Func_005_6141:: ; address name
     ld a, c
     ld hl, wD80D
     call AddAx9ToHL
@@ -8065,8 +8073,10 @@ Func_005_6BE1:: ; address name
     pop bc
     ret
 
+; A = slot: returns NZ when its HP (GetBattleHP_Bank05) is 256 or more; otherwise compares the low byte with 1: Z when HP = 1, carry when HP = 0 (E-0114)
 ; 2 call sites from 2 routines (e.g. Func_005_5397, Func_005_53A5)
-Func_005_6BF8::
+CompareSlotHPWith1::
+Func_005_6BF8:: ; address name
     call GetBattleHP_Bank05
     ld a, h
     or a, a
@@ -8722,7 +8732,7 @@ Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $02, $06, $01, $00, $03
 
 ; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when some present slot in the range has (HL + 9 * slot) & E clear; C = 0 when every slot is absent or has a masked bit set (E-0071)
-; 21 call sites from 20 routines (e.g. AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, Func_005_41EB, AIScore_MagicWall_Sub01_Sub01, ...)
+; 21 call sites from 20 routines (e.g. AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Mask22, AIScore_MagicWall_Sub01_Sub01, ...)
 AnySlotLacksStatusMask::
 Func_005_6FA1:: ; address name
     ld c, a
@@ -8853,9 +8863,11 @@ Func_005_701B:: ; heuristic: follows a terminator; C0
     pop de
     ret
 
+; A = wCFEF, Z set when it is zero (E-0114)
 ; 2 call sites from 2 routines (e.g. Func_005_4676, AIScore_FireAir_Sub01)
 ; reads: wCFEF
-Func_005_702D::
+TestWCFEF::
+Func_005_702D:: ; address name
     ld a, [wCFEF]
     or a, a
     ret
@@ -8956,7 +8968,7 @@ Func_005_708C:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_70C5
-    call Func_005_41EB
+    call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
     jr z, Jump_005_70C5
@@ -8998,7 +9010,7 @@ Func_005_70C9:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7105
-    call Func_005_41EB
+    call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
     jr z, Jump_005_7105
@@ -9040,7 +9052,7 @@ Func_005_7109:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_41EB
+    call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
     jr z, Jump_005_715B
@@ -9305,7 +9317,7 @@ Func_005_7261::
     ld a, c
     and a, a
     ret z
-    call Func_005_41EB
+    call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
     jr z, Jump_005_7276
@@ -9537,7 +9549,7 @@ Func_005_7370:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7393
-    call Func_005_4499
+    call AnyFoeLacksStatus0Bit4
     ld a, c
     and a, a
     jr z, Jump_005_7393
@@ -10646,7 +10658,7 @@ Func_005_78CC:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_78E8
-    call Func_005_4499
+    call AnyFoeLacksStatus0Bit4
     ld a, c
     and a, a
     jr z, Jump_005_78E8
@@ -11508,7 +11520,7 @@ Func_005_7CF3:: ; address name
     jr z, Jump_005_7D57
 
 Jump_005_7D21::
-    call Func_005_4499
+    call AnyFoeLacksStatus0Bit4
     ld a, c
     and a, a
     jr z, Jump_005_7D57

@@ -4016,7 +4016,7 @@ Jump_012_5A3D::
     ld a, [wScriptStep]
     rst $00
     dw Func_012_5C31
-    dw Func_012_5C27
+    dw PlaySound83AndAdvanceScriptStep
     dw Func_012_5B9A
     dw ScriptCommand84_Run_Case03
     dw ScriptCommand84_Run_Case04
@@ -4330,9 +4330,11 @@ Func_012_5BD9::
     farcall DrawMetaSprite
     ret
 
+; QueueSoundEffect $83, then wScriptStep += 1 (E-0114)
 ; 1 call site from 1 routine (e.g. ScriptCommand3E_Run_Case01)
 ; points at: wScriptStep
-Func_012_5C27::
+PlaySound83AndAdvanceScriptStep::
+Func_012_5C27:: ; address name
     ld a, $83
     call QueueSoundEffect
     ld hl, wScriptStep

@@ -4758,7 +4758,7 @@ Jump_0A0_5E39:: ; address name
     ld a, $00
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_BankA0
-    farcall Func_01A_727D
+    farcall CopyRectRecord73ADToScreenBuffer
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4939,7 +4939,7 @@ Jump_0A0_5F5C:: ; address name
     ret nz
     farcall ClearAndLayoutTileBlocksForWD890Count
     call DrawWC338RowsToBGMapRow13_BankA0
-    farcall Func_01A_727D
+    farcall CopyRectRecord73ADToScreenBuffer
     ld a, $01
     ld [wBattleResolveStep], a
     ret
@@ -5001,7 +5001,7 @@ Jump_0A0_5FAC:: ; address name
     ld [wCFD6], a
     xor a, a
     ld [wCFD5], a
-    farcall Func_01A_728B
+    farcall CopyRectRecord747FToScreenBuffer
     ld hl, wC29B
     call Func_0A0_67B8
     ld hl, wBattleResolveStep
@@ -5136,7 +5136,7 @@ Jump_0A0_60AC:: ; address name
     ld a, $09
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_BankA0
-    farcall Func_01A_7299
+    farcall CopyRectRecord75ABToScreenBuffer
     ld a, [wCFD4]
     and a, $03
     ld hl, wC2DA
@@ -5391,7 +5391,7 @@ Jump_0A0_6243:: ; address name
     ld de, Data_0A0_697F
     call Func_0A0_6822
     call Func_0A0_6873
-    farcall Func_01A_72B5
+    farcall CopyRectRecords7600And7734ToScreenBuffer
     ld a, $09
     ld [wStringCategory], a
     ld a, [wD86A]

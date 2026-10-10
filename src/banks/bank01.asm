@@ -2156,29 +2156,29 @@ Jump_001_53CC::
 Func_001_53DC::
     cp a, $64
     jr nc, Jump_001_53EE
-    call Func_001_5417
+    call WriteTileCAtHL
     inc hl
     cp a, $0A
     jr nc, Jump_001_53F7
-    call Func_001_5417
+    call WriteTileCAtHL
     inc hl
     jr Jump_001_5400
 
 Jump_001_53EE::
     ld e, $64
     call Func_001_5405
-    call Func_001_540D
+    call WriteTileDPlusBAtHL
     inc hl
 
 Jump_001_53F7::
     ld e, $0A
     call Func_001_5405
-    call Func_001_540D
+    call WriteTileDPlusBAtHL
     inc hl
 
 Jump_001_5400::
     ld d, a
-    call Func_001_540D
+    call WriteTileDPlusBAtHL
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_001_53DC)
@@ -2192,8 +2192,10 @@ Jump_001_5407::
     add a, e
     ret
 
+; writes tile D + B at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
 ; 5 call sites from 3 routines (e.g. Func_001_53DC, DebugShowMonsterRecord_Sub02, Func_001_5420)
-Func_001_540D::
+WriteTileDPlusBAtHL::
+Func_001_540D:: ; address name
     push af
     ld a, d
     add a, b
@@ -2203,8 +2205,10 @@ Func_001_540D::
     pop af
     ret
 
+; writes tile C at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
 ; 2 call sites from 1 routine (e.g. Func_001_53DC)
-Func_001_5417::
+WriteTileCAtHL::
+Func_001_5417:: ; address name
     push af
     ld a, c
     di
@@ -2220,7 +2224,7 @@ Func_001_5420::
     swap a
     and a, $0F
     ld d, a
-    call Func_001_540D
+    call WriteTileDPlusBAtHL
     inc hl
     pop af
 
@@ -2230,7 +2234,7 @@ DebugShowMonsterRecord_Sub02::
 Func_001_542C:: ; address name
     and a, $0F
     ld d, a
-    call Func_001_540D
+    call WriteTileDPlusBAtHL
     ret
 
 ; update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
@@ -2773,7 +2777,7 @@ Func_001_57C7::
     push de
     ld a, c
     ld [wD7F4], a
-    farcall Func_00E_5E1D
+    farcall LoadWD01AByteWD7F4
     pop de
     pop bc
     ld a, [wD7F5]

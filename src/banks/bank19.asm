@@ -660,13 +660,13 @@ Jump_019_4416::
     jr z, Jump_019_4430
     cp a, $34
     jr nz, Jump_019_4424
-    call Func_019_4462
+    call StoreTileADAtHL
     jr Jump_019_442B
 
 Jump_019_4424::
     cp a, $35
     jr nz, Jump_019_442B
-    call Func_019_4465
+    call StoreTileAEAtHL
 
 Jump_019_442B::
     inc hl
@@ -714,13 +714,17 @@ Jump_019_445B::
     pop hl
     ret
 
+; [HL] = $AD (E-0114)
 ; 1 call site from 1 routine (e.g. Func_019_43ED)
-Func_019_4462::
+StoreTileADAtHL::
+Func_019_4462:: ; address name
     ld [hl], $AD
     ret
 
+; [HL] = $AE (E-0114)
 ; 1 call site from 1 routine (e.g. Func_019_43ED)
-Func_019_4465::
+StoreTileAEAtHL::
+Func_019_4465:: ; address name
     ld [hl], $AE
     ret
 

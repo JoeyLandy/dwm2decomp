@@ -1368,7 +1368,7 @@ Jump_037_51D7::
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    farcall Func_015_68F3
+    farcall SetBitInFieldAtWD7F3
     ld hl, wD7E0
     ld b, $07
 

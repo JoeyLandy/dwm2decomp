@@ -88,6 +88,9 @@
     {"canonical": "15:68DC", "name": "BlankLeadingZeroDigitsWC8C0", "note": "when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093)", "evidence": "reading (E-0093)"},
     {"canonical": "1E:75B3", "name": "BlankLeadingZeroDigitsWC8C0", "note": "when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3 (the same effect as the bank-$15 copy, coded through HL): leading zeros become the blank tile once $E0 is added (E-0093)", "evidence": "reading (E-0093)"},
     {"canonical": "1E:759A", "name": "DrawPageOfPagesAtWD7F1", "note": "HL = the address in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two bytes later (current page and page count, 1-based display) (E-0093)", "evidence": "reading (E-0093)"},
-    {"canonical": "0F:7ED8", "name": "UpdateFollowersOnStep", "note": "A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093)", "evidence": "reading (E-0093)"}
+    {"canonical": "0F:7ED8", "name": "UpdateFollowersOnStep", "note": "A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093)", "evidence": "reading (E-0093)"},
+    {"canonical": "03:5C16", "name": "SetWC2DFTileC2", "note": "wC2DF = $C2 (E-0114)", "evidence": "reading (E-0114)"},
+    {"canonical": "03:5C1C", "name": "SetWC2DFTileC1", "note": "wC2DF = $C1 (E-0114)", "evidence": "reading (E-0114)"},
+    {"canonical": "03:5C22", "name": "SetWC2DETileC0", "note": "wC2DE = $C0 (E-0114)", "evidence": "reading (E-0114)"}
   ]
 }

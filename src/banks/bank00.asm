@@ -41,13 +41,17 @@ Func_000_0010:: ; address name
     ret
     ds $10, $00
 
+; the rst $30 vector: a bare ret (unused restart) (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
-Func_000_0030::
+Rst30Vector::
+Func_000_0030:: ; address name
     ret
     db $00, $00, $00, $00, $00, $00, $00
 
+; the rst $38 vector: a bare ret (unused restart) (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
-Func_000_0038::
+Rst38Vector::
+Func_000_0038:: ; address name
     ret
     db $00, $00, $00, $00, $00, $00, $00
 
@@ -62,15 +66,19 @@ Func_000_0040:: ; address name
     jp VBlankHandler
     db $00, $00, $00, $00
 
+; the LCD STAT interrupt vector ($0048): jumps to the handler at Jump_000_256A (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: rSVBK, wC5E1
 ; writes: rSVBK
-Func_000_0048::
+StatInterruptVector::
+Func_000_0048:: ; address name
     jp Jump_000_256A
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; the serial-transfer interrupt vector ($0058): jumps to the handler at Jump_000_255B (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
-Func_000_0058::
+SerialInterruptVector::
+Func_000_0058:: ; address name
     jp Jump_000_255B
     db $D9
     ds $24, $00
@@ -104,11 +112,13 @@ Jump_000_0094::
     ret
     ds $68, $00
 
+; the cartridge entry point ($0100): nop, then jp Func_000_0150 (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC58A, wModeChangeRequest, wFadeState
 ; writes: wIsCGB, rVBK, wGameMode, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
 ; points at: wGameMode, wC604
-Func_000_0100::
+ROMEntryPoint::
+Func_000_0100:: ; address name
     nop
     jp Func_000_0150
     INCBIN "dwm2-cobi-us.gbc", $000104, $4C
@@ -1339,10 +1349,12 @@ Func_000_0897::
     ld h, $00
     ret
 
+; rSTAT |= $40: selects the LY = LYC coincidence as an LCD STAT interrupt source (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: rSTAT
 ; writes: rSTAT
-Func_000_089F:: ; heuristic: follows a terminator; C0
+EnableLYCInterruptSource:: ; heuristic: follows a terminator; C0
+Func_000_089F:: ; address name
     ldh a, [rSTAT]
     or a, $40
     ldh [rSTAT], a
@@ -1571,10 +1583,12 @@ Jump_000_0A39::
     ldh [rP1], a
     ret
 
+; ReadJoypadDirect, then wC561 = the old wC560 and wC560 = B (the new reading); finally rP1 = $30 (deselects both key groups) (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC560
 ; writes: wC561, wC560, rP1
-Func_000_0A4F:: ; heuristic: follows a terminator; C0
+ReadJoypadIntoWC560:: ; heuristic: follows a terminator; C0
+Func_000_0A4F:: ; address name
     call ReadJoypadDirect
     ld a, [wC560]
     ld [wC561], a
@@ -1585,7 +1599,7 @@ Func_000_0A4F:: ; heuristic: follows a terminator; C0
     ret
 
 ; B = the buttons: upper nibble D-pad (bit 7 down, 6 up, 5 left, 4 right), lower nibble A, B, Select, Start (bits 0-3), 1 = pressed; reads rP1 with each line group selected
-; 2 call sites from 2 routines (e.g. PollJoypad, Func_000_0A4F)
+; 2 call sites from 2 routines (e.g. PollJoypad, ReadJoypadIntoWC560)
 ; reads: rP1
 ; writes: rP1
 ReadJoypadDirect::
@@ -1850,10 +1864,12 @@ Func_000_0B7F::
 Func_000_0B9B::
     xor a, a
     ld hl, hScrollX
-    call Func_000_0BA2
+    call StoreAFourTimesAtHL
 
+; stores A at HL, HL+1, HL+2, HL+3; HL += 4 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_000_0B9B)
-Func_000_0BA2::
+StoreAFourTimesAtHL::
+Func_000_0BA2:: ; address name
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
@@ -3883,7 +3899,7 @@ Jump_000_16A5::
     ret
 
 ; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
-; 62 call sites from 52 routines (e.g. Func_005_5029, Func_005_4B97, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
+; 62 call sites from 52 routines (e.g. MultiplyHLByAPercent, Func_005_4B97, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
 Multiply8By16::
 Func_000_16AA:: ; address name
     push af
@@ -3952,7 +3968,7 @@ Jump_000_16DE::
     ret
 
 ; E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D
-; 36 call sites from 30 routines (e.g. Func_005_5029, Func_005_4B97, Func_005_667F, AIScore_BiAttack_Sub01, ...)
+; 36 call sites from 30 routines (e.g. MultiplyHLByAPercent, Func_005_4B97, Func_005_667F, AIScore_BiAttack_Sub01, ...)
 Divide24ByA::
 Func_000_16E2:: ; address name
     ld d, $18
@@ -5257,7 +5273,7 @@ Jump_000_1E23::
     ret
 
 ; HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF; on CGB then draws the attribute bytes at wD000 (rSVBK = 2), masked to the palette bits (& $07), into VRAM bank 1; HL kept (E-0071)
-; 16 call sites from 16 routines (e.g. Func_002_4628, Func_002_5B9E, Func_002_64B3, Func_007_65F1_Table2_Case01, ...)
+; 16 call sites from 16 routines (e.g. Func_002_4628, Func_002_5B9E, Func_002_64B3, InitWD06ABlock_Table2_Case01, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
@@ -5845,7 +5861,7 @@ Jump_000_20DF::
     ds $24, $00
 
 ; DE = destination: writes wC8C1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wC8C2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
-; 7 call sites from 7 routines (e.g. Func_002_6788, Func_003_50DD, Func_003_7281, Func_003_74D1, ...)
+; 7 call sites from 7 routines (e.g. Func_002_6788, Func_003_50DD, MenuCursorAddressWC46E_Shared02, WriteByteAAsTwoDigitTiles, ...)
 ; points at: wC8C1
 WriteTwoDigitTilesFromWC8C1::
 Func_000_210D:: ; address name
@@ -5870,7 +5886,7 @@ Jump_000_211B::
     ret
 
 ; DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
-; 36 call sites from 19 routines (e.g. Func_002_6788, Func_003_50DD, Func_003_7281, Func_003_7335_Case00, ...)
+; 36 call sites from 19 routines (e.g. Func_002_6788, Func_003_50DD, MenuCursorAddressWC46E_Shared02, Func_003_7335_Case00, ...)
 ; points at: wC8C0
 WriteDecimalDigitTiles::
 Func_000_2123:: ; address name
@@ -6571,7 +6587,7 @@ Jump_000_249E::
     ret
 
 ; A = word number: with ROM bank $09 mapped, copies that string of the bank-$09 database's category 3 (Data_009_4078: Ylw, Plain, Green, ... then Slime, Draco, Beast, ... Cave, Isle) with its $F0 to DE; restores the bank (E-0090)
-; 5 call sites from 3 routines (e.g. WriteKeyNameToDE, Func_015_6B00, Func_016_7A1E)
+; 5 call sites from 3 routines (e.g. WriteKeyNameToDE, Func_015_6B00, CopyKeyNameWordToDE_Bank16)
 ; writes: rROMB0
 CopyKeyNameWordToDE::
 Func_000_24A2:: ; address name
@@ -7408,7 +7424,7 @@ Func_000_2950::
     dw Func_000_2950_Case11
     dw Func_000_2950_Case12
     dw Func_000_2950_Case13
-    dw Func_000_2C6A
+    dw ClearStringDisplayFlags
     dw Func_000_2950_Case15
     dw Func_000_2950_Case16
     dw Func_000_2950_Case17
@@ -7897,7 +7913,7 @@ Jump_000_2C21:: ; address name
 Func_000_2950_Case12::
 Jump_000_2C48:: ; address name
     call Func_000_2BFA
-    call Func_000_2C6A
+    call ClearStringDisplayFlags
     call FillTilesFromRequest
 
 ; entry 19 of the `rst $00` table in Func_000_2950
@@ -7920,9 +7936,11 @@ Jump_000_2C51:: ; address name
     ld [wC536], a
     ret
 
+; clears bit 7 of wC52C and bit 1 of wC52B (E-0114)
 ; 1 call site from 1 routine (e.g. Func_000_2950_Case12)
 ; points at: wC52C, wC52B
-Func_000_2C6A::
+ClearStringDisplayFlags::
+Func_000_2C6A:: ; address name
     ld hl, wC52C
     res 7, [hl]
     ld hl, wC52B
@@ -8277,9 +8295,11 @@ Func_000_2E5D:: ; address name
     ld [wC534], a
     ret
 
+; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank08 (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
-Func_000_2E72:: ; heuristic: follows a terminator; C0
+ShowStringHL_Bank08:: ; heuristic: follows a terminator; C0
+Func_000_2E72:: ; address name
     ld a, h
     ld [wStringCategory], a
     ld a, l
@@ -10049,7 +10069,7 @@ Jump_000_398E::
     ldh [hFFEC], a
     ld c, $14
     call WriteChannelRegisterC
-    call Func_000_3A5D
+    call ClearChannelLengthBits
 
 Jump_000_3998::
     ld a, [wDD0C]
@@ -10188,7 +10208,7 @@ Jump_000_3A38::
     ldh a, [hFFEC]
     ld c, $14
     call WriteChannelRegisterC
-    call Func_000_3A5D
+    call ClearChannelLengthBits
     ret
 
 ; A = value, C = register offset: writes A to $FF00 + wDD0D + C (wDD0D holds the current sound channel's register base); B = A (E-0077)
@@ -10209,9 +10229,11 @@ Jump_000_3A57::
     ld c, $12
     jr WriteChannelRegisterC
 
+; [$FF00 + wDD0D + $11] &= $C0: keeps the duty bits of the current channel's length/duty register and clears its length (E-0114)
 ; 2 call sites from 2 routines (e.g. SoundNextEvent, Func_000_3A2F)
 ; reads: wDD0D
-Func_000_3A5D::
+ClearChannelLengthBits::
+Func_000_3A5D:: ; address name
     ld c, $11
     ld a, [wDD0D]
     add a, c

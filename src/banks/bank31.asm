@@ -7688,7 +7688,7 @@ Jump_031_6CBB::
     inc de
     dec b
     jr nz, Jump_031_6CBB
-    farcall Func_01A_631A
+    farcall ClearHFFC6AndA
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_031_6CD2
@@ -8981,7 +8981,7 @@ Func_031_7479:: ; address name
 ; points at: wC338
 RunBattleSetup_Shared01::
 Func_031_7486:: ; address name
-    farcall Func_01A_727D
+    farcall CopyRectRecord73ADToScreenBuffer
 
 ; only called from routines of RunBattleSetup (E-0098)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_Table2_Case04, RunBattleSetup_Table2_Case02)
@@ -8996,7 +8996,7 @@ Func_031_748C:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case00)
 Func_031_7499::
-    farcall Func_01A_7284
+    farcall CopyRectRecord73F7ToScreenBuffer
     ret
 
 ; copies a 12 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7) with CopyRect32StrideToVRAM (E-0110)
@@ -9012,7 +9012,7 @@ Func_031_74A0:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case04)
 Func_031_74AD::
-    farcall Func_01A_7292
+    farcall CopyRectRecord755FToScreenBuffer
     ret
 
 ; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (identical to DrawWC2B8LeftToBGMapRow9 at $74E1) (E-0078)
@@ -9028,7 +9028,7 @@ Func_031_74B4:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Table2_Case00)
 Func_031_74C1::
-    farcall Func_01A_72A0
+    farcall CopyRectRecord7600ToScreenBuffer
     ret
 
 ; copies a 20 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9) with CopyRect32StrideToVRAM, then wD868 = 1 (E-0077)
@@ -9047,7 +9047,7 @@ Func_031_74C8:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_031_645E)
 Func_031_74DA::
-    farcall Func_01A_72A7
+    farcall CopyRectRecord76ACToScreenBuffer
     ret
 
 ; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (E-0078)
@@ -9063,7 +9063,7 @@ Func_031_74E1:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Table2_Case04)
 Func_031_74EE::
-    farcall Func_01A_72AE
+    farcall CopyRectRecord76F8ToScreenBuffer
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_031_4EB9_Table2_Case07, Func_031_4EB9_Table2_Case05)
@@ -9077,7 +9077,7 @@ Func_031_74F5::
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case10)
 Func_031_7502::
-    farcall Func_01A_72B5
+    farcall CopyRectRecords7600And7734ToScreenBuffer
     ret
 
 ; copies a 7 x 1 rectangle from wC2A4 to vBGMap0 + $10C (row 8, column 12) and a 20 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9), both with CopyRect32StrideToVRAM (E-0110)
@@ -9097,7 +9097,7 @@ Func_031_7509:: ; address name
 
 ; 3 call sites from 3 routines (e.g. Func_031_4EB9_Case1C, Func_031_4EB9_Case0C, Func_031_4EB9_Table2_Case0C)
 Func_031_7522::
-    farcall Func_01A_72C2
+    farcall CopyRectRecord7750ToScreenBuffer
     ret
 
 ; copies a 14 x 7 rectangle from wC2F8 (rows 32 bytes apart) to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0078)

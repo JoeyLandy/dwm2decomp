@@ -1531,9 +1531,11 @@ Jump_01A_6318::
     pop bc
     ret
 
+; hFFC6 = 0 and A = 0 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_6C2F_Case01)
 ; writes: hFFC6
-Func_01A_631A::
+ClearHFFC6AndA::
+Func_01A_631A:: ; address name
     xor a, a
     ldh [hFFC6], a
     xor a, a
@@ -2071,64 +2073,84 @@ Func_01A_7276:: ; address name
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_73AD (E-0114)
 ; 3 call sites from 3 routines (e.g. RunBattleSetup_Shared01, RunBattleSetup_BankA0_Table2_Case00, RunBattleSetup_BankA0_Table2_Case07)
-Func_01A_727D::
+CopyRectRecord73ADToScreenBuffer::
+Func_01A_727D:: ; address name
     ld hl, Data_01A_73AD
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_73F7 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_7499)
-Func_01A_7284::
+CopyRectRecord73F7ToScreenBuffer::
+Func_01A_7284:: ; address name
     ld hl, Data_01A_73F7
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_747F (E-0114)
 ; 1 call site from 1 routine (e.g. Func_0A0_5F2E_Case00)
-Func_01A_728B::
+CopyRectRecord747FToScreenBuffer::
+Func_01A_728B:: ; address name
     ld hl, Data_01A_747F
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_755F (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_74AD)
-Func_01A_7292::
+CopyRectRecord755FToScreenBuffer::
+Func_01A_7292:: ; address name
     ld hl, Data_01A_755F
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_75AB (E-0114)
 ; 1 call site from 1 routine (e.g. Func_0A0_5F2E_Case04)
-Func_01A_7299::
+CopyRectRecord75ABToScreenBuffer::
+Func_01A_7299:: ; address name
     ld hl, Data_01A_75AB
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7600 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_74C1)
-Func_01A_72A0::
+CopyRectRecord7600ToScreenBuffer::
+Func_01A_72A0:: ; address name
     ld hl, Data_01A_7600
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_76AC (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_74DA)
-Func_01A_72A7::
+CopyRectRecord76ACToScreenBuffer::
+Func_01A_72A7:: ; address name
     ld hl, Data_01A_76AC
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_76F8 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_74EE)
-Func_01A_72AE::
+CopyRectRecord76F8ToScreenBuffer::
+Func_01A_72AE:: ; address name
     ld hl, Data_01A_76F8
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with Data_01A_7600, then with Data_01A_7734 (E-0114)
 ; 2 call sites from 2 routines (e.g. Func_031_7502, Func_0A0_5F2E_Case0C)
-Func_01A_72B5::
+CopyRectRecords7600And7734ToScreenBuffer::
+Func_01A_72B5:: ; address name
     ld hl, Data_01A_7600
     call CopyRecordRectToScreenBuffer_Bank1A
     ld hl, Data_01A_7734
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7750 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_7522)
-Func_01A_72C2::
+CopyRectRecord7750ToScreenBuffer::
+Func_01A_72C2:: ; address name
     ld hl, Data_01A_7750
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
@@ -2193,7 +2215,7 @@ Func_01A_7315::
     ret
 
 ; HL = header (word offset, width, rows) followed by tile bytes: copies the rectangle to wScreenTileBuffer ($C198) + offset with rows 32 bytes apart (the same effect as CopyRecordRectToScreenBuffer) (E-0079)
-; 20 call sites from 18 routines (e.g. CopyRectRecord7345ToScreenBuffer, CopyRectRecord787EAndPlaySound6C, Func_01A_730E, Func_01A_72A0, ...)
+; 20 call sites from 18 routines (e.g. CopyRectRecord7345ToScreenBuffer, CopyRectRecord787EAndPlaySound6C, Func_01A_730E, CopyRectRecord7600ToScreenBuffer, ...)
 CopyRecordRectToScreenBuffer_Bank1A::
 Func_01A_7321:: ; address name
     ld a, $98

@@ -2223,7 +2223,7 @@ Jump_015_4F07::
     ld [wD7F3], a
     ld a, d
     ld [wD7F4], a
-    call Func_015_68F3
+    call SetBitInFieldAtWD7F3
     ld hl, wD7E0
     ld b, $07
 
@@ -6235,8 +6235,10 @@ Func_015_68DC:: ; address name
 Jump_015_68F2::
     ret
 
+; TestBitInFieldAtWD7F3, then ORs its mask into the byte, setting bit wD7F1/wD7F2 of the field at wD7F3/wD7F4 (E-0114)
 ; 5 call sites from 5 routines (e.g. Func_015_4182_Case36, Func_007_7DE5, ScriptCommandF4_Run_Table2_Case17, Func_037_5172, ...)
-Func_015_68F3::
+SetBitInFieldAtWD7F3::
+Func_015_68F3:: ; address name
     call TestBitInFieldAtWD7F3
     ld a, [hl]
     or a, b
@@ -6244,7 +6246,7 @@ Func_015_68F3::
     ret
 
 ; index = the word wD7F1/wD7F2, field = the address in wD7F3/wD7F4: wD7F5 = $FF when bit index of the field is set (bit order $80 first within each byte), else 0 (E-0074)
-; 12 call sites from 9 routines (e.g. Func_015_68F3, Func_015_4182_Case28, Func_015_4182_Case27, Func_015_4182_Case1C, ...)
+; 12 call sites from 9 routines (e.g. SetBitInFieldAtWD7F3, Func_015_4182_Case28, Func_015_4182_Case27, Func_015_4182_Case1C, ...)
 ; reads: wD7F1, wD7F2, wD7F3, wD7F4
 ; writes: wD7F5
 TestBitInFieldAtWD7F3::

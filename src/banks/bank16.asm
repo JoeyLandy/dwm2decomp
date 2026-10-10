@@ -3062,7 +3062,7 @@ Func_016_5473::
     cp a, [hl]
     ret nc
     ld [wD083], a
-    call Func_016_56D9
+    call TestWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $5B
@@ -3108,7 +3108,7 @@ Func_016_54AD::
     cp a, [hl]
     ret nc
     ld [wD083], a
-    call Func_016_56D9
+    call TestWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $5D
@@ -3241,7 +3241,7 @@ Func_016_555C::
     cp a, [hl]
     ret nc
     ld [wD083], a
-    call Func_016_56D9
+    call TestWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $55
@@ -3480,9 +3480,11 @@ Func_016_56CC::
     call Func_016_57E8
     ret
 
+; Z clear when bit 7 of byte $55 of record wD083 is set (SRAMRecordAddressMapped); HL points at it (E-0114)
 ; 3 call sites from 3 routines (e.g. Func_016_555C, Func_016_54AD, Func_016_5473)
 ; reads: wD083
-Func_016_56D9::
+TestWD083RecordFlag55Bit7::
+Func_016_56D9:: ; address name
     ld a, [wD083]
     ld c, $55
     call SRAMRecordAddressMapped
@@ -3935,8 +3937,10 @@ Jump_016_58EF::
     ld [hl], d
     ret
 
+; A = record (SRAMRecordAddressMapped), C = field offset: stores the low byte of the caller's HL (moved to C) at that field (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
-Func_016_58F6:: ; heuristic: follows a terminator; C0
+StoreCToRecordField:: ; heuristic: follows a terminator; C0
+Func_016_58F6:: ; address name
     push hl
     call SRAMRecordAddressMapped
     pop bc
@@ -4109,7 +4113,7 @@ Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
-; 8 call sites from 8 routines (e.g. Func_016_6A4E_Case01, Func_001_6C48, Func_007_6975, Func_00D_6B55, ...)
+; 8 call sites from 8 routines (e.g. Func_016_6A4E_Case01, Func_001_6C48, InitWD06ABlock_Table2_Case06_Sub01, Func_00D_6B55, ...)
 ; reads: wC7FB
 ; writes: wC7FB
 SetSpeciesFlag::
@@ -6735,18 +6739,22 @@ Func_016_6BE0::
     call AddAx9ToHL
     ld [hl], $00
     bit 2, d
-    call nz, Func_016_6C07
+    call nz, SetBit0AtHL
     bit 0, d
-    call nz, Func_016_6C04
+    call nz, SetBit5AtHL
     ret
 
+; [HL] |= $20 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_016_6BE0)
-Func_016_6C04::
+SetBit5AtHL::
+Func_016_6C04:: ; address name
     set 5, [hl]
     ret
 
+; [HL] |= $01 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_016_6BE0)
-Func_016_6C07::
+SetBit0AtHL::
+Func_016_6C07:: ; address name
     set 0, [hl]
     ret
 
@@ -7612,9 +7620,9 @@ Jump_016_716D::
     xor a, a
     ld [de], a
     bit 0, [hl]
-    call nz, Func_016_717E
+    call nz, SetBit5AtDE
     bit 2, [hl]
-    call nz, Func_016_7183
+    call nz, SetBit0AtDE
     ret
 
 Jump_016_717A::
@@ -7622,15 +7630,19 @@ Jump_016_717A::
     ld [de], a
     ret
 
+; [DE] |= $20; clobbers A (E-0114)
 ; 1 call site from 1 routine (e.g. Func_016_710F)
-Func_016_717E::
+SetBit5AtDE::
+Func_016_717E:: ; address name
     ld a, [de]
     set 5, a
     ld [de], a
     ret
 
+; [DE] |= $01; clobbers A (E-0114)
 ; 1 call site from 1 routine (e.g. Func_016_710F)
-Func_016_7183::
+SetBit0AtDE::
+Func_016_7183:: ; address name
     ld a, [de]
     set 0, a
     ld [de], a
@@ -8712,11 +8724,11 @@ Jump_016_79EF::
     ld de, wC130
     ld a, [wD10E]
     inc a
-    call Func_016_7A1E
+    call CopyKeyNameWordToDE_Bank16
     dec de
     ld a, [wD10F]
     add a, $11
-    call Func_016_7A1E
+    call CopyKeyNameWordToDE_Bank16
     dec de
     ld a, $F0
     ld [de], a
@@ -8727,8 +8739,10 @@ Jump_016_79EF::
     farcall ShowString_Bank08
     ret
 
+; calls CopyKeyNameWordToDE (bank $00) (E-0114)
 ; 2 call sites from 1 routine (e.g. Func_016_79B5)
-Func_016_7A1E::
+CopyKeyNameWordToDE_Bank16::
+Func_016_7A1E:: ; address name
     call CopyKeyNameWordToDE
     ret
 

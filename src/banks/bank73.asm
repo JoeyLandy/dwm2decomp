@@ -5392,7 +5392,7 @@ Jump_073_6181:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3E_Run_Case01::
 Jump_073_6188:: ; address name
-    farcall Func_012_5C27
+    farcall PlaySound83AndAdvanceScriptStep
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand3E_Run

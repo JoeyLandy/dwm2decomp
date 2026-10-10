@@ -1719,17 +1719,17 @@ Jump_00E_5AA9::
     ld hl, wCADB
     call Func_00E_5C11
     ld hl, wCB0C
-    call Func_00E_5C09
+    call StoreBCAAtHL
     push hl
     ld hl, wC991
     call Func_00E_5C11
     pop hl
-    call Func_00E_5C09
+    call StoreBCAAtHL
     push hl
     ld hl, wCA36
     call Func_00E_5C11
     pop hl
-    call Func_00E_5C09
+    call StoreBCAAtHL
     ld de, wC9BA
     call Func_00E_5C00
     ld de, wCA5F
@@ -1858,8 +1858,10 @@ Jump_00E_5C02::
     jr nz, Jump_00E_5C02
     ret
 
+; stores B, C and A at HL onward; HL += 3; AF kept (E-0114)
 ; 3 call sites from 1 routine (e.g. Func_00E_5AA4)
-Func_00E_5C09::
+StoreBCAAtHL::
+Func_00E_5C09:: ; address name
     push af
     ld a, b
     ld [hl+], a
@@ -1941,7 +1943,7 @@ Jump_00E_5C8C::
     push bc
     ld a, c
     ld [wD7F4], a
-    call Func_00E_5E1D
+    call LoadWD01AByteWD7F4
     ld a, [wD7F5]
     pop bc
     pop hl
@@ -1982,7 +1984,7 @@ Jump_00E_5CCD::
     push bc
     ld a, c
     ld [wD7F4], a
-    call Func_00E_5E1D
+    call LoadWD01AByteWD7F4
     ld a, [wD7F5]
     cp a, $03
     jr nc, Jump_00E_5D01
@@ -2220,11 +2222,13 @@ Data_00E_5E02:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $02, $03, $04, $05, $06, $0E, $0F, $07, $10, $11, $12, $13, $14, $08
     db $09, $0A, $0B, $15, $16, $17, $18, $19, $1A, $0C, $0D
 
+; wD7F5 = the byte at wD01A + wD7F4 (E-0114)
 ; 3 call sites from 3 routines (e.g. Func_00E_5CB2, Func_00E_5C50, Func_001_57C7)
 ; reads: wD7F4
 ; writes: wD7F5
 ; points at: wD01A
-Func_00E_5E1D::
+LoadWD01AByteWD7F4::
+Func_00E_5E1D:: ; address name
     ld hl, wD01A
     ld a, [wD7F4]
     add_a_to_hl

@@ -103,10 +103,12 @@ Jump_00A_4095::
     jr nz, Jump_00A_4062
     ret
 
+; sets bit 7 of wC8BF (E-0114)
 ; 2 call sites from 2 routines (e.g. Func_00A_4110, Func_00A_40A4)
 ; reads: wC8BF
 ; writes: wC8BF
-Func_00A_409B::
+SetWC8BFBit7::
+Func_00A_409B:: ; address name
     ld a, [wC8BF]
     set 7, a
     ld [wC8BF], a
@@ -150,7 +152,7 @@ Jump_00A_40AB::
 
 Jump_00A_40D5::
     ld c, $01
-    call Func_00A_409B
+    call SetWC8BFBit7
     ld a, [wC6FD]
     sub a, b
     jr z, Jump_00A_40E6
@@ -249,7 +251,7 @@ Jump_00A_414F::
 
 Jump_00A_415D::
     ld c, $01
-    call Func_00A_409B
+    call SetWC8BFBit7
     ld a, [wC6FD]
     sub a, b
     jr z, Jump_00A_416E
@@ -3000,7 +3002,7 @@ Jump_00A_54CA::
     ld e, a
     ld a, [wC90C]
     ld d, a
-    call Func_00A_5593
+    call JumpToWordAtHL_Bank0A
 
 Jump_00A_54ED::
     push hl
@@ -3117,8 +3119,10 @@ Jump_00A_558E:: ; address name
     inc [hl]
     ret
 
+; HL = the word at HL, then jp hl (E-0114)
 ; 1 call site from 1 routine (e.g. Func_00A_534E_Table2_Case00)
-Func_00A_5593::
+JumpToWordAtHL_Bank0A::
+Func_00A_5593:: ; address name
     deref_hl
     jp hl
     INCBIN "dwm2-cobi-us.gbc", $029597, $63

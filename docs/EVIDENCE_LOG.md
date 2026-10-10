@@ -1234,6 +1234,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Others:** SetWDA5BForPresentSlots and CopyVRAMRectToBuffer (its source-row step is not read).
 - Binary verification: pending; see the commit.
 
+### E-0114 — Short routines read in bulk
+
+- Kind: OBSERVATION (full reading of each routine, at most 8 instructions; vector names from the documented Game Boy memory map, HARDWARE).
+- **Method.** A listing of every address-only routine of up to eight instructions ending in `ret`/`jp` (315 of them) was read in one pass. 59 were named, including three three-copy families: SetWC2DFTileC2, SetWC2DFTileC1, SetWC2DETileC0.
+- **Interrupt vectors and entry point** (by address):
+  - Rst30Vector and Rst38Vector (bare `ret`);
+  - StatInterruptVector ($0048) and SerialInterruptVector ($0058);
+  - ROMEntryPoint ($0100).
+- **Bank-0 helpers:** EnableLYCInterruptSource, ReadJoypadIntoWC560, StoreAFourTimesAtHL, ClearStringDisplayFlags, ShowStringHL_Bank08, ClearChannelLengthBits.
+- **Battle predicates:** AnyFoeLacksStatus2Mask22, AnyFoeLacksStatus0Bit4, TestSlotStatus1Bit6 and CompareSlotHPWith1, plus MultiplyHLByAPercent.
+- **Menu helpers:** MenuCursorAddressWC46E, DrawMenuCursorWC46E and EraseMenuCursorWC46E, WriteByteAAsTwoDigitTiles, and four screen-block loaders.
+- **Bit and record helpers:** SetBit5/0AtHL/DE, SetBitInFieldAtWD7F3, StoreCToRecordField and TestWD083RecordFlag55Bit7.
+- **Ten CopyRectRecordNNNNToScreenBuffer wrappers** in bank $1A.
+- **Others:** three ShowStringHL wrappers and assorted setters.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
