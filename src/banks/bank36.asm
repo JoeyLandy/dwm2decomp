@@ -212,7 +212,7 @@ Jump_036_414B::
     ld a, [wDAC0]
     res 4, a
     ld [wDAC0], a
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     ret
 
 ; only called from RunBattleResolveStep_Table2_Case00 (E-0047)
@@ -235,12 +235,12 @@ Func_036_4162:: ; address name
     jr z, Jump_036_4189
     ld a, $84
     call QueueSoundEffect
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     ld d, $68
     jp Jump_036_4317
 
 Jump_036_4189::
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     ld d, $69
     jp Jump_036_4317
 
@@ -352,7 +352,7 @@ Jump_036_4253::
     ret
 
 Jump_036_4255::
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     scf
     ret
 
@@ -403,7 +403,7 @@ Jump_036_42A3::
     ret
 
 Jump_036_42A5::
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     scf
     ret
 
@@ -422,7 +422,7 @@ Func_036_42AA:: ; address name
     call QueueSoundEffect
     ld d, $68
     farcall Func_03A_7193
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     scf
     ret
 
@@ -542,7 +542,7 @@ Jump_036_4356:: ; address name
     jr z, ResolveStepEffectChecks
     ld d, $35
     farcall Func_03A_6EE5
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     ld a, $84
     call QueueSoundEffect
     ret
@@ -559,7 +559,7 @@ Jump_036_438A:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_036_439B
-    call Func_036_5009
+    call SetSubPhase3AndRestartResolve
     ret
 
 Jump_036_439B::
@@ -787,7 +787,7 @@ Jump_036_4543::
     ld a, [wDAC0]
     res 4, a
     ld [wDAC0], a
-    call Func_036_4FD1
+    call SetSubPhase2AndRestartResolve
     ret
 
 ; only called from ResolveStepEffectChecks (E-0047)
@@ -1469,7 +1469,7 @@ Func_036_4961::
     ld a, [wDABD]
     or a, a
     ret nz
-    call Func_036_5009
+    call SetSubPhase3AndRestartResolve
     ld a, [wDABF]
     or a, a
     ret z
@@ -2293,9 +2293,11 @@ Jump_036_4F06::
     ld [wDABD], a
     ret
 
+; the same 10 bytes as SetSubPhase3AndRestartResolve (36:5009)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
-Func_036_4F0E:: ; heuristic: follows a terminator; C0
+SetSubPhase3AndRestartResolve_Bank36:: ; heuristic: follows a terminator; C0
+Func_036_4F0E:: ; address name
     ld a, $03
     ld [wBattleSubPhase], a
     xor a, a
@@ -2423,11 +2425,13 @@ Jump_036_4FCA::
     farcall Func_03A_7193
     ret
 
+; for action $CC clears bits 0-1 of the actor's wD810 byte when bits 2-3 equal 4; for an action in $D0-$E3 it farcalls Func_0A3_413F first. Then it sets wBattleSubPhase to 2 and clears wBattleResolveStep (E-0055)
 ; 8 call sites from 7 routines (e.g. ResolveStepEffectChecks, ResolveStepFlagBit7Effect, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub04, ...)
 ; reads: wBattleActionId, wBattleActor
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wD810
-Func_036_4FD1::
+SetSubPhase2AndRestartResolve::
+Func_036_4FD1:: ; address name
     ld a, [wBattleActionId]
     cp a, $CC
     jr z, Jump_036_4FF3
@@ -2458,9 +2462,11 @@ Jump_036_4FF3::
     ld [hl], a
     jr Jump_036_4FE9
 
+; sets wBattleSubPhase to 3 and clears wBattleResolveStep (E-0055)
 ; 2 call sites from 2 routines (e.g. Func_036_4961, ResolveStepEffectChecks)
 ; writes: wBattleSubPhase, wBattleResolveStep
-Func_036_5009::
+SetSubPhase3AndRestartResolve::
+Func_036_5009:: ; address name
     ld a, $03
     ld [wBattleSubPhase], a
     xor a, a

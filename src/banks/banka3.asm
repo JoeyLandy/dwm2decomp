@@ -63,7 +63,7 @@ Jump_0A3_406F::
     ret
     INCBIN "dwm2-cobi-us.gbc", $28C075, $CA
 
-; 21 call sites from 20 routines (e.g. Func_032_4F0A, Func_036_4FD1, Func_036_6906, Func_036_6912, ...)
+; 21 call sites from 20 routines (e.g. Func_032_4F0A, SetSubPhase2AndRestartResolve, Func_036_6906, Func_036_6912, ...)
 ; reads: hFFC6
 ; points at: wDA5B
 Func_0A3_413F::
