@@ -109,7 +109,7 @@ DEF wC194 EQU $C194
 DEF wC195 EQU $C195
 DEF wC196 EQU $C196
 DEF wC197 EQU $C197
-DEF wBGMapShadow EQU $C198 ; 32 x 18 byte buffer copied to vBGMap0 (20 x 18 visible) by CopyShadowToBGMap; filled with $C3 (reading)
+DEF wScreenTileBuffer EQU $C198 ; screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030) (reading)
 DEF wC19A EQU $C19A
 DEF wC19E EQU $C19E
 DEF wC19F EQU $C19F

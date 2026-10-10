@@ -3679,10 +3679,10 @@ Jump_000_1644::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_000_1649:: ; heuristic: follows a terminator; C0
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld c, $20
 
 Jump_000_1651::
@@ -4295,7 +4295,7 @@ Func_000_18D6::
 ; 4 call sites from 2 routines (e.g. Func_061_4472, Func_061_474C)
 ; reads: hFFC6, wC190, hFF92, hFF8F, wIsCGB, hFFC7, hFFC8, hFFC9
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_000_1906::
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -4355,7 +4355,7 @@ Func_000_1906::
     ld d, [hl]
     inc hl
     ld b, [hl]
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToVRAM
     pop af
     ld [rROMB0], a
@@ -4411,7 +4411,7 @@ Jump_000_19A4::
 ; 4 call sites from 4 routines (e.g. Func_002_4628, Func_002_5BD7, Func_00F_7BC3, Func_015_570C)
 ; reads: wCC44, wC190, hFF92, hFF8F, wIsCGB, hFFC6, hFFC7, hFFC8, ...
 ; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_000_19A9::
     ld a, [wCC44]
     bit 7, a
@@ -4488,7 +4488,7 @@ Jump_000_19E6::
     ld d, a
     ld a, [hl]
     ld b, a
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToVRAM
     pop af
     ld [rROMB0], a
@@ -5129,10 +5129,10 @@ Jump_000_1E23::
 ; 16 call sites from 12 routines (e.g. Func_002_4628, Func_002_5B9E, Func_002_64B3, Func_007_65F1, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_000_1E29::
     push hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
 
 Jump_000_1E30::
@@ -5226,9 +5226,9 @@ Jump_000_1E9C::
 ; 2 call sites from 2 routines (e.g. Func_000_2637, Func_085_4555)
 ; reads: wC8CB, rSTAT, wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_000_1EA5::
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld a, [wC8CB]
     bit 7, a
     jr z, Jump_000_1EC1

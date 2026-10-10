@@ -13,7 +13,7 @@ Func_01E_4001::
 
 Jump_01E_400D::
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     call Func_01E_7428
     ld a, [wIsCGB]
@@ -88,7 +88,7 @@ Jump_01E_4091::
     or a, c
     jr nz, Jump_01E_4091
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     call Func_01E_7428
     ld a, [wIsCGB]
@@ -6955,12 +6955,12 @@ Jump_01E_74B6::
 ; 38 call sites from 11 routines (e.g. Func_01E_4069, Func_01E_4A32, Func_01E_46E5, Func_01E_42C6, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_01E_74C8::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h
@@ -7174,17 +7174,17 @@ Func_01E_75EB::
 
 ; 5 call sites from 4 routines (e.g. Func_01E_46E5, Func_01E_5A4D, Func_01E_42C6, Func_01E_4A32)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_01E_75F2::
     push bc
     push hl
     push de
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h

@@ -446,7 +446,7 @@ Func_073_42D8:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD04, wIsCGB
 ; writes: wC46B, wC46C, wC46D, wC46E, rSVBK
-; points at: wBGMapShadow, wC923
+; points at: wScreenTileBuffer, wC923
 Func_073_42F1:: ; heuristic: target of a pointer table; C0
     farcall Func_002_5EEE
     call NextRandomSeed
@@ -468,7 +468,7 @@ Func_073_42F1:: ; heuristic: target of a pointer table; C0
     ld [wC46E], a
     call Func_073_441D
     ld de, $4378
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld b, $03
 
 Jump_073_432D::
@@ -3876,7 +3876,7 @@ Jump_073_5BAE::
     srl a
     srl a
     add_a_to_hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     ld de, wC910
     ld a, [hl+]
@@ -5826,9 +5826,9 @@ Jump_073_6868::
     ld b, $56
 
 ; 1 call site from 1 routine (e.g. Func_073_6882)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_073_6875::
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToVRAM
     farcall Func_05F_6DDB
     ret

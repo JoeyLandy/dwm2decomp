@@ -13,15 +13,15 @@ Func_014_4001::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wC364, wBGMapShadow
+; points at: wC364, wScreenTileBuffer
 Func_014_400D:: ; heuristic: target of a pointer table; C0
     ld hl, wC364
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_014_4010:: ; heuristic: target of a pointer table; C0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     call Func_014_57E5
     ld a, [wIsCGB]
@@ -188,14 +188,14 @@ Jump_014_40EE::
     ld [hl+], a
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC364, wBGMapShadow
+; points at: wC364, wScreenTileBuffer
 Func_014_40F0:: ; heuristic: target of a pointer table; C0
     dec bc
     ld a, b
     or a, c
     jr nz, Jump_014_40EE
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     db $CD, $E5
 
@@ -3569,12 +3569,12 @@ Jump_014_5849::
 ; 17 call sites from 17 routines (e.g. Func_014_4F7D, Func_014_4990, Func_014_4A1F, Func_014_4760, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_014_585B::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h
@@ -3722,17 +3722,17 @@ Func_014_5910::
 
 ; 4 call sites from 4 routines (e.g. Func_014_557D, Func_014_4750, Func_014_5910, Func_014_4932)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_014_5925::
     push bc
     push hl
     push de
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h

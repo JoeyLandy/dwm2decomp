@@ -684,10 +684,10 @@ Func_085_44D2::
 ; 2 call sites from 2 routines (e.g. Func_085_4047, Func_085_43AF)
 ; reads: wIsCGB
 ; writes: rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_085_4505::
     farcall Func_002_5EEE
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld de, $4583
     ld b, $09
 
@@ -1956,7 +1956,7 @@ Jump_085_4E1F::
     ld d, a
     push hl
     ld b, $93
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToVRAM
     pop hl
     ld a, [wIsCGB]

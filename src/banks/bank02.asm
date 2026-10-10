@@ -2070,7 +2070,7 @@ Jump_002_4E39::
     ld c, a
 
 Jump_002_4E3F::
-    call Func_002_59CD
+    call TileBlockedAtPixel
     ld a, [wC195]
     and a, $F0
     jr z, Jump_002_4E59
@@ -2401,7 +2401,7 @@ Jump_002_5033::
     ld c, a
 
 Jump_002_5037::
-    call Func_002_59CD
+    call TileBlockedAtPixel
     ld de, wC910
     ld b, $04
 
@@ -3050,10 +3050,10 @@ Jump_002_5460::
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call Func_002_59CD
+    call TileBlockedAtPixel
     cp a, $01
     jr z, Jump_002_544D
-    call Func_002_5A51
+    call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_544D
     call Func_002_5AB6
@@ -3137,10 +3137,10 @@ Jump_002_54F7::
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call Func_002_59CD
+    call TileBlockedAtPixel
     cp a, $01
     jr z, Jump_002_54E4
-    call Func_002_5A51
+    call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_54E4
     call Func_002_5AB6
@@ -3231,10 +3231,10 @@ Jump_002_5590::
     ldh a, [hPlayerY]
     add a, $11
     ld c, a
-    call Func_002_59CD
+    call TileBlockedAtPixel
     cp a, $01
     jr z, Jump_002_557C
-    call Func_002_5A51
+    call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_557C
     call Func_002_5AB6
@@ -3333,10 +3333,10 @@ Jump_002_564B::
     ldh a, [hPlayerY]
     sub a, $10
     ld c, a
-    call Func_002_59CD
+    call TileBlockedAtPixel
     cp a, $01
     jr z, Jump_002_5639
-    call Func_002_5A51
+    call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_5639
     call Func_002_5AB6
@@ -3832,11 +3832,13 @@ Jump_002_59C9::
     jr nz, Jump_002_5953
     ret
 
+; B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)
 ; 6 call sites from 3 routines (e.g. Func_002_4DED, UpdatePlayerMovement, CheckInteractionInFront)
 ; reads: hFF8C, wC192, wC196
 ; writes: wC910, wC911, wC912, wC913
 ; points at: wC910
-Func_002_59CD::
+TileBlockedAtPixel::
+Func_002_59CD:: ; address name
     push bc
     push de
     ldh a, [hFF8C]
@@ -3932,11 +3934,13 @@ Jump_002_5A4C::
     pop bc
     ret
 
+; B = X, C = Y in pixels: returns A = the 1-based number of the first slot of wSpriteSlots (from wCB8A, count wSpriteSlotCount) whose X and Y bytes, or those plus 15, lie in the same 16-pixel cell as (B, C); A = 0 when none does
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wSpriteSlotCount, hFFC7, hFFC6
 ; writes: hFFC6, hFFC7
 ; points at: wCB8A
-Func_002_5A51::
+FindSpriteSlotAtTile::
+Func_002_5A51:: ; address name
     ld a, [wSpriteSlotCount]
     or a, a
     ret z
@@ -4274,7 +4278,7 @@ Jump_002_5C83::
     and a, $E0
     or a, c
     ld e, a
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld a, [wC469]
     add_a_to_hl
     call Func_002_5DC8
@@ -4310,7 +4314,7 @@ Jump_002_5CCC::
     and a, $E0
     or a, c
     ld e, a
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld a, [wC469]
     ld c, a
     ld a, $13
@@ -4633,9 +4637,9 @@ Jump_002_5EE9::
 ; 22 call sites from 19 routines (e.g. CheckInteractionInFront, Func_002_4F4C, Func_002_64E5, Func_00A_43EC, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wCB7E
-; points at: wBGMapShadow, wD000, wD2D0
+; points at: wScreenTileBuffer, wD000, wD2D0
 Func_002_5EEE::
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld hl, vBGMap1
     ld bc, $0168
 
@@ -4667,10 +4671,10 @@ Jump_002_5F1B::
 ; 7 call sites from 6 routines (e.g. Func_002_4628, Func_073_4139, Func_085_4047, Func_085_426B, ...)
 ; reads: wIsCGB, wCB7E
 ; writes: rSVBK, wSpriteSlotCount
-; points at: wBGMapShadow, wD2D0, wD000
+; points at: wScreenTileBuffer, wD2D0, wD000
 Func_002_5F22::
     ld hl, vBGMap1
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0168
 
 Jump_002_5F2B::
@@ -5322,7 +5326,7 @@ Jump_002_64D7::
 ; 3 call sites from 3 routines (e.g. Func_002_4745, Func_002_4AE0, Func_002_4C4E)
 ; reads: wFadeState, wC8CB, wC468, hFF8C, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hFFB9, wC8C7, rSVBK, wC8CE, wModeState, wC46B
-; points at: wC300, wBGMapShadow, wD168, wD000, wC30C
+; points at: wC300, wScreenTileBuffer, wD168, wD000, wC30C
 Func_002_64E5::
     ld a, [wFadeState]
     or a, a
@@ -5349,7 +5353,7 @@ Func_002_64E5::
     farcall Func_002_5EEE
     farcall Func_004_4470
     ld hl, wC300
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld b, $64
 
 Jump_002_6525::
@@ -5609,7 +5613,7 @@ Jump_002_66C8::
 ; 1 call site from 1 routine (e.g. Func_002_64E5)
 ; reads: wC8CB, wC468, wC6FD, hFF8C, wC8CD, wC8CE, wIsCGB
 ; writes: wC8CE, wC8CD, hFFB9, rSVBK
-; points at: wC364, wBGMapShadow, wD1CC
+; points at: wC364, wScreenTileBuffer, wD1CC
 Func_002_66CC::
     ld de, $0002
     call TestFlagBit
@@ -5643,7 +5647,7 @@ Func_002_66CC::
     ld a, $03
     ldh [hFFB9], a
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld a, e
     add a, $F0
     ld e, a
@@ -5992,13 +5996,13 @@ Data_002_695E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 9 call sites from 8 routines (e.g. Func_002_4AE0, Func_007_4B27, Func_007_4E11, Func_01B_660D, ...)
 ; reads: wC8CB, wIsCGB, hScrollY, hScrollX, wC8CC
 ; writes: rSVBK
-; points at: wC300, wBGMapShadow, wC8CC
+; points at: wC300, wScreenTileBuffer, wC8CC
 Func_002_69D0::
     ld a, [wC8CB]
     and a, $03
     ret z
     ld hl, wC300
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld a, [wC8CB]
     bit 7, a
     jr nz, Jump_002_69EB

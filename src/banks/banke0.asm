@@ -859,7 +859,7 @@ Jump_0E0_46D1::
     ret
 
 Jump_0E0_46DD::
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
 
@@ -2865,7 +2865,7 @@ Jump_0E0_5B16::
     call DecompressToVRAM
     ld b, $46
     ld de, Data_046_496B
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -3305,7 +3305,7 @@ Jump_0E0_5E83::
     call DecompressToVRAM
     ld b, $46
     ld de, Data_046_777A
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -3856,7 +3856,7 @@ Jump_0E0_62A0::
     call DecompressToVRAM
     ld b, $48
     ld de, Data_048_523C
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -4597,7 +4597,7 @@ Jump_0E0_685B::
     call DecompressToVRAM
     ld b, $48
     ld de, Data_048_5C7D
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -5071,7 +5071,7 @@ Jump_0E0_6C2C::
     call DecompressToVRAM
     ld b, $49
     ld de, Data_049_531F
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a

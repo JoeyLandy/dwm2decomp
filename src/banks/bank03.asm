@@ -20,7 +20,7 @@ Func_003_4001:: ; address name
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate)
 ; reads: wC5DD, wModeState, wIsCGB, hScrollY, hScrollX, wC933, wCC37, wSpriteSlotCount
 ; writes: wSpriteSlotCount, wC526, rVBK, hScrollX, hScrollY, wC46D, wC46E, wC46F, ...
-; points at: wC49F, wBGMapShadow, wC5DD, wC0A0, wD09D
+; points at: wC49F, wScreenTileBuffer, wC5DD, wC0A0, wD09D
 GameMode2_Update::
 Func_003_4015:: ; address name
     ld a, [wC5DD]
@@ -73,7 +73,7 @@ Jump_003_4064::
     ldh [rVBK], a
 
 Jump_003_4073::
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -106,13 +106,13 @@ Jump_003_4073::
 Jump_003_40A6::
     ld l, e
     ld h, d
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
     call CopyRectToBGMap
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC5DD
     inc [hl]
     ret
@@ -148,7 +148,7 @@ Jump_003_40BE::
     ld [rRAMG], a
     xor a, a
     ld [wD095], a
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -330,19 +330,19 @@ Jump_003_427D::
     call Func_003_7AE8
     ret
 
-; fills the $240 bytes at wBGMapShadow with $C3 (the same 12 bytes appear in 2 banks)
+; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
 ; 14 call sites from 14 routines (e.g. Func_003_7692, Func_003_641E, Func_003_581E, Func_003_499B, ...)
-; points at: wBGMapShadow
-ClearBGMapShadow_Bank03::
+; points at: wScreenTileBuffer
+ClearScreenTileBuffer_Bank03::
 Func_003_4284:: ; address name
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_003_6526, Func_003_649C, Func_003_5874)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_003_4290::
     ld e, [hl]
     inc hl
@@ -353,7 +353,7 @@ Func_003_4290::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     pop de
 
@@ -376,7 +376,7 @@ Jump_003_42A0::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_003_42B0:: ; heuristic: follows a terminator; C0
     ld e, [hl]
     inc hl
@@ -387,7 +387,7 @@ Func_003_42B0:: ; heuristic: follows a terminator; C0
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     pop de
 
@@ -416,13 +416,13 @@ Jump_003_42CB::
     jr nz, Jump_003_42BE
     ret
 
-; copies the 20 x 18 tiles at the start of wBGMapShadow to vBGMap0 (CopyRectToBGMap with BC = $1412)
+; copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC = $1412)
 ; 36 call sites from 13 routines (e.g. GameMode2_Update, Func_003_5171, Func_003_4339, Func_003_6A60, ...)
-; points at: wBGMapShadow
-CopyShadowToBGMap::
+; points at: wScreenTileBuffer
+CopyTileBufferToBGMap::
 Func_003_42DA:: ; address name
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
 
 ; HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is masked with $9B)
@@ -504,7 +504,7 @@ Func_003_432F::
 ; 12 call sites from 7 routines (e.g. Func_003_4659, Func_003_6A60, Func_003_6B5E, Func_003_5E68, ...)
 ; reads: hPlayerX, hPlayerY, wIsCGB
 ; writes: wC8C8, wC8C9, wC8CA, rRAMG, wC526, wC5E0, wGameMode
-; points at: wC49F, wBGMapShadow, wC5E0
+; points at: wC49F, wScreenTileBuffer, wC5E0
 Func_003_4339::
     call Func_003_4389
     ldh a, [hPlayerX]
@@ -527,11 +527,11 @@ Func_003_4339::
     call UploadBGPalettes
 
 Jump_003_4367::
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC5E0
     inc [hl]
     farcall Func_002_4628
@@ -1076,7 +1076,7 @@ Jump_003_46B3::
     or a, a
     jr nz, Jump_003_46BF
     call Func_003_499B
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
 
 Jump_003_46BF::
     ld hl, wC0A1
@@ -1102,7 +1102,7 @@ Jump_003_46CD::
     call Func_003_4A84
     ld hl, vBGMap0
     ld bc, $1412
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     call CopyRectToBGMap
     ld hl, wC0A1
     inc [hl]
@@ -1162,7 +1162,7 @@ Jump_003_473F::
     or a, a
     jr nz, Jump_003_474B
     call Func_003_49C2
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
 
 Jump_003_474B::
     ld hl, wC0A1
@@ -1245,7 +1245,7 @@ Jump_003_47CC::
     or a, a
     jr nz, Jump_003_47D8
     call Func_003_49E9
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
 
 Jump_003_47D8::
     ld hl, wC0A1
@@ -1326,7 +1326,7 @@ Jump_003_4850::
     or a, a
     jr nz, Jump_003_485C
     call Func_003_4A08
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
 
 Jump_003_485C::
     ld hl, wC0A1
@@ -1415,15 +1415,15 @@ Jump_003_48EB::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_48EF::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $01
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $02
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $03
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1431,15 +1431,15 @@ Func_003_48EF::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_4917::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $04
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $05
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $06
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1447,13 +1447,13 @@ Func_003_4917::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_493F::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $07
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $08
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1461,13 +1461,13 @@ Func_003_493F::
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 ; points at: wC0A4
 Func_003_495F::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $09
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $0A
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld hl, wC0A4
     inc [hl]
     ret
@@ -1476,20 +1476,20 @@ Func_003_495F::
 ; reads: wC6FD
 ; points at: wC0A4
 Func_003_497F::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld a, [wC6FD]
     add a, $2D
     ld e, a
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $31
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld hl, wC0A4
     inc [hl]
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_4208, Func_003_4659)
 Func_003_499B::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $01
@@ -1503,7 +1503,7 @@ Func_003_499B::
 
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 Func_003_49C2::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $04
@@ -1517,7 +1517,7 @@ Func_003_49C2::
 
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 Func_003_49E9::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $07
@@ -1529,7 +1529,7 @@ Func_003_49E9::
 
 ; 1 call site from 1 routine (e.g. Func_003_4659)
 Func_003_4A08::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall Func_033_402B
     ld e, $09
@@ -2664,7 +2664,7 @@ Data_003_51AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $66, $C3, $86, $C3, $A6, $C3
 
 Jump_003_51B0::
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_003_51FB
@@ -2793,7 +2793,7 @@ Jump_003_5288::
     call Func_003_581E
     call Func_003_59DB
     call Func_003_5900
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -2884,7 +2884,7 @@ Jump_003_5340::
 
 Jump_003_5348::
     call Func_003_585D
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -2989,7 +2989,7 @@ Jump_003_53FC::
 
 Jump_003_5401::
     call Func_003_58E6
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3018,7 +3018,7 @@ Jump_003_542F::
     xor a, a
     ld [wC46D], a
     call Func_003_5874
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, [wC6FD]
     ld [wC0A2], a
     ld a, $01
@@ -3077,7 +3077,7 @@ Jump_003_549C::
 
 Jump_003_54A9::
     call Func_003_58A6
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3300,7 +3300,7 @@ Jump_003_564A::
     ld a, $6C
     call QueueSoundEffect
     call Func_003_7791
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -3424,7 +3424,7 @@ Jump_003_572D::
 
 Jump_003_573F::
     call Func_003_58E6
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3450,7 +3450,7 @@ Jump_003_575F::
     ld a, $01
     ld [wC0A3], a
     call Func_003_58CF
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $6C
     call QueueSoundEffect
     ld hl, wC0A1
@@ -3536,16 +3536,16 @@ Jump_003_581A::
 ; reads: wC61D, wC0A7, wC0A6
 ; points at: wC2A6
 Func_003_581E::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $0B
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $0C
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC61D]
     or a, a
     ret z
     ld e, $0D
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC0A7]
     cp a, $02
     jr c, Jump_003_585C
@@ -3570,7 +3570,7 @@ Jump_003_585C::
 Func_003_585D::
     call Func_003_581E
     ld e, $0E
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
@@ -3582,9 +3582,9 @@ Func_003_585D::
 Func_003_5874::
     call Func_003_585D
     ld e, $11
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $1B
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wD081]
     ld hl, Data_003_5C8B
     add_a_to_hl
@@ -3603,7 +3603,7 @@ Func_003_58A6::
     call FillTilesFromRequest
     call Func_003_5874
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $03
     ld hl, Func_003_460B
@@ -3614,7 +3614,7 @@ Func_003_58A6::
 Func_003_58C0::
     call Func_003_585D
     ld e, $0F
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
     db $CD, $0E, $29
 
@@ -3623,7 +3623,7 @@ Func_003_58C0::
 Func_003_58CF::
     call Func_003_58C0
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46F]
     and a, $03
     ld hl, Data_003_461F
@@ -3636,7 +3636,7 @@ Func_003_58E6::
     call FillTilesFromRequest
     call Func_003_585D
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46F]
     and a, $03
     ld hl, Data_003_461F
@@ -4328,7 +4328,7 @@ Jump_003_5EA3::
     call Func_003_67B0
     ld a, $00
     ld [rRAMG], a
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
 
 Jump_003_5EC8::
     ld a, [wC6FD]
@@ -4345,7 +4345,7 @@ Jump_003_5EC8::
     call Func_003_6432
     ld a, $00
     ld [rRAMG], a
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ret
 
 Jump_003_5EF0::
@@ -4367,7 +4367,7 @@ Jump_003_5EF0::
     call Func_003_6A60
     ld a, $00
     ld [rRAMG], a
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ret
 
 Jump_003_5F23::
@@ -4467,7 +4467,7 @@ Jump_003_5FBD::
     ld [rRAMG], a
     call Func_003_6432
     call Func_003_6A60
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
@@ -4497,7 +4497,7 @@ Jump_003_5FFB::
     call Func_003_6A60
     ld a, $00
     ld [rRAMG], a
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -4591,7 +4591,7 @@ Jump_003_60C6::
     call Func_003_650C
     call Func_003_6432
     call Func_003_6A60
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -4630,7 +4630,7 @@ Jump_003_6103::
     call Func_003_650C
     call Func_003_6432
     call Func_003_6A60
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A0
     inc [hl]
     ret
@@ -4651,7 +4651,7 @@ Jump_003_6120::
     ld [rRAMG], a
     call Func_003_6432
     call Func_003_6A60
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, [wC6FD]
     ld [wC0A2], a
     ld hl, wC0A1
@@ -4693,7 +4693,7 @@ Jump_003_6178::
     ld [wD083], a
     call Func_003_6526
     call Func_003_664A
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, [wD083]
     ld c, $01
     call SRAMRecordAddressMapped
@@ -4739,7 +4739,7 @@ Jump_003_61CE::
 Jump_003_61EA::
     call Func_003_6432
     call Func_003_6A60
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
@@ -5029,11 +5029,11 @@ Jump_003_640F::
 
 ; 4 call sites from 4 routines (e.g. Func_003_4208, Func_003_657B, Func_003_5E68, Func_003_646F)
 Func_003_641E::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $1C
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $0C
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 8 call sites from 1 routine (e.g. Func_003_5E68)
@@ -5081,7 +5081,7 @@ Jump_003_6450::
 Func_003_646F::
     call Func_003_641E
     ld e, $1D
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $03
     ld c, $5F
@@ -5100,13 +5100,13 @@ Func_003_646F::
 ; reads: wC46D, wCFEE, wC46E, wCFEC, wCFED
 ; points at: wC3A2, wC39E
 Func_003_649C::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $20
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $0C
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $1D
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $03
     ld c, $5F
@@ -5157,18 +5157,18 @@ Func_003_650C::
     ld hl, $4617
     call Func_003_4538
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
 ; reads: wC46E, wC46F, wCFEC, wCFED
 Func_003_6526::
     call FillTilesFromRequest
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $20
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $0C
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46E]
     and a, $07
     ld hl, $4617
@@ -5194,7 +5194,7 @@ Func_003_6526::
     deref_hl
     call Func_003_4290
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68)
@@ -5207,7 +5207,7 @@ Func_003_657B::
     ld hl, Func_003_460B
     call Func_003_4538
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4208)
@@ -5740,7 +5740,7 @@ Jump_003_6AAF::
 
 Jump_003_6ABB::
     call Func_003_7692
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     call Func_000_222B
     farcall Func_016_7A64
     ld a, $06
@@ -5774,7 +5774,7 @@ Jump_003_6ADC::
     call Func_003_6B5E
     jr z, Jump_003_6B1F
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     xor a, a
     ld [wC0A0], a
     ld hl, wC0A1
@@ -5873,7 +5873,7 @@ Jump_003_6B8D::
     ld a, $0C
     ld [hl+], a
     call FillTilesFromRequest
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     call Func_003_779A
     call Func_003_78CB
     ld hl, wC0A1
@@ -5961,7 +5961,7 @@ Jump_003_6C52::
 Jump_003_6C6E::
     call Func_003_76C9
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0709
     call CopyRectToBGMap
     ld a, $02
@@ -6321,7 +6321,7 @@ Jump_003_6EE2::
     xor a, a
     ld [wC0A8], a
     call Func_003_7726
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $04
     ld [wC0A2], a
     ld a, $01
@@ -6447,7 +6447,7 @@ Jump_003_6FBE::
 
 Jump_003_6FC6::
     call Func_003_7743
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, [wC834]
     ld [wC46E], a
     ld hl, wC0A1
@@ -6596,7 +6596,7 @@ Jump_003_70A4::
     ld [wC0A6], a
     ld [wC0A8], a
     call Func_003_774F
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6729,7 +6729,7 @@ Jump_003_71AE::
     xor a, a
     ld [wC46E], a
     call Func_003_7281
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     dec [hl]
     ld hl, wC0A1
@@ -7098,7 +7098,7 @@ Jump_003_746C::
     call HLToDecimalDigits
     ld de, wC2E6
     call WriteDecimalDigitTiles
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld hl, wC0A1
     inc [hl]
     ret
@@ -7225,7 +7225,7 @@ Jump_003_7501::
     ld [wC52E], a
     ld a, $C3
     ld [wC1F9], a
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $00
     ld [wStringCategory], a
     ld a, $25
@@ -7249,7 +7249,7 @@ Jump_003_7571::
     ld a, $6C
     call QueueSoundEffect
     call Func_003_7791
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $02
     ld [wC0A2], a
     ld a, $01
@@ -7340,10 +7340,10 @@ Jump_003_7630::
 
 Jump_003_7633::
     ld bc, $0240
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld a, $C3
     call FillBytes
-    call CopyShadowToBGMap
+    call CopyTileBufferToBGMap
     ld a, $06
     ld [wC0A1], a
     ret
@@ -7394,9 +7394,9 @@ Jump_003_7689::
 
 ; 4 call sites from 4 routines (e.g. Func_003_4208, Func_003_6A60, Func_003_769E, Func_003_7145)
 Func_003_7692::
-    call ClearBGMapShadow_Bank03
+    call ClearScreenTileBuffer_Bank03
     ld e, $21
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_003_76AD, Func_003_7726, Func_003_7743, Func_003_774F)
@@ -7413,11 +7413,11 @@ Func_003_769E::
 Func_003_76AD::
     call Func_003_769E
     ld e, $23
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     call Func_003_7978
     jr z, Jump_003_76C5
     ld e, $22
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
 
 Jump_003_76C5::
     call Func_003_7A58
@@ -7427,7 +7427,7 @@ Jump_003_76C5::
 Func_003_76C9::
     call Func_003_76AD
     ld e, $24
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_003_6B5E)
@@ -7437,7 +7437,7 @@ Func_003_76D5::
     call Func_003_76C9
     call FillTilesFromRequest
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46F]
     and a, $07
     ld hl, Data_003_4633
@@ -7461,9 +7461,9 @@ Func_003_7707::
     ld hl, Data_003_4633
     call Func_003_4538
     ld e, $25
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_6EBF)
@@ -7473,55 +7473,55 @@ Func_003_7726::
     ld de, Data_003_7BAF
     call Func_003_7BBF
     ld e, $26
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $27
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_6EBF)
 Func_003_7743::
     call Func_003_769E
     ld e, $2C
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_7145, Func_003_705B)
 Func_003_774F::
     call Func_003_769E
     ld e, $29
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
 
 ; 1 call site from 1 routine (e.g. Func_003_7202)
 Func_003_775A::
     ld e, $28
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_7335)
 Func_003_7763::
     ld e, $2D
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_74E2)
 ; reads: wC46D
 Func_003_776C::
     ld e, $2A
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $07
     ld hl, Func_003_460B
     call Func_003_4538
     call FillTilesFromRequest
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     farcall Func_016_777B
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_74E2, Func_003_5253)
 Func_003_7791::
     ld e, $2B
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_003_6B5E)

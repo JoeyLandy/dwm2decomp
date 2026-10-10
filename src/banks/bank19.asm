@@ -864,9 +864,9 @@ Jump_019_44EC::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_019_419B)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_019_4516::
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
 
 Jump_019_451C::

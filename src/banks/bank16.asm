@@ -3935,7 +3935,7 @@ Jump_016_5E5A::
     ld a, $6C
     call QueueSoundEffect
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     xor a, a
@@ -3990,7 +3990,7 @@ Jump_016_5ED1::
 Jump_016_5ED7::
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     ld a, $06
@@ -4005,7 +4005,7 @@ Jump_016_5EEC::
     farcall Func_01A_7315
     call Func_016_64DC
     call Func_016_6705
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $080B
     call Func_016_7321
@@ -4144,7 +4144,7 @@ Jump_016_6017::
     xor a, a
     ld [wD782], a
     farcall Func_01D_5F2D
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $02D0
     ld a, $C3
     call FillBytes
@@ -4169,7 +4169,7 @@ Jump_016_6058::
     ld [wC2C5], a
     call Func_016_64DC
     call Func_016_6705
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
     call Func_016_7321
@@ -4388,7 +4388,7 @@ Jump_016_622B::
     ld [wC46B], a
     call Func_016_682F
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     ld hl, wCFCC
@@ -4429,7 +4429,7 @@ Jump_016_6291::
     ret z
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     ld a, $09
@@ -4467,7 +4467,7 @@ Jump_016_62D3::
     ld h, a
     ld [hl], $BC
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     xor a, a
@@ -4550,7 +4550,7 @@ Jump_016_637E::
     xor a, a
     ld [wD782], a
     farcall Func_01D_6026
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $02D0
     ld a, $C3
     call FillBytes
@@ -4596,7 +4596,7 @@ Jump_016_63B9::
 Jump_016_640E::
     call Func_016_65B1
     call Func_016_682F
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
     call Func_016_7321
@@ -5649,7 +5649,7 @@ Jump_016_6A6F::
     ld [wD007], a
     call Func_016_5AAF
     ld a, $C3
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $02D0
     call FillBytes
     ld hl, vTiles1
@@ -5871,7 +5871,7 @@ Func_016_6C16::
 Jump_016_6C42::
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     ld a, [wD09D]
@@ -6041,7 +6041,7 @@ Jump_016_6D47::
 
 Jump_016_6D7B::
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     ld a, $04
@@ -6074,7 +6074,7 @@ Jump_016_6DA6::
     ld a, $04
     ld [wCFD3], a
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     ld a, [wC46C]
@@ -6287,7 +6287,7 @@ Jump_016_6F6F::
     ld [hl], $BC
     farcall Func_01A_72FB
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
     call Func_016_7321
     call Func_016_69E2
@@ -6368,7 +6368,7 @@ Jump_016_7023::
     call Func_016_70DB
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     ld a, $04
@@ -6378,7 +6378,7 @@ Jump_016_7023::
 Jump_016_7051::
     call Func_016_733F
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $140D
     call Func_016_7321
     farcall Func_01A_72DB

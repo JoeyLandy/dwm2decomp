@@ -1373,7 +1373,7 @@ Jump_004_48CD::
 
 ; 3 call sites from 2 routines (e.g. Func_004_4852, Func_004_456D)
 ; reads: wC192
-; points at: wBGMapShadow, wC910
+; points at: wScreenTileBuffer, wC910
 Func_004_4904::
     push bc
     push de
@@ -1393,7 +1393,7 @@ Func_004_4904::
     srl a
     srl a
     add_a_to_hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     ld de, wC910
     ld a, [hl+]
@@ -1439,7 +1439,7 @@ Jump_004_4955::
 
 ; 1 call site from 1 routine (e.g. Func_004_4852)
 ; reads: wC196
-; points at: wBGMapShadow, wC910
+; points at: wScreenTileBuffer, wC910
 Func_004_495A::
     push bc
     push de
@@ -1459,7 +1459,7 @@ Func_004_495A::
     srl a
     srl a
     add_a_to_hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     ld de, wC910
     ld a, [hl+]

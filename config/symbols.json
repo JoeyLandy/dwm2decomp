@@ -31,7 +31,7 @@
   "FFB0": {"name": "hSpriteAttrXor", "note": "XORed into each entry's attribute byte by BuildOamFromSpriteTable", "evidence": "reading"},
   "CB7D": {"name": "wSpriteSlotCount", "note": "number of 8-byte slots DrawSpriteSlots draws", "evidence": "reading"},
   "CB7F": {"name": "wSpriteSlots", "note": "start of the 8-byte slot array DrawSpriteSlots reads", "evidence": "reading"},
-  "C198": {"name": "wBGMapShadow", "note": "32 x 18 byte buffer copied to vBGMap0 (20 x 18 visible) by CopyShadowToBGMap; filled with $C3", "evidence": "reading"},
+  "C198": {"name": "wScreenTileBuffer", "note": "screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030)", "evidence": "reading"},
   "C524": {"name": "wSGBActive", "note": "set to 1 at boot, cleared on CGB and when DetectSGB finds no Super Game Boy; SendSGBPacketSet, DelayBCWhenSGB and SpinDelay return at once when it is 0", "evidence": "reading"},
   "C47C": {"name": "wSGBPacketIndex", "note": "packet set number for SendSGBPacketSet; $FF selects wSGBPacketBuffer", "evidence": "reading"},
   "C47F": {"name": "wSGBPacketBuffer", "note": "packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF", "evidence": "reading"},

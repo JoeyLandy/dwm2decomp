@@ -1109,7 +1109,7 @@ Jump_031_471C::
     dw Jump_031_474A
 
 Jump_031_4724::
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
     call Func_031_753F
@@ -1167,11 +1167,11 @@ Jump_031_4793::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_46C1)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_031_47A9::
     call Func_031_47C7
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
     call Func_031_753F
     ret
@@ -7194,7 +7194,7 @@ Jump_031_6E79::
     farcall Func_01A_7276
     ld hl, vBGMap0
     ld bc, $1412
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
 
 Jump_031_6EAC::
     push bc
@@ -7664,7 +7664,7 @@ Func_031_71C4::
 ; 6 call sites from 6 routines (e.g. Func_031_47C7, Func_031_46C1, Func_016_733F, Func_019_419B, ...)
 ; reads: wIsCGB
 ; writes: rVBK
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_031_71F5::
     ld a, [wIsCGB]
     or a, a
@@ -7693,7 +7693,7 @@ Jump_031_7207::
     ldh [rVBK], a
 
 Jump_031_721B::
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
 
 Jump_031_7221::
@@ -8255,7 +8255,7 @@ Jump_031_7557::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_72AC)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_031_755B::
     ld e, [hl]
     inc hl
@@ -8266,7 +8266,7 @@ Func_031_755B::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     pop de
     ret
@@ -8482,7 +8482,7 @@ Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 7 call sites from 6 routines (e.g. Func_031_6885, Func_031_7450, Func_031_7431, Func_031_7412, ...)
 ; reads: wC58A, wC57F
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_031_77B9::
     ld a, [wC58A]
     or a, a
@@ -8515,7 +8515,7 @@ Jump_031_77DD::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push hl
@@ -8536,7 +8536,7 @@ Jump_031_7805::
 
 ; 6 call sites from 5 routines (e.g. Func_031_73DD, Func_031_73BE, Func_031_739F, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wD8BF, wBGMapShadow
+; points at: wD8BF, wScreenTileBuffer
 Func_031_7806::
     ld a, [wC58A]
     cp a, $02
@@ -8580,7 +8580,7 @@ Jump_031_782B::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     ld d, h
     ld e, l
@@ -8593,7 +8593,7 @@ Jump_031_785D::
 
 ; 6 call sites from 5 routines (e.g. Func_031_73DD, Func_031_73BE, Func_031_739F, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wD8DF, wBGMapShadow
+; points at: wD8DF, wScreenTileBuffer
 Func_031_785F::
     ld a, [wC58A]
     cp a, $02
@@ -8637,7 +8637,7 @@ Jump_031_7884::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     ld d, h
     ld e, l
@@ -8650,7 +8650,7 @@ Jump_031_78B6::
 
 ; 2 call sites from 1 routine (e.g. Func_031_76AE)
 ; reads: wC58A, wC57F
-; points at: wBGMapShadow, wD8B7
+; points at: wScreenTileBuffer, wD8B7
 Func_031_78B8::
     ld a, [wC58A]
     cp a, $02
@@ -8685,7 +8685,7 @@ Jump_031_78DD::
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     ld [hl], $EA
     inc hl
@@ -8709,7 +8709,7 @@ Jump_031_7912::
 
 ; 6 call sites from 5 routines (e.g. Func_031_7450, Func_031_7431, Func_031_7412, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_031_7914::
     ld a, [wC58A]
     or a, a
@@ -8742,7 +8742,7 @@ Jump_031_7938::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push hl
@@ -8763,7 +8763,7 @@ Jump_031_7964::
 
 ; 6 call sites from 5 routines (e.g. Func_031_7450, Func_031_7431, Func_031_7412, Func_03A_66A9, ...)
 ; reads: wC58A, wC57F
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_031_7965::
     ld a, [wC58A]
     or a, a
@@ -8796,7 +8796,7 @@ Jump_031_7989::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push hl
@@ -8817,7 +8817,7 @@ Jump_031_79B5::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wC57F
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_031_79B6:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     or a, a
@@ -8850,7 +8850,7 @@ Jump_031_79DA::
     add_a_to_hl
     deref_hl
     push hl
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push hl

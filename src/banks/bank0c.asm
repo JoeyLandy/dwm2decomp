@@ -570,10 +570,10 @@ Func_00C_433D:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD799, wD79A, wD780
 ; writes: hFFB9, hFFBA, hFF8D, wD780, wC52D, wC52E, wC52F, wC530, ...
-; points at: wC364, wBGMapShadow, wD1CC, wD000
+; points at: wC364, wScreenTileBuffer, wD1CC, wD000
 Func_00C_4360:: ; heuristic: target of a pointer table; C0
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     call Func_00C_52D0
     ld a, [wIsCGB]
@@ -2692,12 +2692,12 @@ Jump_00C_51E3::
 ; 28 call sites from 21 routines (e.g. Func_00C_7002, Func_00C_6674, Func_00C_6E0C, Func_00C_6DC5, ...)
 ; reads: wStringIndex, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_00C_51F5::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h
@@ -3560,7 +3560,7 @@ Jump_00C_66C0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wC82C, wD7FB, wD780
 ; writes: wD7F0, wD780, wD7FA, wC52D, wC52E, wC52F, wC530, wC920, ...
-; points at: wD780, wC364, wBGMapShadow, wD1CC, wD000
+; points at: wD780, wC364, wScreenTileBuffer, wD1CC, wD000
 Func_00C_66D7:: ; heuristic: target of a pointer table; C0
     ld hl, wD780
     ld b, $6F
@@ -3571,7 +3571,7 @@ Jump_00C_66DC::
     dec b
     jr nz, Jump_00C_66DC
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     call Func_00C_52D0
     ld a, [wIsCGB]
@@ -5389,7 +5389,7 @@ Jump_00C_72BA::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_00C_72C0:: ; heuristic: follows a terminator; C0
     sub a, b
     ld bc, $0258
@@ -5405,17 +5405,17 @@ Jump_00C_72C9::
 
 ; 7 call sites from 6 routines (e.g. Func_00C_6674, Func_00C_6FCB, Func_00C_6DC5, Func_00C_6CD0, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_00C_72CC::
     push bc
     push hl
     push de
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld a, l
     ld e, a

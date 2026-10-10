@@ -683,8 +683,8 @@
     "evidence": "reading"
   },
   "03:42DA": {
-    "name": "CopyShadowToBGMap",
-    "note": "copies the 20 x 18 tiles at the start of wBGMapShadow to vBGMap0 (CopyRectToBGMap with BC = $1412)",
+    "name": "CopyTileBufferToBGMap",
+    "note": "copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC = $1412)",
     "evidence": "reading"
   },
   "03:42E3": {
@@ -698,8 +698,8 @@
     "evidence": "reading"
   },
   "33:4001": {
-    "name": "CopyBlockToBGMapShadow",
-    "note": "DE = block number: the table at $405F gives each block an offset into wBGMapShadow (word), a width B and a height C, followed by B * C tile bytes; they are copied into wBGMapShadow rows 32 bytes apart",
+    "name": "CopyBlockToTileBuffer",
+    "note": "DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows 32 bytes apart",
     "evidence": "reading"
   },
   "5F:6BCD": {
@@ -738,7 +738,7 @@
     "evidence": "reading"
   },
   "F1:5834": {
-    "name": "BeginBank0EString",
+    "name": "BeginString_Bank0E_Cat0",
     "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E",
     "evidence": "reading"
   },
@@ -996,5 +996,30 @@
     "name": "DrawMetaSpriteAt",
     "note": "DE = table of set pointers: returns at once when hOamNextEntry is $27 or more; otherwise converts the 16-bit position (hSpriteOriginX with hFFAA, hSpriteOriginY with hFFAC) to screen coordinates by adding the scroll-offset words hSpriteScrollXLo/Hi and hSpriteScrollYLo/Hi, and writes OAM entries for the sprite chosen by hSpriteSetIndex and hSpriteSubIndex (tile += hSpriteTileOffset, attribute ^= hSpriteAttrXor)",
     "evidence": "reading + execution (E-0030)"
+  },
+  "02:59CD": {
+    "name": "TileBlockedAtPixel",
+    "note": "B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)",
+    "evidence": "reading + execution (E-0030)"
+  },
+  "02:5A51": {
+    "name": "FindSpriteSlotAtTile",
+    "note": "B = X, C = Y in pixels: returns A = the 1-based number of the first slot of wSpriteSlots (from wCB8A, count wSpriteSlotCount) whose X and Y bytes, or those plus 15, lie in the same 16-pixel cell as (B, C); A = 0 when none does",
+    "evidence": "reading"
+  },
+  "33:5550": {
+    "name": "BeginString_Bank07_Cat5",
+    "note": "A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07",
+    "evidence": "reading"
+  },
+  "F0:5DDD": {
+    "name": "BeginString_BankF0_Cat0",
+    "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_48A0",
+    "evidence": "reading"
+  },
+  "1B:61F5": {
+    "name": "BeginString_Bank1B_Cat0",
+    "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C",
+    "evidence": "reading"
   }
 }

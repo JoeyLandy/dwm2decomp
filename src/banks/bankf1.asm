@@ -271,16 +271,16 @@ Jump_0F1_41E0::
 ; reads: wC61D, wC0A7, wC0A6
 ; points at: wC2A6
 Func_0F1_41EE::
-    call ClearBGMapShadow_BankF1
+    call ClearScreenTileBuffer_BankF1
     ld e, $0B
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $0C
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC61D]
     or a, a
     ret z
     ld e, $0D
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC0A7]
     cp a, $02
     jr c, Jump_0F1_422C
@@ -305,7 +305,7 @@ Jump_0F1_422C::
 Func_0F1_422D::
     call Func_0F1_41EE
     ld e, $32
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46E]
     and a, $07
     ld hl, $4A6A
@@ -317,9 +317,9 @@ Func_0F1_422D::
 Func_0F1_4244:: ; heuristic: follows a terminator; C0
     call Func_0F1_422D
     ld e, $11
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld e, $1B
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wD081]
     ld hl, Data_0F1_4613
     add_a_to_hl
@@ -338,7 +338,7 @@ Func_0F1_4276:: ; heuristic: follows a terminator; C0
     call FillTilesFromRequest
     call Func_0F1_4244
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $03
     ld hl, Func_0F1_4A5E
@@ -349,7 +349,7 @@ Func_0F1_4276:: ; heuristic: follows a terminator; C0
 Func_0F1_4290:: ; heuristic: follows a terminator; C0
     call Func_0F1_422D
     ld e, $0F
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -358,7 +358,7 @@ Func_0F1_429C:: ; heuristic: follows a terminator; C0
     call FillTilesFromRequest
     call Func_0F1_4290
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46F]
     and a, $03
     ld hl, Data_0F1_4A72
@@ -374,7 +374,7 @@ Func_0F1_42B6::
     call FillTilesFromRequest
     call Func_0F1_422D
     ld e, $10
-    farcall CopyBlockToBGMapShadow
+    farcall CopyBlockToTileBuffer
     ld a, [wC46F]
     and a, $03
     ld hl, Data_0F1_4A72
@@ -969,10 +969,10 @@ Data_0F1_47C8:: ; heuristic: target of a monotone pointer table; C0
     db $C9
 
 ; 3 call sites from 1 routine (e.g. Func_0F1_4001)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_0F1_4811::
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
 
 Jump_0F1_481A::
@@ -1257,19 +1257,19 @@ Func_0F1_4997:: ; heuristic: follows a terminator; C0
     db $30, $C5, $21, $2B, $40, $06, $08, $D7, $E1, $7D, $EA, $2F, $C5, $7C, $EA, $30
     db $C5, $E1, $7D, $EA, $2D, $C5, $7C, $EA, $2E, $C5, $C9
 
-; fills the $240 bytes at wBGMapShadow with $C3 (the same 12 bytes appear in 2 banks)
+; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_41EE)
-; points at: wBGMapShadow
-ClearBGMapShadow_BankF1::
+; points at: wScreenTileBuffer
+ClearScreenTileBuffer_BankF1::
 Func_0F1_49E1:: ; address name
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4244)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_0F1_49ED:: ; heuristic: follows a terminator; C0
     ld e, [hl]
     inc hl
@@ -1280,7 +1280,7 @@ Func_0F1_49ED:: ; heuristic: follows a terminator; C0
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     pop de
 
@@ -1380,9 +1380,9 @@ Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 6 call sites from 5 routines (e.g. Func_007_4B27, Func_007_4E11, Func_01B_660D, GameMode6_Init, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_0F1_4AA8::
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $02D0
 
 Jump_0F1_4AAE::
@@ -1474,7 +1474,7 @@ Jump_0F1_4B2E::
     xor a, a
     ld [wStringCategory], a
     ld a, $01
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     xor a, a
     ld [wC594], a
     ld hl, wD06A
@@ -1494,7 +1494,7 @@ Jump_0F1_4B53::
     and a, a
     ret nz
     ld a, $07
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1518,7 +1518,7 @@ Jump_0F1_4B77::
     xor a, a
     ld [wC594], a
     ld a, $09
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1582,7 +1582,7 @@ Jump_0F1_4BE5::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wC594], a
     ret
@@ -1601,7 +1601,7 @@ Jump_0F1_4C08::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wC594], a
     ret
@@ -1614,7 +1614,7 @@ Jump_0F1_4C24::
     ld a, $09
     ld [wD781], a
     ld a, $02
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wC594], a
     ret
@@ -1635,7 +1635,7 @@ Jump_0F1_4C4C::
     ret nz
     farcall Func_015_40FA
     ld a, $09
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ret
 
 Jump_0F1_4C64::
@@ -1660,7 +1660,7 @@ Jump_0F1_4C78::
     inc a
     ld [wD782], a
     ld a, $07
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ret
 
 Jump_0F1_4C8E::
@@ -1681,7 +1681,7 @@ Jump_0F1_4CA0::
     xor a, a
     ld [wC594], a
     ld a, $09
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -1705,7 +1705,7 @@ Jump_0F1_4CCA::
     and a, a
     jr nz, Jump_0F1_4CE2
     ld a, $04
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -1808,7 +1808,7 @@ Jump_0F1_4D6F::
     dec a
     ld [wD781], a
     ld a, $05
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ret
 
 Jump_0F1_4DAB::
@@ -1835,7 +1835,7 @@ Jump_0F1_4DBE::
     dec a
     ld [wD781], a
     ld a, $06
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ret
 
 Jump_0F1_4DD0::
@@ -1882,7 +1882,7 @@ Jump_0F1_4E19::
     xor a, a
     ld [rRAMG2], a
     ld a, $07
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     call Func_0F1_4D4E
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
@@ -1910,7 +1910,7 @@ Jump_0F1_4E4A::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wC594], a
     ret
@@ -1963,7 +1963,7 @@ Jump_0F1_4EA7::
     cp a, b
     jr nz, Jump_0F1_4ED1
     ld a, $08
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $10
     ld [wD781], a
     xor a, a
@@ -1980,7 +1980,7 @@ Jump_0F1_4ED1::
 
 Jump_0F1_4EDE::
     ld a, $0A
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $10
     ld [wD781], a
     xor a, a
@@ -2030,7 +2030,7 @@ Jump_0F1_4F12::
     ld [hl+], a
     ld [hl], $12
     ld a, $0B
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2050,7 +2050,7 @@ Jump_0F1_4F4C::
     inc a
     ld [wD781], a
     ld a, $0D
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ret
 
 Jump_0F1_4F6F::
@@ -2093,7 +2093,7 @@ Jump_0F1_4FAA::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wC594], a
     ret
@@ -2113,7 +2113,7 @@ Jump_0F1_4FD7::
     ld a, $09
     ld [wD781], a
     ld a, $02
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wC594], a
     ret
@@ -2170,14 +2170,14 @@ Jump_0F1_5048::
     and a, a
     jr z, Jump_0F1_5059
     ld a, $16
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
 
 Jump_0F1_5059::
     ret
 
 Jump_0F1_505A::
     ld a, $0C
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2237,7 +2237,7 @@ Jump_0F1_50C3::
 
 Jump_0F1_50DC::
     ld a, $0B
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $17
     ld [wD781], a
     ret
@@ -2252,7 +2252,7 @@ Jump_0F1_50E7::
     xor a, a
     ld [wD782], a
     ld a, $07
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ret
 
 Jump_0F1_50FF::
@@ -2345,7 +2345,7 @@ Jump_0F1_51A4::
     ld a, $09
     ld [wD781], a
     ld a, $03
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wC594], a
     ret
@@ -2374,7 +2374,7 @@ Jump_0F1_51DC::
     and a, a
     ret nz
     ld a, $07
-    call BeginBank0EString
+    call BeginString_Bank0E_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3195,7 +3195,7 @@ Func_0F1_5812::
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E
 ; 26 call sites from 2 routines (e.g. Func_0F1_4AD0, Func_0F1_4D4E)
 ; writes: wStringIndex, wStringCategory
-BeginBank0EString::
+BeginString_Bank0E_Cat0::
 Func_0F1_5834:: ; address name
     ld [wStringIndex], a
     xor a, a
@@ -3331,17 +3331,17 @@ Data_0F1_58F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_0F1_5812, Func_0F1_4D4E)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_0F1_58FA::
     push bc
     push hl
     push de
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h
@@ -3505,12 +3505,12 @@ Jump_0F1_59B8::
 ; 4 call sites from 2 routines (e.g. Func_0F1_4D4E, Func_0F1_5812)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_0F1_59CA::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h

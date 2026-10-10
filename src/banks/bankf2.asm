@@ -470,12 +470,12 @@ Func_0F2_434E:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_0F2_436F::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld a, l
     ld e, a

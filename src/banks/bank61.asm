@@ -919,7 +919,7 @@ Jump_061_454E::
     ld b, c
     ld e, l
     ld d, h
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToVRAM
     pop bc
     pop hl
@@ -1512,7 +1512,7 @@ Jump_061_5443::
     inc de
     inc de
     inc de
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToVRAM
     pop bc
     pop hl

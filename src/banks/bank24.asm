@@ -1871,12 +1871,12 @@ Jump_024_4E3F::
 ; 18 call sites from 2 routines (e.g. GameMode6_Init, GameMode6_Update)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_024_4E57::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld a, l
     ld e, a
@@ -4313,7 +4313,7 @@ Jump_024_659A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wIsCGB, wD781, wD783, wD784
 ; writes: hFFB9, wD782, wD781, wD783, wD784
-; points at: wC364, wBGMapShadow, wC300, wC29C, wD1CC, wD000, wD168, wD104
+; points at: wC364, wScreenTileBuffer, wC300, wC29C, wD1CC, wD000, wD168, wD104
 Func_024_65B1:: ; heuristic: target of a pointer table; C0
     ld a, [wD782]
     and a, a
@@ -4353,7 +4353,7 @@ Jump_024_65CA::
 
 Jump_024_65F4::
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     call Func_024_6887
     ld hl, wC300
@@ -4616,12 +4616,12 @@ Jump_024_6825::
 ; 9 call sites from 8 routines (e.g. Func_024_6655, Func_024_65B1, Func_024_6535, Func_024_6AE4, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_024_6837::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h
@@ -5036,17 +5036,17 @@ Data_024_6A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_024_62C9)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_024_6A90::
     push bc
     push hl
     push de
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld e, l
     ld d, h

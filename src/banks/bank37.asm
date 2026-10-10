@@ -2303,17 +2303,17 @@ Data_037_5A57:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_037_5976, Func_037_4DC7)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_037_5A5D::
     push bc
     push hl
     push de
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld a, l
     ld e, a
@@ -2489,12 +2489,12 @@ Jump_037_5B27::
 ; 4 call sites from 2 routines (e.g. Func_037_4DC7, Func_037_5976)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_037_5B3F::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld a, l
     ld e, a

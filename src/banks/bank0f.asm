@@ -244,7 +244,7 @@ Jump_00F_418E::
     ld a, $FB
     ld [wStringIndex], a
     farcall ShowString_Bank28
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld a, $C3
     ld bc, $0168
     call FillBytes

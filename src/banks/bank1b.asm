@@ -1148,7 +1148,7 @@ Jump_01B_47F5::
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. ShowString_Bank1B_481A, GameMode0_Update, Func_01B_61F5, Func_01B_7439, ...)
+; 5 call sites from 5 routines (e.g. ShowString_Bank1B_481A, GameMode0_Update, BeginString_Bank1B_Cat0, Func_01B_7439, ...)
 BeginStringDisplay_Bank1B_480C::
 Func_01B_480C:: ; address name
     ld de, Data_01B_4821
@@ -1750,7 +1750,7 @@ Jump_01B_53DB::
 
 Jump_01B_53E9::
     ld hl, wC364
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $0104
     call Func_01B_62EC
     ld a, [wIsCGB]
@@ -1779,7 +1779,7 @@ Jump_01B_5407::
 
 Jump_01B_5429::
     ld a, $01
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1794,7 +1794,7 @@ Jump_01B_543E::
     and a, a
     ret nz
     ld a, $07
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1818,7 +1818,7 @@ Jump_01B_5462::
     xor a, a
     ld [wC594], a
     ld a, $06
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     xor a, a
     ld [wD781], a
     ld a, [wD780]
@@ -2087,7 +2087,7 @@ Jump_01B_5688::
     ld a, h
     ld [wC530], a
     ld a, $04
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ret
 
 Jump_01B_56B7::
@@ -2124,7 +2124,7 @@ Jump_01B_56E5::
     xor a, a
     ld [wC594], a
     ld a, b
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2135,7 +2135,7 @@ Jump_01B_56F5::
     and a, a
     ret nz
     ld a, $07
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2265,7 +2265,7 @@ Jump_01B_57C0::
 Jump_01B_57E6::
     call Func_01B_6203
     ld a, $06
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2319,7 +2319,7 @@ Jump_01B_5823::
 
 Jump_01B_583A::
     ld a, $05
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2347,7 +2347,7 @@ Jump_01B_5850::
 
 Jump_01B_5864::
     ld a, $07
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2822,7 +2822,7 @@ Jump_01B_5B12::
     ld a, $08
 
 Jump_01B_5B14::
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2840,7 +2840,7 @@ Jump_01B_5B1F::
 Jump_01B_5B2C::
     call Func_01B_6203
     ld a, $06
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     xor a, a
     ld [wD782], a
     ld a, $0A
@@ -2869,7 +2869,7 @@ Jump_01B_5B3E::
     inc a
     ld [wD781], a
     ld a, $09
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ret
 
 Jump_01B_5B7E::
@@ -2963,7 +2963,7 @@ Jump_01B_5C06::
     ld a, h
     ld [wC530], a
     ld a, $0A
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3025,7 +3025,7 @@ Jump_01B_5C8A::
     ld a, h
     ld [wC530], a
     ld a, $09
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ret
 
 Jump_01B_5CAD::
@@ -3068,7 +3068,7 @@ Jump_01B_5CD3::
 
 Jump_01B_5CFE::
     ld a, $07
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3076,7 +3076,7 @@ Jump_01B_5CFE::
 
 Jump_01B_5D0B::
     ld a, $0B
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3436,7 +3436,7 @@ Jump_01B_5EEC::
 
 Jump_01B_5F7D::
     ld a, $0C
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ld a, $80
     ld [wC836], a
     ret
@@ -3455,7 +3455,7 @@ Jump_01B_5F88::
     xor a, a
     ld [wD783], a
     ld a, $07
-    call Func_01B_61F5
+    call BeginString_Bank1B_Cat0
     ret
 
 Jump_01B_5FAA::
@@ -3809,9 +3809,11 @@ Jump_01B_61D7::
     call Func_01B_618C
     ret
 
+; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C
 ; 18 call sites from 3 routines (e.g. Func_01B_53CE, Func_01B_5C3B, Func_01B_5A41)
 ; writes: wStringIndex, wStringCategory
-Func_01B_61F5::
+BeginString_Bank1B_Cat0::
+Func_01B_61F5:: ; address name
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
@@ -3910,12 +3912,12 @@ Jump_01B_625F::
 ; 18 call sites from 7 routines (e.g. Func_01B_5C3B, Func_01B_5A41, Func_01B_6203, Func_01B_53CE, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_01B_6277::
     push de
     push bc
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld a, l
     ld e, a
@@ -4129,17 +4131,17 @@ Jump_01B_6360::
 
 ; 1 call site from 1 routine (e.g. Func_01B_6203)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wBGMapShadow, wD000
+; points at: wScreenTileBuffer, wD000
 Func_01B_6371::
     push bc
     push hl
     push de
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     ld a, l
     ld e, a
@@ -4558,7 +4560,7 @@ Jump_01B_6753::
     farcall Func_015_40FA
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_5550)
+; 1 call site from 1 routine (e.g. BeginString_Bank07_Cat5)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC42E, wC42F

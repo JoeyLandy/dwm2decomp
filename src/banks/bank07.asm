@@ -746,9 +746,9 @@ Jump_007_4A9D::
     jp Jump_000_077A
 
 ; 5 call sites from 4 routines (e.g. GameMode5_Init, Func_007_6DE3, Func_007_7807, Func_007_7C5F)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_007_4AE4::
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $1412
     ld a, d
 
@@ -769,7 +769,7 @@ Jump_007_4AEB::
     ret
 
 ; 19 call sites from 12 routines (e.g. Func_007_4B27, GameMode5_Init, Func_007_65F1, Func_007_60E9, ...)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_007_4AFE::
     ld e, [hl]
     inc hl
@@ -780,7 +780,7 @@ Func_007_4AFE::
     ld c, [hl]
     inc hl
     push hl
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     add hl, de
     pop de
 
@@ -803,10 +803,10 @@ Jump_007_4B0E::
     ret
 
 ; 12 call sites from 9 routines (e.g. Func_007_4B27, GameMode5_Init, Func_007_7807, Func_007_60E9, ...)
-; points at: wBGMapShadow
+; points at: wScreenTileBuffer
 Func_007_4B1E::
     ld hl, vBGMap0
-    ld de, wBGMapShadow
+    ld de, wScreenTileBuffer
     ld bc, $1412
 
 ; 10 call sites from 8 routines (e.g. Func_007_65F1, Func_007_60E9, Func_007_6DE3, Func_007_7724, ...)
@@ -1094,7 +1094,7 @@ Jump_007_4D45::
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -1774,7 +1774,7 @@ Jump_007_591A::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_40D6
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -1866,7 +1866,7 @@ Jump_007_59C0::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_45A7
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -1958,7 +1958,7 @@ Jump_007_5A66::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_4946
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -2223,7 +2223,7 @@ Jump_007_5C5F::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_590F
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -2639,7 +2639,7 @@ Jump_007_5F09::
     call DecompressToVRAM
     ld b, $E1
     ld de, Data_0E1_582B
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
@@ -2892,7 +2892,7 @@ Jump_007_60F3::
     call SerialSendByte
     ld a, $01
     ld [wD781], a
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -3132,7 +3132,7 @@ Jump_007_62CE::
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_62E9
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -3617,7 +3617,7 @@ Jump_007_6633::
     ld [rRAMB], a
     xor a, a
     ld [rRAMG], a
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
     call FillBytes
@@ -3833,7 +3833,7 @@ Jump_007_6856::
     or a, a
     ret nz
     ld a, $C3
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $02D0
     call FillBytes
     ld a, [wIsCGB]
@@ -6505,7 +6505,7 @@ Jump_007_7A9C::
     ret
 
 Jump_007_7AA7::
-    ld hl, wBGMapShadow
+    ld hl, wScreenTileBuffer
     ld bc, $0280
     ld a, $C3
     call FillBytes
