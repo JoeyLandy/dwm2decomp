@@ -100,6 +100,12 @@
     "note": "index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28",
     "evidence": "reading"
   },
+  "C0A2": {"name": "wMenuRowCount", "note": "number of cursor rows UpdateMenuCursor wraps over (E-0060)", "evidence": "reading (E-0060)"},
+  "C0A3": {"name": "wMenuPageCount", "note": "number of pages UpdateMenuCursor steps through with Left/Right; 0 or 1 disables paging (E-0060)", "evidence": "reading (E-0060)"},
+  "C0A5": {"name": "wMenuLastPageRows", "note": "rows on the last page; UpdateMenuCursor clamps the row to this minus 1 there (E-0060)", "evidence": "reading (E-0060)"},
+  "C0A6": {"name": "wMenuPage", "note": "current page index set by UpdateMenuCursor (E-0060)", "evidence": "reading (E-0060)"},
+  "C53D": {"name": "wStringDestLo", "note": "low byte of the destination CopyStringToBuffer writes the string to (E-0059)", "evidence": "reading (E-0059)"},
+  "C53E": {"name": "wStringDestHi", "note": "high byte of the destination CopyStringToBuffer writes the string to (E-0059)", "evidence": "reading (E-0059)"},
   "C528": {
     "name": "wStringCategory",
     "note": "category index LookupString uses in the table of tables",

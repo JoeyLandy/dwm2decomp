@@ -50,11 +50,11 @@ DEF wC01B EQU $C01B
 DEF wC026 EQU $C026
 DEF wC0A0 EQU $C0A0
 DEF wC0A1 EQU $C0A1
-DEF wC0A2 EQU $C0A2
-DEF wC0A3 EQU $C0A3
+DEF wMenuRowCount EQU $C0A2 ; number of cursor rows UpdateMenuCursor wraps over (E-0060) (reading (E-0060))
+DEF wMenuPageCount EQU $C0A3 ; number of pages UpdateMenuCursor steps through with Left/Right; 0 or 1 disables paging (E-0060) (reading (E-0060))
 DEF wC0A4 EQU $C0A4
-DEF wC0A5 EQU $C0A5
-DEF wC0A6 EQU $C0A6
+DEF wMenuLastPageRows EQU $C0A5 ; rows on the last page; UpdateMenuCursor clamps the row to this minus 1 there (E-0060) (reading (E-0060))
+DEF wMenuPage EQU $C0A6 ; current page index set by UpdateMenuCursor (E-0060) (reading (E-0060))
 DEF wC0A7 EQU $C0A7
 DEF wC0A8 EQU $C0A8
 DEF wC0C0 EQU $C0C0
@@ -390,8 +390,8 @@ DEF wC538 EQU $C538
 DEF wC539 EQU $C539
 DEF wC53B EQU $C53B
 DEF wC53C EQU $C53C
-DEF wC53D EQU $C53D
-DEF wC53E EQU $C53E
+DEF wStringDestLo EQU $C53D ; low byte of the destination CopyStringToBuffer writes the string to (E-0059) (reading (E-0059))
+DEF wStringDestHi EQU $C53E ; high byte of the destination CopyStringToBuffer writes the string to (E-0059) (reading (E-0059))
 DEF wC53F EQU $C53F
 DEF wC54F EQU $C54F
 DEF wC550 EQU $C550

@@ -4728,7 +4728,7 @@ Jump_01D_639F::
     ld d, [hl]
     pop hl
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     pop de
     ld a, [wD7F1]
     and a, a
@@ -4920,7 +4920,7 @@ Jump_01D_64B2::
     call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -5120,7 +5120,7 @@ Jump_01D_65D2::
     call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -5250,7 +5250,7 @@ Jump_01D_668E::
     call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -5456,7 +5456,7 @@ Jump_01D_67C1::
     call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -5972,7 +5972,7 @@ Jump_01D_6AE3::
     call BGMapAddressAtScroll_Bank1D_62FF
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     ld e, l
     ld d, h
     jr Jump_01D_6B10

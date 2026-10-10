@@ -138,7 +138,7 @@ Jump_001_4061:: ; address name
     ld [wC0A0], a
     ld [wC0A1], a
     xor a, a
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ret
 
 Data_001_412F:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -846,7 +846,7 @@ Func_001_4AD4:: ; address name
 
 ; update for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wJoypadPressed, wC0A2, wC0A1, wC0A0, wJoypadPressedRepeat, wC46B, wFrameCounterLo
+; reads: wC52B, wJoypadPressed, wMenuRowCount, wC0A1, wC0A0, wJoypadPressedRepeat, wC46B, wFrameCounterLo
 ; writes: wStringIndex, wStringCategory, wC52F, wC530, wC52D, wC52E, wC46B, wModeState
 ; points at: wC0A0, wModeChangeRequest
 DebugMessageTest_Update::
@@ -857,7 +857,7 @@ Jump_001_4AF0:: ; address name
     ld a, [wJoypadPressed]
     and a, $01
     jp z, Jump_001_4C56
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     ld [wStringIndex], a
     ld a, [wC0A1]
     ld [wStringCategory], a
@@ -1303,7 +1303,7 @@ Jump_001_4D54::
 
 ; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
-; reads: wC0A0, wC46B, wC0A1, wC0A2
+; reads: wC0A0, wC46B, wC0A1, wMenuRowCount
 GameMode0_Update_Table2_Case21_Sub01::
 Func_001_4D6E:: ; address name
     ld a, [wC0A0]
@@ -1326,7 +1326,7 @@ Jump_001_4D79::
 
 ; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
-; reads: wC0A1, wC46B, wC0A0, wC0A2
+; reads: wC0A1, wC46B, wC0A0, wMenuRowCount
 GameMode0_Update_Table2_Case21_Sub02::
 Func_001_4D93:: ; address name
     ld a, [wC0A1]
@@ -1346,10 +1346,10 @@ Jump_001_4D9E::
 
 ; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
-; reads: wC0A2, wC46B, wC0A0, wC0A1
+; reads: wMenuRowCount, wC46B, wC0A0, wC0A1
 GameMode0_Update_Table2_Case21_Sub03::
 Func_001_4DB1:: ; address name
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ED
     call Func_001_6A7E
     jr Jump_001_4DBC
@@ -1374,7 +1374,7 @@ Jump_001_4DDC::
     ld a, [wC46B]
     cp a, $02
     jr z, Jump_001_4DEC
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ED
     call Func_001_6A7E
 
@@ -1383,7 +1383,7 @@ Jump_001_4DEC::
 
 ; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 3 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
-; reads: wC46B, wC0A0, wC0A1, wC0A2
+; reads: wC46B, wC0A0, wC0A1, wMenuRowCount
 ; points at: wC0A0
 GameMode0_Update_Table2_Case21_Sub04::
 Func_001_4DED:: ; address name
@@ -1425,7 +1425,7 @@ Jump_001_4E1B::
 
 Jump_001_4E2A::
     ld de, vBGMap0 + $ED
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
 
 Jump_001_4E30::
     add_a_to_hl
@@ -1437,7 +1437,7 @@ Jump_001_4E30::
 ; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
 ; reads: wC46B
-; writes: wC0A1, wC0A2
+; writes: wC0A1, wMenuRowCount
 GameMode0_Update_Table2_Case21_Sub05::
 Func_001_4E3B:: ; address name
     ld a, [wC46B]
@@ -1446,14 +1446,14 @@ Func_001_4E3B:: ; address name
     xor a, a
     ld [wC0A1], a
     xor a, a
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ret
 
 Jump_001_4E4B::
     cp a, $01
     jr nz, Jump_001_4E53
     xor a, a
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
 
 Jump_001_4E53::
     ret

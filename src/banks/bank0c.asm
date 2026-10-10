@@ -2667,7 +2667,7 @@ Func_00C_51F5::
     ld d, h
     pop hl
     push hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     pop hl
     push hl
     ld a, l
@@ -2703,7 +2703,7 @@ Jump_00C_5226::
     ld e, l
     ld d, h
     pop hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     xor a, a
     ldh [rSVBK], a
     ldh [rVBK], a
@@ -3729,7 +3729,7 @@ Jump_00C_68F9::
     call BGMapAddressAtScroll_Bank0C
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -4305,7 +4305,7 @@ Jump_00C_6CA7::
     call BGMapAddressAtScroll_Bank0C
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b

@@ -1021,7 +1021,7 @@ Func_005_4605::
 
 Jump_005_460F::
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr nc, Jump_005_461C
     inc c
     dec b
@@ -4731,7 +4731,7 @@ Jump_005_59D0::
     ld a, c
     cp a, e
     jr z, Jump_005_59D9
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr nc, Jump_005_59DF
 
 Jump_005_59D9::
@@ -4817,7 +4817,7 @@ Jump_005_5A4B::
     ld a, c
     cp a, e
     jr z, Jump_005_5A54
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr nc, Jump_005_5A5A
 
 Jump_005_5A54::
@@ -4864,7 +4864,7 @@ Jump_005_5A85::
     ld a, c
     cp a, e
     jr z, Jump_005_5A92
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr nc, Jump_005_5A98
 
 Jump_005_5A92::
@@ -4969,7 +4969,7 @@ Jump_005_5B11::
     ld a, c
     cp a, e
     jr z, Jump_005_5B1A
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr nc, Jump_005_5B20
 
 Jump_005_5B1A::
@@ -5034,7 +5034,7 @@ Jump_005_5B6A::
     ld a, c
     cp a, e
     jr z, Jump_005_5B73
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr nc, Jump_005_5B79
 
 Jump_005_5B73::
@@ -5710,7 +5710,7 @@ Jump_005_5EED::
 
 Jump_005_5EF0::
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_005_5F05
     ld a, [de]
     cp a, $02
@@ -5792,7 +5792,7 @@ Jump_005_5F56::
     cp a, d
     jr z, Jump_005_5F80
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_005_5F80
     ld a, c
     ld hl, wD80D
@@ -5896,7 +5896,7 @@ Jump_005_5FE0::
     ld a, c
     cp a, d
     jr z, Jump_005_6001
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_005_6001
     ld a, c
     ld hl, wDA5B
@@ -6024,7 +6024,7 @@ Jump_005_608D::
 
 Jump_005_6093::
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_005_60AD
     ld hl, wSlotPersonalityLo
     add_a_to_hl
@@ -7483,7 +7483,7 @@ Jump_005_68C6::
     jr nz, Jump_005_68F5
     ld a, c
     push de
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     pop de
     jr c, Jump_005_68F5
     ld a, c

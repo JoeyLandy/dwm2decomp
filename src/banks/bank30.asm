@@ -3418,7 +3418,7 @@ Jump_030_5D44::
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
 Func_030_5D49:: ; heuristic: follows a terminator; C0
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret c
     push hl
     push bc

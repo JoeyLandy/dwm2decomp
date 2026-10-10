@@ -282,18 +282,18 @@ Func_003_4208:: ; address name
 ; entry 0 of the `rst $00` table in Func_003_4208
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD
-; writes: wC0A2, wC0A3, wC0A6
+; writes: wMenuRowCount, wMenuPageCount, wMenuPage
 Func_003_4208_Case00::
 Jump_003_4218:: ; address name
     call Func_003_499B
     call Func_003_4A27
     farcall Func_016_7A64
     ld a, [wC6FD]
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $00
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld a, $00
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ret
 
 ; entry 1 of the `rst $00` table in Func_003_4208
@@ -307,14 +307,14 @@ Jump_003_4235:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_003_4208
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A3, wC0A6, wC0A7, wC46D, wC46E, wC46F
+; writes: wMenuPageCount, wMenuPage, wC0A7, wC46D, wC46E, wC46F
 Func_003_4208_Case02::
 Jump_003_423F:: ; address name
     call Func_003_641E
     call Func_003_6595
     xor a, a
-    ld [wC0A3], a
-    ld [wC0A6], a
+    ld [wMenuPageCount], a
+    ld [wMenuPage], a
     ld [wC0A7], a
     ld [wC46D], a
     ld [wC46E], a
@@ -520,7 +520,7 @@ Jump_003_4315::
 ; 2 call sites from 2 routines (e.g. Func_003_5E68_Table2_Case00, Func_003_5253_Table2_Case00)
 Func_003_432F::
     farcall Func_002_5E82
-    call Func_000_222B
+    call LoadRecordListNameTiles
     ret
 
 ; 12 call sites from 12 routines (e.g. Func_003_4659_Table2_Case04, Func_003_6A60_Table2_Case01, Func_003_6B5E_Case06, Func_003_6B5E_Case01, ...)
@@ -673,10 +673,12 @@ Jump_003_441A::
     pop bc
     ret
 
+; HL = cursor byte (low nibble = row, bit 7 = page-changed flag). Up/Down (wJoypadPressedRepeat bits 6/7) move the row with wrap over wMenuRowCount, erase the old cursor (Func_003_44F0), play sound $69, store the row (clearing bit 7) and draw it (Func_003_4506). When wMenuPageCount >= 2, Left/Right (bits 5/4) step wMenuPage with wrap, clamp the row to wMenuLastPageRows - 1 on the last page, set bit 7 and play sound $69. With no input the cursor blinks every 16 frames. wFrameCounterLo is reset on each move (E-0060)
 ; 19 call sites from 19 routines (e.g. Func_003_6A60_Table2_Case01, Func_003_6B5E_Case0E, Func_003_6B5E_Case03, Func_003_6B5E_Case01, ...)
-; reads: wJoypadPressedRepeat, wC0A2, wC0A3, wC0A6, wC0A5, wFrameCounterLo
-; writes: wFrameCounterLo, wC0A6
-Func_003_4425::
+; reads: wJoypadPressedRepeat, wMenuRowCount, wMenuPageCount, wMenuPage, wMenuLastPageRows, wFrameCounterLo
+; writes: wFrameCounterLo, wMenuPage
+UpdateMenuCursor::
+Func_003_4425:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_003_443A
@@ -685,7 +687,7 @@ Func_003_4425::
     dec a
     cp a, $FF
     jr nz, Jump_003_447E
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     dec a
     jr Jump_003_447E
 
@@ -693,7 +695,7 @@ Jump_003_443A::
     ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_003_444F
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     ld c, a
     ld a, [hl]
     and a, $0F
@@ -704,7 +706,7 @@ Jump_003_443A::
     jr Jump_003_447E
 
 Jump_003_444F::
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     or a, a
     jr z, Jump_003_44CB
     cp a, $01
@@ -713,7 +715,7 @@ Jump_003_444F::
     ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_003_446D
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     dec a
     cp a, $FF
     jr nz, Jump_003_449C
@@ -725,7 +727,7 @@ Jump_003_446D::
     ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_003_44CB
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     inc a
     cp a, b
     jr nz, Jump_003_449C
@@ -740,7 +742,7 @@ Jump_003_447E::
     cp a, b
     jr z, Jump_003_4491
     push de
-    call Func_003_44F0
+    call UpdateMenuCursor_Sub01
     pop de
     ld a, $69
     call QueueSoundEffect
@@ -748,20 +750,20 @@ Jump_003_447E::
 Jump_003_4491::
     ld [hl], b
     ld a, b
-    call Func_003_4506
+    call UpdateMenuCursor_Sub02
     xor a, a
     ld [wFrameCounterLo], a
     jr Jump_003_44EF
 
 Jump_003_449C::
-    ld [wC0A6], a
+    ld [wMenuPage], a
     inc a
     cp a, b
     jr nz, Jump_003_44BE
     ld a, [hl]
     and a, $0F
     ld c, a
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     dec a
     cp a, c
     jr nc, Jump_003_44BE
@@ -770,11 +772,11 @@ Jump_003_449C::
     push de
     ld a, [hl]
     and a, $0F
-    call Func_003_44F0
+    call UpdateMenuCursor_Sub01
     pop de
     pop af
     ld [hl], a
-    call Func_003_4506
+    call UpdateMenuCursor_Sub02
 
 Jump_003_44BE::
     set 7, [hl]
@@ -793,13 +795,13 @@ Jump_003_44CB::
     jr z, Jump_003_44E1
     ld a, [hl]
     and a, $0F
-    call Func_003_4506
+    call UpdateMenuCursor_Sub02
     jr Jump_003_44EF
 
 Jump_003_44E1::
     ld a, [hl]
     and a, $0F
-    call Func_003_44F0
+    call UpdateMenuCursor_Sub01
     ld a, [wFrameCounterLo]
     set 3, a
     ld [wFrameCounterLo], a
@@ -807,8 +809,10 @@ Jump_003_44E1::
 Jump_003_44EF::
     ret
 
-; 3 call sites from 1 routine (e.g. Func_003_4425)
-Func_003_44F0::
+; only called from UpdateMenuCursor (E-0047)
+; 3 call sites from 1 routine (e.g. UpdateMenuCursor)
+UpdateMenuCursor_Sub01::
+Func_003_44F0:: ; address name
     add a, a
     add a, e
     ld e, a
@@ -830,8 +834,10 @@ Jump_003_44F6::
     ei
     ret
 
-; 3 call sites from 1 routine (e.g. Func_003_4425)
-Func_003_4506::
+; only called from UpdateMenuCursor (E-0047)
+; 3 call sites from 1 routine (e.g. UpdateMenuCursor)
+UpdateMenuCursor_Sub02::
+Func_003_4506:: ; address name
     add a, a
     add a, e
     ld e, a
@@ -1049,12 +1055,12 @@ Func_003_4659::
 ; entry 0 of the `rst $00` table in Func_003_4659
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC608
-; writes: wC0A5, wC8C3, wC8C4
+; writes: wMenuLastPageRows, wC8C3, wC8C4
 ; points at: wC0A4
 Func_003_4659_Case00::
 Jump_003_4665:: ; address name
     ld a, [wC608]
-    ld [wC0A5], a
+    ld [wMenuLastPageRows], a
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
@@ -1182,7 +1188,7 @@ Func_003_4659_Table3_Case02::
 Jump_003_46F1:: ; address name
     ld de, Func_003_460B
     ld hl, wC46D
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_4706
@@ -1281,7 +1287,7 @@ Jump_003_4770:: ; address name
     farcall Func_01D_6A3D
     ld de, Func_003_460B
     ld hl, wC46D
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_478B
@@ -1382,7 +1388,7 @@ Func_003_4659_Table5_Case02::
 Jump_003_47FA:: ; address name
     ld de, Func_003_460B
     ld hl, wC46D
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_480F
@@ -1484,7 +1490,7 @@ Func_003_4659_Table6_Case02::
 Jump_003_4881:: ; address name
     ld de, Func_003_460B
     ld hl, wC46D
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_4896
@@ -2246,8 +2252,8 @@ Data_003_4DF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $93, $10, $94, $A0, $94, $30, $95, $C0, $95, $50, $96, $E0, $96, $70, $97
 
 ; 1 call site from 1 routine (e.g. Func_003_4ABD)
-; reads: wC46D, wC0A5
-; writes: wC0A5, wC206, wC326
+; reads: wC46D, wMenuLastPageRows
+; writes: wMenuLastPageRows, wC206, wC326
 ; points at: wC202, wC322, wC130
 Func_003_4E02::
     ld c, $0D
@@ -2257,7 +2263,7 @@ Func_003_4E02::
     ld a, [hl]
     swap a
     and a, $0F
-    ld [wC0A5], a
+    ld [wMenuLastPageRows], a
     ld a, l
     add a, $0D
     ld l, a
@@ -2269,17 +2275,17 @@ Func_003_4E02::
     dec hl
     cp a, $FF
     jr z, Jump_003_4E69
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     ld b, a
     call Func_003_4EB6
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     xor a, $01
     ld b, a
     call Func_003_4EB6
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     ld b, a
     call Func_003_4EFD
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     xor a, $01
     ld b, a
     call Func_003_4EFD
@@ -2289,14 +2295,14 @@ Func_003_4E02::
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     ld b, a
     call Func_003_4F0D
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     xor a, $01
     ld b, a
     call Func_003_4F0D
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     add a, $CC
     ld [wC206], a
     xor a, $01
@@ -2975,7 +2981,7 @@ Jump_003_5288:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_003_5253
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wC0A2, wC0A6, wC46E
+; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wC46E
 ; writes: wD082, wItemId, wC0A1, wC46F
 ; points at: wC46E, wInventory, wC150, wC60C, wC130, wC0A0
 Func_003_5253_Table2_Case01::
@@ -2989,11 +2995,11 @@ Jump_003_52A3:: ; address name
 Jump_003_52AE::
     ld de, $4617
     ld hl, wC46E
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_52C8
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     cp a, $01
     ret z
     call Func_003_5900
@@ -3016,7 +3022,7 @@ Jump_003_52DE::
     jr z, Jump_003_5328
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     add a, a
     add a, a
     ld c, a
@@ -3030,7 +3036,7 @@ Jump_003_52DE::
     ld l, a
     ld h, $05
     ld de, wC150
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld de, wC60C
     ld hl, wC130
     call Func_000_2FE1
@@ -3069,16 +3075,16 @@ Jump_003_5340:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_003_5253
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A2, wC0A3
+; writes: wMenuRowCount, wMenuPageCount
 ; points at: wC0A1
 Func_003_5253_Table3_Case00::
 Jump_003_5348:: ; address name
     call Func_003_585D
     call CopyTileBufferToBGMap
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3092,7 +3098,7 @@ Func_003_5253_Table3_Case01::
 Jump_003_535D:: ; address name
     ld de, Data_003_461F
     ld hl, wC46F
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_003_5381
@@ -3237,7 +3243,7 @@ Jump_003_5421:: ; address name
 ; entry 4 of the `rst $00` table in Func_003_5253
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD
-; writes: wC46D, wC0A2, wC0A3
+; writes: wC46D, wMenuRowCount, wMenuPageCount
 ; points at: wC0A1
 Func_003_5253_Table4_Case04::
 Jump_003_542F:: ; address name
@@ -3246,9 +3252,9 @@ Jump_003_542F:: ; address name
     call Func_003_5874
     call CopyTileBufferToBGMap
     ld a, [wC6FD]
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld hl, wC0A1
     inc [hl]
     ret
@@ -3262,7 +3268,7 @@ Func_003_5253_Table4_Case05::
 Jump_003_5449:: ; address name
     ld de, Func_003_460B
     ld hl, wC46D
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_5469
@@ -3426,7 +3432,7 @@ Jump_003_5547:: ; address name
 ; entry 11 of the `rst $00` table in Func_003_5253
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD08E, hFFC6
-; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wC0A6, wC46E
+; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wMenuPage, wC46E
 ; points at: wC0A1
 Func_003_5253_Table4_Case0B::
 Jump_003_5550:: ; address name
@@ -3449,7 +3455,7 @@ Jump_003_556E::
     ld hl, wC0A1
     inc [hl]
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ld [wC46E], a
     ret
 
@@ -3592,7 +3598,7 @@ Jump_003_5643::
 ; entry 28 of the `rst $00` table in Func_003_5253
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC0A2, wC0A3, wC46F
+; writes: wMenuRowCount, wMenuPageCount, wC46F
 ; points at: wC0A1
 Func_003_5253_Table4_Case1C::
 Jump_003_564A:: ; address name
@@ -3604,9 +3610,9 @@ Jump_003_564A:: ; address name
     call Func_003_7791
     call CopyTileBufferToBGMap
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     xor a, a
     ld [wC46F], a
     ld hl, wC0A1
@@ -3622,7 +3628,7 @@ Func_003_5253_Table4_Case1D::
 Jump_003_566D:: ; address name
     ld hl, wC46F
     ld de, Data_003_4645
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_003_56C7
@@ -3783,7 +3789,7 @@ Jump_003_574A:: ; address name
 ; entry 2 of the `rst $00` table in Func_003_5253
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC470, wC0A2, wC0A3
+; writes: wC470, wMenuRowCount, wMenuPageCount
 ; points at: wC0A1
 Func_003_5253_Table5_Case02::
 Jump_003_575F:: ; address name
@@ -3793,9 +3799,9 @@ Jump_003_575F:: ; address name
     xor a, a
     ld [wC470], a
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     call Func_003_58CF
     call CopyTileBufferToBGMap
     ld a, $6C
@@ -3813,7 +3819,7 @@ Func_003_5253_Table5_Case03::
 Jump_003_5782:: ; address name
     ld de, Data_003_4623
     ld hl, wC470
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_003_57B9
@@ -3880,14 +3886,14 @@ Jump_003_57E2::
 ; entry 5 of the `rst $00` table in Func_003_5253
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC0A6, wC46E
+; writes: wMenuPage, wC46E
 Func_003_5253_Table5_Case05::
 Jump_003_580A:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ld [wC46E], a
     call Func_003_5E68
     ret
@@ -3900,7 +3906,7 @@ Jump_003_581A:: ; address name
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_003_4208_Case01, Func_003_5253_Table2_Case00, Func_003_585D)
-; reads: wInventory, wC0A7, wC0A6
+; reads: wInventory, wC0A7, wMenuPage
 ; points at: wC2A6
 Func_003_581E::
     call ClearScreenTileBuffer_Bank03
@@ -3919,7 +3925,7 @@ Func_003_581E::
     ld hl, wC2A6
     ld a, $C5
     ld [hl+], a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     add a, $E1
     ld [hl+], a
     ld a, $BE
@@ -4011,11 +4017,11 @@ Func_003_58E6::
     ret
 
 ; 5 call sites from 3 routines (e.g. Func_003_5A07, Func_003_5253_Table2_Case01, Func_003_5253_Table2_Case00)
-; reads: wC0A6, wC46E
+; reads: wMenuPage, wC46E
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
 Func_003_5900::
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, a
     add a, a
@@ -4042,7 +4048,7 @@ Jump_003_591C::
     ret
 
 ; 4 call sites from 3 routines (e.g. Func_003_5A07, Func_003_5E68, Func_003_5253_Table2_Case01)
-; reads: wC52D, wC52E, wC52F, wC530, wInventory, wC0A6
+; reads: wC52D, wC52E, wC52F, wC530, wInventory, wMenuPage
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC61E, wInventory
 Func_003_592E::
@@ -4080,7 +4086,7 @@ Func_003_592E::
     jr Jump_003_598A
 
 Jump_003_5976::
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, a
     add a, a
@@ -4135,12 +4141,12 @@ Jump_003_5995::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5253_Table2_Case01)
-; reads: wC0A3, wC0A6
+; reads: wMenuPageCount, wMenuPage
 Func_003_59C7::
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     or a, a
     jr z, Jump_003_59DA
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, $E1
     ld hl, vBGMap0 + $10F
@@ -4150,19 +4156,19 @@ Jump_003_59DA::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5253_Table2_Case01, Func_003_5253_Table2_Case00)
-; reads: wC0A7, wC0A6, wC0A5, wC46E
-; writes: wC0A2, wC46E
-; points at: wC0A6
+; reads: wC0A7, wMenuPage, wMenuLastPageRows, wC46E
+; writes: wMenuRowCount, wC46E
+; points at: wMenuPage
 Func_003_59DB::
     ld a, [wC0A7]
     dec a
     ld c, a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     cp a, c
     jr nz, Jump_003_59FC
-    ld a, [wC0A5]
-    ld [wC0A2], a
+    ld a, [wMenuLastPageRows]
+    ld [wMenuRowCount], a
     ld c, a
     ld a, [wC46E]
     cp a, c
@@ -4174,10 +4180,10 @@ Func_003_59DB::
 
 Jump_003_59FC::
     ld a, $04
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
 
 Jump_003_5A01::
-    ld hl, wC0A6
+    ld hl, wMenuPage
     res 7, [hl]
     ret
 
@@ -4225,8 +4231,8 @@ Func_003_5A07::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5E68, Func_003_5253_Table2_Case00)
-; reads: wC0A6, wC0A5
-; writes: wC0A3, wC0A7, wC0A5, wC0A2
+; reads: wMenuPage, wMenuLastPageRows
+; writes: wMenuPageCount, wC0A7, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
 Func_003_5A58::
     ld hl, wInventory
@@ -4269,7 +4275,7 @@ Jump_003_5A7E::
     ld a, b
 
 Jump_003_5A85::
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld [wC0A7], a
     ld a, c
     and a, $03
@@ -4278,18 +4284,18 @@ Jump_003_5A85::
     ld a, $04
 
 Jump_003_5A93::
-    ld [wC0A5], a
-    ld a, [wC0A6]
+    ld [wMenuLastPageRows], a
+    ld a, [wMenuPage]
     cp a, b
     jr nz, Jump_003_5AA1
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     jr Jump_003_5AA3
 
 Jump_003_5AA1::
     ld a, $04
 
 Jump_003_5AA3::
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5874, Func_003_5253_Table4_Case05)
@@ -4638,15 +4644,15 @@ Data_003_5E40:: ; heuristic: target of a monotone pointer table; C0
     ds $24, $C3
 
 ; 5 call sites from 5 routines (e.g. Func_003_4208_Case01, Func_003_5253_Table4_Case21, Func_003_5253_Table4_Case0A, Func_003_5253_Table5_Case06, ...)
-; writes: wC0A6, wC46E, wC0A0, wC0A1
-; points at: wC0A6
+; writes: wMenuPage, wC46E, wC0A0, wC0A1
+; points at: wMenuPage
 Func_003_5E68::
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     xor a, a
     ld [wC46E], a
     call Func_003_5A58
-    ld hl, wC0A6
+    ld hl, wMenuPage
 
 Jump_003_5E76::
     ld a, [hl+]
@@ -4690,15 +4696,15 @@ Jump_003_5E95:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD095, wC0A3, wC6FD
-; writes: rRAMG, rRAMB, wC0A2, wC0A3
+; reads: wD095, wMenuPageCount, wC6FD
+; writes: rRAMG, rRAMB, wMenuRowCount, wMenuPageCount
 ; points at: wC0A1
 Func_003_5E68_Table2_Case00::
 Jump_003_5EA3:: ; address name
     ld a, [wD095]
     or a, a
     call nz, Func_003_432F
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     or a, a
     jr z, Jump_003_5EC8
     ld a, $0A
@@ -4713,9 +4719,9 @@ Jump_003_5EA3:: ; address name
 
 Jump_003_5EC8::
     ld a, [wC6FD]
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld hl, wC0A1
     inc [hl]
     ld a, $0A
@@ -4732,18 +4738,18 @@ Jump_003_5EC8::
 ; entry 1 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wC46D
-; writes: wC0A6, rRAMG, rRAMB, wC0A0, wC0A1, wC46E
+; writes: wMenuPage, rRAMG, rRAMB, wC0A0, wC0A1, wC46E
 ; points at: wC46D
 Func_003_5E68_Table2_Case01::
 Jump_003_5EF0:: ; address name
     ld de, Func_003_460B
     ld hl, wC46D
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_5F23
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
@@ -4786,7 +4792,7 @@ Jump_003_5F23::
     xor a, a
     ld [wC0A1], a
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     xor a, a
     ld [wC46E], a
     jr Jump_003_5F6F
@@ -4864,7 +4870,7 @@ Jump_003_5FAF:: ; address name
 ; entry 0 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC46D
-; writes: rRAMG, rRAMB, wC0A2
+; writes: rRAMG, rRAMB, wMenuRowCount
 ; points at: wC0A1
 Func_003_5E68_Table3_Case00::
 Jump_003_5FBD:: ; address name
@@ -4901,7 +4907,7 @@ Jump_003_5FFB::
     dec b
     jr nz, Jump_003_5FF2
     call Func_003_69FF
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     call Func_003_6432
     call Func_003_6A34
     call Func_003_67B0
@@ -4915,18 +4921,18 @@ Jump_003_5FFB::
 
 ; entry 1 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wC0A2, wJoypadPressed
-; writes: rRAMG, rRAMB, wC0A0, wC46F, wC0A1, wStringIndex, wC0A6
+; reads: wJoypadPressedRepeat, wMenuRowCount, wJoypadPressed
+; writes: rRAMG, rRAMB, wC0A0, wC46F, wC0A1, wStringIndex, wMenuPage
 ; points at: wC46E, wC39E, wC0A1
 Func_003_5E68_Table3_Case01::
 Jump_003_601D:: ; address name
     ld de, $4617
     ld hl, wC46E
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_6052
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     cp a, $01
     ret z
     ld a, $0A
@@ -5001,7 +5007,7 @@ Jump_003_60B8::
     xor a, a
     ld [wC0A0], a
     ld [wC0A1], a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ret
 
 ; entry 2 of the `rst $00` table in Func_003_5E68
@@ -5033,7 +5039,7 @@ Jump_003_60D7:: ; address name
 ; entry 4 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC0A0, wC0A1, wC0A6
+; writes: wC0A0, wC0A1, wMenuPage
 Func_003_5E68_Table3_Case04::
 Jump_003_60E7:: ; address name
     ld a, [wC52B]
@@ -5044,7 +5050,7 @@ Jump_003_60E7:: ; address name
     xor a, a
     ld [wC0A1], a
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ret
 
 ; entry 2 of the `rst $00` table in Func_003_5E68
@@ -5083,7 +5089,7 @@ Jump_003_611B::
 ; entry 1 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD
-; writes: rRAMG, rRAMB, wC0A2
+; writes: rRAMG, rRAMB, wMenuRowCount
 ; points at: wC0A1
 Func_003_5E68_Table4_Case01::
 Jump_003_6120:: ; address name
@@ -5099,7 +5105,7 @@ Jump_003_6120:: ; address name
     call Func_003_6A60
     call CopyTileBufferToBGMap
     ld a, [wC6FD]
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld hl, wC0A1
     inc [hl]
     ret
@@ -5107,13 +5113,13 @@ Jump_003_6120:: ; address name
 ; entry 2 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wC46F, wD083
-; writes: rRAMG, rRAMB, wD083, wC0A1, wC0A0, wC0A6
+; writes: rRAMG, rRAMB, wD083, wC0A1, wC0A0, wMenuPage
 ; points at: wC46F, wC2D9, wC140, wC0A0
 Func_003_5E68_Table4_Case02::
 Jump_003_6149:: ; address name
     ld de, Func_003_460B
     ld hl, wC46F
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_6178
@@ -5169,7 +5175,7 @@ Jump_003_61BD::
     xor a, a
     ld [wC0A1], a
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ret
 
 ; entry 3 of the `rst $00` table in Func_003_5E68
@@ -5217,7 +5223,7 @@ Jump_003_61EA:: ; address name
     ld l, a
     ld h, $04
     ld de, wC150
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $00
     ld [rRAMG], a
     ld hl, wC0A1
@@ -5301,7 +5307,7 @@ Jump_003_6286:: ; address name
 ; entry 4 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC0A0, wC0A1, wC0A6
+; writes: wC0A0, wC0A1, wMenuPage
 Func_003_5E68_Table5_Case04::
 Jump_003_62A1:: ; address name
     ld a, [wC52B]
@@ -5311,7 +5317,7 @@ Jump_003_62A1:: ; address name
     ld [wC0A0], a
     ld [wC0A1], a
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ret
 
 ; entry 5 of the `rst $00` table in Func_003_5E68
@@ -5473,7 +5479,7 @@ Jump_003_6387:: ; address name
     add a, $02
     ld h, a
     ld de, wC160
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $01
     ld [wStringCategory], a
     ld a, $0C
@@ -5525,7 +5531,7 @@ Jump_003_63E8::
 ; entry 11 of the `rst $00` table in Func_003_5E68
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wDataBankSave, wItemId
-; writes: wC0A0, wC0A1, wC0A6, wC46E
+; writes: wC0A0, wC0A1, wMenuPage, wC46E
 Func_003_5E68_Table5_Case0B::
 Jump_003_63F9:: ; address name
     ld a, [wC52B]
@@ -5545,7 +5551,7 @@ Jump_003_640F::
     cp a, $FF
     ret z
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     xor a, a
     ld [wC46E], a
     ret
@@ -5560,7 +5566,7 @@ Func_003_641E::
     ret
 
 ; 8 call sites from 7 routines (e.g. Func_003_5E68_Table2_Case01, Func_003_5E68_Table2_Case00, Func_003_5E68_Table3_Case02, Func_003_5E68_Table3_Case00, ...)
-; reads: wC46D, wC0A7, wC0A6
+; reads: wC46D, wC0A7, wMenuPage
 ; points at: wC2A6
 Func_003_6432::
     ld a, [wC46D]
@@ -5587,7 +5593,7 @@ Jump_003_6450::
     ld hl, wC2A6
     ld a, $C5
     ld [hl+], a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     add a, $E1
     ld [hl+], a
     ld a, $BE
@@ -5776,7 +5782,7 @@ Func_003_6595::
     ret
 
 ; 3 call sites from 2 routines (e.g. Func_003_5E68_Table3_Case01, Func_003_5E68_Table3_Case00)
-; reads: wC46D, wC46E, wC0A6, wRecordBufferData
+; reads: wC46D, wC46E, wMenuPage, wRecordBufferData
 ; writes: wStringIndex, wRecordBuffer, wItemId, wCFED, wStringCategory
 ; points at: wC39E
 Func_003_65E3::
@@ -5787,7 +5793,7 @@ Func_003_65E3::
     ld a, [wC46E]
     and a, $07
     ld c, a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, a
     add a, a
@@ -5964,7 +5970,7 @@ Data_003_6700:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0D, $0E, $0F, $10, $11, $12, $13, $FF, $FF, $FF, $FF, $FF, $FF
 
 ; 5 call sites from 5 routines (e.g. Func_003_6595, Func_003_5E68_Table2_Case01, Func_003_5E68_Table2_Case00, Func_003_5E68_Table3_Case01, ...)
-; reads: wC52D, wC52E, wC52F, wC530, wC46D, wC0A6
+; reads: wC52D, wC52E, wC52F, wC530, wC46D, wMenuPage
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 Func_003_67B0::
     ld a, [wC52D]
@@ -6009,7 +6015,7 @@ Func_003_67B0::
     jr Jump_003_6814
 
 Jump_003_6803::
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, a
     add a, a
@@ -6082,7 +6088,7 @@ Data_003_69AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_003_5E68_Table2_Case01, Func_003_5E68_Table2_Case00)
 ; reads: wC46D
-; writes: wC0A3, wC0A7, wC0A5
+; writes: wMenuPageCount, wC0A7, wMenuLastPageRows
 Func_003_69C3::
     ld a, [wC46D]
     and a, $03
@@ -6111,7 +6117,7 @@ Jump_003_69E4::
 
 Jump_003_69E6::
     ld b, a
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld [wC0A7], a
     ld a, c
     cp a, $09
@@ -6125,12 +6131,12 @@ Jump_003_69F4::
     ld a, $04
 
 Jump_003_69FB::
-    ld [wC0A5], a
+    ld [wMenuLastPageRows], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_5E68_Table3_Case00)
-; reads: wC0A6, wC0A5
-; writes: wC0A3, wC0A7, wC0A5
+; reads: wMenuPage, wMenuLastPageRows
+; writes: wMenuPageCount, wC0A7, wMenuLastPageRows
 Func_003_69FF::
     ld a, c
     cp a, $00
@@ -6145,7 +6151,7 @@ Jump_003_6A0C::
 
 Jump_003_6A0E::
     ld b, a
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld [wC0A7], a
     ld a, c
     cp a, $09
@@ -6159,11 +6165,11 @@ Jump_003_6A1C::
     ld a, $04
 
 Jump_003_6A23::
-    ld [wC0A5], a
-    ld a, [wC0A6]
+    ld [wMenuLastPageRows], a
+    ld a, [wMenuPage]
     cp a, b
     jr nz, Jump_003_6A31
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     jr Jump_003_6A33
 
 Jump_003_6A31::
@@ -6173,19 +6179,19 @@ Jump_003_6A33::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_5E68_Table3_Case01, Func_003_5E68_Table3_Case00)
-; reads: wC0A7, wC0A6, wC0A5, wC46E
-; writes: wC0A2, wC46E
-; points at: wC0A6
+; reads: wC0A7, wMenuPage, wMenuLastPageRows, wC46E
+; writes: wMenuRowCount, wC46E
+; points at: wMenuPage
 Func_003_6A34::
     ld a, [wC0A7]
     dec a
     ld c, a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     cp a, c
     jr nz, Jump_003_6A55
-    ld a, [wC0A5]
-    ld [wC0A2], a
+    ld a, [wMenuLastPageRows]
+    ld [wMenuRowCount], a
     ld c, a
     ld a, [wC46E]
     cp a, c
@@ -6197,15 +6203,15 @@ Func_003_6A34::
 
 Jump_003_6A55::
     ld a, $04
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
 
 Jump_003_6A5A::
-    ld hl, wC0A6
+    ld hl, wMenuPage
     res 7, [hl]
     ret
 
 ; 8 call sites from 7 routines (e.g. Func_003_5E68_Table2_Case01, Func_003_5E68_Table3_Case02, Func_003_5E68_Table3_Case01, Func_003_5E68_Table3_Case00, ...)
-; reads: wC46D, wC0A7, wC0A3, wC0A6
+; reads: wC46D, wC0A7, wMenuPageCount, wMenuPage
 ; points at: wC2A6
 Func_003_6A60::
     ld a, [wC46D]
@@ -6229,10 +6235,10 @@ Jump_003_6A7E::
     ld a, [wC0A7]
     cp a, $01
     jr z, Jump_003_6A71
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     or a, a
     ret z
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, $E1
     ld hl, vBGMap0 + $10F
@@ -6271,18 +6277,18 @@ Jump_003_6AAF:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_003_6A60
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A2, wC0A3
+; writes: wMenuRowCount, wMenuPageCount
 ; points at: wC0A1
 Func_003_6A60_Table2_Case00::
 Jump_003_6ABB:: ; address name
     call Func_003_7692
     call CopyTileBufferToBGMap
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_016_7A64
     ld a, $06
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld hl, wC0A1
     inc [hl]
     call Func_003_7B61
@@ -6291,13 +6297,13 @@ Jump_003_6ABB:: ; address name
 ; entry 1 of the `rst $00` table in Func_003_6A60
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC46D
-; writes: wC0A0, wC0A1, wC0A6, wC46E
+; writes: wC0A0, wC0A1, wMenuPage, wC46E
 ; points at: wC46D, wC0A1
 Func_003_6A60_Table2_Case01::
 Jump_003_6ADC:: ; address name
     ld hl, wC46D
     ld de, Func_003_460B
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_003_6B2C
@@ -6327,7 +6333,7 @@ Jump_003_6B1F::
     xor a, a
     ld [wC0A1], a
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     xor a, a
     ld [wC46E], a
     ret
@@ -6442,7 +6448,7 @@ Jump_003_6B8D:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_003_6B5E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD0C7, wJoypadPressed, wC836, wJoypadPressedRepeat, wC0A3, wC3C7, wC46E, wModeState
+; reads: wD0C7, wJoypadPressed, wC836, wJoypadPressedRepeat, wMenuPageCount, wC3C7, wC46E, wModeState
 ; writes: wC836, wC0A1, wC0A0, wDataBankSave
 ; points at: wC46E, wC0A1
 Func_003_6B5E_Case01::
@@ -6452,7 +6458,7 @@ Jump_003_6BD7:: ; address name
     jr z, Jump_003_6C52
     ld hl, wC46E
     ld de, Data_003_462B
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     and a, $04
     jr z, Jump_003_6C05
@@ -6481,12 +6487,12 @@ Jump_003_6C10::
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_003_6C36
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     cp a, $02
     ret c
     call Func_003_779A
     call Func_003_78CB
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     cp a, $02
     ret c
     call Func_003_7A58
@@ -6526,7 +6532,7 @@ Jump_003_6C52::
 
 ; entry 2 of the `rst $00` table in Func_003_6B5E
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A2, wC0A3, wC46F
+; writes: wMenuRowCount, wMenuPageCount, wC46F
 ; points at: wScreenTileBuffer, wC0A1
 Func_003_6B5E_Case02::
 Jump_003_6C6E:: ; address name
@@ -6536,9 +6542,9 @@ Jump_003_6C6E:: ; address name
     ld bc, $0709
     call CopyRectToBGMap
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     xor a, a
     ld [wC46F], a
     ld hl, wC0A1
@@ -6548,13 +6554,13 @@ Jump_003_6C6E:: ; address name
 ; entry 3 of the `rst $00` table in Func_003_6B5E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC46F, wC833, wCC44
-; writes: wC0A1, wStringIndex, wStringCategory, wC53D, wC53E
+; writes: wC0A1, wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wC46F, wC0A1, wC150
 Func_003_6B5E_Case03::
 Jump_003_6C90:: ; address name
     ld hl, wC46F
     ld de, Data_003_4633
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jp z, Jump_003_6D29
@@ -6632,9 +6638,9 @@ Jump_003_6CEE::
     ld [wStringCategory], a
     ld hl, wC150
     ld a, l
-    ld [wC53D], a
+    ld [wStringDestLo], a
     ld a, h
-    ld [wC53E], a
+    ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank09
     ld a, $0A
     ld [wC0A1], a
@@ -6778,15 +6784,15 @@ Jump_003_6DC0:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_003_6B5E
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A2, wC0A3
+; writes: wMenuRowCount, wMenuPageCount
 ; points at: wC0A1
 Func_003_6B5E_Case0A::
 Jump_003_6DCA:: ; address name
     call Func_003_76D5
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld hl, wC0A1
     inc [hl]
     ret
@@ -6821,7 +6827,7 @@ Jump_003_6DF1:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_003_6B5E
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A2, wC0A3, wC470
+; writes: wMenuRowCount, wMenuPageCount, wC470
 ; points at: wC278, wC0A1
 Func_003_6B5E_Case0D::
 Jump_003_6DFB:: ; address name
@@ -6833,9 +6839,9 @@ Jump_003_6DFB:: ; address name
     ld a, $6C
     call QueueSoundEffect
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     xor a, a
     ld [wC470], a
     ld a, $01
@@ -6847,13 +6853,13 @@ Jump_003_6DFB:: ; address name
 ; entry 14 of the `rst $00` table in Func_003_6B5E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC470
-; writes: wC0A2, wC0A3, wC46F, wC0A1
+; writes: wMenuRowCount, wMenuPageCount, wC46F, wC0A1
 ; points at: wC470, wC0A1, wC218, wC338
 Func_003_6B5E_Case0E::
 Jump_003_6E27:: ; address name
     ld hl, wC470
     ld de, Data_003_4627
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_003_6E53
@@ -6886,9 +6892,9 @@ Jump_003_6E56::
     call CopyRectToBGMap
     call Func_003_779A
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     xor a, a
     ld [wC46F], a
     ld a, $03
@@ -6913,7 +6919,7 @@ Jump_003_6E88:: ; address name
 ; entry 16 of the `rst $00` table in Func_003_6B5E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC0A1, hFFC6, wC0A6, wC46E
+; writes: wC0A1, hFFC6, wMenuPage, wC46E
 Func_003_6B5E_Case10::
 Jump_003_6E9D:: ; address name
     ld a, [wC52B]
@@ -6930,15 +6936,15 @@ Jump_003_6EAF::
     ldh [hFFC6], a
     farcall Func_012_69B0
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ld [wC46E], a
     ret
 
 ; 4 call sites from 3 routines (e.g. Func_003_6B5E_Case10, Func_003_6B5E_Case05, Func_003_6B5E_Case03)
-; reads: wC0A6, wC46E
+; reads: wMenuPage, wC46E
 ; points at: wD0A7
 Func_003_6EBF::
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     ld b, a
     add a, a
     add a, a
@@ -6965,7 +6971,7 @@ Jump_003_6ED8:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_003_6EBF
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A8, wC0A2, wC0A3, wC0A6
+; writes: wC0A8, wMenuRowCount, wMenuPageCount, wMenuPage
 ; points at: wC0A1
 Func_003_6EBF_Case00::
 Jump_003_6EE2:: ; address name
@@ -6974,11 +6980,11 @@ Jump_003_6EE2:: ; address name
     call Func_003_7726
     call CopyTileBufferToBGMap
     ld a, $04
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld a, $00
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ld hl, wC0A1
     inc [hl]
     ret
@@ -7034,7 +7040,7 @@ Func_003_6EBF_Case02::
 Jump_003_6F48:: ; address name
     ld hl, wC46E
     ld de, Data_003_4637
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_003_6F6F
@@ -7240,7 +7246,7 @@ Jump_003_706B:: ; address name
 ; entry 0 of the `rst $00` table in Func_003_705B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD
-; writes: wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, wD0A5, wC0A3, ...
+; writes: wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, wD0A5, wMenuPageCount, ...
 ; points at: wC0A1
 Func_003_705B_Case00::
 Jump_003_707B:: ; address name
@@ -7279,9 +7285,9 @@ Jump_003_70A4::
     ld [wD0A4], a
     ld [wD0A5], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     xor a, a
-    ld [wC0A6], a
+    ld [wMenuPage], a
     ld [wC0A8], a
     call Func_003_774F
     call CopyTileBufferToBGMap
@@ -7312,7 +7318,7 @@ Func_003_705B_Case02::
 Jump_003_70D9:: ; address name
     ld hl, wC46E
     ld de, Data_003_463F
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_003_70ED
@@ -7485,13 +7491,13 @@ Jump_003_71FD::
 
 ; 3 call sites from 3 routines (e.g. Func_003_705B_Case05, Func_003_705B_Case03, Func_003_705B_Case01)
 ; reads: wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, wD0A5
-; writes: wC0A2
+; writes: wMenuRowCount
 ; points at: wC1FB, wC23B, wC27B, wC204, wC244, wC284
 Func_003_7202::
     call Func_003_775A
     ld a, [wD09F]
     inc a
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld de, wC1FB
     ld a, [wD0A0]
     call Func_003_726E
@@ -7980,7 +7986,7 @@ Jump_003_7501:: ; address name
 ; entry 1 of the `rst $00` table in Func_003_74E2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC0A2, wC0A3, wC46F
+; writes: wMenuRowCount, wMenuPageCount, wC46F
 ; points at: wC0A1
 Func_003_74E2_Case01::
 Jump_003_7571:: ; address name
@@ -7998,9 +8004,9 @@ Jump_003_7571:: ; address name
     call Func_003_7791
     call CopyTileBufferToBGMap
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     xor a, a
     ld [wC46F], a
     ld hl, wC0A1
@@ -8016,7 +8022,7 @@ Func_003_74E2_Case02::
 Jump_003_75A4:: ; address name
     ld hl, wC46F
     ld de, Data_003_4645
-    call Func_003_4425
+    call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_003_75E6
@@ -8297,7 +8303,7 @@ Func_003_7791::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_003_6B5E_Case0E, Func_003_6B5E_Case01, Func_003_6B5E_Case00)
-; reads: wC0A6, wD0C7
+; reads: wMenuPage, wD0C7
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wD0A7, wD0A8, wC130
 Func_003_779A::
@@ -8306,7 +8312,7 @@ Func_003_779A::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     ld b, a
     add a, a
     add a, a
@@ -8475,7 +8481,7 @@ Data_003_78C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $46, $99, $86, $99, $C6, $99, $06, $9A
 
 ; 3 call sites from 2 routines (e.g. Func_003_6B5E_Case01, Func_003_6B5E_Case00)
-; reads: wD0C7, wC0A6, wC46E
+; reads: wD0C7, wMenuPage, wC46E
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wD0A7, wC130
 Func_003_78CB::
@@ -8492,7 +8498,7 @@ Func_003_78CB::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     ld b, a
     add a, a
     add a, a
@@ -8517,7 +8523,7 @@ Func_003_78CB::
     bit 7, [hl]
     jr nz, Jump_003_794D
     ld de, wD0A7
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     ld b, a
     add a, a
     add a, a
@@ -8746,8 +8752,8 @@ Jump_003_7A53::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_76AD, Func_003_6B5E_Case01)
-; reads: wD0C7, wC0A6, wC0A5, wC0A3
-; writes: wC0A5, wC0A3, wC0A2, wC3C9, wC3C7, wC3C6, wC3C8, wC3CA
+; reads: wD0C7, wMenuPage, wMenuLastPageRows, wMenuPageCount
+; writes: wMenuLastPageRows, wMenuPageCount, wMenuRowCount, wC3C9, wC3C7, wC3C6, wC3C8, wC3CA
 Func_003_7A58::
     ld a, [wD0C7]
     or a, a
@@ -8809,27 +8815,27 @@ Jump_003_7AA6::
     jr Jump_003_7AAC
 
 Jump_003_7AAC::
-    ld [wC0A5], a
+    ld [wMenuLastPageRows], a
     ld a, b
-    ld [wC0A3], a
-    ld a, [wC0A6]
+    ld [wMenuPageCount], a
+    ld a, [wMenuPage]
     inc a
     cp a, b
     jr nz, Jump_003_7ABF
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     jr Jump_003_7AC1
 
 Jump_003_7ABF::
     ld a, $04
 
 Jump_003_7AC1::
-    ld [wC0A2], a
-    ld a, [wC0A3]
+    ld [wMenuRowCount], a
+    ld a, [wMenuPageCount]
     cp a, $02
     ret c
     add a, $E0
     ld [wC3C9], a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     inc a
     add a, $E0
     ld [wC3C7], a

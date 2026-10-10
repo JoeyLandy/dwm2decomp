@@ -2705,7 +2705,7 @@ Jump_037_5A35::
     call BGMapAddressAtScroll_Bank37
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b

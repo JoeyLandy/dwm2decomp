@@ -4309,7 +4309,7 @@ Func_01B_6277::
     ld d, a
     pop hl
     push hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     pop hl
     push hl
     ld a, l
@@ -4346,7 +4346,7 @@ Func_01B_6277::
     ld a, h
     ld d, a
     pop hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a
@@ -4697,7 +4697,7 @@ Jump_01B_645D::
     call BGMapAddressAtScroll_Bank1B
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b

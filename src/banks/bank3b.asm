@@ -14,7 +14,7 @@ Func_03B_4001:: ; address name
     jr z, Jump_03B_4013
     ld a, c
     ld e, $1D
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_403C
 
@@ -57,7 +57,7 @@ Func_03B_4045:: ; address name
     jr z, Jump_03B_4057
     ld a, c
     ld e, $21
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_4080
 
@@ -100,7 +100,7 @@ Func_03B_4089:: ; address name
     jr z, Jump_03B_409B
     ld a, c
     ld e, $23
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_40C4
 
@@ -143,7 +143,7 @@ Func_03B_40CD:: ; address name
     jr z, Jump_03B_40DF
     ld a, c
     ld e, $25
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_4108
 
@@ -186,7 +186,7 @@ Func_03B_4111:: ; address name
     jr z, Jump_03B_4123
     ld a, c
     ld e, $27
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_414C
 
@@ -229,7 +229,7 @@ Func_03B_4155:: ; address name
     jr z, Jump_03B_4167
     ld a, c
     ld e, $29
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     call Func_03B_42F0
     jr Jump_03B_4190
 
@@ -270,7 +270,7 @@ Func_03B_4199::
     jr z, Jump_03B_41A9
     ld a, c
     ld e, $17
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld c, [hl]
     jr Jump_03B_41CE
 
@@ -307,7 +307,7 @@ Func_03B_41D3::
     jr z, Jump_03B_41E3
     ld a, c
     ld e, $2D
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld c, [hl]
     jr Jump_03B_4208
 
@@ -344,7 +344,7 @@ Func_03B_420D::
     jr z, Jump_03B_421D
     ld a, c
     ld e, $30
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld c, [hl]
     jr Jump_03B_4242
 
@@ -381,7 +381,7 @@ Func_03B_4247::
     jr z, Jump_03B_4257
     ld a, c
     ld e, $2E
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld c, [hl]
     jr Jump_03B_427C
 
@@ -418,7 +418,7 @@ Func_03B_4281::
     jr z, Jump_03B_4291
     ld a, c
     ld e, $2F
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld c, [hl]
     jr Jump_03B_42B6
 
@@ -454,7 +454,7 @@ Func_03B_42BB::
     jr z, Jump_03B_42E3
     ld a, c
     ld e, $0A
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld a, [hl+]
     ld [wD006], a
     ld a, [hl]
@@ -643,7 +643,7 @@ Jump_03B_43AD::
     and a, $C0
     jr nz, Jump_03B_4428
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_03B_4439
 
 Jump_03B_43E5::
@@ -2128,7 +2128,7 @@ Jump_03B_4C9F::
     and a, $C0
     jr nz, Jump_03B_4D00
     ld a, [wBattleTarget]
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_03B_4D0E
     call Func_03B_48FA
 
@@ -2200,7 +2200,7 @@ Jump_03B_4D2C::
     and a, $C0
     jp nz, Jump_03B_4DEE
     ld a, [wBattleTarget]
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jp c, Jump_03B_4DFC
     call Func_03B_48FA
 
@@ -2575,7 +2575,7 @@ Jump_03B_5024::
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
 Func_03B_5029:: ; heuristic: follows a terminator; C0
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret c
     push hl
     push bc

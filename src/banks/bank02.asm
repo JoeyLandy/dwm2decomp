@@ -1100,7 +1100,7 @@ Func_002_4628::
     jr z, Jump_002_4680
 
 Jump_002_467D::
-    call Func_000_222B
+    call LoadRecordListNameTiles
 
 Jump_002_4680::
     farcall Func_004_4AA8
@@ -1381,7 +1381,7 @@ Jump_002_4846::
 Jump_002_48AE::
     farcall Func_012_64F8
     call Func_002_5E82
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     jp Func_002_4745_Case00
 

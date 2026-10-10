@@ -1802,7 +1802,7 @@ Jump_012_4B0A:: ; address name
 ; entry 25 of the `rst $00` table in ScriptCommand8D_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFB9
-; writes: wStringIndex, wStringCategory, wC53D, wC53E, wScriptParam0, hFFB9
+; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi, wScriptParam0, hFFB9
 ; points at: wScriptStep, wCAD0, wC151, wC17E
 ScriptCommand8D_Run_Case19::
 Jump_012_4B19:: ; address name
@@ -1819,9 +1819,9 @@ Jump_012_4B19:: ; address name
     ld [wStringCategory], a
     ld de, wC151
     ld a, e
-    ld [wC53D], a
+    ld [wStringDestLo], a
     ld a, d
-    ld [wC53E], a
+    ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank08
     ld hl, wCAD0
     ld a, $6D
@@ -3412,7 +3412,7 @@ ScriptCommand9B_Run_Case05::
 Jump_012_56E8:: ; address name
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -5988,7 +5988,7 @@ Jump_012_65B6:: ; address name
 Jump_012_65C5::
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a

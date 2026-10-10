@@ -60,7 +60,7 @@ Jump_0F1_4013:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wC0A2, wC0A6, wC46E
+; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wC46E
 ; writes: wDataBankSave, wD082, wItemId, wC0A1, wC46F
 ; points at: wC46E, wInventory, wC150, wC60C, wC130, wC0A0
 Func_0F1_4001_Table2_Case01::
@@ -78,7 +78,7 @@ Jump_0F1_4062::
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_0F1_407C
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     cp a, $01
     ret z
     call Func_0F1_42D9
@@ -101,7 +101,7 @@ Jump_0F1_4092::
     jr z, Jump_0F1_40DC
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     add a, a
     add a, a
     ld c, a
@@ -115,7 +115,7 @@ Jump_0F1_4092::
     ld l, a
     ld h, $05
     ld de, wC150
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld de, wC60C
     ld hl, wC130
     call Func_000_2FE1
@@ -156,16 +156,16 @@ Jump_0F1_40FC:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC0A2, wC0A3
+; writes: wMenuRowCount, wMenuPageCount
 ; points at: wC0A1
 Func_0F1_4001_Table3_Case00::
 Jump_0F1_4104:: ; address name
     call Func_0F1_422D
     call CopyTileBufferToBGMap_BankF1
     ld a, $02
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, $01
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld hl, wC0A1
     inc [hl]
     ret
@@ -325,7 +325,7 @@ Jump_0F1_41E0:: ; address name
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case00, Func_0F1_422D)
-; reads: wInventory, wC0A7, wC0A6
+; reads: wInventory, wC0A7, wMenuPage
 ; points at: wC2A6
 Func_0F1_41EE::
     call ClearScreenTileBuffer_BankF1
@@ -344,7 +344,7 @@ Func_0F1_41EE::
     ld hl, wC2A6
     ld a, $C5
     ld [hl+], a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     add a, $E1
     ld [hl+], a
     ld a, $BE
@@ -439,11 +439,11 @@ Func_0F1_42B6::
     ret
 
 ; 4 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case01, Func_0F1_4001_Table2_Case00)
-; reads: wC0A6, wC46E
+; reads: wMenuPage, wC46E
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
 Func_0F1_42D9::
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, a
     add a, a
@@ -470,7 +470,7 @@ Jump_0F1_42F5::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0F1_4001_Table2_Case01)
-; reads: wC52D, wC52E, wC52F, wC530, wInventory, wC0A6
+; reads: wC52D, wC52E, wC52F, wC530, wInventory, wMenuPage
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC61E, wInventory
 Func_0F1_4307::
@@ -508,7 +508,7 @@ Func_0F1_4307::
     jr Jump_0F1_4363
 
 Jump_0F1_434F::
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, a
     add a, a
@@ -563,12 +563,12 @@ Jump_0F1_436E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Table2_Case01)
-; reads: wC0A3, wC0A6
+; reads: wMenuPageCount, wMenuPage
 Func_0F1_43A0::
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     or a, a
     jr z, Jump_0F1_43B3
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     add a, $E1
     ld hl, vBGMap0 + $10F
@@ -578,19 +578,19 @@ Jump_0F1_43B3::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case01, Func_0F1_4001_Table2_Case00)
-; reads: wC0A7, wC0A6, wC0A5, wC46E
-; writes: wC0A2, wC46E
-; points at: wC0A6
+; reads: wC0A7, wMenuPage, wMenuLastPageRows, wC46E
+; writes: wMenuRowCount, wC46E
+; points at: wMenuPage
 Func_0F1_43B4::
     ld a, [wC0A7]
     dec a
     ld c, a
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     and a, $0F
     cp a, c
     jr nz, Jump_0F1_43D5
-    ld a, [wC0A5]
-    ld [wC0A2], a
+    ld a, [wMenuLastPageRows]
+    ld [wMenuRowCount], a
     ld c, a
     ld a, [wC46E]
     cp a, c
@@ -602,16 +602,16 @@ Func_0F1_43B4::
 
 Jump_0F1_43D5::
     ld a, $04
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
 
 Jump_0F1_43DA::
-    ld hl, wC0A6
+    ld hl, wMenuPage
     res 7, [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Table2_Case00)
-; reads: wC0A6, wC0A5
-; writes: wC0A3, wC0A7, wC0A5, wC0A2
+; reads: wMenuPage, wMenuLastPageRows
+; writes: wMenuPageCount, wC0A7, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
 Func_0F1_43E0::
     ld hl, wInventory
@@ -654,7 +654,7 @@ Jump_0F1_4406::
     ld a, b
 
 Jump_0F1_440D::
-    ld [wC0A3], a
+    ld [wMenuPageCount], a
     ld [wC0A7], a
     ld a, c
     and a, $03
@@ -663,18 +663,18 @@ Jump_0F1_440D::
     ld a, $04
 
 Jump_0F1_441B::
-    ld [wC0A5], a
-    ld a, [wC0A6]
+    ld [wMenuLastPageRows], a
+    ld a, [wMenuPage]
     cp a, b
     jr nz, Jump_0F1_4429
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     jr Jump_0F1_442B
 
 Jump_0F1_4429::
     ld a, $04
 
 Jump_0F1_442B::
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_4244)
@@ -1104,12 +1104,12 @@ Jump_0F1_484C::
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Table2_Case00)
 Func_0F1_4866::
     farcall Func_002_5E82
-    call Func_000_222B
+    call LoadRecordListNameTiles
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Table2_Case01, Func_0F1_4001_Table3_Case01)
-; reads: wJoypadPressedRepeat, wC0A2, wC0A3, wC0A6, wC0A5, wFrameCounterLo
-; writes: wFrameCounterLo, wC0A6
+; reads: wJoypadPressedRepeat, wMenuRowCount, wMenuPageCount, wMenuPage, wMenuLastPageRows, wFrameCounterLo
+; writes: wFrameCounterLo, wMenuPage
 Func_0F1_4870::
     ld a, [wJoypadPressedRepeat]
     and a, $40
@@ -1119,7 +1119,7 @@ Func_0F1_4870::
     dec a
     cp a, $FF
     jr nz, Jump_0F1_48C9
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     dec a
     jr Jump_0F1_48C9
 
@@ -1127,7 +1127,7 @@ Jump_0F1_4885::
     ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_0F1_489A
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     ld c, a
     ld a, [hl]
     and a, $0F
@@ -1138,7 +1138,7 @@ Jump_0F1_4885::
     jr Jump_0F1_48C9
 
 Jump_0F1_489A::
-    ld a, [wC0A3]
+    ld a, [wMenuPageCount]
     or a, a
     jr z, Jump_0F1_4916
     cp a, $01
@@ -1147,7 +1147,7 @@ Jump_0F1_489A::
     ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_0F1_48B8
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     dec a
     cp a, $FF
     jr nz, Jump_0F1_48E7
@@ -1159,7 +1159,7 @@ Jump_0F1_48B8::
     ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_0F1_4916
-    ld a, [wC0A6]
+    ld a, [wMenuPage]
     inc a
     cp a, b
     jr nz, Jump_0F1_48E7
@@ -1188,14 +1188,14 @@ Jump_0F1_48DC::
     jr Jump_0F1_493A
 
 Jump_0F1_48E7::
-    ld [wC0A6], a
+    ld [wMenuPage], a
     inc a
     cp a, b
     jr nz, Jump_0F1_4909
     ld a, [hl]
     and a, $0F
     ld c, a
-    ld a, [wC0A5]
+    ld a, [wMenuLastPageRows]
     dec a
     cp a, c
     jr nc, Jump_0F1_4909
@@ -3768,7 +3768,7 @@ Jump_0F1_58D4::
     call BGMapAddressAtScroll_BankF1
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -3966,7 +3966,7 @@ Func_0F1_59CA::
     ld d, h
     pop hl
     push hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     pop hl
     push hl
     ld a, l
@@ -3991,7 +3991,7 @@ Func_0F1_59CA::
     ld e, l
     ld d, h
     pop hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     xor a, a
     ldh [rSVBK], a
     ldh [rVBK], a

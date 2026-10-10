@@ -2075,7 +2075,7 @@ Jump_016_4A61::
     ld l, a
     ld h, $05
     ld de, wC160
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $01
     ldh [hFFC6], a
     ret
@@ -3375,7 +3375,7 @@ Jump_016_5675::
     ld l, c
     ld h, $05
     ld de, wC160
-    call Func_000_2E81
+    call CopyStringHLToDE
     farcall Func_016_4C48
 
 Jump_016_5688::
@@ -5095,7 +5095,7 @@ Jump_016_61A8::
     ld a, [wC6FF]
     ld [wC0A1], a
     ld a, [wC700]
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     call Func_016_70DB
     xor a, a
     ld [rRAMG], a
@@ -5313,7 +5313,7 @@ Jump_016_631B:: ; address name
     add a, $02
     ld h, a
     ld de, wC140
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $18
     ld [wStringIndex], a
     call Func_016_6955
@@ -6317,7 +6317,7 @@ Func_016_69AB::
     add a, $02
     ld h, a
     ld de, wC140
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $17
     ld [wStringIndex], a
     call Func_016_6961
@@ -6396,7 +6396,7 @@ Func_016_6A36::
     ld h, a
     pop af
     ld l, a
-    call Func_000_2E81
+    call CopyStringHLToDE
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_46C1_Case03)
@@ -6909,7 +6909,7 @@ Jump_016_6D47:: ; address name
     add_a_to_hl
     ld [hl], b
     call Func_016_70C5
-    call Func_000_222B
+    call LoadRecordListNameTiles
     call Func_016_70DB
     call Func_016_733F
     ld hl, wBattleSubStep
@@ -7309,7 +7309,7 @@ Jump_016_7023::
     inc de
     dec b
     jr nz, Jump_016_7023
-    call Func_000_222B
+    call LoadRecordListNameTiles
     call Func_016_70DB
     call Func_016_733F
     ld hl, vBGMap0
@@ -7621,7 +7621,7 @@ Func_016_733F::
     farcall Func_031_71F5
     farcall Func_031_72AC
     farcall Func_031_7389
-    farcall Func_031_72CC
+    farcall LayoutTileBlocksForWD890Count
     farcall Func_031_7321
     farcall Func_01A_7276
     ret

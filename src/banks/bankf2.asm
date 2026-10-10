@@ -536,7 +536,7 @@ Func_0F2_436F:: ; address name
     ld d, a
     pop hl
     push hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     pop hl
     push hl
     ld a, l
@@ -573,7 +573,7 @@ Func_0F2_436F:: ; address name
     ld a, h
     ld d, a
     pop hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a
@@ -1067,7 +1067,7 @@ Func_0F2_4B05::
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $018C
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     call Func_0F2_4E63
     ld a, [wCA81]
     ldh [hFFC6], a
@@ -1138,7 +1138,7 @@ Jump_0F2_4BA8::
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $020C
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     call Func_0F2_4E63
     ret
 
@@ -1435,7 +1435,7 @@ Jump_0F2_4D9E::
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $006E
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -1483,7 +1483,7 @@ Jump_0F2_4DF0::
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $018E
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, b
@@ -1741,7 +1741,7 @@ Func_0F2_4F47::
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $0029
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     ldh a, [hFFC7]
     ld b, a
     ldh a, [hFFC6]
@@ -1902,7 +1902,7 @@ Jump_0F2_500E::
     call BGMapAddressAtScroll_BankF2_514D
     pop de
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     call Func_0F2_50A4
     inc c
     ld a, c
@@ -1922,7 +1922,7 @@ Func_0F2_505C::
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $0070
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     ld c, $00
 
 Jump_0F2_5068::
@@ -2033,7 +2033,7 @@ Jump_0F2_5108::
     ld a, [wD7F3]
     ld e, a
     add hl, de
-    call Func_000_24F8
+    call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
     ld a, $1E

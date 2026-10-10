@@ -809,7 +809,7 @@ Func_05F_6D3F::
     xor a, a
     ld [wD7F2], a
     farcall Func_014_7E96
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -2253,7 +2253,7 @@ Jump_05F_7631:: ; address name
 Jump_05F_7646::
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a

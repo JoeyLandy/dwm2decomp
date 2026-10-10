@@ -343,7 +343,7 @@ Func_0E0_41E9::
     ld a, [wC5F9]
     ld l, a
     ld h, $04
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $08
     ld [wStringCategory], a
     ld a, $05
@@ -1484,8 +1484,8 @@ Jump_0E0_4B2D::
 
 ; entry 11 of the `rst $00` table in Func_0E0_443B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC0A2, wC0A0, wC0A1, wC5FE, wC5FF
-; writes: wC5FF, wC0A2, wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wC5FD, ...
+; reads: wJoypadPressed, wMenuRowCount, wC0A0, wC0A1, wC5FE, wC5FF
+; writes: wC5FF, wMenuRowCount, wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wC5FD, ...
 ; points at: wC5FE, wC5FF, wBattleStatus, wD09D
 Func_0E0_443B_Case0B::
 Jump_0E0_4B54:: ; address name
@@ -1512,7 +1512,7 @@ Jump_0E0_4B74::
     ld a, [wJoypadPressed]
     and a, $20
     jr z, Jump_0E0_4B9C
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
@@ -1538,7 +1538,7 @@ Jump_0E0_4B9C::
     ld a, [wJoypadPressed]
     and a, $10
     jr z, Jump_0E0_4BC2
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
@@ -1563,7 +1563,7 @@ Jump_0E0_4BC2::
     ld a, [wJoypadPressed]
     and a, $40
     jr z, Jump_0E0_4BEB
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
@@ -1589,7 +1589,7 @@ Jump_0E0_4BEB::
     ld a, [wJoypadPressed]
     and a, $80
     jr z, Jump_0E0_4C14
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wC5FF
     ld a, [hl]
@@ -1617,14 +1617,14 @@ Jump_0E0_4C14::
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_0E0_4C6B
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     xor a, $01
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ld a, [wC0A0]
     ld l, a
     ld a, [wC0A1]
     ld h, a
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld a, [wC5FE]
     ld hl, wBattleStatus
@@ -1636,7 +1636,7 @@ Jump_0E0_4C14::
     ld c, a
     ld b, $00
     add hl, bc
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     and a, $01
     jr z, Jump_0E0_4C5C
     ld a, e
@@ -1673,7 +1673,7 @@ Jump_0E0_4C6B::
     db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F, $01, $02, $04, $08, $10, $20, $40, $80
 
 ; 1 call site from 1 routine (e.g. Func_0E0_443B_Case0B)
-; reads: wC0A0, wC0A1, wFrameCounterLo, wC0A2
+; reads: wC0A0, wC0A1, wFrameCounterLo, wMenuRowCount
 Func_0E0_4C7E::
     ld a, [wC0A0]
     ld l, a
@@ -1683,7 +1683,7 @@ Func_0E0_4C7E::
     bit 3, a
     ld a, $C3
     jr z, Jump_0E0_4C92
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
 
 Jump_0E0_4C92::
     call WriteVRAMByte
@@ -1885,7 +1885,7 @@ Jump_0E0_4D89:: ; address name
 
 ; 3 call sites from 2 routines (e.g. Func_0E0_443B_Case0B, Func_0E0_4ABB)
 ; reads: wC5FF
-; writes: wC0A0, wC0A1, wC0A2
+; writes: wC0A0, wC0A1, wMenuRowCount
 Func_0E0_4EFD::
     ld a, [wC5FF]
     ld b, a
@@ -1911,7 +1911,7 @@ Func_0E0_4EFD::
     ld [wC0A1], a
     call WaitForVRAMAccess
     ld a, [hl]
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0E0_443B_Case0B, Func_0E0_4ABB)
@@ -7905,7 +7905,7 @@ Jump_0E0_7AD2::
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD80F
 Func_0E0_7AD7:: ; heuristic: follows a terminator; C0
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret c
     push hl
     push bc

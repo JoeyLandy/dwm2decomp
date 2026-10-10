@@ -1574,7 +1574,7 @@ Func_00D_4E05::
     ld d, h
     pop hl
     push hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     pop hl
     push hl
     ld a, l
@@ -1611,7 +1611,7 @@ Jump_00D_4E39::
     ld e, l
     ld d, h
     pop hl
-    call Func_000_18A5
+    call CopyRectToBGMapWrapped
     xor a, a
     ldh [rSVBK], a
     ldh [rVBK], a
@@ -1920,7 +1920,7 @@ Jump_00D_50F1:: ; address name
 ; writes: wD784, wD785, wD780, wD781, wC46B, wD788, wC52D, wC52E, ...
 ScriptCommandF1_Run_Case01::
 Jump_00D_50F8:: ; address name
-    call Func_000_222B
+    call LoadRecordListNameTiles
     ld de, Data_01F_4910
     ld hl, vTiles1 + $700
     ld b, $1F
@@ -2153,7 +2153,7 @@ Func_00D_525F::
 ; points at: wC364
 Func_00D_517A_Case02::
 Jump_00D_5280:: ; address name
-    call Func_000_222B
+    call LoadRecordListNameTiles
     ld de, Data_00D_5576
     ld hl, wC364
     ld bc, $0809
@@ -2315,7 +2315,7 @@ Jump_00D_537C::
 Jump_00D_537F::
     xor a, a
     ld [rRAMG2], a
-    call Func_000_222B
+    call LoadRecordListNameTiles
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a

@@ -2993,7 +2993,7 @@ Jump_0A1_52D1::
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4519_Case01)
 ; reads: wC944, hMapId
-; writes: wStringIndex, wStringCategory, wC53D, wC53E
+; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wC8CF
 Func_0A1_52D4::
     ld a, [wC944]
@@ -3034,9 +3034,9 @@ Jump_0A1_52FB::
     ld [wStringCategory], a
     ld de, wC8CF
     ld a, e
-    ld [wC53D], a
+    ld [wStringDestLo], a
     ld a, d
-    ld [wC53E], a
+    ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank08
     call Func_0A1_528B
     ld de, vTiles1

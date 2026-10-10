@@ -1361,7 +1361,7 @@ Jump_039_53DD::
     jr nz, Jump_039_540D
     call Func_039_6E27
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ld a, [wBattleDamageLo]
     ld c, a
     ld a, [wD873]
@@ -1472,7 +1472,7 @@ Jump_039_548E::
     call Func_039_71D4
     jr nz, Jump_039_549F
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr nc, Jump_039_54A9
 
 Jump_039_549F::
@@ -1490,7 +1490,7 @@ Jump_039_54A9::
 Jump_039_54AF::
     push bc
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_039_54E5
     call Func_039_6E06
     jr nz, Jump_039_54E5
@@ -1499,7 +1499,7 @@ Jump_039_54AF::
     ld a, c
     call Func_039_6E27
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ld a, [wBattleDamageLo]
     ld c, a
     ld a, [wD873]
@@ -1578,7 +1578,7 @@ Jump_039_5532::
     inc hl
     ld b, [hl]
     ld a, e
-    call Func_039_71EF
+    call GetBattleMaxHP_Bank39
     call CompareHLToBC
     jr nz, Jump_039_5550
     ld bc, $0001
@@ -1655,7 +1655,7 @@ Jump_039_55A8::
     ld hl, wD868
     inc [hl]
     ld a, c
-    call Func_039_71EF
+    call GetBattleMaxHP_Bank39
     ld a, c
     ld de, wD8A7
     add a, e
@@ -1730,7 +1730,7 @@ Jump_039_561A::
     inc hl
     ld b, [hl]
     ld a, e
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     call CompareHLToBC
     jr z, Jump_039_566D
     ld a, [wD87D]
@@ -2024,7 +2024,7 @@ Jump_039_57E9::
     bit 2, [hl]
     jr nz, Jump_039_5831
     ld a, c
-    call Func_039_71E5
+    call GetBattleATK_Bank39
     push bc
     ldh a, [hFFC7]
     ld c, a
@@ -2098,7 +2098,7 @@ Jump_039_5867::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5891
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     push hl
     call Func_039_6F32
     pop bc
@@ -2171,7 +2171,7 @@ Jump_039_58CD::
     jr nz, Jump_039_5909
     ld a, c
     ldh [hFFC9], a
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     ld a, h
     or a, a
     jr nz, Jump_039_58EE
@@ -2200,7 +2200,7 @@ Jump_039_5909::
     inc c
     dec b
     jr nz, Jump_039_58CD
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2231,7 +2231,7 @@ Jump_039_5927::
     jr nz, Jump_039_5963
     ld a, c
     ldh [hFFC9], a
-    call Func_039_7203
+    call GetBattleAGL_Bank39
     ld a, h
     or a, a
     jr nz, Jump_039_5948
@@ -2260,7 +2260,7 @@ Jump_039_5963::
     inc c
     dec b
     jr nz, Jump_039_5927
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2282,7 +2282,7 @@ Jump_039_597B::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_59A5
-    call Func_039_7203
+    call GetBattleAGL_Bank39
     push hl
     call Func_039_6F66
     pop bc
@@ -2349,7 +2349,7 @@ Jump_039_59E1::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5A1F
     ldh [hFFC8], a
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     ld a, h
     or a, a
     jr nz, Jump_039_5A02
@@ -2357,7 +2357,7 @@ Jump_039_59E1::
     cp a, $02
     jr nc, Jump_039_5A02
     ld a, c
-    call Func_039_7203
+    call GetBattleAGL_Bank39
     ld a, h
     or a, a
     jr nz, Jump_039_5A02
@@ -2387,7 +2387,7 @@ Jump_039_5A1F::
     inc c
     dec b
     jr nz, Jump_039_59E1
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2417,10 +2417,10 @@ Jump_039_5A40::
     cp a, e
     jr z, Jump_039_5A7B
     ldh [hFFCA], a
-    call Func_039_71EF
+    call GetBattleMaxHP_Bank39
     push hl
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     add hl, hl
     ld c, l
     ld b, h
@@ -2532,7 +2532,7 @@ Jump_039_5AF3::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5B38
     ldh [hFFC8], a
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     ld a, h
     or a, a
     jr nz, Jump_039_5B07
@@ -2696,7 +2696,7 @@ Jump_039_5BF1::
     inc c
     dec b
     jr nz, Jump_039_5BBB
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2721,7 +2721,7 @@ Jump_039_5C0F::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5C3B
     ldh [hFFC8], a
-    call Func_039_71FE
+    call GetBattleMP_Bank39
     ld a, h
     or a, l
     jr z, Jump_039_5C3B
@@ -2747,7 +2747,7 @@ Jump_039_5C3B::
     inc c
     dec b
     jr nz, Jump_039_5C0F
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2778,10 +2778,10 @@ Jump_039_5C59::
     bit 0, [hl]
     jr z, Jump_039_5C8E
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ldh a, [hFFC7]
@@ -2906,7 +2906,7 @@ Jump_039_5D11::
     inc c
     dec b
     jr nz, Jump_039_5CE3
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2958,7 +2958,7 @@ Jump_039_5D5F::
     inc c
     dec b
     jr nz, Jump_039_5D2F
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3015,7 +3015,7 @@ Jump_039_5DB3::
     inc c
     dec b
     jr nz, Jump_039_5D7D
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3041,10 +3041,10 @@ Jump_039_5DD2::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5DFA
     ldh [hFFC9], a
-    call Func_039_71EF
+    call GetBattleMaxHP_Bank39
     push hl
     ld a, c
-    call Func_039_71F4
+    call GetBattleMaxMP_Bank39
     pop bc
     add hl, bc
     ldh a, [hFFC7]
@@ -3153,7 +3153,7 @@ Jump_039_5E65::
     cp a, e
     jr nz, Jump_039_5EA5
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ldh a, [hFFC9]
     ld c, a
     ldh a, [hFFCA]
@@ -3187,7 +3187,7 @@ Jump_039_5EB1::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5ED1
     ldh [hFFCB], a
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ldh a, [hFFC9]
     ld c, a
     ldh a, [hFFCA]
@@ -3320,7 +3320,7 @@ Jump_039_5F6B::
     pop bc
     push hl
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     pop bc
     call CompareHLToBC
     jr c, Jump_039_5FD9
@@ -3434,12 +3434,12 @@ Jump_039_602D::
     jr z, Jump_039_6060
     jr nc, Jump_039_6079
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     jr Jump_039_606F
 
 Jump_039_6060::
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ldh a, [hFFC7]
     ld c, a
     ldh a, [hFFC8]
@@ -3478,7 +3478,7 @@ Jump_039_608A::
     bit 0, [hl]
     jr nz, Jump_039_60B6
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ldh a, [hFFC7]
     ld c, a
     ldh a, [hFFC8]
@@ -3510,7 +3510,7 @@ Jump_039_60C6::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_60E4
     ldh [hFFC9], a
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ldh a, [hFFC7]
     ld c, a
     ldh a, [hFFC8]
@@ -3618,7 +3618,7 @@ Jump_039_6161::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6199
     ldh [hFFC8], a
-    call Func_039_71FE
+    call GetBattleMP_Bank39
     ld a, h
     or a, l
     jr z, Jump_039_6199
@@ -3650,7 +3650,7 @@ Jump_039_6199::
     inc c
     dec b
     jr nz, Jump_039_6161
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3705,10 +3705,10 @@ Jump_039_61BD::
 Jump_039_61F5::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -3729,7 +3729,7 @@ Jump_039_621A::
     inc c
     dec b
     jr nz, Jump_039_61BD
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3784,10 +3784,10 @@ Jump_039_623E::
 Jump_039_6276::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -3808,7 +3808,7 @@ Jump_039_629B::
     inc c
     dec b
     jr nz, Jump_039_623E
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3864,10 +3864,10 @@ Jump_039_62BF::
 Jump_039_62F7::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -3888,7 +3888,7 @@ Jump_039_631C::
     inc c
     dec b
     jr nz, Jump_039_62BF
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3944,10 +3944,10 @@ Jump_039_6340::
 Jump_039_6378::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -3968,7 +3968,7 @@ Jump_039_639D::
     inc c
     dec b
     jr nz, Jump_039_6340
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4016,10 +4016,10 @@ Jump_039_63C1::
 Jump_039_63E9::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -4040,7 +4040,7 @@ Jump_039_640E::
     inc c
     dec b
     jr nz, Jump_039_63C1
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4129,10 +4129,10 @@ Jump_039_646A::
 Jump_039_649D::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -4153,7 +4153,7 @@ Jump_039_64C2::
     inc c
     dec b
     jr nz, Jump_039_646A
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 Jump_039_64CA::
@@ -4218,10 +4218,10 @@ Jump_039_64F7::
 Jump_039_652F::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -4242,7 +4242,7 @@ Jump_039_6554::
     inc c
     dec b
     jr nz, Jump_039_64F7
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4290,10 +4290,10 @@ Jump_039_6578::
 Jump_039_65A0::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -4314,7 +4314,7 @@ Jump_039_65C5::
     inc c
     dec b
     jr nz, Jump_039_6578
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4361,7 +4361,7 @@ Jump_039_65F4::
     pop bc
     push hl
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     pop bc
     call CompareHLToBC
     jr c, Jump_039_6656
@@ -4507,10 +4507,10 @@ Jump_039_66EF::
     add_a_to_hl
     push hl
     ld a, e
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, e
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop de
     add hl, de
     sra h
@@ -4629,10 +4629,10 @@ Jump_039_67DB::
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_680E
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, e
-    call Func_039_71EF
+    call GetBattleMaxHP_Bank39
     pop bc
     call CompareHLToBC
     jr z, Jump_039_680E
@@ -4802,7 +4802,7 @@ Jump_039_68DA::
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_68F1
-    call Func_039_71EF
+    call GetBattleMaxHP_Bank39
     ldh a, [hFFCA]
     add a, l
     ldh [hFFCA], a
@@ -4834,7 +4834,7 @@ Jump_039_690A::
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_693C
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     ldh a, [hFFCA]
     ld c, a
     ldh a, [hFFCB]
@@ -5213,10 +5213,10 @@ Jump_039_6A41::
 Jump_039_6A69::
     push bc
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ld a, [wBattleDamageLo]
@@ -5237,7 +5237,7 @@ Jump_039_6A8E::
     inc c
     dec b
     jr nz, Jump_039_6A41
-    call Func_039_6FE2
+    call SetActorWDA1DFromHRAMChoice
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5356,7 +5356,7 @@ Jump_039_6B1D::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6B41
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     push hl
     call Func_039_6F32
     pop bc
@@ -5408,7 +5408,7 @@ Jump_039_6B70::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6B94
-    call Func_039_7203
+    call GetBattleAGL_Bank39
     push hl
     call Func_039_6F66
     pop bc
@@ -5444,7 +5444,7 @@ Jump_039_6B94::
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC6, hFFC7
 Func_039_6BB0:: ; heuristic: target of a pointer table; C0
-    ld de, Func_039_71EA
+    ld de, GetBattleDEF_Bank39
     jp Jump_039_6C30
     db $11, $03, $72, $C3, $30, $6C, $FA, $A4, $D8, $E6, $04, $21, $0C, $D8, $16, $10
     db $C3, $E3, $6B, $FA, $A4, $D8, $E6, $04, $21, $0C, $D8, $16, $40, $C3, $E3, $6B
@@ -5561,10 +5561,10 @@ Jump_039_6C8A::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6CD4
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EF
+    call GetBattleMaxHP_Bank39
     pop bc
     call DivideHLByBC
     ldh a, [hFFC7]
@@ -5644,10 +5644,10 @@ Jump_039_6CFE::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6D4E
-    call Func_039_71FE
+    call GetBattleMP_Bank39
     push hl
     ld a, c
-    call Func_039_71F4
+    call GetBattleMaxMP_Bank39
     pop bc
     call DivideHLByBC
     ldh a, [hFFC7]
@@ -5788,10 +5788,10 @@ Func_039_6DC8::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Func_039_6DF1
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     ldh a, [hFFC7]
     or a, a
     jr z, Jump_039_6DED
@@ -5889,7 +5889,7 @@ Jump_039_6E47::
 
 Jump_039_6E4F::
     ld a, [wBattleActor]
-    call Func_039_71E5
+    call GetBattleATK_Bank39
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -6151,10 +6151,12 @@ Jump_039_6FDC::
     ld [hl], a
     ret
 
+; HL = wDA1D + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)
 ; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_5D67, Func_039_6416, Func_039_5BA5, ...)
 ; reads: wBattleActor, hFFC6, hFFC9, hFFC8, hFFD0
 ; points at: wDA1D
-Func_039_6FE2::
+SetActorWDA1DFromHRAMChoice::
+Func_039_6FE2:: ; address name
     ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
@@ -6311,10 +6313,10 @@ Jump_039_70A9::
     cp a, d
     jr nz, Jump_039_70F4
     ld a, c
-    call Func_039_71F9
+    call GetBattleHP_Bank39
     push hl
     ld a, c
-    call Func_039_71EA
+    call GetBattleDEF_Bank39
     pop bc
     add hl, bc
     ldh a, [hFFC7]
@@ -6434,7 +6436,7 @@ Jump_039_717F::
 Func_039_7180::
     push af
     ld a, [wBattleActor]
-    call Func_039_71FE
+    call GetBattleMP_Bank39
     push hl
     ld a, [wBattleActor]
     ld hl, wD8B7
@@ -6501,45 +6503,59 @@ Func_039_71D4::
     and a, $C0
     ret
 
+; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$39 copy of GetBattleATK) (E-0060)
 ; 2 call sites from 2 routines (e.g. Func_039_6E27, Func_039_57D8)
 ; points at: wBattleATK
-Func_039_71E5::
+GetBattleATK_Bank39::
+Func_039_71E5:: ; address name
     ld hl, wBattleATK
     jr Jump_039_7212
 
+; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)
 ; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_66C5, Func_039_6DC8, Func_039_5ADB, ...)
 ; points at: wBattleDEF
-Func_039_71EA::
+GetBattleDEF_Bank39::
+Func_039_71EA:: ; address name
     ld hl, wBattleDEF
     jr Jump_039_7212
 
+; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0060)
 ; 7 call sites from 7 routines (e.g. Func_039_68B0, Func_039_5593, Func_039_5514, Func_039_67AD, ...)
 ; points at: wBattleMaxHP
-Func_039_71EF::
+GetBattleMaxHP_Bank39::
+Func_039_71EF:: ; address name
     ld hl, wBattleMaxHP
     jr Jump_039_7212
 
+; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0060)
 ; 2 call sites from 2 routines (e.g. Func_039_5DBB, Func_039_6CE9)
 ; points at: wBattleMaxMP
-Func_039_71F4::
+GetBattleMaxMP_Bank39::
+Func_039_71F4:: ; address name
     ld hl, wBattleMaxMP
     jr Jump_039_7212
 
+; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0060)
 ; 28 call sites from 24 routines (e.g. Func_039_6A25, Func_039_68B0, Func_039_66C5, Func_039_5593, ...)
 ; points at: wBattleHP
-Func_039_71F9::
+GetBattleHP_Bank39::
+Func_039_71F9:: ; address name
     ld hl, wBattleHP
     jr Jump_039_7212
 
+; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)
 ; 4 call sites from 4 routines (e.g. Func_039_7180, Func_039_6CE9, Func_039_5BF9, Func_039_614B)
 ; points at: wBattleMP
-Func_039_71FE::
+GetBattleMP_Bank39::
+Func_039_71FE:: ; address name
     ld hl, wBattleMP
     jr Jump_039_7212
 
+; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0060)
 ; 4 call sites from 4 routines (e.g. Func_039_6B5D, Func_039_5911, Func_039_596B, Func_039_59CB)
 ; points at: wBattleAGL
-Func_039_7203::
+GetBattleAGL_Bank39::
+Func_039_7203:: ; address name
     ld hl, wBattleAGL
     jr Jump_039_7212
 

@@ -2086,7 +2086,7 @@ Jump_032_4B14::
     cp a, $09
     jr z, Jump_032_4B38
     ld hl, wD895
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     cp a, $FF
     jr z, Jump_032_4B38
     cp a, $10
@@ -2495,7 +2495,7 @@ Jump_032_4D69::
     ld a, [wBattleActor]
     ld hl, wBattleMP
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     pop bc
     sub a, c
     ld [hl+], a
@@ -2567,7 +2567,7 @@ Jump_032_4DD4::
     ld b, a
     ld a, [hl+]
     call DivideBByA
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     cp a, $C8
     jr nz, Jump_032_4DF7
     ld a, [wCFC5]
@@ -2599,7 +2599,7 @@ Jump_032_4DF7::
     ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wBattleTarget], a
     ret
 
@@ -2854,7 +2854,7 @@ Jump_032_4F9C::
     jr z, Jump_032_4FFB
     ld a, [wBattleActor]
     ld hl, wDAE0
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     or a, a
     jr nz, Jump_032_4FFB
     ld a, [wCFF3]
@@ -2880,7 +2880,7 @@ Jump_032_4FC8::
     ld a, [wBattleActor]
     ld hl, wDA1C
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wBattleActionId], a
     inc hl
     ld [hl], $FF
@@ -2918,7 +2918,7 @@ Jump_032_5018::
     jr c, Jump_032_5043
     push hl
     ld hl, wDA5B
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     pop hl
     cp a, $03
     jr z, Jump_032_5031
@@ -2997,7 +2997,7 @@ Jump_032_50B7:: ; address name
     ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     cp a, $FF
     jr z, Jump_032_50F6
     ld a, [wBattleActor]
@@ -3030,7 +3030,7 @@ Jump_032_50FC::
     ld a, [wBattleActor]
     ld hl, wDA1D
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wBattleTarget], a
     ld hl, wBattleSubStep
     inc [hl]
@@ -3090,7 +3090,7 @@ Func_032_514C:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     add a, a
     ld hl, wDA2C
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wRecordBuffer], a
     ld a, $00
     ld [wCFED], a
@@ -3120,7 +3120,7 @@ Jump_032_5181::
     ld [wBattleActor], a
     add a, a
     ld hl, wDA2C
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wRecordBuffer], a
     ld a, $00
     ld [wCFED], a
@@ -3536,7 +3536,7 @@ Jump_032_53C8::
     ld a, [wBattleActor]
     ld hl, wDA2C
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wRecordBuffer], a
     ld a, $00
     ld [wCFED], a
@@ -3549,7 +3549,7 @@ Jump_032_53C8::
     ld [wBattleActor], a
     ld hl, wDA2C
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wRecordBuffer], a
     ld a, $00
     ld [wCFED], a
@@ -3597,7 +3597,7 @@ Jump_032_544A:: ; address name
     ld a, [wBattleActor]
     ld hl, wD854
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     and a, $54
     ret z
     bit 6, a
@@ -3708,7 +3708,7 @@ Jump_032_54F5::
     ld a, [wBattleActor]
     ld hl, wD854
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     and a, $03
     ret z
     bit 0, a
@@ -3778,7 +3778,7 @@ Jump_032_554D:: ; address name
     ld a, [wBattleActor]
     ld hl, wDA1C
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wBattleActionId], a
     inc hl
     ld a, [hl]
@@ -4096,11 +4096,13 @@ Func_032_57E8::
 
 Jump_032_57F8::
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret
 
+; HL += A, then A = the byte at HL
 ; 18 call sites from 13 routines (e.g. Func_032_5397, Func_032_5804, Func_032_4ADC_Case04, Func_032_4ADC_Case02, ...)
-Func_032_57FD::
+ReadByteAtHLPlusA::
+Func_032_57FD:: ; address name
     add_a_to_hl
     ld a, [hl]
     ret
@@ -4113,7 +4115,7 @@ Func_032_5804::
     ld a, [wBattleActor]
     ld hl, wDA1C
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wBattleActionId], a
     ld [wRecordBuffer], a
     ld a, $00
@@ -4305,7 +4307,7 @@ Jump_032_5921:: ; address name
     ld a, [wBattleActor]
     ld hl, wDA1C
     add a, a
-    call Func_032_57FD
+    call ReadByteAtHLPlusA
     ld [wBattleActionId], a
     inc hl
     ld a, [hl]
@@ -5046,7 +5048,7 @@ Jump_032_5CCA::
     ret z
     ld a, b
     ld e, $31
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld a, l
     ld [wD868], a
     ld a, h
@@ -6929,7 +6931,7 @@ Jump_032_68F8::
 ; 2 call sites from 1 routine (e.g. Func_032_514C)
 ; points at: wD80F
 Func_032_68FD::
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret c
     push hl
     push bc

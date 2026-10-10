@@ -383,5 +383,21 @@ class BattleText(unittest.TestCase):
             self.assertEqual((gb.rb(0xC528), gb.rb(0xC529)), (0, index), hex(index))
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class SlotStatusBlock(unittest.TestCase):
+    """CheckSlotStatusBlock: carry set when the slot is absent or one of its status masks is set (E-0058; C2 on our emulator)."""
+
+    def test_absent_slot_and_each_mask(self):
+        gb = call(0x00, 0x3E25, a=0x08)
+        self.assertTrue(gb.f & 0x10, "slot 8 is out of range")
+        gb = call(0x00, 0x3E25, a=0x00, mem={0xDA63: 0x01})
+        self.assertTrue(gb.f & 0x10, "absent slot")
+        for offset, mask in ((0, 0x10), (3, 0x01), (5, 0x40), (8, 0x08)):
+            gb = call(0x00, 0x3E25, a=0x00, mem={0xD80C + offset: mask})
+            self.assertTrue(gb.f & 0x10, f"offset {offset} mask {mask:#x}")
+        gb = call(0x00, 0x3E25, a=0x00)
+        self.assertFalse(gb.f & 0x10, "present and clear")
+
+
 if __name__ == "__main__":
     unittest.main()

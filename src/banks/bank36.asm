@@ -1973,7 +1973,7 @@ Func_036_4D0C::
     ret z
     ld a, b
     ld e, $31
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld a, l
     ld [wD868], a
     ld a, h
@@ -6099,7 +6099,7 @@ Func_036_6658:: ; heuristic: follows a terminator; C0
     jr z, Jump_036_6667
     ld a, b
     ld e, $31
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     jr Jump_036_669D
 
 Jump_036_6667::
@@ -6136,7 +6136,7 @@ Func_036_669E:: ; heuristic: follows a terminator; C0
     jr z, Jump_036_66AF
     ld a, b
     ld e, $0E
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld b, $08
     jr Jump_036_66D5
 
@@ -7977,7 +7977,7 @@ Jump_036_730E::
 ; points at: wD80E, wD235
 Func_036_7314:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_036_7326
     call AdvanceRandom
     ld a, [wC5E7]
@@ -9905,7 +9905,7 @@ Jump_036_7F37::
 ; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, ResolveStepBegin, RunBattleResolveStep_Table2_Case00, Func_036_42D3, ...)
 ; points at: wD80F
 Func_036_7F3C::
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret c
     push hl
     push bc

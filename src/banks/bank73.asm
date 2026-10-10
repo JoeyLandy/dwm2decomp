@@ -239,7 +239,7 @@ Jump_073_4139:: ; address name
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    call Func_000_222B
+    call LoadRecordListNameTiles
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -1384,7 +1384,7 @@ Jump_073_49BB::
 
 ; 1 call site from 1 routine (e.g. Func_073_4956)
 ; reads: hFFC8
-; writes: wScriptParam0, wStringIndex, wStringCategory, wC53D, wC53E
+; writes: wScriptParam0, wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wC152
 Func_073_49C5::
     ldh a, [hFFC8]
@@ -1395,9 +1395,9 @@ Func_073_49C5::
     ld [wStringCategory], a
     ld hl, wC152
     ld a, l
-    ld [wC53D], a
+    ld [wStringDestLo], a
     ld a, h
-    ld [wC53E], a
+    ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank09
     ret
 
@@ -2199,7 +2199,7 @@ Jump_073_4E67:: ; address name
 Jump_073_4E76::
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -5044,7 +5044,7 @@ Func_073_5F55:: ; heuristic: follows a terminator; C0
     ld [hl], a
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a

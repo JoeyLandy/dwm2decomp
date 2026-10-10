@@ -187,7 +187,7 @@ Jump_0A3_41E4::
     cp a, c
     jr nz, Jump_0A3_4257
     ldh a, [hFFC6]
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
     ldh a, [hFFC6]
     call Func_0A3_4278
@@ -206,7 +206,7 @@ Jump_0A3_41FD::
     jr nz, Jump_0A3_4257
     ldh a, [hFFC6]
     inc a
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
     ldh a, [hFFC6]
     inc a
@@ -227,7 +227,7 @@ Jump_0A3_421A::
     ldh a, [hFFC6]
     inc a
     inc a
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
     ldh a, [hFFC6]
     inc a

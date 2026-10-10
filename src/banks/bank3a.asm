@@ -4416,7 +4416,7 @@ Jump_03A_6AFE:: ; address name
     call CarryUnlessWDA63SlotEmpty
     jp c, Jump_03A_6BE8
     ld a, [wBattleTarget]
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jp c, Jump_03A_6BE8
     ld a, [wDAC0]
     bit 4, a
@@ -5552,7 +5552,7 @@ Func_03A_791A::
     ld l, a
     ld h, $04
     ld de, wC140
-    call Func_000_2E81
+    call CopyStringHLToDE
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_03A_774C, Func_03A_77C3, Func_03A_77D3, Func_03A_784A, ...)
@@ -5625,7 +5625,7 @@ Func_03A_7980:: ; heuristic: follows a terminator; C0
     ld l, a
     ld h, $05
     ld de, wC150
-    call Func_000_2E81
+    call CopyStringHLToDE
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -5653,7 +5653,7 @@ Func_03A_79A0::
     push hl
     push bc
     ld e, $00
-    call Func_000_3F32
+    call WD0D5RecordFieldAddress
     ld e, l
     ld d, h
     pop bc
@@ -5731,7 +5731,7 @@ Func_03A_79ED::
     ld [wD87A], a
     ld a, d
     ld [wD87B], a
-    call Func_000_2E81
+    call CopyStringHLToDE
     ret
 
 Jump_03A_7A10::
@@ -6325,7 +6325,7 @@ Jump_03A_7D65::
 ; 2 call sites from 2 routines (e.g. RunBattleActions_Case05, Func_03A_6CD4)
 ; points at: wD80F
 Func_03A_7D6A::
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret c
     push hl
     push bc

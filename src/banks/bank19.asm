@@ -211,7 +211,7 @@ Func_019_419B:: ; address name
     farcall GameMode4_Init_Sub01_Sub02_Sub02
     farcall Func_031_71F5
     farcall Func_031_72AC
-    farcall Func_031_72CC
+    farcall LayoutTileBlocksForWD890Count
     farcall Func_031_7389
     farcall Func_031_7321
     ld hl, vBGMap0
@@ -2523,7 +2523,7 @@ Jump_019_4E44::
     call CarryUnlessWDA63SlotEmpty
     jr z, Jump_019_4E58
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_019_4E54
     ld [hl], $00
     jr Jump_019_4E5A

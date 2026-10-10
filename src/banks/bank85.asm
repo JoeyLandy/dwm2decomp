@@ -170,7 +170,7 @@ Jump_085_40C3:: ; address name
     ld [hl], a
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -442,7 +442,7 @@ Jump_085_429B:: ; address name
     ld [hl], a
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a

@@ -2414,6 +2414,52 @@
     "note": "reads the effect flags in wDAD3 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set wBattleActor to wBattleTarget and select a table (Data_03A_60B7 or Data_03A_6107) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)",
     "evidence": "reading (E-0057)"
   },
+  "00:3E25": {
+    "name": "CheckSlotStatusBlock",
+    "note": "A = slot: returns carry set when the slot is absent (CarryUnlessWDA63SlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)",
+    "evidence": "reading + execution (E-0058)"
+  },
+  "32:57FD": {
+    "name": "ReadByteAtHLPlusA",
+    "note": "HL += A, then A = the byte at HL",
+    "evidence": "reading"
+  },
+  "00:24F8": {
+    "name": "StepBGMapAddressBackOnScrollWrap",
+    "note": "HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)",
+    "evidence": "reading (E-0059)"
+  },
+  "00:18A5": {
+    "name": "CopyRectToBGMapWrapped",
+    "note": "B = width, C = rows, DE = source, HL = BG map address: copies a B x C rectangle, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B). Each byte is written with interrupts off after rSTAT bit 1 clears. DE ends past the source, HL at the last row start, C = 0; B kept (E-0059)",
+    "evidence": "reading (E-0059)"
+  },
+  "00:2E81": {
+    "name": "CopyStringHLToDE",
+    "note": "H = string category, L = string index, DE = destination: stores them in wStringDestLo/Hi, wStringCategory and wStringIndex and far-calls CopyStringToBuffer_Bank08, which copies the string with its $F0 terminator to DE (categories 9 and above go to Func_095_465F) (E-0059)",
+    "evidence": "reading (E-0059)"
+  },
+  "00:222B": {
+    "name": "LoadRecordListNameTiles",
+    "note": "fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToWC8CF, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)",
+    "evidence": "reading (E-0059)"
+  },
+  "00:3F32": {
+    "name": "WD0D5RecordFieldAddress",
+    "note": "A = index, E = field offset: HL = wD0D5 + $4E * A' + E, where A' = A - 1 when A >= 3 (so indices 2 and 3 share a record); clobbers A, BC (E-0059)",
+    "evidence": "reading (E-0059)"
+  },
+  "39:71E5": {"name": "GetBattleATK_Bank39", "note": "A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$39 copy of GetBattleATK) (E-0060)", "evidence": "reading (E-0060)"},
+  "39:71EA": {"name": "GetBattleDEF_Bank39", "note": "A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)", "evidence": "reading (E-0060)"},
+  "39:71EF": {"name": "GetBattleMaxHP_Bank39", "note": "A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0060)", "evidence": "reading (E-0060)"},
+  "39:71F4": {"name": "GetBattleMaxMP_Bank39", "note": "A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0060)", "evidence": "reading (E-0060)"},
+  "39:71F9": {"name": "GetBattleHP_Bank39", "note": "A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0060)", "evidence": "reading (E-0060)"},
+  "39:71FE": {"name": "GetBattleMP_Bank39", "note": "A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)", "evidence": "reading (E-0060)"},
+  "39:7203": {"name": "GetBattleAGL_Bank39", "note": "A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0060)", "evidence": "reading (E-0060)"},
+  "39:6FE2": {"name": "SetActorWDA1DFromHRAMChoice", "note": "HL = wDA1D + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)", "evidence": "reading (E-0060)"},
+  "31:72CC": {"name": "LayoutTileBlocksForWD890Count", "note": "wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)", "evidence": "reading (E-0060)"},
+  "31:753F": {"name": "CopyRect32StrideToVRAM", "note": "B = width, C = rows, DE = source with 32-byte rows, HL = VRAM address with 32-byte rows: copies a B x C rectangle with WriteVRAMByteInc. DE ends 32 * C past its start and HL at the start of the row below; B kept, C = 0 (E-0060)", "evidence": "reading (E-0060)"},
+  "03:4425": {"name": "UpdateMenuCursor", "note": "HL = cursor byte (low nibble = row, bit 7 = page-changed flag). Up/Down (wJoypadPressedRepeat bits 6/7) move the row with wrap over wMenuRowCount, erase the old cursor (Func_003_44F0), play sound $69, store the row (clearing bit 7) and draw it (Func_003_4506). When wMenuPageCount >= 2, Left/Right (bits 5/4) step wMenuPage with wrap, clamp the row to wMenuLastPageRows - 1 on the last page, set bit 7 and play sound $69. With no input the cursor blinks every 16 frames. wFrameCounterLo is reset on each move (E-0060)", "evidence": "reading (E-0060)"},
   "32:51F9": {
     "name": "CheckSkillMPCost",
     "note": "for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)",

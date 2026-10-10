@@ -360,7 +360,7 @@ Func_031_423B::
     ld a, h
     add a, $02
     ld h, a
-    call Func_000_2E81
+    call CopyStringHLToDE
     ret
 
 ; wBattlePhase 0, wBattleStep 3 (E-0044)
@@ -561,7 +561,7 @@ Func_031_4365:: ; address name
     add a, $02
     ld h, a
     ld de, wC130
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld hl, wC130
 
 Jump_031_437C::
@@ -1257,14 +1257,14 @@ Jump_031_4724:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     call Func_031_47DD
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_7321
     ld de, wC27F
     ld hl, vBGMap0 + $E7
     ld bc, $0606
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -1331,7 +1331,7 @@ Func_031_47A9::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $1412
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; entry 4 of the `rst $00` table in Func_031_46C1
@@ -1351,7 +1351,7 @@ Func_031_47C7::
     call Func_031_71F5
     call Func_031_72AC
     call Func_031_7389
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_7321
     call Func_031_746F
     ret
@@ -1376,7 +1376,7 @@ Func_031_47DD::
     ld a, $7F
     ld [wC526], a
     call UploadBGPalettes
-    call Func_000_222B
+    call LoadRecordListNameTiles
     ld hl, vTiles1 + $6D0
     ld a, l
     ld [wC52D], a
@@ -1703,7 +1703,7 @@ Func_031_49D8:: ; address name
     add a, $02
     ld h, a
     ld de, wC130
-    call Func_000_2E81
+    call CopyStringHLToDE
     jr Jump_031_4A22
 
 Jump_031_49E5::
@@ -1885,7 +1885,7 @@ Jump_031_4AD2::
     jr c, Jump_031_4B01
     ld e, $01
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_031_4B01
     ld a, c
     ld hl, wD80F
@@ -2028,7 +2028,7 @@ Jump_031_4B8F:: ; address name
     inc hl
     set 7, [hl]
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_7536
     ld hl, vTiles1 + $6D0
     ld de, $0701
@@ -2084,7 +2084,7 @@ Jump_031_4BEE:: ; address name
     ld a, $00
     call FillBytes
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -2314,7 +2314,7 @@ Jump_031_4D4E:: ; address name
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_7479
     call Func_031_7486
     ld a, $02
@@ -2639,7 +2639,7 @@ Jump_031_4F2A:: ; address name
     ld de, wC2A6
     ld hl, vBGMap0 + $10E
     ld bc, $0605
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -2669,7 +2669,7 @@ Jump_031_4F50:: ; address name
     and a, $01
     jr z, Jump_031_4F8F
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_74A0
     ld a, $01
     ld [wBattleResolveStep], a
@@ -2896,7 +2896,7 @@ Jump_031_50BF:: ; address name
 
 Jump_031_5104::
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -2954,7 +2954,7 @@ Jump_031_515E::
 
 Jump_031_5172::
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -3047,7 +3047,7 @@ Jump_031_51F0:: ; address name
     ld a, $00
     ld [wD869], a
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     jp Jump_031_52B4
@@ -3092,7 +3092,7 @@ Jump_031_5242::
 
 Jump_031_525C::
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $0C
     ld [wBattleResolveStep], a
     xor a, a
@@ -3105,14 +3105,14 @@ Jump_031_526D::
     or a, a
     jr nz, Jump_031_5281
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $08
     ld [wBattleResolveStep], a
     jr Jump_031_52B4
 
 Jump_031_5281::
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     xor a, a
     ld [wD869], a
     ld a, $10
@@ -3133,7 +3133,7 @@ Jump_031_52A5::
     ld a, $01
     ld [wD869], a
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -3193,7 +3193,7 @@ Jump_031_52E7:: ; address name
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -3278,7 +3278,7 @@ Jump_031_5350:: ; address name
     bit 1, a
     jr z, Jump_031_537B
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $00
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -3291,7 +3291,7 @@ Jump_031_537B::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, [wCFD4]
     ld hl, wDA1C
     add a, a
@@ -3308,7 +3308,7 @@ Jump_031_537B::
     or a, b
     ld [hl], a
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $01
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -3430,7 +3430,7 @@ Jump_031_5454:: ; address name
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $20
     ld [wD869], a
     call Func_031_63ED
@@ -3585,7 +3585,7 @@ Jump_031_557A::
     bit 1, a
     jr z, Jump_031_5592
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $04
     ld [wD869], a
     ld hl, wBattleResolveStep
@@ -3640,7 +3640,7 @@ Jump_031_55C1:: ; address name
 Func_031_4EB9_Case14::
 Jump_031_55CF:: ; address name
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_7509
     call Func_031_746F
     ld hl, wBattleResolveStep
@@ -3671,7 +3671,7 @@ Jump_031_55F2:: ; address name
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -3764,7 +3764,7 @@ Jump_031_566A:: ; address name
     bit 1, a
     jr z, Jump_031_5693
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $10
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -3795,7 +3795,7 @@ Jump_031_56AF::
     cp a, c
     jr nz, Jump_031_56D5
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_7509
     call Func_031_746F
     ld a, $65
@@ -3817,7 +3817,7 @@ Jump_031_56D5::
     or a, b
     ld [hl], a
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $20
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -3923,7 +3923,7 @@ Jump_031_576F:: ; address name
     bit 1, a
     jr z, Jump_031_579A
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $10
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -3936,7 +3936,7 @@ Jump_031_579A::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, [wCFD4]
     ld hl, wDA1D
     add a, a
@@ -3951,7 +3951,7 @@ Jump_031_579A::
     or a, b
     ld [hl], a
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $20
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -4067,7 +4067,7 @@ Jump_031_5829:: ; address name
 Func_031_4EB9_Table2_Case00::
 Jump_031_5855:: ; address name
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_7536
     ld hl, wCFD5
     res 7, [hl]
@@ -4144,7 +4144,7 @@ Jump_031_58CF:: ; address name
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $00
     ld [wD869], a
     call Func_031_62D3
@@ -4172,7 +4172,7 @@ Jump_031_58CF:: ; address name
 
 Jump_031_5921::
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $10
     ld [wBattleResolveStep], a
     ld a, $1E
@@ -4181,7 +4181,7 @@ Jump_031_5921::
 
 Jump_031_5933::
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_74C8
     ld a, $08
     ld [wBattleResolveStep], a
@@ -4226,7 +4226,7 @@ Jump_031_597D::
     bit 1, a
     jr z, Jump_031_5995
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $FF
     ld [wD892], a
     ld [wD893], a
@@ -4386,7 +4386,7 @@ Jump_031_5A78::
 
 Jump_031_5A85::
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -4487,7 +4487,7 @@ Jump_031_5AFD:: ; address name
     bit 1, a
     jr z, Jump_031_5B26
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $00
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -4500,7 +4500,7 @@ Jump_031_5B26::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, [wC470]
     and a, $03
     ld [wD892], a
@@ -4629,7 +4629,7 @@ Jump_031_5BD6:: ; address name
     bit 1, a
     jr z, Jump_031_5C01
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, $00
     ld [wD868], a
     ld hl, wBattleResolveStep
@@ -4642,7 +4642,7 @@ Jump_031_5C01::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ld a, [wC470]
     and a, $03
     set 2, a
@@ -4725,7 +4725,7 @@ Jump_031_5C6B:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     ret
 
 ; entry 19 of the `rst $00` table in Func_031_4EB9
@@ -4764,7 +4764,7 @@ Jump_031_5C98::
     xor a, a
     ld [wBattleActor], a
     call FillWC278WithC3_Bank31
-    call Func_031_72CC
+    call LayoutTileBlocksForWD890Count
     call Func_031_746F
     call Func_031_7536
     ld hl, wBattleSubPhase
@@ -7100,7 +7100,7 @@ Jump_031_69A4:: ; address name
     ld l, a
     ld h, $04
     ld de, wC150
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld c, $FF
     ld hl, $0503
     ldh a, [hFFCA]
@@ -7114,7 +7114,7 @@ Jump_031_69A4:: ; address name
     ld l, a
     ld h, $04
     ld de, wC160
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld hl, $0504
     ldh a, [hFFCB]
     ld c, a
@@ -7684,7 +7684,7 @@ Jump_031_6CD2::
     ld l, a
     ld h, $04
     ld de, wC140
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, [wC6FE]
     ld c, $01
     call SRAMRecordAddress
@@ -8090,11 +8090,11 @@ Jump_031_6EF7:: ; address name
     ld de, wC1A0
     ld hl, vBGMap0 + $8
     ld bc, $0C09
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $1409
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     call Func_031_71B6
     ld hl, wBattleSubStep
     inc [hl]
@@ -8128,7 +8128,7 @@ Jump_031_6F57:: ; address name
     ld l, a
     ld h, $04
     ld de, wC150
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -8174,7 +8174,7 @@ Jump_031_6FB1:: ; address name
     ld hl, vBGMap0 + $1A0
     ld de, wC338
     ld bc, $1405
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ld hl, $0508
     call Func_031_6DDD
     ld hl, wBattleSubStep
@@ -8197,7 +8197,7 @@ Jump_031_6FE9:: ; address name
     ld hl, vBGMap0 + $10E
     ld de, wC2A6
     ld bc, $0605
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ld a, $01
     ld [wC46C], a
     ld hl, wBattleSubStep
@@ -8651,17 +8651,19 @@ Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Func_031_72C9::
     call FillWC278WithC3_Bank31
 
+; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
 ; 41 call sites from 24 routines (e.g. Func_031_47C7, RunBattleSetup_Case03, RunBattleSetup_Table2_Case0D, RunBattleSetup_Table2_Case07, ...)
 ; reads: wD890
 ; points at: wC285
-Func_031_72CC::
+LayoutTileBlocksForWD890Count::
+Func_031_72CC:: ; address name
     ld d, $14
     ld a, [wD890]
     dec a
     ld hl, Data_031_7317
     add a, a
     add_a_to_hl
-    call Func_031_72FF
+    call LayoutTileBlocksForWD890Count_Sub01
     ld a, [wD890]
     cp a, $01
     jr z, Jump_031_7316
@@ -8670,15 +8672,17 @@ Func_031_72CC::
     ld hl, Data_031_731D
     add a, a
     add_a_to_hl
-    call Func_031_72FF
+    call LayoutTileBlocksForWD890Count_Sub01
     ld a, [wD890]
     cp a, $03
     jr nz, Jump_031_7316
     ld hl, wC285
     jr Jump_031_7302
 
-; 2 call sites from 1 routine (e.g. Func_031_72CC)
-Func_031_72FF::
+; only called from LayoutTileBlocksForWD890Count (E-0047)
+; 2 call sites from 1 routine (e.g. LayoutTileBlocksForWD890Count)
+LayoutTileBlocksForWD890Count_Sub01::
+Func_031_72FF:: ; address name
     deref_hl
 
 Jump_031_7302::
@@ -8941,7 +8945,7 @@ Func_031_7479::
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $1405
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_Table2_Case07, RunBattleSetup_Table2_Case01)
@@ -8955,7 +8959,7 @@ Func_031_748C::
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $0E05
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case00)
@@ -8969,7 +8973,7 @@ Func_031_74A0::
     ld de, wC278
     ld hl, vBGMap0 + $E0
     ld bc, $0C0B
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case04)
@@ -8983,7 +8987,7 @@ Func_031_74B4::
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0809
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Table2_Case00)
@@ -8998,7 +9002,7 @@ Func_031_74C8::
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $1409
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ld a, $01
     ld [wD868], a
     ret
@@ -9014,7 +9018,7 @@ Func_031_74E1::
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0809
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Table2_Case04)
@@ -9028,7 +9032,7 @@ Func_031_74F5::
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0807
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case10)
@@ -9042,11 +9046,11 @@ Func_031_7509::
     ld de, wC2A4
     ld hl, vBGMap0 + $10C
     ld bc, $0701
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $1409
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_031_4EB9_Case1C, Func_031_4EB9_Case0C, Func_031_4EB9_Table2_Case0C)
@@ -9060,7 +9064,7 @@ Func_031_7529::
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0E07
-    call Func_031_753F
+    call CopyRect32StrideToVRAM
     ret
 
 ; 8 call sites from 8 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, RunBattleSetup_Case03, RunBattleSetup_Table2_Case01, ...)
@@ -9070,8 +9074,10 @@ Func_031_7536::
     ld hl, vBGMap0 + $E0
     ld bc, $140B
 
+; B = width, C = rows, DE = source with 32-byte rows, HL = VRAM address with 32-byte rows: copies a B x C rectangle with WriteVRAMByteInc. DE ends 32 * C past its start and HL at the start of the row below; B kept, C = 0 (E-0060)
 ; 18 call sites from 15 routines (e.g. Func_031_47A9, Func_031_7479, Func_031_74A0, RunBattleSetup_Table2_Case0C, ...)
-Func_031_753F::
+CopyRect32StrideToVRAM::
+Func_031_753F:: ; address name
     push bc
     push hl
 
@@ -9094,7 +9100,7 @@ Jump_031_7541::
 
 Jump_031_7557::
     dec c
-    jr nz, Func_031_753F
+    jr nz, CopyRect32StrideToVRAM
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_72AC)
@@ -9797,7 +9803,7 @@ Data_031_7ADA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wD80F
 RunBattleSetup_Table2_Case09_Sub01_Sub01::
 Func_031_7BEE:: ; address name
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     ret c
     push hl
     push bc

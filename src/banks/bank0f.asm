@@ -2975,7 +2975,7 @@ Jump_00F_54E0:: ; address name
     farcall Func_012_64F8
     farcall Func_002_5E85
     farcall Func_002_5E85
-    call Func_000_222B
+    call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a

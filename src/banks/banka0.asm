@@ -1125,7 +1125,7 @@ Jump_0A0_46A7::
     call CarryUnlessWDA63SlotEmpty
     jr z, Jump_0A0_46BB
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_0A0_46B7
     ld [hl], $00
     jr Jump_0A0_46BD
@@ -2069,7 +2069,7 @@ Func_0A0_4C74::
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $1405
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_5E07_Table2_Case03, Func_0A0_5E07_Table2_Case01)
@@ -2078,7 +2078,7 @@ Func_0A0_4C81::
     ld de, wC338
     ld hl, vBGMap0 + $1A0
     ld bc, $0E05
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0A0_5F2E_Case04, Func_0A0_5F2E_Case03, Func_0A0_5F2E_Case01)
@@ -2087,7 +2087,7 @@ Func_0A0_4C8E::
     ld de, wC278
     ld hl, vBGMap0 + $E0
     ld bc, $140B
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_0A0_5F2E_Case0C, Func_0A0_5F2E_Case08, Func_0A0_5F2E_Case07, Func_0A0_5F2E_Case05)
@@ -2096,7 +2096,7 @@ Func_0A0_4C9B::
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0B09
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2106,7 +2106,7 @@ Func_0A0_4CA8:: ; heuristic: follows a terminator; C0
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $1409
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ld a, $01
     ld [wD868], a
     ret
@@ -2117,7 +2117,7 @@ Func_0A0_4CBA:: ; heuristic: follows a terminator; C0
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0809
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2126,7 +2126,7 @@ Func_0A0_4CC7:: ; heuristic: follows a terminator; C0
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0707
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_0A0_5F2E_Case10, Func_0A0_5F2E_Case0F, Func_0A0_5F2E_Case0D)
@@ -2135,11 +2135,11 @@ Func_0A0_4CD4::
     ld de, wC2A4
     ld hl, vBGMap0 + $10C
     ld bc, $0701
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $1409
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2148,11 +2148,13 @@ Func_0A0_4CED:: ; heuristic: follows a terminator; C0
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0D07
-    call Func_0A0_4CFA
+    call CopyRect32StrideToVRAM_BankA0
     ret
 
+; the same 28 bytes as CopyRect32StrideToVRAM (31:753F)
 ; 10 call sites from 9 routines (e.g. Func_0A0_4C74, Func_0A0_4C81, Func_0A0_4CD4, Func_0A0_4C9B, ...)
-Func_0A0_4CFA::
+CopyRect32StrideToVRAM_BankA0::
+Func_0A0_4CFA:: ; address name
     push bc
     push hl
 
@@ -2175,7 +2177,7 @@ Jump_0A0_4CFC::
 
 Jump_0A0_4D12::
     dec c
-    jr nz, Func_0A0_4CFA
+    jr nz, CopyRect32StrideToVRAM_BankA0
     ret
 
 ; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_Sub02_Sub02, Func_0A0_4C36)
@@ -2558,7 +2560,7 @@ Jump_0A0_50C8:: ; address name
     add a, $02
     ld h, a
     ld de, wC130
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $03
     ld [wStringIndex], a
     ld a, $06
@@ -2653,7 +2655,7 @@ Jump_0A0_5158:: ; address name
     add a, $02
     ld h, a
     ld de, wC130
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $04
     ld [wStringIndex], a
     ld a, $06
@@ -2741,7 +2743,7 @@ Jump_0A0_51DD:: ; address name
     add a, $02
     ld h, a
     ld de, wC130
-    call Func_000_2E81
+    call CopyStringHLToDE
     ld a, $05
     ld [wStringIndex], a
     ld a, $06
@@ -4639,7 +4641,7 @@ Jump_0A0_5DC9::
     jr c, Jump_0A0_5DF8
     ld e, $01
     ld a, c
-    call Func_000_3E25
+    call CheckSlotStatusBlock
     jr c, Jump_0A0_5DF8
     ld a, c
     ld hl, wD80F

@@ -4289,9 +4289,11 @@ Jump_000_188C::
     jr nz, Jump_000_1885
     ret
 
+; B = width, C = rows, DE = source, HL = BG map address: copies a B x C rectangle, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B). Each byte is written with interrupts off after rSTAT bit 1 clears. DE ends past the source, HL at the last row start, C = 0; B kept (E-0059)
 ; 24 call sites from 12 routines (e.g. Func_00C_51F5, Func_00D_4E05, Func_014_585B, Func_015_65F1, ...)
 ; reads: rSTAT
-Func_000_18A5::
+CopyRectToBGMapWrapped::
+Func_000_18A5:: ; address name
     push hl
     push bc
 
@@ -4332,7 +4334,7 @@ Jump_000_18BE::
     ld a, h
     and a, $9B
     ld h, a
-    jr Func_000_18A5
+    jr CopyRectToBGMapWrapped
 
 Jump_000_18D5::
     ret
@@ -5527,7 +5529,7 @@ Func_000_1F95::
     ret
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
-; 29 call sites from 25 routines (e.g. Func_000_222B, Func_004_58C2_Case13, ScriptCommand87_Run_Case01, Func_014_56B0, ...)
+; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, Func_004_58C2_Case13, ScriptCommand87_Run_Case01, Func_014_56B0, ...)
 ; points at: wC8CF
 CopyRecordNameToWC8CF::
 Func_000_1FA4:: ; address name
@@ -5930,7 +5932,7 @@ Jump_000_219A::
     ret
 
 ; DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile
-; 68 call sites from 31 routines (e.g. Func_000_222B, DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5B98, DebugAutomap_Update_Sub03, ...)
+; 68 call sites from 31 routines (e.g. LoadRecordListNameTiles, DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5B98, DebugAutomap_Update_Sub03, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 ; points at: wC8CF
@@ -6050,11 +6052,13 @@ Jump_000_2221::
     ld [rROMB0], a
     ret
 
+; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToWC8CF, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
 ; 22 call sites from 22 routines (e.g. Func_002_4628, Func_002_4745_Case02, Func_003_6A60_Table2_Case00, Func_003_432F, ...)
 ; reads: wC6FD
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, rRAMG, wC8D9
 ; points at: wC6FE
-Func_000_222B::
+LoadRecordListNameTiles::
+Func_000_222B:: ; address name
     ld a, $90
     ld [wC8CF], a
     ld [wC8D0], a
@@ -6576,9 +6580,11 @@ Func_000_24E5::
     ld [wC526], a
     ret
 
+; HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)
 ; 73 call sites from 57 routines (e.g. ScriptCommandF7_Run_Case12_Sub03, ScriptCommandF7_Run_Case02_Sub03, Func_015_6742, Func_015_54C0, ...)
 ; reads: hScrollX
-Func_000_24F8::
+StepBGMapAddressBackOnScrollWrap::
+Func_000_24F8:: ; address name
     push bc
     push de
     push hl
@@ -6784,13 +6790,13 @@ Func_000_25C9:: ; address name
 
 ; DE = string table (see LookupString); copies the string, including its $F0 terminator, to the address in wC53D/wC53E
 ; 29 call sites from 29 routines (e.g. CopyStringToBuffer_Bank08, CopyStringToBuffer_Bank09, Func_00E_4016, Func_028_4016, ...)
-; reads: wC53D, wC53E
+; reads: wStringDestLo, wStringDestHi
 CopyStringToBuffer::
 Func_000_25FE:: ; address name
     call LookupString
-    ld a, [wC53D]
+    ld a, [wStringDestLo]
     ld l, a
-    ld a, [wC53E]
+    ld a, [wStringDestHi]
     ld h, a
 
 Jump_000_2609::
@@ -8217,13 +8223,15 @@ Func_000_2E72:: ; heuristic: follows a terminator; C0
     farcall BeginStringDisplay_Bank08
     ret
 
+; H = string category, L = string index, DE = destination: stores them in wStringDestLo/Hi, wStringCategory and wStringIndex and far-calls CopyStringToBuffer_Bank08, which copies the string with its $F0 terminator to DE (categories 9 and above go to Func_095_465F) (E-0059)
 ; 23 call sites from 22 routines (e.g. Func_003_5E68_Table5_Case09, Func_003_5E68_Table5_Case00, Func_003_5253_Table2_Case01, Func_016_53E6_Case11, ...)
-; writes: wC53D, wC53E, wStringCategory, wStringIndex
-Func_000_2E81::
+; writes: wStringDestLo, wStringDestHi, wStringCategory, wStringIndex
+CopyStringHLToDE::
+Func_000_2E81:: ; address name
     ld a, e
-    ld [wC53D], a
+    ld [wStringDestLo], a
     ld a, d
-    ld [wC53E], a
+    ld [wStringDestHi], a
     ld a, h
     ld [wStringCategory], a
     ld a, l
@@ -8343,22 +8351,22 @@ Jump_000_2F1F::
     jp Jump_000_2FA7
 
 ; 3 call sites from 1 routine (e.g. Func_000_2ECF)
-; reads: hFFC6, hFFC7, hFFC8, wC0A0, wC0A1, wC0A2
-; writes: wC0A0, wC0A1, wC0A2, hFFC6, hFFC7, hFFC8
+; reads: hFFC6, hFFC7, hFFC8, wC0A0, wC0A1, wMenuRowCount
+; writes: wC0A0, wC0A1, wMenuRowCount, hFFC6, hFFC7, hFFC8
 Func_000_2F36::
     ldh a, [hFFC6]
     ld [wC0A0], a
     ldh a, [hFFC7]
     ld [wC0A1], a
     ldh a, [hFFC8]
-    ld [wC0A2], a
+    ld [wMenuRowCount], a
     call Func_000_2F5A
     push af
     ld a, [wC0A0]
     ldh [hFFC6], a
     ld a, [wC0A1]
     ldh [hFFC7], a
-    ld a, [wC0A2]
+    ld a, [wMenuRowCount]
     ldh [hFFC8], a
     pop af
     ret
@@ -10476,9 +10484,11 @@ Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $43
     db $FF, $FF
 
+; A = slot: returns carry set when the slot is absent (CarryUnlessWDA63SlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
 ; 33 call sites from 30 routines (e.g. Func_005_59BD, Func_005_5A33, Func_005_5A73, Func_005_689C, ...)
 ; points at: wBattleStatus
-Func_000_3E25::
+CheckSlotStatusBlock::
+Func_000_3E25:: ; address name
     push hl
     push bc
     ld c, a
@@ -10516,7 +10526,7 @@ Jump_000_3E50::
     ret
 
 ; A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved
-; 288 call sites from 242 routines (e.g. Func_000_3E25, Func_005_6494, Func_005_4CE5, Func_005_4C5D, ...)
+; 288 call sites from 242 routines (e.g. CheckSlotStatusBlock, Func_005_6494, Func_005_4CE5, Func_005_4C5D, ...)
 ; points at: wBattleSlotOut
 CarryUnlessWDA63SlotEmpty::
 Func_000_3E54:: ; address name
@@ -10718,7 +10728,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 295 call sites from 240 routines (e.g. Func_000_3E25, Func_005_69DA, Func_005_6972, Func_005_53CA, ...)
+; 295 call sites from 240 routines (e.g. CheckSlotStatusBlock, Func_005_69DA, Func_005_6972, Func_005_53CA, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de
@@ -10731,9 +10741,11 @@ Func_000_3F25:: ; address name
     add_a_to_hl
     ret
 
+; A = index, E = field offset: HL = wD0D5 + $4E * A' + E, where A' = A - 1 when A >= 3 (so indices 2 and 3 share a record); clobbers A, BC (E-0059)
 ; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, Func_036_6658, Func_036_669E, ...)
 ; points at: wD0D5
-Func_000_3F32::
+WD0D5RecordFieldAddress::
+Func_000_3F32:: ; address name
     cp a, $03
     jr c, Jump_000_3F37
     dec a
