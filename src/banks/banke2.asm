@@ -435,7 +435,7 @@ Func_0E2_432D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_433D::
-    farcall Func_005_4664
+    farcall AnyFoeHasClearStatus3
     ld a, c
     and a, a
     jr nz, Jump_0E2_434D
@@ -2863,7 +2863,7 @@ Func_0E2_5529:: ; heuristic: follows a terminator; C0
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5542::
-    farcall Func_005_4664
+    farcall AnyFoeHasClearStatus3
     ld a, c
     and a, a
     jr nz, Jump_0E2_5552
@@ -3679,7 +3679,7 @@ Func_0E2_5B3D:: ; heuristic: follows a terminator; C0
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5B5C::
-    farcall Func_005_4664
+    farcall AnyFoeHasClearStatus3
     ld a, c
     and a, a
     jr nz, Jump_0E2_5B6C

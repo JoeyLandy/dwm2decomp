@@ -2820,7 +2820,7 @@ Jump_039_5C8E::
     inc c
     dec b
     jr nz, Jump_039_5C59
-    call Func_039_6FC8
+    call SetActorTargetFromHFFC6OrHFFC9
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3083,7 +3083,7 @@ Jump_039_5DFA::
     inc c
     dec b
     jr nz, Jump_039_5DD2
-    call Func_039_6FC8
+    call SetActorTargetFromHFFC6OrHFFC9
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -3548,7 +3548,7 @@ Jump_039_60E4::
     jr nz, Jump_039_60C6
 
 Jump_039_60E9::
-    call Func_039_6FC8
+    call SetActorTargetFromHFFC6OrHFFC9
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -6151,10 +6151,12 @@ Jump_039_6FC0::
     pop bc
     ret
 
+; wBattleTargetChoice[2 * actor] = (hFFC6, or hFFC9 when hFFC6 is $FF) | hFFD0 (the two-choice form of SetActorTargetFromHRAMChoice) (E-0078)
 ; 5 call sites from 5 routines (e.g. Func_039_70FD, Func_039_6014, Func_039_5C43, Func_039_7093, ...)
 ; reads: wBattleActor, hFFC6, hFFC9, hFFD0
 ; points at: wBattleTargetChoice
-Func_039_6FC8::
+SetActorTargetFromHFFC6OrHFFC9::
+Func_039_6FC8:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -6359,7 +6361,7 @@ Jump_039_70F4::
     inc c
     dec b
     jr nz, Jump_039_70A9
-    call Func_039_6FC8
+    call SetActorTargetFromHFFC6OrHFFC9
     ret
 
 ; 9 call sites from 9 routines (e.g. Func_039_69E3, Func_039_69DD, Func_039_69D7, Func_039_69F5, ...)
@@ -6414,7 +6416,7 @@ Jump_039_714C::
     inc c
     dec b
     jr nz, Jump_039_710F
-    call Func_039_6FC8
+    call SetActorTargetFromHFFC6OrHFFC9
     ret
 
 ; 1 call site from 1 routine (e.g. Func_039_5F0E)

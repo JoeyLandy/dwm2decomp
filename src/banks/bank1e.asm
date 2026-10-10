@@ -908,7 +908,7 @@ Jump_01E_45D2::
     ld [wD781], a
     ld [wD782], a
     ld [wTwoChoiceCursor], a
-    call Func_01E_7745
+    call SaveAndHideSpriteState_Bank1E
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -2899,7 +2899,7 @@ Jump_01E_540F:: ; address name
     ld [wD782], a
     ld a, $0A
     ld [wD780], a
-    call Func_01E_7745
+    call SaveAndHideSpriteState_Bank1E
     ret
 
 ; entry 21 of the `rst $00` table in Func_01E_4A32
@@ -3097,7 +3097,7 @@ Jump_01E_55D9::
     ld [wD782], a
     ld a, $0B
     ld [wD780], a
-    call Func_01E_7745
+    call SaveAndHideSpriteState_Bank1E
     ret
 
 ; entry 29 of the `rst $00` table in Func_01E_4A32
@@ -4066,7 +4066,7 @@ Jump_01E_5CD5::
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
-    call Func_01E_7763
+    call RestoreSpriteStateFromWD7BA
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -5294,7 +5294,7 @@ Jump_01E_64BE:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
-    call Func_01E_7763
+    call RestoreSpriteStateFromWD7BA
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -5838,7 +5838,7 @@ Jump_01E_6870:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
-    call Func_01E_7763
+    call RestoreSpriteStateFromWD7BA
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -8320,10 +8320,12 @@ Func_01E_7732:: ; address name
     ld [wD7AF], a
     ret
 
+; wD7BC = hFFB9, then hFFB9 = hFFBA = 0; wD7BA = hFF8D, wD7BB = wSpriteSlotCount; then hFF8D = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
 ; 10 call sites from 10 routines (e.g. Func_01E_4A32_Table2_Case1B, Func_01E_4A32_Table2_Case14, Func_01E_4201_Case0C, Func_00D_463F_Case0C, ...)
 ; reads: hFFB9, hFF8D, wSpriteSlotCount
 ; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wSpriteSlotCount
-Func_01E_7745::
+SaveAndHideSpriteState_Bank1E::
+Func_01E_7745:: ; address name
     ldh a, [hFFB9]
     ld [wD7BC], a
     xor a, a
@@ -8339,10 +8341,12 @@ Func_01E_7745::
     ld [wSpriteSlotCount], a
     ret
 
+; hFFB9 = wD7BC, hFFBA = $80, hFF8D = wD7BA, wSpriteSlotCount = wD7BB: puts back the values SaveAndHideSpriteState stored (hFFBA is set to $80 rather than restored) (E-0078)
 ; 5 call sites from 5 routines (e.g. Func_01E_6074_Table8_Case0D, Func_01E_6074_Table6_Case11, Func_01E_5A4D_Case0D, Func_00D_4B30_Case08, ...)
 ; reads: wD7BC, wD7BA, wD7BB
 ; writes: hFFB9, hFFBA, hFF8D, wSpriteSlotCount
-Func_01E_7763::
+RestoreSpriteStateFromWD7BA::
+Func_01E_7763:: ; address name
     ld a, [wD7BC]
     ldh [hFFB9], a
     ld a, $80

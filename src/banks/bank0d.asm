@@ -574,7 +574,7 @@ Jump_00D_4822::
     ld [wD781], a
     ld [wD782], a
     ld [wTwoChoiceCursor], a
-    farcall Func_01E_7745
+    farcall SaveAndHideSpriteState_Bank1E
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1334,7 +1334,7 @@ Jump_00D_4C9C:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank0D
-    farcall Func_01E_7763
+    farcall RestoreSpriteStateFromWD7BA
     ld a, $70
     ldh [hFFBA], a
     xor a, a

@@ -799,6 +799,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - battle and helpers: AnyFoeLacksStatus0MaskCC, RandomBelowC, LoadBCFromHL, StoreBCAtActorWordEntry.
 - Binary verification: pending; see the commit.
 
+### E-0078 — Batch 13
+
+- Kind: OBSERVATION (full reading only; C1).
+- **Routines read:**
+  - Bank-0 arithmetic and BG-map helpers: DivideBCByDE (8-bit quotient by subtraction), AdvanceBGMapColumnsByB.
+  - Battle helpers: AnyFoeHasClearStatus3, SetActorTargetFromHFFC6OrHFFC9, ClearDamageAndReadTargetStatus0.
+  - Screen and buffer copies: three bank-$31 rectangle draws, CopyRectRecordForWD88F_Bank31, CopyStringMaxBToDE.
+  - A save and restore pair for sprite state: the SaveAndHideSpriteState family and RestoreSpriteStateFromWD7BA. The restore writes $80 to hFFBA instead of the old value.
+  - Other: AddWD09CIfWD09BMatchesB, SetModeState3AndSaveScreen.
+- **Identical copies.** `31:74B4` and `31:74E1` are byte-identical routines at two addresses; both are named.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

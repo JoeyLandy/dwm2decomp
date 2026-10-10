@@ -1254,7 +1254,7 @@ Jump_014_488F::
     ld [wD781], a
     ld [wD782], a
     ld [wTwoChoiceCursor], a
-    farcall Func_01E_7745
+    farcall SaveAndHideSpriteState_Bank1E
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3003,7 +3003,7 @@ Jump_014_55A0:: ; address name
     ld [wD782], a
     ld a, $09
     ld [wD780], a
-    farcall Func_01E_7745
+    farcall SaveAndHideSpriteState_Bank1E
     ret
 
 ; entry 7 of the `rst $00` table in ScriptCommandEB_Run

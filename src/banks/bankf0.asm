@@ -2114,7 +2114,7 @@ Jump_0F0_55DC:: ; address name
     ld hl, wC5CB
     ld de, wC130
     ld b, $0A
-    call Func_0F0_5B42
+    call CopyStringMaxBToDE
     ld a, $09
     call BeginString_BankF0_Cat0
     ld hl, wD782
@@ -2180,7 +2180,7 @@ Jump_0F0_563F:: ; address name
     ld hl, wC5CB
     ld de, wC130
     ld b, $0A
-    call Func_0F0_5B42
+    call CopyStringMaxBToDE
     ld a, $0A
     call BeginString_BankF0_Cat0
     ld hl, wD782
@@ -2285,7 +2285,7 @@ Jump_0F0_56D9:: ; address name
     ld hl, wC5CB
     ld de, wC130
     ld b, $0A
-    call Func_0F0_5B42
+    call CopyStringMaxBToDE
     ld a, $0B
     call BeginString_BankF0_Cat0
     ld hl, wD782
@@ -2881,7 +2881,7 @@ Jump_0F0_5AA3:: ; address name
     ld hl, wC5CB
     ld de, wC130
     ld b, $0A
-    call Func_0F0_5B42
+    call CopyStringMaxBToDE
     ld hl, wC5C8
     ld de, wC140
     call Func_0F0_7C96
@@ -2987,15 +2987,17 @@ Jump_0F0_5B2A::
 Data_0F0_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FD, $FD, $FE, $00, $01, $01, $03, $03, $80
 
+; copies bytes from HL to DE until a $F0 or B bytes, then writes $F0; HL and DE advance (E-0078)
 ; 4 call sites from 4 routines (e.g. Func_0F0_4CA0_Table7_Case0B, Func_0F0_4CA0_Table8_Case0B, Func_0F0_4CA0_Table9_Case0F, Func_0F0_5888_Case1E)
-Func_0F0_5B42::
+CopyStringMaxBToDE::
+Func_0F0_5B42:: ; address name
     ld a, [hl+]
     cp a, $F0
     jr z, Jump_0F0_5B4C
     ld [de], a
     inc de
     dec b
-    jr nz, Func_0F0_5B42
+    jr nz, CopyStringMaxBToDE
 
 Jump_0F0_5B4C::
     ld a, $F0
@@ -3210,7 +3212,7 @@ Jump_0F0_5D17::
     ld a, [wD780]
     inc a
     ld [wD780], a
-    call Func_0F0_61F6
+    call SaveAndHideSpriteState_BankF0
     ret
 
 ; entry 7 of the `rst $00` table in Func_0F0_5B50
@@ -3909,10 +3911,12 @@ Jump_0F0_61B7:: ; address name
     ld [hl], $12
     ret
 
+; wD7BC = hFFB9, then hFFB9 = hFFBA = 0; wD7BA = hFF8D, wD7BB = wSpriteSlotCount; then hFF8D = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F0_5B50_Case06)
 ; reads: hFFB9, hFF8D, wSpriteSlotCount
 ; writes: wD7BC, hFFB9, hFFBA, wD7BA, wD7BB, hFF8D, wSpriteSlotCount
-Func_0F0_61F6::
+SaveAndHideSpriteState_BankF0::
+Func_0F0_61F6:: ; address name
     ldh a, [hFFB9]
     ld [wD7BC], a
     xor a, a

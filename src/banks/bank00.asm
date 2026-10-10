@@ -6884,7 +6884,7 @@ Jump_000_265F::
     ld hl, $0060
     call Func_000_305E
     ld b, $09
-    call Func_000_3048
+    call AdvanceBGMapColumnsByB
     ld a, c
     call WriteVRAMByte
 
@@ -6945,7 +6945,7 @@ Jump_000_26CE::
     ld hl, $0120
     call Func_000_3072
     ld b, $0F
-    call Func_000_3048
+    call AdvanceBGMapColumnsByB
     pop bc
     ld a, c
     call WriteVRAMByte
@@ -6953,7 +6953,7 @@ Jump_000_26CE::
     ld hl, $0160
     call Func_000_3072
     ld b, $0F
-    call Func_000_3048
+    call AdvanceBGMapColumnsByB
     pop bc
     ld a, b
     call WriteVRAMByte
@@ -7807,7 +7807,7 @@ Func_000_2BFA::
     ld hl, $0060
     call Func_000_305E
     ld b, $09
-    call Func_000_3048
+    call AdvanceBGMapColumnsByB
     ld a, $B4
     call WriteVRAMByte
     ld a, [wGameMode]
@@ -8080,7 +8080,7 @@ Func_000_2D4A::
     ld hl, $0100
     call Func_000_3072
     ld b, $0E
-    call Func_000_3048
+    call AdvanceBGMapColumnsByB
     push hl
     ld de, $2DFA
 
@@ -8429,19 +8429,19 @@ Jump_000_2F60::
 Func_000_2F84::
     ld de, $03E8
     push bc
-    call Func_000_2FC7
+    call DivideBCByDE
     pop bc
     or a, a
     jr nz, Jump_000_2FA7
     ld de, $0064
     push bc
-    call Func_000_2FC7
+    call DivideBCByDE
     pop bc
     or a, a
     jr nz, Jump_000_2FB0
     ld de, $000A
     push bc
-    call Func_000_2FC7
+    call DivideBCByDE
     pop bc
     or a, a
     jr nz, Jump_000_2FB9
@@ -8449,17 +8449,17 @@ Func_000_2F84::
 
 Jump_000_2FA7::
     ld de, $03E8
-    call Func_000_2FC7
+    call DivideBCByDE
     call StoreAThenTerminator
 
 Jump_000_2FB0::
     ld de, $0064
-    call Func_000_2FC7
+    call DivideBCByDE
     call StoreAThenTerminator
 
 Jump_000_2FB9::
     ld de, $000A
-    call Func_000_2FC7
+    call DivideBCByDE
     call StoreAThenTerminator
 
 Jump_000_2FC2::
@@ -8467,8 +8467,10 @@ Jump_000_2FC2::
     call StoreAThenTerminator
     ret
 
+; A = BC / DE by repeated subtraction (the quotient must fit in 8 bits), BC = the remainder; HL kept (E-0078)
 ; 6 call sites from 1 routine (e.g. Func_000_2F84)
-Func_000_2FC7::
+DivideBCByDE::
+Func_000_2FC7:: ; address name
     push hl
     ld h, $FF
 
@@ -8575,15 +8577,17 @@ Jump_000_3032::
     jr nz, Jump_000_3031
     ret
 
+; moves HL B entries to the right inside its 32-entry BG map row, wrapping at the row end (NextBGMapColumn B times); B = 0 (E-0078)
 ; 5 call sites from 3 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D4A)
-Func_000_3048::
+AdvanceBGMapColumnsByB::
+Func_000_3048:: ; address name
     call NextBGMapColumn_Bank00
     dec b
-    jr nz, Func_000_3048
+    jr nz, AdvanceBGMapColumnsByB
     ret
 
 ; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF (the same 15 bytes appear in 2 banks)
-; 8 call sites from 6 routines (e.g. Func_000_3048, Func_000_2D4A, Func_000_2950_Case0F, Func_000_3095, ...)
+; 8 call sites from 6 routines (e.g. AdvanceBGMapColumnsByB, Func_000_2D4A, Func_000_2950_Case0F, Func_000_3095, ...)
 NextBGMapColumn_Bank00::
 Func_000_304F:: ; address name
     push af

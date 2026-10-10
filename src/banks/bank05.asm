@@ -1123,10 +1123,12 @@ Jump_005_4661::
     ld c, $FF
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wD80F) entirely clear (AnySlotLacksStatusMask with mask $FF), else 0 (E-0078)
 ; 6 call sites from 6 routines (e.g. Func_005_7AD8, Func_005_7B11, Func_005_7B5C, Func_0E2_432D, ...)
 ; reads: wBattleActor
 ; points at: wD80F
-Func_005_4664::
+AnyFoeHasClearStatus3::
+Func_005_4664:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -10978,7 +10980,7 @@ Func_005_7AD8:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7B0D
-    call Func_005_4664
+    call AnyFoeHasClearStatus3
     ld a, c
     and a, a
     jr z, Jump_005_7B0D
@@ -11014,7 +11016,7 @@ Func_005_7B11:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7B3C
-    call Func_005_4664
+    call AnyFoeHasClearStatus3
     ld a, c
     and a, a
     jr z, Jump_005_7B3C
@@ -11066,7 +11068,7 @@ Func_005_7B5C:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7B80
-    call Func_005_4664
+    call AnyFoeHasClearStatus3
     ld a, c
     and a, a
     jr z, Jump_005_7B80

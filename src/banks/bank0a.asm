@@ -1062,7 +1062,7 @@ Jump_00A_475C::
     ld [wCFC5], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_00A_43EC, Func_007_6213_Table2_Case02, Func_00A_47A4, Func_05F_6C71, ...)
+; 5 call sites from 5 routines (e.g. Func_00A_43EC, Func_007_6213_Table2_Case02, Func_00A_47A4, SetModeState3AndSaveScreen, ...)
 ; reads: wCD04
 ; writes: wC902
 Func_00A_476E::

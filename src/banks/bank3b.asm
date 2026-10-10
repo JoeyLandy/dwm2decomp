@@ -1992,7 +1992,7 @@ Jump_03B_4BE5::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 Func_03B_4BE8:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F03
+    call ClearDamageAndReadTargetStatus0
     and a, $03
     jr z, Jump_03B_4BFB
     ld a, [hl]
@@ -2010,7 +2010,7 @@ Jump_03B_4BFB::
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
 Func_03B_4BFE:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F03
+    call ClearDamageAndReadTargetStatus0
     and a, $40
     jr z, Jump_03B_4C1E
     ld a, [hl]
@@ -2030,7 +2030,7 @@ Jump_03B_4C1E::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 Func_03B_4C21:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F03
+    call ClearDamageAndReadTargetStatus0
     and a, $20
     jr z, Jump_03B_4C34
     ld a, [hl]
@@ -2048,7 +2048,7 @@ Jump_03B_4C34::
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
 Func_03B_4C37:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F03
+    call ClearDamageAndReadTargetStatus0
     and a, $8C
     jr z, Jump_03B_4C57
     ld a, [hl]
@@ -2070,7 +2070,7 @@ Jump_03B_4C57::
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
 Func_03B_4C5A:: ; heuristic: target of a pointer table; C0
-    call Func_03B_4F03
+    call ClearDamageAndReadTargetStatus0
     and a, $10
     jr z, Jump_03B_4C7A
     ld a, [hl]
@@ -2393,11 +2393,13 @@ Jump_03B_4EFA::
     ld [wDAC1], a
     ret
 
+; clears wBattleDamageLo/wD873, then A = status byte 0 of wBattleTarget (wBattleStatus + 9 * target), HL pointing at it (E-0078)
 ; 5 call sites from 5 routines (e.g. Func_03B_4C5A, Func_03B_4C37, Func_03B_4C21, Func_03B_4BFE, ...)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleStatus
-Func_03B_4F03::
+ClearDamageAndReadTargetStatus0::
+Func_03B_4F03:: ; address name
     xor a, a
     ld [wBattleDamageLo], a
     ld [wD873], a

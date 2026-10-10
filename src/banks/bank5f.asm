@@ -651,9 +651,11 @@ Func_05F_6C5A:: ; address name
     inc [hl]
     ret
 
+; wModeState = 3, wC904 = 0, wC8C7 = 2, far-calls SaveScreenBufferToBGMap1, then Func_00A_476E (E-0078)
 ; 5 call sites from 5 routines (e.g. ScriptCommand9A_Run, ScriptCommand96_Run_Case04, ScriptCommand85_Run_Case01, ScriptCommand9E_Run_Case01, ...)
 ; writes: wModeState, wC904, wC8C7
-Func_05F_6C71::
+SetModeState3AndSaveScreen::
+Func_05F_6C71:: ; address name
     ld a, $03
     ld [wModeState], a
     xor a, a

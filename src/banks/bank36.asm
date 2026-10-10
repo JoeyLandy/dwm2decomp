@@ -6522,7 +6522,7 @@ Func_036_697B:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     xor a, a
     ldh [hFFC6], a
-    call Func_036_7D33
+    call ClearDamageAndReadTargetStatus0_Bank36
     or a, a
     jr z, Jump_036_6990
     ld [hl], $00
@@ -6586,7 +6586,7 @@ Jump_036_69EA::
 ; writes: wBattleActionId, hFFC6, hFFC7, wDAD2, wDAD3, wDAC2, wDAC0, wDAC1
 Func_036_69ED:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
-    call Func_036_7D33
+    call ClearDamageAndReadTargetStatus0_Bank36
     call AdvanceRandom
     ld a, [wC5E7]
     sra a
@@ -7142,7 +7142,7 @@ Jump_036_6D45::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6D4E:: ; heuristic: target of a pointer table; C0
-    call Func_036_7D33
+    call ClearDamageAndReadTargetStatus0_Bank36
     and a, $03
     jr z, Jump_036_6D61
     ld a, [hl]
@@ -7160,7 +7160,7 @@ Jump_036_6D61::
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wDA5B
 Func_036_6D64:: ; heuristic: target of a pointer table; C0
-    call Func_036_7D33
+    call ClearDamageAndReadTargetStatus0_Bank36
     and a, $10
     jr z, Jump_036_6D84
     ld a, [hl]
@@ -7182,7 +7182,7 @@ Jump_036_6D84::
 ; writes: wDAC3, wDAC0, wDAC1
 ; points at: wDA5B
 Func_036_6D87:: ; heuristic: target of a pointer table; C0
-    call Func_036_7D33
+    call ClearDamageAndReadTargetStatus0_Bank36
     and a, $CC
     jr z, Jump_036_6DB2
     push hl
@@ -7213,7 +7213,7 @@ Jump_036_6DB2::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 Func_036_6DB5:: ; heuristic: target of a pointer table; C0
-    call Func_036_7D33
+    call ClearDamageAndReadTargetStatus0_Bank36
     and a, $20
     jr z, Jump_036_6DC8
     ld a, [hl]
@@ -9576,11 +9576,13 @@ Func_036_7D13:: ; heuristic: follows a terminator; C0
     ld [wD873], a
     ret
 
+; the same 18 bytes as ClearDamageAndReadTargetStatus0 (3B:4F03)
 ; 6 call sites from 6 routines (e.g. Func_036_69ED, Func_036_697B, Func_036_6DB5, Func_036_6D87, ...)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleStatus
-Func_036_7D33:: ; heuristic: follows a terminator; C0
+ClearDamageAndReadTargetStatus0_Bank36:: ; heuristic: follows a terminator; C0
+Func_036_7D33:: ; address name
     xor a, a
     ld [wBattleDamageLo], a
     ld [wD873], a

@@ -84,7 +84,7 @@ Jump_012_404C::
     and a, $01
     sla a
     ld [wC905], a
-    farcall Func_05F_6C71
+    farcall SetModeState3AndSaveScreen
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1238,7 +1238,7 @@ Jump_012_4705:: ; address name
     ld [wC903], a
     ld a, $01
     ld [wC905], a
-    farcall Func_05F_6C71
+    farcall SetModeState3AndSaveScreen
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand96_Run
@@ -3888,7 +3888,7 @@ Jump_012_5941::
 Jump_012_5988::
     ld a, $01
     ld [wC905], a
-    farcall Func_05F_6C71
+    farcall SetModeState3AndSaveScreen
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand85_Run
@@ -3980,7 +3980,7 @@ Jump_012_59DE:: ; address name
     ld [wCFDC], a
     ld a, $01
     ld [wC905], a
-    farcall Func_05F_6C71
+    farcall SetModeState3AndSaveScreen
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand9E_Run
@@ -5629,7 +5629,7 @@ Jump_012_63B7:: ; address name
     ld [wC903], a
     ld a, $01
     ld [wC905], a
-    farcall Func_05F_6C71
+    farcall SetModeState3AndSaveScreen
     call Func_012_64D5
     ld a, [hl]
     or a, $80

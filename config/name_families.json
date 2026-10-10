@@ -80,6 +80,7 @@
     {"canonical": "03:4538", "name": "WriteBCTileToScreenBufferAtTableEntry", "note": "HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC there (E-0072)", "evidence": "reading (E-0072)"},
     {"canonical": "0C:7246", "name": "AddHFFC6WordToHL", "note": "HL += the word in hFFC6/hFFC7; clobbers A (E-0073)", "evidence": "reading (E-0073)"},
     {"canonical": "31:60AD", "name": "SetBit6AndBlankEntryTile", "note": "HL = entry byte, DE = table of BG map offsets: sets bit 6 of [HL] and writes tile $C3 at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074)", "evidence": "reading (E-0074)"},
-    {"canonical": "31:60CC", "name": "ClearBit6AndCursorEntryTile", "note": "HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074)", "evidence": "reading (E-0074)"}
+    {"canonical": "31:60CC", "name": "ClearBit6AndCursorEntryTile", "note": "HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074)", "evidence": "reading (E-0074)"},
+    {"canonical": "1E:7745", "name": "SaveAndHideSpriteState", "note": "wD7BC = hFFB9, then hFFB9 = hFFBA = 0; wD7BA = hFF8D, wD7BB = wSpriteSlotCount; then hFF8D = $FF and wSpriteSlotCount = 0 (E-0078)", "evidence": "reading (E-0078)"}
   ]
 }

@@ -1226,7 +1226,7 @@ Jump_031_46EE::
     ld a, h
     ld [wD961], a
     call Func_031_71F5
-    call Func_031_72AC
+    call CopyRectRecordForWD88F_Bank31
     call Func_031_7389
     call Func_031_746F
     ld a, $6C
@@ -1349,7 +1349,7 @@ Jump_031_47B9:: ; address name
 Func_031_47C7::
     call Func_031_47DD
     call Func_031_71F5
-    call Func_031_72AC
+    call CopyRectRecordForWD88F_Bank31
     call Func_031_7389
     call LayoutTileBlocksForWD890Count
     call Func_031_7321
@@ -3014,7 +3014,7 @@ Jump_031_518A:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case05::
 Jump_031_51CE:: ; address name
-    call Func_031_74B4
+    call DrawWC2B8LeftToBGMapRow9_74B4
     ld hl, Data_031_63AF
     ld a, [wC46D]
     and a, $03
@@ -3146,7 +3146,7 @@ Jump_031_52B4::
 ; writes: wBattleResolveStep
 Func_031_4EB9_Case07::
 Jump_031_52B5:: ; address name
-    call Func_031_74B4
+    call DrawWC2B8LeftToBGMapRow9_74B4
     ld a, [wD869]
     or a, a
     jr z, Jump_031_52C0
@@ -3161,7 +3161,7 @@ Jump_031_52C0::
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case08::
 Jump_031_52C4:: ; address name
-    call Func_031_74B4
+    call DrawWC2B8LeftToBGMapRow9_74B4
     call Func_031_746F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3214,7 +3214,7 @@ Jump_031_52F7:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case0C::
 Jump_031_5300:: ; address name
-    call Func_031_74B4
+    call DrawWC2B8LeftToBGMapRow9_74B4
     call Func_031_7522
     xor a, a
     ld [wD869], a
@@ -3232,7 +3232,7 @@ Jump_031_5300:: ; address name
 ; points at: wC470, wBattleResolveStep
 Func_031_4EB9_Case0D::
 Jump_031_5319:: ; address name
-    call Func_031_7529
+    call DrawWC2F8RectToBGMapRow11
     xor a, a
     ld [wD86C], a
     ld a, [wC57F]
@@ -3323,7 +3323,7 @@ Jump_031_53B9::
 ; writes: wBattleResolveStep
 Func_031_4EB9_Case0F::
 Jump_031_53BA:: ; address name
-    call Func_031_7529
+    call DrawWC2F8RectToBGMapRow11
     ld a, [wD868]
     or a, a
     jr z, Jump_031_53C7
@@ -3346,7 +3346,7 @@ Func_031_4EB9_Case10::
 Jump_031_53CD:: ; address name
     ld a, [wD869]
     or a, a
-    call z, Func_031_74B4
+    call z, DrawWC2B8LeftToBGMapRow9_74B4
     xor a, a
     ld [wD869], a
     ld a, [wCFD4]
@@ -3713,7 +3713,7 @@ Jump_031_560B:: ; address name
 ; points at: wC470, wBattleResolveStep
 Func_031_4EB9_Case19::
 Jump_031_562A:: ; address name
-    call Func_031_74E1
+    call DrawWC2B8LeftToBGMapRow9
     ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_5639
@@ -3832,7 +3832,7 @@ Jump_031_56FD::
 ; writes: wBattleResolveStep
 Func_031_4EB9_Case1B::
 Jump_031_56FE:: ; address name
-    call Func_031_74E1
+    call DrawWC2B8LeftToBGMapRow9
     ld a, [wD868]
     ld [wBattleResolveStep], a
     ret
@@ -3870,7 +3870,7 @@ Jump_031_5717::
 ; points at: wC470, wBattleResolveStep
 Func_031_4EB9_Case1D::
 Jump_031_572D:: ; address name
-    call Func_031_7529
+    call DrawWC2F8RectToBGMapRow11
     ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_573C
@@ -3966,7 +3966,7 @@ Jump_031_57D5::
 ; writes: wBattleResolveStep
 Func_031_4EB9_Case1F::
 Jump_031_57D6:: ; address name
-    call Func_031_7529
+    call DrawWC2F8RectToBGMapRow11
     ld a, [wD868]
     ld [wBattleResolveStep], a
     ret
@@ -4438,7 +4438,7 @@ Jump_031_5AA6:: ; address name
 ; points at: wC470, wBattleResolveStep
 Func_031_4EB9_Table2_Case09::
 Jump_031_5AC1:: ; address name
-    call Func_031_74E1
+    call DrawWC2B8LeftToBGMapRow9
     ld a, [wItemId]
     cp a, $0C
     jr z, Jump_031_5ACC
@@ -4519,7 +4519,7 @@ Jump_031_5B48::
 ; writes: wBattleResolveStep, wD868, wBattleSubPhase
 Func_031_4EB9_Table2_Case0B::
 Jump_031_5B49:: ; address name
-    call Func_031_74E1
+    call DrawWC2B8LeftToBGMapRow9
     ld a, [wD868]
     or a, a
     jr nz, Jump_031_5B66
@@ -4578,7 +4578,7 @@ Jump_031_5B86::
 ; points at: wC470, wBattleResolveStep
 Func_031_4EB9_Table2_Case0D::
 Jump_031_5B98:: ; address name
-    call Func_031_7529
+    call DrawWC2F8RectToBGMapRow11
     ld a, [wItemId]
     cp a, $0C
     jr z, Jump_031_5BA3
@@ -4662,7 +4662,7 @@ Jump_031_5C25::
 ; writes: wBattleResolveStep, wD868, wBattleSubPhase
 Func_031_4EB9_Table2_Case0F::
 Jump_031_5C26:: ; address name
-    call Func_031_74E1
+    call DrawWC2B8LeftToBGMapRow9
     ld a, [wD868]
     or a, a
     jr nz, Jump_031_5C43
@@ -8008,7 +8008,7 @@ Jump_031_6E79:: ; address name
     xor a, a
     ld [wBattleResolveStep], a
     farcall Func_031_71F5
-    farcall Func_031_72AC
+    farcall CopyRectRecordForWD88F_Bank31
     farcall Func_031_7389
     call FillTilesFromRequest
     farcall Func_01A_7276
@@ -8641,9 +8641,11 @@ Jump_031_7285::
     ret
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8D, $50, $8D, $A0, $8D
 
+; picks record wD88F - 1 from Data_031_72C3 and copies it into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31) (E-0078)
 ; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wD88F
-Func_031_72AC::
+CopyRectRecordForWD88F_Bank31::
+Func_031_72AC:: ; address name
     ld a, [wD88F]
     dec a
     ld hl, Data_031_72C3
@@ -8997,9 +8999,11 @@ Func_031_74AD::
     farcall Func_01A_7292
     ret
 
+; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (identical to DrawWC2B8LeftToBGMapRow9 at $74E1) (E-0078)
 ; 5 call sites from 5 routines (e.g. Func_031_4EB9_Case10, Func_031_4EB9_Case0C, Func_031_4EB9_Case08, Func_031_4EB9_Case07, ...)
 ; points at: wC2B8
-Func_031_74B4::
+DrawWC2B8LeftToBGMapRow9_74B4::
+Func_031_74B4:: ; address name
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0809
@@ -9030,9 +9034,11 @@ Func_031_74DA::
     farcall Func_01A_72A7
     ret
 
+; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (E-0078)
 ; 5 call sites from 5 routines (e.g. Func_031_4EB9_Case1B, Func_031_4EB9_Case19, Func_031_4EB9_Table2_Case0F, Func_031_4EB9_Table2_Case0B, ...)
 ; points at: wC2B8
-Func_031_74E1::
+DrawWC2B8LeftToBGMapRow9::
+Func_031_74E1:: ; address name
     ld de, wC2B8
     ld hl, vBGMap0 + $120
     ld bc, $0809
@@ -9076,9 +9082,11 @@ Func_031_7522::
     farcall Func_01A_72C2
     ret
 
+; copies a 14 x 7 rectangle from wC2F8 (rows 32 bytes apart) to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0078)
 ; 5 call sites from 5 routines (e.g. Func_031_4EB9_Case1F, Func_031_4EB9_Case1D, Func_031_4EB9_Case0F, Func_031_4EB9_Case0D, ...)
 ; points at: wC2F8
-Func_031_7529::
+DrawWC2F8RectToBGMapRow11::
+Func_031_7529:: ; address name
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0E07
@@ -9124,7 +9132,7 @@ Jump_031_7557::
     ret
 
 ; reads a 4-byte header at HL (word offset, width, rows): returns HL = wScreenTileBuffer + offset, B = width, C = rows, DE = the byte after the header (E-0065) (the same 15 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_031_72AC)
+; 1 call site from 1 routine (e.g. CopyRectRecordForWD88F_Bank31)
 ; points at: wScreenTileBuffer
 ReadScreenBufferRectHeader_Bank31::
 Func_031_755B:: ; address name
@@ -9143,7 +9151,7 @@ Func_031_755B:: ; address name
     ret
 
 ; DE = source (rows packed), HL = destination with rows 32 bytes apart, B = width, C = rows: copies a B x C rectangle; DE ends past the source, HL at the start of the row below; B kept, C = 0 (E-0065) (the same 18 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_031_72AC)
+; 1 call site from 1 routine (e.g. CopyRectRecordForWD88F_Bank31)
 CopyRectToStride32_Bank31::
 Func_031_756A:: ; address name
     push bc

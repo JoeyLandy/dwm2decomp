@@ -1754,32 +1754,32 @@ Func_01A_6418::
     ld a, [wD014]
     call Func_01A_6562
     ld b, $00
-    call Func_01A_6579
+    call AddWD09CIfWD09BMatchesB
     ld [wD095], a
     ld a, [wD015]
     call Func_01A_6562
     ld b, $01
-    call Func_01A_6579
+    call AddWD09CIfWD09BMatchesB
     ld [wD096], a
     ld a, [wD016]
     call Func_01A_6562
     ld b, $02
-    call Func_01A_6579
+    call AddWD09CIfWD09BMatchesB
     ld [wD097], a
     ld a, [wD017]
     call Func_01A_6562
     ld b, $03
-    call Func_01A_6579
+    call AddWD09CIfWD09BMatchesB
     ld [wD098], a
     ld a, [wD018]
     call Func_01A_6562
     ld b, $04
-    call Func_01A_6579
+    call AddWD09CIfWD09BMatchesB
     ld [wD099], a
     ld a, [wD019]
     call Func_01A_6562
     ld b, $05
-    call Func_01A_6579
+    call AddWD09CIfWD09BMatchesB
     ld [wD09A], a
     call Func_01A_6587
 
@@ -1947,9 +1947,11 @@ Func_01A_6562::
     ld c, [hl]
     ret
 
+; A = C + (wD09C when wD09B = B, else 0) (E-0078)
 ; 6 call sites from 1 routine (e.g. Func_01A_6418)
 ; reads: wD09B, wD09C
-Func_01A_6579::
+AddWD09CIfWD09BMatchesB::
+Func_01A_6579:: ; address name
     ld a, [wD09B]
     cp a, b
     jr z, Jump_01A_6582

@@ -4893,7 +4893,7 @@ Jump_016_6017:: ; address name
     ld a, [wC470]
     ld [wD7AF], a
     farcall Func_01E_7163
-    farcall Func_01E_7745
+    farcall SaveAndHideSpriteState_Bank1E
     ld a, $0C
     ld [wD780], a
     xor a, a
@@ -5356,7 +5356,7 @@ Jump_016_637E:: ; address name
     ld a, [wC471]
     ld [wD7AF], a
     farcall Func_01E_71E1
-    farcall Func_01E_7745
+    farcall SaveAndHideSpriteState_Bank1E
     ld a, $0D
     ld [wD780], a
     xor a, a
@@ -7178,7 +7178,7 @@ Jump_016_6F01::
     ld a, $00
     ld [wD7AF], a
     farcall Func_01E_7163
-    farcall Func_01E_7745
+    farcall SaveAndHideSpriteState_Bank1E
     ld a, $0E
     ld [wD780], a
     xor a, a
@@ -7645,7 +7645,7 @@ Jump_016_7324::
 ; 11 call sites from 11 routines (e.g. Func_016_6C16_Case13, Func_016_6C16_Case12, Func_016_6C16_Case0F, Func_016_6C16_Case0C, ...)
 Func_016_733F::
     farcall Func_031_71F5
-    farcall Func_031_72AC
+    farcall CopyRectRecordForWD88F_Bank31
     farcall Func_031_7389
     farcall LayoutTileBlocksForWD890Count
     farcall Func_031_7321
