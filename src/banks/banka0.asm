@@ -868,13 +868,13 @@ Jump_0A0_44EA::
     jr Jump_0A0_4543
 
 Jump_0A0_452B::
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     call StoreByteAtDEPlusC_BankA0
-    ld de, wD978
+    ld de, wSlotPersonalityLo
     call StoreByteAtDEPlusC_BankA0
     ld de, wD980
     call StoreByteAtDEPlusC_BankA0
-    ld de, wD970
+    ld de, wSlotPersonalityMid
     call StoreByteAtDEPlusC_BankA0
 
 Jump_0A0_4543::
@@ -1040,13 +1040,13 @@ Jump_0A0_4605::
     jr Jump_0A0_465E
 
 Jump_0A0_4646::
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     call StoreByteAtDEPlusC_BankA0
-    ld de, wD978
+    ld de, wSlotPersonalityLo
     call StoreByteAtDEPlusC_BankA0
     ld de, wD980
     call StoreByteAtDEPlusC_BankA0
-    ld de, wD970
+    ld de, wSlotPersonalityMid
     call StoreByteAtDEPlusC_BankA0
 
 Jump_0A0_465E::

@@ -313,10 +313,10 @@ Func_0A3_44C4::
     dec a
     jr z, Jump_0A3_453A
     ld a, $01
-    call Func_0A3_497E
+    call PersonalityIndexOfSlot_BankA3
     push af
     ld a, $02
-    call Func_0A3_497E
+    call PersonalityIndexOfSlot_BankA3
     ld l, a
     ld h, $00
     add hl, hl
@@ -349,10 +349,10 @@ Jump_0A3_4503::
 
 Jump_0A3_4505::
     ld a, $00
-    call Func_0A3_497E
+    call PersonalityIndexOfSlot_BankA3
     push af
     ld a, $01
-    call Func_0A3_497E
+    call PersonalityIndexOfSlot_BankA3
     ld l, a
     ld h, $00
     add hl, hl
@@ -385,10 +385,10 @@ Jump_0A3_4538::
 
 Jump_0A3_453A::
     ld a, $00
-    call Func_0A3_497E
+    call PersonalityIndexOfSlot_BankA3
     push af
     ld a, $02
-    call Func_0A3_497E
+    call PersonalityIndexOfSlot_BankA3
     ld l, a
     ld h, $00
     add hl, hl
@@ -544,14 +544,16 @@ Jump_0A3_497A::
     ldh [hFFC6], a
     ret
 
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
 ; 6 call sites from 1 routine (e.g. Func_0A3_44C4)
-; points at: wD968, wD970, wD978
-Func_0A3_497E::
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+PersonalityIndexOfSlot_BankA3::
+Func_0A3_497E:: ; address name
     push hl
     push bc
     ld c, a
     ld b, $00
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -567,7 +569,7 @@ Jump_0A3_499A::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -583,7 +585,7 @@ Jump_0A3_49B5::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00

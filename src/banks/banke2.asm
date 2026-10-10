@@ -5057,7 +5057,7 @@ Func_0E2_651C:: ; address name
 
 ; BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wD2C7 (rows of 27 words); A = its low byte; clobbers HL, E
 ; 2 call sites from 2 routines (e.g. AccumulateBank6WordToDA70, AccumulateBank6WordToDA6E)
-; reads: wD2C7
+; reads: wPersonalityIndex
 ; writes: wDataBank
 ReadBank6TableWord::
 Func_0E2_654B:: ; address name
@@ -5069,7 +5069,7 @@ Func_0E2_654B:: ; address name
     ld a, h
     adc a, $40
     ld h, a
-    ld a, [wD2C7]
+    ld a, [wPersonalityIndex]
     add a, a
     add_a_to_hl
     ld a, $06

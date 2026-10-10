@@ -1021,5 +1021,15 @@
     "name": "BeginString_Bank1B_Cat0",
     "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C",
     "evidence": "reading"
+  },
+  "00:23BD": {
+    "name": "GradeHFFC6",
+    "note": "C = 0 when hFFC6 >= $C0, 1 when hFFC6 >= $40, otherwise 2",
+    "evidence": "reading"
+  },
+  "00:2391": {
+    "name": "PersonalityIndexOfRecord",
+    "note": "A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeHFFC6 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)",
+    "evidence": "reading + execution (E-0031)"
   }
 }

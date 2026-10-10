@@ -5407,7 +5407,7 @@ Jump_000_1F77::
     ret
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
-; 102 call sites from 75 routines (e.g. Func_000_228A, Func_000_2391, Func_002_5E85, Func_002_6788, ...)
+; 102 call sites from 75 routines (e.g. Func_000_228A, PersonalityIndexOfRecord, Func_002_5E85, Func_002_6788, ...)
 ; writes: hFFC6
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
@@ -6199,21 +6199,23 @@ Jump_000_2378::
     jp nz, Jump_000_22A5
     ret
 
+; A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeHFFC6 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)
 ; 4 call sites from 4 routines (e.g. Func_003_5AA7, Func_00F_409A, Func_01E_6D42, Func_0F1_442F)
 ; reads: hFFCC
 ; writes: hFFCC
-Func_000_2391::
+PersonalityIndexOfRecord::
+Func_000_2391:: ; address name
     ldh [hFFCC], a
     ld c, $6F
     call LoadSRAMRecordByte
-    call Func_000_23BD
+    call GradeHFFC6
     ld a, $09
     call Multiply8
     ld b, l
     ldh a, [hFFCC]
     ld c, $72
     call LoadSRAMRecordByte
-    call Func_000_23BD
+    call GradeHFFC6
     ld a, c
     add a, a
     add a, c
@@ -6222,14 +6224,16 @@ Func_000_2391::
     ldh a, [hFFCC]
     ld c, $70
     call LoadSRAMRecordByte
-    call Func_000_23BD
+    call GradeHFFC6
     ld a, c
     add a, b
     ret
 
-; 3 call sites from 1 routine (e.g. Func_000_2391)
+; C = 0 when hFFC6 >= $C0, 1 when hFFC6 >= $40, otherwise 2
+; 3 call sites from 1 routine (e.g. PersonalityIndexOfRecord)
 ; reads: hFFC6
-Func_000_23BD::
+GradeHFFC6::
+Func_000_23BD:: ; address name
     ldh a, [hFFC6]
     ld c, $00
     cp a, $C0

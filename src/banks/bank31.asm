@@ -2205,7 +2205,7 @@ Jump_031_4E4D::
 
 ; 1 call site from 1 routine (e.g. Func_031_4D06)
 ; reads: wD88F
-; points at: wD8B7, wD980, wD968, wD970, wD978
+; points at: wD8B7, wD980, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 Func_031_4E54::
     ld a, [wD88F]
     ld b, a
@@ -2244,13 +2244,13 @@ Jump_031_4E91::
     add a, a
     add a, a
     add_a_to_hl
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     call Func_031_4EB9
     inc hl
-    ld de, wD970
+    ld de, wSlotPersonalityMid
     call Func_031_4EB9
     inc hl
-    ld de, wD978
+    ld de, wSlotPersonalityLo
     call Func_031_4EB9
     inc hl
     ld de, wD980
@@ -6014,13 +6014,13 @@ Jump_031_676D::
 
 ; 1 call site from 1 routine (e.g. Func_031_663D)
 ; reads: wD868
-; points at: wD968, wD978, wD980, wD970
+; points at: wSlotPersonalityHi, wSlotPersonalityLo, wD980, wSlotPersonalityMid
 Func_031_6776::
     ld a, [wD868]
     bit 7, a
     jr nz, Jump_031_67A9
     ld a, c
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     add a, e
     ld e, a
     jr nc, Jump_031_6786
@@ -6030,7 +6030,7 @@ Jump_031_6786::
     ld a, [de]
     ld [hl+], a
     ld a, c
-    ld de, wD978
+    ld de, wSlotPersonalityLo
     add a, e
     ld e, a
     jr nc, Jump_031_6791
@@ -6050,7 +6050,7 @@ Jump_031_679C::
     ld a, [de]
     ld [hl+], a
     ld a, c
-    ld de, wD970
+    ld de, wSlotPersonalityMid
     add a, e
     ld e, a
     jr nc, Jump_031_67A7

@@ -31,6 +31,7 @@
     {"canonical": "0C:51BB", "name": "CopyRectTo20ByteRows", "note": "Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0", "evidence": "reading"},
     {"canonical": "1B:6232", "name": "CopyRectTo20ByteRows", "note": "Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0", "evidence": "reading"},
     {"canonical": "36:6185", "name": "HLToWD814EntryOfWD8A5", "note": "HL = wD814 + 9 * [wD8A5] (AddAx9ToHL); A = [wD8A5]", "evidence": "reading"},
-    {"canonical": "03:4284", "name": "ClearScreenTileBuffer", "note": "fills the $240 bytes at wScreenTileBuffer with $C3", "evidence": "reading"}
+    {"canonical": "03:4284", "name": "ClearScreenTileBuffer", "note": "fills the $240 bytes at wScreenTileBuffer with $C3", "evidence": "reading"},
+    {"canonical": "30:5CF2", "name": "PersonalityIndexOfSlot", "note": "A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept", "evidence": "reading"}
   ]
 }

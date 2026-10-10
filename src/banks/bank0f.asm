@@ -113,7 +113,7 @@ Jump_00F_40A2::
     pop hl
     ld a, [hl]
     push de
-    call Func_000_2391
+    call PersonalityIndexOfRecord
     pop de
     add a, e
     ld l, a

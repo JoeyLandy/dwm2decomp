@@ -1306,7 +1306,7 @@ DEF wD2B4 EQU $D2B4
 DEF wD2B5 EQU $D2B5
 DEF wD2BD EQU $D2BD
 DEF wD2C1 EQU $D2C1
-DEF wD2C7 EQU $D2C7
+DEF wPersonalityIndex EQU $D2C7 ; column index (0-26) into the bank-6 table; set from PersonalityIndexOfSlot in banks $30 and $E0 before ReadBank6TableWord (reading)
 DEF wD2C8 EQU $D2C8
 DEF wD2C9 EQU $D2C9
 DEF wD2CA EQU $D2CA
@@ -1516,9 +1516,9 @@ DEF wD962 EQU $D962
 DEF wD963 EQU $D963
 DEF wD964 EQU $D964
 DEF wD965 EQU $D965
-DEF wD968 EQU $D968
-DEF wD970 EQU $D970
-DEF wD978 EQU $D978
+DEF wSlotPersonalityHi EQU $D968 ; first of three byte arrays (8 slots each) graded into the personality index with weight 9 by PersonalityIndexOfSlot (reading)
+DEF wSlotPersonalityMid EQU $D970 ; second array, weight 3 (reading)
+DEF wSlotPersonalityLo EQU $D978 ; third array, weight 1 (reading)
 DEF wD980 EQU $D980
 DEF wD981 EQU $D981
 DEF wD982 EQU $D982

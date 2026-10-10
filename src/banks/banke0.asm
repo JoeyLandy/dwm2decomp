@@ -565,11 +565,11 @@ Jump_0E0_44CB::
     call Func_0E0_455F
     ld de, wD92F
     call Func_0E0_455F
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     call Func_0E0_456B
-    ld de, wD970
+    ld de, wSlotPersonalityMid
     call Func_0E0_456B
-    ld de, wD978
+    ld de, wSlotPersonalityLo
     call Func_0E0_456B
     ld de, wD980
     call Func_0E0_456B
@@ -1661,8 +1661,8 @@ Jump_0E0_4CDB::
 
 Jump_0E0_4CF6::
     ld a, [wD8A4]
-    call Func_0E0_7A80
-    ld [wD2C7], a
+    call PersonalityIndexOfSlot_BankE0
+    ld [wPersonalityIndex], a
     farcall Func_0E0_56C7
     ld a, $02
     ld [wC5FE], a
@@ -2311,7 +2311,7 @@ Jump_0E0_5795::
     ld [wC530], a
     call FillTilesFromRequest
     ld a, [wD8A4]
-    call Func_0E0_7A80
+    call PersonalityIndexOfSlot_BankE0
     ld [wStringIndex], a
     ld a, $07
     ld [wStringCategory], a
@@ -7246,14 +7246,16 @@ Jump_0E0_7A37::
     ret
     INCBIN "dwm2-cobi-us.gbc", $383A3D, $43
 
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
 ; 2 call sites from 2 routines (e.g. Func_0E0_572D, Func_0E0_4C7E)
-; points at: wD968, wD970, wD978
-Func_0E0_7A80::
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+PersonalityIndexOfSlot_BankE0::
+Func_0E0_7A80:: ; address name
     push hl
     push bc
     ld c, a
     ld b, $00
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -7269,7 +7271,7 @@ Jump_0E0_7A9C::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -7285,7 +7287,7 @@ Jump_0E0_7AB7::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00

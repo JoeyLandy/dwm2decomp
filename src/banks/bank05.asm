@@ -5975,7 +5975,7 @@ Func_005_6039::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_51DB, Func_0E2_51F6)
 ; reads: wD8A4
-; points at: wD8BF, wD8CF, wD978
+; points at: wD8BF, wD8CF, wSlotPersonalityLo
 Func_005_604C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     call ReadWDA53Indexed_Bank05
@@ -6026,7 +6026,7 @@ Jump_005_6093::
     ld a, c
     call Func_000_3E25
     jr c, Jump_005_60AD
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     cp a, $C0

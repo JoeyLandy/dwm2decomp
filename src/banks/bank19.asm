@@ -2231,13 +2231,13 @@ Jump_019_4C89::
     jr Jump_019_4CE2
 
 Jump_019_4CCA::
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     call StoreByteAtDEPlusC_Bank19
-    ld de, wD978
+    ld de, wSlotPersonalityLo
     call StoreByteAtDEPlusC_Bank19
     ld de, wD980
     call StoreByteAtDEPlusC_Bank19
-    ld de, wD970
+    ld de, wSlotPersonalityMid
     call StoreByteAtDEPlusC_Bank19
 
 Jump_019_4CE2::
@@ -2404,13 +2404,13 @@ Jump_019_4D96::
     jr Jump_019_4DEF
 
 Jump_019_4DD7::
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     call StoreByteAtDEPlusC_Bank19
-    ld de, wD978
+    ld de, wSlotPersonalityLo
     call StoreByteAtDEPlusC_Bank19
     ld de, wD980
     call StoreByteAtDEPlusC_Bank19
-    ld de, wD970
+    ld de, wSlotPersonalityMid
     call StoreByteAtDEPlusC_Bank19
 
 Jump_019_4DEF::

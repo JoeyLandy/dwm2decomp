@@ -63,5 +63,9 @@
   "C82E": {"name": "wPlaySeconds", "note": "seconds 0-59 of the play-time counter", "evidence": "reading"},
   "C82F": {"name": "wPlayMinutes", "note": "minutes 0-59 of the play-time counter", "evidence": "reading"},
   "C830": {"name": "wPlayHoursLo", "note": "low byte of the 16-bit play-time hours", "evidence": "reading"},
-  "C831": {"name": "wPlayHoursHi", "note": "high byte of the 16-bit play-time hours", "evidence": "reading"}
+  "C831": {"name": "wPlayHoursHi", "note": "high byte of the 16-bit play-time hours", "evidence": "reading"},
+  "D968": {"name": "wSlotPersonalityHi", "note": "first of three byte arrays (8 slots each) graded into the personality index with weight 9 by PersonalityIndexOfSlot", "evidence": "reading"},
+  "D970": {"name": "wSlotPersonalityMid", "note": "second array, weight 3", "evidence": "reading"},
+  "D978": {"name": "wSlotPersonalityLo", "note": "third array, weight 1", "evidence": "reading"},
+  "D2C7": {"name": "wPersonalityIndex", "note": "column index (0-26) into the bank-6 table; set from PersonalityIndexOfSlot in banks $30 and $E0 before ReadBank6TableWord", "evidence": "reading"}
 }

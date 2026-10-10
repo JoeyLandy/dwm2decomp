@@ -20,10 +20,14 @@ class Done(Exception):
     pass
 
 
-def call(bank: int, addr: int, mem=None, **regs) -> GameBoy:
+def call(bank: int, addr: int, mem=None, sram=None, **regs) -> GameBoy:
     """Run the routine at `addr` (bank mapped) with the given registers until it returns."""
     gb = GameBoy(ROM.read_bytes())
     gb.rombank = bank
+    if sram:
+        gb.ramen = True
+        for offset, value in sram.items():
+            gb.sram[offset] = value
     for address, value in (mem or {}).items():
         gb.wb(address, value)
     for name, value in regs.items():
@@ -152,6 +156,27 @@ class DecimalRoutines(unittest.TestCase):
             mem = {0xC8C0 + i: d for i, d in enumerate(digits)}
             gb = call(0, 0x2123, mem, d=0xC0, e=0x00, h=0, l=0)
             self.assertEqual([gb.rb(0xC000 + i) for i in range(3)], want, digits)
+
+
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class PersonalityIndex(unittest.TestCase):
+    def test_index_combines_three_graded_record_bytes(self):
+        def grade(v):
+            return 0 if v >= 0xC0 else 1 if v >= 0x40 else 2
+        for record in (0, 1, 3):
+            base = record * 0xA5
+            for b6f, b72, b70 in ((0xFF, 0xFF, 0xFF), (0x00, 0x00, 0x00), (0xC0, 0x40, 0x3F), (0x7F, 0xBF, 0x01), (0x40, 0xC0, 0xFF)):
+                gb = call(0, 0x2391, sram={base + 0x6F: b6f, base + 0x72: b72, base + 0x70: b70}, a=record)
+                self.assertEqual(gb.a, 9 * grade(b6f) + 3 * grade(b72) + grade(b70), (record, b6f, b72, b70))
+
+    def test_every_index_from_0_to_26_is_reachable(self):
+        seen = set()
+        for v1 in (0xFF, 0x80, 0x00):
+            for v2 in (0xFF, 0x80, 0x00):
+                for v3 in (0xFF, 0x80, 0x00):
+                    gb = call(0, 0x2391, sram={0x6F: v1, 0x72: v2, 0x70: v3}, a=0)
+                    seen.add(gb.a)
+        self.assertEqual(seen, set(range(27)))
 
 
 class FamilyNamesAreApplied(unittest.TestCase):

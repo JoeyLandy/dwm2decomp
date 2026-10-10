@@ -1772,7 +1772,7 @@ Jump_036_4C07::
     ld a, [wDAC4]
     ld c, a
     ld a, [wD8A5]
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
@@ -1781,7 +1781,7 @@ Jump_036_4C07::
     ld a, [wDAC4]
     ld c, a
     ld a, [wD8A5]
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
@@ -1790,7 +1790,7 @@ Jump_036_4C07::
     ld a, [wDAC4]
     ld c, a
     ld a, [wD8A5]
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld [hl], c
     ld a, [wD8A5]
@@ -4261,15 +4261,15 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     call Func_036_5D84
     ld a, [wD002]
     ld c, a
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     call Func_036_5D7A
     ld a, [wD003]
     ld c, a
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     call Func_036_5D7A
     ld a, [wD004]
     ld c, a
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     call Func_036_5D7A
     ld a, [wD005]
     ld c, a
@@ -9650,14 +9650,16 @@ Func_036_7ED8:: ; address name
     pop hl
     ret
 
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wD968, wD970, wD978
-Func_036_7EE5:: ; heuristic: follows a terminator; C0
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+PersonalityIndexOfSlot_Bank36:: ; heuristic: follows a terminator; C0
+Func_036_7EE5:: ; address name
     push hl
     push bc
     ld c, a
     ld b, $00
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -9673,7 +9675,7 @@ Jump_036_7F01::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -9689,7 +9691,7 @@ Jump_036_7F1C::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00

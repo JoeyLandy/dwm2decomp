@@ -717,7 +717,7 @@ Jump_0F1_44A3::
 Jump_0F1_44BA::
     ld a, c
     call MapIndexViaWC6FE
-    call Func_000_2391
+    call PersonalityIndexOfRecord
     ld c, a
     ld [wStringIndex], a
     ld a, $07

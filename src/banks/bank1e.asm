@@ -5647,7 +5647,7 @@ Func_01E_6D2B::
 ; points at: wC52D
 Func_01E_6D42::
     ld a, [hl]
-    call Func_000_2391
+    call PersonalityIndexOfRecord
     ld c, a
     ld [wStringIndex], a
     ld a, $07

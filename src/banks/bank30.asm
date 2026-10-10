@@ -28,13 +28,13 @@ Jump_030_4018::
     ld a, [wD88F]
     ld b, a
     ld c, $00
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     ld de, $0000
     call Func_030_408D
     ld a, [wD88F]
     ld b, a
     ld c, $00
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     push de
     ld de, $0000
     call Func_030_408D
@@ -54,7 +54,7 @@ Jump_030_4052::
     ld a, [wD88F]
     ld b, a
     ld c, $00
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     ld de, $0000
     call Func_030_408D
     pop hl
@@ -593,8 +593,8 @@ Func_030_43C4::
 
 Jump_030_43D0::
     ld a, [wD8A4]
-    call Func_030_5CF2
-    ld [wD2C7], a
+    call PersonalityIndexOfSlot_Bank30
+    ld [wPersonalityIndex], a
     call Func_030_5287
     jr nz, Jump_030_4414
     ld a, [wC58A]
@@ -790,10 +790,10 @@ Jump_030_451F::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_030_43C4)
-; reads: wD2C7
+; reads: wPersonalityIndex
 ; points at: wD868
 Func_030_4536::
-    ld a, [wD2C7]
+    ld a, [wPersonalityIndex]
     add a, a
     add a, a
     ld hl, Data_030_5587
@@ -983,15 +983,15 @@ Jump_030_4687::
 
 ; 2 call sites from 2 routines (e.g. Func_030_45DA, Func_030_5472)
 ; reads: wD8A4
-; points at: wD968, wD970, wD978, wDA3C
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wDA3C
 Func_030_4688::
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     ld a, $00
     call Func_030_469D
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     ld a, $01
     call Func_030_469D
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     ld a, $02
 
 ; 2 call sites from 1 routine (e.g. Func_030_4688)
@@ -1172,7 +1172,7 @@ Jump_030_47B4::
 
 ; 2 call sites from 2 routines (e.g. Func_030_45DA, Func_030_5472)
 ; reads: wC58A, wD8A4, wC5E7
-; points at: wDA3C, wD968, wD970, wDA3D, wD978, wDA3E
+; points at: wDA3C, wSlotPersonalityHi, wSlotPersonalityMid, wDA3D, wSlotPersonalityLo, wDA3E
 Func_030_47B9::
     ld a, [wC58A]
     or a, a
@@ -1206,15 +1206,15 @@ Jump_030_47E6::
     cp a, $04
     jr c, Jump_030_47CA
     ld a, [wD8A4]
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     ld de, wDA3C
     call Func_030_480E
     ld a, [wD8A4]
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     ld de, wDA3D
     call Func_030_480E
     ld a, [wD8A4]
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     ld de, wDA3E
 
 ; 2 call sites from 1 routine (e.g. Func_030_47B9)
@@ -2018,7 +2018,7 @@ Func_030_4F3B::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wD8A4
-; points at: wD968, wD854
+; points at: wSlotPersonalityHi, wD854
 Func_030_4F46:: ; heuristic: follows a terminator; C0
     ld bc, $0200
     nop
@@ -2070,15 +2070,15 @@ Jump_030_4F63::
     add a, $4F
     add a, $4F
     add a, $4F
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     ld de, $0001
     jr Jump_030_4FC8
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wD8A4
-; points at: wD968, wD854
+; points at: wSlotPersonalityHi, wD854
 Func_030_4F8E:: ; heuristic: follows a terminator; C0
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     ld de, $0002
     jr Func_030_4FE9
     db $21, $70, $D9, $11, $04, $00, $18, $2A, $21, $70, $D9, $11, $08, $00, $18, $43
@@ -2156,22 +2156,22 @@ Jump_030_5016::
 
 ; 1 call site from 1 routine (e.g. Func_030_43C4)
 ; reads: wD8A4, wC0A0, wC0A8
-; points at: wD968, wD970, wD978, wC0A0
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wC0A0
 Func_030_502D::
     ld b, $00
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     call Func_030_50AC
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     call Func_030_50AC
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     call Func_030_50AC
     ld a, b
     cp a, $03
     jr z, Jump_030_509A
     ld b, $00
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     call Func_030_50BA
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     call Func_030_50BA
     ld a, b
     cp a, $02
@@ -2182,7 +2182,7 @@ Func_030_502D::
     call FillBytes
     call Func_030_50D2
     ld a, [wD8A4]
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     add_a_to_hl
     ld a, [hl]
     cp a, $40
@@ -2233,12 +2233,12 @@ Func_030_50AC::
 
 ; 2 call sites from 1 routine (e.g. Func_030_502D)
 ; reads: wD8A4
-; points at: wD968
+; points at: wSlotPersonalityHi
 Func_030_50BA::
     ld a, [wD8A4]
     add_a_to_hl
     ld a, [wD8A4]
-    ld de, wD968
+    ld de, wSlotPersonalityHi
     add a, e
     ld e, a
     jr nc, Jump_030_50CD
@@ -2661,7 +2661,7 @@ Func_030_5335::
 
 ; 1 call site from 1 routine (e.g. Func_030_52B5)
 ; reads: wDAE8, hFFC6, hFFC7, hFFC8, hFFC9, wD8A4
-; points at: hFFC6, wD968, wD970, wD978, wD980
+; points at: hFFC6, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wD980
 Func_030_533E::
     ld a, [wDAE8]
     ld c, a
@@ -2683,15 +2683,15 @@ Func_030_533E::
 Jump_030_5357::
     ldh a, [hFFC6]
     ld e, a
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     call Func_030_5378
     ldh a, [hFFC7]
     ld e, a
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     call Func_030_5378
     ldh a, [hFFC8]
     ld e, a
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     call Func_030_5378
     ldh a, [hFFC9]
     ld e, a
@@ -2755,12 +2755,12 @@ Jump_030_543E::
 
 ; 3 call sites from 2 routines (e.g. Func_032_4F0A, Func_0E0_5A35)
 ; reads: wD8A4
-; writes: wD2C7, wD2CC
+; writes: wPersonalityIndex, wD2CC
 ; points at: wDA53
 Func_030_5440::
     ld a, [wD8A4]
-    call Func_030_5CF2
-    ld [wD2C7], a
+    call PersonalityIndexOfSlot_Bank30
+    ld [wPersonalityIndex], a
     call Func_030_5472
     ld a, $01
     ld [wD2CC], a
@@ -3285,14 +3285,16 @@ Jump_030_5CA9::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0C1CAF, $43
 
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
 ; 2 call sites from 2 routines (e.g. Func_030_43C4, Func_030_5440)
-; points at: wD968, wD970, wD978
-Func_030_5CF2::
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+PersonalityIndexOfSlot_Bank30::
+Func_030_5CF2:: ; address name
     push hl
     push bc
     ld c, a
     ld b, $00
-    ld hl, wD968
+    ld hl, wSlotPersonalityHi
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -3308,7 +3310,7 @@ Jump_030_5D0E::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD970
+    ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
@@ -3324,7 +3326,7 @@ Jump_030_5D29::
     add a, b
     ld b, a
     ld a, c
-    ld hl, wD978
+    ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00
