@@ -1,22 +1,26 @@
 SECTION "Bank 96", ROMX[$4000], BANK[$96]
     db $96
 
-; 1 call site from 1 routine (e.g. Func_080_4001)
+; overflow for message bank $80: wStringIndex -= $C8, then BeginStringDisplay with the table Data_096_404B in this bank (E-0080)
+; 1 call site from 1 routine (e.g. BeginStringDisplay_Bank80)
 ; reads: wStringIndex
 ; writes: wStringIndex
-Func_096_4001::
-    ld de, Data_096_404B
+BeginStringDisplay_Bank80_Overflow::
+Func_096_4001:: ; address name
+    ld de, MessageStrings_Bank80_Overflow
     ld a, [wStringIndex]
     sub a, $C8
     ld [wStringIndex], a
     call BeginStringDisplay
     ret
 
-; 1 call site from 1 routine (e.g. Func_080_4016)
+; overflow for message bank $80: wStringIndex -= $C8, then CopyStringToBuffer with the table Data_096_404B in this bank (E-0080)
+; 1 call site from 1 routine (e.g. CopyStringToBuffer_Bank80)
 ; reads: wStringIndex
 ; writes: wStringIndex
-Func_096_4010:: ; heuristic: follows a terminator; C0
-    ld de, Data_096_404B
+CopyStringToBuffer_Bank80_Overflow:: ; heuristic: follows a terminator; C0
+Func_096_4010:: ; address name
+    ld de, MessageStrings_Bank80_Overflow
     ld a, [wStringIndex]
     sub a, $C8
     ld [wStringIndex], a
@@ -24,22 +28,26 @@ Func_096_4010:: ; heuristic: follows a terminator; C0
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
-; 2 call sites from 2 routines (e.g. Func_082_4001, Func_082_4016)
+; overflow for message bank $82: wStringIndex -= $90, then BeginStringDisplay with the table Data_096_574A in this bank (E-0080)
+; 2 call sites from 2 routines (e.g. BeginStringDisplay_Bank82, CopyStringToBuffer_Bank82)
 ; reads: wStringIndex
 ; writes: wStringIndex
-Func_096_4026::
-    ld de, Data_096_574A
+BeginStringDisplay_Bank82_Overflow::
+Func_096_4026:: ; address name
+    ld de, MessageStrings_Bank82_Overflow
     ld a, [wStringIndex]
     sub a, $90
     ld [wStringIndex], a
     call BeginStringDisplay
     ret
 
+; overflow for message bank $82: wStringIndex -= $90, then CopyStringToBuffer with the table Data_096_574A in this bank (E-0080)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStringIndex
 ; writes: wStringIndex
-Func_096_4035:: ; heuristic: follows a terminator; C0
-    ld de, Data_096_574A
+CopyStringToBuffer_Bank82_Overflow:: ; heuristic: follows a terminator; C0
+Func_096_4035:: ; address name
+    ld de, MessageStrings_Bank82_Overflow
     ld a, [wStringIndex]
     sub a, $90
     ld [wStringIndex], a
@@ -47,7 +55,9 @@ Func_096_4035:: ; heuristic: follows a terminator; C0
     ret
     db $CD, $26, $40, $CD, $11, $26, $C9
 
-Data_096_404B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; string-pointer table for message bank $80, strings from $C8 up (index minus $C8) (E-0080)
+MessageStrings_Bank80_Overflow:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_096_404B:: ; address name
     dw Data_096_404D
 
 Data_096_404D:: ; heuristic: target of a monotone pointer table; C0
@@ -593,7 +603,9 @@ Data_096_56B8:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "That's why she was", $EF, $EE, "in a bad mood!", $F7
     db $F0
 
-Data_096_574A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; string-pointer table for message bank $82, strings from $90 up (index minus $90) (E-0080)
+MessageStrings_Bank82_Overflow:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_096_574A:: ; address name
     dw Data_096_574C
 
 Data_096_574C:: ; heuristic: target of a monotone pointer table; C0
@@ -1157,18 +1169,20 @@ Data_096_6EF6:: ; heuristic: target of a monotone pointer table; C0
 ; writes: wStringIndex
 GameMode0_Update_Table2_Case1C_Sub01_Sub01::
 Func_096_7011:: ; address name
-    ld de, Data_096_7036
+    ld de, MessageStrings_Bank0E_Overflow
     ld a, [wStringIndex]
     sub a, $88
     ld [wStringIndex], a
     call BeginStringDisplay
     ret
 
-; 1 call site from 1 routine (e.g. Func_00E_4016)
+; overflow for message bank $0E: wStringIndex -= $88, then CopyStringToBuffer with the table Data_096_7036 in this bank (E-0080)
+; 1 call site from 1 routine (e.g. CopyStringToBuffer_Bank0E)
 ; reads: wStringIndex
 ; writes: wStringIndex
-Func_096_7020:: ; heuristic: follows a terminator; C0
-    ld de, Data_096_7036
+CopyStringToBuffer_Bank0E_Overflow:: ; heuristic: follows a terminator; C0
+Func_096_7020:: ; address name
+    ld de, MessageStrings_Bank0E_Overflow
     ld a, [wStringIndex]
     sub a, $88
     ld [wStringIndex], a
@@ -1176,7 +1190,9 @@ Func_096_7020:: ; heuristic: follows a terminator; C0
     ret
     db $CD, $11, $70, $CD, $11, $26, $C9
 
-Data_096_7036:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; string-pointer table for message bank $0E, strings from $88 up (index minus $88) (E-0080)
+MessageStrings_Bank0E_Overflow:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_096_7036:: ; address name
     dw Data_096_7038
 
 Data_096_7038:: ; heuristic: target of a monotone pointer table; C0

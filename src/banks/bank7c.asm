@@ -1,36 +1,42 @@
 SECTION "Bank 7C", ROMX[$4000], BANK[$7C]
     db $7C
 
+; message bank $7C: when wStringIndex < $87, BeginStringDisplay with this bank's table Data_07C_4032; otherwise far-calls Func_099_404B (E-0080)
 ; 3 call sites from 3 routines (e.g. GameMode0_Update_Table2_Case09, Func_010_4AD0_Case08, ShowMessageHL_Case08)
 ; reads: wStringIndex
-Func_07C_4001::
+BeginStringDisplay_Bank7C::
+Func_07C_4001:: ; address name
     ld a, [wStringIndex]
     cp a, $87
     jr c, Jump_07C_400F
-    farcall Func_099_404B
+    farcall BeginStringDisplay_Bank7C_Overflow
     ret
 
 Jump_07C_400F::
-    ld de, Data_07C_4032
+    ld de, MessageStrings_Bank7C
     call BeginStringDisplay
     ret
 
+; message bank $7C: when wStringIndex < $87, CopyStringToBuffer with this bank's table Data_07C_4032; otherwise far-calls Func_099_405A (E-0080)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStringIndex
-Func_07C_4016:: ; heuristic: follows a terminator; C0
+CopyStringToBuffer_Bank7C:: ; heuristic: follows a terminator; C0
+Func_07C_4016:: ; address name
     ld a, [wStringIndex]
     cp a, $87
     jr c, Jump_07C_4024
-    farcall Func_099_405A
+    farcall CopyStringToBuffer_Bank7C_Overflow
     ret
 
 Jump_07C_4024::
-    ld de, Data_07C_4032
+    ld de, MessageStrings_Bank7C
     call CopyStringToBuffer
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
-Data_07C_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; string-pointer table of message bank $7C: strings 0 to $87 - 1; the rest are in MessageStrings_Bank7C_Overflow (E-0080)
+MessageStrings_Bank7C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_07C_4032:: ; address name
     dw Data_07C_4034
 
 Data_07C_4034:: ; heuristic: target of a monotone pointer table; C0

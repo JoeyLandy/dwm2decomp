@@ -13,26 +13,30 @@ Func_00E_4001:: ; address name
     ret
 
 Jump_00E_400F::
-    ld de, Data_00E_4032
+    ld de, MessageStrings_Bank0E
     call BeginStringDisplay
     ret
 
+; message bank $0E: when wStringIndex < $88, CopyStringToBuffer with this bank's table Data_00E_4032; otherwise far-calls Func_096_7020 (E-0080)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStringIndex
-Func_00E_4016:: ; heuristic: follows a terminator; C0
+CopyStringToBuffer_Bank0E:: ; heuristic: follows a terminator; C0
+Func_00E_4016:: ; address name
     ld a, [wStringIndex]
     cp a, $88
     jr c, Jump_00E_4024
-    farcall Func_096_7020
+    farcall CopyStringToBuffer_Bank0E_Overflow
     ret
 
 Jump_00E_4024::
-    ld de, Data_00E_4032
+    ld de, MessageStrings_Bank0E
     call CopyStringToBuffer
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
-Data_00E_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; string-pointer table of message bank $0E: strings 0 to $88 - 1; the rest are in MessageStrings_Bank0E_Overflow (E-0080)
+MessageStrings_Bank0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_4032:: ; address name
     dw Data_00E_4034
 
 Data_00E_4034:: ; heuristic: target of a monotone pointer table; C0

@@ -2062,63 +2062,63 @@ Jump_010_4B53:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case01::
 Jump_010_4B5A:: ; address name
-    farcall Func_029_4001
+    farcall BeginStringDisplay_Bank29
     ret
 
 ; entry 2 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case02::
 Jump_010_4B61:: ; address name
-    farcall Func_02A_4001
+    farcall BeginStringDisplay_Bank2A
     ret
 
 ; entry 3 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case03::
 Jump_010_4B68:: ; address name
-    farcall Func_02B_4001
+    farcall BeginStringDisplay_Bank2B
     ret
 
 ; entry 4 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case04::
 Jump_010_4B6F:: ; address name
-    farcall Func_02C_4001
+    farcall BeginStringDisplay_Bank2C
     ret
 
 ; entry 5 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case05::
 Jump_010_4B76:: ; address name
-    farcall Func_02D_4001
+    farcall BeginStringDisplay_Bank2D
     ret
 
 ; entry 6 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case06::
 Jump_010_4B7D:: ; address name
-    farcall Func_02E_4001
+    farcall BeginStringDisplay_Bank2E
     ret
 
 ; entry 8 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case08::
 Jump_010_4B84:: ; address name
-    farcall Func_07C_4001
+    farcall BeginStringDisplay_Bank7C
     ret
 
 ; entry 9 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case09::
 Jump_010_4B8B:: ; address name
-    farcall Func_080_4001
+    farcall BeginStringDisplay_Bank80
     ret
 
 ; entry 11 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case0B::
 Jump_010_4B92:: ; address name
-    farcall Func_082_4001
+    farcall BeginStringDisplay_Bank82
     ret
 
 ; entry 12 of the `rst $00` table in Func_010_4AD0
@@ -2132,7 +2132,7 @@ Jump_010_4B99:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_010_4AD0_Case0D::
 Jump_010_4BA0:: ; address name
-    farcall Func_089_4001
+    farcall BeginStringDisplay_Bank89
     ret
 
 Jump_010_4BA7::
@@ -2145,7 +2145,7 @@ Jump_010_4BA7::
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
-    farcall Func_083_4001
+    farcall BeginStringDisplay_Bank83
     ret
 
 Jump_010_4BBE::

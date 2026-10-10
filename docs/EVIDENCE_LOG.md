@@ -830,6 +830,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also named in this batch:** WriteTileBAtScrollOffset47PlusWCFC2, WriteBCTileAtHLOrHLPlusBC, LoadHFFC6WordFromWCA2B, CopyRecordRectToScreenBuffer_Bank1A and two wrappers of it.
 - Binary verification: pending; see the commit.
 
+### E-0080 — Message string banks and their overflow banks
+
+- Kind: OBSERVATION (pattern match plus reading of representative cases; C1).
+- **The pattern.** ShowMessageHL (E-0079) far-calls the `$4001` entry of one bank per message group: $28, $29, $2A, $2B, $2C, $2D, $2E, $7C, $80, $82, $86 and $89. Bank $83 has the same stubs.
+  - Each such bank starts with two stubs. `$4001` handles BeginStringDisplay and `$4016` handles CopyStringToBuffer: when wStringIndex is below the bank's threshold, they use the bank's own string table (`$4032`). Otherwise they far-call an overflow entry in banks $96-$99.
+  - That overflow entry subtracts the threshold from wStringIndex and uses a second table there.
+- **Detection.** A script (`build/string_stubs.py`, not committed) matched the exact instruction shapes. It found 26 stubs and 26 overflow entries. The thresholds are unique per bank ($88 bank $0E, $DA $28, $8E $29, $95 $2A, $8A $2B, $91 $2C, $D5 $2D, $A6 $2E, $87 $7C, $C8 $80, $90 $82, $C7 $83, $DE $89), so each overflow entry pairs with its bank.
+- **Names.** Stubs are named BeginStringDisplay_BankBB / CopyStringToBuffer_BankBB, overflow entries ..._BankBB_Overflow, and tables MessageStrings_BankBB(_Overflow).
+- **A likely bug.** Bank $82's CopyStringToBuffer stub far-calls `96:4026`, the BeginStringDisplay overflow entry. The matching copy entry `96:4035` exists right after it but is not used, so a copy request for string $90 or above starts a display instead.
+- **Not covered.** Bank $86's entry is named already and has a different shape, and the overflow entries' `call` stubs (`db $CD …` runs) are untraced data.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

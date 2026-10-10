@@ -6805,7 +6805,7 @@ Func_000_25C9:: ; address name
     ret
 
 ; DE = string table (see LookupString); copies the string, including its $F0 terminator, to the address in wC53D/wC53E
-; 29 call sites from 29 routines (e.g. CopyStringToBuffer_Bank08, CopyStringToBuffer_Bank09, Func_00E_4016, Func_028_4016, ...)
+; 29 call sites from 29 routines (e.g. CopyStringToBuffer_Bank08, CopyStringToBuffer_Bank09, CopyStringToBuffer_Bank0E, CopyStringToBuffer_Bank28, ...)
 ; reads: wStringDestLo, wStringDestHi
 CopyStringToBuffer::
 Func_000_25FE:: ; address name

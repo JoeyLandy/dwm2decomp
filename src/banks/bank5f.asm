@@ -226,63 +226,63 @@ Jump_05F_6A31:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case01::
 Jump_05F_6A38:: ; address name
-    farcall Func_029_4001
+    farcall BeginStringDisplay_Bank29
     ret
 
 ; entry 2 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case02::
 Jump_05F_6A3F:: ; address name
-    farcall Func_02A_4001
+    farcall BeginStringDisplay_Bank2A
     ret
 
 ; entry 3 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case03::
 Jump_05F_6A46:: ; address name
-    farcall Func_02B_4001
+    farcall BeginStringDisplay_Bank2B
     ret
 
 ; entry 4 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case04::
 Jump_05F_6A4D:: ; address name
-    farcall Func_02C_4001
+    farcall BeginStringDisplay_Bank2C
     ret
 
 ; entry 5 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case05::
 Jump_05F_6A54:: ; address name
-    farcall Func_02D_4001
+    farcall BeginStringDisplay_Bank2D
     ret
 
 ; entry 6 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case06::
 Jump_05F_6A5B:: ; address name
-    farcall Func_02E_4001
+    farcall BeginStringDisplay_Bank2E
     ret
 
 ; entry 8 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case08::
 Jump_05F_6A62:: ; address name
-    farcall Func_07C_4001
+    farcall BeginStringDisplay_Bank7C
     ret
 
 ; entry 9 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case09::
 Jump_05F_6A69:: ; address name
-    farcall Func_080_4001
+    farcall BeginStringDisplay_Bank80
     ret
 
 ; entry 11 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case0B::
 Jump_05F_6A70:: ; address name
-    farcall Func_082_4001
+    farcall BeginStringDisplay_Bank82
     ret
 
 ; entry 12 of the `rst $00` table in ShowMessageHL
@@ -296,7 +296,7 @@ Jump_05F_6A77:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_Case0D::
 Jump_05F_6A7E:: ; address name
-    farcall Func_089_4001
+    farcall BeginStringDisplay_Bank89
     ret
 
 Jump_05F_6A85::

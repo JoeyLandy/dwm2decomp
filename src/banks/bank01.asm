@@ -935,63 +935,63 @@ Jump_001_4B76:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case03::
 Jump_001_4B7D:: ; address name
-    farcall Func_029_4001
+    farcall BeginStringDisplay_Bank29
     ret
 
 ; entry 4 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case04::
 Jump_001_4B84:: ; address name
-    farcall Func_02A_4001
+    farcall BeginStringDisplay_Bank2A
     ret
 
 ; entry 5 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case05::
 Jump_001_4B8B:: ; address name
-    farcall Func_02B_4001
+    farcall BeginStringDisplay_Bank2B
     ret
 
 ; entry 6 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case06::
 Jump_001_4B92:: ; address name
-    farcall Func_02C_4001
+    farcall BeginStringDisplay_Bank2C
     ret
 
 ; entry 7 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case07::
 Jump_001_4B99:: ; address name
-    farcall Func_02D_4001
+    farcall BeginStringDisplay_Bank2D
     ret
 
 ; entry 8 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case08::
 Jump_001_4BA0:: ; address name
-    farcall Func_02E_4001
+    farcall BeginStringDisplay_Bank2E
     ret
 
 ; entry 9 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case09::
 Jump_001_4BA7:: ; address name
-    farcall Func_07C_4001
+    farcall BeginStringDisplay_Bank7C
     ret
 
 ; entry 10 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case0A::
 Jump_001_4BAE:: ; address name
-    farcall Func_080_4001
+    farcall BeginStringDisplay_Bank80
     ret
 
 ; entry 11 of the `rst $00` table in GameMode0_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case0B::
 Jump_001_4BB5:: ; address name
-    farcall Func_082_4001
+    farcall BeginStringDisplay_Bank82
     ret
 
 ; entry 12 of the `rst $00` table in GameMode0_Update
@@ -1005,7 +1005,7 @@ Jump_001_4BBC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case0D::
 Jump_001_4BC3:: ; address name
-    farcall Func_089_4001
+    farcall BeginStringDisplay_Bank89
     ret
 
 ; entry 14 of the `rst $00` table in GameMode0_Update
@@ -1040,7 +1040,7 @@ Jump_001_4BDF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case12::
 Jump_001_4BE6:: ; address name
-    farcall Func_083_4001
+    farcall BeginStringDisplay_Bank83
     ret
 
 ; entry 19 of the `rst $00` table in GameMode0_Update
