@@ -842,6 +842,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Not covered.** Bank $86's entry is named already and has a different shape, and the overflow entries' `call` stubs (`db $CD …` runs) are untraced data.
 - Binary verification: pending; see the commit.
 
+### E-0081 — Message stubs named from their text
+
+- Kind: OBSERVATION (pattern match plus decoding of ROM text; C1 for what each stub displays).
+- **The stubs.** 69 routines (54 in bank $04, 15 in bank $13) share one shape: `ld a, P0 / ld [wScriptParam0], a / ld a, P1 / ld [wScriptParam1], a / ld de, W / call SetRequestPtrC924FromDE / ret`. That helper stores DE as the message word and starts script command $0A, whose case 2 is ShowMessageHL (E-0079), so it is renamed StartMessageScriptDE_B04/_B13.
+- **Decoding the text.** Each stub's text was found with the E-0080 tables: group = high byte & $3F, then the bank from ShowMessageHL's dispatch, then string = low byte, using the bank's table below its threshold and the overflow table above it. It was rendered with the game charmap by a script (`build/msg_stubs.py`, not committed).
+- **Names.** Stubs are named `MsgGGII_FirstWords` after the message word and the first words of the string; notes quote at most six words.
+- **Shared and empty strings (real data).** Several table entries share one string. For example, entries 56-66 of bank $29's overflow table all point to the same egg-spot line, and entries from 71 on point to an empty string. Stubs whose text resolves to an empty string keep an ID-only name.
+- **Limits.**
+  - ShowMessageHL takes a different path when wCC44 has bit 7 set (and is not $80), and that path is not read, so the quoted text holds for the normal path only.
+  - wScriptParam0/1 are not interpreted.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

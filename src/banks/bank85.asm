@@ -4430,7 +4430,7 @@ Jump_085_5AEE::
 Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
     db $74, $01, $00, $00
 
-; 13 call sites from 8 routines (e.g. Func_013_5922_Case07, Func_013_5922_Case19, Func_013_70D9, Func_013_7598, ...)
+; 13 call sites from 8 routines (e.g. Msg01F0_Case07, Msg01F0_Case19, Func_013_70D9, Func_013_7598, ...)
 ; writes: hFFC6, hFFC7
 ; points at: wD09D
 Func_085_5B04::

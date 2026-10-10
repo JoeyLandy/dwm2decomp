@@ -556,7 +556,7 @@ Jump_004_4396::
     INCBIN "dwm2-cobi-us.gbc", $0103AC, $86
     dw $7594
     dw $764F
-    dw Func_004_7705
+    dw Msg01CE_ThisIsAGreat
     dw $77BF
     db $FC, $77, $75, $79, $D4, $7A, $8D, $7B, $D0, $7B, $84, $7C, $75, $7D, $2D, $7E
     db $07, $7F, $01, $40, $D7, $40, $B1, $41, $7C, $42, $53, $43, $C6, $44, $89, $45
@@ -3088,10 +3088,10 @@ Func_004_55BB:: ; address name
     ld [wScriptStep], a
     ret
 
-; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
+; starts a message through script command $0A: DE is stored in wMessageIndex (low) and wMessageGroup (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
 ; 99 call sites from 99 routines (e.g. Func_004_6A35_Case1A, Func_004_6A35_Case19, Func_004_6A35_Case18, Func_004_6A35_Case15, ...)
 ; writes: wMessageIndex, wMessageGroup, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
-SetRequestPtrC924FromDE_B04::
+StartMessageScriptDE_B04::
 Func_004_55DF:: ; address name
     ld a, e
     ld [wMessageIndex], a
@@ -3689,7 +3689,7 @@ Jump_004_5A43:: ; address name
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0061
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 11 of the `rst $00` table in Func_004_58C2
@@ -3702,7 +3702,7 @@ Jump_004_5A54:: ; address name
     ld a, $28
     ld [wScriptParam1], a
     ld de, $0062
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 12 of the `rst $00` table in Func_004_58C2
@@ -4084,7 +4084,7 @@ Jump_004_5C2C:: ; address name
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0063
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 44 of the `rst $00` table in Func_004_58C2
@@ -4311,7 +4311,7 @@ Jump_004_5D6F:: ; address name
     ld a, $1B
     ld [wScriptParam1], a
     ld de, $0067
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 54 of the `rst $00` table in Func_004_58C2
@@ -4324,7 +4324,7 @@ Jump_004_5D80:: ; address name
     ld a, $02
     ld [wScriptParam1], a
     ld de, $0068
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 55 of the `rst $00` table in Func_004_58C2
@@ -4337,7 +4337,7 @@ Jump_004_5D91:: ; address name
     ld a, $02
     ld [wScriptParam1], a
     ld de, $0069
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 56 of the `rst $00` table in Func_004_58C2
@@ -4350,7 +4350,7 @@ Jump_004_5DA2:: ; address name
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $006A
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 57 of the `rst $00` table in Func_004_58C2
@@ -4363,7 +4363,7 @@ Jump_004_5DB3:: ; address name
     ld a, $46
     ld [wScriptParam1], a
     ld de, $006B
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 58 of the `rst $00` table in Func_004_58C2
@@ -4376,7 +4376,7 @@ Jump_004_5DC4:: ; address name
     ld a, $28
     ld [wScriptParam1], a
     ld de, $006C
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 59 of the `rst $00` table in Func_004_58C2
@@ -4649,7 +4649,7 @@ Jump_004_5F24:: ; address name
     ld a, $2E
     ld [wScriptParam1], a
     ld de, $0079
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 79 of the `rst $00` table in Func_004_58C2
@@ -4732,7 +4732,7 @@ Jump_004_5F91:: ; address name
     ld a, $20
     ld [wScriptParam1], a
     ld de, $00E0
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 85 of the `rst $00` table in Func_004_58C2
@@ -4745,7 +4745,7 @@ Jump_004_5FA2:: ; address name
     ld a, $28
     ld [wScriptParam1], a
     ld de, $00E1
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 86 of the `rst $00` table in Func_004_58C2
@@ -4758,7 +4758,7 @@ Jump_004_5FB3:: ; address name
     ld a, $0C
     ld [wScriptParam1], a
     ld de, $00E2
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 87 of the `rst $00` table in Func_004_58C2
@@ -4771,7 +4771,7 @@ Jump_004_5FC4:: ; address name
     ld a, $11
     ld [wScriptParam1], a
     ld de, $00E3
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 88 of the `rst $00` table in Func_004_58C2
@@ -4784,7 +4784,7 @@ Jump_004_5FD5:: ; address name
     ld a, $0E
     ld [wScriptParam1], a
     ld de, $00E4
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 89 of the `rst $00` table in Func_004_58C2
@@ -4805,7 +4805,7 @@ Jump_004_5FED:: ; address name
     ld a, $03
     ld [wScriptParam1], a
     ld de, $00E5
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 91 of the `rst $00` table in Func_004_58C2
@@ -4818,7 +4818,7 @@ Jump_004_5FFE:: ; address name
     ld a, $5C
     ld [wScriptParam1], a
     ld de, $00E6
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 92 of the `rst $00` table in Func_004_58C2
@@ -4831,7 +4831,7 @@ Jump_004_600F:: ; address name
     ld a, $06
     ld [wScriptParam1], a
     ld de, $00E7
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 93 of the `rst $00` table in Func_004_58C2
@@ -4844,7 +4844,7 @@ Jump_004_6020:: ; address name
     ld a, $02
     ld [wScriptParam1], a
     ld de, $00E8
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 94 of the `rst $00` table in Func_004_58C2
@@ -4857,7 +4857,7 @@ Jump_004_6031:: ; address name
     ld a, $28
     ld [wScriptParam1], a
     ld de, $00F2
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 95 of the `rst $00` table in Func_004_58C2
@@ -4878,7 +4878,7 @@ Jump_004_6049:: ; address name
     ld a, $1D
     ld [wScriptParam1], a
     ld de, $00E9
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 97 of the `rst $00` table in Func_004_58C2
@@ -4891,7 +4891,7 @@ Jump_004_605A:: ; address name
     ld a, $1A
     ld [wScriptParam1], a
     ld de, $00EA
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 98 of the `rst $00` table in Func_004_58C2
@@ -4904,7 +4904,7 @@ Jump_004_606B:: ; address name
     ld a, $51
     ld [wScriptParam1], a
     ld de, $00EB
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 99 of the `rst $00` table in Func_004_58C2
@@ -4917,7 +4917,7 @@ Jump_004_607C:: ; address name
     ld a, $20
     ld [wScriptParam1], a
     ld de, $00EC
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 100 of the `rst $00` table in Func_004_58C2
@@ -4930,7 +4930,7 @@ Jump_004_608D:: ; address name
     ld a, $0C
     ld [wScriptParam1], a
     ld de, $00ED
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 101 of the `rst $00` table in Func_004_58C2
@@ -4943,7 +4943,7 @@ Jump_004_609E:: ; address name
     ld a, $0F
     ld [wScriptParam1], a
     ld de, $00EE
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 102 of the `rst $00` table in Func_004_58C2
@@ -4956,7 +4956,7 @@ Jump_004_60AF:: ; address name
     ld a, $04
     ld [wScriptParam1], a
     ld de, $00EF
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 103 of the `rst $00` table in Func_004_58C2
@@ -4969,7 +4969,7 @@ Jump_004_60C0:: ; address name
     ld a, $10
     ld [wScriptParam1], a
     ld de, $00F0
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 104 of the `rst $00` table in Func_004_58C2
@@ -5230,7 +5230,7 @@ Jump_004_623E:: ; address name
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0046
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 9 of the `rst $00` table in Func_004_612B
@@ -5582,7 +5582,7 @@ Jump_004_6445:: ; address name
     ld a, $06
     ld [wScriptParam1], a
     ld de, $0047
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 27 of the `rst $00` table in Func_004_612B
@@ -5946,7 +5946,7 @@ Jump_004_664B:: ; address name
     ld a, $01
     ld [wScriptParam1], a
     ld de, $004B
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 48 of the `rst $00` table in Func_004_612B
@@ -5959,7 +5959,7 @@ Jump_004_665C:: ; address name
     ld a, $1A
     ld [wScriptParam1], a
     ld de, $004C
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 49 of the `rst $00` table in Func_004_612B
@@ -5972,7 +5972,7 @@ Jump_004_666D:: ; address name
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $004D
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 50 of the `rst $00` table in Func_004_612B
@@ -5985,7 +5985,7 @@ Jump_004_667E:: ; address name
     ld a, $2B
     ld [wScriptParam1], a
     ld de, $004E
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 51 of the `rst $00` table in Func_004_612B
@@ -5998,7 +5998,7 @@ Jump_004_668F:: ; address name
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $004F
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 52 of the `rst $00` table in Func_004_612B
@@ -6011,7 +6011,7 @@ Jump_004_66A0:: ; address name
     ld a, $24
     ld [wScriptParam1], a
     ld de, $0050
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 53 of the `rst $00` table in Func_004_612B
@@ -6024,7 +6024,7 @@ Jump_004_66B1:: ; address name
     ld a, $29
     ld [wScriptParam1], a
     ld de, $0051
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 54 of the `rst $00` table in Func_004_612B
@@ -6037,7 +6037,7 @@ Jump_004_66C2:: ; address name
     ld a, $48
     ld [wScriptParam1], a
     ld de, $0052
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 55 of the `rst $00` table in Func_004_612B
@@ -6225,7 +6225,7 @@ Jump_004_67DB:: ; address name
     ld a, $19
     ld [wScriptParam1], a
     ld de, $005B
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 67 of the `rst $00` table in Func_004_612B
@@ -6804,72 +6804,72 @@ Func_004_6A35::
     dw Func_004_7624
     dw Func_004_763A
     dw Func_004_7657
-    dw Func_004_766D
-    dw Func_004_767E
+    dw Msg01C8_ThisIsAGreat
+    dw Msg01C9_ThisIsAGreat
     db $8F, $76, $96, $76, $9D, $76, $A4, $76, $B5, $76
-    dw Func_004_76BC
+    dw Msg01CB_ThisIsAGreat
     dw Func_004_76CD
-    dw Func_004_76E3
-    dw Func_004_76F4
-    dw Func_004_7705
+    dw Msg01CC_ThisIsAGreat
+    dw Msg01CD_ThisIsAGreat
+    dw Msg01CE_ThisIsAGreat
     db $16, $77
     ds $14, $00
     db $1D, $77, $24, $77, $2B, $77, $47, $77, $47, $77, $47, $77, $47, $77
     dw Func_004_774E
-    dw Func_004_7764
-    dw Func_004_7775
-    dw Func_004_7786
-    dw Func_004_7797
-    dw Func_004_77A8
-    dw Func_004_77B9
-    dw Func_004_77CA
-    dw Func_004_77DB
-    dw Func_004_77EC
-    dw Func_004_77FD
-    dw Func_004_780E
-    dw Func_004_781F
-    dw Func_004_7830
-    dw Func_004_7841
-    dw Func_004_7852
-    dw Func_004_7863
+    dw Msg01D5
+    dw Msg01D6
+    dw Msg01D8
+    dw Msg01DA
+    dw Msg01DB
+    dw Msg01DC
+    dw Msg01DE
+    dw Msg01DF
+    dw Msg0169_WereWorriedAboutThe
+    dw Msg016B_TheKingIsSo
+    dw Msg016C_SoHaveYouDiscovered
+    dw Msg016D_KingTheCanalIs
+    dw Msg016F_KingWhatNeverMind
+    dw Msg0170_IFeelBadlyFor
+    dw Msg0171_WhatOpenTheCanal
+    dw Msg0172_KingArrghIKnow
     db $74, $78, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $7B, $78, $82, $78, $89, $78, $A5, $78, $A5, $78, $A5, $78, $A5, $78
     dw Func_004_78AC
-    dw Func_004_78C2
-    dw Func_004_78D3
-    dw Func_004_78E4
-    dw Func_004_78F5
-    dw Func_004_7906
-    dw Func_004_7917
-    dw Func_004_7928
-    dw Func_004_7939
-    dw Func_004_794A
-    dw Func_004_795B
-    dw Func_004_796C
-    dw Func_004_797D
-    dw Func_004_798E
-    dw Func_004_799F
-    dw Func_004_79B0
-    dw Func_004_79C1
+    dw Msg0175_ImMakingANew
+    dw Msg0176_GaahYoureTooStrong
+    dw Msg0177_KingWhatSoThats
+    dw Msg0179_KingThisShouldSolve
+    dw Msg017A_OhYouSayThat
+    dw Msg017B_TheWellHasAmple
+    dw Msg017D_HiDidYouHear
+    dw Msg017E_TheKingSolvedOur
+    dw Msg017F_OurKingWorkedTo
+    dw Msg00D6_IllShowYouHow
+    dw Msg00D7_HmMyRivalIs
+    dw Msg00D8_FinallySomeoneToIgnite
+    dw Msg00DA_YouHaveRaisedYour
+    dw Msg00DB_WhatHowDidYou
+    dw Msg00DC_AllThoseWhoStood
+    dw Msg00DD_LetMeShowYou
     ds $10, $00
     db $D2, $79, $D9, $79, $E0, $79, $FC, $79, $FC, $79, $FC, $79, $FC, $79
     dw Func_004_7A03
-    dw Func_004_7A19
-    dw Func_004_7A2A
-    dw Func_004_7A3B
-    dw Func_004_7A4C
-    dw Func_004_7A5D
-    dw Func_004_7A6E
-    dw Func_004_7A7F
-    dw Func_004_7A90
-    dw Func_004_7AA1
-    dw Func_004_7AB2
-    dw Func_004_7AC3
-    dw Func_004_7AD4
-    dw Func_004_7AE5
-    dw Func_004_7AF6
-    dw Func_004_7B07
-    dw Func_004_7B18
+    dw Msg00F5_ItIsAnItem
+    dw Msg00F6_HelloWhatCanI
+    dw Msg00F7_HelloWhatCanI
+    dw Msg00F9_HelloWhatCanI
+    dw Msg00FA_HelloWhatCanI
+    dw Msg00FB_THEEND
+    dw Msg00FD_HeyThatsMine0
+    dw Msg00FE_TerryHereJustTake
+    dw Msg00FF_Composing
+    dw Msg01F3
+    dw Msg01F4
+    dw Msg01F5
+    dw Msg01F7
+    dw Msg01F8
+    dw Msg01F9
+    dw Msg01FA
     ds $10, $00
 
 ; entry 0 of the `rst $00` table in Func_004_6A35
@@ -7413,7 +7413,7 @@ Jump_004_6F1F:: ; address name
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0153
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 20 of the `rst $00` table in Func_004_6A35
@@ -7426,7 +7426,7 @@ Jump_004_6F30:: ; address name
     ld a, $10
     ld [wScriptParam1], a
     ld de, $0154
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 21 of the `rst $00` table in Func_004_6A35
@@ -7439,7 +7439,7 @@ Jump_004_6F41:: ; address name
     ld a, $04
     ld [wScriptParam1], a
     ld de, $0155
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 22 of the `rst $00` table in Func_004_6A35
@@ -7468,7 +7468,7 @@ Jump_004_6F60:: ; address name
     ld a, $03
     ld [wScriptParam1], a
     ld de, $0156
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 25 of the `rst $00` table in Func_004_6A35
@@ -7481,7 +7481,7 @@ Jump_004_6F71:: ; address name
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $0157
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 26 of the `rst $00` table in Func_004_6A35
@@ -7494,7 +7494,7 @@ Jump_004_6F82:: ; address name
     ld a, $12
     ld [wScriptParam1], a
     ld de, $0158
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; entry 27 of the `rst $00` table in Func_004_6A35
@@ -8467,40 +8467,46 @@ Jump_004_7666::
     call SetRequestPtrC91A_B04
     ret
 
+; wScriptParam0 = 01, wScriptParam1 = 0E, then StartMessageScriptDE_B04 with DE = $01C8: starts message group 1, string $C8; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_766D:: ; heuristic: target of a pointer table; C0
+Msg01C8_ThisIsAGreat:: ; heuristic: target of a pointer table; C0
+Func_004_766D:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $0E
     ld [wScriptParam1], a
     ld de, $01C8
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 01, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $01C9: starts message group 1, string $C9; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_767E:: ; heuristic: target of a pointer table; C0
+Msg01C9_ThisIsAGreat:: ; heuristic: target of a pointer table; C0
+Func_004_767E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $01C9
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
     db $21, $FB, $0C, $CD, $BB, $55, $C9, $21, $FA, $0C, $CD, $BB, $55, $C9, $21, $FC
     db $0C, $CD, $BB, $55, $C9, $3E, $01, $EA, $21, $C9, $3E, $04, $EA, $22, $C9, $11
     db $CA, $01, $CD, $DF, $55, $C9, $21, $FD, $0C, $CD, $BB, $55, $C9
 
+; wScriptParam0 = 00, wScriptParam1 = 08, then StartMessageScriptDE_B04 with DE = $01CB: starts message group 1, string $CB; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_76BC:: ; heuristic: target of a pointer table; C0
+Msg01CB_ThisIsAGreat:: ; heuristic: target of a pointer table; C0
+Func_004_76BC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $08
     ld [wScriptParam1], a
     ld de, $01CB
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8517,37 +8523,43 @@ Jump_004_76DC::
     call SetRequestPtrC921_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $01CC: starts message group 1, string $CC; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_76E3:: ; heuristic: target of a pointer table; C0
+Msg01CC_ThisIsAGreat:: ; heuristic: target of a pointer table; C0
+Func_004_76E3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $01CC
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $01CD: starts message group 1, string $CD; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_76F4:: ; heuristic: target of a pointer table; C0
+Msg01CD_ThisIsAGreat:: ; heuristic: target of a pointer table; C0
+Func_004_76F4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $01CD
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 23, then StartMessageScriptDE_B04 with DE = $01CE: starts message group 1, string $CE; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7705:: ; heuristic: target of a pointer table; C0
+Msg01CE_ThisIsAGreat:: ; heuristic: target of a pointer table; C0
+Func_004_7705:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $23
     ld [wScriptParam1], a
     ld de, $01CE
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
     db $21, $95, $65, $CD, $03, $56, $C9, $21, $03, $0C, $CD, $BB, $55, $C9, $21, $02
     db $0C, $CD, $BB, $55, $C9, $11, $D3, $01, $CD, $1B, $18, $38, $0D, $21, $00, $0C
@@ -8568,180 +8580,212 @@ Jump_004_775D::
     call SetRequestPtrC921_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $01D5: starts message group 1, string $D5; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7764:: ; heuristic: target of a pointer table; C0
+Msg01D5:: ; heuristic: target of a pointer table; C0
+Func_004_7764:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $01D5
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 48, then StartMessageScriptDE_B04 with DE = $01D6: starts message group 1, string $D6; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7775:: ; heuristic: target of a pointer table; C0
+Msg01D6:: ; heuristic: target of a pointer table; C0
+Func_004_7775:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $48
     ld [wScriptParam1], a
     ld de, $01D6
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 0A, then StartMessageScriptDE_B04 with DE = $01D8: starts message group 1, string $D8; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7786:: ; heuristic: target of a pointer table; C0
+Msg01D8:: ; heuristic: target of a pointer table; C0
+Func_004_7786:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0A
     ld [wScriptParam1], a
     ld de, $01D8
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $01DA: starts message group 1, string $DA; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7797:: ; heuristic: target of a pointer table; C0
+Msg01DA:: ; heuristic: target of a pointer table; C0
+Func_004_7797:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $01DA
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 51, then StartMessageScriptDE_B04 with DE = $01DB: starts message group 1, string $DB; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_77A8:: ; heuristic: target of a pointer table; C0
+Msg01DB:: ; heuristic: target of a pointer table; C0
+Func_004_77A8:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $51
     ld [wScriptParam1], a
     ld de, $01DB
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $01DC: starts message group 1, string $DC; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_77B9:: ; heuristic: target of a pointer table; C0
+Msg01DC:: ; heuristic: target of a pointer table; C0
+Func_004_77B9:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $01DC
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $01DE: starts message group 1, string $DE; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_77CA:: ; heuristic: target of a pointer table; C0
+Msg01DE:: ; heuristic: target of a pointer table; C0
+Func_004_77CA:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $01DE
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 44, then StartMessageScriptDE_B04 with DE = $01DF: starts message group 1, string $DF; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_77DB:: ; heuristic: target of a pointer table; C0
+Msg01DF:: ; heuristic: target of a pointer table; C0
+Func_004_77DB:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $44
     ld [wScriptParam1], a
     ld de, $01DF
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $0169: starts message group 1, string $69; on the normal ShowMessageHL path the string begins 'We're worried about the well. The' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_77EC:: ; heuristic: target of a pointer table; C0
+Msg0169_WereWorriedAboutThe:: ; heuristic: target of a pointer table; C0
+Func_004_77EC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0169
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $016B: starts message group 1, string $6B; on the normal ShowMessageHL path the string begins 'The King is so frivolous. A' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_77FD:: ; heuristic: target of a pointer table; C0
+Msg016B_TheKingIsSo:: ; heuristic: target of a pointer table; C0
+Func_004_77FD:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $016B
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 5F, then StartMessageScriptDE_B04 with DE = $016C: starts message group 1, string $6C; on the normal ShowMessageHL path the string begins 'So, have you discovered what concerns' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_780E:: ; heuristic: target of a pointer table; C0
+Msg016C_SoHaveYouDiscovered:: ; heuristic: target of a pointer table; C0
+Func_004_780E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5F
     ld [wScriptParam1], a
     ld de, $016C
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 4E, then StartMessageScriptDE_B04 with DE = $016D: starts message group 1, string $6D; on the normal ShowMessageHL path the string begins 'King The canal is managed by' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_781F:: ; heuristic: target of a pointer table; C0
+Msg016D_KingTheCanalIs:: ; heuristic: target of a pointer table; C0
+Func_004_781F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4E
     ld [wScriptParam1], a
     ld de, $016D
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 4C, then StartMessageScriptDE_B04 with DE = $016F: starts message group 1, string $6F; on the normal ShowMessageHL path the string begins 'King What? Never mind, then! I'll' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7830:: ; heuristic: target of a pointer table; C0
+Msg016F_KingWhatNeverMind:: ; heuristic: target of a pointer table; C0
+Func_004_7830:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4C
     ld [wScriptParam1], a
     ld de, $016F
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 4D, then StartMessageScriptDE_B04 with DE = $0170: starts message group 1, string $70; on the normal ShowMessageHL path the string begins 'I feel badly for his Majesty,' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7841:: ; heuristic: target of a pointer table; C0
+Msg0170_IFeelBadlyFor:: ; heuristic: target of a pointer table; C0
+Func_004_7841:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4D
     ld [wScriptParam1], a
     ld de, $0170
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $0171: starts message group 1, string $71; on the normal ShowMessageHL path the string begins 'What? Open the Canal Gate more?' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7852:: ; heuristic: target of a pointer table; C0
+Msg0171_WhatOpenTheCanal:: ; heuristic: target of a pointer table; C0
+Func_004_7852:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0171
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $0172: starts message group 1, string $72; on the normal ShowMessageHL path the string begins 'King Arrgh! I know that! I' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7863:: ; heuristic: target of a pointer table; C0
+Msg0172_KingArrghIKnow:: ; heuristic: target of a pointer table; C0
+Func_004_7863:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0172
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
     db $21, $9E, $65, $CD, $03, $56, $C9, $21, $1B, $0C, $CD, $BB, $55, $C9, $21, $1A
     db $0C, $CD, $BB, $55, $C9, $11, $73, $01, $CD, $1B, $18, $38, $0D, $21, $18, $0C
@@ -8762,180 +8806,212 @@ Jump_004_78BB::
     call SetRequestPtrC921_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 0A, then StartMessageScriptDE_B04 with DE = $0175: starts message group 1, string $75; on the normal ShowMessageHL path the string begins 'I'm making a new home for' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_78C2:: ; heuristic: target of a pointer table; C0
+Msg0175_ImMakingANew:: ; heuristic: target of a pointer table; C0
+Func_004_78C2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0A
     ld [wScriptParam1], a
     ld de, $0175
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 4A, then StartMessageScriptDE_B04 with DE = $0176: starts message group 1, string $76; on the normal ShowMessageHL path the string begins 'Gaah! You're too strong! You win!' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_78D3:: ; heuristic: target of a pointer table; C0
+Msg0176_GaahYoureTooStrong:: ; heuristic: target of a pointer table; C0
+Func_004_78D3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4A
     ld [wScriptParam1], a
     ld de, $0176
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $0177: starts message group 1, string $77; on the normal ShowMessageHL path the string begins 'King What? So that's the truth?' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_78E4:: ; heuristic: target of a pointer table; C0
+Msg0177_KingWhatSoThats:: ; heuristic: target of a pointer table; C0
+Func_004_78E4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $0177
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $0179: starts message group 1, string $79; on the normal ShowMessageHL path the string begins 'King This should solve the water' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_78F5:: ; heuristic: target of a pointer table; C0
+Msg0179_KingThisShouldSolve:: ; heuristic: target of a pointer table; C0
+Func_004_78F5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0179
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 09, then StartMessageScriptDE_B04 with DE = $017A: starts message group 1, string $7A; on the normal ShowMessageHL path the string begins 'Oh? You say that a monster' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7906:: ; heuristic: target of a pointer table; C0
+Msg017A_OhYouSayThat:: ; heuristic: target of a pointer table; C0
+Func_004_7906:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $09
     ld [wScriptParam1], a
     ld de, $017A
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 61, then StartMessageScriptDE_B04 with DE = $017B: starts message group 1, string $7B; on the normal ShowMessageHL path the string begins 'The well has ample water again.' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7917:: ; heuristic: target of a pointer table; C0
+Msg017B_TheWellHasAmple:: ; heuristic: target of a pointer table; C0
+Func_004_7917:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $61
     ld [wScriptParam1], a
     ld de, $017B
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $017D: starts message group 1, string $7D; on the normal ShowMessageHL path the string begins 'Hi! Did you hear the news?' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7928:: ; heuristic: target of a pointer table; C0
+Msg017D_HiDidYouHear:: ; heuristic: target of a pointer table; C0
+Func_004_7928:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $017D
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 52, then StartMessageScriptDE_B04 with DE = $017E: starts message group 1, string $7E; on the normal ShowMessageHL path the string begins 'The King solved our water shortage' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7939:: ; heuristic: target of a pointer table; C0
+Msg017E_TheKingSolvedOur:: ; heuristic: target of a pointer table; C0
+Func_004_7939:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $52
     ld [wScriptParam1], a
     ld de, $017E
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 07, then StartMessageScriptDE_B04 with DE = $017F: starts message group 1, string $7F; on the normal ShowMessageHL path the string begins 'Our King worked to save all' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_794A:: ; heuristic: target of a pointer table; C0
+Msg017F_OurKingWorkedTo:: ; heuristic: target of a pointer table; C0
+Func_004_794A:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $07
     ld [wScriptParam1], a
     ld de, $017F
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 46, then StartMessageScriptDE_B04 with DE = $00D6: starts message group 0, string $D6; on the normal ShowMessageHL path the string begins 'I'll show you how small you' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_795B:: ; heuristic: target of a pointer table; C0
+Msg00D6_IllShowYouHow:: ; heuristic: target of a pointer table; C0
+Func_004_795B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $46
     ld [wScriptParam1], a
     ld de, $00D6
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $00D7: starts message group 0, string $D7; on the normal ShowMessageHL path the string begins 'Hm? My rival is here? Come' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_796C:: ; heuristic: target of a pointer table; C0
+Msg00D7_HmMyRivalIs:: ; heuristic: target of a pointer table; C0
+Func_004_796C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $00D7
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 60, then StartMessageScriptDE_B04 with DE = $00D8: starts message group 0, string $D8; on the normal ShowMessageHL path the string begins 'Finally, someone to ignite my soul!' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_797D:: ; heuristic: target of a pointer table; C0
+Msg00D8_FinallySomeoneToIgnite:: ; heuristic: target of a pointer table; C0
+Func_004_797D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $60
     ld [wScriptParam1], a
     ld de, $00D8
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $00DA: starts message group 0, string $DA; on the normal ShowMessageHL path the string begins 'You have raised your charges well.' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_798E:: ; heuristic: target of a pointer table; C0
+Msg00DA_YouHaveRaisedYour:: ; heuristic: target of a pointer table; C0
+Func_004_798E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $00DA
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 4F, then StartMessageScriptDE_B04 with DE = $00DB: starts message group 0, string $DB; on the normal ShowMessageHL path the string begins 'What? How did you get here?' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_799F:: ; heuristic: target of a pointer table; C0
+Msg00DB_WhatHowDidYou:: ; heuristic: target of a pointer table; C0
+Func_004_799F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4F
     ld [wScriptParam1], a
     ld de, $00DB
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 5D, then StartMessageScriptDE_B04 with DE = $00DC: starts message group 0, string $DC; on the normal ShowMessageHL path the string begins 'All those who stood before me' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_79B0:: ; heuristic: target of a pointer table; C0
+Msg00DC_AllThoseWhoStood:: ; heuristic: target of a pointer table; C0
+Func_004_79B0:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5D
     ld [wScriptParam1], a
     ld de, $00DC
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 06, then StartMessageScriptDE_B04 with DE = $00DD: starts message group 0, string $DD; on the normal ShowMessageHL path the string begins 'Let me show you why your' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_79C1:: ; heuristic: target of a pointer table; C0
+Msg00DD_LetMeShowYou:: ; heuristic: target of a pointer table; C0
+Func_004_79C1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $06
     ld [wScriptParam1], a
     ld de, $00DD
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
     db $21, $33, $0C, $CD, $BB, $55, $C9, $21, $32, $0C, $CD, $BB, $55, $C9, $11, $DE
     db $00, $CD, $1B, $18, $38, $0D, $21, $30, $0C, $CD, $BB, $55, $11, $DE, $00, $CD
@@ -8956,180 +9032,212 @@ Jump_004_7A12::
     call SetRequestPtrC921_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $00F5: starts message group 0, string $F5; on the normal ShowMessageHL path the string begins 'It is an item with a' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A19:: ; heuristic: target of a pointer table; C0
+Msg00F5_ItIsAnItem:: ; heuristic: target of a pointer table; C0
+Func_004_7A19:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $00F5
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 5C, then StartMessageScriptDE_B04 with DE = $00F6: starts message group 0, string $F6; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A2A:: ; heuristic: target of a pointer table; C0
+Msg00F6_HelloWhatCanI:: ; heuristic: target of a pointer table; C0
+Func_004_7A2A:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5C
     ld [wScriptParam1], a
     ld de, $00F6
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 03, then StartMessageScriptDE_B04 with DE = $00F7: starts message group 0, string $F7; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A3B:: ; heuristic: target of a pointer table; C0
+Msg00F7_HelloWhatCanI:: ; heuristic: target of a pointer table; C0
+Func_004_7A3B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
     ld de, $00F7
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $00F9: starts message group 0, string $F9; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A4C:: ; heuristic: target of a pointer table; C0
+Msg00F9_HelloWhatCanI:: ; heuristic: target of a pointer table; C0
+Func_004_7A4C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $00F9
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 45, then StartMessageScriptDE_B04 with DE = $00FA: starts message group 0, string $FA; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A5D:: ; heuristic: target of a pointer table; C0
+Msg00FA_HelloWhatCanI:: ; heuristic: target of a pointer table; C0
+Func_004_7A5D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $45
     ld [wScriptParam1], a
     ld de, $00FA
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 47, then StartMessageScriptDE_B04 with DE = $00FB: starts message group 0, string $FB; on the normal ShowMessageHL path the string begins 'THE END' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A6E:: ; heuristic: target of a pointer table; C0
+Msg00FB_THEEND:: ; heuristic: target of a pointer table; C0
+Func_004_7A6E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $47
     ld [wScriptParam1], a
     ld de, $00FB
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 5A, then StartMessageScriptDE_B04 with DE = $00FD: starts message group 0, string $FD; on the normal ShowMessageHL path the string begins 'Hey, that's mine! 0 obtained a' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A7F:: ; heuristic: target of a pointer table; C0
+Msg00FD_HeyThatsMine0:: ; heuristic: target of a pointer table; C0
+Func_004_7A7F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5A
     ld [wScriptParam1], a
     ld de, $00FD
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 5B, then StartMessageScriptDE_B04 with DE = $00FE: starts message group 0, string $FE; on the normal ShowMessageHL path the string begins 'Terry Here, just take this. 0' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7A90:: ; heuristic: target of a pointer table; C0
+Msg00FE_TerryHereJustTake:: ; heuristic: target of a pointer table; C0
+Func_004_7A90:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5B
     ld [wScriptParam1], a
     ld de, $00FE
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $00FF: starts message group 0, string $FF; on the normal ShowMessageHL path the string begins 'Composing' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7AA1:: ; heuristic: target of a pointer table; C0
+Msg00FF_Composing:: ; heuristic: target of a pointer table; C0
+Func_004_7AA1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $00FF
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 50, then StartMessageScriptDE_B04 with DE = $01F3: starts message group 1, string $F3; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7AB2:: ; heuristic: target of a pointer table; C0
+Msg01F3:: ; heuristic: target of a pointer table; C0
+Func_004_7AB2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $50
     ld [wScriptParam1], a
     ld de, $01F3
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 4B, then StartMessageScriptDE_B04 with DE = $01F4: starts message group 1, string $F4; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7AC3:: ; heuristic: target of a pointer table; C0
+Msg01F4:: ; heuristic: target of a pointer table; C0
+Func_004_7AC3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4B
     ld [wScriptParam1], a
     ld de, $01F4
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $01F5: starts message group 1, string $F5; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7AD4:: ; heuristic: target of a pointer table; C0
+Msg01F5:: ; heuristic: target of a pointer table; C0
+Func_004_7AD4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $01F5
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $01F7: starts message group 1, string $F7; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7AE5:: ; heuristic: target of a pointer table; C0
+Msg01F7:: ; heuristic: target of a pointer table; C0
+Func_004_7AE5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $01F7
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 5E, then StartMessageScriptDE_B04 with DE = $01F8: starts message group 1, string $F8; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7AF6:: ; heuristic: target of a pointer table; C0
+Msg01F8:: ; heuristic: target of a pointer table; C0
+Func_004_7AF6:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5E
     ld [wScriptParam1], a
     ld de, $01F8
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 49, then StartMessageScriptDE_B04 with DE = $01F9: starts message group 1, string $F9; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7B07:: ; heuristic: target of a pointer table; C0
+Msg01F9:: ; heuristic: target of a pointer table; C0
+Func_004_7B07:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $49
     ld [wScriptParam1], a
     ld de, $01F9
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
+; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $01FA: starts message group 1, string $FA; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_7B18:: ; heuristic: target of a pointer table; C0
+Msg01FA:: ; heuristic: target of a pointer table; C0
+Func_004_7B18:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $01FA
-    call SetRequestPtrC924FromDE_B04
+    call StartMessageScriptDE_B04
     ret
 
 ; 1 call site from 1 routine (e.g. Func_013_405C_Case09)

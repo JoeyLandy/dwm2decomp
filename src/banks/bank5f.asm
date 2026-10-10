@@ -838,7 +838,7 @@ Func_05F_6D3F::
     ldh [hFF8D], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_013_5922_Case33, Func_013_5922_Case42, Func_013_78DE, ScriptCommand2A_Run_Case02, ...)
+; 7 call sites from 7 routines (e.g. Msg01F0_Case33, Msg01F0_Case42, Func_013_78DE, ScriptCommand2A_Run_Case02, ...)
 ; reads: wD7F5, wC7C7
 ; writes: wD7F1, wD7F2, wD7F5
 Func_05F_6D78::

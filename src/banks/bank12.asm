@@ -6530,7 +6530,7 @@ Func_012_6893::
     call Func_012_6EB7
     ret
 
-; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, Func_013_5922_Case65, ...)
+; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, Msg01F0_Case65, ...)
 ; reads: hFFC6, hFFC8, hFFC7, hFFD0, wC966, wCD03, wCD04, wC836
 ; writes: wC966, hFFC6, hFFC7, hFFD0, wC836
 ; points at: wC70A, wC787
@@ -10000,7 +10000,7 @@ Jump_012_7D93::
     xor a, a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_013_5EF4, Func_013_5922_Case27, Func_013_5922_Case7F, Func_05F_6D3F, ...)
+; 7 call sites from 7 routines (e.g. Msg01F0_Case07_Sub01, Msg01F0_Case27, Msg01F0_Case7F, Func_05F_6D3F, ...)
 ; reads: hFFC6, hFFC7, wC6FD
 ; writes: rRAMG, hFFC6
 ; points at: wC6FE

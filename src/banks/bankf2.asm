@@ -2909,9 +2909,11 @@ Jump_0F2_668F::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_013_5922_Case65)
+; only called from Msg01F0_Case65 (E-0047)
+; 1 call site from 1 routine (e.g. Msg01F0_Case65)
 ; points at: wD580
-Func_0F2_6692::
+Msg01F0_Case65_Sub01::
+Func_0F2_6692:: ; address name
     ld hl, wD580
     ld bc, $020F
 
