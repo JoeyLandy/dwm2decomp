@@ -91,6 +91,7 @@
     {"canonical": "0F:7ED8", "name": "UpdateFollowersOnStep", "note": "A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093)", "evidence": "reading (E-0093)"},
     {"canonical": "03:5C16", "name": "SetWC2DFTileC2", "note": "wC2DF = $C2 (E-0114)", "evidence": "reading (E-0114)"},
     {"canonical": "03:5C1C", "name": "SetWC2DFTileC1", "note": "wC2DF = $C1 (E-0114)", "evidence": "reading (E-0114)"},
-    {"canonical": "03:5C22", "name": "SetWC2DETileC0", "note": "wC2DE = $C0 (E-0114)", "evidence": "reading (E-0114)"}
+    {"canonical": "03:5C22", "name": "SetWC2DETileC0", "note": "wC2DE = $C0 (E-0114)", "evidence": "reading (E-0114)"},
+    {"canonical": "03:74E2", "name": "WriteTwoDigitTilesWC8C1NoBlank", "note": "writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117)", "evidence": "reading (E-0117)"}
   ]
 }

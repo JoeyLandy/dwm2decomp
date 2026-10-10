@@ -531,11 +531,13 @@ Jump_002_42F3::
     jr nz, Jump_002_42F3
     ret
 
+; on CGB copies the 8-byte palette Data_002_4322 into wBGPaletteBuffer and wOBJPaletteBuffer and sets the upload requests wC526 and wC527 = $7F (E-0117)
 ; 1 call site from 1 routine (e.g. Func_000_0150)
 ; reads: wIsCGB
 ; writes: wC526, wC527
 ; points at: wBGPaletteBuffer, wOBJPaletteBuffer
-Func_002_42FA::
+LoadPalette0FromData4322::
+Func_002_42FA:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -1509,7 +1511,7 @@ Jump_002_4945::
 Jump_002_495E::
     dec a
     jr nz, Jump_002_497E
-    call Func_002_4A2C
+    call ResetFollowersToPlayer
     ld a, $02
     call QueueMusic
     ld a, $67
@@ -1524,7 +1526,7 @@ Jump_002_495E::
 Jump_002_497E::
     dec a
     jr nz, Jump_002_499E
-    call Func_002_4A2C
+    call ResetFollowersToPlayer
     ld a, $02
     call QueueMusic
     ld a, $67
@@ -1539,7 +1541,7 @@ Jump_002_497E::
 Jump_002_499E::
     dec a
     jr nz, Jump_002_49BE
-    call Func_002_4A2C
+    call ResetFollowersToPlayer
     ld a, $02
     call QueueMusic
     ld a, $67
@@ -1607,10 +1609,12 @@ Jump_002_4A1C::
     farcall DispatchTalkEvent
     ret
 
+; hPlayerFacing and the three follower directions = 0, every follower position = hPlayerX/hPlayerY, wDataBankSave = 0 (E-0117)
 ; 3 call sites from 1 routine (e.g. Func_002_4745_Case01)
 ; reads: hPlayerX, hPlayerY
 ; writes: hPlayerFacing, wFollowerRecords, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, ...
-Func_002_4A2C::
+ResetFollowersToPlayer::
+Func_002_4A2C:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -7971,10 +7975,12 @@ Jump_002_7469::
     jr nz, Jump_002_7469
     ret
 
+; fills the $2000 bytes of SRAM banks 2 and 3 with $FF (E-0117)
 ; 1 call site from 1 routine (e.g. Func_002_7491)
 ; writes: rRAMB
 ; points at: sA000
-Func_002_7470::
+ClearSRAMBanks2And3::
+Func_002_7470:: ; address name
     ld a, $02
     ld [rRAMB], a
     ld hl, sA000
@@ -7997,7 +8003,7 @@ Func_002_7491::
     ld a, [wC94E]
     or a, a
     jr z, Jump_002_749A
-    call Func_002_7470
+    call ClearSRAMBanks2And3
 
 Jump_002_749A::
     ld a, [wCC44]

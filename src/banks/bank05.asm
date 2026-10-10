@@ -5186,7 +5186,7 @@ Jump_005_5C96::
     ld a, [hl]
     ld h, a
     ld l, c
-    call Func_005_701B
+    call ScaleHLToFourFifths
     pop bc
     push bc
     push hl
@@ -5663,7 +5663,7 @@ Jump_005_5EF0::
     ld a, [de]
     cp a, $02
     jr nz, Jump_005_5F05
-    call Func_005_5F13
+    call SlotActionIs9C33Or92Or93
     jr nz, Jump_005_5F05
     call WDA77EntryHasBits2And3_Bank05_5F2A
     jr nz, Jump_005_5F0D
@@ -5686,9 +5686,11 @@ Jump_005_5F10::
     ld c, $01
     ret
 
+; C = slot: Z set when the slot's chosen action (wBattleActionChoice) is $9C, $33, $92 or $93 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_005_5ECE)
 ; points at: wBattleActionChoice
-Func_005_5F13::
+SlotActionIs9C33Or92Or93::
+Func_005_5F13:: ; address name
     ld a, c
     ld hl, wBattleActionChoice
     add a, a
@@ -6046,7 +6048,7 @@ Jump_005_60ED::
 
 Jump_005_60EF::
     push hl
-    call Func_005_6127
+    call TestSlotStatus1Bit0OrSideFlagBit3
     pop hl
     jr nz, Jump_005_60E9
     ld a, e
@@ -6084,9 +6086,11 @@ Jump_005_6102::
     jr c, Jump_005_60E9
     ret
 
+; C = slot: NZ when its status byte 1 bit 0 is set; otherwise the result of testing bit 3 of its side flag (wD80A for slots 0-3, wD80B for 4-7) (E-0117)
 ; 1 call site from 1 routine (e.g. Func_005_60BA)
 ; points at: wD80D, wD80A
-Func_005_6127::
+TestSlotStatus1Bit0OrSideFlagBit3::
+Func_005_6127:: ; address name
     ld a, c
     ld hl, wD80D
     call AddAx9ToHL
@@ -6851,7 +6855,7 @@ Func_005_6556:: ; heuristic: follows a terminator; C0
     swap a
     add_a_to_hl
     ld b, $08
-    call Func_005_65AC
+    call SkillListHas19Or1AOr7COrA1
     jr nz, Jump_005_65A9
     ld a, [wBattleActor]
     and a, $04
@@ -6895,8 +6899,10 @@ Jump_005_65A9::
     ld c, $01
     ret
 
+; walks B skill numbers at every other byte from HL + 1: Z set as soon as one is $19, $1A, $7C or $A1; otherwise A = 1 and Z clear (E-0117)
 ; 1 call site from 1 routine (e.g. Func_005_6556)
-Func_005_65AC::
+SkillListHas19Or1AOr7COrA1::
+Func_005_65AC:: ; address name
     inc hl
     ld a, [hl+]
     cp a, $19
@@ -6908,7 +6914,7 @@ Func_005_65AC::
     cp a, $A1
     ret z
     dec b
-    jr nz, Func_005_65AC
+    jr nz, SkillListHas19Or1AOr7COrA1
     ld a, $01
     or a, a
     ret
@@ -8849,8 +8855,10 @@ Func_005_6FFD:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; HL = (HL / 5) * 4; BC and DE kept (E-0117)
 ; 1 call site from 1 routine (e.g. Func_005_5C8C)
-Func_005_701B:: ; heuristic: follows a terminator; C0
+ScaleHLToFourFifths:: ; heuristic: follows a terminator; C0
+Func_005_701B:: ; address name
     push de
     push bc
     ld a, $05

@@ -5750,7 +5750,7 @@ Jump_01D_695F::
     ret
 
 ; graphics number = the word wD7F1/wD7F2: reads its far pointer (3 bytes per entry) from Data_004_4EAA in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in wD7F4/wD7F5; on CGB it continues with the palette (not read) (E-0104)
-; 8 call sites from 8 routines (e.g. Func_003_4F6F, Func_00C_45DA_Case03, Func_014_5CA8_Table2_Case03, Func_015_63B8, ...)
+; 8 call sites from 8 routines (e.g. Func_003_4F6F, Func_00C_45DA_Case03, Func_014_5CA8_Table2_Case03, DecompressGraphicsA4ToTiles0, ...)
 ; reads: wD7F1, wD7F2, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
 ; writes: wC527
 ; points at: wOBJPaletteBuffer

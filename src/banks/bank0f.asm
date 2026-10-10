@@ -2531,7 +2531,7 @@ Jump_00F_507C:: ; address name
     xor a, a
     ld [wC90F], a
     ld de, hPlayerY
-    call Func_00F_7F0B
+    call ScriptStepDeltaThenNextStep
     ret
 
 ; entry 22 of the `rst $00` table in ScriptCommand5E_Run
@@ -2926,7 +2926,7 @@ ScriptCommand58_Run_Case2A::
 Jump_00F_5495:: ; address name
     ld de, hPlayerY
     ld hl, $0A7E
-    call Func_00F_7F24
+    call ScriptStepDeltaThenMessage
     ret
 
 ; entry 40 of the `rst $00` table in ScriptCommand58_Run
@@ -3040,7 +3040,7 @@ ScriptCommand58_Run_Case18::
 Jump_00F_554E:: ; address name
     ld de, wCBAB
     ld hl, $048F
-    call Func_00F_7F24
+    call ScriptStepDeltaThenMessage
     ret
 
 ; entry 23 of the `rst $00` table in ScriptCommand58_Run
@@ -3242,7 +3242,7 @@ ScriptCommand58_Run_Case08::
 Jump_00F_564D:: ; address name
     ld de, wCB8B
     ld hl, $0486
-    call Func_00F_7F24
+    call ScriptStepDeltaThenMessage
     ret
 
 ; entry 6 of the `rst $00` table in ScriptCommand58_Run
@@ -4114,7 +4114,7 @@ Jump_00F_5B2C:: ; address name
     ld [wCB96], a
     ld de, wCB9B
     ld hl, $0AF4
-    call Func_00F_7F24
+    call ScriptStepDeltaThenMessage
     ret
 
 ; entry 10 of the `rst $00` table in ScriptCommand66_Run
@@ -4859,7 +4859,7 @@ Jump_00F_5F8E:: ; address name
 ScriptCommand46_Run_Case09::
 Jump_00F_5FB9:: ; address name
     ld de, wCBAB
-    call Func_00F_7F0B
+    call ScriptStepDeltaThenNextStep
     ret
 
 ; entry 7 of the `rst $00` table in ScriptCommand46_Run
@@ -5954,7 +5954,7 @@ Jump_00F_666A:: ; address name
     ld a, $02
     ld [wCB96], a
     ld de, wCB9B
-    call Func_00F_7F0B
+    call ScriptStepDeltaThenNextStep
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand42_Run
@@ -6647,7 +6647,7 @@ ScriptCommand39_Run_Case12::
 Jump_00F_6AB2:: ; address name
     ld de, wCBAB
     ld hl, $0870
-    call Func_00F_7F24
+    call ScriptStepDeltaThenMessage
     ret
 
 ; entry 17 of the `rst $00` table in ScriptCommand39_Run
@@ -6676,7 +6676,7 @@ ScriptCommand39_Run_Case0F::
 Jump_00F_6AD3:: ; address name
     ld de, wCB8B
     ld hl, $086F
-    call Func_00F_7F24
+    call ScriptStepDeltaThenMessage
     ret
 
 ; entry 14 of the `rst $00` table in ScriptCommand39_Run
@@ -6790,7 +6790,7 @@ ScriptCommand39_Run_Case09::
 Jump_00F_6B99:: ; address name
     ld de, wCBAB
     ld hl, $086D
-    call Func_00F_7F24
+    call ScriptStepDeltaThenMessage
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommand39_Run
@@ -7823,7 +7823,7 @@ Jump_00F_71DD:: ; address name
 ScriptCommand29_Run_Case03::
 Jump_00F_7209:: ; address name
     ld de, wCB8B
-    call Func_00F_7F0B
+    call ScriptStepDeltaThenNextStep
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand29_Run
@@ -9951,7 +9951,7 @@ Jump_00F_7EAE::
     ret
 
 ; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
-; 34 call sites from 34 routines (e.g. ScriptCommand77_Run_Case0B, ScriptCommand77_Run_Case01, ScriptCommand75_Run_Case01, Func_00F_7F24, ...)
+; 34 call sites from 34 routines (e.g. ScriptCommand77_Run_Case0B, ScriptCommand77_Run_Case01, ScriptCommand75_Run_Case01, ScriptStepDeltaThenMessage, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 StepWC921Counter_Bank0F::
@@ -10044,10 +10044,12 @@ Jump_00F_7F05::
     scf
     ret
 
+; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStep += 1 (E-0117)
 ; 4 call sites from 4 routines (e.g. ScriptCommand5E_Run_Case18, ScriptCommand46_Run_Case09, ScriptCommand42_Run_Case05, ScriptCommand29_Run_Case03)
 ; writes: wC928, wC929
 ; points at: wScriptStep
-Func_00F_7F0B::
+ScriptStepDeltaThenNextStep::
+Func_00F_7F0B:: ; address name
     ld a, e
     ld [wC928], a
     ld a, d
@@ -10060,10 +10062,12 @@ Func_00F_7F0B::
     inc [hl]
     ret
 
+; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, StartMessageHL_B0F with the caller's HL and wScriptStep += 1 (E-0117)
 ; 7 call sites from 7 routines (e.g. ScriptCommand66_Run_Case0C, ScriptCommand58_Run_Case2A, ScriptCommand58_Run_Case18, ScriptCommand58_Run_Case08, ...)
 ; writes: wC928, wC929
 ; points at: wScriptStep
-Func_00F_7F24::
+ScriptStepDeltaThenMessage::
+Func_00F_7F24:: ; address name
     push hl
     ld a, e
     ld [wC928], a
@@ -10079,9 +10083,11 @@ Func_00F_7F24::
     inc [hl]
     ret
 
+; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStartRequest = $80 (E-0117)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC928, wC929, wScriptStartRequest
-Func_00F_7F42:: ; heuristic: follows a terminator; C0
+ScriptStepDeltaThenRequestFetch:: ; heuristic: follows a terminator; C0
+Func_00F_7F42:: ; address name
     ld a, e
     ld [wC928], a
     ld a, d

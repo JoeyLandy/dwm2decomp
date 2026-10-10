@@ -199,7 +199,7 @@ Jump_011_4105::
     ldh a, [hFF8C]
     or a, $80
     ldh [hFF8C], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     pop de
     ld c, $01
     ret
@@ -400,7 +400,7 @@ Jump_011_4235::
     ldh a, [hFF8C]
     or a, $80
     ldh [hFF8C], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     pop de
     xor a, a
     ld [wJoypadPressed], a
@@ -560,7 +560,7 @@ Func_011_4340::
     or a, $20
     and a, $7F
     ldh [hFF8C], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     pop de
     ld c, $01
     ret
@@ -718,7 +718,7 @@ Jump_011_442B::
     ldh a, [hFF8C]
     or a, $20
     ldh [hFF8C], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     ld c, $01
     ret
 

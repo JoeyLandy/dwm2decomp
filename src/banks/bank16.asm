@@ -2972,7 +2972,7 @@ Func_016_53E6::
     rst $00
     dw Func_016_53E6_Case00
     dw Func_016_53E6_Case01
-    dw Func_016_543E
+    dw FullHealRecordWD083
     dw Func_016_53E6_Case03
     dw Func_016_53E6_Case04
     dw Func_016_53E6_Case05
@@ -3019,10 +3019,12 @@ Jump_016_542B:: ; address name
     ld [wD08D], a
     ret
 
+; record wD083: copies its word at field $5D (max HP) into field $5B (HP) (StoreHLToRecordField), then wD08D = 6 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_016_53E6_Case09)
 ; reads: wD083
 ; writes: wD08D
-Func_016_543E::
+FullHealRecordWD083::
+Func_016_543E:: ; address name
     ld a, [wD083]
     ld c, $5D
     call SRAMRecordAddressMapped
@@ -3094,16 +3096,18 @@ Jump_016_549B:: ; address name
     ld a, [wD08E]
     ld [wD08D], a
     ld a, $00
-    call Func_016_54AD
+    call FullHealPartyRecordA
     ld a, $01
-    call Func_016_54AD
+    call FullHealPartyRecordA
     ld a, $02
 
+; A = party index: returns when it is not below wC6FD or the record's byte $55 bit 7 is set; otherwise wD083 = A and the record's HP word ($5B) = its max HP word ($5D) (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_016_53E6_Case04)
 ; reads: wD083
 ; writes: wD083
 ; points at: wC6FD
-Func_016_54AD::
+FullHealPartyRecordA::
+Func_016_54AD:: ; address name
     ld hl, wC6FD
     cp a, [hl]
     ret nc
@@ -3196,7 +3200,7 @@ Jump_016_5522:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     ld [hl], $00
-    call Func_016_543E
+    call FullHealRecordWD083
     ld a, $08
     ld [wD08D], a
     ld a, $01
@@ -3227,16 +3231,18 @@ Jump_016_554A:: ; address name
     ld a, [wD08E]
     ld [wD08D], a
     ld a, $00
-    call Func_016_555C
+    call ClearPartyRecordFlag55Bit0
     ld a, $01
-    call Func_016_555C
+    call ClearPartyRecordFlag55Bit0
     ld a, $02
 
+; A = party index: returns when it is not below wC6FD or byte $55 bit 7 is set; otherwise clears bit 0 of the record's byte $55 (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_016_53E6_Case0B)
 ; reads: wD083
 ; writes: wD083
 ; points at: wC6FD
-Func_016_555C::
+ClearPartyRecordFlag55Bit0::
+Func_016_555C:: ; address name
     ld hl, wC6FD
     cp a, [hl]
     ret nc
@@ -3481,7 +3487,7 @@ Func_016_56CC::
     ret
 
 ; Z clear when bit 7 of byte $55 of record wD083 is set (SRAMRecordAddressMapped); HL points at it (E-0114)
-; 3 call sites from 3 routines (e.g. Func_016_555C, Func_016_54AD, Func_016_5473)
+; 3 call sites from 3 routines (e.g. ClearPartyRecordFlag55Bit0, FullHealPartyRecordA, Func_016_5473)
 ; reads: wD083
 TestWD083RecordFlag55Bit7::
 Func_016_56D9:: ; address name
@@ -3948,7 +3954,7 @@ Func_016_58F6:: ; address name
     ret
 
 ; A = record (SRAMRecordAddressMapped), C = field offset: stores HL (low byte first) at that field (E-0103)
-; 5 call sites from 5 routines (e.g. Func_016_54AD, Func_016_543E, ItemApply_WorldLeaf, ItemApply_ElfWater, ...)
+; 5 call sites from 5 routines (e.g. FullHealPartyRecordA, FullHealRecordWD083, ItemApply_WorldLeaf, ItemApply_ElfWater, ...)
 StoreHLToRecordField::
 Func_016_58FD:: ; address name
     push hl
@@ -8342,12 +8348,12 @@ Jump_016_776C::
 Jump_016_777A::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_003_776C, Func_007_6213_Table2_Case00)
+; 2 call sites from 2 routines (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00_Sub01, Func_007_6213_Table2_Case00)
 ; reads: wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, wC1E9, ...
 Func_016_777B::
-    farcall Func_015_63B8
+    farcall DecompressGraphicsA4ToTiles0
     jr Jump_016_77A6
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -8492,7 +8498,7 @@ Jump_016_7872::
     ld de, wC229
 
 Jump_016_788B::
-    call Func_016_78CF
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank16
     ld a, [wD0E5]
     ld b, a
     ld c, $00
@@ -8527,9 +8533,11 @@ Func_016_78C7::
     ld [de], a
     inc de
 
+; writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. Func_016_7783, Func_016_78F9)
 ; points at: wC8C1
-Func_016_78CF::
+WriteTwoDigitTilesWC8C1NoBlank_Bank16::
+Func_016_78CF:: ; address name
     ld hl, wC8C1
     ld a, [hl+]
     add a, $E0
@@ -8634,7 +8642,7 @@ Jump_016_795B::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    call Func_016_78CF
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank16
     ret
 
 Jump_016_7969::

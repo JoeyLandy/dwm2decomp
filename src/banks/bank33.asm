@@ -2,7 +2,7 @@ SECTION "Bank 33", ROMX[$4000], BANK[$33]
     db $33
 
 ; DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows 32 bytes apart
-; 64 call sites from 38 routines (e.g. Func_003_48EF, Func_003_4917, Func_003_493F, Func_003_495F, ...)
+; 64 call sites from 38 routines (e.g. LoadScreenBlocks00To03, LoadScreenBlocks00And04To06, LoadScreenBlocks00_07_08, LoadScreenBlocks00_09_0A, ...)
 ; points at: wScreenTileBuffer
 CopyBlockToTileBuffer::
 Func_033_4001:: ; address name
@@ -42,9 +42,11 @@ Jump_033_401B::
     jr nz, Jump_033_4019
     ret
 
-; 14 call sites from 4 routines (e.g. Func_003_499B, Func_003_49C2, Func_003_49E9, Func_003_4A08)
+; E = block: copies the screen block from Data_033_405F[E] (word offset, width, rows, tiles) into wScreenTileBuffer like CopyBlockToTileBuffer, but writes tile $C3 for tiles $15-$A3 (the text glyphs) (E-0117)
+; 14 call sites from 4 routines (e.g. LoadBlankedBlocks00To03WithCursor, LoadBlankedBlocks00And04To06WithCursor, LoadBlankedBlocks00_07_08WithCursor, LoadBlankedBlocks00_09_0AWithCursor)
 ; points at: wScreenTileBuffer
-Func_033_402B::
+CopyBlockToTileBufferBlankingText::
+Func_033_402B:: ; address name
     ld d, $00
     ld hl, Data_033_405F
     add hl, de

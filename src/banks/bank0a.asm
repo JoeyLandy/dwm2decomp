@@ -2673,7 +2673,7 @@ Jump_00A_5309:: ; address name
     inc [hl]
     ret
 
-; 10 call sites from 3 routines (e.g. Func_00A_51FD_Table3_Case00, Func_00A_534E_Case01, Func_00A_534E_Table2_Case00)
+; 10 call sites from 3 routines (e.g. Func_00A_51FD_Table3_Case00, AddHLToWC909InBGMap_Case01, AddHLToWC909InBGMap_Table2_Case00)
 ; reads: wIsCGB
 ; writes: rVBK
 Func_00A_530E::
@@ -2698,7 +2698,7 @@ Func_00A_5328::
     ld a, l
     and a, $E0
     ld l, a
-    call Func_00A_534E
+    call AddHLToWC909InBGMap
     ld a, b
     and a, $1F
     jr z, Jump_00A_533D
@@ -2731,9 +2731,11 @@ Func_00A_533F:: ; address name
     pop af
     ret
 
+; HL = wC909/wC90A + HL, the high byte's low 2 bits wrapped and its upper 6 bits kept from wC90A (stays inside one 1 KB BG map) (E-0117)
 ; 1 call site from 1 routine (e.g. Func_00A_5328)
 ; reads: wC909, wC90A
-Func_00A_534E::
+AddHLToWC909InBGMap::
+Func_00A_534E:: ; address name
     ld a, [wC909]
     add a, l
     ld l, a
@@ -2757,16 +2759,16 @@ Jump_00A_5362:: ; address name
 Jump_00A_5364::
     ld a, [wC906]
     rst $00
-    dw Func_00A_534E_Case00
-    dw Func_00A_534E_Case01
-    dw Func_00A_534E_Case02
+    dw AddHLToWC909InBGMap_Case00
+    dw AddHLToWC909InBGMap_Case01
+    dw AddHLToWC909InBGMap_Case02
 
-; entry 0 of the `rst $00` table in Func_00A_534E
+; entry 0 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC907, wC90B, wC90C, wC906
 ; writes: wC90B, wC90C, wC907
 ; points at: wC907, wC906
-Func_00A_534E_Case00::
+AddHLToWC909InBGMap_Case00::
 Jump_00A_536E:: ; address name
     push bc
     ld a, [wC907]
@@ -2806,12 +2808,12 @@ Jump_00A_536E:: ; address name
     jr c, Jump_00A_5413
     jr Jump_00A_5438
 
-; entry 1 of the `rst $00` table in Func_00A_534E
+; entry 1 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC907, wC90B, wC90C, wC906
 ; writes: wC90B, wC90C, wC907
 ; points at: wC907, wC906
-Func_00A_534E_Case01::
+AddHLToWC909InBGMap_Case01::
 Jump_00A_53C6:: ; address name
     push bc
     ld a, [wC907]
@@ -2953,10 +2955,10 @@ Jump_00A_54A4::
     jp nz, Jump_00A_5364
     ret
 
-; entry 2 of the `rst $00` table in Func_00A_534E
+; entry 2 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC904
-Func_00A_534E_Case02::
+AddHLToWC909InBGMap_Case02::
 Jump_00A_54AA:: ; address name
     ld hl, wC904
     inc [hl]
@@ -2969,16 +2971,16 @@ Func_00A_51FD_Table2_Case02::
 Jump_00A_54AF:: ; address name
     ld a, [wC906]
     rst $00
-    dw Func_00A_534E_Table2_Case00
-    dw Func_00A_534E_Table2_Case01
-    dw Func_00A_534E_Table2_Case02
+    dw AddHLToWC909InBGMap_Table2_Case00
+    dw AddHLToWC909InBGMap_Table2_Case01
+    dw AddHLToWC909InBGMap_Table2_Case02
 
-; entry 0 of the `rst $00` table in Func_00A_534E
+; entry 0 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC907, wC90B, wC90C
 ; writes: wC90B, wC90C
 ; points at: wC907, wC906
-Func_00A_534E_Table2_Case00::
+AddHLToWC909InBGMap_Table2_Case00::
 Jump_00A_54B9:: ; address name
     ld a, [wC907]
     or a, a
@@ -3101,26 +3103,26 @@ Jump_00A_554C::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_00A_534E
+; entry 1 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC906
-Func_00A_534E_Table2_Case01::
+AddHLToWC909InBGMap_Table2_Case01::
 Jump_00A_5589:: ; address name
     ld hl, wC906
     dec [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_00A_534E
+; entry 2 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC904
-Func_00A_534E_Table2_Case02::
+AddHLToWC909InBGMap_Table2_Case02::
 Jump_00A_558E:: ; address name
     ld hl, wC904
     inc [hl]
     ret
 
 ; HL = the word at HL, then jp hl (E-0114)
-; 1 call site from 1 routine (e.g. Func_00A_534E_Table2_Case00)
+; 1 call site from 1 routine (e.g. AddHLToWC909InBGMap_Table2_Case00)
 JumpToWordAtHL_Bank0A::
 Func_00A_5593:: ; address name
     deref_hl

@@ -8154,7 +8154,7 @@ Jump_073_711D::
     ld [wScriptParam0], a
     cp a, $20
     jr z, Jump_073_7138
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -8183,7 +8183,7 @@ Jump_073_7138::
 ; points at: wCB86, wScriptStep
 ScriptCommand16_Run_Case16::
 Jump_073_715A:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -8205,7 +8205,7 @@ Jump_073_715A:: ; address name
 ; points at: wCB86, wScriptParam0, wScriptStep
 ScriptCommand16_Run_Case15::
 Jump_073_7180:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -8235,7 +8235,7 @@ Jump_073_7180:: ; address name
 ; points at: wCB86, wCB9B
 ScriptCommand16_Run_Case13::
 Jump_073_71BC:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -8279,7 +8279,7 @@ Jump_073_71F6:: ; address name
     ld [wC8F0], a
     ld a, $40
     ld [wC8F1], a
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     xor a, a
     ldh [hFFC6], a
     farcall Func_012_6B33

@@ -12,7 +12,7 @@ Func_069_4001::
     bit 7, a
     jr z, Jump_069_401E
     farcall Func_004_4025
-    farcall Func_004_4008
+    farcall RestoreSpriteSnapshot
     ld a, $7F
     ld [wC527], a
     ret
@@ -271,7 +271,7 @@ Jump_069_413A::
     jr nz, Jump_069_40FC
 
 Jump_069_4168::
-    farcall Func_004_4008
+    farcall RestoreSpriteSnapshot
     ld a, $7F
     ld [wC527], a
     ret

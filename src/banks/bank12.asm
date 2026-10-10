@@ -122,7 +122,7 @@ Jump_012_4080:: ; address name
     inc a
     ld [wC8FB], a
     ld de, wC8FB
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
 ; entry 9 of the `rst $00` table in ScriptCommand99_Run
@@ -135,7 +135,7 @@ Jump_012_4092:: ; address name
     xor a, a
     ld [wC8F4], a
     ld de, wC8F6
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ld a, [wC8F6]
     inc a
     ld [wC8F6], a
@@ -162,7 +162,7 @@ Jump_012_40B8:: ; address name
     xor a, a
     ld [wFollowerRecords], a
     ld de, wC8F1
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ld a, [wC8F1]
     inc a
     ld [wC8F1], a
@@ -190,7 +190,7 @@ Jump_012_40E1:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
     ld de, hPlayerY
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ldh a, [hPlayerY]
     inc a
     ldh [hPlayerY], a
@@ -419,7 +419,7 @@ Jump_012_4238:: ; address name
     dec a
     ld [wC8FA], a
     ld de, wC8FB
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
 ; entry 9 of the `rst $00` table in ScriptCommand98_Run
@@ -432,7 +432,7 @@ Jump_012_424B:: ; address name
     ld a, $03
     ld [wC8F4], a
     ld de, wC8F6
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ld hl, wC8F5
     dec [hl]
     ld hl, wC8FB
@@ -458,7 +458,7 @@ Jump_012_426F:: ; address name
     ld a, $03
     ld [wFollowerRecords], a
     ld de, wC8F1
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ld a, [wC8F0]
     dec a
     ld [wC8F0], a
@@ -486,7 +486,7 @@ Jump_012_4299:: ; address name
     ld a, $03
     ldh [hPlayerFacing], a
     ld de, hPlayerY
-    call Func_012_42B5
+    call ScriptApplyStepDeltaAtDE_Bank12
     ldh a, [hPlayerX]
     dec a
     ldh [hPlayerX], a
@@ -498,11 +498,13 @@ Jump_012_4299:: ; address name
     dec [hl]
     ret
 
+; DE = address of a byte: adds the step delta for wScriptParam0, then wScriptParam0 += 2; at $20 it is reset and wScriptStep += 1 (the bank-$12 form of ScriptApplyStepDeltaAtDE) (E-0117)
 ; 8 call sites from 8 routines (e.g. ScriptCommand99_Run_Case0A, ScriptCommand99_Run_Case09, ScriptCommand99_Run_Case08, ScriptCommand99_Run_Case07, ...)
 ; reads: wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
 ; points at: wScriptStep
-Func_012_42B5::
+ScriptApplyStepDeltaAtDE_Bank12::
+Func_012_42B5:: ; address name
     ld a, e
     ld [wC928], a
     ld a, d
@@ -7005,10 +7007,12 @@ Jump_012_6B15::
     ld [wC527], a
     ret
 
+; wC949 -= 2, and when the result is $C0 or more it becomes $30 (E-0117)
 ; 11 call sites from 11 routines (e.g. Func_05F_7363_Case0F, Func_05F_7363_Case0D, Func_05F_7363_Case0C, Func_05F_7363_Case0B, ...)
 ; reads: wC949
 ; writes: wC949
-Func_012_6B22::
+CycleWC949Down::
+Func_012_6B22:: ; address name
     ld a, [wC949]
     dec a
     dec a
@@ -9719,10 +9723,12 @@ Jump_012_7B92::
     scf
     ret
 
+; when wC935 has bit 7 set and bit 6 clear: wC935 = 0 and wC832 = 0 (E-0117)
 ; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, Func_011_4130, Func_011_4340, Func_011_43FA, ...)
 ; reads: wC935
 ; writes: wC935, wC832
-Func_012_7B9F::
+ClearWC935IfBit7AndNot6::
+Func_012_7B9F:: ; address name
     ld a, [wC935]
     bit 7, a
     ret z

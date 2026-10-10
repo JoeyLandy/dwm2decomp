@@ -190,7 +190,7 @@ Jump_000_0189::
     ldh [rVBK], a
     ldh [rSVBK], a
     ldh [rRP], a
-    farcall Func_002_42FA
+    farcall LoadPalette0FromData4322
     jr Jump_000_01D8
 
 Jump_000_01D3::
@@ -285,7 +285,7 @@ Jump_000_02D1::
 Jump_000_02D2::
     call Func_000_0930
     call Func_000_0BA7
-    call Func_000_0B7F
+    call SetDefaultDMGPaletteBytes
     call Func_000_0B9B
     call ResetFadeFromWC5E9
     xor a, a
@@ -1736,7 +1736,7 @@ Func_000_0B0D:: ; address name
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.
-; 24 call sites from 18 routines (e.g. LoadMonsterPicture, Func_000_228A, Func_000_24E5, DecompressGraphicsHFFC6ToHFFCA, ...)
+; 24 call sites from 18 routines (e.g. LoadMonsterPicture, Func_000_228A, LoadBGPaletteBufferFromBank, DecompressGraphicsHFFC6ToHFFCA, ...)
 ; writes: rROMB0
 CopyFromBank::
 Func_000_0B18:: ; address name
@@ -1839,10 +1839,12 @@ Func_000_0B6C:: ; address name
     ld [rROMB0], a
     ret
 
+; wC5E9, wC5EA, wC5EB = $D2, $D2, $E2 (the DMG palette bytes the fade routines start from), copied to wD040-wD042 as well (E-0117)
 ; 1 call site from 1 routine (e.g. Func_000_0150)
 ; reads: wC5E9, wC5EA, wC5EB
 ; points at: wC5E9, wD040
-Func_000_0B7F::
+SetDefaultDMGPaletteBytes::
+Func_000_0B7F:: ; address name
     ld hl, wC5E9
     ld a, $D2
     ld [hl+], a
@@ -2855,7 +2857,7 @@ Jump_000_10CE::
     ret
 
 Jump_000_10E8::
-    call Func_000_111F
+    call LightenSelectedDMGPalettes
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
@@ -2874,7 +2876,7 @@ Jump_000_10FE::
     ret
 
 Jump_000_1109::
-    call Func_000_111F
+    call LightenSelectedDMGPalettes
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
@@ -2884,10 +2886,12 @@ Jump_000_1109::
     jp z, Jump_000_1205
     ret
 
+; for each of bits 0, 1, 2 of wC56D that is set, lightens wC56F, wC570 or wC571 by wFadeLevel into wC5E9, wC5EA or wC5EB (LightenDMGPaletteByFadeLevel) (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_000_10AB)
 ; reads: wC56D, wC56F, wC570, wC571, wFadeLevel
 ; points at: wC5E9
-Func_000_111F::
+LightenSelectedDMGPalettes::
+Func_000_111F:: ; address name
     ld a, [wC56D]
     bit 0, a
     ld a, [wC56F]
@@ -2906,7 +2910,7 @@ Func_000_111F::
     ret
 
 ; A = a DMG palette byte: each 2-bit shade - wFadeLevel, at least 0 (white), is packed back and stored at [HL] (LightenDMGShade and LightenDMGShadeNext) (E-0108)
-; 2 call sites from 1 routine (e.g. Func_000_111F)
+; 2 call sites from 1 routine (e.g. LightenSelectedDMGPalettes)
 ; reads: wFadeLevel
 LightenDMGPaletteByFadeLevel::
 Func_000_1145:: ; address name
@@ -3058,7 +3062,7 @@ Jump_000_1205::
     ret
 
 ; loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set
-; 251 call sites from 145 routines (e.g. VBlankHandler_Sub01, UploadBGPalettes, Func_000_2950_Case0F, Func_000_1CF9, ...)
+; 251 call sites from 145 routines (e.g. VBlankHandler_Sub01, UploadBGPalettes, Func_000_2950_Case0F, CopyBBytesToVRAMFromDE, ...)
 ; reads: rSTAT
 WaitForVRAMAccess::
 Func_000_120A:: ; address name
@@ -3086,7 +3090,7 @@ Jump_000_1214::
     ret
 
 ; like WriteVRAMByte but stores at [HL] and increments HL
-; 145 call sites from 81 routines (e.g. Func_000_2950_Case0E, LoadMonsterPictureAttributes, DrawFullScreenBufferToBGMap, Func_000_1CF9, ...)
+; 145 call sites from 81 routines (e.g. Func_000_2950_Case0E, LoadMonsterPictureAttributes, DrawFullScreenBufferToBGMap, CopyBBytesToVRAMFromDE, ...)
 ; reads: rSTAT, hFFD1
 ; writes: hFFD1
 WriteVRAMByteInc::
@@ -3843,7 +3847,7 @@ Jump_000_1654::
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 5 call sites from 3 routines (e.g. Func_001_4AA4, Func_002_42FA, Func_01B_53AF)
+; 5 call sites from 3 routines (e.g. LoadPalette0FromData4ACC, LoadPalette0FromData4322, Func_01B_53AF)
 CopyBytesDEToHL_Bank00::
 Func_000_1679:: ; address name
     ld a, [de]
@@ -4921,7 +4925,7 @@ Func_000_1BAD:: ; address name
     ld a, [hl+]
     ld b, a
     push hl
-    call Func_000_24E5
+    call LoadBGPaletteBufferFromBank
     pop hl
     ld a, [hl+]
     ld [wMapWidthScreens], a
@@ -4993,7 +4997,7 @@ Jump_000_1C55::
     ld a, [hl+]
     ld b, a
     push hl
-    call Func_000_24E5
+    call LoadBGPaletteBufferFromBank
     pop hl
     ld a, [hl+]
     ld [wMapWidthScreens], a
@@ -5067,26 +5071,28 @@ Jump_000_1CCB::
     ld de, vTiles2 + $500
     ld hl, vTiles2 + $510
     ld b, $10
-    call Func_000_1CF9
+    call CopyBBytesToVRAMFromDE
     ld de, $1D07
     ld hl, vTiles2 + $120
     ld b, $40
-    call Func_000_1CF9
+    call CopyBBytesToVRAMFromDE
     ret
 
 Jump_000_1CE2::
     ld de, vTiles2 + $400
     ld hl, vTiles2 + $410
     ld b, $10
-    call Func_000_1CF9
+    call CopyBBytesToVRAMFromDE
     ld de, $1D07
     ld hl, vTiles2 + $2A0
     ld b, $40
-    call Func_000_1CF9
+    call CopyBBytesToVRAMFromDE
     ret
 
+; copies B bytes from DE to VRAM at HL, each read after WaitForVRAMAccess with interrupts off and written with WriteVRAMByteInc (E-0117)
 ; 4 call sites from 1 routine (e.g. Func_000_1CB7)
-Func_000_1CF9::
+CopyBBytesToVRAMFromDE::
+Func_000_1CF9:: ; address name
     di
     call WaitForVRAMAccess
     ld a, [de]
@@ -5094,7 +5100,7 @@ Func_000_1CF9::
     call WriteVRAMByteInc
     inc de
     dec b
-    jr nz, Func_000_1CF9
+    jr nz, CopyBBytesToVRAMFromDE
     ret
     db $FF, $1E, $E1, $21, $DF, $5F, $E2, $62, $9C, $9C, $A4, $A4, $C4, $C4, $CE, $4E
     db $FF, $78, $87, $84, $FB, $FA, $67, $66, $39, $39, $25, $25, $23, $23, $33, $32
@@ -6641,11 +6647,13 @@ Jump_000_24D7::
     ld a, [hl]
     ret
 
+; on CGB copies $40 bytes from DE in bank B (CopyFromBank) into wBGPaletteBuffer and sets wC526 = $7F (upload request) (E-0117)
 ; 2 call sites from 2 routines (e.g. Func_000_1C0C, LoadSpecialMapHeader)
 ; reads: wIsCGB
 ; writes: wC526
 ; points at: wBGPaletteBuffer
-Func_000_24E5::
+LoadBGPaletteBufferFromBank::
+Func_000_24E5:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -8128,7 +8136,7 @@ Func_000_2D33::
 ; reads: wIsCGB
 ; writes: rVBK
 Func_000_2D4A::
-    call Func_000_2DD6
+    call UploadTwoTilesFromWC89E
     ld de, Data_01F_4180
     ld hl, vTiles1 + $6E0
     ld b, $1F
@@ -8222,9 +8230,11 @@ Jump_000_2DCE::
     pop hl
     ret
 
+; copies the 16-byte tiles at wC89E and wC8AE to vTiles1 + $6E0 and + $6F0 (CopyCBytesToVRAMWaitSTAT) (E-0117)
 ; 1 call site from 1 routine (e.g. Func_000_2D4A)
 ; points at: wC89E, wC8AE
-Func_000_2DD6::
+UploadTwoTilesFromWC89E::
+Func_000_2DD6:: ; address name
     ld hl, vTiles1 + $6E0
     ld de, wC89E
     ld c, $10
@@ -8236,7 +8246,7 @@ Func_000_2DD6::
     ret
 
 ; copies C bytes from HL to DE, waiting for rSTAT bit 1 to clear before each (interrupts stay on); HL and DE advance, C = 0 (E-0090)
-; 2 call sites from 1 routine (e.g. Func_000_2DD6)
+; 2 call sites from 1 routine (e.g. UploadTwoTilesFromWC89E)
 ; reads: rSTAT
 CopyCBytesToVRAMWaitSTAT::
 Func_000_2DED:: ; address name

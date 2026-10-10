@@ -473,7 +473,7 @@ Data_015_42F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wC364
 Func_015_4182_Case01::
 Jump_015_434C:: ; address name
-    call Func_015_6A1A
+    call ClearTileAreas1240_1700_14E0
     ld de, Data_015_747D
     ld hl, wC364
     ld bc, $080B
@@ -1385,7 +1385,7 @@ Jump_015_4987:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    ld de, Func_015_6DE6
+    ld de, SRAMBank1RecordAddress
     ld a, d
     ld [wD7F3], a
     ld a, e
@@ -1423,7 +1423,7 @@ Jump_015_49C9:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank15
-    call Func_015_69FE
+    call ClearTileAreas2700_1750_17D0
     call Func_015_47A7
     ld de, Data_015_7589
     ld hl, wC40C
@@ -1847,7 +1847,7 @@ Jump_015_4C8A::
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank15
-    call Func_015_69FE
+    call ClearTileAreas2700_1750_17D0
     call Func_015_47A7
     ld de, Data_015_7589
     ld hl, wC40C
@@ -1940,7 +1940,7 @@ Jump_015_4D46:: ; address name
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    ld de, Func_015_6DE6
+    ld de, SRAMBank1RecordAddress
     ld a, d
     ld [wD7F3], a
     ld a, e
@@ -2078,7 +2078,7 @@ Jump_015_4E1D:: ; address name
     ld hl, wCB3D
     ld a, [hl]
     ldh [hFFC6], a
-    call Func_015_67F9
+    call TenTimesHFFC6PlusTenToDigits
     call Func_015_6822
     ld hl, wC52D
     xor a, a
@@ -2345,7 +2345,7 @@ Jump_015_4FC4::
     ld hl, wCB3D
     ld a, [hl]
     ldh [hFFC6], a
-    call Func_015_680F
+    call TenTimesHFFC6PlusTen
     xor a, a
     ld [wD7F3], a
     ld a, h
@@ -2407,7 +2407,7 @@ Jump_015_5030:: ; address name
     ld hl, wCB3D
     ld a, [hl]
     ldh [hFFC6], a
-    call Func_015_680F
+    call TenTimesHFFC6PlusTen
     xor a, a
     ld [wD7F3], a
     ld a, h
@@ -2736,7 +2736,7 @@ Jump_015_525F::
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
-    call Func_015_67F9
+    call TenTimesHFFC6PlusTenToDigits
     call Func_015_6822
     ld hl, vTiles1
     ld a, l
@@ -2818,7 +2818,7 @@ Jump_015_5323::
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
-    ld de, Func_015_6DE6
+    ld de, SRAMBank1RecordAddress
     ld a, d
     ld [wD7F3], a
     ld a, e
@@ -3124,7 +3124,7 @@ Jump_015_5504:: ; address name
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
-    call Func_015_680F
+    call TenTimesHFFC6PlusTen
     xor a, a
     ld [wD7F3], a
     ld a, h
@@ -3189,7 +3189,7 @@ Jump_015_556A:: ; address name
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
-    call Func_015_680F
+    call TenTimesHFFC6PlusTen
     xor a, a
     ld [wD7F3], a
     ld a, h
@@ -4864,7 +4864,7 @@ Jump_015_6101:: ; address name
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
-    call Func_015_67F9
+    call TenTimesHFFC6PlusTenToDigits
     call Func_015_6822
     xor a, a
     ld [wStringCategory], a
@@ -5270,9 +5270,11 @@ Jump_015_63AE::
     ld [wD784], a
     ret
 
+; DecompressGraphicsWD7F1ToWD7F4 with graphics number $00A4 and destination $8000 (vTiles0) (E-0117)
 ; 2 call sites from 2 routines (e.g. Func_015_6B00, Func_016_777B)
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5
-Func_015_63B8::
+DecompressGraphicsA4ToTiles0::
+Func_015_63B8:: ; address name
     ld a, $A4
     ld [wD7F1], a
     xor a, a
@@ -5733,7 +5735,7 @@ Func_015_6655:: ; address name
     ret
 
 ; wD7F1 = hFFC9, then the high and low digits of hFFC8, hFFC7 and hFFC6 go to wD7F2-wD7F7 (seven digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read (E-0106)
-; 9 call sites from 9 routines (e.g. Func_015_67F9, Func_015_4182, ScriptCommandEF_Run_Table2_Case01, Func_00D_463F_Case06, ...)
+; 9 call sites from 9 routines (e.g. TenTimesHFFC6PlusTenToDigits, Func_015_4182, ScriptCommandEF_Run_Table2_Case01, Func_00D_463F_Case06, ...)
 ; points at: hFFC9, wD7F1
 UnpackBCDToDigitsWD7F1::
 Func_015_6676:: ; address name
@@ -6060,10 +6062,12 @@ Jump_015_67E9::
     jr c, Jump_015_67E9
     ret
 
+; TenTimesHFFC6PlusTen, then converts it to packed BCD (Number24ToPackedBCD) and unpacks the digits to wD7F1 onward (E-0117)
 ; 3 call sites from 3 routines (e.g. Func_015_4182_Case3C, Func_015_4F4C_Case06, Func_015_5A2D_Table2_Case07)
 ; writes: wC8C0, wC8C1, wC8C2
-Func_015_67F9::
-    call Func_015_680F
+TenTimesHFFC6PlusTenToDigits::
+Func_015_67F9:: ; address name
+    call TenTimesHFFC6PlusTen
     ld a, l
     ld [wC8C0], a
     ld a, h
@@ -6074,9 +6078,11 @@ Func_015_67F9::
     call UnpackBCDToDigitsWD7F1
     ret
 
-; 5 call sites from 5 routines (e.g. Func_015_4182_Case41, Func_015_4182_Case3F, Func_015_67F9, Func_015_4F4C_Case10, ...)
+; HL = 10 * hFFC6 + 10 (E-0117)
+; 5 call sites from 5 routines (e.g. Func_015_4182_Case41, Func_015_4182_Case3F, TenTimesHFFC6PlusTenToDigits, Func_015_4F4C_Case10, ...)
 ; reads: hFFC6
-Func_015_680F::
+TenTimesHFFC6PlusTen::
+Func_015_680F:: ; address name
     ldh a, [hFFC6]
     ld c, $0A
     ld hl, $0000
@@ -6426,8 +6432,10 @@ Func_015_69E3::
     ld bc, $0201
     call FillTilesBxC
 
+; clears tile areas with FillTilesBxC: 9 x 1 at vTiles2 + $700, 3 x 1 at vTiles1 + $750, 2 x 1 at vTiles1 + $7D0 (E-0117)
 ; 2 call sites from 2 routines (e.g. Func_015_4182_Case29, Func_015_4182_Case24)
-Func_015_69FE::
+ClearTileAreas2700_1750_17D0::
+Func_015_69FE:: ; address name
     ld hl, vTiles2 + $700
     ld bc, $0901
     call FillTilesBxC
@@ -6439,8 +6447,10 @@ Func_015_69FE::
     call FillTilesBxC
     ret
 
+; clears tile areas: 12 x 1 at vTiles1 + $240, 13 x 1 at vTiles1 + $700, 17 x 1 at vTiles1 + $4E0 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_015_4182_Case01)
-Func_015_6A1A::
+ClearTileAreas1240_1700_14E0::
+Func_015_6A1A:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0C01
     call FillTilesBxC
@@ -6710,7 +6720,7 @@ Jump_015_6BB4::
 Jump_015_6C0C::
     push hl
     push bc
-    call Func_015_6DE6
+    call SRAMBank1RecordAddress
     ld a, l
     ld [wD7F3], a
     ld a, h
@@ -6739,7 +6749,7 @@ Jump_015_6C0C::
 Jump_015_6C3F::
     push hl
     push bc
-    call Func_015_6DE6
+    call SRAMBank1RecordAddress
     ld a, $0A
     ld [rRAMG2], a
     ld a, $01
@@ -6766,7 +6776,7 @@ Jump_015_6C3F::
 Jump_015_6C6F::
     push hl
     push bc
-    call Func_015_6DE6
+    call SRAMBank1RecordAddress
     ld a, $62
     add_a_to_hl
     ld a, $0A
@@ -6863,7 +6873,7 @@ Jump_015_6CC8::
     ld c, $00
     ld de, wC8C0
     ld b, $03
-    call Func_015_6DD6
+    call WriteDigitTilesFromDEToVRAM
     pop hl
     inc hl
     inc hl
@@ -6877,7 +6887,7 @@ Jump_015_6CC8::
     ld c, $00
     ld de, wC8C1
     ld b, $02
-    call Func_015_6DD6
+    call WriteDigitTilesFromDEToVRAM
     ld hl, sBB01
     ld a, $06
     add_a_to_hl
@@ -6951,7 +6961,7 @@ Jump_015_6DB4::
     xor a, a
     ld [rRAMB], a
     ld [rRAMG2], a
-    call Func_015_63B8
+    call DecompressGraphicsA4ToTiles0
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -6967,8 +6977,10 @@ Jump_015_6DB4::
 Data_015_6DD0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A8, $C3, $D0, $C3, $F8, $C3
 
+; writes the digits at DE as tiles $E0 + digit to HL (WaitForVRAMAccess, interrupts off), counting C up to B (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_015_6B00)
-Func_015_6DD6::
+WriteDigitTilesFromDEToVRAM::
+Func_015_6DD6:: ; address name
     di
     call WaitForVRAMAccess
     ld a, [de]
@@ -6979,13 +6991,15 @@ Func_015_6DD6::
     inc c
     ld a, c
     cp a, b
-    jr c, Func_015_6DD6
+    jr c, WriteDigitTilesFromDEToVRAM
     ret
 
+; with SRAM bank 1 selected, HL = sA06F + $6F * [HL + C] (a $6F-byte record in bank 1); then selects bank 0 and disables SRAM (E-0117)
 ; 3 call sites from 1 routine (e.g. Func_015_6B00)
 ; writes: rRAMG2, rRAMB
 ; points at: sA06F
-Func_015_6DE6::
+SRAMBank1RecordAddress::
+Func_015_6DE6:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     ld a, $01

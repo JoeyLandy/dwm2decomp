@@ -7,11 +7,13 @@ Func_004_4001::
     call Func_004_44CE
     ret
 
+; when wC88D bit 7 is set: clears wC88D, wSpriteSlotCount = wC83A and the $50 bytes at wC83B go back to wSpriteSlots (undoes SnapshotSpritesForSave) (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_069_4001)
 ; reads: wC88D, wC83A
 ; writes: wC88D, wSpriteSlotCount
 ; points at: wC83B, wSpriteSlots
-Func_004_4008::
+RestoreSpriteSnapshot::
+Func_004_4008:: ; address name
     ld a, [wC88D]
     bit 7, a
     ret z

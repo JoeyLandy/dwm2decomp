@@ -102,7 +102,7 @@ Jump_00C_406F::
 ; writes: wD780
 ScriptCommandF6_Run_Case02::
 Jump_00C_4087:: ; address name
-    call Func_00C_5269
+    call ClearStringWindowAt2020
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -686,7 +686,7 @@ Func_00C_4424:: ; address name
 ; writes: wD780
 ScriptCommandF6_Run_Case09::
 Jump_00C_443D:: ; address name
-    call Func_00C_5283
+    call ClearStringWindowAt2200
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -895,7 +895,7 @@ Jump_00C_456F::
     ld a, [de]
     ld h, a
     push hl
-    call Func_00C_52FB
+    call GridIndexFromWD78AWD78B
     pop hl
     add_a_to_hl
     call Func_00C_530A
@@ -1456,7 +1456,7 @@ Jump_00C_49DA:: ; address name
     ld [wD7F1], a
     ld a, h
     ld [wD7F2], a
-    farcall Func_00E_5C2B
+    farcall LoadSpeciesBytes8To10ToWD7F5
     farcall Func_0F2_5181
     ld a, $04
     ld [wStringCategory], a
@@ -1885,8 +1885,8 @@ Jump_00C_4D12::
     ld b, $BC
     ld hl, Data_00C_590A
     call StoreBAtWordTableEntry_Bank0C
-    call Func_00C_5269
-    call Func_00C_5283
+    call ClearStringWindowAt2020
+    call ClearStringWindowAt2200
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -2365,7 +2365,7 @@ Jump_00C_505C::
     ld a, [de]
     ld h, a
     push hl
-    call Func_00C_52FB
+    call GridIndexFromWD78AWD78B
     pop hl
     add_a_to_hl
     ret
@@ -2748,9 +2748,11 @@ Func_00C_525B:: ; address name
     ld [de], a
     ret
 
+; sets the string window to tile destination vTiles2 + $20 and size word $1702, then FillTilesFromRequest (clears it) (E-0117)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case02, Func_00C_45DA_Case0A)
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_00C_5269::
+ClearStringWindowAt2020::
+Func_00C_5269:: ; address name
     ld hl, vTiles2 + $20
     ld a, l
     ld [wC52D], a
@@ -2764,9 +2766,11 @@ Func_00C_5269::
     call FillTilesFromRequest
     ret
 
+; sets the string window to tile destination vTiles2 + $200 and size word $5301, then FillTilesFromRequest (clears it) (E-0117)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case09, Func_00C_45DA_Case0A)
 ; writes: wC52D, wC52E, wC52F, wC530
-Func_00C_5283::
+ClearStringWindowAt2200::
+Func_00C_5283:: ; address name
     ld hl, vTiles2 + $200
     ld a, l
     ld [wC52D], a
@@ -2858,9 +2862,11 @@ Func_00C_52EC:: ; address name
     pop bc
     ret
 
+; A = 6 * wD78B + wD78A (row-major index in a 6-column grid); BC kept (E-0117)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0C, Func_00C_5050)
 ; reads: wD78B, wD78A
-Func_00C_52FB::
+GridIndexFromWD78AWD78B::
+Func_00C_52FB:: ; address name
     push bc
     ld a, [wD78B]
     add a, a
@@ -3286,7 +3292,7 @@ Jump_00C_65F3:: ; address name
     ld d, [hl]
     push de
     ld b, $1F
-    call Func_00C_73B3
+    call RandomModulo52
     pop de
     ld b, $00
 
@@ -5391,7 +5397,7 @@ Jump_00C_732B::
 Jump_00C_7336::
     push bc
     ld b, $1F
-    call Func_00C_73B3
+    call RandomModulo52
 
 Jump_00C_733C::
     ld de, Data_00C_78FF
@@ -5478,9 +5484,11 @@ Jump_00C_737E::
     jp c, Jump_00C_7336
     ret
 
+; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $52 (E-0117)
 ; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case27_Sub01, ScriptCommand96_Run_Shared01_Sub01)
 ; reads: wC5E7
-Func_00C_73B3::
+RandomModulo52::
+Func_00C_73B3:: ; address name
     push bc
     call NextTableByte
     pop bc
@@ -5739,7 +5747,7 @@ Jump_00C_750B::
 ScriptCommandF7_Run_Case27_Sub01::
 Func_00C_750F:: ; address name
     ld b, $1F
-    call Func_00C_73B3
+    call RandomModulo52
     ld c, l
     ld a, l
     and a, $03

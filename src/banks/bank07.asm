@@ -11,7 +11,7 @@ Func_007_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 11 call sites from 9 routines (e.g. Func_003_74E2_Case00, GameMode5_Init_Case01, GameMode5_Init_Case04_Sub02, Func_007_6213_Table2_Case00, ...)
+; 11 call sites from 9 routines (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00, GameMode5_Init_Case01, GameMode5_Init_Case04_Sub02, Func_007_6213_Table2_Case00, ...)
 ShowString_Bank07::
 Func_007_400F:: ; address name
     call BeginStringDisplay_Bank07
@@ -888,7 +888,7 @@ Jump_007_4B6F::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_007_4B7B
-    farcall Func_001_4AA4
+    farcall LoadPalette0FromData4ACC
 
 Jump_007_4B7B::
     farcall RunSaveSteps
@@ -995,7 +995,7 @@ Jump_007_4C4E::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_007_4C5A
-    farcall Func_001_4AA4
+    farcall LoadPalette0FromData4ACC
 
 Jump_007_4C5A::
     farcall RunSaveSteps
@@ -1091,7 +1091,7 @@ Jump_007_4D1F::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_007_4D2B
-    farcall Func_001_4AA4
+    farcall LoadPalette0FromData4ACC
 
 Jump_007_4D2B::
     farcall RunSaveSteps
@@ -1271,7 +1271,7 @@ Jump_007_4E5F::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_007_4E6B
-    farcall Func_001_4AA4
+    farcall LoadPalette0FromData4ACC
 
 Jump_007_4E6B::
     farcall RunSaveSteps

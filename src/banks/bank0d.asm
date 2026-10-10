@@ -1997,7 +1997,7 @@ Jump_00D_5172:: ; address name
     dw Func_00D_517A
     dw ScriptCommandF0_Run_Table2_Case01
 
-; 1 call site from 1 routine (e.g. Func_00D_525F_Case01)
+; 1 call site from 1 routine (e.g. ClearStringWindowAt1500AndIncWD781_Case01)
 ; reads: wD781
 ; writes: wD781
 Func_00D_517A::
@@ -2099,7 +2099,7 @@ Jump_00D_5221:: ; address name
     ld a, [wD781]
     rst $00
     dw Func_00D_517A_Case00
-    dw Func_00D_525F
+    dw ClearStringWindowAt1500AndIncWD781
     dw Func_00D_517A_Case02
 
 ; entry 0 of the `rst $00` table in Func_00D_517A
@@ -2130,10 +2130,12 @@ Jump_00D_522B:: ; address name
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_00D_525F_Case01)
+; sets the string window to tile destination vTiles1 + $500 and size word $0F01, then FillTilesFromRequest (clears it); then wD781 += 1 (E-0117)
+; 1 call site from 1 routine (e.g. ClearStringWindowAt1500AndIncWD781_Case01)
 ; reads: wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wD781
-Func_00D_525F::
+ClearStringWindowAt1500AndIncWD781::
+Func_00D_525F:: ; address name
     ld hl, vTiles1 + $500
     ld a, l
     ld [wC52D], a
@@ -2240,18 +2242,18 @@ ScriptCommandF0_Run_Case06::
 Jump_00D_530F:: ; address name
     ld a, [wD781]
     rst $00
-    dw Func_00D_525F_Case00
-    dw Func_00D_525F_Case01
-    dw Func_00D_525F_Case02
-    dw Func_00D_525F_Case03
-    dw Func_00D_525F_Case04
+    dw ClearStringWindowAt1500AndIncWD781_Case00
+    dw ClearStringWindowAt1500AndIncWD781_Case01
+    dw ClearStringWindowAt1500AndIncWD781_Case02
+    dw ClearStringWindowAt1500AndIncWD781_Case03
+    dw ClearStringWindowAt1500AndIncWD781_Case04
 
-; entry 0 of the `rst $00` table in Func_00D_525F
+; entry 0 of the `rst $00` table in ClearStringWindowAt1500AndIncWD781
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC526, wD781
 ; points at: wBGPaletteBuffer
-Func_00D_525F_Case00::
+ClearStringWindowAt1500AndIncWD781_Case00::
 Jump_00D_531D:: ; address name
     ld hl, vTiles2
     ld de, Data_049_4832
@@ -2269,23 +2271,23 @@ Jump_00D_531D:: ; address name
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in Func_00D_525F
+; entry 1 of the `rst $00` table in ClearStringWindowAt1500AndIncWD781
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD781
-Func_00D_525F_Case01::
+ClearStringWindowAt1500AndIncWD781_Case01::
 Jump_00D_5342:: ; address name
     call Func_00D_517A
-    call Func_00D_525F
+    call ClearStringWindowAt1500AndIncWD781
     ld a, $02
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in Func_00D_525F
+; entry 2 of the `rst $00` table in ClearStringWindowAt1500AndIncWD781
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD786, wD781
 ; writes: rRAMG2, rRAMB, wC52D, wC52E, wC52F, wC530, wD781
 ; points at: wC6FE, wC8CF
-Func_00D_525F_Case02::
+ClearStringWindowAt1500AndIncWD781_Case02::
 Jump_00D_534E:: ; address name
     ld a, [wD786]
     ld hl, wC6FE
@@ -2335,11 +2337,11 @@ Jump_00D_537F::
     ld [wD781], a
     ret
 
-; entry 3 of the `rst $00` table in Func_00D_525F
+; entry 3 of the `rst $00` table in ClearStringWindowAt1500AndIncWD781
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wStringCategory, wStringIndex, wD781
-Func_00D_525F_Case03::
+ClearStringWindowAt1500AndIncWD781_Case03::
 Jump_00D_53A4:: ; address name
     xor a, a
     ld [wStringCategory], a
@@ -2351,10 +2353,10 @@ Jump_00D_53A4:: ; address name
     ld [wD781], a
     ret
 
-; entry 4 of the `rst $00` table in Func_00D_525F
+; entry 4 of the `rst $00` table in ClearStringWindowAt1500AndIncWD781
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC527, hFFBA, wD782, wD781, wD780, wC52D, wC52E, wC52F, ...
-Func_00D_525F_Case04::
+ClearStringWindowAt1500AndIncWD781_Case04::
 Jump_00D_53BB:: ; address name
     farcall Func_004_4AA8
     ld a, $7F

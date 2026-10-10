@@ -1277,6 +1277,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Not named.** `3D:4E56` and `E0:55BF` decode as implausible instruction runs (data), and the per-skill AIScore wrappers in bank $E2 wait on Func_0E2_67F9.
 - Binary verification: pending; see the commit.
 
+### E-0117 — Medium-length routines read in bulk (first half)
+
+- Kind: OBSERVATION (full reading of 9-16-instruction routines; C1).
+- **Method.** A listing of all 205 address-only routines of 9-16 instructions was read in chunks. Fifty-two are named in this half (plus the family WriteTwoDigitTilesWC8C1NoBlank).
+- **Palettes and fades:** SetDefaultDMGPaletteBytes, LightenSelectedDMGPalettes, LoadBGPaletteBufferFromBank, and LoadPalette0FromData4322/4ACC.
+- **Screen blocks:** the LoadScreenBlocks… and LoadBlankedBlocks…WithCursor sets, and CopyBlockToTileBufferBlankingText (`33:402B`, which writes $C3 over tiles $15-$A3).
+- **Save records:**
+  - FullHealRecordWD083 and FullHealPartyRecordA copy record field $5D into $5B. These are the fields ItemUsable_Herb compares, so $5B/$5D are probably HP and max HP.
+  - ClearPartyRecordFlag55Bit0. ItemUsable_Antidote tests bit 2 of the same byte, so this bit is another status.
+  - SRAMBank1RecordAddress ($6F-byte records in SRAM bank 1).
+- **Sprites, followers and SRAM:** RestoreSpriteSnapshot (undoes SnapshotSpritesForSave), ResetFollowersToPlayer and ClearSRAMBanks2And3.
+- **Script movement:** the ScriptStepDelta… variants and ScriptApplyStepDeltaAtDE_Bank12.
+- **Random and species helpers:** RandomModulo52/29 and LoadSpeciesBytes8To10….
+- **Others:** grid and window helpers.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

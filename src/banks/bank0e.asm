@@ -1717,17 +1717,17 @@ Jump_00E_5AA9::
     dec c
     jr nz, Jump_00E_5AA9
     ld hl, wCADB
-    call Func_00E_5C11
+    call LoadSpeciesBytes8To10FromHL
     ld hl, wCB0C
     call StoreBCAAtHL
     push hl
     ld hl, wC991
-    call Func_00E_5C11
+    call LoadSpeciesBytes8To10FromHL
     pop hl
     call StoreBCAAtHL
     push hl
     ld hl, wCA36
-    call Func_00E_5C11
+    call LoadSpeciesBytes8To10FromHL
     pop hl
     call StoreBCAAtHL
     ld de, wC9BA
@@ -1871,10 +1871,12 @@ Func_00E_5C09:: ; address name
     ld [hl+], a
     ret
 
+; monster id = the word at HL: LoadSpeciesRecord, then B = species byte 8, C = byte 9, A = byte 10 (wD010-wD012) (E-0117)
 ; 3 call sites from 1 routine (e.g. Func_00E_5AA4)
 ; reads: wD010, wD011, wD012
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-Func_00E_5C11::
+LoadSpeciesBytes8To10FromHL::
+Func_00E_5C11:: ; address name
     ld a, [hl+]
     ld [wSpeciesIdLo], a
     ld a, [hl]
@@ -1887,10 +1889,12 @@ Func_00E_5C11::
     ld a, [wD012]
     ret
 
+; monster id = wD7F1/wD7F2: LoadSpeciesRecord, then copies species bytes 8-10 to wD7F5-wD7F7 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_00C_45DA_Case04)
 ; reads: wD7F1, wD7F2, wD010, wD011, wD012
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F5, wD7F6, wD7F7
-Func_00E_5C2B::
+LoadSpeciesBytes8To10ToWD7F5::
+Func_00E_5C2B:: ; address name
     ld a, [wD7F1]
     ld [wSpeciesIdLo], a
     ld a, [wD7F2]
@@ -2093,7 +2097,7 @@ Func_00E_5D4E::
     push af
     push bc
     ld b, $0F
-    call Func_00E_611B
+    call RandomModulo29
     pop bc
     pop af
     cp a, l
@@ -2140,7 +2144,7 @@ Jump_00E_5D8D::
     push af
     push bc
     ld b, $1F
-    call Func_00E_611B
+    call RandomModulo29
     pop bc
     pop af
     cp a, l
@@ -2628,9 +2632,11 @@ Data_00E_603F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $30, $0C, $03
 
+; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0117)
 ; 3 call sites from 3 routines (e.g. Func_00E_5D4E, Func_00E_5D77, Func_00E_61C1)
 ; reads: wC5E7
-Func_00E_611B::
+RandomModulo29::
+Func_00E_611B:: ; address name
     push bc
     call NextTableByte
     pop bc
@@ -2775,7 +2781,7 @@ Func_00E_61C1::
     push af
     push bc
     ld b, $0F
-    call Func_00E_611B
+    call RandomModulo29
     pop bc
     pop af
     cp a, l

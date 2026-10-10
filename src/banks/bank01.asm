@@ -57,7 +57,7 @@ Func_001_4045:: ; address name
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC554, wC555, ...
 DebugMessageTest_Init::
 Jump_001_4061:: ; address name
-    call Func_001_4AA4
+    call LoadPalette0FromData4ACC
     ld hl, vTiles2 + $100
     ld a, l
     ld [wC52D], a
@@ -249,7 +249,7 @@ Jump_001_4462:: ; address name
 ; points at: wD780
 DebugResultsDisplay_Init::
 Jump_001_4472:: ; address name
-    call Func_001_4AA4
+    call LoadPalette0FromData4ACC
     ld hl, vTiles2 + $100
     ld a, l
     ld [wC52D], a
@@ -406,7 +406,7 @@ Jump_001_45E2::
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 DebugMainMenu_Init::
 Jump_001_45EA:: ; address name
-    call Func_001_4AA4
+    call LoadPalette0FromData4ACC
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -801,11 +801,13 @@ Jump_001_4A77::
     ldh [c], a
     ret
 
+; on CGB copies the 8-byte palette Data_001_4ACC into wBGPaletteBuffer twice and sets wC526 and wC527 = $7F (E-0117)
 ; 7 call sites from 7 routines (e.g. DebugMessageTest_Init, DebugResultsDisplay_Init, DebugMainMenu_Init, GameMode5_Init_Case02, ...)
 ; reads: wIsCGB
 ; writes: wC526, wC527
 ; points at: wBGPaletteBuffer
-Func_001_4AA4::
+LoadPalette0FromData4ACC::
+Func_001_4AA4:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z

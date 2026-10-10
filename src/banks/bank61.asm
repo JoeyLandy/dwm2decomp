@@ -3161,7 +3161,7 @@ Jump_061_5D92::
     ldh [hFF8C], a
     ld a, $03
     ld [wC8C6], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01
     ret
@@ -3233,7 +3233,7 @@ Jump_061_5E44::
     ldh a, [hFF8C]
     or a, $80
     ldh [hFF8C], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01
     ret
@@ -3349,7 +3349,7 @@ Jump_061_5EF0::
     ld [wC8CA], a
     ld a, $03
     ld [wC8C6], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     ld a, $01
     ret
 
@@ -3453,7 +3453,7 @@ Jump_061_5F56::
     ld [wC8C9], a
     ld a, $03
     ld [wC8C6], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01
     ret
@@ -3526,7 +3526,7 @@ Jump_061_5FE0::
     ld [wC8C9], a
     ld a, $03
     ld [wC8C6], a
-    farcall Func_012_7B9F
+    farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01
     ret

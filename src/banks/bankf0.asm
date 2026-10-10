@@ -5074,7 +5074,7 @@ Jump_0F0_6C6E::
     jr z, Jump_0F0_6CA0
     push de
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld a, l
     bit 0, a
     jr nz, Jump_0F0_6CA4
@@ -5584,9 +5584,11 @@ Data_0F0_7085:: ; heuristic: target of a monotone pointer table; C0
     db $61, $01, $64, $01, $67, $01, $69, $01, $70, $01, $71, $01, $72, $01, $73, $01
     db $FE, $FE
 
+; the same 19 bytes as RandomModulo29 (0E:611B)
 ; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, Func_0F0_6BE0, Func_0F0_7E69, Func_0F0_7284)
 ; reads: wC5E7
-Func_0F0_7097::
+RandomModulo29_BankF0::
+Func_0F0_7097:: ; address name
     push bc
     call NextTableByte
     pop bc
@@ -5691,7 +5693,7 @@ Jump_0F0_728F::
     ld l, a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     pop de
     ld a, l
     cp a, e
@@ -7482,7 +7484,7 @@ Jump_0F0_7D1F::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld a, l
     and a, $01
     pop hl
@@ -7544,7 +7546,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $20
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7558,7 +7560,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $20
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7572,7 +7574,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $20
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7582,7 +7584,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $20
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7592,7 +7594,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $20
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7602,7 +7604,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $20
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7619,7 +7621,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $FE
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7627,7 +7629,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $FE
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7635,7 +7637,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $FE
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7643,7 +7645,7 @@ Jump_0F0_7D73::
     ld [hl+], a
     push hl
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld b, $FE
     call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
@@ -7746,7 +7748,7 @@ Jump_0F0_7E80::
 Jump_0F0_7E82::
     push de
     ld b, $0F
-    call Func_0F0_7097
+    call RandomModulo29_BankF0
     ld a, l
     pop de
     cp a, e

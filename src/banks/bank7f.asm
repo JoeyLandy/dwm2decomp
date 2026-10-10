@@ -934,7 +934,7 @@ Data_07F_6EB4:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $1FEEB4, $156
 
 ; DE = Data_07F_7011 (the table of meta-sprite sets), then DrawMetaSpriteAt
-; 25 call sites from 20 routines (e.g. Func_003_7647, Func_004_4BE4, Func_004_4D43, Func_007_5DD6, ...)
+; 25 call sites from 20 routines (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01, Func_004_4BE4, Func_004_4D43, Func_007_5DD6, ...)
 DrawMetaSprite::
 Func_07F_700A:: ; address name
     ld de, Data_07F_7011

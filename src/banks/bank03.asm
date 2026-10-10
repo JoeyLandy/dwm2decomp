@@ -285,7 +285,7 @@ Func_003_4208:: ; address name
 ; writes: wMenuRowCount, wMenuPageCount, wMenuPage
 Func_003_4208_Case00::
 Jump_003_4218:: ; address name
-    call Func_003_499B
+    call LoadBlankedBlocks00To03WithCursor
     call Func_003_4A27
     farcall LoadTilesForPartyRecords
     ld a, [wC6FD]
@@ -353,7 +353,7 @@ Jump_003_427D::
     ret
 
 ; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
-; 14 call sites from 14 routines (e.g. LoadScreenBlock21, LoadScreenBlocks1CAnd0C, Func_003_581E, Func_003_499B, ...)
+; 14 call sites from 14 routines (e.g. LoadScreenBlock21, LoadScreenBlocks1CAnd0C, Func_003_581E, LoadBlankedBlocks00To03WithCursor, ...)
 ; points at: wScreenTileBuffer
 ClearScreenTileBuffer_Bank03::
 Func_003_4284:: ; address name
@@ -868,7 +868,7 @@ Jump_003_450C::
     ret
 
 ; writes the cursor tile $BB into wScreenTileBuffer at the position of MenuCursorPositions_Bank03[wC46D & 3] (BG map address + $2998) (E-0101)
-; 4 call sites from 4 routines (e.g. Func_003_499B, Func_003_49C2, Func_003_49E9, Func_003_4A08)
+; 4 call sites from 4 routines (e.g. LoadBlankedBlocks00To03WithCursor, LoadBlankedBlocks00And04To06WithCursor, LoadBlankedBlocks00_07_08WithCursor, LoadBlankedBlocks00_09_0AWithCursor)
 ; reads: wC46D
 DrawMenuCursorTileInBuffer::
 Func_003_451C:: ; address name
@@ -904,7 +904,7 @@ Func_003_4538:: ; address name
     ret
 
 ; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte) (E-0067) (the same 15 bytes appear in 3 banks)
-; 4 call sites from 4 routines (e.g. Func_003_6A60_Table2_Case01, Func_003_6B5E_Case0E, Func_003_6B5E_Case01, Func_003_74E2_Case02)
+; 4 call sites from 4 routines (e.g. Func_003_6A60_Table2_Case01, Func_003_6B5E_Case0E, Func_003_6B5E_Case01, WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case02)
 WriteBCTileAtWordTableEntry_Bank03::
 Func_003_454C:: ; address name
     add a, a
@@ -1043,7 +1043,7 @@ Data_003_4645:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_4649:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $99, $84, $99, $86, $99, $88, $99, $8A, $99, $8C, $99, $8E, $99, $90, $99
 
-; 2 call sites from 2 routines (e.g. Func_003_74E2_Case03, Func_003_5253_Table4_Case1E)
+; 2 call sites from 2 routines (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case03, Func_003_5253_Table4_Case1E)
 ; reads: wC0A4
 Func_003_4659::
     ld a, [wC0A4]
@@ -1138,7 +1138,7 @@ Jump_003_46B3:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_46BF
-    call Func_003_499B
+    call LoadBlankedBlocks00To03WithCursor
     call CopyTileBufferToBGMap
 
 Jump_003_46BF::
@@ -1161,7 +1161,7 @@ Jump_003_46C4:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_46CD
-    call Func_003_48EF
+    call LoadScreenBlocks00To03
 
 Jump_003_46CD::
     ld a, $0A
@@ -1248,7 +1248,7 @@ Jump_003_473F:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_474B
-    call Func_003_49C2
+    call LoadBlankedBlocks00And04To06WithCursor
     call CopyTileBufferToBGMap
 
 Jump_003_474B::
@@ -1265,7 +1265,7 @@ Jump_003_4750:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_4759
-    call Func_003_4917
+    call LoadScreenBlocks00And04To06
 
 Jump_003_4759::
     call Func_003_4A98
@@ -1351,7 +1351,7 @@ Jump_003_47CC:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_47D8
-    call Func_003_49E9
+    call LoadBlankedBlocks00_07_08WithCursor
     call CopyTileBufferToBGMap
 
 Jump_003_47D8::
@@ -1368,7 +1368,7 @@ Jump_003_47DD:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_47E6
-    call Func_003_493F
+    call LoadScreenBlocks00_07_08
 
 Jump_003_47E6::
     call Func_003_4AAC
@@ -1452,7 +1452,7 @@ Jump_003_4850:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_485C
-    call Func_003_4A08
+    call LoadBlankedBlocks00_09_0AWithCursor
     call CopyTileBufferToBGMap
 
 Jump_003_485C::
@@ -1469,7 +1469,7 @@ Jump_003_4861:: ; address name
     ld a, [wC0A4]
     or a, a
     jr nz, Jump_003_486A
-    call Func_003_495F
+    call LoadScreenBlocks00_09_0A
 
 Jump_003_486A::
     call Func_003_4ABD
@@ -1553,9 +1553,11 @@ Jump_003_48EB:: ; address name
     call Func_003_4339
     ret
 
+; clears the screen tile buffer, copies blocks $00-$03 into it, then wC0A4 += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table3_Case01)
 ; points at: wC0A4
-Func_003_48EF::
+LoadScreenBlocks00To03::
+Func_003_48EF:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall CopyBlockToTileBuffer
@@ -1569,9 +1571,11 @@ Func_003_48EF::
     inc [hl]
     ret
 
+; clears the screen tile buffer, copies blocks $00, $04, $05, $06, then wC0A4 += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table4_Case01)
 ; points at: wC0A4
-Func_003_4917::
+LoadScreenBlocks00And04To06::
+Func_003_4917:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall CopyBlockToTileBuffer
@@ -1585,9 +1589,11 @@ Func_003_4917::
     inc [hl]
     ret
 
+; clears the screen tile buffer, copies blocks $00, $07, $08, then wC0A4 += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table5_Case01)
 ; points at: wC0A4
-Func_003_493F::
+LoadScreenBlocks00_07_08::
+Func_003_493F:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall CopyBlockToTileBuffer
@@ -1599,9 +1605,11 @@ Func_003_493F::
     inc [hl]
     ret
 
+; clears the screen tile buffer, copies blocks $00, $09, $0A, then wC0A4 += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table6_Case01)
 ; points at: wC0A4
-Func_003_495F::
+LoadScreenBlocks00_09_0A::
+Func_003_495F:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
     farcall CopyBlockToTileBuffer
@@ -1613,10 +1621,12 @@ Func_003_495F::
     inc [hl]
     ret
 
+; clears the screen tile buffer, copies block $2D + wC6FD and block $31, then wC0A4 += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4FBB_Case01)
 ; reads: wC6FD
 ; points at: wC0A4
-Func_003_497F::
+LoadScreenBlockForPartySize::
+Func_003_497F:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld a, [wC6FD]
     add a, $2D
@@ -1628,55 +1638,63 @@ Func_003_497F::
     inc [hl]
     ret
 
+; clears the screen tile buffer, copies blocks $00-$03 with CopyBlockToTileBufferBlankingText, then DrawMenuCursorTileInBuffer (E-0117)
 ; 2 call sites from 2 routines (e.g. Func_003_4208_Case00, Func_003_4659_Table3_Case00)
-Func_003_499B::
+LoadBlankedBlocks00To03WithCursor::
+Func_003_499B:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $01
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $02
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $03
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     call DrawMenuCursorTileInBuffer
     ret
 
+; as LoadBlankedBlocks00To03WithCursor with blocks $00, $04, $05, $06 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table4_Case00)
-Func_003_49C2::
+LoadBlankedBlocks00And04To06WithCursor::
+Func_003_49C2:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $04
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $05
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $06
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     call DrawMenuCursorTileInBuffer
     ret
 
+; as LoadBlankedBlocks00To03WithCursor with blocks $00, $07, $08 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table5_Case00)
-Func_003_49E9::
+LoadBlankedBlocks00_07_08WithCursor::
+Func_003_49E9:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $07
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $08
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     call DrawMenuCursorTileInBuffer
     ret
 
+; as LoadBlankedBlocks00To03WithCursor with blocks $00, $09, $0A (E-0117)
 ; 1 call site from 1 routine (e.g. Func_003_4659_Table6_Case00)
-Func_003_4A08::
+LoadBlankedBlocks00_09_0AWithCursor::
+Func_003_4A08:: ; address name
     call ClearScreenTileBuffer_Bank03
     ld e, $00
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $09
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     ld e, $0A
-    farcall Func_033_402B
+    farcall CopyBlockToTileBufferBlankingText
     call DrawMenuCursorTileInBuffer
     ret
 
@@ -2605,7 +2623,7 @@ Jump_003_503D::
 ; points at: wC0A1
 Func_003_4FBB_Case01::
 Jump_003_5042:: ; address name
-    call Func_003_497F
+    call LoadScreenBlockForPartySize
     call FillTilesFromRequest
     ld a, $0A
     ld [rRAMG], a
@@ -2885,7 +2903,7 @@ Jump_003_520B:: ; address name
     ld hl, vBGMap0
     ld bc, $1412
     ld d, $C3
-    call Func_003_523E
+    call FillVRAMRowsWithD
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_003_522E
@@ -2894,7 +2912,7 @@ Jump_003_520B:: ; address name
     ld hl, vBGMap0 + $E0
     ld bc, $1406
     ld d, $00
-    call Func_003_523E
+    call FillVRAMRowsWithD
     xor a, a
     ldh [rVBK], a
 
@@ -2908,12 +2926,14 @@ Jump_003_522E::
     ld [wC0A4], a
     ret
 
+; D = tile, B = first-row width, C = rows: writes D with WriteVRAMByteInc; after each row moves 12 entries on (to the next 32-entry row) and uses width 20 (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_003_4FBB_Case04)
-Func_003_523E::
+FillVRAMRowsWithD::
+Func_003_523E:: ; address name
     ld a, d
     call WriteVRAMByteInc
     dec b
-    jr nz, Func_003_523E
+    jr nz, FillVRAMRowsWithD
     ld a, l
     add a, $0C
     ld l, a
@@ -2922,7 +2942,7 @@ Func_003_523E::
     ld h, a
     ld b, $14
     dec c
-    jr nz, Func_003_523E
+    jr nz, FillVRAMRowsWithD
     ret
 
 ; 1 call site from 1 routine (e.g. Func_003_4FBB_Case04)
@@ -6601,7 +6621,7 @@ Jump_003_6C90:: ; address name
     ret
 
 Jump_003_6CB2::
-    call Func_003_6EBF
+    call TestListEntryBit7
     jr nz, Jump_003_6CEE
     push af
     ld c, a
@@ -6702,7 +6722,7 @@ Jump_003_6D31:: ; address name
 ; points at: wC0A1
 Func_003_6B5E_Case05::
 Jump_003_6D39:: ; address name
-    call Func_003_6EBF
+    call TestListEntryBit7
     jr nz, Jump_003_6D60
     ld l, a
     ld h, $00
@@ -6740,7 +6760,7 @@ Jump_003_6D69::
     jr Jump_003_6D85
 
 Jump_003_6D73::
-    call Func_003_6EBF
+    call TestListEntryBit7
     set 7, a
     ld [wDataBankSave], a
     ld a, $08
@@ -6954,7 +6974,7 @@ Jump_003_6E9D:: ; address name
     ret nz
     xor a, a
     ld [wC0A1], a
-    call Func_003_6EBF
+    call TestListEntryBit7
     jr z, Jump_003_6EAF
     res 7, a
     and a, $3F
@@ -6967,10 +6987,12 @@ Jump_003_6EAF::
     ld [wC46E], a
     ret
 
+; index = wMenuPage * 4 + (wC46E & 7): A = wD0A7[index], Z clear when its bit 7 is set (E-0117)
 ; 4 call sites from 3 routines (e.g. Func_003_6B5E_Case10, Func_003_6B5E_Case05, Func_003_6B5E_Case03)
 ; reads: wMenuPage, wC46E
 ; points at: wD0A7
-Func_003_6EBF::
+TestListEntryBit7::
+Func_003_6EBF:: ; address name
     ld a, [wMenuPage]
     ld b, a
     add a, a
@@ -6992,19 +7014,19 @@ Func_003_6A60_Case02::
 Jump_003_6ED8:: ; address name
     ld a, [wC0A1]
     rst $00
-    dw Func_003_6EBF_Case00
-    dw Func_003_6EBF_Case01
-    dw Func_003_6EBF_Case02
+    dw TestListEntryBit7_Case00
+    dw TestListEntryBit7_Case01
+    dw TestListEntryBit7_Case02
 
-; entry 0 of the `rst $00` table in Func_003_6EBF
+; entry 0 of the `rst $00` table in TestListEntryBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC0A8, wMenuRowCount, wMenuPageCount, wMenuPage
 ; points at: wC0A1
-Func_003_6EBF_Case00::
+TestListEntryBit7_Case00::
 Jump_003_6EE2:: ; address name
     xor a, a
     ld [wC0A8], a
-    call Func_003_7726
+    call TestListEntryBit7_Case00_Sub01
     call CopyTileBufferToBGMap
     ld a, $04
     ld [wMenuRowCount], a
@@ -7016,12 +7038,12 @@ Jump_003_6EE2:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_003_6EBF
+; entry 1 of the `rst $00` table in TestListEntryBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A8
 ; writes: rRAMG, rRAMB, wC46E
 ; points at: wC286, wC282, wC0A1
-Func_003_6EBF_Case01::
+TestListEntryBit7_Case01::
 Jump_003_6F00:: ; address name
     ld a, [wC0A8]
     ld hl, Data_003_6FBB
@@ -7058,12 +7080,12 @@ Jump_003_6F00:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_003_6EBF
+; entry 2 of the `rst $00` table in TestListEntryBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC0A8, wC46E, wC6FD
 ; writes: wC0A8, wC0A0, wC0A1, rRAMG, rRAMB
 ; points at: wC46E, wC0A1
-Func_003_6EBF_Case02::
+TestListEntryBit7_Case02::
 Jump_003_6F48:: ; address name
     ld hl, wC46E
     ld de, Data_003_4637
@@ -7142,15 +7164,15 @@ Func_003_6A60_Case03::
 Jump_003_6FBE:: ; address name
     ld a, [wC0A1]
     rst $00
-    dw Func_003_6EBF_Table2_Case00
-    dw Func_003_6EBF_Table2_Case01
+    dw TestListEntryBit7_Table2_Case00
+    dw TestListEntryBit7_Table2_Case01
 
-; entry 0 of the `rst $00` table in Func_003_6EBF
+; entry 0 of the `rst $00` table in TestListEntryBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC834
 ; writes: wC46E
 ; points at: wC0A1
-Func_003_6EBF_Table2_Case00::
+TestListEntryBit7_Table2_Case00::
 Jump_003_6FC6:: ; address name
     call LoadScreenBlock21CursorAnd2C
     call CopyTileBufferToBGMap
@@ -7160,11 +7182,11 @@ Jump_003_6FC6:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_003_6EBF
+; entry 1 of the `rst $00` table in TestListEntryBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC46E, wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wC834, wC0A0, wC0A1, wC46E, wFrameCounterLo
-Func_003_6EBF_Table2_Case01::
+TestListEntryBit7_Table2_Case01::
 Jump_003_6FD7:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
@@ -7233,7 +7255,7 @@ Jump_003_7048::
     ret
 
 ; writes the cursor tile $BB at MenuCursorAddressWC46E (E-0114)
-; 2 call sites from 1 routine (e.g. Func_003_6EBF_Table2_Case01)
+; 2 call sites from 1 routine (e.g. TestListEntryBit7_Table2_Case01)
 DrawMenuCursorWC46E::
 Func_003_7049:: ; address name
     call MenuCursorAddressWC46E
@@ -7242,7 +7264,7 @@ Func_003_7049:: ; address name
     ret
 
 ; writes the blank tile $C3 at MenuCursorAddressWC46E (E-0114)
-; 3 call sites from 1 routine (e.g. Func_003_6EBF_Table2_Case01)
+; 3 call sites from 1 routine (e.g. TestListEntryBit7_Table2_Case01)
 EraseMenuCursorWC46E::
 Func_003_7052:: ; address name
     call MenuCursorAddressWC46E
@@ -7819,7 +7841,7 @@ Jump_003_73A0:: ; address name
     ld a, [wPlayMinutes]
     call ByteAToDecimalDigits
     ld de, wC204
-    call Func_003_74E2
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03
     call Func_003_7B25
     ld a, [wD09D]
     ld de, wC243
@@ -7902,7 +7924,7 @@ Jump_003_7487:: ; address name
     ld a, [wPlayMinutes]
     call ByteAToDecimalDigits
     ld de, wC204
-    call Func_003_74E2
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03
     ld a, [wPlayHoursLo]
     ld l, a
     ld a, [wPlayHoursHi]
@@ -7950,9 +7972,11 @@ Func_003_74DA::
     ld [de], a
     inc de
 
+; writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. Func_003_7335_Case01, Func_003_7335_Case00)
 ; points at: wC8C1
-Func_003_74E2::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03::
+Func_003_74E2:: ; address name
     ld hl, wC8C1
     ld a, [hl+]
     add a, $E0
@@ -7970,24 +7994,24 @@ Func_003_6A60_Case06::
 Jump_003_74EF:: ; address name
     ld a, [wC0A1]
     rst $00
-    dw Func_003_74E2_Case00
-    dw Func_003_74E2_Case01
-    dw Func_003_74E2_Case02
-    dw Func_003_74E2_Case03
-    dw Func_003_74E2_Case04
-    dw Func_003_74E2_Case05
-    dw Func_003_74E2_Case06
+    dw WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00
+    dw WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case01
+    dw WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case02
+    dw WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case03
+    dw WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case04
+    dw WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case05
+    dw WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case06
 
-; entry 0 of the `rst $00` table in Func_003_74E2
+; entry 0 of the `rst $00` table in WriteTwoDigitTilesWC8C1NoBlank_Bank03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: hFFB9, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC1F9
 ; points at: wC0A1
-Func_003_74E2_Case00::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00::
 Jump_003_7501:: ; address name
     xor a, a
     ldh [hFFB9], a
-    call Func_003_776C
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00_Sub01
     ld a, [wC52D]
     ld l, a
     ld a, [wC52E]
@@ -8031,19 +8055,19 @@ Jump_003_7501:: ; address name
     ld a, $25
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank37
-    call Func_003_7647
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01
     ld hl, wC0A1
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_003_74E2
+; entry 1 of the `rst $00` table in WriteTwoDigitTilesWC8C1NoBlank_Bank03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
 ; writes: wMenuRowCount, wMenuPageCount, wC46F
 ; points at: wC0A1
-Func_003_74E2_Case01::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case01::
 Jump_003_7571:: ; address name
-    call Func_003_7647
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01
     ld a, [wC52B]
     or a, a
     ret nz
@@ -8066,12 +8090,12 @@ Jump_003_7571:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_003_74E2
+; entry 2 of the `rst $00` table in WriteTwoDigitTilesWC8C1NoBlank_Bank03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC46F, wModeState
 ; writes: wC0A4, wC0A0, wC0A1
 ; points at: wC46F, wC0A1, wScreenTileBuffer
-Func_003_74E2_Case02::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case02::
 Jump_003_75A4:: ; address name
     ld hl, wC46F
     ld de, Data_003_4645
@@ -8088,7 +8112,7 @@ Jump_003_75A4:: ; address name
     ld a, [wC46F]
     and a, $01
     jr nz, Jump_003_75D7
-    call Func_003_7647
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01
     xor a, a
     ld [wC0A4], a
     ld hl, wC0A1
@@ -8107,16 +8131,16 @@ Jump_003_75D7::
 Jump_003_75E6::
     bit 1, a
     jr nz, Jump_003_75D7
-    call Func_003_7647
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01
     ret
 
-; entry 3 of the `rst $00` table in Func_003_74E2
+; entry 3 of the `rst $00` table in WriteTwoDigitTilesWC8C1NoBlank_Bank03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A4
 ; points at: wC0A1
-Func_003_74E2_Case03::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case03::
 Jump_003_75EE:: ; address name
-    call Func_003_7647
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01
     call Func_003_4659
     ld a, [wC0A4]
     cp a, $04
@@ -8125,13 +8149,13 @@ Jump_003_75EE:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_003_74E2
+; entry 4 of the `rst $00` table in WriteTwoDigitTilesWC8C1NoBlank_Bank03
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wC0A1
-Func_003_74E2_Case04::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case04::
 Jump_003_75FF:: ; address name
-    call Func_003_7647
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01
     ld a, $00
     ld [wStringCategory], a
     ld a, $26
@@ -8141,17 +8165,17 @@ Jump_003_75FF:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_003_74E2
+; entry 5 of the `rst $00` table in WriteTwoDigitTilesWC8C1NoBlank_Bank03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wModeState
 ; writes: wC0A0, wC0A1
 ; points at: wScreenTileBuffer
-Func_003_74E2_Case05::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case05::
 Jump_003_7617:: ; address name
     ld a, [wC52B]
     or a, a
     jr z, Jump_003_7621
-    call Func_003_7647
+    call WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01
     ret
 
 Jump_003_7621::
@@ -8163,9 +8187,9 @@ Jump_003_7621::
     ld [wC0A1], a
     ret
 
-; entry 6 of the `rst $00` table in Func_003_74E2
+; entry 6 of the `rst $00` table in WriteTwoDigitTilesWC8C1NoBlank_Bank03
 ; no direct call (reached through a table, a jump or a vector)
-Func_003_74E2_Case06::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case06::
 Jump_003_7630:: ; address name
     jp Jump_000_015A
 
@@ -8179,10 +8203,12 @@ Jump_003_7633::
     ld [wC0A1], a
     ret
 
-; 7 call sites from 6 routines (e.g. Func_003_74E2_Case05, Func_003_74E2_Case04, Func_003_74E2_Case03, Func_003_74E2_Case02, ...)
+; only called from routines of WriteTwoDigitTilesWC8C1NoBlank_Bank03 (E-0098)
+; 7 call sites from 6 routines (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case05, WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case04, WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case03, WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case02, ...)
 ; reads: wBattlerRecords, wD10A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
-Func_003_7647::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Shared01::
+Func_003_7647:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, $01
@@ -8233,7 +8259,7 @@ Func_003_7692:: ; address name
     ret
 
 ; LoadScreenBlock21, then writes tile $BC at MenuCursorPositions_Bank03[wC46D & 7] in the buffer (WriteBCTileToScreenBufferAtTableEntry_Bank03) (E-0101)
-; 4 call sites from 4 routines (e.g. Func_003_76AD, Func_003_7726, LoadScreenBlock21CursorAnd2C, MenuCursorAddressWC46E_Shared03)
+; 4 call sites from 4 routines (e.g. Func_003_76AD, TestListEntryBit7_Case00_Sub01, LoadScreenBlock21CursorAnd2C, MenuCursorAddressWC46E_Shared03)
 ; reads: wC46D
 LoadScreenBlock21WithCursor::
 Func_003_769E:: ; address name
@@ -8301,12 +8327,14 @@ Func_003_7707::
     farcall CopyBlockToTileBuffer
     ret
 
-; 1 call site from 1 routine (e.g. Func_003_6EBF_Case00)
-Func_003_7726::
+; only called from TestListEntryBit7_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. TestListEntryBit7_Case00)
+TestListEntryBit7_Case00_Sub01::
+Func_003_7726:: ; address name
     call LoadScreenBlock21WithCursor
     ld hl, Data_003_7B9F
     ld de, Data_003_7BAF
-    call Func_003_7BBF
+    call TestListEntryBit7_Case00_Sub01_Sub01
     ld e, $26
     farcall CopyBlockToTileBuffer
     ld e, $27
@@ -8314,7 +8342,7 @@ Func_003_7726::
     ret
 
 ; LoadScreenBlock21WithCursor, then block $2C (E-0114)
-; 1 call site from 1 routine (e.g. Func_003_6EBF_Table2_Case00)
+; 1 call site from 1 routine (e.g. TestListEntryBit7_Table2_Case00)
 LoadScreenBlock21CursorAnd2C::
 Func_003_7743:: ; address name
     call LoadScreenBlock21WithCursor
@@ -8346,9 +8374,11 @@ Func_003_7763:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; 1 call site from 1 routine (e.g. Func_003_74E2_Case00)
+; only called from WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00)
 ; reads: wC46D
-Func_003_776C::
+WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case00_Sub01::
+Func_003_776C:: ; address name
     ld e, $2A
     farcall CopyBlockToTileBuffer
     ld a, [wC46D]
@@ -8362,7 +8392,7 @@ Func_003_776C::
     ret
 
 ; copies screen block $2B into the tile buffer (E-0114)
-; 2 call sites from 2 routines (e.g. Func_003_74E2_Case01, Func_003_5253_Table4_Case1C)
+; 2 call sites from 2 routines (e.g. WriteTwoDigitTilesWC8C1NoBlank_Bank03_Case01, Func_003_5253_Table4_Case1C)
 LoadScreenBlock2B::
 Func_003_7791:: ; address name
     ld e, $2B
@@ -9032,8 +9062,10 @@ Data_003_7B9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_7BAF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0, $40, $70, $43, $B0, $42, $D0, $42, $10, $43, $C0, $42, $B0, $43, $FF, $FF
 
-; 1 call site from 1 routine (e.g. Func_003_7726)
-Func_003_7BBF::
+; only called from TestListEntryBit7_Case00_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. TestListEntryBit7_Case00_Sub01)
+TestListEntryBit7_Case00_Sub01_Sub01::
+Func_003_7BBF:: ; address name
     ld b, $00
 
 Jump_003_7BC1::

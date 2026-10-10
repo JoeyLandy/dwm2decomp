@@ -1909,7 +1909,7 @@ Jump_05F_73E6::
     ld [wScriptParam0], a
     cp a, $20
     jr z, Jump_05F_7402
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -1958,7 +1958,7 @@ Jump_05F_742F:: ; address name
 ; points at: wCB8B, wC92D
 Func_05F_7363_Case0D::
 Jump_05F_743D:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -1986,7 +1986,7 @@ Jump_05F_743D:: ; address name
 ; points at: wC92D
 Func_05F_7363_Case0C::
 Jump_05F_746F:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -2039,7 +2039,7 @@ Jump_05F_74AA::
 ; points at: wCBD4, wC92D
 Func_05F_7363_Case0B::
 Jump_05F_74CD:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -2125,7 +2125,7 @@ Jump_05F_753A:: ; address name
 ; points at: wCBD4, wCBD3, wC92D
 Func_05F_7363_Case08::
 Jump_05F_7554:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B33
@@ -2160,7 +2160,7 @@ Jump_05F_7554:: ; address name
 ; points at: wCB8B, wC92D
 Func_05F_7363_Case07::
 Jump_05F_7593:: ; address name
-    farcall Func_012_6B22
+    farcall CycleWC949Down
     ld a, $01
     ldh [hFFC6], a
     farcall Func_012_6B33
