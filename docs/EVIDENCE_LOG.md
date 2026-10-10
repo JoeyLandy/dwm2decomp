@@ -583,6 +583,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Battler records (correction to E-0059).** GetBaseHP's note (E-0043) already says the `$4E`-byte records at wD0D5 belong to battle slots, and that slots 3 and 7 are handled separately. So `00:3F32`'s index-3 adjustment maps slots 4-6 to records 3-5. It is renamed `BattlerRecordFieldAddress`, and wD0D5 is named wBattlerRecords.
 - Binary verification: pending; see the commit.
 
+### E-0063 — Inventory, MP and SRAM helpers (batch 5)
+
+- Kind: OBSERVATION (full reading only; C1).
+- Routines read:
+  - `ConsumeSelectedItemByChance` (`16:4C1D`, 33 call sites) and `CompactInventory` (`16:4C48`).
+  - `ActorCanPayMPCost_Bank05` (`05:413F`, 35).
+  - `ShowStringA10_Bank1B` (`1B:7439`, 32).
+  - `SRAMRecordAddressOfWD7F1` (`1D:7B0F`, 27).
+  - `SetWC924ClearWC926` (`12:6820`, 35).
+- `ActorCanPayMPCost_Bank05` is a second routine that allows cost = MP. That puts `FilterSkillListByMP`'s strict cost < MP (E-0048) in the minority, which is still unexplained.
+- The roll in `ConsumeSelectedItemByChance` is (wC5E8:wC5E7) mod 100, where wC5E8 is a 7-bit table index, so it is not exactly uniform.
+- Unknowns:
+  - which item uses consume this way;
+  - what wD087 (the chance) and wD082 (the bag slot) are set from;
+  - what wC924 and wC926 do.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

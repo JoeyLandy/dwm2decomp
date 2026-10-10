@@ -3878,7 +3878,7 @@ Jump_003_57E2::
     ld a, $04
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank08
-    farcall Func_016_4C48
+    farcall CompactInventory
     ld hl, wC0A1
     inc [hl]
     ret

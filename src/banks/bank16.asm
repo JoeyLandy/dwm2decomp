@@ -1355,7 +1355,7 @@ Jump_016_475F:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_57D1
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 3 of the `rst $00` table in Func_016_468E
@@ -1368,7 +1368,7 @@ Jump_016_477D:: ; address name
     call Func_016_4790
     ld a, $02
     call Func_016_4790
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_468E_Case03)
@@ -1408,7 +1408,7 @@ Jump_016_47B0:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_57E8
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 5 of the `rst $00` table in Func_016_468E
@@ -1423,7 +1423,7 @@ Jump_016_47CE:: ; address name
     ld a, [wD083]
     ld c, $5F
     call Func_016_58FD
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 6 of the `rst $00` table in Func_016_468E
@@ -1435,7 +1435,7 @@ Jump_016_47E5:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     res 2, [hl]
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 7 of the `rst $00` table in Func_016_468E
@@ -1447,7 +1447,7 @@ Jump_016_47F3:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     res 3, [hl]
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 8 of the `rst $00` table in Func_016_468E
@@ -1459,7 +1459,7 @@ Jump_016_4801:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     res 0, [hl]
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 9 of the `rst $00` table in Func_016_468E
@@ -1471,7 +1471,7 @@ Jump_016_480F:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     res 1, [hl]
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 10 of the `rst $00` table in Func_016_468E
@@ -1483,7 +1483,7 @@ Jump_016_481D:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     res 4, [hl]
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 11 of the `rst $00` table in Func_016_468E
@@ -1511,7 +1511,7 @@ Jump_016_482C:: ; address name
     call Func_016_58FD
     ld a, $01
     ld [wD095], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 13 of the `rst $00` table in Func_016_468E
@@ -1524,7 +1524,7 @@ Jump_016_4852:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_57FF
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 14 of the `rst $00` table in Func_016_468E
@@ -1537,7 +1537,7 @@ Jump_016_4862:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_580B
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 15 of the `rst $00` table in Func_016_468E
@@ -1550,7 +1550,7 @@ Jump_016_4872:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_5817
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 16 of the `rst $00` table in Func_016_468E
@@ -1563,7 +1563,7 @@ Jump_016_4882:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_5823
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 17 of the `rst $00` table in Func_016_468E
@@ -1576,7 +1576,7 @@ Jump_016_4892:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_582F
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 18 of the `rst $00` table in Func_016_468E
@@ -1589,7 +1589,7 @@ Jump_016_48A2:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_583B
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 19 of the `rst $00` table in Func_016_468E
@@ -1602,7 +1602,7 @@ Jump_016_48B2:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_5847
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 20 of the `rst $00` table in Func_016_468E
@@ -1615,7 +1615,7 @@ Jump_016_48C2:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_5852
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 21 of the `rst $00` table in Func_016_468E
@@ -1628,7 +1628,7 @@ Jump_016_48D2:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_585D
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 22 of the `rst $00` table in Func_016_468E
@@ -1641,7 +1641,7 @@ Jump_016_48E2:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_5868
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 23 of the `rst $00` table in Func_016_468E
@@ -1654,7 +1654,7 @@ Jump_016_48F2:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_5873
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 24 of the `rst $00` table in Func_016_468E
@@ -1667,7 +1667,7 @@ Jump_016_4902:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_587E
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 25 of the `rst $00` table in Func_016_468E
@@ -1680,7 +1680,7 @@ Jump_016_4912:: ; address name
     ld h, $00
     ld a, [wD083]
     call Func_016_5889
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 29 of the `rst $00` table in Func_016_468E
@@ -1697,7 +1697,7 @@ Jump_016_4922:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     set 2, [hl]
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 30 of the `rst $00` table in Func_016_468E
@@ -1719,7 +1719,7 @@ Func_016_468E_Case20::
 Jump_016_493E:: ; address name
     ld a, $C8
     ld [wD091], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 33 of the `rst $00` table in Func_016_468E
@@ -1729,7 +1729,7 @@ Func_016_468E_Case21::
 Jump_016_4947:: ; address name
     ld a, $01
     ld [wDataBankSave], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 34 of the `rst $00` table in Func_016_468E
@@ -1745,7 +1745,7 @@ Func_016_468E_Case28::
 Jump_016_4951:: ; address name
     ld a, $02
     ld [wDataBankSave], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 41 of the `rst $00` table in Func_016_468E
@@ -1755,7 +1755,7 @@ Func_016_468E_Case29::
 Jump_016_495A:: ; address name
     ld a, $03
     ld [wDataBankSave], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 42 of the `rst $00` table in Func_016_468E
@@ -1765,14 +1765,14 @@ Func_016_468E_Case2A::
 Jump_016_4963:: ; address name
     ld a, $04
     ld [wDataBankSave], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 43 of the `rst $00` table in Func_016_468E
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_468E_Case2B::
 Jump_016_496C:: ; address name
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 44 of the `rst $00` table in Func_016_468E
@@ -1788,7 +1788,7 @@ Func_016_468E_Case2E::
 Jump_016_4971:: ; address name
     ld a, $09
     ld [wDataBankSave], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     ret
 
 ; entry 47 of the `rst $00` table in Func_016_468E
@@ -2050,7 +2050,7 @@ Func_016_4A48::
     ld a, [wItemId]
     sub a, $3F
     ld [hl], a
-    call Func_016_4C1D
+    call ConsumeSelectedItemByChance
     xor a, a
     ldh [hFFC6], a
     ret
@@ -2069,7 +2069,7 @@ Jump_016_4A61::
     add a, $3F
     ld [hl], a
     push af
-    call Func_016_4C48
+    call CompactInventory
     pop af
     call Func_016_4A92
     ld l, a
@@ -2456,11 +2456,13 @@ Jump_016_4C18::
     ld d, $03
     ret
 
+; advances the random table (NextTableByte), takes A = (wC5E8:wC5E7) mod 100 and, when A < wD087, sets wItemId = $FF, clears wInventory[wD082] to $FF and runs CompactInventory; otherwise returns with carry clear and nothing changed (E-0063)
 ; 33 call sites from 33 routines (e.g. Func_016_4A48, Func_016_468E_Case2E, Func_016_468E_Case2B, Func_016_468E_Case2A, ...)
 ; reads: wC5E7, wC5E8, wD082
 ; writes: wItemId
 ; points at: wD087, wInventory
-Func_016_4C1D::
+ConsumeSelectedItemByChance::
+Func_016_4C1D:: ; address name
     call NextTableByte
     ld a, [wC5E7]
     ld l, a
@@ -2477,12 +2479,14 @@ Func_016_4C1D::
     ld hl, wInventory
     add_a_to_hl
     ld [hl], $FF
-    call Func_016_4C48
+    call CompactInventory
     ret
 
-; 6 call sites from 6 routines (e.g. Func_016_4C1D, Func_016_4A48, Func_016_4C9E, Func_003_5253_Table5_Case04, ...)
+; copies the 24 wInventory bytes to wD09D, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
+; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, Func_016_4A48, Func_016_4C9E, Func_003_5253_Table5_Case04, ...)
 ; points at: wD09D, wInventory
-Func_016_4C48::
+CompactInventory::
+Func_016_4C48:: ; address name
     ld hl, wD09D
     ld de, wInventory
     ld b, $18
@@ -2572,7 +2576,7 @@ Jump_016_4CAC::
 
 Jump_016_4CBC::
     ld [hl], $FF
-    call Func_016_4C48
+    call CompactInventory
     ret
 
 ; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wD081) to wD084; RunItemEffect dispatches on the same id; wC61D is a 24-slot bag of such ids, empty at the start of a new game, matching the item menu's 'No items'; the herb handler compares the words at save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a different table. The meaning of the fields is not established beyond the first amount being 10, 50, 500, 200 and 2000 for ids 1-5.
@@ -3376,7 +3380,7 @@ Jump_016_5675::
     ld h, $05
     ld de, wC160
     call CopyStringHLToDE
-    farcall Func_016_4C48
+    farcall CompactInventory
 
 Jump_016_5688::
     ld a, $0E

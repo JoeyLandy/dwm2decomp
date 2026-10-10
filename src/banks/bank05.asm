@@ -106,10 +106,12 @@ Jump_005_406F::
     ret
     INCBIN "dwm2-cobi-us.gbc", $014075, $CA
 
+; cost = wRecordBufferData (byte 0 of the skill record): C = $FF (can pay) when the cost is 0, when the cost is $FF and the actor's MP (wBattleMP word) is non-zero, or when MP >= cost; C = 0 otherwise. Agrees with CheckSkillMPCost that equal MP and cost is enough (E-0063)
 ; 35 call sites from 35 routines (e.g. Func_005_708C, Func_005_70C9, Func_005_7109, Func_005_715F, ...)
 ; reads: wBattleActor, wRecordBufferData
 ; points at: wBattleMP
-Func_005_413F::
+ActorCanPayMPCost_Bank05::
+Func_005_413F:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleMP
     add a, a
@@ -8922,7 +8924,7 @@ Jump_005_7088::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_40BF, Func_0E2_411C)
 Func_005_708C:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_70C5
@@ -8962,7 +8964,7 @@ Jump_005_70C5::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_41E0)
 Func_005_70C9:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7105
@@ -9002,7 +9004,7 @@ Jump_005_7105::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_4279)
 Func_005_7109:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_715B
@@ -9058,7 +9060,7 @@ Jump_005_715B::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_4310, Func_0E2_438D)
 Func_005_715F:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7183
@@ -9677,7 +9679,7 @@ Jump_005_7490::
 
 ; 18 call sites from 18 routines (e.g. Func_005_71AC, Func_005_71BE, Func_005_71DE, Func_005_71F4, ...)
 Func_005_7494::
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_74B1
@@ -9721,7 +9723,7 @@ Jump_005_74CD::
 
 ; 6 call sites from 6 routines (e.g. Func_005_74B5, Func_005_74F9, Func_005_7512, Func_0E2_4AB6, ...)
 Func_005_74D1::
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_74F5
@@ -9983,7 +9985,7 @@ Jump_005_7610::
 
 ; 19 call sites from 19 routines (e.g. Func_005_7524, Func_005_763E, Func_005_753A, Func_005_7686, ...)
 Func_005_7616::
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_763A
@@ -10173,7 +10175,7 @@ Jump_005_7706::
 
 ; 3 call sites from 3 routines (e.g. Func_005_76F8, Func_005_7777, Func_005_7812)
 Func_005_770A::
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7727
@@ -10221,7 +10223,7 @@ Jump_005_774B::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_545D)
 Func_005_774F:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7773
@@ -10282,7 +10284,7 @@ Jump_005_779B::
 
 ; 3 call sites from 3 routines (e.g. Func_005_7786, Func_005_77C7, Func_0E2_56C6)
 Func_005_779F::
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_77C3
@@ -10450,7 +10452,7 @@ Jump_005_7875::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5900)
 Func_005_7879:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_78A4
@@ -10532,7 +10534,7 @@ Jump_005_78E8::
 
 ; 4 call sites from 4 routines (e.g. Func_005_78A8, Func_005_790D, Func_005_78CC, Func_005_791F)
 Func_005_78EC::
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7909
@@ -10600,7 +10602,7 @@ Jump_005_7942::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5AE6)
 Func_005_7946:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7971
@@ -10632,7 +10634,7 @@ Jump_005_7971::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5B3D)
 Func_005_7975:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7992
@@ -10656,7 +10658,7 @@ Jump_005_7992::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5BC4)
 Func_005_7996:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_79C1
@@ -10712,7 +10714,7 @@ Jump_005_79E1::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5CC2)
 Func_005_79E5:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A09
@@ -10740,7 +10742,7 @@ Jump_005_7A09::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5CCE)
 Func_005_7A0D:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A23
@@ -10760,7 +10762,7 @@ Jump_005_7A23::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5D3D)
 Func_005_7A27:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A38
@@ -10778,7 +10780,7 @@ Jump_005_7A38::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5D60)
 Func_005_7A3E:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A4F
@@ -10796,7 +10798,7 @@ Jump_005_7A4F::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5D83)
 Func_005_7A55:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A66
@@ -10814,7 +10816,7 @@ Jump_005_7A66::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5DBC)
 Func_005_7A6C:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7A8D
@@ -10842,7 +10844,7 @@ Jump_005_7A8D::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_5DED)
 Func_005_7A91:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7AA0
@@ -10898,7 +10900,7 @@ Jump_005_7AD4::
 
 ; 3 call sites from 3 routines (e.g. Func_005_7B40, Func_0E2_5EC0, Func_0E2_5FE8)
 Func_005_7AD8:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7B0D
@@ -10934,7 +10936,7 @@ Jump_005_7B0D::
 
 ; 2 call sites from 2 routines (e.g. Func_0E2_5F0A, Func_0E2_6401)
 Func_005_7B11:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7B3C
@@ -10986,7 +10988,7 @@ Jump_005_7B58::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6044)
 Func_005_7B5C:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7B80
@@ -11014,7 +11016,7 @@ Jump_005_7B80::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6089)
 Func_005_7B84:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
@@ -11054,7 +11056,7 @@ Jump_005_7BBA::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_60A6)
 Func_005_7BBE:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7BE2
@@ -11134,7 +11136,7 @@ Jump_005_7C20::
 
 ; 4 call sites from 4 routines (e.g. Func_005_7BEE, Func_005_7C45, Func_005_7C82, Func_005_7CA2)
 Func_005_7C24::
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7C41
@@ -11254,7 +11256,7 @@ Jump_005_7CBE::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_61CD)
 Func_005_7CC2:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7CE3
@@ -11282,7 +11284,7 @@ Jump_005_7CE3::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_61E0)
 Func_005_7CE7:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7CEF
@@ -11294,7 +11296,7 @@ Jump_005_7CEF::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6249)
 Func_005_7CF3:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7D57
@@ -11362,7 +11364,7 @@ Jump_005_7D57::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_62A4)
 Func_005_7D5B:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7D91
@@ -11402,7 +11404,7 @@ Jump_005_7D91::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6303)
 Func_005_7D95:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7DA4
@@ -11418,7 +11420,7 @@ Jump_005_7DA4::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6350)
 Func_005_7DA8:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7DBE
@@ -11438,7 +11440,7 @@ Jump_005_7DBE::
 
 ; 1 call site from 1 routine (e.g. Func_0E2_6387)
 Func_005_7DC2:: ; heuristic: follows a terminator; C0
-    call Func_005_413F
+    call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7DD8

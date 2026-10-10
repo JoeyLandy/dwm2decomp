@@ -1136,7 +1136,7 @@ Jump_03B_46AE::
     add a, b
     ld [wD082], a
     farcall LoadItemRecord
-    farcall Func_016_4C1D
+    farcall ConsumeSelectedItemByChance
     ld a, [wItemId]
     cp a, $FF
     ret nz

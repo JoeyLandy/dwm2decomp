@@ -17,7 +17,7 @@ Func_012_4001:: ; address name
 ScriptCommand9D_Run_Case00::
 Jump_012_4009:: ; address name
     ld a, $10
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -50,7 +50,7 @@ Jump_012_401B:: ; address name
 ScriptCommand9C_Run_Case00::
 Jump_012_4026:: ; address name
     ld a, $0F
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -846,7 +846,7 @@ Jump_012_44AF:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ld a, [wD7FC]
     add a, $05
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $80
     ld [wC94A], a
     ret
@@ -1478,7 +1478,7 @@ Jump_012_4895::
 
 Jump_012_48A6::
     ld a, [de]
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_48AB::
@@ -1491,7 +1491,7 @@ Jump_012_48AB::
 
 Jump_012_48B4::
     ld a, [de]
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Data_012_48B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1830,7 +1830,7 @@ Jump_012_4B19:: ; address name
     or a, a
     jr nz, Jump_012_4B56
     ld a, $17
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_4B56::
@@ -1849,7 +1849,7 @@ Jump_012_4B65::
     ld [hl+], a
     ld [hl], $F0
     ld a, $18
-    call Func_012_6820
+    call SetWC924ClearWC926
     ldh a, [hFFB9]
     ld [wScriptParam0], a
     xor a, a
@@ -2069,7 +2069,7 @@ Jump_012_4CA0:: ; address name
 ScriptCommand9F_Run_Case0E::
 Jump_012_4CAA:: ; address name
     ld a, $0E
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2840,7 +2840,7 @@ Jump_012_50D1:: ; address name
 ScriptCommandA1_Run_Case00::
 Jump_012_50DB:: ; address name
     ld a, $12
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3166,12 +3166,12 @@ Jump_012_5548:: ; address name
     call TestFlagBit
     jr c, Jump_012_555B
     ld a, $0D
-    call Func_012_6820
+    call SetWC924ClearWC926
     jr Jump_012_5560
 
 Jump_012_555B::
     ld a, $15
-    call Func_012_6820
+    call SetWC924ClearWC926
 
 Jump_012_5560::
     ld de, $0025
@@ -3295,7 +3295,7 @@ Jump_012_5633:: ; address name
     call TestFlagBit
     jr c, Jump_012_5650
     ld a, $0C
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $01
     ld [wCB86], a
     ret
@@ -3307,12 +3307,12 @@ Jump_012_5650::
     call TestFlagBit
     jr c, Jump_012_5662
     ld a, $13
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_5662::
     ld a, $14
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommand9B_Run
@@ -3379,12 +3379,12 @@ Jump_012_56AD::
     call TestFlagBit
     jr c, Jump_012_56C9
     ld a, $11
-    call Func_012_6820
+    call SetWC924ClearWC926
     jr Jump_012_56CE
 
 Jump_012_56C9::
     ld a, $16
-    call Func_012_6820
+    call SetWC924ClearWC926
 
 Jump_012_56CE::
     xor a, a
@@ -3424,12 +3424,12 @@ Jump_012_56E8:: ; address name
     call TestFlagBit
     jr c, Jump_012_5717
     ld a, $11
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_5717::
     ld a, $16
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 ; entry 6 of the `rst $00` table in ScriptCommand9B_Run
@@ -4087,7 +4087,7 @@ Jump_012_5A89:: ; address name
     ld de, wC17E
     call Func_000_23CA
     ld a, $05
-    call Func_012_6820
+    call SetWC924ClearWC926
     xor a, a
     ld [wC925], a
     ret
@@ -4097,7 +4097,7 @@ Jump_012_5AB1::
     ld de, wC152
     call Func_000_2431
     ld a, $06
-    call Func_012_6820
+    call SetWC924ClearWC926
     xor a, a
     ld [wC925], a
     ret
@@ -5429,7 +5429,7 @@ Jump_012_6295:: ; address name
     or a, l
     jr nz, Jump_012_62A9
     ld a, $00
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_62A9::
@@ -5448,12 +5448,12 @@ Jump_012_62A9::
 
 Jump_012_62C3::
     ld a, $02
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_62C9::
     ld a, $03
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld hl, $0000
     ld a, l
     ld [wScriptParam0], a
@@ -5467,12 +5467,12 @@ Jump_012_62DA::
     or a, a
     jr z, Jump_012_62EB
     ld a, $08
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_62EB::
     ld a, $09
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld hl, $0000
     ld a, l
     ld [wScriptParam0], a
@@ -5485,7 +5485,7 @@ Jump_012_62FC::
     cp a, $01
     jr z, Jump_012_62DA
     ld a, $19
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $03
     ld [wScriptStep], a
     ret
@@ -5566,7 +5566,7 @@ Jump_012_635B:: ; address name
     or a, a
     jr z, Jump_012_6374
     ld a, $00
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_6374::
@@ -5584,12 +5584,12 @@ Jump_012_6374::
 
 Jump_012_638A::
     ld a, $02
-    call Func_012_6820
+    call SetWC924ClearWC926
     ret
 
 Jump_012_6390::
     ld a, $03
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld hl, $0000
     ld a, l
     ld [wScriptParam0], a
@@ -5729,7 +5729,7 @@ Jump_012_6441::
     ld de, wC152
     call Func_000_2431
     ld a, $06
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $03
     ld [wScriptParam0], a
     ret
@@ -5740,7 +5740,7 @@ Jump_012_6454::
     ld de, wC152
     call Func_000_2431
     ld a, $07
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $05
     ld [wScriptParam0], a
     ret
@@ -5768,7 +5768,7 @@ Jump_012_6467::
     ld de, wC17E
     call Func_000_23CA
     ld a, $05
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $02
     ld [wScriptParam0], a
     ret
@@ -5788,7 +5788,7 @@ Jump_012_64A4::
     ld de, wC152
     call Func_000_2431
     ld a, $02
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $03
     ld [wScriptParam0], a
     ret
@@ -5799,14 +5799,14 @@ Jump_012_64B7::
     ld de, wC152
     call Func_000_2431
     ld a, $03
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $05
     ld [wScriptParam0], a
     ret
 
 Jump_012_64CA::
     ld a, $04
-    call Func_012_6820
+    call SetWC924ClearWC926
     ld a, $04
     ld [wScriptParam0], a
     ret
@@ -6423,9 +6423,11 @@ Func_012_6813:: ; address name
     ld [wC926], a
     ret
 
+; wC924 = A, wC926 = 0; used by script commands, meaning not read (E-0063)
 ; 35 call sites from 15 routines (e.g. ScriptCommandA1_Run_Case00, ScriptCommand9D_Run_Case00, ScriptCommand9C_Run_Case00, Func_012_488B, ...)
 ; writes: wC924, wC926
-Func_012_6820::
+SetWC924ClearWC926::
+Func_012_6820:: ; address name
     ld [wC924], a
     xor a, a
     ld [wC926], a

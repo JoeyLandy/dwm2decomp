@@ -271,7 +271,7 @@ Jump_0F1_4187::
     ld hl, wInventory
     add_a_to_hl
     ld [hl], $00
-    farcall Func_016_4C48
+    farcall CompactInventory
     ld a, $40
     ld [wDataBankSave], a
     farcall Func_003_4339

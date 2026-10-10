@@ -1244,7 +1244,7 @@ Jump_01B_47F5::
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. ShowString_Bank1B_481A, GameMode0_Update_Table2_Case21, BeginString_Bank1B_Cat0, Func_01B_7439, ...)
+; 5 call sites from 5 routines (e.g. ShowString_Bank1B_481A, GameMode0_Update_Table2_Case21, BeginString_Bank1B_Cat0, ShowStringA10_Bank1B, ...)
 BeginStringDisplay_Bank1B_480C::
 Func_01B_480C:: ; address name
     ld de, Data_01B_4821
@@ -4819,7 +4819,7 @@ Jump_01B_6682:: ; address name
     ldh [hFFBA], a
     xor a, a
     ld [wStringCategory], a
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     call Func_01B_74DC
     ld a, [wD780]
     inc a
@@ -4880,7 +4880,7 @@ Jump_01B_66C6:: ; address name
     and a, a
     ret nz
     ld a, $0C
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5160,7 +5160,7 @@ Jump_01B_686F:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -5207,14 +5207,14 @@ Jump_01B_68C3::
     dec a
     ld [wD7DC], a
     ld a, $01
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     jr Jump_01B_68E6
 
 Jump_01B_68DE::
     dec a
     ld [wD7DC], a
     xor a, a
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
 
 Jump_01B_68E6::
     call Func_01B_74DC
@@ -5229,7 +5229,7 @@ Jump_01B_68F6::
     ld a, $02
     ld [wD780], a
     ld a, $0A
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     xor a, a
     ld [wD781], a
     ld [wD782], a
@@ -5257,12 +5257,12 @@ Jump_01B_6918::
     cp a, $03
     jr z, Jump_01B_693A
     ld a, $02
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ret
 
 Jump_01B_693A::
     ld a, $07
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ret
 
 ; entry 9 of the `rst $00` table in Func_01B_665E
@@ -5332,7 +5332,7 @@ Jump_01B_69A9:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -5399,7 +5399,7 @@ Jump_01B_6A18::
     inc a
     ld [wD780], a
     ld a, $0C
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ret
 
 Jump_01B_6A46::
@@ -5485,7 +5485,7 @@ Jump_01B_6AB3:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -5516,7 +5516,7 @@ Jump_01B_6AE5:: ; address name
     and a, a
     jr z, Jump_01B_6B02
     ld a, $03
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -5582,7 +5582,7 @@ Jump_01B_6B4B:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -5611,7 +5611,7 @@ Jump_01B_6B89::
     jr nz, Jump_01B_6B7D
     call Func_01B_7349
     xor a, a
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -5641,7 +5641,7 @@ Jump_01B_6BAB:: ; address name
     bit 7, a
     jr nz, Jump_01B_6BBB
     ld a, $0C
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     call Func_01B_7716
     ret
 
@@ -5652,7 +5652,7 @@ Jump_01B_6BBB::
     jr nz, Jump_01B_6BD7
     call Func_01B_72AD
     ld a, $05
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -5660,7 +5660,7 @@ Jump_01B_6BBB::
 
 Jump_01B_6BD7::
     ld a, $04
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     call Func_01B_72AD
     ld a, [wD7DC]
     ld [wD7B4], a
@@ -5683,7 +5683,7 @@ Jump_01B_6BF7:: ; address name
     ret nz
     call Func_01B_7716
     ld a, $0C
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ret
 
 ; entry 7 of the `rst $00` table in Func_01B_6A5E
@@ -5701,7 +5701,7 @@ Jump_01B_6C05:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -5734,7 +5734,7 @@ Jump_01B_6C4D::
     jr nz, Jump_01B_6C37
     call Func_01B_7349
     ld a, $06
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $03
     ld [wD782], a
     ret
@@ -5776,7 +5776,7 @@ Jump_01B_6C61:: ; address name
 Func_01B_6A5E_Table2_Case11::
 Jump_01B_6C91:: ; address name
     ld a, $09
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5789,7 +5789,7 @@ Jump_01B_6C91:: ; address name
 Func_01B_6A5E_Table2_Case09::
 Jump_01B_6C9E:: ; address name
     ld a, $0C
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5900,7 +5900,7 @@ Jump_01B_6D1E:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -5979,7 +5979,7 @@ Jump_01B_6D96:: ; address name
     inc a
     ld [wD781], a
     ld a, $08
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ret
 
 ; entry 6 of the `rst $00` table in Func_01B_6A5E
@@ -6040,7 +6040,7 @@ Jump_01B_6E09:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -6060,7 +6060,7 @@ Jump_01B_6E3B::
     ld a, $02
     ld [wD780], a
     ld a, $0A
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     xor a, a
     ld [wD781], a
     ld [wD782], a
@@ -6087,7 +6087,7 @@ Jump_01B_6E67::
     bit 7, a
     jr nz, Jump_01B_6E7B
     ld a, $14
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -6098,7 +6098,7 @@ Jump_01B_6E7B::
     and a, a
     jr nz, Jump_01B_6E8E
     ld a, $15
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -6153,7 +6153,7 @@ Jump_01B_6EC6:: ; address name
     ld [wD781], a
     ld [wD782], a
     ld a, $0B
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, $FE
     ld [wC594], a
     ret
@@ -7035,9 +7035,11 @@ Jump_01B_7424::
     farcall Func_01D_5F9C
     ret
 
+; wStringIndex = A + $10, wStringCategory = 0, then far-calls BeginStringDisplay_Bank1B_480C (E-0063)
 ; 32 call sites from 17 routines (e.g. Func_01B_665E_Case00, Func_01B_665E_Table2_Case01, Func_01B_665E_Table3_Case0D, Func_01B_7600, ...)
 ; writes: wStringIndex, wStringCategory
-Func_01B_7439::
+ShowStringA10_Bank1B::
+Func_01B_7439:: ; address name
     add a, $10
     ld [wStringIndex], a
     xor a, a
@@ -7400,7 +7402,7 @@ Jump_01B_764B::
 
 Jump_01B_767A::
     ld a, $11
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     dec a
     ld [wD781], a
@@ -7443,7 +7445,7 @@ Jump_01B_76AC::
 
 Jump_01B_76BD::
     ld a, $12
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     dec a
     ld [wD781], a
@@ -7455,7 +7457,7 @@ Jump_01B_76CB::
     cp a, $FF
     jr nz, Jump_01B_76E0
     ld a, $13
-    call Func_01B_7439
+    call ShowStringA10_Bank1B
     ld a, [wD781]
     dec a
     ld [wD781], a

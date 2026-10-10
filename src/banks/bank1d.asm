@@ -6413,7 +6413,7 @@ Jump_01D_6E3F::
     ld a, b
     or a, c
     jr nz, Jump_01D_6E3F
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push de
@@ -6521,7 +6521,7 @@ Jump_01D_6ECA::
     ld a, c
     cp a, $05
     jr c, Jump_01D_6ECA
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $03
     add_a_to_hl
     ld a, [wD7E1]
@@ -6648,7 +6648,7 @@ Data_01D_6F9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $0F, $1E, $29, $8E, $99
 
 Jump_01D_6FA0::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $21
     add_a_to_hl
     push hl
@@ -6677,7 +6677,7 @@ Jump_01D_6FA0::
     jp Jump_01D_6EC5
 
 Jump_01D_6FDD::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $22
     add_a_to_hl
     push hl
@@ -6707,7 +6707,7 @@ Jump_01D_6FDD::
     jp Jump_01D_6EC5
 
 Jump_01D_7019::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $23
     add_a_to_hl
     push hl
@@ -6738,7 +6738,7 @@ Jump_01D_7019::
     jp Jump_01D_6EC5
 
 Jump_01D_7057::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $24
     add_a_to_hl
     push hl
@@ -6768,7 +6768,7 @@ Jump_01D_7057::
     jp Jump_01D_6EC5
 
 Jump_01D_708D::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $25
     add_a_to_hl
     push hl
@@ -6798,7 +6798,7 @@ Jump_01D_708D::
     jp Jump_01D_6EC5
 
 Jump_01D_70C6::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $26
     add_a_to_hl
     push hl
@@ -6852,7 +6852,7 @@ Func_01D_70F9::
     ret
 
 Jump_01D_7121::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $28
     add_a_to_hl
     ld a, $73
@@ -6940,7 +6940,7 @@ Jump_01D_7157::
     pop af
     ld [hl], a
     push hl
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     pop hl
     ld a, $1A
     add a, e
@@ -6988,7 +6988,7 @@ Jump_01D_71B2::
     ld [rRAMG2], a
     ld [rRAMB], a
     ld [wD7E1], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push de
@@ -7071,7 +7071,7 @@ Jump_01D_7248::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     ld a, $5B
     add a, e
     ld e, a
@@ -7165,7 +7165,7 @@ Jump_01D_727C::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push de
     ld a, $6B
@@ -7291,7 +7291,7 @@ Jump_01D_735E::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push de
     ld a, $6F
@@ -7437,7 +7437,7 @@ Jump_01D_7470::
 ; writes: rRAMB, rRAMG2, wD7E0, wD7F5
 ; points at: wC8CF
 Func_01D_7492::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push de
     push af
@@ -7554,7 +7554,7 @@ Jump_01D_7514::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push de
     call Func_01D_795D
@@ -7666,7 +7666,7 @@ Jump_01D_75C9::
     ret
 
 Jump_01D_75DA::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     ld a, $28
     add_a_to_hl
@@ -7862,7 +7862,7 @@ Jump_01D_7702::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     ld a, $32
     add_a_to_hl
@@ -7949,7 +7949,7 @@ Jump_01D_7768::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     ld a, $57
     add_a_to_hl
@@ -8036,7 +8036,7 @@ Jump_01D_779D::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     ld a, $61
     add_a_to_hl
@@ -8144,7 +8144,7 @@ Jump_01D_785B::
     xor a, a
     ld [rRAMG2], a
     ld [rRAMB], a
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     ld a, $67
     add_a_to_hl
@@ -8263,7 +8263,7 @@ Jump_01D_793C::
 ; reads: wD7F2
 ; writes: rRAMB, wD7F9
 Func_01D_795D::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push af
@@ -8292,7 +8292,7 @@ Func_01D_795D::
 ; reads: wD7F2
 ; writes: rRAMB, wD7F9
 Func_01D_7991::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push af
@@ -8318,7 +8318,7 @@ Func_01D_7991::
 ; reads: wD7F2
 ; writes: rRAMB, wD7F9
 Func_01D_79C5::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push af
@@ -8345,7 +8345,7 @@ Func_01D_79C5::
 ; reads: wD7F2
 ; writes: rRAMB, wD7F9
 Func_01D_79FB::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push af
@@ -8370,7 +8370,7 @@ Func_01D_79FB::
 ; reads: wD7F2
 ; writes: rRAMB, wD7F9
 Func_01D_7A2D::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push af
@@ -8399,7 +8399,7 @@ Func_01D_7A2D::
 ; reads: wD7F2
 ; writes: rRAMB, wD7F9
 Func_01D_7A61::
-    call Func_01D_7B0F
+    call SRAMRecordAddressOfWD7F1
     call Func_01D_7B05
     push hl
     push af
@@ -8518,10 +8518,12 @@ Func_01D_7B05::
     ld [rRAMB], a
     ret
 
+; HL = the word at wD7F3/wD7F4; DE = sA000 + $A5 * wD7F1, the start of SRAM record wD7F1 (records are $A5 bytes, as in SRAMRecordAddress); clobbers A, BC (E-0063)
 ; 27 call sites from 10 routines (e.g. Func_01D_7492, Func_01D_75C7, Func_01D_7A61, Func_01D_7A2D, ...)
 ; reads: wD7F3, wD7F4, wD7F1
 ; points at: sA000
-Func_01D_7B0F::
+SRAMRecordAddressOfWD7F1::
+Func_01D_7B0F:: ; address name
     ld a, [wD7F3]
     ld l, a
     ld a, [wD7F4]
