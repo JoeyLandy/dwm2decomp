@@ -1000,6 +1000,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also named:** DrawFullScreenBufferAtScroll, DrawPageOfPagesAtWD7F1, DecompressGraphicsHFFC6ToHFFCA (partly read).
 - Binary verification: pending; see the commit.
 
+### E-0094 — Unreferenced bank-$05 AI predicates
+
+- Kind: OBSERVATION (full reading only; C1).
+- **How they are reached.** 184 heuristic routine entries have no reference in the traced source. The bank-$05 ones read as real AI predicates in the same style as the referenced ones, so they are probably reached in a way the tracer does not follow. How they are called is not established.
+- **Fourteen named:**
+  - status predicates: AnyFoeLacksStatus5Bits01, AnyFoeLacksStatus5Bit0And1Bit1, AnyFoeLacksStatus5Bit1And1Bit1, ActorLacksStatus4Bits01 (the correct version of the test ActorStatus4CheckReadsAddress gets wrong, E-0075), ActorLacksStatus1Bit2, ActorLacksStatus1Bit3, AnyAllyWDA76Bits2To5NotAllSet;
+  - HP comparisons: CompareHPWithHalfMax, CompareHPWithQuarterMax, CompareHPWithTenthMax;
+  - score accumulators: AddBCToWDA6E, AddBCToWDA70;
+  - others: CountSlotSkills40To47 and CheckWCFC5Not4Or5.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

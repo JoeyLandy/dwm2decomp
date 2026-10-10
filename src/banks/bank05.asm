@@ -892,10 +892,12 @@ Jump_005_4524::
     ld c, $01
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $03 clear (AnySlotLacksStatusMask), else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD811
-Func_005_4527:: ; heuristic: follows a terminator; C0
+AnyFoeLacksStatus5Bits01:: ; heuristic: follows a terminator; C0
+Func_005_4527:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -905,10 +907,12 @@ Func_005_4527:: ; heuristic: follows a terminator; C0
     call AnySlotLacksStatusMask
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) bit 0 clear and status byte 1 (wD80D) bit 1 clear, else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD811, wD80D
-Func_005_4539:: ; heuristic: follows a terminator; C0
+AnyFoeLacksStatus5Bit0And1Bit1:: ; heuristic: follows a terminator; C0
+Func_005_4539:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -943,10 +947,12 @@ Jump_005_4568::
     ld c, $FF
     ret
 
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) bit 1 clear and status byte 1 (wD80D) bit 1 clear, else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD811, wD80D
-Func_005_456B:: ; heuristic: follows a terminator; C0
+AnyFoeLacksStatus5Bit1And1Bit1:: ; heuristic: follows a terminator; C0
+Func_005_456B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -1251,10 +1257,12 @@ Jump_005_46F0::
     ld c, $01
     ret
 
+; C = 0 when the actor's status byte 4 (wD810) & $03 is set, else C = $FF (the correct form of the test ActorStatus4CheckReadsAddress gets wrong) (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD810
-Func_005_46F3:: ; heuristic: follows a terminator; C0
+ActorLacksStatus4Bits01:: ; heuristic: follows a terminator; C0
+Func_005_46F3:: ; address name
     ld a, [wBattleActor]
     ld hl, wD810
     call AddAx9ToHL
@@ -1287,10 +1295,12 @@ Jump_005_4718::
     ld c, $FF
     ret
 
+; C = 0 when the actor's status byte 1 (wD80D) bit 2 is set, else C = $FF (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD80D
-Func_005_471B:: ; heuristic: follows a terminator; C0
+ActorLacksStatus1Bit2:: ; heuristic: follows a terminator; C0
+Func_005_471B:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
@@ -1303,10 +1313,12 @@ Jump_005_472B::
     ld c, $FF
     ret
 
+; C = 0 when the actor's status byte 1 (wD80D) bit 3 is set, else C = $FF (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD80D
-Func_005_472E:: ; heuristic: follows a terminator; C0
+ActorLacksStatus1Bit3:: ; heuristic: follows a terminator; C0
+Func_005_472E:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
     call AddAx9ToHL
@@ -1463,10 +1475,12 @@ Func_005_47D5:: ; address name
     call Func_005_6FBD
     ret
 
+; walks the actor's own three slots through their 7-byte wDA76 entries: C = $FF when a present slot's entry & $3C is not $3C, else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wDA76
-Func_005_47E5:: ; heuristic: follows a terminator; C0
+AnyAllyWDA76Bits2To5NotAllSet:: ; heuristic: follows a terminator; C0
+Func_005_47E5:: ; address name
     ld a, [wBattleActor]
     and a, $04
 
@@ -2738,9 +2752,11 @@ Jump_005_4E0C::
     ld c, $FF
     ret
 
+; C = 0 when wCFC5 is 4 or 5, else C = $FF (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCFC5
-Func_005_4E0F:: ; heuristic: follows a terminator; C0
+CheckWCFC5Not4Or5:: ; heuristic: follows a terminator; C0
+Func_005_4E0F:: ; address name
     ld a, [wCFC5]
     cp a, $04
     jr z, Jump_005_4E1A
@@ -8061,10 +8077,12 @@ Func_005_6AE8:: ; address name
     ld [wDA71], a
     ret
 
+; the word wDA6E/wDA6F += BC (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDA6E, wDA6F
 ; writes: wDA6E, wDA6F
-Func_005_6AF8:: ; heuristic: follows a terminator; C0
+AddBCToWDA6E:: ; heuristic: follows a terminator; C0
+Func_005_6AF8:: ; address name
     ld a, [wDA6E]
     add a, c
     ld [wDA6E], a
@@ -8073,10 +8091,12 @@ Func_005_6AF8:: ; heuristic: follows a terminator; C0
     ld [wDA6F], a
     ret
 
+; the word wDA70/wDA71 += BC (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDA70, wDA71
 ; writes: wDA70, wDA71
-Func_005_6B07:: ; heuristic: follows a terminator; C0
+AddBCToWDA70:: ; heuristic: follows a terminator; C0
+Func_005_6B07:: ; address name
     ld a, [wDA70]
     add a, c
     ld [wDA70], a
@@ -8224,8 +8244,10 @@ Func_005_6B9E:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; A = slot whose max HP is used, C = slot whose HP is used (callers normally pass the same slot): compares 2 x HP with the max HP (CompareHLToBC): carry set when HP is below 1/2 of max, Z when exactly 1/2; BC kept (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
-Func_005_6BBC:: ; heuristic: follows a terminator; C0
+CompareHPWithHalfMax:: ; heuristic: follows a terminator; C0
+Func_005_6BBC:: ; address name
     push bc
     push af
     call GetBattleMaxHP_Bank05
@@ -8239,8 +8261,10 @@ Func_005_6BBC:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; A = slot whose max HP is used, C = slot whose HP is used (callers normally pass the same slot): compares 4 x HP with the max HP (CompareHLToBC): carry set when HP is below 1/4 of max, Z when exactly 1/4; BC kept (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
-Func_005_6BCE:: ; heuristic: follows a terminator; C0
+CompareHPWithQuarterMax:: ; heuristic: follows a terminator; C0
+Func_005_6BCE:: ; address name
     push bc
     push af
     call GetBattleMaxHP_Bank05
@@ -8255,8 +8279,10 @@ Func_005_6BCE:: ; heuristic: follows a terminator; C0
     pop bc
     ret
 
+; A = slot whose max HP is used, C = slot whose HP is used (callers normally pass the same slot): compares 10 x HP with the max HP (CompareHLToBC): carry set when HP is below 1/10 of max, Z when exactly 1/10; BC kept (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
-Func_005_6BE1:: ; heuristic: follows a terminator; C0
+CompareHPWithTenthMax:: ; heuristic: follows a terminator; C0
+Func_005_6BE1:: ; address name
     push bc
     push af
     call GetBattleMaxHP_Bank05
@@ -8839,9 +8865,11 @@ Jump_005_6EF9::
     or a, a
     ret
 
+; A = battle slot: counts the skills numbered $40-$47 among the slot's 8 skills (every other byte of wD989 + 16 * slot): A = the count, Z set when there are none; BC kept (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD989
-Func_005_6F01:: ; heuristic: follows a terminator; C0
+CountSlotSkills40To47:: ; heuristic: follows a terminator; C0
+Func_005_6F01:: ; address name
     push bc
     ld hl, wD989
     swap a
@@ -8910,7 +8938,7 @@ Jump_005_6F58::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
-; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub01, Func_005_5D9B, Func_005_47E5, Func_005_5DCD, ...)
+; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub01, Func_005_5D9B, AnyAllyWDA76Bits2To5NotAllSet, Func_005_5DCD, ...)
 ReadByteAtHLPlus4APlus3C_Bank05::
 Func_005_6F60:: ; address name
     add a, a
