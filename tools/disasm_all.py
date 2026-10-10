@@ -675,6 +675,47 @@ class Rom:
                     added += 1
         log(f"compressed assets from decompress call sites: {calls} calls, {literal} with literal "
             f"arguments, {added} new streams")
+        # Third and fourth sources (E-0035): streams the emulated game decompressed
+        # (config/observed_streams.json) and runs of six or more back-to-back streams
+        # (config/stream_chains.json). Every one is re-checked with the decompressor and skipped
+        # when it starts inside decoded code or a structured table.
+        in_table = [(t["bank"], t["addr"], t["addr"] + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+
+        def usable(bnk: int, addr: int) -> bool:
+            return (0 < bnk < self.nbanks and bnk not in self.zero and 0x4000 <= addr < 0x8000
+                    and (bnk, addr) not in self.streams and addr not in self.covered[bnk]
+                    and not any(tb == bnk and lo <= addr < hi for tb, lo, hi in in_table))
+
+        def register(bnk: int, addr: int, why: str) -> bool:
+            if not usable(bnk, addr):
+                return False
+            r = parse(bnk, addr)
+            if not r:
+                return False
+            self.streams[(bnk, addr)] = r
+            self.dlabels[bnk].setdefault(addr, f"Data_{bnk:03X}_{addr:04X}")
+            self.dreason.setdefault((bnk, addr), why)
+            return True
+
+        seen_new = chained = 0
+        obs_path = ROOT / "config/observed_streams.json"
+        if obs_path.exists():
+            for key in json.loads(obs_path.read_text(encoding="utf-8"))["streams"]:
+                bnk, addr = (int(x, 16) for x in key.split(":"))
+                seen_new += register(bnk, addr, "stream decompressed while the game ran on the emulator")
+        chain_path = ROOT / "config/stream_chains.json"
+        if chain_path.exists():
+            for bank_s, runs in json.loads(chain_path.read_text(encoding="utf-8"))["chains"].items():
+                for start_s, count in runs:
+                    bnk, addr = int(bank_s, 16), int(start_s, 16)
+                    for _ in range(count):
+                        r = self.streams.get((bnk, addr)) or parse(bnk, addr)
+                        if not r:
+                            break
+                        chained += register(bnk, addr, "stream in a run of back-to-back compressed streams")
+                        addr += r[1]
+        log(f"compressed assets from emulated runs: {seen_new} new streams; from chains: {chained} new streams")
 
     def _decompress_entries(self) -> set[int]:
         """Bank-0 addresses of the decompress routines, taken from config/names.json."""

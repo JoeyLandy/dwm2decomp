@@ -200,6 +200,24 @@ class SkillTableSource(unittest.TestCase):
             self.assertEqual(bytes(int(v[1:], 16) for v in values.split(", ")), rom[at:at + 17], ident)
 
 
+class StreamSources(unittest.TestCase):
+    """Audit of the committed src/ and config/: the extra stream sources (E-0035) are used."""
+
+    def test_asset_pack_banks_carry_stream_labels(self):
+        import re
+        for bank, minimum in (("7d", 80), ("20", 70), ("74", 50)):
+            text = (ROOT / f"src/banks/bank{bank}.asm").read_text(encoding="utf-8")
+            self.assertGreaterEqual(len(re.findall(r"^; LZSS-compressed asset", text, re.M)), minimum, bank)
+
+    def test_chains_skip_the_monster_table(self):
+        import json
+        chains = json.loads((ROOT / "config/stream_chains.json").read_text(encoding="utf-8"))["chains"]
+        text = (ROOT / "src/banks/bank34.asm").read_text(encoding="utf-8")
+        self.assertIn("MonsterTable::", text)
+        self.assertNotRegex(text.split("MonsterTable::")[1][:200000], r"LZSS-compressed asset")
+        self.assertTrue(all(count >= 6 for runs in chains.values() for _, count in runs))
+
+
 class FamilyNamesAreApplied(unittest.TestCase):
     """Audit of the committed src/: each family in config/name_families.json names its copies."""
 

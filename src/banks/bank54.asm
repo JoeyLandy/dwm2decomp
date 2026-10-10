@@ -1,5 +1,9 @@
 SECTION "Bank 54", ROMX[$4000], BANK[$54]
-    INCBIN "dwm2-cobi-us.gbc", $150000, $463
+    INCBIN "dwm2-cobi-us.gbc", $150000, $78
+
+; LZSS-compressed asset: 1057 bytes expand to 1239 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_054_4078:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $150078, $3EB
     dw Data_054_4499
     db $54
     dw Data_054_4564

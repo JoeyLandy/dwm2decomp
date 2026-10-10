@@ -113,7 +113,11 @@ Data_047_68B2:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 108 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_047_6965:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $11E965, $D7
+    INCBIN "dwm2-cobi-us.gbc", $11E965, $6C
+
+; LZSS-compressed asset: 107 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_047_69D1:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $11E9D1, $6B
 
 ; LZSS-compressed asset: 206 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_047_6A3C:: ; heuristic: target of a monotone pointer table; C0

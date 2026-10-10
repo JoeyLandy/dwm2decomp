@@ -280,7 +280,11 @@ Data_057_64E5:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 75 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_057_6532:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $15E532, $C34
+    INCBIN "dwm2-cobi-us.gbc", $15E532, $964
+
+; LZSS-compressed asset: 656 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_057_6E96:: ; heuristic: stream decompressed while the game ran on the emulator; C0
+    INCBIN "dwm2-cobi-us.gbc", $15EE96, $2D0
     dw Data_057_71C6
     db $57
     dw Data_057_71D9

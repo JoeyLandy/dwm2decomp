@@ -76,7 +76,11 @@ Data_04B_4F27:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 201 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_4FD0:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $12CFD0, $17C
+    INCBIN "dwm2-cobi-us.gbc", $12CFD0, $C9
+
+; LZSS-compressed asset: 179 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_5099:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12D099, $B3
 
 ; LZSS-compressed asset: 166 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_514C:: ; heuristic: target of a monotone pointer table; C0
@@ -84,7 +88,15 @@ Data_04B_514C:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 196 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_51F2:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $12D1F2, $22B
+    INCBIN "dwm2-cobi-us.gbc", $12D1F2, $C4
+
+; LZSS-compressed asset: 196 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_52B6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12D2B6, $C4
+
+; LZSS-compressed asset: 163 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_537A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12D37A, $A3
 
 ; LZSS-compressed asset: 180 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_541D:: ; heuristic: target of a monotone pointer table; C0
@@ -92,7 +104,15 @@ Data_04B_541D:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 246 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_54D1:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $12D4D1, $2B5
+    INCBIN "dwm2-cobi-us.gbc", $12D4D1, $F6
+
+; LZSS-compressed asset: 242 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_55C7:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12D5C7, $F2
+
+; LZSS-compressed asset: 205 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_56B9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12D6B9, $CD
 
 ; LZSS-compressed asset: 121 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_5786:: ; heuristic: target of a monotone pointer table; C0
@@ -100,7 +120,15 @@ Data_04B_5786:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 117 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_57FF:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $12D7FF, $230
+    INCBIN "dwm2-cobi-us.gbc", $12D7FF, $75
+
+; LZSS-compressed asset: 222 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_5874:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12D874, $DE
+
+; LZSS-compressed asset: 221 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_5952:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12D952, $DD
 
 ; LZSS-compressed asset: 45 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_5A2F:: ; heuristic: target of a monotone pointer table; C0
@@ -136,7 +164,11 @@ Data_04B_5DC7:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 41 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04B_5DF3:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $12DDF3, $2CA
+    INCBIN "dwm2-cobi-us.gbc", $12DDF3, $6A
+
+; LZSS-compressed asset: 752 bytes expand to 770 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04B_5E5D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $12DE5D, $260
     dw Data_04B_614D
     db $4B
     dw Data_04B_621A

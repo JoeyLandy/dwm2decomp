@@ -723,7 +723,11 @@ Data_04C_4DE8:: ; heuristic: target of a monotone pointer table; C0
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_4E05:: ; heuristic: target of a monotone pointer table; C0
     db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+
+; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04C_4E1D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    db $4D, $00, $F8, $0F, $0D
 
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_4E22:: ; heuristic: target of a monotone pointer table; C0
@@ -781,7 +785,11 @@ Data_04C_5240:: ; heuristic: target of a monotone pointer table; C0
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_525D:: ; heuristic: target of a monotone pointer table; C0
     db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+
+; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04C_5275:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    db $4D, $00, $F8, $0F, $0D
 
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_527A:: ; heuristic: target of a monotone pointer table; C0
@@ -834,7 +842,11 @@ Data_04C_5654:: ; heuristic: target of a monotone pointer table; C0
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_5671:: ; heuristic: target of a monotone pointer table; C0
     db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+
+; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04C_5689:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    db $4D, $00, $F8, $0F, $0D
 
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_568E:: ; heuristic: target of a monotone pointer table; C0
@@ -890,7 +902,11 @@ Data_04C_5BCB:: ; heuristic: target of a monotone pointer table; C0
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_5BE8:: ; heuristic: target of a monotone pointer table; C0
     db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+
+; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04C_5C00:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    db $4D, $00, $F8, $0F, $0D
 
 ; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_5C05:: ; heuristic: target of a monotone pointer table; C0
@@ -1109,7 +1125,11 @@ Data_04C_7236:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 86 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_7252:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $133252, $56
+    db $68, $01, $02, $00, $01, $02, $00, $0E
+
+; LZSS-compressed asset: 225 bytes expand to 258 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_04C_725A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $13325A, $4E
 
 ; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04C_72A8:: ; heuristic: target of a monotone pointer table; C0

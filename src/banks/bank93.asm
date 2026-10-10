@@ -5,7 +5,11 @@ SECTION "Bank 93", ROMX[$4000], BANK[$93]
 Data_093_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $24C001, $920
     ds $12, $00
-    INCBIN "dwm2-cobi-us.gbc", $24C933, $E6D
+    INCBIN "dwm2-cobi-us.gbc", $24C933, $DC0
+
+; LZSS-compressed asset: 359 bytes expand to 366 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_56F3:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $24D6F3, $AD
     dw Data_093_57E8
     db $93
     dw Data_093_5927
@@ -73,7 +77,27 @@ Data_093_5974:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 165 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_093_5A91:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $24DA91, $405
+    INCBIN "dwm2-cobi-us.gbc", $24DA91, $A5
+
+; LZSS-compressed asset: 179 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_5B36:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $24DB36, $B3
+
+; LZSS-compressed asset: 176 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_5BE9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $24DBE9, $B0
+
+; LZSS-compressed asset: 178 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_5C99:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $24DC99, $B2
+
+; LZSS-compressed asset: 170 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_5D4B:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $24DD4B, $AA
+
+; LZSS-compressed asset: 161 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_5DF5:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+    INCBIN "dwm2-cobi-us.gbc", $24DDF5, $A1
 
 ; LZSS-compressed asset: 159 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_093_5E96:: ; heuristic: target of a monotone pointer table; C0

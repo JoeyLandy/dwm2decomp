@@ -5241,7 +5241,8 @@ Data_024_6CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $00
     db $1F, $00, $FF, $7F, $00, $7E, $00, $00
 
-Data_024_6CE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; LZSS-compressed asset: 303 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_024_6CE4:: ; heuristic: stream decompressed while the game ran on the emulator; C0
     INCBIN "dwm2-cobi-us.gbc", $092CE4, $12F
 
 ; LZSS-compressed asset: 315 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
