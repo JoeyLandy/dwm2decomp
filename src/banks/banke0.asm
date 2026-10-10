@@ -2280,7 +2280,7 @@ Func_0E0_559E:: ; heuristic: follows a terminator; C0
     ld [wBattleActionId], a
     ld a, [hl]
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ret
 
 ; no direct call (reached through a table, a jump or a vector)

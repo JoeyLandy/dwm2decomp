@@ -1,7 +1,7 @@
 SECTION "Bank 32", ROMX[$4000], BANK[$32]
     db $32
 
-; 8 call sites from 6 routines (e.g. GameMode4_Update, Func_03A_4001, Func_03A_4ADB, Func_03A_548F, ...)
+; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByWDAD2Flags, Func_03A_4ADB, Func_03A_548F, ...)
 ; reads: wCB75, wCB76
 Func_032_4001::
     ld a, [wCB75]
@@ -3630,7 +3630,7 @@ Jump_032_5474:: ; address name
     farcall Func_03A_6D76
     ld a, $80
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ld a, [wC58A]
     or a, a
     ret nz
@@ -3746,7 +3746,7 @@ Jump_032_5519:: ; address name
     ret z
     ld a, $80
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ret
 
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case05)
@@ -4255,7 +4255,7 @@ Jump_032_58DA:: ; address name
     farcall Func_03A_6D76
     ld a, $80
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
 
 Jump_032_58F2::
     ld hl, wBattleResolveStep
@@ -4276,7 +4276,7 @@ Jump_032_58F7:: ; address name
     ret nz
     ld a, $80
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld hl, wBattleResolveStep
     inc [hl]
     xor a, a
@@ -5310,10 +5310,10 @@ Jump_032_5F63::
     call SetBit2OfWD095Indexed_Bank32
     ld a, $20
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $08
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ld a, $75
     ld [wCFCE], a
     jp Func_032_61D9
@@ -5338,10 +5338,10 @@ Jump_032_5FAE::
     call SetBit2OfWD095Indexed_Bank32
     ld a, $20
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $08
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ld a, $76
     ld [wCFCE], a
     jp Func_032_61D9
@@ -5368,10 +5368,10 @@ Jump_032_5FF8::
     call SetBit2OfWD095Indexed_Bank32
     ld a, $20
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $08
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     call Func_032_6848
     ld a, $74
     jr c, Jump_032_6044
@@ -5489,10 +5489,10 @@ Jump_032_60C0:: ; address name
     ret c
     ld a, $20
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $08
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ret
 
 ; entry 1 of the `rst $00` table in Func_032_604A
@@ -5691,10 +5691,10 @@ Jump_032_61EF:: ; address name
     ret c
     ld a, $20
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $08
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ld hl, wBattleSubStep2
     inc [hl]
     ret
@@ -6118,10 +6118,10 @@ Jump_032_6449:: ; address name
     ret c
     ld a, $20
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $08
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ret
 
 ; entry 1 of the `rst $00` table in Func_032_63C2
@@ -6464,8 +6464,8 @@ Func_032_6662_Case00::
 Jump_032_666C:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
-    farcall Func_03A_4001
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByWDAD3Flags
     ret
 
 ; entry 1 of the `rst $00` table in Func_032_6662

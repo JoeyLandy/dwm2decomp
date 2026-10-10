@@ -496,7 +496,7 @@ Jump_036_431F:: ; address name
     ret z
     ld a, $82
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ret
 
 ; Z set when wBattleActionId = $91 and bit 6 of the actor's status byte 3 (wD80F + 9 * actor) is set; Z clear otherwise (A is $40 or 0 for $91, the comparison result otherwise). Used by RunBattleResolveStep_Case02 (E-0050)
@@ -1185,12 +1185,12 @@ Jump_036_47C7::
 Jump_036_47D6::
     ld a, b
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, [wDAC0]
     and a, $10
     or a, $20
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ret
 
 ; resolve step $09: advances wBattleResolveStep, stores $13 in wDAD2, farcalls 3A:4001 and queues sound effect $85 (E-0053)
@@ -1203,7 +1203,7 @@ Jump_036_47F1:: ; address name
     inc [hl]
     ld a, $13
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $85
     call QueueSoundEffect
     ret
@@ -6604,8 +6604,8 @@ Jump_036_6A0E::
     ld [wDAD2], a
     ld a, $30
     ld [wDAD3], a
-    farcall Func_03A_4001
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByWDAD3Flags
     ldh a, [hFFC6]
     ld [wDAD3], a
     ldh a, [hFFC7]

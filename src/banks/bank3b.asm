@@ -654,7 +654,7 @@ Jump_03B_43E5::
 Jump_03B_43E9::
     ld a, $08
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ret
 
 Jump_03B_43F5::
@@ -773,10 +773,10 @@ Jump_03B_449D::
     ld [wD808], a
     ld a, $04
     ld [wDAD2], a
-    farcall Func_03A_4001
+    farcall SelectEffectByWDAD2Flags
     ld a, $01
     ld [wDAD3], a
-    farcall Func_03A_5762
+    farcall SelectEffectByWDAD3Flags
     ld a, [wBattleActionId]
     cp a, $01
     ret c

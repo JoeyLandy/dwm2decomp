@@ -1,11 +1,13 @@
 SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
     db $3A
 
+; reads the effect flags in wDAD2. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88, it returns unless wDAD2 bit 0 or bit 6 is set. Then it tests bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (Data_03A_40CC, Data_03A_4294, Data_03A_445C, Data_03A_47EC, Data_03A_486C; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF returns; other entries go on to Jump_03A_48EC or the effect code, which is not read (E-0057)
 ; 15 call sites from 13 routines (e.g. Func_032_4ADC_Case05, Func_032_5820_Case03, ResolveStep0EEffect_Case00, Func_032_604A_Case00, ...)
 ; reads: wBattleTarget, wBattleActionId, wDAD2, wDABF, wCFF2, wBattleActor, wD868, wD801
 ; writes: wBattleActor, wD803, wD802, wDAF1, wC952, wD868, wD801, wDAB5, ...
 ; points at: wD804, wD805, wDAB3, wDAD2
-Func_03A_4001::
+SelectEffectByWDAD2Flags::
+Func_03A_4001:: ; address name
     ld a, [wBattleTarget]
     and a, $03
     cp a, $03
@@ -193,8 +195,8 @@ Jump_03A_48FA::
 Jump_03A_48FF::
     pop af
     ld b, a
-    call Func_03A_4A19
-    call Func_03A_49EB
+    call SelectEffectByWDAD2Flags_Sub03
+    call SelectEffectByWDAD2Flags_Sub01
     ld a, b
     jr nc, Jump_03A_492E
     cp a, $2B
@@ -224,7 +226,7 @@ Jump_03A_492E::
     ld [wD801], a
     ld [wDAB5], a
     ld b, a
-    call Func_03A_4A06
+    call SelectEffectByWDAD2Flags_Sub02
     jr z, Jump_03A_4962
     ld a, b
     cp a, $09
@@ -291,9 +293,11 @@ Data_03A_49AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $01, $01, $00, $00, $01, $00
     db $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $01, $01
 
-; 1 call site from 1 routine (e.g. Func_03A_4001)
+; only called from SelectEffectByWDAD2Flags (E-0047)
+; 1 call site from 1 routine (e.g. SelectEffectByWDAD2Flags)
 ; reads: wC58A, wC57F, wD868
-Func_03A_49EB::
+SelectEffectByWDAD2Flags_Sub01::
+Func_03A_49EB:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_03A_4A00
@@ -310,9 +314,11 @@ Jump_03A_4A00::
     cp a, $04
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_4001)
+; only called from SelectEffectByWDAD2Flags (E-0047)
+; 1 call site from 1 routine (e.g. SelectEffectByWDAD2Flags)
 ; reads: wDAD2, wBattleActionId
-Func_03A_4A06::
+SelectEffectByWDAD2Flags_Sub02::
+Func_03A_4A06:: ; address name
     ld a, [wDAD2]
     bit 3, a
     ret nz
@@ -325,10 +331,12 @@ Func_03A_4A06::
     ld a, $02
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_4001)
+; only called from SelectEffectByWDAD2Flags (E-0047)
+; 1 call site from 1 routine (e.g. SelectEffectByWDAD2Flags)
 ; reads: wDAD2, wBattleActionId, wBattleTarget, wBattleActor
 ; writes: wD868
-Func_03A_4A19::
+SelectEffectByWDAD2Flags_Sub03::
+Func_03A_4A19:: ; address name
     ld a, [wDAD2]
     bit 3, a
     jr nz, Jump_03A_4A33
@@ -350,7 +358,7 @@ Jump_03A_4A33::
     ld [wD868], a
     ret
 
-; 9 call sites from 5 routines (e.g. Func_03A_4ADB, Func_03A_4001, Func_03A_548F, Func_03D_4001, ...)
+; 9 call sites from 5 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, Func_03A_548F, Func_03D_4001, ...)
 ; reads: wDAB9, wD890, wC58A, wC57F, wD868, wD805
 ; writes: wD804
 ; points at: wD805
@@ -477,7 +485,7 @@ Func_03A_4ADB::
     srl a
     and a, $44
     ld [wDAD3], a
-    call Func_03A_5762
+    call SelectEffectByWDAD3Flags
     ret
 
 Jump_03A_4B04::
@@ -565,7 +573,7 @@ Jump_03A_4B87::
     srl a
     and a, $44
     ld [wDAD3], a
-    call Func_03A_5762
+    call SelectEffectByWDAD3Flags
     ret
 
 Jump_03A_4BB5::
@@ -2143,7 +2151,7 @@ Jump_03A_5509::
     ld [wD802], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_03A_4ADB, Func_03A_4001, Func_03A_548F)
+; 3 call sites from 3 routines (e.g. Func_03A_4ADB, SelectEffectByWDAD2Flags, Func_03A_548F)
 ; reads: wIsCGB
 ; writes: wC527
 ; points at: wC4DF
@@ -2568,10 +2576,12 @@ Jump_03A_575D::
 Data_03A_575E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $04, $00, $06
 
+; reads the effect flags in wDAD3 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set wBattleActor to wBattleTarget and select a table (Data_03A_60B7 or Data_03A_6107) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)
 ; 15 call sites from 12 routines (e.g. Func_03A_4ADB, Func_032_4ADC_Case03, Func_032_5820_Case02, ResolveStep0EEffect_Case00, ...)
 ; reads: wDAD3, wBattleTarget, wBattleActionId
 ; writes: wBattleActor
-Func_03A_5762::
+SelectEffectByWDAD3Flags::
+Func_03A_5762:: ; address name
     ld a, [wDAD3]
     or a, a
     ret z
@@ -2611,7 +2621,7 @@ Jump_03A_579B::
 
 Jump_03A_57A0::
     ld b, a
-    call Func_03A_57CA
+    call SelectEffectByWDAD3Flags_Sub01
     ret nz
     ld hl, Data_03A_5B87
     bit 4, b
@@ -2639,10 +2649,12 @@ Jump_03A_57C2::
     call QueueSoundEffect
     ret
 
-; 1 call site from 1 routine (e.g. Func_03A_5762)
+; only called from SelectEffectByWDAD3Flags (E-0047)
+; 1 call site from 1 routine (e.g. SelectEffectByWDAD3Flags)
 ; reads: wBattleActionId, wDAC0
 ; points at: wBattleDamageLo
-Func_03A_57CA::
+SelectEffectByWDAD3Flags_Sub01::
+Func_03A_57CA:: ; address name
     bit 4, a
     ret z
     ld a, [wBattleActionId]
@@ -6175,7 +6187,7 @@ Func_03A_7C93:: ; address name
     add_a_to_hl
     ret
 
-; 2 call sites from 2 routines (e.g. Func_03A_5762, Func_03A_4001)
+; 2 call sites from 2 routines (e.g. SelectEffectByWDAD3Flags, SelectEffectByWDAD2Flags)
 ; reads: wC58A, wC57F, wBattleActor
 Func_03A_7C9A::
     ld a, [wC58A]
@@ -6194,7 +6206,7 @@ Jump_03A_7CAF::
     cp a, $04
     ret
 
-; 4 call sites from 3 routines (e.g. Func_03A_6C93_Case01, Func_03A_6C93_Case00, Func_03A_4001)
+; 4 call sites from 3 routines (e.g. Func_03A_6C93_Case01, Func_03A_6C93_Case00, SelectEffectByWDAD2Flags)
 ; reads: wC58A, wC57F, wBattleTarget
 Func_03A_7CB5::
     ld a, [wC58A]

@@ -522,6 +522,11 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Consistent with E-0045, which found battle text in bank $2F, category 1.
 - Binary verification: pending; see the commit.
 
+### E-0057 — Effect selectors driven by wDAD2 and wDAD3
+
+- Kind: OBSERVATION (reading only; C1). `SelectEffectByWDAD2Flags` (`3A:4001`, 15 call sites) and `SelectEffectByWDAD3Flags` (`3A:5762`, 15 call sites) test the bits of the effect-flag bytes that the resolve steps write (wDAD2 and wDAD3) and choose a display table indexed by the action id. The table contents and the effect routines they reach are not read; the names state only the bit tests and the table choices.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
