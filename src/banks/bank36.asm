@@ -2480,7 +2480,7 @@ Func_036_5009:: ; address name
     ret
 
 ; AdvanceRandom, then BC = the target's DEF (wBattleDEF) / 2 and falls into ComputeBasicDamage with HL = the actor's ATK (E-0064)
-; 14 call sites from 13 routines (e.g. Func_036_5522, Func_036_6098, Func_036_5533, Func_036_5544, ...)
+; 14 call sites from 13 routines (e.g. AttackDamageScaledByWDA72Byte0Bits54, Func_036_6098, AttackDamageScaledByWDA72Byte1Bits76, AttackDamageScaledByWDA72Byte1Bits54, ...)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
@@ -2587,7 +2587,7 @@ Func_036_5094:: ; address name
 ; 1 call site from 1 routine (e.g. ActionEffect_ActionD2)
 ActionEffect_ActionD2_Sub01:: ; heuristic: follows a terminator; C0
 Func_036_509D:: ; address name
-    call Func_036_5A6C
+    call SkillDamageScaledByWDA72Byte6Bits32
     call GetTargetSpeciesFamily
     cp a, $00
     jr z, Jump_036_50AE
@@ -2604,7 +2604,7 @@ Jump_036_50AE::
 ; 1 call site from 1 routine (e.g. ActionEffect_ActionD3)
 ActionEffect_ActionD3_Sub01:: ; heuristic: follows a terminator; C0
 Func_036_50B2:: ; address name
-    call Func_036_5A6C
+    call SkillDamageScaledByWDA72Byte6Bits32
     call GetTargetSpeciesFamily
     cp a, $01
     jr z, Jump_036_50C3
@@ -2621,7 +2621,7 @@ Jump_036_50C3::
 ; 1 call site from 1 routine (e.g. ActionEffect_ActionD4)
 ActionEffect_ActionD4_Sub01:: ; heuristic: follows a terminator; C0
 Func_036_50C7:: ; address name
-    call Func_036_5A6C
+    call SkillDamageScaledByWDA72Byte6Bits32
     call GetTargetSpeciesFamily
     cp a, $02
     jr z, Jump_036_50D8
@@ -2742,8 +2742,10 @@ ActionEffect_Infernos_Sub01::
 Func_036_51F9:: ; address name
     call RollSkillDamageFromRecord
 
+; level = bits 7-6 of the target's wDA72 byte 1, then ScaleDamageByFlagsAtHL (HL from the caller) (E-0115)
 ; 2 call sites from 2 routines (e.g. ActionEffect_Vacuum_Sub01, ActionEffect_WindBeast_Sub01)
-Func_036_51FC::
+ScaleDamageByWDA72Byte1Bits76::
+Func_036_51FC:: ; address name
     call GetTargetWDA72Byte1
     rlca
     rlca
@@ -3324,8 +3326,10 @@ Jump_036_5520::
     xor a, a
     ret
 
+; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wD814 entry and level = bits 5-4 of the target's wDA72 byte 0 (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_5522:: ; heuristic: follows a terminator; C0
+AttackDamageScaledByWDA72Byte0Bits54:: ; heuristic: follows a terminator; C0
+Func_036_5522:: ; address name
     call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call GetTargetWDA72Byte0
@@ -3334,8 +3338,10 @@ Func_036_5522:: ; heuristic: follows a terminator; C0
     call ScaleDamageByFlagsAtHLBit6
     ret
 
+; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wD814 entry and level = bits 7-6 of the target's wDA72 byte 1 (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_5533:: ; heuristic: follows a terminator; C0
+AttackDamageScaledByWDA72Byte1Bits76:: ; heuristic: follows a terminator; C0
+Func_036_5533:: ; address name
     call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call GetTargetWDA72Byte1
@@ -3345,8 +3351,10 @@ Func_036_5533:: ; heuristic: follows a terminator; C0
     call ScaleDamageByFlagsAtHLBit6
     ret
 
+; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wD814 entry and level = bits 5-4 of the target's wDA72 byte 1 (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_5544:: ; heuristic: follows a terminator; C0
+AttackDamageScaledByWDA72Byte1Bits54:: ; heuristic: follows a terminator; C0
+Func_036_5544:: ; address name
     call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call GetTargetWDA72Byte1
@@ -3355,8 +3363,10 @@ Func_036_5544:: ; heuristic: follows a terminator; C0
     call ScaleDamageByFlagsAtHLBit6
     ret
 
+; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wD814 entry and level = bits 3-2 of the target's wDA72 byte 1 (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
-Func_036_5555:: ; heuristic: follows a terminator; C0
+AttackDamageScaledByWDA72Byte1Bits32:: ; heuristic: follows a terminator; C0
+Func_036_5555:: ; address name
     call ComputeAttackDamage
     call HLToWD814EntryOfWD8A5_Bank36
     call GetTargetWDA72Byte1
@@ -3366,101 +3376,121 @@ Func_036_5555:: ; heuristic: follows a terminator; C0
     call ScaleDamageByFlagsAtHLBit6
     ret
 
+; when the target's species family (GetTargetSpeciesFamily) is 0 (Slime), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_5566:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsSlime:: ; heuristic: follows a terminator; C0
+Func_036_5566:: ; address name
     call GetTargetSpeciesFamily
     cp a, $00
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 1 (Dragon), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_5571:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsDragon:: ; heuristic: follows a terminator; C0
+Func_036_5571:: ; address name
     call GetTargetSpeciesFamily
     cp a, $01
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 2 (Beast), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_557C:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsBeast:: ; heuristic: follows a terminator; C0
+Func_036_557C:: ; address name
     call GetTargetSpeciesFamily
     cp a, $02
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 3 (Bird), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_5587:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsBird:: ; heuristic: follows a terminator; C0
+Func_036_5587:: ; address name
     call GetTargetSpeciesFamily
     cp a, $03
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 5 (Bug), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_5592:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsBug:: ; heuristic: follows a terminator; C0
+Func_036_5592:: ; address name
     call GetTargetSpeciesFamily
     cp a, $05
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 4 (Plant), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_559D:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsPlant:: ; heuristic: follows a terminator; C0
+Func_036_559D:: ; address name
     call GetTargetSpeciesFamily
     cp a, $04
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 6 (Demon), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_55A8:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsDemon:: ; heuristic: follows a terminator; C0
+Func_036_55A8:: ; address name
     call GetTargetSpeciesFamily
     cp a, $06
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 7 (Zombie), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_55B3:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsZombie:: ; heuristic: follows a terminator; C0
+Func_036_55B3:: ; address name
     call GetTargetSpeciesFamily
     cp a, $07
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 8 (Material), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_55BE:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsMaterial:: ; heuristic: follows a terminator; C0
+Func_036_55BE:: ; address name
     call GetTargetSpeciesFamily
     cp a, $08
     jp nz, ComputeAttackDamage
     jp ComputeAttackDamageWithHalvedDEF
 
+; when the target's species family (GetTargetSpeciesFamily) is 9 (Water), damage = ComputeAttackDamageWithHalvedDEF; otherwise ComputeAttackDamage (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_55C9:: ; heuristic: follows a terminator; C0
+AttackDamageHalvedDEFVsWater:: ; heuristic: follows a terminator; C0
+Func_036_55C9:: ; address name
     call GetTargetSpeciesFamily
     cp a, $09
     jp nz, ComputeAttackDamage
@@ -3481,7 +3511,7 @@ Func_036_55D4:: ; heuristic: follows a terminator; C0
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_036_6465
+    call ScaleHLBy3Over2
     inc hl
     ld a, l
     ld [wBattleDamageLo], a
@@ -3963,7 +3993,7 @@ Jump_036_58F9::
     ld a, h
     ld [wD873], a
     call HLToWD814EntryOfWD8A5_Bank36
-    call Func_036_51FC
+    call ScaleDamageByWDA72Byte1Bits76
     ret
 
 ; only called from ActionEffect_Vacuum (E-0047)
@@ -4027,7 +4057,7 @@ Jump_036_595E::
     ld a, h
     ld [wD873], a
     call HLToWD814EntryOfWD8A5_Bank36
-    call Func_036_51FC
+    call ScaleDamageByWDA72Byte1Bits76
     ret
 
 ; only called from ActionEffect_Lightning (E-0047)
@@ -4161,8 +4191,10 @@ Jump_036_5A5E::
     call ScaleDamageByFlagsAtHLAlt
     ret
 
+; RollSkillDamageFromRecord, then ScaleDamageByFlagsAtHL with level = bits 3-2 of the target's wDA72 byte 6 (E-0115)
 ; 4 call sites from 4 routines (e.g. ActionEffect_ActionD2_Sub01, ActionEffect_ActionD3_Sub01, ActionEffect_ActionD4_Sub01, ActionEffect_ActionD5)
-Func_036_5A6C::
+SkillDamageScaledByWDA72Byte6Bits32::
+Func_036_5A6C:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetWDA72Byte6
     rrca
@@ -4966,9 +4998,11 @@ Func_036_6077:: ; address name
     inc de
     ret
 
+; [HL + wBattleActor] = C (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-Func_036_6081:: ; heuristic: follows a terminator; C0
+StoreCAtActorEntry:: ; heuristic: follows a terminator; C0
+Func_036_6081:: ; address name
     ld a, [wBattleActor]
     add_a_to_hl
     ld [hl], c
@@ -5141,7 +5175,7 @@ Jump_036_6155::
     ret
 
 ; picks a base and spread from the loaded skill record: wCFFB/wCFFC and wCFFD for actors in slots 4-7 when wC58A is not 1, otherwise wCFF7/wCFF8 and wCFF9; the spread goes to wD86A and RollDamageBaseToBasePlusWD86A sets the damage word; then falls into HLToWD814EntryOfWD8A5_Bank36 (E-0095)
-; 15 call sites from 15 routines (e.g. Func_036_5F01, ActionEffect_ActionD1_Sub01, ActionEffect_Watershot_Sub01, Func_036_5A6C, ...)
+; 15 call sites from 15 routines (e.g. Func_036_5F01, ActionEffect_ActionD1_Sub01, ActionEffect_Watershot_Sub01, SkillDamageScaledByWDA72Byte6Bits32, ...)
 ; reads: wC58A, wBattleActor, wCFFB, wCFFC, wCFFD, wBattleTarget, wCFF7, wCFF8, ...
 ; writes: wD86A
 ; points at: wD814
@@ -5204,7 +5238,7 @@ Func_036_618F:: ; address name
     ret
 
 ; A = byte 0 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA72 + 7 * target); DE points at it (E-0095)
-; 7 call sites from 7 routines (e.g. ActionEffect_Geyser_Sub01, Func_036_5522, ActionEffect_Watershot_Sub01, ActionEffect_BigBang_Sub01, ...)
+; 7 call sites from 7 routines (e.g. ActionEffect_Geyser_Sub01, AttackDamageScaledByWDA72Byte0Bits54, ActionEffect_Watershot_Sub01, ActionEffect_BigBang_Sub01, ...)
 ; reads: wBattleTarget
 ; points at: wDA72
 GetTargetWDA72Byte0::
@@ -5213,7 +5247,7 @@ Func_036_61A6:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 1 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA73 + 7 * target); DE points at it (E-0095)
-; 8 call sites from 8 routines (e.g. Func_036_55FB, Func_036_5533, Func_036_5544, Func_036_5555, ...)
+; 8 call sites from 8 routines (e.g. Func_036_55FB, AttackDamageScaledByWDA72Byte1Bits76, AttackDamageScaledByWDA72Byte1Bits54, AttackDamageScaledByWDA72Byte1Bits32, ...)
 ; reads: wBattleTarget
 ; points at: wDA73
 GetTargetWDA72Byte1::
@@ -5258,7 +5292,7 @@ Func_036_61BF:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 6 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA78 + 7 * target); DE points at it (E-0095)
-; 4 call sites from 4 routines (e.g. Func_036_5A6C, ActionEffect_MouthShut_Sub01, ActionEffect_CallHelp_Sub01, ActionEffect_RockThrow_Sub01)
+; 4 call sites from 4 routines (e.g. SkillDamageScaledByWDA72Byte6Bits32, ActionEffect_MouthShut_Sub01, ActionEffect_CallHelp_Sub01, ActionEffect_RockThrow_Sub01)
 ; reads: wBattleTarget
 ; points at: wDA78
 GetTargetWDA72Byte6::
@@ -5352,7 +5386,7 @@ Jump_036_621B::
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_1_075_04_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_085_05_0 (A = level) (E-0095)
-; 12 call sites from 12 routines (e.g. ActionEffect_ActionD1_Sub01, ActionEffect_Watershot_Sub01, Func_036_5A6C, Func_036_5A7A, ...)
+; 12 call sites from 12 routines (e.g. ActionEffect_ActionD1_Sub01, ActionEffect_Watershot_Sub01, SkillDamageScaledByWDA72Byte6Bits32, Func_036_5A7A, ...)
 ScaleDamageByFlagsAtHL:: ; heuristic: follows a terminator; C0
 Func_036_621C:: ; address name
     bit 6, [hl]
@@ -5394,7 +5428,7 @@ Jump_036_6247::
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_1_085_05_0, otherwise ScaleDamageByLevel_131_116_075_03 (A = level) (E-0096)
-; 4 call sites from 4 routines (e.g. Func_036_5522, Func_036_5533, Func_036_5544, Func_036_5555)
+; 4 call sites from 4 routines (e.g. AttackDamageScaledByWDA72Byte0Bits54, AttackDamageScaledByWDA72Byte1Bits76, AttackDamageScaledByWDA72Byte1Bits54, AttackDamageScaledByWDA72Byte1Bits32)
 ScaleDamageByFlagsAtHLBit6::
 Func_036_6248:: ; address name
     bit 6, [hl]
@@ -5840,15 +5874,17 @@ Func_036_6451::
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_036_6465
+    call ScaleHLBy3Over2
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
     ret
 
+; HL += HL / 2 (rounded down); BC = the old HL (E-0115)
 ; 3 call sites from 3 routines (e.g. Func_036_6451, Func_036_55D4, ActionEffect_PsycheUp)
-Func_036_6465::
+ScaleHLBy3Over2::
+Func_036_6465:: ; address name
     ld b, h
     ld c, l
     call ShiftHLRight1
@@ -5991,8 +6027,10 @@ Func_036_64EC:: ; address name
     call ShiftHLRight1
     ret
 
+; HL = table, A = index: HL = the word at HL + 2 * A (AddDoubleAToHL_Bank36) (E-0115)
 ; 1 call site from 1 routine (e.g. Func_036_6558)
-Func_036_64FC:: ; heuristic: follows a terminator; C0
+ReadWordTableEntry_Bank36:: ; heuristic: follows a terminator; C0
+Func_036_64FC:: ; address name
     call AddDoubleAToHL_Bank36
     deref_hl
     ret
@@ -6089,7 +6127,7 @@ Jump_036_6554::
 Func_036_6558:: ; heuristic: follows a terminator; C0
     ld [wD868], a
     ld hl, wBattleAGL
-    call Func_036_64FC
+    call ReadWordTableEntry_Bank36
     ld bc, $03E7
     call CompareHLToBC
     jr z, Jump_036_6590
@@ -6123,7 +6161,7 @@ Jump_036_6590::
     ret
 
 ; loads the species record of wBattleTarget's monster id (TargetMonsterIdAddress, LoadSpeciesRecord); A = its family (E-0069)
-; 15 call sites from 15 routines (e.g. ActionEffect_ActionD2_Sub01, ActionEffect_ActionD3_Sub01, Func_036_5566, ActionEffect_ActionD4_Sub01, ...)
+; 15 call sites from 15 routines (e.g. ActionEffect_ActionD2_Sub01, ActionEffect_ActionD3_Sub01, AttackDamageHalvedDEFVsSlime, ActionEffect_ActionD4_Sub01, ...)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 GetTargetSpeciesFamily::
@@ -6683,7 +6721,7 @@ Func_036_6936:: ; address name
 ; points at: wD035
 ActionEffect_ActionD5:: ; heuristic: target of a pointer table; C0
 Func_036_6942:: ; address name
-    call Func_036_5A6C
+    call SkillDamageScaledByWDA72Byte6Bits32
     farcall Func_0A3_413F
     jp ResolveStepComputeDamage_Sub02
 
@@ -7530,7 +7568,7 @@ Func_036_6DF8:: ; address name
     call ActionEffect_UltraDown_Sub02_Sub01
     jr nc, Jump_036_6E0B
     ld a, [wBattleTarget]
-    call Func_036_7D50
+    call SetSlotStatus6Bit7
     ld l, $39
     ld bc, $0098
     jp Jump_036_7CA3
@@ -7576,7 +7614,7 @@ Func_036_6E40:: ; address name
     call ResolveStepDamageMessage_Sub04_Sub01_Sub01
     jr nc, Jump_036_6E53
     ld a, [wBattleTarget]
-    call Func_036_7D50
+    call SetSlotStatus6Bit7
     ld l, $48
     ld bc, $0098
     jp Jump_036_7CA3
@@ -8274,7 +8312,7 @@ Func_036_72E0:: ; address name
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_036_6465
+    call ScaleHLBy3Over2
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -8882,7 +8920,7 @@ Jump_036_765B::
     ld [hl+], a
     ld [hl], $00
     ld a, [wBattleTarget]
-    call Func_036_7D50
+    call SetSlotStatus6Bit7
 
 Jump_036_7680::
     ld a, [wBattleActionId]
@@ -9014,7 +9052,7 @@ Func_036_771B:: ; address name
     ld [hl], $00
     ld d, $DD
     farcall ShowBattleText
-    jp Func_036_7CC9
+    jp SetSubPhase2AndResetResolveStep
 
 Jump_036_7756::
     ld h, $6E
@@ -9375,7 +9413,7 @@ Jump_036_7966::
     jr c, Jump_036_7981
     ld d, $72
     farcall ShowBattleText
-    jp Func_036_7D03
+    jp SetSubPhase7AndResetResolveStep
 
 Jump_036_7981::
     ld a, [wBattleTarget]
@@ -9420,7 +9458,7 @@ Func_036_799B:: ; address name
     ld [hl], a
     pop hl
     set 1, [hl]
-    jp Func_036_7D03
+    jp SetSubPhase7AndResetResolveStep
 
 Jump_036_79CF::
     ld a, [wC96F]
@@ -9430,7 +9468,7 @@ Jump_036_79CF::
     ret
 
 Jump_036_79D9::
-    jp Func_036_7D03
+    jp SetSubPhase7AndResetResolveStep
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $02, $02, $02, $02
     db $C9, $CD, $13, $50, $FA, $72, $D8, $6F, $FA, $73, $D8, $67, $CD, $1C, $65, $7D
     db $EA, $72, $D8, $7C, $EA, $73, $D8, $C3, $7D, $7C, $FA, $A4, $D8, $21, $13, $D8
@@ -9932,9 +9970,11 @@ Jump_036_7CC0::
     ld [wDAC1], a
     ret
 
+; wBattleSubPhase = 2, wBattleResolveStep = 0 (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
-Func_036_7CC9:: ; heuristic: follows a terminator; C0
+SetSubPhase2AndResetResolveStep:: ; heuristic: follows a terminator; C0
+Func_036_7CC9:: ; address name
     ld a, $02
     ld [wBattleSubPhase], a
     xor a, a
@@ -9968,9 +10008,11 @@ Jump_036_7CF3::
     ld [wBattleResolveStep], a
     ret
 
+; wBattleSubPhase = 7, wBattleResolveStep = 0 (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
-Func_036_7D03:: ; heuristic: follows a terminator; C0
+SetSubPhase7AndResetResolveStep:: ; heuristic: follows a terminator; C0
+Func_036_7D03:: ; address name
     ld a, $07
     ld [wBattleSubPhase], a
     xor a, a
@@ -10030,9 +10072,11 @@ Func_036_7D45:: ; address name
     pop hl
     ret
 
+; A = slot: sets bit 7 of its status byte 6 (wD812 + 9 * slot); HL kept (E-0115)
 ; 3 call sites from 3 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01, ActionEffect_LushLicks, ActionEffect_UltraDown_Sub02)
 ; points at: wD812
-Func_036_7D50::
+SetSlotStatus6Bit7::
+Func_036_7D50:: ; address name
     push hl
     ld hl, wD812
     call AddAx9ToHL

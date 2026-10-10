@@ -2,7 +2,7 @@ SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
 ; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wDA53[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wC58A is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
-; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, Func_032_4EE4_Case02, Func_032_5820_Case00, ...)
+; 8 call sites from 7 routines (e.g. Func_030_4102, Func_032_4D99, ClearActorStatus3Bits0To5_Case02, Func_032_5820_Case00, ...)
 ; reads: wBattleActor, wC58A
 ; writes: wBattleActionId
 ; points at: wBattleActionChoice, wDA53

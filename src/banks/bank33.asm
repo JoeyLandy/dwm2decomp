@@ -1196,17 +1196,17 @@ Jump_033_5615:: ; address name
     farcall Func_01B_675F
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case03)
+; 1 call site from 1 routine (e.g. CopyBBytesThenMark1_Table2_Case03)
 Func_033_561C::
     farcall Func_01B_67A5
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case04)
+; 1 call site from 1 routine (e.g. CopyBBytesThenMark1_Table2_Case04)
 Func_033_5623::
     farcall Func_01B_67F0
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case05)
+; 1 call site from 1 routine (e.g. CopyBBytesThenMark1_Table2_Case05)
 ; points at: wC36E, wD781
 Func_033_562A::
     ld de, Data_033_62C3
@@ -1603,17 +1603,19 @@ Jump_033_58AB:: ; address name
     ld hl, wC895
     ld de, wC597
     ld b, $04
-    call Func_033_58C3
+    call CopyBBytesThenMark1
     ld hl, wC60C
     ld b, $0B
 
+; copies B bytes from HL to DE, then stores 1 after them (E-0115)
 ; 1 call site from 1 routine (e.g. Func_033_562A_Case00)
-Func_033_58C3::
+CopyBBytesThenMark1::
+Func_033_58C3:: ; address name
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Func_033_58C3
+    jr nz, CopyBBytesThenMark1
     ld a, $01
     ld [de], a
     ret
@@ -2170,21 +2172,21 @@ Func_033_5215_Table2_Case0E::
 Jump_033_5C4F:: ; address name
     ld a, [wD781]
     rst $00
-    dw Func_033_58C3_Case00
-    dw Func_033_58C3_Case01
-    dw Func_033_58C3_Case01
-    dw Func_033_58C3_Case03
-    dw Func_033_58C3_Case04
-    dw Func_033_58C3_Case05
-    dw Func_033_58C3_Case06
-    dw Func_033_58C3_Case07
+    dw CopyBBytesThenMark1_Case00
+    dw CopyBBytesThenMark1_Case01
+    dw CopyBBytesThenMark1_Case01
+    dw CopyBBytesThenMark1_Case03
+    dw CopyBBytesThenMark1_Case04
+    dw CopyBBytesThenMark1_Case05
+    dw CopyBBytesThenMark1_Case06
+    dw CopyBBytesThenMark1_Case07
 
-; entry 0 of the `rst $00` table in Func_033_58C3
+; entry 0 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD781
 ; points at: wC364
-Func_033_58C3_Case00::
+CopyBBytesThenMark1_Case00::
 Jump_033_5C63:: ; address name
     farcall Func_01B_7205
     ld de, Data_033_6331
@@ -2212,21 +2214,21 @@ Jump_033_5C63:: ; address name
     ld [wD781], a
     ret
 
-; entry 1 of the `rst $00` table in Func_033_58C3
+; entry 1 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD781
-Func_033_58C3_Case01::
+CopyBBytesThenMark1_Case01::
 Jump_033_5CA7:: ; address name
     ld hl, wD781
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_033_58C3
+; entry 3 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F6, hFFC6, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2, ...
 ; writes: wD7F1, rRAMG2, rRAMB, wD09D, wD09E, wD7F2, wD7F3, wD781
 ; points at: wC440, wC443
-Func_033_58C3_Case03::
+CopyBBytesThenMark1_Case03::
 Jump_033_5CAC:: ; address name
     farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
@@ -2319,18 +2321,18 @@ Data_033_5D5F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $EA, $ED, $C3, $C3, $F8, $F9, $FA, $FB, $FC, $C3, $C7, $B7, $B3, $B4, $B4
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; entry 4 of the `rst $00` table in Func_033_58C3
+; entry 4 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
-Func_033_58C3_Case04::
+CopyBBytesThenMark1_Case04::
 Jump_033_5D79:: ; address name
     farcall Func_01B_67F0
     ret
 
-; entry 5 of the `rst $00` table in Func_033_58C3
+; entry 5 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52D, wC52E, wC52F, wC530, wC8D9
 ; points at: wC36E, wC895, wC3B1, wC364, wC5B7, wC3A7, wC8CF, wC5BB, ...
-Func_033_58C3_Case05::
+CopyBBytesThenMark1_Case05::
 Jump_033_5D80:: ; address name
     ld de, Data_033_62C3
     ld hl, wC36E
@@ -2369,12 +2371,12 @@ Jump_033_5D80:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_033_58C3
+; entry 6 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wTwoChoiceCursor, wD781
 ; points at: wC3E7
-Func_033_58C3_Case06::
+CopyBBytesThenMark1_Case06::
 Jump_033_5DDF:: ; address name
     ld hl, vTiles2 + $300
     ld a, l
@@ -2404,11 +2406,11 @@ Jump_033_5DDF:: ; address name
     ld [wD781], a
     ret
 
-; entry 7 of the `rst $00` table in Func_033_58C3
+; entry 7 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B2, wD7B3
 ; writes: hFFBA, wD782, wD780, wD781
-Func_033_58C3_Case07::
+CopyBBytesThenMark1_Case07::
 Jump_033_5E23:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
@@ -2438,21 +2440,21 @@ Func_033_5215_Table2_Case0F::
 Jump_033_5E57:: ; address name
     ld a, [wD781]
     rst $00
-    dw Func_033_58C3_Table2_Case00
-    dw Func_033_58C3_Table2_Case01
-    dw Func_033_58C3_Table2_Case02
-    dw Func_033_58C3_Table2_Case03
-    dw Func_033_58C3_Table2_Case04
-    dw Func_033_58C3_Table2_Case05
-    dw Func_033_58C3_Table2_Case06
-    dw Func_033_58C3_Table2_Case07
+    dw CopyBBytesThenMark1_Table2_Case00
+    dw CopyBBytesThenMark1_Table2_Case01
+    dw CopyBBytesThenMark1_Table2_Case02
+    dw CopyBBytesThenMark1_Table2_Case03
+    dw CopyBBytesThenMark1_Table2_Case04
+    dw CopyBBytesThenMark1_Table2_Case05
+    dw CopyBBytesThenMark1_Table2_Case06
+    dw CopyBBytesThenMark1_Table2_Case07
 
-; entry 0 of the `rst $00` table in Func_033_58C3
+; entry 0 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD781
 ; writes: wD781
 ; points at: wC364
-Func_033_58C3_Table2_Case00::
+CopyBBytesThenMark1_Table2_Case00::
 Jump_033_5E6B:: ; address name
     farcall Func_01B_7205
     ld de, Data_033_6438
@@ -2469,21 +2471,21 @@ Jump_033_5E6B:: ; address name
     ld [wD781], a
     ret
 
-; entry 3 of the `rst $00` table in Func_033_58C3
+; entry 3 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
-Func_033_58C3_Table2_Case03::
+CopyBBytesThenMark1_Table2_Case03::
 Jump_033_5E93:: ; address name
     call Func_033_561C
     ret
 
-; entry 1 of the `rst $00` table in Func_033_58C3
+; entry 1 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B0, wD781
 ; writes: wD7F1, wD7F2, wD781
 ; points at: wC42E, wC42F
-Func_033_58C3_Table2_Case01::
+CopyBBytesThenMark1_Table2_Case01::
 Jump_033_5E97:: ; address name
-    call Func_033_5F99
+    call CopyBBytesThenMark1_Table2_Case01_Sub01
     farcall Func_01E_7163
     ld a, [wD7B0]
     cp a, $02
@@ -2503,10 +2505,10 @@ Jump_033_5EBE::
     ld [wD781], a
     ret
 
-; entry 2 of the `rst $00` table in Func_033_58C3
+; entry 2 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7F1
-Func_033_58C3_Table2_Case02::
+CopyBBytesThenMark1_Table2_Case02::
 Jump_033_5EC6:: ; address name
     farcall Func_01F_5C15
     xor a, a
@@ -2514,26 +2516,26 @@ Jump_033_5EC6:: ; address name
     farcall Func_01D_6AA5
     ret
 
-; entry 4 of the `rst $00` table in Func_033_58C3
+; entry 4 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
-Func_033_58C3_Table2_Case04::
+CopyBBytesThenMark1_Table2_Case04::
 Jump_033_5ED7:: ; address name
     call Func_033_5623
     ret
 
-; entry 5 of the `rst $00` table in Func_033_58C3
+; entry 5 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
-Func_033_58C3_Table2_Case05::
+CopyBBytesThenMark1_Table2_Case05::
 Jump_033_5EDB:: ; address name
     call Func_033_562A
     ret
 
-; entry 6 of the `rst $00` table in Func_033_58C3
+; entry 6 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7AD, wD781
 ; points at: wC895, wC3B1, wC410
-Func_033_58C3_Table2_Case06::
+CopyBBytesThenMark1_Table2_Case06::
 Jump_033_5EDF:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
@@ -2570,11 +2572,11 @@ Jump_033_5EDF:: ; address name
     ld [wD781], a
     ret
 
-; entry 7 of the `rst $00` table in Func_033_58C3
+; entry 7 of the `rst $00` table in CopyBBytesThenMark1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B2, wD7B3
 ; writes: hFFBA, wD782, wD780, wD781
-Func_033_58C3_Table2_Case07::
+CopyBBytesThenMark1_Table2_Case07::
 Jump_033_5F37:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
@@ -2627,11 +2629,13 @@ Func_033_5F83:: ; address name
     call Func_033_61FB
     ret
 
-; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case01)
+; only called from CopyBBytesThenMark1_Table2_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. CopyBBytesThenMark1_Table2_Case01)
 ; reads: wD7DC, wD7B9
 ; writes: wD7A9, rRAMG2, rRAMB, wD7B9
 ; points at: wD789, wD7BE, sA000, wD7DD
-Func_033_5F99::
+CopyBBytesThenMark1_Table2_Case01_Sub01::
+Func_033_5F99:: ; address name
     ld hl, wD789
     ld b, $1E
 
@@ -2793,7 +2797,7 @@ Func_033_6060:: ; address name
     ld [de], a
     ret
 
-; 3 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Table2_Case08, Func_033_58C3_Case06, Func_033_58C3_Table2_Case06)
+; 3 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Table2_Case08, CopyBBytesThenMark1_Case06, CopyBBytesThenMark1_Table2_Case06)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wC8CF, wC130
@@ -2845,7 +2849,7 @@ Func_033_60A7:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 4 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Table2_Case08, BeginString_Bank07_Cat5_Table2_Case07, Func_033_58C3_Table2_Case00)
+; 4 call sites from 3 routines (e.g. BeginString_Bank07_Cat5_Table2_Case08, BeginString_Bank07_Cat5_Table2_Case07, CopyBBytesThenMark1_Table2_Case00)
 StoreBAtWordTableEntry_Bank33::
 Func_033_60C3:: ; address name
     push bc
@@ -3165,7 +3169,7 @@ Jump_033_622B::
     jr c, Jump_033_622B
     ret
 
-; 3 call sites from 3 routines (e.g. Func_033_5215_Case00, Func_033_58C3_Case00, Func_033_58C3_Table2_Case00)
+; 3 call sites from 3 routines (e.g. Func_033_5215_Case00, CopyBBytesThenMark1_Case00, CopyBBytesThenMark1_Table2_Case00)
 ; writes: wC52D, wC52E, wC52F, wC530, wC8D9, wStringCategory, wStringIndex
 ; points at: wC8CF, wC60C
 Func_033_6247::
@@ -3206,7 +3210,7 @@ Func_033_6247::
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 1 call site from 1 routine (e.g. Func_033_58C3_Table2_Case01)
+; 1 call site from 1 routine (e.g. CopyBBytesThenMark1_Table2_Case01)
 StoreC5BEC6AtHLStride2_Bank33::
 Func_033_629D:: ; address name
     ld a, $C5

@@ -529,11 +529,13 @@ Jump_0A3_494E::
     ld a, $02
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_4EE4_Case00)
+; only called from ClearActorStatus3Bits0To5_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. ClearActorStatus3Bits0To5_Case00)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wBattleActionChoice
-Func_0A3_4960::
+ClearActorStatus3Bits0To5_Case00_Sub01::
+Func_0A3_4960:: ; address name
     ld a, [wBattleActor]
     add a, a
     ld hl, wBattleActionChoice

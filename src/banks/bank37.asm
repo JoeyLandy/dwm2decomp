@@ -3057,7 +3057,7 @@ Jump_037_5BF5::
 Jump_037_5C07::
     call Func_037_5DEB
     ld b, $12
-    call Func_037_5D08
+    call CopyBBytesHLToDE_Bank37
     call Func_037_5E3E
     ld a, [de]
     ld [hl+], a
@@ -3078,7 +3078,7 @@ Jump_037_5C07::
     ld [hl+], a
     inc de
     ld b, $1A
-    call Func_037_5D08
+    call CopyBBytesHLToDE_Bank37
     ld a, $00
     ld [hl+], a
     inc de
@@ -3148,11 +3148,11 @@ Jump_037_5C80::
 Jump_037_5C95::
     call Func_037_5EF7
     ld b, $12
-    call Func_037_5D08
+    call CopyBBytesHLToDE_Bank37
     call Func_037_5F4A
     ld b, $06
-    call Func_037_5D08
-    call Func_037_5FAD
+    call CopyBBytesHLToDE_Bank37
+    call Copy26BytesThenWD034
     call Func_037_5EC0
     ld a, [de]
     ld [hl+], a
@@ -3238,13 +3238,15 @@ Func_037_5CF1::
     ld [hl+], a
     ret
 
-; 5 call sites from 3 routines (e.g. Func_037_5C4E, Func_037_5FAD, Func_037_5BC6)
-Func_037_5D08::
+; copies B bytes from HL to DE; HL and DE advance, B = 0 (E-0115)
+; 5 call sites from 3 routines (e.g. Func_037_5C4E, Copy26BytesThenWD034, Func_037_5BC6)
+CopyBBytesHLToDE_Bank37::
+Func_037_5D08:: ; address name
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Func_037_5D08
+    jr nz, CopyBBytesHLToDE_Bank37
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_5EC0)
@@ -3812,11 +3814,13 @@ Jump_037_5FA7::
     inc hl
     ret
 
+; copies $1A bytes (CopyBBytesHLToDE_Bank37), then appends wD034 as the 27th byte (E-0115)
 ; 1 call site from 1 routine (e.g. Func_037_5C4E)
 ; reads: wD034
-Func_037_5FAD::
+Copy26BytesThenWD034::
+Func_037_5FAD:: ; address name
     ld b, $1A
-    call Func_037_5D08
+    call CopyBBytesHLToDE_Bank37
     ld a, [wD034]
     ld [hl+], a
     inc de

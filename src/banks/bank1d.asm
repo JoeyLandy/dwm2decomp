@@ -4150,7 +4150,7 @@ Jump_01D_5F8D::
     xor a, a
     ld [rRAMG2], a
 
-; 3 call sites from 3 routines (e.g. Func_015_693F, Func_01B_7399, Func_033_5F99)
+; 3 call sites from 3 routines (e.g. Func_015_693F, Func_01B_7399, CopyBBytesThenMark1_Table2_Case01_Sub01)
 ; reads: wD7A9, wC6FD
 ; points at: wD789, wC6FE, wD7BE
 Func_01D_5F9C::

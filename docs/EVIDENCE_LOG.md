@@ -1250,6 +1250,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Others:** three ShowStringHL wrappers and assorted setters.
 - Binary verification: pending; see the commit.
 
+### E-0115 — Short routines, second chunk: family-slayer and resistance damage
+
+- Kind: OBSERVATION (full reading; C1).
+- **Family-slayer damage.** Ten bank-$36 routines (`5566`-`55C9`) each compare the target's species family (E-0069) with one constant (0-9) and use ComputeAttackDamageWithHalvedDEF on a match, plain ComputeAttackDamage otherwise. They are named AttackDamageHalvedDEFVs<family> after StringTable_MonsterFamilies. They pair with the family-slaying moves' target routines (E-0096).
+- **Resistance-scaled damage.** Four AttackDamageScaledByWDA72ByteNBitsXY routines, ScaleDamageByWDA72Byte1Bits76 and SkillDamageScaledByWDA72Byte6Bits32 scale damage by one 2-bit field of the target's wDA72 record (E-0095).
+- **Battle sub-phase setters** SetSubPhase2AndResetResolveStep, SetSubPhase7AndResetResolveStep and SetSubPhase7AndResetSteps, with SkipTurnIfActorAbsent.
+- **Bank-$31 battle screen helpers:** BuildBattleScreenBuffer and BuildAndDrawBattleScreen, four ShowStringAAtTiles routines, and seven far wrappers of the bank-$1A screen records.
+- **Copies and small helpers:** CopyEBytesBCToHL, CopyBBytesHLToDE_Bank37, Copy26BytesThenWD034, AddAx4EToHL, ScaleHLBy3Over2, CopyMonsterNameToDE_Bank31, and others.
+- **Not named.** `36:6A59` decodes as `ld [bc], a / cpl / ld [hl], a / nop / jr / reti` and is probably data.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

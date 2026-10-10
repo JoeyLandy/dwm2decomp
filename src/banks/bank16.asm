@@ -4709,7 +4709,7 @@ Jump_016_5E5A:: ; address name
     or a, a
     ret nz
     call Func_016_733F
-    farcall Func_01A_72F4
+    farcall CopyRectRecord7848ToScreenBuffer
     ld a, $6C
     call QueueSoundEffect
     ld hl, vBGMap0
@@ -4791,7 +4791,7 @@ Jump_016_5EEC:: ; address name
     ld bc, $001E
     ld a, $FF
     call FillBytes
-    farcall Func_01A_7315
+    farcall CopyRectRecord796FToScreenBufferAndPlaySound6C
     call Func_016_64DC
     call Func_016_6705
     ld de, wScreenTileBuffer
@@ -4922,7 +4922,7 @@ Jump_016_5FC7::
     ld [wC2E5], a
     ld [wC305], a
     ld [wC325], a
-    farcall Func_01A_72F4
+    farcall CopyRectRecord7848ToScreenBuffer
     ld a, $BC
     ld [wC2C3], a
     ld de, wC2A2
@@ -4972,7 +4972,7 @@ Jump_016_6017:: ; address name
 ; points at: wScreenTileBuffer
 Func_016_5D13_Case11::
 Jump_016_6058:: ; address name
-    farcall Func_01A_7315
+    farcall CopyRectRecord796FToScreenBufferAndPlaySound6C
     ld a, [wD7AB]
     ld [wC46B], a
     ld hl, Data_016_66DD
@@ -5189,10 +5189,10 @@ Jump_016_61A8::
 Func_016_5D13_Case16::
 Jump_016_61D2:: ; address name
     call Func_016_733F
-    farcall Func_01A_72F4
+    farcall CopyRectRecord7848ToScreenBuffer
     ld a, $BC
     ld [wC303], a
-    farcall Func_01A_7307
+    farcall CopyRectRecord78AAToScreenBuffer
     ld a, $6C
     call QueueSoundEffect
     ld a, $16
@@ -5296,7 +5296,7 @@ Jump_016_6291::
 Func_016_5D13_Case18::
 Jump_016_62A9:: ; address name
     call Func_016_733F
-    farcall Func_01A_7307
+    farcall CopyRectRecord78AAToScreenBuffer
     farcall CopyRectRecord787EAndPlaySound6C
     ld a, [wCFD2]
     cp a, $02
@@ -5435,7 +5435,7 @@ Jump_016_637E:: ; address name
 ; points at: wScreenTileBuffer
 Func_016_5D13_Case1B::
 Jump_016_63B9:: ; address name
-    farcall Func_01A_7307
+    farcall CopyRectRecord78AAToScreenBuffer
     ld a, [wD7AB]
     ld [wC46B], a
     ld [wCFD6], a
@@ -7429,7 +7429,7 @@ Jump_016_7051:: ; address name
 
 ; 3 call sites from 3 routines (e.g. Func_016_6C16_Case11, Func_016_6C16_Case0F, Func_016_6C16_Case08)
 Func_016_7078::
-    farcall Func_01A_730E
+    farcall CopyRectRecord7923ToScreenBuffer
     call Func_016_67A5
     ret
 

@@ -10872,7 +10872,7 @@ Jump_000_3F37::
     ret
 
 ; Z set when A equals the queued action (wQueuedActionId, wDAAC) or is its partner in one of the pairs $34-$AD, $35-$AE, $6A-$CC, $A1-$CF, $8F-$AA (the pairs are symmetric); Z clear otherwise. A and BC are kept (E-0049)
-; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, Func_032_4EE4_Case03)
+; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, ClearActorStatus3Bits0To5_Case03)
 ; reads: wQueuedActionId
 QueuedActionMatches::
 Func_000_3F47:: ; address name

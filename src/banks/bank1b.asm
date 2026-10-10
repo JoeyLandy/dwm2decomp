@@ -5087,7 +5087,7 @@ Func_01B_67A5::
     ld [wD781], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01B_6A5E_Table3_Case04, Func_033_5623, Func_033_58C3_Case04)
+; 3 call sites from 3 routines (e.g. Func_01B_6A5E_Table3_Case04, Func_033_5623, CopyBBytesThenMark1_Case04)
 ; reads: wD781
 ; writes: wC52D, wC52E, wC52F, wC530, wD781
 Func_01B_67F0::
@@ -6594,7 +6594,7 @@ Jump_01B_716C::
     push hl
     push de
     ld e, $0E
-    call Func_01B_71FE
+    call CopyEBytesBCToHL
     pop de
     push de
     push hl
@@ -6605,7 +6605,7 @@ Jump_01B_716C::
     ld b, h
     pop hl
     ld e, $08
-    call Func_01B_71FE
+    call CopyEBytesBCToHL
     pop de
     push de
     push hl
@@ -6623,7 +6623,7 @@ Jump_01B_716C::
     inc bc
     inc bc
     ld e, $15
-    call Func_01B_71FE
+    call CopyEBytesBCToHL
     pop de
     push de
     push hl
@@ -6634,7 +6634,7 @@ Jump_01B_716C::
     ld b, h
     pop hl
     ld e, $1F
-    call Func_01B_71FE
+    call CopyEBytesBCToHL
     pop de
     push de
     push hl
@@ -6674,16 +6674,18 @@ Jump_01B_71E5::
     ld [rRAMB], a
     ret
 
+; copies E bytes from BC to HL; BC and HL advance, E = 0 (E-0115)
 ; 4 call sites from 1 routine (e.g. Func_01B_7152)
-Func_01B_71FE::
+CopyEBytesBCToHL::
+Func_01B_71FE:: ; address name
     ld a, [bc]
     ld [hl+], a
     inc bc
     dec e
-    jr nz, Func_01B_71FE
+    jr nz, CopyEBytesBCToHL
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01B_6A5E_Table3_Case00, Func_033_58C3_Case00, Func_033_58C3_Table2_Case00)
+; 3 call sites from 3 routines (e.g. Func_01B_6A5E_Table3_Case00, CopyBBytesThenMark1_Case00, CopyBBytesThenMark1_Table2_Case00)
 ; reads: wD7DC
 ; writes: wC52D, wC52E, wC52F, wC530, wD7DC
 Func_01B_7205::

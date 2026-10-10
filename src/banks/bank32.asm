@@ -2346,7 +2346,7 @@ Jump_032_4C91::
     farcall ShowBattleTextCategory0
 
 Jump_032_4C97::
-    call Func_032_4EE4
+    call ClearActorStatus3Bits0To5
     xor a, a
 
 Jump_032_4C9B::
@@ -2377,7 +2377,7 @@ Jump_032_4CB7::
 Jump_032_4CB9::
     ld hl, wD89E
     inc [hl]
-    call Func_032_4D8D
+    call ClearActorStatus3
     ld d, $0F
     call Func_032_4D23
     xor a, a
@@ -2514,10 +2514,12 @@ Jump_032_4D84::
     ld [wD873], a
     ret
 
+; the actor's status byte 3 (wD80F + 9 * actor) = 0 (E-0115)
 ; 1 call site from 1 routine (e.g. Func_032_4C9C)
 ; reads: wBattleActor
 ; points at: wD80F
-Func_032_4D8D::
+ClearActorStatus3::
+Func_032_4D8D:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
@@ -2725,11 +2727,11 @@ Jump_032_4EC3::
     ld hl, wBattleActionChoice
     add a, a
 
-; entry 9 of the `rst $00` table in Func_032_4EE4
+; entry 9 of the `rst $00` table in ClearActorStatus3Bits0To5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD871
 ; writes: wBattleTarget
-Func_032_4EE4_Case09::
+ClearActorStatus3Bits0To5_Case09::
 Jump_032_4ECA:: ; address name
     add_a_to_hl
     ld [hl], $BF
@@ -2746,10 +2748,12 @@ Jump_032_4EDB::
     ccf
     ret
 
+; keeps only bits 7-6 of the actor's status byte 3 (E-0115)
 ; 1 call site from 1 routine (e.g. Func_032_4C3E)
 ; reads: wBattleActor
 ; points at: wD80F
-Func_032_4EE4::
+ClearActorStatus3Bits0To5::
+Func_032_4EE4:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
@@ -2765,18 +2769,18 @@ Func_032_4ADC_Case01::
 Jump_032_4EF2:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw Func_032_4EE4_Case00
-    dw Func_032_4EE4_Case01
-    dw Func_032_4EE4_Case02
-    dw Func_032_4EE4_Case03
-    dw Func_032_4EE4_Case04
+    dw ClearActorStatus3Bits0To5_Case00
+    dw ClearActorStatus3Bits0To5_Case01
+    dw ClearActorStatus3Bits0To5_Case02
+    dw ClearActorStatus3Bits0To5_Case03
+    dw ClearActorStatus3Bits0To5_Case04
 
 Jump_032_4F00::
     dw $4CCD
     dw $3851
-    dw Func_032_4EE4_Case07
+    dw ClearActorStatus3Bits0To5_Case07
     dw $07FE
-    dw Func_032_4EE4_Case09
+    dw ClearActorStatus3Bits0To5_Case09
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6
@@ -2789,7 +2793,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
     pop af
     cp a, $01
     call nz, Func_032_5386
-    call Func_032_543C
+    call SetSubPhase7AndResetSteps
     farcall Func_0A3_414F
     ldh a, [hFFC6]
     call SlotHasStatus3Or4Bits_Bank32
@@ -2799,7 +2803,7 @@ Func_032_4F0A:: ; heuristic: follows a terminator; C0
 
 Jump_032_4F32::
     farcall Func_03A_7715
-    call Func_032_543C
+    call SetSubPhase7AndResetSteps
     farcall Func_0A3_414F
     ldh a, [hFFC6]
     call SlotHasStatus3Or4Bits_Bank32
@@ -2808,14 +2812,14 @@ Jump_032_4F32::
     ret
     db $21, $CC, $CF, $34, $C9
 
-; entry 0 of the `rst $00` table in Func_032_4EE4
+; entry 0 of the `rst $00` table in ClearActorStatus3Bits0To5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wBattleActor, wBattleActionId, wCFF3
 ; writes: wBattleActionId
 ; points at: wDAD8, wBattleSubStep, wBattleStatus, wBattleActionChoice, wDAE0
-Func_032_4EE4_Case00::
+ClearActorStatus3Bits0To5_Case00::
 Jump_032_4F53:: ; address name
-    farcall Func_0A3_4960
+    farcall ClearActorStatus3Bits0To5_Case00_Sub01
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_032_4F00
@@ -2843,7 +2847,7 @@ Jump_032_4F85::
     pop af
     cp a, $01
     call nz, Func_032_5386
-    call Func_032_543C
+    call SetSubPhase7AndResetSteps
     ret
 
 Jump_032_4F9C::
@@ -2892,11 +2896,11 @@ Jump_032_4FFB::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_032_4EE4
+; entry 1 of the `rst $00` table in ClearActorStatus3Bits0To5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wBattleActor, wD89E, wBattleActionId
 ; points at: wD895, wDA5B, wBattleActionChoice, wBattleSubStep
-Func_032_4EE4_Case01::
+ClearActorStatus3Bits0To5_Case01::
 Jump_032_5000:: ; address name
     ld a, [wC58A]
     cp a, $01
@@ -2987,12 +2991,12 @@ Data_032_5078:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4B, $4D, $4E, $4F, $64, $65, $66, $67, $6B, $6C, $6D, $6F, $70, $71, $72, $73
     db $74, $79, $7A, $8E, $90, $FF
 
-; entry 2 of the `rst $00` table in Func_032_4EE4
+; entry 2 of the `rst $00` table in ClearActorStatus3Bits0To5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wCFF2
 ; writes: wBattleTarget
 ; points at: wBattleTargetChoice, wDAD8, wBattleSubStep
-Func_032_4EE4_Case02::
+ClearActorStatus3Bits0To5_Case02::
 Jump_032_50B7:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -3036,12 +3040,12 @@ Jump_032_50FC::
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_032_4EE4
+; entry 3 of the `rst $00` table in ClearActorStatus3Bits0To5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wRecordBufferData
 ; writes: wBattleSubStep
 ; points at: wBattleResolveStep
-Func_032_4EE4_Case03::
+ClearActorStatus3Bits0To5_Case03::
 Jump_032_510E:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3055,13 +3059,13 @@ Jump_032_510E:: ; address name
     ld a, [wRecordBufferData]
     or a, a
     call nz, Func_032_5386
-    call Func_032_543C
+    call SetSubPhase7AndResetSteps
     ret
 
-; entry 4 of the `rst $00` table in Func_032_4EE4
+; entry 4 of the `rst $00` table in ClearActorStatus3Bits0To5
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-Func_032_4EE4_Case04::
+ClearActorStatus3Bits0To5_Case04::
 Jump_032_5130:: ; address name
     call CheckSkillMPCost
     jr c, Jump_032_5143
@@ -3070,7 +3074,7 @@ Jump_032_5130:: ; address name
     jr z, Jump_032_5143
     cp a, $01
     call nz, Func_032_5386
-    call Func_032_543C
+    call SetSubPhase7AndResetSteps
     ret
 
 Jump_032_5143::
@@ -3186,7 +3190,7 @@ Jump_032_51F3::
     ret
 
 ; for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)
-; 6 call sites from 4 routines (e.g. Func_032_5820_Case01, Func_032_4EE4_Case04, Func_032_4EE4_Case00, Func_032_514C)
+; 6 call sites from 4 routines (e.g. Func_032_5820_Case01, ClearActorStatus3Bits0To5_Case04, ClearActorStatus3Bits0To5_Case00, Func_032_514C)
 ; reads: wBattleActionId, wBattleActor, hFFC8, wCFF3, wRecordBufferData
 ; writes: hFFC8
 ; points at: wD80E
@@ -3448,7 +3452,7 @@ Jump_032_535D::
     scf
     ret
 
-; 3 call sites from 3 routines (e.g. Func_032_5386, Func_032_55EE, Func_032_4EE4_Case00)
+; 3 call sites from 3 routines (e.g. Func_032_5386, Func_032_55EE, ClearActorStatus3Bits0To5_Case00)
 ; reads: wBattleActionId
 Func_032_535F::
     ld a, [wBattleActionId]
@@ -3475,7 +3479,7 @@ Jump_032_5384::
     xor a, a
     ret
 
-; 8 call sites from 8 routines (e.g. Func_032_5820_Case07, Func_032_5820_Case01, Func_032_4ADC_Case08, Func_032_4EE4_Case04, ...)
+; 8 call sites from 8 routines (e.g. Func_032_5820_Case07, Func_032_5820_Case01, Func_032_4ADC_Case08, ClearActorStatus3Bits0To5_Case04, ...)
 ; reads: wBattleActionId, wBattleActor, hFFC6, wRecordBufferData
 ; writes: wRecordBuffer, wCFED, wBattleActor, wRecordBufferData, wD866, wD867
 ; points at: wDA2C, wBattleMP
@@ -3575,9 +3579,11 @@ Jump_032_541A::
     call Func_032_5804
     ret
 
-; 7 call sites from 6 routines (e.g. Func_032_4ADC_Case04, Func_032_4EE4_Case04, Func_032_4EE4_Case03, Func_032_4EE4_Case00, ...)
+; wBattleSubPhase = 7, wBattleResolveStep = 0, wBattleSubStep = 0 (E-0115)
+; 7 call sites from 6 routines (e.g. Func_032_4ADC_Case04, ClearActorStatus3Bits0To5_Case04, ClearActorStatus3Bits0To5_Case03, ClearActorStatus3Bits0To5_Case00, ...)
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep
-Func_032_543C::
+SetSubPhase7AndResetSteps::
+Func_032_543C:: ; address name
     ld a, $07
     ld [wBattleSubPhase], a
     xor a, a
@@ -3701,7 +3707,7 @@ Jump_032_54EA::
     ld a, [hl]
     and a, $3F
     ld [hl], a
-    call Func_032_543C
+    call SetSubPhase7AndResetSteps
     ret
 
 Jump_032_54F5::
@@ -3742,16 +3748,18 @@ Jump_032_5519:: ; address name
     inc [hl]
     xor a, a
     ld [wBattleSubStep], a
-    call Func_032_553B
+    call CompareActionIdWithCD
     ret z
     ld a, $80
     ld [wDAD2], a
     farcall SelectEffectByWDAD2Flags
     ret
 
+; compares wBattleActionId with $CD: carry when below, Z when equal (E-0115)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case05)
 ; reads: wBattleActionId
-Func_032_553B::
+CompareActionIdWithCD::
+Func_032_553B:: ; address name
     ld a, [wBattleActionId]
     cp a, $CD
     ret
@@ -3763,17 +3771,17 @@ Func_032_4ADC_Case06::
 Jump_032_5541:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw Func_032_553B_Case00
-    dw Func_032_553B_Case01
-    dw Func_032_553B_Case02
-    dw Func_032_553B_Case03
+    dw CompareActionIdWithCD_Case00
+    dw CompareActionIdWithCD_Case01
+    dw CompareActionIdWithCD_Case02
+    dw CompareActionIdWithCD_Case03
 
-; entry 0 of the `rst $00` table in Func_032_553B
+; entry 0 of the `rst $00` table in CompareActionIdWithCD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wCFF6, wCFF2, wBattleActionId, wBattleTarget
 ; writes: wBattleActionId, wBattleTarget, wBattleSubStep
 ; points at: wBattleActionChoice, wD814, wBattleResolveStep, wQueuedActionId, wBattleSubStep
-Func_032_553B_Case00::
+CompareActionIdWithCD_Case00::
 Jump_032_554D:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -3844,10 +3852,10 @@ Jump_032_55B2::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_032_553B
+; entry 1 of the `rst $00` table in CompareActionIdWithCD
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-Func_032_553B_Case01::
+CompareActionIdWithCD_Case01::
 Jump_032_55C2:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -3855,12 +3863,12 @@ Jump_032_55C2:: ; address name
     farcall ShowBattleText
     ret
 
-; entry 2 of the `rst $00` table in Func_032_553B
+; entry 2 of the `rst $00` table in CompareActionIdWithCD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAAD
 ; writes: wDAAD
 ; points at: wBattleSubStep
-Func_032_553B_Case02::
+CompareActionIdWithCD_Case02::
 Jump_032_55CF:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -3873,12 +3881,12 @@ Jump_032_55CF:: ; address name
     ld [wDAAD], a
     ret
 
-; entry 3 of the `rst $00` table in Func_032_553B
+; entry 3 of the `rst $00` table in CompareActionIdWithCD
 ; no direct call (reached through a table, a jump or a vector)
-Func_032_553B_Case03::
+CompareActionIdWithCD_Case03::
 Jump_032_55E7:: ; address name
     call Func_032_5386
-    call Func_032_543C
+    call SetSubPhase7AndResetSteps
     ret
 
 ; 1 call site from 1 routine (e.g. Func_032_5820_Case06)
@@ -4028,7 +4036,7 @@ Jump_032_5793:: ; address name
     ld [wBattleTarget], a
     call DefeatTarget
     call Func_032_5AB3
-    call Func_032_57E4
+    call LoadBattleActor
     ld d, $8A
     cp a, $04
     jr c, Jump_032_57AF
@@ -4050,7 +4058,7 @@ Jump_032_57BA:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_032_57E4
+    call LoadBattleActor
     and a, $04
     ld c, a
     ld b, $03
@@ -4076,9 +4084,11 @@ Jump_032_57DA::
 Jump_032_57E3::
     ret
 
+; A = wBattleActor (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_032_55EE_Case01, Func_032_55EE_Case00)
 ; reads: wBattleActor
-Func_032_57E4::
+LoadBattleActor::
+Func_032_57E4:: ; address name
     ld a, [wBattleActor]
     ret
 
@@ -4107,7 +4117,7 @@ Func_032_57FD:: ; address name
     ld a, [hl]
     ret
 
-; 7 call sites from 4 routines (e.g. Func_032_5397, Func_032_4EE4_Case01, Func_032_4EE4_Case00, Func_032_514C)
+; 7 call sites from 4 routines (e.g. Func_032_5397, ClearActorStatus3Bits0To5_Case01, ClearActorStatus3Bits0To5_Case00, Func_032_514C)
 ; reads: wBattleActor
 ; writes: wBattleActionId, wRecordBuffer, wCFED
 ; points at: wBattleActionChoice
@@ -5489,7 +5499,7 @@ Func_032_604A_Case00::
 Jump_032_60C0:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
-    call Func_032_6749
+    call SkipTurnIfActorAbsent
     ret c
     ld a, $20
     ld [wDAD2], a
@@ -5665,7 +5675,7 @@ Jump_032_61C6::
     ret
 
 ; wBattleSubStep2 = 0, wBattleSubStep = 1 (E-0071)
-; 3 call sites from 3 routines (e.g. Func_032_6749, SetBattleSubStep1_Case03, Func_032_63C2_Table2_Case03)
+; 3 call sites from 3 routines (e.g. SkipTurnIfActorAbsent, SetBattleSubStep1_Case03, Func_032_63C2_Table2_Case03)
 ; writes: wBattleSubStep2, wBattleSubStep
 SetBattleSubStep1::
 Func_032_61D9:: ; address name
@@ -5693,7 +5703,7 @@ Jump_032_61E3:: ; address name
 ; points at: wBattleSubStep2
 SetBattleSubStep1_Case00::
 Jump_032_61EF:: ; address name
-    call Func_032_6749
+    call SkipTurnIfActorAbsent
     ret c
     ld a, $20
     ld [wDAD2], a
@@ -6122,7 +6132,7 @@ Func_032_63C2_Table2_Case00::
 Jump_032_6449:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
-    call Func_032_6749
+    call SkipTurnIfActorAbsent
     ret c
     ld a, $20
     ld [wDAD2], a
@@ -6626,9 +6636,11 @@ Jump_032_672D::
     ld [wDABA], a
     ret
 
+; when the actor's slot is absent (CarryUnlessWDA63SlotEmpty) runs SetBattleSubStep1 and returns carry set; otherwise returns carry clear (E-0115)
 ; 3 call sites from 3 routines (e.g. Func_032_604A_Case00, SetBattleSubStep1_Case00, Func_032_63C2_Table2_Case00)
 ; reads: wBattleActor
-Func_032_6749::
+SkipTurnIfActorAbsent::
+Func_032_6749:: ; address name
     ld a, [wBattleActor]
     call CarryUnlessWDA63SlotEmpty
     ret nc
@@ -6788,7 +6800,7 @@ Func_032_6808:: ; address name
     db $21, $1F, $D9, $18, $0A
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 6 call sites from 5 routines (e.g. CheckSkillMPCost, CheckActorStatusAndFoeTargets, CheckActorStatusBit7AndFoeBit6, Func_032_4EE4_Case02, ...)
+; 6 call sites from 5 routines (e.g. CheckSkillMPCost, CheckActorStatusAndFoeTargets, CheckActorStatusBit7AndFoeBit6, ClearActorStatus3Bits0To5_Case02, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank32::
 Func_032_6812:: ; address name
@@ -6999,9 +7011,9 @@ Jump_032_692B::
     ret
     ds $111C, $00
 
-; entry 7 of the `rst $00` table in Func_032_4EE4
+; entry 7 of the `rst $00` table in ClearActorStatus3Bits0To5
 ; no direct call (reached through a table, a jump or a vector)
-Func_032_4EE4_Case07::
+ClearActorStatus3Bits0To5_Case07::
 Jump_032_7A49:: ; address name
     nop
     nop

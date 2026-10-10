@@ -4961,7 +4961,7 @@ Data_03A_710C:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0EB10C, $87
 
 ; D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)
-; 66 call sites from 56 routines (e.g. Func_032_4EE4_Case09, Func_032_553B_Case01, Func_032_553B_Case02, Func_032_55EE_Case00, ...)
+; 66 call sites from 56 routines (e.g. ClearActorStatus3Bits0To5_Case09, CompareActionIdWithCD_Case01, CompareActionIdWithCD_Case02, Func_032_55EE_Case00, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleText::
 Func_03A_7193:: ; address name
@@ -5029,7 +5029,7 @@ Data_03A_74F7:: ; heuristic: target of a monotone pointer table; C0
     db $CD, $EE, $78, $CD, $08, $79, $C9, $CD, $41, $79, $CD, $EE, $78, $CD, $08, $79
     db $C9
 
-; 4 call sites from 4 routines (e.g. Func_032_4F0A, Func_032_4EE4_Case00, Func_032_4EE4_Case03, Func_032_5820_Case01)
+; 4 call sites from 4 routines (e.g. Func_032_4F0A, ClearActorStatus3Bits0To5_Case00, ClearActorStatus3Bits0To5_Case03, Func_032_5820_Case01)
 ; reads: wBattleActionId, wBattleActor, wC982
 ; writes: wC982, wD86C, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wC150

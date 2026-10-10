@@ -265,7 +265,7 @@ Jump_031_418E::
     ld a, [wD961]
     ld h, a
     ld de, wC130
-    call Func_031_423B
+    call CopyMonsterNameToDE_Bank31
     ld a, [wD962]
     ld l, a
     ld a, [wD963]
@@ -273,7 +273,7 @@ Jump_031_418E::
     ld de, wC140
     ld a, [wD890]
     cp a, $01
-    call nz, Func_031_423B
+    call nz, CopyMonsterNameToDE_Bank31
     ld a, [wD964]
     ld l, a
     ld a, [wD965]
@@ -281,7 +281,7 @@ Jump_031_418E::
     ld de, wC150
     ld a, [wD890]
     cp a, $03
-    call z, Func_031_423B
+    call z, CopyMonsterNameToDE_Bank31
     ld a, [wD890]
     cp a, $01
     jr z, Jump_031_420F
@@ -355,8 +355,10 @@ Jump_031_4228::
     inc [hl]
     ret
 
+; HL = monster id: H += 2 (string categories 2 and 3 hold the monster names), then CopyStringHLToDE (E-0115)
 ; 3 call sites from 1 routine (e.g. Func_031_40CC_Table3_Case03)
-Func_031_423B::
+CopyMonsterNameToDE_Bank31::
+Func_031_423B:: ; address name
     ld a, h
     add a, $02
     ld h, a
@@ -1295,7 +1297,7 @@ Jump_031_4751:: ; address name
     ldh [hFF8D], a
     ld a, [wD7BB]
     ld [wSpriteSlotCount], a
-    call Func_031_47C7
+    call BuildBattleScreenBuffer
     ld b, $31
     ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
@@ -1317,17 +1319,19 @@ Func_031_46C1_Case03::
 Jump_031_4793:: ; address name
     ld a, [wBattleSubStep]
     cp a, $03
-    call z, Func_031_47A9
+    call z, BuildAndDrawBattleScreen
     farcall Func_016_6A4E
     ld a, [wCFCF]
     or a, a
     call nz, Func_031_47DD
     ret
 
+; BuildBattleScreenBuffer, then copies the 20 x 18 wScreenTileBuffer to vBGMap0 (CopyRect32StrideToVRAM) (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_46C1_Case03)
 ; points at: wScreenTileBuffer
-Func_031_47A9::
-    call Func_031_47C7
+BuildAndDrawBattleScreen::
+Func_031_47A9:: ; address name
+    call BuildBattleScreenBuffer
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $1412
@@ -1345,8 +1349,10 @@ Jump_031_47B9:: ; address name
     call nz, Func_031_47DD
     ret
 
-; 2 call sites from 2 routines (e.g. Func_031_47A9, Func_031_46C1_Case02)
-Func_031_47C7::
+; runs Func_031_47DD, ClearAttributesAndScreenBuffer_Bank31, CopyRectRecordForWD88F_Bank31, Func_031_7389, LayoutTileBlocksForWD890Count, Func_031_7321 and Func_031_746F in turn (E-0115)
+; 2 call sites from 2 routines (e.g. BuildAndDrawBattleScreen, Func_031_46C1_Case02)
+BuildBattleScreenBuffer::
+Func_031_47C7:: ; address name
     call Func_031_47DD
     call ClearAttributesAndScreenBuffer_Bank31
     call CopyRectRecordForWD88F_Bank31
@@ -1356,7 +1362,7 @@ Func_031_47C7::
     call Func_031_746F
     ret
 
-; 4 call sites from 4 routines (e.g. Func_031_46C1_Case04, Func_031_46C1_Case03, Func_031_47C7, Func_031_46C1_Table2_Case00)
+; 4 call sites from 4 routines (e.g. Func_031_46C1_Case04, Func_031_46C1_Case03, BuildBattleScreenBuffer, Func_031_46C1_Table2_Case00)
 ; reads: wDAAB
 ; writes: wCFCF, wC526, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wBattleMonsterId
@@ -2818,7 +2824,7 @@ Jump_031_5067::
     ld [wCFD6], a
     xor a, a
     ld [wCFD5], a
-    call Func_031_7499
+    call CopyRectRecord73F7ToScreenBufferFar
     ld a, [wCFD4]
     and a, $03
     ld hl, wC29B
@@ -2992,7 +2998,7 @@ Jump_031_518A:: ; address name
     ld a, $02
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call Func_031_74AD
+    call CopyRectRecord755FToScreenBufferFar
     ld a, [wCFD4]
     and a, $03
     ld hl, wC2D9
@@ -3215,7 +3221,7 @@ Jump_031_52F7:: ; address name
 Func_031_4EB9_Case0C::
 Jump_031_5300:: ; address name
     call DrawWC2B8LeftToBGMapRow9_74B4
-    call Func_031_7522
+    call CopyRectRecord7750ToScreenBufferFar
     xor a, a
     ld [wD869], a
     farcall Func_03A_7BA0
@@ -3365,7 +3371,7 @@ Jump_031_53CD:: ; address name
     ld de, Data_031_63A7
     call Func_031_6153
     call Func_031_61A4
-    call Func_031_7502
+    call CopyRectRecords7600And7734ToScreenBufferFar
     ld a, $09
     ld [wStringCategory], a
     ld a, [wD86A]
@@ -3844,7 +3850,7 @@ Jump_031_56FE:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Case1C::
 Jump_031_5708:: ; address name
-    call Func_031_7522
+    call CopyRectRecord7750ToScreenBufferFar
     ld a, [wRecordBuffer]
     cp a, $1E
     jr z, Jump_031_5717
@@ -4074,7 +4080,7 @@ Jump_031_5855:: ; address name
     ld de, Data_031_63A7
     call Func_031_624F
     call Func_031_6288
-    call Func_031_74C1
+    call CopyRectRecord7600ToScreenBufferFar
     ld a, $06
     ld [wStringCategory], a
     ld hl, wInventory
@@ -4284,7 +4290,7 @@ Jump_031_59BC:: ; address name
     ld a, $03
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call Func_031_74EE
+    call CopyRectRecord76F8ToScreenBufferFar
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4295,7 +4301,7 @@ Jump_031_59BC:: ; address name
 ; points at: wBattleResolveStep
 Func_031_4EB9_Table2_Case05::
 Jump_031_59EA:: ; address name
-    call Func_031_74F5
+    call DrawWC2F8Rect8x7ToBGMapRow11
     ld hl, Data_031_639F
     ld a, [wC46F]
     and a, $03
@@ -4399,7 +4405,7 @@ Jump_031_5A8F::
 ; writes: wBattleResolveStep
 Func_031_4EB9_Table2_Case07::
 Jump_031_5A90:: ; address name
-    call Func_031_74F5
+    call DrawWC2F8Rect8x7ToBGMapRow11
     ld a, [wD868]
     or a, a
     jr z, Jump_031_5AA2
@@ -4556,7 +4562,7 @@ Jump_031_5B76::
 ; points at: wBattleResolveStep
 Func_031_4EB9_Table2_Case0C::
 Jump_031_5B7B:: ; address name
-    call Func_031_7522
+    call CopyRectRecord7750ToScreenBufferFar
     ld a, [wItemId]
     cp a, $0C
     jr z, Jump_031_5B86
@@ -5642,21 +5648,21 @@ Func_031_6153::
     inc hl
     cp a, $FF
     call z, ReturnZero_61A2
-    call Func_031_62F7
+    call ShowStringAAtTiles16D0
     ld a, [hl+]
     inc hl
     cp a, $FF
     call z, ReturnZero_61A2
-    call Func_031_6306
+    call ShowStringAAtTiles1760
     ld a, [hl+]
     inc hl
     cp a, $FF
     call z, ReturnZero_61A2
-    call Func_031_6315
+    call ShowStringAAtTiles17F0
     ld a, [hl]
     cp a, $FF
     call z, ReturnZero_61A2
-    call Func_031_6324
+    call ShowStringAAtTiles2080
     ret
 
 ; A = 0 (xor a, so Z set and carry clear); a two-byte handler stub (E-0110)
@@ -5801,19 +5807,19 @@ Func_031_624F::
     ld a, [hl+]
     cp a, $FF
     call z, ReturnZero_6286
-    call Func_031_62F7
+    call ShowStringAAtTiles16D0
     ld a, [hl+]
     cp a, $FF
     call z, ReturnZero_6286
-    call Func_031_6306
+    call ShowStringAAtTiles1760
     ld a, [hl+]
     cp a, $FF
     call z, ReturnZero_6286
-    call Func_031_6315
+    call ShowStringAAtTiles17F0
     ld a, [hl]
     cp a, $FF
     call z, ReturnZero_6286
-    call Func_031_6324
+    call ShowStringAAtTiles2080
     ret
 
 ; A = 0 (xor a, so Z set and carry clear); a two-byte handler stub (E-0110)
@@ -5883,9 +5889,11 @@ Func_031_62D3::
     farcall LoadItemRecord
     ret
 
+; wStringIndex = A, then ShowStringBank08AtTilesHL_Bank31 at vTiles1 + $6D0 with size $0901; HL kept (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
 ; writes: wStringIndex
-Func_031_62F7::
+ShowStringAAtTiles16D0::
+Func_031_62F7:: ; address name
     ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $6D0
@@ -5894,9 +5902,11 @@ Func_031_62F7::
     pop hl
     ret
 
+; wStringIndex = A, then ShowStringBank08AtTilesHL_Bank31 at vTiles1 + $760 with size $0901; HL kept (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
 ; writes: wStringIndex
-Func_031_6306::
+ShowStringAAtTiles1760::
+Func_031_6306:: ; address name
     ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $760
@@ -5905,9 +5915,11 @@ Func_031_6306::
     pop hl
     ret
 
+; wStringIndex = A, then ShowStringBank08AtTilesHL_Bank31 at vTiles1 + $7F0 with size $0901; HL kept (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
 ; writes: wStringIndex
-Func_031_6315::
+ShowStringAAtTiles17F0::
+Func_031_6315:: ; address name
     ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $7F0
@@ -5916,9 +5928,11 @@ Func_031_6315::
     pop hl
     ret
 
+; wStringIndex = A, then ShowStringBank08AtTilesHL_Bank31 at vTiles2 + $80 with size $0901 (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_031_6153, Func_031_624F)
 ; writes: wStringIndex
-Func_031_6324::
+ShowStringAAtTiles2080::
+Func_031_6324:: ; address name
     ld [wStringIndex], a
     ld hl, vTiles2 + $80
     ld de, $0901
@@ -6168,7 +6182,7 @@ Jump_031_649A::
     jr Jump_031_64A2
 
 Jump_031_64A2::
-    call Func_031_74DA
+    call CopyRectRecord76ACToScreenBufferFar
     ld hl, wC31A
     ld a, [wD86D]
     or a, a
@@ -7743,8 +7757,10 @@ Jump_031_6D17:: ; address name
     ret nz
     jp Jump_031_6C93
 
+; HL += A * $4E (the battler-record size, Multiply8); clobbers BC (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
-Func_031_6D1F:: ; heuristic: follows a terminator; C0
+AddAx4EToHL:: ; heuristic: follows a terminator; C0
+Func_031_6D1F:: ; address name
     push hl
     ld c, $4E
     call Multiply8
@@ -8087,7 +8103,7 @@ Jump_031_6EF7:: ; address name
     call FillWC278WithC3_Bank31
     call DrawWC278RowsToBGMapRow7
     call Func_031_7096
-    farcall Func_01A_72C9
+    farcall CopyRectRecords77B6And79CBAndPlaySound6C
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -8113,7 +8129,7 @@ Jump_031_6EF7:: ; address name
     ld hl, vBGMap0 + $120
     ld bc, $1409
     call CopyRect32StrideToVRAM
-    call Func_031_71B6
+    call DrawWCFD5PageNumber
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -8166,7 +8182,7 @@ Jump_031_6F9C::
     res 7, [hl]
     call Func_031_7096
     call Func_031_719E
-    call Func_031_71B6
+    call DrawWCFD5PageNumber
     ret
 
 ; entry 3 of the `rst $00` table in Func_031_6E67
@@ -8474,9 +8490,11 @@ Func_031_719E::
     call WriteVRAMByte
     ret
 
+; writes tile $E1 + (wCFD5 & $0F) at vBGMap0 + $10F (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_031_6E67_Case02, Func_031_6E67_Case01)
 ; reads: wCFD5
-Func_031_71B6::
+DrawWCFD5PageNumber::
+Func_031_71B6:: ; address name
     ld a, [wCFD5]
     and a, $0F
     add a, $E1
@@ -8521,7 +8539,7 @@ Func_031_71C4::
     ret
 
 ; on CGB writes 0 to the 20 x 18 visible attributes of vBGMap0 in VRAM bank 1 (rows 32 apart, WriteVRAMByteInc); then fills the $240 bytes of wScreenTileBuffer with $C3; what follows is not read (E-0110)
-; 6 call sites from 6 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
+; 6 call sites from 6 routines (e.g. BuildBattleScreenBuffer, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wIsCGB
 ; writes: rVBK
 ; points at: wScreenTileBuffer
@@ -8650,7 +8668,7 @@ Jump_031_7285::
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8D, $50, $8D, $A0, $8D
 
 ; picks record wD88F - 1 from Data_031_72C3 and copies it into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31) (E-0078)
-; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
+; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wD88F
 CopyRectRecordForWD88F_Bank31::
 Func_031_72AC:: ; address name
@@ -8676,7 +8694,7 @@ Func_031_72C9:: ; address name
     call FillWC278WithC3_Bank31
 
 ; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
-; 41 call sites from 24 routines (e.g. Func_031_47C7, RunBattleSetup_Case03, RunBattleSetup_Table2_Case0D, RunBattleSetup_Table2_Case07, ...)
+; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_Case03, RunBattleSetup_Table2_Case0D, RunBattleSetup_Table2_Case07, ...)
 ; reads: wD890
 ; points at: wC285
 LayoutTileBlocksForWD890Count::
@@ -8738,7 +8756,7 @@ Data_031_7317:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $C2, $7F, $C2
 
-; 4 call sites from 4 routines (e.g. Func_031_47C7, Func_031_46C1_Table2_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02)
+; 4 call sites from 4 routines (e.g. BuildBattleScreenBuffer, Func_031_46C1_Table2_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02)
 ; reads: wIsCGB, wC57F, wD890
 ; points at: wD960, wBattleMonsterId
 Func_031_7321::
@@ -8811,7 +8829,7 @@ Func_031_7379:: ; address name
     pop de
     ret
 
-; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
+; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wD88F
 Func_031_7389::
     call Func_031_739F
@@ -8959,7 +8977,7 @@ Jump_031_7465::
     call CopySlotPanelRowToVRAM
     ret
 
-; 13 call sites from 13 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, Func_031_47C7, Func_031_46C1_Case00, ...)
+; 13 call sites from 13 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, BuildBattleScreenBuffer, Func_031_46C1_Case00, ...)
 Func_031_746F::
     call FillTilesFromRequest
     farcall CopyRectRecord7345ToScreenBuffer
@@ -8994,8 +9012,10 @@ Func_031_748C:: ; address name
     call CopyRect32StrideToVRAM
     ret
 
+; far-calls CopyRectRecord73F7ToScreenBuffer in bank $1A (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case00)
-Func_031_7499::
+CopyRectRecord73F7ToScreenBufferFar::
+Func_031_7499:: ; address name
     farcall CopyRectRecord73F7ToScreenBuffer
     ret
 
@@ -9010,8 +9030,10 @@ Func_031_74A0:: ; address name
     call CopyRect32StrideToVRAM
     ret
 
+; far-calls CopyRectRecord755FToScreenBuffer in bank $1A (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case04)
-Func_031_74AD::
+CopyRectRecord755FToScreenBufferFar::
+Func_031_74AD:: ; address name
     farcall CopyRectRecord755FToScreenBuffer
     ret
 
@@ -9026,8 +9048,10 @@ Func_031_74B4:: ; address name
     call CopyRect32StrideToVRAM
     ret
 
+; far-calls CopyRectRecord7600ToScreenBuffer in bank $1A (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Table2_Case00)
-Func_031_74C1::
+CopyRectRecord7600ToScreenBufferFar::
+Func_031_74C1:: ; address name
     farcall CopyRectRecord7600ToScreenBuffer
     ret
 
@@ -9045,8 +9069,10 @@ Func_031_74C8:: ; address name
     ld [wD868], a
     ret
 
+; far-calls CopyRectRecord76ACToScreenBuffer in bank $1A (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_645E)
-Func_031_74DA::
+CopyRectRecord76ACToScreenBufferFar::
+Func_031_74DA:: ; address name
     farcall CopyRectRecord76ACToScreenBuffer
     ret
 
@@ -9061,22 +9087,28 @@ Func_031_74E1:: ; address name
     call CopyRect32StrideToVRAM
     ret
 
+; far-calls CopyRectRecord76F8ToScreenBuffer in bank $1A (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Table2_Case04)
-Func_031_74EE::
+CopyRectRecord76F8ToScreenBufferFar::
+Func_031_74EE:: ; address name
     farcall CopyRectRecord76F8ToScreenBuffer
     ret
 
+; copies an 8 x 7 rectangle from wC2F8 to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_031_4EB9_Table2_Case07, Func_031_4EB9_Table2_Case05)
 ; points at: wC2F8
-Func_031_74F5::
+DrawWC2F8Rect8x7ToBGMapRow11::
+Func_031_74F5:: ; address name
     ld de, wC2F8
     ld hl, vBGMap0 + $160
     ld bc, $0807
     call CopyRect32StrideToVRAM
     ret
 
+; far-calls CopyRectRecords7600And7734ToScreenBuffer in bank $1A (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_4EB9_Case10)
-Func_031_7502::
+CopyRectRecords7600And7734ToScreenBufferFar::
+Func_031_7502:: ; address name
     farcall CopyRectRecords7600And7734ToScreenBuffer
     ret
 
@@ -9095,8 +9127,10 @@ Func_031_7509:: ; address name
     call CopyRect32StrideToVRAM
     ret
 
+; far-calls CopyRectRecord7750ToScreenBuffer in bank $1A (E-0115)
 ; 3 call sites from 3 routines (e.g. Func_031_4EB9_Case1C, Func_031_4EB9_Case0C, Func_031_4EB9_Table2_Case0C)
-Func_031_7522::
+CopyRectRecord7750ToScreenBufferFar::
+Func_031_7522:: ; address name
     farcall CopyRectRecord7750ToScreenBuffer
     ret
 
@@ -9121,7 +9155,7 @@ Func_031_7536:: ; address name
     ld bc, $140B
 
 ; B = width, C = rows, DE = source with 32-byte rows, HL = VRAM address with 32-byte rows: copies a B x C rectangle with WriteVRAMByteInc. DE ends 32 * C past its start and HL at the start of the row below; B kept, C = 0 (E-0060)
-; 18 call sites from 15 routines (e.g. Func_031_47A9, DrawWC338RowsToBGMapRow13, DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_Table2_Case0C, ...)
+; 18 call sites from 15 routines (e.g. BuildAndDrawBattleScreen, DrawWC338RowsToBGMapRow13, DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_Table2_Case0C, ...)
 CopyRect32StrideToVRAM::
 Func_031_753F:: ; address name
     push bc
@@ -9831,7 +9865,7 @@ Func_031_7A02:: ; address name
     ret
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes appear in 2 banks)
-; 7 call sites from 7 routines (e.g. Func_031_6331, Func_031_6324, Func_031_6315, Func_031_6306, ...)
+; 7 call sites from 7 routines (e.g. Func_031_6331, ShowStringAAtTiles2080, ShowStringAAtTiles17F0, ShowStringAAtTiles1760, ...)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wC52D, wC52E, wC52F, wC530
 ShowStringBank08AtTilesHL_Bank31::

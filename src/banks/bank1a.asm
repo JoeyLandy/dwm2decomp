@@ -2082,7 +2082,7 @@ Func_01A_727D:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_73F7 (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_7499)
+; 1 call site from 1 routine (e.g. CopyRectRecord73F7ToScreenBufferFar)
 CopyRectRecord73F7ToScreenBuffer::
 Func_01A_7284:: ; address name
     ld hl, Data_01A_73F7
@@ -2098,7 +2098,7 @@ Func_01A_728B:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_755F (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_74AD)
+; 1 call site from 1 routine (e.g. CopyRectRecord755FToScreenBufferFar)
 CopyRectRecord755FToScreenBuffer::
 Func_01A_7292:: ; address name
     ld hl, Data_01A_755F
@@ -2114,7 +2114,7 @@ Func_01A_7299:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7600 (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_74C1)
+; 1 call site from 1 routine (e.g. CopyRectRecord7600ToScreenBufferFar)
 CopyRectRecord7600ToScreenBuffer::
 Func_01A_72A0:: ; address name
     ld hl, Data_01A_7600
@@ -2122,7 +2122,7 @@ Func_01A_72A0:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_76AC (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_74DA)
+; 1 call site from 1 routine (e.g. CopyRectRecord76ACToScreenBufferFar)
 CopyRectRecord76ACToScreenBuffer::
 Func_01A_72A7:: ; address name
     ld hl, Data_01A_76AC
@@ -2130,7 +2130,7 @@ Func_01A_72A7:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_76F8 (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_74EE)
+; 1 call site from 1 routine (e.g. CopyRectRecord76F8ToScreenBufferFar)
 CopyRectRecord76F8ToScreenBuffer::
 Func_01A_72AE:: ; address name
     ld hl, Data_01A_76F8
@@ -2138,7 +2138,7 @@ Func_01A_72AE:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with Data_01A_7600, then with Data_01A_7734 (E-0114)
-; 2 call sites from 2 routines (e.g. Func_031_7502, Func_0A0_5F2E_Case0C)
+; 2 call sites from 2 routines (e.g. CopyRectRecords7600And7734ToScreenBufferFar, Func_0A0_5F2E_Case0C)
 CopyRectRecords7600And7734ToScreenBuffer::
 Func_01A_72B5:: ; address name
     ld hl, Data_01A_7600
@@ -2148,15 +2148,17 @@ Func_01A_72B5:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7750 (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_7522)
+; 1 call site from 1 routine (e.g. CopyRectRecord7750ToScreenBufferFar)
 CopyRectRecord7750ToScreenBuffer::
 Func_01A_72C2:: ; address name
     ld hl, Data_01A_7750
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with Data_01A_77B6 and Data_01A_79CB, then QueueSoundEffect $6C (E-0115)
 ; 1 call site from 1 routine (e.g. Func_031_6E67_Case01)
-Func_01A_72C9::
+CopyRectRecords77B6And79CBAndPlaySound6C::
+Func_01A_72C9:: ; address name
     ld hl, Data_01A_77B6
     call CopyRecordRectToScreenBuffer_Bank1A
     ld hl, Data_01A_79CB
@@ -2178,8 +2180,10 @@ Func_01A_72DB::
     call QueueSoundEffect
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7848 (E-0115)
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case0A, Func_016_5D13_Case0F, Func_016_5D13_Case16)
-Func_01A_72F4::
+CopyRectRecord7848ToScreenBuffer::
+Func_01A_72F4:: ; address name
     ld hl, Data_01A_7848
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
@@ -2194,20 +2198,26 @@ Func_01A_72FB:: ; address name
     call QueueSoundEffect
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_78AA (E-0115)
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case16, Func_016_5D13_Case18, Func_016_5D13_Case1B)
-Func_01A_7307::
+CopyRectRecord78AAToScreenBuffer::
+Func_01A_7307:: ; address name
     ld hl, Data_01A_78AA
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7923 (E-0115)
 ; 1 call site from 1 routine (e.g. Func_016_7078)
-Func_01A_730E::
+CopyRectRecord7923ToScreenBuffer::
+Func_01A_730E:: ; address name
     ld hl, Data_01A_7923
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_796F, then QueueSoundEffect $6C (E-0115)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case0C, Func_016_5D13_Case11)
-Func_01A_7315::
+CopyRectRecord796FToScreenBufferAndPlaySound6C::
+Func_01A_7315:: ; address name
     ld hl, Data_01A_796F
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6C
@@ -2215,7 +2225,7 @@ Func_01A_7315::
     ret
 
 ; HL = header (word offset, width, rows) followed by tile bytes: copies the rectangle to wScreenTileBuffer ($C198) + offset with rows 32 bytes apart (the same effect as CopyRecordRectToScreenBuffer) (E-0079)
-; 20 call sites from 18 routines (e.g. CopyRectRecord7345ToScreenBuffer, CopyRectRecord787EAndPlaySound6C, Func_01A_730E, CopyRectRecord7600ToScreenBuffer, ...)
+; 20 call sites from 18 routines (e.g. CopyRectRecord7345ToScreenBuffer, CopyRectRecord787EAndPlaySound6C, CopyRectRecord7923ToScreenBuffer, CopyRectRecord7600ToScreenBuffer, ...)
 CopyRecordRectToScreenBuffer_Bank1A::
 Func_01A_7321:: ; address name
     ld a, $98

@@ -2249,11 +2249,11 @@ Jump_030_5016::
 Func_030_502D::
     ld b, $00
     ld hl, wSlotPersonalityHi
-    call Func_030_50AC
+    call IncBIfActorEntryBelow40
     ld hl, wSlotPersonalityMid
-    call Func_030_50AC
+    call IncBIfActorEntryBelow40
     ld hl, wSlotPersonalityLo
-    call Func_030_50AC
+    call IncBIfActorEntryBelow40
     ld a, b
     cp a, $03
     jr z, Jump_030_509A
@@ -2309,9 +2309,11 @@ Jump_030_50A6::
     ld [hl], $00
     ret
 
+; B += 1 when the byte at HL + wBattleActor is below $40 (E-0115)
 ; 3 call sites from 1 routine (e.g. Func_030_502D)
 ; reads: wBattleActor
-Func_030_50AC::
+IncBIfActorEntryBelow40::
+Func_030_50AC:: ; address name
     ld a, [wBattleActor]
     add_a_to_hl
     ld a, [hl]
@@ -2727,20 +2729,22 @@ Func_030_5319::
     ld c, [hl]
     pop hl
     ld de, hFFC6
-    call Func_030_5335
+    call CopyByteNegateIfCBit6
     inc hl
     inc de
-    call Func_030_5335
+    call CopyByteNegateIfCBit6
     inc hl
     inc de
-    call Func_030_5335
+    call CopyByteNegateIfCBit6
     inc hl
     inc de
-    call Func_030_5335
+    call CopyByteNegateIfCBit6
     ret
 
+; [DE] = [HL], negated (two's complement) when bit 6 of C is set (E-0115)
 ; 4 call sites from 1 routine (e.g. Func_030_5319)
-Func_030_5335::
+CopyByteNegateIfCBit6::
+Func_030_5335:: ; address name
     ld a, [hl]
     ld [de], a
     bit 6, c
@@ -2848,7 +2852,7 @@ Jump_030_543E::
     ld [hl], a
     ret
 
-; 3 call sites from 2 routines (e.g. Func_032_4EE4_Case00, Func_0E0_5A35)
+; 3 call sites from 2 routines (e.g. ClearActorStatus3Bits0To5_Case00, Func_0E0_5A35)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wD2CC
 ; points at: wDA53

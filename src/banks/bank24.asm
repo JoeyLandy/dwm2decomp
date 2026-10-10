@@ -489,7 +489,7 @@ Jump_024_4326:: ; address name
     ld hl, wC412
     ld bc, $0605
     call CopyRectTo20ByteRowsJp_Bank24
-    call Func_024_51A3
+    call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -559,7 +559,7 @@ Jump_024_4394:: ; address name
     ld hl, wC40E
     ld bc, $0A05
     call CopyRectTo20ByteRowsJp_Bank24
-    call Func_024_51A3
+    call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -614,7 +614,7 @@ Jump_024_43F1::
     ld b, $BC
     ld hl, Data_024_5AAA
     call StoreBAtWordTableEntry_Bank24_52CE
-    call Func_024_51A3
+    call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -695,7 +695,7 @@ Jump_024_4477::
     ld hl, wC300
     ld bc, $1405
     call CopyRectTo20ByteRowsJp_Bank24
-    call Func_024_51A3
+    call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
     ld de, $01A0
     add hl, de
@@ -732,7 +732,7 @@ Jump_024_44BA::
     ld hl, wC300
     ld bc, $1405
     call CopyRectTo20ByteRowsJp_Bank24
-    call Func_024_51A3
+    call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
     ld de, $01A0
     add hl, de
@@ -2711,7 +2711,7 @@ Jump_024_5121::
     ld b, $06
     dec c
     jr nz, Jump_024_5121
-    call Func_024_51A3
+    call ReturnStub_51A3
     ret
 
 Jump_024_513A::
@@ -2776,8 +2776,10 @@ Data_024_5197:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_519D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E1, $00, $E7, $00, $ED, $00
 
+; a bare ret (E-0115)
 ; 6 call sites from 6 routines (e.g. GameMode6_Init_Sub01_Sub01, GameMode6_Update_Table3_Case0C, GameMode6_Update_Table3_Case0B, GameMode6_Update_Table3_Case08, ...)
-Func_024_51A3::
+ReturnStub_51A3::
+Func_024_51A3:: ; address name
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
