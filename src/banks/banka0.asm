@@ -1439,7 +1439,7 @@ Func_0A0_4874::
     ld b, $FF
     call DivideBByA
     ld d, b
-    call Func_000_3ED4
+    call AdvanceRandom
     pop bc
     ld c, $00
     ld hl, wC5E7
@@ -1485,7 +1485,7 @@ Jump_0A0_48CC::
 ; 1 call site from 1 routine (e.g. Func_0A0_4874)
 ; reads: wC5E7, wCFE4
 Func_0A0_48D0::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld bc, $0B00
     ld hl, Data_0A0_48F5
@@ -4103,7 +4103,7 @@ Jump_0A0_5A7F::
     ld a, $00
     adc a, b
     ld b, a
-    call Func_000_3F04
+    call DivideHLByBC
     ld a, l
     ld [wD09D], a
     ld [wCFE4], a
@@ -4542,7 +4542,7 @@ Jump_0A0_5D49::
 ; 2 call sites from 2 routines (e.g. Func_0A0_5D38, Func_0A0_5CF9)
 ; reads: wC5E7
 Func_0A0_5D4B::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $80
     ret
@@ -5632,7 +5632,7 @@ Jump_0A0_6424:: ; address name
 ; points at: wDA43, wC597, wBattleSubPhase
 Func_0A0_5E07_Case05::
 Jump_0A0_6442:: ; address name
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $F3
     ret z

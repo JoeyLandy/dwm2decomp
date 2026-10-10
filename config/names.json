@@ -2298,5 +2298,25 @@
     "name": "ResolveStepApplyDamage",
     "note": "resolve step $0C: farcalls ApplyDamageToTarget",
     "evidence": "reading + execution (E-0043)"
+  },
+  "00:3F04": {
+    "name": "DivideHLByBC",
+    "note": "HL = HL / BC (quotient), BC = HL mod BC; clobbers A, DE",
+    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
+  },
+  "00:3ED4": {
+    "name": "AdvanceRandom",
+    "note": "when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB",
+    "evidence": "reading"
+  },
+  "00:3E98": {
+    "name": "RandomInRange",
+    "note": "HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)",
+    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
+  },
+  "36:5025": {
+    "name": "ComputeBasicDamage",
+    "note": "the damage formula: HL = the acting slot's value from the array at wD8FF (Func_036_7E2E), BC = the value to compare with, set by the caller. If HL <= BC the damage is RandomInRange(0, 1). Otherwise, with diff = HL - BC: when HL / 4 >= diff / 2 the damage is RandomInRange(0, HL / 4); else it is diff / 2 + RandomInRange(-(diff / 4), diff / 4) + RandomInRange(-1, 1). The 16-bit result goes to wBattleDamageLo/Hi",
+    "evidence": "reading + execution (E-0043)"
   }
 }

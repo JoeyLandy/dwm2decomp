@@ -1733,7 +1733,7 @@ Func_03B_4A34::
 ; 4 call sites from 3 routines (e.g. Func_03B_4990, Func_03B_483A, Func_03B_489B)
 ; writes: wBattleDamageLo, wD873
 Func_03B_4A40::
-    call Func_000_3E98
+    call RandomInRange
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
@@ -1872,25 +1872,25 @@ Jump_03B_4AD2::
     ret
 
 Jump_03B_4AD5::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $D8
     ret
 
 Jump_03B_4ADE::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $BF
     ret
 
 Jump_03B_4AE7::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $7F
     ret
 
 Jump_03B_4AF0::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $66
     ret
@@ -1898,7 +1898,7 @@ Jump_03B_4AF0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7
 Func_03B_4AF9:: ; heuristic: follows a terminator; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $3F
     ret

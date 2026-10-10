@@ -1745,7 +1745,7 @@ Jump_019_4A4D::
     ld a, d
     or a, e
     jr z, Jump_019_4A68
-    ld hl, rIE
+    ld hl, $FFFF
 
 Jump_019_4A68::
     pop bc

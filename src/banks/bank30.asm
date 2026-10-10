@@ -311,7 +311,7 @@ Jump_030_41D2::
 ; points at: wD91F
 Func_030_41DF::
     push de
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, e
     ld hl, wD91F
     add a, a
@@ -325,7 +325,7 @@ Func_030_41DF::
     ld a, $0A
     call Divide24ByA
     pop bc
-    call Func_000_3E98
+    call RandomInRange
     ld c, e
     ld b, d
     pop de
@@ -404,7 +404,7 @@ Jump_030_427A::
     jr Jump_030_4292
 
 Jump_030_427F::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld b, a
     ld a, $09
@@ -885,7 +885,7 @@ Func_030_4558::
 ; reads: wC5E7, wD86A, wD86B
 ; writes: wD86A, wD86B
 Func_030_4579::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $3F
     ld l, a
@@ -1241,7 +1241,7 @@ Jump_030_47CA::
     ld b, $03
 
 Jump_030_47D5::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $0F
     ld e, a
@@ -1288,7 +1288,7 @@ Func_030_480E::
 
 Jump_030_4834::
     ld hl, $0000
-    call Func_000_3E98
+    call RandomInRange
     pop hl
     call Func_030_5428
     ret
@@ -1797,7 +1797,7 @@ Jump_030_4C09::
     call CompareHLToBC
     jr c, Jump_030_4C2F
     jr nz, Jump_030_4C34
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 0, a
     jr z, Jump_030_4C34
@@ -1936,7 +1936,7 @@ Jump_030_4CC9::
 Func_030_4CDB::
     push af
     dec de
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $3F
     ld b, a
@@ -2142,7 +2142,7 @@ Func_030_4F8E:: ; heuristic: follows a terminator; C0
     db $AF, $C9
 
 Jump_030_4FC8::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld b, a
     ld a, [wBattleActor]
@@ -2162,7 +2162,7 @@ Jump_030_4FC8::
 ; reads: wC5E7, wBattleActor
 ; points at: wD854
 Func_030_4FE9:: ; heuristic: follows a terminator; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld b, a
     ld a, [wBattleActor]
@@ -2994,7 +2994,7 @@ Jump_030_556B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5F8, wC5FA, wC5E7, wC5F9
 Func_030_556C:: ; heuristic: follows a terminator; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     call Func_030_541B
     ld a, [wC5F8]
     or a, a

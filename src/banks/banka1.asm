@@ -453,7 +453,7 @@ Func_0A1_437D::
     ld a, $0A
     call Divide24ByA
     pop bc
-    call Func_000_3E98
+    call RandomInRange
     ld c, e
     ld b, d
     pop de

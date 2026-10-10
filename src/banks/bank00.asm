@@ -1474,7 +1474,7 @@ Func_000_0952:: ; address name
     ret
 
 ; wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8
-; 47 call sites from 41 routines (e.g. Func_000_0150, Func_000_3ED4, Func_000_3EDE, Func_001_6C48, ...)
+; 47 call sites from 41 routines (e.g. Func_000_0150, AdvanceRandom, Func_000_3EDE, Func_001_6C48, ...)
 ; reads: wC5E8
 ; writes: wC5E8, wC5E7
 NextTableByte::
@@ -3866,7 +3866,7 @@ Jump_000_16CD::
     ret
 
 ; HL = HL / A (quotient in HL), A = remainder; clobbers D, E
-; 87 call sites from 63 routines (e.g. Func_000_3F04, Func_005_6985, Func_005_64DF, Func_005_5317, ...)
+; 87 call sites from 63 routines (e.g. DivideHLByBC, Func_005_6985, Func_005_64DF, Func_005_5317, ...)
 DivideHLByA::
 Func_000_16D1:: ; address name
     ld d, $10
@@ -10501,7 +10501,7 @@ Jump_000_3E76::
     ret
 
 ; Z set when HL == BC; A is clobbered
-; 177 call sites from 116 routines (e.g. Func_000_3E98, DebugMonsterRecordViewer_Update, Func_001_6857, Func_005_6494, ...)
+; 177 call sites from 116 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, Func_001_6857, Func_005_6494, ...)
 CompareHLToBC::
 Func_000_3E7A:: ; address name
     ld a, h
@@ -10538,9 +10538,11 @@ Jump_000_3E8F::
     scf
     ret
 
+; HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)
 ; 18 call sites from 15 routines (e.g. Func_030_41DF, Func_030_480E, Func_036_4930, Func_036_494E, ...)
 ; reads: wC5E7, wC5E8
-Func_000_3E98::
+RandomInRange::
+Func_000_3E98:: ; address name
     call CompareHLToBC
     jr z, Jump_000_3ED1
     ld a, h
@@ -10569,12 +10571,12 @@ Jump_000_3EB1::
     adc a, $00
     ld b, a
     push hl
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld l, a
     ld a, [wC5E8]
     ld h, a
-    call Func_000_3F04
+    call DivideHLByBC
     pop hl
     ld a, c
     sub a, l
@@ -10591,10 +10593,12 @@ Jump_000_3ED1::
 Jump_000_3ED3::
     ret
 
-; 73 call sites from 58 routines (e.g. Func_000_3E98, Func_030_4203, Func_030_41DF, Func_030_47B9, ...)
+; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
+; 73 call sites from 58 routines (e.g. RandomInRange, Func_030_4203, Func_030_41DF, Func_030_47B9, ...)
 ; reads: wC58A, wC5BA, wC5BB, wC5E7, wC5E8
 ; writes: wC5E7, wC5E8, wC5BA, wC5BB
-Func_000_3ED4::
+AdvanceRandom::
+Func_000_3ED4:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Func_000_3EDE
@@ -10626,8 +10630,10 @@ Func_000_3EDE::
     pop hl
     ret
 
-; 8 call sites from 8 routines (e.g. Func_000_3E98, Func_036_64DB, Func_036_4930, Func_039_5514, ...)
-Func_000_3F04::
+; HL = HL / BC (quotient), BC = HL mod BC; clobbers A, DE
+; 8 call sites from 8 routines (e.g. RandomInRange, Func_036_64DB, Func_036_4930, Func_039_5514, ...)
+DivideHLByBC::
+Func_000_3F04:: ; address name
     ld de, $0000
     ld a, b
     or a, a

@@ -109,6 +109,8 @@ class SymbolicOperands(unittest.TestCase):
                     ahead = [l.split(";")[0].strip() for l in lines[n:n + 2]]
                     if reg in ("bc", "de") and int(m.group(1), 16) >= 0xFF00 and f"add hl, {reg}" in ahead:
                         continue  # a small negative number added to HL, not an address
+                    if int(m.group(1), 16) == 0xFFFF:
+                        continue  # -1 as a 16-bit number, not the interrupt-enable register
                     if forbidden(int(m.group(1), 16), True):
                         bad.append(f"{f.name}:{n} {code}")
         self.assertGreater(symbolic, 10000, "expected the source to use many symbolic operands")

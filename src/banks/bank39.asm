@@ -137,7 +137,7 @@ Func_039_40C2:: ; heuristic: target of a pointer table; C0
     ld d, c
 
 Jump_039_40CB::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 7, a
     jr z, Jump_039_40D6
@@ -188,7 +188,7 @@ Func_039_414F:: ; heuristic: target of a pointer table; C0
     ld e, a
 
 Jump_039_4153::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $07
     cp a, e
@@ -223,7 +223,7 @@ Jump_039_4181::
     jr Jump_039_419A
 
 Jump_039_418F::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 7, a
     jr z, Jump_039_419A
@@ -1586,7 +1586,7 @@ Jump_039_5532::
     jr Jump_039_5553
 
 Jump_039_5550::
-    call Func_000_3F04
+    call DivideHLByBC
 
 Jump_039_5553::
     push hl
@@ -1749,7 +1749,7 @@ Jump_039_561A::
     jr Jump_039_566D
 
 Jump_039_565D::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 7, a
     jr z, Jump_039_566D
@@ -1843,7 +1843,7 @@ Jump_039_56F0::
     cp a, $FF
     jr z, Jump_039_5704
     push af
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld e, a
     pop af
@@ -1917,7 +1917,7 @@ Jump_039_574D::
     jr z, Jump_039_57C1
     cp a, $03
     jr z, Jump_039_57B3
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 7, a
     jr z, Jump_039_57C1
@@ -1954,7 +1954,7 @@ Jump_039_578E::
     jr z, Jump_039_57C1
     cp a, $03
     jr z, Jump_039_57B3
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 7, a
     jr z, Jump_039_57C1
@@ -1977,7 +1977,7 @@ Jump_039_57AE::
     jr Jump_039_57C1
 
 Jump_039_57B3::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld b, a
     ld a, $03
@@ -2044,7 +2044,7 @@ Jump_039_57E9::
 
 Jump_039_581C::
     push hl
-    call Func_000_3ED4
+    call AdvanceRandom
     pop hl
     ld a, [wC5E7]
     bit 7, a
@@ -4436,7 +4436,7 @@ Jump_039_668F::
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC6, hFFC7
 Func_039_6691:: ; heuristic: target of a pointer table; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4472,7 +4472,7 @@ Jump_039_66BD::
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873, wD874, wD875, ...
 ; points at: hFFC6, hFFC7, wBattleDamageLo
 Func_039_66C5:: ; heuristic: target of a pointer table; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4637,7 +4637,7 @@ Jump_039_67DB::
     call CompareHLToBC
     jr z, Jump_039_680E
     push de
-    call Func_000_3F04
+    call DivideHLByBC
     pop de
     push de
     ld a, e
@@ -5566,7 +5566,7 @@ Jump_039_6C8A::
     ld a, c
     call Func_039_71EF
     pop bc
-    call Func_000_3F04
+    call DivideHLByBC
     ldh a, [hFFC7]
     sub a, l
     ld e, a
@@ -5587,7 +5587,7 @@ Jump_039_6C8A::
     ld a, d
     or a, e
     jr nz, Jump_039_6CD4
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 7, a
     jr z, Jump_039_6CD4
@@ -5649,7 +5649,7 @@ Jump_039_6CFE::
     ld a, c
     call Func_039_71F4
     pop bc
-    call Func_000_3F04
+    call DivideHLByBC
     ldh a, [hFFC7]
     sub a, l
     ld e, a
@@ -5670,7 +5670,7 @@ Jump_039_6CFE::
     ld a, d
     or a, e
     jr nz, Jump_039_6D4E
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 7, a
     jr z, Jump_039_6D4E
@@ -5766,7 +5766,7 @@ Jump_039_6DAB::
     jr Jump_039_6DBC
 
 Jump_039_6DB2::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     bit 1, a
     jr z, Jump_039_6DAB
@@ -5814,7 +5814,7 @@ Jump_039_6DED::
 ; 1 call site from 1 routine (e.g. Func_039_6E8B)
 ; points at: wD874
 Func_039_6DF1::
-    ld hl, rIE
+    ld hl, $FFFF
 
 ; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
 ; points at: wD874
@@ -6376,7 +6376,7 @@ Jump_039_710F::
     ldh a, [hFFC6]
     cp a, $FF
     jr z, Jump_039_7148
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $01
     jr z, Jump_039_714C

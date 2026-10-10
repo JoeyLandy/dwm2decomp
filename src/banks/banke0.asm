@@ -6490,7 +6490,7 @@ Jump_0E0_7269::
     cp a, $1B
     cp a, $20
     jr c, Jump_0E0_72AF
-    ld hl, rIE
+    ld hl, $FFFF
     jr Jump_0E0_72AF
 
 Jump_0E0_72AC::

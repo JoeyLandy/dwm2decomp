@@ -436,7 +436,7 @@ Jump_0A3_456D::
     ld l, $FF
 
 Jump_0A3_458F::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $7F
     cp a, $64
@@ -710,7 +710,7 @@ Jump_0A3_4A59::
 ; reads: wBattleTarget
 ; points at: wD86D
 Func_0A3_4A5F::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, $FF
     ld hl, wD86D
     ld bc, $0003
@@ -750,7 +750,7 @@ Jump_0A3_4A99::
     ld b, $00
     dec e
     ld c, e
-    call Func_000_3E98
+    call RandomInRange
     ld a, e
     ld hl, wD86D
     add_a_to_hl
@@ -761,7 +761,7 @@ Jump_0A3_4A99::
 ; 1 call site from 1 routine (e.g. Func_036_714F)
 ; reads: wC5E7, wC58A, wCFC5, wBattleActor
 Func_0A3_4AAF:: ; heuristic: follows a terminator; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     ld b, a
     ld a, $0E

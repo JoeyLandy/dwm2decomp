@@ -1483,6 +1483,8 @@ class Rom:
             reg = m.group(1).split()[1].rstrip(",")
             if reg in ("bc", "de") and f"add hl, {reg}" in following and int(m.group(2), 16) >= 0xFF00:
                 return text  # a small negative number, not an address
+            if int(m.group(2), 16) == 0xFFFF:
+                return text  # -1 as a 16-bit number; rIE would only be a pointer in a memory operand
             nm = self.sym_name(int(m.group(2), 16), True)
             if nm:
                 return m.group(1) + nm

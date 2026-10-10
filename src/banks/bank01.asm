@@ -2869,7 +2869,7 @@ Jump_001_5879::
     ld a, c
     cp a, $74
     jr c, Jump_001_588A
-    ld bc, rIE
+    ld bc, $FFFF
 
 Jump_001_588A::
     inc bc

@@ -231,6 +231,32 @@ class DispatchCases(unittest.TestCase):
                          len(set(re.findall(r"^(\w+_Case[0-9A-F]{2})::", text, re.M))))
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class RandomAndDivision(unittest.TestCase):
+    def test_divide_hl_by_bc(self):
+        rng = random.Random(5)
+        for _ in range(40):
+            n, d = rng.randrange(65536), rng.randrange(1, 65536)
+            gb = call(0, 0x3F04, h=n >> 8, l=n & 0xFF, b=d >> 8, c=d & 0xFF)
+            self.assertEqual(((gb.h << 8) | gb.l, (gb.b << 8) | gb.c), divmod(n, d), (n, d))
+
+    def test_random_in_range_stays_inside_and_uses_the_table(self):
+        rng = random.Random(6)
+        seen = set()
+        for _ in range(60):
+            lo = rng.randrange(0, 500)
+            hi = lo + rng.randrange(0, 300)
+            gb = call(0, 0x3E98, {0xC5E8: rng.randrange(128), 0xC58A: 0}, h=lo >> 8, l=lo & 0xFF, b=hi >> 8, c=hi & 0xFF)
+            got = (gb.d << 8) | gb.e
+            self.assertTrue(lo <= got <= hi, (lo, hi, got))
+            seen.add(got - lo)
+        self.assertGreater(len(seen), 10)
+
+    def test_equal_bounds_return_the_bound(self):
+        gb = call(0, 0x3E98, h=0, l=7, b=0, c=7)
+        self.assertEqual((gb.d << 8) | gb.e, 7)
+
+
 class FamilyNamesAreApplied(unittest.TestCase):
     """Audit of the committed src/: each family in config/name_families.json names its copies."""
 

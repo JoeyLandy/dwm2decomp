@@ -1940,7 +1940,7 @@ Func_032_4A49:: ; heuristic: target of a pointer table; C0
     inc d
     ld bc, $011F
     dec d
-    ld bc, rIE
+    ld bc, $FFFF
     nop
     dec b
     ld bc, $0206
@@ -2355,7 +2355,7 @@ Jump_032_4C9B::
 ; writes: wBattleSubStep
 ; points at: wBattleStatus, wD89E
 Func_032_4C9C::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $40
     jr nc, Jump_032_4CB7
@@ -2527,7 +2527,7 @@ Func_032_4D8D::
 ; writes: wD8A6, wBattleTarget
 ; points at: wD80F, wDA1C, wDA1D
 Func_032_4D99::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wD80F
     call AddAx9ToHL
@@ -5363,7 +5363,7 @@ Jump_032_6044::
 ; reads: wBattleActor, wC5E7
 ; points at: wDA1C
 Func_032_604A::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wDA1C
     call AddDoubleAToHL_Bank32
@@ -5868,7 +5868,7 @@ Jump_032_630B:: ; address name
     inc [hl]
     ld a, [wBattleActor]
     call SetBit0OfWD095Indexed_Bank32
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $01
     jr z, Jump_032_6366

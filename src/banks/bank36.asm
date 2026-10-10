@@ -633,7 +633,7 @@ Jump_036_4431::
     call AddAx9ToHL
     bit 1, [hl]
     jr z, Jump_036_4451
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $A0
     jr nc, Jump_036_4451
@@ -646,7 +646,7 @@ Jump_036_4451::
     ld a, [hl]
     and a, $03
     jr z, Jump_036_447F
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $60
     jr nc, Jump_036_447F
@@ -686,7 +686,7 @@ Jump_036_447F::
     ld a, [hl]
     and a, $03
     jp nz, Jump_036_4542
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wBattleTarget]
     ld hl, wD811
     call AddAx9ToHL
@@ -861,7 +861,7 @@ Jump_036_45AA::
     call AddAx9ToHL
     bit 3, [hl]
     jr nz, Jump_036_45D3
-    call Func_000_3ED4
+    call AdvanceRandom
     call Func_036_4918
     jr nc, Jump_036_45F7
 
@@ -1401,7 +1401,7 @@ Jump_036_492B::
 Func_036_4930::
     push hl
     ld bc, $0014
-    call Func_000_3F04
+    call DivideHLByBC
     ld e, l
     ld d, h
     pop bc
@@ -1419,7 +1419,7 @@ Func_036_4930::
     adc a, $00
     ld d, a
     add hl, de
-    call Func_000_3E98
+    call RandomInRange
     ret
 
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case07)
@@ -1435,7 +1435,7 @@ Func_036_494E::
     ld c, l
     ld b, h
     pop hl
-    call Func_000_3E98
+    call RandomInRange
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_036_4A38, RunBattleResolveStep_Case0A)
@@ -2294,7 +2294,7 @@ Func_036_4F18::
     ret
 
 Jump_036_4F2E::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $33
     jp c, Jump_036_4FBA
@@ -2333,7 +2333,7 @@ Func_036_4F69::
     ld b, $00
     dec e
     ld c, e
-    call Func_000_3E98
+    call RandomInRange
     ld a, e
     ld hl, wD86D
     add_a_to_hl
@@ -2444,7 +2444,7 @@ Func_036_5009::
 ; writes: wBattleDamageLo, wD873
 ; points at: wD90F
 Func_036_5013::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wBattleTarget]
     ld hl, wD90F
     call AddDoubleAToHL_Bank36
@@ -2453,10 +2453,12 @@ Func_036_5013::
     ld c, a
     call Func_036_650B
 
+; the damage formula: HL = the acting slot's value from the array at wD8FF (Func_036_7E2E), BC = the value to compare with, set by the caller. If HL <= BC the damage is RandomInRange(0, 1). Otherwise, with diff = HL - BC: when HL / 4 >= diff / 2 the damage is RandomInRange(0, HL / 4); else it is diff / 2 + RandomInRange(-(diff / 4), diff / 4) + RandomInRange(-1, 1). The 16-bit result goes to wBattleDamageLo/Hi
 ; 2 call sites from 1 routine (e.g. Func_036_50DC)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wD873
-Func_036_5025::
+ComputeBasicDamage::
+Func_036_5025:: ; address name
     ld a, [wBattleActor]
     call Func_036_7E2E
     call CompareHLToBC
@@ -2485,7 +2487,7 @@ Func_036_5025::
 Jump_036_504E::
     ld hl, $0000
     ld bc, $0001
-    call Func_000_3E98
+    call RandomInRange
     jr Jump_036_508B
 
 Jump_036_5059::
@@ -2493,7 +2495,7 @@ Jump_036_5059::
     ld c, l
     ld b, h
     ld hl, $0000
-    call Func_000_3E98
+    call RandomInRange
     jr Jump_036_508B
 
 Jump_036_5066::
@@ -2511,13 +2513,13 @@ Jump_036_5066::
     cpl
     adc a, $00
     ld h, a
-    call Func_000_3E98
+    call RandomInRange
     pop hl
     add hl, de
     push hl
-    ld hl, rIE
+    ld hl, $FFFF
     ld bc, $0001
-    call Func_000_3E98
+    call RandomInRange
     pop hl
     add hl, de
     ld e, l
@@ -2588,9 +2590,9 @@ Jump_036_50D8::
 Func_036_50DC:: ; heuristic: follows a terminator; C0
     ld a, [wBattleActor]
     push af
-    call Func_000_3ED4
+    call AdvanceRandom
     ld bc, $0000
-    call Func_036_5025
+    call ComputeBasicDamage
     ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wD873]
@@ -2599,9 +2601,9 @@ Func_036_50DC:: ; heuristic: follows a terminator; C0
     farcall Func_0A3_414F
     ldh a, [hFFC6]
     ld [wBattleActor], a
-    call Func_000_3ED4
+    call AdvanceRandom
     ld bc, $0000
-    call Func_036_5025
+    call ComputeBasicDamage
     pop de
     ld a, [wBattleDamageLo]
     ld l, a
@@ -3858,7 +3860,7 @@ Jump_036_58F9::
     cpl
     adc a, $00
     ld h, a
-    call Func_000_3E98
+    call RandomInRange
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
@@ -3920,7 +3922,7 @@ Jump_036_595E::
     cpl
     adc a, $00
     ld h, a
-    call Func_000_3E98
+    call RandomInRange
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
@@ -3995,7 +3997,7 @@ Jump_036_59D3::
     cpl
     adc a, $00
     ld h, a
-    call Func_000_3E98
+    call RandomInRange
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wD873]
@@ -5054,7 +5056,7 @@ Func_036_618F::
     ld c, l
     ld b, h
     pop hl
-    call Func_000_3E98
+    call RandomInRange
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
@@ -5502,43 +5504,43 @@ Jump_036_6367::
     ret
 
 Jump_036_636A::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $D8
     ret
 
 Jump_036_6373::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $BF
     ret
 
 Jump_036_637C::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $7F
     ret
 
 Jump_036_6385::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $66
     ret
 
 Jump_036_638E::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $4C
     ret
 
 Jump_036_6397::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $3F
     ret
 
 Jump_036_63A0::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $26
     ret
@@ -5766,7 +5768,7 @@ Func_036_64D4::
 ; 4 call sites from 4 routines (e.g. Func_036_54BE, Func_036_5441, Func_036_5360, Func_036_53EF)
 Func_036_64DB::
     ld bc, $0003
-    call Func_000_3F04
+    call DivideHLByBC
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_771B)
@@ -5807,7 +5809,7 @@ Func_036_650B::
     rr c
     ret
 
-; 3 call sites from 1 routine (e.g. Func_036_5025)
+; 3 call sites from 1 routine (e.g. ComputeBasicDamage)
 Func_036_6510:: ; heuristic: follows a terminator; C0
     srl h
     rr l
@@ -6525,7 +6527,7 @@ Jump_036_69EA::
 Func_036_69ED:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     call Func_036_7D33
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     sra a
     sra a
@@ -6617,7 +6619,7 @@ Func_036_6A82:: ; heuristic: target of a pointer table; C0
 
 Jump_036_6A93::
     push hl
-    call Func_000_3ED4
+    call AdvanceRandom
     pop hl
     ld a, $04
     add_a_to_hl
@@ -6836,7 +6838,7 @@ Jump_036_6BC4::
 Func_036_6BC7:: ; heuristic: target of a pointer table; C0
     call Func_036_5ED8
     jr nc, Jump_036_6C21
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $01
     jr z, Jump_036_6C01
@@ -6968,7 +6970,7 @@ Func_036_6C9A:: ; heuristic: target of a pointer table; C0
     call CarryUnlessWDA63SlotEmpty
     jp nc, Jump_036_6D1A
     jp z, Jump_036_6D1D
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $01
     jr z, Jump_036_6CED
@@ -7817,7 +7819,7 @@ Func_036_71DF:: ; heuristic: target of a pointer table; C0
     bit 0, [hl]
     jr nz, Jump_036_7214
     push hl
-    call Func_000_3ED4
+    call AdvanceRandom
     pop hl
     ld a, [wC5E7]
     cp a, $80
@@ -7929,7 +7931,7 @@ Func_036_7314:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     call Func_000_3E25
     jr c, Jump_036_7326
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $A0
     jr c, Jump_036_734B
@@ -8174,7 +8176,7 @@ Func_036_74A0:: ; heuristic: target of a pointer table; C0
     ld a, [wDABA]
     or a, a
     jr nz, Jump_036_74CD
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $01
     jr nz, Jump_036_74CD
@@ -8199,7 +8201,7 @@ Jump_036_74CD::
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1
 ; points at: wD811, wDA1D
 Func_036_74D1:: ; heuristic: target of a pointer table; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wD811
     call AddAx9ToHL
@@ -8356,7 +8358,7 @@ Func_036_75AB:: ; heuristic: target of a pointer table; C0
     pop hl
     and a, $04
     jr nz, Jump_036_75DD
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, $C0
     ld b, a
     ld a, [wC5E7]
@@ -8599,7 +8601,7 @@ Jump_036_775E::
     jr nz, Jump_036_7780
     bit 7, [hl]
     jr nz, Jump_036_7780
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $01
     jr z, Jump_036_77AD
@@ -8615,7 +8617,7 @@ Jump_036_7780::
     push bc
     call Func_036_64EC
     pop bc
-    call Func_000_3E98
+    call RandomInRange
     ld a, d
     or a, e
     jr nz, Jump_036_779C
@@ -8915,7 +8917,7 @@ Jump_036_7966::
     ld a, [wDABA]
     or a, a
     jr nz, Jump_036_7981
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $80
     jr c, Jump_036_7981
@@ -8950,7 +8952,7 @@ Func_036_799B:: ; heuristic: follows a terminator; C0
     and a, $01
     jr nz, Jump_036_79CF
     push hl
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $0F
     ld hl, $79DC
@@ -9193,7 +9195,7 @@ Jump_036_7B68::
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD136
 Func_036_7B6B:: ; heuristic: target of a pointer table; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $40
     jr c, Jump_036_7B81
@@ -9212,7 +9214,7 @@ Jump_036_7B81::
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
 Func_036_7B89:: ; heuristic: target of a pointer table; C0
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $C0
     jr c, Jump_036_7B99
@@ -9649,7 +9651,7 @@ Jump_036_7DD1::
     db $72, $0B, $5E, $0B, $5E, $13, $50, $13, $50, $6C, $5A, $13, $50, $E0, $72, $13
     db $50, $13, $50, $13, $50, $E0, $72, $13, $50
 
-; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Case07, Func_036_5025, Func_036_7353, Func_036_7314)
+; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Case07, ComputeBasicDamage, Func_036_7353, Func_036_7314)
 ; points at: wD8FF
 Func_036_7E2E::
     ld hl, wD8FF

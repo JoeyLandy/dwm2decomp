@@ -3919,7 +3919,7 @@ Jump_03A_6832::
     sla c
 
 Jump_03A_683B::
-    call Func_000_3E98
+    call RandomInRange
     ld a, e
     or a, $80
     ld [wDABA], a
@@ -4303,7 +4303,7 @@ Jump_03A_6A60:: ; address name
     and a, $90
     jr z, Jump_03A_6AB6
     push hl
-    call Func_000_3ED4
+    call AdvanceRandom
     call Func_03A_6C7A
     pop hl
     jr nc, Jump_03A_6AB6
@@ -4465,7 +4465,7 @@ Jump_03A_6B8B::
     jr Jump_03A_6BCF
 
 Jump_03A_6BAB::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     and a, $01
     jr nz, Jump_03A_6BB9
@@ -4826,7 +4826,7 @@ Func_03A_6D76::
 ; reads: wC5E7
 ; writes: wC96F
 Func_03A_6D91::
-    call Func_000_3ED4
+    call AdvanceRandom
     ld a, [wC5E7]
     cp a, $80
     jr c, Jump_03A_6DA2
