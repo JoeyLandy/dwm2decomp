@@ -159,7 +159,7 @@ Data_00D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0, "MeteOrb", $F0, "MadCat", $F0, "HornBeet", $F0, "SkyDragon", $F0, "Octogon", $F0, "Serva"
     db "nt", $F0, "Darck", $F0
 
-; 2 call sites from 2 routines (e.g. Func_00D_5159, Func_010_6613)
+; 2 call sites from 2 routines (e.g. Func_00D_5159, ScriptCommandEF)
 ; reads: wD780
 Func_00D_45D1::
     ld a, [wD780]
@@ -1735,7 +1735,7 @@ Data_00D_50BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $74, $75, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; 1 call site from 1 routine (e.g. Func_010_6621)
+; 1 call site from 1 routine (e.g. ScriptCommandF1)
 ; reads: wD788
 Func_00D_50E5::
     ld a, [wD788]
@@ -1791,7 +1791,7 @@ Jump_00D_50F8::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_661A)
+; 1 call site from 1 routine (e.g. ScriptCommandF0)
 ; reads: wD780
 Func_00D_5159::
     ld a, [wD780]
@@ -2310,7 +2310,7 @@ Data_00D_552E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_5576:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $035576, $48
 
-; 1 call site from 1 routine (e.g. Func_010_6628)
+; 1 call site from 1 routine (e.g. ScriptCommandF2)
 ; reads: wD780
 Func_00D_55BE::
     ld a, [wD780]
@@ -3902,7 +3902,7 @@ Data_00D_6292:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_62B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0362B0, $60
 
-; 1 call site from 1 routine (e.g. Func_010_662F)
+; 1 call site from 1 routine (e.g. ScriptCommandF3)
 ; reads: wD780
 Func_00D_6310::
     ld a, [wD780]
@@ -5748,7 +5748,7 @@ Func_00D_7115::
     farcall Func_01E_4001
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_6636)
+; 1 call site from 1 routine (e.g. ScriptCommandF4)
 ; reads: wD780
 Func_00D_711C::
     ld a, [wD780]

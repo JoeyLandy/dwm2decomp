@@ -1,7 +1,7 @@
 SECTION "Bank 0C", ROMX[$4000], BANK[$0C]
     db $0C
 
-; 1 call site from 1 routine (e.g. Func_010_6644)
+; 1 call site from 1 routine (e.g. ScriptCommandF6)
 ; reads: wD780
 Func_00C_4001::
     ld a, [wD780]
@@ -3031,7 +3031,7 @@ Data_00C_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $03251B, $6C
     ds $18, $FE
 
-; 1 call site from 1 routine (e.g. Func_010_664B)
+; 1 call site from 1 routine (e.g. ScriptCommandF7)
 ; reads: wD780
 Func_00C_659F::
     ld a, [wD780]

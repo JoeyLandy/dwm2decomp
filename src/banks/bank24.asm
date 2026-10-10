@@ -3659,7 +3659,7 @@ Data_024_60CD:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "RviD-oxUncurt", $F0
 
-; 1 call site from 1 routine (e.g. Func_010_6652)
+; 1 call site from 1 routine (e.g. ScriptCommandF8)
 ; reads: wD780
 Func_024_60DB::
     ld a, [wD780]

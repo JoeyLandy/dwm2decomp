@@ -2199,7 +2199,7 @@ Jump_05F_77D6::
     scf
     ret
 
-; 2 call sites from 2 routines (e.g. Func_010_49E1, Func_010_49E7)
+; 2 call sites from 2 routines (e.g. ScriptCommand03, ScriptCommand02)
 ; reads: wScriptParam0, wScriptStep, wScriptParam1
 ; writes: wScriptStep, wScriptParam1, wScriptCommandType, wScriptStartRequest
 Func_05F_77D8::
@@ -2290,7 +2290,7 @@ Jump_05F_783B::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_49DA)
+; 1 call site from 1 routine (e.g. ScriptCommand04)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptParam0, wScriptParam1, wScriptCommandType, wScriptStartRequest
 Func_05F_785C::
@@ -2314,7 +2314,7 @@ Func_05F_785C::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_49D3)
+; 1 call site from 1 routine (e.g. ScriptCommand05)
 ; reads: wC468, hFF8C, wScriptParam1, wScriptParam0, wJoypadHeld
 ; writes: wJoypadHeld, wJoypadPressed, wScriptStartRequest, wScriptParam1
 Func_05F_787C::
@@ -2367,7 +2367,7 @@ Jump_05F_78C5::
     ld [wJoypadHeld], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_49CC)
+; 1 call site from 1 routine (e.g. ScriptCommand06)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptStartRequest
 ; points at: hPlayerFacing, wC8EF
@@ -2408,7 +2408,7 @@ Jump_05F_78FD::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BCD)
+; 1 call site from 1 routine (e.g. ScriptCommand0C)
 ; reads: wScriptParam1, wScriptParam0
 ; writes: wScriptParam0, wScriptCommandType, wScriptStartRequest
 ; points at: hPlayerY, wC8F1, wCB8B
@@ -2469,7 +2469,7 @@ Jump_05F_7933::
 Data_05F_7959:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
-; 1 call site from 1 routine (e.g. Func_010_49EE)
+; 1 call site from 1 routine (e.g. ScriptCommand0A)
 ; reads: wScriptStep
 Func_05F_7969::
     ld a, [wScriptStep]
@@ -2654,7 +2654,7 @@ Jump_05F_7A8C::
     ld [wModeState], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BD4)
+; 1 call site from 1 routine (e.g. ScriptCommand0E)
 ; reads: wScriptStep, wScriptParam0
 ; writes: hFFC6, wScriptCommandType, wScriptStartRequest
 ; points at: wScriptStep

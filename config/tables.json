@@ -413,7 +413,10 @@
           "type": "ptr",
           "code": true,
           "name": "handler that runs one frame of script command type (index + 1)",
-          "reason": "script command handler"
+          "reason": "script command handler",
+          "name_targets": "ScriptCommand",
+          "name_base": 1,
+          "name_note": "runs one frame of script command type"
         }
       ],
       "note": "E-0038 (C1: ExecuteScriptCommand indexes it with wScriptCommandType - 1; command types are set by the fetch handlers of FetchScriptCommand; a zero word is an unused type; all 248 words are code pointers inside the bank and the table ends where the next bytes stop being pointers)."

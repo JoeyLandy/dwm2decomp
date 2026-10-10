@@ -1,7 +1,7 @@
 SECTION "Bank 73", ROMX[$4000], BANK[$73]
     db $73
 
-; 1 call site from 1 routine (e.g. Func_010_499B)
+; 1 call site from 1 routine (e.g. ScriptCommand82)
 ; reads: wC935
 Func_073_4001::
     ld a, [wC935]
@@ -2414,7 +2414,7 @@ Jump_073_5194::
     farcall Func_00A_476E
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4F31)
+; 1 call site from 1 routine (e.g. ScriptCommandCB)
 ; reads: wScriptStep
 Func_073_51BD::
     ld a, [wScriptStep]
@@ -2577,7 +2577,7 @@ Jump_073_52FF::
     ret
     INCBIN "dwm2-cobi-us.gbc", $1CD30C, $6C
 
-; 1 call site from 1 routine (e.g. Func_010_4F2A)
+; 1 call site from 1 routine (e.g. ScriptCommandCA)
 ; reads: hFFC6, wCC3F
 ; writes: hFFC6, hFFC7, wCC3F, wCB9A, wCB9B, wScriptStartRequest
 Func_073_5378::
@@ -2603,7 +2603,7 @@ Func_073_5378::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4F23)
+; 1 call site from 1 routine (e.g. ScriptCommandC9)
 ; reads: wScriptStep
 Func_073_53AB::
     ld a, [wScriptStep]
@@ -2678,7 +2678,7 @@ Jump_073_5412::
     ld [wCB86], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4F1C)
+; 1 call site from 1 routine (e.g. ScriptCommandC8)
 ; reads: wCB8B
 ; writes: wCBAB, wCB86, wCB96, wCB8B, wCB9B, wScriptStartRequest
 ; points at: wCB8C, wCB9C
@@ -2703,7 +2703,7 @@ Func_073_541D::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4F0E)
+; 1 call site from 1 routine (e.g. ScriptCommandC5)
 ; reads: wScriptStep
 Func_073_5449::
     ld a, [wScriptStep]
@@ -2854,7 +2854,7 @@ Jump_073_5541::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4F38)
+; 1 call site from 1 routine (e.g. ScriptCommandCC)
 ; reads: wScriptStep
 Func_073_5546::
     ld a, [wScriptStep]
@@ -2884,7 +2884,7 @@ Jump_073_555E::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4F00)
+; 1 call site from 1 routine (e.g. ScriptCommandC6)
 ; reads: wScriptStep
 ; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, wScriptStartRequest
 Func_073_5577::
@@ -2911,7 +2911,7 @@ Jump_073_559E::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4EF9)
+; 1 call site from 1 routine (e.g. ScriptCommandC3)
 ; reads: hFFC6
 ; writes: hFFC6, hFFC7, wScriptStartRequest
 Func_073_55A4::
@@ -2930,7 +2930,7 @@ Func_073_55A4::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4EEB)
+; 1 call site from 1 routine (e.g. ScriptCommandC1)
 ; reads: wScriptStep
 Func_073_55C5::
     ld a, [wScriptStep]
@@ -3034,7 +3034,7 @@ Jump_073_5670::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4EE4)
+; 1 call site from 1 routine (e.g. ScriptCommandC0)
 ; reads: wScriptStep
 Func_073_568E::
     ld a, [wScriptStep]
@@ -3111,7 +3111,7 @@ Jump_073_56F6::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E20)
+; 1 call site from 1 routine (e.g. ScriptCommand64)
 ; reads: wScriptStep
 Func_073_571D::
     ld a, [wScriptStep]
@@ -3126,7 +3126,7 @@ Jump_073_5729::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E19)
+; 1 call site from 1 routine (e.g. ScriptCommand63)
 ; reads: wScriptStep
 ; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, wScriptStartRequest
 Func_073_572F::
@@ -3155,7 +3155,7 @@ Jump_073_575B::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E0B)
+; 1 call site from 1 routine (e.g. ScriptCommand61)
 ; reads: wScriptStep
 Func_073_5761::
     ld a, [wScriptStep]
@@ -3307,7 +3307,7 @@ Jump_073_5873::
     farcall Func_012_61EF
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E04)
+; 1 call site from 1 routine (e.g. ScriptCommand60)
 ; reads: wScriptStep
 Func_073_587A::
     ld a, [wScriptStep]
@@ -3376,7 +3376,7 @@ Jump_073_58E0::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DEF)
+; 1 call site from 1 routine (e.g. ScriptCommand5D)
 ; reads: hFFC6
 ; writes: hFFC6, hFFC7, wSpriteSlotCount, wScriptStartRequest
 Func_073_58FE::
@@ -3394,7 +3394,7 @@ Func_073_58FE::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DE8)
+; 1 call site from 1 routine (e.g. ScriptCommand5C)
 ; reads: wScriptParam0
 ; writes: wCB9B, wScriptParam0, hFFC6, wScriptStartRequest
 Func_073_5919::
@@ -3450,7 +3450,7 @@ Jump_073_5942::
     ld [wScriptStartRequest], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_010_4DD3, Func_010_4DDA)
+; 2 call sites from 2 routines (e.g. ScriptCommand59, ScriptCommand5A)
 ; reads: wScriptStep
 Func_073_5987::
     ld a, [wScriptStep]
@@ -3518,7 +3518,7 @@ Jump_073_59E6::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DC5)
+; 1 call site from 1 routine (e.g. ScriptCommand57)
 ; reads: wScriptStep
 Func_073_5A16::
     ld a, [wScriptStep]
@@ -3558,7 +3558,7 @@ Jump_073_5A48::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E3C)
+; 1 call site from 1 routine (e.g. ScriptCommand68)
 ; reads: hPlayerX, wC6FD, wC92C
 ; writes: wC92A, wC928, wC929, wScriptStartRequest
 ; points at: wC8F0
@@ -3626,7 +3626,7 @@ Jump_073_5AA6::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DBE)
+; 1 call site from 1 routine (e.g. ScriptCommand56)
 ; reads: hFFC6
 ; writes: hFFC6, hFFC7, wSpriteSlotCount, wScriptStartRequest
 Func_073_5ABB::
@@ -3644,7 +3644,7 @@ Func_073_5ABB::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DB7)
+; 1 call site from 1 routine (e.g. ScriptCommand55)
 ; reads: wCC3B
 ; writes: wCC3B, wScriptStartRequest
 Func_073_5AD6::
@@ -3655,7 +3655,7 @@ Func_073_5AD6::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DB0)
+; 1 call site from 1 routine (e.g. ScriptCommand54)
 ; reads: wScriptStep
 Func_073_5AE4::
     ld a, [wScriptStep]
@@ -3871,7 +3871,7 @@ Jump_073_5C1F::
     ret
     db $03, $F0, $00, $00, $02, $00, $F0, $00, $00, $00, $10, $00, $01, $10, $00, $00
 
-; 1 call site from 1 routine (e.g. Func_010_4DA9)
+; 1 call site from 1 routine (e.g. ScriptCommand53)
 ; reads: hPlayerX, hPlayerY, wC1EA, wC1F8, wC28A, wC298, wCC3B
 ; writes: wCC3B, wScriptStartRequest
 ; points at: wC1EA, wC28A, wC298, wC1C8, wC1F8
@@ -4030,7 +4030,7 @@ Func_073_5D65::
     ld a, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E35)
+; 1 call site from 1 routine (e.g. ScriptCommand67)
 ; reads: hMapId, hMapScreenX, hFFC6
 ; writes: hFFC6, hFFC7, wSpriteSlotCount, wScriptStartRequest
 Func_073_5D71::
@@ -4070,7 +4070,7 @@ Jump_073_5DAB::
     call SetFlagBit
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DA2)
+; 1 call site from 1 routine (e.g. ScriptCommand52)
 ; reads: wScriptStep
 ; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, wScriptStartRequest
 Func_073_5DAF::
@@ -4097,7 +4097,7 @@ Jump_073_5DD7::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D9B)
+; 1 call site from 1 routine (e.g. ScriptCommand51)
 ; reads: wScriptStep
 Func_073_5DDD::
     ld a, [wScriptStep]
@@ -4221,7 +4221,7 @@ Jump_073_5E97::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D94)
+; 1 call site from 1 routine (e.g. ScriptCommand50)
 ; reads: wScriptStep
 Func_073_5EB3::
     ld a, [wScriptStep]
@@ -4302,7 +4302,7 @@ Jump_073_5F1D::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D8D)
+; 1 call site from 1 routine (e.g. ScriptCommand4F)
 ; writes: wScriptStartRequest
 ; points at: wC26A, wC27E
 Func_073_5F39::
@@ -4365,7 +4365,7 @@ Func_073_5F55:: ; heuristic: follows a terminator; C0
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D78)
+; 1 call site from 1 routine (e.g. ScriptCommand4C)
 ; reads: wScriptStep
 Func_073_5FBC::
     ld a, [wScriptStep]
@@ -4433,7 +4433,7 @@ Jump_073_601B::
     db $06, $31, $12, $44, $00, $63, $02, $24, $16, $53, $1A, $43, $06, $31, $12, $44
     db $00, $53, $02, $24, $16, $42, $1A, $43
 
-; 1 call site from 1 routine (e.g. Func_010_4D55)
+; 1 call site from 1 routine (e.g. ScriptCommand47)
 ; reads: wScriptStep
 Func_073_6038::
     ld a, [wScriptStep]
@@ -4474,7 +4474,7 @@ Jump_073_6072::
     call SetFlagBit
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D40)
+; 1 call site from 1 routine (e.g. ScriptCommand44)
 ; reads: wScriptStep
 Func_073_6079::
     ld a, [wScriptStep]
@@ -4546,7 +4546,7 @@ Jump_073_60CD::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D1D)
+; 1 call site from 1 routine (e.g. ScriptCommand3F)
 ; reads: wFrameCounterLo, wCB9B
 ; writes: wSpriteSlotCount, wCB9B, wScriptStartRequest
 Func_073_60FE::
@@ -4573,7 +4573,7 @@ Jump_073_6111::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D16)
+; 1 call site from 1 routine (e.g. ScriptCommand3E)
 ; reads: wScriptStep
 Func_073_6126::
     ld a, [wScriptStep]
@@ -4647,7 +4647,7 @@ Jump_073_619B::
     farcall Func_012_61EF
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D0F)
+; 1 call site from 1 routine (e.g. ScriptCommand3D)
 ; reads: wScriptStep
 Func_073_61A7::
     ld a, [wScriptStep]
@@ -4860,7 +4860,7 @@ Jump_073_62D7::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D08)
+; 1 call site from 1 routine (e.g. ScriptCommand3C)
 ; reads: wScriptStep
 Func_073_630F::
     ld a, [wScriptStep]
@@ -5294,7 +5294,7 @@ Func_073_65AA::
     ld [hl], $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CFA)
+; 1 call site from 1 routine (e.g. ScriptCommand3A)
 ; reads: wScriptStep
 Func_073_65B0::
     ld a, [wScriptStep]
@@ -5632,7 +5632,7 @@ Jump_073_6798::
     jr Jump_073_6762
     db $C9
 
-; 1 call site from 1 routine (e.g. Func_010_4CD7)
+; 1 call site from 1 routine (e.g. ScriptCommand35)
 ; reads: wScriptStep
 Func_073_679F::
     ld a, [wScriptStep]
@@ -5856,7 +5856,7 @@ Jump_073_6931::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CD0)
+; 1 call site from 1 routine (e.g. ScriptCommand34)
 ; reads: wCC39
 ; writes: wC242, wC243, wC256, wC257, wCC39, wScriptStartRequest
 Func_073_6941::
@@ -5876,7 +5876,7 @@ Func_073_6941::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CC9)
+; 1 call site from 1 routine (e.g. ScriptCommand33)
 ; reads: wScriptStep
 Func_073_6969::
     ld a, [wScriptStep]
@@ -6034,7 +6034,7 @@ Jump_073_6A71::
     farcall Func_05F_6C5A
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CB4)
+; 1 call site from 1 routine (e.g. ScriptCommand30)
 ; reads: wScriptStep
 Func_073_6A91::
     ld a, [wScriptStep]
@@ -6062,7 +6062,7 @@ Jump_073_6AB8::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CAD)
+; 1 call site from 1 routine (e.g. ScriptCommand2F)
 ; reads: wScriptStep
 ; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8C6, wScriptStartRequest
 Func_073_6ABE::
@@ -6091,7 +6091,7 @@ Jump_073_6AE9::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CA6)
+; 1 call site from 1 routine (e.g. ScriptCommand2E)
 ; reads: wScriptStep
 ; writes: wScriptStartRequest
 Func_073_6AEF::
@@ -6106,7 +6106,7 @@ Jump_073_6AF9::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C9F)
+; 1 call site from 1 routine (e.g. ScriptCommand2D)
 ; reads: wScriptStep
 Func_073_6AFF::
     ld a, [wScriptStep]
@@ -6160,7 +6160,7 @@ Jump_073_6B46::
     call StoreHLInWC924_B73b
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C98)
+; 1 call site from 1 routine (e.g. ScriptCommand2C)
 ; reads: wScriptStep
 Func_073_6B5B::
     ld a, [wScriptStep]
@@ -6199,7 +6199,7 @@ Jump_073_6B87::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C91)
+; 1 call site from 1 routine (e.g. ScriptCommand2B)
 ; reads: wScriptStep
 Func_073_6B98::
     ld a, [wScriptStep]
@@ -6433,7 +6433,7 @@ Jump_073_6D4D::
     ret
     INCBIN "dwm2-cobi-us.gbc", $1CED52, $C5
 
-; 1 call site from 1 routine (e.g. Func_010_4C6E)
+; 1 call site from 1 routine (e.g. ScriptCommand26)
 ; reads: wScriptStep
 Func_073_6E17::
     ld a, [wScriptStep]
@@ -6477,7 +6477,7 @@ Jump_073_6E55::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C36)
+; 1 call site from 1 routine (e.g. ScriptCommand1E)
 ; reads: hFFC6, wC836
 ; writes: hFFC6, wC836, wScriptStartRequest
 ; points at: wInventory
@@ -6520,7 +6520,7 @@ Jump_073_6EA0::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C67)
+; 1 call site from 1 routine (e.g. ScriptCommand25)
 ; reads: wScriptStep
 Func_073_6EBA::
     ld a, [wScriptStep]
@@ -6547,7 +6547,7 @@ Jump_073_6EC8::
     farcall Func_05F_6C5A
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C4B)
+; 1 call site from 1 routine (e.g. ScriptCommand21)
 ; reads: wScriptStep
 Func_073_6EE7::
     ld a, [wScriptStep]
@@ -6576,7 +6576,7 @@ Jump_073_6F04::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C1A)
+; 1 call site from 1 routine (e.g. ScriptCommand1A)
 ; reads: hPlayerX, hPlayerY, wCBD4
 ; writes: wCBCF, wCBD3, wCBD4, wScriptStartRequest
 ; points at: wCBD3, wCBD4
@@ -6622,7 +6622,7 @@ Jump_073_6F40::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C13)
+; 1 call site from 1 routine (e.g. ScriptCommand19)
 ; reads: wScriptStep
 ; writes: wCBCF, wScriptStartRequest
 ; points at: wScriptStep, wCBD4
@@ -6646,7 +6646,7 @@ Jump_073_6F6B::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C44)
+; 1 call site from 1 routine (e.g. ScriptCommand20)
 ; reads: wScriptStep
 Func_073_6F7C::
     ld a, [wScriptStep]
@@ -6750,7 +6750,7 @@ Jump_073_701E::
     ld [wScriptParam0], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BFE)
+; 1 call site from 1 routine (e.g. ScriptCommand16)
 ; reads: wScriptStep
 Func_073_7024::
     ld a, [wScriptStep]
@@ -7203,7 +7203,7 @@ Jump_073_7386::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BF7)
+; 1 call site from 1 routine (e.g. ScriptCommand15)
 ; reads: wScriptStep
 Func_073_73A0::
     ld a, [wScriptStep]
@@ -7392,7 +7392,7 @@ Jump_073_7566::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C05)
+; 1 call site from 1 routine (e.g. ScriptCommand17)
 ; reads: wScriptStep, hPlayerX, hPlayerY
 ; writes: wCBD3, wCBD4, wCBCF, wScriptStartRequest
 ; points at: wScriptStep, wCBD3, wCBD4
@@ -7447,7 +7447,7 @@ Jump_073_75CC::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BF0)
+; 1 call site from 1 routine (e.g. ScriptCommand14)
 ; reads: wScriptStep
 Func_073_75DD::
     ld a, [wScriptStep]
@@ -7524,7 +7524,7 @@ Jump_073_764E::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BE9)
+; 1 call site from 1 routine (e.g. ScriptCommand13)
 ; reads: wScriptStep
 Func_073_765D::
     ld a, [wScriptStep]
@@ -7717,7 +7717,7 @@ Jump_073_77C0::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BE2)
+; 1 call site from 1 routine (e.g. ScriptCommand12)
 ; reads: wScriptStep
 Func_073_77CC::
     ld a, [wScriptStep]
@@ -8024,7 +8024,7 @@ Jump_073_79D9::
     ld [wCB86], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4BDB)
+; 1 call site from 1 routine (e.g. ScriptCommand11)
 ; reads: wScriptStep
 Func_073_79F4::
     ld a, [wScriptStep]

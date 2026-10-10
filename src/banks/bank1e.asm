@@ -1,7 +1,7 @@
 SECTION "Bank 1E", ROMX[$4000], BANK[$1E]
     db $1E
 
-; 2 call sites from 2 routines (e.g. Func_00D_7115, Func_010_65F0)
+; 2 call sites from 2 routines (e.g. Func_00D_7115, ScriptCommandE9)
 ; reads: wD788
 Func_01E_4001::
     ld a, [wD788]
@@ -55,7 +55,7 @@ Jump_01E_4062::
     farcall Func_015_4001
     ret
 
-; 18 call sites from 16 routines (e.g. Func_00D_4B30, Func_00D_711C, Func_00D_720E, Func_010_65E9, ...)
+; 18 call sites from 16 routines (e.g. Func_00D_4B30, Func_00D_711C, Func_00D_720E, ScriptCommandE8, ...)
 ; reads: wD780
 Func_01E_4069::
     ld a, [wD780]

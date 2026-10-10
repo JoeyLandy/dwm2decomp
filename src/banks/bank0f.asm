@@ -1,7 +1,7 @@
 SECTION "Bank 0F", ROMX[$4000], BANK[$0F]
     db $0F
 
-; 1 call site from 1 routine (e.g. Func_010_4F15)
+; 1 call site from 1 routine (e.g. ScriptCommandC7)
 ; reads: wScriptStep
 Func_00F_4001::
     ld a, [wScriptStep]
@@ -86,7 +86,7 @@ Jump_00F_4077::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E12)
+; 1 call site from 1 routine (e.g. ScriptCommand62)
 ; reads: wScriptStep
 Func_00F_409A::
     ld a, [wScriptStep]
@@ -126,7 +126,7 @@ Jump_00F_40A2::
     ret
     db $94, $AF, $CA, $AF, $94, $CA, $AF, $94, $CA, $CA, $E5
 
-; 1 call site from 1 routine (e.g. Func_010_4DFD)
+; 1 call site from 1 routine (e.g. ScriptCommand5F)
 ; reads: wScriptStep
 Func_00F_40E9::
     ld a, [wScriptStep]
@@ -725,7 +725,7 @@ Jump_00F_456A::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4DF6)
+; 1 call site from 1 routine (e.g. ScriptCommand5E)
 ; reads: wScriptStep
 Func_00F_4595::
     ld a, [wScriptStep]
@@ -2281,7 +2281,7 @@ Jump_00F_5280::
     ret
     INCBIN "dwm2-cobi-us.gbc", $03D284, $180
 
-; 1 call site from 1 routine (e.g. Func_010_4DCC)
+; 1 call site from 1 routine (e.g. ScriptCommand58)
 ; reads: wScriptStep
 Func_00F_5404::
     ld a, [wScriptStep]
@@ -2661,7 +2661,7 @@ Jump_00F_56C2::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D86)
+; 1 call site from 1 routine (e.g. ScriptCommand4E)
 ; reads: wScriptStep
 Func_00F_56CD::
     ld a, [wScriptStep]
@@ -2819,7 +2819,7 @@ Jump_00F_57DE::
     ld [wScriptStep], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D71)
+; 1 call site from 1 routine (e.g. ScriptCommand4B)
 ; reads: wScriptStep
 Func_00F_57EA::
     ld a, [wScriptStep]
@@ -3089,7 +3089,7 @@ Jump_00F_59C8::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D6A)
+; 1 call site from 1 routine (e.g. ScriptCommand4A)
 ; reads: wScriptStep
 Func_00F_59E6::
     ld a, [wScriptStep]
@@ -3243,7 +3243,7 @@ Jump_00F_5AE4::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E2E)
+; 1 call site from 1 routine (e.g. ScriptCommand66)
 ; reads: wScriptStep
 Func_00F_5AF3::
     ld a, [wScriptStep]
@@ -3421,7 +3421,7 @@ Jump_00F_5C2F::
     ld [wScriptStep], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D63)
+; 1 call site from 1 routine (e.g. ScriptCommand49)
 ; reads: wScriptStep
 Func_00F_5C3B::
     ld a, [wScriptStep]
@@ -3586,7 +3586,7 @@ Jump_00F_5D5F::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D5C)
+; 1 call site from 1 routine (e.g. ScriptCommand48)
 ; reads: wScriptStep
 Func_00F_5D9D::
     ld a, [wScriptStep]
@@ -3781,7 +3781,7 @@ Jump_00F_5F00::
     ld [wScriptStep], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D4E)
+; 1 call site from 1 routine (e.g. ScriptCommand46)
 ; reads: wScriptStep
 Func_00F_5F06::
     ld a, [wScriptStep]
@@ -4037,7 +4037,7 @@ Func_00F_60D9::
     ld [wCBA6], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D2B)
+; 1 call site from 1 routine (e.g. ScriptCommand41)
 ; reads: wScriptStep
 Func_00F_60E6::
     ld a, [wScriptStep]
@@ -4233,7 +4233,7 @@ Jump_00F_626B::
     ld [wScriptStep], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D47)
+; 1 call site from 1 routine (e.g. ScriptCommand45)
 ; reads: wScriptStep
 Func_00F_6277::
     ld a, [wScriptStep]
@@ -4333,7 +4333,7 @@ Jump_00F_630A::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D39)
+; 1 call site from 1 routine (e.g. ScriptCommand43)
 ; reads: wScriptStep
 Func_00F_631F::
     ld a, [wScriptStep]
@@ -4573,7 +4573,7 @@ Jump_00F_64D4::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D32)
+; 1 call site from 1 routine (e.g. ScriptCommand42)
 ; reads: wScriptStep
 Func_00F_64F3::
     ld a, [wScriptStep]
@@ -4789,7 +4789,7 @@ Jump_00F_6676::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4D24)
+; 1 call site from 1 routine (e.g. ScriptCommand40)
 ; reads: wScriptStep
 Func_00F_6681::
     ld a, [wScriptStep]
@@ -4936,7 +4936,7 @@ Jump_00F_6767::
     inc [hl]
     ret
 
-; 2 call sites from 2 routines (e.g. Func_010_4CF3, Func_010_4D01)
+; 2 call sites from 2 routines (e.g. ScriptCommand39, ScriptCommand3B)
 ; reads: wScriptStep
 Func_00F_67BA::
     ld a, [wScriptStep]
@@ -5661,7 +5661,7 @@ Jump_00F_6D13::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CEC)
+; 1 call site from 1 routine (e.g. ScriptCommand38)
 ; reads: wScriptStep
 Func_00F_6D2B::
     ld a, [wScriptStep]
@@ -5949,7 +5949,7 @@ Jump_00F_6F4C::
     call SetBit2AtHL_B0F
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CE5)
+; 1 call site from 1 routine (e.g. ScriptCommand37)
 ; reads: wScriptStep
 Func_00F_6F65::
     ld a, [wScriptStep]
@@ -6071,7 +6071,7 @@ Jump_00F_7019::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CDE)
+; 1 call site from 1 routine (e.g. ScriptCommand36)
 ; reads: wScriptStep
 Func_00F_7049::
     ld a, [wScriptStep]
@@ -6118,7 +6118,7 @@ Jump_00F_7079::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4CC2)
+; 1 call site from 1 routine (e.g. ScriptCommand32)
 ; reads: wScriptStep
 Func_00F_7093::
     ld a, [wScriptStep]
@@ -6166,7 +6166,7 @@ Jump_00F_70E2::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C83)
+; 1 call site from 1 routine (e.g. ScriptCommand29)
 ; reads: wScriptStep
 Func_00F_70EC::
     ld a, [wScriptStep]
@@ -6364,7 +6364,7 @@ Jump_00F_723C::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C7C)
+; 1 call site from 1 routine (e.g. ScriptCommand28)
 ; reads: wScriptStep
 Func_00F_7271::
     ld a, [wScriptStep]
@@ -6444,7 +6444,7 @@ Jump_00F_72CB::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C75)
+; 1 call site from 1 routine (e.g. ScriptCommand27)
 ; reads: wScriptStep
 Func_00F_72D9::
     ld a, [wScriptStep]
@@ -6850,7 +6850,7 @@ Jump_00F_7601::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C59)
+; 1 call site from 1 routine (e.g. ScriptCommand23)
 ; reads: wScriptStep
 Func_00F_7625::
     ld a, [wScriptStep]
@@ -6981,7 +6981,7 @@ Jump_00F_7719::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C3D)
+; 1 call site from 1 routine (e.g. ScriptCommand1F)
 ; reads: wScriptStep
 Func_00F_772E::
     ld a, [wScriptStep]
@@ -7140,7 +7140,7 @@ Jump_00F_785B::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C2F)
+; 1 call site from 1 routine (e.g. ScriptCommand1D)
 ; reads: wScriptStep
 Func_00F_786F::
     ld a, [wScriptStep]
@@ -7377,7 +7377,7 @@ Jump_00F_7A12::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4C28)
+; 1 call site from 1 routine (e.g. ScriptCommand1C)
 ; reads: wScriptStep
 Func_00F_7A2D::
     ld a, [wScriptStep]
@@ -7468,7 +7468,7 @@ Jump_00F_7AA2::
     farcall Func_05F_6C5A
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4EA5)
+; 1 call site from 1 routine (e.g. ScriptCommand77)
 ; reads: wScriptStep
 Func_00F_7AC6::
     ld a, [wScriptStep]
@@ -7754,7 +7754,7 @@ Jump_00F_7C84::
     farcall Func_05F_6C5A
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E9E)
+; 1 call site from 1 routine (e.g. ScriptCommand76)
 ; reads: wScriptStep
 Func_00F_7CA5::
     ld a, [wScriptStep]
@@ -7801,7 +7801,7 @@ Jump_00F_7CF4::
     call StoreHLInWC924_B0F
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E97)
+; 1 call site from 1 routine (e.g. ScriptCommand75)
 ; reads: wScriptStep
 Func_00F_7CFB::
     ld a, [wScriptStep]
@@ -7862,7 +7862,7 @@ Jump_00F_7D3C::
     ldh [hFF8B], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E51)
+; 1 call site from 1 routine (e.g. ScriptCommand6B)
 ; reads: wScriptStep
 Func_00F_7D62::
     ld a, [wScriptStep]
@@ -7896,7 +7896,7 @@ Jump_00F_7D86::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_4E4A)
+; 1 call site from 1 routine (e.g. ScriptCommand6A)
 ; reads: wScriptStep
 Func_00F_7D97::
     ld a, [wScriptStep]

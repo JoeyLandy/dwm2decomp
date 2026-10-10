@@ -563,7 +563,7 @@ Jump_004_4396::
     db $E3, $45, $99, $46, $D8, $46, $FF, $46, $34, $47, $73, $47, $32, $48, $5F, $48
     db $D6, $48, $BD, $49, $D7, $4A
 
-; 11 call sites from 11 routines (e.g. Func_002_64E5, Func_010_4A1B, Func_012_6610, Func_012_66DA, ...)
+; 11 call sites from 11 routines (e.g. Func_002_64E5, ScriptCommand01, Func_012_6610, Func_012_66DA, ...)
 ; reads: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 ; writes: hFF8C, wCB8C, wCB9C, wCBAC, wCBBC, wCBCC
 Func_004_4470::

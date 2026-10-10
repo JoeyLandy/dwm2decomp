@@ -1,7 +1,7 @@
 SECTION "Bank 15", ROMX[$4000], BANK[$15]
     db $15
 
-; 4 call sites from 3 routines (e.g. Func_00D_50E5, Func_010_660C, Func_01E_4001)
+; 4 call sites from 3 routines (e.g. Func_00D_50E5, ScriptCommandEE, Func_01E_4001)
 ; reads: wD788
 Func_015_4001::
     ld a, [wD788]
@@ -126,7 +126,7 @@ Jump_015_40D3::
     ld [wScriptStartRequest], a
     ret
 
-; 27 call sites from 13 routines (e.g. Func_00D_463F, Func_00D_711C, Func_00D_720E, Func_010_6605, ...)
+; 27 call sites from 13 routines (e.g. Func_00D_463F, Func_00D_711C, Func_00D_720E, ScriptCommandED, ...)
 ; reads: wD780
 Func_015_40FA::
     ld a, [wD780]

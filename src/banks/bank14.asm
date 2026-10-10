@@ -1,7 +1,7 @@
 SECTION "Bank 14", ROMX[$4000], BANK[$14]
     db $14
 
-; 1 call site from 1 routine (e.g. Func_010_65FE)
+; 1 call site from 1 routine (e.g. ScriptCommandEC)
 ; reads: wD788
 Func_014_4001::
     ld a, [wD788]
@@ -104,7 +104,7 @@ Jump_014_40B1::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_65F7)
+; 1 call site from 1 routine (e.g. ScriptCommandEB)
 ; reads: wD780
 Func_014_40CC::
     ld a, [wD780]

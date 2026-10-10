@@ -1,7 +1,7 @@
 SECTION "Bank 1C", ROMX[$4000], BANK[$1C]
     db $1C
 
-; 1 call site from 1 routine (e.g. Func_010_65C6)
+; 1 call site from 1 routine (e.g. ScriptCommandE1)
 ; reads: wIsCGB
 ; writes: wD7F0, wD780, wC46B, wC56D, wScriptCommandType, wScriptStartRequest
 ; points at: wScreenTileBuffer, wC3A0, wD000, wD208, wC300, wD168, wD780
@@ -59,7 +59,7 @@ Jump_01C_404F::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_65BF)
+; 1 call site from 1 routine (e.g. ScriptCommandE0)
 ; reads: wD780
 Func_01C_4075::
     ld a, [wD780]
@@ -941,7 +941,7 @@ Jump_01C_45F5::
     ld [wC617], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_01C_6CEB, Func_010_65D4)
+; 2 call sites from 2 routines (e.g. Func_01C_6CEB, ScriptCommandE3)
 ; reads: wD787
 Func_01C_4605::
     ld a, [wD787]
@@ -1021,7 +1021,7 @@ Jump_01C_4680::
     ld [wScriptStartRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_65CD)
+; 1 call site from 1 routine (e.g. ScriptCommandE2)
 ; reads: wD780
 Func_01C_4696::
     ld a, [wD780]
@@ -6165,12 +6165,12 @@ Func_01C_6CAB::
     ld d, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_65E2)
+; 1 call site from 1 routine (e.g. ScriptCommandE6)
 Func_01C_6CEB::
     call Func_01C_4605
     ret
 
-; 1 call site from 1 routine (e.g. Func_010_65DB)
+; 1 call site from 1 routine (e.g. ScriptCommandE5)
 ; reads: wD780
 Func_01C_6CEF::
     ld a, [wD780]

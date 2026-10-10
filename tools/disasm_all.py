@@ -1047,6 +1047,13 @@ class Rom:
                         continue
                     tb = vals[f["bank_from"]] if "bank_from" in f else bank
                     tgt = vals[fi]
+                    if f.get("name_targets") and tgt and (tb, tgt) not in self.names and tgt in self.insn[tb]:
+                        # the first table entry that points at a routine names it (E-0038)
+                        self.names[(tb, tgt)] = {
+                            "name": f"{f['name_targets']}{i + f.get('name_base', 0):02X}",
+                            "note": f"{f.get('name_note', 'handler')} {i + f.get('name_base', 0):02X} "
+                                    f"(entry {i} of {t['label']})",
+                            "evidence": "structure of the table"}
                     if tb in range(self.nbanks) and tb not in self.zero and \
                             self.base(tb) <= tgt < self.base(tb) + BANK and tgt not in self.covered[tb] \
                             and not (tb == bank and addr <= tgt < end):
