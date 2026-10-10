@@ -18,6 +18,72 @@
       "start": "460B",
       "end": "461F",
       "reason": "ten BG map addresses ($9861, $98A1, $98E1, $9921, $9961, $99A1, $9829, $9869, $98A9, $98E9) that eleven bank-$03 menu routines load into HL or DE as a cursor-position table (WriteBCTileToScreenBufferAtTableEntry and others); it had been decoded as code (E-0101)"
+    },
+    {
+      "bank": "05",
+      "start": "5A33",
+      "end": "5A4B",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "05",
+      "start": "5AF8",
+      "end": "5B11",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "0C",
+      "start": "72C0",
+      "end": "72CC",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "11",
+      "start": "42AC",
+      "end": "42B8",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "15",
+      "start": "5A67",
+      "end": "5A77",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "16",
+      "start": "5CFB",
+      "end": "5D03",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "30",
+      "start": "4F46",
+      "end": "4F66",
+      "reason": "16 bit-mask words ($0001, $0002, ... $8000) read by Func_030_4F14; the 16-entry handler jump table at $4F66 that follows is left to the pointer-table pass (E-0102)"
+    },
+    {
+      "bank": "3B",
+      "start": "4A24",
+      "end": "4A34",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "60",
+      "start": "690E",
+      "end": "6916",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+    },
+    {
+      "bank": "E2",
+      "start": "6727",
+      "end": "672D",
+      "reason": "six bytes $1D-$22 indexed by the AI code (ld hl, then add_a_to_hl and a read); AIScore_Cover_Sub02 starts right after at $672D (E-0102)"
+    },
+    {
+      "bank": "F1",
+      "start": "4A5E",
+      "end": "4A72",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
     }
   ]
 }

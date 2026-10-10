@@ -5625,7 +5625,7 @@ Func_0E2_670B:: ; address name
     ld a, c
     pop bc
     ld b, a
-    ld hl, Func_0E2_6727
+    ld hl, Data_0E2_6727
     ld a, b
     add_a_to_hl
     ld c, [hl]
@@ -5633,14 +5633,8 @@ Func_0E2_670B:: ; address name
     call AccumulateBank6WordToDA6E
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; writes: hFFC6
-Func_0E2_6727:: ; heuristic: follows a terminator; C0
-    dec e
-    ld e, $1F
-    jr nz, Jump_0E2_674D
-    ld [hl+], a
+Data_0E2_6727:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $1D, $1E, $1F, $20, $21, $22
 
 ; only called from AIScore_Cover (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Cover)
@@ -5675,8 +5669,6 @@ Func_0E2_6744:: ; address name
     farcall HPBandOfSlotHFFC6
     ld a, c
     pop bc
-
-Jump_0E2_674D::
     ld b, a
     ld a, [wBattleActor]
     cp a, c

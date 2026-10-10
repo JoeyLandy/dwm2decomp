@@ -4320,7 +4320,7 @@ Jump_01D_6075::
     ld [rRAMG2], a
     ret
 
-; 8 call sites from 8 routines (e.g. Func_00D_4B30_Case04, Func_015_4F4C_Case04, Func_015_5A67_Table2_Case04, Func_01E_4A32_Table2_Case19, ...)
+; 8 call sites from 8 routines (e.g. Func_00D_4B30_Case04, Func_015_4F4C_Case04, Func_015_5A2D_Table2_Case04, Func_01E_4A32_Table2_Case19, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hFFC6, hFFC7, wDataBank, wD7B0
 ; writes: rRAMG2, rRAMB, wDataBank, wC8DE
 ; points at: wD789, wC8CF

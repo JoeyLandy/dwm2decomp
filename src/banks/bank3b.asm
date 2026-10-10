@@ -1617,7 +1617,7 @@ Func_03B_4990:: ; heuristic: follows a terminator; C0
     sub a, $24
     add a, a
     add a, a
-    ld de, Func_03B_4A24
+    ld de, Data_03B_4A24
     add a, e
     ld e, a
     jr nc, Jump_03B_499F
@@ -1711,22 +1711,8 @@ Jump_03B_4A1C::
     ld [wD873], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_03B_4A24:: ; heuristic: follows a terminator; C0
-    ld [$1800], sp
-    nop
-    inc hl
-    nop
-    ld [hl-], a
-    nop
-    ld a, b
-    nop
-    adc a, h
-    nop
-    or a, h
-    nop
-    ret z
-    nop
+Data_03B_4A24:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8C, $00, $B4, $00, $C8, $00
 
 ; 1 call site from 1 routine (e.g. Func_03B_4E1B)
 Func_03B_4A34::

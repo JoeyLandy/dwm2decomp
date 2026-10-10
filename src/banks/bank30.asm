@@ -2008,7 +2008,7 @@ Jump_030_4D18::
     and a, b
     cp a, $FF
     jr z, Jump_030_4D24
-    call Func_030_4F14
+    call RunHandlersForSetBitsInBC
 
 Jump_030_4D24::
     ret
@@ -2043,11 +2043,13 @@ Data_030_4D34:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $00
     ds $8A, $FF
 
+; for bit numbers 0-15 in turn (BitMaskWords16): when the bit is set in BC (C for 0-7, B for 8-15), calls handler E through CallFlagBitHandlerE; stops early when a handler returns carry (E-0102)
 ; 1 call site from 1 routine (e.g. Func_030_4CFC)
-Func_030_4F14::
+RunHandlersForSetBitsInBC::
+Func_030_4F14:: ; address name
     ld e, $00
     ld d, $10
-    ld hl, Func_030_4F46
+    ld hl, BitMaskWords16
 
 Jump_030_4F1B::
     push hl
@@ -2056,7 +2058,7 @@ Jump_030_4F1B::
     ld a, c
     and a, [hl]
     jr z, Jump_030_4F27
-    call Func_030_4F3B
+    call CallFlagBitHandlerE
     jr Jump_030_4F2F
 
 Jump_030_4F27::
@@ -2064,7 +2066,7 @@ Jump_030_4F27::
     ld a, b
     and a, [hl]
     jr z, Jump_030_4F2F
-    call Func_030_4F3B
+    call CallFlagBitHandlerE
 
 Jump_030_4F2F::
     pop de
@@ -2080,8 +2082,10 @@ Jump_030_4F2F::
 Jump_030_4F3A::
     ret
 
-; 2 call sites from 1 routine (e.g. Func_030_4F14)
-Func_030_4F3B::
+; E = bit number: jumps through the 16-word handler table at $4F66 (JumpToWordAtHL) (E-0102)
+; 2 call sites from 1 routine (e.g. RunHandlersForSetBitsInBC)
+CallFlagBitHandlerE::
+Func_030_4F3B:: ; address name
     ld d, $00
     ld hl, $4F66
     add hl, de
@@ -2089,60 +2093,25 @@ Func_030_4F3B::
     call JumpToWordAtHL
     ret
 
+; 16 words $0001, $0002, ... $8000, one bit each (E-0102)
+BitMaskWords16:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_4F46:: ; address name
+    db $01, $00, $02, $00, $04, $00, $08, $00, $10, $00, $20, $00, $40, $00, $80, $00
+    db $00, $01, $00, $02, $00, $04, $00, $08, $00, $10, $00, $20, $00, $40, $00, $80
+    dw Func_030_4F86
+    dw Func_030_4F8E
+    dw Func_030_4F96
+    dw Func_030_4F9E
+    dw Func_030_4FA6
+    dw Func_030_4FAE
+    dw Func_030_4FB6
+    dw Func_030_4FBE
+    db $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F
+
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wBattleActor
 ; points at: wSlotPersonalityHi, wD854
-Func_030_4F46:: ; heuristic: follows a terminator; C0
-    ld bc, $0200
-    nop
-    inc b
-    nop
-    ld [$1000], sp
-    nop
-    jr nz, Jump_030_4F52
-
-Jump_030_4F52::
-    ld b, b
-    nop
-    add a, b
-    nop
-    nop
-    ld bc, $0200
-    nop
-    inc b
-    nop
-    ld [$1000], sp
-    nop
-    jr nz, Jump_030_4F63
-
-Jump_030_4F63::
-    ld b, b
-    nop
-    add a, b
-    add a, [hl]
-    ld c, a
-    adc a, [hl]
-    ld c, a
-    sub a, [hl]
-    ld c, a
-    sbc a, [hl]
-    ld c, a
-    and a, [hl]
-    ld c, a
-    xor a, [hl]
-    ld c, a
-    or a, [hl]
-    ld c, a
-    cp a, [hl]
-    ld c, a
-    add a, $4F
-    add a, $4F
-    add a, $4F
-    add a, $4F
-    add a, $4F
-    add a, $4F
-    add a, $4F
-    add a, $4F
+Func_030_4F86:: ; heuristic: target of a pointer table; C0
     ld hl, wSlotPersonalityHi
     ld de, $0001
     jr Jump_030_4FC8
@@ -2150,13 +2119,58 @@ Jump_030_4F63::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wBattleActor
 ; points at: wSlotPersonalityHi, wD854
-Func_030_4F8E:: ; heuristic: follows a terminator; C0
+Func_030_4F8E:: ; heuristic: target of a pointer table; C0
     ld hl, wSlotPersonalityHi
     ld de, $0002
-    jr Func_030_4FE9
-    db $21, $70, $D9, $11, $04, $00, $18, $2A, $21, $70, $D9, $11, $08, $00, $18, $43
-    db $21, $78, $D9, $11, $10, $00, $18, $1A, $21, $78, $D9, $11, $20, $00, $18, $33
-    db $21, $80, $D9, $11, $40, $00, $18, $0A, $21, $80, $D9, $11, $80, $00, $18, $23
+    jr Jump_030_4FE9
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5E7, wBattleActor
+; points at: wSlotPersonalityMid, wD854
+Func_030_4F96:: ; heuristic: target of a pointer table; C0
+    ld hl, wSlotPersonalityMid
+    ld de, $0004
+    jr Jump_030_4FC8
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5E7, wBattleActor
+; points at: wSlotPersonalityMid, wD854
+Func_030_4F9E:: ; heuristic: target of a pointer table; C0
+    ld hl, wSlotPersonalityMid
+    ld de, $0008
+    jr Jump_030_4FE9
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5E7, wBattleActor
+; points at: wSlotPersonalityLo, wD854
+Func_030_4FA6:: ; heuristic: target of a pointer table; C0
+    ld hl, wSlotPersonalityLo
+    ld de, $0010
+    jr Jump_030_4FC8
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5E7, wBattleActor
+; points at: wSlotPersonalityLo, wD854
+Func_030_4FAE:: ; heuristic: target of a pointer table; C0
+    ld hl, wSlotPersonalityLo
+    ld de, $0020
+    jr Jump_030_4FE9
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5E7, wBattleActor
+; points at: wD980, wD854
+Func_030_4FB6:: ; heuristic: target of a pointer table; C0
+    ld hl, wD980
+    ld de, $0040
+    jr Jump_030_4FC8
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wC5E7, wBattleActor
+; points at: wD980, wD854
+Func_030_4FBE:: ; heuristic: target of a pointer table; C0
+    ld hl, wD980
+    ld de, $0080
+    jr Jump_030_4FE9
     db $AF, $C9
 
 Jump_030_4FC8::
@@ -2176,10 +2190,7 @@ Jump_030_4FC8::
     jr c, Jump_030_5014
     jr Jump_030_5008
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
-; points at: wD854
-Func_030_4FE9:: ; heuristic: follows a terminator; C0
+Jump_030_4FE9::
     call AdvanceRandom
     ld a, [wC5E7]
     ld b, a
@@ -2190,6 +2201,11 @@ Func_030_4FE9:: ; heuristic: follows a terminator; C0
     ret nc
     cp a, $60
     jr nc, Jump_030_500C
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor
+; points at: wD854
+Func_030_5000:: ; heuristic: target of a pointer table; C0
     cp a, $3F
     jr nc, Jump_030_5010
     cp a, $1E
@@ -3035,7 +3051,22 @@ Jump_030_5586::
     ret
 
 Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C1587, $1AF
+    INCBIN "dwm2-cobi-us.gbc", $0C1587, $13B
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    INCBIN "dwm2-cobi-us.gbc", $0C16D4, $56
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    dw Func_030_5000
+    db $00, $46, $00, $50
     ds $11, $00
     db $50, $00, $00, $00, $50, $00, $5A, $00, $3C
     ds $33, $00

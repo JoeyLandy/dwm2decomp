@@ -72,7 +72,7 @@ Jump_0F1_4057:: ; address name
     jr Jump_0F1_40DC
 
 Jump_0F1_4062::
-    ld de, $4A6A
+    ld de, Data_0F1_4A6A
     ld hl, wC46E
     call Func_0F1_4870
     ld a, [wJoypadPressedRepeat]
@@ -365,7 +365,7 @@ Func_0F1_422D::
     farcall CopyBlockToTileBuffer
     ld a, [wC46E]
     and a, $07
-    ld hl, $4A6A
+    ld hl, Data_0F1_4A6A
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
@@ -398,7 +398,7 @@ Func_0F1_4276:: ; heuristic: follows a terminator; C0
     farcall CopyBlockToTileBuffer
     ld a, [wC46D]
     and a, $03
-    ld hl, Func_0F1_4A5E
+    ld hl, Data_0F1_4A5E
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
@@ -1425,26 +1425,11 @@ Func_0F1_4A23:: ; address name
     ld [wC52E], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_0F1_4A5E:: ; heuristic: follows a terminator; C0
-    ld h, c
-    sbc a, b
-    and a, c
-    sbc a, b
-    pop hl
-    sbc a, b
-    ld hl, Data_0F1_6199
-    sbc a, c
-    and a, c
-    sbc a, c
-    add hl, hl
-    sbc a, b
-    ld l, c
-    sbc a, b
-    xor a, c
-    sbc a, b
-    jp hl
-    db $98
+Data_0F1_4A5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
+
+Data_0F1_4A6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $29, $98, $69, $98, $A9, $98, $E9, $98
 
 Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98, $21, $99, $61, $99, $47, $99, $87, $99, $C7, $99, $07, $9A
@@ -4320,10 +4305,7 @@ Data_0F1_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F
-    ds $355, $00
-
-Data_0F1_6199:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $23E, $00
+    ds $593, $00
 
 Data_0F1_63D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $144, $00

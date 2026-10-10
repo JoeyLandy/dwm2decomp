@@ -5285,7 +5285,7 @@ Jump_00C_72AE::
 
 Jump_00C_72B0::
     sla a
-    ld de, Func_00C_72C0
+    ld de, Data_00C_72C0
     add a, e
     ld e, a
     jr nc, Jump_00C_72BA
@@ -5299,21 +5299,8 @@ Jump_00C_72BA::
     ld h, a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer, wD000
-Func_00C_72C0:: ; heuristic: follows a terminator; C0
-    sub a, b
-    ld bc, $0258
-    jr nz, Jump_00C_72C9
-    or a, b
-    inc b
-    ld a, b
-
-Jump_00C_72C9::
-    dec b
-    ld a, b
-    dec b
+Data_00C_72C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $90, $01, $58, $02, $20, $03, $B0, $04, $78, $05, $78, $05
 
 ; 7 call sites from 6 routines (e.g. ScriptCommandF7_Run_Case26, Func_00C_6FCB, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case13, ...)
 ; reads: wD7F1, wD7F2, wIsCGB

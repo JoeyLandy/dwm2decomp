@@ -14,7 +14,7 @@ Func_000_0000:: ; address name
     pop de
 
 ; HL = address of a word: HL = that word, then jumps to it (falls into JumpToHL); A = its low byte (E-0061)
-; 7 call sites from 7 routines (e.g. Func_030_4F3B, DispatchActionEffectTable, Func_036_7DC9, ChooseActionTarget, ...)
+; 7 call sites from 7 routines (e.g. CallFlagBitHandlerE, DispatchActionEffectTable, Func_036_7DC9, ChooseActionTarget, ...)
 JumpToWordAtHL::
 Func_000_000B:: ; address name
     deref_hl
@@ -10539,7 +10539,7 @@ Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessWDA63SlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 33 call sites from 30 routines (e.g. Func_005_59BD, Func_005_5A33, Func_005_5A73, AIScore_Kamikaze_Sub01, ...)
+; 29 call sites from 26 routines (e.g. Func_005_59BD, AIScore_Kamikaze_Sub01, Func_005_5FC7, Func_005_5ECE, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name
@@ -10708,7 +10708,7 @@ Jump_000_3ED3::
     ret
 
 ; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
-; 73 call sites from 58 routines (e.g. RandomInRange, RunBattleCommandEntry_Case04_Sub02, RunBattleCommandEntry_Case04_Sub01, Func_030_47B9, ...)
+; 73 call sites from 57 routines (e.g. RandomInRange, RunBattleCommandEntry_Case04_Sub02, RunBattleCommandEntry_Case04_Sub01, Func_030_47B9, ...)
 ; reads: wC58A, wC5BA, wC5BB, wC5E7, wC5E8
 ; writes: wC5E7, wC5E8, wC5BA, wC5BB
 AdvanceRandom::
@@ -10784,7 +10784,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 295 call sites from 240 routines (e.g. CheckSlotStatusBlock, ActorLacksStatus2Bit1And4Bits01, ActorStatus4CheckReadsAddress, ActorLacksStatus1Bits23And4Bits01, ...)
+; 292 call sites from 237 routines (e.g. CheckSlotStatusBlock, ActorLacksStatus2Bit1And4Bits01, ActorStatus4CheckReadsAddress, ActorLacksStatus1Bits23And4Bits01, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de

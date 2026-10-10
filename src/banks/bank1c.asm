@@ -418,7 +418,7 @@ Jump_01C_4295:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; 3 call sites from 3 routines (e.g. ScriptCommandE0_Run_Case07, Func_015_5A67_Case05, GameMode5_Update_Case07_Sub01)
+; 3 call sites from 3 routines (e.g. ScriptCommandE0_Run_Case07, Func_015_5A2D_Case05, GameMode5_Update_Case07_Sub01)
 ; reads: wSGBActive, wC51F, wC520
 ; writes: wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, wC57E, ...
 Func_01C_42B3::

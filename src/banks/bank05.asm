@@ -42,7 +42,7 @@ Func_005_4015:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
-; 9 call sites from 9 routines (e.g. Func_005_5500, ActorMPBelowThreeQuarters, Func_005_6FFD, AIScore_MPass_Sub01_Sub01, ...)
+; 8 call sites from 8 routines (e.g. Func_005_5500, ActorMPBelowThreeQuarters, Func_005_6FFD, AIScore_MPass_Sub01_Sub01, ...)
 ; points at: wBattleMP
 GetBattleMP_Bank05::
 Func_005_401A:: ; address name
@@ -4986,7 +4986,7 @@ Jump_005_59F7::
     jr Jump_005_5A2D
 
 Jump_005_5A12::
-    ld hl, Func_005_5A33
+    ld hl, Data_005_5A33
     sub a, $16
     add_a_to_hl
     ld a, [hl]
@@ -5010,298 +5010,8 @@ Jump_005_5A30::
     ld c, $01
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; points at: wD80D
-Func_005_5A33:: ; heuristic: follows a terminator; C0
-    ld [bc], a
-    dec b
-    rlca
-    ld [de], a
-    inc h
-    ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank05
-    cp a, $03
-    jr c, Jump_005_5A70
-    ld a, [wBattleActor]
-    ld e, a
-    and a, $04
-    ld c, a
-    ld b, $03
-
-Jump_005_5A4B::
-    ld a, c
-    cp a, e
-    jr z, Jump_005_5A54
-    call CheckSlotStatusBlock
-    jr nc, Jump_005_5A5A
-
-Jump_005_5A54::
-    inc c
-    dec b
-    jr nz, Jump_005_5A4B
-    jr Jump_005_5A6D
-
-Jump_005_5A5A::
-    ld a, c
-    ld hl, wD80D
-    call AddAx9ToHL
-    bit 6, [hl]
-    jr nz, Jump_005_5A54
-    call Func_005_6D1A
-    jr z, Jump_005_5A54
-    ld c, $00
-    ret
-
-Jump_005_5A6D::
-    ld c, $FF
-    ret
-
-Jump_005_5A70::
-    ld c, $01
-    ret
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; points at: wD989
-Func_005_5A73:: ; heuristic: follows a terminator; C0
-    ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank05
-    cp a, $03
-    jr c, Jump_005_5AF5
-    ld a, [wBattleActor]
-    and a, $04
-    ld c, a
-    ld b, $03
-
-Jump_005_5A85::
-    ld a, [wBattleActor]
-    ld e, a
-    ld a, c
-    cp a, e
-    jr z, Jump_005_5A92
-    call CheckSlotStatusBlock
-    jr nc, Jump_005_5A98
-
-Jump_005_5A92::
-    inc c
-    dec b
-    jr nz, Jump_005_5A85
-    jr Jump_005_5AF2
-
-Jump_005_5A98::
-    ld a, c
-    swap a
-    ld hl, wD989
-    add_a_to_hl
-    ld d, $08
-
-Jump_005_5AA5::
-    ld a, [hl+]
-    ld e, $00
-    cp a, $4D
-    jr z, Jump_005_5ACB
-    inc e
-    cp a, $3D
-    jr z, Jump_005_5ACB
-    inc e
-    cp a, $3E
-    jr z, Jump_005_5ACB
-    inc e
-    cp a, $3F
-    jr z, Jump_005_5ACB
-    inc e
-    cp a, $66
-    jr z, Jump_005_5ACB
-    inc e
-    cp a, $67
-    jr z, Jump_005_5ACB
-
-Jump_005_5AC5::
-    inc hl
-    dec d
-    jr nz, Jump_005_5AA5
-    jr Jump_005_5AF2
-
-Jump_005_5ACB::
-    push hl
-    push bc
-    ld hl, Func_005_5AF8
-    ld a, e
-    add_a_to_hl
-    ld a, [hl]
-    push de
-    ld d, a
-    ld a, c
-    call GetBattleMP_Bank05
-    ld a, h
-    and a, a
-    jr nz, Jump_005_5AEA
-    ld a, l
-    cp a, d
-    jr nc, Jump_005_5AEA
-    pop de
-    pop bc
-    pop hl
-    jr Jump_005_5AEF
-
-Jump_005_5AEA::
-    pop de
-    pop bc
-    pop hl
-    jr Jump_005_5AC5
-
-Jump_005_5AEF::
-    ld c, $00
-    ret
-
-Jump_005_5AF2::
-    ld c, $FF
-    ret
-
-Jump_005_5AF5::
-    ld c, $01
-    ret
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; points at: wD80D, wD989
-Func_005_5AF8:: ; heuristic: follows a terminator; C0
-    rrca
-    ld bc, $191E
-    inc d
-    inc d
-    ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank05
-    cp a, $03
-    jr c, Jump_005_5B54
-    ld a, [wBattleActor]
-    ld e, a
-    and a, $04
-    ld c, a
-    ld b, $03
-
-Jump_005_5B11::
-    ld a, c
-    cp a, e
-    jr z, Jump_005_5B1A
-    call CheckSlotStatusBlock
-    jr nc, Jump_005_5B20
-
-Jump_005_5B1A::
-    inc c
-    dec b
-    jr nz, Jump_005_5B11
-    jr Jump_005_5B51
-
-Jump_005_5B20::
-    ld a, c
-    ld hl, wD80D
-    call AddAx9ToHL
-    bit 7, [hl]
-    jr nz, Jump_005_5B1A
-    ld hl, wD989
-    swap a
-    add_a_to_hl
-    ld d, $08
-
-Jump_005_5B37::
-    ld a, [hl+]
-    cp a, $42
-    jr z, Jump_005_5B4E
-    cp a, $43
-    jr z, Jump_005_5B4E
-    cp a, $46
-    jr z, Jump_005_5B4E
-    cp a, $47
-    jr z, Jump_005_5B4E
-    inc hl
-    dec d
-    jr nz, Jump_005_5B37
-    jr Jump_005_5B1A
-
-Jump_005_5B4E::
-    ld c, $00
-    ret
-
-Jump_005_5B51::
-    ld c, $FF
-    ret
-
-Jump_005_5B54::
-    ld c, $01
-    ret
-
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; points at: wD80D, wD989
-Func_005_5B57:: ; heuristic: follows a terminator; C0
-    ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank05
-    cp a, $03
-    jr c, Jump_005_5BB9
-    ld a, [wBattleActor]
-    ld e, a
-    and a, $04
-    ld c, a
-    ld b, $03
-
-Jump_005_5B6A::
-    ld a, c
-    cp a, e
-    jr z, Jump_005_5B73
-    call CheckSlotStatusBlock
-    jr nc, Jump_005_5B79
-
-Jump_005_5B73::
-    inc c
-    dec b
-    jr nz, Jump_005_5B6A
-    jr Jump_005_5BB6
-
-Jump_005_5B79::
-    ld a, c
-    ld hl, wD80D
-    call AddAx9ToHL
-    bit 6, [hl]
-    jr z, Jump_005_5B73
-    ld hl, wD989
-    swap a
-    add_a_to_hl
-    ld d, $08
-
-Jump_005_5B90::
-    ld a, [hl+]
-    cp a, $78
-    jr z, Jump_005_5BB3
-    cp a, $79
-    jr z, Jump_005_5BB3
-    cp a, $7A
-    jr z, Jump_005_5BB3
-    cp a, $7B
-    jr z, Jump_005_5BB3
-    cp a, $7C
-    jr z, Jump_005_5BB3
-    cp a, $7D
-    jr z, Jump_005_5BB3
-    cp a, $92
-    jr z, Jump_005_5BB3
-    inc hl
-    dec d
-    jr nz, Jump_005_5B90
-    jr Jump_005_5B73
-
-Jump_005_5BB3::
-    ld c, $00
-    ret
-
-Jump_005_5BB6::
-    ld c, $FF
-    ret
-
-Jump_005_5BB9::
-    ld c, $01
-    ret
+Data_005_5A33:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $015A33, $189
 
 ; only called from AIScore_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BeDragon)
@@ -8158,7 +7868,7 @@ Func_005_6B07:: ; address name
     ret
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 35 call sites from 35 routines (e.g. CheckFoeStatus7Bit2, Func_005_5500, Func_005_6A6B, Func_005_64FE, ...)
+; 31 call sites from 31 routines (e.g. CheckFoeStatus7Bit2, Func_005_5500, Func_005_6A6B, Func_005_64FE, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank05::
 Func_005_6B16:: ; address name
@@ -8584,7 +8294,7 @@ Func_005_6D07:: ; heuristic: follows a terminator; C0
 Jump_005_6D19::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_005_57A1, Func_005_5A33)
+; 1 call site from 1 routine (e.g. Func_005_57A1)
 ; points at: wD989
 Func_005_6D1A::
     ld hl, wD989

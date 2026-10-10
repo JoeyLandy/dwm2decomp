@@ -4276,7 +4276,7 @@ Func_016_5B7E::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     call TestSpeciesFlag
-    ld de, $5D0B
+    ld de, Data_016_5D0B
     jr nz, Jump_016_5C15
     farcall LoadSpeciesRecord
     call NextTableByte
@@ -4290,7 +4290,7 @@ Func_016_5B7E::
     ld a, [wD00C]
     cp a, $07
     jp z, Jump_016_5CF5
-    ld hl, Func_016_5CFB
+    ld hl, Data_016_5CFB
     add_a_to_hl
     ld a, [hl]
     cp a, b
@@ -4449,24 +4449,14 @@ Jump_016_5CF5::
 Jump_016_5CFA::
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleSubStep
-Func_016_5CFB:: ; heuristic: follows a terminator; C0
-    ld h, h
-    ld [hl-], a
-    jr Jump_016_5D09
-    db $06, $02, $01, $00
+Data_016_5CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $64, $32, $18, $0A, $06, $02, $01, $00
 
 Data_016_5D03:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $02, $03, $04, $05
+    db $00, $01, $02, $03, $04, $05, $06, $07
 
-Jump_016_5D09::
-    ld b, $07
-    nop
-    ld de, $1312
-    inc d
-    dec d
-    ld d, $07
+Data_016_5D0B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $00, $11, $12, $13, $14, $15, $16, $07
 
 ; 1 call site from 1 routine (e.g. Func_031_46C1_Table2_Case01)
 ; reads: wBattleSubStep

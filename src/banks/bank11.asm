@@ -418,7 +418,7 @@ Func_011_4268::
     ldh a, [hMapId]
     ld c, a
     ld b, $00
-    ld hl, Func_011_42AC
+    ld hl, Data_011_42AC
 
 Jump_011_4278::
     ld a, [hl+]
@@ -461,19 +461,8 @@ Jump_011_42A6::
     ld c, $01
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-Func_011_42AC:: ; heuristic: follows a terminator; C0
-    add hl, hl
-    ld b, l
-    ld l, b
-    sbc a, l
-    and a, h
-    xor a, a
-    or a, d
-    push bc
-    ret nc
-    reti
-    db $E2, $FF
+Data_011_42AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2, $FF
 
 Data_011_42B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
@@ -576,7 +565,7 @@ Func_011_4340::
     ld c, $01
     ret
 
-; 2 call sites from 1 routine (e.g. Func_011_42AC)
+; 2 call sites from 1 routine (e.g. Func_011_4268)
 ; reads: hFF8C
 ; writes: wC8CA, wModeState, wC8C5, hFF8C, wC8C6
 Func_011_438F::

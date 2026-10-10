@@ -4421,7 +4421,7 @@ Func_060_68EB::
     ld a, [wCD04]
     and a, $07
     ldh [hFFC6], a
-    ld hl, Func_060_690E
+    ld hl, Data_060_690E
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -4433,15 +4433,8 @@ Func_060_68EB::
     ld [de], a
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC9, hFFC7, hFFC8
-Func_060_690E:: ; heuristic: follows a terminator; C0
-    ld bc, $1210
-    inc de
-    jr nz, Jump_060_6935
-    inc hl
-    ld [hl-], a
+Data_060_690E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; 2 call sites from 2 routines (e.g. DebugAutomap_Update_Sub01, Func_012_6955)
 ; reads: hFFC6
@@ -4464,8 +4457,6 @@ Func_060_6916::
 
 Jump_060_6934::
     ld a, [hl+]
-
-Jump_060_6935::
     or a, a
     jr z, Jump_060_693B
     cp a, c

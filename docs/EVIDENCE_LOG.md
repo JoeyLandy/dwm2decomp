@@ -1110,6 +1110,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - ByteAToDecimalDigits and CopyTenBytesToWC130.
 - Binary verification: pending; see the commit.
 
+### E-0102 — Indexed tables that had been decoded as routines
+
+- Kind: OBSERVATION (reading of each loader plus a reference check; C1/C2).
+- **How they were found.** A scan for `Func_` labels whose only references are `ld hl/de/bc` loads (no call, jump, far call or `dw`) found eleven. Every load is followed by indexing (`add_a_to_hl`, or `add a, e` / `adc`) and a read, so each label is a data table.
+- **The regions.** Each region runs from the label to the next label referenced from outside, and none of the heuristic labels inside is referenced from outside. They are added to `config/data_regions.json`: `05:5A33`, `05:5AF8`, `0C:72C0`, `11:42AC`, `15:5A67`, `16:5CFB`, `3B:4A24`, `60:690E` (the E-0088 flag), `E2:6727` (narrowed to six bytes after the `DataRegions` test showed `E2:672D` is code called as AIScore_Cover_Sub02; the first scan had missed references made through generated names) and `F1:4A5E`.
+- **The bank-$30 table.** `30:4F46` holds 16 bit-mask words, followed at `$4F66` by a 16-entry jump table to code. Only the masks are declared as data, so the pointer-table pass can still find the handlers. Names: BitMaskWords16, RunHandlersForSetBitsInBC (`30:4F14`) and CallFlagBitHandlerE (`30:4F3B`).
+- **Not checked.** The contents of the other ten tables are not interpreted.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
