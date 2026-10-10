@@ -8286,7 +8286,7 @@ Func_000_2E98:: ; address name
     ret
 
 ; HL = destination: writes A (0-255) as 1-3 decimal digit glyphs (charmap '0' = $00) without leading zeros, then $F0; HL ends on the terminator; clobbers A, D, E (E-0074)
-; 10 call sites from 4 routines (e.g. Func_016_466A, Func_031_6D96, Func_0A0_5491_Case07, Func_0A0_5491_Case06)
+; 10 call sites from 4 routines (e.g. ShowRaiseAmountOrRefuse, Func_031_6D96, Func_0A0_5491_Case07, Func_0A0_5491_Case06)
 WriteDecimalByteString::
 Func_000_2EAC:: ; address name
     cp a, $64

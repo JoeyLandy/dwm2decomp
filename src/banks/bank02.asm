@@ -5957,7 +5957,7 @@ Jump_002_676F::
 Jump_002_677B::
     call Func_002_6788
     call Func_002_6841
-    farcall Func_016_7A64
+    farcall LoadTilesForPartyRecords
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_66CC)

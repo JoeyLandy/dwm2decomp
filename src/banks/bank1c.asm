@@ -1078,7 +1078,7 @@ Jump_01C_4619:: ; address name
 ScriptCommandE3_Run_Case03::
 Jump_01C_465B:: ; address name
     farcall Func_01D_62AD
-    farcall Func_016_7A64
+    farcall LoadTilesForPartyRecords
     xor a, a
     ld [wD7F0], a
     ld [wD787], a

@@ -287,7 +287,7 @@ Func_003_4208_Case00::
 Jump_003_4218:: ; address name
     call Func_003_499B
     call Func_003_4A27
-    farcall Func_016_7A64
+    farcall LoadTilesForPartyRecords
     ld a, [wC6FD]
     ld [wMenuRowCount], a
     ld a, $00
@@ -6299,7 +6299,7 @@ Jump_003_6ABB:: ; address name
     call LoadScreenBlock21
     call CopyTileBufferToBGMap
     call LoadRecordListNameTiles
-    farcall Func_016_7A64
+    farcall LoadTilesForPartyRecords
     ld a, $06
     ld [wMenuRowCount], a
     ld a, $01

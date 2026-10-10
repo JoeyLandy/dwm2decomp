@@ -573,7 +573,7 @@ Jump_016_433C:: ; address name
     ld b, [hl]
     ld c, a
     ld hl, $03E7
-    call Func_016_466A
+    call ShowRaiseAmountOrRefuse
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 14 DEFseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -590,7 +590,7 @@ Jump_016_4352:: ; address name
     ld b, [hl]
     ld c, a
     ld hl, $03E7
-    call Func_016_466A
+    call ShowRaiseAmountOrRefuse
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 15 AGLseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -607,7 +607,7 @@ Jump_016_4368:: ; address name
     ld b, [hl]
     ld c, a
     ld hl, $03E7
-    call Func_016_466A
+    call ShowRaiseAmountOrRefuse
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 16 INTseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -624,7 +624,7 @@ Jump_016_437E:: ; address name
     ld b, [hl]
     ld c, a
     ld hl, $03E7
-    call Func_016_466A
+    call ShowRaiseAmountOrRefuse
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -641,7 +641,7 @@ Jump_016_4394:: ; address name
     ld b, [hl]
     ld c, a
     ld hl, $03E7
-    call Func_016_466A
+    call ShowRaiseAmountOrRefuse
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 18 MysticNut; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -658,7 +658,7 @@ Jump_016_43AA:: ; address name
     ld b, [hl]
     ld c, a
     ld hl, $03E7
-    call Func_016_466A
+    call ShowRaiseAmountOrRefuse
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 19 Quest?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -1215,11 +1215,13 @@ Jump_016_4667::
 Jump_016_4669::
     ret
 
+; HL = cap, BC = current value: when they are equal sets wItemId = $FF (refuse); otherwise writes min(HL - BC, wD08F) (wD08F when the difference is 256 or more) as a decimal string at wC160 (WriteDecimalByteString) (E-0103)
 ; 6 call sites from 6 routines (e.g. ItemUsable_MysticNut, ItemUsable_LifeAcorn, ItemUsable_INTseed, ItemUsable_AGLseed, ...)
 ; reads: wD08F
 ; writes: wItemId
 ; points at: wC160
-Func_016_466A::
+ShowRaiseAmountOrRefuse::
+Func_016_466A:: ; address name
     ld a, l
     sub a, c
     ld l, a
@@ -1416,7 +1418,7 @@ Func_016_4790:: ; address name
     deref_hl
     ld a, [wD083]
     ld c, $5B
-    call Func_016_58FD
+    call StoreHLToRecordField
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion; the body is not interpreted beyond the Herb case (E-0089)
@@ -1450,7 +1452,7 @@ Jump_016_47CE:: ; address name
     deref_hl
     ld a, [wD083]
     ld c, $5F
-    call Func_016_58FD
+    call StoreHLToRecordField
     call ConsumeSelectedItemByChance
     ret
 
@@ -1536,7 +1538,7 @@ Jump_016_482C:: ; address name
     deref_hl
     ld a, [wD083]
     ld c, $5B
-    call Func_016_58FD
+    call StoreHLToRecordField
     ld a, $01
     ld [wD095], a
     call ConsumeSelectedItemByChance
@@ -1914,7 +1916,7 @@ ItemApply_VITbelt::
 Jump_016_49AF:: ; address name
     ld a, $1E
     ld c, $5D
-    call Func_016_4B68
+    call AddAToRecordWordPairCapped
     call Func_016_4A48
     ret
 
@@ -1924,7 +1926,7 @@ ItemApply_DracoBelt::
 Jump_016_49BA:: ; address name
     ld a, $50
     ld c, $5D
-    call Func_016_4B68
+    call AddAToRecordWordPairCapped
     call Func_016_4A48
     ret
 
@@ -1934,7 +1936,7 @@ ItemApply_MagicBelt::
 Jump_016_49C5:: ; address name
     ld a, $1E
     ld c, $61
-    call Func_016_4B68
+    call AddAToRecordWordPairCapped
     call Func_016_4A48
     ret
 
@@ -1944,7 +1946,7 @@ ItemApply_OddBelt::
 Jump_016_49D0:: ; address name
     ld a, $50
     ld c, $61
-    call Func_016_4B68
+    call AddAToRecordWordPairCapped
     call Func_016_4A48
     ret
 
@@ -1954,7 +1956,7 @@ ItemApply_StoneFang::
 Jump_016_49DB:: ; address name
     ld a, $0A
     ld c, $63
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -1964,7 +1966,7 @@ ItemApply_SteelFang::
 Jump_016_49E6:: ; address name
     ld a, $32
     ld c, $63
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -1974,7 +1976,7 @@ ItemApply_MermScale::
 Jump_016_49F1:: ; address name
     ld a, $0A
     ld c, $65
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -1984,7 +1986,7 @@ ItemApply_DrakScale::
 Jump_016_49FC:: ; address name
     ld a, $32
     ld c, $65
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -1994,7 +1996,7 @@ ItemApply_AGL::
 Jump_016_4A07:: ; address name
     ld a, $0A
     ld c, $67
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -2004,7 +2006,7 @@ ItemApply_Starry::
 Jump_016_4A12:: ; address name
     ld a, $32
     ld c, $67
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -2014,7 +2016,7 @@ ItemApply_Smart_4A1D::
 Jump_016_4A1D:: ; address name
     ld a, $32
     ld c, $69
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -2024,7 +2026,7 @@ ItemApply_Wise::
 Jump_016_4A28:: ; address name
     ld a, $64
     ld c, $69
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -2041,7 +2043,7 @@ ItemApply_DScale::
 Jump_016_4A37:: ; address name
     ld a, $05
     ld c, $65
-    call Func_016_4B4D
+    call AddAToRecordWordCapped
     call Func_016_4A48
     ret
 
@@ -2161,7 +2163,7 @@ Func_016_4A98_Case00::
 Jump_016_4AE1:: ; address name
     ld a, $1E
     ld c, $5D
-    call Func_016_4BC4
+    call SubtractAFromRecordWordPairFloor1
     ret
 
 ; entry 1 of the `rst $00` table in Func_016_4A98
@@ -2170,7 +2172,7 @@ Func_016_4A98_Case01::
 Jump_016_4AE9:: ; address name
     ld a, $50
     ld c, $5D
-    call Func_016_4BC4
+    call SubtractAFromRecordWordPairFloor1
     ret
 
 ; entry 2 of the `rst $00` table in Func_016_4A98
@@ -2179,7 +2181,7 @@ Func_016_4A98_Case02::
 Jump_016_4AF1:: ; address name
     ld a, $1E
     ld c, $61
-    call Func_016_4BC4
+    call SubtractAFromRecordWordPairFloor1
     ret
 
 ; entry 3 of the `rst $00` table in Func_016_4A98
@@ -2188,7 +2190,7 @@ Func_016_4A98_Case03::
 Jump_016_4AF9:: ; address name
     ld a, $50
     ld c, $61
-    call Func_016_4BC4
+    call SubtractAFromRecordWordPairFloor1
     ret
 
 ; entry 4 of the `rst $00` table in Func_016_4A98
@@ -2197,7 +2199,7 @@ Func_016_4A98_Case04::
 Jump_016_4B01:: ; address name
     ld a, $0A
     ld c, $63
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 5 of the `rst $00` table in Func_016_4A98
@@ -2206,7 +2208,7 @@ Func_016_4A98_Case05::
 Jump_016_4B09:: ; address name
     ld a, $32
     ld c, $63
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 6 of the `rst $00` table in Func_016_4A98
@@ -2215,7 +2217,7 @@ Func_016_4A98_Case06::
 Jump_016_4B11:: ; address name
     ld a, $0A
     ld c, $65
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 7 of the `rst $00` table in Func_016_4A98
@@ -2224,7 +2226,7 @@ Func_016_4A98_Case07::
 Jump_016_4B19:: ; address name
     ld a, $32
     ld c, $65
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 8 of the `rst $00` table in Func_016_4A98
@@ -2233,7 +2235,7 @@ Func_016_4A98_Case08::
 Jump_016_4B21:: ; address name
     ld a, $0A
     ld c, $67
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 9 of the `rst $00` table in Func_016_4A98
@@ -2242,7 +2244,7 @@ Func_016_4A98_Case09::
 Jump_016_4B29:: ; address name
     ld a, $32
     ld c, $67
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 10 of the `rst $00` table in Func_016_4A98
@@ -2251,7 +2253,7 @@ Func_016_4A98_Case0A::
 Jump_016_4B31:: ; address name
     ld a, $32
     ld c, $69
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 11 of the `rst $00` table in Func_016_4A98
@@ -2260,7 +2262,7 @@ Func_016_4A98_Case0B::
 Jump_016_4B39:: ; address name
     ld a, $64
     ld c, $69
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 12 of the `rst $00` table in Func_016_4A98
@@ -2275,7 +2277,7 @@ Func_016_4A98_Case13::
 Jump_016_4B42:: ; address name
     ld a, $05
     ld c, $65
-    call Func_016_4B97
+    call SubtractAFromRecordWordFloor1
     ret
 
 ; entry 20 of the `rst $00` table in Func_016_4A98
@@ -2296,10 +2298,12 @@ Func_016_4A98_Case22::
 Jump_016_4B4C:: ; address name
     ret
 
+; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: the word there += A, capped at 999 (CapDETo999) (E-0103)
 ; 9 call sites from 9 routines (e.g. ItemApply_DScale, ItemApply_Wise, ItemApply_Smart_4A1D, ItemApply_Starry, ...)
 ; reads: wD083, hFFC6
 ; writes: hFFC6
-Func_016_4B4D::
+AddAToRecordWordCapped::
+Func_016_4B4D:: ; address name
     ldh [hFFC6], a
     ld a, [wD083]
     call SRAMRecordAddressMapped
@@ -2314,17 +2318,19 @@ Func_016_4B4D::
     inc d
 
 Jump_016_4B60::
-    call Func_016_4C0E
+    call CapDETo999
     ld a, d
     ld [hl-], a
     ld a, e
     ld [hl], a
     ret
 
+; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: adds A to the word at field C and to the word two bytes before it, each capped at 999 (E-0103)
 ; 4 call sites from 4 routines (e.g. ItemApply_OddBelt, ItemApply_MagicBelt, ItemApply_DracoBelt, ItemApply_VITbelt)
 ; reads: wD083, hFFC6
 ; writes: hFFC6
-Func_016_4B68::
+AddAToRecordWordPairCapped::
+Func_016_4B68:: ; address name
     ldh [hFFC6], a
     ld a, [wD083]
     call SRAMRecordAddressMapped
@@ -2339,7 +2345,7 @@ Func_016_4B68::
     inc d
 
 Jump_016_4B7B::
-    call Func_016_4C0E
+    call CapDETo999
     ld a, d
     ld [hl-], a
     ld a, e
@@ -2357,17 +2363,19 @@ Jump_016_4B7B::
     inc d
 
 Jump_016_4B8F::
-    call Func_016_4C0E
+    call CapDETo999
     ld a, d
     ld [hl-], a
     ld a, e
     ld [hl], a
     ret
 
+; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: leaves the word unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
 ; 9 call sites from 9 routines (e.g. Func_016_4A98_Case13, Func_016_4A98_Case0B, Func_016_4A98_Case0A, Func_016_4A98_Case09, ...)
 ; reads: wD083, hFFC6
 ; writes: hFFC6
-Func_016_4B97::
+SubtractAFromRecordWordFloor1::
+Func_016_4B97:: ; address name
     ldh [hFFC6], a
     ld a, [wD083]
     call SRAMRecordAddressMapped
@@ -2404,10 +2412,12 @@ Jump_016_4BBF::
     ld [hl], a
     ret
 
+; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: as SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before it (the second half is not read to its end) (E-0103)
 ; 4 call sites from 4 routines (e.g. Func_016_4A98_Case03, Func_016_4A98_Case02, Func_016_4A98_Case01, Func_016_4A98_Case00)
 ; reads: wD083, hFFC6
 ; writes: hFFC6
-Func_016_4BC4::
+SubtractAFromRecordWordPairFloor1::
+Func_016_4BC4:: ; address name
     ldh [hFFC6], a
     ld a, [wD083]
     call SRAMRecordAddressMapped
@@ -2469,8 +2479,10 @@ Jump_016_4C09::
     ld [hl], a
     ret
 
-; 3 call sites from 2 routines (e.g. Func_016_4B4D, Func_016_4B68)
-Func_016_4C0E::
+; DE = min(DE, 999 ($03E7)) (E-0103)
+; 3 call sites from 2 routines (e.g. AddAToRecordWordCapped, AddAToRecordWordPairCapped)
+CapDETo999::
+Func_016_4C0E:: ; address name
     ld a, d
     cp a, $03
     ret c
@@ -3017,7 +3029,7 @@ Func_016_543E::
     deref_hl
     ld a, [wD083]
     ld c, $5B
-    call Func_016_58FD
+    call StoreHLToRecordField
     ld a, $06
     ld [wD08D], a
     ret
@@ -3104,7 +3116,7 @@ Func_016_54AD::
     deref_hl
     ld a, [wD083]
     ld c, $5B
-    call Func_016_58FD
+    call StoreHLToRecordField
     ret
 
 ; entry 5 of the `rst $00` table in Func_016_53E6
@@ -3931,8 +3943,10 @@ Func_016_58F6:: ; heuristic: follows a terminator; C0
     ld [hl], c
     ret
 
+; A = record (SRAMRecordAddressMapped), C = field offset: stores HL (low byte first) at that field (E-0103)
 ; 5 call sites from 5 routines (e.g. Func_016_54AD, Func_016_543E, ItemApply_WorldLeaf, ItemApply_ElfWater, ...)
-Func_016_58FD::
+StoreHLToRecordField::
+Func_016_58FD:: ; address name
     push hl
     call SRAMRecordAddressMapped
     pop bc
@@ -5766,7 +5780,7 @@ Func_016_65FF::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_016_662B
-    call Func_016_66B9
+    call BlankTileAtTableEntryDE
     ld a, [de]
     sub a, $01
     jp nc, Jump_016_6691
@@ -5792,7 +5806,7 @@ Jump_016_6625::
 Jump_016_662B::
     bit 7, a
     jr z, Jump_016_664E
-    call Func_016_66B9
+    call BlankTileAtTableEntryDE
     ld a, [wCFD1]
     inc a
     ld b, a
@@ -5821,7 +5835,7 @@ Jump_016_664E::
     ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_016_666D
-    call Func_016_66B9
+    call BlankTileAtTableEntryDE
     ld a, [wCFD1]
     dec a
     cp a, $FF
@@ -5833,7 +5847,7 @@ Jump_016_664E::
 Jump_016_666D::
     bit 4, a
     jr z, Jump_016_6682
-    call Func_016_66B9
+    call BlankTileAtTableEntryDE
     ld a, [wCFD2]
     ld b, a
     ld a, [wCFD1]
@@ -5849,7 +5863,7 @@ Jump_016_6682::
     ret z
     ld a, [wFrameCounterLo]
     bit 4, a
-    jr z, Func_016_66B9
+    jr z, BlankTileAtTableEntryDE
     jr Func_016_66CB
 
 Jump_016_6691::
@@ -5881,8 +5895,10 @@ Jump_016_66B1::
     ld [wFrameCounterLo], a
     ret
 
+; HL = table of VRAM addresses, [DE] = index: writes tile $C3 at that entry's address (WriteVRAMByte); HL kept (E-0103)
 ; 4 call sites from 1 routine (e.g. Func_016_65FF)
-Func_016_66B9::
+BlankTileAtTableEntryDE::
+Func_016_66B9:: ; address name
     ld a, [de]
     push hl
     add a, a
@@ -8760,37 +8776,41 @@ Func_016_7A5B::
     call Func_016_7AAF
     ret
 
+; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
 ; 6 call sites from 6 routines (e.g. Func_002_66CC, Func_003_4208_Case00, Func_003_6A60_Table2_Case00, ScriptCommandF6_Run_Case08, ...)
 ; reads: wC6FD
 ; writes: rRAMG, rRAMB
-Func_016_7A64::
+LoadTilesForPartyRecords::
+Func_016_7A64:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
     ld a, $00
     ld h, $C7
-    call Func_016_7A97
+    call LoadTileForRecordByte0D
     ld a, [wC6FD]
     cp a, $01
     jr z, Jump_016_7A91
     ld a, $01
     ld h, $C8
-    call Func_016_7A97
+    call LoadTileForRecordByte0D
     ld a, [wC6FD]
     cp a, $02
     jr z, Jump_016_7A91
     ld a, $02
     ld h, $C9
-    call Func_016_7A97
+    call LoadTileForRecordByte0D
 
 Jump_016_7A91::
     ld a, $00
     ld [rRAMG], a
     ret
 
-; 3 call sites from 1 routine (e.g. Func_016_7A64)
-Func_016_7A97::
+; A = record (SRAMRecordAddressMapped, offset $0D), H = destination page: picks 16 bytes from Data_016_7ACD by the low nibble of record byte $0D and copies them on through the shared copy loop at Jump_016_7AB2 (not read to its end) (E-0103)
+; 3 call sites from 1 routine (e.g. LoadTilesForPartyRecords)
+LoadTileForRecordByte0D::
+Func_016_7A97:: ; address name
     push hl
     ld c, $0D
     call SRAMRecordAddressMapped

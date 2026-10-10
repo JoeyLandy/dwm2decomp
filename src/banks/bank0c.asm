@@ -638,7 +638,7 @@ Jump_00C_43CE:: ; address name
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
     farcall Func_01D_62AD
-    farcall Func_016_7A64
+    farcall LoadTilesForPartyRecords
     xor a, a
     ld [wD7F0], a
     ld hl, wD780

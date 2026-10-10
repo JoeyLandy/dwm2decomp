@@ -111,7 +111,7 @@ Jump_015_4076:: ; address name
 ScriptCommandEE_Run_Case03::
 Jump_015_40AE:: ; address name
     farcall Func_01D_62AD
-    farcall Func_016_7A64
+    farcall LoadTilesForPartyRecords
     xor a, a
     ld [wD7F0], a
     ld [wD788], a

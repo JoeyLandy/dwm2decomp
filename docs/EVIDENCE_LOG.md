@@ -1119,6 +1119,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Not checked.** The contents of the other ten tables are not interpreted.
 - Binary verification: pending; see the commit.
 
+### E-0103 — Save-record stat edits (bank $16)
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **The cap.** CapDETo999 limits a word to 999.
+- **The edits.** Four routines edit words of the selected save record wD083 at field offset C:
+  - AddAToRecordWordCapped and AddAToRecordWordPairCapped (the pair form also edits the word two bytes before, a maximum-and-current pair is likely);
+  - SubtractAFromRecordWordFloor1 and SubtractAFromRecordWordPairFloor1. These leave 999 untouched and never go below 1.
+  - These are the record edits the item effects (E-0089) and seeds use. The 999 cap matches the 999 test in the seeds' usability checks.
+- **Also named:** ShowRaiseAmountOrRefuse, StoreHLToRecordField, BlankTileAtTableEntryDE, and the party tile loaders LoadTilesForPartyRecords and LoadTileForRecordByte0D (partly read).
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
