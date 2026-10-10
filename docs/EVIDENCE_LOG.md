@@ -1333,6 +1333,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Unknown meanings stay mechanical (for example InitWD043PresetA/B and LoadTable4E60EntryToHFFC8).
 - Binary verification: pending; see the commit.
 
+### E-0121 — Routines of 17-45 instructions, remainder
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** About 110 routines of 17-45 instructions are named by what they do. These include:
+  - saving the game to SRAM with its checksum (SaveGameToSRAMWithChecksum, 02:7688);
+  - saving and restoring the player position state (12:4DFB, 13:7FB0, 15:6E14);
+  - the script warp command that reads a destination at DE (11:4340);
+  - adding a record to the party as a follower (73:5F55);
+  - counting a slot's active status effects (05:6E30) and summing its stats (05:6741);
+  - battle helpers: a sixth of max HP lost (32:4D2C), damage times 50 when a flag is set (39:6E61), and AGL/DEF reset to base (32:5BE8);
+  - 24-bit by 8-bit multiplies (19:4A74, 1C:6CAB);
+  - per-bank copies of earlier names (the bracket and page indicator, skill-page names, effect-sprite setup in five banks).
+- 32:4D2C subtracts the damage from HP without a floor check; callers may guarantee HP > max HP / 6. Not tested.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
