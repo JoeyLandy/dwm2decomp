@@ -12,10 +12,10 @@ Func_036_4001:: ; address name
     dw ResolveStepTargetAndSubEffects
     dw ResolveStepCallEffect82
     dw ResolveStepFlagBit7Effect
-    dw RunBattleResolveStep_Case04
+    dw ResolveStepEffectChecks
     dw ResolveStepChanceRoll
     dw ResolveStepActionEffect
-    dw RunBattleResolveStep_Case07
+    dw ResolveStepComputeDamage
     dw ResolveStepSoundWaitAndMessage
     dw ResolveStepMessage13AndSound
     dw ResolveStepDamageMessage
@@ -530,16 +530,16 @@ Jump_036_4356:: ; address name
     inc [hl]
     ld a, [wBattleTarget]
     call Func_036_7F3C
-    jr c, RunBattleResolveStep_Case04
+    jr c, ResolveStepEffectChecks
     ld a, [wCFF4]
     bit 6, a
-    jr z, RunBattleResolveStep_Case04
+    jr z, ResolveStepEffectChecks
     ld a, [wBattleTarget]
     ld hl, wD854
     add a, a
     add_a_to_hl
     bit 7, [hl]
-    jr z, RunBattleResolveStep_Case04
+    jr z, ResolveStepEffectChecks
     ld d, $35
     farcall Func_03A_6EE5
     call Func_036_4FD1
@@ -547,14 +547,14 @@ Jump_036_4356:: ; address name
     call QueueSoundEffect
     ret
 
-; entry 4 of the `rst $00` table in RunBattleResolveStep
+; resolve step $04: runs RunBattleResolveStep_Case04_Sub01 (returns on action $35) and, when the target is present, advances the step. Then it selects one of several effects from wCFF4 bits 1, 6 and wCFF3 bits 7 and 0 and the status bytes of the actor and target: messages $66, $68 and $D2 (with sound $84) and calls to RunBattleResolveStep_Case04_Sub03 when the roll is below a threshold. The threshold for the roll comes from the actor's AGL minus the target's AGL, in bands of $320, $258, $190, $C8 and $64 (values $80 down to $01); the roll is AdvanceRandom's wC5E7 (E-0054)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wCFF4, wBattleActionId, wBattleActor, wDAC0, wCFF3, wC5E7
 ; writes: wDAC0
 ; points at: wBattleResolveStep, wD810, wD811, wD80F, wD80D, wD854, wBattleStatus, wBattleAGL
-RunBattleResolveStep_Case04::
+ResolveStepEffectChecks::
 Jump_036_438A:: ; address name
-    call RunBattleResolveStep_Case04_Sub01
+    call ResolveStepEffectChecks_Sub01
     jr z, Jump_036_439B
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
@@ -565,7 +565,7 @@ Jump_036_438A:: ; address name
 Jump_036_439B::
     ld hl, wBattleResolveStep
     inc [hl]
-    call RunBattleResolveStep_Case04_Sub02
+    call ResolveStepEffectChecks_Sub02
     ret z
     ld a, [wCFF4]
     bit 1, a
@@ -668,7 +668,7 @@ Jump_036_4469::
     add_a_to_hl
     bit 2, [hl]
     jr nz, Jump_036_447F
-    call RunBattleResolveStep_Case04_Sub03
+    call ResolveStepEffectChecks_Sub03
     jp Jump_036_4543
 
 Jump_036_447F::
@@ -790,10 +790,10 @@ Jump_036_4543::
     call Func_036_4FD1
     ret
 
-; only called from RunBattleResolveStep_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
+; only called from ResolveStepEffectChecks (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
 ; reads: wBattleActionId
-RunBattleResolveStep_Case04_Sub01::
+ResolveStepEffectChecks_Sub01::
 Func_036_454F:: ; address name
     ld a, [wBattleActionId]
     cp a, $35
@@ -829,10 +829,10 @@ Func_036_454F:: ; address name
     cp a, $CE
     ret
 
-; only called from RunBattleResolveStep_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
+; only called from ResolveStepEffectChecks (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
 ; reads: wBattleActionId
-RunBattleResolveStep_Case04_Sub02::
+ResolveStepEffectChecks_Sub02::
 Func_036_4582:: ; address name
     ld a, [wBattleActionId]
     cp a, $6A
@@ -914,12 +914,12 @@ Jump_036_4603:: ; address name
     call DispatchActionEffectTable
     ret
 
-; entry 7 of the `rst $00` table in RunBattleResolveStep
+; resolve step $07: waits for the sound channels in wDC20 when the actor's wD80E bit 7 is set; advances the step; then works on the damage in wBattleDamageLo/Hi and wD873: doubles it for several status bits (wD80D bit 2, wD810 bits 0 and 4 with wCFF3 and wCFF4), rerolls it from the actor's ATK through Func_036_4930 when wCFF4 bit 3 and wD80E bit 7 are set, adds half again for wD854 bit 6, and halves or doubles it on the target's wD813 and wD812 bits (E-0054)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wSoundChannelSlots, wCFF4, wBattleDamageLo, wD873, wBattleTarget, wCFF3, wBattleActionId
 ; writes: wBattleDamageLo, wD873
 ; points at: wD80E, wDC20, wBattleResolveStep, wD80D, wD854, wD813, wD812, wD810
-RunBattleResolveStep_Case07::
+ResolveStepComputeDamage::
 Jump_036_460B:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80E
@@ -964,7 +964,7 @@ Jump_036_464D::
     bit 7, [hl]
     jr z, Jump_036_4679
     res 7, [hl]
-    call RunBattleResolveStep_Case07_Sub02
+    call ResolveStepComputeDamage_Sub02
     ld a, [wBattleActor]
     call GetBattleATK
     call Func_036_4930
@@ -1007,7 +1007,7 @@ Jump_036_46A0::
     ld l, a
     ld a, [wD873]
     ld h, a
-    call RunBattleResolveStep_Case07_Sub01
+    call ResolveStepComputeDamage_Sub01
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
@@ -1415,7 +1415,7 @@ Jump_036_492B::
     cp a, b
     ret
 
-; 3 call sites from 3 routines (e.g. RunBattleResolveStep_Case07, Func_036_7353, Func_036_7314)
+; 3 call sites from 3 routines (e.g. ResolveStepComputeDamage, Func_036_7353, Func_036_7314)
 Func_036_4930::
     push hl
     ld bc, $0014
@@ -1440,9 +1440,9 @@ Func_036_4930::
     call RandomInRange
     ret
 
-; only called from RunBattleResolveStep_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case07)
-RunBattleResolveStep_Case07_Sub01::
+; only called from ResolveStepComputeDamage (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepComputeDamage)
+ResolveStepComputeDamage_Sub01::
 Func_036_494E:: ; address name
     ld c, l
     ld b, h
@@ -2408,9 +2408,9 @@ Jump_036_4FBA::
     scf
     ret
 
-; only called from RunBattleResolveStep_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
-RunBattleResolveStep_Case04_Sub03::
+; only called from ResolveStepEffectChecks (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
+ResolveStepEffectChecks_Sub03::
 Func_036_4FBC:: ; address name
     ld a, $84
     call QueueSoundEffect
@@ -2423,7 +2423,7 @@ Jump_036_4FCA::
     farcall Func_03A_7193
     ret
 
-; 8 call sites from 7 routines (e.g. RunBattleResolveStep_Case04, ResolveStepFlagBit7Effect, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub04, ...)
+; 8 call sites from 7 routines (e.g. ResolveStepEffectChecks, ResolveStepFlagBit7Effect, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub04, ...)
 ; reads: wBattleActionId, wBattleActor
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wD810
@@ -2458,7 +2458,7 @@ Jump_036_4FF3::
     ld [hl], a
     jr Jump_036_4FE9
 
-; 2 call sites from 2 routines (e.g. Func_036_4961, RunBattleResolveStep_Case04)
+; 2 call sites from 2 routines (e.g. Func_036_4961, ResolveStepEffectChecks)
 ; writes: wBattleSubPhase, wBattleResolveStep
 Func_036_5009::
     ld a, $03
@@ -6439,7 +6439,7 @@ Func_036_6912:: ; heuristic: target of a pointer table; C0
 Func_036_691E:: ; heuristic: target of a pointer table; C0
     call Func_036_509D
     farcall Func_0A3_413F
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6447,7 +6447,7 @@ Func_036_691E:: ; heuristic: target of a pointer table; C0
 Func_036_692A:: ; heuristic: target of a pointer table; C0
     call Func_036_50B2
     farcall Func_0A3_413F
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6455,7 +6455,7 @@ Func_036_692A:: ; heuristic: target of a pointer table; C0
 Func_036_6936:: ; heuristic: target of a pointer table; C0
     call Func_036_50C7
     farcall Func_0A3_413F
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6463,7 +6463,7 @@ Func_036_6936:: ; heuristic: target of a pointer table; C0
 Func_036_6942:: ; heuristic: target of a pointer table; C0
     call Func_036_5A6C
     farcall Func_0A3_413F
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wBattleTarget
@@ -6479,7 +6479,7 @@ Func_036_694E:: ; heuristic: target of a pointer table; C0
 Func_036_6957:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     call Func_036_50DC
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6487,7 +6487,7 @@ Func_036_6957:: ; heuristic: target of a pointer table; C0
 Func_036_6963:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     call Func_036_511D
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
     db $CD, $52, $51, $21, $3F, $41, $06, $A3, $D7, $C3, $85, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -6798,7 +6798,7 @@ Jump_036_6B6A::
 ; points at: wD035
 Func_036_6B75::
     call Func_036_5013
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -7882,7 +7882,7 @@ Jump_036_720C::
 
 Jump_036_7214::
     call Func_036_5DCF
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 Data_036_721A:: ; heuristic: target of a monotone pointer table; C0
     db $CD, $22, $55, $C3, $85, $7C
@@ -7941,7 +7941,7 @@ Func_036_72E0::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD, wBattleDamageLo, wD873
@@ -8054,7 +8054,7 @@ Func_036_7387:: ; heuristic: target of a pointer table; C0
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
     db $CD, $7A, $5A, $C3, $85, $7C, $CD, $98, $5A, $C3, $7D, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -9261,7 +9261,7 @@ Func_036_7B89:: ; heuristic: target of a pointer table; C0
     cp a, $C0
     jr c, Jump_036_7B99
     call Func_036_5013
-    jp RunBattleResolveStep_Case07_Sub02
+    jp ResolveStepComputeDamage_Sub02
 
 Jump_036_7B99::
     ld h, $D0
@@ -9424,11 +9424,11 @@ Jump_036_7C7D::
     ld bc, vTiles0 + $A8
     jr Jump_036_7C8B
 
-; only called from RunBattleResolveStep_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case07)
+; only called from ResolveStepComputeDamage (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepComputeDamage)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
-RunBattleResolveStep_Case07_Sub02::
+ResolveStepComputeDamage_Sub02::
 Func_036_7C85:: ; address name
     ld hl, wD035
     ld bc, vTiles1 + $A8
@@ -9696,7 +9696,7 @@ Jump_036_7DD1::
     db $50, $13, $50, $13, $50, $E0, $72, $13, $50
 
 ; A = battle slot: HL = the word for that slot in the array at wD8FF (Func_036_7E5B)
-; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Case07, ComputeBasicDamage, Func_036_7353, Func_036_7314)
+; 4 call sites from 4 routines (e.g. ResolveStepComputeDamage, ComputeBasicDamage, Func_036_7353, Func_036_7314)
 ; points at: wBattleATK
 GetBattleATK::
 Func_036_7E2E:: ; address name
@@ -9745,7 +9745,7 @@ Func_036_7E47:: ; address name
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
 ; HL = array base, A = slot: HL = the 16-bit word at HL + 2 * A
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
+; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
 ReadBattleWordFromArray::
 Func_036_7E5B:: ; address name
     add a, a
@@ -9754,14 +9754,14 @@ Func_036_7E5B:: ; address name
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
-; 56 call sites from 31 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, RunBattleResolveStep_Case07, ResolveStepChanceRoll, Func_036_42D3, ...)
+; 56 call sites from 31 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, ResolveStepComputeDamage, ResolveStepChanceRoll, Func_036_42D3, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
     add a, a
     add_a_to_hl
     ret
 
-; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, ResolveStepChanceRoll, RunBattleResolveStep_Case04_Sub03)
+; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, ResolveStepChanceRoll, ResolveStepEffectChecks_Sub03)
 ; reads: wC58A, wC57F, wBattleActor
 Func_036_7E6C::
     ld a, [wC58A]

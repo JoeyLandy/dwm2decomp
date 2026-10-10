@@ -10589,7 +10589,7 @@ Jump_000_3E8F::
     ret
 
 ; HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)
-; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, Func_030_480E, Func_036_4930, RunBattleResolveStep_Case07_Sub01, ...)
+; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, Func_030_480E, Func_036_4930, ResolveStepComputeDamage_Sub01, ...)
 ; reads: wC5E7, wC5E8
 RandomInRange::
 Func_000_3E98:: ; address name
