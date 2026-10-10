@@ -64,210 +64,266 @@ Jump_010_404E::
 Jump_010_4054::
     push hl
     rst $00
-    dw Jump_010_42B3
-    dw Jump_010_42E8
-    dw Jump_010_42EF
-    dw Jump_010_430F
-    dw Jump_010_4326
-    dw Jump_010_4343
-    dw Jump_010_4367
-    dw Jump_010_43C9
-    db $00, $00, $00, $00, $EA, $43
-    dw Func_010_43FD
-    dw Func_010_4414
-    dw Func_010_442E
-    dw Func_010_4445
-    dw Func_010_445D
-    db $00, $00
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4490
-    dw Func_010_44CA
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_44FB
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_450D
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4248
-    dw Func_010_4252
-    dw Func_010_4248
-    dw Func_010_426E
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4297
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    db $00, $00
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    dw Func_010_4248
-    ds $3C, $00
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    dw Func_010_4486
-    ds $20, $00
-    dw Func_010_451F
-    dw Func_010_4529
-    dw Func_010_4533
-    dw Func_010_453D
-    db $94, $46, $47, $45, $51, $45, $7E, $46
-    dw Func_010_455B
-    dw Func_010_4565
-    dw Func_010_4637
-    dw Func_010_456F
-    dw Func_010_4579
-    dw Func_010_4583
-    dw Func_010_458D
-    dw Func_010_4597
-    dw Func_010_45A1
-    dw Func_010_45AB
-    dw Func_010_45B5
-    dw Func_010_45BF
-    dw Func_010_45C9
-    dw Func_010_45D3
-    dw Func_010_4619
-    dw Func_010_4623
-    dw Func_010_462D
 
+; E-0039 (C1: the inline table after FetchScriptCommand's `rst $00`, indexed by the script byte; 249 words, 49 distinct handlers: opcodes 0-12 each have their own, and most others share ScriptFetchGeneric, which makes the opcode byte the command type and starts the command (the command then reads its own arguments from the script pointer); a zero word is an unused opcode).
+; record: fetch handler for this script byte (opcode)
+ScriptOpcodeHandlers::
+Data_010_4056:: ; heuristic: start of a structured table; C0
+    dw ScriptFetch00 ; entry 0
+    dw ScriptFetch01 ; entry 1
+    dw ScriptFetch02 ; entry 2
+    dw ScriptFetch03 ; entry 3
+    dw ScriptFetch04 ; entry 4
+    dw ScriptFetch05 ; entry 5
+    dw ScriptFetch06 ; entry 6
+    dw ScriptFetch07 ; entry 7
+    dw $0000 ; entry 8
+    dw $0000 ; entry 9
+    dw ScriptFetch0A ; entry 10
+    dw ScriptFetch0B ; entry 11
+    dw ScriptFetch0C ; entry 12
+    dw ScriptFetch0D ; entry 13
+    dw ScriptFetch0E ; entry 14
+    dw ScriptFetch0F ; entry 15
+    dw $0000 ; entry 16
+    dw ScriptFetchGeneric ; entry 17
+    dw ScriptFetchGeneric ; entry 18
+    dw ScriptFetchGeneric ; entry 19
+    dw ScriptFetchGeneric ; entry 20
+    dw ScriptFetchGeneric ; entry 21
+    dw ScriptFetchGeneric ; entry 22
+    dw ScriptFetchGeneric ; entry 23
+    dw ScriptFetchGeneric ; entry 24
+    dw ScriptFetchGeneric ; entry 25
+    dw ScriptFetchGeneric ; entry 26
+    dw ScriptFetchGeneric ; entry 27
+    dw ScriptFetch1C ; entry 28
+    dw ScriptFetch1D ; entry 29
+    dw ScriptFetchGeneric ; entry 30
+    dw ScriptFetchGeneric ; entry 31
+    dw ScriptFetchGeneric ; entry 32
+    dw ScriptFetchGeneric ; entry 33
+    dw ScriptFetchGeneric ; entry 34
+    dw ScriptFetch23 ; entry 35
+    dw ScriptFetchGeneric ; entry 36
+    dw ScriptFetchGeneric ; entry 37
+    dw ScriptFetchGeneric ; entry 38
+    dw ScriptFetchGeneric ; entry 39
+    dw ScriptFetchGeneric ; entry 40
+    dw ScriptFetchGeneric ; entry 41
+    dw ScriptFetchGeneric ; entry 42
+    dw ScriptFetchGeneric ; entry 43
+    dw ScriptFetchGeneric ; entry 44
+    dw ScriptFetchGeneric ; entry 45
+    dw ScriptFetchGeneric ; entry 46
+    dw ScriptFetchGeneric ; entry 47
+    dw ScriptFetchGeneric ; entry 48
+    dw ScriptFetchGeneric ; entry 49
+    dw ScriptFetchGeneric ; entry 50
+    dw ScriptFetchGeneric ; entry 51
+    dw ScriptFetchGeneric ; entry 52
+    dw ScriptFetchGeneric ; entry 53
+    dw ScriptFetchGeneric ; entry 54
+    dw ScriptFetchGeneric ; entry 55
+    dw ScriptFetchGeneric ; entry 56
+    dw ScriptFetchGeneric ; entry 57
+    dw ScriptFetchGeneric ; entry 58
+    dw ScriptFetchGeneric ; entry 59
+    dw ScriptFetchGeneric ; entry 60
+    dw ScriptFetchGeneric ; entry 61
+    dw ScriptFetchGeneric ; entry 62
+    dw ScriptFetchGeneric ; entry 63
+    dw ScriptFetchGeneric ; entry 64
+    dw ScriptFetchGeneric ; entry 65
+    dw ScriptFetchGeneric ; entry 66
+    dw ScriptFetchGeneric ; entry 67
+    dw ScriptFetchGeneric ; entry 68
+    dw ScriptFetchGeneric ; entry 69
+    dw ScriptFetchGeneric ; entry 70
+    dw ScriptFetchGeneric ; entry 71
+    dw ScriptFetchGeneric ; entry 72
+    dw ScriptFetchGeneric ; entry 73
+    dw ScriptFetchGeneric ; entry 74
+    dw ScriptFetchGeneric ; entry 75
+    dw ScriptFetchGeneric ; entry 76
+    dw ScriptFetchGeneric ; entry 77
+    dw ScriptFetchGeneric ; entry 78
+    dw ScriptFetchGeneric ; entry 79
+    dw ScriptFetchGeneric ; entry 80
+    dw ScriptFetchGeneric ; entry 81
+    dw ScriptFetchGeneric ; entry 82
+    dw ScriptFetchGeneric ; entry 83
+    dw ScriptFetchGeneric ; entry 84
+    dw ScriptFetchGeneric ; entry 85
+    dw ScriptFetchGeneric ; entry 86
+    dw ScriptFetchGeneric ; entry 87
+    dw ScriptFetchGeneric ; entry 88
+    dw ScriptFetchGeneric ; entry 89
+    dw ScriptFetchGeneric ; entry 90
+    dw ScriptFetchGeneric ; entry 91
+    dw ScriptFetchGeneric ; entry 92
+    dw ScriptFetchGeneric ; entry 93
+    dw ScriptFetchGeneric ; entry 94
+    dw ScriptFetchGeneric ; entry 95
+    dw ScriptFetchGeneric ; entry 96
+    dw ScriptFetchGeneric ; entry 97
+    dw ScriptFetch62 ; entry 98
+    dw ScriptFetchGeneric ; entry 99
+    dw ScriptFetchGeneric ; entry 100
+    dw ScriptFetchGeneric ; entry 101
+    dw ScriptFetchGeneric ; entry 102
+    dw ScriptFetchGeneric ; entry 103
+    dw ScriptFetchGeneric ; entry 104
+    dw ScriptFetchGeneric ; entry 105
+    dw ScriptFetchGeneric ; entry 106
+    dw ScriptFetchGeneric ; entry 107
+    dw ScriptFetchGeneric ; entry 108
+    dw ScriptFetchGeneric ; entry 109
+    dw ScriptFetchGeneric ; entry 110
+    dw ScriptFetchGeneric ; entry 111
+    dw ScriptFetchGeneric ; entry 112
+    dw ScriptFetchGeneric ; entry 113
+    dw ScriptFetchGeneric ; entry 114
+    dw ScriptFetchGeneric ; entry 115
+    dw ScriptFetchGeneric ; entry 116
+    dw ScriptFetchGeneric ; entry 117
+    dw ScriptFetchGeneric ; entry 118
+    dw ScriptFetchGeneric ; entry 119
+    dw ScriptFetchGeneric ; entry 120
+    dw ScriptFetchGeneric ; entry 121
+    dw ScriptFetchGeneric ; entry 122
+    dw ScriptFetchGeneric ; entry 123
+    dw ScriptFetchGeneric ; entry 124
+    dw ScriptFetchGeneric ; entry 125
+    dw ScriptFetchGeneric ; entry 126
+    dw ScriptFetchGeneric ; entry 127
+    dw ScriptFetchGeneric2 ; entry 128
+    dw ScriptFetch81 ; entry 129
+    dw ScriptFetchGeneric2 ; entry 130
+    dw ScriptFetch83 ; entry 131
+    dw ScriptFetchGeneric2 ; entry 132
+    dw ScriptFetchGeneric2 ; entry 133
+    dw ScriptFetch86 ; entry 134
+    dw ScriptFetchGeneric2 ; entry 135
+    dw ScriptFetchGeneric2 ; entry 136
+    dw ScriptFetchGeneric2 ; entry 137
+    dw ScriptFetchGeneric2 ; entry 138
+    dw ScriptFetchGeneric2 ; entry 139
+    dw ScriptFetchGeneric2 ; entry 140
+    dw ScriptFetchGeneric2 ; entry 141
+    dw ScriptFetchGeneric2 ; entry 142
+    dw ScriptFetchGeneric2 ; entry 143
+    dw ScriptFetchGeneric2 ; entry 144
+    dw ScriptFetchGeneric2 ; entry 145
+    dw ScriptFetchGeneric2 ; entry 146
+    dw ScriptFetchGeneric2 ; entry 147
+    dw ScriptFetchGeneric2 ; entry 148
+    dw ScriptFetchGeneric2 ; entry 149
+    dw ScriptFetchGeneric2 ; entry 150
+    dw $0000 ; entry 151
+    dw ScriptFetchGeneric2 ; entry 152
+    dw ScriptFetchGeneric2 ; entry 153
+    dw ScriptFetchGeneric2 ; entry 154
+    dw ScriptFetchGeneric2 ; entry 155
+    dw ScriptFetchGeneric2 ; entry 156
+    dw ScriptFetchGeneric2 ; entry 157
+    dw ScriptFetchGeneric2 ; entry 158
+    dw ScriptFetchGeneric2 ; entry 159
+    dw ScriptFetchGeneric2 ; entry 160
+    dw ScriptFetchGeneric2 ; entry 161
+    dw $0000 ; entry 162
+    dw $0000 ; entry 163
+    dw $0000 ; entry 164
+    dw $0000 ; entry 165
+    dw $0000 ; entry 166
+    dw $0000 ; entry 167
+    dw $0000 ; entry 168
+    dw $0000 ; entry 169
+    dw $0000 ; entry 170
+    dw $0000 ; entry 171
+    dw $0000 ; entry 172
+    dw $0000 ; entry 173
+    dw $0000 ; entry 174
+    dw $0000 ; entry 175
+    dw $0000 ; entry 176
+    dw $0000 ; entry 177
+    dw $0000 ; entry 178
+    dw $0000 ; entry 179
+    dw $0000 ; entry 180
+    dw $0000 ; entry 181
+    dw $0000 ; entry 182
+    dw $0000 ; entry 183
+    dw $0000 ; entry 184
+    dw $0000 ; entry 185
+    dw $0000 ; entry 186
+    dw $0000 ; entry 187
+    dw $0000 ; entry 188
+    dw $0000 ; entry 189
+    dw $0000 ; entry 190
+    dw $0000 ; entry 191
+    dw ScriptFetchGeneric ; entry 192
+    dw ScriptFetchGeneric ; entry 193
+    dw ScriptFetchGeneric ; entry 194
+    dw ScriptFetchGeneric ; entry 195
+    dw ScriptFetchGeneric ; entry 196
+    dw ScriptFetchGeneric ; entry 197
+    dw ScriptFetchGeneric ; entry 198
+    dw ScriptFetchGeneric ; entry 199
+    dw ScriptFetchGeneric ; entry 200
+    dw ScriptFetchGeneric ; entry 201
+    dw ScriptFetchGeneric ; entry 202
+    dw ScriptFetchGeneric ; entry 203
+    dw ScriptFetchGeneric ; entry 204
+    dw ScriptFetchGeneric ; entry 205
+    dw ScriptFetchGeneric ; entry 206
+    dw ScriptFetchGeneric ; entry 207
+    dw $0000 ; entry 208
+    dw $0000 ; entry 209
+    dw $0000 ; entry 210
+    dw $0000 ; entry 211
+    dw $0000 ; entry 212
+    dw $0000 ; entry 213
+    dw $0000 ; entry 214
+    dw $0000 ; entry 215
+    dw $0000 ; entry 216
+    dw $0000 ; entry 217
+    dw $0000 ; entry 218
+    dw $0000 ; entry 219
+    dw $0000 ; entry 220
+    dw $0000 ; entry 221
+    dw $0000 ; entry 222
+    dw $0000 ; entry 223
+    dw ScriptFetchE0 ; entry 224
+    dw ScriptFetchE1 ; entry 225
+    dw ScriptFetchE2 ; entry 226
+    dw ScriptFetchE3 ; entry 227
+    dw ScriptFetchE4 ; entry 228
+    dw ScriptFetchE5 ; entry 229
+    dw ScriptFetchE6 ; entry 230
+    dw ScriptFetchE7 ; entry 231
+    dw ScriptFetchE8 ; entry 232
+    dw ScriptFetchE9 ; entry 233
+    dw ScriptFetchEA ; entry 234
+    dw ScriptFetchEB ; entry 235
+    dw ScriptFetchEC ; entry 236
+    dw ScriptFetchED ; entry 237
+    dw ScriptFetchEE ; entry 238
+    dw ScriptFetchEF ; entry 239
+    dw ScriptFetchF0 ; entry 240
+    dw ScriptFetchF1 ; entry 241
+    dw ScriptFetchF2 ; entry 242
+    dw ScriptFetchF3 ; entry 243
+    dw ScriptFetchF4 ; entry 244
+    dw ScriptFetchF5 ; entry 245
+    dw ScriptFetchF6 ; entry 246
+    dw ScriptFetchF7 ; entry 247
+    dw ScriptFetchF8 ; entry 248
+
+; the same five instructions as ScriptFetchGeneric, used by 30 opcodes
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4248:: ; heuristic: target of a pointer table; C0
+ScriptFetchGeneric2:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4248:: ; address name
     pop hl
     dec hl
     ld a, [hl+]
@@ -275,9 +331,11 @@ Func_010_4248:: ; heuristic: target of a pointer table; C0
     call StartEventScript
     ret
 
+; fetch handler for script opcode 81 (entry 129 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType, wScriptStep, wC924, wC925, wC926, wScriptPointerLo, wScriptPointerHi
-Func_010_4252:: ; heuristic: target of a pointer table; C0
+ScriptFetch81:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4252:: ; address name
     pop hl
     ld a, $81
     ld [wScriptCommandType], a
@@ -292,10 +350,12 @@ Func_010_4252:: ; heuristic: target of a pointer table; C0
     ld [wScriptPointerHi], a
     ret
 
+; fetch handler for script opcode 83 (entry 131 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC195, hFF8C
 ; writes: wScriptCommandType, wScriptParam1
-Func_010_426E:: ; heuristic: target of a pointer table; C0
+ScriptFetch83:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_426E:: ; address name
     pop hl
     ld a, $83
     ld [wScriptCommandType], a
@@ -321,9 +381,11 @@ Jump_010_4291::
     ld [wScriptParam1], a
     ret
 
+; fetch handler for script opcode 86 (entry 134 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType, wScriptStep, wC924, wC925, wC926, wScriptPointerLo, wScriptPointerHi
-Func_010_4297:: ; heuristic: target of a pointer table; C0
+ScriptFetch86:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4297:: ; address name
     pop hl
     ld a, $86
     ld [wScriptCommandType], a
@@ -338,7 +400,12 @@ Func_010_4297:: ; heuristic: target of a pointer table; C0
     ld [wScriptPointerHi], a
     ret
 
-Jump_010_42B3::
+; fetch handler for script opcode 00 (entry 0 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptInDataBank
+; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptStep, wScriptPointerLo, wScriptPointerHi
+ScriptFetch00:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_42B3:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
@@ -371,12 +438,20 @@ Jump_010_42DB::
     ld [wScriptPointerHi], a
     ret
 
-Jump_010_42E8::
+; fetch handler for script opcode 01 (entry 1 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptStep, wScriptPointerLo, wScriptPointerHi
+ScriptFetch01:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_42E8:: ; address name
     ld a, $02
     ld [wScriptCommandType], a
     jr Jump_010_42F4
 
-Jump_010_42EF::
+; fetch handler for script opcode 02 (entry 2 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptStep, wScriptPointerLo, wScriptPointerHi
+ScriptFetch02:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_42EF:: ; address name
     ld a, $03
     ld [wScriptCommandType], a
 
@@ -398,7 +473,11 @@ Jump_010_42F4::
     ld [wScriptPointerHi], a
     ret
 
-Jump_010_430F::
+; fetch handler for script opcode 03 (entry 3 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptPointerLo, wScriptPointerHi
+ScriptFetch03:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_430F:: ; address name
     pop hl
     ld a, $04
     ld [wScriptCommandType], a
@@ -412,7 +491,11 @@ Jump_010_430F::
     ld [wScriptPointerHi], a
     ret
 
-Jump_010_4326::
+; fetch handler for script opcode 04 (entry 4 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptStep, hFF9A, wScriptPointerLo, wScriptPointerHi
+ScriptFetch04:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4326:: ; address name
     pop hl
     ld a, $05
     ld [wScriptCommandType], a
@@ -429,7 +512,11 @@ Jump_010_4326::
     ld [wScriptPointerHi], a
     ret
 
-Jump_010_4343::
+; fetch handler for script opcode 05 (entry 5 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptPointerLo, wScriptPointerHi
+ScriptFetch05:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4343:: ; address name
     pop hl
     ld a, $06
     ld [wScriptCommandType], a
@@ -443,7 +530,7 @@ Jump_010_4343::
     ld [wScriptPointerHi], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_010_435A)
+; 2 call sites from 1 routine (e.g. ScriptFetch06)
 ; reads: rSTAT
 Func_010_435A::
     ldh a, [rSTAT]
@@ -456,7 +543,13 @@ Func_010_435A::
     jr nz, Func_010_435A
     ret
 
-Jump_010_4367::
+; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptInDataBank, wC552, wScriptPointerLo, wScriptPointerHi, wCC44
+; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
+; points at: wC89E, wC8AE
+ScriptFetch06:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4367:: ; address name
     push bc
     push de
     ld hl, wC89E
@@ -515,7 +608,12 @@ Jump_010_43BD::
     ld [wScriptPointerHi], a
     jp Jump_010_401D
 
-Jump_010_43C9::
+; fetch handler for script opcode 07 (entry 7 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wCC44
+; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
+ScriptFetch07:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_43C9:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
@@ -534,12 +632,30 @@ Jump_010_43DF::
     ld a, [hl]
     ld [wScriptPointerHi], a
     jp Jump_010_401D
-    db $E1, $2A, $5F, $2A, $57, $7D, $EA, $1A, $C9, $7C, $EA, $1B, $C9, $CD, $45, $18
-    db $C3, $1D, $40
 
+; fetch handler for script opcode 0A (entry 10 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
+ScriptFetch0A:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_43EA:: ; address name
+    pop hl
+    ld a, [hl+]
+    ld e, a
+    ld a, [hl+]
+    ld d, a
+    ld a, l
+    ld [wScriptPointerLo], a
+    ld a, h
+    ld [wScriptPointerHi], a
+    call SetFlagBit
+    jp Jump_010_401D
+
+; fetch handler for script opcode 0B (entry 11 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType, wScriptParam1, wScriptParam0, wScriptPointerLo, wScriptPointerHi
-Func_010_43FD:: ; heuristic: target of a pointer table; C0
+ScriptFetch0B:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_43FD:: ; address name
     pop hl
     ld a, $0C
     ld [wScriptCommandType], a
@@ -553,11 +669,13 @@ Func_010_43FD:: ; heuristic: target of a pointer table; C0
     ld [wScriptPointerHi], a
     ret
 
+; fetch handler for script opcode 0C (entry 12 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ; points at: wCB8B
-Func_010_4414:: ; heuristic: target of a pointer table; C0
+ScriptFetch0C:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4414:: ; address name
     pop hl
     ld a, [hl+]
     swap a
@@ -576,9 +694,11 @@ Jump_010_4420::
     ld [wScriptPointerHi], a
     jp Jump_010_401D
 
+; fetch handler for script opcode 0D (entry 13 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType, wScriptParam0, wScriptStep, wScriptPointerLo, wScriptPointerHi
-Func_010_442E:: ; heuristic: target of a pointer table; C0
+ScriptFetch0D:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_442E:: ; address name
     pop hl
     ld a, $0E
     ld [wScriptCommandType], a
@@ -592,10 +712,12 @@ Func_010_442E:: ; heuristic: target of a pointer table; C0
     ld [wScriptPointerHi], a
     ret
 
+; fetch handler for script opcode 0E (entry 14 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
 ; writes: hFFC6, hFFC7, wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
-Func_010_4445:: ; heuristic: target of a pointer table; C0
+ScriptFetch0E:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4445:: ; address name
     pop hl
     ld a, [hl+]
     ldh [hFFC6], a
@@ -608,10 +730,12 @@ Func_010_4445:: ; heuristic: target of a pointer table; C0
     farcall Func_012_7EC2
     jp Jump_010_401D
 
+; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
-Func_010_445D:: ; heuristic: target of a pointer table; C0
+ScriptFetch0F:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_445D:: ; address name
     pop hl
     ld a, [hl+]
     push af
@@ -635,9 +759,11 @@ Jump_010_447D::
     farcall Func_002_604B
     jp Jump_010_401D
 
+; fetch handler shared by 123 opcodes: wScriptCommandType = the opcode byte, then StartEventScript with the pointer just after it; the command reads its own arguments from the script
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4486:: ; heuristic: target of a pointer table; C0
+ScriptFetchGeneric:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4486:: ; address name
     pop hl
     dec hl
     ld a, [hl+]
@@ -645,10 +771,12 @@ Func_010_4486:: ; heuristic: target of a pointer table; C0
     call StartEventScript
     ret
 
+; fetch handler for script opcode 1C (entry 28 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerFacing
 ; writes: wC8EF, wScriptCommandType, wC924, wC925, wC926
-Func_010_4490:: ; heuristic: target of a pointer table; C0
+ScriptFetch1C:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4490:: ; address name
     pop hl
     ldh a, [hPlayerFacing]
     inc a
@@ -680,9 +808,11 @@ Jump_010_44BA::
     ld [wC926], a
     ret
 
+; fetch handler for script opcode 1D (entry 29 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType, wC924, wC925, wC926
-Func_010_44CA:: ; heuristic: target of a pointer table; C0
+ScriptFetch1D:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_44CA:: ; address name
     pop hl
     ld a, $1D
     ld [wScriptCommandType], a
@@ -709,10 +839,12 @@ Jump_010_44EB::
     ld [wC926], a
     ret
 
+; fetch handler for script opcode 23 (entry 35 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC38
 ; writes: wCC38, wScriptCommandType
-Func_010_44FB:: ; heuristic: target of a pointer table; C0
+ScriptFetch23:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_44FB:: ; address name
     pop hl
     ld a, [wCC38]
     set 2, a
@@ -722,10 +854,12 @@ Func_010_44FB:: ; heuristic: target of a pointer table; C0
     call StartEventScript
     ret
 
+; fetch handler for script opcode 62 (entry 98 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: wScriptCommandType, wScriptParam1
-Func_010_450D:: ; heuristic: target of a pointer table; C0
+ScriptFetch62:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_450D:: ; address name
     pop hl
     dec hl
     ld a, [hl+]
@@ -737,172 +871,210 @@ Func_010_450D:: ; heuristic: target of a pointer table; C0
     ld [wScriptParam1], a
     ret
 
+; fetch handler for script opcode E0 (entry 224 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_451F:: ; heuristic: target of a pointer table; C0
+ScriptFetchE0:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_451F:: ; address name
     pop hl
     ld a, $E0
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode E1 (entry 225 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4529:: ; heuristic: target of a pointer table; C0
+ScriptFetchE1:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4529:: ; address name
     pop hl
     ld a, $E1
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode E2 (entry 226 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4533:: ; heuristic: target of a pointer table; C0
+ScriptFetchE2:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4533:: ; address name
     pop hl
     ld a, $E2
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode E3 (entry 227 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_453D:: ; heuristic: target of a pointer table; C0
+ScriptFetchE3:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_453D:: ; address name
     pop hl
     ld a, $E3
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode E5 (entry 229 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4547:: ; heuristic: follows a terminator; C0
+ScriptFetchE5:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4547:: ; address name
     pop hl
     ld a, $E5
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode E6 (entry 230 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4551:: ; heuristic: follows a terminator; C0
+ScriptFetchE6:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4551:: ; address name
     pop hl
     ld a, $E6
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode E8 (entry 232 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_455B:: ; heuristic: target of a pointer table; C0
+ScriptFetchE8:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_455B:: ; address name
     pop hl
     ld a, $E8
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode E9 (entry 233 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4565:: ; heuristic: target of a pointer table; C0
+ScriptFetchE9:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4565:: ; address name
     pop hl
     ld a, $E9
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode EB (entry 235 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_456F:: ; heuristic: target of a pointer table; C0
+ScriptFetchEB:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_456F:: ; address name
     pop hl
     ld a, $EB
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode EC (entry 236 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4579:: ; heuristic: target of a pointer table; C0
+ScriptFetchEC:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4579:: ; address name
     pop hl
     ld a, $EC
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode ED (entry 237 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4583:: ; heuristic: target of a pointer table; C0
+ScriptFetchED:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4583:: ; address name
     pop hl
     ld a, $ED
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode EE (entry 238 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_458D:: ; heuristic: target of a pointer table; C0
+ScriptFetchEE:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_458D:: ; address name
     pop hl
     ld a, $EE
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode EF (entry 239 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4597:: ; heuristic: target of a pointer table; C0
+ScriptFetchEF:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4597:: ; address name
     pop hl
     ld a, $EF
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F0 (entry 240 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_45A1:: ; heuristic: target of a pointer table; C0
+ScriptFetchF0:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_45A1:: ; address name
     pop hl
     ld a, $F0
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F1 (entry 241 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_45AB:: ; heuristic: target of a pointer table; C0
+ScriptFetchF1:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_45AB:: ; address name
     pop hl
     ld a, $F1
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F2 (entry 242 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_45B5:: ; heuristic: target of a pointer table; C0
+ScriptFetchF2:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_45B5:: ; address name
     pop hl
     ld a, $F2
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F3 (entry 243 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_45BF:: ; heuristic: target of a pointer table; C0
+ScriptFetchF3:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_45BF:: ; address name
     pop hl
     ld a, $F3
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F4 (entry 244 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_45C9:: ; heuristic: target of a pointer table; C0
+ScriptFetchF4:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_45C9:: ; address name
     pop hl
     ld a, $F4
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F5 (entry 245 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptInDataBank, wD7FB, wScriptParam0
 ; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptStep, wScriptPointerLo, wScriptPointerHi
-Func_010_45D3:: ; heuristic: target of a pointer table; C0
+ScriptFetchF5:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_45D3:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
@@ -946,37 +1118,45 @@ Jump_010_45FB::
     ld [wScriptPointerHi], a
     ret
 
+; fetch handler for script opcode F6 (entry 246 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4619:: ; heuristic: target of a pointer table; C0
+ScriptFetchF6:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4619:: ; address name
     pop hl
     ld a, $F6
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F7 (entry 247 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_4623:: ; heuristic: target of a pointer table; C0
+ScriptFetchF7:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4623:: ; address name
     pop hl
     ld a, $F7
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode F8 (entry 248 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType
-Func_010_462D:: ; heuristic: target of a pointer table; C0
+ScriptFetchF8:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_462D:: ; address name
     pop hl
     ld a, $F8
     ld [wScriptCommandType], a
     call StartEventScript
     ret
 
+; fetch handler for script opcode EA (entry 234 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptInDataBank, wScriptParam0
 ; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptStep, wScriptPointerLo, wScriptPointerHi
-Func_010_4637:: ; heuristic: target of a pointer table; C0
+ScriptFetchEA:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4637:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
@@ -1018,10 +1198,70 @@ Jump_010_4670::
     ld a, h
     ld [wScriptPointerHi], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $04067E, $4F
+
+; fetch handler for script opcode E7 (entry 231 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; writes: wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wModeState
+ScriptFetchE7:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_467E:: ; address name
+    pop hl
+    ld a, $01
+    ld [wScriptInDataBank], a
+    ld a, [hl+]
+    ld c, a
+    ld a, [hl]
+    ld h, a
+    ld l, c
+    ld a, l
+    ld [wScriptPointerLo], a
+    ld a, h
+    ld [wScriptPointerHi], a
+    jp Jump_010_401D
+
+; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wD7FA, wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wCC44
+; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
+ScriptFetchE4:: ; code pointer of the table ScriptOpcodeHandlers; C0
+Func_010_4694:: ; address name
+    pop hl
+    ld a, [wD7FA]
+    ld c, a
+
+Jump_010_4699::
+    ld a, c
+    and a, a
+    jr z, Jump_010_46A1
+    inc hl
+    dec c
+    jr Jump_010_4699
+
+Jump_010_46A1::
+    ld a, [wScriptInDataBank]
+    and a, a
+    jr z, Jump_010_46BC
+    call ReadWordFromDataBank
+    inc hl
+    ld a, b
+    add_a_to_hl
+    ld a, l
+    ld [wScriptPointerLo], a
+    ld a, h
+    ld [wScriptPointerHi], a
+    jp Jump_010_401D
+
+Jump_010_46BC::
+    ld a, [hl+]
+    add_a_to_hl
+    ld a, l
+    ld [wScriptPointerLo], a
+    ld a, h
+    ld [wScriptPointerHi], a
+    jp Jump_010_401D
 
 ; HL = script address: clears wC921-wC926 (parameters and step) and stores HL in wScriptPointer; the script is run by RunEventScriptFrame (28 call sites)
-; 28 call sites from 28 routines (e.g. Func_010_462D, Func_010_4623, Func_010_4619, Func_010_45C9, ...)
+; 28 call sites from 28 routines (e.g. ScriptFetchF8, ScriptFetchF7, ScriptFetchF6, ScriptFetchF4, ...)
 ; writes: wScriptParam0, wScriptParam1, wScriptStep, wC924, wC925, wC926, wScriptPointerLo, wScriptPointerHi
 StartEventScript::
 Func_010_46CD:: ; address name

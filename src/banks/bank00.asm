@@ -1734,7 +1734,7 @@ Jump_000_0B5A::
     ret
 
 ; C2 static reading (E-0014): switches to the ROM bank held in $D7FE, reads the word at [HL] into B (low address) and C (next address), leaves HL unchanged, restores the caller's bank. $D7FE is therefore the data-bank variable for reads through HL; 30 call sites.
-; 30 call sites from 17 routines (e.g. CopyMonsterNameToBuffer_B01, Func_00D_5DED, CopyMonsterNameToBuffer_B0D, FetchScriptCommand, ...)
+; 31 call sites from 19 routines (e.g. CopyMonsterNameToBuffer_B01, Func_00D_5DED, CopyMonsterNameToBuffer_B0D, ScriptFetchF5, ...)
 ; reads: wDataBank
 ; writes: rROMB0
 ReadWordFromDataBank::
@@ -4090,7 +4090,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 863 call sites from 174 routines (e.g. Func_000_1B6F, Func_000_1CA1, Func_002_470B, Func_002_64E5, ...)
+; 863 call sites from 174 routines (e.g. Func_000_1B6F, Func_000_1CA1, Func_002_470B, Func_002_6050, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -4129,7 +4129,7 @@ Jump_000_1843::
     ret
 
 ; DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300
-; 157 call sites from 68 routines (e.g. Func_002_4745, Func_002_6CD4, GameMode2_Update, Func_004_6A35, ...)
+; 158 call sites from 69 routines (e.g. Func_002_4745, Func_002_6CD4, GameMode2_Update, Func_004_6A35, ...)
 SetFlagBit::
 Func_000_1845:: ; address name
     ld a, d

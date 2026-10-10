@@ -1032,6 +1032,9 @@ class Rom:
                     p += sz
             for a in list(dl):
                 if addr < a < end and a not in bounds:
+                    if "pointer load" in self.dreason.get((bank, a), ""):
+                        del dl[a]  # a guessed address constant (C0) inside a table the config proves
+                        continue
                     raise AssertionError(f"label {dl[a]} falls inside a field of table {t['label']}")
             for k in [k for k in dt if addr <= k < end]:
                 del dt[k]  # the schema emits these bytes
@@ -1047,7 +1050,9 @@ class Rom:
                         continue
                     tb = vals[f["bank_from"]] if "bank_from" in f else bank
                     tgt = vals[fi]
-                    if f.get("name_targets") and tgt and (tb, tgt) not in self.names and tgt in self.insn[tb]:
+                    if f.get("name_targets") and tgt and (tb, tgt) not in self.names and tgt in self.insn[tb] and not (
+                            f.get("name_unique_only") and sum(
+                                1 for j in range(count) if self._u16(bank, addr + j * stride) == tgt) > 1):
                         # the first table entry that points at a routine names it (E-0038)
                         self.names[(tb, tgt)] = {
                             "name": f"{f['name_targets']}{i + f.get('name_base', 0):02X}",

@@ -420,6 +420,25 @@
         }
       ],
       "note": "E-0038 (C1: ExecuteScriptCommand indexes it with wScriptCommandType - 1; command types are set by the fetch handlers of FetchScriptCommand; a zero word is an unused type; all 248 words are code pointers inside the bank and the table ends where the next bytes stop being pointers)."
+    },
+    {
+      "bank": "10",
+      "addr": "4056",
+      "label": "ScriptOpcodeHandlers",
+      "count": 249,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "fetch handler for this script byte (opcode)",
+          "name_targets": "ScriptFetch",
+          "name_base": 0,
+          "name_unique_only": true,
+          "name_note": "fetch handler for script opcode",
+          "reason": "script opcode handler"
+        }
+      ],
+      "note": "E-0039 (C1: the inline table after FetchScriptCommand's `rst $00`, indexed by the script byte; 249 words, 49 distinct handlers: opcodes 0-12 each have their own, and most others share ScriptFetchGeneric, which makes the opcode byte the command type and starts the command (the command then reads its own arguments from the script pointer); a zero word is an unused opcode)."
     }
   ]
 }

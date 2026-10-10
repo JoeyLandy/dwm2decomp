@@ -9143,7 +9143,7 @@ Jump_012_7EB7::
     ld [wC619], a
     ret
 
-; 12 call sites from 5 routines (e.g. Func_012_5A2F, Func_010_4445, Func_012_63A1, Func_013_70D9, ...)
+; 12 call sites from 5 routines (e.g. Func_012_5A2F, ScriptFetch0E, Func_012_63A1, Func_013_70D9, ...)
 ; reads: hFFC6, hFFC7, wC617, wC618, wC619
 ; writes: wC617, wC618, wC619
 Func_012_7EC2::
