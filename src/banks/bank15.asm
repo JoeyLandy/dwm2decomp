@@ -6935,12 +6935,12 @@ Jump_015_6CC8::
     ld a, [hl+]
     inc a
     push hl
-    call Func_000_24A2
+    call CopyKeyNameWordToDE
     pop hl
     dec de
     ld a, [hl]
     add a, $11
-    call Func_000_24A2
+    call CopyKeyNameWordToDE
     dec de
     ld a, $F0
     ld [de], a

@@ -5678,7 +5678,7 @@ Func_01D_6915::
     ld e, l
     ld d, h
     ld b, $04
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld e, l
     ld d, h
     ld a, [wD7F4]
@@ -5745,7 +5745,7 @@ Func_01D_6973::
     ld e, l
     ld d, h
     ld b, $04
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld e, l
     ld d, h
     ld a, [wD7F4]

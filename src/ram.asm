@@ -563,7 +563,7 @@ DEF wC6FE EQU $C6FE
 DEF wC6FF EQU $C6FF
 DEF wC700 EQU $C700
 DEF wC701 EQU $C701
-DEF wC707 EQU $C707
+DEF wKeyList EQU $C707 ; up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090) (reading + data (E-0090))
 DEF wC70A EQU $C70A
 DEF wC783 EQU $C783
 DEF wC787 EQU $C787

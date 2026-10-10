@@ -2922,7 +2922,7 @@ Func_037_5B3F::
     pop hl
     push hl
     xor a, a
-    call Func_000_160B
+    call CopyRectFromBankToBGMapWrapped
     pop hl
     push hl
     ld a, l
@@ -2960,7 +2960,7 @@ Func_037_5B3F::
     ld d, a
     pop hl
     xor a, a
-    call Func_000_160B
+    call CopyRectFromBankToBGMapWrapped
     call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a

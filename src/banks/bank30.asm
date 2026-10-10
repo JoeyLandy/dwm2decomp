@@ -126,7 +126,7 @@ RunBattleCommandEntry_Case01::
 Jump_030_40A0:: ; address name
     ld a, [wC58A]
     or a, a
-    call nz, Func_000_3EDE
+    call nz, NextTableByteSecondStream
     ld a, [wBattleActor]
     cp a, $08
     jr z, Jump_030_40D6

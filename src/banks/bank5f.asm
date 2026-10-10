@@ -868,11 +868,11 @@ Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 10 call sites from 8 routines (e.g. Func_004_6F9A, ScriptCommand58_Run_Case2B, ScriptCommand4B_Run_Case16, ScriptCommand39_Run_Case31, ...)
 ; reads: hFFC6
-; points at: wC707
+; points at: wKeyList
 Func_05F_6DAC::
     ldh a, [hFFC6]
     ld c, a
-    ld hl, wC707
+    ld hl, wKeyList
 
 Jump_05F_6DB2::
     push hl

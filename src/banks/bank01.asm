@@ -3933,7 +3933,7 @@ Jump_001_5F44::
     ld a, [wC5F9]
     and a, $1F
     ld de, wC8CF
-    call Func_000_2458
+    call WriteKeyNameToDE
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     ret
@@ -6091,10 +6091,10 @@ Func_001_6E91::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_001_6ABE)
-; points at: wC707
+; points at: wKeyList
 Func_001_6E98::
     ld de, Data_001_6EB0
-    ld hl, wC707
+    ld hl, wKeyList
     ld b, $20
 
 Jump_001_6EA0::

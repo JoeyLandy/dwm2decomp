@@ -6631,11 +6631,11 @@ Jump_012_68FF::
 
 ; 3 call sites from 3 routines (e.g. Func_012_689A, Func_00D_6A80, Func_00D_6B45)
 ; writes: hFFC6
-; points at: wC707
+; points at: wKeyList
 Func_012_691F::
     ld b, $00
     ld d, $00
-    ld hl, wC707
+    ld hl, wKeyList
 
 Jump_012_6926::
     push hl
@@ -6715,14 +6715,14 @@ Jump_012_6973::
     ld [hl], a
     ret
 
-; counts the 4-byte entries at wC707 before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
+; counts the 4-byte wKeyList entries before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
 ; 11 call sites from 9 routines (e.g. Func_004_581C, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hFFC6
-; points at: wC707
-CountWC707EntriesOrFull::
+; points at: wKeyList
+CountKeysOrFull::
 Func_012_6990:: ; address name
     ld b, $00
-    ld hl, wC707
+    ld hl, wKeyList
 
 Jump_012_6995::
     ld a, [hl]

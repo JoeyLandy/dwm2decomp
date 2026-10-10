@@ -7368,7 +7368,7 @@ Jump_0F0_7CA1::
 Jump_0F0_7CA4::
     push hl
     ld b, $08
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld c, l
     ld b, h
     pop hl
@@ -7383,7 +7383,7 @@ Jump_0F0_7CA4::
     ld e, l
     ld d, h
     ld b, $08
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld e, l
     ld d, h
     pop hl

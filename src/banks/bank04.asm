@@ -3349,11 +3349,11 @@ Func_004_581C:: ; heuristic: target of a pointer table; C0
     ld de, $001A
     call TestFlagBit
     ret nc
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ld a, $01
     ldh [hFFC7], a
     farcall Func_012_6955
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ld a, $02
     ldh [hFFC7], a
     farcall Func_012_6955

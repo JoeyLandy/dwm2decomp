@@ -277,7 +277,7 @@ Jump_000_02D2::
     call Func_000_0BA7
     call Func_000_0B7F
     call Func_000_0B9B
-    call Func_000_0DCA
+    call ResetFadeFromWC5E9
     xor a, a
     ld [wC586], a
     ld [wC52B], a
@@ -1482,7 +1482,7 @@ Func_000_0952:: ; address name
     ret
 
 ; wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8
-; 47 call sites from 41 routines (e.g. Func_000_0150, AdvanceRandom, Func_000_3EDE, Func_001_6C48, ...)
+; 47 call sites from 41 routines (e.g. Func_000_0150, AdvanceRandom, NextTableByteSecondStream, Func_001_6C48, ...)
 ; reads: wC5E8
 ; writes: wC5E8, wC5E7
 NextTableByte::
@@ -2330,11 +2330,13 @@ Func_000_0DA8:: ; address name
     pop hl
     ret
 
+; wC56F-wC571 = wC5E9-wC5EB; then clears wFadeLevel and the four bytes after it and wFadeState, and sets wC56D = 7 and wC56E = $1F (E-0090)
 ; 4 call sites from 4 routines (e.g. Func_000_0150, Func_002_5F9B, Func_007_600E, Func_0E0_75BF)
 ; reads: wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wC56D, wC56E
 ; points at: wC56F, wFadeLevel
-Func_000_0DCA::
+ResetFadeFromWC5E9::
+Func_000_0DCA:: ; address name
     ld hl, wC56F
     ld a, [wC5E9]
     ld [hl+], a
@@ -3694,9 +3696,11 @@ Jump_000_1606::
     ld [rROMB0], a
     ret
 
+; A = ROM bank, DE = source in that bank, B = width, C = rows, HL = BG map address: switches to the bank and copies the rectangle with WriteVRAMByteInc (interrupts off per byte), wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B); restores the bank (E-0090)
 ; 8 call sites from 4 routines (e.g. Func_002_6841, Func_002_6B19, Func_033_60FC, Func_037_5B3F)
 ; writes: rROMB0
-Func_000_160B::
+CopyRectFromBankToBGMapWrapped::
+Func_000_160B:: ; address name
     push bc
     ld b, a
     ld a, [BANK_NUMBER_BYTE]
@@ -4349,9 +4353,11 @@ Jump_000_18BE::
 Jump_000_18D5::
     ret
 
+; with ROM bank B mapped, reads three bytes at DE: HL = the word, B = the third byte (a far pointer: address then bank); DE += 3; restores the bank (E-0090)
 ; 10 call sites from 8 routines (e.g. ScriptCommandF7_Run_Case27_Sub02_Sub01, Func_01C_500C, Func_01C_5EEC, Func_01C_5F26, ...)
 ; writes: rROMB0
-Func_000_18D6::
+ReadFarPointerAtDEInBankB::
+Func_000_18D6:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, b
@@ -6468,8 +6474,10 @@ Jump_000_244C::
     ld [rROMB0], a
     ret
 
+; A = key slot, or $FE: writes 'Magic Key' to DE; otherwise writes the name of key A in wKeyList (4-byte entries from $C708): the word numbered byte 0 + 1, then the word numbered byte 1 + $11 (CopyKeyNameWordToDE), then $F0 (E-0090)
 ; 7 call sites from 7 routines (e.g. DebugAutomap_Update_Sub03, Func_003_779A, Func_003_6B5E_Case03, Func_003_78CB, ...)
-Func_000_2458::
+WriteKeyNameToDE::
+Func_000_2458:: ; address name
     cp a, $FE
     jr nz, Jump_000_2482
     ld a, $16
@@ -6515,12 +6523,12 @@ Jump_000_2482::
     ld a, [hl+]
     inc a
     push hl
-    call Func_000_24A2
+    call CopyKeyNameWordToDE
     pop hl
     dec de
     ld a, [hl]
     add a, $11
-    call Func_000_24A2
+    call CopyKeyNameWordToDE
     dec de
 
 Jump_000_249E::
@@ -6528,9 +6536,11 @@ Jump_000_249E::
     ld [de], a
     ret
 
-; 5 call sites from 3 routines (e.g. Func_000_2458, Func_015_6B00, Func_016_7A1E)
+; A = word number: with ROM bank $09 mapped, copies that string of the bank-$09 database's category 3 (Data_009_4078: Ylw, Plain, Green, ... then Slime, Draco, Beast, ... Cave, Isle) with its $F0 to DE; restores the bank (E-0090)
+; 5 call sites from 3 routines (e.g. WriteKeyNameToDE, Func_015_6B00, Func_016_7A1E)
 ; writes: rROMB0
-Func_000_24A2::
+CopyKeyNameWordToDE::
+Func_000_24A2:: ; address name
     add a, a
     ld hl, $4078
     add_a_to_hl
@@ -6882,7 +6892,7 @@ Func_000_2637::
 
 Jump_000_265F::
     ld hl, $0060
-    call Func_000_305E
+    call AddHLToTextCursorWC554
     ld b, $09
     call AdvanceBGMapColumnsByB
     ld a, c
@@ -6943,7 +6953,7 @@ Jump_000_26C3::
 Jump_000_26CE::
     push bc
     ld hl, $0120
-    call Func_000_3072
+    call BGMapAddressAtScrollPlusHL
     ld b, $0F
     call AdvanceBGMapColumnsByB
     pop bc
@@ -6951,7 +6961,7 @@ Jump_000_26CE::
     call WriteVRAMByte
     push bc
     ld hl, $0160
-    call Func_000_3072
+    call BGMapAddressAtScrollPlusHL
     ld b, $0F
     call AdvanceBGMapColumnsByB
     pop bc
@@ -7094,7 +7104,7 @@ Jump_000_27E5::
     ld [wC54F], a
     ld hl, wC52C
     res 1, [hl]
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld a, [hl]
     cp a, $E0
     jr nc, Jump_000_282C
@@ -7384,7 +7394,7 @@ Func_000_2950_Case00::
 Jump_000_2996:: ; address name
     ld hl, wC52C
     res 7, [hl]
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld a, [hl]
     call QueueSoundEffect
     ld hl, wC52C
@@ -7398,7 +7408,7 @@ Func_000_2950_Case05::
 Jump_000_29A8:: ; address name
     ld hl, wC52C
     res 7, [hl]
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld a, [hl]
     call QueueMusic
     ld hl, wC52C
@@ -7431,10 +7441,10 @@ Jump_000_29BD:: ; address name
 ; writes: wC531, wC532, wC535, wC536
 Func_000_2950_Case08::
 Jump_000_29CB:: ; address name
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld d, $00
     ld e, [hl]
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld c, [hl]
     ld a, [wC530]
     call Multiply8
@@ -7462,7 +7472,7 @@ Jump_000_29CB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_000_2950_Case09::
 Jump_000_29FA:: ; address name
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld a, [hl]
     cp a, $FF
     jr z, Jump_000_2A1A
@@ -7585,12 +7595,12 @@ Jump_000_2A9C::
     dec b
     jr nz, Jump_000_2A9C
     ld hl, $0020
-    call Func_000_305E
+    call AddHLToTextCursorWC554
     ld a, [wC52F]
     ld c, a
     ld a, [wC530]
     ld b, a
-    call Func_000_3095
+    call BlankBGMapEntriesRight
     ld a, [wC530]
     swap a
     ld h, a
@@ -7621,7 +7631,7 @@ Jump_000_2AD2::
     jr nz, Jump_000_2AD2
     pop bc
     ld hl, $0040
-    call Func_000_305E
+    call AddHLToTextCursorWC554
 
 Jump_000_2AE8::
     ld a, e
@@ -7683,7 +7693,7 @@ Jump_000_2B09:: ; address name
     ld [wC535], a
     ld a, h
     ld [wC536], a
-    call Func_000_2E5D
+    call IncrementWC533Word
     ret
 
 Jump_000_2B45::
@@ -7695,7 +7705,7 @@ Jump_000_2B45::
     ld c, a
     ld a, [wC530]
     ld b, a
-    call Func_000_3095
+    call BlankBGMapEntriesRight
     ld a, [wC52D]
     ld e, a
     ld a, [wC52E]
@@ -7713,7 +7723,7 @@ Jump_000_2B45::
     ld a, [wC530]
     ld b, a
     ld hl, $0020
-    call Func_000_305E
+    call AddHLToTextCursorWC554
     ld a, e
     add a, b
     ld e, a
@@ -7726,12 +7736,12 @@ Jump_000_2B81::
     dec b
     jr nz, Jump_000_2B81
     ld hl, $0040
-    call Func_000_305E
+    call AddHLToTextCursorWC554
     ld a, [wC52F]
     ld c, a
     ld a, [wC530]
     ld b, a
-    call Func_000_3095
+    call BlankBGMapEntriesRight
     ld a, [wC530]
     swap a
     ld h, a
@@ -7805,7 +7815,7 @@ Func_000_2BFA::
     res 5, a
     ld [wC52B], a
     ld hl, $0060
-    call Func_000_305E
+    call AddHLToTextCursorWC554
     ld b, $09
     call AdvanceBGMapColumnsByB
     ld a, $B4
@@ -7949,7 +7959,7 @@ Func_000_2950_Case18::
 Jump_000_2CB8:: ; address name
     ld hl, wC52B
     set 3, [hl]
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld a, [hl]
     ld [wC539], a
     ret
@@ -8007,7 +8017,7 @@ Func_000_2950_Case1B::
 Jump_000_2D03:: ; address name
     ld hl, wC52B
     set 6, [hl]
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld a, [hl]
     ld [wC53B], a
     ld hl, wC52C
@@ -8022,7 +8032,7 @@ Func_000_2950_Case1C::
 Jump_000_2D15:: ; address name
     ld hl, wC52B
     set 7, [hl]
-    call Func_000_2E5D
+    call IncrementWC533Word
     ld a, [hl]
     ld [wC53C], a
     ld hl, wC52C
@@ -8078,7 +8088,7 @@ Func_000_2D4A::
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, $0100
-    call Func_000_3072
+    call BGMapAddressAtScrollPlusHL
     ld b, $0E
     call AdvanceBGMapColumnsByB
     push hl
@@ -8166,24 +8176,26 @@ Func_000_2DD6::
     ld hl, vTiles1 + $6E0
     ld de, wC89E
     ld c, $10
-    call Func_000_2DED
+    call CopyCBytesToVRAMWaitSTAT
     ld hl, vTiles1 + $6F0
     ld de, wC8AE
     ld c, $10
-    call Func_000_2DED
+    call CopyCBytesToVRAMWaitSTAT
     ret
 
+; copies C bytes from HL to DE, waiting for rSTAT bit 1 to clear before each (interrupts stay on); HL and DE advance, C = 0 (E-0090)
 ; 2 call sites from 1 routine (e.g. Func_000_2DD6)
 ; reads: rSTAT
-Func_000_2DED::
+CopyCBytesToVRAMWaitSTAT::
+Func_000_2DED:: ; address name
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Func_000_2DED
+    jr nz, CopyCBytesToVRAMWaitSTAT
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, Func_000_2DED
+    jr nz, CopyCBytesToVRAMWaitSTAT
     ret
     INCBIN "dwm2-cobi-us.gbc", $002DFA, $46
 
@@ -8213,10 +8225,12 @@ Func_000_2E40:: ; address name
     ld d, [hl]
     ret
 
+; HL = the word at wC533/wC534, then that word += 1 (E-0090)
 ; 10 call sites from 9 routines (e.g. Func_000_2637, Func_000_2950_Case1C, Func_000_2950_Case1B, Func_000_2950_Case18, ...)
 ; reads: wC533, wC534
 ; writes: wC533, wC534
-Func_000_2E5D::
+IncrementWC533Word::
+Func_000_2E5D:: ; address name
     ld a, [wC533]
     ld l, a
     ld a, [wC534]
@@ -8318,21 +8332,21 @@ Func_000_2ECF::
     ldh [hFFCC], a
     ld e, $40
     ld d, $42
-    call Func_000_2F36
+    call Quotient24ByHFFCCDE
     or a, a
     jp nz, Jump_000_2F03
     ld a, $01
     ldh [hFFCC], a
     ld e, $A0
     ld d, $86
-    call Func_000_2F36
+    call Quotient24ByHFFCCDE
     or a, a
     jr nz, Jump_000_2F11
     ld a, $00
     ldh [hFFCC], a
     ld e, $10
     ld d, $27
-    call Func_000_2F36
+    call Quotient24ByHFFCCDE
     or a, a
     jr nz, Jump_000_2F1F
     ldh a, [hFFC6]
@@ -8346,7 +8360,7 @@ Jump_000_2F03::
     ldh [hFFCC], a
     ld e, $40
     ld d, $42
-    call Func_000_2F5A
+    call Divide24ByHFFCCDE
     call StoreAThenTerminator
 
 Jump_000_2F11::
@@ -8354,7 +8368,7 @@ Jump_000_2F11::
     ldh [hFFCC], a
     ld e, $A0
     ld d, $86
-    call Func_000_2F5A
+    call Divide24ByHFFCCDE
     call StoreAThenTerminator
 
 Jump_000_2F1F::
@@ -8362,7 +8376,7 @@ Jump_000_2F1F::
     ldh [hFFCC], a
     ld e, $10
     ld d, $27
-    call Func_000_2F5A
+    call Divide24ByHFFCCDE
     call StoreAThenTerminator
     ldh a, [hFFC6]
     ld c, a
@@ -8370,17 +8384,19 @@ Jump_000_2F1F::
     ld b, a
     jp Jump_000_2FA7
 
+; Divide24ByHFFCCDE with hFFC6-hFFC8 restored afterwards (A = the quotient); uses wC0A0, wC0A1 and wMenuRowCount as scratch, so wMenuRowCount is overwritten (E-0090)
 ; 3 call sites from 1 routine (e.g. Func_000_2ECF)
 ; reads: hFFC6, hFFC7, hFFC8, wC0A0, wC0A1, wMenuRowCount
 ; writes: wC0A0, wC0A1, wMenuRowCount, hFFC6, hFFC7, hFFC8
-Func_000_2F36::
+Quotient24ByHFFCCDE::
+Func_000_2F36:: ; address name
     ldh a, [hFFC6]
     ld [wC0A0], a
     ldh a, [hFFC7]
     ld [wC0A1], a
     ldh a, [hFFC8]
     ld [wMenuRowCount], a
-    call Func_000_2F5A
+    call Divide24ByHFFCCDE
     push af
     ld a, [wC0A0]
     ldh [hFFC6], a
@@ -8391,10 +8407,12 @@ Func_000_2F36::
     pop af
     ret
 
-; 4 call sites from 2 routines (e.g. Func_000_2ECF, Func_000_2F36)
+; A = the 24-bit hFFC8:hFFC7:hFFC6 divided by the 24-bit hFFCC:D:E (repeated subtraction; the quotient must fit in 8 bits); the remainder is left in hFFC6-hFFC8; HL kept (E-0090)
+; 4 call sites from 2 routines (e.g. Func_000_2ECF, Quotient24ByHFFCCDE)
 ; reads: hFFCC, hFFC6, hFFC7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8
-Func_000_2F5A::
+Divide24ByHFFCCDE::
+Func_000_2F5A:: ; address name
     push hl
     ldh a, [hFFCC]
     ld l, a
@@ -8572,7 +8590,7 @@ Jump_000_3032::
     jr nz, Jump_000_3032
     pop bc
     ld hl, $0040
-    call Func_000_305E
+    call AddHLToTextCursorWC554
     dec c
     jr nz, Jump_000_3031
     ret
@@ -8587,7 +8605,7 @@ Func_000_3048:: ; address name
     ret
 
 ; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF (the same 15 bytes appear in 2 banks)
-; 8 call sites from 6 routines (e.g. AdvanceBGMapColumnsByB, Func_000_2D4A, Func_000_2950_Case0F, Func_000_3095, ...)
+; 8 call sites from 6 routines (e.g. AdvanceBGMapColumnsByB, Func_000_2D4A, Func_000_2950_Case0F, BlankBGMapEntriesRight, ...)
 NextBGMapColumn_Bank00::
 Func_000_304F:: ; address name
     push af
@@ -8604,9 +8622,11 @@ Func_000_304F:: ; address name
     pop af
     ret
 
+; HL = wC554/wC555 + HL, with the high byte's low 2 bits wrapped and its upper 6 bits kept from wC555 (stays inside one 1 KB BG map) (E-0090)
 ; 7 call sites from 5 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2950_Case0F, Func_000_2950_Case0E, ...)
 ; reads: wC554, wC555
-Func_000_305E::
+AddHLToTextCursorWC554::
+Func_000_305E:: ; address name
     ld a, [wC554]
     add a, l
     ld l, a
@@ -8620,9 +8640,11 @@ Func_000_305E::
     ld h, a
     ret
 
+; HL = offset in a 32 x 32 BG map: returns HL = $9800 + ((HL + (hScrollY & $F8) * 4 + hScrollX / 8) & $3FF), the entry that offset points at from the scroll origin, wrapping inside the map (E-0090)
 ; 3 call sites from 2 routines (e.g. Func_000_2637, Func_000_2D4A)
 ; reads: hScrollY, hScrollX
-Func_000_3072::
+BGMapAddressAtScrollPlusHL::
+Func_000_3072:: ; address name
     push hl
     ldh a, [hScrollY]
     and a, $F8
@@ -8651,13 +8673,15 @@ Func_000_3072::
     ld h, a
     ret
 
+; writes tile $C3 (WriteVRAMByte) to B BG map entries from HL rightward, wrapping inside the 32-entry row (NextBGMapColumn); B = 0 (E-0090)
 ; 3 call sites from 2 routines (e.g. Func_000_2950_Case0F, Func_000_2950_Case0E)
-Func_000_3095::
+BlankBGMapEntriesRight::
+Func_000_3095:: ; address name
     ld a, $C3
     call WriteVRAMByte
     call NextBGMapColumn_Bank00
     dec b
-    jr nz, Func_000_3095
+    jr nz, BlankBGMapEntriesRight
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -10691,14 +10715,16 @@ AdvanceRandom::
 Func_000_3ED4:: ; address name
     ld a, [wC58A]
     or a, a
-    jr nz, Func_000_3EDE
+    jr nz, NextTableByteSecondStream
     call NextTableByte
     ret
 
+; advances a second random stream: loads the state in wC5BA/wC5BB into wC5E7/wC5E8, runs NextTableByte and stores the result back in wC5BA/wC5BB (wC5E7/wC5E8 keep the new value); HL kept (E-0090)
 ; 4 call sites from 4 routines (e.g. RunBattleCommandEntry_Case01, Func_0A1_43A1, Func_0A1_437D, Func_0A1_413F_Case01)
 ; reads: wC5BA, wC5BB, wC5E7, wC5E8
 ; writes: wC5E7, wC5E8, wC5BA, wC5BB
-Func_000_3EDE::
+NextTableByteSecondStream::
+Func_000_3EDE:: ; address name
     push hl
     ld a, [wC5BA]
     ld l, a

@@ -1400,7 +1400,7 @@ Jump_085_48C2:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_4912
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_085_48F5
@@ -1513,7 +1513,7 @@ Jump_085_496F:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_085_49BF
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_085_49A2
@@ -4454,11 +4454,11 @@ Jump_085_5B12::
 ; 4 call sites from 3 routines (e.g. TalkMsg0512_KamehaYo0Thanks, ScriptCommand72_Run_Case01, ScriptCommand71_Run_Case01)
 ; reads: hFFC6
 ; writes: hFFC6
-; points at: wC707
+; points at: wKeyList
 Func_085_5B23::
     ldh a, [hFFC6]
     ld c, a
-    ld hl, wC707
+    ld hl, wKeyList
     ld b, $20
 
 Jump_085_5B2B::

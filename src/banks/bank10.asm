@@ -530,19 +530,19 @@ Func_010_4343:: ; address name
     ld [wScriptPointerHi], a
     ret
 
-; only called from ScriptFetch06 (E-0047)
+; the same 13 bytes as CopyCBytesToVRAMWaitSTAT (00:2DED)
 ; 2 call sites from 1 routine (e.g. ScriptFetch06)
 ; reads: rSTAT
-ScriptFetch06_Sub01::
+CopyCBytesToVRAMWaitSTAT_Bank10::
 Func_010_435A:: ; address name
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, ScriptFetch06_Sub01
+    jr nz, CopyCBytesToVRAMWaitSTAT_Bank10
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, ScriptFetch06_Sub01
+    jr nz, CopyCBytesToVRAMWaitSTAT_Bank10
     ret
 
 ; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers)
@@ -557,11 +557,11 @@ Func_010_4367:: ; address name
     ld hl, wC89E
     ld de, vTiles1 + $6E0
     ld c, $10
-    call ScriptFetch06_Sub01
+    call CopyCBytesToVRAMWaitSTAT_Bank10
     ld hl, wC8AE
     ld de, vTiles1 + $6F0
     ld c, $10
-    call ScriptFetch06_Sub01
+    call CopyCBytesToVRAMWaitSTAT_Bank10
     pop de
     pop bc
     pop hl

@@ -8707,7 +8707,7 @@ Jump_013_75E5::
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_7624
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_013_7607
@@ -8771,7 +8771,7 @@ Jump_013_7665::
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_013_76A4
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ldh a, [hFFC6]
     bit 7, a
     jr z, Jump_013_7687

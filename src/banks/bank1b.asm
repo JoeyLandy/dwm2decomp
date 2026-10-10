@@ -2739,7 +2739,7 @@ Jump_01B_5925::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781, wC592, wC593, wC595, wC596, wC590, wC591, wC594, ...
-; points at: wC597, wC707, wC5B7
+; points at: wC597, wKeyList, wC5B7
 Func_01B_53CE_Table3_Case0E::
 Jump_01B_5931:: ; address name
     ld a, [wD781]
@@ -2772,7 +2772,7 @@ Jump_01B_5931:: ; address name
     ld [wC592], a
     ld a, h
     ld [wC593], a
-    ld hl, wC707
+    ld hl, wKeyList
     ld hl, wC597
     ld a, l
     ld [wC595], a
@@ -2865,9 +2865,9 @@ Jump_01B_59D7::
 
 ; 1 call site from 1 routine (e.g. Func_01B_53CE_Table3_Case10)
 ; reads: wC5BA, wC5B7, wC5B8, wC5B9
-; points at: wC707, wC5B7
+; points at: wKeyList, wC5B7
 Func_01B_59E8::
-    ld hl, wC707
+    ld hl, wKeyList
     ld de, wC5B7
     ld b, $20
 
@@ -2934,9 +2934,9 @@ Jump_01B_5A3D::
 
 ; 1 call site from 1 routine (e.g. Func_01B_53CE_Table3_Case10)
 ; reads: wC5BA
-; points at: wC707
+; points at: wKeyList
 Func_01B_5A41::
-    ld hl, wC707
+    ld hl, wKeyList
     ld b, $20
     ld c, $00
 
@@ -3601,7 +3601,7 @@ Jump_01B_5E31::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781, wD7F5, wD7F6, wC5BA, wC5B7, wC5BB, wC5BC, hFFC6, ...
 ; writes: wD781, wC8C3, wC8C4, hFFC6, wC5B7, wD200, rRAMG2, rRAMB, ...
-; points at: wC707, wC5B7, wC787, wD200
+; points at: wKeyList, wC5B7, wC787, wD200
 Func_01B_53CE_Table3_Case21::
 Jump_01B_5E41:: ; address name
     ld de, Data_01B_660A
@@ -3657,7 +3657,7 @@ Jump_01B_5E77::
     farcall Func_012_69B0
 
 Jump_01B_5E96::
-    ld hl, wC707
+    ld hl, wKeyList
     ld c, $00
 
 Jump_01B_5E9B::

@@ -2381,10 +2381,10 @@ Func_0F2_633B::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F2_633B)
-; points at: wD09E, wC707
+; points at: wD09E, wKeyList
 Func_0F2_6346::
     ld hl, wD09E
-    ld de, wC707
+    ld de, wKeyList
     ld c, $C0
 
 Jump_0F2_634E::
@@ -2398,7 +2398,7 @@ Jump_0F2_634E::
 ; 1 call site from 1 routine (e.g. Func_0F2_633B)
 ; reads: wD09D
 ; writes: wD15E, wD09D
-; points at: wD09E, wC707
+; points at: wD09E, wKeyList
 Func_0F2_6355::
     ld hl, wD09E
     ld c, $C0
@@ -2415,20 +2415,20 @@ Jump_0F2_635A::
     jr nz, Jump_0F2_637F
     ld a, $01
     ld [wD09D], a
-    ld hl, wC707
+    ld hl, wKeyList
     ld de, wD09E
     call Func_0F2_63EF
-    ld hl, wC707
+    ld hl, wKeyList
     call Func_0F2_6393
     ret
 
 Jump_0F2_637F::
     xor a, a
     ld [wD09D], a
-    ld hl, wC707
+    ld hl, wKeyList
     ld de, wD09E
     call Func_0F2_6393
-    ld hl, wC707
+    ld hl, wKeyList
     call Func_0F2_63EF
     ret
 

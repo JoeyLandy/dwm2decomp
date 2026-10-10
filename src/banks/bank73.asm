@@ -4029,7 +4029,7 @@ Func_073_5987:: ; address name
 ; writes: hFFC7, wC836, wScriptStartRequest
 ScriptCommand59_Run_Case02::
 Jump_073_5991:: ; address name
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ld a, $05
     ldh [hFFC7], a
     farcall Func_012_6955
@@ -5451,7 +5451,7 @@ Jump_073_61E0::
     ret
 
 Jump_073_61EC::
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ld a, $04
     ldh [hFFC7], a
     farcall Func_012_6955
@@ -5719,7 +5719,7 @@ Jump_073_635C::
     ret
 
 Jump_073_6368::
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ld a, $04
     ldh [hFFC7], a
     farcall Func_012_6955

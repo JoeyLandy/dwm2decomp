@@ -951,6 +951,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Bodies other than the ones quoted here are not read.
 - Binary verification: pending; see the commit.
 
+### E-0090 — Key names and bank-0 helpers
+
+- Kind: OBSERVATION (reading plus decoded strings; C1).
+- **Key names.**
+  - `00:2458` writes the literal glyphs for "Magic Key" (decoded with the charmap) when A = $FE.
+  - Otherwise it builds a two-word name from a 4-byte entry at $C708 + 4 × A: word byte0 + 1, then word byte1 + $11, both through `00:24A2`.
+  - `00:24A2` copies a string of the bank-$09 database's category 3, whose entries begin Ylw, Plain, Green, Blue, … (1-16), then Slime, Draco, Beast, Bird, Tree, Bug, … and Cave, Isle, Torch, Gardn.
+  - So wC707 is named wKeyList (32 entries, the count routine renamed CountKeysOrFull), and the two routines are named WriteKeyNameToDE and CopyKeyNameWordToDE.
+  - That entries are the travel keys of the game is an inference from "Magic Key" and the name words.
+- **Bank-0 helpers named:**
+  - IncrementWC533Word, ReadFarPointerAtDEInBankB, AddHLToTextCursorWC554 and NextTableByteSecondStream (a second random stream kept in wC5BA/wC5BB);
+  - CopyRectFromBankToBGMapWrapped, BlankBGMapEntriesRight, CopyCBytesToVRAMWaitSTAT, BGMapAddressAtScrollPlusHL and ResetFadeFromWC5E9;
+  - the 24-bit divide pair Divide24ByHFFCCDE and Quotient24ByHFFCCDE. The latter overwrites wMenuRowCount as scratch.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -3465,7 +3465,7 @@ Jump_00D_5BBF:: ; address name
     ld l, a
     ld a, [hl]
     ld de, wC130
-    call Func_000_2458
+    call WriteKeyNameToDE
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3545,9 +3545,9 @@ Func_00D_5C47::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_00D_5702_Case11)
-; points at: wC707
+; points at: wKeyList
 Func_00D_5C60::
-    ld hl, wC707
+    ld hl, wKeyList
     ld c, $00
     ld b, $00
 
@@ -3689,7 +3689,7 @@ Data_00D_5D1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_00D_5702_Case03, Func_01B_53CE_Table3_Case03)
 ; reads: wD7F5, wD7AF, wD7B1, wD7A9, wD7B0
-; points at: wD789, wC707
+; points at: wD789, wKeyList
 Func_00D_5D26::
     ld a, [wD7F5]
     and a, a
@@ -3756,7 +3756,7 @@ Jump_00D_5D6F::
     rl h
     sla l
     rl h
-    ld de, wC707
+    ld de, wKeyList
     add hl, de
     ld e, l
     ld d, h
@@ -3831,7 +3831,7 @@ Data_00D_5DE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. Func_00D_5702_Case03, Func_01B_53CE_Table3_Case03)
 ; reads: wD7AF, wD7B1, wD7A9, wDataBank, wD7B0
 ; writes: wDataBank, wC8DC
-; points at: wD789, wC707, wC8CF
+; points at: wD789, wKeyList, wC8CF
 Func_00D_5DED::
     ld hl, wD789
     ld a, [wD7AF]
@@ -3870,7 +3870,7 @@ Jump_00D_5E19::
     ld a, [hl]
     sla a
     sla a
-    ld de, wC707
+    ld de, wKeyList
     add a, e
     ld e, a
     jr nc, Jump_00D_5E35
@@ -3958,7 +3958,7 @@ Jump_00D_5E60::
 Jump_00D_5EB2::
     ld a, [hl]
     ld de, wC8CF
-    call Func_000_2458
+    call WriteKeyNameToDE
     ld a, $5B
     ld [de], a
     inc de
@@ -4120,7 +4120,7 @@ Data_00D_60A9:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_00D_5702_Case00, Func_01B_53CE_Table3_Case00)
 ; writes: wD7A9
-; points at: wD789, wC707
+; points at: wD789, wKeyList
 Func_00D_60C3::
     ld hl, wD789
     ld b, $20
@@ -4132,7 +4132,7 @@ Jump_00D_60C8::
     jr nz, Jump_00D_60C8
     xor a, a
     ld [wD7A9], a
-    ld de, wC707
+    ld de, wKeyList
     ld hl, wD789
     ld b, $00
     ld c, $00
@@ -4163,7 +4163,7 @@ Jump_00D_60EA::
 
 ; 2 call sites from 1 routine (e.g. Func_00D_6120)
 ; reads: wD7AF, wD7AB
-; points at: wD789, wC707
+; points at: wD789, wKeyList
 Func_00D_60F5::
     ld hl, wD789
     ld a, [wD7AF]
@@ -4173,7 +4173,7 @@ Func_00D_60F5::
     ld a, [wD7AB]
     add_a_to_hl
     ld a, [hl]
-    ld hl, wC707
+    ld hl, wKeyList
     add a, a
     add a, a
     add_a_to_hl
@@ -5895,9 +5895,9 @@ Jump_00D_6D20::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC707
+; points at: wKeyList
 Func_00D_6D22:: ; heuristic: follows a terminator; C0
-    ld hl, wC707
+    ld hl, wKeyList
     ld c, $00
 
 Jump_00D_6D27::

@@ -1866,7 +1866,7 @@ Jump_01C_4AFA::
     ld e, l
     ld d, h
     ld b, $F2
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld a, l
     ld [wC8C0], a
     ld a, h
@@ -2735,7 +2735,7 @@ Jump_01C_5032::
     ld e, l
     ld d, h
     ld b, $F2
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld e, b
     pop bc
     ld a, c
@@ -5041,7 +5041,7 @@ Jump_01C_5F00::
     ld e, l
     ld d, h
     ld b, $F2
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld e, b
     ld a, $09
     call Func_01C_6CAB
@@ -5078,7 +5078,7 @@ Func_01C_5F26::
     ld e, l
     ld d, h
     ld b, $F2
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     pop de
     ret
 

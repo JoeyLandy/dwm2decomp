@@ -6632,7 +6632,7 @@ Jump_003_6CE1::
 
 Jump_003_6CE2::
     ld de, wC150
-    call Func_000_2458
+    call WriteKeyNameToDE
     ld a, $0A
     ld [wC0A1], a
     ret
@@ -8401,7 +8401,7 @@ Jump_003_77E0::
 
 Jump_003_781C::
     ld de, wC130
-    call Func_000_2458
+    call WriteKeyNameToDE
     ld a, $5B
     ld [de], a
     inc de
@@ -8577,7 +8577,7 @@ Jump_003_792B::
     jr z, Jump_003_7949
     ld a, [de]
     ld de, wC130
-    call Func_000_2458
+    call WriteKeyNameToDE
     ld a, $0E
     jr Jump_003_7953
 
@@ -8612,14 +8612,14 @@ Jump_003_7953::
 ; 1 call site from 1 routine (e.g. Func_003_76AD)
 ; reads: wC836, wD0C7
 ; writes: wD0C7
-; points at: wD0A7, wC707
+; points at: wD0A7, wKeyList
 Func_003_7978::
     ld hl, wD0A7
     ld bc, $0020
     ld a, $FF
     call FillBytes
     ld hl, wD0A7
-    ld de, wC707
+    ld de, wKeyList
     ld bc, $2000
     xor a, a
     ld [wD0C7], a
@@ -8658,7 +8658,7 @@ Jump_003_79B4::
     ld d, a
     dec b
     jr nz, Jump_003_7997
-    ld de, wC707
+    ld de, wKeyList
     ld bc, $2000
 
 Jump_003_79C6::
@@ -8731,7 +8731,7 @@ Jump_003_7A18::
     ld d, a
     dec b
     jr nz, Jump_003_79F6
-    ld de, wC707
+    ld de, wKeyList
     ld bc, $2000
 
 Jump_003_7A2A::

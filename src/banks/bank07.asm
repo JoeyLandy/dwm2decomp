@@ -2968,7 +2968,7 @@ Func_007_600E::
     ld [hl+], a
     ld a, [wC5EB]
     ld [hl], a
-    call Func_000_0DCA
+    call ResetFadeFromWC5E9
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_608F
@@ -4310,7 +4310,7 @@ Jump_007_690E::
 ; entry 6 of the `rst $00` table in Func_007_65F1
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, wC8F0, hPlayerY, wC8F1, hPlayerFacing, ...
-; points at: wC707
+; points at: wKeyList
 Func_007_65F1_Table2_Case06::
 Jump_007_6919:: ; address name
     ld a, $38
@@ -4333,7 +4333,7 @@ Jump_007_6919:: ; address name
     ld [wC6FE], a
     call InitGoldAndClearInventory
     call Func_007_6975
-    ld hl, wC707
+    ld hl, wKeyList
     ld bc, $0080
     ld a, $FF
     call FillBytes

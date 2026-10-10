@@ -7098,7 +7098,7 @@ Func_0E0_75BF::
     ld [hl+], a
     ld a, [wC5EB]
     ld [hl], a
-    call Func_000_0DCA
+    call ResetFadeFromWC5E9
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_0E0_7640

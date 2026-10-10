@@ -8723,7 +8723,7 @@ Jump_016_79EF::
 
 ; 2 call sites from 1 routine (e.g. Func_016_79B5)
 Func_016_7A1E::
-    call Func_000_24A2
+    call CopyKeyNameWordToDE
     ret
 
 Jump_016_7A22::

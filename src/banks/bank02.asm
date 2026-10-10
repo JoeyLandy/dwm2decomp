@@ -5043,7 +5043,7 @@ Jump_002_5FF7::
     ld [hl+], a
     ld a, [wC5EB]
     ld [hl], a
-    call Func_000_0DCA
+    call ResetFadeFromWC5E9
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_002_6045
@@ -6127,7 +6127,7 @@ Jump_002_6869::
     ld de, wC364
     ld bc, $1406
     xor a, a
-    call Func_000_160B
+    call CopyRectFromBankToBGMapWrapped
     pop hl
     ld a, [wIsCGB]
     or a, a
@@ -6139,7 +6139,7 @@ Jump_002_6869::
     ld de, wD1CC
     ld bc, $1406
     xor a, a
-    call Func_000_160B
+    call CopyRectFromBankToBGMapWrapped
     ld a, $00
     ldh [rSVBK], a
     ld a, $00
@@ -6460,7 +6460,7 @@ Func_002_6B19::
     push hl
     ld de, wC300
     xor a, a
-    call Func_000_160B
+    call CopyRectFromBankToBGMapWrapped
     pop hl
     push hl
     ld a, h
@@ -6489,7 +6489,7 @@ Func_002_6B19::
     ldh [rSVBK], a
     ld de, wD168
     xor a, a
-    call Func_000_160B
+    call CopyRectFromBankToBGMapWrapped
     ld a, $00
     ldh [rVBK], a
     ld a, $00

@@ -131,7 +131,7 @@ Jump_0A1_417F::
 ; points at: wDA5B, wBattleSubPhase
 Func_0A1_413F_Case01::
 Jump_0A1_418A:: ; address name
-    call Func_000_3EDE
+    call NextTableByteSecondStream
     ld a, [wBattleActor]
     cp a, $08
     jr z, Jump_0A1_41BC
@@ -445,7 +445,7 @@ Jump_0A1_4378::
 ; points at: wBattleAGL
 Func_0A1_437D::
     push de
-    call Func_000_3EDE
+    call NextTableByteSecondStream
     ld a, e
     ld hl, wBattleAGL
     add a, a
@@ -538,7 +538,7 @@ Jump_0A1_4418::
     jr Jump_0A1_4430
 
 Jump_0A1_441D::
-    call Func_000_3EDE
+    call NextTableByteSecondStream
     ld a, [wC5E7]
     ld b, a
     ld a, $09
@@ -2868,7 +2868,7 @@ Jump_0A1_5214::
     jr nz, Jump_0A1_5214
     ld de, wC8CF
     ld a, [wC833]
-    call Func_000_2458
+    call WriteKeyNameToDE
     call Func_0A1_528B
     ld de, vTiles1
     call CopyGlyphTilesToVRAM

@@ -4726,7 +4726,7 @@ Jump_00C_6F5E:: ; address name
     jr nz, Jump_00C_6F8B
     ld de, $0188
     call SetFlagBit
-    farcall CountWC707EntriesOrFull
+    farcall CountKeysOrFull
     ld a, $03
     ldh [hFFC7], a
     farcall Func_012_6955
@@ -5807,7 +5807,7 @@ ScriptCommandF7_Run_Case27_Sub02_Sub01::
 Func_00C_7587:: ; address name
     ld de, Data_008_403C
     ld b, $08
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld c, l
     ld b, h
     ld a, [wD7F1]
@@ -5821,7 +5821,7 @@ Func_00C_7587:: ; address name
     ld e, l
     ld d, h
     ld b, $08
-    call Func_000_18D6
+    call ReadFarPointerAtDEInBankB
     ld e, l
     ld d, h
     ld hl, wC140
