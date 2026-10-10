@@ -132,7 +132,7 @@ Jump_036_407F:: ; address name
     ld a, c
     ld [wBattleTarget], a
     ld d, $CB
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -206,7 +206,7 @@ Jump_036_4127:: ; address name
     inc d
 
 Jump_036_414B::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $03
     ld [wDABE], a
     ld a, [wDAC0]
@@ -293,7 +293,7 @@ Jump_036_41EB::
     pop af
     push af
     ld d, $C8
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, [wBattleTarget]
     ld [wDAD1], a
     pop af
@@ -310,7 +310,7 @@ Jump_036_41EB::
 
 Jump_036_4211::
     ld d, $C9
-    farcall Func_03A_7193
+    farcall ShowBattleText
     scf
     ret
 
@@ -336,7 +336,7 @@ Func_036_421D:: ; address name
     ld a, $02
     ld [wDABE], a
     ld d, $C7
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $01
     ld [wC981], a
     ld a, [wBattleActor]
@@ -387,7 +387,7 @@ Jump_036_4280::
     ld d, $C6
 
 Jump_036_4289::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $01
     ld [wC981], a
     ld a, [wBattleActor]
@@ -421,7 +421,7 @@ Func_036_42AA:: ; address name
     ld a, $84
     call QueueSoundEffect
     ld d, $68
-    farcall Func_03A_7193
+    farcall ShowBattleText
     call SetSubPhase2AndRestartResolve
     scf
     ret
@@ -473,7 +473,7 @@ Jump_036_4315::
     ret
 
 Jump_036_4317::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     scf
     ret
 
@@ -588,7 +588,7 @@ Jump_036_43BF::
     and a, $C0
     jr z, Jump_036_43D8
     ld d, $66
-    farcall Func_03A_7193
+    farcall ShowBattleText
     jp Jump_036_4543
 
 Jump_036_43D8::
@@ -617,7 +617,7 @@ Jump_036_4406::
     ld a, $84
     call QueueSoundEffect
     ld d, $68
-    farcall Func_03A_7193
+    farcall ShowBattleText
     jp Jump_036_4543
 
 Jump_036_4416::
@@ -775,7 +775,7 @@ Jump_036_452D::
 
 Jump_036_4533::
     ld d, $D2
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $84
     call QueueSoundEffect
     jr Jump_036_4543
@@ -890,7 +890,7 @@ Jump_036_45D3::
     ld d, $9D
 
 Jump_036_45E7::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $83
     call QueueSoundEffect
     ld hl, wBattleResolveStep
@@ -1247,7 +1247,7 @@ Jump_036_4833::
 Jump_036_4844::
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
 
 Jump_036_484E::
     call Func_036_4961
@@ -1704,7 +1704,7 @@ Jump_036_4A9D::
     jr z, Jump_036_4AE1
     ld a, [wDAC2]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
 
 Jump_036_4AE1::
     call Func_036_4961
@@ -1731,7 +1731,7 @@ Jump_036_4B06::
     ld d, a
 
 Jump_036_4B0A::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $01
     ld [wBattleSubStep], a
     ret
@@ -1761,7 +1761,7 @@ Jump_036_4B26:: ; address name
     ret z
     res 6, [hl]
     ld d, $80
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; entry 1 of the `rst $00` table in Func_036_4A38
@@ -1787,7 +1787,7 @@ Jump_036_4B41:: ; address name
     ld hl, wBattleSubStep
     dec [hl]
     ld d, $5F
-    farcall Func_03A_7193
+    farcall ShowBattleText
     push hl
     farcall Func_0A3_4A02
     ld a, [wBattleTarget]
@@ -2051,7 +2051,7 @@ Jump_036_4D7F:: ; address name
     call CarryUnlessWDA63SlotEmpty
     ret c
     ld d, $7F
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -2422,7 +2422,7 @@ Func_036_4FBC:: ; address name
     ld d, $D1
 
 Jump_036_4FCA::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; for action $CC clears bits 0-1 of the actor's wD810 byte when bits 2-3 equal 4; for an action in $D0-$E3 it farcalls Func_0A3_413F first. Then it sets wBattleSubPhase to 2 and clears wBattleResolveStep (E-0055)
@@ -7874,7 +7874,7 @@ Func_036_71DF:: ; heuristic: target of a pointer table; C0
     jr c, Jump_036_720C
     set 0, [hl]
     ld d, $53
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $03
     ld [wBattleSubPhase], a
     xor a, a
@@ -8229,7 +8229,7 @@ Func_036_74A0:: ; heuristic: target of a pointer table; C0
     and a, $01
     jr nz, Jump_036_74CD
     ld d, $CC
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $01
     ld [wBattleSubPhase], a
     ld a, $0E
@@ -8629,7 +8629,7 @@ Func_036_771B:: ; heuristic: target of a pointer table; C0
     add_a_to_hl
     ld [hl], $00
     ld d, $DD
-    farcall Func_03A_7193
+    farcall ShowBattleText
     jp Func_036_7CC9
 
 Jump_036_7756::
@@ -8970,7 +8970,7 @@ Jump_036_7966::
     cp a, $80
     jr c, Jump_036_7981
     ld d, $72
-    farcall Func_03A_7193
+    farcall ShowBattleText
     jp Func_036_7D03
 
 Jump_036_7981::
@@ -9071,7 +9071,7 @@ Func_036_7A18:: ; heuristic: target of a pointer table; C0
     ld d, $8F
     jr z, Jump_036_7A85
     ld d, $D8
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $82
     call QueueSoundEffect
     jp Jump_036_7CD3
@@ -9084,7 +9084,7 @@ Jump_036_7A7A::
     ld d, $5C
 
 Jump_036_7A85::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     jp Jump_036_7CD3
 
 ; no direct call (reached through a table, a jump or a vector)

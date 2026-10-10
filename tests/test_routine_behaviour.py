@@ -368,5 +368,15 @@ class ResolveStepHelpers(unittest.TestCase):
         self.assertFalse(gb.f & 0x80)
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class BattleText(unittest.TestCase):
+    """ShowBattleText stores the message index and category 1 (E-0056; C2 on our emulator)."""
+
+    def test_show_battle_text_selects_category_1_and_the_index(self):
+        for index in (0x05, 0x35, 0x8B):
+            gb = call(0x3A, 0x7193, d=index)
+            self.assertEqual((gb.rb(0xC528), gb.rb(0xC529)), (1, index), hex(index))
+
+
 if __name__ == "__main__":
     unittest.main()

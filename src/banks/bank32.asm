@@ -2737,7 +2737,7 @@ Jump_032_4ECA:: ; address name
 
 Jump_032_4ED3::
     ld d, $82
-    farcall Func_03A_7193
+    farcall ShowBattleText
 
 Jump_032_4EDB::
     ld a, [wD871]
@@ -3852,7 +3852,7 @@ Jump_032_55C2:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
     ld d, $B0
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; entry 2 of the `rst $00` table in Func_032_553B
@@ -3868,7 +3868,7 @@ Jump_032_55CF:: ; address name
     cp a, $FF
     ret z
     ld d, $92
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $FF
     ld [wDAAD], a
     ret
@@ -4035,7 +4035,7 @@ Jump_032_5793:: ; address name
     ld d, $8D
 
 Jump_032_57AF::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4378,7 +4378,7 @@ Jump_032_5993:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
     ld d, $B0
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; entry 2 of the `rst $00` table in Func_032_5820
@@ -4394,7 +4394,7 @@ Jump_032_59A0:: ; address name
     cp a, $FF
     ret z
     ld d, $92
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $FF
     ld [wDAAD], a
     ret
@@ -4579,7 +4579,7 @@ Jump_032_5A86::
     dec d
 
 Jump_032_5A8E::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; only called from RunDefeatSequence_Case02 (E-0047)
@@ -5448,7 +5448,7 @@ Jump_032_6099:: ; address name
     or a, a
     jr z, ResolveStep0EEffect_Case02
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -5573,7 +5573,7 @@ Jump_032_612F::
     ld [wD873], a
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     pop hl
     ld a, l
     ld [wBattleDamageLo], a
@@ -5653,7 +5653,7 @@ Jump_032_61B1:: ; address name
 Jump_032_61C6::
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld hl, wBattleSubStep2
     inc [hl]
     xor a, a
@@ -5746,7 +5746,7 @@ Jump_032_6245::
     ld a, [wBattleActor]
     ld [wBattleTarget], a
     ld d, $38
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, [wD871]
     ld [wBattleTarget], a
 
@@ -5823,7 +5823,7 @@ Jump_032_62A3:: ; address name
 Jump_032_62B8::
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld hl, wBattleSubStep2
     inc [hl]
     xor a, a
@@ -5928,7 +5928,7 @@ Jump_032_6342::
     ld a, [wBattleActor]
     ld [wBattleTarget], a
     ld d, $38
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, [wD871]
     ld [wBattleTarget], a
     jr Jump_032_637D
@@ -6050,7 +6050,7 @@ Jump_032_63E9:: ; address name
     ld d, $8D
 
 Jump_032_6401::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     xor a, a
     ld [wCFCE], a
 
@@ -6218,7 +6218,7 @@ Jump_032_64D3::
     ld [wD873], a
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     pop hl
     ld a, l
     ld [wBattleDamageLo], a
@@ -6298,7 +6298,7 @@ Jump_032_6555:: ; address name
 Jump_032_656A::
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld hl, wBattleSubStep2
     inc [hl]
     xor a, a
@@ -6524,7 +6524,7 @@ Jump_032_66B5::
     ld d, $36
 
 Jump_032_66C4::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, [wBattleActor]
     ld l, a
     ld a, [wBattleTarget]
@@ -6603,7 +6603,7 @@ Jump_032_6718:: ; address name
 Jump_032_672D::
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     xor a, a
     ld [wBattleSubStep2], a
     xor a, a
@@ -6691,7 +6691,7 @@ Jump_032_678D:: ; address name
     dec d
 
 Jump_032_67A3::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; only called from ResolveStepDamageMessage (E-0047)

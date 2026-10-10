@@ -2897,7 +2897,7 @@ Jump_03A_6211::
     jr z, Jump_03A_6264
     res 0, [hl]
     ld d, $81
-    farcall Func_03A_7193
+    farcall ShowBattleText
     jr Jump_03A_6264
 
 Jump_03A_6230::
@@ -2906,7 +2906,7 @@ Jump_03A_6230::
     call AddAx9ToHL
     res 0, [hl]
     ld d, $86
-    farcall Func_03A_7193
+    farcall ShowBattleText
     jr Jump_03A_6264
 
 Jump_03A_6245::
@@ -2959,7 +2959,7 @@ Jump_03A_6269:: ; address name
     xor a, a
     ld [wBattleResolveStep], a
     ld d, $7E
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 Jump_03A_629F::
@@ -3307,7 +3307,7 @@ Jump_03A_6480:: ; address name
     sub a, $40
     jr nz, Jump_03A_64A5
     ld d, $84
-    farcall Func_03A_7193
+    farcall ShowBattleText
     xor a, a
 
 Jump_03A_64A5::
@@ -3357,7 +3357,7 @@ Jump_03A_64D8::
     call Func_03A_6533
     ld a, [wD868]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, [wD871]
     or a, a
     ret z
@@ -3478,7 +3478,7 @@ Jump_03A_6584:: ; address name
     inc [hl]
     farcall Func_032_5AB3
     ld d, $90
-    farcall Func_03A_7193
+    farcall ShowBattleText
     call Func_03A_639A
     ret nc
     ld a, $0A
@@ -4282,7 +4282,7 @@ Jump_03A_6A3A::
     ld a, [wBattleTarget]
     call SetBit1OfWD095Indexed_Bank3A
     ld d, $40
-    farcall Func_03A_7193
+    farcall ShowBattleText
     pop de
     ld a, e
     ld [wBattleDamageLo], a
@@ -4331,7 +4331,7 @@ Jump_03A_6A60:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank3A
     ld d, $82
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 Jump_03A_6AB6::
@@ -4362,7 +4362,7 @@ Jump_03A_6ABC:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank3A
     ld d, $83
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; entry 3 of the `rst $00` table in Func_03A_69AA
@@ -4488,7 +4488,7 @@ Jump_03A_6BB9::
     ld d, $7D
 
 Jump_03A_6BBB::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, [wDAD2]
     bit 0, a
     jr z, Jump_03A_6BD8
@@ -4709,7 +4709,7 @@ Jump_03A_6CC7:: ; address name
     ld d, $7F
 
 Jump_03A_6CC9::
-    farcall Func_03A_7193
+    farcall ShowBattleText
     xor a, a
     ld [wDABE], a
     ret
@@ -4755,7 +4755,7 @@ Jump_03A_6D11::
     bit 4, a
     jr z, Jump_03A_6D45
     ld d, $7A
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -4773,7 +4773,7 @@ Jump_03A_6D39::
 
 Jump_03A_6D3D::
     ld d, $7B
-    farcall Func_03A_7193
+    farcall ShowBattleText
 
 Jump_03A_6D45::
     xor a, a
@@ -4832,7 +4832,7 @@ Func_03A_6D76::
     ld a, [wBattleActionId]
     cp a, $CF
     call z, Func_03A_6D91
-    jp Func_03A_7193
+    jp ShowBattleText
 
 ; 1 call site from 1 routine (e.g. Func_03A_6D76)
 ; reads: wC5E7
@@ -4869,7 +4869,7 @@ Func_03A_6E92::
     cp a, $FF
     ret z
     ld d, a
-    jp Func_03A_7193
+    jp ShowBattleText
 
 Data_03A_6EA5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $9F, $9F, $A2, $9F, $9F, $9F, $9F, $9F, $9F, $9F, $A1, $9F, $FF, $FF, $FF
@@ -4936,9 +4936,11 @@ Data_03A_710B:: ; heuristic: target of a monotone pointer table; C0
 Data_03A_710C:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0EB10C, $87
 
+; D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)
 ; 66 call sites from 56 routines (e.g. Func_032_4EE4_Case09, Func_032_553B_Case01, Func_032_553B_Case02, Func_032_55EE_Case00, ...)
 ; writes: wStringIndex, wStringCategory
-Func_03A_7193::
+ShowBattleText::
+Func_03A_7193:: ; address name
     push de
     ld hl, Data_03A_71B4
     ld c, d

@@ -2394,6 +2394,11 @@
     "note": "sets wBattleSubPhase to 3 and clears wBattleResolveStep (E-0055)",
     "evidence": "reading (E-0055)"
   },
+  "3A:7193": {
+    "name": "ShowBattleText",
+    "note": "D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)",
+    "evidence": "reading + execution (E-0056)"
+  },
   "32:51F9": {
     "name": "CheckSkillMPCost",
     "note": "for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)",

@@ -668,7 +668,7 @@ Jump_03B_43F5::
 Jump_03B_4406::
     call Func_03B_444A
     ld d, $E6
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $0B
     ld [wBattleResolveStep], a
     ret
@@ -721,7 +721,7 @@ Jump_03B_4456:: ; address name
     and a, $C0
     ret z
     ld d, $66
-    farcall Func_03A_7193
+    farcall ShowBattleText
     call Func_03B_470B
     ret
 
@@ -854,7 +854,7 @@ Jump_03B_4529::
 Jump_03B_452F::
     ld a, [wC0A0]
     ld d, a
-    farcall Func_03A_7193
+    farcall ShowBattleText
     call Func_03B_453D
     ret
 
@@ -1150,7 +1150,7 @@ Jump_03B_46AE::
 
 Jump_03B_46E6::
     ld d, $87
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 ; entry 12 of the `rst $00` table in Func_03B_42F4
@@ -1172,7 +1172,7 @@ Jump_03B_46EF:: ; address name
 Func_03B_42F4_Case0D::
 Jump_03B_46FD:: ; address name
     ld d, $CC
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ld a, $0C
     ld [wBattleResolveStep], a
     ret
@@ -2234,12 +2234,12 @@ Jump_03B_4D59::
     cp a, $01
     jr z, Jump_03B_4DA3
     ld d, $FE
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 Jump_03B_4DA3::
     ld d, $96
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 Jump_03B_4DAC::
@@ -2255,12 +2255,12 @@ Jump_03B_4DAC::
     cp a, $01
     jr z, Jump_03B_4DCF
     ld d, $FE
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 Jump_03B_4DCF::
     ld d, $96
-    farcall Func_03A_7193
+    farcall ShowBattleText
     ret
 
 Jump_03B_4DD8::
