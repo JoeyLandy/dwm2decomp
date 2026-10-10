@@ -397,7 +397,7 @@ Data_033_505A:: ; heuristic: target of a monotone pointer table; C0
     ds $12, $B4
     db $B5
 
-; 1 call site from 1 routine (e.g. Func_007_4F7B)
+; 1 call site from 1 routine (e.g. GameMode5_Update)
 ; reads: wD06A, wD780, wD781, wD782
 Func_033_51C6::
     call Func_000_0535
@@ -450,7 +450,7 @@ Jump_033_520E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01B_450D)
-; reads: wD06A, wD06B, wC56C, wD780
+; reads: wD06A, wD06B, wFadeState, wD780
 Func_033_5215::
     ld a, [wD06A]
     or a, a
@@ -473,7 +473,7 @@ Func_033_5215::
     dw Jump_033_552A
 
 Jump_033_523B::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wD780]
@@ -526,7 +526,7 @@ Jump_033_5287::
     ret
 
 Jump_033_52A8::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $19
@@ -1002,7 +1002,7 @@ Jump_033_55C8::
     ld a, b
     or a, c
     jr nz, Jump_033_55C8
-    ld hl, wC5DB
+    ld hl, wGameMode
     ld a, $05
     ld [hl+], a
     ld a, $01
@@ -1010,7 +1010,7 @@ Jump_033_55C8::
     xor a, a
     ld [hl+], a
     ld [hl], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -1187,7 +1187,7 @@ Jump_033_56FC::
     ld [wStringIndex], a
     farcall ShowString_Bank1B_481A
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_033_63C7
     ld hl, wC410
     ld bc, $0805
@@ -1812,13 +1812,13 @@ Jump_033_5BE9::
     xor a, a
     ld [wC594], a
     ld a, $07
-    ld [wC5DB], a
+    ld [wGameMode], a
     xor a, a
     ld [wC5DC], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     ld a, $07
     ld [wC581], a
     ld a, $00
@@ -2860,7 +2860,7 @@ Data_033_6438:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0CE438, $58
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank33_649E, Func_001_4AD4)
+; 2 call sites from 2 routines (e.g. ShowString_Bank33_649E, GameMode0_Update)
 BeginStringDisplay_Bank33_6490::
 Func_033_6490:: ; address name
     ld de, Data_033_64A5
@@ -3122,7 +3122,7 @@ Data_033_6F6E:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, Func_001_4AD4, Func_024_4EE8)
+; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, GameMode0_Update, Func_024_4EE8)
 BeginStringDisplay_Bank33_7037::
 Func_033_7037:: ; address name
     ld de, Data_033_704C
@@ -3131,7 +3131,7 @@ Func_033_7037:: ; address name
     db $11, $4C, $70, $CD, $FE, $25, $C9
 
 ; Func_033_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 7 call sites from 3 routines (e.g. Func_024_4117, Func_024_4D65, Func_024_4DA8)
+; 7 call sites from 3 routines (e.g. GameMode6_Update, Func_024_4D65, Func_024_4DA8)
 ShowString_Bank33_7045::
 Func_033_7045:: ; address name
     call BeginStringDisplay_Bank33_7037

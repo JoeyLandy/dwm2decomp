@@ -1,9 +1,11 @@
 SECTION "Bank 01", ROMX[$4000], BANK[$01]
     db $01
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; start-up for wGameMode = 0; forcing this mode on the emulator shows: debug menu (E-0029)
+; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; writes: wC5F8, wC5F9, wC5FA, wC5FB, wC5FC, wC5FD, wC5FE, wC5FF, ...
-Func_001_4001::
+GameMode0_Init::
+Func_001_4001:: ; address name
     ld hl, vTiles1
     ld de, $1007
     call FillTilesRequest
@@ -30,7 +32,7 @@ Func_001_4001::
     ld a, $01
     jp Jump_000_077A
 
-; 1 call site from 1 routine (e.g. Func_001_4001)
+; 1 call site from 1 routine (e.g. GameMode0_Init)
 ; reads: wC5DC
 Func_001_4045::
     ld a, [wC5DC]
@@ -214,7 +216,7 @@ Jump_001_445A::
 
 Jump_001_4462::
     ld a, $31
-    call Func_000_122D
+    call QueueMusic
     xor a, a
     ld hl, wD09D
     ld bc, $0038
@@ -769,9 +771,11 @@ Func_001_4AA4::
 Data_001_4ACC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
 
-; 1 call site from 1 routine (e.g. Func_000_048A)
+; per-frame routine for wGameMode = 0
+; 1 call site from 1 routine (e.g. RunGameModeUpdate)
 ; reads: wC5DC
-Func_001_4AD4::
+GameMode0_Update::
+Func_001_4AD4:: ; address name
     ld a, [wC5DC]
     rst $00
     dw Jump_001_616A
@@ -791,7 +795,7 @@ Jump_001_4AF0::
     ld a, [wC52B]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jp z, Jump_001_4C56
     ld a, [wC0A2]
@@ -982,7 +986,7 @@ Jump_001_4C4F::
     ret
 
 Jump_001_4C56::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_001_4C86
     ld a, [wC46B]
@@ -1002,10 +1006,10 @@ Jump_001_4C56::
 Jump_001_4C7E::
     ld [wC46B], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_001_4C86::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_001_4CB8
     ld a, [wC46B]
@@ -1026,7 +1030,7 @@ Jump_001_4C86::
 Jump_001_4CB0::
     ld [wC46B], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_001_4CB8::
     ld a, [wC46B]
@@ -1034,7 +1038,7 @@ Jump_001_4CB8::
     ld b, $00
     ld hl, wC0A0
     add hl, bc
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_001_4CCF
     inc [hl]
@@ -1042,7 +1046,7 @@ Jump_001_4CB8::
     jr Jump_001_4CE5
 
 Jump_001_4CCF::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_001_4CDC
     dec [hl]
@@ -1050,7 +1054,7 @@ Jump_001_4CCF::
     jr Jump_001_4CE5
 
 Jump_001_4CDC::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $08
     jr z, Jump_001_4D44
     xor a, a
@@ -1058,7 +1062,7 @@ Jump_001_4CDC::
 
 Jump_001_4CE5::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     ld b, $21
     cp a, $00
@@ -1114,12 +1118,12 @@ Jump_001_4D3B::
     call z, Func_001_4DED
 
 Jump_001_4D44::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_001_4D54
     xor a, a
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -1127,7 +1131,7 @@ Jump_001_4D54::
     ld a, [wC46B]
     cp a, $00
     jr nz, Jump_001_4D79
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Func_001_4D6E
     xor a, a
@@ -1136,7 +1140,7 @@ Jump_001_4D54::
     call WriteVRAMByte
     jr Jump_001_4DBC
 
-; 2 call sites from 1 routine (e.g. Func_001_4AD4)
+; 2 call sites from 1 routine (e.g. GameMode0_Update)
 ; reads: wC0A0, wC46B, wC0A1, wC0A2
 Func_001_4D6E::
     ld a, [wC0A0]
@@ -1148,7 +1152,7 @@ Jump_001_4D79::
     ld a, [wC46B]
     cp a, $01
     jr nz, Jump_001_4D9E
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Func_001_4D93
     xor a, a
@@ -1157,7 +1161,7 @@ Jump_001_4D79::
     call WriteVRAMByte
     jr Jump_001_4DBC
 
-; 2 call sites from 1 routine (e.g. Func_001_4AD4)
+; 2 call sites from 1 routine (e.g. GameMode0_Update)
 ; reads: wC0A1, wC46B, wC0A0, wC0A2
 Func_001_4D93::
     ld a, [wC0A1]
@@ -1166,7 +1170,7 @@ Func_001_4D93::
     jr Jump_001_4DBC
 
 Jump_001_4D9E::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Func_001_4DB1
     xor a, a
@@ -1175,7 +1179,7 @@ Jump_001_4D9E::
     call WriteVRAMByte
     jr Jump_001_4DBC
 
-; 2 call sites from 1 routine (e.g. Func_001_4AD4)
+; 2 call sites from 1 routine (e.g. GameMode0_Update)
 ; reads: wC0A2, wC46B, wC0A0, wC0A1
 Func_001_4DB1::
     ld a, [wC0A2]
@@ -1210,7 +1214,7 @@ Jump_001_4DDC::
 Jump_001_4DEC::
     ret
 
-; 3 call sites from 1 routine (e.g. Func_001_4AD4)
+; 3 call sites from 1 routine (e.g. GameMode0_Update)
 ; reads: wC46B, wC0A0, wC0A1, wC0A2
 ; points at: wC0A0
 Func_001_4DED::
@@ -1261,7 +1265,7 @@ Jump_001_4E30::
     pop af
     ret
 
-; 2 call sites from 1 routine (e.g. Func_001_4AD4)
+; 2 call sites from 1 routine (e.g. GameMode0_Update)
 ; reads: wC46B
 ; writes: wC0A1, wC0A2
 Func_001_4E3B::
@@ -1287,21 +1291,21 @@ Data_001_4E54:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $004E54, $80
 
 Jump_001_4ED4::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_001_4EE7
     xor a, a
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_4EE7::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_001_4F34
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 2, a
     jr nz, Jump_001_4F07
     ld a, [wC5F8]
@@ -1340,10 +1344,10 @@ Jump_001_4F1F::
     jr Func_001_4F80
 
 Jump_001_4F34::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 4, a
     jp z, Jump_001_50EC
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 2, a
     jr nz, Jump_001_4F55
     ld a, [wC5F8]
@@ -1533,18 +1537,18 @@ Jump_001_50EC::
     ret
 
 Jump_001_50ED::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_001_5100
     xor a, a
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_5100::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_001_5117
     ld a, [wC5F8]
@@ -1556,7 +1560,7 @@ Jump_001_5100::
     ld [wC5F8], a
 
 Jump_001_5117::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr z, Jump_001_512D
     ld a, [wC5F8]
@@ -2040,7 +2044,7 @@ Jump_001_543A::
     jp z, Jump_001_56F1
     cp a, $01
     jp z, Jump_001_5564
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, Jump_001_59DC
     bit 1, a
@@ -2436,7 +2440,7 @@ Func_001_56D3::
     ret
 
 Jump_001_56F1::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, Jump_001_59DC
     bit 1, a
@@ -2914,7 +2918,7 @@ Jump_001_59BA::
     ld [wC5FF], a
     xor a, a
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -3242,7 +3246,7 @@ Jump_001_5BED::
     ret
 
 Jump_001_5BFA::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp z, Jump_001_5C14
     ld a, [wC5FD]
@@ -3284,10 +3288,10 @@ Jump_001_5C18::
     xor a, a
     ld [wC91F], a
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     xor a, a
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -3305,10 +3309,10 @@ Jump_001_5C5B::
     ld a, [wCD0E]
     ld [wC191], a
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $05
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -3316,15 +3320,15 @@ Jump_001_5C8D::
     bit 3, a
     jr z, Jump_001_5CA0
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $00
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_5CA0::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_001_5CB6
     ld a, [wC5F8]
@@ -3351,7 +3355,7 @@ Jump_001_5CC3::
 
 Jump_001_5CC6::
     ld c, $00
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_001_5CD3
     ld c, $FF
@@ -3495,7 +3499,7 @@ Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. Func_001_5BE8)
 ; reads: wC5FA, wC5F9, wC5FD, hFFC6, hFFC7, hFFC8, hFFC9, wCD0D, ...
 ; writes: hFFC6, wC833, wCC42, wCD05, wC190, wC191, hFF98, hFF8F, ...
-; points at: wC5DF
+; points at: wModeChangeRequest
 Func_001_5DBA::
     ld a, [wC5FA]
     ldh [hFFC6], a
@@ -3572,10 +3576,10 @@ Jump_001_5DF3::
     ld a, $80
     ld [wCC44], a
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $05
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -3708,7 +3712,7 @@ Data_001_5F56:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $005F56, $A8
 
 Jump_001_5FFE::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 0, a
     jr z, Jump_001_604B
     ld a, [wC5F9]
@@ -3741,15 +3745,15 @@ Jump_001_601F::
     xor a, a
     ld [wC8C7], a
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $00
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_604B::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_001_6061
     ld a, [wC5F8]
@@ -3776,10 +3780,10 @@ Jump_001_606E::
 
 Jump_001_6071::
     ld c, $00
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     jr nz, Jump_001_608B
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 5, a
     jr z, Jump_001_6085
     ld c, $FF
@@ -3912,7 +3916,7 @@ Jump_001_615C::
     ret
 
 Jump_001_616A::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $90
     jr z, Jump_001_617D
     ld a, [wC5F8]
@@ -3923,7 +3927,7 @@ Jump_001_616A::
     jr Jump_001_618E
 
 Jump_001_617D::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $60
     jr z, Jump_001_6191
     ld a, [wC5F8]
@@ -3947,15 +3951,15 @@ Jump_001_619D::
     inc a
     dec b
     jr nz, Jump_001_619D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, [wC5F8]
     or a, a
     jr nz, Jump_001_61C3
     ld a, $01
-    ld [wC5DB], a
-    ld hl, wC5DF
+    ld [wGameMode], a
+    ld hl, wModeChangeRequest
     inc [hl]
     xor a, a
     ld [wCC44], a
@@ -3967,10 +3971,10 @@ Jump_001_61C3::
     dec a
     jr nz, Jump_001_61D5
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $02
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -3978,10 +3982,10 @@ Jump_001_61D5::
     dec a
     jr nz, Jump_001_61E7
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $03
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -3989,12 +3993,12 @@ Jump_001_61E7::
     dec a
     jr nz, Jump_001_61FE
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $04
     ld [wC5DC], a
     ld a, $80
     ld [wC8C5], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4002,10 +4006,10 @@ Jump_001_61FE::
     dec a
     jr nz, Jump_001_6210
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $05
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4013,10 +4017,10 @@ Jump_001_6210::
     dec a
     jr nz, Jump_001_6222
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $06
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4024,10 +4028,10 @@ Jump_001_6222::
     dec a
     jr nz, Jump_001_6234
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $07
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4035,10 +4039,10 @@ Jump_001_6234::
     dec a
     jr nz, Jump_001_6246
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $08
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4046,10 +4050,10 @@ Jump_001_6246::
     dec a
     jr nz, Jump_001_6258
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $09
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4057,10 +4061,10 @@ Jump_001_6258::
     dec a
     jr nz, Jump_001_626A
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $0A
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4068,15 +4072,15 @@ Jump_001_626A::
     dec a
     jr nz, Jump_001_627C
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $0B
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_627C::
-    ld hl, wC5DB
+    ld hl, wGameMode
     ld a, [wC600]
     ld [hl+], a
     ld a, [wC601]
@@ -4085,12 +4089,12 @@ Jump_001_627C::
     ld [hl+], a
     ld a, [wC603]
     ld [hl], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_6294::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_001_62A6
     ld a, [wC5FD]
@@ -4103,15 +4107,15 @@ Jump_001_62A6::
     bit 1, a
     jr z, Jump_001_62B9
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $00
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_62B9::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $C0
     jr z, Jump_001_62CA
     ld a, [wC5F8]
@@ -4135,7 +4139,7 @@ Jump_001_62D7::
     inc de
     ld a, [de]
     ld h, a
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_001_6318
     dec hl
@@ -4367,7 +4371,7 @@ Jump_001_644D::
 Jump_001_645E::
     sla a
     ld c, a
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     swap a
     and a, $01
     add a, c
@@ -4423,7 +4427,7 @@ Jump_001_64B9::
     ret
 
 Jump_001_64C0::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $08
     jr z, Jump_001_64F0
     ld a, [wC46B]
@@ -4434,7 +4438,7 @@ Jump_001_64C0::
     ld hl, Data_001_65DE
     add_a_to_hl
     ld a, [hl]
-    call Func_000_122D
+    call QueueMusic
     ret
 
 Jump_001_64E0::
@@ -4442,11 +4446,11 @@ Jump_001_64E0::
     ld hl, Data_001_65FE
     add_a_to_hl
     ld a, [hl]
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_001_64F0::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_001_6512
     ld a, [wC46B]
@@ -4463,7 +4467,7 @@ Jump_001_6505::
     xor a, $01
     ld [wC46B], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_001_6512::
     ld a, [wC46B]
@@ -4471,21 +4475,21 @@ Jump_001_6512::
     ld b, $00
     ld hl, wC0A0
     add hl, bc
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_001_6526
     inc [hl]
     jr Jump_001_6539
 
 Jump_001_6526::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_001_6530
     dec [hl]
     jr Jump_001_6539
 
 Jump_001_6530::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_001_654F
     xor a, a
@@ -4493,7 +4497,7 @@ Jump_001_6530::
 
 Jump_001_6539::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     ld b, $20
     cp a, $00
@@ -4503,12 +4507,12 @@ Jump_001_6539::
     call z, Func_001_65A0
 
 Jump_001_654F::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_001_655F
     xor a, a
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -4516,7 +4520,7 @@ Jump_001_655F::
     ld a, [wC46B]
     or a, a
     jr nz, Jump_001_6583
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Func_001_6578
     xor a, a
@@ -4534,7 +4538,7 @@ Func_001_6578::
     jr Jump_001_659F
 
 Jump_001_6583::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Func_001_6596
     xor a, a
@@ -4602,7 +4606,7 @@ Data_001_65FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0065FE, $54
 
 Jump_001_6652::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $08
     jp z, Jump_001_66E8
     ld a, [wD09D]
@@ -4636,12 +4640,12 @@ Jump_001_6693::
 
 Jump_001_6696::
     ld a, $04
-    ld [wC5DB], a
+    ld [wGameMode], a
     xor a, a
     ld [wC5DC], a
     ld a, $04
     call StartPaletteFade
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ld hl, wD066
     inc [hl]
@@ -4690,7 +4694,7 @@ Jump_001_66BD::
     jr Jump_001_667A
 
 Jump_001_66E8::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_001_6701
     ld a, [wC46B]
@@ -4703,7 +4707,7 @@ Jump_001_66E8::
     jp Jump_001_6801
 
 Jump_001_6701::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_001_6734
     ld a, [wD09D]
@@ -4721,12 +4725,12 @@ Jump_001_6701::
     ld [wC46B], a
     xor a, a
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_001_6734::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_001_674E
     call Func_001_6809
@@ -4765,10 +4769,10 @@ Jump_001_6764::
     inc hl
     ld d, [hl]
     dec hl
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr z, Jump_001_67A4
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 2, a
     jr z, Jump_001_679B
     inc de
@@ -4799,7 +4803,7 @@ Jump_001_679F::
     jr Jump_001_6801
 
 Jump_001_67A4::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 2, a
     jr z, Jump_001_67C0
     dec de
@@ -4835,7 +4839,7 @@ Jump_001_67C9::
     add a, a
     add_a_to_hl
     deref_hl
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Jump_001_67EB
     xor a, a
@@ -4859,7 +4863,7 @@ Jump_001_67EB::
 
 Jump_001_6801::
     xor a, a
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
     call Func_001_6903
 
 Jump_001_6808::

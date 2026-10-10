@@ -2,7 +2,7 @@ SECTION "Bank 28", ROMX[$4000], BANK[$28]
     db $28
 
 ; if wC529 < $DA, BeginStringDisplay with this bank's table; otherwise far-calls Func_097_4001
-; 5 call sites from 4 routines (e.g. ShowString_Bank28, Func_001_4AD4, Func_010_4AD0, Func_05F_69FB)
+; 5 call sites from 4 routines (e.g. ShowString_Bank28, GameMode0_Update, Func_010_4AD0, Func_05F_69FB)
 ; reads: wStringIndex
 BeginStringDisplay_Bank28::
 Func_028_4001:: ; address name

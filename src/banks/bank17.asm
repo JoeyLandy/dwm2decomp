@@ -153,7 +153,7 @@ Data_017_41AF:: ; heuristic: target of a monotone pointer table; C0
 Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; 9 call sites from 7 routines (e.g. Func_000_0150, Func_002_45C6, Func_007_486E, Func_007_4B27, ...)
+; 9 call sites from 7 routines (e.g. Func_000_0150, GameMode1_Init, GameMode5_Init, Func_007_4B27, ...)
 ; reads: wSGBActive, wC51F, wC0A0, wC520
 ; writes: wSGBPacketBuffer, wC0A0, wSGBPacketIndex
 ; points at: wC480, wC577
@@ -197,7 +197,7 @@ Jump_017_41F4::
     call SpinDelay
     ret
 
-; 7 call sites from 7 routines (e.g. Func_017_41CF, Func_002_5F9B, Func_007_486E, Func_007_600E, ...)
+; 7 call sites from 7 routines (e.g. Func_017_41CF, Func_002_5F9B, GameMode5_Init, Func_007_600E, ...)
 ; reads: wSGBActive, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
 ; points at: wC4DF, wC4E7, wC4EF, wC4F7
 Func_017_421A::

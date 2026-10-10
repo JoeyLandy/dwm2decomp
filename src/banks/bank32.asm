@@ -1,7 +1,7 @@
 SECTION "Bank 32", ROMX[$4000], BANK[$32]
     db $32
 
-; 8 call sites from 6 routines (e.g. Func_031_40A5, Func_03A_4001, Func_03A_4ADB, Func_03A_548F, ...)
+; 8 call sites from 6 routines (e.g. GameMode4_Update, Func_03A_4001, Func_03A_4ADB, Func_03A_548F, ...)
 ; reads: wCB75, wCB76
 Func_032_4001::
     ld a, [wCB75]
@@ -3805,7 +3805,7 @@ Jump_032_5633::
 
 Jump_032_563B::
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld a, [wC57F]
     rlca
     and a, $04

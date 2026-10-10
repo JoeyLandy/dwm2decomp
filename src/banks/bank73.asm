@@ -344,11 +344,11 @@ Jump_073_4250::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5F0, wC46E
+; reads: wFrameCounterLo, wC46E
 ; points at: wC46B, wC923, wC46C, wC46D
 Func_073_4269:: ; heuristic: target of a pointer table; C0
     call Func_073_43BE
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $01
     jr z, Jump_073_42A7
     ld a, [wC46E]
@@ -409,10 +409,10 @@ Jump_073_42BF::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC562
+; reads: wJoypadPressed
 ; points at: wC46E, wC923
 Func_073_42C2:: ; heuristic: target of a pointer table; C0
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_073_42D1
     ld hl, wC46E
@@ -559,10 +559,10 @@ Jump_073_43B3::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_073_4269, Func_073_42C2, Func_073_42D8)
-; reads: wC5F0, wC46E, wC46B, wC46C, wC46D
+; reads: wFrameCounterLo, wC46E, wC46B, wC46C, wC46D
 ; writes: wC46B, wC46C, wC46D
 Func_073_43BE::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $01
     ret z
     ld a, [wC46E]
@@ -1904,7 +1904,7 @@ Func_073_4E20:: ; heuristic: target of a pointer table; C0
 
 Jump_073_4E37::
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -2054,7 +2054,7 @@ Jump_073_4F02::
     call FillTilesRequest
     call FillTilesFromRequest
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -2102,7 +2102,7 @@ Jump_073_4F59::
 
 Jump_073_4F6D::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
     ld [wC8CB], a
     ld a, $00
@@ -3755,7 +3755,7 @@ Jump_073_5AF2::
     set 1, a
     ld [wCC3B], a
     ld a, $66
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC19A
     ld [hl], $56
     inc hl
@@ -4001,7 +4001,7 @@ Jump_073_5CAD::
     cp a, $10
     jr nz, Jump_073_5CFD
     ld a, $66
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC1C8
     ld [hl], $46
     inc hl
@@ -4570,7 +4570,7 @@ Jump_073_6083::
     ld a, $03
     ld [wSpriteSlotCount], a
     ld a, $00
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $80
     ld [wC919], a
     ret
@@ -4591,7 +4591,7 @@ Jump_073_60A7::
     ld a, $80
     ld [wCBCF], a
     ld a, $7D
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -4621,10 +4621,10 @@ Jump_073_60CD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4D1D)
-; reads: wC5F0, wCB9B
+; reads: wFrameCounterLo, wCB9B
 ; writes: wSpriteSlotCount, wCB9B, wC919
 Func_073_60FE::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 2, a
     jr z, Jump_073_610C
     ld a, $01
@@ -5924,9 +5924,9 @@ Jump_073_691C::
 
 Jump_073_6927::
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld a, $70
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_073_6931::
     ld a, $48
@@ -6346,7 +6346,7 @@ Jump_073_6C0C::
     call Func_073_7A5D
     ret nc
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -6552,7 +6552,7 @@ Jump_073_6E40::
 
 Jump_073_6E55::
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -6743,7 +6743,7 @@ Jump_073_6F88::
     cp a, $3C
     ret nz
     ld a, $72
-    call StoreWC60B
+    call QueueSoundEffect
     ldh a, [hFF98]
     inc a
     inc a
@@ -6940,7 +6940,7 @@ Jump_073_70E5::
     or a, a
     jr nz, Jump_073_70F0
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_073_70F0::
     ld de, wCB8B
@@ -6979,7 +6979,7 @@ Jump_073_711D::
 
 Jump_073_7138::
     ld a, $72
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_07D_7AD4
     ld b, $7D
     ld hl, vTiles0 + $500
@@ -7158,7 +7158,7 @@ Jump_073_72B9::
     ld a, $70
     ld [wCBD3], a
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -7166,7 +7166,7 @@ Jump_073_72B9::
     ret
 
 Jump_073_72D6::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     ret nz
     ld a, [wC8F1]
@@ -7349,7 +7349,7 @@ Jump_073_741E::
     or a, a
     jr nz, Jump_073_7429
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_073_7429::
     ld a, [wC921]
@@ -7589,7 +7589,7 @@ Jump_073_7639::
     cp a, $30
     ret nz
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -8078,11 +8078,11 @@ Func_073_79B8::
     db $01, $00, $03, $02
 
 ; 3 call sites from 1 routine (e.g. Func_073_77CC)
-; reads: wC5F0, wC922, wC921
+; reads: wFrameCounterLo, wC922, wC921
 ; writes: wC921, wCB86
 ; points at: wC922
 Func_073_79CE::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $08
     jr nz, Jump_073_79D9
     ld hl, wC922

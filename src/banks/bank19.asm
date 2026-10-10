@@ -1,7 +1,7 @@
 SECTION "Bank 19", ROMX[$4000], BANK[$19]
     db $19
 
-; 1 call site from 1 routine (e.g. Func_031_4001)
+; 1 call site from 1 routine (e.g. GameMode4_Init)
 ; reads: wCFC5, wDataBank, wC58A, wD20C, wD25A, wD2A8
 ; writes: wDataBankSave, wCFC5, rRAMG, rRAMB, wD8A1, wD8A2, wD8A3
 ; points at: wD800, wCFC8, wCFD0, wD09D
@@ -924,7 +924,7 @@ Jump_019_4551::
     ld a, $13
 
 Jump_019_4553::
-    call Func_000_122D
+    call QueueMusic
     ret
 
 ; 1 call site from 1 routine (e.g. Func_019_4001)

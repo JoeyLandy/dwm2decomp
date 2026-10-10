@@ -1,7 +1,7 @@
 SECTION "Bank A0", ROMX[$4000], BANK[$A0]
     db $A0
 
-; 1 call site from 1 routine (e.g. Func_0A0_4ECF)
+; 1 call site from 1 routine (e.g. GameMode7_Init)
 ; reads: wDataBank
 ; writes: wDataBankSave, wCFC5
 ; points at: wD800, wCFC8, wCFD0, wD09D
@@ -524,7 +524,7 @@ Jump_0A0_42DD::
     ld a, $13
 
 Jump_0A0_42DF::
-    call Func_000_122D
+    call QueueMusic
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_4001)
@@ -2196,13 +2196,15 @@ Data_0A0_4D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0A0_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $280DC7, $108
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; start-up for wGameMode = 7; forcing this mode on the emulator shows: two monster panels when forced (E-0029)
+; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; reads: wSGBActive, wIsCGB
 ; writes: wC51F, wC520, hScrollX, hFFA2, hScrollY, hFFA6, rVBK, wC554, ...
-Func_0A0_4ECF::
+GameMode7_Init::
+Func_0A0_4ECF:: ; address name
     call Func_000_08A6
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_0A0_4EED
@@ -2273,9 +2275,11 @@ Jump_0A0_4F19::
     ld a, $0B
     jp Jump_000_077A
 
-; 1 call site from 1 routine (e.g. Func_000_048A)
+; per-frame routine for wGameMode = 7
+; 1 call site from 1 routine (e.g. RunGameModeUpdate)
 ; reads: wD802, wD800
-Func_0A0_4F70::
+GameMode7_Update::
+Func_0A0_4F70:: ; address name
     call Func_000_0535
     ld a, [wD802]
     cp a, $FF
@@ -2326,7 +2330,7 @@ Jump_0A0_4F9F::
     dw Jump_0A0_5265
 
 Jump_0A0_4FC9::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     and a, a
     ret nz
     ld hl, wCFC9
@@ -2451,7 +2455,7 @@ Jump_0A0_5093::
     ret
 
 Jump_0A0_50AD::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wD78E]
@@ -2856,7 +2860,7 @@ Jump_0A0_536B::
 
 Jump_0A0_5383::
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld hl, wCFC8
     inc [hl]
     xor a, a
@@ -3574,13 +3578,13 @@ Jump_0A0_57C8::
     ld a, $04
     call StartPaletteFade
     ld a, $06
-    ld [wC5DB], a
+    ld [wGameMode], a
     xor a, a
     ld [wC5DC], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld [wD780], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ld hl, wD066
     inc [hl]
@@ -3724,14 +3728,14 @@ Jump_0A0_59EB::
     ld a, $04
     call StartPaletteFade
     ld a, $05
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
     ld [wC5DC], a
     xor a, a
     ld [wC5DD], a
     ld [wC5DE], a
     ld [wD780], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     xor a, a
     ld [wC581], a
@@ -4440,11 +4444,11 @@ Jump_0A0_5E93::
     ld de, Data_0A0_6977
     ld hl, wC46B
     call Func_0A0_65CF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_0A0_5EBD
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC46C
     ld bc, $0007
     ld a, $00
@@ -4648,11 +4652,11 @@ Jump_0A0_6021::
     ld de, Data_0A0_697F
     ld hl, wC46C
     call Func_0A0_666B
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_0A0_6062
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wCFD4]
     ld hl, wCFD8
     add_a_to_hl
@@ -4763,7 +4767,7 @@ Jump_0A0_6115::
     ld de, Data_0A0_6987
     ld hl, wC46D
     call Func_0A0_661B
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0A0_6137
     ld a, $00
@@ -4777,7 +4781,7 @@ Jump_0A0_6137::
     bit 0, a
     jp z, Jump_0A0_61D9
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wCFD4]
     ld hl, wDAD8
     add_a_to_hl
@@ -4982,11 +4986,11 @@ Jump_0A0_62CD::
     ld de, Data_0A0_697F
     ld hl, wC46E
     call Func_0A0_666B
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp z, Jump_0A0_6354
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     farcall Func_031_72C9
     ld a, $14
     ld [wD869], a
@@ -5043,7 +5047,7 @@ Jump_0A0_6312::
     jr Jump_0A0_6372
 
 Jump_0A0_6354::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0A0_636C
     farcall Func_031_72C9
@@ -5398,10 +5402,10 @@ Jump_0A0_65BD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_5E07)
-; reads: wC563, wC5F0
-; writes: wC5F0
+; reads: wJoypadPressedRepeat, wFrameCounterLo
+; writes: wFrameCounterLo
 Func_0A0_65CF::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_0A0_65E7
     call Func_0A0_677A
@@ -5410,11 +5414,11 @@ Func_0A0_65CF::
     ld [hl], a
     call Func_0A0_6799
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_0A0_6612
 
 Jump_0A0_65E7::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_0A0_65FF
     call Func_0A0_677A
@@ -5423,11 +5427,11 @@ Jump_0A0_65E7::
     ld [hl], a
     call Func_0A0_6799
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_0A0_6612
 
 Jump_0A0_65FF::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $0F
     jr nz, Jump_0A0_661A
     bit 6, [hl]
@@ -5439,18 +5443,18 @@ Jump_0A0_660F::
     call Func_0A0_677A
 
 Jump_0A0_6612::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $F0
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
 
 Jump_0A0_661A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_5F2E)
-; reads: wC563, wC5F0
-; writes: wC5F0
+; reads: wJoypadPressedRepeat, wFrameCounterLo
+; writes: wFrameCounterLo
 Func_0A0_661B::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_0A0_6631
     call Func_0A0_677A
@@ -5463,7 +5467,7 @@ Func_0A0_661B::
     jr Jump_0A0_6644
 
 Jump_0A0_6631::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_0A0_664F
     call Func_0A0_677A
@@ -5478,11 +5482,11 @@ Jump_0A0_6644::
     ld [hl], a
     call Func_0A0_6799
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_0A0_6662
 
 Jump_0A0_664F::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $0F
     jr nz, Jump_0A0_666A
     bit 6, [hl]
@@ -5494,18 +5498,18 @@ Jump_0A0_665F::
     call Func_0A0_677A
 
 Jump_0A0_6662::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $F0
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
 
 Jump_0A0_666A::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0A0_5F2E)
-; reads: wC563, wCFD5, wCFD7, wCFD6, wC5F0, wCFD3
-; writes: wC5F0, wCFD5
+; reads: wJoypadPressedRepeat, wCFD5, wCFD7, wCFD6, wFrameCounterLo, wCFD3
+; writes: wFrameCounterLo, wCFD5
 Func_0A0_666B::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_0A0_66AF
     ld a, [wCFD5]
@@ -5539,11 +5543,11 @@ Jump_0A0_66A1::
     call Func_0A0_6799
     set 7, [hl]
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jp Jump_0A0_6771
 
 Jump_0A0_66AF::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_0A0_66F4
     ld a, [wCFD5]
@@ -5582,7 +5586,7 @@ Jump_0A0_66E7::
     call Func_0A0_6799
     set 7, [hl]
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_0A0_6771
 
 Jump_0A0_66F4::
@@ -5590,7 +5594,7 @@ Jump_0A0_66F4::
     or a, a
     jr z, Jump_0A0_6735
     ld b, a
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_0A0_6718
     ld a, [wCFD5]
@@ -5606,11 +5610,11 @@ Jump_0A0_670C::
     or a, $80
     ld [wCFD5], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_0A0_674A
 
 Jump_0A0_6718::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_0A0_6735
     ld a, [wCFD5]
@@ -5626,11 +5630,11 @@ Jump_0A0_6729::
     or a, $80
     ld [wCFD5], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_0A0_674A
 
 Jump_0A0_6735::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $0F
     jr nz, Jump_0A0_6779
     bit 6, [hl]
@@ -5673,9 +5677,9 @@ Jump_0A0_676E::
     ld [hl], a
 
 Jump_0A0_6771::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $F0
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
 
 Jump_0A0_6779::
     ret

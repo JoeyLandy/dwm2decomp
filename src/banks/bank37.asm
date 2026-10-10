@@ -2,7 +2,7 @@ SECTION "Bank 37", ROMX[$4000], BANK[$37]
     db $37
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 17 call sites from 4 routines (e.g. Func_001_4AD4, Func_003_5253, Func_003_5E68, Func_003_74E2)
+; 17 call sites from 4 routines (e.g. GameMode0_Update, Func_003_5253, Func_003_5E68, Func_003_74E2)
 BeginStringDisplay_Bank37::
 Func_037_4001:: ; address name
     ld de, Data_037_4016
@@ -238,9 +238,9 @@ Data_037_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0
 
 ; 1 call site from 1 routine (e.g. Func_01B_44D6)
-; reads: wC56C, wD780
+; reads: wFadeState, wD780
 Func_037_4AFD::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     and a, a
     ret nz
     ld a, [wD780]
@@ -286,11 +286,11 @@ Jump_037_4B44::
     or a, c
     jr nz, Jump_037_4B44
     ld a, $05
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
     ld [wC5DC], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     ret
 
 Jump_037_4B5B::
@@ -949,7 +949,7 @@ Jump_037_4FFD::
     xor a, a
     ld [wD7FA], a
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_037_64D7
     ld hl, wC3E7
     ld bc, $0907
@@ -1311,11 +1311,11 @@ Jump_037_52CF::
     or a, c
     jr nz, Jump_037_52CF
     ld a, $05
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
     ld [wC5DC], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     xor a, a
     ld [wC594], a
     ret
@@ -1540,10 +1540,10 @@ Jump_037_547F::
     ret
 
 Jump_037_5486::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
-    ld [wC563], a
+    ld [wJoypadPressedRepeat], a
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -1725,10 +1725,10 @@ Jump_037_55C6::
     ret
 
 Jump_037_5611::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
-    ld [wC563], a
+    ld [wJoypadPressedRepeat], a
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -1792,10 +1792,10 @@ Jump_037_5683::
     ret
 
 Jump_037_5691::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
-    ld [wC563], a
+    ld [wJoypadPressedRepeat], a
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -1916,10 +1916,10 @@ Jump_037_5789::
     ret
 
 Jump_037_579B::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
-    ld [wC563], a
+    ld [wJoypadPressedRepeat], a
     xor a, a
     ld [wD7F9], a
     farcall Func_01D_66B6
@@ -2175,15 +2175,15 @@ Func_037_5999::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_4DC7)
-; reads: wC563, wC562, wD7FA
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD7FA
 ; writes: wD7F9, wD7FA, wD783
 Func_037_59A3::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_037_59C1
     bit 7, a
     jr nz, Jump_037_59D7
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr nz, Jump_037_59FD
     bit 1, a
@@ -2225,7 +2225,7 @@ Jump_037_59EB::
     ld [wD783], a
     call Func_037_5A2B
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $FD
     ld [wD7F9], a
     ret
@@ -2233,7 +2233,7 @@ Jump_037_59EB::
 Jump_037_59FD::
     call Func_037_5A33
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $FF
     ld [wD7F9], a
     ret
@@ -2244,10 +2244,10 @@ Jump_037_5A0B::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_59A3)
-; reads: wC564, wD783, wD7FA
+; reads: wJoypadRepeatTimer, wD783, wD7FA
 ; writes: wD783
 Func_037_5A11::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Func_037_5A2B
     ld a, [wD783]

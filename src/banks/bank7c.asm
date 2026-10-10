@@ -1,7 +1,7 @@
 SECTION "Bank 7C", ROMX[$4000], BANK[$7C]
     db $7C
 
-; 3 call sites from 3 routines (e.g. Func_001_4AD4, Func_010_4AD0, Func_05F_69FB)
+; 3 call sites from 3 routines (e.g. GameMode0_Update, Func_010_4AD0, Func_05F_69FB)
 ; reads: wStringIndex
 Func_07C_4001::
     ld a, [wStringIndex]

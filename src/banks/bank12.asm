@@ -873,7 +873,7 @@ Func_012_456A:: ; heuristic: target of a pointer table; C0
     cp a, $01
     jr nz, Jump_012_457B
     ld a, $6D
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_012_457B::
@@ -971,7 +971,7 @@ Func_012_45FA:: ; heuristic: target of a pointer table; C0
     set 1, l
     ld a, [$3E65]
     nop
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -1099,7 +1099,7 @@ Func_012_469E:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wC90D], a
     ld a, $6D
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC924], a
     ld hl, wC923
@@ -1285,7 +1285,7 @@ Jump_012_47D8::
     ld a, [wC922]
     ld [wC90D], a
     ld a, $00
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     xor a, a
@@ -1315,7 +1315,7 @@ Func_012_4814:: ; heuristic: target of a pointer table; C0
     ld [wC8F5], a
     ld [wC8FA], a
     ld a, $6D
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC90D]
     ld [wC922], a
     xor a, a
@@ -1438,16 +1438,16 @@ Func_012_4919::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC965
-; writes: wC88D, wC5DB, wC5DC, wC5DF, wC91F
+; writes: wC88D, wGameMode, wC5DC, wModeChangeRequest, wC91F
 Func_012_494B:: ; heuristic: target of a pointer table; C0
     ld a, [wC965]
     ld [wC88D], a
     ld a, $08
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $00
     ld [wC5DC], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     xor a, a
     ld [wC91F], a
     ret
@@ -1753,7 +1753,7 @@ Func_012_4B77:: ; heuristic: target of a pointer table; C0
     cp a, $C2
     jr nz, Jump_012_4B83
     ld a, $74
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_012_4B83::
     ld b, $E0
@@ -1864,10 +1864,10 @@ Func_012_4C07::
     dw Func_012_4C3D
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC56C, wC91C, wC91D, wC91E
+; reads: wFadeState, wC91C, wC91D, wC91E
 ; writes: wC917, wC916, wC919, wC91A, wC91B, wC920, wD7FD
 Func_012_4C3D:: ; heuristic: target of a pointer table; C0
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $01
@@ -2452,7 +2452,7 @@ Func_012_4FD7:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
     call SetBit1AtHL_Bank12
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -2583,7 +2583,7 @@ Func_012_5090:: ; heuristic: target of a pointer table; C0
 ; points at: wC49F, wC0F0, wC923
 Func_012_5097:: ; heuristic: target of a pointer table; C0
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_012_50AE
@@ -3111,7 +3111,7 @@ Jump_012_567F::
     ld hl, wC923
     inc [hl]
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_012_5689::
@@ -3278,7 +3278,7 @@ Jump_012_5772::
     xor a, a
     ld [rRAMG], a
     ld a, $42
-    call Func_000_122D
+    call QueueMusic
     ld hl, wC923
     inc [hl]
     ret
@@ -3712,14 +3712,14 @@ Func_012_5A17:: ; heuristic: target of a pointer table; C0
 
 ; 1 call site from 1 routine (e.g. Func_010_49A9)
 ; reads: wC923
-; writes: wC55E, wC562
+; writes: wJoypadHeld, wJoypadPressed
 Func_012_5A2F::
     ld a, [wC923]
     cp a, $07
     jr z, Jump_012_5A3D
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
 
 Jump_012_5A3D::
     ld a, [wC923]
@@ -4013,7 +4013,7 @@ Func_012_5BD9::
 ; points at: wC923
 Func_012_5C27::
     ld a, $83
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -4153,11 +4153,11 @@ Jump_012_5CF6::
 
 ; 1 call site from 1 routine (e.g. Func_012_5CE5)
 ; reads: wC923
-; writes: wC55E, wC562
+; writes: wJoypadHeld, wJoypadPressed
 Func_012_5CFA::
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC923]
     rst $00
     dw Jump_012_5D09
@@ -4262,11 +4262,11 @@ Jump_012_5DB1::
 
 ; 1 call site from 1 routine (e.g. Func_012_5CE5)
 ; reads: wC923
-; writes: wC55E, wC562
+; writes: wJoypadHeld, wJoypadPressed
 Func_012_5DB6::
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC923]
     rst $00
     dw Func_012_61EF
@@ -4368,7 +4368,7 @@ Jump_012_5E55::
 
 Jump_012_5E5C::
     ld a, $2B
-    call Func_000_122D
+    call QueueMusic
     ret
 
 Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4450,11 +4450,11 @@ Jump_012_5ECF::
 
 ; 1 call site from 1 routine (e.g. Func_012_5CE5)
 ; reads: wC923
-; writes: wC55E, wC562
+; writes: wJoypadHeld, wJoypadPressed
 Func_012_5EE7::
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC923]
     rst $00
     dw Func_012_61EF
@@ -4500,7 +4500,7 @@ Jump_012_5F30::
     ld a, [wC8EF]
     ldh [hFF98], a
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -4587,9 +4587,9 @@ Jump_012_5FC9::
     jr z, Jump_012_6006
     dec a
     jr z, Jump_012_6017
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 5, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ld a, b
     or a, a
     ret z
@@ -4598,9 +4598,9 @@ Jump_012_5FC9::
     jr Jump_012_6025
 
 Jump_012_5FF5::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 7, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ld a, c
     cp a, $80
     ret z
@@ -4609,9 +4609,9 @@ Jump_012_5FF5::
     jr Jump_012_6025
 
 Jump_012_6006::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 4, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ld a, b
     cp a, $90
     ret z
@@ -4620,9 +4620,9 @@ Jump_012_6006::
     jr Jump_012_6025
 
 Jump_012_6017::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 6, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ld a, c
     or a, a
     ret z
@@ -4681,7 +4681,7 @@ Jump_012_606A::
     and a, $03
     ldh [hFF98], a
     xor a, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ret
 
 Jump_012_6077::
@@ -5638,7 +5638,7 @@ Jump_012_662D::
     call FillTilesRequest
     call FillTilesFromRequest
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -5691,7 +5691,7 @@ Jump_012_668A::
 
 Jump_012_669E::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
     ld [wC8CB], a
     ld a, $00
@@ -5759,7 +5759,7 @@ Jump_012_66F7::
     call FillTilesRequest
     call FillTilesFromRequest
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -5808,7 +5808,7 @@ Jump_012_6750::
 
 Jump_012_6764::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
     ld [wC8CB], a
     ld a, $00
@@ -6497,7 +6497,7 @@ Func_012_6B22:: ; heuristic: follows a terminator; C0
     ret
 
 ; 11 call sites from 2 routines (e.g. Func_05F_73A8, Func_073_7024)
-; reads: hFFC6, wC5F0, wC5F1, wC949
+; reads: hFFC6, wFrameCounterLo, wFrameCounterHi, wC949
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
 Func_012_6B33:: ; heuristic: follows a terminator; C0
     ldh a, [hFFC6]
@@ -6516,9 +6516,9 @@ Jump_012_6B42::
     ldh [hSpriteAttrXor], a
 
 Jump_012_6B4A::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     ld l, a
-    ld a, [wC5F1]
+    ld a, [wFrameCounterHi]
     ld h, a
     ld a, $1E
     call DivideHLByA
@@ -7663,8 +7663,8 @@ Data_012_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
 
 ; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
-; reads: wC8CB, wC468, hFF8C, wC562, wC8FE, hFF8E, hFF91, hFF98, ...
-; writes: wC916, wC917, wC55E, wC562
+; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wC8FE, hFF8E, hFF91, hFF98, ...
+; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_012_7333::
     ld a, [wC8CB]
     and a, $03
@@ -7675,7 +7675,7 @@ Func_012_7333::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     ret z
     ld a, [wC8FE]
@@ -7725,8 +7725,8 @@ Jump_012_7377::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC8CD]
     bit 7, a
     ret z
@@ -7738,7 +7738,7 @@ Jump_012_73A0::
 
 ; 2 call sites from 2 routines (e.g. Func_002_4C4E, Func_002_56DC)
 ; reads: wC951, wC8BF, wC8FE, hFF8E, hFF91, wC91F, wC917, wC916
-; writes: wD091, wC916, wC917, wC55E, wC562
+; writes: wD091, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_012_73A1::
     ld a, [wC951]
     dec a
@@ -7779,15 +7779,15 @@ Jump_012_73DC::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
 
 Jump_012_73F2::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4C4E)
-; reads: wC8CB, wC468, hFF8C, wC562, wCC44, hFF8E, hFF91, hFF98, ...
-; writes: wC921, wC922, wC916, wC917, wC55E, wC562
+; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wCC44, hFF8E, hFF91, hFF98, ...
+; writes: wC921, wC922, wC916, wC917, wJoypadHeld, wJoypadPressed
 ; points at: wCDB0, wCE8B
 Func_012_73F3::
     ld a, [wC8CB]
@@ -7799,7 +7799,7 @@ Func_012_73F3::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     ret z
     ld a, [wCC44]
@@ -7869,8 +7869,8 @@ Jump_012_7457::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ret
 
 Jump_012_7479::
@@ -7914,8 +7914,8 @@ Jump_012_74A2::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ret
 
 Jump_012_74C7::
@@ -7950,8 +7950,8 @@ Jump_012_74D6::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
 
 Jump_012_74FA::
     ret
@@ -7976,8 +7976,8 @@ Jump_012_7508::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ret
 
 Data_012_752E:: ; heuristic: pointer load in the same bank (bank assumed); C0

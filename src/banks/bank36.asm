@@ -208,7 +208,7 @@ Func_036_4162::
     cp a, $4F
     jr z, Jump_036_4189
     ld a, $84
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_036_4FD1
     ld d, $68
     jp Jump_036_4317
@@ -387,7 +387,7 @@ Func_036_42AA::
     bit 5, a
     jr z, Jump_036_42CB
     ld a, $84
-    call StoreWC60B
+    call QueueSoundEffect
     ld d, $68
     farcall Func_03A_7193
     call Func_036_4FD1
@@ -498,7 +498,7 @@ Jump_036_4356::
     farcall Func_03A_6EE5
     call Func_036_4FD1
     ld a, $84
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_036_438A::
@@ -563,7 +563,7 @@ Jump_036_43D8::
 
 Jump_036_4406::
     ld a, $84
-    call StoreWC60B
+    call QueueSoundEffect
     ld d, $68
     farcall Func_03A_7193
     jp Jump_036_4543
@@ -725,7 +725,7 @@ Jump_036_4533::
     ld d, $D2
     farcall Func_03A_7193
     ld a, $84
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_036_4543
 
 Jump_036_4542::
@@ -831,7 +831,7 @@ Jump_036_45D3::
 Jump_036_45E7::
     farcall Func_03A_7193
     ld a, $83
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wCFCB
     inc [hl]
     ret
@@ -1123,7 +1123,7 @@ Jump_036_47F1::
     ld [wDAD2], a
     farcall Func_03A_4001
     ld a, $85
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_036_4806::
@@ -1578,7 +1578,7 @@ Jump_036_4A9D::
     ld a, [wDAC0]
     bit 4, a
     ld a, $99
-    call nz, StoreWC60B
+    call nz, QueueSoundEffect
     ld a, [wDAC3]
     ld d, a
     ld a, [wDAC0]
@@ -1597,7 +1597,7 @@ Jump_036_4AE5::
     ld a, [wDAC0]
     bit 4, a
     ld a, $87
-    call nz, StoreWC60B
+    call nz, QueueSoundEffect
     ld a, [wDAC0]
     bit 4, a
     jr z, Jump_036_4B06
@@ -2258,7 +2258,7 @@ Jump_036_4FBA::
 ; 1 call site from 1 routine (e.g. Func_036_433F)
 Func_036_4FBC::
     ld a, $84
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_036_7E6C
     ld d, $D0
     jr c, Jump_036_4FCA
@@ -8896,7 +8896,7 @@ Func_036_7A18:: ; heuristic: target of a pointer table; C0
     ld d, $D8
     farcall Func_03A_7193
     ld a, $82
-    call StoreWC60B
+    call QueueSoundEffect
     jp Jump_036_7CD3
 
 Jump_036_7A7A::

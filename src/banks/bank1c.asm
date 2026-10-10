@@ -251,10 +251,10 @@ Func_01C_41CD:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC56C
+; reads: wFadeState
 ; points at: wD780
 Func_01C_41DC:: ; heuristic: target of a pointer table; C0
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld hl, wD780
@@ -325,7 +325,7 @@ Func_01C_4250:: ; heuristic: target of a pointer table; C0
     rst $10
     inc [hl]
     ld a, $40
-    call Func_000_122D
+    call QueueMusic
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -362,11 +362,11 @@ Jump_01C_428E::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC56C
+; reads: wFadeState
 ; writes: wC56D, wC920, wC919
 ; points at: wD780
 Func_01C_4295:: ; heuristic: follows a terminator; C0
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     farcall Func_002_604B
@@ -1163,12 +1163,12 @@ Func_01C_4770:: ; heuristic: target of a pointer table; C0
     ret
 
 Jump_01C_4785::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01C_47A0
     bit 7, a
     jr nz, Jump_01C_47BE
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr nz, Jump_01C_47CE
     bit 1, a
@@ -1189,7 +1189,7 @@ Jump_01C_47AB::
     ld [wD7B3], a
     call Func_01C_485F
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_47BB::
@@ -1211,7 +1211,7 @@ Jump_01C_47CB::
 Jump_01C_47CE::
     call Func_01C_4867
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD7B1]
     ld [wD7FA], a
     ld b, a
@@ -1845,10 +1845,10 @@ Jump_01C_4B68::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC563, wC562, wD7C2, wD781, wD7B7, wD7B5, wD7BA, wD7B6
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD7C2, wD781, wD7B7, wD7B5, wD7BA, wD7B6
 ; writes: wD7C7, wD780, wD781, wD7FA, wC920, wC919, wD7B5, wD7B4, ...
 Func_01C_4B95:: ; heuristic: target of a pointer table; C0
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, Jump_01C_4BE4
     bit 5, a
@@ -1857,7 +1857,7 @@ Func_01C_4B95:: ; heuristic: target of a pointer table; C0
     jp nz, Jump_01C_4C30
     bit 7, a
     jp nz, Jump_01C_4C58
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01C_4C74
     call Func_01C_4C87
@@ -1865,7 +1865,7 @@ Func_01C_4B95:: ; heuristic: target of a pointer table; C0
     ld a, [wD7C2]
     cp a, $03
     ret c
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     ret z
     call Func_01C_6ADB
@@ -1907,7 +1907,7 @@ Jump_01C_4C05::
     ld [wD7B4], a
     call Func_01C_4C9A
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_4C12::
@@ -1952,7 +1952,7 @@ Func_01C_4C4B:: ; heuristic: target of a pointer table; C0
     ld [wD7B4], a
     call Func_01C_4C9A
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_4C58::
@@ -1976,7 +1976,7 @@ Jump_01C_4C71::
 Jump_01C_4C74::
     call Func_01C_4CA2
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01C_6ADB
     ld a, [wD781]
     inc a
@@ -2214,10 +2214,10 @@ Jump_01C_4DB0::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC563
+; reads: wJoypadPressedRepeat
 ; writes: wD7FA, wD781, wD7C7, wC920, wC919
 Func_01C_4DE0:: ; heuristic: target of a pointer table; C0
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 1, a
     jr nz, Jump_01C_4E05
     dw Func_01C_67CB
@@ -2226,14 +2226,14 @@ Func_01C_4DE0:: ; heuristic: target of a pointer table; C0
     dw Func_01C_5820
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC562, wD7CA, wD7CB, wD781, wD7CC
+; reads: wJoypadPressed, wD7CA, wD7CB, wD781, wD7CC
 ; writes: wD7C7, wD7FA, wD781, wC920, wC919, wD7CA, wD7CB
 Func_01C_4DEF:: ; heuristic: follows a terminator; C0
     bit 6, a
     jp nz, Func_01C_4E57
     bit 7, a
     jp nz, Jump_01C_4ECE
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01C_4F53
     call Func_01C_4F87
@@ -2276,7 +2276,7 @@ Jump_01C_4E3B::
     ld [wD7CC], a
     call Func_01C_4F87
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
     db $CD, $9A, $4F, $FA, $CC, $D7
 
@@ -2297,7 +2297,7 @@ Jump_01C_4E54::
 ; writes: wD7CA, wD7CB
 Func_01C_4E57:: ; heuristic: follows a terminator; C0
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD7CC]
     and a, a
     jr nz, Jump_01C_4E98
@@ -2375,7 +2375,7 @@ Jump_01C_4EC6::
 
 Jump_01C_4ECE::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD7CC]
     and a, a
     jr nz, Jump_01C_4F18
@@ -2466,7 +2466,7 @@ Jump_01C_4F53::
 
 Jump_01C_4F67::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01C_4F9A
     call Func_01C_500C
     xor a, a
@@ -2812,22 +2812,22 @@ Jump_01C_516C::
     ld bc, $0605
     call Func_01C_6806
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD781]
     inc a
     ld [wD781], a
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC563, wC562, wD781, wD7D1, wD7D0, wD7CF, wD7CE, wD7F1, ...
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD781, wD7D1, wD7D0, wD7CF, wD7CE, wD7F1, ...
 ; writes: wD781, wD7FA, wC920, wC919, wD7F3, wD7F2, wD7F1, wD7D1
 Func_01C_51A7:: ; heuristic: target of a pointer table; C0
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01C_51C3
     bit 7, a
     jr nz, Jump_01C_51DD
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01C_51ED
     bit 1, a
@@ -2850,7 +2850,7 @@ Jump_01C_51D1::
     ld [wD7D1], a
     call Func_01C_52A0
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_51DD::
@@ -2867,7 +2867,7 @@ Jump_01C_51EA::
 
 Jump_01C_51ED::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01C_52C2
     ld a, [wD7D1]
     and a, a
@@ -2961,10 +2961,10 @@ Jump_01C_5279::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_01C_51A7)
-; reads: wC564, wD7D2, wD7D1
+; reads: wJoypadRepeatTimer, wD7D2, wD7D1
 ; writes: wD7D2
 Func_01C_52A0::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Jump_01C_52BA
     ld a, [wD7D2]
@@ -3713,10 +3713,10 @@ Jump_01C_572F::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC563, wC562, wD7C2, wD781, wD7B7, wD7B5, wD7BB, wD7B6
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD7C2, wD781, wD7B7, wD7B5, wD7BB, wD7B6
 ; writes: wD7C7, wD780, wD781, wD7FA, wC920, wC919, wD7B4, wD7B5, ...
 Func_01C_575B:: ; heuristic: target of a pointer table; C0
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, Jump_01C_57AA
     bit 5, a
@@ -3725,7 +3725,7 @@ Func_01C_575B:: ; heuristic: target of a pointer table; C0
     jp nz, Jump_01C_57F0
     bit 7, a
     jp nz, Jump_01C_581C
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01C_583C
     call Func_01C_4C87
@@ -3733,7 +3733,7 @@ Func_01C_575B:: ; heuristic: target of a pointer table; C0
     ld a, [wD7C2]
     cp a, $03
     ret c
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 1, a
     ret z
     call Func_01C_6ADB
@@ -3774,7 +3774,7 @@ Jump_01C_57C8::
     ld [wD7B4], a
     call Func_01C_4C9A
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_57D5::
@@ -3818,7 +3818,7 @@ Jump_01C_580F::
     ld [wD7B4], a
     call Func_01C_4C9A
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_581C::
@@ -3848,7 +3848,7 @@ Jump_01C_5839::
 
 Jump_01C_583C::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01C_4CA2
     call Func_01C_6ADB
     xor a, a
@@ -4073,10 +4073,10 @@ Jump_01C_598D::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC563
+; reads: wJoypadPressedRepeat
 ; writes: wD7FA, wD781, wD7C7, wC920, wC919
 Func_01C_59AD:: ; heuristic: target of a pointer table; C0
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 1, a
     jr nz, Jump_01C_59D2
     dw Func_01C_67CB
@@ -4085,14 +4085,14 @@ Func_01C_59AD:: ; heuristic: target of a pointer table; C0
     dw Func_01C_5320
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC562, wD7CA, wD7CB, wD781, wD7CC, wD7D4, wD7D3
+; reads: wJoypadPressed, wD7CA, wD7CB, wD781, wD7CC, wD7D4, wD7D3
 ; writes: wD7FA, wD7C7, wD781, wD7CA, wD7CB
 Func_01C_59BC:: ; heuristic: follows a terminator; C0
     bit 6, a
     jp nz, Jump_01C_5A1F
     bit 7, a
     jp nz, Jump_01C_5AA6
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01C_5B36
     call Func_01C_5B61
@@ -4153,7 +4153,7 @@ Jump_01C_5A1C::
 
 Jump_01C_5A1F::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD7CC]
     and a, a
     jr nz, Jump_01C_5A6A
@@ -4242,7 +4242,7 @@ Jump_01C_5A9E::
 
 Jump_01C_5AA6::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD7CC]
     and a, a
     jr nz, Jump_01C_5AF6
@@ -4335,7 +4335,7 @@ Jump_01C_5B36::
 
 Jump_01C_5B46::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01C_5B74
     call Func_01C_5BE6
     xor a, a
@@ -4616,15 +4616,15 @@ Jump_01C_5CF2::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC563, wC562, wD781, wD7D1
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD781, wD7D1
 ; writes: wD781, wD7FA, wC920, wC919, wD7D1
 Func_01C_5D13:: ; heuristic: target of a pointer table; C0
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01C_5D2F
     bit 7, a
     jr nz, Jump_01C_5D49
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01C_5D59
     bit 1, a
@@ -4647,7 +4647,7 @@ Jump_01C_5D3D::
     ld [wD7D1], a
     call Func_01C_5DA4
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_5D49::
@@ -4664,7 +4664,7 @@ Jump_01C_5D56::
 
 Jump_01C_5D59::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01C_5DC6
     ld a, [wD7D1]
     and a, a
@@ -4700,10 +4700,10 @@ Jump_01C_5D7D::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_01C_5D13)
-; reads: wC564, wD7D2, wD7D1
+; reads: wJoypadRepeatTimer, wD7D2, wD7D1
 ; writes: wD7D2
 Func_01C_5DA4::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Jump_01C_5DBE
     ld a, [wD7D2]
@@ -6271,10 +6271,10 @@ Func_01C_6ADB::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_01C_575B, Func_01C_4B95)
-; reads: wC563, wD780, wD7C7, wD7C2, wD781
+; reads: wJoypadPressedRepeat, wD780, wD7C7, wD7C2, wD781
 ; writes: wD7C9, wD7C7, wD7C2
 Func_01C_6AF7::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 0, a
     jr nz, Jump_01C_6B38
     and a, a
@@ -6299,7 +6299,7 @@ Jump_01C_6B1A::
     jr nz, Jump_01C_6B2E
 
 Jump_01C_6B21::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 1, a
     jr z, Jump_01C_6B2E
     ld a, $03
@@ -6632,7 +6632,7 @@ Data_01C_6DEF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $072DEF, $4D
 
 Jump_01C_6E3C::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01C_6E54
     bit 7, a
@@ -6659,7 +6659,7 @@ Jump_01C_6E62::
     ld [wD7B1], a
     call Func_01C_6EDE
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01C_6E6E::
@@ -6676,7 +6676,7 @@ Jump_01C_6E7B::
 
 Jump_01C_6E7E::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01C_6F00
     ld a, [wD7B1]
     ld b, a
@@ -6730,10 +6730,10 @@ Jump_01C_6ED6::
     jp Jump_01C_6EAE
 
 ; 2 call sites from 1 routine (e.g. Func_01C_6DCB)
-; reads: wC564, wD7B3, wD7B1
+; reads: wJoypadRepeatTimer, wD7B3, wD7B1
 ; writes: wD7B3
 Func_01C_6EDE::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Jump_01C_6EF8
     ld a, [wD7B3]

@@ -3,7 +3,7 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
 ; reads: wC8CB, wC468, hFF8C, wC918, hFF90, hFF8F, hFF92, wC5DC, ...
-; writes: wC918, wC916, wC917, wC55E, wC562
+; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_4001::
     ld a, [wC8CB]
     and a, $03
@@ -105,8 +105,8 @@ Jump_087_4078::
     cp a, $01
     jr nz, Jump_087_4094
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
 
 Jump_087_4094::
     pop hl
@@ -143,8 +143,8 @@ Jump_087_4096::
     ds $A6, $00
 
 ; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
-; reads: wC8CB, wC468, hFF8C, wC562, wSpriteSlotCount, hFF8E, hFF91, hFF98, ...
-; writes: wC916, wC917, wC55E, wC562
+; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wSpriteSlotCount, hFF8E, hFF91, hFF98, ...
+; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_42A0::
     ld a, [wC8CB]
     and a, $03
@@ -155,7 +155,7 @@ Func_087_42A0::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     ret z
     ld a, [wSpriteSlotCount]
@@ -350,8 +350,8 @@ Jump_087_43DC::
     cp a, $01
     ret nz
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC8CD]
     bit 7, a
     ret z
@@ -530,8 +530,8 @@ Jump_087_44D1::
     cp a, $01
     jr nz, Jump_087_44FC
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC8CD]
     bit 7, a
     jr z, Jump_087_44FA

@@ -2109,7 +2109,7 @@ Jump_061_57AD::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -2153,7 +2153,7 @@ Jump_061_5810::
     ld a, [hl-]
     ld [hl], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $83
     ld [wCC44], a
     ld a, $04
@@ -2207,7 +2207,7 @@ Jump_061_587C::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -2341,7 +2341,7 @@ Jump_061_594D::
     ld [wC8C6], a
     pop de
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld c, $01
     ret
 
@@ -2457,7 +2457,7 @@ Jump_061_59DD::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -2585,7 +2585,7 @@ Jump_061_5AB5::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -2631,7 +2631,7 @@ Jump_061_5B18::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wCCEA], a
     ld a, $04
@@ -2672,7 +2672,7 @@ Jump_061_5B6B::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wCCEA], a
     ld a, $04
@@ -2852,7 +2852,7 @@ Jump_061_5C7E::
     ld a, $84
     ld [wCC44], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -3022,7 +3022,7 @@ Jump_061_5D92::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC8C7], a
     ld a, $04
@@ -3096,7 +3096,7 @@ Jump_061_5E44::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC8C7], a
     ld a, $04
@@ -3199,7 +3199,7 @@ Jump_061_5EF0::
     bit 5, a
     jr nz, Jump_061_5ECD
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC8C7], a
     ld a, $04
@@ -3285,7 +3285,7 @@ Jump_061_5F56::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC8C7], a
     push hl
@@ -3360,7 +3360,7 @@ Jump_061_5FE0::
     xor a, a
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     push hl
     ld a, $04
     call StartPaletteFade

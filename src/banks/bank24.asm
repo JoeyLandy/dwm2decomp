@@ -1,11 +1,13 @@
 SECTION "Bank 24", ROMX[$4000], BANK[$24]
     db $24
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; start-up for wGameMode = 6; forcing this mode on the emulator shows: victory screen when forced (E-0029)
+; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; reads: wD04C, wD092, wC991, wC992, wC8CB, wC986, wC94C, wC8C3
 ; writes: hScrollY, hScrollX, wC52D, wC52E, wC52F, wC530, wD0DF, wD0E0, ...
 ; points at: wD780
-Func_024_4001::
+GameMode6_Init::
+Func_024_4001:: ; address name
     ld hl, wD780
     ld bc, $006F
 
@@ -140,10 +142,12 @@ Jump_024_40EA::
     ld a, $01
     jp Jump_000_077A
 
-; 2 call sites from 2 routines (e.g. Func_000_048A, Func_0F0_56C2)
-; reads: wC56C, wC52B, wD780, wD781, wD782
-Func_024_4117::
-    ld a, [wC56C]
+; per-frame routine for wGameMode = 6
+; 2 call sites from 2 routines (e.g. RunGameModeUpdate, Func_0F0_56C2)
+; reads: wFadeState, wC52B, wD780, wD781, wD782
+GameMode6_Update::
+Func_024_4117:: ; address name
+    ld a, [wFadeState]
     and a, a
     ret nz
     ld a, [wC52B]
@@ -428,7 +432,7 @@ Jump_024_4319::
 
 Jump_024_4326::
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_024_4D65
     ld de, Data_024_5A0A
     ld hl, wC412
@@ -484,7 +488,7 @@ Jump_024_4390::
 
 Jump_024_4394::
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_024_4DA8
     ld de, Data_024_5A50
     ld hl, wC40E
@@ -1179,7 +1183,7 @@ Jump_024_48EA::
     ld [wStringIndex], a
     farcall ShowString_Bank33_7045
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_024_5B85
     ld hl, wC410
     ld bc, $0805
@@ -1520,7 +1524,7 @@ Jump_024_4BB0::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     ret nz
     ld a, [wC581]
@@ -1655,7 +1659,7 @@ Jump_024_4CF2::
     farcall Func_01B_665E
     ret
 
-; 3 call sites from 1 routine (e.g. Func_024_4117)
+; 3 call sites from 1 routine (e.g. GameMode6_Update)
 ; reads: wD7EB
 ; points at: wC37A
 Func_024_4D21::
@@ -1669,7 +1673,7 @@ Func_024_4D21::
     call Func_024_4E12
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: wIsCGB
 ; points at: wD1E3
 Func_024_4D36::
@@ -1706,7 +1710,7 @@ Jump_024_4D5E::
     jr nz, Jump_024_4D5E
     ret
 
-; 3 call sites from 1 routine (e.g. Func_024_4117)
+; 3 call sites from 1 routine (e.g. GameMode6_Update)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC52B, wC52C
 Func_024_4D65::
     ld hl, vTiles2 + $6D0
@@ -1739,7 +1743,7 @@ Func_024_4D65::
     ld [wC530], a
     ret
 
-; 3 call sites from 1 routine (e.g. Func_024_4117)
+; 3 call sites from 1 routine (e.g. GameMode6_Update)
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC52B, wC52C
 Func_024_4DA8::
     ld hl, vTiles2 + $760
@@ -1772,9 +1776,9 @@ Func_024_4DA8::
     ld [wC530], a
     ret
 
-; 6 call sites from 1 routine (e.g. Func_024_4117)
+; 6 call sites from 1 routine (e.g. GameMode6_Update)
 ; reads: wD092
-; writes: wC94B, wC5DB, wC5DC, wC5DF
+; writes: wC94B, wGameMode, wC5DC, wModeChangeRequest
 ; points at: wD780
 Func_024_4DEB::
     ld hl, wD780
@@ -1790,17 +1794,17 @@ Jump_024_4DF1::
     xor a, a
     ld [wC94B], a
     ld a, $05
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
     ld [wC5DC], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     ld a, [wD092]
     cp a, $08
     ret nz
     ret
 
-; 22 call sites from 2 routines (e.g. Func_024_4117, Func_024_4D21)
+; 22 call sites from 2 routines (e.g. GameMode6_Update, Func_024_4D21)
 ; reads: wIsCGB
 ; writes: rSVBK
 Func_024_4E12::
@@ -1864,7 +1868,7 @@ Jump_024_4E3F::
     ldh [rSVBK], a
     ret
 
-; 18 call sites from 2 routines (e.g. Func_024_4001, Func_024_4117)
+; 18 call sites from 2 routines (e.g. GameMode6_Init, GameMode6_Update)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wBGMapShadow, wD000
@@ -1927,7 +1931,7 @@ Func_024_4E57::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 22 call sites from 4 routines (e.g. Func_024_4001, Func_024_5064, Func_024_5101, Func_024_4117)
+; 22 call sites from 4 routines (e.g. GameMode6_Init, Func_024_5064, Func_024_5101, GameMode6_Update)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank24::
 Func_024_4EAB:: ; address name
@@ -1980,7 +1984,7 @@ Jump_024_4ED9::
     ldh [rSVBK], a
     ret
 
-; 15 call sites from 3 routines (e.g. Func_024_4117, Func_024_5434, Func_024_5553)
+; 15 call sites from 3 routines (e.g. GameMode6_Update, Func_024_5434, Func_024_5553)
 ; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 Func_024_4EE8::
     ld [wStringIndex], a
@@ -1999,7 +2003,7 @@ Func_024_4EE8::
     farcall BeginStringDisplay_Bank33_7037
     ret
 
-; 2 call sites from 2 routines (e.g. Func_024_4117, Func_024_5553)
+; 2 call sites from 2 routines (e.g. GameMode6_Update, Func_024_5553)
 ; points at: wCA2C, wC130
 Func_024_4F0C::
     ld hl, wCA2C
@@ -2029,7 +2033,7 @@ Jump_024_4F25::
     ld [de], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: wC6FD, wD7AB, wD7AF
 Func_024_4F29::
     ld a, [wC6FD]
@@ -2048,7 +2052,7 @@ Jump_024_4F3F::
     xor a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; writes: rRAMG, rRAMB
 ; points at: sA000
 Func_024_4F41::
@@ -2074,7 +2078,7 @@ Func_024_4F41::
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC130
@@ -2114,7 +2118,7 @@ Func_024_4F68:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG, rRAMB, wC8D9
 ; points at: wC8CF, wC130
@@ -2150,7 +2154,7 @@ Jump_024_4FD5::
     ld [de], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; writes: wC52D, wC52E, wC52F, wC530
 Func_024_4FD9::
     ld hl, vTiles1 + $500
@@ -2223,7 +2227,7 @@ Jump_024_505D::
     call DecompressToVRAM
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4001)
+; 1 call site from 1 routine (e.g. GameMode6_Init)
 ; reads: wD092, wIsCGB, wD7BD
 ; writes: wC526, hFFC6, wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, ...
 ; points at: wD0DF, wD1C9, wD12D, wD217, wD17B, wD265, wC3F7, wC22B
@@ -2405,7 +2409,7 @@ Data_024_5197:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_519D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E1, $00, $E7, $00, $ED, $00
 
-; 6 call sites from 2 routines (e.g. Func_024_5101, Func_024_4117)
+; 6 call sites from 2 routines (e.g. Func_024_5101, GameMode6_Update)
 Func_024_51A3::
     ret
 
@@ -2461,7 +2465,7 @@ Jump_024_51FE::
     ld h, d
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4001)
+; 1 call site from 1 routine (e.g. GameMode6_Init)
 ; reads: wD092
 ; writes: wD7BD
 ; points at: wD0DF, wD1C9, wD12D, wD217, wD17B, wD265
@@ -2536,7 +2540,7 @@ Jump_024_526D::
     ld [wD7BD], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: wD7AF, wD7AB, hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB
 ; points at: wD789
@@ -2574,7 +2578,7 @@ Func_024_527E::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank24_52BA::
 Func_024_52BA:: ; address name
@@ -2599,7 +2603,7 @@ Jump_024_52BD::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 17 call sites from 1 routine (e.g. Func_024_4117)
+; 17 call sites from 1 routine (e.g. GameMode6_Update)
 StoreBAtWordTableEntry_Bank24_52CE::
 Func_024_52CE:: ; address name
     push bc
@@ -2638,7 +2642,7 @@ Data_024_52ED:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $091343, $4F
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 3 call sites from 1 routine (e.g. Func_024_4117)
+; 3 call sites from 1 routine (e.g. GameMode6_Update)
 StoreC5BEC6AtHLStride2_Bank24::
 Func_024_5392:: ; address name
     ld a, $C5
@@ -2653,7 +2657,7 @@ Func_024_5392:: ; address name
     ld [hl], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_024_4117)
+; 2 call sites from 1 routine (e.g. GameMode6_Update)
 ; writes: wC52D, wC52E, wC52F, wC530
 Func_024_53A0::
     ld hl, vTiles1 + $3F0
@@ -2723,7 +2727,7 @@ Func_024_53A0::
     ld [wC530], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: wD782
 Func_024_5434::
     ld a, [wD782]
@@ -2891,7 +2895,7 @@ Jump_024_5531::
     ld [wD781], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
+; 1 call site from 1 routine (e.g. GameMode6_Update)
 ; reads: wD782
 Func_024_5553::
     ld a, [wD782]
@@ -3063,7 +3067,7 @@ Jump_024_5653::
     ld [wD781], a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_024_4117)
+; 4 call sites from 1 routine (e.g. GameMode6_Update)
 ; reads: wCA99
 Func_024_567C::
     farcall Func_004_44CE
@@ -3073,7 +3077,7 @@ Func_024_567C::
     farcall Func_012_6EC6
     ret
 
-; 2 call sites from 1 routine (e.g. Func_024_4117)
+; 2 call sites from 1 routine (e.g. GameMode6_Update)
 ; reads: wCA99, wD092, wCA36, wCA37, wIsCGB, wC991, wC992
 ; writes: hFFC6, hFFC7, wCBA1, wCBA2, wSpriteSlotCount, wC527, wCBCF, wCBD3, ...
 ; points at: wSpriteSlots, wCB8F, hFFC6, wCB9F
@@ -3322,16 +3326,16 @@ Data_024_5C19:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5C29:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $B0, $40, $02, $03, $20, $00, $00, $B0, $40, $04, $00, $00
 
-; 1 call site from 1 routine (e.g. Func_024_4117)
-; reads: wC563, wC562, wD7FA
+; 1 call site from 1 routine (e.g. GameMode6_Update)
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD7FA
 ; writes: wD7F9, wD7FA, wD783
 Func_024_5C39::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_024_5C57
     bit 7, a
     jr nz, Jump_024_5C6D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr nz, Jump_024_5C93
     bit 1, a
@@ -3373,7 +3377,7 @@ Jump_024_5C81::
     ld [wD783], a
     call Func_024_5CC1
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $FD
     ld [wD7F9], a
     ret
@@ -3381,7 +3385,7 @@ Jump_024_5C81::
 Jump_024_5C93::
     call Func_024_5CC9
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $FF
     ld [wD7F9], a
     ret
@@ -3392,10 +3396,10 @@ Jump_024_5CA1::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_024_5C39)
-; reads: wC564, wD783, wD7FA
+; reads: wJoypadRepeatTimer, wD783, wD7FA
 ; writes: wD783
 Func_024_5CA7::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Func_024_5CC1
     ld a, [wD783]
@@ -3471,7 +3475,7 @@ Data_024_5D0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $01, $6B, $01
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank24, Func_001_4AD4)
+; 2 call sites from 2 routines (e.g. ShowString_Bank24, GameMode0_Update)
 BeginStringDisplay_Bank24::
 Func_024_5D10:: ; address name
     ld de, Data_024_5D25
@@ -4129,7 +4133,7 @@ Jump_024_642B::
 ; points at: wC412
 Func_024_6445:: ; heuristic: target of a pointer table; C0
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_024_6479
     ld hl, wC412
     ld bc, $0605
@@ -4320,7 +4324,7 @@ Func_024_65B1:: ; heuristic: target of a pointer table; C0
 
 Jump_024_65BD::
     ld a, $3D
-    call Func_000_122D
+    call QueueMusic
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -4901,15 +4905,15 @@ Data_024_69CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F9, $C3, $21, $C4, $49, $C4
 
 ; 1 call site from 1 routine (e.g. Func_024_628C)
-; reads: wC563, wC562, wC6FD, wD7AD
+; reads: wJoypadPressedRepeat, wJoypadPressed, wC6FD, wD7AD
 ; writes: wD7F9, wD7AD, wD7AE
 Func_024_69D2::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_024_69F0
     bit 7, a
     jr nz, Jump_024_6A08
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr nz, Jump_024_6A32
     bit 1, a
@@ -4955,14 +4959,14 @@ Jump_024_6A20::
     ld [wD7AE], a
     call Func_024_6A60
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $FD
     ld [wD7F9], a
     ret
 
 Jump_024_6A32::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_024_6A68
     ld a, $FF
     ld [wD7F9], a
@@ -4974,10 +4978,10 @@ Jump_024_6A40::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_024_69D2)
-; reads: wC564, wD7AE, wD7AD
+; reads: wJoypadRepeatTimer, wD7AE, wD7AD
 ; writes: wD7AE
 Func_024_6A46::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Func_024_6A60
     ld a, [wD7AE]

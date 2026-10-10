@@ -696,7 +696,7 @@ Jump_0A1_452D::
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a
-    call Func_000_07E0
+    call CopyScrollToHardware
     ld de, Data_07E_4EB3
     ld b, $7E
     ld hl, vTiles0
@@ -1585,7 +1585,7 @@ Func_0A1_4A91::
     ret
 
 Jump_0A1_4AA6::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr nz, Func_0A1_4AB1
     bit 2, a
@@ -2372,10 +2372,10 @@ Jump_0A1_4F48::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4AB1)
-; reads: wC5F0
+; reads: wFrameCounterLo
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hFFAA, hFFAC
 Func_0A1_4F8B::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 5, a
     ret z
     ld a, $50
@@ -2428,7 +2428,7 @@ Jump_0A1_4FE2::
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a
-    call Func_000_07E0
+    call CopyScrollToHardware
     ld de, Data_07E_4EB3
     ld b, $7E
     ld hl, vTiles0
@@ -2510,7 +2510,7 @@ Jump_0A1_5090::
     ret
 
 Jump_0A1_5095::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0A1_50A5
     call Func_0A1_4AB1
@@ -3095,9 +3095,9 @@ Func_0A1_542E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4F8B)
-; reads: wC5F0, wCC44, hFF90, wC88B, hFF8F, hFF92, wC88E, wC891, ...
+; reads: wFrameCounterLo, wCC44, hFF90, wC88B, hFF8F, hFF92, wC88E, wC891, ...
 Func_0A1_5479::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 5, a
     ret z
     ld a, [wCC44]
@@ -3713,7 +3713,7 @@ Func_0A1_57F9::
     ds $90, $34
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4F8B)
-; writes: wC5E0, wDataBankSave, wC5DB
+; writes: wC5E0, wDataBankSave, wGameMode
 ; points at: wC5E9
 Func_0A1_5898::
     ld a, $03
@@ -3729,7 +3729,7 @@ Func_0A1_5898::
     ld a, $E2
     ld [hl], a
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_0A1_4F0A, Func_0A1_4DA4, Func_0A1_45C5, Func_0A1_5719, ...)
@@ -3789,12 +3789,12 @@ Jump_0A1_58FE::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
-; reads: wC56C, wC8CB, wC468, hFF8C, wCC44, hFF90
+; reads: wFadeState, wC8CB, wC468, hFF8C, wCC44, hFF90
 ; writes: hFFC6, wC944, wC8C7, wC5DC, wC5DD
 Func_0A1_5903::
     xor a, a
     ldh [hFFC6], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC8CB]

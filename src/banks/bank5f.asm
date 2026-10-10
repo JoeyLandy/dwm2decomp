@@ -31,7 +31,7 @@ Jump_05F_6953::
     call FillTilesRequest
     call FillTilesFromRequest
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -73,7 +73,7 @@ Jump_05F_69A2::
     bit 6, a
     jr nz, Jump_05F_69CD
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
     ld [wC8CB], a
     ld a, $00
@@ -1388,7 +1388,7 @@ Jump_05F_71BA::
 Jump_05F_71D4::
     dec a
     jr nz, Jump_05F_71F4
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     srl a
     srl a
     srl a
@@ -1655,7 +1655,7 @@ Jump_05F_73B2::
     or a, a
     jr nz, Jump_05F_73BD
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_05F_73BD::
     ld de, wCB8B
@@ -1693,7 +1693,7 @@ Jump_05F_73E6::
 
 Jump_05F_7402::
     ld a, $72
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_07D_7AD4
     ld b, $7D
     ld hl, vTiles0 + $500
@@ -1838,7 +1838,7 @@ Jump_05F_750C::
     ld a, $40
     ld [wCBD3], a
     ld a, $72
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld hl, wC92D
@@ -2077,7 +2077,7 @@ Jump_05F_76D6::
 
 Jump_05F_76F6::
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC92D
     inc [hl]
     ret
@@ -2302,12 +2302,12 @@ Func_05F_785C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49C5)
-; reads: wC468, hFF8C, wC922, wC921, wC55E
-; writes: wC55E, wC562, wC919, wC922
+; reads: wC468, hFF8C, wC922, wC921, wJoypadHeld
+; writes: wJoypadHeld, wJoypadPressed, wC919, wC922
 Func_05F_787C::
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -2327,31 +2327,31 @@ Jump_05F_789A::
     ld a, [wC921]
     or a, a
     jr nz, Jump_05F_78AD
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 7, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ret
 
 Jump_05F_78AD::
     dec a
     jr nz, Jump_05F_78B9
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 4, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ret
 
 Jump_05F_78B9::
     dec a
     jr nz, Jump_05F_78C5
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 6, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ret
 
 Jump_05F_78C5::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     set 5, a
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49C5)
@@ -2563,7 +2563,7 @@ Jump_05F_7A02::
     call FillTilesRequest
     call FillTilesFromRequest
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -2608,7 +2608,7 @@ Jump_05F_7A5D::
     bit 6, a
     jr nz, Jump_05F_7A87
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ldh [hFFB9], a
     ld a, $02

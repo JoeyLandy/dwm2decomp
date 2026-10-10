@@ -1,11 +1,13 @@
 SECTION "Bank F2", ROMX[$4000], BANK[$F2]
     db $F2
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when forced (E-0029)
+; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; reads: wC8C3, wC8CB
 ; writes: wC8C3, wC8C4, hScrollY, hScrollX, wC52D, wC52E, wC52F, wC530, ...
 ; points at: wD780
-Func_0F2_4001::
+GameMode8_Init::
+Func_0F2_4001:: ; address name
     ld hl, wD780
     ld bc, $006F
 
@@ -74,10 +76,12 @@ Jump_0F2_4075::
     ld a, $01
     jp Jump_000_077A
 
-; 1 call site from 1 routine (e.g. Func_000_048A)
-; reads: wC56C, wD782, wC52B
-Func_0F2_40A2::
-    ld a, [wC56C]
+; per-frame routine for wGameMode = 8
+; 1 call site from 1 routine (e.g. RunGameModeUpdate)
+; reads: wFadeState, wD782, wC52B
+GameMode8_Update::
+Func_0F2_40A2:: ; address name
+    ld a, [wFadeState]
     and a, a
     ret nz
     ld a, [wD782]
@@ -228,7 +232,7 @@ Jump_0F2_4185::
     inc [hl]
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0F2_40A2)
+; 2 call sites from 1 routine (e.g. GameMode8_Update)
 Func_0F2_41BA::
     ld a, [hl+]
     cp a, $F0
@@ -248,7 +252,7 @@ Jump_0F2_41C8::
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. Func_0F2_40A2)
+; 1 call site from 1 routine (e.g. GameMode8_Update)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC8CF
@@ -305,7 +309,7 @@ Jump_0F2_4219::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F2_41BA)
-; writes: wC94B, wC5DB, wC5DC, wC5DF
+; writes: wC94B, wGameMode, wC5DC, wModeChangeRequest
 ; points at: wD780
 Func_0F2_4227::
     ld hl, wD780
@@ -321,14 +325,14 @@ Jump_0F2_422D::
     xor a, a
     ld [wC94B], a
     ld a, $05
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
     ld [wC5DC], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_40A2)
+; 1 call site from 1 routine (e.g. GameMode8_Update)
 ; reads: wC5C7, wIsCGB
 ; writes: hFFC6, wCBCF, wCBD3, wCBD4, wSpriteSlotCount, wC527
 ; points at: wSpriteSlots, wCB8F, hFFC6
@@ -442,7 +446,7 @@ Data_0F2_432E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 1 call site from 1 routine (e.g. Func_0F2_4001)
+; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF2::
 Func_0F2_434E:: ; address name
@@ -463,7 +467,7 @@ Func_0F2_434E:: ; address name
     add_a_to_hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_4001)
+; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wBGMapShadow, wD000
@@ -525,14 +529,14 @@ Func_0F2_436F::
     ldh [c], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F2_40A2)
+; 1 call site from 1 routine (e.g. GameMode8_Update)
 Func_0F2_43C3::
     farcall Func_004_44CE
     farcall Func_012_6EC6
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_BankF2, Func_001_4AD4)
+; 2 call sites from 2 routines (e.g. ShowString_BankF2, GameMode0_Update)
 BeginStringDisplay_BankF2::
 Func_0F2_43D0:: ; address name
     ld de, Data_0F2_43E5

@@ -61,7 +61,7 @@ Jump_0E0_4045::
     ret
 
 Jump_0E0_406F::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 2, a
     jr z, Jump_0E0_407C
     ld a, $05
@@ -69,7 +69,7 @@ Jump_0E0_406F::
     ret
 
 Jump_0E0_407C::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_0E0_408A
     ld a, $04
@@ -103,7 +103,7 @@ Jump_0E0_40A6::
     ret
 
 Jump_0E0_40B7::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $04
     jr z, Jump_0E0_40C4
     ld a, $05
@@ -111,7 +111,7 @@ Jump_0E0_40B7::
     ret
 
 Jump_0E0_40C4::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_0E0_40D3
     xor a, a
@@ -120,7 +120,7 @@ Jump_0E0_40C4::
     ret
 
 Jump_0E0_40D3::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_0E0_40E1
     ld a, $01
@@ -173,7 +173,7 @@ Jump_0E0_4112::
     ret
 
 Jump_0E0_4123::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $04
     jr z, Jump_0E0_4130
     ld a, $05
@@ -181,7 +181,7 @@ Jump_0E0_4123::
     ret
 
 Jump_0E0_4130::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_0E0_413E
     ld a, $02
@@ -224,7 +224,7 @@ Jump_0E0_4164::
     ret
 
 Jump_0E0_4175::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 2, a
     jr z, Jump_0E0_4182
     ld a, $05
@@ -232,7 +232,7 @@ Jump_0E0_4175::
     ret
 
 Jump_0E0_4182::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_0E0_4190
     ld a, $03
@@ -793,7 +793,7 @@ Jump_0E0_4634::
     db $52, $99, $0B, $0A, $09, $08, $EF
 
 Jump_0E0_4663::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $04
     jr z, Jump_0E0_46A3
     ld hl, wD09D
@@ -823,7 +823,7 @@ Jump_0E0_4663::
     ret
 
 Jump_0E0_46A3::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $08
     jr z, Jump_0E0_46AF
     ld hl, wC5FD
@@ -831,7 +831,7 @@ Jump_0E0_46A3::
     ret
 
 Jump_0E0_46AF::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $30
     jr z, Jump_0E0_46C4
     ld a, [wC5FE]
@@ -843,7 +843,7 @@ Jump_0E0_46AF::
     ret
 
 Jump_0E0_46C4::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_0E0_46D1
     ld a, $04
@@ -851,7 +851,7 @@ Jump_0E0_46C4::
     ret
 
 Jump_0E0_46D1::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
     ld a, $07
@@ -1031,7 +1031,7 @@ Jump_0E0_47F1::
     ret
 
 Jump_0E0_47F9::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     xor a, a
@@ -1246,7 +1246,7 @@ Jump_0E0_4929::
     db $E2, $99, $E8, $99, $EE, $99
 
 Jump_0E0_493B::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
     xor a, a
@@ -1292,7 +1292,7 @@ Jump_0E0_4A86::
     ret
 
 Jump_0E0_4A94::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $10
     jr z, Jump_0E0_4AA8
     ld hl, wC5FE
@@ -1305,7 +1305,7 @@ Jump_0E0_4A94::
     jr Func_0E0_4ABB
 
 Jump_0E0_4AA8::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $20
     jr z, Jump_0E0_4AE7
     ld hl, wC5FE
@@ -1349,7 +1349,7 @@ Jump_0E0_4ADD::
     ret
 
 Jump_0E0_4AE7::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_0E0_4AF8
     farcall Func_03A_548F
@@ -1357,7 +1357,7 @@ Jump_0E0_4AE7::
     ret
 
 Jump_0E0_4AF8::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $04
     jr z, Jump_0E0_4B2D
     ld hl, wD09D
@@ -1383,7 +1383,7 @@ Jump_0E0_4AF8::
     ret
 
 Jump_0E0_4B2D::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
     ld hl, wD09D
@@ -1405,7 +1405,7 @@ Jump_0E0_4B2D::
 
 Jump_0E0_4B54::
     call Func_0E0_4C7E
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $08
     jr z, Jump_0E0_4B74
     ld hl, wC5FE
@@ -1424,7 +1424,7 @@ Jump_0E0_4B69::
     ret
 
 Jump_0E0_4B74::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $20
     jr z, Jump_0E0_4B9C
     ld a, [wC0A2]
@@ -1450,7 +1450,7 @@ Jump_0E0_4B93::
     jr Jump_0E0_4C10
 
 Jump_0E0_4B9C::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $10
     jr z, Jump_0E0_4BC2
     ld a, [wC0A2]
@@ -1475,7 +1475,7 @@ Jump_0E0_4BB9::
     jr Jump_0E0_4C10
 
 Jump_0E0_4BC2::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $40
     jr z, Jump_0E0_4BEB
     ld a, [wC0A2]
@@ -1501,7 +1501,7 @@ Jump_0E0_4BE2::
     jr Jump_0E0_4C10
 
 Jump_0E0_4BEB::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $80
     jr z, Jump_0E0_4C14
     ld a, [wC0A2]
@@ -1529,7 +1529,7 @@ Jump_0E0_4C10::
     ret
 
 Jump_0E0_4C14::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_0E0_4C6B
     ld a, [wC0A2]
@@ -1588,13 +1588,13 @@ Jump_0E0_4C6B::
     db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F, $01, $02, $04, $08, $10, $20, $40, $80
 
 ; 1 call site from 1 routine (e.g. Func_0E0_4ABB)
-; reads: wC0A0, wC0A1, wC5F0, wC0A2
+; reads: wC0A0, wC0A1, wFrameCounterLo, wC0A2
 Func_0E0_4C7E::
     ld a, [wC0A0]
     ld l, a
     ld a, [wC0A1]
     ld h, a
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     ld a, $C3
     jr z, Jump_0E0_4C92
@@ -1675,7 +1675,7 @@ Jump_0E0_4D0B::
     ret
 
 Jump_0E0_4D17::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0E0_4D2A
     ld a, $04
@@ -1687,7 +1687,7 @@ Jump_0E0_4D17::
     ret
 
 Jump_0E0_4D2A::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 0, a
     jr z, Jump_0E0_4D37
     ld a, $01
@@ -2142,7 +2142,7 @@ Func_0E0_558E::
     ld hl, $55BF
     add_a_to_hl
     ld a, [hl]
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2985,7 +2985,7 @@ Jump_0E0_5BB2::
 
 Jump_0E0_5C32::
     call DrawSpriteSlots
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $04
@@ -3404,7 +3404,7 @@ Jump_0E0_5F07::
 
 Jump_0E0_5F6F::
     call DrawSpriteSlots
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $00
@@ -4016,7 +4016,7 @@ Jump_0E0_636C::
 
 Jump_0E0_6417::
     call DrawSpriteSlots
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $00
@@ -4783,7 +4783,7 @@ Jump_0E0_694D::
 
 Jump_0E0_6A10::
     call DrawSpriteSlots
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $00
@@ -5189,7 +5189,7 @@ Jump_0E0_6CC8::
 
 Jump_0E0_6D43::
     call DrawSpriteSlots
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $00
@@ -5990,10 +5990,10 @@ Jump_0E0_72DB::
     ld de, $019F
     call SetFlagBit
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -6009,7 +6009,7 @@ Jump_0E0_732E::
     ret
 
 Jump_0E0_733E::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wD0A1]
@@ -6104,7 +6104,7 @@ Jump_0E0_73DC::
     ret
 
 Jump_0E0_73FC::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld hl, wD09F

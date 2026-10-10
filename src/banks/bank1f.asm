@@ -232,7 +232,7 @@ Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07D094, $17A
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 1 call site from 1 routine (e.g. Func_001_4AD4)
+; 1 call site from 1 routine (e.g. GameMode0_Update)
 BeginStringDisplay_Bank1F::
 Func_01F_520E:: ; address name
     ld de, Data_01F_5223

@@ -159,12 +159,12 @@ Jump_01E_4100::
     ret
 
 Jump_01E_412A::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01E_4146
     bit 7, a
     jr nz, Jump_01E_4174
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01E_418E
     bit 1, a
@@ -181,7 +181,7 @@ Jump_01E_4146::
     ld [wD786], a
     call Func_01E_41DF
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01E_415D::
@@ -195,7 +195,7 @@ Jump_01E_415E::
     ld [wD7AF], a
     call Func_01E_41F9
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01E_4174::
@@ -207,7 +207,7 @@ Jump_01E_4174::
     ld [wD786], a
     call Func_01E_41DF
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01E_418B::
@@ -216,7 +216,7 @@ Jump_01E_418B::
 
 Jump_01E_418E::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01E_4201
     ld c, $00
 
@@ -260,10 +260,10 @@ Jump_01E_41D0::
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_01E_4069)
-; reads: wC564, wD787, wD786
+; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
 Func_01E_41DF::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Func_01E_41F9
     ld a, [wD787]
@@ -636,7 +636,7 @@ Jump_01E_44C3::
     ld de, $01CC
     call Func_01E_74C8
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wD7AD], a
     ld [wD7AE], a
@@ -663,12 +663,12 @@ Func_01E_44EF:: ; heuristic: follows a terminator; C0
     db $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 Jump_01E_4517::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01E_4533
     bit 7, a
     jr nz, Jump_01E_454D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_01E_455D
     bit 1, a
@@ -691,7 +691,7 @@ Jump_01E_4541::
     ld [wD7AD], a
     call Func_01E_46B7
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_01E_454D::
@@ -708,7 +708,7 @@ Jump_01E_455A::
 
 Jump_01E_455D::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_01E_46BF
     ld a, [wD7AD]
     and a, a
@@ -873,10 +873,10 @@ Jump_01E_4687::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_01E_44EF)
-; reads: wC564, wD7AE, wD7AD
+; reads: wJoypadRepeatTimer, wD7AE, wD7AD
 ; writes: wD7AE
 Func_01E_469D::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Func_01E_46B7
     ld a, [wD7AE]
@@ -1104,7 +1104,7 @@ Jump_01E_4831::
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, $4872
     ld hl, wC412
     ld bc, $0605
@@ -2139,7 +2139,7 @@ Jump_01E_50BE::
     ld bc, $0D05
     call CopyRectTo20ByteRows_Bank1E
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     farcall Func_01D_5F2D
     ld a, [wD7A9]
     ld l, a
@@ -2460,7 +2460,7 @@ Jump_01E_536A::
     ld bc, $0D05
     call CopyRectTo20ByteRows_Bank1E
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     farcall Func_01D_5F2D
     ld a, [wD7A9]
     ld l, a
@@ -3557,7 +3557,7 @@ Jump_01E_5D1F::
     dw Jump_01E_5DBD
 
 Jump_01E_5D2B::
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr z, Jump_01E_5D38
     farcall Func_01D_5C35
@@ -3832,7 +3832,7 @@ Jump_01E_5F29::
     jr z, Jump_01E_5F90
 
 Jump_01E_5F4D::
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     ret z
     farcall Func_01D_5BF2

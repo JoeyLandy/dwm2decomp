@@ -2,7 +2,7 @@ SECTION "Bank 07", ROMX[$4000], BANK[$07]
     db $07
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 20 call sites from 11 routines (e.g. ShowString_Bank07, Func_001_4AD4, Func_007_512B, Func_007_60E9, ...)
+; 20 call sites from 11 routines (e.g. ShowString_Bank07, GameMode0_Update, Func_007_512B, Func_007_60E9, ...)
 BeginStringDisplay_Bank07::
 Func_007_4001:: ; address name
     ld de, $4016
@@ -11,7 +11,7 @@ Func_007_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 11 call sites from 8 routines (e.g. Func_003_74E2, Func_007_486E, Func_007_513A, Func_007_6213, ...)
+; 11 call sites from 8 routines (e.g. Func_003_74E2, GameMode5_Init, Func_007_513A, Func_007_6213, ...)
 ShowString_Bank07::
 Func_007_400F:: ; address name
     call BeginStringDisplay_Bank07
@@ -451,11 +451,13 @@ Data_007_482A:: ; heuristic: target of a monotone pointer table; C0
     db "tournament!"
     db $E5, $00, $E4, $7E, $FA, $F7, $F0
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles and a victory screen when forced (E-0029)
+; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; reads: wC5DC
 ; writes: wC554, wC555, wC58C
 ; points at: wC46B, wC52D, wD06A
-Func_007_486E::
+GameMode5_Init::
+Func_007_486E:: ; address name
     xor a, a
     ld hl, wC46B
     ld bc, $0008
@@ -550,8 +552,8 @@ Jump_007_48F3::
     ld a, $00
     ldh [hScrollY], a
     xor a, a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     xor a, a
     ld [wC5E1], a
     xor a, a
@@ -711,7 +713,7 @@ Jump_007_4A9B::
     ld a, $09
 
 Jump_007_4A9D::
-    call Func_000_122D
+    call QueueMusic
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -724,8 +726,8 @@ Jump_007_4A9D::
     ld a, $00
     ldh [hScrollX], a
     xor a, a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     xor a, a
     ld [wC5E1], a
     xor a, a
@@ -743,7 +745,7 @@ Jump_007_4A9D::
     ld a, $09
     jp Jump_000_077A
 
-; 5 call sites from 4 routines (e.g. Func_007_486E, Func_007_6DE3, Func_007_7807, Func_007_7C5F)
+; 5 call sites from 4 routines (e.g. GameMode5_Init, Func_007_6DE3, Func_007_7807, Func_007_7C5F)
 ; points at: wBGMapShadow
 Func_007_4AE4::
     ld hl, wBGMapShadow
@@ -766,7 +768,7 @@ Jump_007_4AEB::
     jr nz, Jump_007_4AEB
     ret
 
-; 19 call sites from 12 routines (e.g. Func_007_4B27, Func_007_486E, Func_007_65F1, Func_007_60E9, ...)
+; 19 call sites from 12 routines (e.g. Func_007_4B27, GameMode5_Init, Func_007_65F1, Func_007_60E9, ...)
 ; points at: wBGMapShadow
 Func_007_4AFE::
     ld e, [hl]
@@ -800,7 +802,7 @@ Jump_007_4B0E::
     jr nz, Jump_007_4B0C
     ret
 
-; 12 call sites from 9 routines (e.g. Func_007_4B27, Func_007_486E, Func_007_7807, Func_007_60E9, ...)
+; 12 call sites from 9 routines (e.g. Func_007_4B27, GameMode5_Init, Func_007_7807, Func_007_60E9, ...)
 ; points at: wBGMapShadow
 Func_007_4B1E::
     ld hl, vBGMap0
@@ -910,7 +912,7 @@ Jump_007_4BC4::
     xor a, a
     call FillBytes
     ld a, $09
-    call Func_000_122D
+    call QueueMusic
     ld a, $07
     ldh [hFF9F], a
     ld a, $FF
@@ -922,8 +924,8 @@ Jump_007_4BC4::
     ld a, $02
     ldh [hFFB9], a
     xor a, a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     xor a, a
     ld [wC5E1], a
     xor a, a
@@ -1011,7 +1013,7 @@ Jump_007_4CA3::
     xor a, a
     call FillBytes
     ld a, $09
-    call Func_000_122D
+    call QueueMusic
     ld a, $07
     ldh [hFF9F], a
     ld a, $FF
@@ -1021,8 +1023,8 @@ Jump_007_4CA3::
     ld a, $00
     ldh [hScrollX], a
     xor a, a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     xor a, a
     ld [wC5E1], a
     xor a, a
@@ -1108,7 +1110,7 @@ Jump_007_4D45::
     xor a, a
     call FillBytes
     ld a, $09
-    call Func_000_122D
+    call QueueMusic
     ld a, $07
     ldh [hFF9F], a
     ld a, $FF
@@ -1118,8 +1120,8 @@ Jump_007_4D45::
     ld a, $00
     ldh [hScrollX], a
     xor a, a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     xor a, a
     ld [wC5E1], a
     xor a, a
@@ -1284,7 +1286,7 @@ Jump_007_4ED6::
     xor a, a
     call FillBytes
     ld a, $09
-    call Func_000_122D
+    call QueueMusic
     ld a, $07
     ldh [hFF9F], a
     ld a, $FF
@@ -1294,8 +1296,8 @@ Jump_007_4ED6::
     ld a, $00
     ldh [hScrollX], a
     xor a, a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     xor a, a
     ld [wC5E1], a
     xor a, a
@@ -1367,9 +1369,11 @@ Jump_007_4F38::
     inc de
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_048A)
+; per-frame routine for wGameMode = 5
+; 1 call site from 1 routine (e.g. RunGameModeUpdate)
 ; reads: wC5DC
-Func_007_4F7B::
+GameMode5_Update::
+Func_007_4F7B:: ; address name
     ld a, [wC5DC]
     rst $00
     dw Jump_007_5902
@@ -1390,13 +1394,13 @@ Jump_007_4F96::
     ret
 
 ; 6 call sites from 5 routines (e.g. Func_007_65A7, Func_007_6C59, Func_007_60E9, Func_007_7270, ...)
-; reads: wC5F0, wC46F, wC563
-; writes: wC5F0
+; reads: wFrameCounterLo, wC46F, wJoypadPressedRepeat
+; writes: wFrameCounterLo
 Func_007_4F9D::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $07
     jr nz, Jump_007_4FB3
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Jump_007_4FB0
     call Func_007_5066
@@ -1410,7 +1414,7 @@ Jump_007_4FB3::
     cp a, $01
     jr z, Jump_007_4FE4
     ld c, [hl]
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_007_4FD0
     ld a, [hl]
@@ -1424,7 +1428,7 @@ Jump_007_4FB3::
     jr Jump_007_4FE5
 
 Jump_007_4FD0::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_007_4FE4
     ld a, [wC46F]
@@ -1442,21 +1446,21 @@ Jump_007_4FE4::
 
 Jump_007_4FE5::
     xor a, a
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
     call Func_007_5067
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_007_5046
     ret
 
 ; 15 call sites from 7 routines (e.g. Func_007_7807, Func_007_7724, Func_007_7594, Func_007_7270, ...)
-; reads: wC5F0, wC563, wC470
-; writes: wC5F0
+; reads: wFrameCounterLo, wJoypadPressedRepeat, wC470
+; writes: wFrameCounterLo
 Func_007_4FF5::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $07
     jr nz, Jump_007_500B
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Jump_007_5008
     call Func_007_5066
@@ -1467,7 +1471,7 @@ Jump_007_5008::
 
 Jump_007_500B::
     ld c, [hl]
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_007_5021
     ld a, [hl]
@@ -1481,7 +1485,7 @@ Jump_007_500B::
     jr Jump_007_5036
 
 Jump_007_5021::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_007_5035
     ld a, [wC470]
@@ -1499,10 +1503,10 @@ Jump_007_5035::
 
 Jump_007_5036::
     xor a, a
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
     call Func_007_5067
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_007_5046
     ret
 
@@ -1821,7 +1825,7 @@ Jump_007_5976::
     ret c
 
 Jump_007_5993::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $0B
     ret
 
@@ -1913,7 +1917,7 @@ Jump_007_5A1C::
     ret c
 
 Jump_007_5A39::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $0B
     ret
 
@@ -1996,7 +2000,7 @@ Jump_007_5AC2::
     jr nc, Jump_007_5AE9
     cp a, $3C
     ret c
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $0B
     ret z
     xor a, a
@@ -2021,7 +2025,7 @@ Jump_007_5AE9::
     ret
 
 Jump_007_5AFB::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $0B
     jr z, Func_007_5B14
     call Func_007_5B14
@@ -2049,7 +2053,7 @@ Func_007_5B14::
     dw Jump_007_5DB6
 
 Jump_007_5B2A::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld b, $7E
@@ -2134,13 +2138,13 @@ Jump_007_5BAA::
     ld a, $FC
     call StartPaletteFade
     ld a, $DD
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wD06B
     inc [hl]
     ret
 
 Jump_007_5BDC::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wD0E7]
@@ -2210,7 +2214,7 @@ Jump_007_5C5F::
     ld a, [wD0E7]
     ld b, a
     ld hl, wD09F
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jp nz, Func_007_5DF5
     ld b, $E1
@@ -2251,7 +2255,7 @@ Jump_007_5CA9::
     ret
 
 Jump_007_5CC1::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wD09D]
@@ -2265,7 +2269,7 @@ Jump_007_5CC1::
     ret
 
 Jump_007_5CD8::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld b, $E1
@@ -2321,7 +2325,7 @@ Jump_007_5D24::
     ret
 
 Jump_007_5D56::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wD0E7]
@@ -2618,7 +2622,7 @@ Jump_007_5EFF::
     dw Jump_007_5F9D
 
 Jump_007_5F09::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld b, $E1
@@ -2674,19 +2678,19 @@ Jump_007_5F6D::
     ret
 
 Jump_007_5F89::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $B4
     ld [wD09D], a
     ld a, $06
-    call Func_000_122D
+    call QueueMusic
     ld hl, wD06B
     inc [hl]
     ret
 
 Jump_007_5F9D::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $0B
     jr nz, Jump_007_5FCF
     ld a, [wDC40]
@@ -2722,7 +2726,7 @@ Jump_007_5FCF::
     ld [wC5DD], a
     ld a, $00
     ld [wC5DE], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -2819,7 +2823,7 @@ Jump_007_608F::
     ret
 
 Jump_007_6090::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     and a, a
     ret nz
     ld a, $02
@@ -2845,7 +2849,7 @@ Jump_007_60B0::
     ld b, a
     xor a, a
     ld [wC58B], a
-    ld a, [wC5DF]
+    ld a, [wModeChangeRequest]
     or a, a
     jr nz, Jump_007_60E8
     ld a, $0F
@@ -2861,7 +2865,7 @@ Jump_007_60D8::
     and a, $03
     cp a, $03
     jr nz, Jump_007_60D8
-    ld a, [wC5DF]
+    ld a, [wModeChangeRequest]
     and a, a
     jr nz, Jump_007_60E7
 
@@ -2921,7 +2925,7 @@ Jump_007_612C::
     ret
 
 Jump_007_6145::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     and a, a
     jr z, Jump_007_615D
     xor a, a
@@ -2947,7 +2951,7 @@ Jump_007_615D::
     ret
 
 Jump_007_6176::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr nz, Jump_007_6182
     call Func_007_6213
@@ -2958,7 +2962,7 @@ Jump_007_6182::
     call SerialSendByte
 
 Jump_007_6187::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_007_61F8
     ld a, [wSGBActive]
@@ -3003,7 +3007,7 @@ Jump_007_61DC::
     and a, $07
     call Func_007_50FE
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_007_61EE::
     ld hl, wD06B
@@ -3114,7 +3118,7 @@ Jump_007_6262::
     ret
 
 Jump_007_62BA::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_62CE
     ld hl, wD06C
@@ -3125,7 +3129,7 @@ Jump_007_62BA::
     jr Jump_007_62E9
 
 Jump_007_62CE::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_62E9
     ld hl, wBGMapShadow
@@ -3291,7 +3295,7 @@ Jump_007_63E7::
 Func_007_6406::
     call WriteVRAMByte
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC58B], a
     ld a, $07
@@ -3505,7 +3509,7 @@ Jump_007_6588::
 Func_007_65A7::
     call WriteVRAMByte
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC58B], a
     ld a, $04
@@ -3531,7 +3535,7 @@ Jump_007_65C5::
     ld [hl], $00
     ld de, $5086
     call Func_007_4F9D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
 
@@ -3555,7 +3559,7 @@ Jump_007_65FC::
     dw Jump_007_6633
 
 Jump_007_6606::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     xor a, a
@@ -3564,7 +3568,7 @@ Jump_007_6606::
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
     ld a, $52
-    call Func_000_122D
+    call QueueMusic
     ld hl, wD06B
     inc [hl]
     ret
@@ -3625,7 +3629,7 @@ Jump_007_6633::
     ld hl, wD06A
     dec [hl]
     ld a, $09
-    call Func_000_122D
+    call QueueMusic
     ret
 
 Jump_007_66A2::
@@ -3638,7 +3642,7 @@ Jump_007_66A2::
     ld [wD781], a
     ld a, $04
     call StartPaletteFade
-    ld hl, wC5DB
+    ld hl, wGameMode
     ld a, $01
     ld [hl+], a
     ld a, [wC91F]
@@ -3657,7 +3661,7 @@ Jump_007_66D2::
     ld [hl+], a
     ld [hl], $00
     call Func_007_63AC
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
@@ -3825,7 +3829,7 @@ Jump_007_684C::
     ret
 
 Jump_007_6856::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, $C3
@@ -3879,7 +3883,7 @@ Jump_007_6897::
     ret
 
 Jump_007_68B7::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld hl, wD06B
@@ -4246,9 +4250,9 @@ Jump_007_6B23::
     or a, a
     ret z
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     xor a, a
     ld [wCC44], a
     xor a, a
@@ -4400,7 +4404,7 @@ Jump_007_6C28::
     dw Jump_007_6CB8
 
 Jump_007_6C32::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     di
@@ -4554,11 +4558,11 @@ Jump_007_6D32::
     ld de, $5096
     ld hl, wC46B
     call Func_007_4F9D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_6D90
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     and a, $03
     cp a, $03
@@ -4598,7 +4602,7 @@ Jump_007_6D86::
     jr Jump_007_6DA8
 
 Jump_007_6D90::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_6DA8
 
@@ -4845,9 +4849,9 @@ Jump_007_6EFB::
     ld bc, $001E
     xor a, a
     call FillBytes
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
-    ld hl, wC5DB
+    ld hl, wGameMode
     ld a, $05
     ld [hl+], a
     ld a, $01
@@ -4977,17 +4981,17 @@ Jump_007_7010::
     ld hl, wC46C
     ld de, $509E
     call Func_007_4F9D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_7021
     ret
 
 Jump_007_7021::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46C]
     ld hl, $509E
     and a, $07
@@ -5026,7 +5030,7 @@ Jump_007_707C::
     ld hl, wC46D
     ld de, $50AA
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_7097
     ld a, [wC46D]
@@ -5036,11 +5040,11 @@ Jump_007_707C::
     ret
 
 Jump_007_7097::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     and a, $01
     jr z, Jump_007_70AF
@@ -5183,7 +5187,7 @@ Jump_007_719B::
     ld hl, wC46D
     ld de, $50AE
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_71B6
     ld a, [wC46D]
@@ -5193,11 +5197,11 @@ Jump_007_719B::
     ret
 
 Jump_007_71B6::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     ld [wD09E], a
     or a, a
@@ -5331,11 +5335,11 @@ Jump_007_7284::
     ld hl, wC46E
     ld de, $50C2
     call Func_007_4F9D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_72AE
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46E]
     ld hl, $50C2
     call Func_007_50FE
@@ -5348,7 +5352,7 @@ Jump_007_7284::
     ret
 
 Jump_007_72AE::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
     ld bc, $0000
@@ -5437,11 +5441,11 @@ Jump_007_732C::
     ld hl, wD0A3
     ld de, $50D0
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD0A3]
     and a, $03
     ld hl, $50D0
@@ -5454,11 +5458,11 @@ Jump_007_7351::
     ld hl, wD0A4
     ld de, $50D6
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD0A4]
     and a, $03
     ld hl, $50D6
@@ -5471,11 +5475,11 @@ Jump_007_7376::
     ld hl, wD0A5
     ld de, $50DC
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD0A5]
     and a, $03
     ld hl, $50DC
@@ -5488,11 +5492,11 @@ Jump_007_739B::
     ld hl, wD0A6
     ld de, $50E2
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD0A6]
     and a, $03
     ld hl, $50E2
@@ -5505,11 +5509,11 @@ Jump_007_73C0::
     ld hl, wD0A7
     ld de, $50E8
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD0A7]
     and a, $03
     ld hl, $50E8
@@ -5522,11 +5526,11 @@ Jump_007_73E5::
     ld hl, wD0A8
     ld de, $50EE
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD0A8]
     and a, $03
     ld hl, $50EE
@@ -5539,11 +5543,11 @@ Jump_007_740A::
     ld hl, wD0A9
     ld de, $50F4
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wD0A9]
     and a, $03
     ld hl, $50F4
@@ -5556,7 +5560,7 @@ Jump_007_742F::
     ld hl, wC46D
     ld de, $50B2
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_744A
     ld a, [wC46D]
@@ -5566,11 +5570,11 @@ Jump_007_742F::
     ret
 
 Jump_007_744A::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     ld [wD09F], a
     or a, a
@@ -5610,7 +5614,7 @@ Jump_007_7498::
     ld hl, wC46E
     ld de, $50FA
     call Func_007_4F9D
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_007_7514
     ld a, [wC46E]
@@ -5624,7 +5628,7 @@ Jump_007_7498::
     ld a, [wD048]
     and a, $3F
     ld h, a
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_007_74D5
     dec hl
@@ -5658,7 +5662,7 @@ Jump_007_74E1::
 Jump_007_74EF::
     ld a, [wD046]
     ld l, a
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_007_7504
     dec hl
@@ -5681,11 +5685,11 @@ Jump_007_750D::
     call Func_007_7594
 
 Jump_007_7514::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46E]
     rrca
     rrca
@@ -5805,7 +5809,7 @@ Jump_007_75D8::
     ld hl, wC46D
     ld de, $50B6
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_75F3
     ld a, [wC46D]
@@ -5815,11 +5819,11 @@ Jump_007_75D8::
     ret
 
 Jump_007_75F3::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     ld [wD0A0], a
     or a, a
@@ -5849,7 +5853,7 @@ Jump_007_7615::
 
 Jump_007_762F::
     call Func_007_7690
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_7656
     ld a, [wD049]
@@ -5861,7 +5865,7 @@ Jump_007_762F::
     cp a, $F0
     jr nz, Jump_007_7651
     ld a, $84
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_007_7651::
@@ -5870,11 +5874,11 @@ Jump_007_7651::
     ret
 
 Jump_007_7656::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_007_766B
     ld a, [wC46E]
     call Func_007_7724
@@ -5911,16 +5915,16 @@ Jump_007_768E::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_007_7594)
-; reads: wC5F0, wC563
-; writes: wC5F0
+; reads: wFrameCounterLo, wJoypadPressedRepeat
+; writes: wFrameCounterLo
 ; points at: wC46E
 Func_007_7690::
     ld hl, wC46E
     ld de, $7700
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $07
     jr z, Jump_007_76AC
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, Jump_007_76A9
     call Func_007_5066
@@ -5931,7 +5935,7 @@ Jump_007_76A9::
 
 Jump_007_76AC::
     ld c, [hl]
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_007_76C3
     ld a, [hl]
@@ -5946,7 +5950,7 @@ Jump_007_76BF::
     jr Jump_007_76F4
 
 Jump_007_76C3::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_007_76DD
     ld a, [hl]
@@ -5966,7 +5970,7 @@ Jump_007_76D9::
     jr Jump_007_76F4
 
 Jump_007_76DD::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $10
     ret z
     ld a, [hl]
@@ -5987,7 +5991,7 @@ Jump_007_76F2::
 Jump_007_76F4::
     ld [hl], a
     xor a, a
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
     call Func_007_5067
     call Func_007_5046
     ret
@@ -6039,7 +6043,7 @@ Jump_007_7763::
     ld hl, wC46D
     ld de, $50BA
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_777E
     ld a, [wC46D]
@@ -6049,11 +6053,11 @@ Jump_007_7763::
     ret
 
 Jump_007_777E::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     ld [wD0A1], a
     or a, a
@@ -6082,17 +6086,17 @@ Jump_007_77A0::
     ret
 
 Jump_007_77BA::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     jr z, Jump_007_77CB
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wD06B], a
     ret
 
 Jump_007_77CB::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $20
     jr z, Jump_007_77E8
     ld a, [wD04B]
@@ -6108,7 +6112,7 @@ Jump_007_77CB::
     jr Jump_007_7803
 
 Jump_007_77E8::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_007_7806
     ld a, [wD04B]
@@ -6172,11 +6176,11 @@ Jump_007_7845::
     ld hl, wC46D
     ld de, $50BE
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $03
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     ld [wD0A2], a
     xor a, a
@@ -6352,11 +6356,11 @@ Jump_007_7990::
     ld hl, wC46D
     ld de, $50AA
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_79BB
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     and a, $01
     jr nz, Jump_007_79C1
@@ -6369,7 +6373,7 @@ Jump_007_7990::
     ret
 
 Jump_007_79BB::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
 
@@ -6865,11 +6869,11 @@ Jump_007_7CB7::
     ld hl, wC46D
     ld de, $50AA
     call Func_007_4FF5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_7CE4
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     and a, $01
     jr nz, Jump_007_7CEA
@@ -6880,7 +6884,7 @@ Jump_007_7CB7::
     ret
 
 Jump_007_7CE4::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
 
@@ -6947,9 +6951,9 @@ Jump_007_7D43::
     ret z
     call Func_007_7DE5
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $01
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     xor a, a
     ld [wCC44], a
     xor a, a

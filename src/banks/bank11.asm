@@ -109,7 +109,7 @@ Jump_011_4088::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [de]
     inc de
     ldh [hFF90], a
@@ -336,7 +336,7 @@ Jump_011_41E6::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [de]
     inc de
     ldh [hFF90], a
@@ -401,7 +401,7 @@ Jump_011_4235::
     farcall Func_012_7B9F
     pop de
     xor a, a
-    ld [wC562], a
+    ld [wJoypadPressed], a
     ld c, $01
     ret
 
@@ -538,7 +538,7 @@ Func_011_4340::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [de]
     and a, $F0
     ld [wC8C8], a
@@ -581,7 +581,7 @@ Func_011_438F::
     ld a, $F0
     ld [wC8CA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -695,7 +695,7 @@ Jump_011_442B::
     ld a, $01
     ld [wCCEA], a
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     inc de
     ld a, [de]
     dec a

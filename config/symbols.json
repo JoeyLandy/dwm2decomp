@@ -34,5 +34,17 @@
   "C198": {"name": "wBGMapShadow", "note": "32 x 18 byte buffer copied to vBGMap0 (20 x 18 visible) by CopyShadowToBGMap; filled with $C3", "evidence": "reading"},
   "C524": {"name": "wSGBActive", "note": "set to 1 at boot, cleared on CGB and when DetectSGB finds no Super Game Boy; SendSGBPacketSet, DelayBCWhenSGB and SpinDelay return at once when it is 0", "evidence": "reading"},
   "C47C": {"name": "wSGBPacketIndex", "note": "packet set number for SendSGBPacketSet; $FF selects wSGBPacketBuffer", "evidence": "reading"},
-  "C47F": {"name": "wSGBPacketBuffer", "note": "packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF", "evidence": "reading"}
+  "C47F": {"name": "wSGBPacketBuffer", "note": "packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF", "evidence": "reading"},
+  "C5DB": {"name": "wGameMode", "note": "index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot", "evidence": "reading"},
+  "C5DF": {"name": "wModeChangeRequest", "note": "non-zero makes the main loop leave its wait and run RunGameModeInit again", "evidence": "reading"},
+  "C56C": {"name": "wFadeState", "note": "palette fade state set by StartPaletteFade; GameFrameUpdate and the VBlank handler skip normal work while it is non-zero (bit 7 clear)", "evidence": "reading"},
+  "C55E": {"name": "wJoypadHeld", "note": "buttons held at the latest PollJoypad (layout of ReadJoypadDirect)", "evidence": "reading"},
+  "C55F": {"name": "wJoypadHeldPrev", "note": "wJoypadHeld from the previous poll", "evidence": "reading"},
+  "C562": {"name": "wJoypadPressed", "note": "buttons newly held since the previous poll", "evidence": "reading"},
+  "C563": {"name": "wJoypadPressedRepeat", "note": "newly held buttons plus auto-repeat (UpdateJoypadPresses)", "evidence": "reading"},
+  "C564": {"name": "wJoypadRepeatTimer", "note": "auto-repeat countdown: $14 after a new press, then 6", "evidence": "reading"},
+  "C5F0": {"name": "wFrameCounterLo", "note": "low byte of the 16-bit frame counter the VBlank handler increments", "evidence": "reading"},
+  "C5F1": {"name": "wFrameCounterHi", "note": "high byte of the 16-bit frame counter", "evidence": "reading"},
+  "C60A": {"name": "wMusicRequest", "note": "music id waiting for ProcessSoundQueue; $FF = none", "evidence": "reading"},
+  "C60B": {"name": "wSoundEffectRequest", "note": "sound effect id waiting for ProcessSoundQueue; $FF = none", "evidence": "reading"}
 }

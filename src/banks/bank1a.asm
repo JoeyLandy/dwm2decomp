@@ -1941,7 +1941,7 @@ Func_01A_72C9::
     ld hl, Data_01A_79CB
     call Func_01A_7321
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 ; 7 call sites from 4 routines (e.g. Func_016_5D13, Func_016_6C16, Func_031_4EB9, Func_031_6E67)
@@ -1954,7 +1954,7 @@ Func_01A_72DB::
     ld hl, Data_01A_7826
     call Func_01A_7321
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_5D13)
@@ -1968,7 +1968,7 @@ Func_01A_72FB::
     ld hl, Data_01A_787E
     call Func_01A_7321
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_5D13)
@@ -1988,7 +1988,7 @@ Func_01A_7315::
     ld hl, Data_01A_796F
     call Func_01A_7321
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 ; 20 call sites from 18 routines (e.g. Func_01A_7276, Func_01A_72FB, Func_01A_730E, Func_01A_72A0, ...)

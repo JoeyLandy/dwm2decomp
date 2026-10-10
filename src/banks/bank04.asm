@@ -2173,9 +2173,9 @@ Jump_004_4DF3::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_004_4C96, Func_004_4C25, Func_004_4D43)
-; reads: wC56C, hFF90, hFF8F, hFF92, hFF91
+; reads: wFadeState, hFF90, hFF8F, hFF92, hFF91
 Func_004_4E0F::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jr z, Jump_004_4E30
     ldh a, [hFF90]

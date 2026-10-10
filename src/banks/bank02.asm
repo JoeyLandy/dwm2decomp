@@ -2,16 +2,16 @@ SECTION "Bank 02", ROMX[$4000], BANK[$02]
     db $02
 
 ; 1 call site from 1 routine (e.g. StartPaletteFade)
-; reads: wC56C, wC56D
+; reads: wFadeState, wC56D
 ; writes: wC572, wC573, wC574, rBGPI, rBGPD, rOBPI, rOBPD
 Func_002_4001::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     ld b, a
     bit 7, b
     jr nz, Jump_002_401C
     ld a, $00
     ld [wC572], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     srl a
     srl a
     ld [wC573], a
@@ -31,7 +31,7 @@ Jump_002_402D::
     ld de, $0000
 
 Jump_002_4030::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     cpl
     srl a
     srl a
@@ -74,10 +74,10 @@ Jump_002_4062::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_10AB)
-; reads: wC56C, wC574, wC572, wC573
-; writes: wC574, wC572, wC56C
+; reads: wFadeState, wC574, wC572, wC573
+; writes: wC574, wC572, wFadeState
 Func_002_4071::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_002_40A2
     ld a, [wC574]
@@ -131,7 +131,7 @@ Jump_002_40B7::
 
 Jump_002_40CA::
     xor a, a
-    ld [wC56C], a
+    ld [wFadeState], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4071)
@@ -980,10 +980,12 @@ Jump_002_45C1::
 Data_002_45C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $04, $00, $06
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; start-up for wGameMode = 1; forcing this mode on the emulator shows: water map with the player sprite (E-0029)
+; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; reads: hFF90, hFF8F, hFF92, wC88D, wC5E0
 ; writes: rIF, wC51F, wC520, wC8C5, wC5E0, wC5EC
-Func_002_45C6::
+GameMode1_Init::
+Func_002_45C6:: ; address name
     call Func_000_08A6
     xor a, a
     ldh [rIF], a
@@ -1030,9 +1032,9 @@ Jump_002_461A::
     ld a, $03
     jp Jump_000_077A
 
-; 4 call sites from 4 routines (e.g. Func_002_45C6, Func_002_4AE0, Func_003_4339, Func_0A1_5898)
+; 4 call sites from 4 routines (e.g. GameMode1_Init, Func_002_4AE0, Func_003_4339, Func_0A1_5898)
 ; reads: wCC44, hFF90, wC8C7, wC927, wC5E0, wIsCGB
-; writes: hFF8D, hScrollY, hScrollX, hFFA0, hFF9F, rLYC, wC5F0, wC5F1, ...
+; writes: hFF8D, hScrollY, hScrollX, hFFA0, hFF9F, rLYC, wFrameCounterLo, wFrameCounterHi, ...
 Func_002_4628::
     ld a, $0F
     ldh [hFF8D], a
@@ -1048,8 +1050,8 @@ Func_002_4628::
     ld a, $67
     ldh [rLYC], a
     xor a, a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     ld a, $00
     ld [wC5E1], a
     di
@@ -1363,9 +1365,9 @@ Jump_002_48C3::
 Jump_002_48D9::
     or a, a
     jr nz, Jump_002_48EF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     set 0, a
-    ld [wC562], a
+    ld [wJoypadPressed], a
     ld a, $01
     ldh [hFFCE], a
     farcall Func_002_64E5
@@ -1442,9 +1444,9 @@ Jump_002_495E::
     jr nz, Jump_002_497E
     call Func_002_4A2C
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld a, $67
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $08
     ld [wC916], a
     xor a, a
@@ -1457,9 +1459,9 @@ Jump_002_497E::
     jr nz, Jump_002_499E
     call Func_002_4A2C
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld a, $67
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $06
     ld [wC916], a
     xor a, a
@@ -1472,9 +1474,9 @@ Jump_002_499E::
     jr nz, Jump_002_49BE
     call Func_002_4A2C
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld a, $67
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $07
     ld [wC916], a
     xor a, a
@@ -1616,7 +1618,7 @@ Jump_002_4AA1::
     ld [wCBCF], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_45C6)
+; 1 call site from 1 routine (e.g. GameMode1_Init)
 ; reads: wCC44, hFF90, hFF8F, hFF92
 Func_002_4AB5::
     ld a, [wCC44]
@@ -1650,11 +1652,13 @@ Data_002_4AD6:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_002_4AD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00
 
-; 1 call site from 1 routine (e.g. Func_000_048A)
+; per-frame routine for wGameMode = 1
+; 1 call site from 1 routine (e.g. RunGameModeUpdate)
 ; reads: wC5E0, wC5DC, wC5E9, wC5EA, wC5EB, wSGBActive
-; writes: wC55E, wC55F, wC562, wC563, wC564, wC565, wC5E0
+; writes: wJoypadHeld, wJoypadHeldPrev, wJoypadPressed, wJoypadPressedRepeat, wJoypadRepeatTimer, wC565, wC5E0
 ; points at: wC5E9, wD040, wC4DF, wC4FF
-Func_002_4AD8::
+GameMode1_Update::
+Func_002_4AD8:: ; address name
     ld a, [wC5E0]
     cp a, $02
     jp z, Jump_002_5FF7
@@ -1677,10 +1681,10 @@ Func_002_4AE0::
     dw Jump_002_4DCC
 
 Jump_002_4AFB::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jp nz, Jump_002_4B44
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 2, a
     jr z, Jump_002_4B13
     farcall Func_0A1_5903
@@ -1693,7 +1697,7 @@ Jump_002_4B13::
     call Func_002_5B2A
     call Func_002_541B
     call Func_002_5BD7
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_002_4B44
     call Func_002_4FE8
@@ -1756,7 +1760,7 @@ Jump_002_4BCD::
     farcall Func_004_4BB0
     farcall Func_012_6893
     call Func_002_5074
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC8C5]
@@ -1786,8 +1790,8 @@ Jump_002_4C18::
     bit 7, a
     jr z, Jump_002_4C3F
     ld a, $01
-    ld [wC5DB], a
-    ld hl, wC5DF
+    ld [wGameMode], a
+    ld hl, wModeChangeRequest
     inc [hl]
     xor a, a
     ld [wC5E0], a
@@ -1922,10 +1926,10 @@ Jump_002_4CDA::
     ret
 
 Jump_002_4D28::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jr nz, Jump_002_4D6D
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 2, a
     jr z, Jump_002_4D3F
     farcall Func_0A1_5903
@@ -1936,7 +1940,7 @@ Jump_002_4D28::
 Jump_002_4D3F::
     call Func_002_541B
     call Func_002_5BD7
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_002_4D6D
     call Func_002_4F4C
@@ -2003,13 +2007,13 @@ Func_002_4DD6::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_4C4E, Func_002_4AE0)
-; reads: wC195, wC56C, wC8CB, wC468, hFF8C, wC562, hFF8E, hFF91, ...
+; reads: wC195, wFadeState, wC8CB, wC468, hFF8C, wJoypadPressed, hFF8E, hFF91, ...
 ; writes: wC934
 Func_002_4DED::
     ld a, [wC195]
     or a, a
     ret z
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC8CB]
@@ -2021,7 +2025,7 @@ Func_002_4DED::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     ret z
     ldh a, [hFF8E]
@@ -2134,7 +2138,7 @@ Jump_002_4E9B::
 
 ; 1 call site from 1 routine (e.g. Func_002_4DED)
 ; reads: hFF8C, wC197, wC910, wC8CD
-; writes: wC916, wC917, wC55E, wC562
+; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_002_4E9E::
     ldh a, [hFF8C]
     bit 3, a
@@ -2156,8 +2160,8 @@ Jump_002_4EA6::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC8CD]
     bit 7, a
     jr z, Jump_002_4ED3
@@ -2169,7 +2173,7 @@ Jump_002_4ED3::
 
 ; 1 call site from 1 routine (e.g. Func_002_4DED)
 ; reads: hFF8C, wC196, wC8CD, wC192
-; writes: wC916, wC917, wC55E, wC562
+; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 ; points at: wC910
 Func_002_4ED6::
     ldh a, [hFF8C]
@@ -2199,8 +2203,8 @@ Jump_002_4EF0::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC8CD]
     bit 7, a
     ret z
@@ -2235,8 +2239,8 @@ Jump_002_4F29::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ld a, [wC8CD]
     bit 7, a
     ret z
@@ -2244,9 +2248,9 @@ Jump_002_4F29::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4C4E)
-; reads: wC56C, wC8CB, wC468, hFF8C, wC562, wCC44
+; reads: wFadeState, wC8CB, wC468, hFF8C, wJoypadPressed, wCC44
 Func_002_4F4C::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC8CB]
@@ -2258,7 +2262,7 @@ Func_002_4F4C::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     ret z
     ld a, [wCC44]
@@ -2323,21 +2327,21 @@ Jump_002_4FBC::
     ld a, $01
     ld [wC8C7], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $0B
     ld [wC5DC], a
     xor a, a
     ld [wC5DD], a
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wC193, wC56C, wC8CB, wC468, hFF8C, wC562, hFF8E, hFF91, ...
-; writes: wC8C7, wC5DB, wC5DC, wC5DD, wC55E, wC562
+; reads: wC193, wFadeState, wC8CB, wC468, hFF8C, wJoypadPressed, hFF8E, hFF91, ...
+; writes: wC8C7, wGameMode, wC5DC, wC5DD, wJoypadHeld, wJoypadPressed
 ; points at: wC910
 Func_002_4FE8::
     ld a, [wC193]
@@ -2346,7 +2350,7 @@ Func_002_4FE8::
     ld de, $0002
     call TestFlagBit
     ret nc
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC8CB]
@@ -2358,7 +2362,7 @@ Func_002_4FE8::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     ret z
     ldh a, [hFF8E]
@@ -2419,22 +2423,22 @@ Jump_002_504E::
     ld a, $01
     ld [wC8C7], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $0B
     ld [wC5DC], a
     xor a, a
     ld [wC5DD], a
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ret
 
 ; 7 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_0E0_5AD3)
-; reads: wC56C, wC468, wC90D
+; reads: wFadeState, wC468, wC90D
 Func_002_5074::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC468]
@@ -2472,9 +2476,9 @@ Jump_002_50AD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_50AE)
-; reads: wC5F0, rSTAT
+; reads: wFrameCounterLo, rSTAT
 Func_002_50AE::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $07
     ret nz
     ld hl, vTiles2
@@ -2506,7 +2510,7 @@ Jump_002_50C6::
     ret
 
 Jump_002_50D5::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $07
     ret nz
     ld hl, vTiles2 + $A0
@@ -2524,7 +2528,7 @@ Jump_002_50E0::
     ret
 
 Jump_002_50EE::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $07
     ret nz
     ld hl, vTiles2
@@ -2554,7 +2558,7 @@ Jump_002_510B::
     ret
 
 Jump_002_5119::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $0F
     ret nz
     ld de, vTiles2 + $300
@@ -2562,7 +2566,7 @@ Jump_002_5119::
     jp Jump_002_51AD
 
 Jump_002_5128::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     ret nz
     ld de, vTiles2 + $280
@@ -2571,7 +2575,7 @@ Jump_002_5128::
 
 Jump_002_5136::
     call Func_002_50AE
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     ret nz
     ld de, vTiles2 + $140
@@ -2579,7 +2583,7 @@ Jump_002_5136::
     jr Jump_002_5176
 
 Jump_002_5147::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     ret nz
     ld de, vTiles2 + $280
@@ -2587,7 +2591,7 @@ Jump_002_5147::
     jr Jump_002_5176
 
 Jump_002_5155::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     ret nz
     ld de, vTiles2 + $480
@@ -2598,7 +2602,7 @@ Jump_002_5163::
     ldh a, [hFF8F]
     cp a, $01
     ret z
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     ret nz
     ld de, vTiles2
@@ -2606,7 +2610,7 @@ Jump_002_5163::
     jr Jump_002_5176
 
 Jump_002_5176::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     srl a
     srl a
     and a, $03
@@ -2646,7 +2650,7 @@ Jump_002_518F::
     ret
 
 Jump_002_51AD::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $10
     push af
     add_a_to_hl
@@ -2686,7 +2690,7 @@ Jump_002_51DE::
     ld de, $0043
     call TestFlagBit
     ret c
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $1F
     cp a, $0C
     ret nc
@@ -2711,7 +2715,7 @@ Data_002_5205:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $94, $40, $94, $30, $94, $50, $94, $80, $94, $A0, $94, $90, $94, $B0, $94
 
 Jump_002_5235::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $1F
     cp a, $0C
     ret nc
@@ -2739,7 +2743,7 @@ Jump_002_5284::
     ldh a, [hFF92]
     or a, a
     ret nz
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $3F
     cp a, $04
     ret nc
@@ -2936,7 +2940,7 @@ Data_002_53C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FC, $F8, $F4, $F0, $EC, $E8, $E4, $E4, $E8, $EC, $F0, $F4, $F8, $FC, $00
 
 ; 1 call site from 1 routine (e.g. Func_002_5074)
-; reads: wC90E, wCD03, wC90F, wC5F0, hScrollX, wCD04
+; reads: wC90E, wCD03, wC90F, wFrameCounterLo, hScrollX, wCD04
 ; writes: wC90E, hScrollX
 Func_002_53D5::
     ld a, [wC90E]
@@ -2960,7 +2964,7 @@ Jump_002_53F0::
     ld a, [wC90F]
     or a, a
     jr nz, Jump_002_53EC
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
     jr nz, Jump_002_5408
@@ -2983,11 +2987,11 @@ Jump_002_5408::
     ret
 
 ; 12 call sites from 7 routines (e.g. Func_002_4C4E, Func_002_4AE0, Func_00F_5C3B, Func_00F_6681, ...)
-; reads: wC56C, hFF9A, hFF8C, wC468, wC562, hFF98, hFF8E, wC91F, ...
+; reads: wFadeState, hFF9A, hFF8C, wC468, wJoypadPressed, hFF98, hFF8E, wC91F, ...
 ; writes: hFF9A, hFF98, hFF8C, hFF9B, hFF9C, hFF8F, wC468, wC46A, ...
 ; points at: hFFF0, hFF8F, hFF92, hFF80, hFFF8
 Func_002_541B::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ldh a, [hFF9A]
@@ -3008,7 +3012,7 @@ Jump_002_542C::
     ldh a, [hFF8C]
     bit 6, a
     jp nz, Jump_002_556F
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 5, a
     jr z, Jump_002_5459
     ldh a, [hFF98]
@@ -3024,7 +3028,7 @@ Jump_002_544D::
     ret
 
 Jump_002_5459::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 5, a
     jr z, Jump_002_54D7
 
@@ -3095,7 +3099,7 @@ Jump_002_54C0::
     ret
 
 Jump_002_54D7::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 4, a
     jr z, Jump_002_54F0
     ldh a, [hFF98]
@@ -3111,7 +3115,7 @@ Jump_002_54E4::
     ret
 
 Jump_002_54F0::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 4, a
     jr z, Jump_002_556F
 
@@ -3183,7 +3187,7 @@ Jump_002_5558::
     ret
 
 Jump_002_556F::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 7, a
     jr z, Jump_002_5588
     ldh a, [hFF98]
@@ -3199,7 +3203,7 @@ Jump_002_557C::
     ret
 
 Jump_002_5588::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 7, a
     jp z, Jump_002_562C
 
@@ -3285,7 +3289,7 @@ Jump_002_5616::
     call Func_002_56DC
 
 Jump_002_562C::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 6, a
     jr z, Jump_002_5645
     ldh a, [hFF98]
@@ -3301,7 +3305,7 @@ Jump_002_5639::
     ret
 
 Jump_002_5645::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 6, a
     ret z
 
@@ -4066,16 +4070,16 @@ Data_002_5B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wC56C, hFF8C, wC55E, hFF8F, hFF92, hFF90, hFF8E, hFF91
-; writes: wC916, wC917, wC55E, wC562
+; reads: wFadeState, hFF8C, wJoypadHeld, hFF8F, hFF92, hFF90, hFF8E, hFF91
+; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_002_5B2A::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     bit 7, a
     ret z
     ldh a, [hFF8F]
@@ -4120,8 +4124,8 @@ Jump_002_5B53::
     ld [wC917], a
     farcall Func_013_405C
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     pop hl
     ret
 
@@ -4278,7 +4282,7 @@ Jump_002_5C83::
     ld a, [wC469]
     cp a, $14
     jr nc, Jump_002_5CB8
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_002_5CB8::
@@ -4288,7 +4292,7 @@ Jump_002_5CB8::
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_002_5CCC::
@@ -4317,7 +4321,7 @@ Jump_002_5CCC::
     ld a, [wC469]
     cp a, $14
     jr nc, Jump_002_5D01
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_002_5D01::
@@ -4327,7 +4331,7 @@ Jump_002_5D01::
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_002_5D15::
@@ -4365,7 +4369,7 @@ Jump_002_5D15::
     ld a, [wC469]
     cp a, $12
     jr nc, Jump_002_5D54
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_002_5D54::
@@ -4375,7 +4379,7 @@ Jump_002_5D54::
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_002_5D68::
@@ -4424,7 +4428,7 @@ Jump_002_5D81::
     ld a, [wC469]
     cp a, $12
     jr nc, Jump_002_5DB4
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_002_5DB4::
@@ -4434,7 +4438,7 @@ Jump_002_5DB4::
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
 
 Jump_002_5DC7::
     ret
@@ -4748,7 +4752,7 @@ Jump_002_5F75::
     ld [hl], c
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4628, Func_024_4001, Func_0F2_4001)
+; 3 call sites from 3 routines (e.g. Func_002_4628, GameMode6_Init, GameMode8_Init)
 ; reads: wSGBActive, wC51F, wC520, wC5E0
 ; writes: wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, wC57E, ...
 Func_002_5F9B::
@@ -4799,13 +4803,13 @@ Jump_002_5FEB::
 
 Jump_002_5FF7::
     xor a, a
-    ld [wC55E], a
-    ld [wC55F], a
+    ld [wJoypadHeld], a
+    ld [wJoypadHeldPrev], a
     xor a, a
-    ld [wC562], a
-    ld [wC563], a
+    ld [wJoypadPressed], a
+    ld [wJoypadPressedRepeat], a
     xor a, a
-    ld [wC564], a
+    ld [wJoypadRepeatTimer], a
     ld [wC565], a
     call Func_002_4AE0
     xor a, a
@@ -4844,7 +4848,7 @@ Jump_002_6045::
     call StartPaletteFade
     ret
 
-; 8 call sites from 7 routines (e.g. Func_002_45C6, Func_002_4628, Func_000_2950, Func_002_6CD4, ...)
+; 8 call sites from 7 routines (e.g. GameMode1_Init, Func_002_4628, Func_000_2950, Func_002_6CD4, ...)
 ; reads: wCC44, wCC45, hFF8C, wC608, hFF90
 ; writes: wC608
 ; points at: wCD89
@@ -4891,15 +4895,15 @@ Jump_002_6089::
     cp a, c
     ret z
     ld a, c
-    call Func_000_122D
+    call QueueMusic
     ret
 
 Jump_002_6093::
-    ld a, [wC60B]
+    ld a, [wSoundEffectRequest]
     cp a, c
     ret z
     ld a, c
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_002_609D::
@@ -5088,11 +5092,11 @@ Func_002_6327:: ; heuristic: follows a terminator; C0
     INCBIN "dwm2-cobi-us.gbc", $00A334, $5D
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wC562, wCC44, wC46B
-; writes: wC8C7, hFFB9, wC5DC, wC5DB, wC5DD, wC46B
+; reads: wJoypadPressed, wCC44, wC46B
+; writes: wC8C7, hFFB9, wC5DC, wGameMode, wC5DD, wC46B
 Func_002_6391::
     call Func_002_641E
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_002_63BD
     xor a, a
@@ -5117,9 +5121,9 @@ Jump_002_63BD::
     bit 0, a
     jr z, Jump_002_63D6
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, [wC46B]
     ld [wC5DC], a
     xor a, a
@@ -5130,7 +5134,7 @@ Jump_002_63D6::
     bit 5, a
     jr z, Jump_002_63E8
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     xor a, $01
     ld [wC46B], a
@@ -5140,7 +5144,7 @@ Jump_002_63E8::
     bit 4, a
     jr z, Jump_002_63FA
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     xor a, $01
     ld [wC46B], a
@@ -5150,7 +5154,7 @@ Jump_002_63FA::
     bit 6, a
     jr z, Jump_002_640C
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     xor a, $02
     ld [wC46B], a
@@ -5160,7 +5164,7 @@ Jump_002_640C::
     bit 7, a
     jr z, Jump_002_641D
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     xor a, $02
     ld [wC46B], a
@@ -5310,11 +5314,11 @@ Jump_002_64D7::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4745, Func_002_4AE0, Func_002_4C4E)
-; reads: wC56C, wC8CB, wC468, hFF8C, wC562, wIsCGB, hScrollY, hScrollX, ...
+; reads: wFadeState, wC8CB, wC468, hFF8C, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hFFB9, wC8C7, rSVBK, wC8CE, wC5DC, wC46B
 ; points at: wC300, wBGMapShadow, wD168, wD000, wC30C
 Func_002_64E5::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld de, $0002
@@ -5329,7 +5333,7 @@ Func_002_64E5::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     ret z
     ld a, $03
@@ -5425,7 +5429,7 @@ Jump_002_6585::
 Jump_002_65AD::
     call Func_002_665A
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $02
     ld [wC5DC], a
     ldh a, [hFFCE]
@@ -6331,7 +6335,7 @@ Jump_002_6C5E::
 
 Jump_002_6C5F::
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     call InitSoundHardware
     ld hl, wC46B
     inc [hl]
@@ -6342,7 +6346,7 @@ Jump_002_6C5F::
     ld [wC46C], a
     ld [wC46E], a
     ld a, $78
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_002_6C7F::
@@ -6359,7 +6363,7 @@ Jump_002_6C89::
     cp a, $3C
     ret c
     ld a, $61
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_002_6CD4
     xor a, a
     ld [wC46C], a
@@ -6469,7 +6473,7 @@ Jump_002_6D28::
 Jump_002_6D4D::
     ld a, $01
     ld [wC46C], a
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $07
     jr nz, Jump_002_6D75
     ld a, [wC46E]
@@ -6490,13 +6494,13 @@ Jump_002_6D4D::
 Jump_002_6D75::
     ld a, [wC46E]
     ldh [hFFC6], a
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     rra
     rra
     and a, $0F
     ld e, a
     ld d, $00
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     cp a, $00
     jr nz, Jump_002_6D96
@@ -6562,7 +6566,7 @@ Data_002_6DDE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $60, $B6, $EC, $FF, $EC, $B6, $60, $00, $60, $B6, $EC, $FF, $EC, $B6, $60
 
 Jump_002_6DEE::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $0F
     jr nz, Jump_002_6E0B
     ld a, [wC46F]
@@ -6639,19 +6643,19 @@ Jump_002_6E61::
     bit 7, a
     jr nz, Jump_002_6EA5
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $00
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 Jump_002_6EA5::
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $05
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     farcall Func_0A1_4474
     ret
@@ -6682,10 +6686,10 @@ Jump_002_6EC7::
     jp z, Jump_002_6F59
     push hl
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $00
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     pop hl
     ld a, [hl]
@@ -6761,10 +6765,10 @@ Jump_002_6F7E::
     ld a, $80
     ld [wC893], a
     ld a, $01
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $05
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ld a, [wCD0D]
     ld [wC190], a
@@ -6820,7 +6824,7 @@ Jump_002_6FDE::
 Data_002_7006:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $00B006, $68
 
-; 4 call sites from 4 routines (e.g. Func_001_6880, Func_007_486E, Func_015_6B00, Func_016_75EE)
+; 4 call sites from 4 routines (e.g. Func_001_6880, GameMode5_Init, Func_015_6B00, Func_016_75EE)
 ; reads: sBB00
 ; writes: rRAMG, rRAMB, hFFC6
 Func_002_706E::
@@ -7398,7 +7402,7 @@ Jump_002_732A::
     jr nz, Jump_002_732A
     ret
 
-; 9 call sites from 6 routines (e.g. Func_007_6ADC, Func_007_7DE5, Func_01B_5C3B, Func_024_4001, ...)
+; 9 call sites from 6 routines (e.g. Func_007_6ADC, Func_007_7DE5, Func_01B_5C3B, GameMode6_Init, ...)
 ; reads: wC8C3
 ; writes: rRAMG, wC8C3, rRAMB
 Func_002_7333::

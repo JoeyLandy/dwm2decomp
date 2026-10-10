@@ -1429,7 +1429,7 @@ Jump_013_49CE::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC955, hFF90
-; writes: wC955, hFF90, wC8C8, wC8C9, wC55E, wC562, wC8CA, wC914, ...
+; writes: wC955, hFF90, wC8C8, wC8C9, wJoypadHeld, wJoypadPressed, wC8CA, wC914, ...
 Func_013_49D5:: ; heuristic: follows a terminator; C0
     ld a, [wC955]
     or a, a
@@ -1457,8 +1457,8 @@ Jump_013_49F4::
 
 Jump_013_4A02::
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     xor a, a
     ld [wC8CA], a
     xor a, a
@@ -1867,8 +1867,8 @@ Jump_013_4CE6::
 Jump_013_4CED::
     xor a, a
     set 0, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     ret
 
 Jump_013_4CF7::

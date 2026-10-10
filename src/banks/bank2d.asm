@@ -1,7 +1,7 @@
 SECTION "Bank 2D", ROMX[$4000], BANK[$2D]
     db $2D
 
-; 3 call sites from 3 routines (e.g. Func_001_4AD4, Func_010_4AD0, Func_05F_69FB)
+; 3 call sites from 3 routines (e.g. GameMode0_Update, Func_010_4AD0, Func_05F_69FB)
 ; reads: wStringIndex
 Func_02D_4001::
     ld a, [wStringIndex]

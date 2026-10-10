@@ -1,7 +1,7 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0E
 
-; 1 call site from 1 routine (e.g. Func_001_4AD4)
+; 1 call site from 1 routine (e.g. GameMode0_Update)
 ; reads: wStringIndex
 Func_00E_4001::
     ld a, [wStringIndex]
@@ -788,7 +788,7 @@ Data_00E_5350:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank0E, Func_001_4AD4, Func_037_5999, BeginBank0EString)
+; 4 call sites from 4 routines (e.g. ShowString_Bank0E, GameMode0_Update, Func_037_5999, BeginBank0EString)
 BeginStringDisplay_Bank0E::
 Func_00E_5370:: ; address name
     ld de, Data_00E_5385

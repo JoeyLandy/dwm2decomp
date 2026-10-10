@@ -8,10 +8,10 @@ Func_010_4001::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_010_4001, Func_002_4745, Func_002_6CD4, Func_007_6ADC, ...)
-; reads: wC56C, wC919, wC91A, wC91B, wD7FD, wCC44
+; reads: wFadeState, wC919, wC91A, wC91B, wD7FD, wCC44
 ; writes: wC919, wC91F, wC920, wD7FD, wC5DC
 Func_010_4008::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC919]
@@ -620,11 +620,11 @@ Func_010_445D:: ; heuristic: target of a pointer table; C0
     jr z, Jump_010_447D
     cp a, $60
     jr c, Jump_010_4477
-    call StoreWC60B
+    call QueueSoundEffect
     jp Jump_010_401D
 
 Jump_010_4477::
-    call Func_000_122D
+    call QueueMusic
     jp Jump_010_401D
 
 Jump_010_447D::
@@ -1033,9 +1033,9 @@ Func_010_46CD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4001)
-; reads: wC56C, wC920
+; reads: wFadeState, wC920
 Func_010_46E9::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC920]
@@ -1315,7 +1315,7 @@ Jump_010_4A27::
     call FillTilesRequest
     call FillTilesFromRequest
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wC8CB], a
     ld a, $00
@@ -1361,7 +1361,7 @@ Jump_010_4A84::
     bit 6, a
     jr nz, Jump_010_4AAE
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ldh [hFFB9], a
     ld a, $02

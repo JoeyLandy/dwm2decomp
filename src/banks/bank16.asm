@@ -3933,7 +3933,7 @@ Jump_016_5E5A::
     call Func_016_733F
     farcall Func_01A_72F4
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, vBGMap0
     ld de, wBGMapShadow
     ld bc, $140D
@@ -3957,7 +3957,7 @@ Jump_016_5E96::
     ld hl, Data_016_6701
     call Func_016_6480
     ret z
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr nz, Jump_016_5ED7
     ld a, [de]
@@ -4023,14 +4023,14 @@ Jump_016_5F24::
     ld de, wC46B
     ld hl, Data_016_66F7
     call Func_016_65FF
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_016_5F38
     call Func_016_6705
     ret
 
 Jump_016_5F38::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_016_5F4D
     ld a, [wCFD1]
@@ -4082,7 +4082,7 @@ Jump_016_5FA4::
     ld de, wC46C
     ld hl, Data_016_66EB
     call Func_016_65FF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_016_5FC7
     ld hl, wCFCC
@@ -4348,7 +4348,7 @@ Jump_016_61D2::
     ld [wC303], a
     farcall Func_01A_7307
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $16
     ld [wStringIndex], a
     call Func_016_6961
@@ -4399,7 +4399,7 @@ Jump_016_6250::
     ld de, wC46B
     ld hl, Data_016_66EF
     call Func_016_65FF
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_016_6279
     call Func_016_682F
@@ -4413,7 +4413,7 @@ Jump_016_6250::
     ret
 
 Jump_016_6279::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_016_6291
     ld a, [wC46B]
@@ -4489,7 +4489,7 @@ Jump_016_631B::
     ld hl, Data_016_66EB
     ld de, wC46D
     call Func_016_65FF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_016_6375
     ld hl, wCFCC
@@ -4647,13 +4647,13 @@ Jump_016_643D::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_016_5D13)
-; reads: wC562
+; reads: wJoypadPressed
 Func_016_6480::
     call Func_016_65FF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret nz
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
     ld a, $01
@@ -4896,10 +4896,10 @@ Jump_016_65EE::
     ret
 
 ; 8 call sites from 3 routines (e.g. Func_016_6C16, Func_016_5D13, Func_016_6480)
-; reads: wC563, wCFD2, wCFD1, wCFD3, wCFD0, wC5F0
-; writes: wC5F0, wCFD1
+; reads: wJoypadPressedRepeat, wCFD2, wCFD1, wCFD3, wCFD0, wFrameCounterLo
+; writes: wFrameCounterLo, wCFD1
 Func_016_65FF::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_016_662B
     call Func_016_66B9
@@ -4954,7 +4954,7 @@ Jump_016_664E::
     ld a, [wCFD2]
     cp a, $02
     jr c, Jump_016_6682
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_016_666D
     call Func_016_66B9
@@ -4980,10 +4980,10 @@ Jump_016_666D::
     jr Jump_016_669B
 
 Jump_016_6682::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $0F
     ret z
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 4, a
     jr z, Func_016_66B9
     jr Func_016_66CB
@@ -4992,7 +4992,7 @@ Jump_016_6691::
     ld [de], a
     call Func_016_66CB
     ld a, $02
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
     ret
 
 Jump_016_669B::
@@ -5014,7 +5014,7 @@ Jump_016_669B::
 Jump_016_66B1::
     call Func_016_66CB
     xor a, a
-    ld [wC5F0], a
+    ld [wFrameCounterLo], a
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_016_65FF)
@@ -5942,11 +5942,11 @@ Jump_016_6CC8::
     ld hl, Data_016_66E7
     ld de, wC46B
     call Func_016_65FF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_016_6CEA
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46B]
     and a, $01
     jr nz, Jump_016_6CF0
@@ -5955,7 +5955,7 @@ Jump_016_6CC8::
     ret
 
 Jump_016_6CEA::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
 
@@ -6092,7 +6092,7 @@ Jump_016_6DE4::
     ld hl, Data_016_66F7
     ld de, wC46C
     call Func_016_65FF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_016_6E22
     ld a, [wD88F]
@@ -6121,11 +6121,11 @@ Jump_016_6E13::
     ret
 
 Jump_016_6E22::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     farcall Func_01A_72FB
     ld hl, wCFCC
     inc [hl]
@@ -6165,11 +6165,11 @@ Jump_016_6E80::
     ld hl, Data_016_66EB
     ld de, wC46D
     call Func_016_65FF
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_016_6ED4
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wC46D]
     and a, $01
     jr nz, Jump_016_6EA1
@@ -6205,7 +6205,7 @@ Jump_016_6EC0::
     ret
 
 Jump_016_6ED4::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     and a, $02
     ret z
     call Func_016_733F
@@ -7293,7 +7293,7 @@ Jump_016_777A::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_776C, Func_007_6213)
-; reads: wD0D5, wC5DB, wD0E3, wD0E4, wD0E2, wD0E5
+; reads: wD0D5, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, wC1E9, ...
 Func_016_777B::
@@ -7301,7 +7301,7 @@ Func_016_777B::
     jr Jump_016_77A6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wD0D5, wC5DB, wD0E3, wD0E4, wD0E2, wD0E5
+; reads: wIsCGB, wD0D5, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC527, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC4DF, wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, ...
 Func_016_7783:: ; heuristic: follows a terminator; C0
@@ -7327,7 +7327,7 @@ Jump_016_77A6::
     jp nz, Jump_016_7832
     ld hl, wC1D9
     ld bc, $1104
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_77C0
     ld hl, wC219
@@ -7351,7 +7351,7 @@ Jump_016_77C4::
     jr nz, Jump_016_77C2
     ld hl, wC25C
     ld b, $0E
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_77E4
     ld hl, wC29C
@@ -7367,7 +7367,7 @@ Jump_016_77E6::
     dec b
     jr nz, Jump_016_77E6
     ld hl, vTiles2 + $200
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_77F8
     ld hl, vTiles2 + $400
@@ -7411,7 +7411,7 @@ Jump_016_7832::
     ld [wStringIndex], a
     ld hl, wD0D6
     ld de, vTiles2 + $200
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_7857
     ld de, vTiles2 + $400
@@ -7424,7 +7424,7 @@ Jump_016_7857::
     ld h, a
     call HLToDecimalDigits
     ld de, wC1E5
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_7872
     ld de, wC225
@@ -7436,7 +7436,7 @@ Jump_016_7872::
     ld h, $00
     call HLToDecimalDigits
     ld de, wC1E9
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_788B
     ld de, wC229
@@ -7513,7 +7513,7 @@ Jump_016_78E9::
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_7783)
-; reads: wC5DB
+; reads: wGameMode
 ; writes: wD09D, wD09E
 ; points at: hFFF7
 Func_016_78F9::
@@ -7527,7 +7527,7 @@ Func_016_78F9::
     ld a, c
     ld hl, Data_016_7A36
     push af
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_7912
     ld hl, Data_016_7A39
@@ -7572,7 +7572,7 @@ Jump_016_7912::
     ld a, c
     ld hl, Data_016_7A3C
     push af
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_795B
     ld hl, Data_016_7A42
@@ -7590,7 +7590,7 @@ Jump_016_795B::
 Jump_016_7969::
     ld hl, Data_016_7A3C
     push af
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_7977
     ld hl, Data_016_7A42
@@ -7614,10 +7614,10 @@ Jump_016_798A::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_7783)
-; reads: wC5DB
+; reads: wGameMode
 ; writes: wC227, wC228, wC247, wC248, wC267, wC268, wC287, wC288
 Func_016_7990::
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr z, Jump_016_79A6
     ld a, $C3
@@ -7636,12 +7636,12 @@ Jump_016_79A6::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_016_7783)
-; reads: wC5DB, wD10B, wD10C, wD110, wD10E, wD10F, wD10D
+; reads: wGameMode, wD10B, wD10C, wD110, wD10E, wD10F, wD10D
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wC130
 Func_016_79B5::
     ld hl, vTiles2 + $3B0
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_79C2
     ld hl, vTiles2 + $5B0

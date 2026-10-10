@@ -668,7 +668,7 @@ Jump_015_4550::
 
 Jump_015_4570::
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, Data_015_72E1
     ld de, Data_015_72F1
     call Func_015_6374
@@ -2505,7 +2505,7 @@ Jump_015_5376::
 
 Jump_015_5387::
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_015_7351
     ld hl, wC410
     ld bc, $0805
@@ -2523,12 +2523,12 @@ Jump_015_5387::
     ret
 
 Jump_015_53B3::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_015_53CF
     bit 7, a
     jr nz, Jump_015_53E9
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_015_53F9
     bit 1, a
@@ -2551,7 +2551,7 @@ Jump_015_53DD::
     ld [wD7AD], a
     call Func_015_549E
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_015_53E9::
@@ -2568,7 +2568,7 @@ Jump_015_53F6::
 
 Jump_015_53F9::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_015_54C0
     ld a, [wD7AD]
     and a, a
@@ -2653,10 +2653,10 @@ Jump_015_5488::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_015_512C)
-; reads: wC564, wD7AE, wD7AD
+; reads: wJoypadRepeatTimer, wD7AE, wD7AD
 ; writes: wD7AE
 Func_015_549E::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Jump_015_54B8
     ld a, [wD7AE]
@@ -3096,7 +3096,7 @@ Jump_015_57CB::
     call CopyFromBankWaitVRAM
     call Func_015_63D3
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, Data_015_73AB
     ld hl, wC412
     ld bc, $0605
@@ -4027,7 +4027,7 @@ Jump_015_5F1F::
     ret
 
 Jump_015_5F51::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     and a, a
     ret nz
     ld de, wCADB
@@ -4710,15 +4710,15 @@ Func_015_645F::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_015_4182, Func_00D_463F)
-; reads: wC563, wC562, wD786, wD780
+; reads: wJoypadPressedRepeat, wJoypadPressed, wD786, wD780
 ; writes: wD7FA, wC920, wC919, wC89D, wD780, wD7AB, wD7AD, wD7AF, ...
 Func_015_6478::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_015_6494
     bit 7, a
     jr nz, Jump_015_64C2
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 0, a
     jp nz, Jump_015_64DC
     bit 1, a
@@ -4735,7 +4735,7 @@ Jump_015_6494::
     ld [wD786], a
     call Func_015_6524
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_015_64AB::
@@ -4749,7 +4749,7 @@ Jump_015_64AC::
     ld [wD7AF], a
     call Func_015_6524
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_015_64C2::
@@ -4761,7 +4761,7 @@ Jump_015_64C2::
     ld [wD786], a
     call Func_015_6524
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_015_64D9::
@@ -4770,7 +4770,7 @@ Jump_015_64D9::
 
 Jump_015_64DC::
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_015_6546
     ld c, $03
     ld hl, Data_015_732D
@@ -4804,10 +4804,10 @@ Jump_015_6511::
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_015_6478)
-; reads: wC564, wD787, wD786
+; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
 Func_015_6524::
-    ld a, [wC564]
+    ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Jump_015_653E
     ld a, [wD787]

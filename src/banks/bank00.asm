@@ -49,13 +49,15 @@ Func_000_0038::
     ret
     db $00, $00, $00, $00, $00, $00, $00
 
+; di; jp VBlankHandler (the interrupt vector at $0040)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: rSVBK, rVBK, wIsCGB, wC56C, wC526, wC527, wC58A, wC52B, ...
-; writes: rSVBK, wC526, wC527, wC5F0, wC5F1, rVBK, wC5D7, wC5DB, ...
-; points at: wC5ED, wC526, wC5DB, wC604
-Func_000_0040::
+; reads: rSVBK, rVBK, wIsCGB, wFadeState, wC526, wC527, wC58A, wC52B, ...
+; writes: rSVBK, wC526, wC527, wFrameCounterLo, wFrameCounterHi, rVBK, wC5D7, wGameMode, ...
+; points at: wC5ED, wC526, wGameMode, wC604
+VBlankVector::
+Func_000_0040:: ; address name
     di
-    jp Jump_000_03A4
+    jp VBlankHandler
     db $00, $00, $00, $00
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -101,18 +103,18 @@ Jump_000_0094::
     ds $68, $00
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wC58A, wC5DF, wC56C
-; writes: wIsCGB, rVBK, wC5DB, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
-; points at: wC5DB, wC604
+; reads: wIsCGB, wC58A, wModeChangeRequest, wFadeState
+; writes: wIsCGB, rVBK, wGameMode, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
+; points at: wGameMode, wC604
 Func_000_0100::
     nop
     jp Func_000_0150
     INCBIN "dwm2-cobi-us.gbc", $000104, $4C
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wC58A, wC5DF, wC56C
-; writes: wIsCGB, rVBK, wC5DB, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
-; points at: wC5DB, wC604
+; reads: wIsCGB, wC58A, wModeChangeRequest, wFadeState
+; writes: wIsCGB, rVBK, wGameMode, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
+; points at: wGameMode, wC604
 Func_000_0150::
     cp a, $11
     ld a, $00
@@ -145,14 +147,14 @@ Jump_000_015A::
     ldh [rVBK], a
 
 Jump_000_0189::
-    ld hl, wC5DB
+    ld hl, wGameMode
     xor a, a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
     ld a, $05
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $00
     ld [rRAMB], a
     ld a, $00
@@ -164,8 +166,8 @@ Jump_000_0189::
     ld a, $01
     ld [wSGBActive], a
     ld a, $FF
-    ld [wC60A], a
-    ld [wC60B], a
+    ld [wMusicRequest], a
+    ld [wSoundEffectRequest], a
     call InitSoundHardware
     xor a, a
     ld [wC58C], a
@@ -279,9 +281,9 @@ Jump_000_02D2::
     ld [wC52B], a
     ld [wC52F], a
     ld [wC530], a
-    call Func_000_0355
+    call RunGameModeInit
     xor a, a
-    ld [wC5DF], a
+    ld [wModeChangeRequest], a
     ld [wC5E0], a
     ld [wC5EE], a
     ld [wC0C0], a
@@ -289,8 +291,8 @@ Jump_000_02D2::
     ld [wC0D8], a
     ld [wC0D9], a
     ld [wC5ED], a
-    ld [wC5F0], a
-    ld [wC5F1], a
+    ld [wFrameCounterLo], a
+    ld [wFrameCounterHi], a
     ldh [hFFB9], a
     ld a, $80
     ldh [hFFBA], a
@@ -309,10 +311,10 @@ Jump_000_0324::
     call z, NextTableByte
     halt
     nop
-    ld a, [wC5DF]
+    ld a, [wModeChangeRequest]
     or a, a
     jr z, Jump_000_0324
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jr z, Jump_000_033D
     bit 7, a
@@ -328,10 +330,12 @@ Jump_000_033D::
     call SpinDelay
     jp Jump_000_02D2
 
+; jumps through a 9-entry table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07, $24, $A0, $F2); called from the main loop each time the mode changes
 ; 1 call site from 1 routine (e.g. Func_000_0150)
-; reads: wC5DB
-Func_000_0355::
-    ld a, [wC5DB]
+; reads: wGameMode
+RunGameModeInit::
+Func_000_0355:: ; address name
+    ld a, [wGameMode]
     rst $00
     dw Jump_000_036B
     dw Jump_000_0372
@@ -344,41 +348,47 @@ Func_000_0355::
     dw Jump_000_039D
 
 Jump_000_036B::
-    farcall Func_001_4001
+    farcall GameMode0_Init
     ret
 
 Jump_000_0372::
-    farcall Func_002_45C6
+    farcall GameMode1_Init
     ret
 
 Jump_000_0379::
-    farcall Func_003_4001
+    farcall GameMode2_Init
     ret
 
 Jump_000_0380::
     ret
 
 Jump_000_0381::
-    farcall Func_031_4001
+    farcall GameMode4_Init
     ret
 
 Jump_000_0388::
-    farcall Func_007_486E
+    farcall GameMode5_Init
     ret
 
 Jump_000_038F::
-    farcall Func_024_4001
+    farcall GameMode6_Init
     ret
 
 Jump_000_0396::
-    farcall Func_0A0_4ECF
+    farcall GameMode7_Init
     ret
 
 Jump_000_039D::
-    farcall Func_0F2_4001
+    farcall GameMode8_Init
     ret
 
-Jump_000_03A4::
+; runs once per frame: saves registers and the VRAM and WRAM banks; skips everything but the sound tick when wC5ED bit 0 shows it was entered again; otherwise runs the OAM DMA routine at $FF80, uploads queued palettes on CGB, flushes the queued BG map write, restores the DMG palettes, scroll and LCDC, applies the screen shake, polls the joypad, runs SoundTick, advances the random seed, processes the sound queue, runs GameFrameUpdate, steps the string display when wC52B is set, steps the fade, and increments the 16-bit frame counter wC5F0/wC5F1; resets the game when all four buttons are held
+; no direct call (reached through a table, a jump or a vector)
+; reads: rSVBK, rVBK, wIsCGB, wFadeState, wC526, wC527, wC58A, wC52B, ...
+; writes: rSVBK, wC526, wC527, wFrameCounterLo, wFrameCounterHi, rVBK, wC5D7, wGameMode, ...
+; points at: wC5ED, wC526, wGameMode, wC604
+VBlankHandler::
+Jump_000_03A4:: ; address name
     push af
     push bc
     push de
@@ -398,7 +408,7 @@ Jump_000_03A4::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_000_03EA
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jr nz, Jump_000_03EA
     ld hl, wC526
@@ -418,45 +428,45 @@ Jump_000_03A4::
     ld [wC527], a
 
 Jump_000_03EA::
-    call Func_000_0BCC
-    call Func_000_07FD
-    call Func_000_07E0
-    call Func_000_04ED
-    call Func_000_07F1
+    call FlushQueuedBGMapWrite
+    call CopyDMGPalettesToHardware
+    call CopyScrollToHardware
+    call ApplyScreenShake
+    call WriteLCDCShadow
     ld a, [wC58A]
     and a, a
     jr nz, Jump_000_042E
     ei
-    call Func_000_0A17
-    call Func_000_0A8D
-    call Func_000_33E8
+    call PollJoypad
+    call UpdateJoypadPresses
+    call SoundTick
     call NextRandomSeed
-    call Func_000_131A
-    call Func_000_0474
+    call ProcessSoundQueue
+    call GameFrameUpdate
     ld a, [wC52B]
     or a, a
     call nz, Func_000_2620
-    call Func_000_0F4E
-    ld a, [wC5F0]
+    call StepFade
+    ld a, [wFrameCounterLo]
     add a, $01
-    ld [wC5F0], a
-    ld a, [wC5F1]
+    ld [wFrameCounterLo], a
+    ld a, [wFrameCounterHi]
     adc a, $00
-    ld [wC5F1], a
+    ld [wFrameCounterHi], a
     jr Jump_000_043A
 
 Jump_000_042E::
-    call Func_000_33E8
+    call SoundTick
     ei
-    call Func_000_131A
-    call Func_000_0474
+    call ProcessSoundQueue
+    call GameFrameUpdate
     jr Jump_000_043A
 
 Jump_000_043A::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jr nz, Jump_000_0456
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     and a, $0F
     cp a, $0F
     jr nz, Jump_000_0450
@@ -487,46 +497,50 @@ Jump_000_045B::
     reti
 
 Jump_000_046B::
-    call Func_000_07F1
-    call Func_000_33E8
+    call WriteLCDCShadow
+    call SoundTick
     ei
     jr Jump_000_045B
 
-; 2 call sites from 1 routine (e.g. Func_000_0355)
-; reads: wC56C
+; hOamNextEntry = 0, ComputeSpriteScrollOffsets, RunGameModeUpdate, and ClearUnusedOAMEntries unless a fade is running
+; 2 call sites from 1 routine (e.g. VBlankHandler)
+; reads: wFadeState
 ; writes: hOamNextEntry
-Func_000_0474::
+GameFrameUpdate::
+Func_000_0474:: ; address name
     xor a, a
     ldh [hOamNextEntry], a
-    call Func_000_252D
-    call Func_000_048A
-    ld a, [wC56C]
+    call ComputeSpriteScrollOffsets
+    call RunGameModeUpdate
+    ld a, [wFadeState]
     or a, a
     jr z, Jump_000_0486
     bit 7, a
     ret z
 
 Jump_000_0486::
-    call Func_000_0BB4
+    call ClearUnusedOAMEntries
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0474)
-; reads: wC5DF, wC58A, wC56C, wC5DB
-Func_000_048A::
-    ld a, [wC5DF]
+; unless wC5DF is non-zero or a fade is running: jumps through a 9-entry table indexed by wGameMode to the mode's per-frame routine (modes 0-8 in banks $01, $02, $03, none, $31, $07, $24, $A0, $F2)
+; 1 call site from 1 routine (e.g. GameFrameUpdate)
+; reads: wModeChangeRequest, wC58A, wFadeState, wGameMode
+RunGameModeUpdate::
+Func_000_048A:: ; address name
+    ld a, [wModeChangeRequest]
     or a, a
     ret nz
     ld a, [wC58A]
     or a, a
     jr nz, Jump_000_049E
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     jr z, Jump_000_049E
     bit 7, a
     ret z
 
 Jump_000_049E::
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     rst $00
     dw Jump_000_04B4
     dw Jump_000_04BB
@@ -539,45 +553,47 @@ Jump_000_049E::
     dw Jump_000_04E6
 
 Jump_000_04B4::
-    farcall Func_001_4AD4
+    farcall GameMode0_Update
     ret
 
 Jump_000_04BB::
-    farcall Func_002_4AD8
+    farcall GameMode1_Update
     ret
 
 Jump_000_04C2::
-    farcall Func_003_4015
+    farcall GameMode2_Update
     ret
 
 Jump_000_04C9::
     ret
 
 Jump_000_04CA::
-    farcall Func_031_40A5
+    farcall GameMode4_Update
     ret
 
 Jump_000_04D1::
-    farcall Func_007_4F7B
+    farcall GameMode5_Update
     ret
 
 Jump_000_04D8::
-    farcall Func_024_4117
+    farcall GameMode6_Update
     ret
 
 Jump_000_04DF::
-    farcall Func_0A0_4F70
+    farcall GameMode7_Update
     ret
 
 Jump_000_04E6::
-    farcall Func_0F2_40A2
+    farcall GameMode8_Update
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; while wC604 or wC605 is non-zero, counts it down and adds an oscillating offset (from the counter's low bits) to rSCY or rSCX
+; 1 call site from 1 routine (e.g. VBlankHandler)
 ; reads: wC604, rSCY, wC605, rSCX
 ; writes: wC604, rSCY, wC605, rSCX
 ; points at: wC604
-Func_000_04ED::
+ApplyScreenShake::
+Func_000_04ED:: ; address name
     ld hl, wC604
     ld b, [hl]
     inc hl
@@ -627,10 +643,10 @@ Jump_000_0530::
     ret
     db $CD, $CC, $0B, $C9
 
-; 8 call sites from 6 routines (e.g. Func_007_6ADC, Func_007_7C5F, Func_031_40A5, Func_033_51C6, ...)
-; reads: wC58A, wC58D, wC58E, wC57F, wC581, wC5ED, wC55E, wC55F, ...
+; 8 call sites from 6 routines (e.g. Func_007_6ADC, Func_007_7C5F, GameMode4_Update, Func_033_51C6, ...)
+; reads: wC58A, wC58D, wC58E, wC57F, wC581, wC5ED, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wC58D, wC58E, wC56A, wC56B, wC582, wC595, wC596, rVBK, ...
-; points at: wC592, wC5DB, wC604
+; points at: wC592, wGameMode, wC604
 Func_000_0535::
     ld a, [wC58A]
     or a, a
@@ -671,11 +687,11 @@ Jump_000_0574::
     ret
 
 Jump_000_057C::
-    ld a, [wC55E]
+    ld a, [wJoypadHeld]
     ld [wC56A], a
-    ld a, [wC55F]
+    ld a, [wJoypadHeldPrev]
     ld [wC56B], a
-    call Func_000_0A17
+    call PollJoypad
     ld a, [wC594]
     cp a, $FF
     jr z, Jump_000_059D
@@ -784,7 +800,7 @@ Jump_000_0636::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0A17)
+; 1 call site from 1 routine (e.g. PollJoypad)
 ; reads: rP1
 ; writes: rP1
 ; points at: wC474
@@ -1085,10 +1101,12 @@ Func_000_07D8::
     ldh [rIE], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_000_0355, Func_0A1_4519, Func_0A1_4F8B)
+; rSCX = hScrollX, rSCY = hScrollY
+; 3 call sites from 3 routines (e.g. VBlankHandler, Func_0A1_4519, Func_0A1_4F8B)
 ; reads: hScrollX, hScrollY, hFF9F, hFFA0
 ; writes: rSCX, rSCY, rWX, rWY
-Func_000_07E0::
+CopyScrollToHardware::
+Func_000_07E0:: ; address name
     ldh a, [hScrollX]
     ldh [rSCX], a
     ldh a, [hScrollY]
@@ -1099,21 +1117,25 @@ Func_000_07E0::
     ldh [rWY], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_0355)
+; waits until rSTAT mode bits are 0, then rLCDC = wC5EC
+; 2 call sites from 1 routine (e.g. VBlankHandler)
 ; reads: rSTAT, wC5EC
 ; writes: rLCDC
-Func_000_07F1::
+WriteLCDCShadow::
+Func_000_07F1:: ; address name
     ldh a, [rSTAT]
     and a, $03
-    jr nz, Func_000_07F1
+    jr nz, WriteLCDCShadow
     ld a, [wC5EC]
     ldh [rLCDC], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; rBGP, rOBP0, rOBP1 = wC5E9, wC5EA, wC5EB
+; 1 call site from 1 routine (e.g. VBlankHandler)
 ; writes: rBGP, rOBP0, rOBP1
 ; points at: wC5E9
-Func_000_07FD::
+CopyDMGPalettesToHardware::
+Func_000_07FD:: ; address name
     ld hl, wC5E9
     ld a, [hl+]
     ldh [rBGP], a
@@ -1150,7 +1172,7 @@ Jump_000_0819::
     ret
 
 ; when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access
-; 18 call sites from 15 routines (e.g. Func_000_0355, Func_003_4015, Func_003_4A36, Func_003_4339, ...)
+; 18 call sites from 15 routines (e.g. VBlankHandler, GameMode2_Update, Func_003_4A36, Func_003_4339, ...)
 ; reads: wC526
 ; writes: rBGPI
 ; points at: wC49F
@@ -1192,7 +1214,7 @@ Jump_000_0851::
     jr nz, Jump_000_0851
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; 1 call site from 1 routine (e.g. VBlankHandler)
 ; reads: wC527, rSTAT
 ; writes: rOBPI
 ; points at: wC4DF
@@ -1258,7 +1280,7 @@ Func_000_089F:: ; heuristic: follows a terminator; C0
     ldh [rSTAT], a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_002_45C6, Func_007_486E, Func_031_4001, Func_0A0_4ECF)
+; 4 call sites from 4 routines (e.g. GameMode1_Init, GameMode5_Init, GameMode4_Init, GameMode7_Init)
 ; reads: rSTAT
 ; writes: rSTAT
 Func_000_08A6::
@@ -1417,7 +1439,7 @@ Func_000_095B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $000973, $80
 
 ; 16-bit seed in wCD03/wCD04 becomes seed * 5 + 11
-; 81 call sites from 43 routines (e.g. Func_000_0355, Func_00A_43EC, Func_00A_476E, Func_00A_465D, ...)
+; 81 call sites from 43 routines (e.g. VBlankHandler, Func_00A_43EC, Func_00A_476E, Func_00A_465D, ...)
 ; reads: wCD03, wCD04
 ; writes: wCD03, wCD04
 NextRandomSeed::
@@ -1445,18 +1467,20 @@ Func_000_09F3:: ; address name
     pop hl
     ret
 
-; 6 call sites from 4 routines (e.g. Func_000_0355, Func_000_0535, Func_01B_468A, Func_01B_45A1)
-; reads: wSGBActive, wC55E, wC474, wC560, wC476
-; writes: wC55F, wC55E, wC561, wC560, wC55D, rP1
-Func_000_0A17::
+; shifts wJoypadHeld to wJoypadHeldPrev and reads the new state into wJoypadHeld (directly, or through the SGB path when wSGBActive)
+; 6 call sites from 4 routines (e.g. VBlankHandler, Func_000_0535, Func_01B_468A, Func_01B_45A1)
+; reads: wSGBActive, wJoypadHeld, wC474, wC560, wC476
+; writes: wJoypadHeldPrev, wJoypadHeld, wC561, wC560, wC55D, rP1
+PollJoypad::
+Func_000_0A17:: ; address name
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_000_0A39
     call Func_000_0646
-    ld a, [wC55E]
-    ld [wC55F], a
+    ld a, [wJoypadHeld]
+    ld [wJoypadHeldPrev], a
     ld a, [wC474]
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ld a, [wC560]
     ld [wC561], a
     ld a, [wC476]
@@ -1466,11 +1490,11 @@ Func_000_0A17::
 Jump_000_0A39::
     xor a, a
     ld [wC55D], a
-    call Func_000_0A61
-    ld a, [wC55E]
-    ld [wC55F], a
+    call ReadJoypadDirect
+    ld a, [wJoypadHeld]
+    ld [wJoypadHeldPrev], a
     ld a, b
-    ld [wC55E], a
+    ld [wJoypadHeld], a
     ld a, $30
     ldh [rP1], a
     ret
@@ -1479,7 +1503,7 @@ Jump_000_0A39::
 ; reads: wC560
 ; writes: wC561, wC560, rP1
 Func_000_0A4F:: ; heuristic: follows a terminator; C0
-    call Func_000_0A61
+    call ReadJoypadDirect
     ld a, [wC560]
     ld [wC561], a
     ld a, b
@@ -1488,10 +1512,12 @@ Func_000_0A4F:: ; heuristic: follows a terminator; C0
     ldh [rP1], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_0A17, Func_000_0A4F)
+; B = the buttons: upper nibble D-pad (bit 7 down, 6 up, 5 left, 4 right), lower nibble A, B, Select, Start (bits 0-3), 1 = pressed; reads rP1 with each line group selected
+; 2 call sites from 2 routines (e.g. PollJoypad, Func_000_0A4F)
 ; reads: rP1
 ; writes: rP1
-Func_000_0A61::
+ReadJoypadDirect::
+Func_000_0A61:: ; address name
     ld a, $20
     ldh [rP1], a
     ldh a, [rP1]
@@ -1518,11 +1544,13 @@ Func_000_0A61::
     ld b, a
     ret
 
-; 9 call sites from 5 routines (e.g. Func_000_0355, Func_01B_4736, Func_01B_468A, Func_01B_45EF, ...)
-; reads: wC58A, wC55D, wC562, wC566, wC560, wC55E
-; writes: wC560, wC561, wC563, wC562, wC564, wC567, wC566, wC568
-; points at: wC55E, wC560, wC568, wC564
-Func_000_0A8D::
+; wJoypadPressed = buttons newly held since the last poll; wJoypadPressedRepeat = the same, plus an auto-repeat that fires after $14 frames and then every 6 (timer in wJoypadRepeatTimer)
+; 9 call sites from 5 routines (e.g. VBlankHandler, Func_01B_4736, Func_01B_468A, Func_01B_45EF, ...)
+; reads: wC58A, wC55D, wJoypadPressed, wC566, wC560, wJoypadHeld
+; writes: wC560, wC561, wJoypadPressedRepeat, wJoypadPressed, wJoypadRepeatTimer, wC567, wC566, wC568
+; points at: wJoypadHeld, wC560, wC568, wJoypadRepeatTimer
+UpdateJoypadPresses::
+Func_000_0A8D:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_000_0AA0
@@ -1535,15 +1563,15 @@ Func_000_0A8D::
 
 Jump_000_0AA0::
     xor a, a
-    ld [wC563], a
-    ld hl, wC55E
+    ld [wJoypadPressedRepeat], a
+    ld hl, wJoypadHeld
     ld a, [hl]
     inc hl
     xor a, [hl]
     dec hl
     and a, [hl]
-    ld [wC562], a
-    ld hl, wC55E
+    ld [wJoypadPressed], a
+    ld hl, wJoypadHeld
     ld a, [hl+]
     or a, a
     jr z, Jump_000_0AB9
@@ -1551,20 +1579,20 @@ Jump_000_0AA0::
     jr z, Jump_000_0AC6
 
 Jump_000_0AB9::
-    ld a, [wC562]
-    ld [wC563], a
+    ld a, [wJoypadPressed]
+    ld [wJoypadPressedRepeat], a
     ld a, $14
-    ld [wC564], a
+    ld [wJoypadRepeatTimer], a
     jr Jump_000_0AD6
 
 Jump_000_0AC6::
-    ld hl, wC564
+    ld hl, wJoypadRepeatTimer
     ld a, [hl]
     or a, a
     jr nz, Jump_000_0AD5
     ld [hl], $06
-    ld a, [wC55E]
-    ld [wC563], a
+    ld a, [wJoypadHeld]
+    ld [wJoypadPressedRepeat], a
 
 Jump_000_0AD5::
     dec [hl]
@@ -1773,9 +1801,11 @@ Jump_000_0BAF::
     jr nz, Jump_000_0BAF
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0474)
+; zeroes the first byte (Y) of every OAM shadow entry from hOamNextEntry up to 40
+; 1 call site from 1 routine (e.g. GameFrameUpdate)
 ; reads: hOamNextEntry
-Func_000_0BB4::
+ClearUnusedOAMEntries::
+Func_000_0BB4:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $28
     ret z
@@ -1796,11 +1826,13 @@ Jump_000_0BC4::
     jr nz, Jump_000_0BC4
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0355)
+; if wC0C0/wC0C1 (a VRAM address) is non-zero, writes wC0C3 bytes from wC0C4 there: along the row when wC0C2 is 0, down the column otherwise
+; 1 call site from 1 routine (e.g. VBlankHandler)
 ; reads: wC0C0, wC0C1, wC0C3, wC0C2, wIsCGB, wC0D8, wC0D9, wC0DB, ...
 ; writes: wC0C0, wC0C1, rVBK, wC0D8, wC0D9
 ; points at: wC0C4, wC0DC
-Func_000_0BCC::
+FlushQueuedBGMapWrite::
+Func_000_0BCC:: ; address name
     ld a, [wC0C0]
     ld e, a
     ld a, [wC0C1]
@@ -1911,7 +1943,7 @@ Jump_000_0C4E::
     ret
 
 ; C2 static reading (E-0016): takes the lock byte $FFD6 (spins while it is non-zero), calls Func_000_0C69, then clears the lock.
-; 33 call sites from 13 routines (e.g. SGBTransferCompressed, Func_007_4E11, Func_007_4B27, Func_007_486E, ...)
+; 33 call sites from 13 routines (e.g. SGBTransferCompressed, Func_007_4E11, Func_007_4B27, GameMode5_Init, ...)
 ; reads: hDecompressLock
 ; writes: hDecompressLock
 DecompressToRAMLocked::
@@ -2236,7 +2268,7 @@ Func_000_0DA8:: ; address name
 
 ; 4 call sites from 4 routines (e.g. Func_000_0150, Func_002_5F9B, Func_007_600E, Func_0E0_75BF)
 ; reads: wC5E9, wC5EA, wC5EB
-; writes: wC56C, wC56D, wC56E
+; writes: wFadeState, wC56D, wC56E
 ; points at: wC56F, wC572
 Func_000_0DCA::
     ld hl, wC56F
@@ -2256,7 +2288,7 @@ Jump_000_0DDB::
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld [wC56C], a
+    ld [wFadeState], a
     ld a, $07
     ld [wC56D], a
     ld a, $1F
@@ -2264,9 +2296,9 @@ Jump_000_0DDB::
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
-; 91 call sites from 50 routines (e.g. Func_001_4001, Func_001_65A0, Func_002_5F9B, Func_002_4745, ...)
-; reads: wIsCGB, wSGBActive, wC56C, wC56D, wC56E, wC5E9, wC5EA, wC5EB
-; writes: wC56C, wC572, wC573, wC574
+; 91 call sites from 50 routines (e.g. GameMode0_Init, Func_001_65A0, Func_002_5F9B, Func_002_4745, ...)
+; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
+; writes: wFadeState, wC572, wC573, wC574
 ; points at: wC4FF, wC4DF, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
 StartPaletteFade::
 Func_000_0DF2:: ; address name
@@ -2280,7 +2312,7 @@ Func_000_0DF2:: ; address name
     bit 7, b
     jr nz, Jump_000_0E2C
     ld a, b
-    ld [wC56C], a
+    ld [wFadeState], a
     ld hl, wC4FF
     ld de, wC4DF
     ld c, $20
@@ -2293,7 +2325,7 @@ Jump_000_0E11::
     jr nz, Jump_000_0E11
     ld a, $00
     ld [wC572], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     srl a
     srl a
     ld [wC573], a
@@ -2302,10 +2334,10 @@ Jump_000_0E11::
 
 Jump_000_0E2C::
     ld a, b
-    ld [wC56C], a
+    ld [wFadeState], a
     ld a, $20
     ld [wC572], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     cpl
     srl a
     srl a
@@ -2361,7 +2393,7 @@ Jump_000_0E63::
 
 Jump_000_0E9B::
     ld a, b
-    ld [wC56C], a
+    ld [wFadeState], a
     farcall Func_002_4001
     jp Jump_000_0F3D
 
@@ -2372,7 +2404,7 @@ Jump_000_0EA8::
     bit 7, b
     jr nz, Jump_000_0ED8
     ld a, b
-    ld [wC56C], a
+    ld [wFadeState], a
     ld hl, wC56F
     ld a, [wC5E9]
     ld [hl+], a
@@ -2382,7 +2414,7 @@ Jump_000_0EA8::
     ld [hl], a
     ld a, $00
     ld [wC572], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     add a, $02
     ld [wC573], a
     ld [wC574], a
@@ -2390,10 +2422,10 @@ Jump_000_0EA8::
 
 Jump_000_0ED8::
     ld a, b
-    ld [wC56C], a
+    ld [wFadeState], a
     ld a, $04
     ld [wC572], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     cpl
     add a, $02
     ld [wC573], a
@@ -2409,7 +2441,7 @@ Jump_000_0EF7::
     bit 7, b
     jr nz, Jump_000_0F20
     ld a, b
-    ld [wC56C], a
+    ld [wFadeState], a
     ld hl, wC56F
     ld a, [wC5E9]
     ld [hl+], a
@@ -2419,7 +2451,7 @@ Jump_000_0EF7::
     ld [hl], a
     ld a, $00
     ld [wC572], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     add a, $02
     ld [wC573], a
     ld [wC574], a
@@ -2427,10 +2459,10 @@ Jump_000_0EF7::
 
 Jump_000_0F20::
     ld a, b
-    ld [wC56C], a
+    ld [wFadeState], a
     ld a, $04
     ld [wC572], a
-    ld a, [wC56C]
+    ld a, [wFadeState]
     cpl
     add a, $02
     ld [wC573], a
@@ -2461,11 +2493,13 @@ Jump_000_0F47::
     jr nz, Jump_000_0F47
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_0355, Func_01B_47CA)
-; reads: wC56C, wIsCGB, wSGBActive, wC574, wC572, wC573, wC56D
-; writes: wC574, wC572, wC56C
-Func_000_0F4E::
-    ld a, [wC56C]
+; does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)
+; 2 call sites from 2 routines (e.g. VBlankHandler, Func_01B_47CA)
+; reads: wFadeState, wIsCGB, wSGBActive, wC574, wC572, wC573, wC56D
+; writes: wC574, wC572, wFadeState
+StepFade::
+Func_000_0F4E:: ; address name
+    ld a, [wFadeState]
     or a, a
     ret z
     bit 7, a
@@ -2476,7 +2510,7 @@ Func_000_0F4E::
     ld a, [wSGBActive]
     or a, a
     jp z, Jump_000_10CE
-    ld a, [wC56C]
+    ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_000_0F98
     ld a, [wC574]
@@ -2528,7 +2562,7 @@ Jump_000_0FAD::
     jp z, Jump_000_1205
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_0F4E)
+; 2 call sites from 1 routine (e.g. StepFade)
 ; reads: wC56E
 ; writes: wC576, wSGBPacketIndex
 ; points at: wC4DF, wSGBPacketBuffer, wC4EF
@@ -2708,7 +2742,7 @@ Jump_000_10CE::
     ld a, [wC56D]
     bit 7, a
     jp nz, Jump_000_116D
-    ld a, [wC56C]
+    ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_000_10FE
     ld a, [wC574]
@@ -2805,7 +2839,7 @@ Jump_000_1166::
     ret
 
 Jump_000_116D::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     bit 7, a
     jr nz, Jump_000_1194
     ld a, [wC574]
@@ -2908,7 +2942,7 @@ Jump_000_11FE::
 
 Jump_000_1205::
     xor a, a
-    ld [wC56C], a
+    ld [wFadeState], a
     ret
 
 ; loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set
@@ -2957,16 +2991,20 @@ Jump_000_1222::
     ei
     ret
 
+; wMusicRequest = A
 ; 37 call sites from 30 routines (e.g. Func_000_2950, Func_001_5EAF, Func_001_4045, Func_002_6050, ...)
-; writes: wC60A
-Func_000_122D::
-    ld [wC60A], a
+; writes: wMusicRequest
+QueueMusic::
+Func_000_122D:: ; address name
+    ld [wMusicRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_131A)
+; A = sound id (0 = none): stores it in wC608, calls InitSoundHardware (silencing every channel), stores A in wSoundId and starts the track with Func_000_334E unless the id is one of a list that is handled separately
+; 1 call site from 1 routine (e.g. ProcessSoundQueue)
 ; reads: wC608
 ; writes: wC608, wSoundId
-Func_000_1231::
+StartMusic::
+Func_000_1231:: ; address name
     ld [wC608], a
     di
     call InitSoundHardware
@@ -3010,17 +3048,19 @@ Jump_000_1276::
     ei
     ret
 
-; stores A in wC60B
+; wSoundEffectRequest = A; ProcessSoundQueue starts it on the next frame
 ; 403 call sites from 211 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D33, Func_000_2950, ...)
-; writes: wC60B
-StoreWC60B::
+; writes: wSoundEffectRequest
+QueueSoundEffect::
 Func_000_1278:: ; address name
-    ld [wC60B], a
+    ld [wSoundEffectRequest], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_131A)
+; A = sound id: stores it in wSoundId and starts the effect (ids in a fixed list take a separate path)
+; 1 call site from 1 routine (e.g. ProcessSoundQueue)
 ; writes: wSoundId
-Func_000_127C::
+StartSoundEffect::
+Func_000_127C:: ; address name
     push af
     push bc
     push de
@@ -3115,24 +3155,26 @@ Jump_000_1310::
     pop af
     ret
 
-; 2 call sites from 1 routine (e.g. Func_000_0355)
-; reads: wC60A, wC60B
-; writes: wC60A, wC60B
-Func_000_131A::
-    ld a, [wC60A]
+; starts the music requested in wMusicRequest and the effect requested in wSoundEffectRequest (StartMusic / StartSoundEffect), then sets each request to $FF
+; 2 call sites from 1 routine (e.g. VBlankHandler)
+; reads: wMusicRequest, wSoundEffectRequest
+; writes: wMusicRequest, wSoundEffectRequest
+ProcessSoundQueue::
+Func_000_131A:: ; address name
+    ld a, [wMusicRequest]
     cp a, $FF
     jr z, Jump_000_1329
-    call Func_000_1231
+    call StartMusic
     ld a, $FF
-    ld [wC60A], a
+    ld [wMusicRequest], a
 
 Jump_000_1329::
-    ld a, [wC60B]
+    ld a, [wSoundEffectRequest]
     cp a, $FF
     jr z, Jump_000_1338
-    call Func_000_127C
+    call StartSoundEffect
     ld a, $FF
-    ld [wC60B], a
+    ld [wSoundEffectRequest], a
 
 Jump_000_1338::
     ret
@@ -3179,7 +3221,7 @@ Jump_000_1378::
     ld [wC5E2], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_0F4E)
+; 1 call site from 1 routine (e.g. StepFade)
 ; reads: wC5E0, wC5E2, wC5E3, rNR50, wC5E5, wC5E4
 ; writes: wC5E3, rNR50, wC5E5, wC5E4, wC5E2
 Func_000_137D::
@@ -3254,7 +3296,7 @@ Jump_000_13E0::
     ld [wC5E2], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_45C6, Func_007_486E)
+; 2 call sites from 2 routines (e.g. GameMode1_Init, GameMode5_Init)
 ; points at: wC523
 Func_000_13E5::
     ld hl, wC523
@@ -3377,7 +3419,7 @@ Jump_000_14CF::
 ; 1 call site from 1 routine (e.g. Func_000_076B)
 ; reads: wC58A, wC580, wC57F, wC581, rSB, wIsCGB
 ; writes: wC580, wC582, wC57F
-; points at: wC55E
+; points at: wJoypadHeld
 Func_000_14D1::
     ld a, [wC58A]
     or a, a
@@ -3473,7 +3515,7 @@ Jump_000_1558::
 Jump_000_1575::
     xor a, a
     ld [wC582], a
-    ld hl, wC55E
+    ld hl, wJoypadHeld
     ld b, $0E
 
 Jump_000_157E::
@@ -4091,7 +4133,7 @@ Jump_000_1843::
     ret
 
 ; DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300
-; 157 call sites from 68 routines (e.g. Func_002_4745, Func_002_6CD4, Func_003_4015, Func_004_6A35, ...)
+; 157 call sites from 68 routines (e.g. Func_002_4745, Func_002_6CD4, GameMode2_Update, Func_004_6A35, ...)
 SetFlagBit::
 Func_000_1845:: ; address name
     ld a, d
@@ -6408,7 +6450,7 @@ Jump_000_24B9::
 
 ; returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case
 ; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, Func_003_5AA7, Func_016_5906, Func_0F1_442F)
-; reads: wC58A, wC5DB
+; reads: wC58A, wGameMode
 ; points at: wC6FE
 MapIndexViaWC6FE::
 Func_000_24C5:: ; address name
@@ -6417,7 +6459,7 @@ Func_000_24C5:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_000_24D7
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $04
     jr nz, Jump_000_24D7
     ld a, b
@@ -6493,12 +6535,14 @@ Jump_000_2528::
     xor a, a
     ret
 
-; 11 call sites from 3 routines (e.g. Func_000_0474, Func_002_5BD7, Func_00F_7BC3)
-; reads: wC5DB, wC5DC
+; hFFD2/hFFD3 = -(hScrollX - 9) - 1 and hFFD4/hFFD5 = -(hScrollY - $11) - 1 as 16-bit values; returns early in game mode 1 when wC5DC & $0F = 6
+; 11 call sites from 3 routines (e.g. GameFrameUpdate, Func_002_5BD7, Func_00F_7BC3)
+; reads: wGameMode, wC5DC
 ; writes: hFFD2, hFFD3, hFFD4, hFFD5
 ; points at: hScrollX, hScrollY
-Func_000_252D::
-    ld a, [wC5DB]
+ComputeSpriteScrollOffsets::
+Func_000_252D:: ; address name
+    ld a, [wGameMode]
     cp a, $01
     jr nz, Jump_000_253C
     ld a, [wC5DC]
@@ -6667,8 +6711,8 @@ Jump_000_2616::
     jr nz, Jump_000_2616
     ret
 
-; 3 call sites from 3 routines (e.g. Func_000_0355, RunStringDisplayToEnd, Func_01B_47CA)
-; reads: wC52C, wStringBank, wC52B, wC5F0, wC550, wC563, wC567, wC552, ...
+; 3 call sites from 3 routines (e.g. VBlankHandler, RunStringDisplayToEnd, Func_01B_47CA)
+; reads: wC52C, wStringBank, wC52B, wFrameCounterLo, wC550, wJoypadPressedRepeat, wC567, wC552, ...
 ; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
 ; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
 Func_000_2620::
@@ -6686,7 +6730,7 @@ Jump_000_2627::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_2620)
-; reads: wStringBank, wC52C, wC52B, wC5F0, wC550, wC563, wC567, wC552, ...
+; reads: wStringBank, wC52C, wC52B, wFrameCounterLo, wC550, wJoypadPressedRepeat, wC567, wC552, ...
 ; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
 ; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
 Func_000_2637::
@@ -6703,7 +6747,7 @@ Func_000_2637::
     bit 5, a
     jr z, Jump_000_266E
     ld c, $BD
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 4, a
     jr z, Jump_000_265F
     ld c, $B4
@@ -6728,7 +6772,7 @@ Jump_000_266E::
     jp nz, Jump_000_274A
 
 Jump_000_2685::
-    ld a, [wC563]
+    ld a, [wJoypadPressedRepeat]
     ld b, a
     ld a, [wC567]
     or a, b
@@ -6739,7 +6783,7 @@ Jump_000_2685::
     xor a, $01
     ld [wC552], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_000_26B5
 
 Jump_000_26A2::
@@ -6750,7 +6794,7 @@ Jump_000_26A2::
     xor a, $01
     ld [wC552], a
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_000_26B5::
     ld c, $BB
@@ -6762,7 +6806,7 @@ Jump_000_26B5::
     ld b, $BB
 
 Jump_000_26C3::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 4, a
     jr z, Jump_000_26CE
     ld c, $C3
@@ -6785,7 +6829,7 @@ Jump_000_26CE::
     pop bc
     ld a, b
     call WriteVRAMByte
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     ld b, a
     ld a, [wC566]
     or a, b
@@ -6798,7 +6842,7 @@ Jump_000_26CE::
     cp a, $E6
     jp z, Jump_000_271B
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_000_271B
 
 Jump_000_2711::
@@ -6834,7 +6878,7 @@ Jump_000_271B::
     jp Jump_000_2875
 
 Jump_000_274A::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     ld b, a
     ld a, [wC566]
     or a, b
@@ -6854,7 +6898,7 @@ Jump_000_2764::
     ld [wC53B], a
     or a, a
     jp z, Jump_000_2780
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     ld b, a
     ld a, [wC566]
     or a, b
@@ -6894,7 +6938,7 @@ Jump_000_27A2::
     ld a, [wC52B]
     bit 1, a
     jr nz, Jump_000_27E5
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     ld b, a
     ld a, [wC566]
     or a, b
@@ -6936,7 +6980,7 @@ Jump_000_27E5::
     cp a, $9A
     jr z, Jump_000_2875
     ld a, [wC556]
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC52C
     set 1, [hl]
     jr Jump_000_2875
@@ -7210,7 +7254,7 @@ Jump_000_2996::
     res 7, [hl]
     call Func_000_2E5D
     ld a, [hl]
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC52C
     set 2, [hl]
     ret
@@ -7220,7 +7264,7 @@ Jump_000_29A8::
     res 7, [hl]
     call Func_000_2E5D
     ld a, [hl]
-    call Func_000_122D
+    call QueueMusic
     ld hl, wC52C
     set 2, [hl]
     ret
@@ -7277,11 +7321,11 @@ Jump_000_29FA::
     jr z, Jump_000_2A16
     cp a, $D6
     jr z, Jump_000_2A16
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_000_2A16::
-    call Func_000_122D
+    call QueueMusic
     ret
 
 Jump_000_2A1A::
@@ -7562,7 +7606,7 @@ Jump_000_2BF1::
     ret
 
 ; 4 call sites from 3 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2950)
-; reads: wC52B, wC5DB
+; reads: wC52B, wGameMode
 ; writes: wC52B
 Func_000_2BFA::
     ld a, [wC52B]
@@ -7576,11 +7620,11 @@ Func_000_2BFA::
     call Func_000_3048
     ld a, $B4
     call WriteVRAMByte
-    ld a, [wC5DB]
+    ld a, [wGameMode]
     cp a, $04
     ret z
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_000_2C21::
@@ -7758,7 +7802,7 @@ Func_000_2D33::
     ld hl, wC52C
     res 7, [hl]
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     call Func_000_2D4A
     ld hl, wC52B
     set 2, [hl]
@@ -7958,7 +8002,7 @@ Func_000_2E81::
     ret
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
-; 46 call sites from 24 routines (e.g. Func_001_4001, Func_001_4F80, Func_003_4015, Func_007_4E11, ...)
+; 46 call sites from 24 routines (e.g. GameMode0_Init, Func_001_4F80, GameMode2_Update, Func_007_4E11, ...)
 ; writes: wC52D, wC52E, wC52F, wC530
 FillTilesRequest::
 Func_000_2E98:: ; address name
@@ -8387,7 +8431,7 @@ Jump_000_30BE::
     INCBIN "dwm2-cobi-us.gbc", $0030CC, $1C4
 
 ; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0
-; 9 call sites from 7 routines (e.g. Func_000_0150, Func_000_1231, Func_001_5EAF, Func_002_45C6, ...)
+; 9 call sites from 7 routines (e.g. Func_000_0150, StartMusic, Func_001_5EAF, GameMode1_Init, ...)
 ; writes: rNR52, rNR51, wDD09, rNR50, wDD15, wDD19
 ; points at: wSoundChannelSlots, wSoundLabelSlots
 InitSoundHardware::
@@ -8455,7 +8499,7 @@ Func_000_32DB::
     ld [wDD14], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wSoundChannelIndex, wDD14
 ; writes: wDD14
 Func_000_32E8::
@@ -8477,7 +8521,7 @@ Jump_000_32F5::
     ld [wDD14], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wDD14, wDD13, wDD12
 ; writes: wDD14, wDD12
 ; points at: wDD12, wDC06
@@ -8541,21 +8585,21 @@ Func_000_3340::
     ld hl, $3E24
     jr Jump_000_335D
 
-; 1 call site from 1 routine (e.g. Func_000_1231)
+; 1 call site from 1 routine (e.g. StartMusic)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
 Func_000_334B::
     call StartSound
 
-; 2 call sites from 2 routines (e.g. Func_000_127C, Func_000_1231)
+; 2 call sites from 2 routines (e.g. StartSoundEffect, StartMusic)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
 Func_000_334E::
     call StartSound
 
-; 2 call sites from 2 routines (e.g. Func_000_127C, Func_000_1231)
+; 2 call sites from 2 routines (e.g. StartSoundEffect, StartMusic)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
@@ -8563,7 +8607,7 @@ Func_000_3351::
     call StartSound
 
 ; C2 static reading, and 495 emulated sound starts agree (E-0018): starts sound id A (kept in $DD10). Finds A's range in SoundBankTable, switches to that bank, takes the 4-byte record at (array + 4*(A - first id)), and copies it into the channel-state slot at $DC00 + record byte 0 (record byte 1 to slot +2, the track pointer to +3/+4, this bank to +5). Returns A + 1.
-; 4 call sites from 4 routines (e.g. Func_000_127C, Func_000_334E, Func_000_3351, Func_000_334B)
+; 4 call sites from 4 routines (e.g. StartSoundEffect, Func_000_334E, Func_000_3351, Func_000_334B)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
@@ -8686,11 +8730,13 @@ Jump_000_33AA::
     ret
 
 ; C1 (E-0018): appears to be the sound engine's update routine. It switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes the sound registers (including $FF1A). Identified from those writes and from the banks it reads at runtime ($40-$43 via the tables above); not decoded further.
-; 3 call sites from 1 routine (e.g. Func_000_0355)
+; for each of the 6 channel slots at wSoundChannelSlots: copies the slot into HRAM $FFD8-$FFF7, reads events from the track in bank hSoundBank and writes the channel's sound registers (the per-frame sound engine; called from VBlankHandler)
+; 3 call sites from 1 routine (e.g. VBlankHandler)
 ; reads: wDD15, hSoundBank, hFFDA, hTrackPosLo, hTrackPosHi, hFFE6, hFFE7, hFFDE, ...
 ; writes: wSoundChannelIndex, wDD08, rROMB0, wSoundHwChannel, wDD0D, wDD0B, wDD0C, hFFE7, ...
 ; points at: wDD0E, wSoundChannelSlots, hFFDF, hFFF2
-Func_000_33E8::
+SoundTick::
+Func_000_33E8:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, [wDD15]
@@ -9020,7 +9066,7 @@ Jump_000_35C5::
     jr Jump_000_357E
 
 ; C2 static reading and 5,154 emulated fetches agree (E-0019): fetches the next track event of the current channel. The position in $FFD8/$FFD9 counts 2-byte events from the track start ($FFDB/$FFDC), the event address is base + 2*position, and the first byte selects the command (see tools/sound_tracks.py).
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hTrackPosLo, hTrackPosHi, hTrackBaseLo, hTrackBaseHi, hFFF3, wSoundHwChannel, hFFE2, hFFDE, ...
 ; writes: hTrackPosLo, hTrackPosHi, hFFF2, hFFE1, hFFE7, rNR30, hFFEB, hFFEC, ...
 SoundNextEvent::
@@ -9697,7 +9743,7 @@ Jump_000_39AB::
     and a, $07
     jr Jump_000_398E
 
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wSoundHwChannel, hFFE8, hFFE0, hFFE9, wDD0D, hFFEC
 ; writes: hFFEA, hFFE0
 ; points at: hFFEA, hFFE8
@@ -9742,7 +9788,7 @@ Jump_000_39EC::
     ldh [hFFE0], a
     jr Func_000_3A2F
 
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wSoundHwChannel, hFFF0, hFFDA, wDD0E, hFFEB, wDD0D
 Func_000_39F8::
     call Func_000_3B51
@@ -9782,7 +9828,7 @@ Func_000_3A21::
     jr nz, Jump_000_3A94
     ldh a, [hFFE0]
 
-; 2 call sites from 2 routines (e.g. SoundNextEvent, Func_000_33E8)
+; 2 call sites from 2 routines (e.g. SoundNextEvent, SoundTick)
 ; reads: wDD0D, hFFEC
 Func_000_3A2F::
     ld b, a
@@ -9847,7 +9893,7 @@ Jump_000_3A69::
     ldh [rNR32], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hFFEB, hFFEC, wSoundHwChannel, hFFE5, hFFE6, hFFE7, hFFF1, hFFE0, ...
 ; writes: rNR32
 ; points at: hFFE0
@@ -10045,7 +10091,7 @@ Func_000_3D7C::
     xor a, a
     ldh [rNR30], a
 
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hFFF1
 Func_000_3D8D::
     ld d, a
@@ -10099,7 +10145,7 @@ Func_000_3DAE:: ; address name
     ld h, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_000_33E8)
+; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hFFED, hFFE0
 ; writes: hFFED, hFFE0
 Func_000_3DC8::

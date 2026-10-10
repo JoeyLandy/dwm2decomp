@@ -301,7 +301,7 @@ Func_00A_4196::
     or a, a
     jr nz, Jump_00A_41C1
     ld a, $66
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC5E9
     ld a, $D2
     ld [hl+], a
@@ -441,7 +441,7 @@ Jump_00A_4271::
     jr Jump_00A_427B
 
 Jump_00A_427B::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC91F]
@@ -622,10 +622,10 @@ Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E2, $FF
 
 ; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7)
-; reads: wC56C, wC91F, wC901, wD069
+; reads: wFadeState, wC91F, wC901, wD069
 ; writes: wD069, wC916, wC917
 Func_00A_43B5::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC91F]
@@ -657,10 +657,10 @@ Jump_00A_43DC::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_56DC, Func_002_5BD7)
-; reads: wC56C, wC91F, hFF8C, wC5DC, wC901, wD091, wC902, wCC44, ...
+; reads: wFadeState, wC91F, hFF8C, wC5DC, wC901, wD091, wC902, wCC44, ...
 ; writes: wC901, wD091, wC916, wC917, wC902, wC903, wC5DC, wC904, ...
 Func_00A_43EC::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld a, [wC91F]
@@ -2409,7 +2409,7 @@ Jump_00A_5207::
     and a, $01
     sla a
     add a, $44
-    call Func_000_122D
+    call QueueMusic
     ld a, $03
     ldh [hFFB9], a
     ldh a, [hScrollY]
@@ -2481,12 +2481,12 @@ Jump_00A_525C::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DB], a
+    ld [wGameMode], a
     xor a, a
     ld [wC5DC], a
     ld [wC5DD], a
     ld [wC5DE], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ld hl, wD066
     inc [hl]

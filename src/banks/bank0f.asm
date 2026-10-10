@@ -62,7 +62,7 @@ Jump_00F_404D::
     or a, $02
     ldh [hFF8C], a
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -189,7 +189,7 @@ Jump_00F_414D::
     ldh [hFF8F], a
     ldh [hFF92], a
     ld a, $02
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $0B
     ld [wC5DC], a
     xor a, a
@@ -325,7 +325,7 @@ Jump_00F_423E::
     db $DE, $67, $1F, $33, $3C, $12, $00, $00
 
 Jump_00F_4266::
-    ld a, [wC56C]
+    ld a, [wFadeState]
     or a, a
     ret nz
     ld hl, wC923
@@ -614,10 +614,10 @@ Jump_00F_44B1::
     ld a, $10
     call StartPaletteFade
     ld a, $00
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $08
     ld [wC5DC], a
-    ld hl, wC5DF
+    ld hl, wModeChangeRequest
     inc [hl]
     ld hl, wC923
     inc [hl]
@@ -718,7 +718,7 @@ Jump_00F_456A::
     ld a, h
     ld [wC922], a
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $0E
     ldh [hFF8D], a
     ld hl, wC923
@@ -2491,7 +2491,7 @@ Jump_00F_55AC::
 
 Jump_00F_55B3::
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_00F_55B8::
     ld a, [wIsCGB]
@@ -2522,7 +2522,7 @@ Jump_00F_55DA::
     ret
 
 Jump_00F_55E5::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 2, a
     jr z, Jump_00F_55F2
     xor a, a
@@ -2598,7 +2598,7 @@ Jump_00F_5662::
     or a, a
     jr nz, Jump_00F_566D
     ld a, $1F
-    call Func_000_122D
+    call QueueMusic
 
 Jump_00F_566D::
     ld a, $18
@@ -2896,7 +2896,7 @@ Jump_00F_585B::
     ld a, $80
     ld [wCBCF], a
     ld a, $85
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -3739,7 +3739,7 @@ Jump_00F_5E9D::
     ld a, $E0
     ld [wCB9A], a
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -3771,7 +3771,7 @@ Jump_00F_5EE8::
     cp a, $10
     jr nz, Jump_00F_5F00
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -3937,7 +3937,7 @@ Jump_00F_6003::
 Jump_00F_6019::
     ld hl, wCBAC
     call SetBit2AtHL_B0F
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     srl a
     srl a
     srl a
@@ -4027,10 +4027,10 @@ Jump_00F_60B3::
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_00F_5F06)
-; reads: wC5F0
+; reads: wFrameCounterLo
 ; writes: wCBA6
 Func_00F_60D9::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     srl a
     srl a
     and a, $03
@@ -4061,7 +4061,7 @@ Jump_00F_60FE::
     cp a, $10
     ret nz
     ld a, $72
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $52
     ld [wCBA1], a
     ldh [hFFC6], a
@@ -4123,7 +4123,7 @@ Jump_00F_614C::
 
 Jump_00F_6189::
     ld a, $7A
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, hFF8C
     call ClearBit2AtHL_Bank0F
     xor a, a
@@ -4210,7 +4210,7 @@ Jump_00F_622E::
     or a, a
     ret z
     ld a, $66
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -4448,12 +4448,12 @@ Jump_00F_63E5::
     cp a, $30
     jr z, Jump_00F_6410
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_00F_6410::
     ld a, $66
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_00F_6416::
@@ -4670,7 +4670,7 @@ Jump_00F_6586::
     ld a, $B0
     ld [wC8FB], a
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -4740,7 +4740,7 @@ Jump_00F_6606::
     ld a, $01
     ldh [hFF8D], a
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -5042,7 +5042,7 @@ Jump_00F_6866::
     ld a, $80
     ld [wCBCF], a
     ld a, $85
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -5262,7 +5262,7 @@ Jump_00F_6A21::
     call Func_00F_7EE9
     ret nc
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ld [wSpriteSlotCount], a
     ld hl, wC923
@@ -5294,7 +5294,7 @@ Jump_00F_6A51::
     ld a, $80
     ld [wCBCF], a
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $E0
     ld [wCB9A], a
     xor a, a
@@ -5328,7 +5328,7 @@ Jump_00F_6AA1::
     call Func_00F_7EE9
     ret nc
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -5493,7 +5493,7 @@ Jump_00F_6BDA::
     cp a, $40
     ret nz
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld [wC922], a
@@ -5760,7 +5760,7 @@ Jump_00F_6DD1::
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
     jr nz, Jump_00F_6E16
@@ -5780,7 +5780,7 @@ Jump_00F_6E16::
     and a, $F8
     ldh [hScrollX], a
     ld a, $7D
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     xor a, a
@@ -5796,7 +5796,7 @@ Jump_00F_6E31::
     ret nz
     farcall Func_05F_6E09
     ld a, $66
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -5854,7 +5854,7 @@ Jump_00F_6E6F::
     ld a, $80
     ld [wCBCF], a
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -5934,7 +5934,7 @@ Jump_00F_6F0C::
     ld hl, hFF8C
     call SetBit1AtHL_Bank0F
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -6000,7 +6000,7 @@ Jump_00F_6F9A::
     ret
 
 Jump_00F_6FB5::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
     jr nz, Jump_00F_6FC7
@@ -6034,7 +6034,7 @@ Jump_00F_6FC7::
     ld [wC8C7], a
     farcall Func_05F_6C5A
     ld a, $00
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_00F_7002::
@@ -6066,7 +6066,7 @@ Jump_00F_7019::
     ld hl, wCBAC
     call ClearBit2AtHL_Bank0F
     ld a, $7D
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -6253,7 +6253,7 @@ Jump_00F_716A::
     or a, $02
     ldh [hFF8C], a
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC922], a
     ld hl, wC923
@@ -6376,7 +6376,7 @@ Func_00F_7271::
 Jump_00F_727B::
     farcall Func_05F_6E09
     ld a, $7D
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -6388,13 +6388,13 @@ Jump_00F_728B::
 
 Jump_00F_7291::
     ld a, $00
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $80
     ld [wC919], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6882)
-; reads: wC928, wC5F0, hScrollX, hFFA2
+; reads: wC928, wFrameCounterLo, hScrollX, hFFA2
 ; writes: hScrollX, hFFA2
 ; points at: wC923
 Func_00F_729C::
@@ -6402,11 +6402,11 @@ Func_00F_729C::
     ld b, a
 
 ; 7 call sites from 6 routines (e.g. Func_00F_7271, Func_00F_67BA, Func_00F_60E6, Func_00F_631F, ...)
-; reads: wC5F0, hScrollX, hFFA2
+; reads: wFrameCounterLo, hScrollX, hFFA2
 ; writes: hScrollX, hFFA2
 ; points at: wC923
 Func_00F_72A0::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
     jr nz, Jump_00F_72CB
@@ -6536,7 +6536,7 @@ Jump_00F_7369::
     ld a, $80
     ld [wCBCF], a
     ld a, $85
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -6750,14 +6750,14 @@ Jump_00F_7546::
     or a, a
     jr nz, Jump_00F_7553
     ld a, $7C
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_00F_755C
 
 Jump_00F_7553::
     cp a, $3C
     jr nz, Jump_00F_755C
     ld a, $81
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_00F_755C::
     ld a, [wC921]
@@ -6886,7 +6886,7 @@ Jump_00F_7639::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_00F_766D::
@@ -6958,7 +6958,7 @@ Jump_00F_76E3::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_00F_7707::
@@ -7019,7 +7019,7 @@ Jump_00F_776B::
     call Func_00F_7F75
     ret nc
     ld a, $6D
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -7057,7 +7057,7 @@ Jump_00F_7795::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_00F_77C9::
@@ -7072,7 +7072,7 @@ Jump_00F_77C9::
     ld a, $02
     ldh [hFF98], a
     ld a, $6D
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -7101,7 +7101,7 @@ Jump_00F_780D::
     inc a
     ld [wC921], a
     ld a, $6D
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_00F_781C::
     ld a, $80
@@ -7124,9 +7124,9 @@ Jump_00F_781C::
     ld [wC8C6], a
     farcall Func_05F_6C5A
     ld a, $02
-    call Func_000_122D
+    call QueueMusic
     ld a, $60
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wC921], a
     ret
@@ -7695,7 +7695,7 @@ Jump_00F_7C22::
     jr z, Jump_00F_7C3F
     ld hl, hScrollY
     dec [hl]
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ret
 
 Jump_00F_7C3F::
@@ -7703,7 +7703,7 @@ Jump_00F_7C3F::
     ld [wC921], a
     ldh [hScrollY], a
     ldh [hFFA6], a
-    call Func_000_252D
+    call ComputeSpriteScrollOffsets
     ld hl, wC923
     inc [hl]
     ret
@@ -7766,7 +7766,7 @@ Func_00F_7CA5::
 
 Jump_00F_7CB1::
     ld a, $76
-    call StoreWC60B
+    call QueueSoundEffect
     ld de, $001B
     call SetFlagBit
     ld a, $03

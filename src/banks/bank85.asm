@@ -587,10 +587,10 @@ Func_085_442D:: ; heuristic: follows a terminator; C0
     ret
 
 ; 1 call site from 1 routine (e.g. Func_085_4339)
-; reads: wC562, wC5F0
+; reads: wJoypadPressed, wFrameCounterLo
 ; points at: wC923, wC92E
 Func_085_446D::
-    ld a, [wC562]
+    ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_085_4479
     ld hl, wC923
@@ -604,7 +604,7 @@ Jump_085_4479::
     ld a, $BC
     call WriteVRAMByte
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ld hl, wC923
@@ -620,7 +620,7 @@ Jump_085_4493::
     ld hl, wC92E
     dec [hl]
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
     jr Jump_085_44BF
 
 Jump_085_44AA::
@@ -632,12 +632,12 @@ Jump_085_44AA::
     ld hl, wC92E
     inc [hl]
     ld a, $69
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_085_44BF::
     call Func_085_44D2
     ld c, $BB
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     bit 3, a
     jr z, Jump_085_44CD
     ld c, $C3
@@ -734,7 +734,7 @@ Jump_085_4539::
 Jump_085_454C::
     call Func_085_4555
     ld a, $6C
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_085_4047, Func_085_4339, Func_085_4505, Func_085_4307)
@@ -960,7 +960,7 @@ Jump_085_4725::
     ld a, $01
     ld [wC8C7], a
     ld a, $02
-    ld [wC5DB], a
+    ld [wGameMode], a
     ld a, $0C
     ld [wC5DC], a
     xor a, a
@@ -969,8 +969,8 @@ Jump_085_4725::
     ld [wC0A0], a
     ld [wC0A1], a
     xor a, a
-    ld [wC55E], a
-    ld [wC562], a
+    ld [wJoypadHeld], a
+    ld [wJoypadPressed], a
     xor a, a
     ld [wC91F], a
     ld hl, wC923
@@ -1079,7 +1079,7 @@ Jump_085_47E3::
 
 Jump_085_480A::
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, $01
     ldh [hFF8D], a
     xor a, a
@@ -1698,7 +1698,7 @@ Jump_085_4C46::
     or a, a
     jr nz, Jump_085_4C51
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_085_4C51::
     ld a, [wC921]
@@ -1763,7 +1763,7 @@ Jump_085_4CC6::
     or a, a
     jr nz, Jump_085_4CD5
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_085_4CD5::
     ld a, [wC921]
@@ -1797,7 +1797,7 @@ Jump_085_4D03::
     cp a, $40
     ret nz
     ld a, $72
-    call StoreWC60B
+    call QueueSoundEffect
     ld a, [wCB96]
     ld [wCBA6], a
     xor a, a
@@ -2106,7 +2106,7 @@ Jump_085_4F52::
     ret c
     push af
     ld a, $66
-    call StoreWC60B
+    call QueueSoundEffect
     xor a, a
     ld [wCB86], a
     pop af
@@ -2147,7 +2147,7 @@ Jump_085_4F9E::
     cp a, $48
     ret nz
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC921
     inc [hl]
     ret
@@ -2167,11 +2167,11 @@ Jump_085_4FBE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_085_4F14)
-; reads: wC5F0, hScrollX, hFFA2, wC921
+; reads: wFrameCounterLo, hScrollX, hFFA2, wC921
 ; writes: hScrollX, hFFA2, wC921
 ; points at: wC923
 Func_085_4FD8::
-    ld a, [wC5F0]
+    ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
     jr nz, Jump_085_5003
@@ -3137,7 +3137,7 @@ Jump_085_561E::
     ld hl, wCB9C
     call SetBit1AtHL_Bank85
     ld a, $63
-    call StoreWC60B
+    call QueueSoundEffect
     ld hl, wC923
     inc [hl]
     ret
@@ -3190,7 +3190,7 @@ Jump_085_5689::
     or a, a
     jr nz, Jump_085_5694
     ld a, $65
-    call StoreWC60B
+    call QueueSoundEffect
 
 Jump_085_5694::
     ld a, [wC922]

@@ -91,9 +91,9 @@
     "evidence": "reading"
   },
   "00:1278": {
-    "name": "StoreWC60B",
-    "note": "stores A in wC60B",
-    "evidence": "reading"
+    "name": "QueueSoundEffect",
+    "note": "wSoundEffectRequest = A; ProcessSoundQueue starts it on the next frame",
+    "evidence": "reading + execution (E-0029)"
   },
   "00:1682": {
     "name": "Multiply8",
@@ -781,5 +781,190 @@
     "name": "InitSoundHardware",
     "note": "rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0",
     "evidence": "reading"
+  },
+  "00:0040": {
+    "name": "VBlankVector",
+    "note": "di; jp VBlankHandler (the interrupt vector at $0040)",
+    "evidence": "reading"
+  },
+  "00:03A4": {
+    "name": "VBlankHandler",
+    "note": "runs once per frame: saves registers and the VRAM and WRAM banks; skips everything but the sound tick when wC5ED bit 0 shows it was entered again; otherwise runs the OAM DMA routine at $FF80, uploads queued palettes on CGB, flushes the queued BG map write, restores the DMG palettes, scroll and LCDC, applies the screen shake, polls the joypad, runs SoundTick, advances the random seed, processes the sound queue, runs GameFrameUpdate, steps the string display when wC52B is set, steps the fade, and increments the 16-bit frame counter wC5F0/wC5F1; resets the game when all four buttons are held",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "00:33E8": {
+    "name": "SoundTick",
+    "note": "for each of the 6 channel slots at wSoundChannelSlots: copies the slot into HRAM $FFD8-$FFF7, reads events from the track in bank hSoundBank and writes the channel's sound registers (the per-frame sound engine; called from VBlankHandler)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "00:131A": {
+    "name": "ProcessSoundQueue",
+    "note": "starts the music requested in wMusicRequest and the effect requested in wSoundEffectRequest (StartMusic / StartSoundEffect), then sets each request to $FF",
+    "evidence": "reading"
+  },
+  "00:122D": {
+    "name": "QueueMusic",
+    "note": "wMusicRequest = A",
+    "evidence": "reading"
+  },
+  "00:1231": {
+    "name": "StartMusic",
+    "note": "A = sound id (0 = none): stores it in wC608, calls InitSoundHardware (silencing every channel), stores A in wSoundId and starts the track with Func_000_334E unless the id is one of a list that is handled separately",
+    "evidence": "reading"
+  },
+  "00:127C": {
+    "name": "StartSoundEffect",
+    "note": "A = sound id: stores it in wSoundId and starts the effect (ids in a fixed list take a separate path)",
+    "evidence": "reading"
+  },
+  "00:0474": {
+    "name": "GameFrameUpdate",
+    "note": "hOamNextEntry = 0, ComputeSpriteScrollOffsets, RunGameModeUpdate, and ClearUnusedOAMEntries unless a fade is running",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "00:048A": {
+    "name": "RunGameModeUpdate",
+    "note": "unless wC5DF is non-zero or a fade is running: jumps through a 9-entry table indexed by wGameMode to the mode's per-frame routine (modes 0-8 in banks $01, $02, $03, none, $31, $07, $24, $A0, $F2)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "00:0355": {
+    "name": "RunGameModeInit",
+    "note": "jumps through a 9-entry table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07, $24, $A0, $F2); called from the main loop each time the mode changes",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "00:0BB4": {
+    "name": "ClearUnusedOAMEntries",
+    "note": "zeroes the first byte (Y) of every OAM shadow entry from hOamNextEntry up to 40",
+    "evidence": "reading"
+  },
+  "00:252D": {
+    "name": "ComputeSpriteScrollOffsets",
+    "note": "hFFD2/hFFD3 = -(hScrollX - 9) - 1 and hFFD4/hFFD5 = -(hScrollY - $11) - 1 as 16-bit values; returns early in game mode 1 when wC5DC & $0F = 6",
+    "evidence": "reading"
+  },
+  "00:0BCC": {
+    "name": "FlushQueuedBGMapWrite",
+    "note": "if wC0C0/wC0C1 (a VRAM address) is non-zero, writes wC0C3 bytes from wC0C4 there: along the row when wC0C2 is 0, down the column otherwise",
+    "evidence": "reading"
+  },
+  "00:04ED": {
+    "name": "ApplyScreenShake",
+    "note": "while wC604 or wC605 is non-zero, counts it down and adds an oscillating offset (from the counter's low bits) to rSCY or rSCX",
+    "evidence": "reading"
+  },
+  "00:07FD": {
+    "name": "CopyDMGPalettesToHardware",
+    "note": "rBGP, rOBP0, rOBP1 = wC5E9, wC5EA, wC5EB",
+    "evidence": "reading"
+  },
+  "00:07F1": {
+    "name": "WriteLCDCShadow",
+    "note": "waits until rSTAT mode bits are 0, then rLCDC = wC5EC",
+    "evidence": "reading"
+  },
+  "00:07E0": {
+    "name": "CopyScrollToHardware",
+    "note": "rSCX = hScrollX, rSCY = hScrollY",
+    "evidence": "reading"
+  },
+  "00:0F4E": {
+    "name": "StepFade",
+    "note": "does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)",
+    "evidence": "reading"
+  },
+  "00:0A61": {
+    "name": "ReadJoypadDirect",
+    "note": "B = the buttons: upper nibble D-pad (bit 7 down, 6 up, 5 left, 4 right), lower nibble A, B, Select, Start (bits 0-3), 1 = pressed; reads rP1 with each line group selected",
+    "evidence": "reading + Pan Docs (rP1 layout)"
+  },
+  "00:0A17": {
+    "name": "PollJoypad",
+    "note": "shifts wJoypadHeld to wJoypadHeldPrev and reads the new state into wJoypadHeld (directly, or through the SGB path when wSGBActive)",
+    "evidence": "reading"
+  },
+  "00:0A8D": {
+    "name": "UpdateJoypadPresses",
+    "note": "wJoypadPressed = buttons newly held since the last poll; wJoypadPressedRepeat = the same, plus an auto-repeat that fires after $14 frames and then every 6 (timer in wJoypadRepeatTimer)",
+    "evidence": "reading"
+  },
+  "01:4001": {
+    "name": "GameMode0_Init",
+    "note": "start-up for wGameMode = 0; forcing this mode on the emulator shows: debug menu (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "01:4AD4": {
+    "name": "GameMode0_Update",
+    "note": "per-frame routine for wGameMode = 0",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "02:45C6": {
+    "name": "GameMode1_Init",
+    "note": "start-up for wGameMode = 1; forcing this mode on the emulator shows: water map with the player sprite (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "02:4AD8": {
+    "name": "GameMode1_Update",
+    "note": "per-frame routine for wGameMode = 1",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "03:4001": {
+    "name": "GameMode2_Init",
+    "note": "start-up for wGameMode = 2; forcing this mode on the emulator shows: monster status panel (incomplete when forced) (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "03:4015": {
+    "name": "GameMode2_Update",
+    "note": "per-frame routine for wGameMode = 2",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "31:4001": {
+    "name": "GameMode4_Init",
+    "note": "start-up for wGameMode = 4; forcing this mode on the emulator shows: sparkles on black (incomplete when forced) (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "31:40A5": {
+    "name": "GameMode4_Update",
+    "note": "per-frame routine for wGameMode = 4",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "07:486E": {
+    "name": "GameMode5_Init",
+    "note": "start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles and a victory screen when forced (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "07:4F7B": {
+    "name": "GameMode5_Update",
+    "note": "per-frame routine for wGameMode = 5",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "24:4001": {
+    "name": "GameMode6_Init",
+    "note": "start-up for wGameMode = 6; forcing this mode on the emulator shows: victory screen when forced (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "24:4117": {
+    "name": "GameMode6_Update",
+    "note": "per-frame routine for wGameMode = 6",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "A0:4ECF": {
+    "name": "GameMode7_Init",
+    "note": "start-up for wGameMode = 7; forcing this mode on the emulator shows: two monster panels when forced (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "A0:4F70": {
+    "name": "GameMode7_Update",
+    "note": "per-frame routine for wGameMode = 7",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "F2:4001": {
+    "name": "GameMode8_Init",
+    "note": "start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when forced (E-0029)",
+    "evidence": "reading + execution (E-0029)"
+  },
+  "F2:40A2": {
+    "name": "GameMode8_Update",
+    "note": "per-frame routine for wGameMode = 8",
+    "evidence": "reading + execution (E-0029)"
   }
 }

@@ -400,20 +400,20 @@ DEF wC554 EQU $C554
 DEF wC555 EQU $C555
 DEF wC556 EQU $C556
 DEF wC55D EQU $C55D
-DEF wC55E EQU $C55E
-DEF wC55F EQU $C55F
+DEF wJoypadHeld EQU $C55E ; buttons held at the latest PollJoypad (layout of ReadJoypadDirect) (reading)
+DEF wJoypadHeldPrev EQU $C55F ; wJoypadHeld from the previous poll (reading)
 DEF wC560 EQU $C560
 DEF wC561 EQU $C561
-DEF wC562 EQU $C562
-DEF wC563 EQU $C563
-DEF wC564 EQU $C564
+DEF wJoypadPressed EQU $C562 ; buttons newly held since the previous poll (reading)
+DEF wJoypadPressedRepeat EQU $C563 ; newly held buttons plus auto-repeat (UpdateJoypadPresses) (reading)
+DEF wJoypadRepeatTimer EQU $C564 ; auto-repeat countdown: $14 after a new press, then 6 (reading)
 DEF wC565 EQU $C565
 DEF wC566 EQU $C566
 DEF wC567 EQU $C567
 DEF wC568 EQU $C568
 DEF wC56A EQU $C56A
 DEF wC56B EQU $C56B
-DEF wC56C EQU $C56C
+DEF wFadeState EQU $C56C ; palette fade state set by StartPaletteFade; GameFrameUpdate and the VBlank handler skip normal work while it is non-zero (bit 7 clear) (reading)
 DEF wC56D EQU $C56D
 DEF wC56E EQU $C56E
 DEF wC56F EQU $C56F
@@ -476,11 +476,11 @@ DEF wC5C8 EQU $C5C8
 DEF wC5C9 EQU $C5C9
 DEF wC5CB EQU $C5CB
 DEF wC5D7 EQU $C5D7
-DEF wC5DB EQU $C5DB
+DEF wGameMode EQU $C5DB ; index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot (reading)
 DEF wC5DC EQU $C5DC
 DEF wC5DD EQU $C5DD
 DEF wC5DE EQU $C5DE
-DEF wC5DF EQU $C5DF
+DEF wModeChangeRequest EQU $C5DF ; non-zero makes the main loop leave its wait and run RunGameModeInit again (reading)
 DEF wC5E0 EQU $C5E0
 DEF wC5E1 EQU $C5E1
 DEF wC5E2 EQU $C5E2
@@ -495,8 +495,8 @@ DEF wC5EB EQU $C5EB
 DEF wC5EC EQU $C5EC
 DEF wC5ED EQU $C5ED
 DEF wC5EE EQU $C5EE
-DEF wC5F0 EQU $C5F0
-DEF wC5F1 EQU $C5F1
+DEF wFrameCounterLo EQU $C5F0 ; low byte of the 16-bit frame counter the VBlank handler increments (reading)
+DEF wFrameCounterHi EQU $C5F1 ; high byte of the 16-bit frame counter (reading)
 DEF wC5F6 EQU $C5F6
 DEF wC5F7 EQU $C5F7
 DEF wC5F8 EQU $C5F8
@@ -514,8 +514,8 @@ DEF wC603 EQU $C603
 DEF wC604 EQU $C604
 DEF wC605 EQU $C605
 DEF wC608 EQU $C608
-DEF wC60A EQU $C60A
-DEF wC60B EQU $C60B
+DEF wMusicRequest EQU $C60A ; music id waiting for ProcessSoundQueue; $FF = none (reading)
+DEF wSoundEffectRequest EQU $C60B ; sound effect id waiting for ProcessSoundQueue; $FF = none (reading)
 DEF wC60C EQU $C60C
 DEF wC60D EQU $C60D
 DEF wC60E EQU $C60E

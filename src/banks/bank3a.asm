@@ -457,7 +457,7 @@ Jump_03A_4ACA::
 Data_03A_4AD5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $50, $80, $38, $68, $50
 
-; 4 call sites from 4 routines (e.g. Func_031_40A5, Func_03A_6157, Func_03A_68C9, Func_0A0_4F70)
+; 4 call sites from 4 routines (e.g. GameMode4_Update, Func_03A_6157, Func_03A_68C9, GameMode7_Update)
 ; reads: wD802, wD800, wD801, wDAD2, wC58A, wDAB3, wDAAA, wDAB9, ...
 ; writes: wD800, wDAD3, wD804, wD806, wDAAA, wDAF1, wD807, wD802, ...
 ; points at: wD805, wDAB3, wDAF1
@@ -2384,7 +2384,7 @@ Jump_03A_57C2::
     ld a, [hl]
     cp a, $FF
     ret z
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 ; 1 call site from 1 routine (e.g. Func_03A_5762)
@@ -2412,7 +2412,7 @@ Jump_03A_57E2::
     ld a, [hl]
     sbc a, $03
     ld a, $81
-    call StoreWC60B
+    call QueueSoundEffect
     ret
 
 Jump_03A_57F1::
@@ -3309,7 +3309,7 @@ Jump_03A_6677::
     ld a, $80
     ld [wD092], a
     ld a, $42
-    call Func_000_122D
+    call QueueMusic
     ret
 
 Jump_03A_6698::
