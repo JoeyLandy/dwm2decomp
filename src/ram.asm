@@ -1586,7 +1586,7 @@ DEF wDA95 EQU $DA95
 DEF wDA9C EQU $DA9C
 DEF wDAAA EQU $DAAA
 DEF wDAAB EQU $DAAB
-DEF wDAAC EQU $DAAC
+DEF wQueuedActionId EQU $DAAC ; queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049) (reading (E-0049))
 DEF wDAAD EQU $DAAD
 DEF wDAAE EQU $DAAE
 DEF wDAB2 EQU $DAB2

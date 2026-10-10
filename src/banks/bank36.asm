@@ -2085,7 +2085,7 @@ Jump_036_4D7F:: ; address name
 ; entry 4 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
-; writes: wDAAC, wDAAD
+; writes: wQueuedActionId, wDAAD
 ; points at: wBattleSubStep, wD814
 Func_036_4A38_Case04::
 Jump_036_4DD6:: ; address name
@@ -2098,7 +2098,7 @@ Jump_036_4DD6:: ; address name
     ret z
     res 4, [hl]
     ld a, $FF
-    ld [wDAAC], a
+    ld [wQueuedActionId], a
     ld a, $FF
     ld [wDAAD], a
     ret

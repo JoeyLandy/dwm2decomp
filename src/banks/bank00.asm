@@ -10747,12 +10747,14 @@ Jump_000_3F37::
     add_a_to_hl
     ret
 
+; Z set when A equals the queued action (wQueuedActionId, wDAAC) or is its partner in one of the pairs $34-$AD, $35-$AE, $6A-$CC, $A1-$CF, $8F-$AA (the pairs are symmetric); Z clear otherwise. A and BC are kept (E-0049)
 ; 3 call sites from 3 routines (e.g. Func_005_41D6, CheckSkillMPCost, Func_032_4EE4_Case03)
-; reads: wDAAC
-Func_000_3F47::
+; reads: wQueuedActionId
+QueuedActionMatches::
+Func_000_3F47:: ; address name
     push bc
     push af
-    ld a, [wDAAC]
+    ld a, [wQueuedActionId]
     ld c, a
     pop af
     cp a, c

@@ -490,6 +490,7 @@
     "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)",
     "evidence": "reading (E-0043)"
   },
+  "DAAC": {"name": "wQueuedActionId", "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)", "evidence": "reading (E-0049)"},
   "D80C": {
     "name": "wBattleStatus",
     "note": "9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated",

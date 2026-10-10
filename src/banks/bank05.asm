@@ -228,7 +228,7 @@ Func_005_41D6::
     bit 7, a
     jr z, Jump_005_41E8
     ld a, [wRecordBuffer]
-    call Func_000_3F47
+    call QueuedActionMatches
     jr nz, Jump_005_41E8
     ld c, $00
     ret
@@ -2630,9 +2630,9 @@ Jump_005_4E1D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0E2_61E0)
-; reads: wDAAC
+; reads: wQueuedActionId
 Func_005_4E20:: ; heuristic: follows a terminator; C0
-    ld a, [wDAAC]
+    ld a, [wQueuedActionId]
     and a, a
     jr z, Jump_005_4E45
     cp a, $3D
@@ -6054,7 +6054,7 @@ Jump_005_60B7::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_005_604C)
-; reads: wDAAC
+; reads: wQueuedActionId
 ; points at: wDA1D, wBattleMP
 Func_005_60BA::
     ld a, c
@@ -6112,7 +6112,7 @@ Jump_005_6101::
 
 Jump_005_6102::
     ld d, a
-    ld a, [wDAAC]
+    ld a, [wQueuedActionId]
     cp a, e
     jr z, Jump_005_60E9
     ld a, d

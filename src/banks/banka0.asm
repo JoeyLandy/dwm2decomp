@@ -122,13 +122,13 @@ Jump_0A0_409E::
 ; only called from GameMode7_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01)
 ; reads: wC835
-; writes: wD802, wDAAC, wDAAD, wD892, wC5FC, wC5FD, wC5FE, wDAAB, ...
+; writes: wD802, wQueuedActionId, wDAAD, wD892, wC5FC, wC5FD, wC5FE, wDAAB, ...
 ; points at: wC46B, wDA5B, wDAD8, wBattleSlotOut, wD958, wDA08, wDAD4, wD895
 GameMode7_Init_Sub01_Sub01::
 Func_0A0_40B0:: ; address name
     ld a, $FF
     ld [wD802], a
-    ld [wDAAC], a
+    ld [wQueuedActionId], a
     ld [wDAAD], a
     ld [wD892], a
     ld hl, wC46B

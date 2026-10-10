@@ -310,5 +310,46 @@ class BattleSkillCost(unittest.TestCase):
             self.assertEqual(gb.rb(0xD8DF), mp, "routine must not write the MP")
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class ActionGates(unittest.TestCase):
+    """Refusal codes of the battle action gates and the queued-action predicate (E-0049; C2 on our emulator)."""
+
+    PAIRS = [(0x34, 0xAD), (0x35, 0xAE), (0x6A, 0xCC), (0xA1, 0xCF), (0x8F, 0xAA)]
+
+    def test_queued_action_matches_itself_and_its_partner(self):
+        for x, y in self.PAIRS:
+            for a, c in ((x, y), (y, x)):
+                gb = call(0x00, 0x3F47, a=a, mem={0xDAAC: c})
+                self.assertTrue(gb.f & 0x80, f"{a:02x} vs {c:02x}")
+        gb = call(0x00, 0x3F47, a=0x10, mem={0xDAAC: 0x10})
+        self.assertTrue(gb.f & 0x80)
+        gb = call(0x00, 0x3F47, a=0x11, mem={0xDAAC: 0x10})
+        self.assertFalse(gb.f & 0x80)
+
+    def test_action_matching_the_queued_one_is_refused_with_code_2(self):
+        mem = {0xD8A4: 0, 0xD8A6: 0x34, 0xFFC8: 2, 0xCFEE: 2, 0xD8DF: 10, 0xD8E0: 0,
+               0xDAAC: 0xAD, 0xCFF3: 0}
+        gb = call(0x32, 0x51F9, mem=mem)
+        self.assertEqual((gb.d, bool(gb.f & 0x10)), (2, False))
+
+    def test_bit6_of_status_byte_refuses_with_code_6(self):
+        gb = call(0x32, 0x534A, mem={0xD8A4: 0, 0xD80D: 0x40})
+        self.assertEqual((gb.d, bool(gb.f & 0x10)), (6, False))
+        gb = call(0x32, 0x534A, mem={0xD8A4: 0, 0xD80D: 0x00})
+        self.assertTrue(gb.f & 0x10)
+
+    def test_bit0_of_status_byte_refuses_with_code_3(self):
+        gb = call(0x32, 0x529E, mem={0xD8A4: 0, 0xD80D: 0x01})
+        self.assertEqual((gb.d, bool(gb.f & 0x10)), (3, False))
+
+    def test_side_flag_bit3_refuses_with_code_4(self):
+        gb = call(0x32, 0x529E, mem={0xD8A4: 0, 0xD80D: 0x00, 0xD80A: 0x08})
+        self.assertEqual((gb.d, bool(gb.f & 0x10)), (4, False))
+
+    def test_bit7_of_status_byte_refuses_with_code_5(self):
+        gb = call(0x32, 0x5303, mem={0xD8A4: 0, 0xD80D: 0x80})
+        self.assertEqual((gb.d, bool(gb.f & 0x10)), (5, False))
+
+
 if __name__ == "__main__":
     unittest.main()

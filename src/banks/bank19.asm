@@ -61,7 +61,7 @@ Jump_019_4069::
 ; only called from GameMode4_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wCFC5, wC58A, wC6FD, wCFDC, wC835, wC834, wC57F
-; writes: wDAD7, wD802, wDAAC, wDAAD, wD892, wC5FC, wC5FD, wC5FE, ...
+; writes: wDAD7, wD802, wQueuedActionId, wDAAD, wD892, wC5FC, wC5FD, wC5FE, ...
 ; points at: wC46B, wDA5B, wDAD8, wBattleSlotOut, wD958, wDA08, wDAD4, wD895, ...
 GameMode4_Init_Sub01_Sub01::
 Func_019_4079:: ; address name
@@ -82,7 +82,7 @@ Jump_019_408D::
     ld [wDAD7], a
     ld a, $FF
     ld [wD802], a
-    ld [wDAAC], a
+    ld [wQueuedActionId], a
     ld [wDAAD], a
     ld [wD892], a
     ld hl, wC46B

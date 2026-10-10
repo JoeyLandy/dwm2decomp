@@ -3048,7 +3048,7 @@ Jump_032_510E:: ; address name
     xor a, a
     ld [wBattleSubStep], a
     ld a, [wBattleActionId]
-    call Func_000_3F47
+    call QueuedActionMatches
     ret nz
     ld d, $02
     farcall Func_03A_7508
@@ -3227,26 +3227,26 @@ Jump_032_520B::
 
 Jump_032_522D::
     ld a, [wBattleActionId]
-    call Func_000_3F47
+    call QueuedActionMatches
     jr z, Jump_032_529A
     ld a, [wCFF3]
     bit 6, a
     jr z, Jump_032_5243
-    call CheckSkillMPCost_Sub01
+    call CheckActorStatusAndFoeTargets
     jr nc, Jump_032_529C
     jr Jump_032_5259
 
 Jump_032_5243::
     bit 4, a
     jr z, Jump_032_524E
-    call CheckSkillMPCost_Sub02
+    call CheckActorStatusBit7AndFoeBit6
     jr nc, Jump_032_529C
     jr Jump_032_5259
 
 Jump_032_524E::
     bit 5, a
     jr z, Jump_032_5259
-    call CheckSkillMPCost_Sub03
+    call CheckActorStatusBit6
     jr nc, Jump_032_529C
     jr Jump_032_5259
 
@@ -3301,11 +3301,11 @@ Jump_032_529C::
     xor a, a
     ret
 
-; only called from CheckSkillMPCost (E-0047)
+; returns carry set when the action may proceed, clear when refused. Refused with D = 3 when bit 0 of the actor's status byte 1 (wD80D + 9 * actor) is set; with D = 4 when bit 3 of the side flag (wD80A for slots 0-3, wD80B for 4-7) is set. Otherwise, when wDA53[actor] >= 2 and wCFF2 = $12, the three opposite slots are scanned: an absent slot is skipped, a present slot without bit 1 or 5 of its status byte 2 allows the action, and if every present one has them the refusal is D = 7 (E-0049)
 ; 1 call site from 1 routine (e.g. CheckSkillMPCost)
 ; reads: wBattleActor, wCFF2
 ; points at: wD80D, wD80A, wD80B, wD80E
-CheckSkillMPCost_Sub01::
+CheckActorStatusAndFoeTargets::
 Func_032_529E:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
@@ -3372,11 +3372,11 @@ Jump_032_5301::
     scf
     ret
 
-; only called from CheckSkillMPCost (E-0047)
+; carry set = may proceed, clear = refused. Refused with D = 5 when bit 7 of the actor's status byte 1 (wD80D + 9 * actor) is set; otherwise when wDA53[actor] >= 2 the three opposite slots are scanned for a present slot whose status byte 2 (wD80E + 9 * slot) has bit 6 clear (allowed), and if every present one has bit 6 set the refusal is D = 7 (E-0049)
 ; 1 call site from 1 routine (e.g. CheckSkillMPCost)
 ; reads: wBattleActor
 ; points at: wD80D, wD80E
-CheckSkillMPCost_Sub02::
+CheckActorStatusBit7AndFoeBit6::
 Func_032_5303:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
@@ -3426,11 +3426,11 @@ Jump_032_5348::
     scf
     ret
 
-; only called from CheckSkillMPCost (E-0047)
+; carry set = may proceed; clear with D = 6 when bit 6 of the actor's status byte 1 (wD80D + 9 * actor) is set (E-0049)
 ; 1 call site from 1 routine (e.g. CheckSkillMPCost)
 ; reads: wBattleActor
 ; points at: wD80D
-CheckSkillMPCost_Sub03::
+CheckActorStatusBit6::
 Func_032_534A:: ; address name
     ld a, [wBattleActor]
     ld hl, wD80D
@@ -3772,7 +3772,7 @@ Jump_032_5541:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wCFF6, wCFF2, wBattleActionId, wBattleTarget
 ; writes: wBattleActionId, wBattleTarget, wBattleSubStep
-; points at: wDA1C, wD814, wBattleResolveStep, wDAAC, wBattleSubStep
+; points at: wDA1C, wD814, wBattleResolveStep, wQueuedActionId, wBattleSubStep
 Func_032_553B_Case00::
 Jump_032_554D:: ; address name
     ld a, [wBattleActor]
@@ -3835,7 +3835,7 @@ Jump_032_55A9::
 
 Jump_032_55B2::
     res 4, [hl]
-    ld hl, wDAAC
+    ld hl, wQueuedActionId
     ld a, [hl+]
     ld [hl-], a
     ld a, [wBattleActionId]
@@ -4299,7 +4299,7 @@ Jump_032_5915:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wCFF6, wCFF2, wBattleTarget, wBattleActionId
 ; writes: wBattleActionId, wBattleTarget, wBattleSubStep
-; points at: wDA1C, wD814, wBattleResolveStep, wDAAC, wBattleSubStep
+; points at: wDA1C, wD814, wBattleResolveStep, wQueuedActionId, wBattleSubStep
 Func_032_5820_Table2_Case00::
 Jump_032_5921:: ; address name
     ld a, [wBattleActor]
@@ -4361,7 +4361,7 @@ Jump_032_5976::
 
 Jump_032_5983::
     res 4, [hl]
-    ld hl, wDAAC
+    ld hl, wQueuedActionId
     ld a, [hl+]
     ld [hl-], a
     ld a, [wBattleActionId]
@@ -6766,7 +6766,7 @@ Func_032_6808::
     db $21, $1F, $D9, $18, $0A
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 6 call sites from 5 routines (e.g. CheckSkillMPCost, CheckSkillMPCost_Sub01, CheckSkillMPCost_Sub02, Func_032_4EE4_Case02, ...)
+; 6 call sites from 5 routines (e.g. CheckSkillMPCost, CheckActorStatusAndFoeTargets, CheckActorStatusBit7AndFoeBit6, Func_032_4EE4_Case02, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank32::
 Func_032_6812:: ; address name
