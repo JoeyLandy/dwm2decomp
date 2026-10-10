@@ -2680,10 +2680,10 @@ Jump_001_5720::
     ld a, [wC5FA]
     ld [wD7F3], a
     ld a, [wD7F2]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wD7F3]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld c, $00
     ld de, wD787
     call Func_001_57C7
@@ -2692,10 +2692,10 @@ Jump_001_5720::
     ld a, [wC5FD]
     ld [wD7F3], a
     ld a, [wD7F2]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wD7F3]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld c, $00
     ld de, wD7A2
     call Func_001_57C7
@@ -5728,7 +5728,7 @@ Func_001_6C1F::
 
 ; 1 call site from 1 routine (e.g. Func_001_6E91)
 ; reads: hFFC9, wD868, wRecordBuffer, wCFED, wD869, wC5E8, wRecordBufferData, wCFEF, ...
-; writes: wMonsterId, wCFE7, wC9DC, wD006, wD007, wD09D, wD09E, wD09F, ...
+; writes: wMonsterId, wCFE7, wC9DC, wSpeciesIdLo, wSpeciesIdHi, wD09D, wD09E, wD09F, ...
 ; points at: wC60C, wD01A
 Func_001_6C48::
     ldh a, [hFFC9]
@@ -5887,14 +5887,14 @@ Jump_001_6D33::
     ld a, [wCFED]
     ld h, a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD868]
     ld c, $0D
     call SRAMRecordAddress
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     ld [hl], a
     ld a, a
     ld [wD09D], a
@@ -5971,9 +5971,9 @@ Jump_001_6DD9::
     call CopyBBytesDEToHL_Bank01
 
 Jump_001_6DF4::
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld l, a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld h, a
     ld a, l
     ld [wC991], a

@@ -3850,7 +3850,7 @@ Func_01D_5DBC::
 
 ; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case1A)
 ; reads: hFFC6, hFFC7, wD013
-; writes: rRAMG2, rRAMB, wD006, wD007, wStringIndex, wStringCategory
+; writes: rRAMG2, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory
 ; points at: wC52D
 Func_01D_5DF9::
     call SetWD7F5ToWD789Cell5
@@ -3864,10 +3864,10 @@ Func_01D_5DF9::
     xor a, a
     ld [rRAMG2], a
     ldh a, [hFFC6]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ldh a, [hFFC7]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD013]
     ld [wStringIndex], a
     ld a, $0D

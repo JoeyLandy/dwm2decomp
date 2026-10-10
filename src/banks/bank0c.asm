@@ -219,9 +219,9 @@ Jump_00C_4141::
     push de
     push bc
     ld a, e
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, d
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5A7E
     ld a, c
     and a, a
@@ -2873,7 +2873,7 @@ Func_00C_52FB::
 
 ; 5 call sites from 4 routines (e.g. ScriptCommandF6_Run_Case0C, Func_00C_4EC7, Func_00C_45DA_Case08, Func_00C_45DA_Case05)
 ; reads: wD7F5
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD006, wD007
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wC7FC
 Func_00C_530A::
     push hl
@@ -2898,9 +2898,9 @@ Jump_00C_532F::
     pop hl
     push hl
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5A7E
     ld a, c
     and a, a

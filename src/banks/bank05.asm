@@ -2355,8 +2355,8 @@ Jump_005_4C99::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wBattleActor, hFFC6
-; writes: hFFC6, wD006, wD007
-; points at: wD958, hFFC6
+; writes: hFFC6, wSpeciesIdLo, wSpeciesIdHi
+; points at: wBattleMonsterId, hFFC6
 Func_005_4C9C:: ; heuristic: follows a terminator; C0
     ld a, [wC58A]
     or a, a
@@ -2373,13 +2373,13 @@ Jump_005_4CAF::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_4CD6
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     push bc
     farcall Func_016_5A7E
     ld a, c
@@ -2877,7 +2877,7 @@ Jump_005_4F72::
     call Func_005_5029
     pop bc
     push hl
-    call Func_005_5034
+    call SlotFamilyBelowWater
     pop hl
     jr z, Jump_005_4F8E
     ld a, h
@@ -3003,21 +3003,23 @@ Func_005_5029::
     call Divide24ByA
     ret
 
+; C = battle slot: loads the slot's species record (LoadSpeciesRecord); A = its family; carry set when the family is below 9 (Slime to Material), clear for Water (9) and Boss (10) (E-0069)
 ; 1 call site from 1 routine (e.g. Func_005_4E7C)
-; reads: wD008
-; writes: wD006, wD007
-; points at: wD958
-Func_005_5034::
+; reads: wSpeciesRecord
+; writes: wSpeciesIdLo, wSpeciesIdHi
+; points at: wBattleMonsterId
+SlotFamilyBelowWater::
+Func_005_5034:: ; address name
     ld a, c
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
-    ld a, [wD008]
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
+    ld a, [wSpeciesRecord]
     cp a, $09
     ret
 
@@ -8228,22 +8230,24 @@ Jump_005_6CA2::
     and a, $03
     ret
 
+; A = battle slot: A = the family (byte 0 of the species record) of the monster id in wBattleMonsterId[slot] (LoadSpeciesFamily); BC kept (E-0069)
 ; 1 call site from 1 routine (e.g. Func_005_6FD9)
-; reads: wD008
-; writes: wD006, wD007
-; points at: wD958
-Func_005_6CA5:: ; heuristic: follows a terminator; C0
-    ld hl, wD958
+; reads: wSpeciesRecord
+; writes: wSpeciesIdLo, wSpeciesIdHi
+; points at: wBattleMonsterId
+GetSlotSpeciesFamily:: ; heuristic: follows a terminator; C0
+Func_005_6CA5:: ; address name
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     push bc
-    farcall LoadBank35RecordByte0
+    farcall LoadSpeciesFamily
     pop bc
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_005_51EA, Func_005_5228)
@@ -8811,7 +8815,7 @@ Jump_005_6FE3::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6FF1
     push de
-    call Func_005_6CA5
+    call GetSlotSpeciesFamily
     pop de
     cp a, e
     jr z, Jump_005_6FF7

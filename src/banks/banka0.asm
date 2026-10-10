@@ -123,7 +123,7 @@ Jump_0A0_409E::
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01)
 ; reads: wC835
 ; writes: wD802, wQueuedActionId, wDAAD, wD892, wC5FC, wC5FD, wC5FE, wDAAB, ...
-; points at: wC46B, wDA5B, wDAD8, wBattleSlotOut, wD958, wDA08, wDAD4, wD895
+; points at: wC46B, wDA5B, wDAD8, wBattleSlotOut, wBattleMonsterId, wDA08, wDAD4, wD895
 GameMode7_Init_Sub01_Sub01::
 Func_0A0_40B0:: ; address name
     ld a, $FF
@@ -160,7 +160,7 @@ Func_0A0_40B0:: ; address name
     ld bc, $0008
     ld a, $FF
     call FillBytes
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     ld bc, $0010
     ld a, $FF
     call FillBytes
@@ -236,16 +236,16 @@ Jump_0A0_4184::
 
 ; 1 call site from 1 routine (e.g. Func_0A0_4F8E_Table2_Case06)
 ; reads: wD00B, wD00A
-; writes: wD006, wD007
-; points at: wD8A7, wBattleSlotOut, wD958
+; writes: wSpeciesIdLo, wSpeciesIdHi
+; points at: wD8A7, wBattleSlotOut, wBattleMonsterId
 Func_0A0_418E::
     ld bc, $0204
     jr Jump_0A0_4196
 
 ; 1 call site from 1 routine (e.g. Func_0A0_4F8E_Table2_Case06)
 ; reads: wD00B, wD00A
-; writes: wD006, wD007
-; points at: wD8A7, wBattleSlotOut, wD958
+; writes: wSpeciesIdLo, wSpeciesIdHi
+; points at: wD8A7, wBattleSlotOut, wBattleMonsterId
 Func_0A0_4193::
     ld bc, $0304
 
@@ -270,14 +270,14 @@ Jump_0A0_41A8::
     jr z, Jump_0A0_41DC
     ld a, c
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     push de
-    farcall LoadBank35Record
+    farcall LoadSpeciesRecord
     pop de
     ld a, [wD00B]
     ld h, a
@@ -294,14 +294,14 @@ Jump_0A0_41DC::
     jr nz, Jump_0A0_41A8
     ret
 
-; zero-fills the $2F bytes at wD008, where LoadBank35Record writes; BC, HL kept (E-0067) (the same 15 bytes appear in 2 banks)
+; zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067) (the same 15 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0A0_43F7)
-; points at: wD008
-ClearBank35RecordBuffer_BankA0::
+; points at: wSpeciesRecord
+ClearSpeciesRecordBuffer_BankA0::
 Func_0A0_41E3:: ; address name
     push bc
     push hl
-    ld hl, wD008
+    ld hl, wSpeciesRecord
     ld bc, $002F
     xor a, a
     call FillBytes
@@ -691,7 +691,7 @@ Jump_0A0_4405::
     call Func_0A0_456F
 
 Jump_0A0_4408::
-    call ClearBank35RecordBuffer_BankA0
+    call ClearSpeciesRecordBuffer_BankA0
     pop af
     ld [wD868], a
     ret
@@ -699,7 +699,7 @@ Jump_0A0_4408::
 ; 1 call site from 1 routine (e.g. Func_0A0_43F7)
 ; reads: wC57F, wD868, wD871
 ; writes: wD868, wD869, wD86A, wD86B
-; points at: wD958, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
+; points at: wBattleMonsterId, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
 Func_0A0_4410::
     ld a, c
     push bc
@@ -707,7 +707,7 @@ Func_0A0_4410::
     pop bc
     ld a, c
     add a, a
-    ld de, wD958
+    ld de, wBattleMonsterId
     add a, e
     ld e, a
     jr nc, Jump_0A0_4420
@@ -925,14 +925,14 @@ Jump_0A0_4550::
 ; 1 call site from 1 routine (e.g. Func_0A0_43F7)
 ; reads: wD868, wD871
 ; writes: wD868, wD869, wD86A, wD86B
-; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
+; points at: wBattleMonsterId, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
 Func_0A0_456F::
     push bc
     call BattlerRecordAddress_BankA0
     pop bc
     ld a, c
     add a, a
-    ld de, wD958
+    ld de, wBattleMonsterId
     add a, e
     ld e, a
     jr nc, Jump_0A0_457E
@@ -1588,8 +1588,8 @@ Jump_0A0_4933::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_4919)
-; reads: wD86A, wD86B, wD006, wD007, wD008, wD009, wD010, wD011, ...
-; writes: wD869, wD006, wD007, hFFC6, wD868
+; reads: wD86A, wD86B, wSpeciesIdLo, wSpeciesIdHi, wSpeciesRecord, wD009, wD010, wD011, ...
+; writes: wD869, wSpeciesIdLo, wSpeciesIdHi, hFFC6, wD868
 ; points at: wCFDD
 Func_0A0_494F::
     push bc
@@ -1600,21 +1600,21 @@ Func_0A0_494F::
     add_a_to_hl
     deref_hl
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD86A]
     add a, $0A
     ld l, a
     ld a, [wD86B]
     adc a, $00
     ld h, a
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld [hl+], a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld [hl+], a
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     ld [hl+], a
     ld a, [wD009]
     ld [hl+], a

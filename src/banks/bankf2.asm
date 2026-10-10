@@ -1053,7 +1053,7 @@ Func_0F2_4AFE::
 
 ; 2 call sites from 2 routines (e.g. Func_037_5344_Case13, Func_0F1_5285_Case13)
 ; reads: wCA83, wCA84, wCA85, wCA81, wCA82, hFFC6, wCA36, wCA37, ...
-; writes: wC8C0, wC8C1, wC8C2, hFFC6, hFFC7, wD006, wD007, hFFC8, ...
+; writes: wC8C0, wC8C1, wC8C2, hFFC6, hFFC7, wSpeciesIdLo, wSpeciesIdHi, hFFC8, ...
 ; points at: hFFC8
 Func_0F2_4B05::
     ld a, [wCA83]
@@ -1081,10 +1081,10 @@ Func_0F2_4B05::
     ld b, a
     push bc
     ld a, [wCA36]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCA37]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD00F]
     ldh [hFFC6], a
     pop bc
@@ -1179,13 +1179,13 @@ Func_0F2_4BD0::
 
 ; 2 call sites from 2 routines (e.g. Func_037_5344_Case1A, Func_0F1_5285_Case1A)
 ; reads: wCA36, wCA37, wD013
-; writes: wD006, wD007, wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
+; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
 Func_0F2_4BFC::
     ld a, [wCA36]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCA37]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD013]
     ld [wStringIndex], a
     ld a, $0D

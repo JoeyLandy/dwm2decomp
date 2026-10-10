@@ -963,7 +963,7 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
 
 ; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_007_7DE5, ScriptCommandF4_Run_Table2_Case14, Func_015_4182_Case1C, ...)
 ; reads: wD7F6, wD7F7, wD7F5, wC616, wD7F1, wD00E, wCFA8
-; writes: wD7F6, wD7F7, wD006, wD007, wCFA8, wD7F5
+; writes: wD7F6, wD7F7, wSpeciesIdLo, wSpeciesIdHi, wCFA8, wD7F5
 ; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...
 Func_00E_5688::
     ld hl, wCAD0
@@ -1506,10 +1506,10 @@ Jump_00E_598B::
     ld [hl], a
     ld hl, wCADB
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD00E]
     ld b, a
     push bc
@@ -1867,13 +1867,13 @@ Func_00E_5C09::
 
 ; 3 call sites from 1 routine (e.g. Func_00E_5AA4)
 ; reads: wD010, wD011, wD012
-; writes: wD006, wD007
+; writes: wSpeciesIdLo, wSpeciesIdHi
 Func_00E_5C11::
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD010]
     ld b, a
     ld a, [wD011]
@@ -1883,13 +1883,13 @@ Func_00E_5C11::
 
 ; 1 call site from 1 routine (e.g. Func_00C_45DA_Case04)
 ; reads: wD7F1, wD7F2, wD010, wD011, wD012
-; writes: wD006, wD007, wD7F5, wD7F6, wD7F7
+; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F5, wD7F6, wD7F7
 Func_00E_5C2B::
     ld a, [wD7F1]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wD7F2]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD010]
     ld [wD7F5], a
     ld a, [wD011]
@@ -1900,7 +1900,7 @@ Func_00E_5C2B::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5
-; writes: rRAMG2, rRAMB, wD7F2, wD006, wD7F3, wD007, wD7F4, rRAMG
+; writes: rRAMG2, rRAMB, wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4, rRAMG
 ; points at: sA000
 Func_00E_5C50:: ; heuristic: follows a terminator; C0
     ld a, $0A
@@ -1921,11 +1921,11 @@ Jump_00E_5C5E::
     add_a_to_hl
     ld a, [hl+]
     ld [wD7F2], a
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wD7F3], a
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     pop hl
     ld a, $73
     add_a_to_hl
@@ -1960,17 +1960,17 @@ Jump_00E_5CA1::
 
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; reads: wD7F5
-; writes: wD7F2, wD006, wD7F3, wD007, wD7F4
+; writes: wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4
 ; points at: wCADB, wCB43
 Func_00E_5CB2::
     ld hl, wCADB
     ld a, [hl+]
     ld [wD7F2], a
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wD7F3], a
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld b, $1B
     ld c, $00
 
@@ -2749,14 +2749,14 @@ Jump_00E_61BD::
 
 ; 2 call sites from 2 routines (e.g. Func_00E_5688, Func_00D_6B55)
 ; reads: wCADB, wCADC, wD009
-; writes: wD006, wD007
+; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wCADE
 Func_00E_61C1::
     ld a, [wCADB]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCADC]
-    ld [wD007], a
-    farcall LoadBank35RecordWord0
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecordWord0
     ld a, [wD009]
     and a, a
     jr z, Jump_00E_61F4

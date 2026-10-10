@@ -2,8 +2,8 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
 ; 1 call site from 1 routine (e.g. Func_037_5FB8)
-; reads: wCA36, wCA37, wCA38, wCA45, wCA46, wD008, wCA47, wCA48, ...
-; writes: wD2AD, wD2AE, wD2B3, wD2AF, wD2B0, wD006, wD007, wD2B4, ...
+; reads: wCA36, wCA37, wCA38, wCA45, wCA46, wSpeciesRecord, wCA47, wCA48, ...
+; writes: wD2AD, wD2AE, wD2B3, wD2AF, wD2B0, wSpeciesIdLo, wSpeciesIdHi, wD2B4, ...
 Func_081_4001::
     ld a, [wCA36]
     ld l, a
@@ -25,11 +25,11 @@ Func_081_4001::
     ld a, h
     ld [wD2B0], a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35RecordByte0
-    ld a, [wD008]
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesFamily
+    ld a, [wSpeciesRecord]
     ld [wD2B4], a
     ld a, [wCA47]
     ld l, a
@@ -40,11 +40,11 @@ Func_081_4001::
     ld a, h
     ld [wD2B2], a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35RecordByte0
-    ld a, [wD008]
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesFamily
+    ld a, [wSpeciesRecord]
     ld [wD2B5], a
     ld a, [wD2AD]
     ld l, a
@@ -115,9 +115,9 @@ Func_081_4001::
 Jump_081_40D8::
     pop hl
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_081_4001)

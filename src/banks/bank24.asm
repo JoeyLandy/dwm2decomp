@@ -403,7 +403,7 @@ Jump_024_42A4::
 ; entry 1 of the `rst $00` table in GameMode6_Update
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCA36, wCA37, wD781
-; writes: rRAMG, rRAMB, wD006, wD007, wC8C3, wC8C4, wD781
+; writes: rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wC8C3, wC8C4, wD781
 ; points at: sA000, wCA2B
 GameMode6_Update_Table3_Case01::
 Jump_024_42B3:: ; address name
@@ -435,9 +435,9 @@ Jump_024_42DB::
     dec b
     jr nz, Jump_024_42DB
     ld a, [wCA36]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCA37]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5AAF
     xor a, a
     ld [rRAMG], a
@@ -1149,7 +1149,7 @@ Jump_024_4724:: ; address name
 ; entry 12 of the `rst $00` table in GameMode6_Update
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F6, wCA36, wCA37, wD781
-; writes: wD7F1, wD7F2, rRAMG, rRAMB, wD006, wD007, wC8C3, wC8C4, ...
+; writes: wD7F1, wD7F2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wC8C3, wC8C4, ...
 ; points at: sA000, wCA2B
 GameMode6_Update_Table5_Case0C::
 Jump_024_475C:: ; address name
@@ -1182,9 +1182,9 @@ Jump_024_4792::
     dec b
     jr nz, Jump_024_4792
     ld a, [wCA36]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCA37]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5AAF
     xor a, a
     ld [rRAMG], a
@@ -1527,7 +1527,7 @@ Jump_024_49AF:: ; address name
 ; entry 10 of the `rst $00` table in GameMode6_Update
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F6, wCA36, wCA37, wD781
-; writes: wD7F1, wD7F2, rRAMG, rRAMB, wD006, wD007, wC8C3, wC8C4, ...
+; writes: wD7F1, wD7F2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wC8C3, wC8C4, ...
 ; points at: sA000, wCA2B
 GameMode6_Update_Table7_Case0A::
 Jump_024_49E8:: ; address name
@@ -1560,9 +1560,9 @@ Jump_024_4A1E::
     dec b
     jr nz, Jump_024_4A1E
     ld a, [wCA36]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCA37]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5AAF
     xor a, a
     ld [rRAMG], a

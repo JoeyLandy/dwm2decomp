@@ -446,7 +446,7 @@ Jump_03B_42B6::
 
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_66D6)
 ; reads: wD00A, wD00B
-; writes: wD006, wD007
+; writes: wSpeciesIdLo, wSpeciesIdHi
 Func_03B_42BB::
     ld a, c
     and a, $03
@@ -456,10 +456,10 @@ Func_03B_42BB::
     ld e, $0A
     call BattlerRecordFieldAddress
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD00A]
     swap a
     ld c, a
@@ -945,8 +945,8 @@ Jump_03B_459F:: ; address name
 ; entry 10 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD893, wD892, wBattleTarget, wDABA
-; writes: wBattleTarget, wBattleResolveStep, wD006, wD007
-; points at: wBattleResolveStep, wD958, wDABA, wD88B
+; writes: wBattleTarget, wBattleResolveStep, wSpeciesIdLo, wSpeciesIdHi
+; points at: wBattleResolveStep, wBattleMonsterId, wDABA, wD88B
 Func_03B_42F4_Case0A::
 Jump_03B_45A6:: ; address name
     ld hl, wBattleResolveStep
@@ -978,12 +978,12 @@ Jump_03B_45CF::
     call z, Func_03B_4711
     ld a, [wBattleTarget]
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5A7E
     ld a, c
     or a, a

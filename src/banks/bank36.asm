@@ -1212,7 +1212,7 @@ Jump_036_47F1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAC0, wDAC2, wBattleActionId, wC0A0, hFFC6, wBattleActor, wBattleTarget, wDAC3, ...
 ; writes: wC0A0, wBattleActor
-; points at: wBattleResolveStep, wC0A0, wD958
+; points at: wBattleResolveStep, wC0A0, wBattleMonsterId
 ResolveStepDamageMessage::
 Jump_036_4806:: ; address name
     ld hl, wBattleResolveStep
@@ -1277,7 +1277,7 @@ Jump_036_4859::
 Jump_036_4879::
     ld a, [wBattleTarget]
     add a, a
-    ld de, wD958
+    ld de, wBattleMonsterId
     add a, e
     ld e, a
     jr nc, Jump_036_4885
@@ -2001,7 +2001,7 @@ Jump_036_4D33::
 ; entry 2 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wC58A
-; points at: wBattleSubStep, wD958, wDA5B, wDAD4
+; points at: wBattleSubStep, wBattleMonsterId, wDA5B, wDAD4
 Func_036_4A38_Case02::
 Jump_036_4D42:: ; address name
     ld hl, wBattleSubStep
@@ -2009,7 +2009,7 @@ Jump_036_4D42:: ; address name
     ld a, [wBattleTarget]
     ld b, a
     add a, a
-    ld de, wD958
+    ld de, wBattleMonsterId
     add a, e
     ld e, a
     jr nc, Jump_036_4D53
@@ -2578,7 +2578,7 @@ Func_036_5094:: ; heuristic: follows a terminator; C0
 ; 1 call site from 1 routine (e.g. Func_036_691E)
 Func_036_509D:: ; heuristic: follows a terminator; C0
     call Func_036_5A6C
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $00
     jr z, Jump_036_50AE
     cp a, $08
@@ -2593,7 +2593,7 @@ Jump_036_50AE::
 ; 1 call site from 1 routine (e.g. Func_036_692A)
 Func_036_50B2:: ; heuristic: follows a terminator; C0
     call Func_036_5A6C
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $01
     jr z, Jump_036_50C3
     cp a, $03
@@ -2608,7 +2608,7 @@ Jump_036_50C3::
 ; 1 call site from 1 routine (e.g. Func_036_6936)
 Func_036_50C7:: ; heuristic: follows a terminator; C0
     call Func_036_5A6C
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $02
     jr z, Jump_036_50D8
     cp a, $05
@@ -3329,7 +3329,7 @@ Func_036_5555:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_5566:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $00
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3339,7 +3339,7 @@ Func_036_5566:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_5571:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $01
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3349,7 +3349,7 @@ Func_036_5571:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_557C:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $02
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3359,7 +3359,7 @@ Func_036_557C:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_5587:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $03
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3369,7 +3369,7 @@ Func_036_5587:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_5592:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $05
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3379,7 +3379,7 @@ Func_036_5592:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_559D:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $04
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3389,7 +3389,7 @@ Func_036_559D:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_55A8:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $06
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3399,7 +3399,7 @@ Func_036_55A8:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_55B3:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $07
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3409,7 +3409,7 @@ Func_036_55B3:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_55BE:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $08
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -3419,7 +3419,7 @@ Func_036_55BE:: ; heuristic: follows a terminator; C0
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
 Func_036_55C9:: ; heuristic: follows a terminator; C0
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $09
     jp nz, ComputeAttackDamage
     jp Func_036_66E0
@@ -4002,7 +4002,7 @@ Jump_036_59B6::
 Jump_036_59BA::
     add hl, bc
     push hl
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $09
     jr z, Jump_036_59C8
     ld bc, $00B4
@@ -4081,7 +4081,7 @@ Jump_036_5A33::
 Jump_036_5A3E::
     ld [wD86A], a
     call Func_036_618F
-    call Func_036_6594
+    call GetTargetSpeciesFamily
     cp a, $07
     jr nz, Jump_036_5A5E
     ld a, [wBattleDamageLo]
@@ -4332,8 +4332,8 @@ Jump_036_5BC2::
 
 ; 1 call site from 1 routine (e.g. Func_036_75AB)
 ; reads: wD871, wRecordBuffer, wCFED, wCFF5, wCFF6, wCFF7, wCFF8, wCFF9, ...
-; writes: wMonsterId, wCFE7, wD006, wD007, wD868, wD869, wD86A, wD86B
-; points at: wBattleStatus, wBattleSlotOut, wDAAE, wD958, wD8B7, wBattleHP, wBattleMaxHP, wBattleMP, ...
+; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
+; points at: wBattleStatus, wBattleSlotOut, wDAAE, wBattleMonsterId, wD8B7, wBattleHP, wBattleMaxHP, wBattleMP, ...
 Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld a, [wD871]
     ld hl, wBattleStatus
@@ -4369,7 +4369,7 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld c, a
     ld a, [wCFED]
     ld b, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     call Func_036_5D84
     ld a, [wCFF5]
     ld c, a
@@ -4456,10 +4456,10 @@ Func_036_5BC4:: ; heuristic: follows a terminator; C0
     ld a, [wCFED]
     ld h, a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld hl, wD01A
     ld a, l
     ld [wD868], a
@@ -4698,7 +4698,7 @@ Jump_036_5F17::
 
 ; 1 call site from 1 routine (e.g. Func_036_710F)
 ; reads: wBattleActionId, wCFF6, wCFF7, wBattleActor, wCFF8, wCFF9, wCFFA, wCFFB, ...
-; writes: wMonsterId, wCFE7, wD006, wD007, wD868, wD869, wD86A, wD86B
+; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
 ; points at: wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, wBattleDEF, wBattleAGL, wBattleINT, ...
 Func_036_5F25:: ; heuristic: follows a terminator; C0
     ld hl, $0082
@@ -4760,10 +4760,10 @@ Jump_036_5F32::
     ld a, [wCFED]
     ld h, a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wBattleActor]
     ld c, a
     farcall Func_019_4298
@@ -5956,26 +5956,30 @@ Jump_036_6590::
     xor a, a
     ret
 
+; loads the species record of wBattleTarget's monster id (TargetMonsterIdAddress, LoadSpeciesRecord); A = its family (E-0069)
 ; 15 call sites from 15 routines (e.g. Func_036_509D, Func_036_50B2, Func_036_5566, Func_036_50C7, ...)
-; reads: wD008
-; writes: wD006, wD007
-Func_036_6594::
-    call Func_036_65A9
+; reads: wSpeciesRecord
+; writes: wSpeciesIdLo, wSpeciesIdHi
+GetTargetSpeciesFamily::
+Func_036_6594:: ; address name
+    call TargetMonsterIdAddress
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
-    ld a, [wD008]
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
+    ld a, [wSpeciesRecord]
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_6594)
+; HL = wBattleMonsterId + 2 * wBattleTarget, the target's monster id word (E-0069)
+; 1 call site from 1 routine (e.g. GetTargetSpeciesFamily)
 ; reads: wBattleTarget
-; points at: wD958
-Func_036_65A9::
+; points at: wBattleMonsterId
+TargetMonsterIdAddress::
+Func_036_65A9:: ; address name
     ld a, [wBattleTarget]
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     ret
 
@@ -6100,7 +6104,7 @@ Func_036_6646::
 
 ; 1 call site from 1 routine (e.g. Func_036_5703)
 ; reads: wRecordBuffer, wCFED
-; writes: wMonsterId, wCFE7, wD006, wD007
+; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wDAAE, wD01A
 Func_036_6658:: ; heuristic: follows a terminator; C0
     ld b, a
@@ -6127,10 +6131,10 @@ Jump_036_6667::
     ld [wCFE7], a
     farcall LoadMonsterRecord
     ld a, [wRecordBuffer]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCFED]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld hl, wD01A
 
 Jump_036_669D::
@@ -7016,7 +7020,7 @@ Jump_036_6C97::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wC5E7, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
-; points at: wBattleMaxHP, wBattleHP, wD958, wBattleTargetChoice
+; points at: wBattleMaxHP, wBattleHP, wBattleMonsterId, wBattleTargetChoice
 Func_036_6C9A:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
@@ -7048,7 +7052,7 @@ Jump_036_6CC1::
     ld a, [wBattleTarget]
     ld b, a
     add a, a
-    ld de, wD958
+    ld de, wBattleMonsterId
     add a, e
     ld e, a
     jr nc, Jump_036_6CDD
@@ -7072,7 +7076,7 @@ Jump_036_6CED::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wBattleTarget, wDAD1, wBattleSubPhase, ...
-; points at: wBattleMaxHP, wBattleHP, wD958, wBattleTargetChoice
+; points at: wBattleMaxHP, wBattleHP, wBattleMonsterId, wBattleTargetChoice
 Func_036_6CF5:: ; heuristic: target of a pointer table; C0
     ld a, [wBattleTarget]
     and a, $03
@@ -7086,7 +7090,7 @@ Func_036_6CF5:: ; heuristic: target of a pointer table; C0
 ; 3 call sites from 3 routines (e.g. Func_036_7931, Func_036_6D20, Func_03B_4C7D)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1
-; points at: wBattleMaxHP, wBattleHP, wD958
+; points at: wBattleMaxHP, wBattleHP, wBattleMonsterId
 Func_036_6D0A::
     ld a, [wBattleTarget]
     ld b, a

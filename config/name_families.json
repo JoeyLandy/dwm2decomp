@@ -73,7 +73,7 @@
     {"canonical": "1E:7306", "name": "WriteThreeC3TilesAtHL", "note": "writes tile $C3 to the 3 VRAM bytes from HL (WaitForVRAMAccess, interrupts off per byte); HL kept; clobbers C, E (E-0067)", "evidence": "reading (E-0067)"},
     {"canonical": "1E:7732", "name": "SplitWD7ABBy4", "note": "wD7AF = wD7AB / 4 and wD7AB = wD7AB mod 4 (DivideHLByA) (E-0067)", "evidence": "reading (E-0067)"},
     {"canonical": "32:6755", "name": "ScaleHLTo80Percent", "note": "HL = HL * 8 / 10 (24-bit intermediate; Multiply8By16 then Divide24ByA), A = the remainder; DE kept (E-0067)", "evidence": "reading (E-0067)"},
-    {"canonical": "19:42EE", "name": "ClearBank35RecordBuffer", "note": "zero-fills the $2F bytes at wD008, where LoadBank35Record writes; BC, HL kept (E-0067)", "evidence": "reading (E-0067)"},
+    {"canonical": "19:42EE", "name": "ClearSpeciesRecordBuffer", "note": "zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067)", "evidence": "reading (E-0067)"},
     {"canonical": "1E:7317", "name": "WriteTileC0AtHL", "note": "writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067)", "evidence": "reading (E-0067)"},
     {"canonical": "1E:7320", "name": "WriteTileC1AtHL", "note": "writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067)", "evidence": "reading (E-0067)"},
     {"canonical": "1E:7329", "name": "WriteTileC2AtHL", "note": "writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067)", "evidence": "reading (E-0067)"}

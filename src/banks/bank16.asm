@@ -4013,12 +4013,12 @@ Data_016_5A0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $059A0E, $70
 
 ; 12 call sites from 12 routines (e.g. Func_016_5AAF, Func_016_5AC0, BattleEnd_Step3_Sub01_Sub01, Func_016_5B7E, ...)
-; reads: wD006, wD007
+; reads: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wC7CC
 Func_016_5A7E::
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld c, a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld b, a
     ld a, c
     and a, $07
@@ -4058,8 +4058,8 @@ Func_016_5AAF::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_003_7335_Case00, Func_085_5B04)
-; reads: wD008, wD006, wD007, wD7F5
-; writes: wD006, wD007, wD7F1, wD7F2, wD7F3, wD7F4
+; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wD7F5
+; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F1, wD7F2, wD7F3, wD7F4
 ; points at: wD09D, wC7FC
 Func_016_5AC0::
     xor a, a
@@ -4067,12 +4067,12 @@ Func_016_5AC0::
     ld bc, $000B
     call FillBytes
     xor a, a
-    ld [wD006], a
-    ld [wD007], a
+    ld [wSpeciesIdLo], a
+    ld [wSpeciesIdHi], a
 
 Jump_016_5AD1::
-    farcall LoadBank35RecordByte0
-    ld a, [wD008]
+    farcall LoadSpeciesFamily
+    ld a, [wSpeciesRecord]
     cp a, $FF
     jr z, Jump_016_5B16
     ld de, wD09D
@@ -4085,9 +4085,9 @@ Jump_016_5AE6::
     call Func_016_5A7E
     jr nz, Jump_016_5B13
     push de
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld [wD7F1], a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld [wD7F2], a
     ld hl, wC7FC
     ld a, l
@@ -4107,15 +4107,15 @@ Jump_016_5B13::
     ld [de], a
 
 Jump_016_5B16::
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld l, a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld h, a
     inc hl
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     ld bc, $0175
     ld a, l
     sub a, c
@@ -4128,8 +4128,8 @@ Jump_016_5B16::
 
 ; only called from BattleEnd_Step3_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub01)
-; reads: wD008, wD006, wD007
-; writes: wD006, wD007
+; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi
+; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wD09D
 BattleEnd_Step3_Sub01_Sub01::
 Func_016_5B33:: ; address name
@@ -4138,12 +4138,12 @@ Func_016_5B33:: ; address name
     ld bc, $000B
     call FillBytes
     xor a, a
-    ld [wD006], a
-    ld [wD007], a
+    ld [wSpeciesIdLo], a
+    ld [wSpeciesIdHi], a
 
 Jump_016_5B44::
-    farcall LoadBank35RecordByte0
-    ld a, [wD008]
+    farcall LoadSpeciesFamily
+    ld a, [wSpeciesRecord]
     cp a, $FF
     jr z, Jump_016_5B61
     ld de, wD09D
@@ -4160,15 +4160,15 @@ Jump_016_5B59::
     ld [de], a
 
 Jump_016_5B61::
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld l, a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld h, a
     inc hl
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     ld bc, $0175
     ld a, l
     sub a, c
@@ -4181,8 +4181,8 @@ Jump_016_5B61::
 
 ; 1 call site from 1 routine (e.g. Func_031_46C1_Case00)
 ; reads: wC58A, wCFC5, wDAAB, wC5E7, wC5E8, wD00C, wD894, wD89F, ...
-; writes: wD890, wD006, wD007, wDAAB
-; points at: wD8A1, wD958
+; writes: wD890, wSpeciesIdLo, wSpeciesIdHi, wDAAB
+; points at: wD8A1, wBattleMonsterId
 Func_016_5B7E::
     ld a, $01
     ld [wD890], a
@@ -4212,17 +4212,17 @@ Func_016_5B7E::
     cp a, $07
     jp z, Jump_016_5CF5
     ld a, [wDAAB]
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     call Func_016_5A7E
     ld de, $5D0B
     jr nz, Jump_016_5C15
-    farcall LoadBank35Record
+    farcall LoadSpeciesRecord
     call NextTableByte
     ld a, [wC5E7]
     ld l, a
@@ -6365,7 +6365,7 @@ Jump_016_6A01::
 ; points at: wD8AF
 Func_016_6A10::
     push de
-    call Func_016_6A36
+    call CopyMonsterNameOfWDAABSlotToDE
     ld a, [wDAAB]
     ld hl, wD8AF
     add_a_to_hl
@@ -6389,12 +6389,14 @@ Jump_016_6A31::
     ld [hl], $F0
     ret
 
+; copies the name of the monster in slot wDAAB to DE: string category 2 + the id's high byte (StringTable_MonsterNames, then StringTable_MonsterNames2 from id 256), index = the low byte (CopyStringHLToDE) (E-0069)
 ; 1 call site from 1 routine (e.g. Func_016_6A10)
 ; reads: wDAAB
-; points at: wD958
-Func_016_6A36::
+; points at: wBattleMonsterId
+CopyMonsterNameOfWDAABSlotToDE::
+Func_016_6A36:: ; address name
     ld a, [wDAAB]
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -6436,7 +6438,7 @@ Jump_016_6A5C:: ; address name
 ; entry 1 of the `rst $00` table in Func_016_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wDAAB
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD006, wD7F5, wD007, wC52D, ...
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wSpeciesIdLo, wD7F5, wSpeciesIdHi, wC52D, ...
 ; points at: wCFA8, wD8AF, wC986, wScreenTileBuffer, wBattleSubStep
 Func_016_6A4E_Case01::
 Jump_016_6A6F:: ; address name
@@ -6472,10 +6474,10 @@ Jump_016_6A6F:: ; address name
     ld h, a
     ld a, [hl+]
     ld [wD7F4], a
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wD7F5], a
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     call Func_016_5AAF
     ld a, $C3
     ld hl, wScreenTileBuffer
@@ -7570,10 +7572,10 @@ Func_016_7183::
 
 ; 2 call sites from 2 routines (e.g. Func_016_6C16_Case05, Func_016_6C16_Case03)
 ; reads: wDAAB
-; points at: wD958
+; points at: wBattleMonsterId
 Func_016_7188::
     ld a, [wDAAB]
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -7641,7 +7643,7 @@ Func_016_733F::
 ; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wCFC5, wC9DC, wC991, wC992, wD00E, wC9E3, wC9E4, wC9E7, ...
-; writes: wC9DC, wD006, wD007, wC9DD, wC9E3, wC9E4, wC9E1, wC9E2, ...
+; writes: wC9DC, wSpeciesIdLo, wSpeciesIdHi, wC9DD, wC9E3, wC9E4, wC9E1, wC9E2, ...
 ; points at: wD09D
 BattleEnd_Step3_Sub01::
 Func_016_7364:: ; address name
@@ -7684,10 +7686,10 @@ Jump_016_7397::
     ld a, [wC992]
     ld h, a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD00E]
     ld c, a
     ld a, [wC9DC]

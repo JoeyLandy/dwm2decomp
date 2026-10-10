@@ -2125,10 +2125,10 @@ Jump_003_4CB8::
     and a, $0F
     call SRAMRecordAddressMapped
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD00F]
     ldh [hFFC6], a
     ld c, $56
@@ -2172,17 +2172,17 @@ Jump_003_4D4D::
 
 ; 1 call site from 1 routine (e.g. Func_003_4AAC)
 ; reads: wC46D, wD013
-; writes: wD006, wD007, wStringIndex, wStringCategory
+; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory
 Func_003_4D57::
     ld c, $0B
     ld a, [wC46D]
     and a, $0F
     call SRAMRecordAddressMapped
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD013]
     ld [wStringIndex], a
     ld a, $0D
@@ -2362,14 +2362,14 @@ Jump_003_4E6F::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_003_4E02)
-; reads: wD008
-; writes: wD006, wStringIndex, wD007, wStringCategory, wD09D, wD09E
+; reads: wSpeciesRecord
+; writes: wSpeciesIdLo, wStringIndex, wSpeciesIdHi, wStringCategory, wD09D, wD09E
 Func_003_4EB6::
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld [wStringIndex], a
     ld a, [hl+]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     add a, $02
     ld [wStringCategory], a
     push hl
@@ -2381,8 +2381,8 @@ Func_003_4EB6::
     deref_hl
     ld de, $0901
     call ShowStringBank08AtTilesHL_Bank03
-    farcall LoadBank35Record
-    ld a, [wD008]
+    farcall LoadSpeciesRecord
+    ld a, [wSpeciesRecord]
     ld [wD09D], a
     pop bc
     ld a, b

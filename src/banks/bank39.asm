@@ -6296,9 +6296,9 @@ Jump_039_7084::
     ret
 
 ; 9 call sites from 9 routines (e.g. Func_039_5CB5, Func_039_5CAF, Func_039_5CA9, Func_039_5CC7, ...)
-; reads: wBattleActor, wD008, hFFC7, hFFC8, hFFC9
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wD006, wD007
-; points at: wD958
+; reads: wBattleActor, wSpeciesRecord, hFFC7, hFFC8, hFFC9
+; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wSpeciesIdLo, wSpeciesIdHi
+; points at: wBattleMonsterId
 Func_039_7093::
     ld a, [wBattleActor]
     and a, $04
@@ -6319,19 +6319,19 @@ Jump_039_70A9::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_70F4
     ldh [hFFC9], a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     push de
     push bc
-    farcall LoadBank35RecordByte0
+    farcall LoadSpeciesFamily
     pop bc
     pop de
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     cp a, d
     jr nz, Jump_039_70F4
     ld a, c
@@ -6363,9 +6363,9 @@ Jump_039_70F4::
     ret
 
 ; 9 call sites from 9 routines (e.g. Func_039_69E3, Func_039_69DD, Func_039_69D7, Func_039_69F5, ...)
-; reads: wBattleActor, wD008, hFFC6, wC5E7, hFFC9
-; writes: hFFD0, hFFC6, hFFC9, wD006, wD007
-; points at: wD958
+; reads: wBattleActor, wSpeciesRecord, hFFC6, wC5E7, hFFC9
+; writes: hFFD0, hFFC6, hFFC9, wSpeciesIdLo, wSpeciesIdHi
+; points at: wBattleMonsterId
 Func_039_70FD::
     ld a, [wBattleActor]
     and a, $04
@@ -6384,17 +6384,17 @@ Jump_039_710F::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_714C
     ldh [hFFC9], a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     push de
-    farcall LoadBank35RecordByte0
+    farcall LoadSpeciesFamily
     pop de
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     cp a, d
     jr nz, Jump_039_714C
     ldh a, [hFFC6]

@@ -3100,7 +3100,7 @@ Jump_037_5C47::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Table3_Case15)
-; writes: wD006, wD007, wD043
+; writes: wSpeciesIdLo, wSpeciesIdHi, wD043
 ; points at: wCA2B, wD132
 Func_037_5C4E::
     ld hl, wCA2B
@@ -3111,9 +3111,9 @@ Func_037_5C4E::
     call Func_037_5EC0
     call Func_037_5ED0
     ld a, c
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, b
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     call Func_037_5EE7
     ld a, [de]
     and a, $01
@@ -3388,8 +3388,8 @@ Func_037_5DA9::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_5BC6)
-; reads: wD008
-; writes: wD006, wD007
+; reads: wSpeciesRecord
+; writes: wSpeciesIdLo, wSpeciesIdHi
 Func_037_5DBC::
     ld a, [de]
     and a, $0F
@@ -3405,14 +3405,14 @@ Func_037_5DBC::
     add hl, bc
     add hl, bc
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     push de
-    farcall LoadBank35RecordByte0
+    farcall LoadSpeciesFamily
     pop de
     pop hl
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
 
 Jump_037_5DE3::
     cp a, $0A
@@ -3641,14 +3641,14 @@ Func_037_5ED0::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_5C4E)
-; reads: wD008
+; reads: wSpeciesRecord
 Func_037_5EE7::
     push hl
     push de
-    farcall LoadBank35Record
+    farcall LoadSpeciesRecord
     pop de
     pop hl
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     ld [hl+], a
     inc de
     ret

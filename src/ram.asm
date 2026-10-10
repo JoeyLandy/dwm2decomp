@@ -1142,9 +1142,9 @@ DEF wD002 EQU $D002
 DEF wD003 EQU $D003
 DEF wD004 EQU $D004
 DEF wD005 EQU $D005
-DEF wD006 EQU $D006
-DEF wD007 EQU $D007
-DEF wD008 EQU $D008
+DEF wSpeciesIdLo EQU $D006 ; low byte of the monster id whose species record LoadSpeciesRecord loads (E-0069) (reading + data (E-0069))
+DEF wSpeciesIdHi EQU $D007 ; high byte of that monster id (E-0069) (reading + data (E-0069))
+DEF wSpeciesRecord EQU $D008 ; 47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069) (reading + data (E-0069))
 DEF wD009 EQU $D009
 DEF wD00A EQU $D00A
 DEF wD00B EQU $D00B
@@ -1515,7 +1515,7 @@ DEF wBattleAGL EQU $D91F ; agility of the 8 battle slots; Func_032_5BE8 fills it
 DEF wBattleINT EQU $D92F ; intelligence of the 8 battle slots, the array after wBattleAGL (assumed) (reading (E-0043))
 DEF wD93F EQU $D93F
 DEF wD94F EQU $D94F
-DEF wD958 EQU $D958
+DEF wBattleMonsterId EQU $D958 ; word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfWDAABSlotToDE, GetSlotSpeciesFamily) (E-0069) (reading + data (E-0069))
 DEF wD960 EQU $D960
 DEF wD961 EQU $D961
 DEF wD962 EQU $D962

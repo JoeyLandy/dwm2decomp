@@ -4923,14 +4923,14 @@ Jump_0F0_6B93::
 
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table6_Case11)
 ; reads: wCED9, wCEDA, wD010, wD011, wD012, wCF2B, wCF2F
-; writes: wD006, wD007, wCF0A, wCF0B, wCF0C, wCF29, wCF2D
+; writes: wSpeciesIdLo, wSpeciesIdHi, wCF0A, wCF0B, wCF0C, wCF29, wCF2D
 ; points at: wD01A, wCF41
 Func_0F0_6BA1::
     ld a, [wCED9]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCEDA]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD010]
     ld [wCF0A], a
     ld a, [wD011]

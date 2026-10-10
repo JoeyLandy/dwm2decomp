@@ -1356,7 +1356,7 @@ Jump_01A_6242::
 ; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wC991, wC992
-; writes: wD006, wD007
+; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wD09D, wD010, wC9C2
 BattleEnd_Step3_Sub02::
 Func_01A_624B:: ; address name
@@ -1369,10 +1369,10 @@ Func_01A_624B:: ; address name
     ld a, [wC992]
     ld h, a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld hl, wD09D
     ld de, wD010
     ld b, $03
@@ -1723,7 +1723,7 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_031_6885_Case01, Func_031_67AA_Case07)
 ; reads: wD869, wD014, wD015, wD016, wD017, wD018, wD019
-; writes: wD006, wD007, wD095, wD096, wD097, wD098, wD099, wD09A
+; writes: wSpeciesIdLo, wSpeciesIdHi, wD095, wD096, wD097, wD098, wD099, wD09A
 ; points at: wD095
 Func_01A_6418::
     ld hl, wD095
@@ -1735,10 +1735,10 @@ Func_01A_6418::
     call SRAMRecordAddress
     push hl
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     pop hl
     ld a, l
     add a, $4B

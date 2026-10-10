@@ -1157,7 +1157,7 @@ Jump_015_47CF:: ; address name
 ; entry 28 of the `rst $00` table in Func_015_4182
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F7, wD7F6, wD781
-; writes: wD7F1, wD006, wD7F2, wD007, wD7F3, wD7F4, wD7F5, wD781, ...
+; writes: wD7F1, wSpeciesIdLo, wD7F2, wSpeciesIdHi, wD7F3, wD7F4, wD7F5, wD781, ...
 ; points at: wC7FC, wC8CF, wCADD
 Func_015_4182_Case1C::
 Jump_015_47E1:: ; address name
@@ -1177,10 +1177,10 @@ Jump_015_47E1:: ; address name
 Jump_015_47FF::
     ld a, [wD7F6]
     ld [wD7F1], a
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wD7F7]
     ld [wD7F2], a
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     ld de, Data_015_75C5
     ld a, e
     ld [wD7F3], a
@@ -1203,9 +1203,9 @@ Jump_015_47FF::
     cp a, $FF
     jr z, Jump_015_487A
     ld a, [wD7F6]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wD7F7]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5A7E
     ld a, c
     and a, a
@@ -1598,9 +1598,9 @@ Jump_015_4B02:: ; address name
 Jump_015_4B21::
     ld hl, wCADB
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5A7E
     ld a, c
     and a, a
@@ -1691,7 +1691,7 @@ Jump_015_4BA7::
 ; entry 40 of the `rst $00` table in Func_015_4182
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD006, wD007, wTwoChoiceCursor, wD781, ...
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wSpeciesIdLo, wSpeciesIdHi, wTwoChoiceCursor, wD781, ...
 ; points at: wCADB, wC7FC
 Func_015_4182_Case28::
 Jump_015_4BBE:: ; address name
@@ -1710,9 +1710,9 @@ Jump_015_4BBE:: ; address name
     jr z, Jump_015_4BF7
     ld hl, wCADB
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5A7E
     ld a, c
     and a, a

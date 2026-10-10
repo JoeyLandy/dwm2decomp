@@ -5713,11 +5713,11 @@ Jump_03A_79E4::
 
 ; 1 call site from 1 routine (e.g. Func_03A_79A0)
 ; writes: wD87C, wD87A, wD87B
-; points at: wD958
+; points at: wBattleMonsterId
 Func_03A_79ED::
     ld [wD87C], a
     push hl
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     push bc
@@ -5816,7 +5816,7 @@ Jump_03A_7A68::
 ; 1 call site from 1 routine (e.g. Func_03A_79A0)
 ; reads: wD87C, wC0A0, wD87A, wD87B
 ; writes: wC0A0
-; points at: wD958, wC0A0
+; points at: wBattleMonsterId, wC0A0
 Func_03A_7A6E::
     call Func_03A_7AE3
     inc b
@@ -5825,7 +5825,7 @@ Func_03A_7A6E::
     ld [wC0A0], a
     ld a, [wD87C]
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
@@ -5834,7 +5834,7 @@ Func_03A_7A6E::
 Jump_03A_7A87::
     ld a, c
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
     cp a, e
@@ -5863,7 +5863,7 @@ Jump_03A_7AA9::
 Jump_03A_7AB0::
     ld a, c
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
     cp a, e
@@ -5903,7 +5903,7 @@ Jump_03A_7ADD::
 
 ; 6 call sites from 5 routines (e.g. Func_03A_7A6E, Func_03A_7B66, Func_03B_4711, Func_03B_4C95, ...)
 ; reads: wC58A, wC57F
-; points at: wC0A0, wD958, wC0A8
+; points at: wC0A0, wBattleMonsterId, wC0A8
 Func_03A_7AE3::
     xor a, a
     ld hl, wC0A0
@@ -5933,7 +5933,7 @@ Jump_03A_7B04::
     push de
     ld a, c
     add a, a
-    ld de, wD958
+    ld de, wBattleMonsterId
     add a, e
     ld e, a
     jr nc, Jump_03A_7B1F
@@ -5975,7 +5975,7 @@ Jump_03A_7B3E::
     push de
     ld a, c
     add a, a
-    ld de, wD958
+    ld de, wBattleMonsterId
     add a, e
     ld e, a
     jr nc, Jump_03A_7B59

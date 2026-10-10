@@ -1201,7 +1201,7 @@ Jump_031_46CA:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_031_46C1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAAB, wD006, wD007
+; reads: wDAAB, wSpeciesIdLo, wSpeciesIdHi
 ; writes: wBattleSubPhase, wD960, wD961, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleStep, wBattleSubPhase
 Func_031_46C1_Case00::
@@ -1217,9 +1217,9 @@ Jump_031_46D8:: ; address name
     ret
 
 Jump_031_46EE::
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld l, a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld h, a
     ld a, l
     ld [wD960], a
@@ -1359,12 +1359,12 @@ Func_031_47C7::
 ; 4 call sites from 4 routines (e.g. Func_031_46C1_Case04, Func_031_46C1_Case03, Func_031_47C7, Func_031_46C1_Table2_Case00)
 ; reads: wDAAB
 ; writes: wCFCF, wC526, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
-; points at: wD958
+; points at: wBattleMonsterId
 Func_031_47DD::
     xor a, a
     ld [wCFCF], a
     ld a, [wDAAB]
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -7746,7 +7746,7 @@ Func_031_6D1F:: ; heuristic: follows a terminator; C0
 
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case06, Func_031_6885_Case00)
 ; reads: wD00F, hFFC8, hFFC9, hFFCA
-; writes: rRAMG, rRAMB, hFFC7, wD006, wD007, hFFC6
+; writes: rRAMG, rRAMB, hFFC7, wSpeciesIdLo, wSpeciesIdHi, hFFC6
 Func_031_6D28::
     push af
     ld a, $0A
@@ -7767,9 +7767,9 @@ Func_031_6D28::
     adc a, $FF
     ld h, a
     ld a, [hl+]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [hl+]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     ld a, l
     add a, $4B
     ld l, a
@@ -7777,7 +7777,7 @@ Func_031_6D28::
     adc a, $00
     ld h, a
     push hl
-    farcall LoadBank35Record
+    farcall LoadSpeciesRecord
     ld a, [wD00F]
     ldh [hFFC6], a
     farcall Func_019_7380
@@ -8724,7 +8724,7 @@ Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 4 call sites from 4 routines (e.g. Func_031_47C7, Func_031_46C1_Table2_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02)
 ; reads: wIsCGB, wC57F, wD890
-; points at: wD960, wD958
+; points at: wD960, wBattleMonsterId
 Func_031_7321::
     ld a, [wIsCGB]
     or a, a
@@ -8733,7 +8733,7 @@ Func_031_7321::
     bit 1, a
     ld de, wD960
     jr z, Jump_031_7333
-    ld de, wD958
+    ld de, wBattleMonsterId
 
 Jump_031_7333::
     ld a, [wD890]

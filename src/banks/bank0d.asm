@@ -5589,8 +5589,8 @@ Func_00D_6B45:: ; heuristic: follows a terminator; C0
     jr Jump_00D_6B25
 
 ; 1 call site from 1 routine (e.g. Func_00D_6509_Case0E)
-; reads: wD7F5, wD7F6, wRecordBuffer, wCFED, wD008, wCADE, wD010, wD011, ...
-; writes: wMonsterId, wCFE7, wD006, wD007, wCADB, wCADC, rRAMG2, rRAMB
+; reads: wD7F5, wD7F6, wRecordBuffer, wCFED, wSpeciesRecord, wCADE, wD010, wD011, ...
+; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi, wCADB, wCADC, rRAMG2, rRAMB
 ; points at: wC986, wC60C, wD01A
 Func_00D_6B55::
     push hl
@@ -5618,10 +5618,10 @@ Jump_00D_6B5B::
     ld [wCFE7], a
     farcall LoadMonsterRecord
     ld a, [wRecordBuffer]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wCFED]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     farcall Func_016_5AAF
     ld hl, wC986
     ld a, $01
@@ -5633,7 +5633,7 @@ Jump_00D_6B5B::
     ld a, [wCFED]
     ld [hl+], a
     ld [wCADC], a
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     ld [hl+], a
     push hl
     farcall Func_00E_61C1
@@ -7056,16 +7056,16 @@ Jump_00D_76AF:: ; address name
 ; only called from ScriptCommandF4_Run_Table2_Case14 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Table2_Case14)
 ; reads: wD7F6, wD7F7, wD7F5, wCB3D
-; writes: wD7F1, wD006, wD7F2, wD007, wD7F3, wD7F4, wTwoChoiceCursor
+; writes: wD7F1, wSpeciesIdLo, wD7F2, wSpeciesIdHi, wD7F3, wD7F4, wTwoChoiceCursor
 ; points at: wC7FC, wC8CF, wC130, wC8C0
 ScriptCommandF4_Run_Table2_Case14_Sub01::
 Func_00D_76D0:: ; address name
     ld a, [wD7F6]
     ld [wD7F1], a
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wD7F7]
     ld [wD7F2], a
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     ld de, $75C5
     ld a, e
     ld [wD7F3], a
@@ -7088,9 +7088,9 @@ Func_00D_76D0:: ; address name
     cp a, $FF
     jr z, Jump_00D_7737
     ld a, [wD7F6]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, [wD7F7]
-    ld [wD007], a
+    ld [wSpeciesIdHi], a
     farcall Func_016_5A7E
     ld a, c
     and a, a

@@ -6794,7 +6794,7 @@ Func_01E_6EE2::
 
 ; 1 call site from 1 routine (e.g. Func_01E_5A4D_Case13)
 ; reads: hFFC6, hFFC7, hFFC8, wD00F
-; writes: wC8C0, wC8C1, wC8C2, wD006, wD007, hFFC6, hFFC7, wD7F1, ...
+; writes: wC8C0, wC8C1, wC8C2, wSpeciesIdLo, wSpeciesIdHi, hFFC6, hFFC7, wD7F1, ...
 ; points at: hFFC8
 Func_01E_6F17::
     call Func_01E_76EB
@@ -6834,10 +6834,10 @@ Func_01E_6F17::
     ld c, $0B
     call LoadSRAMRecordWord
     ldh a, [hFFC6]
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ldh a, [hFFC7]
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld a, [wD00F]
     ldh [hFFC6], a
     pop bc

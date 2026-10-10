@@ -4355,7 +4355,7 @@ Func_007_695A::
 
 ; 1 call site from 1 routine (e.g. Func_007_65F1_Table2_Case06)
 ; reads: wRecordBuffer, wCFED, wRecordBufferData, wCFEF, wCFF0, wCFF1, wCFF5, wCFF6, ...
-; writes: rRAMG, rRAMB, wMonsterId, wCFE7, wD006, wD007
+; writes: rRAMG, rRAMB, wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi
 ; points at: sA000, wC60C, sA00D, wD01A, sA08E, sA099, sA01E, sA029
 Func_007_6975::
     ld a, $0A
@@ -4488,12 +4488,12 @@ Func_007_6975::
     ld a, [wCFED]
     ld h, a
     ld a, l
-    ld [wD006], a
+    ld [wSpeciesIdLo], a
     ld a, h
-    ld [wD007], a
-    farcall LoadBank35Record
+    ld [wSpeciesIdHi], a
+    farcall LoadSpeciesRecord
     ld hl, sA00D
-    ld a, [wD008]
+    ld a, [wSpeciesRecord]
     ld [hl], a
     ld a, l
     add a, $2F

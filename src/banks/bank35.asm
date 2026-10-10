@@ -1,50 +1,50 @@
 SECTION "Bank 35", ROMX[$4000], BANK[$35]
     db $35
 
-; copies the whole $2F-byte record numbered by wD006/wD007 to wD008 (CopyBank35RecordPrefix); what the records describe is not known (E-0062)
+; copies the whole 47-byte species record of monster id wSpeciesIdLo/Hi to wSpeciesRecord; byte 0 is the family (E-0069)
 ; 37 call sites from 36 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_6C48, Func_003_4BE8, Func_003_4D57, ...)
-; points at: wD008
-LoadBank35Record::
+; points at: wSpeciesRecord
+LoadSpeciesRecord::
 Func_035_4001:: ; address name
-    ld de, wD008
+    ld de, wSpeciesRecord
     ld b, $2F
-    call CopyBank35RecordPrefix
+    call CopySpeciesRecordPrefix
     ret
 
-; copies byte 0 of the record numbered by wD006/wD007 to wD008 (E-0062)
-; 8 call sites from 7 routines (e.g. Func_005_6CA5, Func_016_5AC0, BattleEnd_Step3_Sub01_Sub01, Func_037_5DBC, ...)
-; points at: wD008
-LoadBank35RecordByte0::
+; copies byte 0 of the species record of monster id wSpeciesIdLo/Hi, the family (0 Slime ... 9 Water, 10 Boss; $FF for an unused id), to wSpeciesRecord (E-0069)
+; 8 call sites from 7 routines (e.g. GetSlotSpeciesFamily, Func_016_5AC0, BattleEnd_Step3_Sub01_Sub01, Func_037_5DBC, ...)
+; points at: wSpeciesRecord
+LoadSpeciesFamily::
 Func_035_400A:: ; address name
-    ld de, wD008
+    ld de, wSpeciesRecord
     ld b, $01
-    call CopyBank35RecordPrefix
+    call CopySpeciesRecordPrefix
     ret
 
-; copies bytes 0-1 of the record numbered by wD006/wD007 to wD008 (E-0062)
+; copies bytes 0-1 of the species record of monster id wSpeciesIdLo/Hi (the family and byte 1) to wSpeciesRecord (E-0069)
 ; 1 call site from 1 routine (e.g. Func_00E_61C1)
-; points at: wD008
-LoadBank35RecordWord0::
+; points at: wSpeciesRecord
+LoadSpeciesRecordWord0::
 Func_035_4013:: ; address name
-    ld de, wD008
+    ld de, wSpeciesRecord
     ld b, $02
-    call CopyBank35RecordPrefix
+    call CopySpeciesRecordPrefix
     ret
 
-; B = byte count, DE = destination: copies the first B bytes of the record numbered by the 16-bit wD006/wD007 (pointer table Data_035_403B, 384 entries, records $2F bytes apart) to DE (E-0062)
-; 3 call sites from 3 routines (e.g. LoadBank35Record, LoadBank35RecordWord0, LoadBank35RecordByte0)
-; reads: wD006, wD007
-CopyBank35RecordPrefix::
+; B = byte count, DE = destination: copies the first B bytes of the species record for monster id wSpeciesIdLo/Hi (pointer table SpeciesRecordPointers, 384 entries, 47-byte records) to DE (E-0062, E-0069)
+; 3 call sites from 3 routines (e.g. LoadSpeciesRecord, LoadSpeciesRecordWord0, LoadSpeciesFamily)
+; reads: wSpeciesIdLo, wSpeciesIdHi
+CopySpeciesRecordPrefix::
 Func_035_401C:: ; address name
     push bc
     push de
-    ld a, [wD006]
+    ld a, [wSpeciesIdLo]
     ld c, a
-    ld a, [wD007]
+    ld a, [wSpeciesIdHi]
     ld b, a
     sla c
     rl b
-    ld hl, Data_035_403B
+    ld hl, SpeciesRecordPointers
     add hl, bc
     ld e, [hl]
     inc hl
@@ -61,7 +61,9 @@ Jump_035_4034::
     jr nz, Jump_035_4034
     ret
 
-Data_035_403B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; 384 pointers indexed by monster id (the numbering of StringTable_MonsterNames and StringTable_MonsterNames2) to 47-byte species records; byte 0 is the family index of StringTable_MonsterFamilies, $FF for an unused id (E-0069)
+SpeciesRecordPointers:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_035_403B:: ; address name
     dw Data_035_433B
     dw Data_035_436A
     dw Data_035_4399

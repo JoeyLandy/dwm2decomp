@@ -615,7 +615,7 @@ Jump_0A3_49D0::
 ; 1 call site from 1 routine (e.g. RollWC5E7BelowChance)
 ; reads: wC58A, wBattleActor
 ; writes: hFFC6
-; points at: wD958
+; points at: wBattleMonsterId
 RollWC5E7BelowChance_Sub01::
 Func_0A3_49D5:: ; address name
     ld a, [wC58A]
@@ -637,7 +637,7 @@ Jump_0A3_49EB::
 Jump_0A3_49EE::
     ld a, [wBattleActor]
     add a, a
-    ld hl, wD958
+    ld hl, wBattleMonsterId
     add_a_to_hl
     deref_hl
     add hl, de
