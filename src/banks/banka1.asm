@@ -3965,7 +3965,7 @@ Jump_0A1_595D::
     ldh [hFFC6], a
     ld a, $01
     ld [wC8C7], a
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     ld a, $08
     ld [wModeState], a
     ldh a, [hMapId]
@@ -4005,7 +4005,7 @@ Jump_0A1_59AE::
     ldh [hFFC6], a
     ld a, $01
     ld [wC8C7], a
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     ld a, $08
     ld [wModeState], a
     ld a, [wCC44]

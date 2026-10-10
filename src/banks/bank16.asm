@@ -149,7 +149,7 @@ Jump_016_40F5:: ; address name
 ; reads: wD083
 ; writes: wItemId
 Func_016_40F6::
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $5B
@@ -329,7 +329,7 @@ Func_016_41B3::
 ; reads: wD083
 ; writes: wItemId
 Func_016_41FD::
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $5F
@@ -356,7 +356,7 @@ Func_016_41FD::
 ; reads: wD083
 ; writes: wItemId
 Func_016_421F::
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $55
@@ -373,7 +373,7 @@ Func_016_421F::
 ; writes: wItemId
 RunItemEffect_Case07::
 Jump_016_4234:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $55
@@ -390,7 +390,7 @@ Jump_016_4234:: ; address name
 ; writes: wItemId
 RunItemEffect_Case08::
 Jump_016_4249:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $55
@@ -409,7 +409,7 @@ Func_016_425E::
     and a, a
     jr z, Jump_016_42A6
     xor a, a
-    call Func_016_4636
+    call CheckRecordFlag55Bit7
     jr nz, Jump_016_4274
     xor a, a
     ld c, $55
@@ -422,7 +422,7 @@ Jump_016_4274::
     cp a, $02
     jr c, Jump_016_42A6
     ld a, $01
-    call Func_016_4636
+    call CheckRecordFlag55Bit7
     jr nz, Jump_016_428D
     ld a, $01
     ld c, $55
@@ -435,7 +435,7 @@ Jump_016_428D::
     cp a, $03
     jr c, Jump_016_42A6
     ld a, $02
-    call Func_016_4636
+    call CheckRecordFlag55Bit7
     jr nz, Jump_016_42A6
     ld a, $02
     ld c, $55
@@ -506,7 +506,7 @@ Func_016_42C4::
 ; writes: wItemId
 RunItemEffect_Case09::
 Jump_016_4301:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $55
@@ -523,7 +523,7 @@ Jump_016_4301:: ; address name
 ; writes: wItemId
 RunItemEffect_Case0A::
 Jump_016_4316:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $55
@@ -552,7 +552,7 @@ Func_016_432B::
 ; reads: wD083
 RunItemEffect_Case0D::
 Jump_016_433C:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $63
@@ -569,7 +569,7 @@ Jump_016_433C:: ; address name
 ; reads: wD083
 RunItemEffect_Case0E::
 Jump_016_4352:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $65
@@ -586,7 +586,7 @@ Jump_016_4352:: ; address name
 ; reads: wD083
 RunItemEffect_Case0F::
 Jump_016_4368:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $67
@@ -603,7 +603,7 @@ Jump_016_4368:: ; address name
 ; reads: wD083
 RunItemEffect_Case10::
 Jump_016_437E:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $69
@@ -620,7 +620,7 @@ Jump_016_437E:: ; address name
 ; reads: wD083
 RunItemEffect_Case11::
 Jump_016_4394:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $5D
@@ -637,7 +637,7 @@ Jump_016_4394:: ; address name
 ; reads: wD083
 RunItemEffect_Case12::
 Jump_016_43AA:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $61
@@ -655,7 +655,7 @@ Jump_016_43AA:: ; address name
 ; writes: wItemId
 RunItemEffect_Case13::
 Jump_016_43C0:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $6F
@@ -673,7 +673,7 @@ Jump_016_43C0:: ; address name
 ; writes: wItemId
 RunItemEffect_Case14::
 Jump_016_43D6:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $6F
@@ -691,7 +691,7 @@ Jump_016_43D6:: ; address name
 ; writes: wItemId
 RunItemEffect_Case15::
 Jump_016_43EB:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $70
@@ -709,7 +709,7 @@ Jump_016_43EB:: ; address name
 ; writes: wItemId
 RunItemEffect_Case16::
 Jump_016_4401:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $70
@@ -727,7 +727,7 @@ Jump_016_4401:: ; address name
 ; writes: wItemId
 RunItemEffect_Case17::
 Jump_016_4416:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $72
@@ -745,7 +745,7 @@ Jump_016_4416:: ; address name
 ; writes: wItemId
 RunItemEffect_Case18::
 Jump_016_442C:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $72
@@ -761,7 +761,7 @@ Jump_016_442C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunItemEffect_Case19::
 Jump_016_4441:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ret
 
@@ -1142,18 +1142,22 @@ Jump_016_462E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunItemEffect_Case40::
 Jump_016_462F:: ; address name
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret
 
+; A = wD083, then CheckRecordFlag55Bit7 (E-0066)
 ; 22 call sites from 22 routines (e.g. Func_016_4790, RunItemEffect_Case40, RunItemEffect_Case19, RunItemEffect_Case18, ...)
 ; reads: wD083
 ; writes: wItemId
-Func_016_4633::
+CheckWD083RecordFlag55Bit7::
+Func_016_4633:: ; address name
     ld a, [wD083]
 
+; A = record (SRAMRecordAddressMapped, offset $55; SRAM must be enabled): returns Z set when bit 7 of that byte is clear; when it is set, wItemId = $FF, A = $FF and Z is clear. What the bit means is not known (E-0066)
 ; 3 call sites from 1 routine (e.g. Func_016_425E)
 ; writes: wItemId
-Func_016_4636::
+CheckRecordFlag55Bit7::
+Func_016_4636:: ; address name
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
@@ -1380,7 +1384,7 @@ Func_016_4790::
     cp a, [hl]
     ret nc
     ld [wD083], a
-    call Func_016_4633
+    call CheckWD083RecordFlag55Bit7
     ret nz
     ld a, [wD083]
     ld c, $5D
@@ -4529,7 +4533,7 @@ Jump_016_5DB2:: ; address name
     ld de, wC2A6
     ld hl, vBGMap0 + $10E
     ld bc, $0605
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     xor a, a
     ld [wC46B], a
     ld a, $02
@@ -4647,7 +4651,7 @@ Jump_016_5E5A:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     xor a, a
     ld [wC46B], a
     ld a, $02
@@ -4708,7 +4712,7 @@ Jump_016_5ED7::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $06
     ld [wBattleSubStep], a
     ret
@@ -4729,7 +4733,7 @@ Jump_016_5EEC:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $080B
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld hl, vBGMap0 + $12B
     ld a, $BC
     call WriteVRAMByte
@@ -4796,7 +4800,7 @@ Jump_016_5F5C:: ; address name
     ld de, wC2A4
     ld hl, vBGMap0 + $10C
     ld bc, $0805
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     xor a, a
     ld [wC46C], a
     ld a, $02
@@ -4860,7 +4864,7 @@ Jump_016_5FC7::
     ld de, wC2A2
     ld hl, vBGMap0 + $10A
     ld bc, $0A05
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, [wC470]
     ld [wCFD1], a
     ld a, $0C
@@ -4923,7 +4927,7 @@ Jump_016_6058:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     call Func_016_696D
     ld a, $02
     ld [wCFD0], a
@@ -5168,7 +5172,7 @@ Jump_016_622B::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -5190,7 +5194,7 @@ Jump_016_6250:: ; address name
     ld hl, vBGMap0 + $AB
     ld de, wC243
     ld bc, $0107
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, [wC320]
     ld hl, vBGMap0 + $188
     call WriteVRAMByte
@@ -5215,7 +5219,7 @@ Jump_016_6291::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $09
     ld [wBattleSubStep], a
     ret
@@ -5259,7 +5263,7 @@ Jump_016_62D3::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     xor a, a
     ld [wC46D], a
     ld a, $02
@@ -5407,7 +5411,7 @@ Jump_016_640E::
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $02
     ld [wCFD0], a
     ld a, $00
@@ -6722,7 +6726,7 @@ Jump_016_6C42:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, [wD09D]
     push af
     ld a, [wD88F]
@@ -6780,7 +6784,7 @@ Jump_016_6C9E:: ; address name
     ld hl, vBGMap0 + $10E
     ld de, wC2A6
     ld bc, $0605
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $02
     ld [wCFD0], a
     ld a, $00
@@ -6931,7 +6935,7 @@ Jump_016_6D7B:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $04
     ld [wBattleSubStep], a
     ret
@@ -6975,7 +6979,7 @@ Jump_016_6DA6:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, [wC46C]
     ld hl, Data_016_66F7
     add a, a
@@ -7048,7 +7052,7 @@ Jump_016_6E38:: ; address name
     ld hl, vBGMap0 + $10C
     ld de, wC2A4
     ld bc, $0805
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $02
     ld [wCFD0], a
     ld a, $00
@@ -7224,7 +7228,7 @@ Jump_016_6F6F:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $1412
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     call Func_016_69E2
     ld a, $0C
     ld [wBattleSubStep], a
@@ -7256,7 +7260,7 @@ Jump_016_6FA4:: ; address name
     ld hl, vBGMap0 + $10C
     ld hl, wC2A4
     ld bc, $0805
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $19
     ld [wStringIndex], a
     call Func_016_6961
@@ -7321,7 +7325,7 @@ Jump_016_7023::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     ld a, $04
     ld [wBattleSubStep], a
     ret
@@ -7336,7 +7340,7 @@ Jump_016_7051:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
-    call Func_016_7321
+    call CopyRect32StrideToVRAM_Bank16
     farcall Func_01A_72DB
     ld a, $19
     ld [wStringIndex], a
@@ -7595,8 +7599,10 @@ Jump_016_71AA::
     ret
     INCBIN "dwm2-cobi-us.gbc", $05B1AC, $175
 
+; B = width, C = rows, DE = source with rows 32 bytes apart, HL = VRAM address with rows 32 bytes apart: copies a B x C rectangle with WriteVRAMByteInc; DE and HL end at the start of the row below; B kept, C = 0 (E-0066)
 ; 21 call sites from 20 routines (e.g. Func_016_6C16_Case13, Func_016_6C16_Case12, Func_016_6C16_Case10, Func_016_6C16_Case0F, ...)
-Func_016_7321::
+CopyRect32StrideToVRAM_Bank16::
+Func_016_7321:: ; address name
     push bc
     push de
     push hl
@@ -7619,7 +7625,7 @@ Jump_016_7324::
     ld d, a
     pop bc
     dec c
-    jr nz, Func_016_7321
+    jr nz, CopyRect32StrideToVRAM_Bank16
     ret
 
 ; 11 call sites from 11 routines (e.g. Func_016_6C16_Case13, Func_016_6C16_Case12, Func_016_6C16_Case0F, Func_016_6C16_Case0C, ...)

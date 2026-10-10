@@ -652,7 +652,7 @@ Func_05F_6C71::
     ld [wC904], a
     ld a, $02
     ld [wC8C7], a
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     farcall Func_00A_476E
     ret
 

@@ -396,7 +396,7 @@ Jump_037_4BA4:: ; address name
     xor a, a
     ld [wD781], a
     ld a, $15
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ret
 
 Jump_037_4BC1::
@@ -414,7 +414,7 @@ Jump_037_4BC9:: ; address name
     xor a, a
     ld [wC594], a
     ld a, $09
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -493,7 +493,7 @@ Jump_037_4C33:: ; address name
     ld a, $09
     ld [wD781], a
     ld a, $14
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wC594], a
     ld a, $01
@@ -519,7 +519,7 @@ Jump_037_4C5B:: ; address name
     ld a, $09
     ld [wD781], a
     ld a, $14
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wC594], a
     ld a, $01
@@ -534,7 +534,7 @@ Jump_037_4C7C::
     ld a, $09
     ld [wD781], a
     ld a, $13
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wC594], a
     ld a, $00
@@ -565,7 +565,7 @@ Jump_037_4CA9:: ; address name
     ret nz
     farcall ScriptCommandED_Run
     ld a, $09
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ret
 
 Jump_037_4CC1::
@@ -598,7 +598,7 @@ Jump_037_4CDB:: ; address name
     inc a
     ld [wD782], a
     ld a, $07
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ret
 
 ; entry 1 of the `rst $00` table in Func_037_4AFD
@@ -629,7 +629,7 @@ Jump_037_4D03:: ; address name
     xor a, a
     ld [wC594], a
     ld a, $09
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -662,7 +662,7 @@ Jump_037_4D2D:: ; address name
     xor a, a
     ld [wC594], a
     ld a, $09
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -681,7 +681,7 @@ Jump_037_4D43:: ; address name
     and a, a
     jr nz, Jump_037_4D5B
     ld a, $04
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -802,7 +802,7 @@ Jump_037_4DE9:: ; address name
     dec a
     ld [wD781], a
     ld a, $05
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ret
 
 Jump_037_4E25::
@@ -830,7 +830,7 @@ Jump_037_4E39::
     dec a
     ld [wD781], a
     ld a, $06
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ret
 
 Jump_037_4E4B::
@@ -884,7 +884,7 @@ Jump_037_4E94::
     ld [rRAMG2], a
     call Func_037_5BC6
     ld a, $07
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     call Func_037_4DC7
     call BGMapAddressAtScroll_Bank37
     ld bc, $140D
@@ -953,7 +953,7 @@ Jump_037_4EF9:: ; address name
     ld a, $09
     ld [wD781], a
     ld a, $14
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wC594], a
     ld a, $01
@@ -1020,7 +1020,7 @@ Jump_037_4F5E:: ; address name
     cp a, b
     jr nz, Jump_037_4F89
     ld a, $08
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $10
     ld [wD781], a
     ld a, $08
@@ -1058,7 +1058,7 @@ Jump_037_4F89::
     ld a, h
     ld [wC530], a
     ld a, $0B
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1146,7 +1146,7 @@ Jump_037_5041:: ; address name
     ld a, $21
     ld [wD781], a
     ld a, $14
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $FE
     ld [wC594], a
     ld a, $01
@@ -1168,7 +1168,7 @@ Jump_037_5073::
     ld a, $21
     ld [wD781], a
     ld a, $13
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $FE
     ld [wC594], a
     ld a, $00
@@ -1189,7 +1189,7 @@ Jump_037_508B::
     inc a
     ld [wD781], a
     ld a, $0C
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ret
 
 Jump_037_50AE::
@@ -1276,7 +1276,7 @@ Jump_037_5136:: ; address name
 
 Jump_037_514F::
     ld a, $0B
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $17
     ld [wD781], a
     ret
@@ -1291,7 +1291,7 @@ Jump_037_515A::
     xor a, a
     ld [wD782], a
     ld a, $07
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ret
 
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Table3_Case1D)
@@ -1397,7 +1397,7 @@ Jump_037_5216:: ; address name
     ld a, $21
     ld [wD781], a
     ld a, $14
-    call Func_037_5999
+    call ShowStringIndexA_Bank37
     ld a, $FE
     ld [wC594], a
     ld a, $01
@@ -2582,9 +2582,11 @@ Func_037_5976::
     call Func_037_5B3F
     ret
 
+; wStringIndex = A (wStringCategory unchanged), then far-calls BeginStringDisplay_Bank0E (E-0066)
 ; 22 call sites from 16 routines (e.g. Func_037_4AFD_Table2_Case02, Func_037_4AFD_Table2_Case01, Func_037_4AFD_Table3_Case1C, Func_037_4AFD_Table3_Case1A, ...)
 ; writes: wStringIndex
-Func_037_5999::
+ShowStringIndexA_Bank37::
+Func_037_5999:: ; address name
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank0E
     ret

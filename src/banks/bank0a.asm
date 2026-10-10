@@ -857,7 +857,7 @@ Jump_00A_44D3::
     ld [wC905], a
     ld a, $02
     ld [wC8C7], a
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_00A_476E
     ret
     INCBIN "dwm2-cobi-us.gbc", $0284FE, $120
@@ -1148,7 +1148,7 @@ Jump_00A_47FB::
     ld [wC905], a
     ld a, $02
     ld [wC8C7], a
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     farcall Func_00A_476E
     pop hl
     ret

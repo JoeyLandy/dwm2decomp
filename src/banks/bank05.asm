@@ -1030,9 +1030,11 @@ Func_005_45F3:: ; heuristic: follows a terminator; C0
     call Func_005_6FA1
     ret
 
+; C = $FF when at least one of the actor's three opposite slots passes CheckSlotStatusBlock (present and none of its blocking status bits set); C = 0 when all three are absent or blocked (E-0066)
 ; 22 call sites from 22 routines (e.g. Func_005_7686, Func_005_7236, Func_005_727A, Func_005_7293, ...)
 ; reads: wBattleActor
-Func_005_4605::
+AnyFoeNotBlocked::
+Func_005_4605:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4305,7 +4307,7 @@ Jump_005_5771::
     inc c
     dec b
     jr nz, Jump_005_5761
-    call Func_005_577F
+    call FewerThanTwoFoesPresent
     ret
     db $0E, $00, $C9
 
@@ -4313,9 +4315,11 @@ Jump_005_577C::
     ld c, $FF
     ret
 
+; counts the present slots among the actor's three opposite slots: C = $FF when fewer than two are present, C = 0 for two or three; E = the count (E-0066)
 ; 21 call sites from 21 routines (e.g. Func_005_5758, Func_0E2_40BF, Func_0E2_411C, Func_0E2_41E0, ...)
 ; reads: wBattleActor
-Func_005_577F::
+FewerThanTwoFoesPresent::
+Func_005_577F:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -9253,7 +9257,7 @@ Func_005_7236:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_724B
@@ -9309,7 +9313,7 @@ Func_005_727A:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_728F
@@ -9329,7 +9333,7 @@ Func_005_7293:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_72A8
@@ -9369,7 +9373,7 @@ Func_005_72BE:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_72DA
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_72DA
@@ -9533,7 +9537,7 @@ Func_005_7397:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_73D3
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_73D3
@@ -9581,7 +9585,7 @@ Func_005_73D7:: ; heuristic: follows a terminator; C0
     jr z, Jump_005_740C
 
 Jump_005_73EF::
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_740C
@@ -9625,7 +9629,7 @@ Jump_005_7428::
     ld a, c
     and a, a
     jr z, Jump_005_7445
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7445
@@ -9665,7 +9669,7 @@ Jump_005_7461::
     ld a, c
     and a, a
     jr z, Jump_005_747E
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_747E
@@ -10100,7 +10104,7 @@ Func_005_7686::
     ld a, c
     and a, a
     jr z, Jump_005_769D
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_769D
@@ -10358,7 +10362,7 @@ Func_005_77E0:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_77F5
@@ -10544,7 +10548,7 @@ Func_005_78CC:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_78E8
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_78E8
@@ -10604,7 +10608,7 @@ Func_005_791F:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7942
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7942
@@ -10692,7 +10696,7 @@ Func_005_7996:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_79C1
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_79C1
@@ -10720,7 +10724,7 @@ Func_005_79C5:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_79E1
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_79E1
@@ -10748,7 +10752,7 @@ Func_005_79E5:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7A09
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7A09
@@ -11186,7 +11190,7 @@ Func_005_7C45:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7C65
@@ -11234,7 +11238,7 @@ Func_005_7C82:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7C9E
@@ -11258,7 +11262,7 @@ Func_005_7CA2:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7CBE
@@ -11402,7 +11406,7 @@ Func_005_7D5B:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7D91
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7D91
@@ -11502,7 +11506,7 @@ Func_005_7DE8:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_7E10
-    call Func_005_4605
+    call AnyFoeNotBlocked
     ld a, c
     and a, a
     jr z, Jump_005_7E10

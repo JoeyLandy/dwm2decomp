@@ -1118,7 +1118,7 @@ Jump_002_4680::
     jr Jump_002_46BC
 
 Jump_002_46B3::
-    call Func_002_5F22
+    call RestoreScreenBufferFromBGMap1
     farcall Func_085_5B53
 
 Jump_002_46BC::
@@ -2418,7 +2418,7 @@ Jump_002_4FAB:: ; address name
 Jump_002_4FBC::
     farcall Func_060_6C96
     call Func_002_5B9E
-    call Func_002_5EEE
+    call SaveScreenBufferToBGMap1
     ld a, $01
     ld [wC8C7], a
     ld a, $69
@@ -2516,7 +2516,7 @@ Jump_002_504A::
 
 Jump_002_504E::
     call Func_002_5B9E
-    call Func_002_5EEE
+    call SaveScreenBufferToBGMap1
     ld a, $01
     ld [wC8C7], a
     ld a, $69
@@ -4809,11 +4809,13 @@ Jump_002_5EE9::
     ld [rRAMG], a
     ret
 
+; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
 ; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, Func_002_64E5, Func_00A_43EC, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wCB7E
 ; points at: wScreenTileBuffer, wD000, wD2D0
-Func_002_5EEE::
+SaveScreenBufferToBGMap1::
+Func_002_5EEE:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap1
     ld bc, $0168
@@ -4843,11 +4845,13 @@ Jump_002_5F1B::
     ld [wCB7E], a
     ret
 
+; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
 ; 7 call sites from 7 routines (e.g. Func_002_4628, ScriptCommand82_Run_Table4_Case08, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case0D, ...)
 ; reads: wIsCGB, wCB7E
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wD2D0, wD000
-Func_002_5F22::
+RestoreScreenBufferFromBGMap1::
+Func_002_5F22:: ; address name
     ld hl, vBGMap1
     ld de, wScreenTileBuffer
     ld bc, $0168
@@ -5552,7 +5556,7 @@ Func_002_64E5::
     ldh [hFFB9], a
     ld a, $01
     ld [wC8C7], a
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     farcall Func_004_4470
     ld hl, wC300
     ld de, wScreenTileBuffer

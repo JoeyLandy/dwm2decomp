@@ -138,7 +138,7 @@ Jump_0E2_40F8::
 
 Jump_0E2_4108::
     call Func_0E2_6822
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_411B
@@ -205,7 +205,7 @@ Jump_0E2_4179::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_418C::
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_419C
@@ -280,7 +280,7 @@ Jump_0E2_41FD::
 
 Jump_0E2_4213::
     call Func_0E2_6822
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4226
@@ -1506,7 +1506,7 @@ Jump_0E2_4B12::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B22::
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4B32
@@ -1607,7 +1607,7 @@ Jump_0E2_4BD4::
 
 Jump_0E2_4BE4::
     call Func_0E2_6876
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4BF7
@@ -1651,7 +1651,7 @@ Func_0E2_4C30:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Func_0E2_4C49
@@ -1712,7 +1712,7 @@ Func_0E2_4CA1:: ; heuristic: follows a terminator; C0
     and a, a
     ret z
     call Func_0E2_4C49
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4CBD
@@ -1781,7 +1781,7 @@ Jump_0E2_4D1F::
 
 Jump_0E2_4D2F::
     call Func_0E2_6898
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4D42
@@ -1858,7 +1858,7 @@ Jump_0E2_4DB4::
 
 Jump_0E2_4DC4::
     call Func_0E2_6898
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4DD7
@@ -1917,7 +1917,7 @@ Jump_0E2_4E25::
 
 Jump_0E2_4E35::
     call Func_0E2_6898
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E48
@@ -2004,7 +2004,7 @@ Jump_0E2_4ED0::
 
 Jump_0E2_4EE0::
     call Func_0E2_6898
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_4EF3
@@ -2516,7 +2516,7 @@ Jump_0E2_5296::
 
 Jump_0E2_52A6::
     call Func_0E2_6898
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_52B9
@@ -2593,7 +2593,7 @@ Jump_0E2_5327::
 
 Jump_0E2_533D::
     call Func_0E2_6898
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_5350
@@ -2678,7 +2678,7 @@ Jump_0E2_53D2::
 
 Jump_0E2_53E2::
     call Func_0E2_6898
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_53F5
@@ -2855,7 +2855,7 @@ Func_0E2_5529:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4605
+    farcall AnyFoeNotBlocked
     ld a, c
     and a, a
     jr nz, Jump_0E2_5542
@@ -3070,7 +3070,7 @@ Func_0E2_56C6:: ; heuristic: follows a terminator; C0
     ret z
     call Func_0E2_67A5
     ret z
-    farcall Func_005_4605
+    farcall AnyFoeNotBlocked
     ld a, c
     and a, a
     jr nz, Jump_0E2_56E3
@@ -3301,7 +3301,7 @@ Jump_0E2_588F::
     call Func_0E2_6876
 
 Jump_0E2_5892::
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_58A2
@@ -3442,7 +3442,7 @@ Func_0E2_5970:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5995::
     call Func_0E2_6887
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_59A8
@@ -3499,7 +3499,7 @@ Func_0E2_59E5:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5A04::
     call Func_0E2_6887
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_5A17
@@ -3575,7 +3575,7 @@ Func_0E2_5A72::
 
 Jump_0E2_5A91::
     call Func_0E2_6887
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_5AA4
@@ -3818,7 +3818,7 @@ Jump_0E2_5C52::
 
 Jump_0E2_5C62::
     call Func_0E2_6854
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_5C75
@@ -3891,7 +3891,7 @@ Func_0E2_5CCE:: ; heuristic: follows a terminator; C0
 
 Jump_0E2_5CED::
     call Func_0E2_6854
-    farcall Func_005_577F
+    farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
     jr nz, Jump_0E2_5D00

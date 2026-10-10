@@ -52,6 +52,7 @@
     {"canonical": "A0:5693", "name": "CountTableBytesAtOrBelowA", "note": "HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065)", "evidence": "reading (E-0065)"},
     {"canonical": "19:4963", "name": "CopyWD01ARecordToHL", "note": "copies the 27 ($1B) bytes at wD01A to HL; HL ends past the copy; clobbers A, B, DE (E-0065)", "evidence": "reading (E-0065)"},
     {"canonical": "02:7674", "name": "CopyBytesWithChecksum", "note": "HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hFFC8/hFFC9; clobbers A, BC = 0 (E-0065)", "evidence": "reading (E-0065)"},
-    {"canonical": "05:5F2A", "name": "WDA77EntryHasBits2And3", "note": "C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065)", "evidence": "reading (E-0065)"}
+    {"canonical": "05:5F2A", "name": "WDA77EntryHasBits2And3", "note": "C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065)", "evidence": "reading (E-0065)"},
+    {"canonical": "1D:7B05", "name": "EnableSRAMBank0", "note": "writes $0A to the RAM-enable register (rRAMG2 alias) and selects SRAM bank 0 (rRAMB = 0); clobbers A (E-0066)", "evidence": "reading (E-0066)"}
   ]
 }

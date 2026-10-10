@@ -231,7 +231,7 @@ Jump_024_418A::
 Jump_024_418D::
     ld hl, wC37A
     ld bc, $1102
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call GameMode6_Update_Table2_Case00_Sub01
     call BGMapAddressAtScroll_Bank24
     ld bc, $1406
@@ -323,7 +323,7 @@ Jump_024_4225:: ; address name
     ld de, Data_024_58CA
     ld hl, wC3F0
     ld bc, $1406
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -488,7 +488,7 @@ Jump_024_4326:: ; address name
     ld de, Data_024_5A0A
     ld hl, wC412
     ld bc, $0605
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call Func_024_51A3
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
@@ -558,7 +558,7 @@ Jump_024_4394:: ; address name
     ld de, Data_024_5A50
     ld hl, wC40E
     ld bc, $0A05
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call Func_024_51A3
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
@@ -609,7 +609,7 @@ Jump_024_43F1::
     ld de, Data_024_5A0A
     ld hl, wC412
     ld bc, $0605
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     xor a, a
     ld b, $BC
     ld hl, Data_024_5AAA
@@ -680,7 +680,7 @@ Jump_024_445F:: ; address name
     ld de, Data_024_58CA
     ld hl, wC3F7
     ld bc, $0606
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     jr Jump_024_4477
 
 Jump_024_4474::
@@ -694,7 +694,7 @@ Jump_024_4477::
     ld de, Data_024_5942
     ld hl, wC300
     ld bc, $1405
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call Func_024_51A3
     call BGMapAddressAtScroll_Bank24
     ld de, $01A0
@@ -731,7 +731,7 @@ Jump_024_44BA::
     ld de, Data_024_59A6
     ld hl, wC300
     ld bc, $1405
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call Func_024_51A3
     call BGMapAddressAtScroll_Bank24
     ld de, $01A0
@@ -998,7 +998,7 @@ Jump_024_463A:: ; address name
     ld de, Data_024_5814
     ld hl, wC364
     ld bc, $0E0D
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wD7FA]
     ld b, $BB
     ld hl, Data_024_5AAA
@@ -1009,7 +1009,7 @@ Jump_024_463A:: ; address name
     ld de, Data_024_58CA
     ld hl, wC3F7
     ld bc, $0606
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     jr Jump_024_4678
 
 Jump_024_4666::
@@ -1019,13 +1019,13 @@ Jump_024_4666::
     ld de, Data_024_57F2
     ld hl, wC37A
     ld bc, $1102
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
 
 Jump_024_4678::
     ld de, Data_024_5A50
     ld hl, wC40E
     ld bc, $0A05
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -1127,7 +1127,7 @@ Jump_024_4724:: ; address name
     ld de, Data_024_5A28
     ld hl, wC410
     ld bc, $0805
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     xor a, a
     ld b, $BC
     ld hl, Data_024_5AAA
@@ -1250,7 +1250,7 @@ Jump_024_47F6:: ; address name
     ld de, Data_024_5B10
     ld hl, wC364
     ld bc, $0D09
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1419,7 +1419,7 @@ Jump_024_48EA:: ; address name
     ld de, Data_024_5B85
     ld hl, wC410
     ld bc, $0805
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -1505,7 +1505,7 @@ Jump_024_49AF:: ; address name
     ld de, Data_024_5A82
     ld hl, wC410
     ld bc, $0805
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     ld a, $01
     ld b, $BC
     ld hl, Data_024_5AAA
@@ -1676,7 +1676,7 @@ Jump_024_4AA4:: ; address name
     ld de, Data_024_58CA
     ld hl, wC3F7
     ld bc, $0606
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     jr Jump_024_4AEF
 
 Jump_024_4AEC::
@@ -1686,7 +1686,7 @@ Jump_024_4AEF::
     ld de, Data_024_5B10
     ld hl, wC364
     ld bc, $0D09
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wD7AB]
     ld b, $BB
     ld hl, Data_024_5AAE
@@ -1768,7 +1768,7 @@ Jump_024_4B77:: ; address name
     ld de, Data_024_5B85
     ld hl, wC410
     ld bc, $0805
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -1898,13 +1898,13 @@ Jump_024_4C75::
     ld de, Data_024_58CA
     ld hl, wC3F7
     ld bc, $0606
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
 
 Jump_024_4C81::
     ld de, Data_024_5AB8
     ld hl, wC364
     ld bc, $080B
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_024_5AAE
@@ -2005,7 +2005,7 @@ Func_024_4D21::
     ld de, Data_024_57F2
     ld hl, wC37A
     ld bc, $1102
-    call Func_024_4E12
+    call CopyRectTo20ByteRowsJp_Bank24
     ret
 
 ; only called from GameMode6_Update_Table2_Case00 (E-0047)
@@ -2141,10 +2141,12 @@ Jump_024_4DF1::
     ret nz
     ret
 
+; the same steps as CopyRectTo20ByteRows (copy a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fill the same rectangle at HL + $0E68 with rSVBK = 2) but encoded with jp instead of jr, so its bytes differ (E-0066)
 ; 22 call sites from 16 routines (e.g. GameMode6_Update_Case01, GameMode6_Update_Table2_Case00, GameMode6_Update_Table3_Case0C, GameMode6_Update_Table3_Case0B, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_024_4E12::
+CopyRectTo20ByteRowsJp_Bank24::
+Func_024_4E12:: ; address name
     push hl
     push bc
 

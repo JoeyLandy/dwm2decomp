@@ -118,7 +118,7 @@ Jump_085_4093:: ; address name
     xor a, a
     call Func_085_57D5
     ret nc
-    farcall Func_002_5F22
+    farcall RestoreScreenBufferFromBGMap1
     ld hl, wSpriteSlotCount
     dec [hl]
     farcall Func_05F_6DDB
@@ -189,7 +189,7 @@ Jump_085_40C3:: ; address name
 ; points at: wC92E, wC6FD, wScriptStep, wC8EF, wC6FE, wSpriteSlotCount
 ScriptCommand2A_Run_Case0D::
 Jump_085_412F:: ; address name
-    farcall Func_002_5F22
+    farcall RestoreScreenBufferFromBGMap1
     call Func_085_4555
     ld a, [wC92E]
     cp a, $03
@@ -253,7 +253,7 @@ Jump_085_4192::
     jr z, Jump_085_41B2
     ld hl, vTiles0 + $1B8
     call StoreHLInWC924_B85
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     ld a, [wC6FD]
     inc a
     ld [wC92E], a
@@ -390,7 +390,7 @@ Jump_085_426B:: ; address name
     xor a, a
     call Func_085_57D5
     ret nc
-    farcall Func_002_5F22
+    farcall RestoreScreenBufferFromBGMap1
     ld hl, wSpriteSlotCount
     dec [hl]
     farcall Func_05F_6DDB
@@ -465,7 +465,7 @@ Jump_085_4307:: ; address name
     call Func_085_4339
     or a, a
     ret z
-    farcall Func_002_5F22
+    farcall RestoreScreenBufferFromBGMap1
     call Func_085_4555
     ld a, [wC92E]
     cp a, $03
@@ -557,7 +557,7 @@ Jump_085_4389::
 ; points at: wCD56
 ScriptCommand2A_Run_Case09::
 Jump_085_4390:: ; address name
-    farcall Func_002_5F22
+    farcall RestoreScreenBufferFromBGMap1
     call Func_085_4555
     ld hl, wCD56
     call StoreHLInWC924_B85
@@ -627,7 +627,7 @@ Jump_085_43F3::
     jr z, Jump_085_4413
     ld hl, vTiles0 + $1B8
     call StoreHLInWC924_B85
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     ld a, [wC6FD]
     inc a
     ld [wC92E], a
@@ -787,7 +787,7 @@ Func_085_44D2:: ; address name
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wD000
 Func_085_4505::
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     ld hl, wScreenTileBuffer
     ld de, $4583
     ld b, $09
@@ -1095,7 +1095,7 @@ Jump_085_471F:: ; address name
 ; points at: wScriptStep
 ScriptCommand78_Run_Case00::
 Jump_085_4725:: ; address name
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     ld a, $01
     ld [wC8C7], a
     ld a, $02

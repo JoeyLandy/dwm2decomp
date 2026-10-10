@@ -233,7 +233,7 @@ Jump_073_4139:: ; address name
     ld [wScriptParam0], a
     cp a, $3C
     ret nz
-    farcall Func_002_5F22
+    farcall RestoreScreenBufferFromBGMap1
     farcall Func_05F_6DDB
     ld b, $46
     ld de, Data_046_4001
@@ -506,7 +506,7 @@ Jump_073_42D8:: ; address name
 ; points at: wScreenTileBuffer, wScriptStep
 ScriptCommand82_Run_Table4_Case04::
 Jump_073_42F1:: ; address name
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call NextRandomSeed
     ld a, [wCD04]
     and a, $07
@@ -2758,7 +2758,7 @@ Jump_073_5194:: ; address name
     ld [wC904], a
     ld a, $02
     ld [wC8C7], a
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     farcall Func_00A_476E
     ret
 

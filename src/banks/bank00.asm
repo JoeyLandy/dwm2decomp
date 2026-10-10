@@ -1467,7 +1467,7 @@ Jump_000_094A::
     ret
 
 ; HL = source, DE = destination, BC = count (memcpy)
-; 47 call sites from 42 routines (e.g. Func_002_5F22, Func_002_5EEE, Func_002_470B, Func_002_52D8, ...)
+; 47 call sites from 42 routines (e.g. RestoreScreenBufferFromBGMap1, SaveScreenBufferToBGMap1, Func_002_470B, Func_002_52D8, ...)
 CopyBytes::
 Func_000_0952:: ; address name
     ld a, [hl+]

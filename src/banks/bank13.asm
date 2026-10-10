@@ -7533,7 +7533,7 @@ Jump_013_6DCA::
 ; writes: wD7FB, wDataBank
 Func_013_5922_Case66::
 Jump_013_6DD1:: ; address name
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld de, $010E
     call TestFlagBit
@@ -7658,7 +7658,7 @@ Jump_013_6E94::
 ; writes: wDataBank
 Func_013_5922_Case6A::
 Jump_013_6EA3:: ; address name
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld a, $15
     ld [wDataBank], a
@@ -8362,7 +8362,7 @@ Jump_013_7332::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7FB, wDataBank
 Func_013_7364:: ; heuristic: target of a pointer table; C0
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld de, $0024
     call TestFlagBit
@@ -8384,7 +8384,7 @@ Jump_013_738F::
     ret
 
 Jump_013_7396::
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld de, $0125
     call TestFlagBit
@@ -8482,7 +8482,7 @@ Jump_013_743A::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7FB, wDataBank
 Func_013_7441:: ; heuristic: target of a pointer table; C0
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld de, $011A
     call TestFlagBit
@@ -8791,7 +8791,7 @@ Func_013_76CE:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD7FB, wDataBank
 Func_013_76DF:: ; heuristic: target of a pointer table; C0
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld de, $0129
     call TestFlagBit
@@ -9447,7 +9447,7 @@ Func_013_7DEC:: ; heuristic: target of a pointer table; C0
 ; reads: wCB81, hFFC7, hFFC6
 ; writes: wDataBank, wD7FB
 Func_013_7E05:: ; heuristic: target of a pointer table; C0
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld a, $0E
     ld [wDataBank], a
@@ -9528,7 +9528,7 @@ Jump_013_7E98::
 ; reads: wCB81, hFFC7, hFFC6
 ; writes: wDataBank, wD7FB
 Func_013_7E9F:: ; heuristic: target of a pointer table; C0
-    farcall Func_002_5EEE
+    farcall SaveScreenBufferToBGMap1
     call Func_013_7FB0
     ld a, $0E
     ld [wDataBank], a

@@ -6414,7 +6414,7 @@ Jump_01D_6E3F::
     or a, c
     jr nz, Jump_01D_6E3F
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push de
     ld a, [de]
@@ -6531,7 +6531,7 @@ Jump_01D_6ECA::
     add a, b
     add_a_to_hl
     ld bc, $0000
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     ld a, [wD7E1]
     ld hl, Data_01D_6F9A
@@ -6862,7 +6862,7 @@ Jump_01D_7121::
     inc d
 
 Jump_01D_7132::
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push af
     xor a, a
     ld [rRAMB], a
@@ -6989,7 +6989,7 @@ Jump_01D_71B2::
     ld [rRAMB], a
     ld [wD7E1], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push de
     ld a, $19
@@ -7081,7 +7081,7 @@ Jump_01D_7248::
 Jump_01D_7270::
     ld a, $57
     add_a_to_hl
-    call Func_01D_7B05
+    call EnableSRAMBank0
     ld c, $00
 
 Jump_01D_727C::
@@ -7166,7 +7166,7 @@ Jump_01D_727C::
     ld [rRAMG2], a
     ld [rRAMB], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push de
     ld a, $6B
     add a, e
@@ -7292,7 +7292,7 @@ Jump_01D_735E::
     ld [rRAMG2], a
     ld [rRAMB], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push de
     ld a, $6F
     add a, e
@@ -7438,7 +7438,7 @@ Jump_01D_7470::
 ; points at: wC8CF
 Func_01D_7492::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push de
     push af
     ld a, [wD7F2]
@@ -7555,7 +7555,7 @@ Jump_01D_7514::
     ld [rRAMG2], a
     ld [rRAMB], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push de
     call Func_01D_795D
     pop de
@@ -7667,7 +7667,7 @@ Jump_01D_75C9::
 
 Jump_01D_75DA::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     ld a, $28
     add_a_to_hl
     push de
@@ -7863,7 +7863,7 @@ Jump_01D_7702::
     ld [rRAMG2], a
     ld [rRAMB], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     ld a, $32
     add_a_to_hl
     push de
@@ -7950,7 +7950,7 @@ Jump_01D_7768::
     ld [rRAMG2], a
     ld [rRAMB], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     ld a, $57
     add_a_to_hl
     push de
@@ -8037,7 +8037,7 @@ Jump_01D_779D::
     ld [rRAMG2], a
     ld [rRAMB], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     ld a, $61
     add_a_to_hl
     push de
@@ -8145,7 +8145,7 @@ Jump_01D_785B::
     ld [rRAMG2], a
     ld [rRAMB], a
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     ld a, $67
     add_a_to_hl
     push de
@@ -8264,7 +8264,7 @@ Jump_01D_793C::
 ; writes: rRAMB, wD7F9
 Func_01D_795D::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push af
     ld a, [wD7F2]
@@ -8293,7 +8293,7 @@ Func_01D_795D::
 ; writes: rRAMB, wD7F9
 Func_01D_7991::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push af
     ld a, [wD7F2]
@@ -8319,7 +8319,7 @@ Func_01D_7991::
 ; writes: rRAMB, wD7F9
 Func_01D_79C5::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push af
     ld a, [wD7F2]
@@ -8346,7 +8346,7 @@ Func_01D_79C5::
 ; writes: rRAMB, wD7F9
 Func_01D_79FB::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push af
     ld a, [wD7F2]
@@ -8371,7 +8371,7 @@ Func_01D_79FB::
 ; writes: rRAMB, wD7F9
 Func_01D_7A2D::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push af
     ld a, [wD7F2]
@@ -8400,7 +8400,7 @@ Func_01D_7A2D::
 ; writes: rRAMB, wD7F9
 Func_01D_7A61::
     call SRAMRecordAddressOfWD7F1
-    call Func_01D_7B05
+    call EnableSRAMBank0
     push hl
     push af
     ld a, [wD7F2]
@@ -8509,9 +8509,11 @@ Func_01D_7AD8::
     ld [wD7F8], a
     ret
 
+; writes $0A to the RAM-enable register (rRAMG2 alias) and selects SRAM bank 0 (rRAMB = 0); clobbers A (E-0066)
 ; 20 call sites from 10 routines (e.g. Func_01D_7492, Func_01D_75C7, Func_01D_7A61, Func_01D_7A2D, ...)
 ; writes: rRAMG2, rRAMB
-Func_01D_7B05::
+EnableSRAMBank0::
+Func_01D_7B05:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
