@@ -57,7 +57,7 @@ Jump_014_403F:: ; address name
     ld [wD7F3], a
     ld a, e
     ld [wD7F4], a
-    farcall Func_01D_6C14
+    farcall LoadTileListSixPerCall
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -1646,7 +1646,7 @@ Jump_014_4BDB::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandEB_Run_Case05_Case20::
 Jump_014_4BE3:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     ret
 
 ; entry 33 of the `rst $00` table in ScriptCommandEB_Run_Case05
@@ -1671,7 +1671,7 @@ Jump_014_4BEA:: ; address name
     call CopyRectTo20ByteRows_Bank14
     pop af
     ld [wD7F1], a
-    farcall Func_01D_5B4D
+    farcall DrawRecordStatsBoxForWD7F1
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2902,7 +2902,7 @@ Jump_014_54B8:: ; address name
     call CopyRectTo20ByteRows_Bank14
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     farcall SetWD7F5ToWD789Cell5
     ld a, [wD7F5]
     ld h, a
@@ -2910,7 +2910,7 @@ Jump_014_54B8:: ; address name
     ld l, a
     ld a, [hl]
     ld [wD7F1], a
-    farcall Func_01D_5B4D
+    farcall DrawRecordStatsBoxForWD7F1
     ld a, [wD781]
     inc a
     ld [wD781], a

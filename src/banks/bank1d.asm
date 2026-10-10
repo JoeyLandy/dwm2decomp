@@ -3515,10 +3515,12 @@ Jump_01D_5B46::
 Jump_01D_5B4C::
     ret
 
+; record wD7F1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)
 ; 4 call sites from 4 routines (e.g. ScriptCommandEB_Run_Case05_Case21, ScriptCommandEB_Run_Case06_Case04, ScriptCommandED_Run_Case07_Case0F, CallFunc5B4DInBank1D)
 ; reads: wD7F1, hFFC6, wC8C1, wC8C2, hFFC7, wC8C0
 ; writes: rRAMG2, rRAMB, wC386, wC389, wC38A
-Func_01D_5B4D::
+DrawRecordStatsBoxForWD7F1::
+Func_01D_5B4D:: ; address name
     ld a, [wD7F1]
     ld b, a
     push bc
@@ -3635,7 +3637,7 @@ Jump_01D_5C05::
     ld [wD7F1], a
     ld a, h
     ld [wD7F2], a
-    call Func_01D_6899
+    call DrawPartySpeciesSprites
     ld hl, wRecordBuffer
     ld de, wD7F1
     ld b, $09
@@ -4746,7 +4748,7 @@ Data_01D_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 6 call sites from 6 routines (e.g. Func_01D_6320, Func_01D_6AA5, UpdatePagedListCursor_Sub04, DrawTwoChoiceCursorConfirmed, ...)
+; 6 call sites from 6 routines (e.g. Func_01D_6320, MarkPartyMembersInRecordListPage, UpdatePagedListCursor_Sub04, DrawTwoChoiceCursorConfirmed, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1D_62FF::
 Func_01D_62FF:: ; address name
@@ -5075,10 +5077,12 @@ Jump_01D_64B2::
 Data_01D_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $28, $01, $68, $01
 
+; up/down moves wD7AB over wD7A9 entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wD7AF = 0 (E-0128)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE8_Run_Case0D_Case07, RunWD781Step_F0_5DE8_Case07)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7A9, wD7AB
 ; writes: wD7AF, wMenuInputResult, wD7AB
-Func_01D_64D6::
+HandleListCursorInput_1D::
+Func_01D_64D6:: ; address name
     xor a, a
     ld [wD7AF], a
     ld a, [wJoypadPressedRepeat]
@@ -5644,11 +5648,13 @@ Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E6, $00, $26, $01, $66, $01, $A6, $01, $A4, $00, $E4, $00, $24, $01, $64, $01
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
+; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
 ; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_Sub01, ScriptCommandE8_Run_Case0D_Case04, ScriptCommandE8_Run_Case09_Case1E, RunWD781Step_F0_5DE8_Case04)
 ; reads: wD7F1, wD7F2, hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wD7F3
-Func_01D_682A::
+LoadPartySpeciesSpriteGraphics::
+Func_01D_682A:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5729,10 +5735,12 @@ Jump_01D_6885::
 Data_01D_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
+; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
 ; 5 call sites from 5 routines (e.g. CallFunc6899PreservingWD7F1AndHFFC6, PauseMenu_Main_Case03_Case02, ScriptCommandE8_Run_Case0D_Case07, ScriptCommandE8_Run_Case08_Case20, ...)
 ; reads: wD7F1, wD7F2, hFFC6, hFFC7
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2
-Func_01D_6899::
+DrawPartySpeciesSprites::
+Func_01D_6899:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5814,7 +5822,7 @@ Data_01D_6909:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
 ; decompresses the sprite graphics of species hFFC6/7 (far pointer Data_004_4EAA + 3 * id) to the VRAM address in wD7F4/5; on CGB copies its 8-byte palette from bank $27 into wOBJPaletteBuffer + wD7F3 (E-0127)
-; 1 call site from 1 routine (e.g. Func_01D_682A)
+; 1 call site from 1 routine (e.g. LoadPartySpeciesSpriteGraphics)
 ; reads: hFFC6, hFFC7, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
@@ -5958,7 +5966,7 @@ Jump_01D_69D9::
     ret
 
 ; draws sprite set wD7F1 & $7F (from bank $25, $26 or $27 by wD7F2 and bit 7 of wD7F1) at the scroll position + (L, D), tile offset H, attribute E, alternating two frames (E-0127)
-; 2 call sites from 2 routines (e.g. Func_01D_6899, DrawWD789Cell5SpeciesSprite)
+; 2 call sites from 2 routines (e.g. DrawPartySpeciesSprites, DrawWD789Cell5SpeciesSprite)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi, hScrollY, hScrollYHi, wD7F1, wD7F2
 ; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSetIndex
 DrawSpeciesMetaSpriteAtScrollOffset::
@@ -6096,11 +6104,13 @@ Jump_01D_6A9E::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
+; for each party record found on the current list page (wD789 page wD7AF) draws a party mark at its row (scroll offsets Data_01D_6B28 when wD7F1 is set, else screen-buffer offsets Data_01D_6B1E) (E-0128)
 ; 14 call sites from 10 routines (e.g. ScriptCommandEB_Run_Case06_Case04, ScriptCommandED_Run_Case04_Case03, ScriptCommandEF_Run_Bank1B_Case0E_Case02, ScriptCommandE8_Run_Case06_Case08, ...)
 ; reads: wD7AF, wD7B1, wC6FD, wD7F1
 ; writes: rRAMG2, rRAMB
 ; points at: wC6FE, wD789
-Func_01D_6AA5::
+MarkPartyMembersInRecordListPage::
+Func_01D_6AA5:: ; address name
     ld hl, wC6FE
     ld bc, $0000
     ld a, $0A
@@ -6313,10 +6323,12 @@ Jump_01D_6C02::
     ld [wScriptStartRequest], a
     ret
 
+; copies tiles listed at the address in wD7F3/4 to wD7F1/2 + 16 * n, six per call; wD7F5 = $FF when the $FF end is reached, else 0 (E-0128)
 ; 7 call sites from 7 routines (e.g. ScriptCommandEC_Run_Case01, ScriptCommandED_Run_Case04_Case20, ScriptCommandED_Run_Case04_Case32, ScriptCommandED_Run_Case05_Case08, ...)
 ; reads: wD7F3, wD7F4, wD785, wD7F1, wD7F2, wD784
 ; writes: wD784, wD785, wD7F5
-Func_01D_6C14::
+LoadTileListSixPerCall::
+Func_01D_6C14:: ; address name
     ld a, [wD7F3]
     ld d, a
     ld a, [wD7F4]
@@ -6385,7 +6397,7 @@ Jump_01D_6C6A::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 7 call sites from 3 routines (e.g. Func_01D_6C14, LoadTileList6DC4SixPerFrame, UploadTilesFromData6D20)
+; 7 call sites from 3 routines (e.g. LoadTileListSixPerCall, LoadTileList6DC4SixPerFrame, UploadTilesFromData6D20)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1D::
 Func_01D_6C79:: ; address name

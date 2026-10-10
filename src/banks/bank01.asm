@@ -2834,7 +2834,7 @@ Jump_001_5800::
     ret
 
 Jump_001_5812::
-    call Func_001_5AC0
+    call DrawDebugFieldValueWC5F8
     ld a, [wD780]
     inc a
     inc a
@@ -2844,7 +2844,7 @@ Jump_001_5812::
     ret
 
 Jump_001_5822::
-    call Func_001_5AC0
+    call DrawDebugFieldValueWC5F8
     ld a, [wC5F8]
     and a, a
     ret z
@@ -2854,7 +2854,7 @@ Jump_001_5822::
     ret
 
 Jump_001_5832::
-    call Func_001_5AC0
+    call DrawDebugFieldValueWC5F8
     ld a, [wC5F8]
     cp a, $09
     ret z
@@ -3199,7 +3199,7 @@ Jump_001_59FB::
     ld [wD7F6], a
     ld a, [wC5FA]
     ld [wD7F7], a
-    farcall Func_00E_615A
+    farcall FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]
     ld hl, wC993
     ld [hl], a
@@ -3207,7 +3207,7 @@ Jump_001_59FB::
     ld [wD7F6], a
     ld a, [wC5FD]
     ld [wD7F7], a
-    farcall Func_00E_615A
+    farcall FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]
     ld hl, wCA38
     ld [hl], a
@@ -3268,15 +3268,17 @@ Func_001_5AAC:: ; address name
     inc a
     ld [wC5FF], a
     cp a, $10
-    jr c, Func_001_5AC0
+    jr c, DrawDebugFieldValueWC5F8
     cp a, $18
     jp c, Jump_001_5B45
     xor a, a
     ld [wC5FF], a
 
+; debug: draws the value of field wC5F8 (Data_001_5B70) at Data_001_5B84[wC5F8] as hex, a tile or BCD (E-0128)
 ; 3 call sites from 1 routine (e.g. Func_001_57E1)
 ; reads: wC5F8
-Func_001_5AC0::
+DrawDebugFieldValueWC5F8::
+Func_001_5AC0:: ; address name
     ld a, [wC5F8]
     sla a
     ld de, Data_001_5B70
@@ -3346,7 +3348,7 @@ Jump_001_5B14::
     ret
 
 ; C = the last two decimal digits of C packed as BCD (E-0125)
-; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0)
+; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueWC5F8)
 ; reads: wC8C1, wC8C2
 PackTwoDigitsOfCAsBCD::
 Func_001_5B2D:: ; address name
@@ -5541,7 +5543,7 @@ Func_001_6A7E:: ; address name
     ret
 
 ; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess each); DE ends on the last tile (E-0120)
-; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0, DrawDebugValueHexForWC46B, Func_001_66AD, ...)
+; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueWC5F8, DrawDebugValueHexForWC46B, Func_001_66AD, ...)
 WriteThreeHexDigitsAtDE::
 Func_001_6A98:: ; address name
     ld a, b

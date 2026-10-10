@@ -2218,7 +2218,7 @@ Jump_073_4E76::
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     xor a, a
@@ -2957,7 +2957,7 @@ Jump_073_52B9:: ; address name
 Jump_073_52C5::
     ld a, [de]
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4186,7 +4186,7 @@ ScriptCommand57_Run_Case00::
 Jump_073_5A48:: ; address name
     ld a, $1C
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -5089,7 +5089,7 @@ Func_073_5F55:: ; address name
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld hl, wSpriteSlotCount

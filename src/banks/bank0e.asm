@@ -1311,7 +1311,7 @@ Jump_00E_5862::
     swap a
     ld b, a
     push bc
-    call Func_00E_615A
+    call FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]
     pop bc
     or a, b
@@ -2403,7 +2403,7 @@ Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wD7F5, wD7F1
 ; points at: wC9DD, wCA82, wC9F3, wCA98, wCAD0
 Func_00E_5EE8::
-    call Func_00E_5F91
+    call PersonalityPairValueToWD7F5
     ld c, $00
     ld a, [wD7F5]
     and a, a
@@ -2531,10 +2531,12 @@ Jump_00E_5F7C::
 Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
+; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
 ; 2 call sites from 2 routines (e.g. Func_00E_5EE8, RunWD780StateWhenNotFading_F1_Case04_Case16)
 ; writes: wD7F5
 ; points at: wC986, wCA2B
-Func_00E_5F91::
+PersonalityPairValueToWD7F5::
+Func_00E_5F91:: ; address name
     ld hl, wC986
     call CombinedPersonalityLevelIndexOfRecord
     push af
@@ -2608,7 +2610,7 @@ Jump_00E_5FF4::
     ret
 
 ; for the record at HL returns 9 * grade(field $6F) + 3 * grade(field $72) + grade(field $70) (GradeHFFC6_Bank0E); compare CombinedPersonalityLevelIndex (E-0121)
-; 2 call sites from 1 routine (e.g. Func_00E_5F91)
+; 2 call sites from 1 routine (e.g. PersonalityPairValueToWD7F5)
 ; writes: hFFC6
 CombinedPersonalityLevelIndexOfRecord::
 Func_00E_5FF9:: ; address name
@@ -2704,7 +2706,7 @@ Func_00E_6138:: ; address name
     ld [wD7F6], a
     ldh a, [hFFC7]
     ld [wD7F7], a
-    call Func_00E_615A
+    call FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]
     and a, $0F
     ld [wD09D], a
@@ -2713,10 +2715,12 @@ Func_00E_6138:: ; address name
     farcall LoadFamilyIconTileForWD09D
     ret
 
+; wD7F5 = the family (0-10) of species id wD7F6/7 by id ranges (< $1B, $43, $67, $85, $A8, $CA, $F1, $111, $139, $15C, or more) (E-0128)
 ; 5 call sites from 4 routines (e.g. Func_00E_5688, DrawSpeciesAndFamilyIconForHFFC6, Func_001_57E1, ScriptCommandF6_Run_Case10_Case06_Sub02)
 ; reads: wD7F6, wD7F7
 ; writes: wD7F5
-Func_00E_615A::
+FamilyForSpeciesIdWD7F6::
+Func_00E_615A:: ; address name
     ld a, [wD7F6]
     ld l, a
     ld a, [wD7F7]

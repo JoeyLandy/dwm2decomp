@@ -1890,7 +1890,7 @@ Jump_007_591A:: ; address name
 Jump_007_595C::
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
-    call Func_007_600E
+    call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
 
@@ -2000,7 +2000,7 @@ Jump_007_59C0:: ; address name
 Jump_007_5A02::
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
-    call Func_007_600E
+    call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
 
@@ -2110,7 +2110,7 @@ Jump_007_5A66:: ; address name
 Jump_007_5AA8::
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
-    call Func_007_600E
+    call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
 
@@ -2283,7 +2283,7 @@ Jump_007_5BAA::
     ld [wD0E7], a
     ld hl, wD09F
     call RunWD06BSubState_5B14_Shared02
-    call Func_007_600E
+    call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
     ld a, $DD
@@ -2418,7 +2418,7 @@ Jump_007_5C5F:: ; address name
 Jump_007_5CA9::
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
-    call Func_007_600E
+    call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
     ld hl, wD06B
@@ -2487,7 +2487,7 @@ Jump_007_5CD8:: ; address name
     call CopyFromBankWaitVRAM
 
 Jump_007_5D24::
-    call Func_007_600E
+    call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
     xor a, a
@@ -2883,7 +2883,7 @@ Jump_007_5F09:: ; address name
 Jump_007_5F6D::
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
-    call Func_007_600E
+    call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
     ld hl, wD06B
@@ -2985,11 +2985,13 @@ Func_007_5FE8:: ; address name
     farcall RunE15AC0For5ABE
     ret
 
+; sets the DMG palettes $D2/$D2/$E2 (also in wD040) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wC51F and copies 8 bytes from $58FA to wC4FF (E-0128)
 ; 7 call sites from 7 routines (e.g. GameMode5_Update_Case00_Case00_Case00, GameMode5_Update_Case00_Case01_Case00, GameMode5_Update_Case00_Case02_Case00, RunWD06BSubState_5B14_Case06, ...)
 ; reads: wC5E9, wC5EA, wC5EB, wSGBActive, wC51F, wC520
 ; writes: rBGP, rOBP0, rOBP1, wC577, wC578, wC579, wC57A, wC57B, ...
 ; points at: wC5E9, wD040, wC4FF
-Func_007_600E::
+ResetLinkScreenPalettes::
+Func_007_600E:: ; address name
     ld hl, wC5E9
     ld a, $D2
     ld [hl+], a
@@ -4657,7 +4659,7 @@ Jump_007_6AEE:: ; address name
     ld a, [wC581]
     cp a, $05
     jp z, Jump_007_7D38
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD06A]
     cp a, $01
     jr z, Jump_007_6B01
@@ -4760,7 +4762,7 @@ Jump_007_6BAF::
 ; reads: wD06A
 GameMode5_Update_Case03::
 Jump_007_6BB7:: ; address name
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD06A]
     cp a, $01
     jr z, Jump_007_6BC2
@@ -4774,7 +4776,7 @@ Jump_007_6BC2::
 ; reads: wD06A, wD780, wD781, wD782
 GameMode5_Update_Case04::
 Jump_007_6BC3:: ; address name
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD06A]
     or a, a
     jr nz, Jump_007_6BCD
@@ -7773,7 +7775,7 @@ Jump_007_7D24:: ; address name
     ret
 
 Jump_007_7D38::
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD06A]
     cp a, $01
     jr z, Jump_007_7D43

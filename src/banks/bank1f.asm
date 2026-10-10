@@ -630,11 +630,13 @@ Data_01F_5B76:: ; heuristic: bank from RAM variable $D7FE; C0
 Data_01F_5BA8:: ; heuristic: bank from RAM variable $D7FE; C0
     INCBIN "dwm2-cobi-us.gbc", $07DBA8, $6D
 
+; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
 ; 8 call sites from 8 routines (e.g. ScriptCommandEB_Run_Case05_Case20, ScriptCommandED_Run_Case04_Case03, ScriptCommandED_Run_Case07_Case0E, ScriptCommandED_Run_Case12_Case06, ...)
 ; reads: wD7AF, wD7B1, wD7A9, wD781, wD7B0
 ; writes: rRAMG2, rRAMB, wC8D9, wD781
 ; points at: wD789
-Func_01F_5C15::
+DrawRecordListPageNames::
+Func_01F_5C15:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -726,7 +728,7 @@ Data_01F_5C9C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
 ; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
-; 1 call site from 1 routine (e.g. Func_01F_5C15)
+; 1 call site from 1 routine (e.g. DrawRecordListPageNames)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
 ; points at: wC8CF
@@ -812,7 +814,7 @@ Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
 ; parameters wD7F1/wD7F2 = source (high, low), wD7F3 = width, wD7F4 = rows, wD7F5/wD7F6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wD7F7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
-; 25 call sites from 18 routines (e.g. Func_01F_73EC, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ClearTilesAndDrawRects6C5FAnd6D37, ...)
+; 25 call sites from 18 routines (e.g. DrawWCA36MonsterPictureInTwoSteps, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ClearTilesAndDrawRects6C5FAnd6D37, ...)
 ; reads: wD7F6, rSTAT, wIsCGB, wD7F7
 ; writes: rVBK
 ; points at: wD7F1
@@ -1163,10 +1165,12 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
+; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wCA36 at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, RunWD780StateWhenNotFading_F1_Case0D_Case05)
 ; reads: wD782, wCA36, wCA37, wIsCGB, wD781
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wD782, ...
-Func_01F_73EC::
+DrawWCA36MonsterPictureInTwoSteps::
+Func_01F_73EC:: ; address name
     ld a, [wD782]
     and a, a
     jp nz, Jump_01F_7436
@@ -1537,9 +1541,11 @@ Jump_01F_769E::
     ld [wC530], a
     ret
 
+; draws the tile rectangles Data_01F_6E47 and Data_01F_6D6F, clears tile rows and sets up the summary text window (E-0128)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1B, RunWD780StateWhenNotFading_F1_Case0D_Case1B)
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wC52D, ...
-Func_01F_76B5::
+DrawSummaryFrames6E47And6D6F::
+Func_01F_76B5:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1658,7 +1664,7 @@ Func_01F_7754:: ; address name
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 14 call sites from 7 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, Func_01F_73EC, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ...)
+; 14 call sites from 7 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, DrawWCA36MonsterPictureInTwoSteps, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1F::
 Func_01F_77AB:: ; address name

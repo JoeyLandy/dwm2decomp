@@ -3446,7 +3446,7 @@ Jump_012_56E8:: ; address name
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     xor a, a
@@ -6040,7 +6040,7 @@ Jump_012_65C5::
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     xor a, a
@@ -8008,11 +8008,13 @@ Data_012_7026:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B04C, $58
 
+; wC8FE = $FF; on town maps (or special maps of type 0) finds the wCC48 entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
 ; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC47, wC8FE, wIsCGB
 ; writes: wC8FE, wC900, wC8FF, wC527
 ; points at: wCC48, wOBJPaletteBuffer
-Func_012_70A4::
+FindTriggerEntryForCurrentScreen::
+Func_012_70A4:: ; address name
     ld a, $FF
     ld [wC8FE], a
     ld a, [wCC44]
@@ -8080,11 +8082,13 @@ Jump_012_7101::
     ld [wC900], a
     jr Jump_012_715E
 
+; on maps from $30 (or special map $85) finds the wCCEB entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
 ; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, wCCE9, hMapScreenX, hMapScreenY, wC8FE, wIsCGB
 ; writes: wCCE9, wC900, wC8FF, wC8FE, wC527
 ; points at: wCCEB, wOBJPaletteBuffer
-Func_012_710A::
+FindTriggerEntryForCurrentScreen_WCCEB::
+Func_012_710A:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_012_711C
@@ -8796,10 +8800,12 @@ Func_012_75A1:: ; address name
     ld [wC913], a
     ret
 
+; on town maps, every 100 calls (wC832), tries the gold, party-stat and digit events in turn until one sets wC935 (E-0128)
 ; 3 call sites from 3 routines (e.g. Func_012_7BCC, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wScriptRunning, wC935, wCC44, hMapId, wC832
 ; writes: wC832
-Func_012_75E0::
+RunPeriodicFieldEventChecks::
+Func_012_75E0:: ; address name
     ld a, [wScriptRunning]
     or a, a
     ret nz
@@ -8853,21 +8859,21 @@ Jump_012_7624::
     ret c
     call TriggerEventC0IfHPDigitsRepeat
     ret c
-    call Func_012_7AD0
+    call TriggerEventC1IfGoldDigitSumAtMost12
     ret c
-    call Func_012_7A4D
+    call TriggerEventC2IfPartyHPLastDigitsMatch
     ret c
-    call Func_012_79DC
+    call TriggerEventC3IfGoldDigitSum30
     ret c
     call TriggerEventC6IfGoldAtLeast5000
     ret c
-    call Func_012_781E
+    call TriggerEventForStatusedMemberHP_781E
     ret c
     call TriggerEventC7IfGold1000AndNoItems19To1C
     ret c
-    call Func_012_789E
+    call RunPeriodicFieldEventChecks_Sub01
     ret c
-    call Func_012_77AC
+    call TriggerEventC9IfExpDigitsRepeat
     ret c
     call TriggerEventC4OrC5IfGold1000
     ret c
@@ -8875,7 +8881,7 @@ Jump_012_7624::
     ret
 
 ; when story flag $192 is set, flag $193 is clear and gold >= 10,000 ($2710): wC935 = $CC and carry set; otherwise A = 0 and carry clear (E-0075)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
 EventCheckGoldAtLeast10000::
@@ -8911,7 +8917,7 @@ Jump_012_7691::
     ret
 
 ; with story flag $195 set and $196 clear: when the party's total HP is below 100, wC935 = $CD and carry (E-0127)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: hFFC8, hFFC9, rRAMG, wC935
 ; points at: wC6FE
@@ -8976,7 +8982,7 @@ Jump_012_76EF::
     ret
 
 ; with story flag $198 set and $199 clear: when the party's total MP is below 100, wC935 = $CE and carry (E-0127)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: hFFC8, hFFC9, rRAMG, wC935
 ; points at: wC6FE
@@ -9041,7 +9047,7 @@ Jump_012_774D::
     ret
 
 ; with story flag $19B set and $19C clear: when the party's total level is below 100, wC935 = $CF and carry (E-0127)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC6FD, hFFC6, hFFC8, hFFC9
 ; writes: hFFC8, hFFC9, rRAMG, wC935
 ; points at: wC6FE
@@ -9104,11 +9110,13 @@ Jump_012_77AA::
     sub a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; with at least 1000 gold: when a party member's EXP has its last three decimal digits equal, wC935 = $C9 and carry (E-0128)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, hFFC8, wGoldLo
 ; writes: rRAMG, wC8C0, wC8C1, wC8C2, wC935
 ; points at: wC6FE
-Func_012_77AC::
+TriggerEventC9IfExpDigitsRepeat::
+Func_012_77AC:: ; address name
     ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_77C4
@@ -9184,11 +9192,13 @@ Jump_012_7818::
     sub a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; with at least 1000 gold: checks party members with status bits 7, 2 or 0 of field $55 against half their max HP and may set an event (E-0128)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, hFFC9, hFFC8, wGoldLo
 ; writes: rRAMG, hFFC8, hFFC9, wC935
 ; points at: wC6FE
-Func_012_781E::
+TriggerEventForStatusedMemberHP_781E::
+Func_012_781E:: ; address name
     ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7836
@@ -9274,11 +9284,13 @@ Jump_012_7898::
     sub a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; only called from RunPeriodicFieldEventChecks (E-0047)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC627, wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, wGoldLo
 ; writes: rRAMG, wC935
 ; points at: wC6FE
-Func_012_789E::
+RunPeriodicFieldEventChecks_Sub01::
+Func_012_789E:: ; address name
     ld a, [wC627]
     cp a, $FF
     jr z, Jump_012_78A9
@@ -9379,7 +9391,7 @@ Jump_012_7932::
     ret
 
 ; when wC627 is $FF or 0, the gold is at least 1000 and no inventory slot before the first empty one holds items $19-$1C: wC935 = $C7 and carry (E-0125)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC627, wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
 ; points at: wInventory
@@ -9436,7 +9448,7 @@ Jump_012_797A::
     ret
 
 ; when wC627 is $FF or 0 and the gold is at least 5000, wC935 = $C6 and carry; otherwise A = 0, no carry (E-0124)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC627, wGoldHi, wGoldMid, wGoldLo
 ; writes: wC935
 TriggerEventC6IfGoldAtLeast5000::
@@ -9473,7 +9485,7 @@ Jump_012_79A5::
     ret
 
 ; when the gold is at least 1000 and wC634 is $FF or 0: wC935 = $C4 or $C5 at random and carry (E-0125)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wC634, wC5E8, wGoldLo
 ; writes: wC935
 TriggerEventC4OrC5IfGold1000::
@@ -9515,10 +9527,12 @@ Jump_012_79CD::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; with at least 5000 gold and wC634 $FF or 0: when the gold's decimal digits sum to at least 30, wC935 = $C3 and carry (E-0128)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wC634, wGoldLo, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: wC8C0, wC8C1, wC8C2, wC935
-Func_012_79DC::
+TriggerEventC3IfGoldDigitSum30::
+Func_012_79DC:: ; address name
     ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_79F4
@@ -9590,10 +9604,12 @@ Jump_012_7A46::
     scf
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; with at least 1000 gold: when every party member's HP ends in the same decimal digit, wC935 = $C2 and carry (E-0128)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wC6FD, wC6FE, hFFC6, hFFC7, wC8C2, wC6FF, ...
 ; writes: rRAMG, wC935
-Func_012_7A4D::
+TriggerEventC2IfPartyHPLastDigitsMatch::
+Func_012_7A4D:: ; address name
     ld a, [wGoldHi]
     or a, a
     jr nz, Jump_012_7A66
@@ -9671,10 +9687,12 @@ Jump_012_7ACE::
     sub a, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; with at least 1000 gold and wC634 $FF or 0: when the gold's decimal digits sum to at most 12, wC935 = $C1 and carry (E-0128)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC634, wGoldHi, wGoldMid, wGoldLo, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: wC8C0, wC8C1, wC8C2, wC935
-Func_012_7AD0::
+TriggerEventC1IfGoldDigitSumAtMost12::
+Func_012_7AD0:: ; address name
     ld a, [wC634]
     cp a, $FF
     jr z, Jump_012_7ADA
@@ -9748,7 +9766,7 @@ Jump_012_7B3E::
     ret
 
 ; when a party member's HP has all decimal digits equal (for example 77 or 333), wC935 = $C0 and carry (E-0127)
-; 1 call site from 1 routine (e.g. Func_012_75E0)
+; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wC6FD, hFFC6, hFFC7, wC8C0, wC8C1, wC8C2
 ; writes: rRAMG, wC935
 ; points at: wC6FE
@@ -9917,7 +9935,7 @@ Jump_012_7C25::
     ld [wC935], a
     ld a, $63
     ld [wC832], a
-    call Func_012_75E0
+    call RunPeriodicFieldEventChecks
 
 Jump_012_7C3B::
     call NextTableByte
@@ -9937,7 +9955,7 @@ Jump_012_7C3B::
     ld a, [wCB84]
     ld c, a
     call ReadTileBuffer2x2AtPixel_Bank12
-    call Func_012_7CD9
+    call RollFieldEventOnTallTiles
     cp a, $01
     ret z
     ld a, $03
@@ -9990,11 +10008,13 @@ Jump_012_7CA1::
     ld [wC527], a
     ret
 
+; on map type 1, standing on tiles at or above wC196, a 1-in-8 roll sets event $0A in wC935 unless item $2C is owned or the gold is below 100; then A = 1 when any tile under the player is blocking (E-0128)
 ; 1 call site from 1 routine (e.g. Func_012_7BCC)
 ; reads: wC195, wC196, wCD04, hFFC6, wC634, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: hFFC6, wC935
 ; points at: wC910
-Func_012_7CD9::
+RollFieldEventOnTallTiles::
+Func_012_7CD9:: ; address name
     ld a, [wC195]
     and a, $0F
     dec a
@@ -10153,7 +10173,7 @@ Jump_012_7DC3::
     ret
 
 ; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
-; 47 call sites from 23 routines (e.g. Func_012_7CD9, Func_004_58C2_Case4F, Func_004_58C2_Case6A, Func_004_612B_Case38, ...)
+; 47 call sites from 23 routines (e.g. RollFieldEventOnTallTiles, Func_004_58C2_Case4F, Func_004_58C2_Case6A, Func_004_612B_Case38, ...)
 ; reads: hFFC6
 ; writes: hFFC6
 ; points at: wInventory
@@ -10219,11 +10239,13 @@ Jump_012_7E09::
     ld [wC634], a
     ret
 
+; hFFC7 = the index of the first party member knowing skill $76-$7D or $92 and hFFC8 = that skill, or hFFC7 = $80 (E-0128)
 ; 1 call site from 1 routine (e.g. Func_004_58C2_Case13)
 ; reads: wC6FD, hFFC7, hFFC6
 ; writes: rRAMG, hFFC7, hFFC8
 ; points at: wC6FE
-Func_012_7E0F::
+FindPartyMemberWithSkill76To7DOr92::
+Func_012_7E0F:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]

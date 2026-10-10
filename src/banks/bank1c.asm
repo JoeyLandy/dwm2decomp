@@ -152,7 +152,7 @@ Jump_01C_40F2::
     cp a, $18
     jr c, Jump_01C_40F2
     ld hl, wD78C
-    call Func_01C_4395
+    call DrawGoldDigitsAtHLWrapped_1C
     ld a, [wC8CB]
     bit 7, a
     jr nz, Jump_01C_4122
@@ -593,11 +593,13 @@ Jump_01C_4393::
     xor a, a
     ret
 
+; writes the gold as up to five decimal digit tiles without leading zeros at HL in VRAM, wrapping at the row end (E-0128)
 ; 7 call sites from 7 routines (e.g. ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, InitItemListWD788AndCount, ScriptCommandE2_Run_Case03_Case0E, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFFC8
-Func_01C_4395::
+DrawGoldDigitsAtHLWrapped_1C::
+Func_01C_4395:: ; address name
     push hl
     ld a, [wGoldLo]
     ld l, a
@@ -926,7 +928,7 @@ Jump_01C_4543::
     cp a, $18
     jr c, Jump_01C_4543
     ld hl, wD78C
-    call Func_01C_4395
+    call DrawGoldDigitsAtHLWrapped_1C
     ld a, [wC8CB]
     bit 7, a
     jr nz, Jump_01C_4573
@@ -3346,7 +3348,7 @@ Jump_01C_5415::
     or a, c
     jr nz, Jump_01C_5415
     ld hl, wD792
-    call Func_01C_4395
+    call DrawGoldDigitsAtHLWrapped_1C
     ld hl, wInventory
     ld c, $00
     ld b, $00
@@ -4950,7 +4952,7 @@ Jump_01C_5E1B:: ; address name
     ld a, [wD7CE]
     ld [wD7F1], a
     call AddWD7F1ToGoldCapped99999
-    call Func_01C_6919
+    call RemoveItemCountFromInventory
     ld hl, wInventory
     ld b, $00
     ld c, $00
@@ -5006,7 +5008,7 @@ Jump_01C_5E84::
     or a, c
     jr nz, Jump_01C_5E84
     ld hl, wD792
-    call Func_01C_4395
+    call DrawGoldDigitsAtHLWrapped_1C
     ld hl, wInventory
     ld c, $00
     ld b, $00
@@ -5988,11 +5990,13 @@ Func_01C_68FA:: ; address name
     ld [wD7F1], a
     ret
 
+; removes 10 * wD7CA + wD7CB copies of the selected item (wD7D5[4 * wD7B6 + wD7B5]) from the inventory and compacts it (E-0128)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE2_Run_Case04_Case0D, ScriptCommandE5_Run_Case03_Case0E)
 ; reads: wD7CA, wD7CB, wD7B6, wD7B5, wD7B8, wD7B9
 ; writes: wD7B9, wD7B8
 ; points at: wD7D5, wInventory
-Func_01C_6919::
+RemoveItemCountFromInventory::
+Func_01C_6919:: ; address name
     ld a, [wD7CA]
     ld e, a
     ld d, $00
@@ -6200,7 +6204,7 @@ Jump_01C_6A2B::
     or a, c
     jr nz, Jump_01C_6A2B
     ld hl, wD792
-    call Func_01C_4395
+    call DrawGoldDigitsAtHLWrapped_1C
     ld hl, wInventory
     ld c, $18
     ld b, $00
@@ -7231,7 +7235,7 @@ Jump_01C_710A:: ; address name
     ret
 
 Jump_01C_7118::
-    call Func_01C_6919
+    call RemoveItemCountFromInventory
     farcall ScriptCommandE5_Run_Case03_Case0E_Sub02
     farcall ScriptCommandE5_Run_Case03_Case0E_Sub03
     ret
@@ -7358,7 +7362,7 @@ Jump_01C_71CF::
     or a, c
     jr nz, Jump_01C_71CF
     ld hl, wD792
-    call Func_01C_4395
+    call DrawGoldDigitsAtHLWrapped_1C
     call BGMapAddressAtScroll_Bank1C_67AF
     ld a, $0C
     add_a_to_hl
@@ -7451,7 +7455,7 @@ Jump_01C_725B::
     or a, c
     jr nz, Jump_01C_725B
     ld hl, wD792
-    call Func_01C_4395
+    call DrawGoldDigitsAtHLWrapped_1C
     ld hl, wInventory
     ld c, $00
     ld b, $00

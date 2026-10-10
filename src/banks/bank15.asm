@@ -529,10 +529,10 @@ Jump_015_43A4::
 ; writes: wD7F1
 ScriptCommandED_Run_Case04_Case03::
 Jump_015_43AC:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     ret
 
 ; entry 4 of the `rst $00` table in ScriptCommandED_Run_Case04
@@ -1400,7 +1400,7 @@ Jump_015_4987:: ; address name
     ld [wD7F3], a
     ld a, e
     ld [wD7F4], a
-    farcall Func_01D_6C14
+    farcall LoadTileListSixPerCall
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -1937,7 +1937,7 @@ Jump_015_4D2B:: ; address name
     ld bc, $0605
     call CopyRectTo20ByteRows_Bank15
     call DrawRect70C5IfWC58AAndStep
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ret
@@ -1957,7 +1957,7 @@ Jump_015_4D46:: ; address name
     ld [wD7F3], a
     ld a, e
     ld [wD7F4], a
-    farcall Func_01D_6C14
+    farcall LoadTileListSixPerCall
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -2839,7 +2839,7 @@ Jump_015_5323::
     ld [wD7F3], a
     ld a, e
     ld [wD7F4], a
-    farcall Func_01D_6C14
+    farcall LoadTileListSixPerCall
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -3441,9 +3441,9 @@ ScriptCommandED_Run_Case07_Case02::
 Jump_015_571D:: ; address name
     ld a, $0D
     ldh [hMapId], a
-    call Func_000_1C0C
+    call LoadMapHeader
     call LoadMapScreen
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     farcall Func_069_4001
     call RestorePlayerPositionState
     xor a, a
@@ -3790,7 +3790,7 @@ Jump_015_593E:: ; address name
     ld [hl], a
     xor a, a
     ld [rRAMG2], a
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld a, $01
@@ -3964,7 +3964,7 @@ Jump_015_5ACA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandED_Run_Case07_Case0E::
 Jump_015_5AF5:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     ret
 
 ; entry 15 of the `rst $00` table in ScriptCommandED_Run_Case07
@@ -3991,7 +3991,7 @@ Jump_015_5AFC:: ; address name
     call CopyRectTo20ByteRows_Bank15
     pop af
     ld [wD7F1], a
-    farcall Func_01D_5B4D
+    farcall DrawRecordStatsBoxForWD7F1
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4382,7 +4382,7 @@ Jump_015_5DB3::
 ; writes: wC527, wD781
 ScriptCommandED_Run_Case07_Case1D::
 Jump_015_5DBB:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld a, [wD781]
@@ -4926,7 +4926,7 @@ Jump_015_6101:: ; address name
 ; writes: wC527, hFFBA, wD782, wD780, wD781, wC52D, wC52E, wC52F, ...
 ScriptCommandED_Run_Case0F_Case08::
 Jump_015_6155:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call BGMapAddressAtScroll_Bank15
@@ -5235,7 +5235,7 @@ Jump_015_6336:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandED_Run_Case12_Case06::
 Jump_015_6359:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     ret
 
 ; copies the 8 x 5 rectangle Data_015_7351 into wC410 (CopyRectTo20ByteRows_Bank15), then wD781 += 1 (E-0119)
@@ -6310,7 +6310,7 @@ Jump_015_68F2::
     ret
 
 ; TestBitInFieldAtWD7F3, then ORs its mask into the byte, setting bit wD7F1/wD7F2 of the field at wD7F3/wD7F4 (E-0114)
-; 5 call sites from 5 routines (e.g. ScriptCommandED_Run_Case04_Case36, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case17, Func_037_5172, ...)
+; 5 call sites from 5 routines (e.g. ScriptCommandED_Run_Case04_Case36, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case17, StoreReceivedRecordIntoSRAM, ...)
 SetBitInFieldAtWD7F3::
 Func_015_68F3:: ; address name
     call TestBitInFieldAtWD7F3

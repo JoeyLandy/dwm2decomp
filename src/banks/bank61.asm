@@ -362,7 +362,7 @@ Jump_061_4209::
     ret
 
 ; runs the routine for wCC44 & 7 (jump table; 4 reuses 3) (E-0122)
-; 1 call site from 1 routine (e.g. Func_000_1C0C)
+; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: wCC44
 RunWCC44Type_420D::
 Func_061_420D:: ; address name

@@ -88,7 +88,7 @@ Func_031_40A5:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_031_40C9
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD802]
     cp a, $FF
     ret z
@@ -4249,7 +4249,7 @@ Jump_031_597D::
 Jump_031_5995::
     bit 2, a
     jr z, Jump_031_59A7
-    farcall Func_016_590C
+    farcall SortInventory
     ld de, Data_031_63A7
     ld hl, wCFD5
     set 7, [hl]
@@ -8194,7 +8194,7 @@ Jump_031_6EF7:: ; address name
     ld a, [wCFD7]
     add a, $E1
     ld [wC2A9], a
-    call Func_031_7105
+    call ShowSelectedSkillNameAndCost
     ld de, wC1A0
     ld hl, vBGMap0 + $8
     ld bc, $0C09
@@ -8474,11 +8474,13 @@ Jump_031_70D2::
 Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
+; shows the name (category 9) of skill wD09D[4 * page + row] at vTiles2 + $260, loads its record and writes its MP cost (or the record's MP for skills $3D, $20, $7B) as digits at wC39E (E-0128)
 ; 2 call sites from 2 routines (e.g. DrawWC39EThreeTilesAtBGMap206, RunBattleSubStep_6E67_Case01)
 ; reads: wCFD5, wC46B, wRecordBuffer, wD868, wRecordBufferData
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory, wRecordBuffer, wCFED, ...
 ; points at: wD09D, wC39E
-Func_031_7105::
+ShowSelectedSkillNameAndCost::
+Func_031_7105:: ; address name
     ld hl, vTiles2 + $260
     ld a, l
     ld [wC52D], a
@@ -8557,7 +8559,7 @@ Jump_031_717E::
 ; points at: wC39E
 DrawWC39EThreeTilesAtBGMap206::
 Func_031_719E:: ; address name
-    call Func_031_7105
+    call ShowSelectedSkillNameAndCost
     ld hl, vBGMap0 + $206
     ld de, wC39E
     ld a, [de]

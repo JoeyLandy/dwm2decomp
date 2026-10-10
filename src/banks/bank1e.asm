@@ -1149,7 +1149,7 @@ Jump_01E_4782::
     inc de
     dec b
     jr nz, Jump_01E_4782
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call DrawBox4718AndMenuAndStep_1E
@@ -1494,7 +1494,7 @@ Jump_01E_4A2A::
 ; 1 call site from 1 routine (e.g. RedrawRecordListAndNextStep)
 CallFunc5C15InBank1F::
 Func_01E_4A32:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     ret
 
 ; entry 23 of the `rst $00` table in ScriptCommandE8_Run_Case04
@@ -1807,7 +1807,7 @@ Jump_01E_4BE1:: ; address name
     ld a, [hl]
     ld [wC6FE], a
     farcall ListPartyRecordsWithState2ToWD789
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call DrawBox4718AndMenuAndStep_1E
@@ -2008,7 +2008,7 @@ Jump_01E_4D5B:: ; address name
     xor a, a
     ld [rRAMG2], a
     farcall ListPartyRecordsWithState2ToWD789
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call DrawBox4718AndMenuAndStep_1E
@@ -2413,7 +2413,7 @@ Jump_01E_4FF7:: ; address name
     xor a, a
     ld [rRAMG2], a
     farcall ListPartyRecordsWithState2ToWD789
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call DrawBox4718AndMenuAndStep_1E
@@ -2703,7 +2703,7 @@ Jump_01E_525F:: ; address name
     call CopyRectTo20ByteRows_Bank1E
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     call GetWD789Cell5Address
     ld a, [hl]
     ld b, a
@@ -3168,7 +3168,7 @@ Jump_01E_5654:: ; address name
     ld [wD7F3], a
     ld a, e
     ld [wD7F4], a
-    farcall Func_01D_6C14
+    farcall LoadTileListSixPerCall
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -3459,7 +3459,7 @@ Jump_01E_586E:: ; address name
     ld [wD7F2], a
     farcall Func_014_7E96
     farcall ListPartyRecordsWithState2ToWD789
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call ScriptCommandE8_Run_Shared03
@@ -3739,7 +3739,7 @@ Jump_01E_5A88:: ; address name
     ld [wD7F3], a
     ld a, e
     ld [wD7F4], a
-    farcall Func_01D_6C14
+    farcall LoadTileListSixPerCall
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -4032,7 +4032,7 @@ Jump_01E_5C78:: ; address name
 ; points at: wC52D
 ScriptCommandE8_Run_Case09_Case0D::
 Jump_01E_5C85:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld c, $05
@@ -4776,10 +4776,10 @@ Jump_01E_616A:: ; address name
     call DrawWD789Cell5RecordDetails
     ld a, $01
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     ret
 
 ; entry 6 of the `rst $00` table in ScriptCommandE8_Run_Case0E
@@ -4854,10 +4854,10 @@ Jump_01E_61D1:: ; address name
     call ScriptCommandE8_Run_Shared06
     ld a, $01
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     xor a, a
     ld [wD782], a
     ret
@@ -4884,10 +4884,10 @@ Jump_01E_61FD:: ; address name
     call ScriptCommandE8_Run_Shared06
     ld a, $01
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     ld a, [wD781]
     sub a, $04
     ld [wD781], a
@@ -4918,10 +4918,10 @@ Jump_01E_6231:: ; address name
     call ScriptCommandE8_Run_Shared06
     ld a, $01
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     ld a, [wD781]
     dec a
     ld [wD781], a
@@ -5045,7 +5045,7 @@ Jump_01E_62EF:: ; address name
     ld [wD7F1], a
     ld a, h
     ld [wD7F2], a
-    farcall Func_01D_682A
+    farcall LoadPartySpeciesSpriteGraphics
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5209,7 +5209,7 @@ Jump_01E_640A::
 ; writes: wD7F1, wD7F2, hFFBA, wD781
 ScriptCommandE8_Run_Case0D_Case07::
 Jump_01E_6437:: ; address name
-    farcall Func_01D_64D6
+    farcall HandleListCursorInput_1D
     ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_01E_644F
@@ -5236,7 +5236,7 @@ Jump_01E_645D::
     ld [wD7F1], a
     ld a, h
     ld [wD7F2], a
-    farcall Func_01D_6899
+    farcall DrawPartySpeciesSprites
     ret
 
 Jump_01E_6471::
@@ -5297,7 +5297,7 @@ Jump_01E_64AD:: ; address name
 ; points at: wC52D
 ScriptCommandE8_Run_Case0D_Case11::
 Jump_01E_64BE:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call BGMapAddressAtScroll_Bank1E
@@ -5847,7 +5847,7 @@ Jump_01E_6870:: ; address name
     ld a, [hl]
     ld b, a
     call LoadFamilyIconTileForRecordB_Bank1E
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call BGMapAddressAtScroll_Bank1E
@@ -6422,7 +6422,7 @@ Jump_01E_6C69:: ; address name
     ld a, h
     ld [wD7F2], a
     push hl
-    farcall Func_01D_682A
+    farcall LoadPartySpeciesSpriteGraphics
     pop hl
 
 ; entry 31 of the `rst $00` table in ScriptCommandE8_Run_Case09
@@ -6468,7 +6468,7 @@ Jump_01E_6CC7::
     ld [wD7F1], a
     ld a, h
     ld [wD7F2], a
-    farcall Func_01D_6899
+    farcall DrawPartySpeciesSprites
     ret
 
 Jump_01E_6CDB::
@@ -8120,7 +8120,7 @@ Func_01E_75C5:: ; address name
 ; 5 call sites from 5 routines (e.g. ScriptCommandE8_Run_Case04_Case01, ScriptCommandE8_Run_Case04_Case17, ScriptCommandE8_Run_Case06_Case08, ListRecordsAndDrawWD789Cell5Panel, ...)
 CallFunc5B4DInBank1D::
 Func_01E_75EB:: ; address name
-    farcall Func_01D_5B4D
+    farcall DrawRecordStatsBoxForWD7F1
     ret
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)

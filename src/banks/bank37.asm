@@ -475,7 +475,7 @@ Jump_037_4BEB:: ; address name
     dw Func_037_4AFD_Case04_Case13
     dw Func_037_4AFD_Case04_Case1C
     dw Func_037_4AFD_Case04_Case1D
-    dw Func_037_5172
+    dw StoreReceivedRecordIntoSRAM
     dw Func_037_4AFD_Case04_Case1F
     dw Func_037_4AFD_Case04_Case20
     dw Func_037_4AFD_Case04_Case21
@@ -764,7 +764,7 @@ Func_037_4DC7:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_037_5A5D
+    call CopyScreenBufferRectWithAttrs_37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1090,7 +1090,7 @@ Jump_037_4FE7::
 
 Jump_037_4FEF::
     push bc
-    call Func_037_5172
+    call StoreReceivedRecordIntoSRAM
     pop bc
     ld a, [wD781]
     cp a, b
@@ -1298,11 +1298,13 @@ Jump_037_515A::
     call ShowStringIndexA_Bank37
     ret
 
+; when text is idle and not linking: copies the $A5-byte received record at wCAD0 into the record slot at WD789 cell 5 and resets the save counters (E-0128)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case1D)
 ; reads: wC52B, wD782, wD781, wC57F, wD7B5, wD7B6, wD7F5, wD7F6, ...
 ; writes: wD782, wD781, wD7AB, wD7AF, wD7F1, wD7F2, rRAMG2, rRAMB, ...
 ; points at: wCAD0, wCADB, wC7FC, wD7E0
-Func_037_5172::
+StoreReceivedRecordIntoSRAM::
+Func_037_5172:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
@@ -1831,7 +1833,7 @@ Jump_037_5471:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_037_4AFD_Case0D_Case05::
 Jump_037_547F:: ; address name
-    farcall Func_01F_73EC
+    farcall DrawWCA36MonsterPictureInTwoSteps
     ret
 
 ; entry 6 of the `rst $00` table in Func_037_4AFD_Case0D
@@ -2206,7 +2208,7 @@ Jump_037_56D4::
     ld c, $10
     call CopyFromBankWaitVRAM
     call UploadTilesFromData58AE
-    farcall Func_01F_76B5
+    farcall DrawSummaryFrames6E47And6D6F
     ld a, [wD781]
     add a, $03
     ld [wD781], a
@@ -2595,7 +2597,7 @@ Func_037_5976:: ; address name
     ld [wD7F1], a
     ld a, $09
     ld [wD7F2], a
-    call Func_037_5A5D
+    call CopyScreenBufferRectWithAttrs_37
     call BGMapAddressAtScroll_Bank37
     ld bc, $140D
     ld de, $01CC
@@ -2748,10 +2750,12 @@ Jump_037_5A35::
 Data_037_5A57:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EC, $00, $2C, $01, $6C, $01
 
+; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
 ; 2 call sites from 2 routines (e.g. RunFunc5A5DAt024FAndDrawBox, RunFunc5A5DAt0278AndStep)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-Func_037_5A5D::
+CopyScreenBufferRectWithAttrs_37::
+Func_037_5A5D:: ; address name
     push bc
     push hl
     push de
@@ -2813,11 +2817,11 @@ Jump_037_5AB1::
     inc b
     ld a, b
     cp a, c
-    jr c, Func_037_5A5D
+    jr c, CopyScreenBufferRectWithAttrs_37
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 1 call site from 1 routine (e.g. Func_037_5A5D)
+; 1 call site from 1 routine (e.g. CopyScreenBufferRectWithAttrs_37)
 CopyBytesDEToHL_Bank37::
 Func_037_5AB7:: ; address name
     ld a, [de]
@@ -2830,7 +2834,7 @@ Func_037_5AB7:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
-; 1 call site from 1 routine (e.g. Func_037_5A5D)
+; 1 call site from 1 routine (e.g. CopyScreenBufferRectWithAttrs_37)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank37::
 Func_037_5AC0:: ; address name

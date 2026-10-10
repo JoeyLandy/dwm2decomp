@@ -139,7 +139,7 @@ Jump_0F1_40DC::
 Jump_0F1_40EC::
     bit 2, a
     ret z
-    farcall Func_016_590C
+    farcall SortInventory
     call ShowSelectedItemDescription_BankF1
     call Func_0F1_4307
     ret
@@ -2206,7 +2206,7 @@ Jump_0F1_4EA7:: ; address name
     ret
 
 Jump_0F1_4ED1::
-    farcall Func_00E_5F91
+    farcall PersonalityPairValueToWD7F5
     ld a, [wD7F5]
     cp a, $03
     jr nz, Jump_0F1_4EF2
@@ -2974,7 +2974,7 @@ Jump_0F1_5379:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWD780StateWhenNotFading_F1_Case0D_Case05::
 Jump_0F1_5387:: ; address name
-    farcall Func_01F_73EC
+    farcall DrawWCA36MonsterPictureInTwoSteps
     ret
 
 ; entry 6 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
@@ -3312,7 +3312,7 @@ Jump_0F1_558B::
 
 Jump_0F1_559C::
     call UploadTilesFromData5757_BankF1
-    farcall Func_01F_76B5
+    farcall DrawSummaryFrames6E47And6D6F
     ld a, [wD781]
     add a, $03
     ld [wD781], a
@@ -4134,7 +4134,7 @@ Data_0F1_5ACF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wD7EE
 GameMode5_Update_Case07_Sub01::
 Func_0F1_5AD5:: ; address name
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD06A]
     cp a, $01
     jr z, Jump_0F1_5AE0
@@ -4242,7 +4242,7 @@ Jump_0F1_5B68::
     ld [wD7F2], a
     ld a, $01
     ldh [hFFB9], a
-    farcall Func_01D_6899
+    farcall DrawPartySpeciesSprites
     ret
 
 ; only called from GameMode5_Update_Case07_Sub01 (E-0047)

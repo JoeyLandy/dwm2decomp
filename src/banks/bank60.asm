@@ -84,7 +84,7 @@ Func_060_4076:: ; address name
     call Func_060_4274
     call FillWCD51LevelsSlope
     call RollKeyWorldMonsterIds
-    call Func_060_4597
+    call RollKeyWorldEncounterTable
     ret
 
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
@@ -537,11 +537,13 @@ Data_060_43C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_060_43D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $1803D7, $1C0
 
+; clears wCE7B ($10 bytes) and fills a 4-byte entry per map area (from wCD7B) with a random monster id and level from the band lists (E-0128)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD05, wC96A, hFFC8
 ; writes: hFFC6, hFFC8
 ; points at: wCE7B, wCD7B, wCD74
-Func_060_4597::
+RollKeyWorldEncounterTable::
+Func_060_4597:: ; address name
     ld b, $10
     ld hl, wCE7B
     xor a, a
@@ -800,7 +802,7 @@ Jump_060_46FE::
     ret
 
 ; hFFC7 = wCCF7[random & 1], stepping back over $FF entries (E-0124)
-; 4 call sites from 3 routines (e.g. Func_060_4597, RollKeyWorldMonsterIds, Func_060_4607)
+; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, Func_060_4607)
 ; reads: wCD03
 ; writes: hFFC7
 ; points at: wCCF7
@@ -827,7 +829,7 @@ Jump_060_4721::
     ret
 
 ; DE = a random entry of the list Data_060_6D6D[16 * hFFC7 + 2 * hFFC6]; carry when valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
-; 4 call sites from 3 routines (e.g. Func_060_4597, RollKeyWorldMonsterIds, Func_060_4607)
+; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, Func_060_4607)
 ; reads: hFFC7, hFFC6, wCD04
 PickRandomMonsterFromBandList::
 Func_060_4724:: ; address name
@@ -899,7 +901,7 @@ Jump_060_476C::
     ret
 
 ; A = 2-7 by thresholds 20, 40, 60, 70, 80, 90, 95 (E-0125)
-; 3 call sites from 3 routines (e.g. Func_060_4597, RollKeyWorldMonsterIds, Func_060_4607)
+; 3 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, Func_060_4607)
 BandForA_4773::
 Func_060_4773:: ; address name
     cp a, $14
@@ -1707,7 +1709,7 @@ Func_060_4FEA::
     ldh a, [hFFC9]
     or a, c
     ldh [hFFC9], a
-    call Func_060_5075
+    call ReadKeyWorldCellIsSolid
     or a, a
     jr z, Func_060_4FEA
     ldh a, [hFFC9]
@@ -1757,7 +1759,7 @@ Jump_060_5036::
     ldh a, [hFFC9]
     or a, c
     ldh [hFFC9], a
-    call Func_060_5075
+    call ReadKeyWorldCellIsSolid
     or a, a
     jr z, Jump_060_5036
     ldh a, [hFFC9]
@@ -1770,9 +1772,11 @@ Jump_060_5036::
     ld [hl+], a
     ret
 
+; reads the cell at (hFFC9, hFFCA) from the area map chunk in wCD60; A = 1 when its byte is not $FF, else 0 (E-0128)
 ; 3 call sites from 2 routines (e.g. Func_060_528B, Func_060_4FEA)
 ; reads: hFFCA, hFFC9
-Func_060_5075::
+ReadKeyWorldCellIsSolid::
+Func_060_5075:: ; address name
     push hl
     ldh a, [hFFCA]
     and a, $FC
@@ -2224,7 +2228,7 @@ Jump_060_52FB::
 
 Jump_060_5310::
     push bc
-    call Func_060_5075
+    call ReadKeyWorldCellIsSolid
     pop bc
     or a, a
     jr z, Jump_060_5365

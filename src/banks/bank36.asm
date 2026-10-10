@@ -1288,7 +1288,7 @@ Jump_036_4879::
 Jump_036_4885::
     ld a, [wBattleActor]
     ld b, a
-    call Func_036_4E26
+    call LoadBattleMonsterPictureForSlotB
     call ResolveStepDamageMessage_Sub05
     ret
 
@@ -1302,7 +1302,7 @@ Jump_036_4890::
     dec de
     ld a, [wBattleActor]
     ld b, a
-    call Func_036_4E26
+    call LoadBattleMonsterPictureForSlotB
     ret
 
 Jump_036_48A3::
@@ -1340,7 +1340,7 @@ Func_036_48CB:: ; address name
     dec de
     ld a, [wBattleActor]
     ld b, a
-    call Func_036_4E26
+    call LoadBattleMonsterPictureForSlotB
     ret
 
 ; resolve step $0B: wBattleActionId $82 jumps to 36:4A9D; $83, $84 and $B3 jump to 36:4B16; any other action advances wBattleResolveStep and returns (E-0050)
@@ -2024,7 +2024,7 @@ Jump_036_4D42:: ; address name
     inc d
 
 Jump_036_4D53::
-    call Func_036_4E26
+    call LoadBattleMonsterPictureForSlotB
     ld a, [wBattleTarget]
     ld hl, wDA5B
     add_a_to_hl
@@ -2141,10 +2141,12 @@ Jump_036_4DF3:: ; address name
     ld [wD80B], a
     ret
 
+; loads the picture of battle slot B (species at DE) into its picture area at vTiles2 + $140 + $240 * position and, on CGB, its attributes (E-0128)
 ; 5 call sites from 4 routines (e.g. ActionEffect_Vivify, ResolveStepDamageMessage_Sub02, ResolveStepDamageMessage, Func_036_4A38_Case02)
 ; reads: wC58A, wC57F, wIsCGB, wD890, wC985, wC984
 ; writes: wC526, hFFC6
-Func_036_4E26::
+LoadBattleMonsterPictureForSlotB::
+Func_036_4E26:: ; address name
     ld a, [wC58A]
     cp a, $01
     ld a, b
@@ -3067,11 +3069,13 @@ Func_036_5352:: ; address name
     call ScaleDamageByFlagsAtHL
     ret
 
+; raises the target's DEF by a third (half for action $25) of its base DEF, limited by the buff cap; the actual gain is stored as damage (E-0128)
 ; 2 call sites from 2 routines (e.g. ActionEffect_ActionDD, ActionEffect_Upper)
 ; reads: wBattleTarget, wBattleActionId, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleDEF
-Func_036_5360::
+RaiseTargetDEF::
+Func_036_5360:: ; address name
     ld a, [wBattleTarget]
     call SlotDEFBelowBuffCap
     jr nc, Jump_036_53C4
@@ -3238,11 +3242,13 @@ Jump_036_543F::
     xor a, a
     ret
 
+; raises the target's AGL by a third (half for action $29) of its base AGL, limited by the buff cap; the actual gain is stored as damage (E-0128)
 ; 2 call sites from 2 routines (e.g. ActionEffect_ActionDD, ActionEffect_Speed)
 ; reads: wBattleTarget, wBattleActionId, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleAGL
-Func_036_5441::
+RaiseTargetAGL::
+Func_036_5441:: ; address name
     ld a, [wBattleTarget]
     call SlotAGLBelowBuffCap
     jr nc, Jump_036_54A5
@@ -6319,7 +6325,7 @@ Func_036_64D4:: ; address name
     ret
 
 ; HL = HL / 3 (DivideHLByBC with BC = 3) (E-0095)
-; 4 call sites from 4 routines (e.g. Func_036_5441, Func_036_5360, ActionEffect_UltraDown_Sub02_Sub01, ResolveStepDamageMessage_Sub04_Sub01_Sub01)
+; 4 call sites from 4 routines (e.g. RaiseTargetAGL, RaiseTargetDEF, ActionEffect_UltraDown_Sub02_Sub01, ResolveStepDamageMessage_Sub04_Sub01_Sub01)
 DivideHLBy3::
 Func_036_64DB:: ; address name
     ld bc, $0003
@@ -6401,7 +6407,7 @@ Func_036_651C:: ; address name
     ret
 
 ; slot A: carry when its DEF is below 999 and below 2x (4x for foes outside link battles... allies) its base DEF; NC otherwise (E-0124)
-; 2 call sites from 1 routine (e.g. Func_036_5360)
+; 2 call sites from 1 routine (e.g. RaiseTargetDEF)
 ; reads: wD868, wC58A
 ; writes: wD868
 SlotDEFBelowBuffCap::
@@ -6442,7 +6448,7 @@ Jump_036_6554::
     ret
 
 ; slot A: carry when its AGL is below 999 and below 2x (4x for allies or link battles) its base AGL (E-0125)
-; 2 call sites from 1 routine (e.g. Func_036_5441)
+; 2 call sites from 1 routine (e.g. RaiseTargetAGL)
 ; reads: wD868, wC58A
 ; writes: wD868
 ; points at: wBattleAGL
@@ -6614,7 +6620,7 @@ Func_036_6622:: ; address name
     ret
 
 ; A = battle slot: BC = the slot's base DEF (GetBaseDEF); HL kept (E-0096)
-; 4 call sites from 4 routines (e.g. Func_036_5360, SlotDEFBelowBuffCap, ActionEffect_UltraDown_Sub02_Sub01, ActionEffect_Transform_Sub01)
+; 4 call sites from 4 routines (e.g. RaiseTargetDEF, SlotDEFBelowBuffCap, ActionEffect_UltraDown_Sub02_Sub01, ActionEffect_Transform_Sub01)
 ; reads: wBattleStatResultLo, wBattleStatResultHi
 GetBaseDEFOfSlotA::
 Func_036_6634:: ; address name
@@ -6629,7 +6635,7 @@ Func_036_6634:: ; address name
     ret
 
 ; A = battle slot: BC = the slot's base AGL (GetBaseAGL); HL kept (E-0096)
-; 4 call sites from 4 routines (e.g. Func_036_5441, SlotAGLBelowBuffCap, ActionEffect_Transform_Sub01, ResolveStepDamageMessage_Sub04_Sub01_Sub01)
+; 4 call sites from 4 routines (e.g. RaiseTargetAGL, SlotAGLBelowBuffCap, ActionEffect_Transform_Sub01, ResolveStepDamageMessage_Sub04_Sub01_Sub01)
 ; reads: wBattleStatResultLo, wBattleStatResultHi
 GetBaseAGLOfSlotA::
 Func_036_6646:: ; address name
@@ -7308,13 +7314,13 @@ Func_036_6A82:: ; address name
     and a, $F3
     or a, b
     ld [hl], a
-    call Func_036_5360
+    call RaiseTargetDEF
     jr nc, Jump_036_6AB7
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
 
 Jump_036_6AB7::
-    call Func_036_5441
+    call RaiseTargetAGL
     jr nc, Jump_036_6AC2
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
@@ -7721,7 +7727,7 @@ Jump_036_6CC1::
     inc d
 
 Jump_036_6CDD::
-    call Func_036_4E26
+    call LoadBattleMonsterPictureForSlotB
     jr Jump_036_6CE2
 
 Jump_036_6CE2::
@@ -7904,7 +7910,7 @@ Jump_036_6DC8::
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
 ActionEffect_Upper:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6DCB:: ; address name
-    call Func_036_5360
+    call RaiseTargetDEF
     jr nc, Jump_036_6DEA
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
@@ -7958,7 +7964,7 @@ Jump_036_6E0B::
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
 ActionEffect_Speed:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6E13:: ; address name
-    call Func_036_5441
+    call RaiseTargetAGL
     jr nc, Jump_036_6E32
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
@@ -10973,7 +10979,7 @@ Func_036_7E5B:: ; address name
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
-; 60 call sites from 33 routines (e.g. ActionEffect_BiAttack_Sub01, ComputeAttackDamage, Func_036_5441, ReadWordTableEntry_Bank36, ...)
+; 60 call sites from 33 routines (e.g. ActionEffect_BiAttack_Sub01, ComputeAttackDamage, RaiseTargetAGL, ReadWordTableEntry_Bank36, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
     add a, a

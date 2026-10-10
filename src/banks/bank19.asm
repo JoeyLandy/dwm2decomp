@@ -1381,7 +1381,7 @@ Jump_019_4771::
     pop hl
     ld a, $01
     ld [wD868], a
-    call Func_019_48B1
+    call ScaleStatAndCapByBattleKind
     call StoreHFFC8WordAtHL_Bank19
     ld a, [wD015]
     ldh [hFFC6], a
@@ -1390,7 +1390,7 @@ Jump_019_4771::
     pop hl
     ld a, $00
     ld [wD868], a
-    call Func_019_48B1
+    call ScaleStatAndCapByBattleKind
     call StoreHFFC8WordAtHL_Bank19
     ld a, $02
     ld [wD868], a
@@ -1399,7 +1399,7 @@ Jump_019_4771::
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_019_48B1
+    call ScaleStatAndCapByBattleKind
     ld a, $03
     ld [wD868], a
     ld a, [wD017]
@@ -1407,7 +1407,7 @@ Jump_019_4771::
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_019_48B1
+    call ScaleStatAndCapByBattleKind
     ld a, $00
     ld [wD868], a
     ld a, [wD018]
@@ -1415,13 +1415,13 @@ Jump_019_4771::
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_019_48B1
+    call ScaleStatAndCapByBattleKind
     ld a, [wD019]
     ldh [hFFC6], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
-    call Func_019_48B1
+    call ScaleStatAndCapByBattleKind
     ld a, $E7
     ld [hl+], a
     ld a, $03
@@ -1495,10 +1495,12 @@ Func_019_489D:: ; address name
     ld [hl+], a
     ret
 
+; scales the word hFFC8 by 101 percent and caps it at 999, 600 or 700 depending on wD868 and the battle kind wCFC5, then stores it (E-0128)
 ; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: hFFC8, hFFC9, wCFC5, wD868, wC96C, wD869, wD00B
 ; writes: hFFC8, hFFC9
-Func_019_48B1::
+ScaleStatAndCapByBattleKind::
+Func_019_48B1:: ; address name
     push af
     push bc
     push de

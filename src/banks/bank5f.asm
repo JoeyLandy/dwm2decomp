@@ -842,7 +842,7 @@ Func_05F_6D3F:: ; address name
     ld [wD7F2], a
     farcall Func_014_7E96
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ldh a, [hFF8D]
@@ -2306,7 +2306,7 @@ Jump_05F_7646::
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     xor a, a
@@ -3035,7 +3035,7 @@ Func_05F_7AB2:: ; address name
     jr nz, Jump_05F_7AC8
     ld a, [wScriptParam0]
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret

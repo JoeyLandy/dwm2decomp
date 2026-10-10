@@ -1946,10 +1946,10 @@ Jump_024_4CCA::
 ; writes: wD7F1
 GameMode6_Update_Case0F_Case02::
 Jump_024_4CD2:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     ret
 
 ; entry 3 of the `rst $00` table in GameMode6_Update_Case0F
@@ -5171,7 +5171,7 @@ Jump_024_6797::
     ld a, [wD781]
     inc a
     ld [wD781], a
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     xor a, a

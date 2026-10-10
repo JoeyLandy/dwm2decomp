@@ -620,7 +620,7 @@ Data_03A_4C12:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Jump_03A_4C14::
     call RunWD803EffectEvery5Frames
-    call Func_03A_5536
+    call UploadBGPalettesWithFade
     ld a, [wD802]
     cp a, $FF
     ret nz
@@ -2217,11 +2217,13 @@ Jump_03A_552A::
     ld [wC527], a
     ret
 
+; on CGB, when wC5E9 changed, writes the eight background palettes through Func_03A_55BB (rBGPI $80-$B8) (E-0128)
 ; 1 call site from 1 routine (e.g. Func_03A_4ADB)
 ; reads: wIsCGB, wC5E9, rSTAT, wC5EA
 ; writes: rBGPI, wD040, rOBPI, wD041
 ; points at: wD040, wBGPaletteBuffer, wD041, wOBJPaletteBuffer
-Func_03A_5536::
+UploadBGPalettesWithFade::
+Func_03A_5536:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
@@ -2238,7 +2240,7 @@ Jump_03A_5547::
     ld a, $80
     ldh [rBGPI], a
     ld hl, wBGPaletteBuffer
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
 
 Jump_03A_5557::
     ldh a, [rSTAT]
@@ -2246,7 +2248,7 @@ Jump_03A_5557::
     jr nz, Jump_03A_5557
     ld a, $88
     ldh [rBGPI], a
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
 
 Jump_03A_5564::
     ldh a, [rSTAT]
@@ -2254,7 +2256,7 @@ Jump_03A_5564::
     jr nz, Jump_03A_5564
     ld a, $90
     ldh [rBGPI], a
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
 
 Jump_03A_5571::
     ldh a, [rSTAT]
@@ -2262,7 +2264,7 @@ Jump_03A_5571::
     jr nz, Jump_03A_5571
     ld a, $98
     ldh [rBGPI], a
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
 
 Jump_03A_557E::
     ldh a, [rSTAT]
@@ -2270,7 +2272,7 @@ Jump_03A_557E::
     jr nz, Jump_03A_557E
     ld a, $A0
     ldh [rBGPI], a
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
 
 Jump_03A_558B::
     ldh a, [rSTAT]
@@ -2278,7 +2280,7 @@ Jump_03A_558B::
     jr nz, Jump_03A_558B
     ld a, $A8
     ldh [rBGPI], a
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
 
 Jump_03A_5598::
     ldh a, [rSTAT]
@@ -2286,7 +2288,7 @@ Jump_03A_5598::
     jr nz, Jump_03A_5598
     ld a, $B0
     ldh [rBGPI], a
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
 
 Jump_03A_55A5::
     ldh a, [rSTAT]
@@ -2294,14 +2296,16 @@ Jump_03A_55A5::
     jr nz, Jump_03A_55A5
     ld a, $B8
     ldh [rBGPI], a
-    call Func_03A_55BB
+    call UploadBGPalettesWithFade_Sub01
     ld a, [wC5E9]
     ld [wD040], a
     jp Jump_03A_564C
 
-; 8 call sites from 1 routine (e.g. Func_03A_5536)
+; only called from UploadBGPalettesWithFade (E-0047)
+; 8 call sites from 1 routine (e.g. UploadBGPalettesWithFade)
 ; reads: wC5E9, rSTAT
-Func_03A_55BB::
+UploadBGPalettesWithFade_Sub01::
+Func_03A_55BB:: ; address name
     push hl
     ld a, [wC5E9]
     and a, $03
@@ -2430,7 +2434,7 @@ Jump_03A_5658::
     ld a, $80
     ldh [rOBPI], a
     ld hl, wOBJPaletteBuffer
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
 
 Jump_03A_5668::
     ldh a, [rSTAT]
@@ -2438,7 +2442,7 @@ Jump_03A_5668::
     jr nz, Jump_03A_5668
     ld a, $88
     ldh [rOBPI], a
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
 
 Jump_03A_5675::
     ldh a, [rSTAT]
@@ -2446,7 +2450,7 @@ Jump_03A_5675::
     jr nz, Jump_03A_5675
     ld a, $90
     ldh [rOBPI], a
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
 
 Jump_03A_5682::
     ldh a, [rSTAT]
@@ -2454,7 +2458,7 @@ Jump_03A_5682::
     jr nz, Jump_03A_5682
     ld a, $98
     ldh [rOBPI], a
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
 
 Jump_03A_568F::
     ldh a, [rSTAT]
@@ -2462,7 +2466,7 @@ Jump_03A_568F::
     jr nz, Jump_03A_568F
     ld a, $A0
     ldh [rOBPI], a
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
 
 Jump_03A_569C::
     ldh a, [rSTAT]
@@ -2470,7 +2474,7 @@ Jump_03A_569C::
     jr nz, Jump_03A_569C
     ld a, $A8
     ldh [rOBPI], a
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
 
 Jump_03A_56A9::
     ldh a, [rSTAT]
@@ -2478,7 +2482,7 @@ Jump_03A_56A9::
     jr nz, Jump_03A_56A9
     ld a, $B0
     ldh [rOBPI], a
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
 
 Jump_03A_56B6::
     ldh a, [rSTAT]
@@ -2486,14 +2490,16 @@ Jump_03A_56B6::
     jr nz, Jump_03A_56B6
     ld a, $B8
     ldh [rOBPI], a
-    call Func_03A_56CC
+    call UploadBGPalettesWithFade_Sub01_Sub01
     ld a, [wC5EA]
     ld [wD041], a
     jp Jump_03A_575D
 
-; 8 call sites from 1 routine (e.g. Func_03A_55BB)
+; only called from UploadBGPalettesWithFade_Sub01 (E-0047)
+; 8 call sites from 1 routine (e.g. UploadBGPalettesWithFade_Sub01)
 ; reads: wC5EA, rSTAT
-Func_03A_56CC::
+UploadBGPalettesWithFade_Sub01_Sub01::
+Func_03A_56CC:: ; address name
     push hl
     ld a, [wC5EA]
     and a, $03
@@ -2915,7 +2921,7 @@ Jump_03A_61F0::
     ret
 
 Jump_03A_61F4::
-    call Func_03A_6846
+    call RunMultiHitCounter
     ret
 
 ; after an action: actions $4E/$4F with wDABA clear the actor's wD812 bit 0 (text $81); $B9 clears it (text $86); $D6 stores the actor in wC982; $15 and $D6 jump to resolve step $0E; otherwise wBattleSubPhase += 1 (E-0127)
@@ -4005,11 +4011,13 @@ Jump_03A_683B::
     ld [wDABA], a
     jr Jump_03A_688F
 
+; sets up and counts down the multi-hit counter in wDABA (1 or 3 hits for action $63), choosing a new target for $63 when the old one is gone (E-0128)
 ; 2 call sites from 2 routines (e.g. RunBattleStep4_Case03, RunBattleActions_Case03)
 ; reads: wBattleActor, wDABA, wBattleActionId, wBattleTarget
 ; writes: wDABA, wBattleSubPhase, wBattleResolveStep, wBattleTarget
 ; points at: wBattleSubPhase, wDAD8, wDABA
-Func_03A_6846::
+RunMultiHitCounter::
+Func_03A_6846:: ; address name
     ld a, [wBattleActor]
     call CarryUnlessWDA63SlotEmpty
     jr nc, Jump_03A_6855
@@ -4172,7 +4180,7 @@ Jump_03A_693C::
     ret
 
 Jump_03A_6940::
-    call Func_03A_6846
+    call RunMultiHitCounter
     ret
 
 ; entry 4 of the `rst $00` table in RunBattleStep4
@@ -5372,11 +5380,13 @@ Jump_03A_77CF::
     call CopyTargetNameToWC130
     ret
 
+; counts equal pairs among the hFFC6 target words at wC0A0 (or wC0A8 for the foe side); when not all are equal writes a message to wC130 (E-0128)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wBattleTarget, wBattleStatResultLo
 ; writes: wBattleStatResultLo
 ; points at: wC0A0, wC0A8, wC130
-Func_03A_77D3:: ; heuristic: follows a terminator; C0
+CheckAllTargetsSame:: ; heuristic: follows a terminator; C0
+Func_03A_77D3:: ; address name
     ldh a, [hFFC6]
     ld b, a
     ld a, b
@@ -5650,7 +5660,7 @@ Func_03A_791A:: ; address name
     ret
 
 ; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC130 (E-0077)
-; 6 call sites from 6 routines (e.g. Call774CWithWD890_Sub01, CopyTargetOrSideNameToWC130_77C3, Func_03A_77D3, CopyTargetOrSideNameToWC130_784A, ...)
+; 6 call sites from 6 routines (e.g. Call774CWithWD890_Sub01, CopyTargetOrSideNameToWC130_77C3, CheckAllTargetsSame, CopyTargetOrSideNameToWC130_784A, ...)
 ; reads: wBattleTarget
 ; writes: wD86C
 ; points at: wC130

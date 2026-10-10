@@ -1083,7 +1083,7 @@ Jump_00A_475C::
     ret
 
 ; draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122)
-; 5 call sites from 5 routines (e.g. Func_00A_43EC, RunWD06BSubState_60E9_Case02_Case00_Case02, Func_00A_47A4, SetModeState3AndSaveScreen, ...)
+; 5 call sites from 5 routines (e.g. Func_00A_43EC, RunWD06BSubState_60E9_Case02_Case00_Case02, StartScriptedEncounterHFFC6, SetModeState3AndSaveScreen, ...)
 ; reads: wCD04
 ; writes: wC902
 PickRandomWC902FromTable478F::
@@ -1108,10 +1108,12 @@ Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32, $34, $36, $38, $3A
     db $3C, $41, $46, $50, $50
 
+; loads encounter entry $481C + 8 * hFFC6 into wCFDC-wCFE2, sets the battle intro (wC903 = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the battle transition (E-0128)
 ; 14 call sites from 14 routines (e.g. ScriptCommand4A_Run_Case05, ScriptCommand66_Run_Case05, ScriptCommand48_Run_Case06, ScriptCommand41_Run_Case03, ...)
 ; reads: hFFC6
 ; writes: wCFDC, wCFDD, wCFDE, wCFDF, wCFE0, wCFE1, wCFE2, wC903, ...
-Func_00A_47A4::
+StartScriptedEncounterHFFC6::
+Func_00A_47A4:: ; address name
     push hl
     ldh a, [hFFC6]
     ld l, a

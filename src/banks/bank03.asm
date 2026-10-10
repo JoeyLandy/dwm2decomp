@@ -1539,7 +1539,7 @@ Jump_003_48B3::
     ld [wD7F1], a
     ld a, h
     ld [wD7F2], a
-    farcall Func_01D_6899
+    farcall DrawPartySpeciesSprites
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_003_48DC
@@ -1755,7 +1755,7 @@ Func_003_4A36:: ; address name
     ld a, $01
     ldh [hFFC6], a
     ld hl, wD000
-    call Func_000_2038
+    call LoadMonsterPictureAttributeBlock
     ld a, $01
     ldh [rVBK], a
     ld a, $02
@@ -2602,7 +2602,7 @@ Func_003_4FBB:: ; address name
     ld [wD09D], a
     ld a, h
     ld [wD09E], a
-    farcall Func_01D_682A
+    farcall LoadPartySpeciesSpriteGraphics
     xor a, a
     ld [rRAMG], a
     xor a, a
@@ -2732,7 +2732,7 @@ Jump_003_5057::
     ld a, h
     adc a, $D0
     ld h, a
-    call Func_000_2038
+    call LoadMonsterPictureAttributeBlock
     pop bc
 
 Jump_003_50AC::
@@ -3145,7 +3145,7 @@ Jump_003_5328::
 Jump_003_5330::
     bit 2, a
     ret z
-    farcall Func_016_590C
+    farcall SortInventory
     call ShowSelectedItemDescription
     call Func_003_592E
     ret
@@ -6654,7 +6654,7 @@ Jump_003_6C10::
     ld a, [wMenuPageCount]
     cp a, $02
     ret c
-    call Func_003_7A58
+    call ComputeMenuPagesForWD0C7Items
     ld hl, vBGMap0 + $22F
     ld a, [wC3C7]
     call WriteVRAMByte
@@ -8397,7 +8397,7 @@ Func_003_76AD:: ; address name
     farcall CopyBlockToTileBuffer
 
 Jump_003_76C5::
-    call Func_003_7A58
+    call ComputeMenuPagesForWD0C7Items
     ret
 
 ; builds blocks $21-$23 and copies block $24 (E-0122)
@@ -8978,10 +8978,12 @@ Jump_003_7A53::
     or a, a
     ret
 
+; from wD0C7 items computes wMenuPageCount (4 rows per page, up to 8 pages), wMenuLastPageRows and wMenuRowCount for wMenuPage, and draws the page indicator (E-0128)
 ; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_Case01_Case01)
 ; reads: wD0C7, wMenuPage, wMenuLastPageRows, wMenuPageCount
 ; writes: wMenuLastPageRows, wMenuPageCount, wMenuRowCount, wC3C9, wC3C7, wC3C6, wC3C8, wC3CA
-Func_003_7A58::
+ComputeMenuPagesForWD0C7Items::
+Func_003_7A58:: ; address name
     ld a, [wD0C7]
     or a, a
     jr z, Jump_003_7A80

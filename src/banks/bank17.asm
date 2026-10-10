@@ -202,7 +202,7 @@ Jump_017_41F4::
     ret
 
 ; when the Super Game Boy is active, converts the four palettes pointed to by wC577-wC57E into wOBJPaletteBuffer, wC4E7, wC4EF and wC4F7 (Func_017_4258) (E-0121)
-; 7 call sites from 7 routines (e.g. SendSGBPaletteSetPacket, Func_002_5F9B, GameMode5_Init_Case00, Func_007_600E, ...)
+; 7 call sites from 7 routines (e.g. SendSGBPaletteSetPacket, Func_002_5F9B, GameMode5_Init_Case00, ResetLinkScreenPalettes, ...)
 ; reads: wSGBActive, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
 ; points at: wOBJPaletteBuffer, wC4E7, wC4EF, wC4F7
 LoadSGBObjectPalettesFromPointers::

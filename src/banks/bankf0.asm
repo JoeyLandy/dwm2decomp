@@ -3306,7 +3306,7 @@ Jump_0F0_5DA0:: ; address name
     ld [wD7F3], a
     ld a, e
     ld [wD7F4], a
-    farcall Func_01D_6C14
+    farcall LoadTileListSixPerCall
     ld a, [wD7F5]
     cp a, $FF
     ret nz
@@ -3511,7 +3511,7 @@ Jump_0F0_5EF9:: ; address name
     ld [wD7F1], a
     ld a, h
     ld [wD7F2], a
-    farcall Func_01D_682A
+    farcall LoadPartySpeciesSpriteGraphics
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3674,7 +3674,7 @@ Jump_0F0_6014::
 ; writes: hFFBA, wD781
 RunWD781Step_F0_5DE8_Case07::
 Jump_0F0_6041:: ; address name
-    farcall Func_01D_64D6
+    farcall HandleListCursorInput_1D
     ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_0F0_6059

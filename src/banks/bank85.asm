@@ -171,7 +171,7 @@ Jump_085_40C3:: ; address name
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld hl, wSpriteSlotCount
@@ -443,7 +443,7 @@ Jump_085_429B:: ; address name
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld hl, wSpriteSlotCount
@@ -1467,7 +1467,7 @@ ScriptCommand72_Run_Case00::
 Jump_085_493E:: ; address name
     ld a, $30
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1580,7 +1580,7 @@ ScriptCommand71_Run_Case00::
 Jump_085_49EB:: ; address name
     ld a, $2F
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1624,7 +1624,7 @@ ScriptCommand7B_Run_Case00::
 Jump_085_4A1C:: ; address name
     ld a, $15
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1675,7 +1675,7 @@ Jump_085_4A58:: ; address name
     call SetFlagBit
     ld a, $14
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2925,7 +2925,7 @@ Jump_085_51DC:: ; address name
 Jump_085_51E9::
     ld a, [de]
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3273,7 +3273,7 @@ Jump_085_53C3:: ; address name
 Jump_085_53D0::
     ld a, $1B
     ldh [hFFC6], a
-    farcall Func_00A_47A4
+    farcall StartScriptedEncounterHFFC6
     ld hl, wScriptStep
     inc [hl]
     ret

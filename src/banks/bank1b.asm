@@ -569,7 +569,7 @@ Func_01B_43FA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_Case00::
 Jump_01B_4402:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State
@@ -577,7 +577,7 @@ Jump_01B_4402:: ; address name
 ; points at: wC5ED
 RunWC582State_Case01::
 Jump_01B_4406:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -618,7 +618,7 @@ Func_01B_4431:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_4431_Case00::
 Jump_01B_4439:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State_4431
@@ -626,7 +626,7 @@ Jump_01B_4439:: ; address name
 ; points at: wC5ED
 RunWC582State_4431_Case01::
 Jump_01B_443D:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -667,7 +667,7 @@ Func_01B_4468:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_4468_Case00::
 Jump_01B_4470:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State_4468
@@ -675,7 +675,7 @@ Jump_01B_4470:: ; address name
 ; points at: wC5ED
 RunWC582State_4468_Case01::
 Jump_01B_4474:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -716,7 +716,7 @@ Func_01B_449F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_449F_Case00::
 Jump_01B_44A7:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State_449F
@@ -724,7 +724,7 @@ Jump_01B_44A7:: ; address name
 ; points at: wC5ED
 RunWC582State_449F_Case01::
 Jump_01B_44AB:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -765,7 +765,7 @@ Func_01B_44D6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_44D6_Case00::
 Jump_01B_44DE:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State_44D6
@@ -773,7 +773,7 @@ Jump_01B_44DE:: ; address name
 ; points at: wC5ED
 RunWC582State_44D6_Case01::
 Jump_01B_44E2:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -814,7 +814,7 @@ Func_01B_450D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_450D_Case00::
 Jump_01B_4515:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State_450D
@@ -822,7 +822,7 @@ Jump_01B_4515:: ; address name
 ; points at: wC5ED
 RunWC582State_450D_Case01::
 Jump_01B_4519:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -863,7 +863,7 @@ Func_01B_4544:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_4544_Case00::
 Jump_01B_454C:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State_4544
@@ -871,7 +871,7 @@ Jump_01B_454C:: ; address name
 ; points at: wC5ED
 RunWC582State_4544_Case01::
 Jump_01B_4550:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -912,7 +912,7 @@ Func_01B_457B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWC582State_457B_Case00::
 Jump_01B_4583:: ; address name
-    call Func_01B_468A
+    call LinkSendStepWithBuffer
     ret
 
 ; entry 1 of the `rst $00` table in RunWC582State_457B
@@ -920,7 +920,7 @@ Jump_01B_4583:: ; address name
 ; points at: wC5ED
 RunWC582State_457B_Case01::
 Jump_01B_4587:: ; address name
-    call Func_01B_4736
+    call LinkReceiveStepWithBuffer
     ld hl, wC5ED
     bit 7, [hl]
     res 7, [hl]
@@ -1066,11 +1066,13 @@ Jump_01B_4676::
     set 7, [hl]
     ret
 
+; link: sends $F9 when not connected; otherwise reads the received byte, polls the joypad and sends the queued byte or the next byte of the transfer buffer wC590 (E-0128)
 ; 8 call sites from 8 routines (e.g. RunWC582State_Case00, RunWC582State_4431_Case00, RunWC582State_4468_Case00, RunWC582State_449F_Case00, ...)
 ; reads: wC57F, wC5ED, wC594, rSB, wC590, wC591, wC592, wC593, ...
 ; writes: wC582, wC586, wC58F, wC590, wC591, wC592, wC593, wC595, ...
 ; points at: wC592, wC5ED
-Func_01B_468A::
+LinkSendStepWithBuffer::
+Func_01B_468A:: ; address name
     ld a, [wC57F]
     bit 1, a
     jr nz, Jump_01B_469B
@@ -1149,11 +1151,13 @@ Jump_01B_471E::
     ld a, $F0
     jp StartSerialTransferInternalClock
 
+; link: reads the received byte; stores it in the transfer buffer wC590 while bytes remain, else as the remote joypad; handles the $F3 resync (E-0128)
 ; 8 call sites from 8 routines (e.g. RunWC582State_Case01, RunWC582State_4431_Case01, RunWC582State_4468_Case01, RunWC582State_449F_Case01, ...)
 ; reads: wC57F, wC58C, rSB, wC594, wC586, wC590, wC591, wC592, ...
 ; writes: wC586, wC58F, wC582, wC590, wC591, wC592, wC593, wJoypadHeld, ...
 ; points at: wC5ED, wC592
-Func_01B_4736::
+LinkReceiveStepWithBuffer::
+Func_01B_4736:: ; address name
     ld a, [wC57F]
     bit 1, a
     jr nz, Jump_01B_47B6
@@ -5560,7 +5564,7 @@ Jump_01B_6A89:: ; address name
     inc a
     ld [wD7DC], a
     call ClearTileRowsFromWD7DC
-    call Func_01B_7537
+    call DrawWD7DDRecordNamesAndIcons
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5914,7 +5918,7 @@ Jump_01B_6CB8:: ; address name
     ld a, [wC52B]
     and a, a
     ret nz
-    call Func_01B_7537
+    call DrawWD7DDRecordNamesAndIcons
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -6508,10 +6512,10 @@ Jump_01B_7076::
 ; writes: wD7F1
 ScriptCommandEF_Run_Bank1B_Case0E_Case02::
 Jump_01B_707E:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
@@ -6828,7 +6832,7 @@ Func_01B_7205:: ; address name
     call ClearTileRowsFromWD7DC
     pop af
     ld [wD7DC], a
-    call Func_01B_7537
+    call DrawWD7DDRecordNamesAndIcons
     ret
 
 ; only called from ScriptCommandEF_Run_Bank1B_Case04_Case0A (E-0047)
@@ -7179,7 +7183,7 @@ Func_01B_7449:: ; address name
     ret
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
-; 2 call sites from 2 routines (e.g. Func_01B_7537, DrawWD789Cell5RecordPanel)
+; 2 call sites from 2 routines (e.g. DrawWD7DDRecordNamesAndIcons, DrawWD789Cell5RecordPanel)
 ; reads: hFFC6, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
 LoadFamilyIconTileForRecordB_Bank1B::
@@ -7313,11 +7317,13 @@ Jump_01B_7533::
     call SetDefaultStringWindow_Bank1B
     ret
 
+; for up to wD7DC records listed at wD7DD draws each name at Data_01B_75A8[n] and loads its family icon into tile Data_01B_75B0[n] (E-0128)
 ; 3 call sites from 3 routines (e.g. ClearRecordPanelTiles, ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case05_Case00)
 ; reads: wD7DC
 ; writes: rRAMG2, rRAMB, wC8D9, wD7F1
 ; points at: wD7DD
-Func_01B_7537::
+DrawWD7DDRecordNamesAndIcons::
+Func_01B_7537:: ; address name
     ld a, [wD7DC]
     and a, a
     jr z, Jump_01B_75A7

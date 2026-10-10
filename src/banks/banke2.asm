@@ -117,7 +117,7 @@ Func_0E2_40BF:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_40D8::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_40E8
@@ -178,7 +178,7 @@ Jump_0E2_4139::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4149::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4159
@@ -318,7 +318,7 @@ Jump_0E2_423A::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_424E::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4262
@@ -328,7 +328,7 @@ Jump_0E2_424E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4262::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4276
@@ -687,7 +687,7 @@ Jump_0E2_44B5::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_44C9::
-    farcall Func_005_517D
+    farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_44DD
@@ -719,7 +719,7 @@ Jump_0E2_44F3::
 
 Jump_0E2_450A::
     call AIScore_Sap_Sub02
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4521
@@ -729,7 +729,7 @@ Jump_0E2_450A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4521::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4535
@@ -827,7 +827,7 @@ Jump_0E2_45BE::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_45D5::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_45E9
@@ -837,7 +837,7 @@ Jump_0E2_45D5::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_45E9::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_45FD
@@ -986,7 +986,7 @@ Jump_0E2_46E4::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_46F8::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_470C
@@ -996,7 +996,7 @@ Jump_0E2_46F8::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_470C::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4720
@@ -1045,7 +1045,7 @@ Jump_0E2_4752::
 
 Jump_0E2_4762::
     call WeighWD044RuleBit5
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4779
@@ -1055,7 +1055,7 @@ Jump_0E2_4762::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4779::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_478D
@@ -1096,7 +1096,7 @@ Func_0E2_47AB:: ; address name
     ret z
     ld bc, $0035
     call AccumulateBank6WordToDA6E
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_47CA
@@ -1156,7 +1156,7 @@ Jump_0E2_4818::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_482C::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4840
@@ -1166,7 +1166,7 @@ Jump_0E2_482C::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4840::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4854
@@ -1205,7 +1205,7 @@ Jump_0E2_486E::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4885::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4899
@@ -1215,7 +1215,7 @@ Jump_0E2_4885::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4899::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_48AD
@@ -1326,7 +1326,7 @@ Func_0E2_493F:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_517D
+    farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_495C
@@ -1463,7 +1463,7 @@ Jump_0E2_4A31::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4A41::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A51
@@ -1547,7 +1547,7 @@ Jump_0E2_4ACF::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4ADF::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4AEF
@@ -1650,7 +1650,7 @@ Jump_0E2_4B94::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4BA4::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4BB4
@@ -1756,7 +1756,7 @@ Jump_0E2_4C59::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4C69::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4C79
@@ -1848,7 +1848,7 @@ Jump_0E2_4CFF::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4D0F::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4D1F
@@ -1927,7 +1927,7 @@ Jump_0E2_4D94::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4DA4::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4DB4
@@ -1988,7 +1988,7 @@ Jump_0E2_4E05::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4E15::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E25
@@ -2059,7 +2059,7 @@ Jump_0E2_4E8A::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4E9A::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4EAA
@@ -2168,7 +2168,7 @@ Jump_0E2_4F5D::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4F6D::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_4F7D
@@ -2479,7 +2479,7 @@ Jump_0E2_517E::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_518E::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_51A2
@@ -2489,7 +2489,7 @@ Jump_0E2_518E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_51A2::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_51B6
@@ -2533,7 +2533,7 @@ Func_0E2_51DB:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_604C
+    farcall FailIfFoeHurtAndHealerCanCast
     ld a, c
     cp a, $01
     jr z, Jump_0E2_51F5
@@ -2580,7 +2580,7 @@ Jump_0E2_5223::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5236::
-    farcall Func_005_604C
+    farcall FailIfFoeHurtAndHealerCanCast
     ld a, c
     cp a, $01
     jr z, Jump_0E2_524A
@@ -2791,7 +2791,7 @@ Jump_0E2_53B2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_53C2::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_53D2
@@ -2958,7 +2958,7 @@ Jump_0E2_54DD::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_54F1::
-    farcall Func_005_517D
+    farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5505
@@ -3029,7 +3029,7 @@ Jump_0E2_5562::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5576::
-    farcall Func_005_517D
+    farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_558A
@@ -3151,7 +3151,7 @@ Jump_0E2_5644::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5658::
-    farcall Func_005_517D
+    farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_566C
@@ -3250,7 +3250,7 @@ Jump_0E2_5703::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5717::
-    farcall Func_005_517D
+    farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_572B
@@ -3366,7 +3366,7 @@ Jump_0E2_57E6::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_57F6::
-    farcall Func_005_5052
+    farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
     jr nz, Jump_0E2_5806
@@ -3471,7 +3471,7 @@ Jump_0E2_58A2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_58B6::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_58CA
@@ -3481,7 +3481,7 @@ Jump_0E2_58B6::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_58CA::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_58DE
@@ -3563,7 +3563,7 @@ Func_0E2_591F:: ; address name
 
 Jump_0E2_5944::
     call WeighWD044RuleBit2
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_595B
@@ -3573,7 +3573,7 @@ Jump_0E2_5944::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_595B::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_596F
@@ -3624,7 +3624,7 @@ Jump_0E2_59A8::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_59BC::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_59D0
@@ -3634,7 +3634,7 @@ Jump_0E2_59BC::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_59D0::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_59E4
@@ -3693,7 +3693,7 @@ Jump_0E2_5A2B::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5A3F::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5A53
@@ -3703,7 +3703,7 @@ Jump_0E2_5A3F::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A53::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5A67
@@ -3763,7 +3763,7 @@ Jump_0E2_5AA4::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5AB8::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5ACC
@@ -3773,7 +3773,7 @@ Jump_0E2_5AB8::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5ACC::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5AE0
@@ -4022,7 +4022,7 @@ Jump_0E2_5C85::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5C99::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5CAD
@@ -4032,7 +4032,7 @@ Jump_0E2_5C99::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5CAD::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5CC1
@@ -4091,7 +4091,7 @@ Jump_0E2_5D00::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5D14::
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5D28
@@ -4101,7 +4101,7 @@ Jump_0E2_5D14::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5D28::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5D3C
@@ -4354,7 +4354,7 @@ Func_0E2_5EC0:: ; address name
 
 Jump_0E2_5ED9::
     call WeighWD044RuleBit5
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5EF0
@@ -4364,7 +4364,7 @@ Jump_0E2_5ED9::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5EF0::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5F04
@@ -4404,7 +4404,7 @@ Jump_0E2_5F23::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F37::
-    farcall Func_005_517D
+    farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5F4B
@@ -4423,7 +4423,7 @@ Jump_0E2_5F4B::
 
 Jump_0E2_5F5B::
     call WeighWD044RuleBit5
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5F72
@@ -4433,7 +4433,7 @@ Jump_0E2_5F5B::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F72::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5F86
@@ -4474,7 +4474,7 @@ Func_0E2_5F94:: ; address name
 
 Jump_0E2_5FAD::
     call WeighWD044RuleBit5
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5FC4
@@ -4484,7 +4484,7 @@ Jump_0E2_5FAD::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5FC4::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5FD8
@@ -4532,7 +4532,7 @@ Func_0E2_5FE8:: ; address name
 
 Jump_0E2_6013::
     call WeighWD044RuleBit5
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_602A
@@ -4542,7 +4542,7 @@ Jump_0E2_6013::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_602A::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_603E
@@ -4573,7 +4573,7 @@ Func_0E2_6044:: ; address name
 
 Jump_0E2_605D::
     call WeighWD044RuleBit5
-    farcall Func_005_69F5
+    farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6074
@@ -4583,7 +4583,7 @@ Jump_0E2_605D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_6074::
-    farcall Func_005_6A6B
+    farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6088
@@ -4664,7 +4664,7 @@ Func_0E2_60D7:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_60FA::
-    farcall Func_005_5500
+    farcall FailIfFoeSkill3DThreatensActorHP
     ld a, c
     cp a, $01
     jr z, Jump_0E2_610E
@@ -4840,7 +4840,7 @@ Jump_0E2_620D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_621D::
-    farcall Func_005_5500
+    farcall FailIfFoeSkill3DThreatensActorHP
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6231

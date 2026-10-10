@@ -453,7 +453,7 @@ Jump_004_4309::
     ret
 
 ; hFFC6/hFFC7 = graphics number, hFFCA/hFFCB = VRAM destination: with hFFC8 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
-; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, Func_004_4AA8, Func_004_4129, ScriptCommand41_Run_Case09, ...)
+; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, Func_004_4129, ScriptCommand41_Run_Case09, ...)
 ; reads: hFFC8, hFFC6, hFFC7, hFFCA, hFFCB, wIsCGB, hFFC9
 ; points at: wOBJPaletteBuffer
 DecompressGraphicsHFFC6ToHFFCA::
@@ -1663,10 +1663,12 @@ Jump_004_4A43::
     ret
     INCBIN "dwm2-cobi-us.gbc", $010A46, $62
 
+; hFF8B = sprite mode from story flags $19F, $25 and 2 and bit 3 of hFF8C, then loads the matching player and follower sprite graphics (E-0128)
 ; 32 call sites from 32 routines (e.g. Func_002_4628, RunWC8C7Phase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
 ; reads: hFF8C, hFF8B
 ; writes: hFF8B, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-Func_004_4AA8::
+LoadPlayerAndFollowerSpriteGraphics::
+Func_004_4AA8:: ; address name
     ld a, $00
     ldh [hFF8B], a
     ld de, $019F
@@ -1697,7 +1699,7 @@ Jump_004_4AD2::
     or a, a
     jr nz, Jump_004_4ADE
     call LoadPlayerSpriteGraphics
-    call Func_000_228A
+    call LoadPlayerAndFollowerSpriteGraphics_Sub01
     ret
 
 Jump_004_4ADE::
@@ -1744,12 +1746,12 @@ Jump_004_4AF1::
 
 Jump_004_4B23::
     call LoadPlayerSpriteGraphics
-    call Func_000_228A
+    call LoadPlayerAndFollowerSpriteGraphics_Sub01
     call LoadAltObjectGraphicsIfHFF8CBit3
     ret
 
 ; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream named by hFF94/hFF95 when bit 7 of hFF93 is set (E-0127)
-; 5 call sites from 3 routines (e.g. Func_004_4AA8, ScriptCommandA0_Run_Case04, ScriptCommandA1_Run_Case02)
+; 5 call sites from 3 routines (e.g. LoadPlayerAndFollowerSpriteGraphics, ScriptCommandA0_Run_Case04, ScriptCommandA1_Run_Case02)
 ; reads: hFF93, hFF94, hFF95
 ; writes: hFFC6, hFF8A, hFFC7, hFFC9, hFFC8, hFFCA, hFFCB
 LoadPlayerSpriteGraphics::
@@ -1806,7 +1808,7 @@ Jump_004_4B5E::
     ret
 
 ; when hFF8C bit 3 is set: decompresses Data_07E_58FF (bank $7E) to vTiles0 + $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer (wC527 = $7F) (E-0120)
-; 1 call site from 1 routine (e.g. Func_004_4AA8)
+; 1 call site from 1 routine (e.g. LoadPlayerAndFollowerSpriteGraphics)
 ; reads: hFF8C
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
@@ -3845,7 +3847,7 @@ Jump_004_5AA5:: ; address name
     ld de, $006F
     call TestFlagBit
     jr c, Jump_004_5B16
-    farcall Func_012_7E0F
+    farcall FindPartyMemberWithSkill76To7DOr92
     ldh a, [hFFC7]
     bit 7, a
     jr z, Jump_004_5AC0

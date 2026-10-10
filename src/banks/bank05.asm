@@ -42,7 +42,7 @@ Func_005_4015:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
-; 8 call sites from 8 routines (e.g. Func_005_5500, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, AIScore_MPass_Sub01_Sub01, ...)
+; 8 call sites from 8 routines (e.g. FailIfFoeSkill3DThreatensActorHP, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, AIScore_MPass_Sub01_Sub01, ...)
 ; points at: wBattleMP
 GetBattleMP_Bank05::
 Func_005_401A:: ; address name
@@ -3211,11 +3211,13 @@ Func_005_5034:: ; address name
     cp a, $09
     ret
 
+; C = $FF when wCFEF is 0 or the occupied foes' average resistance level for skill wCFEF is at least 2, else $00 (E-0128)
 ; 14 call sites from 14 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_RobMagic, AIScore_MegaMagic, ...)
 ; reads: wCFEF, wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
-Func_005_5052::
+PassIfFoesAverageResistanceAtLeast2::
+Func_005_5052:: ; address name
     ld a, [wCFEF]
     or a, a
     jr z, Jump_005_50B4
@@ -3417,10 +3419,12 @@ Jump_005_517A::
     ld c, $01
     ret
 
+; C = 1 when the AI mode is below 2; otherwise $FF when the lowest DEF among occupied foes is below twice the actor's ATK, else $00 (E-0128)
 ; 7 call sites from 7 routines (e.g. AIScore_Sap, AIScore_Transform, AIScore_HighJump, AIScore_EvilSlash, ...)
 ; reads: wBattleActor, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
-Func_005_517D:: ; heuristic: follows a terminator; C0
+PassIfTwiceATKAboveLowestFoeDEF:: ; heuristic: follows a terminator; C0
+Func_005_517D:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -4080,10 +4084,12 @@ Func_005_54FD:: ; address name
     ld c, $00
     ret
 
+; C = 1 when the AI mode is below 2; otherwise $00 when a foe knowing skill $3D has 2 * MP + 2 * wD8B7 at least the actor's HP, else $FF (E-0128)
 ; 2 call sites from 2 routines (e.g. AIScore_StrongD, AIScore_SealPray)
 ; reads: wBattleActor
 ; points at: wD989, wBattleMP, wD8B7, wBattleHP
-Func_005_5500:: ; heuristic: follows a terminator; C0
+FailIfFoeSkill3DThreatensActorHP:: ; heuristic: follows a terminator; C0
+Func_005_5500:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -4977,10 +4983,12 @@ Jump_005_59BA::
     ld c, $01
     ret
 
+; C = 1 when the AI mode is below 3; otherwise $00 when another able ally knows a skill $16-$1A but has less MP than its cost (Data_005_5A33), else $FF (E-0128)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wD80D, wD989
-Func_005_59BD:: ; heuristic: follows a terminator; C0
+FailIfAllyLacksMPForHealSkill:: ; heuristic: follows a terminator; C0
+Func_005_59BD:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
@@ -5997,10 +6005,12 @@ Func_005_6039:: ; address name
     cp a, $0C
     ret
 
+; C = 1 when the AI mode is below 4; otherwise $00 when an occupied foe has HP at most half and a foe with personality Lo >= $C0 can cast a heal (Func_005_60BA), else $FF (E-0128)
 ; 2 call sites from 2 routines (e.g. AIScoreB_SquallHit, AIScore_SquallHit)
 ; reads: wBattleActor
 ; points at: wBattleHP, wBattleMaxHP, wSlotPersonalityLo
-Func_005_604C:: ; heuristic: follows a terminator; C0
+FailIfFoeHurtAndHealerCanCast:: ; heuristic: follows a terminator; C0
+Func_005_604C:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $04
@@ -6056,7 +6066,7 @@ Jump_005_6093::
     cp a, $C0
     jr c, Jump_005_60AD
     push bc
-    call Func_005_60BA
+    call SlotCHasCastableHealSkill
     pop bc
     jr nc, Jump_005_60B4
 
@@ -6077,10 +6087,12 @@ Jump_005_60B7::
     ld c, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_005_604C)
+; carry unless slot C has a heal skill ($16-$1A, $7B, $7C or $A1) that its status allows, is not the queued action, and whose MP cost (Data_005_614B) it can pay (E-0128)
+; 1 call site from 1 routine (e.g. FailIfFoeHurtAndHealerCanCast)
 ; reads: wQueuedActionId
 ; points at: wBattleTargetChoice, wBattleMP
-Func_005_60BA::
+SlotCHasCastableHealSkill::
+Func_005_60BA:: ; address name
     ld a, c
     ld hl, wBattleTargetChoice
     swap a
@@ -6157,7 +6169,7 @@ Jump_005_6102::
     ret
 
 ; C = slot: NZ when its status byte 1 bit 0 is set; otherwise the result of testing bit 3 of its side flag (wD80A for slots 0-3, wD80B for 4-7) (E-0117)
-; 1 call site from 1 routine (e.g. Func_005_60BA)
+; 1 call site from 1 routine (e.g. SlotCHasCastableHealSkill)
 ; points at: wD80D, wD80A
 TestSlotStatus1Bit0OrSideFlagBit3::
 Func_005_6127:: ; address name
@@ -6176,7 +6188,7 @@ Func_005_6127:: ; address name
     ret
 
 ; C = slot: Z clear when bit 6 of its status byte 1 (wD80D) is set; HL points at the byte (E-0114)
-; 1 call site from 1 routine (e.g. Func_005_60BA)
+; 1 call site from 1 routine (e.g. SlotCHasCastableHealSkill)
 ; points at: wD80D
 TestSlotStatus1Bit6::
 Func_005_6141:: ; address name
@@ -7765,11 +7777,13 @@ Jump_005_69F2::
     ld c, $FF
     ret
 
+; C = 1 for the player side outside link battles; otherwise like PassIfFoesAverageResistanceAtLeast2 (E-0128)
 ; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
 ; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
-Func_005_69F5:: ; heuristic: follows a terminator; C0
+ResistanceAverageGateForAISide:: ; heuristic: follows a terminator; C0
+Func_005_69F5:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_6A03
@@ -7849,11 +7863,13 @@ Jump_005_6A68::
     ld c, $01
     ret
 
+; C = 1 in link battles, for the player side, or when the AI mode is below 3; otherwise like PassIfFoesAverageResistanceAtLeast2 (E-0128)
 ; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
 ; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
-Func_005_6A6B:: ; heuristic: follows a terminator; C0
+ResistanceAverageGateForFoeAIMode3:: ; heuristic: follows a terminator; C0
+Func_005_6A6B:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_005_6AE5
@@ -7976,7 +7992,7 @@ Func_005_6B07:: ; address name
     ret
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 31 call sites from 31 routines (e.g. CheckFoeStatus7Bit2, Func_005_5500, Func_005_6A6B, FailIfAnyFoeFullyResistant, ...)
+; 31 call sites from 31 routines (e.g. CheckFoeStatus7Bit2, FailIfFoeSkill3DThreatensActorHP, ResistanceAverageGateForFoeAIMode3, FailIfAnyFoeFullyResistant, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank05::
 Func_005_6B16:: ; address name
@@ -8279,7 +8295,7 @@ Jump_005_6C7E::
     ret
 
 ; E = field number: A = bits 1-0 of [HL] for field 0, bits 3-2 for 1, bits 5-4 for 2, bits 7-6 for 3 (moved down to bits 1-0) (E-0092)
-; 8 call sites from 8 routines (e.g. AnyFoeNotFullyResistant, Func_005_69F5, Func_005_5052, Func_005_6A6B, ...)
+; 8 call sites from 8 routines (e.g. AnyFoeNotFullyResistant, ResistanceAverageGateForAISide, PassIfFoesAverageResistanceAtLeast2, ResistanceAverageGateForFoeAIMode3, ...)
 Get2BitFieldEOfHL::
 Func_005_6C86:: ; address name
     ld a, e

@@ -2390,7 +2390,7 @@ Jump_0A0_4F19::
 ; reads: wD802, wD800
 GameMode7_Update::
 Func_0A0_4F70:: ; address name
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD802]
     cp a, $FF
     ret z

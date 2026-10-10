@@ -3205,7 +3205,7 @@ Jump_0E0_5BB2::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    call Func_0E0_75BF
+    call ResetScreenPalettes_E0
     ld a, $FC
     call StartPaletteFade
     ld hl, wD09E
@@ -3701,7 +3701,7 @@ Jump_0E0_5F07::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    call Func_0E0_75BF
+    call ResetScreenPalettes_E0
     ld a, $FC
     call StartPaletteFade
     ld hl, wD09E
@@ -4406,7 +4406,7 @@ Jump_0E0_636C::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    call Func_0E0_75BF
+    call ResetScreenPalettes_E0
     ld a, $FC
     call StartPaletteFade
     ld hl, wD09E
@@ -5304,7 +5304,7 @@ Jump_0E0_694D::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    call Func_0E0_75BF
+    call ResetScreenPalettes_E0
     ld a, $FC
     call StartPaletteFade
     ld hl, wD09E
@@ -5768,7 +5768,7 @@ Jump_0E0_6CC8::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    call Func_0E0_75BF
+    call ResetScreenPalettes_E0
     ld a, $FC
     call StartPaletteFade
     ld hl, wD09E
@@ -6600,7 +6600,7 @@ Jump_0E0_72AF::
     ld [wD0A2], a
     ld a, h
     ld [wD0A3], a
-    call Func_0E0_75BF
+    call ResetScreenPalettes_E0
     ld a, $FC
     call StartPaletteFade
     ret
@@ -6761,7 +6761,7 @@ Jump_0E0_73C7::
     ld [wD0A2], a
     ld a, h
     ld [wD0A3], a
-    call Func_0E0_75BF
+    call ResetScreenPalettes_E0
     ld a, $FC
     call StartPaletteFade
     ld hl, wD09E
@@ -7174,11 +7174,13 @@ Jump_0E0_758D::
     jr nz, FillBGMapRectWithAWrapped
     ret
 
+; sets the DMG palettes $D2/$D2/$E2 (also in wD040) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wC51F and copies 8 bytes from $7641 to wC4FF (E-0128)
 ; 7 call sites from 7 routines (e.g. Func_0E0_5AD3_Table3_Case00, Func_0E0_5AD3_Table2_Case00, Func_0E0_5AD3_Case00_Case00, Func_0E0_5AD3_Case01_Case00, ...)
 ; reads: wC5E9, wC5EA, wC5EB, wSGBActive, wC51F, wC520
 ; writes: rBGP, rOBP0, rOBP1, wC577, wC578, wC579, wC57A, wC57B, ...
 ; points at: wC5E9, wD040, wC4FF
-Func_0E0_75BF::
+ResetScreenPalettes_E0::
+Func_0E0_75BF:: ; address name
     ld hl, wC5E9
     ld a, $D2
     ld [hl+], a

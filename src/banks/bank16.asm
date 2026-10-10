@@ -4026,11 +4026,13 @@ Func_016_5906:: ; address name
     pop hl
     ret
 
+; toggles the sort order in wC836 and sorts the 24 inventory slots by the key table Data_016_599E or Data_016_5A0E (empty slots last) (E-0128)
 ; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case00_Case01, RunBattleSetup_Case02_Case02, Func_0F1_4001_Case00_Case01)
 ; reads: wC836, wD09D, wD09E
 ; writes: wD09D, wD09E, wC836
 ; points at: wD09F, wInventory, wD0A0
-Func_016_590C::
+SortInventory::
+Func_016_590C:: ; address name
     ld hl, wD09F
     ld a, l
     ld [wD09D], a
@@ -4117,7 +4119,7 @@ Jump_016_597C::
     ret
 
 ; swaps wInventory[C] and wInventory[C + 1]; HL kept (E-0118)
-; 1 call site from 1 routine (e.g. Func_016_590C)
+; 1 call site from 1 routine (e.g. SortInventory)
 ; points at: wInventory
 SwapInventorySlotCWithNext::
 Func_016_598C:: ; address name
@@ -4857,7 +4859,7 @@ Jump_016_5EEC:: ; address name
     call FillBytes
     farcall CopyRectRecord796FToScreenBufferAndPlaySound6C
     call Func_016_64DC
-    call Func_016_6705
+    call DrawRecordListPageWithNumbers
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $080B
@@ -4885,7 +4887,7 @@ Jump_016_5F24:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_016_5F38
-    call Func_016_6705
+    call DrawRecordListPageWithNumbers
     ret
 
 Jump_016_5F38::
@@ -5051,7 +5053,7 @@ Jump_016_6058:: ; address name
     ld a, $BB
     ld [wC2C5], a
     call Func_016_64DC
-    call Func_016_6705
+    call DrawRecordListPageWithNumbers
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
@@ -6015,11 +6017,13 @@ Data_016_66F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_6701:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $99, $6B, $99
 
+; shows five record names of page wCFD1 at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or marks ($B6) beside them (E-0128)
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0D, Func_016_5D13_Case0C)
 ; reads: wC52D, wC52E, wC52F, wC530, wCFD1, wC6FD, wCFD2
 ; writes: wC52F, wC530, wC52D, wC52E
 ; points at: wD789
-Func_016_6705::
+DrawRecordListPageWithNumbers::
+Func_016_6705:: ; address name
     ld a, [wC52D]
     ld l, a
     ld a, [wC52E]
@@ -6142,7 +6146,7 @@ Func_016_67A5:: ; address name
     ret
 
 ; for B record indexes at HL shows each record name (or an empty one for $FF) as string 5 of category 8 at successive window rows from DE (E-0127)
-; 2 call sites from 2 routines (e.g. DrawWD868ValuesAtTiles23B0, Func_016_6705)
+; 2 call sites from 2 routines (e.g. DrawWD868ValuesAtTiles23B0, DrawRecordListPageWithNumbers)
 ; writes: rRAMG, rRAMB, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC130
 ShowRecordNamesListFromHL::

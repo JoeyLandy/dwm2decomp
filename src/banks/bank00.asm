@@ -711,11 +711,13 @@ Jump_000_0530::
     ret
     db $CD, $CC, $0B, $C9
 
+; in link mode: counts frames (resetting the game after an overflow), saves the joypad state and starts the next serial transfer of the queued byte or the joypad (E-0128)
 ; 8 call sites from 8 routines (e.g. GameMode5_Update_Case04, GameMode5_Update_Case03, GameMode5_Update_Case02, RunWD06AState_6C12_Case08_Case04, ...)
 ; reads: wC58A, wC58D, wC58E, wC57F, wC581, wC5ED, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wC58D, wC58E, wC56A, wC56B, wC582, wC595, wC596, rVBK, ...
 ; points at: wC592, wGameMode, wC604
-Func_000_0535::
+LinkExchangeJoypadPerFrame::
+Func_000_0535:: ; address name
     ld a, [wC58A]
     or a, a
     ret z
@@ -1564,7 +1566,7 @@ Func_000_09F3:: ; address name
     ret
 
 ; shifts wJoypadHeld to wJoypadHeldPrev and reads the new state into wJoypadHeld (directly, or through the SGB path when wSGBActive)
-; 6 call sites from 4 routines (e.g. VBlankHandler, Func_000_0535, Func_01B_468A, LinkExchangeJoypadByte)
+; 6 call sites from 4 routines (e.g. VBlankHandler, LinkExchangeJoypadPerFrame, LinkSendStepWithBuffer, LinkExchangeJoypadByte)
 ; reads: wSGBActive, wJoypadHeld, wC474, wC560, wC476
 ; writes: wJoypadHeldPrev, wJoypadHeld, wC561, wC560, wC55D, rP1
 PollJoypad::
@@ -1643,7 +1645,7 @@ Func_000_0A61:: ; address name
     ret
 
 ; wJoypadPressed = buttons newly held since the last poll; wJoypadPressedRepeat = the same, plus an auto-repeat that fires after $14 frames and then every 6 (timer in wJoypadRepeatTimer)
-; 9 call sites from 5 routines (e.g. VBlankHandler, Func_01B_4736, Func_01B_468A, LinkReceiveJoypadByte, ...)
+; 9 call sites from 5 routines (e.g. VBlankHandler, LinkReceiveStepWithBuffer, LinkSendStepWithBuffer, LinkReceiveJoypadByte, ...)
 ; reads: wC58A, wC55D, wJoypadPressed, wC566, wC560, wJoypadHeld
 ; writes: wC560, wC561, wJoypadPressedRepeat, wJoypadPressed, wJoypadRepeatTimer, wC567, wC566, wC568
 ; points at: wJoypadHeld, wC560, wC568, wJoypadRepeatTimer
@@ -1748,7 +1750,7 @@ Func_000_0B0D:: ; address name
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.
-; 24 call sites from 18 routines (e.g. LoadMonsterPicture, Func_000_228A, LoadBGPaletteBufferFromBank, DecompressGraphicsHFFC6ToHFFCA, ...)
+; 24 call sites from 18 routines (e.g. LoadMonsterPicture, LoadPlayerAndFollowerSpriteGraphics_Sub01, LoadBGPaletteBufferFromBank, DecompressGraphicsHFFC6ToHFFCA, ...)
 ; writes: rROMB0
 CopyFromBank::
 Func_000_0B18:: ; address name
@@ -2192,7 +2194,7 @@ Jump_000_0CF0::
     ret
 
 ; C2 (E-0016): the same expansion as Func_000_0C69 but for VRAM destinations: each store waits for STAT ($FF41) bit 1 to clear with interrupts disabled, back-references read the already-written VRAM, and the lock byte $FFD6 is taken on entry and cleared on exit.
-; 126 call sites from 74 routines (e.g. LoadMonsterPicture, Func_000_228A, LoadMapScreen, Func_000_1C0C, ...)
+; 126 call sites from 74 routines (e.g. LoadMonsterPicture, LoadPlayerAndFollowerSpriteGraphics_Sub01, LoadMapScreen, LoadMapHeader, ...)
 ; reads: hDecompressLock, rSTAT, hFFC5, hFFBF, hFFC0, hDecompressDestLo, hDecompressDestHi, hFFC2, ...
 ; writes: hDecompressLock, hFFC5, rROMB0, hFFC0, hFFBF
 ; points at: hDecompressMarker
@@ -2375,7 +2377,7 @@ Func_000_0DA8:: ; address name
     ret
 
 ; wC56F-wC571 = wC5E9-wC5EB; then clears wFadeLevel and the four bytes after it and wFadeState, and sets wC56D = 7 and wC56E = $1F (E-0090)
-; 4 call sites from 4 routines (e.g. Func_000_0150, Func_002_5F9B, Func_007_600E, Func_0E0_75BF)
+; 4 call sites from 4 routines (e.g. Func_000_0150, Func_002_5F9B, ResetLinkScreenPalettes, ResetScreenPalettes_E0)
 ; reads: wC5E9, wC5EA, wC5EB
 ; writes: wFadeState, wC56D, wC56E
 ; points at: wC56F, wFadeLevel
@@ -2791,7 +2793,7 @@ Func_000_1051:: ; address name
     ld a, [wFadeLevel]
     ld b, a
     ld a, e
-    call Func_000_10AB
+    call AdjustColorChannelForFade
     ld l, a
     sla e
     rl d
@@ -2800,7 +2802,7 @@ Func_000_1051:: ; address name
     sla e
     rl d
     ld a, d
-    call Func_000_10AB
+    call AdjustColorChannelForFade
     ld d, a
     ld e, $00
     srl d
@@ -2814,7 +2816,7 @@ Func_000_1051:: ; address name
     ld a, d
     srl a
     srl a
-    call Func_000_10AB
+    call AdjustColorChannelForFade
     sla a
     sla a
     add a, h
@@ -2831,9 +2833,11 @@ Func_000_1051:: ; address name
     ld [hl], d
     ret
 
+; A = the 5-bit colour channel A moved by B toward white or black (bit 7 of wC56D), clamped; the following entries step the CGB and DMG fades (E-0128)
 ; 3 call sites from 1 routine (e.g. StepFade_Sub01_Sub01_Sub02)
 ; reads: wC56D
-Func_000_10AB::
+AdjustColorChannelForFade::
+Func_000_10AB:: ; address name
     push af
     ld a, [wC56D]
     ld c, a
@@ -2905,7 +2909,7 @@ Jump_000_1109::
     ret
 
 ; for each of bits 0, 1, 2 of wC56D that is set, lightens wC56F, wC570 or wC571 by wFadeLevel into wC5E9, wC5EA or wC5EB (LightenDMGPaletteByFadeLevel) (E-0117)
-; 2 call sites from 1 routine (e.g. Func_000_10AB)
+; 2 call sites from 1 routine (e.g. AdjustColorChannelForFade)
 ; reads: wC56D, wC56F, wC570, wC571, wFadeLevel
 ; points at: wC5E9
 LightenSelectedDMGPalettes::
@@ -3903,7 +3907,7 @@ Func_000_16AA:: ; address name
     ret
 
 ; B = B / A (quotient), A = remainder; clobbers D, E
-; 29 call sites from 29 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, Func_001_6903, SetupInventoryMenuPages_Bank03, Func_005_69F5, ...)
+; 29 call sites from 29 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, Func_001_6903, SetupInventoryMenuPages_Bank03, ResistanceAverageGateForAISide, ...)
 DivideBByA::
 Func_000_16BF:: ; address name
     ld d, $08
@@ -4021,7 +4025,7 @@ Jump_000_171A::
     ret
 
 ; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
-; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, Func_002_665A, WithSRAMDraw4ACEAnd4BE8_Sub01, ...)
+; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, DrawGoldDigitsAtHLWrapped, WithSRAMDraw4ACEAnd4BE8_Sub01, ...)
 ; reads: hFFC8, hFFC7, wC8C0
 ; writes: hFFC9, hFFC8, hFFC7, hFFC6, wC8C0
 ; points at: wC8C0
@@ -4925,10 +4929,12 @@ Func_000_1BAD:: ; address name
     ld [rROMB0], a
     ret
 
+; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use RunWCC44Type_420D) (E-0128)
 ; 3 call sites from 3 routines (e.g. Func_002_4628, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, hMapId
 ; writes: rROMB0, wC46B, wC46C, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, ...
-Func_000_1C0C::
+LoadMapHeader::
+Func_000_1C0C:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_000_1C1A
@@ -5016,7 +5022,7 @@ Jump_000_1C93::
     ret
 
 ; on map $19, if story flag $D1 is set, wC90D = $0B (the wCC37 check never returns, since the flags still hold the map comparison) (E-0122)
-; 1 call site from 1 routine (e.g. Func_000_1C0C)
+; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: hMapId, wCC37
 ; writes: wC90D
 SetWC90DTo0BOnMap19IfFlagD1::
@@ -5034,7 +5040,7 @@ Func_000_1CA1:: ; address name
     ret
 
 ; when bit 1 of wCC37 is set (and bit 5 clear) on map 1 or 2, shifts a tile row in vTiles2 and copies $40 bytes from $1D07 (tile animation) (E-0125)
-; 1 call site from 1 routine (e.g. Func_000_1C0C)
+; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: wCC37, hMapId
 ShiftAnimatedTilesOnMap1Or2::
 Func_000_1CB7:: ; address name
@@ -5091,7 +5097,7 @@ Func_000_1CF9:: ; address name
     db $7B, $6A, $BF, $E6, $FF, $22, $9F, $10, $FD, $12, $8F, $08, $FF, $04, $FF, $F8
 
 ; sets wC195/wC197 to $11/$2C on maps $30 and $B8, $22/$30 on maps $63-$66, $12/$2C on map $70 (E-0125)
-; 1 call site from 1 routine (e.g. Func_000_1C0C)
+; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: hMapId
 ; writes: wC195, wC197
 SetWC195AndWC197ForSpecialMaps::
@@ -5133,7 +5139,7 @@ Jump_000_1D7E::
     ret
 
 ; HL = the word at MapTable + 2 * hMapId (bank $11)
-; 2 call sites from 2 routines (e.g. LoadMapScreen, Func_000_1C0C)
+; 2 call sites from 2 routines (e.g. LoadMapScreen, LoadMapHeader)
 ; reads: hMapId
 MapRecordPointer::
 Func_000_1D7F:: ; address name
@@ -5550,7 +5556,7 @@ Jump_000_1F77::
     ret
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
-; 102 call sites from 78 routines (e.g. Func_000_228A, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, Func_002_6788, ...)
+; 102 call sites from 78 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, Func_002_6788, ...)
 ; writes: hFFC6
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
@@ -5562,7 +5568,7 @@ Func_000_1F80:: ; address name
     ret
 
 ; like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)
-; 98 call sites from 54 routines (e.g. Func_000_228A, Func_002_6788, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
+; 98 call sites from 54 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, Func_002_6788, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
 ; writes: hFFC6, hFFC7
 LoadSRAMRecordWord::
 Func_000_1F89:: ; address name
@@ -5576,7 +5582,7 @@ Func_000_1F89:: ; address name
     ret
 
 ; A = record, C = field offset (SRAMRecordAddress): copies three bytes from the record to hFFC6-hFFC8; HL kept (E-0108)
-; 3 call sites from 2 routines (e.g. Func_012_77AC, ScriptCommandE8_Run_Case09_Case13_Sub01)
+; 3 call sites from 2 routines (e.g. TriggerEventC9IfExpDigitsRepeat, ScriptCommandE8_Run_Case09_Case13_Sub01)
 ; writes: hFFC6, hFFC7, hFFC8
 LoadRecordThreeBytesToHFFC6::
 Func_000_1F95:: ; address name
@@ -5705,10 +5711,12 @@ Func_000_1FE3:: ; address name
     call CopyFromBank
     ret
 
+; copies the 6 x 6 picture attribute block of species DE (table $447E in bank $38, default $20E9) plus hFFC6 to HL in WRAM bank 2 (E-0128)
 ; 2 call sites from 2 routines (e.g. DrawRecordMonsterPictureForWC46D, Func_003_4FBB_Case01)
 ; reads: hFFC6
 ; writes: rROMB0, rSVBK
-Func_000_2038::
+LoadMonsterPictureAttributeBlock::
+Func_000_2038:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $38
@@ -6178,11 +6186,13 @@ Jump_000_227F::
     ld [rRAMG], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_004_4AA8)
+; only called from LoadPlayerAndFollowerSpriteGraphics (E-0047)
+; 2 call sites from 1 routine (e.g. LoadPlayerAndFollowerSpriteGraphics)
 ; reads: wC6FD, hFFC6, hFFCA, hFFCB, hFFC8, hFFC9, wIsCGB, hFFC7
 ; writes: hFFCA, hFFCB, hFFC8, hFFC9, rRAMG, rROMB0
 ; points at: wC701, wC6FE, wOBJPaletteBuffer
-Func_000_228A::
+LoadPlayerAndFollowerSpriteGraphics_Sub01::
+Func_000_228A:: ; address name
     ld a, [wC6FD]
     or a, a
     ret z
@@ -6643,7 +6653,7 @@ Jump_000_24D7::
     ret
 
 ; on CGB copies $40 bytes from DE in bank B (CopyFromBank) into wBGPaletteBuffer and sets wC526 = $7F (upload request) (E-0117)
-; 2 call sites from 2 routines (e.g. Func_000_1C0C, LoadSpecialMapHeader)
+; 2 call sites from 2 routines (e.g. LoadMapHeader, LoadSpecialMapHeader)
 ; reads: wIsCGB
 ; writes: wC526
 ; points at: wBGPaletteBuffer
@@ -10644,7 +10654,7 @@ Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessWDA63SlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 29 call sites from 26 routines (e.g. Func_005_59BD, AIScore_Kamikaze_Sub01, AIAddScoresFor5ECEAnd5FC7_Sub02, AIAddScoresFor5ECEAnd5FC7_Sub01, ...)
+; 29 call sites from 26 routines (e.g. FailIfAllyLacksMPForHealSkill, AIScore_Kamikaze_Sub01, AIAddScoresFor5ECEAnd5FC7_Sub02, AIAddScoresFor5ECEAnd5FC7_Sub01, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name

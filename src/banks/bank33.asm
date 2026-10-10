@@ -404,7 +404,7 @@ Data_033_505A:: ; heuristic: target of a monotone pointer table; C0
 ; reads: wD06A, wD780, wD781, wD782
 GameMode5_Update_Case05_Sub01::
 Func_033_51C6:: ; address name
-    call Func_000_0535
+    call LinkExchangeJoypadPerFrame
     ld a, [wD06A]
     or a, a
     jr nz, Jump_033_51D0
@@ -2520,10 +2520,10 @@ Jump_033_5EBE::
 ; writes: wD7F1
 Func_033_5215_Table2_Case0F_Case02::
 Jump_033_5EC6:: ; address name
-    farcall Func_01F_5C15
+    farcall DrawRecordListPageNames
     xor a, a
     ld [wD7F1], a
-    farcall Func_01D_6AA5
+    farcall MarkPartyMembersInRecordListPage
     ret
 
 ; entry 4 of the `rst $00` table in Func_033_5215_Table2_Case0F

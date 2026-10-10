@@ -556,8 +556,8 @@ Jump_00C_433D:: ; address name
     call ScriptCommandF6_Run_Shared06
     ld a, $11
     ldh [hMapId], a
-    call Func_000_1C0C
-    farcall Func_004_4AA8
+    call LoadMapHeader
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     farcall Func_069_4001
@@ -2070,7 +2070,7 @@ Func_00C_4E75:: ; address name
     ld [wD7F6], a
     ld a, [hl]
     ld [wD7F7], a
-    farcall Func_00E_615A
+    farcall FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]
     jr Jump_00C_4E94
 
@@ -2836,7 +2836,7 @@ Func_00C_529D:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 4 call sites from 4 routines (e.g. Func_00C_72CC, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
+; 4 call sites from 4 routines (e.g. CopyScreenBufferRectWithAttrs_0C, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
 CopyBytesDEToHL_Bank0C::
 Func_00C_52D0:: ; address name
     ld a, [de]
@@ -2849,7 +2849,7 @@ Func_00C_52D0:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
-; 4 call sites from 4 routines (e.g. Func_00C_72CC, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
+; 4 call sites from 4 routines (e.g. CopyScreenBufferRectWithAttrs_0C, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank0C::
 Func_00C_52D9:: ; address name
@@ -3424,7 +3424,7 @@ Jump_00C_6688::
     ld [wD7F1], a
     ld a, $06
     ld [wD7F2], a
-    call Func_00C_72CC
+    call CopyScreenBufferRectWithAttrs_0C
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -3903,7 +3903,7 @@ Func_00C_69D5:: ; address name
     ld [wD7F1], a
     ld a, $06
     ld [wD7F2], a
-    call Func_00C_72CC
+    call CopyScreenBufferRectWithAttrs_0C
     ld de, Data_00C_76C7
     ld hl, wC412
     ld bc, $0305
@@ -4134,7 +4134,7 @@ Jump_00C_6B2E:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_00C_72CC
+    call CopyScreenBufferRectWithAttrs_0C
     ld b, $00
     ld c, $07
     ld hl, $0244
@@ -4143,7 +4143,7 @@ Jump_00C_6B2E:: ; address name
     ld [wD7F1], a
     ld a, $0D
     ld [wD7F2], a
-    call Func_00C_72CC
+    call CopyScreenBufferRectWithAttrs_0C
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -4377,7 +4377,7 @@ Jump_00C_6CD0:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_00C_72CC
+    call CopyScreenBufferRectWithAttrs_0C
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -4518,7 +4518,7 @@ Jump_00C_6DC5:: ; address name
     ld [wD7F1], a
     ld a, $06
     ld [wD7F2], a
-    call Func_00C_72CC
+    call CopyScreenBufferRectWithAttrs_0C
     ld de, Data_00C_776F
     ld hl, wC412
     ld bc, $0305
@@ -4835,7 +4835,7 @@ Func_00C_6FCB:: ; address name
     ld [wD7F1], a
     ld a, $14
     ld [wD7F2], a
-    call Func_00C_72CC
+    call CopyScreenBufferRectWithAttrs_0C
     ld hl, wC300
     ld de, wC29C
     ld bc, $0064
@@ -5255,11 +5255,13 @@ Func_00C_7246:: ; address name
     ld h, a
     ret
 
+; HL = the word Data_00C_72C0[band] for the party's total level (bands at 49, 91, 139, 181, 220 and 256) (E-0128)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFC6, wC6FD
 ; writes: rRAMG2, rRAMB
 ; points at: wC6FE
-Func_00C_724F:: ; heuristic: follows a terminator; C0
+PickTableEntryByPartyLevelTotal:: ; heuristic: follows a terminator; C0
+Func_00C_724F:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5348,10 +5350,12 @@ Jump_00C_72BA::
 Data_00C_72C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $90, $01, $58, $02, $20, $03, $B0, $04, $78, $05, $78, $05
 
+; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
 ; 7 call sites from 6 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case13, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-Func_00C_72CC::
+CopyScreenBufferRectWithAttrs_0C::
+Func_00C_72CC:: ; address name
     push bc
     push hl
     push de
@@ -5413,7 +5417,7 @@ Jump_00C_7320::
     inc b
     ld a, b
     cp a, c
-    jr c, Func_00C_72CC
+    jr c, CopyScreenBufferRectWithAttrs_0C
     ret
 
 ; only called from ScriptCommand96_Run_Shared01 (E-0047)

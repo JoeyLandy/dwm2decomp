@@ -1329,7 +1329,7 @@ Jump_00D_4C7A::
 ; points at: wC52D
 ScriptCommandEF_Run_Case0F_Case08::
 Jump_00D_4C9C:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call BGMapAddressAtScroll_Bank0D
@@ -2388,7 +2388,7 @@ Jump_00D_53A4:: ; address name
 ; writes: wC527, hFFBA, wD782, wD781, wD780, wC52D, wC52E, wC52F, ...
 ScriptCommandF0_Run_Case06_Case04::
 Jump_00D_53BB:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     call BGMapAddressAtScroll_Bank0D
@@ -2859,7 +2859,7 @@ Jump_00D_5722:: ; address name
 ; writes: wC527, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ScriptCommandF2_Run_Case03_Case12::
 Jump_00D_574C:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld a, $01
@@ -3512,7 +3512,7 @@ Jump_00D_5BBF:: ; address name
 ; writes: wC527, wD7F1, wD7F2, wScriptCommandType, wScriptStartRequest
 ScriptCommandF2_Run_Case03_Case10::
 Jump_00D_5BDF:: ; address name
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld c, $0D
@@ -6827,7 +6827,7 @@ Jump_00D_7435::
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld hl, wCADB

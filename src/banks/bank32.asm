@@ -2056,7 +2056,7 @@ Func_032_4ADC:: ; address name
     dw Func_032_4ADC_Case04
     dw Func_032_4ADC_Case05
     dw Func_032_4ADC_Case06
-    dw Func_032_55EE
+    dw CheckLinkRuleViolation
     dw Func_032_4ADC_Case08
     dw Func_032_4ADC_Case09
 
@@ -2232,7 +2232,7 @@ Jump_032_4BE1:: ; address name
     call AddAx9ToHL
     bit 5, [hl]
     jr z, Func_032_4ADC_Case00_Case03
-    call Func_032_4C9C
+    call RollStatusTickEffect
     jr nc, Func_032_4ADC_Case00_Case03
     ld a, [wBattleActor]
     call GetBattleHP_Bank32
@@ -2259,7 +2259,7 @@ Jump_032_4C0A:: ; address name
     call AddAx9ToHL
     bit 4, [hl]
     jr z, Func_032_4ADC_Case00_Case04
-    call Func_032_4D99
+    call PickRandomActionWhenUncontrolled
     ld d, $14
     farcall ShowBattleTextCategory0
     ret
@@ -2362,11 +2362,13 @@ Jump_032_4C97::
 Jump_032_4C9B::
     ret
 
+; a random roll: 3/4 of the time nothing; otherwise clears status 3 (text $0F), loses a sixth of max HP (text $10) or of max MP, or does something else (E-0128)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case00_Case02)
 ; reads: wC5E7, wC5E8, wBattleActor, wBattleDamageLo, wD873
 ; writes: wBattleSubStep
 ; points at: wBattleStatus, wD89E
-Func_032_4C9C::
+RollStatusTickEffect::
+Func_032_4C9C:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]
     cp a, $40
@@ -2444,7 +2446,7 @@ Jump_032_4D0B::
     jr Jump_032_4D2A
 
 ; far-calls ShowBattleTextCategory0 and returns; the next entry returns carry (E-0126)
-; 4 call sites from 1 routine (e.g. Func_032_4C9C)
+; 4 call sites from 1 routine (e.g. RollStatusTickEffect)
 ShowBattleTextCategory0Entry::
 Func_032_4D23:: ; address name
     farcall ShowBattleTextCategory0
@@ -2455,7 +2457,7 @@ Jump_032_4D2A::
     ret
 
 ; damage = the actor's max HP / 6 (stored in wBattleDamageLo/wD873) and is subtracted from the actor's HP without a floor check (E-0121)
-; 1 call site from 1 routine (e.g. Func_032_4C9C)
+; 1 call site from 1 routine (e.g. RollStatusTickEffect)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleHP
@@ -2490,7 +2492,7 @@ Func_032_4D2C:: ; address name
     ret
 
 ; damage = the actor's max MP / 6 (0 when max MP is 0), subtracted from its MP and floored at 0 (E-0125)
-; 1 call site from 1 routine (e.g. Func_032_4C9C)
+; 1 call site from 1 routine (e.g. RollStatusTickEffect)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleMP
@@ -2531,7 +2533,7 @@ Jump_032_4D84::
     ret
 
 ; the actor's status byte 3 (wD80F + 9 * actor) = 0 (E-0115)
-; 1 call site from 1 routine (e.g. Func_032_4C9C)
+; 1 call site from 1 routine (e.g. RollStatusTickEffect)
 ; reads: wBattleActor
 ; points at: wD80F
 ClearActorStatus3::
@@ -2542,11 +2544,13 @@ Func_032_4D8D:: ; address name
     ld [hl], $00
     ret
 
+; for an actor with status bits $C0 or $0C forces action $C9; otherwise picks action $C0, $C1 or a table action (Data_032_4E1C or 4E20) at random and stores it (E-0128)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case00_Case03)
 ; reads: wBattleActor, wC5E7, wC58A, wC5E8, wCFC5
 ; writes: wBattleActionId, wBattleTarget
 ; points at: wD80F, wBattleActionChoice, wBattleTargetChoice
-Func_032_4D99::
+PickRandomActionWhenUncontrolled::
+Func_032_4D99:: ; address name
     call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wD80F
@@ -3475,7 +3479,7 @@ Jump_032_535D::
     ret
 
 ; A = 0 for action $BF or $C9-$CF, otherwise carry (E-0124)
-; 3 call sites from 3 routines (e.g. CheckActionD0ToE3OrSpecial, Func_032_55EE, Func_032_4ADC_Case01_Case00)
+; 3 call sites from 3 routines (e.g. CheckActionD0ToE3OrSpecial, CheckLinkRuleViolation, Func_032_4ADC_Case01_Case00)
 ; reads: wBattleActionId
 ActionIsSpecialBFOrC9ToCF::
 Func_032_535F:: ; address name
@@ -3521,11 +3525,13 @@ Jump_032_5393::
     call ActionIsSpecialBFOrC9ToCF
     ret nc
 
-; 4 call sites from 1 routine (e.g. Func_032_5397)
+; subtracts the skill's MP cost (wRecordBufferData) from the actor's MP; cost $FF takes all MP and saves it in wD866; marks the MP digits for redraw (E-0128)
+; 4 call sites from 1 routine (e.g. PayActorMPCost)
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wD866, wD867
 ; points at: wBattleMP
-Func_032_5397::
+PayActorMPCost::
+Func_032_5397:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleMP
     add a, a
@@ -3571,7 +3577,7 @@ Jump_032_53C8::
     ld a, $00
     ld [wCFED], a
     farcall LoadSkillRecord
-    call Func_032_5397
+    call PayActorMPCost
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToHFFC6
@@ -3584,7 +3590,7 @@ Jump_032_53C8::
     ld a, $00
     ld [wCFED], a
     farcall LoadSkillRecord
-    call Func_032_5397
+    call PayActorMPCost
     pop af
     ld [wBattleActor], a
     call LoadActorChosenActionRecord
@@ -3593,13 +3599,13 @@ Jump_032_53C8::
 Jump_032_541A::
     ld a, $FF
     ld [wRecordBufferData], a
-    call Func_032_5397
+    call PayActorMPCost
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToHFFC6
     ldh a, [hFFC6]
     ld [wBattleActor], a
-    call Func_032_5397
+    call PayActorMPCost
     pop af
     ld [wBattleActor], a
     call LoadActorChosenActionRecord
@@ -3915,11 +3921,13 @@ Jump_032_55E7:: ; address name
     call SetSubPhase7AndResetSteps
     ret
 
+; in link battles with rules on: an action forbidden by the wD044/wD045 rules (Data_032_5688) ends the battle with music 2 and a message for the side that broke it (E-0128)
 ; 1 call site from 1 routine (e.g. Func_032_5820_Case06)
 ; reads: wC58A, wD043, wDABA, wD044, wBattleActionId, wD045, wBattleActor, wC57F, ...
 ; writes: wD092, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, ...
 ; points at: wBattleResolveStep, wD057, wD058
-Func_032_55EE::
+CheckLinkRuleViolation::
+Func_032_55EE:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wC58A]
@@ -4138,7 +4146,7 @@ Jump_032_57F8::
     ret
 
 ; HL += A, then A = the byte at HL
-; 18 call sites from 13 routines (e.g. Func_032_5397, LoadActorChosenActionRecord, Func_032_4ADC_Case04, Func_032_4ADC_Case02, ...)
+; 18 call sites from 13 routines (e.g. PayActorMPCost, LoadActorChosenActionRecord, Func_032_4ADC_Case04, Func_032_4ADC_Case02, ...)
 ReadByteAtHLPlusA::
 Func_032_57FD:: ; address name
     add_a_to_hl
@@ -4146,7 +4154,7 @@ Func_032_57FD:: ; address name
     ret
 
 ; wBattleActionId = wRecordBuffer = the actor's chosen action (wBattleActionChoice), wCFED = 0, then far-calls LoadSkillRecord (E-0118)
-; 7 call sites from 4 routines (e.g. Func_032_5397, Func_032_4ADC_Case01_Case01, Func_032_4ADC_Case01_Case00, Func_032_514C)
+; 7 call sites from 4 routines (e.g. PayActorMPCost, Func_032_4ADC_Case01_Case01, Func_032_4ADC_Case01_Case00, Func_032_514C)
 ; reads: wBattleActor
 ; writes: wBattleActionId, wRecordBuffer, wCFED
 ; points at: wBattleActionChoice
@@ -4468,7 +4476,7 @@ Jump_032_59C1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_032_5820_Case06::
 Jump_032_59CB:: ; address name
-    call Func_032_55EE
+    call CheckLinkRuleViolation
     ret
 
 ; entry 7 of the `rst $00` table in Func_032_5820
@@ -6833,7 +6841,7 @@ Func_032_67FE:: ; address name
     jr Jump_032_681C
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 4 call sites from 4 routines (e.g. RecomputeTargetMaxHPAndMP, Func_032_4ADC_Case00_Case02, Func_032_4C9C, Func_032_627C_Table2_Case01)
+; 4 call sites from 4 routines (e.g. RecomputeTargetMaxHPAndMP, Func_032_4ADC_Case00_Case02, RollStatusTickEffect, Func_032_627C_Table2_Case01)
 ; points at: wBattleHP
 GetBattleHP_Bank32::
 Func_032_6803:: ; address name
@@ -6918,7 +6926,7 @@ Jump_032_685D::
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 7 call sites from 7 routines (e.g. RunBattleSubStep_6662_Case01, Func_032_4C9C, ApplyDamageToTarget, ResolveStep0EEffect_Case03_Case01, ...)
+; 7 call sites from 7 routines (e.g. RunBattleSubStep_6662_Case01, RollStatusTickEffect, ApplyDamageToTarget, ResolveStep0EEffect_Case03_Case01, ...)
 ; points at: wD095
 SetBit0OfWD095Indexed_Bank32::
 Func_032_687F:: ; address name
@@ -6930,7 +6938,7 @@ Func_032_687F:: ; address name
     ret
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
-; 3 call sites from 3 routines (e.g. Func_032_5397, Func_032_4C9C, ApplyDamageToTarget)
+; 3 call sites from 3 routines (e.g. PayActorMPCost, RollStatusTickEffect, ApplyDamageToTarget)
 ; points at: wD095
 SetBit1OfWD095Indexed_Bank32::
 Func_032_688C:: ; address name

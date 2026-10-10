@@ -192,7 +192,7 @@ Jump_030_40E7:: ; address name
     ret
 
 ; uses the preset target when the side is player-controlled, bit 7 of its wDAD8 byte is clear and wBattleTargetChoice is set; otherwise ChooseActionTarget; stores the result (E-0125)
-; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, ActionEffect_Chance, RunBattleActions_Case06, Func_03A_6846)
+; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, ActionEffect_Chance, RunBattleActions_Case06, RunMultiHitCounter)
 ; reads: wC58A, wC46B, wBattleActor
 ; points at: wDAD8, wBattleTargetChoice, wDAE9
 ChooseTargetForActor::
@@ -997,7 +997,7 @@ Func_030_45DA:: ; address name
     call AddActorPersonalityTensToWDA3C
     call Func_030_46BA
     call AddRandomPersonalityWeights
-    call Func_030_483F
+    call SortThreeAIWeightsRandomTies
     ld a, $00
     ld [wD871], a
     ret
@@ -1337,11 +1337,13 @@ Jump_030_4834::
     call AddSignedEToByteAtHLClamped
     ret
 
+; sorts wDA3C-wDA3E in descending order (ties broken by the random bits in wC5E7/8), swapping the matching wDA3F-wDA41 entries (E-0128)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wC5E7, wC5E8, wDA3F, wDA40, wDA41, wDA3C, wBattleActor
 ; writes: wDA3F, wDA40, wDA41
 ; points at: wDA3C, wD988, wD2AD, wD2BD
-Func_030_483F::
+SortThreeAIWeightsRandomTies::
+Func_030_483F:: ; address name
     ld a, [wC5E7]
     ld c, a
     ld a, [wC5E8]
@@ -1423,7 +1425,7 @@ Jump_030_48A7::
     ld e, $19
 
 ; for each of the actor's skills equal to D adds weight through Func_030_48F3 to wD2AD[index]; for D other than 2 also to wD2BD[D - 1] (E-0125)
-; 1 call site from 1 routine (e.g. Func_030_483F)
+; 1 call site from 1 routine (e.g. SortThreeAIWeightsRandomTies)
 ; reads: wBattleActor
 ; points at: wD988, wD2AD, wD2BD
 AddWeightsForSkillD::
@@ -2996,7 +2998,7 @@ Func_030_5472:: ; address name
     call Func_030_46BA
     call AIChooseActionForActor_Sub01_Sub02
     call AddRandomPersonalityWeights
-    call Func_030_483F
+    call SortThreeAIWeightsRandomTies
     ld a, $00
     ld [wD871], a
     ret

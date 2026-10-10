@@ -83,7 +83,7 @@ Func_0A3_413F:: ; address name
     ret
 
 ; hFFC6 = the slot for the actor through its side's wC953 formation (Data_0A3_4181), $FF when none (E-0124)
-; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, Func_032_514C, Func_032_5397, ...)
+; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, Func_032_514C, PayActorMPCost, ...)
 ; reads: wBattleActor
 ; writes: hFFC6
 ; points at: wC953

@@ -76,7 +76,7 @@ Jump_002_4062::
     ret
 
 ; one CGB fade step: counts wFadeDelayCounter down and, when it reaches 0, reloads it from wFadeDelay and moves wFadeLevel by 5. With wFadeState bit 7 clear (fading out) the level rises to at most $1F and WriteAllFadedPalettesFloor writes the palettes; with bit 7 set (fading in) it falls to at least 0 and WriteAllFadedPalettesAdd writes them. wFadeState = 0 when the level reaches $1F or 0 (E-0077)
-; 1 call site from 1 routine (e.g. Func_000_10AB)
+; 1 call site from 1 routine (e.g. AdjustColorChannelForFade)
 ; reads: wFadeState, wFadeDelayCounter, wFadeLevel, wFadeDelay
 ; writes: wFadeDelayCounter, wFadeLevel, wFadeState
 StepCGBFade::
@@ -1106,7 +1106,7 @@ Jump_002_461A::
 Func_002_4628::
     ld a, $0F
     ldh [hFF8D], a
-    call Func_000_1C0C
+    call LoadMapHeader
     ld a, $00
     ldh [hScrollY], a
     ld a, $00
@@ -1145,9 +1145,9 @@ Jump_002_467D::
     call LoadRecordListNameTiles
 
 Jump_002_4680::
-    farcall Func_004_4AA8
-    farcall Func_012_70A4
-    farcall Func_012_710A
+    farcall LoadPlayerAndFollowerSpriteGraphics
+    farcall FindTriggerEntryForCurrentScreen
+    farcall FindTriggerEntryForCurrentScreen_WCCEB
     xor a, a
     ld [wC468], a
     ld a, [wC8C7]
@@ -1428,7 +1428,7 @@ Jump_002_48AE::
     farcall FullyHealParty
     call RunFunc5E85Twice
     call LoadRecordListNameTiles
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     jp RunWC8C7Phase_Case00
 
 ; entry 1 of the `rst $00` table in RunWC8C7Phase
@@ -1670,7 +1670,7 @@ Func_002_4A53:: ; address name
     ld [hl], $00
     xor a, a
     ld [rRAMG], a
-    farcall Func_004_4AA8
+    farcall LoadPlayerAndFollowerSpriteGraphics
     ret
 
 ; only called from RunWC8C7Phase_Case01 (E-0047)
@@ -3899,7 +3899,7 @@ Jump_002_58B1::
 Jump_002_58BF::
     farcall UpdatePlayerMovement_Sub01_Sub02
     farcall Func_00A_561E
-    farcall Func_012_75E0
+    farcall RunPeriodicFieldEventChecks
     farcall UpdatePlayerMovement_Sub01_Sub03
     farcall Func_00A_43EC
     farcall CheckStepTriggerAndDispatchTalk
@@ -4461,7 +4461,7 @@ Jump_002_5BF4:: ; address name
     xor a, a
     ld [wC918], a
     farcall Func_00A_561E
-    farcall Func_012_75E0
+    farcall RunPeriodicFieldEventChecks
     farcall Func_00A_43EC
     farcall Func_011_4130
     farcall RunPlayerMoveTypeWC194
@@ -4480,8 +4480,8 @@ RunWC468ActionIfBit7_Case02::
 Jump_002_5C27:: ; address name
     ld hl, wC468
     inc [hl]
-    farcall Func_012_70A4
-    farcall Func_012_710A
+    farcall FindTriggerEntryForCurrentScreen
+    farcall FindTriggerEntryForCurrentScreen_WCCEB
     farcall Func_069_4001
     ld a, [wC935]
     bit 7, a
@@ -5761,7 +5761,7 @@ Jump_002_6585::
     ld h, a
 
 Jump_002_65AD::
-    call Func_002_665A
+    call DrawGoldDigitsAtHLWrapped
     ld a, $69
     call QueueSoundEffect
     ld a, $02
@@ -5849,11 +5849,13 @@ Data_002_6642:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
+; writes the gold as up to five decimal digit tiles without leading zeros at HL in VRAM, wrapping at the row end (E-0128)
 ; 1 call site from 1 routine (e.g. Func_002_64E5)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFFC8
-Func_002_665A::
+DrawGoldDigitsAtHLWrapped::
+Func_002_665A:: ; address name
     push hl
     ld a, [wGoldLo]
     ld l, a
@@ -7507,7 +7509,7 @@ Func_002_717D:: ; address name
     ld [wC8C3], a
     call CopySaveBlocksToSRAM
     call RunSaveSteps_Sub01
-    call Func_002_71ED
+    call RestoreRecordsFromSRAMBank1Backup
     call RunSaveSteps_Sub02
     jr Jump_002_71AA
 
@@ -7564,10 +7566,12 @@ Func_002_71B2:: ; address name
     inc [hl]
     ret
 
+; copies the record backup at sAD71 (SRAM bank 1) back to sB356 in bank 0 and to sA000 in bank 1; counterpart of BackupRecordsToSRAMBank1 (E-0128)
 ; 2 call sites from 2 routines (e.g. RunSaveSteps, RunBank1RecordScanSteps)
 ; writes: rRAMB
 ; points at: sAD71, sB356, sA000
-Func_002_71ED::
+RestoreRecordsFromSRAMBank1Backup::
+Func_002_71ED:: ; address name
     ld hl, sAD71
     ld de, sB356
     ld bc, $0309
@@ -8543,7 +8547,7 @@ Func_002_76F2:: ; address name
     jr nz, Jump_002_7704
     inc a
     ld [wC8C3], a
-    call Func_002_71ED
+    call RestoreRecordsFromSRAMBank1Backup
 
 Jump_002_7704::
     call ScanBank1RecordStepWC8C4

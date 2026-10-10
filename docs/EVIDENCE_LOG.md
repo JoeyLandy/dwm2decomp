@@ -1433,6 +1433,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Field $57 is read as the level cap next to field $56 (31:6D28, 03:4ACE). C1.
 - Binary verification: build/run89 PASS, 0 differing bytes; tests OK.
 
+### E-0128 — Routines of 61-80 instructions
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** 67 routines of 61-80 instructions are named; the unnamed count goes from 191 to 120. These include:
+  - the map header loader (00:1C0C) and the species-to-family ranges (0E:615A);
+  - the periodic town event checks (12:75E0) and their digit and gold events (12:77AC, 12:79DC, 12:7A4D, 12:7AD0);
+  - inventory sorting (16:590C);
+  - DEF and AGL buffs, a third of base or half for actions $25/$29 (36:5360, 36:5441);
+  - MP cost payment (32:5397) and the link-rule violation check (32:55EE);
+  - record restore from the SRAM bank-1 backup (02:71ED);
+  - link transfer steps (00:0535, 1B:468A, 1B:4736).
+- 32:4C9C is named mechanically (RollStatusTickEffect): which status it serves is not established.
+- Binary verification: build/run90 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
