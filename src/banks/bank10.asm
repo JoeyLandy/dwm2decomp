@@ -530,17 +530,19 @@ Func_010_4343:: ; address name
     ld [wScriptPointerHi], a
     ret
 
+; only called from ScriptFetch06 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptFetch06)
 ; reads: rSTAT
-Func_010_435A::
+ScriptFetch06_Sub01::
+Func_010_435A:: ; address name
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Func_010_435A
+    jr nz, ScriptFetch06_Sub01
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, Func_010_435A
+    jr nz, ScriptFetch06_Sub01
     ret
 
 ; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers)
@@ -555,11 +557,11 @@ Func_010_4367:: ; address name
     ld hl, wC89E
     ld de, vTiles1 + $6E0
     ld c, $10
-    call Func_010_435A
+    call ScriptFetch06_Sub01
     ld hl, wC8AE
     ld de, vTiles1 + $6F0
     ld c, $10
-    call Func_010_435A
+    call ScriptFetch06_Sub01
     pop de
     pop bc
     pop hl
@@ -1913,7 +1915,7 @@ Jump_010_4A74::
     ld l, a
     ld a, [wScriptParam1]
     ld h, a
-    call Func_010_4AD0
+    call ScriptCommand09_Case01_Sub01
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1971,10 +1973,12 @@ Jump_010_4AC6::
     ld [wScriptStartRequest], a
     ret
 
+; only called from ScriptCommand09_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand09_Case01)
 ; reads: wD7F0, wCC44
 ; writes: wStringIndex, wStringCategory
-Func_010_4AD0::
+ScriptCommand09_Case01_Sub01::
+Func_010_4AD0:: ; address name
     ld a, h
     and a, $3F
     ld h, a

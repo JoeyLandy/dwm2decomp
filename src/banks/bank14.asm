@@ -276,17 +276,17 @@ Jump_014_418A:: ; address name
     jp nz, Jump_014_41EE
     bit 1, a
     jp nz, Jump_014_4230
-    call Func_014_423F
+    call ScriptCommandEB_Run_Case02_Sub01
     ret
 
 Jump_014_41A6::
-    call Func_014_425D
+    call ScriptCommandEB_Run_Case02_Sub03
     ld a, [wD786]
     and a, a
     jr nz, Jump_014_41BD
     ld a, $03
     ld [wD786], a
-    call Func_014_423F
+    call ScriptCommandEB_Run_Case02_Sub01
     ld a, $69
     call QueueSoundEffect
     ret
@@ -300,19 +300,19 @@ Jump_014_41BE::
     ld [wD7AB], a
     ld [wD7AD], a
     ld [wD7AF], a
-    call Func_014_4259
+    call ScriptCommandEB_Run_Case02_Sub02
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_014_41D4::
-    call Func_014_425D
+    call ScriptCommandEB_Run_Case02_Sub03
     ld a, [wD786]
     cp a, $03
     jr c, Jump_014_41EB
     xor a, a
     ld [wD786], a
-    call Func_014_423F
+    call ScriptCommandEB_Run_Case02_Sub01
     ld a, $69
     call QueueSoundEffect
     ret
@@ -324,7 +324,7 @@ Jump_014_41EB::
 Jump_014_41EE::
     ld a, $69
     call QueueSoundEffect
-    call Func_014_4261
+    call ScriptCommandEB_Run_Case02_Sub04
     ld c, $00
 
 Jump_014_41F8::
@@ -366,38 +366,46 @@ Jump_014_4230::
     ld [wScriptStartRequest], a
     ret
 
+; only called from ScriptCommandEB_Run_Case02 (E-0047)
 ; 3 call sites from 1 routine (e.g. ScriptCommandEB_Run_Case02)
 ; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
-Func_014_423F::
+ScriptCommandEB_Run_Case02_Sub01::
+Func_014_423F:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, Func_014_4259
+    jr c, ScriptCommandEB_Run_Case02_Sub02
     ld a, [wD787]
     inc a
     ld [wD787], a
     cp a, $10
-    jr c, Func_014_4259
+    jr c, ScriptCommandEB_Run_Case02_Sub02
     cp a, $18
-    jr c, Func_014_425D
+    jr c, ScriptCommandEB_Run_Case02_Sub03
     xor a, a
     ld [wD787], a
 
+; only called from ScriptCommandEB_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case02)
 ; reads: wD786
-Func_014_4259::
+ScriptCommandEB_Run_Case02_Sub02::
+Func_014_4259:: ; address name
     ld b, $BB
     jr Jump_014_4263
 
+; only called from ScriptCommandEB_Run_Case02 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptCommandEB_Run_Case02)
 ; reads: wD786
-Func_014_425D::
+ScriptCommandEB_Run_Case02_Sub03::
+Func_014_425D:: ; address name
     ld b, $C3
     jr Jump_014_4263
 
+; only called from ScriptCommandEB_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case02)
 ; reads: wD786
-Func_014_4261::
+ScriptCommandEB_Run_Case02_Sub04::
+Func_014_4261:: ; address name
     ld b, $BC
 
 Jump_014_4263::
@@ -3375,7 +3383,7 @@ Jump_014_57F2::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 21 call sites from 21 routines (e.g. ScriptCommandEC_Run_Case00, Func_014_4261, ScriptCommandEB_Run_Table2_Case03, Func_014_4BA0_Case41, ...)
+; 21 call sites from 21 routines (e.g. ScriptCommandEC_Run_Case00, ScriptCommandEB_Run_Case02_Sub04, ScriptCommandEB_Run_Table2_Case03, Func_014_4BA0_Case41, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank14::
 Func_014_5800:: ; address name
@@ -4284,7 +4292,7 @@ Jump_014_5F72:: ; address name
     jp nz, Jump_014_60BB
     bit 3, a
     jp nz, Jump_014_60CF
-    call Func_014_6172
+    call CopyBytesDEFromHL_Bank14_Case00_Sub01
     ret
 
 Jump_014_5FA7::
@@ -4306,7 +4314,7 @@ Jump_014_5FC3::
     ld [wCFC0], a
 
 Jump_014_5FC7::
-    call Func_014_6172
+    call CopyBytesDEFromHL_Bank14_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4347,7 +4355,7 @@ Jump_014_6006::
     ld [wCFC0], a
 
 Jump_014_600D::
-    call Func_014_6172
+    call CopyBytesDEFromHL_Bank14_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4384,7 +4392,7 @@ Jump_014_604A::
     ld [wCFBF], a
 
 Jump_014_6051::
-    call Func_014_6172
+    call CopyBytesDEFromHL_Bank14_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4423,7 +4431,7 @@ Jump_014_6092::
     ld [wCFBF], a
 
 Jump_014_6099::
-    call Func_014_6172
+    call CopyBytesDEFromHL_Bank14_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4433,7 +4441,7 @@ Jump_014_6099::
 Jump_014_60A6::
     ld a, $69
     call QueueSoundEffect
-    call Func_014_618D
+    call CopyBytesDEFromHL_Bank14_Case00_Sub02
     ld a, [wCFA9]
     inc a
     inc a
@@ -4445,7 +4453,7 @@ Jump_014_60A6::
 Jump_014_60BB::
     ld a, $69
     call QueueSoundEffect
-    call Func_014_6172
+    call CopyBytesDEFromHL_Bank14_Case00_Sub01
     ld a, [wCFA9]
     inc a
     ld [wCFA9], a
@@ -4575,10 +4583,12 @@ Jump_014_6164::
     ld [wD7F5], a
     ret
 
+; only called from CopyBytesDEFromHL_Bank14_Case00 (E-0047)
 ; 6 call sites from 1 routine (e.g. CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC1, wCFC0, wCFBF
 ; writes: wCFC1
-Func_014_6172::
+CopyBytesDEFromHL_Bank14_Case00_Sub01::
+Func_014_6172:: ; address name
     ld a, [wCFC1]
     inc a
     ld [wCFC1], a
@@ -4599,9 +4609,11 @@ Func_014_6189::
     ld b, $C3
     jr Jump_014_618F
 
+; only called from CopyBytesDEFromHL_Bank14_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC0, wCFBF
-Func_014_618D::
+CopyBytesDEFromHL_Bank14_Case00_Sub02::
+Func_014_618D:: ; address name
     ld b, $55
 
 Jump_014_618F::
@@ -5023,7 +5035,7 @@ Jump_014_646A::
 ; writes: wCFA8, wD7F5
 CopyBytesDEFromHL_Bank14_Case03::
 Jump_014_6476:: ; address name
-    call Func_014_6C70
+    call CopyBytesDEFromHL_Bank14_Case03_Sub01
     call Func_014_6992
     ld a, [wCFA8]
     inc a
@@ -5935,7 +5947,7 @@ Jump_014_69CA::
     db $C5, $D1, $CD, $40, $2E, $7B, $EA, $33, $C5, $EA, $37, $C5, $7A, $EA, $34, $C5
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
-; 6 call sites from 4 routines (e.g. Func_014_631C, Func_014_6CEA, CopyBytesDEFromHL_Bank14_Case01, CopyBytesDEFromHL_Bank14_Case00)
+; 6 call sites from 4 routines (e.g. Func_014_631C, CopyBytesDEFromHL_Bank14_Case03_Sub01_Sub01, CopyBytesDEFromHL_Bank14_Case01, CopyBytesDEFromHL_Bank14_Case00)
 ; reads: wCFC2, rSTAT
 Func_014_6A0D::
     push bc
@@ -6300,7 +6312,7 @@ Jump_014_6BCD::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 12 call sites from 11 routines (e.g. Func_014_5CA8_Case07, Func_014_695E, Func_014_5CA8_Case04, Func_014_618D, ...)
+; 12 call sites from 11 routines (e.g. Func_014_5CA8_Case07, Func_014_695E, Func_014_5CA8_Case04, CopyBytesDEFromHL_Bank14_Case00_Sub02, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank14_6BCF::
 Func_014_6BCF:: ; address name
@@ -6409,11 +6421,13 @@ Data_014_6C56:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_6C60:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
+; only called from CopyBytesDEFromHL_Bank14_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. CopyBytesDEFromHL_Bank14_Case03)
 ; reads: wD7F1, wC5E7, wD7F3, wD7F2
 ; writes: wCFC2, wCFC3
 ; points at: wCFAD
-Func_014_6C70::
+CopyBytesDEFromHL_Bank14_Case03_Sub01::
+Func_014_6C70:: ; address name
     ld a, [wD7F1]
     or a, a
     jp z, Jump_014_6D28
@@ -6466,7 +6480,7 @@ Jump_014_6CB4::
     ld a, [de]
     ld h, a
     ld de, wCFAD
-    call Func_014_6CEA
+    call CopyBytesDEFromHL_Bank14_Case03_Sub01_Sub01
     ret
 
 Jump_014_6CC0::
@@ -6494,20 +6508,22 @@ Jump_014_6CC0::
     ld a, [de]
     ld h, a
     ld de, wCFAD
-    call Func_014_6CEA
+    call CopyBytesDEFromHL_Bank14_Case03_Sub01_Sub01
     ret
 
-; 2 call sites from 1 routine (e.g. Func_014_6C70)
+; only called from CopyBytesDEFromHL_Bank14_Case03_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. CopyBytesDEFromHL_Bank14_Case03_Sub01)
 ; writes: wCFC2, wCFC3
 ; points at: wCFAD
-Func_014_6CEA::
+CopyBytesDEFromHL_Bank14_Case03_Sub01_Sub01::
+Func_014_6CEA:: ; address name
     ld a, [hl]
     cp a, $F0
     jr z, Jump_014_6CF4
     ld [de], a
     inc de
     inc hl
-    jr Func_014_6CEA
+    jr CopyBytesDEFromHL_Bank14_Case03_Sub01_Sub01
 
 Jump_014_6CF4::
     ld b, $C3

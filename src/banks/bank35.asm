@@ -1,7 +1,7 @@
 SECTION "Bank 35", ROMX[$4000], BANK[$35]
     db $35
 
-; 37 call sites from 36 routines (e.g. Func_001_56D3, Func_001_6C48, Func_003_4BE8, Func_003_4D57, ...)
+; 37 call sites from 36 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_6C48, Func_003_4BE8, Func_003_4D57, ...)
 ; points at: wD008
 Func_035_4001::
     ld de, wD008
@@ -9,7 +9,7 @@ Func_035_4001::
     call Func_035_401C
     ret
 
-; 8 call sites from 7 routines (e.g. Func_005_6CA5, Func_016_5AC0, Func_016_5B33, Func_037_5DBC, ...)
+; 8 call sites from 7 routines (e.g. Func_005_6CA5, Func_016_5AC0, BattleEnd_Step3_Sub01_Sub01, Func_037_5DBC, ...)
 ; points at: wD008
 Func_035_400A::
     ld de, wD008

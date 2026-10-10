@@ -13,7 +13,7 @@ Func_000_0000:: ; address name
     add hl, de
     pop de
 
-; 7 call sites from 7 routines (e.g. Func_030_4F3B, Func_036_6717, Func_036_7DC9, Func_039_4001, ...)
+; 7 call sites from 7 routines (e.g. Func_030_4F3B, RunBattleResolveStep_Case06_Sub01, Func_036_7DC9, Func_039_4001, ...)
 Func_000_000B::
     deref_hl
 
@@ -450,7 +450,7 @@ Jump_000_03A4:: ; address name
     ld [wC526], a
     ld a, [wC527]
     or a, a
-    call nz, Func_000_085C
+    call nz, VBlankHandler_Sub01
     xor a, a
     ld [wC527], a
 
@@ -783,7 +783,7 @@ Jump_000_05C7::
     jp Func_000_08AD
 
 ; returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step
-; 44 call sites from 15 routines (e.g. Func_000_0150, DetectSGB, Func_000_0FC1, StartPaletteFade, ...)
+; 44 call sites from 15 routines (e.g. Func_000_0150, DetectSGB, StepFade_Sub01, StartPaletteFade, ...)
 ; reads: wSGBActive
 SpinDelay::
 Func_000_05D1:: ; address name
@@ -854,11 +854,13 @@ Jump_000_0636::
     scf
     ret
 
+; only called from PollJoypad (E-0047)
 ; 1 call site from 1 routine (e.g. PollJoypad)
 ; reads: rP1
 ; writes: rP1
 ; points at: wC474
-Func_000_0646::
+PollJoypad_Sub01::
+Func_000_0646:: ; address name
     ldh a, [rP1]
     ld b, $04
     ld c, a
@@ -1057,7 +1059,7 @@ Jump_000_0741::
     ld [rROMB0], a
     ret
 
-; 5 call sites from 3 routines (e.g. Func_000_0FC1, StartPaletteFade, Func_017_41CF)
+; 5 call sites from 3 routines (e.g. StepFade_Sub01, StartPaletteFade, Func_017_41CF)
 ; points at: wSGBPacketBuffer
 Func_000_076B::
     push hl
@@ -1268,11 +1270,13 @@ Jump_000_0851::
     jr nz, Jump_000_0851
     ret
 
+; only called from VBlankHandler (E-0047)
 ; 1 call site from 1 routine (e.g. VBlankHandler)
 ; reads: wC527, rSTAT
 ; writes: rOBPI
 ; points at: wC4DF
-Func_000_085C::
+VBlankHandler_Sub01::
+Func_000_085C:: ; address name
     ld a, [wC527]
     bit 7, a
     jr z, Jump_000_0876
@@ -1317,7 +1321,7 @@ Jump_000_088B::
     jr nz, Jump_000_0887
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_085C, UploadBGPalettes)
+; 2 call sites from 2 routines (e.g. VBlankHandler_Sub01, UploadBGPalettes)
 Func_000_0897::
     res 7, a
     and a, $38
@@ -1530,7 +1534,7 @@ Func_000_0A17:: ; address name
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_000_0A39
-    call Func_000_0646
+    call PollJoypad_Sub01
     ld a, [wJoypadHeld]
     ld [wJoypadHeldPrev], a
     ld a, [wC474]
@@ -2448,7 +2452,7 @@ Jump_000_0E63::
 Jump_000_0E9B::
     ld a, b
     ld [wFadeState], a
-    farcall Func_002_4001
+    farcall StartPaletteFade_Sub01
     jp Jump_000_0F3D
 
 Jump_000_0EA8::
@@ -2557,7 +2561,7 @@ Func_000_0F4E:: ; address name
     or a, a
     ret z
     bit 7, a
-    call z, Func_000_137D
+    call z, StepFade_Sub02
     ld a, [wIsCGB]
     or a, a
     jp nz, Jump_000_10C7
@@ -2583,7 +2587,7 @@ Jump_000_0F78::
 
 Jump_000_0F83::
     ld [wC572], a
-    call Func_000_0FC1
+    call StepFade_Sub01
     ld a, [wC573]
     ld [wC574], a
     ld a, [wC572]
@@ -2608,7 +2612,7 @@ Jump_000_0FA3::
 
 Jump_000_0FAD::
     ld [wC572], a
-    call Func_000_0FC1
+    call StepFade_Sub01
     ld a, [wC573]
     ld [wC574], a
     ld a, [wC572]
@@ -2616,21 +2620,23 @@ Jump_000_0FAD::
     jp z, Jump_000_1205
     ret
 
+; only called from StepFade (E-0047)
 ; 2 call sites from 1 routine (e.g. StepFade)
 ; reads: wC56E
 ; writes: wC576, wSGBPacketIndex
 ; points at: wC4DF, wSGBPacketBuffer, wC4EF
-Func_000_0FC1::
+StepFade_Sub01::
+Func_000_0FC1:: ; address name
     ld a, [wC56E]
     bit 0, a
     ld a, $00
     ld [wC576], a
-    call nz, Func_000_1040
+    call nz, StepFade_Sub01_Sub01
     ld a, [wC56E]
     bit 1, a
     ld a, $08
     ld [wC576], a
-    call nz, Func_000_1040
+    call nz, StepFade_Sub01_Sub01
     ld a, [wC56E]
     bit 4, a
     jr z, Jump_000_0FFC
@@ -2638,12 +2644,12 @@ Func_000_0FC1::
     bit 2, a
     ld a, $10
     ld [wC576], a
-    call nz, Func_000_1040
+    call nz, StepFade_Sub01_Sub01
     ld a, [wC56E]
     bit 3, a
     ld a, $18
     ld [wC576], a
-    call nz, Func_000_1040
+    call nz, StepFade_Sub01_Sub01
 
 Jump_000_0FFC::
     call Func_000_076B
@@ -2664,7 +2670,7 @@ Jump_000_0FFC::
     ld [de], a
     inc de
 
-; 3 call sites from 2 routines (e.g. Func_000_0FC1, StartPaletteFade)
+; 3 call sites from 2 routines (e.g. StepFade_Sub01, StartPaletteFade)
 ; writes: wSGBPacketIndex
 Func_000_1022::
     ld c, $08
@@ -2690,28 +2696,34 @@ Jump_000_102E::
     farcall_b SendSGBPacketSet
     ret
 
-; 4 call sites from 1 routine (e.g. Func_000_0FC1)
+; only called from StepFade_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. StepFade_Sub01)
 ; reads: wC576, wC572
 ; writes: wC576
 ; points at: wC4FF, wC4DF
-Func_000_1040::
-    call Func_000_1051
-    call Func_000_1049
-    call Func_000_1049
+StepFade_Sub01_Sub01::
+Func_000_1040:: ; address name
+    call StepFade_Sub01_Sub01_Sub02
+    call StepFade_Sub01_Sub01_Sub01
+    call StepFade_Sub01_Sub01_Sub01
 
-; 2 call sites from 1 routine (e.g. Func_000_1040)
+; only called from StepFade_Sub01_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. StepFade_Sub01_Sub01)
 ; reads: wC576, wC572
 ; writes: wC576
 ; points at: wC4FF, wC4DF
-Func_000_1049::
+StepFade_Sub01_Sub01_Sub01::
+Func_000_1049:: ; address name
     ld a, [wC576]
     add a, $02
     ld [wC576], a
 
-; 1 call site from 1 routine (e.g. Func_000_1040)
+; only called from StepFade_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. StepFade_Sub01_Sub01)
 ; reads: wC576, wC572
 ; points at: wC4FF, wC4DF
-Func_000_1051::
+StepFade_Sub01_Sub01_Sub02::
+Func_000_1051:: ; address name
     ld hl, wC4FF
     ld a, [wC576]
     add_a_to_hl
@@ -2763,7 +2775,7 @@ Func_000_1051::
     ld [hl], d
     ret
 
-; 3 call sites from 1 routine (e.g. Func_000_1051)
+; 3 call sites from 1 routine (e.g. StepFade_Sub01_Sub01_Sub02)
 ; reads: wC56D
 Func_000_10AB::
     push af
@@ -2996,7 +3008,7 @@ Jump_000_1205::
     ret
 
 ; loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set
-; 251 call sites from 145 routines (e.g. Func_000_085C, UploadBGPalettes, Func_000_2950_Case0F, Func_000_1CF9, ...)
+; 251 call sites from 145 routines (e.g. VBlankHandler_Sub01, UploadBGPalettes, Func_000_2950_Case0F, Func_000_1CF9, ...)
 ; reads: rSTAT
 WaitForVRAMAccess::
 Func_000_120A:: ; address name
@@ -3087,7 +3099,7 @@ Func_000_1231:: ; address name
     ret
 
 Jump_000_126E::
-    call Func_000_334B
+    call StartMusic_Sub01
     ei
     ret
 
@@ -3271,10 +3283,12 @@ Jump_000_1378::
     ld [wC5E2], a
     ret
 
+; only called from StepFade (E-0047)
 ; 1 call site from 1 routine (e.g. StepFade)
 ; reads: wC5E0, wC5E2, wC5E3, rNR50, wC5E5, wC5E4
 ; writes: wC5E3, rNR50, wC5E5, wC5E4, wC5E2
-Func_000_137D::
+StepFade_Sub02::
+Func_000_137D:: ; address name
     ld a, [wC5E0]
     or a, a
     jr nz, Jump_000_13E0
@@ -3786,10 +3800,12 @@ Func_000_1682:: ; address name
     ld b, $00
     ld h, b
     ld l, b
-    call Func_000_1689
+    call Multiply8_Sub01
 
+; only called from Multiply8 (E-0047)
 ; 1 call site from 1 routine (e.g. Multiply8)
-Func_000_1689::
+Multiply8_Sub01::
+Func_000_1689:: ; address name
     rrca
     jr nc, Jump_000_168D
     add hl, bc
@@ -3915,7 +3931,7 @@ Jump_000_16F1::
     ret
 
 ; HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones
-; 116 call sites from 78 routines (e.g. Func_001_54FB, Func_001_5B2D, Func_002_6788, Func_003_50DD, ...)
+; 116 call sites from 78 routines (e.g. DebugResultsDisplay_Update_Sub02, Func_001_5B2D, Func_002_6788, Func_003_50DD, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFF9C, hFFF6
@@ -3960,7 +3976,7 @@ Jump_000_171A::
     ret
 
 ; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
-; 45 call sites from 38 routines (e.g. Func_001_536C, Func_001_52AF, Func_002_665A, Func_003_4BE8, ...)
+; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, Func_002_665A, Func_003_4BE8, ...)
 ; reads: hFFC8, hFFC7, wC8C0
 ; writes: hFFC9, hFFC8, hFFC7, hFFC6, wC8C0
 ; points at: wC8C0
@@ -4144,7 +4160,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 863 call sites from 411 routines (e.g. Func_000_1B6F, Func_000_1CA1, Func_002_470B, Func_002_6050_Case05, ...)
+; 863 call sites from 411 routines (e.g. LoadMapScreen_Sub02, Func_000_1CA1, Func_002_470B, Func_002_6050_Case05, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -4223,7 +4239,7 @@ Jump_000_1870::
     jr Jump_000_1870
 
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
-; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, Func_00C_7587, Func_01D_6973, Func_01D_6915, ...)
+; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF7_Run_Case27_Sub02_Sub01, Func_01D_6973, Func_01D_6915, ...)
 ; writes: rROMB0
 ReadByteInBank::
 Func_000_1872:: ; address name
@@ -4321,7 +4337,7 @@ Jump_000_18BE::
 Jump_000_18D5::
     ret
 
-; 10 call sites from 8 routines (e.g. Func_00C_7587, Func_01C_500C, Func_01C_5EEC, Func_01C_5F26, ...)
+; 10 call sites from 8 routines (e.g. ScriptCommandF7_Run_Case27_Sub02_Sub01, Func_01C_500C, Func_01C_5EEC, Func_01C_5F26, ...)
 ; writes: rROMB0
 Func_000_18D6::
     ld a, [BANK_NUMBER_BYTE]
@@ -4468,7 +4484,7 @@ Func_000_19A9:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr z, Jump_000_19B7
-    farcall Func_061_4472
+    farcall LoadMapScreen_Sub03
     ret
 
 Jump_000_19B7::
@@ -4592,15 +4608,17 @@ Jump_000_1A62::
     pop af
     ld [rROMB0], a
     farcall Func_084_43B8
-    call Func_000_1B6F
-    call Func_000_1A73
+    call LoadMapScreen_Sub02
+    call LoadMapScreen_Sub01
     ret
 
+; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
 ; reads: wCC44, hMapId, wC88E, wC891
 ; writes: hFFC6
 ; points at: wC88F
-Func_000_1A73::
+LoadMapScreen_Sub01::
+Func_000_1A73:: ; address name
     ld a, [wCC44]
     bit 7, a
     jp nz, Jump_000_1AB3
@@ -4635,7 +4653,7 @@ Jump_000_1A92::
     ld de, wC88F
     ld a, b
     ldh [hFFC6], a
-    call Func_000_1AD6
+    call LoadMapScreen_Sub01_Sub01
     ret
 
 Jump_000_1AA9::
@@ -4644,7 +4662,7 @@ Jump_000_1AA9::
     inc de
     ld a, b
     ldh [hFFC6], a
-    call Func_000_1AD6
+    call LoadMapScreen_Sub01_Sub01
     ret
 
 Jump_000_1AB3::
@@ -4653,10 +4671,12 @@ Jump_000_1AB3::
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
     db $00, $FF
 
-; 2 call sites from 1 routine (e.g. Func_000_1A73)
+; only called from LoadMapScreen_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. LoadMapScreen_Sub01)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB, hFFC6
 ; writes: rSVBK
-Func_000_1AD6::
+LoadMapScreen_Sub01_Sub01::
+Func_000_1AD6:: ; address name
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -4751,10 +4771,12 @@ Jump_000_1B6D::
     pop hl
     ret
 
+; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
 ; reads: hMapScreenX, hMapId
 ; points at: wC2E2, wC1CA
-Func_000_1B6F::
+LoadMapScreen_Sub02::
+Func_000_1B6F:: ; address name
     ld de, $012B
     call TestFlagBit
     ret nc
@@ -5072,10 +5094,12 @@ Func_000_1D7F:: ; address name
     ld h, d
     ret
 
+; only called from DebugMapEditor_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugMapEditor_Update)
 ; reads: hFFC6, wC5FA, wC5FC
 ; writes: rROMB0, hFFC6
-Func_000_1D90::
+DebugMapEditor_Update_Sub01::
+Func_000_1D90:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $11
@@ -5411,7 +5435,7 @@ Jump_000_1F40::
     ret
 
 ; A is first passed through MapIndexViaWC6FE; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress
-; 138 call sites from 100 routines (e.g. Func_000_1F5E, Func_000_1F6F, Func_001_68CA, Func_003_67B0, ...)
+; 138 call sites from 100 routines (e.g. Func_000_1F5E, Func_000_1F6F, DebugBattleSetup_Update_Sub01_Sub01, Func_003_67B0, ...)
 ; points at: sA000
 SRAMRecordAddressMapped::
 Func_000_1F49:: ; address name
@@ -5475,7 +5499,7 @@ Func_000_1F80:: ; address name
     ret
 
 ; like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)
-; 98 call sites from 54 routines (e.g. Func_000_228A, Func_002_6788, Func_004_5D14, Func_007_4F29, ...)
+; 98 call sites from 54 routines (e.g. Func_000_228A, Func_002_6788, Func_004_5D14, GameMode5_Init_Case06_Sub01, ...)
 ; writes: hFFC6, hFFC7
 LoadSRAMRecordWord::
 Func_000_1F89:: ; address name
@@ -5906,7 +5930,7 @@ Jump_000_219A::
     ret
 
 ; DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile
-; 68 call sites from 31 routines (e.g. Func_000_222B, Func_001_5535, Func_001_5B98, Func_001_5EAF, ...)
+; 68 call sites from 31 routines (e.g. Func_000_222B, DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5B98, DebugAutomap_Update_Sub03, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 ; points at: wC8CF
@@ -6424,7 +6448,7 @@ Jump_000_244C::
     ld [rROMB0], a
     ret
 
-; 7 call sites from 7 routines (e.g. Func_001_5EAF, Func_003_779A, Func_003_6B5E_Case03, Func_003_78CB, ...)
+; 7 call sites from 7 routines (e.g. DebugAutomap_Update_Sub03, Func_003_779A, Func_003_6B5E_Case03, Func_003_78CB, ...)
 Func_000_2458::
     cp a, $FE
     jr nz, Jump_000_2482
@@ -6552,7 +6576,7 @@ Func_000_24E5::
     ld [wC526], a
     ret
 
-; 73 call sites from 57 routines (e.g. Func_00C_6CA1, Func_00C_68F3, Func_015_6742, Func_015_54C0, ...)
+; 73 call sites from 57 routines (e.g. ScriptCommandF7_Run_Case12_Sub03, ScriptCommandF7_Run_Case02_Sub03, Func_015_6742, Func_015_54C0, ...)
 ; reads: hScrollX
 Func_000_24F8::
     push bc
@@ -6638,7 +6662,7 @@ Jump_000_255B::
     push bc
     push de
     push hl
-    farcall Func_01B_4001
+    farcall ComputeSpriteScrollOffsets_Sub01
     pop hl
     pop de
     pop bc
@@ -7246,7 +7270,7 @@ Func_000_28F4::
     ret
 
 ; fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero
-; 110 call sites from 74 routines (e.g. Func_000_2950_Case12, BeginStringDisplay, FillTilesRequest, Func_001_5535, ...)
+; 110 call sites from 74 routines (e.g. Func_000_2950_Case12, BeginStringDisplay, FillTilesRequest, DebugResultsDisplay_Update_Sub02_Sub01, ...)
 ; reads: wC52D, wC52E, wC530, wC52F, rSTAT
 ; points at: wC52F
 FillTilesFromRequest::
@@ -8643,7 +8667,7 @@ Jump_000_30BE::
 InitSoundHardware::
 Func_000_3290:: ; address name
     ld bc, $0000
-    call Func_000_32DB
+    call InitSoundHardware_Sub01
     ld a, $80
     ldh [rNR52], a
     xor a, a
@@ -8694,9 +8718,11 @@ Func_000_32D1:: ; heuristic: follows a terminator; C0
     ld [wDD09], a
     ret
 
+; only called from InitSoundHardware (E-0047)
 ; 1 call site from 1 routine (e.g. InitSoundHardware)
 ; writes: wDD12, wDD13, wDD14
-Func_000_32DB::
+InitSoundHardware_Sub01::
+Func_000_32DB:: ; address name
     ld a, b
     ld [wDD12], a
     ld a, c
@@ -8705,10 +8731,12 @@ Func_000_32DB::
     ld [wDD14], a
     ret
 
+; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wSoundChannelIndex, wDD14
 ; writes: wDD14
-Func_000_32E8::
+SoundTick_Sub01::
+Func_000_32E8:: ; address name
     ld a, [wSoundChannelIndex]
     inc a
     ld b, a
@@ -8727,11 +8755,13 @@ Jump_000_32F5::
     ld [wDD14], a
     ret
 
+; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wDD14, wDD13, wDD12
 ; writes: wDD14, wDD12
 ; points at: wDD12, wDC06
-Func_000_32FE::
+SoundTick_Sub02::
+Func_000_32FE:: ; address name
     ld a, [wDD14]
     ld hl, wDD12
     and a, [hl]
@@ -8791,11 +8821,13 @@ Func_000_3340::
     ld hl, $3E24
     jr Jump_000_335D
 
+; only called from StartMusic (E-0047)
 ; 1 call site from 1 routine (e.g. StartMusic)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
-Func_000_334B::
+StartMusic_Sub01::
+Func_000_334B:: ; address name
     call StartSound
 
 ; 2 call sites from 2 routines (e.g. StartSoundEffect, StartMusic)
@@ -8813,7 +8845,7 @@ Func_000_3351::
     call StartSound
 
 ; C2 static reading, and 495 emulated sound starts agree (E-0018): starts sound id A (kept in $DD10). Finds A's range in SoundBankTable, switches to that bank, takes the 4-byte record at (array + 4*(A - first id)), and copies it into the channel-state slot at $DC00 + record byte 0 (record byte 1 to slot +2, the track pointer to +3/+4, this bank to +5). Returns A + 1.
-; 4 call sites from 4 routines (e.g. StartSoundEffect, Func_000_334E, Func_000_3351, Func_000_334B)
+; 4 call sites from 4 routines (e.g. StartSoundEffect, Func_000_334E, Func_000_3351, StartMusic_Sub01)
 ; reads: wSoundId, wDD09
 ; writes: wSoundId, rROMB0, wDD09
 ; points at: wSoundChannelSlots
@@ -9016,8 +9048,8 @@ Jump_000_343C::
     or a, b
     and a, a
     jp z, Jump_000_3554
-    call Func_000_39F8
-    call Func_000_3A7A
+    call SoundTick_Sub04
+    call SoundTick_Sub05
     ldh a, [hFFE6]
     ld b, a
     ldh a, [hFFE7]
@@ -9040,7 +9072,7 @@ Jump_000_3460::
 
 Jump_000_3473::
     ld [hl], a
-    call Func_000_39B9
+    call SoundTick_Sub03
     ldh a, [hFFF0]
     and a, a
     jr z, Jump_000_347F
@@ -9066,7 +9098,7 @@ Jump_000_347F::
     ldh [hFFE0], a
 
 Jump_000_349C::
-    call Func_000_32E8
+    call SoundTick_Sub01
 
 Jump_000_349F::
     ldh a, [hFFEF]
@@ -9080,7 +9112,7 @@ Jump_000_34A8::
     dec a
     cp a, [hl]
     jr nz, Jump_000_34C7
-    call Func_000_3DC8
+    call SoundTick_Sub07
     ldh a, [hFFE0]
     call Func_000_3A2F
     jr Jump_000_34C7
@@ -9121,7 +9153,7 @@ Jump_000_34C7::
     ld [wDD19], a
     ldh [rNR30], a
     ld d, a
-    call Func_000_3D8D
+    call SoundTick_Sub06
     ld a, $80
     ldh [rNR30], a
 
@@ -9181,7 +9213,7 @@ Jump_000_352F::
     ldh [rNR51], a
     pop af
     ld [rROMB0], a
-    call Func_000_32FE
+    call SoundTick_Sub02
     ret
 
 ; C2 static reading (E-0019): channel start. Reads the 4-byte track header (byte 0 low nibble -> $FFDF, byte 1 -> duty bits of $FFDE (wave: $FFE6), byte 2 swapped -> $FFE0, byte 3 -> $FFE2) and begins playback at event 2 ($FFD8 = 2).
@@ -9340,7 +9372,7 @@ Jump_000_3613::
     ld [wDD19], a
 
 Jump_000_362A::
-    call Func_000_3B41
+    call SoundNextEvent_Sub03
     ret
 
 Jump_000_362E::
@@ -9774,7 +9806,7 @@ Jump_000_38B0::
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_38C2
-    call Func_000_3B39
+    call SoundNextEvent_Sub02
     ret
 
 Jump_000_38C2::
@@ -9874,13 +9906,13 @@ Jump_000_3938::
     ld a, [wSoundHwChannel]
     cp a, $02
     jr nz, Jump_000_394C
-    call Func_000_3D7C
+    call SoundNextEvent_Sub04
     ld a, $80
     ldh [rNR30], a
 
 Jump_000_394C::
     push hl
-    call Func_000_3A21
+    call SoundNextEvent_Sub01
     pop hl
     ld a, [wSoundHwChannel]
     and a, a
@@ -9949,11 +9981,13 @@ Jump_000_39AB::
     and a, $07
     jr Jump_000_398E
 
+; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wSoundHwChannel, hFFE8, hFFE0, hFFE9, wDD0D, hFFEC
 ; writes: hFFEA, hFFE0
 ; points at: hFFEA, hFFE8
-Func_000_39B9::
+SoundTick_Sub03::
+Func_000_39B9:: ; address name
     ld a, [wSoundHwChannel]
     cp a, $02
     ret z
@@ -9994,9 +10028,11 @@ Jump_000_39EC::
     ldh [hFFE0], a
     jr Func_000_3A2F
 
+; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wSoundHwChannel, hFFF0, hFFDA, wDD0E, hFFEB, wDD0D
-Func_000_39F8::
+SoundTick_Sub04::
+Func_000_39F8:: ; address name
     call Func_000_3B51
     ld a, [wSoundHwChannel]
     cp a, $03
@@ -10021,11 +10057,13 @@ Func_000_39F8::
     ld c, $13
     jr Func_000_3A4E
 
+; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
 ; reads: wSoundHwChannel, hFFE5, hFFE0, wDD0D, hFFEC, hFFE6, hFFE7, hFFF1
 ; writes: rNR32
 ; points at: hFFE0
-Func_000_3A21::
+SoundNextEvent_Sub01::
+Func_000_3A21:: ; address name
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_3A57
@@ -10099,18 +10137,20 @@ Jump_000_3A69::
     ldh [rNR32], a
     ret
 
+; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hFFEB, hFFEC, wSoundHwChannel, hFFE5, hFFE6, hFFE7, hFFF1, hFFE0, ...
 ; writes: rNR32
 ; points at: hFFE0
-Func_000_3A7A::
+SoundTick_Sub05::
+Func_000_3A7A:: ; address name
     call Func_000_3B51
     ldh a, [hFFEB]
     and a, a
     jr nz, Jump_000_3A89
     ldh a, [hFFEC]
     and a, $7F
-    jp z, Func_000_3B39
+    jp z, SoundNextEvent_Sub02
 
 Jump_000_3A89::
     ld a, [wSoundHwChannel]
@@ -10241,17 +10281,21 @@ Jump_000_3B20::
     or a, b
     jp Func_000_3A2F
 
+; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
 ; reads: wDD0D, hFFEC
-Func_000_3B39::
+SoundNextEvent_Sub02::
+Func_000_3B39:: ; address name
     call Func_000_3B51
     ld a, $00
     jp Func_000_3A2F
 
+; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
 ; reads: wDD0B, wDD09
 ; writes: wDD09
-Func_000_3B41::
+SoundNextEvent_Sub03::
+Func_000_3B41:: ; address name
     call Func_000_3B51
     ld a, [wDD0B]
     cpl
@@ -10261,7 +10305,7 @@ Func_000_3B41::
     ld [wDD09], a
     ret
 
-; 6 call sites from 5 routines (e.g. SoundNextEvent, Func_000_3B39, Func_000_3B41, Func_000_3A7A, ...)
+; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_Sub02, SoundNextEvent_Sub03, SoundTick_Sub05, ...)
 ; reads: wDD0B, wDD08
 Func_000_3B51::
     ld a, [wDD0B]
@@ -10282,10 +10326,12 @@ Func_000_3B51::
     ds $10, $02
     ds $70, $00
 
+; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
 ; reads: wDD17, hFFE2, hFFF1
 ; writes: wDD17, rNR30
-Func_000_3D7C::
+SoundNextEvent_Sub04::
+Func_000_3D7C:: ; address name
     ld a, [wDD17]
     ld b, a
     ldh a, [hFFE2]
@@ -10297,9 +10343,11 @@ Func_000_3D7C::
     xor a, a
     ldh [rNR30], a
 
+; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hFFF1
-Func_000_3D8D::
+SoundTick_Sub06::
+Func_000_3D8D:: ; address name
     ld d, a
     ld hl, $30CC
     push de
@@ -10351,10 +10399,12 @@ Func_000_3DAE:: ; address name
     ld h, a
     ret
 
+; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hFFED, hFFE0
 ; writes: hFFED, hFFE0
-Func_000_3DC8::
+SoundTick_Sub07::
+Func_000_3DC8:: ; address name
     push de
     push bc
     ldh a, [hFFED]
@@ -10539,7 +10589,7 @@ Jump_000_3E8F::
     ret
 
 ; HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)
-; 18 call sites from 15 routines (e.g. Func_030_41DF, Func_030_480E, Func_036_4930, Func_036_494E, ...)
+; 18 call sites from 15 routines (e.g. RunBattleCommandEntry_Case04_Sub01, Func_030_480E, Func_036_4930, RunBattleResolveStep_Case07_Sub01, ...)
 ; reads: wC5E7, wC5E8
 RandomInRange::
 Func_000_3E98:: ; address name
@@ -10594,7 +10644,7 @@ Jump_000_3ED3::
     ret
 
 ; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
-; 73 call sites from 58 routines (e.g. RandomInRange, Func_030_4203, Func_030_41DF, Func_030_47B9, ...)
+; 73 call sites from 58 routines (e.g. RandomInRange, RunBattleCommandEntry_Case04_Sub02, RunBattleCommandEntry_Case04_Sub01, Func_030_47B9, ...)
 ; reads: wC58A, wC5BA, wC5BB, wC5E7, wC5E8
 ; writes: wC5E7, wC5E8, wC5BA, wC5BB
 AdvanceRandom::

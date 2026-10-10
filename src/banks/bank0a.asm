@@ -370,7 +370,7 @@ Jump_00A_420E::
 Jump_00A_4213::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7_Case03)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
 ; reads: wC194
 Func_00A_4214::
     ld a, [wC194]
@@ -517,7 +517,7 @@ Jump_00A_42AF::
     ld [wC46C], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7_Case03)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
 ; reads: hFF8C, wModeState, wCC44, hMapId, wC6FD, wC88C
 ; writes: rRAMG, wC88C, wC902, wModeState, wC46B, wC46C, wC915
 ; points at: wC6FE
@@ -659,7 +659,7 @@ Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $89, $92, $9D, $A4, $A9, $AB, $AF, $B2, $B1, $B6, $B9, $BA, $BC, $C5, $D0, $D9
     db $E2, $FF
 
-; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7_Case03)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
 ; reads: wFadeState, wScriptRunning, wC901, wD069
 ; writes: wD069, wC916, wC917
 Func_00A_43B5::
@@ -694,7 +694,7 @@ Jump_00A_43DC::
     farcall Func_013_405C
     ret
 
-; 3 call sites from 3 routines (e.g. Func_002_4AE0_Case07, Func_002_56DC, Func_002_5BD7_Case03)
+; 3 call sites from 3 routines (e.g. Func_002_4AE0_Case07, UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
 ; reads: wFadeState, wScriptRunning, hFF8C, wModeState, wC901, wD091, wC902, wCC44, ...
 ; writes: wC901, wD091, wC916, wC917, wC902, wC903, wModeState, wC904, ...
 Func_00A_43EC::
@@ -3131,7 +3131,7 @@ Data_00A_560C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $97, $55, $A2, $55, $AD, $55, $B8, $55, $C3, $55, $CE, $55, $D9, $55, $E4, $55
     db $EF, $55
 
-; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7_Case03)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
 ; reads: wScriptRunning, wC901, wC7C9, wC7CA, hFFC6
 ; writes: hFFC6, wC7C9, wC7CA, rRAMG
 ; points at: sA000
@@ -3268,11 +3268,13 @@ Jump_00A_56B8::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_56DC)
+; only called from UpdatePlayerMovement_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. UpdatePlayerMovement_Sub01)
 ; reads: wC901, wScriptRunning, wC6FD, hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE
-Func_00A_56D0::
+UpdatePlayerMovement_Sub01_Sub02::
+Func_00A_56D0:: ; address name
     ld a, [wC901]
     and a, $7F
     ret z
@@ -3356,10 +3358,12 @@ Jump_00A_573E::
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_002_56DC)
+; only called from UpdatePlayerMovement_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. UpdatePlayerMovement_Sub01)
 ; reads: hFF93, wScriptRunning, hFF96, hFF97
 ; writes: hFF96, hFF97, wC916, wC917
-Func_00A_5748::
+UpdatePlayerMovement_Sub01_Sub03::
+Func_00A_5748:: ; address name
     ldh a, [hFF93]
     bit 7, a
     ret z

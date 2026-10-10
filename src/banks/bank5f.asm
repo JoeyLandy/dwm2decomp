@@ -174,10 +174,12 @@ Func_05F_69F3::
     ld a, [wC925]
     ld h, a
 
+; only called from ScriptCommand0A_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand0A_Run_Case02)
 ; reads: wCC44
 ; writes: wStringIndex, wStringCategory
-Func_05F_69FB::
+ScriptCommand0A_Run_Case02_Sub01::
+Func_05F_69FB:: ; address name
     ld a, [wCC44]
     cp a, $80
     jr z, Jump_05F_6A07
@@ -983,9 +985,11 @@ Jump_05F_6E44::
     jr nz, Jump_05F_6E44
     ret
 
+; only called from ScriptCommand2C_Run_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand2C_Run_Case06)
 ; reads: wC92D
-Func_05F_6E58::
+ScriptCommand2C_Run_Case06_Sub01::
+Func_05F_6E58:: ; address name
     ld a, [wC92D]
     rst $00
     dw Func_05F_6E58_Case00
@@ -1072,9 +1076,11 @@ Jump_05F_6E99::
     inc [hl]
     ret
 
+; only called from ScriptCommand2D_Run_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand2D_Run_Case05)
 ; reads: wC92D
-Func_05F_6EC3::
+ScriptCommand2D_Run_Case05_Sub01::
+Func_05F_6EC3:: ; address name
     ld a, [wC92D]
     rst $00
     dw Func_05F_6E58_Case00
@@ -2904,7 +2910,7 @@ Jump_05F_7A4F::
     ld a, [wScriptParam0]
     ld l, a
     ld h, $00
-    call Func_05F_69FB
+    call ScriptCommand0A_Run_Case02_Sub01
     ld hl, wScriptStep
     inc [hl]
     ret

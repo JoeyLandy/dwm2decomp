@@ -1,13 +1,15 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0E
 
+; only called from GameMode0_Update_Table2_Case1C (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode0_Update_Table2_Case1C)
 ; reads: wStringIndex
-Func_00E_4001::
+GameMode0_Update_Table2_Case1C_Sub01::
+Func_00E_4001:: ; address name
     ld a, [wStringIndex]
     cp a, $88
     jr c, Jump_00E_400F
-    farcall Func_096_7011
+    farcall GameMode0_Update_Table2_Case1C_Sub01_Sub01
     ret
 
 Jump_00E_400F::
@@ -959,7 +961,7 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
     db "be in the Vault.", $F7
     db $F0
 
-; 6 call sites from 6 routines (e.g. Func_001_5535, Func_007_7DE5, ScriptCommandF4_Run_Table2_Case14, Func_015_4182_Case1C, ...)
+; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_007_7DE5, ScriptCommandF4_Run_Table2_Case14, Func_015_4182_Case1C, ...)
 ; reads: wD7F6, wD7F7, wD7F5, wC616, wD7F1, wD00E, wCFA8
 ; writes: wD7F6, wD7F7, wD006, wD007, wCFA8, wD7F5
 ; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...

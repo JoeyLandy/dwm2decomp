@@ -1,10 +1,12 @@
 SECTION "Bank 95", ROMX[$4000], BANK[$95]
     INCBIN "dwm2-cobi-us.gbc", $254000, $650
 
+; only called from BeginStringDisplay_Bank08 (E-0047)
 ; 1 call site from 1 routine (e.g. BeginStringDisplay_Bank08)
 ; reads: wStringCategory
 ; writes: wStringCategory
-Func_095_4650::
+BeginStringDisplay_Bank08_Sub01::
+Func_095_4650:: ; address name
     ld de, Data_095_4675
     ld a, [wStringCategory]
     sub a, $09
@@ -12,10 +14,12 @@ Func_095_4650::
     call BeginStringDisplay
     ret
 
+; only called from CopyStringToBuffer_Bank08 (E-0047)
 ; 1 call site from 1 routine (e.g. CopyStringToBuffer_Bank08)
 ; reads: wStringCategory
 ; writes: wStringCategory
-Func_095_465F::
+CopyStringToBuffer_Bank08_Sub01::
+Func_095_465F:: ; address name
     ld de, Data_095_4675
     ld a, [wStringCategory]
     sub a, $09

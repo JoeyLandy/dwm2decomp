@@ -1,11 +1,13 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: wCD0C, hFFCE, hFFCF
 ; writes: wCC46, hFFCE, hFFCF, hFFC6
 ; points at: wCD8B, wCDAC
-Func_084_4001::
+DebugAutomap_Update_Sub01_Sub01_Sub0C::
+Func_084_4001:: ; address name
     xor a, a
     ld [wCC46], a
     ld a, [wCD0C]
@@ -59,7 +61,7 @@ Jump_084_4029::
 Jump_084_405A::
     jr Jump_084_4029
 
-; 1 call site from 1 routine (e.g. Func_084_4001)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub0C)
 ; reads: hFFC6
 Func_084_405C::
     ldh a, [hFFC6]
@@ -722,11 +724,13 @@ Jump_084_4457::
 Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $210461, $361
 
+; only called from RunItemEffect_Case2E (E-0047)
 ; 1 call site from 1 routine (e.g. RunItemEffect_Case2E)
 ; reads: hFF8C, wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC88E, ...
 ; writes: hFFD0, wC83B, wC83C, wC83D, wC83E, wC88E, wC88F, wC890, ...
 ; points at: wCD7B, wCD8B
-Func_084_47C2::
+RunItemEffect_Case2E_Sub01::
+Func_084_47C2:: ; address name
     xor a, a
     ldh [hFFD0], a
     ldh a, [hFF8C]
@@ -739,7 +743,7 @@ Func_084_47C2::
     cp a, $20
     ret c
     push af
-    call Func_084_4A6A
+    call RunItemEffect_Case2E_Sub01_Sub01
     or a, a
     jr z, Jump_084_47E0
     pop af
@@ -870,7 +874,7 @@ Data_084_4887:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Jump_084_48A9::
     cp a, $80
     ret nz
-    call Func_084_4A6A
+    call RunItemEffect_Case2E_Sub01_Sub01
     or a, a
     ret nz
     ldh a, [hMapScreenX]
@@ -1032,9 +1036,11 @@ Jump_084_499F::
 Data_084_49A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2109A1, $C9
 
-; 2 call sites from 1 routine (e.g. Func_084_47C2)
+; only called from RunItemEffect_Case2E_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. RunItemEffect_Case2E_Sub01)
 ; reads: wC8FE, hPlayerX, hPlayerY, wC8FF
-Func_084_4A6A::
+RunItemEffect_Case2E_Sub01_Sub01::
+Func_084_4A6A:: ; address name
     ld a, [wC8FE]
     cp a, $FF
     jr z, Jump_084_4A87

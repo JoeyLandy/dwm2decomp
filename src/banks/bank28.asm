@@ -9,7 +9,7 @@ Func_028_4001:: ; address name
     ld a, [wStringIndex]
     cp a, $DA
     jr c, Jump_028_400F
-    farcall Func_097_4001
+    farcall BeginStringDisplay_Bank28_Sub01
     ret
 
 Jump_028_400F::

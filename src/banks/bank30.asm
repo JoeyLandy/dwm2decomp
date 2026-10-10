@@ -38,14 +38,14 @@ Jump_030_4018:: ; address name
     ld c, $00
     ld hl, wSlotPersonalityHi
     ld de, $0000
-    call Func_030_408D
+    call RunBattleCommandEntry_Case00_Sub01
     ld a, [wD88F]
     ld b, a
     ld c, $00
     ld hl, wSlotPersonalityMid
     push de
     ld de, $0000
-    call Func_030_408D
+    call RunBattleCommandEntry_Case00_Sub01
     pop hl
     ld a, l
     sub a, e
@@ -64,7 +64,7 @@ Jump_030_4052::
     ld c, $00
     ld hl, wSlotPersonalityLo
     ld de, $0000
-    call Func_030_408D
+    call RunBattleCommandEntry_Case00_Sub01
     pop hl
     ld a, l
     sub a, e
@@ -83,7 +83,7 @@ Jump_030_4070::
     ld c, $00
     ld hl, wD980
     ld de, $0000
-    call Func_030_408D
+    call RunBattleCommandEntry_Case00_Sub01
     pop hl
     ld a, l
     sub a, e
@@ -96,8 +96,10 @@ Jump_030_4070::
 Jump_030_408C::
     ret
 
+; only called from RunBattleCommandEntry_Case00 (E-0047)
 ; 4 call sites from 1 routine (e.g. RunBattleCommandEntry_Case00)
-Func_030_408D::
+RunBattleCommandEntry_Case00_Sub01::
+Func_030_408D:: ; address name
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_030_409A
@@ -112,7 +114,7 @@ Jump_030_409A::
     inc hl
     inc c
     dec b
-    jr nz, Func_030_408D
+    jr nz, RunBattleCommandEntry_Case00_Sub01
     ret
 
 ; entry 1 of the `rst $00` table in RunBattleCommandEntry
@@ -282,8 +284,8 @@ Jump_030_4196::
     cp a, $02
     jr nz, Jump_030_41D2
     ld a, e
-    call Func_030_41DF
-    call Func_030_4203
+    call RunBattleCommandEntry_Case04_Sub01
+    call RunBattleCommandEntry_Case04_Sub02
     ld hl, wD87A
     deref_hl
     ld a, c
@@ -304,14 +306,16 @@ Jump_030_41D2::
     inc e
     dec d
     jp nz, Jump_030_4196
-    call Func_030_4297
+    call RunBattleCommandEntry_Case04_Sub03
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
+; only called from RunBattleCommandEntry_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
 ; points at: wBattleAGL
-Func_030_41DF::
+RunBattleCommandEntry_Case04_Sub01::
+Func_030_41DF:: ; address name
     push de
     call AdvanceRandom
     ld a, e
@@ -333,11 +337,13 @@ Func_030_41DF::
     pop de
     ret
 
+; only called from RunBattleCommandEntry_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
 ; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wDA1C, wCFF3
-Func_030_4203::
+RunBattleCommandEntry_Case04_Sub02::
+Func_030_4203:: ; address name
     push de
     ld a, e
     ld hl, wDA1C
@@ -425,10 +431,12 @@ Jump_030_4295::
     pop de
     ret
 
+; only called from RunBattleCommandEntry_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
 ; reads: wD892, wD871
 ; points at: wD87A, wD868
-Func_030_4297::
+RunBattleCommandEntry_Case04_Sub03::
+Func_030_4297:: ; address name
     ld a, [wD892]
     cp a, $FF
     ret z
@@ -578,7 +586,7 @@ Jump_030_434C:: ; address name
     ld bc, $0005
     call FillBytes
     farcall Func_0A3_4187
-    call Func_030_439D
+    call RunBattleCommandEntry_Case06_Sub01
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
@@ -593,9 +601,11 @@ Func_030_4396:: ; address name
     ld b, a
     ret
 
+; only called from RunBattleCommandEntry_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case06)
 ; points at: wDA1C, wD812
-Func_030_439D::
+RunBattleCommandEntry_Case06_Sub01::
+Func_030_439D:: ; address name
     ld c, $00
     ld b, $08
 

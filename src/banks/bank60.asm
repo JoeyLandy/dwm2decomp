@@ -35,23 +35,25 @@ Func_060_4001::
     ld a, [hl]
     ld [wCD04], a
 
-; 1 call site from 1 routine (e.g. Func_001_5DBA)
+; only called from DebugAutomap_Update_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01)
 ; reads: wC833
-Func_060_4035::
-    call Func_060_4AE5
-    call Func_060_4DA1
-    call Func_060_4E0A
-    call Func_060_4DF6
-    call Func_060_4F7C
-    call Func_060_50E4
-    call Func_060_51B7
+DebugAutomap_Update_Sub01_Sub01::
+Func_060_4035:: ; address name
+    call DebugAutomap_Update_Sub01_Sub01_Sub02
+    call DebugAutomap_Update_Sub01_Sub01_Sub03
+    call DebugAutomap_Update_Sub01_Sub01_Sub05
+    call DebugAutomap_Update_Sub01_Sub01_Sub04
+    call DebugAutomap_Update_Sub01_Sub01_Sub06
+    call DebugAutomap_Update_Sub01_Sub01_Sub07
+    call DebugAutomap_Update_Sub01_Sub01_Sub09
     or a, a
-    jr nz, Func_060_4035
-    farcall Func_084_4001
-    call Func_060_50E5
-    call Func_060_5373
-    call Func_060_4076
-    call Func_060_5E42
+    jr nz, DebugAutomap_Update_Sub01_Sub01
+    farcall DebugAutomap_Update_Sub01_Sub01_Sub0C
+    call DebugAutomap_Update_Sub01_Sub01_Sub08
+    call DebugAutomap_Update_Sub01_Sub01_Sub0A
+    call DebugAutomap_Update_Sub01_Sub01_Sub01
+    call DebugAutomap_Update_Sub01_Sub01_Sub0B
     ld a, [wC833]
     ld l, a
     ld h, $00
@@ -69,8 +71,10 @@ Func_060_4035::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
-Func_060_4076::
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+DebugAutomap_Update_Sub01_Sub01_Sub01::
+Func_060_4076:: ; address name
     call Func_060_47A7
     call Func_060_436B
     call Func_060_408F
@@ -81,7 +85,7 @@ Func_060_4076::
     call Func_060_4597
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD02, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wCD10, wCCF7
@@ -202,7 +206,7 @@ Data_060_4123:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $21, $00
     INCBIN "dwm2-cobi-us.gbc", $180144, $EF
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wC969, wCD05
 ; points at: wCD11
 Func_060_4233::
@@ -252,7 +256,7 @@ Jump_060_4267::
     jr nz, Jump_060_423C
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD04, wCD02, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wCD10
@@ -355,7 +359,7 @@ Jump_060_42D4::
     jp nz, Jump_060_4286
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wC969, wCD05
 ; points at: wCD11
 Func_060_42F2::
@@ -453,7 +457,7 @@ Jump_060_435E::
     jr nz, Jump_060_4356
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wC833, wCD02
 ; writes: wCD02
 ; points at: wCCF7
@@ -523,7 +527,7 @@ Data_060_43C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_060_43D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $1803D7, $1C0
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD05, wC96A, hFFC8
 ; writes: hFFC6, hFFC8
 ; points at: wCE7B, wCD7B, wCD74
@@ -714,7 +718,7 @@ Jump_060_4678::
     inc hl
     jp Jump_060_4626
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD05, wCD03, wC96B, hFFC6
 ; writes: hFFC6, wCE72, wCE73, wCE75, wCE76, wCE78, wCE79, wCE74, ...
 Func_060_4698::
@@ -925,7 +929,7 @@ Jump_060_47A4::
     ld a, $07
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4076)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD05
 ; writes: wC969, wC96A, wC96B
 Func_060_47A7::
@@ -950,11 +954,13 @@ Func_060_47A7::
     ret
     INCBIN "dwm2-cobi-us.gbc", $1807C5, $320
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: wCD05, wCD04, wCD0D, wCD0E, hFFCE, hFFCF
 ; writes: wCD07, wCD0D, wMapWidthScreens, wCD0E, wMapHeightScreens, hFFCE, hFFCF, wCD0C
 ; points at: wCE93, wCD63, wCD70
-Func_060_4AE5::
+DebugAutomap_Update_Sub01_Sub01_Sub02::
+Func_060_4AE5:: ; address name
     xor a, a
     ld [wCD07], a
     call Func_060_4C6C
@@ -1129,7 +1135,7 @@ Data_060_4C58:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $0F, $08, $0F, $08, $0F, $10, $1F, $10, $1F, $10, $1F, $10, $1F, $10, $1F
     db $10, $1F, $10, $1F
 
-; 1 call site from 1 routine (e.g. Func_060_4AE5)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
 ; reads: wC88E, wC891, wCC42
 ; writes: wC88E
 Func_060_4C6C::
@@ -1148,7 +1154,7 @@ Func_060_4C6C::
     ld [wC88E], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4AE5)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
 ; reads: wCD03, wC833
 ; writes: wCD0B
 Func_060_4C85::
@@ -1188,11 +1194,13 @@ Func_060_4C85::
 Data_060_4CC1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $180CC1, $E0
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: hFFC6, hFFC7, hFFCB, hFFCC
 ; writes: hFFC6, hFFC7, hFFCB, hFFCC, hFFCD
 ; points at: wCD63, wCD70, hFFCD
-Func_060_4DA1::
+DebugAutomap_Update_Sub01_Sub01_Sub03::
+Func_060_4DA1:: ; address name
     ld b, $00
     ld hl, wCD63
     ld a, l
@@ -1251,9 +1259,11 @@ Jump_060_4DCE::
     jr nz, Jump_060_4DB8
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; points at: wCD70, wCD74
-Func_060_4DF6::
+DebugAutomap_Update_Sub01_Sub01_Sub04::
+Func_060_4DF6:: ; address name
     ld b, $04
     ld hl, wCD70
     ld de, wCD74
@@ -1270,11 +1280,13 @@ Jump_060_4DFE::
     jr nz, Jump_060_4DFE
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: hFFCD, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 ; points at: wCD70, wCD74
-Func_060_4E0A::
+DebugAutomap_Update_Sub01_Sub01_Sub05::
+Func_060_4E0A:: ; address name
     ldh a, [hFFCD]
     cp a, $01
     jp z, Jump_060_4F4B
@@ -1514,7 +1526,7 @@ Jump_060_4F53::
     jr nz, Jump_060_4F53
     ret
 
-; 4 call sites from 1 routine (e.g. Func_060_4E0A)
+; 4 call sites from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub05)
 ; reads: hFFC7
 ; writes: hFFC7
 ; points at: wCD70
@@ -1548,11 +1560,13 @@ Jump_060_4F76::
     jr nz, Jump_060_4F66
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: hFFCD, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
 ; points at: wCD7A, wCD78, wCD70
-Func_060_4F7C::
+DebugAutomap_Update_Sub01_Sub01_Sub06::
+Func_060_4F7C:: ; address name
     ld hl, wCD7A
     ld b, $05
 
@@ -1640,7 +1654,7 @@ Jump_060_4FE4::
     ld [hl], $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4F7C)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub06)
 ; reads: hFFC7, wCD04, hFFCA, hFFC9, hFFC8
 ; writes: hFFCA, hFFC9
 Func_060_4FEA::
@@ -1806,15 +1820,19 @@ Jump_060_50E0::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
-Func_060_50E4::
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+DebugAutomap_Update_Sub01_Sub01_Sub07::
+Func_060_50E4:: ; address name
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: hFFC6, hFFC7, wCD04, wCD03
 ; writes: hFFC6, hFFC7
 ; points at: wCE8B, wCD8B, wCDAF
-Func_060_50E5::
+DebugAutomap_Update_Sub01_Sub01_Sub08::
+Func_060_50E5:: ; address name
     ld hl, wCE8B
     ld a, l
     ldh [hFFC6], a
@@ -1919,11 +1937,13 @@ Data_060_5177:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53
     db $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $40, $41, $42, $43, $44, $45, $46, $47
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: hFFCD, hFFC6, hFFC7, wCD0C, wCD0E, wCD0D, hFFCB, hFFC8, ...
 ; writes: hFFC6, hFFC7, hFFCB, hFFC8, hFFC9, hFFCE, hFFCF
 ; points at: wCD70, wCD88
-Func_060_51B7::
+DebugAutomap_Update_Sub01_Sub01_Sub09::
+Func_060_51B7:: ; address name
     ldh a, [hFFCD]
     cp a, $01
     jr z, Jump_060_51F9
@@ -2078,7 +2098,7 @@ Jump_060_5288::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_51B7)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub09)
 ; reads: hFFC9, wCD04, hFFCA, hFFD0, hFFCE, hFFCF, wCD0C, hFFCC
 ; writes: hFFD0, hFFCC, hFFCA, hFFC9, hFFCE, hFFCF
 ; points at: wCD70, wCD7B, wCD8B
@@ -2246,11 +2266,13 @@ Jump_060_5365::
     ld a, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: wCD05, wCC47
 ; writes: wCD0F, wCC47, hFFC6
 ; points at: wCC48
-Func_060_5373::
+DebugAutomap_Update_Sub01_Sub01_Sub0A::
+Func_060_5373:: ; address name
     ld a, [wCD05]
     call Func_060_53C3
 
@@ -2297,7 +2319,7 @@ Jump_060_53A7::
 Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
-; 3 call sites from 3 routines (e.g. Func_060_62F9, Func_060_686C, Func_060_5373)
+; 3 call sites from 3 routines (e.g. Func_060_62F9, Func_060_686C, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; writes: wCD0F
 Func_060_53C3::
     cp a, $0B
@@ -2325,7 +2347,7 @@ Jump_060_53DF::
     ld [wCD0F], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_060_62F9, Func_060_5373)
+; 2 call sites from 2 routines (e.g. Func_060_62F9, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; reads: wCD0D, wCD04, wCD0E, hFFC9, hFFCA, hFFC6, wCC47, hFFCB, ...
 ; writes: wC94F, hFFC9, hFFCA, hFFCB
 ; points at: wCC4C
@@ -2464,7 +2486,7 @@ Jump_060_54AB::
     ld a, $01
     ret
 
-; 3 call sites from 3 routines (e.g. Func_060_62F9, Func_060_6488, Func_060_5373)
+; 3 call sites from 3 routines (e.g. Func_060_62F9, Func_060_6488, DebugAutomap_Update_Sub01_Sub01_Sub0A)
 ; reads: wCD0F, wCD04, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7
 Func_060_54BB::
@@ -2850,10 +2872,12 @@ Data_060_5A19:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $08, $0E, $34, $1E, $00, $F5, $CD, $80, $1F, $F0, $C6, $FE, $FF, $28, $07
     db $F1, $0C, $1C, $05, $20, $F0, $C9, $F1, $C9
 
-; 1 call site from 1 routine (e.g. Func_060_4035)
+; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: wCD88, hFFCA, hFFC9
 ; writes: wCD08, hFFC9, hFFCA, wCD09, wCD0A
-Func_060_5E42::
+DebugAutomap_Update_Sub01_Sub01_Sub0B::
+Func_060_5E42:: ; address name
     ld a, [wCD88]
     ld [wCD08], a
     swap a
@@ -2942,7 +2966,7 @@ Jump_060_5EBE::
 Data_060_5ED1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
-; 1 call site from 1 routine (e.g. Func_060_4DA1)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub03)
 ; reads: wCD04
 Func_060_5EE1::
     call NextRandomSeed
@@ -4419,7 +4443,7 @@ Func_060_690E:: ; heuristic: follows a terminator; C0
     inc hl
     ld [hl-], a
 
-; 2 call sites from 2 routines (e.g. Func_001_5DBA, Func_012_6955)
+; 2 call sites from 2 routines (e.g. DebugAutomap_Update_Sub01, Func_012_6955)
 ; reads: hFFC6
 ; writes: hFFC9, hFFC7, hFFC8
 Func_060_6916::
@@ -4494,7 +4518,7 @@ Data_060_6A09:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182B05, $15C
 
-; 3 call sites from 3 routines (e.g. Func_060_4001, Func_001_5DBA, Func_01B_53CE_Table3_Case21)
+; 3 call sites from 3 routines (e.g. Func_060_4001, DebugAutomap_Update_Sub01, Func_01B_53CE_Table3_Case21)
 ; reads: hFFC6
 ; writes: rRAMB, rRAMG, hFFC6
 ; points at: sA000
@@ -4534,7 +4558,7 @@ Jump_060_6C8E::
     ld [rRAMB], a
     ret
 
-; 6 call sites from 5 routines (e.g. Func_001_5DBA, Func_002_4745_Case02, Func_002_4F4C_Case07, Func_002_6C40_Case05, ...)
+; 6 call sites from 5 routines (e.g. DebugAutomap_Update_Sub01, Func_002_4745_Case02, Func_002_4F4C_Case07, Func_002_6C40_Case05, ...)
 ; reads: wCC42
 ; writes: rRAMB, rRAMG
 ; points at: wCD07

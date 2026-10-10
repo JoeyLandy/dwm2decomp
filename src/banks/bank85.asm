@@ -570,7 +570,7 @@ Jump_085_4390:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2A_Run_Case08::
 Jump_085_43AB:: ; address name
-    call Func_085_446D
+    call ScriptCommand2A_Run_Case08_Sub01
     ret
 
 ; entry 7 of the `rst $00` table in ScriptCommand4D_Run
@@ -683,10 +683,12 @@ Jump_085_442D:: ; address name
     inc [hl]
     ret
 
+; only called from ScriptCommand2A_Run_Case08 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand2A_Run_Case08)
 ; reads: wJoypadPressed, wFrameCounterLo
 ; points at: wScriptStep, wC92E
-Func_085_446D::
+ScriptCommand2A_Run_Case08_Sub01::
+Func_085_446D:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_085_4479
@@ -697,7 +699,7 @@ Func_085_446D::
 Jump_085_4479::
     bit 0, a
     jr z, Jump_085_4493
-    call Func_085_44D2
+    call ScriptCommand2A_Run_Case08_Sub01_Sub01
     ld a, $BC
     call WriteVRAMByte
     ld a, $69
@@ -711,7 +713,7 @@ Jump_085_4479::
 Jump_085_4493::
     bit 6, a
     jr z, Jump_085_44AA
-    call Func_085_44D2
+    call ScriptCommand2A_Run_Case08_Sub01_Sub01
     ld a, $C3
     call WriteVRAMByte
     ld hl, wC92E
@@ -723,7 +725,7 @@ Jump_085_4493::
 Jump_085_44AA::
     bit 7, a
     jr z, Jump_085_44BF
-    call Func_085_44D2
+    call ScriptCommand2A_Run_Case08_Sub01_Sub01
     ld a, $C3
     call WriteVRAMByte
     ld hl, wC92E
@@ -732,7 +734,7 @@ Jump_085_44AA::
     call QueueSoundEffect
 
 Jump_085_44BF::
-    call Func_085_44D2
+    call ScriptCommand2A_Run_Case08_Sub01_Sub01
     ld c, $BB
     ld a, [wFrameCounterLo]
     bit 3, a
@@ -744,10 +746,12 @@ Jump_085_44CD::
     call WriteVRAMByte
     ret
 
-; 4 call sites from 1 routine (e.g. Func_085_446D)
+; only called from ScriptCommand2A_Run_Case08_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. ScriptCommand2A_Run_Case08_Sub01)
 ; reads: wC92E, hScrollY, hScrollX
 ; writes: wC92E
-Func_085_44D2::
+ScriptCommand2A_Run_Case08_Sub01_Sub01::
+Func_085_44D2:: ; address name
     ld a, [wC92E]
     and a, $03
     ld [wC92E], a
@@ -2408,7 +2412,7 @@ Jump_085_4F2E:: ; address name
 ScriptCommandC2_Run_Case09::
 Jump_085_4F34:: ; address name
     ld b, $1E
-    call Func_085_4FD8
+    call ScriptCommandC2_Run_Case09_Sub01
     ret
 
 ; entry 8 of the `rst $00` table in ScriptCommandC2_Run
@@ -2519,11 +2523,13 @@ Jump_085_4FBE::
     inc [hl]
     ret
 
+; only called from ScriptCommandC2_Run_Case09 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandC2_Run_Case09)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi, wScriptParam0
 ; writes: hScrollX, hScrollXHi, wScriptParam0
 ; points at: wScriptStep
-Func_085_4FD8::
+ScriptCommandC2_Run_Case09_Sub01::
+Func_085_4FD8:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
@@ -2824,7 +2830,7 @@ Jump_085_5173:: ; address name
     ld [wScriptParam0], a
     and a, $01
     jr z, Jump_085_5181
-    call Func_085_5190
+    call ScriptCommandC4_Run_Case05_Sub01
 
 Jump_085_5181::
     ld a, [wScriptParam0]
@@ -2836,15 +2842,17 @@ Jump_085_5181::
     inc [hl]
     ret
 
+; only called from ScriptCommandC4_Run_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandC4_Run_Case05)
 ; reads: wC5E8
 ; writes: wCB9A
-Func_085_5190::
+ScriptCommandC4_Run_Case05_Sub01::
+Func_085_5190:: ; address name
     call NextTableByte
     ld a, [wC5E8]
     and a, $03
     cp a, $03
-    jr z, Func_085_5190
+    jr z, ScriptCommandC4_Run_Case05_Sub01
     dec a
     ld c, a
     ld a, $40
@@ -4631,11 +4639,13 @@ Jump_085_5C08::
     db $14, $15, $16, $1A, $1B, $1C, $1D, $21, $24, $25, $26, $28, $29, $2A, $2E, $2F
     db $33, $38, $39, $3D
 
+; only called from ScriptCommand84_Run_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand84_Run_Case04)
 ; reads: wC8FE, wC935, wC634, wC5E7, wC195, wC924, wC925, wCD04, ...
 ; writes: wC956, wScriptStartRequest, wScriptParam1, wC8FE, wC8FF, wC900, wScriptParam0
 ; points at: wScriptStep
-Func_085_5C92::
+ScriptCommand84_Run_Case04_Sub01::
+Func_085_5C92:: ; address name
     ld a, [wC8FE]
     cp a, $FF
     jr nz, Jump_085_5CB4
@@ -4667,7 +4677,7 @@ Jump_085_5CBE::
     and a, $0F
     dec a
     jr nz, Jump_085_5CFC
-    call Func_085_5D6F
+    call ScriptCommand84_Run_Case04_Sub01_Sub02
     cp a, $05
     jr nc, Jump_085_5CD8
     ld a, $80
@@ -4698,7 +4708,7 @@ Jump_085_5CFC::
     push af
     ld a, $80
     ld [wC956], a
-    call Func_085_5D6F
+    call ScriptCommand84_Run_Case04_Sub01_Sub02
     cp a, $32
     jr nc, Jump_085_5D0D
     ld a, $00
@@ -4752,7 +4762,7 @@ Jump_085_5D41::
     or a, a
     jp z, Jump_085_5CB4
     ld [wC8FE], a
-    farcall Func_012_7179
+    farcall ScriptCommand84_Run_Case04_Sub01_Sub01
     ld a, [wC924]
     ld [wC8FF], a
     ld a, [wC925]
@@ -4763,14 +4773,16 @@ Jump_085_5D41::
     inc [hl]
     ret
 
-; 2 call sites from 1 routine (e.g. Func_085_5C92)
+; only called from ScriptCommand84_Run_Case04_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ScriptCommand84_Run_Case04_Sub01)
 ; reads: wCD03
-Func_085_5D6F::
+ScriptCommand84_Run_Case04_Sub01_Sub02::
+Func_085_5D6F:: ; address name
     call NextRandomSeed
     ld a, [wCD03]
     and a, $7F
     cp a, $63
-    jr nc, Func_085_5D6F
+    jr nc, ScriptCommand84_Run_Case04_Sub01_Sub02
     ret
 
 ; no direct call (reached through a table, a jump or a vector)

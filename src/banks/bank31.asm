@@ -48,7 +48,7 @@ Jump_031_404B::
     ld [wC554], a
     ld a, h
     ld [wC555], a
-    farcall Func_019_4001
+    farcall GameMode4_Init_Sub01
     ld b, $31
     ld de, Data_031_7C1E
     ld hl, vTiles1 + $240
@@ -433,7 +433,7 @@ Jump_031_42B2::
     jr nz, Jump_031_429D
     ld a, $00
     ld [wStringCategory], a
-    call Func_031_42D5
+    call BattlePhase0_Step3_Sub01
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattlePhase
     dec [hl]
@@ -448,10 +448,12 @@ Jump_031_42CF::
 Jump_031_42D4::
     ret
 
+; only called from BattlePhase0_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattlePhase0_Step3)
 ; reads: wD960, wD961, wD890, wD962, wD963, wD964, wD965, wStringIndex
 ; points at: wC130
-Func_031_42D5::
+BattlePhase0_Step3_Sub01::
+Func_031_42D5:: ; address name
     ld a, [wD960]
     ld e, a
     ld a, [wD961]
@@ -477,7 +479,7 @@ Func_031_42D5::
     jr Jump_031_430A
 
 Jump_031_4305::
-    call Func_031_4365
+    call BattlePhase0_Step3_Sub01_Sub01
     jr Jump_031_4364
 
 Jump_031_430A::
@@ -542,11 +544,13 @@ Jump_031_435E::
 Jump_031_4364::
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_42D5)
+; only called from BattlePhase0_Step3_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. BattlePhase0_Step3_Sub01)
 ; reads: wStringCategory, wStringIndex
 ; writes: wStringCategory, wStringIndex
 ; points at: wC130
-Func_031_4365::
+BattlePhase0_Step3_Sub01_Sub01::
+Func_031_4365:: ; address name
     ld a, [wStringCategory]
     ld l, a
     ld a, [wStringIndex]
@@ -621,7 +625,7 @@ Jump_031_43C0:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_031_4A65
+    call BattleFight_Step0_Sub01
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -694,7 +698,7 @@ BattleEnd_Step1::
 Jump_031_440E:: ; address name
     ld a, $01
     ld [wC964], a
-    call Func_031_656B
+    call BattleEnd_Step1_Sub02
     ld a, [wD092]
     and a, $01
     jr z, Jump_031_4421
@@ -702,7 +706,7 @@ Jump_031_440E:: ; address name
     jr Jump_031_4448
 
 Jump_031_4421::
-    call Func_031_498E
+    call BattleEnd_Step1_Sub01
     ld a, [wD092]
     cp a, $02
     jr z, Jump_031_4443
@@ -764,7 +768,7 @@ Jump_031_445B:: ; address name
     inc hl
     and a, [hl]
     cp a, $FF
-    call z, Func_031_4493
+    call z, BattleEnd_Step2_Sub01
     ld a, [wC52B]
     or a, a
     ret nz
@@ -774,10 +778,12 @@ Jump_031_445B:: ; address name
     ld [wBattleSubPhase], a
     ret
 
+; only called from BattleEnd_Step2 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step2)
 ; reads: wD2CE
 ; writes: wD2CE
-Func_031_4493::
+BattleEnd_Step2_Sub01::
+Func_031_4493:: ; address name
     ld a, [wD2CE]
     dec a
     ld [wD2CE], a
@@ -791,7 +797,7 @@ Func_031_4493::
 ; points at: wBattleStep, wC986, wC60C
 BattleEnd_Step3::
 Jump_031_449C:: ; address name
-    call Func_031_663D
+    call BattleEnd_Step3_Sub08
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -833,8 +839,8 @@ Jump_031_44D1::
     ret nc
     ld a, [wC58A]
     or a, a
-    call z, Func_031_45A3
-    call Func_031_45F2
+    call z, BattleEnd_Step3_Sub06
+    call BattleEnd_Step3_Sub07
     ld a, [wDAAB]
     dec a
     ld c, $4E
@@ -853,25 +859,25 @@ Jump_031_44D1::
     adc a, $00
     ld h, a
     ld b, $0E
-    call Func_031_4566
+    call BattleEnd_Step3_Sub03
     push de
     ld de, wC60C
     ld b, $0B
-    call Func_031_4566
+    call BattleEnd_Step3_Sub03
     pop de
     ld a, $FF
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    call Func_031_458E
+    call BattleEnd_Step3_Sub05
     ld a, $FF
     ld [hl+], a
-    call Func_031_458E
+    call BattleEnd_Step3_Sub05
     ld a, $FF
     ld [hl+], a
     ld b, $08
-    call Func_031_456D
+    call BattleEnd_Step3_Sub04
     ld a, $FF
     ld b, $19
 
@@ -887,36 +893,40 @@ Jump_031_452D::
     ld [hl+], a
     ld [hl+], a
     ld b, $15
-    call Func_031_4566
+    call BattleEnd_Step3_Sub03
     xor a, a
     ld [hl+], a
     ld [hl+], a
     ld b, $1F
-    call Func_031_4566
-    call Func_031_458E
+    call BattleEnd_Step3_Sub03
+    call BattleEnd_Step3_Sub05
     ld a, $00
     ld [hl+], a
-    call Func_031_458E
+    call BattleEnd_Step3_Sub05
     ld a, $00
     ld [hl+], a
     ld a, [de]
     ld [hl+], a
-    farcall Func_01A_624B
-    farcall Func_016_7364
+    farcall BattleEnd_Step3_Sub02
+    farcall BattleEnd_Step3_Sub01
     farcall Func_019_73A2
     ret
 
+; only called from BattleEnd_Step3 (E-0047)
 ; 4 call sites from 1 routine (e.g. BattleEnd_Step3)
-Func_031_4566::
+BattleEnd_Step3_Sub03::
+Func_031_4566:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Func_031_4566
+    jr nz, BattleEnd_Step3_Sub03
     ret
 
+; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
-Func_031_456D::
+BattleEnd_Step3_Sub04::
+Func_031_456D:: ; address name
     push hl
     ld a, $FF
     ld [hl+], a
@@ -949,8 +959,10 @@ Jump_031_4581::
     ld h, a
     ret
 
+; only called from BattleEnd_Step3 (E-0047)
 ; 4 call sites from 1 routine (e.g. BattleEnd_Step3)
-Func_031_458E::
+BattleEnd_Step3_Sub05::
+Func_031_458E:: ; address name
     ld a, $98
     ld [hl+], a
     ld a, $98
@@ -968,11 +980,13 @@ Jump_031_459E::
     jr nz, Jump_031_459E
     ret
 
+; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wD890, wDA6B, wDA6C, wDA6D
 ; writes: wDA6B, wDA6C, wDA6D
 ; points at: wBattleSlotOut
-Func_031_45A3::
+BattleEnd_Step3_Sub06::
+Func_031_45A3:: ; address name
     ld a, [wD890]
     ld b, a
     ld c, $04
@@ -1015,11 +1029,13 @@ Jump_031_45E7::
 Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D7, $D1, $25, $D2, $73, $D2
 
+; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wCFC5, wD890, wCFDF, wCFE0, wCFDD, wCFDE
 ; writes: hFFC6, hFFC7, wDAAB, wCB7E
 ; points at: wCFDF, wCFDD
-Func_031_45F2::
+BattleEnd_Step3_Sub07::
+Func_031_45F2:: ; address name
     ld a, [wCFC5]
     cp a, $02
     ret nz
@@ -1067,12 +1083,12 @@ Jump_031_4631::
 
 Jump_031_4640::
     ld hl, $0008
-    call Func_031_4681
+    call BattleEnd_Step3_Sub07_Sub01
     jr Jump_031_4680
 
 Jump_031_4648::
     ld hl, $001B
-    call Func_031_4681
+    call BattleEnd_Step3_Sub07_Sub01
     jr Jump_031_4680
 
 Jump_031_4650::
@@ -1089,27 +1105,29 @@ Jump_031_4650::
 
 Jump_031_4663::
     ld hl, $0183
-    call Func_031_4681
+    call BattleEnd_Step3_Sub07_Sub01
     jr Jump_031_4680
 
 Jump_031_466B::
     ld a, $02
     ld [wCB7E], a
     ld hl, $01AC
-    call Func_031_4681
+    call BattleEnd_Step3_Sub07_Sub01
     jr Jump_031_4680
 
 Jump_031_4678::
     ld hl, $01AF
-    call Func_031_4681
+    call BattleEnd_Step3_Sub07_Sub01
     jr Jump_031_4680
 
 Jump_031_4680::
     ret
 
-; 5 call sites from 1 routine (e.g. Func_031_45F2)
+; only called from BattleEnd_Step3_Sub07 (E-0047)
+; 5 call sites from 1 routine (e.g. BattleEnd_Step3_Sub07)
 ; reads: hFFC6, hFFC7
-Func_031_4681::
+BattleEnd_Step3_Sub07_Sub01::
+Func_031_4681:: ; address name
     ldh a, [hFFC6]
     ld e, a
     ldh a, [hFFC7]
@@ -1119,7 +1137,7 @@ Func_031_4681::
     inc de
     ld a, h
     ld [de], a
-    farcall Func_019_46B1
+    farcall BattleEnd_Step3_Sub07_Sub01_Sub01
     ret
 
 ; wBattlePhase 2, wBattleStep 4 (E-0044)
@@ -1152,14 +1170,16 @@ Jump_031_4693:: ; address name
     inc hl
     and a, [hl]
     cp a, $FF
-    call z, Func_031_46C1
-    call Func_031_67AA
+    call z, BattleEnd_Step4_Sub01
+    call BattleEnd_Step4_Sub02
     ret
 
+; only called from BattleEnd_Step4 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step4)
 ; reads: wD2CE
 ; writes: wD2CE
-Func_031_46C1::
+BattleEnd_Step4_Sub01::
+Func_031_46C1:: ; address name
     ld a, [wD2CE]
     dec a
     ld [wD2CE], a
@@ -1619,11 +1639,13 @@ Jump_031_4988::
     ld [wBattleStep], a
     ret
 
+; only called from BattleEnd_Step1 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step1)
 ; reads: wC58A, wD890
 ; writes: wD868
 ; points at: wD960, wC130, wC958
-Func_031_498E::
+BattleEnd_Step1_Sub01::
+Func_031_498E:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_031_49E5
@@ -1636,7 +1658,7 @@ Func_031_498E::
     inc hl
     ld a, [wD890]
     cp a, $01
-    jr z, Func_031_49D8
+    jr z, BattleEnd_Step1_Sub01_Sub01
     ld a, $01
     ld [wD868], a
     ld a, [hl+]
@@ -1656,7 +1678,7 @@ Func_031_498E::
     jr nz, Jump_031_4A00
 
 Jump_031_49C2::
-    call Func_031_49D8
+    call BattleEnd_Step1_Sub01_Sub01
     ld hl, wC130
 
 Jump_031_49C8::
@@ -1671,9 +1693,11 @@ Jump_031_49C8::
     ld [hl], $F0
     jr Jump_031_4A22
 
-; 1 call site from 1 routine (e.g. Func_031_498E)
+; only called from BattleEnd_Step1_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step1_Sub01)
 ; points at: wC130
-Func_031_49D8::
+BattleEnd_Step1_Sub01_Sub01::
+Func_031_49D8:: ; address name
     ld l, e
     ld a, d
     add a, $02
@@ -1784,11 +1808,13 @@ Jump_031_4A3F::
     ld [hl], c
     ret
 
+; only called from BattleFight_Step0 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleFight_Step0)
 ; reads: wC984, wC58A, wC57F, wC985
 ; writes: wD892, wD893, wC46B
 ; points at: wDAD8, wD854, wD895, wDA1C, wDA5B, wBattleStep, wD80F
-Func_031_4A65::
+BattleFight_Step0_Sub01::
+Func_031_4A65:: ; address name
     ld hl, wDAD8
     ld b, $08
 
@@ -2094,8 +2120,8 @@ Jump_031_4C21:: ; address name
     jp Jump_031_4CBC
 
 Jump_031_4C37::
-    call Func_031_4CEE
-    call Func_031_4D06
+    call RunBattleSetup_Table2_Case05_Sub01
+    call RunBattleSetup_Table2_Case05_Sub02
     ld a, $03
     ld [wBattleSubPhase], a
     xor a, a
@@ -2145,8 +2171,8 @@ Jump_031_4C83::
     jr z, Jump_031_4CA2
     cp a, $05
     jr z, Jump_031_4CA2
-    call Func_031_4CEE
-    call Func_031_6200
+    call RunBattleSetup_Table2_Case05_Sub01
+    call RunBattleSetup_Table2_Case05_Sub03
     ld a, e
     or a, a
     jr nz, Jump_031_4CB1
@@ -2179,7 +2205,7 @@ Jump_031_4CBC::
     jr Jump_031_4CA4
 
 Jump_031_4CC6::
-    call Func_031_4CEE
+    call RunBattleSetup_Table2_Case05_Sub01
     ld hl, wBattleResolveStep
     ld [hl], $08
     ld a, [wCFC5]
@@ -2201,10 +2227,12 @@ Jump_031_4CC6::
 Jump_031_4CED::
     ret
 
+; only called from RunBattleSetup_Table2_Case05 (E-0047)
 ; 3 call sites from 1 routine (e.g. RunBattleSetup_Table2_Case05)
 ; reads: wC57F
 ; points at: wDA1C
-Func_031_4CEE::
+RunBattleSetup_Table2_Case05_Sub01::
+Func_031_4CEE:: ; address name
     ld a, [wC57F]
     and a, $02
     ld hl, wDA1C
@@ -2220,10 +2248,12 @@ Func_031_4CEE::
     ld [hl+], a
     ret
 
+; only called from RunBattleSetup_Table2_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Table2_Case05)
 ; reads: wC58A, wC57F
 ; points at: wDAF2, wDA43
-Func_031_4D06::
+RunBattleSetup_Table2_Case05_Sub02::
+Func_031_4D06:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_031_4D10
@@ -2396,7 +2426,7 @@ Jump_031_4DDB::
 Jump_031_4DF9::
     cp a, b
     jr nc, Jump_031_4E16
-    call Func_031_4E3E
+    call RunBattleSetup_Table2_Case09_Sub01
     jr z, Jump_031_4E16
     ld a, $00
     ld [wStringCategory], a
@@ -2411,7 +2441,7 @@ Jump_031_4E16::
     ld a, [wC58A]
     or a, a
     jr nz, Jump_031_4E1F
-    call Func_031_4E54
+    call RunBattleSetup_Table2_Case09_Sub02
 
 Jump_031_4E1F::
     ld a, $02
@@ -2428,9 +2458,11 @@ Jump_031_4E1F::
     ld [wDataBankSave], a
     ret
 
+; only called from RunBattleSetup_Table2_Case09 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Table2_Case09)
 ; reads: wD890
-Func_031_4E3E::
+RunBattleSetup_Table2_Case09_Sub01::
+Func_031_4E3E:: ; address name
     ld a, [wD890]
     ld b, a
     ld c, $04
@@ -2438,7 +2470,7 @@ Func_031_4E3E::
 
 Jump_031_4E46::
     ld a, c
-    call Func_031_7BEE
+    call RunBattleSetup_Table2_Case09_Sub01_Sub01
     jr c, Jump_031_4E4D
     inc e
 
@@ -2450,10 +2482,12 @@ Jump_031_4E4D::
     or a, a
     ret
 
+; only called from RunBattleSetup_Table2_Case09 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Table2_Case09)
 ; reads: wD88F
 ; points at: wD8B7, wD980, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
-Func_031_4E54::
+RunBattleSetup_Table2_Case09_Sub02::
+Func_031_4E54:: ; address name
     ld a, [wD88F]
     ld b, a
     ld c, $00
@@ -2492,16 +2526,16 @@ Jump_031_4E91::
     add a, a
     add_a_to_hl
     ld de, wSlotPersonalityHi
-    call Func_031_4EB9
+    call RunBattleSetup_Table2_Case09_Sub02_Sub01
     inc hl
     ld de, wSlotPersonalityMid
-    call Func_031_4EB9
+    call RunBattleSetup_Table2_Case09_Sub02_Sub01
     inc hl
     ld de, wSlotPersonalityLo
-    call Func_031_4EB9
+    call RunBattleSetup_Table2_Case09_Sub02_Sub01
     inc hl
     ld de, wD980
-    call Func_031_4EB9
+    call RunBattleSetup_Table2_Case09_Sub02_Sub01
 
 Jump_031_4EB4::
     inc c
@@ -2509,8 +2543,10 @@ Jump_031_4EB4::
     jr nz, Jump_031_4E5A
     ret
 
-; 4 call sites from 1 routine (e.g. Func_031_4E54)
-Func_031_4EB9::
+; only called from RunBattleSetup_Table2_Case09_Sub02 (E-0047)
+; 4 call sites from 1 routine (e.g. RunBattleSetup_Table2_Case09_Sub02)
+RunBattleSetup_Table2_Case09_Sub02_Sub01::
+Func_031_4EB9:: ; address name
     ld a, c
     add a, e
     ld e, a
@@ -5676,10 +5712,12 @@ Jump_031_61BE::
     call WriteVRAMByte
     ret
 
+; only called from RunBattleSetup_Table2_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Table2_Case05)
 ; writes: wCFD7, wCFD6, wCFD5
 ; points at: wInventory
-Func_031_6200::
+RunBattleSetup_Table2_Case05_Sub03::
+Func_031_6200:: ; address name
     ld hl, wInventory
     ld bc, $1800
     ld e, $00
@@ -5719,7 +5757,7 @@ Jump_031_6229::
     or a, a
     jr z, Jump_031_623D
     and a, $03
-    call z, Func_031_6245
+    call z, RunBattleSetup_Table2_Case05_Sub03_Sub01
     dec a
     and a, $03
 
@@ -5729,10 +5767,12 @@ Jump_031_623D::
     ld [wCFD5], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_6200)
+; only called from RunBattleSetup_Table2_Case05_Sub03 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Table2_Case05_Sub03)
 ; reads: wCFD7
 ; writes: wCFD7
-Func_031_6245::
+RunBattleSetup_Table2_Case05_Sub03_Sub01::
+Func_031_6245:: ; address name
     push af
     ld a, [wCFD7]
     dec a
@@ -6263,10 +6303,12 @@ Func_031_6564:: ; heuristic: follows a terminator; C0
     farcall Func_0E0_443B
     ret
 
+; only called from BattleEnd_Step1 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step1)
 ; reads: wDataBankSave, wCFC5, wD092, wC57F
 ; writes: wDataBank, wDataBankSave, wD092
-Func_031_656B::
+BattleEnd_Step1_Sub02::
+Func_031_656B:: ; address name
     ld a, [wDataBankSave]
     ld [wDataBank], a
     xor a, a
@@ -6276,11 +6318,11 @@ Func_031_656B::
     jr nc, Jump_031_65A0
     ld bc, $0300
     ld e, $00
-    call Func_031_65FF
+    call BattleEnd_Step1_Sub02_Sub01
     jr c, Jump_031_659C
     ld bc, $0304
     ld de, $0000
-    call Func_031_6620
+    call BattleEnd_Step1_Sub02_Sub02
     jr nc, Jump_031_659C
     ld a, d
     or a, a
@@ -6305,36 +6347,36 @@ Jump_031_65A0::
     jr nz, Jump_031_65CF
     ld bc, $0300
     ld e, $00
-    call Func_031_65FF
+    call BattleEnd_Step1_Sub02_Sub01
     jr nc, Jump_031_65C3
     ld bc, $0304
     ld e, $00
-    call Func_031_65FF
+    call BattleEnd_Step1_Sub02_Sub01
     jr c, Jump_031_65F9
     jr Jump_031_65F5
 
 Jump_031_65C3::
     ld bc, $0304
     ld e, $00
-    call Func_031_65FF
+    call BattleEnd_Step1_Sub02_Sub01
     jr c, Jump_031_65F1
     jr Jump_031_65F9
 
 Jump_031_65CF::
     ld bc, $0304
     ld e, $00
-    call Func_031_65FF
+    call BattleEnd_Step1_Sub02_Sub01
     jr nc, Jump_031_65E5
     ld bc, $0300
     ld e, $00
-    call Func_031_65FF
+    call BattleEnd_Step1_Sub02_Sub01
     jr c, Jump_031_65F9
     jr Jump_031_65F5
 
 Jump_031_65E5::
     ld bc, $0300
     ld e, $00
-    call Func_031_65FF
+    call BattleEnd_Step1_Sub02_Sub01
     jr c, Jump_031_65F1
     jr Jump_031_65F9
 
@@ -6353,9 +6395,11 @@ Jump_031_65FB::
     ld [wD092], a
     ret
 
-; 7 call sites from 1 routine (e.g. Func_031_656B)
+; only called from BattleEnd_Step1_Sub02 (E-0047)
+; 7 call sites from 1 routine (e.g. BattleEnd_Step1_Sub02)
 ; points at: wBattleSlotOut, wBattleStatus
-Func_031_65FF::
+BattleEnd_Step1_Sub02_Sub01::
+Func_031_65FF:: ; address name
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -6372,14 +6416,16 @@ Func_031_65FF::
 Jump_031_6618::
     inc c
     dec b
-    jr nz, Func_031_65FF
+    jr nz, BattleEnd_Step1_Sub02_Sub01
     ld a, e
     cp a, $01
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_656B)
+; only called from BattleEnd_Step1_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step1_Sub02)
 ; points at: wBattleSlotOut
-Func_031_6620::
+BattleEnd_Step1_Sub02_Sub02::
+Func_031_6620:: ; address name
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -6397,15 +6443,17 @@ Jump_031_6634::
 Jump_031_6635::
     inc c
     dec b
-    jr nz, Func_031_6620
+    jr nz, BattleEnd_Step1_Sub02_Sub02
     ld a, e
     cp a, $01
     ret
 
+; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wC58A, wD88F
 ; writes: rRAMG, rRAMB
-Func_031_663D::
+BattleEnd_Step3_Sub08::
+Func_031_663D:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_031_6677
@@ -6419,17 +6467,17 @@ Func_031_663D::
 
 Jump_031_6653::
     push bc
-    call Func_031_6678
+    call BattleEnd_Step3_Sub08_Sub01
     ld a, c
     push bc
     ld c, $55
     call SRAMRecordAddressMapped
     pop bc
-    call Func_031_66AE
-    call Func_031_66E2
-    call Func_031_6723
-    call Func_031_6757
-    call Func_031_6776
+    call BattleEnd_Step3_Sub08_Sub02
+    call BattleEnd_Step3_Sub08_Sub03
+    call BattleEnd_Step3_Sub08_Sub04
+    call BattleEnd_Step3_Sub08_Sub05
+    call BattleEnd_Step3_Sub08_Sub06
     pop bc
     inc c
     dec b
@@ -6440,11 +6488,13 @@ Jump_031_6653::
 Jump_031_6677::
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_663D)
+; only called from BattleEnd_Step3_Sub08 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
 ; reads: wC46B
 ; writes: wC835
 ; points at: wDA43, wDA4B
-Func_031_6678::
+BattleEnd_Step3_Sub08_Sub01::
+Func_031_6678:: ; address name
     push bc
     ld a, c
     ld hl, wDA43
@@ -6476,10 +6526,12 @@ Func_031_6678::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_663D)
+; only called from BattleEnd_Step3_Sub08 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
 ; reads: wCFC5
 ; points at: wBattleSlotOut, wBattleStatus
-Func_031_66AE::
+BattleEnd_Step3_Sub08_Sub02::
+Func_031_66AE:: ; address name
     ld [hl], $00
     ld a, c
     ld de, wBattleSlotOut
@@ -6502,29 +6554,35 @@ Jump_031_66B9::
     ld a, [hl]
     pop hl
     bit 5, a
-    call nz, Func_031_66DC
+    call nz, BattleEnd_Step3_Sub08_Sub02_Sub01
     and a, $03
-    call nz, Func_031_66DF
+    call nz, BattleEnd_Step3_Sub08_Sub02_Sub02
     ret
 
 Jump_031_66D9::
     set 7, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_66AE)
-Func_031_66DC::
+; only called from BattleEnd_Step3_Sub08_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08_Sub02)
+BattleEnd_Step3_Sub08_Sub02_Sub01::
+Func_031_66DC:: ; address name
     set 0, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_66AE)
-Func_031_66DF::
+; only called from BattleEnd_Step3_Sub08_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08_Sub02)
+BattleEnd_Step3_Sub08_Sub02_Sub02::
+Func_031_66DF:: ; address name
     set 2, [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_663D)
+; only called from BattleEnd_Step3_Sub08 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
 ; writes: wD868
 ; points at: wBattleHP
-Func_031_66E2::
+BattleEnd_Step3_Sub08_Sub03::
+Func_031_66E2:: ; address name
     ld a, [hl]
     ld [wD868], a
     bit 7, [hl]
@@ -6578,9 +6636,11 @@ Jump_031_671C::
     inc hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_663D)
+; only called from BattleEnd_Step3_Sub08 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
 ; points at: wBattleMP
-Func_031_6723::
+BattleEnd_Step3_Sub08_Sub04::
+Func_031_6723:: ; address name
     push hl
     inc hl
     inc hl
@@ -6624,10 +6684,12 @@ Jump_031_6749::
     ld h, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_663D)
+; only called from BattleEnd_Step3_Sub08 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
 ; reads: wD868
 ; points at: wD93F
-Func_031_6757::
+BattleEnd_Step3_Sub08_Sub05::
+Func_031_6757:: ; address name
     ld a, [wD868]
     bit 7, a
     jr nz, Jump_031_676D
@@ -6655,10 +6717,12 @@ Jump_031_676D::
     ld h, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_031_663D)
+; only called from BattleEnd_Step3_Sub08 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub08)
 ; reads: wD868
 ; points at: wSlotPersonalityHi, wSlotPersonalityLo, wD980, wSlotPersonalityMid
-Func_031_6776::
+BattleEnd_Step3_Sub08_Sub06::
+Func_031_6776:: ; address name
     ld a, [wD868]
     bit 7, a
     jr nz, Jump_031_67A9
@@ -6706,9 +6770,11 @@ Jump_031_67A7::
 Jump_031_67A9::
     ret
 
+; only called from BattleEnd_Step4 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step4)
 ; reads: wBattleSubPhase
-Func_031_67AA::
+BattleEnd_Step4_Sub02::
+Func_031_67AA:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
     dw Func_031_67AA_Case00
@@ -8436,7 +8502,7 @@ Func_031_71C4::
     ret nz
     ret
 
-; 6 call sites from 6 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, Func_019_419B, ...)
+; 6 call sites from 6 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wIsCGB
 ; writes: rVBK
 ; points at: wScreenTileBuffer
@@ -8497,11 +8563,13 @@ Jump_031_7230::
     jr nz, Jump_031_7230
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_419B)
+; only called from GameMode4_Init_Sub01_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub02)
 ; reads: wD88F, wC57F
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4
 ; points at: wC8CF
-Func_031_7239::
+GameMode4_Init_Sub01_Sub02_Sub02::
+Func_031_7239:: ; address name
     ld a, $90
     ld [wC8CF], a
     ld [wC8D0], a
@@ -8561,7 +8629,7 @@ Jump_031_7285::
     ret
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8D, $50, $8D, $A0, $8D
 
-; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, Func_019_419B, ...)
+; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wD88F
 Func_031_72AC::
     ld a, [wD88F]
@@ -8642,7 +8710,7 @@ Data_031_7317:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $C2, $7F, $C2
 
-; 4 call sites from 4 routines (e.g. Func_031_47C7, Func_031_46C1_Table2_Case00, Func_016_733F, Func_019_419B)
+; 4 call sites from 4 routines (e.g. Func_031_47C7, Func_031_46C1_Table2_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02)
 ; reads: wIsCGB, wC57F, wD890
 ; points at: wD960, wD958
 Func_031_7321::
@@ -8713,7 +8781,7 @@ Func_031_7379::
     pop de
     ret
 
-; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, Func_019_419B, ...)
+; 5 call sites from 5 routines (e.g. Func_031_47C7, Func_031_46C1_Case00, Func_016_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wD88F
 Func_031_7389::
     call Func_031_739F
@@ -9724,9 +9792,11 @@ Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_7ADA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C7ADA, $114
 
-; 1 call site from 1 routine (e.g. Func_031_4E3E)
+; only called from RunBattleSetup_Table2_Case09_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Table2_Case09_Sub01)
 ; points at: wD80F
-Func_031_7BEE::
+RunBattleSetup_Table2_Case09_Sub01_Sub01::
+Func_031_7BEE:: ; address name
     call Func_000_3E25
     ret c
     push hl

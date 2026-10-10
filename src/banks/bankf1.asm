@@ -1,9 +1,11 @@
 SECTION "Bank F1", ROMX[$4000], BANK[$F1]
     db $F1
 
+; only called from PauseMenu_State4 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State4)
 ; reads: wC0A0
-Func_0F1_4001::
+PauseMenu_State4_Sub02::
+Func_0F1_4001:: ; address name
     ld a, [wC0A0]
     rst $00
     dw Func_0F1_4001_Case00
@@ -3506,7 +3508,7 @@ Jump_0F1_56DC:: ; address name
     ld [wD781], a
     ret
 
-; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, Func_007_7C5F_Case04, Func_033_51C6)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, Func_007_7C5F_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wCA36, wCA37
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6
 Func_0F1_5719::
@@ -4051,10 +4053,12 @@ Data_0F1_5A90:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F1_5ACF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FC, $C3, $24, $C4, $4C, $C4
 
+; only called from GameMode5_Update_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07)
 ; reads: wD06A, wD7EE, wD780
 ; writes: wD7EE
-Func_0F1_5AD5::
+GameMode5_Update_Case07_Sub01::
+Func_0F1_5AD5:: ; address name
     call Func_000_0535
     ld a, [wD06A]
     cp a, $01
@@ -4073,23 +4077,25 @@ Jump_0F1_5AE0::
     ret
 
 Jump_0F1_5AF7::
-    call Func_0F1_5B0F
+    call GameMode5_Update_Case07_Sub01_Sub01
     ld a, [wD780]
     cp a, $07
     ret c
-    call Func_0F1_5B8E
-    call Func_0F1_5B38
+    call GameMode5_Update_Case07_Sub01_Sub03
+    call GameMode5_Update_Case07_Sub01_Sub02
     ld a, [wD7EE]
     and a, a
     ret z
-    call Func_0F1_5BA5
+    call GameMode5_Update_Case07_Sub01_Sub04
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F1_5AD5)
+; only called from GameMode5_Update_Case07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
 ; reads: wD7DC
 ; writes: rRAMG2, rRAMB
 ; points at: sBB0F
-Func_0F1_5B0F::
+GameMode5_Update_Case07_Sub01_Sub01::
+Func_0F1_5B0F:: ; address name
     ld a, [wD7DC]
     and a, a
     ret z
@@ -4112,10 +4118,12 @@ Jump_0F1_5B31::
     farcall Func_015_6403
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F1_5AD5)
+; only called from GameMode5_Update_Case07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
 ; reads: wD7E8, wD7EA, wD7E9
 ; writes: wD7F1, wD7F2, hFFB9
-Func_0F1_5B38::
+GameMode5_Update_Case07_Sub01_Sub02::
+Func_0F1_5B38:: ; address name
     ld a, [wD7E8]
     cp a, $0C
     jr z, Jump_0F1_5B45
@@ -4162,9 +4170,11 @@ Jump_0F1_5B68::
     farcall Func_01D_6899
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F1_5AD5)
+; only called from GameMode5_Update_Case07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
 ; reads: wSpriteSlotCount, wD7F1
-Func_0F1_5B8E::
+GameMode5_Update_Case07_Sub01_Sub03::
+Func_0F1_5B8E:: ; address name
     ld a, [wSpriteSlotCount]
     and a, a
     ret z
@@ -4175,11 +4185,13 @@ Func_0F1_5B8E::
     farcall DrawFieldSprites
     ret
 
-; 1 call site from 1 routine (e.g. Func_0F1_5AD5)
+; only called from GameMode5_Update_Case07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
 ; reads: wCEDC, wCEDB, wCED9, wCEDA, wD7F5
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wCA99, wD7EE
 ; points at: wC8CF, wCECF, wCECE, wCA2B, wCE9B
-Func_0F1_5BA5::
+GameMode5_Update_Case07_Sub01_Sub04::
+Func_0F1_5BA5:: ; address name
     ld a, $01
     ld [wD7F1], a
     ld a, [wCEDC]

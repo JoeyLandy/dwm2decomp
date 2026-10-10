@@ -57,7 +57,7 @@ Func_034_4040:: ; address name
     ld a, [wMonsterId]
     cp a, $50
     jr c, Jump_034_4055
-    farcall Func_0A2_402D
+    farcall LoadMonsterRecordTo_Sub01
     ret
 
 Jump_034_4055::

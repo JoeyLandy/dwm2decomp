@@ -405,7 +405,7 @@ Jump_073_4269:: ; address name
     dec a
     jr nz, Jump_073_4288
     ld hl, wC46B
-    call Func_073_42AB
+    call ScriptCommand82_Run_Table4_Case07_Sub01
     or a, a
     jr z, Jump_073_42A7
     ld hl, wScriptStep
@@ -416,7 +416,7 @@ Jump_073_4288::
     dec a
     jr nz, Jump_073_429A
     ld hl, wC46C
-    call Func_073_42AB
+    call ScriptCommand82_Run_Table4_Case07_Sub01
     or a, a
     jr z, Jump_073_42A7
     ld hl, wScriptStep
@@ -425,7 +425,7 @@ Jump_073_4288::
 
 Jump_073_429A::
     ld hl, wC46D
-    call Func_073_42AB
+    call ScriptCommand82_Run_Table4_Case07_Sub01
     or a, a
     jr z, Jump_073_42A7
     ld hl, wScriptStep
@@ -435,8 +435,10 @@ Jump_073_42A7::
     call Func_073_441D
     ret
 
+; only called from ScriptCommand82_Run_Table4_Case07 (E-0047)
 ; 3 call sites from 1 routine (e.g. ScriptCommand82_Run_Table4_Case07)
-Func_073_42AB::
+ScriptCommand82_Run_Table4_Case07_Sub01::
+Func_073_42AB:: ; address name
     ld a, [hl]
     and a, $0F
     jr z, Jump_073_42BF
@@ -4512,18 +4514,18 @@ Func_073_5C5F:: ; address name
     cp a, $30
     jr nz, Jump_073_5C7F
     ld hl, wC1EA
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     ld hl, wC28A
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     ld hl, wC298
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     jr Jump_073_5CAD
 
 Jump_073_5C7F::
     ld hl, wC28A
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     ld hl, wC298
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     jr Jump_073_5CAD
 
 Jump_073_5C8D::
@@ -4531,16 +4533,16 @@ Jump_073_5C8D::
     cp a, $30
     jr nz, Jump_073_5CA1
     ld hl, wC1F8
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     ld hl, wC28A
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     jr Jump_073_5CAD
 
 Jump_073_5CA1::
     ld hl, wC1F8
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
     ld hl, wC298
-    call Func_073_5D09
+    call ScriptCommand53_Run_Sub01
 
 Jump_073_5CAD::
     ld a, [wC1EA]
@@ -4587,15 +4589,17 @@ Jump_073_5CFD::
     ld [wScriptStartRequest], a
     ret
 
+; only called from ScriptCommand53_Run (E-0047)
 ; 9 call sites from 1 routine (e.g. ScriptCommand53_Run)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_073_5D09::
+ScriptCommand53_Run_Sub01::
+Func_073_5D09:: ; address name
     push hl
-    call Func_073_5D48
-    call Func_073_5D48
-    call Func_073_5D48
-    call Func_073_5D48
+    call ScriptCommand53_Run_Sub01_Sub01
+    call ScriptCommand53_Run_Sub01_Sub01
+    call ScriptCommand53_Run_Sub01_Sub01
+    call ScriptCommand53_Run_Sub01_Sub01
     pop hl
     ld a, [wIsCGB]
     or a, a
@@ -4618,16 +4622,18 @@ Func_073_5D09::
     ld h, a
     ld a, $02
     ldh [rSVBK], a
-    call Func_073_5D65
-    call Func_073_5D65
-    call Func_073_5D65
-    call Func_073_5D65
+    call ScriptCommand53_Run_Sub01_Sub02
+    call ScriptCommand53_Run_Sub01_Sub02
+    call ScriptCommand53_Run_Sub01_Sub02
+    call ScriptCommand53_Run_Sub01_Sub02
     ld a, $00
     ldh [rSVBK], a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_073_5D09)
-Func_073_5D48::
+; only called from ScriptCommand53_Run_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. ScriptCommand53_Run_Sub01)
+ScriptCommand53_Run_Sub01_Sub01::
+Func_073_5D48:: ; address name
     ld a, [hl]
     add a, $08
     cp a, $28
@@ -4649,8 +4655,10 @@ Jump_073_5D5B::
     ld a, [hl]
     ret
 
-; 4 call sites from 1 routine (e.g. Func_073_5D09)
-Func_073_5D65::
+; only called from ScriptCommand53_Run_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. ScriptCommand53_Run_Sub01)
+ScriptCommand53_Run_Sub01_Sub02::
+Func_073_5D65:: ; address name
     ld a, c
     ld [hl+], a
     ld [hl-], a
@@ -6653,7 +6661,7 @@ Jump_073_680F::
     call Func_073_6882
     ld de, $5ADB
     ld b, $56
-    jp Func_073_6875
+    jp ScriptCommand35_Run_Case03_Sub01
 
 Jump_073_6826::
     ld de, $7827
@@ -6661,7 +6669,7 @@ Jump_073_6826::
     call Func_073_6882
     ld de, $5B8F
     ld b, $56
-    jr Func_073_6875
+    jr ScriptCommand35_Run_Case03_Sub01
 
 ; entry 13 of the `rst $00` table in ScriptCommand35_Run
 ; no direct call (reached through a table, a jump or a vector)
@@ -6701,7 +6709,7 @@ Jump_073_6852::
     call Func_073_6882
     ld de, $61F0
     ld b, $56
-    jr Func_073_6875
+    jr ScriptCommand35_Run_Case03_Sub01
 
 Jump_073_6868::
     ld de, $6D99
@@ -6710,9 +6718,11 @@ Jump_073_6868::
     ld de, Data_056_4301
     ld b, $56
 
+; only called from ScriptCommand35_Run_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand35_Run_Case03)
 ; points at: wScreenTileBuffer
-Func_073_6875::
+ScriptCommand35_Run_Case03_Sub01::
+Func_073_6875:: ; address name
     ld hl, wScreenTileBuffer
     call DecompressToVRAM
     farcall Func_05F_6DDB
@@ -6778,7 +6788,7 @@ Jump_073_68B8:: ; address name
     ld d, a
     ld b, $58
     push hl
-    call Func_073_6875
+    call ScriptCommand35_Run_Case03_Sub01
     pop hl
     ld a, [hl+]
     ld e, a
@@ -6807,7 +6817,7 @@ ScriptCommand35_Run_Case02::
 Jump_073_6910:: ; address name
     ld a, $B4
     ld [wC928], a
-    farcall Func_00F_729C
+    farcall ScriptCommand35_Run_Case02_Sub01
     ret
 
 ; entry 1 of the `rst $00` table in ScriptCommand35_Run
@@ -7265,7 +7275,7 @@ Jump_073_6B77:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2C_Run_Case06::
 Jump_073_6B80:: ; address name
-    farcall Func_05F_6E58
+    farcall ScriptCommand2C_Run_Case06_Sub01
     ret
 
 ; entry 5 of the `rst $00` table in ScriptCommand2C_Run
@@ -7474,7 +7484,7 @@ Func_073_6C77::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2D_Run_Case05::
 Jump_073_6CCA:: ; address name
-    farcall Func_05F_6EC3
+    farcall ScriptCommand2D_Run_Case05_Sub01
     ret
 
 ; entry 4 of the `rst $00` table in ScriptCommand2D_Run

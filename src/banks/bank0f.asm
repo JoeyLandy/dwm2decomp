@@ -4986,7 +4986,7 @@ Jump_00F_6066:: ; address name
     ld a, $70
     ld [wC928], a
     farcall Func_05F_6B54
-    call Func_00F_60D9
+    call ScriptCommand46_Run_Case00_Sub01
     ld a, [wC92C]
     or a, a
     ret z
@@ -5004,7 +5004,7 @@ Jump_00F_608E::
     ld a, $20
     ld [wC928], a
     farcall Func_05F_6B54
-    call Func_00F_60D9
+    call ScriptCommand46_Run_Case00_Sub01
     ld a, [wC92C]
     or a, a
     ret z
@@ -5020,7 +5020,7 @@ Jump_00F_60B3::
     ld a, $40
     ld [wC928], a
     farcall Func_05F_6B54
-    call Func_00F_60D9
+    call ScriptCommand46_Run_Case00_Sub01
     ld a, [wC92C]
     or a, a
     ret z
@@ -5030,10 +5030,12 @@ Jump_00F_60B3::
     inc [hl]
     ret
 
+; only called from ScriptCommand46_Run_Case00 (E-0047)
 ; 3 call sites from 1 routine (e.g. ScriptCommand46_Run_Case00)
 ; reads: wFrameCounterLo
 ; writes: wCBA6
-Func_00F_60D9::
+ScriptCommand46_Run_Case00_Sub01::
+Func_00F_60D9:: ; address name
     ld a, [wFrameCounterLo]
     srl a
     srl a
@@ -7920,11 +7922,13 @@ Jump_00F_7291:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; only called from ScriptCommand35_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand35_Run_Case02)
 ; reads: wC928, wFrameCounterLo, hScrollX, hScrollXHi
 ; writes: hScrollX, hScrollXHi
 ; points at: wScriptStep
-Func_00F_729C::
+ScriptCommand35_Run_Case02_Sub01::
+Func_00F_729C:: ; address name
     ld a, [wC928]
     ld b, a
 
@@ -9399,7 +9403,7 @@ Jump_00F_7B7E::
     ld a, h
     adc a, $C1
     ld h, a
-    call Func_00F_7BC3
+    call ScriptCommand77_Run_Case0A_Sub01
     ldh a, [hScrollY]
     sub a, $01
     ldh [hScrollY], a
@@ -9420,11 +9424,13 @@ Jump_00F_7BB4::
     inc [hl]
     ret
 
+; only called from ScriptCommand77_Run_Case0A (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand77_Run_Case0A)
 ; reads: wIsCGB, hFFC6
 ; writes: wC0C0, wC0C1, wC0C2, wC0C3, wC0D8, wC0D9, wC0DA, wC0DB, ...
 ; points at: wC0C4, wC0DC
-Func_00F_7BC3::
+ScriptCommand77_Run_Case0A_Sub01::
+Func_00F_7BC3:: ; address name
     ld a, e
     ld [wC0C0], a
     ld a, d

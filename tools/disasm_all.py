@@ -893,6 +893,58 @@ class Rom:
                         pc += n
                 self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
 
+    def name_single_caller_helpers(self) -> None:
+        """Name a routine that has exactly one calling routine `Parent_SubNN` (E-0047).
+
+        Only a named parent counts (hand names, family names, table-derived names), the helper must
+        not also be reached through a table, and the pass repeats three times so helpers of helpers
+        are named. NN counts the parent's helpers in address order. The name says where a routine
+        is used, not what it does; the address name stays as an alias."""
+        table_targets = set()
+        for b in range(self.nbanks):
+            for a, v in self.insn[b].items():
+                if v[0] == "dw":
+                    r = self.resolve(b, v[1])
+                    if r:
+                        table_targets.add(r)
+        used = {i["name"] for i in self.names.values()}
+        total = 0
+        for _round in range(3):
+            plan: dict[tuple[int, int], list[tuple[int, int]]] = {}
+            for (b, a), sites in self.callers.items():
+                label = self.labels[b].get(a, "")
+                if not label.startswith("Func_") or (b, a) in self.names or a not in self.insn[b]                         or (b, a) in table_targets:
+                    continue
+                parents = set()
+                for cb, ca in sites:
+                    ents = self.entries[cb]
+                    k = bisect.bisect_right(ents, ca) - 1
+                    parents.add((cb, ents[k]) if k >= 0 else None)
+                if len(parents) != 1 or None in parents:
+                    continue
+                (parent,) = parents
+                if parent == (b, a) or self.labels[parent[0]][parent[1]].startswith("Func_"):
+                    continue
+                plan.setdefault(parent, []).append((b, a))
+            if not plan:
+                break
+            for (pb, pa), subs in plan.items():
+                stem = self.labels[pb][pa]
+                if len(stem) > 48:
+                    continue
+                for n, (b, a) in enumerate(sorted(subs, key=lambda x: (x[0], x[1])), 1):
+                    name = f"{stem}_Sub{n:02X}"
+                    if name in used:
+                        continue
+                    used.add(name)
+                    old = self.labels[b][a]
+                    self.alias[(b, a)] = old
+                    self.labels[b][a] = name
+                    self.names[(b, a)] = {"name": name, "note": f"only called from {stem} (E-0047)",
+                                          "evidence": "call graph"}
+                    total += 1
+        log(f"single-caller helpers named: {total}")
+
     def xref_lines(self, bank: int, addr: int) -> list[str]:
         out = []
         calls = self.callers.get((bank, addr), [])
@@ -1311,6 +1363,7 @@ class Rom:
         self.name_dispatch_cases()
         self.apply_names()
         self.build_xrefs()
+        self.name_single_caller_helpers()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 

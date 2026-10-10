@@ -3924,7 +3924,7 @@ Jump_01D_5E69::
     ld [rRAMG2], a
     ret
 
-; 19 call sites from 19 routines (e.g. Func_01D_6B32, ScriptCommandEB_Run_Table2_Case02, Func_014_43CC_Case40, Func_014_43CC_Case0E, ...)
+; 19 call sites from 19 routines (e.g. ScriptCommandE8_Run_Case03_Sub01, ScriptCommandEB_Run_Table2_Case02, Func_014_43CC_Case40, Func_014_43CC_Case0E, ...)
 ; reads: wD7A9, wC6FD
 ; writes: wD7A9, rRAMG2, rRAMB
 ; points at: wD789, wC6FE, sA000
@@ -6003,11 +6003,13 @@ Data_01D_6B1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01D_6B28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $00, $60, $00, $A0, $00, $E0, $00, $20, $01
 
+; only called from ScriptCommandE8_Run_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case03)
 ; reads: wD786, wD780, wD7A9, wC6FD
 ; writes: wD780, wD781, wD7FA, wD7AF, wScriptCommandType, wScriptStartRequest, wD782
 ; points at: wC52D
-Func_01D_6B32::
+ScriptCommandE8_Run_Case03_Sub01::
+Func_01D_6B32:: ; address name
     ld hl, wC52D
     xor a, a
     ld [hl+], a

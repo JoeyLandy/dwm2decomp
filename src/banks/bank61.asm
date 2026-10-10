@@ -1,7 +1,7 @@
 SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
-; 2 call sites from 2 routines (e.g. Func_00A_465D_Case05, Func_085_5C92)
+; 2 call sites from 2 routines (e.g. Func_00A_465D_Case05, ScriptCommand84_Run_Case04_Sub01)
 ; reads: wC6FD, hFFC6, hFFC7, hFFCA, hFFCB
 ; writes: wCD05, hFFCA, hFFCB, rRAMG
 ; points at: wC6FE
@@ -760,9 +760,11 @@ Jump_061_4467::
 Data_061_4468:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $11, $11, $21, $11, $12, $12, $11, $11, $11, $31
 
+; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
 ; reads: wCC44
-Func_061_4472::
+LoadMapScreen_Sub03::
+Func_061_4472:: ; address name
     ld a, [wCC44]
     and a, $07
     rst $00
@@ -2088,9 +2090,11 @@ Jump_061_5723::
     dw Data_061_654C
     db $52, $58, $62, $2D, $5D, $62, $07, $59, $63, $AD, $5D, $63
 
+; only called from CheckWarpAtPlayer (E-0047)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)
 ; reads: wCC44
-Func_061_5764::
+CheckWarpAtPlayer_Sub01::
+Func_061_5764:: ; address name
     ld a, [wCC44]
     and a, $07
     rst $00

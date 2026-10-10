@@ -1618,7 +1618,7 @@ Jump_00D_4E39::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 35 call sites from 32 routines (e.g. ScriptCommandF3_Run_Case04, Func_00D_54E3, ScriptCommandEF_Run_Table2_Case02, Func_00D_463F_Case11, ...)
+; 35 call sites from 32 routines (e.g. ScriptCommandF3_Run_Case04, ScriptCommandF0_Run_Case04_Sub01_Sub04, ScriptCommandEF_Run_Table2_Case02, Func_00D_463F_Case11, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank0D::
 Func_00D_4E5A:: ; address name
@@ -2173,7 +2173,7 @@ Jump_00D_5280:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF0_Run_Case04::
 Jump_00D_52A7:: ; address name
-    call Func_00D_5412
+    call ScriptCommandF0_Run_Case04_Sub01
     ret
 
 ; entry 5 of the `rst $00` table in ScriptCommandF0_Run
@@ -2388,10 +2388,12 @@ Jump_00D_53BB:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; only called from ScriptCommandF0_Run_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF0_Run_Case04)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD780, wC6FD, wD786
 ; writes: wD7FA, wD780, wD7AB, wD7AD, wD7AF, wScriptCommandType, wScriptStartRequest, wCFA8, ...
-Func_00D_5412::
+ScriptCommandF0_Run_Case04_Sub01::
+Func_00D_5412:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_00D_542E
@@ -2402,11 +2404,11 @@ Func_00D_5412::
     jp nz, Jump_00D_5479
     bit 1, a
     jp nz, Jump_00D_54A6
-    call Func_00D_54C1
+    call ScriptCommandF0_Run_Case04_Sub01_Sub01
     ret
 
 Jump_00D_542E::
-    call Func_00D_54DF
+    call ScriptCommandF0_Run_Case04_Sub01_Sub03
     ld a, [wC6FD]
     cp a, $02
     jr c, Jump_00D_543E
@@ -2418,7 +2420,7 @@ Jump_00D_543E::
     ld a, [wC6FD]
     dec a
     ld [wD786], a
-    call Func_00D_54C1
+    call ScriptCommandF0_Run_Case04_Sub01_Sub01
     ret
 
 Jump_00D_5449::
@@ -2430,13 +2432,13 @@ Jump_00D_544A::
     ld [wD7AB], a
     ld [wD7AD], a
     ld [wD7AF], a
-    call Func_00D_54DB
+    call ScriptCommandF0_Run_Case04_Sub01_Sub02
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00D_5460::
-    call Func_00D_54DF
+    call ScriptCommandF0_Run_Case04_Sub01_Sub03
     ld a, [wC6FD]
     dec a
     ld b, a
@@ -2445,7 +2447,7 @@ Jump_00D_5460::
     jr c, Jump_00D_5476
     xor a, a
     ld [wD786], a
-    call Func_00D_54C1
+    call ScriptCommandF0_Run_Case04_Sub01_Sub01
     ret
 
 Jump_00D_5476::
@@ -2455,7 +2457,7 @@ Jump_00D_5476::
 Jump_00D_5479::
     ld a, $69
     call QueueSoundEffect
-    call Func_00D_54E3
+    call ScriptCommandF0_Run_Case04_Sub01_Sub04
     xor a, a
     ld [wD7FA], a
     ld a, [wD780]
@@ -2486,38 +2488,46 @@ Jump_00D_54A6::
     ld [wScriptStartRequest], a
     ret
 
-; 3 call sites from 1 routine (e.g. Func_00D_5412)
+; only called from ScriptCommandF0_Run_Case04_Sub01 (E-0047)
+; 3 call sites from 1 routine (e.g. ScriptCommandF0_Run_Case04_Sub01)
 ; reads: wJoypadRepeatTimer, wD787, wD786
 ; writes: wD787
-Func_00D_54C1::
+ScriptCommandF0_Run_Case04_Sub01_Sub01::
+Func_00D_54C1:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, Func_00D_54DB
+    jr c, ScriptCommandF0_Run_Case04_Sub01_Sub02
     ld a, [wD787]
     inc a
     ld [wD787], a
     cp a, $10
-    jr c, Func_00D_54DB
+    jr c, ScriptCommandF0_Run_Case04_Sub01_Sub02
     cp a, $18
-    jr c, Func_00D_54DF
+    jr c, ScriptCommandF0_Run_Case04_Sub01_Sub03
     xor a, a
     ld [wD787], a
 
-; 1 call site from 1 routine (e.g. Func_00D_5412)
+; only called from ScriptCommandF0_Run_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF0_Run_Case04_Sub01)
 ; reads: wD786
-Func_00D_54DB::
+ScriptCommandF0_Run_Case04_Sub01_Sub02::
+Func_00D_54DB:: ; address name
     ld b, $BB
     jr Jump_00D_54E5
 
-; 2 call sites from 1 routine (e.g. Func_00D_5412)
+; only called from ScriptCommandF0_Run_Case04_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ScriptCommandF0_Run_Case04_Sub01)
 ; reads: wD786
-Func_00D_54DF::
+ScriptCommandF0_Run_Case04_Sub01_Sub03::
+Func_00D_54DF:: ; address name
     ld b, $C3
     jr Jump_00D_54E5
 
-; 1 call site from 1 routine (e.g. Func_00D_5412)
+; only called from ScriptCommandF0_Run_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommandF0_Run_Case04_Sub01)
 ; reads: wD786
-Func_00D_54E3::
+ScriptCommandF0_Run_Case04_Sub01_Sub04::
+Func_00D_54E3:: ; address name
     ld b, $BC
 
 Jump_00D_54E5::
@@ -2722,7 +2732,7 @@ Jump_00D_56CC::
     ld a, [wD7FA]
     cp a, $01
     jr z, Jump_00D_56BD
-    call Func_00D_5702
+    call ScriptCommandF2_Run_Case02_Sub01
     cp a, $FF
     jr nz, Jump_00D_56E9
     ld a, $01
@@ -2747,8 +2757,10 @@ Jump_00D_56E9::
     ld [wScriptStartRequest], a
     ret
 
+; only called from ScriptCommandF2_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case02)
-Func_00D_5702::
+ScriptCommandF2_Run_Case02_Sub01::
+Func_00D_5702:: ; address name
     ld c, $00
 
 Jump_00D_5704::
@@ -4389,7 +4401,7 @@ Jump_00D_63A9::
     jr z, Jump_00D_63C1
     ld hl, wInventory
     ld c, $00
-    call Func_00D_63F6
+    call ScriptCommandF3_Run_Case01_Sub01
 
 Jump_00D_63C1::
     ld a, $03
@@ -4410,7 +4422,7 @@ Jump_00D_63CF::
     ld [wC839], a
     ld hl, wInventory
     ld c, $00
-    call Func_00D_63F6
+    call ScriptCommandF3_Run_Case01_Sub01
     xor a, a
 
 Jump_00D_63E2::
@@ -4424,9 +4436,11 @@ Jump_00D_63E2::
     ld [wScriptStartRequest], a
     ret
 
+; only called from ScriptCommandF3_Run_Case01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptCommandF3_Run_Case01)
 ; points at: wInventory, wC61E
-Func_00D_63F6::
+ScriptCommandF3_Run_Case01_Sub01::
+Func_00D_63F6:: ; address name
     push hl
     push bc
     ld a, [hl]
@@ -4454,7 +4468,7 @@ Jump_00D_640D::
     inc c
     ld a, c
     cp a, $18
-    jr c, Func_00D_63F6
+    jr c, ScriptCommandF3_Run_Case01_Sub01
 
 Jump_00D_6416::
     ld hl, wInventory
@@ -6356,7 +6370,7 @@ Jump_00D_71BD:: ; address name
     push af
     ld a, $C7
     ld [wD7F1], a
-    call Func_00D_7812
+    call ScriptCommandF4_Run_Table2_Case04_Sub01
     ld de, Data_00D_785E
     ld hl, wC36C
     ld bc, $0C05
@@ -6573,7 +6587,7 @@ Jump_00D_7329:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
-    call Func_00D_76D0
+    call ScriptCommandF4_Run_Table2_Case14_Sub01
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -6803,7 +6817,7 @@ Jump_00D_74BB:: ; address name
 ; writes: wD781
 ScriptCommandF4_Run_Table2_Case1A::
 Jump_00D_74F1:: ; address name
-    call Func_00D_77C2
+    call ScriptCommandF4_Run_Table2_Case1A_Sub01
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -7035,11 +7049,13 @@ Jump_00D_76AF:: ; address name
     ld [wD781], a
     ret
 
+; only called from ScriptCommandF4_Run_Table2_Case14 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Table2_Case14)
 ; reads: wD7F6, wD7F7, wD7F5, wCB3D
 ; writes: wD7F1, wD006, wD7F2, wD007, wD7F3, wD7F4, wD7FA
 ; points at: wC7FC, wC8CF, wC130, wC8C0
-Func_00D_76D0::
+ScriptCommandF4_Run_Table2_Case14_Sub01::
+Func_00D_76D0:: ; address name
     ld a, [wD7F6]
     ld [wD7F1], a
     ld [wD006], a
@@ -7138,7 +7154,7 @@ Jump_00D_7782::
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. Func_00D_76D0)
+; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Table2_Case14_Sub01)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wC8CF
@@ -7173,10 +7189,12 @@ Func_00D_778C:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
+; only called from ScriptCommandF4_Run_Table2_Case1A (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Table2_Case1A)
 ; reads: wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, wC93F, ...
 ; writes: hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, wC8F5, ...
-Func_00D_77C2::
+ScriptCommandF4_Run_Table2_Case1A_Sub01::
+Func_00D_77C2:: ; address name
     ld a, [wC938]
     ldh [hPlayerX], a
     ld a, [wC939]
@@ -7207,10 +7225,12 @@ Func_00D_77C2::
     ld [wC936], a
     ret
 
+; only called from ScriptCommandF4_Run_Table2_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Table2_Case04)
 ; reads: hFFC6, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
-Func_00D_7812::
+ScriptCommandF4_Run_Table2_Case04_Sub01::
+Func_00D_7812:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a

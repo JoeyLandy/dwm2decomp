@@ -1,11 +1,13 @@
 SECTION "Bank 19", ROMX[$4000], BANK[$19]
     db $19
 
+; only called from GameMode4_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init)
 ; reads: wCFC5, wDataBank, wC58A, wD20C, wD25A, wD2A8
 ; writes: wDataBankSave, wCFC5, rRAMG, rRAMB, wD8A1, wD8A2, wD8A3
 ; points at: wD800, wBattlePhase, wCFD0, wD09D
-Func_019_4001::
+GameMode4_Init_Sub01::
+Func_019_4001:: ; address name
     ld a, [wCFC5]
     push af
     ld hl, wD800
@@ -24,7 +26,7 @@ Func_019_4001::
     call FillBytes
     pop af
     ld [wCFC5], a
-    call Func_019_4079
+    call GameMode4_Init_Sub01_Sub01
     ld a, [wC58A]
     or a, a
     jr nz, Jump_019_4069
@@ -36,8 +38,8 @@ Func_019_4001::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    call Func_019_4557
-    call Func_019_46DD
+    call GameMode4_Init_Sub01_Sub06
+    call GameMode4_Init_Sub01_Sub07
     ld a, [wD20C]
     ld [wD8A1], a
     ld a, [wD25A]
@@ -49,18 +51,20 @@ Func_019_4001::
     jr Jump_019_4069
 
 Jump_019_4069::
-    call Func_019_4224
-    call Func_019_419B
-    call Func_019_41CB
-    call Func_019_4544
-    call Func_019_4E1C
+    call GameMode4_Init_Sub01_Sub04
+    call GameMode4_Init_Sub01_Sub02
+    call GameMode4_Init_Sub01_Sub03
+    call GameMode4_Init_Sub01_Sub05
+    call GameMode4_Init_Sub01_Sub08
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wCFC5, wC58A, wC6FD, wCFDC, wC835, wC834, wC57F
 ; writes: wDAD7, wD802, wDAAC, wDAAD, wD892, wC5FC, wC5FD, wC5FE, ...
 ; points at: wC46B, wDA5B, wDAD8, wBattleSlotOut, wD958, wDA08, wDAD4, wD895, ...
-Func_019_4079::
+GameMode4_Init_Sub01_Sub01::
+Func_019_4079:: ; address name
     ld a, [wCFC5]
     cp a, $04
     jr z, Jump_019_408B
@@ -153,22 +157,22 @@ Jump_019_4140::
     bit 1, a
     jr nz, Jump_019_4166
     ld hl, wD0EC
-    call Func_019_4186
+    call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD88F], a
     ld [wC984], a
     ld hl, wD1D6
-    call Func_019_4186
+    call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD890], a
     ld [wC985], a
     jr Jump_019_417E
 
 Jump_019_4166::
     ld hl, wD0EC
-    call Func_019_4186
+    call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD890], a
     ld [wC984], a
     ld hl, wD1D6
-    call Func_019_4186
+    call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD88F], a
     ld [wC985], a
 
@@ -178,8 +182,10 @@ Jump_019_417E::
     ld [wD058], a
     ret
 
-; 4 call sites from 1 routine (e.g. Func_019_4079)
-Func_019_4186::
+; only called from GameMode4_Init_Sub01_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub01)
+GameMode4_Init_Sub01_Sub01_Sub01::
+Func_019_4186:: ; address name
     ld de, $004E
     ld c, $01
     add hl, de
@@ -197,25 +203,29 @@ Jump_019_4199::
     ld a, c
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; writes: wC526
-Func_019_419B::
-    farcall Func_031_7239
+GameMode4_Init_Sub01_Sub02::
+Func_019_419B:: ; address name
+    farcall GameMode4_Init_Sub01_Sub02_Sub02
     farcall Func_031_71F5
     farcall Func_031_72AC
     farcall Func_031_72CC
     farcall Func_031_7389
     farcall Func_031_7321
     ld hl, vBGMap0
-    call Func_019_4516
+    call GameMode4_Init_Sub01_Sub02_Sub01
     ld a, $7F
     ld [wC526], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wC57F, wD890
 ; points at: wD1C9, wD0DF, wD217, wD12D, wD265, wD17B
-Func_019_41CB::
+GameMode4_Init_Sub01_Sub03::
+Func_019_41CB:: ; address name
     ld de, wD1C9
     ld a, [wC57F]
     bit 1, a
@@ -225,7 +235,7 @@ Func_019_41CB::
 Jump_019_41D8::
     ld hl, vTiles2 + $140
     ld c, $01
-    call Func_019_4219
+    call GameMode4_Init_Sub01_Sub03_Sub01
     ld a, [wD890]
     cp a, $01
     jr z, Jump_019_4218
@@ -238,7 +248,7 @@ Jump_019_41D8::
 Jump_019_41F4::
     ld hl, vTiles2 + $380
     ld c, $03
-    call Func_019_4219
+    call GameMode4_Init_Sub01_Sub03_Sub01
     ld a, [wD890]
     cp a, $02
     jr z, Jump_019_4218
@@ -251,13 +261,15 @@ Jump_019_41F4::
 Jump_019_4210::
     ld hl, vTiles2 + $5C0
     ld c, $05
-    call Func_019_4219
+    call GameMode4_Init_Sub01_Sub03_Sub01
 
 Jump_019_4218::
     ret
 
-; 3 call sites from 1 routine (e.g. Func_019_41CB)
-Func_019_4219::
+; only called from GameMode4_Init_Sub01_Sub03 (E-0047)
+; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub03)
+GameMode4_Init_Sub01_Sub03_Sub01::
+Func_019_4219:: ; address name
     ld a, [de]
     push af
     inc de
@@ -268,11 +280,13 @@ Func_019_4219::
     call LoadMonsterPicture
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wD88F, wC57F, wD890, wD00B, wD00A
 ; writes: wD006, wD007
 ; points at: wD8A7, wBattleSlotOut, wD958
-Func_019_4224::
+GameMode4_Init_Sub01_Sub04::
+Func_019_4224:: ; address name
     ld a, [wD88F]
     ld b, a
     ld c, $00
@@ -283,7 +297,7 @@ Func_019_4224::
     ld b, a
 
 Jump_019_4235::
-    call Func_019_4B91
+    call GameMode4_Init_Sub01_Sub04_Sub01
     inc c
     dec b
     jr nz, Jump_019_4235
@@ -297,7 +311,7 @@ Jump_019_4235::
     ld b, a
 
 Jump_019_424D::
-    call Func_019_4B91
+    call GameMode4_Init_Sub01_Sub04_Sub01
     inc c
     dec b
     jr nz, Jump_019_424D
@@ -404,7 +418,7 @@ Jump_019_42EA::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4B91)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
 ; points at: wD008
 Func_019_42EE::
     push bc
@@ -606,7 +620,7 @@ Jump_019_43E4::
     call nz, Func_019_43ED
     ret
 
-; 2 call sites from 2 routines (e.g. Func_019_434D, Func_019_4224)
+; 2 call sites from 2 routines (e.g. Func_019_434D, GameMode4_Init_Sub01_Sub04)
 ; reads: wC58A
 ; points at: wD8AF, wD9C9, wD989
 Func_019_43ED::
@@ -863,9 +877,11 @@ Jump_019_44EC::
     ld [de], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_419B)
+; only called from GameMode4_Init_Sub01_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub02)
 ; points at: wScreenTileBuffer
-Func_019_4516::
+GameMode4_Init_Sub01_Sub02_Sub01::
+Func_019_4516:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $1412
 
@@ -907,9 +923,11 @@ Func_019_4537::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wCFC5
-Func_019_4544::
+GameMode4_Init_Sub01_Sub05::
+Func_019_4544:: ; address name
     ld a, [wCFC5]
     or a, a
     jr z, Jump_019_454D
@@ -927,10 +945,12 @@ Jump_019_4553::
     call QueueMusic
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wD88F
 ; points at: wD0D5
-Func_019_4557::
+GameMode4_Init_Sub01_Sub06::
+Func_019_4557:: ; address name
     ld a, [wD88F]
     ld b, a
     ld c, $00
@@ -938,15 +958,17 @@ Func_019_4557::
 
 Jump_019_4560::
     push bc
-    call Func_019_456A
+    call GameMode4_Init_Sub01_Sub06_Sub01
     pop bc
     inc c
     dec b
     jr nz, Jump_019_4560
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4557)
-Func_019_456A::
+; only called from GameMode4_Init_Sub01_Sub06 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06)
+GameMode4_Init_Sub01_Sub06_Sub01::
+Func_019_456A:: ; address name
     ld a, c
     ld c, $01
     call SRAMRecordAddressMapped
@@ -1077,7 +1099,7 @@ Jump_019_45EC::
     inc de
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_456A)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06_Sub01)
 ; writes: hFFC6, hFFC7
 Func_019_4605::
     or a, a
@@ -1134,10 +1156,12 @@ Func_019_4632::
 Data_019_4641:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $064641, $70
 
-; 1 call site from 1 routine (e.g. Func_031_4681)
+; only called from BattleEnd_Step3_Sub07_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_Sub01)
 ; reads: wDAAB
 ; points at: wD20D, wD1BF
-Func_019_46B1::
+BattleEnd_Step3_Sub07_Sub01_Sub01::
+Func_019_46B1:: ; address name
     ld de, wD20D
     ld a, [wDAAB]
     and a, $03
@@ -1170,10 +1194,12 @@ Jump_019_46C1::
     ld [de], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wD890, wCFC5
 ; points at: wD1BF
-Func_019_46DD::
+GameMode4_Init_Sub01_Sub07::
+Func_019_46DD:: ; address name
     ld a, [wD890]
     ld b, a
     ld c, $00
@@ -1196,7 +1222,7 @@ Jump_019_46F3::
 
 Jump_019_46FD::
     push bc
-    call Func_019_4752
+    call GameMode4_Init_Sub01_Sub07_Sub01
     pop bc
     inc c
     ld a, e
@@ -1209,7 +1235,7 @@ Jump_019_46FD::
     jr nz, Jump_019_46FD
     ret
 
-; 2 call sites from 2 routines (e.g. Func_019_46DD, Func_019_46B1)
+; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07, BattleEnd_Step3_Sub07_Sub01_Sub01)
 ; reads: wRecordBuffer, wCFED
 ; writes: wMonsterId, wCFE7, wD006, wD007
 ; points at: wCFDD
@@ -1248,11 +1274,13 @@ Func_019_470F::
     pop bc
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_46DD)
+; only called from GameMode4_Init_Sub01_Sub07 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07)
 ; reads: wD86A, wD86B, wD006, wD007, wD008, wD009, wD010, wD011, ...
 ; writes: wD86A, wD86B, wD869, hFFC7, wD006, wD007, hFFC6, wD868
 ; points at: wCFE3, wCFDD
-Func_019_4752::
+GameMode4_Init_Sub01_Sub07_Sub01::
+Func_019_4752:: ; address name
     push bc
     ld a, e
     ld [wD86A], a
@@ -1399,7 +1427,7 @@ Jump_019_4771::
     pop bc
     ret
 
-; 3 call sites from 1 routine (e.g. Func_019_4752)
+; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wC5E7
 Func_019_488D::
     push af
@@ -1415,7 +1443,7 @@ Func_019_488D::
     ld [hl+], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4752)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wC5E7
 Func_019_489D::
     push af
@@ -1433,7 +1461,7 @@ Func_019_489D::
     ld [hl+], a
     ret
 
-; 6 call sites from 1 routine (e.g. Func_019_4752)
+; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: hFFC8, hFFC9, wCFC5, wD868, wC96C, wD869, wD00B
 ; writes: hFFC8, hFFC9
 Func_019_48B1::
@@ -1551,7 +1579,7 @@ Jump_019_494B::
     ld [hl+], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_019_4752)
+; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: hFFC8, hFFC9
 Func_019_495C::
     ldh a, [hFFC8]
@@ -1560,7 +1588,7 @@ Func_019_495C::
     ld [hl+], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4752)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; points at: wD01A
 Func_019_4963::
     ld de, wD01A
@@ -1574,7 +1602,7 @@ Jump_019_4968::
     jr nz, Jump_019_4968
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4752)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wD86A, wD86B, wC5E7, wD068
 Func_019_496F::
     ld a, [wD86A]
@@ -1628,7 +1656,7 @@ Jump_019_49A7::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4752)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wD86A, wD86B, hFFC7, hFFCD, hFFCE, wCFC5, hFFCF, hFFCA, ...
 ; writes: hFFCA, hFFCB, hFFCC, hFFCF, hFFCD, hFFCE
 Func_019_49B1::
@@ -2005,10 +2033,12 @@ Jump_019_4B87::
     pop bc
     ret
 
-; 2 call sites from 1 routine (e.g. Func_019_4224)
+; only called from GameMode4_Init_Sub01_Sub04 (E-0047)
+; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub04)
 ; reads: wC58A, wD868, wD871
 ; points at: wD958, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
-Func_019_4B91::
+GameMode4_Init_Sub01_Sub04_Sub01::
+Func_019_4B91:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Func_019_4BA8
@@ -2025,7 +2055,7 @@ Jump_019_4BA4::
     call Func_019_42EE
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4B91)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
 ; reads: wC58A, wD868, wD871
 ; points at: wD958, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
 Func_019_4BA8::
@@ -2259,7 +2289,7 @@ Jump_019_4CEF::
     call Func_019_4298
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4B91)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
 ; reads: wD868, wD871
 ; points at: wD958, wD8AF, wDA43, wD8B7, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
 Func_019_4CF8::
@@ -2452,10 +2482,12 @@ Jump_019_4E0E::
     ld h, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_019_4001)
+; only called from GameMode4_Init_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
 ; reads: wC58A
 ; points at: wDA5F, wDA5B
-Func_019_4E1C::
+GameMode4_Init_Sub01_Sub08::
+Func_019_4E1C:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_019_4E3E

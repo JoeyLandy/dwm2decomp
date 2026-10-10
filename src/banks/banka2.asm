@@ -34,9 +34,11 @@ Func_0A2_4001::
     call CopyBytesDEFromHL_BankA2
     ret
 
+; only called from LoadMonsterRecordTo (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMonsterRecordTo)
 ; reads: wMonsterId, wCFE7
-Func_0A2_402D::
+LoadMonsterRecordTo_Sub01::
+Func_0A2_402D:: ; address name
     push de
     ld a, [wMonsterId]
     ld c, a
@@ -127,10 +129,12 @@ Data_0A2_497A:: ; heuristic: stream in a run of back-to-back compressed streams;
 Data_0A2_499A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $28899A, $48
 
+; only called from BeginStringDisplay_BankE0 (E-0047)
 ; 1 call site from 1 routine (e.g. BeginStringDisplay_BankE0)
 ; reads: wStringCategory
 ; writes: wStringCategory
-Func_0A2_49E2::
+BeginStringDisplay_BankE0_Sub01::
+Func_0A2_49E2:: ; address name
     ld de, Data_0A2_49F8
     ld a, [wStringCategory]
     sub a, $01

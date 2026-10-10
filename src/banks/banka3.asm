@@ -603,11 +603,13 @@ Jump_0A3_49D0::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4918)
+; only called from RunBattleResolveStep_Case05_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case05_Sub01)
 ; reads: wC58A, wBattleActor
 ; writes: hFFC6
 ; points at: wD958
-Func_0A3_49D5::
+RunBattleResolveStep_Case05_Sub01_Sub01::
+Func_0A3_49D5:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_0A3_49DF
@@ -706,10 +708,12 @@ Jump_0A3_4A59::
     pop de
     ret
 
+; only called from RunBattleResolveStep_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case00)
 ; reads: wBattleTarget
 ; points at: wD86D
-Func_0A3_4A5F::
+RunBattleResolveStep_Case00_Sub01::
+Func_0A3_4A5F:: ; address name
     call AdvanceRandom
     ld a, $FF
     ld hl, wD86D

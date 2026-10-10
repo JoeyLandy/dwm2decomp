@@ -1,10 +1,12 @@
 SECTION "Bank 97", ROMX[$4000], BANK[$97]
     db $97
 
+; only called from BeginStringDisplay_Bank28 (E-0047)
 ; 1 call site from 1 routine (e.g. BeginStringDisplay_Bank28)
 ; reads: wStringIndex
 ; writes: wStringIndex
-Func_097_4001::
+BeginStringDisplay_Bank28_Sub01::
+Func_097_4001:: ; address name
     ld de, Data_097_4095
     ld a, [wStringIndex]
     sub a, $DA

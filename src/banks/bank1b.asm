@@ -1,11 +1,13 @@
 SECTION "Bank 1B", ROMX[$4000], BANK[$1B]
     db $1B
 
+; only called from ComputeSpriteScrollOffsets (E-0047)
 ; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets)
 ; reads: wC580, wC581, wD781, rSB, wD06B, wC588, wC46B, wD786, ...
 ; writes: wC580, wD784, wD783, wD780, wC470, wD787, wC57F, wC55D, ...
 ; points at: wGameMode
-Func_01B_4001::
+ComputeSpriteScrollOffsets_Sub01::
+Func_01B_4001:: ; address name
     ld a, [wC580]
     bit 7, a
     jr z, Jump_01B_400E

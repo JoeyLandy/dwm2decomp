@@ -1,10 +1,12 @@
 SECTION "Bank 02", ROMX[$4000], BANK[$02]
     db $02
 
+; only called from StartPaletteFade (E-0047)
 ; 1 call site from 1 routine (e.g. StartPaletteFade)
 ; reads: wFadeState, wC56D
 ; writes: wC572, wC573, wC574, rBGPI, rBGPD, rOBPI, rOBPD
-Func_002_4001::
+StartPaletteFade_Sub01::
+Func_002_4001:: ; address name
     ld a, [wFadeState]
     ld b, a
     bit 7, b
@@ -1026,7 +1028,7 @@ Jump_002_45DB::
     ld a, [wC88D]
     or a, a
     call nz, InitSoundHardware
-    call Func_002_4AB5
+    call GameMode1_Init_Sub01
     call Func_000_13E5
     ld b, $46
     ld de, Data_046_4001
@@ -1157,7 +1159,7 @@ Jump_002_46F7::
     ld [wC527], a
     ret
 
-; 10 call sites from 10 routines (e.g. Func_002_4628, ScriptCommandF6_Run_Case08, ScriptCommandF7_Run_Case23, Func_00C_701C, ...)
+; 10 call sites from 10 routines (e.g. Func_002_4628, ScriptCommandF6_Run_Case08, ScriptCommandF7_Run_Case23, ScriptCommandF7_Run_Case23_Sub01, ...)
 ; writes: wC13A, wC13C, wC13D, wC13E
 ; points at: wC60C, wC130
 Func_002_470B::
@@ -1657,9 +1659,11 @@ Jump_002_4AA1::
     ld [wCBCF], a
     ret
 
+; only called from GameMode1_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode1_Init)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
-Func_002_4AB5::
+GameMode1_Init_Sub01::
+Func_002_4AB5:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_002_4AC5
@@ -3153,7 +3157,7 @@ Func_002_541B:: ; address name
 Jump_002_542C::
     ldh a, [hFF8C]
     bit 0, a
-    jp nz, Func_002_56DC
+    jp nz, UpdatePlayerMovement_Sub01
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -3200,7 +3204,7 @@ Jump_002_5460::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_544D
-    call Func_002_5AB6
+    call UpdatePlayerMovement_Sub02
     or a, a
     jr nz, Jump_002_544D
 
@@ -3214,7 +3218,7 @@ Jump_002_548A::
     ld a, h
     ldh [hFF9C], a
     call Func_002_5923
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
     ret
 
 Jump_002_54A0::
@@ -3243,7 +3247,7 @@ Jump_002_54C0::
     ldh [hFF9B], a
     ld a, h
     ldh [hFF9C], a
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
     ret
 
 Jump_002_54D7::
@@ -3287,7 +3291,7 @@ Jump_002_54F7::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_54E4
-    call Func_002_5AB6
+    call UpdatePlayerMovement_Sub02
     or a, a
     jr nz, Jump_002_54E4
 
@@ -3301,7 +3305,7 @@ Jump_002_5522::
     ld a, h
     ldh [hFF9C], a
     call Func_002_5923
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
     ret
 
 Jump_002_5538::
@@ -3331,7 +3335,7 @@ Jump_002_5558::
     ldh [hFF9B], a
     ld a, h
     ldh [hFF9C], a
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
     ret
 
 Jump_002_556F::
@@ -3381,7 +3385,7 @@ Jump_002_5590::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_557C
-    call Func_002_5AB6
+    call UpdatePlayerMovement_Sub02
     or a, a
     jr nz, Jump_002_557C
 
@@ -3401,7 +3405,7 @@ Jump_002_55DD::
     ld a, h
     ldh [hFF9E], a
     call Func_002_5923
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
     ret
 
 Jump_002_55EA::
@@ -3434,7 +3438,7 @@ Jump_002_5616::
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
 
 Jump_002_562C::
     ld a, [wJoypadPressed]
@@ -3483,7 +3487,7 @@ Jump_002_564B::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_5639
-    call Func_002_5AB6
+    call UpdatePlayerMovement_Sub02
     or a, a
     jr nz, Jump_002_5639
 
@@ -3503,7 +3507,7 @@ Jump_002_5697::
     ld a, h
     ldh [hFF9E], a
     call Func_002_5923
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
     ret
 
 Jump_002_56A4::
@@ -3532,14 +3536,16 @@ Jump_002_56C5::
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    call Func_002_56DC
+    call UpdatePlayerMovement_Sub01
     ret
 
+; only called from UpdatePlayerMovement (E-0047)
 ; 8 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: hFF9B, hFF9C, hFF9D, hFF9E, hFF8C, wC468, hPlayerY, wC8F1, ...
 ; writes: hFF8C, wC918, hFF9D, hFF9E, wC955, hPlayerY, wC8F1, wC8F6, ...
 ; points at: hPlayerY, hPlayerX
-Func_002_56DC::
+UpdatePlayerMovement_Sub01::
+Func_002_56DC:: ; address name
     call Func_002_5B9E
     ldh a, [hFF9B]
     ld l, a
@@ -3607,7 +3613,7 @@ Jump_002_5729::
     jp Jump_002_5892
 
 Jump_002_5747::
-    call Func_002_58FC
+    call UpdatePlayerMovement_Sub01_Sub01
     ldh a, [hFF9B]
     ld l, a
     ldh a, [hFF9C]
@@ -3653,7 +3659,7 @@ Jump_002_5784::
     jp Jump_002_5892
 
 Jump_002_57A2::
-    call Func_002_58FC
+    call UpdatePlayerMovement_Sub01_Sub01
     ldh a, [hFF9B]
     ld l, a
     ldh a, [hFF9C]
@@ -3703,7 +3709,7 @@ Jump_002_57E0::
     jp Jump_002_5892
 
 Jump_002_57FE::
-    call Func_002_58FC
+    call UpdatePlayerMovement_Sub01_Sub01
     ldh a, [hFF9D]
     ld l, a
     ldh a, [hFF9E]
@@ -3749,7 +3755,7 @@ Jump_002_583A::
     jr Jump_002_5892
 
 Jump_002_5857::
-    call Func_002_58FC
+    call UpdatePlayerMovement_Sub01_Sub01
     ldh a, [hFF9D]
     ld l, a
     ldh a, [hFF9E]
@@ -3811,10 +3817,10 @@ Jump_002_58B1::
     ld [wC918], a
 
 Jump_002_58BF::
-    farcall Func_00A_56D0
+    farcall UpdatePlayerMovement_Sub01_Sub02
     farcall Func_00A_561E
     farcall Func_012_75E0
-    farcall Func_00A_5748
+    farcall UpdatePlayerMovement_Sub01_Sub03
     farcall Func_00A_43EC
     farcall Func_012_73A1
     farcall Func_011_4130
@@ -3823,10 +3829,12 @@ Jump_002_58BF::
     farcall Func_00A_43B5
     ret
 
-; 4 call sites from 1 routine (e.g. Func_002_56DC)
+; only called from UpdatePlayerMovement_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. UpdatePlayerMovement_Sub01)
 ; reads: wC94D, hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wC8EF, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
-Func_002_58FC::
+UpdatePlayerMovement_Sub01_Sub01::
+Func_002_58FC:: ; address name
     ld a, [wC94D]
     or a, a
     ret z
@@ -3844,7 +3852,7 @@ Func_002_58FC::
     ld [wC8FB], a
     ret
 
-; 12 call sites from 6 routines (e.g. UpdatePlayerMovement, Func_002_56DC, Func_00F_7ED8, Func_012_61EF, ...)
+; 12 call sites from 6 routines (e.g. UpdatePlayerMovement, UpdatePlayerMovement_Sub01, Func_00F_7ED8, Func_012_61EF, ...)
 ; reads: hPlayerX, hPlayerY, wC8F0, wC8F1, wC8F5, wC8F6
 ; writes: wC8F2, wC8F3, wC8F7, wC8F8, wC8FC, wC8FD
 Func_002_5923::
@@ -3862,7 +3870,7 @@ Func_002_5923::
     ld [wC8FD], a
     ret
 
-; 12 call sites from 5 routines (e.g. Func_002_56DC, Func_00F_7ED8, Func_012_61EF, Func_012_65FF, ...)
+; 12 call sites from 5 routines (e.g. UpdatePlayerMovement_Sub01, Func_00F_7ED8, Func_012_61EF, Func_012_65FF, ...)
 ; reads: wC94D, wC468
 ; points at: wC8EF, wC8F2
 Func_002_5946::
@@ -4158,9 +4166,11 @@ Jump_002_5AB1::
     pop bc
     ret
 
+; only called from UpdatePlayerMovement (E-0047)
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wC8FE, wCC44, wC8FF
-Func_002_5AB6::
+UpdatePlayerMovement_Sub02::
+Func_002_5AB6:: ; address name
     push bc
     ld a, [wC8FE]
     cp a, $02
@@ -4294,7 +4304,7 @@ Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1A, $10, $70, $70
     db $85, $10, $50, $60, $FF
 
-; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, Func_002_56DC, Func_002_4F4C_Case07, ...)
+; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_Sub01, Func_002_4F4C_Case07, ...)
 ; reads: wC8CD, hScrollY, hScrollX
 ; writes: wC8CE, wC8CD
 Func_002_5B9E::
@@ -7081,7 +7091,7 @@ Jump_002_6FDE::
 Data_002_7006:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $00B006, $68
 
-; 4 call sites from 4 routines (e.g. Func_001_6880, GameMode5_Init_Case01, Func_015_6B00, Func_016_75EE)
+; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, Func_015_6B00, Func_016_75EE)
 ; reads: sBB00
 ; writes: rRAMG, rRAMB, hFFC6
 Func_002_706E::
@@ -7340,7 +7350,7 @@ Jump_002_717A::
     ld a, $01
     ret
 
-; 9 call sites from 9 routines (e.g. Func_001_6880, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case04, ...)
+; 9 call sites from 9 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case04, ...)
 ; reads: wC8C3
 ; writes: rRAMG, wC8C3, rRAMB
 Func_002_717D::

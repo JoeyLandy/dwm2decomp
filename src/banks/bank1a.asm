@@ -813,7 +813,7 @@ Data_01A_5F89:: ; heuristic: target of a monotone pointer table; C0
 Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
     db $86, $85, $FF, $8B, $FF, $8D, $FF, $97, $FF, $99, $FF
 
-; 2 call sites from 2 routines (e.g. Func_019_4752, Func_0A0_494F)
+; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, Func_0A0_494F)
 ; reads: wD86A, wD86B
 ; writes: wD86C
 ; points at: wD09D
@@ -1349,11 +1349,13 @@ Jump_01A_6242::
     inc b
     ret
 
+; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wC991, wC992
 ; writes: wD006, wD007
 ; points at: wD09D, wD010, wC9C2
-Func_01A_624B::
+BattleEnd_Step3_Sub02::
+Func_01A_624B:: ; address name
     ld hl, wD09D
     ld bc, $0019
     ld a, $FF
@@ -1374,9 +1376,9 @@ Func_01A_624B::
 Jump_01A_6274::
     ld a, [de]
     inc de
-    call Func_01A_62A0
+    call BattleEnd_Step3_Sub02_Sub01
     jr z, Jump_01A_627E
-    call Func_01A_62D0
+    call BattleEnd_Step3_Sub02_Sub02
 
 Jump_01A_627E::
     ld [hl+], a
@@ -1406,8 +1408,10 @@ Jump_01A_629C::
     jr nz, Jump_01A_6295
     ret
 
-; 1 call site from 1 routine (e.g. Func_01A_624B)
-Func_01A_62A0::
+; only called from BattleEnd_Step3_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub02)
+BattleEnd_Step3_Sub02_Sub01::
+Func_01A_62A0:: ; address name
     push hl
     push bc
     cp a, $C8
@@ -1447,8 +1451,10 @@ Jump_01A_62CD::
     pop hl
     ret
 
-; 1 call site from 1 routine (e.g. Func_01A_624B)
-Func_01A_62D0::
+; only called from BattleEnd_Step3_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub02)
+BattleEnd_Step3_Sub02_Sub02::
+Func_01A_62D0:: ; address name
     push hl
     push de
     push bc
@@ -1496,7 +1502,7 @@ Jump_01A_62FB::
     pop hl
     jr Jump_01A_62F7
 
-; 3 call sites from 2 routines (e.g. Func_01A_62D0, Func_01A_62A0)
+; 3 call sites from 2 routines (e.g. BattleEnd_Step3_Sub02_Sub02, BattleEnd_Step3_Sub02_Sub01)
 ; points at: wC9BA
 Func_01A_6306::
     push bc
@@ -1663,7 +1669,7 @@ Jump_01A_63A4::
     xor a, a
     ret
 
-; 12 call sites from 2 routines (e.g. Func_019_4752, Func_0A0_494F)
+; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, Func_0A0_494F)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9
 Func_01A_63A7::

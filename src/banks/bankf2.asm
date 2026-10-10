@@ -36,7 +36,7 @@ Jump_0F2_4013::
     call BGMapAddressAtScroll_BankF2
     ld bc, $140D
     ld de, $01CC
-    call Func_0F2_436F
+    call GameMode8_Init_Sub01
     farcall Func_01B_53AF
     farcall Func_002_5F9B
     ld hl, vTiles1
@@ -87,7 +87,7 @@ Func_0F2_40A2:: ; address name
     ld a, [wD782]
     and a, a
     jr z, Jump_0F2_40B0
-    call Func_0F2_43C3
+    call GameMode8_Update_Sub01
 
 Jump_0F2_40B0::
     ld a, [wC52B]
@@ -116,7 +116,7 @@ Jump_0F2_40B0::
 ; writes: wD782
 GameMode8_Update_Case00::
 Jump_0F2_40D5:: ; address name
-    call Func_0F2_4248
+    call GameMode8_Update_Case00_Sub01
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -251,7 +251,7 @@ Jump_0F2_4185:: ; address name
     ld hl, wC60C
     ld de, wC130
     ld c, $0A
-    call Func_0F2_41BA
+    call GameMode8_Update_Case0C_Sub01
     ld de, wCADB
     ld a, [de]
     ld l, a
@@ -262,7 +262,7 @@ Jump_0F2_4185:: ; address name
     ld hl, wC8CF
     ld de, wC140
     ld c, $10
-    call Func_0F2_41BA
+    call GameMode8_Update_Case0C_Sub01
     ld a, $0E
     ld [wStringIndex], a
     xor a, a
@@ -272,15 +272,17 @@ Jump_0F2_4185:: ; address name
     inc [hl]
     ret
 
+; only called from GameMode8_Update_Case0C (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode8_Update_Case0C)
-Func_0F2_41BA::
+GameMode8_Update_Case0C_Sub01::
+Func_0F2_41BA:: ; address name
     ld a, [hl+]
     cp a, $F0
     jr z, Jump_0F2_41C4
     ld [de], a
     inc de
     dec c
-    jr nz, Func_0F2_41BA
+    jr nz, GameMode8_Update_Case0C_Sub01
 
 Jump_0F2_41C4::
     ld a, $F0
@@ -291,7 +293,7 @@ Jump_0F2_41C4::
 ; no direct call (reached through a table, a jump or a vector)
 GameMode8_Update_Case0D::
 Jump_0F2_41C8:: ; address name
-    call Func_0F2_4227
+    call GameMode8_Update_Case0D_Sub01
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
@@ -351,10 +353,12 @@ Jump_0F2_4219::
     jr nz, Jump_0F2_4219
     ret
 
+; only called from GameMode8_Update_Case0D (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode8_Update_Case0D)
 ; writes: wC94B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wD780
-Func_0F2_4227::
+GameMode8_Update_Case0D_Sub01::
+Func_0F2_4227:: ; address name
     ld hl, wD780
     ld bc, $006F
 
@@ -375,11 +379,13 @@ Jump_0F2_422D::
     ld [wModeChangeRequest], a
     ret
 
+; only called from GameMode8_Update_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode8_Update_Case00)
 ; reads: wC5C7, wIsCGB
 ; writes: hFFC6, wCBCF, wCBD3, wCBD4, wSpriteSlotCount, wC527
 ; points at: wSpriteSlots, wCB8F, hFFC6
-Func_0F2_4248::
+GameMode8_Update_Case00_Sub01::
+Func_0F2_4248:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, Jump_0F2_4255
@@ -455,7 +461,7 @@ Jump_0F2_42D8::
     ret
 
 ; the same 7 bytes as CopyBytesDEFromHL (34:406E)
-; 4 call sites from 1 routine (e.g. Func_0F2_4248)
+; 4 call sites from 1 routine (e.g. GameMode8_Update_Case00_Sub01)
 CopyBytesDEFromHL_BankF2::
 Func_0F2_42D9:: ; address name
     ld a, [hl+]
@@ -512,11 +518,13 @@ Func_0F2_434E:: ; address name
     add_a_to_hl
     ret
 
+; only called from GameMode8_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_0F2_436F::
+GameMode8_Init_Sub01::
+Func_0F2_436F:: ; address name
     push de
     push bc
     push hl
@@ -574,8 +582,10 @@ Func_0F2_436F::
     ldh [c], a
     ret
 
+; only called from GameMode8_Update (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode8_Update)
-Func_0F2_43C3::
+GameMode8_Update_Sub01::
+Func_0F2_43C3:: ; address name
     farcall Func_004_44CE
     farcall DrawFieldSprites
     ret
@@ -1639,7 +1649,7 @@ Jump_0F2_4ECC::
 Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
-; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, Func_007_7C5F_Case04, Func_033_51C6)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, Func_007_7C5F_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wCA38, hFFC7, hFFC6
 ; writes: hFFC6, wD7F1, wD7F2
 ; points at: wD7F3

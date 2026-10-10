@@ -5354,7 +5354,7 @@ Jump_015_63F5::
     cp a, $37
     jr nc, Jump_015_63ED
 
-; 2 call sites from 2 routines (e.g. Func_00D_615E, Func_0F1_5B0F)
+; 2 call sites from 2 routines (e.g. Func_00D_615E, GameMode5_Update_Case07_Sub01_Sub01)
 ; writes: rRAMB, rRAMG2, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6
 Func_015_6403::
     xor a, a

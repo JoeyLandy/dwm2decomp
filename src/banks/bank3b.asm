@@ -490,9 +490,11 @@ Func_03B_42F0::
     ld c, a
     ret
 
+; only called from RunBattleActions_Case08 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleActions_Case08)
 ; reads: wBattleResolveStep
-Func_03B_42F4::
+RunBattleActions_Case08_Sub01::
+Func_03B_42F4:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw Func_03B_42F4_Case00

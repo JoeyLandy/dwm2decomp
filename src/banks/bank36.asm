@@ -51,7 +51,7 @@ Jump_036_4025:: ; address name
     add_a_to_hl
     bit 5, [hl]
     jr z, Jump_036_4069
-    farcall Func_0A3_4A5F
+    farcall RunBattleResolveStep_Case00_Sub01
     ld a, c
     cp a, $FF
     jr z, Jump_036_4069
@@ -150,22 +150,22 @@ Jump_036_40ED::
     jr Jump_036_4117
 
 Jump_036_4102::
-    call Func_036_4162
+    call RunBattleResolveStep_Table2_Case00_Sub01
     jr c, Jump_036_411E
     jr Jump_036_411C
 
 Jump_036_4109::
-    call Func_036_421D
+    call RunBattleResolveStep_Table2_Case00_Sub02
     jr c, Jump_036_411E
     jr Jump_036_411C
 
 Jump_036_4110::
-    call Func_036_425A
+    call RunBattleResolveStep_Table2_Case00_Sub03
     jr c, Jump_036_411E
     jr Jump_036_411C
 
 Jump_036_4117::
-    call Func_036_42AA
+    call RunBattleResolveStep_Table2_Case00_Sub04
     jr c, Jump_036_411E
 
 Jump_036_411C::
@@ -215,11 +215,13 @@ Jump_036_414B::
     call Func_036_4FD1
     ret
 
+; only called from RunBattleResolveStep_Table2_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
 ; reads: wBattleTarget, wCFF5, wBattleActionId, wBattleActor
 ; writes: wDAD1, wBattleTarget
 ; points at: wD812, wD854, wD810, wDA1D, wDABF
-Func_036_4162::
+RunBattleResolveStep_Table2_Case00_Sub01::
+Func_036_4162:: ; address name
     ld a, [wBattleTarget]
     call Func_036_7F5B
     jr z, Jump_036_4191
@@ -274,7 +276,7 @@ Jump_036_41AF::
     jr z, Jump_036_421B
 
 Jump_036_41D1::
-    call Func_036_4F18
+    call RunBattleResolveStep_Table2_Case00_Sub01_Sub01
     jr c, Jump_036_4211
     push af
     ld a, [wBattleActionId]
@@ -316,11 +318,13 @@ Jump_036_421B::
     xor a, a
     ret
 
+; only called from RunBattleResolveStep_Table2_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wDABE, wC981
 ; points at: wD80E
-Func_036_421D::
+RunBattleResolveStep_Table2_Case00_Sub02::
+Func_036_421D:: ; address name
     call Func_036_42D3
     jp nc, Jump_036_4317
     ld a, [wBattleTarget]
@@ -352,11 +356,13 @@ Jump_036_4255::
     scf
     ret
 
+; only called from RunBattleResolveStep_Table2_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
 ; reads: wBattleTarget, wCFF5, wBattleActor
 ; writes: wDABE, wC981
 ; points at: wD80E
-Func_036_425A::
+RunBattleResolveStep_Table2_Case00_Sub03::
+Func_036_425A:: ; address name
     call Func_036_42D3
     jp nc, Jump_036_4317
     ld a, [wBattleTarget]
@@ -401,9 +407,11 @@ Jump_036_42A5::
     scf
     ret
 
+; only called from RunBattleResolveStep_Table2_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00)
 ; reads: wBattleTarget, wCFF5
-Func_036_42AA::
+RunBattleResolveStep_Table2_Case00_Sub04::
+Func_036_42AA:: ; address name
     ld a, [wBattleTarget]
     call Func_036_7F5B
     jr z, Jump_036_42CB
@@ -424,7 +432,7 @@ Jump_036_42CB::
     xor a, a
     ret
 
-; 4 call sites from 4 routines (e.g. Func_036_42AA, Func_036_425A, Func_036_421D, Func_036_4162)
+; 4 call sites from 4 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub04, RunBattleResolveStep_Table2_Case00_Sub03, RunBattleResolveStep_Table2_Case00_Sub02, RunBattleResolveStep_Table2_Case00_Sub01)
 ; reads: wBattleTarget, wCFF4, wBattleActor
 ; writes: wDAD1, wBattleTarget, wC981
 ; points at: wD812, wDA1D, wDABF
@@ -484,17 +492,19 @@ Jump_036_431F:: ; address name
     ld a, [wDAB2]
     or a, a
     jr nz, RunBattleResolveStep_Case03
-    call Func_036_433F
+    call RunBattleResolveStep_Case02_Sub01
     ret z
     ld a, $82
     ld [wDAD2], a
     farcall Func_03A_4001
     ret
 
+; only called from RunBattleResolveStep_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case02)
 ; reads: wBattleActionId, wBattleActor
 ; points at: wD80F
-Func_036_433F::
+RunBattleResolveStep_Case02_Sub01::
+Func_036_433F:: ; address name
     ld a, [wBattleActionId]
     cp a, $91
     jr z, Jump_036_4347
@@ -544,7 +554,7 @@ Jump_036_4356:: ; address name
 ; points at: wBattleResolveStep, wD810, wD811, wD80F, wD80D, wD854, wBattleStatus, wBattleAGL
 RunBattleResolveStep_Case04::
 Jump_036_438A:: ; address name
-    call Func_036_454F
+    call RunBattleResolveStep_Case04_Sub01
     jr z, Jump_036_439B
     ld a, [wBattleTarget]
     call CarryUnlessWDA63SlotEmpty
@@ -555,7 +565,7 @@ Jump_036_438A:: ; address name
 Jump_036_439B::
     ld hl, wBattleResolveStep
     inc [hl]
-    call Func_036_4582
+    call RunBattleResolveStep_Case04_Sub02
     ret z
     ld a, [wCFF4]
     bit 1, a
@@ -658,7 +668,7 @@ Jump_036_4469::
     add_a_to_hl
     bit 2, [hl]
     jr nz, Jump_036_447F
-    call Func_036_4FBC
+    call RunBattleResolveStep_Case04_Sub03
     jp Jump_036_4543
 
 Jump_036_447F::
@@ -780,9 +790,11 @@ Jump_036_4543::
     call Func_036_4FD1
     ret
 
+; only called from RunBattleResolveStep_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
 ; reads: wBattleActionId
-Func_036_454F::
+RunBattleResolveStep_Case04_Sub01::
+Func_036_454F:: ; address name
     ld a, [wBattleActionId]
     cp a, $35
     ret z
@@ -817,9 +829,11 @@ Func_036_454F::
     cp a, $CE
     ret
 
+; only called from RunBattleResolveStep_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
 ; reads: wBattleActionId
-Func_036_4582::
+RunBattleResolveStep_Case04_Sub02::
+Func_036_4582:: ; address name
     ld a, [wBattleActionId]
     cp a, $6A
     ret z
@@ -862,7 +876,7 @@ Jump_036_45AA::
     bit 3, [hl]
     jr nz, Jump_036_45D3
     call AdvanceRandom
-    call Func_036_4918
+    call RunBattleResolveStep_Case05_Sub01
     jr nc, Jump_036_45F7
 
 Jump_036_45D3::
@@ -897,7 +911,7 @@ RunBattleResolveStep_Case06::
 Jump_036_4603:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    call Func_036_6717
+    call RunBattleResolveStep_Case06_Sub01
     ret
 
 ; entry 7 of the `rst $00` table in RunBattleResolveStep
@@ -950,7 +964,7 @@ Jump_036_464D::
     bit 7, [hl]
     jr z, Jump_036_4679
     res 7, [hl]
-    call Func_036_7C85
+    call RunBattleResolveStep_Case07_Sub02
     ld a, [wBattleActor]
     call GetBattleATK
     call Func_036_4930
@@ -993,7 +1007,7 @@ Jump_036_46A0::
     ld l, a
     ld a, [wD873]
     ld h, a
-    call Func_036_494E
+    call RunBattleResolveStep_Case07_Sub01
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
@@ -1212,7 +1226,7 @@ Jump_036_4806:: ; address name
     ld [wC0A0], a
     ld a, [wDAC0]
     bit 3, a
-    call nz, Func_036_4991
+    call nz, ResolveStepDamageMessage_Sub03
     jr Jump_036_4833
 
 Jump_036_4825::
@@ -1220,7 +1234,7 @@ Jump_036_4825::
     ld [wC0A0], a
     ld a, [wDAC1]
     bit 3, a
-    call nz, Func_036_4A38
+    call nz, ResolveStepDamageMessage_Sub04
 
 Jump_036_4833::
     ld a, [wBattleActionId]
@@ -1228,7 +1242,7 @@ Jump_036_4833::
     jr z, Jump_036_484E
     cp a, $D7
     jr nz, Jump_036_4844
-    farcall Func_032_67AA
+    farcall ResolveStepDamageMessage_Sub01
 
 Jump_036_4844::
     ld a, [wC0A0]
@@ -1273,7 +1287,7 @@ Jump_036_4885::
     ld a, [wBattleActor]
     ld b, a
     call Func_036_4E26
-    call Func_036_70F4
+    call ResolveStepDamageMessage_Sub05
     ret
 
 Jump_036_4890::
@@ -1305,14 +1319,16 @@ Jump_036_48B5::
     farcall Func_0A3_414F
     ldh a, [hFFC6]
     ld [wBattleActor], a
-    call Func_036_48CB
+    call ResolveStepDamageMessage_Sub02
     pop af
     ld [wBattleActor], a
 
+; only called from ResolveStepDamageMessage (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wBattleActor
 ; points at: wC0A0
-Func_036_48CB::
+ResolveStepDamageMessage_Sub02::
+Func_036_48CB:: ; address name
     ld de, wC0A0
     ld a, $61
     ld [de], a
@@ -1363,7 +1379,7 @@ Jump_036_4901:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunBattleResolveStep_Case0E::
 Jump_036_4908:: ; address name
-    farcall Func_032_5EAB
+    farcall RunBattleResolveStep_Case0E_Sub01
     ret
 
 ; entry 15 of the `rst $00` table in RunBattleResolveStep
@@ -1378,12 +1394,14 @@ Jump_036_490F:: ; address name
     ld [wBattleResolveStep], a
     ret
 
+; only called from RunBattleResolveStep_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case05)
 ; reads: hFFC6, wC5E7
-Func_036_4918::
+RunBattleResolveStep_Case05_Sub01::
+Func_036_4918:: ; address name
     push bc
     push hl
-    farcall Func_0A3_49D5
+    farcall RunBattleResolveStep_Case05_Sub01_Sub01
     pop hl
     pop bc
     ldh a, [hFFC6]
@@ -1422,8 +1440,10 @@ Func_036_4930::
     call RandomInRange
     ret
 
+; only called from RunBattleResolveStep_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case07)
-Func_036_494E::
+RunBattleResolveStep_Case07_Sub01::
+Func_036_494E:: ; address name
     ld c, l
     ld b, h
     srl b
@@ -1438,7 +1458,7 @@ Func_036_494E::
     call RandomInRange
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_4A38, ResolveStepDamageMessage)
+; 2 call sites from 2 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage)
 ; reads: wDAC0, wDABD, wDABF, wDAD1, wBattleActor
 ; writes: wBattleTarget, wDAD1
 ; points at: wDA1D
@@ -1467,11 +1487,13 @@ Func_036_4961::
     ld [wDAD1], a
     ret
 
+; only called from ResolveStepDamageMessage (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wBattleActionId, wDABF, wDAC2
 ; writes: wC0A0
 ; points at: wC0A0, wBattleDamageLo
-Func_036_4991::
+ResolveStepDamageMessage_Sub03::
+Func_036_4991:: ; address name
     ld a, [wBattleActionId]
     cp a, $6C
     jr nz, Jump_036_49A1
@@ -1579,11 +1601,13 @@ Jump_036_4A32::
     ld [wC0A0], a
     ret
 
+; only called from ResolveStepDamageMessage (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wBattleActionId
 ; writes: wC0A0
 ; points at: wC0A0
-Func_036_4A38::
+ResolveStepDamageMessage_Sub04::
+Func_036_4A38:: ; address name
     call Func_036_7E6C
     ret c
     ld a, [wBattleActionId]
@@ -1665,7 +1689,7 @@ Jump_036_4A9D::
     ld [wBattleResolveStep], a
     xor a, a
     ld [wBattleSubStep], a
-    call Func_036_6E75
+    call ResolveStepDamageMessage_Sub04_Sub02
     ld a, [wBattleSubPhase]
     cp a, $05
     ret z
@@ -1687,7 +1711,7 @@ Jump_036_4AE1::
     ret
 
 Jump_036_4AE5::
-    call Func_036_6E40
+    call ResolveStepDamageMessage_Sub04_Sub01
     ld a, [wDAC0]
     bit 4, a
     ld a, $87
@@ -2109,7 +2133,7 @@ Jump_036_4DF3:: ; address name
     ld [wD80B], a
     ret
 
-; 5 call sites from 4 routines (e.g. Func_036_48CB, ResolveStepDamageMessage, Func_036_4A38_Case02, Func_036_6C9A)
+; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub02, ResolveStepDamageMessage, Func_036_4A38_Case02, Func_036_6C9A)
 ; reads: wC58A, wC57F, wIsCGB, wD890, wC985, wC984
 ; writes: wC526, hFFC6
 Func_036_4E26::
@@ -2201,7 +2225,7 @@ Jump_036_4E9F::
 Jump_036_4EB0::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_425A, Func_036_421D)
+; 2 call sites from 2 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub03, RunBattleResolveStep_Table2_Case00_Sub02)
 ; reads: wBattleActor, wBattleTarget, wDABA, wDABD
 ; writes: wBattleActor, wBattleTarget, wDABD
 ; points at: wDAC9, wDA1C
@@ -2278,10 +2302,12 @@ Func_036_4F0E:: ; heuristic: follows a terminator; C0
     ld [wBattleResolveStep], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_4162)
+; only called from RunBattleResolveStep_Table2_Case00_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleResolveStep_Table2_Case00_Sub01)
 ; reads: wBattleTarget, wC971, wC5E7
 ; points at: wD854, wD86D
-Func_036_4F18::
+RunBattleResolveStep_Table2_Case00_Sub01_Sub01::
+Func_036_4F18:: ; address name
     ld a, [wBattleTarget]
     ld hl, wD854
     add a, a
@@ -2382,8 +2408,10 @@ Jump_036_4FBA::
     scf
     ret
 
+; only called from RunBattleResolveStep_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case04)
-Func_036_4FBC::
+RunBattleResolveStep_Case04_Sub03::
+Func_036_4FBC:: ; address name
     ld a, $84
     call QueueSoundEffect
     call Func_036_7E6C
@@ -2395,7 +2423,7 @@ Jump_036_4FCA::
     farcall Func_03A_7193
     ret
 
-; 8 call sites from 7 routines (e.g. RunBattleResolveStep_Case04, RunBattleResolveStep_Case03, RunBattleResolveStep_Table2_Case01, Func_036_42AA, ...)
+; 8 call sites from 7 routines (e.g. RunBattleResolveStep_Case04, RunBattleResolveStep_Case03, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub04, ...)
 ; reads: wBattleActionId, wBattleActor
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wD810
@@ -2476,7 +2504,7 @@ Func_036_5025:: ; address name
     push bc
     ld b, d
     ld c, e
-    call Func_036_6510
+    call ComputeBasicDamage_Sub01
     call CompareHLToBC
     pop bc
     pop hl
@@ -2491,7 +2519,7 @@ Jump_036_504E::
     jr Jump_036_508B
 
 Jump_036_5059::
-    call Func_036_6510
+    call ComputeBasicDamage_Sub01
     ld c, l
     ld b, h
     ld hl, $0000
@@ -2502,7 +2530,7 @@ Jump_036_5066::
     ld l, e
     ld h, d
     push hl
-    call Func_036_6510
+    call ComputeBasicDamage_Sub01
     ld c, l
     ld b, h
     ld a, l
@@ -3170,11 +3198,13 @@ Jump_036_54BA::
     call Func_036_61D6
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_6E40)
+; only called from ResolveStepDamageMessage_Sub04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_Sub01)
 ; reads: wBattleTarget, wBattleActionId
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleAGL
-Func_036_54BE::
+ResolveStepDamageMessage_Sub04_Sub01_Sub01::
+Func_036_54BE:: ; address name
     ld a, [wBattleTarget]
     call Func_036_6646
     ld a, [wBattleActionId]
@@ -3411,7 +3441,7 @@ Func_036_55D4:: ; heuristic: follows a terminator; C0
 Jump_036_55FA::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_6E75, Func_036_74F6)
+; 2 call sites from 2 routines (e.g. ResolveStepDamageMessage_Sub04_Sub02, Func_036_74F6)
 ; reads: wBattleActionId
 Func_036_55FB::
     ld a, [wBattleActionId]
@@ -5765,7 +5795,7 @@ Func_036_64D4::
     call Func_036_651C
     ret
 
-; 4 call sites from 4 routines (e.g. Func_036_54BE, Func_036_5441, Func_036_5360, Func_036_53EF)
+; 4 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, Func_036_5441, Func_036_5360, Func_036_53EF)
 Func_036_64DB::
     ld bc, $0003
     call DivideHLByBC
@@ -5803,14 +5833,16 @@ Func_036_6507::
     srl b
     rr c
 
-; 11 call sites from 10 routines (e.g. Func_036_54BE, Func_036_64B2, Func_036_5013, Func_036_6482, ...)
+; 11 call sites from 10 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, Func_036_64B2, Func_036_5013, Func_036_6482, ...)
 Func_036_650B::
     srl b
     rr c
     ret
 
+; only called from ComputeBasicDamage (E-0047)
 ; 3 call sites from 1 routine (e.g. ComputeBasicDamage)
-Func_036_6510:: ; heuristic: follows a terminator; C0
+ComputeBasicDamage_Sub01:: ; heuristic: follows a terminator; C0
+Func_036_6510:: ; address name
     srl h
     rr l
     srl h
@@ -6035,7 +6067,7 @@ Func_036_6634::
     pop hl
     ret
 
-; 4 call sites from 4 routines (e.g. Func_036_54BE, Func_036_6558, Func_036_5703, Func_036_5441)
+; 4 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, Func_036_6558, Func_036_5703, Func_036_5441)
 ; reads: wBattleStatResultLo, wBattleStatResultHi
 Func_036_6646::
     push hl
@@ -6172,9 +6204,11 @@ Jump_036_6712::
     ld [hl], b
     ret
 
+; only called from RunBattleResolveStep_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case06)
 ; reads: wBattleActionId
-Func_036_6717::
+RunBattleResolveStep_Case06_Sub01::
+Func_036_6717:: ; address name
     ld a, [wBattleActionId]
     ld c, a
     ld b, $00
@@ -6403,7 +6437,7 @@ Func_036_6912:: ; heuristic: target of a pointer table; C0
 Func_036_691E:: ; heuristic: target of a pointer table; C0
     call Func_036_509D
     farcall Func_0A3_413F
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6411,7 +6445,7 @@ Func_036_691E:: ; heuristic: target of a pointer table; C0
 Func_036_692A:: ; heuristic: target of a pointer table; C0
     call Func_036_50B2
     farcall Func_0A3_413F
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6419,7 +6453,7 @@ Func_036_692A:: ; heuristic: target of a pointer table; C0
 Func_036_6936:: ; heuristic: target of a pointer table; C0
     call Func_036_50C7
     farcall Func_0A3_413F
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6427,7 +6461,7 @@ Func_036_6936:: ; heuristic: target of a pointer table; C0
 Func_036_6942:: ; heuristic: target of a pointer table; C0
     call Func_036_5A6C
     farcall Func_0A3_413F
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC5E7, wBattleTarget
@@ -6443,7 +6477,7 @@ Func_036_694E:: ; heuristic: target of a pointer table; C0
 Func_036_6957:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     call Func_036_50DC
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -6451,7 +6485,7 @@ Func_036_6957:: ; heuristic: target of a pointer table; C0
 Func_036_6963:: ; heuristic: target of a pointer table; C0
     farcall Func_0A3_413F
     call Func_036_511D
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
     db $CD, $52, $51, $21, $3F, $41, $06, $A3, $D7, $C3, $85, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -6762,7 +6796,7 @@ Jump_036_6B6A::
 ; points at: wD035
 Func_036_6B75::
     call Func_036_5013
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
@@ -7239,11 +7273,13 @@ Jump_036_6E32::
     jp Jump_036_7CBC
     db $CD, $A7, $54, $D2, $B7, $7C
 
-; 1 call site from 1 routine (e.g. Func_036_4A38)
+; only called from ResolveStepDamageMessage_Sub04 (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04)
 ; reads: wBattleTarget
 ; writes: wDAC2, wDAC0, wDAC1, wDAC3
-Func_036_6E40::
-    call Func_036_54BE
+ResolveStepDamageMessage_Sub04_Sub01::
+Func_036_6E40:: ; address name
+    call ResolveStepDamageMessage_Sub04_Sub01_Sub01
     jr nc, Jump_036_6E53
     ld a, [wBattleTarget]
     call Func_036_7D50
@@ -7274,11 +7310,13 @@ Func_036_6E5B:: ; heuristic: follows a terminator; C0
 Jump_036_6E72::
     jp Jump_036_7CD3
 
-; 1 call site from 1 routine (e.g. Func_036_4A38)
+; only called from ResolveStepDamageMessage_Sub04 (E-0047)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04)
 ; reads: wBattleTarget, wDAC0, wDAD1, wBattleActor, wDABD
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3, wBattleTarget, wDAD1, ...
 ; points at: wD80D, wDA1D
-Func_036_6E75::
+ResolveStepDamageMessage_Sub04_Sub02::
+Func_036_6E75:: ; address name
     ld a, [wBattleTarget]
     ld hl, wD80D
     call AddAx9ToHL
@@ -7668,10 +7706,12 @@ Func_036_70CC:: ; heuristic: follows a terminator; C0
     res 4, [hl]
     ret
 
+; only called from ResolveStepDamageMessage (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wC58A, wBattleActor, wBattleTarget
 ; points at: wDAD4
-Func_036_70F4::
+ResolveStepDamageMessage_Sub05::
+Func_036_70F4:: ; address name
     ld a, [wC58A]
     cp a, $01
     ret z
@@ -7840,7 +7880,7 @@ Jump_036_720C::
 
 Jump_036_7214::
     call Func_036_5DCF
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 Data_036_721A:: ; heuristic: target of a monotone pointer table; C0
     db $CD, $22, $55, $C3, $85, $7C
@@ -7899,7 +7939,7 @@ Func_036_72E0::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD, wBattleDamageLo, wD873
@@ -8012,7 +8052,7 @@ Func_036_7387:: ; heuristic: target of a pointer table; C0
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
     db $CD, $7A, $5A, $C3, $85, $7C, $CD, $98, $5A, $C3, $7D, $7C
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -9219,7 +9259,7 @@ Func_036_7B89:: ; heuristic: target of a pointer table; C0
     cp a, $C0
     jr c, Jump_036_7B99
     call Func_036_5013
-    jp Func_036_7C85
+    jp RunBattleResolveStep_Case07_Sub02
 
 Jump_036_7B99::
     ld h, $D0
@@ -9382,10 +9422,12 @@ Jump_036_7C7D::
     ld bc, vTiles0 + $A8
     jr Jump_036_7C8B
 
+; only called from RunBattleResolveStep_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case07)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
 ; points at: wD035
-Func_036_7C85::
+RunBattleResolveStep_Case07_Sub02::
+Func_036_7C85:: ; address name
     ld hl, wD035
     ld bc, vTiles1 + $A8
 
@@ -9530,7 +9572,7 @@ Func_036_7D45:: ; heuristic: follows a terminator; C0
     pop hl
     ret
 
-; 3 call sites from 3 routines (e.g. Func_036_6E40, Func_036_7645, Func_036_6DF8)
+; 3 call sites from 3 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01, Func_036_7645, Func_036_6DF8)
 ; points at: wD812
 Func_036_7D50::
     push hl
@@ -9710,14 +9752,14 @@ Func_036_7E5B:: ; address name
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
-; 56 call sites from 31 routines (e.g. Func_036_54BE, RunBattleResolveStep_Case07, RunBattleResolveStep_Case05, Func_036_42D3, ...)
+; 56 call sites from 31 routines (e.g. ResolveStepDamageMessage_Sub04_Sub01_Sub01, RunBattleResolveStep_Case07, RunBattleResolveStep_Case05, Func_036_42D3, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
     add a, a
     add_a_to_hl
     ret
 
-; 5 call sites from 4 routines (e.g. Func_036_4A38, Func_036_4991, RunBattleResolveStep_Case05, Func_036_4FBC)
+; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, RunBattleResolveStep_Case05, RunBattleResolveStep_Case04_Sub03)
 ; reads: wC58A, wC57F, wBattleActor
 Func_036_7E6C::
     ld a, [wC58A]
@@ -9736,7 +9778,7 @@ Jump_036_7E81::
     cp a, $04
     ret
 
-; 6 call sites from 6 routines (e.g. Func_036_4991, RunBattleResolveStep_Table2_Case01, Func_036_425A, Func_036_6C9A, ...)
+; 6 call sites from 6 routines (e.g. ResolveStepDamageMessage_Sub03, RunBattleResolveStep_Table2_Case01, RunBattleResolveStep_Table2_Case00_Sub03, Func_036_6C9A, ...)
 ; reads: wC58A, wC57F, wBattleTarget
 Func_036_7E87::
     ld a, [wC58A]
@@ -9880,7 +9922,7 @@ Jump_036_7F57::
     pop hl
     ret
 
-; 2 call sites from 2 routines (e.g. Func_036_42AA, Func_036_4162)
+; 2 call sites from 2 routines (e.g. RunBattleResolveStep_Table2_Case00_Sub04, RunBattleResolveStep_Table2_Case00_Sub01)
 ; points at: wD80F
 Func_036_7F5B::
     push hl

@@ -26,7 +26,7 @@ Func_003_4015:: ; address name
     ld a, [wC5DD]
     bit 7, a
     jr z, Jump_003_4036
-    call Func_003_4596
+    call GameMode2_Update_Sub01
     ld a, [wModeState]
     and a, $07
     rst $00
@@ -40,7 +40,7 @@ Func_003_4015:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_State4::
 Jump_003_402F:: ; address name
-    farcall Func_0F1_4001
+    farcall PauseMenu_State4_Sub02
     ret
 
 Jump_003_4036::
@@ -146,7 +146,7 @@ Jump_003_40BE::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    call Func_003_4208
+    call PauseMenu_State4_Sub01
     xor a, a
     ld [rRAMG], a
     xor a, a
@@ -265,9 +265,11 @@ Jump_003_414C::
     ld [wCBAA], a
     ret
 
+; only called from PauseMenu_State4 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State4)
 ; reads: wModeState
-Func_003_4208::
+PauseMenu_State4_Sub01::
+Func_003_4208:: ; address name
     ld a, [wModeState]
     and a, $07
     rst $00
@@ -896,11 +898,13 @@ Func_003_454C::
     db $30, $C5, $21, $2B, $40, $06, $08, $D7, $E1, $7D, $EA, $2F, $C5, $7C, $EA, $30
     db $C5, $E1, $7D, $EA, $2D, $C5, $7C, $EA, $2E, $C5, $C9
 
+; only called from GameMode2_Update (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode2_Update)
 ; reads: wCE9B, wPlayHoursLo, wPlayHoursHi, wPlayMinutes, wCE9C, wCE9D
 ; writes: wCE9B, wCE9C, wCE9D
 ; points at: wPlayFrames
-Func_003_4596::
+GameMode2_Update_Sub01::
+Func_003_4596:: ; address name
     ld a, [wCE9B]
     inc a
     cp a, $3C

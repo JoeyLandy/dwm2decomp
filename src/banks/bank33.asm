@@ -397,9 +397,11 @@ Data_033_505A:: ; heuristic: target of a monotone pointer table; C0
     ds $12, $B4
     db $B5
 
+; only called from GameMode5_Update_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case05)
 ; reads: wD06A, wD780, wD781, wD782
-Func_033_51C6::
+GameMode5_Update_Case05_Sub01::
+Func_033_51C6:: ; address name
     call Func_000_0535
     ld a, [wD06A]
     or a, a
@@ -1437,7 +1439,7 @@ Jump_033_57B2:: ; address name
     ret nz
     ld c, $05
     ld hl, Data_033_63EF
-    call Func_033_6227
+    call BeginString_Bank07_Cat5_Table2_Case0B_Sub01
     call Func_033_5F83
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
@@ -1464,7 +1466,7 @@ Jump_033_57DC:: ; address name
     inc [hl]
     ld a, $0C
     call Func_033_6039
-    call Func_033_60A7
+    call BeginString_Bank07_Cat5_Table2_Case0C_Sub01
     ret
 
 ; entry 13 of the `rst $00` table in BeginString_Bank07_Cat5
@@ -2815,10 +2817,12 @@ Jump_033_6099::
     ld [rRAMG], a
     ret
 
+; only called from BeginString_Bank07_Cat5_Table2_Case0C (E-0047)
 ; 1 call site from 1 routine (e.g. BeginString_Bank07_Cat5_Table2_Case0C)
 ; reads: wD7DC, wD781
 ; writes: wD7B4, wD7E0, wD7DC, wD782, wD781
-Func_033_60A7::
+BeginString_Bank07_Cat5_Table2_Case0C_Sub01::
+Func_033_60A7:: ; address name
     ld a, [wD7DC]
     ld [wD7B4], a
     ld a, $FF
@@ -3120,8 +3124,10 @@ Jump_033_6217::
     ld h, a
     ret
 
+; only called from BeginString_Bank07_Cat5_Table2_Case0B (E-0047)
 ; 1 call site from 1 routine (e.g. BeginString_Bank07_Cat5_Table2_Case0B)
-Func_033_6227::
+BeginString_Bank07_Cat5_Table2_Case0B_Sub01::
+Func_033_6227:: ; address name
     ld a, c
     ld b, a
     ld c, $00

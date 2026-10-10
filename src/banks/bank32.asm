@@ -2034,9 +2034,11 @@ Jump_032_4AB9::
     rst $38
     rst $38
 
+; only called from RunBattleActions_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleActions_Case00)
 ; reads: wBattleResolveStep
-Func_032_4ADC::
+RunBattleActions_Case00_Sub01::
+Func_032_4ADC:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw Func_032_4ADC_Case00
@@ -4111,9 +4113,11 @@ Func_032_5804::
     farcall LoadSkillRecord
     ret
 
+; only called from RunBattleStep4_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleStep4_Case00)
 ; reads: wBattleResolveStep
-Func_032_5820::
+RunBattleStep4_Case00_Sub01::
+Func_032_5820:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw Func_032_5820_Case00
@@ -4547,7 +4551,7 @@ Jump_032_5A63:: ; address name
     ld [wBattleSubStep2], a
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank32
-    call Func_032_5A95
+    call RunDefeatSequence_Case02_Sub01
     ret z
     ld a, [wBattleActionId]
     cp a, $91
@@ -4570,10 +4574,12 @@ Jump_032_5A8E::
     farcall Func_03A_7193
     ret
 
+; only called from RunDefeatSequence_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunDefeatSequence_Case02)
 ; reads: wBattleActionId
 ; points at: wBattleDamageLo
-Func_032_5A95::
+RunDefeatSequence_Case02_Sub01::
+Func_032_5A95:: ; address name
     ld a, [wBattleActionId]
     cp a, $13
     ret z
@@ -4683,7 +4689,7 @@ Func_032_5B12:: ; address name
     call Func_032_5BE8
 
 Jump_032_5B2A::
-    call Func_032_5B94
+    call DefeatTarget_Sub01
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -4743,11 +4749,13 @@ Jump_032_5B8D::
 Jump_032_5B93::
     ret
 
+; only called from DefeatTarget (E-0047)
 ; 1 call site from 1 routine (e.g. DefeatTarget)
 ; reads: wCFF2, wDABF, wDAD1, wBattleTarget, wDABA
 ; writes: wDABA
 ; points at: wD812
-Func_032_5B94::
+DefeatTarget_Sub01::
+Func_032_5B94:: ; address name
     ld a, [wCFF2]
     and a, $0F
     cp a, $02
@@ -4860,7 +4868,7 @@ Func_032_5C3F:: ; address name
     and a, $30
     ret z
     and a, $20
-    call nz, Func_032_5E1A
+    call nz, RecomputeTargetMaxHPAndMP_Sub01
     ld a, $01
     ld [wD868], a
     ld a, [wBattleTarget]
@@ -5055,10 +5063,12 @@ Jump_032_5E0B::
     farcall Func_019_44B9
     ret
 
+; only called from RecomputeTargetMaxHPAndMP (E-0047)
 ; 1 call site from 1 routine (e.g. RecomputeTargetMaxHPAndMP)
 ; reads: wBattleTarget, wC58A
 ; points at: wDAD4
-Func_032_5E1A::
+RecomputeTargetMaxHPAndMP_Sub01::
+Func_032_5E1A:: ; address name
     ld a, [wBattleTarget]
     ld c, a
 
@@ -5156,9 +5166,11 @@ Jump_032_5E79::
     ld [hl], a
     ret
 
+; only called from RunBattleResolveStep_Case0E (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_Case0E)
 ; reads: wBattleSubStep
-Func_032_5EAB::
+RunBattleResolveStep_Case0E_Sub01::
+Func_032_5EAB:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw Func_032_5EAB_Case00
@@ -6672,11 +6684,13 @@ Jump_032_67A3::
     farcall Func_03A_7193
     ret
 
+; only called from ResolveStepDamageMessage (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ; points at: wD813
-Func_032_67AA::
+ResolveStepDamageMessage_Sub01::
+Func_032_67AA:: ; address name
     ld a, [wBattleTarget]
     ld hl, wD813
     call AddAx9ToHL

@@ -24,7 +24,7 @@ Func_001_4001:: ; address name
     xor a, a
     ld [wC5F6], a
     ld [wC5F7], a
-    call Func_001_4045
+    call GameMode0_Init_Sub01
     ld a, $FC
     call StartPaletteFade
     ld a, $03
@@ -32,9 +32,11 @@ Func_001_4001:: ; address name
     ld a, $01
     jp Jump_000_077A
 
+; only called from GameMode0_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode0_Init)
 ; reads: wModeState
-Func_001_4045::
+GameMode0_Init_Sub01::
+Func_001_4045:: ; address name
     ld a, [wModeState]
     rst $00
     dw DebugMainMenu_Init
@@ -1106,7 +1108,7 @@ Jump_001_4C25:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode0_Update_Table2_Case1C::
 Jump_001_4C2C:: ; address name
-    farcall Func_00E_4001
+    farcall GameMode0_Update_Table2_Case1C_Sub01
     ret
 
 ; entry 29 of the `rst $00` table in GameMode0_Update
@@ -1150,13 +1152,13 @@ Jump_001_4C56::
     jr z, Jump_001_4C86
     ld a, [wC46B]
     cp a, $00
-    call z, Func_001_4D6E
+    call z, GameMode0_Update_Table2_Case21_Sub01
     ld a, [wC46B]
     cp a, $01
-    call z, Func_001_4D93
+    call z, GameMode0_Update_Table2_Case21_Sub02
     ld a, [wC46B]
     cp a, $02
-    call z, Func_001_4DB1
+    call z, GameMode0_Update_Table2_Case21_Sub03
     ld a, [wC46B]
     sub a, $01
     jr nc, Jump_001_4C7E
@@ -1173,13 +1175,13 @@ Jump_001_4C86::
     jr z, Jump_001_4CB8
     ld a, [wC46B]
     cp a, $00
-    call z, Func_001_4D6E
+    call z, GameMode0_Update_Table2_Case21_Sub01
     ld a, [wC46B]
     cp a, $01
-    call z, Func_001_4D93
+    call z, GameMode0_Update_Table2_Case21_Sub02
     ld a, [wC46B]
     cp a, $02
-    call z, Func_001_4DB1
+    call z, GameMode0_Update_Table2_Case21_Sub03
     ld a, [wC46B]
     add a, $01
     cp a, $03
@@ -1201,7 +1203,7 @@ Jump_001_4CB8::
     and a, $10
     jr z, Jump_001_4CCF
     inc [hl]
-    call Func_001_4E3B
+    call GameMode0_Update_Table2_Case21_Sub05
     jr Jump_001_4CE5
 
 Jump_001_4CCF::
@@ -1209,7 +1211,7 @@ Jump_001_4CCF::
     and a, $20
     jr z, Jump_001_4CDC
     dec [hl]
-    call Func_001_4E3B
+    call GameMode0_Update_Table2_Case21_Sub05
     jr Jump_001_4CE5
 
 Jump_001_4CDC::
@@ -1225,7 +1227,7 @@ Jump_001_4CE5::
     ld a, [wC46B]
     ld b, $21
     cp a, $00
-    call z, Func_001_4DED
+    call z, GameMode0_Update_Table2_Case21_Sub04
     ld a, [wC0A0]
     add a, a
     ld hl, Data_001_4E54
@@ -1245,7 +1247,7 @@ Jump_001_4D0C::
     ld b, a
     ld a, [wC46B]
     cp a, $01
-    call z, Func_001_4DED
+    call z, GameMode0_Update_Table2_Case21_Sub04
     ld a, [wC0A0]
     add a, a
     ld hl, Data_001_4E54
@@ -1274,7 +1276,7 @@ Jump_001_4D3B::
     ld b, a
     ld a, [wC46B]
     cp a, $02
-    call z, Func_001_4DED
+    call z, GameMode0_Update_Table2_Case21_Sub04
 
 Jump_001_4D44::
     ld a, [wJoypadPressed]
@@ -1292,16 +1294,18 @@ Jump_001_4D54::
     jr nz, Jump_001_4D79
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Func_001_4D6E
+    jr nz, GameMode0_Update_Table2_Case21_Sub01
     xor a, a
     ld hl, vBGMap0 + $6D
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_4DBC
 
+; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
 ; reads: wC0A0, wC46B, wC0A1, wC0A2
-Func_001_4D6E::
+GameMode0_Update_Table2_Case21_Sub01::
+Func_001_4D6E:: ; address name
     ld a, [wC0A0]
     ld de, vBGMap0 + $6D
     call Func_001_6A7E
@@ -1313,16 +1317,18 @@ Jump_001_4D79::
     jr nz, Jump_001_4D9E
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Func_001_4D93
+    jr nz, GameMode0_Update_Table2_Case21_Sub02
     xor a, a
     ld hl, vBGMap0 + $AD
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_4DBC
 
+; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
 ; reads: wC0A1, wC46B, wC0A0, wC0A2
-Func_001_4D93::
+GameMode0_Update_Table2_Case21_Sub02::
+Func_001_4D93:: ; address name
     ld a, [wC0A1]
     ld de, vBGMap0 + $AD
     call Func_001_6A7E
@@ -1331,16 +1337,18 @@ Func_001_4D93::
 Jump_001_4D9E::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Func_001_4DB1
+    jr nz, GameMode0_Update_Table2_Case21_Sub03
     xor a, a
     ld hl, vBGMap0 + $ED
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_4DBC
 
+; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
 ; reads: wC0A2, wC46B, wC0A0, wC0A1
-Func_001_4DB1::
+GameMode0_Update_Table2_Case21_Sub03::
+Func_001_4DB1:: ; address name
     ld a, [wC0A2]
     ld de, vBGMap0 + $ED
     call Func_001_6A7E
@@ -1373,10 +1381,12 @@ Jump_001_4DDC::
 Jump_001_4DEC::
     ret
 
+; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 3 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
 ; reads: wC46B, wC0A0, wC0A1, wC0A2
 ; points at: wC0A0
-Func_001_4DED::
+GameMode0_Update_Table2_Case21_Sub04::
+Func_001_4DED:: ; address name
     push af
     ld a, [wC46B]
     ld hl, wC0A0
@@ -1424,10 +1434,12 @@ Jump_001_4E30::
     pop af
     ret
 
+; only called from GameMode0_Update_Table2_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode0_Update_Table2_Case21)
 ; reads: wC46B
 ; writes: wC0A1, wC0A2
-Func_001_4E3B::
+GameMode0_Update_Table2_Case21_Sub05::
+Func_001_4E3B:: ; address name
     ld a, [wC46B]
     cp a, $00
     jr nz, Jump_001_4E4B
@@ -1570,7 +1582,7 @@ Func_001_4F80:: ; address name
     call Func_001_5420
     ld a, [wCFE7]
     ld hl, vBGMap0 + $24
-    call Func_001_542C
+    call DebugShowMonsterRecord_Sub02
     ld a, [wCFE7]
     ld [wStringCategory], a
     ld a, [wMonsterId]
@@ -1612,7 +1624,7 @@ Func_001_4F80:: ; address name
     call Func_001_5420
     ld a, [wCFED]
     ld hl, vBGMap0 + $4F
-    call Func_001_542C
+    call DebugShowMonsterRecord_Sub02
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $66
     ld bc, $0100
@@ -1632,7 +1644,7 @@ Func_001_4F80:: ; address name
     ld d, a
     ld hl, vBGMap0 + $8D
     ld bc, $0100
-    call Func_001_536C
+    call DebugShowMonsterRecord_Sub01
     ld a, [wCFF4]
     ld hl, vBGMap0 + $AF
     ld bc, $0100
@@ -1647,42 +1659,42 @@ Func_001_4F80:: ; address name
     ld d, a
     ld hl, vBGMap0 + $ED
     ld bc, $0100
-    call Func_001_536C
+    call DebugShowMonsterRecord_Sub01
     ld a, [wCFF8]
     ld e, a
     ld a, [wCFF9]
     ld d, a
     ld hl, vBGMap0 + $10D
     ld bc, $0100
-    call Func_001_536C
+    call DebugShowMonsterRecord_Sub01
     ld a, [wCFFA]
     ld e, a
     ld a, [wCFFB]
     ld d, a
     ld hl, vBGMap0 + $12D
     ld bc, $0100
-    call Func_001_536C
+    call DebugShowMonsterRecord_Sub01
     ld a, [wCFFC]
     ld e, a
     ld a, [wCFFD]
     ld d, a
     ld hl, vBGMap0 + $14D
     ld bc, $0100
-    call Func_001_536C
+    call DebugShowMonsterRecord_Sub01
     ld a, [wCFFE]
     ld e, a
     ld a, [wCFFF]
     ld d, a
     ld hl, vBGMap0 + $16D
     ld bc, $0100
-    call Func_001_536C
+    call DebugShowMonsterRecord_Sub01
     ld a, [wD000]
     ld e, a
     ld a, [wD001]
     ld d, a
     ld hl, vBGMap0 + $18D
     ld bc, $0100
-    call Func_001_536C
+    call DebugShowMonsterRecord_Sub01
     ld a, [wD002]
     ld hl, vBGMap0 + $1AF
     ld bc, $0100
@@ -1824,7 +1836,7 @@ Jump_001_517F::
     ld a, $11
     ld [wStringCategory], a
     ld a, [wCFF2]
-    call Func_001_5311
+    call DebugSkillViewer_Update_Sub03
     ld [wStringIndex], a
     ld hl, vTiles1 + $150
     ld de, $0801
@@ -1833,27 +1845,27 @@ Jump_001_517F::
     ld a, [wCFF3]
     ld hl, vBGMap0 + $14B
     ld bc, $0801
-    call Func_001_5344
+    call DebugSkillViewer_Update_Sub04
     ld a, [wCFF4]
     ld hl, vBGMap0 + $16B
     ld bc, $0801
-    call Func_001_5344
+    call DebugSkillViewer_Update_Sub04
     ld a, [wCFF5]
     ld hl, vBGMap0 + $18B
     ld bc, $0801
-    call Func_001_5344
+    call DebugSkillViewer_Update_Sub04
     ld a, [wCFF6]
     ld hl, vBGMap0 + $1AB
     ld bc, $0801
-    call Func_001_5344
+    call DebugSkillViewer_Update_Sub04
     ld a, [wCFF7]
     ld l, a
     ld a, [wCFF8]
     ld h, a
-    call Func_001_52AF
+    call DebugSkillViewer_Update_Sub01
     ld hl, vBGMap0 + $1EA
     ld bc, $0100
-    call Func_001_52CD
+    call DebugSkillViewer_Update_Sub02
     ld a, [wCFF7]
     ld l, a
     ld a, [wCFF8]
@@ -1863,18 +1875,18 @@ Jump_001_517F::
     ld a, [wCFFA]
     ld d, a
     add hl, de
-    call Func_001_52AF
+    call DebugSkillViewer_Update_Sub01
     ld hl, vBGMap0 + $1EF
     ld bc, $0100
-    call Func_001_52CD
+    call DebugSkillViewer_Update_Sub02
     ld a, [wCFFB]
     ld l, a
     ld a, [wCFFC]
     ld h, a
-    call Func_001_52AF
+    call DebugSkillViewer_Update_Sub01
     ld hl, vBGMap0 + $20A
     ld bc, $0100
-    call Func_001_52CD
+    call DebugSkillViewer_Update_Sub02
     ld a, [wCFFB]
     ld l, a
     ld a, [wCFFC]
@@ -1884,16 +1896,18 @@ Jump_001_517F::
     ld a, [wCFFE]
     ld d, a
     add hl, de
-    call Func_001_52AF
+    call DebugSkillViewer_Update_Sub01
     ld hl, vBGMap0 + $20F
     ld bc, $0100
-    call Func_001_52CD
+    call DebugSkillViewer_Update_Sub02
     ret
 
+; only called from DebugSkillViewer_Update (E-0047)
 ; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
 ; writes: wC8C0, wC8C1, wC8C2, hFFC7, hFFC6
 ; points at: hFFC9
-Func_001_52AF::
+DebugSkillViewer_Update_Sub01::
+Func_001_52AF:: ; address name
     ld a, l
     ld [wC8C0], a
     ld a, h
@@ -1911,9 +1925,11 @@ Func_001_52AF::
     ldh [hFFC6], a
     ret
 
+; only called from DebugSkillViewer_Update (E-0047)
 ; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
 ; reads: hFFC7, hFFC6
-Func_001_52CD::
+DebugSkillViewer_Update_Sub02::
+Func_001_52CD:: ; address name
     ld e, $00
     ldh a, [hFFC7]
     and a, $F0
@@ -1967,8 +1983,10 @@ Jump_001_5301::
     ei
     ret
 
+; only called from DebugSkillViewer_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSkillViewer_Update)
-Func_001_5311::
+DebugSkillViewer_Update_Sub03::
+Func_001_5311:: ; address name
     or a, a
     ret z
     ld c, $01
@@ -2004,8 +2022,10 @@ Jump_001_5342::
     ld a, c
     ret
 
+; only called from DebugSkillViewer_Update (E-0047)
 ; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
-Func_001_5344::
+DebugSkillViewer_Update_Sub04::
+Func_001_5344:: ; address name
     ld d, a
     ld e, $00
 
@@ -2034,10 +2054,12 @@ Jump_001_5357::
 Data_001_5364:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $40, $20, $10, $08, $04, $02, $01
 
+; only called from DebugShowMonsterRecord (E-0047)
 ; 7 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 ; reads: hFFC8, hFFC7, hFFC6
 ; writes: wC8C0, wC8C1, wC8C2
-Func_001_536C::
+DebugShowMonsterRecord_Sub01::
+Func_001_536C:: ; address name
     push bc
     push hl
     ld a, e
@@ -2168,7 +2190,7 @@ Jump_001_5407::
     add a, e
     ret
 
-; 5 call sites from 3 routines (e.g. Func_001_53DC, Func_001_542C, Func_001_5420)
+; 5 call sites from 3 routines (e.g. Func_001_53DC, DebugShowMonsterRecord_Sub02, Func_001_5420)
 Func_001_540D::
     push af
     ld a, d
@@ -2200,8 +2222,10 @@ Func_001_5420::
     inc hl
     pop af
 
+; only called from DebugShowMonsterRecord (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugShowMonsterRecord)
-Func_001_542C::
+DebugShowMonsterRecord_Sub02::
+Func_001_542C:: ; address name
     and a, $0F
     ld d, a
     call Func_001_540D
@@ -2211,7 +2235,7 @@ Func_001_542C::
 ; no direct call (reached through a table, a jump or a vector)
 DebugStaffRoll_Update::
 Jump_001_5433:: ; address name
-    farcall Func_0E0_5AD3
+    farcall DebugStaffRoll_Update_Sub01
     ret
 
 ; update for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
@@ -2241,11 +2265,11 @@ Jump_001_543A:: ; address name
     jp nz, Jump_001_549D
     bit 3, a
     jr nz, Jump_001_546F
-    call Func_001_54E8
+    call DebugResultsDisplay_Update_Sub01
     ret
 
 Jump_001_546F::
-    call Func_001_54FB
+    call DebugResultsDisplay_Update_Sub02
     xor a, a
     ld [wD780], a
     ld [wD7BD], a
@@ -2272,7 +2296,7 @@ Jump_001_5489::
 Jump_001_5497::
     dec a
     ld [hl], a
-    call Func_001_54E8
+    call DebugResultsDisplay_Update_Sub01
     ret
 
 Jump_001_549D::
@@ -2296,11 +2320,11 @@ Jump_001_54AC::
 Jump_001_54BB::
     inc a
     ld [hl], a
-    call Func_001_54E8
+    call DebugResultsDisplay_Update_Sub01
     ret
 
 Jump_001_54C1::
-    call Func_001_54FB
+    call DebugResultsDisplay_Update_Sub02
     ld a, [wD7BD]
     cp a, $1A
     jr c, Jump_001_54CD
@@ -2309,11 +2333,11 @@ Jump_001_54C1::
 Jump_001_54CD::
     inc a
     ld [wD7BD], a
-    call Func_001_54E8
+    call DebugResultsDisplay_Update_Sub01
     ret
 
 Jump_001_54D5::
-    call Func_001_54FB
+    call DebugResultsDisplay_Update_Sub02
     ld a, [wD7BD]
     and a, a
     jr nz, Jump_001_54E0
@@ -2322,28 +2346,32 @@ Jump_001_54D5::
 Jump_001_54E0::
     dec a
     ld [wD7BD], a
-    call Func_001_54E8
+    call DebugResultsDisplay_Update_Sub01
     ret
 
+; only called from DebugResultsDisplay_Update (E-0047)
 ; 5 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
 ; reads: wC5FF, wC5F8, wD7BD, wC8C2
 ; writes: wC5FF
 ; points at: wD787, wD7A2
-Func_001_54E8::
+DebugResultsDisplay_Update_Sub01::
+Func_001_54E8:: ; address name
     ld a, [wC5FF]
     inc a
     ld [wC5FF], a
     cp a, $10
-    jr c, Func_001_54FB
+    jr c, DebugResultsDisplay_Update_Sub02
     cp a, $18
     jr c, Jump_001_552A
     xor a, a
     ld [wC5FF], a
 
+; only called from DebugResultsDisplay_Update (E-0047)
 ; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
 ; reads: wC5F8, wD7BD, wC8C2
 ; points at: wD787, wD7A2
-Func_001_54FB::
+DebugResultsDisplay_Update_Sub02::
+Func_001_54FB:: ; address name
     ld a, [wC5F8]
     cp a, $04
     jr nz, Jump_001_5507
@@ -2360,7 +2388,7 @@ Jump_001_550A::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call Func_001_5535
+    call DebugResultsDisplay_Update_Sub02_Sub01
     ld a, [wC8C2]
     add a, $10
     ld c, a
@@ -2372,7 +2400,7 @@ Jump_001_550A::
     ret
 
 Jump_001_552A::
-    call Func_001_5535
+    call DebugResultsDisplay_Update_Sub02_Sub01
     di
     call WaitForVRAMAccess
     xor a, a
@@ -2380,9 +2408,11 @@ Jump_001_552A::
     ei
     ret
 
-; 2 call sites from 1 routine (e.g. Func_001_54FB)
+; only called from DebugResultsDisplay_Update_Sub02 (E-0047)
+; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02)
 ; reads: wC5F8, wD7BD
-Func_001_5535::
+DebugResultsDisplay_Update_Sub02_Sub01::
+Func_001_5535:: ; address name
     ld a, [wC5F8]
     cp a, $04
     jr nz, Jump_001_5541
@@ -2454,7 +2484,7 @@ Jump_001_5590::
     ld a, [wD7F5]
     cp a, $FF
     jr z, Jump_001_561F
-    call Func_001_5BE8
+    call DebugResultsDisplay_Update_Sub02_Sub01_Sub02
     ld hl, vTiles2 + $500
     ld a, l
     ld [wC52D], a
@@ -2471,7 +2501,7 @@ Jump_001_5590::
     jr Jump_001_5638
 
 Jump_001_55D8::
-    call Func_001_5BE8
+    call DebugResultsDisplay_Update_Sub02_Sub01_Sub02
     ld hl, vTiles2 + $500
     ld a, l
     ld [wC52D], a
@@ -2546,19 +2576,19 @@ Jump_001_5638::
     ld c, a
     ld de, vBGMap0 + $2
     call Func_001_5B2D
-    call Func_001_56D3
+    call DebugResultsDisplay_Update_Sub02_Sub01_Sub01
     ld hl, wCB26
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $22
     call Func_001_5B2D
-    call Func_001_56D3
+    call DebugResultsDisplay_Update_Sub02_Sub01_Sub01
     ld hl, wCB27
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $42
     call Func_001_5B2D
-    call Func_001_56D3
+    call DebugResultsDisplay_Update_Sub02_Sub01_Sub01
     ld hl, wCB43
     ld de, vBGMap0 + $6
     ld c, $00
@@ -2597,8 +2627,10 @@ Jump_001_56B7::
     ld [wCFA8], a
     ret
 
-; 3 call sites from 1 routine (e.g. Func_001_5535)
-Func_001_56D3::
+; only called from DebugResultsDisplay_Update_Sub02_Sub01 (E-0047)
+; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01)
+DebugResultsDisplay_Update_Sub02_Sub01_Sub01::
+Func_001_56D3:: ; address name
     ld a, c
     and a, $F0
     swap a
@@ -2731,7 +2763,7 @@ Jump_001_57B6::
     jr c, Jump_001_57B6
     ret
 
-; 2 call sites from 1 routine (e.g. Func_001_56D3)
+; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01)
 ; reads: wD7F5
 ; writes: wD7F4
 Func_001_57C7::
@@ -3210,7 +3242,7 @@ Jump_001_5A99::
     ld [wCFA8], a
     ret
 
-; 10 call sites from 2 routines (e.g. Func_001_56D3, Func_001_57E1)
+; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, Func_001_57E1)
 ; reads: wC5FF, wC5F8
 ; writes: wC5FF
 Func_001_5AAC::
@@ -3295,7 +3327,7 @@ Jump_001_5B14::
     call Func_001_6A7E
     ret
 
-; 4 call sites from 2 routines (e.g. Func_001_5535, Func_001_5AC0)
+; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0)
 ; reads: wC8C1, wC8C2
 Func_001_5B2D::
     push de
@@ -3351,7 +3383,7 @@ Data_001_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $A2, $99, $C2, $99, $E2, $99
     db $02, $9A, $22, $9A
 
-; 2 call sites from 2 routines (e.g. Func_001_5535, Func_001_57E1)
+; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_57E1)
 ; writes: wC8D9
 Func_001_5B98::
     push hl
@@ -3410,9 +3442,11 @@ Func_001_5BAD:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; 2 call sites from 1 routine (e.g. Func_001_5535)
+; only called from DebugResultsDisplay_Update_Sub02_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01)
 ; points at: wC8CF
-Func_001_5BE8::
+DebugResultsDisplay_Update_Sub02_Sub01_Sub02::
+Func_001_5BE8:: ; address name
     ld c, $00
     ld hl, wC8CF
 
@@ -3445,7 +3479,7 @@ Jump_001_5BFA:: ; address name
     jr nz, Jump_001_5C18
 
 Jump_001_5C10::
-    call Func_001_5DBA
+    call DebugAutomap_Update_Sub01
     ret
 
 Jump_001_5C14::
@@ -3623,7 +3657,7 @@ Jump_001_5D3C::
     ld a, [wC5F9]
     bit 7, a
     jr z, Jump_001_5D46
-    call Func_001_5EAF
+    call DebugAutomap_Update_Sub03
 
 Jump_001_5D46::
     ld a, [wC5F9]
@@ -3648,7 +3682,7 @@ Jump_001_5D63::
     ld a, [wC5FA]
     and a, $7F
     ld [wC5FA], a
-    call Func_001_5E8A
+    call DebugAutomap_Update_Sub02
 
 Jump_001_5D76::
     ld a, [wC5FB]
@@ -3684,11 +3718,13 @@ Jump_001_5D9F::
 Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $05, $20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA
 
+; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
 ; reads: wC5FA, wC5F9, wC5FD, hFFC6, hFFC7, hFFC8, hFFC9, wCD0D, ...
 ; writes: hFFC6, wC833, wCC42, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
 ; points at: wModeChangeRequest
-Func_001_5DBA::
+DebugAutomap_Update_Sub01::
+Func_001_5DBA:: ; address name
     ld a, [wC5FA]
     ldh [hFFC6], a
     farcall Func_060_6916
@@ -3730,7 +3766,7 @@ Jump_001_5DF3::
     ldh a, [hFFC9]
     ld [hl], a
     ld [wCD05], a
-    farcall Func_060_4035
+    farcall DebugAutomap_Update_Sub01_Sub01
     farcall Func_060_6C96
     ld a, [wCD0D]
     ld [wMapWidthScreens], a
@@ -3795,10 +3831,12 @@ Func_001_5E6C::
     ld [wC5FA], a
     ret
 
+; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
 ; reads: wC5FD, wC5FE, wC5FA
 ; writes: wC5FA
-Func_001_5E8A::
+DebugAutomap_Update_Sub02::
+Func_001_5E8A:: ; address name
     ld a, [wC5FD]
     cp a, $FF
     jr z, Jump_001_5EA4
@@ -3818,11 +3856,13 @@ Jump_001_5EA4::
     call Func_001_6A7E
     ret
 
+; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
 ; reads: wC5FE, wC5FD, wC5F9
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, wC8D5, wC8D6, ...
 ; points at: wC8CF
-Func_001_5EAF::
+DebugAutomap_Update_Sub03::
+Func_001_5EAF:: ; address name
     ld a, $90
     ld [wC8CF], a
     ld [wC8D0], a
@@ -3911,7 +3951,7 @@ Jump_001_5FFE:: ; address name
     jr z, Jump_001_604B
     ld a, [wC5F9]
     ldh [hFFC6], a
-    call Func_000_1D90
+    call DebugMapEditor_Update_Sub01
     or a, a
     jr z, Jump_001_601F
     ld b, $08
@@ -4668,11 +4708,11 @@ Jump_001_64F0::
     ld a, [wC46B]
     or a, a
     jr nz, Jump_001_6502
-    call Func_001_6578
+    call DebugSoundTest_Update_Sub01
     jr Jump_001_6505
 
 Jump_001_6502::
-    call Func_001_6596
+    call DebugSoundTest_Update_Sub02
 
 Jump_001_6505::
     ld a, [wC46B]
@@ -4713,10 +4753,10 @@ Jump_001_6539::
     ld a, [wC46B]
     ld b, $20
     cp a, $00
-    call z, Func_001_65A0
+    call z, DebugSoundTest_Update_Sub03
     ld b, $54
     cp a, $01
-    call z, Func_001_65A0
+    call z, DebugSoundTest_Update_Sub03
 
 Jump_001_654F::
     ld a, [wJoypadPressed]
@@ -4734,16 +4774,18 @@ Jump_001_655F::
     jr nz, Jump_001_6583
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Func_001_6578
+    jr nz, DebugSoundTest_Update_Sub01
     xor a, a
     ld hl, vBGMap0 + $E9
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_659F
 
+; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wC0A0
-Func_001_6578::
+DebugSoundTest_Update_Sub01::
+Func_001_6578:: ; address name
     ld a, [wC0A0]
     ld de, vBGMap0 + $E9
     call Func_001_6A7E
@@ -4752,16 +4794,18 @@ Func_001_6578::
 Jump_001_6583::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Func_001_6596
+    jr nz, DebugSoundTest_Update_Sub02
     xor a, a
     ld hl, vBGMap0 + $109
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr Jump_001_659F
 
+; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wC0A1
-Func_001_6596::
+DebugSoundTest_Update_Sub02::
+Func_001_6596:: ; address name
     ld a, [wC0A1]
     ld de, vBGMap0 + $109
     call Func_001_6A7E
@@ -4769,10 +4813,12 @@ Func_001_6596::
 Jump_001_659F::
     ret
 
+; only called from DebugSoundTest_Update (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wC46B, wC0A0, wC0A1
 ; points at: wC0A0
-Func_001_65A0::
+DebugSoundTest_Update_Sub03::
+Func_001_65A0:: ; address name
     push af
     ld a, [wC46B]
     ld hl, wC0A0
@@ -4850,7 +4896,7 @@ Jump_001_667A::
     ld a, [wD0A5]
     or a, a
     jr nz, Jump_001_6693
-    call Func_001_6880
+    call DebugBattleSetup_Update_Sub01
     jr Jump_001_6696
 
 Jump_001_6693::
@@ -5182,10 +5228,12 @@ Jump_001_687B::
     ld [hl], d
     ret
 
+; only called from DebugBattleSetup_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update)
 ; reads: wC6FD, wC7C7, hFFC6
 ; points at: wC6FE
-Func_001_6880::
+DebugBattleSetup_Update_Sub01::
+Func_001_6880:: ; address name
     ld a, [wC6FD]
     or a, a
     jr z, Jump_001_68B4
@@ -5210,7 +5258,7 @@ Jump_001_68A3::
     jr nc, Jump_001_68B4
     push bc
     push hl
-    call Func_001_68CA
+    call DebugBattleSetup_Update_Sub01_Sub01
     pop hl
     pop bc
     jr nz, Jump_001_68B4
@@ -5230,8 +5278,10 @@ Jump_001_68C6::
     call Func_001_6ABE
     ret
 
-; 1 call site from 1 routine (e.g. Func_001_6880)
-Func_001_68CA::
+; only called from DebugBattleSetup_Update_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Sub01)
+DebugBattleSetup_Update_Sub01_Sub01::
+Func_001_68CA:: ; address name
     ld c, $00
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -5438,7 +5488,7 @@ Data_001_6A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_001_6A78:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6B, $99, $AB, $99, $EB, $99
 
-; 20 call sites from 11 routines (e.g. Func_001_4DB1, Func_001_4DED, Func_001_4D93, Func_001_4D6E, ...)
+; 20 call sites from 11 routines (e.g. GameMode0_Update_Table2_Case21_Sub03, GameMode0_Update_Table2_Case21_Sub04, GameMode0_Update_Table2_Case21_Sub02, GameMode0_Update_Table2_Case21_Sub01, ...)
 Func_001_6A7E::
     push af
     swap a
@@ -5458,7 +5508,7 @@ Func_001_6A7E::
     ld [de], a
     ret
 
-; 7 call sites from 5 routines (e.g. Func_001_5535, Func_001_5AC0, Func_001_6809, Func_001_66AD, ...)
+; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, Func_001_5AC0, Func_001_6809, Func_001_66AD, ...)
 Func_001_6A98::
     ld a, b
     and a, $0F
@@ -5486,7 +5536,7 @@ Func_001_6A98::
     ld [de], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_001_6880, DebugBattleSetup_Update)
+; 2 call sites from 2 routines (e.g. DebugBattleSetup_Update_Sub01, DebugBattleSetup_Update)
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
 Func_001_6ABE::
     ld a, $00

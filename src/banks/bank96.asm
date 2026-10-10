@@ -1151,10 +1151,12 @@ Data_096_6EE0:: ; heuristic: target of a monotone pointer table; C0
 Data_096_6EF6:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $25AEF6, $11B
 
-; 1 call site from 1 routine (e.g. Func_00E_4001)
+; only called from GameMode0_Update_Table2_Case1C_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode0_Update_Table2_Case1C_Sub01)
 ; reads: wStringIndex
 ; writes: wStringIndex
-Func_096_7011::
+GameMode0_Update_Table2_Case1C_Sub01_Sub01::
+Func_096_7011:: ; address name
     ld de, Data_096_7036
     ld a, [wStringIndex]
     sub a, $88

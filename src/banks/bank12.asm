@@ -2908,7 +2908,7 @@ Jump_012_5112::
     ld de, wC88F
 
 Jump_012_512C::
-    call Func_012_51B1
+    call ScriptCommand8E_Run_Case01_Sub01
     ret
 
 Data_012_5130:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2927,7 +2927,7 @@ Jump_012_5181::
     cp a, c
     jr nz, Jump_012_519E
     ld de, wC88F
-    call Func_012_51B1
+    call ScriptCommand8E_Run_Case01_Sub01
     ret
 
 Jump_012_519E::
@@ -2936,14 +2936,16 @@ Jump_012_519E::
     ld a, [wCD0A]
     ld [wC8C9], a
     ld de, wCD08
-    call Func_012_51C0
+    call ScriptCommand8E_Run_Case01_Sub02
     ret
 
+; only called from ScriptCommand8E_Run_Case01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptCommand8E_Run_Case01)
 ; reads: hFF8C
 ; writes: wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hFF8C
 ; points at: wC5E0
-Func_012_51B1::
+ScriptCommand8E_Run_Case01_Sub01::
+Func_012_51B1:: ; address name
     ld a, [de]
     and a, $F0
     ld [wC8C8], a
@@ -2953,11 +2955,13 @@ Func_012_51B1::
     ld [wC8C9], a
     inc de
 
+; only called from ScriptCommand8E_Run_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand8E_Run_Case01)
 ; reads: hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hFF8C
 ; points at: wC5E0
-Func_012_51C0::
+ScriptCommand8E_Run_Case01_Sub02::
+Func_012_51C0:: ; address name
     ld a, [de]
     swap a
     and a, $0F
@@ -3286,7 +3290,7 @@ ScriptCommand88_Run_Case00::
 Jump_012_5633:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    farcall Func_012_7F05
+    farcall ScriptCommand88_Run_Case00_Sub01
     ld de, $0025
     call TestFlagBit
     jr c, Jump_012_5650
@@ -3769,7 +3773,7 @@ Jump_012_58C3::
 ScriptCommand85_Run_Case05::
 Jump_012_58D6:: ; address name
     xor a, a
-    call Func_012_684F
+    call ScriptCommand85_Run_Case05_Sub01
     ret nc
     xor a, a
     ld [wScriptParam0], a
@@ -4127,7 +4131,7 @@ Jump_012_5AC4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand84_Run_Case04::
 Jump_012_5AE9:: ; address name
-    farcall Func_085_5C92
+    farcall ScriptCommand84_Run_Case04_Sub01
     ret
 
 ; entry 3 of the `rst $00` table in ScriptCommand84_Run
@@ -4457,23 +4461,25 @@ Func_012_5CE5:: ; address name
     ld a, [wScriptParam1]
     dec a
     jr nz, Jump_012_5CEF
-    call Func_012_5DB6
+    call ScriptCommand83_Run_Sub02
     ret
 
 Jump_012_5CEF::
     dec a
     jr nz, Jump_012_5CF6
-    call Func_012_5EE7
+    call ScriptCommand83_Run_Sub03
     ret
 
 Jump_012_5CF6::
-    call Func_012_5CFA
+    call ScriptCommand83_Run_Sub01
     ret
 
+; only called from ScriptCommand83_Run (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand83_Run)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Func_012_5CFA::
+ScriptCommand83_Run_Sub01::
+Func_012_5CFA:: ; address name
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4591,10 +4597,12 @@ Jump_012_5DB1::
     dec [hl]
     ret
 
+; only called from ScriptCommand83_Run (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand83_Run)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Func_012_5DB6::
+ScriptCommand83_Run_Sub02::
+Func_012_5DB6:: ; address name
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4796,10 +4804,12 @@ Jump_012_5ECF::
     inc [hl]
     ret
 
+; only called from ScriptCommand83_Run (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand83_Run)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Func_012_5EE7::
+ScriptCommand83_Run_Sub03::
+Func_012_5EE7:: ; address name
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -5340,7 +5350,7 @@ Func_012_6211:: ; address name
 ; points at: wCDAF
 ScriptCommand86_Run_Case04::
 Jump_012_621F:: ; address name
-    farcall Func_0F0_7D0A
+    farcall ScriptCommand86_Run_Case04_Sub01
     ld a, [wCC45]
     swap a
     ld hl, wCDAF
@@ -6297,9 +6307,11 @@ Jump_012_6782::
     inc [hl]
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_684F)
+; only called from ScriptCommand85_Run_Case05_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommand85_Run_Case05_Sub01)
 ; reads: wC926
-Func_012_6787::
+ScriptCommand85_Run_Case05_Sub01_Sub01::
+Func_012_6787:: ; address name
     push af
     ld a, [wC926]
     cp a, $FF
@@ -6457,10 +6469,12 @@ Func_012_684A::
     call Func_012_66DA
     jr Jump_012_683F
 
+; only called from ScriptCommand85_Run_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand85_Run_Case05)
 ; reads: wC926
-Func_012_684F::
-    call Func_012_6787
+ScriptCommand85_Run_Case05_Sub01::
+Func_012_684F:: ; address name
+    call ScriptCommand85_Run_Case05_Sub01_Sub01
     jr Jump_012_683F
 
 ; 1 call site from 1 routine (e.g. Func_012_5EE7_Case08)
@@ -7690,7 +7704,7 @@ Jump_012_6ED3::
     ld a, [de]
     bit 7, a
     jr z, Jump_012_6EE7
-    call Func_012_6F17
+    call DrawFieldSprites_Sub01
     jr Jump_012_6EEA
 
 Jump_012_6EE7::
@@ -7726,11 +7740,13 @@ Jump_012_6EEA::
     farcall DrawMetaSprite
     ret
 
+; only called from DrawFieldSprites (E-0047)
 ; 1 call site from 1 routine (e.g. DrawFieldSprites)
 ; reads: wCBD6
 ; writes: hSpriteSubIndex
 ; points at: wCBD5
-Func_012_6F17::
+DrawFieldSprites_Sub01::
+Func_012_6F17:: ; address name
     push af
     ld hl, wCBD5
     inc [hl]
@@ -7739,7 +7755,7 @@ Func_012_6F17::
     cp a, $13
     jr nz, Jump_012_6F2F
     ld hl, Data_012_6FF2
-    call Func_012_6F96
+    call DrawFieldSprites_Sub01_Sub01
     ld a, [wCBD6]
     ldh [hSpriteSubIndex], a
     ret
@@ -7748,7 +7764,7 @@ Jump_012_6F2F::
     cp a, $1A
     jr nz, Jump_012_6F3F
     ld hl, Data_012_6FF7
-    call Func_012_6F96
+    call DrawFieldSprites_Sub01_Sub01
     ld a, [wCBD6]
     ldh [hSpriteSubIndex], a
     ret
@@ -7757,7 +7773,7 @@ Jump_012_6F3F::
     cp a, $17
     jr nz, Jump_012_6F4F
     ld hl, Data_012_6FFA
-    call Func_012_6F96
+    call DrawFieldSprites_Sub01_Sub01
     ld a, [wCBD6]
     ldh [hSpriteSubIndex], a
     ret
@@ -7766,7 +7782,7 @@ Jump_012_6F4F::
     cp a, $1F
     jr nz, Jump_012_6F68
     ld hl, Data_012_6FFE
-    call Func_012_6F96
+    call DrawFieldSprites_Sub01_Sub01
     ld a, [wCBD6]
     ld hl, Data_012_700E
     add_a_to_hl
@@ -7778,7 +7794,7 @@ Jump_012_6F68::
     cp a, $1E
     jr nz, Jump_012_6F78
     ld hl, Data_012_701E
-    call Func_012_6F96
+    call DrawFieldSprites_Sub01_Sub01
     ld a, [wCBD6]
     ldh [hSpriteSubIndex], a
     ret
@@ -7787,7 +7803,7 @@ Jump_012_6F78::
     cp a, $18
     jr nz, Jump_012_6F88
     ld hl, Data_012_7023
-    call Func_012_6F96
+    call DrawFieldSprites_Sub01_Sub01
     ld a, [wCBD6]
     ldh [hSpriteSubIndex], a
     ret
@@ -7796,17 +7812,19 @@ Jump_012_6F88::
     cp a, $20
     jr nz, Jump_012_6F95
     ld hl, Data_012_7026
-    call Func_012_6FBE
+    call DrawFieldSprites_Sub01_Sub02
     ldh [hSpriteSubIndex], a
     ret
 
 Jump_012_6F95::
     ret
 
-; 6 call sites from 1 routine (e.g. Func_012_6F17)
+; only called from DrawFieldSprites_Sub01 (E-0047)
+; 6 call sites from 1 routine (e.g. DrawFieldSprites_Sub01)
 ; reads: wCBD6, wCBD5
 ; writes: wCBD5, wCBD6
-Func_012_6F96::
+DrawFieldSprites_Sub01_Sub01::
+Func_012_6F96:: ; address name
     ld a, [wCBD6]
     add_a_to_hl
     ld a, [hl]
@@ -7832,11 +7850,13 @@ Jump_012_6FB6::
 Jump_012_6FBD::
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_6F17)
+; only called from DrawFieldSprites_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. DrawFieldSprites_Sub01)
 ; reads: wCBD6, wCBD5
 ; writes: wCBD5, wCBD6
 ; points at: wCBD6
-Func_012_6FBE::
+DrawFieldSprites_Sub01_Sub02::
+Func_012_6FBE:: ; address name
     push hl
     ld a, [wCBD6]
     add a, a
@@ -8053,11 +8073,13 @@ Jump_012_7174::
     ret z
     ld [wC8FE], a
 
-; 1 call site from 1 routine (e.g. Func_085_5C92)
+; only called from ScriptCommand84_Run_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. ScriptCommand84_Run_Case04_Sub01)
 ; reads: wC8FE, wIsCGB
 ; writes: wC527
 ; points at: wC4DF
-Func_012_7179::
+ScriptCommand84_Run_Case04_Sub01_Sub01::
+Func_012_7179:: ; address name
     ld a, [wC8FE]
     ld c, a
     add a, a
@@ -8330,7 +8352,7 @@ Jump_012_7377::
 Jump_012_73A0::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_4AE0_Case07, Func_002_56DC)
+; 2 call sites from 2 routines (e.g. Func_002_4AE0_Case07, UpdatePlayerMovement_Sub01)
 ; reads: wC951, wC8BF, wC8FE, hPlayerX, hPlayerY, wScriptRunning, wC917, wC916
 ; writes: wD091, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_012_73A1::
@@ -8673,7 +8695,7 @@ Func_012_75A1::
     ld [wC913], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_012_7BCC, Func_002_56DC, Func_002_5BD7_Case03)
+; 3 call sites from 3 routines (e.g. Func_012_7BCC, UpdatePlayerMovement_Sub01, Func_002_5BD7_Case03)
 ; reads: wScriptRunning, wC935, wCC44, hMapId, wC832
 ; writes: wC832
 Func_012_75E0::
@@ -10233,10 +10255,12 @@ Jump_012_7EF5::
     ld [wC619], a
     ret
 
+; only called from ScriptCommand88_Run_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand88_Run_Case00)
 ; reads: wC619, wC618, wC617
 ; writes: wC619, wC618, wC617
-Func_012_7F05::
+ScriptCommand88_Run_Case00_Sub01::
+Func_012_7F05:: ; address name
     ld a, [wC619]
     srl a
     ld [wC619], a

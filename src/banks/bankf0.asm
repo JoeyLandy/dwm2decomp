@@ -5566,7 +5566,7 @@ Data_0F0_7085:: ; heuristic: target of a monotone pointer table; C0
     db $61, $01, $64, $01, $67, $01, $69, $01, $70, $01, $71, $01, $72, $01, $73, $01
     db $FE, $FE
 
-; 14 call sites from 4 routines (e.g. Func_0F0_7D0A, Func_0F0_6BE0, Func_0F0_7E69, Func_0F0_7284)
+; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, Func_0F0_6BE0, Func_0F0_7E69, Func_0F0_7284)
 ; reads: wC5E7
 Func_0F0_7097::
     push bc
@@ -7427,10 +7427,12 @@ Func_0F0_7D03::
     ld [hl], a
     ret
 
+; only called from ScriptCommand86_Run_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand86_Run_Case04)
 ; reads: wC616
 ; points at: wCE9B, wCECE, wC60C, wCEE7
-Func_0F0_7D0A::
+ScriptCommand86_Run_Case04_Sub01::
+Func_0F0_7D0A:: ; address name
     ld hl, wCE9B
     ld bc, $00D8
 
@@ -7489,16 +7491,16 @@ Jump_0F0_7D4A::
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    call Func_0F0_7E50
+    call ScriptCommand86_Run_Case04_Sub01_Sub02
     ld c, $06
     ld b, $F0
-    call Func_0F0_7E4A
+    call ScriptCommand86_Run_Case04_Sub01_Sub01
     ld a, $F0
     ld [hl+], a
-    call Func_0F0_7E50
+    call ScriptCommand86_Run_Case04_Sub01_Sub02
     ld c, $06
     ld b, $F0
-    call Func_0F0_7E4A
+    call ScriptCommand86_Run_Case04_Sub01_Sub01
     ld a, $F0
     ld [hl+], a
     ld c, $21
@@ -7522,7 +7524,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $20
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7536,7 +7538,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $20
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7550,7 +7552,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $20
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7560,7 +7562,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $20
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7570,7 +7572,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $20
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7580,7 +7582,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $20
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7597,7 +7599,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $FE
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7605,7 +7607,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $FE
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7613,7 +7615,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $FE
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7621,7 +7623,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call Func_0F0_7097
     ld b, $FE
-    call Func_0F0_7E5D
+    call ScriptCommand86_Run_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7654,16 +7656,20 @@ Jump_0F0_7E3F::
     ld [hl+], a
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0F0_7D0A)
-Func_0F0_7E4A::
+; only called from ScriptCommand86_Run_Case04_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ScriptCommand86_Run_Case04_Sub01)
+ScriptCommand86_Run_Case04_Sub01_Sub01::
+Func_0F0_7E4A:: ; address name
     ld a, b
     ld [hl+], a
     dec c
-    jr nz, Func_0F0_7E4A
+    jr nz, ScriptCommand86_Run_Case04_Sub01_Sub01
     ret
 
-; 2 call sites from 1 routine (e.g. Func_0F0_7D0A)
-Func_0F0_7E50::
+; only called from ScriptCommand86_Run_Case04_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. ScriptCommand86_Run_Case04_Sub01)
+ScriptCommand86_Run_Case04_Sub01_Sub02::
+Func_0F0_7E50:: ; address name
     ld a, $98
     ld [hl+], a
     ld a, $98
@@ -7674,8 +7680,10 @@ Func_0F0_7E50::
     ld [hl+], a
     ret
 
-; 10 call sites from 1 routine (e.g. Func_0F0_7D0A)
-Func_0F0_7E5D::
+; only called from ScriptCommand86_Run_Case04_Sub01 (E-0047)
+; 10 call sites from 1 routine (e.g. ScriptCommand86_Run_Case04_Sub01)
+ScriptCommand86_Run_Case04_Sub01_Sub03::
+Func_0F0_7E5D:: ; address name
     ld a, l
 
 Jump_0F0_7E5E::

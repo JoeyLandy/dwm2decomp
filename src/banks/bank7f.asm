@@ -1324,7 +1324,7 @@ Jump_07F_7209::
 Jump_07F_7210::
     ld a, c
     ld [de], a
-    call Func_07F_72AB
+    call DrawMetaSpriteAt_Sub01
     jr nc, Jump_07F_7209
     inc e
     ldh a, [hSpriteTileOffset]
@@ -1426,7 +1426,7 @@ Jump_07F_7284::
 Jump_07F_728B::
     ld a, c
     ld [de], a
-    call Func_07F_72AB
+    call DrawMetaSpriteAt_Sub01
     jr nc, Jump_07F_7284
     inc e
     ldh a, [hSpriteTileOffset]
@@ -1448,9 +1448,11 @@ Jump_07F_728B::
     jr nz, Jump_07F_7230
     ret
 
+; only called from DrawMetaSpriteAt (E-0047)
 ; 2 call sites from 1 routine (e.g. DrawMetaSpriteAt)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
-Func_07F_72AB::
+DrawMetaSpriteAt_Sub01::
+Func_07F_72AB:: ; address name
     push hl
     push bc
     ldh a, [hScrollY]

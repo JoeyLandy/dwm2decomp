@@ -2925,9 +2925,11 @@ Func_0E0_5A79::
     db $21, $0F, $40, $06, $09, $D7, $21, $00, $88, $7D, $EA, $2D, $C5, $7C, $EA, $2E
     db $C5, $21, $02, $12, $7D, $EA, $2F, $C5, $7C, $EA, $30, $C5, $C9
 
+; only called from DebugStaffRoll_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugStaffRoll_Update)
 ; reads: wD09D, wD09F, wD09E
-Func_0E0_5AD3::
+DebugStaffRoll_Update_Sub01::
+Func_0E0_5AD3:: ; address name
     ld a, [wD09D]
     or a, a
     jp z, Jump_0E0_6FF7
@@ -6806,7 +6808,7 @@ Jump_0E0_745E::
     db $01, $40, $25, $01, $40, $7F, $0A, $70, $7F
 
 ; adds 1 to byte 7 of each of the 8 slots at wSpriteSlots
-; 1 call site from 1 routine (e.g. Func_0E0_5AD3)
+; 1 call site from 1 routine (e.g. DebugStaffRoll_Update_Sub01)
 ; points at: wSpriteSlots
 IncrementSpriteSlotCounters::
 Func_0E0_7480:: ; address name
@@ -7146,7 +7148,7 @@ Func_0E0_76E0:: ; address name
     ld a, [wStringCategory]
     cp a, $01
     jr c, Jump_0E0_76EE
-    ld hl, Func_0A2_49E2
+    ld hl, BeginStringDisplay_BankE0_Sub01
     ld b, $A2
 
 Jump_0E0_76EC::

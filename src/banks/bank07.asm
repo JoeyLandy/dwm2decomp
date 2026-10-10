@@ -11,7 +11,7 @@ Func_007_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 11 call sites from 9 routines (e.g. Func_003_74E2_Case00, GameMode5_Init_Case01, Func_007_513A, Func_007_6213_Table2_Case00, ...)
+; 11 call sites from 9 routines (e.g. Func_003_74E2_Case00, GameMode5_Init_Case01, GameMode5_Init_Case04_Sub02, Func_007_6213_Table2_Case00, ...)
 ShowString_Bank07::
 Func_007_400F:: ; address name
     call BeginStringDisplay_Bank07
@@ -1067,7 +1067,7 @@ Jump_007_4CA3::
 ; points at: wC51F, wScreenTileBuffer, wC46B, wD06A
 GameMode5_Init_Case04::
 Jump_007_4CFF:: ; address name
-    call Func_007_4DEC
+    call GameMode5_Init_Case04_Sub01
     xor a, a
     ld [wC8C3], a
     ld [wC8C4], a
@@ -1112,7 +1112,7 @@ Jump_007_4D45::
     ld de, $0B04
     call FillTilesRequest
     ld hl, $0300
-    call Func_007_513A
+    call GameMode5_Init_Case04_Sub02
     ld a, $00
     ld [wD09E], a
     farcall Func_016_7A5B
@@ -1120,7 +1120,7 @@ Jump_007_4D45::
     ld de, $2501
     call FillTilesRequest
     ld hl, $0301
-    call Func_007_513A
+    call GameMode5_Init_Case04_Sub02
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -1163,10 +1163,12 @@ Jump_007_4D45::
     ld a, $09
     jp Jump_000_077A
 
+; only called from GameMode5_Init_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Init_Case04)
 ; reads: wD059
 ; points at: wD043, wD04D
-Func_007_4DEC::
+GameMode5_Init_Case04_Sub01::
+Func_007_4DEC:: ; address name
     ld a, [wD059]
     cp a, $02
     jr z, Jump_007_4DF8
@@ -1295,7 +1297,7 @@ Jump_007_4E8D::
     ld b, $14
     dec c
     jr nz, Jump_007_4E8B
-    call Func_007_4F29
+    call GameMode5_Init_Case06_Sub01
     farcall Func_012_64F8
     ld a, $FC
     call StartPaletteFade
@@ -1351,11 +1353,13 @@ Jump_007_4ED6::
     ld a, $09
     jp Jump_000_077A
 
+; only called from GameMode5_Init_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Init_Case06)
 ; reads: wC6FD, hFFC6, hFFC7
 ; writes: rRAMG
 ; points at: wC6FE, wC972
-Func_007_4F29::
+GameMode5_Init_Case06_Sub01::
+Func_007_4F29:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]
@@ -1431,14 +1435,14 @@ Func_007_4F7B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode5_Update_Case05::
 Jump_007_4F8F:: ; address name
-    farcall Func_033_51C6
+    farcall GameMode5_Update_Case05_Sub01
     ret
 
 ; entry 7 of the `rst $00` table in GameMode5_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode5_Update_Case07::
 Jump_007_4F96:: ; address name
-    farcall Func_0F1_5AD5
+    farcall GameMode5_Update_Case07_Sub01
     ret
 
 ; 6 call sites from 6 routines (e.g. Func_007_600E_Case01, Func_007_6C12_Case01, Func_007_60E9_Case01, Func_007_6DE3_Table2_Case17, ...)
@@ -1664,9 +1668,11 @@ Func_007_512B::
     farcall BeginStringDisplay_Bank07
     ret
 
+; only called from GameMode5_Init_Case04 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode5_Init_Case04)
 ; writes: wStringCategory, wStringIndex
-Func_007_513A::
+GameMode5_Init_Case04_Sub02::
+Func_007_513A:: ; address name
     ld a, h
     ld [wStringCategory], a
     ld a, l

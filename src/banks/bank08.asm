@@ -9,7 +9,7 @@ Func_008_4001:: ; address name
     ld a, [wStringCategory]
     cp a, $09
     jr c, Jump_008_400F
-    farcall Func_095_4650
+    farcall BeginStringDisplay_Bank08_Sub01
     ret
 
 Jump_008_400F::
@@ -25,7 +25,7 @@ Func_008_4016:: ; address name
     ld a, [wStringCategory]
     cp a, $09
     jr c, Jump_008_4024
-    farcall Func_095_465F
+    farcall CopyStringToBuffer_Bank08_Sub01
     ret
 
 Jump_008_4024::
