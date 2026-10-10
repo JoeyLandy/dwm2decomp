@@ -1227,6 +1227,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Where they are used.** The hex and 2-bit displays look like a debug or battle-setup viewer (the same bank holds the debug battle code), but the screen is not identified.
 - Binary verification: pending; see the commit.
 
+### E-0113 — Bank-$3A battle message name helpers
+
+- Kind: OBSERVATION (full reading unless marked; C1).
+- **Name copies for battle messages:** CopyActorNameToWC130, CopyTargetSideNameToWC130, CopyMappedSlotNameToWC140 and WriteMonstersWordToWC130. The last writes the fixed word "Monsters", decoded with the charmap.
+- **Others:** SetWDA5BForPresentSlots and CopyVRAMRectToBuffer (its source-row step is not read).
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

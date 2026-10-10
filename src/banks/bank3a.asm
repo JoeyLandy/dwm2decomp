@@ -724,7 +724,7 @@ Jump_03A_4C9C:: ; address name
     ld hl, Data_03A_4D5C
     call ReadWordTableEntry_Bank3A
     ld c, $06
-    call Func_03A_4D2B
+    call CopyVRAMRectToBuffer
     ld hl, wD804
     inc [hl]
     ret
@@ -750,7 +750,7 @@ Jump_03A_4CC2:: ; address name
     ld hl, Data_03A_4D5C
     call ReadWordTableEntry_Bank3A
     ld c, $06
-    call Func_03A_4D2B
+    call CopyVRAMRectToBuffer
     ld hl, wD804
     inc [hl]
     ret
@@ -806,9 +806,11 @@ Jump_03A_4D28::
 Jump_03A_4D2A::
     ret
 
+; copies rows of wD805 bytes from VRAM at HL (WaitForVRAMAccess, interrupts off per byte) to DE, C rows, the destination rows 32 bytes apart (the source-row step is not read) (E-0113)
 ; 4 call sites from 4 routines (e.g. Func_03A_4C26_Table2_Case01, Func_03A_4C26_Table2_Case00, Func_03A_50D9_Table3_Case01, Func_03A_50D9_Table3_Case00)
 ; reads: wD805
-Func_03A_4D2B::
+CopyVRAMRectToBuffer::
+Func_03A_4D2B:: ; address name
     push de
     ld a, [wD805]
     ld b, a
@@ -832,7 +834,7 @@ Jump_03A_4D30::
     inc d
 
 Jump_03A_4D45::
-    jr Func_03A_4D2B
+    jr CopyVRAMRectToBuffer
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
 ; 8 call sites from 4 routines (e.g. Func_03A_4C26_Table2_Case01, Func_03A_4C26_Table2_Case00, Func_03A_50D9_Table3_Case01, Func_03A_50D9_Table3_Case00)
@@ -1796,7 +1798,7 @@ Jump_03A_5215:: ; address name
     ld hl, Data_03A_4D5C
     call ReadWordTableEntry_Bank3A
     ld c, $06
-    call Func_03A_4D2B
+    call CopyVRAMRectToBuffer
     ld hl, wD804
     inc [hl]
     ret
@@ -1822,7 +1824,7 @@ Jump_03A_523B:: ; address name
     ld hl, Data_03A_4D5C
     call ReadWordTableEntry_Bank3A
     ld c, $06
-    call Func_03A_4D2B
+    call CopyVRAMRectToBuffer
     ld hl, wD804
     inc [hl]
     ret
@@ -3531,10 +3533,10 @@ Jump_03A_65B8::
     ld b, $03
     ld c, $00
     ld d, $00
-    call Func_03A_6650
+    call SetWDA5BForPresentSlots
     ld b, $01
     ld d, $01
-    call Func_03A_6650
+    call SetWDA5BForPresentSlots
     ld b, $03
     ld c, $04
     ld d, $00
@@ -3544,10 +3546,10 @@ Jump_03A_65B8::
     ld d, $01
 
 Jump_03A_65E2::
-    call Func_03A_6650
+    call SetWDA5BForPresentSlots
     ld b, $01
     ld d, $01
-    call Func_03A_6650
+    call SetWDA5BForPresentSlots
     ld hl, wD891
     ld a, [hl]
     cp a, $FF
@@ -3608,9 +3610,11 @@ Jump_03A_663E::
     inc [hl]
     ret
 
+; C = first slot, B = count, D = value: wDA5B[slot] = D for every present slot in the range (CarryUnlessWDA63SlotEmpty) (E-0113)
 ; 4 call sites from 1 routine (e.g. Func_03A_63F7_Case04)
 ; points at: wDA5B
-Func_03A_6650::
+SetWDA5BForPresentSlots::
+Func_03A_6650:: ; address name
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03A_6660
@@ -3622,7 +3626,7 @@ Func_03A_6650::
 Jump_03A_6660::
     inc c
     dec b
-    jr nz, Func_03A_6650
+    jr nz, SetWDA5BForPresentSlots
     ret
 
 ; entry 5 of the `rst $00` table in Func_03A_63F7
@@ -5036,7 +5040,7 @@ Func_03A_7508::
     jr nc, Jump_03A_7532
     xor a, a
     ld [wC982], a
-    call Func_03A_78EE
+    call CopyActorNameToWC130
     call Func_03A_791A
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -5051,8 +5055,8 @@ Func_03A_7508::
 Jump_03A_7532::
     ld a, $01
     ld [wC982], a
-    call Func_03A_78EE
-    call Func_03A_7908
+    call CopyActorNameToWC130
+    call CopyMappedSlotNameToWC140
 
 Jump_03A_753D::
     pop de
@@ -5173,8 +5177,8 @@ Data_03A_76FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 Func_03A_7715::
-    call Func_03A_78EE
-    call Func_03A_7908
+    call CopyActorNameToWC130
+    call CopyMappedSlotNameToWC140
     ld a, [wBattleActionId]
     sub a, $D0
     ld hl, Data_03A_7738
@@ -5286,10 +5290,10 @@ Func_03A_77C3:: ; heuristic: follows a terminator; C0
     ld a, e
     cp a, $01
     jr z, Jump_03A_77CF
-    call Func_03A_795D
+    call CopyTargetSideNameToWC130
 
 Jump_03A_77CB::
-    call Func_03A_7B82
+    call WriteMonstersWordToWC130
     ret
 
 Jump_03A_77CF::
@@ -5392,10 +5396,10 @@ Func_03A_784A:: ; heuristic: follows a terminator; C0
     ld a, e
     cp a, $01
     jr z, Jump_03A_7856
-    call Func_03A_795D
+    call CopyTargetSideNameToWC130
 
 Jump_03A_7852::
-    call Func_03A_7B82
+    call WriteMonstersWordToWC130
     ret
 
 Jump_03A_7856::
@@ -5506,21 +5510,23 @@ Func_03A_78DE:: ; heuristic: follows a terminator; C0
     ld a, e
     cp a, $01
     jr z, Jump_03A_78EA
-    call Func_03A_795D
+    call CopyTargetSideNameToWC130
 
 Jump_03A_78E6::
-    call Func_03A_7B82
+    call WriteMonstersWordToWC130
     ret
 
 Jump_03A_78EA::
     call CopyTargetNameToWC130
     ret
 
+; wD86C = wBattleActor, then CopySlotNameToHL with HL = wC130 (E-0113)
 ; 3 call sites from 2 routines (e.g. Func_03A_7508, Func_03A_7715)
 ; reads: wBattleActor
 ; writes: wD86C
 ; points at: wC130
-Func_03A_78EE::
+CopyActorNameToWC130::
+Func_03A_78EE:: ; address name
     ld a, [wBattleActor]
     ld hl, wC130
     ld [wD86C], a
@@ -5538,11 +5544,13 @@ Func_03A_78FB:: ; heuristic: follows a terminator; C0
     call CopySlotNameToHL
     ret
 
+; far-calls Func_0A3_414F (which maps the actor to a slot in hFFC6), then copies that slot's name to wC140 (CopySlotNameToHL) (E-0113)
 ; 2 call sites from 2 routines (e.g. Func_03A_7508, Func_03A_7715)
 ; reads: hFFC6
 ; writes: wD86C
 ; points at: wC140
-Func_03A_7908::
+CopyMappedSlotNameToWC140::
+Func_03A_7908:: ; address name
     farcall Func_0A3_414F
     ldh a, [hFFC6]
     ld hl, wC140
@@ -5597,11 +5605,13 @@ Func_03A_7941:: ; heuristic: follows a terminator; C0
     ret
     db $21, $40, $C1, $FA, $72, $D8, $4F, $FA, $73, $D8, $47, $CD, $84, $2F, $C9
 
+; wD86C = wBattleTarget & 4 (the first slot of the target's side), then CopySlotNameToHL with HL = wC130 (E-0113)
 ; 3 call sites from 3 routines (e.g. Func_03A_77C3, Func_03A_784A, Func_03A_78DE)
 ; reads: wBattleTarget
 ; writes: wD86C
 ; points at: wC130
-Func_03A_795D::
+CopyTargetSideNameToWC130::
+Func_03A_795D:: ; address name
     ld a, [wBattleTarget]
     and a, $04
     ld hl, wC130
@@ -5649,7 +5659,7 @@ Func_03A_798D:: ; heuristic: follows a terminator; C0
     ret
 
 ; A = battle slot: slots 0-2 go to CopyBattlerNameToHL; other slots take paths that check slot 3/7, wC58A and wDAD4 (not fully read) (E-0077)
-; 10 call sites from 10 routines (e.g. Func_03A_7BF9, Func_03A_7508, Func_03A_78EE, Func_03A_7908, ...)
+; 10 call sites from 10 routines (e.g. Func_03A_7BF9, Func_03A_7508, CopyActorNameToWC130, CopyMappedSlotNameToWC140, ...)
 ; reads: wC58A, wD86C
 ; writes: wD869
 ; points at: wDAD4
@@ -6035,9 +6045,11 @@ Jump_03A_7B77::
     ld d, $46
     ret
 
+; writes the glyphs of 'Monsters' (decoded with the charmap) and $F0 to wC130 (E-0113)
 ; 3 call sites from 3 routines (e.g. Func_03A_77C3, Func_03A_784A, Func_03A_78DE)
 ; points at: wC130
-Func_03A_7B82::
+WriteMonstersWordToWC130::
+Func_03A_7B82:: ; address name
     ld hl, wC130
     ld [hl], $16
     inc hl
