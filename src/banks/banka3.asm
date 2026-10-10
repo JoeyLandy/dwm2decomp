@@ -69,7 +69,7 @@ Jump_0A3_406F::
     ret
     INCBIN "dwm2-cobi-us.gbc", $28C075, $CA
 
-; 21 call sites from 20 routines (e.g. Func_032_4F0A, SetSubPhase2AndRestartResolve, Func_036_6906, Func_036_6912, ...)
+; 21 call sites from 20 routines (e.g. Func_032_4F0A, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
 ; reads: hFFC6
 ; points at: wDA5B
 Func_0A3_413F::
@@ -770,9 +770,11 @@ Jump_0A3_4A99::
     ld c, a
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_714F)
+; only called from ActionEffect_Chance (E-0047)
+; 1 call site from 1 routine (e.g. ActionEffect_Chance)
 ; reads: wC5E7, wC58A, wCFC5, wBattleActor
-Func_0A3_4AAF:: ; heuristic: follows a terminator; C0
+ActionEffect_Chance_Sub01:: ; heuristic: follows a terminator; C0
+Func_0A3_4AAF:: ; address name
     call AdvanceRandom
     ld a, [wC5E7]
     ld b, a
@@ -800,20 +802,20 @@ Func_0A3_4AAF:: ; heuristic: follows a terminator; C0
 Jump_0A3_4AE2::
     ld a, c
     cp a, $B3
-    jr z, Func_0A3_4AAF
+    jr z, ActionEffect_Chance_Sub01
     cp a, $B4
-    jr z, Func_0A3_4AAF
+    jr z, ActionEffect_Chance_Sub01
     cp a, $B6
-    jr z, Func_0A3_4AAF
+    jr z, ActionEffect_Chance_Sub01
     cp a, $BD
-    jr z, Func_0A3_4AAF
+    jr z, ActionEffect_Chance_Sub01
 
 Jump_0A3_4AF3::
     ld a, c
     cp a, $B0
-    jr z, Func_0A3_4AAF
+    jr z, ActionEffect_Chance_Sub01
     cp a, $B2
-    jr z, Func_0A3_4AAF
+    jr z, ActionEffect_Chance_Sub01
     ret
 
 Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0

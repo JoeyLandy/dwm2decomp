@@ -5082,10 +5082,12 @@ Func_032_5E1A:: ; address name
     ld a, [wBattleTarget]
     ld c, a
 
-; 1 call site from 1 routine (e.g. Func_036_710F)
+; only called from ActionEffect_BeDragon (E-0047)
+; 1 call site from 1 routine (e.g. ActionEffect_BeDragon)
 ; reads: wC58A
 ; points at: wDAD4
-Func_032_5E1E::
+ActionEffect_BeDragon_Sub01::
+Func_032_5E1E:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_032_5E27
@@ -6318,10 +6320,12 @@ Jump_032_657D:: ; address name
     call SetBattleSubStep1
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_7571)
+; only called from ActionEffect_Surge (E-0047)
+; 1 call site from 1 routine (e.g. ActionEffect_Surge)
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; points at: wBattleStatus, wBattleAGL, wBattleDEF
-Func_032_6581:: ; heuristic: follows a terminator; C0
+ActionEffect_Surge_Sub01:: ; heuristic: follows a terminator; C0
+Func_032_6581:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -6394,7 +6398,7 @@ Jump_032_65DF::
     ld [hl], a
     ret
 
-; 3 call sites from 2 routines (e.g. Func_032_6581, Func_032_6622)
+; 3 call sites from 2 routines (e.g. ActionEffect_Surge_Sub01, ActionEffect_DeMagic_Sub01)
 ; reads: wBattleTarget
 ; points at: wDA5B
 Func_032_660F::
@@ -6409,10 +6413,12 @@ Func_032_660F::
     ret
     db $C9
 
-; 1 call site from 1 routine (e.g. Func_036_7599)
+; only called from ActionEffect_DeMagic (E-0047)
+; 1 call site from 1 routine (e.g. ActionEffect_DeMagic)
 ; reads: wBattleTarget
 ; points at: wBattleStatus
-Func_032_6622::
+ActionEffect_DeMagic_Sub01::
+Func_032_6622:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL

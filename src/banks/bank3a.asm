@@ -5913,7 +5913,7 @@ Jump_03A_7ADD::
     ld [hl], a
     ret
 
-; 6 call sites from 5 routines (e.g. CopyBattlerNameToHL_Sub02, Func_03A_7B66, Func_03B_4711, Func_03B_4C95, ...)
+; 6 call sites from 5 routines (e.g. CopyBattlerNameToHL_Sub02, ActionEffect_Ironize_Sub01, Func_03B_4711, Func_03B_4C95, ...)
 ; reads: wC58A, wC57F
 ; points at: wC0A0, wBattleMonsterId, wC0A8
 Func_03A_7AE3::
@@ -6009,9 +6009,11 @@ Jump_03A_7B60::
     ld b, d
     ret
 
-; 1 call site from 1 routine (e.g. Func_036_6FF1)
+; only called from ActionEffect_Ironize (E-0047)
+; 1 call site from 1 routine (e.g. ActionEffect_Ironize)
 ; reads: wC58A, wBattleTarget
-Func_03A_7B66:: ; heuristic: follows a terminator; C0
+ActionEffect_Ironize_Sub01:: ; heuristic: follows a terminator; C0
+Func_03A_7B66:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr z, Jump_03A_7B77

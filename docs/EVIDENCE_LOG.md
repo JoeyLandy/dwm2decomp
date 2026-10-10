@@ -886,6 +886,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Skill 0 (no name), which has its own routine, AIScore_Skill00.
 - Binary verification: pending; see the commit.
 
+### E-0084 — Action effect routines named after their skills
+
+- Kind: OBSERVATION (table scan plus the skill-name mapping of E-0083; C1).
+- **The table.** DispatchActionEffectTable (`36:6717`, E-0053) jumps through the word table at `36:6726`, indexed by wBattleActionId.
+  - Reading words until the first address the table itself would reach gives 240 entries (ids 0-239). The table ends at `$6906`, the lowest target.
+  - It has the same family sharing as the AI table: entries 1-3 → one routine (Blaze/Blazemore/Blazemost), 4-6 (Firebal/Firebane/Firebolt), 7-9 (Bang/Boom/Explodet), 10-12 (Infernos…), 16-18 (IceBolt/SnowStorm/Blizzard). That again supports the action id being the skill number below 175.
+- **Names.** 119 routines are named `ActionEffect_<first skill>`, with the action list in each note. Ids 175 and up (including the $D0-$E3 specials of E-0045) have no skill name, so routines used only by them get `ActionEffect_ActionXX`.
+- **Not named.** 36 target addresses are already named or sit inside another routine (shared tails).
+- **Limits.** The effect bodies are not read. Each name says which actions reach the routine, not what it does.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

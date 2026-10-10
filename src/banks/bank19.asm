@@ -811,7 +811,7 @@ Jump_019_44B3::
     ld [de], a
     ret
 
-; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, Func_036_5703, Func_036_5BC4, ...)
+; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, ActionEffect_Transform_Sub01, ActionEffect_TatsuCall_Sub01, ...)
 ; reads: wD868, wD869, wD86A, wD86B
 Func_019_44B9::
     ld a, [wD868]

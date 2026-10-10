@@ -10772,7 +10772,7 @@ Func_000_3F25:: ; address name
     ret
 
 ; A = battle slot, E = field offset: HL = wBattlerRecords + $4E * A' + E, where A' = A - 1 for A >= 3, so slots 0-2 and 4-6 map to records 0-5 (slots 3 and 7 have no record here; GetBaseHP handles them separately); clobbers A, BC (E-0059, E-0062)
-; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, Func_036_6658, Func_036_669E, ...)
+; 17 call sites from 17 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4D0C, ActionEffect_Transform_Sub01_Sub04, ActionEffect_Transform_Sub01_Sub05, ...)
 ; points at: wBattlerRecords
 BattlerRecordFieldAddress::
 Func_000_3F32:: ; address name

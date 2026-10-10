@@ -191,7 +191,7 @@ Jump_030_40E7:: ; address name
     inc [hl]
     ret
 
-; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, Func_036_714F, RunBattleActions_Case06, Func_03A_6846)
+; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, ActionEffect_Chance, RunBattleActions_Case06, Func_03A_6846)
 ; reads: wC58A, wC46B, wBattleActor
 ; points at: wDAD8, wBattleTargetChoice, wDAE9
 Func_030_4102::

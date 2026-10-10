@@ -2,7 +2,7 @@ SECTION "Bank 3B", ROMX[$4000], BANK[$3B]
     db $3B
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's HP word (wCFF6) is returned; otherwise the word at offset $1D of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, Func_036_65E8)
+; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ActionEffect_Transform_Sub01_Sub01)
 ; reads: wCFF6, wCFF7
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -45,7 +45,7 @@ Jump_03B_403C::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's MP word (wCFF8) is returned; otherwise the word at offset $21 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, Func_036_6605)
+; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ActionEffect_Transform_Sub01_Sub02)
 ; reads: wCFF8, wCFF9
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -88,7 +88,7 @@ Jump_03B_4080::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's ATK word (wCFFA) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, Func_036_6622)
+; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ActionEffect_Transform_Sub01_Sub03)
 ; reads: wCFFA, wCFFB
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -131,7 +131,7 @@ Jump_03B_40C4::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's DEF word (wCFFC) is returned; otherwise the word at offset $25 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 7 call sites from 7 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, Func_032_5BE8, RecomputeTargetMaxHPAndMP, Func_032_6581, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, Func_032_5BE8, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
 ; reads: wCFFC, wCFFD
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -174,7 +174,7 @@ Jump_03B_4108::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's AGL word (wCFFE) is returned; otherwise the word at offset $27 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 7 call sites from 7 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, Func_032_5BE8, RecomputeTargetMaxHPAndMP, Func_032_6581, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, Func_032_5BE8, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
 ; reads: wCFFE, wCFFF
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
 ; points at: wDAAE
@@ -444,7 +444,7 @@ Jump_03B_42B6::
     ld [wBattleStatResultLo], a
     ret
 
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_66D6)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_Sub06)
 ; reads: wD00A, wD00B
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 Func_03B_42BB::
