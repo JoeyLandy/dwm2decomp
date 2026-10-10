@@ -4473,7 +4473,7 @@ Jump_03A_6B8B::
     or a, a
     jr z, Jump_03A_6BAB
     ld d, $31
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     jr Jump_03A_6BCF
 
 Jump_03A_6BAB::
@@ -4878,9 +4878,11 @@ Data_03A_6EA5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $10, $FF
     db $97, $FF, $FF, $FF, $0D, $A9, $28, $D6
 
+; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at Data_03A_6F06 + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F shows category 0 (E-0056)
 ; 22 call sites from 14 routines (e.g. Func_030_43C4_Case01, Func_032_4ADC_Table2_Case01, Func_032_4ADC_Table2_Case03, Func_032_4C3E, ...)
 ; writes: wStringIndex, wStringCategory
-Func_03A_6EE5::
+ShowBattleTextCategory0::
+Func_03A_6EE5:: ; address name
     push de
     ld hl, Data_03A_6F06
     ld c, d

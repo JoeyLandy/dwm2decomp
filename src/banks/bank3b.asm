@@ -660,7 +660,7 @@ Jump_03B_43E9::
 Jump_03B_43F5::
     call Func_03B_444A
     ld d, $7E
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld a, $0B
     ld [wBattleResolveStep], a
     ret
@@ -676,7 +676,7 @@ Jump_03B_4406::
 Jump_03B_4417::
     call Func_03B_444A
     ld d, $7B
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld a, $0B
     ld [wBattleResolveStep], a
     ret
@@ -684,7 +684,7 @@ Jump_03B_4417::
 Jump_03B_4428::
     call Func_03B_444A
     ld d, $7D
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld a, $0B
     ld [wBattleResolveStep], a
     ret
@@ -692,7 +692,7 @@ Jump_03B_4428::
 Jump_03B_4439::
     call Func_03B_444A
     ld d, $7C
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld a, $0B
     ld [wBattleResolveStep], a
     ret
@@ -989,12 +989,12 @@ Jump_03B_45CF::
     or a, a
     jr z, Jump_03B_45FF
     ld d, $2B
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     jr Jump_03B_4607
 
 Jump_03B_45FF::
     ld d, $2A
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
 
 Jump_03B_4607::
     ld hl, wDABA
@@ -2156,19 +2156,19 @@ Jump_03B_4CEA::
 
 Jump_03B_4CF2::
     ld d, $7B
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4D00::
     ld d, $7D
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4D0E::
     ld d, $7C
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld bc, $0000
     jp Jump_03B_4EFA
 
@@ -2270,19 +2270,19 @@ Jump_03B_4DD8::
 
 Jump_03B_4DE0::
     ld d, $7B
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4DEE::
     ld d, $7D
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld bc, $0000
     jp Jump_03B_4EFA
 
 Jump_03B_4DFC::
     ld d, $7C
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ld bc, $0000
     jp Jump_03B_4EFA
 

@@ -377,6 +377,11 @@ class BattleText(unittest.TestCase):
             gb = call(0x3A, 0x7193, d=index)
             self.assertEqual((gb.rb(0xC528), gb.rb(0xC529)), (1, index), hex(index))
 
+    def test_category_0_variant_stores_category_0(self):
+        for index in (0x02, 0x40):
+            gb = call(0x3A, 0x6EE5, d=index)
+            self.assertEqual((gb.rb(0xC528), gb.rb(0xC529)), (0, index), hex(index))
+
 
 if __name__ == "__main__":
     unittest.main()

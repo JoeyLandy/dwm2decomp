@@ -2139,7 +2139,7 @@ Jump_032_4B62:: ; address name
     and a, $C0
     jr z, Jump_032_4B7A
     ld d, $15
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     jr Jump_032_4BD8
 
 Jump_032_4B7A::
@@ -2253,7 +2253,7 @@ Jump_032_4C0A:: ; address name
     jr z, Func_032_4ADC_Table2_Case04
     call Func_032_4D99
     ld d, $14
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ret
 
 ; entry 4 of the `rst $00` table in Func_032_4ADC
@@ -2343,7 +2343,7 @@ Jump_032_4C8E::
     jr Jump_032_4C9B
 
 Jump_032_4C91::
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
 
 Jump_032_4C97::
     call Func_032_4EE4
@@ -2435,7 +2435,7 @@ Jump_032_4D0B::
 
 ; 4 call sites from 1 routine (e.g. Func_032_4C9C)
 Func_032_4D23::
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ret
 
 Jump_032_4D2A::
@@ -3615,7 +3615,7 @@ Jump_032_546B::
     ld d, $34
 
 Jump_032_546D::
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ret
 
 ; entry 3 of the `rst $00` table in Func_032_4ADC
@@ -3723,7 +3723,7 @@ Jump_032_550A::
     ld d, $2E
 
 Jump_032_5512::
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ret
 
 ; entry 5 of the `rst $00` table in Func_032_4ADC

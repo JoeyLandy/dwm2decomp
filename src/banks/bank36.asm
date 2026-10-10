@@ -57,7 +57,7 @@ Jump_036_4025:: ; address name
     jr z, Jump_036_4069
     ld [wC971], a
     ld d, $33
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     ret
 
 Jump_036_4069::
@@ -541,7 +541,7 @@ Jump_036_4356:: ; address name
     bit 7, [hl]
     jr z, ResolveStepEffectChecks
     ld d, $35
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
     call SetSubPhase2AndRestartResolve
     ld a, $84
     call QueueSoundEffect

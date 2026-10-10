@@ -518,6 +518,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 ### E-0056 — Func_03A_7193 is the battle text display (ShowBattleText)
 
 - Kind: OBSERVATION (reading plus emulator; C2 on our emulator). `ShowBattleText` (`3A:7193`) has 66 call sites in 56 routines, the most of any unnamed battle routine. It takes the message index in D, optionally runs the per-index routine from a pointer table, then stores the index in wStringIndex and 1 in wStringCategory and farcalls `BeginStringDisplay_Bank2F`. The emulator test (`BattleText`) confirms the stored category and index for indices $05, $35 and $8B. The per-index routines are not read.
+- `ShowBattleTextCategory0` (`3A:6EE5`, 22 call sites) is the category-0 twin of `ShowBattleText`. The emulator test (`BattleText`) checks its stored category.
 - Consistent with E-0045, which found battle text in bank $2F, category 1.
 - Binary verification: pending; see the commit.
 

@@ -789,7 +789,7 @@ Jump_030_4497::
     cp a, $03
     jr z, Jump_030_44DF
     ld d, $28
-    farcall Func_03A_6EE5
+    farcall ShowBattleTextCategory0
 
 Jump_030_44DF::
     ret
