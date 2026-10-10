@@ -907,6 +907,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The handler bodies are not read; each name says which items reach the routine.
 - Binary verification: pending; see the commit.
 
+### E-0086 — Per-action target routines named after their skills
+
+- Kind: OBSERVATION (table scan plus the skill-name mapping; C1).
+- **The tables.** Data_039_41AC (E-0061) holds, for AI modes 0-4 (wDA53), two table pointers each.
+  - The ten tables start at `$41C0` and are $1C8 bytes (228 action entries) apart. The last ends at `$5390`, where the first table target starts.
+  - The entries for modes 5 and up in Data_039_41AC are routine addresses (`$404B`, `$4078`), not tables, so the mode count is 5 (inference from layout).
+- **Names.** Every routine reached from those tables that was still address-named, 98 in all, is named `ChooseTarget_<first skill>`, with the action list in the note. Several distinct routines serve the same first skill in different modes, so the address is appended (for example ChooseTarget_Heal and ChooseTarget_Heal_5593).
+- **Limits.** The selection rules inside are not read.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

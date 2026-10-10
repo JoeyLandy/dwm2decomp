@@ -348,24 +348,24 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
-    dw Func_039_6C75
-    dw Func_039_6C75
-    dw Func_039_6C75
+    dw ChooseTarget_Heal_6C75
+    dw ChooseTarget_Heal_6C75
+    dw ChooseTarget_Heal_6C75
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_6CE9
-    dw Func_039_6CE9
-    dw Func_039_6CE9
+    dw ChooseTarget_MPass
+    dw ChooseTarget_MPass
+    dw ChooseTarget_MPass
     dw TargetRandomAllySlot
     dw TargetRandomAllySlot
     dw TargetOwnSideFirstSlot
-    dw Func_039_6AFD
+    dw ChooseTarget_Antidote_6AFD
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_6B0A
+    dw ChooseTarget_Upper_6B0A
     dw TargetFirstAlly
-    dw Func_039_6BB0
+    dw ChooseTarget_Sap_6BB0
     db $78, $40, $5D, $6B, $A2, $40, $B6, $6B, $78, $40, $9A, $40, $78, $40, $91, $66
     db $78, $40, $2B, $41, $4B, $40, $78, $40, $78, $40
     dw TargetFirstAlly
@@ -465,24 +465,24 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
-    dw Func_039_6C75
-    dw Func_039_6C75
-    dw Func_039_6C75
+    dw ChooseTarget_Heal_6C75
+    dw ChooseTarget_Heal_6C75
+    dw ChooseTarget_Heal_6C75
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_6CE9
-    dw Func_039_6CE9
-    dw Func_039_6CE9
+    dw ChooseTarget_MPass
+    dw ChooseTarget_MPass
+    dw ChooseTarget_MPass
     dw TargetRandomAllySlot
     dw TargetRandomAllySlot
     dw TargetOwnSideFirstSlot
-    dw Func_039_6AFD
+    dw ChooseTarget_Antidote_6AFD
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_6B0A
+    dw ChooseTarget_Upper_6B0A
     dw TargetFirstAlly
-    dw Func_039_6BB0
+    dw ChooseTarget_Sap_6BB0
     db $78, $40, $5D, $6B, $A2, $40, $B6, $6B, $78, $40, $9A, $40, $78, $40, $91, $66
     db $78, $40, $2B, $41, $4B, $40, $78, $40, $00, $00, $00, $00
     dw TargetSelf
@@ -578,29 +578,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5390
-    dw Func_039_5F0E
-    dw Func_039_5F0E
-    dw Func_039_5F0E
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_Blaze
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $03, $5E
     db $78, $40, $78, $40
-    dw Func_039_5514
-    dw Func_039_5514
-    dw Func_039_5514
+    dw ChooseTarget_Heal
+    dw ChooseTarget_Heal
+    dw ChooseTarget_Heal
     dw TargetFirstAlly
     dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
-    dw Func_039_569C
-    dw Func_039_569C
+    dw ChooseTarget_Vivify
+    dw ChooseTarget_Vivify
     dw TargetOwnSideFirstSlot
-    dw Func_039_5716
+    dw ChooseTarget_Antidote
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_5857
+    dw ChooseTarget_Upper
     dw TargetFirstAlly
-    dw Func_039_58B7
+    dw ChooseTarget_Sap
     db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
     db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
     dw TargetFirstAlly
@@ -608,44 +608,44 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_5DBB
+    dw ChooseTarget_Transform
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_65CD
+    dw ChooseTarget_MegaMagic
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
     db $4B, $40, $4B, $40
-    dw Func_039_61A1
-    dw Func_039_62A3
-    dw Func_039_6222
-    dw Func_039_6324
-    dw Func_039_5CBB
-    dw Func_039_5C97
-    dw Func_039_5C9D
-    dw Func_039_5CA3
-    dw Func_039_5CC1
-    dw Func_039_5CC7
-    dw Func_039_5CA9
-    dw Func_039_5CAF
-    dw Func_039_5CB5
-    dw Func_039_64DB
-    dw Func_039_5C43
-    dw Func_039_5CCD
-    dw Func_039_5D19
-    dw Func_039_5BA5
-    dw Func_039_5390
-    dw Func_039_5390
+    dw ChooseTarget_FireSlash
+    dw ChooseTarget_VacuSlash
+    dw ChooseTarget_BoltSlash
+    dw ChooseTarget_IceSlash
+    dw ChooseTarget_SlimeBlow
+    dw ChooseTarget_DrakSlash
+    dw ChooseTarget_BeastCut
+    dw ChooseTarget_BirdBlow
+    dw ChooseTarget_BugBlow
+    dw ChooseTarget_Shears
+    dw ChooseTarget_DevilCut
+    dw ChooseTarget_ZombieCut
+    dw ChooseTarget_CleanCut
+    dw ChooseTarget_AquaCut
+    dw ChooseTarget_MetalCut
+    dw ChooseTarget_PoisonHit
+    dw ChooseTarget_Paralyze
+    dw ChooseTarget_NapAttack
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6416
+    dw ChooseTarget_GigaSlash
     dw TargetSelf
-    dw Func_039_5390
-    dw Func_039_5390
-    dw Func_039_5390
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
     dw TargetRandomOtherSlot
-    dw Func_039_5390
-    dw Func_039_5390
-    dw Func_039_6014
-    dw Func_039_6014
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_Ramming
+    dw ChooseTarget_Ramming
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $CB, $59, $78, $40, $78, $40
@@ -655,15 +655,15 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5D67
-    dw Func_039_5ADB
-    dw Func_039_5B40
+    dw ChooseTarget_LushLicks
+    dw ChooseTarget_SickLick
+    dw ChooseTarget_LegSweep
     db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
-    dw Func_039_5A84
+    dw ChooseTarget_MouthShut
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5A27
+    dw ChooseTarget_Cover
     dw TargetFirstAlly
     dw TargetSelf
     dw TargetFirstAlly
@@ -689,10 +689,10 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw Func_039_5F0E
-    dw Func_039_5390
-    dw Func_039_5390
-    dw Func_039_5390
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
     db $78, $40, $78, $40, $90, $53, $90, $53, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $0E, $5F, $2B, $41, $78, $40
     dw TargetSelf
@@ -704,29 +704,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
-    dw Func_039_67AD
-    dw Func_039_67AD
-    dw Func_039_67AD
+    dw ChooseTarget_Heal_67AD
+    dw ChooseTarget_Heal_67AD
+    dw ChooseTarget_Heal_67AD
     dw TargetFirstAlly
     dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
-    dw Func_039_6998
-    dw Func_039_6998
+    dw ChooseTarget_Vivify_6998
+    dw ChooseTarget_Vivify_6998
     dw TargetOwnSideFirstSlot
-    dw Func_039_699B
+    dw ChooseTarget_Antidote_699B
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_69A1
+    dw ChooseTarget_Upper_69A1
     dw TargetFirstAlly
-    dw Func_039_69A4
+    dw ChooseTarget_Sap_69A4
     db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $91, $66
     db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00, $00, $00
     dw TargetSelf
     dw TargetSelf
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_6A04
+    dw ChooseTarget_Transform_6A04
     dw TargetSelf
     dw TargetSelf
     dw TargetFoeWeightedBySlotOrder
@@ -737,17 +737,17 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
-    dw Func_039_69E9
-    dw Func_039_69C5
-    dw Func_039_69CB
-    dw Func_039_69D1
-    dw Func_039_69EF
-    dw Func_039_69F5
-    dw Func_039_69D7
-    dw Func_039_69DD
-    dw Func_039_69E3
+    dw ChooseTarget_SlimeBlow_69E9
+    dw ChooseTarget_DrakSlash_69C5
+    dw ChooseTarget_BeastCut_69CB
+    dw ChooseTarget_BirdBlow_69D1
+    dw ChooseTarget_BugBlow_69EF
+    dw ChooseTarget_Shears_69F5
+    dw ChooseTarget_DevilCut_69D7
+    dw ChooseTarget_ZombieCut_69DD
+    dw ChooseTarget_CleanCut_69E3
     dw TargetFoeWeightedBySlotOrder
-    dw Func_039_69C2
+    dw ChooseTarget_MetalCut_69C2
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
@@ -774,14 +774,14 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     dw TargetFoeWeightedBySlotOrder
-    dw Func_039_69B6
-    dw Func_039_69B9
+    dw ChooseTarget_SickLick_69B6
+    dw ChooseTarget_LegSweep_69B9
     db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw Func_039_69B3
+    dw ChooseTarget_MouthShut_69B3
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_69B0
+    dw ChooseTarget_Cover_69B0
     dw TargetFirstAlly
     dw TargetSelf
     dw TargetFirstAlly
@@ -824,29 +824,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5390
-    dw Func_039_5F0E
-    dw Func_039_5F0E
-    dw Func_039_5F0E
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_Blaze
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $03, $5E
     db $78, $40, $78, $40
-    dw Func_039_5514
-    dw Func_039_5514
-    dw Func_039_5514
+    dw ChooseTarget_Heal
+    dw ChooseTarget_Heal
+    dw ChooseTarget_Heal
     dw TargetFirstAlly
     dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
-    dw Func_039_569C
-    dw Func_039_569C
+    dw ChooseTarget_Vivify
+    dw ChooseTarget_Vivify
     dw TargetOwnSideFirstSlot
-    dw Func_039_5716
+    dw ChooseTarget_Antidote
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_5857
+    dw ChooseTarget_Upper
     dw TargetFirstAlly
-    dw Func_039_58B7
+    dw ChooseTarget_Sap
     db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
     db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
     dw TargetFirstAlly
@@ -854,44 +854,44 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_5DBB
+    dw ChooseTarget_Transform
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_65CD
+    dw ChooseTarget_MegaMagic
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
     db $4B, $40, $4B, $40
-    dw Func_039_61A1
-    dw Func_039_62A3
-    dw Func_039_6222
-    dw Func_039_6324
-    dw Func_039_5CBB
-    dw Func_039_5C97
-    dw Func_039_5C9D
-    dw Func_039_5CA3
-    dw Func_039_5CC1
-    dw Func_039_5CC7
-    dw Func_039_5CA9
-    dw Func_039_5CAF
-    dw Func_039_5CB5
-    dw Func_039_64DB
-    dw Func_039_5C43
-    dw Func_039_5CCD
-    dw Func_039_5D19
-    dw Func_039_5BA5
-    dw Func_039_5390
-    dw Func_039_5390
+    dw ChooseTarget_FireSlash
+    dw ChooseTarget_VacuSlash
+    dw ChooseTarget_BoltSlash
+    dw ChooseTarget_IceSlash
+    dw ChooseTarget_SlimeBlow
+    dw ChooseTarget_DrakSlash
+    dw ChooseTarget_BeastCut
+    dw ChooseTarget_BirdBlow
+    dw ChooseTarget_BugBlow
+    dw ChooseTarget_Shears
+    dw ChooseTarget_DevilCut
+    dw ChooseTarget_ZombieCut
+    dw ChooseTarget_CleanCut
+    dw ChooseTarget_AquaCut
+    dw ChooseTarget_MetalCut
+    dw ChooseTarget_PoisonHit
+    dw ChooseTarget_Paralyze
+    dw ChooseTarget_NapAttack
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6416
+    dw ChooseTarget_GigaSlash
     dw TargetSelf
-    dw Func_039_5390
-    dw Func_039_5390
-    dw Func_039_5390
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
     dw TargetRandomOtherSlot
-    dw Func_039_5390
-    dw Func_039_5390
-    dw Func_039_6014
-    dw Func_039_6014
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_Ramming
+    dw ChooseTarget_Ramming
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $CB, $59, $78, $40, $78, $40
@@ -901,15 +901,15 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5D67
-    dw Func_039_5ADB
-    dw Func_039_5B40
+    dw ChooseTarget_LushLicks
+    dw ChooseTarget_SickLick
+    dw ChooseTarget_LegSweep
     db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
-    dw Func_039_5A84
+    dw ChooseTarget_MouthShut
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5A27
+    dw ChooseTarget_Cover
     dw TargetFirstAlly
     dw TargetSelf
     dw TargetFirstAlly
@@ -935,10 +935,10 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw Func_039_5F0E
-    dw Func_039_5390
-    dw Func_039_5390
-    dw Func_039_5390
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
+    dw ChooseTarget_SquallHit
     db $78, $40, $78, $40, $90, $53, $90, $53, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $90, $53, $2B, $41, $78, $40
     dw TargetSelf
@@ -950,29 +950,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
     db $78, $40, $78, $40
-    dw Func_039_67AD
-    dw Func_039_67AD
-    dw Func_039_67AD
+    dw ChooseTarget_Heal_67AD
+    dw ChooseTarget_Heal_67AD
+    dw ChooseTarget_Heal_67AD
     dw TargetFirstAlly
     dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
-    dw Func_039_6998
-    dw Func_039_6998
+    dw ChooseTarget_Vivify_6998
+    dw ChooseTarget_Vivify_6998
     dw TargetOwnSideFirstSlot
-    dw Func_039_699B
+    dw ChooseTarget_Antidote_699B
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_69A1
+    dw ChooseTarget_Upper_69A1
     dw TargetFirstAlly
-    dw Func_039_69A4
+    dw ChooseTarget_Sap_69A4
     db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $91, $66
     db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00, $00, $00
     dw TargetSelf
     dw TargetSelf
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_6A04
+    dw ChooseTarget_Transform_6A04
     dw TargetSelf
     dw TargetSelf
     dw TargetFoeWeightedBySlotOrder
@@ -983,17 +983,17 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
-    dw Func_039_69E9
-    dw Func_039_69C5
-    dw Func_039_69CB
-    dw Func_039_69D1
-    dw Func_039_69EF
-    dw Func_039_69F5
-    dw Func_039_69D7
-    dw Func_039_69DD
-    dw Func_039_69E3
+    dw ChooseTarget_SlimeBlow_69E9
+    dw ChooseTarget_DrakSlash_69C5
+    dw ChooseTarget_BeastCut_69CB
+    dw ChooseTarget_BirdBlow_69D1
+    dw ChooseTarget_BugBlow_69EF
+    dw ChooseTarget_Shears_69F5
+    dw ChooseTarget_DevilCut_69D7
+    dw ChooseTarget_ZombieCut_69DD
+    dw ChooseTarget_CleanCut_69E3
     dw TargetFoeWeightedBySlotOrder
-    dw Func_039_69C2
+    dw ChooseTarget_MetalCut_69C2
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
     dw TargetFoeWeightedBySlotOrder
@@ -1020,14 +1020,14 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     dw TargetFoeWeightedBySlotOrder
-    dw Func_039_69B6
-    dw Func_039_69B9
+    dw ChooseTarget_SickLick_69B6
+    dw ChooseTarget_LegSweep_69B9
     db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw Func_039_69B3
+    dw ChooseTarget_MouthShut_69B3
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_69B0
+    dw ChooseTarget_Cover_69B0
     dw TargetFirstAlly
     dw TargetSelf
     dw TargetFirstAlly
@@ -1070,29 +1070,29 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_543C
-    dw Func_039_5F0E
-    dw Func_039_5F0E
-    dw Func_039_5F0E
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_Blaze
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $03, $5E
     db $78, $40, $78, $40
-    dw Func_039_5593
-    dw Func_039_5593
-    dw Func_039_5593
+    dw ChooseTarget_Heal_5593
+    dw ChooseTarget_Heal_5593
+    dw ChooseTarget_Heal_5593
     dw TargetFirstAlly
     dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
-    dw Func_039_569C
-    dw Func_039_569C
+    dw ChooseTarget_Vivify
+    dw ChooseTarget_Vivify
     dw TargetOwnSideFirstSlot
-    dw Func_039_5716
+    dw ChooseTarget_Antidote
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_5857
+    dw ChooseTarget_Upper
     dw TargetFirstAlly
-    dw Func_039_58B7
+    dw ChooseTarget_Sap
     db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
     db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
     dw TargetFirstAlly
@@ -1100,44 +1100,44 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_5DBB
+    dw ChooseTarget_Transform
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_65CD
+    dw ChooseTarget_MegaMagic
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
     db $4B, $40, $4B, $40
-    dw Func_039_61A1
-    dw Func_039_62A3
-    dw Func_039_6222
-    dw Func_039_6324
-    dw Func_039_5CBB
-    dw Func_039_5C97
-    dw Func_039_5C9D
-    dw Func_039_5CA3
-    dw Func_039_5CC1
-    dw Func_039_5CC7
-    dw Func_039_5CA9
-    dw Func_039_5CAF
-    dw Func_039_5CB5
-    dw Func_039_64DB
-    dw Func_039_5C43
-    dw Func_039_5CCD
-    dw Func_039_5D19
-    dw Func_039_5BA5
-    dw Func_039_543C
-    dw Func_039_543C
+    dw ChooseTarget_FireSlash
+    dw ChooseTarget_VacuSlash
+    dw ChooseTarget_BoltSlash
+    dw ChooseTarget_IceSlash
+    dw ChooseTarget_SlimeBlow
+    dw ChooseTarget_DrakSlash
+    dw ChooseTarget_BeastCut
+    dw ChooseTarget_BirdBlow
+    dw ChooseTarget_BugBlow
+    dw ChooseTarget_Shears
+    dw ChooseTarget_DevilCut
+    dw ChooseTarget_ZombieCut
+    dw ChooseTarget_CleanCut
+    dw ChooseTarget_AquaCut
+    dw ChooseTarget_MetalCut
+    dw ChooseTarget_PoisonHit
+    dw ChooseTarget_Paralyze
+    dw ChooseTarget_NapAttack
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_SquallHit_543C
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6416
+    dw ChooseTarget_GigaSlash
     dw TargetSelf
-    dw Func_039_543C
-    dw Func_039_543C
-    dw Func_039_543C
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_SquallHit_543C
     dw TargetRandomOtherSlot
-    dw Func_039_543C
-    dw Func_039_543C
-    dw Func_039_6014
-    dw Func_039_6014
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_Ramming
+    dw ChooseTarget_Ramming
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $CB, $59, $78, $40, $78, $40
@@ -1147,15 +1147,15 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5D67
-    dw Func_039_5ADB
-    dw Func_039_5B40
+    dw ChooseTarget_LushLicks
+    dw ChooseTarget_SickLick
+    dw ChooseTarget_LegSweep
     db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
-    dw Func_039_5A84
+    dw ChooseTarget_MouthShut
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_5A27
+    dw ChooseTarget_Cover
     dw TargetFirstAlly
     dw TargetSelf
     dw TargetFirstAlly
@@ -1181,37 +1181,37 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw Func_039_5F0E
-    dw Func_039_543C
-    dw Func_039_543C
-    dw Func_039_543C
+    dw ChooseTarget_Blaze
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_SquallHit_543C
+    dw ChooseTarget_SquallHit_543C
     db $78, $40, $78, $40, $3C, $54, $3C, $54, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $0E, $5F, $2B, $41, $78, $40
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_66C5
-    dw Func_039_6A0A
-    dw Func_039_6A0A
-    dw Func_039_6A0A
+    dw ChooseTarget_SquallHit_66C5
+    dw ChooseTarget_Blaze_6A0A
+    dw ChooseTarget_Blaze_6A0A
+    dw ChooseTarget_Blaze_6A0A
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $07, $6A
     db $78, $40, $78, $40
-    dw Func_039_68B0
-    dw Func_039_68B0
-    dw Func_039_68B0
+    dw ChooseTarget_Heal_68B0
+    dw ChooseTarget_Heal_68B0
+    dw ChooseTarget_Heal_68B0
     dw TargetFirstAlly
     dw TargetFirstAlly
     db $E8, $40, $E8, $40, $E8, $40
-    dw Func_039_6998
-    dw Func_039_6998
+    dw ChooseTarget_Vivify_6998
+    dw ChooseTarget_Vivify_6998
     dw TargetOwnSideFirstSlot
-    dw Func_039_699B
+    dw ChooseTarget_Antidote_699B
     dw TargetFirstAlly
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_69A1
+    dw ChooseTarget_Upper_69A1
     dw TargetFirstAlly
-    dw Func_039_69A4
+    dw ChooseTarget_Sap_69A4
     db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $10, $6A
     db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00
     dw TargetSelf
@@ -1219,44 +1219,44 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetFirstAlly
     dw TargetFirstAlly
-    dw Func_039_6A04
+    dw ChooseTarget_Transform_6A04
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_6AFA
+    dw ChooseTarget_MegaMagic_6AFA
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
     db $78, $40, $78, $40, $22, $6A, $78, $40, $78, $40, $78, $40, $99, $6A, $78, $40
     db $4B, $40, $4B, $40
-    dw Func_039_6A16
-    dw Func_039_6A1C
-    dw Func_039_6A19
-    dw Func_039_6A1F
-    dw Func_039_69E9
-    dw Func_039_69C5
-    dw Func_039_69CB
-    dw Func_039_69D1
-    dw Func_039_69EF
-    dw Func_039_69F5
-    dw Func_039_69D7
-    dw Func_039_69DD
-    dw Func_039_69E3
-    dw Func_039_6A96
-    dw Func_039_69C2
-    dw Func_039_69FB
-    dw Func_039_69FE
-    dw Func_039_69BC
-    dw Func_039_66C5
-    dw Func_039_66C5
+    dw ChooseTarget_FireSlash_6A16
+    dw ChooseTarget_VacuSlash_6A1C
+    dw ChooseTarget_BoltSlash_6A19
+    dw ChooseTarget_IceSlash_6A1F
+    dw ChooseTarget_SlimeBlow_69E9
+    dw ChooseTarget_DrakSlash_69C5
+    dw ChooseTarget_BeastCut_69CB
+    dw ChooseTarget_BirdBlow_69D1
+    dw ChooseTarget_BugBlow_69EF
+    dw ChooseTarget_Shears_69F5
+    dw ChooseTarget_DevilCut_69D7
+    dw ChooseTarget_ZombieCut_69DD
+    dw ChooseTarget_CleanCut_69E3
+    dw ChooseTarget_AquaCut_6A96
+    dw ChooseTarget_MetalCut_69C2
+    dw ChooseTarget_PoisonHit_69FB
+    dw ChooseTarget_Paralyze_69FE
+    dw ChooseTarget_NapAttack_69BC
+    dw ChooseTarget_SquallHit_66C5
+    dw ChooseTarget_SquallHit_66C5
     db $4B, $40, $78, $40, $78, $40
-    dw Func_039_6A25
+    dw ChooseTarget_GigaSlash_6A25
     dw TargetSelf
-    dw Func_039_66C5
-    dw Func_039_66C5
-    dw Func_039_66C5
+    dw ChooseTarget_SquallHit_66C5
+    dw ChooseTarget_SquallHit_66C5
+    dw ChooseTarget_SquallHit_66C5
     dw TargetRandomOtherSlot
-    dw Func_039_66C5
-    dw Func_039_6A0D
-    dw Func_039_6A0D
-    dw Func_039_66C5
+    dw ChooseTarget_SquallHit_66C5
+    dw ChooseTarget_Berserker
+    dw ChooseTarget_Berserker
+    dw ChooseTarget_SquallHit_66C5
     db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $BF, $69, $BF, $69, $78, $40
     db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
     db $A2, $40, $AD, $69, $78, $40, $78, $40
@@ -1266,15 +1266,15 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_6A01
-    dw Func_039_69B6
-    dw Func_039_69B9
+    dw ChooseTarget_LushLicks_6A01
+    dw ChooseTarget_SickLick_69B6
+    dw ChooseTarget_LegSweep_69B9
     db $78, $40, $01, $6A, $78, $40, $4B, $40, $78, $40
-    dw Func_039_69B3
+    dw ChooseTarget_MouthShut_69B3
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_69B0
+    dw ChooseTarget_Cover_69B0
     dw TargetFirstAlly
     dw TargetSelf
     dw TargetFirstAlly
@@ -1289,7 +1289,7 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4B, $40
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_6A9C
+    dw ChooseTarget_PanicAll
     dw TargetSelf
     db $00, $00, $78, $40, $A2, $40, $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40
     db $2B, $41, $2B, $41, $78, $40, $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00
@@ -1304,23 +1304,25 @@ Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw TargetSelf
     dw TargetSelf
     dw TargetSelf
-    dw Func_039_66C5
+    dw ChooseTarget_SquallHit_66C5
     dw TargetSelf
     dw TargetOwnSideFirstSlot
     dw TargetFirstAlly
     db $78, $40
-    dw Func_039_6A0A
-    dw Func_039_66C5
-    dw Func_039_66C5
-    dw Func_039_66C5
+    dw ChooseTarget_Blaze_6A0A
+    dw ChooseTarget_SquallHit_66C5
+    dw ChooseTarget_SquallHit_66C5
+    dw ChooseTarget_SquallHit_66C5
     db $78, $40, $78, $40, $C5, $66, $C5, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
     db $A2, $40, $78, $40, $0A, $6A, $2B, $41, $78, $40, $2B, $41, $2B, $41
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105 PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 110 Berserker, $D2, $D3 ...; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleTarget, wBattleDamageLo, wD873
 ; points at: wBattleDamageLo, wBattleTargetChoice
-Func_039_5390:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SquallHit:: ; heuristic: target of a pointer table; C0
+Func_039_5390:: ; address name
     ld hl, wBattleDamageLo
     ld bc, $0008
     xor a, a
@@ -1427,11 +1429,13 @@ Jump_039_542B::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105 PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 110 Berserker, $D2, $D3 ...; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleTarget, wBattleDamageLo, wD873
 ; points at: wBattleDamageLo, wBattleTargetChoice
-Func_039_543C:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SquallHit_543C:: ; heuristic: target of a pointer table; C0
+Func_039_543C:: ; address name
     ld hl, wBattleDamageLo
     ld bc, $0008
     xor a, a
@@ -1565,11 +1569,13 @@ Jump_039_5503::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wD86B, wD86C
 ; writes: wD86B, wD86C
 ; points at: wD87D, wD874, wBattleHP
-Func_039_5514:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal:: ; heuristic: target of a pointer table; C0
+Func_039_5514:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld e, a
@@ -1640,14 +1646,16 @@ Jump_039_5553::
     inc e
     dec d
     jr nz, Jump_039_551C
-    call Func_039_6EB6
+    call ChooseTarget_Heal_Sub01
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, hFFC8, wD86B, wD86C, wD868, wD87D, ...
 ; writes: wD868, wD86B, wD86C, hFFC6, hFFC7, hFFC8, wD87D, wD87E, ...
 ; points at: hFFC6, wD868, wD8A7, wBattleMaxHP, wBattleTargetChoice, wD87D, wD874, wBattleHP
-Func_039_5593:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_5593:: ; heuristic: target of a pointer table; C0
+Func_039_5593:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld e, a
@@ -1800,11 +1808,13 @@ Jump_039_5691::
     ld d, $03
     jp Jump_039_551C
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleSlotOut, hFFC7, hFFC6, wBattleTargetChoice
-Func_039_569C:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Vivify:: ; heuristic: target of a pointer table; C0
+Func_039_569C:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -1882,11 +1892,13 @@ Jump_039_5708::
     ld [hl], c
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7, hFFC6
 ; writes: hFFC7, hFFC8, hFFC9, hFFC6
 ; points at: hFFC7, wBattleStatus, wBattleTargetChoice
-Func_039_5716:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Antidote:: ; heuristic: target of a pointer table; C0
+Func_039_5716:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -2015,11 +2027,13 @@ Jump_039_57C1::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8
 ; points at: wBattleStatus, wBattleTargetChoice
-Func_039_57D8:: ; heuristic: follows a terminator; C0
+ChooseTarget_TwinHits:: ; heuristic: follows a terminator; C0
+Func_039_57D8:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -2097,11 +2111,13 @@ Jump_039_5840::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
 ; points at: wBattleTargetChoice
-Func_039_5857:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Upper:: ; heuristic: target of a pointer table; C0
+Func_039_5857:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -2161,11 +2177,13 @@ Jump_039_58A1::
     ld [hl], c
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD80E, wDA75
-Func_039_58B7:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Sap:: ; heuristic: target of a pointer table; C0
+Func_039_58B7:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2221,11 +2239,13 @@ Jump_039_5909::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD80E, wDA75
-Func_039_5911:: ; heuristic: follows a terminator; C0
+ChooseTarget_Slow:: ; heuristic: follows a terminator; C0
+Func_039_5911:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2281,11 +2301,13 @@ Jump_039_5963::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
 ; points at: wBattleTargetChoice
-Func_039_596B:: ; heuristic: follows a terminator; C0
+ChooseTarget_Speed:: ; heuristic: follows a terminator; C0
+Func_039_596B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -2345,11 +2367,13 @@ Jump_039_59B5::
     ld [hl], c
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wDA74
-Func_039_59CB:: ; heuristic: follows a terminator; C0
+ChooseTarget_UltraDown:: ; heuristic: follows a terminator; C0
+Func_039_59CB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2408,10 +2432,12 @@ Jump_039_5A1F::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCA, hFFC7, hFFC8
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-Func_039_5A27:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Cover:: ; heuristic: target of a pointer table; C0
+Func_039_5A27:: ; address name
     ld a, [wBattleActor]
     ld e, a
     and a, $04
@@ -2468,14 +2494,16 @@ Jump_039_5A7B::
     inc c
     dec b
     jr nz, Jump_039_5A40
-    call Func_039_7028
+    call ChooseTarget_Cover_Sub01
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wD80D, wDA78
-Func_039_5A84:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MouthShut:: ; heuristic: target of a pointer table; C0
+Func_039_5A84:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2494,7 +2522,7 @@ Jump_039_5A9C::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5AD3
     ldh [hFFC8], a
-    call Func_039_6F9A
+    call ChooseTarget_MouthShut_Sub01
     jr z, Jump_039_5AD3
     ld a, c
     ldh [hFFC9], a
@@ -2527,11 +2555,13 @@ Jump_039_5AD3::
     call Func_039_7002
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wBattleStatus, wDA77
-Func_039_5ADB:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SickLick:: ; heuristic: target of a pointer table; C0
+Func_039_5ADB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2596,11 +2626,13 @@ Jump_039_5B38::
     call Func_039_7002
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wD8A7, wBattleStatus, wDA77
-Func_039_5B40:: ; heuristic: target of a pointer table; C0
+ChooseTarget_LegSweep:: ; heuristic: target of a pointer table; C0
+Func_039_5B40:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2660,11 +2692,13 @@ Jump_039_5B9D::
     call Func_039_7002
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA74
-Func_039_5BA5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_NapAttack:: ; heuristic: target of a pointer table; C0
+Func_039_5BA5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2717,11 +2751,13 @@ Jump_039_5BF1::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wDA74
-Func_039_5BF9:: ; heuristic: follows a terminator; C0
+ChooseTarget_OddDance:: ; heuristic: follows a terminator; C0
+Func_039_5BF9:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2768,11 +2804,13 @@ Jump_039_5C3B::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD8A7
-Func_039_5C43:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MetalCut:: ; heuristic: target of a pointer table; C0
+Func_039_5C43:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2823,65 +2861,85 @@ Jump_039_5C8E::
     call SetActorTargetFromHFFC6OrHFFC9
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5C97:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DrakSlash:: ; heuristic: target of a pointer table; C0
+Func_039_5C97:: ; address name
     ld d, $01
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5C9D:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BeastCut:: ; heuristic: target of a pointer table; C0
+Func_039_5C9D:: ; address name
     ld d, $02
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5CA3:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BirdBlow:: ; heuristic: target of a pointer table; C0
+Func_039_5CA3:: ; address name
     ld d, $03
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5CA9:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DevilCut:: ; heuristic: target of a pointer table; C0
+Func_039_5CA9:: ; address name
     ld d, $06
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5CAF:: ; heuristic: target of a pointer table; C0
+ChooseTarget_ZombieCut:: ; heuristic: target of a pointer table; C0
+Func_039_5CAF:: ; address name
     ld d, $07
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5CB5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_CleanCut:: ; heuristic: target of a pointer table; C0
+Func_039_5CB5:: ; address name
     ld d, $08
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5CBB:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SlimeBlow:: ; heuristic: target of a pointer table; C0
+Func_039_5CBB:: ; address name
     ld d, $00
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5CC1:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BugBlow:: ; heuristic: target of a pointer table; C0
+Func_039_5CC1:: ; address name
     ld d, $05
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_5CC7:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Shears:: ; heuristic: target of a pointer table; C0
+Func_039_5CC7:: ; address name
     ld d, $04
     call Func_039_7093
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA76
-Func_039_5CCD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_PoisonHit:: ; heuristic: target of a pointer table; C0
+Func_039_5CCD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2927,11 +2985,13 @@ Jump_039_5D11::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA77
-Func_039_5D19:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Paralyze:: ; heuristic: target of a pointer table; C0
+Func_039_5D19:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2979,11 +3039,13 @@ Jump_039_5D5F::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA77
-Func_039_5D67:: ; heuristic: target of a pointer table; C0
+ChooseTarget_LushLicks:: ; heuristic: target of a pointer table; C0
+Func_039_5D67:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3036,10 +3098,12 @@ Jump_039_5DB3::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9
 ; writes: hFFD0, hFFC6, hFFC9, hFFC7, hFFC8
-Func_039_5DBB:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Transform:: ; heuristic: target of a pointer table; C0
+Func_039_5DBB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3086,11 +3150,13 @@ Jump_039_5DFA::
     call SetActorTargetFromHFFC6OrHFFC9
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: wD80E, wDA74, hFFC8, wBattleTargetChoice
-Func_039_5E03:: ; heuristic: follows a terminator; C0
+ChooseTarget_Beat:: ; heuristic: follows a terminator; C0
+Func_039_5E03:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3265,11 +3331,13 @@ Jump_039_5EFA::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
 ; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
 ; points at: hFFCE, wD80E, wDA72, wBattleTargetChoice
-Func_039_5F0E:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Blaze:: ; heuristic: target of a pointer table; C0
+Func_039_5F0E:: ; address name
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
     xor a, a
@@ -3334,7 +3402,7 @@ Jump_039_5F6B::
     jr z, Jump_039_5FF2
     ldh [hFFCC], a
     push bc
-    call Func_039_7155
+    call ChooseTarget_Blaze_Sub01
     pop bc
     push hl
     ld a, c
@@ -3408,11 +3476,13 @@ Jump_039_6012::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 111 Ramming, 112 Kamikaze; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCA, hFFC9, hFFC6, hFFD0, hFFC7, hFFC8
 ; writes: hFFD0, hFFC6, hFFC9, hFFCA, hFFC7, hFFC8
 ; points at: wD812, wDA75, wD813
-Func_039_6014:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Ramming:: ; heuristic: target of a pointer table; C0
+Func_039_6014:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3551,11 +3621,13 @@ Jump_039_60E9::
     call SetActorTargetFromHFFC6OrHFFC9
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wBattleStatus, wDA74
-Func_039_60ED:: ; heuristic: follows a terminator; C0
+ChooseTarget_Sleep:: ; heuristic: follows a terminator; C0
+Func_039_60ED:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3614,11 +3686,13 @@ Jump_039_6143::
     call Func_039_7002
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD80E, wDA74
-Func_039_614B:: ; heuristic: follows a terminator; C0
+ChooseTarget_RobMagic:: ; heuristic: follows a terminator; C0
+Func_039_614B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3671,11 +3745,13 @@ Jump_039_6199::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
-Func_039_61A1:: ; heuristic: target of a pointer table; C0
+ChooseTarget_FireSlash:: ; heuristic: target of a pointer table; C0
+Func_039_61A1:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3750,11 +3826,13 @@ Jump_039_621A::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
-Func_039_6222:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BoltSlash:: ; heuristic: target of a pointer table; C0
+Func_039_6222:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3829,11 +3907,13 @@ Jump_039_629B::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
-Func_039_62A3:: ; heuristic: target of a pointer table; C0
+ChooseTarget_VacuSlash:: ; heuristic: target of a pointer table; C0
+Func_039_62A3:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3909,11 +3989,13 @@ Jump_039_631C::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
-Func_039_6324:: ; heuristic: target of a pointer table; C0
+ChooseTarget_IceSlash:: ; heuristic: target of a pointer table; C0
+Func_039_6324:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3989,11 +4071,13 @@ Jump_039_639D::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wDA73
-Func_039_63A5:: ; heuristic: follows a terminator; C0
+ChooseTarget_WindBeast:: ; heuristic: follows a terminator; C0
+Func_039_63A5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4061,11 +4145,13 @@ Jump_039_640E::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, hFFC7, wBattleDamageLo, wD873
 ; writes: wBattleTarget, hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wBattleTargetChoice, wDA78
-Func_039_6416:: ; heuristic: target of a pointer table; C0
+ChooseTarget_GigaSlash:: ; heuristic: target of a pointer table; C0
+Func_039_6416:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4183,11 +4269,13 @@ Jump_039_64CA::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
-Func_039_64DB:: ; heuristic: target of a pointer table; C0
+ChooseTarget_AquaCut:: ; heuristic: target of a pointer table; C0
+Func_039_64DB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4263,11 +4351,13 @@ Jump_039_6554::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wDA72
-Func_039_655C:: ; heuristic: follows a terminator; C0
+ChooseTarget_Watershot:: ; heuristic: follows a terminator; C0
+Func_039_655C:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4335,11 +4425,13 @@ Jump_039_65C5::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
 ; points at: wDA76, wBattleTargetChoice
-Func_039_65CD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MegaMagic:: ; heuristic: target of a pointer table; C0
+Func_039_65CD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4375,7 +4467,7 @@ Jump_039_65F4::
     jr z, Jump_039_666F
     ldh [hFFCC], a
     push bc
-    call Func_039_7180
+    call ChooseTarget_MegaMagic_Sub01
     pop bc
     push hl
     ld a, c
@@ -4487,11 +4579,13 @@ Jump_039_66BD::
     call PickWeightedTargetCandidate
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105 PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 112 Kamikaze, $CC, $D2 ...; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleDamageLo, wD873, wD874, wD875, hFFC7, hFFC8, wD876, ...
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873, wD874, wD875, ...
 ; points at: hFFC6, hFFC7, wBattleDamageLo
-Func_039_66C5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SquallHit_66C5:: ; heuristic: target of a pointer table; C0
+Func_039_66C5:: ; address name
     call AdvanceRandom
     ld a, [wBattleActor]
     and a, $04
@@ -4621,11 +4715,13 @@ Jump_039_67A9::
     call PickWeightedTargetCandidate
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCB, hFFCC, hFFC7, hFFC8, hFFC6, hFFC9, hFFCA
 ; writes: wD09D, wD09E, wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, ...
 ; points at: wD09D, hFFC7, wBattleTargetChoice
-Func_039_67AD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_67AD:: ; heuristic: target of a pointer table; C0
+Func_039_67AD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld e, a
@@ -4793,11 +4889,13 @@ Jump_039_68AE::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCA, hFFCB, hFFC6, wD876, wD877, wD874, wD875, ...
 ; writes: hFFC6, hFFCA, hFFCB, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873, ...
 ; points at: hFFC6, wBattleDamageLo, hFFC7, wBattleTargetChoice, wD09D
-Func_039_68B0:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_68B0:: ; heuristic: target of a pointer table; C0
+Func_039_68B0:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld e, a
@@ -4888,7 +4986,7 @@ Jump_039_693C::
     jr nz, Jump_039_690A
     ldh a, [hFFC6]
     or a, a
-    jp z, Func_039_67AD
+    jp z, ChooseTarget_Heal_67AD
     cp a, $01
     jr z, Jump_039_6988
     cp a, $02
@@ -4933,266 +5031,344 @@ Jump_039_6988::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleSlotOut, hFFC7, hFFC6, wBattleTargetChoice
-Func_039_6998:: ; heuristic: target of a pointer table; C0
-    jp Func_039_569C
+ChooseTarget_Vivify_6998:: ; heuristic: target of a pointer table; C0
+Func_039_6998:: ; address name
+    jp ChooseTarget_Vivify
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wC5E7, hFFC6
 ; writes: hFFC7, hFFC8, hFFC9, hFFC6
 ; points at: hFFC7, wBattleStatus, wBattleTargetChoice
-Func_039_699B:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5716
+ChooseTarget_Antidote_699B:: ; heuristic: target of a pointer table; C0
+Func_039_699B:: ; address name
+    jp ChooseTarget_Antidote
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6, wC5E7
 ; writes: hFFC6, hFFC7, hFFC8
 ; points at: wBattleStatus, wBattleTargetChoice
-Func_039_699E:: ; heuristic: follows a terminator; C0
-    jp Func_039_57D8
+ChooseTarget_TwinHits_699E:: ; heuristic: follows a terminator; C0
+Func_039_699E:: ; address name
+    jp ChooseTarget_TwinHits
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
 ; points at: wBattleTargetChoice
-Func_039_69A1:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5857
+ChooseTarget_Upper_69A1:: ; heuristic: target of a pointer table; C0
+Func_039_69A1:: ; address name
+    jp ChooseTarget_Upper
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD80E, wDA75
-Func_039_69A4:: ; heuristic: target of a pointer table; C0
-    jp Func_039_58B7
+ChooseTarget_Sap_69A4:: ; heuristic: target of a pointer table; C0
+Func_039_69A4:: ; address name
+    jp ChooseTarget_Sap
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD80E, wDA75
-Func_039_69A7:: ; heuristic: follows a terminator; C0
-    jp Func_039_5911
+ChooseTarget_Slow_69A7:: ; heuristic: follows a terminator; C0
+Func_039_69A7:: ; address name
+    jp ChooseTarget_Slow
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8
 ; points at: wBattleTargetChoice
-Func_039_69AA:: ; heuristic: follows a terminator; C0
-    jp Func_039_596B
+ChooseTarget_Speed_69AA:: ; heuristic: follows a terminator; C0
+Func_039_69AA:: ; address name
+    jp ChooseTarget_Speed
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wDA74
-Func_039_69AD:: ; heuristic: follows a terminator; C0
-    jp Func_039_59CB
+ChooseTarget_UltraDown_69AD:: ; heuristic: follows a terminator; C0
+Func_039_69AD:: ; address name
+    jp ChooseTarget_UltraDown
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCA, hFFC7, hFFC8
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-Func_039_69B0:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5A27
+ChooseTarget_Cover_69B0:: ; heuristic: target of a pointer table; C0
+Func_039_69B0:: ; address name
+    jp ChooseTarget_Cover
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wD80D, wDA78
-Func_039_69B3:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5A84
+ChooseTarget_MouthShut_69B3:: ; heuristic: target of a pointer table; C0
+Func_039_69B3:: ; address name
+    jp ChooseTarget_MouthShut
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wBattleStatus, wDA77
-Func_039_69B6:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5ADB
+ChooseTarget_SickLick_69B6:: ; heuristic: target of a pointer table; C0
+Func_039_69B6:: ; address name
+    jp ChooseTarget_SickLick
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wD8A7, wBattleStatus, wDA77
-Func_039_69B9:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5B40
+ChooseTarget_LegSweep_69B9:: ; heuristic: target of a pointer table; C0
+Func_039_69B9:: ; address name
+    jp ChooseTarget_LegSweep
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA74
-Func_039_69BC:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5BA5
+ChooseTarget_NapAttack_69BC:: ; heuristic: target of a pointer table; C0
+Func_039_69BC:: ; address name
+    jp ChooseTarget_NapAttack
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wDA74
-Func_039_69BF:: ; heuristic: follows a terminator; C0
-    jp Func_039_5BF9
+ChooseTarget_OddDance_69BF:: ; heuristic: follows a terminator; C0
+Func_039_69BF:: ; address name
+    jp ChooseTarget_OddDance
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD8A7
-Func_039_69C2:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5C43
+ChooseTarget_MetalCut_69C2:: ; heuristic: target of a pointer table; C0
+Func_039_69C2:: ; address name
+    jp ChooseTarget_MetalCut
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69C5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DrakSlash_69C5:: ; heuristic: target of a pointer table; C0
+Func_039_69C5:: ; address name
     ld d, $01
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69CB:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BeastCut_69CB:: ; heuristic: target of a pointer table; C0
+Func_039_69CB:: ; address name
     ld d, $02
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69D1:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BirdBlow_69D1:: ; heuristic: target of a pointer table; C0
+Func_039_69D1:: ; address name
     ld d, $03
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69D7:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DevilCut_69D7:: ; heuristic: target of a pointer table; C0
+Func_039_69D7:: ; address name
     ld d, $06
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69DD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_ZombieCut_69DD:: ; heuristic: target of a pointer table; C0
+Func_039_69DD:: ; address name
     ld d, $07
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69E3:: ; heuristic: target of a pointer table; C0
+ChooseTarget_CleanCut_69E3:: ; heuristic: target of a pointer table; C0
+Func_039_69E3:: ; address name
     ld d, $08
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69E9:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SlimeBlow_69E9:: ; heuristic: target of a pointer table; C0
+Func_039_69E9:: ; address name
     ld d, $00
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69EF:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BugBlow_69EF:: ; heuristic: target of a pointer table; C0
+Func_039_69EF:: ; address name
     ld d, $05
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_69F5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Shears_69F5:: ; heuristic: target of a pointer table; C0
+Func_039_69F5:: ; address name
     ld d, $04
     call Func_039_70FD
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA76
-Func_039_69FB:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5CCD
+ChooseTarget_PoisonHit_69FB:: ; heuristic: target of a pointer table; C0
+Func_039_69FB:: ; address name
+    jp ChooseTarget_PoisonHit
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA77
-Func_039_69FE:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5D19
+ChooseTarget_Paralyze_69FE:: ; heuristic: target of a pointer table; C0
+Func_039_69FE:: ; address name
+    jp ChooseTarget_Paralyze
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, wDA77
-Func_039_6A01:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5D67
+ChooseTarget_LushLicks_6A01:: ; heuristic: target of a pointer table; C0
+Func_039_6A01:: ; address name
+    jp ChooseTarget_LushLicks
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9
 ; writes: hFFD0, hFFC6, hFFC9, hFFC7, hFFC8
-Func_039_6A04:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5DBB
+ChooseTarget_Transform_6A04:: ; heuristic: target of a pointer table; C0
+Func_039_6A04:: ; address name
+    jp ChooseTarget_Transform
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
 ; points at: wD80E, wDA74, hFFC8, wBattleTargetChoice
-Func_039_6A07:: ; heuristic: follows a terminator; C0
-    jp Func_039_5E03
+ChooseTarget_Beat_6A07:: ; heuristic: follows a terminator; C0
+Func_039_6A07:: ; address name
+    jp ChooseTarget_Beat
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
 ; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
 ; points at: hFFCE, wD80E, wDA72, wBattleTargetChoice
-Func_039_6A0A:: ; heuristic: target of a pointer table; C0
-    jp Func_039_5F0E
+ChooseTarget_Blaze_6A0A:: ; heuristic: target of a pointer table; C0
+Func_039_6A0A:: ; address name
+    jp ChooseTarget_Blaze
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 110 Berserker, 111 Ramming; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCA, hFFC9, hFFC6, hFFD0, hFFC7, hFFC8
 ; writes: hFFD0, hFFC6, hFFC9, hFFCA, hFFC7, hFFC8
 ; points at: wD812, wDA75, wD813
-Func_039_6A0D:: ; heuristic: target of a pointer table; C0
-    jp Func_039_6014
+ChooseTarget_Berserker:: ; heuristic: target of a pointer table; C0
+Func_039_6A0D:: ; address name
+    jp ChooseTarget_Ramming
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wBattleStatus, wDA74
-Func_039_6A10:: ; heuristic: follows a terminator; C0
-    jp Func_039_60ED
+ChooseTarget_Sleep_6A10:: ; heuristic: follows a terminator; C0
+Func_039_6A10:: ; address name
+    jp ChooseTarget_Sleep
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wD80E, wDA74
-Func_039_6A13:: ; heuristic: follows a terminator; C0
-    jp Func_039_614B
+ChooseTarget_RobMagic_6A13:: ; heuristic: follows a terminator; C0
+Func_039_6A13:: ; address name
+    jp ChooseTarget_RobMagic
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
-Func_039_6A16:: ; heuristic: target of a pointer table; C0
-    jp Func_039_61A1
+ChooseTarget_FireSlash_6A16:: ; heuristic: target of a pointer table; C0
+Func_039_6A16:: ; address name
+    jp ChooseTarget_FireSlash
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
-Func_039_6A19:: ; heuristic: target of a pointer table; C0
-    jp Func_039_6222
+ChooseTarget_BoltSlash_6A19:: ; heuristic: target of a pointer table; C0
+Func_039_6A19:: ; address name
+    jp ChooseTarget_BoltSlash
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
-Func_039_6A1C:: ; heuristic: target of a pointer table; C0
-    jp Func_039_62A3
+ChooseTarget_VacuSlash_6A1C:: ; heuristic: target of a pointer table; C0
+Func_039_6A1C:: ; address name
+    jp ChooseTarget_VacuSlash
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
-Func_039_6A1F:: ; heuristic: target of a pointer table; C0
-    jp Func_039_6324
+ChooseTarget_IceSlash_6A1F:: ; heuristic: target of a pointer table; C0
+Func_039_6A1F:: ; address name
+    jp ChooseTarget_IceSlash
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wDA73
-Func_039_6A22:: ; heuristic: follows a terminator; C0
-    jp Func_039_63A5
+ChooseTarget_WindBeast_6A22:: ; heuristic: follows a terminator; C0
+Func_039_6A22:: ; address name
+    jp ChooseTarget_WindBeast
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wDA78
-Func_039_6A25:: ; heuristic: target of a pointer table; C0
+ChooseTarget_GigaSlash_6A25:: ; heuristic: target of a pointer table; C0
+Func_039_6A25:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -5260,25 +5436,31 @@ Jump_039_6A8E::
     call SetActorTargetFromHRAMChoice
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
-Func_039_6A96:: ; heuristic: target of a pointer table; C0
-    jp Func_039_64DB
+ChooseTarget_AquaCut_6A96:: ; heuristic: target of a pointer table; C0
+Func_039_6A96:: ; address name
+    jp ChooseTarget_AquaCut
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
 ; points at: wDA72
-Func_039_6A99:: ; heuristic: follows a terminator; C0
-    jp Func_039_655C
+ChooseTarget_Watershot_6A99:: ; heuristic: follows a terminator; C0
+Func_039_6A99:: ; address name
+    jp ChooseTarget_Watershot
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 173 PanicAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wBattleStatus, wDA75
-Func_039_6A9C:: ; heuristic: target of a pointer table; C0
+ChooseTarget_PanicAll:: ; heuristic: target of a pointer table; C0
+Func_039_6A9C:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -5337,29 +5519,35 @@ Jump_039_6AF2::
     call Func_039_7002
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
 ; points at: wDA76, wBattleTargetChoice
-Func_039_6AFA:: ; heuristic: target of a pointer table; C0
-    jp Func_039_65CD
+ChooseTarget_MegaMagic_6AFA:: ; heuristic: target of a pointer table; C0
+Func_039_6AFA:: ; address name
+    jp ChooseTarget_MegaMagic
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: wBattleStatus, hFFC6, hFFC7, wBattleTargetChoice
-Func_039_6AFD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Antidote_6AFD:: ; heuristic: target of a pointer table; C0
+Func_039_6AFD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld hl, wBattleStatus
     ld d, $03
     jp Jump_039_6BE3
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC6, hFFC7, wBattleTargetChoice
-Func_039_6B0A:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Upper_6B0A:: ; heuristic: target of a pointer table; C0
+Func_039_6B0A:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -5407,11 +5595,13 @@ Jump_039_6B41::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC6, hFFC7, wBattleTargetChoice
-Func_039_6B5D:: ; heuristic: follows a terminator; C0
+ChooseTarget_Speed_6B5D:: ; heuristic: follows a terminator; C0
+Func_039_6B5D:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -5459,11 +5649,13 @@ Jump_039_6B94::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC6, hFFC7
-Func_039_6BB0:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Sap_6BB0:: ; heuristic: target of a pointer table; C0
+Func_039_6BB0:: ; address name
     ld de, GetBattleDEF_Bank39
     jp Jump_039_6C30
     db $11, $03, $72, $C3, $30, $6C, $FA, $A4, $D8, $E6, $04, $21, $0C, $D8, $16, $10
@@ -5559,11 +5751,13 @@ Jump_039_6C67::
     call PickWeightedTargetCandidate
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wBattleTargetChoice
-Func_039_6C75:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_6C75:: ; heuristic: target of a pointer table; C0
+Func_039_6C75:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -5639,11 +5833,13 @@ Jump_039_6CD4::
     ld [hl], a
     ret
 
+; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 27 MPass, 28 MPassmore, 29 MPassmost; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
 ; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
 ; points at: wBattleTargetChoice
-Func_039_6CE9:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MPass:: ; heuristic: target of a pointer table; C0
+Func_039_6CE9:: ; address name
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -5727,7 +5923,7 @@ Jump_039_6D68::
     ld [hl], a
     ret
 
-; 3 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; points at: wD810
 Func_039_6D6A::
     ld hl, wD810
@@ -5736,7 +5932,7 @@ Func_039_6D6A::
     and a, $0C
     ret
 
-; 3 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; reads: wBattleTarget, wD874, wD875, hFFC6, wC5E7
 ; writes: wD87F, hFFC7, hFFC6
 ; points at: wD874, wBattleTarget
@@ -5755,7 +5951,7 @@ Jump_039_6D82::
     dec b
     jr nz, Jump_039_6D82
 
-; 3 call sites from 3 routines (e.g. Func_039_6E8B, Func_039_543C, Func_039_5390)
+; 3 call sites from 3 routines (e.g. Func_039_6E8B, ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wD874, wD875, hFFC6, wC5E7
 ; writes: hFFC6
 ; points at: wD874, wBattleTarget
@@ -5836,7 +6032,7 @@ Jump_039_6DED::
 Func_039_6DF1::
     ld hl, $FFFF
 
-; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
+; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; points at: wD874
 Func_039_6DF4::
     ld a, c
@@ -5856,7 +6052,7 @@ Jump_039_6E00::
     ld [de], a
     ret
 
-; 7 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; 7 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; points at: wBattleStatus
 Func_039_6E06::
     ld hl, wBattleStatus
@@ -5882,7 +6078,7 @@ Func_039_6E06::
 Jump_039_6E26::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
+; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wBattleActionId, wBattleActor
 ; writes: wBattleDamageLo, wD873
 Func_039_6E27::
@@ -5920,7 +6116,7 @@ Jump_039_6E5F::
     pop bc
     ret
 
-; 2 call sites from 2 routines (e.g. Func_039_543C, Func_039_5390)
+; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ; points at: wD8A7
@@ -5950,7 +6146,7 @@ Func_039_6E61::
     pop af
     ret
 
-; 4 call sites from 3 routines (e.g. Func_039_543C, Func_039_6416, Func_039_5390)
+; 4 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; reads: wBattleTarget
 ; writes: hFFC7
 ; points at: wD80F
@@ -5984,11 +6180,13 @@ Jump_039_6EAE::
     call Func_039_6D89
     ret
 
-; 1 call site from 1 routine (e.g. Func_039_5514)
+; only called from ChooseTarget_Heal (E-0047)
+; 1 call site from 1 routine (e.g. ChooseTarget_Heal)
 ; reads: hFFC7, hFFC6, hFFC8, wBattleActor, wBattleTarget
 ; writes: hFFC6, hFFC7, hFFC8, wBattleTarget
 ; points at: wD874, wD87D, hFFC7, wBattleTargetChoice
-Func_039_6EB6::
+ChooseTarget_Heal_Sub01::
+Func_039_6EB6:: ; address name
     ld a, $00
     ldh [hFFC6], a
     ld a, $01
@@ -6052,7 +6250,7 @@ Jump_039_6F0A::
     ld [hl], a
     ret
 
-; 2 call sites from 2 routines (e.g. Func_039_5857, Func_039_6B0A)
+; 2 call sites from 2 routines (e.g. ChooseTarget_Upper, ChooseTarget_Upper_6B0A)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A, wBattleActor
 Func_039_6F32::
     farcall GetBaseDEF
@@ -6084,7 +6282,7 @@ Jump_039_6F62::
 Jump_039_6F65::
     ret
 
-; 2 call sites from 2 routines (e.g. Func_039_6B5D, Func_039_596B)
+; 2 call sites from 2 routines (e.g. ChooseTarget_Speed_6B5D, ChooseTarget_Speed)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wC58A, wBattleActor
 Func_039_6F66:: ; heuristic: follows a terminator; C0
     farcall GetBaseAGL
@@ -6116,9 +6314,11 @@ Jump_039_6F96::
 Jump_039_6F99::
     ret
 
-; 1 call site from 1 routine (e.g. Func_039_5A84)
+; only called from ChooseTarget_MouthShut (E-0047)
+; 1 call site from 1 routine (e.g. ChooseTarget_MouthShut)
 ; points at: wD989
-Func_039_6F9A::
+ChooseTarget_MouthShut_Sub01::
+Func_039_6F9A:: ; address name
     push bc
     ld hl, wD989
     swap a
@@ -6152,7 +6352,7 @@ Jump_039_6FC0::
     ret
 
 ; wBattleTargetChoice[2 * actor] = (hFFC6, or hFFC9 when hFFC6 is $FF) | hFFD0 (the two-choice form of SetActorTargetFromHRAMChoice) (E-0078)
-; 5 call sites from 5 routines (e.g. Func_039_70FD, Func_039_6014, Func_039_5C43, Func_039_7093, ...)
+; 5 call sites from 5 routines (e.g. Func_039_70FD, ChooseTarget_Ramming, ChooseTarget_MetalCut, Func_039_7093, ...)
 ; reads: wBattleActor, hFFC6, hFFC9, hFFD0
 ; points at: wBattleTargetChoice
 SetActorTargetFromHFFC6OrHFFC9::
@@ -6174,7 +6374,7 @@ Jump_039_6FDC::
     ret
 
 ; HL = wBattleTargetChoice + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)
-; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_5D67, Func_039_6416, Func_039_5BA5, ...)
+; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_LushLicks, ChooseTarget_GigaSlash, ChooseTarget_NapAttack, ...)
 ; reads: wBattleActor, hFFC6, hFFC9, hFFC8, hFFD0
 ; points at: wBattleTargetChoice
 SetActorTargetFromHRAMChoice::
@@ -6198,7 +6398,7 @@ Jump_039_6FFC::
     ld [hl], a
     ret
 
-; 5 call sites from 5 routines (e.g. Func_039_6A9C, Func_039_5A84, Func_039_5B40, Func_039_5ADB, ...)
+; 5 call sites from 5 routines (e.g. ChooseTarget_PanicAll, ChooseTarget_MouthShut, ChooseTarget_LegSweep, ChooseTarget_SickLick, ...)
 ; reads: wBattleActor, hFFC6, hFFCA, hFFC9, hFFC8, hFFD0
 ; points at: wBattleTargetChoice
 Func_039_7002::
@@ -6224,10 +6424,12 @@ Jump_039_7022::
     ld [hl], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_039_5A27)
+; only called from ChooseTarget_Cover (E-0047)
+; 1 call site from 1 routine (e.g. ChooseTarget_Cover)
 ; reads: wBattleActor, hFFC6, hFFCB, hFFCA, hFFC9, hFFD0
 ; points at: wBattleTargetChoice
-Func_039_7028::
+ChooseTarget_Cover_Sub01::
+Func_039_7028:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -6251,7 +6453,7 @@ Jump_039_7048::
     ret
 
 ; hFFC6 = candidate count, hFFC7-hFFC9 = candidates in priority order: target = the first for one; with two the first when wC5E7 < $AB (171/256), else the second; with three the first when wC5E7 < $80, the second when < $D5, else the third (128, 85 and 43 of 256). Writes wBattleTargetChoice[2 * actor]; with no candidates it stores hFFC7 ($FF) (E-0061)
-; 3 call sites from 3 routines (e.g. Func_039_66C5, Func_039_6BB0, TargetFoeWeightedBySlotOrder)
+; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_66C5, ChooseTarget_Sap_6BB0, TargetFoeWeightedBySlotOrder)
 ; reads: hFFC6, hFFC7, wBattleActor, wC5E7, hFFC8
 ; points at: wBattleTargetChoice, hFFC7
 PickWeightedTargetCandidate::
@@ -6297,7 +6499,7 @@ Jump_039_7084::
     ld [hl], b
     ret
 
-; 9 call sites from 9 routines (e.g. Func_039_5CB5, Func_039_5CAF, Func_039_5CA9, Func_039_5CC7, ...)
+; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut, ChooseTarget_ZombieCut, ChooseTarget_DevilCut, ChooseTarget_Shears, ...)
 ; reads: wBattleActor, wSpeciesRecord, hFFC7, hFFC8, hFFC9
 ; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
@@ -6364,7 +6566,7 @@ Jump_039_70F4::
     call SetActorTargetFromHFFC6OrHFFC9
     ret
 
-; 9 call sites from 9 routines (e.g. Func_039_69E3, Func_039_69DD, Func_039_69D7, Func_039_69F5, ...)
+; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut_69E3, ChooseTarget_ZombieCut_69DD, ChooseTarget_DevilCut_69D7, ChooseTarget_Shears_69F5, ...)
 ; reads: wBattleActor, wSpeciesRecord, hFFC6, wC5E7, hFFC9
 ; writes: hFFD0, hFFC6, hFFC9, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
@@ -6419,9 +6621,11 @@ Jump_039_714C::
     call SetActorTargetFromHFFC6OrHFFC9
     ret
 
-; 1 call site from 1 routine (e.g. Func_039_5F0E)
+; only called from ChooseTarget_Blaze (E-0047)
+; 1 call site from 1 routine (e.g. ChooseTarget_Blaze)
 ; reads: hFFCE, hFFCF
-Func_039_7155::
+ChooseTarget_Blaze_Sub01::
+Func_039_7155:: ; address name
     push af
     ldh a, [hFFCE]
     ld l, a
@@ -6454,10 +6658,12 @@ Jump_039_717B::
 Jump_039_717F::
     ret
 
-; 1 call site from 1 routine (e.g. Func_039_65CD)
+; only called from ChooseTarget_MegaMagic (E-0047)
+; 1 call site from 1 routine (e.g. ChooseTarget_MegaMagic)
 ; reads: wBattleActor
 ; points at: wD8B7
-Func_039_7180::
+ChooseTarget_MegaMagic_Sub01::
+Func_039_7180:: ; address name
     push af
     ld a, [wBattleActor]
     call GetBattleMP_Bank39
@@ -6501,7 +6707,7 @@ Jump_039_71C8::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
-; 29 call sites from 27 routines (e.g. Func_039_6A9C, Func_039_6A25, Func_039_5A84, Func_039_5B40, ...)
+; 29 call sites from 27 routines (e.g. ChooseTarget_PanicAll, ChooseTarget_GigaSlash_6A25, ChooseTarget_MouthShut, ChooseTarget_LegSweep, ...)
 ReadByteAtHLPlus4APlus3C_Bank39::
 Func_039_71C9:: ; address name
     add a, a
@@ -6512,7 +6718,7 @@ Func_039_71C9:: ; address name
     ld a, [hl]
     ret
 
-; 5 call sites from 2 routines (e.g. Func_039_543C, Func_039_6416)
+; 5 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash)
 ; points at: wD80E
 Func_039_71D4::
     ld a, c
@@ -6528,7 +6734,7 @@ Func_039_71D4::
     ret
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$39 copy of GetBattleATK) (E-0060)
-; 2 call sites from 2 routines (e.g. Func_039_6E27, Func_039_57D8)
+; 2 call sites from 2 routines (e.g. Func_039_6E27, ChooseTarget_TwinHits)
 ; points at: wBattleATK
 GetBattleATK_Bank39::
 Func_039_71E5:: ; address name
@@ -6536,7 +6742,7 @@ Func_039_71E5:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)
-; 18 call sites from 18 routines (e.g. Func_039_6A25, Func_039_66C5, Func_039_6DC8, Func_039_5ADB, ...)
+; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_SquallHit_66C5, Func_039_6DC8, ChooseTarget_SickLick, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank39::
 Func_039_71EA:: ; address name
@@ -6544,7 +6750,7 @@ Func_039_71EA:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0060)
-; 7 call sites from 7 routines (e.g. Func_039_68B0, Func_039_5593, Func_039_5514, Func_039_67AD, ...)
+; 7 call sites from 7 routines (e.g. ChooseTarget_Heal_68B0, ChooseTarget_Heal_5593, ChooseTarget_Heal, ChooseTarget_Heal_67AD, ...)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank39::
 Func_039_71EF:: ; address name
@@ -6552,7 +6758,7 @@ Func_039_71EF:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0060)
-; 2 call sites from 2 routines (e.g. Func_039_5DBB, Func_039_6CE9)
+; 2 call sites from 2 routines (e.g. ChooseTarget_Transform, ChooseTarget_MPass)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank39::
 Func_039_71F4:: ; address name
@@ -6560,7 +6766,7 @@ Func_039_71F4:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0060)
-; 28 call sites from 24 routines (e.g. Func_039_6A25, Func_039_68B0, Func_039_66C5, Func_039_5593, ...)
+; 28 call sites from 24 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_Heal_68B0, ChooseTarget_SquallHit_66C5, ChooseTarget_Heal_5593, ...)
 ; points at: wBattleHP
 GetBattleHP_Bank39::
 Func_039_71F9:: ; address name
@@ -6568,7 +6774,7 @@ Func_039_71F9:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)
-; 4 call sites from 4 routines (e.g. Func_039_7180, Func_039_6CE9, Func_039_5BF9, Func_039_614B)
+; 4 call sites from 4 routines (e.g. ChooseTarget_MegaMagic_Sub01, ChooseTarget_MPass, ChooseTarget_OddDance, ChooseTarget_RobMagic)
 ; points at: wBattleMP
 GetBattleMP_Bank39::
 Func_039_71FE:: ; address name
@@ -6576,7 +6782,7 @@ Func_039_71FE:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0060)
-; 4 call sites from 4 routines (e.g. Func_039_6B5D, Func_039_5911, Func_039_596B, Func_039_59CB)
+; 4 call sites from 4 routines (e.g. ChooseTarget_Speed_6B5D, ChooseTarget_Slow, ChooseTarget_Speed, ChooseTarget_UltraDown)
 ; points at: wBattleAGL
 GetBattleAGL_Bank39::
 Func_039_7203:: ; address name

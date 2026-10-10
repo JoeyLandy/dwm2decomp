@@ -10601,7 +10601,7 @@ Func_000_3E7A:: ; address name
     cp a, c
     ret
 
-; 5 call sites from 4 routines (e.g. Func_005_667F, Func_039_65CD, Func_039_5F0E, Func_039_5E03)
+; 5 call sites from 4 routines (e.g. Func_005_667F, ChooseTarget_MegaMagic, ChooseTarget_Blaze, ChooseTarget_Beat)
 Func_000_3E80:: ; heuristic: follows a terminator; C0
     ld a, b
     or a, c
@@ -10721,7 +10721,7 @@ Func_000_3EDE::
     ret
 
 ; HL = HL / BC (quotient), BC = HL mod BC; clobbers A, DE
-; 8 call sites from 8 routines (e.g. RandomInRange, Func_036_64DB, Func_036_4930, Func_039_5514, ...)
+; 8 call sites from 8 routines (e.g. RandomInRange, Func_036_64DB, Func_036_4930, ChooseTarget_Heal, ...)
 DivideHLByBC::
 Func_000_3F04:: ; address name
     ld de, $0000
