@@ -1009,6 +1009,9 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - HP comparisons: CompareHPWithHalfMax, CompareHPWithQuarterMax, CompareHPWithTenthMax;
   - score accumulators: AddBCToWDA6E, AddBCToWDA70;
   - others: CountSlotSkills40To47 and CheckWCFC5Not4Or5.
+- **Probably unused.** A follow-up search found no encoding of most of these addresses anywhere in the ROM: no `call`/`jp` with the address, no 3-byte far pointer with bank $05, and no `ld hl` immediate.
+  - The exceptions are `$456B` (5 call/jump byte matches), `$4E0F` (3), `$47E5` (1 word in a battle bank) and `$6F01` (8 words), not checked; these may be coincidental byte patterns.
+  - So most of these predicates are probably leftover code that the game never calls (inference; a computed call cannot be fully excluded).
 - Binary verification: pending; see the commit.
 
 ## Reusable investigation record
