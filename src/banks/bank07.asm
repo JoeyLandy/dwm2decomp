@@ -4546,7 +4546,7 @@ Func_007_6975::
     call Func_007_6ADC
     ld hl, sA029
     call Func_007_6ADC
-    farcall Func_016_5AAF
+    farcall SetSpeciesFlag
     ret
 
 ; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5 bytes appear in 2 banks)

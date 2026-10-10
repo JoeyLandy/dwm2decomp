@@ -5622,7 +5622,7 @@ Jump_00D_6B5B::
     ld a, [wCFED]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    farcall Func_016_5AAF
+    farcall SetSpeciesFlag
     ld hl, wC986
     ld a, $01
     ld [hl+], a
@@ -7091,7 +7091,7 @@ Func_00D_76D0:: ; address name
     ld [wSpeciesIdLo], a
     ld a, [wD7F7]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     and a, a
     jr nz, Jump_00D_7737

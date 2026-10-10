@@ -12,7 +12,7 @@ Func_035_4001:: ; address name
     ret
 
 ; copies byte 0 of the species record of monster id wSpeciesIdLo/Hi, the family (0 Slime ... 9 Water, 10 Boss; $FF for an unused id), to wSpeciesRecord (E-0069)
-; 8 call sites from 7 routines (e.g. GetSlotSpeciesFamily, Func_016_5AC0, BattleEnd_Step3_Sub01_Sub01, Func_037_5DBC, ...)
+; 8 call sites from 7 routines (e.g. GetSlotSpeciesFamily, CountSpeciesPerFamilyFlaggedOrListed, BattleEnd_Step3_Sub01_Sub01, Func_037_5DBC, ...)
 ; points at: wSpeciesRecord
 LoadSpeciesFamily::
 Func_035_400A:: ; address name

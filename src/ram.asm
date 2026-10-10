@@ -570,7 +570,7 @@ DEF wC787 EQU $C787
 DEF wC7C7 EQU $C7C7
 DEF wC7C9 EQU $C7C9
 DEF wC7CA EQU $C7CA
-DEF wC7CC EQU $C7CC
+DEF wSpeciesFlags EQU $C7CC ; one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070) (reading (E-0070))
 DEF wC7FB EQU $C7FB
 DEF wC7FC EQU $C7FC
 DEF wC82C EQU $C82C

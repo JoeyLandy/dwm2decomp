@@ -1206,7 +1206,7 @@ Jump_015_47FF::
     ld [wSpeciesIdLo], a
     ld a, [wD7F7]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     and a, a
     jr nz, Jump_015_487A
@@ -1601,7 +1601,7 @@ Jump_015_4B21::
     ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     and a, a
     jr z, Jump_015_4B38
@@ -1713,7 +1713,7 @@ Jump_015_4BBE:: ; address name
     ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     and a, a
     jr nz, Jump_015_4BF7
@@ -2232,7 +2232,7 @@ Jump_015_4F36::
     ld [hl+], a
     dec b
     jr nz, Jump_015_4F36
-    farcall Func_016_5AAF
+    farcall SetSpeciesFlag
     call Func_015_6E64
     ld a, [wD782]
     inc a

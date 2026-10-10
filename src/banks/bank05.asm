@@ -2381,7 +2381,7 @@ Jump_005_4CAF::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     push bc
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     pop bc
     or a, a

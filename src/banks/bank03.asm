@@ -7798,7 +7798,7 @@ Jump_003_73A0:: ; address name
     ld a, [wD7F5]
     ld de, wC283
     call Func_003_74D1
-    farcall Func_016_5AC0
+    farcall CountSpeciesPerFamilyFlaggedOrListed
     ld a, [wD09D]
     ld de, wC31B
     call Func_003_74D1

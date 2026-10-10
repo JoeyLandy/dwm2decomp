@@ -222,7 +222,7 @@ Jump_00C_4141::
     ld [wSpeciesIdLo], a
     ld a, d
     ld [wSpeciesIdHi], a
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     and a, a
     jr z, Jump_00C_4159
@@ -2901,7 +2901,7 @@ Jump_00C_532F::
     ld [wSpeciesIdLo], a
     ld a, h
     ld [wSpeciesIdHi], a
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     and a, a
     jr nz, Jump_00C_5346

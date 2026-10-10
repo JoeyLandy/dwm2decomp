@@ -4432,7 +4432,7 @@ Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
 ; writes: hFFC6, hFFC7
 ; points at: wD09D
 Func_085_5B04::
-    farcall Func_016_5AC0
+    farcall CountSpeciesPerFamilyFlaggedOrListed
     ld hl, $0000
     ld de, wD09D
     ld b, $0B
@@ -4892,7 +4892,7 @@ Jump_085_5DE7::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC7CC
+; points at: wSpeciesFlags
 Func_085_5DF5:: ; heuristic: follows a terminator; C0
     ld a, c
     ld de, $5E11
@@ -4905,7 +4905,7 @@ Func_085_5DF5:: ; heuristic: follows a terminator; C0
 
 Jump_085_5E05::
     ld b, $30
-    ld hl, wC7CC
+    ld hl, wSpeciesFlags
 
 Jump_085_5E0A::
     ld a, [de]

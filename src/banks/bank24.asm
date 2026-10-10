@@ -438,7 +438,7 @@ Jump_024_42DB::
     ld [wSpeciesIdLo], a
     ld a, [wCA37]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5AAF
+    farcall SetSpeciesFlag
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a
@@ -1185,7 +1185,7 @@ Jump_024_4792::
     ld [wSpeciesIdLo], a
     ld a, [wCA37]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5AAF
+    farcall SetSpeciesFlag
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a
@@ -1563,7 +1563,7 @@ Jump_024_4A1E::
     ld [wSpeciesIdLo], a
     ld a, [wCA37]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5AAF
+    farcall SetSpeciesFlag
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a

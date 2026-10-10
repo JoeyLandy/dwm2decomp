@@ -4012,10 +4012,12 @@ Data_016_599E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_5A0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $059A0E, $70
 
-; 12 call sites from 12 routines (e.g. Func_016_5AAF, Func_016_5AC0, BattleEnd_Step3_Sub01_Sub01, Func_016_5B7E, ...)
+; monster id = wSpeciesIdLo/Hi: HL = wSpeciesFlags + id / 8, B = the mask 1 << (id & 7) (Data_016_5AA7); C = A = [HL] & B, so Z is set when the species' bit is clear (E-0070)
+; 12 call sites from 12 routines (e.g. SetSpeciesFlag, CountSpeciesPerFamilyFlaggedOrListed, BattleEnd_Step3_Sub01_Sub01, Func_016_5B7E, ...)
 ; reads: wSpeciesIdLo, wSpeciesIdHi
-; points at: wC7CC
-Func_016_5A7E::
+; points at: wSpeciesFlags
+TestSpeciesFlag::
+Func_016_5A7E:: ; address name
     ld a, [wSpeciesIdLo]
     ld c, a
     ld a, [wSpeciesIdHi]
@@ -4031,7 +4033,7 @@ Func_016_5A7E::
     rr c
     srl b
     rr c
-    ld hl, wC7CC
+    ld hl, wSpeciesFlags
     add hl, bc
     ld b, a
     ld a, [hl]
@@ -4042,11 +4044,13 @@ Func_016_5A7E::
 Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $04, $08, $10, $20, $40, $80
 
+; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
 ; 8 call sites from 8 routines (e.g. Func_016_6A4E_Case01, Func_001_6C48, Func_007_6975, Func_00D_6B55, ...)
 ; reads: wC7FB
 ; writes: wC7FB
-Func_016_5AAF::
-    call Func_016_5A7E
+SetSpeciesFlag::
+Func_016_5AAF:: ; address name
+    call TestSpeciesFlag
     ld a, b
     or a, [hl]
     ld [hl], a
@@ -4057,11 +4061,13 @@ Func_016_5AAF::
     pop af
     ret
 
+; zeroes the 11 per-family counters at wD09D, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wD09D[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wC7FC (wD7F5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
 ; 2 call sites from 2 routines (e.g. Func_003_7335_Case00, Func_085_5B04)
 ; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wD7F5
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F1, wD7F2, wD7F3, wD7F4
 ; points at: wD09D, wC7FC
-Func_016_5AC0::
+CountSpeciesPerFamilyFlaggedOrListed::
+Func_016_5AC0:: ; address name
     xor a, a
     ld hl, wD09D
     ld bc, $000B
@@ -4082,7 +4088,7 @@ Jump_016_5AD1::
     inc d
 
 Jump_016_5AE6::
-    call Func_016_5A7E
+    call TestSpeciesFlag
     jr nz, Jump_016_5B13
     push de
     ld a, [wSpeciesIdLo]
@@ -4153,7 +4159,7 @@ Jump_016_5B44::
     inc d
 
 Jump_016_5B59::
-    call Func_016_5A7E
+    call TestSpeciesFlag
     jr z, Jump_016_5B61
     ld a, [de]
     inc a
@@ -4219,7 +4225,7 @@ Func_016_5B7E::
     ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wSpeciesIdHi], a
-    call Func_016_5A7E
+    call TestSpeciesFlag
     ld de, $5D0B
     jr nz, Jump_016_5C15
     farcall LoadSpeciesRecord
@@ -6478,7 +6484,7 @@ Jump_016_6A6F:: ; address name
     ld a, [hl]
     ld [wD7F5], a
     ld [wSpeciesIdHi], a
-    call Func_016_5AAF
+    call SetSpeciesFlag
     ld a, $C3
     ld hl, wScreenTileBuffer
     ld bc, $02D0

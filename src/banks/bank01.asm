@@ -5989,7 +5989,7 @@ Jump_001_6DF4::
     ld [hl+], a
     ld a, [wC9E0]
     ld [hl+], a
-    farcall Func_016_5AAF
+    farcall SetSpeciesFlag
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)

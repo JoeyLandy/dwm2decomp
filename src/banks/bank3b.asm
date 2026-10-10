@@ -984,7 +984,7 @@ Jump_03B_45CF::
     ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wSpeciesIdHi], a
-    farcall Func_016_5A7E
+    farcall TestSpeciesFlag
     ld a, c
     or a, a
     jr z, Jump_03B_45FF
