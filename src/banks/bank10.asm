@@ -1397,7 +1397,7 @@ Jump_010_4AC6::
 
 ; 1 call site from 1 routine (e.g. Func_010_49EE)
 ; reads: wD7F0, wCC44
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_010_4AD0::
     ld a, h
     and a, $3F
@@ -1427,9 +1427,9 @@ Jump_010_4AE8::
     ld d, a
     pop hl
     ld a, l
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld l, c
     ld h, b
     ld b, d
@@ -1451,9 +1451,9 @@ Jump_010_4B20::
 
 Jump_010_4B2D::
     ld a, l
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, h
     rst $00
     dw Jump_010_4B53
@@ -1472,7 +1472,7 @@ Jump_010_4B2D::
     dw Jump_010_4BA0
 
 Jump_010_4B53::
-    farcall Func_028_4001
+    farcall BeginStringDisplay_Bank28
     ret
 
 Jump_010_4B5A::
@@ -1512,7 +1512,7 @@ Jump_010_4B92::
     ret
 
 Jump_010_4B99::
-    farcall Func_086_4001
+    farcall BeginStringDisplay_Bank86
     ret
 
 Jump_010_4BA0::
@@ -1526,18 +1526,18 @@ Jump_010_4BA7::
     ld a, l
     cp a, $20
     jr c, Jump_010_4BBE
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     farcall Func_083_4001
     ret
 
 Jump_010_4BBE::
     ld a, l
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
-    farcall Func_08A_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank8A
     ret
 
 ; no direct call (reached through a table, a jump or a vector)

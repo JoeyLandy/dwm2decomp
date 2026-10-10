@@ -1,17 +1,21 @@
 SECTION "Bank 07", ROMX[$4000], BANK[$07]
     db $07
 
-; 20 call sites from 11 routines (e.g. Func_007_400F, Func_001_4AD4, Func_007_512B, Func_007_60E9, ...)
-Func_007_4001::
+; ld de, this bank's string table / BeginStringDisplay
+; 20 call sites from 11 routines (e.g. ShowString_Bank07, Func_001_4AD4, Func_007_512B, Func_007_60E9, ...)
+BeginStringDisplay_Bank07::
+Func_007_4001:: ; address name
     ld de, $4016
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9
 
+; Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ; 11 call sites from 8 routines (e.g. Func_003_74E2, Func_007_486E, Func_007_513A, Func_007_6213, ...)
-Func_007_400F::
-    call Func_007_4001
-    call Func_000_2611
+ShowString_Bank07::
+Func_007_400F:: ; address name
+    call BeginStringDisplay_Bank07
+    call RunStringDisplayToEnd
     ret
     dw Data_007_4024
     dw Data_007_4034
@@ -542,9 +546,9 @@ Jump_007_48F3::
     ld a, $FF
     ldh [hFFA0], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     xor a, a
     ld [wC5F0], a
     ld [wC5F1], a
@@ -659,18 +663,18 @@ Jump_007_49B3::
     ld de, $0907
     call FillTilesRequest
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $02
-    ld [wC529], a
-    farcall Func_007_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank07
     ld hl, vTiles2 + $700
     ld de, $0907
     call FillTilesRequest
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $06
-    ld [wC529], a
-    farcall Func_007_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank07
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_007_4A68
@@ -716,9 +720,9 @@ Jump_007_4A9D::
     ld a, $00
     ldh [hFFA0], a
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     xor a, a
     ld [wC5F0], a
     ld [wC5F1], a
@@ -912,9 +916,9 @@ Jump_007_4BC4::
     ld a, $FF
     ldh [hFFA0], a
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld a, $02
     ldh [hFFB9], a
     xor a, a
@@ -1013,9 +1017,9 @@ Jump_007_4CA3::
     ld a, $FF
     ldh [hFFA0], a
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     xor a, a
     ld [wC5F0], a
     ld [wC5F1], a
@@ -1110,9 +1114,9 @@ Jump_007_4D45::
     ld a, $FF
     ldh [hFFA0], a
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     xor a, a
     ld [wC5F0], a
     ld [wC5F1], a
@@ -1286,9 +1290,9 @@ Jump_007_4ED6::
     ld a, $FF
     ldh [hFFA0], a
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     xor a, a
     ld [wC5F0], a
     ld [wC5F1], a
@@ -1599,23 +1603,23 @@ Jump_007_5115::
     ret
 
 ; 4 call sites from 3 routines (e.g. Func_007_6DE3, Func_007_70E9, Func_007_7807)
-; writes: wC528, wC529
+; writes: wStringCategory, wStringIndex
 Func_007_512B::
     ld a, h
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, l
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_007_4B27)
-; writes: wC528, wC529
+; writes: wStringCategory, wStringIndex
 Func_007_513A::
     ld a, h
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, l
-    ld [wC529], a
-    farcall Func_007_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank07
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -2402,10 +2406,10 @@ Func_007_5DD6::
 
 ; 2 call sites from 1 routine (e.g. Func_007_5B14)
 ; reads: wD09E
-; writes: hFFA5
+; writes: hScrollY
 Func_007_5DEF::
     ld a, [wD09E]
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ret
 
 ; 5 call sites from 1 routine (e.g. Func_007_5B14)
@@ -2666,7 +2670,7 @@ Jump_007_5F6D::
     xor a, a
     ld [wD09D], a
     ld [wD09E], a
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ret
 
 Jump_007_5F89::
@@ -2881,7 +2885,7 @@ Jump_007_60F3::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, wC198
@@ -2924,7 +2928,7 @@ Jump_007_6145::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ret
@@ -2937,7 +2941,7 @@ Jump_007_615D::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ret
@@ -2951,7 +2955,7 @@ Jump_007_6176::
 
 Jump_007_6182::
     ld a, $C0
-    call Func_000_08BA
+    call SerialSendByte
 
 Jump_007_6187::
     ld a, [wC562]
@@ -2968,10 +2972,10 @@ Jump_007_6187::
     ld de, $1202
     call FillTilesRequest
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $07
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     ld hl, $52FF
     call Func_007_4AFE
     ld hl, vBGMap0 + $1A0
@@ -3040,7 +3044,7 @@ Jump_007_6220::
     ld [wD781], a
     ld a, [de]
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ret
@@ -3063,7 +3067,7 @@ Jump_007_6247::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld a, [wD06C]
@@ -3084,10 +3088,10 @@ Jump_007_6262::
     ld a, h
     ld [wC530], a
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $04
-    ld [wC529], a
-    farcall Func_007_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank07
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -3259,7 +3263,7 @@ Jump_007_63CD::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $A1
@@ -3274,7 +3278,7 @@ Jump_007_63E7::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $A1
@@ -3313,7 +3317,7 @@ Jump_007_6432::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $E1
@@ -3328,7 +3332,7 @@ Jump_007_644C::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $E1
@@ -3353,7 +3357,7 @@ Jump_007_6481::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $121
@@ -3368,7 +3372,7 @@ Jump_007_649B::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $121
@@ -3393,7 +3397,7 @@ Jump_007_64D0::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $1A1
@@ -3408,7 +3412,7 @@ Jump_007_64EA::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $1A1
@@ -3433,7 +3437,7 @@ Jump_007_651F::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $1E1
@@ -3448,7 +3452,7 @@ Jump_007_6539::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $1E1
@@ -3473,7 +3477,7 @@ Jump_007_656E::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $161
@@ -3488,7 +3492,7 @@ Jump_007_6588::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vBGMap0 + $161
@@ -3516,7 +3520,7 @@ Jump_007_65C5::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld a, $01
@@ -3555,10 +3559,10 @@ Jump_007_6606::
     or a, a
     ret nz
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $03
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     ld a, $52
     call Func_000_122D
     ld hl, wD06B
@@ -3629,7 +3633,7 @@ Jump_007_66A2::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld a, $04
@@ -3662,7 +3666,7 @@ Jump_007_66E0::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vTiles1
@@ -3693,10 +3697,10 @@ Jump_007_66E0::
     ld a, $F0
     ld [wC13A], a
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $07
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     ld hl, $52FF
     call Func_007_4AFE
     ld hl, vBGMap0 + $1A0
@@ -3712,7 +3716,7 @@ Jump_007_6759::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     call Func_007_5066
@@ -3746,10 +3750,10 @@ Jump_007_6759::
     ld a, $F0
     ld [wC13A], a
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $08
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     ld hl, $52FF
     call Func_007_4AFE
     ld hl, vBGMap0 + $1A0
@@ -3765,17 +3769,17 @@ Jump_007_67DB::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $05
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     ld hl, $52FF
     call Func_007_4AFE
     ld hl, vBGMap0 + $1A0
@@ -3791,7 +3795,7 @@ Jump_007_681C::
     ld [wD781], a
     ld a, $F4
     ld [wD782], a
-    call Func_000_08BA
+    call SerialSendByte
     ld a, $01
     ld [wD781], a
     ld a, [wC52B]

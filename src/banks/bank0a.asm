@@ -2412,7 +2412,7 @@ Jump_00A_5207::
     call Func_000_122D
     ld a, $03
     ldh [hFFB9], a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -2429,7 +2429,7 @@ Jump_00A_5207::
     ld a, d
     and a, $9B
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -2596,7 +2596,7 @@ Func_00A_5328::
     ld b, a
 
 Jump_00A_5337::
-    call Func_00A_533F
+    call NextBGMapColumn_Bank0A
     dec b
     jr nz, Jump_00A_5337
 
@@ -2604,8 +2604,10 @@ Jump_00A_533D::
     pop bc
     ret
 
+; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF (the same 15 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_00A_5328)
-Func_00A_533F::
+NextBGMapColumn_Bank0A::
+Func_00A_533F:: ; address name
     push af
     ld a, l
     and a, $E0

@@ -1032,15 +1032,15 @@ Jump_002_461A::
 
 ; 4 call sites from 4 routines (e.g. Func_002_45C6, Func_002_4AE0, Func_003_4339, Func_0A1_5898)
 ; reads: wCC44, hFF90, wC8C7, wC927, wC5E0, wIsCGB
-; writes: hFF8D, hFFA5, hFFA1, hFFA0, hFF9F, rLYC, wC5F0, wC5F1, ...
+; writes: hFF8D, hScrollY, hScrollX, hFFA0, hFF9F, rLYC, wC5F0, wC5F1, ...
 Func_002_4628::
     ld a, $0F
     ldh [hFF8D], a
     call Func_000_1C0C
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld a, $80
     ldh [hFFA0], a
     ld a, $07
@@ -2936,8 +2936,8 @@ Data_002_53C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FC, $F8, $F4, $F0, $EC, $E8, $E4, $E4, $E8, $EC, $F0, $F4, $F8, $FC, $00
 
 ; 1 call site from 1 routine (e.g. Func_002_5074)
-; reads: wC90E, wCD03, wC90F, wC5F0, hFFA1, wCD04
-; writes: wC90E, hFFA1
+; reads: wC90E, wCD03, wC90F, wC5F0, hScrollX, wCD04
+; writes: wC90E, hScrollX
 Func_002_53D5::
     ld a, [wC90E]
     bit 7, a
@@ -2953,7 +2953,7 @@ Func_002_53D5::
 
 Jump_002_53EC::
     xor a, a
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ret
 
 Jump_002_53F0::
@@ -2967,9 +2967,9 @@ Jump_002_53F0::
     dec a
     sla a
     ld c, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, c
-    ldh [hFFA1], a
+    ldh [hScrollX], a
 
 Jump_002_5408::
     ld a, [wC90E]
@@ -4139,7 +4139,7 @@ Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $85, $10, $50, $60, $FF
 
 ; 15 call sites from 9 routines (e.g. Func_002_541B, Func_002_56DC, Func_002_4FE8, Func_002_4F4C, ...)
-; reads: wC8CD, hFFA5, hFFA1
+; reads: wC8CD, hScrollY, hScrollX
 ; writes: wC8CE, wC8CD
 Func_002_5B9E::
     xor a, a
@@ -4148,7 +4148,7 @@ Func_002_5B9E::
     bit 7, a
     ret z
     ld hl, vBGMap0
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -4160,7 +4160,7 @@ Func_002_5B9E::
     ld a, h
     and a, $9B
     ld h, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -4231,7 +4231,7 @@ Jump_002_5C54::
     ret
 
 Jump_002_5C5F::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -4245,7 +4245,7 @@ Jump_002_5C5F::
     ld a, d
     adc a, $98
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -4270,9 +4270,9 @@ Jump_002_5C83::
     ld a, [wC469]
     add_a_to_hl
     call Func_002_5DC8
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, $08
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wC469
     inc [hl]
     ld a, [wC469]
@@ -4282,9 +4282,9 @@ Jump_002_5C83::
     ret
 
 Jump_002_5CB8::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     and a, $F8
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
@@ -4309,9 +4309,9 @@ Jump_002_5CCC::
     sub a, c
     add_a_to_hl
     call Func_002_5DC8
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     sub a, $08
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wC469
     inc [hl]
     ld a, [wC469]
@@ -4321,9 +4321,9 @@ Jump_002_5CCC::
     ret
 
 Jump_002_5D01::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     and a, $F8
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
@@ -4357,9 +4357,9 @@ Jump_002_5D15::
     adc a, $C1
     ld h, a
     call Func_002_5E2C
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     add a, $08
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld hl, wC469
     inc [hl]
     ld a, [wC469]
@@ -4369,9 +4369,9 @@ Jump_002_5D15::
     ret
 
 Jump_002_5D54::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
@@ -4416,9 +4416,9 @@ Jump_002_5D81::
     adc a, $C1
     ld h, a
     call Func_002_5E2C
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     sub a, $08
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld hl, wC469
     inc [hl]
     ld a, [wC469]
@@ -4428,9 +4428,9 @@ Jump_002_5D81::
     ret
 
 Jump_002_5DB4::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     farcall Func_0A1_4435
     ld hl, wC468
     inc [hl]
@@ -5169,10 +5169,10 @@ Jump_002_641D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_6391)
-; reads: hFFA5, hFFA1, wC46B, wC46C
+; reads: hScrollY, hScrollX, wC46B, wC46C
 ; writes: wC46C
 Func_002_641E::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -5186,7 +5186,7 @@ Func_002_641E::
     ld a, d
     adc a, $98
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -5273,10 +5273,10 @@ Data_002_64AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $06, $01, $01, $03, $06, $03
 
 ; 1 call site from 1 routine (e.g. Func_002_6391)
-; reads: hFFA5, hFFA1
+; reads: hScrollY, hScrollX
 ; writes: wC8CD, wC8CE
 Func_002_64B3::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -5290,7 +5290,7 @@ Func_002_64B3::
     ld a, d
     adc a, $98
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -5310,7 +5310,7 @@ Jump_002_64D7::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4745, Func_002_4AE0, Func_002_4C4E)
-; reads: wC56C, wC8CB, wC468, hFF8C, wC562, wIsCGB, hFFA5, hFFA1, ...
+; reads: wC56C, wC8CB, wC468, hFF8C, wC562, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hFFB9, wC8C7, rSVBK, wC8CE, wC5DC, wC46B
 ; points at: wC300, wC198, wD168, wD000, wC30C
 Func_002_64E5::
@@ -5376,7 +5376,7 @@ Jump_002_6549::
     ld hl, wC30C
     ld bc, $0803
     call Func_002_65C3
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -5390,7 +5390,7 @@ Jump_002_6549::
     ld a, d
     adc a, $98
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -5835,11 +5835,11 @@ Data_002_6835:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $54, $2B, $3F, $51, $5A, $31, $45, $57, $60, $37, $4B, $5D
 
 ; 1 call site from 1 routine (e.g. Func_002_66CC)
-; reads: hFFA5, hFFA1, wIsCGB
+; reads: hScrollY, hScrollX, wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wC364, wD1CC
 Func_002_6841::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -5856,7 +5856,7 @@ Func_002_6841::
     ld a, d
     and a, $9B
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -5980,7 +5980,7 @@ Data_002_695E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B5
 
 ; 9 call sites from 8 routines (e.g. Func_002_4AE0, Func_007_4B27, Func_007_4E11, Func_01B_660D, ...)
-; reads: wC8CB, wIsCGB, hFFA5, hFFA1, wC8CC
+; reads: wC8CB, wIsCGB, hScrollY, hScrollX, wC8CC
 ; writes: rSVBK
 ; points at: wC300, wC198, wC8CC
 Func_002_69D0::
@@ -6042,7 +6042,7 @@ Jump_002_6A13::
     ldh [rSVBK], a
 
 Jump_002_6A1F::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -6059,7 +6059,7 @@ Jump_002_6A1F::
     ld a, d
     and a, $9B
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -6373,7 +6373,7 @@ Jump_002_6C89::
     ld b, $90
 
 Jump_002_6CB6::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld [hl+], a
     dec b
     jr nz, Jump_002_6CB6
@@ -6390,9 +6390,9 @@ Jump_002_6CB6::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_6C40)
-; reads: hFFA5, hFFA1
+; reads: hScrollY, hScrollX
 Func_002_6CD4::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld l, a
     ld h, $00
@@ -6409,7 +6409,7 @@ Func_002_6CD4::
     ld a, h
     and a, $9B
     ld h, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -6540,12 +6540,12 @@ Jump_002_6DB7::
     pop bc
     bit 3, e
     jr z, Jump_002_6DD1
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     sub a, h
     jr Jump_002_6DD4
 
 Jump_002_6DD1::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, h
 
 Jump_002_6DD4::

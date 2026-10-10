@@ -1,10 +1,12 @@
 SECTION "Bank 28", ROMX[$4000], BANK[$28]
     db $28
 
-; 5 call sites from 4 routines (e.g. Func_028_402B, Func_001_4AD4, Func_010_4AD0, Func_05F_69FB)
-; reads: wC529
-Func_028_4001::
-    ld a, [wC529]
+; if wC529 < $DA, BeginStringDisplay with this bank's table; otherwise far-calls Func_097_4001
+; 5 call sites from 4 routines (e.g. ShowString_Bank28, Func_001_4AD4, Func_010_4AD0, Func_05F_69FB)
+; reads: wStringIndex
+BeginStringDisplay_Bank28::
+Func_028_4001:: ; address name
+    ld a, [wStringIndex]
     cp a, $DA
     jr c, Jump_028_400F
     farcall Func_097_4001
@@ -12,13 +14,13 @@ Func_028_4001::
 
 Jump_028_400F::
     ld de, Data_028_4032
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC529
+; reads: wStringIndex
 Func_028_4016:: ; heuristic: follows a terminator; C0
-    ld a, [wC529]
+    ld a, [wStringIndex]
     cp a, $DA
     jr c, Jump_028_4024
     farcall Func_097_4010
@@ -26,13 +28,15 @@ Func_028_4016:: ; heuristic: follows a terminator; C0
 
 Jump_028_4024::
     ld de, Data_028_4032
-    call Func_000_25FE
+    call CopyStringToBuffer
     ret
 
+; Func_028_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ; 1 call site from 1 routine (e.g. Func_00F_40E9)
-Func_028_402B::
-    call Func_028_4001
-    call Func_000_2611
+ShowString_Bank28::
+Func_028_402B:: ; address name
+    call BeginStringDisplay_Bank28
+    call RunStringDisplayToEnd
     ret
 
 Data_028_4032:: ; heuristic: pointer load in the same bank (bank assumed); C0

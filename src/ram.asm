@@ -370,9 +370,9 @@ DEF wC524 EQU $C524
 DEF wIsCGB EQU $C525 ; 1 when the boot code found A = $11 (CGB), else 0; set at $0150 (E-0020)
 DEF wC526 EQU $C526
 DEF wC527 EQU $C527
-DEF wC528 EQU $C528
-DEF wC529 EQU $C529
-DEF wC52A EQU $C52A
+DEF wStringCategory EQU $C528 ; category index LookupString uses in the table of tables (reading)
+DEF wStringIndex EQU $C529 ; index within the category table that LookupString uses (reading)
+DEF wStringBank EQU $C52A ; ROM bank number LookupString stores; the string printer maps it into the ROM bank window (reading)
 DEF wC52B EQU $C52B
 DEF wC52C EQU $C52C
 DEF wC52D EQU $C52D
@@ -1672,9 +1672,9 @@ DEF hFF9D EQU $FF9D
 DEF hFF9E EQU $FF9E
 DEF hFF9F EQU $FF9F
 DEF hFFA0 EQU $FFA0
-DEF hFFA1 EQU $FFA1
+DEF hScrollX EQU $FFA1 ; copied to rSCX by Func_000_07E0 and by the LCD handler (reading)
 DEF hFFA2 EQU $FFA2
-DEF hFFA5 EQU $FFA5
+DEF hScrollY EQU $FFA5 ; copied to rSCY by Func_000_07E0 and by the LCD handler (reading)
 DEF hFFA6 EQU $FFA6
 DEF hFFA9 EQU $FFA9
 DEF hFFAA EQU $FFAA
@@ -1684,7 +1684,7 @@ DEF hFFAD EQU $FFAD
 DEF hFFAE EQU $FFAE
 DEF hFFAF EQU $FFAF
 DEF hFFB0 EQU $FFB0
-DEF hFFB1 EQU $FFB1
+DEF hOamNextEntry EQU $FFB1 ; index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28 (reading)
 DEF hFFB3 EQU $FFB3
 DEF hFFB4 EQU $FFB4
 DEF hFFB5 EQU $FFB5

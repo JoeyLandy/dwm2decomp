@@ -22,18 +22,20 @@ Func_03E_4001::
     ld [hl+], a
     ld [hl+], a
     ld de, Data_03E_4024
-    call Func_03E_4040
+    call BuildOamFromSpriteTable_Bank3E
     ret
 
 Data_03E_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $91, $40, $9E, $41, $C2, $44, $5F, $48, $1E, $4B, $CD, $4E, $CD, $52, $A7, $53
     db $19, $56, $26, $60, $FC, $61, $1A, $67, $16, $76, $3A, $7A
 
+; DE = two-level table; entries are chosen by hFFAD and hFFAE; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hFFAB + b + $10, X = hFFA9 + b + 8, tile += hFFAF, flags ^= hFFB0) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
 ; 1 call site from 1 routine (e.g. Func_03E_4001)
-; reads: hFFB1, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
-; writes: hFFB1
-Func_03E_4040::
-    ldh a, [hFFB1]
+; reads: hOamNextEntry, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; writes: hOamNextEntry
+BuildOamFromSpriteTable_Bank3E::
+Func_03E_4040:: ; address name
+    ldh a, [hOamNextEntry]
     cp a, $28
     jr nc, Jump_03E_4090
     ldh a, [hFFAD]
@@ -52,7 +54,7 @@ Func_03E_4040::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     sla a
     sla a
     ld l, a
@@ -87,9 +89,9 @@ Jump_03E_4063::
     ldh a, [hFFB0]
     xor a, b
     ld [hl+], a
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr c, Jump_03E_4063
 

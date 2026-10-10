@@ -331,5 +331,245 @@
     "name": "CopyMonsterNameToBuffer_BF2",
     "note": "HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored",
     "evidence": "E-0026"
+  },
+  "00:08BA": {
+    "name": "SerialSendByte",
+    "note": "A is stored in rSB and rSC becomes $80 (transfer start, external clock); interrupts are off during the write",
+    "evidence": "reading"
+  },
+  "00:08C7": {
+    "name": "LoadSerialByte",
+    "note": "rSC = 0, rSB = A",
+    "evidence": "reading"
+  },
+  "00:2E40": {
+    "name": "LookupString",
+    "note": "DE = table of 16-bit pointers, one per category; wC528 = category, wC529 = index; returns DE = the string pointer; stores the current ROM bank in wC52A",
+    "evidence": "reading"
+  },
+  "00:25C9": {
+    "name": "BeginStringDisplay",
+    "note": "DE = string table (see LookupString); clears the request area with FillTilesFromRequest, copies the position wC52D/wC52E to wC531/wC532 and wC535/wC536, points wC533/wC534 and wC537/wC538 at the string, sets wC52B = 1 and clears wC52C and wC54F; the string is drawn later by the routine at $2620",
+    "evidence": "reading"
+  },
+  "00:25FE": {
+    "name": "CopyStringToBuffer",
+    "note": "DE = string table (see LookupString); copies the string, including its $F0 terminator, to the address in wC53D/wC53E",
+    "evidence": "reading"
+  },
+  "00:2611": {
+    "name": "RunStringDisplayToEnd",
+    "note": "sets bit 1 of wC52B, then runs the display step at $2620 until wC52B is zero",
+    "evidence": "reading"
+  },
+  "07:4001": {
+    "name": "BeginStringDisplay_Bank07",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "07:400F": {
+    "name": "ShowString_Bank07",
+    "note": "Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "08:402B": {
+    "name": "ShowString_Bank08",
+    "note": "Func_008_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "09:4001": {
+    "name": "BeginStringDisplay_Bank09",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "09:4008": {
+    "name": "CopyStringToBuffer_Bank09",
+    "note": "ld de, this bank's string table / CopyStringToBuffer",
+    "evidence": "reading"
+  },
+  "09:400F": {
+    "name": "ShowString_Bank09",
+    "note": "Func_009_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "0B:4001": {
+    "name": "BeginStringDisplay_Bank0B",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "0B:400F": {
+    "name": "ShowString_Bank0B",
+    "note": "Func_00B_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "0D:4001": {
+    "name": "BeginStringDisplay_Bank0D",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "0D:400F": {
+    "name": "ShowString_Bank0D",
+    "note": "Func_00D_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "0E:5370": {
+    "name": "BeginStringDisplay_Bank0E",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "0E:537E": {
+    "name": "ShowString_Bank0E",
+    "note": "Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "1B:480C": {
+    "name": "BeginStringDisplay_Bank1B_480C",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "1B:481A": {
+    "name": "ShowString_Bank1B_481A",
+    "note": "Func_01B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "1B:4C86": {
+    "name": "BeginStringDisplay_Bank1B_4C86",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "1B:4C94": {
+    "name": "ShowString_Bank1B_4C94",
+    "note": "Func_01B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "1D:4001": {
+    "name": "BeginStringDisplay_Bank1D",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "1F:520E": {
+    "name": "BeginStringDisplay_Bank1F",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "24:5D10": {
+    "name": "BeginStringDisplay_Bank24",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "24:5D1E": {
+    "name": "ShowString_Bank24",
+    "note": "Func_024_5D10 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "28:402B": {
+    "name": "ShowString_Bank28",
+    "note": "Func_028_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "2F:4001": {
+    "name": "BeginStringDisplay_Bank2F",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "2F:400F": {
+    "name": "ShowString_Bank2F",
+    "note": "Func_02F_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "33:6490": {
+    "name": "BeginStringDisplay_Bank33_6490",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "33:649E": {
+    "name": "ShowString_Bank33_649E",
+    "note": "Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "33:7037": {
+    "name": "BeginStringDisplay_Bank33_7037",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "33:7045": {
+    "name": "ShowString_Bank33_7045",
+    "note": "Func_033_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "37:4001": {
+    "name": "BeginStringDisplay_Bank37",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "86:4001": {
+    "name": "BeginStringDisplay_Bank86",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "88:4001": {
+    "name": "BeginStringDisplay_Bank88",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "88:400F": {
+    "name": "ShowString_Bank88",
+    "note": "Func_088_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "8A:4001": {
+    "name": "BeginStringDisplay_Bank8A",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "E0:76F5": {
+    "name": "ShowString_BankE0",
+    "note": "Func_0E0_76E0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "F0:4001": {
+    "name": "BeginStringDisplay_BankF0_4001",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "F0:48A0": {
+    "name": "BeginStringDisplay_BankF0_48A0",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "F0:48AE": {
+    "name": "ShowString_BankF0",
+    "note": "Func_0F0_48A0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "F2:43D0": {
+    "name": "BeginStringDisplay_BankF2",
+    "note": "ld de, this bank's string table / BeginStringDisplay",
+    "evidence": "reading"
+  },
+  "F2:43DE": {
+    "name": "ShowString_BankF2",
+    "note": "Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
+    "evidence": "reading"
+  },
+  "08:4001": {
+    "name": "BeginStringDisplay_Bank08",
+    "note": "if wC528 < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650",
+    "evidence": "reading"
+  },
+  "08:4016": {
+    "name": "CopyStringToBuffer_Bank08",
+    "note": "if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F",
+    "evidence": "reading"
+  },
+  "28:4001": {
+    "name": "BeginStringDisplay_Bank28",
+    "note": "if wC529 < $DA, BeginStringDisplay with this bank's table; otherwise far-calls Func_097_4001",
+    "evidence": "reading"
+  },
+  "E0:76E0": {
+    "name": "BeginStringDisplay_BankE0",
+    "note": "if wC528 < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls Func_0A2_49E2",
+    "evidence": "reading"
   }
 }

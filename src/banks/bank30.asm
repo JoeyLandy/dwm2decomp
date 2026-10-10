@@ -513,18 +513,18 @@ Jump_030_4342::
 Jump_030_434C::
     ld hl, wD8BF
     ld bc, $0000
-    call Func_030_4396
-    call Func_030_4396
-    call Func_030_4396
+    call AddWordAtHLToBC_Bank30
+    call AddWordAtHLToBC_Bank30
+    call AddWordAtHLToBC_Bank30
     ld a, c
     ld [wD2C8], a
     ld a, b
     ld [wD2C9], a
     ld hl, wD8CF
     ld bc, $0000
-    call Func_030_4396
-    call Func_030_4396
-    call Func_030_4396
+    call AddWordAtHLToBC_Bank30
+    call AddWordAtHLToBC_Bank30
+    call AddWordAtHLToBC_Bank30
     ld a, c
     ld [wD2CA], a
     ld a, b
@@ -541,8 +541,10 @@ Jump_030_434C::
     call Func_030_439D
     ret
 
+; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
 ; 6 call sites from 1 routine (e.g. Func_030_4297)
-Func_030_4396::
+AddWordAtHLToBC_Bank30::
+Func_030_4396:: ; address name
     ld a, [hl+]
     add a, c
     ld c, a
@@ -708,7 +710,7 @@ Jump_030_4497::
     ld [hl], $01
     ld a, [wD8A4]
     ld hl, wDA1C
-    call Func_030_5C72
+    call AddDoubleAToHL_Bank30
     ld a, $FF
     ld [hl+], a
     ld [hl], a
@@ -3236,8 +3238,10 @@ Func_030_5C68::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 1 call site from 1 routine (e.g. Func_030_43C4)
-Func_030_5C72::
+AddDoubleAToHL_Bank30::
+Func_030_5C72:: ; address name
     add a, a
     add_a_to_hl
     ret

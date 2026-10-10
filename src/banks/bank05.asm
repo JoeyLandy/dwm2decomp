@@ -43,9 +43,11 @@ Func_005_401F::
     ld hl, wD91F
     jr Jump_005_402E
 
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
 ; 6 call sites from 5 routines (e.g. Func_005_6556, Func_005_667F, Func_005_67B2, Func_005_6820, ...)
 ; points at: wDA53
-Func_005_4024:: ; heuristic: follows a terminator; C0
+ReadWDA53Indexed_Bank05_4024:: ; heuristic: follows a terminator; C0
+Func_005_4024:: ; address name
     ld hl, wDA53
     add_a_to_hl
     ld a, [hl]
@@ -57,8 +59,10 @@ Jump_005_402E::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_005_4038:: ; heuristic: follows a terminator; C0
+AddDoubleAToHL_Bank05:: ; heuristic: follows a terminator; C0
+Func_005_4038:: ; address name
     add a, a
     add_a_to_hl
     ret
@@ -360,7 +364,7 @@ Jump_005_4283::
 ; points at: wD988, hFFC6
 Func_005_4286:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_4319
     ld a, [wCFEC]
@@ -471,7 +475,7 @@ Func_005_431C:: ; heuristic: follows a terminator; C0
 ; points at: wD80D
 Func_005_432E:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_4370
     ld a, [wCFEC]
@@ -519,7 +523,7 @@ Jump_005_4370::
 ; writes: wCFEC
 Func_005_4373:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_43AA
     ld a, [wCFEC]
@@ -563,7 +567,7 @@ Jump_005_43AA::
 ; points at: wD80D
 Func_005_43AD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_43EF
     ld a, [wCFEC]
@@ -796,7 +800,7 @@ Func_005_44CF::
 ; points at: wD80D
 Func_005_44E1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_4524
     ld a, [wCFEC]
@@ -1099,7 +1103,7 @@ Func_005_4664::
 ; points at: wD80E
 Func_005_4676::
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_46B1
     call Func_005_702D
@@ -1146,7 +1150,7 @@ Jump_005_46B1::
 ; points at: wD80E
 Func_005_46B4:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_46F0
     call Func_005_702D
@@ -1396,7 +1400,7 @@ Jump_005_47EA::
     ld c, a
     ld b, $03
     ld hl, wDA76
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
 
 Jump_005_47F3::
     ld a, c
@@ -1541,7 +1545,7 @@ Jump_005_488A::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_48BF
     ld hl, wDA74
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $30
     cp a, $30
     jr z, Jump_005_48BF
@@ -1604,7 +1608,7 @@ Jump_005_48D3::
     jr nz, Jump_005_48FA
     ld a, c
     ld hl, wDA73
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
     jr nz, Jump_005_4901
@@ -1647,7 +1651,7 @@ Jump_005_4914::
     jr z, Jump_005_4937
     ld a, c
     ld hl, wDA74
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
     jr nz, Jump_005_4942
@@ -1687,7 +1691,7 @@ Jump_005_4953::
     jr z, Jump_005_496D
     ld a, c
     ld hl, wDA74
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $0C
     cp a, $0C
     jr nz, Jump_005_4974
@@ -1728,7 +1732,7 @@ Jump_005_4981::
 Jump_005_4993::
     ld a, c
     ld hl, wDA75
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $30
     cp a, $30
     jr nz, Jump_005_49A7
@@ -1769,7 +1773,7 @@ Jump_005_49B4::
 Jump_005_49C6::
     ld a, c
     ld hl, wDA75
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $0C
     cp a, $0C
     jr nz, Jump_005_49DA
@@ -1807,7 +1811,7 @@ Jump_005_49E7::
     jr nz, Jump_005_4A06
     ld a, c
     ld hl, wDA76
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
     jr nz, Jump_005_4A0D
@@ -1845,7 +1849,7 @@ Jump_005_4A1A::
     jr nz, Jump_005_4A39
     ld a, c
     ld hl, wDA77
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
     jr nz, Jump_005_4A40
@@ -1883,7 +1887,7 @@ Jump_005_4A4D::
     jr nz, Jump_005_4A6C
     ld a, c
     ld hl, wDA77
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $30
     cp a, $30
     jr nz, Jump_005_4A73
@@ -1926,7 +1930,7 @@ Jump_005_4A86::
     jr z, Jump_005_4AA9
     ld a, c
     ld hl, wDA77
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
     jr nz, Jump_005_4AB4
@@ -1973,7 +1977,7 @@ Jump_005_4ACB::
     jr z, Jump_005_4AEE
     ld a, c
     ld hl, wDA78
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
     jr nz, Jump_005_4AF9
@@ -2382,7 +2386,7 @@ Jump_005_4CE2::
 ; points at: wD812
 Func_005_4CE5::
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_4D17
     ld a, [wD8A4]
@@ -3071,7 +3075,7 @@ Jump_005_50B4::
 ; reads: wD8A4
 Func_005_50B7:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_50E0
     ld a, [wD8A4]
@@ -3102,7 +3106,7 @@ Jump_005_50E0::
 ; points at: hFFC6, hFFC9
 Func_005_50E3:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_517A
     ld a, [wD8A4]
@@ -3204,7 +3208,7 @@ Jump_005_517A::
 ; writes: hFFC6, hFFC7
 Func_005_517D:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_51E7
     ld a, [wD8A4]
@@ -3288,7 +3292,7 @@ Jump_005_51E7::
 ; reads: wD8A4, hFFC6, hFFC7
 Func_005_51EA:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_5225
     call Func_005_6CC2
@@ -3330,7 +3334,7 @@ Jump_005_5225::
 ; reads: wD8A4, hFFC6, hFFC7
 Func_005_5228:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_5272
     call Func_005_6CC2
@@ -3387,7 +3391,7 @@ Jump_005_5272::
 ; points at: hFFC6, hFFC9
 Func_005_5275:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_5314
     ld a, [wD8A4]
@@ -3668,7 +3672,7 @@ Jump_005_53F7::
 ; points at: wD80D, wD989
 Func_005_53FA:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_544C
     ld a, [wD8A4]
@@ -3729,7 +3733,7 @@ Jump_005_544C::
 ; points at: hFFCE
 Func_005_544F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jp c, Jump_005_54FA
     ld a, [wD8A4]
@@ -3847,7 +3851,7 @@ Func_005_54FD::
 ; points at: wD989, wD8DF, wD8B7, wD8BF
 Func_005_5500:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_557B
     ld a, [wD8A4]
@@ -4321,7 +4325,7 @@ Jump_005_579E::
 ; reads: wD8A4
 Func_005_57A1:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_57CC
     ld a, [wD8A4]
@@ -4360,7 +4364,7 @@ Jump_005_57CC::
 ; points at: wD812
 Func_005_57CF::
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5800
     ld a, [wD8A4]
@@ -4447,7 +4451,7 @@ Jump_005_5840::
     jr c, Jump_005_5853
     ld a, c
     ld hl, wDA75
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $02
     jr nc, Jump_005_585A
@@ -4599,7 +4603,7 @@ Jump_005_5916::
 ; points at: wD989, wD80D
 Func_005_5919:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jp c, Jump_005_59BA
     ld a, [wD8A4]
@@ -4712,7 +4716,7 @@ Jump_005_59BA::
 ; points at: wD80D, wD989
 Func_005_59BD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5A30
     ld a, [wD8A4]
@@ -4798,7 +4802,7 @@ Func_005_5A33:: ; heuristic: follows a terminator; C0
     ld [de], a
     inc h
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5A70
     ld a, [wD8A4]
@@ -4844,7 +4848,7 @@ Jump_005_5A70::
 ; points at: wD989
 Func_005_5A73:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5AF5
     ld a, [wD8A4]
@@ -4950,7 +4954,7 @@ Func_005_5AF8:: ; heuristic: follows a terminator; C0
     inc d
     inc d
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5B54
     ld a, [wD8A4]
@@ -5015,7 +5019,7 @@ Jump_005_5B54::
 ; points at: wD80D, wD989
 Func_005_5B57:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5BB9
     ld a, [wD8A4]
@@ -5377,7 +5381,7 @@ Func_005_5D31:: ; heuristic: follows a terminator; C0
 ; reads: wD8A4
 Func_005_5D44:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_5D86
     ld a, [wD8A4]
@@ -5464,7 +5468,7 @@ Jump_005_5DA5::
     jr nz, Jump_005_5DC3
     ld a, c
     ld hl, wDA74
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
     jr nz, Jump_005_5DCA
@@ -5502,7 +5506,7 @@ Jump_005_5DD7::
     jr nz, Jump_005_5DF5
     ld a, c
     ld hl, wDA77
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $0C
     cp a, $0C
     jr nz, Jump_005_5DFC
@@ -5625,7 +5629,7 @@ Jump_005_5E79::
     jr nz, Jump_005_5E97
     ld a, c
     ld hl, wDA75
-    call Func_005_6F60
+    call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
     jr nz, Jump_005_5E9E
@@ -5683,7 +5687,7 @@ Jump_005_5ECB::
 ; points at: wDA5B
 Func_005_5ECE::
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_5F10
     ld a, [wD2CC]
@@ -5769,7 +5773,7 @@ Func_005_5F2A::
 ; points at: wD80D, wDA5B
 Func_005_5F3D:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_5F8A
     ld a, [wD2CC]
@@ -5874,7 +5878,7 @@ Jump_005_5FB3::
 ; points at: wDA5B
 Func_005_5FC7::
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_600B
     ld a, [wD2CC]
@@ -5972,7 +5976,7 @@ Func_005_6039::
 ; points at: wD8BF, wD8CF, wD978
 Func_005_604C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_60B7
     ld a, [wD8A4]
@@ -6160,7 +6164,7 @@ Data_005_614B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wD80E, wDA74
 Func_005_6153::
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_6195
     ld a, [wD8A4]
@@ -6209,7 +6213,7 @@ Jump_005_6195::
 ; reads: wD8A4, wD2CC
 Func_005_6198:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_61AE
     ld a, [wD2CC]
@@ -6520,7 +6524,7 @@ Jump_005_638E::
 ; reads: wD8A4
 Func_005_6392:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_63CF
     ld a, [wD8A4]
@@ -6801,7 +6805,7 @@ Jump_005_64FB::
 ; points at: wDA72
 Func_005_64FE:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_6553
     ld a, [wCFEF]
@@ -6863,7 +6867,7 @@ Jump_005_6553::
 ; points at: wD988
 Func_005_6556:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_4024
+    call ReadWDA53Indexed_Bank05_4024
     cp a, $03
     jr c, Jump_005_65A9
     ld a, [wD8A4]
@@ -7071,7 +7075,7 @@ Jump_005_667C::
 ; points at: wD988
 Func_005_667F:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_4024
+    call ReadWDA53Indexed_Bank05_4024
     cp a, $04
     jp c, Jump_005_671D
     ld a, [wD8A4]
@@ -7289,7 +7293,7 @@ Jump_005_67AF::
 ; points at: wD2C1
 Func_005_67B2:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_4024
+    call ReadWDA53Indexed_Bank05_4024
     cp a, $02
     jr c, Jump_005_681D
     ld a, [wD8A4]
@@ -7362,7 +7366,7 @@ Jump_005_681D::
 ; points at: wDA72
 Func_005_6820:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_4024
+    call ReadWDA53Indexed_Bank05_4024
     cp a, $02
     jr c, Jump_005_6899
     ld a, [wD8A4]
@@ -7442,7 +7446,7 @@ Jump_005_6899::
 ; points at: wDA5B, wDA72
 Func_005_689C:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
-    call Func_005_4024
+    call ReadWDA53Indexed_Bank05_4024
     cp a, $03
     jp c, Jump_005_696F
     ld a, [wC58A]
@@ -7468,7 +7472,7 @@ Jump_005_68C6::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_68F5
     ld a, c
-    call Func_005_4024
+    call ReadWDA53Indexed_Bank05_4024
     cp a, $03
     jr c, Jump_005_68F5
     push de
@@ -7766,7 +7770,7 @@ Func_005_6A6B:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     cp a, $04
     jr c, Jump_005_6AE5
-    call Func_005_6B16
+    call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_6AE5
     ld a, [wCFEF]
@@ -7877,9 +7881,11 @@ Func_005_6B07:: ; heuristic: follows a terminator; C0
     ld [wDA71], a
     ret
 
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
 ; 35 call sites from 35 routines (e.g. Func_005_4CE5, Func_005_5500, Func_005_6A6B, Func_005_64FE, ...)
 ; points at: wDA53
-Func_005_6B16::
+ReadWDA53Indexed_Bank05::
+Func_005_6B16:: ; address name
     ld hl, wDA53
     add_a_to_hl
     ld a, [hl]
@@ -8687,8 +8693,10 @@ Jump_005_6F58::
     pop bc
     ret
 
+; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
 ; 16 call sites from 16 routines (e.g. Func_005_5803, Func_005_5D9B, Func_005_47E5, Func_005_5DCD, ...)
-Func_005_6F60::
+ReadByteAtHLPlus4APlus3C_Bank05::
+Func_005_6F60:: ; address name
     add a, a
     add a, c
     add a, a

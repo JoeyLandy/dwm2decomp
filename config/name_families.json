@@ -1,0 +1,32 @@
+{
+  "_comment": "The ROM repeats a small library of leaf routines in many banks. Each entry names one canonical routine; tools/disasm_all.py gives every function entry whose bytes are identical the name 'Name_BankBB' (E-0027). The canonical routine must contain no call, jump or restart, so identical bytes behave identically in every bank. Two entries may share a name when the bytes differ but the behaviour is the same; the bank suffix keeps names unique. 'note' gives inputs, outputs and what is clobbered, from a complete reading of the instructions.",
+  "families": [
+    {"canonical": "0C:5156", "name": "BGMapAddressAtScroll", "note": "HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE", "evidence": "reading"},
+    {"canonical": "14:6BCF", "name": "BGMapAddressAtScroll", "note": "HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE", "evidence": "reading"},
+    {"canonical": "0C:525B", "name": "StoreBAtWordTableEntry", "note": "HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL", "evidence": "reading"},
+    {"canonical": "1B:6308", "name": "StoreBAtWordTableEntry", "note": "HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL", "evidence": "reading"},
+    {"canonical": "36:7E65", "name": "AddDoubleAToHL", "note": "HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A", "evidence": "reading"},
+    {"canonical": "0F:7EB2", "name": "StepWC921Counter", "note": "wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way", "evidence": "reading"},
+    {"canonical": "05:6B16", "name": "ReadWDA53Indexed", "note": "A = the byte at wDA53 + A; clobbers HL", "evidence": "reading"},
+    {"canonical": "05:6F60", "name": "ReadByteAtHLPlus4APlus3C", "note": "A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL", "evidence": "reading"},
+    {"canonical": "19:44AC", "name": "StoreWordAtDEPlus2C", "note": "DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written", "evidence": "reading"},
+    {"canonical": "19:44A3", "name": "StoreByteAtDEPlusC", "note": "DE += C; copies the byte at HL to [DE]; HL += 1", "evidence": "reading"},
+    {"canonical": "0F:7ED3", "name": "ClearBit2AtHL", "note": "[HL] &= $FB; clobbers A", "evidence": "reading"},
+    {"canonical": "0F:7EC4", "name": "SetBit1AtHL", "note": "[HL] |= $02; clobbers A", "evidence": "reading"},
+    {"canonical": "0F:7EC9", "name": "ClearBit1AtHL", "note": "[HL] &= $FD; clobbers A", "evidence": "reading"},
+    {"canonical": "32:6899", "name": "SetBit2OfWD095Indexed", "note": "Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A", "evidence": "reading"},
+    {"canonical": "32:687F", "name": "SetBit0OfWD095Indexed", "note": "Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A", "evidence": "reading"},
+    {"canonical": "32:688C", "name": "SetBit1OfWD095Indexed", "note": "Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A", "evidence": "reading"},
+    {"canonical": "31:722A", "name": "FillWC278WithC3", "note": "Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL", "evidence": "reading"},
+    {"canonical": "14:6981", "name": "CopyTileBytesToVRAM", "note": "Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance", "evidence": "reading"},
+    {"canonical": "1B:635D", "name": "CopyTileBytesToVRAM", "note": "Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A; HL and DE advance", "evidence": "reading"},
+    {"canonical": "0D:4E84", "name": "CopyLow3BitsToWRAMBank2", "note": "With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0", "evidence": "reading"},
+    {"canonical": "0C:52D9", "name": "CopyLow3BitsToWRAMBank2", "note": "With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0", "evidence": "reading"},
+    {"canonical": "0D:4EC7", "name": "StoreC5BEC6AtHLStride2", "note": "[HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A", "evidence": "reading"},
+    {"canonical": "30:4396", "name": "AddWordAtHLToBC", "note": "BC += the word at [HL]; HL += 2; clobbers A", "evidence": "reading"},
+    {"canonical": "00:304F", "name": "NextBGMapColumn", "note": "L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF", "evidence": "reading"},
+    {"canonical": "F1:57BA", "name": "CopyShortStringToWC8CF", "note": "Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator", "evidence": "reading"},
+    {"canonical": "3B:50E2", "name": "BuildOamFromSpriteTable", "note": "DE = two-level table; entries are chosen by hFFAD and hFFAE; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hFFAB + b + $10, X = hFFA9 + b + 8, tile += hFFAF, flags ^= hFFB0) until a $80 byte or hOamNextEntry reaches $28 (40 entries)", "evidence": "reading"},
+    {"canonical": "A0:486D", "name": "AddWordAtHLToDE", "note": "DE += the word at [HL]; HL += 1 (ends on the high byte); clobbers A", "evidence": "reading"}
+  ]
+}

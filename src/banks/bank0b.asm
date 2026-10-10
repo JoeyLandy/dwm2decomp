@@ -1,17 +1,21 @@
 SECTION "Bank 0B", ROMX[$4000], BANK[$0B]
     db $0B
 
-; 2 call sites from 2 routines (e.g. Func_00B_400F, Func_001_4AD4)
-Func_00B_4001::
+; ld de, this bank's string table / BeginStringDisplay
+; 2 call sites from 2 routines (e.g. ShowString_Bank0B, Func_001_4AD4)
+BeginStringDisplay_Bank0B::
+Func_00B_4001:: ; address name
     ld de, Data_00B_4016
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9
 
+; Func_00B_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ; 6 call sites from 5 routines (e.g. Func_00C_49DA, Func_00C_4AA6, Func_00C_4B5C, Func_00C_4E16, ...)
-Func_00B_400F::
-    call Func_00B_4001
-    call Func_000_2611
+ShowString_Bank0B::
+Func_00B_400F:: ; address name
+    call BeginStringDisplay_Bank0B
+    call RunStringDisplayToEnd
     ret
 
 Data_00B_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0

@@ -2362,7 +2362,7 @@ Jump_032_4CD4::
     or a, l
     jr z, Jump_032_4CB7
     ld a, [wD8A4]
-    call Func_032_687F
+    call SetBit0OfWD095Indexed_Bank32
     ld d, $10
     call Func_032_4D23
     ld a, [wD8A4]
@@ -2378,7 +2378,7 @@ Jump_032_4CF7::
     or a, c
     jr z, Jump_032_4CB7
     ld a, [wD8A4]
-    call Func_032_688C
+    call SetBit1OfWD095Indexed_Bank32
     ld d, $11
     call Func_032_4D23
     jr Jump_032_4D2A
@@ -2389,7 +2389,7 @@ Jump_032_4D0B::
     call AddAx9ToHL
     set 4, [hl]
     ld a, [wD8A4]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld d, $12
     call Func_032_4D23
     jr Jump_032_4D2A
@@ -2656,7 +2656,7 @@ Jump_032_4E8F::
     and a, $73
     ld [hl], a
     ld a, [wD8A4]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, [wD8A5]
     ld [wD871], a
     ld a, [wD8A4]
@@ -2776,7 +2776,7 @@ Jump_032_4F53::
     bit 7, [hl]
     jr z, Jump_032_4F85
     ld a, [wD8A4]
-    call Func_032_6812
+    call ReadWDA53Indexed_Bank32
     cp a, $02
     jr nc, Jump_032_4FC8
 
@@ -2807,7 +2807,7 @@ Jump_032_4F9C::
     bit 2, a
     jr nz, Jump_032_4FFB
     ld a, [wD8A4]
-    call Func_032_6812
+    call ReadWDA53Indexed_Bank32
     cp a, $03
     jr c, Jump_032_4FFB
 
@@ -2947,7 +2947,7 @@ Jump_032_50B7::
 
 Jump_032_50DD::
     ld a, [wD8A4]
-    call Func_032_6812
+    call ReadWDA53Indexed_Bank32
     cp a, $02
     jr nc, Jump_032_50F6
     ld a, [wCFF2]
@@ -3175,7 +3175,7 @@ Jump_032_524E::
 
 Jump_032_5259::
     ld a, [wD8A4]
-    call Func_032_6812
+    call ReadWDA53Indexed_Bank32
     cp a, $02
     jr c, Jump_032_5294
     ld a, [wCFF3]
@@ -3243,7 +3243,7 @@ Jump_032_52B8::
     bit 3, [hl]
     jp nz, Jump_032_52FD
     ld a, [wD8A4]
-    call Func_032_6812
+    call ReadWDA53Indexed_Bank32
     cp a, $02
     jr c, Jump_032_5301
     ld a, [wCFF2]
@@ -3303,7 +3303,7 @@ Func_032_5303::
     bit 7, [hl]
     jr nz, Jump_032_5344
     ld a, [wD8A4]
-    call Func_032_6812
+    call ReadWDA53Indexed_Bank32
     cp a, $02
     jr c, Jump_032_5348
     ld a, [wD8A4]
@@ -3442,7 +3442,7 @@ Jump_032_53B6::
 
 Jump_032_53C1::
     ld a, [wD8A4]
-    call Func_032_688C
+    call SetBit1OfWD095Indexed_Bank32
     ret
 
 Jump_032_53C8::
@@ -3754,7 +3754,7 @@ Jump_032_55E7::
 
 ; 1 call site from 1 routine (e.g. Func_032_5820)
 ; reads: wC58A, wD043, wDABA, wD044, wD8A6, wD045, wD8A4, wC57F, ...
-; writes: wD092, wC529, wC528, wCFC8, wCFC9, wCFCA, wCFCB, wDataBank, ...
+; writes: wD092, wStringIndex, wStringCategory, wCFC8, wCFC9, wCFCA, wCFCB, wDataBank, ...
 ; points at: wCFCB, wD057, wD058
 Func_032_55EE::
     ld hl, wCFCB
@@ -3825,10 +3825,10 @@ Jump_032_5658::
     ld a, $64
 
 Jump_032_565F::
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
     ld a, $02
     ld [wCFC8], a
     ld a, $09
@@ -3858,7 +3858,7 @@ Data_032_5688:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Jump_032_5770::
     ld a, [wD8A4]
     ld hl, wD854
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     bit 4, [hl]
     call z, Func_032_5386
     ld hl, wCFCA
@@ -4038,7 +4038,7 @@ Jump_032_5872::
     ld [wD8A4], a
     ld a, [wD8A4]
     ld hl, wDA1C
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld a, [wD8A6]
     ld [hl+], a
     ld [hl], $FF
@@ -4049,7 +4049,7 @@ Jump_032_5872::
     farcall Func_039_4001
     ld a, [wD8A4]
     ld hl, wDA1D
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld a, [hl]
     ld [wD8A5], a
     ret
@@ -4250,7 +4250,7 @@ Func_032_59DF::
     jr z, Jump_032_5A26
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -4283,11 +4283,11 @@ Jump_032_5A1B::
 
 Jump_032_5A26::
     ld a, [wD8A5]
-    call Func_032_687F
+    call SetBit0OfWD095Indexed_Bank32
     ld a, [wD8A5]
-    call Func_032_688C
+    call SetBit1OfWD095Indexed_Bank32
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ret
 
 Jump_032_5A39::
@@ -4326,7 +4326,7 @@ Jump_032_5A63::
     xor a, a
     ld [wCFCD], a
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     call Func_032_5A95
     ret z
     ld a, [wD8A6]
@@ -4516,7 +4516,7 @@ Jump_032_5B78::
 
 Jump_032_5B8D::
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
 
 Jump_032_5B93::
     ret
@@ -4651,7 +4651,7 @@ Func_032_5C3F::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4661,7 +4661,7 @@ Func_032_5C3F::
     jr c, Jump_032_5C95
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4676,7 +4676,7 @@ Jump_032_5C95::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD8EF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4686,7 +4686,7 @@ Jump_032_5C95::
     jr c, Jump_032_5CCA
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4701,7 +4701,7 @@ Jump_032_5CCA::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD8FF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4714,7 +4714,7 @@ Jump_032_5CCA::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD92F
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4775,7 +4775,7 @@ Jump_032_5CCA::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD91F
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -4788,7 +4788,7 @@ Jump_032_5CCA::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD90F
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld [hl], c
     inc hl
     ld [hl], b
@@ -5057,7 +5057,7 @@ Jump_032_5F63::
     jp nz, Func_032_61D9
     set 0, [hl]
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, $20
     ld [wDAD2], a
     farcall Func_03A_4001
@@ -5085,7 +5085,7 @@ Jump_032_5FAE::
     jp nz, Func_032_61D9
     set 6, [hl]
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, $20
     ld [wDAD2], a
     farcall Func_03A_4001
@@ -5115,7 +5115,7 @@ Jump_032_5FF8::
     or a, $8C
     ld [hl], a
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, $20
     ld [wDAD2], a
     farcall Func_03A_4001
@@ -5138,7 +5138,7 @@ Func_032_604A::
     call Func_000_3ED4
     ld a, [wD8A4]
     ld hl, wDA1C
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     push hl
     ld a, [wC5E7]
     and a, $03
@@ -5230,7 +5230,7 @@ Jump_032_60DF::
     inc [hl]
     ld a, [wD8A4]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     push hl
     deref_hl
     push hl
@@ -5304,7 +5304,7 @@ Jump_032_612F::
     ld a, [wD871]
     ld [wD8A5], a
     ld a, [wD8A4]
-    call Func_032_687F
+    call SetBit0OfWD095Indexed_Bank32
     ret
 
 Jump_032_6174::
@@ -5344,7 +5344,7 @@ Jump_032_61A9::
 
 Jump_032_61B1::
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, $90
     ld [wC0A0], a
     call Func_032_682D
@@ -5399,7 +5399,7 @@ Jump_032_620E::
     inc [hl]
     ld a, [wD8A4]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     push hl
     deref_hl
     ld a, h
@@ -5439,7 +5439,7 @@ Jump_032_6245::
 
 Jump_032_625F::
     ld a, [wD8A4]
-    call Func_032_687F
+    call SetBit0OfWD095Indexed_Bank32
     ret
 
 Jump_032_6266::
@@ -5479,7 +5479,7 @@ Jump_032_629B::
 
 Jump_032_62A3::
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, $90
     ld [wC0A0], a
     call Func_032_682D
@@ -5538,7 +5538,7 @@ Jump_032_630B::
     ld hl, wCFCD
     inc [hl]
     ld a, [wD8A4]
-    call Func_032_687F
+    call SetBit0OfWD095Indexed_Bank32
     call Func_000_3ED4
     ld a, [wC5E7]
     and a, $01
@@ -5583,7 +5583,7 @@ Jump_032_6342::
 Jump_032_6366::
     ld a, [wD8A4]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     xor a, a
     ld [hl+], a
     ld [hl], a
@@ -5596,7 +5596,7 @@ Jump_032_6366::
 Jump_032_637D::
     ld a, [wD8A4]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -5667,7 +5667,7 @@ Jump_032_63E1::
 
 Jump_032_63E9::
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, [wD8A6]
     cp a, $7B
     ld d, $8C
@@ -5742,7 +5742,7 @@ Jump_032_6468::
     inc [hl]
     ld a, [wD8A4]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     push hl
     deref_hl
     push hl
@@ -5832,7 +5832,7 @@ Jump_032_64D3::
     ld a, [wD871]
     ld [wD8A5], a
     ld a, [wD8A4]
-    call Func_032_687F
+    call SetBit0OfWD095Indexed_Bank32
     ret
 
 Jump_032_6518::
@@ -5872,7 +5872,7 @@ Jump_032_654D::
 
 Jump_032_6555::
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, $90
     ld [wC0A0], a
     call Func_032_682D
@@ -5907,7 +5907,7 @@ Func_032_6581:: ; heuristic: follows a terminator; C0
     xor a, a
     ld [hl+], a
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, [hl]
     and a, $3C
     ld [hl+], a
@@ -5999,7 +5999,7 @@ Func_032_6622::
     and a, $63
     ld [hl], a
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     inc hl
     ld a, [hl]
     and a, $30
@@ -6049,7 +6049,7 @@ Jump_032_666C::
 Jump_032_667D::
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_032_6826
+    call AddDoubleAToHL_Bank32
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -6089,7 +6089,7 @@ Jump_032_66AD::
 
 Jump_032_66B5::
     ld a, [wD8A5]
-    call Func_032_687F
+    call SetBit0OfWD095Indexed_Bank32
     call Func_032_682D
     ld d, $35
     jr c, Jump_032_66C4
@@ -6144,7 +6144,7 @@ Jump_032_6710::
 
 Jump_032_6718::
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld a, $8A
     ld [wC0A0], a
     call Func_032_682D
@@ -6221,7 +6221,7 @@ Jump_032_678D::
     xor a, a
     ld [wCFCD], a
     ld a, [wD8A5]
-    call Func_032_6899
+    call SetBit2OfWD095Indexed_Bank32
     ld d, $8B
     call Func_032_6848
     jr nc, Jump_032_67A3
@@ -6302,9 +6302,11 @@ Func_032_6808::
     jr Jump_032_681C
     db $21, $1F, $D9, $18, $0A
 
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
 ; 6 call sites from 4 routines (e.g. Func_032_51F9, Func_032_529E, Func_032_5303, Func_032_4F0A)
 ; points at: wDA53
-Func_032_6812::
+ReadWDA53Indexed_Bank32::
+Func_032_6812:: ; address name
     ld hl, wDA53
     add_a_to_hl
     ld a, [hl]
@@ -6316,8 +6318,10 @@ Jump_032_681C::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 19 call sites from 9 routines (e.g. Func_032_5C3F, Func_032_5820, Func_032_55EE, Func_032_6662, ...)
-Func_032_6826::
+AddDoubleAToHL_Bank32::
+Func_032_6826:: ; address name
     add a, a
     add_a_to_hl
     ret
@@ -6362,9 +6366,11 @@ Jump_032_685D::
     db $7A, $21, $78, $68, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 7 call sites from 7 routines (e.g. Func_032_6662, Func_032_4C9C, Func_032_59DF, Func_032_604A, ...)
 ; points at: wD095
-Func_032_687F::
+SetBit0OfWD095Indexed_Bank32::
+Func_032_687F:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -6372,9 +6378,11 @@ Func_032_687F::
     pop hl
     ret
 
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. Func_032_5397, Func_032_4C9C, Func_032_59DF)
 ; points at: wD095
-Func_032_688C::
+SetBit1OfWD095Indexed_Bank32::
+Func_032_688C:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -6382,9 +6390,11 @@ Func_032_688C::
     pop hl
     ret
 
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 16 call sites from 14 routines (e.g. Func_032_5B12, Func_032_6764, Func_032_4C9C, Func_032_4E51, ...)
 ; points at: wD095
-Func_032_6899::
+SetBit2OfWD095Indexed_Bank32::
+Func_032_6899:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl

@@ -240,7 +240,7 @@ Jump_036_41AF::
     jr c, Jump_036_421B
     ld a, [wD8A5]
     ld hl, wD854
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     bit 5, [hl]
     jr nz, Jump_036_41D1
     ld a, [wD8A5]
@@ -275,7 +275,7 @@ Jump_036_41EB::
     ld b, a
     ld a, [wD8A4]
     ld hl, wDA1D
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], b
     ld hl, wDABF
     set 0, [hl]
@@ -424,7 +424,7 @@ Func_036_42D3::
     ld [wDAD1], a
     ld a, [wD8A4]
     ld hl, wDA1D
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     ld a, c
     ld [wD8A5], a
@@ -806,7 +806,7 @@ Jump_036_45AA::
     jr z, Jump_036_45F7
     ld a, [wD8A4]
     ld hl, wD854
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     bit 0, [hl]
     jr nz, Jump_036_45D3
     ld a, [wD8A4]
@@ -945,7 +945,7 @@ Jump_036_46A0::
 Jump_036_46C7::
     ld a, [wD8A4]
     ld hl, wD854
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     bit 6, [hl]
     jr z, Jump_036_46EB
     ld a, [wD872]
@@ -1218,11 +1218,11 @@ Jump_036_4890::
 Jump_036_48A3::
     farcall Func_0A3_414F
     ldh a, [hFFC6]
-    call Func_036_7ECB
+    call SetBit1OfWD095Indexed_Bank36
 
 Jump_036_48AE::
     ld a, [wD8A4]
-    call Func_036_7ECB
+    call SetBit1OfWD095Indexed_Bank36
     ret
 
 Jump_036_48B5::
@@ -1683,7 +1683,7 @@ Jump_036_4B41::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -1692,10 +1692,10 @@ Jump_036_4B41::
     call CompareHLToBC
     jr c, Jump_036_4BCC
     ld a, [wD8A5]
-    call Func_036_7EBE
+    call SetBit0OfWD095Indexed_Bank36
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -1710,7 +1710,7 @@ Jump_036_4BCC::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD8EF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -1719,10 +1719,10 @@ Jump_036_4BCC::
     call CompareHLToBC
     jr c, Jump_036_4C07
     ld a, [wD8A5]
-    call Func_036_7ECB
+    call SetBit1OfWD095Indexed_Bank36
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -1737,7 +1737,7 @@ Jump_036_4C07::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD8FF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -1750,7 +1750,7 @@ Jump_036_4C07::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD92F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -1813,7 +1813,7 @@ Jump_036_4CCF::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD91F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -1826,7 +1826,7 @@ Jump_036_4CCF::
     ld b, a
     ld a, [wD8A5]
     ld hl, wD90F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld [hl], c
     inc hl
     ld [hl], b
@@ -2320,7 +2320,7 @@ Func_036_5013::
     call Func_000_3ED4
     ld a, [wD8A5]
     ld hl, wD90F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -2614,7 +2614,7 @@ Jump_036_5244::
 Jump_036_5251::
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -2626,7 +2626,7 @@ Jump_036_5251::
 Jump_036_5265::
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     deref_hl
     ld a, l
@@ -2653,7 +2653,7 @@ Jump_036_5285::
 Jump_036_528B::
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -2720,7 +2720,7 @@ Jump_036_52F7::
     ld [wD873], a
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     deref_hl
     ld a, l
@@ -2813,7 +2813,7 @@ Jump_036_5383::
     ld [wD873], a
     ld a, [wD8A5]
     ld hl, wD90F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl]
     add a, c
     ld [hl+], a
@@ -2919,7 +2919,7 @@ Jump_036_5417::
 Jump_036_541A::
     ld a, [wD8A5]
     ld hl, wD90F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     ld a, [hl+]
     ld h, [hl]
@@ -2979,7 +2979,7 @@ Jump_036_5462::
     ld [wD873], a
     ld a, [wD8A5]
     ld hl, wD91F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl]
     add a, c
     ld [hl+], a
@@ -3064,7 +3064,7 @@ Jump_036_54D4::
 Jump_036_54D7::
     ld a, [wD8A5]
     ld hl, wD91F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     ld d, $00
     deref_hl
@@ -3339,7 +3339,7 @@ Func_036_5640:: ; heuristic: follows a terminator; C0
     call Func_036_5671
     ld a, [wD8A4]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     deref_hl
     add hl, bc
@@ -3377,7 +3377,7 @@ Jump_036_5670::
 Func_036_5671::
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     ld a, [wD8A6]
     cp a, $DF
@@ -3493,7 +3493,7 @@ Func_036_5703:: ; heuristic: follows a terminator; C0
     call Func_036_65E8
     ld a, [wD8A4]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     deref_hl
     call CompareHLToBC
@@ -3503,12 +3503,12 @@ Func_036_5703:: ; heuristic: follows a terminator; C0
     ld [hl+], a
     ld [hl], b
     ld a, [wD8A4]
-    call Func_036_7EBE
+    call SetBit0OfWD095Indexed_Bank36
 
 Jump_036_5737::
     ld a, [wD8A4]
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, c
     ld [hl+], a
     ld [hl], b
@@ -3516,7 +3516,7 @@ Jump_036_5737::
     call Func_036_6605
     ld a, [wD8A4]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     deref_hl
     call CompareHLToBC
@@ -3526,18 +3526,18 @@ Jump_036_5737::
     ld [hl+], a
     ld [hl], b
     ld a, [wD8A4]
-    call Func_036_7ECB
+    call SetBit1OfWD095Indexed_Bank36
 
 Jump_036_5765::
     ld a, [wD8A4]
     ld hl, wD8EF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, c
     ld [hl+], a
     ld [hl], b
     ld a, [wD8A4]
     ld hl, wD8FF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [wD8A5]
     call Func_036_6622
     ld a, c
@@ -3545,7 +3545,7 @@ Jump_036_5765::
     ld [hl], b
     ld a, [wD8A4]
     ld hl, wD90F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [wD8A5]
     call Func_036_6634
     ld a, c
@@ -3553,7 +3553,7 @@ Jump_036_5765::
     ld [hl], b
     ld a, [wD8A4]
     ld hl, wD91F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [wD8A5]
     call Func_036_6646
     ld a, c
@@ -4633,9 +4633,9 @@ Jump_036_5FE1::
     add_a_to_hl
     ld [hl], $00
     ld a, [wD8A4]
-    call Func_036_7EBE
+    call SetBit0OfWD095Indexed_Bank36
     ld a, [wD8A4]
-    call Func_036_7ECB
+    call SetBit1OfWD095Indexed_Bank36
     ret
 
 ; 1 call site from 1 routine (e.g. Func_036_5F25)
@@ -4736,7 +4736,7 @@ Func_036_608B::
 Func_036_6098:: ; heuristic: follows a terminator; C0
     ld a, [wD8A4]
     ld hl, wD8FF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     ld a, [hl+]
     ld b, [hl]
@@ -5658,7 +5658,7 @@ Func_036_64EC:: ; heuristic: follows a terminator; C0
 
 ; 1 call site from 1 routine (e.g. Func_036_6558)
 Func_036_64FC:: ; heuristic: follows a terminator; C0
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     deref_hl
     ret
 
@@ -6341,13 +6341,13 @@ Func_036_697B:: ; heuristic: target of a pointer table; C0
 Jump_036_6990::
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
     jr z, Jump_036_69B4
@@ -6358,7 +6358,7 @@ Jump_036_6990::
 Jump_036_69B4::
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
@@ -6367,7 +6367,7 @@ Jump_036_69B4::
     ld d, h
     ld a, [wD8A5]
     ld hl, wD8EF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
     jr z, Jump_036_69DD
@@ -6684,7 +6684,7 @@ Func_036_6B9F:: ; heuristic: target of a pointer table; C0
     jr nc, Jump_036_6BC4
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     xor a, a
     ld [hl+], a
     ld [hl], a
@@ -6743,7 +6743,7 @@ Jump_036_6BF6::
 Jump_036_6C01::
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     xor a, a
     ld [hl+], a
     ld [hl], a
@@ -6773,13 +6773,13 @@ Func_036_6C24:: ; heuristic: target of a pointer table; C0
 Jump_036_6C30::
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
     jr z, Jump_036_6C58
@@ -6808,13 +6808,13 @@ Func_036_6C5E:: ; heuristic: target of a pointer table; C0
 Jump_036_6C6A::
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
     ld hl, wD8EF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
     jr z, Jump_036_6C94
@@ -6846,7 +6846,7 @@ Func_036_6C9A:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld b, a
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -6856,7 +6856,7 @@ Func_036_6C9A:: ; heuristic: target of a pointer table; C0
 Jump_036_6CC1::
     ld a, b
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, e
     ld [hl+], a
     ld [hl], d
@@ -6908,7 +6908,7 @@ Func_036_6D0A::
     ld a, [wD8A5]
     ld b, a
     ld hl, wD8CF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -7235,7 +7235,7 @@ Jump_036_6EF9::
 Func_036_6EFC:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     or a, [hl]
     jp z, Jump_036_6F93
@@ -7266,7 +7266,7 @@ Jump_036_6F2D::
     jr nc, Jump_036_6F93
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     ld c, a
     ld a, [hl]
@@ -7291,7 +7291,7 @@ Jump_036_6F2D::
     ld [wD8A4], a
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     xor a, a
     ld [hl+], a
     ld [hl], a
@@ -7995,7 +7995,7 @@ Jump_036_745A::
 Func_036_745D:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     or a, [hl]
     jr z, Jump_036_747B
@@ -8322,7 +8322,7 @@ Jump_036_765B::
     jr z, Jump_036_7680
     ld a, [wD8A5]
     ld hl, wD90F
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, $01
     ld [hl+], a
     ld [hl], $00
@@ -8867,7 +8867,7 @@ Func_036_7A18:: ; heuristic: target of a pointer table; C0
     jr c, Jump_036_7A7A
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     xor a, a
     ld [hl+], a
     ld [hl], a
@@ -8968,7 +8968,7 @@ Jump_036_7ACD::
 Func_036_7AD5:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld a, [hl+]
     or a, [hl]
     jp z, Jump_036_7CD3
@@ -9001,14 +9001,14 @@ Func_036_7AF4:: ; heuristic: target of a pointer table; C0
 Func_036_7B09:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     push hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
     ld hl, wD8EF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
     pop bc
@@ -9029,7 +9029,7 @@ Func_036_7B09:: ; heuristic: target of a pointer table; C0
 Func_036_7B36:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_036_7E65
+    call AddDoubleAToHL_Bank36
     ld c, l
     ld b, h
     ld a, [hl+]
@@ -9564,8 +9564,10 @@ Func_036_7E5B::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 56 call sites from 30 routines (e.g. Func_036_54BE, Func_036_4582, Func_036_42D3, Func_036_4162, ...)
-Func_036_7E65::
+AddDoubleAToHL_Bank36::
+Func_036_7E65:: ; address name
     add a, a
     add_a_to_hl
     ret
@@ -9610,9 +9612,11 @@ Jump_036_7E9C::
     db $7A, $21, $B7, $7E, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. Func_036_4A38, Func_036_5F25, Func_036_5703)
 ; points at: wD095
-Func_036_7EBE::
+SetBit0OfWD095Indexed_Bank36::
+Func_036_7EBE:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -9620,9 +9624,11 @@ Func_036_7EBE::
     pop hl
     ret
 
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 5 call sites from 4 routines (e.g. Func_036_4582, Func_036_4A38, Func_036_5F25, Func_036_5703)
 ; points at: wD095
-Func_036_7ECB::
+SetBit1OfWD095Indexed_Bank36::
+Func_036_7ECB:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -9630,9 +9636,11 @@ Func_036_7ECB::
     pop hl
     ret
 
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wD095
-Func_036_7ED8:: ; heuristic: follows a terminator; C0
+SetBit2OfWD095Indexed_Bank36:: ; heuristic: follows a terminator; C0
+Func_036_7ED8:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl

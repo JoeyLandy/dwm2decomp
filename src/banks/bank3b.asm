@@ -830,7 +830,7 @@ Jump_03B_4548::
     jr z, Jump_03B_458B
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -863,11 +863,11 @@ Jump_03B_4580::
 
 Jump_03B_458B::
     ld a, [wD8A5]
-    call Func_03B_4FAB
+    call SetBit0OfWD095Indexed_Bank3B
     ld a, [wD8A5]
-    call Func_03B_4FB8
+    call SetBit1OfWD095Indexed_Bank3B
     ld a, [wD8A5]
-    call Func_03B_4FC5
+    call SetBit2OfWD095Indexed_Bank3B
     ret
 
 Jump_03B_459E::
@@ -1316,7 +1316,7 @@ Jump_03B_4854::
 Jump_03B_485F::
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -1328,7 +1328,7 @@ Jump_03B_485F::
 Jump_03B_4873::
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     push hl
     deref_hl
     ld a, l
@@ -1368,7 +1368,7 @@ Func_03B_489B:: ; heuristic: follows a terminator; C0
 Jump_03B_48AD::
     ld a, [wD8A5]
     ld hl, wD8EF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -1380,7 +1380,7 @@ Jump_03B_48AD::
 Jump_03B_48C1::
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     push hl
     deref_hl
     ld a, l
@@ -1427,7 +1427,7 @@ Func_03B_48E9::
 Func_03B_48FA::
     ld a, [wD8A5]
     ld hl, wD93F
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     push hl
     deref_hl
     push hl
@@ -1857,13 +1857,13 @@ Func_03B_4B02::
 Func_03B_4B92:: ; heuristic: target of a pointer table; C0
     ld a, [wD8A5]
     ld hl, wD8BF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
     ld hl, wD8CF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
     jr z, Jump_03B_4BBA
@@ -1882,13 +1882,13 @@ Jump_03B_4BBA::
 Func_03B_4BBD:: ; heuristic: follows a terminator; C0
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, [wD8A5]
     ld hl, wD8EF
-    call Func_03B_4F52
+    call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
     jr z, Jump_03B_4BE5
@@ -2132,7 +2132,7 @@ Jump_03B_4D59::
     jr nz, Jump_03B_4DAC
     set 0, [hl]
     ld a, [wD8A5]
-    call Func_03B_4FC5
+    call SetBit2OfWD095Indexed_Bank3B
     ld l, $75
     ld bc, $0090
     call Func_03B_4ECF
@@ -2342,8 +2342,10 @@ Jump_03B_4F48::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 10 call sites from 6 routines (e.g. Func_03B_453D, Func_03B_48FA, Func_03B_4B92, Func_03B_483A, ...)
-Func_03B_4F52::
+AddDoubleAToHL_Bank3B::
+Func_03B_4F52:: ; address name
     add a, a
     add_a_to_hl
     ret
@@ -2388,9 +2390,11 @@ Jump_03B_4F89::
     db $7A, $21, $A4, $4F, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_453D)
 ; points at: wD095
-Func_03B_4FAB::
+SetBit0OfWD095Indexed_Bank3B::
+Func_03B_4FAB:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -2398,9 +2402,11 @@ Func_03B_4FAB::
     pop hl
     ret
 
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_453D)
 ; points at: wD095
-Func_03B_4FB8::
+SetBit1OfWD095Indexed_Bank3B::
+Func_03B_4FB8:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -2408,9 +2414,11 @@ Func_03B_4FB8::
     pop hl
     ret
 
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 2 call sites from 2 routines (e.g. Func_03B_453D, Func_03B_4D1C)
 ; points at: wD095
-Func_03B_4FC5::
+SetBit2OfWD095Indexed_Bank3B::
+Func_03B_4FC5:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -2540,7 +2548,7 @@ Func_03B_5059::
     ld [hl+], a
     ld [hl+], a
     ld de, Data_03B_507C
-    call Func_03B_50E2
+    call BuildOamFromSpriteTable_Bank3B
     ret
 
 Data_03B_507C:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2596,11 +2604,13 @@ Data_03B_507C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_03B_6208
     dw Data_03B_6901
 
+; DE = two-level table; entries are chosen by hFFAD and hFFAE; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hFFAB + b + $10, X = hFFA9 + b + 8, tile += hFFAF, flags ^= hFFB0) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_5059)
-; reads: hFFB1, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
-; writes: hFFB1
-Func_03B_50E2::
-    ldh a, [hFFB1]
+; reads: hOamNextEntry, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; writes: hOamNextEntry
+BuildOamFromSpriteTable_Bank3B::
+Func_03B_50E2:: ; address name
+    ldh a, [hOamNextEntry]
     cp a, $28
     jr nc, Jump_03B_5132
     ldh a, [hFFAD]
@@ -2619,7 +2629,7 @@ Func_03B_50E2::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     sla a
     sla a
     ld l, a
@@ -2654,9 +2664,9 @@ Jump_03B_5105::
     ldh a, [hFFB0]
     xor a, b
     ld [hl+], a
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr c, Jump_03B_5105
 

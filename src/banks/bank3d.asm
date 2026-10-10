@@ -67,17 +67,19 @@ Func_03D_4054::
     ld [hl+], a
     ld [hl+], a
     ld de, Data_03D_4077
-    call Func_03D_40D1
+    call BuildOamFromSpriteTable_Bank3D
     ret
 
 Data_03D_4077:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0F4077, $5A
 
+; DE = two-level table; entries are chosen by hFFAD and hFFAE; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hFFAB + b + $10, X = hFFA9 + b + 8, tile += hFFAF, flags ^= hFFB0) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
 ; 1 call site from 1 routine (e.g. Func_03D_4054)
-; reads: hFFB1, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
-; writes: hFFB1
-Func_03D_40D1::
-    ldh a, [hFFB1]
+; reads: hOamNextEntry, hFFAD, hFFAE, hFFAB, hFFA9, hFFAF, hFFB0
+; writes: hOamNextEntry
+BuildOamFromSpriteTable_Bank3D::
+Func_03D_40D1:: ; address name
+    ldh a, [hOamNextEntry]
     cp a, $28
     jr nc, Jump_03D_4121
     ldh a, [hFFAD]
@@ -96,7 +98,7 @@ Func_03D_40D1::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     sla a
     sla a
     ld l, a
@@ -131,9 +133,9 @@ Jump_03D_40F4::
     ldh a, [hFFB0]
     xor a, b
     ld [hl+], a
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr c, Jump_03D_40F4
 

@@ -446,8 +446,10 @@ Jump_0A0_429A::
     pop hl
     ret
 
+; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
 ; 10 call sites from 2 routines (e.g. Func_0A0_4410, Func_0A0_456F)
-Func_0A0_429C::
+StoreByteAtDEPlusC_BankA0::
+Func_0A0_429C:: ; address name
     ld a, c
     add a, e
     ld e, a
@@ -459,8 +461,10 @@ Jump_0A0_42A2::
     ld [de], a
     ret
 
+; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same 13 bytes appear in 2 banks)
 ; 22 call sites from 2 routines (e.g. Func_0A0_4410, Func_0A0_456F)
-Func_0A0_42A5::
+StoreWordAtDEPlus2C_BankA0::
+Func_0A0_42A5:: ; address name
     ld a, c
     add a, a
     add a, e
@@ -803,7 +807,7 @@ Jump_0A0_449F::
     call z, Func_0A0_4268
     inc hl
     ld de, wD8B7
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     inc hl
     inc hl
     inc hl
@@ -813,34 +817,34 @@ Jump_0A0_449F::
     inc hl
     inc hl
     ld de, wD8CF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     inc hl
     inc hl
     ld de, wD8EF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     jr Jump_0A0_44EA
 
 Jump_0A0_44D2::
     ld de, wD8BF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD8CF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD8DF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD8EF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
 
 Jump_0A0_44EA::
     ld de, wD8FF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD90F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD91F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD92F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD93F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld a, [wD871]
     or a, a
     jr z, Jump_0A0_452B
@@ -865,13 +869,13 @@ Jump_0A0_44EA::
 
 Jump_0A0_452B::
     ld de, wD968
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     ld de, wD978
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     ld de, wD980
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     ld de, wD970
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
 
 Jump_0A0_4543::
     ld a, c
@@ -974,7 +978,7 @@ Jump_0A0_45B9::
     call z, Func_0A0_4268
     inc hl
     ld de, wD8B7
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     xor a, a
     ld [hl+], a
     ld [hl+], a
@@ -985,34 +989,34 @@ Jump_0A0_45B9::
     inc hl
     inc hl
     ld de, wD8CF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     inc hl
     inc hl
     ld de, wD8EF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     jr Jump_0A0_4605
 
 Jump_0A0_45ED::
     ld de, wD8BF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD8CF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD8DF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD8EF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
 
 Jump_0A0_4605::
     ld de, wD8FF
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD90F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD91F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD92F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld de, wD93F
-    call Func_0A0_42A5
+    call StoreWordAtDEPlus2C_BankA0
     ld a, [wD871]
     or a, a
     jr z, Jump_0A0_4646
@@ -1037,13 +1041,13 @@ Jump_0A0_4605::
 
 Jump_0A0_4646::
     ld de, wD968
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     ld de, wD978
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     ld de, wD980
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
     ld de, wD970
-    call Func_0A0_429C
+    call StoreByteAtDEPlusC_BankA0
 
 Jump_0A0_465E::
     ld a, c
@@ -1138,19 +1142,19 @@ Func_0A0_46CC::
     push bc
     ld de, $0000
     ld hl, wD0FC
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0FE
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     srl d
     rr e
     ld hl, wD0F2
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0F6
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0F8
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0FA
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld h, d
     ld l, e
     ld a, $32
@@ -1162,17 +1166,17 @@ Func_0A0_46CC::
     push hl
     ld de, $0000
     ld hl, wD0F2
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0F6
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0F8
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0FA
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0FC
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD0FE
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     pop hl
     ld a, e
     sub a, l
@@ -1224,19 +1228,19 @@ Jump_0A0_4767::
     push hl
     ld de, $0000
     ld hl, wD14A
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD14C
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     srl d
     rr e
     ld hl, wD140
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD144
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD146
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD148
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld h, d
     ld l, e
     ld a, $32
@@ -1248,17 +1252,17 @@ Jump_0A0_4767::
     push hl
     ld de, $0000
     ld hl, wD140
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD144
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD146
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD148
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD14A
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     ld hl, wD14C
-    call Func_0A0_486D
+    call AddWordAtHLToDE
     pop hl
     ld a, e
     sub a, l
@@ -1396,8 +1400,10 @@ Jump_0A0_4863::
     jr nz, Jump_0A0_4863
     ret
 
+; DE += the word at [HL]; HL += 1 (ends on the high byte); clobbers A
 ; 24 call sites from 1 routine (e.g. Func_0A0_46CC)
-Func_0A0_486D::
+AddWordAtHLToDE::
+Func_0A0_486D:: ; address name
     ld a, [hl+]
     add a, e
     ld e, a
@@ -1962,9 +1968,11 @@ Jump_0A0_4C13::
     call Func_000_21A1
     ret
 
+; Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wC278
-Func_0A0_4C1D:: ; heuristic: follows a terminator; C0
+FillWC278WithC3_BankA0:: ; heuristic: follows a terminator; C0
+Func_0A0_4C1D:: ; address name
     ld hl, wC278
     ld bc, $0160
 
@@ -2190,7 +2198,7 @@ Data_0A0_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_000_0355)
 ; reads: wC524, wIsCGB
-; writes: wC51F, wC520, hFFA1, hFFA2, hFFA5, hFFA6, rVBK, wC554, ...
+; writes: wC51F, wC520, hScrollX, hFFA2, hScrollY, hFFA6, rVBK, wC554, ...
 Func_0A0_4ECF::
     call Func_000_08A6
     ld a, $02
@@ -2206,10 +2214,10 @@ Func_0A0_4ECF::
 
 Jump_0A0_4EED::
     xor a, a
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ldh [hFFA2], a
     xor a, a
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ldh [hFFA6], a
     ld hl, vBGMap0
     ld bc, $0400
@@ -2257,9 +2265,9 @@ Jump_0A0_4F19::
     ld a, $FF
     ldh [hFFA0], a
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld a, $03
     ld [wC5EC], a
     ld a, $0B
@@ -2447,10 +2455,10 @@ Jump_0A0_50AD::
     or a, a
     ret nz
     ld a, [wD78E]
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $06
-    ld [wC528], a
-    farcall Func_007_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank07
     ld hl, wCFC9
     inc [hl]
     ret
@@ -2467,10 +2475,10 @@ Jump_0A0_50C8::
     ld de, wC130
     call Func_000_2E81
     ld a, $03
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $06
-    ld [wC528], a
-    farcall Func_007_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank07
     ld hl, wCFC9
     inc [hl]
     ret
@@ -2544,10 +2552,10 @@ Jump_0A0_5158::
     ld de, wC130
     call Func_000_2E81
     ld a, $04
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $06
-    ld [wC528], a
-    farcall Func_007_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank07
     ld hl, wCFC9
     inc [hl]
     ret
@@ -2614,10 +2622,10 @@ Jump_0A0_51DD::
     ld de, wC130
     call Func_000_2E81
     ld a, $05
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $06
-    ld [wC528], a
-    farcall Func_007_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank07
     ld hl, wCFC9
     inc [hl]
     ret
@@ -2662,10 +2670,10 @@ Jump_0A0_5246::
     or a, a
     ret nz
     ld a, $05
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $0C
-    ld [wC529], a
-    farcall Func_007_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank07
     ld a, $01
     ld [wC594], a
     ld hl, wCFC9
@@ -2838,10 +2846,10 @@ Jump_0A0_5356::
 Jump_0A0_536B::
     ld a, [wD78E]
     add a, $06
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $06
-    ld [wC528], a
-    farcall Func_007_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank07
     ld hl, wCFC9
     inc [hl]
     ret
@@ -2884,10 +2892,10 @@ Jump_0A0_5391::
     farcall Func_031_785F
     farcall Func_031_7965
     ld a, $05
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $0C
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     xor a, a
     ld [wC594], a
     ld hl, wCFC9
@@ -3150,10 +3158,10 @@ Jump_0A0_558C::
     farcall Func_002_7688
     ld a, [wC899]
     add a, $0F
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $05
-    ld [wC528], a
-    farcall Func_007_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank07
     ld hl, wCFC9
     inc [hl]
     ret
@@ -3184,10 +3192,10 @@ Jump_0A0_55D1::
     ld a, h
     ld [wC530], a
     ld a, $01
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $03
-    ld [wC529], a
-    farcall Func_007_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank07
     ld hl, vTiles2 + $200
     ld a, l
     ld [wC52D], a
@@ -3199,10 +3207,10 @@ Jump_0A0_55D1::
     ld a, h
     ld [wC530], a
     ld a, $01
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $05
-    ld [wC529], a
-    farcall Func_007_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank07
     ld hl, wCFC9
     inc [hl]
     ret
@@ -3362,10 +3370,10 @@ Jump_0A0_5704::
     ld a, $15
 
 Jump_0A0_571B::
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $05
-    ld [wC528], a
-    farcall Func_007_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank07
     ld hl, wCFC9
     inc [hl]
     ld hl, wCFC9
@@ -3387,10 +3395,10 @@ Jump_0A0_5737::
     ld hl, wC150
     call Func_000_2EAC
     ld a, $05
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $15
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     ld a, [wCFCA]
     inc a
     ld [wCFCA], a
@@ -3415,10 +3423,10 @@ Jump_0A0_5772::
     ld hl, wC150
     call Func_000_2ECF
     ld a, $05
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $16
-    ld [wC529], a
-    farcall Func_007_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank07
     xor a, a
     ld [wCFCA], a
     xor a, a
@@ -4401,9 +4409,9 @@ Jump_0A0_5E39::
     ld hl, vTiles1 + $6D0
     ld de, $0701
     ld a, $02
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $00
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_0A0_6C81
     farcall Func_01A_727D
     ld hl, wCFCB
@@ -4485,9 +4493,9 @@ Jump_0A0_5EEA::
     or a, a
     jr z, Jump_0A0_5F0D
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $2D
-    ld [wC529], a
+    ld [wStringIndex], a
     ld hl, wCFCB
     inc [hl]
     jr Jump_0A0_5F2D
@@ -4509,9 +4517,9 @@ Jump_0A0_5F20::
     ld a, $20
 
 Jump_0A0_5F22::
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld hl, wCFCB
     inc [hl]
 
@@ -4540,7 +4548,7 @@ Jump_0A0_5F40::
     ret
 
 Jump_0A0_5F51::
-    farcall Func_02F_4001
+    farcall BeginStringDisplay_Bank2F
     ld hl, wCFCB
     inc [hl]
     ret
@@ -4589,12 +4597,12 @@ Jump_0A0_5FAC::
     ld hl, vTiles1 + $6D0
     ld de, $2001
     ld a, $02
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $01
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_0A0_6C81
     ld a, $08
-    ld [wC529], a
+    ld [wStringIndex], a
     ld hl, vTiles2 + $50
     ld de, $0801
     call Func_0A0_6C81
@@ -4713,9 +4721,9 @@ Jump_0A0_60AC::
     ld hl, vTiles1 + $6D0
     ld de, $0803
     ld a, $02
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $09
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_0A0_6C81
     farcall Func_01A_7299
     ld a, [wCFD4]
@@ -4871,10 +4879,10 @@ Jump_0A0_61E9::
 Jump_0A0_61FA::
     call Func_0A0_4C74
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $29
-    ld [wC529], a
-    farcall Func_02F_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank2F
     ld hl, wCFCB
     inc [hl]
     ret
@@ -4882,10 +4890,10 @@ Jump_0A0_61FA::
 Jump_0A0_6212::
     call Func_0A0_4C74
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $7F
-    ld [wC529], a
-    farcall Func_02F_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank2F
     ld hl, wCFCB
     inc [hl]
     ret
@@ -4929,7 +4937,7 @@ Jump_0A0_6243::
     call Func_0A0_6873
     farcall Func_01A_72B5
     ld a, $09
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, [wD86A]
     ld l, a
     ld a, [wD86B]
@@ -5054,7 +5062,7 @@ Jump_0A0_6372::
 
 Jump_0A0_6373::
     ld a, $25
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $13
     ld [wD869], a
     ld hl, wCFCB
@@ -5065,7 +5073,7 @@ Jump_0A0_6373::
 
 Jump_0A0_6387::
     ld a, $26
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $13
     ld [wD869], a
     ld hl, wCFCB
@@ -5093,8 +5101,8 @@ Jump_0A0_63A9::
 Jump_0A0_63BD::
     call Func_0A0_4C74
     xor a, a
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
     ld hl, wCFCB
     inc [hl]
     ret
@@ -5155,10 +5163,10 @@ Jump_0A0_6424::
     ld hl, wC130
     call Func_000_2FE1
     ld a, $00
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $22
-    ld [wC529], a
-    farcall Func_02F_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank2F
     ld hl, wCFCA
     inc [hl]
     ret
@@ -5805,11 +5813,11 @@ Jump_0A0_681A::
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_6873, Func_0A0_5F2E)
 ; reads: wCFD4, wCFD5
-; writes: wC528, wD86A, wD86B
+; writes: wStringCategory, wD86A, wD86B
 ; points at: wD989
 Func_0A0_6822::
     ld a, $04
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, [wCFD4]
     ld hl, wD989
     swap a
@@ -5852,7 +5860,7 @@ Func_0A0_6871::
 
 ; 2 call sites from 1 routine (e.g. Func_0A0_5F2E)
 ; reads: wCFD5, wC46E, wD86A, wD86B
-; writes: wCFD5, wC46E, wC528
+; writes: wCFD5, wC46E, wStringCategory
 ; points at: wC46E, wC388
 Func_0A0_6873::
     ld a, [wCFD5]
@@ -5875,7 +5883,7 @@ Jump_0A0_688D::
     and a, $0F
     push af
     ld a, $09
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, [wD86A]
     ld l, a
     ld a, [wD86B]
@@ -5903,9 +5911,9 @@ Jump_0A0_688D::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
-; writes: wC529
+; writes: wStringIndex
 Func_0A0_68CF::
-    ld [wC529], a
+    ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $6D0
     ld de, $0901
@@ -5914,9 +5922,9 @@ Func_0A0_68CF::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
-; writes: wC529
+; writes: wStringIndex
 Func_0A0_68DE::
-    ld [wC529], a
+    ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $760
     ld de, $0901
@@ -5925,9 +5933,9 @@ Func_0A0_68DE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
-; writes: wC529
+; writes: wStringIndex
 Func_0A0_68ED::
-    ld [wC529], a
+    ld [wStringIndex], a
     push hl
     ld hl, vTiles1 + $7F0
     ld de, $0901
@@ -5936,9 +5944,9 @@ Func_0A0_68ED::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0A0_6822)
-; writes: wC529
+; writes: wStringIndex
 Func_0A0_68FC::
-    ld [wC529], a
+    ld [wStringIndex], a
     ld hl, vTiles2 + $80
     ld de, $0901
     call Func_0A0_6CBC
@@ -5946,11 +5954,11 @@ Func_0A0_68FC::
 
 ; 2 call sites from 2 routines (e.g. Func_0A0_6873, Func_0A0_5F2E)
 ; reads: wCFEE, wCFD4
-; writes: wC529, wCFEC, wCFED
+; writes: wStringIndex, wCFEC, wCFED
 ; points at: wD8DF, wC388
 Func_0A0_6909::
     push af
-    ld [wC529], a
+    ld [wStringIndex], a
     ld hl, vTiles1
     ld de, $0603
     call Func_0A0_6CBC
@@ -6543,7 +6551,7 @@ Func_0A0_6C81::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    farcall Func_009_400F
+    farcall ShowString_Bank09
     pop de
     pop hl
     ld a, l
@@ -6578,7 +6586,7 @@ Func_0A0_6CBC::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    farcall Func_008_402B
+    farcall ShowString_Bank08
     pop de
     pop hl
     ld a, l

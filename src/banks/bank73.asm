@@ -1265,21 +1265,21 @@ Jump_073_49BB::
 
 ; 1 call site from 1 routine (e.g. Func_073_4956)
 ; reads: hFFC8
-; writes: wC921, wC529, wC528, wC53D, wC53E
+; writes: wC921, wStringIndex, wStringCategory, wC53D, wC53E
 ; points at: wC152
 Func_073_49C5::
     ldh a, [hFFC8]
     ld [wC921], a
     add a, $28
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $05
-    ld [wC528], a
+    ld [wStringCategory], a
     ld hl, wC152
     ld a, l
     ld [wC53D], a
     ld a, h
     ld [wC53E], a
-    farcall Func_009_4008
+    farcall CopyStringToBuffer_Bank09
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_073_4706)
@@ -2080,10 +2080,10 @@ Jump_073_4F3C::
     and a, $03
     ret nz
     ld a, [wC924]
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $05
-    ld [wC528], a
-    farcall Func_009_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank09
     ld hl, wC926
     inc [hl]
     ret
@@ -2519,7 +2519,7 @@ Jump_073_51D7::
     xor a, a
     ld [wCB86], a
     ld hl, wCB8C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld hl, wC923
     inc [hl]
     ret
@@ -2699,7 +2699,7 @@ Jump_073_53B3::
     xor a, a
     ld [wCB86], a
     ld hl, wCB8C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld a, $80
     ld [wC919], a
     ret
@@ -2938,7 +2938,7 @@ Func_073_5546::
 
 Jump_073_554E::
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -3070,7 +3070,7 @@ Jump_073_562C::
 
 Jump_073_5643::
     ld hl, wCB9C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld hl, $0300
     ld a, l
     ld [wC924], a
@@ -3128,9 +3128,9 @@ Jump_073_569A::
     cp a, $50
     ret nz
     ld hl, wCB9C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld hl, wCBAC
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld a, $80
     ld [wC919], a
     ret
@@ -3412,7 +3412,7 @@ Jump_073_5888::
 
 Jump_073_58B1::
     ld b, $5A
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wC923
     inc [hl]
@@ -3558,7 +3558,7 @@ Jump_073_59AF::
     cp a, $C0
     ret nz
     ld hl, hFF8C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld a, $19
     ldh [hFF90], a
     xor a, a
@@ -3916,7 +3916,7 @@ Jump_073_5C08::
 
 Jump_073_5C13::
     ld hl, wCB8C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld a, $80
     ld [wC919], a
     ret
@@ -4282,7 +4282,7 @@ Func_073_5E73::
 
 Jump_073_5E97::
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wCB8C
     call SetBit2AtHL_B73
@@ -4363,7 +4363,7 @@ Func_073_5EF9::
 
 Jump_073_5F1D::
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wCB8C
     call SetBit2AtHL_B73
@@ -4458,7 +4458,7 @@ Jump_073_5FC4::
 
 Jump_073_5FD4::
     ld b, $5A
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -4528,9 +4528,9 @@ Jump_073_604B::
 
 Jump_073_604F::
     ld hl, wCB8C
-    call Func_073_7A3D
+    call SetBit1AtHL_Bank73
     ld b, $1E
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     xor a, a
     ld [wCB86], a
@@ -4559,7 +4559,7 @@ Func_073_6079::
 
 Jump_073_6083::
     ld b, $78
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld a, $40
     ld [wCBAB], a
@@ -4817,7 +4817,7 @@ Jump_073_622D::
 
 Jump_073_6252::
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wC923
     inc [hl]
@@ -5069,7 +5069,7 @@ Jump_073_63DA::
 
 Jump_073_63FF::
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wC923
     inc [hl]
@@ -5916,7 +5916,7 @@ Jump_073_6910::
 
 Jump_073_691C::
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wC923
     inc [hl]
@@ -6274,7 +6274,7 @@ Jump_073_6B87::
     ld hl, hFF8C
     call SetBit2AtHL_B73
     ld hl, hFF8C
-    call Func_073_7A3D
+    call SetBit1AtHL_Bank73
     ld hl, wC923
     inc [hl]
     ret
@@ -6430,7 +6430,7 @@ Func_073_6C77::
     ld [wC8F4], a
     ld [wC8F9], a
     ld hl, hFF8C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -6473,7 +6473,7 @@ Jump_073_6CD1::
     ld [wC8F4], a
     ld [wC8F9], a
     ld hl, hFF8C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld hl, wC923
     inc [hl]
     xor a, a
@@ -6637,7 +6637,7 @@ Func_073_6EE7::
 
 Jump_073_6EEF::
     ld b, $5A
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld a, $05
     ldh [hFFC6], a
@@ -6648,7 +6648,7 @@ Jump_073_6EEF::
 
 Jump_073_6F04::
     ld b, $28
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -6918,7 +6918,7 @@ Jump_073_70A9::
 
 Jump_073_70C2::
     ld b, $B4
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, $005C
     call StoreHLInWC924_B73b
@@ -7002,7 +7002,7 @@ Jump_073_715A::
     ld de, wCB86
     call Func_073_7A51
     ld b, $78
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, $005B
     call StoreHLInWC924_B73b
@@ -7373,9 +7373,9 @@ Jump_073_7429::
     cp a, $00
     jr nz, Jump_073_746A
     ld hl, hFF8C
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     ld hl, wCBAC
-    call Func_073_7A4C
+    call ClearBit2AtHL_Bank73
     jr Jump_073_7476
 
 Jump_073_746A::
@@ -7539,7 +7539,7 @@ Func_073_75DD::
 
 Jump_073_75E9::
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld a, $80
     ld [wC919], a
@@ -7736,7 +7736,7 @@ Jump_073_7741::
 
 Jump_073_775A::
     ld b, $1E
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wC923
     inc [hl]
@@ -7913,7 +7913,7 @@ Jump_073_78B2::
     call Func_073_78F5
     call Func_073_79B8
     ld b, $A0
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld a, $40
     ld [wC922], a
@@ -7927,7 +7927,7 @@ Jump_073_78CC::
     call Func_073_78F5
     call Func_073_79B8
     ld b, $80
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld a, $81
     ld [wC924], a
@@ -8132,16 +8132,18 @@ Jump_073_7A11::
     ld a, $80
     ld [wCBCF], a
     ld b, $3C
-    call Func_073_7A2B
+    call StepWC921Counter_Bank73
     ret nc
     ld hl, wC923
     inc [hl]
     ret
 
+; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
 ; 19 call sites from 16 routines (e.g. Func_073_79F4, Func_073_77CC, Func_073_765D, Func_073_75DD, ...)
 ; reads: wC921
 ; writes: wC921
-Func_073_7A2B::
+StepWC921Counter_Bank73::
+Func_073_7A2B:: ; address name
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -8156,15 +8158,19 @@ Jump_073_7A37::
     scf
     ret
 
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
 ; 2 call sites from 2 routines (e.g. Func_073_6B5B, Func_073_6038)
-Func_073_7A3D:: ; heuristic: follows a terminator; C0
+SetBit1AtHL_Bank73:: ; heuristic: follows a terminator; C0
+Func_073_7A3D:: ; address name
     ld a, [hl]
     or a, $02
     ld [hl], a
     ret
 
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_073_7A42:: ; heuristic: follows a terminator; C0
+ClearBit1AtHL_Bank73:: ; heuristic: follows a terminator; C0
+Func_073_7A42:: ; address name
     ld a, [hl]
     and a, $FD
     ld [hl], a
@@ -8179,8 +8185,10 @@ Func_073_7A47:: ; address name
     ld [hl], a
     ret
 
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
 ; 11 call sites from 8 routines (e.g. Func_073_73A0, Func_073_6C77, Func_073_5B66, Func_073_5987, ...)
-Func_073_7A4C:: ; heuristic: follows a terminator; C0
+ClearBit2AtHL_Bank73:: ; heuristic: follows a terminator; C0
+Func_073_7A4C:: ; address name
     ld a, [hl]
     and a, $FB
     ld [hl], a

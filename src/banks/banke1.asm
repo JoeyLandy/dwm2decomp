@@ -119,11 +119,11 @@ Data_0E1_5ABE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $5D
 
 ; 1 call site from 1 routine (e.g. Func_0E1_5AB7)
-; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
-; writes: hFFB3, hFFB4, hFFB1
+; reads: hOamNextEntry, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_0E1_5AC0::
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
     ldh a, [hFFD4]
@@ -171,7 +171,7 @@ Func_0E1_5AC0::
     add hl, hl
     add hl, de
     deref_hl
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     add a, a
     add a, a
     ld e, a
@@ -273,9 +273,9 @@ Jump_0E1_5B77::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_0E1_5B1C
     ret
@@ -369,9 +369,9 @@ Jump_0E1_5BEF::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_0E1_5B92
     ret
@@ -476,9 +476,9 @@ Jump_0E1_5C6B::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_0E1_5C10
     ret
@@ -578,19 +578,19 @@ Jump_0E1_5CE6::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_0E1_5C8B
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_0E1_5AC0)
-; reads: hFFA5, hFFA1, hFFBA, rSTAT
+; reads: hScrollY, hScrollX, hFFBA, rSTAT
 Func_0E1_5D06::
     push hl
     push bc
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld b, a
     dec e
     ld a, [de]
@@ -602,7 +602,7 @@ Func_0E1_5D06::
     ld h, $00
     add hl, hl
     add hl, hl
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld b, a
     ld a, [de]
     add a, b

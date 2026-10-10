@@ -830,30 +830,30 @@ Jump_03A_4DF4::
 
 Jump_03A_4E00::
     ld a, $02
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFFA5, hFFA1
+; writes: hScrollY, hScrollX
 ; points at: wD804
 Func_03A_4E0D:: ; heuristic: follows a terminator; C0
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $01
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_4E1A::
     xor a, a
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     xor a, a
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
@@ -862,9 +862,9 @@ Jump_03A_4E25::
     ld a, $FF
     ld [wD802], a
     xor a, a
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     xor a, a
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     xor a, a
     ld [wD804], a
     ret
@@ -1164,27 +1164,27 @@ Func_03A_4FB4::
 
 Jump_03A_4FF3::
     ld a, $04
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $00
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD805
     inc [hl]
     ret
 
 Jump_03A_5000::
     ld a, $00
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld a, $03
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD805
     inc [hl]
     ret
 
 Jump_03A_500D::
     xor a, a
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     xor a, a
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD805
     inc [hl]
     ret
@@ -1193,9 +1193,9 @@ Jump_03A_5018::
     ld a, $01
     ld [wD804], a
     xor a, a
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     xor a, a
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     xor a, a
     ld [wD805], a
     ret
@@ -1420,76 +1420,76 @@ Jump_03A_513A::
 
 Jump_03A_5176::
     xor a, a
-    ldh [hFFA1], a
-    ldh [hFFA5], a
+    ldh [hScrollX], a
+    ldh [hScrollY], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_5180::
     ld a, $FE
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_5189::
     ld a, $02
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_5192::
     ld a, $FC
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_519B::
     ld a, $04
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_51A4::
     ld a, $F8
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_51AD::
     ld a, $08
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_51B6::
     ld a, $F8
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld a, $02
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_51C3::
     ld a, $08
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ld a, $02
-    ldh [hFFA5], a
+    ldh [hScrollY], a
     ld hl, wD804
     inc [hl]
     ret
 
 Jump_03A_51D0::
     xor a, a
-    ldh [hFFA1], a
-    ldh [hFFA5], a
+    ldh [hScrollX], a
+    ldh [hScrollY], a
     ld a, $FF
     ld [wD802], a
     xor a, a
@@ -3109,7 +3109,7 @@ Func_03A_6533::
     ld [wD871], a
     ld a, [wD8A4]
     ld hl, wD8BF
-    call Func_03A_7C93
+    call AddDoubleAToHL_Bank3A
     ld a, [hl+]
     ld d, [hl]
     ld e, a
@@ -3139,7 +3139,7 @@ Jump_03A_655A::
     ld [hl+], a
     ld [hl], a
     ld a, [wD8A4]
-    call Func_03A_7D06
+    call SetBit2OfWD095Indexed_Bank3A
     ld a, [wD868]
     push af
     farcall Func_032_5B12
@@ -3152,7 +3152,7 @@ Jump_03A_655A::
 
 Jump_03A_657D::
     ld a, [wD8A4]
-    call Func_03A_7CEC
+    call SetBit0OfWD095Indexed_Bank3A
     ret
 
 Jump_03A_6584::
@@ -3258,10 +3258,10 @@ Jump_03A_6631::
     ret
 
 Jump_03A_663E::
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
     ld hl, wCFCB
     inc [hl]
     ret
@@ -3896,13 +3896,13 @@ Jump_03A_6A3A::
     push hl
     ld a, [wD8A5]
     ld hl, wD8DF
-    call Func_03A_7C93
+    call AddDoubleAToHL_Bank3A
     pop bc
     ld [hl], c
     inc hl
     ld [hl], b
     ld a, [wD8A5]
-    call Func_03A_7CF9
+    call SetBit1OfWD095Indexed_Bank3A
     ld d, $40
     farcall Func_03A_7193
     pop de
@@ -3945,7 +3945,7 @@ Jump_03A_6A60::
     add_a_to_hl
     ld [hl], $03
     ld a, [wD8A5]
-    call Func_03A_7D06
+    call SetBit2OfWD095Indexed_Bank3A
     ld d, $82
     farcall Func_03A_7193
     ret
@@ -3970,7 +3970,7 @@ Jump_03A_6ABC::
     add_a_to_hl
     ld [hl], $03
     ld a, [wD8A5]
-    call Func_03A_7D06
+    call SetBit2OfWD095Indexed_Bank3A
     ld d, $83
     farcall Func_03A_7193
     ret
@@ -4009,7 +4009,7 @@ Jump_03A_6AFE::
     jp z, Jump_03A_6BE8
     ld a, [wD8A5]
     ld hl, wD854
-    call Func_03A_7C93
+    call AddDoubleAToHL_Bank3A
     ld a, [hl]
     and a, $08
     ld [wD868], a
@@ -4132,7 +4132,7 @@ Jump_03A_6BF8::
     ld b, a
     ld a, [wD8A4]
     ld hl, wDA1D
-    call Func_03A_7C93
+    call AddDoubleAToHL_Bank3A
     ld [hl], b
     ld a, $FF
     ld [wDAD1], a
@@ -4377,7 +4377,7 @@ Jump_03A_6D71::
 
 ; 2 call sites from 2 routines (e.g. Func_032_543C, Func_032_5820)
 ; reads: wD8A6
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_03A_6D76::
     ld a, [wD8A6]
     ld hl, Data_03A_6DAA
@@ -4417,7 +4417,7 @@ Data_03A_6DAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_03B_42F4, Func_03B_4373)
 ; reads: wD8A6
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_03A_6E92::
     ld a, [wD8A6]
     ld hl, Data_03A_6EA5
@@ -4436,7 +4436,7 @@ Data_03A_6EA5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $97, $FF, $FF, $FF, $0D, $A9, $28, $D6
 
 ; 22 call sites from 12 routines (e.g. Func_030_43C4, Func_032_4ADC, Func_032_4C3E, Func_032_4D23, ...)
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_03A_6EE5::
     push de
     ld hl, Data_03A_6F06
@@ -4452,10 +4452,10 @@ Func_03A_6EE5::
 
 Jump_03A_6EF6::
     pop af
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $00
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
     ret
 
 Data_03A_6F06:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4494,7 +4494,7 @@ Data_03A_710C:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $0EB10C, $87
 
 ; 66 call sites from 40 routines (e.g. Func_032_4E51, Func_032_553B, Func_032_55EE, Func_032_5820, ...)
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_03A_7193::
     push de
     ld hl, Data_03A_71B4
@@ -4510,10 +4510,10 @@ Func_03A_7193::
 
 Jump_03A_71A4::
     pop af
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $01
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
     ret
 
 Data_03A_71B4:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4562,7 +4562,7 @@ Data_03A_74F7:: ; heuristic: target of a monotone pointer table; C0
 
 ; 4 call sites from 2 routines (e.g. Func_032_4F0A, Func_032_5820)
 ; reads: wD8A6, wD8A4, wC982
-; writes: wC982, wD86C, wC529, wC528
+; writes: wC982, wD86C, wStringIndex, wStringCategory
 ; points at: wDA1D, wC150
 Func_03A_7508::
     push de
@@ -4654,10 +4654,10 @@ Jump_03A_759F::
 Jump_03A_75A4::
     cp a, $FF
     jr z, Jump_03A_75B6
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $00
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
 
 Jump_03A_75B6::
     ret
@@ -4706,7 +4706,7 @@ Data_03A_76FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_032_4F0A)
 ; reads: wD8A6
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_03A_7715::
     call Func_03A_78EE
     call Func_03A_7908
@@ -4715,10 +4715,10 @@ Func_03A_7715::
     ld hl, Data_03A_7738
     add_a_to_hl
     ld a, [hl]
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $00
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
     ret
 
 Data_03A_7738:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5583,7 +5583,7 @@ Func_03A_7B82::
 
 ; 3 call sites from 1 routine (e.g. Func_031_4EB9)
 ; reads: wC58A, wD869, wD86D, wD86E, wD86F, wC52D, wC52E, wC52F, ...
-; writes: wD86C, wC528, wC529, wC52D, wC52E, wC52F, wC530
+; writes: wD86C, wStringCategory, wStringIndex, wC52D, wC52E, wC52F, wC530
 ; points at: wD86D, wC130
 Func_03A_7BA0::
     ld a, $FF
@@ -5638,7 +5638,7 @@ Jump_03A_7BDC::
 
 ; 2 call sites from 1 routine (e.g. Func_03A_7BA0)
 ; reads: wC52D, wC52E, wC52F, wC530
-; writes: wD86C, wC528, wC529, wC52D, wC52E, wC52F, wC530
+; writes: wD86C, wStringCategory, wStringIndex, wC52D, wC52E, wC52F, wC530
 ; points at: wC130
 Func_03A_7BF9::
     cp a, $FF
@@ -5648,17 +5648,17 @@ Func_03A_7BF9::
     ld [wD86C], a
     call Func_03A_799C
     ld a, $08
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $05
-    ld [wC529], a
+    ld [wStringIndex], a
     pop hl
     jr Jump_03A_7C1E
 
 Jump_03A_7C14::
     ld a, $02
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $00
-    ld [wC529], a
+    ld [wStringIndex], a
 
 Jump_03A_7C1E::
     ld de, $0A01
@@ -5680,7 +5680,7 @@ Jump_03A_7C1E::
     ld [wC52F], a
     ld a, d
     ld [wC530], a
-    farcall Func_008_402B
+    farcall ShowString_Bank08
     pop de
     pop hl
     ld a, l
@@ -5720,8 +5720,10 @@ Jump_03A_7C89::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 4 call sites from 2 routines (e.g. Func_03A_6533, Func_03A_69AA)
-Func_03A_7C93::
+AddDoubleAToHL_Bank3A::
+Func_03A_7C93:: ; address name
     add a, a
     add_a_to_hl
     ret
@@ -5766,9 +5768,11 @@ Jump_03A_7CCA::
     db $7A, $21, $E5, $7C, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_03A_6533)
 ; points at: wD095
-Func_03A_7CEC::
+SetBit0OfWD095Indexed_Bank3A::
+Func_03A_7CEC:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -5776,9 +5780,11 @@ Func_03A_7CEC::
     pop hl
     ret
 
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_03A_69AA)
 ; points at: wD095
-Func_03A_7CF9::
+SetBit1OfWD095Indexed_Bank3A::
+Func_03A_7CF9:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl
@@ -5786,9 +5792,11 @@ Func_03A_7CF9::
     pop hl
     ret
 
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 3 call sites from 2 routines (e.g. Func_03A_6533, Func_03A_69AA)
 ; points at: wD095
-Func_03A_7D06::
+SetBit2OfWD095Indexed_Bank3A::
+Func_03A_7D06:: ; address name
     push hl
     ld hl, wD095
     add_a_to_hl

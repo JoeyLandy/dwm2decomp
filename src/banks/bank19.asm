@@ -761,8 +761,10 @@ Jump_019_44A1::
     pop hl
     ret
 
+; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
 ; 10 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
-Func_019_44A3::
+StoreByteAtDEPlusC_Bank19::
+Func_019_44A3:: ; address name
     ld a, c
     add a, e
     ld e, a
@@ -774,8 +776,10 @@ Jump_019_44A9::
     ld [de], a
     ret
 
+; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same 13 bytes appear in 2 banks)
 ; 22 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
-Func_019_44AC::
+StoreWordAtDEPlus2C_Bank19::
+Func_019_44AC:: ; address name
     ld a, c
     add a, a
     add a, e
@@ -2166,7 +2170,7 @@ Jump_019_4C3E::
     call z, Func_019_4468
     inc hl
     ld de, wD8B7
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     inc hl
     inc hl
     inc hl
@@ -2176,34 +2180,34 @@ Jump_019_4C3E::
     inc hl
     inc hl
     ld de, wD8CF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     inc hl
     inc hl
     ld de, wD8EF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     jr Jump_019_4C89
 
 Jump_019_4C71::
     ld de, wD8BF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD8CF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD8DF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD8EF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
 
 Jump_019_4C89::
     ld de, wD8FF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD90F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD91F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD92F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD93F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld a, [wD871]
     or a, a
     jr z, Jump_019_4CCA
@@ -2228,13 +2232,13 @@ Jump_019_4C89::
 
 Jump_019_4CCA::
     ld de, wD968
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     ld de, wD978
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     ld de, wD980
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     ld de, wD970
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
 
 Jump_019_4CE2::
     ld a, c
@@ -2328,7 +2332,7 @@ Jump_019_4D3C::
     call z, Func_019_4468
     inc hl
     ld de, wD8B7
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     inc hl
     inc hl
     inc hl
@@ -2338,16 +2342,16 @@ Jump_019_4D3C::
     inc hl
     inc hl
     ld de, wD8CF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     inc hl
     inc hl
     ld de, wD8EF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     jr Jump_019_4D96
 
 Jump_019_4D6F::
     ld de, wD8BF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     push de
     push hl
     ld a, e
@@ -2360,23 +2364,23 @@ Jump_019_4D6F::
     pop hl
     pop de
     ld de, wD8CF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD8DF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD8EF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
 
 Jump_019_4D96::
     ld de, wD8FF
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD90F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD91F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD92F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld de, wD93F
-    call Func_019_44AC
+    call StoreWordAtDEPlus2C_Bank19
     ld a, [wD871]
     or a, a
     jr z, Jump_019_4DD7
@@ -2401,13 +2405,13 @@ Jump_019_4D96::
 
 Jump_019_4DD7::
     ld de, wD968
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     ld de, wD978
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     ld de, wD980
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
     ld de, wD970
-    call Func_019_44A3
+    call StoreByteAtDEPlusC_Bank19
 
 Jump_019_4DEF::
     ld a, c

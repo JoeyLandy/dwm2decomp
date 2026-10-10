@@ -2182,7 +2182,7 @@ Jump_039_58CD::
 Jump_039_58EE::
     ld a, c
     ld hl, wDA75
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
@@ -2242,7 +2242,7 @@ Jump_039_5927::
 Jump_039_5948::
     ld a, c
     ld hl, wDA75
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
@@ -2369,7 +2369,7 @@ Jump_039_5A02::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
@@ -2487,7 +2487,7 @@ Jump_039_5A9C::
     ld a, c
     ldh [hFFCA], a
     ld hl, wDA78
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -2556,7 +2556,7 @@ Jump_039_5B07::
     ld a, c
     ldh [hFFCA], a
     ld hl, wDA77
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -2620,7 +2620,7 @@ Jump_039_5B58::
     ld a, c
     ldh [hFFCA], a
     ld hl, wDA77
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -2677,7 +2677,7 @@ Jump_039_5BBB::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -2728,7 +2728,7 @@ Jump_039_5C0F::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -2889,7 +2889,7 @@ Jump_039_5CE3::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA76
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $03
     cp a, $03
     jr z, Jump_039_5D11
@@ -2939,7 +2939,7 @@ Jump_039_5D2F::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA77
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -2996,7 +2996,7 @@ Jump_039_5D7D::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA77
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -3100,7 +3100,7 @@ Jump_039_5E20::
     jr nz, Jump_039_5E53
     ld a, c
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
@@ -3143,7 +3143,7 @@ Jump_039_5E65::
     jr nz, Jump_039_5EA5
     ld a, c
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
@@ -3220,7 +3220,7 @@ Jump_039_5EE0::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5EF3
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, e
@@ -3309,7 +3309,7 @@ Jump_039_5F6B::
     ld a, c
     ldh [hFFCA], a
     ld hl, wDA72
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
@@ -3424,7 +3424,7 @@ Jump_039_602D::
     jr nz, Jump_039_6079
     ld a, c
     ld hl, wDA75
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $03
     cp a, $03
     jr z, Jump_039_6079
@@ -3574,7 +3574,7 @@ Jump_039_6105::
     ld a, c
     ldh [hFFCA], a
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -3631,7 +3631,7 @@ Jump_039_6161::
     jr nz, Jump_039_6199
     ld a, c
     ld hl, wDA74
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -3688,7 +3688,7 @@ Jump_039_61BD::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA72
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     ld e, a
@@ -3767,7 +3767,7 @@ Jump_039_623E::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA73
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     ld e, a
@@ -3846,7 +3846,7 @@ Jump_039_62BF::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA73
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -3926,7 +3926,7 @@ Jump_039_6340::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA73
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -3998,7 +3998,7 @@ Jump_039_63C1::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA73
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -4111,7 +4111,7 @@ Jump_039_646A::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA78
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -4200,7 +4200,7 @@ Jump_039_64F7::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA72
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -4272,7 +4272,7 @@ Jump_039_6578::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA72
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -4348,7 +4348,7 @@ Jump_039_65F4::
     jp c, Jump_039_666F
     ldh [hFFC9], a
     ld hl, wDA76
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rrca
     rrca
@@ -5195,7 +5195,7 @@ Jump_039_6A41::
     ld a, c
     ldh [hFFC9], a
     ld hl, wDA78
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
@@ -5295,7 +5295,7 @@ Jump_039_6AB4::
     ld a, c
     ldh [hFFCA], a
     ld hl, wDA75
-    call Func_039_71C9
+    call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
@@ -6474,8 +6474,10 @@ Jump_039_71C4::
 Jump_039_71C8::
     ret
 
+; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
 ; 29 call sites from 27 routines (e.g. Func_039_6A9C, Func_039_6A25, Func_039_5A84, Func_039_5B40, ...)
-Func_039_71C9::
+ReadByteAtHLPlus4APlus3C_Bank39::
+Func_039_71C9:: ; address name
     add a, a
     add a, c
     add a, a
@@ -6541,9 +6543,11 @@ Func_039_7203::
     ld hl, wD91F
     jr Jump_039_7212
 
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDA53
-Func_039_7208:: ; heuristic: follows a terminator; C0
+ReadWDA53Indexed_Bank39:: ; heuristic: follows a terminator; C0
+Func_039_7208:: ; address name
     ld hl, wDA53
     add_a_to_hl
     ld a, [hl]
@@ -6555,8 +6559,10 @@ Jump_039_7212::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_039_721C:: ; heuristic: follows a terminator; C0
+AddDoubleAToHL_Bank39:: ; heuristic: follows a terminator; C0
+Func_039_721C:: ; address name
     add a, a
     add_a_to_hl
     ret

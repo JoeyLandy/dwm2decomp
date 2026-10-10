@@ -2,71 +2,71 @@ SECTION "Bank 99", ROMX[$4000], BANK[$99]
     db $99
 
 ; 1 call site from 1 routine (e.g. Func_02D_4001)
-; reads: wC529
-; writes: wC529
+; reads: wStringIndex
+; writes: wStringIndex
 Func_099_4001::
     ld de, Data_099_4070
-    ld a, [wC529]
+    ld a, [wStringIndex]
     sub a, $D5
-    ld [wC529], a
-    call Func_000_25C9
+    ld [wStringIndex], a
+    call BeginStringDisplay
     ret
 
 ; 1 call site from 1 routine (e.g. Func_02D_4016)
-; reads: wC529
-; writes: wC529
+; reads: wStringIndex
+; writes: wStringIndex
 Func_099_4010:: ; heuristic: follows a terminator; C0
     ld de, Data_099_4070
-    ld a, [wC529]
+    ld a, [wStringIndex]
     sub a, $D5
-    ld [wC529], a
-    call Func_000_25FE
+    ld [wStringIndex], a
+    call CopyStringToBuffer
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 ; 1 call site from 1 routine (e.g. Func_02E_4001)
-; reads: wC529
-; writes: wC529
+; reads: wStringIndex
+; writes: wStringIndex
 Func_099_4026::
     ld de, Data_099_4B35
-    ld a, [wC529]
+    ld a, [wStringIndex]
     sub a, $A6
-    ld [wC529], a
-    call Func_000_25C9
+    ld [wStringIndex], a
+    call BeginStringDisplay
     ret
 
 ; 1 call site from 1 routine (e.g. Func_02E_4016)
-; reads: wC529
-; writes: wC529
+; reads: wStringIndex
+; writes: wStringIndex
 Func_099_4035:: ; heuristic: follows a terminator; C0
     ld de, Data_099_4B35
-    ld a, [wC529]
+    ld a, [wStringIndex]
     sub a, $A6
-    ld [wC529], a
-    call Func_000_25FE
+    ld [wStringIndex], a
+    call CopyStringToBuffer
     ret
     db $CD, $26, $40, $CD, $11, $26, $C9
 
 ; 1 call site from 1 routine (e.g. Func_07C_4001)
-; reads: wC529
-; writes: wC529
+; reads: wStringIndex
+; writes: wStringIndex
 Func_099_404B::
     ld de, Data_099_6366
-    ld a, [wC529]
+    ld a, [wStringIndex]
     sub a, $87
-    ld [wC529], a
-    call Func_000_25C9
+    ld [wStringIndex], a
+    call BeginStringDisplay
     ret
 
 ; 1 call site from 1 routine (e.g. Func_07C_4016)
-; reads: wC529
-; writes: wC529
+; reads: wStringIndex
+; writes: wStringIndex
 Func_099_405A:: ; heuristic: follows a terminator; C0
     ld de, Data_099_6366
-    ld a, [wC529]
+    ld a, [wStringIndex]
     sub a, $87
-    ld [wC529], a
-    call Func_000_25FE
+    ld [wStringIndex], a
+    call CopyStringToBuffer
     ret
     db $CD, $4B, $40, $CD, $11, $26, $C9
 

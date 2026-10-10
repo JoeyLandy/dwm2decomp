@@ -494,10 +494,10 @@ Jump_000_046B::
 
 ; 2 call sites from 1 routine (e.g. Func_000_0355)
 ; reads: wC56C
-; writes: hFFB1
+; writes: hOamNextEntry
 Func_000_0474::
     xor a, a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     call Func_000_252D
     call Func_000_048A
     ld a, [wC56C]
@@ -1076,12 +1076,12 @@ Func_000_07D8::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_000_0355, Func_0A1_4519, Func_0A1_4F8B)
-; reads: hFFA1, hFFA5, hFF9F, hFFA0
+; reads: hScrollX, hScrollY, hFF9F, hFFA0
 ; writes: rSCX, rSCY, rWX, rWY
 Func_000_07E0::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ldh [rSCX], a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ldh [rSCY], a
     ldh a, [hFF9F]
     ldh [rWX], a
@@ -1258,26 +1258,30 @@ Func_000_08A6::
 ; 3 call sites from 3 routines (e.g. Func_000_15C2, Func_000_1583, Func_007_600E)
 Func_000_08AD::
     di
-    call Func_000_08C7
+    call LoadSerialByte
     ld hl, rSC
     set 0, [hl]
     set 7, [hl]
     ei
     ret
 
+; A is stored in rSB and rSC becomes $80 (transfer start, external clock); interrupts are off during the write
 ; 32 call sites from 13 routines (e.g. Func_000_14D1, Func_000_15C2, Func_000_1583, Func_007_65F1, ...)
-Func_000_08BA::
+SerialSendByte::
+Func_000_08BA:: ; address name
     di
-    call Func_000_08C7
+    call LoadSerialByte
     ld hl, rSC
     res 0, [hl]
     set 7, [hl]
     ei
     ret
 
-; 2 call sites from 2 routines (e.g. Func_000_08BA, Func_000_08AD)
+; rSC = 0, rSB = A
+; 2 call sites from 2 routines (e.g. SerialSendByte, Func_000_08AD)
 ; writes: rSC, rSB
-Func_000_08C7::
+LoadSerialByte::
+Func_000_08C7:: ; address name
     ld b, a
     ld a, $00
     ldh [rSC], a
@@ -1728,10 +1732,10 @@ Func_000_0B7F::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_000_0150, Func_000_06A8, Func_000_0705)
-; points at: hFFA1
+; points at: hScrollX
 Func_000_0B9B::
     xor a, a
-    ld hl, hFFA1
+    ld hl, hScrollX
     call Func_000_0BA2
 
 ; 1 call site from 1 routine (e.g. Func_000_0B9B)
@@ -1743,11 +1747,11 @@ Func_000_0BA2::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_0150)
-; writes: hFFB1
+; writes: hOamNextEntry
 ; points at: wC000
 Func_000_0BA7::
     xor a, a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     ld hl, wC000
     ld b, $A0
 
@@ -1758,9 +1762,9 @@ Jump_000_0BAF::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_0474)
-; reads: hFFB1
+; reads: hOamNextEntry
 Func_000_0BB4::
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     cp a, $28
     ret z
     ld l, a
@@ -3450,7 +3454,7 @@ Jump_000_1558::
     ld a, [wC57F]
     bit 1, a
     ld a, $F8
-    call nz, Func_000_08BA
+    call nz, SerialSendByte
 
 Jump_000_1575::
     xor a, a
@@ -3479,7 +3483,7 @@ Func_000_1583::
 Jump_000_1594::
     ld a, [wIsCGB]
     or a, $70
-    call Func_000_08BA
+    call SerialSendByte
 
 Jump_000_159C::
     ld a, [wC588]
@@ -3508,7 +3512,7 @@ Func_000_15C2::
     ld a, [wC57F]
     bit 1, a
     ld a, $F5
-    call nz, Func_000_08BA
+    call nz, SerialSendByte
     ld a, [wC57F]
     bit 1, a
     ld a, $F5
@@ -6411,12 +6415,12 @@ Func_000_24E5::
     ret
 
 ; 73 call sites from 57 routines (e.g. Func_00C_6901, Func_00C_6CA1, Func_015_6742, Func_015_54C0, ...)
-; reads: hFFA1
+; reads: hScrollX
 Func_000_24F8::
     push bc
     push de
     push hl
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -6458,7 +6462,7 @@ Jump_000_2528::
 ; 11 call sites from 3 routines (e.g. Func_000_0474, Func_002_5BD7, Func_00F_7BC3)
 ; reads: wC5DB, wC5DC
 ; writes: hFFD2, hFFD3, hFFD4, hFFD5
-; points at: hFFA1, hFFA5
+; points at: hScrollX, hScrollY
 Func_000_252D::
     ld a, [wC5DB]
     cp a, $01
@@ -6469,7 +6473,7 @@ Func_000_252D::
     ret z
 
 Jump_000_253C::
-    ld hl, hFFA1
+    ld hl, hScrollX
     ld a, [hl+]
     sub a, $09
     cpl
@@ -6478,7 +6482,7 @@ Jump_000_253C::
     sbc a, $00
     cpl
     ldh [hFFD3], a
-    ld hl, hFFA5
+    ld hl, hScrollY
     ld a, [hl+]
     sub a, $11
     cpl
@@ -6539,7 +6543,7 @@ Jump_000_258B::
     add a, $02
     cp a, $90
     jr c, Jump_000_25A6
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ldh [rSCX], a
     ld a, $00
 
@@ -6557,7 +6561,7 @@ Jump_000_25AA::
     add a, $02
     cp a, $81
     jr c, Jump_000_25C5
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ldh [rSCY], a
     ld a, $00
 
@@ -6565,10 +6569,12 @@ Jump_000_25C5::
     ldh [rLYC], a
     jr Jump_000_2582
 
-; 51 call sites from 51 routines (e.g. Func_007_4001, Func_008_4001, Func_009_4001, Func_00B_4001, ...)
+; DE = string table (see LookupString); clears the request area with FillTilesFromRequest, copies the position wC52D/wC52E to wC531/wC532 and wC535/wC536, points wC533/wC534 and wC537/wC538 at the string, sets wC52B = 1 and clears wC52C and wC54F; the string is drawn later by the routine at $2620
+; 51 call sites from 51 routines (e.g. BeginStringDisplay_Bank07, BeginStringDisplay_Bank08, BeginStringDisplay_Bank09, BeginStringDisplay_Bank0B, ...)
 ; reads: wC52D, wC52E
 ; writes: wC531, wC535, wC532, wC536, wC533, wC537, wC534, wC538, ...
-Func_000_25C9::
+BeginStringDisplay::
+Func_000_25C9:: ; address name
     push de
     call FillTilesFromRequest
     ld a, [wC52D]
@@ -6578,7 +6584,7 @@ Func_000_25C9::
     ld [wC532], a
     ld [wC536], a
     pop de
-    call Func_000_2E40
+    call LookupString
     ld a, e
     ld [wC533], a
     ld [wC537], a
@@ -6592,10 +6598,12 @@ Func_000_25C9::
     ld [wC54F], a
     ret
 
-; 29 call sites from 29 routines (e.g. Func_008_4016, Func_009_4008, Func_00E_4016, Func_028_4016, ...)
+; DE = string table (see LookupString); copies the string, including its $F0 terminator, to the address in wC53D/wC53E
+; 29 call sites from 29 routines (e.g. CopyStringToBuffer_Bank08, CopyStringToBuffer_Bank09, Func_00E_4016, Func_028_4016, ...)
 ; reads: wC53D, wC53E
-Func_000_25FE::
-    call Func_000_2E40
+CopyStringToBuffer::
+Func_000_25FE:: ; address name
+    call LookupString
     ld a, [wC53D]
     ld l, a
     ld a, [wC53E]
@@ -6609,10 +6617,12 @@ Jump_000_2609::
     jr nz, Jump_000_2609
     ret
 
-; 17 call sites from 17 routines (e.g. Func_007_400F, Func_008_402B, Func_009_400F, Func_00B_400F, ...)
+; sets bit 1 of wC52B, then runs the display step at $2620 until wC52B is zero
+; 17 call sites from 17 routines (e.g. ShowString_Bank07, ShowString_Bank08, ShowString_Bank09, ShowString_Bank0B, ...)
 ; reads: wC52B
 ; points at: wC52B
-Func_000_2611::
+RunStringDisplayToEnd::
+Func_000_2611:: ; address name
     ld hl, wC52B
     set 1, [hl]
 
@@ -6623,8 +6633,8 @@ Jump_000_2616::
     jr nz, Jump_000_2616
     ret
 
-; 3 call sites from 3 routines (e.g. Func_000_0355, Func_000_2611, Func_01B_47CA)
-; reads: wC52C, wC52A, wC52B, wC5F0, wC550, wC563, wC567, wC552, ...
+; 3 call sites from 3 routines (e.g. Func_000_0355, RunStringDisplayToEnd, Func_01B_47CA)
+; reads: wC52C, wStringBank, wC52B, wC5F0, wC550, wC563, wC567, wC552, ...
 ; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
 ; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
 Func_000_2620::
@@ -6642,13 +6652,13 @@ Jump_000_2627::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_000_2620)
-; reads: wC52A, wC52C, wC52B, wC5F0, wC550, wC563, wC567, wC552, ...
+; reads: wStringBank, wC52C, wC52B, wC5F0, wC550, wC563, wC567, wC552, ...
 ; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
 ; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
 Func_000_2637::
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, [wC52A]
+    ld a, [wStringBank]
     ld [rROMB0], a
     ld a, [wC52C]
     bit 2, a
@@ -6771,7 +6781,7 @@ Jump_000_271B::
     res 1, [hl]
     push de
     ld hl, vBGMap0
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -6780,7 +6790,7 @@ Jump_000_271B::
     sla e
     rl d
     add hl, de
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -7076,7 +7086,7 @@ Func_000_28F4::
     ret
 
 ; fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero
-; 108 call sites from 66 routines (e.g. Func_000_2BFA, FillTilesRequest, Func_000_25C9, Func_001_5535, ...)
+; 108 call sites from 66 routines (e.g. Func_000_2BFA, FillTilesRequest, BeginStringDisplay, Func_001_5535, ...)
 ; reads: wC52D, wC52E, wC530, wC52F, rSTAT
 ; points at: wC52F
 FillTilesFromRequest::
@@ -7313,7 +7323,7 @@ Jump_000_2A73::
 Jump_000_2A9C::
     ld a, e
     call WriteVRAMByte
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     inc e
     dec b
     jr nz, Jump_000_2A9C
@@ -7359,7 +7369,7 @@ Jump_000_2AD2::
 Jump_000_2AE8::
     ld a, e
     call WriteVRAMByte
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     inc e
     dec b
     jr nz, Jump_000_2AE8
@@ -7448,7 +7458,7 @@ Jump_000_2B45::
 Jump_000_2B81::
     ld a, e
     call WriteVRAMByte
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     inc e
     dec b
     jr nz, Jump_000_2B81
@@ -7769,7 +7779,7 @@ Jump_000_2D77::
 
 Jump_000_2D92::
     call WriteVRAMByte
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     jr Jump_000_2D77
 
 Jump_000_2D9A::
@@ -7809,7 +7819,7 @@ Jump_000_2DAB::
 
 Jump_000_2DC6::
     call WriteVRAMByte
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     jr Jump_000_2DAB
 
 Jump_000_2DCE::
@@ -7847,13 +7857,15 @@ Func_000_2DED::
     ret
     INCBIN "dwm2-cobi-us.gbc", $002DFA, $46
 
-; 2 call sites from 2 routines (e.g. Func_000_25C9, Func_000_25FE)
-; reads: wC528, wC529
-; writes: wC52A
-Func_000_2E40::
+; DE = table of 16-bit pointers, one per category; wC528 = category, wC529 = index; returns DE = the string pointer; stores the current ROM bank in wC52A
+; 2 call sites from 2 routines (e.g. BeginStringDisplay, CopyStringToBuffer)
+; reads: wStringCategory, wStringIndex
+; writes: wStringBank
+LookupString::
+Func_000_2E40:: ; address name
     ld a, [BANK_NUMBER_BYTE]
-    ld [wC52A], a
-    ld a, [wC528]
+    ld [wStringBank], a
+    ld a, [wStringCategory]
     ld l, a
     ld h, $00
     add hl, hl
@@ -7861,7 +7873,7 @@ Func_000_2E40::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ld a, [wC529]
+    ld a, [wStringIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -7888,27 +7900,27 @@ Func_000_2E5D::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC528, wC529
+; writes: wStringCategory, wStringIndex
 Func_000_2E72:: ; heuristic: follows a terminator; C0
     ld a, h
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, l
-    ld [wC529], a
-    farcall Func_008_4001
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank08
     ret
 
 ; 23 call sites from 19 routines (e.g. Func_003_5E68, Func_003_5253, Func_016_555C, Func_016_4A48, ...)
-; writes: wC53D, wC53E, wC528, wC529
+; writes: wC53D, wC53E, wStringCategory, wStringIndex
 Func_000_2E81::
     ld a, e
     ld [wC53D], a
     ld a, d
     ld [wC53E], a
     ld a, h
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, l
-    ld [wC529], a
-    farcall Func_008_4016
+    ld [wStringIndex], a
+    farcall CopyStringToBuffer_Bank08
     ret
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
@@ -8212,7 +8224,7 @@ Jump_000_3031::
 Jump_000_3032::
     ld a, e
     call WriteVRAMByte
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     inc e
     dec b
     jr nz, Jump_000_3032
@@ -8225,13 +8237,15 @@ Jump_000_3032::
 
 ; 5 call sites from 3 routines (e.g. Func_000_2637, Func_000_2BFA, Func_000_2D4A)
 Func_000_3048::
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     dec b
     jr nz, Func_000_3048
     ret
 
+; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF (the same 15 bytes appear in 2 banks)
 ; 8 call sites from 5 routines (e.g. Func_000_3048, Func_000_2D4A, Func_000_2950, Func_000_3095, ...)
-Func_000_304F::
+NextBGMapColumn_Bank00::
+Func_000_304F:: ; address name
     push af
     ld a, l
     and a, $E0
@@ -8263,16 +8277,16 @@ Func_000_305E::
     ret
 
 ; 3 call sites from 2 routines (e.g. Func_000_2637, Func_000_2D4A)
-; reads: hFFA5, hFFA1
+; reads: hScrollY, hScrollX
 Func_000_3072::
     push hl
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld l, a
     ld h, $00
     add hl, hl
     add hl, hl
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     and a, $F8
     rrca
     rrca
@@ -8297,7 +8311,7 @@ Func_000_3072::
 Func_000_3095::
     ld a, $C3
     call WriteVRAMByte
-    call Func_000_304F
+    call NextBGMapColumn_Bank00
     dec b
     jr nz, Func_000_3095
     ret

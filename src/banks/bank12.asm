@@ -361,7 +361,7 @@ Func_012_4210::
 ; points at: hFF8C
 Func_012_422C:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
-    call Func_012_65FA
+    call ClearBit2AtHL_Bank12
     ld a, $80
     ld [wC919], a
     ret
@@ -1145,7 +1145,7 @@ Func_012_4705:: ; heuristic: target of a pointer table; C0
     ld hl, wCBBA
     dec [hl]
     ld b, $10
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld hl, wC923
     inc [hl]
@@ -1274,7 +1274,7 @@ Jump_012_47D8::
     cp a, $30
     ret nz
     ld hl, hFF8C
-    call Func_012_65FA
+    call ClearBit2AtHL_Bank12
     ld a, $01
     ldh [hFF98], a
     ld [wC8EF], a
@@ -1691,7 +1691,7 @@ Func_012_4B0A:: ; heuristic: target of a pointer table; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFFB9
-; writes: wC529, wC528, wC53D, wC53E, wC921, hFFB9
+; writes: wStringIndex, wStringCategory, wC53D, wC53E, wC921, hFFB9
 ; points at: wC923, wCAD0, wC151, wC17E
 Func_012_4B19:: ; heuristic: target of a pointer table; C0
     ld hl, wC923
@@ -1700,17 +1700,17 @@ Func_012_4B19:: ; heuristic: target of a pointer table; C0
     ld a, $0B
     add_a_to_hl
     ld a, [hl+]
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, [hl]
     inc a
     inc a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld de, wC151
     ld a, e
     ld [wC53D], a
     ld a, d
     ld [wC53E], a
-    farcall Func_008_4016
+    farcall CopyStringToBuffer_Bank08
     ld hl, wCAD0
     ld a, $6D
     add_a_to_hl
@@ -1757,7 +1757,7 @@ Func_012_4B77:: ; heuristic: target of a pointer table; C0
 
 Jump_012_4B83::
     ld b, $E0
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     xor a, a
     ld [wCBCF], a
@@ -2001,7 +2001,7 @@ Func_012_4CDF:: ; heuristic: target of a pointer table; C0
 ; points at: wC923
 Func_012_4D05:: ; heuristic: target of a pointer table; C0
     ld b, $3C
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld a, $40
     ld [wCBAB], a
@@ -2038,7 +2038,7 @@ Func_012_4D15:: ; heuristic: target of a pointer table; C0
 ; points at: wC923
 Func_012_4D3B:: ; heuristic: target of a pointer table; C0
     ld b, $1E
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld hl, wC923
     inc [hl]
@@ -2049,7 +2049,7 @@ Func_012_4D3B:: ; heuristic: target of a pointer table; C0
 ; points at: wC923
 Func_012_4D46:: ; heuristic: target of a pointer table; C0
     ld b, $3C
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld a, $40
     ld [wCB9B], a
@@ -2068,7 +2068,7 @@ Func_012_4D56:: ; heuristic: target of a pointer table; C0
     cp a, $58
     ret nz
     ld hl, wCB8C
-    call Func_012_65FA
+    call ClearBit2AtHL_Bank12
     ld hl, wC923
     inc [hl]
     ret
@@ -2207,7 +2207,7 @@ Func_012_4E55::
 ; points at: hFF8C, wC923
 Func_012_4E63:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
-    call Func_012_65EB
+    call SetBit1AtHL_Bank12
     xor a, a
     ld [wC8EF], a
     ld [wC8F4], a
@@ -2360,7 +2360,7 @@ Func_012_4F2E:: ; heuristic: target of a pointer table; C0
     cp a, c
     ret nz
     ld hl, hFF8C
-    call Func_012_65F0
+    call ClearBit1AtHL_Bank12
     ld a, $80
     ld [wC919], a
     ret
@@ -2450,7 +2450,7 @@ Func_012_4FD7:: ; heuristic: target of a pointer table; C0
     xor a, a
     ldh [hFF98], a
     ld hl, hFF8C
-    call Func_012_65EB
+    call SetBit1AtHL_Bank12
     ld a, $65
     call StoreWC60B
     ld hl, wC923
@@ -3010,7 +3010,7 @@ Jump_012_55BF::
 
 Jump_012_55D7::
     ld b, $5A
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ldh a, [hFF8C]
     and a, $B7
@@ -3250,7 +3250,7 @@ Func_012_574E:: ; heuristic: target of a pointer table; C0
 ; points at: wC923
 Func_012_575B:: ; heuristic: target of a pointer table; C0
     ld b, $B4
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld hl, wC923
     inc [hl]
@@ -3961,14 +3961,14 @@ Jump_012_5BC6::
 Jump_012_5BCB::
     call Func_012_5BD9
     ld b, $1E
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld hl, wC923
     inc [hl]
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_5B9A)
-; reads: wC195, wC922, hFFA1, hFFA2, wC924, hFFA5, hFFA6, wC925
+; reads: wC195, wC922, hScrollX, hFFA2, wC924, hScrollY, hFFA6, wC925
 ; writes: hFFAD, hFFAE, hFFB0, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
 Func_012_5BD9::
     ld a, [wC195]
@@ -3984,7 +3984,7 @@ Func_012_5BD9::
     ldh [hFFB0], a
     ld a, $70
     ldh [hFFAF], a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld l, a
     ldh a, [hFFA2]
     ld h, a
@@ -3995,7 +3995,7 @@ Func_012_5BD9::
     ldh [hFFA9], a
     ld a, h
     ldh [hFFAA], a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld l, a
     ldh a, [hFFA6]
     ld h, a
@@ -4470,7 +4470,7 @@ Func_012_5EE7::
 
 Jump_012_5F06::
     ld b, $1E
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld hl, wC923
     inc [hl]
@@ -4785,7 +4785,7 @@ Jump_012_60FD::
     ret
 
 ; 4 call sites from 2 routines (e.g. Func_012_5EE7, Func_012_5DB6)
-; reads: wC195, hFF98, hFFA1, hFFA2, wC924, hFFA5, hFFA6, wC925
+; reads: wC195, hFF98, hScrollX, hFFA2, wC924, hScrollY, hFFA6, wC925
 ; writes: hFFAD, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
 ; points at: hFFAD
 Func_012_6114::
@@ -4812,7 +4812,7 @@ Jump_012_6132::
     ldh [hFFAE], a
     ld a, $70
     ldh [hFFAF], a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld l, a
     ldh a, [hFFA2]
     ld h, a
@@ -4823,7 +4823,7 @@ Jump_012_6132::
     ldh [hFFA9], a
     ld a, h
     ldh [hFFAA], a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld l, a
     ldh a, [hFFA6]
     ld h, a
@@ -4926,7 +4926,7 @@ Func_012_61EF::
 Jump_012_6200::
     farcall Func_002_5946
     ld b, $11
-    call Func_012_65A4
+    call StepWC921Counter_Bank12
     ret nc
     ld hl, wC923
     inc [hl]
@@ -5511,10 +5511,12 @@ Jump_012_6591::
     inc [hl]
     ret
 
+; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
 ; 10 call sites from 10 routines (e.g. Func_012_61EF, Func_012_5B9A, Func_012_5EE7, Func_012_575B, ...)
 ; reads: wC921
 ; writes: wC921
-Func_012_65A4:: ; heuristic: follows a terminator; C0
+StepWC921Counter_Bank12:: ; heuristic: follows a terminator; C0
+Func_012_65A4:: ; address name
     ld a, [wC921]
     inc a
     ld [wC921], a
@@ -5558,15 +5560,19 @@ Jump_012_65C5::
     inc [hl]
     ret
 
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
 ; 2 call sites from 2 routines (e.g. Func_012_4E63, Func_012_4FD7)
-Func_012_65EB:: ; heuristic: follows a terminator; C0
+SetBit1AtHL_Bank12:: ; heuristic: follows a terminator; C0
+Func_012_65EB:: ; address name
     ld a, [hl]
     or a, $02
     ld [hl], a
     ret
 
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_012_4F2E)
-Func_012_65F0:: ; heuristic: follows a terminator; C0
+ClearBit1AtHL_Bank12:: ; heuristic: follows a terminator; C0
+Func_012_65F0:: ; address name
     ld a, [hl]
     and a, $FD
     ld [hl], a
@@ -5581,8 +5587,10 @@ Func_012_65F5:: ; address name
     ld [hl], a
     ret
 
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. Func_012_4D56, Func_012_474A, Func_012_422C)
-Func_012_65FA:: ; heuristic: follows a terminator; C0
+ClearBit2AtHL_Bank12:: ; heuristic: follows a terminator; C0
+Func_012_65FA:: ; address name
     ld a, [hl]
     and a, $FB
     ld [hl], a
@@ -5661,10 +5669,10 @@ Jump_012_666D::
     and a, $03
     ret nz
     ld a, [wC924]
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $01
-    ld [wC528], a
-    farcall Func_009_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank09
     ld hl, wC926
     inc [hl]
     ret
@@ -5778,10 +5786,10 @@ Jump_012_6731::
     ret nz
     ld a, [wC924]
     and a, $3F
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $09
-    ld [wC528], a
-    farcall Func_009_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank09
     ld hl, wC926
     inc [hl]
     ret
@@ -5871,10 +5879,10 @@ Jump_012_67D2::
     and a, $03
     ret nz
     ld a, [wC924]
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
-    farcall Func_08A_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank8A
     ld hl, wC926
     inc [hl]
     ret
@@ -7051,7 +7059,7 @@ Jump_012_6EB4::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_6893)
-; reads: wC468, hFFA1, hFFA2, hFFA5, hFFA6
+; reads: wC468, hScrollX, hFFA2, hScrollY, hFFA6
 ; writes: hFFAF, hFFAD, hFFB0, hFFA9, hFFAA, hFFAB, hFFAC, hFFAE
 ; points at: wCBCF
 Func_012_6EB7::
@@ -7065,7 +7073,7 @@ Func_012_6EB7::
     jr Jump_012_6ED3
 
 ; 9 call sites from 5 routines (e.g. Func_002_4AE0, Func_002_4C4E, Func_024_567C, Func_0F1_5B8E, ...)
-; reads: wC468, hFFA1, hFFA2, hFFA5, hFFA6
+; reads: wC468, hScrollX, hFFA2, hScrollY, hFFA6
 ; writes: hFFAF, hFFAD, hFFB0, hFFA9, hFFAA, hFFAB, hFFAC, hFFAE
 ; points at: wCBCF
 Func_012_6EC6::
@@ -7105,7 +7113,7 @@ Jump_012_6EEA::
     ld a, [hl]
     add a, $08
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, d
     ldh [hFFA9], a
     ldh a, [hFFA2]
@@ -7115,7 +7123,7 @@ Jump_012_6EEA::
     ld a, [hl]
     add a, $10
     ld d, a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     add a, d
     ldh [hFFAB], a
     ldh a, [hFFA6]
@@ -7503,7 +7511,7 @@ Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B1E8, $42
 
 ; 2 call sites from 2 routines (e.g. Func_012_6893, Func_002_4C4E)
-; reads: wC468, wC8FE, wC956, wCCE9, wCC44, hFFA1, hFFA2, wC8FF, ...
+; reads: wC468, wC8FE, wC956, wCCE9, wCC44, hScrollX, hFFA2, wC8FF, ...
 ; writes: hFFAD, hFFAE, hFFAF, hFFB0, hFFA9, hFFAA, hFFAB, hFFAC
 Func_012_722A::
     ld a, [wC468]
@@ -7533,7 +7541,7 @@ Func_012_722A::
     jr nz, Jump_012_729A
 
 Jump_012_7261::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld e, a
     ldh a, [hFFA2]
     ld d, a
@@ -7550,7 +7558,7 @@ Jump_012_7273::
     ldh [hFFA9], a
     ld a, d
     ldh [hFFAA], a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld e, a
     ldh a, [hFFA6]
     ld d, a
@@ -7576,7 +7584,7 @@ Jump_012_729A::
     add a, a
     ld hl, Data_012_7313
     add_a_to_hl
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld e, a
     ldh a, [hFFA2]
     ld d, a
@@ -7592,7 +7600,7 @@ Jump_012_72B4::
     ldh [hFFA9], a
     ld a, d
     ldh [hFFAA], a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld e, a
     ldh a, [hFFA6]
     ld d, a
@@ -7612,7 +7620,7 @@ Jump_012_72C8::
     ret
 
 Jump_012_72D5::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld e, a
     ldh a, [hFFA2]
     ld d, a
@@ -7628,7 +7636,7 @@ Jump_012_72E5::
     ldh [hFFA9], a
     ld a, d
     ldh [hFFAA], a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld e, a
     ldh a, [hFFA6]
     ld d, a

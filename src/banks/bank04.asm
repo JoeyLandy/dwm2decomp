@@ -612,7 +612,7 @@ Func_004_449F::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_004_4001, Func_014_6804, Func_024_567C, Func_0F1_5B8E, ...)
-; reads: wC468, wCB7D, hFFA1, hFFA2, hFFA5, hFFA6, hFFB0, hFFC6
+; reads: wC468, wCB7D, hScrollX, hFFA2, hScrollY, hFFA6, hFFB0, hFFC6
 ; writes: hFFC6, hFFB0, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC, hFFAE, ...
 ; points at: wCB7F
 Func_004_44CE::
@@ -648,7 +648,7 @@ Jump_004_44E3::
     ld a, [hl+]
     add a, $08
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, d
     ldh [hFFA9], a
     ldh a, [hFFA2]
@@ -657,7 +657,7 @@ Jump_004_44E3::
     ld a, [hl+]
     add a, $10
     ld d, a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     add a, d
     ldh [hFFAB], a
     ldh a, [hFFA6]
@@ -1864,7 +1864,7 @@ Jump_004_4C17::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
-; reads: hFF8D, hFF8A, wC8F0, wC8F1, hFF99, hFFA1, hFFA2, hFFA5, ...
+; reads: hFF8D, hFF8A, wC8F0, wC8F1, hFF99, hScrollX, hFFA2, hScrollY, ...
 ; writes: hFFAD, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
 Func_004_4C25::
     ldh a, [hFF8D]
@@ -1911,7 +1911,7 @@ Jump_004_4C5B::
     ld a, [wC8F0]
     add a, $08
     ld l, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, l
     ldh [hFFA9], a
     ldh a, [hFFA2]
@@ -1920,7 +1920,7 @@ Jump_004_4C5B::
     ld a, [wC8F1]
     add a, $10
     ld l, a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     add a, l
     ldh [hFFAB], a
     ldh a, [hFFA6]
@@ -1930,7 +1930,7 @@ Jump_004_4C5B::
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_004_4BB0)
-; reads: hFF8D, hFF8A, hFF8E, hFF91, hFF99, hFFA1, hFFA2, hFFA5, ...
+; reads: hFF8D, hFF8A, hFF8E, hFF91, hFF99, hScrollX, hFFA2, hScrollY, ...
 ; writes: hFFAD, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, hFFAC
 Func_004_4C96::
     ldh a, [hFF8D]
@@ -1972,7 +1972,7 @@ Jump_004_4CBF::
     ldh a, [hFF8E]
     add a, $08
     ld l, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, l
     ldh [hFFA9], a
     ldh a, [hFFA2]
@@ -1981,7 +1981,7 @@ Jump_004_4CBF::
     ldh a, [hFF91]
     add a, $10
     ld l, a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     add a, l
     ldh [hFFAB], a
     ld l, a
@@ -2041,7 +2041,7 @@ Jump_004_4D3C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
-; reads: wC6FD, hFFCF, hFF8D, hFF99, hFFC6, hFFA1, hFFA2, hFFA5, ...
+; reads: wC6FD, hFFCF, hFF8D, hFF99, hFFC6, hScrollX, hFFA2, hScrollY, ...
 ; writes: hFFCF, hFFC6, hFFB0, hFFAE, hFFAF, hFFA9, hFFAA, hFFAB, ...
 ; points at: wC8EF, wC701
 Func_004_4D43::
@@ -2107,7 +2107,7 @@ Jump_004_4D89::
     ld a, [hl+]
     add a, $08
     ld c, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, c
     ldh [hFFA9], a
     ldh a, [hFFA2]
@@ -2116,7 +2116,7 @@ Jump_004_4D89::
     ld a, [hl+]
     add a, $10
     ld c, a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     add a, c
     ldh [hFFAB], a
     ldh a, [hFFA6]

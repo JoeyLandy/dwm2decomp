@@ -2,9 +2,9 @@ SECTION "Bank 83", ROMX[$4000], BANK[$83]
     db $83
 
 ; 2 call sites from 2 routines (e.g. Func_001_4AD4, Func_010_4AD0)
-; reads: wC529
+; reads: wStringIndex
 Func_083_4001::
-    ld a, [wC529]
+    ld a, [wStringIndex]
     cp a, $C7
     jr c, Jump_083_400F
     farcall Func_097_4070
@@ -12,13 +12,13 @@ Func_083_4001::
 
 Jump_083_400F::
     ld de, Data_083_4032
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC529
+; reads: wStringIndex
 Func_083_4016:: ; heuristic: follows a terminator; C0
-    ld a, [wC529]
+    ld a, [wStringIndex]
     cp a, $C7
     jr c, Jump_083_4024
     farcall Func_097_407F
@@ -26,7 +26,7 @@ Func_083_4016:: ; heuristic: follows a terminator; C0
 
 Jump_083_4024::
     ld de, Data_083_4032
-    call Func_000_25FE
+    call CopyStringToBuffer
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 

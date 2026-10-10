@@ -1,10 +1,12 @@
 SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
-; 12 call sites from 6 routines (e.g. Func_008_402B, Func_000_2E72, Func_001_4AD4, Func_003_5253, ...)
-; reads: wC528
-Func_008_4001::
-    ld a, [wC528]
+; if wC528 < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650
+; 12 call sites from 6 routines (e.g. ShowString_Bank08, Func_000_2E72, Func_001_4AD4, Func_003_5253, ...)
+; reads: wStringCategory
+BeginStringDisplay_Bank08::
+Func_008_4001:: ; address name
+    ld a, [wStringCategory]
     cp a, $09
     jr c, Jump_008_400F
     farcall Func_095_4650
@@ -12,13 +14,15 @@ Func_008_4001::
 
 Jump_008_400F::
     ld de, StringDatabase
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
 
+; if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F
 ; 3 call sites from 3 routines (e.g. Func_000_2E81, Func_012_4B19, Func_0A1_52D4)
-; reads: wC528
-Func_008_4016::
-    ld a, [wC528]
+; reads: wStringCategory
+CopyStringToBuffer_Bank08::
+Func_008_4016:: ; address name
+    ld a, [wStringCategory]
     cp a, $09
     jr c, Jump_008_4024
     farcall Func_095_465F
@@ -26,13 +30,15 @@ Func_008_4016::
 
 Jump_008_4024::
     ld de, StringDatabase
-    call Func_000_25FE
+    call CopyStringToBuffer
     ret
 
+; Func_008_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ; 67 call sites from 40 routines (e.g. Func_001_4045, Func_001_4F80, Func_001_5EAF, Func_001_6903, ...)
-Func_008_402B::
-    call Func_008_4001
-    call Func_000_2611
+ShowString_Bank08::
+Func_008_402B:: ; address name
+    call BeginStringDisplay_Bank08
+    call RunStringDisplayToEnd
     ret
 
 ; nine pointers, one per string category; each points at a table of string pointers; strings end in $F0 (E-0026)

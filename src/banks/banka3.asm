@@ -16,8 +16,10 @@ Jump_0A3_402E::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0A3_4038:: ; heuristic: follows a terminator; C0
+AddDoubleAToHL_BankA3:: ; heuristic: follows a terminator; C0
+Func_0A3_4038:: ; address name
     add a, a
     add_a_to_hl
     ret

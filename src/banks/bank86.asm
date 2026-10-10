@@ -1,10 +1,12 @@
 SECTION "Bank 86", ROMX[$4000], BANK[$86]
     db $86
 
+; ld de, this bank's string table / BeginStringDisplay
 ; 3 call sites from 3 routines (e.g. Func_001_4AD4, Func_010_4AD0, Func_05F_69FB)
-Func_086_4001::
+BeginStringDisplay_Bank86::
+Func_086_4001:: ; address name
     ld de, Data_086_4016
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
 

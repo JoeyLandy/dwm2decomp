@@ -113,7 +113,7 @@ Jump_05F_69ED::
 
 ; 1 call site from 1 routine (e.g. Func_05F_6936)
 ; reads: wC924, wC925, wCC44
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_05F_69F3::
     ld a, [wC924]
     ld l, a
@@ -122,7 +122,7 @@ Func_05F_69F3::
 
 ; 1 call site from 1 routine (e.g. Func_05F_7969)
 ; reads: wCC44
-; writes: wC529, wC528
+; writes: wStringIndex, wStringCategory
 Func_05F_69FB::
     ld a, [wCC44]
     cp a, $80
@@ -135,9 +135,9 @@ Jump_05F_6A07::
     and a, $3F
     ld h, a
     ld a, l
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, h
     rst $00
     dw Jump_05F_6A31
@@ -156,7 +156,7 @@ Jump_05F_6A07::
     dw Jump_05F_6A7E
 
 Jump_05F_6A31::
-    farcall Func_028_4001
+    farcall BeginStringDisplay_Bank28
     ret
 
 Jump_05F_6A38::
@@ -196,7 +196,7 @@ Jump_05F_6A70::
     ret
 
 Jump_05F_6A77::
-    farcall Func_086_4001
+    farcall BeginStringDisplay_Bank86
     ret
 
 Jump_05F_6A7E::
@@ -205,10 +205,10 @@ Jump_05F_6A7E::
 
 Jump_05F_6A85::
     ld a, l
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
-    farcall Func_028_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank28
     ret
 
 ; 11 call sites from 7 routines (e.g. Func_00F_4FA1, Func_00F_6681, Func_00F_67BA, Func_00F_7625, ...)
@@ -819,9 +819,9 @@ Jump_05F_6DD6::
     ret
 
 ; 23 call sites from 23 routines (e.g. Func_00F_40E9, Func_00F_4FA1, Func_00F_631F, Func_00F_64F3, ...)
-; reads: hFFA5, hFFA1
+; reads: hScrollY, hScrollX
 Func_05F_6DDB::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -838,7 +838,7 @@ Func_05F_6DDB::
     ld a, d
     and a, $9B
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -854,9 +854,9 @@ Jump_05F_6E03::
     ret
 
 ; 9 call sites from 9 routines (e.g. Func_00F_4FA1, Func_00F_5404, Func_00F_60E6, Func_00F_631F, ...)
-; reads: hFFA5, hFFA1
+; reads: hScrollY, hScrollX
 Func_05F_6E09::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -874,11 +874,11 @@ Func_05F_6E09::
     and a, $9B
     ld d, a
     push de
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     sub a, $08
     call Func_05F_6E35
     pop de
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, $A0
     call Func_05F_6E35
     ret

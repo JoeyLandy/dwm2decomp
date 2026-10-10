@@ -16,8 +16,10 @@ Jump_0A1_402E::
     deref_hl
     ret
 
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
-Func_0A1_4038:: ; heuristic: follows a terminator; C0
+AddDoubleAToHL_BankA1:: ; heuristic: follows a terminator; C0
+Func_0A1_4038:: ; address name
     add a, a
     add_a_to_hl
     ret
@@ -328,18 +330,18 @@ Jump_0A1_42FB::
 Jump_0A1_4305::
     ld hl, wD8BF
     ld bc, $0000
-    call Func_0A1_434F
-    call Func_0A1_434F
-    call Func_0A1_434F
+    call AddWordAtHLToBC_BankA1
+    call AddWordAtHLToBC_BankA1
+    call AddWordAtHLToBC_BankA1
     ld a, c
     ld [wD2C8], a
     ld a, b
     ld [wD2C9], a
     ld hl, wD8CF
     ld bc, $0000
-    call Func_0A1_434F
-    call Func_0A1_434F
-    call Func_0A1_434F
+    call AddWordAtHLToBC_BankA1
+    call AddWordAtHLToBC_BankA1
+    call AddWordAtHLToBC_BankA1
     ld a, c
     ld [wD2CA], a
     ld a, b
@@ -356,8 +358,10 @@ Jump_0A1_4305::
     call Func_0A1_4356
     ret
 
+; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
 ; 6 call sites from 1 routine (e.g. Func_0A1_413F)
-Func_0A1_434F::
+AddWordAtHLToBC_BankA1::
+Func_0A1_434F:: ; address name
     ld a, [hl+]
     add a, c
     ld c, a
@@ -690,8 +694,8 @@ Func_0A1_4519::
 
 Jump_0A1_452D::
     xor a, a
-    ldh [hFFA1], a
-    ldh [hFFA5], a
+    ldh [hScrollX], a
+    ldh [hScrollY], a
     call Func_000_07E0
     ld de, Data_07E_4EB3
     ld b, $7E
@@ -2422,8 +2426,8 @@ Jump_0A1_4FDD::
 
 Jump_0A1_4FE2::
     xor a, a
-    ldh [hFFA1], a
-    ldh [hFFA5], a
+    ldh [hScrollX], a
+    ldh [hScrollY], a
     call Func_000_07E0
     ld de, Data_07E_4EB3
     ld b, $7E
@@ -2899,7 +2903,7 @@ Jump_0A1_52D1::
 
 ; 1 call site from 1 routine (e.g. Func_0A1_4F8B)
 ; reads: wC944, hFF90
-; writes: wC529, wC528, wC53D, wC53E
+; writes: wStringIndex, wStringCategory, wC53D, wC53E
 ; points at: wC8CF
 Func_0A1_52D4::
     ld a, [wC944]
@@ -2935,15 +2939,15 @@ Jump_0A1_52FB::
     jr nz, Jump_0A1_52FB
     ldh a, [hFF90]
     add a, $0A
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld de, wC8CF
     ld a, e
     ld [wC53D], a
     ld a, d
     ld [wC53E], a
-    farcall Func_008_4016
+    farcall CopyStringToBuffer_Bank08
     call Func_0A1_528B
     ld de, vTiles1
     call Func_000_21A1

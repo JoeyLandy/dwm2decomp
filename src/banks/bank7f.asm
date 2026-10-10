@@ -104,11 +104,11 @@ Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $74, $62, $74, $62, $26, $6F, $74, $62, $98, $6F
 
 ; 1 call site from 1 routine (e.g. Func_07F_4001)
-; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
-; writes: hFFB3, hFFB4, hFFB1
+; reads: hOamNextEntry, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_07F_40CC::
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
     ldh a, [hFFD4]
@@ -156,7 +156,7 @@ Func_07F_40CC::
     add hl, hl
     add hl, de
     deref_hl
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     add a, a
     add a, a
     ld e, a
@@ -258,9 +258,9 @@ Jump_07F_4183::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_4128
     ret
@@ -354,9 +354,9 @@ Jump_07F_41FB::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_419E
     ret
@@ -461,9 +461,9 @@ Jump_07F_4277::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_421C
     ret
@@ -563,19 +563,19 @@ Jump_07F_42F2::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_4297
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_07F_40CC)
-; reads: hFFA5, hFFA1, hFFBA, rSTAT
+; reads: hScrollY, hScrollX, hFFBA, rSTAT
 Func_07F_4312::
     push hl
     push bc
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld b, a
     dec e
     ld a, [de]
@@ -587,7 +587,7 @@ Func_07F_4312::
     ld h, $00
     add hl, hl
     add hl, hl
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld b, a
     ld a, [de]
     add a, b
@@ -978,11 +978,11 @@ Data_07F_7011:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_7B24
 
 ; 1 call site from 1 routine (e.g. Func_07F_700A)
-; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
-; writes: hFFB3, hFFB4, hFFB1
+; reads: hOamNextEntry, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_07F_7065::
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
     ldh a, [hFFD4]
@@ -1030,7 +1030,7 @@ Func_07F_7065::
     add hl, hl
     add hl, de
     deref_hl
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     add a, a
     add a, a
     ld e, a
@@ -1132,9 +1132,9 @@ Jump_07F_711C::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_70C1
     ret
@@ -1228,9 +1228,9 @@ Jump_07F_7194::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_7137
     ret
@@ -1335,9 +1335,9 @@ Jump_07F_7210::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_71B5
     ret
@@ -1437,19 +1437,19 @@ Jump_07F_728B::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_07F_7230
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_07F_7065)
-; reads: hFFA5, hFFA1, hFFBA, rSTAT
+; reads: hScrollY, hScrollX, hFFBA, rSTAT
 Func_07F_72AB::
     push hl
     push bc
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld b, a
     dec e
     ld a, [de]
@@ -1461,7 +1461,7 @@ Func_07F_72AB::
     ld h, $00
     add hl, hl
     add hl, hl
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld b, a
     ld a, [de]
     add a, b

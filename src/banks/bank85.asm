@@ -648,7 +648,7 @@ Jump_085_44CD::
     ret
 
 ; 4 call sites from 1 routine (e.g. Func_085_446D)
-; reads: wC92E, hFFA5, hFFA1
+; reads: wC92E, hScrollY, hScrollX
 ; writes: wC92E
 Func_085_44D2::
     ld a, [wC92E]
@@ -657,7 +657,7 @@ Func_085_44D2::
     swap a
     add a, $08
     ld c, a
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     add a, c
     and a, $F8
     ld l, a
@@ -673,7 +673,7 @@ Func_085_44D2::
     ld a, h
     and a, $9B
     ld h, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, $08
     srl a
     srl a
@@ -738,9 +738,9 @@ Jump_085_454C::
     ret
 
 ; 4 call sites from 4 routines (e.g. Func_085_4047, Func_085_4339, Func_085_4505, Func_085_4307)
-; reads: hFFA5, hFFA1
+; reads: hScrollY, hScrollX
 Func_085_4555::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -757,7 +757,7 @@ Func_085_4555::
     ld a, d
     and a, $9B
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -2091,7 +2091,7 @@ Jump_085_4F3A::
     cp a, $60
     ret nz
     ld hl, wCBAC
-    call Func_085_5765
+    call ClearBit1AtHL_Bank85
     ld hl, wC923
     inc [hl]
     ret
@@ -2115,9 +2115,9 @@ Jump_085_4F52::
     ld a, $01
     ld [wCB86], a
     ld hl, wCBAC
-    call Func_085_576F
+    call ClearBit2AtHL_Bank85
     ld hl, wCBAC
-    call Func_085_5760
+    call SetBit1AtHL_Bank85
     ld a, $03
     ld [wCBA6], a
     xor a, a
@@ -2167,8 +2167,8 @@ Jump_085_4FBE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_085_4F14)
-; reads: wC5F0, hFFA1, hFFA2, wC921
-; writes: hFFA1, hFFA2, wC921
+; reads: wC5F0, hScrollX, hFFA2, wC921
+; writes: hScrollX, hFFA2, wC921
 ; points at: wC923
 Func_085_4FD8::
     ld a, [wC5F0]
@@ -2183,18 +2183,18 @@ Func_085_4FD8::
     cpl
     inc a
     ld c, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     sub a, c
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ldh a, [hFFA2]
     sbc a, $00
     ldh [hFFA2], a
     jr Jump_085_5003
 
 Jump_085_4FF8::
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     add a, c
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ldh a, [hFFA2]
     adc a, $00
     ldh [hFFA2], a
@@ -2206,7 +2206,7 @@ Jump_085_5003::
     cp a, b
     ret nz
     xor a, a
-    ldh [hFFA1], a
+    ldh [hScrollX], a
     ldh [hFFA2], a
     xor a, a
     ld [wC921], a
@@ -3118,7 +3118,7 @@ Jump_085_5607::
     cp a, $10
     ret nz
     ld hl, wCB9C
-    call Func_085_5765
+    call ClearBit1AtHL_Bank85
     ld a, $80
     ld [wC919], a
     ret
@@ -3135,7 +3135,7 @@ Jump_085_561E::
     or a, a
     ret z
     ld hl, wCB9C
-    call Func_085_5760
+    call SetBit1AtHL_Bank85
     ld a, $63
     call StoreWC60B
     ld hl, wC923
@@ -3280,15 +3280,19 @@ Jump_085_574E::
     ld [wC922], a
     ret
 
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
 ; 2 call sites from 2 routines (e.g. Func_085_55F5, Func_085_4F14)
-Func_085_5760:: ; heuristic: follows a terminator; C0
+SetBit1AtHL_Bank85:: ; heuristic: follows a terminator; C0
+Func_085_5760:: ; address name
     ld a, [hl]
     or a, $02
     ld [hl], a
     ret
 
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
 ; 2 call sites from 2 routines (e.g. Func_085_55F5, Func_085_4F14)
-Func_085_5765:: ; heuristic: follows a terminator; C0
+ClearBit1AtHL_Bank85:: ; heuristic: follows a terminator; C0
+Func_085_5765:: ; address name
     ld a, [hl]
     and a, $FD
     ld [hl], a
@@ -3301,8 +3305,10 @@ Func_085_576A:: ; heuristic: follows a terminator; C0
     ld [hl], a
     ret
 
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_085_4F14)
-Func_085_576F:: ; heuristic: follows a terminator; C0
+ClearBit2AtHL_Bank85:: ; heuristic: follows a terminator; C0
+Func_085_576F:: ; address name
     ld a, [hl]
     and a, $FB
     ld [hl], a

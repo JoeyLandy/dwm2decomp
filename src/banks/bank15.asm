@@ -22,10 +22,10 @@ Jump_015_400D::
     ld hl, wD1CC
     ld de, wD000
     ld bc, $0104
-    call Func_015_66B8
+    call CopyLow3BitsToWRAMBank2_Bank15
 
 Jump_015_402B::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -172,7 +172,7 @@ Jump_015_412A::
     ld hl, wD1CC
     ld de, wD000
     ld bc, $0104
-    call Func_015_66B8
+    call CopyLow3BitsToWRAMBank2_Bank15
 
 Jump_015_414F::
     ld a, $05
@@ -251,7 +251,7 @@ Jump_015_41BD::
     ld hl, wC364
     ld bc, $0807
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140B
     ld de, $01CC
     call Func_015_65F1
@@ -389,7 +389,7 @@ Jump_015_42B3::
     ld hl, wC364
     ld bc, $080B
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -428,7 +428,7 @@ Jump_015_4369::
     ld de, $0142
     call Func_015_6742
     ld hl, wC42E
-    call Func_015_6772
+    call StoreC5BEC6AtHLStride2_Bank15
     ld de, $0143
     ld a, d
     ld [wD7F1], a
@@ -518,7 +518,7 @@ Jump_015_4418::
 ; reads: wD781
 ; writes: wD781
 Func_015_4439::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -531,12 +531,12 @@ Jump_015_444D::
     ld a, [wD7AB]
     ld b, $BB
     ld hl, Data_015_73A1
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     call Func_015_4439
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_015_73A1
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ret
 
 Jump_015_4467::
@@ -579,7 +579,7 @@ Jump_015_449C::
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_73A1
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -621,7 +621,7 @@ Jump_015_44D3::
     ld hl, wC364
     ld bc, $0807
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -639,8 +639,8 @@ Jump_015_451B::
     ld a, [wD786]
     ld hl, Data_015_732D
     ld b, $BC
-    call Func_015_66CA
-    call Func_015_6655
+    call StoreBAtWordTableEntry_Bank15
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -657,7 +657,7 @@ Jump_015_4550::
     ld hl, wC410
     ld bc, $0805
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -676,7 +676,7 @@ Jump_015_4570::
     ld hl, wC410
     ld bc, $0805
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -702,7 +702,7 @@ Jump_015_45B9::
     ld c, $05
     ld hl, Data_015_73A1
     call Func_015_67E5
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -861,7 +861,7 @@ Jump_015_46D3::
     ld c, $05
     ld hl, Data_015_73A1
     call Func_015_67E5
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1111,7 +1111,7 @@ Jump_015_48E3::
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_73A1
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -1157,7 +1157,7 @@ Jump_015_491A::
     ld hl, wC393
     ld bc, $0102
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1214,7 +1214,7 @@ Jump_015_49C9::
     ld hl, wC410
     ld bc, $0805
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1224,12 +1224,12 @@ Jump_015_49C9::
     ld hl, wC40C
     ld bc, $0C05
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
     call Func_015_4771
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1253,7 +1253,7 @@ Jump_015_4A2A::
     ld c, $05
     ld hl, Data_015_73A1
     call Func_015_67E5
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1559,8 +1559,8 @@ Jump_015_4C4D::
     and a, a
     jr z, Jump_015_4C5E
     ld a, $0D
-    ld [wC529], a
-    farcall Func_01B_4C86
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank1B_4C86
 
 Jump_015_4C5E::
     ld a, [wD782]
@@ -1600,7 +1600,7 @@ Jump_015_4C8A::
     ld hl, wC410
     ld bc, $0805
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1610,12 +1610,12 @@ Jump_015_4C8A::
     ld hl, wC40C
     ld bc, $0C05
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
     call Func_015_4771
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1705,7 +1705,7 @@ Jump_015_4D6E::
     ld a, $14
     ld [wD7F2], a
     call Func_015_6791
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1730,8 +1730,8 @@ Jump_015_4DB0::
     ld a, [wD786]
     ld hl, Data_015_732D
     ld b, $BC
-    call Func_015_66CA
-    call Func_015_6655
+    call StoreBAtWordTableEntry_Bank15
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1761,7 +1761,7 @@ Jump_015_4DE5::
     ret
 
 Jump_015_4DF3::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -1833,8 +1833,8 @@ Jump_015_4E6B::
     and a, a
     jr z, Jump_015_4E7F
     ld a, $0E
-    ld [wC529], a
-    farcall Func_01B_4C86
+    ld [wStringIndex], a
+    farcall BeginStringDisplay_Bank1B_4C86
 
 Jump_015_4E7F::
     ld a, [wD782]
@@ -2208,8 +2208,8 @@ Jump_015_50FB::
     ld a, [wD786]
     ld hl, Data_015_732D
     ld b, $BC
-    call Func_015_66CA
-    call Func_015_6655
+    call StoreBAtWordTableEntry_Bank15
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -2261,7 +2261,7 @@ Jump_015_5165::
     ld de, $018E
     call Func_015_6742
     ld hl, wC462
-    call Func_015_6772
+    call StoreC5BEC6AtHLStride2_Bank15
     ld de, $018F
     ld a, d
     ld [wD7F1], a
@@ -2279,15 +2279,15 @@ Jump_015_51AC::
     ld a, [wD7AB]
     ld b, $BB
     ld hl, Data_015_7333
-    call Func_015_66CA
-    call Func_015_6655
+    call StoreBAtWordTableEntry_Bank15
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_015_7333
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2373,7 +2373,7 @@ Jump_015_525F::
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_7333
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     farcall Func_01D_5DA1
     ld a, [wD7F5]
     ld h, a
@@ -2445,7 +2445,7 @@ Jump_015_52FF::
     ld a, [wD781]
     dec a
     ld [wD781], a
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -2510,7 +2510,7 @@ Jump_015_5387::
     ld hl, wC410
     ld bc, $0805
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -2693,7 +2693,7 @@ Jump_015_54C2::
     inc hl
     ld d, [hl]
     push de
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     pop de
     add hl, de
     call Func_000_24F8
@@ -2709,7 +2709,7 @@ Data_015_54E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Jump_015_54E6::
     call Func_015_60BF
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -3032,18 +3032,18 @@ Jump_015_5746::
     ld hl, wD1CC
     ld de, wD000
     ld bc, $0104
-    call Func_015_66B8
+    call CopyLow3BitsToWRAMBank2_Bank15
     ld hl, wD168
     ld de, wD104
     ld bc, $0064
-    call Func_015_66B8
+    call CopyLow3BitsToWRAMBank2_Bank15
 
 Jump_015_577C::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld de, $01A0
     add hl, de
     ld bc, $1405
@@ -3101,7 +3101,7 @@ Jump_015_57CB::
     ld hl, wC412
     ld bc, $0605
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -3179,7 +3179,7 @@ Func_015_586D::
     call Func_015_58B4
 
 Jump_015_5889::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -3214,7 +3214,7 @@ Func_015_58B4::
     push de
     push bc
     ld bc, $0006
-    call Func_015_66B8
+    call CopyLow3BitsToWRAMBank2_Bank15
     pop bc
     pop de
     pop hl
@@ -3249,8 +3249,8 @@ Jump_015_58D2::
     ld a, [wD786]
     ld hl, Data_015_732D
     ld b, $BC
-    call Func_015_66CA
-    call Func_015_6655
+    call StoreBAtWordTableEntry_Bank15
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140B
     ld de, $01CC
     call Func_015_65F1
@@ -3320,7 +3320,7 @@ Jump_015_5998::
     ld a, [wD7FA]
     ld b, $BC
     ld hl, Data_015_733B
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     xor a, a
     ld [wD7FA], a
     ld a, [wD781]
@@ -3337,7 +3337,7 @@ Jump_015_59B8::
     ld hl, wC364
     ld bc, $0809
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -3555,7 +3555,7 @@ Jump_015_5B62::
     ret
 
 Jump_015_5B82::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140B
     ld de, $01CC
     call Func_015_65F1
@@ -3610,7 +3610,7 @@ Jump_015_5BD9::
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_73A1
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -3662,7 +3662,7 @@ Jump_015_5C19::
     ret
 
 Jump_015_5C5B::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -3707,7 +3707,7 @@ Jump_015_5C7D::
     xor a, a
     ld b, $BC
     ld hl, Data_015_733B
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld c, $04
     ld hl, Data_015_73A1
     call Func_015_67E5
@@ -3717,7 +3717,7 @@ Jump_015_5C7D::
     ret
 
 Jump_015_5CDC::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -3883,8 +3883,8 @@ Jump_015_5E0C::
     ld a, [wD786]
     ld hl, Data_015_732D
     ld b, $BC
-    call Func_015_66CA
-    call Func_015_6655
+    call StoreBAtWordTableEntry_Bank15
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -4004,7 +4004,7 @@ Jump_015_5F1E::
     ret
 
 Jump_015_5F1F::
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld a, h
     ld [wD7F5], a
     ld a, l
@@ -4059,7 +4059,7 @@ Jump_015_5F77::
     ld a, [wD781]
     inc a
     ld [wD781], a
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -4191,7 +4191,7 @@ Jump_015_6074::
     cp a, $02
     jr c, Jump_015_60A4
     ld hl, wC462
-    call Func_015_6772
+    call StoreC5BEC6AtHLStride2_Bank15
     ld hl, wC463
     ld a, h
     ld [wD7F1], a
@@ -4236,7 +4236,7 @@ Jump_015_60E2::
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_7333
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld de, Data_015_7351
     ld hl, wC410
     ld bc, $0805
@@ -4264,9 +4264,9 @@ Jump_015_6101::
     call Func_015_67F9
     call Func_015_6822
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $1B
-    ld [wC529], a
+    ld [wStringIndex], a
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -4277,7 +4277,7 @@ Jump_015_6101::
     ld [wC52F], a
     ld a, h
     ld [wC530], a
-    farcall Func_01B_4C94
+    farcall ShowString_Bank1B_4C94
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4287,11 +4287,11 @@ Jump_015_6155::
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld de, $01A0
     add hl, de
     ld bc, $1405
@@ -4394,7 +4394,7 @@ Jump_015_6235::
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_73A1
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld de, Data_015_7351
     ld hl, wC410
     ld bc, $0805
@@ -4489,7 +4489,7 @@ Jump_015_62F7::
     cp a, $02
     jr c, Jump_015_631B
     ld hl, wC42E
-    call Func_015_6772
+    call StoreC5BEC6AtHLStride2_Bank15
     ld hl, wC42F
     ld a, h
     ld [wD7F1], a
@@ -4504,7 +4504,7 @@ Jump_015_631B::
     ld a, [wD7AB]
     ld b, $BC
     ld hl, Data_015_73A1
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4690,7 +4690,7 @@ Jump_015_6441::
 Jump_015_644D::
     ld a, $02
     ld [wD782], a
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -4703,7 +4703,7 @@ Func_015_645F::
     ld hl, wC364
     ld bc, $140B
     call Func_015_65B7
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
     call Func_015_65F1
@@ -4845,7 +4845,7 @@ Jump_015_6548::
     ld a, [hl]
     ld d, a
     push de
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     pop de
     add hl, de
     di
@@ -4968,7 +4968,7 @@ Jump_015_65DF::
     ret
 
 ; 41 call sites from 15 routines (e.g. Func_015_645F, Func_015_642D, Func_015_4182, Func_015_4C0C, ...)
-; reads: wC529, wC555, wC554, wIsCGB
+; reads: wStringIndex, wC555, wC554, wIsCGB
 ; writes: wC554, wC555, rVBK, rSVBK
 ; points at: wC198, wD000
 Func_015_65F1::
@@ -4984,7 +4984,7 @@ Func_015_65F1::
     call Func_000_18A5
     pop hl
     push hl
-    ld a, [wC529]
+    ld a, [wStringIndex]
     cp a, $10
     jr z, Jump_015_6634
     cp a, $11
@@ -5031,11 +5031,13 @@ Jump_015_6634::
     ldh [rVBK], a
     ret
 
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 ; 45 call sites from 17 routines (e.g. Func_015_6546, Func_015_645F, Func_015_642D, Func_015_4182, ...)
-; reads: hFFA5, hFFA1
-Func_015_6655::
+; reads: hScrollY, hScrollX
+BGMapAddressAtScroll_Bank15::
+Func_015_6655:: ; address name
     ld hl, vBGMap0
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -5044,7 +5046,7 @@ Func_015_6655::
     sla e
     rl d
     add hl, de
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a
@@ -5108,9 +5110,11 @@ Func_015_66AF::
     jr nz, Func_015_66AF
     ret
 
+; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
 ; 6 call sites from 5 routines (e.g. Func_015_40FA, Func_015_6791, Func_015_58B4, Func_015_570C, ...)
 ; writes: rSVBK
-Func_015_66B8::
+CopyLow3BitsToWRAMBank2_Bank15::
+Func_015_66B8:: ; address name
     ld a, $02
     ldh [rSVBK], a
 
@@ -5127,8 +5131,10 @@ Jump_015_66BC::
     ldh [rSVBK], a
     ret
 
+; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
 ; 19 call sites from 9 routines (e.g. Func_015_67E5, Func_015_4C0C, Func_015_47A7, Func_015_4439, ...)
-Func_015_66CA::
+StoreBAtWordTableEntry_Bank15::
+Func_015_66CA:: ; address name
     push bc
     add a, a
     add_a_to_hl
@@ -5193,7 +5199,7 @@ Jump_015_66EF::
     ld e, l
     ld d, h
     pop hl
-    call Func_015_6780
+    call CopyTileBytesToVRAM_Bank15
     pop hl
     ld a, [wD785]
     inc a
@@ -5218,7 +5224,7 @@ Jump_015_6734::
 ; 2 call sites from 2 routines (e.g. Func_015_4182, Func_015_512C)
 Func_015_6742::
     push de
-    call Func_015_6655
+    call BGMapAddressAtScroll_Bank15
     pop de
     add hl, de
     push hl
@@ -5249,8 +5255,10 @@ Func_015_6742::
     ei
     ret
 
+; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
 ; 4 call sites from 4 routines (e.g. Func_015_4182, Func_015_512C, Func_015_5A67, Func_015_60BF)
-Func_015_6772::
+StoreC5BEC6AtHLStride2_Bank15::
+Func_015_6772:: ; address name
     ld a, $C5
     ld [hl], a
     inc hl
@@ -5263,9 +5271,11 @@ Func_015_6772::
     ld [hl], a
     ret
 
+; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
 ; 2 call sites from 2 routines (e.g. Func_015_6B00, Func_015_66DF)
 ; reads: rSTAT
-Func_015_6780::
+CopyTileBytesToVRAM_Bank15::
+Func_015_6780:: ; address name
     ld c, $10
 
 Jump_015_6782::
@@ -5326,7 +5336,7 @@ Func_015_6791::
     ld b, a
     ld a, [wD7F2]
     ld c, a
-    call Func_015_66B8
+    call CopyLow3BitsToWRAMBank2_Bank15
     pop de
     pop hl
 
@@ -5356,7 +5366,7 @@ Jump_015_67E9::
     push bc
     ld b, $C3
     push hl
-    call Func_015_66CA
+    call StoreBAtWordTableEntry_Bank15
     pop hl
     pop bc
     inc c
@@ -5875,7 +5885,7 @@ Func_015_6ACA:: ; address name
 
 ; 3 call sites from 3 routines (e.g. Func_015_4C0C, Func_00D_5A4A, Func_0F0_4CA0)
 ; reads: hFFC6, wC8C1, wC8C2
-; writes: wC528, wC529, wD782, rRAMG2, rRAMB, wC8CF, wC8D0, wC8D1, ...
+; writes: wStringCategory, wStringIndex, wD782, rRAMG2, rRAMB, wC8CF, wC8D0, wC8D1, ...
 ; points at: wC52D, wC364, sBB0F, wC3B0, wC3C4, wC8CF, wC385, wC8C0, ...
 Func_015_6B00::
     ld hl, vTiles1 + $240
@@ -5911,10 +5921,10 @@ Func_015_6B00::
     ld [hl+], a
     ld [hl], $0F
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $28
-    ld [wC529], a
-    farcall Func_01B_4C94
+    ld [wStringIndex], a
+    farcall ShowString_Bank1B_4C94
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -5944,7 +5954,7 @@ Jump_015_6B6B::
     jr z, Jump_015_6BA1
     ld hl, Data_015_763B
     ld de, vTiles2 + $6F0
-    call Func_015_6780
+    call CopyTileBytesToVRAM_Bank15
     ld a, $6F
     ld hl, wC3B0
     ld [hl+], a
@@ -6213,9 +6223,9 @@ Jump_015_6CC8::
     ld a, $F0
     ld [de], a
     ld a, $08
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $05
-    ld [wC529], a
+    ld [wStringIndex], a
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -6224,16 +6234,16 @@ Jump_015_6CC8::
     ld a, $01
     ld [hl+], a
     ld [hl], $0D
-    farcall Func_008_402B
+    farcall ShowString_Bank08
     jr Jump_015_6DB4
 
 Jump_015_6D98::
     ld a, $0D
 
 Jump_015_6D9A::
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
+    ld [wStringCategory], a
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -6242,7 +6252,7 @@ Jump_015_6D9A::
     ld a, $01
     ld [hl+], a
     ld [hl], $0D
-    farcall Func_008_402B
+    farcall ShowString_Bank08
 
 Jump_015_6DB4::
     xor a, a

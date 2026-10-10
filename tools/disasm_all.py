@@ -135,6 +135,7 @@ class Rom:
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
         self.names: dict[tuple[int, int], dict] = {}  # config/names.json: evidence-backed routine names
+        self.families: list[dict] = []  # config/name_families.json: names for copies of library routines
         self.text_enabled = True  # render prose runs as db strings (--no-text turns it off)
         self._text_runs: dict[int, list[tuple[int, int]]] = {}
         self.alias: dict[tuple[int, int], str] = {}  # address name kept as an alias after a rename
@@ -868,6 +869,68 @@ class Rom:
                 out.append(f"; {label}: " + ", ".join(items[:8]) + (", ..." if len(items) > 8 else ""))
         return out
 
+    def routine_extent(self, bank: int, addr: int) -> int | None:
+        """Length in bytes of the self-contained leaf routine at `addr`, or None.
+
+        The routine ends at the first `ret` that no forward `jr` in it jumps past. It must contain
+        no call, jump or restart (so the same bytes behave the same in any bank) and no branch out
+        of its own bytes."""
+        ins, pc, far, start = self.insn[bank], addr, addr, addr
+        while pc in ins and not isinstance(ins[pc][0], str) and pc - start < 256:
+            n, _text, kind, tgt = ins[pc]
+            if kind in ("call", "callc", "jp", "jpc", "jphl", "rst", "bad"):
+                return None
+            if kind in ("jr", "jrc"):
+                if tgt < start:
+                    return None
+                far = max(far, tgt)
+            pc += n
+            if kind == "ret" and pc > far:
+                return pc - start
+        return None
+
+    def expand_families(self, families: list[dict]) -> None:
+        """Name every function whose bytes equal a family's canonical routine (config/name_families.json).
+
+        The ROM repeats a small library in many banks. A family names one canonical routine; each
+        function entry in any bank whose bytes are identical is a copy and gets `Name_BankBB`
+        (plain `Name` when it is the only one). Identical bytes with no calls or jumps behave
+        identically, so one reading covers every copy."""
+        used = {info["name"] for info in self.names.values()}
+        for fam in families:
+            cb, ca = (int(x, 16) for x in fam["canonical"].split(":"))
+            size = self.routine_extent(cb, ca)
+            if size is None:
+                raise AssertionError(f"family {fam['name']}: {fam['canonical']} is not a leaf routine")
+            base = self.base(cb)
+            want = self.data[cb * BANK + ca - base:cb * BANK + ca - base + size]
+            found = []
+            for bank in range(self.nbanks):
+                b0 = self.base(bank)
+                for addr, label in self.labels[bank].items():
+                    if not label.startswith("Func_") or addr not in self.insn[bank]:
+                        continue
+                    off = bank * BANK + addr - b0
+                    if self.data[off:off + size] == want and self.routine_extent(bank, addr) == size:
+                        found.append((bank, addr))
+            if (cb, ca) not in found:
+                raise AssertionError(f"family {fam['name']}: canonical {fam['canonical']} not a function entry")
+            for bank, addr in found:
+                if (bank, addr) in self.names:
+                    raise AssertionError(f"{bank:02X}:{addr:04X} named twice ({fam['name']})")
+                name = fam["name"]
+                if len(found) > 1:
+                    name += f"_Bank{bank:02X}"
+                if name in used:
+                    name += f"_{addr:04X}"  # another copy or variant in this bank has the name
+                used.add(name)
+                info = {"name": name, "evidence": fam.get("evidence", "reading")}
+                if fam.get("note"):
+                    info["note"] = fam["note"] + (
+                        f" (the same {size} bytes appear in {len(found)} banks)" if len(found) > 1 else "")
+                self.names[(bank, addr)] = info
+            log(f"family {fam['name']}: {len(found)} copies of {size} bytes")
+
     def apply_names(self) -> None:
         """Rename code labels listed in config/names.json; keep the address name as an alias.
 
@@ -1077,6 +1140,7 @@ class Rom:
         self.label_data_refs()
         self.prepare_tables()
         self.prepare_tracks()
+        self.expand_families(self.families)
         self.apply_names()
         self.build_xrefs()
         log(f"cross-references: {len(self.callers)} routines are called, "
@@ -1396,6 +1460,10 @@ def main() -> int:
                 bank_s, addr_s = key.split(":")
                 rom.names[(int(bank_s, 16), int(addr_s, 16))] = info
         log(f"loaded {len(rom.names)} routine names")
+    families_path = ROOT / "config/name_families.json"
+    if families_path.exists():
+        rom.families = json.loads(families_path.read_text(encoding="utf-8"))["families"]
+        log(f"loaded {len(rom.families)} routine families")
     symbols_path = ROOT / "config/symbols.json"
     if symbols_path.exists():
         for key, info in json.loads(symbols_path.read_text(encoding="utf-8")).items():

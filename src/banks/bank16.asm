@@ -3802,7 +3802,7 @@ Jump_016_5D51::
 
 Jump_016_5D71::
     ld a, $1E
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ret
 
@@ -3833,7 +3833,7 @@ Jump_016_5DA0::
     or a, a
     ret nz
     ld a, $0B
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld hl, wCFCC
     inc [hl]
@@ -3875,7 +3875,7 @@ Jump_016_5DE6::
     ld de, wC130
     call Func_016_6A10
     ld a, $0C
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld a, $01
     ld [wCFCC], a
@@ -3909,7 +3909,7 @@ Jump_016_5E2E::
 
 Jump_016_5E3B::
     ld a, $0D
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld hl, wCFCC
     inc [hl]
@@ -3920,7 +3920,7 @@ Jump_016_5E48::
     or a, a
     ret nz
     ld a, $0E
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld hl, wCFCC
     inc [hl]
@@ -3976,7 +3976,7 @@ Jump_016_5E96::
     or a, a
     jr nz, Jump_016_5ED1
     ld a, $0F
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld a, $09
     ld [wCFCC], a
@@ -4013,7 +4013,7 @@ Jump_016_5EEC::
     ld a, $BC
     call WriteVRAMByte
     ld a, $11
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     ld hl, wCFCC
     inc [hl]
@@ -4210,7 +4210,7 @@ Jump_016_60B5::
 
 Jump_016_60DF::
     ld a, $15
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld a, $09
     ld [wCFCC], a
@@ -4279,7 +4279,7 @@ Jump_016_6151::
     ld hl, wCFCC
     inc [hl]
     ld a, $13
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ret
 
@@ -4350,7 +4350,7 @@ Jump_016_61D2::
     ld a, $6C
     call StoreWC60B
     ld a, $16
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     call Func_016_6493
     call Func_016_65B1
@@ -4523,7 +4523,7 @@ Jump_016_631B::
     ld de, wC140
     call Func_000_2E81
     ld a, $18
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     xor a, a
     ld [rRAMG], a
@@ -5184,7 +5184,7 @@ Func_016_67A5::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_016_67A5, Func_016_6705)
-; writes: rRAMG, rRAMB, wC528, wC529, wC52D, wC52E
+; writes: rRAMG, rRAMB, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC130
 Func_016_67E0::
     ld a, $0A
@@ -5192,9 +5192,9 @@ Func_016_67E0::
     xor a, a
     ld [rRAMB], a
     ld a, $08
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $05
-    ld [wC529], a
+    ld [wStringIndex], a
 
 Jump_016_67F3::
     ld a, [hl+]
@@ -5228,7 +5228,7 @@ Jump_016_6810::
     ld [wC52D], a
     ld a, d
     ld [wC52E], a
-    farcall Func_008_402B
+    farcall ShowString_Bank08
     pop de
     inc d
     pop hl
@@ -5344,7 +5344,7 @@ Jump_016_68CB::
 
 ; 1 call site from 1 routine (e.g. Func_016_6891)
 ; reads: wD868
-; writes: wC529, wC528, wC52D, wC52E
+; writes: wStringIndex, wStringCategory, wC52D, wC52E
 Func_016_68E5::
     ld c, $0B
     call SRAMRecordAddress
@@ -5356,12 +5356,12 @@ Func_016_68E5::
 
 ; 1 call site from 1 routine (e.g. Func_016_6891)
 ; reads: wD868
-; writes: wC529, wC528, wC52D, wC52E
+; writes: wStringIndex, wStringCategory, wC52D, wC52E
 Func_016_68F0::
     ld a, c
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, b
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, [wD868]
     add a, $94
     ld h, a
@@ -5370,7 +5370,7 @@ Func_016_68F0::
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
-    farcall Func_008_402B
+    farcall ShowString_Bank08
     ret
 
 Data_016_690F:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5427,24 +5427,24 @@ Jump_016_694B::
     ret
 
 ; 16 call sites from 4 routines (e.g. Func_016_69E2, Func_016_6C16, Func_016_6A4E, Func_016_5D13)
-; writes: wC528
+; writes: wStringCategory
 Func_016_6955::
     ld a, $05
-    ld [wC528], a
-    farcall Func_02F_4001
+    ld [wStringCategory], a
+    farcall BeginStringDisplay_Bank2F
     ret
 
 ; 9 call sites from 4 routines (e.g. Func_016_6C16, Func_016_69AB, Func_016_5D13, Func_016_696D)
-; writes: wC528
+; writes: wStringCategory
 Func_016_6961::
     ld a, $05
-    ld [wC528], a
-    farcall Func_02F_400F
+    ld [wStringCategory], a
+    farcall ShowString_Bank2F
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_016_5D13)
 ; reads: wC470, wC46B
-; writes: rRAMG, rRAMB, wC529
+; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wD789, wC140
 Func_016_696D::
     ld a, [wC470]
@@ -5478,13 +5478,13 @@ Jump_016_6995::
     xor a, a
     ld [rRAMG], a
     ld a, $12
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_016_5D13)
 ; reads: wC471, wCFD6
-; writes: rRAMG, rRAMB, wC529
+; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wD789, wC140
 Func_016_69AB::
     ld a, [wC471]
@@ -5509,13 +5509,13 @@ Func_016_69AB::
     ld de, wC140
     call Func_000_2E81
     ld a, $17
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_016_6C16)
 ; reads: wC46C
-; writes: rRAMG, rRAMB, wC529
+; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wD868, wC130
 Func_016_69E2::
     ld a, $0A
@@ -5538,7 +5538,7 @@ Jump_016_6A01::
     dec b
     jr nz, Jump_016_6A01
     ld a, $1D
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ret
 
@@ -5604,7 +5604,7 @@ Jump_016_6A5C::
     ld de, wC130
     call Func_016_6A10
     ld a, $14
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld hl, wCFCC
     inc [hl]
@@ -5910,7 +5910,7 @@ Jump_016_6C7A::
     ld [rRAMG], a
     farcall Func_01A_72DB
     ld a, $19
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     ld hl, wCFCC
     inc [hl]
@@ -5971,13 +5971,13 @@ Jump_016_6CF5::
     or a, a
     jr z, Jump_016_6D08
     ld a, $20
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ret
 
 Jump_016_6D08::
     ld a, $1A
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ret
 
@@ -6005,13 +6005,13 @@ Jump_016_6D2B::
     or a, a
     jr z, Jump_016_6D3E
     ld a, $21
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ret
 
 Jump_016_6D3E::
     ld a, $1B
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ret
 
@@ -6051,7 +6051,7 @@ Jump_016_6D7B::
 Jump_016_6D8D::
     call Func_016_7078
     ld a, $1C
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     xor a, a
     ld [wC46C], a
@@ -6198,7 +6198,7 @@ Jump_016_6EC0::
     dec b
     jr nz, Jump_016_6EC0
     ld a, $1A
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6955
     ld a, $12
     ld [wCFCC], a
@@ -6318,7 +6318,7 @@ Jump_016_6FA4::
     ld bc, $0805
     call Func_016_7321
     ld a, $19
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     ld a, $01
     ld [wCFCC], a
@@ -6331,7 +6331,7 @@ Jump_016_6FEE::
     xor a, a
     ld [wC46D], a
     ld a, $1C
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     ld a, $09
     ld [wCFCC], a
@@ -6383,7 +6383,7 @@ Jump_016_7051::
     call Func_016_7321
     farcall Func_01A_72DB
     ld a, $19
-    ld [wC529], a
+    ld [wStringIndex], a
     call Func_016_6961
     ld a, $01
     ld [wCFCC], a
@@ -6979,7 +6979,7 @@ Jump_016_752B::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC52F, wC530, wC52D, wC52E, wC528, wC529
+; writes: wC52F, wC530, wC52D, wC52E, wStringCategory, wStringIndex
 Func_016_756F:: ; heuristic: follows a terminator; C0
     ld de, vTiles1 + $2F0
     ld hl, vTiles1 + $6D0
@@ -7003,26 +7003,26 @@ Jump_016_7577::
     ld a, h
     ld [wC52E], a
     ld a, $02
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $06
-    ld [wC529], a
-    farcall Func_009_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank09
     ld hl, vTiles1 + $750
     ld a, l
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
     ld a, $07
-    ld [wC529], a
-    farcall Func_009_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank09
     ld hl, vTiles1 + $7D0
     ld a, l
     ld [wC52D], a
     ld a, h
     ld [wC52E], a
     ld a, $08
-    ld [wC529], a
-    farcall Func_009_400F
+    ld [wStringIndex], a
+    farcall ShowString_Bank09
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -7294,7 +7294,7 @@ Jump_016_777A::
 
 ; 2 call sites from 2 routines (e.g. Func_003_776C, Func_007_6213)
 ; reads: wD0D5, wC5DB, wD0E3, wD0E4, wD0E2, wD0E5
-; writes: wC52D, wC52E, wC52F, wC530, wC528, wC529
+; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, wC1E9, ...
 Func_016_777B::
     farcall Func_015_63B8
@@ -7302,7 +7302,7 @@ Func_016_777B::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD0D5, wC5DB, wD0E3, wD0E4, wD0E2, wD0E5
-; writes: wC527, wC52D, wC52E, wC52F, wC530, wC528, wC529
+; writes: wC527, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC4DF, wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, ...
 Func_016_7783:: ; heuristic: follows a terminator; C0
     ld b, $7E
@@ -7383,10 +7383,10 @@ Jump_016_77F8::
     ld a, h
     ld [wC530], a
     ld a, $08
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $0A
-    ld [wC529], a
-    farcall Func_008_402B
+    ld [wStringIndex], a
+    farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -7406,9 +7406,9 @@ Jump_016_7832::
     ld a, h
     ld [wC530], a
     ld a, $08
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $05
-    ld [wC529], a
+    ld [wStringIndex], a
     ld hl, wD0D6
     ld de, vTiles2 + $200
     ld a, [wC5DB]
@@ -7509,7 +7509,7 @@ Jump_016_78E9::
     jr nz, Jump_016_78E9
     ld a, $F0
     ld [de], a
-    farcall Func_008_402B
+    farcall ShowString_Bank08
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_016_7783)
@@ -7637,7 +7637,7 @@ Jump_016_79A6::
 
 ; 1 call site from 1 routine (e.g. Func_016_7783)
 ; reads: wC5DB, wD10B, wD10C, wD110, wD10E, wD10F, wD10D
-; writes: wC52D, wC52E, wC52F, wC530, wC529, wC528
+; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wC130
 Func_016_79B5::
     ld hl, vTiles2 + $3B0
@@ -7661,10 +7661,10 @@ Jump_016_79C2::
     jr nz, Jump_016_79EF
     ld a, [wD10C]
     add a, $0A
-    ld [wC529], a
+    ld [wStringIndex], a
     xor a, a
-    ld [wC528], a
-    farcall Func_008_402B
+    ld [wStringCategory], a
+    farcall ShowString_Bank08
     ret
 
 Jump_016_79EF::
@@ -7683,10 +7683,10 @@ Jump_016_79EF::
     ld a, $F0
     ld [de], a
     ld a, $08
-    ld [wC528], a
+    ld [wStringCategory], a
     ld a, $05
-    ld [wC529], a
-    farcall Func_008_402B
+    ld [wStringIndex], a
+    farcall ShowString_Bank08
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_016_79B5)
@@ -7697,10 +7697,10 @@ Func_016_7A1E::
 Jump_016_7A22::
     ld a, [wD10D]
     and a, $3F
-    ld [wC529], a
+    ld [wStringIndex], a
     ld a, $06
-    ld [wC528], a
-    farcall Func_009_400F
+    ld [wStringCategory], a
+    farcall ShowString_Bank09
     ret
 
 Data_016_7A36:: ; heuristic: pointer load in the same bank (bank assumed); C0

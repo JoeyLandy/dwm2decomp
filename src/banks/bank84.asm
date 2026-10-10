@@ -1216,7 +1216,7 @@ Jump_084_4BB9::
     ldh [rSVBK], a
 
 Jump_084_4BD6::
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     and a, $F8
     ld e, a
     ld d, $00
@@ -1233,7 +1233,7 @@ Jump_084_4BD6::
     ld a, d
     and a, $9B
     ld d, a
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     srl a
     srl a
     srl a

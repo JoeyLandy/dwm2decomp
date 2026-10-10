@@ -72,15 +72,15 @@ Func_0A2_404F::
     ds $14, $00
     INCBIN "dwm2-cobi-us.gbc", $288070, $972
 
-; 1 call site from 1 routine (e.g. Func_0E0_76E0)
-; reads: wC528
-; writes: wC528
+; 1 call site from 1 routine (e.g. BeginStringDisplay_BankE0)
+; reads: wStringCategory
+; writes: wStringCategory
 Func_0A2_49E2::
     ld de, Data_0A2_49F8
-    ld a, [wC528]
+    ld a, [wStringCategory]
     sub a, $01
-    ld [wC528], a
-    call Func_000_25C9
+    ld [wStringCategory], a
+    call BeginStringDisplay
     ret
     db $CD, $E2, $49, $CD, $11, $26, $C9
 

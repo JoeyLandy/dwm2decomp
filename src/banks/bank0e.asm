@@ -2,9 +2,9 @@ SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0E
 
 ; 1 call site from 1 routine (e.g. Func_001_4AD4)
-; reads: wC529
+; reads: wStringIndex
 Func_00E_4001::
-    ld a, [wC529]
+    ld a, [wStringIndex]
     cp a, $88
     jr c, Jump_00E_400F
     farcall Func_096_7011
@@ -12,13 +12,13 @@ Func_00E_4001::
 
 Jump_00E_400F::
     ld de, Data_00E_4032
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC529
+; reads: wStringIndex
 Func_00E_4016:: ; heuristic: follows a terminator; C0
-    ld a, [wC529]
+    ld a, [wStringIndex]
     cp a, $88
     jr c, Jump_00E_4024
     farcall Func_096_7020
@@ -26,7 +26,7 @@ Func_00E_4016:: ; heuristic: follows a terminator; C0
 
 Jump_00E_4024::
     ld de, Data_00E_4032
-    call Func_000_25FE
+    call CopyStringToBuffer
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
@@ -787,17 +787,21 @@ Data_00E_5350:: ; heuristic: target of a monotone pointer table; C0
     db "a monster.", $F7
     db $F0
 
-; 4 call sites from 4 routines (e.g. Func_00E_537E, Func_001_4AD4, Func_037_5999, Func_0F1_5834)
-Func_00E_5370::
+; ld de, this bank's string table / BeginStringDisplay
+; 4 call sites from 4 routines (e.g. ShowString_Bank0E, Func_001_4AD4, Func_037_5999, Func_0F1_5834)
+BeginStringDisplay_Bank0E::
+Func_00E_5370:: ; address name
     ld de, Data_00E_5385
-    call Func_000_25C9
+    call BeginStringDisplay
     ret
     db $11, $85, $53, $CD, $FE, $25, $C9
 
+; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ; 6 call sites from 6 routines (e.g. Func_037_4DC7, Func_037_542C, Func_0F1_4D4E, Func_0F1_5344, ...)
-Func_00E_537E::
-    call Func_00E_5370
-    call Func_000_2611
+ShowString_Bank0E::
+Func_00E_537E:: ; address name
+    call BeginStringDisplay_Bank0E
+    call RunStringDisplayToEnd
     ret
 
 Data_00E_5385:: ; heuristic: pointer load in the same bank (bank assumed); C0

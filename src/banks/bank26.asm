@@ -162,11 +162,11 @@ Data_026_411E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $098156, $48
 
 ; 1 call site from 1 routine (e.g. Func_026_4001)
-; reads: hFFB1, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
-; writes: hFFB3, hFFB4, hFFB1
+; reads: hOamNextEntry, hFFD4, hFFD5, hFFAB, hFFAC, hFFD2, hFFD3, hFFA9, ...
+; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_026_419E::
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
     ldh a, [hFFD4]
@@ -214,7 +214,7 @@ Func_026_419E::
     add hl, hl
     add hl, de
     deref_hl
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     add a, a
     add a, a
     ld e, a
@@ -316,9 +316,9 @@ Jump_026_4255::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_026_41FA
     ret
@@ -412,9 +412,9 @@ Jump_026_42CD::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_026_4270
     ret
@@ -519,9 +519,9 @@ Jump_026_4349::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_026_42EE
     ret
@@ -621,19 +621,19 @@ Jump_026_43C4::
     xor a, c
     ld [de], a
     inc e
-    ldh a, [hFFB1]
+    ldh a, [hOamNextEntry]
     inc a
-    ldh [hFFB1], a
+    ldh [hOamNextEntry], a
     cp a, $28
     jr nz, Jump_026_4369
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_026_419E)
-; reads: hFFA5, hFFA1, hFFBA, rSTAT
+; reads: hScrollY, hScrollX, hFFBA, rSTAT
 Func_026_43E4::
     push hl
     push bc
-    ldh a, [hFFA5]
+    ldh a, [hScrollY]
     ld b, a
     dec e
     ld a, [de]
@@ -645,7 +645,7 @@ Func_026_43E4::
     ld h, $00
     add hl, hl
     add hl, hl
-    ldh a, [hFFA1]
+    ldh a, [hScrollX]
     ld b, a
     ld a, [de]
     add a, b

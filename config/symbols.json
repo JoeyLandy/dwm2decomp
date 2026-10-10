@@ -16,5 +16,11 @@
   "FFD6": {"name": "hDecompressLock", "note": "non-zero while the decompressor is running", "evidence": "E-0016"},
   "FFBB": {"name": "hDecompressMarker", "note": "marker byte from the stream header", "evidence": "E-0016"},
   "FFBC": {"name": "hDecompressDestLo", "note": "destination start, low byte", "evidence": "E-0016"},
-  "FFBD": {"name": "hDecompressDestHi", "note": "destination start, high byte", "evidence": "E-0016"}
+  "FFBD": {"name": "hDecompressDestHi", "note": "destination start, high byte", "evidence": "E-0016"},
+  "FFA1": {"name": "hScrollX", "note": "copied to rSCX by Func_000_07E0 and by the LCD handler", "evidence": "reading"},
+  "FFA5": {"name": "hScrollY", "note": "copied to rSCY by Func_000_07E0 and by the LCD handler", "evidence": "reading"},
+  "FFB1": {"name": "hOamNextEntry", "note": "index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28", "evidence": "reading"},
+  "C528": {"name": "wStringCategory", "note": "category index LookupString uses in the table of tables", "evidence": "reading"},
+  "C529": {"name": "wStringIndex", "note": "index within the category table that LookupString uses", "evidence": "reading"},
+  "C52A": {"name": "wStringBank", "note": "ROM bank number LookupString stores; the string printer maps it into the ROM bank window", "evidence": "reading"}
 }
